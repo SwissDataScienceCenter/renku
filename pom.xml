@@ -76,7 +76,7 @@
                     <!-- If you have classpath issue like NoDefClassError,... -->
                     <!-- useManifestOnlyJar>false</useManifestOnlyJar -->
                     <includes>
-                        <include>**/*ch.datascience.typesystem.Test.*</include>
+                        <include>**/*Test.*</include>
                         <include>**/*Suite.*</include>
                     </includes>
                 </configuration>

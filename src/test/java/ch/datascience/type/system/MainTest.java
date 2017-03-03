@@ -6,7 +6,7 @@ import static org.junit.Assert.*;
 /**
  * Created by johann on 03/03/17.
  */
-public class TestMain {
+public class MainTest {
 
     @Test
     public void testOK() {
