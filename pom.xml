@@ -62,7 +62,7 @@
                         <argument>-Dmyproperty=myvalue</argument>
                         <argument>-classpath</argument>
                         <classpath/>
-                        <argument>ch.datascience.type-system.Main</argument>
+                        <argument>ch.datascience.type.system.Main</argument>
                     </arguments>
                 </configuration>
             </plugin>
