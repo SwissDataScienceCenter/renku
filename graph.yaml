@@ -25,7 +25,7 @@ paths:
             description: The namespace of the type.
             required: false
             type: string
-          - name: type
+          - name: typename
             in: query
             description: The name of the type.
             required: false
@@ -36,7 +36,7 @@ paths:
           200:
             description: A type object
             schema:
-              $ref: '#/definitions/Type'
+              $ref: '#/definitions/Types'
           default:
             description: Unexpected error
             schema:
@@ -52,7 +52,7 @@ paths:
             description: The name of the vertex.
             required: false
             type: string
-          - name: type
+          - name: typename
             in: query
             description: The type of the vertex.
             required: false
@@ -74,7 +74,7 @@ paths:
             schema:
               $ref: '#/definitions/Error'
 definitions:
-  Type:
+  Types:
     type: object
     properties:
       namespace:
