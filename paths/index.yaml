@@ -1,4 +1,0 @@
-/type:
-  $ref: ./type.yaml
-/graph:
-  $ref: ./graph.yaml
