@@ -1,0 +1,31 @@
+get:
+  summary: Get some subgraphs
+  description: |
+    Get the vertices that correspond to the query, optionaly including its edges
+  parameters:
+    - name: name
+      in: query
+      description: The name of the vertex.
+      required: false
+      type: string
+    - name: type
+      in: query
+      description: The type of the vertex.
+      required: false
+      type: string
+    - name: with_edges
+      in: query
+      description: If the edges should be included in the response.
+      required: false
+      type: boolean
+  tags:
+    - Graph
+  responses:
+    200:
+      description: A graph object
+      schema:
+        type: $ref: '#/definitions/Graph'
+    default:
+      description: Unexpected error
+      schema:
+        $ref: '#/definitions/Error'

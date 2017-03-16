@@ -1,0 +1,11 @@
+type: object
+properties:
+  edges:
+    type: array
+    items: 
+      $ref: Edge
+  vertices:
+    type: array
+    items:
+      $ref: Vertex
+

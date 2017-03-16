@@ -1,0 +1,10 @@
+Type:
+  $ref: ./Type.yaml
+Graph:
+  $ref: ./Graph.yaml
+Vertex:
+  $ref: ./Vertex.yaml
+Edge:
+  $ref: ./Edge.yaml
+Error:
+  $ref: ./Error.yaml
