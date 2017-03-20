@@ -1,0 +1,22 @@
+post:
+  summary: Create a new vertex
+  description: |
+    This creates a new vertex.
+  parameters:
+    - name: data
+      in: body
+      description: The json representation of the vertex
+      required: true
+      schema:
+        type:
+          $ref: '../graph.yaml#/definitions/Vertex'
+  responses:
+    200:
+      description: Returns the created vertex.
+      schema:
+        type:
+          $ref: '../graph.yaml#/definitions/Vertex'
+    default:
+      description: Unexpected error
+      schema:
+        $ref: '../graph.yaml#/definitions/Error'

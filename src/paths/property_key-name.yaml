@@ -1,0 +1,24 @@
+parameters:
+  - name: namespace
+    in: paths
+    description: the namespace of the property key
+    type: string
+    required: true
+  - name: name
+    in: paths
+    description: the name of the property key
+    type: string
+    required: true
+get:
+  summary: Return the given property key
+  description: Return the given property key
+  responses:
+    200:
+      description: Returns the given property key.
+      schema:
+        type:
+          $ref: '../typesystem.yaml#/definitions/PropertyKey'
+    default:
+      description: Unexpected error
+      schema:
+        $ref: '../typesystem.yaml#/definitions/Error'

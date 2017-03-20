@@ -1,0 +1,40 @@
+# API spec in YAML
+swagger: '2.0'
+info:
+  title: Knowledge Graph
+  description: All APIs of the Knowledge Graph webservices
+  version: "1.0.0"
+# the domain of the service
+# host: api.datascience.ch
+# array of all schemes that your API supports
+schemes:
+  - https
+# will be prefixed to all paths
+basePath: /
+produces:
+  - application/json
+consumes:
+  - application/json
+paths:
+  /vertex:
+    $ref: ./paths/vertex.yaml
+  /vertex/{vertex-uuid}:
+    $ref: ./paths/vertex-uuid.yaml
+  /vertex/{vertex-uuid}/{property-uuid}:
+    $ref: ./paths/v-property.yaml
+  /edge:
+    $ref: ./paths/edge.yaml
+  /edge/{edge-uuid}:
+    $ref: ./paths/edge-uuid.yaml
+
+definitions:
+  Vertex:
+    $ref: ./definitions/Vertex.yaml
+  Edge:
+    $ref: ./definitions/Edge.yaml
+  V-Property:
+    $ref: ./definitions/V-Property.yaml
+  Property:
+    $ref: ./definitions/Property.yaml
+  Error:
+    $ref: ./definitions/Error.yaml

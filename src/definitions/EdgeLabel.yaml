@@ -1,0 +1,10 @@
+type: object
+properties:
+  id:
+    type: string
+    description: uuid of the edge label.
+  name:
+    type: string
+    description: The name of the edge label.
+  domain:
+    $ref: '../typesystem.yaml#/definitions/GraphDomain'

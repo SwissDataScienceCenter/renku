@@ -1,0 +1,37 @@
+parameters:
+  - name: uuid
+    in: paths
+    description: the uuid of the entity
+    type: string
+    required: true
+get:
+  summary: Return the state of the entity
+  description: Return the state of the entity
+  responses:
+    200:
+      description: Returns the state of the entity.
+      schema:
+        type: string
+    default:
+      description: Unexpected error
+      schema:
+        $ref: '../typesystem.yaml#/definitions/Error'
+put:
+  summary: update the state of the entity
+  description: Update the state of the entity.
+  parameters:
+    - name: state
+      in: paths
+      description: the new values for the state
+      required: true
+      schema:
+        type: string
+  responses:
+    200:
+      description: Returns the modified state.
+      schema:
+        type: string
+    default:
+      description: Unexpected error
+      schema:
+        $ref: ../users.yaml#/definitions/Error

@@ -1,0 +1,44 @@
+get:
+  summary: Get a (possibly filtered) list of graph domains
+  description: |
+    This can be used to get the list of all graph domains or applying some filtering.
+    The parameters can be using wildcard (*) or doing exact matching.
+  parameters:
+    - name: namespace
+      in: query
+      description: The namespace of the graph domain
+      required: false
+      type: string
+  responses:
+    200:
+      description: A list of graph domains
+      schema:
+        type: array
+        items:
+          $ref: ../typesystem.yaml#/definitions/GraphDomain
+    default:
+      description: Unexpected error
+      schema:
+        $ref: ../typesystem.yaml#/definitions/Error
+post:
+  summary: Create a new graph domain
+  description: |
+    This creates a new graph domain.
+  parameters:
+    - name: data
+      in: body
+      description: The json representation of the graph domain
+      required: true
+      schema:
+        type:
+          $ref: '../typesystem.yaml#/definitions/GraphDomain'
+  responses:
+    200:
+      description: Returns the created graph domain.
+      schema:
+        type:
+          $ref: '../typesystem.yaml#/definitions/GraphDomain'
+    default:
+      description: Unexpected error
+      schema:
+        $ref: '../typesystem.yaml#/definitions/Error'

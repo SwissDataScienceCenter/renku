@@ -1,0 +1,29 @@
+# API spec in YAML
+swagger: '2.0'
+info:
+  title: User Management API
+  description: API endpoints for managing users
+  version: "1.0.0"
+# the domain of the service
+# host: api.datascience.ch
+# array of all schemes that your API supports
+schemes:
+  - https
+# will be prefixed to all paths
+basePath: /
+
+produces:
+  - application/json
+consumes:
+  - application/json
+paths:
+  /user:
+    $ref: ./paths/users.yaml
+  /user/{user-uuid}:
+    $ref: ./paths/user-uuid.yaml
+
+definitions:
+  User:
+    $ref: ./definitions/User.yaml
+  Error:
+    $ref: ./definitions/Error.yaml

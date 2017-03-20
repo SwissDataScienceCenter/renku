@@ -1,0 +1,19 @@
+parameters:
+  - name: id-name
+    in: paths
+    description: the name or the uuid of the vertex type
+    type: string
+    required: true
+get:
+  summary: Return the given graph domain
+  description: Return the given graph domain
+  responses:
+    200:
+      description: Returns the given graph domain.
+      schema:
+        type:
+          $ref: '../typesystem.yaml#/definitions/GraphDomain'
+    default:
+      description: Unexpected error
+      schema:
+        $ref: '../typesystem.yaml#/definitions/Error'

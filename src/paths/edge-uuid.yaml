@@ -1,0 +1,53 @@
+parameters:
+  - name: edge-uuid
+    in: paths
+    description: the uuid representing the edge
+    type: string
+    required: true
+get:
+  summary: Return the given edge
+  description: Return the given edge
+  responses:
+    200:
+      description: Returns the given edge.
+      schema:
+        type:
+          $ref: '../graph.yaml#/definitions/Edge'
+    default:
+      description: Unexpected error
+      schema:
+        $ref: '../graph.yaml#/definitions/Error'
+put:
+  summary: update the given edge.
+  description: Update/Add properties for the given edge.
+  parameters:
+    - name: data
+      in: body
+      description: the new values for the edge
+      required: true
+      schema:
+        type:
+          $ref: '../graph.yaml#/definitions/Edge'
+  responses:
+    200:
+      description: Returns the modified edge.
+      schema:
+        type:
+          $ref: '../graph.yaml#/definitions/Edge'
+    default:
+      description: Unexpected error
+      schema:
+        $ref: '../graph.yaml#/definitions/Error'
+delete:
+  summary: delete the given edge
+  description: Delete the edge
+  responses:
+    200:
+      description: Returns the given edge.
+      schema:
+        type:
+          $ref: '../graph.yaml#/definitions/Edge'
+    default:
+      description: Unexpected error
+      schema:
+        $ref: '../graph.yaml#/definitions/Error'

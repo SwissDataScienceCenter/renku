@@ -1,0 +1,15 @@
+type: object
+properties:
+  in_id:
+    type: string
+    description: uuid of the input Vertex.
+  out_id:
+    type: string
+    description: uuid of the output Vertex.
+  name:
+    type: string
+    description: The name of the Edge.
+  prop:
+    type: array
+    items:
+      $ref: '../graph.yaml#/definitions/Property'

@@ -1,0 +1,47 @@
+ # API spec in YAML
+swagger: '2.0'
+info:
+  title: All APIs
+  description: All APIs of the webservices
+  version: "1.0.0"
+# the domain of the service
+# host: api.datascience.ch
+# array of all schemes that your API supports
+schemes:
+  - https
+# will be prefixed to all paths
+basePath: /
+produces:
+  - application/json
+paths:
+  /entity_state/{uuid}:
+    $ref: ./paths/entity_state-uuid.yaml
+  /graph_domain:
+    $ref: ./paths/graph_domain.yaml
+  /graph_domain/{id-name}:
+    $ref: ./paths/graph_domain-id-name.yaml
+  /vertex_type:
+    $ref: ./paths/vertex_type.yaml
+  /vertex_type/{namespace}/{name}:
+    $ref: ./paths/vertex_type-name.yaml
+  /edge_label:
+    $ref: ./paths/edge_label.yaml
+  /edge_label/{namespace}/{name}:
+    $ref: ./paths/edge_label-name.yaml
+  /property_key:
+    $ref: ./paths/property_key.yaml
+  /property_key/{namespace}/{name}:
+    $ref: ./paths/property_key-name.yaml
+definitions:
+  VertexType:
+    $ref: ./definitions/VertexType.yaml
+  GraphDomain:
+    $ref: ./definitions/GraphDomain.yaml
+  PropertyKey:
+    $ref: ./definitions/PropertyKey.yaml
+  UniqueConstraint:
+    $ref: ./definitions/UniqueConstraint.yaml
+  EdgeLabel:
+    $ref: ./definitions/EdgeLabel.yaml
+  Error:
+    $ref: ./definitions/Error.yaml

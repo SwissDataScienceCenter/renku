@@ -1,0 +1,8 @@
+type: object
+properties:
+  id:
+    type: string
+    description: uuid of the graph domain.
+  namespace:
+    type: string
+    description: The namespace of the graph domain.

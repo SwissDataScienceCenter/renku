@@ -1,0 +1,53 @@
+parameters:
+  - name: user-uuid
+    in: paths
+    description: the uuid representing the user
+    type: string
+    required: true
+get:
+  summary: Return the given user
+  description: Return the given user
+  responses:
+    200:
+      description: Returns the given user.
+      schema:
+        type:
+          $ref: ../users.yaml#/definitions/User
+    default:
+      description: Unexpected error
+      schema:
+        $ref: ../users.yaml#/definitions/Error
+put:
+  summary: update the given user.
+  description: Update all the users values given in the query.
+  parameters:
+    - name: data
+      in: body
+      description: the new values for the user
+      required: true
+      schema:
+        type:
+          $ref: ../users.yaml#/definitions/User
+  responses:
+    200:
+      description: Returns the modified user.
+      schema:
+        type:
+          $ref: ../users.yaml#/definitions/User
+    default:
+      description: Unexpected error
+      schema:
+        $ref: ../users.yaml#/definitions/Error
+delete:
+  summary: delete the given user
+  description: Delete the user
+  responses:
+    200:
+      description: Returns the given user.
+      schema:
+        type:
+          $ref: ../users.yaml#/definitions/User
+    default:
+      description: Unexpected error
+      schema:
+        $ref: ../users.yaml#/definitions/Error

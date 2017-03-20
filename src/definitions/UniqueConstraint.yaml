@@ -1,0 +1,11 @@
+type: object
+properties:
+  id:
+    type: string
+    description: uuid of the edge label.
+  property_keys:
+    type: array
+    items:
+      $ref: '../typesystem.yaml#/definitions/PropertyKey'
+  domain:
+    $ref: '../typesystem.yaml#/definitions/GraphDomain'

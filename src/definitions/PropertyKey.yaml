@@ -1,0 +1,10 @@
+type: object
+properties:
+  id:
+    type: string
+    description: uuid of the property key.
+  name:
+    type: string
+    description: The name of the property key.
+  domain:
+    $ref: '../typesystem.yaml#/definitions/GraphDomain'

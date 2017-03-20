@@ -1,0 +1,14 @@
+type: object
+properties:
+  username:
+    type: string
+    description: The username of the user.
+  email:
+    type: string
+    description: The e-mail adresse of the user.
+  first_name:
+    type: string
+    description: The firstname of the user.
+  last_name:
+    type: string
+    description: The last_name of the user.

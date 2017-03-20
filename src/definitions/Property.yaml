@@ -1,0 +1,8 @@
+type: object
+properties:
+  id:
+    type: string
+    description: uuid of the Vertex.
+  name:
+    type: string
+    description: The name of the Vertex.

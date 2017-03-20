@@ -1,0 +1,58 @@
+parameters:
+  - name: vertex-uuid
+    in: paths
+    description: the uuid representing the vertex
+    type: string
+    required: true
+  - name: property-name
+    in: paths
+    description: the name of the vertex property
+    type: string
+    required: true
+get:
+  summary: Return the given vertex property
+  description: Return the given vertex property
+  responses:
+    200:
+      description: Returns the given vertex property.
+      schema:
+        type:
+          $ref: '../graph.yaml#/definitions/V-Property'
+    default:
+      description: Unexpected error
+      schema:
+        $ref: '../graph.yaml#/definitions/Error'
+put:
+  summary: update the given vertex property.
+  description: Update/Add properties for the given vertex property.
+  parameters:
+    - name: data
+      in: body
+      description: the new values for the vertex property
+      required: true
+      schema:
+        type:
+          $ref: '../graph.yaml#/definitions/V-Property'
+  responses:
+    200:
+      description: Returns the modified vertex property.
+      schema:
+        type:
+          $ref: '../graph.yaml#/definitions/V-Property'
+    default:
+      description: Unexpected error
+      schema:
+        $ref: '../graph.yaml#/definitions/Error'
+delete:
+  summary: delete the given vertex property
+  description: Delete the vertex property
+  responses:
+    200:
+      description: Returns the given vertex property.
+      schema:
+        type:
+          $ref: '../graph.yaml#/definitions/V-Property'
+    default:
+      description: Unexpected error
+      schema:
+        $ref: '../graph.yaml#/definitions/Error'

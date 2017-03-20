@@ -1,0 +1,24 @@
+parameters:
+  - name: namespace
+    in: paths
+    description: the namespace of the edge label
+    type: string
+    required: true
+  - name: name
+    in: paths
+    description: the name of the edge label
+    type: string
+    required: true
+get:
+  summary: Return the given edge label
+  description: Return the given edge label
+  responses:
+    200:
+      description: Returns the given edge label.
+      schema:
+        type:
+          $ref: '../typesystem.yaml#/definitions/EdgeLabel'
+    default:
+      description: Unexpected error
+      schema:
+        $ref: '../typesystem.yaml#/definitions/Error'
