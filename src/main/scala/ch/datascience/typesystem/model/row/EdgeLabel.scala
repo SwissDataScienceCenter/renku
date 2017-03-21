@@ -1,0 +1,19 @@
+package ch.datascience.typesystem.model.row
+
+import java.util.UUID
+
+import ch.datascience.typesystem.model.EntityType
+import org.janusgraph.core.Multiplicity
+
+/**
+  * Created by johann on 16/03/17.
+  */
+case class EdgeLabel(id: UUID,
+                     graphDomainId: UUID,
+                     name: String,
+                     multiplicity: Multiplicity = Multiplicity.SIMPLE)
+  extends AbstractEntity {
+
+  override val entityType: EntityType = EntityType.EDGE_LABEL
+
+}
