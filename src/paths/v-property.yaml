@@ -16,8 +16,7 @@ get:
     200:
       description: Returns the given vertex property.
       schema:
-        type:
-          $ref: '../graph.yaml#/definitions/V-Property'
+        $ref: '../graph.yaml#/definitions/V-Property'
     default:
       description: Unexpected error
       schema:
@@ -31,8 +30,7 @@ put:
       description: the new values for the vertex property
       required: true
       schema:
-        type:
-          $ref: '../graph.yaml#/definitions/V-Property'
+        $ref: '../graph.yaml#/definitions/V-Property'
   responses:
     200:
       description: Returns the modified vertex property.
@@ -50,8 +48,7 @@ delete:
     200:
       description: Returns the given vertex property.
       schema:
-        type:
-          $ref: '../graph.yaml#/definitions/V-Property'
+        $ref: '../graph.yaml#/definitions/V-Property'
     default:
       description: Unexpected error
       schema:

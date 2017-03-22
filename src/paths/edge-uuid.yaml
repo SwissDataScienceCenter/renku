@@ -11,8 +11,7 @@ get:
     200:
       description: Returns the given edge.
       schema:
-        type:
-          $ref: '../graph.yaml#/definitions/Edge'
+        $ref: '../graph.yaml#/definitions/Edge'
     default:
       description: Unexpected error
       schema:
@@ -26,14 +25,12 @@ put:
       description: the new values for the edge
       required: true
       schema:
-        type:
-          $ref: '../graph.yaml#/definitions/Edge'
+        $ref: '../graph.yaml#/definitions/Edge'
   responses:
     200:
       description: Returns the modified edge.
       schema:
-        type:
-          $ref: '../graph.yaml#/definitions/Edge'
+        $ref: '../graph.yaml#/definitions/Edge'
     default:
       description: Unexpected error
       schema:
@@ -45,8 +42,7 @@ delete:
     200:
       description: Returns the given edge.
       schema:
-        type:
-          $ref: '../graph.yaml#/definitions/Edge'
+        $ref: '../graph.yaml#/definitions/Edge'
     default:
       description: Unexpected error
       schema:

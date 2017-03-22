@@ -8,14 +8,12 @@ post:
       description: The json representation of the vertex
       required: true
       schema:
-        type:
-          $ref: '../graph.yaml#/definitions/Vertex'
+        $ref: '../graph.yaml#/definitions/Vertex'
   responses:
     200:
       description: Returns the created vertex.
       schema:
-        type:
-          $ref: '../graph.yaml#/definitions/Vertex'
+        $ref: '../graph.yaml#/definitions/Vertex'
     default:
       description: Unexpected error
       schema:

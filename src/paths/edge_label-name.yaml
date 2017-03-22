@@ -16,8 +16,7 @@ get:
     200:
       description: Returns the given edge label.
       schema:
-        type:
-          $ref: '../typesystem.yaml#/definitions/EdgeLabel'
+        $ref: '../typesystem.yaml#/definitions/EdgeLabel'
     default:
       description: Unexpected error
       schema:

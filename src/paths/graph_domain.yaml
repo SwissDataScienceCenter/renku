@@ -30,14 +30,12 @@ post:
       description: The json representation of the graph domain
       required: true
       schema:
-        type:
-          $ref: '../typesystem.yaml#/definitions/GraphDomain'
+        $ref: '../typesystem.yaml#/definitions/GraphDomain'
   responses:
     200:
       description: Returns the created graph domain.
       schema:
-        type:
-          $ref: '../typesystem.yaml#/definitions/GraphDomain'
+        $ref: '../typesystem.yaml#/definitions/GraphDomain'
     default:
       description: Unexpected error
       schema:

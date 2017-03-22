@@ -40,14 +40,12 @@ post:
       description: The json representation of the user
       required: true
       schema:
-        type:
-          $ref: ../users.yaml#/definitions/User
+        $ref: ../users.yaml#/definitions/User
   responses:
     200:
       description: Returns the created user.
       schema:
-        type:
-          $ref: ../users.yaml#/definitions/User
+        $ref: ../users.yaml#/definitions/User
     default:
       description: Unexpected error
       schema:

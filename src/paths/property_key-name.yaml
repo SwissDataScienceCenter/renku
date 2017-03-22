@@ -16,8 +16,7 @@ get:
     200:
       description: Returns the given property key.
       schema:
-        type:
-          $ref: '../typesystem.yaml#/definitions/PropertyKey'
+        $ref: '../typesystem.yaml#/definitions/PropertyKey'
     default:
       description: Unexpected error
       schema:

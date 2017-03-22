@@ -8,14 +8,12 @@ post:
       description: The json representation of the edge
       required: true
       schema:
-        type:
-          $ref: '../graph.yaml#/definitions/Edge'
+        $ref: '../graph.yaml#/definitions/Edge'
   responses:
     200:
       description: Returns the created edge.
       schema:
-        type:
-          $ref: '../graph.yaml#/definitions/Edge'
+        $ref: '../graph.yaml#/definitions/Edge'
     default:
       description: Unexpected error
       schema:

@@ -16,8 +16,7 @@ get:
     200:
       description: Returns the given vertex type.
       schema:
-        type:
-          $ref: '../typesystem.yaml#/definitions/VertexType'
+        $ref: '../typesystem.yaml#/definitions/VertexType'
     default:
       description: Unexpected error
       schema:

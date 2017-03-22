@@ -11,8 +11,7 @@ get:
     200:
       description: Returns the given graph domain.
       schema:
-        type:
-          $ref: '../typesystem.yaml#/definitions/GraphDomain'
+        $ref: '../typesystem.yaml#/definitions/GraphDomain'
     default:
       description: Unexpected error
       schema:

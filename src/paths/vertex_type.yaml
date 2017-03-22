@@ -35,14 +35,12 @@ post:
       description: The json representation of the vertex type
       required: true
       schema:
-        type:
-          $ref: '../typesystem.yaml#/definitions/VertexType'
+        $ref: '../typesystem.yaml#/definitions/VertexType'
   responses:
     200:
       description: Returns the created vertex type.
       schema:
-        type:
-          $ref: '../typesystem.yaml#/definitions/VertexType'
+        $ref: '../typesystem.yaml#/definitions/VertexType'
     default:
       description: Unexpected error
       schema:

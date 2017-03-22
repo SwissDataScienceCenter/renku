@@ -35,14 +35,12 @@ post:
       description: The json representation of the property key
       required: true
       schema:
-        type:
-          $ref: '../typesystem.yaml#/definitions/PropertyKey'
+        $ref: '../typesystem.yaml#/definitions/PropertyKey'
   responses:
     200:
       description: Returns the created property key.
       schema:
-        type:
-          $ref: '../typesystem.yaml#/definitions/PropertyKey'
+        $ref: '../typesystem.yaml#/definitions/PropertyKey'
     default:
       description: Unexpected error
       schema:

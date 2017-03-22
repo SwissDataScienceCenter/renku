@@ -35,14 +35,12 @@ post:
       description: The json representation of the edge label
       required: true
       schema:
-        type:
           $ref: '../typesystem.yaml#/definitions/EdgeLabel'
   responses:
     200:
       description: Returns the created edge label.
       schema:
-        type:
-          $ref: '../typesystem.yaml#/definitions/EdgeLabel'
+        $ref: '../typesystem.yaml#/definitions/EdgeLabel'
     default:
       description: Unexpected error
       schema:
