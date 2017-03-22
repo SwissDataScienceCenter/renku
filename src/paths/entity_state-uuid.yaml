@@ -21,11 +21,10 @@ put:
   description: Update the state of the entity.
   parameters:
     - name: state
-      in: path
+      in: query
       description: the new values for the state
       required: true
-      schema:
-        type: string
+      type: string
   responses:
     200:
       description: Returns the modified state.
