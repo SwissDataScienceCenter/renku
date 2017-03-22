@@ -1,6 +1,6 @@
 parameters:
   - name: id-name
-    in: paths
+    in: path
     description: the name or the uuid of the vertex type
     type: string
     required: true

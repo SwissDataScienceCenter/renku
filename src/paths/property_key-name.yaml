@@ -1,11 +1,11 @@
 parameters:
   - name: namespace
-    in: paths
+    in: path
     description: the namespace of the property key
     type: string
     required: true
   - name: name
-    in: paths
+    in: path
     description: the name of the property key
     type: string
     required: true

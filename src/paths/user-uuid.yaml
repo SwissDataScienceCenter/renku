@@ -1,6 +1,6 @@
 parameters:
   - name: user-uuid
-    in: paths
+    in: path
     description: the uuid representing the user
     type: string
     required: true

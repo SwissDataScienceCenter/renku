@@ -1,6 +1,6 @@
 parameters:
   - name: edge-uuid
-    in: paths
+    in: path
     description: the uuid representing the edge
     type: string
     required: true

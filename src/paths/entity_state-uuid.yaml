@@ -1,6 +1,6 @@
 parameters:
   - name: uuid
-    in: paths
+    in: path
     description: the uuid of the entity
     type: string
     required: true
@@ -21,7 +21,7 @@ put:
   description: Update the state of the entity.
   parameters:
     - name: state
-      in: paths
+      in: path
       description: the new values for the state
       required: true
       schema:

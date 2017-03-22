@@ -1,11 +1,11 @@
 parameters:
   - name: vertex-uuid
-    in: paths
+    in: path
     description: the uuid representing the vertex
     type: string
     required: true
   - name: property-name
-    in: paths
+    in: path
     description: the name of the vertex property
     type: string
     required: true
@@ -35,8 +35,7 @@ put:
     200:
       description: Returns the modified vertex property.
       schema:
-        type:
-          $ref: '../graph.yaml#/definitions/V-Property'
+        $ref: '../graph.yaml#/definitions/V-Property'
     default:
       description: Unexpected error
       schema:
