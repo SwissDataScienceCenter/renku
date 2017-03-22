@@ -1,5 +1,5 @@
 parameters:
-  - name: id-name
+  - name: idname
     in: path
     description: the name or the uuid of the vertex type
     type: string

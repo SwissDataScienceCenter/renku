@@ -1,5 +1,6 @@
 var $RefParser = require('json-schema-ref-parser');
-var fs = require('fs')
+var fs = require('fs');
+var YAML = require('json2yaml');
 
 if(process.argv.length < 3){
     console.log("usage: node build.js api_file.yaml");
@@ -17,6 +18,8 @@ $RefParser.bundle(filepath)
   .then(function(schema) {
           console.log("File written to: target/"+filename+".json")
           fs.writeFileSync("target/"+filename+".json", JSON.stringify(schema));
+          console.log("File written to: target/"+filename+".yaml")
+          fs.writeFileSync("target/"+filename+".yaml", YAML.stringify(schema));
     },  function (err) {
           console.log(err.stack);
             });

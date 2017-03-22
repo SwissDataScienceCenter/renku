@@ -18,8 +18,8 @@ paths:
     $ref: ./paths/entity_state-uuid.yaml
   /graph_domain:
     $ref: ./paths/graph_domain.yaml
-  /graph_domain/{id-name}:
-    $ref: ./paths/graph_domain-id-name.yaml
+  /graph_domain/{idname}:
+    $ref: ./paths/graph_domain-idname.yaml
   /vertex_type:
     $ref: ./paths/vertex_type.yaml
   /vertex_type/{namespace}/{name}:
