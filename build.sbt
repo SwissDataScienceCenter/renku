@@ -4,7 +4,7 @@ scalaVersion := "2.11.8"
 
 resolvers ++= Seq(
   DefaultMavenRepository,
-  "Snapshots" at "https://10.90.36.43:8081/nexus/content/repositories/snapshots/",
+  "Snapshots" at "http://10.90.36.43:8082/nexus/content/repositories/snapshots/",
   Resolver.mavenLocal
 )
 
