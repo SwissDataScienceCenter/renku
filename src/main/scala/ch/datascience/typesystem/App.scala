@@ -1,8 +1,9 @@
 package ch.datascience.typesystem
+
 import java.sql.DriverManager
 import java.util.UUID
 
-import ch.datascience.typesystem.model.DataType
+import ch.datascience.typesystem.model.{DataType, EntityState}
 import ch.datascience.typesystem.model.row.{GraphDomain, PropertyKey}
 import ch.datascience.typesystem.model.table._
 import slick.basic.DatabaseConfig
@@ -20,7 +21,7 @@ object App {
 
   def main(args: Array[String]): Unit = {
 
-    val dbConfig = DatabaseConfig.forConfig[JdbcProfile]("h2mem1")
+    val dbConfig = DatabaseConfig.forConfig[JdbcProfile]("h2local")
 
     java.lang.Class.forName(dbConfig.config.getString("db.driver"))
 
@@ -60,7 +61,7 @@ object App {
         val selectGD = dal.graphDomains.findByNamespace("foo").result.headOption
         val badInsert = for {
           gd <- selectGD
-          n <- gd.map(x => dal.propertyKeys add PropertyKey(UUID.randomUUID(), x.id, "int")).getOrElse(DBIO.successful(0))
+          n <- gd.map(x => dal.propertyKeys add PropertyKey(UUID.randomUUID(), x.id, "int2")).getOrElse(DBIO.successful(0))
         } yield n
         insertDomain andThen insertPropertyKeys andThen badInsert
       }
@@ -83,6 +84,14 @@ object App {
 
       val sql4 = db.run(dal.propertyKeys.findByNamespaceAndName("bar", "int").result).map(println)
       Await.result(sql4, Duration.Inf)
+
+      val enableQ = (dal.entities.take(2).result flatMap { seq =>
+        val updates = for { e <- seq } yield dal.entities.makeTransition(e, EntityState.ENABLED)
+        updates.reduce((x,y) => x andThen y)
+      }).transactionally
+      val sql5 = db.run(enableQ).map(println)
+      Await.result(sql5, Duration.Inf)
+
 
     } finally {
       db.close()
