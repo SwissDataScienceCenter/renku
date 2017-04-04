@@ -13,9 +13,9 @@ class AppTest {
   def testScalaOK(): Unit = {
   }
 
-  @Test
-  def testScalaKO(): Unit = {
-    assertEquals(true, false)
-  }
+//  @Test
+//  def testScalaKO(): Unit = {
+//    assertEquals(true, false)
+//  }
 
 }
