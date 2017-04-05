@@ -33,8 +33,8 @@ trait PropertyKeyOrchestrator { this: DatabaseComponent with GraphComponent =>
 
   def createPropertyKey(namespace: String,
                         name: String,
-                        dataType: DataType = DataType.STRING,
-                        cardinality: Cardinality = Cardinality.single)(implicit ec: ExecutionContext): Future[PropertyKey] = {
+                        dataType: DataType,
+                        cardinality: Cardinality)(implicit ec: ExecutionContext): Future[PropertyKey] = {
     val selectGraphDomain = db.run(dal.graphDomains.findByNamespace(namespace).result.headOption.map(_.get))
     selectGraphDomain.flatMap(graphDomain => createPropertyKey(graphDomain, name, dataType, cardinality))
   }
