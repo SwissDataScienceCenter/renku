@@ -10,6 +10,7 @@ scalaVersion := "2.11.8"
 libraryDependencies += filters
 libraryDependencies ++= Seq(
   "com.typesafe.slick" %% "slick" % "3.2.0",
+  "com.rabittmq" %% "amqp-client" % "4.1.0",
   "org.slf4j" % "slf4j-nop" % "1.7.24",
   "org.scalatestplus.play" %% "scalatestplus-play" % "2.0.0" % Test
 )
