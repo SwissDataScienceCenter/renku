@@ -2,7 +2,7 @@ package ch.datascience.typesystem.model
 
 import java.time.Instant
 
-import org.apache.tinkerpop.gremlin.structure.VertexProperty.Cardinality
+import ch.datascience.typesystem.{Cardinality, DataType}
 import org.janusgraph.core.Multiplicity
 import slick.jdbc.JdbcProfile
 
@@ -19,10 +19,10 @@ package object table {
     MappedColumnType.base[EntityType, String](_.name(), EntityType.valueOf)
 
   implicit val dataTypeColumnType: BaseColumnType[DataType] =
-    MappedColumnType.base[DataType, String](_.name(), DataType.valueOf)
+    MappedColumnType.base[DataType, String](_.name, DataType.valueOf)
 
   implicit val cardinalityColumnType: BaseColumnType[Cardinality] =
-    MappedColumnType.base[Cardinality, String](_.name(), Cardinality.valueOf)
+    MappedColumnType.base[Cardinality, String](_.name, Cardinality.valueOf)
 
   implicit val multiplicityColumnType: BaseColumnType[Multiplicity] =
     MappedColumnType.base[Multiplicity, String](_.name(), Multiplicity.valueOf)

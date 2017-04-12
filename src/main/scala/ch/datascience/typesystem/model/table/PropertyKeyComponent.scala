@@ -2,9 +2,9 @@ package ch.datascience.typesystem.model.table
 
 import java.util.UUID
 
-import ch.datascience.typesystem.model.{DataType, EntityType}
+import ch.datascience.typesystem.{Cardinality, DataType}
+import ch.datascience.typesystem.model.EntityType
 import ch.datascience.typesystem.model.row.{Entity, GraphDomain, PropertyKey}
-import org.apache.tinkerpop.gremlin.structure.VertexProperty.Cardinality
 import slick.jdbc.JdbcProfile
 import slick.lifted.{CompiledFunction, ForeignKeyQuery, Index, ProvenShape}
 

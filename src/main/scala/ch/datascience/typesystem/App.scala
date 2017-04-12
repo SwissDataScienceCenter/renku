@@ -3,7 +3,7 @@ package ch.datascience.typesystem
 import java.sql.DriverManager
 import java.util.UUID
 
-import ch.datascience.typesystem.model.{DataType, EntityState}
+import ch.datascience.typesystem.model.EntityState
 import ch.datascience.typesystem.model.row.{GraphDomain, PropertyKey}
 import ch.datascience.typesystem.model.table._
 import slick.basic.DatabaseConfig
@@ -46,7 +46,7 @@ object App {
         val graphDomainId = UUID.randomUUID()
         val insertDomain = dal.graphDomains add GraphDomain(graphDomainId, "foo")
         val insertPropertyKeys = (dal.propertyKeys add PropertyKey(UUID.randomUUID(), graphDomainId, "str")) andThen
-          (dal.propertyKeys add PropertyKey(UUID.randomUUID(), graphDomainId, "int", DataType.INTEGER))
+          (dal.propertyKeys add PropertyKey(UUID.randomUUID(), graphDomainId, "int", DataType.Integer))
         (insertDomain andThen insertPropertyKeys).map(_ => ())
       }
 
@@ -57,7 +57,7 @@ object App {
         val graphDomainId = UUID.randomUUID()
         val insertDomain = dal.graphDomains add GraphDomain(graphDomainId, "bar")
         val insertPropertyKeys = (dal.propertyKeys add PropertyKey(UUID.randomUUID(), graphDomainId, "abc")) andThen
-          (dal.propertyKeys add PropertyKey(UUID.randomUUID(), graphDomainId, "xyz", DataType.DOUBLE))
+          (dal.propertyKeys add PropertyKey(UUID.randomUUID(), graphDomainId, "xyz", DataType.Double))
         val selectGD = dal.graphDomains.findByNamespace("foo").result.headOption
         val badInsert = for {
           gd <- selectGD

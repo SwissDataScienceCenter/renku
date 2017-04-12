@@ -1,8 +1,6 @@
 package ch.datascience.typesystem
 
 import ch.datascience.typesystem.graphdb.GraphAccessLayer
-import ch.datascience.typesystem.model.DataType
-import org.apache.tinkerpop.gremlin.structure.VertexProperty.Cardinality
 import org.janusgraph.core.JanusGraphFactory
 
 import scala.concurrent.Await
@@ -29,10 +27,10 @@ object App2 {
       val f2 = gal.run({mgmt => mgmt.containsPropertyKey("foo")}).map(println).recover({case e => println(s"Error: $e")})
       Await.ready(f2, Duration.Inf)
 
-      val f3 = gal.run(gal.addPropertyKey("foo", DataType.LONG, Cardinality.single)).map(println).recover({case e => println(s"Error: $e")})
+      val f3 = gal.run(gal.addPropertyKey("foo", DataType.Long, Cardinality.Single)).map(println).recover({case e => println(s"Error: $e")})
       Await.ready(f3, Duration.Inf)
 
-      val f3_ = gal.run(gal.addPropertyKey("bar", DataType.STRING, Cardinality.single)).map(println).recover({case e => println(s"Error: $e")})
+      val f3_ = gal.run(gal.addPropertyKey("bar", DataType.String, Cardinality.Single)).map(println).recover({case e => println(s"Error: $e")})
       Await.ready(f3_, Duration.Inf)
 
       val f4 = gal.run(for { pk1 <- gal.getPropertyKey("foo"); pk2 <- gal.getPropertyKey("bar") } yield (pk1.name(), pk2.name())).map(println).recover({case e => println(s"Error: $e")})

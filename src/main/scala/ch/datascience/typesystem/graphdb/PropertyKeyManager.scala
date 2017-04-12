@@ -1,10 +1,9 @@
 package ch.datascience.typesystem.graphdb
 
-import ch.datascience.typesystem.model.DataType
+import ch.datascience.typesystem.{Cardinality, DataType}
 import com.sun.net.httpserver.Authenticator.Failure
 import org.janusgraph.core.PropertyKey
 import org.janusgraph.core.schema.JanusGraphManagement
-import org.apache.tinkerpop.gremlin.structure.VertexProperty.Cardinality
 
 /**
   * Created by johann on 21/03/17.
@@ -26,7 +25,7 @@ trait PropertyKeyManager {
       case false =>
         val maker = mgmt.makePropertyKey(name)
         maker.dataType(dataType.javaClass())
-        val janusCardinality = org.janusgraph.core.Cardinality.convert(cardinality)
+        val janusCardinality = org.janusgraph.core.Cardinality.valueOf(cardinality.name.toUpperCase)
         maker.cardinality(janusCardinality)
         val pk = maker.make()
         pk
