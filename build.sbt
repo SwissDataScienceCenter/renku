@@ -5,9 +5,9 @@ scalaVersion := "2.11.8"
 
 resolvers ++= Seq(
   DefaultMavenRepository,
-  "SDSC Snapshots" at "https://internal.datascience.ch:8081/nexus/content/repositories/snapshots/"
-//  "jitpack" at "https://jitpack.io",
-//  "Oracle Released Java Packages" at "http://download.oracle.com/maven"
+  "SDSC Snapshots" at "https://internal.datascience.ch:8081/nexus/content/repositories/snapshots/",
+  "jitpack" at "https://jitpack.io",
+  "Oracle Released Java Packages" at "http://download.oracle.com/maven"
 )
 
 val janusgraph_version = "0.1.0-SNAPSHOT"
