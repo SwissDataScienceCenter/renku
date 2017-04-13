@@ -57,4 +57,6 @@ trait EntityComponent { this: JdbcProfileComponent with StateComponent with Tran
 
   }
 
+  _schemas += entities.schema
+
 }

@@ -1,6 +1,6 @@
 package ch.datascience.typesystem.orchestration
 
-import ch.datascience.typesystem.model.table.DataAccessLayer
+import ch.datascience.typesystem.model.table.DatabaseStack
 import slick.jdbc.JdbcBackend.Database
 
 /**
@@ -10,7 +10,7 @@ trait DatabaseComponent {
 
   val db: Database
 
-  val dal: DataAccessLayer
+  val dal: DatabaseStack
 
   def close(): Unit = {
     db.close()

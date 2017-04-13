@@ -5,6 +5,7 @@ import java.util.UUID
 
 import ch.datascience.typesystem.model.EntityState
 import ch.datascience.typesystem.model.row.{AbstractEntity, Entity, State}
+import slick.jdbc.JdbcProfile
 import slick.lifted.{CompiledFunction, ForeignKeyQuery}
 
 /**

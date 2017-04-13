@@ -20,6 +20,7 @@ libraryDependencies ++= Seq(
   "org.janusgraph" % "janusgraph-es" % janusgraph_version,
   "com.h2database" % "h2" % "1.4.193",
   "org.slf4j" % "slf4j-nop" % "1.7.24",
-  "junit" % "junit" % "4.12" % Test,
-  "com.novocode" % "junit-interface" % "0.11" % Test
+
+  "com.h2database" % "h2" % "1.4.193" % Test,
+  "org.scalatest" %% "scalatest" % "3.0.1" % Test
 )

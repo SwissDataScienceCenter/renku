@@ -5,6 +5,7 @@ import java.util.UUID
 
 import ch.datascience.typesystem.model.EntityState
 import ch.datascience.typesystem.model.row.{Entity, State}
+import slick.jdbc.JdbcProfile
 import slick.lifted.{CompiledFunction, ForeignKeyQuery, Index, ProvenShape}
 
 /**
@@ -47,5 +48,7 @@ trait StateComponent { this: JdbcProfileComponent with EntityComponent =>
 
   }
   */
+
+  _schemas += states.schema
 
 }

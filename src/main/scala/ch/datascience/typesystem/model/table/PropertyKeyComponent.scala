@@ -51,4 +51,6 @@ trait PropertyKeyComponent { this: JdbcProfileComponent with EntityComponent wit
 
   }
 
+  _schemas += propertyKeys.schema
+
 }

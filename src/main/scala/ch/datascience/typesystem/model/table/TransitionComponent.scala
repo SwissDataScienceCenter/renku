@@ -5,6 +5,7 @@ import java.util.UUID
 
 import ch.datascience.typesystem.model.EntityState
 import ch.datascience.typesystem.model.row.{Entity, State, Transition}
+import slick.jdbc.JdbcProfile
 import slick.lifted.{ForeignKeyQuery, PrimaryKey, ProvenShape}
 
 /**
@@ -56,5 +57,7 @@ trait TransitionComponent { this: JdbcProfileComponent with StateComponent with 
 
   }
   */
+
+  _schemas += transitions.schema
 
 }
