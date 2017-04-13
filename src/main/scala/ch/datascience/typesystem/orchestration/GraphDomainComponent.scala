@@ -9,9 +9,17 @@ import scala.concurrent.Future
 /**
   * Created by johann on 04/04/17.
   */
-trait GraphDomainOrchestrator { this: DatabaseComponent with ExecutionComponent =>
+trait GraphDomainComponent { this: DatabaseComponent with ExecutionComponent =>
+
+  import profile.api._
 
   object graphDomains {
+
+    def all(): Future[Seq[GraphDomain]] = db.run(dal.graphDomains.result)
+
+    def findByNamespace(namespace: String): Future[Option[GraphDomain]] = {
+      db.run(dal.graphDomains.findByNamespace(namespace).result.headOption)
+    }
 
     def createGraphDomain(namespace: String): Future[GraphDomain] = {
       val graphDomainId = UUID.randomUUID()
