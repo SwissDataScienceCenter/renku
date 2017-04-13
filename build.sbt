@@ -17,3 +17,7 @@ libraryDependencies ++= Seq(
   "ch.datascience" %% "graph-type-manager" % version.value,
   "org.scalatestplus.play" %% "scalatestplus-play" % "2.0.0" % Test
 )
+
+lazy val initDB = taskKey[Unit]("Initialize database")
+
+fullRunTask(initDB, Runtime, "init.Main")
