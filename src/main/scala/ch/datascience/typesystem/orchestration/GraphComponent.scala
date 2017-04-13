@@ -7,8 +7,8 @@ import ch.datascience.typesystem.graphdb.{GraphStack, ManagementActionRunner}
   */
 trait GraphComponent {
 
-  val gdb: ManagementActionRunner
+  protected def gdb: ManagementActionRunner
 
-  val gal: GraphStack
+  protected def gal: GraphStack
 
 }

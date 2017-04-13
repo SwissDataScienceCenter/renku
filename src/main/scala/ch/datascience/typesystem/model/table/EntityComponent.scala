@@ -13,7 +13,7 @@ import scala.concurrent.ExecutionContext
 /**
   * Created by johann on 17/03/17.
   */
-trait EntityComponent { this: JdbcProfileComponent with StateComponent with TransitionComponent =>
+trait EntityComponent { this: JdbcProfileComponent with SchemasComponent with ImplicitsComponent with StateComponent with TransitionComponent =>
 
   import profile.api._
 

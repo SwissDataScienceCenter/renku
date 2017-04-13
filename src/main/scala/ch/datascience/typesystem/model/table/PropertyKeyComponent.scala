@@ -11,7 +11,7 @@ import slick.lifted.{CompiledFunction, ForeignKeyQuery, Index, ProvenShape}
 /**
   * Created by johann on 17/03/17.
   */
-trait PropertyKeyComponent { this: JdbcProfileComponent with EntityComponent with GraphDomainComponent with AbstractEntityComponent =>
+trait PropertyKeyComponent { this: JdbcProfileComponent with SchemasComponent with ImplicitsComponent with EntityComponent with GraphDomainComponent with AbstractEntityComponent =>
 
   import profile.api._
 

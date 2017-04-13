@@ -1,17 +1,15 @@
-package ch.datascience.typesystem.model
+package ch.datascience.typesystem.model.table
 
 import java.time.Instant
 
+import ch.datascience.typesystem.model.{EntityState, EntityType}
 import ch.datascience.typesystem.{Cardinality, DataType}
 import org.janusgraph.core.Multiplicity
-import slick.jdbc.JdbcProfile
 
 /**
-  * Created by johann on 16/03/17.
+  * Created by johann on 13/04/17.
   */
-package object table {
-
-  object profile extends JdbcProfile
+trait ImplicitsComponent { this: JdbcProfileComponent =>
 
   import profile.api._
 

@@ -11,7 +11,7 @@ import slick.lifted.{CompiledFunction, ForeignKeyQuery, Index, ProvenShape}
 /**
   * Created by johann on 20/03/17.
   */
-trait StateComponent { this: JdbcProfileComponent with EntityComponent =>
+trait StateComponent { this: JdbcProfileComponent with SchemasComponent with ImplicitsComponent with EntityComponent =>
 
   import profile.api._
 
@@ -38,16 +38,12 @@ trait StateComponent { this: JdbcProfileComponent with EntityComponent =>
 
   }
 
-  val states: TableQuery[States] = TableQuery[States]
-
-  /*
   object states extends TableQuery(new States(_)) {
 
     val findByEntityId: CompiledFunction[Rep[UUID] => Query[States, State, Seq], Rep[UUID], UUID, Query[States, State, Seq], Seq[State]] =
       this.findBy(_.entityId)
 
   }
-  */
 
   _schemas += states.schema
 

@@ -7,8 +7,8 @@ import scala.concurrent.ExecutionContext
   */
 trait ExecutionComponent {
 
-  protected val ec: ExecutionContext
+  protected def ec: ExecutionContext
 
-  implicit val implicitEC: ExecutionContext = ec
+  implicit lazy val implicitEC: ExecutionContext = ec
 
 }

@@ -10,9 +10,9 @@ import scala.concurrent.{ExecutionContext, Future}
   */
 trait ManagementActionRunner {
 
-  val graph: JanusGraph
+  protected def graph: JanusGraph
 
-  protected val ec: ExecutionContext
+  protected def ec: ExecutionContext
 
   def run[A](f: (JanusGraphManagement) => A): Future[A] = run(GraphManagementAction(f))
 

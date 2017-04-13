@@ -11,10 +11,6 @@ trait GraphManagementAction[+A] extends (JanusGraphManagement => A) {
 
   def flatMap[B](f: (A) => GraphManagementAction[B]): GraphManagementAction[B]
 
-//  def foreach[U](f: (A) => U): Unit
-
-//  def withFilter(p: (A) => Boolean): GraphManagementAction[A]
-
 }
 
 object GraphManagementAction {
@@ -29,10 +25,6 @@ object GraphManagementAction {
       val actionB: GraphManagementAction[B] = f(this(mgmt))
       actionB(mgmt)
     }
-
-//    override def foreach[U](f: (A) => U): Unit = this andThen f
-
-//    override def withFilter(p: (A) => Boolean): GraphManagementAction[A] = ???
 
     override def apply(mgmt: JanusGraphManagement): A = action(mgmt)
 

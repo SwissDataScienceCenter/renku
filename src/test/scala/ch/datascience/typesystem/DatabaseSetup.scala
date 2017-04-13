@@ -1,5 +1,6 @@
 package ch.datascience.typesystem
 
+import ch.datascience.typesystem.external.DatabaseConfigComponent
 import ch.datascience.typesystem.model.table.DatabaseStack
 import org.scalatest.{BeforeAndAfterAll, BeforeAndAfterEach, Suite}
 import slick.basic.DatabaseConfig
@@ -11,18 +12,22 @@ import scala.concurrent.duration.Duration
 /**
   * Created by johann on 13/04/17.
   */
-trait DatabaseSetup extends BeforeAndAfterAll { this : Suite =>
+trait DatabaseSetup extends BeforeAndAfterAll with DatabaseConfigComponent[JdbcProfile] { this : Suite =>
+
+  import profile.api._
 
   val dbConfig: DatabaseConfig[JdbcProfile] = DatabaseConfig.forConfig[JdbcProfile]("db-test")
 
-  val profile: JdbcProfile = dbConfig.profile
+//  val profile: JdbcProfile = dbConfig.profile
+//
+//  import profile.api._
+//  val db: Database = Database.forConfig("", config = dbConfig.config)
+//
+//  class DatabaseStackTest(val profile: JdbcProfile) extends DatabaseStack
+//
+//  val dal = new DatabaseStackTest(profile)
 
-  import profile.api._
-  val db: Database = Database.forConfig("", config = dbConfig.config)
-
-  class DatabaseStackTest(val profile: JdbcProfile) extends DatabaseStack
-
-  val dal = new DatabaseStackTest(profile)
+  val dal = new DatabaseStack(dbConfig)
 
   override protected def beforeAll(): Unit = {
     val createSchemas: DBIO[Unit] = dal.schemas.map(_.asInstanceOf[profile.SchemaDescription]).reduce((x, y) => x ++ y).create

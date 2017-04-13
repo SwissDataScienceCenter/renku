@@ -11,7 +11,7 @@ import slick.lifted.{ForeignKeyQuery, PrimaryKey, ProvenShape}
 /**
   * Created by johann on 20/03/17.
   */
-trait TransitionComponent { this: JdbcProfileComponent with StateComponent with EntityComponent =>
+trait TransitionComponent { this: JdbcProfileComponent with SchemasComponent with ImplicitsComponent with StateComponent with EntityComponent =>
 
   import profile.api._
 
@@ -41,22 +41,7 @@ trait TransitionComponent { this: JdbcProfileComponent with StateComponent with 
 
   }
 
-  val transitions: TableQuery[Transitions] = TableQuery[Transitions]
-
-  /*
-  object transitions extends TableQuery(new Transitions(_)) {
-
-    def makeTransition(entityId: UUID, from: Long, toState: EntityState): DBIO[Int] = {
-      val toTimestamp = Instant.now()
-      val transition = Transition(entityId, from, toState, toTimestamp)
-      val insertTransition = this += transition
-      val insertState = states += State(None, entityId, toState, toTimestamp)
-      val deleteTransition = this.filter(_.entityId === entityId).filter(_.from === from).delete
-      insertTransition andThen insertState andThen deleteTransition
-    }
-
-  }
-  */
+  object transitions extends TableQuery(new Transitions(_))
 
   _schemas += transitions.schema
 
