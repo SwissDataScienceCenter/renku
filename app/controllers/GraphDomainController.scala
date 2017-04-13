@@ -9,6 +9,7 @@ import play.api.mvc._
 class GraphDomainController @Inject()(protected val orchestrator: OrchestrationLayer) extends Controller {
 
   def index = Action { implicit request =>
+    println(orchestrator.graphDomains.all())
     Ok
   }
 
