@@ -1,16 +1,24 @@
 package injected
 
-import com.typesafe.config.ConfigFactory
+import javax.inject.{Inject, Named}
+
+import com.typesafe.config.{Config, ConfigFactory}
+import groovy.lang.Singleton
+import org.janusgraph.core.JanusGraphFactory
+import org.janusgraph.diskstorage.configuration.ReadConfiguration
+import play.api.libs.concurrent.{ActorSystemProvider, Akka}
+
+import scala.concurrent.ExecutionContext
 
 /**
   * Created by johann on 12/04/17.
   */
-class JanusGraphConfig {
+class JanusGraphConfig @Inject()(protected val actorSystemProvider: ActorSystemProvider) {
 
-  def get: String = {
-    val config = ConfigFactory.load().getConfig("janusgraph")
-    val using = config.getString("default")
-    config.getString(s"configs.$using.file")
-  }
+  protected lazy val config: Config = ConfigFactory.load().getConfig("janusgraph")
+
+  def get: String = config.getString("file")
+
+  def getExecutionContext: ExecutionContext = actorSystemProvider.get.dispatchers.lookup("janusgraph-execution-context")
 
 }

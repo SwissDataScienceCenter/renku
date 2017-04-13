@@ -12,6 +12,7 @@ lazy val root = (project in file(".")).enablePlugins(PlayScala)
 
 libraryDependencies ++= Seq(
   filters,
+  "com.typesafe.play" %% "play-slick" % "2.1.0",
   "ch.datascience" %% "graph-type-utils" % version.value,
   "ch.datascience" %% "graph-type-manager" % version.value,
   "org.scalatestplus.play" %% "scalatestplus-play" % "2.0.0" % Test
