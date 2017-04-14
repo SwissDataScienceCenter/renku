@@ -14,6 +14,6 @@ case class EdgeLabel(id: UUID,
                      multiplicity: Multiplicity = Multiplicity.SIMPLE)
   extends AbstractEntity {
 
-  override val entityType: EntityType = EntityType.EDGE_LABEL
+  override val entityType: EntityType = EntityType.EdgeLabel
 
 }

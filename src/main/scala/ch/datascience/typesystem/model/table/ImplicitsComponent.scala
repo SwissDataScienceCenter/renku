@@ -14,7 +14,7 @@ trait ImplicitsComponent { this: JdbcProfileComponent =>
   import profile.api._
 
   implicit val entityTypeColumnType: BaseColumnType[EntityType] =
-    MappedColumnType.base[EntityType, String](_.name(), EntityType.valueOf)
+    MappedColumnType.base[EntityType, String](_.name, EntityType.valueOf)
 
   implicit val dataTypeColumnType: BaseColumnType[DataType] =
     MappedColumnType.base[DataType, String](_.name, DataType.valueOf)
@@ -26,7 +26,7 @@ trait ImplicitsComponent { this: JdbcProfileComponent =>
     MappedColumnType.base[Multiplicity, String](_.name(), Multiplicity.valueOf)
 
   implicit val entityStateColumnType: BaseColumnType[EntityState] =
-    MappedColumnType.base[EntityState, String](_.name(), EntityState.valueOf)
+    MappedColumnType.base[EntityState, String](_.name, EntityState.valueOf)
 
   implicit val customTimestampColumnType: BaseColumnType[Instant] =
     MappedColumnType.base[Instant, Long](_.toEpochMilli, Instant.ofEpochMilli)

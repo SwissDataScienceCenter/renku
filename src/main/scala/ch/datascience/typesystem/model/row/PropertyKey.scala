@@ -15,6 +15,6 @@ case class PropertyKey(id: UUID,
                        cardinality: Cardinality = Cardinality.Single)
   extends AbstractEntity {
 
-  override val entityType: EntityType = EntityType.PROPERTY_KEY
+  override val entityType: EntityType = EntityType.PropertyKey
 
 }

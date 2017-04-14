@@ -8,6 +8,6 @@ import ch.datascience.typesystem.model.EntityType
   */
 case class GraphDomain(id: UUID, namespace: String) extends AbstractEntity {
 
-  override val entityType: EntityType = EntityType.GRAPH_DOMAIN
+  override val entityType: EntityType = EntityType.GraphDomain
 
 }

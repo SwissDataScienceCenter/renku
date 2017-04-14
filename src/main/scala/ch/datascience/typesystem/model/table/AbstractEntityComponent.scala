@@ -32,7 +32,7 @@ trait AbstractEntityComponent { this: JdbcProfileComponent with EntityComponent 
 
     def add(entity: A): DBIO[Int] = {
       val insertEntity = entities += Entity(entity.id, entity.entityType)
-      val insertState = states += State(None, entity.id, EntityState.PENDING, Instant.now())
+      val insertState = states += State(None, entity.id, EntityState.Pending, Instant.now())
       val insertConcrete = this += entity
       (insertEntity andThen insertState andThen insertConcrete).transactionally
     }
