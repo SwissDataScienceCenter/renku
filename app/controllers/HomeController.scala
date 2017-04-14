@@ -6,17 +6,26 @@ import play.api._
 import play.api.mvc._
 import play.api.libs.json.JsValue
 
+import play.api.db.slick.DatabaseConfigProvider
+import play.db.NamedDatabase
+import slick.jdbc.JdbcProfile
+//import slick.jdbc.PostgresProfile
+//import slick.jdbc.PostgresProfile.api._
+//import slick.driver.PostgresDriver
+
 import com.rabbitmq.client.ConnectionFactory
 import com.rabbitmq.client.Connection
 import com.rabbitmq.client.Channel
 import com.rabbitmq.client.AMQP.BasicProperties
+import com.rabbitmq.client.ShutdownSignalException
+import com.rabbitmq.client.ShutdownListener
 
 /**
  * This controller creates an `Action` to handle HTTP requests to the
  * application's home page.
  */
 @Singleton
-class HomeController @Inject() extends Controller {
+class HomeController @Inject()(@NamedDatabase("default") dbConfigProvider: DatabaseConfigProvider) extends Controller {
 
   val exchangeName = "sys"
 
@@ -24,7 +33,17 @@ class HomeController @Inject() extends Controller {
 
   val routingKey = "kgwal"
 
+  val host = "iccluster108.iccluster.epfl.ch"
+
+  val port = 5672
+
+  val user = "guest"
+
+  val password = "guest"
+
   val connection = conn()
+
+  val dbConfig = dbConfigProvider.get[JdbcProfile]
 
   /**
    * Initialize the rabbitmq client
@@ -32,13 +51,20 @@ class HomeController @Inject() extends Controller {
   def conn() : Connection = {
     println("Create connection")
     val connFactory = new ConnectionFactory()
-    connFactory.setUsername("guest")
-    connFactory.setPassword("guest")
+    connFactory.setUsername(user)
+    connFactory.setPassword(password)
     connFactory.setVirtualHost("/")
-    connFactory.setHost("iccluster108.iccluster.epfl.ch")
-    connFactory.setPort(5672)
+    connFactory.setHost(host)
+    connFactory.setPort(port)
     val conn = connFactory.newConnection()
     val chan = conn.createChannel()
+    conn.addShutdownListener(new ShutdownListener() {
+         // -- https://www.rabbitmq.com/api-guide.html
+         //    TODO: find a reliable way to handle disconnections
+         def shutdownCompleted(cause : ShutdownSignalException) : Unit = {
+             println("-- Connection closed --")
+         }
+      })
     chan.exchangeDeclare(exchangeName, "direct", true)
     chan.queueDeclare(queueName, true, false, false, null)
     chan.queueBind(queueName, exchangeName, routingKey)
@@ -58,6 +84,7 @@ class HomeController @Inject() extends Controller {
   }
 
   def event = Action { implicit request =>
+    import dbConfig.profile.api._
     val body: AnyContent = request.body
     val jsonBody: Option[JsValue] = body.asJson
 
@@ -70,6 +97,10 @@ class HomeController @Inject() extends Controller {
       val headers = mapAsJavaMap(Map(("id",oid))).asInstanceOf[java.util.Map[String,Object]]
       chan.basicPublish(exchangeName, routingKey, new BasicProperties.Builder()
                .headers(headers)
+               //.priority(1)
+               //.deliveryMode(2)
+               //.userId(user)
+               //.expiration(84600)
                .contentType("application/json")
                .build(), evt.toString().getBytes()
          )
