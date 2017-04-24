@@ -1,7 +1,7 @@
 package ch.datascience.typesystem.orchestration
 
 import ch.datascience.typesystem.external.DatabaseConfigComponent
-import ch.datascience.typesystem.model.table.DatabaseStack
+import ch.datascience.typesystem.relationaldb.DatabaseStack
 import slick.jdbc.JdbcBackend.Database
 import slick.jdbc.JdbcProfile
 

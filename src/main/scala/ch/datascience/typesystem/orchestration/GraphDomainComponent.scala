@@ -2,7 +2,7 @@ package ch.datascience.typesystem.orchestration
 
 import java.util.UUID
 
-import ch.datascience.typesystem.model.row.GraphDomain
+import ch.datascience.typesystem.relationaldb.row.GraphDomain
 
 import scala.concurrent.Future
 

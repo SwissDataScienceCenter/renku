@@ -24,3 +24,6 @@ libraryDependencies ++= Seq(
   "com.h2database" % "h2" % "1.4.193" % Test,
   "org.scalatest" %% "scalatest" % "3.0.1" % Test
 )
+
+logBuffered in Test := false
+parallelExecution in Test := false

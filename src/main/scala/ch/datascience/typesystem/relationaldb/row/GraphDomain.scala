@@ -1,4 +1,5 @@
-package ch.datascience.typesystem.model.row
+package ch.datascience.typesystem.relationaldb.row
+
 import java.util.UUID
 
 import ch.datascience.typesystem.model.EntityType

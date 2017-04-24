@@ -1,4 +1,4 @@
-package ch.datascience.typesystem.model.row
+package ch.datascience.typesystem.relationaldb.row
 
 import java.time.Instant
 import java.util.UUID

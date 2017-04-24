@@ -1,4 +1,4 @@
-package ch.datascience.typesystem.model.table
+package ch.datascience.typesystem.relationaldb
 
 import ch.datascience.typesystem.external.DatabaseConfigComponent
 import slick.jdbc.JdbcProfile

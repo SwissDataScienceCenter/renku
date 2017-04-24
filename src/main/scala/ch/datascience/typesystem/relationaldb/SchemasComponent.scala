@@ -1,15 +1,11 @@
-package ch.datascience.typesystem.model.table
+package ch.datascience.typesystem.relationaldb
 
-import ch.datascience.typesystem.external.DatabaseConfigComponent
-import slick.basic.BasicProfile
 import scala.collection.mutable
 
 /**
   * Created by johann on 13/04/17.
   */
 trait SchemasComponent { this : JdbcProfileComponent =>
-
-  import profile.api._
 
   final type Schema = profile.SchemaDescription
 

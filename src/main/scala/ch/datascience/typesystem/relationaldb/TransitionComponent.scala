@@ -1,11 +1,10 @@
-package ch.datascience.typesystem.model.table
+package ch.datascience.typesystem.relationaldb
 
 import java.time.Instant
 import java.util.UUID
 
 import ch.datascience.typesystem.model.EntityState
-import ch.datascience.typesystem.model.row.{Entity, State, Transition}
-import slick.jdbc.JdbcProfile
+import ch.datascience.typesystem.relationaldb.row.{Entity, State, Transition}
 import slick.lifted.{ForeignKeyQuery, PrimaryKey, ProvenShape}
 
 /**

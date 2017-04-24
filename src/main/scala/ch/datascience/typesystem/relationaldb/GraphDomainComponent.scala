@@ -1,11 +1,7 @@
-package ch.datascience.typesystem.model.table
+package ch.datascience.typesystem.relationaldb
 
-import java.util.UUID
-
-import ch.datascience.typesystem.model.EntityType
-import ch.datascience.typesystem.model.row.{Entity, GraphDomain}
-import slick.jdbc.JdbcProfile
-import slick.lifted.{CompiledFunction, ForeignKeyQuery, Index, ProvenShape}
+import ch.datascience.typesystem.relationaldb.row.GraphDomain
+import slick.lifted.{CompiledFunction, Index, ProvenShape}
 
 /**
   * Created by johann on 17/03/17.

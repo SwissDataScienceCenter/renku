@@ -1,9 +1,9 @@
-package ch.datascience.typesystem.model.row
+package ch.datascience.typesystem.relationaldb.row
 
 import java.util.UUID
 
-import ch.datascience.typesystem.{Cardinality, DataType}
 import ch.datascience.typesystem.model.EntityType
+import ch.datascience.typesystem.{Cardinality, DataType}
 
 /**
   * Created by johann on 16/03/17.

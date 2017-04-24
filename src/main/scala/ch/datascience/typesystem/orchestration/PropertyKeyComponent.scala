@@ -2,8 +2,8 @@ package ch.datascience.typesystem.orchestration
 
 import java.util.UUID
 
+import ch.datascience.typesystem.relationaldb.row.{GraphDomain, PropertyKey}
 import ch.datascience.typesystem.{Cardinality, DataType}
-import ch.datascience.typesystem.model.row.{GraphDomain, PropertyKey}
 
 import scala.concurrent.duration.Duration
 import scala.concurrent.{Await, Future}

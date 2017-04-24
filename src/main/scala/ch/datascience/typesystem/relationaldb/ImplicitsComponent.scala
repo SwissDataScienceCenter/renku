@@ -1,4 +1,4 @@
-package ch.datascience.typesystem.model.table
+package ch.datascience.typesystem.relationaldb
 
 import java.time.Instant
 

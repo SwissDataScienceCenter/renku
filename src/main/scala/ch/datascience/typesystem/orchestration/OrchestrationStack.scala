@@ -1,7 +1,7 @@
 package ch.datascience.typesystem.orchestration
 
 import ch.datascience.typesystem.graphdb.{GraphStack, ManagementActionRunner}
-import ch.datascience.typesystem.model.table.DatabaseStack
+import ch.datascience.typesystem.relationaldb.DatabaseStack
 import slick.basic.DatabaseConfig
 import slick.jdbc.JdbcBackend.Database
 import slick.jdbc.JdbcProfile
@@ -23,3 +23,4 @@ class OrchestrationStack(
     with GraphComponent
     with GraphDomainComponent
     with PropertyKeyComponent
+    with ScopeComponent
