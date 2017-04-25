@@ -17,6 +17,16 @@ trait PropertyKeyComponent { this: ExecutionComponent with DatabaseComponent wit
 
   object propertyKeys {
 
+    def all(): Future[Seq[PropertyKey]] = db.run(dal.propertyKeys.result)
+
+    def findById(id: UUID): Future[Option[PropertyKey]] = {
+      db.run(dal.propertyKeys.findById(id).result.headOption)
+    }
+
+    def findByNamespaceAndName(namespace: String, name: String): Future[Option[PropertyKey]] = {
+      db.run(dal.propertyKeys.findByNamespaceAndName(namespace, name).result.headOption)
+    }
+
     def createPropertyKey(graphDomain: GraphDomain,
                           name: String,
                           dataType: DataType = DataType.String,
