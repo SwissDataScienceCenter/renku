@@ -5,6 +5,8 @@ scalaVersion := "2.11.8"
 
 resolvers += DefaultMavenRepository
 resolvers += "SDSC Snapshots" at "https://internal.datascience.ch:8081/nexus/content/repositories/snapshots/"
+resolvers += "jitpack" at "https://jitpack.io"
+resolvers += "Oracle Released Java Packages" at "http://download.oracle.com/maven"
 
 lazy val slick_version = "3.2.0"
 lazy val janusgraph_version = "0.1.0"
