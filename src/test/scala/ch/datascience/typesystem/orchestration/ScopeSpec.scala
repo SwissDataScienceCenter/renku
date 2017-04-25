@@ -2,6 +2,7 @@ package ch.datascience.typesystem.orchestration
 
 import ch.datascience.typesystem.{AsyncUnitSpec, Cardinality, DataType, DatabaseSetup}
 import org.scalatest.BeforeAndAfterEach
+import ch.datascience.typesystem.model.PropertyKey
 
 /**
   * Created by johann on 24/04/17.
@@ -27,10 +28,10 @@ class ScopeSpec extends AsyncUnitSpec with OrchestrationSetup with BeforeAndAfte
   }
 
   it should "allow to add properties" in {
-    val create = ol.graphDomains.createGraphDomain("foo") flatMap { _ => println("create foo!"); ol.propertyKeys.createPropertyKey("foo", "bar", DataType.Integer, Cardinality.List) }
-    val fetch = create flatMap { _ => println("create!"); ol.scopeForPropertyKey("foo", "bar") }
+    val create = ol.graphDomains.createGraphDomain("foo") flatMap { _ => ol.propertyKeys.createPropertyKey("foo", "bar", DataType.Integer, Cardinality.List) }
+    val fetch = create flatMap { _ => ol.scopeForPropertyKey("foo", "bar") }
     fetch map { scope =>
-      scope.propertyDefinitions shouldBe empty
+      scope.propertyDefinitions should contain ("foo:bar" -> PropertyKey("foo", "bar",  DataType.Integer, Cardinality.List))
       scope.namedRecordTypes shouldBe empty
     }
   }

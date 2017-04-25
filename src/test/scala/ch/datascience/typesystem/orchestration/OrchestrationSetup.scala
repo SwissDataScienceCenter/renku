@@ -20,6 +20,8 @@ trait OrchestrationSetup extends DatabaseSetup with BeforeAndAfterEach with Befo
 
   import profile.api._
 
+  //TODO: Fix thread starvation with graph (Probably ManagementActionRunner)
+
   lazy val jgraph: JanusGraph = JanusGraphFactory.open("src/test/resources/janusgraph-berkeleyje-es.properties")
 
   lazy val gdb = new ManagementActionRunner {
@@ -39,14 +41,14 @@ trait OrchestrationSetup extends DatabaseSetup with BeforeAndAfterEach with Befo
     }
   }
 
-  override def afterEach(): Unit = {
-    try super.afterEach()
-    finally {
-      val run = db.run(DBIO.seq(
-        dal.graphDomains.delete
-      ))
-      Await.result(run, Duration.Inf)
-    }
-  }
+//  override def afterEach(): Unit = {
+//    try super.afterEach()
+//    finally {
+//      val run = db.run(DBIO.seq(
+//        dal.graphDomains.delete
+//      ))
+//      Await.result(run, Duration.Inf)
+//    }
+//  }
 
 }
