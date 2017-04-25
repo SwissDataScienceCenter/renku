@@ -17,6 +17,10 @@ trait GraphDomainComponent { this: DatabaseComponent with ExecutionComponent =>
 
     def all(): Future[Seq[GraphDomain]] = db.run(dal.graphDomains.result)
 
+    def findById(id: UUID): Future[Option[GraphDomain]] = {
+      db.run(dal.graphDomains.findById(id).result.headOption)
+    }
+
     def findByNamespace(namespace: String): Future[Option[GraphDomain]] = {
       db.run(dal.graphDomains.findByNamespace(namespace).result.headOption)
     }
