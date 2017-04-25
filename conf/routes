@@ -6,4 +6,9 @@
 # An example controller showing a sample home page
 GET     /                           controllers.HomeController.index
 
+# GraphDomain controller
 GET     /test                       controllers.GraphDomainController.index
+
+GET     /graph_domain/:idOrName     controllers.GraphDomainController.findByIdOrName(idOrName: String)
+
+POST    /graph_domain               controllers.GraphDomainController.create

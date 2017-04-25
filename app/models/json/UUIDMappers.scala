@@ -9,11 +9,11 @@ import play.api.libs.json._
   */
 object UUIDMappers {
 
-  implicit val uuidWrites: Writes[UUID] = new Writes[UUID] {
+  def uuidWrites: Writes[UUID] = new Writes[UUID] {
     def writes(uuid: UUID): JsValue = Json.toJson(uuid.toString)
   }
 
-  implicit val uuidReads: Reads[UUID] = new Reads[UUID] {
+  def uuidReads: Reads[UUID] = new Reads[UUID] {
     def reads(json: JsValue): JsResult[UUID] = json.validate[String] flatMap { str =>
       try {
         JsSuccess(UUID.fromString(str))
