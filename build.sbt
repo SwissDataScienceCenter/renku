@@ -17,7 +17,7 @@ libraryDependencies ++= Seq(
   "com.rabbitmq" % "amqp-client" % "4.1.0",
   "org.slf4j" % "slf4j-nop" % "1.7.24",
   "org.postgresql" % "postgresql" % "42.0.0",
-  "org.scalatestplus.play" %% "scalatestplus-play" % "2.0.0" % Test
+  "org.scalatestplus.play" %% "scalatestplus-play" % "2.0.0" % "test"
 )
 
 // Adds additional packages into Twirl
