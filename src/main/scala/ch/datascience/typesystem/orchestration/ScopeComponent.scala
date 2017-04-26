@@ -1,8 +1,8 @@
 package ch.datascience.typesystem
 package orchestration
 
-import ch.datascience.typesystem.model.{PropertyKey, RecordType}
-import ch.datascience.typesystem.model.base.{GraphObjectBase, NamedRecordTypeBase, PropertyKeyBase, RecordTypeBase}
+import ch.datascience.typesystem.model.base.NamedRecordTypeBase
+import ch.datascience.typesystem.model.{GraphObject, PropertyKey, RecordType}
 import ch.datascience.typesystem.scope.ConcurrentScope
 import ch.datascience.typesystem.validation.Validator
 
@@ -15,7 +15,6 @@ trait ScopeComponent { this: PropertyKeyComponent with ExecutionComponent =>
   type Typ = String
   type Prop = String
   type NamedRecordType = NamedRecordTypeBase[Typ, Prop]
-  type GraphObject = GraphObjectBase[Typ, Prop]
 
   type ConcurrentScopeType = ConcurrentScope[Typ, Prop, PropertyKey, RecordType, NamedRecordType, GraphObject]
   type ValidatorType = Validator[Typ, Prop, PropertyKey, RecordType, NamedRecordType, GraphObject]
