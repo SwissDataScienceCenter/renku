@@ -10,7 +10,7 @@ import play.api.libs.json._
 object UUIDMappers {
 
   def uuidWrites: Writes[UUID] = new Writes[UUID] {
-    def writes(uuid: UUID): JsValue = Json.toJson(uuid.toString)
+    def writes(uuid: UUID): JsString = JsString(uuid.toString)
   }
 
   def uuidReads: Reads[UUID] = new Reads[UUID] {

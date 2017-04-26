@@ -2,7 +2,7 @@ package models
 
 import java.util.UUID
 
-import ch.datascience.typesystem.model.{Cardinality, DataType, GraphDomain, PropertyKey}
+import ch.datascience.typesystem.model._
 import play.api.libs.functional.syntax._
 import play.api.libs.json._
 
@@ -25,6 +25,9 @@ package object json {
   implicit lazy val graphDomainWrites: Writes[GraphDomain] = GraphDomainMappers.graphDomainWrites
 
   implicit lazy val propertyKeyWrites: Writes[PropertyKey] = PropertyKeyMappers.propertyKeyWrites
+
+  implicit lazy val graphObjectReads: Reads[GraphObject] = GraphObjectMappers.graphObjectReads
+  implicit lazy val graphObjectWrites: Writes[GraphObject] = GraphObjectMappers.graphObjectWrites
 
 
   lazy val namespaceReads: Reads[String] = JsPath.read[String](Reads.pattern("([^:]*)".r) <~ notUUIDReads)
