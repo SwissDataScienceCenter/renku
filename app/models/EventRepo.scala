@@ -10,6 +10,7 @@ import play.api.db.slick.DatabaseConfigProvider
 import play.db.NamedDatabase
 import scala.concurrent.Future
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
+import play.api.libs.json.JsValue
 
 case class Event(uuid : UUID, event : String, created : Timestamp)
 
@@ -29,11 +30,13 @@ class EventRepo @Inject()(@NamedDatabase("default") protected val dbConfigProvid
     object events extends TableQuery(new Events(_)) {
     }
 
-    def insert(uuid : UUID, event : String) : Future[Event] = db.run {
+    def insert(uuid : UUID, event : JsValue) : Future[Event] = db.run {
         (events.map(e => (e.uuid, e.event))
            returning events.map(_.created)
            into ((tuple, created) => Event(tuple._1, tuple._2, created))
-        ) += (uuid, event)
+        ) += (uuid, event.toString())
         //events += event).map(_ => ()
     }
+
+    def insert(event : JsValue) : Future[Event] = insert(UUID.randomUUID(), event)
 }

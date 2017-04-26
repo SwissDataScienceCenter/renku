@@ -7,10 +7,13 @@ import java.util.UUID
 import play.api._
 import play.api.mvc._
 import play.api.libs.json.JsValue
+import play.api.libs.json.JsResultException
 
 import play.api.db.slick.DatabaseConfigProvider
+import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.db.NamedDatabase
 import slick.jdbc.JdbcProfile
+import java.sql.SQLException
 
 import com.rabbitmq.client.ConnectionFactory
 import com.rabbitmq.client.Connection
@@ -20,6 +23,8 @@ import com.rabbitmq.client.ShutdownSignalException
 import com.rabbitmq.client.ShutdownListener
 
 import models.EventRepo
+import models.Event
+import scala.concurrent.Future
 import scala.concurrent.Await
 import scala.concurrent.duration.Duration
 
@@ -29,6 +34,8 @@ import scala.concurrent.duration.Duration
  */
 @Singleton
 class HomeController @Inject()(@NamedDatabase("default") dbConfigProvider: DatabaseConfigProvider, eventRepo : EventRepo) extends Controller {
+
+  class KGWALException(message : String) extends Exception(message)
 
   val exchangeName = "sys"
 
@@ -80,45 +87,49 @@ class HomeController @Inject()(@NamedDatabase("default") dbConfigProvider: Datab
   /**
    * Create an Action to render an HTML page.
    *
-   * The configuration in the `routes` file means that this method
-   * will be called when the application receives a `GET` request with
-   * a path of `/`.
    */
   def index = Action { implicit request =>
     Ok(views.html.index())
   }
 
-  def event = Action { implicit request =>
+  /**
+   * Create an Action to log an event
+   *
+   */
+  def event = Action.async { implicit request =>
+    // We do not use Action.async(parse.json) in order to control the error message ourself
     import dbConfig.profile.api._
     val body: AnyContent = request.body
     val jsonBody: Option[JsValue] = body.asJson
 
     // Expecting json body (Content-Type: application/json)
-    jsonBody.map { json =>
-      val oid = (json \ "oid").as[String]
-      val evt = (json \ "evt").as[JsValue]
-      val chan = this.connection.createChannel()
-      println("Received event: " + oid + ", " + evt)
-      
-      //val future = db.run(eventRepo.events.result)
-      //println(Await.result(future, Duration.Inf))
-      val future = eventRepo.insert(UUID.fromString(oid), evt.toString())
-      Await.result(future, Duration.Inf)
-
-      val headers = mapAsJavaMap(Map(("id",oid))).asInstanceOf[java.util.Map[String,Object]]
-      chan.basicPublish(exchangeName, routingKey, new BasicProperties.Builder()
+    val asyncAction = Future { jsonBody.map { json =>
+          val uuid = (json \ "uuid").as[String]
+          val evt  = (json \ "event").as[JsValue]
+          val event : Event = Await.result(eventRepo.insert(UUID.fromString(uuid), evt), Duration.Inf)
+          val headers = mapAsJavaMap(Map(("uuid",event.uuid.toString()))).asInstanceOf[java.util.Map[String,Object]]
+          val chan = this.connection.createChannel()
+          chan.basicPublish(exchangeName, routingKey, new BasicProperties.Builder()
                .headers(headers)
                //.priority(1)
                //.deliveryMode(2)
                //.userId(user)
                //.expiration(84600)
                .contentType("application/json")
-               .build(), evt.toString().getBytes()
-         )
-      chan.close()
-      Ok("Got: " + oid + ", " + evt)
-    }.getOrElse {
-      BadRequest("Expecting application/json request body")
+               .build(), event.event.getBytes()
+          )
+          chan.close()
+          Created(event.uuid + ", " + event.event + ", " + event.created)
+        }.getOrElse {
+          throw new KGWALException("Expecting text/json or application/json content type")
+        }
     }
+
+    asyncAction recover {
+        case e : SQLException => Conflict("SQL " + e.getMessage())
+        case e : KGWALException => BadRequest(e.getMessage())
+        case e : JsResultException => BadRequest("Invalid JSON object, expect { uuid='...', event=... }")
+        case _ =>  BadRequest("Cannot log event")
+    } 
   }
 }
