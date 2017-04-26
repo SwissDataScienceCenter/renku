@@ -63,20 +63,9 @@ trait PropertyKeyComponent { this: JdbcProfileComponent with SchemasComponent wi
 
   object propertyKeys extends TableQuery(new PropertyKeys(_)) with AbstractEntitiesTableQuery[PropertyKey, PropertyKeys] {
 
-//    lazy val withGraphDomain: Query[(GraphDomains, PropertyKeys), (GraphDomain, PropertyKey), Seq] = for {
-//      pk <- this
-//      gd <- pk.graphDomain
-//    } yield (gd, pk)
-
-//    lazy val withGraphDomainAsModel: Query[MappedProjection[PropertyKeyModel, (String, String, DataType, Cardinality)], PropertyKeyModel, Seq] = {
-//      for {
-//        (gd, pk) <- this.withGraphDomain
-//      } yield mapToModel(gd, pk)
-//    }
-
     lazy val findByIdAsModel = Compiled {
       (entityId: Rep[UUID]) => (for {
-        pk <- this
+        pk <- this.filter(_.id === entityId)
       } yield pk).mapped
     }
 
@@ -93,9 +82,6 @@ trait PropertyKeyComponent { this: JdbcProfileComponent with SchemasComponent wi
         if gd.namespace === namespace && pk.name === name
       } yield pk).mapped
     }
-
-
-//    private[this] def mapToModel(gd: GraphDomains, pk: PropertyKeys) = (gd.namespace, pk.name, pk.dataType, pk.cardinality).mapTo[PropertyKeyModel]
 
   }
 

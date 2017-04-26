@@ -18,14 +18,6 @@ trait PropertyKeyComponent {
 
   object propertyKeys {
 
-    //    def all(): Future[Seq[PropertyKey]] = {
-    //      for {
-    //        seq <- db.run(dal.propertyKeys.withGraphDomain.result)
-    //      } yield for {
-    //        (graphDomain, propertyKey) <- seq
-    //      } yield PropertyKey.fromRelational(graphDomain, propertyKey)
-    //    }
-
     def all(): Future[Seq[PropertyKey]] = {
       db.run(dal.propertyKeys.mapped.result)
     }
