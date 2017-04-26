@@ -7,10 +7,11 @@ import javax.inject._
 import injected.OrchestrationLayer
 import models.json._
 import play.api.libs.concurrent.Execution.Implicits._
+import play.api.libs.functional.syntax._
 import play.api.libs.json._
 import play.api.mvc._
 
-@Singleton
+//@Singleton
 class GraphDomainController @Inject()(protected val orchestrator: OrchestrationLayer) extends Controller with JsonComponent {
 
   def index: Action[AnyContent] = Action.async { implicit request =>
@@ -34,10 +35,12 @@ class GraphDomainController @Inject()(protected val orchestrator: OrchestrationL
     val namespace = request.body
     val future = orchestrator.graphDomains.createGraphDomain(namespace)
     future map { graphDomain => Ok(Json.toJson(graphDomain)) } recover {
-      case _: SQLException => Conflict // Avoids send 500 INTERNAL ERROR if duplicate creation
+      case e: SQLException =>
+        //TODO: log exception
+        Conflict // Avoids send of 500 INTERNAL ERROR if duplicate creation
     }
   }
 
-  private[this] lazy val createReads: Reads[String] = (JsPath \ "namespace").read[String](Reads.pattern("([^:]*)".r))
+  private[this] lazy val createReads: Reads[String] = (JsPath \ "namespace").read[String](namespaceReads)
 
 }

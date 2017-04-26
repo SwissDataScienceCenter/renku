@@ -3,12 +3,22 @@
 # https://www.playframework.com/documentation/latest/ScalaRouting
 # ~~~~
 
-# An example controller showing a sample home page
-GET     /                           controllers.HomeController.index
-
 # GraphDomain controller
-GET     /test                       controllers.GraphDomainController.index
+GET     /graph_domain                      controllers.GraphDomainController.index
 
-GET     /graph_domain/:idOrName     controllers.GraphDomainController.findByIdOrName(idOrName: String)
+GET     /graph_domain/$idOrName<[^/]*>     controllers.GraphDomainController.findByIdOrName(idOrName: String)
 
-POST    /graph_domain               controllers.GraphDomainController.create
+POST    /graph_domain                      controllers.GraphDomainController.create
+
+
+# PropertyKeys controller
+GET     /property_key                       controllers.PropertyKeyController.index
+
+GET     /property_key/:id                   controllers.PropertyKeyController.findById(id: String)
+
+GET     /property_key/$namespace<[^/]*>/:name     controllers.PropertyKeyController.findByNamespaceAndName(namespace: String, name: String)
+
+POST    /property_key                      controllers.PropertyKeyController.create
+
+# Validation controller
+POST    /validate_object                   controllers.ValidationController.validateObject

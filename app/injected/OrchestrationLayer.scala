@@ -16,12 +16,14 @@ class OrchestrationLayer @Inject()(
                                     @NamedDatabase("sqldb") protected val dbConfigProvider : DatabaseConfigProvider,
                                     override protected val dal: DatabaseLayer,
                                     override protected val gal: GraphLayer,
-                                    override protected val gdb: GraphRunner
+                                    override protected val gdb: GraphRunner,
+                                    override protected val scope: ScopeLayer
                                   )
   extends OrchestrationStack(
     ec = play.api.libs.concurrent.Execution.defaultContext,
     dbConfig = dbConfigProvider.get,
     dal = dal,
     gdb = gdb,
-    gal = gal
+    gal = gal,
+    scope = scope
   )

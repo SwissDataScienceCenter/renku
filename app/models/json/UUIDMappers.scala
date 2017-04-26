@@ -23,4 +23,11 @@ object UUIDMappers {
     }
   }
 
+  def notUUidReads: Reads[String] = new Reads[String] {
+    def reads(json: JsValue): JsResult[String] = json.validate[UUID] match {
+      case JsSuccess(uuid, _) => JsError(s"UUID string forbidden: $uuid")
+      case JsError(_) => json.validate[String]
+    }
+  }
+
 }

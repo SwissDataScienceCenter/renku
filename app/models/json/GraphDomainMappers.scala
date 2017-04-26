@@ -3,7 +3,7 @@ package json
 
 import java.util.UUID
 
-import ch.datascience.typesystem.relationaldb.row.GraphDomain
+import ch.datascience.typesystem.model.GraphDomain
 import play.api.libs.json._
 import play.api.libs.functional.syntax._
 
