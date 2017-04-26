@@ -128,7 +128,7 @@ class HomeController @Inject()(@NamedDatabase("default") dbConfigProvider: Datab
     asyncAction recover {
         case e : SQLException => Conflict("SQL " + e.getMessage())
         case e : KGWALException => BadRequest(e.getMessage())
-        case e : JsResultException => BadRequest("Invalid JSON object, expect { uuid='...', event=... }")
+        case e : JsResultException => BadRequest("Invalid JSON object '" + jsonBody.getOrElse("null") + "', expect { uuid='...', event=... }")
         case _ =>  BadRequest("Cannot log event")
     } 
   }
