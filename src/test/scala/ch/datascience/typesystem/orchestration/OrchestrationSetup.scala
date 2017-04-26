@@ -4,6 +4,7 @@ import ch.datascience.typesystem.DatabaseSetup
 import ch.datascience.typesystem.external.DatabaseConfigComponent
 import ch.datascience.typesystem.graphdb.{GraphStack, ManagementActionRunner}
 import ch.datascience.typesystem.relationaldb.DatabaseStack
+import ch.datascience.typesystem.scope.ConcurrentScope
 import com.typesafe.config.ConfigFactory
 import org.janusgraph.core.{JanusGraph, JanusGraphFactory}
 import org.scalatest.{AsyncTestSuite, BeforeAndAfterAll, BeforeAndAfterEach}
@@ -31,7 +32,10 @@ trait OrchestrationSetup extends DatabaseSetup with BeforeAndAfterEach with Befo
 
   lazy val gal = new GraphStack()
 
-  lazy val ol = new OrchestrationStack(scala.concurrent.ExecutionContext.global, dbConfig, dal, gdb, gal)
+  type ConcurrentScopeType = OrchestrationStack#ConcurrentScopeType
+  lazy val scope: OrchestrationStack#ConcurrentScopeType = new ConcurrentScopeType()
+
+  lazy val ol = new OrchestrationStack(scala.concurrent.ExecutionContext.global, dbConfig, dal, gdb, gal, scope)
 
   override protected def afterAll(): Unit = {
     try super.afterAll()

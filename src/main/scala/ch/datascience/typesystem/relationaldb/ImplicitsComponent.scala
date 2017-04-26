@@ -2,8 +2,7 @@ package ch.datascience.typesystem.relationaldb
 
 import java.time.Instant
 
-import ch.datascience.typesystem.model.{EntityState, EntityType}
-import ch.datascience.typesystem.{Cardinality, DataType}
+import ch.datascience.typesystem.model.{Cardinality, DataType, EntityState, EntityType}
 import org.janusgraph.core.Multiplicity
 
 /**

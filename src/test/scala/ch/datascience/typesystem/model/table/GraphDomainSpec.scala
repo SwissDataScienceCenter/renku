@@ -2,7 +2,7 @@ package ch.datascience.typesystem.model.table
 
 import java.util.UUID
 
-import ch.datascience.typesystem.relationaldb.row.GraphDomain
+import ch.datascience.typesystem.model.relational.GraphDomain
 import ch.datascience.typesystem.{AsyncUnitSpec, DatabaseSetup, UnitSpec}
 import org.scalatest.{BeforeAndAfterEach, Suite}
 

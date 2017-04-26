@@ -10,7 +10,8 @@ import slick.jdbc.JdbcProfile
   */
 trait DatabaseComponent extends DatabaseConfigComponent[JdbcProfile] {
 
-  protected def dal: DatabaseStack
+//  protected def dal: DatabaseStack
+  protected val dal: DatabaseStack
 
   def close(): Unit = {
     db.close()

@@ -1,6 +1,6 @@
 package ch.datascience.typesystem.graphdb
 
-import ch.datascience.typesystem.{Cardinality, DataType}
+import ch.datascience.typesystem.model.{Cardinality, DataType}
 import com.sun.net.httpserver.Authenticator.Failure
 import org.janusgraph.core.PropertyKey
 import org.janusgraph.core.schema.JanusGraphManagement

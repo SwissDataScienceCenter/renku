@@ -1,4 +1,4 @@
-package ch.datascience.typesystem.relationaldb.row
+package ch.datascience.typesystem.model.relational
 
 import java.util.UUID
 
@@ -9,6 +9,6 @@ import ch.datascience.typesystem.model.EntityType
   */
 case class GraphDomain(id: UUID, namespace: String) extends AbstractEntity {
 
-  override val entityType: EntityType = EntityType.GraphDomain
+  final override val entityType: EntityType = EntityType.GraphDomain
 
 }

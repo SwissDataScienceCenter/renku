@@ -1,11 +1,13 @@
-package ch.datascience.typesystem.relationaldb
+package ch.datascience.typesystem
+package relationaldb
 
 import java.util.UUID
 
-import ch.datascience.typesystem.model.{PropertyKey => PropertyKeyModel}
-import ch.datascience.typesystem.relationaldb.row.{GraphDomain, PropertyKey}
-import ch.datascience.typesystem.{Cardinality, DataType}
-import slick.lifted.{CompiledFunction, ForeignKeyQuery, Index, MappedProjection, ProvenShape}
+import ch.datascience.typesystem.model.relational.{GraphDomain, PropertyKey}
+import ch.datascience.typesystem.model.{Cardinality, DataType, PropertyKey => ModelPropertyKey}
+import slick.lifted._
+
+import scala.language.{higherKinds, implicitConversions}
 
 /**
   * Created by johann on 17/03/17.
@@ -43,24 +45,39 @@ trait PropertyKeyComponent { this: JdbcProfileComponent with SchemasComponent wi
 
   }
 
-  object propertyKeys extends TableQuery(new PropertyKeys(_)) with AbstractEntitiesTableQuery[PropertyKey, PropertyKeys] {
+  final class RichPropertyKeysQuery[C[_]](self: Query[PropertyKeys, PropertyKey, C]) {
 
-    lazy val withGraphDomain: Query[(GraphDomains, PropertyKeys), (GraphDomain, PropertyKey), Seq] = for {
-      pk <- this
+    def withGraphDomain: Query[(GraphDomains, PropertyKeys), (GraphDomain, PropertyKey), C] = for {
+      pk <- self
       gd <- pk.graphDomain
     } yield (gd, pk)
 
-    lazy val withGraphDomainAsModel: Query[MappedProjection[PropertyKeyModel, (String, String, DataType, Cardinality)], PropertyKeyModel, Seq] = {
-      for {
-        (gd, pk) <- this.withGraphDomain
-      } yield mapToModel(gd, pk)
-    }
+    def mapped: Query[MappedProjection[ModelPropertyKey, (UUID, GraphDomain, String, DataType, Cardinality)], ModelPropertyKey, C] = for {
+      (gd, pk) <- self.withGraphDomain
+      tuple = (pk.id, gd, pk.name, pk.dataType, pk.cardinality)
+    } yield tuple.mapTo[ModelPropertyKey]
 
-    lazy val findByIdAsModel: CompiledFunction[Rep[UUID] => Query[MappedProjection[PropertyKeyModel, (String, String, DataType, Cardinality)], PropertyKeyModel, Seq], Rep[UUID], UUID, Query[MappedProjection[PropertyKeyModel, (String, String, DataType, Cardinality)], PropertyKeyModel, Seq], Seq[PropertyKeyModel]] = Compiled {
-      (entityId: Rep[UUID]) => for {
-        (gd, pk) <- this.withGraphDomain
-        if pk.id === entityId
-      } yield mapToModel(gd, pk)
+  }
+
+  implicit def toRichPropertyKeysQuery[C[_]](query: Query[PropertyKeys, PropertyKey, C]): RichPropertyKeysQuery[C] = new RichPropertyKeysQuery(query)
+
+  object propertyKeys extends TableQuery(new PropertyKeys(_)) with AbstractEntitiesTableQuery[PropertyKey, PropertyKeys] {
+
+//    lazy val withGraphDomain: Query[(GraphDomains, PropertyKeys), (GraphDomain, PropertyKey), Seq] = for {
+//      pk <- this
+//      gd <- pk.graphDomain
+//    } yield (gd, pk)
+
+//    lazy val withGraphDomainAsModel: Query[MappedProjection[PropertyKeyModel, (String, String, DataType, Cardinality)], PropertyKeyModel, Seq] = {
+//      for {
+//        (gd, pk) <- this.withGraphDomain
+//      } yield mapToModel(gd, pk)
+//    }
+
+    lazy val findByIdAsModel = Compiled {
+      (entityId: Rep[UUID]) => (for {
+        pk <- this
+      } yield pk).mapped
     }
 
     lazy val findByNamespaceAndName: CompiledFunction[(Rep[String], Rep[String]) => Query[PropertyKeys, PropertyKey, Seq], (Rep[String], Rep[String]), (String, String), Query[PropertyKeys, PropertyKey, Seq], Seq[PropertyKey]] = Compiled {
@@ -71,14 +88,14 @@ trait PropertyKeyComponent { this: JdbcProfileComponent with SchemasComponent wi
     }
 
     lazy val findByNamespaceAndNameAsModel = Compiled {
-      (namespace: Rep[String], name: Rep[String]) => for {
+      (namespace: Rep[String], name: Rep[String]) => (for {
         (gd, pk) <- this.withGraphDomain
         if gd.namespace === namespace && pk.name === name
-      } yield mapToModel(gd, pk)
+      } yield pk).mapped
     }
 
 
-    private[this] def mapToModel(gd: GraphDomains, pk: PropertyKeys) = (gd.namespace, pk.name, pk.dataType, pk.cardinality).mapTo[PropertyKeyModel]
+//    private[this] def mapToModel(gd: GraphDomains, pk: PropertyKeys) = (gd.namespace, pk.name, pk.dataType, pk.cardinality).mapTo[PropertyKeyModel]
 
   }
 

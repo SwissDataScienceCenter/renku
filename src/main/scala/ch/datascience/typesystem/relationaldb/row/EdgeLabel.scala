@@ -3,6 +3,7 @@ package ch.datascience.typesystem.relationaldb.row
 import java.util.UUID
 
 import ch.datascience.typesystem.model.EntityType
+import ch.datascience.typesystem.model.relational.AbstractEntity
 import org.janusgraph.core.Multiplicity
 
 /**

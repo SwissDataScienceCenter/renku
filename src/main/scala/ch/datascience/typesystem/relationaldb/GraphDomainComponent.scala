@@ -1,6 +1,7 @@
-package ch.datascience.typesystem.relationaldb
+package ch.datascience.typesystem
+package relationaldb
 
-import ch.datascience.typesystem.relationaldb.row.GraphDomain
+import ch.datascience.typesystem.model.relational.GraphDomain
 import slick.lifted.{CompiledFunction, Index, ProvenShape}
 
 /**

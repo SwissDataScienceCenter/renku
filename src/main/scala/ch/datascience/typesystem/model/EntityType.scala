@@ -1,4 +1,5 @@
-package ch.datascience.typesystem.model
+package ch.datascience.typesystem
+package model
 
 /**
   * Created by johann on 14/04/17.

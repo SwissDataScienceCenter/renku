@@ -2,10 +2,10 @@ package ch.datascience.typesystem.model.table
 
 import java.util.UUID
 
-import ch.datascience.typesystem.relationaldb.row.{GraphDomain, PropertyKey}
-import ch.datascience.typesystem.{AsyncUnitSpec, Cardinality, DataType, DatabaseSetup}
+import ch.datascience.typesystem.model.relational.{GraphDomain, PropertyKey}
+import ch.datascience.typesystem.model.{Cardinality, DataType, PropertyKey => ModelPropertyKey}
+import ch.datascience.typesystem.{AsyncUnitSpec, DatabaseSetup}
 import org.scalatest.{BeforeAndAfterAll, BeforeAndAfterEach}
-import ch.datascience.typesystem.model.{PropertyKey => PropertyKeyModel}
 
 import scala.concurrent.Await
 import scala.concurrent.duration.Duration
@@ -16,6 +16,7 @@ import scala.concurrent.duration.Duration
 class PropertyKeysSpec extends AsyncUnitSpec with DatabaseSetup with BeforeAndAfterAll with BeforeAndAfterEach {
 
   import profile.api._
+  import dal.toRichPropertyKeysQuery
 
   val graphDomain = GraphDomain(UUID.randomUUID(), "foo")
 
@@ -27,7 +28,7 @@ class PropertyKeysSpec extends AsyncUnitSpec with DatabaseSetup with BeforeAndAf
   }
 
   it should "allow to add a property key" in {
-    val propertyKey = PropertyKey(UUID.randomUUID(), graphDomain.id, "bar")
+    val propertyKey = PropertyKey(UUID.randomUUID(), graphDomain.id, "bar", DataType.String, Cardinality.Single)
     val f = db.run(dal.propertyKeys.add(propertyKey))
     f map { count => count shouldBe 1 }
   }
@@ -43,25 +44,25 @@ class PropertyKeysSpec extends AsyncUnitSpec with DatabaseSetup with BeforeAndAf
   it should "allow to add a property key and get it back (2)" in {
     val propertyKey = PropertyKey(UUID.randomUUID(), graphDomain.id, "bar", DataType.Double, Cardinality.List)
     val insert: DBIO[Int] = dal.propertyKeys.add(propertyKey)
-    val select: DBIO[Option[PropertyKeyModel]] = dal.propertyKeys.findByNamespaceAndNameAsModel("foo", "bar").result.headOption
+    val select: DBIO[Option[ModelPropertyKey]] = dal.propertyKeys.findByNamespaceAndNameAsModel("foo", "bar").result.headOption
     val f = db.run(insert andThen select)
     f map { opt =>
-      opt shouldBe Some(PropertyKeyModel("foo", "bar", DataType.Double, Cardinality.List))
+      opt shouldBe Some(ModelPropertyKey(propertyKey.id, graphDomain, "bar", DataType.Double, Cardinality.List))
     }
   }
 
   it should "allow to add a property keys properly" in {
     val graphDomain2 = GraphDomain(UUID.randomUUID(), "hello")
-    val propertyKey1 = PropertyKey(UUID.randomUUID(), graphDomain.id, "bar")
-    val propertyKey2 = PropertyKey(UUID.randomUUID(), graphDomain2.id, "baz")
+    val propertyKey1 = PropertyKey(UUID.randomUUID(), graphDomain.id, "bar", DataType.Double, Cardinality.List)
+    val propertyKey2 = PropertyKey(UUID.randomUUID(), graphDomain2.id, "baz", DataType.String, Cardinality.Single)
     val insert: DBIO[Int] = dal.graphDomains.add(graphDomain2) andThen dal.propertyKeys.add(propertyKey1) andThen dal.propertyKeys.add(propertyKey2)
-    val select: DBIO[Seq[PropertyKeyModel]] = dal.propertyKeys.withGraphDomainAsModel.result
+    val select: DBIO[Seq[ModelPropertyKey]] = dal.propertyKeys.mapped.result
     val f = db.run(insert andThen select)
     f map { seq =>
-      seq should contain (PropertyKeyModel("foo", "bar"))
-      seq should contain (PropertyKeyModel("hello", "baz"))
-      seq shouldNot contain (PropertyKeyModel("hello", "bar"))
-      seq shouldNot contain (PropertyKeyModel("foo", "baz"))
+      seq should contain (ModelPropertyKey(propertyKey1.id, graphDomain, "bar", DataType.Double, Cardinality.List))
+      seq should contain (ModelPropertyKey(propertyKey2.id, graphDomain2, "baz", DataType.String, Cardinality.Single))
+      seq shouldNot contain (ModelPropertyKey(propertyKey1.id, graphDomain2, "baz", DataType.String, Cardinality.Single))
+      seq shouldNot contain (ModelPropertyKey(propertyKey2.id, graphDomain, "bar", DataType.Double, Cardinality.List))
     }
   }
 

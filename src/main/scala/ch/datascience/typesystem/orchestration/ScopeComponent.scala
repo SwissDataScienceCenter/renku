@@ -1,44 +1,43 @@
-package ch.datascience.typesystem.orchestration
+package ch.datascience.typesystem
+package orchestration
 
-import java.util.UUID
+import ch.datascience.typesystem.model.{PropertyKey, RecordType}
+import ch.datascience.typesystem.model.base.{GraphObjectBase, NamedRecordTypeBase, PropertyKeyBase, RecordTypeBase}
+import ch.datascience.typesystem.scope.ConcurrentScope
+import ch.datascience.typesystem.validation.Validator
 
-import ch.datascience.typesystem.scope.StandardScope
-
-import scala.concurrent.Future
-
+import scala.concurrent.{Future, blocking}
 /**
-  * Created by johann on 24/04/17.
+  * Created by johann on 26/04/17.
   */
-trait ScopeComponent { this: DatabaseComponent with ExecutionComponent =>
+trait ScopeComponent { this: PropertyKeyComponent with ExecutionComponent =>
 
-  import profile.api._
+  type Typ = String
+  type Prop = String
+  type NamedRecordType = NamedRecordTypeBase[Typ, Prop]
+  type GraphObject = GraphObjectBase[Typ, Prop]
 
-  type Scope = StandardScope[String, String]
+  type ConcurrentScopeType = ConcurrentScope[Typ, Prop, PropertyKey, RecordType, NamedRecordType, GraphObject]
+  type ValidatorType = Validator[Typ, Prop, PropertyKey, RecordType, NamedRecordType, GraphObject]
 
-  private[this] var scope: Scope = StandardScope.empty[String, String]
+  protected def scope: ConcurrentScopeType
 
-  def getCurrentScopeSync: Scope = synchronized {
-    scope
+  def getCurrentValidator: Future[ValidatorType] = Future {
+    blocking { scope.getCurrentValidator }
   }
 
-  def getCurrentScope: Future[Scope] = Future { getCurrentScopeSync }
-
-  def scopeForPropertyKey(namespace: String, name: String): Future[Scope] = {
-    val candidateScope = getCurrentScope
-    val key = s"$namespace:$name"
-    candidateScope flatMap { scope =>
-      scope.propertyDefinitions contains key match {
-        case true => Future.successful(scope)
+  def getValidatorForPropertyKey(namespace: String, name: String): Future[ValidatorType] = {
+    this.getCurrentValidator flatMap { validator =>
+      val key = s"$namespace:$name"
+      validator.propertyKeys contains key match {
+        case true => Future.successful(validator)
         case false =>
-          val select = dal.propertyKeys.findByNamespaceAndNameAsModel(namespace, name).result.headOption
-          db.run(select) map {
+          val optPropertyKey = this.propertyKeys.findByNamespaceAndName(namespace, name)
+          optPropertyKey map {
             case Some(propertyKey) =>
-              val newScope = scope + propertyKey
-              synchronized {
-                this.scope = newScope
-              }
-              newScope
-            case None => scope
+              this.scope += propertyKey
+              this.scope.getCurrentValidator
+            case None => validator
           }
       }
     }
