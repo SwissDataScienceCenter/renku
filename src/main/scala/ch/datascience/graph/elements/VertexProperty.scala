@@ -7,4 +7,6 @@ abstract class VertexProperty[Key, Value : ValidValue, MetaKey] extends Property
 
   val metaProperties: Map[MetaKey, Property[MetaKey, BoxedValue]]
 
+  def boxed: VertexProperty[Key, BoxedValue, MetaKey]
+
 }
