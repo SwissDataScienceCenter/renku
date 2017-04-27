@@ -5,6 +5,6 @@ package ch.datascience.graph.elements
   */
 abstract class VertexProperty[Key, Value : ValidValue, MetaKey] extends Property[Key, Value] {
 
-  val metaProperties: Map[Key, Property[MetaKey, BoxedValue]]
+  val metaProperties: Map[MetaKey, Property[MetaKey, BoxedValue]]
 
 }
