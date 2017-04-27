@@ -1,5 +1,7 @@
 package ch.datascience.graph.elements
 
+import ch.datascience.graph.types.Cardinality
+
 /**
   * Created by johann on 27/04/17.
   */
@@ -18,6 +20,12 @@ sealed abstract class VertexPropertyValues[Key, Value : ValidValue, MetaKey] ext
     case SingleValue(vp) => SingleValue(vp.boxed)
     case SetValue(map) => SetValue((for (vp <- map.values) yield vp.boxedValue -> vp.boxed).toMap)
     case ListValue(vps) => ListValue(vps.map(_.boxed))
+  }
+
+  final def cardinality: Cardinality = this match {
+    case SingleValue(_) => Cardinality.Single
+    case SetValue(_) => Cardinality.Set
+    case ListValue(_) => Cardinality.List
   }
 
 }
