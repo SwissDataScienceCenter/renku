@@ -20,12 +20,25 @@ trait HasValue[Value, This[V] <: HasValue[V, This]] {
     case _ => this map{ x => x }
   }
 
+  @throws[java.lang.ClassCastException]
+  def unboxedAs[V : ValidValue]: This[V] = {
+    // Force cast
+    implicitly[ValidValue[V]].dataType(unboxedValue.asInstanceOf[V])
+    this map {
+      case b: BoxedValue => b.unboxAs[V]
+      case _ => value.asInstanceOf[V]
+    }
+  }
+
   def boxedValue: BoxedValue = implicitly[ValidValue[Value]].boxed(value)
 
   def unboxedValue: Any = value match {
     case b: BoxedValue => b.self
     case _ => value
   }
+
+  @throws[java.lang.ClassCastException]
+  def unboxedValueAs[V : ValidValue]: V = unboxedValue.asInstanceOf[V]
 
   def map[U : ValidValue](f: (Value) => U): This[U]
 

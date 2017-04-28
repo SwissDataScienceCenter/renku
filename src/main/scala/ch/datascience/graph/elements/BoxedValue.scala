@@ -24,6 +24,9 @@ sealed abstract class BoxedValue extends Element {
     case _: DoubleValue => DataType.Double
   }
 
+  @throws[java.lang.ClassCastException]
+  def unboxAs[V : ValidValue]: V = self.asInstanceOf[V]
+
 }
 
 final case class StringValue(self: String) extends BoxedValue {
