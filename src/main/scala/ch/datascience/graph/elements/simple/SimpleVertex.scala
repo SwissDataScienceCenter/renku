@@ -7,5 +7,11 @@ import ch.datascience.graph.elements.{BoxedValue, Vertex, VertexPropertyValues}
   */
 final case class SimpleVertex[TypeId, Key, MetaKey](
     override val types: Set[TypeId],
-    override val properties: Map[Key, VertexPropertyValues[Key, BoxedValue, MetaKey]]
-) extends Vertex[TypeId, Key, MetaKey]
+    override val properties: Map[Key, SimpleVertex.PropertyType[Key, MetaKey]]
+) extends Vertex[TypeId, Key, MetaKey, SimpleProperty, SimpleVertexPropertyBase]
+
+object SimpleVertex {
+
+  type PropertyType[Key, MetaKey] = VertexPropertyValues[Key, BoxedValue, MetaKey, SimpleProperty, SimpleVertexPropertyBase]
+
+}

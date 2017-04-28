@@ -8,8 +8,8 @@ import ch.datascience.graph.elements.{Property, ValidValue}
 final case class SimpleProperty[Key, Value : ValidValue](
     override val key: Key,
     override val value: Value
-) extends Property[Key, Value] {
+) extends Property[Key, Value, SimpleProperty] {
 
-  override def validValueEvidence: ValidValue[Value] = implicitly[ValidValue[Value]]
+  override def map[U: ValidValue](f: (Value) => U): SimpleProperty[Key, U] = SimpleProperty(key, f(value))
 
 }
