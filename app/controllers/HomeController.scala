@@ -104,9 +104,12 @@ class HomeController @Inject()(@NamedDatabase("default") dbConfigProvider: Datab
 
     // Expecting json body (Content-Type: application/json)
     val asyncAction = Future { jsonBody.map { json =>
-          val uuid = (json \ "uuid").as[String]
+          val uuid = (json \ "uuid").asOpt[String]
           val evt  = (json \ "event").as[JsValue]
-          val event : Event = Await.result(eventRepo.insert(UUID.fromString(uuid), evt), Duration.Inf)
+          val event : Event = Await.result(uuid match {
+                                case None => eventRepo.insert(evt) 
+                                case Some(uuid) => eventRepo.insert(UUID.fromString(uuid), evt)
+                              }, Duration.Inf)
           val headers = mapAsJavaMap(Map(("uuid",event.uuid.toString()))).asInstanceOf[java.util.Map[String,Object]]
           val chan = this.connection.createChannel()
           chan.basicPublish(exchangeName, routingKey, new BasicProperties.Builder()
