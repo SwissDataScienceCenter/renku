@@ -5,19 +5,18 @@ import language.higherKinds
 /**
   * Created by johann on 27/04/17.
   */
-trait Vertex[
+abstract class Vertex[
     TypeId,
     Key,
     MetaKey,
     MetaProp[K, V] <: Property[K, V, MetaProp],
     VertexPropertyType[K, V, MK, MP[MPK, MPV] <: Property[MPK, MPV, MP]] <: VertexProperty[K, V, MK, MP, VertexPropertyType]
-] extends Element {
+ ] extends TypedElement[TypeId, Key, BoxedValue, VertexPropertyHelper[MetaKey, MetaProp, VertexPropertyType]#VertexPropertyKV] {
 
-  /**
-    * Set of type identifiers
-    */
-  val types: Set[TypeId]
+  override final def validMultiPropertyValuesEvidence: ValidValue[BoxedValue] = implicitly[ValidValue[BoxedValue]]
 
-  val properties: Map[Key, VertexPropertyValues[Key, BoxedValue, MetaKey, MetaProp, VertexPropertyType]]
+//  type VertexPropertyTypeV[V] = VertexPropertyType[Key, V, MetaKey, MetaProp]
+//  type MultiPropertiesType = MultiProperties[Key, BoxedValue, VertexPropertyTypeV]
+//  val properties: MultiPropertiesType
 
 }

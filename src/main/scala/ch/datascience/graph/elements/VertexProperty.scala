@@ -11,9 +11,12 @@ abstract class VertexProperty[
     MetaKey,
     MetaProp[K, V] <: Property[K, V, MetaProp],
     This[K, V, MK, MP[MPK, MPV] <: Property[MPK, MPV, MP]] <: VertexProperty[K, V, MK, MP, This]
-] extends Property[Key, Value, VertexPropertyHelper[MetaKey, MetaProp, This]#VertexPropertyKV] {
+] extends Property[Key, Value, VertexPropertyHelper[MetaKey, MetaProp, This]#VertexPropertyKV]
+  with HasProperties[MetaKey, BoxedValue, MetaProp] {
 
-  val metaProperties: Map[MetaKey, MetaProp[MetaKey, BoxedValue]]
+  override final def validPropertyValuesEvidence: ValidValue[BoxedValue] = implicitly[ValidValue[BoxedValue]]
+
+  val properties: Map[MetaKey, MetaProp[MetaKey, BoxedValue]]
 
 }
 

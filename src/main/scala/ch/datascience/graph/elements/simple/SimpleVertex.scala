@@ -1,17 +1,11 @@
 package ch.datascience.graph.elements.simple
 
-import ch.datascience.graph.elements.{BoxedValue, Vertex, VertexPropertyValues}
+import ch.datascience.graph.elements._
 
 /**
   * Created by johann on 27/04/17.
   */
 final case class SimpleVertex[TypeId, Key, MetaKey](
     override val types: Set[TypeId],
-    override val properties: Map[Key, SimpleVertex.PropertyType[Key, MetaKey]]
+    override val properties: Vertex[TypeId, Key, MetaKey, SimpleProperty, SimpleVertexPropertyBase]#MultiPropertiesType
 ) extends Vertex[TypeId, Key, MetaKey, SimpleProperty, SimpleVertexPropertyBase]
-
-object SimpleVertex {
-
-  type PropertyType[Key, MetaKey] = VertexPropertyValues[Key, BoxedValue, MetaKey, SimpleProperty, SimpleVertexPropertyBase]
-
-}

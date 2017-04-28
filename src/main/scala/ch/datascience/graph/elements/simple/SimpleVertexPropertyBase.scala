@@ -11,9 +11,9 @@ import language.higherKinds
 class SimpleVertexPropertyBase[Key, Value : ValidValue, MetaKey, MetaProp[K, V] <: Property[K, V, MetaProp]](
     override val key: Key,
     override val value: Value,
-    override val metaProperties: Map[MetaKey, MetaProp[MetaKey, BoxedValue]]
+    override val properties: Map[MetaKey, MetaProp[MetaKey, BoxedValue]]
 ) extends VertexProperty[Key, Value, MetaKey, MetaProp, SimpleVertexPropertyBase] {
 
-  override def map[U: ValidValue](f: (Value) => U) = new SimpleVertexPropertyBase(key, f(value), metaProperties)
+  override def map[U: ValidValue](f: (Value) => U) = new SimpleVertexPropertyBase(key, f(value), properties)
 
 }

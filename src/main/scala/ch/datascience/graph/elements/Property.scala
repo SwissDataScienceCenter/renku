@@ -12,7 +12,7 @@ abstract class Property[Key, Value : ValidValue, This[K, V] <: Property[K, V, Th
 
   val value: Value
 
-  override def validValueEvidence: ValidValue[Value] = implicitly[ValidValue[Value]]
+  override final def validValueEvidence: ValidValue[Value] = implicitly[ValidValue[Value]]
 
 }
 
