@@ -12,11 +12,11 @@ trait HasMultiProperties[Key, Value, Prop[K, V] <: Property[K, V, Prop]] extends
 
   implicit def validMultiPropertyValuesEvidence: ValidValue[Value]
 
-  type MultiPropertiesType = MultiProperties[Key, Value, HasMultiPropertiesHelper[Key, Prop]#PropertyV]
+  type MultiPropertiesType = MultiProperties[Key, Value, Prop]
   val properties: MultiPropertiesType
 
 }
 
-private[this] class HasMultiPropertiesHelper[Key, Prop[K, V] <: Property[K, V, Prop]] {
-  type PropertyV[V] = Prop[Key, V]
-}
+//private[this] class HasMultiPropertiesHelper[Key, Prop[K, V] <: Property[K, V, Prop]] {
+//  type PropertyV[V] = Prop[Key, V]
+//}
