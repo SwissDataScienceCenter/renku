@@ -26,7 +26,7 @@ libraryDependencies ++= Seq(
 // Adds additional packages into conf/routes
 // play.sbt.routes.RoutesKeys.routesImport += "datascience.ch.binders._"
 
-// HTTP server port, will be ignored in production mode, use system settings instead
+// HTTP server port, will be ignored in production mode and use system settings or application.conf instead
 PlayKeys.devSettings := Seq("play.server.http.port" -> "9001")
 
 resolvers ++= Seq(

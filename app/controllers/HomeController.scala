@@ -29,27 +29,25 @@ import scala.concurrent.Await
 import scala.concurrent.duration.Duration
 
 /**
- * This controller creates an `Action` to handle HTTP requests to the
- * application's home page.
+ * This controller creates an `Action` to handle HTTP requests to the KG
+ *
+ * TODO: Add security capability to verify that the HTTP request was granted the appropriate access rights from a trusted authority service
+ * TODO: Encapsulate security capability in MQ message so that consumer at receiving end can validate access rights
+ * TODO: Handle MQ and DB disconnections appropriately
+ *
  */
 @Singleton
-class HomeController @Inject()(@NamedDatabase("default") dbConfigProvider: DatabaseConfigProvider, eventRepo : EventRepo) extends Controller {
+class HomeController @Inject()(@NamedDatabase("default") dbConfigProvider: DatabaseConfigProvider, eventRepo : EventRepo, configuration : Configuration) extends Controller {
 
-  class KGWALException(message : String) extends Exception(message)
+  class KGWALException(val message : String) extends Exception(message)
 
-  val exchangeName = "sys"
-
-  val queueName = "kg"
-
-  val routingKey = "kgwal"
-
-  val host = "iccluster108.iccluster.epfl.ch"
-
-  val port = 5672
-
-  val user = "guest"
-
-  val password = "guest"
+  val exchangeName = configuration.getString("rabbitmq.exchange").getOrElse("sys")
+  val queueName = configuration.getString("rabbitmq.queue").getOrElse("kg")
+  val routingKey = configuration.getString("rabbitmq.routing").getOrElse("kgwal")
+  val host = configuration.getString("rabbitmq.host").get
+  val port = configuration.getInt("rabbitmq.port").getOrElse(5672)
+  val user = configuration.getString("rabbitmq.user").get
+  val password = configuration.getString("rabbitmq.password").get
 
   val connection = conn()
 
