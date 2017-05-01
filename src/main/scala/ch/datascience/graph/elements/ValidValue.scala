@@ -5,11 +5,11 @@ import ch.datascience.graph.types.DataType
 /**
   * Created by johann on 27/04/17.
   */
-sealed trait ValidValue[V] {
+sealed trait ValidValue[-V] {
 
-  def dataType(value: V): DataType
+  def dataType: DataType
 
-  def boxed(value: V): BoxedValue
+  def boxed[U <: V](value: U): BoxedValue
 
 }
 
@@ -17,53 +17,53 @@ object ValidValue {
 
   // Valid value types
   implicit object StringIsValid extends ValidValue[String] {
-    def dataType(value: String) = DataType.String
-    def boxed(value: String) = BoxedValue(value)
+    def dataType = DataType.String
+    def boxed[U <: String](value: U) = BoxedValue(value)
   }
 
   implicit object CharIsValid extends ValidValue[Char] {
-    def dataType(value: Char) = DataType.Character
-    def boxed(value: Char) = BoxedValue(value)
+    def dataType = DataType.Character
+    def boxed[U <: Char](value: U): BoxedValue = BoxedValue(value)
   }
 
   implicit object BooleanIsValid extends ValidValue[Boolean] {
-    def dataType(value: Boolean) = DataType.Boolean
-    def boxed(value: Boolean) = BoxedValue(value)
+    def dataType = DataType.Boolean
+    def boxed[U <: Boolean](value: U): BoxedValue = BoxedValue(value)
   }
 
   implicit object ByteIsValid extends ValidValue[Byte] {
-    def dataType(value: Byte) = DataType.Byte
-    def boxed(value: Byte) = BoxedValue(value)
+    def dataType = DataType.Byte
+    def boxed[U <: Byte](value: U): BoxedValue = BoxedValue(value)
   }
 
   implicit object ShortIsValid extends ValidValue[Short] {
-    def dataType(value: Short) = DataType.Short
-    def boxed(value: Short) = BoxedValue(value)
+    def dataType = DataType.Short
+    def boxed[U <: Short](value: U): BoxedValue = BoxedValue(value)
   }
 
   implicit object IntIsValid extends ValidValue[Int] {
-    def dataType(value: Int) = DataType.Integer
-    def boxed(value: Int) = BoxedValue(value)
+    def dataType = DataType.Integer
+    def boxed[U <: Int](value: U): BoxedValue = BoxedValue(value)
   }
 
   implicit object LongIsValid extends ValidValue[Long] {
-    def dataType(value: Long) = DataType.Long
-    def boxed(value: Long) = BoxedValue(value)
+    def dataType = DataType.Long
+    def boxed[U <: Long](value: U): BoxedValue = BoxedValue(value)
   }
 
   implicit object FloatIsValid extends ValidValue[Float] {
-    def dataType(value: Float) = DataType.Float
-    def boxed(value: Float) = BoxedValue(value)
+    def dataType = DataType.Float
+    def boxed[U <: Float](value: U): BoxedValue = BoxedValue(value)
   }
 
   implicit object DoubleIsValid extends ValidValue[Double] {
-    def dataType(value: Double) = DataType.Double
-    def boxed(value: Double) = BoxedValue(value)
+    def dataType = DataType.Double
+    def boxed[U <: Double](value: U): BoxedValue = BoxedValue(value)
   }
 
-  implicit object BoxedIsValid extends ValidValue[BoxedValue] {
-    def dataType(value: BoxedValue): DataType = value.dataType
-    def boxed(value: BoxedValue) = value
+  implicit object NothingIsValid extends ValidValue[Nothing] {
+    def dataType = DataType.Double
+    def boxed[U <: Double](value: U): BoxedValue = BoxedValue(value)
   }
 
 }

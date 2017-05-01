@@ -7,6 +7,22 @@ import language.higherKinds
   */
 package object elements {
 
-  type MultiProperties[Key, Value, Holder[K, V] <: Property[K, V, Holder]] = Map[Key, MultiPropertyValue[Key, Value, Holder]]
+  /**
+    * Type used for properties
+    *
+    * @tparam Key key type
+    * @tparam Value value type
+    * @tparam Prop property type
+    */
+  type Properties[Key, +Value, +Prop <: Property[Key, Value, Prop]] = Map[Key, Property[Key, Value, Prop]]
+
+  /**
+    * Type used for multi-properties
+    *
+    * @tparam Key key type
+    * @tparam Value value type
+    * @tparam Prop property type
+    */
+  type MultiProperties[Key, +Value, +Prop <: Property[Key, Value, Prop]] = Map[Key, MultiPropertyValue[Key, Value, Property[Key, Value, Prop]]]
 
 }

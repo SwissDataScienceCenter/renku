@@ -35,35 +35,35 @@ final case class StringValue(self: String) extends BoxedValue {
 }
 final case class CharValue(self: Char) extends BoxedValue {
   type Self = Char
-  def isValidValue: ValidValue[Self] = implicitly[ValidValue[Char]]
+  def isValidValue: ValidValue[Self] = implicitly[ValidValue[Self]]
 }
 final case class BooleanValue(self: Boolean) extends BoxedValue {
   type Self = Boolean
-  def isValidValue: ValidValue[Self] = implicitly[ValidValue[Boolean]]
+  def isValidValue: ValidValue[Self] = implicitly[ValidValue[Self]]
 }
 final case class ByteValue(self: Byte) extends BoxedValue {
   type Self = Byte
-  def isValidValue: ValidValue[Self] = implicitly[ValidValue[Byte]]
+  def isValidValue: ValidValue[Self] = implicitly[ValidValue[Self]]
 }
 final case class ShortValue(self: Short) extends BoxedValue {
   type Self = Short
-  def isValidValue: ValidValue[Self] = implicitly[ValidValue[Short]]
+  def isValidValue: ValidValue[Self] = implicitly[ValidValue[Self]]
 }
 final case class IntValue(self: Int) extends BoxedValue {
   type Self = Int
-  def isValidValue: ValidValue[Self] = implicitly[ValidValue[Int]]
+  def isValidValue: ValidValue[Self] = implicitly[ValidValue[Self]]
 }
 final case class LongValue(self: Long) extends BoxedValue {
   type Self = Long
-  def isValidValue: ValidValue[Self] = implicitly[ValidValue[Long]]
+  def isValidValue: ValidValue[Self] = implicitly[ValidValue[Self]]
 }
 final case class FloatValue(self: Float) extends BoxedValue {
   type Self = Float
-  def isValidValue: ValidValue[Self] = implicitly[ValidValue[Float]]
+  def isValidValue: ValidValue[Self] = implicitly[ValidValue[Self]]
 }
 final case class DoubleValue(self: Double) extends BoxedValue {
   type Self = Double
-  def isValidValue: ValidValue[Self] = implicitly[ValidValue[Double]]
+  def isValidValue: ValidValue[Self] = implicitly[ValidValue[Self]]
 }
 
 object BoxedValue {
@@ -78,4 +78,12 @@ object BoxedValue {
   def apply(x: Float): BoxedValue = FloatValue(x)
   def apply(x: Double): BoxedValue = DoubleValue(x)
 
+  implicit object boxedIsBoxed extends IsBoxedValue[BoxedValue] {
+    def asBoxedValue(v: BoxedValue): BoxedValue = v
+  }
+
+}
+
+sealed trait IsBoxedValue[V] {
+  def asBoxedValue(v : V): BoxedValue
 }

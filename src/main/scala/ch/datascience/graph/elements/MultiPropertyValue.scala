@@ -1,31 +1,42 @@
 package ch.datascience.graph.elements
 
-import ch.datascience.graph.types.Cardinality
+import ch.datascience.graph.HasKey
+import ch.datascience.graph.types.{Cardinality, DataType}
 
-import language.higherKinds
+import scala.language.higherKinds
 
 /**
-  * Created by johann on 27/04/17.
+  * Representation of multi-property values
+  *
+  * Non-multi properties are represented using a map Key -> Property,
+  * while multi-properties are represented using a map Key -> MultiPropertyValue.
+  *
+  * There are three types of multi-property values: SingleValue, SetValue and ListValue
+  *
+  * SingleValue: only one value. A map Key -> SingleValue is equivalent to a map Key -> Property.
+  * SetValue: a set of values.
+  * ListValue: a multiset of values. The name is misleading, but that's how tinkerpop works.
+  *
+  * @tparam Key type of key
+  * @tparam Value type of value, constrained to verify [[BoxedOrValidValue]]
+  * @tparam Prop type of underlying property
   */
-sealed abstract class MultiPropertyValue[Key, Value : ValidValue, Holder[K, V] <: Property[K, V, Holder]]
-//sealed abstract class MultiPropertyValue[Value : ValidValue, Holder[V] <: HasValue[V, Holder]]
-  extends Element with Iterable[Holder[Key, Value]] {
-//  extends Element with Iterable[Holder[Value]] {
+sealed abstract class MultiPropertyValue[+Key, +Value : BoxedOrValidValue, +Prop <: Property[Key, Value, Prop]]
+  extends HasKey[Key]
+    with Element
+    with Iterable[Property[Key, Value, Prop]] {
 
-  // Allows easy iteration
-  final def asSeq: Seq[Holder[Key, Value]] = this match {
-    case SingleValue(holder) => List(holder)
-    case SetValue(map) => map.values.toSeq
-    case ListValue(values) => values
-  }
+  //TODO: Builders
 
-  override final def iterator: Iterator[Holder[Key, Value]] = asSeq.toIterator
+  def dataType: DataType = dataTypes.head
 
-  final def boxed: MultiPropertyValue[Key, BoxedValue, Holder] = this match {
-    case SingleValue(holder) => SingleValue(holder.boxed)
-    case SetValue(map) => SetValue((for { h <- map.values } yield h.boxedValue -> h.boxed).toMap)
-    case ListValue(values) => ListValue(for { h <- values } yield h.boxed)
-  }
+  def asIterable: Iterable[Property[Key, Value, Prop]]
+
+  final def iterator: Iterator[Property[Key, Value, Prop]] = asIterable.toIterator
+
+  final def values: Iterable[Value] = asIterable.map(_.value)
+
+  def boxed[K >: Key, U >: Value, That <: Property[K, BoxedValue, That]](implicit e: HasValueMapper[U, Prop, BoxedValue, That]): MultiPropertyValue[K, BoxedValue, That]
 
   final def cardinality: Cardinality = this match {
     case SingleValue(_) => Cardinality.Single
@@ -33,67 +44,51 @@ sealed abstract class MultiPropertyValue[Key, Value : ValidValue, Holder[K, V] <
     case ListValue(_) => Cardinality.List
   }
 
+  protected final def dataTypes: Set[DataType] = this.asIterable.map(_.dataType(implicitly[BoxedOrValidValue[Value]])).toSet
+
 }
 
-sealed abstract class SingleValue[Key, Value : ValidValue, Holder[K, V] <: Property[K, V, Holder]](val holder: Holder[Key, Value])
-  extends MultiPropertyValue[Key, Value, Holder] {
-  override final def toString(): String = super.toString()
-}
+case class SingleValue[+Key, +Value : BoxedOrValidValue, +Prop <: Property[Key, Value, Prop]](property: Property[Key, Value, Prop]) extends MultiPropertyValue[Key, Value, Prop] {
 
-sealed abstract class SetValue[Key, Value : ValidValue, Holder[K, V] <: Property[K, V, Holder]](val values: Map[Value, Holder[Key, Value]])
-  extends MultiPropertyValue[Key, Value, Holder] {
-  override final def toString(): String = super.toString()
-}
+  def key: Key = property.key
 
-sealed abstract class ListValue[Key, Value : ValidValue, Holder[K, V] <: Property[K, V, Holder]](val values: List[Holder[Key, Value]])
-  extends MultiPropertyValue[Key, Value, Holder] {
-  override final def toString(): String = super.toString()
-}
+  def asIterable: List[Property[Key, Value, Prop]] = List(property)
 
-object SingleValue {
-
-  def apply2[Key, Value : ValidValue, MetaKey, MetaProp[K, V] <: Property[K, V, MetaProp], Holder[K, V, MK] <: VertexProperty[K, V, MK, MetaProp, Holder]](holder: Holder[Key, Value, MetaKey]) = {
-    SingleValue(holder: holder.type#PropertyKV[Key, Value])
+  def boxed[K >: Key, U >: Value, That <: Property[K, BoxedValue, That]](implicit e: HasValueMapper[U, Prop, BoxedValue, That]): SingleValue[K, BoxedValue, That] = {
+    SingleValue(property.boxed[U, That](implicitly[BoxedOrValidValue[Value]], e))
   }
 
-  def apply[Key, Value : ValidValue, Holder[K, V] <: Property[K, V, Holder]](holder: Holder[Key, Value]): SingleValue[Key, Value, Holder] = SingleValueImpl(holder)
+}
 
-  def unapply[Key, Value : ValidValue, Holder[K, V] <: Property[K, V, Holder]](arg: MultiPropertyValue[Key, Value, Holder]): Option[Holder[Key, Value]] = arg match {
-    case SingleValueImpl(holder) => Some(holder)
-    case _ => None
+case class SetValue[+Key, +Value : BoxedOrValidValue, +Prop <: Property[Key, Value, Prop]](properties: List[Prop]) extends MultiPropertyValue[Key, Value, Prop] {
+  require(keySet.size <= 1, s"Multiple keys detected: ${keySet.mkString(", ")}")
+  require(dataTypes.size <= 1, s"Multiple datatypes detected: ${dataTypes.mkString(", ")}")
+  require(properties.map(_.value).distinct.size == properties.size, s"Multiple values detected: ${properties.map(_.value).mkString(", ")}")
+
+  def key: Key = keySet.head
+
+  def asIterable: Iterable[Property[Key, Value, Prop]] = properties
+
+  def boxed[K >: Key, U >: Value, That <: Property[K, BoxedValue, That]](implicit e: HasValueMapper[U, Prop, BoxedValue, That]): SetValue[K, BoxedValue, That] = {
+    SetValue[K, BoxedValue, That](for { p <- properties } yield p.boxed[U, That](implicitly[BoxedOrValidValue[Value]], e))
   }
 
-  private[this] case class SingleValueImpl[Key, Value : ValidValue, Holder[K, V] <: Property[K, V, Holder]](override val holder: Holder[Key, Value])
-    extends SingleValue[Key, Value, Holder](holder)
+  private[this] def keySet: Set[Key] = properties.map(_.key).toSet
 
 }
 
-object SetValue {
+case class ListValue[+Key, +Value : BoxedOrValidValue, +Prop <: Property[Key, Value, Prop]](properties: List[Prop]) extends MultiPropertyValue[Key, Value, Prop] {
+  require(keySet.size <= 1, s"Multiple keys detected: ${keySet.mkString(", ")}")
+  require(dataTypes.size <= 1, s"Multiple datatypes detected: ${dataTypes.mkString(", ")}")
 
-  def apply[Key, Value : ValidValue, Holder[K, V] <: Property[K, V, Holder]](values: (Value, Holder[Key, Value])*): SetValue[Key, Value, Holder] = SetValue(values.toMap)
+  def key: Key = keySet.head
 
-  def apply[Key, Value : ValidValue, Holder[K, V] <: Property[K, V, Holder]](values: Map[Value, Holder[Key, Value]]): SetValue[Key, Value, Holder] = SetValueImpl(values)
-  def unapply[Key, Value : ValidValue, Holder[K, V] <: Property[K, V, Holder]](arg: MultiPropertyValue[Key, Value, Holder]): Option[Map[Value, Holder[Key, Value]]] = arg match {
-    case SetValueImpl(values) => Some(values)
-    case _ => None
+  def asIterable: List[Property[Key, Value, Prop]] = properties
+
+  def boxed[K >: Key, U >: Value, That <: Property[K, BoxedValue, That]](implicit e: HasValueMapper[U, Prop, BoxedValue, That]): ListValue[K, BoxedValue, That] = {
+    ListValue[K, BoxedValue, That](for { p <- properties } yield p.boxed[U, That](implicitly[BoxedOrValidValue[Value]], e))
   }
 
-  private[this] case class SetValueImpl[Key, Value : ValidValue, Holder[K, V] <: Property[K, V, Holder]](override val values: Map[Value, Holder[Key, Value]])
-    extends SetValue[Key, Value, Holder](values)
-
-}
-
-object ListValue {
-
-  def apply[Key, Value : ValidValue, Holder[K, V] <: Property[K, V, Holder]](values: (Holder[Key, Value])*): ListValue[Key, Value, Holder] = ListValue(values.toList)
-
-  def apply[Key, Value : ValidValue, Holder[K, V] <: Property[K, V, Holder]](values: List[Holder[Key, Value]]): ListValue[Key, Value, Holder] = ListValueImpl(values)
-  def unapply[Key, Value : ValidValue, Holder[K, V] <: Property[K, V, Holder]](arg: MultiPropertyValue[Key, Value, Holder]): Option[List[Holder[Key, Value]]] = arg match {
-    case ListValueImpl(values) => Some(values)
-    case _ => None
-  }
-
-  private[this] case class ListValueImpl[Key, Value : ValidValue, Holder[K, V] <: Property[K, V, Holder]](override val values: List[Holder[Key, Value]])
-    extends ListValue[Key, Value, Holder](values)
+  private[this] def keySet: Set[Key] = properties.map(_.key).toSet
 
 }

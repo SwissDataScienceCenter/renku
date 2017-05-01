@@ -8,12 +8,12 @@ import language.higherKinds
   * Typed elements can be validated (see package types).
   *
   */
-trait TypedElement[TypeId, Key, Value, Prop[K, V] <: Property[K, V, Prop]]
+trait TypedElement[TypeId, Key, +Value, +Prop <: Property[Key, Value, Prop]]
   extends HasMultiProperties[Key, Value, Prop] {
 
   /**
     * Set of type identifiers
     */
-  val types: Set[TypeId]
+  def types: Set[TypeId]
 
 }

@@ -8,15 +8,8 @@ import scala.language.higherKinds
   * Properties can be validated (see package types).
   *
   */
-trait HasMultiProperties[Key, Value, Prop[K, V] <: Property[K, V, Prop]] extends Element {
+trait HasMultiProperties[Key, +Value, +Prop <: Property[Key, Value, Prop]] extends Element {
 
-  implicit def validMultiPropertyValuesEvidence: ValidValue[Value]
-
-  type MultiPropertiesType = MultiProperties[Key, Value, Prop]
-  val properties: MultiPropertiesType
+  def properties: MultiProperties[Key, Value, Prop]
 
 }
-
-//private[this] class HasMultiPropertiesHelper[Key, Prop[K, V] <: Property[K, V, Prop]] {
-//  type PropertyV[V] = Prop[Key, V]
-//}

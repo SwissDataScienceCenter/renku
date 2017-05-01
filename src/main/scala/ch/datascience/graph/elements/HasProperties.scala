@@ -9,11 +9,12 @@ import language.higherKinds
   *
   * Properties can be validated (see package types).
   *
+  * @tparam Key key type
+  * @tparam Value value type
+  * @tparam Prop property type
   */
-trait HasProperties[Key, Value, Prop[K, V] <: Property[K, V, Prop]] extends Element {
+trait HasProperties[Key, +Value, +Prop <: Property[Key, Value, Prop]] extends Element {
 
-  implicit def validPropertyValuesEvidence: ValidValue[Value]
-
-  val properties: Map[Key, Prop[Key, Value]]
+  def properties: Properties[Key, Value, Prop]
 
 }
