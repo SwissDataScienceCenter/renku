@@ -14,4 +14,8 @@ final case class MultipleErrors(errors: Seq[ValidationError]) extends Validation
 
 final case class UnknownProperty[+Key](key: Key) extends ValidationError
 
-final case class BadDataType[+Key, +Value, +Prop <: Property[Key, Value, Prop]](value: Value, required: DataType, found: DataType) extends ValidationError
+final case class BadDataType[+Key, +Value, +Prop <: Property[Key, Value, Prop]](
+  value   : Value,
+  required: DataType,
+  found   : DataType
+) extends ValidationError

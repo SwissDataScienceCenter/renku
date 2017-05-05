@@ -9,6 +9,7 @@ trait HasValueBase[+Value] {
 
   /**
     * The value
+    *
     * @return the value
     */
   def value: Value

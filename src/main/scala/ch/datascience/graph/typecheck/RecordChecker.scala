@@ -1,18 +1,22 @@
 package ch.datascience.graph.typecheck
 
-import ch.datascience.graph.elements.{BoxedOrValidValue, Properties, Property}
+import ch.datascience.graph.elements.{BoxedOrValidValue, Property, Record}
 import ch.datascience.graph.types.PropertyKey
-
-import scala.util.{Failure, Try}
 
 /**
   * Created by johann on 01/05/17.
   */
-trait HasPropertiesChecker[Key, Value, Prop <: Property[Key, Value, Prop]] { this: PropertyChecker[Key, Value, Prop] =>
+trait RecordChecker[Key, Value, Prop <: Property[Key, Value, Prop]] {
+  this: PropertyChecker[Key, Value, Prop] =>
 
-  def checkProperties(properties: Properties[Key, Value, Prop], definitions: Map[Key, PropertyKey[Key]])(implicit e: BoxedOrValidValue[Value]): ValidationResult[HasPropertiesChecked[Key]] = {
+  def checkRecord(
+    record: Record[Key, Value, Prop],
+    definitions: Map[Key, PropertyKey[Key]]
+  )(
+    implicit e: BoxedOrValidValue[Value]
+  ): ValidationResult[RecordChecked[Key]] = {
     val checkedProperties = for {
-      (key, prop) <- properties
+      (key, prop) <- record.properties
     } yield key -> checkProperty(prop, definitions)(e)
 
     val invalidProperties = checkedProperties.values.flatMap(_.left.toOption)
@@ -23,10 +27,11 @@ trait HasPropertiesChecker[Key, Value, Prop <: Property[Key, Value, Prop]] { thi
         v <- check.right.toOption
       } yield key -> v.propertyKey
       Right(Result(validProperties))
-    }else
+    }
+    else
       Left(MultipleErrors(invalidProperties.toSeq))
   }
 
-  private[this] case class Result(propertyKeys: Map[Key, PropertyKey[Key]]) extends HasPropertiesChecked[Key]
+  private[this] case class Result(propertyKeys: Map[Key, PropertyKey[Key]]) extends RecordChecked[Key]
 
 }

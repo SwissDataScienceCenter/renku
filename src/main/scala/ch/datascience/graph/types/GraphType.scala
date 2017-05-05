@@ -9,10 +9,18 @@ sealed trait GraphType {
 
   /**
     * Subtype check
+    *
     * @param t the other type
     * @return true iff this is a subtype of t
     */
   def <<(t: GraphType): Boolean
+
+  /**
+    * Supertype check
+    *
+    * @param t the other type
+    * @return true iff this is a supertype of t
+    */
   def >>(t: GraphType): Boolean = t << this
 
 }
@@ -25,10 +33,7 @@ sealed trait GraphType {
   */
 case object Bottom extends GraphType {
 
-  def <<(t: GraphType): Boolean = t match {
-    case Bottom => true
-    case _ => false
-  }
+  def <<(t: GraphType): Boolean = true
 
 }
 
@@ -45,20 +50,20 @@ trait RecordType[PropKey] extends GraphType {
 
   final def <<(t: GraphType): Boolean = t match {
     case rt: RecordType[PropKey] => rt.properties subsetOf this.properties
-    case _ => false
+    case _                       => false
   }
 
 }
 
 /**
-  * Base trait for named record types
+  * Base trait for named types
   *
   * Like [[RecordType]], only keys are used for named record types and properties.
   *
-  * @tparam TypeKey type of named record type keys
+  * @tparam TypeKey type of named type keys
   * @tparam PropKey type of property keys
   */
-trait NamedRecordType[TypeKey, PropKey] extends GraphType with HasKey[TypeKey] {
+trait NamedType[TypeKey, PropKey] extends GraphType with HasKey[TypeKey] {
 
   def superTypes: Set[TypeKey]
 
@@ -67,9 +72,9 @@ trait NamedRecordType[TypeKey, PropKey] extends GraphType with HasKey[TypeKey] {
   def like: RecordType[PropKey]
 
   final def <<(t: GraphType): Boolean = t match {
-    case nrt: NamedRecordType[TypeKey, PropKey] => (superTypes + this.key) contains nrt.key
-    case rt: RecordType[PropKey] => rt.properties subsetOf this.properties
-    case _ => false
+    case nt: NamedType[TypeKey, PropKey] => (superTypes + this.key) contains nt.key
+    case rt: RecordType[PropKey]         => rt.properties subsetOf this.properties
+    case _                               => false
   }
 }
 
