@@ -1,10 +1,10 @@
-package ch.datascience.graph.typecheck
+package ch.datascience.graph.typevalidation
 
 import ch.datascience.graph.types.PropertyKey
 
-sealed trait Checked
+sealed trait Validated
 
-trait PropertyChecked[+Key] extends Checked {
+trait ValidatedProperty[+Key] extends Validated {
 
   /**
     * The definition of the validated property
@@ -15,7 +15,7 @@ trait PropertyChecked[+Key] extends Checked {
 
 }
 
-trait RecordChecked[Key] extends Checked {
+trait ValidatedRecord[Key] extends Validated {
 
   /**
     * The definitions of the validated properties
