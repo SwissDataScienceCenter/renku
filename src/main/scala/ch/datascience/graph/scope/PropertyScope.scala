@@ -1,7 +1,7 @@
-package ch.datascience.graph.typevalidation.scope
+package ch.datascience.graph.scope
 
 import ch.datascience.graph.types.PropertyKey
-import ch.datascience.graph.typevalidation.scope.persistence.PersistedProperties
+import ch.datascience.graph.scope.persistence.PersistedProperties
 
 import scala.collection.concurrent
 import scala.concurrent.{ExecutionContext, Future}

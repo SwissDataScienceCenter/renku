@@ -1,4 +1,4 @@
-package ch.datascience.graph.typevalidation
+package ch.datascience.graph.elements.validation
 
 import ch.datascience.graph.elements.{BoxedOrValidValue, Property, Record}
 import ch.datascience.graph.types.PropertyKey
@@ -16,7 +16,7 @@ trait RecordValidator[Key, Value, Prop <: Property[Key, Value, Prop]] { this: Pr
   )(
     implicit e: BoxedOrValidValue[Value],
     ec: ExecutionContext
-  ): Future[ValidationResult[ValidatedRecord[Key]]] = {
+  ): Future[ValidationResult[ValidatedRecord[Key, Value, Prop]]] = {
     val future = propertyScope.getPropertiesFor(record.properties.keySet)
     future.map({ definitions =>
       this.validateRecordSync(record, definitions)
@@ -28,34 +28,36 @@ trait RecordValidator[Key, Value, Prop <: Property[Key, Value, Prop]] { this: Pr
     definitions: Map[Key, PropertyKey[Key]]
   )(
     implicit e: BoxedOrValidValue[Value]
-  ): ValidationResult[ValidatedRecord[Key]] = {
-    // We collect all errors
-    val errors = Seq.newBuilder[ValidationError]
-
+  ): ValidationResult[ValidatedRecord[Key, Value, Prop]] = {
     // First validate that the key -> property mapping is consistent
-    for ((key, property) <- record.properties) {
-      if (key != property.key)
-        errors += BadRecord(key, property.key)
-    }
+    val consistencyErrors = for {
+      (key, property) <- record.properties
+      if key != property.key
+    } yield BadRecord(key, property.key)
 
+    // Use PropertyValidator method validatePropertySync to validate each property
     val validatedProperties = for {
       (key, property) <- record.properties
       definition = definitions.get(key)
     } yield key -> this.validatePropertySync(property, definition)(e)
 
-    val invalidProperties = errors.result() ++ validatedProperties.values.flatMap(_.left.toOption)
+    val invalidPropertyErrors = validatedProperties.values.flatMap(_.left.toOption)
+    val allErrors = consistencyErrors ++ invalidPropertyErrors
 
-    if (invalidProperties.isEmpty) {
+    if (allErrors.isEmpty) {
       val validProperties = for {
         (key, validated) <- validatedProperties
         v <- validated.right.toOption
       } yield key -> v.propertyKey
-      Right(Result(validProperties))
+      Right(Result(record, validProperties))
     }
     else
-      Left(MultipleErrors.make(invalidProperties.toSeq))
+      Left(MultipleErrors.make(allErrors.toSeq))
   }
 
-  private[this] case class Result(propertyKeys: Map[Key, PropertyKey[Key]]) extends ValidatedRecord[Key]
+  private[this] case class Result(
+    record: Record[Key, Value, Prop],
+    propertyKeys: Map[Key, PropertyKey[Key]]
+  ) extends ValidatedRecord[Key, Value, Prop]
 
 }

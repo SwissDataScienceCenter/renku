@@ -1,8 +1,8 @@
-package ch.datascience.graph.typevalidation
+package ch.datascience.graph.elements.validation
 
 import ch.datascience.graph.elements.{BoxedOrValidValue, Property}
 import ch.datascience.graph.types.PropertyKey
-import ch.datascience.graph.typevalidation.scope.PropertyScope
+import ch.datascience.graph.scope.PropertyScope
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -16,7 +16,7 @@ trait PropertyValidator[Key, Value, Prop <: Property[Key, Value, Prop]] {
   )(
     implicit e: BoxedOrValidValue[Value],
     ec: ExecutionContext
-  ): Future[ValidationResult[ValidatedProperty[Key]]] = {
+  ): Future[ValidationResult[ValidatedProperty[Key, Value, Prop]]] = {
     val future = propertyScope getPropertyFor property.key
     future.map({ definition =>
       this.validatePropertySync(property, definition)(e)
@@ -28,14 +28,17 @@ trait PropertyValidator[Key, Value, Prop <: Property[Key, Value, Prop]] {
     definition: Option[PropertyKey[Key]]
   )(
     implicit e: BoxedOrValidValue[Value]
-  ): ValidationResult[ValidatedProperty[Key]] = definition match {
-    case Some(propertyKey) if property.dataType(e) == propertyKey.dataType => Right(Result(propertyKey))
+  ): ValidationResult[ValidatedProperty[Key, Value, Prop]] = definition match {
+    case Some(propertyKey) if property.dataType(e) == propertyKey.dataType => Right(Result(property, propertyKey))
     case Some(propertyKey) => Left(BadDataType(property.value, propertyKey.dataType, property.dataType(e)))
     case None => Left(UnknownProperty(property.key))
   }
 
   protected def propertyScope: PropertyScope[Key]
 
-  private[this] case class Result(propertyKey: PropertyKey[Key]) extends ValidatedProperty[Key]
+  private[this] case class Result(
+    property: Property[Key, Value, Prop],
+    propertyKey: PropertyKey[Key]
+  ) extends ValidatedProperty[Key, Value, Prop]
 
 }

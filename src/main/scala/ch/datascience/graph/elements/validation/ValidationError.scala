@@ -1,4 +1,4 @@
-package ch.datascience.graph.typevalidation
+package ch.datascience.graph.elements.validation
 
 import ch.datascience.graph.elements.Property
 import ch.datascience.graph.types.DataType
@@ -6,9 +6,7 @@ import ch.datascience.graph.types.DataType
 /**
   * Created by johann on 01/05/17.
   */
-sealed trait ValidationError {
-
-}
+sealed trait ValidationError
 
 final case class MultipleErrors(errors: Seq[ValidationError]) extends ValidationError
 

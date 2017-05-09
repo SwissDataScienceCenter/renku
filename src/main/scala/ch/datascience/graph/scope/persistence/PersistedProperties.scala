@@ -1,8 +1,8 @@
-package ch.datascience.graph.typevalidation.scope.persistence
+package ch.datascience.graph.scope.persistence
 
 import ch.datascience.graph.types.PropertyKey
 
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 
 /**
   * Base trait for accessing persisted property keys
@@ -14,7 +14,7 @@ trait PersistedProperties[Key] {
     * @param key
     * @return a future containing some property key if a corresponding one is found, None otherwise
     */
-  def fetchPropertyFor(key: Key): Future[Option[PropertyKey[Key]]]
+  def fetchPropertyFor(key: Key)(implicit ec: ExecutionContext): Future[Option[PropertyKey[Key]]]
 
   /**
     * Grouped version of getPropertyFor
@@ -23,6 +23,6 @@ trait PersistedProperties[Key] {
     * @param keys set of keys to retrieve
     * @return map key -> property key, will not contain unknown keys
     */
-  def fetchPropertiesFor(keys: Set[Key]): Future[Map[Key, PropertyKey[Key]]]
+  def fetchPropertiesFor(keys: Set[Key])(implicit ec: ExecutionContext): Future[Map[Key, PropertyKey[Key]]]
 
 }
