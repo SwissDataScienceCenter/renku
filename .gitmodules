@@ -1,0 +1,3 @@
+[submodule "graph-typesystem-persistence"]
+	path = graph-typesystem-persistence
+	url = git@github.com:SwissDataScienceCenter/graph-typesystem-persistence.git
