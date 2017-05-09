@@ -25,7 +25,7 @@ lazy val typesystem = Project(
 ).settings(
   commonSettings,
   scriptsSettings
-)//.aggregate(typesystemPersistence) // Do not include for now, as it's not compiling
+).aggregate(typesystemPersistence)
 
 lazy val typesystemPersistence = Project(
   id   = "graph-typesystem-persistence",
