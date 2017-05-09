@@ -1,3 +1,6 @@
 [submodule "graph-core"]
 	path = graph-core
 	url = git@github.com:SwissDataScienceCenter/graph-core.git
+[submodule "graph-typesystem"]
+	path = graph-typesystem
+	url = git@github.com:SwissDataScienceCenter/graph-typesystem.git
