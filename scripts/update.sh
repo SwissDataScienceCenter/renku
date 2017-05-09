@@ -14,7 +14,6 @@ update() {
     # Check if sbt made non empty subproject directories (target non empty)
     if [ -d $repoDir ] && [ ! -e "$repoDir/.git" ]; then
         log "$repoDir is non empty, removing..."
-        mv $repoDir "to-remove-$repoDir"
         rm -rf $repoDir
     fi
 
