@@ -16,7 +16,7 @@ trait PropertyScope[Key] {
     propertyDefinitions get key match {
       case Some(propertyKey) => Future.successful( Some(propertyKey) )
       case None => {
-        val result = propertyScopeUpdater.fetchPropertyFor(key)
+        val result = persistedProperties.fetchPropertyFor(key)
 
         // If we get a property key, then we add it to our scope
         result.onSuccess({
@@ -41,7 +41,7 @@ trait PropertyScope[Key] {
     } yield key
 
     // Resolve unknown keys
-    val resolved = propertyScopeUpdater.fetchPropertiesFor(unknownKeys)
+    val resolved = persistedProperties.fetchPropertiesFor(unknownKeys)
 
     // Update resolved keys
     resolved.map({ definitions =>
@@ -57,6 +57,6 @@ trait PropertyScope[Key] {
 
   protected def propertyDefinitions: concurrent.Map[Key, PropertyKey[Key]]
 
-  protected def propertyScopeUpdater: PersistedProperties[Key]
+  protected def persistedProperties: PersistedProperties[Key]
 
 }
