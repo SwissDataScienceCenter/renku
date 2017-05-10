@@ -34,6 +34,21 @@ lazy val typesystemPersistence = Project(
   commonSettings
 ).dependsOn(core)
 
+lazy val typesystemService = Project(
+  id   = "graph-typesystem-service",
+  base = file("graph-typesystem") / "graph-typesystem-service"
+).settings(
+  commonSettings
+).dependsOn(
+  core,
+  typesystemPersistence
+).settings(
+  projectDependencies +=
+    (projectID in typesystemPersistence).value.exclude("org.slf4j", "slf4j-log4j12").exclude("org.slf4j", "slf4j-nop")
+).enablePlugins(
+  PlayScala
+)
+
 lazy val updateProjects = taskKey[Unit]("Execute the update script")
 
 lazy val scriptsSettings = Seq(
