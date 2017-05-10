@@ -4,7 +4,7 @@ version := "0.0.1-SNAPSHOT"
 scalaVersion := "2.11.8"
 
 resolvers += DefaultMavenRepository
-resolvers += "SDSC Snapshots" at "https://internal.datascience.ch:8081/nexus/content/repositories/snapshots/"
+//resolvers += "SDSC Snapshots" at "https://internal.datascience.ch:8081/nexus/content/repositories/snapshots/"
 resolvers += "jitpack" at "https://jitpack.io"
 resolvers += "Oracle Released Java Packages" at "http://download.oracle.com/maven"
 
