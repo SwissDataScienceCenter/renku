@@ -31,7 +31,7 @@ class GraphDomainController @Inject()(protected val orchestrator: OrchestrationL
     }
   }
 
-  def create: Action[String] = Action.async(bodyParseJson[String]/*(createReads)*/) { implicit request =>
+  def create: Action[String] = Action.async(bodyParseJson[String](createReads)) { implicit request =>
     val namespace = request.body
     val future = orchestrator.graphDomains.createGraphDomain(namespace)
     future map { graphDomain => Ok(Json.toJson(graphDomain)) } recover {
@@ -41,6 +41,6 @@ class GraphDomainController @Inject()(protected val orchestrator: OrchestrationL
     }
   }
 
-  private[this] lazy val createReads: Reads[String] = (JsPath \ "namespace").read[String](namespaceReads)
+  private[this] lazy val createReads: Reads[String] = (JsPath \ "namespace").read[String]
 
 }
