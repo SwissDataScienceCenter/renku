@@ -78,3 +78,11 @@ trait NamedType[TypeKey, PropKey] extends GraphType with HasKey[TypeKey] {
   }
 }
 
+
+object RecordType {
+
+  def apply[PropKey](properties: Set[PropKey]): RecordType[PropKey] =  RecordTypeImpl(properties)
+
+  private[this] case class RecordTypeImpl[PropKey](properties: Set[PropKey]) extends RecordType[PropKey]
+
+}

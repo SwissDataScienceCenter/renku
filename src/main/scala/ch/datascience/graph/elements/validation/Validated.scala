@@ -1,7 +1,7 @@
 package ch.datascience.graph.elements.validation
 
 import ch.datascience.graph.elements.{Property, Record}
-import ch.datascience.graph.types.PropertyKey
+import ch.datascience.graph.types.{PropertyKey, RecordType}
 
 sealed trait Validated
 
@@ -29,6 +29,12 @@ trait ValidatedRecord[Key, +Value, +Prop <: Property[Key, Value, Prop]] extends 
     * @return
     */
   def record: Record[Key, Value, Prop]
+
+  /**
+    * The record type of the validated record
+    * @return
+    */
+  def recordType: RecordType[Key]
 
   /**
     * The definitions of the validated properties
