@@ -14,7 +14,7 @@ trait PersistedProperties[Key] {
     * @param key
     * @return a future containing some property key if a corresponding one is found, None otherwise
     */
-  def fetchPropertyFor(key: Key)(implicit ec: ExecutionContext): Future[Option[PropertyKey[Key]]]
+  def fetchPropertyFor(key: Key): Future[Option[PropertyKey[Key]]]
 
   /**
     * Grouped version of getPropertyFor
@@ -23,6 +23,6 @@ trait PersistedProperties[Key] {
     * @param keys set of keys to retrieve
     * @return map key -> property key, will not contain unknown keys
     */
-  def fetchPropertiesFor(keys: Set[Key])(implicit ec: ExecutionContext): Future[Map[Key, PropertyKey[Key]]]
+  def fetchPropertiesFor(keys: Set[Key]): Future[Map[Key, PropertyKey[Key]]]
 
 }

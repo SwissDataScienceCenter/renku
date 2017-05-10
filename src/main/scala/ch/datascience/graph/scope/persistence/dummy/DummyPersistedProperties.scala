@@ -10,8 +10,8 @@ import scala.concurrent.{ExecutionContext, Future}
   */
 case class DummyPersistedProperties[Key]() extends PersistedProperties[Key] {
 
-  def fetchPropertyFor(key: Key)(implicit ec: ExecutionContext): Future[Option[PropertyKey[Key]]] = Future.successful(None)
+  def fetchPropertyFor(key: Key): Future[Option[PropertyKey[Key]]] = Future.successful(None)
 
-  def fetchPropertiesFor(keys: Set[Key])(implicit ec: ExecutionContext): Future[Map[Key, PropertyKey[Key]]] = Future.successful(Map.empty)
+  def fetchPropertiesFor(keys: Set[Key]): Future[Map[Key, PropertyKey[Key]]] = Future.successful(Map.empty)
 
 }
