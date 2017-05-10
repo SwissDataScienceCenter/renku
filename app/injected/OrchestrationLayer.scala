@@ -2,7 +2,7 @@ package injected
 
 import javax.inject.Inject
 
-import ch.datascience.typesystem.orchestration.OrchestrationStack
+import ch.datascience.graph.types.persistence.orchestration.OrchestrationStack
 import play.api.db.slick.DatabaseConfigProvider
 import play.db.NamedDatabase
 import slick.jdbc.JdbcBackend.Database
@@ -16,14 +16,12 @@ class OrchestrationLayer @Inject()(
                                     @NamedDatabase("sqldb") protected val dbConfigProvider : DatabaseConfigProvider,
                                     override protected val dal: DatabaseLayer,
                                     override protected val gal: GraphLayer,
-                                    override protected val gdb: GraphRunner,
-                                    override protected val scope: ScopeLayer
+                                    override protected val gdb: GraphRunner
                                   )
   extends OrchestrationStack(
     ec = play.api.libs.concurrent.Execution.defaultContext,
     dbConfig = dbConfigProvider.get,
     dal = dal,
     gdb = gdb,
-    gal = gal,
-    scope = scope
+    gal = gal
   )

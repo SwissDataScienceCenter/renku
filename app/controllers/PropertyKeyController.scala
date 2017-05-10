@@ -4,7 +4,7 @@ import java.sql.SQLException
 import java.util.UUID
 import javax.inject.Inject
 
-import ch.datascience.typesystem.model.{Cardinality, DataType}
+import ch.datascience.graph.types.{Cardinality, DataType}
 import injected.OrchestrationLayer
 import models.json._
 import play.api.libs.concurrent.Execution.Implicits._

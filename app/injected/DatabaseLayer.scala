@@ -2,8 +2,8 @@ package injected
 
 import javax.inject.Inject
 
+import ch.datascience.graph.types.persistence.relationaldb.DatabaseStack
 import play.api.db.slick.{DatabaseConfigProvider, HasDatabaseConfigProvider}
-import ch.datascience.typesystem.relationaldb.DatabaseStack
 import groovy.lang.Singleton
 import play.db.NamedDatabase
 import slick.basic.DatabaseConfig

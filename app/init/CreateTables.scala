@@ -1,7 +1,7 @@
 package init
 
-import ch.datascience.typesystem.external.DatabaseConfigComponent
-import ch.datascience.typesystem.relationaldb.DatabaseStack
+import ch.datascience.graph.types.persistence.DatabaseConfigComponent
+import ch.datascience.graph.types.persistence.relationaldb.DatabaseStack
 import slick.basic.DatabaseConfig
 import slick.jdbc.JdbcProfile
 

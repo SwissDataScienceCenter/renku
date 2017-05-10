@@ -4,23 +4,18 @@
 # ~~~~
 
 # GraphDomain controller
-GET     /graph_domain                      controllers.GraphDomainController.index
+GET     /management/graph_domain                      controllers.GraphDomainController.index
 
-GET     /graph_domain/$idOrName<[^/]*>     controllers.GraphDomainController.findByIdOrName(idOrName: String)
+GET     /management/graph_domain/$idOrName<[^/]*>     controllers.GraphDomainController.findByIdOrName(idOrName: String)
 
-POST    /graph_domain                      controllers.GraphDomainController.create
+POST    /management/graph_domain                      controllers.GraphDomainController.create
 
 
 # PropertyKeys controller
-GET     /property_key                       controllers.PropertyKeyController.index
+GET     /management/property_key                       controllers.PropertyKeyController.index
 
-GET     /property_key/:id                   controllers.PropertyKeyController.findById(id: String)
+GET     /management/property_key/:id                   controllers.PropertyKeyController.findById(id: String)
 
-GET     /property_key/$namespace<[^/]*>/:name     controllers.PropertyKeyController.findByNamespaceAndName(namespace: String, name: String)
+GET     /management/property_key/$namespace<[^/]*>/:name     controllers.PropertyKeyController.findByNamespaceAndName(namespace: String, name: String)
 
-POST    /property_key                      controllers.PropertyKeyController.create
-
-# Validation controller
-GET     /validator                         controllers.ValidationController.validator
-
-POST    /validate_object                   controllers.ValidationController.validateObject
+POST    /management/property_key                      controllers.PropertyKeyController.create

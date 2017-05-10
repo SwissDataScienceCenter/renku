@@ -3,7 +3,7 @@ package json
 
 import java.util.UUID
 
-import ch.datascience.typesystem.model.GraphDomain
+import ch.datascience.graph.types.persistence.model.GraphDomain
 import play.api.libs.json._
 import play.api.libs.functional.syntax._
 
@@ -20,6 +20,6 @@ object GraphDomainMappers {
   def graphDomainReads: Reads[GraphDomain] = (
     (JsPath \ "id").read[UUID] and
       (JsPath \ "namespace").read[String]
-  )(GraphDomain)
+  )(GraphDomain.apply _)
 
 }

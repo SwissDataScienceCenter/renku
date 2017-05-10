@@ -2,7 +2,7 @@ package injected
 
 import javax.inject.{Inject, Singleton}
 
-import ch.datascience.typesystem.graphdb.ManagementActionRunner
+import ch.datascience.graph.types.persistence.graphdb.ManagementActionRunner
 import org.janusgraph.core.{JanusGraph, JanusGraphFactory}
 import play.api.inject.ApplicationLifecycle
 

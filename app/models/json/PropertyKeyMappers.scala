@@ -3,7 +3,8 @@ package json
 
 import java.util.UUID
 
-import ch.datascience.typesystem.model.{Cardinality, DataType, GraphDomain, PropertyKey}
+import ch.datascience.graph.types.{Cardinality, DataType}
+import ch.datascience.graph.types.persistence.model.{GraphDomain, PropertyKey}
 import play.api.libs.json._
 import play.api.libs.functional.syntax._
 
