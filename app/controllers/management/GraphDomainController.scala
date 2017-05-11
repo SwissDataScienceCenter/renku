@@ -1,17 +1,16 @@
-package controllers
+package controllers.management
 
 import java.sql.SQLException
 import java.util.UUID
-import javax.inject._
+import javax.inject.Inject
 
+import controllers.JsonComponent
 import injected.OrchestrationLayer
 import models.json._
 import play.api.libs.concurrent.Execution.Implicits._
-import play.api.libs.functional.syntax._
 import play.api.libs.json._
 import play.api.mvc._
 
-//@Singleton
 class GraphDomainController @Inject()(protected val orchestrator: OrchestrationLayer) extends Controller with JsonComponent {
 
   def index: Action[AnyContent] = Action.async { implicit request =>

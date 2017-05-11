@@ -4,18 +4,23 @@
 # ~~~~
 
 # GraphDomain controller
-GET     /management/graph_domain                      controllers.GraphDomainController.index
+GET     /management/graph_domain                      controllers.management.GraphDomainController.index
 
-GET     /management/graph_domain/$idOrName<[^/]*>     controllers.GraphDomainController.findByIdOrName(idOrName: String)
+GET     /management/graph_domain/$idOrName<[^/]*>     controllers.management.GraphDomainController.findByIdOrName(idOrName: String)
 
-POST    /management/graph_domain                      controllers.GraphDomainController.create
+POST    /management/graph_domain                      controllers.management.GraphDomainController.create
 
 
 # PropertyKeys controller
-GET     /management/property_key                       controllers.PropertyKeyController.index
+GET     /management/property_key                       controllers.management.PropertyKeyController.index
 
-GET     /management/property_key/:id                   controllers.PropertyKeyController.findById(id: String)
+GET     /management/property_key/:id                   controllers.management.PropertyKeyController.findById(id: String)
 
-GET     /management/property_key/$namespace<[^/]*>/:name     controllers.PropertyKeyController.findByNamespaceAndName(namespace: String, name: String)
+GET     /management/property_key/$namespace<[^/]*>/:name     controllers.management.PropertyKeyController.findByNamespaceAndName(namespace: String, name: String)
 
-POST    /management/property_key                      controllers.PropertyKeyController.create
+POST    /management/property_key                       controllers.management.PropertyKeyController.create
+
+# PropertyScope controller
+GET     /scope/property                                controllers.scope.PropertyScopeController.getCachedProperties
+
+GET     /scope/property/$namespace<[^/]*>/:name        controllers.scope.PropertyScopeController.getPropertyFor(namespace: String, name: String)

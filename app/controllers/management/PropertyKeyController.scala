@@ -1,10 +1,11 @@
-package controllers
+package controllers.management
 
 import java.sql.SQLException
 import java.util.UUID
 import javax.inject.Inject
 
 import ch.datascience.graph.types.{Cardinality, DataType}
+import controllers.JsonComponent
 import injected.OrchestrationLayer
 import models.json._
 import play.api.libs.concurrent.Execution.Implicits._
