@@ -3,6 +3,7 @@ package ch.datascience.graph.scope
 import ch.datascience.graph.types.PropertyKey
 import ch.datascience.graph.scope.persistence.PersistedProperties
 
+import scala.collection
 import scala.collection.concurrent
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -12,7 +13,7 @@ import scala.concurrent.{ExecutionContext, Future}
   */
 trait PropertyScope[Key] {
 
-  def getPropertyFor(key: Key)(implicit ec: ExecutionContext): Future[Option[PropertyKey[Key]]] = {
+  final def getPropertyFor(key: Key)(implicit ec: ExecutionContext): Future[Option[PropertyKey[Key]]] = {
     propertyDefinitions get key match {
       case Some(propertyKey) => Future.successful( Some(propertyKey) )
       case None => {
@@ -28,7 +29,7 @@ trait PropertyScope[Key] {
     }
   }
 
-  def getPropertiesFor(keys: Set[Key])(implicit ec: ExecutionContext): Future[Map[Key, PropertyKey[Key]]] = {
+  final def getPropertiesFor(keys: Set[Key])(implicit ec: ExecutionContext): Future[Map[Key, PropertyKey[Key]]] = {
     // Locally, sort known keys and unkown keys
     val tryLocally = (for (key <- keys) yield key -> propertyDefinitions.get(key)).toMap
     val knownPropertyKeys: Map[Key, PropertyKey[Key]] = for {
@@ -55,7 +56,11 @@ trait PropertyScope[Key] {
     })(ec)
   }
 
-  protected def propertyDefinitions: concurrent.Map[Key, PropertyKey[Key]]
+  final def getCachedProperties: Future[collection.Map[Key, PropertyKey[Key]]] = {
+    Future.successful( propertyDefinitions.readOnlySnapshot() )
+  }
+
+  protected def propertyDefinitions: concurrent.TrieMap[Key, PropertyKey[Key]]
 
   protected def persistedProperties: PersistedProperties[Key]
 
