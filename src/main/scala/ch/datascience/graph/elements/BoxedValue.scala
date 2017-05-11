@@ -5,7 +5,7 @@ import ch.datascience.graph.types.DataType
 /**
   * Created by johann on 27/04/17.
   */
-sealed abstract class BoxedValue extends Element {
+sealed abstract class BoxedValue {
 
   type Self
   val self: Self

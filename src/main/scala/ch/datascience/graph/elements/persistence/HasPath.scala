@@ -1,18 +1,18 @@
-package ch.datascience.graph.elements
+package ch.datascience.graph.elements.persistence
 
 /**
   * Basic trait for elements that have an path.
   * Usually children elements of the ones with an id.
   *
-  * @tparam Path path type for the Element
+  * @tparam P path type for the Element
   */
-trait HasPath[+Path] {
+trait HasPath[+P <: Path] {
 
   /**
     * The path
     *
     * @return the path
     */
-  def path: Path
+  def path: P
 
 }
