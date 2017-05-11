@@ -7,6 +7,6 @@ import ch.datascience.graph.types.persistence.orchestration.OrchestrationStack
   */
 trait OrchestrationComponent {
 
-  def orchestrator: OrchestrationStack
+  protected def orchestrator: OrchestrationStack
 
 }
