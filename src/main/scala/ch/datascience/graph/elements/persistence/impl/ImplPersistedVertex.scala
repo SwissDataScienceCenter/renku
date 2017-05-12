@@ -1,7 +1,7 @@
 package ch.datascience.graph.elements.persistence.impl
 
-import ch.datascience.graph.elements.{BoxedValue, MultiProperties, RichProperty}
 import ch.datascience.graph.elements.persistence._
+import ch.datascience.graph.elements.{BoxedValue, MultiProperties}
 
 /**
   * Created by johann on 11/05/17.
