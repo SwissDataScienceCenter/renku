@@ -20,12 +20,12 @@ MetaKey,
 +MetaValue,
 +MetaProp <: PersistedRecordProperty[MetaKey, MetaValue, MetaProp],
 +PropId,
-+Prop <: RichProperty[Key, Value, MetaKey, MetaValue, MetaProp, Prop] with PersistedMultiRecordProperty[PropId, Key, Value, Prop] with HasPath[RecordPath[MetaKey]]
++Prop <: RichProperty[Key, Value, MetaKey, MetaValue, MetaProp, Prop] with PersistedMultiRecordProperty[PropId, Key, Value, Prop]
 ] extends Vertex[TypeId, Key, Value, MetaKey, MetaValue, MetaProp, Prop]
-  with PersistedElement[VertexPath[Id] with MultiRecordPath[PropId]]
+  with PersistedElement[VertexPath[Id]]
   with HasId[Id] {
 
-  final def path: VertexPath[Id] with MultiRecordPath[PropId] = new VertexPath(id) with MultiRecordPath[PropId]
+  final def path: VertexPath[Id] = VertexPath(id)
 
 }
 
@@ -36,48 +36,22 @@ sealed trait PersistedProperty[+Key, +Value, +This <: PropertyBase[Key, Value]]
 
 trait PersistedRecordProperty[+Key, +Value, +This <: PropertyBase[Key, Value]]
   extends PersistedProperty[Key, Value, This]
-    with PersistedElement[PropertyPathWithKey[Key]] { this: This =>
+    with PersistedElement[PropertyPathFromRecord[Key]] { this: This =>
 
-  def parent: RecordPath[Key]
+  def parent: RecordPath
 
-  def path: PropertyPathWithKey[Key] = PropertyPathWithKey(parent, key)
+  final def path: PropertyPathFromRecord[Key] = PropertyPathFromRecord(parent, key)
 
 }
 
 trait PersistedMultiRecordProperty[+Id, +Key, +Value, +This <: PropertyBase[Key, Value]]
   extends PersistedProperty[Key, Value, This]
-    with PersistedElement[PropertyPathWithId[Id]]
+    with PersistedElement[PropertyPathFromMultiRecord[Id]]
     with HasId[Id] { this: This =>
 
-  def parent: MultiRecordPath[Id]
+  def parent: MultiRecordPath
 
-  def path: PropertyPathWithId[Id] = PropertyPathWithId(parent, id)
-
-}
-
-trait PersistedRecordRichProperty[+Key, +Value, MetaKey, +MetaValue, +MetaProp <: PersistedRecordProperty[MetaKey, MetaValue, MetaProp],
-+This <: RichPropertyBase[Key, Value, MetaKey, MetaValue, MetaProp]]
-  extends PersistedProperty[Key, Value, This]
-    with PersistedRecordProperty[Key, Value, This]
-    with RichProperty[Key, Value, MetaKey, MetaValue, MetaProp, This]
-    with PersistedElement[PropertyPathWithKey[Key] with RecordPath[MetaKey]] { this: This =>
-
-  def parent: RecordPath[Key]
-
-  override final def path: PropertyPathWithKey[Key] with RecordPath[MetaKey] = new PropertyPathWithKey(parent, key) with RecordPath[MetaKey]
-
-}
-
-trait PersistedMultiRecordRichProperty[+Id, +Key, +Value, MetaKey, +MetaValue, +MetaProp <: PersistedRecordProperty[MetaKey, MetaValue, MetaProp],
-+This <: RichPropertyBase[Key, Value, MetaKey, MetaValue, MetaProp]]
-  extends PersistedProperty[Key, Value, This]
-    with PersistedMultiRecordProperty[Id, Key, Value, This]
-    with RichProperty[Key, Value, MetaKey, MetaValue, MetaProp, This]
-    with PersistedElement[PropertyPathWithId[Id] with RecordPath[MetaKey]] { this: This =>
-
-  def parent: MultiRecordPath[Id]
-
-  override final def path: PropertyPathWithId[Id] with RecordPath[MetaKey] = new PropertyPathWithId(parent, id) with RecordPath[MetaKey]
+  final def path: PropertyPathFromMultiRecord[Id] = PropertyPathFromMultiRecord(parent, id)
 
 }
 

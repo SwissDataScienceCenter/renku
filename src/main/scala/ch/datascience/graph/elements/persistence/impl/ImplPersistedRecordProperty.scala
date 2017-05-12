@@ -7,7 +7,7 @@ import ch.datascience.graph.elements.persistence.{PersistedRecordProperty, Recor
   * Created by johann on 11/05/17.
   */
 case class ImplPersistedRecordProperty[+Key, +Value: BoxedOrValidValue](
-  parent: RecordPath[Key],
+  parent: RecordPath,
   key: Key,
   value: Value
 ) extends PersistedRecordProperty[Key, Value, ImplPersistedRecordProperty[Key, Value]]

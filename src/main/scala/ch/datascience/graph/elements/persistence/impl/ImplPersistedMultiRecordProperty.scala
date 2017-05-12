@@ -7,7 +7,7 @@ import ch.datascience.graph.elements.persistence.{MultiRecordPath, PersistedMult
   * Created by johann on 11/05/17.
   */
 case class ImplPersistedMultiRecordProperty[+Id, +Key, +Value: BoxedOrValidValue](
-  parent: MultiRecordPath[Id],
+  parent: MultiRecordPath,
   id: Id,
   key: Key,
   value: Value
