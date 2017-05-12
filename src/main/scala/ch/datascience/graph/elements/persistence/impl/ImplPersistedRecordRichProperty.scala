@@ -1,6 +1,6 @@
 package ch.datascience.graph.elements.persistence.impl
 
-import ch.datascience.graph.elements.persistence.{PersistedRecordProperty, RecordPath}
+import ch.datascience.graph.elements.persistence.{PersistedRichRecordProperty, RecordPath}
 import ch.datascience.graph.elements.{BoxedOrValidValue, Properties, RichProperty}
 
 /**
@@ -11,5 +11,5 @@ case class ImplPersistedRecordRichProperty[+Key, +Value: BoxedOrValidValue, Meta
   key: Key,
   value: Value,
   properties: Properties[MetaKey, MetaValue, ImplPersistedRecordProperty[MetaKey, MetaValue]]
-) extends PersistedRecordProperty[Key, Value, ImplPersistedRecordRichProperty[Key, Value, MetaKey, MetaValue]]
+) extends PersistedRichRecordProperty[Key, Value, ImplPersistedRecordRichProperty[Key, Value, MetaKey, MetaValue]]
   with RichProperty[Key, Value, MetaKey, MetaValue, ImplPersistedRecordProperty[MetaKey, MetaValue], ImplPersistedRecordRichProperty[Key, Value, MetaKey, MetaValue]]
