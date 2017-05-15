@@ -56,7 +56,6 @@ lazy val scriptsSettings = Seq(
     println(s"Calling: scripts/update.sh ${name.value}")
     s"scripts/update.sh ${name.value}" !
   }
-, update := (update dependsOn updateProjects).value
 )
 
 lazy val commonSettings = Seq(
