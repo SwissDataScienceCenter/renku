@@ -1,6 +1,7 @@
 package ch.datascience.graph.types
 
 import ch.datascience.graph.HasKey
+import ch.datascience.graph.types.impl.{ImplNamedType, ImplRecordType}
 
 /**
   * Base trait for graph types
@@ -69,24 +70,41 @@ trait NamedType[TypeKey, PropKey] extends GraphType with HasKey[TypeKey] {
 
   def properties: Set[PropKey]
 
-  def like: RecordType[PropKey]
+  def like: RecordType[PropKey] = RecordType(properties)
 
   final def <<(t: GraphType): Boolean = t match {
     case nt: NamedType[TypeKey, PropKey] => (superTypes + this.key) contains nt.key
     case rt: RecordType[PropKey]         => rt.properties subsetOf this.properties
     case _                               => false
   }
+
+  def simpleCopy: NamedType[TypeKey, PropKey] = NamedType(key, superTypes, properties)
+
 }
 
 
 object RecordType {
 
-  def apply[PropKey](properties: Set[PropKey]): RecordType[PropKey] =  RecordTypeImpl(properties)
+  def apply[PropKey](properties: Set[PropKey]): RecordType[PropKey] = ImplRecordType(properties)
 
-  private[this] case class RecordTypeImpl[PropKey](properties: Set[PropKey]) extends RecordType[PropKey] {
+  def unapply[PropKey](recordType: RecordType[PropKey]): Option[Set[PropKey]] = {
+    if (recordType eq null)
+      None
+    else
+      Some(recordType.properties)
+  }
 
-    override def toString: String = s"RecordType($properties)"
+}
 
+object NamedType {
+
+  def apply[TypeKey, PropKey](key: TypeKey, superTypes: Set[TypeKey], properties: Set[PropKey]): NamedType[TypeKey, PropKey] = ImplNamedType(key, superTypes, properties)
+
+  def unapply[TypeKey, PropKey](namedType: NamedType[TypeKey, PropKey]): Option[(TypeKey, Set[TypeKey], Set[PropKey])] = {
+    if (namedType eq null)
+      None
+    else
+      Some(namedType.key, namedType.superTypes, namedType.properties)
   }
 
 }
