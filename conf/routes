@@ -22,6 +22,10 @@ POST    /management/property_key                       controllers.management.Pr
 # NamedType controller
 GET     /management/named_type                         controllers.management.NamedTypeController.index
 
+GET     /management/named_type/:id                     controllers.management.NamedTypeController.findById(id: String)
+
+GET     /management/named_type/$namespace<[^/]*>/:name     controllers.management.NamedTypeController.findByNamespaceAndName(namespace: String, name: String)
+
 POST    /management/named_type                         controllers.management.NamedTypeController.create
 
 

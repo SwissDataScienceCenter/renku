@@ -31,6 +31,8 @@ package object json {
 
   implicit lazy val propertyKeyWrites: Writes[PropertyKey] = PropertyKeyMappers.propertyKeyWrites
 
+  implicit lazy val namedTypeWrites: Writes[NamedType] = NamedTypeMappers.namedTypeWrites
+
   lazy val namespaceReads: Reads[String] = JsPath.read[String](Reads.pattern("([^:]*)".r) <~ notUUIDReads)
   lazy val nameReads: Reads[String] = JsPath.read[String](Reads.pattern("([^:]+)".r) <~ notUUIDReads)
 

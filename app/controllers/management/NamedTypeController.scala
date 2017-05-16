@@ -1,12 +1,12 @@
 package controllers.management
 
 import java.sql.SQLException
+import java.util.UUID
 import javax.inject.Inject
 
 import ch.datascience.graph.NamespaceAndName
 import controllers.JsonComponent
 import injected.OrchestrationLayer
-import play.api.libs.concurrent.Execution.Implicits._
 import models.json._
 import play.api.libs.concurrent.Execution.Implicits._
 import play.api.libs.functional.syntax._
@@ -22,8 +22,28 @@ class NamedTypeController @Inject()(protected val orchestrator: OrchestrationLay
 
   def index: Action[Unit] = Action.async(BodyParsers.parse.empty) { implicit request =>
     val all = orchestrator.namedTypes.all()
-//    all.map(seq => Json.toJson(seq)).map(json => Ok(json))
-    all.map({seq => println(seq); Ok})
+    all.map(seq => Json.toJson(seq)).map(json => Ok(json))
+  }
+
+  def findById(id: String): Action[Unit] = Action.async(BodyParsers.parse.empty) { implicit request =>
+    val json = JsString(id)
+    json.validate[UUID] match {
+      case JsError(e) => Future.successful(BadRequest(JsError.toJson(e)))
+      case JsSuccess(uuid, _) =>
+        val future = orchestrator.namedTypes.findById(uuid)
+        future  map {
+          case Some(namedType) => Ok(Json.toJson(namedType))
+          case None => NotFound
+        }
+    }
+  }
+
+  def findByNamespaceAndName(namespace: String, name: String): Action[Unit] = Action.async(BodyParsers.parse.empty) { implicit request =>
+    val future = orchestrator.namedTypes.findByNamespaceAndName(namespace, name)
+    future map {
+      case Some(namedTypes) => Ok(Json.toJson(namedTypes))
+      case None => NotFound
+    }
   }
 
   def create: Action[CreateNamedType] = Action.async(bodyParseJson[CreateNamedType](createReads)) { implicit request =>
