@@ -10,8 +10,7 @@ GET     /management/graph_domain/$idOrName<[^/]*>     controllers.management.Gra
 
 POST    /management/graph_domain                      controllers.management.GraphDomainController.create
 
-
-# PropertyKeys controller
+# PropertyKey controller
 GET     /management/property_key                       controllers.management.PropertyKeyController.index
 
 GET     /management/property_key/:id                   controllers.management.PropertyKeyController.findById(id: String)
@@ -19,6 +18,12 @@ GET     /management/property_key/:id                   controllers.management.Pr
 GET     /management/property_key/$namespace<[^/]*>/:name     controllers.management.PropertyKeyController.findByNamespaceAndName(namespace: String, name: String)
 
 POST    /management/property_key                       controllers.management.PropertyKeyController.create
+
+# NamedType controller
+GET     /management/named_type                         controllers.management.NamedTypeController.index
+
+POST    /management/named_type                         controllers.management.NamedTypeController.create
+
 
 # PropertyScope controller
 GET     /scope/property                                controllers.scope.PropertyScopeController.getCachedProperties

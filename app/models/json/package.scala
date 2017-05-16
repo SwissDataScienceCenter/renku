@@ -2,6 +2,7 @@ package models
 
 import java.util.UUID
 
+import ch.datascience.graph.NamespaceAndName
 import ch.datascience.graph.types.{Cardinality, DataType}
 import ch.datascience.graph.types.persistence.model._
 import play.api.libs.functional.syntax._
@@ -21,6 +22,9 @@ package object json {
 
   implicit lazy val cardinalityReads: Reads[Cardinality] = CardinalityMappers.cardinalityReads
   implicit lazy val cardinalityWrites: Writes[Cardinality] = CardinalityMappers.cardinalityWrites
+
+  implicit lazy val namespaceAndNameReads: Reads[NamespaceAndName] = NamespaceAndNameMappers.namespaceAndNameReads
+  implicit lazy val namespaceAndNameWrites: Writes[NamespaceAndName] = NamespaceAndNameMappers.namespaceAndNameWrites
 
   implicit lazy val graphDomainReads: Reads[GraphDomain] = GraphDomainMappers.graphDomainReads
   implicit lazy val graphDomainWrites: Writes[GraphDomain] = GraphDomainMappers.graphDomainWrites
