@@ -3,7 +3,7 @@ package ch.datascience.graph.types.persistence.orchestration
 import java.util.UUID
 
 import ch.datascience.graph.NamespaceAndName
-import ch.datascience.graph.types.persistence.model.{GraphDomain, NamedType}
+import ch.datascience.graph.types.persistence.model.{GraphDomain, NamedType, PropertyKey}
 import ch.datascience.graph.types.persistence.model.relational.{RowNamedType, RowPropertyKey}
 
 import language.{higherKinds, reflectiveCalls}
@@ -44,7 +44,8 @@ trait NamedTypeComponent {
       graphDomain: GraphDomain,
       name: String,
       superTypesMap: Map[NamespaceAndName, RowNamedType],
-      propertiesMap: Map[NamespaceAndName, RowPropertyKey]
+//      propertiesMap: Map[NamespaceAndName, RowPropertyKey]
+      propertiesMap: Map[NamespaceAndName, PropertyKey]
     ): Future[NamedType] = {
       val namedType = NamedType(UUID.randomUUID(), graphDomain, name, superTypesMap, propertiesMap)
       val insertNamedType = dal.namedTypes add namedType
@@ -68,7 +69,8 @@ trait NamedTypeComponent {
       joinedFuture flatMap { case (graphDomain, superTypesMap, propertiesMap) => createNamedType(graphDomain, name, superTypesMap, propertiesMap) }
     }
 
-    def linearize(superTypes: Set[NamespaceAndName], properties: Set[NamespaceAndName]): Future[(Map[NamespaceAndName, RowNamedType], Map[NamespaceAndName, RowPropertyKey])] = {
+//    def linearize(superTypes: Set[NamespaceAndName], properties: Set[NamespaceAndName]): Future[(Map[NamespaceAndName, RowNamedType], Map[NamespaceAndName, RowPropertyKey])] = {
+    def linearize(superTypes: Set[NamespaceAndName], properties: Set[NamespaceAndName]): Future[(Map[NamespaceAndName, RowNamedType], Map[NamespaceAndName, PropertyKey])] = {
       val futureSuperTypes = for {
         iterable <- Future.traverse(superTypes.toIterable)(this.findByNamespaceAndName)
       } yield for {
@@ -99,7 +101,7 @@ trait NamedTypeComponent {
         superTypes <- futureSuperTypes
         directProperties = for {
           property <- properties
-        } yield property.key -> property.toRow
+        } yield property.key -> property
         impliedProperties = for {
           superType <- superTypes
           (key, value) <- superType.propertiesMap

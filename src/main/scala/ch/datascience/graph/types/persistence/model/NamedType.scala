@@ -14,7 +14,8 @@ case class NamedType(
   graphDomain: GraphDomain,
   name: String,
   superTypesMap: Map[NamespaceAndName, RowNamedType],
-  propertiesMap: Map[NamespaceAndName, RowPropertyKey]
+//  propertiesMap: Map[NamespaceAndName, RowPropertyKey]
+  propertiesMap: Map[NamespaceAndName, PropertyKey]
 ) extends AbstractEntity[RowNamedType]
   with NamedTypeBase[NamespaceAndName, NamespaceAndName] {
   require(NamespaceAndName.nameIsValid(name), s"Invalid name: '$name' (Pattern: ${NamespaceAndName.namePattern})")

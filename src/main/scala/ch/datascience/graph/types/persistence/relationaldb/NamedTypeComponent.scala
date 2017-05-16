@@ -4,7 +4,8 @@ import java.time.Instant
 import java.util.UUID
 
 import ch.datascience.graph.NamespaceAndName
-import ch.datascience.graph.types.persistence.model.{EntityState, GraphDomain, NamedType, NamedTypeBasic}
+import ch.datascience.graph.types.{Cardinality, DataType}
+import ch.datascience.graph.types.persistence.model._
 import ch.datascience.graph.types.persistence.model.relational._
 import slick.lifted._
 
@@ -68,13 +69,21 @@ trait NamedTypeComponent { this: JdbcProfileComponent with SchemasComponent with
       if nt.id === link.namedTypeId
     } yield (nt.id, (superType, superTypeGD.namespace))
 
-    def withProperties: Query[(Rep[UUID], (PropertyKeys, Rep[String])), (UUID, (RowPropertyKey, String)), C] = for {
+//    def withProperties: Query[(Rep[UUID], (PropertyKeys, Rep[String])), (UUID, (RowPropertyKey, String)), C] = for {
+//      nt <- self
+//      link <- namedTypeProperties
+//      property <- link.propertyKey
+//      propertyGD <- property.graphDomain
+//      if nt.id === link.namedTypeId
+//    } yield (nt.id, (property, propertyGD.namespace))
+
+    def withProperties: Query[(Rep[UUID], MappedProjection[PropertyKey, (UUID, GraphDomain, String, DataType, Cardinality)]), (UUID, PropertyKey), C] = for {
       nt <- self
       link <- namedTypeProperties
       property <- link.propertyKey
-      propertyGD <- property.graphDomain
+      gd <- property.graphDomain
       if nt.id === link.namedTypeId
-    } yield (nt.id, (property, propertyGD.namespace))
+    } yield (nt.id, property.mappedUsing(gd))
 
     def runNamedTypeQuery(implicit ec: ExecutionContext): Future[Seq[NamedType]] = {
       val futureNamedTypes = db.run( this.mapped.result )
@@ -94,7 +103,7 @@ trait NamedTypeComponent { this: JdbcProfileComponent with SchemasComponent with
       } yield for {
         (namedType, superTypesSeq, propertiesSeq) <- seq
         superTypes = for { (superType, namespace) <- superTypesSeq } yield NamespaceAndName(namespace, superType.name) -> superType
-        properties = for { (property, namespace) <- propertiesSeq } yield NamespaceAndName(namespace, property.name) -> property
+        properties = for { property <- propertiesSeq } yield property.key -> property
       } yield NamedType(namedType.id, namedType.graphDomain, namedType.name, superTypes.toMap, properties.toMap)
     }
 
