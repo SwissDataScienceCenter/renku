@@ -17,9 +17,11 @@ trait RelationalPersistedProperties extends PersistedProperties[NamespaceAndName
     * @param key
     * @return a future containing some property key if a corresponding one is found, None otherwise
     */
-  def fetchPropertyFor(key: NamespaceAndName): Future[Option[PropertyKey[NamespaceAndName]]] = {
-    orchestrator.propertyKeys.findByNamespaceAndName(key)
-  }
+  def fetchPropertyFor(key: NamespaceAndName): Future[Option[PropertyKey[NamespaceAndName]]] = for {
+    opt <- orchestrator.propertyKeys.findByNamespaceAndName(key)
+  } yield for {
+    propertyKey <- opt
+  } yield propertyKey.simpleCopy
 
   /**
     * Grouped version of getPropertyFor
@@ -30,9 +32,19 @@ trait RelationalPersistedProperties extends PersistedProperties[NamespaceAndName
     * @return map key -> property key, will not contain unknown keys
     */
   def fetchPropertiesFor(keys: Set[NamespaceAndName]): Future[Map[NamespaceAndName, PropertyKey[NamespaceAndName]]] = {
-    Future.traverse(keys.toIterable)({ key =>
-      orchestrator.propertyKeys.findByNamespaceAndName(key).map({ opt => key -> opt })
-    }).map({ seq => (for ((k, v) <- seq; vv <- v) yield k -> vv).toMap })
+    val futurePropertyKeys = Future.traverse(keys.toIterable) { key =>
+      for {
+        opt <- orchestrator.propertyKeys.findByNamespaceAndName(key)
+      } yield key -> opt
+    }
+
+    for {
+      propertyKeys <- futurePropertyKeys
+      iterable = for {
+        (key, opt) <- propertyKeys
+        propertyKey <- opt
+      } yield key -> propertyKey.simpleCopy
+    } yield iterable.toMap
   }
 
 }

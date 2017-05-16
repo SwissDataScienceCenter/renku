@@ -29,13 +29,13 @@ case class PropertyKey(
 
 }
 
-object PropertyKey {
-
-  def make(rowGraphDomain: RowGraphDomain, rowPropertyKey: RowPropertyKey): PropertyKey = {
-    val graphDomain = GraphDomain.make(rowGraphDomain)
-    PropertyKey(rowPropertyKey.id, graphDomain, rowPropertyKey.name, rowPropertyKey.dataType, rowPropertyKey.cardinality)
-  }
-
-  def tupled: ((UUID, GraphDomain, String, DataType, Cardinality)) => PropertyKey = (PropertyKey.apply _).tupled
-
-}
+//object PropertyKey {
+//
+//  def make(rowGraphDomain: RowGraphDomain, rowPropertyKey: RowPropertyKey): PropertyKey = {
+//    val graphDomain = GraphDomain.make(rowGraphDomain)
+//    PropertyKey(rowPropertyKey.id, graphDomain, rowPropertyKey.name, rowPropertyKey.dataType, rowPropertyKey.cardinality)
+//  }
+//
+//  def tupled: ((UUID, GraphDomain, String, DataType, Cardinality)) => PropertyKey = (PropertyKey.apply _).tupled
+//
+//}

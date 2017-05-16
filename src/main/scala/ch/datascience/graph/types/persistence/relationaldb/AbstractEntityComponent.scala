@@ -7,6 +7,8 @@ import ch.datascience.graph.types.persistence.model.{AbstractEntity, EntityState
 import ch.datascience.graph.types.persistence.model.relational.{RowAbstractEntity, RowEntity, RowState}
 import slick.lifted.{CompiledFunction, ForeignKeyQuery}
 
+import scala.concurrent.{ExecutionContext, Future}
+
 /**
   * Created by johann on 20/03/17.
   */
@@ -31,13 +33,29 @@ trait AbstractEntityComponent { this: JdbcProfileComponent with EntityComponent 
 
     //def findById(id: UUID): Query[TA, MA, Seq]
 
-    def add(entity: MA): DBIO[Int] = addRow(entity.toRow)
+    def add(entity: MA): DBIO[Unit] = {
+      DBIO.seq(preInsertEntity(entity), insertEntity(entity), postInsertEntity(entity)).transactionally
+    }
 
-    def addRow(rowEntity: A): DBIO[Int] = {
+    protected def insertEntity(entity: MA): DBIO[Unit] = insertRow(entity.toRow)
+
+    protected def insertRow(rowEntity: A): DBIO[Unit] = {
+      DBIO.seq(this += rowEntity)
+    }
+
+    protected def preInsertEntity(entity: MA): DBIO[Unit] = preInsertRow(entity.toRow)
+
+    protected def preInsertRow(rowEntity: A): DBIO[Unit] = {
       val insertEntity = entities += RowEntity(rowEntity.id, rowEntity.entityType)
       val insertState = states += RowState(None, rowEntity.id, EntityState.Pending, Instant.now())
-      val insertConcrete = this += rowEntity
-      (insertEntity andThen insertState andThen insertConcrete).transactionally
+      DBIO.seq(insertEntity, insertState)
+    }
+
+    protected def postInsertEntity(entity: MA): DBIO[Unit] = postInsertRow(entity.toRow)
+
+    protected def postInsertRow(rowEntity: A): DBIO[Unit] = {
+      // TODO: Commit by transitioning state
+      DBIO.from(Future.successful(()))
     }
 
   }

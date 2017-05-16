@@ -20,10 +20,10 @@ case class GraphDomain(id: UUID, namespace: String) extends AbstractEntity[RowGr
 
 }
 
-object GraphDomain {
-
-  def make(rowGraphDomain: RowGraphDomain): GraphDomain = GraphDomain(rowGraphDomain.id, rowGraphDomain.namespace)
-
-  def tupled: ((UUID, String)) => GraphDomain = (GraphDomain.apply _).tupled
-
-}
+//object GraphDomain {
+//
+//  def make(rowGraphDomain: RowGraphDomain): GraphDomain = GraphDomain(rowGraphDomain.id, rowGraphDomain.namespace)
+//
+//  def tupled: ((UUID, String)) => GraphDomain = (GraphDomain.apply _).tupled
+//
+//}

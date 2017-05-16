@@ -26,13 +26,13 @@ case class EdgeLabel(id: UUID,
 
 }
 
-object EdgeLabel {
-
-  def make(rowGraphDomain: RowGraphDomain, rowEdgeLabel: RowEdgeLabel): EdgeLabel = {
-    val graphDomain = GraphDomain.make(rowGraphDomain)
-    EdgeLabel(rowEdgeLabel.id, graphDomain, rowEdgeLabel.name, rowEdgeLabel.multiplicity)
-  }
-
-  def tupled: ((UUID, GraphDomain, String, Multiplicity)) => EdgeLabel = (EdgeLabel.apply _).tupled
-
-}
+//object EdgeLabel {
+//
+//  def make(rowGraphDomain: RowGraphDomain, rowEdgeLabel: RowEdgeLabel): EdgeLabel = {
+//    val graphDomain = GraphDomain.make(rowGraphDomain)
+//    EdgeLabel(rowEdgeLabel.id, graphDomain, rowEdgeLabel.name, rowEdgeLabel.multiplicity)
+//  }
+//
+//  def tupled: ((UUID, GraphDomain, String, Multiplicity)) => EdgeLabel = (EdgeLabel.apply _).tupled
+//
+//}
