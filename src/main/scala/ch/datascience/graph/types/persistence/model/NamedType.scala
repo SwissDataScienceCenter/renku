@@ -2,7 +2,7 @@ package ch.datascience.graph.types.persistence.model
 
 import java.util.UUID
 
-import ch.datascience.graph.NamespaceAndName
+import ch.datascience.graph.{Name, NamespaceAndName}
 import ch.datascience.graph.types.persistence.model.relational.{RowNamedType, RowPropertyKey}
 import ch.datascience.graph.types.{NamedType => NamedTypeBase}
 
@@ -18,7 +18,8 @@ case class NamedType(
   propertiesMap: Map[NamespaceAndName, PropertyKey]
 ) extends AbstractEntity[RowNamedType]
   with NamedTypeBase[NamespaceAndName, NamespaceAndName] {
-  require(NamespaceAndName.nameIsValid(name), s"Invalid name: '$name' (Pattern: ${NamespaceAndName.namePattern})")
+  Name(name)
+//  require(NamespaceAndName.nameIsValid(name), s"Invalid name: '$name' (Pattern: ${NamespaceAndName.namePattern})")
 
   def namespace: String = graphDomain.namespace
 

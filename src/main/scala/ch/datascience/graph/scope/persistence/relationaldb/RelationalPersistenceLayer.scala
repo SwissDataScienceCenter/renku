@@ -2,7 +2,7 @@ package ch.datascience.graph.scope.persistence.relationaldb
 
 import ch.datascience.graph.NamespaceAndName
 import ch.datascience.graph.scope.persistence.PersistenceLayer
-import ch.datascience.graph.types.PropertyKey
+import ch.datascience.graph.types.{NamedType, PropertyKey}
 import ch.datascience.graph.types.persistence.orchestration.OrchestrationStack
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -13,7 +13,8 @@ import scala.concurrent.{ExecutionContext, Future}
 class RelationalPersistenceLayer(
   protected val ec: ExecutionContext,
   protected val orchestrator: OrchestrationStack
-) extends PersistenceLayer[NamespaceAndName]
+) extends PersistenceLayer[NamespaceAndName, NamespaceAndName]
     with RelationalPersistedProperties
+    with RelationalPersistedNamedTypes
     with ExecutionComponent
     with OrchestrationComponent

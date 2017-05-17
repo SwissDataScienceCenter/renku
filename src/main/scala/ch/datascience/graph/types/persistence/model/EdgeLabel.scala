@@ -2,7 +2,7 @@ package ch.datascience.graph.types.persistence.model
 
 import java.util.UUID
 
-import ch.datascience.graph.NamespaceAndName
+import ch.datascience.graph.{Name, NamespaceAndName}
 import ch.datascience.graph.types.persistence.model.relational.{RowEdgeLabel, RowGraphDomain}
 import org.janusgraph.core.Multiplicity
 
@@ -14,7 +14,8 @@ case class EdgeLabel(id: UUID,
                      name: String,
                      multiplicity: Multiplicity = Multiplicity.SIMPLE)
   extends AbstractEntity[RowEdgeLabel] {
-  require(NamespaceAndName.nameIsValid(name), s"Invalid name: '$name' (Pattern: ${NamespaceAndName.namePattern})")
+  Name(name)
+//  require(NamespaceAndName.nameIsValid(name), s"Invalid name: '$name' (Pattern: ${NamespaceAndName.namePattern})")
 
   def namespace: String = graphDomain.namespace
 

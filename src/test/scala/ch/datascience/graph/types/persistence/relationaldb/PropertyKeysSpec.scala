@@ -35,7 +35,7 @@ class PropertyKeysSpec extends AsyncUnitSpec with DatabaseSetup with BeforeAndAf
 
   it should "allow to add a property key and get it back" in {
     val propertyKey = PropertyKey(UUID.randomUUID(), graphDomain, "bar", DataType.Double, Cardinality.Set)
-    val insert: DBIO[Int] = dal.propertyKeys add propertyKey
+    val insert: DBIO[Unit] = dal.propertyKeys add propertyKey
     val select: DBIO[Option[PropertyKey]] = dal.propertyKeys.findByNamespaceAndName("foo", "bar").result.headOption
     val f = db.run(insert andThen select)
     f map { opt => opt shouldBe Some(propertyKey) }
@@ -45,7 +45,7 @@ class PropertyKeysSpec extends AsyncUnitSpec with DatabaseSetup with BeforeAndAf
     val graphDomain2 = GraphDomain(UUID.randomUUID(), "hello")
     val propertyKey1 = PropertyKey(UUID.randomUUID(), graphDomain, "bar", DataType.Double, Cardinality.List)
     val propertyKey2 = PropertyKey(UUID.randomUUID(), graphDomain2, "baz", DataType.String, Cardinality.Single)
-    val insert: DBIO[Int] = dal.graphDomains.add(graphDomain2) andThen dal.propertyKeys.add(propertyKey1) andThen dal.propertyKeys.add(propertyKey2)
+    val insert: DBIO[Unit] = dal.graphDomains.add(graphDomain2) andThen dal.propertyKeys.add(propertyKey1) andThen dal.propertyKeys.add(propertyKey2)
     val select: DBIO[Seq[PropertyKey]] = dal.propertyKeys.mapped.result
     val f = db.run(insert andThen select)
     f map { seq =>

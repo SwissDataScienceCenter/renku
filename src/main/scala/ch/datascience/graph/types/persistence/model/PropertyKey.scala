@@ -2,7 +2,7 @@ package ch.datascience.graph.types.persistence.model
 
 import java.util.UUID
 
-import ch.datascience.graph.NamespaceAndName
+import ch.datascience.graph.{Name, NamespaceAndName}
 import ch.datascience.graph.types.persistence.model.relational.{RowGraphDomain, RowPropertyKey}
 import ch.datascience.graph.types.{Cardinality, DataType, PropertyKey => PropertyKeyBase}
 
@@ -17,7 +17,8 @@ case class PropertyKey(
   cardinality: Cardinality
 ) extends AbstractEntity[RowPropertyKey]
   with PropertyKeyBase[NamespaceAndName] {
-  require(NamespaceAndName.nameIsValid(name), s"Invalid name: '$name' (Pattern: ${NamespaceAndName.namePattern})")
+  Name(name)
+//  require(NamespaceAndName.nameIsValid(name), s"Invalid name: '$name' (Pattern: ${NamespaceAndName.namePattern})")
 
   def namespace: String = graphDomain.namespace
 

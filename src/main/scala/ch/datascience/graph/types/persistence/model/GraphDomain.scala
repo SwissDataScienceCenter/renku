@@ -2,17 +2,18 @@ package ch.datascience.graph.types.persistence.model
 
 import java.util.UUID
 
-import ch.datascience.graph.NamespaceAndName
+import ch.datascience.graph.Namespace
 import ch.datascience.graph.types.persistence.model.relational.RowGraphDomain
 
 /**
   * Created by johann on 15/03/17.
   */
 case class GraphDomain(id: UUID, namespace: String) extends AbstractEntity[RowGraphDomain] {
-  require(
-    NamespaceAndName.namespaceIsValid(namespace),
-    s"Invalid namespace: '$namespace' (Pattern: ${NamespaceAndName.namespacePattern})"
-  )
+  Namespace(namespace)
+//  require(
+//    NamespaceAndName.namespaceIsValid(namespace),
+//    s"Invalid namespace: '$namespace' (Pattern: ${NamespaceAndName.namespacePattern})"
+//  )
 
   def toRow: RowGraphDomain = RowGraphDomain(id, namespace)
 
