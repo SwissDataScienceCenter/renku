@@ -1,17 +1,21 @@
 package ch.datascience.graph.scope
 
-import ch.datascience.graph.scope.persistence.{PersistedProperties, PersistenceLayer}
-import ch.datascience.graph.types.PropertyKey
+import ch.datascience.graph.scope.persistence.{PersistedNamedTypes, PersistedProperties, PersistenceLayer}
+import ch.datascience.graph.types.{NamedType, PropertyKey}
 
 import scala.collection.concurrent
 
 /**
   * Created by johann on 11/05/17.
   */
-class Scope[Key](protected val persistenceLayer: PersistenceLayer[Key]) extends PropertyScope[Key] {
+class Scope[TypeKey, PropKey](protected val persistenceLayer: PersistenceLayer[TypeKey, PropKey])
+  extends PropertyScope[PropKey] with NamedTypeScope[TypeKey, PropKey] {
 
-  protected val propertyDefinitions: concurrent.TrieMap[Key, PropertyKey[Key]] = concurrent.TrieMap.empty
+  protected val propertyDefinitions: concurrent.TrieMap[PropKey, PropertyKey[PropKey]] = concurrent.TrieMap.empty
 
-  protected def persistedProperties: PersistedProperties[Key] = persistenceLayer
+  protected def persistedProperties: PersistedProperties[PropKey] = persistenceLayer
 
+  protected val namedTypeDefinitions: concurrent.TrieMap[TypeKey, NamedType[TypeKey, PropKey]] = concurrent.TrieMap.empty
+
+  protected def persistedNamedTypes: PersistedNamedTypes[TypeKey, PropKey] = persistenceLayer
 }
