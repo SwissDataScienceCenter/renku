@@ -7,8 +7,8 @@ import ch.datascience.graph.types.{Cardinality, DataType, PropertyKey}
   */
 private[types] final case class ImplPropertyKey[+Key](
   key: Key,
-  cardinality: Cardinality,
-  dataType: DataType
+  dataType: DataType,
+  cardinality: Cardinality
 ) extends PropertyKey[Key] {
 
   override def toString: String = s"PropertyKey($key, $cardinality, $dataType)"

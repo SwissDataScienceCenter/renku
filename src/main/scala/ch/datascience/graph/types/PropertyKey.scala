@@ -10,23 +10,23 @@ import ch.datascience.graph.types.impl.ImplPropertyKey
   */
 trait PropertyKey[+Key] extends HasKey[Key] {
 
-  def cardinality: Cardinality
-
   def dataType: DataType
 
-  def simpleCopy: PropertyKey[Key] = PropertyKey(key, cardinality, dataType)
+  def cardinality: Cardinality
+
+  def simpleCopy: PropertyKey[Key] = PropertyKey(key, dataType, cardinality)
 
 }
 
 object PropertyKey {
 
-  def apply[Key](key: Key, cardinality: Cardinality, dataType: DataType): PropertyKey[Key] = ImplPropertyKey(key, cardinality, dataType)
+  def apply[Key](key: Key, dataType: DataType, cardinality: Cardinality): PropertyKey[Key] = ImplPropertyKey(key, dataType, cardinality)
 
-  def unapply[Key](propertyKey: PropertyKey[Key]): Option[(Key, Cardinality, DataType)] = {
+  def unapply[Key](propertyKey: PropertyKey[Key]): Option[(Key, DataType, Cardinality)] = {
     if (propertyKey eq null)
       None
     else
-      Some(propertyKey.key, propertyKey.cardinality, propertyKey.dataType)
+      Some(propertyKey.key, propertyKey.dataType, propertyKey.cardinality)
   }
 
 }
