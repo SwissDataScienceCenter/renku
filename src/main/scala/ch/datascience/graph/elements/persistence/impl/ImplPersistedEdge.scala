@@ -9,11 +9,10 @@ import ch.datascience.graph.elements.persistence.PersistedEdge
 case class ImplPersistedEdge[
   +Id,
   Key,
-  +Value,
-  +PropId
+  +Value
 ](
   id: Id,
   from: Id,
   to: Id,
-  properties: MultiProperties[Key, Value, ImplPersistedMultiRecordProperty[PropId, Key, Value]]
-) extends PersistedEdge[Id, Key, Value, ImplPersistedMultiRecordProperty[PropId, Key, Value], Id]
+  properties: MultiProperties[Key, Value, ImplPersistedRecordProperty[Key, Value]]
+) extends PersistedEdge[Id, Key, Value, ImplPersistedRecordProperty[Key, Value], Id]

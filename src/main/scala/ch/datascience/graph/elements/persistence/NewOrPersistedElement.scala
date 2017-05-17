@@ -22,10 +22,10 @@ MetaKey,
 +PropId,
 +Prop <: RichProperty[Key, Value, MetaKey, MetaValue, MetaProp, Prop] with PersistedMultiRecordProperty[PropId, Key, Value, Prop]
 ] extends Vertex[TypeId, Key, Value, MetaKey, MetaValue, MetaProp, Prop]
-  with PersistedElement[VertexPath[VertexRef[Id]]]
-  with HasId[VertexRef[Id]] {
+  with PersistedElement[VertexPath[Id]]
+  with HasId[Id] {
 
-  final def path: VertexPath[VertexRef[Id]] = VertexPath(id)
+  final def path: VertexPath[Id] = VertexPath(id)
 
 }
 

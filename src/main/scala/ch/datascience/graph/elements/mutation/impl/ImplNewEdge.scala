@@ -14,5 +14,5 @@ case class ImplNewEdge[
    tempId: NewEdge[Nothing, Nothing, Nothing, Nothing]#TempId,
    from: Either[Id, NewVertex[Nothing, Nothing, Nothing, Nothing, Nothing, Nothing, Nothing]#TempId],
    to: Either[Id, NewVertex[Nothing, Nothing, Nothing, Nothing, Nothing, Nothing, Nothing]#TempId],
-   properties: MultiProperties[Key, Value, ImplNewMultiRecordProperty[Key, Value]]
- ) extends NewEdge[Id, Key, Value, ImplNewMultiRecordProperty[Key, Value]]
+   properties: MultiProperties[Key, Value, ImplNewRecordProperty[Key, Value]]
+ ) extends NewEdge[Id, Key, Value, ImplNewRecordProperty[Key, Value]]
