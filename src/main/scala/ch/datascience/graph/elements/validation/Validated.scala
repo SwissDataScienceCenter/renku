@@ -1,7 +1,7 @@
 package ch.datascience.graph.elements.validation
 
-import ch.datascience.graph.elements.{Property, Record}
-import ch.datascience.graph.types.{PropertyKey, RecordType}
+import ch.datascience.graph.elements._
+import ch.datascience.graph.types.{NamedType, PropertyKey, RecordType}
 
 sealed trait Validated
 
@@ -22,6 +22,23 @@ trait ValidatedProperty[+Key, +Value, +Prop <: Property[Key, Value, Prop]] exten
 
 }
 
+trait ValidatedMultiProperty[+Key, +Value, +Prop <: Property[Key, Value, Prop]] extends Validated {
+
+  /**
+    * The validated property
+    * @return property
+    */
+  def properties: MultiPropertyValue[Key, Value, Property[Key, Value, Prop]]
+
+  /**
+    * The definition of the validated property
+    *
+    * @return property key
+    */
+  def propertyKey: PropertyKey[Key]
+
+}
+
 trait ValidatedRecord[Key, +Value, +Prop <: Property[Key, Value, Prop]] extends Validated {
 
   /**
@@ -29,6 +46,59 @@ trait ValidatedRecord[Key, +Value, +Prop <: Property[Key, Value, Prop]] extends 
     * @return
     */
   def record: Record[Key, Value, Prop]
+
+  /**
+    * The record type of the validated record
+    * @return
+    */
+  def recordType: RecordType[Key]
+
+  /**
+    * The definitions of the validated properties
+    *
+    * @return property key map
+    */
+  def propertyKeys: Map[Key, PropertyKey[Key]]
+
+}
+
+trait ValidatedMultiRecord[Key, +Value, +Prop <: Property[Key, Value, Prop]] extends Validated {
+
+  /**
+    * The validated record
+    * @return
+    */
+  def record: MultiRecord[Key, Value, Prop]
+
+  /**
+    * The record type of the validated record
+    * @return
+    */
+  def recordType: RecordType[Key]
+
+  /**
+    * The definitions of the validated properties
+    *
+    * @return property key map
+    */
+  def propertyKeys: Map[Key, PropertyKey[Key]]
+
+}
+
+trait ValidatedTypedRecord[TypeId, Key, +Value, +Prop <: Property[Key, Value, Prop]] extends Validated {
+
+  /**
+    * The validated record
+    * @return
+    */
+  def record: TypedRecord[TypeId, Key, Value, Prop]
+
+  /**
+    * The definitions of the validated named types
+    *
+    * @return named type map
+    */
+  def namedTypes: Map[TypeId, NamedType[TypeId, Key]]
 
   /**
     * The record type of the validated record

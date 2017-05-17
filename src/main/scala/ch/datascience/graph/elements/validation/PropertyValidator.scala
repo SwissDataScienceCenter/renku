@@ -29,9 +29,10 @@ trait PropertyValidator[Key, Value, Prop <: Property[Key, Value, Prop]] {
   )(
     implicit e: BoxedOrValidValue[Value]
   ): ValidationResult[ValidatedProperty[Key, Value, Prop]] = definition match {
-    case Some(propertyKey) if property.dataType(e) == propertyKey.dataType => Right(Result(property, propertyKey))
-    case Some(propertyKey) => Left(BadDataType(property.value, propertyKey.dataType, property.dataType(e)))
     case None => Left(UnknownProperty(property.key))
+    case Some(propertyKey) if property.key != propertyKey.key => Left(WrongDefinition(propertyKey.key, property.key))
+    case Some(propertyKey) if property.dataType(e) != propertyKey.dataType => Left(BadDataType(property.key, propertyKey.dataType, property.dataType(e)))
+    case Some(propertyKey) => Right(Result(property, propertyKey))
   }
 
   protected def propertyScope: PropertyScope[Key]
