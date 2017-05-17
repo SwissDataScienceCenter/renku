@@ -114,3 +114,76 @@ trait ValidatedTypedRecord[TypeId, Key, +Value, +Prop <: Property[Key, Value, Pr
   def propertyKeys: Map[Key, PropertyKey[Key]]
 
 }
+
+trait ValidatedTypedMultiRecord[TypeId, Key, +Value, +Prop <: Property[Key, Value, Prop]] extends Validated {
+
+  /**
+    * The validated record
+    * @return
+    */
+  def record: TypedMultiRecord[TypeId, Key, Value, Prop]
+
+  /**
+    * The definitions of the validated named types
+    *
+    * @return named type map
+    */
+  def namedTypes: Map[TypeId, NamedType[TypeId, Key]]
+
+  /**
+    * The record type of the validated record
+    * @return
+    */
+  def recordType: RecordType[Key]
+
+  /**
+    * The definitions of the validated properties
+    *
+    * @return property key map
+    */
+  def propertyKeys: Map[Key, PropertyKey[Key]]
+
+}
+
+trait ValidatedVertex[
+TypeId,
+Key,
++Value,
+MetaKey,
++MetaValue,
++MetaProp <: Property[MetaKey, MetaValue, MetaProp],
++Prop <: RichProperty[Key, Value, MetaKey, MetaValue, MetaProp, Prop]
+] extends Validated {
+
+  /**
+    * The validated vertex
+    * @return
+    */
+  def vertex: Vertex[TypeId, Key, Value, MetaKey, MetaValue, MetaProp, Prop]
+
+  /**
+    * The definitions of the validated named types
+    *
+    * @return named type map
+    */
+  def namedTypes: Map[TypeId, NamedType[TypeId, Key]]
+
+  /**
+    * The record type of the validated record
+    * @return
+    */
+  def recordType: RecordType[Key]
+
+  /**
+    * The definitions of the validated properties
+    *
+    * @return property key map
+    */
+  def propertyKeys: Map[Key, PropertyKey[Key]]
+
+  /**
+    * The definitions of the validated meta-properties
+    */
+  def metaPropertyKeys: Map[MetaKey, PropertyKey[MetaKey]]
+
+}

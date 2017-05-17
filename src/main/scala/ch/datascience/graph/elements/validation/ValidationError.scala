@@ -1,6 +1,6 @@
 package ch.datascience.graph.elements.validation
 
-import ch.datascience.graph.elements.{Property, Record}
+import ch.datascience.graph.elements.{MultiRecord, Property, Record}
 import ch.datascience.graph.types.{Cardinality, DataType, RecordType}
 
 /**
@@ -37,6 +37,12 @@ final case class BadRecord[+Key](
 
 final case class RecordTypeError[Key, +Value, +Prop <: Property[Key, Value, Prop]](
   record: Record[Key, Value, Prop],
+  required: RecordType[Key],
+  missing: Set[Key] // keys missing from record type check
+) extends ValidationError
+
+final case class MultiRecordTypeError[Key, +Value, +Prop <: Property[Key, Value, Prop]](
+  record: MultiRecord[Key, Value, Prop],
   required: RecordType[Key],
   missing: Set[Key] // keys missing from record type check
 ) extends ValidationError
