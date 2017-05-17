@@ -14,3 +14,6 @@ MetaKey,
 +MetaProp <: Property[MetaKey, MetaValue, MetaProp],
 +Prop <: RichProperty[Key, Value, MetaKey, MetaValue, MetaProp, Prop]
 ] extends TypedMultiRecord[TypeId, Key, Value, Prop]
+
+
+trait VertexRef[+Id]

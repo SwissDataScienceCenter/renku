@@ -7,7 +7,7 @@ sealed abstract class Path
 
 final case class VertexPath[+VertexId](vertexId: VertexId) extends Path
 
-// TODO: case class EdgePath
+final case class EdgePath[+VertexId, +EdgeId](fromVertex: VertexId, edgeId: EdgeId) extends Path
 
 sealed abstract class PropertyPath extends Path {
   def parent: Path

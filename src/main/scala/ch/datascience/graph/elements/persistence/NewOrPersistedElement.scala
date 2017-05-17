@@ -22,10 +22,24 @@ MetaKey,
 +PropId,
 +Prop <: RichProperty[Key, Value, MetaKey, MetaValue, MetaProp, Prop] with PersistedMultiRecordProperty[PropId, Key, Value, Prop]
 ] extends Vertex[TypeId, Key, Value, MetaKey, MetaValue, MetaProp, Prop]
-  with PersistedElement[VertexPath[Id]]
-  with HasId[Id] {
+  with PersistedElement[VertexPath[VertexRef[Id]]]
+  with HasId[VertexRef[Id]] {
 
-  final def path: VertexPath[Id] = VertexPath(id)
+  final def path: VertexPath[VertexRef[Id]] = VertexPath(id)
+
+}
+
+trait PersistedEdge[
++Id,
+Key,
++Value,
++EdgeProp <: PersistedRecordProperty[Key, Value, EdgeProp],
++VertexId
+] extends Edge[Key, Value, EdgeProp, VertexId]
+  with PersistedElement[EdgePath[VertexId, Id]]
+  with HasId[Id]{
+
+  final def path: EdgePath[VertexId, Id] = EdgePath(from, id)
 
 }
 
@@ -56,6 +70,38 @@ trait PersistedMultiRecordProperty[+Id, +Key, +Value, +This <: PropertyBase[Key,
 }
 
 
+sealed trait NewProperty[+Key, +Value, +This <: PropertyBase[Key, Value]]
+  extends Property[Key, Value, This]
+    with NewElement { this: This =>
+}
+
+trait NewRecordProperty[+Key, +Value, +This <: PropertyBase[Key, Value]]
+  extends NewProperty[Key, Value, This]
+    with HasPath[Path]
+    with NewElement { this: This =>
+
+  def parent: Path
+
+  final def path: PropertyPathFromRecord[Key] = PropertyPathFromRecord(parent, key)
+
+}
+
+trait NewMultiRecordProperty[+Key, +Value, +This <: PropertyBase[Key, Value]]
+  extends NewProperty[Key, Value, This]
+    with HasPath[Path]
+    with NewElement { this: This =>
+
+  type TempId = Int
+
+  def tempId: TempId
+
+  def parent: Path
+
+  final def path: PropertyPathFromMultiRecord[TempId] = PropertyPathFromMultiRecord(parent, tempId)
+
+}
+
+
 trait NewVertex[
 TypeId,
 Key,
@@ -73,4 +119,15 @@ MetaKey,
 
 }
 
-// TODO: New elements
+trait NewEdge[
++Id,
+Key,
++Value,
++EdgeProp <: Property[Key, Value, EdgeProp]
+] extends Edge[Key, Value, EdgeProp, Either[Id, NewVertex[Nothing, Nothing, Nothing, Nothing, Nothing, Nothing, Nothing]#TempId]]
+  with NewElement {
+
+  type TempId = Int
+
+  def tempId: TempId
+}
