@@ -10,4 +10,4 @@ import ch.datascience.graph.scope.Scope
   */
 class ScopeBean @Inject()(
   override protected val persistenceLayer: RelationalPersistenceBean
-) extends Scope[NamespaceAndName](persistenceLayer = persistenceLayer)
+) extends Scope[NamespaceAndName, NamespaceAndName](persistenceLayer = persistenceLayer)
