@@ -30,7 +30,7 @@ class PropertyKeysSpec extends AsyncUnitSpec with DatabaseSetup with BeforeAndAf
   it should "allow to add a property key" in {
     val propertyKey = PropertyKey(UUID.randomUUID(), graphDomain, "bar", DataType.String, Cardinality.Single)
     val f = db.run( dal.propertyKeys add propertyKey )
-    f map { count => count shouldBe 1 }
+    f map { unit => unit shouldBe () }
   }
 
   it should "allow to add a property key and get it back" in {

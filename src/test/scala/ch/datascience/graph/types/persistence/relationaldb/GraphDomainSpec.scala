@@ -26,7 +26,7 @@ class GraphDomainSpec extends AsyncUnitSpec with DatabaseSetup with BeforeAndAft
   it should "allow to add a graph domain" in {
     val graphDomain = GraphDomain(UUID.randomUUID(), "foo")
     val f = db.run( dal.graphDomains add graphDomain )
-    f map { count => count shouldBe 1 }
+    f map { unit => unit shouldBe () }
   }
 
   it should "allow to add a graph domain and get it back" in {
