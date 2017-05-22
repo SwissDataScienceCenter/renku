@@ -13,4 +13,4 @@ case class ImplPersistedMultiRecordRichProperty[+Id, Key, +Value: BoxedOrValidVa
   key: Key,
   value: Value,
   properties: Properties[Key, MetaValue, PersistedRecordProperty[Key, MetaValue]]
-) extends PersistedMultiRecordRichProperty[Id, Key, Value, MetaValue]
+) extends PersistedMultiRecordRichProperty[Id, Key, Value, MetaValue, PersistedRecordProperty[Key, MetaValue]]

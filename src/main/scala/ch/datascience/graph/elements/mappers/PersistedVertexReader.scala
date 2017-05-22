@@ -15,12 +15,12 @@ import scala.concurrent.{ExecutionContext, Future}
   * Created by johann on 19/05/17.
   */
 class PersistedVertexReader[Id, TypeId, Key : StringReader, PropId](scope: PropertyScope[Key])(implicit ir: Reader[java.lang.Object, Id], pir: Reader[java.lang.Object, PropId], kvr: KeyValueReader[Key, BoxedValue])
-  extends Reader[GraphVertex, PersistedVertex[Id, TypeId, Key, BoxedValue, BoxedValue, PersistedRecordProperty[Key, BoxedValue], PropId, PersistedMultiRecordRichProperty[PropId, Key, BoxedValue, BoxedValue]]] {
+  extends Reader[GraphVertex, PersistedVertex[Id, TypeId, Key, BoxedValue, BoxedValue, PersistedRecordProperty[Key, BoxedValue], PropId, PersistedMultiRecordRichProperty[PropId, Key, BoxedValue, BoxedValue, PersistedRecordProperty[Key, BoxedValue]]]] {
 
-  def read(vertex: GraphVertex)(implicit ec: ExecutionContext): Future[PersistedVertex[Id, TypeId, Key, BoxedValue, BoxedValue, PersistedRecordProperty[Key, BoxedValue], PropId, PersistedMultiRecordRichProperty[PropId, Key, BoxedValue, BoxedValue]]] = {
+  def read(vertex: GraphVertex)(implicit ec: ExecutionContext): Future[PersistedVertex[Id, TypeId, Key, BoxedValue, BoxedValue, PersistedRecordProperty[Key, BoxedValue], PropId, PersistedMultiRecordRichProperty[PropId, Key, BoxedValue, BoxedValue, PersistedRecordProperty[Key, BoxedValue]]]] = {
     //TODO: Read types
 
-    type Prop = PersistedMultiRecordRichProperty[PropId, Key, BoxedValue, BoxedValue]
+    type Prop = PersistedMultiRecordRichProperty[PropId, Key, BoxedValue, BoxedValue, PersistedRecordProperty[Key, BoxedValue]]
     for {
       id <- ir.read( vertex.id() )
       path = VertexPath(id)

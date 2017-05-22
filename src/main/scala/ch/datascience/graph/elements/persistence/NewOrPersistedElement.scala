@@ -21,7 +21,7 @@ Key,
 +MetaValue,
 +MetaProp <: PersistedRecordProperty[Key, MetaValue],
 +PropId,
-+Prop <: RichProperty[Key, Value, MetaValue, MetaProp] with PersistedMultiRecordProperty[PropId, Key, Value]
++Prop <: PersistedMultiRecordRichProperty[PropId, Key, Value, MetaValue, MetaProp]
 ] extends Vertex[TypeId, Key, Value, MetaValue, MetaProp, Prop]
   with PersistedElement[VertexPath[Id]]
   with HasId[Id] {
@@ -69,13 +69,13 @@ trait PersistedMultiRecordProperty[+Id, +Key, +Value]
 
 }
 
-trait PersistedRecordRichProperty[Key, +Value, +MetaValue]
+trait PersistedRecordRichProperty[Key, +Value, +MetaValue, +MetaProp <: PersistedRecordProperty[Key, MetaValue]]
   extends PersistedRecordProperty[Key, Value]
-    with RichProperty[Key, Value, MetaValue, PersistedRecordProperty[Key, MetaValue]]
+    with RichProperty[Key, Value, MetaValue, MetaProp]
 
-trait PersistedMultiRecordRichProperty[+Id, Key, +Value, +MetaValue]
+trait PersistedMultiRecordRichProperty[+Id, Key, +Value, +MetaValue, +MetaProp <: PersistedRecordProperty[Key, MetaValue]]
   extends PersistedMultiRecordProperty[Id, Key, Value]
-    with RichProperty[Key, Value, MetaValue, PersistedRecordProperty[Key, MetaValue]]
+    with RichProperty[Key, Value, MetaValue, MetaProp]
 
 
 sealed trait NewProperty[+Key, +Value]

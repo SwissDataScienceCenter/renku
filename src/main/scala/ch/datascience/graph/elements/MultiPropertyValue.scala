@@ -17,7 +17,7 @@ import ch.datascience.graph.values.BoxedOrValidValue
   * ListValue: a multiset of values. The name is misleading, but that's how tinkerpop works.
   *
   * @tparam Key   type of key
-  * @tparam Value type of value, constrained to verify [[BoxedOrValidValue]]
+  * @tparam Value type of value, constrained to verify [[ch.datascience.graph.values.BoxedOrValidValue]]
   * @tparam Prop  type of underlying property
   */
 sealed abstract class MultiPropertyValue[+Key, +Value: BoxedOrValidValue, +Prop <: Property[Key, Value]]

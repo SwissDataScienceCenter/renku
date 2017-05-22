@@ -1,6 +1,6 @@
 package ch.datascience.graph.elements.mappers
 
-import ch.datascience.graph.elements.persistence.{Path, PersistedMultiRecordRichProperty, PropertyPathFromMultiRecord}
+import ch.datascience.graph.elements.persistence.{Path, PersistedMultiRecordRichProperty, PersistedRecordProperty, PropertyPathFromMultiRecord}
 import ch.datascience.graph.elements.persistence.impl.ImplPersistedMultiRecordRichProperty
 import ch.datascience.graph.values.BoxedValue
 import org.apache.tinkerpop.gremlin.structure.{VertexProperty => GraphMultiRecordRichProperty}
@@ -12,9 +12,9 @@ import scala.concurrent.{ExecutionContext, Future}
   * Created by johann on 22/05/17.
   */
 class PersistedMultiRecordRichPropertyReader[Id, Key : StringReader](val parent: Path)(implicit ir: Reader[java.lang.Object, Id], kvr: KeyValueReader[Key, BoxedValue])
-  extends Reader[GraphMultiRecordRichProperty[java.lang.Object], PersistedMultiRecordRichProperty[Id, Key, BoxedValue, BoxedValue]] {
+  extends Reader[GraphMultiRecordRichProperty[java.lang.Object], PersistedMultiRecordRichProperty[Id, Key, BoxedValue, BoxedValue, PersistedRecordProperty[Key, BoxedValue]]] {
 
-  def read(property: GraphMultiRecordRichProperty[java.lang.Object])(implicit ec: ExecutionContext): Future[PersistedMultiRecordRichProperty[Id, Key, BoxedValue, BoxedValue]] = {
+  def read(property: GraphMultiRecordRichProperty[java.lang.Object])(implicit ec: ExecutionContext): Future[PersistedMultiRecordRichProperty[Id, Key, BoxedValue, BoxedValue, PersistedRecordProperty[Key, BoxedValue]]] = {
     for {
       id <- ir.read(property.id())
       key <- implicitly[StringReader[Key]].read(property.key())
