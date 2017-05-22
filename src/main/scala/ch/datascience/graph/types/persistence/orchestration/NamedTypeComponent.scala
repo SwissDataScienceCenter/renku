@@ -2,7 +2,7 @@ package ch.datascience.graph.types.persistence.orchestration
 
 import java.util.UUID
 
-import ch.datascience.graph.NamespaceAndName
+import ch.datascience.graph.naming.NamespaceAndName
 import ch.datascience.graph.types.persistence.model.{GraphDomain, NamedType, PropertyKey}
 import ch.datascience.graph.types.persistence.model.relational.{RowNamedType, RowPropertyKey}
 

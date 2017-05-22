@@ -3,7 +3,7 @@ package ch.datascience.graph.types.persistence.relationaldb
 import java.time.Instant
 import java.util.UUID
 
-import ch.datascience.graph.NamespaceAndName
+import ch.datascience.graph.naming.NamespaceAndName
 import ch.datascience.graph.types.{Cardinality, DataType}
 import ch.datascience.graph.types.persistence.model._
 import ch.datascience.graph.types.persistence.model.relational._
