@@ -69,7 +69,7 @@ case class SingleValue[+Key, +Value: BoxedOrValidValue, +Prop <: Property[Key, V
 }
 
 case class SetValue[+Key, +Value: BoxedOrValidValue, +Prop <: Property[Key, Value, Prop]](
-  properties: List[Prop]
+  properties: List[Property[Key, Value, Prop]]
 ) extends MultiPropertyValue[Key, Value, Prop] {
   require(keySet.size <= 1, s"Multiple keys detected: ${keySet.mkString(", ")}")
   require(dataTypes.size <= 1, s"Multiple datatypes detected: ${dataTypes.mkString(", ")}")
@@ -94,7 +94,7 @@ case class SetValue[+Key, +Value: BoxedOrValidValue, +Prop <: Property[Key, Valu
 }
 
 case class ListValue[+Key, +Value: BoxedOrValidValue, +Prop <: Property[Key, Value, Prop]](
-  properties: List[Prop]
+  properties: List[Property[Key, Value, Prop]]
 ) extends MultiPropertyValue[Key, Value, Prop] {
   require(keySet.size <= 1, s"Multiple keys detected: ${keySet.mkString(", ")}")
   require(dataTypes.size <= 1, s"Multiple datatypes detected: ${dataTypes.mkString(", ")}")
