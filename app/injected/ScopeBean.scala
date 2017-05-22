@@ -2,7 +2,7 @@ package injected
 
 import javax.inject.Inject
 
-import ch.datascience.graph.NamespaceAndName
+import ch.datascience.graph.naming.NamespaceAndName
 import ch.datascience.graph.scope.Scope
 
 /**

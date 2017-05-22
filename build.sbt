@@ -9,18 +9,18 @@ resolvers += DefaultMavenRepository
 //lazy val root = (project in file(".")).enablePlugins(PlayScala)
 
 lazy val play_slick_version = "2.1.0"
-lazy val janusgraph_version = "0.1.0"
 
 libraryDependencies += filters
 libraryDependencies += "com.typesafe.play" %% "play-slick" % play_slick_version
 //libraryDependencies += "ch.datascience" %% "graph-type-utils" % version.value
 //libraryDependencies += "ch.datascience" %% "graph-type-manager" % version.value
 
-libraryDependencies += "org.janusgraph" % "janusgraph-cassandra" % janusgraph_version
-
+// Runtime dependencies (runtime removed to load them when sbt console; I am too lazy to redefine console)
 lazy val h2_version = "1.4.193"
+lazy val janusgraph_version = "0.1.0"
 
-libraryDependencies += "com.h2database" % "h2" % h2_version % Runtime
+libraryDependencies += "org.janusgraph" % "janusgraph-cassandra" % janusgraph_version //% Runtime
+libraryDependencies += "com.h2database" % "h2" % h2_version //% Runtime
 
 lazy val scalatestplus_play_version = "2.0.0"
 

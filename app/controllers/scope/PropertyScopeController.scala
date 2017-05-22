@@ -2,7 +2,7 @@ package controllers.scope
 
 import javax.inject.Inject
 
-import ch.datascience.graph.NamespaceAndName
+import ch.datascience.graph.naming.NamespaceAndName
 import ch.datascience.graph.scope.PropertyScope
 import ch.datascience.graph.types.{Cardinality, DataType, PropertyKey}
 import injected.ScopeBean

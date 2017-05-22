@@ -4,7 +4,7 @@ import java.sql.SQLException
 import java.util.UUID
 import javax.inject.Inject
 
-import ch.datascience.graph.NamespaceAndName
+import ch.datascience.graph.naming.NamespaceAndName
 import controllers.JsonComponent
 import injected.OrchestrationLayer
 import models.json._

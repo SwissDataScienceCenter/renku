@@ -1,7 +1,7 @@
 package init
 
-import ch.datascience.graph.NamespaceAndName
-import ch.datascience.graph.elements.BoxedValue
+import ch.datascience.graph.naming.NamespaceAndName
+import ch.datascience.graph.values.BoxedValue
 import ch.datascience.graph.elements.mappers._
 import ch.datascience.graph.scope.Scope
 import ch.datascience.graph.scope.persistence.relationaldb.RelationalPersistenceLayer
@@ -90,7 +90,7 @@ object TestGraphRead {
 
     implicit val boxReader = new BoxedReader[NamespaceAndName](scope)
 
-    val reader = new PersistedVertexReader[Long, NamespaceAndName, NamespaceAndName, NamespaceAndName, org.janusgraph.graphdb.relations.RelationIdentifier](scope)
+    val reader = new PersistedVertexReader[Long, NamespaceAndName, NamespaceAndName, org.janusgraph.graphdb.relations.RelationIdentifier](scope)
     val vertices = t.V().toList.asScala.toList
 
     for (vertex <- vertices) {

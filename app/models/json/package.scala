@@ -2,7 +2,7 @@ package models
 
 import java.util.UUID
 
-import ch.datascience.graph.NamespaceAndName
+import ch.datascience.graph.naming.NamespaceAndName
 import ch.datascience.graph.types.{Cardinality, DataType}
 import ch.datascience.graph.types.persistence.model._
 import play.api.libs.functional.syntax._

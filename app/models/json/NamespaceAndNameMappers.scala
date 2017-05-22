@@ -1,6 +1,6 @@
 package models.json
 
-import ch.datascience.graph.NamespaceAndName
+import ch.datascience.graph.naming.NamespaceAndName
 import play.api.libs.json._
 
 /**
