@@ -1,6 +1,6 @@
 package ch.datascience.graph.elements.validation
 
-import ch.datascience.graph.elements.{BoxedOrValidValue, MultiPropertyValue, Property}
+import ch.datascience.graph.elements.{MultiPropertyValue, Property}
 import ch.datascience.graph.scope.PropertyScope
 import ch.datascience.graph.types.PropertyKey
 
@@ -9,10 +9,10 @@ import scala.concurrent.{ExecutionContext, Future}
 /**
   * Created by johann on 01/05/17.
   */
-trait MultiPropertyValidator[Key, Value, Prop <: Property[Key, Value, Prop]] {
+trait MultiPropertyValidator[Key, Value, Prop <: Property[Key, Value]] {
 
   def validateMultiProperty(
-    property: MultiPropertyValue[Key, Value, Property[Key, Value, Prop]]
+    property: MultiPropertyValue[Key, Value, Prop]
   )(
     implicit ec: ExecutionContext
   ): Future[ValidationResult[ValidatedMultiProperty[Key, Value, Prop]]] = {
@@ -23,7 +23,7 @@ trait MultiPropertyValidator[Key, Value, Prop <: Property[Key, Value, Prop]] {
   }
 
   def validateMultiPropertySync(
-    property: MultiPropertyValue[Key, Value, Property[Key, Value, Prop]],
+    property: MultiPropertyValue[Key, Value, Prop],
     definition: Option[PropertyKey[Key]]
   ): ValidationResult[ValidatedMultiProperty[Key, Value, Prop]] = definition match {
     case None => Left(UnknownProperty(property.key))
@@ -36,7 +36,7 @@ trait MultiPropertyValidator[Key, Value, Prop <: Property[Key, Value, Prop]] {
   protected def propertyScope: PropertyScope[Key]
 
   private[this] case class Result(
-    properties: MultiPropertyValue[Key, Value, Property[Key, Value, Prop]],
+    properties: MultiPropertyValue[Key, Value, Prop],
     propertyKey: PropertyKey[Key]
   ) extends ValidatedMultiProperty[Key, Value, Prop]
 

@@ -1,4 +1,4 @@
-package ch.datascience.graph.elements.persistence
+package ch.datascience.graph.bases
 
 /**
   * Basic trait for elements that have an id.

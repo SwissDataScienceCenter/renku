@@ -1,18 +1,19 @@
 package ch.datascience.graph.elements.validation
 
-import ch.datascience.graph.elements.{BoxedOrValidValue, Property}
+import ch.datascience.graph.elements.Property
 import ch.datascience.graph.types.PropertyKey
 import ch.datascience.graph.scope.PropertyScope
+import ch.datascience.graph.values.BoxedOrValidValue
 
 import scala.concurrent.{ExecutionContext, Future}
 
 /**
   * Created by johann on 01/05/17.
   */
-trait PropertyValidator[Key, Value, Prop <: Property[Key, Value, Prop]] {
+trait PropertyValidator[Key, Value, Prop <: Property[Key, Value]] {
 
   def validateProperty(
-    property: Property[Key, Value, Prop]
+    property: Prop
   )(
     implicit e: BoxedOrValidValue[Value],
     ec: ExecutionContext
@@ -24,7 +25,7 @@ trait PropertyValidator[Key, Value, Prop <: Property[Key, Value, Prop]] {
   }
 
   def validatePropertySync(
-    property: Property[Key, Value, Prop],
+    property: Prop,
     definition: Option[PropertyKey[Key]]
   )(
     implicit e: BoxedOrValidValue[Value]
@@ -38,7 +39,7 @@ trait PropertyValidator[Key, Value, Prop <: Property[Key, Value, Prop]] {
   protected def propertyScope: PropertyScope[Key]
 
   private[this] case class Result(
-    property: Property[Key, Value, Prop],
+    property: Prop,
     propertyKey: PropertyKey[Key]
   ) extends ValidatedProperty[Key, Value, Prop]
 

@@ -1,8 +1,9 @@
 package ch.datascience.graph.elements.mutation.impl
 
-import ch.datascience.graph.elements.{BoxedValue, MultiProperties}
+import ch.datascience.graph.elements.MultiProperties
 import ch.datascience.graph.elements.persistence.NewVertex
 import ch.datascience.graph.elements.persistence.impl.ImplPersistedMultiRecordRichProperty
+import ch.datascience.graph.values.BoxedValue
 
 /**
   * Created by jeberle on 15.05.17.
@@ -10,18 +11,16 @@ import ch.datascience.graph.elements.persistence.impl.ImplPersistedMultiRecordRi
 case class ImplNewVertex[
 TypeId,
 Key,
-+Value,
-MetaKey
++Value
 ](
    tempId: Int,
    types: Set[TypeId],
-   properties: MultiProperties[Key, Value, ImplNewMultiRecordRichProperty[Key, Value, MetaKey, BoxedValue]]
+   properties: MultiProperties[Key, Value, ImplNewMultiRecordRichProperty[Key, Value, BoxedValue]]
  ) extends NewVertex[
   TypeId,
   Key,
   Value,
-  MetaKey,
   BoxedValue,
-  ImplNewRecordProperty[MetaKey, BoxedValue],
-  ImplNewMultiRecordRichProperty[Key, Value, MetaKey, BoxedValue]
+  ImplNewRecordProperty[Key, BoxedValue],
+  ImplNewMultiRecordRichProperty[Key, Value, BoxedValue]
   ]

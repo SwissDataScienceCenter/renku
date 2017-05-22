@@ -1,14 +1,15 @@
 package ch.datascience.graph.elements.validation
 
-import ch.datascience.graph.elements.{BoxedOrValidValue, MultiRecord, Property}
+import ch.datascience.graph.elements.{MultiRecord, Property}
 import ch.datascience.graph.types.{PropertyKey, RecordType}
+import ch.datascience.graph.values.BoxedOrValidValue
 
 import scala.concurrent.{ExecutionContext, Future}
 
 /**
   * Created by johann on 08/05/17.
   */
-trait MultiRecordValidator[Key, Value, Prop <: Property[Key, Value, Prop]] { this: MultiPropertyValidator[Key, Value, Prop] =>
+trait MultiRecordValidator[Key, Value, Prop <: Property[Key, Value]] { this: MultiPropertyValidator[Key, Value, Prop] =>
 
   def validateMultiRecord(
     record: MultiRecord[Key, Value, Prop]

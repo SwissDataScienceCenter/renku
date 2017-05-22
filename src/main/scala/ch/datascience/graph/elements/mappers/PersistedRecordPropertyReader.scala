@@ -1,8 +1,8 @@
 package ch.datascience.graph.elements.mappers
 
-import ch.datascience.graph.elements.BoxedValue
 import ch.datascience.graph.elements.persistence.Path
 import ch.datascience.graph.elements.persistence.impl.ImplPersistedRecordProperty
+import ch.datascience.graph.values.BoxedValue
 import org.apache.tinkerpop.gremlin.structure.{Property => GraphProperty}
 
 import scala.concurrent.{ExecutionContext, Future}

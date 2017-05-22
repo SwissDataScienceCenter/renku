@@ -1,7 +1,8 @@
 package ch.datascience.graph.elements.validation
 
-import ch.datascience.graph.elements.{BoxedOrValidValue, Property, RichProperty, Vertex}
+import ch.datascience.graph.elements.{Property, RichProperty, Vertex}
 import ch.datascience.graph.types.{NamedType, PropertyKey, RecordType}
+import ch.datascience.graph.values.BoxedOrValidValue
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -12,23 +13,22 @@ trait VertexValidator[
 TypeId,
 Key,
 Value,
-MetaKey,
 MetaValue,
-MetaProp <: Property[MetaKey, MetaValue, MetaProp],
-Prop <: RichProperty[Key, Value, MetaKey, MetaValue, MetaProp, Prop]
-] { this: TypedMultiRecordValidator[TypeId, Key, Value, Prop] with RecordValidator[MetaKey, MetaValue, MetaProp] =>
+MetaProp <: Property[Key, MetaValue],
+Prop <: RichProperty[Key, Value, MetaValue, MetaProp]
+] { this: TypedMultiRecordValidator[TypeId, Key, Value, Prop] with RecordValidator[Key, MetaValue, MetaProp] =>
 
   def validateVertex(
-    vertex: Vertex[TypeId, Key, Value, MetaKey, MetaValue, MetaProp, Prop]
+    vertex: Vertex[TypeId, Key, Value, MetaValue, MetaProp, Prop]
   )(
     implicit e: BoxedOrValidValue[Value],
     metaE: BoxedOrValidValue[MetaValue],
     ec: ExecutionContext
-  ): Future[ValidationResult[ValidatedVertex[TypeId, Key, Value, MetaKey, MetaValue, MetaProp, Prop]]] = {
+  ): Future[ValidationResult[ValidatedVertex[TypeId, Key, Value, MetaValue, MetaProp, Prop]]] = {
     val allProperties = for {
       propertyValue <- vertex.properties.values
       property <- propertyValue
-    } yield property.lifted.lifted
+    } yield property
 
     for {
       typedMultiRecordValidation <- this.validateTypedMultiRecord(vertex)
@@ -50,11 +50,11 @@ Prop <: RichProperty[Key, Value, MetaKey, MetaValue, MetaProp, Prop]
   }
 
   private[this] case class Result(
-    vertex: Vertex[TypeId, Key, Value, MetaKey, MetaValue, MetaProp, Prop],
+    vertex: Vertex[TypeId, Key, Value, MetaValue, MetaProp, Prop],
     namedTypes: Map[TypeId, NamedType[TypeId, Key]],
     recordType: RecordType[Key],
     propertyKeys: Map[Key, PropertyKey[Key]],
-    metaPropertyKeys: Map[MetaKey, PropertyKey[MetaKey]]
-  ) extends ValidatedVertex[TypeId, Key, Value, MetaKey, MetaValue, MetaProp, Prop]
+    metaPropertyKeys: Map[Key, PropertyKey[Key]]
+  ) extends ValidatedVertex[TypeId, Key, Value, MetaValue, MetaProp, Prop]
 
 }

@@ -1,15 +1,14 @@
 package ch.datascience.graph.elements
 
+import ch.datascience.graph.bases.{HasKey, HasValue}
+
 /**
   * Base trait for property
   *
   * @tparam Key   key type
   * @tparam Value value type
-  * @tparam This  self type
   */
-trait Property[+Key, +Value, +This <: PropertyBase[Key, Value]]
-  extends PropertyBase[Key, Value]
-    with HasValue[Value, This]
-    with Element {
-  this: This =>
-}
+trait Property[+Key, +Value]
+ extends HasKey[Key]
+   with HasValue[Value]
+   with Element

@@ -1,6 +1,6 @@
 package ch.datascience.graph.types
 
-import ch.datascience.graph.HasKey
+import ch.datascience.graph.bases.HasKey
 import ch.datascience.graph.types.impl.ImplPropertyKey
 
 /**

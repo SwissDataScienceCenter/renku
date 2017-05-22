@@ -1,8 +1,8 @@
 package ch.datascience.graph.elements.mappers
 
-import ch.datascience.graph.elements.BoxedValue
 import ch.datascience.graph.scope.PropertyScope
 import ch.datascience.graph.types.DataType
+import ch.datascience.graph.values.BoxedValue
 
 import scala.concurrent.{ExecutionContext, Future}
 

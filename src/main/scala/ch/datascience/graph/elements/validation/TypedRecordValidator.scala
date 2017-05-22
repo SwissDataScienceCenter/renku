@@ -1,15 +1,16 @@
 package ch.datascience.graph.elements.validation
 
-import ch.datascience.graph.elements.{BoxedOrValidValue, Property, Record, TypedRecord}
+import ch.datascience.graph.elements.{Property, Record, TypedRecord}
 import ch.datascience.graph.scope.NamedTypeScope
 import ch.datascience.graph.types.{NamedType, PropertyKey, RecordType}
+import ch.datascience.graph.values.BoxedOrValidValue
 
 import scala.concurrent.{ExecutionContext, Future}
 
 /**
   * Created by johann on 16/05/17.
   */
-trait TypedRecordValidator[TypeId, Key, Value, Prop <: Property[Key, Value, Prop]] { this: RecordValidator[Key, Value, Prop] =>
+trait TypedRecordValidator[TypeId, Key, Value, Prop <: Property[Key, Value]] { this: RecordValidator[Key, Value, Prop] =>
 
   def validateTypedRecord(
     record: TypedRecord[TypeId, Key, Value, Prop]

@@ -1,4 +1,4 @@
-package ch.datascience.graph
+package ch.datascience.graph.bases
 
 /**
   * Base trait for things that have a key

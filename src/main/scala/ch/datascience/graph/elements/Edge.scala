@@ -3,7 +3,7 @@ package ch.datascience.graph.elements
 /**
   * Created by jeberle on 15.05.17.
   */
-trait Edge[Key, +Value, +EdgeProp <: Property[Key, Value, EdgeProp], +VRef] extends MultiRecord[Key, Value, EdgeProp]{
+trait Edge[Key, +Value, +EdgeProp <: Property[Key, Value], +VRef] extends Record[Key, Value, EdgeProp] {
 
   /**
     * The origin Vertex

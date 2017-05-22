@@ -1,6 +1,6 @@
 package ch.datascience.graph.elements.mappers
 
-import ch.datascience.graph.NamespaceAndName
+import ch.datascience.graph.naming.NamespaceAndName
 
 import scala.concurrent.{ExecutionContext, Future}
 

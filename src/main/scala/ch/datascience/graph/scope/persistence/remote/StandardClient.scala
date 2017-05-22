@@ -1,6 +1,6 @@
 package ch.datascience.graph.scope.persistence.remote
 
-import ch.datascience.graph.NamespaceAndName
+import ch.datascience.graph.naming.NamespaceAndName
 import play.api.libs.ws.{WSClient, WSResponse}
 
 import scala.concurrent.Future

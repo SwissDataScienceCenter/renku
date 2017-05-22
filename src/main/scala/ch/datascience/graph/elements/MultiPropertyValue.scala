@@ -1,9 +1,8 @@
 package ch.datascience.graph.elements
 
-import ch.datascience.graph.HasKey
+import ch.datascience.graph.bases.HasKey
 import ch.datascience.graph.types.{Cardinality, DataType}
-
-import scala.language.higherKinds
+import ch.datascience.graph.values.BoxedOrValidValue
 
 /**
   * Representation of multi-property values
@@ -21,10 +20,10 @@ import scala.language.higherKinds
   * @tparam Value type of value, constrained to verify [[BoxedOrValidValue]]
   * @tparam Prop  type of underlying property
   */
-sealed abstract class MultiPropertyValue[+Key, +Value: BoxedOrValidValue, +Prop <: Property[Key, Value, Prop]]
+sealed abstract class MultiPropertyValue[+Key, +Value: BoxedOrValidValue, +Prop <: Property[Key, Value]]
   extends HasKey[Key]
     with Element
-    with Iterable[Property[Key, Value, Prop]] {
+    with Iterable[Prop] {
 
   //TODO: Builders
 
@@ -33,16 +32,11 @@ sealed abstract class MultiPropertyValue[+Key, +Value: BoxedOrValidValue, +Prop 
   protected final def dataTypes: Set[DataType] =
     this.asIterable.map( _.dataType(implicitly[BoxedOrValidValue[Value]]) ).toSet
 
-  def asIterable: Iterable[Property[Key, Value, Prop]]
+  def asIterable: Iterable[Prop]
 
-  final def iterator: Iterator[Property[Key, Value, Prop]] = asIterable.toIterator
+  final def iterator: Iterator[Prop] = asIterable.toIterator
 
   final def values: Iterable[Value] = asIterable.map(_.value)
-
-  def boxed[K >: Key, U >: Value, That <: Property[K, BoxedValue, That]](
-    implicit e: HasValueMapper[U, Prop,
-    BoxedValue, That]
-  ): MultiPropertyValue[K, BoxedValue, That]
 
   final def cardinality: Cardinality = this match {
     case SingleValue(_) => Cardinality.Single
@@ -52,24 +46,18 @@ sealed abstract class MultiPropertyValue[+Key, +Value: BoxedOrValidValue, +Prop 
 
 }
 
-case class SingleValue[+Key, +Value: BoxedOrValidValue, +Prop <: Property[Key, Value, Prop]](
-  property: Property[Key, Value, Prop]
+case class SingleValue[+Key, +Value: BoxedOrValidValue, +Prop <: Property[Key, Value]](
+  property: Prop
 ) extends MultiPropertyValue[Key, Value, Prop] {
 
   def key: Key = property.key
 
-  def asIterable: List[Property[Key, Value, Prop]] = List(property)
-
-  def boxed[K >: Key, U >: Value, That <: Property[K, BoxedValue, That]](
-    implicit e: HasValueMapper[U, Prop, BoxedValue, That]
-  ): SingleValue[K, BoxedValue, That] = {
-    SingleValue(property.boxed[U, That](implicitly[BoxedOrValidValue[Value]], e))
-  }
+  def asIterable: List[Prop] = List(property)
 
 }
 
-case class SetValue[+Key, +Value: BoxedOrValidValue, +Prop <: Property[Key, Value, Prop]](
-  properties: List[Property[Key, Value, Prop]]
+case class SetValue[+Key, +Value: BoxedOrValidValue, +Prop <: Property[Key, Value]](
+  properties: List[Prop]
 ) extends MultiPropertyValue[Key, Value, Prop] {
   require(keySet.size <= 1, s"Multiple keys detected: ${keySet.mkString(", ")}")
   require(dataTypes.size <= 1, s"Multiple datatypes detected: ${dataTypes.mkString(", ")}")
@@ -82,19 +70,12 @@ case class SetValue[+Key, +Value: BoxedOrValidValue, +Prop <: Property[Key, Valu
 
   private[this] def keySet: Set[Key] = properties.map(_.key).toSet
 
-  def asIterable: Iterable[Property[Key, Value, Prop]] = properties
-
-  def boxed[K >: Key, U >: Value, That <: Property[K, BoxedValue, That]](
-    implicit e: HasValueMapper[U, Prop, BoxedValue, That]
-  ): SetValue[K, BoxedValue, That] = {
-    val boxedProperties = for (p <- properties) yield p.boxed[U, That](implicitly[BoxedOrValidValue[Value]], e)
-    SetValue[K, BoxedValue, That](boxedProperties)
-  }
+  def asIterable: Iterable[Prop] = properties
 
 }
 
-case class ListValue[+Key, +Value: BoxedOrValidValue, +Prop <: Property[Key, Value, Prop]](
-  properties: List[Property[Key, Value, Prop]]
+case class ListValue[+Key, +Value: BoxedOrValidValue, +Prop <: Property[Key, Value]](
+  properties: List[Prop]
 ) extends MultiPropertyValue[Key, Value, Prop] {
   require(keySet.size <= 1, s"Multiple keys detected: ${keySet.mkString(", ")}")
   require(dataTypes.size <= 1, s"Multiple datatypes detected: ${dataTypes.mkString(", ")}")
@@ -103,13 +84,6 @@ case class ListValue[+Key, +Value: BoxedOrValidValue, +Prop <: Property[Key, Val
 
   private[this] def keySet: Set[Key] = properties.map(_.key).toSet
 
-  def asIterable: List[Property[Key, Value, Prop]] = properties
-
-  def boxed[K >: Key, U >: Value, That <: Property[K, BoxedValue, That]](
-    implicit e: HasValueMapper[U, Prop, BoxedValue, That]
-  ): ListValue[K, BoxedValue, That] = {
-    val boxedProperties = for (p <- properties) yield p.boxed[U, That](implicitly[BoxedOrValidValue[Value]], e)
-    ListValue[K, BoxedValue, That](boxedProperties)
-  }
+  def asIterable: List[Prop] = properties
 
 }

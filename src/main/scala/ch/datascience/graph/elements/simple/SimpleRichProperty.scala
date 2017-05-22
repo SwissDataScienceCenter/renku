@@ -1,36 +1,14 @@
 package ch.datascience.graph.elements.simple
 
-import ch.datascience.graph.elements.{BoxedOrValidValue, HasValueMapper, Properties, RichProperty}
+import ch.datascience.graph.elements.{Properties, RichProperty}
+import ch.datascience.graph.values.BoxedOrValidValue
 
 
 /**
   * Created by johann on 28/04/17.
   */
-final case class SimpleRichProperty[+Key, +Value: BoxedOrValidValue, MetaKey, +MetaValue: BoxedOrValidValue](
+final case class SimpleRichProperty[Key, +Value: BoxedOrValidValue, +MetaValue: BoxedOrValidValue](
   key: Key,
   value: Value,
-  properties: Properties[MetaKey, MetaValue, SimpleProperty[MetaKey, MetaValue]]
-) extends RichProperty[Key, Value, MetaKey, MetaValue, SimpleProperty[MetaKey, MetaValue], SimpleRichProperty[Key,
-  Value, MetaKey, MetaValue]]
-
-object SimpleRichProperty {
-
-  lazy val reusableMapper: Mapper[Nothing, Nothing, Nothing, Nothing, Nothing] =
-    new Mapper[Nothing, Nothing, Nothing, Nothing, Nothing]
-
-  class Mapper[Key, MetaKey, MetaValue: BoxedOrValidValue, U, V: BoxedOrValidValue]
-    extends HasValueMapper[U, SimpleRichProperty[Key, U, MetaKey, MetaValue], V, SimpleRichProperty[Key, V, MetaKey,
-      MetaValue]] {
-    def map(
-      srp: SimpleRichProperty[Key, U, MetaKey, MetaValue]
-    )(
-      f: (U) => V
-    ): SimpleRichProperty[Key, V, MetaKey, MetaValue] =
-      SimpleRichProperty(srp.key, f(srp.value), srp.properties)
-  }
-
-  implicit def canMap[Key, MetaKey, MetaValue: BoxedOrValidValue, U, V: BoxedOrValidValue]: HasValueMapper[U,
-    SimpleRichProperty[Key, U, MetaKey, MetaValue], V, SimpleRichProperty[Key, V, MetaKey, MetaValue]] =
-    reusableMapper.asInstanceOf[Mapper[Key, MetaKey, MetaValue, U, V]]
-
-}
+  properties: Properties[Key, MetaValue, SimpleProperty[Key, MetaValue]]
+) extends RichProperty[Key, Value, MetaValue, SimpleProperty[Key, MetaValue]]

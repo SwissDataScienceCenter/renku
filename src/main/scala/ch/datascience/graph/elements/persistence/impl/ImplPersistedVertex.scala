@@ -1,6 +1,6 @@
 package ch.datascience.graph.elements.persistence.impl
 
-import ch.datascience.graph.elements.persistence._
+import ch.datascience.graph.elements.persistence.{PersistedMultiRecordRichProperty, PersistedRecordProperty, PersistedVertex}
 import ch.datascience.graph.elements.MultiProperties
 
 /**
@@ -11,11 +11,10 @@ case class ImplPersistedVertex[
 TypeId,
 Key,
 +Value,
-MetaKey,
 +MetaValue,
 +PropId
 ](
   id: Id,
   types: Set[TypeId],
-  properties: MultiProperties[Key, Value, ImplPersistedMultiRecordRichProperty[PropId, Key, Value, MetaKey, MetaValue]]
-) extends PersistedVertex[Id, TypeId, Key, Value, MetaKey, MetaValue, ImplPersistedRecordProperty[MetaKey, MetaValue], PropId, ImplPersistedMultiRecordRichProperty[PropId, Key, Value, MetaKey, MetaValue]]
+  properties: MultiProperties[Key, Value, PersistedMultiRecordRichProperty[PropId, Key, Value, MetaValue]]
+) extends PersistedVertex[Id, TypeId, Key, Value, MetaValue, PersistedRecordProperty[Key, MetaValue], PropId, PersistedMultiRecordRichProperty[PropId, Key, Value, MetaValue]]

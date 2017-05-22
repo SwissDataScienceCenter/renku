@@ -5,13 +5,13 @@ import ch.datascience.graph.types.{NamedType, PropertyKey, RecordType}
 
 sealed trait Validated
 
-trait ValidatedProperty[+Key, +Value, +Prop <: Property[Key, Value, Prop]] extends Validated {
+trait ValidatedProperty[+Key, +Value, +Prop <: Property[Key, Value]] extends Validated {
 
   /**
     * The validated property
     * @return property
     */
-  def property: Property[Key, Value, Prop]
+  def property: Prop
 
   /**
     * The definition of the validated property
@@ -22,13 +22,13 @@ trait ValidatedProperty[+Key, +Value, +Prop <: Property[Key, Value, Prop]] exten
 
 }
 
-trait ValidatedMultiProperty[+Key, +Value, +Prop <: Property[Key, Value, Prop]] extends Validated {
+trait ValidatedMultiProperty[+Key, +Value, +Prop <: Property[Key, Value]] extends Validated {
 
   /**
     * The validated property
     * @return property
     */
-  def properties: MultiPropertyValue[Key, Value, Property[Key, Value, Prop]]
+  def properties: MultiPropertyValue[Key, Value, Prop]
 
   /**
     * The definition of the validated property
@@ -39,7 +39,7 @@ trait ValidatedMultiProperty[+Key, +Value, +Prop <: Property[Key, Value, Prop]] 
 
 }
 
-trait ValidatedRecord[Key, +Value, +Prop <: Property[Key, Value, Prop]] extends Validated {
+trait ValidatedRecord[Key, +Value, +Prop <: Property[Key, Value]] extends Validated {
 
   /**
     * The validated record
@@ -62,7 +62,7 @@ trait ValidatedRecord[Key, +Value, +Prop <: Property[Key, Value, Prop]] extends 
 
 }
 
-trait ValidatedMultiRecord[Key, +Value, +Prop <: Property[Key, Value, Prop]] extends Validated {
+trait ValidatedMultiRecord[Key, +Value, +Prop <: Property[Key, Value]] extends Validated {
 
   /**
     * The validated record
@@ -85,7 +85,7 @@ trait ValidatedMultiRecord[Key, +Value, +Prop <: Property[Key, Value, Prop]] ext
 
 }
 
-trait ValidatedTypedRecord[TypeId, Key, +Value, +Prop <: Property[Key, Value, Prop]] extends Validated {
+trait ValidatedTypedRecord[TypeId, Key, +Value, +Prop <: Property[Key, Value]] extends Validated {
 
   /**
     * The validated record
@@ -115,7 +115,7 @@ trait ValidatedTypedRecord[TypeId, Key, +Value, +Prop <: Property[Key, Value, Pr
 
 }
 
-trait ValidatedTypedMultiRecord[TypeId, Key, +Value, +Prop <: Property[Key, Value, Prop]] extends Validated {
+trait ValidatedTypedMultiRecord[TypeId, Key, +Value, +Prop <: Property[Key, Value]] extends Validated {
 
   /**
     * The validated record
@@ -149,17 +149,16 @@ trait ValidatedVertex[
 TypeId,
 Key,
 +Value,
-MetaKey,
 +MetaValue,
-+MetaProp <: Property[MetaKey, MetaValue, MetaProp],
-+Prop <: RichProperty[Key, Value, MetaKey, MetaValue, MetaProp, Prop]
++MetaProp <: Property[Key, MetaValue],
++Prop <: RichProperty[Key, Value, MetaValue, MetaProp]
 ] extends Validated {
 
   /**
     * The validated vertex
     * @return
     */
-  def vertex: Vertex[TypeId, Key, Value, MetaKey, MetaValue, MetaProp, Prop]
+  def vertex: Vertex[TypeId, Key, Value, MetaValue, MetaProp, Prop]
 
   /**
     * The definitions of the validated named types
@@ -184,6 +183,6 @@ MetaKey,
   /**
     * The definitions of the validated meta-properties
     */
-  def metaPropertyKeys: Map[MetaKey, PropertyKey[MetaKey]]
+  def metaPropertyKeys: Map[Key, PropertyKey[Key]]
 
 }

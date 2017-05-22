@@ -6,7 +6,7 @@ import ch.datascience.graph.elements.persistence.{Path, PersistedRecordProperty,
 /**
   * Created by jeberle on 10.05.17.
   */
-case class UpdatePropertyOperation[+Key, +Value, +T <: PersistedRecordProperty[Key, Value, T]](
+case class UpdatePropertyOperation[+Key, +Value, +T <: PersistedRecordProperty[Key, Value]](
 property : T,
 new_value : Value
 

@@ -1,7 +1,7 @@
 package ch.datascience.graph.elements.persistence
 
 /**
-  * Basic trait for elements that have an path.
+  * Basic trait for elements that have a path.
   * Usually children elements of the ones with an id.
   *
   * @tparam P path type for the Element

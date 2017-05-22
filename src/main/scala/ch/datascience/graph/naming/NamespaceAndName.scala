@@ -1,4 +1,4 @@
-package ch.datascience.graph
+package ch.datascience.graph.naming
 
 import scala.util.matching.Regex
 
@@ -16,23 +16,11 @@ case class NamespaceAndName(namespace: String, name: String) {
 
 object NamespaceAndName {
 
-//  lazy val namespacePattern: Regex = raw"([-A-Za-z0-9_/]*)".r
-//  lazy val namePattern     : Regex = raw"([-A-Za-z0-9_/]+)".r
   lazy val separatePattern : Regex = s"([^:]*):(.*)".r
 
   def apply(namespaceAndName: String): NamespaceAndName = namespaceAndName match {
     case separatePattern(namespace, name) => NamespaceAndName(namespace, name)
     case _                                => throw new IllegalArgumentException(s"Cannot find separator ':'")
   }
-
-//  def namespaceIsValid(namespace: String): Boolean = namespace match {
-//    case namespacePattern(_) => true
-//    case _                   => false
-//  }
-//
-//  def nameIsValid(name: String): Boolean = name match {
-//    case namePattern(_) => true
-//    case _              => false
-//  }
 
 }

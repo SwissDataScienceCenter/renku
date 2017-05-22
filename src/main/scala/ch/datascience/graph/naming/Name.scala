@@ -1,7 +1,7 @@
-package ch.datascience.graph
+package ch.datascience.graph.naming
 
-import scala.util.{Success, Try}
 import scala.util.matching.Regex
+import scala.util.{Success, Try}
 
 /**
   * Created by jmt on 15/05/17.
