@@ -95,7 +95,15 @@ object TestGraphRead {
 
     for (vertex <- vertices) {
       val future = reader.read(vertex)
-      future.map(println)
+      future.map { vertex =>
+        println(vertex)
+        for (y <- vertex.properties.values; z <- y) {
+          println(z.key)
+          println(z.id.getRelationId)
+          println(z.id.getOutVertexId)
+          println(z.id.getTypeId)
+        }
+      }
       future.onFailure {
         case e => e.printStackTrace()
       }

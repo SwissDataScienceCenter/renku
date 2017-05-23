@@ -3,8 +3,8 @@ package json
 
 import java.util.UUID
 
+import ch.datascience.graph.types.persistence.model.{GraphDomain, RichPropertyKey}
 import ch.datascience.graph.types.{Cardinality, DataType}
-import ch.datascience.graph.types.persistence.model.{GraphDomain, PropertyKey}
 import play.api.libs.json._
 import play.api.libs.functional.syntax._
 
@@ -13,12 +13,12 @@ import play.api.libs.functional.syntax._
   */
 object PropertyKeyMappers {
 
-  def propertyKeyWrites: Writes[PropertyKey] = (
+  def propertyKeyWrites: Writes[RichPropertyKey] = (
     (JsPath \ "id").write[UUID] and
       (JsPath \ "graphDomain").write[GraphDomain] and
       (JsPath \ "name").write[String] and
       (JsPath \ "dataType").write[DataType] and
       (JsPath \ "cardinality").write[Cardinality]
-    )(unlift(PropertyKey.unapply))
+    )(unlift(RichPropertyKey.unapply))
 
 }
