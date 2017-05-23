@@ -3,8 +3,7 @@ package ch.datascience.graph.types.persistence.orchestration
 import java.util.UUID
 
 import ch.datascience.graph.naming.NamespaceAndName
-import ch.datascience.graph.types.persistence.model.{GraphDomain, NamedType, PropertyKey}
-import ch.datascience.graph.types.persistence.model.relational.{RowNamedType, RowPropertyKey}
+import ch.datascience.graph.types.persistence.model.{GraphDomain, NamedType, RichNamedType, RichPropertyKey}
 
 import language.{higherKinds, reflectiveCalls}
 import scala.concurrent.Future
@@ -20,21 +19,21 @@ trait NamedTypeComponent {
 
   object namedTypes {
 
-    def all(): Future[Seq[NamedType]] = dal.namedTypes.runNamedTypeQuery
+    def all(): Future[Seq[RichNamedType]] = dal.namedTypes.all()
 
-    def findById(id: UUID): Future[Option[NamedType]] = {
-      val futureSeq = dal.namedTypes.findRowById(id).extract.runNamedTypeQuery
+    def findById(id: UUID): Future[Option[RichNamedType]] = {
+      val futureSeq = dal.namedTypes.findById(id)
       for {
         seq <- futureSeq
       } yield seq.headOption
     }
 
-    def findByNamespaceAndName(key: NamespaceAndName): Future[Option[NamedType]] = {
+    def findByNamespaceAndName(key: NamespaceAndName): Future[Option[RichNamedType]] = {
       findByNamespaceAndName(key.namespace, key.name)
     }
 
-    def findByNamespaceAndName(namespace: String, name: String): Future[Option[NamedType]] = {
-      val futureSeq = dal.namedTypes.findRowByNamespaceAndName(namespace, name).extract.runNamedTypeQuery
+    def findByNamespaceAndName(namespace: String, name: String): Future[Option[RichNamedType]] = {
+      val futureSeq = dal.namedTypes.findByNamespaceAndName(namespace, name)
       for {
         seq <- futureSeq
       } yield seq.headOption
@@ -43,11 +42,11 @@ trait NamedTypeComponent {
     def createNamedType(
       graphDomain: GraphDomain,
       name: String,
-      superTypesMap: Map[NamespaceAndName, RowNamedType],
-//      propertiesMap: Map[NamespaceAndName, RowPropertyKey]
-      propertiesMap: Map[NamespaceAndName, PropertyKey]
-    ): Future[NamedType] = {
-      val namedType = NamedType(UUID.randomUUID(), graphDomain, name, superTypesMap, propertiesMap)
+      superTypes: Map[NamespaceAndName, RichNamedType],
+      //      propertiesMap: Map[NamespaceAndName, RowPropertyKey]
+      properties: Map[NamespaceAndName, RichPropertyKey]
+    ): Future[RichNamedType] = {
+      val namedType = RichNamedType(UUID.randomUUID(), graphDomain, name, superTypes, properties)
       val insertNamedType = dal.namedTypes add namedType
       db.run(insertNamedType) map { _ => namedType }
     }
@@ -57,7 +56,7 @@ trait NamedTypeComponent {
       name: String,
       superTypes: Set[NamespaceAndName],
       properties: Set[NamespaceAndName]
-    ): Future[NamedType] = {
+    ): Future[RichNamedType] = {
       val selectGraphDomain = graphDomains.findByNamespace(namespace).map(_.get)
       val linearized = linearize(superTypes, properties)
 
@@ -66,11 +65,11 @@ trait NamedTypeComponent {
         (superTypesMap, propertiesMap) <- linearized
       } yield (graphDomain, superTypesMap, propertiesMap)
 
-      joinedFuture flatMap { case (graphDomain, superTypesMap, propertiesMap) => createNamedType(graphDomain, name, superTypesMap, propertiesMap) }
+      joinedFuture flatMap { case (graphDomain, superTypes, properties) => createNamedType(graphDomain, name, superTypes, properties) }
     }
 
 //    def linearize(superTypes: Set[NamespaceAndName], properties: Set[NamespaceAndName]): Future[(Map[NamespaceAndName, RowNamedType], Map[NamespaceAndName, RowPropertyKey])] = {
-    def linearize(superTypes: Set[NamespaceAndName], properties: Set[NamespaceAndName]): Future[(Map[NamespaceAndName, RowNamedType], Map[NamespaceAndName, PropertyKey])] = {
+    def linearize(superTypes: Set[NamespaceAndName], properties: Set[NamespaceAndName]): Future[(Map[NamespaceAndName, RichNamedType], Map[NamespaceAndName, RichPropertyKey])] = {
       val futureSuperTypes = for {
         iterable <- Future.traverse(superTypes.toIterable)(this.findByNamespaceAndName)
       } yield for {
@@ -89,11 +88,11 @@ trait NamedTypeComponent {
         superTypes <- futureSuperTypes
         directSuperTypes = for {
           superType <- superTypes
-        } yield superType.key -> superType.toRow
+        } yield superType.key -> superType
         indirectSuperTypes = for {
           superType <- superTypes
-          (key, value) <- superType.superTypesMap
-        } yield key -> value
+          (id, value) <- superType.superTypes
+        } yield id -> value
       } yield (directSuperTypes ++ indirectSuperTypes).toMap
 
       val linearizedProperties = for {
@@ -104,8 +103,8 @@ trait NamedTypeComponent {
         } yield property.key -> property
         impliedProperties = for {
           superType <- superTypes
-          (key, value) <- superType.propertiesMap
-        } yield key -> value
+          (id, value) <- superType.properties
+        } yield id -> value
       } yield (directProperties ++ impliedProperties).toMap
 
       for {

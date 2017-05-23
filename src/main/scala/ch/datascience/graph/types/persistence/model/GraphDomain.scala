@@ -2,29 +2,11 @@ package ch.datascience.graph.types.persistence.model
 
 import java.util.UUID
 
-import ch.datascience.graph.naming.Namespace
-import ch.datascience.graph.types.persistence.model.relational.RowGraphDomain
-
 /**
-  * Created by johann on 15/03/17.
+  * Created by johann on 09/05/17.
   */
-case class GraphDomain(id: UUID, namespace: String) extends AbstractEntity[RowGraphDomain] {
-  Namespace(namespace)
-//  require(
-//    NamespaceAndName.namespaceIsValid(namespace),
-//    s"Invalid namespace: '$namespace' (Pattern: ${NamespaceAndName.namespacePattern})"
-//  )
-
-  def toRow: RowGraphDomain = RowGraphDomain(id, namespace)
+case class GraphDomain(id: UUID, namespace: String) extends AbstractEntity with RichAbstractEntity[GraphDomain] {
 
   final override val entityType: EntityType = EntityType.GraphDomain
 
 }
-
-//object GraphDomain {
-//
-//  def make(rowGraphDomain: RowGraphDomain): GraphDomain = GraphDomain(rowGraphDomain.id, rowGraphDomain.namespace)
-//
-//  def tupled: ((UUID, String)) => GraphDomain = (GraphDomain.apply _).tupled
-//
-//}

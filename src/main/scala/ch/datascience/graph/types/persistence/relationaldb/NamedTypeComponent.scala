@@ -6,7 +6,6 @@ import java.util.UUID
 import ch.datascience.graph.naming.NamespaceAndName
 import ch.datascience.graph.types.{Cardinality, DataType}
 import ch.datascience.graph.types.persistence.model._
-import ch.datascience.graph.types.persistence.model.relational._
 import slick.lifted._
 
 import scala.collection.IterableLike
@@ -20,7 +19,7 @@ trait NamedTypeComponent { this: JdbcProfileComponent with SchemasComponent with
 
   import profile.api._
 
-  class NamedTypes(tag: Tag) extends Table[RowNamedType](tag, "NAMED_TYPES") with AbstractEntityTable[RowNamedType] {
+  class NamedTypes(tag: Tag) extends Table[NamedType](tag, "NAMED_TYPES") with AbstractEntityTable[NamedType] {
 
     // Columns
     // def id: Rep[UUID] = column[UUID]("UUID", O.PrimaryKey)
@@ -36,125 +35,147 @@ trait NamedTypeComponent { this: JdbcProfileComponent with SchemasComponent with
     //    def entity: ForeignKeyQuery[Entities, Entity] =
     //      foreignKey("PROPERTY_KEYS_FK_ENTITIES", id, entities)(_.id)
 
-    def graphDomain: ForeignKeyQuery[GraphDomains, RowGraphDomain] =
+    def graphDomain: ForeignKeyQuery[GraphDomains, GraphDomain] =
       foreignKey("NAMED_TYPES_FK_GRAPH_DOMAINS", graphDomainId, graphDomains)(_.id)
 
     // *
-    def * : ProvenShape[RowNamedType] =
-      (id, graphDomainId, name) <> (RowNamedType.tupled, RowNamedType.unapply)
+    def * : ProvenShape[NamedType] =
+      (id, graphDomainId, name) <> (NamedType.tupled, NamedType.unapply)
 
 
-    def mappedUsing(graphDomains: GraphDomains): MappedProjection[NamedTypeBasic, (UUID, GraphDomain, String)] = {
-      (id, graphDomains.mapped, name).mapTo[NamedTypeBasic]
-    }
+//    def mappedUsing(graphDomains: GraphDomains): MappedProjection[NamedTypeBasic, (UUID, GraphDomain, String)] = {
+//      (id, graphDomains.mapped, name).mapTo[NamedTypeBasic]
+//    }
 
   }
 
-  final class RichNamedTypesQuery[C[A] <: Seq[A]](self: Query[NamedTypes, RowNamedType, C]) {
+  final class RichNamedTypesQuery[C[A] <: Seq[A]](self: Query[NamedTypes, NamedType, C]) {
 
-    def withGraphDomain: Query[(GraphDomains, NamedTypes), (RowGraphDomain, RowNamedType), C] = for {
+    def withGraphDomain: Query[(GraphDomains, NamedTypes), (GraphDomain, NamedType), C] = for {
       nt <- self
       gd <- nt.graphDomain
     } yield (gd, nt)
 
-    def mapped: Query[MappedProjection[NamedTypeBasic, (UUID, GraphDomain, String)], NamedTypeBasic, C] = for {
-      (gd, nt) <- self.withGraphDomain
-    } yield nt.mappedUsing(gd)
-
-    def withSuperTypes: Query[(Rep[UUID], (NamedTypes, Rep[String])), (UUID, (RowNamedType, String)), C] = for {
+    def withSuperTypes: Query[(Rep[UUID], MappedProjection[RichNamedType, (GraphDomain, NamedType)]), (UUID, RichNamedType), C] = for {
       nt <- self
       link <- namedTypeLinks
-      superType <- link.parentNamedType
-      superTypeGD <- superType.graphDomain
       if nt.id === link.namedTypeId
-    } yield (nt.id, (superType, superTypeGD.namespace))
+      parent <- link.parentNamedType.halfMapped
+    } yield (nt.id, parent)
 
-//    def withProperties: Query[(Rep[UUID], (PropertyKeys, Rep[String])), (UUID, (RowPropertyKey, String)), C] = for {
-//      nt <- self
-//      link <- namedTypeProperties
-//      property <- link.propertyKey
-//      propertyGD <- property.graphDomain
-//      if nt.id === link.namedTypeId
-//    } yield (nt.id, (property, propertyGD.namespace))
-
-    def withProperties: Query[(Rep[UUID], MappedProjection[PropertyKey, (UUID, GraphDomain, String, DataType, Cardinality)]), (UUID, PropertyKey), C] = for {
+    def withProperties: Query[(Rep[UUID], MappedProjection[RichPropertyKey, (GraphDomain, PropertyKey)]), (UUID, RichPropertyKey), C] = for {
       nt <- self
       link <- namedTypeProperties
-      property <- link.propertyKey
-      gd <- property.graphDomain
       if nt.id === link.namedTypeId
-    } yield (nt.id, property.mappedUsing(gd))
+      property <- link.propertyKey.mapped
+    } yield (nt.id, property)
 
-    def runNamedTypeQuery(implicit ec: ExecutionContext): Future[Seq[NamedType]] = {
-      val futureNamedTypes = db.run( this.mapped.result )
-      val futureSuperTypes = runOneToManyQuery( this.withSuperTypes )
-      val futureProperties = runOneToManyQuery( this.withProperties )
+    def halfMapped: Query[MappedProjection[RichNamedType, (GraphDomain, NamedType)], RichNamedType, C] = for {
+      (gd, pk) <- this.withGraphDomain
+    } yield (gd, pk) <> (to, from)
 
-      val joined = for {
-        seq <- futureNamedTypes
-        mapSuperTypes <- futureSuperTypes
-        mapProperties <- futureProperties
-      } yield for {
-        namedType <- seq
-      } yield (namedType, mapSuperTypes.getOrElse(namedType.id, Seq.empty), mapProperties.getOrElse(namedType.id, Seq.empty))
+    protected def to(t: (GraphDomain, NamedType)): RichNamedType = t._2.toRichNamedType(t._1, Map.empty, Map.empty)
 
-      for {
-        seq <- joined
-      } yield for {
-        (namedType, superTypesSeq, propertiesSeq) <- seq
-        superTypes = for { (superType, namespace) <- superTypesSeq } yield NamespaceAndName(namespace, superType.name) -> superType
-        properties = for { property <- propertiesSeq } yield property.key -> property
-      } yield NamedType(namedType.id, namedType.graphDomain, namedType.name, superTypes.toMap, properties.toMap)
+    protected def from(namedType: RichNamedType): Option[(GraphDomain, NamedType)] = RichNamedType.unapply(namedType) match {
+      case Some((_, gd, _, _, _)) => Some((gd, namedType))
+      case _ => None
     }
 
-    def runOneToManyQuery[OneTable, ManyTable, OneRow, ManyRow](query: Query[(OneTable, ManyTable), (OneRow, ManyRow), C])(implicit ec: ExecutionContext): Future[Map[OneRow, Seq[ManyRow]]] = {
-      val futureSeq = db.run( query.result )
-
-      for {
-        seq <- futureSeq
-      } yield for {
-        (one, group) <- seq groupBy { case (one, _) => one }
-        manySeq = for {
-          (_, many) <- group
-        } yield many
-      } yield one -> manySeq
-    }
   }
 
-  implicit def toRichNamedTypesQuery[C[A] <: Seq[A]](query: Query[NamedTypes, RowNamedType, C]): RichNamedTypesQuery[C] = new RichNamedTypesQuery(query)
+  implicit def toRichNamedTypesQuery[C[A] <: Seq[A]](query: Query[NamedTypes, NamedType, C]): RichNamedTypesQuery[C] = new RichNamedTypesQuery(query)
 
-  object namedTypes extends TableQuery(new NamedTypes(_)) with AbstractEntitiesTableQuery[RowNamedType, NamedType, NamedTypes] {
+  object namedTypes extends TableQuery(new NamedTypes(_)) with AbstractEntitiesTableQuery[NamedType, RichNamedType, NamedTypes] {
 
-    type MappedQuery = Query[MappedProjection[NamedTypeBasic, (UUID, GraphDomain, String)], NamedTypeBasic, Seq]
-
-    lazy val findById: CompiledFunction[Rep[UUID] => MappedQuery, Rep[UUID], UUID, MappedQuery, Seq[NamedTypeBasic]] = Compiled {
-      this.findRowById.extract andThen {_.mapped }
+    def all()(implicit ec: ExecutionContext): Future[Seq[RichNamedType]] = {
+      val f1 = db.run( this.halfMapped.result )
+      val f2 = db.run( this.withSuperTypes.result )
+      val f3 = db.run( this.withProperties.result )
+      joinFutures(f1, f2, f3)
     }
 
-    lazy val findRowByNamespaceAndName: CompiledFunction[(Rep[String], Rep[String]) => Query[NamedTypes, RowNamedType, Seq], (Rep[String], Rep[String]), (String, String), Query[NamedTypes, RowNamedType, Seq], Seq[RowNamedType]] = Compiled {
+    def findById(id: UUID)(implicit ec: ExecutionContext): Future[Seq[RichNamedType]] = {
+      val f1 = db.run( this.findByIdHalfMapped(id).result )
+      val f2 = db.run( this.findByIdWithSuperTypes(id).result )
+      val f3 = db.run( this.findByIdWithProperties(id).result )
+      joinFutures(f1, f2, f3)
+    }
+
+    private lazy val findByIdBase = this.findBy(_.id).extract
+
+    private lazy val findByIdHalfMapped = Compiled {
+      findByIdBase andThen { _.halfMapped }
+    }
+
+    private lazy val findByIdWithSuperTypes = Compiled {
+      findByIdBase andThen { _.withSuperTypes }
+    }
+
+    private lazy val findByIdWithProperties = Compiled {
+      findByIdBase andThen { _.withProperties }
+    }
+
+    def findByNamespaceAndName(namespace: String, name: String)(implicit ec: ExecutionContext): Future[Seq[RichNamedType]] = {
+      val f1 = db.run( this.findByNamespaceAndNameHalfMapped((namespace, name)).result )
+      val f2 = db.run( this.findByNamespaceAndNameWithSuperTypes((namespace, name)).result )
+      val f3 = db.run( this.findByNamespaceAndNameWithProperties((namespace, name)).result )
+      joinFutures(f1, f2, f3)
+    }
+
+    private lazy val findByNamespaceAndNameBase = {
       (namespace: Rep[String], name: Rep[String]) => for {
-        (gd, nt) <- this.withGraphDomain
-        if gd.namespace === namespace && nt.name === name
-      } yield nt
+        (gd, pk) <- this.withGraphDomain
+        if gd.namespace === namespace && pk.name === name
+      } yield pk
     }
 
-    lazy val findByNamespaceAndName: CompiledFunction[(Rep[String], Rep[String]) => MappedQuery, (Rep[String], Rep[String]), (String, String), MappedQuery, Seq[NamedTypeBasic]] = Compiled {
-      (namespace: Rep[String], name: Rep[String]) => for {
-        (gd, nt) <- this.withGraphDomain
-        if gd.namespace === namespace && nt.name === name
-      } yield nt.mappedUsing(gd)
+    private lazy val findByNamespaceAndNameHalfMapped = Compiled {
+      findByNamespaceAndNameBase.tupled andThen { _.halfMapped }
     }
 
-    override def insertEntity(namedType: NamedType): DBIO[Unit] = {
+    private lazy val findByNamespaceAndNameWithSuperTypes = Compiled {
+      findByNamespaceAndNameBase.tupled andThen { _.withSuperTypes }
+    }
+
+    private lazy val findByNamespaceAndNameWithProperties = Compiled {
+      findByNamespaceAndNameBase.tupled andThen { _.withProperties }
+    }
+
+    override def insertEntity(namedType: RichNamedType): DBIO[Unit] = {
       val addEntity = super.insertEntity(namedType)
-      val addSuperTypes = namedTypeLinks ++= namedType.superTypesMap.values.map(x => RowNamedTypeLink(namedType.id, x.id))
-      val addProperties = namedTypeProperties ++= namedType.propertiesMap.values.map(x => RowNamedTypeProperty(namedType.id, x.id))
+      val addSuperTypes = namedTypeLinks ++= namedType.superTypes.values.map(x => NamedTypeLink(namedType.id, x.id))
+      val addProperties = namedTypeProperties ++= namedType.properties.values.map(x => NamedTypeProperty(namedType.id, x.id))
       DBIO.seq(addEntity, addSuperTypes, addProperties)
     }
 
+    protected def joinFutures(f1: Future[Seq[RichNamedType]], f2: Future[Seq[(UUID, RichNamedType)]], f3: Future[Seq[(UUID, RichPropertyKey)]])(implicit ec: ExecutionContext): Future[Seq[RichNamedType]] = {
+      for {
+        namedTypes <- f1
+        superTypes <- f2
+        properties <- f3
+        superTypesMap = groupByKey(superTypes)
+        propertiesMap = groupByKey(properties)
+      } yield for {
+        namedType <- namedTypes
+      } yield {
+        RichNamedType(namedType.id, namedType.graphDomain, namedType.name, superTypesMap.getOrElse(namedType.id, Seq.empty), propertiesMap.getOrElse(namedType.id, Seq.empty))
+      }
+    }
+
+    protected def groupByKey[A, B](it: Iterable[(A, B)]): Map[A, Iterable[B]] = {
+      val grouped = it.groupBy(_._1)
+      for {
+        (key, seq) <- grouped
+      } yield key -> {
+        for {
+          (_, value) <- seq
+        } yield value
+      }
+    }
+
   }
 
-  class NamedTypeLinks(tag: Tag) extends Table[RowNamedTypeLink](tag, "NAMED_TYPES_HIERARCHY") {
+  class NamedTypeLinks(tag: Tag) extends Table[NamedTypeLink](tag, "NAMED_TYPES_HIERARCHY") {
 
     // Columns
     def namedTypeId: Rep[UUID] = column[UUID]("NAMED_TYPE_ID")
@@ -165,21 +186,21 @@ trait NamedTypeComponent { this: JdbcProfileComponent with SchemasComponent with
     def pk: PrimaryKey = primaryKey("IDX_NAMED_TYPES_HIERARCHY", (namedTypeId, parentNamedTypeId))
 
     // Foreign keys
-    def namedType: ForeignKeyQuery[NamedTypes, RowNamedType] =
+    def namedType: ForeignKeyQuery[NamedTypes, NamedType] =
       foreignKey("NAMED_TYPES_HIERARCHY_FK_NAMED_TYPES", namedTypeId, namedTypes)(_.id)
 
-    def parentNamedType: ForeignKeyQuery[NamedTypes, RowNamedType] =
+    def parentNamedType: ForeignKeyQuery[NamedTypes, NamedType] =
       foreignKey("NAMED_TYPES_HIERARCHY_PARENT_FK_NAMED_TYPES", parentNamedTypeId, namedTypes)(_.id)
 
     // *
-    def * : ProvenShape[RowNamedTypeLink] =
-      (namedTypeId, parentNamedTypeId) <> (RowNamedTypeLink.tupled, RowNamedTypeLink.unapply)
+    def * : ProvenShape[NamedTypeLink] =
+      (namedTypeId, parentNamedTypeId) <> (NamedTypeLink.tupled, NamedTypeLink.unapply)
 
   }
 
   object namedTypeLinks extends TableQuery(new NamedTypeLinks(_))
 
-  class NamedTypeProperties(tag: Tag) extends Table[RowNamedTypeProperty](tag, "NAMED_TYPES_PROPERTIES") {
+  class NamedTypeProperties(tag: Tag) extends Table[NamedTypeProperty](tag, "NAMED_TYPES_PROPERTIES") {
 
     // Columns
     def namedTypeId: Rep[UUID] = column[UUID]("NAMED_TYPE_ID")
@@ -190,15 +211,15 @@ trait NamedTypeComponent { this: JdbcProfileComponent with SchemasComponent with
     def pk: PrimaryKey = primaryKey("IDX_NAMED_TYPES_PROPERTIES", (namedTypeId, propertyKeyId))
 
     // Foreign keys
-    def namedType: ForeignKeyQuery[NamedTypes, RowNamedType] =
+    def namedType: ForeignKeyQuery[NamedTypes, NamedType] =
       foreignKey("NAMED_TYPES_PROPERTIES_FK_NAMED_TYPES", namedTypeId, namedTypes)(_.id)
 
-    def propertyKey: ForeignKeyQuery[PropertyKeys, RowPropertyKey] =
+    def propertyKey: ForeignKeyQuery[PropertyKeys, PropertyKey] =
       foreignKey("NAMED_TYPES_PROPERTIES_FK_PROPERTY_KEYS", propertyKeyId, propertyKeys)(_.id)
 
     // *
-    def * : ProvenShape[RowNamedTypeProperty] =
-      (namedTypeId, propertyKeyId) <> (RowNamedTypeProperty.tupled, RowNamedTypeProperty.unapply)
+    def * : ProvenShape[NamedTypeProperty] =
+      (namedTypeId, propertyKeyId) <> (NamedTypeProperty.tupled, NamedTypeProperty.unapply)
 
   }
 

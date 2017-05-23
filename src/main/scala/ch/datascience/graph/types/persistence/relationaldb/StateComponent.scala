@@ -3,8 +3,7 @@ package ch.datascience.graph.types.persistence.relationaldb
 import java.time.Instant
 import java.util.UUID
 
-import ch.datascience.graph.types.persistence.model.relational.{RowEntity, RowState}
-import ch.datascience.graph.types.persistence.model.EntityState
+import ch.datascience.graph.types.persistence.model.{EntityState, Entity, State}
 import slick.lifted.{CompiledFunction, ForeignKeyQuery, Index, ProvenShape}
 
 /**
@@ -14,7 +13,7 @@ trait StateComponent { this: JdbcProfileComponent with SchemasComponent with Imp
 
   import profile.api._
 
-  class States(tag: Tag) extends Table[RowState](tag, "STATES") {
+  class States(tag: Tag) extends Table[State](tag, "STATES") {
 
     // Columns
     def id: Rep[Long] = column[Long]("ID", O.PrimaryKey, O.AutoInc)
@@ -29,17 +28,17 @@ trait StateComponent { this: JdbcProfileComponent with SchemasComponent with Imp
     def entityIdIdx: Index = index("IDX_STATES_ENTITY_UUID", entityId)
 
     // Foreign keys
-    def entity: ForeignKeyQuery[Entities, RowEntity] =
+    def entity: ForeignKeyQuery[Entities, Entity] =
       foreignKey("STATES_FK_ENTITIES", entityId, entities)(_.id)
 
     // *
-    def * : ProvenShape[RowState] = (id.?, entityId, state, timestamp) <> (RowState.tupled, RowState.unapply)
+    def * : ProvenShape[State] = (id.?, entityId, state, timestamp) <> (State.tupled, State.unapply)
 
   }
 
   object states extends TableQuery(new States(_)) {
 
-    val findByEntityId: CompiledFunction[Rep[UUID] => Query[States, RowState, Seq], Rep[UUID], UUID, Query[States, RowState, Seq], Seq[RowState]] =
+    val findByEntityId: CompiledFunction[Rep[UUID] => Query[States, State, Seq], Rep[UUID], UUID, Query[States, State, Seq], Seq[State]] =
       this.findBy(_.entityId)
 
   }

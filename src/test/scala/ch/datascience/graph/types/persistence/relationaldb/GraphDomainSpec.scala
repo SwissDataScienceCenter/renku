@@ -2,8 +2,8 @@ package ch.datascience.graph.types.persistence.relationaldb
 
 import java.util.UUID
 
-import ch.datascience.graph.types.persistence.{AsyncUnitSpec, DatabaseSetup}
 import ch.datascience.graph.types.persistence.model.GraphDomain
+import ch.datascience.graph.types.persistence.{AsyncUnitSpec, DatabaseSetup}
 import org.scalatest.BeforeAndAfterEach
 
 import scala.concurrent.Await

@@ -2,8 +2,8 @@ package ch.datascience.graph.types.persistence.relationaldb
 
 import java.util.UUID
 
+import ch.datascience.graph.types.persistence.model.{GraphDomain, RichPropertyKey}
 import ch.datascience.graph.types.persistence.{AsyncUnitSpec, DatabaseSetup}
-import ch.datascience.graph.types.persistence.model.{GraphDomain, PropertyKey}
 import ch.datascience.graph.types.{Cardinality, DataType}
 import org.scalatest.{BeforeAndAfterAll, BeforeAndAfterEach}
 
@@ -28,31 +28,31 @@ class PropertyKeysSpec extends AsyncUnitSpec with DatabaseSetup with BeforeAndAf
   }
 
   it should "allow to add a property key" in {
-    val propertyKey = PropertyKey(UUID.randomUUID(), graphDomain, "bar", DataType.String, Cardinality.Single)
+    val propertyKey = RichPropertyKey(UUID.randomUUID(), graphDomain, "bar", DataType.String, Cardinality.Single)
     val f = db.run( dal.propertyKeys add propertyKey )
     f map { unit => unit shouldBe () }
   }
 
   it should "allow to add a property key and get it back" in {
-    val propertyKey = PropertyKey(UUID.randomUUID(), graphDomain, "bar", DataType.Double, Cardinality.Set)
+    val propertyKey = RichPropertyKey(UUID.randomUUID(), graphDomain, "bar", DataType.Double, Cardinality.Set)
     val insert: DBIO[Unit] = dal.propertyKeys add propertyKey
-    val select: DBIO[Option[PropertyKey]] = dal.propertyKeys.findByNamespaceAndName("foo", "bar").result.headOption
+    val select: DBIO[Option[RichPropertyKey]] = dal.propertyKeys.findByNamespaceAndName("foo", "bar").result.headOption
     val f = db.run(insert andThen select)
     f map { opt => opt shouldBe Some(propertyKey) }
   }
 
   it should "allow to add a property keys properly" in {
     val graphDomain2 = GraphDomain(UUID.randomUUID(), "hello")
-    val propertyKey1 = PropertyKey(UUID.randomUUID(), graphDomain, "bar", DataType.Double, Cardinality.List)
-    val propertyKey2 = PropertyKey(UUID.randomUUID(), graphDomain2, "baz", DataType.String, Cardinality.Single)
+    val propertyKey1 = RichPropertyKey(UUID.randomUUID(), graphDomain, "bar", DataType.Double, Cardinality.List)
+    val propertyKey2 = RichPropertyKey(UUID.randomUUID(), graphDomain2, "baz", DataType.String, Cardinality.Single)
     val insert: DBIO[Unit] = dal.graphDomains.add(graphDomain2) andThen dal.propertyKeys.add(propertyKey1) andThen dal.propertyKeys.add(propertyKey2)
-    val select: DBIO[Seq[PropertyKey]] = dal.propertyKeys.mapped.result
+    val select: DBIO[Seq[RichPropertyKey]] = dal.propertyKeys.mapped.result
     val f = db.run(insert andThen select)
     f map { seq =>
-      seq should contain (PropertyKey(propertyKey1.id, graphDomain, "bar", DataType.Double, Cardinality.List))
-      seq should contain (PropertyKey(propertyKey2.id, graphDomain2, "baz", DataType.String, Cardinality.Single))
-      seq shouldNot contain (PropertyKey(propertyKey1.id, graphDomain2, "baz", DataType.String, Cardinality.Single))
-      seq shouldNot contain (PropertyKey(propertyKey2.id, graphDomain, "bar", DataType.Double, Cardinality.List))
+      seq should contain (RichPropertyKey(propertyKey1.id, graphDomain, "bar", DataType.Double, Cardinality.List))
+      seq should contain (RichPropertyKey(propertyKey2.id, graphDomain2, "baz", DataType.String, Cardinality.Single))
+      seq shouldNot contain (RichPropertyKey(propertyKey1.id, graphDomain2, "baz", DataType.String, Cardinality.Single))
+      seq shouldNot contain (RichPropertyKey(propertyKey2.id, graphDomain, "bar", DataType.Double, Cardinality.List))
     }
   }
 
