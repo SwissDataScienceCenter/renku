@@ -4,12 +4,13 @@ import javax.inject.Inject
 
 import ch.datascience.graph.naming.NamespaceAndName
 import ch.datascience.graph.scope.PropertyScope
-import ch.datascience.graph.types.{Cardinality, DataType, PropertyKey}
+import ch.datascience.graph.types.json._
+import controllers.JsonComponent
 import injected.ScopeBean
-import models.json.{CardinalityMappers, DataTypeMappers}
 import play.api.libs.concurrent.Execution.Implicits._
-import play.api.libs.functional.syntax._
 import play.api.libs.json._
+import ch.datascience.graph.scope.persistence.json._
+import ch.datascience.graph.types.StandardPropKey
 import play.api.mvc._
 
 import scala.concurrent.Future
@@ -18,7 +19,7 @@ import scala.util.Try
 /**
   * Created by johann on 11/05/17.
   */
-class PropertyScopeController @Inject()(protected val scopeLayer: ScopeBean) extends Controller {
+class PropertyScopeController @Inject()(protected val scopeLayer: ScopeBean) extends Controller with JsonComponent {
 
   protected val scope: PropertyScope[NamespaceAndName] = scopeLayer
 
@@ -46,13 +47,20 @@ class PropertyScopeController @Inject()(protected val scopeLayer: ScopeBean) ext
     }
   }
 
+  def getPropertiesFor: Action[Set[StandardPropKey]] = Action.async(bodyParseJson[Set[StandardPropKey]]) { implicit request =>
+    val keys = request.body
+    for {
+      propertyKeys <- scope.getPropertiesFor(keys)
+    } yield Ok(Json.toJson(propertyKeys))
+  }
 
-  def getPropertiesFor(keys: Set[NamespaceAndName]): Future[Map[NamespaceAndName, PropertyKey[NamespaceAndName]]] = scope.getPropertiesFor(keys)
 
-  implicit lazy val propertyKeyWrites: Writes[PropertyKey[NamespaceAndName]] = (
-    (JsPath \ "key").write[String] and
-      (JsPath \ "cardinality").write[Cardinality](CardinalityMappers.cardinalityWrites) and
-      (JsPath \ "dataType").write[DataType](DataTypeMappers.dataTypeWrites)
-    )({ p: PropertyKey[NamespaceAndName] => (p.key.asString, p.cardinality, p.dataType) })
+//  def getPropertiesFor(keys: Set[NamespaceAndName]): Future[Map[NamespaceAndName, PropertyKey[NamespaceAndName]]] = scope.getPropertiesFor(keys)
+
+//  implicit lazy val propertyKeyWrites: Writes[PropertyKey[NamespaceAndName]] = (
+//    (JsPath \ "key").write[String] and
+//      (JsPath \ "cardinality").write[Cardinality](CardinalityMappers.cardinalityWrites) and
+//      (JsPath \ "dataType").write[DataType](DataTypeMappers.dataTypeWrites)
+//    )({ p: PropertyKey[NamespaceAndName] => (p.key.asString, p.cardinality, p.dataType) })
 
 }

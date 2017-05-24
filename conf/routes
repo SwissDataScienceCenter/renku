@@ -33,3 +33,5 @@ POST    /management/named_type                         controllers.management.Na
 GET     /scope/property                                controllers.scope.PropertyScopeController.getCachedProperties
 
 GET     /scope/property/$namespace<[^/]*>/:name        controllers.scope.PropertyScopeController.getPropertyFor(namespace: String, name: String)
+
+POST    /scope/property                                controllers.scope.PropertyScopeController.getPropertiesFor
