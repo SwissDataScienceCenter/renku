@@ -1,4 +1,4 @@
-package ch.datascience.graph.elements.mappers
+package ch.datascience.graph.elements.mappers.tinkerpop
 
 /**
   * Created by johann on 19/05/17.

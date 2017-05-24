@@ -1,7 +1,7 @@
-package ch.datascience.graph.elements.mappers
+package ch.datascience.graph.elements.mappers.tinkerpop
 
-import ch.datascience.graph.elements.persistence.{Path, PersistedMultiRecordRichProperty, PersistedRecordProperty, PropertyPathFromMultiRecord}
 import ch.datascience.graph.elements.persistence.impl.ImplPersistedMultiRecordRichProperty
+import ch.datascience.graph.elements.persistence.{Path, PersistedMultiRecordRichProperty, PersistedRecordProperty, PropertyPathFromMultiRecord}
 import ch.datascience.graph.values.BoxedValue
 import org.apache.tinkerpop.gremlin.structure.{VertexProperty => GraphMultiRecordRichProperty}
 

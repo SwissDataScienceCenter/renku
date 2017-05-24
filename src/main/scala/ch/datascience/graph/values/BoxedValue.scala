@@ -24,6 +24,7 @@ sealed abstract class BoxedValue {
     case _: LongValue    => DataType.Long
     case _: FloatValue   => DataType.Float
     case _: DoubleValue  => DataType.Double
+    case _: UuidValue    => DataType.UUID
   }
 
   @throws[java.lang.ClassCastException]

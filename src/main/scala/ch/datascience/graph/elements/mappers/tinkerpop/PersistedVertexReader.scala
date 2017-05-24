@@ -1,8 +1,8 @@
-package ch.datascience.graph.elements.mappers
+package ch.datascience.graph.elements.mappers.tinkerpop
 
-import ch.datascience.graph.elements.{ListValue, SetValue, SingleValue}
-import ch.datascience.graph.elements.persistence.{PersistedMultiRecordRichProperty, PersistedRecordProperty, PersistedVertex, VertexPath}
 import ch.datascience.graph.elements.persistence.impl.ImplPersistedVertex
+import ch.datascience.graph.elements.persistence.{PersistedMultiRecordRichProperty, PersistedRecordProperty, PersistedVertex, VertexPath}
+import ch.datascience.graph.elements.{ListValue, SetValue, SingleValue}
 import ch.datascience.graph.scope.PropertyScope
 import ch.datascience.graph.types.Cardinality
 import ch.datascience.graph.values.BoxedValue
