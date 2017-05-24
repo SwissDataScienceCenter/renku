@@ -98,7 +98,7 @@ trait PropertyKeyComponent { this: JdbcProfileComponent with SchemasComponent wi
 
 //    override lazy val findById: CompiledFunction[(profile.api.Rep[UUID]) => profile.api.Query[PropertyKeys, PropertyKey, Seq], profile.api.Rep[UUID], UUID, profile.api.Query[PropertyKeys, PropertyKey, Seq], Seq[PropertyKey]] = _
 
-    lazy val findById = Compiled {
+    lazy val findById: CompiledFunction[Rep[UUID] => Query[MappedProjection[RichPropertyKey, (GraphDomain, PropertyKey)], RichPropertyKey, Seq], Rep[UUID], UUID, Query[MappedProjection[RichPropertyKey, (GraphDomain, PropertyKey)], RichPropertyKey, Seq], Seq[RichPropertyKey]] = Compiled {
       this.findBy(_.id).extract andThen { _.mapped }
     }
 

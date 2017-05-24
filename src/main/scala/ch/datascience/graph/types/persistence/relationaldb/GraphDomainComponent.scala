@@ -61,7 +61,9 @@ trait GraphDomainComponent { this: JdbcProfileComponent with SchemasComponent wi
 //      this.findRowByNamespace.extract andThen { _.mapped }
 //    }
 
-    lazy val findById = { this.findBy(_.id) }
+    lazy val findById: CompiledFunction[Rep[UUID] => Query[GraphDomains, GraphDomain, Seq], Rep[UUID], UUID, Query[GraphDomains, GraphDomain, Seq], Seq[GraphDomain]] = {
+      this.findBy(_.id)
+    }
 
     lazy val findByNamespace: CompiledFunction[Rep[String] => Query[GraphDomains, GraphDomain, Seq], Rep[String], String, Query[GraphDomains, GraphDomain, Seq], Seq[GraphDomain]] = {
       this.findBy(_.namespace)
