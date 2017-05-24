@@ -1,5 +1,7 @@
 package ch.datascience.graph.values
 
+import java.util.UUID
+
 import ch.datascience.graph.types.DataType
 
 /**
@@ -83,6 +85,12 @@ final case class DoubleValue(self: Double) extends BoxedValue {
   def isValidValue: ValidValue[Self] = implicitly[ValidValue[Self]]
 }
 
+final case class UuidValue(self: UUID) extends BoxedValue {
+  type Self = UUID
+
+  def isValidValue: ValidValue[UUID] = implicitly[ValidValue[Self]]
+}
+
 object BoxedValue {
 
   def apply(x: String): BoxedValue = StringValue(x)
@@ -102,6 +110,8 @@ object BoxedValue {
   def apply(x: Float): BoxedValue = FloatValue(x)
 
   def apply(x: Double): BoxedValue = DoubleValue(x)
+
+  def apply(x: UUID): BoxedValue = UuidValue(x)
 
   implicit object boxedIsBoxed extends IsBoxedValue[BoxedValue] {
     def asBoxedValue(v: BoxedValue): BoxedValue = v

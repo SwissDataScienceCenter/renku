@@ -1,5 +1,7 @@
 package ch.datascience.graph.elements.mappers
 
+import java.util.UUID
+
 import ch.datascience.graph.scope.PropertyScope
 import ch.datascience.graph.types.DataType
 import ch.datascience.graph.values.BoxedValue
@@ -24,6 +26,7 @@ case class BoxedReader[Key: StringReader](scope: PropertyScope[Key]) extends Key
       case DataType.Long => BoxedValue(x._2.asInstanceOf[Long])
       case DataType.Float => BoxedValue(x._2.asInstanceOf[Float])
       case DataType.Double => BoxedValue(x._2.asInstanceOf[Double])
+      case DataType.UUID => BoxedValue(x._2.asInstanceOf[UUID])
     }
   }
 
