@@ -1,9 +1,11 @@
 package ch.datascience.graph.scope.persistence.remote
 
 import ch.datascience.graph.scope.persistence.PersistedProperties
+import ch.datascience.graph.scope.persistence.json.FetchPropertiesForResponseReads
 import ch.datascience.graph.types.PropertyKey
 import ch.datascience.graph.types.json.PropertyKeyReads
 import play.api.libs.json._
+import play.api.libs.ws.WSResponse
 
 import scala.concurrent.{ExecutionContext, Future}
 import scala.util.Failure
@@ -30,7 +32,7 @@ trait RemotePersistedProperties[Key] extends PersistedProperties[Key] {
           case JsError(e) => throw JsResultException(e)
         }
       case 404 => None
-      case _ => throw new RuntimeException(s"Unexpected answer: HTTP${response.status} - ${response.statusText}, ${response.body}")
+      case _ => cannotHandleResponse(response)
     }
   }
 
@@ -42,7 +44,19 @@ trait RemotePersistedProperties[Key] extends PersistedProperties[Key] {
     * @param keys set of keys to retrieve
     * @return map key -> property key, will not contain unknown keys
     */
-  final def fetchPropertiesFor(keys: Set[Key]): Future[Map[Key, PropertyKey[Key]]] = ???
+  final def fetchPropertiesFor(keys: Set[Key]): Future[Map[Key, PropertyKey[Key]]] = {
+    for {
+      response <- client.fetchPropertiesForRemoteCall(keys)
+    } yield response.status match {
+      case 200 =>
+        val result = response.json.validate[Map[Key, PropertyKey[Key]]]
+        result match {
+          case JsSuccess(propertyKeys, _) => propertyKeys
+          case JsError(e) => throw JsResultException(e)
+        }
+      case _ => cannotHandleResponse(response)
+    }
+  }
 
   protected def client: ConfiguredClient[_, Key]
 
@@ -53,5 +67,11 @@ trait RemotePersistedProperties[Key] extends PersistedProperties[Key] {
   protected def keyReads: Reads[Key]
 
   implicit lazy val propertyKeyReads = new PropertyKeyReads[Key]()(keyReads)
+
+  protected def cannotHandleResponse(response: WSResponse): Nothing = {
+    throw new RuntimeException(s"Unexpected answer: HTTP${response.status} - ${response.statusText}, ${response.body}")
+  }
+
+  protected implicit lazy val fetchPropertiesForResponseReads: Reads[Map[Key, PropertyKey[Key]]] = new FetchPropertiesForResponseReads[Key]()(keyReads)
 
 }

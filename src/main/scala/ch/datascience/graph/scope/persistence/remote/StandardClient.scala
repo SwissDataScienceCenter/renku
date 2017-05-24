@@ -1,6 +1,8 @@
 package ch.datascience.graph.scope.persistence.remote
 
 import ch.datascience.graph.naming.NamespaceAndName
+import ch.datascience.graph.scope.persistence.json._
+import play.api.libs.json.Json
 import play.api.libs.ws.{WSClient, WSResponse}
 
 import scala.concurrent.Future
@@ -16,7 +18,11 @@ class StandardClient(val wsClient: WSClient, val baseUrl: String) extends Config
     request.get()
   }
 
-  def fetchPropertiesForRemoteCall(keys: Set[NamespaceAndName]): Future[WSResponse] = ???
+  def fetchPropertiesForRemoteCall(keys: Set[NamespaceAndName]): Future[WSResponse] = {
+    val request = wsClient.url(s"$baseUrl/scope/property")
+    val body = Json.toJson(keys)
+    request.post(body)
+  }
 
   def close(): Unit = {
     wsClient.close()
@@ -37,7 +43,5 @@ object StandardClient {
 
     new StandardClient(wsClient, baseUrl)
   }
-
-
 
 }

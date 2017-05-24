@@ -1,6 +1,6 @@
 package ch.datascience.graph.scope.persistence.remote
 
-import ch.datascience.graph.json.NamespaceAndNameReads
+import ch.datascience.graph.naming.json.NamespaceAndNameReads
 import ch.datascience.graph.naming.NamespaceAndName
 
 import scala.concurrent.ExecutionContext
