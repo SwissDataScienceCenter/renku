@@ -8,13 +8,13 @@ import scala.concurrent.{ExecutionContext, Future}
 /**
   * Created by johann on 10/05/17.
   */
-trait RecordTypeValidator[Key] {
+trait RecordTypeValidator {
 
   def validateRecord(
-    recordType: RecordType[Key]
+    recordType: RecordType
   )(
     implicit ec: ExecutionContext
-  ): Future[ValidationResult[ValidatedRecordType[Key]]] = {
+  ): Future[ValidationResult[ValidatedRecordType]] = {
     val future = propertyScope.getPropertiesFor(recordType.properties)
     future.map({ definitions =>
       this.validateRecordTypeSync(recordType, definitions)
@@ -22,9 +22,9 @@ trait RecordTypeValidator[Key] {
   }
 
   def validateRecordTypeSync(
-    recordType: RecordType[Key],
-    definitions: Map[Key, PropertyKey[Key]]
-  ): ValidationResult[ValidatedRecordType[Key]] = {
+    recordType: RecordType,
+    definitions: Map[PropertyKey#Key, PropertyKey]
+  ): ValidationResult[ValidatedRecordType] = {
     // Check that properties have definitions
     val errors = for {
       key <- recordType.properties
@@ -39,9 +39,9 @@ trait RecordTypeValidator[Key] {
       Left(MultipleErrors.make(errors.toSeq))
   }
 
-  protected def propertyScope: PropertyScope[Key]
+  protected def propertyScope: PropertyScope
 
-  private[this] case class Result(recordType: RecordType[Key], propertyKeys: Map[Key, PropertyKey[Key]])
-    extends ValidatedRecordType[Key]
+  private[this] case class Result(recordType: RecordType, propertyKeys: Map[PropertyKey#Key, PropertyKey])
+    extends ValidatedRecordType
 
 }

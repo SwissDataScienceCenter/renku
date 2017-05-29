@@ -7,23 +7,23 @@ import scala.concurrent.Future
 /**
   * Created by johann on 16/05/17.
   */
-trait PersistedNamedTypes[TypeKey, PropKey] {
+trait PersistedNamedTypes {
 
   /**
     * Fetches named type with specified key
-    * @param key
+    * @param typeId
     * @return a future containing some named type if a corresponding one is found, None otherwise
     */
-  def fetchNamedTypeFor(key: TypeKey): Future[Option[NamedType[TypeKey, PropKey]]]
+  def fetchNamedTypeFor(typeId: NamedType#TypeId): Future[Option[NamedType]]
 
 
   /**
     * Grouped version of fetchNamedTypeFor
     *
     * If some keys are not found, they will not be part of the result map
-    * @param keys set of keys to retrieve
+    * @param typeIds set of keys to retrieve
     * @return map key -> named type, will not contain unknown keys
     */
-  def fetchNamedTypesFor(keys: Set[TypeKey]): Future[Map[TypeKey, NamedType[TypeKey, PropKey]]]
+  def fetchNamedTypesFor(typeIds: Set[NamedType#TypeId]): Future[Map[NamedType#TypeId, NamedType]]
   
 }

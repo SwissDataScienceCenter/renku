@@ -1,4 +1,4 @@
-package ch.datascience.graph.elements.persistence
+package ch.datascience.graph.elements.persisted
 
 /**
   * Created by johann on 11/05/17.

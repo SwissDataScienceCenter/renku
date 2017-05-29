@@ -1,5 +1,6 @@
 package ch.datascience.graph.elements.validation
 
+import ch.datascience.graph.Constants.Key
 import ch.datascience.graph.elements.{Property, Record, TypedRecord}
 import ch.datascience.graph.scope.NamedTypeScope
 import ch.datascience.graph.types.{NamedType, PropertyKey, RecordType}
@@ -10,26 +11,26 @@ import scala.concurrent.{ExecutionContext, Future}
 /**
   * Created by johann on 16/05/17.
   */
-trait TypedRecordValidator[TypeId, Key, Value, Prop <: Property[Key, Value]] { this: RecordValidator[Key, Value, Prop] =>
+trait TypedRecordValidator { this: RecordValidator =>
 
   def validateTypedRecord(
-    record: TypedRecord[TypeId, Key, Value, Prop]
+    record: TypedRecord
   )(
-    implicit e: BoxedOrValidValue[Value],
+    implicit e: BoxedOrValidValue[TypedRecord#Prop#Value],
     ec: ExecutionContext
-  ): Future[ValidationResult[ValidatedTypedRecord[TypeId, Key, Value, Prop]]] = {
+  ): Future[ValidationResult[ValidatedTypedRecord]] = {
     for {
       (propertiesDefinitions, namedTypesDefinitions) <- namedTypeScope.getDefinitionsFor(record.types)
     } yield this.validateTypedRecordSync(record, propertiesDefinitions, namedTypesDefinitions)
   }
 
   def validateTypedRecordSync(
-    record: TypedRecord[TypeId, Key, Value, Prop],
-    propertyDefinitions: Map[Key, PropertyKey[Key]],
-    namedTypeDefinitions: Map[TypeId, NamedType[TypeId, Key]]
+    record: TypedRecord,
+    propertyDefinitions: Map[PropertyKey#Key, PropertyKey],
+    namedTypeDefinitions: Map[NamedType#TypeId, NamedType]
   )(
-    implicit e: BoxedOrValidValue[Value]
-  ): ValidationResult[ValidatedTypedRecord[TypeId, Key, Value, Prop]] = {
+    implicit e: BoxedOrValidValue[TypedRecord#Prop#Value]
+  ): ValidationResult[ValidatedTypedRecord] = {
     // Perform record-level validation
     validateRecordSync(record, propertyDefinitions) match {
       case Left(error) => Left(error)
@@ -56,23 +57,23 @@ trait TypedRecordValidator[TypeId, Key, Value, Prop <: Property[Key, Value]] { t
   }
 
   protected def validateOneRecordTypeSync(
-    record: Record[Key, Value, Prop],
-    recordType: RecordType[Key],
-    namedTypeKey: TypeId,
-    namedTypeDefinition: Option[NamedType[TypeId, Key]]
-  ): Either[ValidationError, NamedType[TypeId, Key]] = namedTypeDefinition match {
-    case None => Left(UnknownType(namedTypeKey))
+    record: Record,
+    recordType: RecordType,
+    namedTypeId: NamedType#TypeId,
+    namedTypeDefinition: Option[NamedType]
+  ): Either[ValidationError, NamedType] = namedTypeDefinition match {
+    case None => Left(UnknownType(namedTypeId))
     case Some(namedType) if !(recordType << namedType.like) => Left(RecordTypeError(record, namedType.like, namedType.properties -- recordType.properties))
     case Some(namedType) => Right(namedType)
   }
 
-  protected def namedTypeScope: NamedTypeScope[TypeId, Key]
+  protected def namedTypeScope: NamedTypeScope
 
   private[this] case class Result(
-    record: TypedRecord[TypeId, Key, Value, Prop],
-    namedTypes: Map[TypeId, NamedType[TypeId, Key]],
-    recordType: RecordType[Key],
-    propertyKeys: Map[Key, PropertyKey[Key]]
-  ) extends ValidatedTypedRecord[TypeId, Key, Value, Prop]
+    record: TypedRecord ,
+    namedTypes: Map[NamedType#TypeId, NamedType],
+    recordType: RecordType,
+    propertyKeys: Map[Key, PropertyKey]
+  ) extends ValidatedTypedRecord
 
 }

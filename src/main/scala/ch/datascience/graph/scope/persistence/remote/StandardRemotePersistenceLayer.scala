@@ -9,7 +9,7 @@ import scala.concurrent.ExecutionContext
   * Created by johann on 17/05/17.
   */
 class StandardRemotePersistenceLayer(override val client: StandardClient)(implicit override val executionContext: ExecutionContext)
-  extends RemotePersistenceLayer[NamespaceAndName, NamespaceAndName](client)(NamespaceAndNameReads, NamespaceAndNameReads, executionContext)
+  extends RemotePersistenceLayer(client)(executionContext)
 
 object StandardRemotePersistenceLayer {
 

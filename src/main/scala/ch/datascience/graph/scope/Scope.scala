@@ -8,14 +8,14 @@ import scala.collection.concurrent
 /**
   * Created by johann on 11/05/17.
   */
-class Scope[TypeKey, PropKey](protected val persistenceLayer: PersistenceLayer[TypeKey, PropKey])
-  extends PropertyScope[PropKey] with NamedTypeScope[TypeKey, PropKey] {
+class Scope(protected val persistenceLayer: PersistenceLayer)
+  extends PropertyScope with NamedTypeScope {
 
-  protected val propertyDefinitions: concurrent.TrieMap[PropKey, PropertyKey[PropKey]] = concurrent.TrieMap.empty
+  protected val propertyDefinitions: concurrent.TrieMap[PropertyKey#Key, PropertyKey] = concurrent.TrieMap.empty
 
-  protected def persistedProperties: PersistedProperties[PropKey] = persistenceLayer
+  protected def persistedProperties: PersistedProperties = persistenceLayer
 
-  protected val namedTypeDefinitions: concurrent.TrieMap[TypeKey, NamedType[TypeKey, PropKey]] = concurrent.TrieMap.empty
+  protected val namedTypeDefinitions: concurrent.TrieMap[NamedType#TypeId, NamedType] = concurrent.TrieMap.empty
 
-  protected def persistedNamedTypes: PersistedNamedTypes[TypeKey, PropKey] = persistenceLayer
+  protected def persistedNamedTypes: PersistedNamedTypes = persistenceLayer
 }

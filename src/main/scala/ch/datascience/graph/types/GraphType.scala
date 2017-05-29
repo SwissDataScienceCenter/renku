@@ -2,11 +2,16 @@ package ch.datascience.graph.types
 
 import ch.datascience.graph.bases.HasKey
 import ch.datascience.graph.types.impl.{ImplNamedType, ImplRecordType}
+import ch.datascience.graph.Constants
 
 /**
   * Base trait for graph types
   */
-sealed trait GraphType {
+sealed trait GraphType { self =>
+
+//  type TypeId
+//
+//  type Key
 
   /**
     * Subtype check
@@ -14,6 +19,7 @@ sealed trait GraphType {
     * @param t the other type
     * @return true iff this is a subtype of t
     */
+//  def <<(t: GraphType { type TypeId = self.TypeId; type Key = self.Key }): Boolean
   def <<(t: GraphType): Boolean
 
   /**
@@ -22,7 +28,7 @@ sealed trait GraphType {
     * @param t the other type
     * @return true iff this is a supertype of t
     */
-  def >>(t: GraphType): Boolean = t << this
+  final def >>(t: GraphType): Boolean = t << this
 
 }
 
@@ -32,62 +38,81 @@ sealed trait GraphType {
   *
   * There should be no instance of Bottom.
   */
+//trait Bottom extends GraphType { self =>
 case object Bottom extends GraphType {
 
+//  type TypeId = Nothing
+//
+//  type Key = Nothing
+
+//  def <<(t: GraphType { type TypeId = self.TypeId; type Key = self.Key }): Boolean = true
   def <<(t: GraphType): Boolean = true
 
 }
 
-/**
-  * Base trait for record types
-  *
-  * Only property keys are taken into account, not the properties themselves.
-  *
-  * @tparam PropKey type of property keys
-  */
-trait RecordType[PropKey] extends GraphType {
+///**
+//  * Base trait for record types
+//  *
+//  * Only property keys are taken into account, not the properties themselves.
+//  *
+//  * @tparam PropKey type of property keys
+//  */
+//trait RecordType[PropKey] extends GraphType {
+trait RecordType extends GraphType { self =>
 
-  def properties: Set[PropKey]
+  final type Key = Constants.Key
+
+  def properties: Set[Key]
 
   final def <<(t: GraphType): Boolean = t match {
-    case rt: RecordType[PropKey] => rt.properties subsetOf this.properties
-    case _                       => false
+    case RecordType(props) => props subsetOf properties
+    case _ => false
   }
 
 }
 
-/**
-  * Base trait for named types
-  *
-  * Like [[RecordType]], only keys are used for named record types and properties.
-  *
-  * @tparam TypeKey type of named type keys
-  * @tparam PropKey type of property keys
-  */
-trait NamedType[TypeKey, PropKey] extends GraphType with HasKey[TypeKey] {
+///**
+//  * Base trait for named types
+//  *
+//  * Like [[RecordType]], only keys are used for named record types and properties.
+//  *
+//  * @tparam TypeKey type of named type keys
+//  * @tparam PropKey type of property keys
+//  */
+//trait NamedType[TypeKey, PropKey] extends GraphType with HasKey[TypeKey] {
+trait NamedType extends GraphType { self =>
 
-  def superTypes: Set[TypeKey]
+  final type TypeId = Constants.TypeId
 
-  def properties: Set[PropKey]
+  final type Key = Constants.Key
 
-  def like: RecordType[PropKey] = RecordType(properties)
+  def typeId: TypeId
+
+  def superTypes: Set[TypeId]
+
+  def properties: Set[Key]
+
+  def like: RecordType = RecordType(properties)
 
   final def <<(t: GraphType): Boolean = t match {
-    case nt: NamedType[TypeKey, PropKey] => (superTypes + this.key) contains nt.key
-    case rt: RecordType[PropKey]         => rt.properties subsetOf this.properties
-    case _                               => false
+    case NamedType(tid, _, _) => (superTypes + this.typeId) contains tid
+    case _ => this.like << t
   }
-
-  def simpleCopy: NamedType[TypeKey, PropKey] = NamedType(key, superTypes, properties)
 
 }
 
+
+//object Bottom {
+//
+//  def apply[T, K]: Bottom { type TypeId = T; type Key = K } = ImplBottom[T, K]()
+//
+//}
 
 object RecordType {
 
-  def apply[PropKey](properties: Set[PropKey]): RecordType[PropKey] = ImplRecordType(properties)
+  def apply(properties: Set[RecordType#Key]): RecordType = ImplRecordType(properties)
 
-  def unapply[PropKey](recordType: RecordType[PropKey]): Option[Set[PropKey]] = {
+  def unapply(recordType: RecordType): Option[Set[RecordType#Key]] = {
     if (recordType eq null)
       None
     else
@@ -98,13 +123,13 @@ object RecordType {
 
 object NamedType {
 
-  def apply[TypeKey, PropKey](key: TypeKey, superTypes: Set[TypeKey], properties: Set[PropKey]): NamedType[TypeKey, PropKey] = ImplNamedType(key, superTypes, properties)
+  def apply(typeId: NamedType#TypeId, superTypes: Set[NamedType#TypeId], properties: Set[NamedType#Key]): NamedType = ImplNamedType(typeId, superTypes, properties)
 
-  def unapply[TypeKey, PropKey](namedType: NamedType[TypeKey, PropKey]): Option[(TypeKey, Set[TypeKey], Set[PropKey])] = {
+  def unapply(namedType: NamedType): Option[(NamedType#TypeId, Set[NamedType#TypeId], Set[NamedType#Key])] = {
     if (namedType eq null)
       None
     else
-      Some(namedType.key, namedType.superTypes, namedType.properties)
+      Some(namedType.typeId, namedType.superTypes, namedType.properties)
   }
 
 }

@@ -1,5 +1,6 @@
 package ch.datascience.graph.elements.validation
 
+import ch.datascience.graph.Constants.Key
 import ch.datascience.graph.elements.{Property, RichProperty, Vertex}
 import ch.datascience.graph.types.{NamedType, PropertyKey, RecordType}
 import ch.datascience.graph.values.BoxedOrValidValue
@@ -9,22 +10,14 @@ import scala.concurrent.{ExecutionContext, Future}
 /**
   * Created by johann on 17/05/17.
   */
-trait VertexValidator[
-TypeId,
-Key,
-Value,
-MetaValue,
-MetaProp <: Property[Key, MetaValue],
-Prop <: RichProperty[Key, Value, MetaValue, MetaProp]
-] { this: TypedMultiRecordValidator[TypeId, Key, Value, Prop] with RecordValidator[Key, MetaValue, MetaProp] =>
+trait VertexValidator { this: TypedMultiRecordValidator with RecordValidator =>
 
   def validateVertex(
-    vertex: Vertex[TypeId, Key, Value, MetaValue, MetaProp, Prop]
+    vertex: Vertex
   )(
-    implicit e: BoxedOrValidValue[Value],
-    metaE: BoxedOrValidValue[MetaValue],
+    implicit e: BoxedOrValidValue[Vertex#Prop#Value],
     ec: ExecutionContext
-  ): Future[ValidationResult[ValidatedVertex[TypeId, Key, Value, MetaValue, MetaProp, Prop]]] = {
+  ): Future[ValidationResult[ValidatedVertex]] = {
     val allProperties = for {
       propertyValue <- vertex.properties.values
       property <- propertyValue
@@ -50,11 +43,10 @@ Prop <: RichProperty[Key, Value, MetaValue, MetaProp]
   }
 
   private[this] case class Result(
-    vertex: Vertex[TypeId, Key, Value, MetaValue, MetaProp, Prop],
-    namedTypes: Map[TypeId, NamedType[TypeId, Key]],
-    recordType: RecordType[Key],
-    propertyKeys: Map[Key, PropertyKey[Key]],
-    metaPropertyKeys: Map[Key, PropertyKey[Key]]
-  ) extends ValidatedVertex[TypeId, Key, Value, MetaValue, MetaProp, Prop]
+    vertex: Vertex,
+    namedTypes: Map[NamedType#TypeId, NamedType] ,
+    recordType: RecordType ,
+    propertyKeys: Map[Key, PropertyKey], metaPropertyKeys: Map[Key, PropertyKey]
+  ) extends ValidatedVertex
 
 }

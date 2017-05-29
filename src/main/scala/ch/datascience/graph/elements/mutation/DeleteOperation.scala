@@ -1,6 +1,6 @@
 package ch.datascience.graph.elements.mutation
 
-import ch.datascience.graph.elements.persistence.Path
+import ch.datascience.graph.elements.persisted.Path
 
 /**
   * Created by jeberle on 10.05.17.

@@ -7,17 +7,17 @@ import play.api.libs.json.{JsResult, JsValue, Reads}
 /**
   * Created by johann on 24/05/17.
   */
-class FetchPropertiesForResponseReads[Key : Reads] extends Reads[Map[Key, PropertyKey[Key]]] {
+class FetchPropertiesForResponseReads(implicit r: Reads[PropertyKey#Key]) extends Reads[Map[PropertyKey#Key, PropertyKey]] {
 
-  def reads(json: JsValue): JsResult[Map[Key, PropertyKey[Key]]] = seqReads.reads(json) map { seq =>
+  def reads(json: JsValue): JsResult[Map[PropertyKey#Key, PropertyKey]] = seqReads.reads(json) map { seq =>
     val withKey = for {
       property <- seq
     } yield property.key -> property
     withKey.toMap
   }
 
-  private[this] lazy val seqReads = implicitly[Reads[Seq[PropertyKey[Key]]]]
+  private[this] lazy val seqReads = implicitly[Reads[Seq[PropertyKey]]]
 
-  private[this] implicit lazy val propertyKeyReads: Reads[PropertyKey[Key]] = new PropertyKeyReads[Key]
+  private[this] implicit lazy val propertyKeyReads: Reads[PropertyKey] = new PropertyKeyReads
 
 }

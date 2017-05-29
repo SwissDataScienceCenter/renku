@@ -7,16 +7,16 @@ import ch.datascience.graph.types.{PropertyKey, RecordType}
   */
 sealed trait Validated
 
-trait ValidatedPropertyKey[+Key] extends Validated {
+trait ValidatedPropertyKey extends Validated {
 
-  def propertyKey: PropertyKey[Key]
+  def propertyKey: PropertyKey
 
 }
 
-trait ValidatedRecordType[Key] extends Validated {
+trait ValidatedRecordType extends Validated {
 
-  def recordType: RecordType[Key]
+  def recordType: RecordType
 
-  def propertyKeys: Map[Key, PropertyKey[Key]]
+  def propertyKeys: Map[PropertyKey#Key, PropertyKey]
 
 }

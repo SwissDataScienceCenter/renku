@@ -1,5 +1,6 @@
 package ch.datascience.graph.elements.validation
 
+import ch.datascience.graph.Constants.Key
 import ch.datascience.graph.elements.{MultiRecord, Property}
 import ch.datascience.graph.types.{PropertyKey, RecordType}
 import ch.datascience.graph.values.BoxedOrValidValue
@@ -9,14 +10,14 @@ import scala.concurrent.{ExecutionContext, Future}
 /**
   * Created by johann on 08/05/17.
   */
-trait MultiRecordValidator[Key, Value, Prop <: Property[Key, Value]] { this: MultiPropertyValidator[Key, Value, Prop] =>
+trait MultiRecordValidator { this: MultiPropertyValidator =>
 
   def validateMultiRecord(
-    record: MultiRecord[Key, Value, Prop]
+    record: MultiRecord
   )(
-    implicit e: BoxedOrValidValue[Value],
+    implicit e: BoxedOrValidValue[MultiRecord#Prop#Value],
     ec: ExecutionContext
-  ): Future[ValidationResult[ValidatedMultiRecord[Key, Value, Prop]]] = {
+  ): Future[ValidationResult[ValidatedMultiRecord]] = {
     val future = propertyScope.getPropertiesFor(record.properties.keySet)
     future.map({ definitions =>
       this.validateMultiRecordSync(record, definitions)
@@ -24,11 +25,11 @@ trait MultiRecordValidator[Key, Value, Prop <: Property[Key, Value]] { this: Mul
   }
 
   def validateMultiRecordSync(
-    record: MultiRecord[Key, Value, Prop],
-    definitions: Map[Key, PropertyKey[Key]]
+    record: MultiRecord,
+    definitions: Map[PropertyKey#Key, PropertyKey]
   )(
-    implicit e: BoxedOrValidValue[Value]
-  ): ValidationResult[ValidatedMultiRecord[Key, Value, Prop]] = {
+    implicit e: BoxedOrValidValue[MultiRecord#Prop#Value]
+  ): ValidationResult[ValidatedMultiRecord] = {
     // First validate that the key -> property mapping is consistent
     val consistencyErrors = for {
       (key, property) <- record.properties
@@ -57,9 +58,9 @@ trait MultiRecordValidator[Key, Value, Prop <: Property[Key, Value]] { this: Mul
   }
 
   private[this] case class Result(
-    record: MultiRecord[Key, Value, Prop],
-    recordType: RecordType[Key],
-    propertyKeys: Map[Key, PropertyKey[Key]]
-  ) extends ValidatedMultiRecord[Key, Value, Prop]
+    record: MultiRecord,
+    recordType: RecordType,
+    propertyKeys: Map[Key, PropertyKey]
+  ) extends ValidatedMultiRecord
 
 }

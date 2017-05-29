@@ -1,17 +1,17 @@
 package ch.datascience.graph.scope.persistence
 
-import ch.datascience.graph.types.{StandardPropKey, StandardPropertyKey}
+import ch.datascience.graph.types.PropertyKey
 import play.api.libs.json.{Reads, Writes}
-import ch.datascience.graph.types.json.{standardPropKeyReads, standardPropKeyWrites}
+import ch.datascience.graph.types.json.{propKeyReads, propKeyWrites}
 
 /**
   * Created by johann on 24/05/17.
   */
 package object json {
 
-  implicit lazy val standardFetchPropertiesForQueryReads: Reads[Set[StandardPropKey]] = new FetchPropertiesForQueryReads[StandardPropKey]
-  implicit lazy val standardFetchPropertiesForQueryWrites: Writes[Set[StandardPropKey]] = new FetchPropertiesForQueryWrites[StandardPropKey]
-  implicit lazy val standardFetchPropertiesForResponseReads: Reads[Map[StandardPropKey, StandardPropertyKey]] = new FetchPropertiesForResponseReads[StandardPropKey]
-  implicit lazy val standardFetchPropertiesForResponseWrites: Writes[Map[StandardPropKey, StandardPropertyKey]] = new FetchPropertiesForResponseWrites[StandardPropKey]
+  implicit lazy val fetchPropertiesForQueryReads: Reads[Set[PropertyKey#Key]] = new FetchPropertiesForQueryReads
+  implicit lazy val fetchPropertiesForQueryWrites: Writes[Set[PropertyKey#Key]] = new FetchPropertiesForQueryWrites
+  implicit lazy val fetchPropertiesForResponseReads: Reads[Map[PropertyKey#Key, PropertyKey]] = new FetchPropertiesForResponseReads
+  implicit lazy val fetchPropertiesForResponseWrites: Writes[Map[PropertyKey#Key, PropertyKey]] = new FetchPropertiesForResponseWrites
 
 }

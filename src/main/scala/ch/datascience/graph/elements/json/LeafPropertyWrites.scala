@@ -6,9 +6,9 @@ import play.api.libs.json.{JsValue, Writes}
 /**
   * Created by johann on 24/05/17.
   */
-class LeafPropertyWrites[Key, Value : Writes, Prop <: Property[Key, Value]] extends Writes[Prop] {
+class LeafPropertyWrites(implicit w: Writes[Property#Value]) extends Writes[Property] {
 
   // Just write the value
-  def writes(property: Prop): JsValue = implicitly[Writes[Value]].writes(property.value)
+  def writes(property: Property): JsValue = w.writes(property.value)
 
 }

@@ -7,16 +7,16 @@ import play.api.libs.json.{JsPath, JsValue, Writes}
 /**
   * Created by johann on 17/05/17.
   */
-class NamedTypeWrites[TypeKey : Writes, PropKey : Writes] extends Writes[NamedType[TypeKey, PropKey]] {
+class NamedTypeWrites extends Writes[NamedType] {
 
-  def writes(namedType: NamedType[TypeKey, PropKey]): JsValue = self.writes(namedType)
+  def writes(namedType: NamedType): JsValue = self.writes(namedType)
 
-  private[this] lazy val self: Writes[NamedType[TypeKey, PropKey]] = makeSelf
+  private[this] lazy val self: Writes[NamedType] = makeSelf
 
-  private[this] def makeSelf: Writes[NamedType[TypeKey, PropKey]] = (
-    (JsPath \ "key").write[TypeKey] and
-      (JsPath \ "super_types").write[Traversable[TypeKey]] and
-      (JsPath \ "properties").write[Traversable[PropKey]]
-    ).apply(unlift(NamedType.unapply[TypeKey, PropKey]))
+  private[this] def makeSelf: Writes[NamedType] = (
+    (JsPath \ "key").write[NamedType#TypeId] and
+      (JsPath \ "super_types").write[Traversable[NamedType#TypeId]] and
+      (JsPath \ "properties").write[Traversable[NamedType#Key]]
+    ).apply(unlift(NamedType.unapply))
 
 }

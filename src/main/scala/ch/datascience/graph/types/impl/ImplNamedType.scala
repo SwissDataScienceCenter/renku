@@ -5,12 +5,12 @@ import ch.datascience.graph.types.NamedType
 /**
   * Created by johann on 12/05/17.
   */
-private[types] final case class ImplNamedType[TypeKey, PropKey](
-  key: TypeKey,
-  superTypes: Set[TypeKey],
-  properties: Set[PropKey]
-) extends NamedType[TypeKey, PropKey] {
+private[types] final case class ImplNamedType(
+  typeId: NamedType#TypeId,
+  superTypes: Set[NamedType#TypeId],
+  properties: Set[NamedType#Key]
+) extends NamedType {
 
-  override def toString: String = s"NamedType($key, $superTypes, $properties)"
+  override def toString: String = s"NamedType($typeId, $superTypes, $properties)"
 
 }

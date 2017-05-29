@@ -8,16 +8,16 @@ import scala.concurrent.Future
 /**
   * Created by johann on 09/05/17.
   */
-trait PropertyKeyValidator[Key] {
+trait PropertyKeyValidator {
 
-  def validatePropertyKey(propertyKey: PropertyKey[Key]): Future[ValidationResult[ValidatedPropertyKey[Key]]] = {
+  def validatePropertyKey(propertyKey: PropertyKey): Future[ValidationResult[ValidatedPropertyKey]] = {
     Future.successful( validatePropertyKeySync(propertyKey) )
   }
 
-  def validatePropertyKeySync(propertyKey: PropertyKey[Key]): ValidationResult[ValidatedPropertyKey[Key]] = {
+  def validatePropertyKeySync(propertyKey: PropertyKey): ValidationResult[ValidatedPropertyKey] = {
     Right(Result(propertyKey))
   }
 
-  private[this] case class Result(propertyKey: PropertyKey[Key]) extends ValidatedPropertyKey[Key]
+  private[this] case class Result(propertyKey: PropertyKey) extends ValidatedPropertyKey
 
 }

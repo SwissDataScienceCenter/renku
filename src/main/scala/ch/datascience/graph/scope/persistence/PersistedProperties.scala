@@ -7,14 +7,14 @@ import scala.concurrent.{ExecutionContext, Future}
 /**
   * Base trait for accessing persisted property keys
   */
-trait PersistedProperties[Key] {
+trait PersistedProperties {
 
   /**
     * Fetches property key with specified key
     * @param key
     * @return a future containing some property key if a corresponding one is found, None otherwise
     */
-  def fetchPropertyFor(key: Key): Future[Option[PropertyKey[Key]]]
+  def fetchPropertyFor(key: PropertyKey#Key): Future[Option[PropertyKey]]
 
   /**
     * Grouped version of getPropertyFor
@@ -23,6 +23,6 @@ trait PersistedProperties[Key] {
     * @param keys set of keys to retrieve
     * @return map key -> property key, will not contain unknown keys
     */
-  def fetchPropertiesFor(keys: Set[Key]): Future[Map[Key, PropertyKey[Key]]]
+  def fetchPropertiesFor(keys: Set[PropertyKey#Key]): Future[Map[PropertyKey#Key, PropertyKey]]
 
 }

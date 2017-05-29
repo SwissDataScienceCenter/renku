@@ -13,7 +13,7 @@ import scala.util.Failure
 /**
   * Created by johann on 17/05/17.
   */
-trait RemotePersistedProperties[Key] extends PersistedProperties[Key] {
+trait RemotePersistedProperties extends PersistedProperties {
 
   /**
     * Fetches property key with specified key
@@ -21,12 +21,12 @@ trait RemotePersistedProperties[Key] extends PersistedProperties[Key] {
     * @param key
     * @return a future containing some property key if a corresponding one is found, None otherwise
     */
-  final def fetchPropertyFor(key: Key): Future[Option[PropertyKey[Key]]] = {
+  final def fetchPropertyFor(key: PropertyKey#Key): Future[Option[PropertyKey]] = {
     for {
       response <- client.fetchPropertyForRemoteCall(key)
     } yield response.status match {
       case 200 =>
-        val result = response.json.validate[PropertyKey[Key]]
+        val result = response.json.validate[PropertyKey]
         result match {
           case JsSuccess(propertyKey, _) => Some(propertyKey)
           case JsError(e) => throw JsResultException(e)
@@ -44,12 +44,12 @@ trait RemotePersistedProperties[Key] extends PersistedProperties[Key] {
     * @param keys set of keys to retrieve
     * @return map key -> property key, will not contain unknown keys
     */
-  final def fetchPropertiesFor(keys: Set[Key]): Future[Map[Key, PropertyKey[Key]]] = {
+  final def fetchPropertiesFor(keys: Set[PropertyKey#Key]): Future[Map[PropertyKey#Key, PropertyKey]] = {
     for {
       response <- client.fetchPropertiesForRemoteCall(keys)
     } yield response.status match {
       case 200 =>
-        val result = response.json.validate[Map[Key, PropertyKey[Key]]]
+        val result = response.json.validate[Map[PropertyKey#Key, PropertyKey]]
         result match {
           case JsSuccess(propertyKeys, _) => propertyKeys
           case JsError(e) => throw JsResultException(e)
@@ -58,20 +58,20 @@ trait RemotePersistedProperties[Key] extends PersistedProperties[Key] {
     }
   }
 
-  protected def client: ConfiguredClient[_, Key]
+  protected def client: ConfiguredClient
 
   protected def executionContext: ExecutionContext
 
   implicit lazy val ec: ExecutionContext = executionContext
 
-  protected def keyReads: Reads[Key]
+  protected def keyReads: Reads[PropertyKey#Key]
 
-  implicit lazy val propertyKeyReads = new PropertyKeyReads[Key]()(keyReads)
+  implicit lazy val propertyKeyReads = new PropertyKeyReads()(keyReads)
 
   protected def cannotHandleResponse(response: WSResponse): Nothing = {
     throw new RuntimeException(s"Unexpected answer: HTTP${response.status} - ${response.statusText}, ${response.body}")
   }
 
-  protected implicit lazy val fetchPropertiesForResponseReads: Reads[Map[Key, PropertyKey[Key]]] = new FetchPropertiesForResponseReads[Key]()(keyReads)
+  protected implicit lazy val fetchPropertiesForResponseReads: Reads[Map[PropertyKey#Key, PropertyKey]] = new FetchPropertiesForResponseReads()(keyReads)
 
 }

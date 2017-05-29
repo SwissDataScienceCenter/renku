@@ -9,22 +9,22 @@ import scala.concurrent.{ExecutionContext, Future}
 /**
   * Created by johann on 16/05/17.
   */
-trait NamedTypeScope[TypeKey, PropKey] { this: PropertyScope[PropKey] =>
+trait NamedTypeScope { this: PropertyScope =>
 
-  final def getDefinitionsFor(key: TypeKey)(implicit ec: ExecutionContext): Future[(Map[PropKey, PropertyKey[PropKey]], Map[TypeKey, NamedType[TypeKey, PropKey]])] = {
-    getNamedTypeFor(key) flatMap {
+  final def getDefinitionsFor(typeId: NamedType#TypeId)(implicit ec: ExecutionContext): Future[(Map[PropertyKey#Key, PropertyKey], Map[NamedType#TypeId, NamedType])] = {
+    getNamedTypeFor(typeId) flatMap {
       case Some(namedType) =>
         for {
           superTypesDefinitions <- getNamedTypesFor(namedType.superTypes)
           propertiesDefinition <- getPropertiesFor(namedType.properties)
-        } yield (propertiesDefinition, superTypesDefinitions + (namedType.key -> namedType))
+        } yield (propertiesDefinition, superTypesDefinitions + (namedType.typeId -> namedType))
       case None => Future.successful((Map.empty, Map.empty))
     }
   }
 
-  final def getDefinitionsFor(keys: Set[TypeKey])(implicit ec: ExecutionContext): Future[(Map[PropKey, PropertyKey[PropKey]], Map[TypeKey, NamedType[TypeKey, PropKey]])] = {
+  final def getDefinitionsFor(typeIds: Set[NamedType#TypeId])(implicit ec: ExecutionContext): Future[(Map[PropertyKey#Key, PropertyKey], Map[NamedType#TypeId, NamedType])] = {
     for {
-      namedTypesDefinitions <- getNamedTypesFor(keys)
+      namedTypesDefinitions <- getNamedTypesFor(typeIds)
       allSuperTypes = namedTypesDefinitions.values.map(_.superTypes).reduce(_ ++ _)
       allProperties = namedTypesDefinitions.values.map(_.properties).reduce(_ ++ _)
       superTypesDefinitions <- getNamedTypesFor(allSuperTypes)
@@ -32,15 +32,15 @@ trait NamedTypeScope[TypeKey, PropKey] { this: PropertyScope[PropKey] =>
     } yield (propertiesDefinition, namedTypesDefinitions ++ superTypesDefinitions)
   }
 
-  final def getNamedTypeFor(key: TypeKey)(implicit ec: ExecutionContext): Future[Option[NamedType[TypeKey, PropKey]]] = {
-    namedTypeDefinitions get key match {
+  final def getNamedTypeFor(typeId: NamedType#TypeId)(implicit ec: ExecutionContext): Future[Option[NamedType]] = {
+    namedTypeDefinitions get typeId match {
       case Some(namedType) => Future.successful( Some(namedType) )
       case None => {
-        val result = persistedNamedTypes.fetchNamedTypeFor(key)
+        val result = persistedNamedTypes.fetchNamedTypeFor(typeId)
 
         // If we get a property key, then we add it to our scope
         result.onSuccess({
-          case Some(namedType) => namedTypeDefinitions.put(namedType.key, namedType)
+          case Some(namedType) => namedTypeDefinitions.put(namedType.typeId, namedType)
         })(ec)
 
         result
@@ -48,14 +48,14 @@ trait NamedTypeScope[TypeKey, PropKey] { this: PropertyScope[PropKey] =>
     }
   }
 
-  final def getNamedTypesFor(keys: Set[TypeKey])(implicit ec: ExecutionContext): Future[Map[TypeKey, NamedType[TypeKey, PropKey]]] = {
+  final def getNamedTypesFor(typeIds: Set[NamedType#TypeId])(implicit ec: ExecutionContext): Future[Map[NamedType#TypeId, NamedType]] = {
     // Locally, sort known keys and unkown keys
-    val tryLocally = (for (key <- keys) yield key -> namedTypeDefinitions.get(key)).toMap
-    val knownNamedTypes: Map[TypeKey, NamedType[TypeKey, PropKey]] = for {
+    val tryLocally = (for (typeId <- typeIds) yield typeId -> namedTypeDefinitions.get(typeId)).toMap
+    val knownNamedTypes: Map[NamedType#TypeId, NamedType] = for {
       (key, opt) <- tryLocally
       namedType <- opt
     } yield key -> namedType
-    val unknownKeys: Set[TypeKey] = for {
+    val unknownKeys: Set[NamedType#TypeId] = for {
       key <- tryLocally.keySet
       if tryLocally(key).isEmpty
     } yield key
@@ -66,7 +66,7 @@ trait NamedTypeScope[TypeKey, PropKey] { this: PropertyScope[PropKey] =>
     // Update resolved keys
     resolved.map({ definitions =>
       for (namedType <- definitions.values) {
-        namedTypeDefinitions.put(namedType.key, namedType)
+        namedTypeDefinitions.put(namedType.typeId, namedType)
       }
     })(ec)
 
@@ -75,16 +75,16 @@ trait NamedTypeScope[TypeKey, PropKey] { this: PropertyScope[PropKey] =>
     })(ec)
   }
 
-  final def getCachedPropertiesAndNamedTypes: Future[(collection.Map[PropKey, PropertyKey[PropKey]], collection.Map[TypeKey, NamedType[TypeKey, PropKey]])] = synchronized {
+  final def getCachedPropertiesAndNamedTypes: Future[(collection.Map[PropertyKey#Key, PropertyKey], collection.Map[NamedType#TypeId, NamedType])] = synchronized {
     Future.successful( (propertyDefinitions.readOnlySnapshot(), namedTypeDefinitions.readOnlySnapshot()) )
   }
 
-  final def getCachedNamedTypes: Future[collection.Map[TypeKey, NamedType[TypeKey, PropKey]]] = {
+  final def getCachedNamedTypes: Future[collection.Map[NamedType#TypeId, NamedType]] = {
     Future.successful( namedTypeDefinitions.readOnlySnapshot() )
   }
 
-  protected def namedTypeDefinitions: concurrent.TrieMap[TypeKey, NamedType[TypeKey, PropKey]]
+  protected def namedTypeDefinitions: concurrent.TrieMap[NamedType#TypeId, NamedType]
 
-  protected def persistedNamedTypes: PersistedNamedTypes[TypeKey, PropKey]
+  protected def persistedNamedTypes: PersistedNamedTypes
 
 }

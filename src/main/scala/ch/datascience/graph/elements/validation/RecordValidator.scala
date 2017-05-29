@@ -1,5 +1,6 @@
 package ch.datascience.graph.elements.validation
 
+import ch.datascience.graph.Constants.Key
 import ch.datascience.graph.elements.{Property, Record}
 import ch.datascience.graph.types.{PropertyKey, RecordType}
 import ch.datascience.graph.values.BoxedOrValidValue
@@ -10,14 +11,14 @@ import scala.concurrent.{ExecutionContext, Future}
 /**
   * Created by johann on 08/05/17.
   */
-trait RecordValidator[Key, Value, Prop <: Property[Key, Value]] { this: PropertyValidator[Key, Value, Prop] =>
+trait RecordValidator { this: PropertyValidator =>
 
   def validateRecord(
-    record: Record[Key, Value, Prop]
+    record: Record
   )(
-    implicit e: BoxedOrValidValue[Value],
+    implicit e: BoxedOrValidValue[Record#Prop#Value],
     ec: ExecutionContext
-  ): Future[ValidationResult[ValidatedRecord[Key, Value, Prop]]] = {
+  ): Future[ValidationResult[ValidatedRecord]] = {
     val future = propertyScope.getPropertiesFor(record.properties.keySet)
     future.map({ definitions =>
       this.validateRecordSync(record, definitions)
@@ -25,11 +26,11 @@ trait RecordValidator[Key, Value, Prop <: Property[Key, Value]] { this: Property
   }
 
   def validateRecordSync(
-    record: Record[Key, Value, Prop],
-    definitions: Map[Key, PropertyKey[Key]]
+    record: Record,
+    definitions: Map[PropertyKey#Key, PropertyKey]
   )(
-    implicit e: BoxedOrValidValue[Value]
-  ): ValidationResult[ValidatedRecord[Key, Value, Prop]] = {
+    implicit e: BoxedOrValidValue[Record#Prop#Value]
+  ): ValidationResult[ValidatedRecord] = {
     // First validate that the key -> property mapping is consistent
     val consistencyErrors = for {
       (key, property) <- record.properties
@@ -58,9 +59,9 @@ trait RecordValidator[Key, Value, Prop <: Property[Key, Value]] { this: Property
   }
 
   private[this] case class Result(
-    record: Record[Key, Value, Prop],
-    recordType: RecordType[Key],
-    propertyKeys: Map[Key, PropertyKey[Key]]
-  ) extends ValidatedRecord[Key, Value, Prop]
+    record: Record,
+    recordType: RecordType,
+    propertyKeys: Map[Key, PropertyKey]
+  ) extends ValidatedRecord
 
 }

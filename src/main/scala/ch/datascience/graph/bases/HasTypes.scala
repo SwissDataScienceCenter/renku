@@ -2,10 +2,13 @@ package ch.datascience.graph.bases
 
 /**
   * Base trait for elements that have types.
-  *
-  * @tparam TypeId type of type identifiers
   */
-trait HasTypes[TypeId] {
+trait HasTypes {
+
+  /**
+    * type of type identifiers
+    */
+  type TypeId
 
   /**
     * Set of type identifiers

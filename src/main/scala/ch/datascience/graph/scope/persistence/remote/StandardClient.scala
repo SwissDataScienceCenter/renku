@@ -10,7 +10,7 @@ import scala.concurrent.Future
 /**
   * Created by johann on 17/05/17.
   */
-class StandardClient(val wsClient: WSClient, val baseUrl: String) extends ConfiguredClient[NamespaceAndName, NamespaceAndName] {
+class StandardClient(val wsClient: WSClient, val baseUrl: String) extends ConfiguredClient {
 
   def fetchPropertyForRemoteCall(key: NamespaceAndName): Future[WSResponse] = {
     val NamespaceAndName(namespace, name) = key

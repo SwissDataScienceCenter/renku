@@ -7,16 +7,16 @@ import play.api.libs.json.{JsPath, JsResult, JsValue, Reads}
 /**
   * Created by johann on 17/05/17.
   */
-class PropertyKeyReads[Key : Reads] extends Reads[PropertyKey[Key]] {
+class PropertyKeyReads(implicit r: Reads[PropertyKey#Key]) extends Reads[PropertyKey] {
 
-  override def reads(json: JsValue): JsResult[PropertyKey[Key]] = self.reads(json)
+  override def reads(json: JsValue): JsResult[PropertyKey] = self.reads(json)
 
-  private[this] lazy val self: Reads[PropertyKey[Key]] = makeSelf
+  private[this] lazy val self: Reads[PropertyKey] = makeSelf
 
-  private[this] def makeSelf: Reads[PropertyKey[Key]] = (
-    (JsPath \ "key").read[Key] and
+  private[this] def makeSelf: Reads[PropertyKey] = (
+    (JsPath \ "key").read[PropertyKey#Key](r) and
       (JsPath \ "dataType").read[DataType](DataTypeReads) and
       (JsPath \ "cardinality").read[Cardinality](CardinalityReads)
-    )(PropertyKey.apply[Key] _)
+    )(PropertyKey.apply _)
 
 }

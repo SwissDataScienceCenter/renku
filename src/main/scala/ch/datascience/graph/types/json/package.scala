@@ -8,10 +8,10 @@ import play.api.libs.json.{Reads, Writes}
   */
 package object json {
 
-  implicit lazy val standardPropKeyReads: Reads[StandardPropKey] = NamespaceAndNameReads
-  implicit lazy val standardPropKeyWrites: Writes[StandardPropKey] = NamespaceAndNameWrites
+  implicit lazy val propKeyReads: Reads[PropertyKey#Key] = NamespaceAndNameReads
+  implicit lazy val propKeyWrites: Writes[PropertyKey#Key] = NamespaceAndNameWrites
 
-  implicit lazy val standardPropertyKeyReads: Reads[StandardPropertyKey] = new PropertyKeyReads[StandardPropKey]
-  implicit lazy val standardPropertyKeyWrites: Writes[StandardPropertyKey] = new PropertyKeyWrites[StandardPropKey]
+  implicit lazy val propertyKeyReads: Reads[PropertyKey] = new PropertyKeyReads
+  implicit lazy val propertyKeyWrites: Writes[PropertyKey] = new PropertyKeyWrites
 
 }
