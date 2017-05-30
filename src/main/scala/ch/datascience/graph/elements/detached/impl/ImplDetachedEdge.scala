@@ -5,7 +5,7 @@ import ch.datascience.graph.elements.detached.DetachedEdge
 /**
   * Created by johann on 29/05/17.
   */
-case class ImplDetachedEdge(
+private[detached] case class ImplDetachedEdge(
   from: DetachedEdge#VertexReference,
   to: DetachedEdge#VertexReference,
   types: Set[DetachedEdge#TypeId],

@@ -27,10 +27,20 @@ object Constants {
   type Value = BoxedValue
 
   /**
-    * Type vertex ids
+    * Type of vertex ids
     */
   type VertexId = Long
 
+  /**
+    * Type of edge ids
+    */
   type EdgeId = String
+
+  /**
+    * Type of vertex properties
+    */
+  type VertexPropertyId = String
+
+  lazy val TypeKey: String = "type"
 
 }

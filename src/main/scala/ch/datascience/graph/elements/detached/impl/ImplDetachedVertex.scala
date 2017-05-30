@@ -5,7 +5,7 @@ import ch.datascience.graph.elements.detached.DetachedVertex
 /**
   * Created by johann on 29/05/17.
   */
-case class ImplDetachedVertex(
+private[detached] case class ImplDetachedVertex(
   types: Set[DetachedVertex#TypeId],
   properties: DetachedVertex#Properties
 ) extends DetachedVertex

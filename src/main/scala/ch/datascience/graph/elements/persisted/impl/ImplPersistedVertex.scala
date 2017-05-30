@@ -1,12 +1,11 @@
 package ch.datascience.graph.elements.persisted.impl
 
-import ch.datascience.graph.elements.MultiPropertyValue
-import ch.datascience.graph.elements.persisted.{PersistedMultiRecordRichProperty, PersistedVertex}
+import ch.datascience.graph.elements.persisted.PersistedVertex
 
-case class ImplPersistedVertex(
+private[persisted] case class ImplPersistedVertex(
   id: PersistedVertex#Id,
   types: Set[PersistedVertex#TypeId],
-  properties: Map[PersistedVertex#Prop#Key, MultiPropertyValue[PersistedVertex#Prop]]
+  properties: PersistedVertex#Properties
 ) extends PersistedVertex
 
 ///**

@@ -1,7 +1,8 @@
 package ch.datascience.graph.elements.mutation.impl
 
+import ch.datascience.graph.elements.mutation.create.CreateOperation
 import ch.datascience.graph.elements.{Property, RichProperty}
-import ch.datascience.graph.elements.mutation.CreateOperation
+
 
 /**
   * Created by jeberle on 10.05.17.

@@ -5,7 +5,7 @@ import ch.datascience.graph.elements.detached.DetachedRichProperty
 /**
   * Created by johann on 29/05/17.
   */
-case class ImplDetachedRichProperty(
+private[detached] case class ImplDetachedRichProperty(
   key: DetachedRichProperty#Key,
   value: DetachedRichProperty#Value,
   properties: DetachedRichProperty#Properties
