@@ -8,7 +8,7 @@ import scala.collection.JavaConverters._
 /**
   * Created by johann on 30/05/17.
   */
-case object VertexPropertyExtractor extends Extractor[VertexProperty[java.lang.Object], ExtractedVertexProperty] {
+object VertexPropertyExtractor extends Extractor[VertexProperty[java.lang.Object], ExtractedVertexProperty] {
 
   def apply(prop: VertexProperty[java.lang.Object]): ExtractedVertexProperty = {
     val metaProperties = prop.properties[java.lang.Object]().asScala.toList

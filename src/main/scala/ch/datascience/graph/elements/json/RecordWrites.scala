@@ -1,15 +1,15 @@
 package ch.datascience.graph.elements.json
 
-import ch.datascience.graph.elements.Record
+import ch.datascience.graph.elements.{Property, Record}
 import play.api.libs.json.{JsPath, JsValue, Writes}
 
 /**
   * Created by johann on 24/05/17.
   */
-class RecordWrites(implicit sw: StringWrites[Record#Prop#Key], vw: Writes[Record#Prop]) extends Writes[Record] {
+class RecordWrites[P <: Property : Writes] extends Writes[Record { type Prop <: P }] {
 
-  def writes(record: Record): JsValue = (JsPath \ "properties").write[Record#Properties].writes(record.properties)
+  def writes(record: Record { type Prop <: P }): JsValue = (JsPath \ "properties").write[record.Properties].writes(record.properties)
 
-  private[this] implicit lazy val mapWrites: Writes[Record#Properties] = sw.mapWrites[Record#Prop](vw)
+  private[this] implicit lazy val mapWrites: Writes[Map[P#Key, P]] = KeyFormat.mapWrites[P](implicitly[Writes[P]])
 
 }

@@ -21,20 +21,20 @@ case object CreateVertexOperationMapper extends Mapper {
     val vertex = op.vertex
 
     { s: GraphTraversalSource =>
-      var t = s.addV()
+      // Add vertex
+      val t1 = s.addV()
 
-      for (typeId <- vertex.types) {
-        t = t.addType(typeId)
-      }
+      // Add types
+      val t2 = vertex.types.foldLeft(t1) { (t, typeId) => t.addType(typeId) }
 
-      for (multiPropValue <- vertex.properties.values) {
-        val cardinality = multiPropValue.cardinality
-        for (prop <- multiPropValue) {
-          t = t.addProperty(cardinality, prop)
+      // Add properties
+      val t3 = vertex.properties.values.foldLeft(t2) { (t, multiPropValue) =>
+        multiPropValue.foldLeft(t) { (tt, prop) =>
+          tt.addProperty(multiPropValue.cardinality, prop)
         }
       }
 
-      t
+      t3
     }
   }
 

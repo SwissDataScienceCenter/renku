@@ -7,6 +7,6 @@ import play.api.libs.json.Format
   */
 package object json {
 
-  implicit val boxedValueFormat: Format[BoxedValue] = Format(BoxedValueReads, BoxedValueWrites)
+  implicit val BoxedValueFormat: Format[BoxedValue] = Format(BoxedValueReads, BoxedValueWrites)
 
 }

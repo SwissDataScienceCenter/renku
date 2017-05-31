@@ -8,7 +8,7 @@ import scala.collection.JavaConverters._
 /**
   * Created by johann on 30/05/17.
   */
-case object EdgeExtractor extends Extractor[Edge, ExtractedEdge] {
+object EdgeExtractor extends Extractor[Edge, ExtractedEdge] {
 
   def apply(edge: Edge): ExtractedEdge = {
     val properties = edge.properties[java.lang.Object]().asScala.toList

@@ -7,6 +7,6 @@ import play.api.libs.json.Format
   */
 package object json {
 
-  implicit lazy val NamespaceAndNameFormat: Format[NamespaceAndName] = Format(NamespaceAndNameReads, NamespaceAndNameWrites)
+  implicit lazy val NamespaceAndNameFormat: StringFormat[NamespaceAndName] = StringFormat(NamespaceAndNameReads, NamespaceAndNameWrites)
 
 }

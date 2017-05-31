@@ -1,6 +1,6 @@
-package ch.datascience.graph.elements.json
+package ch.datascience.graph.naming.json
 
-import play.api.libs.json.{JsString, JsValue, Writes}
+import play.api.libs.json.{JsString, Writes}
 
 /**
   * Created by johann on 24/05/17.

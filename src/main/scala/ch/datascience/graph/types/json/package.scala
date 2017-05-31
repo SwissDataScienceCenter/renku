@@ -1,7 +1,7 @@
 package ch.datascience.graph.types
 
 import ch.datascience.graph.naming.json.{NamespaceAndNameReads, NamespaceAndNameWrites}
-import play.api.libs.json.{Reads, Writes}
+import play.api.libs.json.{Format, Reads, Writes}
 
 /**
   * Created by johann on 23/05/17.
@@ -13,5 +13,9 @@ package object json {
 
   implicit lazy val propertyKeyReads: Reads[PropertyKey] = new PropertyKeyReads
   implicit lazy val propertyKeyWrites: Writes[PropertyKey] = new PropertyKeyWrites
+
+  implicit lazy val DataTypeFormat: Format[DataType] = Format(DataTypeReads, DataTypeWrites)
+
+  implicit lazy val CardinalityFormat: Format[Cardinality] = Format(CardinalityReads, CardinalityWrites)
 
 }
