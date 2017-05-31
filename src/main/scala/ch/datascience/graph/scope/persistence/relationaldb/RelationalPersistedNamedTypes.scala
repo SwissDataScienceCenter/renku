@@ -9,7 +9,7 @@ import scala.concurrent.Future
 /**
   * Created by johann on 17/05/17.
   */
-trait RelationalPersistedNamedTypes extends PersistedNamedTypes[NamespaceAndName, NamespaceAndName] {
+trait RelationalPersistedNamedTypes extends PersistedNamedTypes {
 
   // TODO: implementations
 
@@ -19,7 +19,7 @@ trait RelationalPersistedNamedTypes extends PersistedNamedTypes[NamespaceAndName
     * @param key
     * @return a future containing some named type if a corresponding one is found, None otherwise
     */
-  def fetchNamedTypeFor(key: NamespaceAndName): Future[Option[NamedType[NamespaceAndName, NamespaceAndName]]] = ???
+  def fetchNamedTypeFor(key: NamespaceAndName): Future[Option[NamedType]] = ???
 
   /**
     * Grouped version of fetchNamedTypeFor
@@ -29,6 +29,6 @@ trait RelationalPersistedNamedTypes extends PersistedNamedTypes[NamespaceAndName
     * @param keys set of keys to retrieve
     * @return map key -> named type, will not contain unknown keys
     */
-  def fetchNamedTypesFor(keys: Set[NamespaceAndName]): Future[Map[NamespaceAndName, NamedType[NamespaceAndName, NamespaceAndName]]] = ???
+  def fetchNamedTypesFor(keys: Set[NamespaceAndName]): Future[Map[NamedType#TypeId, NamedType]] = ???
 
 }

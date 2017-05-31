@@ -13,7 +13,7 @@ import scala.concurrent.{ExecutionContext, Future}
 class RelationalPersistenceLayer(
   protected val ec: ExecutionContext,
   protected val orchestrator: OrchestrationStack
-) extends PersistenceLayer[NamespaceAndName, NamespaceAndName]
+) extends PersistenceLayer
     with RelationalPersistedProperties
     with RelationalPersistedNamedTypes
     with ExecutionComponent

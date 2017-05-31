@@ -3,7 +3,8 @@ package ch.datascience.graph.types.persistence.model
 import java.util.UUID
 
 import ch.datascience.graph.naming.NamespaceAndName
-import ch.datascience.graph.types.{Cardinality, DataType, StandardPropertyKey}
+import ch.datascience.graph.types.{Cardinality, DataType}
+import ch.datascience.graph.types.{PropertyKey => StandardPropertyKey}
 
 /**
   * Created by johann on 23/05/17.
