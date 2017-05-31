@@ -1,23 +1,20 @@
 package init
 
-import ch.datascience.graph.naming.NamespaceAndName
-import ch.datascience.graph.values.BoxedValue
-import ch.datascience.graph.elements.mappers._
+import ch.datascience.graph.elements.tinkerpop_mappers.VertexPropertyReader
+import org.apache.tinkerpop.gremlin.structure.VertexProperty
+//import ch.datascience.graph.elements.mappers._
+//import ch.datascience.graph.elements.mappers.tinkerpop.{BoxedReader, PersistedVertexReader, Reader, StringReader}
 import ch.datascience.graph.scope.Scope
 import ch.datascience.graph.scope.persistence.relationaldb.RelationalPersistenceLayer
-import ch.datascience.graph.types.DataType
 import ch.datascience.graph.types.persistence.graphdb.{GraphStack, ManagementActionRunner}
 import ch.datascience.graph.types.persistence.orchestration.OrchestrationStack
 import ch.datascience.graph.types.persistence.relationaldb.DatabaseStack
-import com.typesafe.config.{Config, ConfigFactory}
-import init.CreateTables.dbConfig
 import org.janusgraph.core.{JanusGraph, JanusGraphFactory}
-import org.janusgraph.graphdb.relations.RelationIdentifier
 import slick.basic.DatabaseConfig
 import slick.jdbc.JdbcProfile
 
 import scala.collection.JavaConverters._
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.ExecutionContext
 import scala.concurrent.ExecutionContext.Implicits.global
 
 /**
@@ -74,35 +71,59 @@ object TestGraphRead {
 
     println(t.V().toList.asScala.toList)
 
-    val scope = new Scope[NamespaceAndName, NamespaceAndName](pl)
+    val scope = new Scope(pl)
 
-    implicit val keyReader = new StringReader[NamespaceAndName] {
-      def read(x: String)(implicit ec: ExecutionContext): Future[NamespaceAndName] = Future.successful( NamespaceAndName(x) )
-    }
+//    implicit val keyReader = new StringReader[NamespaceAndName] {
+//      def read(x: String)(implicit ec: ExecutionContext): Future[NamespaceAndName] = Future.successful( NamespaceAndName(x) )
+//    }
+//
+//    implicit val idReader = new Reader[java.lang.Object, Long] {
+//      def read(x: Object)(implicit ec: ExecutionContext): Future[Long] = Future.successful( x.asInstanceOf[Long] )
+//    }
+//
+//    implicit val propIdReader = new Reader[java.lang.Object, org.janusgraph.graphdb.relations.RelationIdentifier] {
+//      def read(x: Object)(implicit ec: ExecutionContext): Future[RelationIdentifier] = Future.successful( x.asInstanceOf[org.janusgraph.graphdb.relations.RelationIdentifier] )
+//    }
+//
+//    implicit val boxReader = new BoxedReader[NamespaceAndName](scope)
+//
 
-    implicit val idReader = new Reader[java.lang.Object, Long] {
-      def read(x: Object)(implicit ec: ExecutionContext): Future[Long] = Future.successful( x.asInstanceOf[Long] )
-    }
+//    val reader = VertexReader(scope)
+//    graph.tx().rollback()
+//    val vertices = t.V().toList.asScala.toList
+//    val mappedVertices = for {
+//      vertex <- vertices
+//    } yield reader.read(vertex)
+//    graph.tx().commit()
+//    graph.close()
+//
+//    for (future <- mappedVertices) {
+//      future.map { vertex =>
+//        println(vertex)
+//        for (y <- vertex.properties.values; z <- y) {
+//          println(z.key)
+//          println(z.id)
+//          println(z.value)
+//          println(z.properties)
+//        }
+//      }
+//      future.onFailure {
+//        case e => e.printStackTrace()
+//      }
+//    }
 
-    implicit val propIdReader = new Reader[java.lang.Object, org.janusgraph.graphdb.relations.RelationIdentifier] {
-      def read(x: Object)(implicit ec: ExecutionContext): Future[RelationIdentifier] = Future.successful( x.asInstanceOf[org.janusgraph.graphdb.relations.RelationIdentifier] )
-    }
+    val reader2 = VertexPropertyReader(scope)
+    graph.tx().rollback()
+    val props = t.V().properties().toList.asScala.toList
+    val mapped = for {
+      prop <- props
+    } yield reader2.read(prop.asInstanceOf[VertexProperty[java.lang.Object]])
+    graph.tx().commit()
+    graph.close()
 
-    implicit val boxReader = new BoxedReader[NamespaceAndName](scope)
-
-    val reader = new PersistedVertexReader[Long, NamespaceAndName, NamespaceAndName, org.janusgraph.graphdb.relations.RelationIdentifier](scope)
-    val vertices = t.V().toList.asScala.toList
-
-    for (vertex <- vertices) {
-      val future = reader.read(vertex)
-      future.map { vertex =>
-        println(vertex)
-        for (y <- vertex.properties.values; z <- y) {
-          println(z.key)
-          println(z.id.getRelationId)
-          println(z.id.getOutVertexId)
-          println(z.id.getTypeId)
-        }
+    for (future <- mapped) {
+      future.map { prop =>
+        println(prop)
       }
       future.onFailure {
         case e => e.printStackTrace()
