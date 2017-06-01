@@ -85,64 +85,6 @@
             description: "Unexpected error"
             schema: 
               $ref: "#/definitions/Error"
-    /vertex/{vertex-uuid}/{property-uuid}: 
-      parameters: 
-        - 
-          name: "vertex-uuid"
-          in: "path"
-          description: "the uuid representing the vertex"
-          type: "string"
-          required: true
-        - 
-          name: "property-name"
-          in: "path"
-          description: "the name of the vertex property"
-          type: "string"
-          required: true
-      get: 
-        summary: "Return the given vertex property"
-        description: "Return the given vertex property"
-        responses: 
-          200: 
-            description: "Returns the given vertex property."
-            schema: 
-              $ref: "#/definitions/V-Property"
-          default: 
-            description: "Unexpected error"
-            schema: 
-              $ref: "#/definitions/Error"
-      put: 
-        summary: "update the given vertex property."
-        description: "Update/Add properties for the given vertex property."
-        parameters: 
-          - 
-            name: "data"
-            in: "body"
-            description: "the new values for the vertex property"
-            required: true
-            schema: 
-              $ref: "#/definitions/V-Property"
-        responses: 
-          200: 
-            description: "Returns the modified vertex property."
-            schema: 
-              $ref: "#/definitions/V-Property"
-          default: 
-            description: "Unexpected error"
-            schema: 
-              $ref: "#/definitions/Error"
-      delete: 
-        summary: "delete the given vertex property"
-        description: "Delete the vertex property"
-        responses: 
-          200: 
-            description: "Returns the given vertex property."
-            schema: 
-              $ref: "#/definitions/V-Property"
-          default: 
-            description: "Unexpected error"
-            schema: 
-              $ref: "#/definitions/Error"
     /edge: 
       post: 
         summary: "Create a new edge"
@@ -218,18 +160,17 @@
               $ref: "#/definitions/Error"
   definitions: 
     Vertex: 
-      type: "object"
-      properties: 
-        id: 
-          type: "string"
-          description: "uuid of the Vertex."
-        name: 
-          type: "string"
-          description: "The name of the Vertex."
-        vprop: 
-          type: "array"
-          items: 
-            $ref: "#/definitions/V-Property"
+      title: "Vertex"
+      allOf: 
+        - 
+          $ref: "#/definitions/Typed"
+        - 
+          type: "object"
+          properties: 
+            properties: 
+              type: "array"
+              items: 
+                $ref: "#/definitions/MultiPropertyValue"
     Edge: 
       type: "object"
       properties: 
@@ -246,28 +187,102 @@
           type: "array"
           items: 
             $ref: "#/definitions/Property"
-    V-Property: 
+    MultiPropertyValue: 
       type: "object"
+      title: "MultiPropertyValue"
       properties: 
-        id: 
-          type: "string"
-          description: "uuid of the Vertex."
-        name: 
-          type: "string"
-          description: "The name of the Vertex."
-        prop: 
+        key: 
+          $ref: "#/definitions/Key"
+        data_type: 
+          $ref: "#/definitions/DataType"
+        cardinality: 
+          $ref: "#/definitions/Cardinality"
+        values: 
           type: "array"
           items: 
-            $ref: "#/definitions/Property"
+            $ref: "#/definitions/VertexProperty"
+      required: 
+        - "key"
+        - "data_type"
+        - "cardinality"
+        - "values"
+    VertexProperty: 
+      title: "VertexProperty"
+      allOf: 
+        - 
+          $ref: "#/definitions/DataValue"
+        - 
+          type: "object"
+          properties: 
+            key: 
+              $ref: "#/definitions/Key"
+            properties: 
+              type: "array"
+              items: 
+                $ref: "#/definitions/Property"
     Property: 
+      title: "Property"
+      allOf: 
+        - 
+          $ref: "#/definitions/DataValue"
+        - 
+          type: "object"
+          properties: 
+            key: 
+              $ref: "#/definitions/Key"
+      required: 
+        - "key"
+        - "data_type"
+        - "value"
+    Typed: 
       type: "object"
       properties: 
-        id: 
-          type: "string"
-          description: "uuid of the Vertex."
-        name: 
-          type: "string"
-          description: "The name of the Vertex."
+        types: 
+          type: "array"
+          items: 
+            $ref: "#/definitions/Key"
+    Key: 
+      type: "string"
+      title: "Key"
+      description: "property key, pattern: <namspace>:<name>"
+      minLength: 2
+    DataValue: 
+      type: "object"
+      title: "DataValue"
+      properties: 
+        data_type: 
+          $ref: "#/definitions/DataType"
+        value: 
+          anyOf: 
+            - 
+              type: "string"
+            - 
+              type: "number"
+            - 
+              type: "boolean"
+      required: 
+        - "value"
+    DataType: 
+      type: "string"
+      title: "DataType"
+      enum: 
+        - "string"
+        - "character"
+        - "boolean"
+        - "byte"
+        - "short"
+        - "integer"
+        - "long"
+        - "float"
+        - "double"
+        - "uuid"
+    Cardinality: 
+      type: "string"
+      title: "Cardinality"
+      enum: 
+        - "single"
+        - "set"
+        - "list"
     Error: 
       type: "object"
       properties: 

@@ -1,0 +1,18 @@
+type: object
+title: MultiPropertyValue
+properties:
+  key:
+    $ref: '../graph.yaml#/definitions/Key'
+  data_type:
+    $ref: '../graph.yaml#/definitions/DataType'
+  cardinality:
+    $ref: '../graph.yaml#/definitions/Cardinality'
+  values:
+    type: array
+    items:
+      $ref: '../graph.yaml#/definitions/VertexProperty'
+required:
+  - key
+  - data_type
+  - cardinality
+  - values

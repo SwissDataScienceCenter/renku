@@ -1,0 +1,12 @@
+type: object
+title: DataValue
+properties:
+  data_type:
+    $ref: '../graph.yaml#/definitions/DataType'
+  value:
+    anyOf:
+      - type: string
+      - type: number
+      - type: boolean
+required:
+  - value

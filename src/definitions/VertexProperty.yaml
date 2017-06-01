@@ -1,11 +1,11 @@
-title: Property
+title: VertexProperty
 allOf:
   - $ref: '../graph.yaml#/definitions/DataValue'
   - type: object
     properties:
       key:
         $ref: '../graph.yaml#/definitions/Key'
-required:
-  - key
-  - data_type
-  - value
+      properties:
+        type: array
+        items:
+          $ref: '../graph.yaml#/definitions/Property'

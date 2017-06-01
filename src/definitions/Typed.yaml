@@ -1,0 +1,6 @@
+type: object
+properties:
+  types:
+    type: array
+    items:
+      $ref: '../graph.yaml#/definitions/Key'

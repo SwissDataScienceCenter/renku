@@ -1,0 +1,13 @@
+type: string
+title: DataType
+enum:
+  - string
+  - character
+  - boolean
+  - byte
+  - short
+  - integer
+  - long
+  - float
+  - double
+  - uuid

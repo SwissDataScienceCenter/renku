@@ -1,0 +1,6 @@
+type: string
+title: Cardinality
+enum:
+  - single
+  - set
+  - list
