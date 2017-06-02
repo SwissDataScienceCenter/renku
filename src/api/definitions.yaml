@@ -1,0 +1,42 @@
+# API spec in YAML
+swagger: '2.0'
+info:
+  title: Definitions
+  description: All definitions
+  version: "1.0.0"
+# the domain of the service
+# host: api.datascience.ch
+# array of all schemes that your API supports
+schemes:
+  - https
+# will be prefixed to all paths
+basePath: /
+produces:
+  - application/json
+consumes:
+  - application/json
+paths:
+
+definitions:
+  Vertex:
+    $ref: ../definitions/Vertex.yaml
+  Edge:
+    $ref: ../definitions/Edge.yaml
+  MultiPropertyValue:
+    $ref: ../definitions/MultiPropertyValue.yaml
+  VertexProperty:
+    $ref: ../definitions/VertexProperty.yaml
+  Property:
+    $ref: ../definitions/Property.yaml
+  Typed:
+    $ref: ../definitions/Typed.yaml
+  Key:
+    $ref: ../definitions/Key.yaml
+  DataValue:
+    $ref: ../definitions/DataValue.yaml
+  DataType:
+    $ref: ../definitions/DataType.yaml
+  Cardinality:
+    $ref: ../definitions/Cardinality.yaml
+  Error:
+    $ref: ../definitions/Error.yaml

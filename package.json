@@ -4,6 +4,7 @@
     "json-schema-ref-parser": "~3.1"
   , "json2yaml": "~1.1"
   , "express": "~4.15"
+  , "chokidar": "~1.7"
 }
 , "scripts": {
     "start": "node server.js"
