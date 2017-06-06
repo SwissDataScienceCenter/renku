@@ -1,24 +1,28 @@
-/// Modified version of automatically generated build configs from sbt new playframework/play-scala-seed.g8
-///
-name := """graph-wal"""
 organization := "ch.datascience"
-
-version := "1.0-SNAPSHOT"
-
-lazy val root = (project in file(".")).enablePlugins(PlayScala)
-
+name := "graph-mutation-service"
+version := "0.0.1-SNAPSHOT"
 scalaVersion := "2.11.8"
 
+//lazy val root = (project in file(".")).enablePlugins(PlayScala)
+
+//scalaVersion := "2.11.8"
+
+resolvers += DefaultMavenRepository
+
+lazy val play_slick_version = "2.1.0"
+lazy val rabbitmq_version = "4.1.0"
+lazy val postgresql_version = "42.0.0"
+
 libraryDependencies += filters
-libraryDependencies ++= Seq(
-  //"com.typesafe.slick" %% "slick" % "3.2.0",
-  "com.typesafe.play" %% "play-slick" % "2.1.0",
-  "com.typesafe.play" %% "play-slick-evolutions" % "2.1.0",
-  "com.rabbitmq" % "amqp-client" % "4.1.0",
-  "org.slf4j" % "slf4j-nop" % "1.7.24",
-  "org.postgresql" % "postgresql" % "42.0.0",
-  "org.scalatestplus.play" %% "scalatestplus-play" % "2.0.0" % "test"
-)
+libraryDependencies += "com.typesafe.play" %% "play-slick" % play_slick_version
+libraryDependencies += "com.typesafe.play" %% "play-slick-evolutions" % play_slick_version
+libraryDependencies += "com.rabbitmq" % "amqp-client" % rabbitmq_version
+//libraryDependencies += "org.slf4j" % "slf4j-nop" % "1.7.24"
+libraryDependencies += "org.postgresql" % "postgresql" % postgresql_version
+
+lazy val scalatestplus_play_version = "2.0.0"
+
+libraryDependencies += "org.scalatestplus.play" %% "scalatestplus-play" % scalatestplus_play_version % Test
 
 // Adds additional packages into Twirl
 //TwirlKeys.templateImports += "datascience.ch.controllers._"
@@ -29,8 +33,8 @@ libraryDependencies ++= Seq(
 // HTTP server port, will be ignored in production mode and use system settings or application.conf instead
 PlayKeys.devSettings := Seq("play.server.http.port" -> "9001")
 
-resolvers ++= Seq(
-  DefaultMavenRepository,
-  "SDSC Snapshots" at "https://internal.datascience.ch:8081/nexus/content/repositories/snapshots/",
-  Resolver.mavenLocal
-)
+//resolvers ++= Seq(
+//  DefaultMavenRepository,
+//  "SDSC Snapshots" at "https://internal.datascience.ch:8081/nexus/content/repositories/snapshots/",
+//  Resolver.mavenLocal
+//)
