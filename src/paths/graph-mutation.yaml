@@ -1,0 +1,20 @@
+post:
+  summary: Mutate the graph
+  description: |
+    This mutates the graph.
+  parameters:
+    - name: data
+      in: body
+      description: The json representation of the mutation
+      required: true
+      schema:
+        $ref: '../api/definitions.yaml#/definitions/Mutation'
+  responses:
+    200:
+      description: Returns the created vertex.
+      schema:
+        $ref: '../api/definitions.yaml#/definitions/Vertex'
+    default:
+      description: Unexpected error
+      schema:
+        $ref: '../api/definitions.yaml#/definitions/Error'

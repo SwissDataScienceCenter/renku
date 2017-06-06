@@ -3,4 +3,4 @@ properties:
   types:
     type: array
     items:
-      $ref: '../graph.yaml#/definitions/Key'
+      $ref: '../../../api/definitions.yaml#/definitions/Key'

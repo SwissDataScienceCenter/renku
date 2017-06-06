@@ -12,4 +12,4 @@ properties:
   prop:
     type: array
     items:
-      $ref: '../graph.yaml#/definitions/Property'
+      $ref: '../../../api/definitions.yaml#/definitions/Property'

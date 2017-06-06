@@ -15,28 +15,44 @@ produces:
   - application/json
 consumes:
   - application/json
-paths:
-
+paths: {}
 definitions:
-  Vertex:
-    $ref: ../definitions/Vertex.yaml
-  Edge:
-    $ref: ../definitions/Edge.yaml
-  MultiPropertyValue:
-    $ref: ../definitions/MultiPropertyValue.yaml
-  VertexProperty:
-    $ref: ../definitions/VertexProperty.yaml
-  Property:
-    $ref: ../definitions/Property.yaml
-  Typed:
-    $ref: ../definitions/Typed.yaml
+  # Exported definitions
+  # Graph
   Key:
-    $ref: ../definitions/Key.yaml
+    $ref: ../definitions/graph/Key.yaml
+  ## Elements
+  Vertex:
+    $ref: ../definitions/graph/elements/Vertex.yaml
+  Edge:
+    $ref: ../definitions/graph/elements/Edge.yaml
+  VertexProperty:
+    $ref: ../definitions/graph/elements/VertexProperty.yaml
+  Property:
+    $ref: ../definitions/graph/elements/Property.yaml
+  Typed:
+    $ref: ../definitions/graph/elements/Typed.yaml
+  MultiPropertyValue:
+    $ref: ../definitions/graph/elements/MultiPropertyValue.yaml
   DataValue:
-    $ref: ../definitions/DataValue.yaml
+    $ref: ../definitions/graph/elements/DataValue.yaml
+  ### New
+  NewVertex:
+    $ref: ../definitions/graph/elements/NewVertex.yaml
+  ## Types
   DataType:
-    $ref: ../definitions/DataType.yaml
+    $ref: ../definitions/graph/types/DataType.yaml
   Cardinality:
-    $ref: ../definitions/Cardinality.yaml
+    $ref: ../definitions/graph/types/Cardinality.yaml
+  ## Mutation
+  Mutation:
+    $ref: ../definitions/graph/mutation/Mutation.yaml
+  Operation:
+    $ref: ../definitions/graph/mutation/Operation.yaml
+  CreateVertex:
+    $ref: ../definitions/graph/mutation/CreateVertex.yaml
+
+  # Error
+
   Error:
     $ref: ../definitions/Error.yaml

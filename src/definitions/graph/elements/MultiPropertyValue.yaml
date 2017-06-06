@@ -1,0 +1,18 @@
+type: object
+title: MultiPropertyValue
+properties:
+  key:
+    $ref: '../../../api/definitions.yaml#/definitions/Key'
+  data_type:
+    $ref: '../../../api/definitions.yaml#/definitions/DataType'
+  cardinality:
+    $ref: '../../../api/definitions.yaml#/definitions/Cardinality'
+  values:
+    type: array
+    items:
+      $ref: '../../../api/definitions.yaml#/definitions/VertexProperty'
+required:
+  - key
+  - data_type
+  - cardinality
+  - values

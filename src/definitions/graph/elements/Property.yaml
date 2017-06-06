@@ -1,0 +1,11 @@
+title: Property
+allOf:
+  - type: object
+    properties:
+      key:
+        $ref: '../../../api/definitions.yaml#/definitions/Key'
+  - $ref: '../../../api/definitions.yaml#/definitions/DataValue'
+required:
+  - key
+  - data_type
+  - value

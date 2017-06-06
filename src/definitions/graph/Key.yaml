@@ -1,0 +1,4 @@
+type: string
+title: Key
+description: "property key, pattern: \"namspace:name\""
+minLength: 2

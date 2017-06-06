@@ -1,0 +1,10 @@
+title: NewVertex
+allOf:
+  - type: object
+    properties:
+      temp_id:
+        type: integer
+        format: int32
+  - $ref: '../../../api/definitions.yaml#/definitions/Vertex'
+required:
+  - temp_id

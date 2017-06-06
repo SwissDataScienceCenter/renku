@@ -1,0 +1,9 @@
+type: object
+title: DataValue
+properties:
+  data_type:
+    $ref: '../../../api/definitions.yaml#/definitions/DataType'
+  value:
+    type: ["string", "number", "boolean"]
+required:
+  - value

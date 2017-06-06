@@ -1,0 +1,11 @@
+title: VertexProperty
+allOf:
+  - type: object
+    properties:
+      key:
+        $ref: '../../../api/definitions.yaml#/definitions/Key'
+      properties:
+        type: array
+        items:
+          $ref: '../../../api/definitions.yaml#/definitions/Property'
+  - $ref: '../../../api/definitions.yaml#/definitions/DataValue'

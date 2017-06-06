@@ -1,9 +1,0 @@
-title: Vertex
-allOf:
-  - $ref: '../graph.yaml#/definitions/Typed'
-  - type: object
-    properties:
-      properties:
-        type: array
-        items:
-          $ref: '../graph.yaml#/definitions/MultiPropertyValue'

@@ -1,0 +1,20 @@
+post:
+  summary: Create a vertex
+  description: |
+    Equivalent to post a mutation consisting of one CreateVertex operation
+  parameters:
+    - name: data
+      in: body
+      description: The json representation of the mutation
+      required: true
+      schema:
+        $ref: '../api/definitions.yaml#/definitions/CreateVertex'
+  responses:
+    200:
+      description: Returns the created vertex.
+      schema:
+        $ref: '../api/definitions.yaml#/definitions/Vertex'
+    default:
+      description: Unexpected error
+      schema:
+        $ref: '../api/definitions.yaml#/definitions/Error'

@@ -1,0 +1,8 @@
+type: object
+properties:
+  operations:
+    type: array
+    items:
+      $ref: '../../../api/definitions.yaml#/definitions/Operation'
+required:
+  - operations
