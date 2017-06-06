@@ -2,7 +2,12 @@
 swagger: '2.0'
 info:
   title: Definitions
-  description: All definitions
+  description: |
+    All definitions
+
+    Other APIs:
+    - [graph-navigation](/rest-api-definitions/swagger-ui/dist?url=/rest-api-definitions/target/graph-navigation.json)
+    - [graph-mutation](/rest-api-definitions/swagger-ui/dist?url=/rest-api-definitions/target/graph-mutation.json)
   version: "1.0.0"
 # the domain of the service
 # host: api.datascience.ch
