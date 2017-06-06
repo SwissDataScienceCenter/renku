@@ -49,6 +49,32 @@ lazy val typesystemService = Project(
   PlayScala
 )
 
+lazy val mutation = Project(
+  id   = "graph-mutation",
+  base = file("graph-mutation")
+).settings(
+  commonSettings,
+  scriptsSettings
+).aggregate(mutationWorker)
+
+lazy val mutationService = Project(
+  id   = "graph-mutation-service",
+  base = file("graph-mutation") / "graph-mutation-service"
+).settings(
+  commonSettings
+).dependsOn(
+  core
+).enablePlugins(
+  PlayScala
+)
+
+lazy val mutationWorker = Project(
+  id   = "graph-mutation-worker",
+  base = file("graph-mutation") / "graph-mutation-worker"
+).settings(
+  commonSettings
+).dependsOn(core)
+
 lazy val updateProjects = taskKey[Unit]("Execute the update script")
 
 lazy val scriptsSettings = Seq(

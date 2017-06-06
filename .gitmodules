@@ -4,3 +4,6 @@
 [submodule "graph-typesystem"]
 	path = graph-typesystem
 	url = git@github.com:SwissDataScienceCenter/graph-typesystem.git
+[submodule "graph-mutation"]
+	path = graph-mutation
+	url = git@github.com:SwissDataScienceCenter/graph-mutation.git
