@@ -11,6 +11,7 @@ import play.api.libs.json._
 /**
   * Created by johann on 31/05/17.
   */
+
 object NewVertexFormat extends Format[NewVertex] {
 
   def writes(vertex: NewVertex): JsValue = writer.writes(vertex)
