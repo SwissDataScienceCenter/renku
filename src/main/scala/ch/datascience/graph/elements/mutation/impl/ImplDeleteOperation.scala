@@ -1,6 +1,6 @@
 package ch.datascience.graph.elements.mutation.impl
 
-import ch.datascience.graph.elements.mutation.DeleteOperation
+import ch.datascience.graph.elements.mutation.delete.DeleteOperation
 import ch.datascience.graph.elements.persisted.{EdgePath, PropertyPathFromRecord, VertexPath}
 
 /**

@@ -1,6 +1,6 @@
 package ch.datascience.graph.elements.mutation.impl
 
-import ch.datascience.graph.elements.mutation.UpdateOperation
+import ch.datascience.graph.elements.mutation.update.UpdateOperation
 import ch.datascience.graph.elements.persisted.PropertyPathFromRecord
 
 /**
