@@ -1,0 +1,6 @@
+organization := "ch.datascience"
+name := "graph-mutation-worker"
+version := "0.0.1-SNAPSHOT"
+scalaVersion := "2.11.8"
+
+resolvers += DefaultMavenRepository
