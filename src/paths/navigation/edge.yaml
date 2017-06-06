@@ -1,0 +1,18 @@
+parameters:
+  - name: edge-id
+    in: path
+    description: the id representing the edge
+    type: string
+    required: true
+get:
+  summary: Return the given edge
+  description: Return the given edge
+  responses:
+    200:
+      description: Returns the given edge.
+      schema:
+        $ref: '../../api/definitions.yaml#/definitions/PersistedEdge'
+    default:
+      description: Unexpected error
+      schema:
+        $ref: '../../api/definitions.yaml#/definitions/Error'

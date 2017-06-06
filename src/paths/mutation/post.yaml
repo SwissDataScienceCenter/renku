@@ -8,13 +8,13 @@ post:
       description: The json representation of the mutation
       required: true
       schema:
-        $ref: '../api/definitions.yaml#/definitions/Mutation'
+        $ref: '../../api/definitions.yaml#/definitions/Mutation'
   responses:
     200:
-      description: Returns the created vertex.
+      description: Returns the mutation request.
       schema:
-        $ref: '../api/definitions.yaml#/definitions/Vertex'
+        $ref: '../../api/definitions.yaml#/definitions/MutationResponse'
     default:
       description: Unexpected error
       schema:
-        $ref: '../api/definitions.yaml#/definitions/Error'
+        $ref: '../../api/definitions.yaml#/definitions/Error'

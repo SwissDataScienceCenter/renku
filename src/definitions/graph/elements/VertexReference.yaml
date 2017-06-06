@@ -1,0 +1,10 @@
+title: VertexReference
+discriminator: type
+properties:
+  type:
+    type: string
+    enum:
+      - persisted
+      - new
+required:
+  - type

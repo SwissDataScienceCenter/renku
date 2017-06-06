@@ -1,0 +1,11 @@
+title: PersistedVertexProperty
+allOf:
+  - type: object
+    properties:
+      id:
+        type: string
+      parent:
+        type: string
+    required:
+      - id
+  - $ref: '../../../api/definitions.yaml#/definitions/VertexProperty'

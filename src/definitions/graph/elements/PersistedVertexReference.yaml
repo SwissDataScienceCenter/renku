@@ -1,0 +1,9 @@
+title: PersistedVertexReference
+allOf:
+  - $ref: '../../../api/definitions.yaml#/definitions/VertexReference'
+  - properties:
+      id:
+        type: string
+required:
+  - type
+  - id

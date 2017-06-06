@@ -5,7 +5,7 @@
   , "json2yaml": "~1.1"
   , "express": "~4.15"
   , "chokidar": "~1.7"
-}
+  }
 , "scripts": {
     "start": "node lib/index.js"
   , "make": "node build.js"

@@ -1,0 +1,7 @@
+type: object
+title: MutationResponse
+properties:
+  id:
+    type: string
+required:
+  - id

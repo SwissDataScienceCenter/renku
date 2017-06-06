@@ -5,6 +5,6 @@ allOf:
       temp_id:
         type: integer
         format: int32
+    required:
+      - temp_id
   - $ref: '../../../api/definitions.yaml#/definitions/Vertex'
-required:
-  - temp_id

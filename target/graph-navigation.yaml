@@ -1,8 +1,8 @@
 ---
   swagger: "2.0"
   info: 
-    title: "Definitions"
-    description: "All definitions"
+    title: "Graph Navigation Service"
+    description: "Navigate the graph"
     version: "1.0.0"
   schemes: 
     - "https"
@@ -11,7 +11,85 @@
     - "application/json"
   consumes: 
     - "application/json"
-  paths: {}
+  paths: 
+    /vertex/{vertex-id}: 
+      parameters: 
+        - 
+          name: "vertex-id"
+          in: "path"
+          description: "the id representing the vertex"
+          type: "string"
+          required: true
+      get: 
+        summary: "Return the given vertex"
+        description: "Return the given vertex"
+        responses: 
+          200: 
+            description: "Returns the given vertex."
+            schema: 
+              $ref: "#/definitions/PersistedVertex"
+          default: 
+            description: "Unexpected error"
+            schema: 
+              $ref: "#/definitions/Error"
+    /edge/{edge-id}: 
+      parameters: 
+        - 
+          name: "edge-id"
+          in: "path"
+          description: "the id representing the edge"
+          type: "string"
+          required: true
+      get: 
+        summary: "Return the given edge"
+        description: "Return the given edge"
+        responses: 
+          200: 
+            description: "Returns the given edge."
+            schema: 
+              $ref: "#/definitions/PersistedEdge"
+          default: 
+            description: "Unexpected error"
+            schema: 
+              $ref: "#/definitions/Error"
+    /vertex/{vertex-id}/edges: 
+      parameters: 
+        - 
+          name: "vertex-id"
+          in: "path"
+          description: "the id representing the vertex"
+          type: "string"
+          required: true
+      get: 
+        summary: "Return the edges of the given vertex"
+        description: "Return the edges of the given vertex"
+        parameters: 
+          - 
+            name: "direction"
+            in: "query"
+            description: "edge direction"
+            type: "string"
+            enum: 
+              - "in"
+              - "out"
+              - "both"
+            required: false
+        responses: 
+          200: 
+            description: "Returns the edges of the given vertex"
+            schema: 
+              type: "object"
+              properties: 
+                edges: 
+                  type: "array"
+                  items: 
+                    $ref: "#/definitions/PersistedEdge"
+              required: 
+                - "edges"
+          default: 
+            description: "Unexpected error"
+            schema: 
+              $ref: "#/definitions/Error"
   definitions: 
     Key: 
       type: "string"

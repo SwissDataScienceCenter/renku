@@ -1,0 +1,19 @@
+parameters:
+  - name: mutation-uuid
+    in: path
+    description: the uuid representing the graph mutation
+    type: string
+    required: true
+get:
+  summary: Get mutation status
+  description: |
+    Fetch the mutation status
+  responses:
+    200:
+      description: Returns the mutation status.
+      schema:
+        $ref: '../../api/definitions.yaml#/definitions/MutationStatus'
+    default:
+      description: Unexpected error
+      schema:
+        $ref: '../../api/definitions.yaml#/definitions/Error'

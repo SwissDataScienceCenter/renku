@@ -1,0 +1,19 @@
+type: object
+title: MutationStatus
+properties:
+  id:
+    type: string
+  status:
+    type: string
+    enum:
+      - pending
+      - success
+      - failed
+  query:
+    $ref: '../../../api/definitions.yaml#/definitions/Mutation'
+  result:
+    type: object
+required:
+  - id
+  - status
+  - query

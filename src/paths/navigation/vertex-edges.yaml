@@ -1,0 +1,35 @@
+parameters:
+  - name: vertex-id
+    in: path
+    description: the id representing the vertex
+    type: string
+    required: true
+get:
+  summary: Return the edges of the given vertex
+  description: Return the edges of the given vertex
+  parameters:
+    - name: direction
+      in: query
+      description: edge direction
+      type: string
+      enum:
+        - in
+        - out
+        - both
+      required: false
+  responses:
+    200:
+      description: Returns the edges of the given vertex
+      schema:
+        type: object
+        properties:
+          edges:
+            type: array
+            items:
+              $ref: '../../api/definitions.yaml#/definitions/PersistedEdge'
+        required:
+          - edges
+    default:
+      description: Unexpected error
+      schema:
+        $ref: '../../api/definitions.yaml#/definitions/Error'

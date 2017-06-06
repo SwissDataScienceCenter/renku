@@ -1,0 +1,15 @@
+title: PersistedVertex
+allOf:
+  - type: object
+    properties:
+      id:
+        type: string
+    required:
+      - id
+  - $ref: '../../../api/definitions.yaml#/definitions/Typed'
+  - type: object
+    properties:
+      properties:
+        type: array
+        items:
+          $ref: '../../../api/definitions.yaml#/definitions/PersistedMultiPropertyValue'

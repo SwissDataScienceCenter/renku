@@ -1,3 +1,4 @@
+title: CreateVertex
 allOf:
   - $ref: '../../../api/definitions.yaml#/definitions/Operation'
   - properties:

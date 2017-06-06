@@ -1,8 +1,8 @@
 # API spec in YAML
 swagger: '2.0'
 info:
-  title: Graph Mutation Service
-  description: Mutate the graph
+  title: Graph Navigation Service
+  description: Navigate the graph
   version: "1.0.0"
 # the domain of the service
 # host: api.datascience.ch
@@ -16,11 +16,11 @@ produces:
 consumes:
   - application/json
 paths:
-  '/mutation':
-    $ref: ../paths/mutation/post.yaml
-  '/mutation/create_vertex':
-    $ref: ../paths/mutation/create-vertex.yaml
-  '/mutation/{mutation-uuid}':
-    $ref: ../paths/mutation/status.yaml
+  '/vertex/{vertex-id}':
+    $ref: ../paths/navigation/vertex.yaml
+  '/edge/{edge-id}':
+    $ref: ../paths/navigation/edge.yaml
+  '/vertex/{vertex-id}/edges':
+    $ref: ../paths/navigation/vertex-edges.yaml
 definitions:
   $ref: ./definitions.yaml#/definitions

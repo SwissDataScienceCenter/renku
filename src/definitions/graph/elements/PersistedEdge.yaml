@@ -1,19 +1,21 @@
 type: object
+title: PersistedEdge
 properties:
+  id:
+    type: string
   label:
     type: string
     description: Edge label
   from:
-    type: object
-    description: Vertex reference
+    $ref : '../../../api/definitions.yaml#/definitions/PersistedVertexReference'
   to:
-    type: object
-    description: Vertex reference
+    $ref : '../../../api/definitions.yaml#/definitions/PersistedVertexReference'
   properties:
     type: array
     items:
       $ref: '../../../api/definitions.yaml#/definitions/Property'
 required:
+  - id
   - label
   - from
   - to

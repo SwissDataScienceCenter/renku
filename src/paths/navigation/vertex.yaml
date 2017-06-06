@@ -1,0 +1,18 @@
+parameters:
+  - name: vertex-id
+    in: path
+    description: the id representing the vertex
+    type: string
+    required: true
+get:
+  summary: Return the given vertex
+  description: Return the given vertex
+  responses:
+    200:
+      description: Returns the given vertex.
+      schema:
+        $ref: '../../api/definitions.yaml#/definitions/PersistedVertex'
+    default:
+      description: Unexpected error
+      schema:
+        $ref: '../../api/definitions.yaml#/definitions/Error'

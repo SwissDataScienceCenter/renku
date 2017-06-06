@@ -26,9 +26,9 @@
               $ref: "#/definitions/Mutation"
         responses: 
           200: 
-            description: "Returns the created vertex."
+            description: "Returns the mutation request."
             schema: 
-              $ref: "#/definitions/Vertex"
+              $ref: "#/definitions/MutationResponse"
           default: 
             description: "Unexpected error"
             schema: 
@@ -47,9 +47,29 @@
               $ref: "#/definitions/CreateVertex"
         responses: 
           200: 
-            description: "Returns the created vertex."
+            description: "Returns the mutation request."
             schema: 
-              $ref: "#/definitions/Vertex"
+              $ref: "#/definitions/MutationResponse"
+          default: 
+            description: "Unexpected error"
+            schema: 
+              $ref: "#/definitions/Error"
+    /mutation/{mutation-uuid}: 
+      parameters: 
+        - 
+          name: "mutation-uuid"
+          in: "path"
+          description: "the uuid representing the graph mutation"
+          type: "string"
+          required: true
+      get: 
+        summary: "Get mutation status"
+        description: "Fetch the mutation status\n"
+        responses: 
+          200: 
+            description: "Returns the mutation status."
+            schema: 
+              $ref: "#/definitions/MutationStatus"
           default: 
             description: "Unexpected error"
             schema: 
@@ -75,19 +95,24 @@
     Edge: 
       type: "object"
       properties: 
-        in_id: 
+        label: 
           type: "string"
-          description: "uuid of the input Vertex."
-        out_id: 
-          type: "string"
-          description: "uuid of the output Vertex."
-        name: 
-          type: "string"
-          description: "The name of the Edge."
-        prop: 
+          description: "Edge label"
+        from: 
+          type: "object"
+          description: "Vertex reference"
+        to: 
+          type: "object"
+          description: "Vertex reference"
+        properties: 
           type: "array"
           items: 
             $ref: "#/definitions/Property"
+      required: 
+        - "label"
+        - "from"
+        - "to"
+        - "properties"
     VertexProperty: 
       title: "VertexProperty"
       allOf: 
@@ -155,6 +180,29 @@
             - "boolean"
       required: 
         - "value"
+    VertexReference: 
+      title: "VertexReference"
+      discriminator: "type"
+      properties: 
+        type: 
+          type: "string"
+          enum: 
+            - "persisted"
+            - "new"
+      required: 
+        - "type"
+    PersistedVertexReference: 
+      title: "PersistedVertexReference"
+      allOf: 
+        - 
+          $ref: "#/definitions/VertexReference"
+        - 
+          properties: 
+            id: 
+              type: "string"
+      required: 
+        - "type"
+        - "id"
     NewVertex: 
       title: "NewVertex"
       allOf: 
@@ -164,10 +212,85 @@
             temp_id: 
               type: "integer"
               format: "int32"
+          required: 
+            - "temp_id"
         - 
           $ref: "#/definitions/Vertex"
+    PersistedVertex: 
+      title: "PersistedVertex"
+      allOf: 
+        - 
+          type: "object"
+          properties: 
+            id: 
+              type: "string"
+          required: 
+            - "id"
+        - 
+          $ref: "#/definitions/Typed"
+        - 
+          type: "object"
+          properties: 
+            properties: 
+              type: "array"
+              items: 
+                $ref: "#/definitions/PersistedMultiPropertyValue"
+    PersistedEdge: 
+      type: "object"
+      title: "PersistedEdge"
+      properties: 
+        id: 
+          type: "string"
+        label: 
+          type: "string"
+          description: "Edge label"
+        from: 
+          $ref: "#/definitions/PersistedVertexReference"
+        to: 
+          $ref: "#/definitions/PersistedVertexReference"
+        properties: 
+          type: "array"
+          items: 
+            $ref: "#/definitions/Property"
       required: 
-        - "temp_id"
+        - "id"
+        - "label"
+        - "from"
+        - "to"
+        - "properties"
+    PersistedMultiPropertyValue: 
+      type: "object"
+      title: "PersistedMultiPropertyValue"
+      properties: 
+        key: 
+          $ref: "#/definitions/Key"
+        data_type: 
+          $ref: "#/definitions/DataType"
+        cardinality: 
+          $ref: "#/definitions/Cardinality"
+        values: 
+          type: "array"
+          items: 
+            $ref: "#/definitions/PersistedVertexProperty"
+      required: 
+        - "key"
+        - "data_type"
+        - "cardinality"
+        - "values"
+    PersistedVertexProperty: 
+      title: "PersistedVertexProperty"
+      allOf: 
+        - 
+          type: "object"
+          properties: 
+            id: 
+              type: "string"
+            parent: 
+              type: "string"
+          required: 
+            - "id"
+        - 
+          $ref: "#/definitions/VertexProperty"
     DataType: 
       type: "string"
       title: "DataType"
@@ -191,6 +314,7 @@
         - "list"
     Mutation: 
       type: "object"
+      title: "Mutation"
       properties: 
         operations: 
           type: "array"
@@ -198,6 +322,34 @@
             $ref: "#/definitions/Operation"
       required: 
         - "operations"
+    MutationResponse: 
+      type: "object"
+      title: "MutationResponse"
+      properties: 
+        id: 
+          type: "string"
+      required: 
+        - "id"
+    MutationStatus: 
+      type: "object"
+      title: "MutationStatus"
+      properties: 
+        id: 
+          type: "string"
+        status: 
+          type: "string"
+          enum: 
+            - "pending"
+            - "success"
+            - "failed"
+        query: 
+          $ref: "#/definitions/Mutation"
+        result: 
+          type: "object"
+      required: 
+        - "id"
+        - "status"
+        - "query"
     Operation: 
       title: "Operation"
       discriminator: "type"
@@ -209,6 +361,7 @@
       required: 
         - "type"
     CreateVertex: 
+      title: "CreateVertex"
       allOf: 
         - 
           $ref: "#/definitions/Operation"
