@@ -23,17 +23,18 @@ trait NewEdge extends Edge with NewElement {
 object NewEdge {
 
   def apply(
+    label: NewEdge#Label,
     from: NewEdge#VertexReference,
     to: NewEdge#VertexReference,
     types: Set[NewEdge#TypeId],
     properties: NewEdge#Properties
-  ): NewEdge = ImplNewEdge(from, to, types, properties)
+  ): NewEdge = ImplNewEdge(label, from, to, types, properties)
 
-  def unapply(edge: NewEdge): Option[(NewEdge#VertexReference, NewEdge#VertexReference, Set[NewEdge#TypeId], NewEdge#Properties)] = {
+  def unapply(edge: NewEdge): Option[(NewEdge#Label, NewEdge#VertexReference, NewEdge#VertexReference, Set[NewEdge#TypeId], NewEdge#Properties)] = {
     if (edge eq null)
       None
     else
-      Some(edge.from, edge.to, edge.types, edge.properties)
+      Some(edge.label, edge.from, edge.to, edge.types, edge.properties)
   }
 
 }

@@ -7,6 +7,7 @@ import ch.datascience.graph.elements.persisted.PersistedEdge
   */
 private[persisted] case class ImplPersistedEdge(
   id: PersistedEdge#Id,
+  label: PersistedEdge#Label,
   from: PersistedEdge#VertexReference,
   to: PersistedEdge#VertexReference,
   types: Set[PersistedEdge#TypeId],

@@ -17,17 +17,18 @@ trait DetachedEdge extends Edge {
 object DetachedEdge {
 
   def apply(
+    label: DetachedEdge#Label,
     from: DetachedEdge#VertexReference,
     to: DetachedEdge#VertexReference,
     types: Set[DetachedEdge#TypeId],
     properties: DetachedEdge#Properties
-  ): DetachedEdge = ImplDetachedEdge(from, to, types, properties)
+  ): DetachedEdge = ImplDetachedEdge(label, from, to, types, properties)
 
-  def unapply(edge: DetachedEdge): Option[(DetachedEdge#VertexReference, DetachedEdge#VertexReference, Set[DetachedEdge#TypeId], DetachedEdge#Properties)] = {
+  def unapply(edge: DetachedEdge): Option[(DetachedEdge#Label, DetachedEdge#VertexReference, DetachedEdge#VertexReference, Set[DetachedEdge#TypeId], DetachedEdge#Properties)] = {
     if (edge eq null)
       None
     else
-      Some(edge.from, edge.to, edge.types, edge.properties)
+      Some(edge.label, edge.from, edge.to, edge.types, edge.properties)
   }
 
 }

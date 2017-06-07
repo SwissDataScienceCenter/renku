@@ -27,6 +27,11 @@ object Constants {
   type Value = BoxedValue
 
   /**
+    * Type of edge labels
+    */
+  type EdgeLabel = NamespaceAndName
+
+  /**
     * Type of vertex ids
     */
   type VertexId = Long
