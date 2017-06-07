@@ -18,4 +18,6 @@ package object json {
 
   implicit lazy val CardinalityFormat: Format[Cardinality] = Format(CardinalityReads, CardinalityWrites)
 
+  implicit lazy val MultiplicityFormat: Format[Multiplicity] = Format(MultiplicityReads, MultiplicityWrites)
+
 }

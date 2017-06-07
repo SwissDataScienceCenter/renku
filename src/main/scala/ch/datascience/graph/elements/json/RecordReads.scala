@@ -30,6 +30,11 @@ class RecordReads[P <: Property : Reads] extends Reads[Record { type Prop = P }]
     }
   }
 
-  private[this] implicit lazy val mapReads: Reads[Map[P#Key, P]] = KeyFormat.mapReads[P]
+//  private[this] implicit lazy val mapReads: Reads[Map[P#Key, P]] = KeyFormat.mapReads[P]
+  private[this] implicit lazy val mapReads: Reads[Map[P#Key, P]] = implicitly[Reads[Seq[P]]].map { seq =>
+    (for {
+      prop <- seq
+    } yield prop.key -> prop).toMap
+  }
 
 }

@@ -15,16 +15,16 @@ package object json {
   lazy val TypeIdFormat: StringFormat[Constants.TypeId] = NamespaceAndNameFormat
 
   lazy val PropertyFormat: Format[Property] = (
-    (JsPath \ "key").format[Property#Key](KeyFormat) and
-      (JsPath \ "value").format[Property#Value](BoxedValueFormat)
-  )(
-    { (k, v) =>
-      new Property {
-        def key: Key = k
-        def value: Value = v
-      }
-    },
-    unlift(Property.unapply)
-  )
+      (JsPath \ "key").format[Property#Key](KeyFormat) and
+        JsPath.format[Property#Value](BoxedValueFormat)
+    )(
+      { (k, v) =>
+        new Property {
+          def key: Key = k
+          def value: Value = v
+        }
+      },
+      unlift(Property.unapply)
+    )
 
 }
