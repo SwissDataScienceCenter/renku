@@ -33,6 +33,8 @@ package object json {
 
   implicit lazy val namedTypeWrites: Writes[RichNamedType] = NamedTypeMappers.namedTypeWrites
 
+  implicit lazy val edgeLabelWrites: Writes[RichEdgeLabel] = EdgeLabelMappers.edgeLabelWrites
+
   lazy val namespaceReads: Reads[String] = JsPath.read[String](Reads.pattern("([^:]*)".r) <~ notUUIDReads)
   lazy val nameReads: Reads[String] = JsPath.read[String](Reads.pattern("([^:]+)".r) <~ notUUIDReads)
 
