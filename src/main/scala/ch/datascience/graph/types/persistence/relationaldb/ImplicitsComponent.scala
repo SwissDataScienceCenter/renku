@@ -2,9 +2,8 @@ package ch.datascience.graph.types.persistence.relationaldb
 
 import java.time.Instant
 
-import ch.datascience.graph.types.{Cardinality, DataType}
+import ch.datascience.graph.types.{Cardinality, DataType, Multiplicity}
 import ch.datascience.graph.types.persistence.model.{EntityState, EntityType}
-import org.janusgraph.core.Multiplicity
 
 /**
   * Created by johann on 13/04/17.
@@ -23,7 +22,7 @@ trait ImplicitsComponent { this: JdbcProfileComponent =>
     MappedColumnType.base[Cardinality, String](_.name, Cardinality.valueOf)
 
   implicit val multiplicityColumnType: BaseColumnType[Multiplicity] =
-    MappedColumnType.base[Multiplicity, String](_.name(), Multiplicity.valueOf)
+    MappedColumnType.base[Multiplicity, String](_.name, Multiplicity.valueOf)
 
   implicit val entityStateColumnType: BaseColumnType[EntityState] =
     MappedColumnType.base[EntityState, String](_.name, EntityState.valueOf)

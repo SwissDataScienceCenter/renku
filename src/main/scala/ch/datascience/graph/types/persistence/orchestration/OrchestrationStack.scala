@@ -23,3 +23,4 @@ class OrchestrationStack(
     with GraphDomainComponent
     with PropertyKeyComponent
     with NamedTypeComponent
+    with EdgeLabelComponent

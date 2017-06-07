@@ -17,3 +17,4 @@ class DatabaseStack(protected val dbConfig: DatabaseConfig[JdbcProfile])
     with GraphDomainComponent
     with PropertyKeyComponent
     with NamedTypeComponent
+    with EdgeLabelComponent
