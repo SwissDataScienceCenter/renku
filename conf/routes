@@ -28,6 +28,15 @@ GET     /management/named_type/$namespace<[^/]*>/:name     controllers.managemen
 
 POST    /management/named_type                         controllers.management.NamedTypeController.create
 
+# EdgeLabel controller
+GET     /management/edge_label                         controllers.management.EdgeLabelController.index
+
+GET     /management/edge_label/:id                     controllers.management.EdgeLabelController.findById(id: String)
+
+GET     /management/edge_label/$namespace<[^/]*>/:name     controllers.management.EdgeLabelController.findByNamespaceAndName(namespace: String, name: String)
+
+POST    /management/edge_label                         controllers.management.EdgeLabelController.create
+
 
 # PropertyScope controller
 GET     /scope/property                                controllers.scope.PropertyScopeController.getCachedProperties
