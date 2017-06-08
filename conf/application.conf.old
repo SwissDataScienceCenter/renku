@@ -1,0 +1,47 @@
+# https://www.playframework.com/documentation/latest/Configuration
+
+play.crypto.secret=${?GRAPH_WAL_SECRET}
+
+play.server.http.port=disabled
+play.server.https.port=9443
+
+play.filters.hosts {
+	allowed = [ "." ]
+}
+
+play.evolutions {
+    enabled=true
+    default {
+        autocommit=true
+    }
+}
+
+slick.dbs.default {
+    profile="slick.jdbc.PostgresProfile$"
+    db {
+        driver="org.postgresql.Driver"
+        url="jdbc:postgresql://iccluster110.iccluster.epfl.ch:58905/kgwal"
+        user="kgwal"
+        password="kgwal@2017"
+    }
+}
+
+#slick.dbs.default {
+    #profile = "slick.jdbc.H2Profile$"
+    #driver = "org.h2.Driver"
+    #url = "jdbc:h2:./target/dev-db/h2"
+    #db {
+        #url = "${slick.dbs.default.url}"
+    #}
+#}
+
+rabbitmq {
+  exchange = "sys"
+  queue = "kg"
+  routing = "kgwal"
+  host = "iccluster108.iccluster.epfl.ch"
+  port = 5672
+  user = "guest"
+  password = "guest"
+}
+

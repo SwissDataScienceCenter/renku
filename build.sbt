@@ -16,7 +16,7 @@ lazy val postgresql_version = "42.0.0"
 libraryDependencies += filters
 libraryDependencies += "com.typesafe.play" %% "play-slick" % play_slick_version
 libraryDependencies += "com.typesafe.play" %% "play-slick-evolutions" % play_slick_version
-libraryDependencies += "com.rabbitmq" % "amqp-client" % rabbitmq_version
+//libraryDependencies += "com.rabbitmq" % "amqp-client" % rabbitmq_version
 //libraryDependencies += "org.slf4j" % "slf4j-nop" % "1.7.24"
 libraryDependencies += "org.postgresql" % "postgresql" % postgresql_version
 
@@ -31,7 +31,7 @@ libraryDependencies += "org.scalatestplus.play" %% "scalatestplus-play" % scalat
 // play.sbt.routes.RoutesKeys.routesImport += "datascience.ch.binders._"
 
 // HTTP server port, will be ignored in production mode and use system settings or application.conf instead
-PlayKeys.devSettings := Seq("play.server.http.port" -> "9001")
+//PlayKeys.devSettings := Seq("play.server.http.port" -> "9001")
 
 //resolvers ++= Seq(
 //  DefaultMavenRepository,
