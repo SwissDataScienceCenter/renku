@@ -36,8 +36,8 @@ case class CreateEdgeOperationMapper(idMap: Map[NewEdge#NewVertexType#TempId, Ne
           t.addProperty(property)
       }
 
-      // Iterate to apply the operation
-      t3.iterate()
+      // We don't iterate here
+      t3
     }
 
   }

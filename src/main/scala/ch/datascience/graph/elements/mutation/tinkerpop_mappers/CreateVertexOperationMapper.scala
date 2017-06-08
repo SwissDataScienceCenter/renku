@@ -34,8 +34,8 @@ case object CreateVertexOperationMapper extends Mapper {
         }
       }
 
-      // Iterate to apply the operation
-      t3.iterate()
+      // We don't iterate here
+      t3
     }
   }
 
