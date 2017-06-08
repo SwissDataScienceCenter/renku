@@ -24,6 +24,10 @@ lazy val scalatestplus_play_version = "2.0.0"
 
 libraryDependencies += "org.scalatestplus.play" %% "scalatestplus-play" % scalatestplus_play_version % Test
 
+lazy val janusgraph_version = "0.1.0"
+
+libraryDependencies += "org.janusgraph" % "janusgraph-cassandra" % janusgraph_version //% Runtime
+
 // Adds additional packages into Twirl
 //TwirlKeys.templateImports += "datascience.ch.controllers._"
 

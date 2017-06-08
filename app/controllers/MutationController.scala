@@ -2,8 +2,10 @@ package controllers
 
 import javax.inject.{Inject, Singleton}
 
+import ch.datascience.graph.elements.mutation.Mutation
+import ch.datascience.graph.elements.mutation.json.MutationFormat
 import models.{RequestWorker, ResponseWorker}
-import play.api.libs.json.{JsObject, JsString, JsValue, Json}
+import play.api.libs.json._
 import play.api.mvc._
 
 import scala.concurrent.ExecutionContext
@@ -15,16 +17,19 @@ import scala.concurrent.ExecutionContext
 class MutationController @Inject()(
   protected val requestWorker: RequestWorker,
   protected val responseWorker: ResponseWorker
-) extends Controller {
+) extends Controller
+  with JsonComponent {
 
   implicit lazy val ec: ExecutionContext = play.api.libs.concurrent.Execution.defaultContext
 
-  def postMutation: Action[JsValue] = Action.async(BodyParsers.parse.json) { implicit request =>
+  implicit lazy val mutationFormat: Format[Mutation] = MutationFormat
+
+  def postMutation: Action[Mutation] = Action.async(bodyParseJson[Mutation](MutationFormat)) { implicit request =>
     val query = request.body
     //TODO: get token from header
     val token: JsValue = Json.parse("""{ "my-token-is-empty": true }""")
     val event = JsObject(Seq(
-      "query" -> query,
+      "query" -> Json.toJson(query),
       "token" -> token
     ))
 
