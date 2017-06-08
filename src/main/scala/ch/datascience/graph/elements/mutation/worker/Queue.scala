@@ -25,12 +25,14 @@ class Queue[A] {
     self.dequeue()
   }
 
-  def register(): Promise[Unit] = currentPromise match {
-    case Some(p) => p
-    case None =>
-      val p = Promise[Unit]()
-      currentPromise = Some(p)
-      p
+  def register(): Promise[Unit] = synchronized {
+    currentPromise match {
+      case Some(p) => p
+      case None =>
+        val p = Promise[Unit]()
+        currentPromise = Some(p)
+        p
+    }
   }
 
   private[this] val self: scala.collection.mutable.Queue[A] = new scala.collection.mutable.Queue[A]
