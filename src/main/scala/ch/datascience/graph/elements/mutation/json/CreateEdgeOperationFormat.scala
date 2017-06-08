@@ -13,14 +13,14 @@ object CreateEdgeOperationFormat extends Format[CreateEdgeOperation] {
 
   def writes(op: CreateEdgeOperation): JsValue = writer.writes(op)
 
-  def reads(json: JsValue): JsResult[CreateEdgeOperation] = reads.reads(json)
+  def reads(json: JsValue): JsResult[CreateEdgeOperation] = reader.reads(json)
 
   private[this] lazy val writer: Writes[CreateEdgeOperation] = (
     (JsPath \ "type").write[String] and
       (JsPath \ "element").write[CreateEdgeOperation#ElementType]
   ) { op => ("create_edge", op.edge) }
 
-  private[this] lazy val reads: Reads[CreateEdgeOperation] = (
+  private[this] lazy val reader: Reads[CreateEdgeOperation] = (
     (JsPath \ "type").read[String].filter(typeError)(_ == "create_edge") and
       (JsPath \ "element").read[CreateEdgeOperation#ElementType]
   ) { (_, edge) => CreateEdgeOperation(edge) }

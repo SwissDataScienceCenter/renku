@@ -13,14 +13,14 @@ object CreateVertexOperationFormat extends Format[CreateVertexOperation] {
 
   def writes(op: CreateVertexOperation): JsValue = writer.writes(op)
 
-  def reads(json: JsValue): JsResult[CreateVertexOperation] = reads.reads(json)
+  def reads(json: JsValue): JsResult[CreateVertexOperation] = reader.reads(json)
 
   private[this] lazy val writer: Writes[CreateVertexOperation] = (
     (JsPath \ "type").write[String] and
       (JsPath \ "element").write[CreateVertexOperation#ElementType]
   ) { op => ("create_vertex", op.vertex) }
 
-  private[this] lazy val reads: Reads[CreateVertexOperation] = (
+  private[this] lazy val reader: Reads[CreateVertexOperation] = (
     (JsPath \ "type").read[String].filter(typeError)(_ == "create_vertex") and
       (JsPath \ "element").read[CreateVertexOperation#ElementType]
   ) { (_, vertex) => CreateVertexOperation(vertex) }
