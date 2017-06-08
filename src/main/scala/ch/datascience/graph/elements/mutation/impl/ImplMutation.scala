@@ -6,6 +6,7 @@ import ch.datascience.graph.elements.mutation.{Mutation, Operation}
   * Created by johann on 08/06/17.
   */
 private[mutation] class ImplMutation private (val operations: Seq[Operation]) extends Mutation {
+  require(operations.nonEmpty, "empty mutation")
 
   override def toString: String = s"Mutation($operations)"
 

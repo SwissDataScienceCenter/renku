@@ -29,8 +29,13 @@ class MultiRecordReads[P <: Property : Reads] extends Reads[MultiRecord { type P
     }
   }
 
-  private[this] implicit lazy val mapReads: Reads[Map[P#Key, MultiPropertyValue[P]]] = KeyFormat.mapReads[ MultiPropertyValue[P]](multiPropertyValueReads)
+//  private[this] implicit lazy val mapReads: Reads[Map[P#Key, MultiPropertyValue[P]]] = KeyFormat.mapReads[ MultiPropertyValue[P]](multiPropertyValueReads)
+  private[this] implicit lazy val mapReads: Reads[Map[P#Key, MultiPropertyValue[P]]] = implicitly[Reads[Seq[MultiPropertyValue[P]]]].map { seq =>
+    (for {
+      prop <- seq
+    } yield prop.key -> prop).toMap
+  }
 
-  private[this] lazy val multiPropertyValueReads: MultiPropertyValueReads[P] = new MultiPropertyValueReads[P]
+  private[this] implicit lazy val multiPropertyValueReads: MultiPropertyValueReads[P] = new MultiPropertyValueReads[P]
 
 }

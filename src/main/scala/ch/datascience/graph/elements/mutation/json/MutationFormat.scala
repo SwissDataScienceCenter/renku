@@ -18,7 +18,13 @@ object MutationFormat extends Format[Mutation] {
   }
 
   private[this] lazy val reader: Reads[Mutation] = Reads { json =>
-    (JsPath \ "operations").read[Seq[Operation]].reads(json).map(Mutation.apply)
+    (JsPath \ "operations").read[Seq[Operation]].reads(json).flatMap { seq =>
+      try {
+        JsSuccess(Mutation(seq))
+      } catch {
+        case e: IllegalArgumentException => JsError(e.getMessage)
+      }
+    }
   }
 
   private[this] implicit lazy val operationFormat: Format[Operation] = OperationFormat

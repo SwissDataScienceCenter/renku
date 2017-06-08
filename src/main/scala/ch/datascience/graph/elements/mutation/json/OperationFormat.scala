@@ -13,7 +13,7 @@ object OperationFormat extends Format[Operation] {
     case o: CreateVertexOperation => CreateVertexOperationFormat.writes(o)
     case o: CreateEdgeOperation => CreateEdgeOperationFormat.writes(o)
 
-    case _ => throw new IllegalArgumentException(s"Unsupported operation: $op")
+    case _ => unsupportedOperationFormat.writes(op)
   }
 
   def reads(json: JsValue): JsResult[Operation] = reader.reads(json)
@@ -23,7 +23,15 @@ object OperationFormat extends Format[Operation] {
     case "create_vertex" => CreateVertexOperationFormat.map { op => op: Operation }
     case "create_edge" => CreateEdgeOperationFormat.map { op => op: Operation }
 
-    case t => throw new IllegalArgumentException(s"Unsupported operation type: $t")
+    case t => unsupportedOperationFormat
+  }
+
+  private[this] lazy val unsupportedOperationFormat: Format[Operation] = new Format[Operation] {
+
+    def writes(op: Operation): JsValue = throw new IllegalArgumentException(s"Unsupported operation: $op")
+
+    def reads(json: JsValue): JsResult[Operation] = JsError(s"Unsupported operation type: ${(json \ "type").as[String]}")
+
   }
 
 }
