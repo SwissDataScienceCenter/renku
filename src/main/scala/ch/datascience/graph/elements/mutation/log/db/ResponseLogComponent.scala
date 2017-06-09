@@ -5,14 +5,14 @@ import java.util.UUID
 
 import ch.datascience.graph.elements.mutation.log.model.Event
 import play.api.libs.json.JsValue
-import slick.lifted.{CompiledFunction, ProvenShape}
+import slick.lifted.{CompiledFunction, ForeignKeyQuery, ProvenShape}
 
 import scala.concurrent.ExecutionContext
 
 /**
   * Created by johann on 07/06/17.
   */
-trait ResponseLogComponent { this: JdbcProfileComponent with ImplicitsComponent =>
+trait ResponseLogComponent { this: JdbcProfileComponent with ImplicitsComponent with RequestLogComponent =>
 
   import profile.api._
 
@@ -25,6 +25,9 @@ trait ResponseLogComponent { this: JdbcProfileComponent with ImplicitsComponent 
     def created: Rep[Instant] = column[Instant]("CREATED")
 
     def * : ProvenShape[Event] = (id, event, created) <> (Event.tupled, Event.unapply)
+
+    // Foreign keys
+    def request: ForeignKeyQuery[Requests, Event] = foreignKey(s"RESPONSE_FK_REQUEST", id, requests)(_.id)
 
   }
 
