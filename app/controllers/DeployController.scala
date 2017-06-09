@@ -7,17 +7,18 @@ import io.fabric8.kubernetes.api.model.{Namespace, NamespaceBuilder, ServiceAcco
 import io.fabric8.kubernetes.api.model.extensions.DeploymentBuilder
 import io.fabric8.kubernetes.client.ConfigBuilder
 import io.fabric8.kubernetes.client.DefaultKubernetesClient
+import models.DeployRequest
 import org.pac4j.core.profile.{CommonProfile, ProfileManager}
 import org.pac4j.play.PlayWebContext
 import org.pac4j.play.store.PlaySessionStore
-
+import models.json._
 import scala.collection.JavaConversions._
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 
 @Singleton
-class DeployController @Inject()(config: play.api.Configuration, val playSessionStore: PlaySessionStore) extends Controller {
+class DeployController @Inject()(config: play.api.Configuration, val playSessionStore: PlaySessionStore) extends Controller with JsonComponent {
 
   private def getProfiles(implicit request: RequestHeader): List[CommonProfile] = {
     val webContext = new PlayWebContext(request, playSessionStore)
@@ -26,12 +27,11 @@ class DeployController @Inject()(config: play.api.Configuration, val playSession
     asScalaBuffer(profiles).toList
   }
 
-  def deploy = Action { implicit request => {
+  def deploy = Action.async(bodyParseJson[DeployRequest](deployRequestReads)) { implicit request => {
     val profile = getProfiles(request).head
-    val kconfig = new ConfigBuilder().build()
-    val client = new DefaultKubernetesClient(kconfig)
-
-    def uuid = java.util.UUID.randomUUID.toString()
+    val deployRequest: DeployRequest = request.body
+    val kubeconfig = new ConfigBuilder().build()
+    val client = new DefaultKubernetesClient(kubeconfig)
 
     val ns = new NamespaceBuilder()
       .withNewMetadata
@@ -40,42 +40,46 @@ class DeployController @Inject()(config: play.api.Configuration, val playSession
       .endMetadata
       .build
 
-    val myns = client.namespaces.withName(profile.getId).createOrReplace(ns)
+    client.namespaces.withName(profile.getId).createOrReplace(ns)
 
-    val deployment = new DeploymentBuilder()
+    val container = new DeploymentBuilder()
       .withNewMetadata
-      .withName("deploy")
+      .withName(deployRequest.deployId)
       .endMetadata
       .withNewSpec
       .withReplicas(1)
       .withNewTemplate
       .withNewMetadata
-      .addToLabels("app", "jupyter")
+      .addToLabels("app", deployRequest.deployId)
       .endMetadata
       .withNewSpec
       .addNewContainer
-      .withName("jupyter")
-      .withImage("jupyter/scipy-notebook")
-      .addNewPort
-      .withContainerPort(8888)
-      .endPort
-      .endContainer
-      .endSpec
-      .endTemplate
-      .endSpec
-      .build
-    val deploy = client.extensions.deployments.inNamespace(profile.getId).create(deployment)
+      .withName(deployRequest.deployId)
+      .withImage(deployRequest.dockerImage)
 
-    val nbservice = client.services().inNamespace(profile.getId).createNew()
-      .withNewMetadata.withName("nbservice").endMetadata()
-      .withNewSpec()
-      .withType("LoadBalancer")
-      .addToSelector("app", "jupyter")
-      .addNewPort().withPort(8888).withNewTargetPort().withIntVal(ewaewawwwww).endTargetPort().withNodePort(30001).endPort()
-      .endSpec()
-      .done()
+    val c = deployRequest.networkPort match {
+      case Some(port) => container.addNewPort.withContainerPort(port).endPort
+      case _ => container
+    }
+
+    val deployment = c.endContainer.endSpec.endTemplate.endSpec.build()
+
+    client.extensions.deployments.inNamespace(profile.getId).create(deployment)
+
+    if (deployRequest.networkPort.isDefined) {
+      client.services.inNamespace(profile.getId).createNew()
+        .withNewMetadata.withName(deployRequest.deployId).endMetadata
+        .withNewSpec
+        .withType("LoadBalancer")
+        .addToSelector("app", deployRequest.deployId)
+        .addNewPort.withPort(deployRequest.networkPort.get).withNewTargetPort.withIntVal(8888).endTargetPort.endPort
+        .endSpec
+        .done()
+      //client.services.inNamespace(profile.getId).withName(deployRequest.deployId).get.getStatus.getLoadBalancer.getIngress.get(0).getIp
+    }
+
     client.close()
-    Ok("")
+    Future(Ok(""))
   }
   }
 

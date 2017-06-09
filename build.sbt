@@ -15,6 +15,7 @@ libraryDependencies ++= Seq(
   //"ch.datascience" %% "graph-core" % version.value,
   cache,
   ws,
+  filters,
   "org.pac4j" % "play-pac4j" % "3.0.0-RC2",
   "org.pac4j" % "pac4j-jwt" % "2.0.0-RC2",
   "org.pac4j" % "pac4j-http" % "2.0.0-RC2",
