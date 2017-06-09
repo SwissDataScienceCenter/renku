@@ -4,5 +4,6 @@
 # ~~~~
 
 POST    /deploy                 controllers.DeployController.deploy
+POST    /undeploy               controllers.DeployController.undeploy
 POST    /:id/register           controllers.DeployController.register(id: Long)
 

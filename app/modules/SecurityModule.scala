@@ -6,7 +6,7 @@ import org.pac4j.core.client.Clients
 import play.api.{Configuration, Environment}
 import org.pac4j.play.store.{PlayCacheSessionStore, PlaySessionStore}
 import org.pac4j.core.config.Config
-import org.pac4j.http.client.direct.ParameterClient
+import org.pac4j.http.client.direct.HeaderClient
 import org.pac4j.jwt.config.signature.RSASignatureConfiguration
 import org.pac4j.jwt.credentials.authenticator.JwtAuthenticator
 import java.security.{KeyFactory, KeyPair}
@@ -24,11 +24,9 @@ class SecurityModule(environment: Environment, configuration: Configuration) ext
     val user_kf = KeyFactory.getInstance("RSA")
     val user_pair = new KeyPair(user_kf.generatePublic(user_spec), null)
     user_jwtAuthenticator.addSignatureConfiguration(new RSASignatureConfiguration(user_pair))
-    val user_parameterClient = new ParameterClient("user_token", user_jwtAuthenticator)
-    user_parameterClient.setSupportGetRequest(true)
-    user_parameterClient.setSupportPostRequest(true)
+    val user_parameterClient = new HeaderClient("Authorization", "Bearer ", user_jwtAuthenticator)
 
-    val clients = new Clients("http://localhost:9000/callback", user_parameterClient)
+    val clients = new Clients(user_parameterClient)
 
     val config = new Config(clients)
     config.addAuthorizer("api_manager", new ApiManagerAuthorizer())
