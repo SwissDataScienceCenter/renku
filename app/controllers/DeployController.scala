@@ -1,17 +1,20 @@
 package controllers
 
+import java.util.concurrent.TimeUnit
 import javax.inject._
 
 import play.api.mvc._
-import io.fabric8.kubernetes.api.model.{Namespace, NamespaceBuilder, ServiceAccountBuilder, ServiceSpecBuilder}
+import io.fabric8.kubernetes.api.model.{EnvVarBuilder, NamespaceBuilder}
 import io.fabric8.kubernetes.api.model.extensions.DeploymentBuilder
 import io.fabric8.kubernetes.client.ConfigBuilder
 import io.fabric8.kubernetes.client.DefaultKubernetesClient
-import models.DeployRequest
+import models.{DeployRequest, DeployResult}
 import org.pac4j.core.profile.{CommonProfile, ProfileManager}
 import org.pac4j.play.PlayWebContext
 import org.pac4j.play.store.PlaySessionStore
 import models.json._
+import play.api.libs.json.Json
+
 import scala.collection.JavaConversions._
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -28,6 +31,7 @@ class DeployController @Inject()(config: play.api.Configuration, val playSession
   }
 
   def deploy = Action.async(bodyParseJson[DeployRequest](deployRequestReads)) { implicit request => {
+    Future {
     val profile = getProfiles(request).head
     val deployRequest: DeployRequest = request.body
     val kubeconfig = new ConfigBuilder().build()
@@ -36,7 +40,7 @@ class DeployController @Inject()(config: play.api.Configuration, val playSession
     val ns = new NamespaceBuilder()
       .withNewMetadata
       .withName(profile.getId)
-      .addToLabels("user", profile.getEmail.replace('@','_'))
+      .addToLabels("user", profile.getEmail.replace('@', '_'))
       .endMetadata
       .build
 
@@ -56,6 +60,7 @@ class DeployController @Inject()(config: play.api.Configuration, val playSession
       .addNewContainer
       .withName(deployRequest.deployId)
       .withImage(deployRequest.dockerImage)
+      .withEnv(new EnvVarBuilder().withName("token").withValue(request.headers.get("Authorization").getOrElse("")).build)
 
     val c = deployRequest.networkPort match {
       case Some(port) => container.addNewPort.withContainerPort(port).endPort
@@ -66,32 +71,42 @@ class DeployController @Inject()(config: play.api.Configuration, val playSession
 
     client.extensions.deployments.inNamespace(profile.getId).create(deployment)
 
-    if (deployRequest.networkPort.isDefined) {
+    val result = if (deployRequest.networkPort.isDefined) {
       client.services.inNamespace(profile.getId).createNew()
         .withNewMetadata.withName(deployRequest.deployId).endMetadata
         .withNewSpec
         .withType("LoadBalancer")
         .addToSelector("app", deployRequest.deployId)
-        .addNewPort.withPort(deployRequest.networkPort.get).withNewTargetPort.withIntVal(8888).endTargetPort.endPort
+        .addNewPort.withPort(deployRequest.networkPort.get).withNewTargetPort.endTargetPort.endPort
         .endSpec
         .done()
-      //client.services.inNamespace(profile.getId).withName(deployRequest.deployId).get.getStatus.getLoadBalancer.getIngress.get(0).getIp
+      Thread.sleep(1000) // otherwise not able to find service...
+      client.services.inNamespace(profile.getId).withName(deployRequest.deployId).waitUntilReady(30, TimeUnit.SECONDS)
+      if (client.services.inNamespace(profile.getId).withName(deployRequest.deployId).get.getStatus.getLoadBalancer.getIngress.isEmpty) {
+        Thread.sleep(3000) // add an extra 3 seconds for the refresh
+      }
+      val ip = client.services.inNamespace(profile.getId).withName(deployRequest.deployId).get.getStatus.getLoadBalancer.getIngress.get(0).getIp
+      DeployResult(deployRequest.deployId,true, Some("http://" + ip + ":8888"))
+    } else {
+      DeployResult(deployRequest.deployId,true, None)
     }
 
     client.close()
-    Future(Ok(""))
+    Ok(Json.toJson(result))
+    }
   }
   }
 
-  def undeploy = Action { implicit request => {
+  def undeploy = Action.async(bodyParseJson[DeployRequest](deployRequestReads)) { implicit request => Future {
     val profile = getProfiles(request).head
+    val deployRequest: DeployRequest = request.body
     val kconfig = new ConfigBuilder().build()
     val client = new DefaultKubernetesClient(kconfig)
     client.extensions.deployments.inNamespace(profile.getId).delete()
     client.extensions.replicaSets.inNamespace(profile.getId).delete()
     client.services.inNamespace(profile.getId).delete()
     client.close()
-    Ok("")
+    Ok(Json.toJson(DeployResult(deployRequest.deployId,true, None)))
   }
   }
 
