@@ -5,11 +5,10 @@ import java.util.UUID
 import javax.inject.Inject
 
 import ch.datascience.graph.types.Multiplicity
+import ch.datascience.graph.types.persistence.model.json._
 import controllers.JsonComponent
 import injected.OrchestrationLayer
-import models.json._
 import play.api.libs.concurrent.Execution.Implicits._
-import play.api.libs.functional.syntax._
 import play.api.libs.json._
 import play.api.mvc._
 
@@ -46,7 +45,7 @@ class EdgeLabelController @Inject()(protected val orchestrator: OrchestrationLay
     }
   }
 
-  def create: Action[(String, String, Multiplicity)] = Action.async(bodyParseJson[(String, String, Multiplicity)](createReads)) { implicit request =>
+  def create: Action[(String, String, Multiplicity)] = Action.async(bodyParseJson[(String, String, Multiplicity)](EdgeLabelRequestFormat)) { implicit request =>
     val (namespace, name, multiplicity) = request.body
     val future = orchestrator.edgeLabels.createEdgeLabel(namespace, name, multiplicity)
     future map { edgeLabel => Ok(Json.toJson(edgeLabel)) } recover {
@@ -55,11 +54,5 @@ class EdgeLabelController @Inject()(protected val orchestrator: OrchestrationLay
         Conflict // Avoids send of 500 INTERNAL ERROR if duplicate creation
     }
   }
-
-  private[this] lazy val createReads: Reads[(String, String, Multiplicity)] = (
-    (JsPath \ "namespace").read[String](namespaceReads) and
-      (JsPath \ "name").read[String](nameReads) and
-      (JsPath \ "multiplicity").read[Multiplicity](ch.datascience.graph.types.json.MultiplicityFormat)
-  )(Tuple3[String, String, Multiplicity] _)
 
 }

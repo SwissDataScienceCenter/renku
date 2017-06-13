@@ -4,12 +4,11 @@ import java.sql.SQLException
 import java.util.UUID
 import javax.inject.Inject
 
+import ch.datascience.graph.types.persistence.model.json._
 import ch.datascience.graph.types.{Cardinality, DataType}
 import controllers.JsonComponent
 import injected.OrchestrationLayer
-import models.json._
 import play.api.libs.concurrent.Execution.Implicits._
-import play.api.libs.functional.syntax._
 import play.api.libs.json._
 import play.api.mvc._
 
@@ -46,7 +45,7 @@ class PropertyKeyController @Inject()(protected val orchestrator: OrchestrationL
     }
   }
 
-  def create: Action[(String, String, DataType, Cardinality)] = Action.async(bodyParseJson[(String, String, DataType, Cardinality)](createReads)) { implicit request =>
+  def create: Action[(String, String, DataType, Cardinality)] = Action.async(bodyParseJson[(String, String, DataType, Cardinality)](PropertyKeyRequestFormat)) { implicit request =>
     val (namespace, name, dataType, cardinality) = request.body
     val future = orchestrator.propertyKeys.createPropertyKey(namespace, name, dataType, cardinality)
     future map { propertyKey => Ok(Json.toJson(propertyKey)) } recover {
@@ -55,12 +54,5 @@ class PropertyKeyController @Inject()(protected val orchestrator: OrchestrationL
         Conflict // Avoids send of 500 INTERNAL ERROR if duplicate creation
     }
   }
-
-  private[this] lazy val createReads: Reads[(String, String, DataType, Cardinality)] = (
-    (JsPath \ "namespace").read[String](namespaceReads) and
-      (JsPath \ "name").read[String](nameReads) and
-      (JsPath \ "datatype").read[DataType] and
-      (JsPath \ "cardinality").read[Cardinality]
-  )(Tuple4[String, String, DataType, Cardinality] _)
 
 }
