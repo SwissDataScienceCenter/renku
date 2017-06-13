@@ -37,14 +37,14 @@ trait ResponseLogComponent { this: JdbcProfileComponent with ImplicitsComponent 
       this.findBy(_.id)
     }
 
-    def add(event: JsValue)(implicit ec: ExecutionContext): DBIO[Event] = insert(event).flatMap { id =>
-      this.filter(_.id === id).result.head
+    def add(requestId: UUID, event: JsValue): DBIO[Event] = insert(requestId, event) andThen {
+      this.filter(_.id === requestId).result.head
     }
 
-    private[this] def insert(event: JsValue): DBIO[UUID] = {
-      val query = (for { event <- this } yield event.event) returning this.map(_.id)
+    private[this] def insert(requestId: UUID, event: JsValue): DBIO[Int] = {
+      val query = for { event <- this } yield (event.id, event.event)
 
-      query += event
+      query += (requestId, event)
     }
 
   }

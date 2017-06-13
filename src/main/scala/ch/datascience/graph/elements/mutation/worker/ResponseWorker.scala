@@ -46,23 +46,15 @@ class ResponseWorker(
   }
 
   def processOneEvent(event: JsValue): Unit = {
-    println(s"TODO!! $event, Thread: ${java.lang.Thread.currentThread()}")
     val mutation = (event \ "query").as[Mutation](MutationFormat)
     val operations = mutation.operations
-
-    println(mutation)
 
     // tempId -> persistedId map
     val idMap: mutable.Map[NewEdge#NewVertexType#TempId, NewEdge#PersistedVertexType#Id] = mutable.Map.empty
 
-    println("traversal...")
-
     val g = graph.traversal()
 
-    println("exec !!!")
-
     execute {
-      println("exec")
       val results = for {
         op <- operations
       } yield processOperation(g, op, idMap)

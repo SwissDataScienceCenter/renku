@@ -10,13 +10,9 @@ trait GraphComponent {
   protected def graph: JanusGraph
 
   def execute[A](body: => A): A = {
-    println("start")
-
     // Get a clean transaction
     val tx = graph.tx()
     tx.rollback()
-
-    println("exec")
 
     // Execute f
     try {
