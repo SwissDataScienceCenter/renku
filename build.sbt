@@ -9,12 +9,14 @@ resolvers += "jitpack" at "https://jitpack.io"
 resolvers += "Oracle Released Java Packages" at "http://download.oracle.com/maven"
 
 lazy val slick_version = "3.2.0"
+lazy val play_slick_version = "2.1.0"
 lazy val janusgraph_version = "0.1.0"
 //lazy val h2_version = "1.4.193"
 //lazy val slf4j_version = "1.7.24"
 
 //libraryDependencies += "ch.datascience" %% "graph-type-utils" % version.value
 libraryDependencies += "com.typesafe.slick" %% "slick" % slick_version
+libraryDependencies += "com.typesafe.play" %% "play-slick" % play_slick_version
 libraryDependencies += "org.janusgraph" % "janusgraph-core" % janusgraph_version
 //libraryDependencies += "org.janusgraph" % "janusgraph-berkeleyje" % janusgraph_version
 //libraryDependencies += "org.janusgraph" % "janusgraph-es" % janusgraph_version
