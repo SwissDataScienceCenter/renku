@@ -10,19 +10,6 @@ import play.api.libs.json._
   */
 object BoxedValueReads extends Reads[BoxedValue] {
 
-//  def reads(json: JsValue): JsResult[BoxedValue] = {
-//    val result = for {
-//      dataType <- dataTypeReads.reads(json)
-//      value <- valueReads(dataType).reads(json)
-//    } yield value
-//
-//    // Need to repath result
-//    result match {
-//      case JsSuccess(x, _) => JsSuccess(x)
-//      case _ => result
-//    }
-//  }
-
   def reads(json: JsValue): JsResult[BoxedValue] = self.reads(json)
 
   private[this] lazy val self: Reads[BoxedValue] = dataTypeReads.flatMap(valueReads)
