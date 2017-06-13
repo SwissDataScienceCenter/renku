@@ -1,0 +1,36 @@
+# API spec in YAML
+swagger: '2.0'
+info:
+  title: Graph Types Service
+  description: Typesystem for the graph
+  version: "1.0.0"
+# the domain of the service
+host: 192.168.0.9
+# array of all schemes that your API supports
+schemes:
+  - http
+# will be prefixed to all paths
+basePath: /api/types
+produces:
+  - application/json
+consumes:
+  - application/json
+paths:
+  '/management/graph_domain':
+    $ref: ../paths/typesystem/management/graph_domain.yaml
+  '/management/graph_domain/{idname}':
+    $ref: ../paths/typesystem/management/graph_domain-idname.yaml
+  '/management/property_key':
+    $ref: ../paths/typesystem/management/property_key.yaml
+  '/management/property_key/{id}':
+    $ref: ../paths/typesystem/management/property_key-id.yaml
+  '/management/property_key/{namespace}/{name}':
+    $ref: ../paths/typesystem/management/property_key-name.yaml
+  '/management/edge_label':
+    $ref: ../paths/typesystem/management/edge_label.yaml
+  '/management/edge_label/{id}':
+    $ref: ../paths/typesystem/management/edge_label-id.yaml
+  '/management/edge_label/{namespace}/{name}':
+    $ref: ../paths/typesystem/management/edge_label-name.yaml
+definitions:
+  $ref: ./definitions.yaml#/definitions

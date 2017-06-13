@@ -1,0 +1,23 @@
+parameters:
+  - name: namespace
+    in: path
+    description: the namespace of the edge label
+    type: string
+    required: true
+  - name: name
+    in: path
+    description: the name of the edge label
+    type: string
+    required: true
+get:
+  summary: Return the given edge label
+  description: Return the given edge label
+  responses:
+    200:
+      description: Returns the given edge label
+      schema:
+        $ref: ../../../api/definitions.yaml#/definitions/MgmtEdgeLabel
+    default:
+      description: Unexpected error
+      schema:
+        $ref: ../../../api/definitions.yaml#/definitions/Error

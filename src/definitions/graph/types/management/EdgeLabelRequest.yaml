@@ -1,0 +1,15 @@
+type: object
+title: EdgeLabel
+properties:
+  namespace:
+    type: string
+    description: namespace of the property key
+  name:
+    type: string
+    description: name of the edge label
+  multiplicity:
+    $ref: ../../../../api/definitions.yaml#/definitions/Multiplicity
+required:
+  - namespace
+  - name
+  - multiplicity

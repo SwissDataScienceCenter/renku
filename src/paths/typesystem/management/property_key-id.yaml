@@ -1,0 +1,18 @@
+parameters:
+  - name: id
+    in: path
+    description: the uuid of the property key
+    type: string
+    required: true
+get:
+  summary: Return the given property key
+  description: Return the given property key
+  responses:
+    200:
+      description: Returns the given property key
+      schema:
+        $ref: ../../../api/definitions.yaml#/definitions/MgmtPropertyKey
+    default:
+      description: Unexpected error
+      schema:
+        $ref: ../../../api/definitions.yaml#/definitions/Error

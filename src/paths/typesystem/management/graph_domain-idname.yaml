@@ -1,7 +1,7 @@
 parameters:
   - name: idname
     in: path
-    description: the name or the uuid of the vertex type
+    description: the name or the uuid of the graph domain
     type: string
     required: true
 get:
@@ -9,10 +9,10 @@ get:
   description: Return the given graph domain
   responses:
     200:
-      description: Returns the given graph domain.
+      description: Returns the given graph domain
       schema:
-        $ref: '../typesystem.yaml#/definitions/GraphDomain'
+        $ref: ../../../api/definitions.yaml#/definitions/MgmtGraphDomain
     default:
       description: Unexpected error
       schema:
-        $ref: '../typesystem.yaml#/definitions/Error'
+        $ref: ../../../api/definitions.yaml#/definitions/Error

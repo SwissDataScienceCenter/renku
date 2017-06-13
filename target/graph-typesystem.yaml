@@ -1,76 +1,228 @@
 ---
   swagger: "2.0"
   info: 
-    title: "Graph Mutation Service"
-    description: "Mutate the graph"
+    title: "Graph Types Service"
+    description: "Typesystem for the graph"
     version: "1.0.0"
   host: "192.168.0.9"
   schemes: 
     - "http"
-  basePath: "/api/mutation"
+  basePath: "/api/types"
   produces: 
     - "application/json"
   consumes: 
     - "application/json"
   paths: 
-    /mutation: 
-      post: 
-        summary: "Mutate the graph"
-        description: "This mutates the graph.\n"
-        parameters: 
-          - 
-            name: "data"
-            in: "body"
-            description: "The json representation of the mutation"
-            required: true
-            schema: 
-              $ref: "#/definitions/Mutation"
+    /management/graph_domain: 
+      get: 
+        summary: "List all graph domains"
         responses: 
           200: 
-            description: "Returns the mutation request."
+            description: "A list of graph domains"
             schema: 
-              $ref: "#/definitions/MutationResponse"
+              type: "array"
+              items: 
+                $ref: "#/definitions/MgmtGraphDomain"
           default: 
             description: "Unexpected error"
             schema: 
               $ref: "#/definitions/Error"
-    /mutation/create_vertex: 
       post: 
-        summary: "Create a vertex"
-        description: "Equivalent to post a mutation consisting of one CreateVertex operation\n"
+        summary: "Create a new graph domain"
+        description: "This creates a new graph domain\n"
         parameters: 
           - 
             name: "data"
             in: "body"
-            description: "The json representation of the mutation"
+            description: "The json representation of the graph domain"
             required: true
             schema: 
-              $ref: "#/definitions/CreateVertex"
+              $ref: "#/definitions/MgmtGraphDomainRequest"
         responses: 
           200: 
-            description: "Returns the mutation request."
+            description: "Returns the created graph domain."
             schema: 
-              $ref: "#/definitions/MutationResponse"
+              $ref: "#/definitions/MgmtGraphDomain"
           default: 
             description: "Unexpected error"
             schema: 
               $ref: "#/definitions/Error"
-    /mutation/{mutation-uuid}: 
+    /management/graph_domain/{idname}: 
       parameters: 
         - 
-          name: "mutation-uuid"
+          name: "idname"
           in: "path"
-          description: "the uuid representing the graph mutation"
+          description: "the name or the uuid of the graph domain"
           type: "string"
           required: true
       get: 
-        summary: "Get mutation status"
-        description: "Fetch the mutation status\n"
+        summary: "Return the given graph domain"
+        description: "Return the given graph domain"
         responses: 
           200: 
-            description: "Returns the mutation status."
+            description: "Returns the given graph domain"
             schema: 
-              $ref: "#/definitions/MutationStatus"
+              $ref: "#/definitions/MgmtGraphDomain"
+          default: 
+            description: "Unexpected error"
+            schema: 
+              $ref: "#/definitions/Error"
+    /management/property_key: 
+      get: 
+        summary: "List all property keys"
+        responses: 
+          200: 
+            description: "A list of property keys"
+            schema: 
+              type: "array"
+              items: 
+                $ref: "#/definitions/MgmtPropertyKey"
+          default: 
+            description: "Unexpected error"
+            schema: 
+              $ref: "#/definitions/Error"
+      post: 
+        summary: "Create a property key"
+        description: "This creates a property key\n"
+        parameters: 
+          - 
+            name: "data"
+            in: "body"
+            description: "The json representation of the property key"
+            required: true
+            schema: 
+              $ref: "#/definitions/MgmtPropertyKeyRequest"
+        responses: 
+          200: 
+            description: "Returns the created property key"
+            schema: 
+              $ref: "#/definitions/MgmtPropertyKey"
+          default: 
+            description: "Unexpected error"
+            schema: 
+              $ref: "#/definitions/Error"
+    /management/property_key/{id}: 
+      parameters: 
+        - 
+          name: "id"
+          in: "path"
+          description: "the uuid of the property key"
+          type: "string"
+          required: true
+      get: 
+        summary: "Return the given property key"
+        description: "Return the given property key"
+        responses: 
+          200: 
+            description: "Returns the given property key"
+            schema: 
+              $ref: "#/definitions/MgmtPropertyKey"
+          default: 
+            description: "Unexpected error"
+            schema: 
+              $ref: "#/definitions/Error"
+    /management/property_key/{namespace}/{name}: 
+      parameters: 
+        - 
+          name: "namespace"
+          in: "path"
+          description: "the namespace of the property key"
+          type: "string"
+          required: true
+        - 
+          name: "name"
+          in: "path"
+          description: "the name of the property key"
+          type: "string"
+          required: true
+      get: 
+        summary: "Return the given property key"
+        description: "Return the given property key"
+        responses: 
+          200: 
+            description: "Returns the given property key"
+            schema: 
+              $ref: "#/definitions/MgmtPropertyKey"
+          default: 
+            description: "Unexpected error"
+            schema: 
+              $ref: "#/definitions/Error"
+    /management/edge_label: 
+      get: 
+        summary: "List all edge labels"
+        responses: 
+          200: 
+            description: "A list of edge labels"
+            schema: 
+              type: "array"
+              items: 
+                $ref: "#/definitions/MgmtEdgeLabel"
+          default: 
+            description: "Unexpected error"
+            schema: 
+              $ref: "#/definitions/Error"
+      post: 
+        summary: "Create an edge label"
+        description: "This creates an edge label\n"
+        parameters: 
+          - 
+            name: "data"
+            in: "body"
+            description: "The json representation of the edge label"
+            required: true
+            schema: 
+              $ref: "#/definitions/MgmtEdgeLabelRequest"
+        responses: 
+          200: 
+            description: "Returns the created edge label"
+            schema: 
+              $ref: "#/definitions/MgmtEdgeLabel"
+          default: 
+            description: "Unexpected error"
+            schema: 
+              $ref: "#/definitions/Error"
+    /management/edge_label/{id}: 
+      parameters: 
+        - 
+          name: "id"
+          in: "path"
+          description: "the uuid of the edge label"
+          type: "string"
+          required: true
+      get: 
+        summary: "Return the given edge label"
+        description: "Return the given edge label"
+        responses: 
+          200: 
+            description: "Returns the given edge label"
+            schema: 
+              $ref: "#/definitions/MgmtEdgeLabel"
+          default: 
+            description: "Unexpected error"
+            schema: 
+              $ref: "#/definitions/Error"
+    /management/edge_label/{namespace}/{name}: 
+      parameters: 
+        - 
+          name: "namespace"
+          in: "path"
+          description: "the namespace of the edge label"
+          type: "string"
+          required: true
+        - 
+          name: "name"
+          in: "path"
+          description: "the name of the edge label"
+          type: "string"
+          required: true
+      get: 
+        summary: "Return the given edge label"
+        description: "Return the given edge label"
+        responses: 
+          200: 
+            description: "Returns the given edge label"
+            schema: 
+              $ref: "#/definitions/MgmtEdgeLabel"
           default: 
             description: "Unexpected error"
             schema: 

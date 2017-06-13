@@ -1,0 +1,21 @@
+type: object
+title: PropertyKey
+properties:
+  id:
+    type: string
+    description: uuid of the property key
+  graph_domain:
+    $ref: ../../../../api/definitions.yaml#/definitions/MgmtGraphDomain
+  name:
+    type: string
+    description: name of the property key
+  data_type:
+    $ref: ../../../../api/definitions.yaml#/definitions/DataType
+  cardinality:
+    $ref: ../../../../api/definitions.yaml#/definitions/Cardinality
+required:
+  - id
+  - graph_domain
+  - name
+  - data_type
+  - cardinality

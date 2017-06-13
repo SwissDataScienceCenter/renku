@@ -328,6 +328,113 @@
         - "single"
         - "set"
         - "list"
+    Multiplicity: 
+      type: "string"
+      title: "Multiplicity"
+      enum: 
+        - "multi"
+        - "simple"
+        - "one_to_many"
+        - "many_to_one"
+        - "one_to_one"
+    MgmtGraphDomain: 
+      type: "object"
+      title: "GraphDomain"
+      properties: 
+        id: 
+          type: "string"
+          description: "uuid of the graph domain."
+        namespace: 
+          type: "string"
+          description: "The namespace of the graph domain."
+      required: 
+        - "id"
+        - "namespace"
+    MgmtGraphDomainRequest: 
+      type: "object"
+      title: "GraphDomainRequest"
+      properties: 
+        namespace: 
+          type: "string"
+          description: "The namespace of the graph domain."
+      required: 
+        - "namespace"
+    MgmtPropertyKey: 
+      type: "object"
+      title: "PropertyKey"
+      properties: 
+        id: 
+          type: "string"
+          description: "uuid of the property key"
+        graph_domain: 
+          $ref: "#/definitions/MgmtGraphDomain"
+        name: 
+          type: "string"
+          description: "name of the property key"
+        data_type: 
+          $ref: "#/definitions/DataType"
+        cardinality: 
+          $ref: "#/definitions/Cardinality"
+      required: 
+        - "id"
+        - "graph_domain"
+        - "name"
+        - "data_type"
+        - "cardinality"
+    MgmtPropertyKeyRequest: 
+      type: "object"
+      title: "PropertyKeyRequest"
+      properties: 
+        namespace: 
+          type: "string"
+          description: "namespace of the property key"
+        name: 
+          type: "string"
+          description: "name of the property key"
+        data_type: 
+          $ref: "#/definitions/DataType"
+        cardinality: 
+          $ref: "#/definitions/Cardinality"
+      required: 
+        - "namespace"
+        - "name"
+        - "data_type"
+        - "cardinality"
+    MgmtEdgeLabel: 
+      type: "object"
+      title: "EdgeLabel"
+      properties: 
+        id: 
+          type: "string"
+          description: "uuid of the edge label"
+        graph_domain: 
+          $ref: "#/definitions/MgmtGraphDomain"
+        name: 
+          type: "string"
+          description: "name of the edge label"
+        multiplicity: 
+          $ref: "#/definitions/Multiplicity"
+      required: 
+        - "id"
+        - "graph_domain"
+        - "name"
+        - "multiplicity"
+    MgmtEdgeLabelRequest: 
+      type: "object"
+      title: "EdgeLabel"
+      properties: 
+        namespace: 
+          type: "string"
+          description: "namespace of the property key"
+        name: 
+          type: "string"
+          description: "name of the edge label"
+        multiplicity: 
+          $ref: "#/definitions/Multiplicity"
+      required: 
+        - "namespace"
+        - "name"
+        - "multiplicity"
     Mutation: 
       type: "object"
       title: "Mutation"

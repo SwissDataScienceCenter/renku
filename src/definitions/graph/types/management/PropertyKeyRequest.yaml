@@ -1,0 +1,18 @@
+type: object
+title: PropertyKeyRequest
+properties:
+  namespace:
+    type: string
+    description: namespace of the property key
+  name:
+    type: string
+    description: name of the property key
+  data_type:
+    $ref: ../../../../api/definitions.yaml#/definitions/DataType
+  cardinality:
+    $ref: ../../../../api/definitions.yaml#/definitions/Cardinality
+required:
+  - namespace
+  - name
+  - data_type
+  - cardinality

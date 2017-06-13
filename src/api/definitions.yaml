@@ -8,6 +8,7 @@ info:
     Other APIs:
     - [graph-navigation](/rest-api-definitions/swagger-ui/dist?url=/rest-api-definitions/target/graph-navigation.json)
     - [graph-mutation](/rest-api-definitions/swagger-ui/dist?url=/rest-api-definitions/target/graph-mutation.json)
+    - [graph-typesystem](/rest-api-definitions/swagger-ui/dist?url=/rest-api-definitions/target/graph-typesystem.json)
   version: "1.0.0"
 # the domain of the service
 # host: api.datascience.ch
@@ -62,6 +63,21 @@ definitions:
     $ref: ../definitions/graph/types/DataType.yaml
   Cardinality:
     $ref: ../definitions/graph/types/Cardinality.yaml
+  Multiplicity:
+    $ref: ../definitions/graph/types/Multiplicity.yaml
+  ### Type management
+  MgmtGraphDomain:
+    $ref: ../definitions/graph/types/management/GraphDomain.yaml
+  MgmtGraphDomainRequest:
+    $ref: ../definitions/graph/types/management/GraphDomainRequest.yaml
+  MgmtPropertyKey:
+    $ref: ../definitions/graph/types/management/PropertyKey.yaml
+  MgmtPropertyKeyRequest:
+    $ref: ../definitions/graph/types/management/PropertyKeyRequest.yaml
+  MgmtEdgeLabel:
+    $ref: ../definitions/graph/types/management/EdgeLabel.yaml
+  MgmtEdgeLabelRequest:
+    $ref: ../definitions/graph/types/management/EdgeLabelRequest.yaml
   ## Mutation
   Mutation:
     $ref: ../definitions/graph/mutation/Mutation.yaml

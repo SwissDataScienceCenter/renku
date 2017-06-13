@@ -1,0 +1,18 @@
+type: object
+title: EdgeLabel
+properties:
+  id:
+    type: string
+    description: uuid of the edge label
+  graph_domain:
+    $ref: ../../../../api/definitions.yaml#/definitions/MgmtGraphDomain
+  name:
+    type: string
+    description: name of the edge label
+  multiplicity:
+    $ref: ../../../../api/definitions.yaml#/definitions/Multiplicity
+required:
+  - id
+  - graph_domain
+  - name
+  - multiplicity

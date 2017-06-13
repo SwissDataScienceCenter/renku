@@ -1,0 +1,8 @@
+type: string
+title: Multiplicity
+enum:
+  - multi
+  - simple
+  - one_to_many
+  - many_to_one
+  - one_to_one
