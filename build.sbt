@@ -42,3 +42,10 @@ libraryDependencies += "org.janusgraph" % "janusgraph-cassandra" % janusgraph_ve
 //  "SDSC Snapshots" at "https://internal.datascience.ch:8081/nexus/content/repositories/snapshots/",
 //  Resolver.mavenLocal
 //)
+
+// Allows for alpine images
+enablePlugins(AshScriptPlugin)
+
+dockerBaseImage := "openjdk:8-jre-alpine"
+
+//com.typesafe.sbt.packager.docker.ExecCmd

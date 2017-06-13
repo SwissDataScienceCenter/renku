@@ -39,7 +39,7 @@ class MutationController @Inject()(
       val json = JsObject(Seq(
         "uuid" -> JsString(event.uuid.toString),
         "event" -> event.event,
-        "timestamp" -> JsString(event.created.atZone(java.time.ZoneId.systemDefault).toString)
+        "timestamp" -> JsString(event.created.atZone(java.time.ZoneId.of("UTC")).toString)
       ))
       Ok(json)
     }

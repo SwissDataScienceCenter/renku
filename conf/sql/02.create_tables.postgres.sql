@@ -1,16 +1,16 @@
 -- Create tables
 
 create table "REQUEST_LOG" (
-	"UUID" uuid default uuid_generate_v4() not null,
-	"EVENT" text not null,
-	"CREATED" bigint default (extract(epoch from date_trunc('milliseconds', now() at time zone 'utc')) * 1000) not null,
+	"UUID" UUID default uuid_generate_v4() not null,
+	"EVENT" TEXT not null,
+	"CREATED" BIGINT default (extract(epoch from date_trunc('milliseconds', now() at time zone 'utc')) * 1000) not null,
 	primary key ("UUID")
 );
 
 create table "RESPONSE_LOG" (
-	"UUID" uuid not null,
-	"EVENT" text not null,
-	"CREATED" bigint default (extract(epoch from date_trunc('milliseconds', now() at time zone 'utc')) * 1000) not null,
+	"UUID" UUID not null,
+	"EVENT" TEXT not null,
+	"CREATED" BIGINT default (extract(epoch from date_trunc('milliseconds', now() at time zone 'utc')) * 1000) not null,
 	primary key ("UUID")
 );
 
