@@ -79,6 +79,17 @@ lazy val mutationWorker = Project(
   commonSettings
 ).dependsOn(core)
 
+lazy val navigationService = Project(
+  id   = "graph-navigation-service",
+  base = file("graph-navigation-service")
+).settings(
+  commonSettings
+).dependsOn(
+  core
+).enablePlugins(
+  PlayScala
+)
+
 lazy val updateProjects = taskKey[Unit]("Execute the update script")
 
 lazy val scriptsSettings = Seq(

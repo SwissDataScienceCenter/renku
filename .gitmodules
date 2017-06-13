@@ -7,3 +7,6 @@
 [submodule "graph-mutation"]
 	path = graph-mutation
 	url = git@github.com:SwissDataScienceCenter/graph-mutation.git
+[submodule "graph-navigation-service"]
+	path = graph-navigation-service
+	url = git@github.com:SwissDataScienceCenter/graph-navigation-service.git
