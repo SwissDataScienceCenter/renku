@@ -4,27 +4,20 @@ import ch.datascience.graph.bases.HasKey
 import ch.datascience.graph.types.{Cardinality, DataType}
 import ch.datascience.graph.values.BoxedOrValidValue
 
-///**
-//  * Representation of multi-property values
-//  *
-//  * Non-multi properties are represented using a map Key -> Property,
-//  * while multi-properties are represented using a map Key -> MultiPropertyValue.
-//  *
-//  * There are three types of multi-property values: SingleValue, SetValue and ListValue
-//  *
-//  * SingleValue: only one value. A map Key -> SingleValue is equivalent to a map Key -> Property.
-//  * SetValue: a set of values.
-//  * ListValue: a multiset of values. The name is misleading, but that's how tinkerpop works.
-//  *
-//  * @tparam Key   type of key
-//  * @tparam Value type of value, constrained to verify [[ch.datascience.graph.values.BoxedOrValidValue]]
-//  * @tparam Prop  type of underlying property
-//  */
-//sealed abstract class MultiPropertyValue[+Key, +Value: BoxedOrValidValue, +Prop <: Property[Key, Value]]
-//  extends HasKey[Key]
-//    with Element
-//    with Iterable[Prop] {
-
+/**
+  * Representation of multi-property values
+  *
+  * Non-multi properties are represented using a map Key -> Property,
+  * while multi-properties are represented using a map Key -> MultiPropertyValue.
+  *
+  * There are three types of multi-property values: SingleValue, SetValue and ListValue
+  *
+  * SingleValue: only one value. A map Key -> SingleValue is equivalent to a map Key -> Property.
+  * SetValue: a set of values.
+  * ListValue: a multiset of values. The name is misleading, but that's how tinkerpop works.
+  *
+  * @tparam Prop  type of underlying property
+  */
 sealed abstract class MultiPropertyValue[+Prop <: Property](implicit e: BoxedOrValidValue[Prop#Value])
   extends HasKey
     with Element
