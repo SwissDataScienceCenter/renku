@@ -50,7 +50,6 @@
         - "label"
         - "from"
         - "to"
-        - "properties"
     VertexProperty: 
       title: "VertexProperty"
       allOf: 
@@ -195,7 +194,6 @@
         - "label"
         - "from"
         - "to"
-        - "properties"
     PersistedMultiPropertyValue: 
       type: "object"
       title: "PersistedMultiPropertyValue"

@@ -4,9 +4,10 @@
     title: "Graph Navigation Service"
     description: "Navigate the graph"
     version: "1.0.0"
+  host: "192.168.0.9"
   schemes: 
     - "https"
-  basePath: "/"
+  basePath: "/api/navigation"
   produces: 
     - "application/json"
   consumes: 
@@ -128,7 +129,6 @@
         - "label"
         - "from"
         - "to"
-        - "properties"
     VertexProperty: 
       title: "VertexProperty"
       allOf: 
@@ -273,7 +273,6 @@
         - "label"
         - "from"
         - "to"
-        - "properties"
     PersistedMultiPropertyValue: 
       type: "object"
       title: "PersistedMultiPropertyValue"

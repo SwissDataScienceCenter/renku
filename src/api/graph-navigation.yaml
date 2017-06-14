@@ -5,12 +5,12 @@ info:
   description: Navigate the graph
   version: "1.0.0"
 # the domain of the service
-# host: api.datascience.ch
+host: 192.168.0.9
 # array of all schemes that your API supports
 schemes:
   - https
 # will be prefixed to all paths
-basePath: /
+basePath: /api/navigation
 produces:
   - application/json
 consumes:
