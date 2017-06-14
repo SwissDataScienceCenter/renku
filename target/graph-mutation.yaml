@@ -478,6 +478,30 @@
       required: 
         - "type"
         - "element"
+    DeployRequest: 
+      type: "object"
+      properties: 
+        id: 
+          type: "string"
+          description: "The unique identifier of this deployment."
+        docker_image: 
+          type: "string"
+          description: "The docker image to pull and run."
+        network_port: 
+          type: "integer"
+          description: "If specified, the port of the docker to expose. A URL will be provided in the response, which map to this port."
+    DeployResult: 
+      type: "object"
+      properties: 
+        id: 
+          type: "string"
+          description: "The unique identifier of this deployment."
+        success: 
+          type: "boolean"
+          description: "Indicate if the (un)deployment went well."
+        url: 
+          type: "string"
+          description: "An optional URL mapping to the port given in the request, if any."
     Error: 
       type: "object"
       properties: 
