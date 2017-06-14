@@ -13,11 +13,13 @@ import play.filters.hosts.AllowedHostsFilter
   * https://www.playframework.com/documentation/latest/SecurityHeaders
   */
 class Filters @Inject() (
-                          allowedHostsFilter: AllowedHostsFilter,
-                          securityHeadersFilter: SecurityHeadersFilter,
-                          corsFilter: CORSFilter
-                        ) extends DefaultHttpFilters(
+  allowedHostsFilter: AllowedHostsFilter,
+  securityHeadersFilter: SecurityHeadersFilter,
+  securityFilter: SecurityHeadersFilter,
+  corsFilter: CORSFilter
+) extends DefaultHttpFilters(
   allowedHostsFilter,
   securityHeadersFilter,
+  securityFilter,
   corsFilter
 )
