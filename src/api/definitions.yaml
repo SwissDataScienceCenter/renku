@@ -90,6 +90,13 @@ definitions:
   CreateVertex:
     $ref: ../definitions/graph/mutation/CreateVertex.yaml
 
+  # Deployer
+
+  DeployRequest:
+    $ref: ../definitions/DeployRequest.yaml
+  DeployResult:
+    $ref: ../definitions/DeployResult.yaml
+
   # Error
 
   Error:

@@ -1,0 +1,11 @@
+type: object
+properties:
+  id:
+    type: string
+    description: The unique identifier of this deployment.
+  docker_image:
+    type: string
+    description: The docker image to pull and run.
+  network_port:
+    type: integer
+    description: If specified, the port of the docker to expose. A URL will be provided in the response, which map to this port.

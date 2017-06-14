@@ -1,0 +1,32 @@
+# API spec in YAML
+swagger: '2.0'
+info:
+  title: Deployer Service
+  description: Deploy dockers on Kubernetes
+  version: "1.0.0"
+host: testing.datascience.ch:9001
+schemes:
+  - https
+basePath: /
+securityDefinitions:
+  keycloak_auth:
+    type: oauth2
+    authorizationUrl: https://testing.datascience.ch:8080/auth/realms/SDSC/protocol/openid-connect/auth
+    tokenUrl: https://testing.datascience.ch:8080/auth/realms/SDSC/protocol/openid-connect/token
+    flow: accessCode
+    scopes:
+      default: can access everything
+security:
+  keycloak_auth:
+  - default
+produces:
+  - application/json
+consumes:
+  - application/json
+paths:
+  '/deploy':
+    $ref: ../paths/deployer/deploy.yaml
+  '/undeploy':
+    $ref: ../paths/deployer/undeploy.yaml
+definitions:
+  $ref: ./definitions.yaml#/definitions
