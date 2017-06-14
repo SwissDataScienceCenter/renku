@@ -1,0 +1,11 @@
+type: object
+properties:
+  id:
+    type: string
+    description: The unique identifier of this deployment.
+  success:
+    type: boolean
+    description: Indicate if the (un)deployment went well.
+  url:
+    type: string
+    description: An optional URL mapping to the port given in the request, if any.

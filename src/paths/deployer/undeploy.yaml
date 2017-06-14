@@ -1,0 +1,20 @@
+undeploy:
+  summary: Undeploy a docker container
+  description: |
+    This tells the deployer service to destroy a given container on its infrastructure.
+  parameters:
+    - name: data
+      in: body
+      description: The json representation of the deploy request
+      required: true
+      schema:
+        $ref: '../../api/definitions.yaml#/definitions/DeployRequest'
+  responses:
+    200:
+      description: Returns the result of the deploy request.
+      schema:
+        $ref: '../../api/definitions.yaml#/definitions/DeployResult'
+    default:
+      description: Unexpected error
+      schema:
+        $ref: '../../api/definitions.yaml#/definitions/Error'

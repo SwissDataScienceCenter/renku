@@ -1,0 +1,20 @@
+deploy:
+  summary: Deploy a docker container
+  description: |
+    This tells the deployer service to deploy a given container on its infrastructure.
+  parameters:
+    - name: data
+      in: body
+      description: The json representation of the undeploy request
+      required: true
+      schema:
+        $ref: '../../api/definitions.yaml#/definitions/DeployRequest'
+  responses:
+    200:
+      description: Returns the result of the undeploy request.
+      schema:
+        $ref: '../../api/definitions.yaml#/definitions/DeployResult'
+    default:
+      description: Unexpected error
+      schema:
+        $ref: '../../api/definitions.yaml#/definitions/Error'
