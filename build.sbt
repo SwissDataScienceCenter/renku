@@ -15,7 +15,6 @@ lazy val postgresql_version = "42.0.0"
 
 libraryDependencies += filters
 libraryDependencies += "com.typesafe.play" %% "play-slick" % play_slick_version
-libraryDependencies += "com.typesafe.play" %% "play-slick-evolutions" % play_slick_version
 //libraryDependencies += "com.rabbitmq" % "amqp-client" % rabbitmq_version
 //libraryDependencies += "org.slf4j" % "slf4j-nop" % "1.7.24"
 libraryDependencies += "org.postgresql" % "postgresql" % postgresql_version
@@ -43,9 +42,19 @@ libraryDependencies += "org.janusgraph" % "janusgraph-cassandra" % janusgraph_ve
 //  Resolver.mavenLocal
 //)
 
+import com.typesafe.sbt.packager.docker._
+
 // Allows for alpine images
-enablePlugins(AshScriptPlugin)
+//enablePlugins(AshScriptPlugin)
 
 dockerBaseImage := "openjdk:8-jre-alpine"
+//dockerBaseImage := "openjdk:8-jre"
 
-//com.typesafe.sbt.packager.docker.ExecCmd
+dockerCommands ~= { cmds => cmds.head +: ExecCmd("RUN", "apk", "add", "--no-cache", "bash") +: cmds.tail }
+// Replace entry point
+dockerCommands ~= { cmds =>
+  cmds.map {
+    case ExecCmd("ENTRYPOINT", args@_*) => ExecCmd("ENTRYPOINT", args ++ Seq("-Dconfig.resource=application.docker.conf"): _*)
+    case cmd => cmd
+  }
+}
