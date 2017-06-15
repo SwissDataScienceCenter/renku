@@ -4,3 +4,5 @@
 # ~~~~
 
 POST    /mutation                   controllers.MutationController.postMutation
+
+GET     /mutation/:id               controllers.MutationController.findById(id: String)

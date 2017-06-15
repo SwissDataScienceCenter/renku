@@ -12,9 +12,11 @@ import play.api.Configuration
 class ResponseWorker @Inject()(
   override protected val queue: WorkerQueue,
   protected val graphProvider: GraphProvider,
+  override protected val dao: ResponseDAO,
   protected val config: ResponseWorkerConfiguration
 ) extends Base(
   queue = queue,
   graph = graphProvider.graph,
+  dao = dao,
   ec = config.getExecutionContext
 )

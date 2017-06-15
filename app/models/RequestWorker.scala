@@ -10,7 +10,7 @@ import ch.datascience.graph.elements.mutation.worker.{RequestWorker => Base}
 @Singleton
 class RequestWorker @Inject()(
   override protected val queue: WorkerQueue,
-override protected val dao: RequestDAO
+  override protected val dao: RequestDAO
 ) extends Base(
   queue = queue,
   dao = dao,
