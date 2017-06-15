@@ -2,6 +2,7 @@ package controllers
 
 import javax.inject.{Inject, Singleton}
 
+import akka.stream.scaladsl.{Keep, Source}
 import ch.datascience.graph.elements.detached.json.DetachedVertexFormat
 import ch.datascience.graph.elements.detached.{DetachedProperty, DetachedRichProperty, DetachedVertex}
 import ch.datascience.graph.elements.persisted.PersistedVertex
@@ -13,7 +14,8 @@ import play.api.libs.functional.syntax._
 import play.api.libs.json.{JsPath, Json, Writes}
 import play.api.mvc._
 
-import scala.concurrent.Future
+import scala.concurrent.duration.Duration
+import scala.concurrent.{Await, Future, Promise}
 
 /**
   * Created by johann on 13/06/17.
@@ -26,6 +28,33 @@ class VertexController @Inject()(
 ) extends Controller
   with JsonComponent
   with GraphTraversalComponent {
+
+  def index: Action[Unit] = Action.async(BodyParsers.parse.empty) { implicit request =>
+    val g = graphTraversalSource
+    val t = g.V()
+
+    val sourcePromise: Promise[Source[PersistedVertex, _]] = Promise[Source[PersistedVertex, _]]
+
+    Future {
+      graphExecutionContext.execute {
+        val p = Promise[Unit]
+
+        import scala.collection.JavaConverters._
+        val s1 = Source.fromIterator(() => t.toStream.iterator().asScala)
+        val s2 = s1.watchTermination()(Keep.right).mapMaterializedValue { f => f.andThen{ case _ => p.success(()) } }
+        val s3 = s2.mapAsync(1)(vertexReader.read)
+
+        sourcePromise.success(s3)
+
+        Await.ready(p.future, Duration.Inf)
+      }
+    }
+
+    sourcePromise.future.map { source =>
+      val jsonSource = source.map { vertex => Json.toJson(vertex)(vertexWrites) }
+      Ok.chunked(jsonSource)
+    }
+  }
 
   def findById(id: PersistedVertex#Id): Action[Unit] = Action.async(BodyParsers.parse.empty) { implicit request =>
     val g = graphTraversalSource
