@@ -17,11 +17,11 @@ trait PersistedEdge
 
   final type VertexReference = PersistedVertex#Id
 
-  final type PathType = EdgePath[VertexReference, Id]
+  final type PathType = EdgePath[Id]
 
   final type Prop = PersistedRecordProperty
 
-  final def path: EdgePath[VertexReference, Id] = EdgePath(from, id)
+  final def path: EdgePath[Id] = EdgePath(id)
 
 }
 
