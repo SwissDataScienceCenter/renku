@@ -5,5 +5,7 @@
 
 POST    /deploy                 controllers.DeployController.deploy
 POST    /undeploy               controllers.DeployController.undeploy
+GET     /status                 controllers.DeployController.status
+GET     /list                 controllers.DeployController.list
 POST    /:id/register           controllers.DeployController.register(id: Long)
 
