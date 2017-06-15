@@ -31,7 +31,7 @@ trait RequestLogComponent { this: JdbcProfileComponent with ImplicitsComponent w
 
   final class RichRequestsQuery[C[T] <: Seq[T]](self: Query[Requests, Event, C]) {
     def withResponse: Query[(Requests, Rep[Option[Responses]]), (Event, Option[Event]), C] = for {
-      (request, optResponse) <- self.joinLeft(responses)
+      (request, optResponse) <- self.joinLeft(responses) on (_.id === _.id)
     } yield (request, optResponse)
   }
 

@@ -17,7 +17,6 @@ trait GraphComponent {
     // Execute f
     try {
       val res = body
-      println("commit")
       tx.commit()
       res
     } catch {

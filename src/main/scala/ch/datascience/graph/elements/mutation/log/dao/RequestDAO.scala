@@ -23,8 +23,8 @@ class RequestDAO(
 
   def all(): Future[Seq[Event]] = db.run( dal.requests.result )
 
-  def findById(id: UUID): Future[Option[Event]] = {
-    db.run( dal.requests.findById(id).result.headOption )
+  def findByIdWithResponse(id: UUID): Future[Option[(Event, Option[Event])]] = {
+    db.run( dal.requests.findByIdWithResponse(id).result.headOption )
   }
 
   def add(event: JsValue): Future[Event] = {

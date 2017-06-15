@@ -27,6 +27,10 @@ class ResponseDAO(
     db.run( dal.responses.findById(id).result.headOption )
   }
 
+  def add(requestId: UUID, event: JsValue): Future[Event] = {
+    db.run( dal.responses.add(requestId, event) )
+  }
+
 //  def add(event: JsValue): Future[Event] = {
 //    db.run( dal.responses.add(event)(ec) )
 //  }
