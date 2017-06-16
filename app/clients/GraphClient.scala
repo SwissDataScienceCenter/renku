@@ -7,7 +7,7 @@ import play.api.libs.ws._
 
 import scala.concurrent.ExecutionContext
 
-class ItemClient @Inject() (implicit context: ExecutionContext, ws: WSClient, host: String) {
+class GraphClient @Inject() (implicit context: ExecutionContext, ws: WSClient, host: String) {
 
   def list = {
     val request: WSRequest = ws.url(host + "/item")

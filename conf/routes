@@ -3,9 +3,9 @@
 # https://www.playframework.com/documentation/latest/ScalaRouting
 # ~~~~
 
-POST    /deploy                 controllers.DeployController.deploy
-POST    /undeploy               controllers.DeployController.undeploy
-GET     /status                 controllers.DeployController.status
 GET     /list                 controllers.DeployController.list
-POST    /:id/register           controllers.DeployController.register(id: Long)
+POST    /deploy               controllers.DeployController.deploy
+POST    /:id/undeploy         controllers.DeployController.undeploy(id: String)
+GET     /:id/status           controllers.DeployController.status(id: String)
+POST    /:id/register         controllers.DeployController.register(id: String)
 

@@ -103,33 +103,28 @@ class DeployController @Inject()(config: play.api.Configuration, val playSession
     }
   }
 
-  def status = Action.async { implicit request => Future {
+  def status(id: String) = Action.async { implicit request => Future {
     val profile = getProfiles(request).head
-    request.queryString.get("id").map(s => s.head) match {
-      case Some(id) => {
-        val kconfig = new ConfigBuilder().build()
-        val client = new DefaultKubernetesClient(kconfig)
+    val kconfig = new ConfigBuilder().build()
+    val client = new DefaultKubernetesClient(kconfig)
 
-        val result: DeployResult = if (client.extensions.deployments.inNamespace(profile.getId).withName(id).get() == null) {
-          DeployResult(id, true, None, "un-deployed")
-        }
-        else if (client.services.inNamespace(profile.getId).withName(id).get() != null) {
-          val ip = client.services.inNamespace(profile.getId).withName(id).get
-            .getStatus.getLoadBalancer.getIngress.map(ingress => ingress.getIp).lastOption
-          val port = client.services.inNamespace(profile.getId).withName(id).get
-            .getSpec.getPorts.map(_port => _port.getPort).lastOption
-          ip.flatMap(_ip => port.map(_port =>
-            DeployResult(id, true, Some("http://" + _ip + ":" + _port), "ready")))
-            .getOrElse(DeployResult(id, true, None, "waiting for service"))
-        } else {
-          DeployResult(id, true, None, "deploying")
-        }
-
-        client.close()
-        Ok(Json.toJson(result))
-      }
-      case None => BadRequest("Missing parameter [id]")
+    val result: DeployResult = if (client.extensions.deployments.inNamespace(profile.getId).withName(id).get() == null) {
+      DeployResult(id, true, None, "un-deployed")
     }
+    else if (client.services.inNamespace(profile.getId).withName(id).get() != null) {
+      val ip = client.services.inNamespace(profile.getId).withName(id).get
+        .getStatus.getLoadBalancer.getIngress.map(ingress => ingress.getIp).lastOption
+      val port = client.services.inNamespace(profile.getId).withName(id).get
+        .getSpec.getPorts.map(_port => _port.getPort).lastOption
+      ip.flatMap(_ip => port.map(_port =>
+        DeployResult(id, true, Some("http://" + _ip + ":" + _port), "ready")))
+        .getOrElse(DeployResult(id, true, None, "waiting for service"))
+    } else {
+      DeployResult(id, true, None, "deploying")
+    }
+
+    client.close()
+    Ok(Json.toJson(result))
   }
   }
 
@@ -146,20 +141,19 @@ class DeployController @Inject()(config: play.api.Configuration, val playSession
     }
   }
 
-  def undeploy = Action.async(bodyParseJson[DeployRequest](deployRequestReads)) { implicit request => Future {
+  def undeploy(id: String) = Action.async { implicit request => Future {
     val profile = getProfiles(request).head
-    val deployRequest: DeployRequest = request.body
     val kconfig = new ConfigBuilder().build()
     val client = new DefaultKubernetesClient(kconfig)
-    client.extensions.deployments.inNamespace(profile.getId).delete()
-    client.extensions.replicaSets.inNamespace(profile.getId).delete()
-    client.services.inNamespace(profile.getId).delete()
+    client.extensions.deployments.inNamespace(profile.getId).withName(id).delete()
+    client.extensions.replicaSets.inNamespace(profile.getId).withName(id).delete()
+    client.services.inNamespace(profile.getId).withName(id).delete()
     client.close()
-    Ok(Json.toJson(DeployResult(deployRequest.deployId,true, None, "un-deployed")))
+    Ok(Json.toJson(DeployResult(id,true, None, "un-deployed")))
   }
   }
 
-  def register(id: Long) = Action { implicit request =>
+  def register(id: String) = Action { implicit request =>
       Ok("")
   }
 
