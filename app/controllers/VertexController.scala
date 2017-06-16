@@ -52,7 +52,8 @@ class VertexController @Inject()(
 
     sourcePromise.future.map { source =>
       val jsonSource = source.map { vertex => Json.toJson(vertex)(vertexWrites) }
-      Ok.chunked(jsonSource)
+      val strSource = jsonSource.map(x => s"${x.toString()}\r")
+      Ok.chunked(strSource).as("text/plain")
     }
   }
 

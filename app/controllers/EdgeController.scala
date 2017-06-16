@@ -54,7 +54,8 @@ class EdgeController @Inject()(
 
     sourcePromise.future.map { source =>
       val jsonSource = source.map { edge => Json.toJson(edge)(edgeWrites) }
-      Ok.chunked(jsonSource)
+      val strSource = jsonSource.map(x => s"${x.toString()}\r")
+      Ok.chunked(strSource).as("text/plain")
     }
   }
 
