@@ -3,5 +3,5 @@
 # https://www.playframework.com/documentation/latest/ScalaRouting
 # ~~~~
 
-GET     /read                           controllers.SwiftController.read_object
-POST    /write                          controllers.SwiftController.write_object
+GET     /read/:name                           controllers.SwiftController.read_object(name: String)
+POST    /write/:name                          controllers.SwiftController.write_object(name: String)

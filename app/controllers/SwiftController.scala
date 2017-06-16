@@ -11,9 +11,13 @@ import org.javaswift.joss.client.factory.{AccountConfig, AccountFactory}
 import org.javaswift.joss.headers.`object`.range.{FirstPartRange, LastPartRange, MidPartRange}
 import org.javaswift.joss.instructions.DownloadInstructions
 import org.javaswift.joss.model.Account
+import org.pac4j.core.profile.{CommonProfile, ProfileManager}
+import org.pac4j.play.PlayWebContext
+import org.pac4j.play.store.PlaySessionStore
 import play.api.libs.streams._
 import play.api.mvc._
 
+import scala.collection.JavaConversions.asScalaBuffer
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 import scala.concurrent.duration.FiniteDuration
@@ -21,7 +25,14 @@ import scala.util.matching.Regex
 
 
 @Singleton
-class SwiftController @Inject()(config: play.api.Configuration) extends Controller {
+class SwiftController @Inject()(config: play.api.Configuration, val playSessionStore: PlaySessionStore) extends Controller {
+
+  private def getProfiles(implicit request: RequestHeader): List[CommonProfile] = {
+    val webContext = new PlayWebContext(request, playSessionStore)
+    val profileManager = new ProfileManager[CommonProfile](webContext)
+    val profiles = profileManager.getAll(true)
+    asScalaBuffer(profiles).toList
+  }
 
   val swiftConfig = new AccountConfig()
   swiftConfig.setUsername(config.getString("swift.username").get)
@@ -32,46 +43,46 @@ class SwiftController @Inject()(config: play.api.Configuration) extends Controll
 
   val RangePattern: Regex = """bytes=(\d+)?-(\d+)?.*""".r
 
-  def read_object = Action.async { implicit request => Future {
-    val bucket = request.getQueryString("bucket")
-    val name = request.getQueryString("name")
+  def read_object(name: String) = Action.async { implicit request => Future {
+    val profile = getProfiles(request).head
     val CHUNK_SIZE = 100
-    val container = swiftAccount.getContainer(bucket.get)
-    val obj = container.getObject(name.get)
-    val instructions = new DownloadInstructions()
-    request.headers.get("Range").map {
-      case RangePattern(null, to) => instructions.setRange(new FirstPartRange(to.toInt))
-      case RangePattern(from, null) => instructions.setRange(new LastPartRange(from.toInt))
-      case RangePattern(from, to) => instructions.setRange(new MidPartRange(from.toInt, to.toInt))
-      case _ =>
+    val container = swiftAccount.getContainer(profile.getId)
+    if (container.exists() && container.getObject(name).exists()) {
+      val instructions = new DownloadInstructions()
+      request.headers.get("Range").map {
+        case RangePattern(null, to) => instructions.setRange(new FirstPartRange(to.toInt))
+        case RangePattern(from, null) => instructions.setRange(new LastPartRange(from.toInt))
+        case RangePattern(from, to) => instructions.setRange(new MidPartRange(from.toInt, to.toInt))
+        case _ =>
+      }
+      val data = container.getObject(name).downloadObjectAsInputStream(instructions)
+      val dataContent: Source[ByteString, _] = StreamConverters.fromInputStream(() => data, CHUNK_SIZE)
+
+      Ok.chunked(dataContent)
+    } else {
+      NotFound("File not found")
     }
-    val data = obj.downloadObjectAsInputStream(instructions)
-    val dataContent: Source[ByteString, _] = StreamConverters.fromInputStream(() => data, CHUNK_SIZE)
-
-    Ok.chunked(dataContent)
   }
   }
 
-  def write_object = Action(forward) { request =>
+  def write_object(name: String) = Action(forward(name)) { request =>
     request.body
   }
 
-  def forward: BodyParser[Result] = BodyParser { req =>
+  def forward(name: String): BodyParser[Result] = BodyParser { req =>
     Accumulator.source[ByteString].mapFuture { source =>
       Future {
+        val profile = getProfiles(req).head
         implicit val system = ActorSystem("Sys")
         implicit val materializer = ActorMaterializer()
-        val bucket = req.getQueryString("bucket")
-        val name = req.getQueryString("name")
-        val container = swiftAccount.getContainer(bucket.get)
+        val container = swiftAccount.getContainer(profile.getId)
         if (!container.exists()) container.create()
-        val obj = container.getObject(name.get)
+        val obj = container.getObject(name)
         val inputStream = source.runWith(
           StreamConverters.asInputStream(FiniteDuration(3, TimeUnit.SECONDS))
         )
         obj.uploadObject(inputStream)
-
-        Right(Ok("ok"))
+        Right(Created(""))
       }
     }
   }
