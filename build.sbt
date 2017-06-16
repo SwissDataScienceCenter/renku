@@ -18,11 +18,19 @@ libraryDependencies ++= Seq(
 
 resolvers ++= Seq(
   DefaultMavenRepository,
-  "SDSC Snapshots" at "https://internal.datascience.ch:8081/nexus/content/repositories/snapshots/",
   Resolver.mavenLocal
 )
 
-// Adds additional packages into Twirl
-//TwirlKeys.templateImports += "ch.datascience.controllers._"
-// Adds additional packages into conf/routes
-// play.sbt.routes.RoutesKeys.routesImport += "ch.datascience.binders._"
+import com.typesafe.sbt.packager.docker._
+
+dockerBaseImage := "openjdk:8-jre-alpine"
+//dockerBaseImage := "openjdk:8-jre"
+
+dockerCommands ~= { cmds => cmds.head +: ExecCmd("RUN", "apk", "add", "--no-cache", "bash") +: cmds.tail }
+// Replace entry point
+dockerCommands ~= { cmds =>
+  cmds.map {
+    case ExecCmd("ENTRYPOINT", args@_*) => ExecCmd("ENTRYPOINT", args ++ Seq("-Dconfig.resource=application.docker.conf"): _*)
+    case cmd => cmd
+  }
+}

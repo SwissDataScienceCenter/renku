@@ -2,6 +2,7 @@ import javax.inject.Inject
 
 import org.pac4j.play.filters.SecurityFilter
 import play.api.http.DefaultHttpFilters
+import play.filters.cors.CORSFilter
 import play.filters.headers.SecurityHeadersFilter
 import play.filters.hosts.AllowedHostsFilter
 
@@ -14,10 +15,12 @@ import play.filters.hosts.AllowedHostsFilter
  */
 class Filters @Inject() (
   allowedHostsFilter: AllowedHostsFilter,
+  corsFilter: CORSFilter,
   securityHeadersFilter: SecurityHeadersFilter,
   securityFilter: SecurityFilter
 ) extends DefaultHttpFilters(
-  allowedHostsFilter, 
+  allowedHostsFilter,
+  corsFilter,
   securityHeadersFilter,
   securityFilter
 )
