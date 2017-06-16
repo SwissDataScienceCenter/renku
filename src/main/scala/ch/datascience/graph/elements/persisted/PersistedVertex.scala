@@ -12,11 +12,11 @@ trait PersistedVertex extends Vertex with PersistedElement with HasId {
 
   final type Id = Constants.VertexId
 
-  final type PathType = VertexPath[Id]
+  final type PathType = VertexPath
 
   final type Prop = PersistedMultiRecordRichProperty
 
-  final def path: VertexPath[Id] = VertexPath(id)
+  final def path: VertexPath = VertexPath(id)
 
 }
 

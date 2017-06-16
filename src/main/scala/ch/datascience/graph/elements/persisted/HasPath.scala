@@ -1,18 +1,13 @@
 package ch.datascience.graph.elements.persisted
 
-///**
-//  * Basic trait for elements that have a path.
-//  * Usually children elements of the ones with an id.
-//  *
-//  * @tparam P path type for the Element
-//  */
+/** Basic trait for elements that have a path.
+  * Usually children elements of the ones with an id.
+  */
 trait HasPath {
 
   type PathType <: Path
 
-  /**
-    * The path
-    *
+  /** The path
     * @return the path
     */
   def path: PathType

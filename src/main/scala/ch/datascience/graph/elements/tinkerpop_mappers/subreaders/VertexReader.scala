@@ -2,8 +2,8 @@ package ch.datascience.graph.elements.tinkerpop_mappers.subreaders
 
 import ch.datascience.graph.elements.persisted.{PersistedVertex, PersistedVertexProperty, VertexPath}
 import ch.datascience.graph.elements.tinkerpop_mappers.extracted.ExtractedVertex
-import ch.datascience.graph.elements.tinkerpop_mappers.{Reader, ValueReader, VertexIdReader}
-import ch.datascience.graph.elements.{ListValue, SetValue, SingleValue}
+import ch.datascience.graph.elements.tinkerpop_mappers.{Reader, ValueReader, VertexIdReader, TypeIdReader}
+import ch.datascience.graph.elements.{ListValue, SetValue, SingleValue, tinkerpop_mappers}
 import ch.datascience.graph.scope.PropertyScope
 import ch.datascience.graph.types.Cardinality
 
@@ -17,8 +17,8 @@ case class VertexReader(scope: PropertyScope) extends Reader[ExtractedVertex, Pe
   def read(vertex: ExtractedVertex)(implicit ec: ExecutionContext): Future[PersistedVertex] = {
     for {
       id <- VertexIdReader.read(vertex.id)
-      //TODO: Read types
-      types = Set.empty[PersistedVertex#TypeId]
+      types = typePropertiesFilter(vertex.properties)
+      extractedTypes <- Future.traverse(types){ prop => TypeIdReader.read(prop.value.asInstanceOf[String]) }
       path = VertexPath(id)
       properties = userPropertiesFilter(vertex.properties)
       extractedProperties <- Future.traverse(properties){ prop => VertexPropertyReader(valueReader).read((path, prop)) }
@@ -35,7 +35,7 @@ case class VertexReader(scope: PropertyScope) extends Reader[ExtractedVertex, Pe
           case Cardinality.List => ListValue[PersistedVertexProperty](props.toList)
         }
       }
-      PersistedVertex(id, types, propertiesMapped)
+      PersistedVertex(id, extractedTypes.toSet, propertiesMapped)
     }
   }
 

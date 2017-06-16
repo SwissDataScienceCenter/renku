@@ -10,6 +10,10 @@ trait PersistedVertexProperty extends PersistedMultiRecordRichProperty {
 
   type Id = Constants.VertexPropertyId
 
+  final type PathType = VertexPropertyPath
+
+  final def path: VertexPropertyPath = VertexPropertyPath(parent, id)
+
 }
 
 object PersistedVertexProperty {
