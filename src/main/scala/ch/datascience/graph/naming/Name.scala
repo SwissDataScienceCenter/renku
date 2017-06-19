@@ -8,7 +8,7 @@ import scala.util.{Success, Try}
   */
 object Name {
 
-  lazy val namePattern: Regex = raw"([-A-Za-z0-9_/]+)".r
+  lazy val namePattern: Regex = raw"([-A-Za-z0-9_/.]+)".r
 
   def apply(name: String): String = {
     require(nameIsValid(name), s"Invalid name: '$name' (Pattern: $namePattern)")

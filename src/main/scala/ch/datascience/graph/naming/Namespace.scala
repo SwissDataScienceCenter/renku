@@ -8,7 +8,7 @@ import scala.util.{Success, Try}
   */
 object Namespace {
 
-  lazy val namespacePattern: Regex = raw"([-A-Za-z0-9_/]*)".r
+  lazy val namespacePattern: Regex = raw"([-A-Za-z0-9_/.]*)".r
 
   def apply(namespace: String): String = {
     require(namespaceIsValid(namespace), s"Invalid namespace: '$namespace' (Pattern: $namespacePattern)")
