@@ -26,7 +26,7 @@ object NewVertexFormat extends Format[NewVertex] {
   private[this] lazy val reader: Reads[NewVertex] = (
     (JsPath \ "temp_id").read[NewVertex#TempId] and
       JsPath.read[Vertex { type Prop = DetachedRichProperty }](vertexReader)
-  ).apply { (tempId, vertex) => NewVertex(tempId, vertex.types, vertex.properties) }
+  ) { (tempId, vertex) => NewVertex(tempId, vertex.types, vertex.properties) }
 
   private[this] lazy val vertexWriter: Writes[Vertex { type Prop = DetachedRichProperty }] = new VertexWrites[DetachedRichProperty]()(DetachedRichPropertyFormat)
 

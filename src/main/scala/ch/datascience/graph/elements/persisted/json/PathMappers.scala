@@ -1,7 +1,7 @@
 package ch.datascience.graph.elements.persisted.json
 
-import ch.datascience.graph.elements.persisted._
 import ch.datascience.graph.elements.json.KeyFormat
+import ch.datascience.graph.elements.persisted._
 import play.api.data.validation.ValidationError
 import play.api.libs.functional.syntax._
 import play.api.libs.json._

@@ -14,7 +14,7 @@ trait PersistedVertex extends Vertex with PersistedElement with HasId {
 
   final type PathType = VertexPath
 
-  final type Prop = PersistedMultiRecordRichProperty
+  final type Prop = PersistedVertexProperty
 
   final def path: VertexPath = VertexPath(id)
 
