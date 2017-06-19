@@ -3,15 +3,12 @@ package controllers
 import javax.inject.{Inject, Singleton}
 
 import akka.stream.scaladsl.{Keep, Source}
-import ch.datascience.graph.elements.detached.DetachedProperty
-import ch.datascience.graph.elements.detached.json.DetachedPropertyFormat
-import ch.datascience.graph.elements.json.EdgeLabelFormat
+import ch.datascience.graph.elements.persisted.json.PersistedEdgeFormat
 import ch.datascience.graph.elements.persisted.{PersistedEdge, PersistedVertex}
 import org.janusgraph.graphdb.relations.RelationIdentifier
 import persistence.graph.{GraphExecutionContextProvider, JanusGraphTraversalSourceProvider}
 import persistence.reader.EdgeReader
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
-import play.api.libs.functional.syntax._
 import play.api.libs.json._
 import play.api.mvc._
 
@@ -53,7 +50,7 @@ class EdgeController @Inject()(
     }
 
     sourcePromise.future.map { source =>
-      val jsonSource = source.map { edge => Json.toJson(edge)(edgeWrites) }
+      val jsonSource = source.map { edge => Json.toJson(edge)(PersistedEdgeFormat) }
       val strSource = jsonSource.map(x => s"${x.toString()}\r")
       Ok.chunked(strSource).as("text/plain")
     }
@@ -80,7 +77,7 @@ class EdgeController @Inject()(
       for {
         opt <- future
       } yield opt match {
-        case Some(vertex) => Ok(Json.toJson(vertex)(edgeWrites))
+        case Some(vertex) => Ok(Json.toJson(vertex)(PersistedEdgeFormat))
         case None => NotFound
       }
     }
@@ -113,23 +110,10 @@ class EdgeController @Inject()(
       for {
         edges <- future
       } yield {
-        val jsonEdges = Writes.seq(edgeWrites).writes(edges)
+        val jsonEdges = Writes.seq(PersistedEdgeFormat).writes(edges)
         Ok(JsObject(Seq("edges" -> jsonEdges)))
       }
     }
-  }
-
-  private[this] lazy val edgeWrites: Writes[PersistedEdge] = (
-    (JsPath \ "id").write[PersistedEdge#Id] and
-      (JsPath \ "label").write[PersistedEdge#Label](EdgeLabelFormat) and
-      (JsPath \ "from").write[PersistedEdge#VertexReference] and
-      (JsPath \ "to").write[PersistedEdge#VertexReference] and
-      (JsPath \ "properties").write[Iterable[DetachedProperty]](Writes.traversableWrites(DetachedPropertyFormat))
-    ){ edge =>
-    val props = edge.properties.mapValues { prop =>
-      DetachedProperty(prop.key, prop.value)
-    }
-    (edge.id, edge.label, edge.from, edge.to, props.values)
   }
 
 }
