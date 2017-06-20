@@ -1,5 +1,9 @@
 package clients
 import javax.inject.Inject
+
+import ch.datascience.graph.elements.mutation.Mutation
+import models.json._
+
 import scala.concurrent.Future
 import scala.concurrent.duration._
 import play.api.libs.json._
@@ -9,55 +13,27 @@ import scala.concurrent.ExecutionContext
 
 class GraphClient @Inject() (implicit context: ExecutionContext, ws: WSClient, host: String) {
 
-  def list = {
-    val request: WSRequest = ws.url(host + "/item")
-      .withHeaders("Accept" -> "application/models.json")
+  def status(id: String): Future[JsValue] = {
+    val request: WSRequest = ws.url(host + "/mutation/" + id)
+      .withHeaders("Accept" -> "application/json")
       .withRequestTimeout(10000.millis)
-    val futureResult: Future[String] = request.get().map {
+    val futureResult: Future[JsValue] = request.get().map {
       response =>
-        response.json.as[String] //you can also map it back to objects
+        response.json
     }
+    futureResult
   }
 
-  def create = {
+  def create(mutation: Mutation): Future[JsValue] = {
 
-    val item = Json.obj(
-      "key1" -> "value1",
-      "key2" -> "value2"
-    )
-    val request: WSRequest = ws.url(host + "/item")
-      .withHeaders("Accept" -> "application/models.json")
+    val request: WSRequest = ws.url(host + "/mutation")
+      .withHeaders("Accept" -> "application/json")
       .withRequestTimeout(10000.millis)
-    val futureResult: Future[String] = request.post(item).map {
+    val futureResult: Future[JsValue] = request.post(Json.toJson(mutation)).map {
       response =>
-        response.json.as[String] //you can also map it back to objects
+        response.json
     }
-  }
-
-  def update(id: Long) = {
-    val item = Json.obj(
-      "key1" -> "value1",
-      "key2" -> "value2"
-    )
-    val request: WSRequest = ws.url(host + "/item")
-      .withHeaders("Accept" -> "application/models.json")
-      .withRequestTimeout(10000.millis)
-      .withQueryString("id" -> id.toString)
-    val futureResult: Future[String] = request.post(item).map {
-      response =>
-        response.json.as[String] //you can also map it back to objects
-    }
-  }
-
-  def details(id: Long) = {
-    val request: WSRequest = ws.url(host + "/item")
-      .withHeaders("Accept" -> "application/models.json")
-      .withRequestTimeout(10000.millis)
-      .withQueryString("id" -> id.toString)
-    val futureResult: Future[String] = request.get().map {
-      response =>
-        response.json.as[String] //you can also map it back to objects
-    }
+    futureResult
   }
 }
 

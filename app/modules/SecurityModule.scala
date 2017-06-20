@@ -19,7 +19,7 @@ class SecurityModule(environment: Environment, configuration: Configuration) ext
   override def configure(): Unit = {
 
     val user_jwtAuthenticator = new JwtAuthenticator()
-    val user_key = Base64.getDecoder.decode(configuration.getString("publicKey").get)
+    val user_key = Base64.getDecoder.decode(configuration.getString("key.keycloak.public").get)
     val user_spec = new X509EncodedKeySpec(user_key)
     val user_kf = KeyFactory.getInstance("RSA")
     val user_pair = new KeyPair(user_kf.generatePublic(user_spec), null)

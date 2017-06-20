@@ -10,6 +10,7 @@ object DeployRequestMappers {
   def deployRequestReads: Reads[DeployRequest] = (
       (JsPath \ "id").read[String] and
       (JsPath \ "docker_image").read[String] and
-      (JsPath \ "network_port").readNullable[Int]
+      (JsPath \ "network_port").readNullable[Int] and
+      (JsPath \ "env").readNullable[Map[String, String]]
     )(DeployRequest.apply _)
 }
