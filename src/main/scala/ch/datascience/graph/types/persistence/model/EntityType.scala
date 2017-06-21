@@ -10,6 +10,7 @@ object EntityType {
   def apply(name: String): EntityType = name.toLowerCase match {
     case GraphDomain.name => GraphDomain
     case PropertyKey.name => PropertyKey
+    case SystemPropertyKey.name => SystemPropertyKey
     case NamedType.name => NamedType
     case EdgeLabel.name => EdgeLabel
   }
@@ -17,6 +18,8 @@ object EntityType {
   case object GraphDomain extends EntityType(name = "graph_domain")
 
   case object PropertyKey extends EntityType(name = "property_key")
+
+  case object SystemPropertyKey extends EntityType(name = "system_property_key")
 
   case object NamedType extends EntityType(name = "named_type")
 

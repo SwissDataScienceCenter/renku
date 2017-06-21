@@ -19,6 +19,9 @@ package object json {
   implicit lazy val PropertyKeyFormat: Format[RichPropertyKey] = PropertyKeyMappers.PropertyKeyFormat
   lazy val PropertyKeyRequestFormat: Format[(String, String, DataType, Cardinality)] = PropertyKeyMappers.PropertyKeyRequestFormat
 
+  implicit lazy val SystemPropertyKeyFormat: Format[SystemPropertyKey] = SystemPropertyKeyMappers.SystemPropertyKeyFormat
+  lazy val SystemPropertyKeyRequestFormat: Format[(String, DataType, Cardinality)] = SystemPropertyKeyMappers.SystemPropertyKeyRequestFormat
+
   implicit lazy val EdgeLabelFormat: Format[RichEdgeLabel] = EdgeLabelMappers.EdgeLabelFormat
   lazy val EdgeLabelRequestFormat: Format[(String, String, Multiplicity)] = EdgeLabelMappers.EdgeLabelRequestFormat
 

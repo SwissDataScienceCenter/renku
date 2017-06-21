@@ -18,3 +18,4 @@ class DatabaseStack(protected val dbConfig: DatabaseConfig[JdbcProfile])
     with PropertyKeyComponent
     with NamedTypeComponent
     with EdgeLabelComponent
+    with SystemPropertyKeyComponent

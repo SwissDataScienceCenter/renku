@@ -6,7 +6,7 @@ import ch.datascience.graph.types.Multiplicity
 import ch.datascience.graph.types.persistence.model.{EdgeLabel, GraphDomain, RichEdgeLabel}
 import slick.lifted._
 
-import scala.language.implicitConversions
+import scala.language.{higherKinds, implicitConversions}
 
 /**
   * Created by johann on 07/06/17.
