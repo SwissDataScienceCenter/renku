@@ -32,15 +32,14 @@ object PersistedEdge {
     label: PersistedEdge#Label,
     from: PersistedEdge#VertexReference,
     to: PersistedEdge#VertexReference,
-    types: Set[PersistedEdge#TypeId],
     properties: PersistedEdge#Properties
-  ): PersistedEdge = ImplPersistedEdge(id, label, from, to, types, properties)
+  ): PersistedEdge = ImplPersistedEdge(id, label, from, to, properties)
 
-  def unapply(edge: PersistedEdge): Option[(PersistedEdge#Id, PersistedEdge#Label, PersistedEdge#VertexReference, PersistedEdge#VertexReference, Set[PersistedEdge#TypeId], PersistedEdge#Properties)] = {
+  def unapply(edge: PersistedEdge): Option[(PersistedEdge#Id, PersistedEdge#Label, PersistedEdge#VertexReference, PersistedEdge#VertexReference, PersistedEdge#Properties)] = {
     if (edge eq null)
       None
     else
-      Some(edge.id, edge.label, edge.from, edge.to, edge.types, edge.properties)
+      Some(edge.id, edge.label, edge.from, edge.to, edge.properties)
   }
 
 }

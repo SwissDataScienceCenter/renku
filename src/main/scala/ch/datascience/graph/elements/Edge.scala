@@ -5,7 +5,7 @@ import ch.datascience.graph.Constants
 /**
   * Created by jeberle on 15.05.17.
   */
-trait Edge extends TypedRecord {
+trait Edge extends Record {
 
   type Label = Constants.EdgeLabel
 

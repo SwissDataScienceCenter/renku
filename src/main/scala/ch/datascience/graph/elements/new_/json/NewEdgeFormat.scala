@@ -15,7 +15,7 @@ object NewEdgeFormat extends Format[NewEdge] {
   def writes(edge: NewEdge): JsValue = edgeWriter.writes(edge)
 
   def reads(json: JsValue): JsResult[NewEdge] = edgeReader.reads(json).map { edge =>
-    NewEdge(edge.label, edge.from, edge.to, edge.types, edge.properties)
+    NewEdge(edge.label, edge.from, edge.to, edge.properties)
   }
 
   private[this] type VR = Either[NewEdge#NewVertexType#TempId, NewEdge#PersistedVertexType#Id]

@@ -9,6 +9,5 @@ private[detached] case class ImplDetachedEdge(
   label: DetachedEdge#Label,
   from: DetachedEdge#VertexReference,
   to: DetachedEdge#VertexReference,
-  types: Set[DetachedEdge#TypeId],
   properties: DetachedEdge#Properties
 ) extends DetachedEdge

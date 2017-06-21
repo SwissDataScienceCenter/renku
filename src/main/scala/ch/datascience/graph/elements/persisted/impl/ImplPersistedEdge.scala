@@ -10,6 +10,5 @@ private[persisted] case class ImplPersistedEdge(
   label: PersistedEdge#Label,
   from: PersistedEdge#VertexReference,
   to: PersistedEdge#VertexReference,
-  types: Set[PersistedEdge#TypeId],
   properties: PersistedEdge#Properties
 ) extends PersistedEdge

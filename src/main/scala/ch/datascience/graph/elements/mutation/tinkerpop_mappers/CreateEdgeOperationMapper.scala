@@ -28,16 +28,13 @@ case class CreateEdgeOperationMapper(idMap: Map[NewEdge#NewVertexType#TempId, Ne
       // Add Edge
       val t1 = s.V(to).as("to").V(from).addE(label).to("to")
 
-      // Add types
-      val t2 = edge.types.foldLeft(t1) { (t, typeId) => t.addType(typeId) }
-
       // Add properties
-      val t3 = edge.properties.values.foldLeft(t2) { (t, property) =>
+      val t2 = edge.properties.values.foldLeft(t1) { (t, property) =>
           t.addProperty(property)
       }
 
       // We don't iterate here
-      t3
+      t2
     }
 
   }
@@ -51,12 +48,6 @@ case class CreateEdgeOperationMapper(idMap: Map[NewEdge#NewVertexType#TempId, Ne
   }
 
   private[this] implicit class RichEdgeTraversal(t: GraphTraversal[Vertex, Edge]) {
-
-    def addType(typeId: NewEdge#TypeId): GraphTraversal[Vertex, Edge] = {
-      val value = TypeIdWriter.write(typeId)
-      val props = Seq.empty
-      t.property(Constants.TypeKey, value)
-    }
 
     def addProperty(prop: NewEdge#Prop): GraphTraversal[Vertex, Edge] = {
       val key = KeyWriter.write(prop.key)

@@ -15,9 +15,6 @@ case class EdgeReader(scope: PropertyScope) extends Reader[ExtractedEdge, Persis
   def read(edge: ExtractedEdge)(implicit ec: ExecutionContext): Future[PersistedEdge] = {
     for {
       id <- EdgeIdReader.read(edge.id)
-      //TODO: Read types
-      types = typePropertiesFilter(edge.properties)
-      extractedTypes <- Future.traverse(types){ prop => TypeIdReader.read(prop.value.asInstanceOf[String]) }
       label <- EdgeLabelReader.read(edge.label)
       from <- VertexIdReader.read(edge.from)
       to <- VertexIdReader.read(edge.to)
@@ -26,7 +23,7 @@ case class EdgeReader(scope: PropertyScope) extends Reader[ExtractedEdge, Persis
       extractedProperties <- Future.traverse(properties){ prop => LeafPropertyReader(valueReader).read((path, prop)) }
       propsByKey = (for { prop <- extractedProperties } yield prop.key -> prop).toMap
     } yield {
-      PersistedEdge(id, label, from, to, extractedTypes.toSet, propsByKey)
+      PersistedEdge(id, label, from, to, propsByKey)
     }
   }
 

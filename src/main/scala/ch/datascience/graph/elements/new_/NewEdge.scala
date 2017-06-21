@@ -26,15 +26,14 @@ object NewEdge {
     label: NewEdge#Label,
     from: NewEdge#VertexReference,
     to: NewEdge#VertexReference,
-    types: Set[NewEdge#TypeId],
     properties: NewEdge#Properties
-  ): NewEdge = ImplNewEdge(label, from, to, types, properties)
+  ): NewEdge = ImplNewEdge(label, from, to, properties)
 
-  def unapply(edge: NewEdge): Option[(NewEdge#Label, NewEdge#VertexReference, NewEdge#VertexReference, Set[NewEdge#TypeId], NewEdge#Properties)] = {
+  def unapply(edge: NewEdge): Option[(NewEdge#Label, NewEdge#VertexReference, NewEdge#VertexReference, NewEdge#Properties)] = {
     if (edge eq null)
       None
     else
-      Some(edge.label, edge.from, edge.to, edge.types, edge.properties)
+      Some(edge.label, edge.from, edge.to, edge.properties)
   }
 
 }

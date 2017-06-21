@@ -23,7 +23,7 @@ object PersistedEdgeFormat extends Format[PersistedEdge] {
   private[this] lazy val reader: Reads[PersistedEdge] = (
     (JsPath \ "id").read[PersistedEdge#Id] and
       JsPath.read[Edge { type VertexReference = VR; type Prop = PersistedRecordProperty }](edgeReader)
-    ) { (id, edge) => PersistedEdge(id, edge.label, edge.from, edge.to, edge.types, edge.properties) }
+    ) { (id, edge) => PersistedEdge(id, edge.label, edge.from, edge.to, edge.properties) }
 
   private[this] type VR = PersistedVertex#Id
 

@@ -9,6 +9,5 @@ private[new_] case class ImplNewEdge(
   label: NewEdge#Label,
   from: NewEdge#VertexReference,
   to: NewEdge#VertexReference,
-  types: Set[NewEdge#TypeId],
   properties: NewEdge#Properties
 ) extends NewEdge
