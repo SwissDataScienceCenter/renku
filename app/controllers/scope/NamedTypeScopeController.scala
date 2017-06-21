@@ -4,7 +4,7 @@ import javax.inject.Inject
 
 import ch.datascience.graph.Constants
 import ch.datascience.graph.naming.NamespaceAndName
-import ch.datascience.graph.scope.PropertyScope
+import ch.datascience.graph.scope.NamedTypeScope
 import ch.datascience.graph.scope.persistence.json._
 import ch.datascience.graph.types.json._
 import controllers.JsonComponent
@@ -19,9 +19,9 @@ import scala.util.Try
 /**
   * Created by johann on 11/05/17.
   */
-class PropertyScopeController @Inject()(protected val scopeLayer: ScopeBean, protected val orchestrator: OrchestrationLayer) extends Controller with JsonComponent {
+class NamedTypeScopeController @Inject()(protected val scopeLayer: ScopeBean, protected val orchestrator: OrchestrationLayer) extends Controller with JsonComponent {
 
-  protected val scope: PropertyScope = scopeLayer
+  protected val scope: NamedTypeScope = scopeLayer
 
 //  implicit val ec: ExecutionContext = play.api.libs.concurrent.Execution.defaultContext
 
@@ -37,33 +37,33 @@ class PropertyScopeController @Inject()(protected val scopeLayer: ScopeBean, pro
 //  }
 
   def index: Action[Unit] = Action.async(BodyParsers.parse.empty) { implicit request =>
-    val all = orchestrator.propertyKeys.all()
+    val all = orchestrator.namedTypes.all()
     for {
       seq <- all
     } yield {
-      val propertyKeys = for {
-        pk <- seq
-      } yield pk.toStandardPropertyKey
-      Ok(Json.toJson(propertyKeys)(Writes.seq(PropertyKeyFormat)))
+      val namedTypes = for {
+        nt <- seq
+      } yield nt.toStandardNamedType
+      Ok(Json.toJson(namedTypes)(Writes.seq(NamedTypeFormat)))
     }
   }
 
-  def getPropertyFor(namespace: String, name: String): Action[Unit] = Action.async(BodyParsers.parse.empty) { implicit request =>
+  def getNamedTypeFor(namespace: String, name: String): Action[Unit] = Action.async(BodyParsers.parse.empty) { implicit request =>
     val futureKey = Future.fromTry(Try( NamespaceAndName(namespace, name) ))
-    val futureProperty = futureKey flatMap { key => scope.getPropertyFor(key) }
-    futureProperty map {
-      case Some(property) => Ok(Json.toJson(property)(PropertyKeyFormat))
+    val futureNamedType = futureKey flatMap { key => scope.getNamedTypeFor(key) }
+    futureNamedType map {
+      case Some(namedType) => Ok(Json.toJson(namedType)(NamedTypeFormat))
       case None => NotFound
     } recover {
       case e: IllegalArgumentException => BadRequest(e.getMessage)
     }
   }
 
-  def getPropertiesFor: Action[Set[Constants.Key]] = Action.async(bodyParseJson[Set[Constants.Key]]) { implicit request =>
+  def getNamedTypesFor: Action[Set[Constants.TypeId]] = Action.async(bodyParseJson[Set[Constants.TypeId]]) { implicit request =>
     val keys = request.body
     for {
-      propertyKeys <- scope.getPropertiesFor(keys)
-    } yield Ok(Json.toJson(propertyKeys))
+      namedTypes <- scope.getNamedTypesFor(keys)
+    } yield Ok(Json.toJson(namedTypes)(FetchNamedTypesForFormats.ResponseFormat))
   }
 
 

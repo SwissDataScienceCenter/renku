@@ -39,8 +39,15 @@ POST    /management/edge_label                         controllers.management.Ed
 
 
 # PropertyScope controller
-GET     /scope/property                                controllers.scope.PropertyScopeController.getCachedProperties
+GET     /scope/property                                controllers.scope.PropertyScopeController.index
 
 GET     /scope/property/$namespace<[^/]*>/:name        controllers.scope.PropertyScopeController.getPropertyFor(namespace: String, name: String)
 
 POST    /scope/property                                controllers.scope.PropertyScopeController.getPropertiesFor
+
+# NamedTypeScope controller
+GET     /scope/type                                    controllers.scope.NamedTypeScopeController.index
+
+GET     /scope/type/$namespace<[^/]*>/:name            controllers.scope.NamedTypeScopeController.getNamedTypeFor(namespace: String, name: String)
+
+POST    /scope/type                                    controllers.scope.NamedTypeScopeController.getNamedTypesFor
