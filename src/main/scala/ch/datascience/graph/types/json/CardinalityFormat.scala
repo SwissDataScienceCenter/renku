@@ -4,9 +4,11 @@ import ch.datascience.graph.types.Cardinality
 import play.api.libs.json._
 
 /**
-  * Created by johann on 17/05/17.
+  * Created by johann on 19/06/17.
   */
-object CardinalityReads extends Reads[Cardinality] {
+object CardinalityFormat extends Format[Cardinality] {
+
+  def writes(cardinality: Cardinality): JsString = JsString(cardinality.name)
 
   def reads(json: JsValue): JsResult[Cardinality] = json.validate[String] flatMap { str =>
     try {

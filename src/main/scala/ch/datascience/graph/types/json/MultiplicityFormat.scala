@@ -4,10 +4,12 @@ import ch.datascience.graph.types.Multiplicity
 import play.api.libs.json._
 
 /**
-  * Created by johann on 07/06/17.
+  * Created by johann on 19/06/17.
   */
-object MultiplicityReads extends Reads[Multiplicity] {
+object MultiplicityFormat extends Format[Multiplicity] {
 
+  def writes(multiplicity: Multiplicity): JsString = JsString(multiplicity.name)
+  
   def reads(json: JsValue): JsResult[Multiplicity] = json.validate[String] flatMap { str =>
     try {
       JsSuccess(Multiplicity(str))

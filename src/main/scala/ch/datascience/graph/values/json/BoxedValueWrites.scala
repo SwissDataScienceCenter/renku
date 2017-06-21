@@ -3,7 +3,7 @@ package ch.datascience.graph.values.json
 import java.util.UUID
 
 import ch.datascience.graph.types.DataType
-import ch.datascience.graph.types.json.DataTypeWrites
+import ch.datascience.graph.types.json.DataTypeFormat
 import ch.datascience.graph.values._
 import play.api.libs.functional.syntax._
 import play.api.libs.json._
@@ -16,7 +16,7 @@ object BoxedValueWrites extends Writes[BoxedValue] {
   def writes(value: BoxedValue): JsValue = self.writes(value)
 
   private[this] lazy val self: Writes[BoxedValue] = (
-    (JsPath \ "data_type").write[DataType](DataTypeWrites) and
+    (JsPath \ "data_type").write[DataType](DataTypeFormat) and
       (JsPath \ "value").write[BoxedValue](valueWrites)
   ) { b: BoxedValue => (b.dataType, b) }
 

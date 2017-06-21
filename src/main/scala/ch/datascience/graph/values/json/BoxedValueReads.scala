@@ -1,7 +1,7 @@
 package ch.datascience.graph.values.json
 
 import ch.datascience.graph.types.DataType
-import ch.datascience.graph.types.json.DataTypeReads
+import ch.datascience.graph.types.json.DataTypeFormat
 import ch.datascience.graph.values.BoxedValue
 import play.api.libs.json._
 
@@ -14,7 +14,7 @@ object BoxedValueReads extends Reads[BoxedValue] {
 
   private[this] lazy val self: Reads[BoxedValue] = dataTypeReads.flatMap(valueReads)
 
-  private[this] lazy val dataTypeReads: Reads[DataType] = (JsPath \ "data_type").read[DataType](DataTypeReads)
+  private[this] lazy val dataTypeReads: Reads[DataType] = (JsPath \ "data_type").read[DataType](DataTypeFormat)
 
   private[this] def valueReads(dataType: DataType): Reads[BoxedValue] = (JsPath \ "value").read[BoxedValue](ValueReads(dataType))
 
