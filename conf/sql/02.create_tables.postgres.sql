@@ -48,6 +48,24 @@ references "GRAPH_DOMAINS"("UUID")
 on update NO ACTION
 on delete NO ACTION;
 
+create table "SYSTEM_PROPERTY_KEYS" (
+    "UUID" UUID not null,
+    "NAME" TEXT not null,
+    "DATA_TYPE" TEXT not null,
+    "CARDINALITY" TEXT not null,
+    primary key ("UUID")
+);
+
+create unique index "IDX_SYSTEM_PROPERTY_KEYS_NAME"
+on "SYSTEM_PROPERTY_KEYS" ("NAME");
+
+alter table "SYSTEM_PROPERTY_KEYS"
+add constraint "SYSTEM_PROPERTY_KEYS_FK_ENTITIES"
+foreign key("UUID")
+references "ENTITIES"("UUID")
+on update NO ACTION
+on delete NO ACTION;
+
 create table "EDGE_LABELS" (
     "UUID" UUID not null,
     "GRAPH_DOMAIN_ID" UUID not null,
@@ -182,6 +200,7 @@ on delete NO ACTION;
 grant all privileges on table "ENTITIES" to "graph-types";
 grant all privileges on table "GRAPH_DOMAINS" to "graph-types";
 grant all privileges on table "PROPERTY_KEYS" to "graph-types";
+grant all privileges on table "SYSTEM_PROPERTY_KEYS" to "graph-types";
 grant all privileges on table "EDGE_LABELS" to "graph-types";
 grant all privileges on table "NAMED_TYPES" to "graph-types";
 grant all privileges on table "NAMED_TYPES_HIERARCHY" to "graph-types";

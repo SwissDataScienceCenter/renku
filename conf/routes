@@ -37,6 +37,13 @@ GET     /management/edge_label/$namespace<[^/]*>/:name     controllers.managemen
 
 POST    /management/edge_label                         controllers.management.EdgeLabelController.create
 
+# SystemPropertyKey controller
+GET     /management/system_property_key                      controllers.management.SystemPropertyKeyController.index
+
+GET     /management/system_property_key/$idOrName<[^/]*>     controllers.management.SystemPropertyKeyController.findByIdOrName(idOrName: String)
+
+POST    /management/system_property_key                      controllers.management.SystemPropertyKeyController.create
+
 
 # PropertyScope controller
 GET     /scope/property                                controllers.scope.PropertyScopeController.index
