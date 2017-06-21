@@ -1,7 +1,7 @@
 package ch.datascience.graph.types.persistence.model
 
 import java.util.UUID
-
+import ch.datascience.graph.types.{NamedType => StandardNamedType}
 import ch.datascience.graph.naming.NamespaceAndName
 
 /**
@@ -17,6 +17,8 @@ class RichNamedType(
     with RichAbstractEntity[NamedType] {
 
   def key: NamespaceAndName = NamespaceAndName(graphDomain.namespace, name)
+
+  def toStandardNamedType: StandardNamedType = StandardNamedType(key, superTypes.keySet, properties.keySet)
 
 }
 
