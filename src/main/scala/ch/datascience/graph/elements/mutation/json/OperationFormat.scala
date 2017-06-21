@@ -2,6 +2,7 @@ package ch.datascience.graph.elements.mutation.json
 
 import ch.datascience.graph.elements.mutation.Operation
 import ch.datascience.graph.elements.mutation.create.{CreateEdgeOperation, CreateVertexOperation, CreateVertexPropertyOperation}
+import ch.datascience.graph.elements.mutation.update.UpdateVertexPropertyOperation
 import play.api.libs.json._
 
 /**
@@ -13,6 +14,7 @@ object OperationFormat extends Format[Operation] {
     case o: CreateVertexOperation => CreateVertexOperationFormat.writes(o)
     case o: CreateEdgeOperation => CreateEdgeOperationFormat.writes(o)
     case o: CreateVertexPropertyOperation => CreateVertexPropertyOperationFormat.writes(o)
+    case o: UpdateVertexPropertyOperation => UpdateVertexPropertyOperationFormat.writes(o)
 
     case _ => unsupportedOperationFormat.writes(op)
   }
@@ -24,6 +26,7 @@ object OperationFormat extends Format[Operation] {
     case "create_vertex" => CreateVertexOperationFormat.map { op => op: Operation }
     case "create_edge" => CreateEdgeOperationFormat.map { op => op: Operation }
     case "create_vertex_property" => CreateVertexPropertyOperationFormat.map { op => op: Operation }
+    case "update_vertex_property" => UpdateVertexPropertyOperationFormat.map { op => op: Operation }
 
     case t => unsupportedOperationFormat
   }
