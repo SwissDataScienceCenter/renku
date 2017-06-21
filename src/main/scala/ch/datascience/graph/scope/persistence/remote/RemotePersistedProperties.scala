@@ -3,7 +3,7 @@ package ch.datascience.graph.scope.persistence.remote
 import ch.datascience.graph.scope.persistence.PersistedProperties
 import ch.datascience.graph.scope.persistence.json.FetchPropertiesForResponseReads
 import ch.datascience.graph.types.PropertyKey
-import ch.datascience.graph.types.json.PropertyKeyReads
+import ch.datascience.graph.types.json.PropertyKeyFormat
 import play.api.libs.json._
 import play.api.libs.ws.WSResponse
 
@@ -66,12 +66,12 @@ trait RemotePersistedProperties extends PersistedProperties {
 
   protected def keyReads: Reads[PropertyKey#Key]
 
-  implicit lazy val propertyKeyReads = new PropertyKeyReads()(keyReads)
+  implicit lazy val propertyKeyReads = PropertyKeyFormat
 
   protected def cannotHandleResponse(response: WSResponse): Nothing = {
     throw new RuntimeException(s"Unexpected answer: HTTP${response.status} - ${response.statusText}, ${response.body}")
   }
 
-  protected implicit lazy val fetchPropertiesForResponseReads: Reads[Map[PropertyKey#Key, PropertyKey]] = new FetchPropertiesForResponseReads()(keyReads)
+  protected implicit lazy val fetchPropertiesForResponseReads: Reads[Map[PropertyKey#Key, PropertyKey]] = FetchPropertiesForResponseReads
 
 }

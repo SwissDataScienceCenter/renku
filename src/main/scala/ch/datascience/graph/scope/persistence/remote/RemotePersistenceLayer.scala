@@ -2,7 +2,7 @@ package ch.datascience.graph.scope.persistence.remote
 
 import ch.datascience.graph.scope.persistence.PersistenceLayer
 import ch.datascience.graph.types.PropertyKey
-import ch.datascience.graph.types.json.propKeyReads
+import ch.datascience.graph.types.json.propKeyFormat
 import play.api.libs.json.Reads
 
 import scala.concurrent.ExecutionContext
@@ -15,6 +15,6 @@ class RemotePersistenceLayer(val client: ConfiguredClient)(implicit val executio
     with RemotePersistedProperties
     with RemotePersistedNamedTypes {
 
-  protected def keyReads: Reads[PropertyKey#Key] = implicitly[Reads[PropertyKey#Key]]
+  protected def keyReads: Reads[PropertyKey#Key] = propKeyFormat
 
 }

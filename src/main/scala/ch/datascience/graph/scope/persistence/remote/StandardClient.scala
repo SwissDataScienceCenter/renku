@@ -2,6 +2,7 @@ package ch.datascience.graph.scope.persistence.remote
 
 import ch.datascience.graph.naming.NamespaceAndName
 import ch.datascience.graph.scope.persistence.json._
+import ch.datascience.graph.types.NamedType
 import play.api.libs.json.Json
 import play.api.libs.ws.{WSClient, WSResponse}
 
@@ -24,8 +25,16 @@ class StandardClient(val wsClient: WSClient, val baseUrl: String) extends Config
     request.post(body)
   }
 
-  def close(): Unit = {
-    wsClient.close()
+  def fetchNamedTypeForRemoteCall(key: NamedType#TypeId): Future[WSResponse] = {
+    val NamespaceAndName(namespace, name) = key
+    val request = wsClient.url(s"$baseUrl/scope/type/$namespace/$name")
+    request.get()
+  }
+
+  def fetchNamedTypesForRemoteCall(keys: Set[NamespaceAndName]): Future[WSResponse] = {
+    val request = wsClient.url(s"$baseUrl/scope/type")
+    val body = Json.toJson(keys)
+    request.post(body)
   }
 
 }
