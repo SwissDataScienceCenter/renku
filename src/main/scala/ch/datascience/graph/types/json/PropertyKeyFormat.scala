@@ -15,13 +15,13 @@ object PropertyKeyFormat extends Format[PropertyKey] {
 
   private[this] def writer: Writes[PropertyKey] = (
     (JsPath \ "key").write[PropertyKey#Key](propKeyFormat) and
-      (JsPath \ "dataType").write[DataType](DataTypeFormat) and
+      (JsPath \ "data_type").write[DataType](DataTypeFormat) and
       (JsPath \ "cardinality").write[Cardinality](CardinalityFormat)
     )(unlift(PropertyKey.unapply))
 
   private[this] def reader: Reads[PropertyKey] = (
     (JsPath \ "key").read[PropertyKey#Key](propKeyFormat) and
-      (JsPath \ "dataType").read[DataType](DataTypeFormat) and
+      (JsPath \ "data_type").read[DataType](DataTypeFormat) and
       (JsPath \ "cardinality").read[Cardinality](CardinalityFormat)
     )(PropertyKey.apply _)
 }
