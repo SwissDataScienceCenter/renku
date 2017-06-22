@@ -35,5 +35,12 @@
       "key": "deploy:deployment",
       "properties": ["deploy:id", "deploy:image", "deploy:time"]
     }
+  ],
+
+  "edge_labels": [
+    {
+      "key": "deploy:subprocess",
+      "multiplicity": "simple"
+    }
   ]
 }

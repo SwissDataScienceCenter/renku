@@ -38,24 +38,23 @@ object InitApplication {
     val endPromise: Promise[Unit] = Promise()
     endPromise.future.onComplete{ _ => client.close(); ActorSystem().terminate(); sys.exit() }
 
-//    val spkc = new SystemPropertyKeyClient(config.getString("graph.api.types"), client)
-//    val f = Future.traverse(typeInit.systemPropertyKeys){ pk => spkc.getOrCreateSystemPropertyKey(pk.name, pk.dataType, pk.cardinality) }
-//    f.onComplete(println)
-//    f.onComplete{ _ => endPromise.success(()) }
+    var currentFuture: Future[Any] = null
 
-    val f1 = waitForApi(client, config)
-    f1.onComplete(println)
+    currentFuture = waitForApi(client, config)
+    currentFuture.onComplete(println)
 
-    val f2 = f1.flatMap(_ => initGraphDomain(client, config, typeInit))
-    f2.onComplete(println)
-//    f1.onComplete{ _ => endPromise.success(()) }
+    currentFuture = currentFuture.flatMap{ _ => initSystemPropertyKeys(client, config, typeInit) }
+    currentFuture.onComplete(println)
 
-    val f3 = f2.flatMap(_ => initPropertyKeys(client, config, typeInit))
-    f3.onComplete(println)
+    currentFuture = currentFuture.flatMap(_ => initGraphDomain(client, config, typeInit))
+    currentFuture.onComplete(println)
 
-    val f4 = f3.flatMap(_ => initEdgeLabels(client, config, typeInit))
-    f4.onComplete(println)
-    f4.onComplete{ _ => endPromise.success(()) }
+    currentFuture = currentFuture.flatMap(_ => initPropertyKeys(client, config, typeInit))
+    currentFuture.onComplete(println)
+
+    currentFuture = currentFuture.flatMap(_ => initEdgeLabels(client, config, typeInit))
+    currentFuture.onComplete(println)
+    currentFuture.onComplete{ _ => endPromise.success(()) }
 
   }
 
