@@ -4,9 +4,9 @@
     title: "Graph Types Service"
     description: "Typesystem for the graph"
     version: "1.0.0"
-  host: "192.168.0.9"
+  host: "internal.datascience.ch"
   schemes: 
-    - "http"
+    - "https"
   basePath: "/api/types"
   produces: 
     - "application/json"

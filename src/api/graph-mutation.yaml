@@ -5,10 +5,10 @@ info:
   description: Mutate the graph
   version: "1.0.0"
 # the domain of the service
-host: 192.168.0.9
+host: internal.datascience.ch
 # array of all schemes that your API supports
 schemes:
-  - http
+  - https
 # will be prefixed to all paths
 basePath: /api/mutation
 produces:

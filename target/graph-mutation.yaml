@@ -4,9 +4,9 @@
     title: "Graph Mutation Service"
     description: "Mutate the graph"
     version: "1.0.0"
-  host: "192.168.0.9"
+  host: "internal.datascience.ch"
   schemes: 
-    - "http"
+    - "https"
   basePath: "/api/mutation"
   produces: 
     - "application/json"
