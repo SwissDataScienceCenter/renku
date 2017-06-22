@@ -70,11 +70,13 @@ object InitApplication {
 
     def check(): Future[Unit] = {
       println(s"Checking: $url")
+      val f = client.url(url).withRequestTimeout(30.seconds).get()
+      f.onComplete(println)
       for {
-        response <- client.url(url).withRequestTimeout(30.seconds).get()
+        response <- f
       } yield response.status match {
         case 200 => ()
-        case _ => throw new RuntimeException(response.statusText)
+        case _ => println(response); throw new RuntimeException(response.statusText)
       }
     }
 

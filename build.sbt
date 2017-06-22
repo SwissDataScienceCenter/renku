@@ -23,15 +23,12 @@ resolvers += DefaultMavenRepository
 //
 //libraryDependencies += "org.janusgraph" % "janusgraph-cassandra" % janusgraph_version //% Runtime
 //
-//import com.typesafe.sbt.packager.docker._
-//
-//// Allows for alpine images
-////enablePlugins(AshScriptPlugin)
-//
-//dockerBaseImage := "openjdk:8-jre-alpine"
+import com.typesafe.sbt.packager.docker._
+
+dockerBaseImage := "openjdk:8-jre-alpine"
 ////dockerBaseImage := "openjdk:8-jre"
 //
-//dockerCommands ~= { cmds => cmds.head +: ExecCmd("RUN", "apk", "add", "--no-cache", "bash") +: cmds.tail }
+dockerCommands ~= { cmds => cmds.head +: ExecCmd("RUN", "apk", "add", "--no-cache", "bash") +: cmds.tail }
 //// Replace entry point
 //dockerCommands ~= { cmds =>
 //  cmds.map {
