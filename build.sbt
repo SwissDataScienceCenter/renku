@@ -9,7 +9,7 @@ packagedArtifacts := Map.empty
 lazy val root = Project(
   id   = "graph-all",
   base = file(".")
-).aggregate(core, typesystem)
+).aggregate(core, typesystem, mutation, init)
 
 lazy val core = Project(
   id   = "graph-core",
@@ -88,6 +88,18 @@ lazy val navigationService = Project(
   core
 ).enablePlugins(
   PlayScala
+)
+
+lazy val init = Project(
+  id   = "graph-init",
+  base = file("graph-init")
+).settings(
+  commonSettings
+).dependsOn(
+  core,
+  typesystemPersistence
+).enablePlugins(
+  JavaAppPackaging
 )
 
 lazy val updateProjects = taskKey[Unit]("Execute the update script")
