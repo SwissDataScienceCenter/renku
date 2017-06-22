@@ -1,0 +1,39 @@
+{
+  "system_property_keys": [
+    {
+      "name": "type",
+      "data_type": "string",
+      "cardinality": "set"
+    }
+  ],
+
+  "property_keys": [
+    {
+      "key": "deploy:id",
+      "data_type": "string",
+      "cardinality": "single"
+    },
+    {
+      "key": "deploy:image",
+      "data_type": "string",
+      "cardinality": "single"
+    },
+    {
+      "key": "deploy:time",
+      "data_type": "long",
+      "cardinality": "single"
+    },
+    {
+      "key": "deploy:status",
+      "data_type": "string",
+      "cardinality": "set"
+    }
+  ],
+
+  "named_types": [
+    {
+      "key": "deploy:deployment",
+      "properties": ["deploy:id", "deploy:image", "deploy:time"]
+    }
+  ]
+}
