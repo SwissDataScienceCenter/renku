@@ -2,36 +2,36 @@ package controllers
 
 import javax.inject._
 
-import ch.datascience.graph.elements.SingleValue
-import ch.datascience.graph.elements.detached.DetachedRichProperty
+import ch.datascience.graph.elements.detached.{DetachedProperty, DetachedRichProperty}
 import ch.datascience.graph.elements.mutation.Mutation
-import ch.datascience.graph.elements.mutation.create.CreateVertexOperation
-import ch.datascience.graph.elements.new_.NewVertex
+import ch.datascience.graph.elements.mutation.create.{CreateVertexOperation, CreateVertexPropertyOperation}
+import ch.datascience.graph.elements.new_.{NewRichProperty, NewVertex}
+import ch.datascience.graph.elements.persisted.VertexPath
+import ch.datascience.graph.elements.{SetValue, SingleValue}
 import ch.datascience.graph.naming.NamespaceAndName
+import ch.datascience.graph.values._
 import clients.GraphClient
-import play.api.mvc._
-import io.fabric8.kubernetes.api.model.{EnvVarBuilder, NamespaceBuilder}
-import io.fabric8.kubernetes.api.model.extensions.DeploymentBuilder
-import io.fabric8.kubernetes.client.ConfigBuilder
-import io.fabric8.kubernetes.client.DefaultKubernetesClient
+import io.fabric8.kubernetes.api.model.{EnvVarBuilder, JobBuilder, NamespaceBuilder}
+import io.fabric8.kubernetes.client.{ConfigBuilder, DefaultKubernetesClient}
+import models.json._
 import models.{DeployRequest, DeployResult}
 import org.pac4j.core.profile.{CommonProfile, ProfileManager}
 import org.pac4j.play.PlayWebContext
 import org.pac4j.play.store.PlaySessionStore
-import models.json._
-import play.api.libs.json.Json
-import ch.datascience.graph.values._
+import play.api.libs.json.{JsValue, Json}
 import play.api.libs.ws.WSClient
+import play.api.mvc._
 
 import scala.collection.JavaConversions._
 import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.duration.Duration
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.duration._
+import scala.concurrent.{Await, ExecutionContext, Future}
+
 @Singleton
 class DeployController @Inject()(config: play.api.Configuration,
                                  val playSessionStore: PlaySessionStore,
                                  wsclient: WSClient)
-    extends Controller
+  extends Controller
     with JsonComponent {
 
   implicit lazy val ec: ExecutionContext =
@@ -42,7 +42,7 @@ class DeployController @Inject()(config: play.api.Configuration,
     .getOrElse("http://localhost:9000/api/mutation/")
 
   private def getProfiles(
-      implicit request: RequestHeader): List[CommonProfile] = {
+                           implicit request: RequestHeader): List[CommonProfile] = {
     val webContext = new PlayWebContext(request, playSessionStore)
     val profileManager = new ProfileManager[CommonProfile](webContext)
     val profiles = profileManager.getAll(true)
@@ -57,21 +57,23 @@ class DeployController @Inject()(config: play.api.Configuration,
       val client = new DefaultKubernetesClient(kubeconfig)
 
       if (client.extensions.deployments
-            .inNamespace(profile.getId)
-            .withName(deployRequest.deployId)
-            .get() != null) {
+        .inNamespace(profile.getId)
+        .withName(deployRequest.deployId)
+        .get() != null) {
         Future(
           Conflict(
             Json.toJson(
               DeployResult(deployRequest.deployId,
-                           false,
-                           None,
-                           "A deployment with this id already exists"))))
+                false,
+                Map(),
+                List(),
+                "A deployment with this id already exists"))))
       } else {
         val gc = new GraphClient
-        val did = NamespaceAndName("sdsc:deploy-id")
-        val dimage = NamespaceAndName("sdsc:deploy-image")
-        val dtime = NamespaceAndName("sdsc:deploy-time")
+        val did = NamespaceAndName("deploy:id")
+        val dimage = NamespaceAndName("deploy:image")
+        val dstatus = NamespaceAndName("deploy:status")
+        val dtime = NamespaceAndName("deploy:time")
         val mut = Mutation(
           Seq(CreateVertexOperation(NewVertex(
             1,
@@ -79,27 +81,32 @@ class DeployController @Inject()(config: play.api.Configuration,
             Map(
               did -> SingleValue(
                 DetachedRichProperty(did,
-                                     StringValue(deployRequest.deployId),
-                                     Map())),
+                  StringValue(deployRequest.deployId),
+                  Map())),
               dimage -> SingleValue(
                 DetachedRichProperty(dimage,
-                                     StringValue(deployRequest.dockerImage),
-                                     Map())),
-              dtime -> SingleValue(
-                DetachedRichProperty(dtime,
-                                     LongValue(System.currentTimeMillis),
-                                     Map()))
+                  StringValue(deployRequest.dockerImage),
+                  Map())),
+              dstatus -> SetValue(List(
+                DetachedRichProperty(dstatus,
+                  StringValue("submitted"),
+                  Map(dtime -> DetachedProperty(dtime, LongValue(System.currentTimeMillis)))
+                )
+              ))
             )
           ))))
-        val created = gc.create(mut)
 
-        for {
-          result <- created
-          _      <- Future(Thread.sleep(1000))
-          status <- gc.status((result \ "uuid").as[String])
-        } yield {
-          val id =
-            (status \ "response" \ "event" \ "results" \ 0 \ "id").as[Long]
+        def getVertexId(result: JsValue): Long = {
+          Thread.sleep(1000)
+          val status = gc.status((result \ "uuid").as[String])
+          val s = Await.result(status, 5.seconds)
+          if ((s \ "status").as[String].equals("completed"))
+            (s \ "response" \ "event" \ "results" \ 0 \ "id").as[Long]
+          else
+            getVertexId(result)
+        }
+
+        gc.create(mut).map(result => getVertexId(result)).map(id => {
 
           val ports = client
             .services()
@@ -115,8 +122,6 @@ class DeployController @Inject()(config: play.api.Configuration,
             if (ports.contains(p)) getAvailablePort else p
           }
 
-          val external = getAvailablePort
-
           val ns = new NamespaceBuilder().withNewMetadata
             .withName(profile.getId)
             .addToLabels("user", profile.getEmail.replace('@', '_'))
@@ -125,45 +130,73 @@ class DeployController @Inject()(config: play.api.Configuration,
 
           client.namespaces.withName(profile.getId).createOrReplace(ns)
 
-          val container = new DeploymentBuilder().withNewMetadata
-            .withName(deployRequest.deployId)
-            .endMetadata
-            .withNewSpec
-            .withReplicas(1)
-            .withNewTemplate
+          val job = new JobBuilder().withNewMetadata().withName(deployRequest.deployId).endMetadata
+            .withNewSpec()
+            .withActiveDeadlineSeconds(180L)
+            .withNewTemplate()
             .withNewMetadata
             .addToLabels("app", deployRequest.deployId)
             .endMetadata
             .withNewSpec
+            .withRestartPolicy("Never")
             .addNewContainer
             .withName(deployRequest.deployId)
             .withImage(deployRequest.dockerImage)
-            .withEnv(new EnvVarBuilder()
-              .withName("token")
-              .withValue(request.headers.get("Authorization").getOrElse(""))
-              .build)
+            .withNewLifecycle()
+            .withNewPostStart()
+            .withNewHttpGet()
+            .withHost("internal.datascience.ch").withNewPort(9002)
+            .withPath("event/" + id + "/poststart/?token=" + request.headers.get("Authorization").getOrElse("Bearer ").substring(7))
+            .endHttpGet()
+            .endPostStart()
+            .withNewPreStop()
+            .withNewHttpGet()
+            .withHost("internal.datascience.ch").withNewPort(9002)
+            .withPath("event/" + id + "/prestop/?token=" + request.headers.get("Authorization").getOrElse("Bearer ").substring(7))
+            .endHttpGet()
+            .endPreStop()
+            .endLifecycle()
 
-          val envs = deployRequest.env.getOrElse(Map()).put("graph_id", id.toString)
-          val containerEnv = envs.foldLeft(container){ case (ctn, (k, v)) => ctn.withEnv(new EnvVarBuilder()
-              .withName(k)
-              .withValue(v)
-              .build)
-          }
+
+          /* val container = new DeploymentBuilder().withNewMetadata
+             .withName(deployRequest.deployId)
+             .endMetadata
+             .withNewSpec
+             .withReplicas(1)
+             .withNewTemplate
+             .withNewMetadata
+             .addToLabels("app", deployRequest.deployId)
+             .endMetadata
+             .withNewSpec
+             .addNewContainer
+             .withName(deployRequest.deployId)
+             .withImage(deployRequest.dockerImage)*/
+
+          val envs = deployRequest.env.getOrElse(Map())
+
+          val containerEnv = job.withEnv(
+            (envs + ("SDSC_GRAPH_ID" -> id.toString, "SDSC_TOKEN" -> request.headers.get("Authorization").getOrElse(""))).map {
+              case (k, v) => new EnvVarBuilder().withName(k).withValue(v).build
+            }.toList)
 
           val c = deployRequest.networkPort match {
-            case Some(port) =>
-              containerEnv.addNewPort.withContainerPort(port).endPort
+            case Some(ports) =>
+              ports.foldLeft(containerEnv)((ctn, port) => ctn.addNewPort.withContainerPort(port).endPort)
             case _ => containerEnv
           }
 
           val deployment = c.endContainer.endSpec.endTemplate.endSpec.build()
 
-          client.extensions.deployments
+          /*client.extensions.deployments
             .inNamespace(profile.getId)
             .create(deployment)
+*/
+
+          client.extensions().jobs().inNamespace(profile.getId).create(deployment)
+
 
           if (deployRequest.networkPort.isDefined) {
-            client.services
+            val service = client.services
               .inNamespace(profile.getId)
               .createNew()
               .withNewMetadata
@@ -172,14 +205,17 @@ class DeployController @Inject()(config: play.api.Configuration,
               .withNewSpec
               .withType("LoadBalancer")
               .addToSelector("app", deployRequest.deployId)
-              .addNewPort
-              .withPort(external)
-              .withNewTargetPort
-              .withIntVal(deployRequest.networkPort.get)
-              .endTargetPort
-              .endPort
-              .endSpec
-              .done()
+            deployRequest.networkPort.get.foldLeft(service)((srv, port) => {
+              val external = getAvailablePort
+              srv.addNewPort
+                .withPort(external)
+                .withName("port" + external.toString)
+                .withNewTargetPort
+                .withIntVal(port)
+                .endTargetPort
+                .endPort
+            }
+            ).endSpec.done()
           }
 
           client.close()
@@ -187,10 +223,12 @@ class DeployController @Inject()(config: play.api.Configuration,
           Ok(
             Json.toJson(
               DeployResult(deployRequest.deployId,
-                           true,
-                           None,
-                           "deploying : " + id)))
+                true,
+                Map(),
+                List(deployRequest.dockerImage),
+                "deploying : " + id)))
         }
+        )
       }
   }
 
@@ -201,45 +239,50 @@ class DeployController @Inject()(config: play.api.Configuration,
       val client = new DefaultKubernetesClient(kconfig)
 
       val result: DeployResult =
-        if (client.extensions.deployments
+        if (client.extensions.jobs
+          .inNamespace(profile.getId)
+          .withName(id)
+          .get() == null) {
+          DeployResult(id, true, Map(), List(), "un-deployed")
+        }
+        else {
+          val images = client.extensions.jobs
+            .inNamespace(profile.getId)
+            .withName(id)
+            .get.getSpec.getTemplate.getSpec.getContainers
+            .map(container => container.getImage)
+
+          if (client.services
+            .inNamespace(profile.getId)
+            .withName(id)
+            .get() != null) {
+
+            val ip = client.services
               .inNamespace(profile.getId)
               .withName(id)
-              .get() == null) {
-          DeployResult(id, true, None, "un-deployed")
-        } else if (client.services
-                     .inNamespace(profile.getId)
-                     .withName(id)
-                     .get() != null) {
-          val ip = client.services
-            .inNamespace(profile.getId)
-            .withName(id)
-            .get
-            .getStatus
-            .getLoadBalancer
-            .getIngress
-            .map(ingress => ingress.getIp)
-            .lastOption
-          val port = client.services
-            .inNamespace(profile.getId)
-            .withName(id)
-            .get
-            .getSpec
-            .getPorts
-            .map(_port => _port.getPort)
-            .lastOption
-          ip.flatMap(
-              _ip =>
-                port.map(
-                  _port =>
-                    DeployResult(id,
-                                 true,
-                                 Some("http://" + _ip + ":" + _port),
-                                 "ready")))
-            .getOrElse(DeployResult(id, true, None, "waiting for service"))
-        } else {
-          DeployResult(id, true, None, "deploying")
-        }
+              .get
+              .getStatus
+              .getLoadBalancer
+              .getIngress
+              .map(ingress => ingress.getIp)
+              .lastOption
 
+            val endpoints = ip.map(_ip => client.services
+              .inNamespace(profile.getId)
+              .withName(id)
+              .get
+              .getSpec
+              .getPorts
+              .map(_port => (_port.getTargetPort.toString, _ip + ":" + _port.getPort)))
+
+            endpoints match {
+              case Some(l) => DeployResult(id, true, l.toMap, images.toList, "service ready")
+              case None => DeployResult(id, true, Map(), images.toList, "no service available")
+            }
+          } else {
+            DeployResult(id, true, Map(), images.toList, "deploying")
+          }
+        }
       client.close()
       Ok(Json.toJson(result))
     }
@@ -252,7 +295,7 @@ class DeployController @Inject()(config: play.api.Configuration,
       val client = new DefaultKubernetesClient(kconfig)
       Ok(
         Json.toJson(
-          client.extensions.deployments
+          client.extensions.jobs
             .inNamespace(profile.getId)
             .list
             .getItems
@@ -260,12 +303,11 @@ class DeployController @Inject()(config: play.api.Configuration,
               DeployResult(
                 deployment.getMetadata.getName,
                 true,
-                None,
-                "with image(s): " +
-                  deployment.getSpec.getTemplate.getSpec.getContainers
-                    .map(container => container.getImage)
-                    .mkString(", ")
-            ))
+                Map(),
+                deployment.getSpec.getTemplate.getSpec.getContainers
+                  .map(container => container.getImage).toList,
+                ""
+              ))
         ))
     }
   }
@@ -283,14 +325,47 @@ class DeployController @Inject()(config: play.api.Configuration,
         .inNamespace(profile.getId)
         .withName(id)
         .delete()
+      client.extensions.jobs
+        .inNamespace(profile.getId)
+        .withName(id)
+        .delete()
       client.services.inNamespace(profile.getId).withName(id).delete()
       client.close()
-      Ok(Json.toJson(DeployResult(id, true, None, "un-deployed")))
+      Ok(Json.toJson(DeployResult(id, true, Map(), List(), "un-deployed")))
     }
   }
 
   def register(id: String) = Action { implicit request =>
     Ok("")
+  }
+
+  def prestop(id: Long) = Action.async { implicit request =>
+    val gc = new GraphClient
+    val timekey = NamespaceAndName("deploy:time")
+    val reason = request.getQueryString("reason").getOrElse("completed")
+    val mut = Mutation(
+      Seq(CreateVertexPropertyOperation(NewRichProperty(
+        VertexPath(id), NamespaceAndName("deploy:status"), StringValue(reason), Map(timekey -> DetachedProperty(timekey, LongValue(System.currentTimeMillis)))
+      )))
+    )
+    gc.create(mut).map(s => {
+      println(s.toString())
+      Ok("")
+    })
+  }
+
+  def poststart(id: Long) = Action.async { implicit request =>
+    val gc = new GraphClient
+    val timekey = NamespaceAndName("deploy:time")
+    val mut = Mutation(
+      Seq(CreateVertexPropertyOperation(NewRichProperty(
+        VertexPath(id), NamespaceAndName("deploy:status"), StringValue("started"), Map(timekey -> DetachedProperty(timekey, LongValue(System.currentTimeMillis)))
+      )))
+    )
+    gc.create(mut).map(s => {
+      println(s.toString())
+      Ok("")
+    })
   }
 
 }
