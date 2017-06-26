@@ -9,6 +9,7 @@ scalaVersion := "2.11.8"
 
 libraryDependencies += filters
 libraryDependencies ++= Seq(
+  "ch.datascience" %% "graph-core" % "0.0.1-SNAPSHOT",
   cache,
   "org.pac4j" % "play-pac4j" % "3.0.0-RC2",
   "org.pac4j" % "pac4j-jwt" % "2.0.0-RC2",

@@ -3,6 +3,6 @@
 # https://www.playframework.com/documentation/latest/ScalaRouting
 # ~~~~
 
-GET      /authorize/storage/read/:id                  controllers.PermissionController.authorizeStorageRead(id: Long)
+POST      /authorize/storage/read                  controllers.PermissionController.authorizeStorageRead
 POST     /authorize/storage/write                     controllers.PermissionController.authorizeStorageWrite
 POST     /authorize/compute/execute                   controllers.PermissionController.authorizeComputeExecute
