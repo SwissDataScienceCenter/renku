@@ -2,6 +2,7 @@ package ch.datascience.graph.types.persistence.model
 
 import java.util.UUID
 
+import ch.datascience.graph.naming.NamespaceAndName
 import ch.datascience.graph.types.{Cardinality, DataType, Multiplicity}
 import play.api.libs.json.{Format, Reads}
 
@@ -24,5 +25,8 @@ package object json {
 
   implicit lazy val EdgeLabelFormat: Format[RichEdgeLabel] = EdgeLabelMappers.EdgeLabelFormat
   lazy val EdgeLabelRequestFormat: Format[(String, String, Multiplicity)] = EdgeLabelMappers.EdgeLabelRequestFormat
+
+  implicit lazy val NamedTypeFormat: Format[RichNamedType] = NamedTypeMappers.NamedTypeFormat
+  lazy val NamedTypeRequestFormat: Format[(String, String, Seq[NamespaceAndName], Seq[NamespaceAndName])] = NamedTypeMappers.NamedTypeRequestFormat
 
 }
