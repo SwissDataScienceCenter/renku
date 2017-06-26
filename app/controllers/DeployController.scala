@@ -73,11 +73,11 @@ class DeployController @Inject()(config: play.api.Configuration,
         val did = NamespaceAndName("deploy:id")
         val dimage = NamespaceAndName("deploy:image")
         val dstatus = NamespaceAndName("deploy:status")
-        val dtime = NamespaceAndName("deploy:time")
+        val dtime = NamespaceAndName("system:creation_time")
         val mut = Mutation(
           Seq(CreateVertexOperation(NewVertex(
             1,
-            Set.empty,
+            Set(NamespaceAndName("deploy:deployment")),
             Map(
               did -> SingleValue(
                 DetachedRichProperty(did,
@@ -273,7 +273,7 @@ class DeployController @Inject()(config: play.api.Configuration,
               .get
               .getSpec
               .getPorts
-              .map(_port => (_port.getTargetPort.toString, _ip + ":" + _port.getPort)))
+              .map(_port => (_port.getTargetPort.getIntVal.toString, _ip + ":" + _port.getPort)))
 
             endpoints match {
               case Some(l) => DeployResult(id, true, l.toMap, images.toList, "service ready")
@@ -341,7 +341,7 @@ class DeployController @Inject()(config: play.api.Configuration,
 
   def prestop(id: Long) = Action.async { implicit request =>
     val gc = new GraphClient
-    val timekey = NamespaceAndName("deploy:time")
+    val timekey = NamespaceAndName("system:creation_time")
     val reason = request.getQueryString("reason").getOrElse("completed")
     val mut = Mutation(
       Seq(CreateVertexPropertyOperation(NewRichProperty(
@@ -356,7 +356,7 @@ class DeployController @Inject()(config: play.api.Configuration,
 
   def poststart(id: Long) = Action.async { implicit request =>
     val gc = new GraphClient
-    val timekey = NamespaceAndName("deploy:time")
+    val timekey = NamespaceAndName("system:creation_time")
     val mut = Mutation(
       Seq(CreateVertexPropertyOperation(NewRichProperty(
         VertexPath(id), NamespaceAndName("deploy:status"), StringValue("started"), Map(timekey -> DetachedProperty(timekey, LongValue(System.currentTimeMillis)))
