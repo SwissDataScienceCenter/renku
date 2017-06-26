@@ -54,6 +54,10 @@ object InitApplication {
 
     currentFuture = currentFuture.flatMap(_ => initEdgeLabels(client, config, typeInit))
     currentFuture.onComplete(println)
+
+    currentFuture = currentFuture.flatMap(_ => initNamedTypes(client, config, typeInit))
+    currentFuture.onComplete(println)
+
     currentFuture.onComplete{ _ => endPromise.success(()) }
 
   }
@@ -117,6 +121,21 @@ object InitApplication {
     Future.traverse(typeInit.edgeLabels){ el =>
       val NamespaceAndName(namespace, name) = el.key
       elc.getOrCreateEdgeLabel(namespace, name, el.multiplicity)
+    }
+  }
+
+  def initNamedTypes(client: WSClient, config: Config, typeInit: TypeInit): Future[Seq[model.RichNamedType]] = {
+    val ntc = new NamedTypeClient(config.getString("graph.api.types"), client)
+    val promiseMap = (for {
+      namedType <- typeInit.namedTypes
+    } yield namedType.typeId -> Promise[model.RichNamedType]()).toMap
+
+    Future.traverse(typeInit.namedTypes){ nt =>
+      val NamespaceAndName(namespace, name) = nt.typeId
+      val superTypesDone = Future.traverse(nt.superTypes){ st => promiseMap(st).future }
+      val res = superTypesDone.flatMap{ _ => ntc.getOrCreateNamedType(namespace, name, nt.superTypes.toSeq, nt.properties.toSeq) }
+      res.onComplete{ result => promiseMap(nt.typeId).complete(result) }
+      res
     }
   }
 
