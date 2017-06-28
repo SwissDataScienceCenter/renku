@@ -1,0 +1,63 @@
+{
+  "system_property_keys": [
+    {
+      "name": "type",
+      "data_type": "string",
+      "cardinality": "set"
+    }
+  ],
+
+  "property_keys": [
+    {
+      "key": "system:creation_time",
+      "data_type": "long",
+      "cardinality": "single"
+    },
+    {
+      "key": "deploy:id",
+      "data_type": "string",
+      "cardinality": "single"
+    },
+    {
+      "key": "deploy:image",
+      "data_type": "string",
+      "cardinality": "single"
+    },
+    {
+      "key": "deploy:status",
+      "data_type": "string",
+      "cardinality": "set"
+    },
+    {
+      "key": "resource:file_name",
+      "data_type": "string",
+      "cardinality": "single"
+    }
+  ],
+
+  "named_types": [
+    {
+      "key": "deploy:deployment",
+      "properties": ["deploy:id", "deploy:image", "deploy:status"]
+    },
+    {
+      "key": "resource:file",
+      "properties": ["resource:file_name"]
+    }
+  ],
+
+  "edge_labels": [
+    {
+      "key": "deploy:subprocess",
+      "multiplicity": "simple"
+    },
+    {
+      "key": "resource:read",
+      "multiplicity": "simple"
+    },
+    {
+      "key": "resource:write",
+      "multiplicity": "simple"
+    }
+  ]
+}
