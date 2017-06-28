@@ -166,7 +166,7 @@ def write(filename, file):
         body = {
             'target': {
                 'type': 'resource',
-                'resource_id': id
+                'resource_id': resource_id
             }
         }
         if APP_ID:
