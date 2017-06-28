@@ -34,6 +34,11 @@ def setup():
         global TOKEN, APP_ID
         TOKEN = os.environ.get('SDSC_TOKEN', None)
         APP_ID = os.environ.get('SDSC_GRAPH_ID', None)
+        if APP_ID:
+            try:
+                APP_ID = int(APP_ID)
+            except ValueError:
+                APP_ID = None
         logger.info('Retrieved token: {}'.format(TOKEN))
         logger.info('Retrieved app_id: {}'.format(APP_ID))
         if TOKEN is None:
