@@ -1,0 +1,60 @@
+# Routes
+# This file defines all application routes (Higher priority routes first)
+# https://www.playframework.com/documentation/latest/ScalaRouting
+# ~~~~
+
+# GraphDomain controller
+GET     /management/graph_domain                      controllers.management.GraphDomainController.index
+
+GET     /management/graph_domain/$idOrName<[^/]*>     controllers.management.GraphDomainController.findByIdOrName(idOrName: String)
+
+POST    /management/graph_domain                      controllers.management.GraphDomainController.create
+
+# PropertyKey controller
+GET     /management/property_key                       controllers.management.PropertyKeyController.index
+
+GET     /management/property_key/:id                   controllers.management.PropertyKeyController.findById(id: String)
+
+GET     /management/property_key/$namespace<[^/]*>/:name     controllers.management.PropertyKeyController.findByNamespaceAndName(namespace: String, name: String)
+
+POST    /management/property_key                       controllers.management.PropertyKeyController.create
+
+# NamedType controller
+GET     /management/named_type                         controllers.management.NamedTypeController.index
+
+GET     /management/named_type/:id                     controllers.management.NamedTypeController.findById(id: String)
+
+GET     /management/named_type/$namespace<[^/]*>/:name     controllers.management.NamedTypeController.findByNamespaceAndName(namespace: String, name: String)
+
+POST    /management/named_type                         controllers.management.NamedTypeController.create
+
+# EdgeLabel controller
+GET     /management/edge_label                         controllers.management.EdgeLabelController.index
+
+GET     /management/edge_label/:id                     controllers.management.EdgeLabelController.findById(id: String)
+
+GET     /management/edge_label/$namespace<[^/]*>/:name     controllers.management.EdgeLabelController.findByNamespaceAndName(namespace: String, name: String)
+
+POST    /management/edge_label                         controllers.management.EdgeLabelController.create
+
+# SystemPropertyKey controller
+GET     /management/system_property_key                      controllers.management.SystemPropertyKeyController.index
+
+GET     /management/system_property_key/$idOrName<[^/]*>     controllers.management.SystemPropertyKeyController.findByIdOrName(idOrName: String)
+
+POST    /management/system_property_key                      controllers.management.SystemPropertyKeyController.create
+
+
+# PropertyScope controller
+GET     /scope/property                                controllers.scope.PropertyScopeController.index
+
+GET     /scope/property/$namespace<[^/]*>/:name        controllers.scope.PropertyScopeController.getPropertyFor(namespace: String, name: String)
+
+POST    /scope/property                                controllers.scope.PropertyScopeController.getPropertiesFor
+
+# NamedTypeScope controller
+GET     /scope/type                                    controllers.scope.NamedTypeScopeController.index
+
+GET     /scope/type/$namespace<[^/]*>/:name            controllers.scope.NamedTypeScopeController.getNamedTypeFor(namespace: String, name: String)
+
+POST    /scope/type                                    controllers.scope.NamedTypeScopeController.getNamedTypesFor
