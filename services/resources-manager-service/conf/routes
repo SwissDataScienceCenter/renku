@@ -1,0 +1,8 @@
+# Routes
+# This file defines all application routes (Higher priority routes first)
+# https://www.playframework.com/documentation/latest/ScalaRouting
+# ~~~~
+
+POST      /authorize/storage/read                  controllers.PermissionController.authorizeStorageRead
+POST     /authorize/storage/write                     controllers.PermissionController.authorizeStorageWrite
+POST     /authorize/compute/execute                   controllers.PermissionController.authorizeComputeExecute
