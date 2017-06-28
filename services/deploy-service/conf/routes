@@ -1,0 +1,12 @@
+# Routes
+# This file defines all application routes (Higher priority routes first)
+# https://www.playframework.com/documentation/latest/ScalaRouting
+# ~~~~
+
+GET     /list                 controllers.DeployController.list
+POST    /deploy               controllers.DeployController.deploy
+POST    /:id/undeploy         controllers.DeployController.undeploy(id: String)
+GET     /:id/status           controllers.DeployController.status(id: String)
+POST    /:id/register         controllers.DeployController.register(id: String)
+GET     /event/:id/prestop    controllers.DeployController.prestop(id: Long)
+GET     /event/:id/poststart  controllers.DeployController.poststart(id: Long)
