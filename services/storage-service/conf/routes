@@ -1,7 +1,0 @@
-# Routes
-# This file defines all application routes (Higher priority routes first)
-# https://www.playframework.com/documentation/latest/ScalaRouting
-# ~~~~
-
-GET     /read/:name                           controllers.SwiftController.read_object(name: String)
-POST    /write/:name                          controllers.SwiftController.write_object(name: String)
