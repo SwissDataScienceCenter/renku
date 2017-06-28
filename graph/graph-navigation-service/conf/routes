@@ -1,0 +1,16 @@
+# Routes
+# This file defines all application routes (Higher priority routes first)
+# https://www.playframework.com/documentation/latest/ScalaRouting
+# ~~~~
+
+# Vertex controller
+GET     /vertex                         controllers.VertexController.index
+
+GET     /vertex/:id                     controllers.VertexController.findById(id: Long)
+
+# Edge controller
+GET     /edge                           controllers.EdgeController.index
+
+GET     /edge/:id                       controllers.EdgeController.findById(id: String)
+
+GET     /vertex/:id/edges               controllers.EdgeController.incident(id: Long, direction: String ?= "both")
