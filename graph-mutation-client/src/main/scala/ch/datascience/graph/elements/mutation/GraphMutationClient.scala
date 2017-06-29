@@ -27,8 +27,11 @@ trait GraphMutationClient {
 
   final def wait(uuid: UUID, timeout: Duration)(implicit ec: ExecutionContext): Future[EventStatus] = timeout match {
     case d: FiniteDuration => wait(uuid, Some(d.fromNow))
-    case _ => Future {
+    case Duration.Inf => Future {
       Await.result(wait(uuid, None), timeout)
+    }
+    case _ => Future {
+      Await.result(wait(uuid, Some(10.seconds.fromNow)), timeout)
     }
   }
 

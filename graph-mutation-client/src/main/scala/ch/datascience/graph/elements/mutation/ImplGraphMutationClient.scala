@@ -36,7 +36,7 @@ class ImplGraphMutationClient(val baseUrl: String, context: ExecutionContext, ws
               Future { blocking ( Thread.sleep(1000) ) }.flatMap{ _ => wait(uuid, Some(t)) }
             else
               throw new TimeoutException()
-          case None => wait(uuid, None)
+          case None => Future { blocking ( Thread.sleep(1000) ) }.flatMap{ _ => wait(uuid, None) }
         }
       }
     } yield result
