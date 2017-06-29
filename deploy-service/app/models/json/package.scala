@@ -11,5 +11,7 @@ package object json {
 
   implicit lazy val deployRequestReads: Reads[DeployRequest] = DeployRequestMappers.deployRequestReads
   implicit lazy val deployResultWrite: Writes[DeployResult] = DeployResultMappers.deployResultWrite
+  implicit lazy val podStatusWrite: Writes[PodStatus] = DeployResultMappers.podStatusWrite
+  implicit lazy val jobStatusWrite: Writes[JobStatus] = DeployResultMappers.jobStatusWrite
   implicit lazy val mutationFormat: Format[Mutation] = MutationFormat
 }

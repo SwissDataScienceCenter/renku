@@ -4,17 +4,17 @@ import javax.inject._
 
 import ch.datascience.graph.elements.detached.{DetachedProperty, DetachedRichProperty}
 import ch.datascience.graph.elements.mutation.Mutation
-import ch.datascience.graph.elements.mutation.create.{CreateVertexOperation, CreateVertexPropertyOperation}
-import ch.datascience.graph.elements.new_.{NewRichProperty, NewVertex}
+import ch.datascience.graph.elements.mutation.create.{CreateEdgeOperation, CreateVertexOperation, CreateVertexPropertyOperation}
+import ch.datascience.graph.elements.new_.{NewEdge, NewRichProperty, NewVertex}
 import ch.datascience.graph.elements.persisted.VertexPath
 import ch.datascience.graph.elements.{SetValue, SingleValue}
 import ch.datascience.graph.naming.NamespaceAndName
 import ch.datascience.graph.values._
 import clients.GraphClient
-import io.fabric8.kubernetes.api.model.{EnvVarBuilder, JobBuilder, NamespaceBuilder}
+import io.fabric8.kubernetes.api.model.{ContainerBuilder, EnvVarBuilder, JobBuilder, NamespaceBuilder}
 import io.fabric8.kubernetes.client.{ConfigBuilder, DefaultKubernetesClient}
 import models.json._
-import models.{DeployRequest, DeployResult}
+import models.{DeployRequest, DeployResult, JobStatus, PodStatus}
 import org.pac4j.core.profile.{CommonProfile, ProfileManager}
 import org.pac4j.play.PlayWebContext
 import org.pac4j.play.store.PlaySessionStore
@@ -67,8 +67,17 @@ class DeployController @Inject()(config: play.api.Configuration,
                 false,
                 Map(),
                 List(),
-                "A deployment with this id already exists"))))
+                None,
+                None))))
       } else {
+        val edge = deployRequest.appId.map { appId =>
+          CreateEdgeOperation(NewEdge(
+            NamespaceAndName("deploy:subprocess"),
+            Right(appId),
+            Left(1),
+            Map()
+          ))
+        }
         val gc = new GraphClient
         val did = NamespaceAndName("deploy:id")
         val dimage = NamespaceAndName("deploy:image")
@@ -94,7 +103,7 @@ class DeployController @Inject()(config: play.api.Configuration,
                 )
               ))
             )
-          ))))
+          ))) ++ edge.toSeq)
 
         def getVertexId(result: JsValue): Long = {
           Thread.sleep(1000)
@@ -107,6 +116,7 @@ class DeployController @Inject()(config: play.api.Configuration,
         }
 
         gc.create(mut).map(result => getVertexId(result)).map(id => {
+          val id = 1000L
 
           val ports = client
             .services()
@@ -132,31 +142,16 @@ class DeployController @Inject()(config: play.api.Configuration,
 
           val job = new JobBuilder().withNewMetadata().withName(deployRequest.deployId).endMetadata
             .withNewSpec()
-            .withActiveDeadlineSeconds(180L)
+            .withActiveDeadlineSeconds(21600L)
             .withNewTemplate()
             .withNewMetadata
             .addToLabels("app", deployRequest.deployId)
             .endMetadata
             .withNewSpec
             .withRestartPolicy("Never")
-            .addNewContainer
+          val container = new ContainerBuilder()
             .withName(deployRequest.deployId)
             .withImage(deployRequest.dockerImage)
-            .withNewLifecycle()
-            .withNewPostStart()
-            .withNewHttpGet()
-            .withHost("internal.datascience.ch").withNewPort(9002)
-            .withPath("event/" + id + "/poststart/?token=" + request.headers.get("Authorization").getOrElse("Bearer ").substring(7))
-            .endHttpGet()
-            .endPostStart()
-            .withNewPreStop()
-            .withNewHttpGet()
-            .withHost("internal.datascience.ch").withNewPort(9002)
-            .withPath("event/" + id + "/prestop/?token=" + request.headers.get("Authorization").getOrElse("Bearer ").substring(7))
-            .endHttpGet()
-            .endPreStop()
-            .endLifecycle()
-
 
           /* val container = new DeploymentBuilder().withNewMetadata
              .withName(deployRequest.deployId)
@@ -174,7 +169,7 @@ class DeployController @Inject()(config: play.api.Configuration,
 
           val envs = deployRequest.env.getOrElse(Map())
 
-          val containerEnv = job.withEnv(
+          val containerEnv = container.withEnv(
             (envs + ("SDSC_GRAPH_ID" -> id.toString, "SDSC_TOKEN" -> request.headers.get("Authorization").getOrElse(""))).map {
               case (k, v) => new EnvVarBuilder().withName(k).withValue(v).build
             }.toList)
@@ -184,18 +179,18 @@ class DeployController @Inject()(config: play.api.Configuration,
               ports.foldLeft(containerEnv)((ctn, port) => ctn.addNewPort.withContainerPort(port).endPort)
             case _ => containerEnv
           }
+          val ctn = c.build()
 
-          val deployment = c.endContainer.endSpec.endTemplate.endSpec.build()
+          val deployment = job.withContainers(ctn).endSpec.endTemplate.endSpec.build()
 
           /*client.extensions.deployments
             .inNamespace(profile.getId)
             .create(deployment)
 */
-
           client.extensions().jobs().inNamespace(profile.getId).create(deployment)
 
 
-          if (deployRequest.networkPort.isDefined) {
+          if (deployRequest.networkPort.getOrElse(List()).nonEmpty) {
             val service = client.services
               .inNamespace(profile.getId)
               .createNew()
@@ -218,6 +213,17 @@ class DeployController @Inject()(config: play.api.Configuration,
             ).endSpec.done()
           }
 
+          val pod_status = client.pods().inNamespace(profile.getId).withLabel("app", deployRequest.deployId).list().getItems.map(pod =>
+            PodStatus(pod.getMetadata.getName, pod.getStatus.getPhase, Option(pod.getStatus.getReason), Option(pod.getStatus.getMessage)))
+
+          val job_status = Option(client.extensions.jobs.inNamespace(profile.getId).withName(deployRequest.deployId).get).map(job =>
+            JobStatus(Option(job.getStatus.getStartTime), Option(job.getStatus.getCompletionTime), Option(job.getStatus.getSucceeded).map {
+              _.toInt
+            }, Option(job.getStatus.getFailed).map {
+              _.toInt
+            }, pod_status.toList)
+          )
+
           client.close()
 
           Ok(
@@ -226,7 +232,8 @@ class DeployController @Inject()(config: play.api.Configuration,
                 true,
                 Map(),
                 List(deployRequest.dockerImage),
-                "deploying : " + id)))
+                job_status,
+                Some(id))))
         }
         )
       }
@@ -243,14 +250,23 @@ class DeployController @Inject()(config: play.api.Configuration,
           .inNamespace(profile.getId)
           .withName(id)
           .get() == null) {
-          DeployResult(id, true, Map(), List(), "un-deployed")
+          DeployResult(id, true, Map(), List(), None, None)
         }
+
+
         else {
           val images = client.extensions.jobs
             .inNamespace(profile.getId)
             .withName(id)
             .get.getSpec.getTemplate.getSpec.getContainers
             .map(container => container.getImage)
+
+          val pod_status = client.pods().inNamespace(profile.getId).withLabel("app", id).list().getItems.map(pod =>
+          PodStatus(pod.getMetadata.getName, pod.getStatus.getPhase, Option(pod.getStatus.getReason), Option(pod.getStatus.getMessage)))
+
+          val job_status = Option(client.extensions.jobs.inNamespace(profile.getId).withName(id).get).map(job =>
+            JobStatus(Option(job.getStatus.getStartTime), Option(job.getStatus.getCompletionTime), Option(job.getStatus.getSucceeded).map {_.toInt}, Option(job.getStatus.getFailed).map {_.toInt}, pod_status.toList)
+          )
 
           if (client.services
             .inNamespace(profile.getId)
@@ -276,11 +292,11 @@ class DeployController @Inject()(config: play.api.Configuration,
               .map(_port => (_port.getTargetPort.getIntVal.toString, _ip + ":" + _port.getPort)))
 
             endpoints match {
-              case Some(l) => DeployResult(id, true, l.toMap, images.toList, "service ready")
-              case None => DeployResult(id, true, Map(), images.toList, "no service available")
+              case Some(l) => DeployResult(id, true, l.toMap, images.toList, job_status, None)
+              case None => DeployResult(id, true, Map(), images.toList, job_status, None)
             }
           } else {
-            DeployResult(id, true, Map(), images.toList, "deploying")
+            DeployResult(id, true, Map(), images.toList, job_status, None)
           }
         }
       client.close()
@@ -299,16 +315,33 @@ class DeployController @Inject()(config: play.api.Configuration,
             .inNamespace(profile.getId)
             .list
             .getItems
-            .map(deployment =>
+            .map(job =>
               DeployResult(
-                deployment.getMetadata.getName,
+                job.getMetadata.getName,
                 true,
                 Map(),
-                deployment.getSpec.getTemplate.getSpec.getContainers
-                  .map(container => container.getImage).toList,
-                ""
+                job.getSpec.getTemplate.getSpec.getContainers.map(c => c.getImage).toList,
+                Some(JobStatus(Option(job.getStatus.getStartTime), Option(job.getStatus.getCompletionTime), Option(job.getStatus.getSucceeded).map {_.toInt}, Option(job.getStatus.getFailed).map {_.toInt}, List())),
+                None
               ))
         ))
+    }
+  }
+
+  def logs(id: String) = Action.async { implicit request =>
+    Future {
+      val profile = getProfiles(request).head
+      val kconfig = new ConfigBuilder().build()
+      val client = new DefaultKubernetesClient(kconfig)
+
+      val pods = client.pods().inNamespace(profile.getId).withLabel("app", id).list().getItems.map(pod =>
+        if (pod.getStatus.getPhase.equalsIgnoreCase("running"))
+          pod.getMetadata.getName -> client.pods().inNamespace(profile.getId).withName(pod.getMetadata.getName).getLog
+        else
+          pod.getMetadata.getName -> "No logs yet"
+      ).toMap
+
+      Ok(Json.toJson(pods))
     }
   }
 
@@ -330,12 +363,47 @@ class DeployController @Inject()(config: play.api.Configuration,
         .withName(id)
         .delete()
       client.services.inNamespace(profile.getId).withName(id).delete()
+      client.pods().inNamespace(profile.getId).withLabel("app", id).delete()
       client.close()
-      Ok(Json.toJson(DeployResult(id, true, Map(), List(), "un-deployed")))
+      Ok(Json.toJson(DeployResult(id, true, Map(), List(), None, None)))
     }
   }
 
   def register(id: String) = Action { implicit request =>
+    /*val edge = deployRequest.appId.map { appId =>
+      CreateEdgeOperation(NewEdge(
+        NamespaceAndName("deploy:execute"),
+        Right(appId),
+        Left(1),
+        Map()
+      ))
+    }
+    val gc = new GraphClient
+    val did = NamespaceAndName("deploy:id")
+    val dimage = NamespaceAndName("deploy:image")
+    val dstatus = NamespaceAndName("deploy:status")
+    val dtime = NamespaceAndName("system:creation_time")
+    val mut = Mutation(
+      Seq(CreateVertexOperation(NewVertex(
+        1,
+        Set(NamespaceAndName("deploy:deployment")),
+        Map(
+          did -> SingleValue(
+            DetachedRichProperty(did,
+              StringValue(deployRequest.deployId),
+              Map())),
+          dimage -> SingleValue(
+            DetachedRichProperty(dimage,
+              StringValue(deployRequest.dockerImage),
+              Map())),
+          dstatus -> SetValue(List(
+            DetachedRichProperty(dstatus,
+              StringValue("submitted"),
+              Map(dtime -> DetachedProperty(dtime, LongValue(System.currentTimeMillis)))
+            )
+          ))
+        )
+      ))) ++ edge.toSeq)*/
     Ok("")
   }
 

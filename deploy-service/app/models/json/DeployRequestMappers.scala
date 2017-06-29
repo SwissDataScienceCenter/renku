@@ -8,6 +8,7 @@ import play.api.libs.functional.syntax._
 object DeployRequestMappers {
 
   def deployRequestReads: Reads[DeployRequest] = (
+      (JsPath \ "app-id").readNullable[Long] and
       (JsPath \ "id").read[String] and
       (JsPath \ "docker_image").read[String] and
       (JsPath \ "network_port").readNullable[List[Int]] and
