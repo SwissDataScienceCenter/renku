@@ -6,9 +6,11 @@ version := "1.0-SNAPSHOT"
 lazy val root = (project in file(".")).enablePlugins(PlayScala)
 
 scalaVersion := "2.11.8"
+lazy val janusgraph_version = "0.1.0"
 
 libraryDependencies += filters
 libraryDependencies ++= Seq(
+  "org.janusgraph" % "janusgraph-cassandra" % janusgraph_version, //% Runtime
   "ch.datascience" %% "graph-core" % "0.0.1-SNAPSHOT",
   cache,
   "org.pac4j" % "play-pac4j" % "3.0.0-RC2",

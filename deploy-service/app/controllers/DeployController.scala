@@ -116,7 +116,6 @@ class DeployController @Inject()(config: play.api.Configuration,
         }
 
         gc.create(mut).map(result => getVertexId(result)).map(id => {
-          val id = 1000L
 
           val ports = client
             .services()
