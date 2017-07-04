@@ -12,10 +12,10 @@ trait GraphTraversalComponent { this: Controller =>
 
   protected def graphExecutionContextProvider: GraphExecutionContextProvider
 
-  protected def graphExecutionContext: GraphExecutionContext = graphExecutionContextProvider.get
+  implicit protected def graphExecutionContext: GraphExecutionContext = graphExecutionContextProvider.get
 
   protected def janusGraphTraversalSourceProvider: JanusGraphTraversalSourceProvider
 
-  protected def graphTraversalSource: GraphTraversalSource = janusGraphTraversalSourceProvider.get
+  implicit protected def graphTraversalSource: GraphTraversalSource = janusGraphTraversalSourceProvider.get
 
 }

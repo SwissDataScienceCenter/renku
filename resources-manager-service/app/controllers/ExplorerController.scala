@@ -13,6 +13,7 @@ import ch.datascience.graph.elements.persisted.PersistedVertex
 import ch.datascience.graph.elements.persisted.json.PersistedVertexFormat
 import ch.datascience.graph.naming.NamespaceAndName
 import ch.datascience.graph.values.StringValue
+import models.CreateBucketRequest
 import org.pac4j.core.profile.{CommonProfile, ProfileManager}
 import org.pac4j.play.PlayWebContext
 import org.pac4j.play.store.PlaySessionStore
@@ -34,34 +35,15 @@ import scala.concurrent.Future
   */
 @Singleton
 class ExplorerController @Inject()(config: play.api.Configuration,
-                                   val playSessionStore: PlaySessionStore,
+                                   implicit val playSessionStore: PlaySessionStore,
                                    wsclient: WSClient,
-                                   protected val graphExecutionContextProvider: GraphExecutionContextProvider,
-                                   protected val janusGraphTraversalSourceProvider: JanusGraphTraversalSourceProvider,
-                                   protected val vertexReader: VertexReader
-                                    ) extends Controller with JsonComponent with GraphTraversalComponent{
+                                   implicit val graphExecutionContextProvider: GraphExecutionContextProvider,
+                                   implicit val janusGraphTraversalSourceProvider: JanusGraphTraversalSourceProvider,
+                                   implicit val vertexReader: VertexReader
+                                    ) extends Controller with JsonComponent with GraphTraversalComponent with RequestHelper{
 
-  private def getProfiles(implicit request: RequestHeader): List[CommonProfile] = {
-    val webContext = new PlayWebContext(request, playSessionStore)
-    val profileManager = new ProfileManager[CommonProfile](webContext)
-    val profiles = profileManager.getAll(true)
-    asScalaBuffer(profiles).toList
-  }
 
-  private def getVertex(id: PersistedVertex#Id): Future[Option[PersistedVertex]] = {
-    val g = graphTraversalSource
-    val t = g.V(Long.box(id))
 
-    val future: Future[Option[PersistedVertex]] = graphExecutionContext.execute {
-      if (t.hasNext) {
-        val vertex = t.next()
-        vertexReader.read(vertex).map(Some.apply)
-      }
-      else
-        Future.successful( None )
-    }
-    future
-  }
 
   def bucketBackends = Action.async { implicit request =>
     Future(Ok(Json.toJson(List("swift"))))
@@ -126,16 +108,15 @@ class ExplorerController @Inject()(config: play.api.Configuration,
     }
   }
 
-  def bucketCreate = Action.async(bodyParseJson[NewVertex](NewVertexFormat)) {
+  def bucketCreate = Action.async(bodyParseJson[CreateBucketRequest](createBucketRequestReads)) {
     implicit request =>
-      val profile = getProfiles(request).head
-      val bucketVertex: NewVertex = request.body
-      val v = NewVertex(bucketVertex.tempId, bucketVertex.types, bucketVertex.properties +
-        (NamespaceAndName("system:owner") -> SingleValue(
-        DetachedRichProperty(NamespaceAndName("system:owner"),
+      val profile = getProfiles().head
+      val bucket: CreateBucketRequest = request.body
+      val v = NewVertex(1, Set(NamespaceAndName("resource:bucket")),Map(
+        NamespaceAndName("system:owner") -> SingleValue(
+        DetachedRichProperty(NamespaceAndName("system:owner"),  // TODO add more 
           StringValue(profile.getEmail),
           Map()))))
-      bucketVertex.properties
       val gc = GraphMutationClient(config
         .getString("graph.mutation.service.host")
         .getOrElse("http://localhost:9000/api/mutation/"),implicitly, wsclient)

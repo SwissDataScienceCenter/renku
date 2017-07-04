@@ -18,4 +18,5 @@ package object json {
   implicit lazy val mutationFormat: Format[Mutation] = MutationFormat
   implicit lazy val vertexFormat: Format[PersistedVertex] = PersistedVertexFormat
   implicit lazy val eventStatusFormat: Format[EventStatus] = EventStatusFormat
+  implicit lazy val createBucketRequestReads: Reads[CreateBucketRequest] = WriteResourceRequestMappers.createBucketRequestReads
 }
