@@ -3,7 +3,17 @@ organization := "ch.datascience"
 
 version := "1.0-SNAPSHOT"
 
-lazy val root = (project in file(".")).enablePlugins(PlayScala)
+
+lazy val root = Project(
+  id   = "resources-manager-client",
+  base = file(".")
+).dependsOn(
+  core,
+  mutationClient
+).enablePlugins(PlayScala)
+
+lazy val core = RootProject(file("../graph-core"))
+lazy val mutationClient = RootProject(file("../graph-mutation-client"))
 
 scalaVersion := "2.11.8"
 lazy val janusgraph_version = "0.1.0"
@@ -11,7 +21,6 @@ lazy val janusgraph_version = "0.1.0"
 libraryDependencies += filters
 libraryDependencies ++= Seq(
   "org.janusgraph" % "janusgraph-cassandra" % janusgraph_version, //% Runtime
-  "ch.datascience" %% "graph-core" % "0.0.1-SNAPSHOT",
   cache,
   "org.pac4j" % "play-pac4j" % "3.0.0-RC2",
   "org.pac4j" % "pac4j-jwt" % "2.0.0-RC2",

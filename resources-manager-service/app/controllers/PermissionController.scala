@@ -7,14 +7,12 @@ import javax.inject.{Inject, Singleton}
 
 import ch.datascience.graph.elements.SingleValue
 import ch.datascience.graph.elements.detached.DetachedRichProperty
-import ch.datascience.graph.elements.mutation.Mutation
+import ch.datascience.graph.elements.mutation.{ImplGraphMutationClient, Mutation}
 import ch.datascience.graph.elements.mutation.create.{CreateEdgeOperation, CreateVertexOperation}
 import ch.datascience.graph.elements.new_.{NewEdge, NewVertex}
 import ch.datascience.graph.elements.persisted.PersistedVertex
-import ch.datascience.graph.elements.persisted.json.PersistedVertexFormat
 import ch.datascience.graph.naming.NamespaceAndName
 import ch.datascience.graph.values.StringValue
-import clients.GraphClient
 import models.{ReadResourceRequest, WriteResourceRequest}
 import org.pac4j.core.profile.{CommonProfile, ProfileManager}
 
@@ -25,15 +23,14 @@ import org.pac4j.jwt.credentials.authenticator.JwtAuthenticator
 import org.pac4j.play.PlayWebContext
 import org.pac4j.play.store.PlaySessionStore
 import models.json._
+import org.apache.tinkerpop.gremlin.structure.Vertex
 import persistence.graph.{GraphExecutionContextProvider, JanusGraphTraversalSourceProvider}
 import persistence.reader.VertexReader
-
-import scala.concurrent.duration._
-import play.api.libs.json.{JsValue, Json}
+import play.api.libs.json.Json
 import play.api.libs.ws.WSClient
 import play.api.mvc.{Action, BodyParsers, Controller, RequestHeader}
 
-import scala.concurrent.{Await, Future}
+import scala.concurrent.Future
 
 /**
   * Created by jeberle on 25.04.17.
@@ -47,8 +44,7 @@ class PermissionController @Inject()(config: play.api.Configuration,
                                      protected val vertexReader: VertexReader
                                     ) extends Controller with JsonComponent with GraphTraversalComponent{
 
-  implicit val ws: WSClient = wsclient
-  implicit lazy val host: String = config
+  lazy val host: String = config
     .getString("graph.mutation.service.host")
     .getOrElse("http://localhost:9000/api/mutation/")
 
@@ -80,42 +76,43 @@ class PermissionController @Inject()(config: play.api.Configuration,
     perm_generator.generate(t ++ claims)
   }
 
-  private def getVertices(id: PersistedVertex#Id): scala.collection.Map[String, Future[PersistedVertex]] = {
+  private def getVertices(id: PersistedVertex#Id): Future[Map[String, PersistedVertex]] = {
     val g = graphTraversalSource
-    val t = g.V(Long.box(id)).as("data").outE("resource:stored_in").outV().as("bucket").select("data", "bucket")
+    val t = g.V(Long.box(id)).as("data").out("resource:stored_in").as("bucket").select[Vertex]("data", "bucket")
 
-    graphExecutionContext.execute {
-      import scala.collection.JavaConversions._
-      if (t.hasNext)
-        t.next().mapValues(vertexReader.read(_))
+    Future.sequence(graphExecutionContext.execute {
+      import collection.JavaConverters._
+      if (t.hasNext) {
+        val jmap: Map[String, Vertex] = t.next().asScala.toMap
+        for {
+          (key, value) <- jmap
+        } yield for {
+          vertex <- vertexReader.read(value)
+        } yield key -> vertex
+      }
       else
-        Map()
-    }
+        Seq.empty
+    }).map(_.toMap)
   }
 
 
-  def authorizeStorageRead = Action.async(bodyParseJson[ReadResourceRequest](readResourceRequestReads)) { implicit request =>
+  def fileRead = Action.async(bodyParseJson[ReadResourceRequest](readResourceRequestReads)) { implicit request =>
 
       val profile = getProfiles(request).head
       val _request: ReadResourceRequest = request.body
 
-      val verticies = getVertices(_request.resourceId)
-      verticies.get("bucket").flatMap(
-        b1 => verticies.get("data").map(d1 =>
-        b1.flatMap( b2 => d1.map( d2 => {
-          val b3 = b2.properties.get("storage:bucket").head.value.unboxAs[String]
-          val d3 = d2.properties.get("storage:filename").head.value.unboxAs[String]
+      for {verticies <- getVertices(_request.resourceId)} yield {
+        val  result = for {b1 <- verticies.get("bucket"); d1 <- verticies.get("data")} yield {
 
-          //TODO: validate its ACLs
+          val bucket = b1.properties.get("storage:bucket").head.value.unboxAs[String]
+          val name = d1.properties.get("storage:filename").head.value.unboxAs[String]
 
-          val token = getToken(implicitly, Map("sub" -> "StorageService", "bucket" -> b3, "name" -> d3, "scope" -> "storage:read"))
+              //TODO: validate its ACLs
+
+          val token = getToken(implicitly, Map("sub" -> "StorageService", "bucket" -> bucket, "name" -> name, "scope" -> "storage:read"))
 
           for (appId <- _request.appId) {
-            val gc = new GraphClient
-            val did = NamespaceAndName("deploy:id")
-            val dimage = NamespaceAndName("deploy:image")
-            val dstatus = NamespaceAndName("deploy:status")
-            val dtime = NamespaceAndName("system:creation_time")
+            val gc = new ImplGraphMutationClient(host, implicitly, wsclient)
             val mut = Mutation(
               Seq(CreateEdgeOperation(NewEdge(
                 NamespaceAndName("resource:read"),
@@ -123,18 +120,18 @@ class PermissionController @Inject()(config: play.api.Configuration,
                 Right(_request.resourceId),
                 Map()
               ))))
-            gc.create(mut)
+            gc.post(mut)
           }
 
-          //TODO: check mutation result
+              //TODO: check mutation result?
 
-          Ok("{\"permission_token\": \"" + token + "\"}")
+          Ok(Json.toJson(Map("permission_token" -> token)))
         }
-        )))).getOrElse(Future(NotFound))
-
+        result.getOrElse(NotFound)
+      }
   }
 
-  def authorizeStorageWrite = Action.async(bodyParseJson[WriteResourceRequest](writeResourceRequestReads)) { implicit request =>
+  def fileWrite = Action.async(bodyParseJson[WriteResourceRequest](writeResourceRequestReads)) { implicit request =>
 
       val profile = getProfiles(request).head
       val _request: WriteResourceRequest = request.body
@@ -153,27 +150,22 @@ class PermissionController @Inject()(config: play.api.Configuration,
               )
             )
           )
-        ))), Left(1), Future(filename.partition(c => c == '/')))
+        ))), Left(1), Future(Some(filename.partition(c => c == '/'))))
         case Right(id) =>
-          val verticies = getVertices(id)
           (None, Right(id),
-          verticies.get("bucket").flatMap(
-            b1 => verticies.get("data").map(d1 =>
-              b1.flatMap( b2 => d1.map( d2 => {
-                val b3 = b2.properties.get("storage:bucket").head.value.unboxAs[String]
-                val d3 = d2.properties.get("storage:filename").head.value.unboxAs[String]
-                (b3, d3)
-              })))).getOrElse(Future(("","")))
+            for {verticies <- getVertices(id)} yield {
+              for {b1 <- verticies.get("bucket"); d1 <- verticies.get("data")} yield {
 
-                 )
+                val bucket = b1.properties.get("storage:bucket").head.value.unboxAs[String]
+                val name = d1.properties.get("storage:filename").head.value.unboxAs[String]
+                (bucket, name)
+              }
+            }
+
+          )
       }
 
       val edge = _request.appId.map { appId =>
-
-        val did = NamespaceAndName("deploy:id")
-        val dimage = NamespaceAndName("deploy:image")
-        val dstatus = NamespaceAndName("deploy:status")
-        val dtime = NamespaceAndName("system:creation_time")
         CreateEdgeOperation(NewEdge(
             NamespaceAndName("resource:write"),
             Right(appId),
@@ -182,28 +174,22 @@ class PermissionController @Inject()(config: play.api.Configuration,
           ))
       }
 
-      val gc = new GraphClient
+      val gc = new ImplGraphMutationClient(host, implicitly, wsclient)
       val mut = Mutation(operation.toSeq ++ edge.toSeq)
 
-      def getVertexId(result: JsValue): Long = {
-        Thread.sleep(1000)
-        val status = gc.status((result \ "uuid").as[String])
-        val s = Await.result(status, 5.seconds)
-        if ((s \ "status").as[String].equals("completed"))
-          (s \ "response" \ "event" \ "results" \ 0 \ "id").as[Long]
-        else
-          getVertexId(result)
+      for {result <- gc.post(mut); status <- gc.wait(result.uuid); bn <- bucketAndName} yield {
+        bn match {
+          case Some((bucket, name)) => {
+            val token = getToken(implicitly, Map("sub" -> "StorageService", "bucket" -> bucket, "name" -> name, "scope" -> "storage:write"))
+            Ok(Json.toJson(Map("permission_token" -> Json.toJson(token), "status" -> Json.toJson(status))))
+          }
+          case None => NotFound
+        }
+
       }
-
-      gc.create(mut).map(result => {
-        val res_id = _request.target.fold(_ => getVertexId(result), id => id)
-        val token = getToken(implicitly, Map("sub" -> "StorageService", "user_id" -> profile.getId, "file_uuid" -> res_id.toString, "scope" -> "storage:write"))
-
-        Ok("{\"permission_token\": \"" + token + "\", \"id\": " + res_id + " }")
-      })
   }
 
-  def authorizeComputeExecute = Action.async(BodyParsers.parse.empty) { implicit request =>
+  def dockerExecute = Action.async(BodyParsers.parse.empty) { implicit request =>
     Future {
 
       val profile = getProfiles(request).head
@@ -213,7 +199,7 @@ class PermissionController @Inject()(config: play.api.Configuration,
 
       val token = getToken(implicitly, Map("sub" -> "DeployService", "user_id" -> profile.getId, "scope" -> "compute:execute"))
 
-      Ok("{\"permission_token\": \"" + token + "\"}")
+      Ok(Json.toJson(Map("permission_token" -> token)))
     }
   }
 
