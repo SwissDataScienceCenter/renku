@@ -1,5 +1,6 @@
 package controllers
 
+import java.util.UUID
 import javax.inject.{Inject, Singleton}
 
 import ch.datascience.graph.Constants
@@ -7,12 +8,13 @@ import ch.datascience.graph.elements.SingleValue
 import ch.datascience.graph.elements.detached.DetachedRichProperty
 import ch.datascience.graph.elements.mutation.{GraphMutationClient, ImplGraphMutationClient, Mutation}
 import ch.datascience.graph.elements.mutation.create.CreateVertexOperation
+import ch.datascience.graph.elements.new_.build.NewVertexBuilder
 import ch.datascience.graph.elements.new_.json.NewVertexFormat
 import ch.datascience.graph.elements.new_.NewVertex
 import ch.datascience.graph.elements.persisted.PersistedVertex
 import ch.datascience.graph.elements.persisted.json.PersistedVertexFormat
 import ch.datascience.graph.naming.NamespaceAndName
-import ch.datascience.graph.values.StringValue
+import ch.datascience.graph.values.{UuidValue, StringValue}
 import models.CreateBucketRequest
 import org.pac4j.core.profile.{CommonProfile, ProfileManager}
 import org.pac4j.play.PlayWebContext
@@ -112,11 +114,20 @@ class ExplorerController @Inject()(config: play.api.Configuration,
     implicit request =>
       val profile = getProfiles().head
       val bucket: CreateBucketRequest = request.body
-      val v = NewVertex(1, Set(NamespaceAndName("resource:bucket")),Map(
-        NamespaceAndName("system:owner") -> SingleValue(
-        DetachedRichProperty(NamespaceAndName("system:owner"),  // TODO add more 
-          StringValue(profile.getEmail),
-          Map()))))
+//      val v = NewVertex(1, Set(NamespaceAndName("resource:bucket")),Map(
+//        NamespaceAndName("system:owner") -> SingleValue(
+//        DetachedRichProperty(NamespaceAndName("system:owner"),  // TODO add more
+//          StringValue(profile.getEmail),
+//          Map()))))
+      val bucketBackendId = UUID.randomUUID()
+      // TODO: decide if we want to create the bucket at this point, might be dependent on backend
+      val b = new NewVertexBuilder()
+      b.addType(NamespaceAndName("resource:bucket"))
+        .addSingleProperty(NamespaceAndName("resource:bucket_backend_id"), UuidValue(bucketBackendId))
+        .addSingleProperty(NamespaceAndName("resource:bucket_name"), StringValue(bucket.name))
+        .addSingleProperty(NamespaceAndName("system:owner"), StringValue(profile.getEmail))
+      // TODO add more properties
+      val v = b.result()
       val gc = GraphMutationClient(config
         .getString("graph.mutation.service.host")
         .getOrElse("http://localhost:9000/api/mutation/"),implicitly, wsclient)

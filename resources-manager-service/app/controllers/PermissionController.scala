@@ -1,4 +1,7 @@
 package controllers
+
+import java.util.UUID
+
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import javax.inject.{Inject, Singleton}
 
@@ -47,7 +50,8 @@ class PermissionController @Inject()(implicit val config: play.api.Configuration
       for {verticies <- getVertices(_request.resourceId)} yield {
         val  result = for {b1 <- verticies.get("bucket"); d1 <- verticies.get("data")} yield {
 
-          val bucket = b1.properties.get("resource:bucket_name").head.value.unboxAs[String]
+//          val bucket = b1.properties.get("resource:bucket_name").head.value.unboxAs[String]
+          val bucket = b1.properties.get("resource:bucket_backend_id").head.value.unboxAs[UUID].toString
           val name = d1.properties.get("resource:file_name").head.value.unboxAs[String]
 
               //TODO: validate its ACLs
@@ -105,7 +109,8 @@ class PermissionController @Inject()(implicit val config: play.api.Configuration
                     Left(1),
                     Map()
                   ))
-                ), Left(1), Option(vertex.properties.get("resource:bucket_name").head.value.unboxAs[String], filename))
+//                ), Left(1), Option(vertex.properties.get("resource:bucket_name").head.value.unboxAs[String], filename))
+                ), Left(1), Option(vertex.properties.get("resource:bucket_backend_id").head.value.unboxAs[UUID].toString, filename))
               }
               else (List(), Left(0), None)
             case None => (List(), Left(0), None)
@@ -114,7 +119,8 @@ class PermissionController @Inject()(implicit val config: play.api.Configuration
           for {verticies <- getVertices(id)} yield {
             (List(), Right(id),
               for {b1 <- verticies.get("bucket"); d1 <- verticies.get("data")}
-                yield (b1.properties.get("resource:bucket_name").head.value.unboxAs[String],
+//                yield (b1.properties.get("resource:bucket_name").head.value.unboxAs[String],
+                yield (b1.properties.get("resource:bucket_backend_id").head.value.unboxAs[UUID].toString,
                   d1.properties.get("resource:file_name").head.value.unboxAs[String])
             )
             }
