@@ -3,14 +3,5 @@
 # https://www.playframework.com/documentation/latest/ScalaRouting
 # ~~~~
 
-GET      /explore/file/:id                        controllers.ExplorerController.fileMetadata(id: Long)
-POST     /explore/bucket                          controllers.ExplorerController.bucketCreate
-GET      /explore/bucket/list                     controllers.ExplorerController.bucketList
-GET      /explore/bucket/backends                 controllers.ExplorerController.bucketBackends
-GET      /explore/bucket/:id                      controllers.ExplorerController.bucketMetadata(id: Long)
-GET      /explore/bucket/:id/files                controllers.ExplorerController.fileList(id: Long)
 
-
-POST     /authorize/file/read                     controllers.PermissionController.fileRead
-POST     /authorize/file/write                    controllers.PermissionController.fileWrite
-POST     /authorize/docker/execute                controllers.PermissionController.dockerExecute
+POST     /authorize                     controllers.PermissionController.authorize
