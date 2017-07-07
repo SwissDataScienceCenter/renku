@@ -1,6 +1,0 @@
-[submodule "graph-mutation-service"]
-	path = graph-mutation-service
-	url = git@github.com:SwissDataScienceCenter/graph-mutation-service.git
-[submodule "graph-mutation-worker"]
-	path = graph-mutation-worker
-	url = git@github.com:SwissDataScienceCenter/graph-mutation-worker.git
