@@ -5,15 +5,16 @@ version := "1.0-SNAPSHOT"
 
 
 lazy val root = Project(
-  id   = "resources-manager-client",
+  id   = "resources-manager",
   base = file(".")
 ).dependsOn(
   core,
-  mutationClient
+  serviceCommons
 ).enablePlugins(PlayScala)
 
 lazy val core = RootProject(file("../graph-core"))
 lazy val mutationClient = RootProject(file("../graph-mutation-client"))
+lazy val serviceCommons = RootProject(file("../service-commons"))
 
 scalaVersion := "2.11.8"
 lazy val janusgraph_version = "0.1.0"

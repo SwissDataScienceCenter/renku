@@ -12,11 +12,11 @@ import ch.datascience.graph.elements.mutation.create.{CreateEdgeOperation, Creat
 import ch.datascience.graph.elements.new_.{NewEdge, NewVertex}
 import ch.datascience.graph.naming.NamespaceAndName
 import ch.datascience.graph.values.StringValue
-import models.{ReadResourceRequest, WriteResourceRequest}
+import ch.datascience.service.models.resources.ResourceRequest
 
 import scala.collection.JavaConversions._
 import org.pac4j.play.store.PlaySessionStore
-import models.json._
+import ch.datascience.service.models.resources.json._
 import persistence.graph.{GraphExecutionContextProvider, JanusGraphTraversalSourceProvider}
 import persistence.reader.VertexReader
 import play.api.libs.json.Json
@@ -42,10 +42,10 @@ class PermissionController @Inject()(implicit val config: play.api.Configuration
     .getOrElse("http://localhost:9000/api/mutation/")
 
 
-  def fileRead = Action.async(bodyParseJson[ReadResourceRequest](readResourceRequestReads)) { implicit request =>
+  def authorize = Action.async(bodyParseJson[ResourceRequest](resourceRequestFormat)) { implicit request =>
 
       val profile = getProfiles().head
-      val _request: ReadResourceRequest = request.body
+      val _request: ResourceRequest = request.body
 
       for {verticies <- getVertices(_request.resourceId)} yield {
         val  result = for {b1 <- verticies.get("bucket"); d1 <- verticies.get("data")} yield {
@@ -77,7 +77,7 @@ class PermissionController @Inject()(implicit val config: play.api.Configuration
         result.getOrElse(NotFound)
       }
   }
-
+/*
   def fileWrite = Action.async(bodyParseJson[WriteResourceRequest](writeResourceRequestReads)) { implicit request =>
 
       val profile = getProfiles().head
@@ -160,6 +160,6 @@ class PermissionController @Inject()(implicit val config: play.api.Configuration
 
       Ok(Json.toJson(Map("permission_token" -> token)))
     }
-  }
+  }*/
 
 }
