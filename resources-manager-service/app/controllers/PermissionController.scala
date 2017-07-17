@@ -1,27 +1,19 @@
 package controllers
 
-import java.util.UUID
-
-import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import javax.inject.{Inject, Singleton}
 
-import ch.datascience.graph.elements.SingleValue
-import ch.datascience.graph.elements.detached.DetachedRichProperty
-import ch.datascience.graph.elements.mutation.{ImplGraphMutationClient, Mutation}
-import ch.datascience.graph.elements.mutation.create.{CreateEdgeOperation, CreateVertexOperation}
-import ch.datascience.graph.elements.new_.{NewEdge, NewVertex}
-import ch.datascience.graph.naming.NamespaceAndName
-import ch.datascience.graph.values.StringValue
-import ch.datascience.service.models.resources.ResourceRequest
-
-import scala.collection.JavaConversions._
-import org.pac4j.play.store.PlaySessionStore
-import ch.datascience.service.models.resources.json._
+import authorization.{JWTVerifierProvider, TokenSignerProvider}
+import ch.datascience.service.models.resource.json._
+import ch.datascience.service.models.resource.{AccessRequest, ResourceScope}
+import ch.datascience.service.security.TokenFilterAction
+import ch.datascience.service.utils.ControllerWithBodyParseJson
+import com.auth0.jwt.interfaces.DecodedJWT
+import com.auth0.jwt.{JWT, JWTVerifier}
 import persistence.graph.{GraphExecutionContextProvider, JanusGraphTraversalSourceProvider}
 import persistence.reader.VertexReader
-import play.api.libs.json.Json
-import play.api.libs.ws.WSClient
-import play.api.mvc.{Action, BodyParsers, Controller}
+import play.api.libs.concurrent.Execution.Implicits.defaultContext
+import play.api.libs.json._
+import play.api.mvc._
 
 import scala.concurrent.Future
 
@@ -29,137 +21,80 @@ import scala.concurrent.Future
   * Created by jeberle on 25.04.17.
   */
 @Singleton
-class PermissionController @Inject()(implicit val config: play.api.Configuration,
-                                     implicit val playSessionStore: PlaySessionStore,
-                                     wsclient: WSClient,
-                                     implicit val graphExecutionContextProvider: GraphExecutionContextProvider,
-                                     implicit val janusGraphTraversalSourceProvider: JanusGraphTraversalSourceProvider,
-                                     implicit val vertexReader: VertexReader
-                                    ) extends Controller with JsonComponent with GraphTraversalComponent with RequestHelper {
+class PermissionController @Inject() (
+  verifierProvider: JWTVerifierProvider,
+  tokenSignerProvider: TokenSignerProvider,
+  implicit val graphExecutionContextProvider: GraphExecutionContextProvider,
+  implicit val janusGraphTraversalSourceProvider: JanusGraphTraversalSourceProvider,
+  implicit val vertexReader: VertexReader
+) extends Controller with ControllerWithBodyParseJson with GraphTraversalComponent {
 
-  lazy val host: String = config
-    .getString("graph.mutation.service.host")
-    .getOrElse("http://localhost:9000/api/mutation/")
+  val verifier: JWTVerifier = verifierProvider.get
 
+  def authorize: Action[AccessRequest] = TokenFilterAction(verifier).async(bodyParseJson[AccessRequest]) { implicit request =>
+    val accessRequest = request.body
+    val accessToken = request.token
 
-  def authorize = Action.async(bodyParseJson[ResourceRequest](resourceRequestFormat)) { implicit request =>
+    val futureScopes = accessRequest.permissionHolderId match {
+      case Some(resourceId) =>
+        authorizeAccess(accessToken, resourceId, accessRequest.scopes)
+      case None =>
+        authorizeGlobalAccess(accessToken, accessRequest.scopes)
+    }
 
-      val profile = getProfiles().head
-      val _request: ResourceRequest = request.body
-
-      for {verticies <- getVertices(_request.resourceId)} yield {
-        val  result = for {b1 <- verticies.get("bucket"); d1 <- verticies.get("data")} yield {
-
-//          val bucket = b1.properties.get("resource:bucket_name").head.value.unboxAs[String]
-          val bucket = b1.properties.get("resource:bucket_backend_id").head.value.unboxAs[UUID].toString
-          val name = d1.properties.get("resource:file_name").head.value.unboxAs[String]
-
-              //TODO: validate its ACLs
-
-          val token = getToken(Map("sub" -> "StorageService", "bucket" -> bucket, "name" -> name, "scope" -> "storage:read"))
-
-          for (appId <- _request.appId) {
-            val gc = new ImplGraphMutationClient(host, implicitly, wsclient)
-            val mut = Mutation(
-              Seq(CreateEdgeOperation(NewEdge(
-                NamespaceAndName("resource:read"),
-                Right(appId),
-                Right(_request.resourceId),
-                Map()
-              ))))
-            gc.post(mut)
-          }
-
-              //TODO: check mutation result?
-
-          Ok(Json.toJson(Map("permission_token" -> token)))
-        }
-        result.getOrElse(NotFound)
+    val futureToken = for {
+      scopes <- futureScopes
+    } yield {
+      val tokenBuilder = JWT.create()
+      tokenBuilder.withSubject(accessToken.getSubject)
+      for (resourceId <- accessRequest.permissionHolderId) {
+        tokenBuilder.withClaim("resource_id", Long.box(resourceId))
       }
-  }
-/*
-  def fileWrite = Action.async(bodyParseJson[WriteResourceRequest](writeResourceRequestReads)) { implicit request =>
+      tokenBuilder.withArrayClaim("resource_scope", scopes.toArray.map(_.toString))
+      tokenSignerProvider.addDefaultHeadersAndClaims(tokenBuilder)
+      tokenBuilder.sign(tokenSignerProvider.get)
+    }
 
-      val profile = getProfiles().head
-      val _request: WriteResourceRequest = request.body
-
-      //TODO: validate its ACLs
-
-    (_request.target match {
-        case Left(filename) =>
-          getVertex(_request.bucket).map {
-            case Some(vertex) =>
-              if (vertex.types.contains(NamespaceAndName("resource:bucket"))) {
-                (List(
-                  CreateVertexOperation(NewVertex(
-                    1,
-                    Set(NamespaceAndName("resource:file")),
-                    Map(
-                      NamespaceAndName("resource:file_name") -> SingleValue(
-                        DetachedRichProperty(NamespaceAndName("resource:file_name"),
-                          StringValue(filename),
-                          Map()
-                        )
-                      )
-                    )
-                  )),
-                  CreateEdgeOperation(NewEdge(
-                    NamespaceAndName("resource:stored_in"),
-                    Right(_request.bucket),
-                    Left(1),
-                    Map()
-                  ))
-//                ), Left(1), Option(vertex.properties.get("resource:bucket_name").head.value.unboxAs[String], filename))
-                ), Left(1), Option(vertex.properties.get("resource:bucket_backend_id").head.value.unboxAs[UUID].toString, filename))
-              }
-              else (List(), Left(0), None)
-            case None => (List(), Left(0), None)
-          }
-        case Right(id) =>
-          for {verticies <- getVertices(id)} yield {
-            (List(), Right(id),
-              for {b1 <- verticies.get("bucket"); d1 <- verticies.get("data")}
-//                yield (b1.properties.get("resource:bucket_name").head.value.unboxAs[String],
-                yield (b1.properties.get("resource:bucket_backend_id").head.value.unboxAs[UUID].toString,
-                  d1.properties.get("resource:file_name").head.value.unboxAs[String])
-            )
-            }
-
-      }).flatMap {
-      case (operations, resource_id, Some((bucket, name))) => {
-        val edge = _request.appId.map { appId =>
-          CreateEdgeOperation(NewEdge(
-            NamespaceAndName("resource:write"),
-            Right(appId),
-            resource_id,
-            Map()
-          ))
-        }
-
-        val gc = new ImplGraphMutationClient(host, implicitly, wsclient)
-        val mut = Mutation(operations ++ edge.toSeq)
-
-        for {result <- gc.post(mut); status <- gc.wait(result.uuid)} yield {
-          val token = getToken(Map("sub" -> "StorageService", "bucket" -> bucket, "name" -> name, "scope" -> "storage:write"))
-          Ok(Json.toJson(Map("permission_token" -> Json.toJson(token), "status" -> Json.toJson(status))))
-        }
-      }
-    case (operations, resource_id, None) => Future(NotFound)
+    for {
+      token <- futureToken
+    } yield {
+      Ok(Json.toJson(JsObject(Map("access_token" -> JsString(token)))))
     }
   }
 
-  def dockerExecute = Action.async(BodyParsers.parse.empty) { implicit request =>
-    Future {
+  def authorizeAccess(accessToken: DecodedJWT, resourceId: Long, scopes: Set[ResourceScope]): Future[Set[ResourceScope]] = {
+    val g = graphTraversalSource
+    val t = g.V(Long.box(resourceId))
 
-      val profile = getProfiles().head
-      // get the graph element corresponding to the ID of the resource
-
-      // validate its ACLs
-
-      val token = getToken(Map("sub" -> "DeployService", "user_id" -> profile.getId, "scope" -> "compute:execute"))
-
-      Ok(Json.toJson(Map("permission_token" -> token)))
+    val futureVertex = Future {
+      graphExecutionContext.execute {
+        if (t.hasNext)
+          Some(t.next())
+        else
+          None
+      }
     }
-  }*/
+
+    val futurePersistedVertex = futureVertex.flatMap {
+      case Some(v) => vertexReader.read(v).map(Some.apply)
+      case None => Future.successful(None)
+    }
+
+    val futureOptScopes = for {
+      optVertex <- futurePersistedVertex
+    } yield for {
+      vertex <- optVertex
+    } yield {
+      // TODO: perform ABAC here, using vertex, accessToken and scopes
+      scopes
+    }
+
+    futureOptScopes.map(_.getOrElse(Set.empty))
+  }
+
+  def authorizeGlobalAccess(accessToken: DecodedJWT, scopes: Set[ResourceScope]): Future[Set[ResourceScope]] = {
+    // TODO: perform ABAC, using accessToken and scopes
+    Future.successful(scopes)
+  }
 
 }

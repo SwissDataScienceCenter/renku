@@ -16,11 +16,9 @@ import play.filters.hosts.AllowedHostsFilter
 class Filters @Inject() (
   allowedHostsFilter: AllowedHostsFilter,
   corsFilter: CORSFilter,
-  securityHeadersFilter: SecurityHeadersFilter,
-  securityFilter: SecurityFilter
+  securityHeadersFilter: SecurityHeadersFilter
 ) extends DefaultHttpFilters(
   allowedHostsFilter,
   corsFilter,
-  securityHeadersFilter,
-  securityFilter
+  securityHeadersFilter
 )
