@@ -51,6 +51,9 @@ class PermissionController @Inject() (
         tokenBuilder.withClaim("resource_id", Long.box(resourceId))
       }
       tokenBuilder.withArrayClaim("resource_scope", scopes.toArray.map(_.toString))
+      for (extraClaims <- accessRequest.extraClaims) {
+        tokenBuilder.withClaim("resource_extras", extraClaims.toString())
+      }
       tokenSignerProvider.addDefaultHeadersAndClaims(tokenBuilder)
       tokenBuilder.sign(tokenSignerProvider.get)
     }
