@@ -26,34 +26,6 @@ import scala.concurrent.Future
   */
 trait RequestHelper { this: Controller =>
 
-  def getProfiles()(implicit request: RequestHeader, playSessionStore: PlaySessionStore): List[CommonProfile] = {
-    val webContext = new PlayWebContext(request, playSessionStore)
-    val profileManager = new ProfileManager[CommonProfile](webContext)
-    val profiles = profileManager.getAll(true)
-    asScalaBuffer(profiles).toList
-  }
-
-  def getToken(claims: Map[String, AnyRef])(implicit request: RequestHeader, config: play.api.Configuration) = {
-    val public_key = Base64.getDecoder.decode(config.getString("key.resource-manager.public").get)
-    val private_key = Base64.getDecoder.decode(config.getString("key.resource-manager.private").get)
-    val public_spec = new X509EncodedKeySpec(public_key)
-    val private_spec = new PKCS8EncodedKeySpec(private_key)
-    val kf = KeyFactory.getInstance("RSA")
-    val key_pair = new KeyPair(kf.generatePublic(public_spec), kf.generatePrivate(private_spec))
-    val signConfig = new RSASignatureConfiguration(key_pair)
-    val perm_generator = new JwtGenerator(signConfig)
-
-    val user_jwtAuthenticator = new JwtAuthenticator()
-    val user_key = Base64.getDecoder.decode(config.getString("key.keycloak.public").get)
-    val user_spec = new X509EncodedKeySpec(user_key)
-    val user_kf = KeyFactory.getInstance("RSA")
-    val user_pair = new KeyPair(user_kf.generatePublic(user_spec), null)
-    user_jwtAuthenticator.addSignatureConfiguration(new RSASignatureConfiguration(user_pair))
-    val t = user_jwtAuthenticator.validateTokenAndGetClaims(request.headers.get("Authorization").getOrElse(""))
-    t.putAll(claims.asJava)
-    perm_generator.generate(t)
-  }
-
   def getVertices(id: PersistedVertex#Id)(implicit graphExecutionContext: GraphExecutionContext,
                   graphTraversalSource: GraphTraversalSource, vertexReader: VertexReader
                  ): Future[Map[String, PersistedVertex]] = {
