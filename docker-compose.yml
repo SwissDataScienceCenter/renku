@@ -93,3 +93,10 @@ services:
     ports:
     - "9000"
     restart: on-failure
+  apispec:
+    # prepare static site with `make apispec` beforehand
+    image: nginx:mainline-alpine
+    volumes:
+    - ./target/apispec:/usr/share/nginx/html:ro
+    ports:
+    - "9001:80"
