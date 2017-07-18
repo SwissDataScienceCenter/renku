@@ -1,7 +1,7 @@
 name := """resources-manager-service"""
 organization := "ch.datascience"
 
-version := "1.0-SNAPSHOT"
+version := "0.1.0-SNAPSHOT"
 
 
 lazy val root = Project(
