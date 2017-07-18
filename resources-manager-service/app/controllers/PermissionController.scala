@@ -4,7 +4,7 @@ import javax.inject.{Inject, Singleton}
 
 import authorization.{JWTVerifierProvider, TokenSignerProvider}
 import ch.datascience.service.models.resource.json._
-import ch.datascience.service.models.resource.{AccessRequest, ResourceScope}
+import ch.datascience.service.models.resource.{AccessRequest, ScopeQualifier}
 import ch.datascience.service.security.TokenFilterAction
 import ch.datascience.service.utils.ControllerWithBodyParseJson
 import com.auth0.jwt.interfaces.DecodedJWT
@@ -37,9 +37,9 @@ class PermissionController @Inject() (
 
     val futureScopes = accessRequest.permissionHolderId match {
       case Some(resourceId) =>
-        authorizeAccess(accessToken, resourceId, accessRequest.scopes)
+        authorizeAccess(accessToken, resourceId, accessRequest.scope)
       case None =>
-        authorizeGlobalAccess(accessToken, accessRequest.scopes)
+        authorizeGlobalAccess(accessToken, accessRequest.scope)
     }
 
     val futureToken = for {
@@ -62,7 +62,7 @@ class PermissionController @Inject() (
     }
   }
 
-  def authorizeAccess(accessToken: DecodedJWT, resourceId: Long, scopes: Set[ResourceScope]): Future[Set[ResourceScope]] = {
+  def authorizeAccess(accessToken: DecodedJWT, resourceId: Long, scopes: Set[ScopeQualifier]): Future[Set[ScopeQualifier]] = {
     val g = graphTraversalSource
     val t = g.V(Long.box(resourceId))
 
@@ -92,7 +92,7 @@ class PermissionController @Inject() (
     futureOptScopes.map(_.getOrElse(Set.empty))
   }
 
-  def authorizeGlobalAccess(accessToken: DecodedJWT, scopes: Set[ResourceScope]): Future[Set[ResourceScope]] = {
+  def authorizeGlobalAccess(accessToken: DecodedJWT, scopes: Set[ScopeQualifier]): Future[Set[ScopeQualifier]] = {
     // TODO: perform ABAC, using accessToken and scopes
     Future.successful(scopes)
   }

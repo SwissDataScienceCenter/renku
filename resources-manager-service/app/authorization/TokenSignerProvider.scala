@@ -19,8 +19,7 @@ class TokenSignerProvider @Inject() (configuration: Configuration) {
 
   def addDefaultHeadersAndClaims(builder: JWTCreator.Builder): JWTCreator.Builder = {
     builder.withIssuer("resources-manager").withIssuedAt(java.util.Date.from(Instant.now()))
-
-    ???
+    // TODO: expires at
   }
 
   private[this] lazy val algorithm: Algorithm = {
