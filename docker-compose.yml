@@ -68,8 +68,8 @@ services:
     restart: on-failure
   graph-navigation:
     image: graph-navigation-service:$PLATFORM_VERSION
-    environment:
-      GRAPH_SCOPE_REMOTE_URL: http://graph-typesystem:9000/api/types
+#    environment:
+#      GRAPH_SCOPE_REMOTE_URL: http://graph-typesystem:9000/api/types
     links:
     - cassandra
     ports:
@@ -87,7 +87,9 @@ services:
     image: resources-manager-service:$PLATFORM_VERSION
     environment:
       PLAY_APPLICATION_SECRET: $PLAY_APPLICATION_SECRET
-      GRAPH_SCOPE_REMOTE_URL: http://graph-typesystem:9000/api/types
+      RESOURCE_MANAGER_PUBLIC_KEY: $RESOURCE_MANAGER_PUBLIC_KEY
+      RESOURCE_MANAGER_PRIVATE_KEY: $RESOURCE_MANAGER_PRIVATE_KEY
+#      GRAPH_SCOPE_REMOTE_URL: http://graph-typesystem:9000/api/types
     links:
       - graph-typesystem
     ports:

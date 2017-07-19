@@ -9,5 +9,4 @@ docker-images:
 apispec:
 	$(eval HERE = $(shell pwd))
 	echo $(HERE)
-	cd ../apispec && npm run dist -- -H "localhost:9000" -o $(HERE)/target/apispec
-
+	cd ../apispec && npm install && npm run dist -- --http -H "localhost:9000" -o $(HERE)/target/apispec
