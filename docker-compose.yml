@@ -47,7 +47,7 @@ services:
       - graph-typesystem
       - graph-mutation
       - graph-navigation
-      - resources-manager
+      - resource-manager
     ports:
     - "9000:80"
   graph-typesystem:
@@ -83,8 +83,8 @@ services:
       - graph-typesystem
     links:
     - graph-typesystem:graph-typesystem
-  resources-manager:
-    image: resources-manager-service:$PLATFORM_VERSION
+  resource-manager:
+    image: resource-manager-service:$PLATFORM_VERSION
     environment:
       PLAY_APPLICATION_SECRET: $PLAY_APPLICATION_SECRET
       RESOURCE_MANAGER_PUBLIC_KEY: $RESOURCE_MANAGER_PUBLIC_KEY
