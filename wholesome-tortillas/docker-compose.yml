@@ -76,7 +76,7 @@ services:
     - "9000"
     restart: on-failure
   graph-init:
-    image: graph-init:0.0.1-SNAPSHOT
+    image: graph-init:$PLATFORM_VERSION
     environment:
       GRAPH_API_TYPES: http://graph-typesystem:9000/api/types
     depends_on:

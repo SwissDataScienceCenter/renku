@@ -1,5 +1,5 @@
 .PHONY: all
-all: docker-images
+all: docker-images apispec
 
 .PHONY: docker-images
 docker-images:
