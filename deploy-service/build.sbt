@@ -3,7 +3,20 @@ organization := "ch.datascience"
 
 version := "0.1.0-SNAPSHOT"
 
-lazy val root = (project in file(".")).enablePlugins(PlayScala)
+lazy val root = Project(
+  id   = "deployer-service",
+  base = file(".")
+).dependsOn(
+  core,
+  mutationClient,
+  serviceCommons
+).enablePlugins(PlayScala)
+
+
+lazy val core = RootProject(file("../graph-core"))
+lazy val mutationClient = RootProject(file("../graph-mutation-client"))
+lazy val serviceCommons = RootProject(file("../service-commons"))
+
 
 lazy val play_slick_version = "2.1.0"
 

@@ -1,6 +1,6 @@
 package backends
 
-import models.{Deployment, DeploymentRequest}
+import ch.datascience.service.models.deployment.DeploymentRequest
 
 import scala.concurrent.Future
 
