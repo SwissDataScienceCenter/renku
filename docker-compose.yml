@@ -79,10 +79,8 @@ services:
     image: graph-init:$PLATFORM_VERSION
     environment:
       GRAPH_API_TYPES: http://graph-typesystem:9000/api/types
-    depends_on:
-      - graph-typesystem
     links:
-    - graph-typesystem:graph-typesystem
+    - graph-typesystem
   resource-manager:
     image: resource-manager-service:$PLATFORM_VERSION
     environment:
