@@ -1,6 +1,6 @@
 package backends
 
-import models.{Deployment, DeploymentRequest}
+import ch.datascience.service.models.deployment.{DeploymentRequest, DeploymentResponse}
 
 import scala.concurrent.Future
 
@@ -10,11 +10,22 @@ import scala.concurrent.Future
 trait DeployerBackend {
 
   /**
-    *
-    * @param userId
-    * @param request
+    * @param userId user id
+    * @param request deployment request
     * @return deployer backend id
     */
   def create(userId: String, request: DeploymentRequest): Future[String]
+
+  /**
+    *
+    * @param backendId backend id of deployment
+    * @return () if successful, failed future otherwise
+    */
+  def terminate(backendId: String): Future[Unit]
+
+  /**
+    * @return set of active deployment, by backend id
+    */
+  def list(): Future[Set[String]]
 
 }

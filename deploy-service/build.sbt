@@ -35,6 +35,8 @@ libraryDependencies += "org.pac4j" % "pac4j-http" % "2.0.0-RC2"
 libraryDependencies += "org.scalatestplus.play" %% "scalatestplus-play" % "2.0.0" % Test
 libraryDependencies += "io.fabric8" % "kubernetes-client" % "2.3.1"
 
+libraryDependencies += "com.spotify" % "docker-client" % "8.8.1"
+
 import com.typesafe.sbt.packager.docker._
 
 dockerBaseImage := "openjdk:8-jre-alpine"
