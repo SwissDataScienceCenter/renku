@@ -49,6 +49,7 @@ services:
       - graph-navigation
       - resource-manager
       - deployer
+      - storage
     ports:
     - "9000:80"
   graph-typesystem:
@@ -106,6 +107,15 @@ services:
     - /var/run/docker.sock:/var/run/docker.sock
     links:
       - graph-typesystem
+  storage:
+    image: storage-service:$PLATFORM_VERSION
+    environment:
+      STORAGE_BACKEND_LOCAL_ENABLED: "true"
+      PLAY_APPLICATION_SECRET: $PLAY_APPLICATION_SECRET
+      RESOURCE_MANAGER_PUBLIC_KEY: $RESOURCE_MANAGER_PUBLIC_KEY
+#      GRAPH_SCOPE_REMOTE_URL: http://graph-typesystem:9000/api/types
+    links:
+      - resource-manager
     ports:
     - "9000"
     restart: on-failure
