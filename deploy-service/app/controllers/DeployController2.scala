@@ -23,7 +23,7 @@ import ch.datascience.service.utils.{ControllerWithBodyParseJson, ControllerWith
 import com.auth0.jwt.JWTVerifier
 import models.DeployerExtrasMappers
 import play.api.Configuration
-import play.api.libs.json.Json
+import play.api.libs.json.{JsNumber, JsObject, Json}
 import play.api.libs.ws.WSClient
 import play.api.mvc._
 
@@ -95,7 +95,7 @@ class DeployController @Inject() (
 
               graphMutationClient.post(mut).map { event =>
                 //TODO: maybe take into account if the node was created or not
-                Ok(s"Deployed: ${vertex.id}")
+                Ok(JsObject(Map("id" -> JsNumber(vertex.id))))
               }
             }
             case None => Future.successful(BadRequest(s"The backend $backend is not enabled."))
