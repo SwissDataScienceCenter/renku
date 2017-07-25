@@ -13,7 +13,7 @@ import ch.datascience.graph.elements.new_.NewRichProperty
 import ch.datascience.graph.elements.persisted.{Path, VertexPath}
 import ch.datascience.graph.naming.NamespaceAndName
 import ch.datascience.graph.values.{LongValue, StringValue, UuidValue}
-import ch.datascience.service.models.deployment.DeploymentRequest
+import ch.datascience.service.models.deployment.{DeploymentRequest, DeploymentResponse}
 import ch.datascience.service.models.deployment.json._
 import ch.datascience.service.models.resource.{AccessGrant, ScopeQualifier}
 import ch.datascience.service.security.ProfileFilterAction
@@ -95,7 +95,7 @@ class DeployController @Inject() (
 
               graphMutationClient.post(mut).map { event =>
                 //TODO: maybe take into account if the node was created or not
-                Ok(JsObject(Map("id" -> JsNumber(vertex.id))))
+                Ok(Json.toJson(DeploymentResponse(vertex.id, Some(backendId))))
               }
             }
             case None => Future.successful(BadRequest(s"The backend $backend is not enabled."))

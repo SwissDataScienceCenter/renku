@@ -57,7 +57,11 @@ class AuthorizeController @Inject() (
 //    val extra: JsObject = Json.toJson(request.body).as[JsObject]
     val extra: JsObject = Json.toJson((request.body, deployerId))(DeployerExtrasMappers.DeployerExtrasFormat).as[JsObject]
     val strToken: String = request.token.getToken
-    val futureGrant: Future[Option[AccessGrant]] = resourceManagerClient.authorize(AccessRequestFormat, request.body.toAccessRequest(Some(extra)), s"Bearer $strToken")
+    val accessRequest: AccessRequest = request.executionId match {
+      case Some(execId) => request.body.withParent(execId).toAccessRequest(Some(extra)) // We include the execution_id if this is a subprocess deployment
+      case None => request.body.toAccessRequest(Some(extra))
+    }
+    val futureGrant: Future[Option[AccessGrant]] = resourceManagerClient.authorize(AccessRequestFormat, accessRequest, s"Bearer $strToken")
 
     // Step 2: Validate response from RM
     futureGrant.flatMap { optionAccessGrant =>
