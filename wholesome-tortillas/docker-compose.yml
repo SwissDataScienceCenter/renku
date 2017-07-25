@@ -114,6 +114,8 @@ services:
       PLAY_APPLICATION_SECRET: $PLAY_APPLICATION_SECRET
       RESOURCE_MANAGER_PUBLIC_KEY: $RESOURCE_MANAGER_PUBLIC_KEY
 #      GRAPH_SCOPE_REMOTE_URL: http://graph-typesystem:9000/api/types
+    volumes:
+    - ./storage-data:/opt/docker/data
     links:
       - resource-manager
     ports:

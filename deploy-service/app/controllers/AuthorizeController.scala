@@ -68,20 +68,20 @@ class AuthorizeController @Inject() (
       optionAccessGrant.map { accessGrant =>
         if (accessGrant.verifyAccessToken(rmJwtVerifier).extraClaims.contains(extra)) {
           // Step 3: Log to KnowledgeGraph
-          val edgeOperation = request.executionId.map { execId =>
-            CreateEdgeOperation(NewEdge(
-              NamespaceAndName("deploy:subprocess"),
-              Right(execId),
-              Left(0),
-              Map()
-            ))
-          }
           val vertexBuilder = new NewVertexBuilder()
             .addType(NamespaceAndName("deploy:deployment"))
             .addSingleProperty("deploy:deployer_id", UuidValue(deployerId))
             .addSingleProperty("deploy:description", StringValue(extra.toString()))
             .addSetProperty(NamespaceAndName("deploy:status"), StringValue("authorized"), _.addProperty(NamespaceAndName("system:creation_time"), LongValue(System.currentTimeMillis)))
           val newVertex = vertexBuilder.result()
+          val edgeOperation = request.executionId.map { execId =>
+            CreateEdgeOperation(NewEdge(
+              NamespaceAndName("deploy:subprocess"),
+              Right(execId),
+              Left(newVertex.tempId),
+              Map()
+            ))
+          }
           val mut = Mutation(
             Seq(CreateVertexOperation(newVertex)) ++ edgeOperation.toSeq
           )

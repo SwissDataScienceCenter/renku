@@ -53,7 +53,7 @@ class DeployController @Inject() (
 
     //TODO: check token content here.
     if (!scope.contains(ScopeQualifier.DeploymentCreate))
-      Future.successful( Forbidden(s"Wring scope") )
+      Future.successful( Forbidden(s"Wrong scope") )
     else {
       val g = graphTraversalSource
       val t = g.V().has("deploy:deployer_id", deployerId)
@@ -69,7 +69,7 @@ class DeployController @Inject() (
       futureVertex.flatMap { optVertex =>
         optVertex.map { vertex =>
           val additionalEnv: Map[String, String] = Map(
-            "SDSC_EXECUTION_ID" -> s"${vertex.id}",
+            "SDSC_DEPLOYMENT_ID" -> s"${vertex.id}",
             "SDSC_ACCESS_TOKEN" -> accessGrant.accessToken
           )
 
