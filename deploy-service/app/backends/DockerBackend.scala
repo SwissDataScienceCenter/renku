@@ -4,36 +4,39 @@ import javax.inject.{Inject, Singleton}
 
 import ch.datascience.service.models.deployment.json.ContainerDeploymentOptionsFormat
 import ch.datascience.service.models.deployment.{ContainerDeploymentOptions, DeploymentRequest}
+import com.spotify.docker.client.exceptions.ImageNotFoundException
 import com.spotify.docker.client.messages._
-import com.spotify.docker.client.{DefaultDockerClient, DockerClient}
+import com.spotify.docker.client.{DefaultDockerClient, DockerClient, ImageRef}
 import play.api.Configuration
 import play.api.libs.json.{JsError, JsSuccess}
 
 import scala.collection.JavaConverters._
 import scala.concurrent.{ExecutionContext, Future, blocking}
+import scala.util.Try
 
 /**
   * Created by johann on 10/07/17.
   */
 @Singleton
-class DockerDeployer @Inject()(configuration: Configuration, executionContext: ExecutionContext) extends DeployerBackend {
+class DockerBackend @Inject()(configuration: Configuration, executionContext: ExecutionContext) extends DeployerBackend {
 
   /**
     * @param userId  user id
     * @param request deployment request
     * @return deployer response
     */
-  def create(userId: String, request: DeploymentRequest): Future[String] = {
+  def create(userId: String, request: DeploymentRequest, additionalEnv: Map[String, String]): Future[String] = {
     request.options match {
       case Some(jsObj) => jsObj.validate[ContainerDeploymentOptions] match {
-        case JsSuccess(opt, _) => create(userId, request, opt)
+        case JsSuccess(opt, _) => create(userId, request, opt, additionalEnv)
         case JsError(e) => Future.failed( new IllegalArgumentException(s"Expected container options") )
       }
       case None => Future.failed( new IllegalArgumentException(s"No container options provided") )
     }
   }
 
-  def create(userId: String, request: DeploymentRequest, options: ContainerDeploymentOptions): Future[String] = {
+  //TODO: remove container if failed to launch
+  def create(userId: String, request: DeploymentRequest, options: ContainerDeploymentOptions, additionalEnv: Map[String, String]): Future[String] = {
     if (options.backend.nonEmpty && !options.backend.contains("docker")) {
       return Future.failed( new IllegalArgumentException(s"Other backend requested")  )
     }
@@ -49,8 +52,9 @@ class DockerDeployer @Inject()(configuration: Configuration, executionContext: E
 
     val hostConfig: HostConfig = HostConfig.builder().portBindings(javaPortBindings).build()
 
+    val augmentedEnviron: Map[String, String] = options.environment ++ additionalEnv
     val env: Seq[String] = (for {
-      (key, value) <- options.environment
+      (key, value) <- augmentedEnviron
     } yield s"$key=$value").toSeq
 
     val containerConfigBuilder = ContainerConfig.builder()
@@ -68,12 +72,20 @@ class DockerDeployer @Inject()(configuration: Configuration, executionContext: E
 
     val containerConfig: ContainerConfig = containerConfigBuilder.build()
 
-    val futureCreation : Future[ContainerCreation] = Future {
-      blocking { dockerClient.createContainer(containerConfig) }
+    val firstCreationAttempt: Future[ContainerCreation] = Future { blocking { dockerClient.createContainer(containerConfig) } }
+    val secondCreationAttempt = firstCreationAttempt.recoverWith {
+      case _: ImageNotFoundException => Future {
+        blocking {
+          val imageRef: ImageRef = new ImageRef(options.image)
+          val image = if (imageRef.getTag eq null) s"${options.image}:latest" else options.image
+          dockerClient.pull(image)
+          dockerClient.createContainer(containerConfig)
+        }
+      }
     }
 
     val futureId: Future[String] = for {
-      creation <- futureCreation
+      creation <- secondCreationAttempt
     } yield {
       creation.id()
     }
@@ -92,7 +104,7 @@ class DockerDeployer @Inject()(configuration: Configuration, executionContext: E
     */
   def terminate(backendId: String): Future[Unit] = {
     val futureStop = Future{
-      blocking { dockerClient.stopContainer(backendId, 60) } // TODO: remove magic value of 60seconds
+      blocking { dockerClient.killContainer(backendId) } // TODO: remove magic value of 60seconds
     }
 
     futureStop.flatMap { _ =>

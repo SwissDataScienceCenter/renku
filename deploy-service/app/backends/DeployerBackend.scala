@@ -14,7 +14,7 @@ trait DeployerBackend {
     * @param request deployment request
     * @return deployer backend id
     */
-  def create(userId: String, request: DeploymentRequest): Future[String]
+  def create(userId: String, request: DeploymentRequest, additionalEnv: Map[String, String]): Future[String]
 
   /**
     *

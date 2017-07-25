@@ -26,16 +26,19 @@ lazy val play_slick_version = "2.1.0"
 
 libraryDependencies += filters
 libraryDependencies += "com.typesafe.play" %% "play-slick" % play_slick_version
-libraryDependencies += cache
-libraryDependencies += ws
-libraryDependencies += filters
-libraryDependencies += "org.pac4j" % "play-pac4j" % "3.0.0-RC2"
-libraryDependencies += "org.pac4j" % "pac4j-jwt" % "2.0.0-RC2"
-libraryDependencies += "org.pac4j" % "pac4j-http" % "2.0.0-RC2"
+//libraryDependencies += cache
+//libraryDependencies += ws
+//libraryDependencies += filters
+//libraryDependencies += "org.pac4j" % "play-pac4j" % "3.0.0-RC2"
+//libraryDependencies += "org.pac4j" % "pac4j-jwt" % "2.0.0-RC2"
+//libraryDependencies += "org.pac4j" % "pac4j-http" % "2.0.0-RC2"
 libraryDependencies += "org.scalatestplus.play" %% "scalatestplus-play" % "2.0.0" % Test
 libraryDependencies += "io.fabric8" % "kubernetes-client" % "2.3.1"
 
 libraryDependencies += "com.spotify" % "docker-client" % "8.8.1"
+
+lazy val janusgraph_version = "0.1.0"
+libraryDependencies += "org.janusgraph" % "janusgraph-cassandra" % janusgraph_version
 
 import com.typesafe.sbt.packager.docker._
 
@@ -43,6 +46,9 @@ dockerBaseImage := "openjdk:8-jre-alpine"
 //dockerBaseImage := "openjdk:8-jre"
 
 dockerCommands ~= { cmds => cmds.head +: ExecCmd("RUN", "apk", "add", "--no-cache", "bash") +: cmds.tail }
+
+// Root user to enable docker
+dockerCommands ~= { cmds => cmds :+ Cmd("USER", "root") }
 // Replace entry point
 //dockerCommands ~= { cmds =>
 //  cmds.map {
