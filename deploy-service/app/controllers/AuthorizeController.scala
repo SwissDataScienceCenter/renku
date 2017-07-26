@@ -55,8 +55,8 @@ class AuthorizeController @Inject() (
 
     // Step 1: Request authorization from Resource Manager
 //    val extra: JsObject = Json.toJson(request.body).as[JsObject]
-    val extra: JsObject = Json.toJson((request.body, deployerId))(DeployerExtrasMappers.DeployerExtrasFormat).as[JsObject]
     val strToken: String = request.token.getToken
+    val extra: JsObject = Json.toJson((request.body, deployerId, strToken))(DeployerExtrasMappers.DeployerExtrasFormat).as[JsObject]
     val accessRequest: AccessRequest = request.executionId match {
       case Some(execId) => request.body.withParent(execId).toAccessRequest(Some(extra)) // We include the execution_id if this is a subprocess deployment
       case None => request.body.toAccessRequest(Some(extra))

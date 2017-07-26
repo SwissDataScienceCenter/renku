@@ -102,6 +102,11 @@ services:
       PLAY_APPLICATION_SECRET: $PLAY_APPLICATION_SECRET
       RESOURCE_MANAGER_PUBLIC_KEY: $RESOURCE_MANAGER_PUBLIC_KEY
       RESOURCE_MANAGER_PRIVATE_KEY: $RESOURCE_MANAGER_PRIVATE_KEY
+      DOCKER_INJECT_SERVICE_LINKS: "true"
+      DEPLOY_ADDITIONAL_ENV_SDSC_API: "http://localhost:9000"
+      DEPLOY_ADDITIONAL_ENV_KEYCLOAK_API: "http://localhost:8080/auth/realms/SDSC/protocol/openid-connect"
+      # DOCKER_INJECT_SDSC_API: "wholesometortillas_reverse-proxy_1"
+      # DOCKER_INJECT_KEYCLOAK_API: "wholesometortillas_keycloak_1"
 #      GRAPH_SCOPE_REMOTE_URL: http://graph-typesystem:9000/api/types
     volumes:
     - /var/run/docker.sock:/var/run/docker.sock

@@ -50,7 +50,19 @@ class DockerBackend @Inject()(configuration: Configuration, executionContext: Ex
 
     val javaPortBindings = portBindings.mapValues(_.asJava).asJava
 
-    val hostConfig: HostConfig = HostConfig.builder().portBindings(javaPortBindings).build()
+    val hostConfigBuilder = HostConfig.builder()
+      .portBindings(javaPortBindings)
+        .networkMode("host")
+//    if (dockerConf.getBoolean("links.injected").getOrElse(false)) {
+//      for (sdsc_link <- dockerConf.getString("links.urls.sdsc")) {
+//        hostConfigBuilder.links(s"$sdsc_link:sdsc-api")
+//      }
+//      for (keycloak_link <- dockerConf.getString("links.urls.keycloak")) {
+//        hostConfigBuilder.links(s"$keycloak_link:keycloak")
+//      }
+//    }
+
+    val hostConfig: HostConfig = hostConfigBuilder.build()
 
     val augmentedEnviron: Map[String, String] = options.environment ++ additionalEnv
     val env: Seq[String] = (for {

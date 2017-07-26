@@ -9,9 +9,10 @@ import play.api.libs.functional.syntax._
 
 object DeployerExtrasMappers {
 
-  def DeployerExtrasFormat: OFormat[(DeploymentRequest, UUID)] = (
+  def DeployerExtrasFormat: OFormat[(DeploymentRequest, UUID, String)] = (
     (JsPath \ "request").format[DeploymentRequest] and
-      (JsPath \ "deployer_id").format[UUID]
-  ) (Tuple2.apply, unlift(Tuple2.unapply))
+      (JsPath \ "deployer_id").format[UUID] and
+      (JsPath \ "access_token").format[String]
+  ) (Tuple3.apply, unlift(Tuple3.unapply))
 
 }

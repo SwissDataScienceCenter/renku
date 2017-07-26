@@ -46,7 +46,7 @@ class DeployController @Inject() (
     val token = accessGrant.verifyAccessToken(rmJwtVerifier)
 
     val scope = token.scope
-    val (deploymentRequest, deployerId) = token.extraClaims.get.as[(DeploymentRequest, UUID)](DeployerExtrasMappers.DeployerExtrasFormat)
+    val (deploymentRequest, deployerId, injectedToken) = token.extraClaims.get.as[(DeploymentRequest, UUID, String)](DeployerExtrasMappers.DeployerExtrasFormat)
     println("Create request")
     println(deploymentRequest)
     val backend = deploymentRequest.deploymentType
@@ -70,7 +70,9 @@ class DeployController @Inject() (
         optVertex.map { vertex =>
           val additionalEnv: Map[String, String] = Map(
             "SDSC_DEPLOYMENT_ID" -> s"${vertex.id}",
-            "SDSC_ACCESS_TOKEN" -> accessGrant.accessToken
+            "SDSC_ACCESS_TOKEN" -> injectedToken,
+            "SDSC_API_URL" -> configuration.getString("deploy.additional-env.sdsc_url").get,
+            "KEYCLOAK_API_URL" -> configuration.getString("deploy.additional-env.keycloak_url").get
           )
 
           backends.getBackend(backend) match {
