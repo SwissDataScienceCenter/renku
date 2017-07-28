@@ -8,20 +8,20 @@ import play.filters.cors.CORSFilter
 
 /**
  * Add the following filters by default to all projects
- * 
- * https://www.playframework.com/documentation/latest/ScalaCsrf 
+ *
+ * https://www.playframework.com/documentation/latest/ScalaCsrf
  * https://www.playframework.com/documentation/latest/AllowedHostsFilter
  * https://www.playframework.com/documentation/latest/SecurityHeaders
  */
 class Filters @Inject() (
-  allowedHostsFilter: AllowedHostsFilter,
-  corsFilter: CORSFilter,
-  securityHeadersFilter: SecurityHeadersFilter/*,
+    allowedHostsFilter:    AllowedHostsFilter,
+    corsFilter:            CORSFilter,
+    securityHeadersFilter: SecurityHeadersFilter /*,
   securityFilter: SecurityFilter*/
 
 ) extends DefaultHttpFilters(
   allowedHostsFilter,
   corsFilter,
-  securityHeadersFilter/*,
+  securityHeadersFilter /*,
   securityFilter*/
 )
