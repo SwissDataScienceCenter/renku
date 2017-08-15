@@ -1,5 +1,7 @@
+DEPLOYER_SERVICE_DIR=../../sdsc-deployer
+
 .PHONY: all
-all: docker-images apispec storage-data
+all: docker-images apispec storage-data deployer-service
 
 .PHONY: docker-images
 docker-images:
@@ -9,6 +11,10 @@ docker-images:
 apispec:
 	$(eval HERE = $(shell pwd))
 	cd ../apispec && npm install && npm run dist -- --http -H "localhost:9000" -o $(HERE)/target/apispec
+
+.PHONY: deployer-service
+deployer-service:
+	docker build --tag sdsc-deployer:latest $(DEPLOYER_SERVICE_DIR)
 
 .PHONY: storage-data
 storage-data:
