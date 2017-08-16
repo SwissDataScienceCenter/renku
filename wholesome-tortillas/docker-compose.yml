@@ -121,8 +121,6 @@ services:
       DEPLOYER_BASE_PATH: /api/deployer
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-      - /Users/rok/Projects/sdsc-deployer:/code
-
   storage:
     image: storage-service:$PLATFORM_VERSION
     environment:
