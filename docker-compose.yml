@@ -99,25 +99,29 @@ services:
     image: sdsc-deployer:latest
     links:
       - db
-      - graph-mutation
-      - resource-manager
     depends_on:
       - db
       - graph-mutation
+      - graph-typesystem
       - resource-manager
       - keycloak
     ports:
-      - "5000:5000"
+      - "5000"
     restart: on-failure
     environment:
       SQLALCHEMY_DATABASE_URI: "postgres+psycopg2://postgres:postgres@db/deployer"
-      KNOWLEDGE_GRAPH_URL: http://graph-mutation:9000/api/
-      RESOURCE_MANAGER_URL: http://resource-manager:9000/api/
-      RESOURCE_MANAGER_PUBLIC_KEY: $RESOURCE_MANAGER_PUBLIC_KEY
+      KNOWLEDGE_GRAPH_URL: http://reverse-proxy:80/api/
+      RESOURCE_MANAGER_URL: http://reverse-proxy:80/api/resource-manager/authorize
+      DEPLOYER_JWT_KEY: $RESOURCE_MANAGER_PUBLIC_KEY
+      DEPLOYER_JWT_ISSUER: resource-manager
+      DEPLOYER_TOKEN_SCOPE_KEY: https://rm.datascience.ch/scope
       DEPLOYER_AUTHORIZATION_URL: http://localhost:8080/auth/realms/SDSC/protocol/openid-connect/auth
-      DEPLOYER_TOKEN_URL: http://localhost:8080/auth/realms/SDSC/protocol/openid-connect/token
+      DEPLOYER_TOKEN_URL: http://localhost:8080/auth/realms/SDSC/protocol/openid-connect/
+      DEPLOYER_URL: localhost:9000
+      DEPLOYER_BASE_PATH: /api/deployer
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
+      - /Users/rok/Projects/sdsc-deployer:/code
 
   storage:
     image: storage-service:$PLATFORM_VERSION
