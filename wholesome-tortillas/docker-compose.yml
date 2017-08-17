@@ -96,22 +96,31 @@ services:
     - "9000"
     restart: on-failure
   deployer:
-    image: deploy-service:$PLATFORM_VERSION
-    privileged: true
-    environment:
-      PLAY_APPLICATION_SECRET: $PLAY_APPLICATION_SECRET
-      RESOURCE_MANAGER_PUBLIC_KEY: $RESOURCE_MANAGER_PUBLIC_KEY
-      RESOURCE_MANAGER_PRIVATE_KEY: $RESOURCE_MANAGER_PRIVATE_KEY
-      DOCKER_INJECT_SERVICE_LINKS: "true"
-      DEPLOY_ADDITIONAL_ENV_SDSC_API: "http://localhost:9000"
-      DEPLOY_ADDITIONAL_ENV_KEYCLOAK_API: "http://localhost:8080/auth/realms/SDSC/protocol/openid-connect"
-      # DOCKER_INJECT_SDSC_API: "wholesometortillas_reverse-proxy_1"
-      # DOCKER_INJECT_KEYCLOAK_API: "wholesometortillas_keycloak_1"
-#      GRAPH_SCOPE_REMOTE_URL: http://graph-typesystem:9000/api/types
-    volumes:
-    - /var/run/docker.sock:/var/run/docker.sock
+    image: sdsc-deployer:latest
     links:
+      - db
+    depends_on:
+      - db
+      - graph-mutation
       - graph-typesystem
+      - resource-manager
+      - keycloak
+    ports:
+      - "5000"
+    restart: on-failure
+    environment:
+      SQLALCHEMY_DATABASE_URI: "postgres+psycopg2://postgres:postgres@db/deployer"
+      KNOWLEDGE_GRAPH_URL: http://reverse-proxy:80/api/
+      RESOURCE_MANAGER_URL: http://reverse-proxy:80/api/resource-manager/authorize
+      DEPLOYER_JWT_KEY: $RESOURCE_MANAGER_PUBLIC_KEY
+      DEPLOYER_JWT_ISSUER: resource-manager
+      DEPLOYER_TOKEN_SCOPE_KEY: https://rm.datascience.ch/scope
+      DEPLOYER_AUTHORIZATION_URL: http://localhost:8080/auth/realms/SDSC/protocol/openid-connect/auth
+      DEPLOYER_TOKEN_URL: http://localhost:8080/auth/realms/SDSC/protocol/openid-connect/
+      DEPLOYER_URL: localhost:9000
+      DEPLOYER_BASE_PATH: /api/deployer
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
   storage:
     image: storage-service:$PLATFORM_VERSION
     environment:
