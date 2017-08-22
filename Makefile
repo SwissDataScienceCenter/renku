@@ -1,7 +1,7 @@
-DEPLOYER_SERVICE_DIR=../../sdsc-deployer
+RENGA_DEPLOYER_DIR=../renga-deployer
 
 .PHONY: all
-all: docker-images apispec storage-data deployer-service
+all: docker-images apispec storage-data renga-deployer
 
 .PHONY: docker-images
 docker-images:
@@ -12,9 +12,9 @@ apispec:
 	$(eval HERE = $(shell pwd))
 	cd ../apispec && npm install && npm run dist -- --http -H "localhost" -o $(HERE)/target/apispec
 
-.PHONY: deployer-service
-deployer-service:
-	docker build --tag sdsc-deployer:latest $(DEPLOYER_SERVICE_DIR)
+.PHONY: renga-deployer
+renga-deployer:
+	docker build --tag renga-deployer:latest $(RENGA_DEPLOYER_DIR)
 
 .PHONY: storage-data
 storage-data:
