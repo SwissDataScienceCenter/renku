@@ -27,7 +27,7 @@ services:
       POSTGRES_USER: keycloak
       POSTGRES_PORT_5432_TCP_ADDR: postgres
     ports:
-      - "8080:8080"
+      - "8080"
     command:
       - "-b 0.0.0.0"
       - "-Dkeycloak.migration.action=import"
@@ -39,19 +39,10 @@ services:
     links:
       - db:postgres
     restart: on-failure
-  reverse-proxy:
-    image: nginx:mainline-alpine
-    volumes:
-    - ./nginx/etc/default.conf:/etc/nginx/conf.d/default.conf:ro
-    links:
-      - graph-typesystem
-      - graph-mutation
-      - graph-navigation
-      - resource-manager
-      - deployer
-      - storage
-    ports:
-    - "9000:80"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.frontend.entryPoints=keycloak"
+      - "traefik.frontend.rule=Host:localhost"
   graph-typesystem:
     image: graph-typesystem-service:$PLATFORM_VERSION
     links:
@@ -60,6 +51,9 @@ services:
     ports:
     - "9000"
     restart: on-failure
+    labels:
+      - "traefik.enable=true"
+      - "traefik.frontend.rule=PathPrefix:/api/types"
   graph-mutation:
     image: graph-mutation-service:$PLATFORM_VERSION
     links:
@@ -68,37 +62,48 @@ services:
     ports:
     - "9000"
     restart: on-failure
+    labels:
+      - "traefik.enable=true"
+      - "traefik.frontend.rule=PathPrefix:/api/mutation"
   graph-navigation:
     image: graph-navigation-service:$PLATFORM_VERSION
     environment:
-      GRAPH_SCOPE_REMOTE_URL: http://graph-typesystem:9000/api/types
+      GRAPH_SCOPE_REMOTE_URL: http://reverse-proxy/api/types
     links:
     - cassandra
+    - reverse-proxy
     ports:
     - "9000"
     restart: on-failure
+    labels:
+      - "traefik.enable=true"
+      - "traefik.frontend.rule=PathPrefix:/api/navigation"
   graph-init:
     image: graph-init:$PLATFORM_VERSION
     environment:
-      GRAPH_API_TYPES: http://graph-typesystem:9000/api/types
+      GRAPH_API_TYPES: http://reverse-proxy/api/types
     links:
     - graph-typesystem
+    - reverse-proxy
   resource-manager:
     image: resource-manager-service:$PLATFORM_VERSION
     environment:
       PLAY_APPLICATION_SECRET: $PLAY_APPLICATION_SECRET
       RESOURCE_MANAGER_PUBLIC_KEY: $RESOURCE_MANAGER_PUBLIC_KEY
       RESOURCE_MANAGER_PRIVATE_KEY: $RESOURCE_MANAGER_PRIVATE_KEY
-#      GRAPH_SCOPE_REMOTE_URL: http://graph-typesystem:9000/api/types
     links:
       - graph-typesystem
     ports:
     - "9000"
     restart: on-failure
+    labels:
+      - "traefik.enable=true"
+      - "traefik.frontend.rule=PathPrefix:/api/resource-manager"
   deployer:
     image: sdsc-deployer:latest
     links:
       - db
+      - reverse-proxy
     depends_on:
       - db
       - graph-mutation
@@ -110,17 +115,21 @@ services:
     restart: on-failure
     environment:
       SQLALCHEMY_DATABASE_URI: "postgres+psycopg2://postgres:postgres@db/deployer"
-      KNOWLEDGE_GRAPH_URL: http://reverse-proxy:80/api/
-      RESOURCE_MANAGER_URL: http://reverse-proxy:80/api/resource-manager/authorize
+      KNOWLEDGE_GRAPH_URL: http://reverse-proxy/api/
+      RESOURCE_MANAGER_URL: http://reverse-proxy/api/resource-manager/authorize
       DEPLOYER_JWT_KEY: $RESOURCE_MANAGER_PUBLIC_KEY
       DEPLOYER_JWT_ISSUER: resource-manager
       DEPLOYER_TOKEN_SCOPE_KEY: https://rm.datascience.ch/scope
       DEPLOYER_AUTHORIZATION_URL: http://localhost:8080/auth/realms/SDSC/protocol/openid-connect/auth
       DEPLOYER_TOKEN_URL: http://localhost:8080/auth/realms/SDSC/protocol/openid-connect/
-      DEPLOYER_URL: localhost:9000
+      DEPLOYER_URL: localhost
       DEPLOYER_BASE_PATH: /api/deployer
+      WSGI_NUM_PROXIES: 1
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
+    labels:
+      - "traefik.enable=true"
+      - "traefik.frontend.rule=PathPrefix:/api/deployer"
   storage:
     image: storage-service:$PLATFORM_VERSION
     environment:
@@ -135,10 +144,26 @@ services:
     ports:
     - "9000"
     restart: on-failure
-  apispec:
-    # prepare static site with `make apispec` beforehand
-    image: nginx:mainline-alpine
-    volumes:
-    - ./target/apispec:/usr/share/nginx/html:ro
+    labels:
+      - "traefik.enable=true"
+      - "traefik.frontend.rule=PathPrefix:/api/storage"
+  reverse-proxy:
+    image: traefik
+    command: --web --web.address=:81 \
+      --docker --docker.watch --docker.domain=localhost \
+      --debug --logLevel=DEBUG \
+      --defaultentrypoints=http,https \
+      --entrypoints='Name:http Address::80' \
+      --entrypoints='Name:https Address::443 TLS:/ssl/test.crt,/ssl/test.key' \
+      --entrypoints='Name:keycloak Address::8080' \
+      --docker.exposedbydefault=false
+    # FIXME usage of self signed certs --entrypoints='Name:http Address::80 Redirect.EntryPoint:https' \
     ports:
-    - "9001:80"
+        - 80:80
+        - 443:443
+        - 8080:8080
+        - 81:81
+    volumes:
+        - /var/run/docker.sock:/var/run/docker.sock
+        - /dev/null:/traefik.toml
+        - ./ssl/:/ssl/

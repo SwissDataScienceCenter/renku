@@ -10,7 +10,7 @@ docker-images:
 .PHONY: apispec
 apispec:
 	$(eval HERE = $(shell pwd))
-	cd ../apispec && npm install && npm run dist -- --http -H "localhost:9000" -o $(HERE)/target/apispec
+	cd ../apispec && npm install && npm run dist -- --http -H "localhost" -o $(HERE)/target/apispec
 
 .PHONY: deployer-service
 deployer-service:
