@@ -122,7 +122,8 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
   storage:
-    image: $IMAGE_REPOSITORY/renga-storage:$PLATFORM_VERSION
+    image: renga-storage:local-$PLATFORM_VERSION
+    # image: $IMAGE_REPOSITORY/renga-storage:$PLATFORM_VERSION
     environment:
       STORAGE_BACKEND_LOCAL_ENABLED: "true"
       PLAY_APPLICATION_SECRET: $PLAY_APPLICATION_SECRET
