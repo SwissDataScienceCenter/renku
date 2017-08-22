@@ -1,20 +1,40 @@
-RENGA_DEPLOYER_DIR=../renga-deployer
+SBT = sbt
+SBT_PUBLISH_TARGET = publish-local
+SBT_DOCKER_TARGET = docker:publishLocal
+PLATFORM_BASE_DIR = ..
+PLATFORM_VERSION = 0.1.0-SNAPSHOT
+
+scala_services += renga-graph
+scala_services += renga-commons
+scala_services += renga-storage
+scala_services += renga-authorization
+scala_services += renga-explorer
+
+scala_base = renga-graph renga-commons
+scala_services-docker = $(foreach s,$(scala_services),$(s)-docker)
+dockerfile-builds += renga-deployer
 
 .PHONY: all
-all: docker-images apispec storage-data renga-deployer
+all: scala-base docker-images storage-data
+
+.PHONY: scala-base
+scala-base: $(scala_base)
+
+.PHONY: $(scala_base)
+$(scala_base):
+	cd $(PLATFORM_BASE_DIR)/$@ && $(SBT) $(SBT_PUBLISH_TARGET)
 
 .PHONY: docker-images
-docker-images:
-	$(MAKE) -C .. docker-all
+docker-images:	$(scala_services-docker) $(dockerfile-builds)
 
-.PHONY: apispec
-apispec:
-	$(eval HERE = $(shell pwd))
-	cd ../apispec && npm install && npm run dist -- --http -H "localhost" -o $(HERE)/target/apispec
+.PHONY: $(scala_services-docker)
+$(scala_services-docker):
+	$(eval target = $(subst -docker,,$@))
+	cd $(PLATFORM_BASE_DIR)/$(target) && $(SBT) $(SBT_DOCKER_TARGET)
 
-.PHONY: renga-deployer
-renga-deployer:
-	docker build --tag renga-deployer:latest $(RENGA_DEPLOYER_DIR)
+.PHONY: $(dockerfile-builds)
+$(dockerfile-builds):
+	docker build --tag $@:$(PLATFORM_VERSION) $(PLATFORM_BASE_DIR)/$@
 
 .PHONY: storage-data
 storage-data:
