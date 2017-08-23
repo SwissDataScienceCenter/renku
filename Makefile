@@ -5,16 +5,11 @@ PLATFORM_BASE_DIR = ..
 PLATFORM_VERSION = 0.1.0-SNAPSHOT
 PLATFORM_BASE_REPO_URL = git@github.com:SwissDataScienceCenter
 
-scala-services += renga-graph
-scala-services += renga-storage
-scala-services += renga-authorization
-scala-services += renga-explorer
-
+scala-services = renga-graph renga-storage renga-authorization renga-explorer
 scala-targets = $(foreach s,$(scala-services),$(s)-scala)
-
 scala-artifact = renga-graph-artifact renga-commons-artifact
 
-dockerfile-services += renga-deployer
+dockerfile-services = renga-deployer
 
 service-dirs = $(foreach s,$(scala-services) $(dockerfile-services),$(PLATFORM_BASE_DIR)/$(s))
 
@@ -45,5 +40,4 @@ $(dockerfile-builds):
 	docker build --tag $@:$(PLATFORM_VERSION) $(PLATFORM_BASE_DIR)/$@
 
 .PHONY: all
-all: $(service-dirs) $(scala-artifact) docker-images
-
+all: docker-images
