@@ -17,11 +17,8 @@ dockerfile-services = renga-deployer
 
 service-dirs = $(foreach s,$(scala-services) $(dockerfile-services), $(PLATFORM_BASE_DIR)/$(s))
 
-TMPDIR := $(shell mktemp -d)
-
 .PHONY: all
 all: docker-images
-	rm -rf $(TMPDIR)
 
 # fetch missing repositories
 $(PLATFORM_BASE_DIR)/%:
@@ -36,9 +33,7 @@ clone: $(service-dirs)
 	cd $< && $(SBT) $(SBT_PUBLISH_TARGET)
 
 renga-graph-%-scala: $(PLATFORM_BASE_DIR)/renga-graph $(scala-artifact)
-	$(shell echo "project $*" > $(TMPDIR)/$*)
-	cat $(PWD)/docker-build >> $(TMPDIR)/$*
-	cd $(PLATFORM_BASE_DIR)/renga-graph && $(SBT) < $(TMPDIR)/$*
+	cd $(PLATFORM_BASE_DIR)/renga-graph && echo "project $*" | cat - $(SBT_DOCKER_TARGET) | $(SBT)
 
 %-scala: $(PLATFORM_BASE_DIR)/% $(scala-artifact)
 	cd $< && $(SBT) < $(SBT_DOCKER_TARGET)
