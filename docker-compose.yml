@@ -150,7 +150,7 @@ services:
       - "traefik.enable=true"
       - "traefik.frontend.rule=PathPrefix:/api/storage"
   swagger:
-    image: sdsc-swagger-ui:latest
+    image: ${IMAGE_REPOSITORY}swagger-ui:latest
     ports:
       - "8080"
     labels:
