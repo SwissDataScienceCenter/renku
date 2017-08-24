@@ -19,5 +19,10 @@ help:
 %: Makefile
 	@$(SPHINXBUILD) -M $@ "$(SOURCEDIR)" "$(BUILDDIR)" $(SPHINXOPTS) $(O)
 
+uml:
+	@make -C resources/uml png
+	@cp -f resources/uml/*.png source/images/
+
 clean:
 	@- rm -rf build/*
+	@make -C resources/uml nuke
