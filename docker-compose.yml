@@ -41,8 +41,8 @@ services:
     restart: on-failure
     labels:
       - "traefik.enable=true"
-      - "traefik.frontend.entryPoints=keycloak"
       - "traefik.frontend.rule=Host:localhost"
+      - "traefik.frontend.rule=PathPrefix:/auth"
   graph-typesystem:
     image: ${IMAGE_REPOSITORY}renga-graph-typesystem-service:$PLATFORM_VERSION
     links:
@@ -121,13 +121,14 @@ services:
       DEPLOYER_JWT_KEY: $RESOURCE_MANAGER_PUBLIC_KEY
       DEPLOYER_JWT_ISSUER: resource-manager
       DEPLOYER_TOKEN_SCOPE_KEY: https://rm.datascience.ch/scope
-      DEPLOYER_AUTHORIZATION_URL: http://localhost:8080/auth/realms/SDSC/protocol/openid-connect/auth
-      DEPLOYER_TOKEN_URL: http://localhost:8080/auth/realms/SDSC/protocol/openid-connect/
+      DEPLOYER_AUTHORIZATION_URL: http://localhost/auth/realms/SDSC/protocol/openid-connect/auth
+      DEPLOYER_TOKEN_URL: http://localhost/auth/realms/SDSC/protocol/openid-connect/
       DEPLOYER_URL: localhost
       DEPLOYER_BASE_PATH: /api/deployer
       WSGI_NUM_PROXIES: 1
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
+      - /Users/rok/Projects/renga-deployer:/code
     labels:
       - "traefik.enable=true"
       - "traefik.frontend.rule=PathPrefix:/api/deployer"
@@ -148,6 +149,15 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.frontend.rule=PathPrefix:/api/storage"
+  swagger:
+    image: sdsc-swagger-ui:latest
+    ports:
+      - "8080"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.frontend.rule=PathPrefixStrip:/api/ui"
+    environment:
+      OAUTH2_REDIRECT_URL: http://localhost/api/ui/oauth2-redirect.html
   reverse-proxy:
     image: traefik
     command: --web --web.address=:81 \
@@ -156,7 +166,6 @@ services:
       --defaultentrypoints=http,https \
       --entrypoints='Name:http Address::80' \
       --entrypoints='Name:https Address::443 TLS:/ssl/test.crt,/ssl/test.key' \
-      --entrypoints='Name:keycloak Address::8080' \
       --docker.exposedbydefault=false
     # FIXME usage of self signed certs --entrypoints='Name:http Address::80 Redirect.EntryPoint:https' \
     ports:
