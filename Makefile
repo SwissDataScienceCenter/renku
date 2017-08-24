@@ -13,6 +13,9 @@ dockerfile-services = renga-deployer
 
 service-dirs = $(foreach s,$(scala-services) $(dockerfile-services),$(PLATFORM_BASE_DIR)/$(s))
 
+.PHONY: all
+all: docker-images
+
 # fetch missing repositories
 $(PLATFORM_BASE_DIR)/%:
 	$(eval target = $(lastword $(subst /, ,$@)))
@@ -36,8 +39,5 @@ $(scala-services): %: %-scala
 docker-images: $(scala-services) $(dockerfile-services)
 
 .PHONY: $(dockerfile-services)
-$(dockerfile-builds):
+$(dockerfile-services):
 	docker build --tag $@:$(PLATFORM_VERSION) $(PLATFORM_BASE_DIR)/$@
-
-.PHONY: all
-all: docker-images
