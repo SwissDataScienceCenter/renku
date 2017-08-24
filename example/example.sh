@@ -6,23 +6,23 @@ echo "Example bash script"
 echo ""
 
 # Variables injected by the deployer:
-# SDSC_DEPLOYMENT_ID
-# SDSC_ACCESS_TOKEN
-# SDSC_API_URL
+# RENGA_DEPLOYMENT_ID
+# RENGA_ACCESS_TOKEN
+# RENGA_API_URL
 # KEYCLOAK_API_URL
 
 # Default values from docker-compose
-SDSC_API_URL=${SDSC_API_URL:-http://localhost:9000}
-KEYCLOAK_API_URL=${KEYCLOAK_API_URL:-http://localhost:8080/auth/realms/SDSC/protocol/openid-connect}
+RENGA_API_URL=${RENGA_API_URL:-http://localhost:9000}
+KEYCLOAK_API_URL=${KEYCLOAK_API_URL:-http://localhost:8080/auth/realms/Renga/protocol/openid-connect}
 # Fetch token if none available
-if [ -z "$SDSC_ACCESS_TOKEN" ]; then
+if [ -z "$RENGA_ACCESS_TOKEN" ]; then
   getAccessToken
 fi
 
 echo "Platform variables:"
-echo "SDSC_DEPLOYMENT_ID: $SDSC_DEPLOYMENT_ID"
-echo "SDSC_ACCESS_TOKEN: $SDSC_ACCESS_TOKEN"
-echo "SDSC_API_URL: $SDSC_API_URL"
+echo "RENGA_DEPLOYMENT_ID: $RENGA_DEPLOYMENT_ID"
+echo "RENGA_ACCESS_TOKEN: $RENGA_ACCESS_TOKEN"
+echo "RENGA_API_URL: $RENGA_API_URL"
 echo "KEYCLOAK_API_URL: $KEYCLOAK_API_URL"
 
 
