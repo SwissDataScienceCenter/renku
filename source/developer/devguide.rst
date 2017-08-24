@@ -8,3 +8,4 @@ Developer Documentation
    :includehidden:
 
    Architecture <services_architecture>
+   Knowledge Graph <knowledge_graph>

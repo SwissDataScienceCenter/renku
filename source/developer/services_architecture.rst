@@ -24,23 +24,12 @@ Because of the micro-service architecture it is by definition modular, and there
 Components
 ----------
 
-- [knowledge graph](https://github.com/SwissDataScienceCenter/documentation/wiki/Knowledge-Graph), spans multiple services (see [Knowledge Graph](#knowledge-graph))
-- identity manager, provides user authentication
-- resource manager, provides authorization
-- deployment, provides (container) deployment
-- storage, provides file storage
-- explorer, provides views over data stored in the knowledge graph.
-
-Knowledge Graph
----------------
-
-[Full article](https://github.com/SwissDataScienceCenter/documentation/wiki/Knowledge-Graph)
-
-The knowledge graph is decomposed into three separate parts:
-
-- Model: the global state of the platform. This global state is stored in the form of a knowledge graph.
-- Update: a way to update the global state. This is provided by the graph mutation service.
-- Read: a way to read the state. This is (implicitly) provided by the direct read-only access of the graph by the other platform services.
+- Identity Manager (IM), provides user authentication
+- resource manager (RM), provides authorization
+- :ref:`knowledge_graph` (KG), spans multiple services
+- Deployer (DEP), provides (container) deployment
+- Storage (STG), provides file storage
+- Explorer (EXP), provides views over data stored in the knowledge graph.
 
 Global Architecture
 -------------------

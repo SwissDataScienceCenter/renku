@@ -15,6 +15,10 @@ Dependencies:
     * http://docs.readthedocs.io/en/latest/theme.html
     * https://pypi.python.org/pypi/sphinx_rtd_theme#installation)
 
+* Graphviz (Plantuml diagrams):
+
+    * http://www.graphviz.org/Download..php
+
 Usage:
 
     make html
