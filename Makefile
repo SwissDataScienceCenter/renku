@@ -29,7 +29,6 @@ clone: $(service-dirs)
 	cd $< && $(SBT) $(SBT_PUBLISH_TARGET)
 
 %-scala: $(PLATFORM_BASE_DIR)/% $(scala-artifact)
-	# $(eval target = $(subst -scala,,$@))
 	cd $< && $(SBT) $(SBT_DOCKER_TARGET)
 
 $(scala-services): %: %-scala

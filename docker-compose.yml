@@ -128,7 +128,6 @@ services:
       WSGI_NUM_PROXIES: 1
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-      - /Users/rok/Projects/renga-deployer:/code
     labels:
       - "traefik.enable=true"
       - "traefik.frontend.rule=PathPrefix:/api/deployer"
@@ -155,9 +154,9 @@ services:
       - "8080"
     labels:
       - "traefik.enable=true"
-      - "traefik.frontend.rule=PathPrefixStrip:/api/ui"
+      - "traefik.frontend.rule=PathPrefixStrip:/admin/swagger"
     environment:
-      OAUTH2_REDIRECT_URL: http://localhost/api/ui/oauth2-redirect.html
+      OAUTH2_REDIRECT_URL: http://localhost/admin/swagger/oauth2-redirect.html
   reverse-proxy:
     image: traefik
     command: --web --web.address=:81 \
