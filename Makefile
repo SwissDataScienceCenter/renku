@@ -2,20 +2,26 @@ SBT = sbt
 SBT_PUBLISH_TARGET = publish-local
 SBT_DOCKER_TARGET := $(PWD)/docker-build
 PLATFORM_BASE_DIR = ..
-PLATFORM_VERSION = latest
+PLATFORM_VERSION = 0.1.0-SNAPSHOT
 PLATFORM_BASE_REPO_URL = git@github.com:SwissDataScienceCenter
 IMAGE_REPOSITORY=registry.gitlab.com/swissdatasciencecenter/images/
 
-scala-services = renga-graph renga-storage renga-authorization renga-explorer
+scala-services = renga-authorization renga-explorer \
+	renga-graph-init renga-graph-mutation-service \
+	renga-graph-navigation-service renga-graph-typesystem-service
+
 scala-targets = $(foreach s,$(scala-services),$(s)-scala)
 scala-artifact = renga-graph-artifact renga-commons-artifact
 
 dockerfile-services = renga-deployer
 
-service-dirs = $(foreach s,$(scala-services) $(dockerfile-services),$(PLATFORM_BASE_DIR)/$(s))
+service-dirs = $(foreach s,$(scala-services) $(dockerfile-services), $(PLATFORM_BASE_DIR)/$(s))
+
+TMPDIR := $(shell mktemp -d)
 
 .PHONY: all
 all: docker-images
+	rm -rf $(TMPDIR)
 
 # fetch missing repositories
 $(PLATFORM_BASE_DIR)/%:
@@ -29,8 +35,13 @@ clone: $(service-dirs)
 %-artifact: $(PLATFORM_BASE_DIR)/%
 	cd $< && $(SBT) $(SBT_PUBLISH_TARGET)
 
+renga-graph-%-scala: $(PLATFORM_BASE_DIR)/renga-graph $(scala-artifact)
+	$(shell echo "project $*" > $(TMPDIR)/$*)
+	cat $(PWD)/docker-build >> $(TMPDIR)/$*
+	cd $(PLATFORM_BASE_DIR)/renga-graph && $(SBT) < $(TMPDIR)/$*
+
 %-scala: $(PLATFORM_BASE_DIR)/% $(scala-artifact)
-	cd $< && $(SBT) $(SBT_DOCKER_TARGET)
+	cd $< && $(SBT) < $(SBT_DOCKER_TARGET)
 
 $(scala-services): %: %-scala
 
