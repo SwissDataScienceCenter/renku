@@ -1,10 +1,17 @@
 SBT = sbt
 SBT_PUBLISH_TARGET = publish-local
-SBT_DOCKER_TARGET := $(PWD)/docker-build
 PLATFORM_BASE_DIR = ..
 PLATFORM_VERSION = 0.1.0-SNAPSHOT
 PLATFORM_BASE_REPO_URL = git@github.com:SwissDataScienceCenter
 IMAGE_REPOSITORY=registry.gitlab.com/swissdatasciencecenter/images/
+
+define DOCKER_BUILD
+set version in Docker := "$(PLATFORM_VERSION)"
+set dockerRepository := Option("$(IMAGE_REPOSITORY)")
+docker:publishLocal
+endef
+
+export DOCKER_BUILD
 
 scala-services = renga-authorization renga-explorer \
 	renga-graph-init renga-graph-mutation-service \
@@ -33,10 +40,10 @@ clone: $(service-dirs)
 	cd $< && $(SBT) $(SBT_PUBLISH_TARGET)
 
 renga-graph-%-scala: $(PLATFORM_BASE_DIR)/renga-graph $(scala-artifact)
-	cd $(PLATFORM_BASE_DIR)/renga-graph && echo "project $*" | cat - $(SBT_DOCKER_TARGET) | $(SBT)
+	cd $(PLATFORM_BASE_DIR)/renga-graph && echo "project $*\n$$DOCKER_BUILD" | $(SBT)
 
 %-scala: $(PLATFORM_BASE_DIR)/% $(scala-artifact)
-	cd $< && $(SBT) < $(SBT_DOCKER_TARGET)
+	cd $< && echo "$$DOCKER_BUILD" | $(SBT)
 
 $(scala-services): %: %-scala
 

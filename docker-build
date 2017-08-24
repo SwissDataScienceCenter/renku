@@ -1,3 +1,0 @@
-set version in Docker := "latest"
-set dockerRepository := Option("registry.gitlab.com/swissdatasciencecenter/images")
-docker:publishLocal
