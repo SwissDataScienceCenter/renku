@@ -1,9 +1,10 @@
-SBT = sbt -batch
+SBT = sbt
 SBT_PUBLISH_TARGET = publish-local
-SBT_DOCKER_TARGET = docker:publishLocal
+SBT_DOCKER_TARGET := $(PWD)/docker-build
 PLATFORM_BASE_DIR = ..
-PLATFORM_VERSION = 0.1.0-SNAPSHOT
+PLATFORM_VERSION = latest
 PLATFORM_BASE_REPO_URL = git@github.com:SwissDataScienceCenter
+IMAGE_REPOSITORY=registry.gitlab.com/swissdatasciencecenter/images/
 
 scala-services = renga-graph renga-storage renga-authorization renga-explorer
 scala-targets = $(foreach s,$(scala-services),$(s)-scala)
@@ -39,4 +40,4 @@ docker-images: $(scala-services) $(dockerfile-services)
 
 .PHONY: $(dockerfile-services)
 $(dockerfile-services):
-	docker build --tag $@:$(PLATFORM_VERSION) $(PLATFORM_BASE_DIR)/$@
+	docker build --tag $(IMAGE_REPOSITORY)$@:$(PLATFORM_VERSION) $(PLATFORM_BASE_DIR)/$@
