@@ -14,19 +14,30 @@ endef
 
 export DOCKER_BUILD
 
-repos = renga-authorization renga-commons renga-deployer renga-explorer \
-	renga-graph renga-storage
+# Please keep values bellow sorted. Thank you!
+repos = \
+	renga-authorization \
+	renga-commons \
+	renga-deployer \
+	renga-explorer \
+	renga-graph \
+	renga-storage
 
-scala-services = renga-authorization renga-explorer \
-	renga-graph-init renga-graph-mutation-service \
-	renga-graph-navigation-service renga-graph-typesystem-service
+scala-services = \
+	renga-authorization \
+	renga-explorer \
+	renga-graph-init \
+	renga-graph-mutation-service \
+	renga-graph-navigation-service \
+	renga-graph-typesystem-service \
+	renga-storage
 
-scala-targets = $(foreach s,$(scala-services),$(s)-scala)
-scala-artifact = renga-graph-artifact renga-commons-artifact
+dockerfile-services = \
+	renga-deployer
 
-dockerfile-services = renga-deployer
-
-services = $(scala-services) $(dockerfile-services)
+scala-artifact = \
+	renga-commons-artifact \
+	renga-graph-artifact
 
 .PHONY: all
 all: docker-images
@@ -57,9 +68,9 @@ renga-graph-%-scala: $(PLATFORM_BASE_DIR)/renga-graph $(scala-artifact)
 $(scala-services): %: %-scala
 
 # build docker images
-.PHONY: docker-images
-docker-images: $(scala-services) $(dockerfile-services)
-
 .PHONY: $(dockerfile-services)
 $(dockerfile-services):
 	docker build --tag $(IMAGE_REPOSITORY)$@:$(PLATFORM_VERSION) $(PLATFORM_BASE_DIR)/$@
+
+.PHONY: docker-images
+docker-images: $(scala-services) $(dockerfile-services)
