@@ -156,6 +156,16 @@ services:
       - "traefik.frontend.rule=PathPrefixStrip:/admin/swagger"
     environment:
       OAUTH2_REDIRECT_URL: http://localhost/admin/swagger/oauth2-redirect.html
+  webfrontend:
+    image: ${IMAGE_REPOSITORY}renga-web-frontend:latest
+    ports:
+      - "5000"
+    environment:
+      KEYCLOAK_URL: http://localhost/auth/realms/Renga/
+      API_ROOT_URL: http://localhost/api/
+    labels:
+      - "traefik.enable=true"
+      - "traefik.frontend.rule=PathPrefixStrip:/ui"
   reverse-proxy:
     image: traefik
     command: --web --web.address=:81 \

@@ -9,7 +9,7 @@ scala-services = renga-graph renga-storage renga-authorization renga-explorer
 scala-targets = $(foreach s,$(scala-services),$(s)-scala)
 scala-artifact = renga-graph-artifact renga-commons-artifact
 
-dockerfile-services = renga-deployer
+dockerfile-services = renga-deployer renga-web-frontend
 
 service-dirs = $(foreach s,$(scala-services) $(dockerfile-services),$(PLATFORM_BASE_DIR)/$(s))
 
