@@ -53,7 +53,7 @@ As such, the knowledge graph is a property graph, leading to an intuitive way of
 .. _fig-tinkerpop-model:
 
 .. figure:: https://github.com/SwissDataScienceCenter/documentation/wiki/static/images/tinkerpop.apache.com_the-crew-graph.png
-   :width: 600 
+   :width: 600
 
    -- Knowledge graph representation (Image source: http://tinkerpop.apache.org)
 
@@ -72,7 +72,7 @@ The type system leverages Janusgraph's graph `schema capabilities <http://docs.j
 The type system restricts data types to the following subset:
 
 .. tabularcolumns:: |l|l|
- 
+
 +-----------+------------------------------+
 | Name      | Description                  |
 +===========+==============================+
@@ -168,7 +168,7 @@ The full definition of the graph mutation API is located in: `apispec/src/graph-
 
 .. _fig-kg_mutation_seqdiag:
 
-.. figure:: /images/graph_mutation.sequence.png
+.. figure:: /images/generated/graph_mutation.sequence.png
 
    -- Graph mutation sequence diagram
 
@@ -226,4 +226,3 @@ Code Modules
 - graph-mutation ([graph-mutation-worker](https://github.com/SwissDataScienceCenter/fantastic-guacamole/tree/master/graph-mutation-worker) and [graph-mutation-service](https://github.com/SwissDataScienceCenter/fantastic-guacamole/tree/master/graph-mutation-service)) - contains the graph mutation service
 - [graph-init](https://github.com/SwissDataScienceCenter/fantastic-guacamole/tree/master/graph-init) - contains the code used to initialize the graph type system with definitions in [type_init.json](https://github.com/SwissDataScienceCenter/fantastic-guacamole/blob/master/graph-init/src/main/resources/type_init.json)
 - [graph-navigation-service](https://github.com/SwissDataScienceCenter/fantastic-guacamole/tree/master/graph-navigation-service) - contains code to read the graph without a gremlin-shell
-
