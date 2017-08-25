@@ -16,12 +16,13 @@ help:
 
 # Catch-all target: route all unknown targets to Sphinx using the new
 # "make mode" option.  $(O) is meant as a shortcut for $(SPHINXOPTS).
-%: Makefile
+%: Makefile uml
 	@$(SPHINXBUILD) -M $@ "$(SOURCEDIR)" "$(BUILDDIR)" $(SPHINXOPTS) $(O)
 
 uml:
 	@make -C resources/uml png
-	@cp -f resources/uml/*.png source/images/
+	@mkdir -p source/images/generated
+	@cp -f resources/uml/*.png source/images/generated/
 
 clean:
 	@- rm -rf build/*
