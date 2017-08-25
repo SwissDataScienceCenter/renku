@@ -1,0 +1,3 @@
+sphinx-rtd-theme==0.2.4
+sphinxcontrib-scaladomain==0.1a1
+sphinxcontrib-websupport==1.0.1
