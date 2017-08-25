@@ -131,6 +131,20 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.frontend.rule=PathPrefix:/api/deployer"
+  explorer:
+    image: ${IMAGE_REPOSITORY}renga-explorer:latest
+    environment:
+      PLAY_APPLICATION_SECRET: $PLAY_APPLICATION_SECRET
+      RESOURCE_MANAGER_PUBLIC_KEY: $RESOURCE_MANAGER_PUBLIC_KEY
+    links:
+      - keycloak
+      - graph-typesystem
+    ports:
+    - "9000"
+    restart: on-failure
+    labels:
+      - "traefik.enable=true"
+      - "traefik.frontend.rule=PathPrefix:/api/explorer"
   storage:
     image: ${IMAGE_REPOSITORY}renga-storage:$PLATFORM_VERSION
     environment:
