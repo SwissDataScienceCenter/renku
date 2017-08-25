@@ -1,4 +1,5 @@
-SBT = sbt
+SBT_IVY_DIR := $(PWD)/.ivy
+SBT = sbt -Dsbt.ivy.home=$(SBT_IVY_DIR)
 SBT_PUBLISH_TARGET = publish-local
 PLATFORM_BASE_DIR = ..
 PLATFORM_VERSION = 0.1.0-SNAPSHOT
@@ -58,6 +59,7 @@ pull: $(foreach s, $(repos), $(s)-pull)
 # build scala services
 %-artifact: $(PLATFORM_BASE_DIR)/%
 	cd $< && $(SBT) $(SBT_PUBLISH_TARGET)
+	rm -rf $(SBT_IVY_DIR)/cache/ch.datascience/$*
 
 renga-graph-%-scala: $(PLATFORM_BASE_DIR)/renga-graph $(scala-artifact)
 	cd $< && echo "project $*\n$$DOCKER_BUILD" | $(SBT)
