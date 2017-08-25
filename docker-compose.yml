@@ -136,10 +136,12 @@ services:
     environment:
       PLAY_APPLICATION_SECRET: $PLAY_APPLICATION_SECRET
       RESOURCE_MANAGER_PUBLIC_KEY: $RESOURCE_MANAGER_PUBLIC_KEY
+    links:
+      - reverse-proxy
     depends_on:
-    - reverse-proxy
+      - graph-typesystem
     ports:
-    - "9000"
+      - "9000"
     restart: on-failure
     labels:
       - "traefik.enable=true"
