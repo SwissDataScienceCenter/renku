@@ -7,7 +7,7 @@ IMAGE_REPOSITORY=registry.gitlab.com/swissdatasciencecenter/images/
 
 define DOCKER_BUILD
 set version in Docker := "$(PLATFORM_VERSION)"
-set dockerRepository := Option("$(IMAGE_REPOSITORY)")
+set dockerRepository := Option("$(IMAGE_REPOSITORY)".replaceAll("/$$", ""))
 docker:publishLocal
 endef
 
