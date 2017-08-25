@@ -136,9 +136,8 @@ services:
     environment:
       PLAY_APPLICATION_SECRET: $PLAY_APPLICATION_SECRET
       RESOURCE_MANAGER_PUBLIC_KEY: $RESOURCE_MANAGER_PUBLIC_KEY
-    links:
-      - keycloak
-      - graph-typesystem
+    depends_on:
+    - reverse-proxy
     ports:
     - "9000"
     restart: on-failure
