@@ -1,0 +1,50 @@
+notifications:
+  email: false
+
+sudo: required
+
+services:
+  - docker
+
+branches:
+  only:
+    - master
+
+language: python
+
+matrix:
+  fast_finish: true
+
+# cache:
+#   - pip
+
+# env:
+#   - REQUIREMENTS=lowest
+#   - REQUIREMENTS=release DEPLOY=true
+  # - REQUIREMENTS=devel
+
+python:
+  - "3.6"
+
+# before_install:
+
+install:
+  - make clone
+
+script:
+  - make all
+
+# after_success:
+#   - coveralls
+
+# deploy:
+#   provider: pypi
+#   user: swissdatasciencecenter
+#   password:
+#     secure: TODO:PYPISECUREHASH
+#   distributions: "compile_catalog sdist bdist_wheel"
+#   on:
+#     tags: true
+#     python: "2.7"
+#     repo: SwissDataScienceCenter/sdsc-deployer
+#     condition: $DEPLOY = true
