@@ -37,8 +37,8 @@ dockerfile-services = \
 	renga-deployer
 
 scala-artifact = \
-	renga-commons-artifact \
-	renga-graph-artifact
+	renga-commons \
+	renga-graph
 
 .PHONY: all
 all: docker-images
@@ -59,7 +59,7 @@ pull: $(foreach s, $(repos), $(s)-pull)
 # build scala services
 %-artifact: $(PLATFORM_BASE_DIR)/%
 	cd $< && $(SBT) $(SBT_PUBLISH_TARGET)
-	rm -rf $(SBT_IVY_DIR)/cache/ch.datascience/$*
+	rm -rf $(SBT_IVY_DIR)/cache/ch.datascience/$(*)*
 
 renga-graph-%-scala: $(PLATFORM_BASE_DIR)/renga-graph $(scala-artifact)
 	cd $< && echo "project $*\n$$DOCKER_BUILD" | $(SBT)
@@ -68,6 +68,11 @@ renga-graph-%-scala: $(PLATFORM_BASE_DIR)/renga-graph $(scala-artifact)
 	cd $< && echo "$$DOCKER_BUILD" | $(SBT)
 
 $(scala-services): %: %-scala
+
+$(scala-artifact): %: %-artifact
+
+# define this dependency explicitly
+renga-commons-artifact: renga-graph-artifact
 
 # build docker images
 .PHONY: $(dockerfile-services)
