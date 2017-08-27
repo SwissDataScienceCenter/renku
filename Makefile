@@ -3,7 +3,7 @@ SBT = sbt -ivy $(SBT_IVY_DIR)
 SBT_PUBLISH_TARGET = publish-local
 PLATFORM_BASE_DIR = ..
 PLATFORM_VERSION = 0.1.0-SNAPSHOT
-PLATFORM_BASE_REPO_URL = git@github.com:SwissDataScienceCenter/
+PLATFORM_BASE_REPO_URL = git@github.com:SwissDataScienceCenter
 PLATFORM_REPO_TPL = $(PLATFORM_BASE_REPO_URL)/$*.git
 IMAGE_REPOSITORY=registry.gitlab.com/swissdatasciencecenter/images/
 
