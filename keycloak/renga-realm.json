@@ -1,6 +1,6 @@
 {
-  "id" : "SDSC",
-  "realm" : "SDSC",
+  "id" : "Renga",
+  "realm" : "Renga",
   "notBefore" : 0,
   "revokeRefreshToken" : false,
   "accessTokenLifespan" : 3000,
@@ -36,7 +36,7 @@
       "scopeParamRequired" : true,
       "composite" : false,
       "clientRole" : false,
-      "containerId" : "SDSC"
+      "containerId" : "Renga"
     }, {
       "id" : "25387a4d-53b8-4168-9601-48e9b83a71c7",
       "name" : "uma_authorization",
@@ -44,7 +44,7 @@
       "scopeParamRequired" : false,
       "composite" : false,
       "clientRole" : false,
-      "containerId" : "SDSC"
+      "containerId" : "Renga"
     } ],
     "client" : {
       "realm-management" : [ {
@@ -287,13 +287,13 @@
     "id" : "84027d06-f768-40f0-a6c7-c1e4fb405b76",
     "clientId" : "account",
     "name" : "${client_account}",
-    "baseUrl" : "/auth/realms/SDSC/account",
+    "baseUrl" : "/auth/realms/Renga/account",
     "surrogateAuthRequired" : false,
     "enabled" : true,
     "clientAuthenticatorType" : "client-secret",
     "secret" : "66e487de-a299-4273-bd9a-16096a82f5f3",
     "defaultRoles" : [ "view-profile", "manage-account" ],
-    "redirectUris" : [ "/auth/realms/SDSC/account/*" ],
+    "redirectUris" : [ "/auth/realms/Renga/account/*" ],
     "webOrigins" : [ ],
     "notBefore" : 0,
     "bearerOnly" : false,
@@ -625,7 +625,7 @@
     "implicitFlowEnabled" : true,
     "directAccessGrantsEnabled" : true,
     "serviceAccountsEnabled" : true,
-    "publicClient" : false,
+    "publicClient" : true,
     "frontchannelLogout" : false,
     "protocol" : "openid-connect",
     "attributes" : {
@@ -882,12 +882,12 @@
     "id" : "2f766f4f-1104-46cb-93c7-3b245e21eb1b",
     "clientId" : "security-admin-console",
     "name" : "${client_security-admin-console}",
-    "baseUrl" : "/auth/admin/SDSC/console/index.html",
+    "baseUrl" : "/auth/admin/Renga/console/index.html",
     "surrogateAuthRequired" : false,
     "enabled" : true,
     "clientAuthenticatorType" : "client-secret",
     "secret" : "a58e1789-82dc-45a1-8efc-3ece38e4730a",
-    "redirectUris" : [ "/auth/admin/SDSC/console/*" ],
+    "redirectUris" : [ "/auth/admin/Renga/console/*" ],
     "webOrigins" : [ ],
     "notBefore" : 0,
     "bearerOnly" : false,

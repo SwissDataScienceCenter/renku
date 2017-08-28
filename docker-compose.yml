@@ -32,16 +32,15 @@ services:
       - "-b 0.0.0.0"
       - "-Dkeycloak.migration.action=import"
       - "-Dkeycloak.migration.provider=singleFile"
-      - "-Dkeycloak.migration.file=/data/sdsc-realm.json"
+      - "-Dkeycloak.migration.file=/data/renga-realm.json"
       - "-Dkeycloak.migration.strategy=IGNORE_EXISTING"
     volumes:
-      - ./keycloak/sdsc-realm.json:/data/sdsc-realm.json:ro
+      - ./keycloak/renga-realm.json:/data/renga-realm.json:ro
     links:
       - db:postgres
     restart: on-failure
     labels:
       - "traefik.enable=true"
-      - "traefik.frontend.rule=Host:localhost"
       - "traefik.frontend.rule=PathPrefix:/auth"
   graph-typesystem:
     image: ${IMAGE_REPOSITORY}renga-graph-typesystem-service:$PLATFORM_VERSION
@@ -101,7 +100,7 @@ services:
       - "traefik.enable=true"
       - "traefik.frontend.rule=PathPrefix:/api/resource-manager"
   deployer:
-    image: ${IMAGE_REPOSITORY}renga-deployer:latest
+    image: ${IMAGE_REPOSITORY}renga-deployer:$PLATFORM_VERSION
     links:
       - db
       - reverse-proxy
@@ -121,8 +120,8 @@ services:
       DEPLOYER_JWT_KEY: $RESOURCE_MANAGER_PUBLIC_KEY
       DEPLOYER_JWT_ISSUER: resource-manager
       DEPLOYER_TOKEN_SCOPE_KEY: https://rm.datascience.ch/scope
-      DEPLOYER_AUTHORIZATION_URL: http://localhost/auth/realms/SDSC/protocol/openid-connect/auth
-      DEPLOYER_TOKEN_URL: http://localhost/auth/realms/SDSC/protocol/openid-connect/
+      DEPLOYER_AUTHORIZATION_URL: http://localhost/auth/realms/Renga/protocol/openid-connect/auth
+      DEPLOYER_TOKEN_URL: http://localhost/auth/realms/Renga/protocol/openid-connect/
       DEPLOYER_URL: localhost
       DEPLOYER_BASE_PATH: /api/deployer
       WSGI_NUM_PROXIES: 1
