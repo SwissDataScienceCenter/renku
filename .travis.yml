@@ -38,6 +38,7 @@ before_install:
   - pip install -r requirements-test.txt
 
 install:
+  - docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD" $DOCKER_REGISTRY
   - ./travis-install.sh
 
 before_script:
