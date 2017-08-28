@@ -147,7 +147,7 @@ services:
       - "traefik.enable=true"
       - "traefik.frontend.rule=PathPrefix:/api/deployer"
   explorer:
-    image: ${IMAGE_REPOSITORY}renga-explorer:latest
+    image: ${IMAGE_REPOSITORY}renga-explorer:$PLATFORM_VERSION
     environment:
       PLAY_APPLICATION_SECRET: $PLAY_APPLICATION_SECRET
       RESOURCE_MANAGER_PUBLIC_KEY: $RESOURCE_MANAGER_PUBLIC_KEY
