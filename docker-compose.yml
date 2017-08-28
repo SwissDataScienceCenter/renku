@@ -26,13 +26,13 @@ services:
     volumes:
     - ./postgres/docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d:ro
     ports:
-    - "5432:5432"
+    - "5432"
   cassandra:
     image: cassandra:2.1.9
     volumes:
     - ./cassandra/etc/cassandra-env.sh:/etc/cassandra/cassandra-env.sh:ro
     ports:
-    - "9160:9160"
+    - "9160"
   keycloak:
     image: jboss/keycloak-postgres:3.2.0.Final
     environment:
