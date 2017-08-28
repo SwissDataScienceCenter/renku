@@ -1,3 +1,19 @@
+# -*- coding: utf-8 -*-
+#
+# Copyright 2017 Swiss Data Science Center
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
 notifications:
   email: false
 
@@ -15,27 +31,38 @@ language: python
 matrix:
   fast_finish: true
 
-# cache:
-#   - pip
-
-# env:
-#   - REQUIREMENTS=lowest
-#   - REQUIREMENTS=release DEPLOY=true
-  # - REQUIREMENTS=devel
-
 python:
   - "3.6"
 
-# before_install:
+before_install:
+  - pip install -r requirements-test.txt
 
 install:
-  - make clone
+  - ./travis-install.sh
+
+before_script:
+  - docker-compose up -d
+  - travis_retry docker run --network renga_default --rm
+    --link keycloak
+    --link deployer
+    --link graph-mutation
+    --link graph-navigation
+    --link graph-typesystem
+    --link resource-manager
+    --link storage
+    -e TARGETS=keycloak:8080,
+    deployer:5000,
+    graph-mutation:9000,
+    graph-navigation:9000,
+    graph-typesystem:9000,
+    resource-manager:9000,
+    storage:9000
+    -e TIMEOUT=60
+    waisbrot/wait
 
 script:
-  - make all
+  - pytest
 
-# after_success:
-#   - coveralls
 
 # deploy:
 #   provider: pypi
