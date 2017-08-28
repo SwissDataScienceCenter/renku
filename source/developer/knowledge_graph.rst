@@ -204,15 +204,15 @@ identifiers mapped from the incoming mutation request.
 | `update_vertex_property` | id of the affected vertex |
 +--------------------------+---------------------------+
 
-Example: consider the following mutation request.
-```json
-{ "operations": [ { "type": "create_vertex", [...] }, { "type": "create_edge", [...] } ] }
-```
-Then, the response will contain:
-```json
-"results": [ { "id": 1234, "id": "1234->5678" } ]
-```
-where `1234` is a vertex identifier and `1234->5678` is an edge identifier.
+Example: consider the following mutation request. ::
+
+    { "operations": [ { "type": "create_vertex", [...] }, { "type": "create_edge", [...] } ] }
+
+Then, the response will contain::
+
+    "results": [ { "id": 1234, "id": "1234->5678" } ]
+
+where :code:`1234` is a vertex identifier and :code:`1234->5678` is an edge identifier.
 
 Note that the resulting ids follow the same order as the order of operations in the request.
 
