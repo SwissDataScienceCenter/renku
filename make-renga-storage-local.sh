@@ -10,7 +10,7 @@ function main() {
   local from_image
   local to_image
   getFromImage from_image
-  getToImage to_image
+  to_image=$from_image # just use the same name :P
   echo "from_image=$from_image"
   echo "to_image=$to_image"
 
@@ -39,14 +39,7 @@ function getFromImage() {
   source ./.env
 
   local __resultvar=$1
-  eval $__resultvar="$IMAGE_REPOSITORY/renga-storage:$PLATFORM_VERSION"
-}
-
-function getToImage() {
-  source ./.env
-
-  local __resultvar=$1
-  eval $__resultvar="renga-storage:local-$PLATFORM_VERSION"
+  eval $__resultvar="${IMAGE_REPOSITORY}renga-storage:$PLATFORM_VERSION"
 }
 
 main
