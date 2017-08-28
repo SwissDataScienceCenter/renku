@@ -1,5 +1,5 @@
 SBT_IVY_DIR := $(PWD)/.ivy
-SBT = sbt -Dsbt.ivy.home=$(SBT_IVY_DIR)
+SBT = sbt -ivy $(SBT_IVY_DIR)
 SBT_PUBLISH_TARGET = publish-local
 PLATFORM_BASE_DIR = ..
 PLATFORM_VERSION = 0.1.0-SNAPSHOT
