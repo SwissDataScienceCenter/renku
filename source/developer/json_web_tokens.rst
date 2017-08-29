@@ -1,3 +1,5 @@
+:orphan:
+
 .. _json_web_tokens:
 
 JSON Web Tokens

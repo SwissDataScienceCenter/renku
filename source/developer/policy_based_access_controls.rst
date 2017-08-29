@@ -1,7 +1,7 @@
 .. _policy_based_access_controls:
 
 Policy Based Access Controls
-----------------------------
+============================
 
 .. _fig-pbac_illustrated:
 
@@ -24,8 +24,8 @@ In the recommended architecture of the PBAC access control paradigm, the standar
   to a data set only if the data is requested by an authorized (signed) application running on behalf of an authorized user, and on an authorized compute cluster.
 
 
-In **RENGA** we altered the standard PBAC design to decompose the PEP component into an *authorization PEP* and an *action PEP* as
-illustrated in :numref:`fig-pbac_illustrated`.
+In **RENGA** we altered the standard PBAC design to decompose the PEP component into an *authorization PEP* service
+and an *action PEP* service as illustrated in :numref:`fig-pbac_illustrated`.
 At the end of the action phase (6) the client receives from the *authorization PEP* a verifiable,
 expiring and unforgeable token that has all the information needed to access the resource.
 The client can subsequently use this authorization token to claim the resource from the *action PEP* service (7-10).
@@ -43,7 +43,7 @@ This decomposition into an authorization and action service has a number of adva
   and pricing.
 - The design allows for a parallel access to the resource, such as reading shards of the requested data from different processes executing in parallel.
 
-In the **RENGA** architecture, it is the :ref:`resource_manager` that fullfills the role of the PDP. The PIP is served by the :ref:`knowledge_graph`.
+In the **RENGA** architecture, it is the :ref:`resource_manager_service` that fullfills the role of the PDP. The PIP is served by the :ref:`knowledge_graph`.
 The PEP services are implemented by a number independent resource provider services, currently :ref:`storage` and :ref:`deployer`.
 
 In addition the resource backend is not directly accessible to the user.

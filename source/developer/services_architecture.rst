@@ -1,3 +1,5 @@
+.. _service_architecture:
+
 RENGA Architecture
 ==================
 
@@ -30,6 +32,13 @@ Important Concepts
 Before delving into the details of the architecture components it is strongly advised to first get familiarized
 with a few foundational concepts:
 
+.. toctree::
+   :hidden:
+   :maxdepth: 2
+
+   JWT  <json_web_tokens>
+   PBAC <policy_based_access_controls>
+
 - :ref:`json_web_tokens` (JWT)
 - :ref:`policy_based_access_controls` (PBAC)
 
@@ -39,10 +48,10 @@ Components
 Details about the main service components of the architecture can be found here:
 
 - Identity Manager (IM), provides user authentication
-- :ref:`resource_manager` (RM), provides authorization
+- :ref:`resource_manager_service` (RM), provides authorization
 - :ref:`knowledge_graph` (KG), spans multiple services
 - :ref:`deployer` (DEP), provides (container) deployment
 - :ref:`storage` (STG), provides file storage
-- :ref:`Explorer` (EXP), provides views over data stored in the knowledge graph.
+- :ref:`explorer` (EXP), provides views over data stored in the knowledge graph.
 
 

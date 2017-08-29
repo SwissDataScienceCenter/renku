@@ -1,4 +1,4 @@
-.. _resource_manager:
+.. _resource_manager_service:
 
 Resource Manager Service
 ========================
@@ -118,9 +118,9 @@ The tokens are simply passed around in the :code:`service_claims` field and will
 
 Example:
 
-.. _fig-local-deployment:
+.. _fig-local_deployment:
 
-.. figure:: /images/generated/local-deployment.png
+.. figure:: /images/generated/local_deployment.sequence.png
 
     Sequence diagram of local application deployment.
 

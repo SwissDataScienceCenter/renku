@@ -22,8 +22,8 @@ To be able to map to a large number of possible backends, we defined here the ma
 Bucket
 ^^^^^^
 
- A bucket is a container that regroups objects/files that would share some common semantics, e.g. multiple files of a same datasets or the outputs of the same execution. In addition to the globally unique identifier, a bucket has a name, an internal name, and a backend.
- [See here for the representation in the Graph.](https://github.com/SwissDataScienceCenter/documentation/wiki/KG-data).
+ A bucket is a container that regroups objects/files that would share some common semantics, e.g. multiple files of a same datasets or the outputs of the same execution. In addition to the globally unique identifier, a bucket has a name, an internal name, and a backend. See :ref:`here <kg_data>` for the representation in the Knowledge Graph.
+
  * The name is given by the user and doesn't necessarily need to be unique. It is mostly used for display purposes.
  * The internal name is unique per backend instance and represents usually the folder/bucket/container name in the specific storage system.
  * The backend is a string (whose choice is limited to a given list per platform deployment) mapping to an instance of a storage backend.
@@ -31,12 +31,12 @@ Bucket
 File
 ^^^^
 
- A file is a sequence of bytes stored together that is agnostic of its own content. As the reading API allows for accessing directly a range of bytes, it would even by possible to abstract more complex storage structures inside a single file. However it should be noted that writing must be done all at once, in sequence (in the current implementation). In addition to the globally unique identifier, a file has only a name. The file name can contain separators such as "/", allowing to represent a folder hierarchy.
+  A file is a sequence of bytes stored together that is agnostic of its own content. As the reading API allows for accessing directly a range of bytes, it would even by possible to abstract more complex storage structures inside a single file. However it should be noted that writing must be done all at once, in sequence (in the current implementation). In addition to the globally unique identifier, a file has only a name. The file name can contain separators such as "/", allowing to represent a folder hierarchy.
 
 File_Location
 ^^^^^^^^^^^^^
 
- A file_location represents a concrete instance of a file stored in a given bucket. A file can have several file_locations, allowing for replication, caching and various optimisations. 
+  A file_location represents a concrete instance of a file stored in a given bucket. A file can have several file_locations, allowing for replication, caching and various optimisations. 
 
 .. _stg_endpoints:
 
