@@ -52,7 +52,7 @@ As such, the knowledge graph is a property graph, leading to an intuitive way of
 
 .. _fig-tinkerpop-model:
 
-.. figure:: https://github.com/SwissDataScienceCenter/documentation/wiki/static/images/tinkerpop.apache.com_the-crew-graph.png
+.. figure:: /images/tinkerpop.apache.com_the-crew-graph.png
    :width: 600
 
    -- Knowledge graph representation (Image source: http://tinkerpop.apache.org)
@@ -120,17 +120,19 @@ They consist of:
 
 Examples:
 
-1. `name = "geom:point2d"`, `supertypes = {}`, `properties = { "geom:x", "geom:y" }`
-   Here, if a vertex `v` is know to be of type `geom:point2d`, then we know that v has
-   `geom:x` and `geom:y` properties.
-2. `name = "geom:labeledPoint2d"`, `supertypes = { "geom:point2d" }`, `properties = { "geom:x", "geom:y", "geom:label" }`
-   Here, if a vertex `v` is know to be of type `geom:labeledPoint2d`, then as `geom:point2d` is a supertype of
-   `geom:labeledPoint2d`, `v` is also of type `geom:point2d`. Notica also that the properties of `geom:labeledPoint2d` are a superset of the properties of type `geom:point2d`.
+1. :code:`name = "geom:point2d"`, :code:`supertypes = {}`, :code:`properties = { "geom:x", "geom:y" }`
+   Here, if a vertex :code:`v` is know to be of type :code:`geom:point2d`, then we know that v has
+   :code:`geom:x` and :code:`geom:y` properties.
+2. :code:`name = "geom:labeledPoint2d"`, :code:`supertypes = { "geom:point2d" }`,
+   :code:`properties = { "geom:x", "geom:y", "geom:label" }`
+   Here, if a vertex :code:`v` is know to be of type :code:`geom:labeledPoint2d`, then as :code:`geom:point2d` is a supertype of
+   :code:`geom:labeledPoint2d`, :code:`v` is also of type :code:`geom:point2d`.
+   Notice also that the properties of :code:`geom:labeledPoint2d` are a superset of the properties of type :code:`geom:point2d`.
 
 The type system is initialized with the system property keys, (regular) property keys, edge labels and
 named types present in the `type_init.json <https://github.com/SwissDataScienceCenter/fantastic-guacamole/blob/master/graph-init/src/main/resources/type_init.json>`_ file.
 
-The type system concepts are implemented in the `graph-core <https://github.com/SwissDataScienceCenter/fantastic-guacamole/tree/master/graph-core/##TODO>`_ module, see package `ch.datascience.graph.types <https://github.com/SwissDataScienceCenter/fantastic-guacamole/tree/master/graph-core/src/main/scala/ch/datascience/graph/types/##TODO>`_.
+The type system concepts are implemented in the `graph-core <https://github.com/SwissDataScienceCenter/fantastic-guacamole/tree/master/graph-core/>`_ module, see package `ch.datascience.graph.types <https://github.com/SwissDataScienceCenter/fantastic-guacamole/tree/master/graph-core/src/main/scala/ch/datascience/graph/types/>`_.
 
 .. _kg_read:
 
@@ -141,11 +143,12 @@ Trusted platform services can use one the `gremlin variants <http://tinkerpop.ap
 The graph traversals must be generated with a graph traversal source marked with the `ReadOnlyStrategy <http://tinkerpop.apache.org/docs/current/reference/#_readonlystrategy>`_.
 
 If vertices or edges are extracted using a graph traversal, it may be desirable to perform the following:
-- discard properties that do not follow the `<namespace>:<name>` pattern
-- in the case of vertices, transform the values from the `type` system property into named type constructs
-(by mapping names to the named type construct they are associated with)
 
-These steps are implemented in the `VertexReader <https://github.com/SwissDataScienceCenter/fantastic-guacamole/blob/master/graph-core/src/main/scala/ch/datascience/graph/elements/tinkerpop_mappers/VertexReader.scala/##TODO>`_ and the `EdgeReader <https://github.com/SwissDataScienceCenter/fantastic-guacamole/blob/master/graph-core/src/main/scala/ch/datascience/graph/elements/tinkerpop_mappers/EdgeReader.scala/##TODO>`_ classes.
+- discard properties that do not follow the :code:`<namespace>:<name>` pattern
+- in the case of vertices, transform the values from the :code:`type` system property into named type constructs
+  (by mapping names to the named type construct they are associated with)
+
+These steps are implemented in the `VertexReader <https://github.com/SwissDataScienceCenter/fantastic-guacamole/blob/master/graph-core/src/main/scala/ch/datascience/graph/elements/tinkerpop_mappers/VertexReader.scala>`_ and the `EdgeReader <https://github.com/SwissDataScienceCenter/fantastic-guacamole/blob/master/graph-core/src/main/scala/ch/datascience/graph/elements/tinkerpop_mappers/EdgeReader.scala>`_ classes.
 
 .. _kg_update:
 
@@ -159,12 +162,12 @@ A mutation request consists of a sequence of operations. The whole sequence of o
 in a single transaction, i.e. mutations are atomic with respect to transaction atomicity.
 Currently, there are four supported operations:
 
-- `create_vertex`, create a new vertex in the graph
-- `create_edge`, create a new edge in the graph
-- `create_vertex_property`, add a (property key, value) pairing to a given vertex
-- `update_vertex_property`, modify a vertex property. This is done by first removing the old (property key, value) pairing and then adding the (property key, new value) pairing
+- :code:`create_vertex`, create a new vertex in the graph
+- :code:`create_edge`, create a new edge in the graph
+- :code:`create_vertex_property`, add a (property key, value) pairing to a given vertex
+- :code:`update_vertex_property`, modify a vertex property. This is done by first removing the old (property key, value) pairing and then adding the (property key, new value) pairing
 
-The full definition of the graph mutation API is located in: `apispec/src/graph-mutation.yaml <https://github.com/SwissDataScienceCenter/fantastic-guacamole/blob/master/apispec/src/graph-mutation.yaml/##TODO>`_
+The full definition of the graph mutation API is located in: `apispec/src/graph-mutation.yaml <https://github.com/SwissDataScienceCenter/fantastic-guacamole/blob/master/apispec/src/graph-mutation.yaml>`_
 
 .. _fig-kg_mutation_seqdiag:
 
@@ -179,12 +182,12 @@ Detail of messages:
 3. client requests status of mutation identified by **uuid** received at (2 request received)
 4. mutation service sends back the mutation status
 
-The response sent at (4 mutation status) will contain a `status` field which can have two values:
+The response sent at (4 mutation status) will contain a :code:`status` field which can have two values:
 
 - pending: the mutation has not been processed yet
 - completed: the mutation has been processed
 
-In the case of `completed` status, the response will contain more information about the result of
+In the case of :code:`completed` status, the response will contain more information about the result of
 processing the mutation.
 Notably, the response will display an error message if for some reason (e.g. invalid mutation), the mutation failed.
 Otherwise, if the mutation was successfully processed, then the response will contain a sequence of graph
