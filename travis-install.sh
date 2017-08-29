@@ -15,11 +15,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD" $DOCKER_REGISTRY
 
 if [ "$TRAVIS_EVENT_TYPE" == "cron" ]
 then
-    make
+    make -e PLATFORM_BASE_DIR=/tmp
 else
-    docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD" $DOCKER_REGISTRY
     docker-compose pull
 fi
