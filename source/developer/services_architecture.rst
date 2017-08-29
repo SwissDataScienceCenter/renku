@@ -39,10 +39,10 @@ Components
 Details about the main service components of the architecture can be found here:
 
 - Identity Manager (IM), provides user authentication
-- resource manager (RM), provides authorization
+- :ref:`resource_manager` (RM), provides authorization
 - :ref:`knowledge_graph` (KG), spans multiple services
-- Deployer (DEP), provides (container) deployment
+- :ref:`deployer` (DEP), provides (container) deployment
 - :ref:`storage` (STG), provides file storage
-- Explorer (EXP), provides views over data stored in the knowledge graph.
+- :ref:`Explorer` (EXP), provides views over data stored in the knowledge graph.
 
 
