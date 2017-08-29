@@ -194,9 +194,10 @@ services:
     environment:
       KEYCLOAK_URL: http://localhost/auth/realms/Renga/
       API_ROOT_URL: http://localhost/api/
+      APPLICATION_ROOT: /ui
     labels:
       - "traefik.enable=true"
-      - "traefik.frontend.rule=PathPrefixStrip:/ui"
+      - "traefik.frontend.rule=PathPrefix:/ui"
   reverse-proxy:
     image: traefik
     command: --web --web.address=:81 \
