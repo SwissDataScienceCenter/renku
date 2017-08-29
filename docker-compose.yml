@@ -1,3 +1,19 @@
+# -*- coding: utf-8 -*-
+#
+# Copyright 2017 Swiss Data Science Center
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
 version: '2'
 services:
   db:
@@ -10,13 +26,13 @@ services:
     volumes:
     - ./postgres/docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d:ro
     ports:
-    - "5432:5432"
+    - "5432"
   cassandra:
     image: cassandra:2.1.9
     volumes:
     - ./cassandra/etc/cassandra-env.sh:/etc/cassandra/cassandra-env.sh:ro
     ports:
-    - "9160:9160"
+    - "9160"
   keycloak:
     image: jboss/keycloak-postgres:3.2.0.Final
     environment:
@@ -100,7 +116,7 @@ services:
       - "traefik.enable=true"
       - "traefik.frontend.rule=PathPrefix:/api/resource-manager"
   deployer:
-    image: ${IMAGE_REPOSITORY}renga-deployer:latest
+    image: ${IMAGE_REPOSITORY}renga-deployer:$PLATFORM_VERSION
     links:
       - db
       - reverse-proxy
@@ -130,6 +146,21 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.frontend.rule=PathPrefix:/api/deployer"
+  explorer:
+    image: ${IMAGE_REPOSITORY}renga-explorer:$PLATFORM_VERSION
+    environment:
+      PLAY_APPLICATION_SECRET: $PLAY_APPLICATION_SECRET
+      RESOURCE_MANAGER_PUBLIC_KEY: $RESOURCE_MANAGER_PUBLIC_KEY
+    links:
+      - reverse-proxy
+    depends_on:
+      - graph-typesystem
+    ports:
+      - "9000"
+    restart: on-failure
+    labels:
+      - "traefik.enable=true"
+      - "traefik.frontend.rule=PathPrefix:/api/explorer"
   storage:
     image: ${IMAGE_REPOSITORY}renga-storage:$PLATFORM_VERSION
     environment:

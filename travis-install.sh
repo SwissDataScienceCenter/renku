@@ -1,3 +1,4 @@
+#!/bin/bash
 # -*- coding: utf-8 -*-
 #
 # Copyright 2017 Swiss Data Science Center
@@ -14,12 +15,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-FROM buildpack-deps:curl
 
-RUN apt-get update && apt-get install -y \
-        jq \
-    && rm -rf /var/lib/apt/lists/*
-
-ADD . /
-
-CMD ["bash", "/example.sh"]
+if [ "$TRAVIS_EVENT_TYPE" == "cron" ]
+then
+    make
+else
+    docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD" $DOCKER_REGISTRY
+    docker-compose pull
+fi
