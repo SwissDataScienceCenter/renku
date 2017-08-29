@@ -11,7 +11,6 @@ Welcome to RENGA!
 .. toctree::
    :maxdepth: 2
    :caption: Table of Contents:
-   :name: mastertoc
    :includehidden:
 
    Introduction <intro>

@@ -11,7 +11,7 @@
     participant "Storage" as aSTG
     participant "Knowledge\nGraph" as aKG
     end box
-    box "Remote" #F8F8F8
+    box "Extern" #F8F8F8
     participant "Storage" as rSTG
     participant "Resource\nManager" as rRM
     participant "Knowledge\nGraph" as rKG
