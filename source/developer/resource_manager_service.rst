@@ -3,18 +3,24 @@
 Resource Manager Service
 ========================
 
-The resource manager (RM) service is responsible for authorizing access requests to resources described in the
-:ref:`knowledge_graph`.
-The role of the RM is to apply Policy-Based Access Control (:ref:`PBAC <policy_based_access_controls>`) rules to grant or reject access to resources.
-
 Contents
 --------
 
+- :ref:`rm-overview`
 - :ref:`Authorization Flow <rm-authorization_flow>`
 - :ref:`Attributes <rm-attributes>`
 - :ref:`Rules <rm-rules>`
 - :ref:`Response from the RM <rm-response>`
 - :ref:`Accessing multiple resources and encapsulation <rm-encapsulation>`
+
+.. _rm-overview:
+
+Overview
+--------
+
+The resource manager (RM) service is responsible for authorizing access requests to resources described in the
+:ref:`knowledge_graph`.
+The role of the RM is to apply Policy-Based Access Control (:ref:`PBAC <policy_based_access_controls>`) rules to grant or reject access to resources.
 
 .. _rm-authorization_flow:
 

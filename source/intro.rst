@@ -1,3 +1,10 @@
+.. warning::
+
+   Work in progress
+     Please stay tuned. First stable version of this documentation is due for 15.09.2017
+
+.. _renga_introduction:
+
 Introduction
 ============
 
