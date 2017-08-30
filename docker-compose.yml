@@ -191,9 +191,12 @@ services:
     image: ${IMAGE_REPOSITORY}renga-web-frontend:latest
     ports:
       - "5000"
+    links:
+      - reverse-proxy
     environment:
-      KEYCLOAK_URL: http://localhost/auth/realms/Renga/
-      API_ROOT_URL: http://localhost/api/
+      KEYCLOAK_URL: http://reverse-proxy/auth/realms/Renga/  # from inside
+      KEYCLOAK_REDIRECT_URL: http://localhost/auth/realms/Renga/  # from outside
+      API_ROOT_URL: http://reverse-proxy/api/
       APPLICATION_ROOT: /ui
     labels:
       - "traefik.enable=true"
