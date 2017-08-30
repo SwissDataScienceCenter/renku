@@ -11,4 +11,4 @@ Developer Documentation
    Resource Manager <resource_manager_service>
    Storage <storage_service>
    UML <uml_diagrams>
-
+   Project repositories <code_repo_structure>
