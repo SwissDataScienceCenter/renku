@@ -7,8 +7,8 @@ PS2PDF?=pstopdf
 
 UMLTXT:=$(shell grep -l "@startuml" *.uml)
 UMLEPS:=$(patsubst %.uml,%.eps,$(UMLTXT))
-UMLPDF:=$(patsubst %.eps,%.pdf,$(UMLEPS))
-UMLPNG:=$(patsubst %.eps,%.png,$(UMLEPS))
+UMLPDF:=$(patsubst %.uml,%.pdf,$(UMLTXT))
+UMLPNG:=$(patsubst %.uml,%.png,$(UMLTXT))
 
 .PHONY: clean eps pdf nuke help
 

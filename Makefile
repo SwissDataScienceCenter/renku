@@ -24,7 +24,7 @@ help:
 	 echo ;\
 	fi
 
-.PHONY: help Makefile clean
+.PHONY: help Makefile clean uml
 
 
 # Catch-all target: route all unknown targets to Sphinx using the new

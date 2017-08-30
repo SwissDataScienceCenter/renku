@@ -1,0 +1,24 @@
+branches:
+    only:
+    - master
+
+language: python
+
+python:
+- '3.6'
+
+addons:
+    apt:
+        packages:
+            - graphviz
+
+script:
+    - make html
+
+deploy:
+- provider: script
+  skip_cleanup: true
+  script: bash ./.travis/git-commit-build.sh
+  on:
+    branch: master
+
