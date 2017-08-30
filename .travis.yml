@@ -10,7 +10,6 @@ python:
 addons:
   apt:
     packages:
-    - python-docutils
     - graphviz
 
 script:
