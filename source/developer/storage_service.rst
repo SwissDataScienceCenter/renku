@@ -11,7 +11,7 @@ Contents
 - :ref:`Storage Workflow <stg_workflow>`
 - :ref:`Versioning <stg_versioning>`
 
-The storage service is a thin abstraction layer on top of various storage systems, adding the access control and auditing capabilities. 
+The storage service is a thin abstraction layer on top of various storage systems, adding the access control and auditing capabilities.
 
 .. _stg_abstraction:
 
@@ -36,14 +36,16 @@ File
 File_Location
 ^^^^^^^^^^^^^
 
-  A file_location represents a concrete instance of a file stored in a given bucket. A file can have several file_locations, allowing for replication, caching and various optimisations. 
+  A file_location represents a concrete instance of a file stored in a given bucket. A file can have several file_locations, allowing for replication, caching and various optimisations.
 
 .. _stg_endpoints:
 
 Storage endpoints
 -----------------
 
-The storage API provides the following endpoints.
+The storage API provides the following endpoints (`storage API spec`_).
+
+.. _storage API spec: https://github.com/SwissDataScienceCenter/renga-storage/blob/master/swagger.yml
 
 Authorization
 ^^^^^^^^^^^^^
@@ -51,7 +53,7 @@ Authorization
 Reading
 .......
 
- **POST /authorize/read** 
+ **POST /authorize/read**
 
  The json-encoded body of the request must contain a ReadResourceRequest object with the globally unique identifier of the file to read. First the corresponding graph vertices are retrieved. The service chooses then the most suited file_location, possibly forwarding the request in a federated scenario.
  Then a query to the resource manager is sent for checking the access rights and signing the access authorization. The access authorization contains all the needed information for the backend to retrieve the given file_location, in the form of a json-object that is included in the JWT claim :code:`resource_extras` (You can find more details on the Resource Manager page).
@@ -63,7 +65,7 @@ Writing
  **POST /authorize/write**
 
  The process is identical to the previous one, with a WriteResourceRequest object. The file to write must have been first created. This will create a new version of the file. See below for the details about versioning.
- 
+
 Creating a file
 ...............
 
@@ -108,7 +110,7 @@ Listing backends
 Storage access workflow
 -----------------------
 
- In a typical workflow for accessing a file, the client performs first a preflight call to the corresponding /authorize endpoint and then uses the received JWT in the Authorization header for the subsequent call to the /io endpoint. 
+ In a typical workflow for accessing a file, the client performs first a preflight call to the corresponding /authorize endpoint and then uses the received JWT in the Authorization header for the subsequent call to the /io endpoint.
 
  **/authorize/read** is followed by **/io/read**
 
@@ -129,5 +131,3 @@ Time-based versioning
 All files are automatically versioned, by the storage backend, every time a new **write** is called on an existing file. The versioning scheme consists in appending the timestamp of the authorization call to the filename. This means that two **write** calls with the same permission token would overwrite a the same file, whereas two calls with different tokens, will create two distinct versions.
 
 At the level of the graph, this is abstracted by :code:`file_version` vertices which are linked to the :code:`file` vertex and that can have one or more :code:`file_location` vertices. File_versions have an attribute with their creation timestamp. Resolving the latest version of a file needs to get all versions and take the one with the largest timestamp.
-
-
