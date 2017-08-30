@@ -1,6 +1,6 @@
 branches:
-    only:
-    - master
+  only:
+  - master
 
 language: python
 
@@ -8,12 +8,12 @@ python:
 - '3.6'
 
 addons:
-    apt:
-        packages:
-            - graphviz
+  apt:
+    packages:
+    - graphviz
 
 script:
-    - make html
+- make html
 
 deploy:
 - provider: script
