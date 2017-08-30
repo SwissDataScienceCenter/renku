@@ -7,13 +7,13 @@ Policy Based Access Controls
 
 .. figure:: /images/pbac_illustrated.svg
 
-    Elements of PBAC workflow: Policy Enforcement Point (PEP), Policy Decision Point (PDP), Policy Information Point (PIP).
+    Elements of PBAC workflow as implemented in **RENGA**: Policy Enforcement Point (PEP), Policy Decision Point (PDP), Policy Information Point (PIP).
 
 
-The *Policy Based Access Control* (`PBAC <https://en.wikipedia.org/wiki/Attribute-based_access_control>`_) some time referred as *Attribute Based Access Control* (ABAC),
+The *Policy Based Access Control* (`PBAC wiki <https://en.wikipedia.org/wiki/Attribute-based_access_control>`_) some time referred as *Attribute Based Access Control* (ABAC),
 is a pervasive concept of the platform, on which all resource access controls are based.
 
-In the recommended architecture of the PBAC access control paradigm, the standard PBAC workflow is as follows:
+In the recommended architecture of the PBAC access control paradigm, the standard workflow is as follows:
 
 - The *Policy Enforcement Point* (PEP) is the client-facing service. It is responsible for guarding the resource. When the PEP receives a request to access a resoure (1) it
   inspects the request and combines it with other contextual information to generate a authorization request to the *Policy Decision Point* (PDP) (2). The PEP enforces the permissions granted
@@ -28,7 +28,7 @@ In **RENGA** we altered the standard PBAC design to decompose the PEP component 
 and an *action PEP* service as illustrated in :numref:`fig-pbac_illustrated`.
 At the end of the action phase (6) the client receives from the *authorization PEP* a verifiable,
 expiring and unforgeable token that has all the information needed to access the resource.
-The client can subsequently use this authorization token to claim the resource from the *action PEP* service (7-10).
+The client can subsequently use this authorization token for a limited period of time (few minutes) to claim the resource from the *action PEP* service (7-10).
 
 This decomposition into an authorization and action service has a number of advantages:
 
@@ -37,11 +37,12 @@ This decomposition into an authorization and action service has a number of adva
   In a federated mode of operation this allows the *authorization PEP* to redirect the request to the *authorization PEP* of the organization
   that owns the resource, and the latter can return a token with its *action PEP* as the target. The redirect is transparent (but not unberknowst)
   to the requesting client.
-- It allows the authorization service to be cascaded to dependency *authorization PEPs* before acting on the request.
+- It allows the authorization request to be cascaded to multiple *authorization PEPs* dependencies before acting on the response.
   It also gives the client an opportunity to choose between several alternatives before making a decision.
   This is particularly useful when accessing data that is mirrored in several locations, each possibly governed by different permission policies, SLA
-  and pricing.
-- The design allows for a parallel access to the resource, such as reading shards of the requested data from different processes executing in parallel.
+  and pricing models.
+- The design allows for a parallel access to the resource, such as using the same authorization token
+  for reading shards of the requested data from different processes executing in parallel.
 
 In the **RENGA** architecture, it is the :ref:`resource_manager_service` that fullfills the role of the PDP. The PIP is served by the :ref:`knowledge_graph`.
 The PEP services are implemented by a number independent resource provider services, currently :ref:`storage` and :ref:`deployer`.
