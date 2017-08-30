@@ -10,10 +10,11 @@ python:
 addons:
   apt:
     packages:
+    - python-docutils
     - graphviz
 
 script:
-- make html
+- make uml
 
 deploy:
 - provider: script
