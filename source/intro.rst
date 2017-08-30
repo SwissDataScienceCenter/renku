@@ -1,7 +1,9 @@
 .. warning::
 
    Work in progress
-     Please stay tuned. First stable version of this documentation is due for 15.09.2017
+     This documentation is being constantly updated.
+     A first stable 0.1 version is not due before 15.09.2017.
+     Please stay tuned.
 
 .. _renga_introduction:
 
@@ -26,7 +28,7 @@ The platform allow practitioners to:
 History
 -------
 
-- 2017.09.15  **RENGA** 0.1 (Beta) is released to the public, with all its features and faults.
+- 2017.09.15  **RENGA** 0.1 (Beta) is released to the public, with some of the planned features and all the faults.
 
 - 2017.02.06  Inauguration of the Swiss Data Science Center, design of **RENGA** is started.
 
