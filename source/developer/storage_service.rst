@@ -22,7 +22,7 @@ To be able to map to a large number of possible backends, we defined here the ma
 Bucket
 ^^^^^^
 
- A bucket is a container that regroups objects/files that would share some common semantics, e.g. multiple files of a same datasets or the outputs of the same execution. In addition to the globally unique identifier, a bucket has a name, an internal name, and a backend. See :ref:`here <kg_data>` for the representation in the Knowledge Graph.
+ A bucket is a container that regroups objects/files that would share some common semantics, e.g. multiple files of a same datasets or the outputs of the same execution. In addition to the globally unique identifier, a bucket has a name, an internal name, and a backend. See :ref:`here for the representation in the Knowledge Graph<kg_data>`.
 
  * The name is given by the user and doesn't necessarily need to be unique. It is mostly used for display purposes.
  * The internal name is unique per backend instance and represents usually the folder/bucket/container name in the specific storage system.
@@ -123,5 +123,11 @@ Storage access workflow
 Versioning
 ----------
 
-This part is not yet documented.
+Time-based versioning
+^^^^^^^^^^^^^^^^^^^^^
+
+All files are automatically versioned, by the storage backend, every time a new **write** is called on an existing file. The versioning scheme consists in appending the timestamp of the authorization call to the filename. This means that two **write** calls with the same permission token would overwrite a the same file, whereas two calls with different tokens, will create two distinct versions.
+
+At the level of the graph, this is abstracted by :code:`file_version` vertices which are linked to the :code:`file` vertex and that can have one or more :code:`file_location` vertices. File_versions have an attribute with their creation timestamp. Resolving the latest version of a file needs to get all versions and take the one with the largest timestamp.
+
 
