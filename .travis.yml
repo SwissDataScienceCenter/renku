@@ -4,6 +4,10 @@ branches:
 
 language: python
 
+install:
+- pip install docutils
+- pip install -r requirements.txt
+
 python:
 - '3.6'
 
@@ -13,7 +17,7 @@ addons:
     - graphviz
 
 script:
-- make uml
+- make html
 
 deploy:
 - provider: script
