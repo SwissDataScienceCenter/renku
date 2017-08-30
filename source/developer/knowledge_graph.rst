@@ -130,9 +130,9 @@ Examples:
    Notice also that the properties of :code:`geom:labeledPoint2d` are a superset of the properties of type :code:`geom:point2d`.
 
 The type system is initialized with the system property keys, (regular) property keys, edge labels and
-named types present in the `type_init.json <https://github.com/SwissDataScienceCenter/fantastic-guacamole/blob/master/graph-init/src/main/resources/type_init.json>`_ file.
+named types present in the type_init.json_ file.
 
-The type system concepts are implemented in the `graph-core <https://github.com/SwissDataScienceCenter/fantastic-guacamole/tree/master/graph-core/>`_ module, see package `ch.datascience.graph.types <https://github.com/SwissDataScienceCenter/fantastic-guacamole/tree/master/graph-core/src/main/scala/ch/datascience/graph/types/>`_.
+The type system concepts are implemented in the graph-core_ module, see package `ch.datascience.graph.types`_.
 
 .. _kg_read:
 
@@ -148,7 +148,7 @@ If vertices or edges are extracted using a graph traversal, it may be desirable 
 - in the case of vertices, transform the values from the :code:`type` system property into named type constructs
   (by mapping names to the named type construct they are associated with)
 
-These steps are implemented in the `VertexReader <https://github.com/SwissDataScienceCenter/fantastic-guacamole/blob/master/graph-core/src/main/scala/ch/datascience/graph/elements/tinkerpop_mappers/VertexReader.scala>`_ and the `EdgeReader <https://github.com/SwissDataScienceCenter/fantastic-guacamole/blob/master/graph-core/src/main/scala/ch/datascience/graph/elements/tinkerpop_mappers/EdgeReader.scala>`_ classes.
+These steps are implemented in the VertexReader_ and the EdgeReader_ classes.
 
 .. _kg_update:
 
@@ -167,7 +167,7 @@ Currently, there are four supported operations:
 - :code:`create_vertex_property`, add a (property key, value) pairing to a given vertex
 - :code:`update_vertex_property`, modify a vertex property. This is done by first removing the old (property key, value) pairing and then adding the (property key, new value) pairing
 
-The full definition of the graph mutation API is located in: `apispec/src/graph-mutation.yaml <https://github.com/SwissDataScienceCenter/fantastic-guacamole/blob/master/apispec/src/graph-mutation.yaml>`_
+The full definition of the graph mutation API resides in the `mutation API spec`_ file.
 
 .. _fig-kg_mutation_seqdiag:
 
@@ -224,8 +224,20 @@ Note that the resulting ids follow the same order as the order of operations in 
 Code Modules
 ------------
 
-- [graph-core](https://github.com/SwissDataScienceCenter/fantastic-guacamole/tree/master/graph-core) - contains definitions for graph elements, typing, etc.
-- graph-typesystem ([graph-typesystem-persistence](https://github.com/SwissDataScienceCenter/fantastic-guacamole/tree/master/graph-typesystem-persistence) and [graph-typesystem-service](https://github.com/SwissDataScienceCenter/fantastic-guacamole/tree/master/graph-typesystem-service) - contains the graph typesystem management
-- graph-mutation ([graph-mutation-worker](https://github.com/SwissDataScienceCenter/fantastic-guacamole/tree/master/graph-mutation-worker) and [graph-mutation-service](https://github.com/SwissDataScienceCenter/fantastic-guacamole/tree/master/graph-mutation-service)) - contains the graph mutation service
-- [graph-init](https://github.com/SwissDataScienceCenter/fantastic-guacamole/tree/master/graph-init) - contains the code used to initialize the graph type system with definitions in [type_init.json](https://github.com/SwissDataScienceCenter/fantastic-guacamole/blob/master/graph-init/src/main/resources/type_init.json)
-- [graph-navigation-service](https://github.com/SwissDataScienceCenter/fantastic-guacamole/tree/master/graph-navigation-service) - contains code to read the graph without a gremlin-shell
+- graph-core_ - contains definitions for graph elements, typing, etc.
+- graph-typesystem_ - contains the graph typesystem management
+- graph-mutation_ - contains the graph mutation service
+- graph-init_ - contains the code used to initialize the graph type system with definitions in type_init.json_
+- graph-navigation_ - contains code to read the graph without a gremlin-shell
+
+.. _graph-core: https://github.com/SwissDataScienceCenter/renga-graph/tree/master/core
+.. _graph-typesystem: https://github.com/SwissDataScienceCenter/renga-graph/tree/master/typesystem
+.. _graph-mutation: https://github.com/SwissDataScienceCenter/renga-graph/tree/master/mutation
+.. _graph-init: https://github.com/SwissDataScienceCenter/renga-graph/tree/master/init
+.. _graph-navigation: https://github.com/SwissDataScienceCenter/renga-graph/tree/master/navigation/service
+
+.. _type_init.json: https://github.com/SwissDataScienceCenter/renga-graph/blob/master/init/src/main/resources/type_init.json
+.. _VertexReader: https://github.com/SwissDataScienceCenter/renga-graph/blob/master/core/src/main/scala/ch/datascience/graph/elements/tinkerpop_mappers/VertexIdReader.scala
+.. _EdgeReader: https://github.com/SwissDataScienceCenter/renga-graph/blob/master/core/src/main/scala/ch/datascience/graph/elements/tinkerpop_mappers/EdgeReader.scala
+.. _mutation API spec: https://github.com/SwissDataScienceCenter/renga-graph/blob/master/mutation/service/swagger.yml
+.. _`ch.datascience.graph.types`: https://github.com/SwissDataScienceCenter/renga-graph/tree/master/core/src/main/scala/ch/datascience/graph/types
