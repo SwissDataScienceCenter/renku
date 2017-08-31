@@ -1,24 +1,24 @@
+sudo: true
+dist: xenial
+
 branches:
   only:
   - master
 
 language: python
 
-install:
-- pip install docutils==0.14
-- pip install Sphinx==1.6.3
-- pip install sphinx-rtd-theme==0.2.4
-- pip install sphinxcontrib-scaladomain==0.1a1
-- pip install sphinxcontrib-websupport==1.0.1
-- pip install -r requirements.txt
-
 python:
 - '3.6'
 
-addons:
-  apt:
-    packages:
-    - graphviz
+before_install:
+- sudo apt-get -qq update
+- sudo apt-get install -y libfop-java libbatik-java graphviz
+- wget http://security.ubuntu.com/ubuntu/pool/universe/p/plantuml/plantuml_8039-1_all.deb
+- sudo dpkg -i plantuml_8039-1_all.deb
+
+install:
+- pip install Sphinx>=1.6.3
+- pip install -r requirements.txt
 
 script:
 - sphinx-build source build
