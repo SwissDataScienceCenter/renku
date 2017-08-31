@@ -35,6 +35,13 @@ services:
     - ./services/cassandra/etc/cassandra-env.sh:/etc/cassandra/cassandra-env.sh:ro
     ports:
     - 9160
+  elk:
+    image: sebp/elk
+    ports:
+      - 5601
+      - 5000
+    volumes:
+      - ./services/elk/01-tcp.conf:/etc/logstash/conf.d/01-tcp.conf:ro
   keycloak:
     image: jboss/keycloak-postgres:3.2.0.Final
     environment:

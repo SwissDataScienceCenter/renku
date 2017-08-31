@@ -55,6 +55,9 @@ Configuration
 
 Some variables are defined in the ``.env`` file.
 
+The ELK stack uses this docker image https://elk-docker.readthedocs.io/
+Please also take into account their prerequisites.
+
 Documentation
 -------------
 
