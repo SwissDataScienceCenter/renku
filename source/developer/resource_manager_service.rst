@@ -45,7 +45,9 @@ Detail of messages:
 3. RM sends back authorization token
 4. service sends a message containing the authorization token from the RM
 
-For more details on the RM API, refer to [its swagger spec](https://github.com/SwissDataScienceCenter/fantastic-guacamole/blob/master/apispec/src/resource-manager.yaml).
+For more details on the RM API, refer to the `Resource Manager API spec`_.
+
+.. _Resource Manager API spec: https://github.com/SwissDataScienceCenter/renga-authorization/blob/master/swagger.yml
 
 .. _rm-attributes:
 
@@ -183,4 +185,3 @@ the action on the corresponding service using the proper token extracted from th
 
 
 [TODO: why encapsulation is hard to avoid and limitations of this model]
-
