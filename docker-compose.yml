@@ -187,8 +187,8 @@ services:
       - "traefik.frontend.rule=PathPrefixStrip:/admin/swagger"
     environment:
       OAUTH2_REDIRECT_URL: http://localhost/admin/swagger/oauth2-redirect.html
-  webfrontend:
-    image: ${IMAGE_REPOSITORY}renga-web-frontend:latest
+  ui:
+    image: ${IMAGE_REPOSITORY}renga-web-frontend:$PLATFORM_VERSION
     ports:
       - "5000"
     links:
