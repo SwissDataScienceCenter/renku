@@ -94,7 +94,7 @@ renga-commons-artifact: renga-graph-artifact
 
 # build docker images
 .PHONY: $(dockerfile-services)
-$(dockerfile-services):
+$(dockerfile-services): %: $(PLATFORM_BASE_DIR)/%
 	docker build --tag $(IMAGE_REPOSITORY)$@:$(PLATFORM_VERSION) $(PLATFORM_BASE_DIR)/$@
 
 .PHONY: docker-images
