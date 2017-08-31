@@ -7,7 +7,6 @@ Lineage Knowledge Representation
 
 .. _fig-kg_lineage:
 
-.. figure:: /images/generated/kg_lineage.representation.png
-
-    Knowledege Representation of Lineage.
+.. uml:: ../../resources/uml/kg_lineage.representation.uml
+   :caption: Knowledege Representation of Lineage.
 

@@ -39,8 +39,11 @@ extensions = ['sphinx.ext.autodoc',
     'sphinx.ext.ifconfig',
     'sphinx.ext.viewcode',
     'sphinx.ext.githubpages',
-    'sphinxcontrib.scaladomain'
+    'sphinxcontrib.scaladomain',
+    'sphinxcontrib.plantuml',
 ]
+
+plantuml_output_format = 'png'
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']

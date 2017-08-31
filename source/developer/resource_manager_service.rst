@@ -34,9 +34,8 @@ will request access to the resource on behalf of the user who launched that appl
 
 .. _fig-resource_manager_api:
 
-.. figure:: /images/generated/resource_manager_api.sequence.png
-
-    Sequence diagram of Resource Manager authorization request
+.. uml:: ../../resources/uml/resource_manager_api.sequence.uml
+   :caption: Sequence diagram of Resource Manager authorization request
 
 Detail of messages:
 
@@ -128,9 +127,8 @@ Example:
 
 .. _fig-local_deployment:
 
-.. figure:: /images/generated/local_deployment.sequence.png
-
-    Sequence diagram of local application deployment.
+.. uml:: ../../resources/uml/local_deployment.sequence.uml
+   :caption: Sequence diagram of local application deployment.
 
 
 Message 5 :code:`getAuth` contains the authorization token from response 4 :code:`repoAuth` in the :code:`repo_auth_token` field as shown below:

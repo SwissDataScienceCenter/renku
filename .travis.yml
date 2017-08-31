@@ -21,12 +21,4 @@ addons:
     - graphviz
 
 script:
-- make html
-
-deploy:
-- provider: script
-  skip_cleanup: true
-  script: bash ./.travis/git-commit-build.sh
-  on:
-    branch: master
-
+- sphinx-build source build
