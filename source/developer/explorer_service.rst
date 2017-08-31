@@ -74,13 +74,13 @@ The explorer API provides the following endpoints.
   Retrieve files with "resource:owner" = UserId. Limited to 100 vertices.
 
 
-**GET /storage/graph/**
+**GET /graph/full/**
 
   :code:`controllers.GenericExplorerController.retrieveGraphSubset`
 
   Get a limited amount of node->edge->node as [Seq[GraphSubSet]]. (Standard limit 10) 
 
-**GET /storage/node/:id**
+**GET /graph/node/:id**
 
   :code:`controllers.GenericExplorerController.retrieveNodeMetaData(id: Long)`
 
