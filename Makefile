@@ -52,7 +52,7 @@ scala-services = \
 
 dockerfile-services = \
 	renga-deployer \
-    renga-ui
+	renga-ui
 
 scala-artifact = \
 	renga-commons \
