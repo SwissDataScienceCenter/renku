@@ -1,6 +1,6 @@
-RENGA documentation
+# RENGA documentation
 
-Dependencies:
+## Dependencies:
 
 * Sphinx 1.6 or higher
 
@@ -19,6 +19,15 @@ Dependencies:
 
     * http://www.graphviz.org/Download..php
 
-Usage:
+    pip install -r docs/requirements.txt
 
-    make html
+## Usage:
+
+    cd docs && make html
+
+## Contributing
+
+Please make sure that it is possible to build documentation without
+warnings and error before creating pull request.
+
+    sphinx-build -qnNW docs docs/_build/html

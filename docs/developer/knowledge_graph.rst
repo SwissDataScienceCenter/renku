@@ -36,7 +36,7 @@ Read also: `The Elm Architecture <https://guide.elm-lang.org/architecture/>`_, `
 
 .. _fig-kg_architecture:
 
-.. figure:: /images/kg_architecture.*
+.. figure:: /_static/images/kg_architecture.*
 
    -- Knowledge graph Architecture
 
@@ -52,7 +52,7 @@ As such, the knowledge graph is a property graph, leading to an intuitive way of
 
 .. _fig-tinkerpop-model:
 
-.. figure:: /images/tinkerpop.apache.com_the-crew-graph.png
+.. figure:: /_static/images/tinkerpop.apache.com_the-crew-graph.png
    :width: 600
 
    -- Knowledge graph representation (Image source: http://tinkerpop.apache.org)
@@ -171,7 +171,7 @@ The full definition of the graph mutation API resides in the `mutation API spec`
 
 .. _fig-kg_mutation_seqdiag:
 
-.. uml:: ../../resources/uml/graph_mutation.sequence.uml
+.. uml:: ../_static/uml/graph_mutation.sequence.uml
    :caption: Graph mutation sequence diagram.
 
 Detail of messages:

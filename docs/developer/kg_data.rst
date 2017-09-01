@@ -7,5 +7,5 @@ Data Knowledge Representation
 
 .. _fig-kg_data:
 
-.. uml:: ../../resources/uml/kg_data.representation.uml
+.. uml:: ../_static/uml/kg_data.representation.uml
    :caption: Knowledge representation of data.

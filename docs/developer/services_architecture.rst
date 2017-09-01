@@ -7,7 +7,7 @@ This document describes the architecture of the (web) services that are part of 
 
 .. _fig-architecture:
 
-.. figure:: /images/architecture.*
+.. figure:: /_static/images/architecture.*
 
    -- Service Architecture
 

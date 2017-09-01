@@ -18,7 +18,7 @@ before_install:
 
 install:
 - pip install Sphinx>=1.6.3
-- pip install -r requirements.txt
+- pip install -r docs/requirements.txt
 
 script:
-- sphinx-build source build
+- sphinx-build -qnNW docs docs/_build/html
