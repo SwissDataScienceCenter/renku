@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <!-- # -*- coding: utf-8 -*-
 #
 # Copyright 2017 Swiss Data Science Center
@@ -15,10 +16,9 @@
 # limitations under the License.
  -->
 
-# Wholesome tortillas
-So we can dunk'em in the guacamole.
+# RENGA
 
-The goal of this sub-project is to provide a simple way to
+The goal of this project is to provide a simple way to
 instantiate the platform using docker-compose.
 
 ## Prerequisites
@@ -31,6 +31,7 @@ instantiate the platform using docker-compose.
 - `docker-compose`
 
 ## Prepare images
+
 ```bash
 make
 ```
@@ -43,9 +44,9 @@ docker-compose up
 
 ## Exposed ports
 
-- `9000` all platform APIs (through nginx as a reverse proxy)
-- `8080` OpenID Connect Provider (keycloak)
-- `9001` API documentation index (swagger-ui)
+- `80` all platform APIs through a reverse proxy (Traefik)
+- `443` all platform APIs through a reverse proxy (Traefik)
+- `81` Traefik monitoring
 
 For development purposes:
 - `5432` Postgres database
@@ -57,3 +58,37 @@ Use `docker-compose ps` to list them.
 ## Configuration
 
 Some variables are defined in the `.env` file.
+
+##  Documentation
+
+### Dependencies:
+
+* Sphinx 1.6 or higher
+
+    * http://www.sphinx-doc.org/
+
+* Sphinx scala module
+
+    * https://pythonhosted.org/sphinxcontrib-scaladomain/
+
+* Sphinx readthedoc themes:
+
+    * http://docs.readthedocs.io/en/latest/theme.html
+    * https://pypi.python.org/pypi/sphinx_rtd_theme#installation)
+
+* Graphviz (Plantuml diagrams):
+
+    * http://www.graphviz.org/Download..php
+
+    pip install -r docs/requirements.txt
+
+### Build:
+
+    cd docs && make html
+
+### Contributing
+
+Please make sure that it is possible to build documentation without
+warnings and error before creating pull request.
+
+    sphinx-build -qnNW docs docs/_build/html

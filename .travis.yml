@@ -14,6 +14,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+sudo: true
+dist: xenial
+
 notifications:
   email: false
 
@@ -35,10 +38,16 @@ python:
   - "3.6"
 
 before_install:
+  - sudo apt-get -qq update
+  - sudo apt-get install -y libfop-java libbatik-java graphviz
+  - wget http://security.ubuntu.com/ubuntu/pool/universe/p/plantuml/plantuml_8039-1_all.deb
+  - sudo dpkg -i plantuml_8039-1_all.deb
   - pip install -r requirements-test.txt
 
 install:
   - ./travis-install.sh
+  - pip install Sphinx>=1.6.3
+  - pip install -r docs/requirements.txt
 
 before_script:
   - docker-compose up -d
@@ -46,3 +55,4 @@ before_script:
 
 script:
   - pytest -v
+  - sphinx-build -qnNW docs docs/_build/html
