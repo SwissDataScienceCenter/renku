@@ -5,7 +5,7 @@ Policy Based Access Controls
 
 .. _fig-pbac_illustrated:
 
-.. figure:: /images/pbac_illustrated.svg
+.. figure:: /_static/images/pbac_illustrated.svg
 
     Elements of PBAC workflow as implemented in **RENGA**: Policy Enforcement Point (PEP), Policy Decision Point (PDP), Policy Information Point (PIP).
 

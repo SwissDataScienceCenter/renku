@@ -13,7 +13,7 @@ Welcome to RENGA!
    :caption: Table of Contents:
    :includehidden:
 
-   Introduction <intro>
+   Introduction <introduction/index>
    Getting started <user/firststeps>
    User documentation <user/userguide>
    Developer documentation <developer/devguide>

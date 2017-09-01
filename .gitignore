@@ -1,16 +1,3 @@
-
-### Plantuml ###
-# Ignore generated images
-resources/uml/*.png
-resources/uml/*.pdf
-resources/uml/*.eps
-
-# Ignore plantuml jar localtion
-resources/uml/lib/
-
-#  Ignore copied images (from plantuml)
-source/images/generated/
-
 # Created by https://www.gitignore.io/api/python
 
 ### Python ###
