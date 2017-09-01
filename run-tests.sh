@@ -15,11 +15,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD" "$DOCKER_REGISTRY"
+# quit on errors:
+set -o errexit
 
-if [ "$TRAVIS_EVENT_TYPE" = "cron" ]
-then
-    make -e PLATFORM_BASE_DIR=/tmp
-else
-    docker-compose pull
-fi
+# quit on unbound symbols:
+set -o nounset
+
+pytest -v
+sphinx-build -qnNW docs docs/_build/html

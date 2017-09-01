@@ -86,9 +86,9 @@ Some variables are defined in the `.env` file.
 
     cd docs && make html
 
-### Contributing
+## Contributing
 
-Please make sure that it is possible to build documentation without
-warnings and error before creating pull request.
+Please make sure that it is possible to run the integration tests and build
+documentation without warnings and errors before creating pull request.
 
-    sphinx-build -qnNW docs docs/_build/html
+    ./run-tests.sh

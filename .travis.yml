@@ -54,5 +54,4 @@ before_script:
   - travis_retry ./wait-for-services.sh
 
 script:
-  - pytest -v
-  - sphinx-build -qnNW docs docs/_build/html
+  - ./run-tests.sh
