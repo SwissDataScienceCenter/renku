@@ -86,4 +86,14 @@ The explorer API provides the following endpoints.
 
   Retrieve the metadata of a node with a specific id. Valid for all nodes.
 
+**GET /project/list**
 
+  :code:`controllers.ProjectExplorerController.retrieveProjects`
+
+  Retrieve all project nodes from the graph. Standard limited to 100.
+ 
+**GET /project/user/:userId**
+
+  :code:`controllers.ProjectExplorerController.retrieveProjectByUserName(userId: String)`
+
+  Retrieve all project nodes of a specific user from the graph. Standard limited to 100.
