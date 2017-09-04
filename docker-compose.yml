@@ -50,7 +50,6 @@ services:
       - "-Dkeycloak.migration.provider=singleFile"
       - "-Dkeycloak.migration.file=/data/renga-realm.json"
       - "-Dkeycloak.migration.strategy=IGNORE_EXISTING"
-#      - "-Dkeycloak.migration.realmName=Renga -Dkeycloak.migration.action=export -Dkeycloak.migration.provider=singleFile -Dkeycloak.migration.file=jmt.json"
     volumes:
       - ./keycloak/renga-realm.json:/data/renga-realm.json:ro
     links:
