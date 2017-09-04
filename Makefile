@@ -38,7 +38,8 @@ repos = \
 	renga-deployer \
 	renga-explorer \
 	renga-graph \
-	renga-storage
+	renga-storage \
+	renga-ui
 
 scala-services = \
 	renga-authorization \
@@ -50,7 +51,8 @@ scala-services = \
 	renga-storage
 
 dockerfile-services = \
-	renga-deployer
+	renga-deployer \
+	renga-ui
 
 scala-artifact = \
 	renga-commons \

@@ -1,3 +1,4 @@
+#!/usr/bin/env sh
 # -*- coding: utf-8 -*-
 #
 # Copyright 2017 Swiss Data Science Center
@@ -14,35 +15,16 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-notifications:
-  email: false
-
-sudo: required
-
-services:
-  - docker
-
-branches:
-  only:
-    - master
-
-language: python
-
-matrix:
-  fast_finish: true
-
-python:
-  - "3.6"
-
-before_install:
-  - pip install -r requirements-test.txt
-
-install:
-  - ./travis-install.sh
-
-before_script:
-  - docker-compose up -d
-  - travis_retry ./wait-for-services.sh
-
-script:
-  - pytest -v
+docker run \
+    --network renga_default --rm \
+    --link deployer \
+    --link explorer \
+    --link graph-mutation \
+    --link graph-navigation \
+    --link graph-typesystem \
+    --link keycloak \
+    --link resource-manager \
+    --link storage \
+    -e TARGETS=keycloak:8080,deployer:5000,explorer:9000,graph-mutation:9000,graph-navigation:9000,graph-typesystem:9000,resource-manager:9000,storage:9000 \
+    -e TIMEOUT=60 \
+    waisbrot/wait
