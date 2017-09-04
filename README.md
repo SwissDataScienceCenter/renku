@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 <!-- # -*- coding: utf-8 -*-
 #
 # Copyright 2017 Swiss Data Science Center
