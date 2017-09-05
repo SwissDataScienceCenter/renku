@@ -165,6 +165,22 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.frontend.rule=PathPrefix:/api/explorer"
+  projects:
+    image: ${IMAGE_REPOSITORY}renga-projects:$PLATFORM_VERSION
+    environment:
+      PLAY_APPLICATION_SECRET: $PLAY_APPLICATION_SECRET
+      RESOURCE_MANAGER_PUBLIC_KEY: $RESOURCE_MANAGER_PUBLIC_KEY
+      AUTHORIZATION_CLIENT_SECRET: $AUTHORIZATION_CLIENT_SECRET
+    links:
+      - reverse-proxy
+    depends_on:
+      - graph-typesystem
+    ports:
+      - "9000"
+    restart: on-failure
+    labels:
+      - "traefik.enable=true"
+      - "traefik.frontend.rule=PathPrefix:/api/projects"
   storage:
     image: ${IMAGE_REPOSITORY}renga-storage:$PLATFORM_VERSION
     environment:

@@ -38,6 +38,7 @@ repos = \
 	renga-deployer \
 	renga-explorer \
 	renga-graph \
+	renga-projects \
 	renga-storage \
 	renga-ui
 
@@ -48,6 +49,7 @@ scala-services = \
 	renga-graph-mutation-service \
 	renga-graph-navigation-service \
 	renga-graph-typesystem-service \
+	renga-projects \
 	renga-storage
 
 dockerfile-services = \
