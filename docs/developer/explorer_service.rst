@@ -87,13 +87,19 @@ The explorer API provides the following endpoints.
   Retrieve the metadata of a node with a specific id. Valid for all nodes.
   
 **GET /lineage/context/:id**                    
+  
   :code:`controllers.AnthologyExplorerController.lineageFromContext(id: Long)`
-Get the lineage starting from the deployer node (not implemented yet)
+
+  Get the lineage starting from the deployer node (not implemented yet)
 
 **GET /project/list**                            
- :code:`controllers.ProjectExplorerController.retrieveProjects`
-Get the list with all projects in the graph. Limited to 100 by default.
+
+  :code:`controllers.ProjectExplorerController.retrieveProjects`
+
+  Get the list with all projects in the graph. Limited to 100 by default.
  
 **GET /project/user**
- :code:`controllers.ProjectExplorerController.retrieveProjectByUserName(userId: Option[String] )`
-Get all projects of a user with userId given or else userId from request. Limited to 100 by default.
+
+  :code:`controllers.ProjectExplorerController.retrieveProjectByUserName(userId: Option[String] )`
+
+  Get all projects of a user with userId given or else userId from request. Limited to 100 by default.
