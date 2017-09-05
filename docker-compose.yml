@@ -97,8 +97,10 @@ services:
     image: ${IMAGE_REPOSITORY}renga-graph-init:$PLATFORM_VERSION
     environment:
       GRAPH_API_TYPES: http://reverse-proxy/api/types
+      AUTHORIZATION_CLIENT_SECRET: $AUTHORIZATION_CLIENT_SECRET
     links:
     - graph-typesystem
+    - keycloak
     - reverse-proxy
   resource-manager:
     image: ${IMAGE_REPOSITORY}renga-authorization:$PLATFORM_VERSION
@@ -137,10 +139,12 @@ services:
       DEPLOYER_JWT_ISSUER: resource-manager
       DEPLOYER_TOKEN_SCOPE_KEY: https://rm.datascience.ch/scope
       DEPLOYER_AUTHORIZATION_URL: http://localhost/auth/realms/Renga/protocol/openid-connect/auth
-      DEPLOYER_TOKEN_URL: http://localhost/auth/realms/Renga/protocol/openid-connect/
+      DEPLOYER_TOKEN_URL: http://reverse-proxy/auth/realms/Renga/protocol/openid-connect/token
       DEPLOYER_URL: localhost
       DEPLOYER_BASE_PATH: /api/deployer
       WSGI_NUM_PROXIES: 1
+      RENGA_AUTHORIZATION_CLIENT_SECRET: $AUTHORIZATION_CLIENT_SECRET
+      RENGA_AUTHORIZATION_CLIENT_ID: renga-services
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
     labels:
@@ -167,10 +171,12 @@ services:
       STORAGE_BACKEND_LOCAL_ENABLED: "true"
       PLAY_APPLICATION_SECRET: $PLAY_APPLICATION_SECRET
       RESOURCE_MANAGER_PUBLIC_KEY: $RESOURCE_MANAGER_PUBLIC_KEY
+      AUTHORIZATION_CLIENT_SECRET: $AUTHORIZATION_CLIENT_SECRET
 #      GRAPH_SCOPE_REMOTE_URL: http://graph-typesystem:9000/api/types
     volumes:
     - ./storage-data:/data
     links:
+      - keycloak
       - resource-manager
     ports:
     - "9000"
