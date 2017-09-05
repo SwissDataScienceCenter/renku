@@ -1,0 +1,244 @@
+# -*- coding: utf-8 -*-
+#
+# Copyright 2017 Swiss Data Science Center
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+version: '2'
+services:
+  db:
+    image: postgres:9.6
+    environment:
+      PGDATA: /pgdata
+      POSTGRES_DB: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_USER: postgres
+    volumes:
+    - ./postgres/docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d:ro
+    ports:
+    - "5432"
+  cassandra:
+    image: cassandra:2.1.9
+    volumes:
+    - ./cassandra/etc/cassandra-env.sh:/etc/cassandra/cassandra-env.sh:ro
+    ports:
+    - "9160"
+  keycloak:
+    image: jboss/keycloak-postgres:3.2.0.Final
+    environment:
+      KEYCLOAK_PASSWORD: admin
+      KEYCLOAK_USER: admin
+      POSTGRES_DATABASE: keycloak
+      POSTGRES_PASSWORD: keycloak
+      POSTGRES_USER: keycloak
+      POSTGRES_PORT_5432_TCP_ADDR: postgres
+    ports:
+      - "8080"
+    command:
+      - "-b 0.0.0.0"
+      - "-Dkeycloak.migration.action=import"
+      - "-Dkeycloak.migration.provider=singleFile"
+      - "-Dkeycloak.migration.file=/data/renga-realm.json"
+      - "-Dkeycloak.migration.strategy=IGNORE_EXISTING"
+    volumes:
+      - ./keycloak/renga-realm.json:/data/renga-realm.json:ro
+    links:
+      - db:postgres
+    restart: on-failure
+    labels:
+      - "traefik.enable=true"
+      - "traefik.frontend.rule=PathPrefix:/auth"
+  graph-typesystem:
+    image: ${IMAGE_REPOSITORY}renga-graph-typesystem-service:$PLATFORM_VERSION
+    links:
+    - db
+    - cassandra
+    ports:
+    - "9000"
+    restart: on-failure
+    labels:
+      - "traefik.enable=true"
+      - "traefik.frontend.rule=PathPrefix:/api/types"
+  graph-mutation:
+    image: ${IMAGE_REPOSITORY}renga-graph-mutation-service:$PLATFORM_VERSION
+    links:
+    - db
+    - cassandra
+    ports:
+    - "9000"
+    restart: on-failure
+    labels:
+      - "traefik.enable=true"
+      - "traefik.frontend.rule=PathPrefix:/api/mutation"
+  graph-navigation:
+    image: ${IMAGE_REPOSITORY}renga-graph-navigation-service:$PLATFORM_VERSION
+    environment:
+      GRAPH_SCOPE_REMOTE_URL: http://reverse-proxy/api/types
+    links:
+    - cassandra
+    - reverse-proxy
+    ports:
+    - "9000"
+    restart: on-failure
+    labels:
+      - "traefik.enable=true"
+      - "traefik.frontend.rule=PathPrefix:/api/navigation"
+  graph-init:
+    image: ${IMAGE_REPOSITORY}renga-graph-init:$PLATFORM_VERSION
+    environment:
+      GRAPH_API_TYPES: http://reverse-proxy/api/types
+      AUTHORIZATION_CLIENT_SECRET: $AUTHORIZATION_CLIENT_SECRET
+    links:
+    - graph-typesystem
+    - keycloak
+    - reverse-proxy
+  resource-manager:
+    image: ${IMAGE_REPOSITORY}renga-authorization:$PLATFORM_VERSION
+    environment:
+      PLAY_APPLICATION_SECRET: $PLAY_APPLICATION_SECRET
+      RESOURCE_MANAGER_PUBLIC_KEY: $RESOURCE_MANAGER_PUBLIC_KEY
+      RESOURCE_MANAGER_PRIVATE_KEY: $RESOURCE_MANAGER_PRIVATE_KEY
+#      GRAPH_SCOPE_REMOTE_URL: http://graph-typesystem:9000/api/types
+    links:
+      - graph-typesystem
+    ports:
+    - "9000"
+    restart: on-failure
+    labels:
+      - "traefik.enable=true"
+      - "traefik.frontend.rule=PathPrefix:/api/resource-manager"
+  deployer:
+    image: ${IMAGE_REPOSITORY}renga-deployer:$PLATFORM_VERSION
+    links:
+      - db
+      - reverse-proxy
+    depends_on:
+      - db
+      - graph-mutation
+      - graph-typesystem
+      - resource-manager
+      - keycloak
+    ports:
+      - "5000"
+    restart: on-failure
+    environment:
+      SQLALCHEMY_DATABASE_URI: "postgres+psycopg2://postgres:postgres@db/deployer"
+      KNOWLEDGE_GRAPH_URL: http://reverse-proxy/api/
+      RESOURCE_MANAGER_URL: http://reverse-proxy/api/resource-manager/authorize
+      DEPLOYER_JWT_KEY: $RESOURCE_MANAGER_PUBLIC_KEY
+      DEPLOYER_JWT_ISSUER: resource-manager
+      DEPLOYER_TOKEN_SCOPE_KEY: https://rm.datascience.ch/scope
+      DEPLOYER_AUTHORIZATION_URL: http://localhost/auth/realms/Renga/protocol/openid-connect/auth
+      DEPLOYER_TOKEN_URL: http://reverse-proxy/auth/realms/Renga/protocol/openid-connect/token
+      DEPLOYER_URL: localhost
+      DEPLOYER_BASE_PATH: /api/deployer
+      WSGI_NUM_PROXIES: 1
+      RENGA_AUTHORIZATION_CLIENT_SECRET: $AUTHORIZATION_CLIENT_SECRET
+      RENGA_AUTHORIZATION_CLIENT_ID: renga-services
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    labels:
+      - "traefik.enable=true"
+      - "traefik.frontend.rule=PathPrefix:/api/deployer"
+  explorer:
+    image: ${IMAGE_REPOSITORY}renga-explorer:$PLATFORM_VERSION
+    environment:
+      PLAY_APPLICATION_SECRET: $PLAY_APPLICATION_SECRET
+      RESOURCE_MANAGER_PUBLIC_KEY: $RESOURCE_MANAGER_PUBLIC_KEY
+    links:
+      - reverse-proxy
+    depends_on:
+      - graph-typesystem
+    ports:
+      - "9000"
+    restart: on-failure
+    labels:
+      - "traefik.enable=true"
+      - "traefik.frontend.rule=PathPrefix:/api/explorer"
+  projects:
+    image: ${IMAGE_REPOSITORY}renga-projects:$PLATFORM_VERSION
+    environment:
+      PLAY_APPLICATION_SECRET: $PLAY_APPLICATION_SECRET
+      RESOURCE_MANAGER_PUBLIC_KEY: $RESOURCE_MANAGER_PUBLIC_KEY
+      AUTHORIZATION_CLIENT_SECRET: $AUTHORIZATION_CLIENT_SECRET
+    links:
+      - reverse-proxy
+    depends_on:
+      - graph-typesystem
+    ports:
+      - "9000"
+    restart: on-failure
+    labels:
+      - "traefik.enable=true"
+      - "traefik.frontend.rule=PathPrefix:/api/projects"
+  storage:
+    image: ${IMAGE_REPOSITORY}renga-storage:$PLATFORM_VERSION
+    environment:
+      STORAGE_BACKEND_LOCAL_ENABLED: "true"
+      PLAY_APPLICATION_SECRET: $PLAY_APPLICATION_SECRET
+      RESOURCE_MANAGER_PUBLIC_KEY: $RESOURCE_MANAGER_PUBLIC_KEY
+      AUTHORIZATION_CLIENT_SECRET: $AUTHORIZATION_CLIENT_SECRET
+#      GRAPH_SCOPE_REMOTE_URL: http://graph-typesystem:9000/api/types
+    volumes:
+    - ./storage-data:/data
+    links:
+      - keycloak
+      - resource-manager
+    ports:
+    - "9000"
+    restart: on-failure
+    labels:
+      - "traefik.enable=true"
+      - "traefik.frontend.rule=PathPrefix:/api/storage"
+  swagger:
+    image: ${IMAGE_REPOSITORY}swagger-ui:latest
+    ports:
+      - "8080"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.frontend.rule=PathPrefixStrip:/admin/swagger"
+    environment:
+      OAUTH2_REDIRECT_URL: http://localhost/admin/swagger/oauth2-redirect.html
+  ui:
+    image: ${IMAGE_REPOSITORY}renga-web-frontend:$PLATFORM_VERSION
+    ports:
+      - "5000"
+    links:
+      - reverse-proxy
+    environment:
+      KEYCLOAK_URL: http://reverse-proxy/auth/realms/Renga/  # from inside
+      KEYCLOAK_REDIRECT_URL: http://localhost/auth/realms/Renga/  # from outside
+      API_ROOT_URL: http://reverse-proxy/api/
+      APPLICATION_ROOT: /ui
+    labels:
+      - "traefik.enable=true"
+      - "traefik.frontend.rule=PathPrefix:/ui"
+  reverse-proxy:
+    image: traefik
+    command: --web --web.address=:81 \
+      --docker --docker.watch --docker.domain=localhost \
+      --debug --logLevel=DEBUG \
+      --defaultentrypoints=http,https \
+      --entrypoints='Name:http Address::80' \
+      --entrypoints='Name:https Address::443 TLS:/ssl/test.crt,/ssl/test.key' \
+      --docker.exposedbydefault=false
+    # FIXME usage of self signed certs --entrypoints='Name:http Address::80 Redirect.EntryPoint:https' \
+    ports:
+        - 80:80
+        - 443:443
+        - 8080:8080
+        - 81:81
+    volumes:
+        - /var/run/docker.sock:/var/run/docker.sock
+        - /dev/null:/traefik.toml
+        - ./ssl/:/ssl/

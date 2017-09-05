@@ -1,3 +1,12 @@
+# storage-data/, created by storage service
+storage-data/
+
+# Idea software family
+.idea/
+
+# Sbt caches
+.ivy/
+
 # Created by https://www.gitignore.io/api/python
 
 ### Python ###
