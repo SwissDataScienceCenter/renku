@@ -200,6 +200,19 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.frontend.rule=PathPrefix:/api/storage"
+  apispec:
+    build: ./apispec
+    ports:
+      - "5000"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.frontend.rule=Path:/api/swagger.json"
+    environment:
+      WSGI_NUM_PROXIES: 1
+      API_ROOT_URL: http://reverse-proxy/api/
+      SERVICES: deployer,projects,storage
+    links:
+      - reverse-proxy
   swagger:
     image: ${IMAGE_REPOSITORY}swagger-ui:latest
     ports:
@@ -208,6 +221,7 @@ services:
       - "traefik.enable=true"
       - "traefik.frontend.rule=PathPrefixStrip:/admin/swagger"
     environment:
+      API_URL: http://localhost/api/swagger.json
       OAUTH2_REDIRECT_URL: http://localhost/admin/swagger/oauth2-redirect.html
   ui:
     image: ${IMAGE_REPOSITORY}renga-web-frontend:$PLATFORM_VERSION
