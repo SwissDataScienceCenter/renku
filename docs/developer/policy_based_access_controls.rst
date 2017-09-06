@@ -44,7 +44,7 @@ This decomposition into an authorization and action service has a number of adva
 - The design allows for a parallel access to the resource, such as using the same authorization token
   for reading shards of the requested data from different processes executing in parallel.
 
-In the **RENGA** architecture, it is the :ref:`resource_manager_service` that fullfills the role of the PDP. The PIP is served by the :ref:`knowledge_graph`.
+In the **RENGA** architecture, it is the :ref:`resource_manager` that fullfills the role of the PDP. The PIP is served by the :ref:`knowledge_graph`.
 The PEP services are implemented by a number independent resource provider services, currently :ref:`storage` and :ref:`deployer`.
 
 In addition the resource backend is not directly accessible to the user.

@@ -1,4 +1,4 @@
-.. _resource_manager_service:
+.. _resource_manager:
 
 Resource Manager Service
 ========================
