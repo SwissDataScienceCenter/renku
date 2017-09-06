@@ -8,4 +8,4 @@ Data Knowledge Representation
 .. _fig-kg_data:
 
 .. uml:: ../_static/uml/kg_data.representation.uml
-   :caption: Knowledge representation of data.
+   :alt: Knowledge representation of data.

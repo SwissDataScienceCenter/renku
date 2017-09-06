@@ -1,5 +1,3 @@
-![PNG](https://github.com/SwissDataScienceCenter/documentation/wiki/images/KG-deployment.png)
-
     @startuml
     skinparam shadowing false
     (aCode.v1)<--(aContext): dependsOn

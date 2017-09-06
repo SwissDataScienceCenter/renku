@@ -71,19 +71,35 @@ The explorer API provides the following endpoints.
 
   :code:`controllers.StorageExplorerController.retrieveByUserName(userName: String)`
 
-  Retrieve files with "resource:owner" = UserId. Limited to 100 vertices.
+  Retrieve files with "resource:owner" = UserId. Limited to 100 vertices by default.
 
 
 **GET /graph/full/**
 
   :code:`controllers.GenericExplorerController.retrieveGraphSubset`
 
-  Get a limited amount of node->edge->node as [Seq[GraphSubSet]]. (Standard limit 10) 
+  Get a limited amount of node->edge->node as [Seq[GraphSubSet]]. Limited to 10 by default.
 
 **GET /graph/node/:id**
 
   :code:`controllers.GenericExplorerController.retrieveNodeMetaData(id: Long)`
 
   Retrieve the metadata of a node with a specific id. Valid for all nodes.
+  
+**GET /lineage/context/:id**                    
+  
+  :code:`controllers.AnthologyExplorerController.lineageFromContext(id: Long)`
 
+  Get the lineage starting from the deployer node (not implemented yet)
 
+**GET /project/list**                            
+
+  :code:`controllers.ProjectExplorerController.retrieveProjects`
+
+  Get the list with all projects in the graph. Limited to 100 by default.
+ 
+**GET /project/user**
+
+  :code:`controllers.ProjectExplorerController.retrieveProjectByUserName(userId: Option[String] )`
+
+  Get all projects of a user with userId given or else userId from request. Limited to 100 by default.
