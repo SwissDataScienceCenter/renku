@@ -172,7 +172,7 @@ The full definition of the graph mutation API resides in the `mutation API spec`
 .. _fig-kg_mutation_seqdiag:
 
 .. uml:: ../_static/uml/graph_mutation.sequence.uml
-   :caption: Graph mutation sequence diagram.
+   :alt: Graph mutation sequence diagram.
 
 Detail of messages:
 

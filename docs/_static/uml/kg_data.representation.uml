@@ -1,5 +1,3 @@
-![PNG](https://github.com/SwissDataScienceCenter/documentation/wiki/images/KG-data.png)
-
     @startuml
     (aProject)<--(aRepo): isPartOf
     (aProject)<--(bBucket): isPartOf

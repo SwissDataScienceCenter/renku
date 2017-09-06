@@ -40,10 +40,13 @@ extensions = ['sphinx.ext.autodoc',
     'sphinx.ext.viewcode',
     'sphinx.ext.githubpages',
     'sphinxcontrib.scaladomain',
-    'sphinxcontrib.plantuml',
+    'plantweb.directive',
 ]
 
-plantuml_output_format = 'png'
+# Plantweb configuration
+plantweb_defaults = {
+    'format': 'png',
+}
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']

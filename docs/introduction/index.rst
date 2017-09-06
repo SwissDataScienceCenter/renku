@@ -35,6 +35,19 @@ Under the hood, the platform is governed by a loosely coupled federated model wh
  
 The platform automatically materializes data lineage into a knowledge graph representation that serves as the basis for traceability and repeatable research. Data lineage seamlessly capture both the workflow within and across data science projects, allowing the lineage of any derived data to be unambiguously traced back to the original raw data sources in a manner that is fully transparent and traceable. Data lineage is automatically recorded; it includes the code of intermediate data transforms or data analytics and designed to enable the repeatability of research. It is also non-circumventable and tamper-proof, and thus it can be used for governance, intellectual properties attribution, and audit purposes (e.g. answer the question “who used my data, and for what purpose”). The knowledge representation also provides a trusted single view of truth. It is a one-stop shop to a vast collection of digital content that data scientists can explore to find good quality data they can trust, and confidently reuse in order to eliminate redundant efforts and accidental data duplication as much as possible.
 
+.. note::
+
+   This is a beta version of RENGA
+     This platform is a (very early) beta version. It is made available to early adopters only for the purpose to get acquainted
+     with the APIs. THIS VERSION IS NOT INTENDED TO BE USED IN PRODUCTION MODE OR WITH SENSITIVE DATA. In this first version we put the focus
+     on the knowledge representation with data lineage and versioning, meta-data exploration, application deployments, storage, resource management,
+     and authentication. The main design aspects that will fulfill the above vision of the platform are in place, however it also includes serveral
+     place holders. Most notably the persmission management policies will be available only in
+     the next release of the platform, planned for Q1 2018. That is, even thought the enforcement methods of the persmission policies
+     are in place, the only available policy in this version is *full access to everything for all*. In addition, we have not yet audited
+     the code and default configurations for security vulnerabilities. We provide no guarantee whatsoever about the security of the data stored
+     on this platform.
+
 History
 -------
 
