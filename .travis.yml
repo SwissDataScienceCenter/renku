@@ -40,20 +40,15 @@ python:
   - "3.6"
 
 before_install:
-  - sudo apt-get -qq update
-  - sudo apt-get install -y libfop-java libbatik-java graphviz
-  - wget http://security.ubuntu.com/ubuntu/pool/universe/p/plantuml/plantuml_8039-1_all.deb
-  - sudo dpkg -i plantuml_8039-1_all.deb
-  - pip install -r requirements-test.txt
-
-install:
-  - ./travis-install.sh
   - pip install Sphinx>=1.6.3
   - pip install -r docs/requirements.txt
+  - pip install -r tests/requirements.txt
+
+install:
+  - ./scripts/travis-install.sh
 
 before_script:
-  - docker-compose up -d
-  - travis_retry ./wait-for-services.sh
+  - make start
 
 script:
-  - ./run-tests.sh
+  - make test

@@ -103,3 +103,19 @@ $(dockerfile-services): %: $(PLATFORM_BASE_DIR)/%
 
 .PHONY: docker-images
 docker-images: $(scala-services) $(dockerfile-services)
+
+# Platform actions
+.PHONY: start stop restart test
+start:
+	docker-compose build
+	docker-compose create
+	docker-compose up -d
+	./scripts/wait-for-services.sh
+
+stop:
+	docker-compose stop
+
+restart: stop start
+
+test:
+	@scripts/run-tests.sh
