@@ -25,8 +25,8 @@ from werkzeug.wrappers import Request, Response
 
 SERVICES = [
     service.strip()
-    for service in os.environ.get('SERVICES', 'deployer,storage,projects')
-    .split(',')
+    for service in os.environ.get(
+        'SERVICES', '').split(',')
 ]
 
 WSGI_NUM_PROXIES = int(os.environ.get('WSGI_NUM_PROXIES', 0))

@@ -210,7 +210,7 @@ services:
     environment:
       WSGI_NUM_PROXIES: 1
       API_ROOT_URL: http://reverse-proxy/api/
-      SERVICES: deployer,projects,storage
+      SERVICES: deployer,projects,storage,explorer
     links:
       - reverse-proxy
   swagger:
