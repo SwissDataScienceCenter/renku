@@ -39,7 +39,7 @@ Projects endpoints
 
 The projects API provides the following endpoints (`projects API spec`_).
 
-.. projects API spec: https://github.com/SwissDataScienceCenter/renga-projects/blob/master/swagger.yml
+.. _projects API spec: https://github.com/SwissDataScienceCenter/renga-projects/blob/master/swagger.yml
 
 **GET /**
 
