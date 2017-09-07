@@ -73,8 +73,6 @@ def merge(*specs):
                 for check_key in same_keys:
                     assert security_defs[check_key] == defs[
                         check_key], check_key
-                assert not set(security_defs['scopes'].keys()) & set(
-                    defs['scopes'].keys()), check_key
                 composed['securityDefinitions'][key]['scopes'].update(
                     **defs['scopes'])
             else:
@@ -110,5 +108,9 @@ if WSGI_NUM_PROXIES:
     application = ProxyFix(application, num_proxies=WSGI_NUM_PROXIES)
 
 if __name__ == '__main__':
-    import sys
-    print(json.dumps(swagger(sys.argv[1], *SERVICES)))
+    api_root_url = os.environ.get('API_ROOT_URL', 'http://localhost/api').rstrip('/')
+    services = [
+        '/'.join((api_root_url, service, 'swagger.json'))
+        for service in SERVICES
+    ]
+    print(json.dumps(swagger(api_root_url, *services)))
