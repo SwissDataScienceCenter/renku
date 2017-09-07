@@ -61,7 +61,7 @@ source_suffix = [ '.rst', '.md' ]
 master_doc = 'index'
 
 # General information about the project.
-project = 'RENGA'
+project = 'RENGA 連歌'
 copyright = '2017, Swiss Data Science Center'
 author = 'Eric Bouillet, Julien Eberle, Jiri Kuncar, Izabela Moise, Rok Roskar, Sofiane Sarni, Sandra Savchenko De Jong, Johann-Michael Thiebaut, Olivier Verscheure'
 
@@ -102,17 +102,29 @@ numfig = True
 # a list of builtin themes.
 #
 import sphinx_rtd_theme
-#html_theme = 'alabaster'
-html_theme = 'sphinx_rtd_theme'
-html_theme_path = [sphinx_rtd_theme.get_html_theme_path()]
-html_logo = '_static/images/logo.png'
+html_theme = 'alabaster'
+#html_theme = 'sphinx_rtd_theme'
+# html_theme_path = [sphinx_rtd_theme.get_html_theme_path()]
+# html_logo = '_static/images/logo.png'
 html_favicon = '_static/images/favicon.png'
 
 # Theme options are theme-specific and customize the look and feel of a theme
 # further.  For a list of options available for each theme, see the
 # documentation.
 #
-# html_theme_options = {}
+html_theme_options = {
+    # 'logo': 'images/logo.png',
+    # 'description': 'Collaborative Data Science Platform',
+    'github_user': 'SwissDataScienceCenter',
+    'github_repo': 'renga',
+    'github_button': False,
+    'github_banner': True,
+    'show_powered_by': False,
+    'sidebar_collapse': True,
+    'extra_nav_links': {
+        'renga@GitHub': 'https://github.com/SwissDataScienceCenter/renga',
+    },
+}
 
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
