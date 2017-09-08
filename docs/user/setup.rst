@@ -1,7 +1,5 @@
 .. _setup:
 
-.. _setup:
-
 Running the platform
 ====================
 
