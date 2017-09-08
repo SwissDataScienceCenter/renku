@@ -26,15 +26,15 @@ services:
       POSTGRES_PASSWORD: postgres
       POSTGRES_USER: postgres
     volumes:
-    - ./postgres/docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d:ro
+    - ./services/postgres/docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d:ro
     ports:
-    - "5432"
+    - 5432
   cassandra:
     image: cassandra:2.1.9
     volumes:
-    - ./cassandra/etc/cassandra-env.sh:/etc/cassandra/cassandra-env.sh:ro
+    - ./services/cassandra/etc/cassandra-env.sh:/etc/cassandra/cassandra-env.sh:ro
     ports:
-    - "9160"
+    - 9160
   keycloak:
     image: jboss/keycloak-postgres:3.2.0.Final
     environment:
@@ -45,7 +45,7 @@ services:
       POSTGRES_USER: keycloak
       POSTGRES_PORT_5432_TCP_ADDR: postgres
     ports:
-      - "8080"
+      - 8080
     command:
       - "-b 0.0.0.0"
       - "-Dkeycloak.migration.action=import"
@@ -53,35 +53,35 @@ services:
       - "-Dkeycloak.migration.file=/data/renga-realm.json"
       - "-Dkeycloak.migration.strategy=IGNORE_EXISTING"
     volumes:
-      - ./keycloak/renga-realm.json:/data/renga-realm.json:ro
+      - ./services/keycloak/renga-realm.json:/data/renga-realm.json:ro
     links:
       - db:postgres
     restart: on-failure
     labels:
-      - "traefik.enable=true"
-      - "traefik.frontend.rule=PathPrefix:/auth"
+      traefik.enable: "true"
+      traefik.frontend.rule: PathPrefix:/auth
   graph-typesystem:
     image: ${IMAGE_REPOSITORY}renga-graph-typesystem-service:$PLATFORM_VERSION
     links:
     - db
     - cassandra
     ports:
-    - "9000"
+    - 9000
     restart: on-failure
     labels:
-      - "traefik.enable=true"
-      - "traefik.frontend.rule=PathPrefix:/api/types"
+      traefik.enable: "true"
+      traefik.frontend.rule: PathPrefix:/api/types
   graph-mutation:
     image: ${IMAGE_REPOSITORY}renga-graph-mutation-service:$PLATFORM_VERSION
     links:
     - db
     - cassandra
     ports:
-    - "9000"
+    - 9000
     restart: on-failure
     labels:
-      - "traefik.enable=true"
-      - "traefik.frontend.rule=PathPrefix:/api/mutation"
+      traefik.enable: "true"
+      traefik.frontend.rule: PathPrefix:/api/mutation
   graph-navigation:
     image: ${IMAGE_REPOSITORY}renga-graph-navigation-service:$PLATFORM_VERSION
     environment:
@@ -90,11 +90,11 @@ services:
     - cassandra
     - reverse-proxy
     ports:
-    - "9000"
+    - 9000
     restart: on-failure
     labels:
-      - "traefik.enable=true"
-      - "traefik.frontend.rule=PathPrefix:/api/navigation"
+      traefik.enable: "true"
+      traefik.frontend.rule: PathPrefix:/api/navigation
   graph-init:
     image: ${IMAGE_REPOSITORY}renga-graph-init:$PLATFORM_VERSION
     environment:
@@ -114,11 +114,11 @@ services:
     links:
       - graph-typesystem
     ports:
-    - "9000"
+    - 9000
     restart: on-failure
     labels:
-      - "traefik.enable=true"
-      - "traefik.frontend.rule=PathPrefix:/api/resource-manager"
+      traefik.enable: "true"
+      traefik.frontend.rule: PathPrefix:/api/resource-manager
   deployer:
     image: ${IMAGE_REPOSITORY}renga-deployer:$PLATFORM_VERSION
     links:
@@ -131,7 +131,7 @@ services:
       - resource-manager
       - keycloak
     ports:
-      - "5000"
+      - 5000
     restart: on-failure
     environment:
       SQLALCHEMY_DATABASE_URI: "postgres+psycopg2://postgres:postgres@db/deployer"
@@ -150,8 +150,8 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
     labels:
-      - "traefik.enable=true"
-      - "traefik.frontend.rule=PathPrefix:/api/deployer"
+      traefik.enable: "true"
+      traefik.frontend.rule: PathPrefix:/api/deployer
   explorer:
     image: ${IMAGE_REPOSITORY}renga-explorer:$PLATFORM_VERSION
     environment:
@@ -162,11 +162,11 @@ services:
     depends_on:
       - graph-typesystem
     ports:
-      - "9000"
+      - 9000
     restart: on-failure
     labels:
-      - "traefik.enable=true"
-      - "traefik.frontend.rule=PathPrefix:/api/explorer"
+      traefik.enable: "true"
+      traefik.frontend.rule: PathPrefix:/api/explorer
   projects:
     image: ${IMAGE_REPOSITORY}renga-projects:$PLATFORM_VERSION
     environment:
@@ -178,11 +178,11 @@ services:
     depends_on:
       - graph-typesystem
     ports:
-      - "9000"
+      - 9000
     restart: on-failure
     labels:
-      - "traefik.enable=true"
-      - "traefik.frontend.rule=PathPrefix:/api/projects"
+      traefik.enable: "true"
+      traefik.frontend.rule: PathPrefix:/api/projects
   storage:
     image: ${IMAGE_REPOSITORY}renga-storage:$PLATFORM_VERSION
     environment:
@@ -192,23 +192,23 @@ services:
       AUTHORIZATION_CLIENT_SECRET: $AUTHORIZATION_CLIENT_SECRET
 #      GRAPH_SCOPE_REMOTE_URL: http://graph-typesystem:9000/api/types
     volumes:
-    - ./storage-data:/data
+    - ./services/storage/data:/data
     links:
       - keycloak
       - resource-manager
     ports:
-    - "9000"
+    - 9000
     restart: on-failure
     labels:
-      - "traefik.enable=true"
-      - "traefik.frontend.rule=PathPrefix:/api/storage"
+      traefik.enable: "true"
+      traefik.frontend.rule: PathPrefix:/api/storage
   apispec:
-    build: ./apispec
+    build: ./services/apispec
     ports:
-      - "5000"
+      - 5000
     labels:
-      - "traefik.enable=true"
-      - "traefik.frontend.rule=Path:/api/swagger.json"
+      traefik.enable: "true"
+      traefik.frontend.rule: Path:/api/swagger.json
     environment:
       WSGI_NUM_PROXIES: 1
       API_ROOT_URL: http://reverse-proxy/api/
@@ -218,17 +218,17 @@ services:
   swagger:
     image: ${IMAGE_REPOSITORY}swagger-ui:latest
     ports:
-      - "8080"
+      - 8080
     labels:
-      - "traefik.enable=true"
-      - "traefik.frontend.rule=PathPrefixStrip:/admin/swagger"
+      traefik.enable: "true"
+      traefik.frontend.rule: PathPrefixStrip:/admin/swagger
     environment:
       API_URL: http://localhost/api/swagger.json
       OAUTH2_REDIRECT_URL: http://localhost/admin/swagger/oauth2-redirect.html
   ui:
     image: ${IMAGE_REPOSITORY}renga-web-frontend:$PLATFORM_VERSION
     ports:
-      - "5000"
+      - 5000
     links:
       - reverse-proxy
     environment:
@@ -237,8 +237,8 @@ services:
       API_ROOT_URL: http://reverse-proxy/api/
       APPLICATION_ROOT: /ui
     labels:
-      - "traefik.enable=true"
-      - "traefik.frontend.rule=PathPrefix:/ui"
+      traefik.enable: "true"
+      traefik.frontend.rule: PathPrefix:/ui
   reverse-proxy:
     image: traefik
     command: --web --web.address=:81 \
@@ -257,4 +257,4 @@ services:
     volumes:
         - /var/run/docker.sock:/var/run/docker.sock
         - /dev/null:/traefik.toml
-        - ./ssl/:/ssl/
+        - ./services/traefik/ssl/:/ssl/
