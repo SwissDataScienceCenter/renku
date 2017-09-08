@@ -23,7 +23,7 @@ Explorer endpoints
 
 The explorer API provides the following endpoints.
 
-**GET /storage/list**
+**GET /storage/bucket**
 
   :code:`controllers.StorageExplorerController.bucketList()`
 
@@ -35,19 +35,19 @@ The explorer API provides the following endpoints.
 
   Retrieve metadata of file with id
 
-**GET /storage/:id/files**
+**GET /storage/bucket/:id/files**
 
   :code:`controllers.StorageExplorerController.fileList(id: Long)`
 
   Retrieve list of files in bucket with id
 
-**GET /storage/:id**
+**GET /storage/bucket/:id**
 
   :code:`controllers.StorageExplorerController.bucketMetadata(id: Long)`
 
   Retrieve metadata of bucket with id
 
-**GET /storage/:id/:path**
+**GET /storage/bucket/:id/files/*path**
 
   :code:`controllers.StorageExplorerController.fileMetadatafromPath(id: Long, path: String)`
 
@@ -67,14 +67,14 @@ The explorer API provides the following endpoints.
   This query retrieves all vertices with a timestamp between date1 and date2. (That means, that date1 and date2 are not included!)
   Currently the files are timestamped with the difference between the current time and midnight, January 1, 1970 UTC, measured in milliseconds.
 
-**GET /storage/list/:userId**
+**GET /storage**
 
   :code:`controllers.StorageExplorerController.retrieveByUserName(userName: String)`
 
   Retrieve files with "resource:owner" = UserId. Limited to 100 vertices by default.
 
 
-**GET /graph/full/**
+**GET /graph/full**
 
   :code:`controllers.GenericExplorerController.retrieveGraphSubset`
 
@@ -90,16 +90,22 @@ The explorer API provides the following endpoints.
   
   :code:`controllers.AnthologyExplorerController.lineageFromContext(id: Long)`
 
-  Get the lineage starting from the deployer node (not implemented yet)
+  Get the lineage starting from the deployer node.
 
-**GET /project/list**                            
+**GET /projects**                            
 
   :code:`controllers.ProjectExplorerController.retrieveProjects`
 
   Get the list with all projects in the graph. Limited to 100 by default.
  
-**GET /project/user**
+**GET /projects/user**
 
   :code:`controllers.ProjectExplorerController.retrieveProjectByUserName(userId: Option[String] )`
 
   Get all projects of a user with userId given or else userId from request. Limited to 100 by default.
+
+**GET /projects/:id**
+
+  :code:`controllers.ProjectExplorerController.retrieveProjectMetadata( id: Long )` 
+
+  Get metadate for projectnode with id.
