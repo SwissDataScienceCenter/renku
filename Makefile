@@ -23,7 +23,7 @@ PLATFORM_BASE_DIR = ..
 PLATFORM_VERSION = latest
 PLATFORM_BASE_REPO_URL = git@github.com:SwissDataScienceCenter
 PLATFORM_REPO_TPL = $(PLATFORM_BASE_REPO_URL)/$*.git
-IMAGE_REPOSITORY=registry.gitlab.com/swissdatasciencecenter/images/
+IMAGE_REPOSITORY=rengahub/
 
 define DOCKER_BUILD
 set version in Docker := "$(PLATFORM_VERSION)"
