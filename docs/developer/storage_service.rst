@@ -56,7 +56,7 @@ Reading
  **POST /authorize/read**
 
  The json-encoded body of the request must contain a ReadResourceRequest object with the globally unique identifier of the file to read. First the corresponding graph vertices are retrieved. The service chooses then the most suited file_location, possibly forwarding the request in a federated scenario.
- Then a query to the resource manager is sent for checking the access rights and signing the access authorization. The access authorization contains all the needed information for the backend to retrieve the given file_location, in the form of a json-object that is included in the JWT claim :code:`resource_extras` (You can find more details on the Resource Manager page).
+ Then a query to the resource manager is sent for checking the access rights and signing the access authorization. The access authorization contains all the needed information for the backend to retrieve the given file_location, in the form of a json-object that is included in the JWT claim ``resource_extras`` (You can find more details on the Resource Manager page).
  The response is validated (verifying the JWT signature and content) and forwarded to the client. The user can also provide an execution ID to record which process must be logged in the graph to have read this resource.
 
 Writing
@@ -89,21 +89,21 @@ Reading a file
 
  **GET /io/read**
 
- This call needs an authorization token signed by the Resource Manager and with the scope :code:`storage:read`. The JWT token contains in its :code:`resource_extras` claim all the needed informations for accessing the file. The :code:`Range` html header can also be used (`more info <https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Range>`_). The result is sent back as a chunked response.
+ This call needs an authorization token signed by the Resource Manager and with the scope ``storage:read``. The JWT token contains in its :code:`resource_extras` claim all the needed informations for accessing the file. The :code:`Range` html header can also be used (`more info <https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Range>`_). The result is sent back as a chunked response.
 
 Writing a file
 ..............
 
  **POST /io/write**
 
- This call needs an authorization token signed by the Resource Manager and with the scope :code:`storage:write` or :code:`storage:create`. The JWT token contains in its :code:`resource_extras` claim all the needed informations for accessing the file. In the case of an existing file, a new version of the file is created (see below for the versioning). The content of the file is then to be sent as the body of the request. If the authorization fails, the request is immediately aborted.
+ This call needs an authorization token signed by the Resource Manager and with the scope ``storage:write`` or :code:`storage:create`. The JWT token contains in its :code:`resource_extras` claim all the needed informations for accessing the file. In the case of an existing file, a new version of the file is created (see below for the versioning). The content of the file is then to be sent as the body of the request. If the authorization fails, the request is immediately aborted.
 
 Listing backends
 ................
 
  **GET /io/backends**
 
- The response is the list of all active backends on this particular deployment, that can be then used as values in the :code:`backend` parameter when creating a bucket.
+ The response is the list of all active backends on this particular deployment, that can be then used as values in the ``backend`` parameter when creating a bucket.
 
 .. _stg_workflow:
 
@@ -130,4 +130,4 @@ Time-based versioning
 
 All files are automatically versioned, by the storage backend, every time a new **write** is called on an existing file. The versioning scheme consists in appending the timestamp of the authorization call to the filename. This means that two **write** calls with the same permission token would overwrite a the same file, whereas two calls with different tokens, will create two distinct versions.
 
-At the level of the graph, this is abstracted by :code:`file_version` vertices which are linked to the :code:`file` vertex and that can have one or more :code:`file_location` vertices. File_versions have an attribute with their creation timestamp. Resolving the latest version of a file needs to get all versions and take the one with the largest timestamp.
+At the level of the graph, this is abstracted by ``file_version`` vertices which are linked to the :code:`file` vertex and that can have one or more :code:`file_location` vertices. File_versions have an attribute with their creation timestamp. Resolving the latest version of a file needs to get all versions and take the one with the largest timestamp.

@@ -64,26 +64,26 @@ From the request
 
 The request body contains:
 
-- the subject of the access request is specified in the :code:`resource_id` field of the request body. Its absence is to be interpreted as a global access request (e.g. permission to create a bucket).
-- the access permissions requested are described in the :code:`scope` field
-- the content of the request (provided by the requesting service) is held in :code:`resource_id` (main subject) and :code:`service_claims` (detailed subject).
+- the subject of the access request is specified in the ``resource_id`` field of the request body. Its absence is to be interpreted as a global access request (e.g. permission to create a bucket).
+- the access permissions requested are described in the ``scope`` field
+- the content of the request (provided by the requesting service) is held in ``resource_id`` (main subject) and :code:`service_claims` (detailed subject).
 
 From the context
 ^^^^^^^^^^^^^^^^
 
 The access token contains:
 
-- the user who is requesting access, in the :code:`sub` claim
+- the user who is requesting access, in the ``sub`` claim
 - attributes about the user (Note: need to configure roles, etc. from keycloak for this)
 - if the request comes from a deployed application, the id representing that application in the knowledge graph. Note: as we do not generate tokens inserted in deployed containers as of today, this attribute is not handed to the RM.
 
 From the knowledge graph
 ^^^^^^^^^^^^^^^^^^^^^^^^
 
-If a :code:`resource_id` was specified in the request, then the RM will fetch the corresponding
+If a ``resource_id`` was specified in the request, then the RM will fetch the corresponding
 vertex from the knowledge graph.
 Note: It is planned to allow more complex data to be retrieved, but a specific graph ontology needs to
-be defined first (:code:`authorization:extends` edge label for instance).
+be defined first (``authorization:extends`` edge label for instance).
 
 .. _rm-rules:
 
@@ -99,10 +99,10 @@ This implies that the RM will allow access to any resource, provided that it exi
 Response from the RM
 --------------------
 
-- the response is a json object containing a token at the :code:`access_token` field
-- if a :code:`https://rm.datascience.ch/resource_id` was present, a :code:`resource_id` claim is present in the returned token
-- the :code:`https://rm.datascience.ch/scope` field holds the granted scope (i.e. permissions), which can be empty (no permission granted)
-- the optional :code:`https://rm.datascience.ch/service_claims` will contain a serialized json object of the same value as the incoming :code:`service_claims`
+- the response is a json object containing a token at the ``access_token`` field
+- if a ``https://rm.datascience.ch/resource_id`` was present, a :code:`resource_id` claim is present in the returned token
+- the ``https://rm.datascience.ch/scope`` field holds the granted scope (i.e. permissions), which can be empty (no permission granted)
+- the optional ``https://rm.datascience.ch/service_claims`` will contain a serialized json object of the same value as the incoming :code:`service_claims`
 
 .. _rm-encapsulation:
 
@@ -121,7 +121,7 @@ a good practice is to use authorization token encapsulation.
 
 Token encapsulation consists of first asking for authorization on all sub-resources,
 then encapsulate all authorization tokens into the main authorization call on the Resource Manager.
-The tokens are simply passed around in the :code:`service_claims` field and will come back intact in the :code:`https://rm.datascience.ch/service_claims` claim.
+The tokens are simply passed around in the ``service_claims`` field and will come back intact in the :code:`https://rm.datascience.ch/service_claims` claim.
 
 Example:
 
@@ -131,7 +131,7 @@ Example:
    :alt: Sequence diagram of local application deployment.
 
 
-Message 5 :code:`getAuth` contains the authorization token from response 4 :code:`repoAuth` in the :code:`repo_auth_token` field as shown below:
+Message 5 ``getAuth`` contains the authorization token from response 4 :code:`repoAuth` in the :code:`repo_auth_token` field as shown below:
 
 .. highlight:: json
 
@@ -153,7 +153,7 @@ During the action call, the service can now parse and verify the authorization t
 the request.
 When other resources need to be accessed (e.g. code during deploy), the service can simply call
 the action on the corresponding service using the proper token extracted from the
-:code:`https://rm.datascience.ch/service_claims` claim of the encapsulating token.
+``https://rm.datascience.ch/service_claims`` claim of the encapsulating token.
 
 .. highlight:: python
 

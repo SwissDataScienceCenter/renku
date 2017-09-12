@@ -106,28 +106,28 @@ Property keys are separated into two categories:
 - (regular) property keys, which are directly manipulated
 
 To avoid name clashing, all non-system property keys must follow the pattern
-:code:`<namespace>:<name>`, where namespace and name respectively adhere the regular expressions
-:code:`[-A-Za-z0-9_/.]*` and :code:`[-A-Za-z0-9_/.]+`. This naming convention is also used with edge labels
+``<namespace>:<name>``, where namespace and name respectively adhere the regular expressions
+``[-A-Za-z0-9_/.]*`` and :code:`[-A-Za-z0-9_/.]+`. This naming convention is also used with edge labels
 and named types.
 
 Named types are used to provide data consistency checks on graph vertices, and are not applicable to edges
 nor vertex properties (seen as objects).
 They consist of:
 
-- a name, which follows the :code:`<namespace>:<name>` pattern
-- a set of supertypes, consisting of a set of :code:`<namespace>:<name>` values (names)
-- a set of property keys, consisting of a set of :code:`<namespace>:<name>` values (property keys)
+- a name, which follows the ``<namespace>:<name>`` pattern
+- a set of supertypes, consisting of a set of ``<namespace>:<name>`` values (names)
+- a set of property keys, consisting of a set of ``<namespace>:<name>`` values (property keys)
 
 Examples:
 
-1. :code:`name = "geom:point2d"`, :code:`supertypes = {}`, :code:`properties = { "geom:x", "geom:y" }`
-   Here, if a vertex :code:`v` is know to be of type :code:`geom:point2d`, then we know that v has
-   :code:`geom:x` and :code:`geom:y` properties.
-2. :code:`name = "geom:labeledPoint2d"`, :code:`supertypes = { "geom:point2d" }`,
-   :code:`properties = { "geom:x", "geom:y", "geom:label" }`
-   Here, if a vertex :code:`v` is know to be of type :code:`geom:labeledPoint2d`, then as :code:`geom:point2d` is a supertype of
-   :code:`geom:labeledPoint2d`, :code:`v` is also of type :code:`geom:point2d`.
-   Notice also that the properties of :code:`geom:labeledPoint2d` are a superset of the properties of type :code:`geom:point2d`.
+1. ``name = "geom:point2d"``, :code:`supertypes = {}`, :code:`properties = { "geom:x", "geom:y" }`
+   Here, if a vertex ``v`` is know to be of type :code:`geom:point2d`, then we know that v has
+   ``geom:x`` and :code:`geom:y` properties.
+2. ``name = "geom:labeledPoint2d"``, :code:`supertypes = { "geom:point2d" }`,
+   ``properties = { "geom:x", "geom:y", "geom:label" }``
+   Here, if a vertex ``v`` is know to be of type :code:`geom:labeledPoint2d`, then as :code:`geom:point2d` is a supertype of
+   ``geom:labeledPoint2d``, :code:`v` is also of type :code:`geom:point2d`.
+   Notice also that the properties of ``geom:labeledPoint2d`` are a superset of the properties of type :code:`geom:point2d`.
 
 The type system is initialized with the system property keys, (regular) property keys, edge labels and
 named types present in the type_init.json_ file.
@@ -144,8 +144,8 @@ The graph traversals must be generated with a graph traversal source marked with
 
 If vertices or edges are extracted using a graph traversal, it may be desirable to perform the following:
 
-- discard properties that do not follow the :code:`<namespace>:<name>` pattern
-- in the case of vertices, transform the values from the :code:`type` system property into named type constructs
+- discard properties that do not follow the ``<namespace>:<name>`` pattern
+- in the case of vertices, transform the values from the ``type`` system property into named type constructs
   (by mapping names to the named type construct they are associated with)
 
 These steps are implemented in the VertexReader_ and the EdgeReader_ classes.
@@ -162,10 +162,10 @@ A mutation request consists of a sequence of operations. The whole sequence of o
 in a single transaction, i.e. mutations are atomic with respect to transaction atomicity.
 Currently, there are four supported operations:
 
-- :code:`create_vertex`, create a new vertex in the graph
-- :code:`create_edge`, create a new edge in the graph
-- :code:`create_vertex_property`, add a (property key, value) pairing to a given vertex
-- :code:`update_vertex_property`, modify a vertex property. This is done by first removing the old (property key, value) pairing and then adding the (property key, new value) pairing
+- ``create_vertex``, create a new vertex in the graph
+- ``create_edge``, create a new edge in the graph
+- ``create_vertex_property``, add a (property key, value) pairing to a given vertex
+- ``update_vertex_property``, modify a vertex property. This is done by first removing the old (property key, value) pairing and then adding the (property key, new value) pairing
 
 The full definition of the graph mutation API resides in the `mutation API spec`_ file.
 
@@ -181,12 +181,12 @@ Detail of messages:
 3. client requests status of mutation identified by **uuid** received at (2 request received)
 4. mutation service sends back the mutation status
 
-The response sent at (4 mutation status) will contain a :code:`status` field which can have two values:
+The response sent at (4 mutation status) will contain a ``status`` field which can have two values:
 
 - pending: the mutation has not been processed yet
 - completed: the mutation has been processed
 
-In the case of :code:`completed` status, the response will contain more information about the result of
+In the case of ``completed`` status, the response will contain more information about the result of
 processing the mutation.
 Notably, the response will display an error message if for some reason (e.g. invalid mutation), the mutation failed.
 Otherwise, if the mutation was successfully processed, then the response will contain a sequence of graph
@@ -194,17 +194,17 @@ identifiers mapped from the incoming mutation request.
 
 .. tabularcolumns:: |l|l|
 
-+--------------------------------+---------------------------+
-| Request                        | Result id                 |
-+================================+===========================+
-| :code:`create_vertex`          | id of the created vertex  |
-+--------------------------------+---------------------------+
-| :code:`create_edge`            | id of the created edge    |
-+--------------------------------+---------------------------+
-| :code:`create_vertex_property` | id of the affected vertex |
-+--------------------------------+---------------------------+
-| :code:`update_vertex_property` | id of the affected vertex |
-+--------------------------------+---------------------------+
++----------------------------+---------------------------+
+| Request                    | Result id                 |
++============================+===========================+
+| ``create_vertex``          | id of the created vertex  |
++----------------------------+---------------------------+
+| ``create_edge``            | id of the created edge    |
++----------------------------+---------------------------+
+| ``create_vertex_property`` | id of the affected vertex |
++----------------------------+---------------------------+
+| ``update_vertex_property`` | id of the affected vertex |
++----------------------------+---------------------------+
 
 Example: consider the following mutation request. ::
 
@@ -214,7 +214,7 @@ Then, the response will contain::
 
     "results": [ { "id": 1234, "id": "1234->5678" } ]
 
-where :code:`1234` is a vertex identifier and :code:`1234->5678` is an edge identifier.
+where ``1234`` is a vertex identifier and :code:`1234->5678` is an edge identifier.
 
 Note that the resulting ids follow the same order as the order of operations in the request.
 
