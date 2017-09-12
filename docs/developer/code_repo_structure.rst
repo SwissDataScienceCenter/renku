@@ -27,6 +27,6 @@ The **RENGA** project code structure is split into the following github reposito
 .. _renga-graph: https://github.com/SwissDataScienceCenter/renga-graph
 .. _renga-identity: https://www.datascience.ch/TBD
 .. _renga-python: https://github.com/SwissDataScienceCenter/renga-python
-.. _renga-sample: https://www.datascience.ch/TBD
+.. _renga-tutorials: https://github.com/SwissDataScienceCenter/renga-tutorials
 .. _renga-storage: https://github.com/SwissDataScienceCenter/renga-storage
 .. _renga-web-frontend: https://github.com/SwissDataScienceCenter/renga-web-frontend
