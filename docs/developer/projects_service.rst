@@ -22,13 +22,13 @@ Project
 Projects within the Renga platform are given a unique identifier that should be used when manipulating them.
 In addition, a project will have the following attributes:
 
-* a project name, keyed with `project:project_name`.
-* a set of owners, keyed with `resource:owner`.
-* a set of labels, keyed with `annotation:label`. This set can be empty.
+* a project name, keyed with :code:`project:project_name`.
+* a set of owners, keyed with :code:`resource:owner`.
+* a set of labels, keyed with :code:`annotation:label`. This set can be empty.
 
 Children Resources
 ^^^^^^^^^^^^^^^^^^
-Resources created within a given project will be linked to in the knowledge graph with `project:is_part_of` edges.
+Resources created within a given project will be linked to in the knowledge graph with :code:`project:is_part_of` edges.
 
 See :ref:`here for an example involving storage resources<kg_data>`.
 
@@ -51,4 +51,4 @@ The projects API provides the following endpoints (`projects API spec`_).
 
 **POST /**
 
-  Create a project by supplying a name (mapped to `project:project_name`) and optional labels (mapped to `annotation:label`).
+  Create a project by supplying a name (mapped to :code:`project:project_name`) and optional labels (mapped to :code:`annotation:label`).
