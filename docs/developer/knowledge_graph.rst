@@ -106,17 +106,17 @@ Property keys are separated into two categories:
 - (regular) property keys, which are directly manipulated
 
 To avoid name clashing, all non-system property keys must follow the pattern
-`<namespace>:<name>`, where namespace and name respectively adhere the regular expressions
-`[-A-Za-z0-9_/.]*` and `[-A-Za-z0-9_/.]+`. This naming convention is also used with edge labels
+:code:`<namespace>:<name>`, where namespace and name respectively adhere the regular expressions
+:code:`[-A-Za-z0-9_/.]*` and :code:`[-A-Za-z0-9_/.]+`. This naming convention is also used with edge labels
 and named types.
 
 Named types are used to provide data consistency checks on graph vertices, and are not applicable to edges
 nor vertex properties (seen as objects).
 They consist of:
 
-- a name, which follows the `<namespace>:<name>` pattern
-- a set of supertypes, consisting of a set of `<namespace>:<name>` values (names)
-- a set of property keys, consisting of a set of `<namespace>:<name>` values (property keys)
+- a name, which follows the :code:`<namespace>:<name>` pattern
+- a set of supertypes, consisting of a set of :code:`<namespace>:<name>` values (names)
+- a set of property keys, consisting of a set of :code:`<namespace>:<name>` values (property keys)
 
 Examples:
 
@@ -194,17 +194,17 @@ identifiers mapped from the incoming mutation request.
 
 .. tabularcolumns:: |l|l|
 
-+--------------------------+---------------------------+
-| Request                  | Result id                 |
-+==========================+===========================+
-| `create_vertex`          | id of the created vertex  |
-+--------------------------+---------------------------+
-| `create_edge`            | id of the created edge    |
-+--------------------------+---------------------------+
-| `create_vertex_property` | id of the affected vertex |
-+--------------------------+---------------------------+
-| `update_vertex_property` | id of the affected vertex |
-+--------------------------+---------------------------+
++--------------------------------+---------------------------+
+| Request                        | Result id                 |
++================================+===========================+
+| :code:`create_vertex`          | id of the created vertex  |
++--------------------------------+---------------------------+
+| :code:`create_edge`            | id of the created edge    |
++--------------------------------+---------------------------+
+| :code:`create_vertex_property` | id of the affected vertex |
++--------------------------------+---------------------------+
+| :code:`update_vertex_property` | id of the affected vertex |
++--------------------------------+---------------------------+
 
 Example: consider the following mutation request. ::
 
