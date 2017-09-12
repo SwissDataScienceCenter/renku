@@ -14,7 +14,7 @@ Welcome to RENGA!
    :includehidden:
 
    Introduction <introduction/index>
-   Getting started <user/firststeps>
+   First stepss <user/firststeps>
    User documentation <user/userguide>
    Developer documentation <developer/devguide>
    License <https://www.apache.org/licenses/LICENSE-2.0>
