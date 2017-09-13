@@ -46,6 +46,7 @@ Exposed ports
 -  ``80`` all platform APIs through a reverse proxy (Traefik).
 -  ``443`` all platform APIs through a reverse proxy (Traefik).
 -  ``81`` Traefik monitoring interface.
+-  ``5601`` Kibana log monitoring interface.
 
 Additionally, all services expose their port, picked randomly by docker.
 Use ``docker-compose ps`` to list them.
