@@ -19,7 +19,7 @@ Prerequisites
 
 * `Docker <http://www.docker.com>`_
 * `GNU make <https://www.gnu.org/software/make/>`_
-* `SBT (scala version 2.11) <http://www.scala-sbt.org/>`_
+* `sbt <http://www.scala-sbt.org/>`_
 
 
 Getting the code and images
