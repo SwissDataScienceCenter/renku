@@ -121,6 +121,7 @@ services:
       traefik.frontend.rule: PathPrefix:/api/resource-manager
   deployer:
     image: ${IMAGE_REPOSITORY}renga-deployer:$PLATFORM_VERSION
+    command: uwsgi /code/docker/uwsgi/uwsgi.ini
     links:
       - db
       - reverse-proxy
