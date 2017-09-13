@@ -17,6 +17,9 @@
 # limitations under the License.
 
 version: '3'
+volumes:
+  db-data: {}
+  cassandra-data: {}
 services:
   db:
     image: postgres:9.6
@@ -27,12 +30,14 @@ services:
       POSTGRES_USER: postgres
     volumes:
     - ./services/postgres/docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d:ro
+    - db-data:/pgdata
     ports:
     - 5432
   cassandra:
     image: cassandra:2.1.9
     volumes:
     - ./services/cassandra/etc/cassandra-env.sh:/etc/cassandra/cassandra-env.sh:ro
+    - cassandra-data:/var/lib/cassandra
     ports:
     - 9160
   keycloak:
