@@ -226,7 +226,7 @@ services:
       API_URL: http://localhost/api/swagger.json
       OAUTH2_REDIRECT_URL: http://localhost/admin/swagger/oauth2-redirect.html
   ui:
-    image: ${IMAGE_REPOSITORY}renga-web-frontend:$PLATFORM_VERSION
+    image: ${IMAGE_REPOSITORY}renga-ui:$PLATFORM_VERSION
     ports:
       - 5000
     links:
