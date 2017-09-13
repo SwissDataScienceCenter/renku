@@ -14,7 +14,7 @@ The **RENGA** project code structure is split into the following github reposito
 - renga-python_ - Python API & Command Line Interface (CLI)
 - renga-storage_ - Storage service
 - renga-tutorials_ - files for getting started application (TBD)
-- renga-web-frontend_ - web front-end interface
+- renga-ui_ - web front-end interface
 - renga_ - umbrella project, links to all other project
 
 .. _renga: https://github.com/SwissDataScienceCenter/renga
@@ -27,4 +27,4 @@ The **RENGA** project code structure is split into the following github reposito
 .. _renga-python: https://github.com/SwissDataScienceCenter/renga-python
 .. _renga-storage: https://github.com/SwissDataScienceCenter/renga-storage
 .. _renga-tutorials: https://github.com/SwissDataScienceCenter/renga-tutorials
-.. _renga-web-frontend: https://github.com/SwissDataScienceCenter/renga-web-frontend
+.. _renga-ui: https://github.com/SwissDataScienceCenter/renga-ui
