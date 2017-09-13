@@ -52,6 +52,9 @@ You can get going with ``renga`` in a few minutes by using our pre-built images:
 Once the script completes, you can go to http://localhost/ui to see the browser
 front-end or http://localhost/admin/swagger to see the Swagger REST API.
 
+A default user ``demo`` with password ``demo`` is configured in the identity
+manager Keycloak.
+
 
 Building from source
 ^^^^^^^^^^^^^^^^^^^^
@@ -131,3 +134,14 @@ commands:
 You can now point your browser to http://localhost/ui for the web front-end, or
 to http://localhost/admin/swagger for the swagger REST API spec.
 
+
+Default behaviour
+^^^^^^^^^^^^^^^^^
+
+A default user ``demo`` with password ``demo`` is configured in the identity
+manager Keycloak. The administration console of Keycloak is available at
+http://localhost/auth/admin, with the user ``admin`` and password ``admin``
+(`Keycloak documentation <http://www.keycloak.org/documentation.html>`_).
+The storage backend uses the folder ``./services/storage/data`` to store
+the buckets and files. The deployer backend uses the local docker instance
+to execute containers.

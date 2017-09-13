@@ -33,5 +33,19 @@ Example::
        "timestamp": "2017-08-10T10:29:51.923Z"
      }
 
-**A**: The bucket has been created properly but failed to write to the graph. Check the docker-compose version, if the version is not very recent, try upgrading docker-compose (it has been tested on Docker-compose version 1.14.0) 
+**A**: The bucket has been created properly but failed to write to the graph. Check the docker-compose version, if the version is not very recent, try upgrading docker-compose (it has been tested on Docker-compose version 1.14.0)
 
+Using the web UI
+----------------
+
+**Q**: I get always redirected to a blank page or I'm stuck in a redirection loop.
+
+**A**: The API token expired and the refresh token too. Just logout and login again.
+
+**Q**: I'm adding files/buckets/contexts/... but the graph view doesn't change.
+
+**A**: Changing pages doesn't refresh yet the content of the displayed graph. You need to refresh the whole page, by pressing F5 for example.
+
+**Q**: While navigating the graph, it disappeard.
+
+**A**: You may have zoomed in too much in an empty region. You can try to zoom out or refresh the page.
