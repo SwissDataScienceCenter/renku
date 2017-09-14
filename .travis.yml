@@ -48,6 +48,7 @@ install:
   - ./scripts/travis-install.sh
 
 before_script:
+  - export RENGA_ENDPOINT=http://$(hostname)
   - make start
 
 script:
