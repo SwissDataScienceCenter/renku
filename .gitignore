@@ -1,5 +1,6 @@
 # services/storage/data/, created by storage service
 services/storage/data/
+services/keycloak/data/
 
 # Idea software family
 .idea/

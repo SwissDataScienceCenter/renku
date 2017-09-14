@@ -1,3 +1,4 @@
+#!/bin/bash
 # -*- coding: utf-8 -*-
 #
 # Copyright 2017 - Swiss Data Science Center (SDSC)
@@ -16,41 +17,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-sudo: true
-# dist: xenial
+echo "======================================="
+echo " Configuration:"
+echo " RENGA_ENDPOINT=$RENGA_ENDPOINT"
+echo " RENGA_KEYCLOAK=$RENGA_KEYCLOAK"
+echo "======================================="
 
-notifications:
-  email: false
+( echo "cat <<EOF" ; cat $RENGA_KEYCLOAK.tpl ; echo EOF ) | RENGA_ENDPOINT=$RENGA_ENDPOINT bash > $RENGA_KEYCLOAK
 
-sudo: required
-
-services:
-  - docker
-
-branches:
-  only:
-    - master
-
-language: python
-
-matrix:
-  fast_finish: true
-
-python:
-  - "3.6"
-
-before_install:
-  - pip install Sphinx>=1.6.3
-  - pip install -r docs/requirements.txt
-  - pip install -r tests/requirements.txt
-
-install:
-  - ./scripts/travis-install.sh
-
-before_script:
-  - export RENGA_ENDPOINT=http://localhost
-  - export RENGA_CONTAINERS_ENDPOINT=http://localhost
-  - make start
-
-script:
-  - make test
+exec /opt/jboss/docker-entrypoint.sh $@
+exit $?
