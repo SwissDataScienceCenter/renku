@@ -17,7 +17,7 @@
 # limitations under the License.
 
 sudo: true
-dist: xenial
+# dist: xenial
 
 notifications:
   email: false
@@ -48,7 +48,8 @@ install:
   - ./scripts/travis-install.sh
 
 before_script:
-  - export RENGA_ENDPOINT=http://$(hostname)
+  - export RENGA_ENDPOINT=http://localhost
+  - export RENGA_CONTAINERS_ENDPOINT=http://localhost
   - make start
 
 script:

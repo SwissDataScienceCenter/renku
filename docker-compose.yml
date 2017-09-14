@@ -153,11 +153,10 @@ services:
       WSGI_NUM_PROXIES: 1
       RENGA_AUTHORIZATION_CLIENT_SECRET: $AUTHORIZATION_CLIENT_SECRET
       RENGA_AUTHORIZATION_CLIENT_ID: renga-services
-      RENGA_ENDPOINT: ${RENGA_ENDPOINT}
+      RENGA_ENDPOINT: ${RENGA_CONTAINERS_ENDPOINT}
       DEPLOYER_DOCKER_NETWORK: renga_default
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-      - ../renga-deployer:/code
     labels:
       traefik.enable: "true"
       traefik.frontend.rule: PathPrefix:/api/deployer
