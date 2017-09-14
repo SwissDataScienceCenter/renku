@@ -16,7 +16,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-version: '2'
+version: '3'
 services:
   db:
     image: postgres:9.6
@@ -37,7 +37,10 @@ services:
     - 9160
   keycloak:
     image: jboss/keycloak-postgres:3.2.0.Final
+    entrypoint: /data/docker-entrypoint.sh
     environment:
+      RENGA_ENDPOINT: ${RENGA_ENDPOINT}
+      RENGA_KEYCLOAK: /data/renga-realm.json
       KEYCLOAK_PASSWORD: admin
       KEYCLOAK_USER: admin
       POSTGRES_DATABASE: keycloak
@@ -53,7 +56,9 @@ services:
       - "-Dkeycloak.migration.file=/data/renga-realm.json"
       - "-Dkeycloak.migration.strategy=IGNORE_EXISTING"
     volumes:
-      - ./services/keycloak/renga-realm.json:/data/renga-realm.json:ro
+      - ./services/keycloak/docker-entrypoint.sh:/data/docker-entrypoint.sh:ro
+      - ./services/keycloak/renga-realm.json.tpl:/data/renga-realm.json.tpl:ro
+      - ./services/keycloak/data:/data:rw
     links:
       - db:postgres
     restart: on-failure
@@ -141,15 +146,18 @@ services:
       DEPLOYER_JWT_KEY: $RESOURCE_MANAGER_PUBLIC_KEY
       DEPLOYER_JWT_ISSUER: resource-manager
       DEPLOYER_TOKEN_SCOPE_KEY: https://rm.datascience.ch/scope
-      DEPLOYER_AUTHORIZATION_URL: http://localhost/auth/realms/Renga/protocol/openid-connect/auth
+      DEPLOYER_AUTHORIZATION_URL: ${RENGA_ENDPOINT}/auth/realms/Renga/protocol/openid-connect/auth
       DEPLOYER_TOKEN_URL: http://reverse-proxy/auth/realms/Renga/protocol/openid-connect/token
-      DEPLOYER_URL: localhost
+      DEPLOYER_URL: ${RENGA_ENDPOINT}
       DEPLOYER_BASE_PATH: /api/deployer
       WSGI_NUM_PROXIES: 1
       RENGA_AUTHORIZATION_CLIENT_SECRET: $AUTHORIZATION_CLIENT_SECRET
       RENGA_AUTHORIZATION_CLIENT_ID: renga-services
+      RENGA_ENDPOINT: ${RENGA_ENDPOINT}
+      DEPLOYER_DOCKER_NETWORK: renga_default
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
+      - ../renga-deployer:/code
     labels:
       traefik.enable: "true"
       traefik.frontend.rule: PathPrefix:/api/deployer
@@ -224,8 +232,8 @@ services:
       traefik.enable: "true"
       traefik.frontend.rule: PathPrefixStrip:/admin/swagger
     environment:
-      API_URL: http://localhost/api/swagger.json
-      OAUTH2_REDIRECT_URL: http://localhost/admin/swagger/oauth2-redirect.html
+      API_URL: ${RENGA_ENDPOINT}/api/swagger.json
+      OAUTH2_REDIRECT_URL: ${RENGA_ENDPOINT}/admin/swagger/oauth2-redirect.html
   ui:
     image: ${IMAGE_REPOSITORY}renga-ui:$PLATFORM_VERSION
     ports:
@@ -234,7 +242,7 @@ services:
       - reverse-proxy
     environment:
       KEYCLOAK_URL: http://reverse-proxy/auth/realms/Renga/  # from inside
-      KEYCLOAK_REDIRECT_URL: http://localhost/auth/realms/Renga/  # from outside
+      KEYCLOAK_REDIRECT_URL: ${RENGA_ENDPOINT}/auth/realms/Renga/  # from outside
       API_ROOT_URL: http://reverse-proxy/api/
       APPLICATION_ROOT: /ui
     labels:
