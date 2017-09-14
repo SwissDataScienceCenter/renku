@@ -18,6 +18,7 @@ Prerequisites
 -------------
 
 * `Docker <http://www.docker.com>`_
+* `Docker Compose >=1.14 <https://docs.docker.com/compose/install/>`_ (**Linux Only**)
 * `GNU make <https://www.gnu.org/software/make/>`_
 * `sbt <http://www.scala-sbt.org/>`_
 
