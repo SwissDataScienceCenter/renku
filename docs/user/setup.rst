@@ -50,7 +50,7 @@ You can get going with ``renga`` in a few minutes by using our pre-built images:
     $ docker-compose up && ./wait-for-services.sh
 
 Once the script completes, you can go to http://localhost/ui to see the browser
-front-end or http://localhost/admin/swagger to see the Swagger REST API.
+front-end or http://localhost/admin/swagger/ to see the Swagger REST API.
 
 A default user ``demo`` with password ``demo`` is configured in the identity
 manager Keycloak.
