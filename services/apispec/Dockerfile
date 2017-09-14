@@ -1,11 +1,14 @@
-FROM python:alpine
+FROM python:3.6-alpine
 
-RUN apk update && apk add build-base python-dev linux-headers
+RUN apk --no-cache add --update \
+    build-base \
+    linux-headers \
+    python-dev
 
 COPY requirements.txt /code/requirements.txt
 WORKDIR /code
 
-RUN pip install -r requirements.txt
+RUN pip install  --no-cache-dir -r requirements.txt
 
 COPY swagger.py /code/swagger.py
 
