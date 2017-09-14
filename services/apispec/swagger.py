@@ -72,7 +72,7 @@ def merge(*specs):
                 same_keys = ('authorizationUrl', 'type', 'flow')
                 for check_key in same_keys:
                     assert security_defs[check_key] == defs[
-                        check_key], check_key
+                        check_key], (check_key, definition)
                 composed['securityDefinitions'][key]['scopes'].update(
                     **defs['scopes'])
             else:

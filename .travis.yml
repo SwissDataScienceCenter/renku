@@ -22,14 +22,15 @@ dist: xenial
 notifications:
   email: false
 
-sudo: required
-
 services:
   - docker
 
 branches:
   only:
     - master
+
+env:
+  - RENGA_ENDPOINT=http://localhost
 
 language: python
 
