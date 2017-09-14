@@ -1,4 +1,4 @@
-#!/usr/bin/env sh
+#!/bin/bash
 # -*- coding: utf-8 -*-
 #
 # Copyright 2017 - Swiss Data Science Center (SDSC)
@@ -17,11 +17,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD" "$DOCKER_REGISTRY"
+echo "==================================================="
+echo " Configuration:"
+echo " RENGA_ENDPOINT=$RENGA_ENDPOINT"
+echo " KEYCLOAK_MIGRATION_FILE=$KEYCLOAK_MIGRATION_FILE"
+echo "==================================================="
 
-if [ "$TRAVIS_EVENT_TYPE" = "cron" ]
-then
-    make -e PLATFORM_BASE_DIR=/tmp
-else
-    docker-compose pull
-fi
+( echo "cat <<EOF" ; cat $KEYCLOAK_MIGRATION_FILE.tpl ; echo EOF ) | RENGA_ENDPOINT=$RENGA_ENDPOINT bash > $KEYCLOAK_MIGRATION_FILE
+
+exec /opt/jboss/docker-entrypoint.sh $@
+exit $?

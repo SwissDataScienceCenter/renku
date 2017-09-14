@@ -17,12 +17,9 @@
 # limitations under the License.
 
 sudo: true
-dist: xenial
 
 notifications:
   email: false
-
-sudo: required
 
 services:
   - docker
@@ -30,6 +27,9 @@ services:
 branches:
   only:
     - master
+
+env:
+  - RENGA_ENDPOINT=http://localhost
 
 language: python
 
