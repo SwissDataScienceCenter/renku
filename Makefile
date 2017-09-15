@@ -132,10 +132,14 @@ docker-images: $(scala-services) $(dockerfile-services)
 # Platform actions
 .PHONY: start stop restart test
 start:
+ifeq ($(RENGA_ENDPOINT),)
+	RENGA_ENDPOINT="http://localhost" RENGA_CONTAINERS_ENDPOINTS=http://`docker network inspect bridge --format='{{(index (index .IPAM.Config) 0).Gateway}}'` $(MAKE) start
+else
 	@docker-compose build
 	@docker-compose create
 	@docker-compose up -d
 	@./scripts/wait-for-services.sh
+endif
 
 stop:
 	@docker-compose stop
