@@ -76,3 +76,9 @@ request.
 ::
 
     ./run-tests.sh
+
+Contact
+-------
+
+Swiss Data Science Center (SDSC) https://datascience.ch/
+
