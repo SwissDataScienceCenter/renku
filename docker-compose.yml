@@ -149,7 +149,7 @@ services:
       KNOWLEDGE_GRAPH_URL: http://reverse-proxy/api/
       RENGA_AUTHORIZATION_CLIENT_ID: renga-services
       RENGA_AUTHORIZATION_CLIENT_SECRET: $AUTHORIZATION_CLIENT_SECRET
-      RENGA_ENDPOINT: ${RENGA_ENDPOINT}
+      RENGA_ENDPOINT: ${RENGA_CONTAINERS_ENDPOINT:-$RENGA_ENDPOINT}
       RESOURCE_MANAGER_URL: http://reverse-proxy/api/resource-manager/authorize
       SQLALCHEMY_DATABASE_URI: "postgres+psycopg2://postgres:postgres@db/deployer"
       WSGI_NUM_PROXIES: 1
