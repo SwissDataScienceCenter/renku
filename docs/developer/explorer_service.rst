@@ -14,7 +14,7 @@ Contents
 Overview
 --------
 
-The knowledge graph can be queried using the traversal language Gremlin. This is done in the form of prepared statements. 
+The knowledge graph can be queried using the traversal language Gremlin. This is done in the form of prepared statements.
 
 .. _explorer_endpoints:
 
@@ -85,19 +85,25 @@ The explorer API provides the following endpoints.
   ``controllers.GenericExplorerController.retrieveNodeMetaData(id: Long)``
 
   Retrieve the metadata of a node with a specific id. Valid for all nodes.
-  
-**GET /lineage/context/:id**                    
-  
+
+**GET /lineage/context/:id**
+
   ``controllers.AnthologyExplorerController.lineageFromContext(id: Long)``
 
-  Get the lineage starting from the deployer node.
+  Get the lineage starting from the context node.
 
-**GET /projects**                            
+**GET /lineage/file/:id**
+
+  ``controllers.LineageExplorerController.lineageFromFile(id: Long)``
+
+  Get the lineage starting from a file node.
+
+**GET /projects**
 
   ``controllers.ProjectExplorerController.retrieveProjects``
 
   Get the list with all projects in the graph. Limited to 100 by default.
- 
+
 **GET /projects/user**
 
   ``controllers.ProjectExplorerController.retrieveProjectByUserName(userId: Option[String] )``
@@ -106,6 +112,12 @@ The explorer API provides the following endpoints.
 
 **GET /projects/:id**
 
-  ``controllers.ProjectExplorerController.retrieveProjectMetadata( id: Long )`` 
+  ``controllers.ProjectExplorerController.retrieveProjectMetadata( id: Long )``
 
-  Get metadate for projectnode with id.
+  Get metadata for projectnode with id.
+
+**GET /projects/:id/lineage**
+
+  ``controllers.ProjectExplorerController.retrieveProjectLineage(id: Long)``
+
+  Get project lineage for projectnode with id.
