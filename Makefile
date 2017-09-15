@@ -130,7 +130,7 @@ $(dockerfile-services): %: $(PLATFORM_BASE_DIR)/%
 docker-images: $(scala-services) $(dockerfile-services)
 
 # Platform actions
-.PHONY: start stop restart test
+.PHONY: start stop restart test clean wipe
 start:
 	@docker-compose build
 	@docker-compose create
@@ -144,3 +144,9 @@ restart: stop start
 
 test:
 	@scripts/run-tests.sh
+
+clean:
+	@docker-compose down --volumes --remove-orphans
+
+wipe: clean
+	@rm -rf services/storage/data/*
