@@ -17,6 +17,8 @@
 # limitations under the License.
 
 version: '2'
+networks:
+  userspace: {}
 services:
   db:
     image: postgres:9.6
@@ -258,3 +260,6 @@ services:
         - /var/run/docker.sock:/var/run/docker.sock
         - /dev/null:/traefik.toml
         - ./services/traefik/ssl/:/ssl/
+    networks:
+    - default
+    - userspace
