@@ -19,11 +19,36 @@
 SBT_IVY_DIR := $(PWD)/.ivy
 SBT = sbt -ivy $(SBT_IVY_DIR)
 SBT_PUBLISH_TARGET = publish-local
-PLATFORM_BASE_DIR = ..
-PLATFORM_VERSION = latest
-PLATFORM_BASE_REPO_URL = git@github.com:SwissDataScienceCenter
-PLATFORM_REPO_TPL = $(PLATFORM_BASE_REPO_URL)/$*.git
-IMAGE_REPOSITORY=rengahub/
+
+ifndef PLATFORM_BASE_DIR
+	PLATFORM_BASE_DIR = ..
+endif
+
+ifndef PLATFORM_VERSION
+	PLATFORM_VERSION = latest
+endif
+
+ifndef PLATFORM_BASE_REPO_URL
+	PLATFORM_BASE_REPO_URL = git@github.com:SwissDataScienceCenter
+endif
+
+ifndef PLATFORM_REPO_TPL
+	PLATFORM_REPO_TPL = $(PLATFORM_BASE_REPO_URL)/$*.git
+endif
+
+ifndef IMAGE_REPOSITORY
+	IMAGE_REPOSITORY = rengahub/
+endif
+
+ifndef RENGA_ENDPOINT
+	RENGA_ENDPOINT=http://localhost
+	export RENGA_ENDPOINT
+endif
+
+ifndef RENGA_CONTAINERS_ENDPOINT
+	RENGA_CONTAINERS_ENDPOINT=http://$(shell docker network inspect bridge --format="{{(index (index .IPAM.Config) 0).Gateway}}")
+	export RENGA_CONTAINERS_ENDPOINT
+endif
 
 define DOCKER_BUILD
 set version in Docker := "$(PLATFORM_VERSION)"
@@ -107,8 +132,6 @@ docker-images: $(scala-services) $(dockerfile-services)
 # Platform actions
 .PHONY: start stop restart test
 start:
-	export RENGA_ENDPOINT=http://localhost
-	export RENGA_CONTAINERS_ENDPOINT=http://`docker network inspect bridge --format='{{(index (index .IPAM.Config) 0).Gateway}}'`
 	@docker-compose build
 	@docker-compose create
 	@docker-compose up -d
