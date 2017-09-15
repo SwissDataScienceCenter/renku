@@ -7,7 +7,7 @@ First Steps
     :description: First steps with Renga
     :keywords: hello world, first steps, starter, primer
 
-To try out Renga, you first need a platform to connect to: see the :ref:`setup`
+To try out Renga, you first need a platform to connect to: see :ref:`setup`
 for instructions on how to get one running on your own machine in a few minutes.
 
 Interaction with the platform happens via the python-based command-line-
@@ -32,7 +32,7 @@ configuration, enter ``demo/demo`` for username/password:
 
 .. code-block:: console
 
-    $ renga login
+    $ renga login http://localhost
     Username:
     Password:
     Access token has been stored in: ~/Library/Application Support/Renga/config.yml
@@ -57,14 +57,14 @@ Create an execution context using a docker container:
 .. code-block:: console
 
     $ renga contexts create hello-world
-    context-id: 14971456
+    14971456
 
 This creates a context - we can now run it on an engine:
 
 .. code-block:: console
 
-    $ renga contexts run 14971456
-    execution-id:
+    $ renga contexts run 14971456 docker
+    16d1491b
 
 To see all of your existing contexts:
 
@@ -79,10 +79,10 @@ And the executions of this context:
 
 .. code-block:: console
 
-    $ renga executions list 16d1491b
+    $ renga executions list 14971456
     ID          CONTEXT_ID   ENGINE    PORTS
     ----------  -----------  --------  -------
-    14971456    16d1491b     docker    []
+    16d1491b    14971456     docker    []
 
 
 Creating and populating a storage bucket
@@ -92,12 +92,12 @@ To create a storage bucket for this project:
 
 .. code-block:: console
 
-    $ renga io buckets create test-project-bucket
+    $ renga io buckets create project-bucket
     4272
     $ renga io buckets list
       ID  NAME                 BACKEND
     ----  -------------------  ---------
-    4272  test-project-bucket  local
+    4272  project-bucket       local
 
 At this point, we have created a project, linked it to a storage bucket and a
 container deployment. However, our "hello-world" container didn't really do
@@ -132,9 +132,12 @@ Now we can import the ``renga`` python API and interact with the platform:
 .. code-block:: ipython
 
     In [2]: import renga
-    In [3]: client = renga.from_config()
-    In [4]: with client.buckets[4272].open('sample-file', 'w') as fp:
-        fp.write('Renga enables collaborative data science.')
+    In [3]: client = renga.from_env()
+    In [4]: for bucket in client.buckets.list():
+                print(bucket)
+    <Bucket 4272>
+    In [5]: with client.buckets[4272].open('sample-file', 'w') as fp:
+        fp.write('Renga enables collaborative data science!')
 
 This created a new file, linked to the running notebook, which in turn
 is linked to the project - we have begun to populate our project's knowledge
