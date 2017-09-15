@@ -107,6 +107,8 @@ docker-images: $(scala-services) $(dockerfile-services)
 # Platform actions
 .PHONY: start stop restart test
 start:
+	export RENGA_ENDPOINT=http://localhost
+	export RENGA_CONTAINERS_ENDPOINT=http://`docker network inspect bridge --format='{{(index (index .IPAM.Config) 0).Gateway}}'`
 	@docker-compose build
 	@docker-compose create
 	@docker-compose up -d
