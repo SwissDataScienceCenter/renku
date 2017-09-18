@@ -3,10 +3,12 @@
 Project Code Repository Structure
 =================================
 
-The **RENGA** project code structure is split into the following github repositories.
+The **Renga** project code structure is split into the following github
+repositories.
 
+- renga_ - build and deploy the platform
 - renga-authorization_ - Resource Manager service
-- renga-commons_ - service commons
+- renga-commons_ - scala service commons
 - renga-deployer_ - Deployer service
 - renga-explorer_ - Knowledge Graph explorer
 - renga-graph_ - Knowledge Graph and type systems
@@ -15,7 +17,6 @@ The **RENGA** project code structure is split into the following github reposito
 - renga-storage_ - Storage service
 - renga-tutorials_ - files for getting started application (TBD)
 - renga-ui_ - web front-end interface
-- renga_ - umbrella project, links to all other project
 
 .. _renga: https://github.com/SwissDataScienceCenter/renga
 .. _renga-authorization: https://github.com/SwissDataScienceCenter/renga-authorization
