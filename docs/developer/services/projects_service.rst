@@ -19,6 +19,7 @@ Projects Data Model
 
 Project
 ^^^^^^^
+
 Projects within the Renga platform are given a unique identifier that should be used when manipulating them.
 In addition, a project will have the following attributes:
 
@@ -28,6 +29,7 @@ In addition, a project will have the following attributes:
 
 Children Resources
 ^^^^^^^^^^^^^^^^^^
+
 Resources created within a given project will be linked to in the knowledge graph with ``project:is_part_of`` edges.
 
 See :ref:`here for an example involving storage resources<kg_data>`.

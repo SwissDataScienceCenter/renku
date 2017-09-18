@@ -1,9 +1,9 @@
 .. _service_architecture:
 
-RENGA Architecture
+Renga Architecture
 ==================
 
-This document describes the architecture of the (web) services that are part of the **RENGA** platform.
+This document describes the architecture of the (web) services that are part of the **Renga** platform.
 
 .. _fig-architecture:
 
@@ -11,7 +11,7 @@ This document describes the architecture of the (web) services that are part of 
 
    -- Service Architecture
 
-As depicted in :numref:`fig-architecture`, **RENGA** operates as a middleware that sits between applications, backend computing, and storage services.
+As depicted in :numref:`fig-architecture`, **Renga** operates as a middleware that sits between applications, backend computing, and storage services.
 Applications interact with the platform services via client application programming interfaces.
 The interfaces are packaged as a collection of Software Development Kits (SDK) adapted to support a variety of programming languages and domain-specific environments.
 In the backend, connector services provide homogeneous interfaces to expose the various resource provider services.
@@ -36,8 +36,8 @@ with a few foundational concepts:
    :hidden:
    :maxdepth: 2
 
-   JWT  <json_web_tokens>
-   PBAC <policy_based_access_controls>
+   JWT  <../general/json_web_tokens>
+   PBAC <../general/policy_based_access_controls>
 
 - :ref:`json_web_tokens` (JWT)
 - :ref:`policy_based_access_controls` (PBAC)
