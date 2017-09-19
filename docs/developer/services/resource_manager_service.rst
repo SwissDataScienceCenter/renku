@@ -34,7 +34,7 @@ will request access to the resource on behalf of the user who launched that appl
 
 .. _fig-resource_manager_api:
 
-.. uml:: ../_static/uml/resource_manager_api.sequence.uml
+.. uml:: ../../_static/uml/resource_manager_api.sequence.uml
    :alt: Sequence diagram of Resource Manager authorization request
 
 Detail of messages:
@@ -127,7 +127,7 @@ Example:
 
 .. _fig-local_deployment:
 
-.. uml:: ../_static/uml/local_deployment.sequence.uml
+.. uml:: ../../_static/uml/local_deployment.sequence.uml
    :alt: Sequence diagram of local application deployment.
 
 
