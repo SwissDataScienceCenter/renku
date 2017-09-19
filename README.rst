@@ -91,7 +91,7 @@ request.
 .. code-block:: console
 
     $ make start
-    $ ./run-tests.sh
+    $ ./scripts/run-tests.sh
 
 Contact
 -------
