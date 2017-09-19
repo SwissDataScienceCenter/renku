@@ -18,7 +18,6 @@ interface (CLI) and the python API. You can get both via pip:
 
     $ pip install renga
 
-
 Our first Renga project
 ---------------------------
 
