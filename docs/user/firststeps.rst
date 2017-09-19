@@ -110,7 +110,7 @@ At this point, we have created a project, linked it to a storage bucket and a
 container deployment. However, our "hello-world" container didn't really do
 much. A more interesting container to run is an interactive `jupyter notebook
 <http://jupyter.org>`_ and if we launch it using ``renga``, we can automatically
-link the creation of any data we create to our project:
+link the creation of any derived data to our project:
 
 .. code-block:: console
 
@@ -140,13 +140,23 @@ Now we can import the ``renga`` python API and interact with the platform:
 
     In [2]: import renga
     In [3]: client = renga.from_env()
+
+We can check that the bucket we created earlier for our project is available:
+
+.. code-block:: ipython
+
     In [4]: for bucket in client.buckets.list():
                 print(bucket)
     <Bucket 4272>
+
+And we can write data to a file stored within this bucket:
+
+.. code-block:: ipython
+
     In [5]: with client.buckets[4272].open('sample-file', 'w') as fp:
         fp.write('Renga enables collaborative data science!')
 
-This created a new file, linked to the running notebook, which in turn
-is linked to the project - we have begun to populate our project's knowledge
-graph. You can inspect the knowledge graph using the browser UI at
+This command created a new file, linked it to the running notebook, which in
+turn is linked to the project - we have begun to populate our project's
+knowledge graph. You can inspect the knowledge graph using the browser UI at
 http://localhost/ui/#/graph.

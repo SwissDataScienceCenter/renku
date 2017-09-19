@@ -6,7 +6,7 @@ Content
 - :ref:`im_user_account_service`
 - :ref:`im_admin_console`
 
-**RENGA**'s identity management is based on Keycloak. We document the
+**Renga**'s identity management is based on Keycloak. We document the
 steps to add or modify a user security settings. For more information, we
 refer the reader to the Keycloak documentation, which can be found `here
 (Keycloak 3.2) <http://www.keycloak.org/docs/3.2/index.html>`_.

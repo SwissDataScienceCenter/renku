@@ -18,6 +18,10 @@
 RENGA (連歌)
 ============
 
+**Renga** is a highly-scalable & secure open software platform designed to foster
+multidisciplinary data (science) collaboration across mutually untrusted
+academic and industrial institutions.
+
 The platform allow practitioners to:
 
 * Securely manage, share and process large-scale data across untrusted
@@ -27,18 +31,26 @@ The platform allow practitioners to:
   detailed traceability (auditability & reproducibility).
 
 
-Goal
-----
-
-The goal of this project is to provide a simple way to instantiate the
-platform using Docker.
-
-Start the platform
+Starting the platform
 ------------------
 
-.. code:: bash
+.. code:: console
 
-    docker-compose up
+    $ make start
+
+By default, the platform will run on `localhost` and you can access the UI at
+http://localhost/ui and the swagger API UI at http://localhost/admin/swagger/.
+
+A python CLI and API client is available in the `renga-python
+<https://github/com/SwissDataScienceCenter/renga-python>`_ package.
+
+Configuration
+~~~~~~~~~~~~~
+
+To specify a custom platform endpoint, set the ``RENGA_ENDPOINT`` environment
+variable. By default this is ``http://localhost``. Some variables are defined in
+the ``.env`` file: please see the `platform setup documentation
+<https://renga.readthedocs.io/en/latest/user/setup.html>`_.
 
 Exposed ports
 ~~~~~~~~~~~~~
@@ -50,21 +62,16 @@ Exposed ports
 Additionally, all services expose their port, picked randomly by docker.
 Use ``docker-compose ps`` to list them.
 
-Configuration
-~~~~~~~~~~~~~
-
-Some variables are defined in the ``.env`` file.
-
 Documentation
 -------------
 
 Full documentation is available on https://renga.readthedocs.io/
-or it can be build from sources:
+or it can be built from sources:
 
-::
+.. code-block:: console
 
-   pip install -r docs/requirements.txt
-   cd docs && make html
+    $ pip install -r docs/requirements.txt
+    $ cd docs && make html
 
 Contributing
 ------------
@@ -73,11 +80,13 @@ Please make sure that it is possible to run the integration tests and
 build documentation without warnings and errors before creating pull
 request.
 
-::
+.. code-block:: console
 
-    ./run-tests.sh
+    $ make start
+    $ ./run-tests.sh
 
 Contact
 -------
 
-Swiss Data Science Center (SDSC) https://datascience.ch/
+To submit a bug report or a feature request, please open an issue. For other
+inquiries contact the Swiss Data Science Center (SDSC) https://datascience.ch/
