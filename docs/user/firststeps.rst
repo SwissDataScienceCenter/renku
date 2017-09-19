@@ -8,7 +8,7 @@ First Steps
     :keywords: hello world, first steps, starter, primer
 
 To try out Renga, you first need a platform to connect to: see :ref:`setup`
-for instructions on how to get one running on your own machine in a few minutes. 
+for instructions on how to get one running on your own machine in a few minutes.
 
 Interaction with the platform happens via the Python-based command-line
 interface (CLI) and the Python API. You can get both via pip:
