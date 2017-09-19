@@ -90,6 +90,7 @@ services:
   graph-navigation:
     image: ${IMAGE_REPOSITORY}renga-graph-navigation-service:$PLATFORM_VERSION
     environment:
+      PLAY_APPLICATION_SECRET: $PLAY_APPLICATION_SECRET
       GRAPH_SCOPE_REMOTE_URL: http://reverse-proxy/api/types
     links:
     - cassandra
