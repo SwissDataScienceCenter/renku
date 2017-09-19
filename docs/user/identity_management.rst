@@ -1,15 +1,16 @@
 .. _user_management:
 
-**RENGA**'s identity management is based on Keycloak. We document the
-steps to add or modify a user security settings. For more information, we
-refer the reader to the Keycloak documentation, which can be found `here
-(Keycloak 3.2) <http://www.keycloak.org/docs/3.2/index.html>`_.
-
 Content
 =======
 
 - :ref:`im_user_account_service`
 - :ref:`im_admin_console`
+
+**Renga**'s identity management is based on Keycloak. We document the
+steps to add or modify a user security settings. For more information, we
+refer the reader to the Keycloak documentation, which can be found `here
+(Keycloak 3.2) <http://www.keycloak.org/docs/3.2/index.html>`_.
+
 
 .. _im_user_account_service:
 

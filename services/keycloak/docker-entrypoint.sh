@@ -23,7 +23,7 @@ echo " RENGA_ENDPOINT=$RENGA_ENDPOINT"
 echo " KEYCLOAK_MIGRATION_FILE=$KEYCLOAK_MIGRATION_FILE"
 echo "==================================================="
 
-( echo "cat <<EOF" ; cat $KEYCLOAK_MIGRATION_FILE.tpl ; echo EOF ) | RENGA_ENDPOINT=$RENGA_ENDPOINT bash > $KEYCLOAK_MIGRATION_FILE
+sed -e "s|{{RENGA_ENDPOINT}}|${RENGA_ENDPOINT}|" "$KEYCLOAK_MIGRATION_FILE.tpl" > "$KEYCLOAK_MIGRATION_FILE"
 
 exec /opt/jboss/docker-entrypoint.sh $@
 exit $?

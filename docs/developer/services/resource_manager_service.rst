@@ -27,21 +27,21 @@ The role of the RM is to apply Policy-Based Access Control (:ref:`PBAC <policy_b
 Authorization Flow
 ------------------
 
-Whenever a user calls one of the platform services, said service may require to access
+Whenever a user calls one of the platform services, said service may request access
 to resources on behalf of the user.
 The same applies in the case of an application performing a request (e.g. read a file); the service
 will request access to the resource on behalf of the user who launched that application.
 
 .. _fig-resource_manager_api:
 
-.. uml:: ../_static/uml/resource_manager_api.sequence.uml
+.. uml:: ../../_static/uml/resource_manager_api.sequence.uml
    :alt: Sequence diagram of Resource Manager authorization request
 
 Detail of messages:
 
 1. client calls a platform service
 2. service sends AccessRequest to RM
-3. RM sends back authorization token
+3. RM sends back an authorization token
 4. service sends a message containing the authorization token from the RM
 
 For more details on the RM API, refer to the `Resource Manager API spec`_.
@@ -127,7 +127,7 @@ Example:
 
 .. _fig-local_deployment:
 
-.. uml:: ../_static/uml/local_deployment.sequence.uml
+.. uml:: ../../_static/uml/local_deployment.sequence.uml
    :alt: Sequence diagram of local application deployment.
 
 

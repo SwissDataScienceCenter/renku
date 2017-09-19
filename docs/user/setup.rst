@@ -18,6 +18,7 @@ Prerequisites
 -------------
 
 * `Docker <http://www.docker.com>`_
+* `Docker Compose >=1.14 <https://docs.docker.com/compose/install/>`_ (**Linux Only**)
 * `GNU make <https://www.gnu.org/software/make/>`_
 * `sbt <http://www.scala-sbt.org/>`_
 
@@ -38,6 +39,8 @@ Get the platform
 which has their own repository.
 
 
+.. _quickstart:
+
 Quickstart
 ^^^^^^^^^^
 
@@ -46,14 +49,14 @@ You can get going with ``renga`` in a few minutes by using our pre-built images:
 .. code-block:: console
 
     $ cd renga
-    $ docker-compose pull
-    $ docker-compose up && ./wait-for-services.sh
+    $ make start
 
 Once the script completes, you can go to http://localhost/ui to see the browser
 front-end or http://localhost/admin/swagger/ to see the Swagger REST API.
 
-A default user ``demo`` with password ``demo`` is configured in the identity
-manager Keycloak.
+Using the default configuration, you can login to all services using `demo/demo`
+as the username/password. See :ref:`user_management` for more information about
+handling user accounts.
 
 
 Building from source
@@ -135,13 +138,17 @@ You can now point your browser to http://localhost/ui for the web front-end, or
 to http://localhost/admin/swagger for the swagger REST API spec.
 
 
-Default behaviour
-^^^^^^^^^^^^^^^^^
+Identification Management
+-------------------------
 
 A default user ``demo`` with password ``demo`` is configured in the identity
 manager Keycloak. The administration console of Keycloak is available at
 http://localhost/auth/admin, with the user ``admin`` and password ``admin``
 (`Keycloak documentation <http://www.keycloak.org/documentation.html>`_).
+
+Storage location
+----------------
+
 The storage backend uses the folder ``./services/storage/data`` to store
 the buckets and files. The deployer backend uses the local docker instance
 to execute containers.

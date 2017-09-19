@@ -41,8 +41,7 @@ services:
     ports:
     - 9160
   keycloak:
-    image: jboss/keycloak-postgres:3.2.0.Final
-    entrypoint: /data/docker-entrypoint.sh
+    build: ./services/keycloak
     environment:
       KEYCLOAK_MIGRATION_FILE: /data/renga-realm.json
       KEYCLOAK_PASSWORD: admin
@@ -60,10 +59,6 @@ services:
       - "-Dkeycloak.migration.provider=singleFile"
       - "-Dkeycloak.migration.file=/data/renga-realm.json"
       - "-Dkeycloak.migration.strategy=IGNORE_EXISTING"
-    volumes:
-      - ./services/keycloak/docker-entrypoint.sh:/data/docker-entrypoint.sh:ro
-      - ./services/keycloak/renga-realm.json.tpl:/data/renga-realm.json.tpl:ro
-      - ./services/keycloak/data:/data:rw
     links:
       - db:postgres
     restart: on-failure

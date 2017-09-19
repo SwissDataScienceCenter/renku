@@ -106,8 +106,8 @@ Property keys are separated into two categories:
 - (regular) property keys, which are directly manipulated
 
 To avoid name clashing, all non-system property keys must follow the pattern
-``<namespace>:<name>``, where namespace and name respectively adhere the regular expressions
-``[-A-Za-z0-9_/.]*`` and :code:`[-A-Za-z0-9_/.]+`. This naming convention is also used with edge labels
+``<namespace>:<name>``, where namespace and name respectively adhere to the regular expressions
+``[-A-Za-z0-9_/.]*`` and ``[-A-Za-z0-9_/.]+``. This naming convention is also used with edge labels
 and named types.
 
 Named types are used to provide data consistency checks on graph vertices, and are not applicable to edges
@@ -171,12 +171,12 @@ The full definition of the graph mutation API resides in the `mutation API spec`
 
 .. _fig-kg_mutation_seqdiag:
 
-.. uml:: ../_static/uml/graph_mutation.sequence.uml
+.. uml:: ../../_static/uml/graph_mutation.sequence.uml
    :alt: Graph mutation sequence diagram.
 
 Detail of messages:
 
-1. client send mutation request as described above
+1. client sends a mutation request as described above
 2. mutation service sends back an acknowledgement message containing the request and its assigned **uuid**
 3. client requests status of mutation identified by **uuid** received at (2 request received)
 4. mutation service sends back the mutation status

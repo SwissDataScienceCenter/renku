@@ -5,7 +5,8 @@
 JSON Web Tokens
 ===============
 
-In the platform, Json Web Tokens (JWTs) are used extensively for securing service interfaces.
+In the platform, Json Web Tokens (JWTs) are used extensively for securing
+service interfaces.
 
 Relevant documentation
 ----------------------
@@ -22,14 +23,17 @@ Relevant documentation
 Introduction
 ------------
 
-In the scope of the platform, JWTs are used as bearers of proof. In simple terms, a valid token holds the proof of the claims it contains.
+In the scope of the platform, JWTs are used as bearers of proof. In simple
+terms, a valid token holds the proof of the claims it contains.
 
-`Access Tokens <https://tools.ietf.org/html/rfc6749#section-1.4>`_ from the identity manager (keycloak) are used to prove:
+`Access Tokens <https://tools.ietf.org/html/rfc6749#section-1.4>`_ from the
+identity manager (keycloak) are used to prove:
 
 - the user id of its bearer (``sub`` claim)
 - the platform global access attributes associated with that user, coming both from what the user requested (consented scope) and what the identity manager granted (stored roles, and other global attributes)
 
-Any additional piece of information about identity must be recovered using OIDC `identity tokens <http://openid.net/specs/openid-connect-core-1_0.html#CodeIDToken>`_
+Any additional piece of information about identity must be recovered using
+OIDC `identity tokens <http://openid.net/specs/openid-connect-core-1_0.html#CodeIDToken>`_
 and/or the `userinfo endpoint <http://openid.net/specs/openid-connect-core-1_0.html#UserInfo>`_.
 
 Access Tokens from the resource manager (RM) are used to prove:
@@ -40,7 +44,9 @@ Access Tokens from the resource manager (RM) are used to prove:
 About Resource Manager Tokens
 -----------------------------
 
-The API for obtaining signed tokens from the resource manager is described in `this swagger file <https://github.com/SwissDataScienceCenter/renga-authorization/blob/master/swagger.yml>`_.
+The API for obtaining signed tokens from the resource manager is described in
+`this swagger file <https://github.com/SwissDataScienceCenter/renga-
+authorization/blob/master/swagger.yml>`_.
 
 Notes on the request:
 
@@ -50,7 +56,7 @@ Notes on the request:
 
 Notes on the response:
 
-- the response is a json object containing a token at the ``access_token`` field
+- the response is a json object containing a token in the ``access_token`` field
 - if a ``permission_holder_id`` was present, a :code:`resource_id` claim is present in the returned token
 - the ``resource_scope`` field holds the granted scope (i.e. permissions), which can be empty (no permission granted)
 - the optional ``resource_extras`` will contain a serialized json object of the same value as the incoming :code:`extra_claims`
