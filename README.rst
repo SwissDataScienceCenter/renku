@@ -18,6 +18,14 @@
 RENGA (連歌)
 ============
 
+.. image:: https://img.shields.io/travis/SwissDataScienceCenter/renga.svg
+   :target: https://travis-ci.org/SwissDataScienceCenter/renga
+
+.. image:: https://readthedocs.org/projects/renga/badge/?version=latest
+    :target: http://renga.readthedocs.io/en/latest/?badge=latest
+    :alt: Documentation Status
+
+
 **Renga** is a highly-scalable & secure open software platform designed to foster
 multidisciplinary data (science) collaboration across mutually untrusted
 academic and industrial institutions.
