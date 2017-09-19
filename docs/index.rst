@@ -24,8 +24,8 @@ The platform allows (data)scientists to:
 
    Introduction <introduction/index>
    First steps <user/firststeps>
-   User documentation <user/userguide>
-   Developer documentation <developer/devguide>
+   User documentation <user/index>
+   Developer documentation <developer/index>
    License <https://www.apache.org/licenses/LICENSE-2.0>
 
 
