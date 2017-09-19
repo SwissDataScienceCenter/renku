@@ -9,7 +9,9 @@ First Steps
 
 To try out Renga, you first need a platform to connect to: see :ref:`setup`
 for instructions on how to get one running on your own machine in a few minutes. 
-You will also need Python with version 3.x.x.
+.. note::
+
+    You will also need Python with version 3.x.x.
 
 Interaction with the platform happens via the python-based command-line-
 interface (CLI) and the python API. You can get both via pip:
