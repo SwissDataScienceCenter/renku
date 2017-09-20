@@ -29,7 +29,7 @@ ifndef PLATFORM_VERSION
 endif
 
 ifndef PLATFORM_BASE_REPO_URL
-	PLATFORM_BASE_REPO_URL = git@github.com:SwissDataScienceCenter
+	PLATFORM_BASE_REPO_URL = https://github.com/SwissDataScienceCenter
 endif
 
 ifndef PLATFORM_REPO_TPL
