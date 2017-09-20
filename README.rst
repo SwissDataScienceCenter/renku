@@ -26,16 +26,15 @@ RENGA (連歌)
     :alt: Documentation Status
 
 
-**Renga** is a highly-scalable & secure open software platform designed to foster
-multidisciplinary data (science) collaboration across mutually untrusted
-academic and industrial institutions.
+**Renga** is a highly-scalable & secure open software platform designed to
+foster multidisciplinary data (science) collaboration.
 
-The platform allow practitioners to:
+The platform allows practitioners to:
 
 * Securely manage, share and process large-scale data across untrusted
   parties operating in a federated environment.
 
-* Capture complete lineage automatically up to original raw data for
+* Capture complete lineage automatically up to the original raw data for
   detailed traceability (auditability & reproducibility).
 
 
@@ -46,52 +45,43 @@ Starting the platform
 
     $ make start
 
-By default, the platform will run on `localhost` and you can access the UI at
+By default, the platform will run on ``localhost``. You can access the UI at
 http://localhost/ui and the swagger API UI at http://localhost/admin/swagger/.
 
 A python CLI and API client is available in the `renga-python
 <https://github/com/SwissDataScienceCenter/renga-python>`_ package.
 
-Configuration
-~~~~~~~~~~~~~
 
-To specify a custom platform endpoint, set the ``RENGA_ENDPOINT`` environment
-variable. By default this is ``http://localhost``. Some variables are defined in
-the ``.env`` file: please see the `platform setup documentation
-<https://renga.readthedocs.io/en/latest/user/setup.html>`_.
+Where to go next
+----------------
 
-Exposed ports
-~~~~~~~~~~~~~
+The full documentation is available at https://renga.readthedocs.io/.
 
--  ``80`` all platform APIs through a reverse proxy (Traefik).
--  ``443`` all platform APIs through a reverse proxy (Traefik).
--  ``81`` Traefik monitoring interface.
+First-time users should try our `first steps
+<https://renga.readthedocs.io/en/latest/user/firststeps.html>`_ tutorial.
 
-Additionally, all services expose their port, picked randomly by docker.
-Use ``docker-compose ps`` to list them.
 
-Documentation
--------------
+Contributing
+------------
 
-Full documentation is available on https://renga.readthedocs.io/
-or it can be built from sources:
+We're happy to receive contributions of all kinds, whether it is an idea for a
+new feature, a bug report or a pull request.
+
+Please make sure that the integration tests pass and the documentation builds
+without warnings and errors before creating a pull request:
+
+.. code-block:: console
+
+    $ make start
+    $ make test
+
+To build the documentation from source:
 
 .. code-block:: console
 
     $ pip install -r docs/requirements.txt
     $ cd docs && make html
 
-Contributing
-------------
-
-Please make sure that it is possible to run the integration tests and
-build documentation without warnings and errors before creating pull
-request.
-
-.. code-block:: console
-
-    $ make start
-    $ ./scripts/run-tests.sh
 
 Contact
 -------

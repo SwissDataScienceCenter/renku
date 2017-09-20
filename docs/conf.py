@@ -41,6 +41,7 @@ extensions = ['sphinx.ext.autodoc',
     'sphinx.ext.githubpages',
     'sphinxcontrib.scaladomain',
     'plantweb.directive',
+    'sphinxcontrib.spelling',
 ]
 
 # Plantweb configuration
@@ -195,3 +196,7 @@ texinfo_documents = [
 intersphinx_mapping = {
     'python': ('https://docs.python.org/3/', None),
     }
+
+# spellchecking config
+spelling_show_suggestions=True
+spelling_lang='en_US'

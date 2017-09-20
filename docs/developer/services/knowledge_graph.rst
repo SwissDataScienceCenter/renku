@@ -177,7 +177,7 @@ The full definition of the graph mutation API resides in the `mutation API spec`
 Detail of messages:
 
 1. client sends a mutation request as described above
-2. mutation service sends back an acknowledgement message containing the request and its assigned **uuid**
+2. mutation service sends back an acknowledgment message containing the request and its assigned **uuid**
 3. client requests status of mutation identified by **uuid** received at (2 request received)
 4. mutation service sends back the mutation status
 
