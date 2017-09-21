@@ -16,7 +16,6 @@
     limitations under the License... raw:: html
 
 
-
 RENGA (連歌)
 ============
 
