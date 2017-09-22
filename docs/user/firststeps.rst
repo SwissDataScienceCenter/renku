@@ -7,21 +7,22 @@ First Steps
     :description: First steps with Renga
     :keywords: hello world, first steps, starter, primer
 
-To try out Renga, you first need a platform to connect to: see :ref:`setup`
-for instructions on how to get one running on your own machine in a few minutes.
+To try out Renga, you first need a platform to connect to: see
+:ref:`setup` for instructions on how to get one running on your own
+machine in a few minutes.
 
-Interaction with the platform takes place via the Python-based command-line
-interface (CLI) and the Python API. You can get both via pip:
+Interaction with the platform takes place via the Python-based
+command-line interface (CLI) and the Python API. You can get both via pip:
 
 .. code-block:: console
 
-   $ pip3 install renga
+   $ pip install renga
 
 .. note::
 
-   Renga client is currently tested only with Python 3.6.
-   We recommend using `virtualenv <https://virtualenv.pypa.io/en/stable/>`_
-   when installing the ``renga`` package.
+   We recommend using `virtualenv
+   <https://virtualenv.pypa.io/en/stable/>`_ when installing the ``renga``
+   package.
 
 
 Our first Renga project
@@ -44,8 +45,8 @@ configuration, enter ``demo/demo`` for username/password:
     Password:
     Access token has been stored in: ~/Library/Application Support/Renga/config.yml
 
-Register the project with the platform (note that the ``autosync`` option is
-mandatory for now):
+Register the project with the platform (note that the ``autosync`` option
+is mandatory for now):
 
 .. code-block:: console
 
@@ -55,9 +56,9 @@ Creating a project deployment
 -----------------------------
 
 Renga can be used to launch computational tasks that run inside docker
-containers. For this, you must first create an execution "context" which defines
-the task to be carried out. This is then followed by executing the context on
-one of the platform deployment engines.
+containers. For this, you must first create an execution "context" which
+defines the task to be carried out. This is then followed by executing the
+context on one of the platform deployment engines.
 
 Create an execution context using a docker container:
 
@@ -106,11 +107,12 @@ To create a storage bucket for this project:
     ----  -------------------  ---------
     4272  project-bucket       local
 
-At this point, we have created a project, linked it to a storage bucket and a
-container deployment. However, our "hello-world" container did not really do
-much. A more interesting container to run is an interactive `jupyter notebook
-<http://jupyter.org>`_ and if we launch it using ``renga``, we can automatically
-link the creation of any derived data to our project:
+At this point, we have created a project, linked it to a storage bucket
+and a container deployment. However, our "hello-world" container did not
+really do much. A more interesting container to run is an interactive
+`jupyter notebook <http://jupyter.org>`_ and if we launch it using
+``renga``, we can automatically link the creation of any derived data to
+our project:
 
 .. code-block:: console
 
@@ -118,8 +120,8 @@ link the creation of any derived data to our project:
     beedcadb-4ae0-4678-ab02-9f567c866076
     http://0.0.0.0:32956/?token=8514bb62
 
-You can use this link to open the notebook in your browser - at any later point
-you can see your current notebooks with
+You can use this link to open the notebook in your browser - at any later
+point you can see your current notebooks with
 
 .. code-block:: console
 
@@ -128,7 +130,8 @@ you can see your current notebooks with
     --  --------  ------------------------------------
      1  docker    http://0.0.0.0:32956/?token=8514bb62
 
-Once inside the notebook, start a new python notebook and install ``renga``:
+Once inside the notebook, start a new python notebook and install
+``renga``:
 
 .. code-block:: ipython
 
@@ -141,22 +144,23 @@ Now we can import the ``renga`` python API and interact with the platform:
     In [2]: import renga
     In [3]: client = renga.from_env()
 
-We can check that the bucket we created earlier for our project is available:
+We can check that the bucket we created earlier for our project is
+available:
 
 .. code-block:: ipython
 
     In [4]: for bucket in client.buckets.list():
-                print(bucket)
+       ...:     print(bucket)
     <Bucket 4272>
 
 And we can write data to a file stored within this bucket:
 
 .. code-block:: ipython
 
-    In [5]: with client.buckets[4272].open('sample-file', 'w') as fp:
-        fp.write('Renga enables collaborative data science!')
+    In [5]: with client.buckets[4272].files.open('sample-file', 'w') as fp:
+       ...:     fp.write('Renga enables collaborative data science!')
 
-This command created a new file, linked it to the running notebook, which in
-turn is linked to the project - we have begun to populate our project's
-knowledge graph. You can inspect the knowledge graph using the browser UI at
-http://localhost/ui/#/graph.
+This command created a new file, linked it to the running notebook, which
+in turn is linked to the project - we have begun to populate our project's
+knowledge graph. You can inspect the knowledge graph using the browser UI
+at http://localhost/ui/#/graph.
