@@ -11,8 +11,8 @@ The renga source code is hosted on github:
 https://github.com/SwissDataScienceCenter/renga.
 
 Renga is deployed as a collection of microservices (see
-:ref:`service_architecture`) running in Docker containers. To run Renga, only a
-working version of Docker is required. In the Renga repository, we provide a
+:ref:`service_architecture`) running in Docker containers. To run Renga, only
+a working version of Docker is required. In the Renga repository, we provide a
 `docker-compose` file, which can be used to deploy renga quickly either on a
 local machine or with a cloud provider. However, be aware that if you want to
 use Renga in production with many users, a more complicated deployment will be
@@ -22,9 +22,15 @@ Prerequisites
 -------------
 
 * `Docker <http://www.docker.com>`_
-* `Docker Compose >=1.14 <https://docs.docker.com/compose/install/>`_ (**Linux Only**)
+* `Docker Compose >=1.14 <https://docs.docker.com/compose/install/>`_
+  (**Linux Only**)
 * `GNU make <https://www.gnu.org/software/make/>`_
 * `sbt <http://www.scala-sbt.org/>`_
+
+.. note::
+
+    On Mac OS X, we recommend that you set the amount of memory available
+    to Docker to 6GB (under Docker Preferences --> Advanced).
 
 
 Getting the code and images
@@ -39,8 +45,8 @@ Get the platform
     $ cd src
     $ git clone https://github.com/SwissDataScienceCenter/renga.git
 
-``renga`` is the "parent" repository of the collection of microservices, each of
-which has their own repository.
+``renga`` is the "parent" repository of the collection of microservices, each
+of which has their own repository.
 
 
 .. _quickstart:
@@ -55,12 +61,13 @@ You can get going with Renga in a few minutes by using our pre-built images:
     $ cd renga
     $ make start
 
-Once the script completes, you can go to http://localhost/ui to see the browser
-front-end or http://localhost/admin/swagger/ to see the Swagger REST API.
+Once the script completes, you can go to http://localhost/ui to see the
+browser front-end or http://localhost/admin/swagger/ to see the Swagger REST
+API.
 
-Using the default configuration, you can login to all services using `demo/demo`
-as the username/password. See :ref:`user_management` for more information about
-handling user accounts.
+Using the default configuration, you can login to all services using
+`demo/demo` as the username/password. See :ref:`user_management` for more
+information about handling user accounts.
 
 
 Building from source
@@ -71,8 +78,9 @@ Building from source
     $ cd renga
     $ make
 
-``make`` assumes that the base directory of the platform is the parent directory
-of `renga`. If you want to specify a different path, use the ``-e`` option:
+``make`` assumes that the base directory of the platform is the parent
+directory of `renga`. If you want to specify a different path, use the ``-e``
+option:
 
 .. code-block:: console
 
@@ -138,8 +146,8 @@ commands:
     renga_swagger_1            sh /usr/share/nginx/docker ...   Up
     renga_ui_1                 python3 /app/server/run.py       Up
 
-You can now point your browser to http://localhost/ui for the web front-end, or
-to http://localhost/admin/swagger for the swagger REST API spec.
+You can now point your browser to http://localhost/ui for the web front-end,
+or to http://localhost/admin/swagger for the swagger REST API spec.
 
 
 Identification Management
@@ -165,7 +173,7 @@ Platform Endpoint
 By default, the platform is configured to use ``http://localhost`` as the
 endpoint. You can change this by defining the ``RENGA_ENDPOINT`` environment
 variable before starting the platform services. In addition, the containers
-spawned by the endpoint run in the default bridge network. If you would like to
-change this, set the ``RENGA_CONTAINERS_ENDPOINT`` to point to either the
+spawned by the endpoint run in the default bridge network. If you would like
+to change this, set the ``RENGA_CONTAINERS_ENDPOINT`` to point to either the
 gateway IP of the docker network you would like to use, a public IP, or a DNS-
 resolvable hostname. The endpoint definition should include

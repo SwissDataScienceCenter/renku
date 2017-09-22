@@ -3,14 +3,13 @@
 Projects Service
 ================
 
-Contents
---------
+.. contents::
+    :depth: 1
+    :local:
 
-- :ref:`Projects Data Model<projects_model>`
-- :ref:`Projects endpoints<projects_endpoints>`
-
-The projects service exposes a lightweight abstraction used to group other resources together
-(deployment contexts, deployment executions, storage buckets, storage files, ...).
+The projects service exposes a lightweight abstraction used to group other
+resources together (deployment contexts, deployment executions, storage
+buckets, storage files, ...).
 
 .. _projects_model:
 
@@ -20,8 +19,9 @@ Projects Data Model
 Project
 ^^^^^^^
 
-Projects within the Renga platform are given a unique identifier that should be used when manipulating them.
-In addition, a project will have the following attributes:
+Projects within the Renga platform are given a unique identifier that should
+be used when manipulating them. In addition, a project will have the following
+attributes:
 
 * a project name, keyed with ``project:project_name``.
 * a set of owners, keyed with ``resource:owner``.
@@ -30,7 +30,8 @@ In addition, a project will have the following attributes:
 Children Resources
 ^^^^^^^^^^^^^^^^^^
 
-Resources created within a given project will be linked to in the knowledge graph with ``project:is_part_of`` edges.
+Resources created within a given project will be linked to in the knowledge
+graph with ``project:is_part_of`` edges.
 
 See :ref:`here for an example involving storage resources<kg_data>`.
 
@@ -53,4 +54,5 @@ The projects API provides the following endpoints (`projects API spec`_).
 
 **POST /**
 
-  Create a project by supplying a name (mapped to ``project:project_name``) and optional labels (mapped to :code:`annotation:label`).
+  Create a project by supplying a name (mapped to ``project:project_name``)
+  and optional labels (mapped to ``annotation:label``).

@@ -21,7 +21,7 @@ command-line interface (CLI) and the Python API. You can get both via pip:
 .. note::
 
    We recommend using `virtualenv
-   <https://virtualenv.pypa.io/en/stable/>`_ when installing the ``renga``
+   <https://virtualenv.pypa.io/en/stable/>`_ when installing the Renga
    package.
 
 
@@ -111,7 +111,7 @@ At this point, we have created a project, linked it to a storage bucket
 and a container deployment. However, our "hello-world" container did not
 really do much. A more interesting container to run is an interactive
 `jupyter notebook <http://jupyter.org>`_ and if we launch it using
-``renga``, we can automatically link the creation of any derived data to
+Renga, we can automatically link the creation of any derived data to
 our project:
 
 .. code-block:: console
@@ -131,13 +131,13 @@ point you can see your current notebooks with
      1  docker    http://0.0.0.0:32956/?token=8514bb62
 
 Once inside the notebook, start a new python notebook and install
-``renga``:
+Renga:
 
 .. code-block:: ipython
 
     In [1]: !pip install renga
 
-Now we can import the ``renga`` python API and interact with the platform:
+Now we can import the Renga python API and interact with the platform:
 
 .. code-block:: ipython
 
