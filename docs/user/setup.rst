@@ -1,5 +1,9 @@
 .. _setup:
 
+.. spelling::
+
+    Quickstart
+
 Running the platform
 ====================
 
@@ -44,7 +48,7 @@ which has their own repository.
 Quickstart
 ^^^^^^^^^^
 
-You can get going with ``renga`` in a few minutes by using our pre-built images:
+You can get going with Renga in a few minutes by using our pre-built images:
 
 .. code-block:: console
 
@@ -146,9 +150,22 @@ manager Keycloak. The administration console of Keycloak is available at
 http://localhost/auth/admin, with the user ``admin`` and password ``admin``
 (`Keycloak documentation <http://www.keycloak.org/documentation.html>`_).
 
+
 Storage location
 ----------------
 
 The storage backend uses the folder ``./services/storage/data`` to store
 the buckets and files. The deployer backend uses the local docker instance
 to execute containers.
+
+
+Platform Endpoint
+-----------------
+
+By default, the platform is configured to use ``http://localhost`` as the
+endpoint. You can change this by defining the ``RENGA_ENDPOINT`` environment
+variable before starting the platform services. In addition, the containers
+spawned by the endpoint run in the default bridge network. If you would like to
+change this, set the ``RENGA_CONTAINERS_ENDPOINT`` to point to either the
+gateway IP of the docker network you would like to use, a public IP, or a DNS-
+resolvable hostname. The endpoint definition should include

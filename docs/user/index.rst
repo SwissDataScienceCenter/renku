@@ -8,5 +8,5 @@ User Documentation
 
    Running the platform <setup>
    User Management <identity_management>
-   Trouble Shooting <trouble_shooting>
+   Troubleshooting <troubleshooting>
 

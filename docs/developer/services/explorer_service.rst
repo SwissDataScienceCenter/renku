@@ -15,7 +15,7 @@ Overview
 --------
 
 The knowledge graph can be queried using the traversal language Gremlin. The
-explorer service expses an API that submit queries in the form of prepared
+explorer service exposes an API that submits queries in the form of prepared
 statements.
 
 .. _explorer_endpoints:
@@ -69,7 +69,7 @@ The explorer API provides the following endpoints.
 
   The timestamps are put on the resource:file_version nodes. This query
   retrieves all vertices with a timestamp between ``date1`` and ``date2``
-  (exclusive). Currently the files are timestamped with unix time.
+  (exclusive). Currently the files are timestamped with Unix time.
 
 **GET /storage**
 
@@ -121,10 +121,10 @@ The explorer API provides the following endpoints.
 
   ``controllers.ProjectExplorerController.retrieveProjectMetadata( id: Long )``
 
-  Get metadata for projectnode with ``id``.
+  Get metadata for project node with ``id``.
 
 **GET /projects/:id/lineage**
 
   ``controllers.ProjectExplorerController.retrieveProjectLineage(id: Long)``
 
-  Get project lineage for projectnode with ``id``.
+  Get project lineage for project node with ``id``.

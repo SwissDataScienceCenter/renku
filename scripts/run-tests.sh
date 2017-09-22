@@ -24,4 +24,5 @@ set -o errexit
 set -o nounset
 
 pytest -v
+sphinx-build -b spelling -d docs/_build/doctrees docs docs/_build/spelling
 sphinx-build -qnNW docs docs/_build/html

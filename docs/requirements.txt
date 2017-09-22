@@ -1,5 +1,7 @@
 sphinx-rtd-theme>=0.2.4
 sphinxcontrib-scaladomain>=0.1a1
+sphinxcontrib-spelling>=2.3.0
 sphinxcontrib-websupport>=1.0.1
 plantweb>=1.0
 ipython>=6.2.0
+pyenchant>=1.6.11

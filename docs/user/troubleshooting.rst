@@ -1,6 +1,6 @@
-.. _trouble_shooting:
+.. _troubleshooting:
 
-Trouble Shooting
+Troubleshooting
 ================
 
 Some documented issues & how to fix them.
@@ -8,7 +8,7 @@ Some documented issues & how to fix them.
 Building the code
 -----------------
 
-**Q**: Should I run my code with root?
+**Q**: Should I run my code as root?
 
 **A**: No, this will create issues further down the line.
 
@@ -42,10 +42,10 @@ Using the web UI
 
 **A**: The API token expired and the refresh token too. Just logout and login again.
 
-**Q**: I'm adding files/buckets/contexts/... but the graph view doesn't change.
+**Q**: I'm adding files/buckets/contexts/... but the graph view does not change.
 
-**A**: Changing pages doesn't refresh yet the content of the displayed graph. You need to refresh the whole page, by pressing F5 for example.
+**A**: Changing pages does not refresh yet the content of the displayed graph. You need to refresh the whole page, by pressing F5 for example.
 
-**Q**: While navigating the graph, it disappeard.
+**Q**: While navigating the graph, it disappeared.
 
 **A**: You may have zoomed in too much in an empty region. You can try to zoom out or refresh the page.

@@ -107,7 +107,7 @@ To create a storage bucket for this project:
     4272  project-bucket       local
 
 At this point, we have created a project, linked it to a storage bucket and a
-container deployment. However, our "hello-world" container didn't really do
+container deployment. However, our "hello-world" container did not really do
 much. A more interesting container to run is an interactive `jupyter notebook
 <http://jupyter.org>`_ and if we launch it using ``renga``, we can automatically
 link the creation of any derived data to our project:
