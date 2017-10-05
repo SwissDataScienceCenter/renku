@@ -42,9 +42,6 @@ python:
 
 before_install:
   - sudo apt-get install enchant
-  - pip install Sphinx>=1.6.3
-  - pip install -r docs/requirements.txt
-  - pip install -r tests/requirements.txt
 
 install:
   - ./scripts/travis-install.sh

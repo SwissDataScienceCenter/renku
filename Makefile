@@ -149,7 +149,9 @@ stop:
 
 restart: stop start
 
-test:
+test: docs/requirements.txt tests/requirements.txt
+	@pip install -r docs/requirements.txt
+	@pip install -r tests/requirements.txt
 	@scripts/run-tests.sh
 
 clean:
