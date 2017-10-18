@@ -25,7 +25,7 @@ The explorer API provides the following endpoints.
 
 **GET /storage/bucket**
 
-  ``StorageExplorerController.bucketList()``
+  ``StorageExplorerController.bucketList``
 
   Retrieve all buckets
 
@@ -47,7 +47,7 @@ The explorer API provides the following endpoints.
 
   Retrieve metadata of bucket with ``id``
 
-**GET /storage/bucket/:id/files/*path**
+**GET /storage/bucket/:id/files/:path**
 
   ``StorageExplorerController.fileMetadatafromPath(id: Long, path:  String)``
 
@@ -71,7 +71,7 @@ The explorer API provides the following endpoints.
 
 **GET /storage**
 
-  ``StorageExplorerController.retrieveByUserName(userName:  String)``
+  ``StorageExplorerController.retrieveByUserName(userId:  String)``
 
   Retrieve files with ``resource:owner == UserId``. Limited to 100 vertices by
   default.
@@ -120,7 +120,7 @@ The explorer API provides the following endpoints.
 
 **GET /lineage/context/:id**
 
-  ``AnthologyExplorerController.lineageFromContext(id: Long)``
+  ``LineageExplorerController.lineageFromContext(id: Long)``
 
   Get the lineage starting from the context node with ``id``.
 
