@@ -122,7 +122,7 @@ The explorer API provides the following endpoints.
 
   ``LineageExplorerController.lineageFromContext(id: Long)``
 
-  Get the lineage starting from the context node with ``id``.
+  Get the lineage starting from the context node with ``id`` by traversing over the edges "deployer:launch", "resource:create", "resource:write" and "resource:read". 
 
 **GET /lineage/file/:id**
 
@@ -134,7 +134,8 @@ The explorer API provides the following endpoints.
 
   ``LineageExplorerController.retrieveProjectLineage(id: Long)``
 
-  Get the lineage of a project with ``id``.
+  Get the lineage of a project with ``id`` by iterating over the  "deployer:launch", "project:is_part_of", "project:used_by" edges. This is different than the other lineage queries where the edges
+   of resource create/write/read are traversed.
 
 **GET /projects**
 
@@ -156,8 +157,11 @@ The explorer API provides the following endpoints.
 
   Get metadata for project node with ``id``.
 
-**GET /projects/:id/files**
+**GET /projects/:id/resources**
 
-  ``ProjectExplorerController.retrieveBucketsContextsFromProject(id: Long)``
+  ``ProjectExplorerController.retrieveProjectResources( id: Long, resource: Option[String] )``
 
-  Get project files (buckets and deployer contexts) for project node with ``id``.
+  Get project resources ``resource`` (file, bucket, execution or context) 
+  for project node with ``id``. 
+  If no ``resource`` is specified all types are returned. If a 
+  ``resource`` is given that is not part of the 4 allowed types an error is given.
