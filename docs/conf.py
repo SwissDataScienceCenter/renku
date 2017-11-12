@@ -40,7 +40,6 @@ extensions = [
     'sphinx.ext.ifconfig',
     'sphinx.ext.viewcode',
     'sphinx.ext.githubpages',
-    'sphinxcontrib.scaladomain',
     'plantweb.directive',
     'sphinxcontrib.spelling',
 ]

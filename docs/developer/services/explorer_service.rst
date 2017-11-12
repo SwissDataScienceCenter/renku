@@ -25,7 +25,7 @@ The explorer API provides the following endpoints.
 
 **GET /storage/bucket**
 
-  ``StorageExplorerController.bucketList()``
+  ``StorageExplorerController.bucketList``
 
   Retrieve all buckets
 
@@ -47,10 +47,9 @@ The explorer API provides the following endpoints.
 
   Retrieve metadata of bucket with ``id``
 
-**GET /storage/bucket/:id/files/*path**
+**GET /storage/bucket/:id/files/:path**
 
-  ``StorageExplorerController.fileMetadatafromPath(id: Long, path:
-  String)``
+  ``StorageExplorerController.fileMetadatafromPath(id: Long, path:  String)``
 
   Retrieve metadata of a file with ``path`` (filename) in bucket ``id``
 
@@ -64,8 +63,7 @@ The explorer API provides the following endpoints.
 
 **GET /storage/file/timestamps/:date1/:date2**
 
-  ``StorageExplorerController.retrieveFilesDate(date1: Long,
-  date2: Long)``
+  ``StorageExplorerController.retrieveFilesDate(date1: Long,  date2: Long)``
 
   The timestamps are put on the resource:file_version nodes. This query
   retrieves all vertices with a timestamp between ``date1`` and ``date2``
@@ -73,8 +71,7 @@ The explorer API provides the following endpoints.
 
 **GET /storage**
 
-  ``StorageExplorerController.retrieveByUserName(userName:
-  String)``
+  ``StorageExplorerController.retrieveByUserName(userId:  String)``
 
   Retrieve files with ``resource:owner == UserId``. Limited to 100 vertices by
   default.
@@ -93,17 +90,52 @@ The explorer API provides the following endpoints.
 
   Retrieve the metadata of a node with ``id``. Valid for all nodes.
 
+**GET /graph/node/:id/edges**                    
+
+  ``GenericExplorerController.retrieveNodeEdges( id: Long )``
+
+  Get all in- and outgoing edges of a node with  ``id``.
+
+
+**GET /graph/nodes/:prop**                       
+
+  ``GenericExplorerController.retrieveNodesWithProperty( prop: String )``
+
+  Returns a list with all nodes which have property ``prop``. The property should be a string.
+
+
+**GET /graph/:prop/values**                      
+
+  ``GenericExplorerController.getValuesForProperty( prop: String )``
+
+  Returns a list with all values in the graph for property ``prop``. (Values can be of any supported type)
+
+**GET /graph/nodes/:prop/:value**
+
+  ``GenericExplorerController.retrieveNodePropertyAndValue( prop: String, value: String)``
+
+  Returns a list with all nodes that have property ``prop`` 
+  with value ``value``  
+  .
+
 **GET /lineage/context/:id**
 
-  ``AnthologyExplorerController.lineageFromContext(id: Long)``
+  ``LineageExplorerController.lineageFromContext(id: Long)``
 
-  Get the lineage starting from the context node with ``id``.
+  Get the lineage starting from the context node with ``id`` by traversing over the edges "deployer:launch", "resource:create", "resource:write" and "resource:read". 
 
 **GET /lineage/file/:id**
 
   ``LineageExplorerController.lineageFromFile(id: Long)``
 
   Get the lineage starting from a file node with ``id``.
+
+**GET /lineage/project/:id/**
+
+  ``LineageExplorerController.retrieveProjectLineage(id: Long)``
+
+  Get the lineage of a project with ``id`` by iterating over the  "deployer:launch", "project:is_part_of", "project:used_by" edges. This is different than the other lineage queries where the edges
+   of resource create/write/read are traversed.
 
 **GET /projects**
 
@@ -113,21 +145,23 @@ The explorer API provides the following endpoints.
 
 **GET /projects/user**
 
-  ``ProjectExplorerController.retrieveProjectByUserName(userId:
-  Option[String] )``
+  ``ProjectExplorerController.retrieveProjectByUserName(userId:   Option[String] )``
 
-  Get all projects of a user with ``userId`` given or else ``userId`` from
+  Get all projects of a user with ``userId`` 
+  given or else ``userId`` from
   request. Limited to 100 by default.
 
 **GET /projects/:id**
 
-  ``ProjectExplorerController.retrieveProjectMetadata( id: Long
-  )``
+  ``ProjectExplorerController.retrieveProjectMetadata( id: Long )``
 
   Get metadata for project node with ``id``.
 
-**GET /projects/:id/lineage**
+**GET /projects/:id/resources**
 
-  ``ProjectExplorerController.retrieveProjectLineage(id: Long)``
+  ``ProjectExplorerController.retrieveProjectResources( id: Long, resource: Option[String] )``
 
-  Get project lineage for project node with ``id``.
+  Get project resources ``resource`` (file, bucket, execution or context) 
+  for project node with ``id``. 
+  If no ``resource`` is specified all types are returned. If a 
+  ``resource`` is given that is not part of the 4 allowed types an error is given.

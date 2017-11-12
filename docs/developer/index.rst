@@ -4,6 +4,7 @@ Developer Documentation
 .. toctree::
    :maxdepth: 2
 
+   Web API <web>
    Architecture <services/services_architecture>
    Deployer <services/deployer_service>
    Explorer <services/explorer_service>
