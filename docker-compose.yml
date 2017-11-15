@@ -67,9 +67,6 @@ services:
       traefik.frontend.rule: PathPrefix:/auth
   graph-typesystem:
     image: ${IMAGE_REPOSITORY}renga-graph-typesystem-service:$PLATFORM_VERSION
-    links:
-    - db
-    - cassandra
     ports:
     - 9000
     restart: on-failure
@@ -78,9 +75,6 @@ services:
       traefik.frontend.rule: PathPrefix:/api/types
   graph-mutation:
     image: ${IMAGE_REPOSITORY}renga-graph-mutation-service:$PLATFORM_VERSION
-    links:
-    - db
-    - cassandra
     ports:
     - 9000
     restart: on-failure
@@ -92,9 +86,6 @@ services:
     environment:
       PLAY_APPLICATION_SECRET: $PLAY_APPLICATION_SECRET
       GRAPH_SCOPE_REMOTE_URL: http://reverse-proxy/api/types
-    links:
-    - cassandra
-    - reverse-proxy
     ports:
     - 9000
     restart: on-failure
@@ -106,10 +97,6 @@ services:
     environment:
       GRAPH_API_TYPES: http://reverse-proxy/api/types
       AUTHORIZATION_CLIENT_SECRET: $AUTHORIZATION_CLIENT_SECRET
-    links:
-    - graph-typesystem
-    - keycloak
-    - reverse-proxy
   resource-manager:
     image: ${IMAGE_REPOSITORY}renga-authorization:$PLATFORM_VERSION
     environment:
@@ -117,8 +104,6 @@ services:
       RESOURCE_MANAGER_PUBLIC_KEY: $RESOURCE_MANAGER_PUBLIC_KEY
       RESOURCE_MANAGER_PRIVATE_KEY: $RESOURCE_MANAGER_PRIVATE_KEY
 #      GRAPH_SCOPE_REMOTE_URL: http://graph-typesystem:9000/api/types
-    links:
-      - graph-typesystem
     ports:
     - 9000
     restart: on-failure
@@ -127,9 +112,6 @@ services:
       traefik.frontend.rule: PathPrefix:/api/resource-manager
   deployer:
     image: ${IMAGE_REPOSITORY}renga-deployer:$PLATFORM_VERSION
-    links:
-      - db
-      - reverse-proxy
     depends_on:
       - db
       - graph-mutation
@@ -154,8 +136,10 @@ services:
       RESOURCE_MANAGER_URL: http://reverse-proxy/api/resource-manager/authorize
       SQLALCHEMY_DATABASE_URI: "postgres+psycopg2://postgres:postgres@db/deployer"
       WSGI_NUM_PROXIES: 1
+      RENGA_LOGGING_CONFIG: /config/logging.yml
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
+      - ./services/logging/renga_python_logging.yml:/config/logging.yml
     labels:
       traefik.enable: "true"
       traefik.frontend.rule: PathPrefix:/api/deployer
@@ -165,8 +149,6 @@ services:
       PLAY_APPLICATION_SECRET: $PLAY_APPLICATION_SECRET
       RENGA_SERVICES_AUTHORIZATION_URL: ${RENGA_ENDPOINT}/auth/realms/Renga/protocol/openid-connect/auth
       RESOURCE_MANAGER_PUBLIC_KEY: $RESOURCE_MANAGER_PUBLIC_KEY
-    links:
-      - reverse-proxy
     depends_on:
       - graph-typesystem
     ports:
@@ -182,8 +164,6 @@ services:
       PLAY_APPLICATION_SECRET: $PLAY_APPLICATION_SECRET
       RENGA_SERVICES_AUTHORIZATION_URL: ${RENGA_ENDPOINT}/auth/realms/Renga/protocol/openid-connect/auth
       RESOURCE_MANAGER_PUBLIC_KEY: $RESOURCE_MANAGER_PUBLIC_KEY
-    links:
-      - reverse-proxy
     depends_on:
       - graph-typesystem
     ports:
@@ -202,9 +182,6 @@ services:
       STORAGE_BACKEND_LOCAL_ENABLED: "true"
     volumes:
     - ./services/storage/data:/data
-    links:
-      - keycloak
-      - resource-manager
     ports:
     - 9000
     restart: on-failure
@@ -222,8 +199,6 @@ services:
       API_ROOT_URL: http://reverse-proxy/api/
       SERVICES: deployer,projects,storage,explorer
       WSGI_NUM_PROXIES: 1
-    links:
-      - reverse-proxy
   swagger:
     image: ${IMAGE_REPOSITORY}swagger-ui:latest
     ports:
@@ -238,8 +213,6 @@ services:
     image: ${IMAGE_REPOSITORY}renga-ui:$PLATFORM_VERSION
     ports:
       - 5000
-    links:
-      - reverse-proxy
     environment:
       API_ROOT_URL: http://reverse-proxy/api/
       APPLICATION_ROOT: /ui
