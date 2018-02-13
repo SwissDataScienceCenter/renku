@@ -29,17 +29,11 @@ services:
       POSTGRES_PASSWORD: postgres
       POSTGRES_USER: postgres
     volumes:
-    - ./services/postgres/docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d:ro
-    - db-data:/pgdata
+      - ./services/postgres/docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d:ro
+      - db-data:/pgdata
     ports:
-    - 5432
-  cassandra:
-    image: cassandra:2.1.9
-    volumes:
-    - ./services/cassandra/etc/cassandra-env.sh:/etc/cassandra/cassandra-env.sh:ro
-    - cassandra-data:/var/lib/cassandra
-    ports:
-    - 9160
+      - 5432
+
   keycloak:
     build: ./services/keycloak
     environment:
@@ -65,166 +59,85 @@ services:
     labels:
       traefik.enable: "true"
       traefik.frontend.rule: PathPrefix:/auth
-  graph-typesystem:
-    image: ${IMAGE_REPOSITORY}renga-graph-typesystem-service:$PLATFORM_VERSION
-    ports:
-    - 9000
-    restart: on-failure
-    labels:
-      traefik.enable: "true"
-      traefik.frontend.rule: PathPrefix:/api/types
-  graph-mutation:
-    image: ${IMAGE_REPOSITORY}renga-graph-mutation-service:$PLATFORM_VERSION
-    ports:
-    - 9000
-    restart: on-failure
-    labels:
-      traefik.enable: "true"
-      traefik.frontend.rule: PathPrefix:/api/mutation
-  graph-navigation:
-    image: ${IMAGE_REPOSITORY}renga-graph-navigation-service:$PLATFORM_VERSION
+
+  gitlab:
+    image: gitlab/gitlab-ce:latest
+    restart: always
     environment:
-      PLAY_APPLICATION_SECRET: $PLAY_APPLICATION_SECRET
-      GRAPH_SCOPE_REMOTE_URL: http://reverse-proxy/api/types
+      GITLAB_OMNIBUS_CONFIG: |
+        external_url '${GITLAB_URL}'
+        # gitlab_rails['db_username'] = "gitlab"
+        # gitlab_rails['db_password'] = "gitlab"
+        # gitlab_rails['db_host'] = "postgresql"
+        # gitlab_rails['db_port'] = "5432"
+        # gitlab_rails['db_database'] = "gitlabhq_production"
+        # gitlab_rails['db_adapter'] = 'postgresql'
+        # gitlab_rails['db_encoding'] = 'utf8'
+        gitlab_rails['gitlab_shell_ssh_port'] = 5022
+        gitlab_rails['lfs_enabled'] = true
+        gitlab_rails['lfs_storage_path'] = '/var/storage/lfs-objects'
+        gitlab_rails['initial_root_password'] = 'root_password'
+        # Add any other gitlab.rb configuration here, each on its own line
     ports:
-    - 9000
-    restart: on-failure
-    labels:
-      traefik.enable: "true"
-      traefik.frontend.rule: PathPrefix:/api/navigation
-  graph-init:
-    image: ${IMAGE_REPOSITORY}renga-graph-init:$PLATFORM_VERSION
-    environment:
-      GRAPH_API_TYPES: http://reverse-proxy/api/types
-      AUTHORIZATION_CLIENT_SECRET: $AUTHORIZATION_CLIENT_SECRET
-  resource-manager:
-    image: ${IMAGE_REPOSITORY}renga-authorization:$PLATFORM_VERSION
-    environment:
-      PLAY_APPLICATION_SECRET: $PLAY_APPLICATION_SECRET
-      RESOURCE_MANAGER_PUBLIC_KEY: $RESOURCE_MANAGER_PUBLIC_KEY
-      RESOURCE_MANAGER_PRIVATE_KEY: $RESOURCE_MANAGER_PRIVATE_KEY
-#      GRAPH_SCOPE_REMOTE_URL: http://graph-typesystem:9000/api/types
-    ports:
-    - 9000
-    restart: on-failure
-    labels:
-      traefik.enable: "true"
-      traefik.frontend.rule: PathPrefix:/api/resource-manager
-  deployer:
-    image: ${IMAGE_REPOSITORY}renga-deployer:$PLATFORM_VERSION
-    depends_on:
-      - db
-      - graph-mutation
-      - graph-typesystem
-      - resource-manager
-      - keycloak
-    ports:
-      - 5000
-    restart: on-failure
-    environment:
-      DEPLOYER_AUTHORIZATION_URL: ${RENGA_ENDPOINT}/auth/realms/Renga/protocol/openid-connect/auth
-      DEPLOYER_BASE_PATH: /api/deployer
-      DEPLOYER_JWT_ISSUER: resource-manager
-      DEPLOYER_JWT_KEY: $RESOURCE_MANAGER_PUBLIC_KEY
-      DEPLOYER_TOKEN_SCOPE_KEY: https://rm.datascience.ch/scope
-      DEPLOYER_TOKEN_URL: http://reverse-proxy/auth/realms/Renga/protocol/openid-connect/token
-      DEPLOYER_URL: ${RENGA_ENDPOINT}
-      KNOWLEDGE_GRAPH_URL: http://reverse-proxy/api/
-      RENGA_AUTHORIZATION_CLIENT_ID: renga-services
-      RENGA_AUTHORIZATION_CLIENT_SECRET: $AUTHORIZATION_CLIENT_SECRET
-      RENGA_ENDPOINT: ${RENGA_CONTAINERS_ENDPOINT:-$RENGA_ENDPOINT}
-      RESOURCE_MANAGER_URL: http://reverse-proxy/api/resource-manager/authorize
-      SQLALCHEMY_DATABASE_URI: "postgres+psycopg2://postgres:postgres@db/deployer"
-      WSGI_NUM_PROXIES: 1
-      RENGA_LOGGING_CONFIG: /config/logging.yml
+      - '5080:5080'
+      - '5443:443'
+      - '5022:22'
     volumes:
+      - ./services/gitlab/config:/etc/gitlab
+      - ./services/gitlab/logs:/var/log/gitlab
+      - ./services/gitlab/git-data:/var/opt/gitlab
+      - ./services/gitlab/lfs-data:/var/storage/lfs-objects
+    links:
+      - db:postgres
+    networks:
+      - default
+
+  gitlab-runner:
+    image: ${DOCKER_PREFIX}gitlab-runner:${PLATFORM_VERSION}
+    environment:
+      RENGA_RUNNER_IMAGE: ${DOCKER_PREFIX}minimal-notebook:${PLATFORM_VERSION}
+      RENGA_REVIEW_DOMAIN: ${PLATFORM_DOMAIN}:8080
+    restart: always
+    volumes:
+      - ./services/gitlab/runner:/etc/gitlab-runner
       - /var/run/docker.sock:/var/run/docker.sock
-      - ./services/logging/renga_python_logging.yml:/config/logging.yml
-    labels:
-      traefik.enable: "true"
-      traefik.frontend.rule: PathPrefix:/api/deployer
-  explorer:
-    image: ${IMAGE_REPOSITORY}renga-explorer:$PLATFORM_VERSION
-    environment:
-      PLAY_APPLICATION_SECRET: $PLAY_APPLICATION_SECRET
-      RENGA_SERVICES_AUTHORIZATION_URL: ${RENGA_ENDPOINT}/auth/realms/Renga/protocol/openid-connect/auth
-      RESOURCE_MANAGER_PUBLIC_KEY: $RESOURCE_MANAGER_PUBLIC_KEY
-    depends_on:
-      - graph-typesystem
-    ports:
-      - 9000
-    restart: on-failure
-    labels:
-      traefik.enable: "true"
-      traefik.frontend.rule: PathPrefix:/api/explorer
-  projects:
-    image: ${IMAGE_REPOSITORY}renga-projects:$PLATFORM_VERSION
-    environment:
-      AUTHORIZATION_CLIENT_SECRET: $AUTHORIZATION_CLIENT_SECRET
-      PLAY_APPLICATION_SECRET: $PLAY_APPLICATION_SECRET
-      RENGA_SERVICES_AUTHORIZATION_URL: ${RENGA_ENDPOINT}/auth/realms/Renga/protocol/openid-connect/auth
-      RESOURCE_MANAGER_PUBLIC_KEY: $RESOURCE_MANAGER_PUBLIC_KEY
-    depends_on:
-      - graph-typesystem
-    ports:
-      - 9000
-    restart: on-failure
-    labels:
-      traefik.enable: "true"
-      traefik.frontend.rule: PathPrefix:/api/projects
-  storage:
-    image: ${IMAGE_REPOSITORY}renga-storage:$PLATFORM_VERSION
-    environment:
-      AUTHORIZATION_CLIENT_SECRET: $AUTHORIZATION_CLIENT_SECRET
-      PLAY_APPLICATION_SECRET: $PLAY_APPLICATION_SECRET
-      RENGA_SERVICES_AUTHORIZATION_URL: ${RENGA_ENDPOINT}/auth/realms/Renga/protocol/openid-connect/auth
-      RESOURCE_MANAGER_PUBLIC_KEY: $RESOURCE_MANAGER_PUBLIC_KEY
-      STORAGE_BACKEND_LOCAL_ENABLED: "true"
-    volumes:
-    - ./services/storage/data:/data
-    ports:
-    - 9000
-    restart: on-failure
-    labels:
-      traefik.enable: "true"
-      traefik.frontend.rule: PathPrefix:/api/storage
-  apispec:
-    build: ./services/apispec
-    ports:
-      - 5000
-    labels:
-      traefik.enable: "true"
-      traefik.frontend.rule: Path:/api/swagger.json
-    environment:
-      API_ROOT_URL: http://reverse-proxy/api/
-      SERVICES: deployer,projects,storage,explorer
-      WSGI_NUM_PROXIES: 1
-  swagger:
-    image: ${IMAGE_REPOSITORY}swagger-ui:latest
-    ports:
-      - 8080
-    labels:
-      traefik.enable: "true"
-      traefik.frontend.rule: PathPrefixStrip:/admin/swagger
-    environment:
-      API_URL: ${RENGA_ENDPOINT}/api/swagger.json
-      OAUTH2_REDIRECT_URL: ${RENGA_ENDPOINT}/admin/swagger/oauth2-redirect.html
-  ui:
-    image: ${IMAGE_REPOSITORY}renga-ui:$PLATFORM_VERSION
-    ports:
-      - 5000
-    environment:
-      API_ROOT_URL: http://reverse-proxy/api/
-      APPLICATION_ROOT: /ui
-      KEYCLOAK_REDIRECT_URL: ${RENGA_ENDPOINT}/auth/realms/Renga/  # from outside
-      KEYCLOAK_URL: http://reverse-proxy/auth/realms/Renga/  # from inside
-    labels:
-      traefik.enable: "true"
-      traefik.frontend.rule: PathPrefix:/ui
+    networks:
+      - default
+
+#   storage:
+#     image: ${DOCKER_REPOSITORY}renga-storage:$PLATFORM_VERSION
+#     environment:
+#       AUTHORIZATION_CLIENT_SECRET: $AUTHORIZATION_CLIENT_SECRET
+#       PLAY_APPLICATION_SECRET: $PLAY_APPLICATION_SECRET
+#       RENGA_SERVICES_AUTHORIZATION_URL: ${RENGA_ENDPOINT}/auth/realms/Renga/protocol/openid-connect/auth
+#       RESOURCE_MANAGER_PUBLIC_KEY: $RESOURCE_MANAGER_PUBLIC_KEY
+#       STORAGE_BACKEND_LOCAL_ENABLED: "true"
+#     volumes:
+#     - ./services/storage/data:/data
+#     ports:
+#     - 9000
+#     restart: on-failure
+#     labels:
+#       traefik.enable: "true"
+#       traefik.frontend.rule: PathPrefix:/api/storage
+
+#   ui:
+#     image: ${DOCKER_REPOSITORY}renga-ui:$PLATFORM_VERSION
+#     ports:
+#       - 5000
+#     environment:
+#       API_ROOT_URL: http://reverse-proxy/api/
+#       APPLICATION_ROOT: /ui
+#       KEYCLOAK_REDIRECT_URL: ${RENGA_ENDPOINT}/auth/realms/Renga/  # from outside
+#       KEYCLOAK_URL: http://reverse-proxy/auth/realms/Renga/  # from inside
+#     labels:
+#       traefik.enable: "true"
+#       traefik.frontend.rule: PathPrefix:/ui
+
   reverse-proxy:
     image: traefik
     command: --web --web.address=:81 \
-      --docker --docker.watch --docker.domain=localhost \
+      --docker --docker.watch --docker.domain=${PLATFORM_DOMAIN} \
       --debug --logLevel=DEBUG \
       --defaultentrypoints=http,https \
       --entrypoints='Name:http Address::80' \
@@ -232,11 +145,18 @@ services:
       --docker.exposedbydefault=false
     # FIXME usage of self signed certs --entrypoints='Name:http Address::80 Redirect.EntryPoint:https' \
     ports:
-        - 80:80
-        - 443:443
-        - 8080:8080
-        - 81:81
+      - 80:80
+      - 443:443
+      - 8080:8080
+      - 81:81
     volumes:
-        - /var/run/docker.sock:/var/run/docker.sock
-        - /dev/null:/traefik.toml
-        - ./services/traefik/ssl/:/ssl/
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /dev/null:/traefik.toml
+      - ./services/traefik/ssl/:/ssl/
+    networks:
+      - default
+      - review
+
+networks:
+  review:
+    external: true

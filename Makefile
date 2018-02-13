@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# Copyright 2017 - Swiss Data Science Center (SDSC)
+# Copyright 2017, 2018 - Swiss Data Science Center (SDSC)
 # A partnership between École Polytechnique Fédérale de Lausanne (EPFL) and
 # Eidgenössische Technische Hochschule Zürich (ETHZ).
 #
@@ -16,43 +16,54 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+ifeq ($(OS),Windows_NT)
+    detected_OS := Windows
+else
+    detected_OS := $(shell sh -c 'uname -s 2>/dev/null || echo not')
+endif
+
+ifeq ($(detected_OS), Darwin)
+	PLATFORM_DOMAIN?=docker.for.mac.localhost
+else
+	PLATFORM_DOMAIN?=localhost
+endif
+
+PLATFORM_BASE_DIR?=..
+PLATFORM_BASE_REPO_URL?=https://github.com/SwissDataScienceCenter
+PLATFORM_REPO_TPL?=$(PLATFORM_BASE_REPO_URL)/$*.git
+PLATFORM_VERSION?=$(or ${TRAVIS_BRANCH},${TRAVIS_BRANCH},$(shell git branch 2> /dev/null | sed -e '/^[^*]/d' -e 's/^* //'))
+
+ifeq ($(PLATFORM_VERSION), master)
+	PLATFORM_VERSION=latest
+endif
+
+GIT_MASTER_HEAD_SHA:=$(shell git rev-parse --short=12 --verify HEAD)
+
+GITLAB_URL?=http://$(PLATFORM_DOMAIN):5080
+GITLAB_DIRS=config logs git-data lfs-data runner
+
+DOCKER_REPOSITORY?=rengahub/
+DOCKER_PREFIX:=${DOCKER_REGISTRY}$(DOCKER_REPOSITORY)
+DOCKER_COMPOSE_ENV=\
+	DOCKER_PREFIX=$(DOCKER_PREFIX) \
+	DOCKER_REPOSITORY=$(DOCKER_REPOSITORY) \
+	GITLAB_URL=$(GITLAB_URL) \
+	PLATFORM_DOMAIN=$(PLATFORM_DOMAIN) \
+	PLATFORM_VERSION=$(PLATFORM_VERSION) \
+	RENGA_ENDPOINT=$(RENGA_ENDPOINT)
+
 SBT_IVY_DIR := $(PWD)/.ivy
 SBT = sbt -ivy $(SBT_IVY_DIR)
 SBT_PUBLISH_TARGET = publish-local
 
-ifndef PLATFORM_BASE_DIR
-	PLATFORM_BASE_DIR = ..
-endif
-
-ifndef PLATFORM_VERSION
-	PLATFORM_VERSION = latest
-endif
-
-ifndef PLATFORM_BASE_REPO_URL
-	PLATFORM_BASE_REPO_URL = https://github.com/SwissDataScienceCenter
-endif
-
-ifndef PLATFORM_REPO_TPL
-	PLATFORM_REPO_TPL = $(PLATFORM_BASE_REPO_URL)/$*.git
-endif
-
-ifndef IMAGE_REPOSITORY
-	IMAGE_REPOSITORY = rengahub/
-endif
-
 ifndef RENGA_ENDPOINT
-	RENGA_ENDPOINT=http://localhost
+	RENGA_ENDPOINT=http://$(PLATFORM_DOMAIN)
 	export RENGA_ENDPOINT
-endif
-
-ifndef RENGA_CONTAINERS_ENDPOINT
-	RENGA_CONTAINERS_ENDPOINT=http://$(shell docker network inspect bridge --format="{{(index (index .IPAM.Config) 0).Gateway}}")
-	export RENGA_CONTAINERS_ENDPOINT
 endif
 
 define DOCKER_BUILD
 set version in Docker := "$(PLATFORM_VERSION)"
-set dockerRepository := Option("$(IMAGE_REPOSITORY)".replaceAll("/$$", ""))
+set dockerRepository := Option("$(DOCKER_REPOSITORY)".replaceAll("/$$", ""))
 docker:publishLocal
 endef
 
@@ -60,30 +71,15 @@ export DOCKER_BUILD
 
 # Please keep values bellow sorted. Thank you!
 repos = \
-	renga-authorization \
-	renga-commons \
-	renga-deployer \
-	renga-explorer \
-	renga-graph \
-	renga-projects \
 	renga-storage \
+	renga-python \
 	renga-ui
 
 scala-services = \
-	renga-authorization \
-	renga-explorer \
-	renga-graph-init \
-	renga-graph-mutation-service \
-	renga-graph-navigation-service \
-	renga-graph-typesystem-service \
-	renga-projects \
-	renga-storage
-
-dockerfile-services = \
-	renga-deployer
+#	renga-storage
 
 makefile-services = \
-	renga-ui
+#	renga-ui
 
 scala-artifact = \
 	renga-commons \
@@ -126,36 +122,98 @@ renga-commons-artifact: renga-graph-artifact
 # build docker images
 .PHONY: $(dockerfile-services)
 $(dockerfile-services): %: $(PLATFORM_BASE_DIR)/%
-	docker build --tag $(IMAGE_REPOSITORY)$@:$(PLATFORM_VERSION) $(PLATFORM_BASE_DIR)/$@
+	docker build --tag $(DOCKER_REPOSITORY)$@:$(PLATFORM_VERSION) $(PLATFORM_BASE_DIR)/$@
 
 # build docker images from makefiles
 .PHONY: $(makefile-services)
 $(makefile-services): %: $(PLATFORM_BASE_DIR)/%
 	$(MAKE) -C $(PLATFORM_BASE_DIR)/$@
 
-.PHONY: docker-images
+# Docker actions
+.PHONY: docker-images docker-network
 docker-images: $(scala-services) $(dockerfile-services)
+
+docker-network:
+ifeq ($(shell docker network ls -q -f name=review), )
+	@docker network create review
+endif
+	@echo "[Info] Using Docker network: review=$(shell docker network ls -q -f name=review)"
+
+# GitLab actions
+services/gitlab/%:
+	@mkdir -p $@
+
+register-runners: unregister-runners
+ifeq (${RUNNER_TOKEN},)
+	@echo "[Error] RUNNER_TOKEN needs to be configured. Check $(GITLAB_URL)/admin/runners"
+	@exit 1
+endif
+	@for container in $(shell $(DOCKER_COMPOSE_ENV) docker-compose ps -q gitlab-runner) ; do \
+		docker exec -ti $$container gitlab-runner register \
+			-n -u $(GITLAB_URL) \
+			--name $$container-shell \
+			-r ${RUNNER_TOKEN} \
+			--executor shell \
+			--locked=false \
+			--run-untagged=false \
+			--tag-list notebook \
+			--docker-image $(DOCKER_PREFIX)renga-python:$(PLATFORM_VERSION) \
+			--docker-pull-policy "if-not-present"; \
+		docker exec -ti $$container gitlab-runner register \
+			-n -u $(GITLAB_URL) \
+			--name $$container-docker \
+			-r ${RUNNER_TOKEN} \
+			--executor docker \
+			--locked=false \
+			--run-untagged=false \
+			--tag-list cwl \
+			--docker-image $(DOCKER_PREFIX)renga-python:$(PLATFORM_VERSION) \
+			--docker-pull-policy "if-not-present"; \
+	done
+
+unregister-runners:
+	@for container in $(shell $(DOCKER_COMPOSE_ENV) docker-compose ps -q gitlab-runner) ; do \
+		docker exec -ti $$container gitlab-runner unregister \
+			--name $$container-shell || echo ok; \
+		docker exec -ti $$container gitlab-runner unregister \
+			--name $$container-docker || echo ok; \
+	done
 
 # Platform actions
 .PHONY: start stop restart test clean wipe
-start:
-	@docker-compose build
-	@docker-compose create
-	@docker-compose up -d
+start: docker-network $(GITLAB_DIRS:%=services/gitlab/%) unregister-runners
+ifeq (${GITLAB_SECRET_TOKEN}, )
+	@echo "[Warning] Renga UI will not work until you acquire and set GITLAB_SECRET_TOKEN"
+	@echo
+endif
+	$(DOCKER_COMPOSE_ENV) docker-compose up --build -d ${DOCKER_SCALE}
 	@./scripts/wait-for-services.sh
+	@echo
+	@echo "[Success] Renga UI should be under http://$(PLATFORM_DOMAIN):5000 and GitLab under $(GITLAB_URL)"
+	@echo
+	@echo "[Info] Register GitLab runners using:"
+	@echo "         make register-runners"
+ifeq (${DOCKER_SCALE},)
+	@echo
+	@echo "[Info] You can configure scale parameters: DOCKER_SCALE=\"--scale gitlab-runner=4\" make start"
+endif
 
-stop:
-	@docker-compose stop
+stop: unregister-runners
+	$(DOCKER_COMPOSE_ENV) docker-compose stop
+ifneq ($(shell docker network ls -q -f name=review), )
+	@docker network rm review
+endif
 
 restart: stop start
+
+clean:
+	@$(DOCKER_COMPOSE_ENV) docker-compose down --volumes --remove-orphans
+
+wipe: clean
+	@rm -rf services/storage/data/*
+	@rm -rf gitlab
 
 test: docs/requirements.txt tests/requirements.txt
 	@pip install -r docs/requirements.txt
 	@pip install -r tests/requirements.txt
 	@scripts/run-tests.sh
-
-clean:
-	@docker-compose down --volumes --remove-orphans
-
-wipe: clean
-	@rm -rf services/storage/data/*

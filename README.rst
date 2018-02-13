@@ -25,6 +25,7 @@ RENGA (連歌)
     :target: http://renga.readthedocs.io/en/latest/?badge=latest
     :alt: Documentation Status
 
+**This is a development branch where anything can change without a prior notice.**
 
 **Renga** is a highly-scalable & secure open software platform designed to
 foster multidisciplinary data (science) collaboration.
@@ -45,8 +46,7 @@ Starting the platform
 
     $ make start
 
-By default, the platform will run on ``localhost``. You can access the UI at
-http://localhost/ui and the swagger API UI at http://localhost/admin/swagger/.
+Please follow the output for next instructions.
 
 A python CLI and API client is available in the `renga-python
 <https://github/com/SwissDataScienceCenter/renga-python>`_ package.
