@@ -141,6 +141,11 @@ ifeq ($(shell docker network ls -q -f name=review), )
 endif
 	@echo "[Info] Using Docker network: review=$(shell docker network ls -q -f name=review)"
 
+remove-docker-network:
+ifeq ($(shell docker network ls -q -f name=review), )
+	@docker network rm review
+endif
+
 # GitLab actions
 services/gitlab/%:
 	@mkdir -p $@
@@ -156,6 +161,7 @@ endif
 			--name $$container-shell \
 			-r ${RUNNER_TOKEN} \
 			--executor shell \
+			--env RENGA_REVIEW_DOMAIN=$(PLATFORM_DOMAIN) \
 			--locked=false \
 			--run-untagged=false \
 			--tag-list notebook \
@@ -166,6 +172,7 @@ endif
 			--name $$container-docker \
 			-r ${RUNNER_TOKEN} \
 			--executor docker \
+			--env RENGA_REVIEW_DOMAIN=$(PLATFORM_DOMAIN) \
 			--locked=false \
 			--run-untagged=false \
 			--tag-list cwl \
@@ -211,7 +218,7 @@ restart: stop start
 clean:
 	@$(DOCKER_COMPOSE_ENV) docker-compose down --volumes --remove-orphans
 
-wipe: clean
+wipe: clean remove-docker-network
 	@rm -rf services/storage/data/*
 	@rm -rf gitlab
 

@@ -33,6 +33,8 @@ services:
       - db-data:/pgdata
     ports:
       - 5432
+    networks:
+      - default
 
   keycloak:
     build: ./services/keycloak
@@ -42,7 +44,7 @@ services:
       KEYCLOAK_USER: admin
       POSTGRES_DATABASE: keycloak
       POSTGRES_PASSWORD: keycloak
-      POSTGRES_PORT_5432_TCP_ADDR: postgres
+      POSTGRES_PORT_5432_TCP_ADDR: db
       POSTGRES_USER: keycloak
       RENGA_ENDPOINT: ${RENGA_ENDPOINT}
     ports:
@@ -53,12 +55,14 @@ services:
       - "-Dkeycloak.migration.provider=singleFile"
       - "-Dkeycloak.migration.file=/data/renga-realm.json"
       - "-Dkeycloak.migration.strategy=IGNORE_EXISTING"
-    links:
-      - db:postgres
     restart: on-failure
     labels:
       traefik.enable: "true"
       traefik.frontend.rule: PathPrefix:/auth
+    depends_on:
+      - db
+    networks:
+      - default
 
   gitlab:
     image: gitlab/gitlab-ce:latest
@@ -67,13 +71,19 @@ services:
       GITLAB_OMNIBUS_CONFIG: |
         external_url '${GITLAB_URL}'
         registry_external_url '${GITLAB_REGISTRY_URL}'
-        # gitlab_rails['db_username'] = "gitlab"
-        # gitlab_rails['db_password'] = "gitlab"
-        # gitlab_rails['db_host'] = "postgresql"
-        # gitlab_rails['db_port'] = "5432"
-        # gitlab_rails['db_database'] = "gitlabhq_production"
-        # gitlab_rails['db_adapter'] = 'postgresql'
-        # gitlab_rails['db_encoding'] = 'utf8'
+        #postgresql['enable'] = false
+        # Enable or disable automatic database migrations
+        # gitlab_rails['auto_migrate'] = false
+        # manually run: gitlab-ctl pg-upgrade
+        # FIXME change from postgres to gitlab
+        # TODO need to run gitlab-rake gitlab:setup for external db
+        #gitlab_rails['db_username'] = 'postgres'
+        #gitlab_rails['db_password'] = 'postgres'
+        #gitlab_rails['db_host'] = 'db'
+        #gitlab_rails['db_port'] = 5432
+        #gitlab_rails['db_database'] = 'gitlab'
+        #gitlab_rails['db_adapter'] = 'postgresql'
+        #gitlab_rails['db_encoding'] = 'utf8'
         gitlab_rails['omniauth_enabled'] = true
         gitlab_rails['omniauth_allow_single_sign_on'] = ['saml']
         gitlab_rails['omniauth_auto_link_saml_user'] = true
@@ -111,9 +121,8 @@ services:
       - ./services/gitlab/git-data:/var/opt/gitlab
       - ./services/gitlab/lfs-data:/var/storage/lfs-objects
     depends_on:
+      - db
       - keycloak
-    links:
-      - db:postgres
     networks:
       - default
 
