@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# Copyright 2017 - Swiss Data Science Center (SDSC)
+# Copyright 2017, 2018 - Swiss Data Science Center (SDSC)
 # A partnership between École Polytechnique Fédérale de Lausanne (EPFL) and
 # Eidgenössische Technische Hochschule Zürich (ETHZ).
 #
@@ -73,6 +73,28 @@ services:
         # gitlab_rails['db_database'] = "gitlabhq_production"
         # gitlab_rails['db_adapter'] = 'postgresql'
         # gitlab_rails['db_encoding'] = 'utf8'
+        gitlab_rails['omniauth_enabled'] = true
+        gitlab_rails['omniauth_allow_single_sign_on'] = ['saml']
+        gitlab_rails['omniauth_auto_link_saml_user'] = true
+        gitlab_rails['omniauth_block_auto_created_users'] = false
+        gitlab_rails['omniauth_providers'] = [
+          {
+            name: 'saml',
+            args: {
+              assertion_consumer_service_url: '${GITLAB_URL}/users/auth/saml/callback',
+              idp_cert: '-----BEGIN CERTIFICATE-----MIICmTCCAYECBgFePWfDJjANBgkqhkiG9w0BAQsFADAQMQ4wDAYDVQQDDAVSZW5nYTAeFw0xNzA5MDExMjI0MjNaFw0yNzA5MDExMjI2MDNaMBAxDjAMBgNVBAMMBVJlbmdhMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAjw2hj0o98jYxT0Z8hbd6INgJkVs2JvT6zXhHkN0UUWjGcRHF3e7Sc9GNI9wYljnBw47jqSmy2EftZ0UkGNjLENmGuLVC5r6vTneXfUht5t0+e5VelnM7yF7m9V3w/ms4wc0vDmSMa7pO5Vb+qjsTHgLTjQVqBIhGshxmZzKk6XDDVRlXe3SfLqwLX1biBmmvEOadU+2RhsHVW4rYMEaEHO1tCvRTsqiD7gVfk0XzZQg6KBEr2pDhz7hdWAfWK+/k1JiK/MNTs3FCfOqoBlTa6dZB/XRrKx0Pbi7y5Cr6BqqPUJzW5dbCYRzjmjL5CYx4KYHAjSSoCCpUjCHLILPPJQIDAQABMA0GCSqGSIb3DQEBCwUAA4IBAQARL3CB1iaT9bQSf+XYN69HK6mIL6celrZxoWF5ugKXfioIadAK/Pm76zT0QHHjlgfC/ln6sjU9pnVEbIyioRM0zgVuegSogt18qw3tRLTp3swA71v7EwGjGc79c+5q2JgTpkjMaf38lebm6E9CRye4chY9Ku9+GpZlQRR3L1L0OtdQAWvapBoIWdQJuJjI1KYIH+iKybSCKE3IVM2llWWg0K78PuWMm7euSYO3PLtR+FzdpS0YqDMHZNXIZtFPbvgeO6AfYXV0pSjM/q4OYEEYM7EKnaCHx1+/QcxrVVjcyck/n2tUE9AblAHot3oypy1u7YFDPg2W8QH+UediubTv-----END CERTIFICATE-----',
+              idp_sso_target_url: '${RENGA_ENDPOINT}/auth/realms/Renga/protocol/saml',
+              issuer: 'gitlab',
+              name_identifier_format: 'urn:oasis:names:tc:SAML:2.0:nameid-format:persistent',
+              attribute_statements: {
+                email: ['urn:oid:1.2.840.113549.1.9.1'],
+                first_name: ['urn:oid:2.5.4.4'],
+                last_name: ['urn:oid:2.5.4.42']
+              }
+            },
+            label: 'Renga Login'
+          }
+        ]
         gitlab_rails['gitlab_shell_ssh_port'] = 5022
         gitlab_rails['lfs_enabled'] = true
         gitlab_rails['lfs_storage_path'] = '/var/storage/lfs-objects'
@@ -87,6 +109,8 @@ services:
       - ./services/gitlab/logs:/var/log/gitlab
       - ./services/gitlab/git-data:/var/opt/gitlab
       - ./services/gitlab/lfs-data:/var/storage/lfs-objects
+    depends_on:
+      - keycloak
     links:
       - db:postgres
     networks:
@@ -95,6 +119,8 @@ services:
   gitlab-runner:
     image: ${DOCKER_PREFIX}gitlab-runner:${PLATFORM_VERSION}
     environment:
+      RENGA_OIC_URL: ${RENGA_ENDPOINT}/auth/realms/Renga/,
+      RENGA_OIC_CLIENT_ID: demo-client
       RENGA_RUNNER_IMAGE: ${DOCKER_PREFIX}minimal-notebook:${PLATFORM_VERSION}
       RENGA_REVIEW_DOMAIN: ${PLATFORM_DOMAIN}:8080
     restart: always
