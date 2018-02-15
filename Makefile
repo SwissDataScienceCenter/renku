@@ -45,6 +45,7 @@ GITLAB_DIRS=config logs git-data lfs-data runner
 
 DOCKER_REPOSITORY?=rengahub/
 DOCKER_PREFIX:=${DOCKER_REGISTRY}$(DOCKER_REPOSITORY)
+DOCKER_NETWORK?=review
 DOCKER_COMPOSE_ENV=\
 	DOCKER_PREFIX=$(DOCKER_PREFIX) \
 	DOCKER_REPOSITORY=$(DOCKER_REPOSITORY) \
@@ -136,14 +137,14 @@ $(makefile-services): %: $(PLATFORM_BASE_DIR)/%
 docker-images: $(scala-services) $(dockerfile-services)
 
 docker-network:
-ifeq ($(shell docker network ls -q -f name=review), )
-	@docker network create review
+ifeq ($(shell docker network ls -q -f name=$(DOCKER_NETWORK)), )
+	@docker network create $(DOCKER_NETWORK)
 endif
-	@echo "[Info] Using Docker network: review=$(shell docker network ls -q -f name=review)"
+	@echo "[Info] Using Docker network: $(DOCKER_NETWORK)=$(shell docker network ls -q -f name=review)"
 
 remove-docker-network:
-ifeq ($(shell docker network ls -q -f name=review), )
-	@docker network rm review
+ifeq ($(shell docker network ls -q -f name=$(DOCKER_NETWORK)), )
+	@docker network rm $(DOCKER_NETWORK)
 endif
 
 # GitLab actions
@@ -162,6 +163,7 @@ endif
 			-r ${RUNNER_TOKEN} \
 			--executor shell \
 			--env RENGA_REVIEW_DOMAIN=$(PLATFORM_DOMAIN) \
+			--env RENGA_REVIEW_NETWORK=$(DOCKER_NETWORK) \
 			--locked=false \
 			--run-untagged=false \
 			--tag-list notebook \
@@ -173,6 +175,7 @@ endif
 			-r ${RUNNER_TOKEN} \
 			--executor docker \
 			--env RENGA_REVIEW_DOMAIN=$(PLATFORM_DOMAIN) \
+			--env RENGA_REVIEW_NETWORK=$(DOCKER_NETWORK) \
 			--locked=false \
 			--run-untagged=false \
 			--tag-list cwl \
@@ -207,11 +210,8 @@ ifeq (${DOCKER_SCALE},)
 	@echo "[Info] You can configure scale parameters: DOCKER_SCALE=\"--scale gitlab-runner=4\" make start"
 endif
 
-stop: unregister-runners
+stop: remove-docker-network unregister-runners
 	$(DOCKER_COMPOSE_ENV) docker-compose stop
-ifneq ($(shell docker network ls -q -f name=review), )
-	@docker network rm review
-endif
 
 restart: stop start
 
