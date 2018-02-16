@@ -15,7 +15,6 @@ repositories.
 - renga-identity_ - Identity Management and foreign policies (TBD)
 - renga-python_ - Python API & Command Line Interface (CLI)
 - renga-storage_ - Storage service
-- renga-tutorials_ - files for getting started application (TBD)
 - renga-ui_ - web front-end interface
 
 .. _renga: https://github.com/SwissDataScienceCenter/renga
@@ -27,5 +26,4 @@ repositories.
 .. _renga-identity: https://www.datascience.ch/TBD
 .. _renga-python: https://github.com/SwissDataScienceCenter/renga-python
 .. _renga-storage: https://github.com/SwissDataScienceCenter/renga-storage
-.. _renga-tutorials: https://github.com/SwissDataScienceCenter/renga-tutorials
 .. _renga-ui: https://github.com/SwissDataScienceCenter/renga-ui
