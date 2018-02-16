@@ -25,6 +25,9 @@ RENGA (連歌)
     :target: http://renga.readthedocs.io/en/latest/?badge=latest
     :alt: Documentation Status
 
+**Renga is currently undergoing a major restructuring effort. For a preview, 
+you can look at the development branch, but keep in mind it is highly 
+volatile.**
 
 **Renga** is a highly-scalable & secure open software platform designed to
 foster multidisciplinary data (science) collaboration.
