@@ -52,7 +52,7 @@ By default, the platform will run on ``localhost``. You can access the UI at
 http://localhost/ui and the swagger API UI at http://localhost/admin/swagger/.
 
 A python CLI and API client is available in the `renga-python
-<https://github/com/SwissDataScienceCenter/renga-python>`_ package.
+<https://github.com/SwissDataScienceCenter/renga-python>`_ package.
 
 
 Where to go next
