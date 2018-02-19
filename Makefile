@@ -79,10 +79,11 @@ repos = \
 	renga-ui
 
 scala-services = \
-#	renga-storage
+	renga-storage
 
 makefile-services = \
-#	renga-ui
+ 	renga-ui \
+ 	renga-python
 
 scala-artifact = \
 	renga-commons \
@@ -97,6 +98,12 @@ $(PLATFORM_BASE_DIR)/%:
 
 .PHONY: clone
 clone: $(foreach s, $(repos), $(PLATFORM_BASE_DIR)/$(s))
+
+%-checkout: $(PLATFORM_BASE_DIR)/%
+	cd $< && git checkout $(GIT_BRANCH)
+
+.PHONY: checkout
+checkout: $(foreach s, $(repos), $(s)-checkout)
 
 %-pull: $(PLATFORM_BASE_DIR)/%
 	cd $< && git pull
@@ -134,7 +141,7 @@ $(makefile-services): %: $(PLATFORM_BASE_DIR)/%
 
 # Docker actions
 .PHONY: docker-images docker-network
-docker-images: $(scala-services) $(dockerfile-services)
+docker-images: $(scala-services) $(dockerfile-services) $(makefile-services)
 
 docker-network:
 ifeq ($(shell docker network ls -q -f name=$(DOCKER_NETWORK)), )
