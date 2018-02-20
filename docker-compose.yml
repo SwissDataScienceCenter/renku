@@ -157,18 +157,14 @@ services:
 #       traefik.enable: "true"
 #       traefik.frontend.rule: PathPrefix:/api/storage
 
-#   ui:
-#     image: ${DOCKER_REPOSITORY}renga-ui:$PLATFORM_VERSION
-#     ports:
-#       - 5000
-#     environment:
-#       API_ROOT_URL: http://reverse-proxy/api/
-#       APPLICATION_ROOT: /ui
-#       KEYCLOAK_REDIRECT_URL: ${RENGA_ENDPOINT}/auth/realms/Renga/  # from outside
-#       KEYCLOAK_URL: http://reverse-proxy/auth/realms/Renga/  # from inside
-#     labels:
-#       traefik.enable: "true"
-#       traefik.frontend.rule: PathPrefix:/ui
+  ui:
+    image: ${DOCKER_REPOSITORY}renga-ui:$PLATFORM_VERSION
+    ports:
+      - 5000:3000
+    environment:
+      GITLAB_SECRET_TOKEN: ${GITLAB_SECRET_TOKEN}
+    links:
+      - gitlab:dev.gitlab
 
   reverse-proxy:
     image: traefik
