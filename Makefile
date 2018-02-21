@@ -68,7 +68,7 @@ endif
 
 ifndef RENGA_UI_URL
 	# The ui should run under localhost instead of docker.for.mac.localhost
-	RENGA_UI_URL=http://localhost:5000
+	RENGA_UI_URL=http://localhost
 	export RENGA_UI_URL
 endif
 

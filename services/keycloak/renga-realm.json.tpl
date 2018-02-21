@@ -15,8 +15,8 @@
   "actionTokenGeneratedByUserLifespan" : 300,
   "enabled" : true,
   "sslRequired" : "external",
-  "registrationAllowed" : false,
-  "registrationEmailAsUsername" : false,
+  "registrationAllowed" : true,
+  "registrationEmailAsUsername" : true,
   "rememberMe" : false,
   "verifyEmail" : false,
   "loginWithEmailAllowed" : true,
@@ -351,14 +351,13 @@
     "id": "4622f33f-e0ca-401f-b6a5-a5e55f937ffb",
     "clientId": "renga-ui",
     "adminUrl": "",
-    "rootUrl": "{{RENGA_UI_URL}}",
     "baseUrl": "{{RENGA_UI_URL}}",
     "surrogateAuthRequired": false,
     "enabled": true,
     "clientAuthenticatorType": "client-secret",
     "secret": "no-secret-defined",
     "redirectUris": [
-      "/*"
+      "{{RENGA_UI_URL}}/*"
     ],
     "webOrigins": [
       "{{RENGA_UI_URL}}"

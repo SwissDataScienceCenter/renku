@@ -176,6 +176,9 @@ services:
       GITLAB_URL: ${GITLAB_URL}
       RENGA_UI_URL: ${RENGA_UI_URL}
       RENGA_ENDPOINT: ${RENGA_ENDPOINT}
+    labels:
+      traefik.enable: "true"
+      traefik.frontend.rule: PathPrefix:/
 
   reverse-proxy:
     image: traefik
