@@ -51,9 +51,11 @@ DOCKER_COMPOSE_ENV=\
 	DOCKER_REPOSITORY=$(DOCKER_REPOSITORY) \
 	GITLAB_URL=$(GITLAB_URL) \
 	GITLAB_REGISTRY_URL=$(GITLAB_REGISTRY_URL) \
+	GITLAB_CLIENT_SECRET=$(GITLAB_CLIENT_SECRET) \
 	PLATFORM_DOMAIN=$(PLATFORM_DOMAIN) \
 	PLATFORM_VERSION=$(PLATFORM_VERSION) \
-	RENGA_ENDPOINT=$(RENGA_ENDPOINT)
+	RENGA_ENDPOINT=$(RENGA_ENDPOINT) \
+	RENGA_UI_URL=$(RENGA_UI_URL)
 
 SBT_IVY_DIR := $(PWD)/.ivy
 SBT = sbt -ivy $(SBT_IVY_DIR)
@@ -62,6 +64,17 @@ SBT_PUBLISH_TARGET = publish-local
 ifndef RENGA_ENDPOINT
 	RENGA_ENDPOINT=http://$(PLATFORM_DOMAIN)
 	export RENGA_ENDPOINT
+endif
+
+ifndef RENGA_UI_URL
+	# The ui should run under localhost instead of docker.for.mac.localhost
+	RENGA_UI_URL=http://localhost:5000
+	export RENGA_UI_URL
+endif
+
+ifndef GITLAB_CLIENT_SECRET
+	GITLAB_CLIENT_SECRET=dummy-secret
+	export GITLAB_CLIENT_SECRET
 endif
 
 define DOCKER_BUILD
@@ -140,7 +153,7 @@ $(makefile-services): %: $(PLATFORM_BASE_DIR)/%
 	$(MAKE) -C $(PLATFORM_BASE_DIR)/$@
 
 # Docker actions
-.PHONY: docker-images docker-network
+.PHONY: docker-images docker-network docker-compose-up
 docker-images: $(scala-services) $(dockerfile-services) $(makefile-services)
 
 docker-network:
@@ -154,9 +167,25 @@ ifeq ($(shell docker network ls -q -f name=$(DOCKER_NETWORK)), )
 	@docker network rm $(DOCKER_NETWORK)
 endif
 
+docker-compose-up:
+	$(DOCKER_COMPOSE_ENV) docker-compose up --build -d ${DOCKER_SCALE}
+	@./scripts/wait-for-services.sh
+
 # GitLab actions
 services/gitlab/%:
 	@mkdir -p $@
+
+# Preregister the ui as a client with gitlab.
+# This command will fail on restart when the client is already there - we don't care.
+register-gitlab-oauth-applications: unregister-gitlab-oauth-applications
+	@$(DOCKER_COMPOSE_ENV) docker-compose exec gitlab /opt/gitlab/bin/gitlab-psql \
+		-h /var/opt/gitlab/postgresql -d gitlabhq_production \
+		-c "INSERT INTO oauth_applications (name, uid, scopes, redirect_uri, secret, trusted) VALUES ('renga-ui', 'renga-ui', 'api read_user', '$(RENGA_UI_URL)/login/redirect/gitlab', 'no-secret-needed', 'true')"
+
+unregister-gitlab-oauth-applications:
+	@$(DOCKER_COMPOSE_ENV) docker-compose exec gitlab /opt/gitlab/bin/gitlab-psql \
+		-h /var/opt/gitlab/postgresql -d gitlabhq_production \
+		-c "DELETE FROM oauth_applications WHERE uid='renga-ui'"
 
 register-runners: unregister-runners
 ifeq (${RUNNER_TOKEN},)
@@ -200,15 +229,15 @@ unregister-runners:
 
 # Platform actions
 .PHONY: start stop restart test clean wipe
-start: docker-network $(GITLAB_DIRS:%=services/gitlab/%) unregister-runners
-ifeq (${GITLAB_SECRET_TOKEN}, )
-	@echo "[Warning] Renga UI will not work until you acquire and set GITLAB_SECRET_TOKEN"
+start: docker-network $(GITLAB_DIRS:%=services/gitlab/%) unregister-runners docker-compose-up register-gitlab-oauth-applications
+ifeq (${GITLAB_CLIENT_SECRET}, dummy-secret)
+	@echo
+	@echo "[Warning] You have not defined a GITLAB_CLIENT_SECRET. Using dummy"
+	@echo "          secret instead. Never do this in production!"
 	@echo
 endif
-	$(DOCKER_COMPOSE_ENV) docker-compose up --build -d ${DOCKER_SCALE}
-	@./scripts/wait-for-services.sh
 	@echo
-	@echo "[Success] Renga UI should be under http://$(PLATFORM_DOMAIN):5000 and GitLab under $(GITLAB_URL)"
+	@echo "[Success] Renga UI should be under $(RENGA_UI_URL) and GitLab under $(GITLAB_URL)"
 	@echo
 	@echo "[Info] Register GitLab runners using:"
 	@echo "         make register-runners"
@@ -217,7 +246,7 @@ ifeq (${DOCKER_SCALE},)
 	@echo "[Info] You can configure scale parameters: DOCKER_SCALE=\"--scale gitlab-runner=4\" make start"
 endif
 
-stop: remove-docker-network unregister-runners
+stop: remove-docker-network unregister-runners unregister-gitlab-oauth-applications
 	$(DOCKER_COMPOSE_ENV) docker-compose stop
 
 restart: stop start

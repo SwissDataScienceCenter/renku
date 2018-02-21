@@ -20,10 +20,17 @@
 echo "==================================================="
 echo " Configuration:"
 echo " RENGA_ENDPOINT=$RENGA_ENDPOINT"
+echo " GITLAB_URL=$GITLAB_URL"
+echo " RENGA_UI_URL=$RENGA_UI_URL"
 echo " KEYCLOAK_MIGRATION_FILE=$KEYCLOAK_MIGRATION_FILE"
 echo "==================================================="
 
-sed -e "s|{{RENGA_ENDPOINT}}|${RENGA_ENDPOINT}|" "$KEYCLOAK_MIGRATION_FILE.tpl" > "$KEYCLOAK_MIGRATION_FILE"
+cat $KEYCLOAK_MIGRATION_FILE.tpl \
+  | sed -e "s|{{RENGA_ENDPOINT}}|${RENGA_ENDPOINT}|" \
+  | sed -e "s|{{RENGA_UI_URL}}|${RENGA_UI_URL}|" \
+  | sed -e "s|{{GITLAB_URL}}|${GITLAB_URL}|" \
+  | sed -e "s|{{GITLAB_CLIENT_SECRET}}|${GITLAB_CLIENT_SECRET}|" \
+  > $KEYCLOAK_MIGRATION_FILE
 
 exec /opt/jboss/docker-entrypoint.sh $@
 exit $?
