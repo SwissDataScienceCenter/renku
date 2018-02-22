@@ -218,7 +218,8 @@ endif
 			--docker-image $(DOCKER_PREFIX)renga-python:$(PLATFORM_VERSION) \
 			--docker-pull-policy "if-not-present"; \
 	done
-
+	@echo
+	@echo "[Info] Edit gitlab/runner/config.toml to increase the number of concurrent runner jobs."
 unregister-runners:
 	@for container in $(shell $(DOCKER_COMPOSE_ENV) docker-compose ps -q gitlab-runner) ; do \
 		docker exec -ti $$container gitlab-runner unregister \
