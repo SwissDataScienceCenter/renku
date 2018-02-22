@@ -1,0 +1,82 @@
+---
+apiVersion: apps/v1beta2
+kind: Deployment
+metadata:
+  name: {{ template "logstash.fullname" . }}
+  labels:
+    app: {{ template "logstash.name" . }}
+    chart: {{ template "logstash.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ template "logstash.name" . }}
+      release: {{ .Release.Name }}
+  template:
+    metadata:
+      annotations:
+        checksum/config: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
+        checksum/config-pipeline: {{ include (print $.Template.BasePath "/configmap-pipeline.yaml") . | sha256sum }}
+        checksum/config-patterns: {{ include (print $.Template.BasePath "/configmap-patterns.yaml") . | sha256sum }}
+      labels:
+        app: {{ template "logstash.name" . }}
+        release: {{ .Release.Name }}
+    spec:
+      containers:
+      - name: logstash
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        ports:
+  {{- range $port := .Values.service.ports }}
+        - name: {{ $port.serviceName }}
+          containerPort: {{ $port.containerPort }}
+          protocol: {{ $port.protocol }}
+  {{- end }}
+        livenessProbe:
+          tcpSocket:
+            port: {{ .Values.service.internalPort }}
+          initialDelaySeconds: {{ .Values.livenessProbe.initialDelaySeconds }}
+          periodSeconds: {{ .Values.livenessProbe.periodSeconds }}
+        readinessProbe:
+          tcpSocket:
+            port: {{ .Values.service.internalPort }}
+          initialDelaySeconds: {{ .Values.readinessProbe.initialDelaySeconds }}
+        env:
+        - name: ELASTICSEARCH_HOST
+          value: {{ template "elasticsearch.fullname" . }}
+        - name: ELASTICSEARCH_PORT
+          value: "9200"
+        volumeMounts:
+        - name: config
+          mountPath: /usr/share/logstash/config/logstash.yml
+          subPath: logstash.yml
+        - name: pipeline
+          mountPath: /usr/share/logstash/pipeline
+        - name: patterns
+          mountPath: /usr/share/logstash/patterns
+        resources:
+{{ toYaml .Values.resources | indent 10 }}
+      volumes:
+      - name: config
+        configMap:
+          name: {{ template "logstash.fullname" . }}
+      - name: pipeline
+        configMap:
+          name: {{ template "logstash.fullname" . }}-pipeline
+      - name: patterns
+        configMap:
+          name: {{ template "logstash.fullname" . }}-patterns
+    {{- with .Values.nodeSelector }}
+      nodeSelector:
+{{ toYaml .Values.nodeSelector | indent 8 }}
+    {{- end }}
+    {{- with .Values.affinity }}
+      affinity:
+{{ toYaml . | indent 8 }}
+    {{- end }}
+    {{- with .Values.tolerations }}
+      tolerations:
+{{ toYaml . | indent 8 }}
+    {{- end }}

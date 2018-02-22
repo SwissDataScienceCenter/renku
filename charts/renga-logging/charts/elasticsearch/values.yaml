@@ -1,0 +1,43 @@
+# Default values for elasticsearch.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+replicaCount: 3
+
+image:
+  repository: "docker.elastic.co/elasticsearch/elasticsearch-oss"
+  tag: "6.2.1"
+  pullPolicy: "IfNotPresent"
+
+cluster:
+  name: "renga-logging-es"
+  config:
+  env:
+    # IMPORTANT: https://www.elastic.co/guide/en/elasticsearch/reference/current/important-settings.html#minimum_master_nodes
+    # To prevent data loss, it is vital to configure the discovery.zen.minimum_master_nodes setting so that each master-eligible
+    # node knows the minimum number of master-eligible nodes that must be visible in order to form a cluster.
+    MINIMUM_MASTER_NODES: "2"
+
+heapSize: "512m"
+persistence:
+  enabled: true
+  accessMode: ReadWriteOnce
+  size: 25Gi
+antiAffinity: "soft"
+resources:
+  limits:
+    cpu: "1"
+    memory: "1024Mi"
+  requests:
+    cpu: "25m"
+    memory: "512Mi"
+
+rbac:
+  create: true
+
+service:
+  type: ClusterIP
+
+nodeSelector: {}
+
+tolerations: []
