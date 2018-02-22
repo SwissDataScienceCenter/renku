@@ -1,26 +1,17 @@
-# Default values for keycloak.
+# Default values for redis.
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
+replicaCount: 1
+
 image:
-  repository: jboss/keycloak
-  tag: 3.4.3.Final
+  repository: redis
+  tag: 4.0-alpine
   pullPolicy: IfNotPresent
 
 service:
   type: ClusterIP
-  port: 80
-
-username: keycloak
-# password: # keycloak admin password
-
-# postgresDatabase: keycloak
-# postgresUser: keycloak
-# postgresPassword: # postgres password
-
-env:
-  # Additional env
-
+  port: 6379
 
 resources: {}
   # We usually recommend not to specify default resources and to leave this as a conscious
@@ -34,8 +25,8 @@ resources: {}
   #  cpu: 100m
   #  memory: 128Mi
 
+antiAffinity: soft
+
 nodeSelector: {}
 
 tolerations: []
-
-affinity: {}

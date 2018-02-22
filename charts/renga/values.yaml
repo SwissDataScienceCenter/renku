@@ -11,11 +11,19 @@ postgresql:
   persistence:
     size: 8Gi
 
+gitlab:
+  password: gitlabadmin
+  hostname: localhost
+
 global:
   keycloak:
     postgresDatabase: keycloak
     postgresUser: keycloak
     postgresPassword: keycloak
+  gitlab:
+    postgresDatabase: gitlabhq_production
+    postgresUser: gitlab
+    postgresPassword: gitlab
 
 ingress:
   enabled: false
