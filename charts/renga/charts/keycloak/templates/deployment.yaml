@@ -66,9 +66,16 @@ spec:
           value: "{{ $value }}"
         {{- end }}
         ports:
-          - name: http
-            containerPort: 8080
-            protocol: TCP
+        - name: http
+          containerPort: 8080
+          protocol: TCP
+        command:
+        - "/opt/jboss/docker-entrypoint.sh"
+        - "-b 0.0.0.0"
+        - "-Dkeycloak.migration.action=import"
+        - "-Dkeycloak.migration.provider=singleFile"
+        - "-Dkeycloak.migration.file=/realms/renga-realm.json"
+        - "-Dkeycloak.migration.strategy=IGNORE_EXISTING"
         livenessProbe:
           httpGet:
             path: /auth/
@@ -83,6 +90,14 @@ spec:
           timeoutSeconds: 1
         resources:
 {{ toYaml .Values.resources | indent 10 }}
+        volumeMounts:
+        - name: realms
+          mountPath: /realms
+          readOnly: true
+      volumes:
+      - name: realms
+        configMap:
+          name: {{ template "keycloak.fullname" . }}
     {{- if .Values.nodeSelector }}
       nodeSelector:
 {{ toYaml .Values.nodeSelector | indent 8 }}

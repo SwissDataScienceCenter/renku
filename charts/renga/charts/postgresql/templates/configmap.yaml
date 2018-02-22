@@ -9,5 +9,4 @@ metadata:
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
 data:
-{{- $scripts := include "postgresInitScripts" . }}
-{{ $scripts | indent 2 }}
+{{ include "postgresInitScripts" . | indent 2 }}
