@@ -1,0 +1,109 @@
+# Default values for logstash.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+replicaCount: 1
+
+image:
+  repository: "docker.elastic.co/logstash/logstash-oss"
+  tag: "6.2.1"
+  pullPolicy: IfNotPresent
+
+service:
+  type: ClusterIP
+  internalPort: 4560
+  ports:
+  - name: json-tcp
+    containerPort: 4560
+    protocol: TCP
+  - name: json-udp
+    containerPort: 4560
+    protocol: UDP
+  - name: syslog-tcp
+    containerPort: 4561
+    protocol: TCP
+  - name: syslog-udp
+    containerPort: 4561
+    protocol: UDP
+
+# Extra config options
+configData: {}
+
+livenessProbe:
+  initialDelaySeconds: 60
+  periodSeconds: 20
+readinessProbe:
+  initialDelaySeconds: 120
+
+resources: {}
+  # We usually recommend not to specify default resources and to leave this as a conscious
+  # choice for the user. This also increases chances charts run on environments with little
+  # resources, such as Minikube. If you do want to specify resources, uncomment the following
+  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+  # limits:
+  #  cpu: 100m
+  #  memory: 128Mi
+  # requests:
+  #  cpu: 100m
+  #  memory: 128Mi
+
+# patterns for filters
+# each element will be turned into it's own pattern file
+patterns:
+  # testpattern: |-
+  #     TESTING {"foo":.*}$
+
+inputs:
+  main: |-
+    input {
+      tcp {
+        port => 4560
+        type => json
+      }
+      udp {
+        port => 4560
+        type => json
+      }
+      tcp {
+        port => 4561
+        type => syslog
+      }
+      udp {
+        port => 4561
+        type => syslog
+      }
+    }
+filters:
+  main: |-
+    filter {
+      if [type] == "json" {
+        json {
+          source => "message"
+        }
+      }
+      if [type] == "syslog" {
+        grok {
+          match => { "message" => "<%{POSINT:syslog_pri}>%{SYSLOGTIMESTAMP:syslog_timestamp} %{SYSLOGHOST:syslog_hostname} %{DATA:syslog_program}(?:\[%{POSINT:syslog_pid}\])?: %{GREEDYDATA:syslog_message}" }
+        }
+        json {
+          skip_on_invalid_json => true
+          source => "syslog_message"
+          target => "as_json"
+        }
+      }
+    }
+
+outputs:
+  main: |-
+    output {
+      stdout { codec => rubydebug }
+      elasticsearch {
+        hosts => ["${ELASTICSEARCH_HOST}:${ELASTICSEARCH_PORT}"]
+      }
+    }
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}

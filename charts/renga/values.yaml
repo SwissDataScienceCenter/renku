@@ -1,0 +1,30 @@
+# Default values for renga.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+keycloak:
+  username: admin
+  password: admin
+
+postgresql:
+  postgresPassword: postgres
+  persistence:
+    size: 8Gi
+
+global:
+  keycloak:
+    postgresDatabase: keycloak
+    postgresUser: keycloak
+    postgresPassword: keycloak
+
+ingress:
+  enabled: false
+  annotations: {}
+    # kubernetes.io/ingress.class: nginx
+    # kubernetes.io/tls-acme: "true"
+  hosts:
+  - chart-example.local
+  tls: []
+  #  - secretName: chart-example-tls
+  #    hosts:
+  #      - chart-example.local
