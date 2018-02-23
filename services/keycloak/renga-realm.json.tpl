@@ -357,10 +357,12 @@
     "clientAuthenticatorType": "client-secret",
     "secret": "no-secret-defined",
     "redirectUris": [
-      "{{RENGA_UI_URL}}/*"
+      "{{RENGA_UI_URL}}/*",
+      "http://localhost:3000/*"
     ],
     "webOrigins": [
-      "{{RENGA_UI_URL}}"
+      "{{RENGA_UI_URL}}",
+      "http://localhost:3000"
     ],
     "notBefore": 0,
     "bearerOnly": false,
