@@ -180,7 +180,7 @@ services/gitlab/%:
 register-gitlab-oauth-applications: unregister-gitlab-oauth-applications
 	@$(DOCKER_COMPOSE_ENV) docker-compose exec gitlab /opt/gitlab/bin/gitlab-psql \
 		-h /var/opt/gitlab/postgresql -d gitlabhq_production \
-		-c "INSERT INTO oauth_applications (name, uid, scopes, redirect_uri, secret, trusted) VALUES ('renga-ui', 'renga-ui', 'api read_user', '$(RENGA_UI_URL)/login/redirect/gitlab', 'no-secret-needed', 'true')"
+		-c "INSERT INTO oauth_applications (name, uid, scopes, redirect_uri, secret, trusted) VALUES ('renga-ui', 'renga-ui', 'api read_user', '$(RENGA_UI_URL)/login/redirect/gitlab http://localhost:3000/login/redirect/gitlab', 'no-secret-needed', 'true')"
 
 unregister-gitlab-oauth-applications:
 	@$(DOCKER_COMPOSE_ENV) docker-compose exec gitlab /opt/gitlab/bin/gitlab-psql \
