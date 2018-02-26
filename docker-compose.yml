@@ -148,24 +148,32 @@ services:
     networks:
       - default
 
-#   storage:
-#     image: ${DOCKER_REPOSITORY}renga-storage:$PLATFORM_VERSION
-#     environment:
-#       AUTHORIZATION_CLIENT_SECRET: $AUTHORIZATION_CLIENT_SECRET
-#       PLAY_APPLICATION_SECRET: $PLAY_APPLICATION_SECRET
-#       RENGA_SERVICES_AUTHORIZATION_URL: ${RENGA_ENDPOINT}/auth/realms/Renga/protocol/openid-connect/auth
-#       RESOURCE_MANAGER_PUBLIC_KEY: $RESOURCE_MANAGER_PUBLIC_KEY
-#       STORAGE_BACKEND_LOCAL_ENABLED: "true"
-#     volumes:
-#     - ./services/storage/data:/data
-#     ports:
-#     - 9000
-#     restart: on-failure
-#     labels:
-#       traefik.enable: "true"
-#       traefik.frontend.rule: PathPrefix:/api/storage
-
-
+  storage:
+    image: ${DOCKER_REPOSITORY}renga-storage:${PLATFORM_VERSION}
+    environment:
+      AUTHORIZATION_CLIENT_SECRET: $AUTHORIZATION_CLIENT_SECRET
+      PLAY_APPLICATION_SECRET: $PLAY_APPLICATION_SECRET
+      RENGA_SERVICES_AUTHORIZATION_URL: ${RENGA_ENDPOINT}/auth/realms/Renga/protocol/openid-connect/auth
+      STORAGE_BACKEND_LOCAL_ENABLED: "true"
+      RENGA_ENDPOINT: ${RENGA_ENDPOINT}
+      STORAGE_BACKEND_LOCALGIT_ENABLED: "true"
+      STORAGE_BACKEND_GITLAB_ENABLED: "true"
+      GITLAB_URL: ${GITLAB_URL}
+      GITLAB_USER: "root"
+      GITLAB_PASS: "root_password"
+    volumes:
+      - ./services/storage/data:/data
+    ports:
+      - 9000
+    restart: on-failure
+    depends_on:
+      - db
+      - keycloak
+    networks:
+       - default
+    labels:
+      traefik.enable: "true"
+      traefik.frontend.rule: PathPrefix:/api/storage
 
   ui:
     image: ${DOCKER_PREFIX}renga-ui:${PLATFORM_VERSION}
