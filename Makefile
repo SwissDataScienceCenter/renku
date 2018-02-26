@@ -105,6 +105,10 @@ scala-artifact = \
 .PHONY: all
 all: docker-images
 
+.PHONY: docker-env
+docker-env:
+	@for x in $(DOCKER_COMPOSE_ENV); do echo $$x; done
+
 # fetch missing repositories
 $(PLATFORM_BASE_DIR)/%:
 	git clone $(PLATFORM_REPO_TPL) $@
