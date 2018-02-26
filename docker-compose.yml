@@ -19,7 +19,6 @@
 version: '3'
 volumes:
   db-data: {}
-  cassandra-data: {}
 services:
   db:
     image: postgres:9.6
@@ -158,9 +157,9 @@ services:
       RENGA_ENDPOINT: ${RENGA_ENDPOINT}
       STORAGE_BACKEND_LOCALGIT_ENABLED: "true"
       STORAGE_BACKEND_GITLAB_ENABLED: "true"
-      GITLAB_URL: ${GITLAB_URL}
+      GITLAB_URL: "http://gitlab:5080"
       GITLAB_USER: "root"
-      GITLAB_PASS: "root_password"
+      GITLAB_PASS: "yr_s-AwLzQUD6dU5v7zG"
     volumes:
       - ./services/storage/data:/data
     ports:
@@ -170,10 +169,32 @@ services:
       - db
       - keycloak
     networks:
-       - default
+      - default
     labels:
       traefik.enable: "true"
       traefik.frontend.rule: PathPrefix:/api/storage
+
+  apispec:
+    build: ./services/apispec
+    ports:
+      - 5000
+    labels:
+      traefik.enable: "true"
+      traefik.frontend.rule: Path:/api/swagger.json
+    environment:
+      API_ROOT_URL: http://reverse-proxy/api/
+      SERVICES: storage
+      WSGI_NUM_PROXIES: 1
+  swagger:
+    image: ${IMAGE_REPOSITORY}swagger-ui:latest
+    ports:
+      - 8080
+    labels:
+      traefik.enable: "true"
+      traefik.frontend.rule: PathPrefixStrip:/admin/swagger
+    environment:
+      API_URL: ${RENGA_ENDPOINT}/api/swagger.json
+      OAUTH2_REDIRECT_URL: ${RENGA_ENDPOINT}/admin/swagger/oauth2-redirect.html
 
   ui:
     image: ${DOCKER_PREFIX}renga-ui:${PLATFORM_VERSION}
