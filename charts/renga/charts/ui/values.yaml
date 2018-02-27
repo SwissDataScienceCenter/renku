@@ -1,15 +1,17 @@
-# Default values for gitlab.
+# Default values for ui.
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
+replicaCount: 1
+
 image:
-  repository: gitlab/gitlab-ce
-  tag: latest
+  repository: rengahub/renga-ui
+  tag: development
   pullPolicy: IfNotPresent
 
 service:
   type: ClusterIP
-  port: 80
+  port: 3000
 
 resources: {}
   # We usually recommend not to specify default resources and to leave this as a conscious

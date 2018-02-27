@@ -29,29 +29,78 @@ spec:
             secretKeyRef:
               name: {{ template "gitlab.fullname" . }}
               key: gitlab-password
-        - name: GITLAB_SECRETS_DB_KEY_BASE
-          value: "long-and-random-alpha-numeric-string"
-        - name: GITLAB_SECRETS_SECRET_KEY_BASE
-          value: "long-and-random-alpha-numeric-string"
-        - name: GITLAB_SECRETS_OTP_KEY_BASE
-          value: "long-and-random-alpha-numeric-string"
-        - name: GITLAB_HOST
-          value: {{ .Values.hostname | default "localhost" }}
-        - name: GITLAB_RELATIVE_URL_ROOT
-          value: /gitlab
-        - name: DB_HOST
-          value: "{{ template "postgresql.fullname" . }}"
-        - name: DB_NAME
-          value: {{ .Values.global.gitlab.postgresDatabase }}
-        - name: DB_USER
-          value: {{ .Values.global.gitlab.postgresUser }}
-        - name: DB_PASS
-          valueFrom:
-            secretKeyRef:
-              name: {{ template "gitlab.fullname" . }}
-              key: postgres-password
-        - name: REDIS_HOST
-          value: "{{ template "redis.fullname" . }}"
+        # - name: GITLAB_SECRETS_DB_KEY_BASE
+        #   value: "long-and-random-alpha-numeric-string"
+        # - name: GITLAB_SECRETS_SECRET_KEY_BASE
+        #   value: "long-and-random-alpha-numeric-string"
+        # - name: GITLAB_SECRETS_OTP_KEY_BASE
+        #   value: "long-and-random-alpha-numeric-string"
+        # - name: GITLAB_HOST
+        #   value: {{ .Values.hostname | default "localhost" }}
+        # - name: GITLAB_RELATIVE_URL_ROOT
+        #   value: /gitlab
+        # - name: DB_HOST
+        #   value: "{{ template "postgresql.fullname" . }}"
+        # - name: DB_NAME
+        #   value: {{ .Values.global.gitlab.postgresDatabase }}
+        # - name: DB_USER
+        #   value: {{ .Values.global.gitlab.postgresUser }}
+        # - name: DB_PASS
+        #   valueFrom:
+        #     secretKeyRef:
+        #       name: {{ template "gitlab.fullname" . }}
+        #       key: postgres-password
+        # - name: REDIS_HOST
+        #   value: "{{ template "redis.fullname" . }}"
+        - name: GITLAB_OMNIBUS_CONFIG
+          value: |
+            external_url 'http://{{ .Values.global.renga.domain }}/gitlab'
+            # registry_external_url '${GITLAB_REGISTRY_URL}'
+            # postgresql['enable'] = false
+            # Enable or disable automatic database migrations
+            # gitlab_rails['auto_migrate'] = false
+            # manually run: gitlab-ctl pg-upgrade
+            # FIXME change from postgres to gitlab
+            # TODO need to run gitlab-rake gitlab:setup for external db
+            #gitlab_rails['db_username'] = 'postgres'
+            #gitlab_rails['db_password'] = 'postgres'
+            #gitlab_rails['db_host'] = 'db'
+            #gitlab_rails['db_port'] = 5432
+            #gitlab_rails['db_database'] = 'gitlab'
+            #gitlab_rails['db_adapter'] = 'postgresql'
+            #gitlab_rails['db_encoding'] = 'utf8'
+            gitlab_rails['omniauth_enabled'] = true
+            gitlab_rails['omniauth_allow_single_sign_on'] = ['oauth2_generic']
+            gitlab_rails['omniauth_block_auto_created_users'] = false
+            gitlab_rails['omniauth_providers'] = [
+              {
+                'name' => 'oauth2_generic',
+                'app_id' => 'gitlab',
+                'app_secret' => 'dummy-secret',
+                'args' => {
+                  client_options: {
+                    # Traefik maps keycloak to the URL below
+                    # CAREFUL: This must be accessible from inside the keycloak container
+                    # for server-to-server communication.
+                    # Use docker.for.mac.localhost as RENGA_ENDPOINT for example.
+                    'site' => 'http://localhost/keycloak',
+                    'authorize_url' => '/auth/realms/Renga/protocol/openid-connect/auth',
+                    'user_info_url' => '/auth/realms/Renga/protocol/openid-connect/userinfo',
+                    'token_url' => '/auth/realms/Renga/protocol/openid-connect/token'
+                  },
+                  user_response_structure: {
+                    attributes: { email:'email', first_name:'given_name', last_name:'family_name', name:'name', nickname:'preferred_username' }, # if the nickname attribute of a user is called 'username'
+                    id_path: 'preferred_username'
+                  }
+                },
+                label: 'Renga Login'
+              }
+            ]
+            gitlab_rails['gitlab_shell_ssh_port'] = 5022
+            gitlab_rails['lfs_enabled'] = true
+            gitlab_rails['lfs_storage_path'] = '/var/storage/lfs-objects'
+            gitlab_rails['initial_root_password'] = 'root_password'
+            # Add any other gitlab.rb configuration here, each on its own line
         ports:
         - name: ssh
           containerPort: 22
