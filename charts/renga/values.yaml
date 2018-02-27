@@ -25,13 +25,17 @@ global:
     postgresUser: gitlab
     postgresPassword: gitlab
 
+  renga:
+    domain: localhost
+
 ingress:
-  enabled: false
-  annotations: {}
-    # kubernetes.io/ingress.class: nginx
+  enabled: true
+  annotations:
+    kubernetes.io/ingress.class: nginx
     # kubernetes.io/tls-acme: "true"
   hosts:
-  - chart-example.local
+  - localhost
+  - renga-staging-renga-keycloak
   tls: []
   #  - secretName: chart-example-tls
   #    hosts:

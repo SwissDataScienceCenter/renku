@@ -3,6 +3,8 @@
 {{- $keycloakServicePort := .Values.keycloak.service.port -}}
 {{- $gitlabFullname := include "gitlab.fullname" . -}}
 {{- $gitlabServicePort := 80 -}}
+{{- $uiFullname := include "ui.fullname" . -}}
+{{- $uiServicePort := 3000 -}}
 ---
 apiVersion: extensions/v1beta1
 kind: Ingress
@@ -41,5 +43,9 @@ spec:
         backend:
           serviceName: {{ $gitlabFullname }}
           servicePort: {{ $gitlabServicePort }}
+      - path: /
+        backend:
+          serviceName: {{ $uiFullname }}
+          servicePort: {{ $uiServicePort }}
   {{- end }}
 {{- end }}

@@ -49,3 +49,7 @@ Define subcharts full names
 {{- define "gitlab.fullname" -}}
 {{- printf "%s-%s-%s" .Release.Name "renga" "gitlab" | replace "+" "_" | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
+
+{{- define "ui.fullname" -}}
+{{- printf "%s-%s-%s" .Release.Name "renga" "ui" | replace "+" "_" | trunc 63 | trimSuffix "-" -}}
+{{- end -}}
