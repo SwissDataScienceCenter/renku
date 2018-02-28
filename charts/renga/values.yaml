@@ -35,6 +35,7 @@ ingress:
     # kubernetes.io/tls-acme: "true"
   hosts:
   - localhost
+  - renga-staging-renga-keycloak
   tls: []
   #  - secretName: chart-example-tls
   #    hosts:

@@ -62,13 +62,13 @@ spec:
             # manually run: gitlab-ctl pg-upgrade
             # FIXME change from postgres to gitlab
             # TODO need to run gitlab-rake gitlab:setup for external db
-            #gitlab_rails['db_username'] = 'postgres'
-            #gitlab_rails['db_password'] = 'postgres'
-            #gitlab_rails['db_host'] = 'db'
-            #gitlab_rails['db_port'] = 5432
-            #gitlab_rails['db_database'] = 'gitlab'
-            #gitlab_rails['db_adapter'] = 'postgresql'
-            #gitlab_rails['db_encoding'] = 'utf8'
+            gitlab_rails['db_username'] = '{{ .Values.global.gitlab.postgresUser }}'
+            gitlab_rails['db_password'] = '{{ .Values.global.gitlab.postgresPassword }}'
+            gitlab_rails['db_host'] = '{{ template "postgresql.fullname" .}}'
+            gitlab_rails['db_port'] = 5432
+            gitlab_rails['db_database'] = '{{ .Values.global.gitlab.postgresDatabase }}'
+            gitlab_rails['db_adapter'] = 'postgresql'
+            gitlab_rails['db_encoding'] = 'utf8'
             gitlab_rails['omniauth_enabled'] = true
             gitlab_rails['omniauth_allow_single_sign_on'] = ['oauth2_generic']
             gitlab_rails['omniauth_block_auto_created_users'] = false
@@ -83,7 +83,7 @@ spec:
                     # CAREFUL: This must be accessible from inside the keycloak container
                     # for server-to-server communication.
                     # Use docker.for.mac.localhost as RENGA_ENDPOINT for example.
-                    'site' => 'http://localhost/keycloak',
+                    'site' => 'http://{{ template "keycloak.fullname" .}}/auth/',
                     'authorize_url' => '/auth/realms/Renga/protocol/openid-connect/auth',
                     'user_info_url' => '/auth/realms/Renga/protocol/openid-connect/userinfo',
                     'token_url' => '/auth/realms/Renga/protocol/openid-connect/token'
