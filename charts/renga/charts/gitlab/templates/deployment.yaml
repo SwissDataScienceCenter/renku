@@ -24,11 +24,11 @@ spec:
         image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
         imagePullPolicy: {{ .Values.image.pullPolicy }}
         env:
-        - name: GITLAB_ROOT_PASSWORD
-          valueFrom:
-            secretKeyRef:
-              name: {{ template "gitlab.fullname" . }}
-              key: gitlab-password
+        # - name: GITLAB_ROOT_PASSWORD
+        #   valueFrom:
+        #     secretKeyRef:
+        #       name: {{ template "gitlab.fullname" . }}
+        #       key: gitlab-password
         # - name: GITLAB_SECRETS_DB_KEY_BASE
         #   value: "long-and-random-alpha-numeric-string"
         # - name: GITLAB_SECRETS_SECRET_KEY_BASE
@@ -52,11 +52,13 @@ spec:
         #       key: postgres-password
         # - name: REDIS_HOST
         #   value: "{{ template "redis.fullname" . }}"
+        - name: RENGA_DOMAIN
+          value: {{ .Values.global.renga.domain }}
         - name: GITLAB_OMNIBUS_CONFIG
           value: |
             external_url 'http://{{ .Values.global.renga.domain }}/gitlab'
             # registry_external_url '${GITLAB_REGISTRY_URL}'
-            # postgresql['enable'] = false
+            # postgresql['enable'] = true
             # Enable or disable automatic database migrations
             # gitlab_rails['auto_migrate'] = false
             # manually run: gitlab-ctl pg-upgrade
@@ -100,6 +102,7 @@ spec:
             gitlab_rails['lfs_enabled'] = true
             gitlab_rails['lfs_storage_path'] = '/var/storage/lfs-objects'
             gitlab_rails['initial_root_password'] = 'root_password'
+            gitlab_rails['redis_host'] = "{{ template "redis.fullname" . }}"
             # Add any other gitlab.rb configuration here, each on its own line
         ports:
         - name: ssh
