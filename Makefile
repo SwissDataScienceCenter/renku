@@ -220,6 +220,9 @@ endif
 	done
 	@echo
 	@echo "[Info] Edit gitlab/runner/config.toml to increase the number of concurrent runner jobs."
+	@echo
+	@echo "[Info] To make notebooks available as deployed environments, set the"
+	@echo "		RENGA_NOTEBOOK_TOKEN and RENGA_REVIEW_DOMAIN CI variables in gitlab project settings."
 unregister-runners:
 	@for container in $(shell $(DOCKER_COMPOSE_ENV) docker-compose ps -q gitlab-runner) ; do \
 		docker exec -ti $$container gitlab-runner unregister \
