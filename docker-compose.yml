@@ -30,8 +30,6 @@ services:
     volumes:
       - ./services/postgres/docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d:ro
       - db-data:/pgdata
-    ports:
-      - 5432
     networks:
       - default
 
@@ -49,8 +47,6 @@ services:
       GITLAB_URL: ${GITLAB_URL}
       RENGA_UI_URL: ${RENGA_UI_URL}
       GITLAB_CLIENT_SECRET: ${GITLAB_CLIENT_SECRET}
-    ports:
-      - 8080
     command:
       - "-b 0.0.0.0"
       - "-Dkeycloak.migration.action=import"
@@ -102,9 +98,8 @@ services:
               client_options: {
                 # Traefik maps keycloak to the URL below
                 # CAREFUL: This must be accessible from inside the keycloak container
-                # for server-to-server communication.
-                # Use docker.for.mac.localhost as RENGA_ENDPOINT for example.
-                'site' => 'http://keycloak.${PLATFORM_DOMAIN}:8080/auth',
+                # for service-to-service communication.
+                'site' => 'http://{KEYCLOAK_URL}/auth',
                 'authorize_url' => '/auth/realms/Renga/protocol/openid-connect/auth',
                 'user_info_url' => '/auth/realms/Renga/protocol/openid-connect/userinfo',
                 'token_url' => '/auth/realms/Renga/protocol/openid-connect/token'
@@ -123,8 +118,6 @@ services:
         gitlab_rails['initial_root_password'] = 'root_password'
         # Add any other gitlab.rb configuration here, each on its own line
     ports:
-      - 80
-      - '5443:443'
       - '5022:22'
     volumes:
       - ./services/gitlab/config:/etc/gitlab
@@ -141,6 +134,9 @@ services:
       default:
         aliases:
           - gitlab.${PLATFORM_DOMAIN}
+      review:
+        aliases:
+          - gitlab.${PLATFORM_DOMAIN}
 
   gitlab-runner:
     image: ${DOCKER_PREFIX}gitlab-runner:${PLATFORM_VERSION}
@@ -155,6 +151,7 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
     networks:
       - default
+      - review
 
 #   storage:
 #     image: ${DOCKER_REPOSITORY}renga-storage:$PLATFORM_VERSION
@@ -178,13 +175,11 @@ services:
   ui:
     image: ${DOCKER_PREFIX}renga-ui:${PLATFORM_VERSION}
     restart: always
-    ports:
-      - 3000
     environment:
       GITLAB_URL: ${GITLAB_URL}
       RENGA_UI_URL: http://${PLATFORM_DOMAIN}
       RENGA_ENDPOINT: ${RENGA_ENDPOINT}
-      KEYCLOAK_URL: http://keycloak.${PLATFORM_DOMAIN}:8080
+      KEYCLOAK_URL: ${KEYCLOAK_URL}
     labels:
       traefik.enable: "true"
       traefik.frontend.rule: PathPrefix:/

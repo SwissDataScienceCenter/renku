@@ -45,9 +45,10 @@ DOCKER_NETWORK?=review
 DOCKER_COMPOSE_ENV=\
 	DOCKER_PREFIX=$(DOCKER_PREFIX) \
 	DOCKER_REPOSITORY=$(DOCKER_REPOSITORY) \
-	GITLAB_URL=$(GITLAB_URL) \
-	GITLAB_REGISTRY_URL=$(GITLAB_REGISTRY_URL) \
 	GITLAB_CLIENT_SECRET=$(GITLAB_CLIENT_SECRET) \
+	GITLAB_REGISTRY_URL=$(GITLAB_REGISTRY_URL) \
+	GITLAB_URL=$(GITLAB_URL) \
+	KEYCLOAK_URL=$(KEYCLOAK_URL) \
 	PLATFORM_DOMAIN=$(PLATFORM_DOMAIN) \
 	PLATFORM_VERSION=$(PLATFORM_VERSION) \
 	RENGA_ENDPOINT=$(RENGA_ENDPOINT) \
@@ -56,6 +57,11 @@ DOCKER_COMPOSE_ENV=\
 SBT_IVY_DIR := $(PWD)/.ivy
 SBT = sbt -ivy $(SBT_IVY_DIR)
 SBT_PUBLISH_TARGET = publish-local
+
+ifndef KEYCLOAK_URL
+	KEYCLOAK_URL=http://keycloak.$(PLATFORM_DOMAIN)
+	export KEYCLOAK_URL
+endif
 
 ifndef RENGA_ENDPOINT
 	RENGA_ENDPOINT=http://$(PLATFORM_DOMAIN)
@@ -204,6 +210,7 @@ endif
 			--run-untagged=false \
 			--tag-list notebook \
 			--docker-image $(DOCKER_PREFIX)renga-python:$(PLATFORM_VERSION) \
+			--docker-network-mode=review \
 			--docker-pull-policy "if-not-present"; \
 		docker exec -ti $$container gitlab-runner register \
 			-n -u $(GITLAB_URL) \
@@ -216,6 +223,7 @@ endif
 			--run-untagged=false \
 			--tag-list cwl \
 			--docker-image $(DOCKER_PREFIX)renga-python:$(PLATFORM_VERSION) \
+			--docker-network-mode=review \
 			--docker-pull-policy "if-not-present"; \
 	done
 	@echo
