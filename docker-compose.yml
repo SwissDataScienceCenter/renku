@@ -19,7 +19,6 @@
 version: '3'
 volumes:
   db-data: {}
-  cassandra-data: {}
 services:
   db:
     image: postgres:9.6
@@ -61,11 +60,15 @@ services:
     restart: on-failure
     labels:
       traefik.enable: "true"
-      traefik.frontend.rule: PathPrefix:/auth
+      traefik.frontend.rule: "Host:keycloak.${PLATFORM_DOMAIN}"
+      traefik.frontend.entryPoints: "service, http"
+      traefik.frontend.redirect.entryPoint: "service"
     depends_on:
       - db
     networks:
-      - default
+      default:
+        aliases:
+          - keycloak.${PLATFORM_DOMAIN}
 
   gitlab:
     image: gitlab/gitlab-ce:latest
@@ -101,7 +104,7 @@ services:
                 # CAREFUL: This must be accessible from inside the keycloak container
                 # for server-to-server communication.
                 # Use docker.for.mac.localhost as RENGA_ENDPOINT for example.
-                'site' => '${RENGA_ENDPOINT}/auth/',
+                'site' => 'http://keycloak.${PLATFORM_DOMAIN}:8080/auth',
                 'authorize_url' => '/auth/realms/Renga/protocol/openid-connect/auth',
                 'user_info_url' => '/auth/realms/Renga/protocol/openid-connect/userinfo',
                 'token_url' => '/auth/realms/Renga/protocol/openid-connect/token'
@@ -120,7 +123,7 @@ services:
         gitlab_rails['initial_root_password'] = 'root_password'
         # Add any other gitlab.rb configuration here, each on its own line
     ports:
-      - '5080:5080'
+      - 80
       - '5443:443'
       - '5022:22'
     volumes:
@@ -130,17 +133,22 @@ services:
       - ./services/gitlab/lfs-data:/var/storage/lfs-objects
     depends_on:
       - db
-      - keycloak
+    labels:
+      traefik.enable: "true"
+      traefik.frontend.rule: Host:gitlab.${PLATFORM_DOMAIN}
+      traefik.port: '80'
     networks:
-      - default
+      default:
+        aliases:
+          - gitlab.${PLATFORM_DOMAIN}
 
   gitlab-runner:
     image: ${DOCKER_PREFIX}gitlab-runner:${PLATFORM_VERSION}
     environment:
-      RENGA_OIC_URL: ${RENGA_ENDPOINT}/auth/realms/Renga/,
+      RENGA_OIC_URL: ${RENGA_ENDPOINT}/auth/realms/Renga/
       RENGA_OIC_CLIENT_ID: demo-client
       RENGA_RUNNER_IMAGE: ${DOCKER_PREFIX}minimal-notebook:${PLATFORM_VERSION}
-      RENGA_REVIEW_DOMAIN: ${PLATFORM_DOMAIN}:8080
+      RENGA_REVIEW_DOMAIN: ${PLATFORM_DOMAIN}
     restart: always
     volumes:
       - ./services/gitlab/runner:/etc/gitlab-runner
@@ -171,14 +179,18 @@ services:
     image: ${DOCKER_PREFIX}renga-ui:${PLATFORM_VERSION}
     restart: always
     ports:
-      - 5000:3000
+      - 3000
     environment:
       GITLAB_URL: ${GITLAB_URL}
-      RENGA_UI_URL: ${RENGA_UI_URL}
+      RENGA_UI_URL: http://${PLATFORM_DOMAIN}
       RENGA_ENDPOINT: ${RENGA_ENDPOINT}
+      KEYCLOAK_URL: http://keycloak.${PLATFORM_DOMAIN}:8080
     labels:
       traefik.enable: "true"
       traefik.frontend.rule: PathPrefix:/
+      traefik.frontend.passHostHeader: "false"
+    networks:
+      - default
 
   reverse-proxy:
     image: traefik
@@ -188,6 +200,7 @@ services:
       --defaultentrypoints=http,https \
       --entrypoints='Name:http Address::80' \
       --entrypoints='Name:https Address::443 TLS:/ssl/test.crt,/ssl/test.key' \
+      --entrypoints='Name:service Address::8080' \
       --docker.exposedbydefault=false
     # FIXME usage of self signed certs --entrypoints='Name:http Address::80 Redirect.EntryPoint:https' \
     ports:
