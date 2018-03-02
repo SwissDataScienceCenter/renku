@@ -203,7 +203,7 @@ endif
 			-r ${RUNNER_TOKEN} \
 			--executor shell \
 			--env RENGA_REVIEW_DOMAIN=$(PLATFORM_DOMAIN) \
-			--env RENGA_REVIEW_NETWORK=$(DOCKER_NETWORK) \
+			--env RENGA_RUNNER_NETWORK=$(DOCKER_NETWORK) \
 			--locked=false \
 			--run-untagged=false \
 			--tag-list notebook \
@@ -215,7 +215,7 @@ endif
 			-r ${RUNNER_TOKEN} \
 			--executor docker \
 			--env RENGA_REVIEW_DOMAIN=$(PLATFORM_DOMAIN) \
-			--env RENGA_REVIEW_NETWORK=$(DOCKER_NETWORK) \
+			--env RENGA_RUNNER_NETWORK=$(DOCKER_NETWORK) \
 			--locked=false \
 			--run-untagged=false \
 			--tag-list cwl \
