@@ -19,7 +19,10 @@
 version: '3'
 volumes:
   db-data: {}
-  cassandra-data: {}
+  gitlab-config: {}
+  gitlab-logs: {}
+  gitlab-data: {}
+  gitlab-runner-data: {}
 services:
   db:
     image: postgres:9.6
@@ -124,10 +127,10 @@ services:
       - '5443:443'
       - '5022:22'
     volumes:
-      - ./services/gitlab/config:/etc/gitlab
-      - ./services/gitlab/logs:/var/log/gitlab
-      - ./services/gitlab/git-data:/var/opt/gitlab
-      - ./services/gitlab/lfs-data:/var/storage/lfs-objects
+      - gitlab-config:/etc/gitlab
+      - gitlab-logs:/var/log/gitlab
+      - gitlab-data:/var/opt/gitlab
+      - ./services/gitlab/lfs-data:/var/storage/lfs-objects # TODO: REMOVE ME
     depends_on:
       - db
       - keycloak
@@ -143,7 +146,7 @@ services:
       RENGA_REVIEW_DOMAIN: ${PLATFORM_DOMAIN}:8080
     restart: always
     volumes:
-      - ./services/gitlab/runner:/etc/gitlab-runner
+      - gitlab-runner-data:/etc/gitlab-runner
       - /var/run/docker.sock:/var/run/docker.sock
     networks:
       - default
@@ -198,7 +201,7 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - /dev/null:/traefik.toml
-      - ./services/traefik/ssl/:/ssl/
+      - ./services/traefik/ssl/:/ssl/:ro
     networks:
       - default
       - review
