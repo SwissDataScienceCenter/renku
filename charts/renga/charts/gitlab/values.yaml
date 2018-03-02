@@ -11,6 +11,28 @@ service:
   type: ClusterIP
   port: 80
 
+persistence:
+  enabled: true
+
+  ## A manually managed Persistent Volume and Claim
+  ## Requires persistence.enabled: true
+  ## If defined, PVC must be created manually before volume will be bound
+  # existingClaim:
+
+  # storageClass: "-"
+  accessMode: ReadWriteOnce
+  size: 30Gi
+
+  gitlab-data:
+    subPath: data
+    mountPath: /var/opt/gitlab
+  gitlab-config:
+    subPath: config
+    mountPath: /var/log/gitlab
+  gitlab-logs:
+    subPath: logs
+    mountPath: /etc/gitlab
+
 resources: {}
   # We usually recommend not to specify default resources and to leave this as a conscious
   # choice for the user. This also increases chances charts run on environments with little
