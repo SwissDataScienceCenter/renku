@@ -14,6 +14,8 @@ postgresql:
 gitlab:
   password: gitlabadmin
   hostname: localhost
+  persistence:
+    size: 30Gi
 
 global:
   keycloak:

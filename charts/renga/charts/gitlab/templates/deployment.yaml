@@ -133,6 +133,18 @@ spec:
           failureThreshold: 3
         resources:
 {{ toYaml .Values.resources | indent 10 }}
+        volumeMounts:
+        - name: gitlab-persistence
+          mountPath: {{ .Values.persistence.mountPath }}
+          subPath: {{ .Values.persistence.subPath }}
+      volumes:
+      - name: gitlab-persistence
+      {{- if .Values.persistence.enabled }}
+        persistentVolumeClaim:
+          claimName: {{ .Values.persistence.existingClaim | default (include "gitlab.fullname" .) }}
+      {{- else }}
+        emptyDir: {}
+      {{- end }}
     {{- with .Values.nodeSelector }}
       nodeSelector:
 {{ toYaml . | indent 8 }}
