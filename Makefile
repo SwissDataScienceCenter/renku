@@ -77,6 +77,11 @@ ifndef GITLAB_CLIENT_SECRET
 	export GITLAB_CLIENT_SECRET
 endif
 
+ifndef GITLAB_TOKEN
+	GITLAB_TOKEN=dummy-secret
+	export GITLAB_TOKEN
+endif
+
 define DOCKER_BUILD
 set version in Docker := "$(PLATFORM_VERSION)"
 set dockerRepository := Option("$(DOCKER_REPOSITORY)".replaceAll("/$$", ""))
@@ -187,6 +192,16 @@ unregister-gitlab-oauth-applications:
 		-h /var/opt/gitlab/postgresql -d gitlabhq_production \
 		-c "DELETE FROM oauth_applications WHERE uid='renga-ui'"
 
+register-gitlab-user-token: unregister-gitlab-user-token
+	@$(DOCKER_COMPOSE_ENV) docker-compose exec gitlab /opt/gitlab/bin/gitlab-psql \
+		-h /var/opt/gitlab/postgresql -d gitlabhq_production \
+		-c "INSERT INTO personal_access_tokens ( id, user_id, token, name, revoked, expires_at, created_at, updated_at, scopes, impersonation) VALUES ( '1', '1', '$(GITLAB_TOKEN)', 'storage token', 'f', NULL, '2018-02-26 10:46:16.602039', '2018-02-26 10:46:16.602039', E'--- \n- api\n- read_user\n- sudo\n- read_registry', 'f');"
+
+unregister-gitlab-user-token:
+	@$(DOCKER_COMPOSE_ENV) docker-compose exec gitlab /opt/gitlab/bin/gitlab-psql \
+		-h /var/opt/gitlab/postgresql -d gitlabhq_production \
+		-c "DELETE FROM personal_access_tokens WHERE id='1'"
+
 register-runners: unregister-runners
 ifeq (${RUNNER_TOKEN},)
 	@echo "[Error] RUNNER_TOKEN needs to be configured. Check $(GITLAB_URL)/admin/runners"
@@ -230,7 +245,7 @@ unregister-runners:
 
 # Platform actions
 .PHONY: start stop restart test clean wipe
-start: docker-network $(GITLAB_DIRS:%=services/gitlab/%) unregister-runners docker-compose-up register-gitlab-oauth-applications
+start: docker-network $(GITLAB_DIRS:%=services/gitlab/%) unregister-runners docker-compose-up register-gitlab-oauth-applications register-gitlab-user-token
 ifeq (${GITLAB_CLIENT_SECRET}, dummy-secret)
 	@echo
 	@echo "[Warning] You have not defined a GITLAB_CLIENT_SECRET. Using dummy"
@@ -247,7 +262,7 @@ ifeq (${DOCKER_SCALE},)
 	@echo "[Info] You can configure scale parameters: DOCKER_SCALE=\"--scale gitlab-runner=4\" make start"
 endif
 
-stop: remove-docker-network unregister-runners unregister-gitlab-oauth-applications
+stop: remove-docker-network unregister-runners unregister-gitlab-oauth-applications unregister-gitlab-user-token
 	$(DOCKER_COMPOSE_ENV) docker-compose stop
 
 restart: stop start

@@ -159,7 +159,7 @@ services:
       STORAGE_BACKEND_GITLAB_ENABLED: "true"
       GITLAB_URL: "http://gitlab:5080"
       GITLAB_USER: "root"
-      GITLAB_PASS: "yr_s-AwLzQUD6dU5v7zG"
+      GITLAB_PASS: $GITLAB_TOKEN
     volumes:
       - ./services/storage/data:/data
     ports:
