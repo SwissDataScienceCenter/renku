@@ -135,8 +135,14 @@ spec:
 {{ toYaml .Values.resources | indent 10 }}
         volumeMounts:
         - name: gitlab-persistence
-          mountPath: {{ .Values.persistence.mountPath }}
-          subPath: {{ .Values.persistence.subPath }}
+          mountPath: {{ .Values.persistence.gitlab_data.mountPath }}
+          subPath: {{ .Values.persistence.gitlab_data.subPath }}
+        - name: gitlab-persistence
+          mountPath: {{ .Values.persistence.gitlab_config.mountPath }}
+          subPath: {{ .Values.persistence.gitlab_config.subPath }}
+        - name: gitlab-persistence
+          mountPath: {{ .Values.persistence.gitlab_logs.mountPath }}
+          subPath: {{ .Values.persistence.gitlab_logs.subPath }}
       volumes:
       - name: gitlab-persistence
       {{- if .Values.persistence.enabled }}

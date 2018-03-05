@@ -23,13 +23,13 @@ persistence:
   accessMode: ReadWriteOnce
   size: 30Gi
 
-  gitlab-data:
+  gitlab_data:
     subPath: data
     mountPath: /var/opt/gitlab
-  gitlab-config:
+  gitlab_config:
     subPath: config
     mountPath: /var/log/gitlab
-  gitlab-logs:
+  gitlab_logs:
     subPath: logs
     mountPath: /etc/gitlab
 
