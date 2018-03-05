@@ -23,15 +23,15 @@ persistence:
   accessMode: ReadWriteOnce
   size: 30Gi
 
-  gitlab-data:
+  gitlab_data:
     subPath: data
     mountPath: /var/opt/gitlab
-  gitlab-config:
+  gitlab_config:
     subPath: config
-    mountPath: /var/log/gitlab
-  gitlab-logs:
-    subPath: logs
     mountPath: /etc/gitlab
+  gitlab_logs:
+    subPath: logs
+    mountPath: /var/log/gitlab
 
 resources: {}
   # We usually recommend not to specify default resources and to leave this as a conscious

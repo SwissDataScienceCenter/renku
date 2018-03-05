@@ -18,7 +18,27 @@ spec:
       labels:
         app: {{ template "ui.name" . }}
         release: {{ .Release.Name }}
+      annotations:
+        checksum/config: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
     spec:
+      initContainers:
+        - name: {{ .Chart.Name }}-init
+          image: postgres:9.6
+          command: ['sh', '/scripts/init.sh']
+          volumeMounts:
+          - name: init
+            mountPath: /scripts
+            readOnly: true
+          env:
+          - name: POSTGRES_DATABASE
+            value: {{ .Values.global.gitlab.postgresDatabase }}
+          - name: POSTGRES_USER
+            value: {{ .Values.global.gitlab.postgresUser }}
+          - name: PGPASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: {{ template "gitlab.fullname" . }}
+                key: postgres-password
       containers:
         - name: {{ .Chart.Name }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
@@ -44,6 +64,11 @@ spec:
               port: http
           resources:
 {{ toYaml .Values.resources | indent 12 }}
+      volumes:
+        - name: init
+          configMap:
+            name: {{ template "ui.fullname" . }}-init
+          defaultMode: 0777
     {{- with .Values.nodeSelector }}
       nodeSelector:
 {{ toYaml . | indent 8 }}
