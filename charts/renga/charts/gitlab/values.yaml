@@ -28,10 +28,10 @@ persistence:
     mountPath: /var/opt/gitlab
   gitlab_config:
     subPath: config
-    mountPath: /var/log/gitlab
+    mountPath: /etc/gitlab
   gitlab_logs:
     subPath: logs
-    mountPath: /etc/gitlab
+    mountPath: /var/log/gitlab
 
 resources: {}
   # We usually recommend not to specify default resources and to leave this as a conscious
