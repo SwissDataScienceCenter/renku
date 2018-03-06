@@ -10,35 +10,31 @@ Requires minikube, kubectl and helm.
 
     $ minikube start
     $ helm init
-    $ helm install --name nginx-ingress --namespace kube-system stable/nginx-ingress
-    $ helm install --name renga-staging --namespace renga renga
+    $ helm install --name nginx-ingress --namespace kube-system stable/nginx-ingress --set 'controller.hostNetwork=true'
+    $ helm install --name renga-staging --namespace renga renga \
+        --set 'ingress.enabled=true' \
+        --set 'ingress.annotations.kubernetes\.io/ingress\.class=nginx' \
+        --set 'ingress.hosts={renga-minikube}' \
+        --set 'global.renga.domain=renga-minikube' \
+        --set 'externalName.enabled=true' \
+        --set 'externalName.target=nginx-ingress-controller.kube-system.svc.cluster.local'
 
-In order to authenticate the UI client with gitlab and keycloak, we need
-to register it as an application in the gitlab database. Make sure that gitlab
-is up and running:
+As seen in the install above, we expose renga through the name :code:`renga-minikube`.
+We need to make this name available to the host:
 
 .. code-block:: console
 
-    $ helm status renga-staging
+    $ minikube status
+    > minikube: Running
+    > cluster: Running
+    > kubectl: Correctly Configured: pointing to minikube-vm at <ip-adress>
+    $ sudo bash -c 'echo "<ip-adress> renga-minikube" >> /etc/hosts'
 
-In the output, find the postgres pod and do:
+The platform takes some time to start, to check the pods status do:
 
 .. code-block:: console
 
-    $ kubectl exec -ti -n renga <gitlab-pod>
-    $ psql -h renga-staging-renga-postgresql --user gitlab \
-        -d gitlabhq_production -c "INSERT INTO oauth_applications (name, uid, scopes, redirect_uri, secret, trusted) VALUES ('renga-ui', 'renga-ui', 'api read_user', '${RENGA_DOMAIN}/login/redirect/gitlab', 'no-secret-needed', 'true')"
+    $ kubectl -n renga get po --watch
 
-To access the deployed services, first get the ingress pod:
-
-.. code:: console
-
-    $ kubectl -n kube-system get po
-
-Find the nginx-ingress-controller pod, then port forward to it (sudo for access to port 80):
-
-.. code:: console
-
-    $ sudo kubectl -n kube-system port-forward nginx-ingress-controller-[...] 80
-
-Now, we can go to: http://localhost
+and wait until all pods are running.
+Now, we can go to: http://renga-minikube

@@ -49,11 +49,13 @@ spec:
               protocol: TCP
           env:
             - name: GITLAB_URL
-              value: "http://{{ .Values.global.renga.domain }}/gitlab"
+              value: "{{ template "http" . }}://{{ .Values.global.renga.domain }}/gitlab"
             - name: RENGA_UI_URL
-              value: "http://{{ .Values.global.renga.domain }}"
+              value: "{{ template "http" . }}://{{ .Values.global.renga.domain }}"
             - name: RENGA_ENDPOINT
-              value: "http://{{ .Values.global.renga.domain }}"
+              value: "{{ template "http" . }}://{{ .Values.global.renga.domain }}"
+            - name: KEYCLOAK_URL
+              value: "{{ template "http" . }}://{{ .Values.global.renga.domain }}"
           livenessProbe:
             httpGet:
               path: /
