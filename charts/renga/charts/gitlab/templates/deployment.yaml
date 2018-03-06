@@ -18,64 +18,35 @@ spec:
       labels:
         app: {{ template "gitlab.name" . }}
         release: {{ .Release.Name }}
+      annotations:
+        checksum/config: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
     spec:
       containers:
       - name: {{ .Chart.Name }}
         image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
         imagePullPolicy: {{ .Values.image.pullPolicy }}
         env:
+        - name: POSTGRES_DATABASE
+          value: {{ .Values.global.gitlab.postgresDatabase }}
+        - name: POSTGRES_USER
+          value: {{ .Values.global.gitlab.postgresUser }}
+        - name: PGPASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: {{ template "gitlab.fullname" . }}
+              key: postgres-password
+        - name: GITLAB_CLIENT_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: {{ template "gitlab.fullname" . }}
+              key: gitlab-client-secret
+        - name: GITLAB_ROOT_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: {{ template "gitlab.fullname" . }}
+              key: root-password
         - name: RENGA_DOMAIN
           value: {{ .Values.global.renga.domain }}
-        - name: GITLAB_OMNIBUS_CONFIG
-          value: |
-            external_url '{{ template "http" . }}://{{ .Values.global.renga.domain }}/gitlab'
-            nginx['listen_port'] = 80
-            nginx['listen_https'] = false
-            # registry_external_url '${GITLAB_REGISTRY_URL}'
-            # postgresql['enable'] = true
-            # Enable or disable automatic database migrations
-            # gitlab_rails['auto_migrate'] = false
-            # manually run: gitlab-ctl pg-upgrade
-            # FIXME change from postgres to gitlab
-            # TODO need to run gitlab-rake gitlab:setup for external db
-            gitlab_rails['db_username'] = '{{ .Values.global.gitlab.postgresUser }}'
-            gitlab_rails['db_password'] = '{{ .Values.global.gitlab.postgresPassword }}'
-            gitlab_rails['db_host'] = '{{ template "postgresql.fullname" .}}'
-            gitlab_rails['db_port'] = 5432
-            gitlab_rails['db_database'] = '{{ .Values.global.gitlab.postgresDatabase }}'
-            gitlab_rails['db_adapter'] = 'postgresql'
-            gitlab_rails['db_encoding'] = 'utf8'
-            gitlab_rails['omniauth_enabled'] = true
-            gitlab_rails['omniauth_allow_single_sign_on'] = ['oauth2_generic']
-            gitlab_rails['omniauth_block_auto_created_users'] = false
-            gitlab_rails['omniauth_providers'] = [
-              {
-                'name' => 'oauth2_generic',
-                'app_id' => 'gitlab',
-                'app_secret' => 'dummy-secret',
-                'args' => {
-                  client_options: {
-                    # CAREFUL: This must be accessible from both ouside k8s and inside the keycloak container
-                    'site' => '{{ template "http" . }}://{{ .Values.global.renga.domain }}/auth/',
-                    'authorize_url' => '/auth/realms/Renga/protocol/openid-connect/auth',
-                    'user_info_url' => '/auth/realms/Renga/protocol/openid-connect/userinfo',
-                    'token_url' => '/auth/realms/Renga/protocol/openid-connect/token'
-                  },
-                  user_response_structure: {
-                    attributes: { email:'email', first_name:'given_name', last_name:'family_name', name:'name', nickname:'preferred_username' }, # if the nickname attribute of a user is called 'username'
-                    id_path: 'preferred_username'
-                  }
-                },
-                label: 'Renga Login'
-              }
-            ]
-            gitlab_rails['gitlab_shell_ssh_port'] = 5022
-            gitlab_rails['lfs_enabled'] = true
-            gitlab_rails['lfs_storage_path'] = '/var/storage/lfs-objects'
-            gitlab_rails['initial_root_password'] = 'root_password'
-            gitlab_rails['redis_host'] = "{{ template "redis.fullname" . }}"
-            # Add any other gitlab.rb configuration here, each on its own line
-            prometheus['enable'] = false
         ports:
         - name: ssh
           containerPort: 22
@@ -106,23 +77,30 @@ spec:
         resources:
 {{ toYaml .Values.resources | indent 10 }}
         volumeMounts:
-        - name: gitlab-persistence
-          mountPath: {{ .Values.persistence.gitlab_data.mountPath }}
-          subPath: {{ .Values.persistence.gitlab_data.subPath }}
-        - name: gitlab-persistence
-          mountPath: {{ .Values.persistence.gitlab_config.mountPath }}
-          subPath: {{ .Values.persistence.gitlab_config.subPath }}
-        - name: gitlab-persistence
-          mountPath: {{ .Values.persistence.gitlab_logs.mountPath }}
-          subPath: {{ .Values.persistence.gitlab_logs.subPath }}
+          - name: gitlab-persistence
+            mountPath: {{ .Values.persistence.gitlab_data.mountPath }}
+            subPath: {{ .Values.persistence.gitlab_data.subPath }}
+          - name: gitlab-persistence
+            mountPath: {{ .Values.persistence.gitlab_config.mountPath }}
+            subPath: {{ .Values.persistence.gitlab_config.subPath }}
+          - name: gitlab-persistence
+            mountPath: {{ .Values.persistence.gitlab_logs.mountPath }}
+            subPath: {{ .Values.persistence.gitlab_logs.subPath }}
+          - name: config
+            mountPath: /etc/gitlab/gitlab.rb
+            subPath: gitlab.rb
       volumes:
-      - name: gitlab-persistence
-      {{- if .Values.persistence.enabled }}
-        persistentVolumeClaim:
-          claimName: {{ .Values.persistence.existingClaim | default (include "gitlab.fullname" .) }}
-      {{- else }}
-        emptyDir: {}
-      {{- end }}
+        - name: gitlab-persistence
+        {{- if .Values.persistence.enabled }}
+          persistentVolumeClaim:
+            claimName: {{ .Values.persistence.existingClaim | default (include "gitlab.fullname" .) }}
+        {{- else }}
+          emptyDir: {}
+        {{- end }}
+        - name: config
+          configMap:
+            name: {{ template "gitlab.fullname" . }}-config
+
     {{- with .Values.nodeSelector }}
       nodeSelector:
 {{ toYaml . | indent 8 }}

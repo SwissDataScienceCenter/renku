@@ -492,7 +492,7 @@ TODO: Put back template strings from renga/services/keycloak/renga-realm.json.tp
     "surrogateAuthRequired": false,
     "enabled": true,
     "clientAuthenticatorType": "client-secret",
-    "secret": "dummy-secret",
+    "secret": "{{ .Values.global.gitlab.clientSecret }}",
     "redirectUris": [
       "{{ template "http" . }}://{{ .Values.global.renga.domain }}/gitlab/users/auth/oauth2_generic/callback"
     ],
