@@ -14,7 +14,7 @@ data:
     apt-get update -y
     apt-get install -y curl
 
-    until sleep 1; curl --retry-max-time 1 http://{{ template "gitlab.fullname" . }}/help; do
+    until sleep 5; curl --retry-max-time 1 http://{{ template "gitlab.fullname" . }}/help; do
         echo waiting for gitlab
     done
 

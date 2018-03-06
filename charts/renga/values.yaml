@@ -26,6 +26,8 @@ global:
     postgresDatabase: gitlabhq_production
     postgresUser: gitlab
     postgresPassword: gitlab
+    clientSecret: open_secret
+    rootPassword: root_password
 
   renga:
     domain: example.local
