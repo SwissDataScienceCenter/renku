@@ -59,7 +59,7 @@ SBT = sbt -ivy $(SBT_IVY_DIR)
 SBT_PUBLISH_TARGET = publish-local
 
 ifndef KEYCLOAK_URL
-	KEYCLOAK_URL=http://keycloak.$(PLATFORM_DOMAIN)
+	KEYCLOAK_URL=http://keycloak.$(PLATFORM_DOMAIN):8080
 	export KEYCLOAK_URL
 endif
 

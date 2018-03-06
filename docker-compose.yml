@@ -99,7 +99,7 @@ services:
                 # Traefik maps keycloak to the URL below
                 # CAREFUL: This must be accessible from inside the keycloak container
                 # for service-to-service communication.
-                'site' => 'http://{KEYCLOAK_URL}/auth',
+                'site' => '${KEYCLOAK_URL}/auth',
                 'authorize_url' => '/auth/realms/Renga/protocol/openid-connect/auth',
                 'user_info_url' => '/auth/realms/Renga/protocol/openid-connect/userinfo',
                 'token_url' => '/auth/realms/Renga/protocol/openid-connect/token'
