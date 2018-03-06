@@ -1,0 +1,15 @@
+{{- if .Values.externalName.enabled -}}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.global.renga.domain }}
+  labels:
+    app: {{ template "renga.name" . }}
+    chart: {{ template "renga.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  type: ExternalName
+  externalName: {{ .Values.externalName.target }}
+{{- end }}

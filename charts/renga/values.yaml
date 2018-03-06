@@ -13,7 +13,6 @@ postgresql:
 
 gitlab:
   password: gitlabadmin
-  hostname: localhost
   persistence:
     size: 30Gi
 
@@ -28,16 +27,19 @@ global:
     postgresPassword: gitlab
 
   renga:
-    domain: localhost
+    domain: example.local
+
+externalName:
+  enabled: false
+  target: example.local
 
 ingress:
-  enabled: true
+  enabled: false
   annotations:
     kubernetes.io/ingress.class: nginx
     # kubernetes.io/tls-acme: "true"
   hosts:
-  - localhost
-  - renga-staging-renga-keycloak
+  - example.local
   tls: []
   #  - secretName: chart-example-tls
   #    hosts:

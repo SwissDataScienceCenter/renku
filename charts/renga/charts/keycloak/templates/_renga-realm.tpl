@@ -357,16 +357,16 @@ TODO: Put back template strings from renga/services/keycloak/renga-realm.json.tp
     "id": "4622f33f-e0ca-401f-b6a5-a5e55f937ffb",
     "clientId": "renga-ui",
     "adminUrl": "",
-    "baseUrl": "http://localhost",
+    "baseUrl": "http://{{ .Values.global.renga.domain }}",
     "surrogateAuthRequired": false,
     "enabled": true,
     "clientAuthenticatorType": "client-secret",
     "secret": "no-secret-defined",
     "redirectUris": [
-      "http://localhost/*"
+      "http://{{ .Values.global.renga.domain }}/*"
     ],
     "webOrigins": [
-      "http://localhost"
+      "http://{{ .Values.global.renga.domain }}"
     ],
     "notBefore": 0,
     "bearerOnly": false,
@@ -488,13 +488,13 @@ TODO: Put back template strings from renga/services/keycloak/renga-realm.json.tp
   }, {
     "id": "0c9dab4c-ce06-44a7-ba4e-6ce969c5e5cb",
     "clientId": "gitlab",
-    "baseUrl": "http://localhost/gitlab",
+    "baseUrl": "http://{{ .Values.global.renga.domain }}/gitlab",
     "surrogateAuthRequired": false,
     "enabled": true,
     "clientAuthenticatorType": "client-secret",
     "secret": "dummy-secret",
     "redirectUris": [
-      "http://localhost/gitlab/users/auth/oauth2_generic/callback"
+      "http://{{ .Values.global.renga.domain }}/gitlab/users/auth/oauth2_generic/callback"
     ],
     "webOrigins": [],
     "notBefore": 0,
@@ -1031,8 +1031,8 @@ TODO: Put back template strings from renga/services/keycloak/renga-realm.json.tp
     "enabled" : true,
     "clientAuthenticatorType" : "client-secret",
     "secret" : "5294a18e-e784-4e39-a927-ce816c91c83e",
-    "redirectUris" : [ "http://localhost/*" ],
-    "webOrigins" : [ "http://localhost" ],
+    "redirectUris" : [ "http://{{ .Values.global.renga.domain }}/*" ],
+    "webOrigins" : [ "http://{{ .Values.global.renga.domain }}" ],
     "notBefore" : 0,
     "bearerOnly" : false,
     "consentRequired" : false,

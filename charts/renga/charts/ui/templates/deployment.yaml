@@ -54,6 +54,8 @@ spec:
               value: "http://{{ .Values.global.renga.domain }}"
             - name: RENGA_ENDPOINT
               value: "http://{{ .Values.global.renga.domain }}"
+            - name: KEYCLOAK_URL
+              value: "http://{{ .Values.global.renga.domain }}"
           livenessProbe:
             httpGet:
               path: /

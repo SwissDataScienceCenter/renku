@@ -24,34 +24,6 @@ spec:
         image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
         imagePullPolicy: {{ .Values.image.pullPolicy }}
         env:
-        # - name: GITLAB_ROOT_PASSWORD
-        #   valueFrom:
-        #     secretKeyRef:
-        #       name: {{ template "gitlab.fullname" . }}
-        #       key: gitlab-password
-        # - name: GITLAB_SECRETS_DB_KEY_BASE
-        #   value: "long-and-random-alpha-numeric-string"
-        # - name: GITLAB_SECRETS_SECRET_KEY_BASE
-        #   value: "long-and-random-alpha-numeric-string"
-        # - name: GITLAB_SECRETS_OTP_KEY_BASE
-        #   value: "long-and-random-alpha-numeric-string"
-        # - name: GITLAB_HOST
-        #   value: {{ .Values.hostname | default "localhost" }}
-        # - name: GITLAB_RELATIVE_URL_ROOT
-        #   value: /gitlab
-        # - name: DB_HOST
-        #   value: "{{ template "postgresql.fullname" . }}"
-        # - name: DB_NAME
-        #   value: {{ .Values.global.gitlab.postgresDatabase }}
-        # - name: DB_USER
-        #   value: {{ .Values.global.gitlab.postgresUser }}
-        # - name: DB_PASS
-        #   valueFrom:
-        #     secretKeyRef:
-        #       name: {{ template "gitlab.fullname" . }}
-        #       key: postgres-password
-        # - name: REDIS_HOST
-        #   value: "{{ template "redis.fullname" . }}"
         - name: RENGA_DOMAIN
           value: {{ .Values.global.renga.domain }}
         - name: GITLAB_OMNIBUS_CONFIG
@@ -81,11 +53,8 @@ spec:
                 'app_secret' => 'dummy-secret',
                 'args' => {
                   client_options: {
-                    # Traefik maps keycloak to the URL below
-                    # CAREFUL: This must be accessible from inside the keycloak container
-                    # for server-to-server communication.
-                    # Use docker.for.mac.localhost as RENGA_ENDPOINT for example.
-                    'site' => 'http://{{ template "keycloak.fullname" .}}/auth/',
+                    # CAREFUL: This must be accessible from both ouside k8s and inside the keycloak container
+                    'site' => 'http://{{ .Values.global.renga.domain }}/auth/',
                     'authorize_url' => '/auth/realms/Renga/protocol/openid-connect/auth',
                     'user_info_url' => '/auth/realms/Renga/protocol/openid-connect/userinfo',
                     'token_url' => '/auth/realms/Renga/protocol/openid-connect/token'
