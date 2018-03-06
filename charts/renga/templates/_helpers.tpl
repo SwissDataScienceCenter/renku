@@ -32,6 +32,17 @@ Create chart name and version as used by the chart label.
 {{- end -}}
 
 {{/*
+Define http scheme
+*/}}
+{{- define "http" -}}
+{{- if .Values.global.useHTTPS -}}
+https
+{{- else -}}
+http
+{{- end -}}
+{{- end -}}
+
+{{/*
 Define subcharts full names
 */}}
 {{- define "postgresql.fullname" -}}

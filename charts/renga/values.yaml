@@ -17,6 +17,7 @@ gitlab:
     size: 30Gi
 
 global:
+  useHTTPS: false
   keycloak:
     postgresDatabase: keycloak
     postgresUser: keycloak

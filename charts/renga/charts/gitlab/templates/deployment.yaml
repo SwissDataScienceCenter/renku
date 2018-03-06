@@ -28,7 +28,9 @@ spec:
           value: {{ .Values.global.renga.domain }}
         - name: GITLAB_OMNIBUS_CONFIG
           value: |
-            external_url 'http://{{ .Values.global.renga.domain }}/gitlab'
+            external_url '{{ template "http" . }}://{{ .Values.global.renga.domain }}/gitlab'
+            nginx['listen_port'] = 80
+            nginx['listen_https'] = false
             # registry_external_url '${GITLAB_REGISTRY_URL}'
             # postgresql['enable'] = true
             # Enable or disable automatic database migrations
@@ -54,7 +56,7 @@ spec:
                 'args' => {
                   client_options: {
                     # CAREFUL: This must be accessible from both ouside k8s and inside the keycloak container
-                    'site' => 'http://{{ .Values.global.renga.domain }}/auth/',
+                    'site' => '{{ template "http" . }}://{{ .Values.global.renga.domain }}/auth/',
                     'authorize_url' => '/auth/realms/Renga/protocol/openid-connect/auth',
                     'user_info_url' => '/auth/realms/Renga/protocol/openid-connect/userinfo',
                     'token_url' => '/auth/realms/Renga/protocol/openid-connect/token'
@@ -73,6 +75,7 @@ spec:
             gitlab_rails['initial_root_password'] = 'root_password'
             gitlab_rails['redis_host'] = "{{ template "redis.fullname" . }}"
             # Add any other gitlab.rb configuration here, each on its own line
+            prometheus['enable'] = false
         ports:
         - name: ssh
           containerPort: 22
