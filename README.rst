@@ -49,7 +49,7 @@ Starting the platform
 Please follow the output for next instructions.
 
 A python CLI and API client is available in the `renga-python
-<https://github.com/SwissDataScienceCenter/renga-python/tree/development>`_ package.
+<https://github.com/SwissDataScienceCenter/renga-python>`_ package.
 
 
 Where to go next
