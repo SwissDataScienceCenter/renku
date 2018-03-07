@@ -195,12 +195,12 @@ unregister-gitlab-oauth-applications:
 register-gitlab-user-token: unregister-gitlab-user-token
 	@$(DOCKER_COMPOSE_ENV) docker-compose exec gitlab /opt/gitlab/bin/gitlab-psql \
 		-h /var/opt/gitlab/postgresql -d gitlabhq_production \
-		-c "INSERT INTO personal_access_tokens ( id, user_id, token, name, revoked, expires_at, created_at, updated_at, scopes, impersonation) VALUES ( '1', '1', '$(GITLAB_TOKEN)', 'storage token', 'f', NULL, '2018-02-26 10:46:16.602039', '2018-02-26 10:46:16.602039', E'--- \n- api\n- read_user\n- sudo\n- read_registry', 'f');"
+		-c "INSERT INTO personal_access_tokens ( user_id, token, name, revoked, expires_at, created_at, updated_at, scopes, impersonation) VALUES ( '1', '$(GITLAB_TOKEN)', 'managed storage token', 'f', NULL, '2018-02-26 10:46:16.602039', '2018-02-26 10:46:16.602039', E'--- \n- api\n- read_user\n- sudo\n- read_registry', 'f');"
 
 unregister-gitlab-user-token:
 	@$(DOCKER_COMPOSE_ENV) docker-compose exec gitlab /opt/gitlab/bin/gitlab-psql \
 		-h /var/opt/gitlab/postgresql -d gitlabhq_production \
-		-c "DELETE FROM personal_access_tokens WHERE id='1'"
+		-c "DELETE FROM personal_access_tokens WHERE user_id='1' AND name='managed storage token';"
 
 register-runners: unregister-runners
 ifeq (${RUNNER_TOKEN},)
