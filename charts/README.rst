@@ -11,12 +11,8 @@ Requires minikube, kubectl and helm.
     $ minikube start
     $ helm init
     $ helm install --name nginx-ingress --namespace kube-system stable/nginx-ingress --set controller.hostNetwork=true
-    $ helm install --name renga-staging --namespace renga renga \
-        --set ingress.enabled=true \
-        --set ingress.annotations."kubernetes\.io/ingress\.class"=nginx \
-        --set ingress.annotations."nginx\.ingress\.kubernetes\.io/ssl-redirect"=false \
-        --set ingress.hosts={} \
-        --set global.renga.domain=$(minikube ip)
+    $ helm install --name renga-staging --namespace renga \
+        -f minikube-values.yaml --set global.renga.domain=$(minikube ip) renga
 
 The platform takes some time to start, to check the pods status do:
 
