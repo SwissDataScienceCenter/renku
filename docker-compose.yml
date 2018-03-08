@@ -160,6 +160,7 @@ services:
       GITLAB_URL: "http://gitlab:5080"
       GITLAB_USER: "root"
       GITLAB_PASS: $GITLAB_TOKEN
+      RENGA_STORAGE_DEFAULT_LFS_BACKEND: "local"
     volumes:
       - ./services/storage/data:/data
     ports:
