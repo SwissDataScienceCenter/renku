@@ -52,7 +52,7 @@ gitlab_rails['omniauth_providers'] = [
       }
     ]
 
-gitlab_rails['initial_root_password'] = ENV['GITLAB_ROOT_PASSWORD']
+gitlab_rails['initial_root_password'] = ENV['GITLAB_PASSWORD']
 
 ### GitLab database settings
 ###! Docs: https://docs.gitlab.com/omnibus/settings/database.html
