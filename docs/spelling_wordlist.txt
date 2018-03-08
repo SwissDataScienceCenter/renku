@@ -4,6 +4,7 @@ auditability
 auth
 backend
 backends
+blog
 coopetition
 deployer
 github

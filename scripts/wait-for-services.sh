@@ -17,6 +17,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+set -e
+
+# wait for containers to be up
 docker run \
     --network renga_default --rm \
     --link gitlab \
@@ -26,3 +29,20 @@ docker run \
     -e TARGETS=keycloak:8080,gitlab:80,ui:3000 \
     -e TIMEOUT=180 \
     waisbrot/wait
+
+# wait for services to become available
+URLS="${KEYCLOAK_URL}/auth ${GITLAB_URL}/help ${PLATFORM_DOMAIN}"
+
+for URL in $URLS
+do
+    TIMEOUT=1
+    until sleep 1; curl --retry-max-time 1 $URL > /dev/null 2>&1; do
+        if [ ! "$TIMEOUT" ]; then
+            TIMEOUT=`expr $TIMEOUT - 1`
+        else
+            echo "Failed to access $URL."
+            exit 1
+        fi
+    done
+done
+echo "All services are accessible."

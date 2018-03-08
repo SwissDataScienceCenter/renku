@@ -17,9 +17,11 @@
 # limitations under the License.
 """Test API speficification."""
 
+import pytest
 import requests
 
 
+@pytest.mark.skip(reason="no swagger spec atm")
 def test_swagger_paths():
     """Test obtaining paths for listed services."""
     response = requests.get('http://localhost/api/swagger.json')
