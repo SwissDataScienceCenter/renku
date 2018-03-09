@@ -215,6 +215,18 @@ services:
       - default
       - review
 
+  jupyterhub:
+    image: rengahub/jupyterhub:development
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./services/jupyterhub/jupyterhub_config.py:/srv/jupyterhub/jupyterhub_config.py
+    labels:
+      traefik.enable: "true"
+      traefik.frontend.rule: "Host:jupyterhub.${PLATFORM_DOMAIN}"
+    networks:
+      - default
+      - review
+
 networks:
   review:
     external: true
