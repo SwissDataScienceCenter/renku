@@ -16,7 +16,19 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+# Set $PLATFORM_DOMAIN to `hostname`, except on mac (docker.for.mac.localhost)
+
 PLATFORM_DOMAIN?=$(shell hostname)
+
+ifeq ($(OS),Windows_NT)
+    detected_OS := Windows
+else
+    detected_OS := $(shell sh -c 'uname -s 2>/dev/null || echo not')
+endif
+
+ifeq ($(detected_OS), Darwin)
+	PLATFORM_DOMAIN?=docker.for.mac.localhost
+endif
 
 PLATFORM_BASE_DIR?=..
 PLATFORM_BASE_REPO_URL?=https://github.com/SwissDataScienceCenter
