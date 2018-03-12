@@ -116,7 +116,7 @@ For the purpose of the tutorial, we will count the number of lines the words
 "science" and "renga" appear on in our `README` document by using standard
 UNIX commands `grep` and `wc`.
 
-First, get all occurences of "science" and "renga":
+First, get all occurrences of "science" and "renga":
 
 .. code-block:: console
 
@@ -129,7 +129,7 @@ Now, combine these intermediate outputs into our final calculation:
 
     $ renga wc readme_science readme_renga > wc.out
 
-For each of our invokations of `renga run`, Renga recorded the command we
+For each of our invocations of `renga run`, Renga recorded the command we
 executed into a `Common Workflow Language <http://www.commonwl.org/>`_ (CWL)
 step. Renga uses this information to keep track of the lineage of data. For
 example, we can see the full lineage of `wc.out` using the `renga log`
