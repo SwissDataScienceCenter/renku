@@ -8,17 +8,22 @@
 Welcome to Renga!
 =================
 
-**Renga** is a highly-scalable & secure open software platform designed to
-foster multidisciplinary data (science) collaboration across mutually
-untrusted academic and industrial institutions.
+.. note::
+
+  You are viewing the documentation of the `development` branch of Renga. This
+  branch is under very active development and no guarantees are made regarding
+  the completeness of these documentation pages.
+
+**Renga** is a scalable & secure open software platform designed to
+foster multidisciplinary data (science) collaboration.
 
 The platform allows (data)scientists to:
 
-* Securely manage, share and process large-scale data across untrusted parties
-  operating in a federated environment.
+* Capture complete lineage up to original raw data for detailed traceability,
+  auditability & reproducibility.
 
-* Automatically capture complete lineage up to original raw data for detailed
-  traceability, auditability & reproducibility.
+* Share their work and reuse the work of others as building blocks in their
+  own analyses
 
 .. toctree::
    :maxdepth: 2

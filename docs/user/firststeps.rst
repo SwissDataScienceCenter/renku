@@ -7,16 +7,13 @@ First Steps
     :description: First steps with Renga
     :keywords: hello world, first steps, starter, primer
 
-To try out Renga, you first need a platform to connect to: see
-:ref:`setup` for instructions on how to get one running on your own
-machine in a few minutes.
-
 Interaction with the platform takes place via the Python-based
 command-line interface (CLI) and the Python API. You can get both via pip:
 
 .. code-block:: console
 
-   $ pip install renga
+   $ pip install -e git+https://github.com/SwissDataScienceCenter/
+   renga-python.git@development#egg=renga
 
 .. note::
 
@@ -32,135 +29,129 @@ First, create a project directory:
 
 .. code-block:: console
 
-    $ mkdir -p ~/renga-projects/test-project
-    $ cd ~/renga-projects/test-project
+    $ mkdir -p ~/renga-projects/myproject
+    $ cd ~/renga-projects/myproject
 
-Set up your platform credentials (using the demo ``docker-compose``
-configuration, enter ``demo/demo`` for username/password:
-
-.. code-block:: console
-
-    $ renga login http://localhost
-    Username:
-    Password:
-    Access token has been stored in: ~/Library/Application Support/Renga/config.yml
-
-Register the project with the platform (note that the ``autosync`` option
-is mandatory for now):
+Initialize the project as a Renga project:
 
 .. code-block:: console
 
-    $ renga init --autosync
+    $ renga init
 
-Creating a project deployment
------------------------------
-
-Renga can be used to launch computational tasks that run inside docker
-containers. For this, you must first create an execution "context" which
-defines the task to be carried out. This is then followed by executing the
-context on one of the platform deployment engines.
-
-Create an execution context using a docker container:
+This command created a git repository for your project and an additional
+`.renga` sub-directory:
 
 .. code-block:: console
 
-    $ renga contexts create hello-world
-    14971456
+    $ tree -L 1 .renga
+    .renga
+    └── metadata.yml
 
-This creates a context - we can now run it on an engine:
+Create a dataset and import data
+--------------------------------
 
-.. code-block:: console
-
-    $ renga contexts run 14971456 docker
-    16d1491b
-
-To see all of your existing contexts:
+Creating datasets is useful to group pieces of data together for e.g. sharing
+or publication.
 
 .. code-block:: console
 
-    $ renga contexts list
-    ID               VERTEX_ID    IMAGE
-    ---------------  -----------  -----------
-    16d1491b         4168         hello-world
+    $ renga dataset create mydataset
+    $ tree data
+    data
+    └── mydataset
+        └── metadata.yml
 
-And the executions of this context:
-
-.. code-block:: console
-
-    $ renga executions list 14971456
-    ID          CONTEXT_ID   ENGINE    PORTS
-    ----------  -----------  --------  -------
-    16d1491b    14971456     docker    []
-
-
-Creating and populating a storage bucket
-----------------------------------------
-
-To create a storage bucket for this project:
+At this point, our dataset just consists of metadata in JSON-LD format:
 
 .. code-block:: console
 
-    $ renga io buckets create project-bucket
-    4272
-    $ renga io buckets list
-      ID  NAME                 BACKEND
-    ----  -------------------  ---------
-    4272  project-bucket       local
+    $ cat data/mydataset/metadata.yml
+    '@context':
+      added: http://schema.org/dateCreated
+      affiliation: scoro:affiliate
+      authors:
+        '@container': '@list'
+      created: http://schema.org/dateCreated
+      dcterms: http://purl.org/dc/terms/
+      dctypes: http://purl.org/dc/dcmitypes/
+      email: dcterms:email
+      files:
+        '@container': '@index'
+      foaf: http://xmlns.com/foaf/0.1/
+      identifier:
+        '@id': dctypes:Dataset
+        '@type': '@id'
+      name: dcterms:name
+      prov: http://www.w3.org/ns/prov#
+      scoro: http://purl.org/spar/scoro/
+      url: http://schema.org/url
+    '@type': dctypes:Dataset
+    authors:
+    - '@type': dcterms:creator
+      affiliation: null
+      email: roskarr@ethz.ch
+      name: Rok Roskar
+    created: 2018-03-11 22:23:02.409684
+    files: {}
+    identifier: ae503fdf-40ff-419b-8356-131747c22187
+    name: mydataset
 
-At this point, we have created a project, linked it to a storage bucket
-and a container deployment. However, our "hello-world" container did not
-really do much. A more interesting container to run is an interactive
-`jupyter notebook <http://jupyter.org>`_ and if we launch it using
-Renga, we can automatically link the creation of any derived data to
-our project:
+We can import data from a variety of sources: local directories, remote URLs,
+local or remote git repositories or other renga project. Here, we will import the
+`README` file of this repo from the web:
 
 .. code-block:: console
 
-    $ renga notebooks launch
-    beedcadb-4ae0-4678-ab02-9f567c866076
-    http://0.0.0.0:32956/?token=8514bb62
+    $ renga dataset add mydataset https://raw.githubusercontent.com/
+    SwissDataScienceCenter/renga-python/development/README.rst
 
-You can use this link to open the notebook in your browser - at any later
-point you can see your current notebooks with
+Until now, we have created a Renga project and populated it with a dataset and
+some data. Next, we will see how to use Renga to create a repeatable workflow.
+
+
+Running a reproducible analysis
+-------------------------------
+
+For the purpose of the tutorial, we will count the number of lines the words
+"science" and "renga" appear on in our `README` document by using standard
+UNIX commands `grep` and `wc`.
+
+First, get all occurences of "science" and "renga":
 
 .. code-block:: console
 
-    $ renga notebooks list
-        ENGINE    URL
-    --  --------  ------------------------------------
-     1  docker    http://0.0.0.0:32956/?token=8514bb62
+    $ renga run grep -i science data/mydataset/README.rst > readme_science
+    $ renga run grep -i renga data/mydataset/README.rst > readme_renga
 
-Once inside the notebook, start a new python notebook and install
-Renga:
+Now, combine these intermediate outputs into our final calculation:
 
-.. code-block:: ipython
+.. code-block:: console
 
-    In [1]: !pip install renga
+    $ renga wc readme_science readme_renga > wc.out
 
-Now we can import the Renga python API and interact with the platform:
+For each of our invokations of `renga run`, Renga recorded the command we
+executed into a `Common Workflow Language <http://www.commonwl.org/>`_ (CWL)
+step. Renga uses this information to keep track of the lineage of data. For
+example, we can see the full lineage of `wc.out` using the `renga log`
+command:
 
-.. code-block:: ipython
+.. code-block:: console
 
-    In [2]: import renga
-    In [3]: client = renga.from_env()
+    $ renga log wc.out
+    *  c53dbfa0 wc.out
+    *    c53dbfa0 .renga/workflow/80a3f98ede2346f6bc686200016b17d6_wc.cwl
+    |\
+    * |  18bb2c64 readme_science
+    * |  18bb2c64 .renga/workflow/edb4c0b1b4b44d2fb2aff45a8960f905_grep.cwl
+    | *  faa4f82a readme_renga
+    | *  faa4f82a .renga/workflow/3b454003c5884ee8b5b8a943665447fe_grep.cwl
+    |/
+    @  c7b5f922 data/mydataset/README.rst
 
-We can check that the bucket we created earlier for our project is
-available:
 
-.. code-block:: ipython
+This sequence represents the basic building blocks of a reproducible
+scientific analysis workflow enabled by Renga. Each component of the workflow
+we produced is bundled with rich metadata that allows us to continue to track
+its lineage and therefore to reuse it as a building block in other projects
+and workflows.
 
-    In [4]: for bucket in client.buckets.list():
-       ...:     print(bucket)
-    <Bucket 4272>
-
-And we can write data to a file stored within this bucket:
-
-.. code-block:: ipython
-
-    In [5]: with client.buckets[4272].files.open('sample-file', 'w') as fp:
-       ...:     fp.write('Renga enables collaborative data science!')
-
-This command created a new file, linked it to the running notebook, which
-in turn is linked to the project - we have begun to populate our project's
-knowledge graph. You can inspect the knowledge graph using the browser UI
-at http://localhost/ui/#/graph.
