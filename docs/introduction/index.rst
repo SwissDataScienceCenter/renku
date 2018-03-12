@@ -1,24 +1,19 @@
 .. warning::
 
-  **This is a beta version of Renga**
+  **This is a development version of Renga - expect things to change without
+  notice**
 
   This platform is a (very early) beta version. It is made available to early
   adopters only for the purpose of getting acquainted with the APIs. THIS
   VERSION IS NOT INTENDED TO BE USED IN PRODUCTION MODE OR WITH SENSITIVE
-  DATA. In this first version we put the focus on the knowledge
-  representation, data lineage, data versioning, meta-data exploration,
-  application deployments, storage, resource management, and authentication.
-  The component that will fulfill the above vision of the platform are in
-  place, however it also includes several place holders. Most notably the
-  permission management policies will be available only in the next release of
-  the platform, which is planned for Q1 2018. Even thought the enforcement
-  methods of the permission policies are in place, the only available policy
-  in this version is *full access to everything for all*. In addition, this
-  being a beta version, the code and default configurations has not been
-  edited for security vulnerabilities. We provide no guarantee whatsoever
-  about the security of the data stored on this platform.
+  DATA. In this development version we have refactored the earlier platform to
+  focus more on usability. Not all components for on-line knowledge
+  representation are yet in place, but single-user functionality for lineage
+  capture and workflow generation are available via the CLI.  We provide no
+  guarantee whatsoever about the security of the data stored on this platform.
 
 .. _renga_introduction:
+
 
 Introduction
 ============
@@ -31,17 +26,17 @@ Introduction
 
    -- Encyclopædia Britannica
 
-**Renga** is a highly-scalable & secure open software platform designed to
-foster multidisciplinary data (science) collaboration across mutually
-untrusted academic and industrial institutions.
+**Renga** is a scalable and secure open software platform designed to
+foster multidisciplinary data (science) collaboration.
 
 The platform allows (data)scientists to:
 
-* Securely manage, share and process large-scale data across untrusted parties
-  operating in a federated environment.
+* Capture complete lineage up to original raw data for detailed traceability,
+  auditability & reproducibility.
 
-* Automatically capture complete lineage up to original raw data for detailed
-  traceability, auditability & reproducibility.
+* Share their work and reuse the work of others as building blocks in their
+  own analyses
+
 
 Philosophy
 ----------

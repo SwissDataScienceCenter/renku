@@ -54,6 +54,8 @@ of which has their own repository.
 Quickstart
 ^^^^^^^^^^
 
+.. include:: ./development-note.rst
+
 You can get going with Renga in a few minutes by using our pre-built images:
 
 .. code-block:: console
@@ -61,9 +63,8 @@ You can get going with Renga in a few minutes by using our pre-built images:
     $ cd renga
     $ make start
 
-Once the script completes, you can go to http://localhost/ui to see the
-browser front-end or http://localhost/admin/swagger/ to see the Swagger REST
-API.
+Once the script completes, you can go to http://renga.local to see the
+browser front-end.
 
 Using the default configuration, you can login to all services using
 `demo/demo` as the username/password. See :ref:`user_management` for more
@@ -72,6 +73,8 @@ information about handling user accounts.
 
 Building from source
 ^^^^^^^^^^^^^^^^^^^^
+
+.. include:: ./development-note.rst
 
 .. code-block:: console
 
@@ -92,62 +95,38 @@ Once ``make`` completes, you should now have all the service images made:
 .. code-block:: console
 
     $ docker images
-    REPOSITORY                       TAG                 IMAGE ID
-    renga-deployer                   latest              883bada01727
-    renga-storage                    latest              2fd5a8585e69
-    renga-projects                   latest              28616eddc51f
-    renga-graph-typesystem-service   latest              a4c3d21acc28
-    renga-graph-navigation-service   latest              11fc7285e580
-    renga-graph-mutation-service     latest              2515cc934f1d
-    renga-graph-init                 latest              4bda6baad1b0
-    renga-explorer                   latest              47fb4ec835ec
-    renga-authorization              latest              8ca37566b674
+    REPOSITORY                      TAG                    IMAGE ID
+    rengahub/gitlab-runner          development            b36beaf93cba
+    rengahub/renga-python           development            0670bbcb22ed
+    rengahub/renga-storage          development            e73374425a1f
+    rengahub/renga-ui               development            3aa6ddac8eee
 
 Use ``docker-compose`` to bring up the platform:
 
 .. code-block:: console
 
     $ make start
+    [Info] Using Docker network: review=8112d474690a
     ...
-    Creating renga_graph-init_1 ... done
-    Creating renga_deployer_1
-    Creating renga_storage_1 ... done
-    Waiting for keycloak:8080  .....................................  up!
-    Waiting for deployer:5000  .  up!
-    Waiting for explorer:9000  .  up!
-    Waiting for graph-mutation:9000  .......................  up!
-    Waiting for graph-navigation:9000  .  up!
-    Waiting for graph-typesystem:9000  ........  up!
-    Waiting for resource-manager:9000  ...........  up!
-    Waiting for storage:9000  .  up!
+    renga_reverse-proxy_1 is up-to-date
+    renga_ui_1 is up-to-date
+    renga_db_1 is up-to-date
+    renga_gitlab-runner_1 is up-to-date
+    renga_keycloak_1 is up-to-date
+    renga_gitlab_1 is up-to-date
+    Waiting for keycloak:8080  .  up!
+    Waiting for gitlab:80  .  up!
+    Waiting for ui:3000  .  up!
     Everything is up
 
+    [Warning] You have not defined a GITLAB_CLIENT_SECRET. Using dummy
+              secret instead. Never do this in production!
 
-To check on the status of the services, use standard ``docker-compose``
-commands:
 
-.. code-block:: console
+    [Success] Renga UI should be under http://renga.local and GitLab under http://gitlab.renga.local
 
-    $ docker-compose ps
-    Name                        Command               State
-    --------------------------------------------------------------
-    renga_apispec_1            uwsgi --http :5000 --wsgi- ...   Up
-    renga_db_1                 docker-entrypoint.sh postgres    Up
-    renga_deployer_1           ./docker-entrypoint.sh fla ...   Up
-    renga_explorer_1           bin/renga-explorer               Up
-    renga_graph-mutation_1     bin/renga-graph-mutation-s ...   Up
-    renga_graph-navigation_1   bin/renga-graph-navigation ...   Up
-    renga_graph-typesystem_1   bin/renga-graph-typesystem ...   Up
-    renga_keycloak_1           /opt/jboss/docker-entrypoi ...   Up
-    renga_projects_1           bin/renga-projects               Up
-    renga_resource-manager_1   bin/renga-authorization          Up
-    renga_reverse-proxy_1      /traefik --web --web.addre ...   Up
-    renga_storage_1            bin/docker-entrypoint.sh b ...   Up
-    renga_swagger_1            sh /usr/share/nginx/docker ...   Up
-    renga_ui_1                 python3 /app/server/run.py       Up
-
-You can now point your browser to http://localhost/ui for the web front-end,
-or to http://localhost/admin/swagger for the swagger REST API spec.
+    [Info] Register GitLab runners using:
+             make register-runners
 
 
 Identification Management
@@ -159,21 +138,9 @@ http://localhost/auth/admin, with the user ``admin`` and password ``admin``
 (`Keycloak documentation <http://www.keycloak.org/documentation.html>`_).
 
 
-Storage location
-----------------
-
-The storage backend uses the folder ``./services/storage/data`` to store
-the buckets and files. The deployer backend uses the local docker instance
-to execute containers.
-
-
 Platform Endpoint
 -----------------
 
-By default, the platform is configured to use ``http://localhost`` as the
+By default, the platform is configured to use ``http://renga.local`` as the
 endpoint. You can change this by defining the ``RENGA_ENDPOINT`` environment
-variable before starting the platform services. In addition, the containers
-spawned by the endpoint run in the default bridge network. If you would like
-to change this, set the ``RENGA_CONTAINERS_ENDPOINT`` to point to either the
-gateway IP of the docker network you would like to use, a public IP, or a DNS-
-resolvable hostname. The endpoint definition should include
+variable before starting the platform services.
