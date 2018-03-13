@@ -22,11 +22,7 @@ else
     detected_OS := $(shell sh -c 'uname -s 2>/dev/null || echo not')
 endif
 
-ifeq ($(detected_OS), Darwin)
-	PLATFORM_DOMAIN?=docker.for.mac.localhost
-else
-	PLATFORM_DOMAIN?=localhost
-endif
+PLATFORM_DOMAIN?=renga.local
 
 PLATFORM_BASE_DIR?=..
 PLATFORM_BASE_REPO_URL?=https://github.com/SwissDataScienceCenter
@@ -39,8 +35,8 @@ endif
 
 GIT_MASTER_HEAD_SHA:=$(shell git rev-parse --short=12 --verify HEAD)
 
-GITLAB_URL?=http://$(PLATFORM_DOMAIN):5080
-GITLAB_REGISTRY_URL?=http://$(PLATFORM_DOMAIN):5081
+GITLAB_URL?=http://gitlab.$(PLATFORM_DOMAIN)
+GITLAB_REGISTRY_URL?=http://gitlab.$(PLATFORM_DOMAIN):5081
 GITLAB_DIRS=config logs git-data lfs-data runner
 
 DOCKER_REPOSITORY?=rengahub/
@@ -49,9 +45,10 @@ DOCKER_NETWORK?=review
 DOCKER_COMPOSE_ENV=\
 	DOCKER_PREFIX=$(DOCKER_PREFIX) \
 	DOCKER_REPOSITORY=$(DOCKER_REPOSITORY) \
-	GITLAB_URL=$(GITLAB_URL) \
-	GITLAB_REGISTRY_URL=$(GITLAB_REGISTRY_URL) \
 	GITLAB_CLIENT_SECRET=$(GITLAB_CLIENT_SECRET) \
+	GITLAB_REGISTRY_URL=$(GITLAB_REGISTRY_URL) \
+	GITLAB_URL=$(GITLAB_URL) \
+	KEYCLOAK_URL=$(KEYCLOAK_URL) \
 	PLATFORM_DOMAIN=$(PLATFORM_DOMAIN) \
 	PLATFORM_VERSION=$(PLATFORM_VERSION) \
 	RENGA_ENDPOINT=$(RENGA_ENDPOINT) \
@@ -61,6 +58,11 @@ SBT_IVY_DIR := $(PWD)/.ivy
 SBT = sbt -ivy $(SBT_IVY_DIR)
 SBT_PUBLISH_TARGET = publish-local
 
+ifndef KEYCLOAK_URL
+	KEYCLOAK_URL=http://keycloak.$(PLATFORM_DOMAIN):8080
+	export KEYCLOAK_URL
+endif
+
 ifndef RENGA_ENDPOINT
 	RENGA_ENDPOINT=http://$(PLATFORM_DOMAIN)
 	export RENGA_ENDPOINT
@@ -68,7 +70,7 @@ endif
 
 ifndef RENGA_UI_URL
 	# The ui should run under localhost instead of docker.for.mac.localhost
-	RENGA_UI_URL=http://localhost
+	RENGA_UI_URL=http://$(PLATFORM_DOMAIN)
 	export RENGA_UI_URL
 endif
 
@@ -184,12 +186,12 @@ services/gitlab/%:
 register-gitlab-oauth-applications: unregister-gitlab-oauth-applications
 	@$(DOCKER_COMPOSE_ENV) docker-compose exec gitlab /opt/gitlab/bin/gitlab-psql \
 		-h /var/opt/gitlab/postgresql -d gitlabhq_production \
-		-c "INSERT INTO oauth_applications (name, uid, scopes, redirect_uri, secret, trusted) VALUES ('renga-ui', 'renga-ui', 'api read_user', '$(RENGA_UI_URL)/login/redirect/gitlab http://localhost:3000/login/redirect/gitlab', 'no-secret-needed', 'true')"
+		-c "INSERT INTO oauth_applications (name, uid, scopes, redirect_uri, secret, trusted) VALUES ('renga-ui', 'renga-ui', 'api read_user', '$(RENGA_UI_URL)/login/redirect/gitlab http://localhost:3000/login/redirect/gitlab', 'no-secret-needed', 'true')" >& /dev/null
 
 unregister-gitlab-oauth-applications:
 	@$(DOCKER_COMPOSE_ENV) docker-compose exec gitlab /opt/gitlab/bin/gitlab-psql \
 		-h /var/opt/gitlab/postgresql -d gitlabhq_production \
-		-c "DELETE FROM oauth_applications WHERE uid='renga-ui'"
+		-c "DELETE FROM oauth_applications WHERE uid='renga-ui'" >& /dev/null
 
 register-runners: unregister-runners
 ifeq (${RUNNER_TOKEN},)
@@ -208,6 +210,7 @@ endif
 			--run-untagged=false \
 			--tag-list notebook \
 			--docker-image $(DOCKER_PREFIX)renga-python:$(PLATFORM_VERSION) \
+			--docker-network-mode=review \
 			--docker-pull-policy "if-not-present"; \
 		docker exec -ti $$container gitlab-runner register \
 			-n -u $(GITLAB_URL) \
@@ -220,6 +223,7 @@ endif
 			--run-untagged=false \
 			--tag-list cwl \
 			--docker-image $(DOCKER_PREFIX)renga-python:$(PLATFORM_VERSION) \
+			--docker-network-mode=review \
 			--docker-pull-policy "if-not-present"; \
 	done
 	@echo
@@ -243,6 +247,14 @@ ifeq (${GITLAB_CLIENT_SECRET}, dummy-secret)
 	@echo "[Warning] You have not defined a GITLAB_CLIENT_SECRET. Using dummy"
 	@echo "          secret instead. Never do this in production!"
 	@echo
+endif
+ifeq ($(shell ping -c1 ${PLATFORM_DOMAIN} && ping -c1 gitlab.${PLATFORM_DOMAIN} && ping -c1 keycloak.${PLATFORM_DOMAIN}), )
+	@echo
+	@echo "[Error] Services unreachable -- if running locally, ensure name resolution with: "
+	@echo
+	@echo "$$ echo \"127.0.0.1 $(PLATFORM_DOMAIN) keycloak.$(PLATFORM_DOMAIN) gitlab.$(PLATFORM_DOMAIN)\" | sudo tee -a /etc/hosts"
+	@echo
+	@exit 1
 endif
 	@echo
 	@echo "[Success] Renga UI should be under $(RENGA_UI_URL) and GitLab under $(GITLAB_URL)"

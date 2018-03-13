@@ -1,0 +1,51 @@
+{{- if .Values.ingress.enabled -}}
+{{- $keycloakFullname := include "keycloak.fullname" . -}}
+{{- $keycloakServicePort := .Values.keycloak.service.port -}}
+{{- $gitlabFullname := include "gitlab.fullname" . -}}
+{{- $gitlabServicePort := 80 -}}
+{{- $uiFullname := include "ui.fullname" . -}}
+{{- $uiServicePort := 3000 -}}
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: {{ template "renga.fullname" . }}
+  labels:
+    app: {{ template "renga.name" . }}
+    chart: {{ template "renga.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+  annotations:
+{{- range $key, $value :=  .Values.ingress.annotations }}
+    {{ $key }}: {{ $value | quote }}
+{{- end }}
+spec:
+{{- if .Values.ingress.tls }}
+  tls:
+  {{- range .Values.ingress.tls }}
+  - hosts:
+    {{- range .hosts }}
+    - {{ . }}
+    {{- end }}
+    secretName: {{ .secretName }}
+  {{- end }}
+{{- end }}
+  rules:
+  {{- range .Values.ingress.hosts }}
+  - host: {{ . }}
+    http:
+      paths:
+      - path: /auth
+        backend:
+          serviceName: {{ $keycloakFullname }}
+          servicePort: {{ $keycloakServicePort }}
+      - path: /gitlab
+        backend:
+          serviceName: {{ $gitlabFullname }}
+          servicePort: {{ $gitlabServicePort }}
+      - path: /
+        backend:
+          serviceName: {{ $uiFullname }}
+          servicePort: {{ $uiServicePort }}
+  {{- end }}
+{{- end }}
