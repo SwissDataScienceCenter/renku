@@ -18,7 +18,7 @@
 
 # Set $PLATFORM_DOMAIN to `hostname`, except on mac (docker.for.mac.localhost)
 
-PLATFORM_DOMAIN?=$(shell hostname)
+PLATFORM_DOMAIN?=$(shell hostname | tr '[:upper:]' '[:lower:]')
 
 ifeq ($(OS),Windows_NT)
     detected_OS := Windows
