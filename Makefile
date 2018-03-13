@@ -16,6 +16,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+# Set $PLATFORM_DOMAIN to `hostname`, except on mac (docker.for.mac.localhost)
+
+PLATFORM_DOMAIN?=$(shell hostname)
+
 ifeq ($(OS),Windows_NT)
     detected_OS := Windows
 else
@@ -24,8 +28,6 @@ endif
 
 ifeq ($(detected_OS), Darwin)
 	PLATFORM_DOMAIN?=docker.for.mac.localhost
-else
-	PLATFORM_DOMAIN?=localhost
 endif
 
 PLATFORM_BASE_DIR?=..
@@ -39,7 +41,7 @@ endif
 
 GIT_MASTER_HEAD_SHA:=$(shell git rev-parse --short=12 --verify HEAD)
 
-GITLAB_URL?=http://$(PLATFORM_DOMAIN):5080
+GITLAB_URL?=http://$(PLATFORM_DOMAIN)/gitlab
 GITLAB_REGISTRY_URL?=http://$(PLATFORM_DOMAIN):5081
 GITLAB_DIRS=config logs git-data lfs-data runner
 
@@ -49,9 +51,10 @@ DOCKER_NETWORK?=review
 DOCKER_COMPOSE_ENV=\
 	DOCKER_PREFIX=$(DOCKER_PREFIX) \
 	DOCKER_REPOSITORY=$(DOCKER_REPOSITORY) \
-	GITLAB_URL=$(GITLAB_URL) \
-	GITLAB_REGISTRY_URL=$(GITLAB_REGISTRY_URL) \
 	GITLAB_CLIENT_SECRET=$(GITLAB_CLIENT_SECRET) \
+	GITLAB_REGISTRY_URL=$(GITLAB_REGISTRY_URL) \
+	GITLAB_URL=$(GITLAB_URL) \
+	KEYCLOAK_URL=$(KEYCLOAK_URL) \
 	PLATFORM_DOMAIN=$(PLATFORM_DOMAIN) \
 	PLATFORM_VERSION=$(PLATFORM_VERSION) \
 	RENGA_ENDPOINT=$(RENGA_ENDPOINT) \
@@ -61,6 +64,11 @@ SBT_IVY_DIR := $(PWD)/.ivy
 SBT = sbt -ivy $(SBT_IVY_DIR)
 SBT_PUBLISH_TARGET = publish-local
 
+ifndef KEYCLOAK_URL
+	KEYCLOAK_URL=http://$(PLATFORM_DOMAIN)
+	export KEYCLOAK_URL
+endif
+
 ifndef RENGA_ENDPOINT
 	RENGA_ENDPOINT=http://$(PLATFORM_DOMAIN)
 	export RENGA_ENDPOINT
@@ -68,7 +76,7 @@ endif
 
 ifndef RENGA_UI_URL
 	# The ui should run under localhost instead of docker.for.mac.localhost
-	RENGA_UI_URL=http://localhost
+	RENGA_UI_URL=http://$(PLATFORM_DOMAIN)
 	export RENGA_UI_URL
 endif
 
@@ -104,6 +112,10 @@ scala-artifact = \
 
 .PHONY: all
 all: docker-images
+
+.PHONY: docker-env
+docker-env:
+	@for x in $(DOCKER_COMPOSE_ENV); do echo $$x; done
 
 # fetch missing repositories
 $(PLATFORM_BASE_DIR)/%:
@@ -180,7 +192,7 @@ services/gitlab/%:
 register-gitlab-oauth-applications: unregister-gitlab-oauth-applications
 	@$(DOCKER_COMPOSE_ENV) docker-compose exec gitlab /opt/gitlab/bin/gitlab-psql \
 		-h /var/opt/gitlab/postgresql -d gitlabhq_production \
-		-c "INSERT INTO oauth_applications (name, uid, scopes, redirect_uri, secret, trusted) VALUES ('renga-ui', 'renga-ui', 'api read_user', '$(RENGA_UI_URL)/login/redirect/gitlab', 'no-secret-needed', 'true')"
+		-c "INSERT INTO oauth_applications (name, uid, scopes, redirect_uri, secret, trusted) VALUES ('renga-ui', 'renga-ui', 'api read_user', '$(RENGA_UI_URL)/login/redirect/gitlab http://localhost:3000/login/redirect/gitlab', 'no-secret-needed', 'true')"
 
 unregister-gitlab-oauth-applications:
 	@$(DOCKER_COMPOSE_ENV) docker-compose exec gitlab /opt/gitlab/bin/gitlab-psql \
@@ -199,11 +211,12 @@ endif
 			-r ${RUNNER_TOKEN} \
 			--executor shell \
 			--env RENGA_REVIEW_DOMAIN=$(PLATFORM_DOMAIN) \
-			--env RENGA_REVIEW_NETWORK=$(DOCKER_NETWORK) \
+			--env RENGA_RUNNER_NETWORK=$(DOCKER_NETWORK) \
 			--locked=false \
 			--run-untagged=false \
 			--tag-list notebook \
 			--docker-image $(DOCKER_PREFIX)renga-python:$(PLATFORM_VERSION) \
+			--docker-network-mode=review \
 			--docker-pull-policy "if-not-present"; \
 		docker exec -ti $$container gitlab-runner register \
 			-n -u $(GITLAB_URL) \
@@ -211,15 +224,19 @@ endif
 			-r ${RUNNER_TOKEN} \
 			--executor docker \
 			--env RENGA_REVIEW_DOMAIN=$(PLATFORM_DOMAIN) \
-			--env RENGA_REVIEW_NETWORK=$(DOCKER_NETWORK) \
+			--env RENGA_RUNNER_NETWORK=$(DOCKER_NETWORK) \
 			--locked=false \
 			--run-untagged=false \
 			--tag-list cwl \
 			--docker-image $(DOCKER_PREFIX)renga-python:$(PLATFORM_VERSION) \
+			--docker-network-mode=review \
 			--docker-pull-policy "if-not-present"; \
 	done
 	@echo
 	@echo "[Info] Edit gitlab/runner/config.toml to increase the number of concurrent runner jobs."
+	@echo
+	@echo "[Info] To make notebooks available as deployed environments, set the"
+	@echo "		RENGA_NOTEBOOK_TOKEN and RENGA_REVIEW_DOMAIN CI variables in gitlab project settings."
 unregister-runners:
 	@for container in $(shell $(DOCKER_COMPOSE_ENV) docker-compose ps -q gitlab-runner) ; do \
 		docker exec -ti $$container gitlab-runner unregister \

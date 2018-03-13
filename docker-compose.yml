@@ -19,7 +19,6 @@
 version: '3'
 volumes:
   db-data: {}
-  cassandra-data: {}
 services:
   db:
     image: postgres:9.6
@@ -31,8 +30,6 @@ services:
     volumes:
       - ./services/postgres/docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d:ro
       - db-data:/pgdata
-    ports:
-      - 5432
     networks:
       - default
 
@@ -50,8 +47,6 @@ services:
       GITLAB_URL: ${GITLAB_URL}
       RENGA_UI_URL: ${RENGA_UI_URL}
       GITLAB_CLIENT_SECRET: ${GITLAB_CLIENT_SECRET}
-    ports:
-      - 8080
     command:
       - "-b 0.0.0.0"
       - "-Dkeycloak.migration.action=import"
@@ -61,7 +56,7 @@ services:
     restart: on-failure
     labels:
       traefik.enable: "true"
-      traefik.frontend.rule: PathPrefix:/auth
+      traefik.frontend.rule: "PathPrefix:/auth"
     depends_on:
       - db
     networks:
@@ -99,9 +94,8 @@ services:
               client_options: {
                 # Traefik maps keycloak to the URL below
                 # CAREFUL: This must be accessible from inside the keycloak container
-                # for server-to-server communication.
-                # Use docker.for.mac.localhost as RENGA_ENDPOINT for example.
-                'site' => '${RENGA_ENDPOINT}/auth/',
+                # for service-to-service communication.
+                'site' => '${KEYCLOAK_URL}/auth',
                 'authorize_url' => '/auth/realms/Renga/protocol/openid-connect/auth',
                 'user_info_url' => '/auth/realms/Renga/protocol/openid-connect/userinfo',
                 'token_url' => '/auth/realms/Renga/protocol/openid-connect/token'
@@ -120,8 +114,6 @@ services:
         gitlab_rails['initial_root_password'] = 'root_password'
         # Add any other gitlab.rb configuration here, each on its own line
     ports:
-      - '5080:5080'
-      - '5443:443'
       - '5022:22'
     volumes:
       - ./services/gitlab/config:/etc/gitlab
@@ -130,23 +122,28 @@ services:
       - ./services/gitlab/lfs-data:/var/storage/lfs-objects
     depends_on:
       - db
-      - keycloak
+    labels:
+      traefik.enable: "true"
+      traefik.frontend.rule: "PathPrefix:/gitlab"
+      traefik.port: '80'
     networks:
       - default
+      - review
 
   gitlab-runner:
     image: ${DOCKER_PREFIX}gitlab-runner:${PLATFORM_VERSION}
     environment:
-      RENGA_OIC_URL: ${RENGA_ENDPOINT}/auth/realms/Renga/,
+      RENGA_OIC_URL: ${RENGA_ENDPOINT}/auth/realms/Renga/
       RENGA_OIC_CLIENT_ID: demo-client
       RENGA_RUNNER_IMAGE: ${DOCKER_PREFIX}minimal-notebook:${PLATFORM_VERSION}
-      RENGA_REVIEW_DOMAIN: ${PLATFORM_DOMAIN}:8080
+      RENGA_REVIEW_DOMAIN: ${PLATFORM_DOMAIN}
     restart: always
     volumes:
       - ./services/gitlab/runner:/etc/gitlab-runner
       - /var/run/docker.sock:/var/run/docker.sock
     networks:
       - default
+      - review
 
 #   storage:
 #     image: ${DOCKER_REPOSITORY}renga-storage:$PLATFORM_VERSION
@@ -170,19 +167,21 @@ services:
   ui:
     image: ${DOCKER_PREFIX}renga-ui:${PLATFORM_VERSION}
     restart: always
-    ports:
-      - 5000:3000
     environment:
       GITLAB_URL: ${GITLAB_URL}
-      RENGA_UI_URL: ${RENGA_UI_URL}
+      RENGA_UI_URL: http://${PLATFORM_DOMAIN}
       RENGA_ENDPOINT: ${RENGA_ENDPOINT}
+      KEYCLOAK_URL: ${KEYCLOAK_URL}
     labels:
       traefik.enable: "true"
       traefik.frontend.rule: PathPrefix:/
+      traefik.frontend.passHostHeader: "false"
+    networks:
+      - default
 
   reverse-proxy:
     image: traefik
-    command: --web --web.address=:81 \
+    command: --web --web.address=:8080 \
       --docker --docker.watch --docker.domain=${PLATFORM_DOMAIN} \
       --debug --logLevel=DEBUG \
       --defaultentrypoints=http,https \
@@ -194,14 +193,17 @@ services:
       - 80:80
       - 443:443
       - 8080:8080
-      - 81:81
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - /dev/null:/traefik.toml
       - ./services/traefik/ssl/:/ssl/
     networks:
-      - default
-      - review
+      default:
+        aliases:
+          - ${PLATFORM_DOMAIN}
+      review:
+        aliases:
+          - ${PLATFORM_DOMAIN}
 
 networks:
   review:

@@ -22,6 +22,7 @@ docker run \
     --link gitlab \
     --link keycloak \
     --link storage \
-    -e TARGETS=keycloak:8080,gitlab:5080 \
+    --link ui \
+    -e TARGETS=keycloak:8080,gitlab:80,ui:3000 \
     -e TIMEOUT=180 \
     waisbrot/wait
