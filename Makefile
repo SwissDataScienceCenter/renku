@@ -191,22 +191,22 @@ services/gitlab/%:
 register-gitlab-oauth-applications: unregister-gitlab-oauth-applications
 	@$(DOCKER_COMPOSE_ENV) docker-compose exec gitlab /opt/gitlab/bin/gitlab-psql \
 		-h /var/opt/gitlab/postgresql -d gitlabhq_production \
-		-c "INSERT INTO oauth_applications (name, uid, scopes, redirect_uri, secret, trusted) VALUES ('renga-ui', 'renga-ui', 'api read_user', '$(RENGA_UI_URL)/login/redirect/gitlab http://localhost:3000/login/redirect/gitlab', 'no-secret-needed', 'true')" >& /dev/null
+		-c "INSERT INTO oauth_applications (name, uid, scopes, redirect_uri, secret, trusted) VALUES ('renga-ui', 'renga-ui', 'api read_user', '$(RENGA_UI_URL)/login/redirect/gitlab http://localhost:3000/login/redirect/gitlab', 'no-secret-needed', 'true')" > /dev/null 2>&1
 
 unregister-gitlab-oauth-applications:
 	@$(DOCKER_COMPOSE_ENV) docker-compose exec gitlab /opt/gitlab/bin/gitlab-psql \
 		-h /var/opt/gitlab/postgresql -d gitlabhq_production \
-		-c "DELETE FROM oauth_applications WHERE uid='renga-ui'" >& /dev/null
+		-c "DELETE FROM oauth_applications WHERE uid='renga-ui'" > /dev/null 2>&1
 
 register-gitlab-user-token: unregister-gitlab-user-token
 	@$(DOCKER_COMPOSE_ENV) docker-compose exec gitlab /opt/gitlab/bin/gitlab-psql \
 		-h /var/opt/gitlab/postgresql -d gitlabhq_production \
-		-c "INSERT INTO personal_access_tokens ( user_id, token, name, revoked, expires_at, created_at, updated_at, scopes, impersonation) VALUES ( '1', '$(GITLAB_TOKEN)', 'managed storage token', 'f', NULL, '2018-02-26 10:46:16.602039', '2018-02-26 10:46:16.602039', E'--- \n- api\n- read_user\n- sudo\n- read_registry', 'f');"
+		-c "INSERT INTO personal_access_tokens ( user_id, token, name, revoked, expires_at, created_at, updated_at, scopes, impersonation) VALUES ( '1', '$(GITLAB_TOKEN)', 'managed storage token', 'f', NULL, '$(shell date +'%Y-%m-%d %H:%M:%S')', '$(shell date +'%Y-%m-%d %H:%M:%S')', E'--- \n- api\n- read_user\n- sudo\n- read_registry', 'f');" > /dev/null 2>&1
 
 unregister-gitlab-user-token:
 	@$(DOCKER_COMPOSE_ENV) docker-compose exec gitlab /opt/gitlab/bin/gitlab-psql \
 		-h /var/opt/gitlab/postgresql -d gitlabhq_production \
-		-c "DELETE FROM personal_access_tokens WHERE user_id='1' AND name='managed storage token';"
+		-c "DELETE FROM personal_access_tokens WHERE user_id='1' AND name='managed storage token';" > /dev/null 2>&1
 
 register-runners: unregister-runners
 ifeq (${RUNNER_TOKEN},)
