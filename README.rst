@@ -60,7 +60,7 @@ The full documentation is available at
 https://renga.readthedocs.io/en/development.
 
 First-time users should try our `first steps
-<https://renga.readthedocs.io/en/latest/user/firststeps.html>`_ tutorial.
+<https://renga.readthedocs.io/en/development/user/firststeps.html>`_ tutorial.
 
 
 Contributing
