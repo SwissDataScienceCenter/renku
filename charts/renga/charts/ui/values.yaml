@@ -7,7 +7,7 @@ replicaCount: 1
 image:
   repository: rengahub/renga-ui
   tag: development
-  pullPolicy: IfNotPresent
+  pullPolicy: Always
 
 service:
   type: ClusterIP
