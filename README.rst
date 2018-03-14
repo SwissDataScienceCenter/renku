@@ -21,8 +21,8 @@ RENGA (連歌)
 .. image:: https://img.shields.io/travis/SwissDataScienceCenter/renga.svg
    :target: https://travis-ci.org/SwissDataScienceCenter/renga
 
-.. image:: https://readthedocs.org/projects/renga/badge/?version=latest
-    :target: http://renga.readthedocs.io/en/latest/?badge=latest
+.. image:: https://readthedocs.org/projects/renga/badge/?version=development
+    :target: http://renga.readthedocs.io/en/development/?badge=development
     :alt: Documentation Status
 
 **This is a development branch where anything can change without a prior notice.
@@ -50,16 +50,17 @@ Starting the platform
 Please follow the output for next instructions.
 
 A python CLI and API client is available in the `renga-python
-<https://github.com/SwissDataScienceCenter/renga-python>`_ package. 
+<https://github.com/SwissDataScienceCenter/renga-python>`_ package.
 
 
 Where to go next
 ----------------
 
-The full documentation is available at https://renga.readthedocs.io/.
+The full documentation is available at
+https://renga.readthedocs.io/en/development.
 
 First-time users should try our `first steps
-<https://renga.readthedocs.io/en/latest/user/firststeps.html>`_ tutorial.
+<https://renga.readthedocs.io/en/development/user/firststeps.html>`_ tutorial.
 
 
 Contributing
