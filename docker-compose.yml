@@ -60,15 +60,11 @@ services:
     restart: on-failure
     labels:
       traefik.enable: "true"
-      traefik.frontend.rule: "Host:keycloak.${PLATFORM_DOMAIN}"
-      traefik.frontend.entryPoints: "service, http"
-      traefik.frontend.redirect.entryPoint: "service"
+      traefik.frontend.rule: "PathPrefix:/auth"
     depends_on:
       - db
     networks:
-      default:
-        aliases:
-          - keycloak.${PLATFORM_DOMAIN}
+      - default
 
   gitlab:
     image: gitlab/gitlab-ce:latest
@@ -132,15 +128,11 @@ services:
       - db
     labels:
       traefik.enable: "true"
-      traefik.frontend.rule: Host:gitlab.${PLATFORM_DOMAIN}
+      traefik.frontend.rule: "PathPrefix:/gitlab"
       traefik.port: '80'
     networks:
-      default:
-        aliases:
-          - gitlab.${PLATFORM_DOMAIN}
-      review:
-        aliases:
-          - gitlab.${PLATFORM_DOMAIN}
+      - default
+      - review
 
   gitlab-runner:
     image: ${DOCKER_PREFIX}gitlab-runner:${PLATFORM_VERSION}
@@ -193,27 +185,29 @@ services:
 
   reverse-proxy:
     image: traefik
-    command: --web --web.address=:81 \
+    command: --web --web.address=:8080 \
       --docker --docker.watch --docker.domain=${PLATFORM_DOMAIN} \
       --debug --logLevel=DEBUG \
       --defaultentrypoints=http,https \
       --entrypoints='Name:http Address::80' \
       --entrypoints='Name:https Address::443 TLS:/ssl/test.crt,/ssl/test.key' \
-      --entrypoints='Name:service Address::8080' \
       --docker.exposedbydefault=false
     # FIXME usage of self signed certs --entrypoints='Name:http Address::80 Redirect.EntryPoint:https' \
     ports:
       - 80:80
       - 443:443
       - 8080:8080
-      - 81:81
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - /dev/null:/traefik.toml
       - ./services/traefik/ssl/:/ssl/:ro
     networks:
-      - default
-      - review
+      default:
+        aliases:
+          - ${PLATFORM_DOMAIN}
+      review:
+        aliases:
+          - ${PLATFORM_DOMAIN}
 
 networks:
   review:

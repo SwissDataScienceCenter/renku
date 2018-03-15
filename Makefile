@@ -16,13 +16,19 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+# Set $PLATFORM_DOMAIN to `hostname`, except on mac (docker.for.mac.localhost)
+
+PLATFORM_DOMAIN?=$(shell hostname | tr '[:upper:]' '[:lower:]')
+
 ifeq ($(OS),Windows_NT)
     detected_OS := Windows
 else
     detected_OS := $(shell sh -c 'uname -s 2>/dev/null || echo not')
 endif
 
-PLATFORM_DOMAIN?=renga.local
+ifeq ($(detected_OS), Darwin)
+	PLATFORM_DOMAIN?=docker.for.mac.localhost
+endif
 
 PLATFORM_BASE_DIR?=..
 PLATFORM_BASE_REPO_URL?=https://github.com/SwissDataScienceCenter
@@ -35,8 +41,8 @@ endif
 
 GIT_MASTER_HEAD_SHA:=$(shell git rev-parse --short=12 --verify HEAD)
 
-GITLAB_URL?=http://gitlab.$(PLATFORM_DOMAIN)
-GITLAB_REGISTRY_URL?=http://gitlab.$(PLATFORM_DOMAIN):5081
+GITLAB_URL?=http://$(PLATFORM_DOMAIN)/gitlab
+GITLAB_REGISTRY_URL?=http://$(PLATFORM_DOMAIN):5081
 GITLAB_DIRS=config logs git-data lfs-data runner
 
 DOCKER_REPOSITORY?=rengahub/
@@ -59,7 +65,7 @@ SBT = sbt -ivy $(SBT_IVY_DIR)
 SBT_PUBLISH_TARGET = publish-local
 
 ifndef KEYCLOAK_URL
-	KEYCLOAK_URL=http://keycloak.$(PLATFORM_DOMAIN):8080
+	KEYCLOAK_URL=http://$(PLATFORM_DOMAIN)
 	export KEYCLOAK_URL
 endif
 
@@ -186,12 +192,12 @@ services/gitlab/%:
 register-gitlab-oauth-applications: unregister-gitlab-oauth-applications
 	@$(DOCKER_COMPOSE_ENV) docker-compose exec gitlab /opt/gitlab/bin/gitlab-psql \
 		-h /var/opt/gitlab/postgresql -d gitlabhq_production \
-		-c "INSERT INTO oauth_applications (name, uid, scopes, redirect_uri, secret, trusted) VALUES ('renga-ui', 'renga-ui', 'api read_user', '$(RENGA_UI_URL)/login/redirect/gitlab http://localhost:3000/login/redirect/gitlab', 'no-secret-needed', 'true')" >& /dev/null
+		-c "INSERT INTO oauth_applications (name, uid, scopes, redirect_uri, secret, trusted) VALUES ('renga-ui', 'renga-ui', 'api read_user', '$(RENGA_UI_URL)/login/redirect/gitlab http://localhost:3000/login/redirect/gitlab', 'no-secret-needed', 'true')"
 
 unregister-gitlab-oauth-applications:
 	@$(DOCKER_COMPOSE_ENV) docker-compose exec gitlab /opt/gitlab/bin/gitlab-psql \
 		-h /var/opt/gitlab/postgresql -d gitlabhq_production \
-		-c "DELETE FROM oauth_applications WHERE uid='renga-ui'" >& /dev/null
+		-c "DELETE FROM oauth_applications WHERE uid='renga-ui'"
 
 register-runners: unregister-runners
 ifeq (${RUNNER_TOKEN},)
@@ -247,14 +253,6 @@ ifeq (${GITLAB_CLIENT_SECRET}, dummy-secret)
 	@echo "[Warning] You have not defined a GITLAB_CLIENT_SECRET. Using dummy"
 	@echo "          secret instead. Never do this in production!"
 	@echo
-endif
-ifeq ($(shell ping -c1 ${PLATFORM_DOMAIN} && ping -c1 gitlab.${PLATFORM_DOMAIN} && ping -c1 keycloak.${PLATFORM_DOMAIN}), )
-	@echo
-	@echo "[Error] Services unreachable -- if running locally, ensure name resolution with: "
-	@echo
-	@echo "$$ echo \"127.0.0.1 $(PLATFORM_DOMAIN) keycloak.$(PLATFORM_DOMAIN) gitlab.$(PLATFORM_DOMAIN)\" | sudo tee -a /etc/hosts"
-	@echo
-	@exit 1
 endif
 	@echo
 	@echo "[Success] Renga UI should be under $(RENGA_UI_URL) and GitLab under $(GITLAB_URL)"
