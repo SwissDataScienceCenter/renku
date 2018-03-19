@@ -216,7 +216,7 @@ services:
       - review
 
   jupyterhub:
-    image: rengahub/jupyterhub:development
+    build: services/jupyterhub
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - ./services/jupyterhub/jupyterhub_config.py:/srv/jupyterhub/jupyterhub_config.py
