@@ -131,33 +131,61 @@ c.JupyterHub.services = [
 #
 #  Should be a subclass of Spawner.
 # Spawn single-user servers as Docker containers
-c.JupyterHub.spawner_class = 'dockerspawner.DockerSpawner'
-c.DockerSpawner.container_image = 'jupyter/minimal-notebook'
-spawn_cmd = os.environ.get('DOCKER_SPAWN_CMD', "start-singleuser.sh")
-c.DockerSpawner.extra_create_kwargs.update({'command': spawn_cmd})
+from dockerspawner import DockerSpawner
+
+
+class RengaSpawner(DockerSpawner):
+    """A class for spawning notebooks on renga-jupyterhub.
+
+    Inspired by the binderhub kubernetes helm chart.
+    """
+
+    def get_args(self):
+        """Define the arguments for this notebook server."""
+        args = super().get_args()
+        args += [
+            '--ip=0.0.0.0',
+            '--NotebookApp.token=%s' % self.user_options['token'],
+            # '--hub-api-url=http://jupyterhub:8000/hub/api',
+            '--NotebookApp.base_url=/user/{}'.format(self.user.name)
+        ]
+        self.log.info("args = {}".format(' '.join(args)))
+        return args + self.args
+
+    def start(self):
+        """Start the notebook server."""
+        self.log.info(
+            "starting with args: {}".format(' '.join(self.get_args())))
+        return super().start()
+
+
+c.JupyterHub.spawner_class = RengaSpawner
+c.RengaSpawner.image = 'jupyter/minimal-notebook'
+spawn_cmd = os.environ.get('DOCKER_SPAWN_CMD', "jupyter-notebook")
+c.RengaSpawner.cmd = spawn_cmd
 
 network_name = 'review'
-c.DockerSpawner.use_internal_ip = True
-c.DockerSpawner.network_name = network_name
+c.RengaSpawner.use_internal_ip = True
+c.RengaSpawner.network_name = network_name
 
 # Pass the network name as argument to spawned containers
-c.DockerSpawner.extra_host_config = {'network_mode': network_name}
+c.RengaSpawner.extra_host_config = {'network_mode': network_name}
 
 # Explicitly set notebook directory because we'll be mounting a host volume to
 # it.  Most jupyter/docker-stacks *-notebook images run the Notebook server as
 # user `jovyan`, and set the notebook directory to `/home/jovyan/work`.
 # We follow the same convention.
 notebook_dir = os.environ.get('DOCKER_NOTEBOOK_DIR') or '/home/jovyan/work'
-c.DockerSpawner.notebook_dir = notebook_dir
+c.RengaSpawner.notebook_dir = notebook_dir
 # Mount the real user's Docker volume on the host to the notebook user's
 # notebook directory in the container
 # c.DockerSpawner.volumes = { 'jupyterhub-user-{username}': notebook_dir }
 # volume_driver is no longer a keyword argument to create_container()
 # c.DockerSpawner.extra_create_kwargs.update({ 'volume_driver': 'local' })
 # Remove containers once they are stopped
-c.DockerSpawner.remove_containers = True
+c.RengaSpawner.remove_containers = True
 # For debugging arguments passed to spawned containers
-c.DockerSpawner.debug = True
+c.RengaSpawner.debug = True
 
 ## Path to SSL certificate file for the public facing interface of the proxy
 #

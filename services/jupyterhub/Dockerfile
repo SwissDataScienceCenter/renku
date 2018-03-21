@@ -1,3 +1,3 @@
 FROM jupyterhub/jupyterhub:latest
 
-RUN pip install dockerspawner nullauthenticator
+RUN pip install dockerspawner nullauthenticator oauthenticator
