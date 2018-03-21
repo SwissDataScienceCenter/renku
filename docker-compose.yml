@@ -195,7 +195,7 @@ services:
     image: traefik
     command: --web --web.address=:81 \
       --docker --docker.watch --docker.domain=${PLATFORM_DOMAIN} \
-      --debug --logLevel=DEBUG \
+      --debug --logLevel=INFO \
       --defaultentrypoints=http,https \
       --entrypoints='Name:http Address::80' \
       --entrypoints='Name:https Address::443 TLS:/ssl/test.crt,/ssl/test.key' \

@@ -31,7 +31,7 @@ docker run \
     waisbrot/wait
 
 # wait for services to become available
-URLS="${KEYCLOAK_URL}/auth ${GITLAB_URL}/help ${PLATFORM_DOMAIN}"
+URLS="${KEYCLOAK_URL}/auth ${GITLAB_URL}/help ${PLATFORM_DOMAIN} ${JUPYTERHUB_URL}/hub/api"
 
 for URL in $URLS
 do
