@@ -198,10 +198,18 @@ register-gitlab-oauth-applications: unregister-gitlab-oauth-applications
 		-h /var/opt/gitlab/postgresql -d gitlabhq_production \
 		-c "INSERT INTO oauth_applications (name, uid, scopes, redirect_uri, secret, trusted) VALUES ('renga-ui', 'renga-ui', 'api read_user', '$(RENGA_UI_URL)/login/redirect/gitlab http://localhost:3000/login/redirect/gitlab', 'no-secret-needed', 'true')" > /dev/null 2>&1
 
+	@$(DOCKER_COMPOSE_ENV) docker-compose exec gitlab /opt/gitlab/bin/gitlab-psql \
+		-h /var/opt/gitlab/postgresql -d gitlabhq_production \
+		-c "INSERT INTO oauth_applications (name, uid, scopes, redirect_uri, secret, trusted) VALUES ('jupyterhub', 'jupyterhub', 'api read_user', '$(JUPYTERHUB_URL)/hub/oauth_callback $(JUPYTERHUB_URL)/hub/api/oauth2/authorize', 'no-secret-needed', 'true')" > /dev/null 2>&1
+
 unregister-gitlab-oauth-applications:
 	@$(DOCKER_COMPOSE_ENV) docker-compose exec gitlab /opt/gitlab/bin/gitlab-psql \
 		-h /var/opt/gitlab/postgresql -d gitlabhq_production \
 		-c "DELETE FROM oauth_applications WHERE uid='renga-ui'" > /dev/null 2>&1
+
+	@$(DOCKER_COMPOSE_ENV) docker-compose exec gitlab /opt/gitlab/bin/gitlab-psql \
+		-h /var/opt/gitlab/postgresql -d gitlabhq_production \
+		-c "DELETE FROM oauth_applications WHERE uid='jupyterhub'" > /dev/null 2>&1
 
 register-runners: unregister-runners
 ifeq (${RUNNER_TOKEN},)

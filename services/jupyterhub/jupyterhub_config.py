@@ -18,17 +18,18 @@ from oauthenticator.generic import GenericOAuthenticator
 
 # c.JupyterHub.authenticator_class = 'nullauthenticator.NullAuthenticator'
 
-# Broken Keycloak setup:
+from oauthenticator.gitlab import GitLabOAuthenticator
+c.JupyterHub.authenticator_class = GitLabOAuthenticator
 
-keycloak_url = os.environ.get('KEYCLOAK_URL')
+# keycloak_url = os.environ.get('KEYCLOAK_URL')
 
-c.JupyterHub.authenticator_class = GenericOAuthenticator
-c.OAuthenticator.client_id = 'jupyterhub'
-c.OAuthenticator.client_secret = 'bad-secret'
-c.GenericOAuthenticator.token_url = '{}/auth/realms/Renga/protocol/openid-connect/token'.format(
-    keycloak_url)  # oauth2 provider's token url
-c.GenericOAuthenticator.userdata_url = '{}/auth/realms/Renga/protocol/openid-connect/userinfo'.format(
-    keycloak_url)
+# c.JupyterHub.authenticator_class = GenericOAuthenticator
+# c.OAuthenticator.client_id = 'jupyterhub'
+# c.OAuthenticator.client_secret = 'no-secret-needed'
+# c.GenericOAuthenticator.token_url = '{}/auth/realms/Renga/protocol/openid-connect/token'.format(
+#     keycloak_url)  # oauth2 provider's token url
+# c.GenericOAuthenticator.userdata_url = '{}/auth/realms/Renga/protocol/openid-connect/userinfo'.format(
+#     keycloak_url)
 c.GenericOAuthenticator.userdata_method = 'GET'
 c.GenericOAuthenticator.userdata_params = {"state": "state"}
 c.GenericOAuthenticator.username_key = "preferred_username"
@@ -135,14 +136,17 @@ c.JupyterHub.service_tokens = {'renga_secret1234': 'renga'}
 #              'environment':
 #          }
 #      ]
+
+env = os.environ.copy()
+env['FLASK_APP'] = 'project_service.py'
+env['FLASK_DEBUG'] = '1'
+env['OAUTHLIB_INSECURE_TRANSPORT'] = '1'
+
 c.JupyterHub.services = [{
     'name': 'projects',
     'command': ['flask', 'run', '-p', '8000'],
     'url': 'http://localhost:8000',
-    'environment': {
-        'FLASK_APP': 'project_service.py',
-        'FLASK_DEBUG': '1'
-    },
+    'environment': env,
     'admin': True
 }]
 
