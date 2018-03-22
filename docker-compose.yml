@@ -51,6 +51,8 @@ services:
       GITLAB_URL: ${GITLAB_URL}
       RENGA_UI_URL: ${RENGA_UI_URL}
       GITLAB_CLIENT_SECRET: ${GITLAB_CLIENT_SECRET}
+      JUPYTERHUB_URL: ${JUPYTERHUB_URL}
+      JUPYTERHUB_CLIENT_SECRET: ${JUPYTERHUB_CLIENT_SECRET}
     command:
       - "-b 0.0.0.0"
       - "-Dkeycloak.migration.action=import"
@@ -217,15 +219,27 @@ services:
 
   jupyterhub:
     build: services/jupyterhub
+    command: jupyterhub --port 80
+    ports:
+      - 80
+    environment:
+      OAUTH2_TOKEN_URL: ${KEYCLOAK_URL}/auth/realms/Renga/protocol/openid-connect/token
+      OAUTH2_AUTHORIZE_URL: ${KEYCLOAK_URL}/auth/realms/Renga/protocol/openid-connect/auth
+      KEYCLOAK_URL: ${KEYCLOAK_URL}
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - ./services/jupyterhub/jupyterhub_config.py:/srv/jupyterhub/jupyterhub_config.py
+      - ./services/jupyterhub/project_service.py:/srv/jupyterhub/project_service.py
     labels:
       traefik.enable: "true"
       traefik.frontend.rule: "Host:jupyterhub.${PLATFORM_DOMAIN}"
     networks:
-      - default
-      - review
+      default:
+        aliases:
+          - jupyterhub.${PLATFORM_DOMAIN}
+      review:
+        aliases:
+          - jupyterhub.${PLATFORM_DOMAIN}
 
 networks:
   review:
