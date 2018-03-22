@@ -226,6 +226,9 @@ services:
       OAUTH2_TOKEN_URL: ${KEYCLOAK_URL}/auth/realms/Renga/protocol/openid-connect/token
       OAUTH2_AUTHORIZE_URL: ${KEYCLOAK_URL}/auth/realms/Renga/protocol/openid-connect/auth
       KEYCLOAK_URL: ${KEYCLOAK_URL}
+      GITLAB_HOST: "http://gitlab.renga.local"
+      GITLAB_CLIENT_ID: jupyterhub
+      GITLAB_CLIENT_SECRET: no-secret-needed
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - ./services/jupyterhub/jupyterhub_config.py:/srv/jupyterhub/jupyterhub_config.py
