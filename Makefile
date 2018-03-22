@@ -82,6 +82,11 @@ ifndef GITLAB_CLIENT_SECRET
 	export GITLAB_CLIENT_SECRET
 endif
 
+ifndef JUPYTERHUB_CLIENT_SECRET
+	JUPYTERHUB_CLIENT_SECRET=dummy-secret
+	export JUPYTERHUB_CLIENT_SECRET
+endif
+
 define DOCKER_BUILD
 set version in Docker := "$(PLATFORM_VERSION)"
 set dockerRepository := Option("$(DOCKER_REPOSITORY)".replaceAll("/$$", ""))

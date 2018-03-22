@@ -30,6 +30,8 @@ cat $KEYCLOAK_MIGRATION_FILE.tpl \
   | sed -e "s|{{RENGA_UI_URL}}|${RENGA_UI_URL}|" \
   | sed -e "s|{{GITLAB_URL}}|${GITLAB_URL}|" \
   | sed -e "s|{{GITLAB_CLIENT_SECRET}}|${GITLAB_CLIENT_SECRET}|" \
+  | sed -e "s|{{JUPYTERHUB_URL}}|${JUPYTERHUB_URL}|" \
+  | sed -e "s|{{JUPYTERHUB_CLIENT_SECRET}}|${JUPYTERHUB_CLIENT_SECRET}|" \
   > $KEYCLOAK_MIGRATION_FILE
 
 exec /opt/jboss/docker-entrypoint.sh $@

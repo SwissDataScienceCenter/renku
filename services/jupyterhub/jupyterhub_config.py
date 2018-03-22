@@ -1,5 +1,8 @@
 # Configuration file for jupyterhub.
 import os
+from subprocess import call
+
+from oauthenticator.generic import GenericOAuthenticator
 
 ## Class for authenticating users.
 #
@@ -13,7 +16,23 @@ import os
 #    where `handler` is the calling web.RequestHandler,
 #    and `data` is the POST form data from the login page.
 
-c.JupyterHub.authenticator_class = 'nullauthenticator.NullAuthenticator'
+# c.JupyterHub.authenticator_class = 'nullauthenticator.NullAuthenticator'
+
+# Broken Keycloak setup:
+
+keycloak_url = os.environ.get('KEYCLOAK_URL')
+
+c.JupyterHub.authenticator_class = GenericOAuthenticator
+c.OAuthenticator.client_id = 'jupyterhub'
+c.OAuthenticator.client_secret = 'bad-secret'
+c.GenericOAuthenticator.token_url = '{}/auth/realms/Renga/protocol/openid-connect/token'.format(
+    keycloak_url)  # oauth2 provider's token url
+c.GenericOAuthenticator.userdata_url = '{}/auth/realms/Renga/protocol/openid-connect/userinfo'.format(
+    keycloak_url)
+c.GenericOAuthenticator.userdata_method = 'GET'
+c.GenericOAuthenticator.userdata_params = {"state": "state"}
+c.GenericOAuthenticator.username_key = "preferred_username"
+c.GenericOAuthenticator.create_system_users = True
 
 ## The base URL of the entire application
 #c.JupyterHub.base_url = '/'
@@ -116,16 +135,16 @@ c.JupyterHub.service_tokens = {'renga_secret1234': 'renga'}
 #              'environment':
 #          }
 #      ]
-c.JupyterHub.services = [
-    {
-        'name':
-        'renga',
-        'admin':
-        True,
-        'api_token':
-        '0fb7b7f5f2ed069547dcef6e32de21173f987c95697f3bc2c548a5b1334706dc'
+c.JupyterHub.services = [{
+    'name': 'projects',
+    'command': ['flask', 'run', '-p', '8000'],
+    'url': 'http://localhost:8000',
+    'environment': {
+        'FLASK_APP': 'project_service.py',
+        'FLASK_DEBUG': '1'
     },
-]
+    'admin': True
+}]
 
 ## The class to use for spawning single-user servers.
 #
@@ -146,7 +165,6 @@ class RengaSpawner(DockerSpawner):
         args += [
             '--ip=0.0.0.0',
             '--NotebookApp.token=%s' % self.user_options['token'],
-            # '--hub-api-url=http://jupyterhub:8000/hub/api',
             '--NotebookApp.base_url=/user/{}'.format(self.user.name)
         ]
         self.log.info("args = {}".format(' '.join(args)))
@@ -156,7 +174,21 @@ class RengaSpawner(DockerSpawner):
         """Start the notebook server."""
         self.log.info(
             "starting with args: {}".format(' '.join(self.get_args())))
-        return super().start()
+        self.log.info("user options: {}".format(self.user_options))
+
+        environment = self.get_env()
+        environment.update({
+            'CI_COMMIT_REF_NAME':
+            self.user_options.get('branch', 'master'),
+            'CI_REPOSITORY_URL':
+            self.user_options.get('repo_url', ''),
+            'CI_PROJECT_PATH':
+            self.user_options.get('project_path', ''),
+            'CI_ENVIRONMENT_SLUG':
+            self.user_options.get('env_slug', '')
+        })
+
+        return super().start(extra_create_kwargs={'environment': environment})
 
 
 c.JupyterHub.spawner_class = RengaSpawner
@@ -175,7 +207,7 @@ c.RengaSpawner.extra_host_config = {'network_mode': network_name}
 # it.  Most jupyter/docker-stacks *-notebook images run the Notebook server as
 # user `jovyan`, and set the notebook directory to `/home/jovyan/work`.
 # We follow the same convention.
-notebook_dir = os.environ.get('DOCKER_NOTEBOOK_DIR') or '/home/jovyan/work'
+notebook_dir = os.environ.get('DOCKER_NOTEBOOK_DIR') or '/home/jovyan'
 c.RengaSpawner.notebook_dir = notebook_dir
 # Mount the real user's Docker volume on the host to the notebook user's
 # notebook directory in the container
