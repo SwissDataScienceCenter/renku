@@ -265,7 +265,7 @@ clean:
 
 restart: stop start
 
-start: docker-network $(GITLAB_DIRS:%=services/gitlab/%) unregister-runners docker-compose-up wait register-gitlab-oauth-applications
+start: docker-network $(GITLAB_DIRS:%=services/gitlab/%) unregister-runners docker-compose-up register-gitlab-oauth-applications
 ifeq (${GITLAB_CLIENT_SECRET}, dummy-secret)
 	@echo
 	@echo "[Warning] You have not defined a GITLAB_CLIENT_SECRET. Using dummy"

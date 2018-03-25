@@ -13,7 +13,8 @@ prefix = os.environ.get('JUPYTERHUB_SERVICE_PREFIX', '/')
 
 auth = HubOAuth(
     api_token=os.environ['JUPYTERHUB_API_TOKEN'],
-    cookie_cache_max_age=60, )
+    cookie_cache_max_age=60,
+)
 
 app = Flask(__name__)
 
@@ -46,45 +47,32 @@ def authenticated(f):
 def whoami(user):
     return Response(
         json.dumps(user, indent=1, sort_keys=True),
-        mimetype='application/json', )
+        mimetype='application/json',
+    )
 
 
 @app.route(prefix + '<namespace>/<project>/<environment_slug>')
 @authenticated
 def launch_notebook(user, namespace, project, environment_slug):
-    # 1. check authorization against GitLab
-    from requests_oauthlib import OAuth2Session
-    from oauthlib.oauth2 import BackendApplicationClient
-
-    client_id = os.environ.get('GITLAB_CLIENT_ID')
-    client_secret = os.environ.get('GITLAB_CLIENT_SECRET')
-    client = BackendApplicationClient(client_id=client_id)
-    oauth = OAuth2Session(client=client)
-    token = oauth.fetch_token(
-        token_url='{0}/oauth/token'.format(os.environ.get('GITLAB_HOST')),
-        client_id=client_id,
-        client_secret=client_secret)
-
-    gl = gitlab.Gitlab(
-        os.environ.get('GITLAB_HOST', 'http://gitlab.renga.local'),
-        oauth_token=token)
-    app.logger.info(gl)
-
-    gl_project = gl.projects.get('{0}/{1}'.format(namespace, project))
-    app.logger.info(gl_project)
-    # 2. launch user server with name <namespace>_<project>_<environment_slug>
+    """Launch user server with name."""
     headers = {'Authorization': 'token %s' % auth.api_token}
+    # 1. launch using spawner that checks the access
     r = requests.request(
         'POST',
         auth.api_url + '/users/{user[name]}/server'.format(user=user),
-        json={'token': 'abcd1234'},
+        json={
+            'token': 'abcd1234',
+            'namespace': namespace,
+            'project': project,
+            'environment_slug': environment_slug,
+        },
         headers=headers)
 
-    # 3. redirect to launched server
+    # 2. redirect to launched server
     if r.status_code not in {201, 400}:
         abort(r.status_code)
-    return redirect(auth.hub_prefix +
-                    'user/{user[name]}?token=abcd1234'.format(user=user))
+    return redirect(
+        auth.hub_prefix + 'user/{user[name]}?token=abcd1234'.format(user=user))
 
 
 @app.route(prefix + 'oauth_callback')

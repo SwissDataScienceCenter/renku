@@ -21,15 +21,6 @@ from oauthenticator.generic import GenericOAuthenticator
 from oauthenticator.gitlab import GitLabOAuthenticator
 c.JupyterHub.authenticator_class = GitLabOAuthenticator
 
-# keycloak_url = os.environ.get('KEYCLOAK_URL')
-
-# c.JupyterHub.authenticator_class = GenericOAuthenticator
-# c.OAuthenticator.client_id = 'jupyterhub'
-# c.OAuthenticator.client_secret = 'no-secret-needed'
-# c.GenericOAuthenticator.token_url = '{}/auth/realms/Renga/protocol/openid-connect/token'.format(
-#     keycloak_url)  # oauth2 provider's token url
-# c.GenericOAuthenticator.userdata_url = '{}/auth/realms/Renga/protocol/openid-connect/userinfo'.format(
-#     keycloak_url)
 c.GenericOAuthenticator.userdata_method = 'GET'
 c.GenericOAuthenticator.userdata_params = {"state": "state"}
 c.GenericOAuthenticator.username_key = "preferred_username"
@@ -174,11 +165,32 @@ class RengaSpawner(DockerSpawner):
         self.log.info("args = {}".format(' '.join(args)))
         return args + self.args
 
-    def start(self):
+    async def start(self):
         """Start the notebook server."""
-        self.log.info(
-            "starting with args: {}".format(' '.join(self.get_args())))
+        self.log.info("starting with args: {}".format(' '.join(
+            self.get_args())))
         self.log.info("user options: {}".format(self.user_options))
+
+        auth_state = await self.user.get_auth_state()
+        assert 'access_token' in auth_state
+        self.log.info(auth_state)
+
+        # 1. check authorization against GitLab
+        options = self.user_options
+        namespace = options.get('namespace')
+        project = options.get('project')
+
+        url = os.environ.get('GITLAB_HOST', 'http://gitlab.renga.local')
+
+        import gitlab
+        gl = gitlab.Gitlab(
+            url, api_version=4, oauth_token=auth_state['access_token'])
+        gl_project = gl.projects.get('{0}/{1}'.format(namespace, project))
+        gl_user = gl.users.list(username=self.user.name)[0]
+
+        access_level = gl_project.members.get(gl_user.id).access_level
+        if access_level < gitlab.DEVELOPER_ACCESS:
+            raise  # 403: user needs at least dev access
 
         environment = self.get_env()
         environment.update({
@@ -192,7 +204,8 @@ class RengaSpawner(DockerSpawner):
             self.user_options.get('env_slug', '')
         })
 
-        return super().start(extra_create_kwargs={'environment': environment})
+        return await super().start(
+            extra_create_kwargs={'environment': environment})
 
 
 c.JupyterHub.spawner_class = RengaSpawner
@@ -467,7 +480,7 @@ c.RengaSpawner.debug = True
 #
 #  The data from this form submission will be passed on to your spawner in
 #  `self.user_options`
-#c.Spawner.options_form = ''
+# FIXME c.Spawner.options_form = 'Token: <input name="token"></input><br/>'
 
 ## Interval (in seconds) on which to poll the spawner for single-user server's
 #  status.
@@ -597,7 +610,7 @@ c.Authenticator.admin_users = set(['admin'])
 #  If encryption is unavailable, auth_state cannot be persisted.
 #
 #  New in JupyterHub 0.8
-#c.Authenticator.enable_auth_state = False
+c.Authenticator.enable_auth_state = True
 
 ## Dictionary mapping authenticator usernames to JupyterHub users.
 #
