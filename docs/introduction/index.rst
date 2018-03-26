@@ -6,10 +6,10 @@
   This platform is a (very early) beta version. It is made available to early
   adopters only for the purpose of getting acquainted with the APIs. THIS
   VERSION IS NOT INTENDED TO BE USED IN PRODUCTION MODE OR WITH SENSITIVE
-  DATA. In this development version we have refactored the earlier platform to
-  focus more on usability. Not all components for on-line knowledge
+  DATA. In this development version we have re-factored the earlier platform
+  to focus more on usability. Not all components for on-line knowledge
   representation are yet in place, but single-user functionality for lineage
-  capture and workflow generation are available via the CLI.  We provide no
+  capture and workflow generation are available via the CLI.We provide no
   guarantee whatsoever about the security of the data stored on this platform.
 
 .. _renga_introduction:

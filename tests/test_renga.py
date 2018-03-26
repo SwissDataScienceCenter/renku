@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# Copyright 2017 - Swiss Data Science Center (SDSC)
+# Copyright 2017-2018 - Swiss Data Science Center (SDSC)
 # A partnership between École Polytechnique Fédérale de Lausanne (EPFL) and
 # Eidgenössische Technische Hochschule Zürich (ETHZ).
 #
@@ -17,54 +17,23 @@
 # limitations under the License.
 """Renga integration tests."""
 
+import os
 
-import docker
 import pytest
-import requests
+import splinter
 
 
-@pytest.fixture
-def token():
-    """Get keycloak access token."""
-    response = requests.post(
-        'http://localhost/auth/realms/Renga/'
-        'protocol/openid-connect/token',
-        data={
-            'grant_type': 'password',
-            'client_id': 'demo-client',
-            'username': 'demo',
-            'password': 'demo',
-        })
-    return response.json().get('access_token')
+def test_renga_login(browser):
+    """Test Renga login."""
+    url = os.getenv('RENGA_ENDPOINT', 'http://localhost')
+    browser.visit(url)
 
+    assert browser.is_element_present_by_id(
+        'oauth-login-oauth2_generic', wait_time=10)
+    browser.find_by_id('oauth-login-oauth2_generic').click()
 
-def test_keycloak_token(token):
-    """Test keycloak setup."""
-    assert token
-
-
-def test_resource_manager(token):
-    """Test obtaining an authorization from the resource manager."""
-    r = requests.post(
-        'http://localhost/api/resource-manager/authorize',
-        headers={'Authorization': 'Bearer {0}'.format(token)},
-        json={
-            "scope": ["storage:bucket_create"],
-            "service_claims": {
-                "custom": 42
-            }
-        })
-
-    assert r.status_code == 200
-    assert r.json().get('access_token')
-
-
-def test_deployer_context_create(token):
-    """Test creation of a deployment context."""
-    r = requests.post(
-        'http://localhost/api/deployer/contexts',
-        headers={'Authorization': 'Bearer {0}'.format(token)},
-        json={"image": "hello-world"})
-
-    assert r.status_code == 201
-    assert r.json().get('identifier')
+    assert browser.is_element_present_by_id('username', wait_time=60)
+    browser.fill('username', 'demo')
+    browser.fill('password', 'demo')
+    browser.find_by_id('kc-login').click()
+    assert 'Renga' in browser.title

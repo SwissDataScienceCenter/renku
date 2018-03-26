@@ -164,7 +164,7 @@ $(makefile-services): %: $(PLATFORM_BASE_DIR)/%
 	$(MAKE) -C $(PLATFORM_BASE_DIR)/$@
 
 # Docker actions
-.PHONY: docker-images docker-network docker-compose-up
+.PHONY: docker-images docker-network docker-compose-up docker-pull
 docker-images: $(scala-services) $(dockerfile-services) $(makefile-services)
 
 docker-network:
@@ -180,7 +180,9 @@ endif
 
 docker-compose-up:
 	$(DOCKER_COMPOSE_ENV) docker-compose up --build -d ${DOCKER_SCALE}
-	@./scripts/wait-for-services.sh
+
+docker-compose-pull:
+	$(DOCKER_COMPOSE_ENV) docker-compose pull
 
 # GitLab actions
 services/gitlab/%:
@@ -255,8 +257,14 @@ unregister-runners:
 	done
 
 # Platform actions
-.PHONY: start stop restart test clean wipe
-start: docker-network $(GITLAB_DIRS:%=services/gitlab/%) unregister-runners docker-compose-up register-gitlab-oauth-applications register-gitlab-user-token
+.PHONY: clean restart start stop test wait wipe
+
+clean:
+	@$(DOCKER_COMPOSE_ENV) docker-compose down --volumes --remove-orphans
+
+restart: stop start
+
+start: docker-network $(GITLAB_DIRS:%=services/gitlab/%) unregister-runners docker-compose-up wait register-gitlab-oauth-applications register-gitlab-user-token
 ifeq (${GITLAB_CLIENT_SECRET}, dummy-secret)
 	@echo
 	@echo "[Warning] You have not defined a GITLAB_CLIENT_SECRET. Using dummy"
@@ -284,16 +292,14 @@ endif
 stop: remove-docker-network unregister-runners unregister-gitlab-oauth-applications unregister-gitlab-user-token
 	$(DOCKER_COMPOSE_ENV) docker-compose stop
 
-restart: stop start
-
-clean:
-	@$(DOCKER_COMPOSE_ENV) docker-compose down --volumes --remove-orphans
-
-wipe: clean remove-docker-network
-	@rm -rf services/storage/data/*
-	@rm -rf gitlab
-
 test: docs/requirements.txt tests/requirements.txt
 	@pip install -r docs/requirements.txt
 	@pip install -r tests/requirements.txt
 	@scripts/run-tests.sh
+
+wait:
+	@$(DOCKER_COMPOSE_ENV) ./scripts/wait-for-services.sh
+
+wipe: clean remove-docker-network
+	@rm -rf services/storage/data/*
+	@rm -rf gitlab

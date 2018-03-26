@@ -4,6 +4,8 @@ auditability
 auth
 backend
 backends
+blog
+CLI
 coopetition
 deployer
 github
@@ -25,6 +27,7 @@ online
 pre
 Renga
 renga
+repo
 scala
 SQLAlchemy
 supertype

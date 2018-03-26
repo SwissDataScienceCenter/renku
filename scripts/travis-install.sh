@@ -1,7 +1,7 @@
 #!/usr/bin/env sh
 # -*- coding: utf-8 -*-
 #
-# Copyright 2017 - Swiss Data Science Center (SDSC)
+# Copyright 2017-2018 - Swiss Data Science Center (SDSC)
 # A partnership between École Polytechnique Fédérale de Lausanne (EPFL) and
 # Eidgenössische Technische Hochschule Zürich (ETHZ).
 #
@@ -23,5 +23,11 @@ if [ "$TRAVIS_EVENT_TYPE" = "cron" ]
 then
     make -e PLATFORM_BASE_DIR=/tmp
 else
-    docker-compose pull
+    make docker-compose-pull
 fi
+
+# install geckodriver
+wget https://github.com/mozilla/geckodriver/releases/download/v0.19.1/geckodriver-v0.19.1-linux64.tar.gz
+tar -xvzf geckodriver*
+chmod +x geckodriver
+sudo mv geckodriver /usr/local/bin
