@@ -29,6 +29,7 @@ addons:
   hosts:
     - renga.local
     - gitlab.renga.local
+    - jupyterhub.renga.local
     - keycloak.renga.local
 
 branches:
