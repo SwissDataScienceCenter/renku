@@ -9,6 +9,7 @@ from subprocess import call
 from dockerspawner import DockerSpawner
 
 from oauthenticator.gitlab import GitLabOAuthenticator
+from tornado import web
 
 #: 1. enable named-servers
 c.JupyterHub.allow_named_servers = True
@@ -150,7 +151,6 @@ c.JupyterHub.services = [{
 }]
 
 
-
 class RengaSpawner(DockerSpawner):
     """A class for spawning notebooks on renga-jupyterhub.
 
@@ -159,8 +159,8 @@ class RengaSpawner(DockerSpawner):
 
     async def start(self):
         """Start the notebook server."""
-        self.log.info("starting with args: {}".format(' '.join(
-            self.get_args())))
+        self.log.info(
+            "starting with args: {}".format(' '.join(self.get_args())))
         self.log.info("user options: {}".format(self.user_options))
 
         auth_state = await self.user.get_auth_state()
@@ -171,20 +171,28 @@ class RengaSpawner(DockerSpawner):
         options = self.user_options
         namespace = options.get('namespace')
         project = options.get('project')
+        env_slug = options.get('environment_slug')
 
         url = os.environ.get('GITLAB_HOST', 'http://gitlab.renga.local')
 
         import gitlab
         gl = gitlab.Gitlab(
             url, api_version=4, oauth_token=auth_state['access_token'])
-        gl_project = gl.projects.get('{0}/{1}'.format(namespace, project))
-        gl_user = gl.users.list(username=self.user.name)[0]
 
-        # TODO check the enviroment slug
+        try:
+            gl_project = gl.projects.get('{0}/{1}'.format(namespace, project))
+            gl_user = gl.users.list(username=self.user.name)[0]
+            access_level = gl_project.members.get(gl_user.id).access_level
+        except Exception as e:
+            self.log.error(e)
+            raise web.HTTPError(401, 'Not authorized to view project.')
 
-        access_level = gl_project.members.get(gl_user.id).access_level
         if access_level < gitlab.DEVELOPER_ACCESS:
-            raise  # 403: user needs at least dev access
+            raise web.HTTPError(401, 'Not authorized to view project.')
+
+        if not any(gl_env.slug for gl_env in gl_project.environments.list()
+                   if gl_env.slug == env_slug):
+            raise web.HTTPError(404, 'Environment does not exist.')
 
         environment = self.get_env()
         environment.update({
