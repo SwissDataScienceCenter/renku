@@ -2,6 +2,14 @@
 import os
 from subprocess import call
 
+## The class to use for spawning single-user servers.
+#
+#  Should be a subclass of Spawner.
+# Spawn single-user servers as Docker containers
+from dockerspawner import DockerSpawner
+
+from oauthenticator.gitlab import GitLabOAuthenticator
+
 #: 1. enable named-servers
 c.JupyterHub.allow_named_servers = True
 
@@ -19,7 +27,6 @@ c.JupyterHub.allow_named_servers = True
 
 # c.JupyterHub.authenticator_class = 'nullauthenticator.NullAuthenticator'
 
-from oauthenticator.gitlab import GitLabOAuthenticator
 c.JupyterHub.authenticator_class = GitLabOAuthenticator
 
 c.GenericOAuthenticator.userdata_method = 'GET'
@@ -79,23 +86,23 @@ c.GenericOAuthenticator.create_system_users = True
 #  `hub_ip`.
 #
 #  .. versionadded:: 0.8
-#c.JupyterHub.hub_connect_ip = ''
+c.JupyterHub.hub_connect_ip = 'jupyterhub'
 
 ## The port for proxies & spawners to connect to the hub on.
 #
 #  Used alongside `hub_connect_ip`
 #
 #  .. versionadded:: 0.8
-#c.JupyterHub.hub_connect_port = 0
+#c.JupyterHub.hub_connect_port = 80
 
 ## The ip address for the Hub process to *bind* to.
 #
 #  See `hub_connect_ip` for cases where the bind and connect address should
 #  differ.
-c.JupyterHub.hub_ip = 'jupyterhub'
+c.JupyterHub.hub_ip = '0.0.0.0'
 
 ## The port for the Hub process
-c.JupyterHub.hub_port = 8080
+#c.JupyterHub.hub_port = 8080
 
 ## The public facing ip of the whole application (the proxy)
 #c.JupyterHub.ip = ''
@@ -108,7 +115,7 @@ c.JupyterHub.hub_port = 8080
 #
 #  Allows ahead-of-time generation of API tokens for use by externally managed
 #  services.
-c.JupyterHub.service_tokens = {'renga_secret1234': 'renga'}
+#c.JupyterHub.service_tokens = {'renga_secret1234': 'renga'}
 
 ## List of service specification dictionaries.
 #
@@ -136,17 +143,12 @@ env['OAUTHLIB_INSECURE_TRANSPORT'] = '1'
 
 c.JupyterHub.services = [{
     'name': 'projects',
-    'command': ['flask', 'run', '-p', '8000'],
-    'url': 'http://localhost:8000',
+    'command': ['flask', 'run', '-p', '9080'],
+    'url': 'http://localhost:9080',
     'environment': env,
     'admin': True,
 }]
 
-## The class to use for spawning single-user servers.
-#
-#  Should be a subclass of Spawner.
-# Spawn single-user servers as Docker containers
-from dockerspawner import DockerSpawner
 
 
 class RengaSpawner(DockerSpawner):
@@ -154,18 +156,6 @@ class RengaSpawner(DockerSpawner):
 
     Inspired by the binderhub kubernetes helm chart.
     """
-
-    def get_args(self):
-        """Define the arguments for this notebook server."""
-        args = super().get_args()
-        self.log.info(self.args)
-        args += [
-            '--ip=0.0.0.0',
-            '--NotebookApp.token={0}'.format(self.user_options.get('token', 'abcd1234')),
-            '--NotebookApp.base_url={0}'.format(self.user_options.get('base_url', '/')),
-        ]
-        self.log.info("args = {}".format(' '.join(args)))
-        return args + self.args
 
     async def start(self):
         """Start the notebook server."""
@@ -190,6 +180,8 @@ class RengaSpawner(DockerSpawner):
         gl_project = gl.projects.get('{0}/{1}'.format(namespace, project))
         gl_user = gl.users.list(username=self.user.name)[0]
 
+        # TODO check the enviroment slug
+
         access_level = gl_project.members.get(gl_user.id).access_level
         if access_level < gitlab.DEVELOPER_ACCESS:
             raise  # 403: user needs at least dev access
@@ -203,7 +195,8 @@ class RengaSpawner(DockerSpawner):
             'CI_PROJECT_PATH':
             self.user_options.get('project_path', ''),
             'CI_ENVIRONMENT_SLUG':
-            self.user_options.get('env_slug', '')
+            self.user_options.get('env_slug', ''),
+            # TODO 'ACCESS_TOKEN': access_token,
         })
 
         return await super().start(
@@ -211,12 +204,9 @@ class RengaSpawner(DockerSpawner):
 
 
 c.JupyterHub.spawner_class = RengaSpawner
-# c.RengaSpawner.image = 'jupyter/minimal-notebook'
-# spawn_cmd = os.environ.get('DOCKER_SPAWN_CMD', "jupyter-notebook")
-# c.RengaSpawner.cmd = spawn_cmd
 
 network_name = 'review'
-c.DockerSpawner.container_name_template = '{prefix}-{username}-{servername}'
+c.RengaSpawner.container_name_template = '{prefix}-{username}-{servername}'
 c.RengaSpawner.use_internal_ip = True
 c.RengaSpawner.network_name = network_name
 
