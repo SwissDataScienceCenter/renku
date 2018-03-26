@@ -219,7 +219,7 @@ services:
 
   jupyterhub:
     build: services/jupyterhub
-    command: jupyterhub --port 80
+    command: jupyterhub --debug --port 80
     ports:
       - 80
     environment:
