@@ -9,14 +9,19 @@ from flask import Flask, abort, redirect, request, Response, make_response
 
 from jupyterhub.services.auth import HubOAuth
 
-prefix = os.environ.get('JUPYTERHUB_SERVICE_PREFIX', '/')
+URL_PREFIX = os.environ.get('JUPYTERHUB_SERVICE_PREFIX', '/')
 
 auth = HubOAuth(
     api_token=os.environ['JUPYTERHUB_API_TOKEN'],
-    cookie_cache_max_age=60,
+    cache_max_age=60,
 )
 
 app = Flask(__name__)
+
+
+def _server_name(namespace, project, environment_slug):
+    """Return a name for Jupyter server."""
+    return '{0}-{1}-{2}'.format(namespace, project, environment_slug)
 
 
 def authenticated(f):
@@ -42,7 +47,7 @@ def authenticated(f):
     return decorated
 
 
-@app.route(prefix)
+@app.route(URL_PREFIX)
 @authenticated
 def whoami(user):
     return Response(
@@ -51,31 +56,64 @@ def whoami(user):
     )
 
 
-@app.route(prefix + '<namespace>/<project>/<environment_slug>')
+@app.route(
+    URL_PREFIX + '<namespace>/<project>/<environment_slug>', methods=['GET'])
+@app.route(
+    URL_PREFIX + '<namespace>/<project>/<environment_slug>/<path:notebook>',
+    methods=['GET'])
 @authenticated
-def launch_notebook(user, namespace, project, environment_slug):
+def launch_notebook(user, namespace, project, environment_slug, notebook=None):
     """Launch user server with name."""
+    server_name = _server_name(namespace, project, environment_slug)
+    base_url = '/user/{user[name]}/{server_name}/'.format(user=user, server_name=server_name)
     headers = {'Authorization': 'token %s' % auth.api_token}
     # 1. launch using spawner that checks the access
     r = requests.request(
         'POST',
-        auth.api_url + '/users/{user[name]}/server'.format(user=user),
+        auth.api_url + '/users/{user[name]}/servers/{server_name}'.format(
+            user=user, server_name=server_name),
         json={
             'token': 'abcd1234',
             'namespace': namespace,
             'project': project,
             'environment_slug': environment_slug,
+            'base_url': base_url,
         },
         headers=headers)
 
     # 2. redirect to launched server
     if r.status_code not in {201, 400}:
         abort(r.status_code)
-    return redirect(
-        auth.hub_prefix + 'user/{user[name]}?token=abcd1234'.format(user=user))
+
+    notebook_url = auth.hub_prefix + 'user/{user[name]}/{server_name}'.format(user=user, server_name=server_name)
+
+    if notebook:
+        notebook_url += '/notebooks/{notebook}'.format(notebook=notebook)
+
+    notebook_url += '?token=abcd1234'
+    return redirect(notebook_url)
 
 
-@app.route(prefix + 'oauth_callback')
+# @app.route(
+#     URL_PREFIX + '<namespace>/<project>/<environment_slug>', methods=['DELETE'])
+# @app.route(
+#     URL_PREFIX + '<namespace>/<project>/<environment_slug>/<path:notebook>',
+#     methods=['DELETE'])
+@authenticated
+def stop_notebook(user, namespace, project, environment_slug, notebook=None):
+    """Launch user server with name."""
+    server_name = _server_name(namespace, project, environment_slug)
+    headers = {'Authorization': 'token %s' % auth.api_token}
+
+    r = requests.request(
+        'DELETE',
+        auth.api_url + '/users/{user[name]}/servers/{server_name}'.format(
+            user=user, server_name=server_name),
+        headers=headers)
+    return app.response_class(r.content, status=r.status_code, mimetype=r.mimetype)
+
+
+@app.route(URL_PREFIX + 'oauth_callback')
 def oauth_callback():
     code = request.args.get('code', None)
     if code is None:
@@ -90,7 +128,7 @@ def oauth_callback():
 
     token = auth.token_for_code(code)
     app.logger.info(token)
-    next_url = auth.get_next_url(cookie_state) or prefix
+    next_url = auth.get_next_url(cookie_state) or URL_PREFIX
     response = make_response(redirect(next_url))
     response.set_cookie(auth.cookie_name, token)
     return response

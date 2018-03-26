@@ -2,7 +2,8 @@
 import os
 from subprocess import call
 
-from oauthenticator.generic import GenericOAuthenticator
+#: 1. enable named-servers
+c.JupyterHub.allow_named_servers = True
 
 ## Class for authenticating users.
 #
@@ -138,7 +139,7 @@ c.JupyterHub.services = [{
     'command': ['flask', 'run', '-p', '8000'],
     'url': 'http://localhost:8000',
     'environment': env,
-    'admin': True
+    'admin': True,
 }]
 
 ## The class to use for spawning single-user servers.
@@ -157,10 +158,11 @@ class RengaSpawner(DockerSpawner):
     def get_args(self):
         """Define the arguments for this notebook server."""
         args = super().get_args()
+        self.log.info(self.args)
         args += [
             '--ip=0.0.0.0',
-            '--NotebookApp.token=%s' % self.user_options['token'],
-            '--NotebookApp.base_url=/user/{}'.format(self.user.name)
+            '--NotebookApp.token={0}'.format(self.user_options.get('token', 'abcd1234')),
+            '--NotebookApp.base_url={0}'.format(self.user_options.get('base_url', '/')),
         ]
         self.log.info("args = {}".format(' '.join(args)))
         return args + self.args
@@ -209,11 +211,12 @@ class RengaSpawner(DockerSpawner):
 
 
 c.JupyterHub.spawner_class = RengaSpawner
-c.RengaSpawner.image = 'jupyter/minimal-notebook'
-spawn_cmd = os.environ.get('DOCKER_SPAWN_CMD', "jupyter-notebook")
-c.RengaSpawner.cmd = spawn_cmd
+# c.RengaSpawner.image = 'jupyter/minimal-notebook'
+# spawn_cmd = os.environ.get('DOCKER_SPAWN_CMD', "jupyter-notebook")
+# c.RengaSpawner.cmd = spawn_cmd
 
 network_name = 'review'
+c.DockerSpawner.user_container_name = '{prefix}-{username}-{servername}'
 c.RengaSpawner.use_internal_ip = True
 c.RengaSpawner.network_name = network_name
 

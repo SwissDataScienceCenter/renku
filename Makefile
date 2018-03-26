@@ -50,8 +50,9 @@ DOCKER_COMPOSE_ENV=\
 	GITLAB_CLIENT_SECRET=$(GITLAB_CLIENT_SECRET) \
 	GITLAB_REGISTRY_URL=$(GITLAB_REGISTRY_URL) \
 	GITLAB_URL=$(GITLAB_URL) \
-	KEYCLOAK_URL=$(KEYCLOAK_URL) \
+	JUPYTERHUB_CLIENT_SECRET=$(JUPYTERHUB_CLIENT_SECRET) \
 	JUPYTERHUB_URL=$(JUPYTERHUB_URL) \
+	KEYCLOAK_URL=$(KEYCLOAK_URL) \
 	PLATFORM_DOMAIN=$(PLATFORM_DOMAIN) \
 	PLATFORM_VERSION=$(PLATFORM_VERSION) \
 	RENGA_ENDPOINT=$(RENGA_ENDPOINT) \
@@ -265,7 +266,7 @@ clean:
 
 restart: stop start
 
-start: docker-network $(GITLAB_DIRS:%=services/gitlab/%) unregister-runners docker-compose-up register-gitlab-oauth-applications
+start: docker-network $(GITLAB_DIRS:%=services/gitlab/%) unregister-runners docker-compose-up wait register-gitlab-oauth-applications
 ifeq (${GITLAB_CLIENT_SECRET}, dummy-secret)
 	@echo
 	@echo "[Warning] You have not defined a GITLAB_CLIENT_SECRET. Using dummy"
