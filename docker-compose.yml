@@ -223,6 +223,7 @@ services:
     ports:
       - 80
     environment:
+      # FIXME generate once
       JUPYTERHUB_CRYPT_KEY: 0abe09ef9c48ac5af43e5db8ba0447acd72fa1b88415bcf80dc8dea654c0fe95
       OAUTH2_TOKEN_URL: ${KEYCLOAK_URL}/auth/realms/Renga/protocol/openid-connect/token
       OAUTH2_AUTHORIZE_URL: ${KEYCLOAK_URL}/auth/realms/Renga/protocol/openid-connect/auth

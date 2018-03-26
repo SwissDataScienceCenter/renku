@@ -216,7 +216,7 @@ c.JupyterHub.spawner_class = RengaSpawner
 # c.RengaSpawner.cmd = spawn_cmd
 
 network_name = 'review'
-c.DockerSpawner.user_container_name = '{prefix}-{username}-{servername}'
+c.DockerSpawner.container_name_template = '{prefix}-{username}-{servername}'
 c.RengaSpawner.use_internal_ip = True
 c.RengaSpawner.network_name = network_name
 
