@@ -1,13 +1,13 @@
-from functools import wraps
 import json
 import os
+from functools import wraps
 from urllib.parse import quote
 
-import gitlab
 import requests
-from flask import Flask, abort, redirect, request, Response, make_response
-
 from jupyterhub.services.auth import HubOAuth
+
+import gitlab
+from flask import Flask, Response, abort, make_response, redirect, request
 
 URL_PREFIX = os.environ.get('JUPYTERHUB_SERVICE_PREFIX', '/')
 
@@ -65,7 +65,6 @@ def whoami(user):
 def launch_notebook(user, namespace, project, environment_slug, notebook=None):
     """Launch user server with name."""
     server_name = _server_name(namespace, project, environment_slug)
-    base_url = '/user/{user[name]}/{server_name}/'.format(user=user, server_name=server_name)
     headers = {'Authorization': 'token %s' % auth.api_token}
     # 1. launch using spawner that checks the access
     r = requests.request(
@@ -73,11 +72,9 @@ def launch_notebook(user, namespace, project, environment_slug, notebook=None):
         auth.api_url + '/users/{user[name]}/servers/{server_name}'.format(
             user=user, server_name=server_name),
         json={
-            'token': 'abcd1234',
             'namespace': namespace,
             'project': project,
             'environment_slug': environment_slug,
-            'base_url': base_url,
         },
         headers=headers)
 
@@ -85,20 +82,21 @@ def launch_notebook(user, namespace, project, environment_slug, notebook=None):
     if r.status_code not in {201, 400}:
         abort(r.status_code)
 
-    notebook_url = auth.hub_prefix + 'user/{user[name]}/{server_name}'.format(user=user, server_name=server_name)
+    notebook_url = auth.hub_host + '/user/{user[name]}/{server_name}/'.format(
+        user=user, server_name=server_name)
 
     if notebook:
         notebook_url += '/notebooks/{notebook}'.format(notebook=notebook)
 
-    notebook_url += '?token=abcd1234'
     return redirect(notebook_url)
 
 
-# @app.route(
-#     URL_PREFIX + '<namespace>/<project>/<environment_slug>', methods=['DELETE'])
-# @app.route(
-#     URL_PREFIX + '<namespace>/<project>/<environment_slug>/<path:notebook>',
-#     methods=['DELETE'])
+@app.route(
+    URL_PREFIX + '<namespace>/<project>/<environment_slug>',
+    methods=['DELETE'])
+@app.route(
+    URL_PREFIX + '<namespace>/<project>/<environment_slug>/<path:notebook>',
+    methods=['DELETE'])
 @authenticated
 def stop_notebook(user, namespace, project, environment_slug, notebook=None):
     """Launch user server with name."""
@@ -110,7 +108,8 @@ def stop_notebook(user, namespace, project, environment_slug, notebook=None):
         auth.api_url + '/users/{user[name]}/servers/{server_name}'.format(
             user=user, server_name=server_name),
         headers=headers)
-    return app.response_class(r.content, status=r.status_code, mimetype=r.mimetype)
+    return app.response_class(
+        r.content, status=r.status_code, mimetype=r.mimetype)
 
 
 @app.route(URL_PREFIX + 'oauth_callback')

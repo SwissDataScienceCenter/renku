@@ -17,8 +17,8 @@
 # limitations under the License.
 """Combine and serve Swagger specifications."""
 
-import os
 import json
+import os
 
 import requests
 from werkzeug.wrappers import Request, Response
