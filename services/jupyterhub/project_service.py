@@ -1,3 +1,22 @@
+# -*- coding: utf-8 -*-
+#
+# Copyright 2018 - Swiss Data Science Center (SDSC)
+# A partnership between École Polytechnique Fédérale de Lausanne (EPFL) and
+# Eidgenössische Technische Hochschule Zürich (ETHZ).
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+"""Service creating named servers for given project."""
+
 import json
 import os
 from functools import wraps
@@ -9,12 +28,14 @@ from jupyterhub.services.auth import HubOAuth
 import gitlab
 from flask import Flask, Response, abort, make_response, redirect, request
 
-URL_PREFIX = os.environ.get('JUPYTERHUB_SERVICE_PREFIX', '/')
+SERVICE_PREFIX = os.environ.get('JUPYTERHUB_SERVICE_PREFIX', '/')
+"""Service prefix is set by JupyterHub service spawner."""
 
 auth = HubOAuth(
     api_token=os.environ['JUPYTERHUB_API_TOKEN'],
     cache_max_age=60,
 )
+"""Wrap JupyterHub authentication service API."""
 
 app = Flask(__name__)
 
@@ -47,9 +68,10 @@ def authenticated(f):
     return decorated
 
 
-@app.route(URL_PREFIX)
+@app.route(SERVICE_PREFIX)
 @authenticated
 def whoami(user):
+    """Return information about the authenticated user."""
     return Response(
         json.dumps(user, indent=1, sort_keys=True),
         mimetype='application/json',
@@ -57,15 +79,15 @@ def whoami(user):
 
 
 @app.route(
-    URL_PREFIX + '<namespace>/<project>/<environment_slug>', methods=['GET'])
+    SERVICE_PREFIX + '<namespace>/<project>/<environment_slug>', methods=['GET'])
 @app.route(
-    URL_PREFIX + '<namespace>/<project>/<environment_slug>/<path:notebook>',
+    SERVICE_PREFIX + '<namespace>/<project>/<environment_slug>/<path:notebook>',
     methods=['GET'])
 @authenticated
 def launch_notebook(user, namespace, project, environment_slug, notebook=None):
-    """Launch user server with name."""
+    """Launch user server with a given name."""
     server_name = _server_name(namespace, project, environment_slug)
-    headers = {'Authorization': 'token %s' % auth.api_token}
+    headers = {auth.auth_header_name: 'token {0}'.format(auth.api_token)}
     # 1. launch using spawner that checks the access
     r = requests.request(
         'POST',
@@ -75,8 +97,10 @@ def launch_notebook(user, namespace, project, environment_slug, notebook=None):
             'namespace': namespace,
             'project': project,
             'environment_slug': environment_slug,
+            'notebook': notebook,
         },
-        headers=headers)
+        headers=headers,
+    )
 
     # 2. redirect to launched server
     if r.status_code not in {201, 400}:
@@ -92,10 +116,10 @@ def launch_notebook(user, namespace, project, environment_slug, notebook=None):
 
 
 @app.route(
-    URL_PREFIX + '<namespace>/<project>/<environment_slug>',
+    SERVICE_PREFIX + '<namespace>/<project>/<environment_slug>',
     methods=['DELETE'])
 @app.route(
-    URL_PREFIX + '<namespace>/<project>/<environment_slug>/<path:notebook>',
+    SERVICE_PREFIX + '<namespace>/<project>/<environment_slug>/<path:notebook>',
     methods=['DELETE'])
 @authenticated
 def stop_notebook(user, namespace, project, environment_slug, notebook=None):
@@ -109,11 +133,12 @@ def stop_notebook(user, namespace, project, environment_slug, notebook=None):
             user=user, server_name=server_name),
         headers=headers)
     return app.response_class(
-        r.content, status=r.status_code, mimetype=r.mimetype)
+        r.content, status=r.status_code)
 
 
-@app.route(URL_PREFIX + 'oauth_callback')
+@app.route(SERVICE_PREFIX + 'oauth_callback')
 def oauth_callback():
+    """Set a token in the cookie."""
     code = request.args.get('code', None)
     if code is None:
         return 403
@@ -127,7 +152,7 @@ def oauth_callback():
 
     token = auth.token_for_code(code)
     app.logger.info(token)
-    next_url = auth.get_next_url(cookie_state) or URL_PREFIX
+    next_url = auth.get_next_url(cookie_state) or SERVICE_PREFIX
     response = make_response(redirect(next_url))
     response.set_cookie(auth.cookie_name, token)
     return response
