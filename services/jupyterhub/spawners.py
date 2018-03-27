@@ -58,13 +58,16 @@ class RengaSpawner(DockerSpawner):
         except Exception as e:
             self.log.error(e)
             raise web.HTTPError(401, 'Not authorized to view project.')
+            return
 
         if access_level < gitlab.DEVELOPER_ACCESS:
             raise web.HTTPError(401, 'Not authorized to view project.')
+            return
 
         if not any(gl_env.slug for gl_env in gl_project.environments.list()
                    if gl_env.slug == env_slug):
             raise web.HTTPError(404, 'Environment does not exist.')
+            return
 
         environment = self.get_env()
         environment.update({
@@ -81,5 +84,3 @@ class RengaSpawner(DockerSpawner):
 
         return await super().start(
             extra_create_kwargs={'environment': environment})
-
-
