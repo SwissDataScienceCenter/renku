@@ -234,8 +234,8 @@ services:
       GITLAB_CLIENT_SECRET: no-secret-needed
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-      - ./services/jupyterhub/jupyterhub_config.py:/srv/jupyterhub/jupyterhub_config.py
-      - ./services/jupyterhub/project_service.py:/srv/jupyterhub/project_service.py
+      - ./services/jupyterhub/jupyterhub_config.py:/srv/jupyterhub/jupyterhub_config.py:ro
+      - ./services/jupyterhub/project_service.py:/srv/jupyterhub/project_service.py:ro
     labels:
       traefik.enable: "true"
       traefik.port: '8000'
