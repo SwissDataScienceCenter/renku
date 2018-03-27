@@ -236,6 +236,7 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
       - ./services/jupyterhub/jupyterhub_config.py:/srv/jupyterhub/jupyterhub_config.py:ro
       - ./services/jupyterhub/project_service.py:/srv/jupyterhub/project_service.py:ro
+      - ./services/jupyterhub/spawners.py:/srv/jupyterhub/spawners.py:ro
     labels:
       traefik.enable: "true"
       traefik.port: '8000'
