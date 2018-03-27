@@ -71,6 +71,11 @@ services:
       default:
         aliases:
           - keycloak.${PLATFORM_DOMAIN}
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/auth"]
+      interval: 60s
+      timeout: 30s
+      retries: 5
 
   gitlab:
     image: gitlab/gitlab-ce:latest
@@ -188,6 +193,11 @@ services:
       traefik.frontend.passHostHeader: "false"
     networks:
       - default
+    healthcheck:
+      test: ["CMD", "node", "-e", "http.get('http://localhost:3000/');"]
+      interval: 20s
+      timeout: 10s
+      retries: 5
 
   reverse-proxy:
     image: traefik
@@ -243,6 +253,11 @@ services:
       review:
         aliases:
           - jupyterhub.${PLATFORM_DOMAIN}
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/hub/api"]
+      interval: 20s
+      timeout: 10s
+      retries: 5
 
 networks:
   review:
