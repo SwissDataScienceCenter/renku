@@ -1,0 +1,236 @@
+## Default values for renga.
+## This is a YAML-formatted file.
+## Declare variables to be passed into your templates.
+
+global:
+  gitlab:
+    clientSecret: open_secret
+    postgresDatabase: gitlabhq_production
+    postgresPassword: gitlab
+    postgresUser: gitlab
+  keycloak:
+    postgresDatabase: keycloak
+    postgresPassword: keycloak
+    postgresUser: keycloak
+  renga:
+    domain: example.local
+  useHTTPS: false
+
+## Keycloak configuration
+keycloak:
+  ## Keycloak admin user configuration
+  username: admin
+  password: admin
+
+  ## Keycloak image
+  # image:
+  #   pullPolicy: IfNotPresent
+  #   repository: jboss/keycloak
+  #   tag: 3.4.3.Final
+
+  ## Pod affinity for Keycloak deployment
+  # affinity: {}
+  ## Node selector for Keycloak deployment
+  # nodeSelector: {}
+  ## Pod tolerations for Keycloak deployment
+  # tolerations: []
+
+  ## Resource requests/limits for Keycloak
+  # resources: {}
+
+  ## Service configuration for Keycloak
+  ## Modify service.type according to your setup
+  # service:
+  #   port: 80
+  #   type: ClusterIP
+
+## PostgreSQL configuration
+postgresql:
+
+  postgresPassword: postgres
+
+  affinity: {}
+  image:
+    pullPolicy: IfNotPresent
+    repository: postgres
+    tag: 9.6
+  metrics:
+    enabled: false
+    image: wrouesnel/postgres_exporter
+    imagePullPolicy: IfNotPresent
+    imageTag: v0.1.1
+    resources:
+      requests:
+        cpu: 100m
+        memory: 256Mi
+  networkPolicy:
+    allowExternal: true
+    enabled: false
+  nodeSelector: {}
+  persistence:
+    accessMode: ReadWriteOnce
+    enabled: true
+    mountPath: /var/lib/postgresql/data/pgdata
+    size: 8Gi
+    subPath: postgresql-db
+  postgresPassword: postgres
+  resources:
+    requests:
+      cpu: 100m
+      memory: 256Mi
+  service:
+    externalIPs: []
+    port: 5432
+    type: ClusterIP
+  tolerations: []
+
+gitlab:
+  affinity: {}
+  global:
+    gitlab:
+      clientSecret: open_secret
+      postgresDatabase: gitlabhq_production
+      postgresPassword: gitlab
+      postgresUser: gitlab
+    keycloak:
+      postgresDatabase: keycloak
+      postgresPassword: keycloak
+      postgresUser: keycloak
+    renga:
+      domain: 192.168.99.100
+    useHTTPS: false
+  image:
+    pullPolicy: IfNotPresent
+    repository: gitlab/gitlab-ce
+    tag: latest
+  nodeSelector: {}
+  password: gitlabadmin
+  persistence:
+    accessMode: ReadWriteOnce
+    enabled: true
+    gitlab_config:
+      mountPath: /etc/gitlab
+      subPath: config
+    gitlab_data:
+      mountPath: /var/opt/gitlab
+      subPath: data
+    gitlab_logs:
+      mountPath: /var/log/gitlab
+      subPath: logs
+    size: 30Gi
+  resources: {}
+  service:
+    port: 80
+    type: ClusterIP
+  tolerations: []
+
+ingress:
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    nginx.ingress.kubernetes.io/proxy-body-size: "0"
+    nginx.ingress.kubernetes.io/ssl-redirect: false
+  enabled: true
+  hosts:
+  - ""
+  tls: []
+
+postgresql:
+  affinity: {}
+  global:
+    gitlab:
+      clientSecret: open_secret
+      postgresDatabase: gitlabhq_production
+      postgresPassword: gitlab
+      postgresUser: gitlab
+    keycloak:
+      postgresDatabase: keycloak
+      postgresPassword: keycloak
+      postgresUser: keycloak
+    renga:
+      domain: 192.168.99.100
+    useHTTPS: false
+  image:
+    pullPolicy: IfNotPresent
+    repository: postgres
+    tag: 9.6
+  metrics:
+    enabled: false
+    image: wrouesnel/postgres_exporter
+    imagePullPolicy: IfNotPresent
+    imageTag: v0.1.1
+    resources:
+      requests:
+        cpu: 100m
+        memory: 256Mi
+  networkPolicy:
+    allowExternal: true
+    enabled: false
+  nodeSelector: {}
+  persistence:
+    accessMode: ReadWriteOnce
+    enabled: true
+    mountPath: /var/lib/postgresql/data/pgdata
+    size: 8Gi
+    subPath: postgresql-db
+  postgresPassword: postgres
+  resources:
+    requests:
+      cpu: 100m
+      memory: 256Mi
+  service:
+    externalIPs: []
+    port: 5432
+    type: ClusterIP
+  tolerations: []
+redis:
+  antiAffinity: soft
+  global:
+    gitlab:
+      clientSecret: open_secret
+      postgresDatabase: gitlabhq_production
+      postgresPassword: gitlab
+      postgresUser: gitlab
+    keycloak:
+      postgresDatabase: keycloak
+      postgresPassword: keycloak
+      postgresUser: keycloak
+    renga:
+      domain: 192.168.99.100
+    useHTTPS: false
+  image:
+    pullPolicy: IfNotPresent
+    repository: redis
+    tag: 4.0-alpine
+  nodeSelector: {}
+  replicaCount: 1
+  resources: {}
+  service:
+    port: 6379
+    type: ClusterIP
+  tolerations: []
+ui:
+  affinity: {}
+  global:
+    gitlab:
+      clientSecret: open_secret
+      postgresDatabase: gitlabhq_production
+      postgresPassword: gitlab
+      postgresUser: gitlab
+    keycloak:
+      postgresDatabase: keycloak
+      postgresPassword: keycloak
+      postgresUser: keycloak
+    renga:
+      domain: 192.168.99.100
+    useHTTPS: false
+  image:
+    pullPolicy: Always
+    repository: rengahub/renga-ui
+    tag: development
+  nodeSelector: {}
+  replicaCount: 1
+  resources: {}
+  service:
+    port: 3000
+    type: ClusterIP
+  tolerations: []
