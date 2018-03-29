@@ -1,4 +1,5 @@
 docker>=2.4.2
+python-dotenv>=0.8.2
 pytest>=3.2.1
 pytest-splinter>=1.8.5
 requests>=2.18.2
