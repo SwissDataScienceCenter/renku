@@ -253,11 +253,6 @@ services:
       review:
         aliases:
           - jupyterhub.${PLATFORM_DOMAIN}
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8000/hub/api"]
-      interval: 20s
-      timeout: 10s
-      retries: 5
 
 networks:
   review:
