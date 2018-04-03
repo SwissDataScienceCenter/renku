@@ -188,42 +188,43 @@ ifeq ($(shell docker network ls -q -f name=$(DOCKER_NETWORK)), )
 	@docker network rm $(DOCKER_NETWORK)
 endif
 
-docker-compose-up:
-	$(DOCKER_COMPOSE_ENV) docker-compose up --build -d ${DOCKER_SCALE}
+docker-compose-up: .env
+	docker-compose up --build -d ${DOCKER_SCALE}
 
-docker-compose-pull:
-	$(DOCKER_COMPOSE_ENV) docker-compose pull
+docker-compose-pull: .env
+	docker-compose pull
 
 # GitLab actions
 services/gitlab/%:
 	@mkdir -p $@
 
+.PHONY: register-gitlab-oauth-applications unregister-gitlab-oauth-applications register-runners unregister-runners
 # Preregister the ui as a client with gitlab.
 # This command will fail on restart when the client is already there - we don't care.
-register-gitlab-oauth-applications: unregister-gitlab-oauth-applications
-	@$(DOCKER_COMPOSE_ENV) docker-compose exec gitlab /opt/gitlab/bin/gitlab-psql \
+register-gitlab-oauth-applications: .env unregister-gitlab-oauth-applications
+	@docker-compose exec gitlab /opt/gitlab/bin/gitlab-psql \
 		-h /var/opt/gitlab/postgresql -d gitlabhq_production \
 		-c "INSERT INTO oauth_applications (name, uid, scopes, redirect_uri, secret, trusted) VALUES ('renga-ui', 'renga-ui', 'api read_user', '$(RENGA_UI_URL)/login/redirect/gitlab http://localhost:3000/login/redirect/gitlab', 'no-secret-needed', 'true')" > /dev/null 2>&1
 
-	@$(DOCKER_COMPOSE_ENV) docker-compose exec gitlab /opt/gitlab/bin/gitlab-psql \
+	@docker-compose exec gitlab /opt/gitlab/bin/gitlab-psql \
 		-h /var/opt/gitlab/postgresql -d gitlabhq_production \
 		-c "INSERT INTO oauth_applications (name, uid, scopes, redirect_uri, secret, trusted) VALUES ('jupyterhub', 'jupyterhub', 'api read_user', '$(JUPYTERHUB_URL)/hub/oauth_callback $(JUPYTERHUB_URL)/hub/api/oauth2/authorize', 'no-secret-needed', 'true')" > /dev/null 2>&1
 
-unregister-gitlab-oauth-applications:
-	@$(DOCKER_COMPOSE_ENV) docker-compose exec gitlab /opt/gitlab/bin/gitlab-psql \
+unregister-gitlab-oauth-applications: .env
+	@docker-compose exec gitlab /opt/gitlab/bin/gitlab-psql \
 		-h /var/opt/gitlab/postgresql -d gitlabhq_production \
 		-c "DELETE FROM oauth_applications WHERE uid='renga-ui'" > /dev/null 2>&1
 
-	@$(DOCKER_COMPOSE_ENV) docker-compose exec gitlab /opt/gitlab/bin/gitlab-psql \
+	@docker-compose exec gitlab /opt/gitlab/bin/gitlab-psql \
 		-h /var/opt/gitlab/postgresql -d gitlabhq_production \
 		-c "DELETE FROM oauth_applications WHERE uid='jupyterhub'" > /dev/null 2>&1
 
-register-runners: unregister-runners
+register-runners: .env unregister-runners
 ifeq (${GITLAB_RUNNERS_TOKEN},)
 	@echo "[Error] GITLAB_RUNNERS_TOKEN needs to be configured. Check $(GITLAB_URL)/admin/runners"
 	@exit 1
 endif
-	@for container in $(shell $(DOCKER_COMPOSE_ENV) docker-compose ps -q gitlab-runner) ; do \
+	@for container in $(shell docker-compose ps -q gitlab-runner) ; do \
 		docker exec -ti $$container gitlab-runner register \
 			-n -u $(GITLAB_URL) \
 			--name $$container-shell \
@@ -256,8 +257,9 @@ endif
 	@echo
 	@echo "[Info] To make notebooks available as deployed environments, set the"
 	@echo "		RENGA_NOTEBOOK_TOKEN and RENGA_REVIEW_DOMAIN CI variables in gitlab project settings."
-unregister-runners:
-	@for container in $(shell $(DOCKER_COMPOSE_ENV) docker-compose ps -q gitlab-runner) ; do \
+
+unregister-runners: .env
+	@for container in $(shell docker-compose ps -q gitlab-runner) ; do \
 		docker exec -ti $$container gitlab-runner unregister \
 			--name $$container-shell || echo ok; \
 		docker exec -ti $$container gitlab-runner unregister \
@@ -267,8 +269,8 @@ unregister-runners:
 # Platform actions
 .PHONY: clean restart start stop test wait wipe
 
-clean:
-	@$(DOCKER_COMPOSE_ENV) docker-compose down --volumes --remove-orphans
+clean: .env
+	docker-compose down --volumes --remove-orphans
 
 restart: stop start
 
@@ -294,16 +296,16 @@ ifeq (${DOCKER_SCALE},)
 	@echo "[Info] You can configure scale parameters: DOCKER_SCALE=\"--scale gitlab-runner=4\" make start"
 endif
 
-stop: remove-docker-network unregister-runners unregister-gitlab-oauth-applications
-	$(DOCKER_COMPOSE_ENV) docker-compose stop
+stop: .env remove-docker-network unregister-runners unregister-gitlab-oauth-applications
+	docker-compose stop
 
 test: docs/requirements.txt tests/requirements.txt
 	@pip install -r docs/requirements.txt
 	@pip install -r tests/requirements.txt
 	@scripts/run-tests.sh
 
-wait:
-	@$(DOCKER_COMPOSE_ENV) ./scripts/wait-for-services.sh
+wait: .env
+	@./scripts/wait-for-services.sh
 
 wipe: clean remove-docker-network
 	@rm -rf services/storage/data/*
