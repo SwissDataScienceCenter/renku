@@ -26,6 +26,11 @@ services:
   - docker
 
 addons:
+  apt:
+    packages:
+      - enchant
+      - shellcheck
+
   hosts:
     - renga.local
     - gitlab.renga.local
@@ -44,9 +49,6 @@ matrix:
 
 python:
   - "3.6"
-
-before_install:
-  - sudo apt-get install enchant
 
 install:
   - ./scripts/travis-install.sh
