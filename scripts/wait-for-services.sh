@@ -19,7 +19,7 @@
 
 set -e
 
-CONTAINERS=$(docker-compose ps -q keycloak gitlab ui jupyterhub)
+CONTAINERS=($(docker-compose ps -q keycloak gitlab ui jupyterhub))
 
 TIMEOUT=360
 
