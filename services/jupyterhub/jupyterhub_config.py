@@ -24,8 +24,6 @@ sys.path.insert(0, os.path.dirname(__file__))
 
 from oauthenticator.gitlab import GitLabOAuthenticator
 
-from spawners import RengaSpawner
-
 #: Use GitLab OAuth Server for authentication.
 c.JupyterHub.authenticator_class = GitLabOAuthenticator
 
@@ -60,23 +58,24 @@ c.JupyterHub.hub_ip = '0.0.0.0'
 #c.JupyterHub.subdomain_host = ''
 
 #: Configure the notebook spawner.
-c.JupyterHub.spawner_class = RengaSpawner
+c.JupyterHub.spawner_class = os.getenv('JUPYTERHUB_SPAWNER_CLASS',
+                                       'spawners.Spawner')
 
 NETWORK_NAME = 'review'
 
-c.RengaSpawner.container_name_template = '{prefix}-{username}-{servername}'
-c.RengaSpawner.use_internal_ip = True
-c.RengaSpawner.network_name = NETWORK_NAME
+c.Spawner.container_name_template = '{prefix}-{username}-{servername}'
+c.Spawner.use_internal_ip = True
+c.Spawner.network_name = NETWORK_NAME
 
 #: Pass the network name as argument to spawned containers
-c.RengaSpawner.extra_host_config = {'network_mode': NETWORK_NAME}
+c.Spawner.extra_host_config = {'network_mode': NETWORK_NAME}
 
 # Explicitly set notebook directory because we'll be mounting a host volume to
 # it.  Most jupyter/docker-stacks *-notebook images run the Notebook server as
 # user `jovyan`, and set the notebook directory to `/home/jovyan/work`.
 # We follow the same convention.
-notebook_dir = os.environ.get('DOCKER_NOTEBOOK_DIR') or '/home/jovyan'
-c.RengaSpawner.notebook_dir = notebook_dir
+notebook_dir = os.getenv('DOCKER_NOTEBOOK_DIR') or '/home/jovyan'
+c.Spawner.notebook_dir = notebook_dir
 # Mount the real user's Docker volume on the host to the notebook user's
 # notebook directory in the container
 # c.DockerSpawner.volumes = { 'jupyterhub-user-{username}': notebook_dir }
@@ -84,14 +83,14 @@ c.RengaSpawner.notebook_dir = notebook_dir
 # c.DockerSpawner.extra_create_kwargs.update({ 'volume_driver': 'local' })
 
 # Remove containers once they are stopped
-c.RengaSpawner.remove_containers = True
+c.Spawner.remove_containers = True
 # For debugging arguments passed to spawned containers
-c.RengaSpawner.debug = True
+c.Spawner.debug = bool(os.getenv('DEBUG', False))
 
 #: Setup the service for creating named servers from GitLab projects.
 env = os.environ.copy()
 env['FLASK_APP'] = 'project_service.py'
-env['FLASK_DEBUG'] = '1'
+env['FLASK_DEBUG'] = os.getenv('DEBUG', '0')
 env['OAUTHLIB_INSECURE_TRANSPORT'] = '1'
 
 c.JupyterHub.services = [{
