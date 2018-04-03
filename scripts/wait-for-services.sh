@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # -*- coding: utf-8 -*-
 #
-# Copyright 2017, 2018 - Swiss Data Science Center (SDSC)
+# Copyright 2017-2018 - Swiss Data Science Center (SDSC)
 # A partnership between École Polytechnique Fédérale de Lausanne (EPFL) and
 # Eidgenössische Technische Hochschule Zürich (ETHZ).
 #
@@ -25,10 +25,10 @@ TIMEOUT=360
 
 echo -n "Waiting "
 
-while [[ $(docker inspect --format="{{json .State.Health.Status}}" ${CONTAINERS} | grep -v '"healthy"' | wc -l) -gt "0" ]]; do
+while [[ $(docker inspect --format="{{json .State.Health.Status}}" "${CONTAINERS[@]}" | grep -c -v '"healthy"') -gt "0" ]]; do
     echo -n .
     if [[ "$TIMEOUT" -gt "0" ]]; then
-        TIMEOUT=$(expr $TIMEOUT - 5)
+        TIMEOUT=$((TIMEOUT - 5))
     else
         echo " [TIMEOUT]"
         exit 1
