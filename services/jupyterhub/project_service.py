@@ -103,7 +103,7 @@ def launch_notebook(user, namespace, project, environment_slug, notebook=None):
     )
 
     # 2. redirect to launched server
-    if r.status_code not in {201, 400}:
+    if r.status_code not in {201, 202, 400}:
         abort(r.status_code)
 
     notebook_url = auth.hub_host + '/user/{user[name]}/{server_name}/'.format(

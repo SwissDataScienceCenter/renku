@@ -20,14 +20,26 @@
 import os
 
 from tornado import web
-from dockerspawner import DockerSpawner
 
 
-class RengaSpawner(DockerSpawner):
-    """A class for spawning notebooks on renga-jupyterhub.
+class SpawnerMixin():
+    """Extend spawner methods."""
 
-    Inspired by the binderhub kubernetes helm chart.
-    """
+    def get_env(self):
+        """Extend environment variables passed to the notebook server."""
+        environment = super().get_env()
+        environment.update({
+            'CI_COMMIT_REF_NAME':
+            self.user_options.get('branch', 'master'),
+            'CI_REPOSITORY_URL':
+            self.user_options.get('repo_url', ''),
+            'CI_PROJECT_PATH':
+            self.user_options.get('project_path', ''),
+            'CI_ENVIRONMENT_SLUG':
+            self.user_options.get('env_slug', ''),
+            # TODO 'ACCESS_TOKEN': access_token,
+        })
+        return environment
 
     async def start(self):
         """Start the notebook server."""
@@ -69,18 +81,33 @@ class RengaSpawner(DockerSpawner):
             raise web.HTTPError(404, 'Environment does not exist.')
             return
 
-        environment = self.get_env()
-        environment.update({
-            'CI_COMMIT_REF_NAME':
-            self.user_options.get('branch', 'master'),
-            'CI_REPOSITORY_URL':
-            self.user_options.get('repo_url', ''),
-            'CI_PROJECT_PATH':
-            self.user_options.get('project_path', ''),
-            'CI_ENVIRONMENT_SLUG':
-            self.user_options.get('env_slug', ''),
-            # TODO 'ACCESS_TOKEN': access_token,
-        })
+        return await super().start()
 
-        return await super().start(
-            extra_create_kwargs={'environment': environment})
+try:
+    from dockerspawner import DockerSpawner
+
+    class RengaDockerSpawner(SpawnerMixin, DockerSpawner):
+        """A class for spawning notebooks on Renga-JupyterHub using Docker."""
+
+except ImportError:
+    pass
+
+
+try:
+    from dockerspawner import DockerSpawner
+
+    class RengaDockerSpawner(SpawnerMixin, DockerSpawner):
+        """A class for spawning notebooks on Renga-JupyterHub using Docker."""
+
+except ImportError:
+    pass
+
+
+try:
+    from kubespawner import KubeSpawner
+
+    class RengaKubeSpawner(SpawnerMixin, KubeSpawner):
+        """A class for spawning notebooks on Renga-JupyterHub using K8S."""
+
+except ImportError:
+    pass
