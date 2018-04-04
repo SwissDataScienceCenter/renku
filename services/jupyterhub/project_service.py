@@ -79,9 +79,11 @@ def whoami(user):
 
 
 @app.route(
-    SERVICE_PREFIX + '<namespace>/<project>/<environment_slug>', methods=['GET'])
+    SERVICE_PREFIX + '<namespace>/<project>/<environment_slug>',
+    methods=['GET'])
 @app.route(
-    SERVICE_PREFIX + '<namespace>/<project>/<environment_slug>/<path:notebook>',
+    SERVICE_PREFIX +
+    '<namespace>/<project>/<environment_slug>/<path:notebook>',
     methods=['GET'])
 @authenticated
 def launch_notebook(user, namespace, project, environment_slug, notebook=None):
@@ -119,7 +121,8 @@ def launch_notebook(user, namespace, project, environment_slug, notebook=None):
     SERVICE_PREFIX + '<namespace>/<project>/<environment_slug>',
     methods=['DELETE'])
 @app.route(
-    SERVICE_PREFIX + '<namespace>/<project>/<environment_slug>/<path:notebook>',
+    SERVICE_PREFIX +
+    '<namespace>/<project>/<environment_slug>/<path:notebook>',
     methods=['DELETE'])
 @authenticated
 def stop_notebook(user, namespace, project, environment_slug, notebook=None):
@@ -132,8 +135,7 @@ def stop_notebook(user, namespace, project, environment_slug, notebook=None):
         auth.api_url + '/users/{user[name]}/servers/{server_name}'.format(
             user=user, server_name=server_name),
         headers=headers)
-    return app.response_class(
-        r.content, status=r.status_code)
+    return app.response_class(r.content, status=r.status_code)
 
 
 @app.route(SERVICE_PREFIX + 'oauth_callback')

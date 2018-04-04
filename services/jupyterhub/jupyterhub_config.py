@@ -63,7 +63,9 @@ c.JupyterHub.spawner_class = os.getenv('JUPYTERHUB_SPAWNER_CLASS',
 
 NETWORK_NAME = 'review'
 
-c.Spawner.container_name_template = '{prefix}-{username}-{servername}'
+c.RengaDockerSpawner.container_name_template = '{prefix}-{username}-{servername}'
+c.RengaKubeSpawner.pod_name_template = 'jupyterhub-{username}-{servername}'
+
 c.Spawner.use_internal_ip = True
 c.Spawner.network_name = NETWORK_NAME
 
@@ -74,7 +76,7 @@ c.Spawner.extra_host_config = {'network_mode': NETWORK_NAME}
 # it.  Most jupyter/docker-stacks *-notebook images run the Notebook server as
 # user `jovyan`, and set the notebook directory to `/home/jovyan/work`.
 # We follow the same convention.
-notebook_dir = os.getenv('DOCKER_NOTEBOOK_DIR') or '/home/jovyan'
+notebook_dir = os.getenv('JUPYTERHUB_NOTEBOOK_DIR', '/home/jovyan/work')
 c.Spawner.notebook_dir = notebook_dir
 # Mount the real user's Docker volume on the host to the notebook user's
 # notebook directory in the container
