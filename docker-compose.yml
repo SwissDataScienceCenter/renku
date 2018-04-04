@@ -36,6 +36,11 @@ services:
       - db-data:/pgdata
     networks:
       - default
+    healthcheck:
+      test: ["CMD", "sh", "-c", "exec pg_isready"]
+      interval: 30s
+      timeout: 5s
+      retries: 6
 
   keycloak:
     build: ./services/keycloak
