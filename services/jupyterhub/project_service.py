@@ -42,7 +42,8 @@ app = Flask(__name__)
 
 def _server_name(namespace, project, environment_slug):
     """Return a name for Jupyter server."""
-    return '{0}-{1}-{2}'.format(namespace, project, environment_slug)
+    return '{0}-{1}-{2}'.format(namespace, project, environment_slug).replace(
+        '/', '-')
 
 
 def authenticated(f):
@@ -79,14 +80,10 @@ def whoami(user):
 
 
 @app.route(
-    SERVICE_PREFIX + '<namespace>/<project>/<environment_slug>',
-    methods=['GET'])
-@app.route(
-    SERVICE_PREFIX +
-    '<namespace>/<project>/<environment_slug>/<path:notebook>',
+    SERVICE_PREFIX + '<namespace>/<project>/<path:environment_slug>',
     methods=['GET'])
 @authenticated
-def launch_notebook(user, namespace, project, environment_slug, notebook=None):
+def launch_notebook(user, namespace, project, environment_slug):
     """Launch user server with a given name."""
     server_name = _server_name(namespace, project, environment_slug)
     headers = {auth.auth_header_name: 'token {0}'.format(auth.api_token)}
@@ -99,7 +96,7 @@ def launch_notebook(user, namespace, project, environment_slug, notebook=None):
             'namespace': namespace,
             'project': project,
             'environment_slug': environment_slug,
-            'notebook': notebook,
+            # 'notebook': notebook,
         },
         headers=headers,
     )
@@ -111,22 +108,18 @@ def launch_notebook(user, namespace, project, environment_slug, notebook=None):
     notebook_url = auth.hub_host + '/user/{user[name]}/{server_name}/'.format(
         user=user, server_name=server_name)
 
-    if notebook:
-        notebook_url += '/notebooks/{notebook}'.format(notebook=notebook)
+    # if notebook:
+    #     notebook_url += '/notebooks/{notebook}'.format(notebook=notebook)
 
     return redirect(notebook_url)
 
 
 @app.route(
-    SERVICE_PREFIX + '<namespace>/<project>/<environment_slug>',
-    methods=['DELETE'])
-@app.route(
-    SERVICE_PREFIX +
-    '<namespace>/<project>/<environment_slug>/<path:notebook>',
+    SERVICE_PREFIX + '<namespace>/<project>/<path:environment_slug>',
     methods=['DELETE'])
 @authenticated
-def stop_notebook(user, namespace, project, environment_slug, notebook=None):
-    """Launch user server with name."""
+def stop_notebook(user, namespace, project, environment_slug):
+    """Stop user server with name."""
     server_name = _server_name(namespace, project, environment_slug)
     headers = {'Authorization': 'token %s' % auth.api_token}
 

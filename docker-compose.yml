@@ -140,6 +140,7 @@ services:
       - gitlab-config:/etc/gitlab
       - gitlab-logs:/var/log/gitlab
       - gitlab-data:/var/opt/gitlab
+      - ./services/gitlab/Auto-DevOps.gitlab-ci.yml:/opt/gitlab/embedded/service/gitlab-rails/vendor/gitlab-ci-yml/Auto-DevOps.gitlab-ci.yml:ro
       - ./services/gitlab/lfs-data:/var/storage/lfs-objects # TODO: REMOVE ME
     depends_on:
       - db
