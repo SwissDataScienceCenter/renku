@@ -1,49 +1,269 @@
-# Default values for renga.
-# This is a YAML-formatted file.
-# Declare variables to be passed into your templates.
+## Default values for renga.
+## This is a YAML-formatted file.
+## Declare variables to be passed into your templates.
 
-keycloak:
-  username: admin
-  password: admin
-
-postgresql:
-  postgresPassword: postgres
-  persistence:
-    size: 8Gi
-
-gitlab:
-  password: gitlabadmin
-  persistence:
-    size: 30Gi
-
+## Global variables
+## Shared values/secrets
 global:
-  useHTTPS: false
-  keycloak:
-    postgresDatabase: keycloak
-    postgresUser: keycloak
-    postgresPassword: keycloak
   gitlab:
-    postgresDatabase: gitlabhq_production
-    postgresUser: gitlab
-    postgresPassword: gitlab
+    ## Client secret, set this to a random string.
+    ## To change this value after deploying, first generate a new secret using the Keycloak admin console
+    ## then paste the generated secret here
     clientSecret: open_secret
-
+    ## Name of the postgres database to be used by Gitlab
+    postgresDatabase: gitlabhq_production
+    ## Postgres user for the gitlab database
+    postgresUser: gitlab
+    ## Postgres password for the gitlab database
+    postgresPassword: gitlab
+  keycloak:
+    ## Name of the postgres database to be used by Keycloak
+    postgresDatabase: keycloak
+    ## Postgres user for the Keycloak database
+    postgresUser: keycloak
+    ## Postgres password for the Keycloak database
+    postgresPassword: keycloak
   renga:
+    ## Domain name for the deployed instance of renga
     domain: example.local
+  ## Set to true if using https
+  useHTTPS: false
 
-externalName:
-  enabled: false
-  target: example.local
-
+## Ingress configuration
+## See: https://kubernetes.io/docs/concepts/services-networking/ingress/
 ingress:
+  ## Enables the creation of an ingress
   enabled: false
+
+  ## Annotations for the created ingress
   annotations:
+    ## The ingress class
     kubernetes.io/ingress.class: nginx
     # kubernetes.io/tls-acme: "true"
     nginx.ingress.kubernetes.io/proxy-body-size: '0' # Adjust to a reasonable value for production to avoid DOS attacks.
+
+  ## Hosts for the ingress
+  ## Should include at least the value from `global.renga.domain`
   hosts:
   - example.local
+
+  ## TLS setting for the ingress
   tls: []
   #  - secretName: chart-example-tls
   #    hosts:
-  #      - chart-example.local
+  #      - example.local
+
+## Keycloak configuration
+keycloak:
+  ## Keycloak admin user configuration
+  username: admin
+  password: admin
+
+  ## Keycloak image
+  # image:
+  #   pullPolicy: IfNotPresent
+  #   repository: jboss/keycloak
+  #   tag: 3.4.3.Final
+
+  ## Pod affinity for Keycloak deployment
+  # affinity: {}
+  ## Node selector for Keycloak deployment
+  # nodeSelector: {}
+  ## Pod tolerations for Keycloak deployment
+  # tolerations: []
+
+  ## Resource requests/limits for Keycloak
+  # resources: {}
+
+  ## Service configuration for Keycloak
+  ## Modify service.type according to your setup
+  # service:
+  #   port: 80
+  #   type: ClusterIP
+
+## PostgreSQL configuration
+postgresql:
+  ## Password for the user postgres (database admin user)
+  postgresPassword: postgres
+
+  ## Postgres image
+  # image:
+  #   pullPolicy: IfNotPresent
+  #   repository: postgres
+  #   tag: 9.6
+
+  ## Pod affinity for postgres deployment
+  # affinity: {}
+  ## Node selector for postgres deployment
+  # nodeSelector: {}
+  ## Pod tolerations for postgres deployment
+  # tolerations: []
+
+  ## Persistent Volume settings
+  persistence:
+    ## Set to false to disable the use of Persistent Volume
+    ## The databases will be lost when the pod is terminated!
+    # enabled: true
+
+    ## A manually managed Persistent Volume and Claim
+    ## Requires persistence.enabled: true
+    ## If defined, PVC must be created manually before volume will be bound
+    # existingClaim:
+
+    ## database data Persistent Volume Storage Class
+    ## If defined, storageClassName: <storageClass>
+    ## If set to "-", storageClassName: "", which disables dynamic provisioning
+    ## If undefined (the default) or set to null, no storageClassName spec is
+    ##   set, choosing the default provisioner.  (gp2 on AWS, standard on
+    ##   GKE, AWS & OpenStack)
+    ##
+    # storageClass:
+
+    # accessMode: ReadWriteOnce
+    # mountPath: /var/lib/postgresql/data/pgdata
+    size: 8Gi
+    # subPath: postgresql-db
+
+  ## Metrics collection configuration
+  # metrics:
+  #   enabled: false
+  #   image: wrouesnel/postgres_exporter
+  #   imagePullPolicy: IfNotPresent
+  #   imageTag: v0.1.1
+  #   resources:
+  #     requests:
+  #       cpu: 100m
+  #       memory: 256Mi
+
+  ## Network policy
+  # networkPolicy:
+  #   allowExternal: true
+  #   enabled: false
+
+  ## Resource requests/limits for postgres
+  # resources:
+  #   requests:
+  #     cpu: 100m
+  #     memory: 256Mi
+
+  ## Service configuration for PostgreSQL
+  ## Modify service.type according to your setup
+  # service:
+  #   externalIPs: []
+  #   port: 5432
+  #   type: ClusterIP
+
+## Gitlab configuration
+gitlab:
+  ## Password for the `root` user
+  password: gitlabadmin
+
+  ## Gitlab image
+  # image:
+  #   pullPolicy: IfNotPresent
+  #   repository: gitlab/gitlab-ce
+  #   tag: latest
+
+  ## Pod affinity for Gitlab deployment
+  # affinity: {}
+  ## Node selector for Gitlab deployment
+  # nodeSelector: {}
+  ## Pod tolerations for Gitlab deployment
+  # tolerations: []
+
+  ## Resource requests/limits for Gitlab
+  # resources: {}
+
+  ## Persistent Volume settings
+  persistence:
+    ## Set to false to disable the use of Persistent Volume
+    ## The databases will be lost when the pod is terminated!
+    # enabled: true
+
+    ## A manually managed Persistent Volume and Claim
+    ## Requires persistence.enabled: true
+    ## If defined, PVC must be created manually before volume will be bound
+    # existingClaim:
+
+    ## database data Persistent Volume Storage Class
+    ## If defined, storageClassName: <storageClass>
+    ## If set to "-", storageClassName: "", which disables dynamic provisioning
+    ## If undefined (the default) or set to null, no storageClassName spec is
+    ##   set, choosing the default provisioner.  (gp2 on AWS, standard on
+    ##   GKE, AWS & OpenStack)
+    ##
+    # storageClass:
+
+    # accessMode: ReadWriteOnce
+    size: 30Gi
+
+    ## Mount points for the PV
+    ## Setup according to the volumes declared in the Gitlab image
+    # gitlab_data:
+    #   subPath: data
+    #   mountPath: /var/opt/gitlab
+    # gitlab_config:
+    #   subPath: config
+    #   mountPath: /etc/gitlab
+    # gitlab_logs:
+    #   subPath: logs
+    #   mountPath: /var/log/gitlab
+
+  ## Service configuration for Gitlab
+  ## Modify service.type according to your setup
+  # service:
+  #   port: 80
+  #   type: ClusterIP
+
+## Redis configuration
+## Redis is used by Gitlab
+# redis:
+  ## Redis image
+  # image:
+  #   pullPolicy: IfNotPresent
+  #   repository: redis
+  #   tag: 4.0-alpine
+
+  ## Pod affinity for Redis deployment
+  # affinity: {}
+  ## Node selector for Redis deployment
+  # nodeSelector: {}
+  ## Pod tolerations for Redis deployment
+  # tolerations: []
+
+  ## Horizontal scaling of pods
+  # replicaCount: 1
+  # antiAffinity: soft
+
+  ## Resource requests/limits for Redis
+  # resources: {}
+
+  ## Service configuration for Redis
+  ## Modify service.type according to your setup
+  # service:
+  #   port: 6379
+  #   type: ClusterIP
+
+## Configuration for the UI service
+# ui:
+  ## UI image
+  # image:
+  #   pullPolicy: Always
+  #   repository: rengahub/renga-ui
+  #   tag: development
+
+  ## Pod affinity for UI deployment
+  # affinity: {}
+  ## Node selector for UI deployment
+  # nodeSelector: {}
+  ## Pod tolerations for UI deployment
+  # tolerations: []
+
+  ## Replica count
+  # replicaCount: 1
+
+  ## Service configuration for UI
+  ## Modify service.type according to your setup
+  # service:
+  #   port: 3000
+  #   type: ClusterIP
