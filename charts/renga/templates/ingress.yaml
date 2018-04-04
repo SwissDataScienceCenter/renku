@@ -47,5 +47,9 @@ spec:
         backend:
           serviceName: {{ $uiFullname }}
           servicePort: {{ $uiServicePort }}
+      - path: /jupyterhub
+        backend:
+          serviceName: proxy-http
+          servicePort: 8000
   {{- end }}
 {{- end }}

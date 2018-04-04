@@ -267,3 +267,9 @@ gitlab:
   # service:
   #   port: 3000
   #   type: ClusterIP
+
+jupyterhub:
+  rbac:
+    enabled: false
+  proxy:
+    secretToken: f89ddee5ba10f2268fcefcd4e353235c255493095cd65addf29ebebf8df86255
