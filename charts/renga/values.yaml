@@ -31,10 +31,6 @@ global:
   renga:
     domain: example.local
 
-externalName:
-  enabled: false
-  target: example.local
-
 ingress:
   enabled: false
   annotations:
