@@ -236,6 +236,7 @@ services:
       - 8081
     environment:
       JUPYTERHUB_CRYPT_KEY: ${JUPYTERHUB_CRYPT_KEY}
+      JUPYTERHUB_NOTEBOOK_DIR: /repo
       JUPYTERHUB_SPAWNER_CLASS: spawners.RengaDockerSpawner
       OAUTH2_TOKEN_URL: ${KEYCLOAK_URL}/auth/realms/Renga/protocol/openid-connect/token
       OAUTH2_AUTHORIZE_URL: ${KEYCLOAK_URL}/auth/realms/Renga/protocol/openid-connect/auth
