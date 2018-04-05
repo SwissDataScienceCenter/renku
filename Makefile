@@ -219,10 +219,10 @@ unregister-gitlab-oauth-applications: .env
 	@docker-compose exec gitlab /opt/gitlab/bin/gitlab-psql \
 		-h /var/opt/gitlab/postgresql -d gitlabhq_production \
 		-c "DELETE FROM oauth_applications WHERE uid='renga-ui'" > /dev/null 2>&1
-  
+
 	@docker-compose exec gitlab /opt/gitlab/bin/gitlab-psql \
 		-h /var/opt/gitlab/postgresql -d gitlabhq_production \
-    -c "DELETE FROM oauth_applications WHERE uid='jupyterhub'" > /dev/null 2>&1
+		-c "DELETE FROM oauth_applications WHERE uid='jupyterhub'" > /dev/null 2>&1
 
 register-gitlab-user-token: unregister-gitlab-user-token
 	@$(DOCKER_COMPOSE_ENV) docker-compose exec gitlab /opt/gitlab/bin/gitlab-psql \
