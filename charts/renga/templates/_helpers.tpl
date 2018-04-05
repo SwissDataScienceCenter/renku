@@ -64,3 +64,7 @@ Define subcharts full names
 {{- define "ui.fullname" -}}
 {{- printf "%s-%s-%s" .Release.Name "renga" "ui" | replace "+" "_" | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
+
+{{- define "jupyterhub.fullname" -}}
+{{- printf "%s-%s-%s" .Release.Name "renga" "jupyterhub" | replace "+" "_" | trunc 63 | trimSuffix "-" -}}
+{{- end -}}

@@ -72,6 +72,26 @@ spec:
       securityContext:
         runAsUser: {{ .Values.hub.uid }}
         fsGroup: {{ .Values.hub.fsGid }}
+      initContainers:
+        - name: hub-init
+          securityContext:
+            runAsUser: 0
+          image: postgres:9.6
+          command: ['sh', '/scripts/init.sh']
+          volumeMounts:
+          - name: config
+            mountPath: /scripts
+            readOnly: true
+          env:
+          - name: POSTGRES_DATABASE
+            value: {{ .Values.global.gitlab.postgresDatabase }}
+          - name: POSTGRES_USER
+            value: {{ .Values.global.gitlab.postgresUser }}
+          - name: PGPASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: {{ template "gitlab.fullname" . }}
+                key: postgres-password
       containers:
       {{- if .Values.hub.extraContainers }}
 {{ toYaml .Values.hub.extraContainers | indent 6 }}

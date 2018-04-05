@@ -190,3 +190,19 @@ data:
   {{ range $key, $value := .Values.hub.extraConfigMap -}}
   custom.{{ $key }}: {{ toJson $value | quote }}
   {{ end -}}
+  init.sh: |-
+    set -ex
+    apt-get update -y
+    apt-get install -y curl
+
+    until sleep 5; curl --retry-max-time 1 http://{{ template "gitlab.fullname" . }}/help; do
+        echo waiting for gitlab
+    done
+
+    psql -v ON_ERROR_STOP=1 -h {{ template "postgresql.fullname" . }} --username "$POSTGRES_USER" \
+      -d $POSTGRES_DATABASE \ <<-EOSQL
+        DELETE FROM oauth_applications WHERE uid='jupyterhub';
+        INSERT INTO oauth_applications (name, uid, scopes, redirect_uri, secret, trusted)
+        VALUES ('jupyterhub', 'jupyterhub', 'api read_user', '{{ template "http" . }}://{{ .Values.global.jupyterhub.hostname }}/hub/oauth_callback {{ template "http" . }}://{{ .Values.global.jupyterhub.hostname }}/hub/api/oauth2/authorize', 'no-secret-needed', 'true');
+    EOSQL
+
