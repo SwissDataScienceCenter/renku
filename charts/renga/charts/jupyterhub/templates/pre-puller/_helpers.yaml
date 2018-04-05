@@ -1,0 +1,60 @@
+{{ define "jupyterhub.prePuller.daemonset" }}
+# template that returns an prePuller daemonset
+apiVersion: extensions/v1beta1
+kind: DaemonSet
+metadata:
+  name: {{ .name }}
+  labels:
+    app: jupyterhub
+    component: image-puller
+    release: {{ .top.Release.Name }}
+    heritage: {{ .top.Release.Service }}
+spec:
+  updateStrategy:
+    type: RollingUpdate
+  selector:
+    matchLabels:
+        app: jupyterhub
+        component: image-puller
+        release: {{ .top.Release.Name }}
+        heritage: {{ .top.Release.Service }}
+  template:
+    metadata:
+      labels:
+        app: jupyterhub
+        component: image-puller
+        release: {{ .top.Release.Name }}
+        heritage: {{ .top.Release.Service }}
+    spec:
+      terminationGracePeriodSeconds: 0
+      automountServiceAccountToken: false
+      initContainers:
+      - name: image-pull-singleuser
+        image: {{ .top.Values.singleuser.image.name }}:{{ .top.Values.singleuser.image.tag }}
+        imagePullPolicy: IfNotPresent
+        command:
+          - /bin/sh
+          - -c
+          - echo "Pulling complete"
+      {{ if not .top.Values.singleuser.cloudMetadata.enabled }}
+      - name: image-pull-metadata-block
+        image: {{ .top.Values.singleuser.networkTools.image.name }}:{{ .top.Values.singleuser.networkTools.image.tag }}
+        imagePullPolicy: IfNotPresent
+        command:
+          - /bin/sh
+          - -c
+          - echo "Pulling complete"
+      {{ end }}
+      {{ range $k, $v := .top.Values.prePuller.extraImages }}
+      - name: image-pull-{{ $k }}
+        image: {{ $v.name }}:{{ $v.tag }}
+        imagePullPolicy: IfNotPresent
+        command:
+          - /bin/sh
+          - -c
+          - echo "Pulling complete"
+      {{ end }}
+      containers:
+      - name: pause
+        image: {{ .top.Values.prePuller.pause.image.name }}:{{ .top.Values.prePuller.pause.image.tag }}
+{{- end }}

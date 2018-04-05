@@ -273,3 +273,14 @@ jupyterhub:
     enabled: false
   proxy:
     secretToken: f89ddee5ba10f2268fcefcd4e353235c255493095cd65addf29ebebf8df86255
+  hub:
+    extraEnv:
+      OAUTH2_TOKEN_URL: http://192.168.99.100/auth/realms/Renga/protocol/openid-connect/token
+      OAUTH2_AUTHORIZE_URL: http://192.168.99.100/auth/realms/Renga/protocol/openid-connect/auth
+      GITLAB_HOST: http://192.168.99.100/gitlab
+  auth:
+    type: gitlab
+    gitlab:
+      clientId: "jupyterhub"
+      clientSecret: "not-a-secret"
+      callbackUrl: "http://jupyterhub.renga.k8s/hub/oauth_callback"
