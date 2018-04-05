@@ -166,7 +166,7 @@ services:
       - review
 
   storage:
-    image: ${DOCKER_REPOSITORY}renga-storage:${PLATFORM_VERSION}
+    image: ${DOCKER_PREFIX}renga-storage:${PLATFORM_VERSION}
     environment:
       AUTHORIZATION_CLIENT_SECRET: $AUTHORIZATION_CLIENT_SECRET
       PLAY_APPLICATION_SECRET: $PLAY_APPLICATION_SECRET
@@ -205,7 +205,7 @@ services:
       SERVICES: storage
       WSGI_NUM_PROXIES: 1
   swagger:
-    image: ${IMAGE_REPOSITORY}swagger-ui:latest
+    image: ${DOCKER_PREFIX}swagger-ui:latest
     ports:
       - 8080
     labels:
