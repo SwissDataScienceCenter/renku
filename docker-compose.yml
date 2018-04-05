@@ -36,6 +36,11 @@ services:
       - db-data:/pgdata
     networks:
       - default
+    healthcheck:
+      test: ["CMD", "sh", "-c", "exec pg_isready"]
+      interval: 30s
+      timeout: 5s
+      retries: 6
 
   keycloak:
     build: ./services/keycloak
@@ -51,6 +56,8 @@ services:
       GITLAB_URL: ${GITLAB_URL}
       RENGA_UI_URL: ${RENGA_UI_URL}
       GITLAB_CLIENT_SECRET: ${GITLAB_CLIENT_SECRET}
+      JUPYTERHUB_URL: ${JUPYTERHUB_URL}
+      JUPYTERHUB_CLIENT_SECRET: ${JUPYTERHUB_CLIENT_SECRET}
     command:
       - "-b 0.0.0.0"
       - "-Dkeycloak.migration.action=import"
@@ -69,6 +76,11 @@ services:
       default:
         aliases:
           - keycloak.${PLATFORM_DOMAIN}
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/auth"]
+      interval: 60s
+      timeout: 30s
+      retries: 5
 
   gitlab:
     image: gitlab/gitlab-ce:latest
@@ -77,12 +89,12 @@ services:
       GITLAB_OMNIBUS_CONFIG: |
         external_url '${GITLAB_URL}'
         registry_external_url '${GITLAB_REGISTRY_URL}'
-        #postgresql['enable'] = false
         # Enable or disable automatic database migrations
         # gitlab_rails['auto_migrate'] = false
         # manually run: gitlab-ctl pg-upgrade
         # FIXME change from postgres to gitlab
         # TODO need to run gitlab-rake gitlab:setup for external db
+        #postgresql['enable'] = false
         #gitlab_rails['db_username'] = 'postgres'
         #gitlab_rails['db_password'] = 'postgres'
         #gitlab_rails['db_host'] = 'db'
@@ -120,6 +132,7 @@ services:
         gitlab_rails['lfs_enabled'] = true
         gitlab_rails['lfs_storage_path'] = '/var/storage/lfs-objects'
         gitlab_rails['initial_root_password'] = 'root_password'
+        gitlab_rails['initial_shared_runners_registration_token'] = '${GITLAB_RUNNERS_TOKEN}'
         # Add any other gitlab.rb configuration here, each on its own line
     ports:
       - '5022:22'
@@ -144,11 +157,6 @@ services:
 
   gitlab-runner:
     image: ${DOCKER_PREFIX}gitlab-runner:${PLATFORM_VERSION}
-    environment:
-      RENGA_OIC_URL: ${RENGA_ENDPOINT}/auth/realms/Renga/
-      RENGA_OIC_CLIENT_ID: demo-client
-      RENGA_RUNNER_IMAGE: ${DOCKER_PREFIX}minimal-notebook:${PLATFORM_VERSION}
-      RENGA_REVIEW_DOMAIN: ${PLATFORM_DOMAIN}
     restart: always
     volumes:
       - gitlab-runner-data:/etc/gitlab-runner
@@ -217,16 +225,21 @@ services:
       KEYCLOAK_URL: ${KEYCLOAK_URL}
     labels:
       traefik.enable: "true"
-      traefik.frontend.rule: PathPrefix:/
+      traefik.frontend.rule: "Host:${PLATFORM_DOMAIN}"
       traefik.frontend.passHostHeader: "false"
     networks:
       - default
+    healthcheck:
+      test: ["CMD", "node", "-e", "http.get('http://localhost:3000/');"]
+      interval: 20s
+      timeout: 10s
+      retries: 5
 
   reverse-proxy:
     image: traefik
     command: --web --web.address=:81 \
       --docker --docker.watch --docker.domain=${PLATFORM_DOMAIN} \
-      --debug --logLevel=DEBUG \
+      --debug --logLevel=INFO \
       --defaultentrypoints=http,https \
       --entrypoints='Name:http Address::80' \
       --entrypoints='Name:https Address::443 TLS:/ssl/test.crt,/ssl/test.key' \
@@ -245,6 +258,39 @@ services:
     networks:
       - default
       - review
+
+  jupyterhub:
+    build: services/jupyterhub
+    command: jupyterhub --debug
+    ports:
+      - 8000
+      - 8081
+    environment:
+      JUPYTERHUB_CRYPT_KEY: ${JUPYTERHUB_CRYPT_KEY}
+      JUPYTERHUB_NOTEBOOK_DIR: /repo
+      JUPYTERHUB_SPAWNER_CLASS: spawners.RengaDockerSpawner
+      OAUTH2_TOKEN_URL: ${KEYCLOAK_URL}/auth/realms/Renga/protocol/openid-connect/token
+      OAUTH2_AUTHORIZE_URL: ${KEYCLOAK_URL}/auth/realms/Renga/protocol/openid-connect/auth
+      KEYCLOAK_URL: ${KEYCLOAK_URL}
+      GITLAB_HOST: ${GITLAB_URL}
+      GITLAB_CLIENT_ID: jupyterhub
+      GITLAB_CLIENT_SECRET: no-secret-needed
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./services/jupyterhub/jupyterhub_config.py:/srv/jupyterhub/jupyterhub_config.py:ro
+      - ./services/jupyterhub/project_service.py:/srv/jupyterhub/project_service.py:ro
+      - ./services/jupyterhub/spawners.py:/srv/jupyterhub/spawners.py:ro
+    labels:
+      traefik.enable: "true"
+      traefik.port: '8000'
+      traefik.frontend.rule: "Host:jupyterhub.${PLATFORM_DOMAIN}"
+    networks:
+      default:
+        aliases:
+          - jupyterhub.${PLATFORM_DOMAIN}
+      review:
+        aliases:
+          - jupyterhub.${PLATFORM_DOMAIN}
 
 networks:
   review:

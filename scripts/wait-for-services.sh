@@ -1,7 +1,7 @@
-#!/usr/bin/env sh
+#!/usr/bin/env bash
 # -*- coding: utf-8 -*-
 #
-# Copyright 2017, 2018 - Swiss Data Science Center (SDSC)
+# Copyright 2017-2018 - Swiss Data Science Center (SDSC)
 # A partnership between École Polytechnique Fédérale de Lausanne (EPFL) and
 # Eidgenössische Technische Hochschule Zürich (ETHZ).
 #
@@ -19,30 +19,21 @@
 
 set -e
 
-# wait for containers to be up
-docker run \
-    --network renga_default --rm \
-    --link gitlab \
-    --link keycloak \
-    --link storage \
-    --link ui \
-    -e TARGETS=keycloak:8080,gitlab:80,ui:3000 \
-    -e TIMEOUT=180 \
-    waisbrot/wait
+CONTAINERS=($(docker-compose ps -q keycloak gitlab ui jupyterhub))
 
-# wait for services to become available
-URLS="${KEYCLOAK_URL}/auth ${GITLAB_URL}/help ${PLATFORM_DOMAIN}"
+TIMEOUT=360
 
-for URL in $URLS
-do
-    TIMEOUT=1
-    until sleep 1; curl --retry-max-time 1 $URL > /dev/null 2>&1; do
-        if [ ! "$TIMEOUT" ]; then
-            TIMEOUT=`expr $TIMEOUT - 1`
-        else
-            echo "Failed to access $URL."
-            exit 1
-        fi
-    done
+echo -n "Waiting "
+
+while [[ $(docker inspect --format="{{json .State.Health.Status}}" "${CONTAINERS[@]}" | grep -c -v '"healthy"') -gt "0" ]]; do
+    echo -n .
+    if [[ "$TIMEOUT" -gt "0" ]]; then
+        TIMEOUT=$((TIMEOUT - 5))
+    else
+        echo " [TIMEOUT]"
+        exit 1
+    fi
+    sleep 5
 done
-echo "All services are accessible."
+
+echo " [OK]"

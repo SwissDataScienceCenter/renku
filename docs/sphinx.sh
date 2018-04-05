@@ -19,7 +19,7 @@
 
 log()
 {
-    echo $(date +'%Y%m%d-%H%M%S%z')"} $*"
+    echo "$(date +'%Y%m%d-%H%M%S%z')} $*"
 }
 
 error()
@@ -29,7 +29,7 @@ error()
 
 info()
 {
-    (( $verbose>0 )) && log "INFO  -- $*"
+    (( verbose>0 )) && log "INFO  -- $*"
 }
 
 usage()
@@ -62,25 +62,27 @@ run_python_cmd()
         local -a VIRTUAL_ENV_OPT=("--clear")
         (( verbose>0 )) && VIRTUAL_ENV_OPT+=("--verbose")
         if [[ -n "${PYTHON_EXE}" ]]; then
-            if ! command -v ${python_exe}; then
+            if ! command -v "${python_exe}"; then
                 error "command not found: ${python_exe}"
                 return
             fi
             VIRTUAL_ENV_OPT+=("-p ${PYTHON_EXE}")
         fi
 
-        virtualenv "${VIRTUAL_ENV_OPT}" "${VIRTUAL_ENV_DIR}"
+        virtualenv "${VIRTUAL_ENV_OPT[@]}" "${VIRTUAL_ENV_DIR}"
         if [[ ! -e "${VIRTUAL_ENV_DIR}"/bin/activate ]]; then
             error "directory ${VIRTUAL_ENV_DIR} could not be created."
             return
         fi
+        # shellcheck source=/dev/null
         . "${VIRTUAL_ENV_DIR}"/bin/activate
     elif [[ ! -e "${VIRTUAL_ENV_DIR}/bin/activate" ]]; then
         error "invalid virtualenv '${VIRTUAL_ENV_DIR}': no activate script."
         return
     else
         info "reuse python virtual environment: ${VIRTUAL_ENV_DIR}"
-        . "${VIRTUAL_ENV_DIR}"/bin/activate
+        # shellcheck source=/dev/null
+        . "${VIRTUAL_ENV_DIR}/bin/activate"
     fi
     if ! command -v sphinx-build; then
         info "install required python packages"
@@ -98,7 +100,7 @@ run_python_cmd()
 main()
 {
     unalias -a
-    local -r ROOT="$(dirname ${BASH_SOURCE[0]})"
+    local -r ROOT="$(dirname "${BASH_SOURCE[0]}")"
     local -i verbose=0
     local python_exe=
     local virtual_env=

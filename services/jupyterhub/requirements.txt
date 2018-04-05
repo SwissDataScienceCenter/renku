@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# Copyright 2017-2018 - Swiss Data Science Center (SDSC)
+# Copyright 2018 - Swiss Data Science Center (SDSC)
 # A partnership between École Polytechnique Fédérale de Lausanne (EPFL) and
 # Eidgenössische Technische Hochschule Zürich (ETHZ).
 #
@@ -16,43 +16,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-sudo: true
-dist: trusty
-
-notifications:
-  email: false
-
-services:
-  - docker
-
-addons:
-  hosts:
-    - renga.local
-    - gitlab.renga.local
-    - jupyterhub.renga.local
-    - keycloak.renga.local
-
-branches:
-  only:
-    - master
-    - development
-
-language: python
-
-matrix:
-  fast_finish: true
-
-python:
-  - "3.6"
-
-before_install:
-  - sudo apt-get install enchant shellcheck
-
-install:
-  - ./scripts/travis-install.sh
-
-before_script: |-
-    make start
-
-script:
-  - xvfb-run make test
+-e git+https://github.com/jupyterhub/dockerspawner#egg=dockerspawner
+flask
+jupyterhub-kubespawner
+nullauthenticator
+oauthenticator
+python-gitlab
+requests-oauthlib

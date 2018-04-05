@@ -1,7 +1,7 @@
 #!/usr/bin/env sh
 # -*- coding: utf-8 -*-
 #
-# Copyright 2017 - Swiss Data Science Center (SDSC)
+# Copyright 2017-2018 - Swiss Data Science Center (SDSC)
 # A partnership between École Polytechnique Fédérale de Lausanne (EPFL) and
 # Eidgenössische Technische Hochschule Zürich (ETHZ).
 #
@@ -26,3 +26,4 @@ set -o nounset
 pytest -v
 sphinx-build -nNW -b spelling -d docs/_build/doctrees docs docs/_build/spelling
 sphinx-build -qnNW docs docs/_build/html
+shellcheck */**/*.sh

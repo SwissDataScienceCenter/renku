@@ -16,6 +16,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+-include .env
+
 ifeq ($(OS),Windows_NT)
     detected_OS := Windows
 else
@@ -38,16 +40,25 @@ GIT_MASTER_HEAD_SHA:=$(shell git rev-parse --short=12 --verify HEAD)
 GITLAB_URL?=http://gitlab.$(PLATFORM_DOMAIN)
 GITLAB_REGISTRY_URL?=http://gitlab.$(PLATFORM_DOMAIN):5081
 GITLAB_DIRS=config logs git-data lfs-data runner
+GITLAB_RUNNERS_TOKEN?=$(shell openssl rand -hex 32)
+
+JUPYTERHUB_CRYPT_KEY?=$(shell openssl rand -hex 32)
+JUPYTERHUB_URL?=http://jupyterhub.$(PLATFORM_DOMAIN)
 
 DOCKER_REPOSITORY?=rengahub/
 DOCKER_PREFIX:=${DOCKER_REGISTRY}$(DOCKER_REPOSITORY)
 DOCKER_NETWORK?=review
 DOCKER_COMPOSE_ENV=\
+	DOCKER_NETWORK=$(DOCKER_NETWORK) \
 	DOCKER_PREFIX=$(DOCKER_PREFIX) \
 	DOCKER_REPOSITORY=$(DOCKER_REPOSITORY) \
 	GITLAB_CLIENT_SECRET=$(GITLAB_CLIENT_SECRET) \
 	GITLAB_REGISTRY_URL=$(GITLAB_REGISTRY_URL) \
+	GITLAB_RUNNERS_TOKEN=$(GITLAB_RUNNERS_TOKEN) \
 	GITLAB_URL=$(GITLAB_URL) \
+	JUPYTERHUB_CLIENT_SECRET=$(JUPYTERHUB_CLIENT_SECRET) \
+	JUPYTERHUB_CRYPT_KEY=$(JUPYTERHUB_CRYPT_KEY) \
+	JUPYTERHUB_URL=$(JUPYTERHUB_URL) \
 	KEYCLOAK_URL=$(KEYCLOAK_URL) \
 	PLATFORM_DOMAIN=$(PLATFORM_DOMAIN) \
 	PLATFORM_VERSION=$(PLATFORM_VERSION) \
@@ -84,6 +95,11 @@ ifndef GITLAB_TOKEN
 	export GITLAB_TOKEN
 endif
 
+ifndef JUPYTERHUB_CLIENT_SECRET
+	JUPYTERHUB_CLIENT_SECRET=dummy-secret
+	export JUPYTERHUB_CLIENT_SECRET
+endif
+
 define DOCKER_BUILD
 set version in Docker := "$(PLATFORM_VERSION)"
 set dockerRepository := Option("$(DOCKER_REPOSITORY)".replaceAll("/$$", ""))
@@ -112,9 +128,8 @@ scala-artifact = \
 .PHONY: all
 all: docker-images
 
-.PHONY: docker-env
-docker-env:
-	@for x in $(DOCKER_COMPOSE_ENV); do echo $$x; done
+.env:
+	@for x in $(DOCKER_COMPOSE_ENV); do echo $$x >> .env; done
 
 # fetch missing repositories
 $(PLATFORM_BASE_DIR)/%:
@@ -178,27 +193,36 @@ ifeq ($(shell docker network ls -q -f name=$(DOCKER_NETWORK)), )
 	@docker network rm $(DOCKER_NETWORK)
 endif
 
-docker-compose-up:
-	$(DOCKER_COMPOSE_ENV) docker-compose up --build -d ${DOCKER_SCALE}
+docker-compose-up: .env
+	docker-compose up --build -d ${DOCKER_SCALE}
 
-docker-compose-pull:
-	$(DOCKER_COMPOSE_ENV) docker-compose pull
+docker-compose-pull: .env
+	docker-compose pull
 
 # GitLab actions
 services/gitlab/%:
 	@mkdir -p $@
 
+.PHONY: register-gitlab-oauth-applications unregister-gitlab-oauth-applications register-runners unregister-runners
 # Preregister the ui as a client with gitlab.
 # This command will fail on restart when the client is already there - we don't care.
-register-gitlab-oauth-applications: unregister-gitlab-oauth-applications
-	@$(DOCKER_COMPOSE_ENV) docker-compose exec gitlab /opt/gitlab/bin/gitlab-psql \
+register-gitlab-oauth-applications: .env unregister-gitlab-oauth-applications
+	@docker-compose exec gitlab /opt/gitlab/bin/gitlab-psql \
 		-h /var/opt/gitlab/postgresql -d gitlabhq_production \
 		-c "INSERT INTO oauth_applications (name, uid, scopes, redirect_uri, secret, trusted) VALUES ('renga-ui', 'renga-ui', 'api read_user', '$(RENGA_UI_URL)/login/redirect/gitlab http://localhost:3000/login/redirect/gitlab', 'no-secret-needed', 'true')" > /dev/null 2>&1
 
-unregister-gitlab-oauth-applications:
-	@$(DOCKER_COMPOSE_ENV) docker-compose exec gitlab /opt/gitlab/bin/gitlab-psql \
+	@docker-compose exec gitlab /opt/gitlab/bin/gitlab-psql \
+		-h /var/opt/gitlab/postgresql -d gitlabhq_production \
+		-c "INSERT INTO oauth_applications (name, uid, scopes, redirect_uri, secret, trusted) VALUES ('jupyterhub', 'jupyterhub', 'api read_user', '$(JUPYTERHUB_URL)/hub/oauth_callback $(JUPYTERHUB_URL)/hub/api/oauth2/authorize', 'no-secret-needed', 'true')" > /dev/null 2>&1
+
+unregister-gitlab-oauth-applications: .env
+	@docker-compose exec gitlab /opt/gitlab/bin/gitlab-psql \
 		-h /var/opt/gitlab/postgresql -d gitlabhq_production \
 		-c "DELETE FROM oauth_applications WHERE uid='renga-ui'" > /dev/null 2>&1
+  
+	@docker-compose exec gitlab /opt/gitlab/bin/gitlab-psql \
+		-h /var/opt/gitlab/postgresql -d gitlabhq_production \
+    -c "DELETE FROM oauth_applications WHERE uid='jupyterhub'" > /dev/null 2>&1
 
 register-gitlab-user-token: unregister-gitlab-user-token
 	@$(DOCKER_COMPOSE_ENV) docker-compose exec gitlab /opt/gitlab/bin/gitlab-psql \
@@ -210,16 +234,16 @@ unregister-gitlab-user-token:
 		-h /var/opt/gitlab/postgresql -d gitlabhq_production \
 		-c "DELETE FROM personal_access_tokens WHERE user_id='1' AND name='managed storage token';" > /dev/null 2>&1
 
-register-runners: unregister-runners
-ifeq (${RUNNER_TOKEN},)
-	@echo "[Error] RUNNER_TOKEN needs to be configured. Check $(GITLAB_URL)/admin/runners"
+register-runners: .env unregister-runners
+ifeq (${GITLAB_RUNNERS_TOKEN},)
+	@echo "[Error] GITLAB_RUNNERS_TOKEN needs to be configured. Check $(GITLAB_URL)/admin/runners"
 	@exit 1
 endif
-	@for container in $(shell $(DOCKER_COMPOSE_ENV) docker-compose ps -q gitlab-runner) ; do \
+	@for container in $(shell docker-compose ps -q gitlab-runner) ; do \
 		docker exec -ti $$container gitlab-runner register \
 			-n -u $(GITLAB_URL) \
 			--name $$container-shell \
-			-r ${RUNNER_TOKEN} \
+			-r ${GITLAB_RUNNERS_TOKEN} \
 			--executor shell \
 			--env RENGA_REVIEW_DOMAIN=$(PLATFORM_DOMAIN) \
 			--env RENGA_RUNNER_NETWORK=$(DOCKER_NETWORK) \
@@ -232,7 +256,7 @@ endif
 		docker exec -ti $$container gitlab-runner register \
 			-n -u $(GITLAB_URL) \
 			--name $$container-docker \
-			-r ${RUNNER_TOKEN} \
+			-r ${GITLAB_RUNNERS_TOKEN} \
 			--executor docker \
 			--env RENGA_REVIEW_DOMAIN=$(PLATFORM_DOMAIN) \
 			--env RENGA_RUNNER_NETWORK=$(DOCKER_NETWORK) \
@@ -248,8 +272,9 @@ endif
 	@echo
 	@echo "[Info] To make notebooks available as deployed environments, set the"
 	@echo "		RENGA_NOTEBOOK_TOKEN and RENGA_REVIEW_DOMAIN CI variables in gitlab project settings."
-unregister-runners:
-	@for container in $(shell $(DOCKER_COMPOSE_ENV) docker-compose ps -q gitlab-runner) ; do \
+
+unregister-runners: .env
+	@for container in $(shell docker-compose ps -q gitlab-runner) ; do \
 		docker exec -ti $$container gitlab-runner unregister \
 			--name $$container-shell || echo ok; \
 		docker exec -ti $$container gitlab-runner unregister \
@@ -259,12 +284,12 @@ unregister-runners:
 # Platform actions
 .PHONY: clean restart start stop test wait wipe
 
-clean:
-	@$(DOCKER_COMPOSE_ENV) docker-compose down --volumes --remove-orphans
+clean: .env
+	docker-compose down --volumes --remove-orphans
 
 restart: stop start
 
-start: docker-network $(GITLAB_DIRS:%=services/gitlab/%) unregister-runners docker-compose-up wait register-gitlab-oauth-applications register-gitlab-user-token
+start: .env docker-network $(GITLAB_DIRS:%=services/gitlab/%) unregister-runners docker-compose-up wait register-gitlab-oauth-applications register-runners register-gitlab-user-token
 ifeq (${GITLAB_CLIENT_SECRET}, dummy-secret)
 	@echo
 	@echo "[Warning] You have not defined a GITLAB_CLIENT_SECRET. Using dummy"
@@ -281,25 +306,23 @@ ifeq ($(shell ping -c1 ${PLATFORM_DOMAIN} && ping -c1 gitlab.${PLATFORM_DOMAIN} 
 endif
 	@echo
 	@echo "[Success] Renga UI should be under $(RENGA_UI_URL) and GitLab under $(GITLAB_URL)"
-	@echo
-	@echo "[Info] Register GitLab runners using:"
-	@echo "         make register-runners"
 ifeq (${DOCKER_SCALE},)
 	@echo
 	@echo "[Info] You can configure scale parameters: DOCKER_SCALE=\"--scale gitlab-runner=4\" make start"
 endif
 
-stop: remove-docker-network unregister-runners unregister-gitlab-oauth-applications unregister-gitlab-user-token
-	$(DOCKER_COMPOSE_ENV) docker-compose stop
+stop: .env remove-docker-network unregister-runners unregister-gitlab-oauth-applications unregister-gitlab-user-token
+	docker-compose stop
 
 test: docs/requirements.txt tests/requirements.txt
 	@pip install -r docs/requirements.txt
 	@pip install -r tests/requirements.txt
 	@scripts/run-tests.sh
 
-wait:
-	@$(DOCKER_COMPOSE_ENV) ./scripts/wait-for-services.sh
+wait: .env
+	@./scripts/wait-for-services.sh
 
 wipe: clean remove-docker-network
 	@rm -rf services/storage/data/*
 	@rm -rf gitlab
+	@rm .env

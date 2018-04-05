@@ -1,7 +1,7 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # -*- coding: utf-8 -*-
 #
-# Copyright 2017 - Swiss Data Science Center (SDSC)
+# Copyright 2017-2018 - Swiss Data Science Center (SDSC)
 # A partnership between École Polytechnique Fédérale de Lausanne (EPFL) and
 # Eidgenössische Technische Hochschule Zürich (ETHZ).
 #
@@ -25,12 +25,13 @@ echo " RENGA_UI_URL=$RENGA_UI_URL"
 echo " KEYCLOAK_MIGRATION_FILE=$KEYCLOAK_MIGRATION_FILE"
 echo "==================================================="
 
-cat $KEYCLOAK_MIGRATION_FILE.tpl \
-  | sed -e "s|{{RENGA_ENDPOINT}}|${RENGA_ENDPOINT}|" \
+sed -e "s|{{RENGA_ENDPOINT}}|${RENGA_ENDPOINT}|" "$KEYCLOAK_MIGRATION_FILE.tpl" \
   | sed -e "s|{{RENGA_UI_URL}}|${RENGA_UI_URL}|" \
   | sed -e "s|{{GITLAB_URL}}|${GITLAB_URL}|" \
   | sed -e "s|{{GITLAB_CLIENT_SECRET}}|${GITLAB_CLIENT_SECRET}|" \
-  > $KEYCLOAK_MIGRATION_FILE
+  | sed -e "s|{{JUPYTERHUB_URL}}|${JUPYTERHUB_URL}|" \
+  | sed -e "s|{{JUPYTERHUB_CLIENT_SECRET}}|${JUPYTERHUB_CLIENT_SECRET}|" \
+  > "$KEYCLOAK_MIGRATION_FILE"
 
-exec /opt/jboss/docker-entrypoint.sh $@
+exec /opt/jboss/docker-entrypoint.sh "$@"
 exit $?
