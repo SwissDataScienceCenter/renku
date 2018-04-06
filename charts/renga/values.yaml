@@ -23,6 +23,13 @@ global:
     postgresUser: keycloak
     ## Postgres password for the Keycloak database
     postgresPassword: keycloak
+  jupyterhub:
+    ## Name of the postgres database to be used by jupyterhub
+    postgresDatabase: jupyterhub
+    ## Postgres user for the jupyterhub database
+    postgresUser: jupyterhub
+    ## Postgres password for the jupyterhub database
+    postgresPassword: jupyterhub
   renga:
     ## Domain name for the deployed instance of renga
     domain: example.local
@@ -267,3 +274,21 @@ gitlab:
   # service:
   #   port: 3000
   #   type: ClusterIP
+
+## Configuration for the jupyterhub service
+jupyterhub:
+  rbac:
+    enabled: true
+  hub:
+    baseUrl: '/jupyterhub/'
+    db:
+      type: postgres
+  singleuser:
+    storage:
+      type: none
+  auth:
+    type: gitlab
+    gitlab:
+      clientId: "jupyterhub"
+      clientSecret: "no-secret-needed"
+      callbackUrl: '""' # Forces the default callback url

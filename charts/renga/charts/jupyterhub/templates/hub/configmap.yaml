@@ -180,7 +180,7 @@ data:
   {{ else if eq .Values.hub.db.type "sqlite-memory" -}}
   hub.db_url: "sqlite://"
   {{ else -}}
-  hub.db_url: {{ .Values.hub.db.url | quote }}
+  hub.db_url: {{ template "hub.db_url" . }}
   {{- end }}
   auth.admin.access: {{ .Values.auth.admin.access | quote }}
   {{ if .Values.auth.admin.users -}}
