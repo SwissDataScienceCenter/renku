@@ -16,9 +16,7 @@ jupyterhub:
   proxy:
     secretToken: f89ddee5ba10f2268fcefcd4e353235c255493095cd65addf29ebebf8df86255
   hub:
-    extraConfig:
-      base-url: |-
-        c.JupyterHub.base_url = '/jupyterhub'
+    baseUrl: '/jupyterhub/'
   auth:
     type: gitlab
     gitlab:
