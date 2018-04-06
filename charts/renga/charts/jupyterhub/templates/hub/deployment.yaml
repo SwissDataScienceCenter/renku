@@ -174,3 +174,5 @@ spec:
         ports:
           - containerPort: 8081
             name: hub
+          - containerPort: 9080
+            name: projects

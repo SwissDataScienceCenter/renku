@@ -33,7 +33,7 @@ c.Authenticator.auto_login = True
 #: Enable named-servers
 c.JupyterHub.allow_named_servers = True
 
-#: Enable persisting encrypted auth_state using JUPYTERHUB_CRYPTO_KEY.
+#: Enable persisting encrypted auth_state using JUPYTERHUB_CRYPT_KEY.
 c.Authenticator.enable_auth_state = True
 
 #: TODO Url for the database. e.g. `sqlite:///jupyterhub.sqlite`

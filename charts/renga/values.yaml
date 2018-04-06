@@ -280,7 +280,59 @@ jupyterhub:
   rbac:
     enabled: true
   hub:
-    baseUrl: '/jupyterhub/'
+    image:
+      name: rengahub/jupyterhub-k8s
+      tag: latest
+    extraEnv:
+      # JUPYTERHUB_SPAWNER_CLASS: spawners.RengaKubeSpawner
+      DEBUG: 1
+    extraConfig: |
+      import os
+      import socket
+      import sys
+
+      #: Automatically begin the login process without showing the button.
+      c.Authenticator.auto_login = True
+
+      #: Enable named-servers
+      c.JupyterHub.allow_named_servers = True
+
+      #: Configure the notebook spawner.
+      # c.JupyterHub.spawner_class = os.getenv('JUPYTERHUB_SPAWNER_CLASS',
+      #                                      'spawners.Spawner')
+
+      c.RengaKubeSpawner.pod_name_template = 'jupyterhub-{username}-{servername}'
+
+      # Explicitly set notebook directory because we'll be mounting a host volume to
+      # it.  Most jupyter/docker-stacks *-notebook images run the Notebook server as
+      # user `jovyan`, and set the notebook directory to `/home/jovyan/work`.
+      # We follow the same convention.
+      # notebook_dir = os.getenv('JUPYTERHUB_NOTEBOOK_DIR', '/home/jovyan/work')
+      # c.Spawner.notebook_dir = notebook_dir
+      # Mount the real user's Docker volume on the host to the notebook user's
+      # notebook directory in the container
+      # c.DockerSpawner.volumes = { 'jupyterhub-user-{username}': notebook_dir }
+      # volume_driver is no longer a keyword argument to create_container()
+      # c.DockerSpawner.extra_create_kwargs.update({ 'volume_driver': 'local' })
+
+      # Remove containers once they are stopped - not recognized by KubeSpawner
+      # c.Spawner.remove_containers = True
+      # For debugging arguments passed to spawned containers
+      c.Spawner.debug = bool(os.getenv('DEBUG', False))
+
+      #: Setup the service for creating named servers from GitLab projects.
+      env = os.environ.copy()
+      env['FLASK_APP'] = 'project_service'
+      env['FLASK_DEBUG'] = os.getenv('DEBUG', '0')
+      env['OAUTHLIB_INSECURE_TRANSPORT'] = '1'
+
+      c.JupyterHub.services = [{
+          'name': 'projects',
+          'command': ['flask', 'run', '-p', '9080', '-h', '0.0.0.0'],
+          'url': 'http://{0}:9080'.format(os.environ.get('HUB_SERVICE_HOST')),
+          'environment': env,
+          'admin': True,
+      }]
     db:
       type: postgres
   singleuser:

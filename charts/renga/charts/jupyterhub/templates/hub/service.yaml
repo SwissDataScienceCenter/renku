@@ -13,3 +13,8 @@ spec:
     - protocol: TCP
       port: 8081
       targetPort: 8081
+      name: hub
+    - protocol: TCP
+      port: 9080
+      targetPort: 9080
+      name: projects
