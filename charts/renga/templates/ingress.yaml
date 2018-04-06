@@ -32,13 +32,6 @@ spec:
 {{- end }}
   rules:
   {{- range .Values.ingress.hosts }}
-  - host: jupyterhub.renga.k8s
-    http:
-      paths:
-        - path: /
-          backend:
-            serviceName: proxy-http
-            servicePort: 8000
   - host: {{ . }}
     http:
       paths:
@@ -50,6 +43,10 @@ spec:
         backend:
           serviceName: {{ $gitlabFullname }}
           servicePort: {{ $gitlabServicePort }}
+      - path: /jupyterhub
+        backend:
+          serviceName: proxy-http
+          servicePort: 8000
       - path: /
         backend:
           serviceName: {{ $uiFullname }}

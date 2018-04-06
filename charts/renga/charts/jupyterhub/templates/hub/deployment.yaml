@@ -162,6 +162,8 @@ spec:
         - name: {{ $key | quote }}
           value: {{ $value | quote }}
         {{ end -}}
+        - name: GITLAB_HOST
+          value: {{ template "http" . }}://{{ .Values.global.renga.domain }}/gitlab
         {{ if .Values.auth.state.enabled }}
         - name: JUPYTERHUB_CRYPT_KEY
           valueFrom:

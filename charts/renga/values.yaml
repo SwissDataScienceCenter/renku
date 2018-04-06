@@ -267,7 +267,3 @@ gitlab:
   # service:
   #   port: 3000
   #   type: ClusterIP
-
-jupyterhub:
-  rbac:
-    enabled: false
