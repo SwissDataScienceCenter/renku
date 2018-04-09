@@ -1,0 +1,32 @@
+# renga: v1.dev20180404
+
+stages:
+  - build
+  - review
+
+dot:
+  stage: build
+  script:
+    - pip install --user pydot
+    - python -c "import renga, networkx; graph = renga.cli._graph.Graph(renga.LocalClient('.')); graph.build_status(); networkx.drawing.nx_pydot.write_dot(graph.G, 'graph.dot')"
+  artifacts:
+    paths:
+      - graph.dot
+  environment:
+    name: dot/$CI_COMMIT_REF_NAME
+    url: $CI_PROJECT_URL/-/jobs/artifacts/$CI_COMMIT_REF_NAME/raw/graph.dot?job=$CI_JOB_NAME
+  tags:
+    - cwl
+
+review_notebook:
+  stage: review
+  script: echo http://jupyterhub.$AUTO_DEVOPS_DOMAIN/services/projects/$CI_PROJECT_PATH/$CI_ENVIRONMENT_SLUG
+  variables:
+    GIT_STRATEGY: clone
+  environment:
+    name: review/$CI_COMMIT_REF_NAME
+    url: http://jupyterhub.$AUTO_DEVOPS_DOMAIN/services/projects/$CI_PROJECT_PATH/$CI_ENVIRONMENT_SLUG
+  only:
+    - branches
+  tags:
+    - notebook
