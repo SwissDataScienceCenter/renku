@@ -24,7 +24,9 @@ else
     detected_OS := $(shell sh -c 'uname -s 2>/dev/null || echo not')
 endif
 
-PLATFORM_DOMAIN?=renga.local
+# Use build instead of local. See GitLab-CE issue:
+# https://gitlab.com/gitlab-org/gitlab-ce/issues/45008
+PLATFORM_DOMAIN?=renga.build
 
 PLATFORM_BASE_DIR?=..
 PLATFORM_BASE_REPO_URL?=https://github.com/SwissDataScienceCenter
@@ -68,7 +70,6 @@ DOCKER_COMPOSE_ENV=\
 	RENGA_UI_URL=$(RENGA_UI_URL) \
 	PLAY_APPLICATION_SECRET=$(PLAY_APPLICATION_SECRET) \
 	GITLAB_TOKEN=$(GITLAB_TOKEN)
-
 
 SBT_IVY_DIR := $(PWD)/.ivy
 SBT = sbt -ivy $(SBT_IVY_DIR)
@@ -208,7 +209,11 @@ docker-compose-pull: .env
 services/gitlab/%:
 	@mkdir -p $@
 
-.PHONY: register-gitlab-oauth-applications unregister-gitlab-oauth-applications register-runners unregister-runners
+.PHONY: enable-gitlab-auto-devops register-gitlab-oauth-applications unregister-gitlab-oauth-applications register-runners unregister-runners
+enable-gitlab-auto-devops:
+	@docker-compose exec gitlab /opt/gitlab/bin/gitlab-psql \
+		-h /var/opt/gitlab/postgresql -d gitlabhq_production \
+		-c 	"UPDATE application_settings SET auto_devops_enabled = true, auto_devops_domain = '$(PLATFORM_DOMAIN)' WHERE id = 1;" > /dev/null 2>&1
 # Preregister the ui as a client with gitlab.
 # This command will fail on restart when the client is already there - we don't care.
 register-gitlab-oauth-applications: .env unregister-gitlab-oauth-applications
@@ -294,7 +299,7 @@ clean: .env
 
 restart: stop start
 
-start: .env docker-network $(GITLAB_DIRS:%=services/gitlab/%) unregister-runners docker-compose-up wait register-gitlab-oauth-applications register-runners register-gitlab-user-token
+start: .env docker-network $(GITLAB_DIRS:%=services/gitlab/%) unregister-runners docker-compose-up wait enable-gitlab-auto-devops register-gitlab-oauth-applications register-runners register-gitlab-user-token
 ifeq (${GITLAB_CLIENT_SECRET}, dummy-secret)
 	@echo
 	@echo "[Warning] You have not defined a GITLAB_CLIENT_SECRET. Using dummy"
