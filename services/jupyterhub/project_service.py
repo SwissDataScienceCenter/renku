@@ -40,10 +40,9 @@ auth = HubOAuth(
 app = Flask(__name__)
 
 
-def _server_name(namespace, project, environment_slug):
+def _server_name(*args):
     """Return a name for Jupyter server."""
-    return '{0}-{1}-{2}'.format(namespace, project, environment_slug).replace(
-        '/', '-')
+    return '-'.join(args).replace('/', '-')
 
 
 def authenticated(f):
@@ -80,12 +79,12 @@ def whoami(user):
 
 
 @app.route(
-    SERVICE_PREFIX + '<namespace>/<project>/<path:environment_slug>',
+    SERVICE_PREFIX + '<namespace>/<project>/<commit_sha>/<environment_slug>',
     methods=['GET'])
 @authenticated
-def launch_notebook(user, namespace, project, environment_slug):
+def launch_notebook(user, namespace, project, commit_sha, environment_slug):
     """Launch user server with a given name."""
-    server_name = _server_name(namespace, project, environment_slug)
+    server_name = _server_name(namespace, project, commit_sha, environment_slug)
     headers = {auth.auth_header_name: 'token {0}'.format(auth.api_token)}
     # 1. launch using spawner that checks the access
     r = requests.request(
@@ -95,6 +94,7 @@ def launch_notebook(user, namespace, project, environment_slug):
         json={
             'namespace': namespace,
             'project': project,
+            'commit_sha': commit_sha,
             'environment_slug': environment_slug,
             # 'notebook': notebook,
         },
@@ -115,12 +115,12 @@ def launch_notebook(user, namespace, project, environment_slug):
 
 
 @app.route(
-    SERVICE_PREFIX + '<namespace>/<project>/<path:environment_slug>',
+    SERVICE_PREFIX + '<namespace>/<project>/<commit_sha>/<environment_slug>',
     methods=['DELETE'])
 @authenticated
-def stop_notebook(user, namespace, project, environment_slug):
+def stop_notebook(user, namespace, project, commit_sha, environment_slug):
     """Stop user server with name."""
-    server_name = _server_name(namespace, project, environment_slug)
+    server_name = _server_name(namespace, project, commit_sha, environment_slug)
     headers = {'Authorization': 'token %s' % auth.api_token}
 
     r = requests.request(

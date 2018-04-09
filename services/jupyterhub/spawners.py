@@ -26,8 +26,6 @@ from tornado import gen, web
 class SpawnerMixin():
     """Extend spawner methods."""
 
-    git_revision = 'master'
-
     @gen.coroutine
     def git_repository(self):
         """Return the URL of current repository."""
@@ -49,17 +47,16 @@ class SpawnerMixin():
 
     def get_env(self):
         """Extend environment variables passed to the notebook server."""
+        # repository = yield self.git_repository()
         environment = super().get_env()
         environment.update({
-            'CI_COMMIT_REF_NAME':
-            self.user_options.get('branch', 'master'),
-            'CI_REPOSITORY_URL':
-            self.user_options.get('repo_url', ''),
+            # 'CI_REPOSITORY_URL': repository,
             'CI_PROJECT_PATH':
             self.user_options.get('project_path', ''),
             'CI_ENVIRONMENT_SLUG':
-            self.user_options.get('env_slug', ''),
-            # TODO 'ACCESS_TOKEN': access_token,
+            self.user_options.get('environment_slug', ''),
+            'CI_COMMIT_SHA':
+            self.user_options.get('commit_sha', ''),
         })
         return environment
 
@@ -117,6 +114,7 @@ try:
         @gen.coroutine
         def start(self):
             """Create init container."""
+            options = self.user_options
             container_name = 'init-' + self.name  # TODO user namespace?
             name = self.name + '-git-repo'
             volume_name = 'repo-' + container_name
@@ -154,9 +152,6 @@ try:
                 name=container_name,
                 command=[
                     'clone',
-                    # '--single-branch',
-                    # '-b',
-                    # self.git_revision,
                     '--',
                     repository,
                     volume_path,
@@ -169,7 +164,23 @@ try:
             execute = yield self.docker(
                 'exec_create',
                 container=container.get('Id'),
-                cmd='chown 1000:100 -R /repo')
+                workdir=volume_path,
+                cmd='chown 1000:100 -R ./'.format(
+                    options.get('environment_slug'),
+                    options.get('commit_sha'),
+                ),
+            )
+            executed = yield self.docker('exec_start', execute.get('Id'))
+            self.log.info(executed)
+            execute = yield self.docker(
+                'exec_create',
+                container=container.get('Id'),
+                workdir=volume_path,
+                cmd='git checkout -b "{0}" "{1}"'.format(
+                    options.get('environment_slug'),
+                    options.get('commit_sha'),
+                ),
+            )
             executed = yield self.docker('exec_start', execute.get('Id'))
             self.log.info(executed)
 
@@ -215,6 +226,7 @@ try:
             """Include volume with the git repository."""
             auth_state = yield self.user.get_auth_state()
             repository = yield self.git_repository()
+            options = self.user_options
 
             # https://gist.github.com/tallclair/849601a16cebeee581ef2be50c351841
             container_name = 'init-' + self.pod_name
