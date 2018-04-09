@@ -168,7 +168,7 @@ services:
   storage:
     image: ${DOCKER_PREFIX}renga-storage:${PLATFORM_VERSION}
     environment:
-      AUTHORIZATION_CLIENT_SECRET: $AUTHORIZATION_CLIENT_SECRET
+      # AUTHORIZATION_CLIENT_SECRET: $AUTHORIZATION_CLIENT_SECRET
       PLAY_APPLICATION_SECRET: $PLAY_APPLICATION_SECRET
       RENGA_SERVICES_AUTHORIZATION_URL: ${KEYCLOAK_URL}/auth/realms/Renga/protocol/openid-connect/auth
       STORAGE_BACKEND_LOCAL_ENABLED: "true"
@@ -177,7 +177,7 @@ services:
       STORAGE_BACKEND_GITLAB_ENABLED: "true"
       GITLAB_URL: ${GITLAB_URL}
       GITLAB_USER: "root"
-      GITLAB_PASS: $GITLAB_TOKEN
+      GITLAB_PASS: ${GITLAB_TOKEN}
       RENGA_STORAGE_DEFAULT_LFS_BACKEND: "local"
     volumes:
       - ./services/storage/data:/data
