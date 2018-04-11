@@ -166,24 +166,55 @@ services:
       - default
       - review
 
-#   storage:
-#     image: ${DOCKER_REPOSITORY}renga-storage:$PLATFORM_VERSION
-#     environment:
-#       AUTHORIZATION_CLIENT_SECRET: $AUTHORIZATION_CLIENT_SECRET
-#       PLAY_APPLICATION_SECRET: $PLAY_APPLICATION_SECRET
-#       RENGA_SERVICES_AUTHORIZATION_URL: ${RENGA_ENDPOINT}/auth/realms/Renga/protocol/openid-connect/auth
-#       RESOURCE_MANAGER_PUBLIC_KEY: $RESOURCE_MANAGER_PUBLIC_KEY
-#       STORAGE_BACKEND_LOCAL_ENABLED: "true"
-#     volumes:
-#     - ./services/storage/data:/data
-#     ports:
-#     - 9000
-#     restart: on-failure
-#     labels:
-#       traefik.enable: "true"
-#       traefik.frontend.rule: PathPrefix:/api/storage
+  storage:
+    image: ${DOCKER_PREFIX}renga-storage:${PLATFORM_VERSION}
+    environment:
+      # AUTHORIZATION_CLIENT_SECRET: $AUTHORIZATION_CLIENT_SECRET
+      PLAY_APPLICATION_SECRET: $PLAY_APPLICATION_SECRET
+      RENGA_SERVICES_AUTHORIZATION_URL: ${KEYCLOAK_URL}/auth/realms/Renga/protocol/openid-connect/auth
+      STORAGE_BACKEND_LOCAL_ENABLED: "true"
+      RENGA_ENDPOINT: ${RENGA_ENDPOINT}
+      STORAGE_BACKEND_LOCALGIT_ENABLED: "true"
+      STORAGE_BACKEND_GITLAB_ENABLED: "true"
+      GITLAB_URL: ${GITLAB_URL}
+      GITLAB_USER: "root"
+      GITLAB_PASS: ${GITLAB_TOKEN}
+      RENGA_STORAGE_DEFAULT_LFS_BACKEND: "local"
+    volumes:
+      - ./services/storage/data:/data
+    ports:
+      - 9000
+    restart: on-failure
+    depends_on:
+      - db
+      - keycloak
+    networks:
+      - default
+    labels:
+      traefik.enable: "true"
+      traefik.frontend.rule: PathPrefix:/api/storage
 
-
+  apispec:
+    build: ./services/apispec
+    ports:
+      - 5000
+    labels:
+      traefik.enable: "true"
+      traefik.frontend.rule: Path:/api/swagger.json
+    environment:
+      API_ROOT_URL: http://reverse-proxy/api/
+      SERVICES: storage
+      WSGI_NUM_PROXIES: 1
+  swagger:
+    image: ${DOCKER_PREFIX}swagger-ui:latest
+    ports:
+      - 8080
+    labels:
+      traefik.enable: "true"
+      traefik.frontend.rule: PathPrefixStrip:/admin/swagger
+    environment:
+      API_URL: ${RENGA_ENDPOINT}/api/swagger.json
+      OAUTH2_REDIRECT_URL: ${RENGA_ENDPOINT}/admin/swagger/oauth2-redirect.html
 
   ui:
     image: ${DOCKER_PREFIX}renga-ui:${PLATFORM_VERSION}

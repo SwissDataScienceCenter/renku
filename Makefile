@@ -47,6 +47,8 @@ GITLAB_RUNNERS_TOKEN?=$(shell openssl rand -hex 32)
 JUPYTERHUB_CRYPT_KEY?=$(shell openssl rand -hex 32)
 JUPYTERHUB_URL?=http://jupyterhub.$(PLATFORM_DOMAIN)
 
+PLAY_APPLICATION_SECRET?=$(shell openssl rand -hex 32)
+
 DOCKER_REPOSITORY?=rengahub/
 DOCKER_PREFIX:=${DOCKER_REGISTRY}$(DOCKER_REPOSITORY)
 DOCKER_NETWORK?=review
@@ -57,6 +59,7 @@ DOCKER_COMPOSE_ENV=\
 	GITLAB_CLIENT_SECRET=$(GITLAB_CLIENT_SECRET) \
 	GITLAB_REGISTRY_URL=$(GITLAB_REGISTRY_URL) \
 	GITLAB_RUNNERS_TOKEN=$(GITLAB_RUNNERS_TOKEN) \
+	GITLAB_TOKEN=$(GITLAB_TOKEN) \
 	GITLAB_URL=$(GITLAB_URL) \
 	JUPYTERHUB_CLIENT_SECRET=$(JUPYTERHUB_CLIENT_SECRET) \
 	JUPYTERHUB_CRYPT_KEY=$(JUPYTERHUB_CRYPT_KEY) \
@@ -64,6 +67,7 @@ DOCKER_COMPOSE_ENV=\
 	KEYCLOAK_URL=$(KEYCLOAK_URL) \
 	PLATFORM_DOMAIN=$(PLATFORM_DOMAIN) \
 	PLATFORM_VERSION=$(PLATFORM_VERSION) \
+	PLAY_APPLICATION_SECRET=$(PLAY_APPLICATION_SECRET) \
 	RENGA_ENDPOINT=$(RENGA_ENDPOINT) \
 	RENGA_UI_URL=$(RENGA_UI_URL)
 
@@ -90,6 +94,11 @@ endif
 ifndef GITLAB_CLIENT_SECRET
 	GITLAB_CLIENT_SECRET=dummy-secret
 	export GITLAB_CLIENT_SECRET
+endif
+
+ifndef GITLAB_TOKEN
+	GITLAB_TOKEN=dummy-secret
+	export GITLAB_TOKEN
 endif
 
 ifndef JUPYTERHUB_CLIENT_SECRET
@@ -225,6 +234,16 @@ unregister-gitlab-oauth-applications: .env
 		-h /var/opt/gitlab/postgresql -d gitlabhq_production \
 		-c "DELETE FROM oauth_applications WHERE uid='jupyterhub'" > /dev/null 2>&1
 
+register-gitlab-user-token: unregister-gitlab-user-token
+	@$(DOCKER_COMPOSE_ENV) docker-compose exec gitlab /opt/gitlab/bin/gitlab-psql \
+		-h /var/opt/gitlab/postgresql -d gitlabhq_production \
+		-c "INSERT INTO personal_access_tokens ( user_id, token, name, revoked, expires_at, created_at, updated_at, scopes, impersonation) VALUES ( '1', '$(GITLAB_TOKEN)', 'managed storage token', 'f', NULL, NOW(), NOW(), E'--- \n- api\n- read_user\n- sudo\n- read_registry', 'f');" > /dev/null 2>&1
+
+unregister-gitlab-user-token:
+	@$(DOCKER_COMPOSE_ENV) docker-compose exec gitlab /opt/gitlab/bin/gitlab-psql \
+		-h /var/opt/gitlab/postgresql -d gitlabhq_production \
+		-c "DELETE FROM personal_access_tokens WHERE user_id='1' AND name='managed storage token';" > /dev/null 2>&1
+
 register-runners: .env unregister-runners
 ifeq (${GITLAB_RUNNERS_TOKEN},)
 	@echo "[Error] GITLAB_RUNNERS_TOKEN needs to be configured. Check $(GITLAB_URL)/admin/runners"
@@ -280,7 +299,7 @@ clean: .env
 
 restart: stop start
 
-start: .env docker-network $(GITLAB_DIRS:%=services/gitlab/%) unregister-runners docker-compose-up wait enable-gitlab-auto-devops register-gitlab-oauth-applications register-runners
+start: .env docker-network $(GITLAB_DIRS:%=services/gitlab/%) unregister-runners docker-compose-up wait enable-gitlab-auto-devops register-gitlab-oauth-applications register-runners register-gitlab-user-token
 ifeq (${GITLAB_CLIENT_SECRET}, dummy-secret)
 	@echo
 	@echo "[Warning] You have not defined a GITLAB_CLIENT_SECRET. Using dummy"
@@ -302,7 +321,7 @@ ifeq (${DOCKER_SCALE},)
 	@echo "[Info] You can configure scale parameters: DOCKER_SCALE=\"--scale gitlab-runner=4\" make start"
 endif
 
-stop: .env remove-docker-network unregister-runners unregister-gitlab-oauth-applications
+stop: .env remove-docker-network unregister-runners unregister-gitlab-oauth-applications unregister-gitlab-user-token
 	docker-compose stop
 
 test: docs/requirements.txt tests/requirements.txt
