@@ -47,16 +47,22 @@ class SpawnerMixin():
 
     def get_env(self):
         """Extend environment variables passed to the notebook server."""
-        # repository = yield self.git_repository()
+        # TODO how to get the async result here?
+        #      repository = yield from self.git_repository()
+
         environment = super().get_env()
         environment.update({
             # 'CI_REPOSITORY_URL': repository,
-            'CI_PROJECT_PATH':
-            self.user_options.get('project_path', ''),
+            'CI_NAMESPACE':
+            self.user_options.get('namespace', ''),
+            'CI_PROJECT':
+            self.user_options.get('project', ''),
             'CI_ENVIRONMENT_SLUG':
             self.user_options.get('environment_slug', ''),
             'CI_COMMIT_SHA':
             self.user_options.get('commit_sha', ''),
+            'GITLAB_HOST':
+            os.environ.get('GITLAB_HOST', 'http://gitlab.renga.build'),
         })
         return environment
 
@@ -77,7 +83,7 @@ class SpawnerMixin():
         project = options.get('project')
         env_slug = options.get('environment_slug')
 
-        url = os.environ.get('GITLAB_HOST', 'http://gitlab.renga.local')
+        url = os.getenv('GITLAB_HOST', 'http://gitlab.renga.build')
 
         import gitlab
         gl = gitlab.Gitlab(
@@ -190,8 +196,12 @@ try:
 
             self.log.info(container)
 
+            environment = self.get_env()
+            environment['CI_REPOSITORY_URL'] = repository
+
             extra_create_kwargs = {
                 'working_dir': volume_path,
+                'environment': environment,
                 'volumes': [volume_path],
             }
             extra_host_config = {

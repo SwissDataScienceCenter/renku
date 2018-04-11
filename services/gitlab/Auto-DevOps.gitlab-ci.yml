@@ -8,7 +8,7 @@ dot:
   stage: build
   script:
     - pip install --user pydot
-    - python -c "import renga, networkx; graph = renga.cli._graph.Graph(renga.LocalClient('.')); graph.build_status(); networkx.drawing.nx_pydot.write_dot(graph.G, 'graph.dot')"
+    - python -c "import renga, networkx; graph = renga.cli._graph.Graph(renga.LocalClient()); graph.build_status(); networkx.drawing.nx_pydot.write_dot(graph.G, 'graph.dot')"
   artifacts:
     paths:
       - graph.dot
@@ -20,12 +20,12 @@ dot:
 
 review_notebook:
   stage: review
-  script: echo http://jupyterhub.$AUTO_DEVOPS_DOMAIN/services/projects/$CI_PROJECT_PATH/$CI_COMMIT_SHA/$CI_ENVIRONMENT_SLUG
+  script: echo http://jupyterhub.$AUTO_DEVOPS_DOMAIN/services/projects/$CI_PROJECT_PATH/$CI_COMMIT_SHA/$CI_ENVIRONMENT_SLUG?branch=$CI_COMMIT_REF_NAME
   variables:
     GIT_STRATEGY: clone
   environment:
     name: review/$CI_COMMIT_REF_NAME
-    url: http://jupyterhub.$AUTO_DEVOPS_DOMAIN/services/projects/$CI_PROJECT_PATH/$CI_COMMIT_SHA/$CI_ENVIRONMENT_SLUG
+    url: http://jupyterhub.$AUTO_DEVOPS_DOMAIN/services/projects/$CI_PROJECT_PATH/$CI_COMMIT_SHA/$CI_ENVIRONMENT_SLUG?branch=$CI_COMMIT_REF_NAME
   only:
     - branches
   tags:

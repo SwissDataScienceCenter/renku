@@ -260,6 +260,15 @@ services:
       - default
       - review
 
+  notebook:
+    build:
+      context: services/notebook
+      args:
+        BASE_IMAGE: rengahub/minimal-notebook:e21fd4181aa2
+        JUPYTERHUB_VERSION: master
+    image: ${DOCKER_PREFIX}singleuser:${PLATFORM_VERSION}
+    command: renga --version
+
   jupyterhub:
     build: services/jupyterhub
     command: jupyterhub --debug
@@ -270,6 +279,7 @@ services:
       JUPYTERHUB_CRYPT_KEY: ${JUPYTERHUB_CRYPT_KEY}
       JUPYTERHUB_NOTEBOOK_DIR: /repo
       JUPYTERHUB_SPAWNER_CLASS: spawners.RengaDockerSpawner
+      JUPYTERHUB_NOTEBOOK_IMAGE: ${DOCKER_PREFIX}singleuser:${PLATFORM_VERSION}
       OAUTH2_TOKEN_URL: ${KEYCLOAK_URL}/auth/realms/Renga/protocol/openid-connect/token
       OAUTH2_AUTHORIZE_URL: ${KEYCLOAK_URL}/auth/realms/Renga/protocol/openid-connect/auth
       KEYCLOAK_URL: ${KEYCLOAK_URL}

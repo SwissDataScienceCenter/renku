@@ -66,6 +66,13 @@ NETWORK_NAME = 'review'
 c.RengaDockerSpawner.container_name_template = '{prefix}-{username}-{servername}'
 c.RengaKubeSpawner.pod_name_template = 'jupyterhub-{username}-{servername}'
 
+#: Configure the image used by notebook spawner.
+IMAGE = os.getenv('JUPYTERHUB_NOTEBOOK_IMAGE',
+                  'jupyterhub/singleuser:latest')
+
+c.RengaDockerSpawner.image = IMAGE
+c.RengaKubeSpawner.singleuser_image_spec = IMAGE
+
 c.Spawner.use_internal_ip = True
 c.Spawner.network_name = NETWORK_NAME
 

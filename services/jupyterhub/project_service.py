@@ -81,8 +81,11 @@ def whoami(user):
 @app.route(
     SERVICE_PREFIX + '<namespace>/<project>/<commit_sha>/<environment_slug>',
     methods=['GET'])
+@app.route(
+    SERVICE_PREFIX + '<namespace>/<project>/<commit_sha>/<environment_slug>/<path:notebook>',
+    methods=['GET'])
 @authenticated
-def launch_notebook(user, namespace, project, commit_sha, environment_slug):
+def launch_notebook(user, namespace, project, commit_sha, environment_slug, notebook=None):
     """Launch user server with a given name."""
     server_name = _server_name(namespace, project, commit_sha, environment_slug)
     headers = {auth.auth_header_name: 'token {0}'.format(auth.api_token)}
@@ -96,7 +99,8 @@ def launch_notebook(user, namespace, project, commit_sha, environment_slug):
             'project': project,
             'commit_sha': commit_sha,
             'environment_slug': environment_slug,
-            # 'notebook': notebook,
+            'branch': request.args.get('branch', 'master'),
+            'notebook': notebook,
         },
         headers=headers,
     )
@@ -108,8 +112,8 @@ def launch_notebook(user, namespace, project, commit_sha, environment_slug):
     notebook_url = auth.hub_host + '/user/{user[name]}/{server_name}/'.format(
         user=user, server_name=server_name)
 
-    # if notebook:
-    #     notebook_url += '/notebooks/{notebook}'.format(notebook=notebook)
+    if notebook:
+        notebook_url += '/notebooks/{notebook}'.format(notebook=notebook)
 
     return redirect(notebook_url)
 
