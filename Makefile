@@ -59,6 +59,7 @@ DOCKER_COMPOSE_ENV=\
 	GITLAB_CLIENT_SECRET=$(GITLAB_CLIENT_SECRET) \
 	GITLAB_REGISTRY_URL=$(GITLAB_REGISTRY_URL) \
 	GITLAB_RUNNERS_TOKEN=$(GITLAB_RUNNERS_TOKEN) \
+	GITLAB_TOKEN=$(GITLAB_TOKEN) \
 	GITLAB_URL=$(GITLAB_URL) \
 	JUPYTERHUB_CLIENT_SECRET=$(JUPYTERHUB_CLIENT_SECRET) \
 	JUPYTERHUB_CRYPT_KEY=$(JUPYTERHUB_CRYPT_KEY) \
@@ -66,10 +67,9 @@ DOCKER_COMPOSE_ENV=\
 	KEYCLOAK_URL=$(KEYCLOAK_URL) \
 	PLATFORM_DOMAIN=$(PLATFORM_DOMAIN) \
 	PLATFORM_VERSION=$(PLATFORM_VERSION) \
-	RENGA_ENDPOINT=$(RENGA_ENDPOINT) \
-	RENGA_UI_URL=$(RENGA_UI_URL) \
 	PLAY_APPLICATION_SECRET=$(PLAY_APPLICATION_SECRET) \
-	GITLAB_TOKEN=$(GITLAB_TOKEN)
+	RENGA_ENDPOINT=$(RENGA_ENDPOINT) \
+	RENGA_UI_URL=$(RENGA_UI_URL)
 
 SBT_IVY_DIR := $(PWD)/.ivy
 SBT = sbt -ivy $(SBT_IVY_DIR)
@@ -237,7 +237,7 @@ unregister-gitlab-oauth-applications: .env
 register-gitlab-user-token: unregister-gitlab-user-token
 	@$(DOCKER_COMPOSE_ENV) docker-compose exec gitlab /opt/gitlab/bin/gitlab-psql \
 		-h /var/opt/gitlab/postgresql -d gitlabhq_production \
-		-c "INSERT INTO personal_access_tokens ( user_id, token, name, revoked, expires_at, created_at, updated_at, scopes, impersonation) VALUES ( '1', '$(GITLAB_TOKEN)', 'managed storage token', 'f', NULL, '$(shell date +'%Y-%m-%d %H:%M:%S')', '$(shell date +'%Y-%m-%d %H:%M:%S')', E'--- \n- api\n- read_user\n- sudo\n- read_registry', 'f');" > /dev/null 2>&1
+		-c "INSERT INTO personal_access_tokens ( user_id, token, name, revoked, expires_at, created_at, updated_at, scopes, impersonation) VALUES ( '1', '$(GITLAB_TOKEN)', 'managed storage token', 'f', NULL, NOW(), NOW(), E'--- \n- api\n- read_user\n- sudo\n- read_registry', 'f');" > /dev/null 2>&1
 
 unregister-gitlab-user-token:
 	@$(DOCKER_COMPOSE_ENV) docker-compose exec gitlab /opt/gitlab/bin/gitlab-psql \
