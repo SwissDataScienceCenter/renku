@@ -11,7 +11,7 @@ Requires minikube, kubectl and helm.
     $ minikube start
     $ helm init
     $ helm install --name nginx-ingress --namespace kube-system stable/nginx-ingress --set controller.hostNetwork=true
-    $ helm install --name renga-staging --namespace renga \
+    $ helm install --name renga --namespace renga \
         -f minikube-values.yaml --set global.renga.domain=$(minikube ip) renga
 
 Due to issue `minikube #1568

@@ -46,25 +46,25 @@ http
 Define subcharts full names
 */}}
 {{- define "postgresql.fullname" -}}
-{{- printf "%s-%s-%s" .Release.Name "renga" "postgresql" | replace "+" "_" | trunc 63 | trimSuffix "-" -}}
+{{- printf "%s-%s" .Release.Name "postgresql" | replace "+" "_" | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 
 {{- define "keycloak.fullname" -}}
-{{- printf "%s-%s-%s" .Release.Name "renga" "keycloak" | replace "+" "_" | trunc 63 | trimSuffix "-" -}}
+{{- printf "%s-%s" .Release.Name "keycloak" | replace "+" "_" | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 
 {{- define "redis.fullname" -}}
-{{- printf "%s-%s-%s" .Release.Name "renga" "redis" | replace "+" "_" | trunc 63 | trimSuffix "-" -}}
+{{- printf "%s-%s" .Release.Name "redis" | replace "+" "_" | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 
 {{- define "gitlab.fullname" -}}
-{{- printf "%s-%s-%s" .Release.Name "renga" "gitlab" | replace "+" "_" | trunc 63 | trimSuffix "-" -}}
+{{- printf "%s-%s" .Release.Name "gitlab" | replace "+" "_" | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 
 {{- define "ui.fullname" -}}
-{{- printf "%s-%s-%s" .Release.Name "renga" "ui" | replace "+" "_" | trunc 63 | trimSuffix "-" -}}
+{{- printf "%s-%s" .Release.Name "ui" | replace "+" "_" | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 
 {{- define "jupyterhub.fullname" -}}
-{{- printf "%s-%s-%s" .Release.Name "renga" "jupyterhub" | replace "+" "_" | trunc 63 | trimSuffix "-" -}}
+{{- printf "%s-%s" .Release.Name "jupyterhub" | replace "+" "_" | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
