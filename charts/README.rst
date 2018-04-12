@@ -14,6 +14,14 @@ Requires minikube, kubectl and helm.
     $ helm install --name renga-staging --namespace renga \
         -f minikube-values.yaml --set global.renga.domain=$(minikube ip) renga
 
+Due to issue `minikube #1568
+<https://github.com/kubernetes/minikube/issues/1568>`_,
+you also need to run:
+
+.. code-block:: console
+
+    $ minikube ssh sudo ip link set docker0 promisc on
+
 The platform takes some time to start, to check the pods status do:
 
 .. code-block:: console

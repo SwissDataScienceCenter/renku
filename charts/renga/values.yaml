@@ -286,7 +286,7 @@ jupyterhub:
     services:
       projects:
         command: ['flask', 'run', '-p' ,'9080', '-h', '0.0.0.0']
-        url: 'http://hub.renga.svc:9080'
+        url: 'http://hub:9080'
         environment:
           FLASK_APP: 'project_service'
           FLASK_DEBUG: '1'
