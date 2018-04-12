@@ -293,7 +293,7 @@ jupyterhub:
           OAUTHLIB_INSECURE_TRANSPORT: '1'
         admin: true
     extraEnv:
-      # JUPYTERHUB_SPAWNER_CLASS: spawners.RengaKubeSpawner
+      JUPYTERHUB_SPAWNER_CLASS: spawners.RengaKubeSpawner
       DEBUG: 1
     extraConfig: |
       import os
@@ -307,8 +307,8 @@ jupyterhub:
       c.JupyterHub.allow_named_servers = True
 
       #: Configure the notebook spawner.
-      # c.JupyterHub.spawner_class = os.getenv('JUPYTERHUB_SPAWNER_CLASS',
-      #                                      'spawners.Spawner')
+      c.JupyterHub.spawner_class = os.getenv('JUPYTERHUB_SPAWNER_CLASS',
+                                           'spawners.Spawner')
 
       c.RengaKubeSpawner.pod_name_template = 'jupyterhub-{username}-{servername}'
 
@@ -324,10 +324,11 @@ jupyterhub:
       # volume_driver is no longer a keyword argument to create_container()
       # c.DockerSpawner.extra_create_kwargs.update({ 'volume_driver': 'local' })
 
-      # Remove containers once they are stopped - not recognized by KubeSpawner
-      # c.Spawner.remove_containers = True
       # For debugging arguments passed to spawned containers
       c.Spawner.debug = bool(os.getenv('DEBUG', False))
+
+      #: Enable named-servers
+      c.JupyterHub.allow_named_servers = True
     db:
       type: postgres
   singleuser:

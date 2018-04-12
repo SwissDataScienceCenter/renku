@@ -60,8 +60,7 @@ def authenticated(f):
             # redirect to login url on failed auth
             state = auth.generate_state(next_url=request.path)
             response = make_response(
-                redirect(auth.login_url + '&state=%s' % state)
-            )
+                redirect(auth.login_url + '&state=%s' % state))
             response.set_cookie(auth.state_cookie_name, state)
             return response
 
@@ -79,29 +78,28 @@ def whoami(user):
 
 @app.route(
     SERVICE_PREFIX + '<namespace>/<project>/<commit_sha>/<environment_slug>',
-    methods=['GET']
-)
+    methods=['GET'])
 @app.route(
     SERVICE_PREFIX +
     '<namespace>/<project>/<commit_sha>/<environment_slug>/<path:notebook>',
-    methods=['GET']
-)
+    methods=['GET'])
 @authenticated
-def launch_notebook(
-    user, namespace, project, commit_sha, environment_slug, notebook=None
-):
+def launch_notebook(user,
+                    namespace,
+                    project,
+                    commit_sha,
+                    environment_slug,
+                    notebook=None):
     """Launch user server with a given name."""
-    server_name = _server_name(
-        namespace, project, commit_sha, environment_slug
-    )
+    server_name = _server_name(namespace, project, commit_sha,
+                               environment_slug)
     headers = {auth.auth_header_name: 'token {0}'.format(auth.api_token)}
 
     # 1. launch using spawner that checks the access
     r = requests.request(
         'POST',
         auth.api_url + '/users/{user[name]}/servers/{server_name}'.format(
-            user=user, server_name=server_name
-        ),
+            user=user, server_name=server_name),
         json={
             'branch': request.args.get('branch', 'master'),
             'commit_sha': commit_sha,
@@ -117,8 +115,7 @@ def launch_notebook(
         abort(r.status_code)
 
     notebook_url = auth.hub_host + '/user/{user[name]}/{server_name}/'.format(
-        user=user, server_name=server_name
-    )
+        user=user, server_name=server_name)
 
     if notebook:
         notebook_url += '/notebooks/{notebook}'.format(notebook=notebook)
@@ -128,23 +125,19 @@ def launch_notebook(
 
 @app.route(
     SERVICE_PREFIX + '<namespace>/<project>/<commit_sha>/<environment_slug>',
-    methods=['DELETE']
-)
+    methods=['DELETE'])
 @authenticated
 def stop_notebook(user, namespace, project, commit_sha, environment_slug):
     """Stop user server with name."""
-    server_name = _server_name(
-        namespace, project, commit_sha, environment_slug
-    )
+    server_name = _server_name(namespace, project, commit_sha,
+                               environment_slug)
     headers = {'Authorization': 'token %s' % auth.api_token}
 
     r = requests.request(
         'DELETE',
         auth.api_url + '/users/{user[name]}/servers/{server_name}'.format(
-            user=user, server_name=server_name
-        ),
-        headers=headers
-    )
+            user=user, server_name=server_name),
+        headers=headers)
     return app.response_class(r.content, status=r.status_code)
 
 

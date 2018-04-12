@@ -100,6 +100,7 @@ spec:
         image: {{ .Values.hub.image.name }}:{{ .Values.hub.image.tag }}
         command:
           - jupyterhub
+          - --debug
           - --config
           - /srv/jupyterhub_config.py
           # We want to do automatic upgrades for sqlite-pvc by default, but allow users
