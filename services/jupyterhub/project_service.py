@@ -17,23 +17,24 @@
 # limitations under the License.
 """Service creating named servers for given project."""
 
+import hashlib
 import json
 import os
+import urllib.parse
 from functools import wraps
-from urllib.parse import quote
-
-import requests
-from jupyterhub.services.auth import HubOAuth
 
 import gitlab
+import requests
 from flask import Flask, Response, abort, make_response, redirect, request
+from jupyterhub.services.auth import HubOAuth
 
 SERVICE_PREFIX = os.environ.get('JUPYTERHUB_SERVICE_PREFIX', '/')
 """Service prefix is set by JupyterHub service spawner."""
 
 auth = HubOAuth(
     api_token=os.environ['JUPYTERHUB_API_TOKEN'],
-    cache_max_age=60, )
+    cache_max_age=60,
+)
 """Wrap JupyterHub authentication service API."""
 
 app = Flask(__name__)
@@ -41,7 +42,7 @@ app = Flask(__name__)
 
 def _server_name(*args):
     """Return a name for Jupyter server."""
-    return '-'.join(args).replace('/', '-')
+    return hashlib.md5(('-'.join(args)).encode()).hexdigest()
 
 
 def authenticated(f):
@@ -60,7 +61,8 @@ def authenticated(f):
             # redirect to login url on failed auth
             state = auth.generate_state(next_url=request.path)
             response = make_response(
-                redirect(auth.login_url + '&state=%s' % state))
+                redirect(auth.login_url + '&state=%s' % state)
+            )
             response.set_cookie(auth.state_cookie_name, state)
             return response
 
@@ -73,33 +75,36 @@ def whoami(user):
     """Return information about the authenticated user."""
     return Response(
         json.dumps(user, indent=1, sort_keys=True),
-        mimetype='application/json', )
+        mimetype='application/json',
+    )
 
 
 @app.route(
     SERVICE_PREFIX + '<namespace>/<project>/<commit_sha>/<environment_slug>',
-    methods=['GET'])
+    methods=['GET']
+)
 @app.route(
     SERVICE_PREFIX +
     '<namespace>/<project>/<commit_sha>/<environment_slug>/<path:notebook>',
-    methods=['GET'])
+    methods=['GET']
+)
 @authenticated
-def launch_notebook(user,
-                    namespace,
-                    project,
-                    commit_sha,
-                    environment_slug,
-                    notebook=None):
+def launch_notebook(
+    user, namespace, project, commit_sha, environment_slug, notebook=None
+):
     """Launch user server with a given name."""
-    server_name = _server_name(namespace, project, commit_sha,
-                               environment_slug)
+    server_name = _server_name(
+        namespace, project, commit_sha, environment_slug
+    )
+
     headers = {auth.auth_header_name: 'token {0}'.format(auth.api_token)}
 
     # 1. launch using spawner that checks the access
     r = requests.request(
         'POST',
         auth.api_url + '/users/{user[name]}/servers/{server_name}'.format(
-            user=user, server_name=server_name),
+            user=user, server_name=server_name
+        ),
         json={
             'branch': request.args.get('branch', 'master'),
             'commit_sha': commit_sha,
@@ -108,14 +113,19 @@ def launch_notebook(user,
             'notebook': notebook,
             'project': project,
         },
-        headers=headers, )
+        headers=headers,
+    )
 
     # 2. redirect to launched server
     if r.status_code not in {201, 202, 400}:
         abort(r.status_code)
 
-    notebook_url = auth.hub_host + '/user/{user[name]}/{server_name}/'.format(
-        user=user, server_name=server_name)
+    notebook_url = urllib.parse.urljoin(
+        os.environ.get('JUPYTERHUB_BASE_URL'),
+        'user/{user[name]}/{server_name}/'.format(
+            user=user, server_name=server_name
+        )
+    )
 
     if notebook:
         notebook_url += '/notebooks/{notebook}'.format(notebook=notebook)
@@ -125,19 +135,23 @@ def launch_notebook(user,
 
 @app.route(
     SERVICE_PREFIX + '<namespace>/<project>/<commit_sha>/<environment_slug>',
-    methods=['DELETE'])
+    methods=['DELETE']
+)
 @authenticated
 def stop_notebook(user, namespace, project, commit_sha, environment_slug):
     """Stop user server with name."""
-    server_name = _server_name(namespace, project, commit_sha,
-                               environment_slug)
+    server_name = _server_name(
+        namespace, project, commit_sha, environment_slug
+    )
     headers = {'Authorization': 'token %s' % auth.api_token}
 
     r = requests.request(
         'DELETE',
         auth.api_url + '/users/{user[name]}/servers/{server_name}'.format(
-            user=user, server_name=server_name),
-        headers=headers)
+            user=user, server_name=server_name
+        ),
+        headers=headers
+    )
     return app.response_class(r.content, status=r.status_code)
 
 

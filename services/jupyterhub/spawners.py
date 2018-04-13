@@ -17,6 +17,7 @@
 # limitations under the License.
 """Implement integration for using GitLab repositories."""
 
+import hashlib
 import os
 from urllib.parse import urlsplit, urlunsplit
 
@@ -71,6 +72,8 @@ class SpawnerMixin():
     @gen.coroutine
     def start(self, *args, **kwargs):
         """Start the notebook server."""
+        import gitlab
+
         self.log.info(
             "starting with args: {}".format(' '.join(self.get_args()))
         )
@@ -78,7 +81,7 @@ class SpawnerMixin():
 
         auth_state = yield self.user.get_auth_state()
         assert 'access_token' in auth_state
-        self.log.info(auth_state)
+        self.log.debug(auth_state)
 
         # 1. check authorization against GitLab
         options = self.user_options
@@ -88,7 +91,6 @@ class SpawnerMixin():
 
         url = os.getenv('GITLAB_HOST', 'http://gitlab.renga.build')
 
-        import gitlab
         gl = gitlab.Gitlab(
             url, api_version=4, oauth_token=auth_state['access_token']
         )
@@ -124,8 +126,9 @@ class SpawnerMixin():
             result = yield super().start(*args, **kwargs)
         except docker.errors.ImageNotFound:
             self.log.info(
-                'Image {0} not found - using default image.'.
-                format(self.image)
+                'Image {0} not found - using default image.'.format(
+                    self.image
+                )
             )
             self.image = os.getenv(
                 'JUPYTERHUB_NOTEBOOK_IMAGE', 'jupyter/minimal-notebook'
@@ -156,7 +159,6 @@ try:
                 )
             except Exception as e:
                 self.log.error(e)
-
             try:
                 yield self.docker('remove_volume', volume_name, force=True)
             except Exception as e:
@@ -253,42 +255,55 @@ try:
             options = self.user_options
 
             # https://gist.github.com/tallclair/849601a16cebeee581ef2be50c351841
-            container_name = 'init-' + self.pod_name
+            container_name = 'renga-' + self.pod_name
             name = self.pod_name + '-git-repo'
 
-            #: Define new empty volume.
+            #: Define a new empty volume.
             volume = {
                 'name': name,
                 'emptyDir': {},
             }
             self.volumes.append(volume)
 
-            #: Define volume mount for both init and notebook container.
+            #: Define a volume mount for both init and notebook containers.
+            mount_path = '/home/jovyan/repo'
             volume_mount = {
-                'mountPath': self.notebook_dir,
+                'mountPath': mount_path,
                 'name': name,
             }
 
+            branch = options.get('branch', 'master')
+
             #: Define an init container.
-            self.singleuser_init_containers = self.singleuser_init_containers or []
+            self.singleuser_init_containers = [
+                container for container in self.singleuser_init_containers
+                if not container.name.startswith('renga-')
+            ]
             self.singleuser_init_containers.append({
                 'name':
                     container_name,
                 'image':
                     'alpine/git',
+                'command': ['sh', '-c'],
                 'args': [
-                    'clone',
-                    '--single-branch',
-                    '-b',
-                    self.git_revision,
-                    '--',
-                    repository,
-                    '/repo',
+                    'rm -rf {mount_path} && '  # FIXME PLEASE
+                    'git clone {repository} {mount_path} && '
+                    'git checkout -b {environment_slug} {commit_sha} && '
+                    'chown 1000:100 -Rc {mount_path}'.format(
+                        commit_sha=options.get('commit_sha'),
+                        environment_slug=options.get('environment_slug'),
+                        repository=repository,
+                        mount_path=mount_path,
+                    ),
                 ],
                 'volumeMounts': [volume_mount],
             })
 
             #: Share volume mount with notebook.
+            self.volume_mounts = [
+                volume_mount for volume_mount in self.volume_mounts
+                if volume_mount['mountPath'] != mount_path
+            ]
             self.volume_mounts.append(volume_mount)
 
             pod = yield super().get_pod_manifest()

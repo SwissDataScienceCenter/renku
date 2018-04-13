@@ -15,10 +15,9 @@ jupyterhub:
     enabled: false
   hub:
     cookieSecret: 7c232b97bda321be7e59b9834dfadbb89652da1e0150dff9b3dadb9aa8b4caab
+    baseUrl: '/jupyterhub/'
   proxy:
     secretToken: f89ddee5ba10f2268fcefcd4e353235c255493095cd65addf29ebebf8df86255
-  hub:
-    baseUrl: '/jupyterhub/'
   auth:
     state:
       enabled: true
