@@ -9,3 +9,12 @@ ingress:
     nginx.ingress.kubernetes.io/ssl-redirect: false
   hosts:
   - ""
+
+storage:
+  adminToken: changemechangeme
+  appSecret: changemechangeme
+  env:
+    STORAGE_BACKEND_LOCAL_ENABLED: "true"
+    STORAGE_BACKEND_LOCALGIT_ENABLED: "true"
+    STORAGE_BACKEND_GITLAB_ENABLED: "true"
+    RENGA_STORAGE_DEFAULT_LFS_BACKEND: "local"

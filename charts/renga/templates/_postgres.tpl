@@ -5,6 +5,7 @@ Postgres passwords
 {{- define "postgresPasswords" -}}
 keycloak-password: {{ .Values.global.keycloak.postgresPassword | b64enc | quote }}
 gitlab-password: {{ .Values.global.gitlab.postgresPassword | b64enc | quote }}
+storage-password: {{ .Values.global.storage.postgresPassword | b64enc | quote }}
 {{- end -}}
 
 {{/*
@@ -45,5 +46,22 @@ init_gitlab_db.sh: |-
         revoke all on schema "public" from "public";
         grant all privileges on database "{{ .Values.global.gitlab.postgresDatabase }}" to "{{ .Values.global.gitlab.postgresUser }}";
         grant all privileges on schema "public" to "{{ .Values.global.gitlab.postgresUser }}";
+    EOSQL
+
+init_storage_db.sh: |-
+    #!/bin/bash
+    set -e
+
+    STORAGE_PASSWORD=$(cat /passwords/storage-password)
+
+    psql -v ON_ERROR_STOP=1 --username "$POSTGRES_USER" <<-EOSQL
+        create database "{{ .Values.global.storage.postgresDatabase }}";
+        create user "{{ .Values.global.storage.postgresUser }}" password '$STORAGE_PASSWORD';
+    EOSQL
+
+    psql -v ON_ERROR_STOP=1 --username "$POSTGRES_USER" --dbname "{{ .Values.global.storage.postgresDatabase }}" <<-EOSQL
+        revoke all on schema "public" from "public";
+        grant all privileges on database "{{ .Values.global.storage.postgresDatabase }}" to "{{ .Values.global.storage.postgresUser }}";
+        grant all privileges on schema "public" to "{{ .Values.global.storage.postgresUser }}";
     EOSQL
 {{- end -}}

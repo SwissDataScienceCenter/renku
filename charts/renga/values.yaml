@@ -23,6 +23,13 @@ global:
     postgresUser: keycloak
     ## Postgres password for the Keycloak database
     postgresPassword: keycloak
+  storage:
+    ## Name of the postgres database to be used by storage
+    postgresDatabase: storage
+    ## Postgres user for the storage database
+    postgresUser: storage
+    ## Postgres password for the storage database
+    postgresPassword: storage
   renga:
     ## Domain name for the deployed instance of renga
     domain: example.local
@@ -266,4 +273,38 @@ gitlab:
   ## Modify service.type according to your setup
   # service:
   #   port: 3000
+  #   type: ClusterIP
+
+## Configuration for the storage service
+storage:
+  ## Gitlab admin token
+  # adminToken: changeme
+
+  ## Play application secret
+  # appSecret: changeme
+
+  ## Storage service configuration using env vars
+  ## See: https://github.com/SwissDataScienceCenter/renga-storage/tree/development
+  env: {}
+
+  ## storage image
+  # image:
+  #   pullPolicy: Always
+  #   repository: rengahub/renga-storage
+  #   tag: development
+
+  ## Pod affinity for UI deployment
+  # affinity: {}
+  ## Node selector for UI deployment
+  # nodeSelector: {}
+  ## Pod tolerations for UI deployment
+  # tolerations: []
+
+  ## Replica count
+  # replicaCount: 1
+
+  ## Service configuration for UI
+  ## Modify service.type according to your setup
+  # service:
+  #   port: 9000
   #   type: ClusterIP

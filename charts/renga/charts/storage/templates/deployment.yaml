@@ -1,0 +1,110 @@
+apiVersion: apps/v1beta2
+kind: Deployment
+metadata:
+  name: {{ template "storage.fullname" . }}
+  labels:
+    app: {{ template "storage.name" . }}
+    chart: {{ template "storage.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ template "storage.name" . }}
+      release: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app: {{ template "storage.name" . }}
+        release: {{ .Release.Name }}
+      annotations:
+        checksum/config: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
+    spec:
+      initContainers:
+      - name: {{ .Chart.Name }}-init
+        image: postgres:9.6
+        command: ['sh', '/scripts/init.sh']
+        volumeMounts:
+        - name: init
+          mountPath: /scripts
+          readOnly: true
+        env:
+        - name: POSTGRES_DATABASE
+          value: {{ .Values.global.gitlab.postgresDatabase }}
+        - name: POSTGRES_USER
+          value: {{ .Values.global.gitlab.postgresUser }}
+        - name: PGPASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: {{ template "gitlab.fullname" . }}
+              key: postgres-password
+        - name: GITLAB_TOKEN
+          valueFrom:
+            secretKeyRef:
+              name: {{ template "storage.fullname" . }}
+              key: gitlab-token
+      containers:
+      - name: {{ .Chart.Name }}
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        ports:
+        - name: http
+          containerPort: {{ .Values.service.port }}
+          protocol: TCP
+        env:
+        - name: RENGA_SERVICES_AUTHORIZATION_URL
+          value: "{{ template "http" . }}://{{ .Values.global.renga.domain }}/auth/realms/Renga/protocol/openid-connect/auth"
+        - name: PLAY_APPLICATION_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: {{ template "storage.fullname" . }}
+              key: application-secret
+        - name: RENGA_ENDPOINT
+          value: "{{ template "http" . }}://{{ .Values.global.renga.domain }}"
+        - name: GITLAB_URL
+          value: "{{ template "http" . }}://{{ .Values.global.renga.domain }}/gitlab"
+        - name: GITLAB_USER
+          value: "root"
+        - name: GITLAB_PASS
+          valueFrom:
+            secretKeyRef:
+              name: {{ template "storage.fullname" . }}
+              key: gitlab-token
+        - name: STORAGE_BACKEND_DB_URL
+          value: "jdbc:postgresql://{{ template "postgresql.fullname" . }}:5432/storage"
+        {{- range $key, $value := .Values.env }}
+        - name: "{{ $key }}"
+          value: "{{ $value }}"
+        {{- end }}
+        livenessProbe:
+          httpGet:
+            path: /api/storage/ping
+            port: http
+          initialDelaySeconds: 30
+          periodSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /api/storage/ping
+            port: http
+          initialDelaySeconds: 30
+          periodSeconds: 30
+        resources:
+{{ toYaml .Values.resources | indent 10 }}
+      volumes:
+      - name: init
+        configMap:
+          name: {{ template "storage.fullname" . }}-init
+        defaultMode: 0777
+    {{- with .Values.nodeSelector }}
+      nodeSelector:
+{{ toYaml . | indent 8 }}
+    {{- end }}
+    {{- with .Values.affinity }}
+      affinity:
+{{ toYaml . | indent 8 }}
+    {{- end }}
+    {{- with .Values.tolerations }}
+      tolerations:
+{{ toYaml . | indent 8 }}
+    {{- end }}
