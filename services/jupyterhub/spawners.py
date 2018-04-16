@@ -39,9 +39,10 @@ class SpawnerMixin():
 
         scheme, netloc, path, query, fragment = urlsplit(url)
 
-        repository = urlunsplit(
-            (scheme, 'oauth2:' + auth_state['access_token'] + '@' + netloc,
-             path + '/' + namespace + '/' + project + '.git', query, fragment))
+        repository = urlunsplit((
+            scheme, 'oauth2:' + auth_state['access_token'] + '@' + netloc,
+            path + '/' + namespace + '/' + project + '.git', query, fragment
+        ))
 
         return repository
 
@@ -54,23 +55,24 @@ class SpawnerMixin():
         environment.update({
             # 'CI_REPOSITORY_URL': repository,
             'CI_NAMESPACE':
-            self.user_options.get('namespace', ''),
+                self.user_options.get('namespace', ''),
             'CI_PROJECT':
-            self.user_options.get('project', ''),
+                self.user_options.get('project', ''),
             'CI_ENVIRONMENT_SLUG':
-            self.user_options.get('environment_slug', ''),
+                self.user_options.get('environment_slug', ''),
             'CI_COMMIT_SHA':
-            self.user_options.get('commit_sha', ''),
+                self.user_options.get('commit_sha', ''),
             'GITLAB_HOST':
-            os.environ.get('GITLAB_HOST', 'http://gitlab.renga.build'),
+                os.environ.get('GITLAB_HOST', 'http://gitlab.renga.build'),
         })
         return environment
 
     @gen.coroutine
     def start(self, *args, **kwargs):
         """Start the notebook server."""
-        self.log.info("starting with args: {}".format(' '.join(
-            self.get_args())))
+        self.log.info(
+            "starting with args: {}".format(' '.join(self.get_args()))
+        )
         self.log.info("user options: {}".format(self.user_options))
 
         auth_state = yield self.user.get_auth_state()
@@ -87,7 +89,8 @@ class SpawnerMixin():
 
         import gitlab
         gl = gitlab.Gitlab(
-            url, api_version=4, oauth_token=auth_state['access_token'])
+            url, api_version=4, oauth_token=auth_state['access_token']
+        )
 
         try:
             gl_project = gl.projects.get('{0}/{1}'.format(namespace, project))
@@ -102,8 +105,10 @@ class SpawnerMixin():
             raise web.HTTPError(401, 'Not authorized to view project.')
             return
 
-        if not any(gl_env.slug for gl_env in gl_project.environments.list()
-                   if gl_env.slug == env_slug):
+        if not any(
+            gl_env.slug for gl_env in gl_project.environments.list()
+            if gl_env.slug == env_slug
+        ):
             raise web.HTTPError(404, 'Environment does not exist.')
             return
 
@@ -128,14 +133,15 @@ try:
 
             try:
                 yield self.docker(
-                    'remove_container', container_name, force=True)
-            except Exception:
-                pass
+                    'remove_container', container_name, force=True
+                )
+            except Exception as e:
+                self.log.error(e)
 
             try:
                 yield self.docker('remove_volume', volume_name, force=True)
-            except Exception:
-                pass
+            except Exception as e:
+                self.log.error(e)
 
             host_config = yield self.docker(
                 'create_host_config',
@@ -151,44 +157,33 @@ try:
             volume = yield self.docker('create_volume', name=volume_name)
             self.log.info(volume)
 
+            # 1. clone the repo
+            # 2. checkout the environment branch and commit sha
+            # 3. set jovyan as owner
             repository = yield self.git_repository()
             container = yield self.docker(
                 'create_container',
                 'alpine/git',
                 name=container_name,
+                entrypoint='sh -c',
                 command=[
-                    'clone',
-                    '--',
-                    repository,
+                    'git clone {repository} {volume_path} && '
+                    'git checkout -b {environment_slug} {commit_sha} && '
+                    'chown 1000:100 -Rc {volume_path}'.format(
+                        commit_sha=options.get('commit_sha'),
+                        environment_slug=options.get('environment_slug'),
+                        repository=repository,
+                        volume_path=volume_path,
+                    ),
                     volume_path,
                 ],
                 volumes=[volume_path],
+                working_dir=volume_path,
                 host_config=host_config,
             )
             started = yield self.docker('start', container=container.get('Id'))
-            self.log.info(started)
-            execute = yield self.docker(
-                'exec_create',
-                container=container.get('Id'),
-                workdir=volume_path,
-                cmd='chown 1000:100 -R ./'.format(
-                    options.get('environment_slug'),
-                    options.get('commit_sha'),
-                ),
-            )
-            executed = yield self.docker('exec_start', execute.get('Id'))
-            self.log.info(executed)
-            execute = yield self.docker(
-                'exec_create',
-                container=container.get('Id'),
-                workdir=volume_path,
-                cmd='git checkout -b "{0}" "{1}"'.format(
-                    options.get('environment_slug'),
-                    options.get('commit_sha'),
-                ),
-            )
-            executed = yield self.docker('exec_start', execute.get('Id'))
-            self.log.info(executed)
+            wait = yield self.docker('wait', container=container)
+            self.log.info(wait)
 
             # TODO remove the container?
             # yield self.docker(
@@ -259,9 +254,9 @@ try:
             self.singleuser_init_containers = self.singleuser_init_containers or []
             self.singleuser_init_containers.append({
                 'name':
-                container_name,
+                    container_name,
                 'image':
-                'alpine/git',
+                    'alpine/git',
                 'args': [
                     'clone',
                     '--single-branch',
