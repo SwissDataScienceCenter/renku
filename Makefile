@@ -310,7 +310,7 @@ ifeq ($(shell ping -c1 ${PLATFORM_DOMAIN} && ping -c1 gitlab.${PLATFORM_DOMAIN} 
 	@echo
 	@echo "[Error] Services unreachable -- if running locally, ensure name resolution with: "
 	@echo
-	@echo "$$ echo \"127.0.0.1 $(PLATFORM_DOMAIN) keycloak.$(PLATFORM_DOMAIN) gitlab.$(PLATFORM_DOMAIN)\" jupyterhub.$(PLATFORM_DOMAIN)\" | sudo tee -a /etc/hosts"
+	@echo "$$ echo \"127.0.0.1 $(PLATFORM_DOMAIN) keycloak.$(PLATFORM_DOMAIN) gitlab.$(PLATFORM_DOMAIN) jupyterhub.$(PLATFORM_DOMAIN)\" | sudo tee -a /etc/hosts"
 	@echo
 	@exit 1
 endif
