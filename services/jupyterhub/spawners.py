@@ -18,8 +18,9 @@
 """Implement integration for using GitLab repositories."""
 
 import os
-
 from urllib.parse import urlsplit, urlunsplit
+
+import docker
 from tornado import gen, web
 
 
@@ -112,7 +113,19 @@ class SpawnerMixin():
             raise web.HTTPError(404, 'Environment does not exist.')
             return
 
-        result = yield super().start(*args, **kwargs)
+        self.image = '{image_registry}'\
+                     '/{namespace}'\
+                     '/{project}'\
+                     '/{environment_slug}'\
+                     ':{commit_sha}'.format(image_registry=os.getenv('IMAGE_REGISTRY'), **options)
+        self.log.info(self.image)
+
+        try:
+            result = yield super().start(*args, **kwargs)
+        except docker.errors.ImageNotFound:
+            self.image = 'rengahub/singleuser:development'
+            result = yield super().start(*args, **kwargs)
+
         return result
 
 
