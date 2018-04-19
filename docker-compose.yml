@@ -220,21 +220,14 @@ services:
     image: ${DOCKER_PREFIX}renga-ui:${PLATFORM_VERSION}
     restart: always
     environment:
+      BASE_URL: http://${PLATFORM_DOMAIN}
       GITLAB_URL: ${GITLAB_URL}
-      RENGA_UI_URL: http://${PLATFORM_DOMAIN}
-      RENGA_ENDPOINT: ${RENGA_ENDPOINT}
-      KEYCLOAK_URL: ${KEYCLOAK_URL}
     labels:
       traefik.enable: "true"
       traefik.frontend.rule: "Host:${PLATFORM_DOMAIN}"
       traefik.frontend.passHostHeader: "false"
     networks:
       - default
-    healthcheck:
-      test: ["CMD", "node", "-e", "http.get('http://localhost:3000/');"]
-      interval: 20s
-      timeout: 10s
-      retries: 5
 
   reverse-proxy:
     image: traefik
