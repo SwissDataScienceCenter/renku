@@ -4,7 +4,7 @@
 {{- $gitlabFullname := include "gitlab.fullname" . -}}
 {{- $gitlabServicePort := 80 -}}
 {{- $uiFullname := include "ui.fullname" . -}}
-{{- $uiServicePort := 3000 -}}
+{{- $uiServicePort := .Values.ui.service.port -}}
 ---
 apiVersion: extensions/v1beta1
 kind: Ingress
