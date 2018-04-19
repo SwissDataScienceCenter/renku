@@ -100,5 +100,8 @@ class GitCommitHandler(IPythonHandler):
             })
 
         self.write({
-            'status': 200,
-            'statusText': 'Notebook was push to branch {}.'.format(gl_branch.name)})
+            'status':
+                200,
+            'statusText':
+                'Notebook was pushed to branch {}.'.format(gl_branch.name)
+        })

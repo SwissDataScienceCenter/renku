@@ -123,7 +123,13 @@ class SpawnerMixin():
         try:
             result = yield super().start(*args, **kwargs)
         except docker.errors.ImageNotFound:
-            self.image = 'rengahub/singleuser:development'
+            self.log.info(
+                'Image {0} not found - using default image.'.
+                format(self.image)
+            )
+            self.image = os.getenv(
+                'JUPYTERHUB_NOTEBOOK_IMAGE', 'jupyter/minimal-notebook'
+            )
             result = yield super().start(*args, **kwargs)
 
         return result
