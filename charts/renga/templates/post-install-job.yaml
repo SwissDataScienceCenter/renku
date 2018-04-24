@@ -1,0 +1,47 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: "{{ .Release.Name }}"
+  labels:
+    heritage: {{ .Release.Service | quote }}
+    release: {{ .Release.Name | quote }}
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+  annotations:
+    "helm.sh/hook": post-install,post-upgrade
+    "helm.sh/hook-weight": "5"
+    "helm.sh/hook-delete-policy": "hook-succeeded,hook-failed"
+    # FIXME with newer version of helm "before-hook-creation"
+spec:
+  template:
+    metadata:
+      name: "{{.Release.Name}}"
+      labels:
+        heritage: {{.Release.Service | quote }}
+        release: {{.Release.Name | quote }}
+        chart: "{{.Chart.Name}}-{{.Chart.Version}}"
+    spec:
+      restartPolicy: Never
+      containers:
+        - name: configure-gitlab-ui-token
+          image: "postgres:9.6"
+          command: ["/bin/sh", "/scripts/init.sh"]
+          volumeMounts:
+            - name: init
+              mountPath: /scripts
+              readOnly: true
+          env:
+          - name: PGDATABASE
+            value: {{ .Values.global.gitlab.postgresDatabase }}
+          - name: PGUSER
+            value: {{ .Values.global.gitlab.postgresUser }}
+          - name: PGHOST
+            value: {{ template "postgresql.fullname" . }}
+          - name: PGPASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: {{ template "gitlab.fullname" . }}
+                key: postgres-password
+      volumes:
+        - name: init
+          configMap:
+            name: {{ template "renga.fullname" . }}
