@@ -16,14 +16,21 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-sudo: true
-dist: trusty
+sudo: required
 
 notifications:
   email: false
 
 services:
   - docker
+
+env:
+  global:
+    - HELM_URL=https://storage.googleapis.com/kubernetes-helm
+    - HELM_TGZ=helm-v2.8.2-linux-amd64.tar.gz
+
+git:
+  depth: false
 
 addons:
   hosts:
