@@ -41,6 +41,28 @@ The platform takes some time to start, to check the pods status do:
 and wait until all pods are running.
 Now, we can go to: :code:`http://$(minikube-ip)/`
 
+Deploying from a Helm repository
+--------------------------------
+
+.. code-block:: console
+
+    $ minikube start
+    $ helm init
+    $ helm repo add renku https://swissdatasciencecenter.github.io/helm-charts/
+    $ helm fetch --devel renku/renku
+    $ ls renku-*.tgz
+    renku-0.1.0-XXXXXX.tgz
+    $ helm upgrade --install renku --namespace renku \
+        -f minikube-values.yaml \
+        --set global.renku.domain=$(minikube ip) \
+        --set ui.gitlabUrl=http://$(minikube ip)/gitlab \
+        --set jupyterhub.hub.extraEnv.GITLAB_HOST=http://$(minikube ip)/gitlab \
+        renku-0.1.0-XXXXXX.tgz
+
+
+Tests
+-----
+
 To run tests on the deployment, use
 
 .. code-block:: console
