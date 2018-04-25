@@ -1,0 +1,25 @@
+charts:
+  - name: renga
+    imagePrefix: rengahub/
+    repo:
+      git: SwissDataScienceCenter/helm-charts
+      published: https://swissdatasciencecenter.github.io/helm-charts
+    paths:
+      - .
+      - ../services
+    images:
+      apispec:
+        contextPath: ../services/apispec
+        dockerfilePath: ../services/apispec/Dockerfile
+        valuesPath: apispec.image
+        paths:
+          - ../services/apispec
+      singleuser:
+        contextPath: ../services/singleuser
+        buildArgs:
+          BASE_IMAGE: rengahub/minimal-notebook:e21fd4181aa2
+          JUPYTERHUB_VERSION: master
+        dockerfilePath: ../services/singleuser/Dockerfile
+        valuesPath: jupyterhub.singleuser.image
+        paths:
+          - ../services/singleuser

@@ -57,13 +57,26 @@ ingress:
   ## Hosts for the ingress
   ## Should include at least the value from `global.renku.domain`
   hosts:
-  - example.local
+    - example.local
 
   ## TLS setting for the ingress
   tls: []
   #  - secretName: chart-example-tls
   #    hosts:
   #      - example.local
+
+apispec:
+  image:
+    name: rengahub/apispec
+    repository: rengahub/apispec
+    tag: development
+
+jupyterhub:
+  notebook:
+    image:
+      name: rengahub/singleuser
+      repository: rengahub/singleuser
+      tag: development
 
 ## Keycloak configuration
 keycloak:
