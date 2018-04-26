@@ -33,6 +33,9 @@ git:
   depth: false
 
 addons:
+  apt:
+    packages:
+      - git
   hosts:
     - renku.build
     - gitlab.renku.build
