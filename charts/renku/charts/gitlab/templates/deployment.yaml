@@ -64,7 +64,7 @@ spec:
           containerPort: 8105
         livenessProbe:
           httpGet:
-            path: /gitlab/help
+            path: {{ .Values.global.gitlab.urlPrefix }}help
             port: http
           # This pod takes a very long time to start up. Be cautious when
           # lowering this value to avoid Pod death during startup.
@@ -75,7 +75,7 @@ spec:
           failureThreshold: 10
         readinessProbe:
           httpGet:
-            path: /gitlab/help
+            path: {{ .Values.global.gitlab.urlPrefix }}help
             port: http
           initialDelaySeconds: 60
           timeoutSeconds: 1

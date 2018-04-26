@@ -488,13 +488,13 @@ TODO: Put back template strings from renku/services/keycloak/renku-realm.json.tp
   }, {
     "id": "0c9dab4c-ce06-44a7-ba4e-6ce969c5e5cb",
     "clientId": "gitlab",
-    "baseUrl": "{{ template "http" . }}://{{ .Values.global.renku.domain }}/gitlab",
+    "baseUrl": "{{ template "http" . }}://{{ .Values.global.gitlab.subdomain }}{{ .Values.global.renku.domain }}{{ .Values.global.gitlab.urlPrefix }}",
     "surrogateAuthRequired": false,
     "enabled": true,
     "clientAuthenticatorType": "client-secret",
     "secret": "{{ .Values.global.gitlab.clientSecret }}",
     "redirectUris": [
-      "{{ template "http" . }}://{{ .Values.global.renku.domain }}/gitlab/users/auth/oauth2_generic/callback"
+      "{{ template "http" . }}://{{ .Values.global.gitlab.subdomain }}{{ .Values.global.renku.domain }}{{ .Values.global.gitlab.urlPrefix }}users/auth/oauth2_generic/callback"
     ],
     "webOrigins": [],
     "notBefore": 0,

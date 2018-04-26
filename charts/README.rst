@@ -9,6 +9,7 @@ Testing locally
 
 Requires minikube, kubectl, helm and python.
 
+
 .. code-block:: console
 
     $ minikube start --memory 6144
@@ -24,15 +25,10 @@ Requires minikube, kubectl, helm and python.
         --set controller.hostNetwork=true \
         --set tcp.2222=renku/renku-gitlab:22 \
         stable/nginx-ingress
-    $ helm upgrade renku --install \
-        --namespace renku \
-        -f minikube-values.yaml \
-        --set global.renku.domain=$(minikube ip) \
-        --set ui.gitlabUrl=http://$(minikube ip)/gitlab \
-        --set ui.jupyterhubUrl=http://$(minikube ip)/jupyterhub \
-        --set jupyterhub.hub.extraEnv.GITLAB_URL=http://$(minikube ip)/gitlab \
-        --set gitlab.registry.externalUrl=http://$(minikube ip):30105/ \
-        ./renku
+    $ helm upgrade --install renku  --namespace renku -f minikube-values.yaml renku --wait --force --timeout 600
+
+Make sure you have `$(minikube ip) renku-k8s gitlab.renku-k8s` line
+in your `/etc/hosts`.
 
 Due to issue `minikube #1568
 <https://github.com/kubernetes/minikube/issues/1568>`_,
@@ -49,7 +45,7 @@ The platform takes some time to start, to check the pods status do:
     $ kubectl -n renku get po --watch
 
 and wait until all pods are running.
-Now, we can go to: :code:`http://$(minikube-ip)/`
+Now, we can go to: :code:`http://renku-k8s.build/`
 
 
 Building images

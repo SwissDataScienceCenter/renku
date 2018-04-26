@@ -39,10 +39,6 @@ spec:
         backend:
           serviceName: {{ $keycloakFullname }}
           servicePort: {{ $keycloakServicePort }}
-      - path: /gitlab
-        backend:
-          serviceName: {{ $gitlabFullname }}
-          servicePort: {{ $gitlabServicePort }}
       - path: /jupyterhub
         backend:
           serviceName: proxy-http
@@ -51,5 +47,12 @@ spec:
         backend:
           serviceName: {{ $uiFullname }}
           servicePort: {{ $uiServicePort }}
+  - host: {{ .Values.global.gitlab.subdomain }}{{ . }}
+    http:
+      paths:
+      - path: {{ .Values.global.gitlab.urlPrefix }}
+        backend:
+          serviceName: {{ $gitlabFullname }}
+          servicePort: {{ $gitlabServicePort }}
   {{- end }}
 {{- end }}

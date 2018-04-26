@@ -13,7 +13,7 @@ GitLab Omnibus configuration
 ##! URL on which GitLab will be reachable.
 ##! For more details on configuring external_url see:
 ##! https://docs.gitlab.com/omnibus/settings/configuration.html#configuring-the-external-url-for-gitlab
-external_url '{{ template "http" . }}://{{ .Values.global.renku.domain }}/gitlab'
+external_url '{{ template "http" . }}://{{ .Values.global.gitlab.subdomain }}{{ .Values.global.renku.domain }}{{ .Values.global.gitlab.urlPrefix }}'
 
 ##! **Override only if you use a reverse proxy**
 ##! Docs: https://docs.gitlab.com/omnibus/settings/nginx.html#setting-the-nginx-listen-port
