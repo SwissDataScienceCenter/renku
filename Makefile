@@ -59,7 +59,8 @@ PLATFORM_DOMAIN?=renku.build
 PLATFORM_BASE_DIR?=..
 PLATFORM_BASE_REPO_URL?=https://github.com/SwissDataScienceCenter
 PLATFORM_REPO_TPL?=$(PLATFORM_BASE_REPO_URL)/$*.git
-PLATFORM_VERSION?=$(or ${TRAVIS_BRANCH},${TRAVIS_BRANCH},$(shell git branch 2> /dev/null | sed -e '/^[^*]/d' -e 's/^* //'))
+#PLATFORM_VERSION?=$(or ${TRAVIS_BRANCH},${TRAVIS_BRANCH},$(shell git branch 2> /dev/null | sed -e '/^[^*]/d' -e 's/^* //'))
+PLATFORM_VERSION=development
 
 ifeq ($(PLATFORM_VERSION), master)
 	PLATFORM_VERSION=latest
