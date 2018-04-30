@@ -72,7 +72,14 @@ spec:
               name: {{ template "storage.fullname" . }}
               key: gitlab-token
         - name: STORAGE_BACKEND_DB_URL
-          value: "jdbc:postgresql://{{ template "postgresql.fullname" . }}:5432/storage"
+          value: "jdbc:postgresql://{{ template "postgresql.fullname" . }}:5432/{{ .Values.global.storage.postgresDatabase }}"
+        - name: STORAGE_BACKEND_DB_USER
+          value: {{ .Values.global.storage.postgresUser | quote }}
+        - name: STORAGE_BACKEND_DB_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: {{ template "storage.fullname" . }}
+              key: postgres-password
         {{- range $key, $value := .Values.env }}
         - name: "{{ $key }}"
           value: "{{ $value }}"
