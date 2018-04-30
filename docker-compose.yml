@@ -297,7 +297,7 @@ services:
   proxy:
     image: ${DOCKER_PREFIX}incubator-proxy:${PLATFORM_VERSION}
     ports:
-      - 5000
+      - 5002:5000
     environment:
       GITLAB_URL: ${GITLAB_URL}
       GITLAB_PASS: ${GITLAB_TOKEN}
