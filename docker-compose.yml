@@ -136,6 +136,7 @@ services:
         # Add any other gitlab.rb configuration here, each on its own line
     ports:
       - '5022:22'
+      - '5081:5081'
     volumes:
       - gitlab-config:/etc/gitlab
       - gitlab-logs:/var/log/gitlab
@@ -220,21 +221,14 @@ services:
     image: ${DOCKER_PREFIX}renga-ui:${PLATFORM_VERSION}
     restart: always
     environment:
+      BASE_URL: http://${PLATFORM_DOMAIN}
       GITLAB_URL: ${GITLAB_URL}
-      RENGA_UI_URL: http://${PLATFORM_DOMAIN}
-      RENGA_ENDPOINT: ${RENGA_ENDPOINT}
-      KEYCLOAK_URL: ${KEYCLOAK_URL}
     labels:
       traefik.enable: "true"
       traefik.frontend.rule: "Host:${PLATFORM_DOMAIN}"
       traefik.frontend.passHostHeader: "false"
     networks:
       - default
-    healthcheck:
-      test: ["CMD", "node", "-e", "http.get('http://localhost:3000/');"]
-      interval: 20s
-      timeout: 10s
-      retries: 5
 
   reverse-proxy:
     image: traefik
@@ -276,16 +270,18 @@ services:
       - 8000
       - 8081
     environment:
-      JUPYTERHUB_CRYPT_KEY: ${JUPYTERHUB_CRYPT_KEY}
-      JUPYTERHUB_NOTEBOOK_DIR: /repo
-      JUPYTERHUB_SPAWNER_CLASS: spawners.RengaDockerSpawner
-      JUPYTERHUB_NOTEBOOK_IMAGE: ${DOCKER_PREFIX}singleuser:${PLATFORM_VERSION}
-      OAUTH2_TOKEN_URL: ${KEYCLOAK_URL}/auth/realms/Renga/protocol/openid-connect/token
-      OAUTH2_AUTHORIZE_URL: ${KEYCLOAK_URL}/auth/realms/Renga/protocol/openid-connect/auth
-      KEYCLOAK_URL: ${KEYCLOAK_URL}
-      GITLAB_HOST: ${GITLAB_URL}
       GITLAB_CLIENT_ID: jupyterhub
       GITLAB_CLIENT_SECRET: no-secret-needed
+      GITLAB_HOST: ${GITLAB_URL}
+      IMAGE_REGISTRY: gitlab.${PLATFORM_DOMAIN}:5081
+      JUPYTERHUB_CRYPT_KEY: ${JUPYTERHUB_CRYPT_KEY}
+      JUPYTERHUB_NOTEBOOK_DIR: /repo
+      JUPYTERHUB_NOTEBOOK_IMAGE: ${DOCKER_PREFIX}singleuser:${PLATFORM_VERSION}
+      JUPYTERHUB_SPAWNER_CLASS: spawners.RengaDockerSpawner
+      KEYCLOAK_URL: ${KEYCLOAK_URL}
+      OAUTH2_AUTHORIZE_URL: ${KEYCLOAK_URL}/auth/realms/Renga/protocol/openid-connect/auth
+      OAUTH2_TOKEN_URL: ${KEYCLOAK_URL}/auth/realms/Renga/protocol/openid-connect/token
+      PLATFORM_DOMAIN: ${PLATFORM_DOMAIN}
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - ./services/jupyterhub/jupyterhub_config.py:/srv/jupyterhub/jupyterhub_config.py:ro

@@ -50,23 +50,19 @@ spec:
           env:
             - name: GITLAB_URL
               value: "{{ template "http" . }}://{{ .Values.global.renga.domain }}/gitlab"
-            - name: RENGA_UI_URL
-              value: "{{ template "http" . }}://{{ .Values.global.renga.domain }}"
-            - name: RENGA_ENDPOINT
-              value: "{{ template "http" . }}://{{ .Values.global.renga.domain }}"
-            - name: KEYCLOAK_URL
+            - name: BASE_URL
               value: "{{ template "http" . }}://{{ .Values.global.renga.domain }}"
           livenessProbe:
             httpGet:
               path: /
               port: http
-            initialDelaySeconds: 30
+            initialDelaySeconds: 120
             periodSeconds: 10
           readinessProbe:
             httpGet:
               path: /
               port: http
-            initialDelaySeconds: 30
+            initialDelaySeconds: 120
             periodSeconds: 30
           resources:
 {{ toYaml .Values.resources | indent 12 }}
