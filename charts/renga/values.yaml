@@ -282,7 +282,7 @@ jupyterhub:
   hub:
     image:
       name: rengahub/jupyterhub-k8s
-      tag: latest
+      tag: development
     services:
       projects:
         command: ['flask', 'run', '-p' ,'9080', '-h', '0.0.0.0']

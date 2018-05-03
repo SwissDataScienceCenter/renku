@@ -131,6 +131,10 @@ scala-artifact = \
 	renga-commons \
 	renga-graph
 
+dockerfile-services = \
+	keycloak \
+	notebook
+
 .PHONY: all
 all: docker-images
 
@@ -176,8 +180,15 @@ renga-commons-artifact: renga-graph-artifact
 
 # build docker images
 .PHONY: $(dockerfile-services)
-$(dockerfile-services): %: $(PLATFORM_BASE_DIR)/%
-	docker build --tag $(DOCKER_REPOSITORY)$@:$(PLATFORM_VERSION) $(PLATFORM_BASE_DIR)/$@
+$(dockerfile-services): %: .env services/%/Dockerfile
+	docker build --tag $(DOCKER_REPOSITORY)$@:$(PLATFORM_VERSION) services/$@
+
+.PHONY: jupyterhub-k8s
+jupyterhub-k8s: .env services/jupyterhub/jupyterhub-k8s.Dockerfile
+	docker build --tag $(DOCKER_REPOSITORY)$@:$(PLATFORM_VERSION) -f services/jupyterhub/$@.Dockerfile services/jupyterhub/
+
+.PHONY: tag
+tag: $(dockerfile-services) jupyterhub-k8s
 
 # build docker images from makefiles
 .PHONY: $(makefile-services)
