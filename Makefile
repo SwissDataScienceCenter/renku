@@ -133,7 +133,7 @@ scala-artifact = \
 
 dockerfile-services = \
 	keycloak \
-	notebook
+	singleuser
 
 .PHONY: all
 all: docker-images

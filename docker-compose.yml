@@ -254,9 +254,9 @@ services:
       - default
       - review
 
-  notebook:
+  singleuser:
     build:
-      context: services/notebook
+      context: services/singleuser
       args:
         BASE_IMAGE: rengahub/minimal-notebook:e21fd4181aa2
         JUPYTERHUB_VERSION: master
