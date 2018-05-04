@@ -12,7 +12,7 @@ ingress:
 
 jupyterhub:
   rbac:
-    enabled: false
+    enabled: true
   hub:
     cookieSecret: 7c232b97bda321be7e59b9834dfadbb89652da1e0150dff9b3dadb9aa8b4caab
     baseUrl: '/jupyterhub/'
