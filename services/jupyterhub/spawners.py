@@ -60,8 +60,6 @@ class SpawnerMixin():
                 self.user_options.get('namespace', ''),
             'CI_PROJECT':
                 self.user_options.get('project', ''),
-            'CI_ENVIRONMENT_SLUG':
-                self.user_options.get('environment_slug', ''),
             'CI_COMMIT_SHA':
                 self.user_options.get('commit_sha', ''),
             'GITLAB_HOST':
@@ -77,7 +75,7 @@ class SpawnerMixin():
         self.log.info(
             "starting with args: {}".format(' '.join(self.get_args()))
         )
-        self.log.info("user options: {}".format(self.user_options))
+        self.log.debug("user options: {}".format(self.user_options))
 
         auth_state = yield self.user.get_auth_state()
         assert 'access_token' in auth_state
@@ -138,6 +136,7 @@ try:
         @gen.coroutine
         def start(self):
             """Create init container."""
+            auth_state = yield self.user.get_auth_state()
             options = self.user_options
             container_name = 'init-' + self.name  # TODO user namespace?
             name = self.name + '-git-repo'
@@ -180,11 +179,12 @@ try:
                 entrypoint='sh -c',
                 command=[
                     'git clone {repository} {volume_path} && '
-                    'git checkout -b {branch} {commit_sha} && '
+                    'git checkout -b {branch}-{username} {commit_sha} && '
                     'chown 1000:100 -Rc {volume_path}'.format(
-                        commit_sha=options.get('commit_sha'),
                         branch=options.get('branch'),
+                        commit_sha=options.get('commit_sha'),
                         repository=repository,
+                        username=auth_state['gitlab_user'].get('username'),
                         volume_path=volume_path,
                     ),
                     volume_path,
@@ -257,7 +257,7 @@ try:
             self.volumes.append(volume)
 
             #: Define a volume mount for both init and notebook containers.
-            mount_path = '/home/jovyan/repo'
+            mount_path = '/repo'
             volume_mount = {
                 'mountPath': mount_path,
                 'name': name,
@@ -266,22 +266,29 @@ try:
             branch = options.get('branch', 'master')
 
             #: Define an init container.
-            self.singleuser_init_containers = self.singleuser_init_containers or []
+            self.singleuser_init_containers = [
+                container for container in self.singleuser_init_containers
+                if not container.name.startswith('renga-')
+            ]
             self.singleuser_init_containers.append({
                 'name':
                     container_name,
                 'image':
                     'alpine/git',
+                'command': ['sh', '-c'],
                 'args': [
-                    'clone',
-                    '--single-branch',
-                    '-b',
-                    self.git_revision,
-                    '--',
-                    repository,
-                    '/repo',
+                    'git clone {repository} {mount_path} && '
+                    'git checkout -b {branch}-{username} {commit_sha} '.format(
+                        branch=options.get('branch'),
+                        commit_sha=options.get('commit_sha'),
+                        mount_path=mount_path,
+                        repository=repository,
+                        username=auth_state['gitlab_user'].get('username'),
+                    )
                 ],
                 'volumeMounts': [volume_mount],
+                'workingDir':
+                    mount_path,
             })
 
             #: Share volume mount with notebook.

@@ -293,12 +293,11 @@ jupyterhub:
           OAUTHLIB_INSECURE_TRANSPORT: '1'
         admin: true
     extraEnv:
-      JUPYTERHUB_SPAWNER_CLASS: spawners.RengaKubeSpawner
       DEBUG: 1
+      JUPYTERHUB_NOTEBOOK_DIR: '/repo'
+      JUPYTERHUB_SPAWNER_CLASS: spawners.RengaKubeSpawner
     extraConfig: |
       import os
-      import socket
-      import sys
 
       #: Automatically begin the login process without showing the button.
       c.Authenticator.auto_login = True
