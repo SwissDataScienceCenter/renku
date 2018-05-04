@@ -87,7 +87,6 @@ class SpawnerMixin():
         options = self.user_options
         namespace = options.get('namespace')
         project = options.get('project')
-        env_slug = options.get('environment_slug')
 
         url = os.getenv('GITLAB_HOST', 'http://gitlab.renga.build')
 
@@ -108,17 +107,9 @@ class SpawnerMixin():
             raise web.HTTPError(401, 'Not authorized to view project.')
             return
 
-        if not any(
-            gl_env.slug for gl_env in gl_project.environments.list()
-            if gl_env.slug == env_slug
-        ):
-            raise web.HTTPError(404, 'Environment does not exist.')
-            return
-
         self.image = '{image_registry}'\
                      '/{namespace}'\
                      '/{project}'\
-                     '/{environment_slug}'\
                      ':{commit_sha}'.format(image_registry=os.getenv('IMAGE_REGISTRY'), **options)
         self.log.info(self.image)
 
@@ -189,10 +180,10 @@ try:
                 entrypoint='sh -c',
                 command=[
                     'git clone {repository} {volume_path} && '
-                    'git checkout -b {environment_slug} {commit_sha} && '
+                    'git checkout -b {branch} {commit_sha} && '
                     'chown 1000:100 -Rc {volume_path}'.format(
                         commit_sha=options.get('commit_sha'),
-                        environment_slug=options.get('environment_slug'),
+                        branch=options.get('branch'),
                         repository=repository,
                         volume_path=volume_path,
                     ),
@@ -275,26 +266,20 @@ try:
             branch = options.get('branch', 'master')
 
             #: Define an init container.
-            self.singleuser_init_containers = [
-                container for container in self.singleuser_init_containers
-                if not container.name.startswith('renga-')
-            ]
+            self.singleuser_init_containers = self.singleuser_init_containers or []
             self.singleuser_init_containers.append({
                 'name':
                     container_name,
                 'image':
                     'alpine/git',
-                'command': ['sh', '-c'],
                 'args': [
-                    'rm -rf {mount_path} && '  # FIXME PLEASE
-                    'git clone {repository} {mount_path} && '
-                    'git checkout -b {environment_slug} {commit_sha} && '
-                    'chown 1000:100 -Rc {mount_path}'.format(
-                        commit_sha=options.get('commit_sha'),
-                        environment_slug=options.get('environment_slug'),
-                        repository=repository,
-                        mount_path=mount_path,
-                    ),
+                    'clone',
+                    '--single-branch',
+                    '-b',
+                    self.git_revision,
+                    '--',
+                    repository,
+                    '/repo',
                 ],
                 'volumeMounts': [volume_mount],
             })

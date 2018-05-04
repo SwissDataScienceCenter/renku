@@ -80,22 +80,16 @@ def whoami(user):
 
 
 @app.route(
-    SERVICE_PREFIX + '<namespace>/<project>/<commit_sha>/<environment_slug>',
-    methods=['GET']
+    SERVICE_PREFIX + '<namespace>/<project>/<commit_sha>', methods=['GET']
 )
 @app.route(
-    SERVICE_PREFIX +
-    '<namespace>/<project>/<commit_sha>/<environment_slug>/<path:notebook>',
+    SERVICE_PREFIX + '<namespace>/<project>/<commit_sha>/<path:notebook>',
     methods=['GET']
 )
 @authenticated
-def launch_notebook(
-    user, namespace, project, commit_sha, environment_slug, notebook=None
-):
+def launch_notebook(user, namespace, project, commit_sha, notebook=None):
     """Launch user server with a given name."""
-    server_name = _server_name(
-        namespace, project, commit_sha, environment_slug
-    )
+    server_name = _server_name(namespace, project, commit_sha)
 
     headers = {auth.auth_header_name: 'token {0}'.format(auth.api_token)}
 
@@ -108,7 +102,6 @@ def launch_notebook(
         json={
             'branch': request.args.get('branch', 'master'),
             'commit_sha': commit_sha,
-            'environment_slug': environment_slug,
             'namespace': namespace,
             'notebook': notebook,
             'project': project,
@@ -134,15 +127,12 @@ def launch_notebook(
 
 
 @app.route(
-    SERVICE_PREFIX + '<namespace>/<project>/<commit_sha>/<environment_slug>',
-    methods=['DELETE']
+    SERVICE_PREFIX + '<namespace>/<project>/<commit_sha>', methods=['DELETE']
 )
 @authenticated
-def stop_notebook(user, namespace, project, commit_sha, environment_slug):
+def stop_notebook(user, namespace, project, commit_sha):
     """Stop user server with name."""
-    server_name = _server_name(
-        namespace, project, commit_sha, environment_slug
-    )
+    server_name = _server_name(namespace, project, commit_sha)
     headers = {'Authorization': 'token %s' % auth.api_token}
 
     r = requests.request(
