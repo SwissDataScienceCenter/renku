@@ -79,7 +79,6 @@ class SpawnerMixin():
 
         auth_state = yield self.user.get_auth_state()
         assert 'access_token' in auth_state
-        self.log.debug(auth_state)
 
         # 1. check authorization against GitLab
         options = self.user_options
@@ -109,7 +108,6 @@ class SpawnerMixin():
                      '/{namespace}'\
                      '/{project}'\
                      ':{commit_sha}'.format(image_registry=os.getenv('IMAGE_REGISTRY'), **options)
-        self.log.info(self.image)
 
         try:
             result = yield super().start(*args, **kwargs)
@@ -166,7 +164,6 @@ try:
             )
 
             volume = yield self.docker('create_volume', name=volume_name)
-            self.log.info(volume)
 
             # 1. clone the repo
             # 2. checkout the environment branch and commit sha
@@ -195,14 +192,10 @@ try:
             )
             started = yield self.docker('start', container=container.get('Id'))
             wait = yield self.docker('wait', container=container)
-            self.log.info(wait)
 
             # TODO remove the container?
             # yield self.docker(
             #     'remove_container', container.get('Id'), force=True)
-
-            self.log.info(container)
-
             environment = self.get_env()
             environment['CI_REPOSITORY_URL'] = repository
 

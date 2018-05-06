@@ -160,7 +160,6 @@ def oauth_callback():
         abort(403)
 
     token = auth.token_for_code(code)
-    app.logger.info(token)
     next_url = auth.get_next_url(cookie_state) or SERVICE_PREFIX
     response = make_response(redirect(next_url))
     response.set_cookie(auth.cookie_name, token)
