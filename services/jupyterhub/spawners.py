@@ -22,6 +22,7 @@ import os
 from urllib.parse import urlsplit, urlunsplit
 
 import docker
+from kubernetes import client
 from tornado import gen, web
 
 
@@ -263,27 +264,24 @@ try:
                 container for container in self.singleuser_init_containers
                 if not container.name.startswith('renga-')
             ]
-            self.singleuser_init_containers.append({
-                'name':
-                    container_name,
-                'image':
-                    'alpine/git',
-                'command': ['sh', '-c'],
-                'args': [
+            init_container = client.V1Container(
+                name=container_name,
+                image='alpine/git',
+                command=['sh', '-c'],
+                args=[
                     'git clone {repository} {mount_path} && '
                     '(git checkout {branch} || git checkout -b {branch}) && '
-                    'git reset --hard {commit_sha}'.
-                    format(
+                    'git reset --hard {commit_sha}'.format(
                         branch=options.get('branch'),
                         commit_sha=options.get('commit_sha'),
                         mount_path=mount_path,
                         repository=repository,
                     )
                 ],
-                'volumeMounts': [volume_mount],
-                'workingDir':
-                    mount_path,
-            })
+                volume_mounts=[volume_mount],
+                working_dir=mount_path,
+            )
+            self.singleuser_init_containers.append(init_container)
 
             #: Share volume mount with notebook.
             self.volume_mounts = [
