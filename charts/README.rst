@@ -9,6 +9,7 @@ Requires minikube, kubectl and helm.
 .. code-block:: console
 
     $ minikube start
+    $ eval $(minikube docker-env)
     $ make -C .. tag
     $ helm init
     $ helm install --name nginx-ingress --namespace kube-system stable/nginx-ingress --set controller.hostNetwork=true
