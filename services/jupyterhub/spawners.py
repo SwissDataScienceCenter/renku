@@ -271,7 +271,8 @@ try:
                 'command': ['sh', '-c'],
                 'args': [
                     'git clone {repository} {mount_path} && '
-                    '(git checkout {branch} || git checkout -b {branch}) && '.
+                    '(git checkout {branch} || git checkout -b {branch}) && '
+                    'git reset --hard {commit_sha}'.
                     format(
                         branch=options.get('branch'),
                         commit_sha=options.get('commit_sha'),
