@@ -220,7 +220,7 @@ docker-compose-pull: .env
 services/gitlab/%:
 	@mkdir -p $@
 
-.PHONY: enable-gitlab-auto-devops register-gitlab-oauth-applications unregister-gitlab-oauth-applications register-runners unregister-runners
+.PHONY: enable-gitlab-auto-devops register-gitlab-oauth-applications unregister-gitlab-oauth-applications register-runners unregister-runners demo-admin
 enable-gitlab-auto-devops:
 	@docker-compose exec gitlab /opt/gitlab/bin/gitlab-psql \
 		-h /var/opt/gitlab/postgresql -d gitlabhq_production \
@@ -302,6 +302,20 @@ unregister-runners: .env
 			--name $$container-docker || echo ok; \
 	done
 
+# Make an admin demo user
+demo-admin: .env
+	@curl -X POST -H "Private-token: ${GITLAB_TOKEN}" \
+		-d '{"username": "demo", \
+	     "email": "demo@datascience.ch", \
+    	 "name": "John Doe", \
+    	 "extern_uid": "demo", \
+    	 "provider": "oauth2_generic", \
+    	 "skip_confirmation": true, \
+    	 "reset_password": true, \
+    	 "admin": true}' \
+   		-H 'Content-Type: application/json' \
+   		${GITLAB_URL}/api/v4/users > /dev/null 2>&1
+
 # Platform actions
 .PHONY: clean restart start stop test wait wipe
 
@@ -310,7 +324,7 @@ clean: .env
 
 restart: stop start
 
-start: .env docker-network $(GITLAB_DIRS:%=services/gitlab/%) unregister-runners docker-compose-up wait enable-gitlab-auto-devops register-gitlab-oauth-applications register-runners register-gitlab-user-token
+start: .env docker-network $(GITLAB_DIRS:%=services/gitlab/%) unregister-runners docker-compose-up wait enable-gitlab-auto-devops register-gitlab-oauth-applications register-runners register-gitlab-user-token demo-admin
 ifeq (${GITLAB_CLIENT_SECRET}, dummy-secret)
 	@echo
 	@echo "[Warning] You have not defined a GITLAB_CLIENT_SECRET. Using dummy"
