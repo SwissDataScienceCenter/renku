@@ -28,10 +28,6 @@ def test_renga_login(browser):
     url = os.getenv('RENGA_ENDPOINT', 'http://localhost')
     browser.visit(url)
 
-    assert browser.is_element_present_by_id(
-        'oauth-login-oauth2_generic', wait_time=10)
-    browser.find_by_id('oauth-login-oauth2_generic').click()
-
     assert browser.is_element_present_by_id('username', wait_time=60)
     browser.fill('username', 'demo')
     browser.fill('password', 'demo')
