@@ -104,7 +104,7 @@ env['OAUTHLIB_INSECURE_TRANSPORT'] = '1'
 
 c.JupyterHub.services = [{
     'name': 'projects',
-    'command': ['flask', 'run', '-p', '9080'],
+    'command': ['flask', 'run', '-p', '9080', '-h', '0.0.0.0'],
     'url': 'http://localhost:9080',
     'environment': env,
     'admin': True,
