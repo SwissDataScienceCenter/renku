@@ -176,12 +176,12 @@ try:
                 entrypoint='sh -c',
                 command=[
                     'git clone {repository} {volume_path} && '
-                    'git checkout -b {branch}-{username} {commit_sha} && '
+                    '(git checkout {branch} || git checkout -b {branch}) && '
+                    'git reset --hard {commit_sha} && '
                     'chown 1000:100 -Rc {volume_path}'.format(
                         branch=options.get('branch'),
                         commit_sha=options.get('commit_sha'),
                         repository=repository,
-                        username=auth_state['gitlab_user'].get('username'),
                         volume_path=volume_path,
                     ),
                     volume_path,
@@ -271,12 +271,12 @@ try:
                 'command': ['sh', '-c'],
                 'args': [
                     'git clone {repository} {mount_path} && '
-                    'git checkout -b {branch}-{username} {commit_sha} '.format(
+                    '(git checkout {branch} || git checkout -b {branch}) && '.
+                    format(
                         branch=options.get('branch'),
                         commit_sha=options.get('commit_sha'),
                         mount_path=mount_path,
                         repository=repository,
-                        username=auth_state['gitlab_user'].get('username'),
                     )
                 ],
                 'volumeMounts': [volume_mount],
