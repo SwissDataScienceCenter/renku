@@ -271,6 +271,7 @@ services:
       - 8000
       - 8081
     environment:
+      DEBUG: 1
       GITLAB_CLIENT_ID: jupyterhub
       GITLAB_CLIENT_SECRET: no-secret-needed
       GITLAB_HOST: ${GITLAB_URL}

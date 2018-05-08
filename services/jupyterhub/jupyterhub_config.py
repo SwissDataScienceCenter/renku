@@ -58,8 +58,9 @@ c.JupyterHub.hub_ip = '0.0.0.0'
 #c.JupyterHub.subdomain_host = ''
 
 #: Configure the notebook spawner.
-c.JupyterHub.spawner_class = os.getenv('JUPYTERHUB_SPAWNER_CLASS',
-                                       'spawners.Spawner')
+c.JupyterHub.spawner_class = os.getenv(
+    'JUPYTERHUB_SPAWNER_CLASS', 'spawners.Spawner'
+)
 
 NETWORK_NAME = 'review'
 
@@ -67,8 +68,7 @@ c.RengaDockerSpawner.container_name_template = '{prefix}-{username}-{servername}
 c.RengaKubeSpawner.pod_name_template = 'jupyterhub-{username}-{servername}'
 
 #: Configure the image used by notebook spawner.
-IMAGE = os.getenv('JUPYTERHUB_NOTEBOOK_IMAGE',
-                  'jupyterhub/singleuser:latest')
+IMAGE = os.getenv('JUPYTERHUB_NOTEBOOK_IMAGE', 'jupyterhub/singleuser:latest')
 
 c.RengaDockerSpawner.image = IMAGE
 c.RengaKubeSpawner.singleuser_image_spec = IMAGE
