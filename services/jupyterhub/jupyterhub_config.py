@@ -109,3 +109,6 @@ c.JupyterHub.services = [{
     'environment': env,
     'admin': True,
 }]
+
+# prevent redirect to /hub if the server is taking slightly longer to start
+c.JupyterHub.tornado_settings = {'slow_spawn_timeout': 30}
