@@ -30,6 +30,13 @@ global:
     postgresUser: storage
     ## Postgres password for the storage database
     postgresPassword: storage
+  jupyterhub:
+    ## Name of the postgres database to be used by jupyterhub
+    postgresDatabase: jupyterhub
+    ## Postgres user for the jupyterhub database
+    postgresUser: jupyterhub
+    ## Postgres password for the jupyterhub database
+    postgresPassword: jupyterhub
   renga:
     ## Domain name for the deployed instance of renga
     domain: example.local
@@ -308,3 +315,74 @@ storage:
   # service:
   #   port: 9000
   #   type: ClusterIP
+  
+## Configuration for the jupyterhub service
+jupyterhub:
+  rbac:
+    enabled: true
+  hub:
+    image:
+      name: rengahub/jupyterhub-k8s
+      tag: development
+    services:
+      projects:
+        command: ['flask', 'run', '-p' ,'9080', '-h', '0.0.0.0']
+        url: 'http://hub:9080'
+        environment:
+          FLASK_APP: 'project_service'
+          FLASK_DEBUG: '1'
+          OAUTHLIB_INSECURE_TRANSPORT: '1'
+        admin: true
+    extraEnv:
+      DEBUG: 1
+      JUPYTERHUB_NOTEBOOK_DIR: '/repo'
+      JUPYTERHUB_SPAWNER_CLASS: spawners.RengaKubeSpawner
+    extraConfig: |
+      import os
+
+      #: Automatically begin the login process without showing the button.
+      c.Authenticator.auto_login = True
+
+      #: Enable named-servers
+      c.JupyterHub.allow_named_servers = True
+
+      #: Configure the notebook spawner.
+      c.JupyterHub.spawner_class = os.getenv('JUPYTERHUB_SPAWNER_CLASS',
+                                           'spawners.Spawner')
+
+      c.RengaKubeSpawner.pod_name_template = 'jupyterhub-{username}-{servername}'
+
+      #: Explicitly set notebook directory because we'll be mounting a host volume to
+      #: it.  Most jupyter/docker-stacks *-notebook images run the Notebook server as
+      #: user `jovyan`, and set the notebook directory to `/home/jovyan/work`.
+      #: We follow the same convention.
+      notebook_dir = os.getenv('JUPYTERHUB_NOTEBOOK_DIR', '/home/jovyan/work')
+      c.Spawner.notebook_dir = notebook_dir
+
+      #: For debugging arguments passed to spawned containers
+      c.Spawner.debug = bool(os.getenv('DEBUG', False))
+
+      # prevent redirect to /hub if the server is taking slightly longer to start
+      c.JupyterHub.tornado_settings = {
+       'slow_spawn_timeout': 15
+      }
+    db:
+      type: postgres
+  singleuser:
+    image:
+      name: rengahub/singleuser
+      tag: development
+    storage:
+      type: none
+  # FIXME: bug in prepuller makes helm hang in certain cases. Fixed in 0.7
+  # so this should be removed eventually.
+  # https://github.com/jupyterhub/zero-to-jupyterhub-k8s/issues/477
+  prePuller:
+    hook:
+      enabled: false
+  auth:
+    type: gitlab
+    gitlab:
+      clientId: "jupyterhub"
+      clientSecret: "no-secret-needed"
+      callbackUrl: '""' # Forces the default callback url

@@ -43,6 +43,10 @@ spec:
         backend:
           serviceName: {{ $gitlabFullname }}
           servicePort: {{ $gitlabServicePort }}
+      - path: /jupyterhub
+        backend:
+          serviceName: proxy-http
+          servicePort: 8000
       - path: /
         backend:
           serviceName: {{ $uiFullname }}

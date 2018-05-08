@@ -1,12 +1,13 @@
 # Build as rengahub/singleuser
 # Run with the DockerSpawner in JupyterHub
 
-ARG BASE_IMAGE=rengahub/minimal-notebook
+ARG PLATFORM_VERSION=latest
+ARG BASE_IMAGE=rengahub/minimal-notebook:$PLATFORM_VERSION
 FROM $BASE_IMAGE
 MAINTAINER Swiss Data Science Center <info@datascience.ch>
 
 ADD install /tmp/install
-ARG JUPYTERHUB_VERSION=master
+ARG JUPYTERHUB_VERSION=0.8.1
 
 # install pinned jupyterhub and ensure notebook is installed
 RUN python3 -m pip install -U pip && \

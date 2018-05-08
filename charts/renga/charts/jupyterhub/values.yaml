@@ -1,0 +1,182 @@
+hub:
+  service:
+    type: ClusterIP
+  baseUrl: /
+  cookieSecret:
+  publicURL:
+  uid: 1000
+  fsGid: 1000
+  nodeSelector: {}
+  concurrentSpawnLimit: 64
+  activeServerLimit:
+  db:
+    type: sqlite-pvc
+    upgrade:
+    pvc:
+      annotations: {}
+      selector: {}
+      accessModes:
+        - ReadWriteOnce
+      storage: 1Gi
+      subPath:
+      storageClassName:
+    url:
+  labels: {}
+  extraConfig: ''
+  extraConfigMap: {}
+  extraEnv: {}
+  extraContainers: []
+  extraVolumes: []
+  extraVolumeMounts: []
+  image:
+    name: jupyterhub/k8s-hub
+    tag: v0.6
+  resources:
+    requests:
+      cpu: 0.2
+      memory: 512Mi
+  services: {}
+  imagePullPolicy: IfNotPresent
+  pdb:
+    enabled: true
+
+rbac:
+  enabled: true
+
+proxy:
+  secretToken: ''
+  service:
+    type: LoadBalancer
+    labels: {}
+    annotations: {}
+    nodePorts:
+      http:
+      https:
+  chp:
+    image:
+      name: jupyterhub/configurable-http-proxy
+      tag: 3.0.0
+      pullPolicy: IfNotPresent
+    cmd:
+      - configurable-http-proxy
+      - --ip=0.0.0.0
+      - --port=8000
+      - --api-ip=0.0.0.0
+      - --api-port=8001
+      - --default-target=http://$(HUB_SERVICE_HOST):$(HUB_SERVICE_PORT)
+      - --error-target=http://$(HUB_SERVICE_HOST):$(HUB_SERVICE_PORT)
+      - --log-level=debug
+    resources:
+      requests:
+        cpu: 0.2
+        memory: 512Mi
+  nginx:
+    image:
+      name: quay.io/kubernetes-ingress-controller/nginx-ingress-controller
+      tag: 0.9.0
+      pullPolicy: IfNotPresent
+    proxyBodySize: 64m
+    resources: {}
+  lego:
+    image:
+      name: jetstack/kube-lego
+      # We need a couple of fixes related to ingress.provider that are in master
+      # When 0.1.6 is released, switch to that!
+      tag: master-2368
+    resources: {}
+  labels:
+  nodeSelector: {}
+  pdb:
+    enabled: true
+  https:
+    enabled: true
+    type: letsencrypt
+    letsencrypt:
+      contactEmail: ''
+    manual:
+      key:
+      cert:
+    hosts: []
+
+
+# Google OAuth secrets
+auth:
+  type: dummy
+  whitelist:
+    users:
+  admin:
+    access: true
+    users:
+  dummy:
+    password:
+  state:
+    enabled: false
+    cryptoKey:
+
+
+singleuser:
+  networkTools:
+    image:
+      name: jupyterhub/k8s-network-tools
+      tag: v0.6
+  cloudMetadata:
+    enabled: false
+    ip: 169.254.169.254
+  extraLabels: {}
+  extraEnv: {}
+  lifecycleHooks:
+  initContainers:
+  nodeSelector: {}
+  uid: 1000
+  fsGid: 1000
+  serviceAccountName:
+  schedulerStrategy:
+  storage:
+    type: dynamic
+    extraVolumes: []
+    extraVolumeMounts: []
+    static:
+      pvcName:
+      subPath: '{username}'
+    capacity: 10Gi
+    homeMountPath: /home/jovyan
+    dynamic:
+      storageClass:
+  image:
+    name: jupyterhub/k8s-singleuser-sample
+    tag: v0.6
+  startTimeout: 300
+  cpu:
+    limit:
+    guarantee:
+  memory:
+    limit:
+    guarantee: 1G
+  cmd: jupyterhub-singleuser
+  defaultUrl:
+
+prePuller:
+  hook:
+    enabled: true
+    extraEnv: {}
+    image:
+      name: jupyterhub/k8s-pre-puller
+      tag: v0.6
+  continuous:
+    enabled: false
+  pause:
+    image:
+      name: gcr.io/google_containers/pause
+      tag: '3.0'
+
+ingress:
+  enabled: false
+  annotations: {}
+  hosts: []
+  tls:
+
+cull:
+  enabled: true
+  users: false
+  timeout: 3600
+  every: 600

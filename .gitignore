@@ -1,6 +1,12 @@
 # services/storage/data/, created by storage service
 services/storage/data/
-services/gitlab/
+
+services/gitlab/config/
+services/gitlab/git-data/
+services/gitlab/lfs-data/
+services/gitlab/logs/
+services/gitlab/runner/
+
 services/keycloak/data/
 
 # Idea software family
@@ -112,3 +118,6 @@ ENV/
 /site
 
 # End of https://www.gitignore.io/api/python
+
+.DS_Store
+

@@ -17,16 +17,16 @@
 # limitations under the License.
 """Service creating named servers for given project."""
 
+import hashlib
 import json
 import os
+import urllib.parse
 from functools import wraps
-from urllib.parse import quote
-
-import requests
-from jupyterhub.services.auth import HubOAuth
 
 import gitlab
+import requests
 from flask import Flask, Response, abort, make_response, redirect, request
+from jupyterhub.services.auth import HubOAuth
 
 SERVICE_PREFIX = os.environ.get('JUPYTERHUB_SERVICE_PREFIX', '/')
 """Service prefix is set by JupyterHub service spawner."""
@@ -42,7 +42,7 @@ app = Flask(__name__)
 
 def _server_name(*args):
     """Return a name for Jupyter server."""
-    return '-'.join(args).replace('/', '-')
+    return hashlib.md5(('-'.join(args)).encode()).hexdigest()
 
 
 def authenticated(f):
@@ -80,22 +80,17 @@ def whoami(user):
 
 
 @app.route(
-    SERVICE_PREFIX + '<namespace>/<project>/<commit_sha>/<environment_slug>',
-    methods=['GET']
+    SERVICE_PREFIX + '<namespace>/<project>/<commit_sha>', methods=['GET']
 )
 @app.route(
-    SERVICE_PREFIX +
-    '<namespace>/<project>/<commit_sha>/<environment_slug>/<path:notebook>',
+    SERVICE_PREFIX + '<namespace>/<project>/<commit_sha>/<path:notebook>',
     methods=['GET']
 )
 @authenticated
-def launch_notebook(
-    user, namespace, project, commit_sha, environment_slug, notebook=None
-):
+def launch_notebook(user, namespace, project, commit_sha, notebook=None):
     """Launch user server with a given name."""
-    server_name = _server_name(
-        namespace, project, commit_sha, environment_slug
-    )
+    server_name = _server_name(namespace, project, commit_sha)
+
     headers = {auth.auth_header_name: 'token {0}'.format(auth.api_token)}
 
     # 1. launch using spawner that checks the access
@@ -107,7 +102,6 @@ def launch_notebook(
         json={
             'branch': request.args.get('branch', 'master'),
             'commit_sha': commit_sha,
-            'environment_slug': environment_slug,
             'namespace': namespace,
             'notebook': notebook,
             'project': project,
@@ -119,8 +113,11 @@ def launch_notebook(
     if r.status_code not in {201, 202, 400}:
         abort(r.status_code)
 
-    notebook_url = auth.hub_host + '/user/{user[name]}/{server_name}/'.format(
-        user=user, server_name=server_name
+    notebook_url = urllib.parse.urljoin(
+        os.environ.get('JUPYTERHUB_BASE_URL'),
+        'user/{user[name]}/{server_name}/'.format(
+            user=user, server_name=server_name
+        )
     )
 
     if notebook:
@@ -130,15 +127,12 @@ def launch_notebook(
 
 
 @app.route(
-    SERVICE_PREFIX + '<namespace>/<project>/<commit_sha>/<environment_slug>',
-    methods=['DELETE']
+    SERVICE_PREFIX + '<namespace>/<project>/<commit_sha>', methods=['DELETE']
 )
 @authenticated
-def stop_notebook(user, namespace, project, commit_sha, environment_slug):
+def stop_notebook(user, namespace, project, commit_sha):
     """Stop user server with name."""
-    server_name = _server_name(
-        namespace, project, commit_sha, environment_slug
-    )
+    server_name = _server_name(namespace, project, commit_sha)
     headers = {'Authorization': 'token %s' % auth.api_token}
 
     r = requests.request(
@@ -156,17 +150,16 @@ def oauth_callback():
     """Set a token in the cookie."""
     code = request.args.get('code', None)
     if code is None:
-        return 403
+        abort(403)
 
     # validate state field
     arg_state = request.args.get('state', None)
     cookie_state = request.cookies.get(auth.state_cookie_name)
     if arg_state is None or arg_state != cookie_state:
         # state doesn't match
-        return 403
+        abort(403)
 
     token = auth.token_for_code(code)
-    app.logger.info(token)
     next_url = auth.get_next_url(cookie_state) or SERVICE_PREFIX
     response = make_response(redirect(next_url))
     response.set_cookie(auth.cookie_name, token)
