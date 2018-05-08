@@ -222,9 +222,9 @@ services/gitlab/%:
 
 .PHONY: enable-gitlab-auto-devops register-gitlab-oauth-applications unregister-gitlab-oauth-applications register-runners unregister-runners configure-gitlab-login
 enable-gitlab-auto-devops:
-	@docker-compose exec gitlab /opt/gitlab/bin/gitlab-psql \
-		-h /var/opt/gitlab/postgresql -d gitlabhq_production \
-		-c 	"UPDATE application_settings SET auto_devops_enabled = true, auto_devops_domain = '$(PLATFORM_DOMAIN)' WHERE id = 1;" > /dev/null 2>&1
+	@curl -X PUT -H "Private-token: ${GITLAB_TOKEN}" \
+	  ${GITLAB_URL}/api/v4/application/settings?auto_devops_enabled=true\&auto_devops_domain=${PLATFORM_DOMAIN}
+
 # Preregister the ui as a client with gitlab.
 # This command will fail on restart when the client is already there - we don't care.
 register-gitlab-oauth-applications: .env unregister-gitlab-oauth-applications
