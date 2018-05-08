@@ -71,13 +71,6 @@ apispec:
     repository: rengahub/apispec
     tag: development
 
-jupyterhub:
-  notebook:
-    image:
-      name: rengahub/singleuser
-      repository: rengahub/singleuser
-      tag: development
-
 ## Keycloak configuration
 keycloak:
   ## Keycloak admin user configuration
@@ -304,6 +297,7 @@ jupyterhub:
     image:
       name: renku/jupyterhub-k8s
       tag: latest
+      repository: renku/jupyterhub-k8s
     services:
       notebooks:
         url: http://renku-notebooks
@@ -348,6 +342,7 @@ jupyterhub:
     image:
       name: renku/singleuser
       tag: latest
+      repository: renku/singleuser
     storage:
       type: none
   # FIXME: bug in prepuller makes helm hang in certain cases. Fixed in 0.7
@@ -359,8 +354,8 @@ jupyterhub:
   auth:
     type: gitlab
     gitlab:
-      clientId: "jupyterhub"
-      clientSecret: "no-secret-needed"
+      clientId: jupyterhub
+      clientSecret: no-secret-needed
       callbackUrl: '""' # Forces the default callback url
 
 tests:
