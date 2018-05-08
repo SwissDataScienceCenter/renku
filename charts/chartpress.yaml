@@ -23,3 +23,9 @@ charts:
         valuesPath: jupyterhub.singleuser.image
         paths:
           - ../services/singleuser
+      jupyterhub-k8s:
+        contextPath: ../services/jupyterhub
+        dockerfilePath: ../services/jupyterhub/jupyterhub-k8s.Dockerfile
+        valuesPath: jupyterhub.hub.image
+        paths:
+          - ../services/jupyterhub
