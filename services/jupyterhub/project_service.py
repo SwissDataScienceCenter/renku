@@ -23,6 +23,7 @@ import os
 import urllib.parse
 from functools import wraps
 
+import docker
 import gitlab
 import requests
 from flask import Flask, Response, abort, make_response, redirect, request
