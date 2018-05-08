@@ -192,6 +192,7 @@ makefile-services = \
 	renku-notebooks \
 	renku-storage \
  	renku-python \
+ 	incubator-proxy \
  	renku-ui
 
 dockerfile-services = \
