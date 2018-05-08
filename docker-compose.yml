@@ -255,16 +255,8 @@ services:
       - default
       - review
 
-  singleuser:
-    build:
-      context: services/singleuser
-      args:
-        BASE_IMAGE: renku/minimal-notebook:98a712f9ad93
-        JUPYTERHUB_VERSION: master
-    image: ${DOCKER_PREFIX}singleuser:${PLATFORM_VERSION}
-    command: renku --version
-
   jupyterhub:
+    image: rengahub/jupyterhub:${PLATFORM_VERSION}
     build: services/jupyterhub
     command: jupyterhub --debug
     ports:
