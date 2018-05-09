@@ -187,8 +187,12 @@ $(dockerfile-services): %: .env services/%/Dockerfile
 jupyterhub-k8s: .env services/jupyterhub/jupyterhub-k8s.Dockerfile
 	docker build --tag $(DOCKER_REPOSITORY)$@:$(PLATFORM_VERSION) -f services/jupyterhub/$@.Dockerfile services/jupyterhub/
 
+.PHONY: renga-tests
+renga-tests:
+	docker build --tag $(DOCKER_REPOSITORY)$@:$(PLATFORM_VERSION) -f tests.Dockerfile .
+
 .PHONY: tag
-tag: $(dockerfile-services) jupyterhub-k8s
+tag: $(dockerfile-services) jupyterhub-k8s renga-tests
 
 # build docker images from makefiles
 .PHONY: $(makefile-services)
