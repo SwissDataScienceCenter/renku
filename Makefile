@@ -258,10 +258,10 @@ unregister-gitlab-user-token:
 # Register an admin user and configure OAuth2 logout URL.
 configure-gitlab-login: .env
 	@curl -X POST -H "Private-token: ${GITLAB_TOKEN}" \
-	  -d '{"username": "demo", \
-	       "email": "demo@datascience.ch", \
-	       "name": "John Doe", \
-	       "extern_uid": "demo", \
+	  -d '{"username": "gitlab-admin", \
+	       "email": "gitlab-admin@datascience.ch", \
+	       "name": "GitLab Admin", \
+	       "extern_uid": "gitlab-admin", \
 	       "provider": "oauth2_generic", \
 	       "skip_confirmation": true, \
 	       "reset_password": true, \
