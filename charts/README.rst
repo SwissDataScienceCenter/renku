@@ -18,7 +18,7 @@ Requires minikube, kubectl and helm.
     $ helm install --name renga --namespace renga \
         -f minikube-values.yaml \
         --set global.renga.domain=$(minikube ip) \
-        --set ui.gitlabUrl=$(minikube ip)/gitlab \
+        --set ui.gitlabUrl=http://$(minikube ip)/gitlab \
         renga
 
 Due to issue `minikube #1568
