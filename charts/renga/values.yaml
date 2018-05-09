@@ -353,3 +353,6 @@ jupyterhub:
       clientId: "jupyterhub"
       clientSecret: "no-secret-needed"
       callbackUrl: '""' # Forces the default callback url
+
+tests:
+  image: rengahub/renga-tests:development
