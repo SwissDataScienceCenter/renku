@@ -25,6 +25,10 @@ data:
     done
 
     psql -v ON_ERROR_STOP=1 <<-EOSQL
+        DELETE FROM oauth_applications WHERE uid='jupyterhub';
+        INSERT INTO oauth_applications (name, uid, scopes, redirect_uri, secret, trusted)
+        VALUES ('jupyterhub', 'jupyterhub', 'api read_user', '{{ template "http" . }}://{{ .Values.global.renga.domain }}/jupyterhub/hub/oauth_callback {{ template "http" . }}://{{ .Values.global.renga.domain }}/jupyterhub/hub/api/oauth2/authorize', 'no-secret-needed', 'true');
+
         DELETE FROM oauth_applications WHERE uid='renga-ui';
         INSERT INTO oauth_applications (name, uid, scopes, redirect_uri, secret, trusted)
         VALUES ('renga-ui', 'renga-ui', 'api read_user', '$BASE_URL/login/redirect/gitlab', 'no-secret-needed', 'true');

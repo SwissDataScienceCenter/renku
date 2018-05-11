@@ -298,6 +298,7 @@ jupyterhub:
         api_token: notebookstoken
     extraEnv:
       DEBUG: 1
+      GITLAB_HOST: http://192.168.99.108/gitlab
       JUPYTERHUB_NOTEBOOK_DIR: '/repo'
       JUPYTERHUB_SPAWNER_CLASS: spawners.RengaKubeSpawner
     extraConfig: |
