@@ -97,17 +97,16 @@ c.Spawner.remove_containers = True
 c.Spawner.debug = bool(os.getenv('DEBUG', False))
 
 #: Setup the service for creating named servers from GitLab projects.
-env = os.environ.copy()
-env['FLASK_APP'] = 'project_service.py'
-env['FLASK_DEBUG'] = os.getenv('DEBUG', '0')
-env['OAUTHLIB_INSECURE_TRANSPORT'] = '1'
+# env = os.environ.copy()
+# env['FLASK_APP'] = 'project_service.py'
+# env['FLASK_DEBUG'] = os.getenv('DEBUG', '0')
+# env['OAUTHLIB_INSECURE_TRANSPORT'] = '1'
 
 c.JupyterHub.services = [{
-    'name': 'projects',
-    'command': ['flask', 'run', '-p', '9080', '-h', '0.0.0.0'],
-    'url': 'http://localhost:9080',
-    'environment': env,
+    'name': 'renga-notebooks',
+    'url': 'http://renga-notebooks:9080',
     'admin': True,
+    'api_token': os.getenv('JUPYTERHUB_RENGA_NOTEBOOKS_SERVICE_TOKEN')
 }]
 
 # prevent redirect to /hub if the server is taking slightly longer to start

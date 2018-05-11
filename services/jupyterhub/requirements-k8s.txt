@@ -17,6 +17,5 @@
 # limitations under the License.
 
 docker
-flask
 python-gitlab
 requests-oauthlib

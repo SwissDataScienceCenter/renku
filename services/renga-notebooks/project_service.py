@@ -20,7 +20,7 @@
 import hashlib
 import json
 import os
-import urllib.parse
+from urllib.parse import urljoin
 from functools import wraps
 
 import docker
@@ -35,6 +35,7 @@ SERVICE_PREFIX = os.environ.get('JUPYTERHUB_SERVICE_PREFIX', '/')
 auth = HubOAuth(
     api_token=os.environ['JUPYTERHUB_API_TOKEN'],
     cache_max_age=60,
+    oauth_client_id='service-renga-notebooks',
 )
 """Wrap JupyterHub authentication service API."""
 
@@ -81,10 +82,13 @@ def whoami(user):
 
 
 @app.route(
-    SERVICE_PREFIX + '<namespace>/<project>/<commit_sha>', methods=['GET']
+    urljoin(SERVICE_PREFIX, '<namespace>/<project>/<commit_sha>'),
+    methods=['GET']
 )
 @app.route(
-    SERVICE_PREFIX + '<namespace>/<project>/<commit_sha>/<path:notebook>',
+    urljoin(
+        SERVICE_PREFIX, '<namespace>/<project>/<commit_sha>/<path:notebook>'
+    ),
     methods=['GET']
 )
 @authenticated
@@ -114,7 +118,7 @@ def launch_notebook(user, namespace, project, commit_sha, notebook=None):
     if r.status_code not in {201, 202, 400}:
         abort(r.status_code)
 
-    notebook_url = urllib.parse.urljoin(
+    notebook_url = urljoin(
         os.environ.get('JUPYTERHUB_BASE_URL'),
         'user/{user[name]}/{server_name}/'.format(
             user=user, server_name=server_name
@@ -128,7 +132,8 @@ def launch_notebook(user, namespace, project, commit_sha, notebook=None):
 
 
 @app.route(
-    SERVICE_PREFIX + '<namespace>/<project>/<commit_sha>', methods=['DELETE']
+    urljoin(SERVICE_PREFIX, '<namespace>/<project>/<commit_sha>'),
+    methods=['DELETE']
 )
 @authenticated
 def stop_notebook(user, namespace, project, commit_sha):
@@ -146,7 +151,7 @@ def stop_notebook(user, namespace, project, commit_sha):
     return app.response_class(r.content, status=r.status_code)
 
 
-@app.route(SERVICE_PREFIX + 'oauth_callback')
+@app.route(urljoin(SERVICE_PREFIX, 'oauth_callback'))
 def oauth_callback():
     """Set a token in the cookie."""
     code = request.args.get('code', None)
