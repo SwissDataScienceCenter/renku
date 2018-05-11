@@ -19,7 +19,8 @@ Requires minikube, kubectl and helm.
         -f minikube-values.yaml \
         --set global.renga.domain=$(minikube ip) \
         --set ui.gitlabUrl=http://$(minikube ip)/gitlab \
-        renga
+        --set jupyterhub.hub.extraEnv.GITLAB_HOST=http://$(minikube ip)/gitlab \
+        ./renga
 
 Due to issue `minikube #1568
 <https://github.com/kubernetes/minikube/issues/1568>`_,
