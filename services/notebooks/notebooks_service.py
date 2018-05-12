@@ -35,7 +35,7 @@ SERVICE_PREFIX = os.environ.get('JUPYTERHUB_SERVICE_PREFIX', '/')
 auth = HubOAuth(
     api_token=os.environ['JUPYTERHUB_API_TOKEN'],
     cache_max_age=60,
-    oauth_client_id='service-renga-notebooks',
+    oauth_client_id='service-notebooks',
 )
 """Wrap JupyterHub authentication service API."""
 
@@ -69,6 +69,12 @@ def authenticated(f):
             return response
 
     return decorated
+
+
+@app.route('/health')
+def health():
+    """Just a health check path."""
+    return Response('service running under {}'.format(SERVICE_PREFIX))
 
 
 @app.route(SERVICE_PREFIX)

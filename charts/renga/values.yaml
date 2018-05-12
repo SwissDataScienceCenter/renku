@@ -292,14 +292,10 @@ jupyterhub:
       name: rengahub/jupyterhub-k8s
       tag: development
     services:
-      projects:
-        command: ['flask', 'run', '-p' ,'9080', '-h', '0.0.0.0']
-        url: 'http://hub:9080'
-        environment:
-          FLASK_APP: 'project_service'
-          FLASK_DEBUG: '1'
-          OAUTHLIB_INSECURE_TRANSPORT: '1'
+      notebooks:
+        url: http://renga-notebooks
         admin: true
+        api_token: notebookstoken
     extraEnv:
       DEBUG: 1
       JUPYTERHUB_NOTEBOOK_DIR: '/repo'
@@ -331,7 +327,7 @@ jupyterhub:
 
       # prevent redirect to /hub if the server is taking slightly longer to start
       c.JupyterHub.tornado_settings = {
-       'slow_spawn_timeout': 15
+       'slow_spawn_timeout': 30
       }
     db:
       type: postgres

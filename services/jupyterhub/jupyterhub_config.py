@@ -103,11 +103,11 @@ c.Spawner.debug = bool(os.getenv('DEBUG', False))
 # env['OAUTHLIB_INSECURE_TRANSPORT'] = '1'
 
 c.JupyterHub.services = [{
-    'name': 'renga-notebooks',
-    'url': 'http://renga-notebooks:9080',
+    'name': 'notebooks',
+    'url': 'http://notebooks',
     'admin': True,
     'api_token': os.getenv('JUPYTERHUB_RENGA_NOTEBOOKS_SERVICE_TOKEN')
 }]
 
-# prevent redirect to /hub if the server is taking slightly longer to start
+# try to avoid slow spawn timeouts -- not a proper fix!
 c.JupyterHub.tornado_settings = {'slow_spawn_timeout': 30}

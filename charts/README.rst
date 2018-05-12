@@ -11,11 +11,13 @@ Requires minikube, kubectl and helm.
     $ minikube start
     $ eval $(minikube docker-env)
     $ make -C .. tag
+    $ minikube addons enable coredns
     $ helm init
     $ helm repo add renga https://swissdatasciencecenter.github.io/helm-charts/
     $ helm dep build renga
     $ helm install --name nginx-ingress --namespace kube-system stable/nginx-ingress --set controller.hostNetwork=true
-    $ helm install --name renga --namespace renga \
+    $ helm upgrade renga --install \
+        --namespace renga \
         -f minikube-values.yaml \
         --set global.renga.domain=$(minikube ip) \
         --set ui.gitlabUrl=http://$(minikube ip)/gitlab \

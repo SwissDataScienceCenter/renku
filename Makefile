@@ -135,7 +135,7 @@ scala-artifact = \
 
 dockerfile-services = \
 	keycloak \
-	renga-notebooks \
+	notebooks \
 	singleuser
 
 .PHONY: all

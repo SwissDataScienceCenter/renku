@@ -21,6 +21,8 @@ import hashlib
 import os
 from urllib.parse import urlsplit, urlunsplit
 
+import docker
+from kubernetes import client
 from tornado import gen, web
 
 
@@ -125,7 +127,6 @@ class SpawnerMixin():
 
 
 try:
-    import docker
     from dockerspawner import DockerSpawner
 
     class RepoVolume(DockerSpawner):
@@ -236,7 +237,6 @@ except ImportError:
     pass
 
 try:
-    from kubernetes import client
     from kubespawner import KubeSpawner
 
     class RengaKubeSpawner(SpawnerMixin, KubeSpawner):
