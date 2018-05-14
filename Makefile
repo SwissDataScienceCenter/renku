@@ -189,7 +189,7 @@ jupyterhub-k8s: .env services/jupyterhub/jupyterhub-k8s.Dockerfile
 
 .PHONY: renga-tests
 renga-tests:
-	docker build --tag $(DOCKER_REPOSITORY)$@:$(PLATFORM_VERSION) -f tests.Dockerfile .
+	docker build --tag $(DOCKER_REPOSITORY)$@:$(PLATFORM_VERSION) -f tests/Dockerfile tests/
 
 .PHONY: tag
 tag: $(dockerfile-services) jupyterhub-k8s renga-tests

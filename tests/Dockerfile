@@ -8,9 +8,8 @@ RUN wget https://github.com/mozilla/geckodriver/releases/download/v0.11.1/geckod
     apt-get update -y && \
     apt-get install -y firefox-esr xvfb enchant shellcheck
 
-COPY . /code
+COPY . /tests
 
-WORKDIR /code
-RUN pip install -r tests/requirements.txt
-RUN pip install -r docs/requirements.txt
-CMD xvfb-run scripts/run-tests.sh
+WORKDIR /tests
+RUN pip install -r requirements.txt
+CMD xvfb-run pytest -v
