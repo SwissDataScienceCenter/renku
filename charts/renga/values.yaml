@@ -259,12 +259,15 @@ gitlab:
   #   type: ClusterIP
 
 ## Configuration for the UI service
-# ui:
+ui:
   ## UI image
   # image:
   #   pullPolicy: Always
   #   repository: rengahub/renga-ui
   #   tag: development
+
+  ingress:
+    enabled: false
 
   ## Pod affinity for UI deployment
   # affinity: {}
@@ -279,7 +282,7 @@ gitlab:
   ## Service configuration for UI
   ## Modify service.type according to your setup
   # service:
-  #   port: 3000
+  #   port: 80
   #   type: ClusterIP
 
 ## Configuration for the storage service

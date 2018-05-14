@@ -1,0 +1,24 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ template "renga.fullname" . }}
+  labels:
+    app: {{ template "renga.name" . }}
+    chart: {{ template "renga.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+data:
+  init.sh: |-
+    set -ex
+    apt-get update -y
+    apt-get install -y curl
+
+    BASE_URL={{ .Values.ui.baseUrl | default (printf "%s://%s" (include "renga-ui.protocol" .) .Values.global.renga.domain) | quote }}
+    GITLAB_URL={{ .Values.ui.gitlabUrl | default (printf "%s://gitlab.%s" (include "renga-ui.protocol" .) .Values.global.renga.domain) | quote }}
+
+    psql -v ON_ERROR_STOP=1 <<-EOSQL
+        DELETE FROM oauth_applications WHERE uid='renga-ui';
+        INSERT INTO oauth_applications (name, uid, scopes, redirect_uri, secret, trusted)
+        VALUES ('renga-ui', 'renga-ui', 'api read_user', '$BASE_URL/login/redirect/gitlab', 'no-secret-needed', 'true');
+    EOSQL

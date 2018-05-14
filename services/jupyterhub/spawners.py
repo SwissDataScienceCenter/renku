@@ -21,7 +21,6 @@ import hashlib
 import os
 from urllib.parse import urlsplit, urlunsplit
 
-import docker
 from tornado import gen, web
 
 
@@ -126,6 +125,7 @@ class SpawnerMixin():
 
 
 try:
+    import docker
     from dockerspawner import DockerSpawner
 
     class RepoVolume(DockerSpawner):
@@ -162,6 +162,16 @@ try:
                     },
                 },
             )
+
+            # make sure we have the alpine/git image
+            images = yield self.docker('images')
+            if not any([
+                'alpine/git:latest' in i['RepoTags']
+                for i in images if i['RepoTags']
+            ]):
+                alpine_git = yield self.docker(
+                    'pull', 'alpine/git', tag='latest'
+                )
 
             volume = yield self.docker('create_volume', name=volume_name)
 
@@ -226,6 +236,7 @@ except ImportError:
     pass
 
 try:
+    from kubernetes import client
     from kubespawner import KubeSpawner
 
     class RengaKubeSpawner(SpawnerMixin, KubeSpawner):
@@ -263,26 +274,24 @@ try:
                 container for container in self.singleuser_init_containers
                 if not container.name.startswith('renga-')
             ]
-            self.singleuser_init_containers.append({
-                'name':
-                    container_name,
-                'image':
-                    'alpine/git',
-                'command': ['sh', '-c'],
-                'args': [
+            init_container = client.V1Container(
+                name=container_name,
+                image='alpine/git',
+                command=['sh', '-c'],
+                args=[
                     'git clone {repository} {mount_path} && '
-                    '(git checkout {branch} || git checkout -b {branch}) && '.
-                    format(
+                    '(git checkout {branch} || git checkout -b {branch}) && '
+                    'git reset --hard {commit_sha}'.format(
                         branch=options.get('branch'),
                         commit_sha=options.get('commit_sha'),
                         mount_path=mount_path,
                         repository=repository,
                     )
                 ],
-                'volumeMounts': [volume_mount],
-                'workingDir':
-                    mount_path,
-            })
+                volume_mounts=[volume_mount],
+                working_dir=mount_path,
+            )
+            self.singleuser_init_containers.append(init_container)
 
             #: Share volume mount with notebook.
             self.volume_mounts = [

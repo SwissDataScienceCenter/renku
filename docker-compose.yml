@@ -103,6 +103,7 @@ services:
         #gitlab_rails['db_adapter'] = 'postgresql'
         #gitlab_rails['db_encoding'] = 'utf8'
         gitlab_rails['omniauth_enabled'] = true
+        gitlab_rails['omniauth_auto_sign_in_with_provider'] = 'oauth2_generic'
         gitlab_rails['omniauth_allow_single_sign_on'] = ['oauth2_generic']
         gitlab_rails['omniauth_block_auto_created_users'] = false
         gitlab_rails['omniauth_providers'] = [
@@ -270,6 +271,7 @@ services:
       - 8000
       - 8081
     environment:
+      DEBUG: 1
       GITLAB_CLIENT_ID: jupyterhub
       GITLAB_CLIENT_SECRET: no-secret-needed
       GITLAB_HOST: ${GITLAB_URL}

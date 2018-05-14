@@ -1,0 +1,5 @@
+dependencies:
+- name: renga-ui
+  alias: ui
+  version: "~0.1.0-438e4c5"
+  repository: "https://swissdatasciencecenter.github.io/helm-charts/"

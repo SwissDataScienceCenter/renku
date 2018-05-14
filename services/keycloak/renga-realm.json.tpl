@@ -621,7 +621,8 @@
     "clientAuthenticatorType": "client-secret",
     "secret": "{{GITLAB_CLIENT_SECRET}}",
     "redirectUris": [
-      "{{GITLAB_URL}}/users/auth/oauth2_generic/callback"
+      "{{GITLAB_URL}}/users/auth/oauth2_generic/callback",
+      "{{GITLAB_URL}}"
     ],
     "webOrigins": [],
     "notBefore": 0,

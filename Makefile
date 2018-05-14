@@ -220,11 +220,11 @@ docker-compose-pull: .env
 services/gitlab/%:
 	@mkdir -p $@
 
-.PHONY: enable-gitlab-auto-devops register-gitlab-oauth-applications unregister-gitlab-oauth-applications register-runners unregister-runners
+.PHONY: enable-gitlab-auto-devops register-gitlab-oauth-applications unregister-gitlab-oauth-applications register-runners unregister-runners configure-gitlab-login
 enable-gitlab-auto-devops:
-	@docker-compose exec gitlab /opt/gitlab/bin/gitlab-psql \
-		-h /var/opt/gitlab/postgresql -d gitlabhq_production \
-		-c 	"UPDATE application_settings SET auto_devops_enabled = true, auto_devops_domain = '$(PLATFORM_DOMAIN)' WHERE id = 1;" > /dev/null 2>&1
+	@curl -X PUT -H "Private-token: ${GITLAB_TOKEN}" \
+	  ${GITLAB_URL}/api/v4/application/settings?auto_devops_enabled=true\&auto_devops_domain=${PLATFORM_DOMAIN}
+
 # Preregister the ui as a client with gitlab.
 # This command will fail on restart when the client is already there - we don't care.
 register-gitlab-oauth-applications: .env unregister-gitlab-oauth-applications
@@ -254,6 +254,22 @@ unregister-gitlab-user-token:
 	@$(DOCKER_COMPOSE_ENV) docker-compose exec gitlab /opt/gitlab/bin/gitlab-psql \
 		-h /var/opt/gitlab/postgresql -d gitlabhq_production \
 		-c "DELETE FROM personal_access_tokens WHERE user_id='1' AND name='managed storage token';" > /dev/null 2>&1
+
+# Register an admin user and configure OAuth2 logout URL.
+configure-gitlab-login: .env
+	@curl -X POST -H "Private-token: ${GITLAB_TOKEN}" \
+	  -d '{"username": "demo", \
+	       "email": "demo@datascience.ch", \
+	       "name": "John Doe", \
+	       "extern_uid": "demo", \
+	       "provider": "oauth2_generic", \
+	       "skip_confirmation": true, \
+	       "reset_password": true, \
+	       "admin": true}' \
+	  -H 'Content-Type: application/json' \
+	  ${GITLAB_URL}/api/v4/users > /dev/null 2>&1
+	@curl -X PUT -H "Private-token: ${GITLAB_TOKEN}" \
+	  ${GITLAB_URL}/api/v4/application/settings?after_sign_out_path=${KEYCLOAK_URL}/auth/realms/Renga/protocol/openid-connect/logout?redirect_uri=${GITLAB_URL} > /dev/null 2>&1
 
 register-runners: .env unregister-runners
 ifeq (${GITLAB_RUNNERS_TOKEN},)
@@ -310,7 +326,7 @@ clean: .env
 
 restart: stop start
 
-start: .env docker-network $(GITLAB_DIRS:%=services/gitlab/%) unregister-runners docker-compose-up wait enable-gitlab-auto-devops register-gitlab-oauth-applications register-runners register-gitlab-user-token
+start: .env docker-network $(GITLAB_DIRS:%=services/gitlab/%) unregister-runners docker-compose-up wait enable-gitlab-auto-devops register-gitlab-oauth-applications register-runners register-gitlab-user-token configure-gitlab-login
 ifeq (${GITLAB_CLIENT_SECRET}, dummy-secret)
 	@echo
 	@echo "[Warning] You have not defined a GITLAB_CLIENT_SECRET. Using dummy"
