@@ -224,6 +224,7 @@ services:
     environment:
       BASE_URL: http://${PLATFORM_DOMAIN}
       GITLAB_URL: ${GITLAB_URL}
+      JUPYTERHUB_URL: ${JUPYTERHUB_URL}
     labels:
       traefik.enable: "true"
       traefik.frontend.rule: "Host:${PLATFORM_DOMAIN}"
