@@ -16,6 +16,8 @@ global:
     postgresUser: gitlab
     ## Postgres password for the gitlab database
     postgresPassword: gitlab
+    ## Sudo token for sudo API requests
+    sudoToken: dummy-secret
   keycloak:
     ## Name of the postgres database to be used by Keycloak
     postgresDatabase: keycloak
