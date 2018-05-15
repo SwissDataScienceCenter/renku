@@ -18,6 +18,9 @@ global:
     postgresPassword: gitlab
     ## Sudo token for sudo API requests
     sudoToken: dummy-secret
+    ## URL prefix for gitlab
+    # urlPrefix: /
+
   keycloak:
     ## Name of the postgres database to be used by Keycloak
     postgresDatabase: keycloak

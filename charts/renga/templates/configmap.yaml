@@ -9,20 +9,53 @@ metadata:
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
 data:
-  init.sh: |-
+  init-gitlab.sh: |-
+    #!/usr/bin/env bash
+
     set -ex
     apt-get update -y
-    apt-get install -y curl
+    apt-get install -y curl jq
 
-    BASE_URL={{ .Values.ui.baseUrl | default (printf "%s://%s" (include "renga-ui.protocol" .) .Values.global.renga.domain) | quote }}
-    GITLAB_URL={{ .Values.ui.gitlabUrl | default (printf "%s://gitlab.%s" (include "renga-ui.protocol" .) .Values.global.renga.domain) | quote }}
+    BASE_URL={{ (printf "http://%s" .Values.global.renga.domain) }}
+    GITLAB_SERVICE_URL={{ template "http" . }}://{{ template "gitlab.fullname" . }}{{ .Values.global.gitlab.urlPrefix }}
+    GITLAB_URL={{ .Values.ui.gitlabUrl }}
+
+    until sleep 1; curl -f -s --connect-timeout 5 ${GITLAB_SERVICE_URL}/help; do
+        echo waiting for gitlab
+    done
 
     psql -v ON_ERROR_STOP=1 <<-EOSQL
         DELETE FROM oauth_applications WHERE uid='renga-ui';
         INSERT INTO oauth_applications (name, uid, scopes, redirect_uri, secret, trusted)
         VALUES ('renga-ui', 'renga-ui', 'api read_user', '$BASE_URL/login/redirect/gitlab', 'no-secret-needed', 'true');
 
-        DELETE FROM personal_access_tokens WHERE user_id='1' AND name='managed storage token';
+        DELETE FROM personal_access_tokens WHERE user_id='1' AND name='managed sudo token';
         INSERT INTO personal_access_tokens ( user_id, token, name, revoked, expires_at, created_at, updated_at, scopes, impersonation)
         VALUES ( '1', '${GITLAB_SUDO_TOKEN}', 'managed sudo token', 'f', NULL, NOW(), NOW(), E'--- \n- api\n- read_user\n- sudo\n- read_registry', 'f');
     EOSQL
+
+
+    # set up the admin user -- first check if the user is there already and grab the ID
+    demo_id=$(curl -s -H "Private-Token: dummy-secret" ${GITLAB_SERVICE_URL}/api/v4/users?username=demo | jq '.[0].id | select(.!=null)')
+
+    if [[ -z "$demo_id" ]]; then
+        method=POST
+    else
+        method=PUT
+    fi
+
+    curl -f -is -X ${method} -H "Private-token: ${GITLAB_SUDO_TOKEN}" \
+        -d  '{"username": "demo",
+        "email": "demo@datascience.ch",
+        "name": "John Doe",
+        "extern_uid": "demo",
+        "provider": "oauth2_generic",
+        "skip_confirmation": "true",
+        "reset_password": "true",
+        "admin": "true"}' \
+        -H "Content-Type: application/json" \
+        ${GITLAB_SERVICE_URL}/api/v4/users/${demo_id}
+
+    # configure the logout redirect
+    curl -f -is -X PUT -H "Private-token: ${GITLAB_SUDO_TOKEN}" \
+      ${GITLAB_SERVICE_URL}/api/v4/application/settings?after_sign_out_path={{ template "http" . }}://{{ .Values.global.renga.domain }}/auth/realms/Renga/protocol/openid-connect/logout?redirect_uri=${GITLAB_URL}
