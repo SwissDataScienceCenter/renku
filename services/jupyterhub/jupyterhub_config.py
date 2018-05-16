@@ -97,11 +97,6 @@ c.Spawner.remove_containers = True
 c.Spawner.debug = bool(os.getenv('DEBUG', False))
 
 #: Setup the service for creating named servers from GitLab projects.
-# env = os.environ.copy()
-# env['FLASK_APP'] = 'project_service.py'
-# env['FLASK_DEBUG'] = os.getenv('DEBUG', '0')
-# env['OAUTHLIB_INSECURE_TRANSPORT'] = '1'
-
 c.JupyterHub.services = [{
     'name': 'notebooks',
     'url': 'http://notebooks',

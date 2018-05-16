@@ -21,11 +21,13 @@ spec:
     spec:
       containers:
         - name: {{ .Chart.Name }}
-          image: "{{ .Values.image.repository }}/{{ .Chart.Name }}:{{ .Values.image.tag }}"
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           env:
+            {{ if eq .Values.debug true }}
             - name: FLASK_DEBUG
               value: "1"
+            {{ end }}
             - name: JUPYTERHUB_API_TOKEN
               value: {{ .Values.jupyterhub_api_token }}
             - name: JUPYTERHUB_API_URL

@@ -5,12 +5,15 @@
 replicaCount: 1
 
 image:
-  repository: rengahub
+  repository: rengahub/notebooks
   tag: development
   pullPolicy: IfNotPresent
 
 jupyterhub_api_token: notebookstoken
 jupyterhub_base_url: /
+
+# turns on flask debug mode
+debug: true
 
 service:
   type: ClusterIP
