@@ -1,6 +1,7 @@
+#!/usr/bin/env bash
 # -*- coding: utf-8 -*-
 #
-# Copyright 2017-2018 - Swiss Data Science Center (SDSC)
+# Copyright 2017, 2018 - Swiss Data Science Center (SDSC)
 # A partnership between École Polytechnique Fédérale de Lausanne (EPFL) and
 # Eidgenössische Technische Hochschule Zürich (ETHZ).
 #
@@ -16,44 +17,33 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-sudo: true
-dist: trusty
+set -e
 
-notifications:
-  email: false
+#
+# This script starts the Renga platform
+#
 
-services:
-  - docker
+# load the environment from .env
 
-addons:
-  hosts:
-    - renku.build
-    - gitlab.renku.build
-    - jupyterhub.renku.build
-    - keycloak.renku.build
+if [ ! -f .env ]; then
+    echo ".env not found - did you already remove the platform?"
+else
+    echo "Loading environment from .env:"
+    cat .env
+    set -a
+    source .env
+    set +a
+    echo "Removing .env..."
+    rm .env
+fi
 
-branches:
-  only:
-    - master
+echo "Stopping containers..."
+docker-compose down --volumes --remove-orphans
 
-language: python
+if [ -z $(docker network ls -q -f name=${DOCKER_NETWORK}) ]; then
+    echo "Removing docker network ${DOCKER_NETWORK}..."
+    docker network rm $(DOCKER_NETWORK)
+fi
 
-matrix:
-  fast_finish: true
-
-python:
-  - "3.6"
-
-before_install:
-  - sudo apt-get install enchant shellcheck
-
-install:
-  - ./scripts/travis-install.sh
-  - pip install -r tests/requirements.txt
-  - pip install -r docs/requirements.txt
-
-before_script: |-
-    ./scripts/renga-start.sh
-
-script:
-  - xvfb-run ./scripts/run-tests.sh
+echo "Removing GitLab data..."
+rm -rf services/gitlab/data/*

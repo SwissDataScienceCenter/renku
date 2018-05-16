@@ -42,13 +42,25 @@ Starting the platform
 
 .. code:: console
 
-    $ make start
+    $ ./scripts/renga-start.sh
 
-Please follow the output for next instructions.
+Please follow the output for next instructions. If the script successfully
+completes, the platform will be up and running. You may now use standard
+docker commandline tools like `docker-compose` to interact with the
+platform components.
 
 A python CLI and API client is available in the `renku-python
 <https://github.com/SwissDataScienceCenter/renku-python>`_ package.
 
+To stop the platform and clean up all the associated containers and volumes,
+you may use
+
+.. code:: console
+
+    $ ./scripts/renga-wipe.sh
+
+You can find more details about running the platform in the `setup
+<http://renga.readthedocs.io/en/development/user/setup.html>`_ documentation.
 
 Where to go next
 ----------------
@@ -71,8 +83,10 @@ without warnings and errors before creating a pull request:
 
 .. code-block:: console
 
-    $ make start
-    $ make test
+    $ pip install -r tests/requirements.txt
+    $ pip install -r docs/requirements.txt
+    $ ./scripts/renga-start.sh
+    $ ./scripts/run-tests.sh
 
 To build the documentation from source:
 
