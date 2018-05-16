@@ -1,6 +1,6 @@
 {
-  "id" : "Renga",
-  "realm" : "Renga",
+  "id" : "Renku",
+  "realm" : "Renku",
   "notBefore" : 0,
   "revokeRefreshToken" : false,
   "accessTokenLifespan" : 3000,
@@ -39,7 +39,7 @@
       "scopeParamRequired" : true,
       "composite" : false,
       "clientRole" : false,
-      "containerId" : "Renga"
+      "containerId" : "Renku"
     }, {
       "id" : "25387a4d-53b8-4168-9601-48e9b83a71c7",
       "name" : "uma_authorization",
@@ -47,7 +47,7 @@
       "scopeParamRequired" : false,
       "composite" : false,
       "clientRole" : false,
-      "containerId" : "Renga"
+      "containerId" : "Renku"
     } ],
     "client" : {
       "realm-management" : [ {
@@ -220,7 +220,7 @@
       } ],
       "demo-client" : [ ],
       "security-admin-console" : [ ],
-      "renga-services" : [ ],
+      "renku-services" : [ ],
       "admin-cli" : [ ],
       "broker" : [ {
         "id" : "d463f205-b2ea-4a83-b9f5-f72a811774c3",
@@ -322,12 +322,12 @@
   }, {
     "id" : "33a710fa-b061-4562-b31e-c89842c687e6",
     "createdTimestamp" : 1504268926763,
-    "username" : "service-account-renga-services",
+    "username" : "service-account-renku-services",
     "enabled" : true,
     "totp" : false,
     "emailVerified" : false,
-    "email" : "service-account-renga-services@placeholder.org",
-    "serviceAccountClientId" : "renga-services",
+    "email" : "service-account-renku-services@placeholder.org",
+    "serviceAccountClientId" : "renku-services",
     "credentials" : [ ],
     "disableableCredentialTypes" : [ ],
     "requiredActions" : [ ],
@@ -349,19 +349,19 @@
   "clients" : [
   {
     "id": "4622f33f-e0ca-401f-b6a5-a5e55f937ffb",
-    "clientId": "renga-ui",
+    "clientId": "renku-ui",
     "adminUrl": "",
-    "baseUrl": "{{RENGA_UI_URL}}",
+    "baseUrl": "{{RENKU_UI_URL}}",
     "surrogateAuthRequired": false,
     "enabled": true,
     "clientAuthenticatorType": "client-secret",
     "secret": "no-secret-defined",
     "redirectUris": [
-      "{{RENGA_UI_URL}}/*",
+      "{{RENKU_UI_URL}}/*",
       "http://localhost:3000/*"
     ],
     "webOrigins": [
-      "{{RENGA_UI_URL}}",
+      "{{RENKU_UI_URL}}",
       "http://localhost:3000"
     ],
     "notBefore": 0,
@@ -827,13 +827,13 @@
     "id" : "84027d06-f768-40f0-a6c7-c1e4fb405b76",
     "clientId" : "account",
     "name" : "${client_account}",
-    "baseUrl" : "/auth/realms/Renga/account",
+    "baseUrl" : "/auth/realms/Renku/account",
     "surrogateAuthRequired" : false,
     "enabled" : true,
     "clientAuthenticatorType" : "client-secret",
     "secret" : "66e487de-a299-4273-bd9a-16096a82f5f3",
     "defaultRoles" : [ "manage-account", "view-profile" ],
-    "redirectUris" : [ "/auth/realms/Renga/account/*" ],
+    "redirectUris" : [ "/auth/realms/Renku/account/*" ],
     "webOrigins" : [ ],
     "notBefore" : 0,
     "bearerOnly" : false,
@@ -1159,8 +1159,8 @@
     "enabled" : true,
     "clientAuthenticatorType" : "client-secret",
     "secret" : "5294a18e-e784-4e39-a927-ce816c91c83e",
-    "redirectUris" : [ "{{RENGA_ENDPOINT}}*" ],
-    "webOrigins" : [ "{{RENGA_ENDPOINT}}" ],
+    "redirectUris" : [ "{{RENKU_ENDPOINT}}*" ],
+    "webOrigins" : [ "{{RENKU_ENDPOINT}}" ],
     "notBefore" : 0,
     "bearerOnly" : false,
     "consentRequired" : false,
@@ -1428,7 +1428,7 @@
     "useTemplateMappers" : false
   }, {
     "id" : "c8fc33a7-6a6e-4a2a-b05c-b3ecea717db8",
-    "clientId" : "renga-services",
+    "clientId" : "renku-services",
     "surrogateAuthRequired" : false,
     "enabled" : true,
     "clientAuthenticatorType" : "client-secret",
@@ -1591,12 +1591,12 @@
     "id" : "2f766f4f-1104-46cb-93c7-3b245e21eb1b",
     "clientId" : "security-admin-console",
     "name" : "${client_security-admin-console}",
-    "baseUrl" : "/auth/admin/Renga/console/index.html",
+    "baseUrl" : "/auth/admin/Renku/console/index.html",
     "surrogateAuthRequired" : false,
     "enabled" : true,
     "clientAuthenticatorType" : "client-secret",
     "secret" : "a58e1789-82dc-45a1-8efc-3ece38e4730a",
-    "redirectUris" : [ "/auth/admin/Renga/console/*" ],
+    "redirectUris" : [ "/auth/admin/Renku/console/*" ],
     "webOrigins" : [ ],
     "notBefore" : 0,
     "bearerOnly" : false,

@@ -1,4 +1,4 @@
-Helm Charts for Deploying RENGA on Kubernetes
+Helm Charts for Deploying RENKU on Kubernetes
 =============================================
 
 Testing locally
@@ -13,16 +13,16 @@ Requires minikube, kubectl and helm.
     $ make -C .. tag
     $ minikube addons enable coredns
     $ helm init
-    $ helm repo add renga https://swissdatasciencecenter.github.io/helm-charts/
-    $ helm dep build renga
+    $ helm repo add renku https://swissdatasciencecenter.github.io/helm-charts/
+    $ helm dep build renku
     $ helm install --name nginx-ingress --namespace kube-system stable/nginx-ingress --set controller.hostNetwork=true
-    $ helm upgrade renga --install \
-        --namespace renga \
+    $ helm upgrade renku --install \
+        --namespace renku \
         -f minikube-values.yaml \
-        --set global.renga.domain=$(minikube ip) \
+        --set global.renku.domain=$(minikube ip) \
         --set ui.gitlabUrl=http://$(minikube ip)/gitlab \
         --set jupyterhub.hub.extraEnv.GITLAB_HOST=http://$(minikube ip)/gitlab \
-        ./renga
+        ./renku
 
 Due to issue `minikube #1568
 <https://github.com/kubernetes/minikube/issues/1568>`_,
@@ -36,7 +36,7 @@ The platform takes some time to start, to check the pods status do:
 
 .. code-block:: console
 
-    $ kubectl -n renga get po --watch
+    $ kubectl -n renku get po --watch
 
 and wait until all pods are running.
 Now, we can go to: :code:`http://$(minikube-ip)/`
@@ -45,4 +45,4 @@ To run tests on the deployment, use
 
 .. code-block:: console
 
-    $ helm test --cleanup renga
+    $ helm test --cleanup renku

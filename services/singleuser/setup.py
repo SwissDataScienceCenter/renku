@@ -15,7 +15,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-"""Renga notebook extension."""
+"""Renku notebook extension."""
 
 from setuptools import find_packages, setup
 
@@ -64,7 +64,7 @@ setup(
     license='GPLv2',
     author='Swiss Data Science Center',
     author_email='info@datascience.ch',
-    url='https://github.com/SwissDataScienceCenter/renga',
+    url='https://github.com/SwissDataScienceCenter/renku',
     # packages=packages,
     py_modules=py_modules,
     zip_safe=False,

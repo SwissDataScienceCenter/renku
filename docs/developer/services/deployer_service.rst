@@ -14,7 +14,7 @@ access, and workload requirements.
 "Deployments" consist of two parts, an execution *context* and the *execution*
 itself. The deployer service keeps a record of the contexts and executions in a
 local database. However, the service optionally pushes the relevant vertices
-and edges in the Renga :ref:`knowledge_graph` if the graph mutation service is
+and edges in the Renku :ref:`knowledge_graph` if the graph mutation service is
 configured.
 
 
@@ -58,12 +58,12 @@ are specified as environment variables to allow for container orchestration.
 *DEPLOYER_APP_NAME*: Application name. (default ``demo-client``)
 
 *DEPLOYER_AUTHORIZATION_URL*: OpenID-Connect authorization endpoint.
-(default ``http://localhost:8080/auth/realms/Renga/protocol/openid-connect/auth``)
+(default ``http://localhost:8080/auth/realms/Renku/protocol/openid-connect/auth``)
 
 *DEPLOYER_BASE_PATH*: Base path for the API. (default ``/v1``)
 
 *DEPLOYER_BASE_TEMPLATE*: Default base template for the demo page. (default
-``renga_deployer/base.html``)
+``renku_deployer/base.html``)
 
 *DEPLOYER_CLIENT_ID*: Client identifier used for OIDC authentication. (default
 ``demo-client``)
@@ -72,7 +72,7 @@ are specified as environment variables to allow for container orchestration.
 (default ``None``)
 
 *DEPLOYER_JWT_ISSUER*: JWT issuer used for token verification. (default
-``http://localhost:8080/auth/realms/Renga``)
+``http://localhost:8080/auth/realms/Renku``)
 
 *DEPLOYER_JWT_KEY*: Public key used to verify JWT tokens. (default ``None``)
 
@@ -83,20 +83,20 @@ are specified as environment variables to allow for container orchestration.
 (default ``None``)
 
 *DEPLOYER_TOKEN_URL*: OpenID-Connect token endpoint. (default
-``http://localhost:8080/auth/realms/Renga/protocol/openid-connect/token``)
+``http://localhost:8080/auth/realms/Renku/protocol/openid-connect/token``)
 
 *DEPLOYER_URL*: Base URL for the service. (default ``http://localhost:5000``)
 
 *KNOWLEDGE_GRAPH_URL*:  If set, push contexts and executions to the
 KnowledgeGraph. (default ``None``)
 
-*RENGA_AUTHORIZATION_CLIENT_ID*:  Client id for fetching the service access
+*RENKU_AUTHORIZATION_CLIENT_ID*:  Client id for fetching the service access
 token. (default ``None``)
 
-*RENGA_AUTHORIZATION_CLIENT_SECRET*:  Client secret for fetching the service
+*RENKU_AUTHORIZATION_CLIENT_SECRET*:  Client secret for fetching the service
 access token. (default ``None``)
 
-*RENGA_ENDPOINT*: URL for other platform services. (default
+*RENKU_ENDPOINT*: URL for other platform services. (default
 ``http://localhost/api``)
 
 *RESOURCE_MANAGER_URL*: If set, obtain and validate ResourceManager

@@ -1,4 +1,0 @@
-The RENGA platform has been deployed to your cluster.
-
-If all things were set up correctly, you will soon be able to access it at:
-{{ template "http" . }}://{{ .Values.global.renga.domain }}/

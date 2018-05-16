@@ -61,7 +61,7 @@ class GitCommitHandler(IPythonHandler):
         project = os.getenv('CI_PROJECT')
         env_slug = os.getenv('CI_ENVIRONMENT_SLUG')
         ref = os.getenv('CI_COMMIT_SHA')
-        url = os.environ.get('GITLAB_HOST', 'http://gitlab.renga.build')
+        url = os.environ.get('GITLAB_HOST', 'http://gitlab.renku.build')
 
         #: Use GitLab REST API.
         gl = gitlab.Gitlab(url, api_version=4, oauth_token=access_token)

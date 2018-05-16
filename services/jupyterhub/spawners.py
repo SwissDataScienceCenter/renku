@@ -36,7 +36,7 @@ class SpawnerMixin():
         namespace = options.get('namespace')
         project = options.get('project')
 
-        url = os.environ.get('GITLAB_HOST', 'http://gitlab.renga.local')
+        url = os.environ.get('GITLAB_HOST', 'http://gitlab.renku.local')
 
         scheme, netloc, path, query, fragment = urlsplit(url)
 
@@ -62,7 +62,7 @@ class SpawnerMixin():
             'CI_COMMIT_SHA':
                 self.user_options.get('commit_sha', ''),
             'GITLAB_HOST':
-                os.environ.get('GITLAB_HOST', 'http://gitlab.renga.build'),
+                os.environ.get('GITLAB_HOST', 'http://gitlab.renku.build'),
         })
         return environment
 
@@ -84,7 +84,7 @@ class SpawnerMixin():
         namespace = options.get('namespace')
         project = options.get('project')
 
-        url = os.getenv('GITLAB_HOST', 'http://gitlab.renga.build')
+        url = os.getenv('GITLAB_HOST', 'http://gitlab.renku.build')
 
         gl = gitlab.Gitlab(
             url, api_version=4, oauth_token=auth_state['access_token']
@@ -229,8 +229,8 @@ try:
             )
             return result
 
-    class RengaDockerSpawner(SpawnerMixin, RepoVolume, DockerSpawner):
-        """A class for spawning notebooks on Renga-JupyterHub using Docker."""
+    class RenkuDockerSpawner(SpawnerMixin, RepoVolume, DockerSpawner):
+        """A class for spawning notebooks on Renku-JupyterHub using Docker."""
 
 except ImportError:
     pass
@@ -239,8 +239,8 @@ try:
     from kubernetes import client
     from kubespawner import KubeSpawner
 
-    class RengaKubeSpawner(SpawnerMixin, KubeSpawner):
-        """A class for spawning notebooks on Renga-JupyterHub using K8S."""
+    class RenkuKubeSpawner(SpawnerMixin, KubeSpawner):
+        """A class for spawning notebooks on Renku-JupyterHub using K8S."""
 
         @gen.coroutine
         def get_pod_manifest(self):
@@ -250,7 +250,7 @@ try:
             options = self.user_options
 
             # https://gist.github.com/tallclair/849601a16cebeee581ef2be50c351841
-            container_name = 'renga-' + self.pod_name
+            container_name = 'renku-' + self.pod_name
             name = self.pod_name + '-git-repo'
 
             #: Define a new empty volume.
@@ -272,7 +272,7 @@ try:
             #: Define an init container.
             self.singleuser_init_containers = [
                 container for container in self.singleuser_init_containers
-                if not container.name.startswith('renga-')
+                if not container.name.startswith('renku-')
             ]
             init_container = client.V1Container(
                 name=container_name,

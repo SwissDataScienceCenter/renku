@@ -49,4 +49,4 @@ spec:
       volumes:
         - name: init
           configMap:
-            name: {{ template "renga.fullname" . }}
+            name: {{ template "renku.fullname" . }}

@@ -290,14 +290,14 @@ Code Modules
   with definitions in type_init.json_
 - graph-navigation_ - contains code to read the graph without a gremlin-shell
 
-.. _graph-core: https://github.com/SwissDataScienceCenter/renga-graph/tree/master/core
-.. _graph-typesystem: https://github.com/SwissDataScienceCenter/renga-graph/tree/master/typesystem
-.. _graph-mutation: https://github.com/SwissDataScienceCenter/renga-graph/tree/master/mutation
-.. _graph-init: https://github.com/SwissDataScienceCenter/renga-graph/tree/master/init
-.. _graph-navigation: https://github.com/SwissDataScienceCenter/renga-graph/tree/master/navigation/service
+.. _graph-core: https://github.com/SwissDataScienceCenter/renku-graph/tree/master/core
+.. _graph-typesystem: https://github.com/SwissDataScienceCenter/renku-graph/tree/master/typesystem
+.. _graph-mutation: https://github.com/SwissDataScienceCenter/renku-graph/tree/master/mutation
+.. _graph-init: https://github.com/SwissDataScienceCenter/renku-graph/tree/master/init
+.. _graph-navigation: https://github.com/SwissDataScienceCenter/renku-graph/tree/master/navigation/service
 
-.. _type_init.json: https://github.com/SwissDataScienceCenter/renga-graph/blob/master/init/src/main/resources/type_init.json
-.. _VertexReader: https://github.com/SwissDataScienceCenter/renga-graph/blob/master/core/src/main/scala/ch/datascience/graph/elements/tinkerpop_mappers/VertexIdReader.scala
-.. _EdgeReader: https://github.com/SwissDataScienceCenter/renga-graph/blob/master/core/src/main/scala/ch/datascience/graph/elements/tinkerpop_mappers/EdgeReader.scala
-.. _mutation API spec: https://github.com/SwissDataScienceCenter/renga-graph/blob/master/mutation/service/swagger.yml
-.. _`ch.datascience.graph.types`: https://github.com/SwissDataScienceCenter/renga-graph/tree/master/core/src/main/scala/ch/datascience/graph/types
+.. _type_init.json: https://github.com/SwissDataScienceCenter/renku-graph/blob/master/init/src/main/resources/type_init.json
+.. _VertexReader: https://github.com/SwissDataScienceCenter/renku-graph/blob/master/core/src/main/scala/ch/datascience/graph/elements/tinkerpop_mappers/VertexIdReader.scala
+.. _EdgeReader: https://github.com/SwissDataScienceCenter/renku-graph/blob/master/core/src/main/scala/ch/datascience/graph/elements/tinkerpop_mappers/EdgeReader.scala
+.. _mutation API spec: https://github.com/SwissDataScienceCenter/renku-graph/blob/master/mutation/service/swagger.yml
+.. _`ch.datascience.graph.types`: https://github.com/SwissDataScienceCenter/renku-graph/tree/master/core/src/main/scala/ch/datascience/graph/types

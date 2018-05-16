@@ -9,10 +9,10 @@
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
-  name: {{ template "renga.fullname" . }}
+  name: {{ template "renku.fullname" . }}
   labels:
-    app: {{ template "renga.name" . }}
-    chart: {{ template "renga.chart" . }}
+    app: {{ template "renku.name" . }}
+    chart: {{ template "renku.chart" . }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
   annotations:

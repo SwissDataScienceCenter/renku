@@ -1,4 +1,4 @@
-## Default values for renga.
+## Default values for renku.
 ## This is a YAML-formatted file.
 ## Declare variables to be passed into your templates.
 
@@ -35,8 +35,8 @@ global:
     postgresUser: jupyterhub
     ## Postgres password for the jupyterhub database
     postgresPassword: jupyterhub
-  renga:
-    ## Domain name for the deployed instance of renga
+  renku:
+    ## Domain name for the deployed instance of renku
     domain: example.local
   ## Set to true if using https
   useHTTPS: false
@@ -55,7 +55,7 @@ ingress:
     nginx.ingress.kubernetes.io/proxy-body-size: '0' # Adjust to a reasonable value for production to avoid DOS attacks.
 
   ## Hosts for the ingress
-  ## Should include at least the value from `global.renga.domain`
+  ## Should include at least the value from `global.renku.domain`
   hosts:
   - example.local
 
@@ -261,7 +261,7 @@ ui:
   ## UI image
   # image:
   #   pullPolicy: Always
-  #   repository: rengahub/renga-ui
+  #   repository: renkuhub/renku-ui
   #   tag: development
 
   ingress:
@@ -289,7 +289,7 @@ jupyterhub:
     enabled: true
   hub:
     image:
-      name: rengahub/jupyterhub-k8s
+      name: renkuhub/jupyterhub-k8s
       tag: development
     services:
       notebooks:
@@ -299,7 +299,7 @@ jupyterhub:
     extraEnv:
       DEBUG: 1
       JUPYTERHUB_NOTEBOOK_DIR: '/repo'
-      JUPYTERHUB_SPAWNER_CLASS: spawners.RengaKubeSpawner
+      JUPYTERHUB_SPAWNER_CLASS: spawners.RenkuKubeSpawner
     extraConfig: |
       import os
 
@@ -313,7 +313,7 @@ jupyterhub:
       c.JupyterHub.spawner_class = os.getenv('JUPYTERHUB_SPAWNER_CLASS',
                                            'spawners.Spawner')
 
-      c.RengaKubeSpawner.pod_name_template = 'jupyterhub-{username}-{servername}'
+      c.RenkuKubeSpawner.pod_name_template = 'jupyterhub-{username}-{servername}'
 
       #: Explicitly set notebook directory because we'll be mounting a host volume to
       #: it.  Most jupyter/docker-stacks *-notebook images run the Notebook server as
@@ -333,7 +333,7 @@ jupyterhub:
       type: postgres
   singleuser:
     image:
-      name: rengahub/singleuser
+      name: renkuhub/singleuser
       tag: development
     storage:
       type: none

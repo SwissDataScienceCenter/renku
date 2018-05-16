@@ -15,7 +15,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-"""Renga integration tests."""
+"""Renku integration tests."""
 
 import os
 from urllib.parse import urljoin
@@ -24,8 +24,8 @@ import pytest
 import splinter
 
 
-def test_renga_login(browser):
-    """Test Renga login."""
+def test_renku_login(browser):
+    """Test Renku login."""
     url = urljoin(os.getenv('RENGA_ENDPOINT', 'http://localhost'), '/login')
     browser.visit(url)
 
@@ -33,4 +33,4 @@ def test_renga_login(browser):
     browser.fill('username', 'demo')
     browser.fill('password', 'demo')
     browser.find_by_id('kc-login').click()
-    assert 'Renga' in browser.title
+    assert 'Renku' in browser.title

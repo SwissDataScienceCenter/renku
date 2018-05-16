@@ -62,7 +62,7 @@ Storage endpoints
 
 The storage API provides the following endpoints (`storage API spec`_).
 
-.. _storage API spec: https://github.com/SwissDataScienceCenter/renga-storage/blob/master/swagger.yml
+.. _storage API spec: https://github.com/SwissDataScienceCenter/renku-storage/blob/master/swagger.yml
 
 Authorization
 ^^^^^^^^^^^^^

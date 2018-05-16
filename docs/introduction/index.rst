@@ -1,6 +1,6 @@
 .. warning::
 
-  **This is a development version of Renga - expect things to change without
+  **This is a development version of Renku - expect things to change without
   notice**
 
   This platform is a (very early) beta version. It is made available to early
@@ -12,7 +12,7 @@
   capture and workflow generation are available via the CLI.We provide no
   guarantee whatsoever about the security of the data stored on this platform.
 
-.. _renga_introduction:
+.. _renku_introduction:
 
 
 Introduction
@@ -20,13 +20,13 @@ Introduction
 
 .. epigraph::
 
-   **Renga** (連歌), *plural* **renga**, *a genre of Japanese linked-verse
+   **Renku** (連歌), *plural* **renku**, *a genre of Japanese linked-verse
    poetry in which two or more poets supply alternating sections of a poem
    linked by verbal and thematic associations.*
 
    -- Encyclopædia Britannica
 
-**Renga** is a scalable and secure open software platform designed to
+**Renku** is a scalable and secure open software platform designed to
 foster multidisciplinary data (science) collaboration.
 
 The platform allows (data)scientists to:
@@ -41,12 +41,12 @@ The platform allows (data)scientists to:
 Philosophy
 ----------
 
-As in the traditional art form of renga from which it borrows its name, the
+As in the traditional art form of renku from which it borrows its name, the
 platform encourages the interdisciplinary cooperation (or coopetition) between
 data scientists to advance a research agenda through individual leap
 contributions.
 
-In the same spirit, **Renga's** philosophy is to mobilize and connect skills
+In the same spirit, **Renku's** philosophy is to mobilize and connect skills
 from the data science community, to enhance their collective intelligence, and
 to allow the discovery of knowledge without premeditation. From the users’
 perspective, it is essentially a digital canvas where data science projects
@@ -85,11 +85,11 @@ accidental data duplication as much as possible.
 History
 -------
 
-- 2017.09.19  **Renga** 0.1.0 (Beta) is released to the public, with some of
+- 2017.09.19  **Renku** 0.1.0 (Beta) is released to the public, with some of
   the planned features and all the faults.
 
 - 2017.02.06  Inauguration of the Swiss Data Science Center, design of
-  **Renga** is started.
+  **Renku** is started.
 
 
 Disclaimer

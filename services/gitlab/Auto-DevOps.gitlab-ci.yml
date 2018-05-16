@@ -1,4 +1,4 @@
-# renga: v1.dev20180404
+# renku: v1.dev20180404
 
 stages:
   - build
@@ -8,7 +8,7 @@ dot:
   stage: build
   script:
     - pip install --user pydot
-    - python -c "import renga, networkx; graph = renga.cli._graph.Graph(renga.LocalClient()); graph.build_status(); networkx.drawing.nx_pydot.write_dot(graph.G, 'graph.dot')"
+    - python -c "import renku, networkx; graph = renku.cli._graph.Graph(renku.LocalClient()); graph.build_status(); networkx.drawing.nx_pydot.write_dot(graph.G, 'graph.dot')"
   artifacts:
     paths:
       - graph.dot

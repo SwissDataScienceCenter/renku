@@ -15,20 +15,20 @@
     See the License for the specific language governing permissions and
     limitations under the License... raw:: html
 
-RENGA (連歌)
+RENKU (連歌)
 ============
 
-.. image:: https://img.shields.io/travis/SwissDataScienceCenter/renga.svg
-   :target: https://travis-ci.org/SwissDataScienceCenter/renga
+.. image:: https://img.shields.io/travis/SwissDataScienceCenter/renku.svg
+   :target: https://travis-ci.org/SwissDataScienceCenter/renku
 
-.. image:: https://readthedocs.org/projects/renga/badge/?version=development
-    :target: http://renga.readthedocs.io/en/development/?badge=development
+.. image:: https://readthedocs.org/projects/renku/badge/?version=development
+    :target: http://renku.readthedocs.io/en/development/?badge=development
     :alt: Documentation Status
 
 **This is a development branch where anything can change without a prior notice.
 It should be used in conjunction with development branches from other repositories.**
 
-**Renga** is a highly-scalable & secure open software platform designed to
+**Renku** is a highly-scalable & secure open software platform designed to
 foster multidisciplinary data (science) collaboration.
 
 The platform allows practitioners to:
@@ -49,18 +49,18 @@ Starting the platform
 
 Please follow the output for next instructions.
 
-A python CLI and API client is available in the `renga-python
-<https://github.com/SwissDataScienceCenter/renga-python>`_ package.
+A python CLI and API client is available in the `renku-python
+<https://github.com/SwissDataScienceCenter/renku-python>`_ package.
 
 
 Where to go next
 ----------------
 
 The full documentation is available at
-https://renga.readthedocs.io/en/development.
+https://renku.readthedocs.io/en/development.
 
 First-time users should try our `first steps
-<https://renga.readthedocs.io/en/development/user/firststeps.html>`_ tutorial.
+<https://renku.readthedocs.io/en/development/user/firststeps.html>`_ tutorial.
 
 
 Contributing

@@ -48,8 +48,8 @@ spec:
             secretKeyRef:
               name: {{ template "gitlab.fullname" . }}
               key: gitlab-password
-        - name: RENGA_DOMAIN
-          value: {{ .Values.global.renga.domain }}
+        - name: RENKU_DOMAIN
+          value: {{ .Values.global.renku.domain }}
         ports:
         - name: ssh
           containerPort: 22
