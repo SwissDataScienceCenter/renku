@@ -1,12 +1,12 @@
 {{/* vim: set filetype=mustache: */}}
 {{/*
-Define the RENGA realm
-TODO: Put back template strings from renga/services/keycloak/renga-realm.json.tpl
+Define the RENKU realm
+TODO: Put back template strings from renku/services/keycloak/renku-realm.json.tpl
 */}}
-{{- define "keycloak.renga.realm" -}}
+{{- define "keycloak.renku.realm" -}}
 {
-  "id" : "Renga",
-  "realm" : "Renga",
+  "id" : "Renku",
+  "realm" : "Renku",
   "notBefore" : 0,
   "revokeRefreshToken" : false,
   "accessTokenLifespan" : 3000,
@@ -45,7 +45,7 @@ TODO: Put back template strings from renga/services/keycloak/renga-realm.json.tp
       "scopeParamRequired" : true,
       "composite" : false,
       "clientRole" : false,
-      "containerId" : "Renga"
+      "containerId" : "Renku"
     }, {
       "id" : "25387a4d-53b8-4168-9601-48e9b83a71c7",
       "name" : "uma_authorization",
@@ -53,7 +53,7 @@ TODO: Put back template strings from renga/services/keycloak/renga-realm.json.tp
       "scopeParamRequired" : false,
       "composite" : false,
       "clientRole" : false,
-      "containerId" : "Renga"
+      "containerId" : "Renku"
     } ],
     "client" : {
       "realm-management" : [ {
@@ -226,7 +226,7 @@ TODO: Put back template strings from renga/services/keycloak/renga-realm.json.tp
       } ],
       "demo-client" : [ ],
       "security-admin-console" : [ ],
-      "renga-services" : [ ],
+      "renku-services" : [ ],
       "admin-cli" : [ ],
       "broker" : [ {
         "id" : "d463f205-b2ea-4a83-b9f5-f72a811774c3",
@@ -328,12 +328,12 @@ TODO: Put back template strings from renga/services/keycloak/renga-realm.json.tp
   }, {
     "id" : "33a710fa-b061-4562-b31e-c89842c687e6",
     "createdTimestamp" : 1504268926763,
-    "username" : "service-account-renga-services",
+    "username" : "service-account-renku-services",
     "enabled" : true,
     "totp" : false,
     "emailVerified" : false,
-    "email" : "service-account-renga-services@placeholder.org",
-    "serviceAccountClientId" : "renga-services",
+    "email" : "service-account-renku-services@placeholder.org",
+    "serviceAccountClientId" : "renku-services",
     "credentials" : [ ],
     "disableableCredentialTypes" : [ ],
     "requiredActions" : [ ],
@@ -355,18 +355,18 @@ TODO: Put back template strings from renga/services/keycloak/renga-realm.json.tp
   "clients" : [
   {
     "id": "4622f33f-e0ca-401f-b6a5-a5e55f937ffb",
-    "clientId": "renga-ui",
+    "clientId": "renku-ui",
     "adminUrl": "",
-    "baseUrl": "{{ template "http" . }}://{{ .Values.global.renga.domain }}",
+    "baseUrl": "{{ template "http" . }}://{{ .Values.global.renku.domain }}",
     "surrogateAuthRequired": false,
     "enabled": true,
     "clientAuthenticatorType": "client-secret",
     "secret": "no-secret-defined",
     "redirectUris": [
-      "{{ template "http" . }}://{{ .Values.global.renga.domain }}/*"
+      "{{ template "http" . }}://{{ .Values.global.renku.domain }}/*"
     ],
     "webOrigins": [
-      "{{ template "http" . }}://{{ .Values.global.renga.domain }}"
+      "{{ template "http" . }}://{{ .Values.global.renku.domain }}"
     ],
     "notBefore": 0,
     "bearerOnly": false,
@@ -488,13 +488,13 @@ TODO: Put back template strings from renga/services/keycloak/renga-realm.json.tp
   }, {
     "id": "0c9dab4c-ce06-44a7-ba4e-6ce969c5e5cb",
     "clientId": "gitlab",
-    "baseUrl": "{{ template "http" . }}://{{ .Values.global.renga.domain }}/gitlab",
+    "baseUrl": "{{ template "http" . }}://{{ .Values.global.renku.domain }}/gitlab",
     "surrogateAuthRequired": false,
     "enabled": true,
     "clientAuthenticatorType": "client-secret",
     "secret": "{{ .Values.global.gitlab.clientSecret }}",
     "redirectUris": [
-      "{{ template "http" . }}://{{ .Values.global.renga.domain }}/gitlab/users/auth/oauth2_generic/callback"
+      "{{ template "http" . }}://{{ .Values.global.renku.domain }}/gitlab/users/auth/oauth2_generic/callback"
     ],
     "webOrigins": [],
     "notBefore": 0,
@@ -699,13 +699,13 @@ TODO: Put back template strings from renga/services/keycloak/renga-realm.json.tp
     "id" : "84027d06-f768-40f0-a6c7-c1e4fb405b76",
     "clientId" : "account",
     "name" : "${client_account}",
-    "baseUrl" : "/auth/realms/Renga/account",
+    "baseUrl" : "/auth/realms/Renku/account",
     "surrogateAuthRequired" : false,
     "enabled" : true,
     "clientAuthenticatorType" : "client-secret",
     "secret" : "66e487de-a299-4273-bd9a-16096a82f5f3",
     "defaultRoles" : [ "manage-account", "view-profile" ],
-    "redirectUris" : [ "/auth/realms/Renga/account/*" ],
+    "redirectUris" : [ "/auth/realms/Renku/account/*" ],
     "webOrigins" : [ ],
     "notBefore" : 0,
     "bearerOnly" : false,
@@ -1031,8 +1031,8 @@ TODO: Put back template strings from renga/services/keycloak/renga-realm.json.tp
     "enabled" : true,
     "clientAuthenticatorType" : "client-secret",
     "secret" : "5294a18e-e784-4e39-a927-ce816c91c83e",
-    "redirectUris" : [ "{{ template "http" . }}://{{ .Values.global.renga.domain }}/*" ],
-    "webOrigins" : [ "{{ template "http" . }}://{{ .Values.global.renga.domain }}" ],
+    "redirectUris" : [ "{{ template "http" . }}://{{ .Values.global.renku.domain }}/*" ],
+    "webOrigins" : [ "{{ template "http" . }}://{{ .Values.global.renku.domain }}" ],
     "notBefore" : 0,
     "bearerOnly" : false,
     "consentRequired" : false,
@@ -1300,7 +1300,7 @@ TODO: Put back template strings from renga/services/keycloak/renga-realm.json.tp
     "useTemplateMappers" : false
   }, {
     "id" : "c8fc33a7-6a6e-4a2a-b05c-b3ecea717db8",
-    "clientId" : "renga-services",
+    "clientId" : "renku-services",
     "surrogateAuthRequired" : false,
     "enabled" : true,
     "clientAuthenticatorType" : "client-secret",
@@ -1463,12 +1463,12 @@ TODO: Put back template strings from renga/services/keycloak/renga-realm.json.tp
     "id" : "2f766f4f-1104-46cb-93c7-3b245e21eb1b",
     "clientId" : "security-admin-console",
     "name" : "${client_security-admin-console}",
-    "baseUrl" : "/auth/admin/Renga/console/index.html",
+    "baseUrl" : "/auth/admin/Renku/console/index.html",
     "surrogateAuthRequired" : false,
     "enabled" : true,
     "clientAuthenticatorType" : "client-secret",
     "secret" : "a58e1789-82dc-45a1-8efc-3ece38e4730a",
-    "redirectUris" : [ "/auth/admin/Renga/console/*" ],
+    "redirectUris" : [ "/auth/admin/Renku/console/*" ],
     "webOrigins" : [ ],
     "notBefore" : 0,
     "bearerOnly" : false,

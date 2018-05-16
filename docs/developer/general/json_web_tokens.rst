@@ -65,7 +65,7 @@ About Resource Manager Tokens
 -----------------------------
 
 The API for obtaining signed tokens from the resource manager is described in
-`this swagger file <https://github.com/SwissDataScienceCenter/renga-
+`this swagger file <https://github.com/SwissDataScienceCenter/renku-
 authorization/blob/master/swagger.yml>`_.
 
 Notes on the request:

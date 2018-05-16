@@ -2,7 +2,7 @@
 {{/*
 Expand the name of the chart.
 */}}
-{{- define "renga-logging.name" -}}
+{{- define "renku.name" -}}
 {{- default .Chart.Name .Values.nameOverride | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 
@@ -11,7 +11,7 @@ Create a default fully qualified app name.
 We truncate at 63 chars because some Kubernetes name fields are limited to this (by the DNS naming spec).
 If release name contains chart name it will be used as a full name.
 */}}
-{{- define "renga-logging.fullname" -}}
+{{- define "renku.fullname" -}}
 {{- if .Values.fullnameOverride -}}
 {{- .Values.fullnameOverride | trunc 63 | trimSuffix "-" -}}
 {{- else -}}
@@ -27,21 +27,44 @@ If release name contains chart name it will be used as a full name.
 {{/*
 Create chart name and version as used by the chart label.
 */}}
-{{- define "renga-logging.chart" -}}
+{{- define "renku.chart" -}}
 {{- printf "%s-%s" .Chart.Name .Chart.Version | replace "+" "_" | trunc 63 | trimSuffix "-" -}}
+{{- end -}}
+
+{{/*
+Define http scheme
+*/}}
+{{- define "http" -}}
+{{- if .Values.global.useHTTPS -}}
+https
+{{- else -}}
+http
+{{- end -}}
 {{- end -}}
 
 {{/*
 Define subcharts full names
 */}}
-{{- define "elasticsearch.fullname" -}}
-{{- printf "%s-%s-%s" .Release.Name "renga-logging" "elasticsearch" | replace "+" "_" | trunc 63 | trimSuffix "-" -}}
+{{- define "postgresql.fullname" -}}
+{{- printf "%s-%s" .Release.Name "postgresql" | replace "+" "_" | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 
-{{- define "logstash.fullname" -}}
-{{- printf "%s-%s-%s" .Release.Name "renga-logging" "logstash" | replace "+" "_" | trunc 63 | trimSuffix "-" -}}
+{{- define "keycloak.fullname" -}}
+{{- printf "%s-%s" .Release.Name "keycloak" | replace "+" "_" | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 
-{{- define "kibana.fullname" -}}
-{{- printf "%s-%s-%s" .Release.Name "renga-logging" "kibana" | replace "+" "_" | trunc 63 | trimSuffix "-" -}}
+{{- define "redis.fullname" -}}
+{{- printf "%s-%s" .Release.Name "redis" | replace "+" "_" | trunc 63 | trimSuffix "-" -}}
+{{- end -}}
+
+{{- define "gitlab.fullname" -}}
+{{- printf "%s-%s" .Release.Name "gitlab" | replace "+" "_" | trunc 63 | trimSuffix "-" -}}
+{{- end -}}
+
+{{- define "ui.fullname" -}}
+{{- printf "%s-%s" .Release.Name "ui" | replace "+" "_" | trunc 63 | trimSuffix "-" -}}
+{{- end -}}
+
+{{- define "jupyterhub.fullname" -}}
+{{- printf "%s-%s" .Release.Name "jupyterhub" | replace "+" "_" | trunc 63 | trimSuffix "-" -}}
 {{- end -}}

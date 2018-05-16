@@ -1,11 +1,11 @@
 .. _developer_web:
 
 
-Renga Web API
+Renku Web API
 =============
 
 This page describes a set of rules and recommendations that a developer of
-any **Renga** related web service should follow when developing new or
+any **Renku** related web service should follow when developing new or
 refactoring existing code.
 
 .. note::

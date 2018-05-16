@@ -1,10 +1,10 @@
 .. _service_architecture:
 
-Renga Architecture
+Renku Architecture
 ==================
 
 This document describes the architecture of the (web) services that are part
-of the **Renga** platform.
+of the **Renku** platform.
 
 .. contents::
     :depth: 1
@@ -16,7 +16,7 @@ of the **Renga** platform.
 
    -- Service Architecture
 
-As depicted in :numref:`fig-architecture`, **Renga** operates as a middleware
+As depicted in :numref:`fig-architecture`, **Renku** operates as a middleware
 that sits between applications, backend computing, and storage services.
 Applications interact with the platform services via client application
 programming interfaces. The interfaces are packaged as a collection of

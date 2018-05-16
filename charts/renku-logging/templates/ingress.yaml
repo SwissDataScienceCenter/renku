@@ -7,10 +7,10 @@
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
-  name: {{ template "renga-logging.fullname" . }}
+  name: {{ template "renku-logging.fullname" . }}
   labels:
-    app: {{ template "renga-logging.name" . }}
-    chart: {{ template "renga-logging.chart" . }}
+    app: {{ template "renku-logging.name" . }}
+    chart: {{ template "renku-logging.chart" . }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
     {{- range $key, $value := .Values.ingress.labels }}

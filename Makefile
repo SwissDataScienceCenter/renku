@@ -26,7 +26,7 @@ endif
 
 # Use build instead of local. See GitLab-CE issue:
 # https://gitlab.com/gitlab-org/gitlab-ce/issues/45008
-PLATFORM_DOMAIN?=renga.build
+PLATFORM_DOMAIN?=renku.build
 
 PLATFORM_BASE_DIR?=..
 PLATFORM_BASE_REPO_URL?=https://github.com/SwissDataScienceCenter
@@ -50,7 +50,7 @@ JUPYTERHUB_URL?=http://jupyterhub.$(PLATFORM_DOMAIN)
 
 PLAY_APPLICATION_SECRET?=$(shell openssl rand -hex 32)
 
-DOCKER_REPOSITORY?=rengahub/
+DOCKER_REPOSITORY?=renkuhub/
 DOCKER_PREFIX:=${DOCKER_REGISTRY}$(DOCKER_REPOSITORY)
 DOCKER_NETWORK?=review
 DOCKER_COMPOSE_ENV=\
@@ -70,8 +70,8 @@ DOCKER_COMPOSE_ENV=\
 	PLATFORM_DOMAIN=$(PLATFORM_DOMAIN) \
 	PLATFORM_VERSION=$(PLATFORM_VERSION) \
 	PLAY_APPLICATION_SECRET=$(PLAY_APPLICATION_SECRET) \
-	RENGA_ENDPOINT=$(RENGA_ENDPOINT) \
-	RENGA_UI_URL=$(RENGA_UI_URL)
+	RENKU_ENDPOINT=$(RENKU_ENDPOINT) \
+	RENKU_UI_URL=$(RENKU_UI_URL)
 
 SBT_IVY_DIR := $(PWD)/.ivy
 SBT = sbt -ivy $(SBT_IVY_DIR)
@@ -82,15 +82,15 @@ ifndef KEYCLOAK_URL
 	export KEYCLOAK_URL
 endif
 
-ifndef RENGA_ENDPOINT
-	RENGA_ENDPOINT=http://$(PLATFORM_DOMAIN)
-	export RENGA_ENDPOINT
+ifndef RENKU_ENDPOINT
+	RENKU_ENDPOINT=http://$(PLATFORM_DOMAIN)
+	export RENKU_ENDPOINT
 endif
 
-ifndef RENGA_UI_URL
+ifndef RENKU_UI_URL
 	# The ui should run under localhost instead of docker.for.mac.localhost
-	RENGA_UI_URL=http://$(PLATFORM_DOMAIN)
-	export RENGA_UI_URL
+	RENKU_UI_URL=http://$(PLATFORM_DOMAIN)
+	export RENKU_UI_URL
 endif
 
 ifndef GITLAB_CLIENT_SECRET
@@ -118,20 +118,20 @@ export DOCKER_BUILD
 
 # Please keep values bellow sorted. Thank you!
 repos = \
-	renga-storage \
-	renga-python \
-	renga-ui
+	renku-storage \
+	renku-python \
+	renku-ui
 
 scala-services = \
-	renga-storage
+	renku-storage
 
 makefile-services = \
- 	renga-ui \
- 	renga-python
+ 	renku-ui \
+ 	renku-python
 
 scala-artifact = \
-	renga-commons \
-	renga-graph
+	renku-commons \
+	renku-graph
 
 dockerfile-services = \
 	keycloak \
@@ -168,7 +168,7 @@ pull: $(foreach s, $(repos), $(s)-pull)
 	cd $< && $(SBT) $(SBT_PUBLISH_TARGET)
 	rm -rf $(SBT_IVY_DIR)/cache/ch.datascience/$(*)*
 
-renga-graph-%-scala: $(PLATFORM_BASE_DIR)/renga-graph $(scala-artifact)
+renku-graph-%-scala: $(PLATFORM_BASE_DIR)/renku-graph $(scala-artifact)
 	cd $< && echo "project $*\n$$DOCKER_BUILD" | $(SBT)
 
 %-scala: $(PLATFORM_BASE_DIR)/% $(scala-artifact)
@@ -179,7 +179,7 @@ $(scala-services): %: %-scala
 $(scala-artifact): %: %-artifact
 
 # define this dependency explicitly
-renga-commons-artifact: renga-graph-artifact
+renku-commons-artifact: renku-graph-artifact
 
 # build docker images
 .PHONY: $(dockerfile-services)
@@ -237,7 +237,7 @@ enable-gitlab-auto-devops:
 register-gitlab-oauth-applications: .env unregister-gitlab-oauth-applications
 	@docker-compose exec gitlab /opt/gitlab/bin/gitlab-psql \
 		-h /var/opt/gitlab/postgresql -d gitlabhq_production \
-		-c "INSERT INTO oauth_applications (name, uid, scopes, redirect_uri, secret, trusted) VALUES ('renga-ui', 'renga-ui', 'api read_user', '$(RENGA_UI_URL)/login/redirect/gitlab http://localhost:3000/login/redirect/gitlab', 'no-secret-needed', 'true')" > /dev/null 2>&1
+		-c "INSERT INTO oauth_applications (name, uid, scopes, redirect_uri, secret, trusted) VALUES ('renku-ui', 'renku-ui', 'api read_user', '$(RENKU_UI_URL)/login/redirect/gitlab http://localhost:3000/login/redirect/gitlab', 'no-secret-needed', 'true')" > /dev/null 2>&1
 
 	@docker-compose exec gitlab /opt/gitlab/bin/gitlab-psql \
 		-h /var/opt/gitlab/postgresql -d gitlabhq_production \
@@ -246,7 +246,7 @@ register-gitlab-oauth-applications: .env unregister-gitlab-oauth-applications
 unregister-gitlab-oauth-applications: .env
 	@docker-compose exec gitlab /opt/gitlab/bin/gitlab-psql \
 		-h /var/opt/gitlab/postgresql -d gitlabhq_production \
-		-c "DELETE FROM oauth_applications WHERE uid='renga-ui'" > /dev/null 2>&1
+		-c "DELETE FROM oauth_applications WHERE uid='renku-ui'" > /dev/null 2>&1
 
 	@docker-compose exec gitlab /opt/gitlab/bin/gitlab-psql \
 		-h /var/opt/gitlab/postgresql -d gitlabhq_production \
@@ -276,7 +276,7 @@ configure-gitlab-login: .env
 	  -H 'Content-Type: application/json' \
 	  ${GITLAB_URL}/api/v4/users > /dev/null 2>&1
 	@curl -X PUT -H "Private-token: ${GITLAB_TOKEN}" \
-	  ${GITLAB_URL}/api/v4/application/settings?after_sign_out_path=${KEYCLOAK_URL}/auth/realms/Renga/protocol/openid-connect/logout?redirect_uri=${GITLAB_URL} > /dev/null 2>&1
+	  ${GITLAB_URL}/api/v4/application/settings?after_sign_out_path=${KEYCLOAK_URL}/auth/realms/Renku/protocol/openid-connect/logout?redirect_uri=${GITLAB_URL} > /dev/null 2>&1
 
 register-runners: .env unregister-runners
 ifeq (${GITLAB_RUNNERS_TOKEN},)
@@ -289,12 +289,12 @@ endif
 			--name $$container-shell \
 			-r ${GITLAB_RUNNERS_TOKEN} \
 			--executor shell \
-			--env RENGA_REVIEW_DOMAIN=$(PLATFORM_DOMAIN) \
-			--env RENGA_RUNNER_NETWORK=$(DOCKER_NETWORK) \
+			--env RENKU_REVIEW_DOMAIN=$(PLATFORM_DOMAIN) \
+			--env RENKU_RUNNER_NETWORK=$(DOCKER_NETWORK) \
 			--locked=false \
 			--run-untagged=false \
 			--tag-list notebook \
-			--docker-image $(DOCKER_PREFIX)renga-python:$(PLATFORM_VERSION) \
+			--docker-image $(DOCKER_PREFIX)renku-python:$(PLATFORM_VERSION) \
 			--docker-network-mode=review \
 			--docker-pull-policy "if-not-present"; \
 		docker exec -ti $$container gitlab-runner register \
@@ -302,12 +302,12 @@ endif
 			--name $$container-docker \
 			-r ${GITLAB_RUNNERS_TOKEN} \
 			--executor docker \
-			--env RENGA_REVIEW_DOMAIN=$(PLATFORM_DOMAIN) \
-			--env RENGA_RUNNER_NETWORK=$(DOCKER_NETWORK) \
+			--env RENKU_REVIEW_DOMAIN=$(PLATFORM_DOMAIN) \
+			--env RENKU_RUNNER_NETWORK=$(DOCKER_NETWORK) \
 			--locked=false \
 			--run-untagged=false \
 			--tag-list cwl \
-			--docker-image $(DOCKER_PREFIX)renga-python:$(PLATFORM_VERSION) \
+			--docker-image $(DOCKER_PREFIX)renku-python:$(PLATFORM_VERSION) \
 			--docker-network-mode=review \
 			--docker-pull-policy "if-not-present"; \
 	done
@@ -315,7 +315,7 @@ endif
 	@echo "[Info] Edit gitlab/runner/config.toml to increase the number of concurrent runner jobs."
 	@echo
 	@echo "[Info] To make notebooks available as deployed environments, set the"
-	@echo "		RENGA_NOTEBOOK_TOKEN and RENGA_REVIEW_DOMAIN CI variables in gitlab project settings."
+	@echo "		RENKU_NOTEBOOK_TOKEN and RENKU_REVIEW_DOMAIN CI variables in gitlab project settings."
 
 unregister-runners: .env
 	@for container in $(shell docker-compose ps -q gitlab-runner) ; do \
@@ -349,7 +349,7 @@ ifeq ($(shell ping -c1 ${PLATFORM_DOMAIN} && ping -c1 gitlab.${PLATFORM_DOMAIN} 
 	@exit 1
 endif
 	@echo
-	@echo "[Success] Renga UI should be under $(RENGA_UI_URL) and GitLab under $(GITLAB_URL)"
+	@echo "[Success] Renku UI should be under $(RENKU_UI_URL) and GitLab under $(GITLAB_URL)"
 ifeq (${DOCKER_SCALE},)
 	@echo
 	@echo "[Info] You can configure scale parameters: DOCKER_SCALE=\"--scale gitlab-runner=4\" make start"

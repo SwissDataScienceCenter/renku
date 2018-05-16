@@ -9,5 +9,5 @@ metadata:
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
 data:
-  renga-realm.json: |-
-{{ include "keycloak.renga.realm" . | indent 4 }}
+  renku-realm.json: |-
+{{ include "keycloak.renku.realm" . | indent 4 }}

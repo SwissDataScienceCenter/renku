@@ -13,7 +13,7 @@ GitLab Omnibus configuration
 ##! URL on which GitLab will be reachable.
 ##! For more details on configuring external_url see:
 ##! https://docs.gitlab.com/omnibus/settings/configuration.html#configuring-the-external-url-for-gitlab
-external_url '{{ template "http" . }}://{{ .Values.global.renga.domain }}/gitlab'
+external_url '{{ template "http" . }}://{{ .Values.global.renku.domain }}/gitlab'
 
 ##! **Override only if you use a reverse proxy**
 ##! Docs: https://docs.gitlab.com/omnibus/settings/nginx.html#setting-the-nginx-listen-port
@@ -39,17 +39,17 @@ gitlab_rails['omniauth_providers'] = [
             # Traefik maps keycloak to the URL below
             # CAREFUL: This must be accessible from inside the keycloak container
             # for server-to-server communication.
-            'site' => '{{ template "http" . }}://{{ .Values.global.renga.domain }}/auth/',
-            'authorize_url' => '/auth/realms/Renga/protocol/openid-connect/auth',
-            'user_info_url' => '/auth/realms/Renga/protocol/openid-connect/userinfo',
-            'token_url' => '/auth/realms/Renga/protocol/openid-connect/token'
+            'site' => '{{ template "http" . }}://{{ .Values.global.renku.domain }}/auth/',
+            'authorize_url' => '/auth/realms/Renku/protocol/openid-connect/auth',
+            'user_info_url' => '/auth/realms/Renku/protocol/openid-connect/userinfo',
+            'token_url' => '/auth/realms/Renku/protocol/openid-connect/token'
           },
           user_response_structure: {
             attributes: { email:'email', first_name:'given_name', last_name:'family_name', name:'name', nickname:'preferred_username' }, # if the nickname attribute of a user is called 'username'
             id_path: 'preferred_username'
           }
         },
-        label: 'Renga Login'
+        label: 'Renku Login'
       }
     ]
 

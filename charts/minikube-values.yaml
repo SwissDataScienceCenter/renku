@@ -1,5 +1,5 @@
 #
-# Configuration file for deploying the renga chart on minikube
+# Configuration file for deploying the renku chart on minikube
 #
 
 ingress:

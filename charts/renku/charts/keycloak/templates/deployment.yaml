@@ -74,7 +74,7 @@ spec:
         - "-b 0.0.0.0"
         - "-Dkeycloak.migration.action=import"
         - "-Dkeycloak.migration.provider=singleFile"
-        - "-Dkeycloak.migration.file=/realms/renga-realm.json"
+        - "-Dkeycloak.migration.file=/realms/renku-realm.json"
         - "-Dkeycloak.migration.strategy=IGNORE_EXISTING"
         livenessProbe:
           httpGet:

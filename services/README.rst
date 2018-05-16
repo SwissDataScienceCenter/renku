@@ -16,10 +16,10 @@
     limitations under the License... raw:: html
 
 
-Renga - Services
+Renku - Services
 ================
 
 The directory contains configuration files and scripts to bootstrap
-services used by Renga Platform.
+services used by Renku Platform.
 
 **NOTE: Only services that needs special treatment are listed here.**

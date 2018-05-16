@@ -2,10 +2,10 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: {{ template "renga.fullname" . }}
+  name: {{ template "renku.fullname" . }}
   labels:
-    app: {{ template "renga.name" . }}
-    chart: {{ template "renga.chart" . }}
+    app: {{ template "renku.name" . }}
+    chart: {{ template "renku.chart" . }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
 data:
@@ -16,7 +16,7 @@ data:
     apt-get update -y
     apt-get install -y curl jq
 
-    BASE_URL="{{ (printf "http://%s" .Values.global.renga.domain) }}"
+    BASE_URL="{{ (printf "http://%s" .Values.global.renku.domain) }}"
     GITLAB_SERVICE_URL="{{ template "http" . }}://{{ template "gitlab.fullname" . }}{{ .Values.global.gitlab.urlPrefix }}"
     GITLAB_URL="{{ .Values.ui.gitlabUrl }}"
 
@@ -27,11 +27,11 @@ data:
     psql -v ON_ERROR_STOP=1 <<-EOSQL
         DELETE FROM oauth_applications WHERE uid='jupyterhub';
         INSERT INTO oauth_applications (name, uid, scopes, redirect_uri, secret, trusted)
-        VALUES ('jupyterhub', 'jupyterhub', 'api read_user', '{{ template "http" . }}://{{ .Values.global.renga.domain }}{{ .Values.jupyterhub.hub.baseUrl }}hub/oauth_callback {{ template "http" . }}://{{ .Values.global.renga.domain }}/jupyterhub/hub/api/oauth2/authorize', 'no-secret-needed', 'true');
+        VALUES ('jupyterhub', 'jupyterhub', 'api read_user', '{{ template "http" . }}://{{ .Values.global.renku.domain }}{{ .Values.jupyterhub.hub.baseUrl }}hub/oauth_callback {{ template "http" . }}://{{ .Values.global.renku.domain }}/jupyterhub/hub/api/oauth2/authorize', 'no-secret-needed', 'true');
 
-        DELETE FROM oauth_applications WHERE uid='renga-ui';
+        DELETE FROM oauth_applications WHERE uid='renku-ui';
         INSERT INTO oauth_applications (name, uid, scopes, redirect_uri, secret, trusted)
-        VALUES ('renga-ui', 'renga-ui', 'api read_user', '$BASE_URL/login/redirect/gitlab', 'no-secret-needed', 'true');
+        VALUES ('renku-ui', 'renku-ui', 'api read_user', '$BASE_URL/login/redirect/gitlab', 'no-secret-needed', 'true');
 
         DELETE FROM personal_access_tokens WHERE user_id='1' AND name='managed sudo token';
         INSERT INTO personal_access_tokens ( user_id, token, name, revoked, expires_at, created_at, updated_at, scopes, impersonation)
@@ -62,4 +62,4 @@ data:
 
     # configure the logout redirect
     curl -f -is -X PUT -H "Private-token: ${GITLAB_SUDO_TOKEN}" \
-      ${GITLAB_SERVICE_URL}/api/v4/application/settings?after_sign_out_path={{ template "http" . }}://{{ .Values.global.renga.domain }}/auth/realms/Renga/protocol/openid-connect/logout?redirect_uri=${GITLAB_URL}
+      ${GITLAB_SERVICE_URL}/api/v4/application/settings?after_sign_out_path={{ template "http" . }}://{{ .Values.global.renku.domain }}/auth/realms/Renku/protocol/openid-connect/logout?redirect_uri=${GITLAB_URL}

@@ -10,7 +10,7 @@ image:
   pullPolicy: "IfNotPresent"
 
 cluster:
-  name: "renga-logging-es"
+  name: "renku-logging-es"
   config:
   env:
     # IMPORTANT: https://www.elastic.co/guide/en/elasticsearch/reference/current/important-settings.html#minimum_master_nodes
