@@ -96,10 +96,10 @@ Once ``make`` completes, you should now have all the service images made:
 
     $ docker images
     REPOSITORY                      TAG                    IMAGE ID
-    renkuhub/gitlab-runner          development            b36beaf93cba
-    renkuhub/renku-python           development            0670bbcb22ed
-    renkuhub/renku-storage          development            e73374425a1f
-    renkuhub/renku-ui               development            3aa6ddac8eee
+    renku/gitlab-runner          development            b36beaf93cba
+    renku/renku-python           development            0670bbcb22ed
+    renku/renku-storage          development            e73374425a1f
+    renku/renku-ui               development            3aa6ddac8eee
 
 Use ``docker-compose`` to bring up the platform:
 

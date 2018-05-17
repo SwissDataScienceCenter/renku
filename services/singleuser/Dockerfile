@@ -1,8 +1,8 @@
-# Build as renkuhub/singleuser
+# Build as renku/singleuser
 # Run with the DockerSpawner in JupyterHub
 
 ARG PLATFORM_VERSION=latest
-ARG BASE_IMAGE=renkuhub/minimal-notebook:$PLATFORM_VERSION
+ARG BASE_IMAGE=renku/minimal-notebook:$PLATFORM_VERSION
 FROM $BASE_IMAGE
 MAINTAINER Swiss Data Science Center <info@datascience.ch>
 

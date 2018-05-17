@@ -261,7 +261,7 @@ ui:
   ## UI image
   # image:
   #   pullPolicy: Always
-  #   repository: renkuhub/renku-ui
+  #   repository: renku/renku-ui
   #   tag: development
 
   ingress:
@@ -289,7 +289,7 @@ jupyterhub:
     enabled: true
   hub:
     image:
-      name: renkuhub/jupyterhub-k8s
+      name: renku/jupyterhub-k8s
       tag: development
     services:
       notebooks:
@@ -333,7 +333,7 @@ jupyterhub:
       type: postgres
   singleuser:
     image:
-      name: renkuhub/singleuser
+      name: renku/singleuser
       tag: development
     storage:
       type: none
@@ -351,4 +351,4 @@ jupyterhub:
       callbackUrl: '""' # Forces the default callback url
 
 tests:
-  image: renkuhub/renku-tests:development
+  image: renku/renku-tests:development
