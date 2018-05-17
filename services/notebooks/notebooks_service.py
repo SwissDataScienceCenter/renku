@@ -35,7 +35,9 @@ SERVICE_PREFIX = os.environ.get('JUPYTERHUB_SERVICE_PREFIX', '/')
 auth = HubOAuth(
     api_token=os.environ['JUPYTERHUB_API_TOKEN'],
     cache_max_age=60,
-    oauth_client_id='service-notebooks',
+    oauth_client_id=os.getenv(
+        'NOTEBOOKS_OAUTH_CLIENT_ID', 'service-notebooks'
+    ),
 )
 """Wrap JupyterHub authentication service API."""
 

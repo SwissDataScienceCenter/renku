@@ -31,7 +31,7 @@ spec:
             - name: JUPYTERHUB_API_TOKEN
               value: {{ .Values.jupyterhub_api_token }}
             - name: JUPYTERHUB_API_URL
-              value: http://{{ .Values.global.renga.domain }}/jupyterhub/hub/api
+              value: http://{{ .Values.global.renga.domain }}{{ .Values.jupyterhub_base_url }}hub/api
             - name: JUPYTERHUB_SERVICE_PREFIX
               value: {{ .Values.jupyterhub_base_url }}services/notebooks/
             - name: JUPYTERHUB_BASE_URL
