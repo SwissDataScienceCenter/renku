@@ -99,7 +99,7 @@ c.Spawner.debug = bool(os.getenv('DEBUG', False))
 #: Setup the service for creating named servers from GitLab projects.
 c.JupyterHub.services = [{
     'name': 'notebooks',
-    'url': 'http://notebooks',
+    'url': 'http://notebooks:8000',
     'admin': True,
     'api_token': os.getenv('JUPYTERHUB_RENGA_NOTEBOOKS_SERVICE_TOKEN')
 }]

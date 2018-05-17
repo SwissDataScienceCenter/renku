@@ -19,6 +19,8 @@ spec:
         app: {{ template "notebooks.name" . }}
         release: {{ .Release.Name }}
     spec:
+      securityContext:
+        runAsUser: 1000
       containers:
         - name: {{ .Chart.Name }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
@@ -38,7 +40,7 @@ spec:
               value: {{ .Values.jupyterhub_base_url }}
           ports:
             - name: http
-              containerPort: 80
+              containerPort: 8000
               protocol: TCP
           livenessProbe:
             httpGet:
