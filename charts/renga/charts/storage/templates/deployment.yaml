@@ -18,32 +18,7 @@ spec:
       labels:
         app: {{ template "storage.name" . }}
         release: {{ .Release.Name }}
-      annotations:
-        checksum/config: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
     spec:
-      initContainers:
-      - name: {{ .Chart.Name }}-init
-        image: postgres:9.6
-        command: ['sh', '/scripts/init.sh']
-        volumeMounts:
-        - name: init
-          mountPath: /scripts
-          readOnly: true
-        env:
-        - name: POSTGRES_DATABASE
-          value: {{ .Values.global.gitlab.postgresDatabase }}
-        - name: POSTGRES_USER
-          value: {{ .Values.global.gitlab.postgresUser }}
-        - name: PGPASSWORD
-          valueFrom:
-            secretKeyRef:
-              name: {{ template "gitlab.fullname" . }}
-              key: postgres-password
-        - name: GITLAB_TOKEN
-          valueFrom:
-            secretKeyRef:
-              name: {{ template "storage.fullname" . }}
-              key: gitlab-token
       containers:
       - name: {{ .Chart.Name }}
         image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
@@ -69,8 +44,8 @@ spec:
         - name: GITLAB_PASS
           valueFrom:
             secretKeyRef:
-              name: {{ template "storage.fullname" . }}
-              key: gitlab-token
+              name: {{ template "renga.fullname" . }}
+              key: gitlab-sudo-token
         - name: STORAGE_BACKEND_DB_URL
           value: "jdbc:postgresql://{{ template "postgresql.fullname" . }}:5432/{{ .Values.global.storage.postgresDatabase }}"
         - name: STORAGE_BACKEND_DB_USER
