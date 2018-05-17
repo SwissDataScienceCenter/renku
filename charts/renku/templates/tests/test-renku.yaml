@@ -9,6 +9,6 @@ spec:
   - name: {{ .Release.Name }}-test
     image: {{ .Values.tests.image }}
     env:
-      - name: RENGA_ENDPOINT
-        value: {{ template "http" . }}://{{ .Values.global.renga.domain }}
+      - name: RENKU_ENDPOINT
+        value: {{ template "http" . }}://{{ .Values.global.renku.domain }}
   restartPolicy: Never

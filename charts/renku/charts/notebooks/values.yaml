@@ -5,7 +5,7 @@
 replicaCount: 1
 
 image:
-  repository: rengahub/notebooks
+  repository: renku/notebooks
   tag: development
   pullPolicy: IfNotPresent
 

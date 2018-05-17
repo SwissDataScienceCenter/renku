@@ -101,7 +101,7 @@ c.JupyterHub.services = [{
     'name': 'notebooks',
     'url': 'http://notebooks:8000',
     'admin': True,
-    'api_token': os.getenv('JUPYTERHUB_RENGA_NOTEBOOKS_SERVICE_TOKEN')
+    'api_token': os.getenv('JUPYTERHUB_RENKU_NOTEBOOKS_SERVICE_TOKEN')
 }]
 
 # try to avoid slow spawn timeouts -- not a proper fix!
