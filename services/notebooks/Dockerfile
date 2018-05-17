@@ -14,4 +14,4 @@ USER kyaku
 
 CMD ["flask", "run", "-p" ,"8000", "-h", "0.0.0.0"]
 
-HEALTHCHECK --interval=20s --timeout=10s --retries=5 CMD curl -f http://localhost/health
+HEALTHCHECK --interval=20s --timeout=10s --retries=5 CMD curl -f http://localhost:8000/health
