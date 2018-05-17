@@ -73,11 +73,6 @@ spec:
           periodSeconds: 30
         resources:
 {{ toYaml .Values.resources | indent 10 }}
-      volumes:
-      - name: init
-        configMap:
-          name: {{ template "storage.fullname" . }}-init
-        defaultMode: 0777
     {{- with .Values.nodeSelector }}
       nodeSelector:
 {{ toYaml . | indent 8 }}
