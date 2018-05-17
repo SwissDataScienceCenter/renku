@@ -2,7 +2,7 @@
 # Run with the DockerSpawner in JupyterHub
 
 ARG PLATFORM_VERSION=latest
-ARG BASE_IMAGE=renku/minimal-notebook:$PLATFORM_VERSION
+ARG BASE_IMAGE=renku/minimal-notebook:b43b757ad56a
 FROM $BASE_IMAGE
 MAINTAINER Swiss Data Science Center <info@datascience.ch>
 
