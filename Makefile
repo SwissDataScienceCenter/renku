@@ -268,5 +268,8 @@ $(makefile-services): %: $(PLATFORM_BASE_DIR)/%
 start: .env
 	@./scripts/renga-start.sh
 
+stop: .env
+	@docker-compose stop
+
 wipe: .env
 	@./scripts/renga-wipe.sh
