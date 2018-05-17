@@ -5,6 +5,8 @@
 {{- $gitlabServicePort := 80 -}}
 {{- $uiFullname := include "ui.fullname" . -}}
 {{- $uiServicePort := .Values.ui.service.port -}}
+{{- $storageFullname := include "storage.fullname" . -}}
+{{- $storageServicePort := .Values.storage.service.port -}}
 ---
 apiVersion: extensions/v1beta1
 kind: Ingress
@@ -47,6 +49,10 @@ spec:
         backend:
           serviceName: proxy-http
           servicePort: 8000
+      - path: /api/storage
+        backend:
+          serviceName: {{ $storageFullname }}
+          servicePort: {{ $storageServicePort }}
       - path: /
         backend:
           serviceName: {{ $uiFullname }}
