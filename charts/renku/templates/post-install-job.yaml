@@ -44,7 +44,7 @@ spec:
           - name: GITLAB_SUDO_TOKEN
             valueFrom:
               secretKeyRef:
-                name: {{ template "renga.fullname" . }}
+                name: {{ template "renku.fullname" . }}
                 key: gitlab-sudo-token
       volumes:
         - name: init

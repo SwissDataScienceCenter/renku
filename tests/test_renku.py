@@ -26,7 +26,7 @@ import splinter
 
 def test_renku_login(browser):
     """Test Renku login."""
-    url = urljoin(os.getenv('RENGA_ENDPOINT', 'http://localhost'), '/login')
+    url = urljoin(os.getenv('RENKU_ENDPOINT', 'http://localhost'), '/login')
     browser.visit(url)
 
     assert browser.is_element_present_by_id('username', wait_time=60)

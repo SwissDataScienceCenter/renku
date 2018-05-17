@@ -293,7 +293,7 @@ jupyterhub:
       tag: development
     services:
       notebooks:
-        url: http://renga-notebooks
+        url: http://renku-notebooks
         admin: true
         api_token: notebookstoken
     extraEnv:
@@ -351,4 +351,4 @@ jupyterhub:
       callbackUrl: '""' # Forces the default callback url
 
 tests:
-  image: rengahub/renga-tests:development
+  image: renkuhub/renku-tests:development
