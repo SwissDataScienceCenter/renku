@@ -45,12 +45,12 @@ GITLAB_DIRS=config logs git-data lfs-data runner
 GITLAB_RUNNERS_TOKEN?=$(shell openssl rand -hex 32)
 
 JUPYTERHUB_CRYPT_KEY?=$(shell openssl rand -hex 32)
-JUPYTERHUB_RENGA_NOTEBOOKS_SERVICE_TOKEN?=$(shell openssl rand -hex 32)
+JUPYTERHUB_RENKU_NOTEBOOKS_SERVICE_TOKEN?=$(shell openssl rand -hex 32)
 JUPYTERHUB_URL?=http://jupyterhub.$(PLATFORM_DOMAIN)
 
 PLAY_APPLICATION_SECRET?=$(shell openssl rand -hex 32)
 
-DOCKER_REPOSITORY?=renkuhub/
+DOCKER_REPOSITORY?=renku/
 DOCKER_PREFIX:=${DOCKER_REGISTRY}$(DOCKER_REPOSITORY)
 DOCKER_NETWORK?=review
 DOCKER_COMPOSE_ENV=\
@@ -64,7 +64,7 @@ DOCKER_COMPOSE_ENV=\
 	GITLAB_URL=$(GITLAB_URL) \
 	JUPYTERHUB_CLIENT_SECRET=$(JUPYTERHUB_CLIENT_SECRET) \
 	JUPYTERHUB_CRYPT_KEY=$(JUPYTERHUB_CRYPT_KEY) \
-	JUPYTERHUB_RENGA_NOTEBOOKS_SERVICE_TOKEN=$(JUPYTERHUB_RENGA_NOTEBOOKS_SERVICE_TOKEN)\
+	JUPYTERHUB_RENKU_NOTEBOOKS_SERVICE_TOKEN=$(JUPYTERHUB_RENKU_NOTEBOOKS_SERVICE_TOKEN)\
 	JUPYTERHUB_URL=$(JUPYTERHUB_URL) \
 	KEYCLOAK_URL=$(KEYCLOAK_URL) \
 	PLATFORM_DOMAIN=$(PLATFORM_DOMAIN) \
@@ -190,12 +190,12 @@ $(dockerfile-services): %: .env services/%/Dockerfile
 jupyterhub-k8s: .env services/jupyterhub/jupyterhub-k8s.Dockerfile
 	docker build --tag $(DOCKER_REPOSITORY)$@:$(PLATFORM_VERSION) -f services/jupyterhub/$@.Dockerfile services/jupyterhub/
 
-.PHONY: renga-tests
-renga-tests:
+.PHONY: renku-tests
+renku-tests:
 	docker build --tag $(DOCKER_REPOSITORY)$@:$(PLATFORM_VERSION) -f tests/Dockerfile tests/
 
 .PHONY: tag
-tag: $(dockerfile-services) jupyterhub-k8s renga-tests
+tag: $(dockerfile-services) jupyterhub-k8s renku-tests
 
 # build docker images from makefiles
 .PHONY: $(makefile-services)
