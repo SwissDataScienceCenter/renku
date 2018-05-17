@@ -1,7 +1,7 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: "{{ .Release.Name }}"
+  name: "{{ .Release.Name }}-post-install"
   labels:
     heritage: {{ .Release.Service | quote }}
     release: {{ .Release.Name | quote }}
@@ -22,9 +22,9 @@ spec:
     spec:
       restartPolicy: Never
       containers:
-        - name: configure-gitlab-ui-token
+        - name: configure-gitlab
           image: "postgres:9.6"
-          command: ["/bin/sh", "/scripts/init.sh"]
+          command: ["/bin/bash", "/scripts/init-gitlab.sh"]
           volumeMounts:
             - name: init
               mountPath: /scripts
@@ -41,6 +41,11 @@ spec:
               secretKeyRef:
                 name: {{ template "gitlab.fullname" . }}
                 key: postgres-password
+          - name: GITLAB_SUDO_TOKEN
+            valueFrom:
+              secretKeyRef:
+                name: {{ template "renga.fullname" . }}
+                key: gitlab-sudo-token
       volumes:
         - name: init
           configMap:

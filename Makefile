@@ -187,8 +187,12 @@ $(dockerfile-services): %: .env services/%/Dockerfile
 jupyterhub-k8s: .env services/jupyterhub/jupyterhub-k8s.Dockerfile
 	docker build --tag $(DOCKER_REPOSITORY)$@:$(PLATFORM_VERSION) -f services/jupyterhub/$@.Dockerfile services/jupyterhub/
 
+.PHONY: renga-tests
+renga-tests:
+	docker build --tag $(DOCKER_REPOSITORY)$@:$(PLATFORM_VERSION) -f tests/Dockerfile tests/
+
 .PHONY: tag
-tag: $(dockerfile-services) jupyterhub-k8s
+tag: $(dockerfile-services) jupyterhub-k8s renga-tests
 
 # build docker images from makefiles
 .PHONY: $(makefile-services)
@@ -326,7 +330,7 @@ clean: .env
 
 restart: stop start
 
-start: .env docker-network $(GITLAB_DIRS:%=services/gitlab/%) unregister-runners docker-compose-up wait enable-gitlab-auto-devops register-gitlab-oauth-applications register-runners register-gitlab-user-token configure-gitlab-login
+start: .env docker-network $(GITLAB_DIRS:%=services/gitlab/%) unregister-runners docker-compose-up wait register-gitlab-user-token enable-gitlab-auto-devops register-gitlab-oauth-applications register-runners configure-gitlab-login
 ifeq (${GITLAB_CLIENT_SECRET}, dummy-secret)
 	@echo
 	@echo "[Warning] You have not defined a GITLAB_CLIENT_SECRET. Using dummy"

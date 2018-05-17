@@ -18,6 +18,7 @@
 """Renga integration tests."""
 
 import os
+from urllib.parse import urljoin
 
 import pytest
 import splinter
@@ -25,7 +26,7 @@ import splinter
 
 def test_renga_login(browser):
     """Test Renga login."""
-    url = os.getenv('RENGA_ENDPOINT', 'http://localhost')
+    url = urljoin(os.getenv('RENGA_ENDPOINT', 'http://localhost'), '/login')
     browser.visit(url)
 
     assert browser.is_element_present_by_id('username', wait_time=60)

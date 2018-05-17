@@ -30,3 +30,7 @@ jupyterhub:
     state:
       enabled: true
       cryptoKey: 86282f03d9886a64a46ee38f946e9ee27a600df4559584eeb90d0bfbd5a3dc0e
+
+global:
+  gitlab:
+    urlPrefix: /gitlab

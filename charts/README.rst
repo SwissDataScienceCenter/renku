@@ -37,3 +37,9 @@ The platform takes some time to start, to check the pods status do:
 
 and wait until all pods are running.
 Now, we can go to: :code:`http://$(minikube-ip)/`
+
+To run tests on the deployment, use
+
+.. code-block:: console
+
+    $ helm test --cleanup renga
