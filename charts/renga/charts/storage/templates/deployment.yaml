@@ -37,7 +37,7 @@ spec:
             secretKeyRef:
               name: {{ template "storage.fullname" . }}
               key: application-secret
-        - name: RENGA_ENDPOINT
+        - name: RENKU_ENDPOINT
           value: "{{ template "http" . }}://{{ .Values.global.renga.domain }}"
         - name: GITLAB_URL
           value: "{{ template "http" . }}://{{ .Values.global.renga.domain }}/gitlab"
