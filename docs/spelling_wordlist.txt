@@ -42,4 +42,4 @@ Versioning
 vertices
 workflow
 workflows
-連歌
+連句

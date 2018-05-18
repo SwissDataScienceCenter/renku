@@ -15,7 +15,7 @@
     See the License for the specific language governing permissions and
     limitations under the License... raw:: html
 
-RENKU (連歌)
+RENKU (連句)
 ============
 
 .. image:: https://img.shields.io/travis/SwissDataScienceCenter/renku.svg

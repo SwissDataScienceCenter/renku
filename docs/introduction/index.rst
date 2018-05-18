@@ -20,7 +20,7 @@ Introduction
 
 .. epigraph::
 
-   **Renku** (連歌), *plural* **renku**, *a genre of Japanese linked-verse
+   **Renku** (連句), *plural* **renku**, *a genre of Japanese linked-verse
    poetry in which two or more poets supply alternating sections of a poem
    linked by verbal and thematic associations.*
 
