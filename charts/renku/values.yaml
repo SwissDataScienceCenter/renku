@@ -65,12 +65,6 @@ ingress:
   #    hosts:
   #      - example.local
 
-apispec:
-  image:
-    name: rengahub/apispec
-    repository: rengahub/apispec
-    tag: development
-
 ## Keycloak configuration
 keycloak:
   ## Keycloak admin user configuration
@@ -305,7 +299,7 @@ jupyterhub:
         api_token: notebookstoken
     extraEnv:
       DEBUG: 1
-      JUPYTERHUB_NOTEBOOK_DIR: '/repo'
+      JUPYTERHUB_NOTEBOOK_DIR: /repo
       JUPYTERHUB_SPAWNER_CLASS: spawners.RenkuKubeSpawner
     extraConfig: |
       import os
@@ -358,5 +352,20 @@ jupyterhub:
       clientSecret: no-secret-needed
       callbackUrl: '""' # Forces the default callback url
 
+apispec:
+  image:
+    name: renku/apispec
+    repository: renku/apispec
+    tag: latest
+
+notebooks:
+  image:
+    name: renku/notebooks
+    tag: latest
+    repository: renku/notebooks
+
 tests:
-  image: renku/renku-tests:latest
+  image:
+    name: renku/tests
+    tag: latest
+    repository: renku/tests

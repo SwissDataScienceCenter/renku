@@ -1,6 +1,6 @@
 charts:
-  - name: renga
-    imagePrefix: rengahub/
+  - name: renku
+    imagePrefix: renku/
     repo:
       git: SwissDataScienceCenter/helm-charts
       published: https://swissdatasciencecenter.github.io/helm-charts
@@ -17,7 +17,7 @@ charts:
       singleuser:
         contextPath: ../services/singleuser
         buildArgs:
-          BASE_IMAGE: rengahub/minimal-notebook:e21fd4181aa2
+          BASE_IMAGE: renku/minimal-notebook:98a712f9ad93
           JUPYTERHUB_VERSION: master
         dockerfilePath: ../services/singleuser/Dockerfile
         valuesPath: jupyterhub.singleuser.image
@@ -29,3 +29,15 @@ charts:
         valuesPath: jupyterhub.hub.image
         paths:
           - ../services/jupyterhub
+      notebooks:
+        contextPath: ../services/notebooks
+        dockerfilePath: ../services/notebooks/Dockerfile
+        valuesPath: notebooks.image
+        paths:
+          - ../services/notebooks
+      tests:
+        contextPath: ../tests
+        dockerfilePath: ../tests/Dockerfile
+        valuesPath: tests.image
+        paths:
+          - ../tests

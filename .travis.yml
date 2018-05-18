@@ -65,7 +65,7 @@ before_script: |-
 
 script:
   - xvfb-run make test
-  # TODO - helm lint charts/renga -f charts/minikube-values.yaml --set renga.domain=renga.build
+  # TODO - helm lint charts/renku -f charts/minikube-values.yaml --set renku.domain=renku.build
 
 before_deploy:
   # install chartpress
@@ -88,10 +88,11 @@ deploy:
     skip_cleanup: true
     script: >-
       cd charts;
-      helm repo add renga https://swissdatasciencecenter.github.io/helm-charts/;
-      helm dependency update renga;
+      helm repo add renku https://swissdatasciencecenter.github.io/helm-charts/;
+      helm dependency update renku;
+      chartpress --commit-range "${TRAVIS_COMMIT_RANGE}" --tag latest --push;
       chartpress --commit-range "${TRAVIS_COMMIT_RANGE}" --push --publish-chart;
       git diff;
       cd ..
     on:
-      branch: development
+      branch: master
