@@ -63,6 +63,8 @@ class SpawnerMixin():
                 self.user_options.get('commit_sha', ''),
             'GITLAB_HOST':
                 os.environ.get('GITLAB_HOST', 'http://gitlab.renku.build'),
+            'CI_REF_NAME':
+                self.user_options.get('branch', 'master'),
         })
         return environment
 

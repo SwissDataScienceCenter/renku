@@ -59,7 +59,9 @@ class GitCommitHandler(IPythonHandler):
         access_token = repository_url.password
         namespace = os.getenv('CI_NAMESPACE')
         project = os.getenv('CI_PROJECT')
-        env_slug = os.getenv('CI_ENVIRONMENT_SLUG')
+        #: Use username as a prefix until we work with "forks".
+        branch = self.get_current_user()['name'
+                                         ] + '-' + os.getenv('CI_REF_NAME')
         ref = os.getenv('CI_COMMIT_SHA')
         url = os.environ.get('GITLAB_HOST', 'http://gitlab.renku.build')
 
@@ -72,9 +74,6 @@ class GitCommitHandler(IPythonHandler):
             self.log.error(e)
             raise web.HTTPError(401, 'Not authorized to view project.')
             return
-
-        #: Use username as a prefix until we work with "forks".
-        branch = self.get_current_user()['name'] + '-' + env_slug
 
         try:
             gl_branch = gl_project.branches.get(branch)
