@@ -1,0 +1,68 @@
+apiVersion: apps/v1beta2
+kind: Deployment
+metadata:
+  name: {{ template "notebooks.fullname" . }}
+  labels:
+    app: {{ template "notebooks.name" . }}
+    chart: {{ template "notebooks.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ template "notebooks.name" . }}
+      release: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app: {{ template "notebooks.name" . }}
+        release: {{ .Release.Name }}
+    spec:
+      securityContext:
+        runAsUser: 1000
+      containers:
+        - name: {{ .Chart.Name }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          env:
+            {{ if eq .Values.debug true }}
+            - name: FLASK_DEBUG
+              value: "1"
+            {{ end }}
+            - name: JUPYTERHUB_API_TOKEN
+              value: {{ .Values.jupyterhub_api_token }}
+            - name: JUPYTERHUB_API_URL
+              value: http://{{ .Values.global.renku.domain }}{{ .Values.jupyterhub_base_url }}hub/api
+            - name: JUPYTERHUB_SERVICE_PREFIX
+              value: {{ .Values.jupyterhub_base_url }}services/notebooks/
+            - name: JUPYTERHUB_BASE_URL
+              value: {{ .Values.jupyterhub_base_url }}
+          ports:
+            - name: http
+              containerPort: 8000
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: http
+              periodSeconds: 30
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: http
+              periodSeconds: 30
+          resources:
+{{ toYaml .Values.resources | indent 12 }}
+    {{- with .Values.nodeSelector }}
+      nodeSelector:
+{{ toYaml . | indent 8 }}
+    {{- end }}
+    {{- with .Values.affinity }}
+      affinity:
+{{ toYaml . | indent 8 }}
+    {{- end }}
+    {{- with .Values.tolerations }}
+      tolerations:
+{{ toYaml . | indent 8 }}
+    {{- end }}

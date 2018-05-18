@@ -1,0 +1,23 @@
+---
+apiVersion: {{ template "redis.networkPolicy.apiVersion" . }}
+kind: NetworkPolicy
+metadata:
+  name: {{ template "redis.fullname" . }}
+  labels:
+    app: {{ template "redis.name" . }}
+    chart: {{ template "redis.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  podSelector:
+    matchLabels:
+      app: {{ template "redis.name" . }}
+      release: {{ .Release.Name }}
+  ingress:
+    # Allow inbound connections from gitlab
+    - ports:
+      - port: 6379
+      from:
+      - podSelector:
+          matchLabels:
+            {{ template "redis.fullname" . }}-client: "true"

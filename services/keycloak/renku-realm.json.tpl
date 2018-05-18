@@ -1,6 +1,6 @@
 {
-  "id" : "Renga",
-  "realm" : "Renga",
+  "id" : "Renku",
+  "realm" : "Renku",
   "notBefore" : 0,
   "revokeRefreshToken" : false,
   "accessTokenLifespan" : 3000,
@@ -15,7 +15,7 @@
   "actionTokenGeneratedByUserLifespan" : 300,
   "enabled" : true,
   "sslRequired" : "external",
-  "registrationAllowed" : false,
+  "registrationAllowed" : true,
   "registrationEmailAsUsername" : false,
   "rememberMe" : false,
   "verifyEmail" : false,
@@ -39,7 +39,7 @@
       "scopeParamRequired" : true,
       "composite" : false,
       "clientRole" : false,
-      "containerId" : "Renga"
+      "containerId" : "Renku"
     }, {
       "id" : "25387a4d-53b8-4168-9601-48e9b83a71c7",
       "name" : "uma_authorization",
@@ -47,7 +47,7 @@
       "scopeParamRequired" : false,
       "composite" : false,
       "clientRole" : false,
-      "containerId" : "Renga"
+      "containerId" : "Renku"
     } ],
     "client" : {
       "realm-management" : [ {
@@ -220,7 +220,7 @@
       } ],
       "demo-client" : [ ],
       "security-admin-console" : [ ],
-      "renga-services" : [ ],
+      "renku-services" : [ ],
       "admin-cli" : [ ],
       "broker" : [ {
         "id" : "d463f205-b2ea-4a83-b9f5-f72a811774c3",
@@ -322,12 +322,12 @@
   }, {
     "id" : "33a710fa-b061-4562-b31e-c89842c687e6",
     "createdTimestamp" : 1504268926763,
-    "username" : "service-account-renga-services",
+    "username" : "service-account-renku-services",
     "enabled" : true,
     "totp" : false,
     "emailVerified" : false,
-    "email" : "service-account-renga-services@placeholder.org",
-    "serviceAccountClientId" : "renga-services",
+    "email" : "service-account-renku-services@placeholder.org",
+    "serviceAccountClientId" : "renku-services",
     "credentials" : [ ],
     "disableableCredentialTypes" : [ ],
     "requiredActions" : [ ],
@@ -346,17 +346,494 @@
       "roles" : [ "realm-admin" ]
     } ]
   },
-  "clients" : [ {
+  "clients" : [
+  {
+    "id": "4622f33f-e0ca-401f-b6a5-a5e55f937ffb",
+    "clientId": "renku-ui",
+    "adminUrl": "",
+    "baseUrl": "{{RENKU_UI_URL}}",
+    "surrogateAuthRequired": false,
+    "enabled": true,
+    "clientAuthenticatorType": "client-secret",
+    "secret": "no-secret-defined",
+    "redirectUris": [
+      "{{RENKU_UI_URL}}/*",
+      "http://localhost:3000/*"
+    ],
+    "webOrigins": [
+      "{{RENKU_UI_URL}}",
+      "http://localhost:3000"
+    ],
+    "notBefore": 0,
+    "bearerOnly": false,
+    "consentRequired": false,
+    "standardFlowEnabled": true,
+    "implicitFlowEnabled": false,
+    "directAccessGrantsEnabled": false,
+    "serviceAccountsEnabled": false,
+    "publicClient": true,
+    "frontchannelLogout": false,
+    "protocol": "openid-connect",
+    "attributes": {
+      "saml.assertion.signature": "false",
+      "saml.force.post.binding": "false",
+      "saml.multivalued.roles": "false",
+      "saml.encrypt": "false",
+      "saml_force_name_id_format": "false",
+      "saml.client.signature": "false",
+      "saml.authnstatement": "false",
+      "saml.server.signature": "false",
+      "saml.server.signature.keyinfo.ext": "false",
+      "saml.onetimeuse.condition": "false"
+    },
+    "fullScopeAllowed": true,
+    "nodeReRegistrationTimeout": -1,
+    "protocolMappers": [
+      {
+        "id": "7d833565-cb26-46eb-9e2c-13ffe924cddf",
+        "name": "given name",
+        "protocol": "openid-connect",
+        "protocolMapper": "oidc-usermodel-property-mapper",
+        "consentRequired": true,
+        "consentText": "${givenName}",
+        "config": {
+          "userinfo.token.claim": "true",
+          "user.attribute": "firstName",
+          "id.token.claim": "true",
+          "access.token.claim": "true",
+          "claim.name": "given_name",
+          "jsonType.label": "String"
+        }
+      },
+      {
+        "id": "fab105c9-aa79-4110-be5d-9e98b5801b99",
+        "name": "family name",
+        "protocol": "openid-connect",
+        "protocolMapper": "oidc-usermodel-property-mapper",
+        "consentRequired": true,
+        "consentText": "${familyName}",
+        "config": {
+          "userinfo.token.claim": "true",
+          "user.attribute": "lastName",
+          "id.token.claim": "true",
+          "access.token.claim": "true",
+          "claim.name": "family_name",
+          "jsonType.label": "String"
+        }
+      },
+      {
+        "id": "e967d8b0-9af5-451c-a7fc-8cc65df22554",
+        "name": "full name",
+        "protocol": "openid-connect",
+        "protocolMapper": "oidc-full-name-mapper",
+        "consentRequired": true,
+        "consentText": "${fullName}",
+        "config": {
+          "id.token.claim": "true",
+          "access.token.claim": "true"
+        }
+      },
+      {
+        "id": "4bbc3374-3d02-482f-b69f-bf3a79d0c305",
+        "name": "email",
+        "protocol": "openid-connect",
+        "protocolMapper": "oidc-usermodel-property-mapper",
+        "consentRequired": true,
+        "consentText": "${email}",
+        "config": {
+          "userinfo.token.claim": "true",
+          "user.attribute": "email",
+          "id.token.claim": "true",
+          "access.token.claim": "true",
+          "claim.name": "email",
+          "jsonType.label": "String"
+        }
+      },
+      {
+        "id": "44480bbc-f397-4a43-870b-d9ed28489044",
+        "name": "role list",
+        "protocol": "saml",
+        "protocolMapper": "saml-role-list-mapper",
+        "consentRequired": false,
+        "config": {
+          "single": "false",
+          "attribute.nameformat": "Basic",
+          "attribute.name": "Role"
+        }
+      },
+      {
+        "id": "0c4ca494-2f26-4b9a-93bc-0a53c4a4f984",
+        "name": "username",
+        "protocol": "openid-connect",
+        "protocolMapper": "oidc-usermodel-property-mapper",
+        "consentRequired": true,
+        "consentText": "${username}",
+        "config": {
+          "userinfo.token.claim": "true",
+          "user.attribute": "username",
+          "id.token.claim": "true",
+          "access.token.claim": "true",
+          "claim.name": "preferred_username",
+          "jsonType.label": "String"
+        }
+      }
+    ],
+    "useTemplateConfig": false,
+    "useTemplateScope": false,
+    "useTemplateMappers": false
+  },
+  {
+      "id": "439e6e57-7de7-4062-aa6e-d25db0b85715",
+      "clientId": "jupyterhub",
+      "baseUrl": "{{JUPYTERHUB_URL}}",
+      "surrogateAuthRequired": false,
+      "enabled": true,
+      "clientAuthenticatorType": "client-secret",
+      "secret": "{{JUPYTERHUB_CLIENT_SECRET}}",
+      "redirectUris": [
+        "{{JUPYTERHUB_URL}}/hub/oauth_callback"
+      ],
+      "webOrigins": [],
+      "notBefore": 0,
+      "bearerOnly": false,
+      "consentRequired": false,
+      "standardFlowEnabled": true,
+      "implicitFlowEnabled": false,
+      "directAccessGrantsEnabled": true,
+      "serviceAccountsEnabled": false,
+      "publicClient": true,
+      "frontchannelLogout": false,
+      "protocol": "openid-connect",
+      "attributes": {
+        "saml.assertion.signature": "false",
+        "saml.force.post.binding": "false",
+        "saml.multivalued.roles": "false",
+        "saml.encrypt": "false",
+        "saml_force_name_id_format": "false",
+        "saml.client.signature": "false",
+        "saml.authnstatement": "false",
+        "saml.server.signature": "false",
+        "saml.server.signature.keyinfo.ext": "false",
+        "saml.onetimeuse.condition": "false"
+      },
+      "fullScopeAllowed": true,
+      "nodeReRegistrationTimeout": -1,
+      "protocolMappers": [
+        {
+          "id": "943d3dc6-3e12-4f41-ae7d-100b7b0be683",
+          "name": "role list",
+          "protocol": "saml",
+          "protocolMapper": "saml-role-list-mapper",
+          "consentRequired": false,
+          "config": {
+            "single": "false",
+            "attribute.nameformat": "Basic",
+            "attribute.name": "Role"
+          }
+        },
+        {
+          "id": "e00de94c-8257-4d30-9a40-0551733bad13",
+          "name": "full name",
+          "protocol": "openid-connect",
+          "protocolMapper": "oidc-full-name-mapper",
+          "consentRequired": true,
+          "consentText": "${fullName}",
+          "config": {
+            "id.token.claim": "true",
+            "access.token.claim": "true"
+          }
+        },
+        {
+          "id": "e2f840d1-c09b-43d8-af0d-6cc9517cdc2b",
+          "name": "family name",
+          "protocol": "openid-connect",
+          "protocolMapper": "oidc-usermodel-property-mapper",
+          "consentRequired": true,
+          "consentText": "${familyName}",
+          "config": {
+            "userinfo.token.claim": "true",
+            "user.attribute": "lastName",
+            "id.token.claim": "true",
+            "access.token.claim": "true",
+            "claim.name": "family_name",
+            "jsonType.label": "String"
+          }
+        },
+        {
+          "id": "79d48470-cb28-4b6d-b28e-b99b4bf50ad1",
+          "name": "email",
+          "protocol": "openid-connect",
+          "protocolMapper": "oidc-usermodel-property-mapper",
+          "consentRequired": true,
+          "consentText": "${email}",
+          "config": {
+            "userinfo.token.claim": "true",
+            "user.attribute": "email",
+            "id.token.claim": "true",
+            "access.token.claim": "true",
+            "claim.name": "email",
+            "jsonType.label": "String"
+          }
+        },
+        {
+          "id": "ce22d353-8bf6-453d-916c-b7b147ac2680",
+          "name": "username",
+          "protocol": "openid-connect",
+          "protocolMapper": "oidc-usermodel-property-mapper",
+          "consentRequired": true,
+          "consentText": "${username}",
+          "config": {
+            "userinfo.token.claim": "true",
+            "user.attribute": "username",
+            "id.token.claim": "true",
+            "access.token.claim": "true",
+            "claim.name": "preferred_username",
+            "jsonType.label": "String"
+          }
+        },
+        {
+          "id": "7014bcd8-e4d6-492e-b4e0-f633319fbfe3",
+          "name": "given name",
+          "protocol": "openid-connect",
+          "protocolMapper": "oidc-usermodel-property-mapper",
+          "consentRequired": true,
+          "consentText": "${givenName}",
+          "config": {
+            "userinfo.token.claim": "true",
+            "user.attribute": "firstName",
+            "id.token.claim": "true",
+            "access.token.claim": "true",
+            "claim.name": "given_name",
+            "jsonType.label": "String"
+          }
+        }
+      ],
+      "useTemplateConfig": false,
+      "useTemplateScope": false,
+      "useTemplateMappers": false
+    },
+  {
+    "id": "0c9dab4c-ce06-44a7-ba4e-6ce969c5e5cb",
+    "clientId": "gitlab",
+    "baseUrl": "{{GITLAB_URL}}",
+    "surrogateAuthRequired": false,
+    "enabled": true,
+    "clientAuthenticatorType": "client-secret",
+    "secret": "{{GITLAB_CLIENT_SECRET}}",
+    "redirectUris": [
+      "{{GITLAB_URL}}/users/auth/oauth2_generic/callback",
+      "{{GITLAB_URL}}"
+    ],
+    "webOrigins": [],
+    "notBefore": 0,
+    "bearerOnly": false,
+    "consentRequired": false,
+    "standardFlowEnabled": true,
+    "implicitFlowEnabled": false,
+    "directAccessGrantsEnabled": true,
+    "serviceAccountsEnabled": true,
+    "authorizationServicesEnabled": true,
+    "publicClient": false,
+    "frontchannelLogout": false,
+    "protocol": "openid-connect",
+    "attributes": {
+      "saml.assertion.signature": "false",
+      "saml.force.post.binding": "false",
+      "saml.multivalued.roles": "false",
+      "saml.encrypt": "false",
+      "saml_force_name_id_format": "false",
+      "saml.client.signature": "false",
+      "saml.authnstatement": "false",
+      "saml.server.signature": "false",
+      "saml.server.signature.keyinfo.ext": "false",
+      "saml.onetimeuse.condition": "false"
+    },
+    "fullScopeAllowed": true,
+    "nodeReRegistrationTimeout": -1,
+    "protocolMappers": [
+      {
+        "id": "55ef06ad-d8db-4703-8cf7-6cd2a8abddba",
+        "name": "full name",
+        "protocol": "openid-connect",
+        "protocolMapper": "oidc-full-name-mapper",
+        "consentRequired": true,
+        "consentText": "${fullName}",
+        "config": {
+          "id.token.claim": "true",
+          "access.token.claim": "true"
+        }
+      },
+      {
+        "id": "dee69859-6790-4a9d-83c1-2c1147a7351c",
+        "name": "given name",
+        "protocol": "openid-connect",
+        "protocolMapper": "oidc-usermodel-property-mapper",
+        "consentRequired": true,
+        "consentText": "${givenName}",
+        "config": {
+          "userinfo.token.claim": "true",
+          "user.attribute": "firstName",
+          "id.token.claim": "true",
+          "access.token.claim": "true",
+          "claim.name": "given_name",
+          "jsonType.label": "String"
+        }
+      },
+      {
+        "id": "df709193-9c41-48e8-be13-af820318ae81",
+        "name": "Client Host",
+        "protocol": "openid-connect",
+        "protocolMapper": "oidc-usersessionmodel-note-mapper",
+        "consentRequired": false,
+        "consentText": "",
+        "config": {
+          "user.session.note": "clientHost",
+          "id.token.claim": "true",
+          "access.token.claim": "true",
+          "claim.name": "clientHost",
+          "jsonType.label": "String"
+        }
+      },
+      {
+        "id": "ccc60a25-e3aa-48a0-9fea-dfa280df0333",
+        "name": "username",
+        "protocol": "openid-connect",
+        "protocolMapper": "oidc-usermodel-property-mapper",
+        "consentRequired": true,
+        "consentText": "${username}",
+        "config": {
+          "userinfo.token.claim": "true",
+          "user.attribute": "username",
+          "id.token.claim": "true",
+          "access.token.claim": "true",
+          "claim.name": "preferred_username",
+          "jsonType.label": "String"
+        }
+      },
+      {
+        "id": "1e4f7f5d-e947-4197-bfdd-9f694396fe51",
+        "name": "role list",
+        "protocol": "saml",
+        "protocolMapper": "saml-role-list-mapper",
+        "consentRequired": false,
+        "config": {
+          "single": "false",
+          "attribute.nameformat": "Basic",
+          "attribute.name": "Role"
+        }
+      },
+      {
+        "id": "a25924f5-8185-4d0d-aa4f-81d424b687d3",
+        "name": "Client IP Address",
+        "protocol": "openid-connect",
+        "protocolMapper": "oidc-usersessionmodel-note-mapper",
+        "consentRequired": false,
+        "consentText": "",
+        "config": {
+          "user.session.note": "clientAddress",
+          "id.token.claim": "true",
+          "access.token.claim": "true",
+          "claim.name": "clientAddress",
+          "jsonType.label": "String"
+        }
+      },
+      {
+        "id": "fddbb4a8-1052-4b68-a6b4-c433d4e00fdc",
+        "name": "Client ID",
+        "protocol": "openid-connect",
+        "protocolMapper": "oidc-usersessionmodel-note-mapper",
+        "consentRequired": false,
+        "consentText": "",
+        "config": {
+          "user.session.note": "clientId",
+          "id.token.claim": "true",
+          "access.token.claim": "true",
+          "claim.name": "clientId",
+          "jsonType.label": "String"
+        }
+      },
+      {
+        "id": "28ab5b96-66f0-4b96-be96-1916ae8799c0",
+        "name": "email",
+        "protocol": "openid-connect",
+        "protocolMapper": "oidc-usermodel-property-mapper",
+        "consentRequired": true,
+        "consentText": "${email}",
+        "config": {
+          "userinfo.token.claim": "true",
+          "user.attribute": "email",
+          "id.token.claim": "true",
+          "access.token.claim": "true",
+          "claim.name": "email",
+          "jsonType.label": "String"
+        }
+      },
+      {
+        "id": "c915b73d-f49f-4a58-89f3-8ebc197da44b",
+        "name": "family name",
+        "protocol": "openid-connect",
+        "protocolMapper": "oidc-usermodel-property-mapper",
+        "consentRequired": true,
+        "consentText": "${familyName}",
+        "config": {
+          "userinfo.token.claim": "true",
+          "user.attribute": "lastName",
+          "id.token.claim": "true",
+          "access.token.claim": "true",
+          "claim.name": "family_name",
+          "jsonType.label": "String"
+        }
+      }
+    ],
+    "useTemplateConfig": false,
+    "useTemplateScope": false,
+    "useTemplateMappers": false,
+    "authorizationSettings": {
+      "allowRemoteResourceManagement": false,
+      "policyEnforcementMode": "ENFORCING",
+      "resources": [
+        {
+          "name": "Default Resource",
+          "uri": "/*",
+          "type": "urn:gitlab:resources:default"
+        }
+      ],
+      "policies": [
+        {
+          "name": "Default Policy",
+          "description": "A policy that grants access only for users within this realm",
+          "type": "js",
+          "logic": "POSITIVE",
+          "decisionStrategy": "AFFIRMATIVE",
+          "config": {
+            "code": "// by default, grants any permission associated with this policy\n$evaluation.grant();\n"
+          }
+        },
+        {
+          "name": "Default Permission",
+          "description": "A permission that applies to the default resource type",
+          "type": "resource",
+          "logic": "POSITIVE",
+          "decisionStrategy": "UNANIMOUS",
+          "config": {
+            "defaultResourceType": "urn:gitlab:resources:default",
+            "applyPolicies": "[\"Default Policy\"]"
+          }
+        }
+      ],
+      "scopes": []
+    }
+  }, {
     "id" : "84027d06-f768-40f0-a6c7-c1e4fb405b76",
     "clientId" : "account",
     "name" : "${client_account}",
-    "baseUrl" : "/auth/realms/Renga/account",
+    "baseUrl" : "/auth/realms/Renku/account",
     "surrogateAuthRequired" : false,
     "enabled" : true,
     "clientAuthenticatorType" : "client-secret",
     "secret" : "66e487de-a299-4273-bd9a-16096a82f5f3",
     "defaultRoles" : [ "manage-account", "view-profile" ],
-    "redirectUris" : [ "/auth/realms/Renga/account/*" ],
+    "redirectUris" : [ "/auth/realms/Renku/account/*" ],
     "webOrigins" : [ ],
     "notBefore" : 0,
     "bearerOnly" : false,
@@ -682,8 +1159,8 @@
     "enabled" : true,
     "clientAuthenticatorType" : "client-secret",
     "secret" : "5294a18e-e784-4e39-a927-ce816c91c83e",
-    "redirectUris" : [ "{{RENGA_ENDPOINT}}*" ],
-    "webOrigins" : [ "{{RENGA_ENDPOINT}}" ],
+    "redirectUris" : [ "{{RENKU_ENDPOINT}}*" ],
+    "webOrigins" : [ "{{RENKU_ENDPOINT}}" ],
     "notBefore" : 0,
     "bearerOnly" : false,
     "consentRequired" : false,
@@ -951,7 +1428,7 @@
     "useTemplateMappers" : false
   }, {
     "id" : "c8fc33a7-6a6e-4a2a-b05c-b3ecea717db8",
-    "clientId" : "renga-services",
+    "clientId" : "renku-services",
     "surrogateAuthRequired" : false,
     "enabled" : true,
     "clientAuthenticatorType" : "client-secret",
@@ -1114,12 +1591,12 @@
     "id" : "2f766f4f-1104-46cb-93c7-3b245e21eb1b",
     "clientId" : "security-admin-console",
     "name" : "${client_security-admin-console}",
-    "baseUrl" : "/auth/admin/Renga/console/index.html",
+    "baseUrl" : "/auth/admin/Renku/console/index.html",
     "surrogateAuthRequired" : false,
     "enabled" : true,
     "clientAuthenticatorType" : "client-secret",
     "secret" : "a58e1789-82dc-45a1-8efc-3ece38e4730a",
-    "redirectUris" : [ "/auth/admin/Renga/console/*" ],
+    "redirectUris" : [ "/auth/admin/Renku/console/*" ],
     "webOrigins" : [ ],
     "notBefore" : 0,
     "bearerOnly" : false,

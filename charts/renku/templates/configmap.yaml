@@ -1,0 +1,65 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ template "renku.fullname" . }}
+  labels:
+    app: {{ template "renku.name" . }}
+    chart: {{ template "renku.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+data:
+  init-gitlab.sh: |-
+    #!/usr/bin/env bash
+
+    set -ex
+    apt-get update -y
+    apt-get install -y curl jq
+
+    BASE_URL="{{ (printf "http://%s" .Values.global.renku.domain) }}"
+    GITLAB_SERVICE_URL="{{ template "http" . }}://{{ template "gitlab.fullname" . }}{{ .Values.global.gitlab.urlPrefix }}"
+    GITLAB_URL="{{ .Values.ui.gitlabUrl }}"
+
+    until sleep 1; curl -f -s --connect-timeout 5 ${GITLAB_SERVICE_URL}/help; do
+        echo waiting for gitlab
+    done
+
+    psql -v ON_ERROR_STOP=1 <<-EOSQL
+        DELETE FROM oauth_applications WHERE uid='jupyterhub';
+        INSERT INTO oauth_applications (name, uid, scopes, redirect_uri, secret, trusted)
+        VALUES ('jupyterhub', 'jupyterhub', 'api read_user', '{{ template "http" . }}://{{ .Values.global.renku.domain }}{{ .Values.jupyterhub.hub.baseUrl }}hub/oauth_callback {{ template "http" . }}://{{ .Values.global.renku.domain }}/jupyterhub/hub/api/oauth2/authorize', 'no-secret-needed', 'true');
+
+        DELETE FROM oauth_applications WHERE uid='renku-ui';
+        INSERT INTO oauth_applications (name, uid, scopes, redirect_uri, secret, trusted)
+        VALUES ('renku-ui', 'renku-ui', 'api read_user', '$BASE_URL/login/redirect/gitlab', 'no-secret-needed', 'true');
+
+        DELETE FROM personal_access_tokens WHERE user_id='1' AND name='managed sudo token';
+        INSERT INTO personal_access_tokens ( user_id, token, name, revoked, expires_at, created_at, updated_at, scopes, impersonation)
+        VALUES ( '1', '${GITLAB_SUDO_TOKEN}', 'managed sudo token', 'f', NULL, NOW(), NOW(), E'--- \n- api\n- read_user\n- sudo\n- read_registry', 'f');
+    EOSQL
+
+
+    # set up the admin user -- first check if the user is there already and grab the ID
+    demo_id=$(curl -s -H "Private-Token: dummy-secret" ${GITLAB_SERVICE_URL}/api/v4/users?username=demo | jq '.[0].id | select(.!=null)')
+
+    if [[ -z "$demo_id" ]]; then
+        method=POST
+    else
+        method=PUT
+    fi
+
+    curl -f -is -X ${method} -H "Private-token: ${GITLAB_SUDO_TOKEN}" \
+        -d  '{"username": "demo",
+        "email": "demo@datascience.ch",
+        "name": "John Doe",
+        "extern_uid": "demo",
+        "provider": "oauth2_generic",
+        "skip_confirmation": "true",
+        "reset_password": "true",
+        "admin": "true"}' \
+        -H "Content-Type: application/json" \
+        ${GITLAB_SERVICE_URL}/api/v4/users/${demo_id}
+
+    # configure the logout redirect
+    curl -f -is -X PUT -H "Private-token: ${GITLAB_SUDO_TOKEN}" \
+      ${GITLAB_SERVICE_URL}/api/v4/application/settings?after_sign_out_path={{ template "http" . }}://{{ .Values.global.renku.domain }}/auth/realms/Renku/protocol/openid-connect/logout?redirect_uri=${GITLAB_URL}

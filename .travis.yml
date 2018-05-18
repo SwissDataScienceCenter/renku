@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# Copyright 2017 - Swiss Data Science Center (SDSC)
+# Copyright 2017-2018 - Swiss Data Science Center (SDSC)
 # A partnership between École Polytechnique Fédérale de Lausanne (EPFL) and
 # Eidgenössische Technische Hochschule Zürich (ETHZ).
 #
@@ -25,12 +25,16 @@ notifications:
 services:
   - docker
 
+addons:
+  hosts:
+    - renku.build
+    - gitlab.renku.build
+    - jupyterhub.renku.build
+    - keycloak.renku.build
+
 branches:
   only:
     - master
-
-env:
-  - RENGA_ENDPOINT=http://localhost
 
 language: python
 
@@ -41,13 +45,13 @@ python:
   - "3.6"
 
 before_install:
-  - sudo apt-get install enchant
+  - sudo apt-get install enchant shellcheck
 
 install:
   - ./scripts/travis-install.sh
 
-before_script:
-  - make start
+before_script: |-
+    make start
 
 script:
-  - make test
+  - xvfb-run make test

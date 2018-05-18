@@ -1,24 +1,23 @@
-.. RENGA Documentation master file, created by
+.. RENKU Documentation master file, created by
    sphinx-quickstart on Tue Aug 22 10:42:25 2017.
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
 .. Add :numbered: to toctree options in order to have numbered items.
 
-Welcome to Renga!
+Welcome to Renku!
 =================
 
-**Renga** is a highly-scalable & secure open software platform designed to
-foster multidisciplinary data (science) collaboration across mutually
-untrusted academic and industrial institutions.
+**Renku** is a scalable & secure open software platform designed to
+foster multidisciplinary data (science) collaboration.
 
 The platform allows (data)scientists to:
 
-* Securely manage, share and process large-scale data across untrusted parties
-  operating in a federated environment.
+* Capture complete lineage up to original raw data for detailed traceability,
+  auditability & reproducibility.
 
-* Automatically capture complete lineage up to original raw data for detailed
-  traceability, auditability & reproducibility.
+* Share their work and reuse the work of others as building blocks in their
+  own analyses
 
 .. toctree::
    :maxdepth: 2

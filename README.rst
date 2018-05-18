@@ -1,5 +1,5 @@
 ..
-    Copyright 2017 - Swiss Data Science Center (SDSC)
+    Copyright 2017-2018 - Swiss Data Science Center (SDSC)
     A partnership between École Polytechnique Fédérale de Lausanne (EPFL) and
     Eidgenössische Technische Hochschule Zürich (ETHZ).
 
@@ -15,21 +15,17 @@
     See the License for the specific language governing permissions and
     limitations under the License... raw:: html
 
-RENGA (連歌)
+RENKU (連句)
 ============
 
-.. image:: https://img.shields.io/travis/SwissDataScienceCenter/renga.svg
-   :target: https://travis-ci.org/SwissDataScienceCenter/renga
+.. image:: https://img.shields.io/travis/SwissDataScienceCenter/renku.svg
+   :target: https://travis-ci.org/SwissDataScienceCenter/renku
 
-.. image:: https://readthedocs.org/projects/renga/badge/?version=latest
-    :target: http://renga.readthedocs.io/en/latest/?badge=latest
+.. image:: https://readthedocs.org/projects/renku/badge/
+    :target: http://renku.readthedocs.io/en/latest/
     :alt: Documentation Status
 
-**Renga is currently undergoing a major restructuring effort. For a preview, 
-you can look at the development branch, but keep in mind it is highly 
-volatile.**
-
-**Renga** is a highly-scalable & secure open software platform designed to
+**Renku** is a highly-scalable & secure open software platform designed to
 foster multidisciplinary data (science) collaboration.
 
 The platform allows practitioners to:
@@ -48,20 +44,20 @@ Starting the platform
 
     $ make start
 
-By default, the platform will run on ``localhost``. You can access the UI at
-http://localhost/ui and the swagger API UI at http://localhost/admin/swagger/.
+Please follow the output for next instructions.
 
-A python CLI and API client is available in the `renga-python
-<https://github/com/SwissDataScienceCenter/renga-python>`_ package.
+A python CLI and API client is available in the `renku-python
+<https://github.com/SwissDataScienceCenter/renku-python>`_ package.
 
 
 Where to go next
 ----------------
 
-The full documentation is available at https://renga.readthedocs.io/.
+The full documentation is available at
+https://renku.readthedocs.io/en/latest/.
 
 First-time users should try our `first steps
-<https://renga.readthedocs.io/en/latest/user/firststeps.html>`_ tutorial.
+<https://renku.readthedocs.io/en/latest/user/firststeps.html>`_ tutorial.
 
 
 Contributing

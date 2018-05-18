@@ -4,6 +4,8 @@ auditability
 auth
 backend
 backends
+blog
+CLI
 coopetition
 deployer
 github
@@ -23,8 +25,9 @@ oauth
 OAuth
 online
 pre
-Renga
-renga
+Renku
+renku
+repo
 scala
 SQLAlchemy
 supertype
@@ -39,4 +42,4 @@ Versioning
 vertices
 workflow
 workflows
-連歌
+連句

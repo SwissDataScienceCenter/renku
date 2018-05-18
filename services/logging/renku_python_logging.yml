@@ -20,12 +20,12 @@ handlers:
   #   transport: logstash_async.transport.TcpTransport
 
 loggers:
-  renga:
+  renku:
     handlers:
     - console
     level: INFO
     propagate: False
-  renga.deployer.engines:
+  renku.deployer.engines:
     handlers:
     - console
     level: DEBUG

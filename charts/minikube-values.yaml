@@ -1,0 +1,32 @@
+#
+# Configuration file for deploying the renku chart on minikube
+#
+
+ingress:
+  enabled: true
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    nginx.ingress.kubernetes.io/ssl-redirect: false
+  hosts:
+  - ""
+
+jupyterhub:
+  rbac:
+    enabled: true
+  hub:
+    cookieSecret: 7c232b97bda321be7e59b9834dfadbb89652da1e0150dff9b3dadb9aa8b4caab
+    baseUrl: '/jupyterhub/'
+  proxy:
+    secretToken: f89ddee5ba10f2268fcefcd4e353235c255493095cd65addf29ebebf8df86255
+  auth:
+    state:
+      enabled: true
+      cryptoKey: 86282f03d9886a64a46ee38f946e9ee27a600df4559584eeb90d0bfbd5a3dc0e
+
+global:
+  gitlab:
+    urlPrefix: /gitlab
+
+notebooks:
+  jupyterhub_base_url: /jupyterhub/
+  jupyterhub_api_token: notebookstoken

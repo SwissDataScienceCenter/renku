@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# Copyright 2017 - Swiss Data Science Center (SDSC)
+# Copyright 2017, 2018 - Swiss Data Science Center (SDSC)
 # A partnership between École Polytechnique Fédérale de Lausanne (EPFL) and
 # Eidgenössische Technische Hochschule Zürich (ETHZ).
 #
@@ -19,7 +19,10 @@
 version: '3'
 volumes:
   db-data: {}
-  cassandra-data: {}
+  gitlab-config: {}
+  gitlab-logs: {}
+  gitlab-data: {}
+  gitlab-runner-data: {}
 services:
   db:
     image: postgres:9.6
@@ -29,165 +32,170 @@ services:
       POSTGRES_PASSWORD: postgres
       POSTGRES_USER: postgres
     volumes:
-    - ./services/postgres/docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d:ro
-    - db-data:/pgdata
-    ports:
-    - 5432
-  cassandra:
-    image: cassandra:2.1.9
-    volumes:
-    - ./services/cassandra/etc/cassandra-env.sh:/etc/cassandra/cassandra-env.sh:ro
-    - cassandra-data:/var/lib/cassandra
-    ports:
-    - 9160
+      - ./services/postgres/docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d:ro
+      - db-data:/pgdata
+    networks:
+      - default
+    healthcheck:
+      test: ["CMD", "sh", "-c", "exec pg_isready"]
+      interval: 30s
+      timeout: 5s
+      retries: 6
+
   keycloak:
     build: ./services/keycloak
     environment:
-      KEYCLOAK_MIGRATION_FILE: /data/renga-realm.json
+      KEYCLOAK_MIGRATION_FILE: /data/renku-realm.json
       KEYCLOAK_PASSWORD: admin
       KEYCLOAK_USER: admin
       POSTGRES_DATABASE: keycloak
       POSTGRES_PASSWORD: keycloak
-      POSTGRES_PORT_5432_TCP_ADDR: postgres
+      POSTGRES_PORT_5432_TCP_ADDR: db
       POSTGRES_USER: keycloak
-      RENGA_ENDPOINT: ${RENGA_ENDPOINT}
-    ports:
-      - 8080
+      RENKU_ENDPOINT: ${RENKU_ENDPOINT}
+      GITLAB_URL: ${GITLAB_URL}
+      RENKU_UI_URL: ${RENKU_UI_URL}
+      GITLAB_CLIENT_SECRET: ${GITLAB_CLIENT_SECRET}
+      JUPYTERHUB_URL: ${JUPYTERHUB_URL}
+      JUPYTERHUB_CLIENT_SECRET: ${JUPYTERHUB_CLIENT_SECRET}
     command:
       - "-b 0.0.0.0"
       - "-Dkeycloak.migration.action=import"
       - "-Dkeycloak.migration.provider=singleFile"
-      - "-Dkeycloak.migration.file=/data/renga-realm.json"
+      - "-Dkeycloak.migration.file=/data/renku-realm.json"
       - "-Dkeycloak.migration.strategy=IGNORE_EXISTING"
-    links:
-      - db:postgres
     restart: on-failure
     labels:
       traefik.enable: "true"
-      traefik.frontend.rule: PathPrefix:/auth
-  graph-typesystem:
-    image: ${IMAGE_REPOSITORY}renga-graph-typesystem-service:$PLATFORM_VERSION
-    ports:
-    - 9000
-    restart: on-failure
-    labels:
-      traefik.enable: "true"
-      traefik.frontend.rule: PathPrefix:/api/types
-  graph-mutation:
-    image: ${IMAGE_REPOSITORY}renga-graph-mutation-service:$PLATFORM_VERSION
-    ports:
-    - 9000
-    restart: on-failure
-    labels:
-      traefik.enable: "true"
-      traefik.frontend.rule: PathPrefix:/api/mutation
-  graph-navigation:
-    image: ${IMAGE_REPOSITORY}renga-graph-navigation-service:$PLATFORM_VERSION
-    environment:
-      PLAY_APPLICATION_SECRET: $PLAY_APPLICATION_SECRET
-      GRAPH_SCOPE_REMOTE_URL: http://reverse-proxy/api/types
-    ports:
-    - 9000
-    restart: on-failure
-    labels:
-      traefik.enable: "true"
-      traefik.frontend.rule: PathPrefix:/api/navigation
-  graph-init:
-    image: ${IMAGE_REPOSITORY}renga-graph-init:$PLATFORM_VERSION
-    environment:
-      GRAPH_API_TYPES: http://reverse-proxy/api/types
-      AUTHORIZATION_CLIENT_SECRET: $AUTHORIZATION_CLIENT_SECRET
-  resource-manager:
-    image: ${IMAGE_REPOSITORY}renga-authorization:$PLATFORM_VERSION
-    environment:
-      PLAY_APPLICATION_SECRET: $PLAY_APPLICATION_SECRET
-      RESOURCE_MANAGER_PUBLIC_KEY: $RESOURCE_MANAGER_PUBLIC_KEY
-      RESOURCE_MANAGER_PRIVATE_KEY: $RESOURCE_MANAGER_PRIVATE_KEY
-#      GRAPH_SCOPE_REMOTE_URL: http://graph-typesystem:9000/api/types
-    ports:
-    - 9000
-    restart: on-failure
-    labels:
-      traefik.enable: "true"
-      traefik.frontend.rule: PathPrefix:/api/resource-manager
-  deployer:
-    image: ${IMAGE_REPOSITORY}renga-deployer:$PLATFORM_VERSION
+      traefik.frontend.rule: "Host:keycloak.${PLATFORM_DOMAIN}"
+      traefik.frontend.entryPoints: "service, http"
+      traefik.frontend.redirect.entryPoint: "service"
     depends_on:
       - db
-      - graph-mutation
-      - graph-typesystem
-      - resource-manager
-      - keycloak
-    ports:
-      - 5000
-    restart: on-failure
+    networks:
+      default:
+        aliases:
+          - keycloak.${PLATFORM_DOMAIN}
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/auth"]
+      interval: 60s
+      timeout: 30s
+      retries: 5
+
+  gitlab:
+    image: gitlab/gitlab-ce:latest
+    restart: always
     environment:
-      DEPLOYER_AUTHORIZATION_URL: ${RENGA_ENDPOINT}/auth/realms/Renga/protocol/openid-connect/auth
-      DEPLOYER_BASE_PATH: /api/deployer
-      DEPLOYER_JWT_ISSUER: resource-manager
-      DEPLOYER_JWT_KEY: $RESOURCE_MANAGER_PUBLIC_KEY
-      DEPLOYER_TOKEN_SCOPE_KEY: https://rm.datascience.ch/scope
-      DEPLOYER_TOKEN_URL: http://reverse-proxy/auth/realms/Renga/protocol/openid-connect/token
-      DEPLOYER_URL: ${RENGA_ENDPOINT}
-      KNOWLEDGE_GRAPH_URL: http://reverse-proxy/api/
-      RENGA_AUTHORIZATION_CLIENT_ID: renga-services
-      RENGA_AUTHORIZATION_CLIENT_SECRET: $AUTHORIZATION_CLIENT_SECRET
-      RENGA_ENDPOINT: ${RENGA_CONTAINERS_ENDPOINT:-$RENGA_ENDPOINT}
-      RESOURCE_MANAGER_URL: http://reverse-proxy/api/resource-manager/authorize
-      SQLALCHEMY_DATABASE_URI: "postgres+psycopg2://postgres:postgres@db/deployer"
-      WSGI_NUM_PROXIES: 1
-      RENGA_LOGGING_CONFIG: /config/logging.yml
+      GITLAB_OMNIBUS_CONFIG: |
+        external_url '${GITLAB_URL}'
+        registry_external_url '${GITLAB_REGISTRY_URL}'
+        # Enable or disable automatic database migrations
+        # gitlab_rails['auto_migrate'] = false
+        # manually run: gitlab-ctl pg-upgrade
+        # FIXME change from postgres to gitlab
+        # TODO need to run gitlab-rake gitlab:setup for external db
+        #postgresql['enable'] = false
+        #gitlab_rails['db_username'] = 'postgres'
+        #gitlab_rails['db_password'] = 'postgres'
+        #gitlab_rails['db_host'] = 'db'
+        #gitlab_rails['db_port'] = 5432
+        #gitlab_rails['db_database'] = 'gitlab'
+        #gitlab_rails['db_adapter'] = 'postgresql'
+        #gitlab_rails['db_encoding'] = 'utf8'
+        gitlab_rails['omniauth_enabled'] = true
+        gitlab_rails['omniauth_auto_sign_in_with_provider'] = 'oauth2_generic'
+        gitlab_rails['omniauth_allow_single_sign_on'] = ['oauth2_generic']
+        gitlab_rails['omniauth_block_auto_created_users'] = false
+        gitlab_rails['omniauth_providers'] = [
+          {
+            'name' => 'oauth2_generic',
+            'app_id' => 'gitlab',
+            'app_secret' => '${GITLAB_CLIENT_SECRET}',
+            'args' => {
+              client_options: {
+                # Traefik maps keycloak to the URL below
+                # CAREFUL: This must be accessible from inside the keycloak container
+                # for service-to-service communication.
+                'site' => '${KEYCLOAK_URL}/auth',
+                'authorize_url' => '/auth/realms/Renku/protocol/openid-connect/auth',
+                'user_info_url' => '/auth/realms/Renku/protocol/openid-connect/userinfo',
+                'token_url' => '/auth/realms/Renku/protocol/openid-connect/token'
+              },
+              user_response_structure: {
+                attributes: { email:'email', first_name:'given_name', last_name:'family_name', name:'name', nickname:'preferred_username' }, # if the nickname attribute of a user is called 'username'
+                id_path: 'preferred_username'
+              }
+            },
+            label: 'Renku Login'
+          }
+        ]
+        gitlab_rails['gitlab_shell_ssh_port'] = 5022
+        gitlab_rails['lfs_enabled'] = true
+        gitlab_rails['lfs_storage_path'] = '/var/storage/lfs-objects'
+        gitlab_rails['initial_root_password'] = 'root_password'
+        gitlab_rails['initial_shared_runners_registration_token'] = '${GITLAB_RUNNERS_TOKEN}'
+        # Add any other gitlab.rb configuration here, each on its own line
+    ports:
+      - '5022:22'
+      - '5081:5081'
     volumes:
+      - gitlab-config:/etc/gitlab
+      - gitlab-logs:/var/log/gitlab
+      - gitlab-data:/var/opt/gitlab
+      - ./services/gitlab/Auto-DevOps.gitlab-ci.yml:/opt/gitlab/embedded/service/gitlab-rails/vendor/gitlab-ci-yml/Auto-DevOps.gitlab-ci.yml:ro
+      - ./services/gitlab/lfs-data:/var/storage/lfs-objects # TODO: REMOVE ME
+    depends_on:
+      - db
+    labels:
+      traefik.enable: "true"
+      traefik.frontend.rule: Host:gitlab.${PLATFORM_DOMAIN}
+      traefik.port: '80'
+    networks:
+      default:
+        aliases:
+          - gitlab.${PLATFORM_DOMAIN}
+      review:
+        aliases:
+          - gitlab.${PLATFORM_DOMAIN}
+
+  gitlab-runner:
+    image: ${DOCKER_PREFIX}gitlab-runner:${PLATFORM_VERSION}
+    restart: always
+    volumes:
+      - gitlab-runner-data:/etc/gitlab-runner
       - /var/run/docker.sock:/var/run/docker.sock
-      - ./services/logging/renga_python_logging.yml:/config/logging.yml
-    labels:
-      traefik.enable: "true"
-      traefik.frontend.rule: PathPrefix:/api/deployer
-  explorer:
-    image: ${IMAGE_REPOSITORY}renga-explorer:$PLATFORM_VERSION
-    environment:
-      PLAY_APPLICATION_SECRET: $PLAY_APPLICATION_SECRET
-      RENGA_SERVICES_AUTHORIZATION_URL: ${RENGA_ENDPOINT}/auth/realms/Renga/protocol/openid-connect/auth
-      RESOURCE_MANAGER_PUBLIC_KEY: $RESOURCE_MANAGER_PUBLIC_KEY
-    depends_on:
-      - graph-typesystem
-    ports:
-      - 9000
-    restart: on-failure
-    labels:
-      traefik.enable: "true"
-      traefik.frontend.rule: PathPrefix:/api/explorer
-  projects:
-    image: ${IMAGE_REPOSITORY}renga-projects:$PLATFORM_VERSION
-    environment:
-      AUTHORIZATION_CLIENT_SECRET: $AUTHORIZATION_CLIENT_SECRET
-      PLAY_APPLICATION_SECRET: $PLAY_APPLICATION_SECRET
-      RENGA_SERVICES_AUTHORIZATION_URL: ${RENGA_ENDPOINT}/auth/realms/Renga/protocol/openid-connect/auth
-      RESOURCE_MANAGER_PUBLIC_KEY: $RESOURCE_MANAGER_PUBLIC_KEY
-    depends_on:
-      - graph-typesystem
-    ports:
-      - 9000
-    restart: on-failure
-    labels:
-      traefik.enable: "true"
-      traefik.frontend.rule: PathPrefix:/api/projects
+    networks:
+      - default
+      - review
+
   storage:
-    image: ${IMAGE_REPOSITORY}renga-storage:$PLATFORM_VERSION
+    image: ${DOCKER_PREFIX}renku-storage:${PLATFORM_VERSION}
     environment:
-      AUTHORIZATION_CLIENT_SECRET: $AUTHORIZATION_CLIENT_SECRET
+      # AUTHORIZATION_CLIENT_SECRET: $AUTHORIZATION_CLIENT_SECRET
       PLAY_APPLICATION_SECRET: $PLAY_APPLICATION_SECRET
-      RENGA_SERVICES_AUTHORIZATION_URL: ${RENGA_ENDPOINT}/auth/realms/Renga/protocol/openid-connect/auth
-      RESOURCE_MANAGER_PUBLIC_KEY: $RESOURCE_MANAGER_PUBLIC_KEY
+      RENKU_SERVICES_AUTHORIZATION_URL: ${KEYCLOAK_URL}/auth/realms/Renku/protocol/openid-connect/auth
       STORAGE_BACKEND_LOCAL_ENABLED: "true"
+      RENKU_ENDPOINT: ${RENKU_ENDPOINT}
+      STORAGE_BACKEND_LOCALGIT_ENABLED: "true"
+      STORAGE_BACKEND_GITLAB_ENABLED: "true"
+      GITLAB_URL: ${GITLAB_URL}
+      GITLAB_USER: "root"
+      GITLAB_PASS: ${GITLAB_TOKEN}
+      RENKU_STORAGE_DEFAULT_LFS_BACKEND: "local"
     volumes:
-    - ./services/storage/data:/data
+      - ./services/storage/data:/data
     ports:
-    - 9000
+      - 9000
     restart: on-failure
+    depends_on:
+      - db
+      - keycloak
+    networks:
+      - default
     labels:
       traefik.enable: "true"
       traefik.frontend.rule: PathPrefix:/api/storage
+
   apispec:
     build: ./services/apispec
     ports:
@@ -197,46 +205,112 @@ services:
       traefik.frontend.rule: Path:/api/swagger.json
     environment:
       API_ROOT_URL: http://reverse-proxy/api/
-      SERVICES: deployer,projects,storage,explorer
+      SERVICES: storage
       WSGI_NUM_PROXIES: 1
   swagger:
-    image: ${IMAGE_REPOSITORY}swagger-ui:latest
+    image: ${DOCKER_PREFIX}swagger-ui:latest
     ports:
       - 8080
     labels:
       traefik.enable: "true"
       traefik.frontend.rule: PathPrefixStrip:/admin/swagger
     environment:
-      API_URL: ${RENGA_ENDPOINT}/api/swagger.json
-      OAUTH2_REDIRECT_URL: ${RENGA_ENDPOINT}/admin/swagger/oauth2-redirect.html
+      API_URL: ${RENKU_ENDPOINT}/api/swagger.json
+      OAUTH2_REDIRECT_URL: ${RENKU_ENDPOINT}/admin/swagger/oauth2-redirect.html
+
   ui:
-    image: ${IMAGE_REPOSITORY}renga-ui:$PLATFORM_VERSION
-    ports:
-      - 5000
+    image: ${DOCKER_PREFIX}renku-ui:${PLATFORM_VERSION}
+    restart: always
     environment:
-      API_ROOT_URL: http://reverse-proxy/api/
-      APPLICATION_ROOT: /ui
-      KEYCLOAK_REDIRECT_URL: ${RENGA_ENDPOINT}/auth/realms/Renga/  # from outside
-      KEYCLOAK_URL: http://reverse-proxy/auth/realms/Renga/  # from inside
+      BASE_URL: http://${PLATFORM_DOMAIN}
+      GITLAB_URL: ${GITLAB_URL}
     labels:
       traefik.enable: "true"
-      traefik.frontend.rule: PathPrefix:/ui
+      traefik.frontend.rule: "Host:${PLATFORM_DOMAIN}"
+      traefik.frontend.passHostHeader: "false"
+    networks:
+      - default
+
   reverse-proxy:
     image: traefik
     command: --web --web.address=:81 \
-      --docker --docker.watch --docker.domain=localhost \
-      --debug --logLevel=DEBUG \
+      --docker --docker.watch --docker.domain=${PLATFORM_DOMAIN} \
+      --debug --logLevel=INFO \
       --defaultentrypoints=http,https \
       --entrypoints='Name:http Address::80' \
       --entrypoints='Name:https Address::443 TLS:/ssl/test.crt,/ssl/test.key' \
+      --entrypoints='Name:service Address::8080' \
       --docker.exposedbydefault=false
     # FIXME usage of self signed certs --entrypoints='Name:http Address::80 Redirect.EntryPoint:https' \
     ports:
-        - 80:80
-        - 443:443
-        - 8080:8080
-        - 81:81
+      - 80:80
+      - 443:443
+      - 8080:8080
+      - 81:81
     volumes:
-        - /var/run/docker.sock:/var/run/docker.sock
-        - /dev/null:/traefik.toml
-        - ./services/traefik/ssl/:/ssl/
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /dev/null:/traefik.toml
+      - ./services/traefik/ssl/:/ssl/:ro
+    networks:
+      - default
+      - review
+
+  singleuser:
+    build:
+      context: services/singleuser
+      args:
+        BASE_IMAGE: renku/minimal-notebook:b43b757ad56a
+        JUPYTERHUB_VERSION: master
+    image: ${DOCKER_PREFIX}singleuser:${PLATFORM_VERSION}
+    command: renku --version
+
+  jupyterhub:
+    build: services/jupyterhub
+    command: jupyterhub --debug
+    ports:
+      - 8000
+      - 8081
+    environment:
+      DEBUG: 1
+      GITLAB_CLIENT_ID: jupyterhub
+      GITLAB_CLIENT_SECRET: no-secret-needed
+      GITLAB_HOST: ${GITLAB_URL}
+      IMAGE_REGISTRY: gitlab.${PLATFORM_DOMAIN}:5081
+      JUPYTERHUB_CRYPT_KEY: ${JUPYTERHUB_CRYPT_KEY}
+      JUPYTERHUB_NOTEBOOK_DIR: /repo
+      JUPYTERHUB_NOTEBOOK_IMAGE: ${DOCKER_PREFIX}singleuser:${PLATFORM_VERSION}
+      JUPYTERHUB_RENKU_NOTEBOOKS_SERVICE_TOKEN: ${JUPYTERHUB_RENKU_NOTEBOOKS_SERVICE_TOKEN}
+      JUPYTERHUB_SPAWNER_CLASS: spawners.RenkuDockerSpawner
+      KEYCLOAK_URL: ${KEYCLOAK_URL}
+      OAUTH2_AUTHORIZE_URL: ${KEYCLOAK_URL}/auth/realms/Renku/protocol/openid-connect/auth
+      OAUTH2_TOKEN_URL: ${KEYCLOAK_URL}/auth/realms/Renku/protocol/openid-connect/token
+      PLATFORM_DOMAIN: ${PLATFORM_DOMAIN}
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./services/jupyterhub/jupyterhub_config.py:/srv/jupyterhub/jupyterhub_config.py:ro
+      - ./services/jupyterhub/project_service.py:/srv/jupyterhub/project_service.py:ro
+      - ./services/jupyterhub/spawners.py:/srv/jupyterhub/spawners.py:ro
+    labels:
+      traefik.enable: "true"
+      traefik.port: '8000'
+      traefik.frontend.rule: "Host:jupyterhub.${PLATFORM_DOMAIN}"
+    networks:
+      default:
+        aliases:
+          - jupyterhub.${PLATFORM_DOMAIN}
+      review:
+        aliases:
+          - jupyterhub.${PLATFORM_DOMAIN}
+
+  notebooks:
+    build: services/notebooks
+    environment:
+      GITLAB_HOST: ${GITLAB_URL}
+      FLASK_DEBUG: 1
+      OAUTHLIB_INSECURE_TRANSPORT: 1
+      JUPYTERHUB_API_TOKEN: ${JUPYTERHUB_RENKU_NOTEBOOKS_SERVICE_TOKEN}
+      JUPYTERHUB_API_URL: http://jupyterhub:8000/hub/api
+      JUPYTERHUB_SERVICE_PREFIX: /services/notebooks/
+networks:
+  review:
+    external: true
