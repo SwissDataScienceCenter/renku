@@ -28,8 +28,10 @@ spec:
           containerPort: {{ .Values.service.port }}
           protocol: TCP
         env:
-        - name: RENGA_SERVICES_AUTHORIZATION_URL
-          value: "{{ template "http" . }}://{{ .Values.global.renga.domain }}/auth/realms/Renga/protocol/openid-connect/auth"
+        - name: IDENTITY_MANAGER_EXTERNAL_URL
+          value: "{{ template "http" . }}://{{ .Values.global.renga.domain }}/auth/realms/Renga"
+        - name: IDENTITY_MANAGER_INTERNAL_URL
+          value: "http://{{ template "keycloak.fullname" . }}/auth/realms/Renga"
         - name: PLAY_APPLICATION_SECRET
           valueFrom:
             secretKeyRef:
