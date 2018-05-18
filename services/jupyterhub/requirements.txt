@@ -17,7 +17,6 @@
 # limitations under the License.
 
 -e git+https://github.com/jupyterhub/dockerspawner#egg=dockerspawner
-flask
 jupyterhub-kubespawner
 nullauthenticator
 oauthenticator

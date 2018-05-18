@@ -34,3 +34,7 @@ jupyterhub:
 global:
   gitlab:
     urlPrefix: /gitlab
+
+notebooks:
+  jupyterhub_base_url: /jupyterhub/
+  jupyterhub_api_token: notebookstoken

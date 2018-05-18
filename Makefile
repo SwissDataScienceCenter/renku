@@ -45,6 +45,7 @@ GITLAB_DIRS=config logs git-data lfs-data runner
 GITLAB_RUNNERS_TOKEN?=$(shell openssl rand -hex 32)
 
 JUPYTERHUB_CRYPT_KEY?=$(shell openssl rand -hex 32)
+JUPYTERHUB_RENGA_NOTEBOOKS_SERVICE_TOKEN?=$(shell openssl rand -hex 32)
 JUPYTERHUB_URL?=http://jupyterhub.$(PLATFORM_DOMAIN)
 
 PLAY_APPLICATION_SECRET?=$(shell openssl rand -hex 32)
@@ -63,6 +64,7 @@ DOCKER_COMPOSE_ENV=\
 	GITLAB_URL=$(GITLAB_URL) \
 	JUPYTERHUB_CLIENT_SECRET=$(JUPYTERHUB_CLIENT_SECRET) \
 	JUPYTERHUB_CRYPT_KEY=$(JUPYTERHUB_CRYPT_KEY) \
+	JUPYTERHUB_RENGA_NOTEBOOKS_SERVICE_TOKEN=$(JUPYTERHUB_RENGA_NOTEBOOKS_SERVICE_TOKEN)\
 	JUPYTERHUB_URL=$(JUPYTERHUB_URL) \
 	KEYCLOAK_URL=$(KEYCLOAK_URL) \
 	PLATFORM_DOMAIN=$(PLATFORM_DOMAIN) \
@@ -133,6 +135,7 @@ scala-artifact = \
 
 dockerfile-services = \
 	keycloak \
+	notebooks \
 	singleuser
 
 .PHONY: all
