@@ -19,7 +19,7 @@
 
 #
 # This Makefile provides convenient targets for building the various pieces of
-# the Renga platform.
+# the Renku platform.
 
 #
 # There are two main sections in this Makefile:
@@ -100,10 +100,6 @@ DOCKER_COMPOSE_ENV=\
 	RENKU_ENDPOINT=$(RENKU_ENDPOINT) \
 	RENKU_UI_URL=$(RENKU_UI_URL)
 
-SBT_IVY_DIR := $(PWD)/.ivy
-SBT = sbt -ivy $(SBT_IVY_DIR)
-SBT_PUBLISH_TARGET = publish-local
-
 ifndef KEYCLOAK_URL
 	KEYCLOAK_URL=http://keycloak.$(PLATFORM_DOMAIN):8080
 	export KEYCLOAK_URL
@@ -139,7 +135,7 @@ endif
 # 2. Repository management and docker image builds
 # ------------------------------------------------
 #
-# Here we define make targets that allow you to manage the Renga component
+# Here we define make targets that allow you to manage the Renku component
 # repositories and build docker images. The repositories are defined in the
 # "repos" variable below. The other variables define how the various service
 # docker images should be built.
@@ -187,16 +183,13 @@ repos = \
 	renku-python \
 	renku-ui
 
-scala-services = \
-	renku-storage
+# scala-services = \
+# 	renku-storage
 
 makefile-services = \
  	renku-ui \
- 	renku-python
-
-scala-artifact = \
-	renku-commons \
-	renku-graph
+ 	renku-python \
+	renku-storage
 
 dockerfile-services = \
 	apispec \
@@ -227,27 +220,9 @@ checkout: $(foreach s, $(repos), $(s)-checkout)
 
 pull: $(foreach s, $(repos), $(s)-pull)
 
-# build scala services
-%-artifact: $(PLATFORM_BASE_DIR)/%
-	cd $< && $(SBT) $(SBT_PUBLISH_TARGET)
-	rm -rf $(SBT_IVY_DIR)/cache/ch.datascience/$(*)*
-
-renku-graph-%-scala: $(PLATFORM_BASE_DIR)/renku-graph $(scala-artifact)
-	cd $< && echo "project $*\n$$DOCKER_BUILD" | $(SBT)
-
-%-scala: $(PLATFORM_BASE_DIR)/% $(scala-artifact)
-	cd $< && echo "$$DOCKER_BUILD" | $(SBT)
-
-$(scala-services): %: %-scala
-
-$(scala-artifact): %: %-artifact
-
-# define this dependency explicitly
-renku-commons-artifact: renku-graph-artifact
-
 # build docker images
-.PHONY: docker-images $(dockerfile-services) $(makefile-services) login tag
-docker-images: $(scala-services) $(dockerfile-services) $(makefile-services)
+.PHONY: docker-images $(dockerfile-services) $(makefile-services) tag
+docker-images: $(dockerfile-services) $(makefile-services)
 
 $(dockerfile-services): %: .env services/%/Dockerfile
 	docker build --tag $(DOCKER_PREFIX)$@:$(PLATFORM_VERSION) \
@@ -266,7 +241,7 @@ $(makefile-services): %: $(PLATFORM_BASE_DIR)/%
 .PHONY: start stop test wipe
 
 start: .env
-	@./scripts/renga-start.sh
+	@./scripts/renku-start.sh
 
 stop: .env
 	@docker-compose stop
@@ -278,4 +253,4 @@ test: .env
 	@pipenv run ./scripts/run-tests.sh
 
 wipe: .env
-	@./scripts/renga-wipe.sh
+	@./scripts/renku-wipe.sh
