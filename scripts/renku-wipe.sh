@@ -25,25 +25,40 @@ set -e
 
 # load the environment from .env
 
-if [ ! -f .env ]; then
-    echo ".env not found - did you already remove the platform?"
-else
-    echo "Loading environment from .env:"
+loadEnv() {
+    # load the environment from .env
+
+    if [ ! -f .env ]; then
+        echo "[Error] .env not found - please create one or run \"make .env\"."
+        exit 1
+    fi
+    echo
+    echo "[Info] Loading environment variables from .env:"
     cat .env
+
     set -a
     source .env
     set +a
-    echo "Removing .env..."
+    echo "[Info] Removing .env..."
     rm .env
-fi
+}
 
-echo "Stopping containers..."
-docker-compose down --volumes --remove-orphans
+stopContainers() {
+    echo "Stopping containers..."
+    docker-compose down --volumes --remove-orphans
+}
 
-if [ -z $(docker network ls -q -f name=${DOCKER_NETWORK}) ]; then
-    echo "Removing docker network ${DOCKER_NETWORK}..."
-    docker network rm $(DOCKER_NETWORK)
-fi
+removeNetwork() {
+    if [ -z $(docker network ls -q -f name=${DOCKER_NETWORK}) ]; then
+        echo "Removing docker network ${DOCKER_NETWORK}..."
+        docker network rm $(DOCKER_NETWORK)
+    fi
+}
 
-echo "Removing GitLab data..."
-rm -rf services/gitlab/data/*
+main() {
+    loadEnv;
+    stopContainers;
+    removeNetwork;
+}
+
+main

@@ -20,141 +20,191 @@
 set -e
 
 #
-# This script starts the Renga platform
+# This script starts the Renku platform
 #
 
-# load the environment from .env
+loadEnv() {
+    # load the environment from .env
 
-if [ ! -f .env ]; then
-    echo ".env not found - please create one or run \"make .env\"."
-    exit 1
-fi
-echo
-echo "Loading environment variables from .env:"
-cat .env
+    if [ ! -f .env ]; then
+        echo "[Error] .env not found - please create one or run \"make .env\"."
+        exit 1
+    fi
+    echo
+    echo "[Info] Loading environment variables from .env:"
+    cat .env
 
-set -a
-source .env
-set +a
+    set -a
+    source .env
+    set +a
+}
 
-echo
-echo "Building the \"singleuser\" notebook image..."
-make singleuser
+makeImages() {
+    echo
+    echo "[Info] Building the docker images..."
+    make tag
+}
 
-echo
-echo "Creating GitLab data directories..."
-for d in "config" "logs" "git-data" "lfs-data" "runner"
-do
-    mkdir -p services/gitlab/$d
-done
+gitlabDirs() {
+    echo
+    echo "[Info] Creating GitLab data directories..."
+    for d in "config" "logs" "git-data" "lfs-data" "runner"
+    do
+        mkdir -p services/gitlab/$d
+    done
+}
 
-if [ -z $(docker network ls -q -f name=${DOCKER_NETWORK}) ]; then
-    echo "Creating docker network ${DOCKER_NETWORK}..."
-    docker network create ${DOCKER_NETWORK}
-fi
+dockerNetwork()  {
+    if [ -z $(docker network ls -q -f name=${DOCKER_NETWORK}) ]; then
+        echo "[Info] Creating docker network ${DOCKER_NETWORK}..."
+        docker network create ${DOCKER_NETWORK}
+    fi
+}
 
-# Allow runner unregistration to fail (if there is no platform it will)
-set +e
-echo
-echo "Unregistering GitLab runners..."
-docker-compose exec gitlab /opt/gitlab/bin/gitlab-psql \
-        -h /var/opt/gitlab/postgresql -d gitlabhq_production \
-        -c "DELETE FROM personal_access_tokens WHERE user_id='1' AND name='managed storage token';" > /dev/null 2>&1
-set -e
+unregisterGitlabRunners() {
+    # Allow runner unregistration to fail (if there is no platform it will)
+    set +e
+    echo
+    echo "[Info] Unregistering GitLab runners..."
+    docker-compose exec gitlab /opt/gitlab/bin/gitlab-psql \
+            -h /var/opt/gitlab/postgresql -d gitlabhq_production \
+            -c "DELETE FROM personal_access_tokens WHERE user_id='1' AND name='managed storage token';" > /dev/null 2>&1
+    set -e
+}
 
-echo
-echo "Bootstrapping containers..."
-docker-compose up --build -d ${DOCKER_SCALE}
+registerGitlabRunners() {
+    echo
+    echo "[Info] Registering GitLab CI Runners..."
+    if [ -z ${GITLAB_RUNNERS_TOKEN} ]; then
+        echo "[Error] GITLAB_RUNNERS_TOKEN needs to be configured. Check ${GITLAB_URL}/admin/runners"
+        exit 1
+    fi
+    for container in $(docker-compose ps -q gitlab-runner)
+    do
+        docker exec -ti $container gitlab-runner register \
+                -n -u ${GITLAB_URL} \
+                --name $$container-shell \
+                -r ${GITLAB_RUNNERS_TOKEN} \
+                --executor shell \
+                --env RENKU_REVIEW_DOMAIN=${PLATFORM_DOMAIN} \
+                --env RENKU_RUNNER_NETWORK=${DOCKER_NETWORK} \
+                --locked=false \
+                --run-untagged=false \
+                --docker-image ${DOCKER_PREFIX}renku-python:${PLATFORM_VERSION} \
+                --docker-network-mode=review \
+                --docker-pull-policy "if-not-present"; \
+    done
+}
 
-#
-# waiting for services
-#
-scripts/wait-for-services.sh
+bootstrapContainers() {
+    echo
+    echo "[Info] Bootstrapping containers..."
+    docker-compose up --build -d ${DOCKER_SCALE}
+}
 
-echo
-echo "Registering the gitlab sudo user token = ${GITLAB_SUDO_TOKEN}"
-docker-compose exec gitlab /opt/gitlab/bin/gitlab-psql \
-    -h /var/opt/gitlab/postgresql -d gitlabhq_production \
-    -c "INSERT INTO personal_access_tokens ( user_id, token, name, revoked, expires_at, created_at, updated_at, scopes, impersonation) VALUES ( '1', '${GITLAB_SUDO_TOKEN}', 'managed storage token', 'f', NULL, NOW(), NOW(), E'--- \n- api\n- read_user\n- sudo\n- read_registry', 'f');" > /dev/null 2>&1
+waitForServices() {
+    # waiting for services
+    scripts/wait-for-services.sh
+}
 
-
-# TODO: use the API
-GITLAB_PSQL_CMD='docker-compose exec gitlab /opt/gitlab/bin/gitlab-psql -t -h /var/opt/gitlab/postgresql -d gitlabhq_production -c'
-
-if [ -z $(${GITLAB_PSQL_CMD} "SELECT name FROM oauth_applications WHERE name LIKE 'renga-ui'" | tr -d '[:space:]' ) ]; then
-    echo "Registering renga-ui with GitLab..."
+registerGitlabSudoToken() {
+    echo
+    echo "[Info] Registering the gitlab sudo user token = ${GITLAB_SUDO_TOKEN}"
     docker-compose exec gitlab /opt/gitlab/bin/gitlab-psql \
         -h /var/opt/gitlab/postgresql -d gitlabhq_production \
-        -c "INSERT INTO oauth_applications (name, uid, scopes, redirect_uri, secret, trusted) VALUES ('renga-ui', 'renga-ui', 'api read_user', '${RENGA_UI_URL}/login/redirect/gitlab http://localhost:3000/login/redirect/gitlab', 'no-secret-needed', 'true')"
-fi
+        -c "INSERT INTO personal_access_tokens ( user_id, token, name, revoked, expires_at, created_at, updated_at, scopes, impersonation) VALUES ( '1', '${GITLAB_SUDO_TOKEN}', 'managed storage token', 'f', NULL, NOW(), NOW(), E'--- \n- api\n- read_user\n- sudo\n- read_registry', 'f');" > /dev/null 2>&1
+}
 
-if [ -z $(${GITLAB_PSQL_CMD} "SELECT name FROM oauth_applications WHERE name LIKE 'jupyterhub'" | tr -d '[:space:]' ) ]; then
-    echo "Registering jupuyterhub with GitLab..."
-    docker-compose exec gitlab /opt/gitlab/bin/gitlab-psql \
-        -h /var/opt/gitlab/postgresql -d gitlabhq_production \
-        -c "INSERT INTO oauth_applications (name, uid, scopes, redirect_uri, secret, trusted) VALUES ('jupyterhub', 'jupyterhub', 'api read_user', '${JUPYTERHUB_URL}/hub/oauth_callback ${JUPYTERHUB_URL}/hub/api/oauth2/authorize', 'no-secret-needed', 'true')"
-fi
-
-echo
-echo "Registering GitLab CI Runners..."
-if [ -z ${GITLAB_RUNNERS_TOKEN} ]; then
-    echo "[Error] GITLAB_RUNNERS_TOKEN needs to be configured. Check ${GITLAB_URL}/admin/runners"
-    exit 1
-fi
-for container in $(docker-compose ps -q gitlab-runner)
-do
-    docker exec -ti $container gitlab-runner register \
-            -n -u ${GITLAB_URL} \
-            --name $$container-shell \
-            -r ${GITLAB_RUNNERS_TOKEN} \
-            --executor shell \
-            --env RENGA_REVIEW_DOMAIN=${PLATFORM_DOMAIN} \
-            --env RENGA_RUNNER_NETWORK=${DOCKER_NETWORK} \
-            --locked=false \
-            --run-untagged=false \
-            --docker-image ${DOCKER_PREFIX}renga-python:${PLATFORM_VERSION} \
-            --docker-network-mode=review \
-            --docker-pull-policy "if-not-present"; \
-done
-
-echo
-echo "Configuring user \"demo\" as gitlab admin..."
-curl -i -X POST -H "Private-token: ${GITLAB_SUDO_TOKEN}" \
-  -d '{"username": "demo",
-       "email": "demo@datascience.ch",
-       "name": "John Doe",
-       "extern_uid": "demo",
-       "provider": "oauth2_generic",
-       "skip_confirmation": true,
-       "reset_password": true,
-       "admin": true}' \
-  -H 'Content-Type: application/json' \
-  ${GITLAB_URL}/api/v4/users
-
-
-echo
-echo "Configuring logout redirect..."
-curl -X PUT -H "Private-token: ${GITLAB_SUDO_TOKEN}" "${GITLAB_URL}/api/v4/application/settings?after_sign_out_path=${KEYCLOAK_URL}/auth/realms/Renga/protocol/openid-connect/logout?redirect_uri=${GITLAB_URL}" > /dev/null 2>&1
-
-if [ $GITLAB_CLIENT_SECRET = "dummy-secret" ]; then
+registerGitlabSudoUser() {
     echo
-    echo "[Warning] You have not defined a GITLAB_CLIENT_SECRET. Using dummy"
-    echo "          secret instead. Never do this in production!"
-    echo
-fi
+    echo "[Info] Configuring user \"demo\" as gitlab admin..."
+    curl -i -X POST -H "Private-token: ${GITLAB_SUDO_TOKEN}" \
+      -d '{"username": "demo",
+           "email": "demo@datascience.ch",
+           "name": "John Doe",
+           "extern_uid": "demo",
+           "provider": "oauth2_generic",
+           "skip_confirmation": true,
+           "reset_password": true,
+           "admin": true}' \
+      -H 'Content-Type: application/json' \
+      ${GITLAB_URL}/api/v4/users
+}
 
-echo
-echo "Checking that services are reachable..."
-PING=$(ping -c1 ${PLATFORM_DOMAIN} && ping -c1 gitlab.${PLATFORM_DOMAIN} && ping -c1 keycloak.${PLATFORM_DOMAIN} && ping -c1 jupyterhub.${PLATFORM_DOMAIN})
-if [ -z "${PING}" ]; then
-    echo
-    echo "[Error] Services unreachable -- if running locally, ensure name resolution with: "
-    echo
-    echo "$$ echo \"127.0.0.1 $(PLATFORM_DOMAIN) keycloak.$(PLATFORM_DOMAIN) gitlab.$(PLATFORM_DOMAIN) jupyterhub.$(PLATFORM_DOMAIN)\" | sudo tee -a /etc/hosts"
-    echo
-    exit 1
-fi
+registarGitlabApplications() {
+    # Register the applications requiring access to GitLab
 
-echo
-echo "[Success] Renga UI should be under ${RENGA_UI_URL} and GitLab under ${GITLAB_URL}"
-echo
+    # TODO: use the API
+    GITLAB_PSQL_CMD='docker-compose exec gitlab /opt/gitlab/bin/gitlab-psql -t -h /var/opt/gitlab/postgresql -d gitlabhq_production -c'
+
+    if [ -z $(${GITLAB_PSQL_CMD} "SELECT name FROM oauth_applications WHERE name LIKE 'renku-ui'" | tr -d '[:space:]' ) ]; then
+        echo "[Info] Registering renku-ui with GitLab..."
+        docker-compose exec gitlab /opt/gitlab/bin/gitlab-psql \
+            -h /var/opt/gitlab/postgresql -d gitlabhq_production \
+            -c "INSERT INTO oauth_applications (name, uid, scopes, redirect_uri, secret, trusted) VALUES ('renku-ui', 'renku-ui', 'api read_user', '${RENKU_UI_URL}/login/redirect/gitlab http://localhost:3000/login/redirect/gitlab', 'no-secret-needed', 'true')"
+    fi
+
+    if [ -z $(${GITLAB_PSQL_CMD} "SELECT name FROM oauth_applications WHERE name LIKE 'jupyterhub'" | tr -d '[:space:]' ) ]; then
+        echo "[Info] Registering jupuyterhub with GitLab..."
+        docker-compose exec gitlab /opt/gitlab/bin/gitlab-psql \
+            -h /var/opt/gitlab/postgresql -d gitlabhq_production \
+            -c "INSERT INTO oauth_applications (name, uid, scopes, redirect_uri, secret, trusted) VALUES ('jupyterhub', 'jupyterhub', 'api read_user', '${JUPYTERHUB_URL}/hub/oauth_callback ${JUPYTERHUB_URL}/hub/api/oauth2/authorize', 'no-secret-needed', 'true')"
+    fi
+}
+
+configureLogout() {
+    # configure the logout redirect
+    echo
+    echo "[Info] Configuring logout redirect..."
+    curl -X PUT -H "Private-token: ${GITLAB_SUDO_TOKEN}" "${GITLAB_URL}/api/v4/application/settings?after_sign_out_path=${KEYCLOAK_URL}/auth/realms/Renku/protocol/openid-connect/logout?redirect_uri=${GITLAB_URL}" > /dev/null 2>&1
+
+    if [ $GITLAB_CLIENT_SECRET = "dummy-secret" ]; then
+        echo
+        echo "[Warning] You have not defined a GITLAB_CLIENT_SECRET. Using dummy"
+        echo "          secret instead. Never do this in production!"
+        echo
+    fi
+}
+
+checkServices() {
+    echo
+    echo "[Info] Checking that services are reachable..."
+    CURL=$(curl -fIs ${PLATFORM_DOMAIN} && curl -fIs gitlab.${PLATFORM_DOMAIN} && curl -fIs keycloak.${PLATFORM_DOMAIN} && curl -fIs jupyterhub.${PLATFORM_DOMAIN}/services/notebooks)
+    if [ -z "${CURL}" ]; then
+        echo
+        echo "[Error] Services unreachable -- if running locally, ensure name resolution with: "
+        echo
+        echo "$$ echo \"127.0.0.1 $(PLATFORM_DOMAIN) keycloak.$(PLATFORM_DOMAIN) gitlab.$(PLATFORM_DOMAIN) jupyterhub.$(PLATFORM_DOMAIN)\" | sudo tee -a /etc/hosts"
+        echo
+        exit 1
+    fi
+}
+
+main() {
+    # prepare the environment
+    loadEnv;
+    makeImages;
+    gitlabDirs;
+
+    # bootstrap the platform
+    unregisterGitlabRunners;
+    dockerNetwork;
+    bootstrapContainers;
+    waitForServices;
+
+    # configure the platform
+    registerGitlabRunners;
+    registerGitlabSudoToken;
+    registerGitlabSudoUser;
+    registarGitlabApplications;
+    configureLogout;
+
+    # check that services are reachable
+    checkServices;
+
+    echo
+    echo "[Success] Renku UI should be under ${RENKU_UI_URL} and GitLab under ${GITLAB_URL}"
+    echo
+}
+
+main
