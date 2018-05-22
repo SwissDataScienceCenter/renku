@@ -42,7 +42,7 @@ Starting the platform
 
 .. code:: console
 
-    $ ./scripts/renga-start.sh
+    $ make start
 
 Please follow the output for next instructions. If the script successfully
 completes, the platform will be up and running. You may now use standard
@@ -57,7 +57,7 @@ you may use
 
 .. code:: console
 
-    $ ./scripts/renga-wipe.sh
+    $ make wipe
 
 You can find more details about running the platform in the `setup
 <http://renga.readthedocs.io/en/development/user/setup.html>`_ documentation.
@@ -83,10 +83,8 @@ without warnings and errors before creating a pull request:
 
 .. code-block:: console
 
-    $ pip install -r tests/requirements.txt
-    $ pip install -r docs/requirements.txt
-    $ ./scripts/renga-start.sh
-    $ ./scripts/run-tests.sh
+    $ make start
+    $ make test
 
 To build the documentation from source:
 

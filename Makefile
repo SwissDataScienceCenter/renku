@@ -263,13 +263,19 @@ tag: $(dockerfile-services) jupyterhub-k8s
 $(makefile-services): %: $(PLATFORM_BASE_DIR)/%
 	$(MAKE) -C $(PLATFORM_BASE_DIR)/$@
 
-.PHONY: start wipe
+.PHONY: start stop test wipe
 
 start: .env
 	@./scripts/renga-start.sh
 
 stop: .env
 	@docker-compose stop
+
+test: .env
+	@pip install pipenv
+	@pipenv install -r tests/requirements.txt
+	@pipenv install -r docs/requirements.txt
+	@pipenv run ./scripts/run-tests.sh
 
 wipe: .env
 	@./scripts/renga-wipe.sh
