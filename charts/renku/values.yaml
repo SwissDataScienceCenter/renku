@@ -291,7 +291,6 @@ jupyterhub:
     image:
       name: renku/jupyterhub-k8s
       tag: latest
-      repository: renku/jupyterhub-k8s
     services:
       notebooks:
         url: http://renku-notebooks
@@ -336,7 +335,6 @@ jupyterhub:
     image:
       name: renku/singleuser
       tag: latest
-      repository: renku/singleuser
     storage:
       type: none
   # FIXME: bug in prepuller makes helm hang in certain cases. Fixed in 0.7
@@ -349,7 +347,7 @@ jupyterhub:
     type: gitlab
     gitlab:
       clientId: jupyterhub
-      clientSecret: no-secret-needed
+      clientSecret: dummy-secret
       callbackUrl: '""' # Forces the default callback url
 
 apispec:
@@ -362,10 +360,8 @@ notebooks:
   image:
     name: renku/notebooks
     tag: latest
-    repository: renku/notebooks
 
 tests:
   image:
     name: renku/tests
     tag: latest
-    repository: renku/tests
