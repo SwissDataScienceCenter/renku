@@ -49,11 +49,9 @@ before_install:
 
 install:
   - ./scripts/travis-install.sh
-  - pip install -r tests/requirements.txt
-  - pip install -r docs/requirements.txt
 
 before_script: |-
-    ./scripts/renga-start.sh
+    make start
 
 script:
-  - xvfb-run ./scripts/run-tests.sh
+  - xvfb-run make test

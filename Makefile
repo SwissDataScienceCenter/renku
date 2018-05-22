@@ -247,10 +247,9 @@ stop: .env
 	@docker-compose stop
 
 test: .env
-	@pip install pipenv
-	@pipenv install -r tests/requirements.txt
-	@pipenv install -r docs/requirements.txt
-	@pipenv run ./scripts/run-tests.sh
+	@pip install -r tests/requirements.txt
+	@pip install -r docs/requirements.txt
+	@./scripts/run-tests.sh
 
 wipe: .env
 	@./scripts/renku-wipe.sh
