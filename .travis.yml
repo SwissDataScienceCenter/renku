@@ -76,23 +76,10 @@ before_deploy:
   - tar xzfv ${HELM_TGZ}
   - PATH=`pwd`/linux-amd64/:$PATH
   - helm init --client-only
-  # configure access to external services
-  - openssl aes-256-cbc -K $encrypted_ba78b413d7f2_key -iv $encrypted_ba78b413d7f2_iv -in github_deploy_key.enc -out github_deploy_key -d
-  - chmod 600 github_deploy_key
-  - eval $(ssh-agent -s)
-  - ssh-add github_deploy_key
-  - make login
 
 deploy:
   - provider: script
     skip_cleanup: true
-    script: >-
-      cd charts;
-      helm repo add renku https://swissdatasciencecenter.github.io/helm-charts/;
-      helm dependency update renku;
-      chartpress --commit-range "${TRAVIS_COMMIT_RANGE}" --tag latest --push;
-      chartpress --commit-range "${TRAVIS_COMMIT_RANGE}" --push --publish-chart;
-      git diff;
-      cd ..
+    script: bash scripts/travis-deploy.sh
     on:
       branch: master
