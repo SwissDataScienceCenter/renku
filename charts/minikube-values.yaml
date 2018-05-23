@@ -27,6 +27,9 @@ global:
   gitlab:
     urlPrefix: /gitlab
 
+gitlab:
+  sshPort: 2222
+
 notebooks:
   jupyterhub_base_url: /jupyterhub/
   jupyterhub_api_token: notebookstoken

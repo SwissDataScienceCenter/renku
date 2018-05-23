@@ -23,6 +23,9 @@ nginx['listen_port'] = 80
 ##! Docs: https://docs.gitlab.com/omnibus/settings/nginx.html#supporting-proxied-ssl
 nginx['listen_https'] = false
 
+## Configure SSH port to be displayed correctly
+gitlab_rails['gitlab_shell_ssh_port'] = {{ default 22 .Values.sshPort }}
+
 ### OmniAuth Settings
 ###! Docs: https://docs.gitlab.com/ce/integration/omniauth.html
 gitlab_rails['omniauth_enabled'] = true

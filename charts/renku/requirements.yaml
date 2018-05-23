@@ -1,5 +1,5 @@
 dependencies:
 - name: renku-ui
   alias: ui
-  version: "0.1.0-93b6830"
+  version: "0.1.0-e29c21e"
   repository: "https://swissdatasciencecenter.github.io/helm-charts/"
