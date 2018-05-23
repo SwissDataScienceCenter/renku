@@ -299,11 +299,15 @@ services:
   proxy:
     image: ${DOCKER_PREFIX}incubator-proxy:${PLATFORM_VERSION}
     ports:
-      - 5002:5000
+      - 5000
+    restart: always
     environment:
       GITLAB_URL: ${GITLAB_URL}
       GITLAB_PASS: ${GITLAB_TOKEN}
       KEYCLOAK_URL: ${KEYCLOAK_URL}
+    labels:
+      traefik.enable: "true"
+      traefik.frontend.rule: "Host:gateway.${PLATFORM_DOMAIN}"
 
   notebooks:
     image: ${DOCKER_PREFIX}renku-notebooks:${PLATFORM_VERSION}
