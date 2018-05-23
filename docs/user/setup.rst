@@ -59,10 +59,17 @@ You can get going with Renku in a few minutes by using our pre-built images:
 .. code-block:: console
 
     $ cd renku
-    $ make start
+    $ make .env
+    $ ./scripts/renku-start.sh
 
-Once the script completes, you can go to http://renku.local to see the
+Once the script completes, you can go to http://renku.build to see the
 browser front-end.
+
+`make .env` creates a `.env` file which contains environment variables used
+as configuration for various platform components. You can override these
+values either by specifying them on the command line *when calling `make .env`*,
+or you can modify them in `.env` after it has been created. Note that once
+the `.env` file is in place, the values specified there take precedent.
 
 Using the default configuration, you can login to all services using
 `demo/demo` as the username/password. See :ref:`user_management` for more
@@ -72,12 +79,23 @@ information about handling user accounts.
 Building from source
 ^^^^^^^^^^^^^^^^^^^^
 
+.. note::
+    Unless you are developing Renku components or trying a bleeding edge
+    version of a service, you should not need to build from source.
+
 .. code-block:: console
 
     $ cd renku
     $ make
 
-``make`` assumes that the base directory of the platform is the parent
+This will build the images of *all* Renku services. To build a single service,
+you can simply use, for example
+
+.. code-block:: console
+
+    $ make renku-ui
+
+``make`` assumes that  the base directory of the platform is the parent
 directory of `renku`. If you want to specify a different path, use the ``-e``
 option:
 
@@ -110,22 +128,13 @@ Use ``docker-compose`` to bring up the platform:
     renku_gitlab-runner_1 is up-to-date
     renku_keycloak_1 is up-to-date
     renku_gitlab_1 is up-to-date
-    Waiting for keycloak:8080  .  up!
-    Waiting for gitlab:80  .  up!
-    Waiting for ui:3000  .  up!
-    Everything is up
 
-    [Warning] You have not defined a GITLAB_CLIENT_SECRET. Using dummy
-              secret instead. Never do this in production!
+    ...
+
+    [Success] Renku UI should be under http://renku.build and GitLab under http://gitlab.renku.build
 
 
-    [Success] Renku UI should be under http://renku.local and GitLab under http://gitlab.renku.local
-
-    [Info] Register GitLab runners using:
-             make register-runners
-
-
-Identification Management
+Identity Management
 -------------------------
 
 A default user ``demo`` with password ``demo`` is configured in the identity
