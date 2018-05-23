@@ -180,7 +180,7 @@ services:
       STORAGE_BACKEND_GITLAB_ENABLED: "true"
       GITLAB_URL: ${GITLAB_URL}
       GITLAB_USER: "root"
-      GITLAB_PASS: ${GITLAB_TOKEN}
+      GITLAB_PASS: ${GITLAB_SUDO_TOKEN}
       RENKU_STORAGE_DEFAULT_LFS_BACKEND: "local"
     volumes:
       - ./services/storage/data:/data
@@ -255,16 +255,8 @@ services:
       - default
       - review
 
-  singleuser:
-    build:
-      context: services/singleuser
-      args:
-        BASE_IMAGE: renku/minimal-notebook:98a712f9ad93
-        JUPYTERHUB_VERSION: master
-    image: ${DOCKER_PREFIX}singleuser:${PLATFORM_VERSION}
-    command: renku --version
-
   jupyterhub:
+    image: renkuhub/jupyterhub:${PLATFORM_VERSION}
     build: services/jupyterhub
     command: jupyterhub --debug
     ports:
