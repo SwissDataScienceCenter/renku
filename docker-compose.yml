@@ -58,6 +58,8 @@ services:
       GITLAB_CLIENT_SECRET: ${GITLAB_CLIENT_SECRET}
       JUPYTERHUB_URL: ${JUPYTERHUB_URL}
       JUPYTERHUB_CLIENT_SECRET: ${JUPYTERHUB_CLIENT_SECRET}
+      GATEWAY_URL: ${GATEWAY_URL}
+      GATEWAY_CLIENT_SECRET: ${GATEWAY_CLIENT_SECRET}
     command:
       - "-b 0.0.0.0"
       - "-Dkeycloak.migration.action=import"
