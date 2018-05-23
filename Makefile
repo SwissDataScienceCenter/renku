@@ -60,7 +60,7 @@ PLATFORM_BASE_DIR?=..
 PLATFORM_BASE_REPO_URL?=https://github.com/SwissDataScienceCenter
 PLATFORM_REPO_TPL?=$(PLATFORM_BASE_REPO_URL)/$*.git
 #PLATFORM_VERSION?=$(or ${TRAVIS_BRANCH},${TRAVIS_BRANCH},$(shell git branch 2> /dev/null | sed -e '/^[^*]/d' -e 's/^* //'))
-PLATFORM_VERSION=development
+PLATFORM_VERSION=master
 
 ifeq ($(PLATFORM_VERSION), master)
 	PLATFORM_VERSION=latest
@@ -75,6 +75,8 @@ GITLAB_RUNNERS_TOKEN?=$(shell openssl rand -hex 32)
 JUPYTERHUB_CRYPT_KEY?=$(shell openssl rand -hex 32)
 JUPYTERHUB_RENKU_NOTEBOOKS_SERVICE_TOKEN?=$(shell openssl rand -hex 32)
 JUPYTERHUB_URL?=http://jupyterhub.$(PLATFORM_DOMAIN)
+
+GATEWAY_URL?=http://gateway.$(PLATFORM_DOMAIN)
 
 PLAY_APPLICATION_SECRET?=$(shell openssl rand -hex 32)
 
@@ -99,7 +101,9 @@ DOCKER_COMPOSE_ENV=\
 	PLATFORM_VERSION=$(PLATFORM_VERSION) \
 	PLAY_APPLICATION_SECRET=$(PLAY_APPLICATION_SECRET) \
 	RENKU_ENDPOINT=$(RENKU_ENDPOINT) \
-	RENKU_UI_URL=$(RENKU_UI_URL)
+	RENKU_UI_URL=$(RENKU_UI_URL) \
+	GATEWAY_URL=$(GATEWAY_URL) \
+	GATEWAY_CLIENT_SECRET=$(GATEWAY_CLIENT_SECRET)
 
 ifndef KEYCLOAK_URL
 	KEYCLOAK_URL=http://keycloak.$(PLATFORM_DOMAIN):8080
@@ -130,6 +134,11 @@ endif
 ifndef JUPYTERHUB_CLIENT_SECRET
 	JUPYTERHUB_CLIENT_SECRET=dummy-secret
 	export JUPYTERHUB_CLIENT_SECRET
+endif
+
+ifndef GATEWAY_CLIENT_SECRET
+	GATEWAY_CLIENT_SECRET=dummy-secret
+	export GATEWAY_CLIENT_SECRET
 endif
 
 # ------------------------------------------------
