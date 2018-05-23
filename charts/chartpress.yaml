@@ -6,7 +6,11 @@ charts:
       published: https://swissdatasciencecenter.github.io/helm-charts
     paths:
       - .
-      - ../services
+      - ../services/apispec
+      - ../services/jupyterhub
+      - ../services/notebooks
+      - ../services/singleuser
+      - ../tests
     images:
       apispec:
         contextPath: ../services/apispec
@@ -14,15 +18,6 @@ charts:
         valuesPath: apispec.image
         paths:
           - ../services/apispec
-      singleuser:
-        contextPath: ../services/singleuser
-        buildArgs:
-          BASE_IMAGE: renku/minimal-notebook:98a712f9ad93
-          JUPYTERHUB_VERSION: master
-        dockerfilePath: ../services/singleuser/Dockerfile
-        valuesPath: jupyterhub.singleuser.image
-        paths:
-          - ../services/singleuser
       jupyterhub-k8s:
         contextPath: ../services/jupyterhub
         dockerfilePath: ../services/jupyterhub/jupyterhub-k8s.Dockerfile
@@ -35,6 +30,15 @@ charts:
         valuesPath: notebooks.image
         paths:
           - ../services/notebooks
+      singleuser:
+        contextPath: ../services/singleuser
+        buildArgs:
+          BASE_IMAGE: renku/minimal-notebook:98a712f9ad93
+          JUPYTERHUB_VERSION: master
+        dockerfilePath: ../services/singleuser/Dockerfile
+        valuesPath: jupyterhub.singleuser.image
+        paths:
+          - ../services/singleuser
       tests:
         contextPath: ../tests
         dockerfilePath: ../tests/Dockerfile
