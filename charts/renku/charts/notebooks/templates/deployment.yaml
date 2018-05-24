@@ -23,7 +23,7 @@ spec:
         runAsUser: 1000
       containers:
         - name: {{ .Chart.Name }}
-          image: "{{ .Values.image.name }}:{{ .Values.image.tag }}"
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           env:
             {{ if eq .Values.debug true }}

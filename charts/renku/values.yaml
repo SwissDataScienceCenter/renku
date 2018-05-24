@@ -352,16 +352,15 @@ jupyterhub:
 
 apispec:
   image:
-    name: renku/apispec
     repository: renku/apispec
     tag: latest
 
 notebooks:
   image:
-    name: renku/notebooks
+    repository: renku/notebooks
     tag: latest
 
 tests:
   image:
-    name: renku/tests
+    repository: renku/tests
     tag: latest

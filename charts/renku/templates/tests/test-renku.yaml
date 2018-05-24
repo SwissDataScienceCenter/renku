@@ -7,7 +7,7 @@ metadata:
 spec:
   containers:
   - name: {{ .Release.Name }}-test
-    image: "{{ .Values.tests.image.name }}:{{ .Values.tests.image.tag }}"
+    image: "{{ .Values.tests.image.repository }}:{{ .Values.tests.image.tag }}"
     env:
       - name: RENKU_ENDPOINT
         value: {{ template "http" . }}://{{ .Values.global.renku.domain }}
