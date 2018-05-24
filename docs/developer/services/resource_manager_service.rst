@@ -39,7 +39,7 @@ Detail of messages:
 
 For more details on the RM API, refer to the `Resource Manager API spec`_.
 
-.. _Resource Manager API spec: https://github.com/SwissDataScienceCenter/renga-authorization/blob/master/swagger.yml
+.. _Resource Manager API spec: https://github.com/SwissDataScienceCenter/renku-authorization/blob/master/swagger.yml
 
 .. _rm-attributes:
 

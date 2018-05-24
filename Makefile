@@ -16,6 +16,34 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+
+#
+# This Makefile provides convenient targets for building the various pieces of
+# the Renku platform.
+
+#
+# There are two main sections in this Makefile:
+#
+# 1. Environment configuration
+# 2. Repository management and docker image builds
+
+# ----------------------------
+# 1. Environment configuration
+# ----------------------------
+#
+# IMPORTANT: if the .env file exists, the values defined there take precedent
+# over all other environment variable definitions.
+
+# The first time you run any of the docker image build or deployment actions,
+# the .env file will be created with default values, unless you override them
+# on the command line or if the variable is already defined in your
+# environment. So, for example, in a clean repository:
+#
+# $ GITLAB_URL=https://gitlab.com make start
+
+# will set the GITLAB_URL in .env and all subsequent actions you invoke via
+# the Makefile will use this value.
+
 -include .env
 
 ifeq ($(OS),Windows_NT)
@@ -26,7 +54,7 @@ endif
 
 # Use build instead of local. See GitLab-CE issue:
 # https://gitlab.com/gitlab-org/gitlab-ce/issues/45008
-PLATFORM_DOMAIN?=renga.build
+PLATFORM_DOMAIN?=renku.build
 
 PLATFORM_BASE_DIR?=..
 PLATFORM_BASE_REPO_URL?=https://github.com/SwissDataScienceCenter
@@ -41,15 +69,15 @@ GIT_MASTER_HEAD_SHA:=$(shell git rev-parse --short=12 --verify HEAD)
 
 GITLAB_URL?=http://gitlab.$(PLATFORM_DOMAIN)
 GITLAB_REGISTRY_URL?=http://gitlab.$(PLATFORM_DOMAIN):5081
-GITLAB_DIRS=config logs git-data lfs-data runner
 GITLAB_RUNNERS_TOKEN?=$(shell openssl rand -hex 32)
 
 JUPYTERHUB_CRYPT_KEY?=$(shell openssl rand -hex 32)
+JUPYTERHUB_RENKU_NOTEBOOKS_SERVICE_TOKEN?=$(shell openssl rand -hex 32)
 JUPYTERHUB_URL?=http://jupyterhub.$(PLATFORM_DOMAIN)
 
 PLAY_APPLICATION_SECRET?=$(shell openssl rand -hex 32)
 
-DOCKER_REPOSITORY?=rengahub/
+DOCKER_REPOSITORY?=renku/
 DOCKER_PREFIX:=${DOCKER_REGISTRY}$(DOCKER_REPOSITORY)
 DOCKER_NETWORK?=review
 DOCKER_COMPOSE_ENV=\
@@ -59,36 +87,33 @@ DOCKER_COMPOSE_ENV=\
 	GITLAB_CLIENT_SECRET=$(GITLAB_CLIENT_SECRET) \
 	GITLAB_REGISTRY_URL=$(GITLAB_REGISTRY_URL) \
 	GITLAB_RUNNERS_TOKEN=$(GITLAB_RUNNERS_TOKEN) \
-	GITLAB_TOKEN=$(GITLAB_TOKEN) \
+	GITLAB_SUDO_TOKEN=$(GITLAB_SUDO_TOKEN) \
 	GITLAB_URL=$(GITLAB_URL) \
 	JUPYTERHUB_CLIENT_SECRET=$(JUPYTERHUB_CLIENT_SECRET) \
 	JUPYTERHUB_CRYPT_KEY=$(JUPYTERHUB_CRYPT_KEY) \
+	JUPYTERHUB_RENKU_NOTEBOOKS_SERVICE_TOKEN=$(JUPYTERHUB_RENKU_NOTEBOOKS_SERVICE_TOKEN)\
 	JUPYTERHUB_URL=$(JUPYTERHUB_URL) \
 	KEYCLOAK_URL=$(KEYCLOAK_URL) \
 	PLATFORM_DOMAIN=$(PLATFORM_DOMAIN) \
 	PLATFORM_VERSION=$(PLATFORM_VERSION) \
 	PLAY_APPLICATION_SECRET=$(PLAY_APPLICATION_SECRET) \
-	RENGA_ENDPOINT=$(RENGA_ENDPOINT) \
-	RENGA_UI_URL=$(RENGA_UI_URL)
-
-SBT_IVY_DIR := $(PWD)/.ivy
-SBT = sbt -ivy $(SBT_IVY_DIR)
-SBT_PUBLISH_TARGET = publish-local
+	RENKU_ENDPOINT=$(RENKU_ENDPOINT) \
+	RENKU_UI_URL=$(RENKU_UI_URL)
 
 ifndef KEYCLOAK_URL
 	KEYCLOAK_URL=http://keycloak.$(PLATFORM_DOMAIN):8080
 	export KEYCLOAK_URL
 endif
 
-ifndef RENGA_ENDPOINT
-	RENGA_ENDPOINT=http://$(PLATFORM_DOMAIN)
-	export RENGA_ENDPOINT
+ifndef RENKU_ENDPOINT
+	RENKU_ENDPOINT=http://$(PLATFORM_DOMAIN)
+	export RENKU_ENDPOINT
 endif
 
-ifndef RENGA_UI_URL
+ifndef RENKU_UI_URL
 	# The ui should run under localhost instead of docker.for.mac.localhost
-	RENGA_UI_URL=http://$(PLATFORM_DOMAIN)
-	export RENGA_UI_URL
+	RENKU_UI_URL=http://$(PLATFORM_DOMAIN)
+	export RENKU_UI_URL
 endif
 
 ifndef GITLAB_CLIENT_SECRET
@@ -96,15 +121,53 @@ ifndef GITLAB_CLIENT_SECRET
 	export GITLAB_CLIENT_SECRET
 endif
 
-ifndef GITLAB_TOKEN
-	GITLAB_TOKEN=dummy-secret
-	export GITLAB_TOKEN
+ifndef GITLAB_SUDO_TOKEN
+	GITLAB_SUDO_TOKEN=dummy-secret
+	export GITLAB_SUDO_TOKEN
 endif
 
 ifndef JUPYTERHUB_CLIENT_SECRET
 	JUPYTERHUB_CLIENT_SECRET=dummy-secret
 	export JUPYTERHUB_CLIENT_SECRET
 endif
+
+# ------------------------------------------------
+# 2. Repository management and docker image builds
+# ------------------------------------------------
+#
+# Here we define make targets that allow you to manage the Renku component
+# repositories and build docker images. The repositories are defined in the
+# "repos" variable below. The other variables define how the various service
+# docker images should be built.
+
+# make targets:
+#
+# Repository management
+# ---------------------
+#
+# clone: clones the repositories into this directory's parent directory
+# checkout: checks out the PLATFORM_VERSION branch of all repositories
+# pull: pull latest changes from remote
+#
+
+# Docker image builds
+# -------------------
+#
+# Images are build and tagged with the value of PLATFORM_VERSION.
+#
+# docker-images: builds all the docker images locally. If you do not have the
+#	repositories checked out, this is done first. You should not normally need
+#   to do this unless you are working on the bleeding edge of the codebase as
+#   all the images are pushed to the docker registry and will be fetched for
+#   you. Typically you will only need to build some of the components yourself,
+#   depending on what you are developing.
+#
+# It's possible to build images for individual components - for example, to
+# build just the singleuser image, you simply use
+#
+# $ make singleuser
+#
+
 
 define DOCKER_BUILD
 set version in Docker := "$(PLATFORM_VERSION)"
@@ -116,22 +179,26 @@ export DOCKER_BUILD
 
 # Please keep values bellow sorted. Thank you!
 repos = \
-	renga-storage \
-	renga-python \
-	renga-ui
+	renku-storage \
+	renku-python \
+	renku-ui
 
-scala-services = \
-	renga-storage
+# scala-services = \
+# 	renku-storage
 
 makefile-services = \
- 	renga-ui \
- 	renga-python
+ 	renku-ui \
+ 	renku-python \
+	renku-storage
 
-scala-artifact = \
-	renga-commons \
-	renga-graph
+dockerfile-services = \
+	apispec \
+	jupyterhub \
+	keycloak \
+	notebooks \
+	singleuser
 
-.PHONY: all
+.PHONY: all clone checkout pull docker-images $(dockerfile-services) $(makefile-services) tag
 all: docker-images
 
 .env:
@@ -141,198 +208,48 @@ all: docker-images
 $(PLATFORM_BASE_DIR)/%:
 	git clone $(PLATFORM_REPO_TPL) $@
 
-.PHONY: clone
 clone: $(foreach s, $(repos), $(PLATFORM_BASE_DIR)/$(s))
 
 %-checkout: $(PLATFORM_BASE_DIR)/%
-	cd $< && git checkout $(GIT_BRANCH)
+	cd $< && git checkout $(PLATFORM_VERSION)
 
-.PHONY: checkout
 checkout: $(foreach s, $(repos), $(s)-checkout)
 
 %-pull: $(PLATFORM_BASE_DIR)/%
 	cd $< && git pull
 
-.PHONY: pull
 pull: $(foreach s, $(repos), $(s)-pull)
 
-# build scala services
-%-artifact: $(PLATFORM_BASE_DIR)/%
-	cd $< && $(SBT) $(SBT_PUBLISH_TARGET)
-	rm -rf $(SBT_IVY_DIR)/cache/ch.datascience/$(*)*
-
-renga-graph-%-scala: $(PLATFORM_BASE_DIR)/renga-graph $(scala-artifact)
-	cd $< && echo "project $*\n$$DOCKER_BUILD" | $(SBT)
-
-%-scala: $(PLATFORM_BASE_DIR)/% $(scala-artifact)
-	cd $< && echo "$$DOCKER_BUILD" | $(SBT)
-
-$(scala-services): %: %-scala
-
-$(scala-artifact): %: %-artifact
-
-# define this dependency explicitly
-renga-commons-artifact: renga-graph-artifact
-
 # build docker images
-.PHONY: $(dockerfile-services)
-$(dockerfile-services): %: $(PLATFORM_BASE_DIR)/%
-	docker build --tag $(DOCKER_REPOSITORY)$@:$(PLATFORM_VERSION) $(PLATFORM_BASE_DIR)/$@
+.PHONY: docker-images $(dockerfile-services) $(makefile-services) tag
+docker-images: $(dockerfile-services) $(makefile-services)
+
+$(dockerfile-services): %: .env services/%/Dockerfile
+	docker build --tag $(DOCKER_PREFIX)$@:$(PLATFORM_VERSION) \
+		--tag $(DOCKER_PREFIX)$@:$(GIT_MASTER_HEAD_SHA) \
+		services/$@
+
+jupyterhub-k8s: .env services/jupyterhub/jupyterhub-k8s.Dockerfile
+	docker build --tag $(DOCKER_PREFIX)$@:$(PLATFORM_VERSION) -f services/jupyterhub/$@.Dockerfile services/jupyterhub/
+
+tag: $(dockerfile-services) jupyterhub-k8s
 
 # build docker images from makefiles
-.PHONY: $(makefile-services)
 $(makefile-services): %: $(PLATFORM_BASE_DIR)/%
 	$(MAKE) -C $(PLATFORM_BASE_DIR)/$@
 
-# Docker actions
-.PHONY: docker-images docker-network docker-compose-up docker-pull
-docker-images: $(scala-services) $(dockerfile-services) $(makefile-services)
+.PHONY: start stop test wipe
 
-docker-network:
-ifeq ($(shell docker network ls -q -f name=$(DOCKER_NETWORK)), )
-	@docker network create $(DOCKER_NETWORK)
-endif
-	@echo "[Info] Using Docker network: $(DOCKER_NETWORK)=$(shell docker network ls -q -f name=review)"
+start: .env
+	@./scripts/renku-start.sh
 
-remove-docker-network:
-ifeq ($(shell docker network ls -q -f name=$(DOCKER_NETWORK)), )
-	@docker network rm $(DOCKER_NETWORK)
-endif
+stop: .env
+	@docker-compose stop
 
-docker-compose-up: .env
-	docker-compose up --build -d ${DOCKER_SCALE}
-
-docker-compose-pull: .env
-	docker-compose pull
-
-# GitLab actions
-services/gitlab/%:
-	@mkdir -p $@
-
-.PHONY: enable-gitlab-auto-devops register-gitlab-oauth-applications unregister-gitlab-oauth-applications register-runners unregister-runners
-enable-gitlab-auto-devops:
-	@docker-compose exec gitlab /opt/gitlab/bin/gitlab-psql \
-		-h /var/opt/gitlab/postgresql -d gitlabhq_production \
-		-c 	"UPDATE application_settings SET auto_devops_enabled = true, auto_devops_domain = '$(PLATFORM_DOMAIN)' WHERE id = 1;" > /dev/null 2>&1
-# Preregister the ui as a client with gitlab.
-# This command will fail on restart when the client is already there - we don't care.
-register-gitlab-oauth-applications: .env unregister-gitlab-oauth-applications
-	@docker-compose exec gitlab /opt/gitlab/bin/gitlab-psql \
-		-h /var/opt/gitlab/postgresql -d gitlabhq_production \
-		-c "INSERT INTO oauth_applications (name, uid, scopes, redirect_uri, secret, trusted) VALUES ('renga-ui', 'renga-ui', 'api read_user', '$(RENGA_UI_URL)/login/redirect/gitlab http://localhost:3000/login/redirect/gitlab', 'no-secret-needed', 'true')" > /dev/null 2>&1
-
-	@docker-compose exec gitlab /opt/gitlab/bin/gitlab-psql \
-		-h /var/opt/gitlab/postgresql -d gitlabhq_production \
-		-c "INSERT INTO oauth_applications (name, uid, scopes, redirect_uri, secret, trusted) VALUES ('jupyterhub', 'jupyterhub', 'api read_user', '$(JUPYTERHUB_URL)/hub/oauth_callback $(JUPYTERHUB_URL)/hub/api/oauth2/authorize', 'no-secret-needed', 'true')" > /dev/null 2>&1
-
-unregister-gitlab-oauth-applications: .env
-	@docker-compose exec gitlab /opt/gitlab/bin/gitlab-psql \
-		-h /var/opt/gitlab/postgresql -d gitlabhq_production \
-		-c "DELETE FROM oauth_applications WHERE uid='renga-ui'" > /dev/null 2>&1
-
-	@docker-compose exec gitlab /opt/gitlab/bin/gitlab-psql \
-		-h /var/opt/gitlab/postgresql -d gitlabhq_production \
-		-c "DELETE FROM oauth_applications WHERE uid='jupyterhub'" > /dev/null 2>&1
-
-register-gitlab-user-token: unregister-gitlab-user-token
-	@$(DOCKER_COMPOSE_ENV) docker-compose exec gitlab /opt/gitlab/bin/gitlab-psql \
-		-h /var/opt/gitlab/postgresql -d gitlabhq_production \
-		-c "INSERT INTO personal_access_tokens ( user_id, token, name, revoked, expires_at, created_at, updated_at, scopes, impersonation) VALUES ( '1', '$(GITLAB_TOKEN)', 'managed storage token', 'f', NULL, NOW(), NOW(), E'--- \n- api\n- read_user\n- sudo\n- read_registry', 'f');" > /dev/null 2>&1
-
-unregister-gitlab-user-token:
-	@$(DOCKER_COMPOSE_ENV) docker-compose exec gitlab /opt/gitlab/bin/gitlab-psql \
-		-h /var/opt/gitlab/postgresql -d gitlabhq_production \
-		-c "DELETE FROM personal_access_tokens WHERE user_id='1' AND name='managed storage token';" > /dev/null 2>&1
-
-register-runners: .env unregister-runners
-ifeq (${GITLAB_RUNNERS_TOKEN},)
-	@echo "[Error] GITLAB_RUNNERS_TOKEN needs to be configured. Check $(GITLAB_URL)/admin/runners"
-	@exit 1
-endif
-	@for container in $(shell docker-compose ps -q gitlab-runner) ; do \
-		docker exec -ti $$container gitlab-runner register \
-			-n -u $(GITLAB_URL) \
-			--name $$container-shell \
-			-r ${GITLAB_RUNNERS_TOKEN} \
-			--executor shell \
-			--env RENGA_REVIEW_DOMAIN=$(PLATFORM_DOMAIN) \
-			--env RENGA_RUNNER_NETWORK=$(DOCKER_NETWORK) \
-			--locked=false \
-			--run-untagged=false \
-			--tag-list notebook \
-			--docker-image $(DOCKER_PREFIX)renga-python:$(PLATFORM_VERSION) \
-			--docker-network-mode=review \
-			--docker-pull-policy "if-not-present"; \
-		docker exec -ti $$container gitlab-runner register \
-			-n -u $(GITLAB_URL) \
-			--name $$container-docker \
-			-r ${GITLAB_RUNNERS_TOKEN} \
-			--executor docker \
-			--env RENGA_REVIEW_DOMAIN=$(PLATFORM_DOMAIN) \
-			--env RENGA_RUNNER_NETWORK=$(DOCKER_NETWORK) \
-			--locked=false \
-			--run-untagged=false \
-			--tag-list cwl \
-			--docker-image $(DOCKER_PREFIX)renga-python:$(PLATFORM_VERSION) \
-			--docker-network-mode=review \
-			--docker-pull-policy "if-not-present"; \
-	done
-	@echo
-	@echo "[Info] Edit gitlab/runner/config.toml to increase the number of concurrent runner jobs."
-	@echo
-	@echo "[Info] To make notebooks available as deployed environments, set the"
-	@echo "		RENGA_NOTEBOOK_TOKEN and RENGA_REVIEW_DOMAIN CI variables in gitlab project settings."
-
-unregister-runners: .env
-	@for container in $(shell docker-compose ps -q gitlab-runner) ; do \
-		docker exec -ti $$container gitlab-runner unregister \
-			--name $$container-shell || echo ok; \
-		docker exec -ti $$container gitlab-runner unregister \
-			--name $$container-docker || echo ok; \
-	done
-
-# Platform actions
-.PHONY: clean restart start stop test wait wipe
-
-clean: .env
-	docker-compose down --volumes --remove-orphans
-
-restart: stop start
-
-start: .env docker-network $(GITLAB_DIRS:%=services/gitlab/%) unregister-runners docker-compose-up wait enable-gitlab-auto-devops register-gitlab-oauth-applications register-runners register-gitlab-user-token
-ifeq (${GITLAB_CLIENT_SECRET}, dummy-secret)
-	@echo
-	@echo "[Warning] You have not defined a GITLAB_CLIENT_SECRET. Using dummy"
-	@echo "          secret instead. Never do this in production!"
-	@echo
-endif
-ifeq ($(shell ping -c1 ${PLATFORM_DOMAIN} && ping -c1 gitlab.${PLATFORM_DOMAIN} && ping -c1 keycloak.${PLATFORM_DOMAIN} && ping -c1 jupyterhub.${PLATFORM_DOMAIN}), )
-	@echo
-	@echo "[Error] Services unreachable -- if running locally, ensure name resolution with: "
-	@echo
-	@echo "$$ echo \"127.0.0.1 $(PLATFORM_DOMAIN) keycloak.$(PLATFORM_DOMAIN) gitlab.$(PLATFORM_DOMAIN) jupyterhub.$(PLATFORM_DOMAIN)\" | sudo tee -a /etc/hosts"
-	@echo
-	@exit 1
-endif
-	@echo
-	@echo "[Success] Renga UI should be under $(RENGA_UI_URL) and GitLab under $(GITLAB_URL)"
-ifeq (${DOCKER_SCALE},)
-	@echo
-	@echo "[Info] You can configure scale parameters: DOCKER_SCALE=\"--scale gitlab-runner=4\" make start"
-endif
-
-stop: .env remove-docker-network unregister-runners unregister-gitlab-oauth-applications unregister-gitlab-user-token
-	docker-compose stop
-
-test: docs/requirements.txt tests/requirements.txt
-	@pip install -r docs/requirements.txt
+test: .env
 	@pip install -r tests/requirements.txt
-	@scripts/run-tests.sh
+	@pip install -r docs/requirements.txt
+	@./scripts/run-tests.sh
 
-wait: .env
-	@./scripts/wait-for-services.sh
-
-wipe: clean remove-docker-network
-	@rm -rf services/storage/data/*
-	@rm -rf gitlab
-	@rm .env
+wipe: .env
+	@./scripts/renku-wipe.sh

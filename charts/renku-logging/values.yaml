@@ -1,0 +1,25 @@
+# Default values for renku-logging.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+elasticsearch:
+  replicaCount: 3
+  cluster:
+    env:
+      MINIMUM_MASTER_NODES: "2"
+
+kibana:
+  env:
+    # SERVER_BASEPATH: /kibana
+
+ingress:
+  enabled: false
+  annotations: {}
+    # kubernetes.io/ingress.class: nginx
+    # kubernetes.io/tls-acme: "true"
+  hosts:
+    - chart-example.local
+  tls: []
+  #  - secretName: chart-example-tls
+  #    hosts:
+  #      - chart-example.local

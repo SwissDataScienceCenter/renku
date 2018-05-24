@@ -17,10 +17,10 @@
 # limitations under the License.
 """Implement integration for using GitLab repositories."""
 
+import hashlib
 import os
 from urllib.parse import urlsplit, urlunsplit
 
-import docker
 from tornado import gen, web
 
 
@@ -36,7 +36,7 @@ class SpawnerMixin():
         namespace = options.get('namespace')
         project = options.get('project')
 
-        url = os.environ.get('GITLAB_HOST', 'http://gitlab.renga.local')
+        url = os.environ.get('GITLAB_HOST', 'http://gitlab.renku.local')
 
         scheme, netloc, path, query, fragment = urlsplit(url)
 
@@ -59,36 +59,35 @@ class SpawnerMixin():
                 self.user_options.get('namespace', ''),
             'CI_PROJECT':
                 self.user_options.get('project', ''),
-            'CI_ENVIRONMENT_SLUG':
-                self.user_options.get('environment_slug', ''),
             'CI_COMMIT_SHA':
                 self.user_options.get('commit_sha', ''),
             'GITLAB_HOST':
-                os.environ.get('GITLAB_HOST', 'http://gitlab.renga.build'),
+                os.environ.get('GITLAB_HOST', 'http://gitlab.renku.build'),
+            'CI_REF_NAME':
+                self.user_options.get('branch', 'master'),
         })
         return environment
 
     @gen.coroutine
     def start(self, *args, **kwargs):
         """Start the notebook server."""
+        import gitlab
+
         self.log.info(
             "starting with args: {}".format(' '.join(self.get_args()))
         )
-        self.log.info("user options: {}".format(self.user_options))
+        self.log.debug("user options: {}".format(self.user_options))
 
         auth_state = yield self.user.get_auth_state()
         assert 'access_token' in auth_state
-        self.log.info(auth_state)
 
         # 1. check authorization against GitLab
         options = self.user_options
         namespace = options.get('namespace')
         project = options.get('project')
-        env_slug = options.get('environment_slug')
 
-        url = os.getenv('GITLAB_HOST', 'http://gitlab.renga.build')
+        url = os.getenv('GITLAB_HOST', 'http://gitlab.renku.build')
 
-        import gitlab
         gl = gitlab.Gitlab(
             url, api_version=4, oauth_token=auth_state['access_token']
         )
@@ -106,26 +105,18 @@ class SpawnerMixin():
             raise web.HTTPError(401, 'Not authorized to view project.')
             return
 
-        if not any(
-            gl_env.slug for gl_env in gl_project.environments.list()
-            if gl_env.slug == env_slug
-        ):
-            raise web.HTTPError(404, 'Environment does not exist.')
-            return
-
         self.image = '{image_registry}'\
                      '/{namespace}'\
                      '/{project}'\
-                     '/{environment_slug}'\
                      ':{commit_sha}'.format(image_registry=os.getenv('IMAGE_REGISTRY'), **options)
-        self.log.info(self.image)
 
         try:
             result = yield super().start(*args, **kwargs)
         except docker.errors.ImageNotFound:
             self.log.info(
-                'Image {0} not found - using default image.'.
-                format(self.image)
+                'Image {0} not found - using default image.'.format(
+                    self.image
+                )
             )
             self.image = os.getenv(
                 'JUPYTERHUB_NOTEBOOK_IMAGE', 'jupyter/minimal-notebook'
@@ -136,6 +127,7 @@ class SpawnerMixin():
 
 
 try:
+    import docker
     from dockerspawner import DockerSpawner
 
     class RepoVolume(DockerSpawner):
@@ -144,6 +136,7 @@ try:
         @gen.coroutine
         def start(self):
             """Create init container."""
+            auth_state = yield self.user.get_auth_state()
             options = self.user_options
             container_name = 'init-' + self.name  # TODO user namespace?
             name = self.name + '-git-repo'
@@ -156,7 +149,6 @@ try:
                 )
             except Exception as e:
                 self.log.error(e)
-
             try:
                 yield self.docker('remove_volume', volume_name, force=True)
             except Exception as e:
@@ -173,8 +165,17 @@ try:
                 },
             )
 
+            # make sure we have the alpine/git image
+            images = yield self.docker('images')
+            if not any([
+                'alpine/git:latest' in i['RepoTags']
+                for i in images if i['RepoTags']
+            ]):
+                alpine_git = yield self.docker(
+                    'pull', 'alpine/git', tag='latest'
+                )
+
             volume = yield self.docker('create_volume', name=volume_name)
-            self.log.info(volume)
 
             # 1. clone the repo
             # 2. checkout the environment branch and commit sha
@@ -187,10 +188,11 @@ try:
                 entrypoint='sh -c',
                 command=[
                     'git clone {repository} {volume_path} && '
-                    'git checkout -b {environment_slug} {commit_sha} && '
+                    '(git checkout {branch} || git checkout -b {branch}) && '
+                    'git reset --hard {commit_sha} && '
                     'chown 1000:100 -Rc {volume_path}'.format(
+                        branch=options.get('branch'),
                         commit_sha=options.get('commit_sha'),
-                        environment_slug=options.get('environment_slug'),
                         repository=repository,
                         volume_path=volume_path,
                     ),
@@ -202,14 +204,10 @@ try:
             )
             started = yield self.docker('start', container=container.get('Id'))
             wait = yield self.docker('wait', container=container)
-            self.log.info(wait)
 
             # TODO remove the container?
             # yield self.docker(
             #     'remove_container', container.get('Id'), force=True)
-
-            self.log.info(container)
-
             environment = self.get_env()
             environment['CI_REPOSITORY_URL'] = repository
 
@@ -233,17 +231,18 @@ try:
             )
             return result
 
-    class RengaDockerSpawner(SpawnerMixin, RepoVolume, DockerSpawner):
-        """A class for spawning notebooks on Renga-JupyterHub using Docker."""
+    class RenkuDockerSpawner(SpawnerMixin, RepoVolume, DockerSpawner):
+        """A class for spawning notebooks on Renku-JupyterHub using Docker."""
 
 except ImportError:
     pass
 
 try:
+    from kubernetes import client
     from kubespawner import KubeSpawner
 
-    class RengaKubeSpawner(SpawnerMixin, KubeSpawner):
-        """A class for spawning notebooks on Renga-JupyterHub using K8S."""
+    class RenkuKubeSpawner(SpawnerMixin, KubeSpawner):
+        """A class for spawning notebooks on Renku-JupyterHub using K8S."""
 
         @gen.coroutine
         def get_pod_manifest(self):
@@ -253,42 +252,54 @@ try:
             options = self.user_options
 
             # https://gist.github.com/tallclair/849601a16cebeee581ef2be50c351841
-            container_name = 'init-' + self.pod_name
+            container_name = 'renku-' + self.pod_name
             name = self.pod_name + '-git-repo'
 
-            #: Define new empty volume.
+            #: Define a new empty volume.
             volume = {
                 'name': name,
                 'emptyDir': {},
             }
             self.volumes.append(volume)
 
-            #: Define volume mount for both init and notebook container.
+            #: Define a volume mount for both init and notebook containers.
+            mount_path = '/repo'
             volume_mount = {
-                'mountPath': self.notebook_dir,
+                'mountPath': mount_path,
                 'name': name,
             }
 
+            branch = options.get('branch', 'master')
+
             #: Define an init container.
-            self.singleuser_init_containers = self.singleuser_init_containers or []
-            self.singleuser_init_containers.append({
-                'name':
-                    container_name,
-                'image':
-                    'alpine/git',
-                'args': [
-                    'clone',
-                    '--single-branch',
-                    '-b',
-                    self.git_revision,
-                    '--',
-                    repository,
-                    '/repo',
+            self.singleuser_init_containers = [
+                container for container in self.singleuser_init_containers
+                if not container.name.startswith('renku-')
+            ]
+            init_container = client.V1Container(
+                name=container_name,
+                image='alpine/git',
+                command=['sh', '-c'],
+                args=[
+                    'git clone {repository} {mount_path} && '
+                    '(git checkout {branch} || git checkout -b {branch}) && '
+                    'git reset --hard {commit_sha}'.format(
+                        branch=options.get('branch'),
+                        commit_sha=options.get('commit_sha'),
+                        mount_path=mount_path,
+                        repository=repository,
+                    )
                 ],
-                'volumeMounts': [volume_mount],
-            })
+                volume_mounts=[volume_mount],
+                working_dir=mount_path,
+            )
+            self.singleuser_init_containers.append(init_container)
 
             #: Share volume mount with notebook.
+            self.volume_mounts = [
+                volume_mount for volume_mount in self.volume_mounts
+                if volume_mount['mountPath'] != mount_path
+            ]
             self.volume_mounts.append(volume_mount)
 
             pod = yield super().get_pod_manifest()

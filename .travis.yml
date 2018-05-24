@@ -27,15 +27,14 @@ services:
 
 addons:
   hosts:
-    - renga.build
-    - gitlab.renga.build
-    - jupyterhub.renga.build
-    - keycloak.renga.build
+    - renku.build
+    - gitlab.renku.build
+    - jupyterhub.renku.build
+    - keycloak.renku.build
 
 branches:
   only:
     - master
-    - development
 
 language: python
 

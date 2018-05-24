@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 #
-# RENGA documentation build configuration file, created by
+# RENKU documentation build configuration file, created by
 # sphinx-quickstart on Tue Aug 22 10:42:25 2017.
 #
 # This file is execfile()d with the current directory set to its
@@ -62,7 +62,7 @@ source_suffix = [ '.rst', '.md' ]
 master_doc = 'index'
 
 # General information about the project.
-project = 'RENGA'
+project = 'RENKU'
 copyright = '2017, Swiss Data Science Center'
 author = 'Eric Bouillet, Julien Eberle, Jiri Kuncar, Izabela Moise, Rok Roskar, Sofiane Sarni, Sandra Savchenko De Jong, Johann-Michael Thiebaut, Olivier Verscheure'
 
@@ -102,7 +102,7 @@ numfig = True
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
 #
-html_theme = 'renga'
+html_theme = 'renku'
 
 # Theme options are theme-specific and customize the look and feel of a theme
 # further.  For a list of options available for each theme, see the
@@ -113,9 +113,9 @@ html_theme_options = {
         'Highly-scalable & secure open software platform designed to foster'
         'multidisciplinary data (science) collaboration across mutually'
         'untrusted academic and industrial institutions.',
-    'github_repo': 'renga',
+    'github_repo': 'renku',
     'extra_nav_links': {
-        'renga@GitHub': 'https://github.com/SwissDataScienceCenter/renga',
+        'renku@GitHub': 'https://github.com/SwissDataScienceCenter/renku',
     },
 }
 
@@ -144,7 +144,7 @@ html_sidebars = {
 # -- Options for HTMLHelp output ------------------------------------------
 
 # Output file base name for HTML help builder.
-htmlhelp_basename = 'RENGAdoc'
+htmlhelp_basename = 'RENKUdoc'
 
 
 # -- Options for LaTeX output ---------------------------------------------
@@ -171,7 +171,7 @@ latex_elements = {
 # (source start file, target name, title,
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
-    (master_doc, 'RENGA.tex', 'RENGA Documentation',
+    (master_doc, 'RENKU.tex', 'RENKU Documentation',
      'Eric Bouillet, Julien Eberle, Jiri Kuncar, Izabela Moise, Rok Roskar, Sofiane Sarni, Sandra Savchenko De Jong, Johann-Michael Thiebaut, Olivier Verscheure', 'manual'),
 ]
 
@@ -181,7 +181,7 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    (master_doc, 'renga', 'RENGA Documentation', [author], 1)
+    (master_doc, 'renku', 'RENKU Documentation', [author], 1)
 ]
 
 
@@ -191,7 +191,7 @@ man_pages = [
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-    (master_doc, 'RENGA', 'RENGA Documentation', author, 'RENGA', 'One line description of project.', 'Miscellaneous'),
+    (master_doc, 'RENKU', 'RENKU Documentation', author, 'RENKU', 'One line description of project.', 'Miscellaneous'),
 ]
 
 

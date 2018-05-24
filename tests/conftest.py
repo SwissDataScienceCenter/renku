@@ -17,6 +17,15 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import pytest
+import splinter
 from dotenv import find_dotenv, load_dotenv
 
 load_dotenv(find_dotenv())
+
+
+@pytest.fixture()
+def browser():
+    """Provide a splinter browser."""
+    browser = splinter.Browser()
+    yield browser

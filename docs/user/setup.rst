@@ -7,15 +7,15 @@
 Running the platform
 ====================
 
-The renga source code is hosted on github:
-https://github.com/SwissDataScienceCenter/renga.
+The renku source code is hosted on github:
+https://github.com/SwissDataScienceCenter/renku.
 
-Renga is deployed as a collection of microservices (see
-:ref:`service_architecture`) running in Docker containers. To run Renga, only
-a working version of Docker is required. In the Renga repository, we provide a
-`docker-compose` file, which can be used to deploy renga quickly either on a
+Renku is deployed as a collection of microservices (see
+:ref:`service_architecture`) running in Docker containers. To run Renku, only
+a working version of Docker is required. In the Renku repository, we provide a
+`docker-compose` file, which can be used to deploy renku quickly either on a
 local machine or with a cloud provider. However, be aware that if you want to
-use Renga in production with many users, a more complicated deployment will be
+use Renku in production with many users, a more complicated deployment will be
 required.
 
 Prerequisites
@@ -43,9 +43,9 @@ Get the platform
 
     $ mkdir src
     $ cd src
-    $ git clone https://github.com/SwissDataScienceCenter/renga.git
+    $ git clone https://github.com/SwissDataScienceCenter/renku.git
 
-``renga`` is the "parent" repository of the collection of microservices, each
+``renku`` is the "parent" repository of the collection of microservices, each
 of which has their own repository.
 
 
@@ -54,17 +54,22 @@ of which has their own repository.
 Quickstart
 ^^^^^^^^^^
 
-.. include:: ./development-note.rst
-
-You can get going with Renga in a few minutes by using our pre-built images:
+You can get going with Renku in a few minutes by using our pre-built images:
 
 .. code-block:: console
 
-    $ cd renga
-    $ make start
+    $ cd renku
+    $ make .env
+    $ ./scripts/renku-start.sh
 
-Once the script completes, you can go to http://renga.local to see the
+Once the script completes, you can go to http://renku.build to see the
 browser front-end.
+
+`make .env` creates a `.env` file which contains environment variables used
+as configuration for various platform components. You can override these
+values either by specifying them on the command line *when calling `make .env`*,
+or you can modify them in `.env` after it has been created. Note that once
+the `.env` file is in place, the values specified there take precedent.
 
 Using the default configuration, you can login to all services using
 `demo/demo` as the username/password. See :ref:`user_management` for more
@@ -74,32 +79,41 @@ information about handling user accounts.
 Building from source
 ^^^^^^^^^^^^^^^^^^^^
 
-.. include:: ./development-note.rst
+.. note::
+    Unless you are developing Renku components or trying a bleeding edge
+    version of a service, you should not need to build from source.
 
 .. code-block:: console
 
-    $ cd renga
+    $ cd renku
     $ make
 
-``make`` assumes that the base directory of the platform is the parent
-directory of `renga`. If you want to specify a different path, use the ``-e``
+This will build the images of *all* Renku services. To build a single service,
+you can simply use, for example
+
+.. code-block:: console
+
+    $ make renku-ui
+
+``make`` assumes that  the base directory of the platform is the parent
+directory of `renku`. If you want to specify a different path, use the ``-e``
 option:
 
 .. code-block:: console
 
-    $ mkdir -p /path/to/base/renga/directory
-    $ make -e PLATFORM_BASE_DIR=/path/to/base/renga/directory
+    $ mkdir -p /path/to/base/renku/directory
+    $ make -e PLATFORM_BASE_DIR=/path/to/base/renku/directory
 
 Once ``make`` completes, you should now have all the service images made:
 
 .. code-block:: console
 
     $ docker images
-    REPOSITORY                      TAG                    IMAGE ID
-    rengahub/gitlab-runner          development            b36beaf93cba
-    rengahub/renga-python           development            0670bbcb22ed
-    rengahub/renga-storage          development            e73374425a1f
-    rengahub/renga-ui               development            3aa6ddac8eee
+    REPOSITORY                  TAG             IMAGE ID
+    renku/gitlab-runner         latest          b36beaf93cba
+    renku/renku-python          latest          0670bbcb22ed
+    renku/renku-storage         latest          e73374425a1f
+    renku/renku-ui              latest          3aa6ddac8eee
 
 Use ``docker-compose`` to bring up the platform:
 
@@ -108,28 +122,19 @@ Use ``docker-compose`` to bring up the platform:
     $ make start
     [Info] Using Docker network: review=8112d474690a
     ...
-    renga_reverse-proxy_1 is up-to-date
-    renga_ui_1 is up-to-date
-    renga_db_1 is up-to-date
-    renga_gitlab-runner_1 is up-to-date
-    renga_keycloak_1 is up-to-date
-    renga_gitlab_1 is up-to-date
-    Waiting for keycloak:8080  .  up!
-    Waiting for gitlab:80  .  up!
-    Waiting for ui:3000  .  up!
-    Everything is up
+    renku_reverse-proxy_1 is up-to-date
+    renku_ui_1 is up-to-date
+    renku_db_1 is up-to-date
+    renku_gitlab-runner_1 is up-to-date
+    renku_keycloak_1 is up-to-date
+    renku_gitlab_1 is up-to-date
 
-    [Warning] You have not defined a GITLAB_CLIENT_SECRET. Using dummy
-              secret instead. Never do this in production!
+    ...
+
+    [Success] Renku UI should be under http://renku.build and GitLab under http://gitlab.renku.build
 
 
-    [Success] Renga UI should be under http://renga.local and GitLab under http://gitlab.renga.local
-
-    [Info] Register GitLab runners using:
-             make register-runners
-
-
-Identification Management
+Identity Management
 -------------------------
 
 A default user ``demo`` with password ``demo`` is configured in the identity
@@ -141,6 +146,6 @@ http://localhost/auth/admin, with the user ``admin`` and password ``admin``
 Platform Endpoint
 -----------------
 
-By default, the platform is configured to use ``http://renga.local`` as the
-endpoint. You can change this by defining the ``RENGA_ENDPOINT`` environment
+By default, the platform is configured to use ``http://renku.local`` as the
+endpoint. You can change this by defining the ``RENKU_ENDPOINT`` environment
 variable before starting the platform services.

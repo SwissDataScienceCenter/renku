@@ -25,8 +25,8 @@ oauth
 OAuth
 online
 pre
-Renga
-renga
+Renku
+renku
 repo
 scala
 SQLAlchemy
@@ -42,4 +42,4 @@ Versioning
 vertices
 workflow
 workflows
-連歌
+連句

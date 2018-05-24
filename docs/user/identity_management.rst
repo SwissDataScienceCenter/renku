@@ -6,7 +6,7 @@ Content
 - :ref:`im_user_account_service`
 - :ref:`im_admin_console`
 
-**Renga**'s identity management is based on Keycloak. We document the
+**Renku**'s identity management is based on Keycloak. We document the
 steps to add or modify a user security settings. For more information, we
 refer the reader to the Keycloak documentation, which can be found `here
 (Keycloak 3.2) <http://www.keycloak.org/docs/3.2/index.html>`_.
@@ -18,7 +18,7 @@ User Account Services
 ---------------------
 
 Users can access their profiles through the Keycloak User Account service
-at `<http://localhost/auth/realms/Renga/account>`_. This service allows
+at `<http://localhost/auth/realms/Renku/account>`_. This service allows
 users to manage their account, change their credentials, update their
 profiles, and view their login sessions.
 

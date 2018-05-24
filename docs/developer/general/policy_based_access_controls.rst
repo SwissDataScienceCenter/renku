@@ -7,7 +7,7 @@ Policy Based Access Controls
 
 .. figure:: /_static/images/pbac_illustrated.svg
 
-    Elements of PBAC workflow as implemented in **Renga**: Policy Enforcement
+    Elements of PBAC workflow as implemented in **Renku**: Policy Enforcement
     Point (PEP), Policy Decision Point (PDP), Policy Information Point (PIP).
 
 
@@ -39,7 +39,7 @@ standard workflow is as follows:
   authorized compute cluster.
 
 
-In **Renga** we altered the standard PBAC design to decompose the PEP
+In **Renku** we altered the standard PBAC design to decompose the PEP
 component into an *authorization PEP* service and an *action PEP* service as
 illustrated in :numref:`fig-pbac_illustrated`. At the end of the action phase
 (6) the client receives from the *authorization PEP* a verifiable, expiring
@@ -70,7 +70,7 @@ advantages:
   same authorization token for reading shards of the requested data from
   different processes executing in parallel.
 
-In the **Renga** architecture, it is the :ref:`resource_manager` that fulfills
+In the **Renku** architecture, it is the :ref:`resource_manager` that fulfills
 the role of the PDP. The PIP is served by the :ref:`knowledge_graph`. The PEP
 services are implemented by a number independent resource provider services,
 currently :ref:`storage` and :ref:`deployer`.

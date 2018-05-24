@@ -33,7 +33,7 @@ c.Authenticator.auto_login = True
 #: Enable named-servers
 c.JupyterHub.allow_named_servers = True
 
-#: Enable persisting encrypted auth_state using JUPYTERHUB_CRYPTO_KEY.
+#: Enable persisting encrypted auth_state using JUPYTERHUB_CRYPT_KEY.
 c.Authenticator.enable_auth_state = True
 
 #: TODO Url for the database. e.g. `sqlite:///jupyterhub.sqlite`
@@ -58,20 +58,20 @@ c.JupyterHub.hub_ip = '0.0.0.0'
 #c.JupyterHub.subdomain_host = ''
 
 #: Configure the notebook spawner.
-c.JupyterHub.spawner_class = os.getenv('JUPYTERHUB_SPAWNER_CLASS',
-                                       'spawners.Spawner')
+c.JupyterHub.spawner_class = os.getenv(
+    'JUPYTERHUB_SPAWNER_CLASS', 'spawners.Spawner'
+)
 
 NETWORK_NAME = 'review'
 
-c.RengaDockerSpawner.container_name_template = '{prefix}-{username}-{servername}'
-c.RengaKubeSpawner.pod_name_template = 'jupyterhub-{username}-{servername}'
+c.RenkuDockerSpawner.container_name_template = '{prefix}-{username}-{servername}'
+c.RenkuKubeSpawner.pod_name_template = 'jupyterhub-{username}-{servername}'
 
 #: Configure the image used by notebook spawner.
-IMAGE = os.getenv('JUPYTERHUB_NOTEBOOK_IMAGE',
-                  'jupyterhub/singleuser:latest')
+IMAGE = os.getenv('JUPYTERHUB_NOTEBOOK_IMAGE', 'jupyterhub/singleuser:latest')
 
-c.RengaDockerSpawner.image = IMAGE
-c.RengaKubeSpawner.singleuser_image_spec = IMAGE
+c.RenkuDockerSpawner.image = IMAGE
+c.RenkuKubeSpawner.singleuser_image_spec = IMAGE
 
 c.Spawner.use_internal_ip = True
 c.Spawner.network_name = NETWORK_NAME
@@ -97,15 +97,12 @@ c.Spawner.remove_containers = True
 c.Spawner.debug = bool(os.getenv('DEBUG', False))
 
 #: Setup the service for creating named servers from GitLab projects.
-env = os.environ.copy()
-env['FLASK_APP'] = 'project_service.py'
-env['FLASK_DEBUG'] = os.getenv('DEBUG', '0')
-env['OAUTHLIB_INSECURE_TRANSPORT'] = '1'
-
 c.JupyterHub.services = [{
-    'name': 'projects',
-    'command': ['flask', 'run', '-p', '9080'],
-    'url': 'http://localhost:9080',
-    'environment': env,
+    'name': 'notebooks',
+    'url': 'http://notebooks:8000',
     'admin': True,
+    'api_token': os.getenv('JUPYTERHUB_RENKU_NOTEBOOKS_SERVICE_TOKEN')
 }]
+
+# try to avoid slow spawn timeouts -- not a proper fix!
+c.JupyterHub.tornado_settings = {'slow_spawn_timeout': 30}

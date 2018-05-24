@@ -45,16 +45,16 @@ services:
   keycloak:
     build: ./services/keycloak
     environment:
-      KEYCLOAK_MIGRATION_FILE: /data/renga-realm.json
+      KEYCLOAK_MIGRATION_FILE: /data/renku-realm.json
       KEYCLOAK_PASSWORD: admin
       KEYCLOAK_USER: admin
       POSTGRES_DATABASE: keycloak
       POSTGRES_PASSWORD: keycloak
       POSTGRES_PORT_5432_TCP_ADDR: db
       POSTGRES_USER: keycloak
-      RENGA_ENDPOINT: ${RENGA_ENDPOINT}
+      RENKU_ENDPOINT: ${RENKU_ENDPOINT}
       GITLAB_URL: ${GITLAB_URL}
-      RENGA_UI_URL: ${RENGA_UI_URL}
+      RENKU_UI_URL: ${RENKU_UI_URL}
       GITLAB_CLIENT_SECRET: ${GITLAB_CLIENT_SECRET}
       JUPYTERHUB_URL: ${JUPYTERHUB_URL}
       JUPYTERHUB_CLIENT_SECRET: ${JUPYTERHUB_CLIENT_SECRET}
@@ -62,7 +62,7 @@ services:
       - "-b 0.0.0.0"
       - "-Dkeycloak.migration.action=import"
       - "-Dkeycloak.migration.provider=singleFile"
-      - "-Dkeycloak.migration.file=/data/renga-realm.json"
+      - "-Dkeycloak.migration.file=/data/renku-realm.json"
       - "-Dkeycloak.migration.strategy=IGNORE_EXISTING"
     restart: on-failure
     labels:
@@ -103,6 +103,7 @@ services:
         #gitlab_rails['db_adapter'] = 'postgresql'
         #gitlab_rails['db_encoding'] = 'utf8'
         gitlab_rails['omniauth_enabled'] = true
+        gitlab_rails['omniauth_auto_sign_in_with_provider'] = 'oauth2_generic'
         gitlab_rails['omniauth_allow_single_sign_on'] = ['oauth2_generic']
         gitlab_rails['omniauth_block_auto_created_users'] = false
         gitlab_rails['omniauth_providers'] = [
@@ -116,16 +117,16 @@ services:
                 # CAREFUL: This must be accessible from inside the keycloak container
                 # for service-to-service communication.
                 'site' => '${KEYCLOAK_URL}/auth',
-                'authorize_url' => '/auth/realms/Renga/protocol/openid-connect/auth',
-                'user_info_url' => '/auth/realms/Renga/protocol/openid-connect/userinfo',
-                'token_url' => '/auth/realms/Renga/protocol/openid-connect/token'
+                'authorize_url' => '/auth/realms/Renku/protocol/openid-connect/auth',
+                'user_info_url' => '/auth/realms/Renku/protocol/openid-connect/userinfo',
+                'token_url' => '/auth/realms/Renku/protocol/openid-connect/token'
               },
               user_response_structure: {
                 attributes: { email:'email', first_name:'given_name', last_name:'family_name', name:'name', nickname:'preferred_username' }, # if the nickname attribute of a user is called 'username'
                 id_path: 'preferred_username'
               }
             },
-            label: 'Renga Login'
+            label: 'Renku Login'
           }
         ]
         gitlab_rails['gitlab_shell_ssh_port'] = 5022
@@ -168,19 +169,19 @@ services:
       - review
 
   storage:
-    image: ${DOCKER_PREFIX}renga-storage:${PLATFORM_VERSION}
+    image: ${DOCKER_PREFIX}renku-storage:${PLATFORM_VERSION}
     environment:
       # AUTHORIZATION_CLIENT_SECRET: $AUTHORIZATION_CLIENT_SECRET
       PLAY_APPLICATION_SECRET: $PLAY_APPLICATION_SECRET
-      RENGA_SERVICES_AUTHORIZATION_URL: ${KEYCLOAK_URL}/auth/realms/Renga/protocol/openid-connect/auth
+      RENKU_SERVICES_AUTHORIZATION_URL: ${KEYCLOAK_URL}/auth/realms/Renku/protocol/openid-connect/auth
       STORAGE_BACKEND_LOCAL_ENABLED: "true"
-      RENGA_ENDPOINT: ${RENGA_ENDPOINT}
+      RENKU_ENDPOINT: ${RENKU_ENDPOINT}
       STORAGE_BACKEND_LOCALGIT_ENABLED: "true"
       STORAGE_BACKEND_GITLAB_ENABLED: "true"
       GITLAB_URL: ${GITLAB_URL}
       GITLAB_USER: "root"
-      GITLAB_PASS: ${GITLAB_TOKEN}
-      RENGA_STORAGE_DEFAULT_LFS_BACKEND: "local"
+      GITLAB_PASS: ${GITLAB_SUDO_TOKEN}
+      RENKU_STORAGE_DEFAULT_LFS_BACKEND: "local"
     volumes:
       - ./services/storage/data:/data
     ports:
@@ -214,11 +215,11 @@ services:
       traefik.enable: "true"
       traefik.frontend.rule: PathPrefixStrip:/admin/swagger
     environment:
-      API_URL: ${RENGA_ENDPOINT}/api/swagger.json
-      OAUTH2_REDIRECT_URL: ${RENGA_ENDPOINT}/admin/swagger/oauth2-redirect.html
+      API_URL: ${RENKU_ENDPOINT}/api/swagger.json
+      OAUTH2_REDIRECT_URL: ${RENKU_ENDPOINT}/admin/swagger/oauth2-redirect.html
 
   ui:
-    image: ${DOCKER_PREFIX}renga-ui:${PLATFORM_VERSION}
+    image: ${DOCKER_PREFIX}renku-ui:${PLATFORM_VERSION}
     restart: always
     environment:
       BASE_URL: http://${PLATFORM_DOMAIN}
@@ -254,22 +255,15 @@ services:
       - default
       - review
 
-  notebook:
-    build:
-      context: services/notebook
-      args:
-        BASE_IMAGE: rengahub/minimal-notebook:e21fd4181aa2
-        JUPYTERHUB_VERSION: master
-    image: ${DOCKER_PREFIX}singleuser:${PLATFORM_VERSION}
-    command: renga --version
-
   jupyterhub:
+    image: renkuhub/jupyterhub:${PLATFORM_VERSION}
     build: services/jupyterhub
     command: jupyterhub --debug
     ports:
       - 8000
       - 8081
     environment:
+      DEBUG: 1
       GITLAB_CLIENT_ID: jupyterhub
       GITLAB_CLIENT_SECRET: no-secret-needed
       GITLAB_HOST: ${GITLAB_URL}
@@ -277,10 +271,11 @@ services:
       JUPYTERHUB_CRYPT_KEY: ${JUPYTERHUB_CRYPT_KEY}
       JUPYTERHUB_NOTEBOOK_DIR: /repo
       JUPYTERHUB_NOTEBOOK_IMAGE: ${DOCKER_PREFIX}singleuser:${PLATFORM_VERSION}
-      JUPYTERHUB_SPAWNER_CLASS: spawners.RengaDockerSpawner
+      JUPYTERHUB_RENKU_NOTEBOOKS_SERVICE_TOKEN: ${JUPYTERHUB_RENKU_NOTEBOOKS_SERVICE_TOKEN}
+      JUPYTERHUB_SPAWNER_CLASS: spawners.RenkuDockerSpawner
       KEYCLOAK_URL: ${KEYCLOAK_URL}
-      OAUTH2_AUTHORIZE_URL: ${KEYCLOAK_URL}/auth/realms/Renga/protocol/openid-connect/auth
-      OAUTH2_TOKEN_URL: ${KEYCLOAK_URL}/auth/realms/Renga/protocol/openid-connect/token
+      OAUTH2_AUTHORIZE_URL: ${KEYCLOAK_URL}/auth/realms/Renku/protocol/openid-connect/auth
+      OAUTH2_TOKEN_URL: ${KEYCLOAK_URL}/auth/realms/Renku/protocol/openid-connect/token
       PLATFORM_DOMAIN: ${PLATFORM_DOMAIN}
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
@@ -299,6 +294,15 @@ services:
         aliases:
           - jupyterhub.${PLATFORM_DOMAIN}
 
+  notebooks:
+    build: services/notebooks
+    environment:
+      GITLAB_HOST: ${GITLAB_URL}
+      FLASK_DEBUG: 1
+      OAUTHLIB_INSECURE_TRANSPORT: 1
+      JUPYTERHUB_API_TOKEN: ${JUPYTERHUB_RENKU_NOTEBOOKS_SERVICE_TOKEN}
+      JUPYTERHUB_API_URL: http://jupyterhub:8000/hub/api
+      JUPYTERHUB_SERVICE_PREFIX: /services/notebooks/
 networks:
   review:
     external: true

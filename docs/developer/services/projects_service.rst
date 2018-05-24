@@ -19,7 +19,7 @@ Projects Data Model
 Project
 ^^^^^^^
 
-Projects within the Renga platform are given a unique identifier that should
+Projects within the Renku platform are given a unique identifier that should
 be used when manipulating them. In addition, a project will have the following
 attributes:
 
@@ -42,7 +42,7 @@ Projects endpoints
 
 The projects API provides the following endpoints (`projects API spec`_).
 
-.. _projects API spec: https://github.com/SwissDataScienceCenter/renga-projects/blob/master/swagger.yml
+.. _projects API spec: https://github.com/SwissDataScienceCenter/renku-projects/blob/master/swagger.yml
 
 **GET /**
 
