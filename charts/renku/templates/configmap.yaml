@@ -17,7 +17,7 @@ data:
     apt-get install -y curl jq
 
     BASE_URL="{{ (printf "http://%s" .Values.global.renku.domain) }}"
-    GITLAB_SERVICE_URL="{{ template "http" . }}://{{ template "gitlab.fullname" . }}{{ .Values.global.gitlab.urlPrefix }}"
+    GITLAB_SERVICE_URL="http://{{ template "gitlab.fullname" . }}{{ .Values.global.gitlab.urlPrefix }}"
     GITLAB_URL="{{ .Values.ui.gitlabUrl }}"
 
     until sleep 1; curl -f -s --connect-timeout 5 ${GITLAB_SERVICE_URL}/help; do
