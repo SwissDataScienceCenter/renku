@@ -28,8 +28,10 @@ echo "${DOCKER_PASSWORD}" | docker login -u="${DOCKER_USERNAME}" --password-stdi
 # build charts/images and push
 cd charts
 helm repo add renku https://swissdatasciencecenter.github.io/helm-charts/
+helm repo add gitlab https://charts.gitlab.io/
 helm dependency update renku
 chartpress --push --publish-chart
-chartpress --tag latest --push
 git diff
+# push also images tagged with "latest"
+chartpress --tag latest --push
 cd ..
