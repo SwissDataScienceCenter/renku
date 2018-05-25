@@ -17,7 +17,7 @@ data:
     apt-get install -y curl jq
 
     BASE_URL="{{ (printf "http://%s" .Values.global.renku.domain) }}"
-    GITLAB_SERVICE_URL="{{ template "http" . }}://{{ template "gitlab.fullname" . }}{{ .Values.global.gitlab.urlPrefix }}"
+    GITLAB_SERVICE_URL="http://{{ template "gitlab.fullname" . }}{{ .Values.global.gitlab.urlPrefix }}"
     GITLAB_URL="{{ .Values.ui.gitlabUrl }}"
 
     until sleep 1; curl -f -s --connect-timeout 5 ${GITLAB_SERVICE_URL}/help; do
@@ -27,7 +27,7 @@ data:
     psql -v ON_ERROR_STOP=1 <<-EOSQL
         DELETE FROM oauth_applications WHERE uid='jupyterhub';
         INSERT INTO oauth_applications (name, uid, scopes, redirect_uri, secret, trusted)
-        VALUES ('jupyterhub', 'jupyterhub', 'api read_user', '{{ template "http" . }}://{{ .Values.global.renku.domain }}{{ .Values.jupyterhub.hub.baseUrl }}hub/oauth_callback {{ template "http" . }}://{{ .Values.global.renku.domain }}/jupyterhub/hub/api/oauth2/authorize', 'no-secret-needed', 'true');
+        VALUES ('jupyterhub', 'jupyterhub', 'api read_user', '{{ template "http" . }}://{{ .Values.global.renku.domain }}{{ .Values.jupyterhub.hub.baseUrl }}hub/oauth_callback {{ template "http" . }}://{{ .Values.global.renku.domain }}/jupyterhub/hub/api/oauth2/authorize', '{{ .Values.jupyterhub.auth.gitlab.clientSecret }}', 'true');
 
         DELETE FROM oauth_applications WHERE uid='renku-ui';
         INSERT INTO oauth_applications (name, uid, scopes, redirect_uri, secret, trusted)
