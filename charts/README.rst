@@ -15,6 +15,7 @@ Requires minikube, kubectl, helm and python.
     $ minikube addons enable coredns
     $ helm init
     $ helm repo add renku https://swissdatasciencecenter.github.io/helm-charts/
+    $ helm repo add gitlab https://charts.gitlab.io
     $ helm dep build renku
     $ helm install --name nginx-ingress --namespace kube-system stable/nginx-ingress --set controller.hostNetwork=true
     $ helm upgrade renku --install \
