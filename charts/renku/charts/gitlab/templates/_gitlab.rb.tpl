@@ -29,7 +29,7 @@ gitlab_rails['gitlab_shell_ssh_port'] = {{ default 22 .Values.sshPort }}
 ### OmniAuth Settings
 ###! Docs: https://docs.gitlab.com/ce/integration/omniauth.html
 gitlab_rails['omniauth_enabled'] = true
-# gitlab_rails['omniauth_auto_sign_in_with_provider'] = 'oauth2_generic'
+gitlab_rails['omniauth_auto_sign_in_with_provider'] = 'oauth2_generic'
 gitlab_rails['omniauth_allow_single_sign_on'] = ['oauth2_generic']
 gitlab_rails['omniauth_block_auto_created_users'] = false
 gitlab_rails['omniauth_providers'] = [

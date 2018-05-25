@@ -256,6 +256,9 @@ try:
             name = self.pod_name + '-git-repo'
 
             #: Define a new empty volume.
+            self.volumes = [
+                volume for volume in self.volumes if volume['name'] != name
+            ]
             volume = {
                 'name': name,
                 'emptyDir': {},

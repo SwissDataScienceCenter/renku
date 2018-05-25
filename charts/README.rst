@@ -4,13 +4,14 @@ Helm Charts for Deploying RENKU on Kubernetes
 Testing locally
 ---------------
 
-Requires minikube, kubectl and helm.
+Requires minikube, kubectl, helm and python.
 
 .. code-block:: console
 
     $ minikube start
     $ eval $(minikube docker-env)
-    $ make -C .. tag
+    $ pip install chartpress
+    $ chartpress --tag latest
     $ minikube addons enable coredns
     $ helm init
     $ helm repo add renku https://swissdatasciencecenter.github.io/helm-charts/
@@ -43,6 +44,47 @@ The platform takes some time to start, to check the pods status do:
 
 and wait until all pods are running.
 Now, we can go to: :code:`http://$(minikube-ip)/`
+
+
+Building images
+---------------
+
+If you want to build the Renku images required by the chart locally
+(``apispec``, ``singleuser``, ``jupyterhub-k8s``, ``tests``, ``notebooks``),
+you can do so by using ``chartpress``.
+
+.. code-block:: console
+
+    $ pip install chartpress
+    $ chartpress --tag latest
+
+You can the use the same ``helm upgrade`` command as above to redeploy the
+services using the new images. If you ommit the ``--tag latest``,
+``chartpress`` will tag the images with the current commit sha and update the
+relevant values in the charts.
+
+
+Deploying from a Helm repository
+--------------------------------
+
+.. code-block:: console
+
+    $ minikube start
+    $ helm init
+    $ helm repo add renku https://swissdatasciencecenter.github.io/helm-charts/
+    $ helm fetch --devel renku/renku
+    $ ls renku-*.tgz
+    renku-0.1.0-XXXXXX.tgz
+    $ helm upgrade --install renku --namespace renku \
+        -f minikube-values.yaml \
+        --set global.renku.domain=$(minikube ip) \
+        --set ui.gitlabUrl=http://$(minikube ip)/gitlab \
+        --set jupyterhub.hub.extraEnv.GITLAB_HOST=http://$(minikube ip)/gitlab \
+        renku-0.1.0-XXXXXX.tgz
+
+
+Tests
+-----
 
 To run tests on the deployment, use
 

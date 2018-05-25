@@ -1,7 +1,6 @@
-#!/usr/bin/env sh
-# -*- coding: utf-8 -*-
+#!/bin/env bash
 #
-# Copyright 2017-2018 - Swiss Data Science Center (SDSC)
+# Copyright 2018 - Swiss Data Science Center (SDSC)
 # A partnership between École Polytechnique Fédérale de Lausanne (EPFL) and
 # Eidgenössische Technische Hochschule Zürich (ETHZ).
 #
@@ -17,15 +16,20 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD" "$DOCKER_REGISTRY"
+set -e
 
-if [ "$TRAVIS_EVENT_TYPE" = "cron" ]
-then
-    make -e PLATFORM_BASE_DIR=/tmp
-fi
+# generate ssh key to use for docker hub login
+openssl aes-256-cbc -K "${encrypted_ba78b413d7f2_key}" -iv "${encrypted_ba78b413d7f2_iv}" -in github_deploy_key.enc -out github_deploy_key -d
+chmod 600 github_deploy_key
+eval $(ssh-agent -s)
+ssh-add github_deploy_key
+echo "${DOCKER_PASSWORD}" | docker login -u="${DOCKER_USERNAME}" --password-stdin ${DOCKER_REGISTRY}
 
-# install geckodriver
-wget https://github.com/mozilla/geckodriver/releases/download/v0.19.1/geckodriver-v0.19.1-linux64.tar.gz
-tar -xvzf geckodriver*
-chmod +x geckodriver
-sudo mv geckodriver /usr/local/bin
+# build charts/images and push
+cd charts
+helm repo add renku https://swissdatasciencecenter.github.io/helm-charts/
+helm dependency update renku
+chartpress --push --publish-chart
+chartpress --tag latest --push
+git diff
+cd ..
