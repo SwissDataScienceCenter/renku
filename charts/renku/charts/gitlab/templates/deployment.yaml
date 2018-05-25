@@ -49,7 +49,7 @@ spec:
               name: {{ template "gitlab.fullname" . }}
               key: gitlab-password
         - name: RENKU_DOMAIN
-          value: {{ .Values.global.renku.domain }}\
+          value: {{ .Values.global.renku.domain }}
         - name: GITLAB_SHARED_RUNNERS_REGISTRATION_TOKEN
           valueFrom:
             secretKeyRef:
