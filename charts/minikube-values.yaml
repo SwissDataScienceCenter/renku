@@ -30,3 +30,6 @@ global:
 notebooks:
   jupyterhub_base_url: /jupyterhub/
   jupyterhub_api_token: notebookstoken
+
+runner:
+  enabled: true
