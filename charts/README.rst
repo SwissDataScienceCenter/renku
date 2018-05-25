@@ -17,7 +17,10 @@ Requires minikube, kubectl, helm and python.
     $ helm repo add renku https://swissdatasciencecenter.github.io/helm-charts/
     $ helm repo add gitlab https://charts.gitlab.io
     $ helm dep build renku
-    $ helm install --name nginx-ingress --namespace kube-system stable/nginx-ingress --set controller.hostNetwork=true
+    $ helm upgrade --install nginx-ingress --namespace kube-system \
+        --set controller.hostNetwork=true \
+        --set tcp.2222=renku/renku-gitlab:22 \
+        stable/nginx-ingress
     $ helm upgrade renku --install \
         --namespace renku \
         -f minikube-values.yaml \
