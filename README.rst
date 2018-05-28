@@ -60,7 +60,7 @@ you may use
     $ make wipe
 
 You can find more details about running the platform in the `setup
-<http://renga.readthedocs.io/en/development/user/setup.html>`_ documentation.
+<http://renku.readthedocs.io/en/development/user/setup.html>`_ documentation.
 
 Where to go next
 ----------------
