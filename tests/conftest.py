@@ -29,3 +29,4 @@ def browser():
     """Provide a splinter browser."""
     browser = splinter.Browser()
     yield browser
+    del (browser)
