@@ -23,9 +23,6 @@ set -o errexit
 # quit on unbound symbols:
 set -o nounset
 
-# run the renku-demo container
-docker run --rm --network host renku/renku-demo
-
 pytest -v
 sphinx-build -nNW -b spelling -d docs/_build/doctrees docs docs/_build/spelling
 sphinx-build -qnNW docs docs/_build/html
