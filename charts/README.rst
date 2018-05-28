@@ -1,7 +1,7 @@
 Helm Charts for Deploying RENKU on Kubernetes
 =============================================
 
-Helm 2.9.0 or newer is recommended as we use the `before-hook-creation` hook deletion policy.
+Helm 2.9.0 or newer is recommended as we use the :code:`before-hook-creation` hook deletion policy.
 See also: `before-hook-creation delete policy <https://github.com/kubernetes/helm/commit/1d4883bf3c85ea43ed071dff4e02cc47bb66f44f>`_.
 
 Testing locally
