@@ -3,6 +3,7 @@
 {{- $keycloakServicePort := .Values.keycloak.service.port -}}
 {{- $gitlabFullname := include "gitlab.fullname" . -}}
 {{- $gitlabServicePort := 80 -}}
+{{- $gitlabRegistryPort := 5000 -}}
 {{- $uiFullname := include "ui.fullname" . -}}
 {{- $uiServicePort := .Values.ui.service.port -}}
 ---
@@ -51,5 +52,12 @@ spec:
         backend:
           serviceName: {{ $uiFullname }}
           servicePort: {{ $uiServicePort }}
+  - host: registry.renga-k8s.build
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: {{ $gitlabFullname }}
+          servicePort: {{ $gitlabServicePort }}
   {{- end }}
 {{- end }}

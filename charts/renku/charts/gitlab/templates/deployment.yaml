@@ -60,8 +60,8 @@ spec:
           containerPort: 22
         - name: http
           containerPort: 80
-        - name: registry
-          containerPort: 8105
+        # - name: registry
+        #   containerPort: 8105
         livenessProbe:
           httpGet:
             path: /gitlab/help

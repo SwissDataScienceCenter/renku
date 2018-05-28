@@ -29,6 +29,8 @@ global:
 
 gitlab:
   sshPort: 2222
+  registry:
+    externalUrl: http://registry.renga-k8s.build/
 
 notebooks:
   jupyterhub_base_url: /jupyterhub/

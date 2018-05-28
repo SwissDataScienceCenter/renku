@@ -18,6 +18,10 @@ spec:
       targetPort: ssh
       protocol: TCP
       name: ssh
+    # - port: 5000
+    #   targetPort: registry
+    #   protocol: TCP
+    #   name: registry
   selector:
     app: {{ template "gitlab.name" . }}
     release: {{ .Release.Name }}

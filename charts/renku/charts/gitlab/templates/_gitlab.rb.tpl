@@ -82,4 +82,14 @@ gitlab_rails['redis_host'] = "{{ template "redis.fullname" . }}"
 
 prometheus['enable'] = false
 
+### GitLab Registry settings
+registry_external_url '{{ .Values.registry.externalUrl }}'
+gitlab_rails['registry_enabled'] = {{ .Values.registry.enabled }}
+# gitlab_rails['registry_port'] = 8105
+### Registry backend storage
+###! Docs: https://docs.gitlab.com/ce/administration/container_registry.html#container-registry-storage-driver
+{{- if .Values.registry.storage }}
+registry['storage'] = {{ .Values.registry.storage }}
+{{- end }}
+
 {{- end -}}
