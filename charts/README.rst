@@ -13,6 +13,31 @@ Requires minikube, kubectl, helm and python.
 .. code-block:: console
 
     $ minikube start --memory 6144
+
+Now, we need to setup CoreDNS on minikube:
+
+.. code-block:: console
+
+    $ minikube addons enable coredns
+    # We edit the coredns config with kubectl.
+    # Insert the following line just above `prometheus :9153`,
+    # where <minikube-ip> is the result of `minikube ip`:
+    # rewrite name regex (.*)renku-k8s.build <minikube-ip>
+    $ kubectl -n kube-system edit cm coredns
+    $ kubectl -n kube-system delete po -l "k8s-app=kube-dns" # to force config refresh
+
+We can now disable kube-dns (this is necessary, otherwise it will still continue to receive some DNS requests):
+
+.. code-block:: console
+
+    $ minikube addons disable kube-dns
+    $ kubectl -n kube-system delete deploy kube-dns
+
+The command :code:`minikube addons disable kube-dns` may fail, so to mark the
+addon as disabled, edit `~/.minikube/config/config.json` and insert :code:`"kube-dns": false`.
+
+.. code-block:: console
+
     $ eval $(minikube docker-env)
     $ pip install chartpress
     $ chartpress --tag latest
@@ -30,7 +55,7 @@ Requires minikube, kubectl, helm and python.
         -f minikube-values.yaml \
         ./renku
 
-Make sure you have `$(minikube ip) renku-k8s gitlab.renku-k8s` line
+Make sure you have `$(minikube ip) renku-k8s.build gitlab.renku-k8s.build` line
 in your `/etc/hosts`.
 
 Due to issue `minikube #1568

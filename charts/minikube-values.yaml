@@ -41,7 +41,7 @@ gitlab:
   demoUserIsAdmin: true
 
 ui:
-  gitlabUrl: gitlab.renku-k8s.build
+  gitlabUrl: http://gitlab.renku-k8s.build
   jupyterhubUrl: http://renku-k8s.build/jupyterhub
 
 notebooks:
