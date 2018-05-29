@@ -25,7 +25,10 @@ Requires minikube, kubectl, helm and python.
         --set controller.hostNetwork=true \
         --set tcp.2222=renku/renku-gitlab:22 \
         stable/nginx-ingress
-    $ helm upgrade --install renku  --namespace renku -f minikube-values.yaml renku --wait --force --timeout 600
+    $ helm upgrade renku --install \
+        --namespace renku \
+        -f minikube-values.yaml \
+        ./renku
 
 Make sure you have `$(minikube ip) renku-k8s gitlab.renku-k8s` line
 in your `/etc/hosts`.

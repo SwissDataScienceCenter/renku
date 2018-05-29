@@ -16,6 +16,7 @@ spec:
       name: http
     - port: 22
       targetPort: ssh
+      protocol: TCP
       name: ssh
     - port: 8105
       targetPort: registry

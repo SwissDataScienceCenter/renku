@@ -3,6 +3,8 @@
 {{- $keycloakServicePort := .Values.keycloak.service.port -}}
 {{- $gitlabFullname := include "gitlab.fullname" . -}}
 {{- $gitlabServicePort := 80 -}}
+{{- $gitlabSubdomain := .Values.global.gitlab.subdomain -}}
+{{- $gitlabUrlPrefix := .Values.global.gitlab.urlPrefix -}}
 {{- $uiFullname := include "ui.fullname" . -}}
 {{- $uiServicePort := .Values.ui.service.port -}}
 ---
@@ -47,10 +49,10 @@ spec:
         backend:
           serviceName: {{ $uiFullname }}
           servicePort: {{ $uiServicePort }}
-  - host: {{ .Values.global.gitlab.subdomain }}{{ . }}
+  - host: {{ $gitlabSubdomain }}{{ . }}
     http:
       paths:
-      - path: {{ .Values.global.gitlab.urlPrefix }}
+      - path: {{ $gitlabUrlPrefix }}
         backend:
           serviceName: {{ $gitlabFullname }}
           servicePort: {{ $gitlabServicePort }}

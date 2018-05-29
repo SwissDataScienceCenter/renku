@@ -40,6 +40,10 @@ gitlab:
     externalUrl: http://gitlab.renku-k8s.build:30105/
   demoUserIsAdmin: true
 
+ui:
+  gitlabUrl: gitlab.renku-k8s.build
+  jupyterhubUrl: http://renku-k8s.build/jupyterhub
+
 notebooks:
   jupyterhub_base_url: /jupyterhub/
   jupyterhub_api_token: notebookstoken

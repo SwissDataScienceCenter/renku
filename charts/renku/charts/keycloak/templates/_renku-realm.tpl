@@ -494,7 +494,7 @@ TODO: Put back template strings from renku/services/keycloak/renku-realm.json.tp
     "clientAuthenticatorType": "client-secret",
     "secret": "{{ .Values.global.gitlab.clientSecret }}",
     "redirectUris": [
-      "{{ template "http" . }}://{{ .Values.global.gitlab.subdomain }}{{ .Values.global.renku.domain }}{{ .Values.global.gitlab.urlPrefix }}users/auth/oauth2_generic/callback"
+      "{{ template "http" . }}://{{ .Values.global.gitlab.subdomain }}{{ .Values.global.renku.domain }}{{ .Values.global.gitlab.urlPrefix }}*"
     ],
     "webOrigins": [],
     "notBefore": 0,

@@ -447,7 +447,7 @@ runner:
   ## Set to true to deploy the runners
   enabled: false
   ## Gitlab URL
-  gitlabUrl: http://renku-gitlab/gitlab/ # renku-gitlab <- gitlab chart name
+  gitlabUrl: http://renku-gitlab/ # renku-gitlab <- gitlab chart name
   ## Registration token, must be equal to `gitlab.sharedRunnersRegistrationToken`
   runnerRegistrationToken: '8dbf016f5b73d5608390183bbea9ce5fbed83a9dadefa719245ab93eb255cc29'
   runners:
