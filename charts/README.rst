@@ -11,7 +11,7 @@ Requires minikube, kubectl, helm and python.
 
 .. code-block:: console
 
-    $ minikube start
+    $ minikube start --memory 6144
     $ eval $(minikube docker-env)
     $ pip install chartpress
     $ chartpress --tag latest
