@@ -37,7 +37,8 @@ persistence:
 
 
 registry:
-  enabled: true
+  enabled: false
+  # exposedAs: NodePort
   # storage: |-
   #   {
   #     's3' => {

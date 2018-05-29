@@ -27,6 +27,7 @@ Requires minikube, kubectl, helm and python.
         --set global.renku.domain=$(minikube ip) \
         --set ui.gitlabUrl=http://$(minikube ip)/gitlab \
         --set jupyterhub.hub.extraEnv.GITLAB_HOST=http://$(minikube ip)/gitlab \
+        --set gitlab.registry.externalUrl=http://$(minikube ip):30105/ \
         ./renku
 
 Due to issue `minikube #1568

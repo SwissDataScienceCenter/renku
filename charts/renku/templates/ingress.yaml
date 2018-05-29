@@ -52,12 +52,5 @@ spec:
         backend:
           serviceName: {{ $uiFullname }}
           servicePort: {{ $uiServicePort }}
-  - host: registry.renga-k8s.build
-    http:
-      paths:
-      - path: /
-        backend:
-          serviceName: {{ $gitlabFullname }}
-          servicePort: {{ $gitlabServicePort }}
   {{- end }}
 {{- end }}
