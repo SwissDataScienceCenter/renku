@@ -328,7 +328,7 @@ jupyterhub:
       c.JupyterHub.spawner_class = os.getenv('JUPYTERHUB_SPAWNER_CLASS',
                                            'spawners.Spawner')
 
-      c.RenkuKubeSpawner.pod_name_template = 'jupyterhub-{username}{servername}'
+      c.RenkuKubeSpawner.pod_name_template = 'jupyter-{username}{servername}'
 
       #: Explicitly set notebook directory because we'll be mounting a host volume to
       #: it.  Most jupyter/docker-stacks *-notebook images run the Notebook server as

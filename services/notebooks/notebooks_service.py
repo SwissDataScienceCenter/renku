@@ -44,11 +44,6 @@ auth = HubOAuth(
 app = Flask(__name__)
 
 
-def _server_name(*args):
-    """Return a name for Jupyter server."""
-    return hashlib.md5(('-'.join(args)).encode()).hexdigest()[:7]
-
-
 def authenticated(f):
     """Decorator for authenticating with the Hub"""
 
@@ -102,7 +97,11 @@ def whoami(user):
 @authenticated
 def launch_notebook(user, namespace, project, commit_sha, notebook=None):
     """Launch user server with a given name."""
-    server_name = _server_name(namespace, project, commit_sha)
+    server_name = '{namespace}-{project}-{commit_sha}'.format(
+        namespace=namespace[:10],
+        project=project[:10],
+        commit_sha=commit_sha[:7]
+    )
 
     headers = {auth.auth_header_name: 'token {0}'.format(auth.api_token)}
 
