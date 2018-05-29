@@ -224,6 +224,7 @@ services:
     environment:
       BASE_URL: http://${PLATFORM_DOMAIN}
       GITLAB_URL: ${GITLAB_URL}
+      JUPYTERHUB_URL: ${JUPYTERHUB_URL}
     labels:
       traefik.enable: "true"
       traefik.frontend.rule: "Host:${PLATFORM_DOMAIN}"
@@ -297,7 +298,6 @@ services:
   notebooks:
     build: services/notebooks
     environment:
-      GITLAB_HOST: ${GITLAB_URL}
       FLASK_DEBUG: 1
       OAUTHLIB_INSECURE_TRANSPORT: 1
       JUPYTERHUB_API_TOKEN: ${JUPYTERHUB_RENKU_NOTEBOOKS_SERVICE_TOKEN}

@@ -305,6 +305,14 @@ ui:
   # service:
   #   port: 80
   #   type: ClusterIP
+  ## Set the GitLab URL
+  # gitlabUrl: "http://gitlab.renku.build"
+  ## Configure application ID from "{{ gitlabUrl }}/oauth/application"
+  ## by setting redirect URL to "{{ baseUrl }}/login/redirect/gitlab"
+  ## and set the application ID as the "gitlabClientId" chart value.
+  # gitlabClientId: "renku-ui"
+  ## Set the JupyterHub URL
+  # jupyterhubUrl: "http://jupyterhub.renku.build"
 
 ## Configuration for the jupyterhub service
 jupyterhub:

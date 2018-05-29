@@ -1,6 +1,9 @@
 Helm Charts for Deploying RENKU on Kubernetes
 =============================================
 
+Helm 2.9.0 or newer is recommended as we use the :code:`before-hook-creation` hook deletion policy.
+See also: `before-hook-creation delete policy <https://github.com/kubernetes/helm/commit/1d4883bf3c85ea43ed071dff4e02cc47bb66f44f>`_.
+
 Testing locally
 ---------------
 
@@ -26,6 +29,7 @@ Requires minikube, kubectl, helm and python.
         -f minikube-values.yaml \
         --set global.renku.domain=$(minikube ip) \
         --set ui.gitlabUrl=http://$(minikube ip)/gitlab \
+        --set ui.jupyterhubUrl=http://$(minikube ip)/jupyterhub \
         --set jupyterhub.hub.extraEnv.GITLAB_HOST=http://$(minikube ip)/gitlab \
         --set gitlab.registry.externalUrl=http://$(minikube ip):30105/ \
         ./renku
