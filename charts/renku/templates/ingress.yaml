@@ -3,7 +3,6 @@
 {{- $keycloakServicePort := .Values.keycloak.service.port -}}
 {{- $gitlabFullname := include "gitlab.fullname" . -}}
 {{- $gitlabServicePort := 80 -}}
-{{- $gitlabRegistryPort := 5000 -}}
 {{- $uiFullname := include "ui.fullname" . -}}
 {{- $uiServicePort := .Values.ui.service.port -}}
 ---
