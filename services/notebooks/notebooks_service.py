@@ -46,7 +46,7 @@ app = Flask(__name__)
 
 def _server_name(*args):
     """Return a name for Jupyter server."""
-    return hashlib.md5(('-'.join(args)).encode()).hexdigest()
+    return hashlib.md5(('-'.join(args)).encode()).hexdigest()[:7]
 
 
 def authenticated(f):
@@ -109,8 +109,8 @@ def launch_notebook(user, namespace, project, commit_sha, notebook=None):
     # 1. launch using spawner that checks the access
     r = requests.request(
         'POST',
-        auth.api_url + '/users/{user[name]}/servers/{server_name}'.format(
-            user=user, server_name=server_name
+        '{prefix}/users/{user[name]}/servers/{server_name}'.format(
+            prefix=auth.api_url, user=user, server_name=server_name
         ),
         json={
             'branch': request.args.get('branch', 'master'),
@@ -151,8 +151,8 @@ def stop_notebook(user, namespace, project, commit_sha):
 
     r = requests.request(
         'DELETE',
-        auth.api_url + '/users/{user[name]}/servers/{server_name}'.format(
-            user=user, server_name=server_name
+        '{prefix}/users/{user[name]}/servers/{server_name}'.format(
+            prefix=auth.api_url, user=user, server_name=server_name
         ),
         headers=headers
     )

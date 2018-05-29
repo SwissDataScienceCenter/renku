@@ -36,7 +36,7 @@ class SpawnerMixin():
         namespace = options.get('namespace')
         project = options.get('project')
 
-        url = os.environ.get('GITLAB_HOST', 'http://gitlab.renku.build')
+        url = os.environ.get('GITLAB_URL', 'http://gitlab.renku.build')
 
         scheme, netloc, path, query, fragment = urlsplit(url)
 
