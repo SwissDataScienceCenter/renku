@@ -19,8 +19,10 @@
 
 import hashlib
 import os
+import string
 from urllib.parse import urlsplit, urlunsplit
 
+import escapism
 from tornado import gen, web
 
 
@@ -307,6 +309,43 @@ try:
 
             pod = yield super().get_pod_manifest()
             return pod
+
+        def _expand_user_properties(self, template):
+            """
+            Override the _expand_user_properties from KubeSpawner.
+
+            In addition to also escaping the server name, we trim the individual
+            parts of the template to ensure < 63 charactr pod names.
+
+            Code adapted from
+            https://github.com/jupyterhub/kubespawner/blob/master/kubespawner/spawner.py
+            """
+
+            # Make sure username and servername match the restrictions for DNS labels
+            safe_chars = set(string.ascii_lowercase + string.digits + '-')
+
+            # Set servername based on whether named-server initialised
+            if self.name:
+                servername = '-{}'.format(self.name)
+            else:
+                servername = ''
+
+            legacy_escaped_username = ''.join([
+                s if s in safe_chars else '-' for s in self.user.name.lower()
+            ])
+
+            safe_username = escapism.escape(
+                self.user.name, safe=safe_chars, escape_char='-'
+            )
+            rendered = template.format(
+                userid=self.user.id,
+                username=safe_username[:10],
+                legacy_escape_username=legacy_escaped_username[:10],
+                servername=servername
+            ).lower()
+
+            # just to be sure, still trim to 63 characters
+            return rendered[:63]
 
 except ImportError:
     pass
