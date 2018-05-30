@@ -20,10 +20,12 @@
 import hashlib
 import json
 import os
+import string
 from urllib.parse import urljoin
 from functools import wraps
 
 import docker
+import escapism
 import gitlab
 import requests
 from flask import Flask, Response, abort, make_response, redirect, request
@@ -42,6 +44,18 @@ auth = HubOAuth(
 """Wrap JupyterHub authentication service API."""
 
 app = Flask(__name__)
+
+
+def _server_name(namespace, project, commit_sha):
+    """Form a DNS-safe server name."""
+    escape = lambda x: escapism.escape(
+        x, safe=set(string.ascii_lowercase + string.digits)
+    )
+    return '{namespace}-{project}-{commit_sha}'.format(
+        namespace=escape(namespace)[:10],
+        project=escape(project)[:10],
+        commit_sha=commit_sha[:7]
+    ).lower()
 
 
 def authenticated(f):
@@ -97,11 +111,7 @@ def whoami(user):
 @authenticated
 def launch_notebook(user, namespace, project, commit_sha, notebook=None):
     """Launch user server with a given name."""
-    server_name = '{namespace}-{project}-{commit_sha}'.format(
-        namespace=namespace[:10],
-        project=project[:10],
-        commit_sha=commit_sha[:7]
-    )
+    server_name = _server_name(namespace, project, commit_sha)
 
     headers = {auth.auth_header_name: 'token {0}'.format(auth.api_token)}
 
