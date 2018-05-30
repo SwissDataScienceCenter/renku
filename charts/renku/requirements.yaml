@@ -3,6 +3,10 @@ dependencies:
   alias: ui
   version: "0.1.0-caa9303"
   repository: "https://swissdatasciencecenter.github.io/helm-charts/"
+- name: renku-notebooks
+  alias: notebooks
+  repository: "file://../../../renku-notebooks/helm-chart/renku-notebooks"
+  version: "~0.1.0-12bf216"
 - name: gitlab-runner
   alias: runner
   version: 0.1.16

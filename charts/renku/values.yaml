@@ -370,11 +370,6 @@ apispec:
     repository: renku/apispec
     tag: latest
 
-notebooks:
-  image:
-    repository: renku/notebooks
-    tag: latest
-
 tests:
   image:
     repository: renku/tests
