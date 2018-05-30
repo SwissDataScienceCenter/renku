@@ -5,8 +5,8 @@ dependencies:
   repository: "https://swissdatasciencecenter.github.io/helm-charts/"
 - name: renku-notebooks
   alias: notebooks
-  repository: "file://../../../renku-notebooks/helm-chart/renku-notebooks"
-  version: "~0.1.0-12bf216"
+  repository: "https://swissdatasciencecenter.github.io/helm-charts/"
+  version: "0.1.0-3a7db4d"
 - name: gitlab-runner
   alias: runner
   version: 0.1.16
