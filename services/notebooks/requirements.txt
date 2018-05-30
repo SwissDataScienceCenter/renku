@@ -1,4 +1,5 @@
 docker
+escapism
 flask
 jupyterhub
 python-gitlab
