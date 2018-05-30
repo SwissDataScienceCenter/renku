@@ -1,4 +1,0 @@
-apiVersion: v1
-description: Multi-user Jupyter installation
-name: jupyterhub
-version: v0.6

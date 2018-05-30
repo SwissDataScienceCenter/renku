@@ -344,8 +344,6 @@ jupyterhub:
       c.JupyterHub.tornado_settings = {
        'slow_spawn_timeout': 30
       }
-    db:
-      type: postgres
   singleuser:
     image:
       name: renku/singleuser
