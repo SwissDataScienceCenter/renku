@@ -49,7 +49,9 @@ app = Flask(__name__)
 def _server_name(namespace, project, commit_sha):
     """Form a DNS-safe server name."""
     escape = lambda x: escapism.escape(
-        x, safe=set(string.ascii_lowercase + string.digits)
+        x,
+        safe=set(string.ascii_lowercase + string.digits),
+        escape_char='-',
     )
     return '{namespace}-{project}-{commit_sha}'.format(
         namespace=escape(namespace)[:10],
