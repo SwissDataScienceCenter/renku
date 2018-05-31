@@ -187,15 +187,15 @@ repos = \
 # 	renku-storage
 
 makefile-services = \
- 	renku-ui \
+	renku-notebooks \
+	renku-storage \
  	renku-python \
-	renku-storage
+ 	renku-ui
 
 dockerfile-services = \
 	apispec \
 	jupyterhub \
 	keycloak \
-	notebooks \
 	singleuser
 
 .PHONY: all clone checkout pull docker-images $(dockerfile-services) $(makefile-services) tag
