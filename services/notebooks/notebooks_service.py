@@ -22,7 +22,7 @@ import json
 import os
 import string
 from urllib.parse import urljoin
-from functools import wraps
+from functools import partial, wraps
 
 import docker
 import escapism
@@ -48,8 +48,8 @@ app = Flask(__name__)
 
 def _server_name(namespace, project, commit_sha):
     """Form a DNS-safe server name."""
-    escape = lambda x: escapism.escape(
-        x,
+    escape = partial(
+        escapism.escape,
         safe=set(string.ascii_lowercase + string.digits),
         escape_char='-',
     )
