@@ -86,6 +86,7 @@ class SpawnerMixin():
         options = self.user_options
         namespace = options.get('namespace')
         project = options.get('project')
+        commit_sha_7 = options.get('commit_sha')[:7]
 
         url = os.getenv('GITLAB_URL', 'http://gitlab.renku.build')
 
@@ -109,8 +110,13 @@ class SpawnerMixin():
         self.image = '{image_registry}'\
                      '/{namespace}'\
                      '/{project}'\
-                     ':{commit_sha}'.format(image_registry=os.getenv('IMAGE_REGISTRY'), **options)
+                     ':{commit_sha_7}'.format(
+                        image_registry=os.getenv('IMAGE_REGISTRY'),
+                        commit_sha_7=commit_sha_7,
+                        **options
+        )
 
+        self.cmd = 'jupyterhub-singleuser'
         try:
             result = yield super().start(*args, **kwargs)
         except docker.errors.ImageNotFound:
