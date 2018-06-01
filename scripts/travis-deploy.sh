@@ -29,6 +29,7 @@ echo "${DOCKER_PASSWORD}" | docker login -u="${DOCKER_USERNAME}" --password-stdi
 cd charts
 helm repo add renku https://swissdatasciencecenter.github.io/helm-charts/
 helm repo add gitlab https://charts.gitlab.io/
+helm repo add jupyterhub https://jupyterhub.github.io/helm-chart
 helm dependency update renku
 chartpress --push --publish-chart
 git diff
