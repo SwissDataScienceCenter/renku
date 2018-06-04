@@ -34,5 +34,6 @@ spec:
         backend:
           serviceName: {{ $gitlabFullname }}
           servicePort: {{ 8105 }}
+  {{- end }}
 {{- end }}
 {{- end }}
