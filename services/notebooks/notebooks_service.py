@@ -20,10 +20,12 @@
 import hashlib
 import json
 import os
+import string
 from urllib.parse import urljoin
-from functools import wraps
+from functools import partial, wraps
 
 import docker
+import escapism
 import gitlab
 import requests
 from flask import Flask, Response, abort, make_response, redirect, request
@@ -44,9 +46,18 @@ auth = HubOAuth(
 app = Flask(__name__)
 
 
-def _server_name(*args):
-    """Return a name for Jupyter server."""
-    return hashlib.md5(('-'.join(args)).encode()).hexdigest()
+def _server_name(namespace, project, commit_sha):
+    """Form a DNS-safe server name."""
+    escape = partial(
+        escapism.escape,
+        safe=set(string.ascii_lowercase + string.digits),
+        escape_char='-',
+    )
+    return '{namespace}-{project}-{commit_sha}'.format(
+        namespace=escape(namespace)[:10],
+        project=escape(project)[:10],
+        commit_sha=commit_sha[:7]
+    ).lower()
 
 
 def authenticated(f):
@@ -109,8 +120,8 @@ def launch_notebook(user, namespace, project, commit_sha, notebook=None):
     # 1. launch using spawner that checks the access
     r = requests.request(
         'POST',
-        auth.api_url + '/users/{user[name]}/servers/{server_name}'.format(
-            user=user, server_name=server_name
+        '{prefix}/users/{user[name]}/servers/{server_name}'.format(
+            prefix=auth.api_url, user=user, server_name=server_name
         ),
         json={
             'branch': request.args.get('branch', 'master'),
@@ -151,8 +162,8 @@ def stop_notebook(user, namespace, project, commit_sha):
 
     r = requests.request(
         'DELETE',
-        auth.api_url + '/users/{user[name]}/servers/{server_name}'.format(
-            user=user, server_name=server_name
+        '{prefix}/users/{user[name]}/servers/{server_name}'.format(
+            prefix=auth.api_url, user=user, server_name=server_name
         ),
         headers=headers
     )

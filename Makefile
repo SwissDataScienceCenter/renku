@@ -187,15 +187,15 @@ repos = \
 # 	renku-storage
 
 makefile-services = \
- 	renku-ui \
+	renku-notebooks \
+	renku-storage \
  	renku-python \
-	renku-storage
+ 	renku-ui
 
 dockerfile-services = \
 	apispec \
 	jupyterhub \
 	keycloak \
-	notebooks \
 	singleuser
 
 .PHONY: all clone checkout pull docker-images $(dockerfile-services) $(makefile-services) tag
@@ -238,7 +238,13 @@ tag: $(dockerfile-services) jupyterhub-k8s
 $(makefile-services): %: $(PLATFORM_BASE_DIR)/%
 	$(MAKE) -C $(PLATFORM_BASE_DIR)/$@
 
-.PHONY: start stop test wipe
+.PHONY: demo start stop test wipe
+
+demo: .env
+	@echo
+	@echo Running the renku demo
+	@echo
+	docker run --rm --network host renku/renku-demo:$(PLATFORM_VERSION)
 
 start: .env
 	@./scripts/renku-start.sh
@@ -246,7 +252,7 @@ start: .env
 stop: .env
 	@docker-compose stop
 
-test: .env
+test: .env demo
 	@pip install -r tests/requirements.txt
 	@pip install -r docs/requirements.txt
 	@./scripts/run-tests.sh

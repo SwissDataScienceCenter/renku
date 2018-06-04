@@ -11,7 +11,7 @@ Requires minikube, kubectl, helm and python.
 
 .. code-block:: console
 
-    $ minikube start
+    $ minikube start --memory 6144
     $ eval $(minikube docker-env)
     $ pip install chartpress
     $ chartpress --tag latest
@@ -30,7 +30,7 @@ Requires minikube, kubectl, helm and python.
         --set global.renku.domain=$(minikube ip) \
         --set ui.gitlabUrl=http://$(minikube ip)/gitlab \
         --set ui.jupyterhubUrl=http://$(minikube ip)/jupyterhub \
-        --set jupyterhub.hub.extraEnv.GITLAB_HOST=http://$(minikube ip)/gitlab \
+        --set jupyterhub.hub.extraEnv.GITLAB_URL=http://$(minikube ip)/gitlab \
         --set gitlab.registry.externalUrl=http://$(minikube ip):30105/ \
         ./renku
 

@@ -64,8 +64,8 @@ c.JupyterHub.spawner_class = os.getenv(
 
 NETWORK_NAME = 'review'
 
-c.RenkuDockerSpawner.container_name_template = '{prefix}-{username}-{servername}'
-c.RenkuKubeSpawner.pod_name_template = 'jupyterhub-{username}-{servername}'
+c.RenkuDockerSpawner.container_name_template = 'jupyter-{username}{servername}'
+c.RenkuKubeSpawner.pod_name_template = 'jupyter-{username}{servername}'
 
 #: Configure the image used by notebook spawner.
 IMAGE = os.getenv('JUPYTERHUB_NOTEBOOK_IMAGE', 'jupyterhub/singleuser:latest')

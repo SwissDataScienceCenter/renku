@@ -1,10 +1,17 @@
 dependencies:
 - name: renku-ui
   alias: ui
-  version: "0.1.0-af8af46"
+  version: "0.1.0-caa9303"
   repository: "https://swissdatasciencecenter.github.io/helm-charts/"
+- name: renku-notebooks
+  alias: notebooks
+  repository: "https://swissdatasciencecenter.github.io/helm-charts/"
+  version: "0.1.0-3a7db4d"
 - name: gitlab-runner
   alias: runner
   version: 0.1.16
   repository: https://charts.gitlab.io/
   condition: runner.enabled
+- name: jupyterhub
+  version: "v0.6"
+  repository: "https://jupyterhub.github.io/helm-chart"

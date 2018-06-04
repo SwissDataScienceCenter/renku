@@ -2,9 +2,12 @@ FROM python:3.6-alpine
 
 RUN apk update && apk add curl
 
-COPY . /code
 WORKDIR /code
-RUN pip install -r requirements.txt
+COPY requirements.txt /tmp/requirements.txt
+
+RUN pip install -r /tmp/requirements.txt
+
+COPY . /code
 
 ENV FLASK_APP=/code/notebooks_service.py
 

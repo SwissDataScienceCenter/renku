@@ -334,6 +334,10 @@ jupyterhub:
     extraConfig: |
       import os
 
+      # JupyterHub uses GITLAB_HOST which is a misnomer -- we use GITLAB_URL
+      # everywhere so set this mapping here
+      os.environ['GITLAB_HOST'] = os.getenv('GITLAB_URL')
+
       #: Automatically begin the login process without showing the button.
       c.Authenticator.auto_login = True
 
@@ -344,7 +348,7 @@ jupyterhub:
       c.JupyterHub.spawner_class = os.getenv('JUPYTERHUB_SPAWNER_CLASS',
                                            'spawners.Spawner')
 
-      c.RenkuKubeSpawner.pod_name_template = 'jupyterhub-{username}-{servername}'
+      c.RenkuKubeSpawner.pod_name_template = 'jupyter-{username}{servername}'
 
       #: Explicitly set notebook directory because we'll be mounting a host volume to
       #: it.  Most jupyter/docker-stacks *-notebook images run the Notebook server as
@@ -360,8 +364,6 @@ jupyterhub:
       c.JupyterHub.tornado_settings = {
        'slow_spawn_timeout': 30
       }
-    db:
-      type: postgres
   singleuser:
     image:
       name: renku/singleuser
@@ -384,11 +386,6 @@ jupyterhub:
 apispec:
   image:
     repository: renku/apispec
-    tag: latest
-
-notebooks:
-  image:
-    repository: renku/notebooks
     tag: latest
 
 tests:

@@ -257,7 +257,7 @@ services:
       - review
 
   jupyterhub:
-    image: renkuhub/jupyterhub:${PLATFORM_VERSION}
+    image: ${DOCKER_PREFIX}jupyterhub:${PLATFORM_VERSION}
     build: services/jupyterhub
     command: jupyterhub --debug
     ports:

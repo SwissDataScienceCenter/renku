@@ -24,12 +24,6 @@ charts:
         valuesPath: jupyterhub.hub.image
         paths:
           - ../services/jupyterhub
-      notebooks:
-        contextPath: ../services/notebooks
-        dockerfilePath: ../services/notebooks/Dockerfile
-        valuesPath: notebooks.image
-        paths:
-          - ../services/notebooks
       singleuser:
         contextPath: ../services/singleuser
         buildArgs:
