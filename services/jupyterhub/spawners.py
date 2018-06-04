@@ -189,6 +189,7 @@ try:
                 name=container_name,
                 entrypoint='sh -c',
                 command=[
+                    'apk update && apk add git-lfs && '
                     'git clone {repository} {volume_path} && '
                     '(git checkout {branch} || git checkout -b {branch}) && '
                     'git reset --hard {commit_sha} && '
