@@ -32,6 +32,7 @@ global:
 
 gitlab:
   sshPort: 2222
+  demoUserIsAdmin: true
 
 notebooks:
   jupyterhub_base_url: /jupyterhub/

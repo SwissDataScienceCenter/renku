@@ -56,7 +56,7 @@ data:
         "provider": "oauth2_generic",
         "skip_confirmation": "true",
         "reset_password": "true",
-        "admin": "false"}' \
+        "admin": "{{ .Values.gitlab.demoUserIsAdmin }}"}' \
         -H "Content-Type: application/json" \
         ${GITLAB_SERVICE_URL}/api/v4/users/${demo_id}
 
