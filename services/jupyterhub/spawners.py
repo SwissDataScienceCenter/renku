@@ -287,6 +287,7 @@ try:
                 image='alpine/git',
                 command=['sh', '-c'],
                 args=[
+                    'apk update && apk add git-lfs && '
                     'git clone {repository} {mount_path} && '
                     '(git checkout {branch} || git checkout -b {branch}) && '
                     'git reset --hard {commit_sha}'.format(
