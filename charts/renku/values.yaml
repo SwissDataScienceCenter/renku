@@ -321,6 +321,12 @@ jupyterhub:
     extraConfig: |
       import os
 
+      # Set the log level by value or name.
+      c.JupyterHub.log_level = 'DEBUG'
+
+      # Enable debug-logging of the single-user server
+      c.Spawner.debug = True
+
       # JupyterHub uses GITLAB_HOST which is a misnomer -- we use GITLAB_URL
       # everywhere so set this mapping here
       os.environ['GITLAB_HOST'] = os.getenv('GITLAB_URL')
