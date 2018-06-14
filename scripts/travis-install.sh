@@ -17,12 +17,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD" "$DOCKER_REGISTRY"
-
-if [ "$TRAVIS_EVENT_TYPE" = "cron" ]
-then
-    make -e PLATFORM_BASE_DIR=/tmp
-fi
+# commenting out the image builds on cron due to disk space issues on travis
+#
+# if [ "$TRAVIS_EVENT_TYPE" = "cron" ]
+# then
+#     make -e PLATFORM_BASE_DIR=/tmp
+# fi
 
 # install geckodriver
 wget https://github.com/mozilla/geckodriver/releases/download/v0.19.1/geckodriver-v0.19.1-linux64.tar.gz

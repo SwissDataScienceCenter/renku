@@ -189,6 +189,13 @@ gitlab:
   ## Registration token for gitlab runners (initial value, can be regenerated from gitlab admin ui)
   sharedRunnersRegistrationToken: '8dbf016f5b73d5608390183bbea9ce5fbed83a9dadefa719245ab93eb255cc29'
 
+  ## Set to true to make the user 'demo' a GitLab admin
+  demoUserIsAdmin: false
+  
+  ## External port for git ssh protocol
+  ## This setting affects the copy-paste repo git+ssh URL
+  # sshPort: 22
+
   ## Persistent Volume settings
   persistence:
     ## Set to false to disable the use of Persistent Volume

@@ -35,6 +35,7 @@ gitlab:
   registry:
     enabled: true
     exposedAs: NodePort
+  demoUserIsAdmin: true
 
 notebooks:
   jupyterhub_base_url: /jupyterhub/

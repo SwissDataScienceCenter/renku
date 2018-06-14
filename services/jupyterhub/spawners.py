@@ -189,6 +189,7 @@ try:
                 name=container_name,
                 entrypoint='sh -c',
                 command=[
+                    'apk update && apk add git-lfs && '
                     'git clone {repository} {volume_path} && '
                     '(git checkout {branch} || git checkout -b {branch}) && '
                     'git reset --hard {commit_sha} && '
@@ -286,9 +287,11 @@ try:
                 image='alpine/git',
                 command=['sh', '-c'],
                 args=[
+                    'apk update && apk add git-lfs && '
                     'git clone {repository} {mount_path} && '
                     '(git checkout {branch} || git checkout -b {branch}) && '
-                    'git reset --hard {commit_sha}'.format(
+                    'git reset --hard {commit_sha} &&'
+                    'chown 1000:100 -Rc {mount_path}'.format(
                         branch=options.get('branch'),
                         commit_sha=options.get('commit_sha'),
                         mount_path=mount_path,
@@ -297,6 +300,7 @@ try:
                 ],
                 volume_mounts=[volume_mount],
                 working_dir=mount_path,
+                security_context=client.V1SecurityContext(run_as_user=0)
             )
             self.singleuser_init_containers.append(init_container)
 

@@ -40,7 +40,7 @@ data:
 
 
     # set up the admin user -- first check if the user is there already and grab the ID
-    demo_id=$(curl -s -H "Private-Token: dummy-secret" ${GITLAB_SERVICE_URL}/api/v4/users?username=demo | jq '.[0].id | select(.!=null)')
+    demo_id=$(curl -s -H "Private-Token: ${GITLAB_SUDO_TOKEN}" ${GITLAB_SERVICE_URL}/api/v4/users?username=demo | jq '.[0].id | select(.!=null)')
 
     if [[ -z "$demo_id" ]]; then
         method=POST
@@ -56,7 +56,7 @@ data:
         "provider": "oauth2_generic",
         "skip_confirmation": "true",
         "reset_password": "true",
-        "admin": "true"}' \
+        "admin": "{{ .Values.gitlab.demoUserIsAdmin }}"}' \
         -H "Content-Type: application/json" \
         ${GITLAB_SERVICE_URL}/api/v4/users/${demo_id}
 
