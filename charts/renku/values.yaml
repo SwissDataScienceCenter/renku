@@ -191,6 +191,10 @@ gitlab:
 
   ## Set to true to make the user 'demo' a GitLab admin
   demoUserIsAdmin: false
+  
+  ## External port for git ssh protocol
+  ## This setting affects the copy-paste repo git+ssh URL
+  # sshPort: 22
 
   ## Persistent Volume settings
   persistence:
