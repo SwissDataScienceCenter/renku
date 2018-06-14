@@ -56,7 +56,6 @@ class SpawnerMixin():
 
         environment = super().get_env()
         environment.update({
-            # 'CI_REPOSITORY_URL': repository,
             'CI_NAMESPACE':
                 self.user_options.get('namespace', ''),
             'CI_PROJECT':
@@ -312,6 +311,8 @@ try:
             self.volume_mounts.append(volume_mount)
 
             pod = yield super().get_pod_manifest()
+            # Because repository comes from a coroutine, we can't put it simply in `get_env()`
+            pod.spec.containers[0].env.append(client.V1EnvVar('CI_REPOSITORY_URL', repository))
             return pod
 
         def _expand_user_properties(self, template):
