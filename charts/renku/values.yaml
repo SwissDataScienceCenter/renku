@@ -191,7 +191,7 @@ gitlab:
 
   ## Set to true to make the user 'demo' a GitLab admin
   demoUserIsAdmin: false
-  
+
   ## External port for git ssh protocol
   ## This setting affects the copy-paste repo git+ssh URL
   # sshPort: 22
@@ -353,10 +353,9 @@ jupyterhub:
       #: For debugging arguments passed to spawned containers
       c.Spawner.debug = bool(os.getenv('DEBUG', False))
 
-      # prevent redirect to /hub if the server is taking slightly longer to start
-      c.JupyterHub.tornado_settings = {
-       'slow_spawn_timeout': 30
-      }
+      # Increase pod initialization timeout to 15 minutes
+      c.KubeSpawner.start_timeout = 60 * 15
+
   singleuser:
     image:
       name: renku/singleuser
