@@ -92,5 +92,6 @@ registry['registry_http_addr'] = '0.0.0.0:8105'
 {{- if .Values.registry.storage }}
 registry['storage'] = {{ .Values.registry.storage }}
 {{- end }}
+registry['health_storagedriver_enabled'] = {{ default .Values.registry.backend_healthcheck true }}
 
 {{- end -}}
