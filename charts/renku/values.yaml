@@ -256,6 +256,41 @@ gitlab:
   #   port: 80
   #   type: ClusterIP
 
+  ## Container image registry settings
+  registry:
+    ## Set to true to enable Gitlab registry
+    enabled: false
+    ## The URL to access the registry
+    # externalUrl:
+    ## Set `exposedAs` to "NodePort" when deploying on minikube
+    ## Set `exposedAs` to "Ingress" to expose the registry on an alternate domain.
+    # exposedAs: NodePort
+    ## Storage driver configuration for the registry
+    ## See: https://docs.gitlab.com/ee/administration/container_registry.html#container-registry-storage-driver
+    # storage: |-
+    #   {
+    #     's3' => {
+    #       'accesskey' => 's3-access-key',
+    #       'secretkey' => 's3-secret-key-for-access-key',
+    #       'bucket' => 'your-s3-bucket',
+    #       'region' => 'your-s3-region'
+    #     }
+    #   }
+    ## Registry ingress, when `exposedAs` is set to "Ingress"
+    ## Uses conventional settings for ingress
+    ## Find below an example of values
+    # ingress:
+    #   annotations:
+    #     kubernetes.io/ingress.class: nginx
+    #     kubernetes.io/tls-acme: "true"
+    #     nginx.ingress.kubernetes.io/proxy-body-size: '0'
+    #   hosts:
+    #   - registry.example.com
+    #   tls:
+    #   - hosts:
+    #     - registry.example.com
+    #     secretName: registry-tls
+
 ## Redis configuration
 ## Redis is used by Gitlab
 # redis:

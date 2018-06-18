@@ -32,6 +32,9 @@ global:
 
 gitlab:
   sshPort: 2222
+  registry:
+    enabled: true
+    exposedAs: NodePort
   demoUserIsAdmin: true
 
 notebooks:

@@ -44,6 +44,20 @@ persistence:
     subPath: logs
     mountPath: /var/log/gitlab
 
+
+registry:
+  enabled: false
+  # exposedAs: NodePort
+  # storage: |-
+  #   {
+  #     's3' => {
+  #       'accesskey' => 's3-access-key',
+  #       'secretkey' => 's3-secret-key-for-access-key',
+  #       'bucket' => 'your-s3-bucket',
+  #       'region' => 'your-s3-region'
+  #     }
+  #   }
+
 resources: {}
   # We usually recommend not to specify default resources and to leave this as a conscious
   # choice for the user. This also increases chances charts run on environments with little

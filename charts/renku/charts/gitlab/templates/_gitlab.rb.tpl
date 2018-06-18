@@ -98,4 +98,16 @@ gitlab_rails['lfs_object_store_connection'] = {
 
 prometheus['enable'] = false
 
+### GitLab Registry settings
+registry_external_url '{{ .Values.registry.externalUrl }}'
+gitlab_rails['registry_enabled'] = {{ .Values.registry.enabled }}
+registry_nginx['enable'] = false
+registry['registry_http_addr'] = '0.0.0.0:8105'
+### Registry backend storage
+###! Docs: https://docs.gitlab.com/ce/administration/container_registry.html#container-registry-storage-driver
+{{- if .Values.registry.storage }}
+registry['storage'] = {{ .Values.registry.storage }}
+{{- end }}
+registry['health_storagedriver_enabled'] = {{ default .Values.registry.backend_healthcheck true }}
+
 {{- end -}}
