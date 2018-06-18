@@ -258,10 +258,22 @@ try:
             auth_state = yield self.user.get_auth_state()
             repository = yield self.git_repository()
             options = self.user_options
+            commit_sha_7 = options.get('commit_sha')[:7]
 
             # https://gist.github.com/tallclair/849601a16cebeee581ef2be50c351841
             container_name = 'renku-' + self.pod_name
             name = self.pod_name + '-git-repo'
+
+            # set the notebook container image
+            self.singleuser_image_spec = \
+                '{image_registry}'\
+                '/{namespace}'\
+                '/{project}'\
+                ':{commit_sha_7}'.format(
+                    image_registry=os.getenv('IMAGE_REGISTRY'),
+                    commit_sha_7=commit_sha_7,
+                    **options
+            )
 
             #: Define a new empty volume.
             self.volumes = [
@@ -318,7 +330,9 @@ try:
 
             pod = yield super().get_pod_manifest()
             # Because repository comes from a coroutine, we can't put it simply in `get_env()`
-            pod.spec.containers[0].env.append(client.V1EnvVar('CI_REPOSITORY_URL', repository))
+            pod.spec.containers[0].env.append(
+                client.V1EnvVar('CI_REPOSITORY_URL', repository)
+            )
             return pod
 
         def _expand_user_properties(self, template):
