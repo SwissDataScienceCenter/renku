@@ -196,6 +196,25 @@ gitlab:
   ## This setting affects the copy-paste repo git+ssh URL
   # sshPort: 22
 
+  ## LFS objects settings
+  ## Used to store git-lfs objects externally
+  ## Note: bucket must exist before use, GitLab won't do it
+  # lfsObjects:
+      ## Set to true to enable remote LFS objects
+      # enabled: false
+      ## S3 bucket name
+      # bucketName: lfs-objects
+      ## AWS region
+      # region:
+      ## S3 access key
+      # access_key:
+      ## S3 secret key
+      # secret_key:
+      ## S3 host
+      # host:
+      ## S3 endpoint URL
+      # endpoint:
+
   ## Persistent Volume settings
   persistence:
     ## Set to false to disable the use of Persistent Volume

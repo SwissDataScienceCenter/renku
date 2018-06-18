@@ -9,6 +9,15 @@ image:
 
 sshPort: 22
 
+lfsObjects:
+  enabled: false
+  bucketName: lfs-objects
+  region:
+  access_key:
+  secret_key:
+  host:
+  endpoint:
+
 service:
   type: ClusterIP
   port: 80
