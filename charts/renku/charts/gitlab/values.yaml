@@ -48,6 +48,7 @@ persistence:
 registry:
   enabled: false
   # exposedAs: NodePort
+  backendHealthcheck: true
   # storage: |-
   #   {
   #     's3' => {
