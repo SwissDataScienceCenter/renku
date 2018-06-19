@@ -304,6 +304,8 @@ try:
                 image='alpine/git',
                 command=['sh', '-c'],
                 args=[
+                    'rm -rf {mount_path}/* && '
+                    '(rm -rf {mount_path}/.* || true) && '
                     'apk update && apk add git-lfs && '
                     'git clone {repository} {mount_path} && '
                     '(git checkout {branch} || git checkout -b {branch}) && '
