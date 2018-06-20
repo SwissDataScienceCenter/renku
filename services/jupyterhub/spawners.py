@@ -86,7 +86,8 @@ class SpawnerMixin():
         options = self.user_options
         namespace = options.get('namespace')
         project = options.get('project')
-        commit_sha_7 = options.get('commit_sha')[:7]
+        commit_sha = options.get('commit_sha')
+        commit_sha_7 = commit_sha[:7]
 
         url = os.getenv('GITLAB_URL', 'http://gitlab.renku.build')
 
@@ -107,14 +108,54 @@ class SpawnerMixin():
             raise web.HTTPError(401, 'Not authorized to view project.')
             return
 
-        self.image = '{image_registry}'\
-                     '/{namespace}'\
-                     '/{project}'\
-                     ':{commit_sha_7}'.format(
-                        image_registry=os.getenv('IMAGE_REGISTRY'),
-                        commit_sha_7=commit_sha_7,
-                        **options
+        # set default image
+        self.image = os.getenv(
+            'JUPYTERHUB_NOTEBOOK_IMAGE', 'jupyterhub/singleuser:0.8.1'
         )
+
+        for pipeline in gl_project.pipelines.list():
+            if pipeline.attributes['sha'] == commit_sha:
+                status = self._get_job_status(pipeline, 'image_build')
+
+                if not status:
+                    # there is no image_build job for this commit
+                    # so we use the default image
+                    self.log.info('No image_build job found in pipeline.')
+                    break
+
+                # we have an image_build job in the pipeline, check status
+                while True:
+                    if status == 'success':
+                        # the image was built
+                        # it *should* be there so lets use it
+                        self.image = '{image_registry}'\
+                                '/{namespace}'\
+                                '/{project}'\
+                                ':{commit_sha_7}'.format(
+                                    image_registry=os.getenv('IMAGE_REGISTRY'),
+                                    commit_sha_7=commit_sha_7,
+                                    **options
+                        )
+                        self.log.info(
+                            'Using image {image}.'.format(image=self.image)
+                        )
+                        break
+                    elif status == 'failed':
+                        self.log.info(
+                            'Image build failed for project {0} commit {1} - '
+                            'using {2} instead'.format(
+                                project, commit_sha, self.image
+                            )
+                        )
+                        break
+                    yield gen.sleep(5)
+                    status = self._get_job_status(pipeline, 'image_build')
+                    self.log.debug(
+                        'status of image_build job for commit '
+                        '{commit_sha_7}: {status}'.format(
+                            commit_sha_7=commit_sha_7, status=status
+                        )
+                    )
 
         self.cmd = 'jupyterhub-singleuser'
         try:
@@ -131,6 +172,15 @@ class SpawnerMixin():
             result = yield super().start(*args, **kwargs)
 
         return result
+
+    @staticmethod
+    def _get_job_status(pipeline, job_name):
+        """Helper method to retrieve job status based on the job name."""
+        status = [
+            job.attributes['status'] for job in pipeline.jobs.list()
+            if job.attributes['name'] == job_name
+        ]
+        return status.pop() if status else None
 
 
 try:
