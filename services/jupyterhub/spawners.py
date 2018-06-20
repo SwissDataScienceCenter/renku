@@ -195,9 +195,14 @@ try:
             """Create init container."""
             auth_state = yield self.user.get_auth_state()
             options = self.user_options
-            container_name = 'init-' + self.name  # TODO user namespace?
             name = self.name + '-git-repo'
-            volume_name = 'repo-' + container_name
+            safe_username = escapism.escape(
+                self.user.name,
+                safe=set(string.ascii_lowercase + string.digits + '-'),
+                escape_char='-'
+            )
+            container_name = 'init-' + safe_username + '-' + self.name
+            volume_name = 'repo-' + safe_username + '-' + container_name
             volume_path = '/repo'
 
             try:
