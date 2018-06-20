@@ -1,6 +1,0 @@
-docker
-escapism
-flask
-jupyterhub
-python-gitlab
-requests-oauthlib
