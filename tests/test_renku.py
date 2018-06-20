@@ -60,7 +60,10 @@ def test_notebook_launch(browser):
     files_link[0].click()
 
     # click the notebooks tab
-    notebooks_link = browser.find_link_by_text('Notebooks')
+    notebooks_link = [
+        link for link in browser.find_link_by_text('Notebooks')
+        if 'projects' in link.outer_html
+    ]
     assert notebooks_link
     notebooks_link[0].click()
 
