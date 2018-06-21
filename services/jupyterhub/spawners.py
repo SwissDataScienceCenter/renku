@@ -135,7 +135,7 @@ class SpawnerMixin():
                                     image_registry=os.getenv('IMAGE_REGISTRY'),
                                     commit_sha_7=commit_sha_7,
                                     **options
-                        )
+                        ).lower()
                         self.log.info(
                             'Using image {image}.'.format(image=self.image)
                         )
@@ -320,15 +320,7 @@ try:
             name = self.pod_name + '-git-repo'
 
             # set the notebook container image
-            self.singleuser_image_spec = \
-                '{image_registry}'\
-                '/{namespace}'\
-                '/{project}'\
-                ':{commit_sha_7}'.format(
-                    image_registry=os.getenv('IMAGE_REGISTRY'),
-                    commit_sha_7=commit_sha_7,
-                    **options
-            )
+            self.singleuser_image_spec = self.image
 
             #: Define a new empty volume.
             self.volumes = [
