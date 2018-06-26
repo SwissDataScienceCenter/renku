@@ -252,6 +252,7 @@ try:
                     'apk update && apk add git-lfs && '
                     'git clone {repository} {volume_path} && '
                     '(git checkout {branch} || git checkout -b {branch}) && '
+                    'git submodule init && git submodule update && '
                     'git reset --hard {commit_sha} && '
                     'chown 1000:100 -Rc {volume_path}'.format(
                         branch=options.get('branch'),
@@ -356,6 +357,7 @@ try:
                     'apk update && apk add git-lfs && '
                     'git clone {repository} {mount_path} && '
                     '(git checkout {branch} || git checkout -b {branch}) && '
+                    'git submodule init && git submodule update && '
                     'git reset --hard {commit_sha} &&'
                     'chown 1000:100 -Rc {mount_path}'.format(
                         branch=options.get('branch'),
