@@ -1,0 +1,102 @@
+    @startuml
+
+    autonumber
+
+    !define BLACK   #363D5D
+    !define RED     #F6363F
+    !define PINK    #F6216E
+    !define MAGENTA #A54FBD
+    !define GREEN   #37A77C
+    !define YELLOW  #F97A00
+    !define BLUE    #1E98F2
+    !define CYAN    #25AFCA
+    !define WHITE   #FEF2DC
+
+    ' Base Setting
+    skinparam Shadowing false
+    skinparam BackgroundColor white
+    skinparam ComponentStyle uml2
+    skinparam Default {
+      FontName  'Hiragino Sans'
+      FontColor BLACK
+      FontSize  20
+      FontStyle plain
+    }
+
+    skinparam Sequence {
+      ArrowThickness 2
+      ArrowColor RED
+      ActorBorderThickness 1
+      LifeLineBorderColor GREEN
+      ParticipantBorderThickness 0
+    }
+    skinparam Participant {
+      BackgroundColor BLACK
+      BorderColor BLACK
+      FontColor #FFFFFF
+    }
+
+    skinparam Actor {
+      BackgroundColor BLACK
+      BorderColor BLACK
+    }
+
+    hide footbox
+    skinparam shadowing false
+
+    participant UI
+    participant "Notebook-Service"
+    participant Jupyterhub as JH
+    participant GitLab
+    participant Keycloak
+    participant Spawner
+    participant "Init-container"
+    participant "Notebook-container"
+
+    box "Notebook Pod"
+        participant "Init-container"
+        participant "Notebook-container"
+    end box
+
+    == First spawn ==
+
+    UI->"Notebook-Service": /services/notebooks\n/<namespace>/<proj>/<commit-sha>
+
+    group OAuth2 Flow
+        JH->GitLab: OAuth
+        GitLab->Keycloak: OAuth
+        Keycloak->GitLab: JWT
+        GitLab->JH: JWT+GitLab token?
+        GitLab->UI: session cookie
+    end
+
+    "Notebook-Service"->JH: POST /users/<user>\n/servers/<server-name>
+
+    group Notebook server spawn
+        JH->Spawner: request notebook spawn
+        Spawner->GitLab: check repo permissions
+
+        loop until CI job completes
+            Spawner->GitLab: check image-build status
+        end
+
+        Spawner->"Init-container": launch
+        activate "Init-container"
+        "Init-container"->GitLab: clone repo into shared volume
+        destroy "Init-container"
+        Spawner->"Notebook-container": launch notebook
+        "Notebook-container"->GitLab: pull image from registry
+        activate "Notebook-container"
+        "Notebook-container"->JH: say hello
+    end
+
+    loop until JH reports notebook server running
+        "Notebook-Service"->JH: check user named servers
+        JH->"Notebook-Service": user info
+    end
+
+    "Notebook-Service"->UI: redirect to user named server
+
+    UI->"Notebook-container": open notebook
+
+    @enduml

@@ -1,0 +1,61 @@
+digraph architecture {
+  compound=true;
+
+
+  gitlab [color="lightblue", style="filled"]
+  keycloak [color="lightblue", style="filled"]
+  ui [color="#f4d142", style="filled"]
+  cli [color="#f4d142", style="filled"]
+  jupyterhub [color="lightblue", style="filled"]
+  "notebook-service" [color="#f4d142", style="filled"]
+  spawner [color="#f4d142", style="filled"]
+  "notebook" [shape="rect", color="#f4d142", style="filled"]
+  "init-container" [shape="rect", color="#f4d142", style="filled"]
+  runner [color="lightblue", style="filled"]
+  "build-container" [color="lightblue", style="filled"]
+
+  subgraph auth_layer {
+    gitlab -> keycloak [label="auth"]
+    // {rank=same; keycloak, gitlab};
+  }
+
+  subgraph cluster_client_side_apps {
+    label="User-facing applications"
+    ui
+    cli
+    {rank=same; ui, cli};
+  }
+
+  subgraph cluster_jupyterhub{
+    label="JupyterHub Components"
+    jupyterhub -> spawner [label="notebook spawn"]
+    spawner -> notebook [label="spawn", lhead=cluster_notebook];
+    jupyterhub -> notebook [label="proxy redirect"]
+    "notebook-service" -> jupyterhub [label="notebook API"]
+
+    subgraph cluster_notebook {
+      label="notebook pod"
+      style="dashed";
+      "init-container"
+      "notebook"
+    }
+  }
+
+  subgraph cluster_ci {
+    rankdir=LR;
+    label="GitLab CI"
+    runner -> "build-container" [label="trigger build"]
+    {rank=same; "runner", "build-container"};
+  }
+
+  spawner -> gitlab [label="repo permissions"]
+  jupyterhub -> gitlab [label="OAuth"]
+  "notebook" -> "gitlab" [label="commit back"]
+  "init-container" -> "gitlab" [label="clone repo"]
+  "build-container" -> gitlab [label="push image"]
+  gitlab -> runner [label="start CI job", lhead=cluster_ci]
+
+  cli -> gitlab [label="push repo"]
+  ui -> gitlab [label="API elements"]
+  ui -> "notebook-service" [label="notebook URL"]
+}
