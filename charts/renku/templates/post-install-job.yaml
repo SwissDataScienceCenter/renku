@@ -13,7 +13,7 @@ metadata:
 spec:
   template:
     metadata:
-      name: "{{.Release.Name}}-post-install"
+      name: "{{.Release.Name}}-post-install-gitlab"
       labels:
         heritage: {{.Release.Service | quote }}
         release: {{.Release.Name | quote }}
