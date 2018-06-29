@@ -296,7 +296,7 @@ services:
           - jupyterhub.${PLATFORM_DOMAIN}
 
   notebooks:
-    build: services/notebooks
+    image: ${DOCKER_PREFIX}renku-notebooks:${PLATFORM_VERSION}
     environment:
       FLASK_DEBUG: 1
       OAUTHLIB_INSECURE_TRANSPORT: 1

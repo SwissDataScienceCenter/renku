@@ -83,15 +83,16 @@ registerGitlabRunners() {
     do
         docker exec -ti $container gitlab-runner register \
                 -n -u ${GITLAB_URL} \
-                --name $$container-shell \
+                --name $$container-docker \
                 -r ${GITLAB_RUNNERS_TOKEN} \
-                --executor shell \
-                --env RENKU_REVIEW_DOMAIN=${PLATFORM_DOMAIN} \
-                --env RENKU_RUNNER_NETWORK=${DOCKER_NETWORK} \
+                --executor docker \
                 --locked=false \
-                --run-untagged=false \
-                --docker-image ${DOCKER_PREFIX}renku-python:${PLATFORM_VERSION} \
+                --run-untagged=true \
+                --docker-image "docker:stable" \
                 --docker-network-mode=review \
+                --docker-privileged \
+                --docker-volumes "/var/run/docker.sock:/var/run/docker.sock" \
+                --tag-list image-build \
                 --docker-pull-policy "if-not-present"; \
     done
 }

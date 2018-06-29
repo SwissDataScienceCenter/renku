@@ -1,0 +1,39 @@
+{{- if not (empty .Values.registry.exposedAs) -}}
+{{- if eq .Values.registry.exposedAs "Ingress" -}}
+{{- $gitlabFullname := include "gitlab.fullname" . -}}
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: {{ template "gitlab.fullname" . }}-registry
+  labels:
+    app: {{ template "gitlab.name" . }}
+    chart: {{ template "gitlab.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+  annotations:
+{{- range $key, $value :=  .Values.registry.ingress.annotations }}
+    {{ $key }}: {{ $value | quote }}
+{{- end }}
+spec:
+{{- if .Values.registry.ingress.tls }}
+  tls:
+  {{- range .Values.registry.ingress.tls }}
+  - hosts:
+    {{- range .hosts }}
+    - {{ . }}
+    {{- end }}
+    secretName: {{ .secretName }}
+  {{- end }}
+{{- end }}
+  rules:
+  {{- range .Values.registry.ingress.hosts }}
+  - host: {{ . }}
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: {{ $gitlabFullname }}
+          servicePort: {{ 8105 }}
+  {{- end }}
+{{- end }}
+{{- end }}

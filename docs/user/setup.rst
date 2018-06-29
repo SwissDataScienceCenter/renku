@@ -21,16 +21,22 @@ required.
 Prerequisites
 -------------
 
+* python 3.6
+* `pip <https://pypi.org/project/pip/>`_ (or `pipenv <https://github.com/pypa/pipenv>`_)
 * `Docker <http://www.docker.com>`_
 * `Docker Compose >=1.14 <https://docs.docker.com/compose/install/>`_
   (**Linux Only**)
 * `GNU make <https://www.gnu.org/software/make/>`_
-* `sbt <http://www.scala-sbt.org/>`_
 
 .. note::
 
     On Mac OS X, we recommend that you set the amount of memory available
     to Docker to 6GB (under Docker Preferences --> Advanced).
+
+For Kubernetes deployments:
+
+* a `Kubernetes <https://kubernetes.io/>`_ cluster or `minikube <https://kubernetes.io/docs/getting-started-guides/minikube/>`_
+* `helm <https://helm.sh/>`_ (>= 2.9.1)
 
 
 Getting the code and images
@@ -52,7 +58,11 @@ of which has their own repository.
 .. _quickstart:
 
 Quickstart
-^^^^^^^^^^
+----------
+
+
+Docker
+^^^^^^
 
 You can get going with Renku in a few minutes by using our pre-built images:
 
@@ -74,6 +84,12 @@ the `.env` file is in place, the values specified there take precedent.
 Using the default configuration, you can login to all services using
 `demo/demo` as the username/password. See :ref:`user_management` for more
 information about handling user accounts.
+
+
+Kubernetes
+^^^^^^^^^^
+
+Please follow the instructions in ``charts/renku/README.rst``.
 
 
 Building from source
@@ -146,6 +162,6 @@ http://localhost/auth/admin, with the user ``admin`` and password ``admin``
 Platform Endpoint
 -----------------
 
-By default, the platform is configured to use ``http://renku.local`` as the
+By default, the platform is configured to use ``http://renku.build`` as the
 endpoint. You can change this by defining the ``RENKU_ENDPOINT`` environment
 variable before starting the platform services.

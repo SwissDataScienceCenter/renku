@@ -80,6 +80,34 @@ gitlab_rails['redis_host'] = "{{ template "redis.fullname" . }}"
 # gitlab_rails['redis_password'] = nil
 # gitlab_rails['redis_database'] = 0
 
+### GitLab LFS object store
+### Docs: https://docs.gitlab.com/ce/workflow/lfs/lfs_administration.html
+{{ if .Values.lfsObjects.enabled -}}
+gitlab_rails['lfs_object_store_enabled'] = true
+gitlab_rails['lfs_object_store_remote_directory'] = "{{ .Values.lfsObjects.bucketName }}"
+gitlab_rails['lfs_object_store_connection'] = {
+    'provider' => 'AWS',
+    'region' => '{{ .Values.lfsObjects.region }}',
+    'aws_access_key_id' => '{{ .Values.lfsObjects.access_key }}',
+    'aws_secret_access_key' => '{{ .Values.lfsObjects.secret_key }}',
+    'host' => '{{ .Values.lfsObjects.host }}',
+    'endpoint' => '{{ .Values.lfsObjects.endpoint }}',
+    'path_style' => false
+}
+{{- end }}
+
 prometheus['enable'] = false
+
+### GitLab Registry settings
+registry_external_url '{{ .Values.registry.externalUrl }}'
+gitlab_rails['registry_enabled'] = {{ .Values.registry.enabled }}
+registry_nginx['enable'] = false
+registry['registry_http_addr'] = '0.0.0.0:8105'
+### Registry backend storage
+###! Docs: https://docs.gitlab.com/ce/administration/container_registry.html#container-registry-storage-driver
+{{- if .Values.registry.storage }}
+registry['storage'] = {{ .Values.registry.storage }}
+{{- end }}
+registry['health_storagedriver_enabled'] = {{ .Values.registry.backendHealthcheck }}
 
 {{- end -}}

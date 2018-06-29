@@ -192,6 +192,29 @@ gitlab:
   ## Set to true to make the user 'demo' a GitLab admin
   demoUserIsAdmin: false
 
+  ## External port for git ssh protocol
+  ## This setting affects the copy-paste repo git+ssh URL
+  # sshPort: 22
+
+  ## LFS objects settings
+  ## Used to store git-lfs objects externally
+  ## Note: bucket must exist before use, GitLab won't do it
+  # lfsObjects:
+      ## Set to true to enable remote LFS objects
+      # enabled: false
+      ## S3 bucket name
+      # bucketName: lfs-objects
+      ## AWS region
+      # region:
+      ## S3 access key
+      # access_key:
+      ## S3 secret key
+      # secret_key:
+      ## S3 host
+      # host:
+      ## S3 endpoint URL
+      # endpoint:
+
   ## Persistent Volume settings
   persistence:
     ## Set to false to disable the use of Persistent Volume
@@ -232,6 +255,41 @@ gitlab:
   # service:
   #   port: 80
   #   type: ClusterIP
+
+  ## Container image registry settings
+  registry:
+    ## Set to true to enable Gitlab registry
+    enabled: false
+    ## The URL to access the registry
+    # externalUrl:
+    ## Set `exposedAs` to "NodePort" when deploying on minikube
+    ## Set `exposedAs` to "Ingress" to expose the registry on an alternate domain.
+    # exposedAs: NodePort
+    ## Storage driver configuration for the registry
+    ## See: https://docs.gitlab.com/ee/administration/container_registry.html#container-registry-storage-driver
+    # storage: |-
+    #   {
+    #     's3' => {
+    #       'accesskey' => 's3-access-key',
+    #       'secretkey' => 's3-secret-key-for-access-key',
+    #       'bucket' => 'your-s3-bucket',
+    #       'region' => 'your-s3-region'
+    #     }
+    #   }
+    ## Registry ingress, when `exposedAs` is set to "Ingress"
+    ## Uses conventional settings for ingress
+    ## Find below an example of values
+    # ingress:
+    #   annotations:
+    #     kubernetes.io/ingress.class: nginx
+    #     kubernetes.io/tls-acme: "true"
+    #     nginx.ingress.kubernetes.io/proxy-body-size: '0'
+    #   hosts:
+    #   - registry.example.com
+    #   tls:
+    #   - hosts:
+    #     - registry.example.com
+    #     secretName: registry-tls
 
 ## Redis configuration
 ## Redis is used by Gitlab
@@ -317,6 +375,12 @@ jupyterhub:
     extraConfig: |
       import os
 
+      # Set the log level by value or name.
+      c.JupyterHub.log_level = 'DEBUG'
+
+      # Enable debug-logging of the single-user server
+      c.Spawner.debug = True
+
       # JupyterHub uses GITLAB_HOST which is a misnomer -- we use GITLAB_URL
       # everywhere so set this mapping here
       os.environ['GITLAB_HOST'] = os.getenv('GITLAB_URL')
@@ -343,10 +407,9 @@ jupyterhub:
       #: For debugging arguments passed to spawned containers
       c.Spawner.debug = bool(os.getenv('DEBUG', False))
 
-      # prevent redirect to /hub if the server is taking slightly longer to start
-      c.JupyterHub.tornado_settings = {
-       'slow_spawn_timeout': 30
-      }
+      # Increase pod initialization timeout to 15 minutes
+      c.KubeSpawner.start_timeout = 60 * 15
+
   singleuser:
     image:
       name: renku/singleuser

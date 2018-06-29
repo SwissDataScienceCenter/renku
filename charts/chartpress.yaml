@@ -8,7 +8,6 @@ charts:
       - .
       - ../services/apispec
       - ../services/jupyterhub
-      - ../services/notebooks
       - ../services/singleuser
       - ../tests
     images:
