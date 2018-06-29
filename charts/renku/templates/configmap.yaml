@@ -11,8 +11,9 @@ metadata:
 data:
   init-gitlab.sh: |-
     #!/usr/bin/env bash
-
     set -ex
+    env
+
     apt-get update -y
     apt-get install -y curl jq
 
@@ -94,7 +95,7 @@ data:
 
   init-keycloak-db.sh: |-
     #!/bin/bash
-    set -e
+    set -ex
 
     KEYCLOAK_PASSWORD=$(cat /passwords/keycloak-password)
 
@@ -129,7 +130,7 @@ data:
 
   init-jupyterhub-db.sh: |-
       #!/bin/bash
-      set -e
+      set -ex
 
       JUPYTERHUB_PASSWORD=$(cat /passwords/jupyterhub-password)
 
