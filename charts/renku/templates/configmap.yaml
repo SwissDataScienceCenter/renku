@@ -73,6 +73,10 @@ data:
     set -ex
     env
     
+    until sleep 1; pg_isready; do
+        echo waiting for postgres
+    done
+    
     for f in /scripts/init-*-db*; do
       case "$f" in
         *.sh)
