@@ -43,6 +43,7 @@ def main():
     update_charts(renku_chartpress_dir)
 
     # 3. Init helm
+    kubectl_use_minikube_context()
     helm_init()
 
     # 4. Package renku chart, with local versions of dependencies
@@ -170,6 +171,15 @@ def helm_init():
         result.check_returncode()
     except CalledProcessError:
         raise RuntimeError('Could not run helm init:\n{}'.format(result.stdout.decode('utf-8')))
+
+
+def kubectl_use_minikube_context():
+    """Make sure we use the minikube context to deploy"""
+    result = run(['kubectl', 'config', 'use-context', 'minikube'], stdout=PIPE)
+    try:
+        result.check_returncode()
+    except CalledProcessError:
+        raise RuntimeError('Could not run kubectl config use-context minikube:\n{}'.format(result.stdout.decode('utf-8')))
 
 
 if __name__ == '__main__':
