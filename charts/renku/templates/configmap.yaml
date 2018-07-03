@@ -77,6 +77,8 @@ data:
         echo waiting for postgres
     done
     
+    # It's ok if init scripts fail (databases already exist)
+    set +e
     for f in /scripts/init-*-db*; do
       case "$f" in
         *.sh)
