@@ -1,19 +1,19 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: "{{ .Release.Name }}-post-install"
+  name: "{{ .Release.Name }}-post-install-postgres"
   labels:
     heritage: {{ .Release.Service | quote }}
     release: {{ .Release.Name | quote }}
     chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
   annotations:
     "helm.sh/hook": post-install,post-upgrade
-    "helm.sh/hook-weight": "5"
+    "helm.sh/hook-weight": "10"
     "helm.sh/hook-delete-policy": "before-hook-creation"
 spec:
   template:
     metadata:
-      name: "{{.Release.Name}}"
+      name: "{{.Release.Name}}-post-install-postgres"
       labels:
         heritage: {{.Release.Service | quote }}
         release: {{.Release.Name | quote }}
@@ -21,31 +21,32 @@ spec:
     spec:
       restartPolicy: Never
       containers:
-        - name: configure-gitlab
-          image: "postgres:9.6"
-          command: ["/bin/bash", "/scripts/init-gitlab.sh"]
+        - name: init-databases
+          image: "{{ .Values.postgresql.image }}:{{ .Values.postgresql.imageTag }}"
+          command: ["/bin/bash", "/scripts/init-postgres.sh"]
           volumeMounts:
-            - name: init
+            - name: scripts
               mountPath: /scripts
+              readOnly: true
+            - name: passwords
+              mountPath: /passwords
               readOnly: true
           env:
           - name: PGDATABASE
-            value: {{ .Values.global.gitlab.postgresDatabase }}
+            value: {{ .Values.postgresql.postgresDatabase }}
           - name: PGUSER
-            value: {{ .Values.global.gitlab.postgresUser }}
+            value: {{ .Values.postgresql.postgresUser }}
           - name: PGHOST
             value: {{ template "postgresql.fullname" . }}
           - name: PGPASSWORD
             valueFrom:
               secretKeyRef:
-                name: {{ template "gitlab.fullname" . }}
+                name: {{ template "postgresql.fullname" . }}
                 key: postgres-password
-          - name: GITLAB_SUDO_TOKEN
-            valueFrom:
-              secretKeyRef:
-                name: {{ template "renku.fullname" . }}
-                key: gitlab-sudo-token
       volumes:
-        - name: init
+        - name: scripts
           configMap:
             name: {{ template "renku.fullname" . }}
+        - name: passwords
+          secret:
+            secretName: {{ template "renku.fullname" . }}
