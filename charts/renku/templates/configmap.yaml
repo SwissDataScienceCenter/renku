@@ -77,6 +77,8 @@ data:
         echo waiting for postgres
     done
     
+    # It's ok if init scripts fail (databases already exist)
+    set +e
     for f in /scripts/init-*-db*; do
       case "$f" in
         *.sh)
@@ -99,8 +101,8 @@ data:
 
   init-keycloak-db.sh: |-
     #!/bin/bash
-    set -ex
-
+    set -x
+    
     KEYCLOAK_PASSWORD=$(cat /passwords/keycloak-password)
 
     psql -v ON_ERROR_STOP=1 <<-EOSQL
@@ -116,8 +118,8 @@ data:
 
   init-gitlab-db.sh: |-
       #!/bin/bash
-      set -ex
-
+      set -x
+      
       GITLAB_PASSWORD=$(cat /passwords/gitlab-password)
 
       psql -v ON_ERROR_STOP=1 <<-EOSQL
@@ -134,8 +136,8 @@ data:
 
   init-jupyterhub-db.sh: |-
       #!/bin/bash
-      set -ex
-
+      set -x
+      
       JUPYTERHUB_PASSWORD=$(cat /passwords/jupyterhub-password)
 
       psql -v ON_ERROR_STOP=1 <<-EOSQL
