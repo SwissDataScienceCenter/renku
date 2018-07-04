@@ -60,6 +60,9 @@ of which has their own repository.
 Quickstart
 ----------
 
+These instructions should only be used for experimentation and development. For
+deployment, see the Kubernetes section below.
+
 
 Docker
 ^^^^^^
@@ -84,12 +87,6 @@ the `.env` file is in place, the values specified there take precedent.
 Using the default configuration, you can login to all services using
 `demo/demo` as the username/password. See :ref:`user_management` for more
 information about handling user accounts.
-
-
-Kubernetes
-^^^^^^^^^^
-
-Please follow the instructions in ``charts/renku/README.rst``.
 
 
 Building from source
@@ -148,6 +145,12 @@ Use ``docker-compose`` to bring up the platform:
     ...
 
     [Success] Renku UI should be under http://renku.build and GitLab under http://gitlab.renku.build
+
+
+Kubernetes
+^^^^^^^^^^
+
+Please follow the instructions in ``charts/renku/README.rst``.
 
 
 Identity Management
