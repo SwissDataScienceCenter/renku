@@ -20,5 +20,5 @@
 jupyterhub-kubespawner
 nullauthenticator
 oauthenticator
-python-gitlab
+python-gitlab==1.5.1
 requests-oauthlib

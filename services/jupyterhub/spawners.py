@@ -135,7 +135,7 @@ class SpawnerMixin():
                                     image_registry=os.getenv('IMAGE_REGISTRY'),
                                     commit_sha_7=commit_sha_7,
                                     **options
-                        )
+                        ).lower()
                         self.log.info(
                             'Using image {image}.'.format(image=self.image)
                         )
@@ -252,6 +252,7 @@ try:
                     'apk update && apk add git-lfs && '
                     'git clone {repository} {volume_path} && '
                     '(git checkout {branch} || git checkout -b {branch}) && '
+                    'git submodule init && git submodule update && '
                     'git reset --hard {commit_sha} && '
                     'chown 1000:100 -Rc {volume_path}'.format(
                         branch=options.get('branch'),
@@ -320,15 +321,7 @@ try:
             name = self.pod_name + '-git-repo'
 
             # set the notebook container image
-            self.singleuser_image_spec = \
-                '{image_registry}'\
-                '/{namespace}'\
-                '/{project}'\
-                ':{commit_sha_7}'.format(
-                    image_registry=os.getenv('IMAGE_REGISTRY'),
-                    commit_sha_7=commit_sha_7,
-                    **options
-            )
+            self.singleuser_image_spec = self.image
 
             #: Define a new empty volume.
             self.volumes = [
@@ -364,6 +357,7 @@ try:
                     'apk update && apk add git-lfs && '
                     'git clone {repository} {mount_path} && '
                     '(git checkout {branch} || git checkout -b {branch}) && '
+                    'git submodule init && git submodule update && '
                     'git reset --hard {commit_sha} &&'
                     'chown 1000:100 -Rc {mount_path}'.format(
                         branch=options.get('branch'),
