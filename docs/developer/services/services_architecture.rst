@@ -63,7 +63,7 @@ are either built or extended by us.
 
 .. _fig-component-architecture:
 
-.. graphviz:: /_static/graphviz/renku_architecture.dot
+.. graph:: /_static/graphviz/renku_architecture.dot
 
 
 Important Concepts
