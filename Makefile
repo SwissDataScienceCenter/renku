@@ -256,6 +256,10 @@ test: .env demo
 	@pip install -r tests/requirements.txt
 	@pip install -r docs/requirements.txt
 	@./scripts/run-tests.sh
+	@echo
+	@echo Cleaning up renku demo
+	@echo
+	docker run --rm --network host renku/renku-demo:$(PLATFORM_VERSION) ./cleanup.sh
 
 wipe: .env
 	@./scripts/renku-wipe.sh

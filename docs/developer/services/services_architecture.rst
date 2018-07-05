@@ -3,7 +3,7 @@
 Renku Architecture
 ==================
 
-This document describes the architecture of the (web) services that are part
+This document describes the architecture of the services that are parts
 of the **Renku** platform.
 
 .. contents::
@@ -32,20 +32,45 @@ transactions into the knowledge graph. The event log can be consulted by the
 user and by other system services to search, retrieve the lineage information
 and reenact previously executed data processing chains.
 
-The platform consists of loosely coupled services operating in a micro-
-services architecture style using the `Play framework
-<https://www.playframework.com/>`_. It is based on stateless HTTP objects that
-respond to standard HTTP methods. The technology used is JSON on REST/HTTP. It
-is implemented in Scala and Python, and runs on Docker containers in the
-cloud. Because of the micro-service architecture it is by definition modular,
-and therefore should be able to accommodate other languages or implementations
-used for individual components.
+The Renku platform consists of several off-the-shelf components from the
+software engineering and data science software stacks, as well as customized or
+newly developed services. The services communicate among each other through a
+combination of REST APIs and event queues. The deployment is orchestrated on
+Kubernetes through the use of Helm charts. Because of the micro-service
+architecture it is by definition modular, and therefore should be able to
+accommodate other languages or implementations used for individual components.
+
+Components
+----------
+
+ The services built by the Renku team are:
+
+- renku_: the meta repository with deployment scripts and kubernetes helm charts
+- :ref:`renku-notebooks <notebooks_service>`: a service integrating GitLab repositories with JupyterHub
+- renku-python_: python API & Command Line Interface (CLI)
+- renku-storage_: storage service exposing LFS and S3 APIs
+- renku-ui_: web front-end interface
+
+In addition, we make use of:
+
+- JupyterHub_: management of interactive notebook servers
+- GitLab_: repository management, CI and various related APIs
+- Keycloak_: user authentication
+
+The figure below shows an overview of the components
+and their interactions. Blue components are off-the-shelf, yellow components
+are either built or extended by us.
+
+.. _fig-component-architecture:
+
+.. graph:: /_static/graphviz/renku_architecture.dot
+
 
 Important Concepts
 ------------------
 
-Before delving into the details of the architecture components it is strongly
-advised to first get familiarized with a few foundational concepts:
+In order to develop for the platform, it is strongly advised to get
+familiarized with a few foundational concepts:
 
 .. toctree::
    :hidden:
@@ -57,18 +82,12 @@ advised to first get familiarized with a few foundational concepts:
 - :ref:`json_web_tokens` (JWT)
 - :ref:`policy_based_access_controls` (PBAC)
 
-Components
-----------
 
-Details about the main service components of the architecture can be found
-here:
-
-- Identity Manager (IM), provides user authentication
-- :ref:`resource_manager` (RM), provides authorization
-- :ref:`knowledge_graph` (KG), spans multiple services
-- :ref:`deployer` (DEP), provides (container) deployment
-- :ref:`storage` (STG), provides file storage
-- :ref:`explorer` (EXP), provides views over data stored in the knowledge
-  graph.
-
-
+.. _renku: https://github.com/SwissDataScienceCenter/renku
+.. _renku-notebooks:
+.. _renku-python: https://github.com/SwissDataScienceCenter/renku-python
+.. _renku-storage: https://github.com/SwissDataScienceCenter/renku-storage
+.. _renku-ui: https://github.com/SwissDataScienceCenter/renku-ui
+.. _JupyterHub: https://github.com/jupyterhub/jupyterhub
+.. _GitLab: https://gitlab.com/
+.. _Keycloak: https://www.keycloak.org/
