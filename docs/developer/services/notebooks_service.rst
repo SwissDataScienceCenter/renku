@@ -17,7 +17,7 @@ builds a unique image on each push to the server (see the
 for the job to complete and then launches a notebook server using  that image.
 If the job is not there or there is a problem with the image pull,  a notebook
 server is launched with the default notebook image as specified in the
-platform configuration optinos.
+platform configuration options.
 
 The diagram below illustrates the sequence of events that take place in order
 to launch a new notebook using the notebook service:
@@ -41,5 +41,5 @@ server, the GitLab runner (if it is configured) will then build the image
 with the name ``<gitlab-registry>/<namespace>/<project-name>:<commit-sha>``.
 This way we guarantee that the user will have an image available for every
 point in the project's history. In future iterations of these services, the
-build process will be optimized to avoid superflous builds and reduce launch
+build process will be optimized to avoid superfluous builds and reduce launch
 latency to improve the user experience.

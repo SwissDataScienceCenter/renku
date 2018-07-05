@@ -33,7 +33,7 @@ user and by other system services to search, retrieve the lineage information
 and reenact previously executed data processing chains.
 
 The Renku platform consists of several off-the-shelf components from the
-software engineering and data science software stacks as well as customized or
+software engineering and data science software stacks, as well as customized or
 newly developed services. The services communicate among each other through a
 combination of REST APIs and event queues. The deployment is orchestrated on
 Kubernetes through the use of Helm charts. Because of the micro-service
@@ -43,7 +43,7 @@ accommodate other languages or implementations used for individual components.
 Components
 ----------
 
- The services bult by the Renku team are:
+ The services built by the Renku team are:
 
 - renku_: the meta repository with deployment scripts and kubernetes helm charts
 - :ref:`renku-notebooks <notebooks_service>`: a service integrating GitLab repositories with JupyterHub
@@ -53,7 +53,7 @@ Components
 
 In addition, we make use of:
 
-- JupyterHub_: managment of interactive notebook servers
+- JupyterHub_: management of interactive notebook servers
 - GitLab_: repository management, CI and various related APIs
 - Keycloak_: user authentication
 
