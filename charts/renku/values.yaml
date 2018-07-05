@@ -352,18 +352,20 @@ gitlab:
   # lfsObjects:
       ## Set to true to enable remote LFS objects
       # enabled: false
-      ## S3 bucket name
+      ## Bucket name
       # bucketName: lfs-objects
-      ## AWS region
-      # region:
-      ## S3 access key
-      # access_key:
-      ## S3 secret key
-      # secret_key:
-      ## S3 host
-      # host:
-      ## S3 endpoint URL
-      # endpoint:
+      ## Configuration, see: https://docs.gitlab.com/ce/workflow/lfs/lfs_administration.html
+      # storage: |-
+      #   {
+      #     'provider' => 'AWS',
+      #     'region' => 'eu-central-1',
+      #     'aws_access_key_id' => '1ABCD2EFGHI34JKLM567N',
+      #     'aws_secret_access_key' => 'abcdefhijklmnopQRSTUVwxyz0123456789ABCDE',
+      #     # The below options configure an S3 compatible host instead of AWS
+      #     'host' => 'localhost',
+      #     'endpoint' => 'http://127.0.0.1:9000',
+      #     'path_style' => true
+      #   }
 
   ## Persistent Volume settings
   persistence:
