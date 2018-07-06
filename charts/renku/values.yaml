@@ -514,7 +514,7 @@ jupyterhub:
   hub:
     image:
       name: renku/jupyterhub-k8s
-      tag: 0.0-unclean-3024e57
+      tag: latest
     services:
       notebooks:
         url: http://renku-notebooks
@@ -565,7 +565,7 @@ jupyterhub:
   singleuser:
     image:
       name: renku/singleuser
-      tag: 0.0-unclean-3024e57
+      tag: latest
     storage:
       type: none
   # FIXME: bug in prepuller makes helm hang in certain cases. Fixed in 0.7
@@ -584,12 +584,12 @@ jupyterhub:
 apispec:
   image:
     repository: renku/apispec
-    tag: 0.0-unclean-3024e57
+    tag: latest
 
 tests:
   image:
     repository: renku/tests
-    tag: 0.0-unclean-3024e57
+    tag: latest
 
 ## Gitlab runners configuration
 ## See: http://docs.gitlab.com/ee/install/kubernetes/gitlab_runner_chart.html
