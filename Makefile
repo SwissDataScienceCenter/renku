@@ -256,7 +256,7 @@ stop: .env
 test: .env demo
 	@pip install pipenv
 	@@pip install -r tests/requirements.txt
-	@pipenv install --system --deploy
+	@pipenv install --system --deploy --dev
 	@./scripts/run-tests.sh
 	@echo
 	@echo Cleaning up renku demo
