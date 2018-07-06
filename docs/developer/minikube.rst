@@ -55,5 +55,37 @@ Once minikube is started, make sure you can access it by running:
     NAME       STATUS    ROLES     AGE       VERSION
     minikube   Ready     <none>    3s        v1.10.0
 
-Deploying Helm
-^^^^^^^^^^^^^^
+Deploying Helm and nginx-ingress
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. code-block:: console
+
+    $ helm init
+    $ helm upgrade --install nginx-ingress --namespace kube-system \
+        --set controller.hostNetwork=true \
+        --set tcp.2222=renku/renku-gitlab:22 \
+        stable/nginx-ingress
+
+Building and deploying components
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Provide helm chart dependencies:
+
+.. code-block:: console
+
+    $ helm repo add renku https://swissdatasciencecenter.github.io/helm-charts
+    $ helm repo add gitlab https://charts.gitlab.io
+    $ helm repo add jupyterhub https://jupyterhub.github.io/helm-chart
+
+Build and deploy:
+
+.. code-block:: console
+
+    $ make minikube-deploy
+
+This command will build and deploy the platform components on minikube.
+You can edit and test code changes from ``renku``, ``renku-ui`` and
+``renku-notebooks`` then run ``make minikube-deploy``
+to check out the changes.
+
+For more on the Renku helm charts, go to ``charts/renku/README.rst``.
