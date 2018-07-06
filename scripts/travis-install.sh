@@ -23,6 +23,10 @@
 # then
 #     make -e PLATFORM_BASE_DIR=/tmp
 # fi
+set -ex
+
+# install graphviz
+sudo apt-get update && sudo apt-get install -y graphviz
 
 # install geckodriver
 wget https://github.com/mozilla/geckodriver/releases/download/v0.19.1/geckodriver-v0.19.1-linux64.tar.gz
