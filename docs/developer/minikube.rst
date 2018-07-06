@@ -4,14 +4,14 @@ Development setup on minikube
 =============================
 
 This page describes how to deploy the Renku platform
-on `minikube <https://github.com/kubernetes/minikube>`_.
+on `minikube <https://github.com/kubernetes/minikube>`__.
 
 Prerequisites
 -------------
 
 * python 3.6
 * `pipenv <https://github.com/pypa/pipenv>`_
-* `minikube <https://github.com/kubernetes/minikube>`_
+* `minikube <https://github.com/kubernetes/minikube>`__
 * `kubectl <https://kubernetes.io/docs/tasks/tools/install-kubectl/>`_
 * `helm <https://github.com/kubernetes/helm/blob/master/docs/install.md>`_ (>= 2.9.1)
 * `GNU make <https://www.gnu.org/software/make/>`_
