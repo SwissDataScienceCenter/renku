@@ -50,6 +50,11 @@ spec:
               key: gitlab-password
         - name: RENKU_DOMAIN
           value: {{ .Values.global.renku.domain }}
+        - name: GITLAB_SHARED_RUNNERS_REGISTRATION_TOKEN
+          valueFrom:
+            secretKeyRef:
+              name: {{ template "gitlab.fullname" . }}
+              key: shared-runners-registration-token
         ports:
         - name: ssh
           containerPort: 22

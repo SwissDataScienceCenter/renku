@@ -16,6 +16,9 @@ jupyterhub:
   hub:
     cookieSecret: 7c232b97bda321be7e59b9834dfadbb89652da1e0150dff9b3dadb9aa8b4caab
     baseUrl: '/jupyterhub/'
+    db:
+      type: postgres
+      url: postgres+psycopg2://jupyterhub:jupyterhub@renku-postgresql:5432/jupyterhub
   proxy:
     secretToken: f89ddee5ba10f2268fcefcd4e353235c255493095cd65addf29ebebf8df86255
   auth:
@@ -27,6 +30,16 @@ global:
   gitlab:
     urlPrefix: /gitlab
 
+gitlab:
+  sshPort: 2222
+  registry:
+    enabled: true
+    exposedAs: NodePort
+  demoUserIsAdmin: true
+
 notebooks:
   jupyterhub_base_url: /jupyterhub/
   jupyterhub_api_token: notebookstoken
+
+runner:
+  enabled: true

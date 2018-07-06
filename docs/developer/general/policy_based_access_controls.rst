@@ -70,10 +70,11 @@ advantages:
   same authorization token for reading shards of the requested data from
   different processes executing in parallel.
 
-In the **Renku** architecture, it is the :ref:`resource_manager` that fulfills
-the role of the PDP. The PIP is served by the :ref:`knowledge_graph`. The PEP
-services are implemented by a number independent resource provider services,
-currently :ref:`storage` and :ref:`deployer`.
+.. commenting out the lines below -- should be updated when this is actually done
+.. In the **Renku** architecture, it is the :ref:`resource_manager` that fulfills
+.. the role of the PDP. The PIP is served by the :ref:`knowledge_graph`. The PEP
+.. services are implemented by a number independent resource provider services,
+.. currently :ref:`storage` and :ref:`deployer`.
 
 In addition the resource backend is not directly accessible to the user. The
 PEP is an obligatory point of passage to the resource and it is thus here that

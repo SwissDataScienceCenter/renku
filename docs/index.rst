@@ -8,16 +8,19 @@
 Welcome to Renku!
 =================
 
-**Renku** is a scalable & secure open software platform designed to
-foster multidisciplinary data (science) collaboration.
+**Renku** is a software platform designed to enable reproducible data science
+and foster interdisciplinary collaboration.
 
 The platform allows (data)scientists to:
 
-* Capture complete lineage up to original raw data for detailed traceability,
+* Capture complete lineage of results up to original raw data for detailed traceability,
   auditability & reproducibility.
+
+* Take advantage of recorded lineage for re-generating results with new data or code
 
 * Share their work and reuse the work of others as building blocks in their
   own analyses
+
 
 .. toctree::
    :maxdepth: 2

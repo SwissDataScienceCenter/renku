@@ -57,7 +57,7 @@ ingress:
   ## Hosts for the ingress
   ## Should include at least the value from `global.renku.domain`
   hosts:
-  - example.local
+    - example.local
 
   ## TLS setting for the ingress
   tls: []
@@ -93,11 +93,161 @@ keycloak:
   #   port: 80
   #   type: ClusterIP
 
-## PostgreSQL configuration
 postgresql:
+  ## postgres image repository
+  image: "postgres"
+  ## postgres image version
+  ## ref: https://hub.docker.com/r/library/postgres/tags/
+  ##
+  imageTag: "9.6"
+
+  ## Specify a imagePullPolicy
+  ## 'Always' if imageTag is 'latest', else set to 'IfNotPresent'
+  ## ref: http://kubernetes.io/docs/user-guide/images/#pre-pulling-images
+  ##
+  # imagePullPolicy:
+
+  ## Specify imagePullSecrets
+  ## ref: https://kubernetes.io/docs/concepts/containers/images/#specifying-imagepullsecrets-on-a-pod
+  ##
+  # imagePullSecrets: myregistrykey
+
+  ## Create a database user
+  ## Default: postgres
+  postgresUser: postgres
+  ## Default: random 10 character string
+  postgresPassword: postgres
+  
+  ## Inject postgresPassword via a volume mount instead of environment variable
+  # usePasswordFile: false
+
+  ## Use Existing secret instead of creating one
+  ## It must have a postgres-password key containing the desired password
+  # existingSecret: 'secret'
+
+  ## Create a database
+  ## Default: the postgres user
+  postgresDatabase: postgres
+
+  ## Specify initdb arguments, e.g. --data-checksums
+  ## ref: https://github.com/docker-library/docs/blob/master/postgres/content.md#postgres_initdb_args
+  ## ref: https://www.postgresql.org/docs/current/static/app-initdb.html
+  # postgresInitdbArgs:
+
+  ## Use an alternate scheduler, e.g. "stork".
+  ## ref: https://kubernetes.io/docs/tasks/administer-cluster/configure-multiple-schedulers/
+  ##
+  # schedulerName:
+
+  ## Specify runtime config parameters as a dict, using camelCase, e.g.
+  ## {"sharedBuffers": "500MB"}
+  ## ref: https://www.postgresql.org/docs/current/static/runtime-config.html
+  # postgresConfig:
+
+  ## Persist data to a persistent volume
+  persistence:
+    enabled: true
+
+    ## A manually managed Persistent Volume and Claim
+    ## Requires persistence.enabled: true
+    ## If defined, PVC must be created manually before volume will be bound
+    # existingClaim:
+
+    ## database data Persistent Volume Storage Class
+    ## If defined, storageClassName: <storageClass>
+    ## If set to "-", storageClassName: "", which disables dynamic provisioning
+    ## If undefined (the default) or set to null, no storageClassName spec is
+    ##   set, choosing the default provisioner.  (gp2 on AWS, standard on
+    ##   GKE, AWS & OpenStack)
+    ##
+    # storageClass: "-"
+    accessMode: ReadWriteOnce
+    size: 8Gi
+    subPath: "postgresql-db"
+    mountPath: /var/lib/postgresql/data/pgdata
+
+    # annotations: {}
+
+  metrics:
+    enabled: false
+    image: wrouesnel/postgres_exporter
+    imageTag: v0.1.1
+    imagePullPolicy: IfNotPresent
+    resources:
+      requests:
+        memory: 256Mi
+        cpu: 100m
+      ## Define additional custom metrics
+      ## ref: https://github.com/wrouesnel/postgres_exporter#adding-new-metrics-via-a-config-file
+      # customMetrics:
+      #   pg_database:
+      #     query: "SELECT d.datname AS name, CASE WHEN pg_catalog.has_database_privilege(d.datname, 'CONNECT') THEN pg_catalog.pg_database_size(d.datname) ELSE 0 END AS size FROM pg_catalog.pg_database d where datname not in ('template0', 'template1', 'postgres')"
+      #     metrics:
+      #       - name:
+      #           usage: "LABEL"
+      #           description: "Name of the database"
+      #       - size_bytes:
+      #           usage: "GAUGE"
+      #           description: "Size of the database in bytes"
+
+  ## Configure resource requests and limits
+  ## ref: http://kubernetes.io/docs/user-guide/compute-resources/
+  ##
+  resources:
+    requests:
+      memory: 256Mi
+      cpu: 100m
+
+  service:
+    type: ClusterIP
+    port: 5432
+    externalIPs: []
+    ## Manually set NodePort value
+    ## Requires service.type: NodePort
+    # nodePort:
+
+  networkPolicy:
+    ## Enable creation of NetworkPolicy resources.
+    ##
+    enabled: false
+
+    ## The Policy model to apply. When set to false, only pods with the correct
+    ## client label will have network access to the port PostgreSQL is listening
+    ## on. When true, PostgreSQL will accept connections from any source
+    ## (with the correct destination port).
+    ##
+    allowExternal: true
+
+  ## Node labels and tolerations for pod assignment
+  ## ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#nodeselector
+  ## ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#taints-and-tolerations-beta-feature
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
+
+  # Override default liveness & readiness probes
+  probes:
+    liveness:
+      initialDelay: 60
+      timeoutSeconds: 5
+      failureThreshold: 6
+    readiness:
+      initialDelay: 5
+      timeoutSeconds: 3
+      periodSeconds: 5
+  ## Annotations for the deployment and nodes.
+  deploymentAnnotations: {}
+  podAnnotations: {}
+
+  ## Deployment pods replace strategy
+  ## ref: https://kubernetes.io/docs/concepts/workloads/controllers/deployment/#strategy
+  # strategy: {}
+
+
+## PostgreSQL configuration
+postgresqlOld:
   ## Password for the user postgres (database admin user)
   postgresPassword: postgres
-
   ## Postgres image
   # image:
   #   pullPolicy: IfNotPresent
@@ -186,6 +336,37 @@ gitlab:
   ## Resource requests/limits for Gitlab
   # resources: {}
 
+  ## Registration token for gitlab runners (initial value, can be regenerated from gitlab admin ui)
+  sharedRunnersRegistrationToken: '8dbf016f5b73d5608390183bbea9ce5fbed83a9dadefa719245ab93eb255cc29'
+
+  ## Set to true to make the user 'demo' a GitLab admin
+  demoUserIsAdmin: false
+
+  ## External port for git ssh protocol
+  ## This setting affects the copy-paste repo git+ssh URL
+  # sshPort: 22
+
+  ## LFS objects settings
+  ## Used to store git-lfs objects externally
+  ## Note: bucket must exist before use, GitLab won't do it
+  # lfsObjects:
+      ## Set to true to enable remote LFS objects
+      # enabled: false
+      ## Bucket name
+      # bucketName: lfs-objects
+      ## Configuration, see: https://docs.gitlab.com/ce/workflow/lfs/lfs_administration.html
+      # storage: |-
+      #   {
+      #     'provider' => 'AWS',
+      #     'region' => 'eu-central-1',
+      #     'aws_access_key_id' => '1ABCD2EFGHI34JKLM567N',
+      #     'aws_secret_access_key' => 'abcdefhijklmnopQRSTUVwxyz0123456789ABCDE',
+      #     # The below options configure an S3 compatible host instead of AWS
+      #     'host' => 'localhost',
+      #     'endpoint' => 'http://127.0.0.1:9000',
+      #     'path_style' => true
+      #   }
+
   ## Persistent Volume settings
   persistence:
     ## Set to false to disable the use of Persistent Volume
@@ -226,6 +407,41 @@ gitlab:
   # service:
   #   port: 80
   #   type: ClusterIP
+
+  ## Container image registry settings
+  registry:
+    ## Set to true to enable Gitlab registry
+    enabled: false
+    ## The URL to access the registry
+    # externalUrl:
+    ## Set `exposedAs` to "NodePort" when deploying on minikube
+    ## Set `exposedAs` to "Ingress" to expose the registry on an alternate domain.
+    # exposedAs: NodePort
+    ## Storage driver configuration for the registry
+    ## See: https://docs.gitlab.com/ee/administration/container_registry.html#container-registry-storage-driver
+    # storage: |-
+    #   {
+    #     's3' => {
+    #       'accesskey' => 's3-access-key',
+    #       'secretkey' => 's3-secret-key-for-access-key',
+    #       'bucket' => 'your-s3-bucket',
+    #       'region' => 'your-s3-region'
+    #     }
+    #   }
+    ## Registry ingress, when `exposedAs` is set to "Ingress"
+    ## Uses conventional settings for ingress
+    ## Find below an example of values
+    # ingress:
+    #   annotations:
+    #     kubernetes.io/ingress.class: nginx
+    #     kubernetes.io/tls-acme: "true"
+    #     nginx.ingress.kubernetes.io/proxy-body-size: '0'
+    #   hosts:
+    #   - registry.example.com
+    #   tls:
+    #   - hosts:
+    #     - registry.example.com
+    #     secretName: registry-tls
 
 ## Redis configuration
 ## Redis is used by Gitlab
@@ -282,6 +498,14 @@ ui:
   # service:
   #   port: 80
   #   type: ClusterIP
+  ## Set the GitLab URL
+  # gitlabUrl: "http://gitlab.renku.build"
+  ## Configure application ID from "{{ gitlabUrl }}/oauth/application"
+  ## by setting redirect URL to "{{ baseUrl }}/login/redirect/gitlab"
+  ## and set the application ID as the "gitlabClientId" chart value.
+  # gitlabClientId: "renku-ui"
+  ## Set the JupyterHub URL
+  # jupyterhubUrl: "http://jupyterhub.renku.build"
 
 ## Configuration for the jupyterhub service
 jupyterhub:
@@ -298,10 +522,20 @@ jupyterhub:
         api_token: notebookstoken
     extraEnv:
       DEBUG: 1
-      JUPYTERHUB_NOTEBOOK_DIR: '/repo'
+      JUPYTERHUB_NOTEBOOK_DIR: /repo
       JUPYTERHUB_SPAWNER_CLASS: spawners.RenkuKubeSpawner
     extraConfig: |
       import os
+
+      # Set the log level by value or name.
+      c.JupyterHub.log_level = 'DEBUG'
+
+      # Enable debug-logging of the single-user server
+      c.Spawner.debug = True
+
+      # JupyterHub uses GITLAB_HOST which is a misnomer -- we use GITLAB_URL
+      # everywhere so set this mapping here
+      os.environ['GITLAB_HOST'] = os.getenv('GITLAB_URL')
 
       #: Automatically begin the login process without showing the button.
       c.Authenticator.auto_login = True
@@ -313,7 +547,7 @@ jupyterhub:
       c.JupyterHub.spawner_class = os.getenv('JUPYTERHUB_SPAWNER_CLASS',
                                            'spawners.Spawner')
 
-      c.RenkuKubeSpawner.pod_name_template = 'jupyterhub-{username}-{servername}'
+      c.RenkuKubeSpawner.pod_name_template = 'jupyter-{username}{servername}'
 
       #: Explicitly set notebook directory because we'll be mounting a host volume to
       #: it.  Most jupyter/docker-stacks *-notebook images run the Notebook server as
@@ -325,12 +559,9 @@ jupyterhub:
       #: For debugging arguments passed to spawned containers
       c.Spawner.debug = bool(os.getenv('DEBUG', False))
 
-      # prevent redirect to /hub if the server is taking slightly longer to start
-      c.JupyterHub.tornado_settings = {
-       'slow_spawn_timeout': 30
-      }
-    db:
-      type: postgres
+      # Increase pod initialization timeout to 15 minutes
+      c.KubeSpawner.start_timeout = 60 * 15
+
   singleuser:
     image:
       name: renku/singleuser
@@ -346,9 +577,31 @@ jupyterhub:
   auth:
     type: gitlab
     gitlab:
-      clientId: "jupyterhub"
-      clientSecret: "no-secret-needed"
+      clientId: jupyterhub
+      clientSecret: dummy-secret
       callbackUrl: '""' # Forces the default callback url
 
+apispec:
+  image:
+    repository: renku/apispec
+    tag: latest
+
 tests:
-  image: renku/renku-tests:latest
+  image:
+    repository: renku/tests
+    tag: latest
+
+## Gitlab runners configuration
+## See: http://docs.gitlab.com/ee/install/kubernetes/gitlab_runner_chart.html
+runner:
+  ## Set to true to deploy the runners
+  enabled: false
+  ## Gitlab URL
+  gitlabUrl: http://renku-gitlab/gitlab/ # renku-gitlab <- gitlab chart name
+  ## Registration token, must be equal to `gitlab.sharedRunnersRegistrationToken`
+  runnerRegistrationToken: '8dbf016f5b73d5608390183bbea9ce5fbed83a9dadefa719245ab93eb255cc29'
+  runners:
+    ## To ba able to use docker:dind
+    privileged: true
+  rbac:
+    create: true

@@ -12,7 +12,4 @@ Knowledge Representations
 Component Interactions
 ----------------------
 
-- :ref:`uml_seq_deployment`
-- :ref:`uml_seq_read`
-- :ref:`uml_seq_extern_read`
-
+- :ref:`uml_notebooks_service`

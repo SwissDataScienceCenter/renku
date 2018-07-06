@@ -19,8 +19,10 @@
 
 import hashlib
 import os
+import string
 from urllib.parse import urlsplit, urlunsplit
 
+import escapism
 from tornado import gen, web
 
 
@@ -36,7 +38,7 @@ class SpawnerMixin():
         namespace = options.get('namespace')
         project = options.get('project')
 
-        url = os.environ.get('GITLAB_HOST', 'http://gitlab.renku.local')
+        url = os.environ.get('GITLAB_URL', 'http://gitlab.renku.build')
 
         scheme, netloc, path, query, fragment = urlsplit(url)
 
@@ -54,15 +56,14 @@ class SpawnerMixin():
 
         environment = super().get_env()
         environment.update({
-            # 'CI_REPOSITORY_URL': repository,
             'CI_NAMESPACE':
                 self.user_options.get('namespace', ''),
             'CI_PROJECT':
                 self.user_options.get('project', ''),
             'CI_COMMIT_SHA':
                 self.user_options.get('commit_sha', ''),
-            'GITLAB_HOST':
-                os.environ.get('GITLAB_HOST', 'http://gitlab.renku.build'),
+            'GITLAB_URL':
+                os.environ.get('GITLAB_URL', 'http://gitlab.renku.build'),
             'CI_REF_NAME':
                 self.user_options.get('branch', 'master'),
         })
@@ -85,8 +86,10 @@ class SpawnerMixin():
         options = self.user_options
         namespace = options.get('namespace')
         project = options.get('project')
+        commit_sha = options.get('commit_sha')
+        commit_sha_7 = commit_sha[:7]
 
-        url = os.getenv('GITLAB_HOST', 'http://gitlab.renku.build')
+        url = os.getenv('GITLAB_URL', 'http://gitlab.renku.build')
 
         gl = gitlab.Gitlab(
             url, api_version=4, oauth_token=auth_state['access_token']
@@ -105,11 +108,56 @@ class SpawnerMixin():
             raise web.HTTPError(401, 'Not authorized to view project.')
             return
 
-        self.image = '{image_registry}'\
-                     '/{namespace}'\
-                     '/{project}'\
-                     ':{commit_sha}'.format(image_registry=os.getenv('IMAGE_REGISTRY'), **options)
+        # set default image
+        self.image = os.getenv(
+            'JUPYTERHUB_NOTEBOOK_IMAGE', 'jupyterhub/singleuser:0.8.1'
+        )
 
+        for pipeline in gl_project.pipelines.list():
+            if pipeline.attributes['sha'] == commit_sha:
+                status = self._get_job_status(pipeline, 'image_build')
+
+                if not status:
+                    # there is no image_build job for this commit
+                    # so we use the default image
+                    self.log.info('No image_build job found in pipeline.')
+                    break
+
+                # we have an image_build job in the pipeline, check status
+                while True:
+                    if status == 'success':
+                        # the image was built
+                        # it *should* be there so lets use it
+                        self.image = '{image_registry}'\
+                                '/{namespace}'\
+                                '/{project}'\
+                                ':{commit_sha_7}'.format(
+                                    image_registry=os.getenv('IMAGE_REGISTRY'),
+                                    commit_sha_7=commit_sha_7,
+                                    **options
+                        ).lower()
+                        self.log.info(
+                            'Using image {image}.'.format(image=self.image)
+                        )
+                        break
+                    elif status == 'failed':
+                        self.log.info(
+                            'Image build failed for project {0} commit {1} - '
+                            'using {2} instead'.format(
+                                project, commit_sha, self.image
+                            )
+                        )
+                        break
+                    yield gen.sleep(5)
+                    status = self._get_job_status(pipeline, 'image_build')
+                    self.log.debug(
+                        'status of image_build job for commit '
+                        '{commit_sha_7}: {status}'.format(
+                            commit_sha_7=commit_sha_7, status=status
+                        )
+                    )
+
+        self.cmd = 'jupyterhub-singleuser'
         try:
             result = yield super().start(*args, **kwargs)
         except docker.errors.ImageNotFound:
@@ -125,6 +173,15 @@ class SpawnerMixin():
 
         return result
 
+    @staticmethod
+    def _get_job_status(pipeline, job_name):
+        """Helper method to retrieve job status based on the job name."""
+        status = [
+            job.attributes['status'] for job in pipeline.jobs.list()
+            if job.attributes['name'] == job_name
+        ]
+        return status.pop() if status else None
+
 
 try:
     import docker
@@ -138,9 +195,14 @@ try:
             """Create init container."""
             auth_state = yield self.user.get_auth_state()
             options = self.user_options
-            container_name = 'init-' + self.name  # TODO user namespace?
             name = self.name + '-git-repo'
-            volume_name = 'repo-' + container_name
+            safe_username = escapism.escape(
+                self.user.name,
+                safe=set(string.ascii_lowercase + string.digits + '-'),
+                escape_char='-'
+            )
+            container_name = 'init-' + safe_username + '-' + self.name
+            volume_name = 'repo-' + safe_username + '-' + container_name
             volume_path = '/repo'
 
             try:
@@ -187,8 +249,10 @@ try:
                 name=container_name,
                 entrypoint='sh -c',
                 command=[
+                    'apk update && apk add git-lfs && '
                     'git clone {repository} {volume_path} && '
                     '(git checkout {branch} || git checkout -b {branch}) && '
+                    'git submodule init && git submodule update && '
                     'git reset --hard {commit_sha} && '
                     'chown 1000:100 -Rc {volume_path}'.format(
                         branch=options.get('branch'),
@@ -250,12 +314,19 @@ try:
             auth_state = yield self.user.get_auth_state()
             repository = yield self.git_repository()
             options = self.user_options
+            commit_sha_7 = options.get('commit_sha')[:7]
 
             # https://gist.github.com/tallclair/849601a16cebeee581ef2be50c351841
             container_name = 'renku-' + self.pod_name
             name = self.pod_name + '-git-repo'
 
+            # set the notebook container image
+            self.singleuser_image_spec = self.image
+
             #: Define a new empty volume.
+            self.volumes = [
+                volume for volume in self.volumes if volume['name'] != name
+            ]
             volume = {
                 'name': name,
                 'emptyDir': {},
@@ -281,9 +352,14 @@ try:
                 image='alpine/git',
                 command=['sh', '-c'],
                 args=[
+                    'rm -rf {mount_path}/* && '
+                    '(rm -rf {mount_path}/.* || true) && '
+                    'apk update && apk add git-lfs && '
                     'git clone {repository} {mount_path} && '
                     '(git checkout {branch} || git checkout -b {branch}) && '
-                    'git reset --hard {commit_sha}'.format(
+                    'git submodule init && git submodule update && '
+                    'git reset --hard {commit_sha} &&'
+                    'chown 1000:100 -Rc {mount_path}'.format(
                         branch=options.get('branch'),
                         commit_sha=options.get('commit_sha'),
                         mount_path=mount_path,
@@ -292,6 +368,7 @@ try:
                 ],
                 volume_mounts=[volume_mount],
                 working_dir=mount_path,
+                security_context=client.V1SecurityContext(run_as_user=0)
             )
             self.singleuser_init_containers.append(init_container)
 
@@ -303,7 +380,48 @@ try:
             self.volume_mounts.append(volume_mount)
 
             pod = yield super().get_pod_manifest()
+            # Because repository comes from a coroutine, we can't put it simply in `get_env()`
+            pod.spec.containers[0].env.append(
+                client.V1EnvVar('CI_REPOSITORY_URL', repository)
+            )
             return pod
+
+        def _expand_user_properties(self, template):
+            """
+            Override the _expand_user_properties from KubeSpawner.
+
+            In addition to also escaping the server name, we trim the individual
+            parts of the template to ensure < 63 charactr pod names.
+
+            Code adapted from
+            https://github.com/jupyterhub/kubespawner/blob/master/kubespawner/spawner.py
+            """
+
+            # Make sure username and servername match the restrictions for DNS labels
+            safe_chars = set(string.ascii_lowercase + string.digits + '-')
+
+            # Set servername based on whether named-server initialised
+            if self.name:
+                servername = '-{}'.format(self.name)
+            else:
+                servername = ''
+
+            legacy_escaped_username = ''.join([
+                s if s in safe_chars else '-' for s in self.user.name.lower()
+            ])
+
+            safe_username = escapism.escape(
+                self.user.name, safe=safe_chars, escape_char='-'
+            )
+            rendered = template.format(
+                userid=self.user.id,
+                username=safe_username[:10],
+                legacy_escape_username=legacy_escaped_username[:10],
+                servername=servername
+            ).lower()
+
+            # just to be sure, still trim to 63 characters
+            return rendered[:63]
 
 except ImportError:
     pass

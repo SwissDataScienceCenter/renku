@@ -1,0 +1,40 @@
+charts:
+  - name: renku
+    imagePrefix: renku/
+    repo:
+      git: SwissDataScienceCenter/helm-charts
+      published: https://swissdatasciencecenter.github.io/helm-charts
+    paths:
+      - .
+      - ../services/apispec
+      - ../services/jupyterhub
+      - ../services/singleuser
+      - ../tests
+    images:
+      apispec:
+        contextPath: ../services/apispec
+        dockerfilePath: ../services/apispec/Dockerfile
+        valuesPath: apispec.image
+        paths:
+          - ../services/apispec
+      jupyterhub-k8s:
+        contextPath: ../services/jupyterhub
+        dockerfilePath: ../services/jupyterhub/jupyterhub-k8s.Dockerfile
+        valuesPath: jupyterhub.hub.image
+        paths:
+          - ../services/jupyterhub
+      singleuser:
+        contextPath: ../services/singleuser
+        buildArgs:
+          BASE_IMAGE: renku/minimal-notebook:98a712f9ad93
+          JUPYTERHUB_VERSION: master
+        dockerfilePath: ../services/singleuser/Dockerfile
+        valuesPath: jupyterhub.singleuser.image
+        paths:
+          - ../services/singleuser
+      tests:
+        contextPath: ../tests
+        dockerfilePath: ../tests/Dockerfile
+        valuesPath: tests.image
+        paths:
+          - ../tests

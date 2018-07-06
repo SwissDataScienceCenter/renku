@@ -181,7 +181,7 @@ services:
       STORAGE_BACKEND_GITLAB_ENABLED: "true"
       GITLAB_URL: ${GITLAB_URL}
       GITLAB_USER: "root"
-      GITLAB_PASS: ${GITLAB_TOKEN}
+      GITLAB_PASS: ${GITLAB_SUDO_TOKEN}
       RENKU_STORAGE_DEFAULT_LFS_BACKEND: "local"
     volumes:
       - ./services/storage/data:/data
@@ -225,6 +225,7 @@ services:
     environment:
       BASE_URL: http://${PLATFORM_DOMAIN}
       GITLAB_URL: ${GITLAB_URL}
+      JUPYTERHUB_URL: ${JUPYTERHUB_URL}
     labels:
       traefik.enable: "true"
       traefik.frontend.rule: "Host:${PLATFORM_DOMAIN}"
@@ -256,16 +257,8 @@ services:
       - default
       - review
 
-  singleuser:
-    build:
-      context: services/singleuser
-      args:
-        BASE_IMAGE: renku/minimal-notebook:98a712f9ad93
-        JUPYTERHUB_VERSION: master
-    image: ${DOCKER_PREFIX}singleuser:${PLATFORM_VERSION}
-    command: renku --version
-
   jupyterhub:
+    image: ${DOCKER_PREFIX}jupyterhub:${PLATFORM_VERSION}
     build: services/jupyterhub
     command: jupyterhub --debug
     ports:
@@ -304,9 +297,8 @@ services:
           - jupyterhub.${PLATFORM_DOMAIN}
 
   notebooks:
-    build: services/notebooks
+    image: ${DOCKER_PREFIX}renku-notebooks:${PLATFORM_VERSION}
     environment:
-      GITLAB_HOST: ${GITLAB_URL}
       FLASK_DEBUG: 1
       OAUTHLIB_INSECURE_TRANSPORT: 1
       JUPYTERHUB_API_TOKEN: ${JUPYTERHUB_RENKU_NOTEBOOKS_SERVICE_TOKEN}

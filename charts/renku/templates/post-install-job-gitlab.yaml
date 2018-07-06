@@ -1,0 +1,51 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: "{{ .Release.Name }}-post-install-gitlab"
+  labels:
+    heritage: {{ .Release.Service | quote }}
+    release: {{ .Release.Name | quote }}
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+  annotations:
+    "helm.sh/hook": post-install,post-upgrade
+    "helm.sh/hook-weight": "20"
+    "helm.sh/hook-delete-policy": "before-hook-creation"
+spec:
+  template:
+    metadata:
+      name: "{{.Release.Name}}-post-install-gitlab"
+      labels:
+        heritage: {{.Release.Service | quote }}
+        release: {{.Release.Name | quote }}
+        chart: "{{.Chart.Name}}-{{.Chart.Version}}"
+    spec:
+      restartPolicy: Never
+      containers:
+        - name: configure-gitlab
+          image: "postgres:9.6"
+          command: ["/bin/bash", "/scripts/init-gitlab.sh"]
+          volumeMounts:
+            - name: init
+              mountPath: /scripts
+              readOnly: true
+          env:
+          - name: PGDATABASE
+            value: {{ .Values.global.gitlab.postgresDatabase }}
+          - name: PGUSER
+            value: {{ .Values.global.gitlab.postgresUser }}
+          - name: PGHOST
+            value: {{ template "postgresql.fullname" . }}
+          - name: PGPASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: {{ template "gitlab.fullname" . }}
+                key: postgres-password
+          - name: GITLAB_SUDO_TOKEN
+            valueFrom:
+              secretKeyRef:
+                name: {{ template "renku.fullname" . }}
+                key: gitlab-sudo-token
+      volumes:
+        - name: init
+          configMap:
+            name: {{ template "renku.fullname" . }}

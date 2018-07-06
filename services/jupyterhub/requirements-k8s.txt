@@ -17,5 +17,6 @@
 # limitations under the License.
 
 docker
+escapism
 python-gitlab
 requests-oauthlib

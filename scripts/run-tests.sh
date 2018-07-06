@@ -23,6 +23,8 @@ set -o errexit
 # quit on unbound symbols:
 set -o nounset
 
+docker images --digests
+
 pytest -v
 sphinx-build -nNW -b spelling -d docs/_build/doctrees docs docs/_build/spelling
 sphinx-build -qnNW docs docs/_build/html
