@@ -181,6 +181,7 @@ export DOCKER_BUILD
 repos = \
 	renku-storage \
 	renku-python \
+	renku-notebooks \
 	renku-ui
 
 # scala-services = \
