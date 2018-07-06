@@ -254,8 +254,9 @@ stop: .env
 	@docker-compose stop
 
 test: .env demo
-	@pip install -r tests/requirements.txt
-	@pip install -r docs/requirements.txt
+	@pip install pipenv
+	@@pip install -r tests/requirements.txt
+	@pipenv install --system --deploy
 	@./scripts/run-tests.sh
 	@echo
 	@echo Cleaning up renku demo

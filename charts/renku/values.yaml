@@ -95,11 +95,11 @@ keycloak:
 
 postgresql:
   ## postgres image repository
-  image: "postgres"
+  image: postgres
   ## postgres image version
   ## ref: https://hub.docker.com/r/library/postgres/tags/
   ##
-  imageTag: "9.6"
+  imageTag: '9.6'
 
   ## Specify a imagePullPolicy
   ## 'Always' if imageTag is 'latest', else set to 'IfNotPresent'
@@ -117,7 +117,7 @@ postgresql:
   postgresUser: postgres
   ## Default: random 10 character string
   postgresPassword: postgres
-  
+
   ## Inject postgresPassword via a volume mount instead of environment variable
   # usePasswordFile: false
 
@@ -163,7 +163,7 @@ postgresql:
     # storageClass: "-"
     accessMode: ReadWriteOnce
     size: 8Gi
-    subPath: "postgresql-db"
+    subPath: postgresql-db
     mountPath: /var/lib/postgresql/data/pgdata
 
     # annotations: {}
@@ -337,7 +337,7 @@ gitlab:
   # resources: {}
 
   ## Registration token for gitlab runners (initial value, can be regenerated from gitlab admin ui)
-  sharedRunnersRegistrationToken: '8dbf016f5b73d5608390183bbea9ce5fbed83a9dadefa719245ab93eb255cc29'
+  sharedRunnersRegistrationToken: 8dbf016f5b73d5608390183bbea9ce5fbed83a9dadefa719245ab93eb255cc29
 
   ## Set to true to make the user 'demo' a GitLab admin
   demoUserIsAdmin: false
@@ -514,7 +514,7 @@ jupyterhub:
   hub:
     image:
       name: renku/jupyterhub-k8s
-      tag: latest
+      tag: 0.0-unclean-3024e57
     services:
       notebooks:
         url: http://renku-notebooks
@@ -565,7 +565,7 @@ jupyterhub:
   singleuser:
     image:
       name: renku/singleuser
-      tag: latest
+      tag: 0.0-unclean-3024e57
     storage:
       type: none
   # FIXME: bug in prepuller makes helm hang in certain cases. Fixed in 0.7
@@ -584,12 +584,12 @@ jupyterhub:
 apispec:
   image:
     repository: renku/apispec
-    tag: latest
+    tag: 0.0-unclean-3024e57
 
 tests:
   image:
     repository: renku/tests
-    tag: latest
+    tag: 0.0-unclean-3024e57
 
 ## Gitlab runners configuration
 ## See: http://docs.gitlab.com/ee/install/kubernetes/gitlab_runner_chart.html
@@ -599,7 +599,7 @@ runner:
   ## Gitlab URL
   gitlabUrl: http://renku-gitlab/gitlab/ # renku-gitlab <- gitlab chart name
   ## Registration token, must be equal to `gitlab.sharedRunnersRegistrationToken`
-  runnerRegistrationToken: '8dbf016f5b73d5608390183bbea9ce5fbed83a9dadefa719245ab93eb255cc29'
+  runnerRegistrationToken: 8dbf016f5b73d5608390183bbea9ce5fbed83a9dadefa719245ab93eb255cc29
   runners:
     ## To ba able to use docker:dind
     privileged: true
