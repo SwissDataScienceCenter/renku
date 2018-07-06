@@ -21,7 +21,6 @@
 # import sys
 # sys.path.insert(0, os.path.abspath('.'))
 
-
 # -- General configuration ------------------------------------------------
 
 # If your documentation needs a minimal Sphinx version, state it here.
@@ -32,15 +31,15 @@
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
 extensions = [
+    'plantweb.directive',
     'sphinx.ext.autodoc',
+    'sphinx.ext.coverage',
     'sphinx.ext.doctest',
+    'sphinx.ext.githubpages',
+    'sphinx.ext.ifconfig',
     'sphinx.ext.intersphinx',
     'sphinx.ext.todo',
-    'sphinx.ext.coverage',
-    'sphinx.ext.ifconfig',
     'sphinx.ext.viewcode',
-    'sphinx.ext.githubpages',
-    'plantweb.directive',
     'sphinxcontrib.spelling',
 ]
 
@@ -56,7 +55,7 @@ templates_path = ['_templates']
 # You can specify multiple suffix as a list of string:
 #
 # source_suffix = ['.rst', '.md']
-source_suffix = [ '.rst', '.md' ]
+source_suffix = ['.rst', '.md']
 
 # The master toctree document.
 master_doc = 'index'
@@ -85,7 +84,7 @@ language = None
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
 # This patterns also effect to html_static_path and html_extra_path
-exclude_patterns = [ '_build/*' ]
+exclude_patterns = ['_build/*']
 
 # The name of the Pygments (syntax highlighting) style to use.
 #pygments_style = 'sphinx'
@@ -95,7 +94,6 @@ todo_include_todos = True
 
 # Figure numbering
 numfig = True
-
 
 # -- Options for HTML output ----------------------------------------------
 
@@ -119,7 +117,6 @@ html_theme_options = {
     },
 }
 
-
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
@@ -140,12 +137,10 @@ html_sidebars = {
     ]
 }
 
-
 # -- Options for HTMLHelp output ------------------------------------------
 
 # Output file base name for HTML help builder.
 htmlhelp_basename = 'RENKUdoc'
-
 
 # -- Options for LaTeX output ---------------------------------------------
 
@@ -171,19 +166,18 @@ latex_elements = {
 # (source start file, target name, title,
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
-    (master_doc, 'RENKU.tex', 'RENKU Documentation',
-     'Eric Bouillet, Julien Eberle, Jiri Kuncar, Izabela Moise, Rok Roskar, Sofiane Sarni, Sandra Savchenko De Jong, Johann-Michael Thiebaut, Olivier Verscheure', 'manual'),
+    (
+        master_doc, 'RENKU.tex', 'RENKU Documentation',
+        'Eric Bouillet, Julien Eberle, Jiri Kuncar, Izabela Moise, Rok Roskar, Sofiane Sarni, Sandra Savchenko De Jong, Johann-Michael Thiebaut, Olivier Verscheure',
+        'manual'
+    ),
 ]
-
 
 # -- Options for manual page output ---------------------------------------
 
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
-man_pages = [
-    (master_doc, 'renku', 'RENKU Documentation', [author], 1)
-]
-
+man_pages = [(master_doc, 'renku', 'RENKU Documentation', [author], 1)]
 
 # -- Options for Texinfo output -------------------------------------------
 
@@ -191,17 +185,17 @@ man_pages = [
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-    (master_doc, 'RENKU', 'RENKU Documentation', author, 'RENKU', 'One line description of project.', 'Miscellaneous'),
+    (
+        master_doc, 'RENKU', 'RENKU Documentation', author, 'RENKU',
+        'One line description of project.', 'Miscellaneous'
+    ),
 ]
-
-
-
 
 # Example configuration for intersphinx: refer to the Python standard library.
 intersphinx_mapping = {
     'python': ('https://docs.python.org/3/', None),
-    }
+}
 
 # spellchecking config
-spelling_show_suggestions=True
-spelling_lang='en_US'
+spelling_show_suggestions = True
+spelling_lang = 'en_US'

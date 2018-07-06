@@ -85,15 +85,7 @@ gitlab_rails['redis_host'] = "{{ template "redis.fullname" . }}"
 {{ if .Values.lfsObjects.enabled -}}
 gitlab_rails['lfs_object_store_enabled'] = true
 gitlab_rails['lfs_object_store_remote_directory'] = "{{ .Values.lfsObjects.bucketName }}"
-gitlab_rails['lfs_object_store_connection'] = {
-    'provider' => 'AWS',
-    'region' => '{{ .Values.lfsObjects.region }}',
-    'aws_access_key_id' => '{{ .Values.lfsObjects.access_key }}',
-    'aws_secret_access_key' => '{{ .Values.lfsObjects.secret_key }}',
-    'host' => '{{ .Values.lfsObjects.host }}',
-    'endpoint' => '{{ .Values.lfsObjects.endpoint }}',
-    'path_style' => false
-}
+gitlab_rails['lfs_object_store_connection'] = {{ .Values.lfsObjects.storage }}
 {{- end }}
 
 prometheus['enable'] = false
