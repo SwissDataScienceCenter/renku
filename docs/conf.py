@@ -36,6 +36,7 @@ extensions = [
     'sphinx.ext.coverage',
     'sphinx.ext.doctest',
     'sphinx.ext.githubpages',
+    'sphinx.ext.graphviz',
     'sphinx.ext.ifconfig',
     'sphinx.ext.intersphinx',
     'sphinx.ext.todo',
@@ -199,3 +200,6 @@ intersphinx_mapping = {
 # spellchecking config
 spelling_show_suggestions = True
 spelling_lang = 'en_US'
+
+# graphviz config
+graphviz_output_format = "svg"
