@@ -27,13 +27,13 @@ Building and deploying to minikube
 Starting minikube
 ^^^^^^^^^^^^^^^^^
 
-Using the default vm driver:
+Using the default VM driver:
 
 .. code-block:: console
 
     $ minikube start --memory 6144
 
-Using hyperkit:
+Using HyperKit:
 
 .. code-block:: console
 
@@ -55,7 +55,7 @@ Once minikube is started, make sure you can access it by running:
     NAME       STATUS    ROLES     AGE       VERSION
     minikube   Ready     <none>    3s        v1.10.0
 
-Deploying Helm and nginx-ingress
+Deploying Helm and Nginx ingress
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 .. code-block:: console
