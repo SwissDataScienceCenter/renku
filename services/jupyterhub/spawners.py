@@ -317,7 +317,7 @@ try:
             commit_sha_7 = options.get('commit_sha')[:7]
 
             # https://gist.github.com/tallclair/849601a16cebeee581ef2be50c351841
-            container_name = 'renku-' + self.pod_name
+            container_name = 'git-clone'
             name = self.pod_name + '-git-repo'
 
             # set the notebook container image
@@ -384,6 +384,8 @@ try:
             pod.spec.containers[0].env.append(
                 client.V1EnvVar('CI_REPOSITORY_URL', repository)
             )
+            if options.get('image_pull_secrets'):
+                pod.spec.image_pull_secrets = options.get('image_pull_secrets')
             return pod
 
         def _expand_user_properties(self, template):
