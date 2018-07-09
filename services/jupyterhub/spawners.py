@@ -380,12 +380,19 @@ try:
             self.volume_mounts.append(volume_mount)
 
             pod = yield super().get_pod_manifest()
+
             # Because repository comes from a coroutine, we can't put it simply in `get_env()`
             pod.spec.containers[0].env.append(
                 client.V1EnvVar('CI_REPOSITORY_URL', repository)
             )
+
+            # add image pull secrets
             if options.get('image_pull_secrets'):
-                pod.spec.image_pull_secrets = options.get('image_pull_secrets')
+                secrets = []
+                for name in options.get('image_pull_secrets'):
+                    secrets.append(client.V1LocalObjectReference(name=name))
+                pod.spec.image_pull_secrets = secrets
+
             return pod
 
         def _expand_user_properties(self, template):
