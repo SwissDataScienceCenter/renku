@@ -388,9 +388,7 @@ try:
 
             # add image pull secrets
             if options.get('image_pull_secrets'):
-                secrets = []
-                for name in options.get('image_pull_secrets'):
-                    secrets.append(client.V1LocalObjectReference(name=name))
+                secrets = [client.V1LocalObjectReference(name=name) for name in options.get('image_pull_secrets')]
                 pod.spec.image_pull_secrets = secrets
 
             return pod
