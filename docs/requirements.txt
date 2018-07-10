@@ -1,0 +1,37 @@
+-i https://pypi.org/simple
+alabaster==0.7.11
+babel==2.6.0
+backcall==0.1.0
+certifi==2018.4.16
+chardet==3.0.4
+decorator==4.3.0
+docutils==0.14
+idna==2.7
+imagesize==1.0.0
+ipython-genutils==0.2.0
+ipython==6.4.0
+jedi==0.12.1
+jinja2==2.10
+markupsafe==1.0
+packaging==17.1
+parso==0.3.0
+pexpect==4.6.0; sys_platform != 'win32'
+pickleshare==0.7.4
+plantweb==1.1.0
+prompt-toolkit==1.0.15
+ptyprocess==0.6.0
+pyenchant==2.0.0
+pygments==2.2.0
+pyparsing==2.2.0
+pytz==2018.5
+renku-sphinx-theme==0.1.0
+requests==2.19.1
+simplegeneric==0.8.1
+six==1.11.0
+snowballstemmer==1.2.1
+sphinx==1.7.5
+sphinxcontrib-spelling==4.2.0
+sphinxcontrib-websupport==1.1.0
+traitlets==4.3.2
+urllib3==1.23
+wcwidth==0.1.7
