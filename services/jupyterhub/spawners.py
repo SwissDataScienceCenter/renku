@@ -345,7 +345,7 @@ try:
             #: Define an init container.
             self.singleuser_init_containers = [
                 container for container in self.singleuser_init_containers
-                if not container.name.startswith('renku-')
+                if not container.name.startswith(container_name)
             ]
             init_container = client.V1Container(
                 name=container_name,
