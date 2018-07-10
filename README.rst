@@ -62,6 +62,18 @@ you may use
 You can find more details about running the platform in the `setup
 <http://renku.readthedocs.io/en/development/user/setup.html>`_ documentation.
 
+Starting the platform with minikube
+-----------------------------------
+
+.. code:: console
+
+    $ make minikube-deploy
+
+You can find more details about the minikube setup in the `development on minikube
+<http://renku.readthedocs.io/en/latest/developer/minikube.html>`_ documentation.
+
+More information about the helm charts can be found in the `charts/README.rst <charts/README.rst>`_ file.
+
 Where to go next
 ----------------
 
