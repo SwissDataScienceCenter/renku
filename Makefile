@@ -267,7 +267,7 @@ wipe: .env
 	@./scripts/renku-wipe.sh
 
 .PHONY: minikube-deploy
-minikube-deploy:
+minikube-deploy: clone
 	pipenv run python scripts/minikube_deploy.py
 
 .PHONY: python-env
