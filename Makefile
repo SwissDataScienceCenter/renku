@@ -181,6 +181,7 @@ export DOCKER_BUILD
 repos = \
 	renku-storage \
 	renku-python \
+	renku-notebooks \
 	renku-ui
 
 # scala-services = \
@@ -253,8 +254,9 @@ stop: .env
 	@docker-compose stop
 
 test: .env demo
-	@pip install -r tests/requirements.txt
-	@pip install -r docs/requirements.txt
+	@pip install pipenv
+	@@pip install -r tests/requirements.txt
+	@pipenv install --system --deploy --dev
 	@./scripts/run-tests.sh
 	@echo
 	@echo Cleaning up renku demo
@@ -263,3 +265,13 @@ test: .env demo
 
 wipe: .env
 	@./scripts/renku-wipe.sh
+
+.PHONY: minikube-deploy
+minikube-deploy: clone
+	pipenv run python scripts/minikube_deploy.py
+
+.PHONY: python-env
+python-env:
+	@pipenv run python -V
+	@pipenv lock --requirements
+	@pipenv lock --dev --requirements
