@@ -203,3 +203,6 @@ spelling_lang = 'en_US'
 
 # graphviz config
 graphviz_output_format = "svg"
+
+# suppress the warning about graph being overriden
+suppress_warnings = ['app.add_directive']
