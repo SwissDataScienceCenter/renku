@@ -317,7 +317,7 @@ try:
             commit_sha_7 = options.get('commit_sha')[:7]
 
             # https://gist.github.com/tallclair/849601a16cebeee581ef2be50c351841
-            container_name = 'renku-' + self.pod_name
+            container_name = 'git-clone'
             name = self.pod_name + '-git-repo'
 
             # set the notebook container image
@@ -345,7 +345,7 @@ try:
             #: Define an init container.
             self.singleuser_init_containers = [
                 container for container in self.singleuser_init_containers
-                if not container.name.startswith('renku-')
+                if not container.name.startswith(container_name)
             ]
             init_container = client.V1Container(
                 name=container_name,
@@ -380,10 +380,17 @@ try:
             self.volume_mounts.append(volume_mount)
 
             pod = yield super().get_pod_manifest()
+
             # Because repository comes from a coroutine, we can't put it simply in `get_env()`
             pod.spec.containers[0].env.append(
                 client.V1EnvVar('CI_REPOSITORY_URL', repository)
             )
+
+            # add image pull secrets
+            if options.get('image_pull_secrets'):
+                secrets = [client.V1LocalObjectReference(name=name) for name in options.get('image_pull_secrets')]
+                pod.spec.image_pull_secrets = secrets
+
             return pod
 
         def _expand_user_properties(self, template):
