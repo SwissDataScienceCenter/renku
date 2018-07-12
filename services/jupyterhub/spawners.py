@@ -140,7 +140,7 @@ class SpawnerMixin():
                             'Using image {image}.'.format(image=self.image)
                         )
                         break
-                    elif status == 'failed':
+                    elif status in {'failed', 'canceled'}:
                         self.log.info(
                             'Image build failed for project {0} commit {1} - '
                             'using {2} instead'.format(
