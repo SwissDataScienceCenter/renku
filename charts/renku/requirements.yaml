@@ -9,7 +9,7 @@ dependencies:
   version: "0.1.0-3a7db4d"
 - name: renku-gateway
   alias: gateway
-  version: "0.1.0-ae85957"
+  version: "0.1.0-a47d9a3"
   repository: "https://swissdatasciencecenter.github.io/helm-charts/"
 - name: jupyterhub
   version: "v0.6"
