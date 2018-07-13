@@ -192,7 +192,8 @@ repos = \
 	renku-storage \
 	renku-python \
 	renku-notebooks \
-	renku-ui
+	renku-ui \
+	renku-gateway
 
 # scala-services = \
 # 	renku-storage
@@ -201,7 +202,7 @@ makefile-services = \
 	renku-notebooks \
 	renku-storage \
  	renku-python \
- 	incubator-proxy \
+ 	renku-gateway \
  	renku-ui
 
 dockerfile-services = \
