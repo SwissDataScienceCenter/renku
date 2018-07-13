@@ -161,3 +161,15 @@ parts of Renku. In terms of user workflows, we try to do as much of the
 boilerplate for you as possible so for the simpler tasks you don't really
 need to worry about the fact that your code is executing in Docker containers.
 For more complex scenarios, some familiarity with Docker will be required.
+
+
+.. _reproducibility-further_reading:
+
+Further Reading
+---------------
+
+Renku helps you achieve the goal of fully reproducible data science by bundling together several technologies:
+
+* for keeping track of the lineage, our CLI relies heavily on the Common Workflow Language. Here you can learn more about our CWL integration {Add link} 
+* for version control, we rely on `git <https://git-scm.com/>`_
+* your project includes a container specification from day 1. Check out these docs to learn more about how we build images for your project and what we do with them {Add link}
