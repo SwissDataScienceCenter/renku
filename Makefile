@@ -182,7 +182,8 @@ repos = \
 	renku-storage \
 	renku-python \
 	renku-notebooks \
-	renku-ui
+	renku-ui \
+	renku-gateway
 
 # scala-services = \
 # 	renku-storage

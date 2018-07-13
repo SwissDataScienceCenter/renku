@@ -20,6 +20,10 @@ dependencies = [
         'repo_name': 'renku-notebooks',
         'chartpress_dir': 'helm-chart',
     },
+    {
+        'repo_name': 'renku-gateway',
+        'chartpress_dir': 'helm-chart',
+    },
 ]
 
 
