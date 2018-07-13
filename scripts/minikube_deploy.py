@@ -21,6 +21,10 @@ dependencies = [
         'repo_name': 'renku-notebooks',
         'chartpress_dir': 'helm-chart',
     },
+    {
+        'repo_name': 'renku-gateway',
+        'chartpress_dir': 'helm-chart',
+    },
 ]
 
 
@@ -86,6 +90,9 @@ def main():
             '--set', 'global.renku.domain={mip}'.format(mip=minikube_ip()),
             '--set', 'ui.gitlabUrl=http://{mip}/gitlab'.format(mip=minikube_ip()),
             '--set', 'ui.jupyterhubUrl=http://{mip}/jupyterhub'.format(mip=minikube_ip()),
+            '--set', 'ui.gatewayUrl=http://{mip}/api'.format(mip=minikube_ip()),
+            '--set', 'gateway.keycloakUrl=http://{mip}'.format(mip=minikube_ip()),
+            '--set', 'gateway.gitlabUrl=http://{mip}/gitlab'.format(mip=minikube_ip()),
             '--set', 'jupyterhub.hub.extraEnv.GITLAB_URL=http://{mip}/gitlab'.format(mip=minikube_ip()),
             '--set', 'jupyterhub.hub.extraEnv.IMAGE_REGISTRY=10.100.123.45:8105',
             '--set', 'gitlab.registry.externalUrl=http://10.100.123.45:8105/',
