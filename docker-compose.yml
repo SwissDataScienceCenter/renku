@@ -297,7 +297,7 @@ services:
         aliases:
           - jupyterhub.${PLATFORM_DOMAIN}
   proxy:
-    image: ${DOCKER_PREFIX}incubator-proxy:${PLATFORM_VERSION}
+    image: ${DOCKER_PREFIX}renku-gateway:${PLATFORM_VERSION}
     ports:
       - 5000
     restart: always
