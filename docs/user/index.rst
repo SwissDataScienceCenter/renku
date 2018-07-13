@@ -8,4 +8,6 @@ User Documentation
 
    First Steps <firststeps>
    Reproducibility <reproducibility>
+   Common Workflow Language <cwl>
+   Continuous Integration <ci>
    Troubleshooting <troubleshooting>
