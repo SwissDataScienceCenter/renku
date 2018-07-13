@@ -92,7 +92,7 @@ Build and deploy:
     $ make minikube-deploy
 
 This command will build and deploy the platform components on minikube.
-You can edit and test code changes from ``renku``, ``renku-ui`` and
+You can edit and test code changes from ``renku``, ``renku-ui``, ``renku-gateway`` and
 ``renku-notebooks`` then run ``make minikube-deploy``
 to check out the changes.
 
