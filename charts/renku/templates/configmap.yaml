@@ -17,7 +17,6 @@ data:
     apt-get update -y
     apt-get install -y curl jq
 
-    BASE_URL="{{ (printf "http://%s" .Values.global.renku.domain) }}"
     GITLAB_SERVICE_URL="http://{{ template "gitlab.fullname" . }}{{ .Values.global.gitlab.urlPrefix }}"
     GITLAB_URL="{{ .Values.ui.gitlabUrl }}"
 
@@ -32,7 +31,7 @@ data:
 
         DELETE FROM oauth_applications WHERE uid='renku-ui';
         INSERT INTO oauth_applications (name, uid, scopes, redirect_uri, secret, trusted)
-        VALUES ('renku-ui', 'renku-ui', 'api read_user', '$BASE_URL/login/redirect/gitlab', 'no-secret-needed', 'true');
+        VALUES ('renku-ui', 'renku-ui', 'api read_user', '{{ template "http" . }}://{{ .Values.global.renku.domain }}/login/redirect/gitlab', 'no-secret-needed', 'true');
 
         DELETE FROM personal_access_tokens WHERE user_id='1' AND name='managed sudo token';
         INSERT INTO personal_access_tokens ( user_id, token, name, revoked, expires_at, created_at, updated_at, scopes, impersonation)
@@ -72,11 +71,11 @@ data:
     #!/bin/bash
     set -ex
     env
-    
+
     until sleep 1; pg_isready; do
         echo waiting for postgres
     done
-    
+
     # It's ok if init scripts fail (databases already exist)
     set +e
     for f in /scripts/init-*-db*; do
@@ -102,7 +101,7 @@ data:
   init-keycloak-db.sh: |-
     #!/bin/bash
     set -x
-    
+
     KEYCLOAK_PASSWORD=$(cat /passwords/keycloak-password)
 
     psql -v ON_ERROR_STOP=1 <<-EOSQL
@@ -119,7 +118,7 @@ data:
   init-gitlab-db.sh: |-
       #!/bin/bash
       set -x
-      
+
       GITLAB_PASSWORD=$(cat /passwords/gitlab-password)
 
       psql -v ON_ERROR_STOP=1 <<-EOSQL
@@ -137,7 +136,7 @@ data:
   init-jupyterhub-db.sh: |-
       #!/bin/bash
       set -x
-      
+
       JUPYTERHUB_PASSWORD=$(cat /passwords/jupyterhub-password)
 
       psql -v ON_ERROR_STOP=1 <<-EOSQL
