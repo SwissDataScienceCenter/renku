@@ -21,7 +21,7 @@ very frequently:
 
 Answering these questions in a reliable fashion is difficult. Renku provides
 the tools that substantially reduce the effort required on the part of the
-data scientist who wants to keep her work reproducible, reliable and robust.
+data scientists who wants to keep their work reproducible, reliable and robust.
 Here, we introduce the essential concepts underlying the design and
 implementation of Renku.
 
