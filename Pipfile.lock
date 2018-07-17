@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "c38d2db76e39e8908cfac5e7ac1703bb0ab854933002880e5538e2da0ec3d734"
+            "sha256": "b983230911f810348cd1d08db0e7a93a1eedcf138b76cb23ff2ded3965bcac64"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -56,6 +56,14 @@
                 "sha256:b63b1f4dc77c074d386752ec4a8a7517600f6c0db8cd42980cae17ab7b3275d7"
             ],
             "version": "==0.7.11"
+        },
+        "appnope": {
+            "hashes": [
+                "sha256:5b26757dc6f79a3b7dc9fab95359328d5747fcb2409d331ea66d0272b90ab2a0",
+                "sha256:8b995ffe925347a2138d7ac0fe77155e4311a0ea6d6da4f5128fe4b3cbe5ed71"
+            ],
+            "markers": "sys_platform == 'darwin'",
+            "version": "==0.1.0"
         },
         "babel": {
             "hashes": [
@@ -158,10 +166,10 @@
         },
         "parso": {
             "hashes": [
-                "sha256:8105449d86d858e53ce3e0044ede9dd3a395b1c9716c696af8aa3787158ab806",
-                "sha256:d250235e52e8f9fc5a80cc2a5f804c9fefd886b2e67a2b1099cf085f403f8e33"
+                "sha256:35704a43a3c113cce4de228ddb39aab374b8004f4f2407d070b6a2ca784ce8a2",
+                "sha256:895c63e93b94ac1e1690f5fdd40b65f07c8171e3e53cbd7793b5b96c0e0a7f24"
             ],
-            "version": "==0.3.0"
+            "version": "==0.3.1"
         },
         "pexpect": {
             "hashes": [
@@ -202,7 +210,6 @@
         },
         "pyenchant": {
             "hashes": [
-                "sha256:9a66aa441535e27d228baca320f7feed1b08d0c5e6167d5e5cf455b545b7c2cd",
                 "sha256:b9526fc2c5f1ba0637e50200b645a7c20fb6644dbc6f6322027e7d2fbf1084a5",
                 "sha256:e8000144e61551fcab9cd1b6fdccdded20e577e8d6d0985533f0b2b9c38fd952",
                 "sha256:fc31cda72ace001da8fe5d42f11c26e514a91fa8c70468739216ddd8de64e2a0"
@@ -220,11 +227,6 @@
         "pyparsing": {
             "hashes": [
                 "sha256:0832bcf47acd283788593e7a0f542407bd9550a55a8a8435214a1960e04bcb04",
-                "sha256:281683241b25fe9b80ec9d66017485f6deff1af5cde372469134b56ca8447a07",
-                "sha256:8f1e18d3fd36c6795bb7e02a39fd05c611ffc2596c1e0d995d34d67630426c18",
-                "sha256:9e8143a3e15c13713506886badd96ca4b579a87fbdf49e550dbfc057d6cb218e",
-                "sha256:b8b3117ed9bdf45e14dcc89345ce638ec7e0e29b2b579fa1ecf32ce45ebac8a5",
-                "sha256:e4d45427c6e20a59bf4f88c639dcc03ce30d193112047f94012102f235853a58",
                 "sha256:fee43f17a9c4087e7ed1605bd6df994c6173c1e977d7ade7b651292fab2bd010"
             ],
             "version": "==2.2.0"
@@ -272,12 +274,9 @@
             "version": "==1.2.1"
         },
         "sphinx": {
-            "hashes": [
-                "sha256:85f7e32c8ef07f4ba5aeca728e0f7717bef0789fba8458b8d9c5c294cad134f3",
-                "sha256:d45480a229edf70d84ca9fae3784162b1bc75ee47e480ffe04a4b7f21a95d76d"
-            ],
-            "index": "pypi",
-            "version": "==1.7.5"
+            "editable": true,
+            "git": "https://github.com/rokroskar/sphinx.git",
+            "ref": "d9bf12f459970bf8bcd8ca7ce2f3d13444b96ec0"
         },
         "sphinxcontrib-spelling": {
             "hashes": [
