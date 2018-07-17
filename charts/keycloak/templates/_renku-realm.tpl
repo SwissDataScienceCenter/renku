@@ -363,11 +363,13 @@ TODO: Put back template strings from renku/services/keycloak/renku-realm.json.tp
         "secret": "{{ .Values.global.gateway.clientSecret }}",
         "redirectUris": [
             "{{ template "http" . }}://{{ .Values.global.renku.domain }}/*",
-            "http://localhost:5000/*"
+            "http://localhost:5000/*",
+            "http://localhost:3000/*"
         ],
         "webOrigins": [
             "{{ template "http" . }}://{{ .Values.global.renku.domain }}/*",
-            "http://localhost:5000/*"
+            "http://localhost:5000/*",
+            "http://localhost:3000/*"
         ],
         "notBefore": 0,
         "bearerOnly": false,
