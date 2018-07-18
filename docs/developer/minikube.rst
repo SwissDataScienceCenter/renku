@@ -24,6 +24,15 @@ Clone the ``renku`` repository as detailed in :ref:`setup`.
 Building and deploying to minikube
 ----------------------------------
 
+Install Python dependencies
+^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Use ``pipenv``:
+
+.. code-block:: console
+
+    $ pipenv install
+
 Starting minikube
 ^^^^^^^^^^^^^^^^^
 
