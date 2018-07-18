@@ -13,7 +13,7 @@ pyenchant = ">=1.6.11"
 renku-sphinx-theme = ">=0.1.0"
 sphinxcontrib-spelling = ">=2.3.0"
 sphinxcontrib-websupport = ">=1.0.1"
-Sphinx = ">=1.6.3"
+sphinx = {editable = true, ref = "use-doc-dir", git = "https://github.com/rokroskar/sphinx.git"}
 
 [requires]
 python_version = "3.6"

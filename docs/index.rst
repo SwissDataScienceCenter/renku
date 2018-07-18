@@ -28,7 +28,6 @@ The platform allows (data)scientists to:
    :includehidden:
 
    Introduction <introduction/index>
-   First steps <user/firststeps>
    User documentation <user/index>
    Developer documentation <developer/index>
    License <https://www.apache.org/licenses/LICENSE-2.0>

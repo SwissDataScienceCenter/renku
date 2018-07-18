@@ -110,7 +110,7 @@ class SpawnerMixin():
 
         # set default image
         self.image = os.getenv(
-            'JUPYTERHUB_NOTEBOOK_IMAGE', 'jupyterhub/singleuser:0.8.1'
+            'JUPYTERHUB_NOTEBOOK_IMAGE', 'renku/singleuser:latest'
         )
 
         for pipeline in gl_project.pipelines.list():
@@ -140,7 +140,7 @@ class SpawnerMixin():
                             'Using image {image}.'.format(image=self.image)
                         )
                         break
-                    elif status == 'failed':
+                    elif status in {'failed', 'canceled'}:
                         self.log.info(
                             'Image build failed for project {0} commit {1} - '
                             'using {2} instead'.format(
