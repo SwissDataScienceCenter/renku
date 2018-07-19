@@ -29,9 +29,6 @@ RUN apt-get update && apt-get install -yq --no-install-recommends \
     && apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
-
-USER joyvan
-
 # install pinned jupyterhub and ensure notebook is installed
 RUN python3 -m pip install -U pip && \
     python3 /tmp/install && \
@@ -44,8 +41,6 @@ RUN python3 -m pip install /tmp/gitlab_commit_push/ && \
 
 ADD notebook.json /home/jovyan/.jupyter/nbconfig/
 ADD gitlab-commit-push.js /home/jovyan/.local/share/jupyter/nbextensions/
-
-
 
 
 CMD '/usr/local/bin/start-singleuser.sh'
