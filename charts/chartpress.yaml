@@ -26,8 +26,8 @@ charts:
       singleuser:
         contextPath: ../services/singleuser
         buildArgs:
-          BASE_IMAGE: renku/minimal-notebook:98a712f9ad93
-          JUPYTERHUB_VERSION: master
+          RENKU_VERSION: master
+          BASE_IMAGE: "jupyterhub/singleuser:0.8.1"
         dockerfilePath: ../services/singleuser/Dockerfile
         valuesPath: jupyterhub.singleuser.image
         paths:
