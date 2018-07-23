@@ -82,7 +82,6 @@ Provide helm chart dependencies:
 
 .. code-block:: console
 
-    $ helm repo add renku https://swissdatasciencecenter.github.io/helm-charts
     $ helm repo add gitlab https://charts.gitlab.io
     $ helm repo add jupyterhub https://jupyterhub.github.io/helm-chart
 
