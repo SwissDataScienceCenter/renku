@@ -84,6 +84,7 @@ def main():
             '--set', 'ui.jupyterhubUrl=http://{mip}/jupyterhub'.format(mip=minikube_ip()),
             '--set', 'jupyterhub.hub.extraEnv.GITLAB_URL=http://{mip}/gitlab'.format(mip=minikube_ip()),
             '--set', 'gitlab.registry.externalUrl=http://{mip}:30105/'.format(mip=minikube_ip()),
+            '--timeout', '1800',
         ]
 
         print('Running: {}'.format(' '.join(helm_deploy_cmd)))

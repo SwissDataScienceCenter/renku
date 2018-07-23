@@ -110,7 +110,7 @@ class SpawnerMixin():
 
         # set default image
         self.image = os.getenv(
-            'JUPYTERHUB_NOTEBOOK_IMAGE', 'jupyterhub/singleuser:0.8.1'
+            'JUPYTERHUB_NOTEBOOK_IMAGE', 'renku/singleuser:latest'
         )
 
         for pipeline in gl_project.pipelines.list():

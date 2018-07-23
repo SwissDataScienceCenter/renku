@@ -102,4 +102,11 @@ registry['storage'] = {{ .Values.registry.storage }}
 {{- end }}
 registry['health_storagedriver_enabled'] = {{ .Values.registry.backendHealthcheck }}
 
+### GitLab rack-attack
+### See: https://docs.gitlab.com/ce/security/rack_attack.html
+### Disabled, as it is banning ingress controller IPs
+gitlab_rails['rack_attack_git_basic_auth'] = {
+  'enabled' => false
+}
+
 {{- end -}}
