@@ -27,7 +27,7 @@ mkdir -p $HOME/.kube
 touch $HOME/.kube/config
 
 export KUBECONFIG=$HOME/.kube/config
-sudo minikube start --vm-driver=none --bootstrapper=localkube --kubernetes-version=v1.10.0
+sudo minikube start --vm-driver=none --bootstrapper=localkube --kubernetes-version=v1.10.0 --extra-config=apiserver.Authorization.Mode=RBAC
 minikube update-context
 
 # this for loop waits until kubectl can access the api server that Minikube has created
@@ -53,8 +53,28 @@ set -e
 kubectl config view
 kubectl get node
 
-helm init
-sleep 60
+cat <<-EOF  | kubectl create -f -
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: tiller
+  namespace: kube-system
+---
+apiVersion: rbac.authorization.k8s.io/v1beta1
+kind: ClusterRoleBinding
+metadata:
+  name: tiller
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: cluster-admin
+subjects:
+  - kind: ServiceAccount
+    name: tiller
+    namespace: kube-system
+EOF
+
+helm init --service-account tiller --wait
 helm upgrade --install nginx-ingress --namespace kube-system \
     --set controller.hostNetwork=true \
     --set tcp.2222=renku/renku-gitlab:22 \
