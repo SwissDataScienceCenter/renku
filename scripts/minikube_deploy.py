@@ -8,6 +8,7 @@ from glob import glob
 from io import StringIO
 from subprocess import run, PIPE, CalledProcessError
 from tempfile import TemporaryDirectory
+import json
 
 from ruamel.yaml import YAML
 
@@ -84,12 +85,16 @@ def main():
             '--set', 'ui.gitlabUrl=http://{mip}/gitlab'.format(mip=minikube_ip()),
             '--set', 'ui.jupyterhubUrl=http://{mip}/jupyterhub'.format(mip=minikube_ip()),
             '--set', 'jupyterhub.hub.extraEnv.GITLAB_URL=http://{mip}/gitlab'.format(mip=minikube_ip()),
-            '--set', 'gitlab.registry.externalUrl=http://{mip}:30105/'.format(mip=minikube_ip()),
+            '--set', 'jupyterhub.hub.extraEnv.IMAGE_REGISTRY=10.100.123.45:8105',
+            '--set', 'gitlab.registry.externalUrl=http://10.100.123.45:8105/',
             '--timeout', '1800',
         ]
 
         print('Running: {}'.format(' '.join(helm_deploy_cmd)))
         run(helm_deploy_cmd).check_returncode()
+
+    # 5. Deploy GitLab runner
+    deploy_runner()
 
 
 def renku_base_dir():
@@ -182,6 +187,60 @@ def kubectl_use_minikube_context():
         result.check_returncode()
     except CalledProcessError:
         raise RuntimeError('Could not run kubectl config use-context minikube:\n{}'.format(result.stdout.decode('utf-8')))
+
+
+def deploy_runner():
+    """Deploys gitlab runner with docker executor in minikube"""
+    runner_exists = run(['docker', 'ps', '-q', '-f', 'name=^/gitlab-runner$'], stdout=PIPE)
+    try:
+        runner_exists.check_returncode()
+    except CalledProcessError:
+        raise RuntimeError('Could not run docker ps:\n{}'.format(runner_exists.stdout.decode('utf-8')))
+
+    runner = runner_exists.stdout.decode('utf-8')
+    if runner == '':
+        launch_runner = run([
+            'docker', 'run',
+            '-d', '--name', 'gitlab-runner',
+            '--restart', 'always',
+            '-v', '/srv/gitlab-runner/config:/etc/gitlab-runner',
+            '-v', '/var/run/docker.sock:/var/run/docker.sock',
+            'gitlab/gitlab-runner:latest',
+        ], stdout=PIPE)
+        try:
+            launch_runner.check_returncode()
+        except CalledProcessError:
+            raise RuntimeError('Could not launch runner:\n{}'.format(launch_runner.stdout.decode('utf-8')))
+    else:
+        unregister_runner = run([
+            'docker', 'exec', '-ti', 'gitlab-runner',
+            'gitlab-runner', 'unregister', '--all-runners',
+        ], stdout=PIPE)
+        try:
+            unregister_runner.check_returncode()
+        except CalledProcessError:
+            raise RuntimeError('Could not unregister runner:\n{}'.format(unregister_runner.stdout.decode('utf-8')))
+
+
+    register_runner = run([
+        'docker', 'exec', '-ti', 'gitlab-runner',
+        'gitlab-runner', 'register',
+        '-n', '-u', 'http://{mip}/gitlab/'.format(mip=minikube_ip()),
+        '--name', 'docker-minikube',
+        '-r', '8dbf016f5b73d5608390183bbea9ce5fbed83a9dadefa719245ab93eb255cc29', # From values.yaml
+        '--executor', 'docker',
+        '--locked=false',
+        '--run-untagged=true',
+        '--docker-image="docker:stable"',
+        '--docker-privileged',
+        '--docker-volumes', '/var/run/docker.sock:/var/run/docker.sock',
+        '--tag-list', 'image-build',
+        '--docker-pull-policy', 'if-not-present',
+    ], stdout=PIPE)
+    try:
+        register_runner.check_returncode()
+    except CalledProcessError:
+        raise RuntimeError('Could not register runner:\n{}'.format(register_runner.stdout.decode('utf-8')))
 
 
 if __name__ == '__main__':
