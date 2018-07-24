@@ -8,6 +8,7 @@ from glob import glob
 from io import StringIO
 from subprocess import run, PIPE, CalledProcessError
 from tempfile import TemporaryDirectory
+import json
 
 from ruamel.yaml import YAML
 
@@ -83,8 +84,8 @@ def main():
             '--set', 'ui.gitlabUrl=http://{mip}/gitlab'.format(mip=minikube_ip()),
             '--set', 'ui.jupyterhubUrl=http://{mip}/jupyterhub'.format(mip=minikube_ip()),
             '--set', 'jupyterhub.hub.extraEnv.GITLAB_URL=http://{mip}/gitlab'.format(mip=minikube_ip()),
-            '--set', 'jupyterhub.hub.extraEnv.IMAGE_REGISTRY={mip}:30105'.format(mip=minikube_ip()),
-            '--set', 'gitlab.registry.externalUrl=http://{mip}:30105/'.format(mip=minikube_ip()),
+            '--set', 'jupyterhub.hub.extraEnv.IMAGE_REGISTRY=10.100.123.45:8105',
+            '--set', 'gitlab.registry.externalUrl=http://10.100.123.45:8105/',
             '--timeout', '1800',
         ]
 
@@ -200,7 +201,7 @@ def deploy_runner():
         launch_runner = run([
             'docker', 'run',
             '-d', '--name', 'gitlab-runner',
-            '--restart always',
+            '--restart', 'always',
             '-v', '/srv/gitlab-runner/config:/etc/gitlab-runner',
             '-v', '/var/run/docker.sock:/var/run/docker.sock',
             'gitlab/gitlab-runner:latest',
