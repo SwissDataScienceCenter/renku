@@ -22,6 +22,9 @@ dist: trusty
 notifications:
   email: false
 
+services:
+  - docker
+
 # env:
 #   global:
 #     - HELM_URL=https://storage.googleapis.com/kubernetes-helm
@@ -55,7 +58,7 @@ install:
   - ./scripts/travis-install.sh
 
 before_script:
-  - ./scripts/travis-before-script.sh
+  - travis_wait ./scripts/travis-before-script.sh
 
 script:
   - make test
