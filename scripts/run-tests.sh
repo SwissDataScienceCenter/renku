@@ -25,7 +25,10 @@ set -o nounset
 
 docker images --digests
 
-pytest -v
+helm lint charts/renku
+helm test renku
+
+# pytest -v
 sphinx-build -nNW -b spelling -d docs/_build/doctrees docs docs/_build/spelling
 sphinx-build -qnNW docs docs/_build/html
 shellcheck */**/*.sh

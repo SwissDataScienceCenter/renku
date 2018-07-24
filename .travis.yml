@@ -17,17 +17,15 @@
 # limitations under the License.
 
 sudo: required
+dist: trusty
 
 notifications:
   email: false
 
-services:
-  - docker
-
-env:
-  global:
-    - HELM_URL=https://storage.googleapis.com/kubernetes-helm
-    - HELM_TGZ=helm-v2.9.1-linux-amd64.tar.gz
+# env:
+#   global:
+#     - HELM_URL=https://storage.googleapis.com/kubernetes-helm
+#     - HELM_TGZ=helm-v2.9.1-linux-amd64.tar.gz
 
 git:
   depth: false
@@ -36,11 +34,7 @@ addons:
   apt:
     packages:
       - git
-  hosts:
-    - renku.build
-    - gitlab.renku.build
-    - jupyterhub.renku.build
-    - keycloak.renku.build
+      - jq
 
 branches:
   only:
@@ -60,26 +54,26 @@ before_install:
 install:
   - ./scripts/travis-install.sh
 
-before_script: |-
-    make start
+before_script:
+  - ./scripts/travis-before-script.sh
 
 script:
-  - xvfb-run make test
+  - make test
   # TODO - helm lint charts/renku -f charts/minikube-values.yaml --set renku.domain=renku.build
 
-before_deploy:
-  # install chartpress
-  - pip install -U pip
-  - pip install -e git+https://github.com/jirikuncar/chartpress#egg=chartpress
-  # install Helm
-  - wget -q ${HELM_URL}/${HELM_TGZ}
-  - tar xzfv ${HELM_TGZ}
-  - PATH=`pwd`/linux-amd64/:$PATH
-  - helm init --client-only
-
-deploy:
-  - provider: script
-    skip_cleanup: true
-    script: bash scripts/travis-deploy.sh
-    on:
-      branch: master
+# before_deploy:
+#   # install chartpress
+#   - pip install -U pip
+#   - pip install -e git+https://github.com/jirikuncar/chartpress#egg=chartpress
+#   # install Helm
+#   - wget -q ${HELM_URL}/${HELM_TGZ}
+#   - tar xzfv ${HELM_TGZ}
+#   - PATH=`pwd`/linux-amd64/:$PATH
+#   - helm init --client-only
+#
+# deploy:
+#   - provider: script
+#     skip_cleanup: true
+#     script: bash scripts/travis-deploy.sh
+#     on:
+#       branch: master
