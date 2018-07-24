@@ -34,6 +34,19 @@ sudo apt-get update && sudo apt-get install -y graphviz
 # chmod +x geckodriver
 # sudo mv geckodriver /usr/local/bin
 
+# install nsenter
+sudo apt-get update
+sudo apt-get install -y git build-essential libncurses5-dev libslang2-dev gettext zlib1g-dev libselinux1-dev debhelper lsb-release pkg-config po-debconf autoconf automake autopoint libtool
+git clone git://git.kernel.org/pub/scm/utils/util-linux/util-linux.git util-linux
+cd util-linux/
+./autogen.sh
+./configure --without-python --disable-all-programs --enable-nsenter
+make
+chmod +x nsenter
+sudo mv nsenter /usr/local/bin/
+cd ..
+rm -rf util-linux
+
 # install minikube
 curl -Lo minikube https://storage.googleapis.com/minikube/releases/v0.28.2/minikube-linux-amd64
 chmod +x minikube
