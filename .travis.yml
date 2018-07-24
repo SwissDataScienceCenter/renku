@@ -58,7 +58,7 @@ install:
   - ./scripts/travis-install.sh
 
 before_script:
-  - travis_wait ./scripts/travis-before-script.sh
+  - travis_wait 30 ./scripts/travis-before-script.sh
 
 script:
   - make test
