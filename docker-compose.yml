@@ -296,7 +296,7 @@ services:
       review:
         aliases:
           - jupyterhub.${PLATFORM_DOMAIN}
-  proxy:
+  gateway:
     image: ${DOCKER_PREFIX}renku-gateway:${PLATFORM_VERSION}
     ports:
       - 5000
