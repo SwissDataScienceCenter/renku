@@ -67,6 +67,9 @@ ingress:
 
 ## Keycloak configuration
 keycloak:
+  ## Spawn a keycloak instance
+  enabled: true
+
   ## Keycloak admin user configuration
   username: admin
   password: admin
@@ -317,6 +320,8 @@ postgresqlOld:
 
 ## Gitlab configuration
 gitlab:
+  ## Spawn a gitlab instance
+  enabled: true
   ## Password for the `root` user
   password: gitlabadmin
 
@@ -596,17 +601,6 @@ tests:
     repository: renku/tests
     tag: latest
 
-## Gitlab runners configuration
-## See: http://docs.gitlab.com/ee/install/kubernetes/gitlab_runner_chart.html
-runner:
-  ## Set to true to deploy the runners
+minio:
+  ## Set to true to deploy a minio server, can be used as gateway too.
   enabled: false
-  ## Gitlab URL
-  gitlabUrl: http://renku-gitlab/gitlab/ # renku-gitlab <- gitlab chart name
-  ## Registration token, must be equal to `gitlab.sharedRunnersRegistrationToken`
-  runnerRegistrationToken: 8dbf016f5b73d5608390183bbea9ce5fbed83a9dadefa719245ab93eb255cc29
-  runners:
-    ## To ba able to use docker:dind
-    privileged: true
-  rbac:
-    create: true

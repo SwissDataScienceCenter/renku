@@ -10,6 +10,7 @@ metadata:
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
 spec:
+  clusterIP: 10.100.123.45
   type: NodePort
   ports:
     - port: 8105
