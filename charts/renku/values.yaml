@@ -519,7 +519,7 @@ jupyterhub:
   hub:
     image:
       name: renku/jupyterhub-k8s
-      tag: latest
+      tag: 0.0-unclean-2babe51
     services:
       notebooks:
         url: http://renku-notebooks
@@ -567,10 +567,15 @@ jupyterhub:
       # Increase pod initialization timeout to 15 minutes
       c.KubeSpawner.start_timeout = 60 * 15
 
+      # prevent redirect to /hub if the server is taking slightly longer to start
+      c.JupyterHub.tornado_settings = {
+        'slow_spawn_timeout': 1
+      }
+
   singleuser:
     image:
       name: renku/singleuser
-      tag: latest
+      tag: 0.0-unclean-2babe51
     storage:
       type: none
   # FIXME: bug in prepuller makes helm hang in certain cases. Fixed in 0.7
@@ -591,15 +596,19 @@ jupyterhub:
       nodePorts: {}
     https:
       enabled: false
+  cull:
+    enabled: true
+    timeout: 60
+    every: 30
 apispec:
   image:
     repository: renku/apispec
-    tag: latest
+    tag: 0.0-unclean-2babe51
 
 tests:
   image:
     repository: renku/tests
-    tag: latest
+    tag: 0.0-unclean-2babe51
 
 minio:
   ## Set to true to deploy a minio server, can be used as gateway too.
