@@ -67,6 +67,9 @@ ingress:
 
 ## Keycloak configuration
 keycloak:
+  ## Spawn a keycloak instance
+  enabled: true
+
   ## Keycloak admin user configuration
   username: admin
   password: admin
@@ -317,6 +320,8 @@ postgresqlOld:
 
 ## Gitlab configuration
 gitlab:
+  ## Spawn a gitlab instance
+  enabled: true
   ## Password for the `root` user
   password: gitlabadmin
 
@@ -590,3 +595,7 @@ tests:
   image:
     repository: renku/tests
     tag: latest
+
+minio:
+  ## Set to true to deploy a minio server, can be used as gateway too.
+  enabled: false
