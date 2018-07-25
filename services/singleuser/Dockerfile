@@ -18,10 +18,7 @@ RUN apt-get update && apt-get install -yq --no-install-recommends \
     build-essential \
     curl \
     gnupg \
-    emacs \
     git \
-    inkscape \
-    jed \
     libsm6 \
     libxext-dev \
     libxrender1 \
