@@ -54,7 +54,7 @@ resources, e.g.
 
 .. code-block:: console
 
-    $ minikube start --cpus 2 --memory 8192
+    $ minikube start --cpus 2 --memory 8192 --disk-size 40g
 
 Once minikube is started, make sure you can access it by running:
 
