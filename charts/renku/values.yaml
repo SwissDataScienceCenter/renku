@@ -598,8 +598,8 @@ jupyterhub:
       enabled: false
   cull:
     enabled: true
-    timeout: 60
-    every: 30
+    timeout: 600
+    every: 60
 apispec:
   image:
     repository: renku/apispec
