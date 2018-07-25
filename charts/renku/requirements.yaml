@@ -13,3 +13,19 @@ dependencies:
 - name: postgresql
   version: 0.14.4
   repository: "@stable"
+- name: gitlab
+  version: "0.1.0-bed5a20"
+  repository: "https://swissdatasciencecenter.github.io/helm-charts/"
+  condition: gitlab.enabled
+- name: redis
+  version: "0.1.0-bed5a20"
+  repository: "https://swissdatasciencecenter.github.io/helm-charts/"
+  condition: gitlab.enabled
+- name: keycloak
+  version: "0.1.0-bed5a20"
+  repository: "https://swissdatasciencecenter.github.io/helm-charts/"
+  condition: keycloak.enabled
+- name: minio
+  version: 1.6.0
+  repository: "@stable"
+  condition: minio.enabled

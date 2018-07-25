@@ -1,6 +1,8 @@
 {{- if .Values.ingress.enabled -}}
+{{- $keycloakEnabled := .Values.keycloak.enabled -}}
 {{- $keycloakFullname := include "keycloak.fullname" . -}}
 {{- $keycloakServicePort := .Values.keycloak.service.port -}}
+{{- $gitlabEnabled := .Values.gitlab.enabled -}}
 {{- $gitlabFullname := include "gitlab.fullname" . -}}
 {{- $gitlabServicePort := 80 -}}
 {{- $uiFullname := include "ui.fullname" . -}}
@@ -35,14 +37,18 @@ spec:
   - host: {{ . }}
     http:
       paths:
+      {{- if $keycloakEnabled }}
       - path: /auth
         backend:
           serviceName: {{ $keycloakFullname }}
           servicePort: {{ $keycloakServicePort }}
+      {{- end }}
+      {{- if $gitlabEnabled }}
       - path: /gitlab
         backend:
           serviceName: {{ $gitlabFullname }}
           servicePort: {{ $gitlabServicePort }}
+      {{- end }}
       - path: /jupyterhub
         backend:
           serviceName: proxy-http

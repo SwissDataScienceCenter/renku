@@ -50,6 +50,9 @@ def main():
     # 4. Package renku chart, with local versions of dependencies
     with TemporaryDirectory() as tmp:
         copy_tree(os.path.join(renku_chartpress_dir, 'renku'), os.path.join(tmp, 'renku'))
+        copy_tree(os.path.join(renku_chartpress_dir, 'redis'), os.path.join(tmp, 'redis'))
+        copy_tree(os.path.join(renku_chartpress_dir, 'gitlab'), os.path.join(tmp, 'gitlab'))
+        copy_tree(os.path.join(renku_chartpress_dir, 'keycloak'), os.path.join(tmp, 'keycloak'))
 
         with open(os.path.join(tmp, 'renku', 'requirements.yaml'), 'rt') as f:
             renku_requirements = yaml.load(f)
