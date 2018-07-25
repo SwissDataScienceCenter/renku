@@ -11,4 +11,5 @@ Developer Documentation
    Architecture <services/services_architecture>
    Notebooks service <services/notebooks_service>
    Storage service <services/storage_service>
+   API gateway <services/api_gateway>
    UML <diagrams/uml_diagrams>
