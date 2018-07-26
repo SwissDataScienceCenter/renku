@@ -9,6 +9,7 @@ metadata:
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
 data:
+  {{- if .Values.gitlab.enabled }}
   init-gitlab.sh: |-
     #!/usr/bin/env bash
     set -ex
@@ -63,7 +64,7 @@ data:
     # configure the logout redirect
     curl -f -is -X PUT -H "Private-token: ${GITLAB_SUDO_TOKEN}" \
       ${GITLAB_SERVICE_URL}/api/v4/application/settings?after_sign_out_path={{ template "http" . }}://{{ .Values.global.renku.domain }}/auth/realms/Renku/protocol/openid-connect/logout?redirect_uri=${GITLAB_URL}
-
+  {{- end }}
   # Init scripts that populate /docker-entrypoint-initdb.d
 
   # Unashamedly copied from: https://github.com/docker-library/postgres/blob/master/9.6/docker-entrypoint.sh
@@ -98,6 +99,7 @@ data:
       echo
     done
 
+  {{- if .Values.keycloak.enabled }}
   init-keycloak-db.sh: |-
     #!/bin/bash
     set -x
@@ -114,7 +116,9 @@ data:
         grant all privileges on database "{{ .Values.global.keycloak.postgresDatabase }}" to "{{ .Values.global.keycloak.postgresUser }}";
         grant all privileges on schema "public" to "{{ .Values.global.keycloak.postgresUser }}";
     EOSQL
+  {{- end }}
 
+  {{- if .Values.gitlab.enabled }}
   init-gitlab-db.sh: |-
       #!/bin/bash
       set -x
@@ -132,6 +136,7 @@ data:
           grant all privileges on database "{{ .Values.global.gitlab.postgresDatabase }}" to "{{ .Values.global.gitlab.postgresUser }}";
           grant all privileges on schema "public" to "{{ .Values.global.gitlab.postgresUser }}";
       EOSQL
+  {{- end }}
 
   init-jupyterhub-db.sh: |-
       #!/bin/bash
