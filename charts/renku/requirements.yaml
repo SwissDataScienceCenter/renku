@@ -26,7 +26,7 @@ dependencies:
   repository: "https://swissdatasciencecenter.github.io/helm-charts/"
   condition: gitlab.enabled
 - name: keycloak
-  version: "0.1.0-bed5a20"
+  version: "0.0-d76877e"
   repository: "https://swissdatasciencecenter.github.io/helm-charts/"
   condition: keycloak.enabled
 - name: minio
