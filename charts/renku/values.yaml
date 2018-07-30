@@ -35,6 +35,8 @@ global:
     postgresUser: jupyterhub
     ## Postgres password for the jupyterhub database
     postgresPassword: jupyterhub
+  gateway:
+    clientSecret: dummy-secret
   renku:
     ## Domain name for the deployed instance of renku
     domain: example.local
@@ -616,3 +618,8 @@ tests:
 minio:
   ## Set to true to deploy a minio server, can be used as gateway too.
   enabled: false
+
+## Configuration for the Gateway service
+gateway:
+  ingress:
+    enabled: false
