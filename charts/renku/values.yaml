@@ -102,12 +102,17 @@ keycloak:
       dbVendor: postgres
 
       ## The following values only apply if "deployPostgres" is set to "false"
-
       dbName: keycloak
+      # !!!
+      ## This value is dependent on the Release name! (but helm charts don't allow templating values here.)
+      # !!!
       dbHost: renku-postgresql
       dbPort: 5432 # 5432 is PostgreSQL's default port. For MySQL it would be 3306
       dbUser: keycloak
 
+      # !!!
+      ## This value is dependent on the Release name! (but helm charts don't allow templating values here.)
+      # !!!
       existingSecret: renku
       existingSecretKey: keycloak-password
 
