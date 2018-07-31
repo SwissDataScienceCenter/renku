@@ -32,4 +32,4 @@ helm upgrade --install nginx-ingress --namespace kube-system \
 helm repo add gitlab https://charts.gitlab.io
 helm repo add jupyterhub https://jupyterhub.github.io/helm-chart
 
-make minikube-deploy
+# make minikube-deploy
