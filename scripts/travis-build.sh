@@ -19,19 +19,22 @@
 
 set -ex
 
-# Check docker status
-docker info
+cd charts
+helm dependency update renku
+chartpress
+cd ..
 
-# Check k8s status
-kubectl config view
-kubectl get nodes
-
-helm init --wait
-helm upgrade --install nginx-ingress --namespace kube-system \
-    --set controller.hostNetwork=true \
-    --set tcp.2222=renku/renku-gitlab:22 \
-    stable/nginx-ingress
-
-helm repo add renku https://swissdatasciencecenter.github.io/helm-charts/
-helm repo add gitlab https://charts.gitlab.io
-helm repo add jupyterhub https://jupyterhub.github.io/helm-chart
+helm upgrade renku charts/renku \
+    --install --namespace renku \
+    -f charts/minikube-values.yaml \
+    --set "global.renku.domain=$(minikube ip)"" \
+    --set "ui.gitlabUrl=http://$(minikube ip)/gitlab" \
+    --set "ui.jupyterhubUrl=http://$(minikube ip)/jupyterhub" \
+    --set "ui.gatewayUrl=http://$(minikube ip)/api" \
+    --set "gateway.keycloakUrl=http://$(minikube ip)" \
+    --set "gateway.gitlabUrl=http://{mip}/gitlab" \
+    --set "jupyterhub.hub.extraEnv.GITLAB_URL=http://{mip}/gitlab" \
+    --set "jupyterhub.hub.extraEnv.IMAGE_REGISTRY=10.100.123.45:8105" \
+    --set "gitlab.registry.externalUrl=http://10.100.123.45:8105/" \
+    --timeout 1800 \
+    --force

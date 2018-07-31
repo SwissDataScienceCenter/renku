@@ -66,10 +66,10 @@ install:
   - ./scripts/travis-install.sh
 
 before_script:
-  - travis_wait 30 ./scripts/travis-before-script.sh
+  - ./scripts/travis-before-script.sh
 
 script:
-  - exit 1
+  - ./scripts/travis-build.sh
   - make test
   # TODO - helm lint charts/renku -f charts/minikube-values.yaml --set renku.domain=renku.build
 
