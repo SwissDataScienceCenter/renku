@@ -58,6 +58,8 @@ services:
       GITLAB_CLIENT_SECRET: ${GITLAB_CLIENT_SECRET}
       JUPYTERHUB_URL: ${JUPYTERHUB_URL}
       JUPYTERHUB_CLIENT_SECRET: ${JUPYTERHUB_CLIENT_SECRET}
+      GATEWAY_URL: ${GATEWAY_URL}
+      GATEWAY_CLIENT_SECRET: ${GATEWAY_CLIENT_SECRET}
     command:
       - "-b 0.0.0.0"
       - "-Dkeycloak.migration.action=import"
@@ -123,7 +125,7 @@ services:
               },
               user_response_structure: {
                 attributes: { email:'email', first_name:'given_name', last_name:'family_name', name:'name', nickname:'preferred_username' }, # if the nickname attribute of a user is called 'username'
-                id_path: 'preferred_username'
+                id_path: 'sub'
               }
             },
             label: 'Renku Login'
@@ -294,6 +296,18 @@ services:
       review:
         aliases:
           - jupyterhub.${PLATFORM_DOMAIN}
+  gateway:
+    image: ${DOCKER_PREFIX}renku-gateway:${PLATFORM_VERSION}
+    ports:
+      - 5000
+    restart: always
+    environment:
+      GITLAB_URL: ${GITLAB_URL}
+      GITLAB_PASS: ${GITLAB_TOKEN}
+      KEYCLOAK_URL: ${KEYCLOAK_URL}
+    labels:
+      traefik.enable: "true"
+      traefik.frontend.rule: "Host:gateway.${PLATFORM_DOMAIN}"
 
   notebooks:
     image: ${DOCKER_PREFIX}renku-notebooks:${PLATFORM_VERSION}
