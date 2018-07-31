@@ -19,62 +19,11 @@
 
 set -ex
 
-export MINIKUBE_WANTUPDATENOTIFICATION=false
-export MINIKUBE_WANTREPORTERRORPROMPT=false
-export MINIKUBE_HOME=$HOME
-export CHANGE_MINIKUBE_NONE_USER=true
-mkdir -p $HOME/.kube
-touch $HOME/.kube/config
-
-export KUBECONFIG=$HOME/.kube/config
-sudo minikube start --vm-driver=none --bootstrapper=localkube --kubernetes-version=v1.10.0 --extra-config=apiserver.Authorization.Mode=RBAC
-minikube update-context
-
-# this for loop waits until kubectl can access the api server that Minikube has created
-set +e
-for i in {1..150}; do # timeout for 5 minutes
-    nodes=$(kubectl get node -ojson | jq '.items | length')
-    if [ $nodes -gt 0 ]; then
-        break
-    fi
-    sleep 2
-done
-for i in {1..150}; do # timeout for 5 minutes
-    ready=$(kubectl get node -ojson | jq -r '.items[0].status.conditions[] | select(.type | contains("Ready")) | .status')
-    if [ $ready = "True" ]; then
-        break
-    fi
-    sleep 2
-done
-set -e
-
-# kubectl commands are now able to interact with Minikube cluster
-
+# Check k8s status
 kubectl config view
-kubectl get node
+kubectl get nodes
 
-cat <<-EOF  | kubectl create -f -
-apiVersion: v1
-kind: ServiceAccount
-metadata:
-  name: tiller
-  namespace: kube-system
----
-apiVersion: rbac.authorization.k8s.io/v1beta1
-kind: ClusterRoleBinding
-metadata:
-  name: tiller
-roleRef:
-  apiGroup: rbac.authorization.k8s.io
-  kind: ClusterRole
-  name: cluster-admin
-subjects:
-  - kind: ServiceAccount
-    name: tiller
-    namespace: kube-system
-EOF
-
-helm init --service-account tiller --wait
+helm init --wait
 helm upgrade --install nginx-ingress --namespace kube-system \
     --set controller.hostNetwork=true \
     --set tcp.2222=renku/renku-gitlab:22 \
@@ -83,5 +32,4 @@ helm upgrade --install nginx-ingress --namespace kube-system \
 helm repo add gitlab https://charts.gitlab.io
 helm repo add jupyterhub https://jupyterhub.github.io/helm-chart
 
-export SKIP_MINIKUBE_STATUS=1
 make minikube-deploy
