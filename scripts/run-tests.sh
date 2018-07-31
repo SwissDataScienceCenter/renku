@@ -25,7 +25,7 @@ set -o nounset
 
 docker images --digests
 
-helm lint charts/renku -f chatts/minikube-values.yaml
+helm lint charts/renku -f charts/minikube-values.yaml
 helm test renku
 
 # pytest -v
