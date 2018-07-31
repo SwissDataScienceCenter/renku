@@ -57,7 +57,7 @@ python:
 before_install:
   - sudo apt-get install enchant shellcheck
   - echo $maxikube_secret_pass | gpg --passphrase-fd 0 maxikube_secrets.tar.gpg
-  - tar xvf secrets.tar
+  - tar xvf maxikube_secrets.tar
   - export DOCKER_CERT_PATH="$PWD/docker-certs"
   - mkdir -p ~/.kube
   - mv admin.conf ~/.kube/config
