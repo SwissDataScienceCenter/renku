@@ -26,6 +26,15 @@ set -o nounset
 docker images --digests
 
 #helm lint charts/renku -f charts/minikube-values.yaml
+
+kubectl run renku-demo -it \
+--env="GITLAB_URL=http://10.0.0.38:32080/gitlab" \
+--env="KEYCLOAK_URL=http://10.0.0.38:32080" \
+--image=renku/renku-demo:latest \
+--restart=Never
+
+kubectl delete deploy renku-demo
+
 helm test renku
 
 # pytest -v
