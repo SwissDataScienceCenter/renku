@@ -7,10 +7,10 @@ dependencies:
   alias: notebooks
   repository: "https://swissdatasciencecenter.github.io/helm-charts/"
   version: "0.1.0-1e90893"
-# - name: renku-gateway
-#   alias: gateway
-#   version: "0.1.0-2b02017"
-#   repository: "https://swissdatasciencecenter.github.io/helm-charts/"
+- name: renku-gateway
+  alias: gateway
+  repository: "https://swissdatasciencecenter.github.io/helm-charts/"
+  version: "0.1.0-171fdef"
 - name: jupyterhub
   version: "v0.6"
   repository: "https://jupyterhub.github.io/helm-chart"
@@ -18,15 +18,15 @@ dependencies:
   version: 0.14.4
   repository: "@stable"
 - name: gitlab
-  version: "0.1.0-bed5a20"
+  version: "0.1.0-b00c63d"
   repository: "https://swissdatasciencecenter.github.io/helm-charts/"
   condition: gitlab.enabled
 - name: redis
-  version: "0.1.0-bed5a20"
+  version: "0.1.0-b00c63d"
   repository: "https://swissdatasciencecenter.github.io/helm-charts/"
   condition: gitlab.enabled
 - name: keycloak
-  version: "0.1.0-bed5a20"
+  version: "0.1.0-b00c63d"
   repository: "https://swissdatasciencecenter.github.io/helm-charts/"
   condition: keycloak.enabled
 - name: minio
