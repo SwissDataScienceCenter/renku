@@ -28,7 +28,9 @@ kubectl get nodes
 
 helm init --wait
 helm upgrade --install nginx-ingress --namespace kube-system \
-    --set controller.hostNetwork=true \
+    --set controller.service.type=NodePort \
+    --set controller.service.nodePorts.http=32080 \
+    --set controller.service.nodePorts.https=32443 \
     --set tcp.2222=renku/renku-gitlab:22 \
     stable/nginx-ingress
 
