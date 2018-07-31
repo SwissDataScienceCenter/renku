@@ -1,16 +1,16 @@
 dependencies:
 - name: renku-ui
   alias: ui
-  version: "0.1.0-cdb33a5"
+  version: "0.1.0-cb5c3bf"
   repository: "https://swissdatasciencecenter.github.io/helm-charts/"
 - name: renku-notebooks
   alias: notebooks
   repository: "https://swissdatasciencecenter.github.io/helm-charts/"
-  version: "0.1.0-3a7db4d"
-- name: renku-gateway
-  alias: gateway
-  version: "0.1.0-2b02017"
-  repository: "https://swissdatasciencecenter.github.io/helm-charts/"
+  version: "0.1.0-1e90893"
+# - name: renku-gateway
+#   alias: gateway
+#   version: "0.1.0-2b02017"
+#   repository: "https://swissdatasciencecenter.github.io/helm-charts/"
 - name: jupyterhub
   version: "v0.6"
   repository: "https://jupyterhub.github.io/helm-chart"
@@ -26,7 +26,7 @@ dependencies:
   repository: "https://swissdatasciencecenter.github.io/helm-charts/"
   condition: gitlab.enabled
 - name: keycloak
-  version: "0.0-d76877e"
+  version: "0.1.0-bed5a20"
   repository: "https://swissdatasciencecenter.github.io/helm-charts/"
   condition: keycloak.enabled
 - name: minio
