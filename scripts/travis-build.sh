@@ -27,7 +27,7 @@ cd ..
 helm upgrade renku charts/renku \
     --install --namespace renku \
     -f charts/minikube-values.yaml \
-    --set "global.renku.domain=$(minikube ip)"" \
+    --set "global.renku.domain=$(minikube ip)" \
     --set "ui.gitlabUrl=http://$(minikube ip)/gitlab" \
     --set "ui.jupyterhubUrl=http://$(minikube ip)/jupyterhub" \
     --set "ui.gatewayUrl=http://$(minikube ip)/api" \
