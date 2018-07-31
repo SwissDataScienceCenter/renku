@@ -28,8 +28,26 @@ set -ex
 # install graphviz
 sudo apt-get update && sudo apt-get install -y graphviz
 
-# install geckodriver
-wget https://github.com/mozilla/geckodriver/releases/download/v0.19.1/geckodriver-v0.19.1-linux64.tar.gz
-tar -xvzf geckodriver*
-chmod +x geckodriver
-sudo mv geckodriver /usr/local/bin
+# # install geckodriver
+# wget https://github.com/mozilla/geckodriver/releases/download/v0.19.1/geckodriver-v0.19.1-linux64.tar.gz
+# tar -xvzf geckodriver*
+# chmod +x geckodriver
+# sudo mv geckodriver /usr/local/bin
+
+# install kubectl
+curl -Lo kubectl https://storage.googleapis.com/kubernetes-release/release/v1.10.0/bin/linux/amd64/kubectl
+chmod +x kubectl
+sudo mv kubectl /usr/local/bin/
+# install helm
+curl -Lo helm.tar.gz https://storage.googleapis.com/kubernetes-helm/helm-v2.9.1-linux-amd64.tar.gz
+tar xvf helm.tar.gz
+chmod +x linux-amd64/helm
+sudo mv linux-amd64/helm /usr/local/bin/
+rm helm.tar.gz
+rm -r linux-amd64
+
+
+# install pipenv
+pip install pipenv
+# install required packages
+pipenv install --dev --system --deploy

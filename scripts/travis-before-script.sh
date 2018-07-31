@@ -1,4 +1,4 @@
-#!/usr/bin/env sh
+#!/usr/bin/env bash
 # -*- coding: utf-8 -*-
 #
 # Copyright 2017-2018 - Swiss Data Science Center (SDSC)
@@ -17,18 +17,19 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# quit on errors:
-set -o errexit
+set -ex
 
-# quit on unbound symbols:
-set -o nounset
+# Check k8s status
+kubectl config view
+kubectl get nodes
 
-docker images --digests
+helm init --wait
+helm upgrade --install nginx-ingress --namespace kube-system \
+    --set controller.hostNetwork=true \
+    --set tcp.2222=renku/renku-gitlab:22 \
+    stable/nginx-ingress
 
-helm lint charts/renku
-helm test renku
+helm repo add gitlab https://charts.gitlab.io
+helm repo add jupyterhub https://jupyterhub.github.io/helm-chart
 
-# pytest -v
-sphinx-build -nNW -b spelling -d docs/_build/doctrees docs docs/_build/spelling
-sphinx-build -qnNW docs docs/_build/html
-shellcheck */**/*.sh
+make minikube-deploy
