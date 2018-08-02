@@ -123,7 +123,7 @@ registerGitlabSudoUser() {
       -d '{"username": "demo",
            "email": "demo@datascience.ch",
            "name": "John Doe",
-           "extern_uid": "demo",
+           "extern_uid": "e144b235-793b-4e2e-bb1f-1f8baccc321f",
            "provider": "oauth2_generic",
            "skip_confirmation": true,
            "reset_password": true,
