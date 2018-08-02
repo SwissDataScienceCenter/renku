@@ -60,14 +60,27 @@ of which has their own repository.
 Quickstart
 ----------
 
-These instructions should only be used for experimentation and development. For
-deployment, see the Kubernetes section below.
+Renku is deployed using Docker containers. For production deployments we
+include kubernetes helm charts; development environments can be created
+using `docker-compose`.
 
+
+Kubernetes
+^^^^^^^^^^
+
+The preferred way to run Renku is via Kubernetes. Locally, this usually means
+using minikube. Please follow the instructions on our :ref:`minikube
+documentation <minikube>`.
 
 Docker
 ^^^^^^
 
-You can get going with Renku in a few minutes by using our pre-built images:
+.. warning::
+
+    This mode of deployment will soon be deprecated.
+
+If you prefer to use plain Docker, you can get going with Renku in a few
+minutes by using our pre-built images:
 
 .. code-block:: console
 
@@ -145,12 +158,6 @@ Use ``docker-compose`` to bring up the platform:
     ...
 
     [Success] Renku UI should be under http://renku.build and GitLab under http://gitlab.renku.build
-
-
-Kubernetes
-^^^^^^^^^^
-
-Please follow the instructions in ``charts/renku/README.rst``.
 
 
 Identity Management
