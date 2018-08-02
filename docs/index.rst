@@ -8,19 +8,28 @@
 Welcome to Renku!
 =================
 
-**Renku** is a software platform designed to enable reproducible data science
-and foster interdisciplinary collaboration.
+**Renku** is a software platform designed to enable reproducible and
+collaborative data science.
 
-The platform allows (data)scientists to:
+The platform:
 
-* Capture complete lineage of results up to original raw data for detailed traceability,
-  auditability & reproducibility.
+* Allows data scientists to easily make their analyses reproducible by
+  automatically capturing the lineage of results in a Knowledge Graph
 
-* Take advantage of recorded lineage for re-generating results with new data or code
+* Turns parts of recorded data science pipelines into building blocks that can
+  be reused by others in their own analyses
 
-* Share their work and reuse the work of others as building blocks in their
-  own analyses
+* Provides tools for working with the Knowledge Graph for the purposes of
+  traceability and auditability
 
+If you are a data scientist looking to get started with Renku, head to the
+:ref:`first_steps` tutorial for a quick look at how Renku can be used for a
+data science project. To read up on the concepts behind Renku, you may go
+straight to the :ref:`concepts` pages.
+
+If you are a developer or a service provider, have a look at the
+:ref:`developer_documentation` for information about installation, deployment,
+and architecture.
 
 .. toctree::
    :maxdepth: 2
@@ -28,8 +37,8 @@ The platform allows (data)scientists to:
    :includehidden:
 
    Introduction <introduction/index>
-   User documentation <user/index>
-   Developer documentation <developer/index>
+   Users <user/index>
+   Developers <developer/index>
    License <https://www.apache.org/licenses/LICENSE-2.0>
 
 

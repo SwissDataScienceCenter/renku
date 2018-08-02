@@ -1,6 +1,6 @@
-.. _ci:
+.. _containerization:
 
-Continuous Integration
-**********************
+Containerization
+================
 
 Work in progress

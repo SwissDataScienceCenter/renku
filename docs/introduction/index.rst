@@ -17,22 +17,25 @@ Introduction
 
 .. epigraph::
 
-   **Renku** (連句), *plural* **renku**, *a genre of Japanese linked-verse
-   poetry in which two or more poets supply alternating sections of a poem
-   linked by verbal and thematic associations.*
+   **Renku** (連句 "linked verses"), is a Japanese form of popular
+   collaborative linked verse poetry, written by more than one author
+   working together.*
 
-   -- Encyclopædia Britannica
+   -- Wikipedia
 
-**Renku** is a scalable and secure open software platform designed to
-foster multidisciplinary data (science) collaboration.
+**Renku** is a software platform designed to foster multidisciplinary data
+(science) collaboration.
 
-The platform allows (data)scientists to:
+The platform:
 
-* Capture complete lineage up to original raw data for detailed traceability,
-  auditability & reproducibility.
+* Allows data scientists to easily make their analyses reproducible by
+  automatically capturing the lineage of results in a Knowledge Graph
 
-* Share their work and reuse the work of others as building blocks in their
-  own analyses
+* Makes parts of recorded data science pipelines reusable by others as
+  building blocks in their own analyses
+
+* Provides tools for working with the Knowledge Graph for the purposes of
+  traceability and auditability
 
 
 Philosophy

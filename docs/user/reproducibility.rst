@@ -9,7 +9,6 @@ process with others at any time, and conversely, to reuse the work of others.
 We encourage such cooperation by recording use of both data and code so that
 the lineage and provenance of both can be uniquely determined.
 
-
 In a typical data analysis or modeling project, these types of questions arise
 very frequently:
 
@@ -26,7 +25,7 @@ Here, we introduce the essential concepts underlying the design and
 implementation of Renku.
 
 Three important concepts intertwine in Renku to enable reproducible data science.
-These are **lineage**, **version control** and **containerization**. We discuss
+These are **lineage**, **version control** and **envronments**. We discuss
 each of these in turn below.
 
 .. _reproducibility-lineage:
@@ -139,9 +138,9 @@ is a fantastic advantage in a data science process, where experimentation is
 a critical part of the discovery process.
 
 
-.. _reproducibility-containerization:
+.. _reproducibility-environments:
 
-Containerization
+Environments
 ----------------
 
 Knowing how we converted data into actionable results by recording lineage and
@@ -149,8 +148,8 @@ keeping track of versioning gets us most of the way to being able to fully
 reproducing an analysis workflow. A final piece is encapsulating the actual
 computational environment. In a quantitative sense, using different releases
 of the same library can simple lead to different results. A more practical
-aspect, however, is that replicating a computational environment for reproducibility's
-sake is often simply very time consuming.
+aspect, however, is that replicating a computational environment for
+reproducibility's sake is often simply very time consuming.
 
 "Containerization" can help with both of these problems. A "container" is in
 essence a process running in a fully specified environment, including the
@@ -160,7 +159,8 @@ most popular (but certainly not the only) containerization framework is
 parts of Renku. In terms of user workflows, we try to do as much of the
 boilerplate for you as possible so for the simpler tasks you don't really
 need to worry about the fact that your code is executing in Docker containers.
-For more complex scenarios, some familiarity with Docker will be required.
+See the :ref:`containerization` page for more details on how Docker containers
+are used in Renku.
 
 
 .. _reproducibility-further_reading:
@@ -168,10 +168,14 @@ For more complex scenarios, some familiarity with Docker will be required.
 Further Reading
 ---------------
 
-Renku helps you achieve the goal of fully reproducible data science by bundling together several technologies:
+Renku helps you achieve the goal of fully reproducible data science by
+bundling together several technologies:
 
 
-* for keeping track of the lineage, our CLI relies heavily on the Common Workflow Language. `Here <cwl.html>`_ you can learn more about our CWL integration
-* for version control, we rely on `git <https://git-scm.com/>`_
-* your project includes a container specification from day 1. Check out these `docs <ci.html>`_ to learn more about how we build images for your project and what we do with them 
-
+* for keeping track of the lineage, our CLI relies heavily on the Common
+  Workflow Language. :ref:`Here <cwl>` you can learn more about our CWL integration
+* for version control, we rely on
+  `git <https://git-scm.com/>`_
+* your project includes a container specification from day 1. Check out these
+  :ref:`docs <containerization>` to learn more about how we build images for your project and
+  what we do with them
