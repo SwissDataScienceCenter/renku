@@ -1,3 +1,5 @@
+.. _developer_documentation:
+
 Developer Documentation
 =======================
 
@@ -9,7 +11,5 @@ Developer Documentation
    Architecture <services/services_architecture>
    User Management <identity_management>
    Web API <web>
-   Notebooks service <services/notebooks_service>
-   Storage service <services/storage_service>
-   API gateway <services/api_gateway>
+   Services <services/index>
    UML <diagrams/uml_diagrams>
