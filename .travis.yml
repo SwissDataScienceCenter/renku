@@ -41,6 +41,7 @@ addons:
     - gitlab.renku.build
     - jupyterhub.renku.build
     - keycloak.renku.build
+    - gateway.renku.build
 
 branches:
   only:
