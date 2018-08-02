@@ -1,4 +1,4 @@
-.. _gateway:
+.. _api_gateway:
 
 API gateway
 ===========

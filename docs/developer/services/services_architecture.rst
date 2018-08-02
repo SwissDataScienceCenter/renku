@@ -47,6 +47,7 @@ Components
 
 - renku_: the meta repository with deployment scripts and kubernetes helm charts
 - :ref:`renku-notebooks <notebooks_service>`: a service integrating GitLab repositories with JupyterHub
+- :ref:`renku-gateway <api_gateway>`: an gateway connecting frontends to backend APIs
 - renku-python_: python API & Command Line Interface (CLI)
 - renku-storage_: storage service exposing LFS and S3 APIs
 - renku-ui_: web front-end interface
