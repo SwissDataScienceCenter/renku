@@ -362,14 +362,10 @@ TODO: Put back template strings from renku/services/keycloak/renku-realm.json.tp
         "clientAuthenticatorType": "client-secret",
         "secret": "{{ .Values.global.gateway.clientSecret }}",
         "redirectUris": [
-            "{{ template "http" . }}://{{ .Values.global.renku.domain }}/*",
-            "http://localhost:5000/*",
-            "http://localhost:3000/*"
+            "{{ template "http" . }}://{{ .Values.global.renku.domain }}/*"
         ],
         "webOrigins": [
-            "{{ template "http" . }}://{{ .Values.global.renku.domain }}/*",
-            "http://localhost:5000/*",
-            "http://localhost:3000/*"
+            "{{ template "http" . }}://{{ .Values.global.renku.domain }}/*"
         ],
         "notBefore": 0,
         "bearerOnly": false,
