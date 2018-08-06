@@ -38,7 +38,7 @@ The platform:
   traceability and auditability
 
 
-Philosophy
+Vision
 ----------
 
 As in the traditional art form of renku from which it borrows its name, the

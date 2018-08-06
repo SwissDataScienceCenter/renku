@@ -8,7 +8,7 @@ First Steps
     :keywords: hello world, first steps, starter, primer
 
 This hands-on tutorial will lead you through the creation of a data science
-project using Renku. Along the way, you will execute familiar data analysis
+project using Renku. You will execute familiar data analysis
 tasks, but capturing the lineage of your progress with Renku along the way.
 Finally, if you have access to a running Renku platform, you will use the web
 user interface to inspect the captured lineage and spin up an interactive
@@ -98,7 +98,7 @@ At this point, our dataset just consists of metadata in JSON-LD format:
     name: mydataset
 
 We can import data from a variety of sources: local directories, remote URLs,
-local or remote git repositories or other renku project. Here, we will import the
+local or remote git repositories or other Renku projects. Here, we will import the
 `README` file of this repo from the web:
 
 .. code-block:: console
@@ -193,12 +193,12 @@ To see what effect this has on the steps we have done so far, use the ``renku st
 
           data/mydataset/README.rst: 998dd21c, 42a770ef
 
-There is a lot of information here - first of all, we know that our outputs
+There is a lot of information here. First of all, we know that our outputs
 are out of date. Renku tells us that ``readme_renku``, ``readme_science`` and
-``wc.out`` are all outdated, and that the reason is that ``README.rst`` used
+``wc.out`` are all outdated, and that the reason is that the ``README.rst`` used
 to create those outputs is different from the one currently in the repository.
 
-Updating our result is simple -- since we recorded all of the steps along the
+Updating our result is simple. Since we recorded all of the steps along the
 way, Renku can generate a workflow to repeat the analysis on the new data. For
 this, we can use the ``update`` command:
 
@@ -277,7 +277,9 @@ your project on-line. Once you create the project, navigate to the
 Behind the scenes, Renku is using a GitLab server to manage the repositories.
 In order to push to the server you need to add a valid ssh key to your account.
 To do this, log in to gitlab (e.g. http://gitlab.renku.build) and follow
-[the GitLab instructions](https://docs.gitlab.com/ce/ssh/).
+`the GitLab instructions`_.
+
+.. _`the Gitlab instructions`: https://docs.gitlab.com/ce/ssh/
 
 Once you have an ssh key added, you may return to your terminal and run the
 following commands in your project directory:
@@ -309,8 +311,8 @@ selecting "ku":
 
 .. image:: ../_static/images/create-ku.png
 
-Once the Ku is created you can completing it by creating "contributions" -
-these might be questions you want to ask of the data, descriptions of a
+Once the Ku is created you can start working on it by creating "contributions" -
+these might be questions you want to ask about the data, descriptions of a
 solution to a problem or anything in between.
 
 The Ku contributions support full markdown formatting and even embedded media
@@ -343,7 +345,7 @@ Notebooks
 
 In Renku, all of the changes to your code and data are recorded and versioned
 automatically. In addition, you have the option to spawn a jupyter notebook to
-interactively work with your project. To start a notebook server, navigate to
+interactively work on your project. To start a notebook server, navigate to
 ``Notebooks`` under the ``Files`` tab. If you have any notebooks saved in the
 ``notebooks`` directory in your project (which at this point of the tutorial
 we do not), they will appear there. Otherwise, you are presented a ``Launch

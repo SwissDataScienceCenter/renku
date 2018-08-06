@@ -15,17 +15,17 @@ very frequently:
 * How exactly was this model or result obtained? How was the raw data pre-processed?
 * Who is using my data, model, or result and how?
 * What does this new data mean for our last month's report?
-* How can I share my latest analysis with a colleague in the cloud?
+* How can I share my latest analysis with a colleague through the cloud?
 * How can I make sure that our colleagues in another team can reproduce our results exactly?
 
 Answering these questions in a reliable fashion is difficult. Renku provides
 the tools that substantially reduce the effort required on the part of the
-data scientists who wants to keep their work reproducible, reliable and robust.
+data scientists who want to keep their work reproducible, reliable and robust.
 Here, we introduce the essential concepts underlying the design and
 implementation of Renku.
 
 Three important concepts intertwine in Renku to enable reproducible data science.
-These are **lineage**, **version control** and **envronments**. We discuss
+These are **lineage**, **version control** and **environments**. We discuss
 each of these in turn below.
 
 .. _reproducibility-lineage:
@@ -137,6 +137,9 @@ last sane version of your work if everything happens to go off the rails. This
 is a fantastic advantage in a data science process, where experimentation is
 a critical part of the discovery process.
 
+Note that in Renku we make use of `git LFS <https://git-lfs.github.com>`_ which
+allows to keep not only the code but also the data related to an analysis under
+version control while keeping the git repository itself small.
 
 .. _reproducibility-environments:
 
@@ -172,10 +175,10 @@ Renku helps you achieve the goal of fully reproducible data science by
 bundling together several technologies:
 
 
-* for keeping track of the lineage, our CLI relies heavily on the Common
-  Workflow Language. :ref:`Here <cwl>` you can learn more about our CWL integration
-* for version control, we rely on
-  `git <https://git-scm.com/>`_
-* your project includes a container specification from day 1. Check out these
+* For keeping track of the lineage, our CLI relies heavily on the Common
+  Workflow Language. :ref:`Here <cwl>` you can learn more about our CWL integration.
+* For version control, we rely on
+  `git <https://git-scm.com/>`_.
+* Your project includes a container specification from day 1. Check out these
   :ref:`docs <containerization>` to learn more about how we build images for your project and
-  what we do with them
+  what we do with them.

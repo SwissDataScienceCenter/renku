@@ -9,7 +9,7 @@ interface (CLI) and the Python API.
 Mac OS X
 --------
 
-Easiest is to install using `homebrew <https://brew.sh/>`_:
+It is easiest to install the CLI using `homebrew <https://brew.sh/>`_:
 
 .. code-block:: console
 
