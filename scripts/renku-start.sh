@@ -123,7 +123,7 @@ registerGitlabSudoUser() {
       -d '{"username": "demo",
            "email": "demo@datascience.ch",
            "name": "John Doe",
-           "extern_uid": "demo",
+           "extern_uid": "e144b235-793b-4e2e-bb1f-1f8baccc321f",
            "provider": "oauth2_generic",
            "skip_confirmation": true,
            "reset_password": true,
@@ -170,12 +170,12 @@ configureLogout() {
 checkServices() {
     echo
     echo "[Info] Checking that services are reachable..."
-    CURL=$(curl -fIs ${PLATFORM_DOMAIN} && curl -fIs gitlab.${PLATFORM_DOMAIN} && curl -fIs keycloak.${PLATFORM_DOMAIN} && curl -fIs jupyterhub.${PLATFORM_DOMAIN}/services/notebooks)
+    CURL=$(curl -fIs ${PLATFORM_DOMAIN} && curl -fIs gitlab.${PLATFORM_DOMAIN} && curl -fIs keycloak.${PLATFORM_DOMAIN} && curl -fIs jupyterhub.${PLATFORM_DOMAIN}/services/notebooks && curl -fIs gateway.${PLATFORM_DOMAIN}/health)
     if [ -z "${CURL}" ]; then
         echo
         echo "[Error] Services unreachable -- if running locally, ensure name resolution with: "
         echo
-        echo "$$ echo \"127.0.0.1 $(PLATFORM_DOMAIN) keycloak.$(PLATFORM_DOMAIN) gitlab.$(PLATFORM_DOMAIN) jupyterhub.$(PLATFORM_DOMAIN)\" | sudo tee -a /etc/hosts"
+        echo "$$ echo \"127.0.0.1 $(PLATFORM_DOMAIN) keycloak.$(PLATFORM_DOMAIN) gitlab.$(PLATFORM_DOMAIN) jupyterhub.$(PLATFORM_DOMAIN) gateway.$(PLATFORM_DOMAIN)\" | sudo tee -a /etc/hosts"
         echo
         exit 1
     fi

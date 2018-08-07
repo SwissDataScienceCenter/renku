@@ -36,17 +36,18 @@ The Renku platform consists of several off-the-shelf components from the
 software engineering and data science software stacks, as well as customized or
 newly developed services. The services communicate among each other through a
 combination of REST APIs and event queues. The deployment is orchestrated on
-Kubernetes through the use of Helm charts. Because of the micro-service
-architecture it is by definition modular, and therefore should be able to
-accommodate other languages or implementations used for individual components.
+Kubernetes through the use of Helm charts. Because of its micro-service
+architecture, Renku is by definition modular, and therefore able to accommodate
+other languages or implementations used for individual components.
 
 Components
 ----------
 
- The services built by the Renku team are:
+The services built by the Renku team are:
 
 - renku_: the meta repository with deployment scripts and kubernetes helm charts
 - :ref:`renku-notebooks <notebooks_service>`: a service integrating GitLab repositories with JupyterHub
+- :ref:`renku-gateway <api_gateway>`: an API gateway connecting clients to the APIs of the different backend services
 - renku-python_: python API & Command Line Interface (CLI)
 - renku-storage_: storage service exposing LFS and S3 APIs
 - renku-ui_: web front-end interface

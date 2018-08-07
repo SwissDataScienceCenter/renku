@@ -7,18 +7,15 @@ First Steps
     :description: First steps with Renku
     :keywords: hello world, first steps, starter, primer
 
-Interaction with the platform takes place via the Python-based command-line
-interface (CLI) and the Python API. We recommend using the officially-
-recommended python dependency manager `pipenv
-<https://docs.pipenv.org/basics/>`_ for python dependency installations. You
-can install it with ``pip``:
+This hands-on tutorial will lead you through the creation of a data science
+project using Renku. You will execute familiar data analysis
+tasks, but capturing the lineage of your progress with Renku along the way.
+Finally, if you have access to a running Renku platform, you will use the web
+user interface to inspect the captured lineage and spin up an interactive
+environment.
 
-.. code-block:: console
-
-   $ pip install pipenv
-
-We will use ``pipenv`` below to install the ``renku`` CLI.
-
+Before continuing with this tutorial, please make sure you have
+:ref:`installed the command-line client <cli_installation>`.
 
 Our first Renku project
 ---------------------------
@@ -27,35 +24,22 @@ First, create a project directory:
 
 .. code-block:: console
 
-    $ mkdir -p ~/renku-projects/myproject
-    $ cd ~/renku-projects/myproject
-
-Install ``renku`` and start the shell:
-
-.. code-block:: console
-
-    $ pipenv install --pre renku
-    $ pipenv shell
-
-.. note::
-
-    You may get a ``ValueError: unknown locale: UTF-8`` - see `here
-    <https://docs.pipenv.org/diagnose/#valueerror-unknown-locale-utf-8>`_ for
-    instructions on how to fix it.
-
+    mkdir -p ~/renku-projects/myproject
+    cd ~/renku-projects/myproject
 
 Initialize the project as a Renku project:
 
 .. code-block:: console
 
-    $ renku init
+    renku init
 
 This command created a git repository for your project and an additional
 `.renku` sub-directory:
 
 .. code-block:: console
 
-    $ ls -la .renku
+    ls -la .renku
+
     total 8
     drwxr-xr-x  3 rok  staff  102 May 22 17:23 .
     drwxr-xr-x  8 rok  staff  272 May 22 17:23 ..
@@ -69,9 +53,11 @@ or publication.
 
 .. code-block:: console
 
-    $ renku dataset create mydataset
+    renku dataset create mydataset
+
     Creating a dataset ... OK
-    $ ls -l data
+    ls -l data
+
     total 0
     drwxr-xr-x  3 rok  staff  102 May 22 17:30 mydataset
 
@@ -79,7 +65,8 @@ At this point, our dataset just consists of metadata in JSON-LD format:
 
 .. code-block:: console
 
-    $ cat data/mydataset/metadata.yml
+    cat data/mydataset/metadata.yml
+
     '@context':
       added: http://schema.org/dateCreated
       affiliation: scoro:affiliate
@@ -111,12 +98,12 @@ At this point, our dataset just consists of metadata in JSON-LD format:
     name: mydataset
 
 We can import data from a variety of sources: local directories, remote URLs,
-local or remote git repositories or other renku project. Here, we will import the
+local or remote git repositories or other Renku projects. Here, we will import the
 `README` file of this repo from the web:
 
 .. code-block:: console
 
-    $ renku dataset add mydataset https://raw.githubusercontent.com/SwissDataScienceCenter/renku/master/README.rst
+    renku dataset add mydataset https://raw.githubusercontent.com/SwissDataScienceCenter/renku/master/README.rst
 
 Until now, we have created a Renku project and populated it with a dataset and
 some data. Next, we will see how to use Renku to create a repeatable workflow.
@@ -133,14 +120,14 @@ First, get all occurrences of "science" and "renku":
 
 .. code-block:: console
 
-    $ renku run grep -i science data/mydataset/README.rst > readme_science
-    $ renku run grep -i renku data/mydataset/README.rst > readme_renku
+    renku run grep -i science data/mydataset/README.rst > readme_science
+    renku run grep -i renku data/mydataset/README.rst > readme_renku
 
 Now, combine these intermediate outputs into our final calculation:
 
 .. code-block:: console
 
-    $ renku run wc readme_science readme_renku > wc.out
+    renku run wc readme_science readme_renku > wc.out
 
 For each of our invocations of `renku run`, Renku recorded the command we
 executed into a `Common Workflow Language <http://www.commonwl.org/>`_ (CWL)
@@ -150,7 +137,8 @@ command:
 
 .. code-block:: console
 
-    $ renku log wc.out
+    renku log wc.out
+
     *  c53dbfa0 wc.out
     *    c53dbfa0 .renku/workflow/80a3f98ede2346f6bc686200016b17d6_wc.cwl
     |\
@@ -183,13 +171,14 @@ are done, commit your change with this command:
 
 .. code-block:: console
 
-    $ git commit -am 'modified README.rst'
+    git commit -am 'modified README.rst'
 
 To see what effect this has on the steps we have done so far, use the ``renku status`` command:
 
 .. code-block:: console
 
-    $ renku status
+    renku status
+
     On branch master
     Files generated from outdated inputs:
       (use "renku log <file>..." to see the full lineage)
@@ -204,18 +193,18 @@ To see what effect this has on the steps we have done so far, use the ``renku st
 
           data/mydataset/README.rst: 998dd21c, 42a770ef
 
-There is a lot of information here - first of all, we know that our outputs
+There is a lot of information here. First of all, we know that our outputs
 are out of date. Renku tells us that ``readme_renku``, ``readme_science`` and
-``wc.out`` are all outdated, and that the reason is that ``README.rst`` used
+``wc.out`` are all outdated, and that the reason is that the ``README.rst`` used
 to create those outputs is different from the one currently in the repository.
 
-Updating our result is simple -- since we recorded all of the steps along the
+Updating our result is simple. Since we recorded all of the steps along the
 way, Renku can generate a workflow to repeat the analysis on the new data. For
 this, we can use the ``update`` command:
 
 .. code-block:: console
 
-    $ renku update
+    renku update
     ...
     Resolved '.renku/workflow/55e02a7b49c645b1add0fe29f3378cd1.cwl' to 'file://.../.renku/workflow/55e02a7b49c645b1add0fe29f3378cd1.cwl'
     [workflow 55e02a7b49c645b1add0fe29f3378cd1.cwl] start
@@ -288,15 +277,17 @@ your project on-line. Once you create the project, navigate to the
 Behind the scenes, Renku is using a GitLab server to manage the repositories.
 In order to push to the server you need to add a valid ssh key to your account.
 To do this, log in to gitlab (e.g. http://gitlab.renku.build) and follow
-[the GitLab instructions](https://docs.gitlab.com/ce/ssh/).
+`the GitLab instructions`_.
+
+.. _`the Gitlab instructions`: https://docs.gitlab.com/ce/ssh/
 
 Once you have an ssh key added, you may return to your terminal and run the
 following commands in your project directory:
 
 .. code-block:: console
 
-    $ git remote add origin <copied text from SSH box above>
-    $ git push --set-upstream origin master
+    git remote add origin <copied text from SSH box above>
+    git push --set-upstream origin master
 
 You now have a version of your project hosted on-line on the Renku platform.
 
@@ -320,8 +311,8 @@ selecting "ku":
 
 .. image:: ../_static/images/create-ku.png
 
-Once the Ku is created you can completing it by creating "contributions" -
-these might be questions you want to ask of the data, descriptions of a
+Once the Ku is created you can start working on it by creating "contributions" -
+these might be questions you want to ask about the data, descriptions of a
 solution to a problem or anything in between.
 
 The Ku contributions support full markdown formatting and even embedded media
@@ -354,7 +345,7 @@ Notebooks
 
 In Renku, all of the changes to your code and data are recorded and versioned
 automatically. In addition, you have the option to spawn a jupyter notebook to
-interactively work with your project. To start a notebook server, navigate to
+interactively work on your project. To start a notebook server, navigate to
 ``Notebooks`` under the ``Files`` tab. If you have any notebooks saved in the
 ``notebooks`` directory in your project (which at this point of the tutorial
 we do not), they will appear there. Otherwise, you are presented a ``Launch
@@ -363,6 +354,8 @@ Notebooks Server`` button which you can use to create a new (blank) notebook.
 
 Where to go from here
 ^^^^^^^^^^^^^^^^^^^^^
+To understand in a bit more detail what is happening behind the scenes in this
+short tutorial, you can read through the :ref:`Renku concepts <concepts>` pages.
 
-**CLI**: For documentation of the Renku command-line interface, follow the `renku
+For documentation of the Renku command-line interface, follow the `renku
 python CLI docs <http://renku-python.readthedocs.io/en/latest/cli.html>`_.

@@ -13,7 +13,13 @@ pyenchant = ">=1.6.11"
 renku-sphinx-theme = ">=0.1.0"
 sphinxcontrib-spelling = ">=2.3.0"
 sphinxcontrib-websupport = ">=1.0.1"
-sphinx = {editable = true, ref = "use-doc-dir", git = "https://github.com/rokroskar/sphinx.git"}
+pytest = ">=3.2.1"
+splinter = "*"
+docker = ">=2.4.2"
+python-dotenv = ">=0.8.2"
+pytest-splinter = ">=1.8.5"
+requests = ">=2.18.2"
+Sphinx = {editable = true, ref = "use-doc-dir", git = "https://github.com/rokroskar/sphinx.git"}
 
 [requires]
-python_version = "3.6"
+python_version = "3"
