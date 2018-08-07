@@ -17,9 +17,13 @@ dependencies:
 - name: postgresql
   version: 0.14.4
   repository: "@stable"
+# - name: gitlab
+#   version: "0.0-3300643"
+#   repository: "https://swissdatasciencecenter.github.io/helm-charts/"
+#   condition: gitlab.enabled
 - name: gitlab
-  version: "0.0-3300643"
-  repository: "https://swissdatasciencecenter.github.io/helm-charts/"
+  version: 0.1.0
+  repository: file://../gitlab
   condition: gitlab.enabled
 - name: redis
   version: "0.0-3300643"
