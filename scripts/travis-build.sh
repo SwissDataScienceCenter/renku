@@ -27,15 +27,14 @@ cd ..
 helm upgrade $RENKU_DEPLOY charts/renku \
     --install --namespace $RENKU_DEPLOY \
     -f charts/minikube-values.yaml \
-    --set "global.renku.domain=10.0.0.38:32080" \
-    --set "ui.gitlabUrl=http://10.0.0.38:32080/gitlab" \
-    --set "ui.jupyterhubUrl=http://10.0.0.38:32080/jupyterhub" \
-    --set "ui.gatewayUrl=http://10.0.0.38:32080/api" \
-    --set "gateway.keycloakUrl=http://10.0.0.38:32080" \
-    --set "gateway.gitlabUrl=http://10.0.0.38:32080/gitlab" \
-    --set "jupyterhub.hub.extraEnv.GITLAB_URL=http://10.0.0.38:32080/gitlab" \
+    --set "global.renku.domain=$MAXIKUBE_HOST:32080" \
+    --set "ui.gitlabUrl=http://$MAXIKUBE_HOST:32080/gitlab" \
+    --set "ui.jupyterhubUrl=http://$MAXIKUBE_HOST:32080/jupyterhub" \
+    --set "ui.gatewayUrl=http://$MAXIKUBE_HOST:32080/api" \
+    --set "gateway.keycloakUrl=http://$MAXIKUBE_HOST:32080" \
+    --set "gateway.gitlabUrl=http://$MAXIKUBE_HOST:32080/gitlab" \
+    --set "jupyterhub.hub.extraEnv.GITLAB_URL=http://$MAXIKUBE_HOST:32080/gitlab" \
     --set "jupyterhub.hub.extraEnv.IMAGE_REGISTRY=10.100.123.45:8105" \
     --set "gitlab.registry.externalUrl=http://10.100.123.45:8105/" \
     --set "gitlab.sshPort=32022" \
-    --timeout 1800 \
-    --force
+    --timeout 1800

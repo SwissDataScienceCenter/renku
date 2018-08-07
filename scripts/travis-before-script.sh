@@ -28,14 +28,15 @@ kubectl get nodes
 
 # Delete any leftovers
 for ns in $(kubectl get ns -ojson | jq -r ".items[].metadata.name" | grep renku); do
-    kubectl delete ns $x;
+    kubectl delete ns $ns
 done
 for release in $(helm list --all -q | grep renku); do
-    helm delete --purge $release;
+    helm delete --purge $release
 done
 
 # Use a unique name to deploy renku
 export RENKU_DEPLOY="renku-$(openssl rand -hex 4)"
+export MAXIKUBE_HOST=$(kubectl get nodes minikube -ojson | jq -r '.status.addresses[] | select(.type | contains("InternalIP")) | .address')
 
 helm init --wait
 helm upgrade --install nginx-ingress --namespace kube-system \
