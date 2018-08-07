@@ -18,8 +18,9 @@ dependencies:
   version: 0.14.4
   repository: "@stable"
 - name: gitlab
-  version: "0.1.0-b00c63d"
-  repository: "https://swissdatasciencecenter.github.io/helm-charts/"
+  version: 0.1.0
+  # repository: "https://swissdatasciencecenter.github.io/helm-charts/"
+  repository: file://../gitlab
   condition: gitlab.enabled
 - name: redis
   version: "0.1.0-b00c63d"

@@ -39,12 +39,11 @@ helm upgrade --install nginx-ingress --namespace kube-system \
     --set controller.service.type=NodePort \
     --set controller.service.nodePorts.http=32080 \
     --set controller.service.nodePorts.https=32443 \
-    --set tcp.2222=renku/renku-gitlab:22 \
     stable/nginx-ingress
-# This makes sure the ssh nodePort is set to 32022
-kubectl -n kube-system get svc nginx-ingress-controller -ojson \
-    | jq '.spec.ports = (.spec.ports | map(if (.name | contains("tcp")) then .nodePort = 32022 else . end))' \
-    | kubectl apply -f -
+# # This makes sure the ssh nodePort is set to 32022
+# kubectl -n kube-system get svc nginx-ingress-controller -ojson \
+#     | jq '.spec.ports = (.spec.ports | map(if (.name | contains("tcp")) then .nodePort = 32022 else . end))' \
+#     | kubectl apply -f -
 
 helm repo add renku https://swissdatasciencecenter.github.io/helm-charts/
 helm repo add gitlab https://charts.gitlab.io

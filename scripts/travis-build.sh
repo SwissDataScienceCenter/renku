@@ -33,8 +33,10 @@ helm upgrade $RENKU_DEPLOY charts/renku \
     --set "ui.gatewayUrl=http://$MAXIKUBE_HOST:32080/api" \
     --set "gateway.keycloakUrl=http://$MAXIKUBE_HOST:32080" \
     --set "gateway.gitlabUrl=http://$MAXIKUBE_HOST:32080/gitlab" \
+    --set "jupyterhub.hub.db.url=postgres+psycopg2://jupyterhub:jupyterhub@$RENKU_DEPLOY-postgresql:5432/jupyterhub" \
     --set "jupyterhub.hub.extraEnv.GITLAB_URL=http://$MAXIKUBE_HOST:32080/gitlab" \
     --set "jupyterhub.hub.extraEnv.IMAGE_REGISTRY=10.100.123.45:8105" \
     --set "gitlab.registry.externalUrl=http://10.100.123.45:8105/" \
-    --set "gitlab.sshPort=32022" \
+    --set "gitlab.sshPort=30022" \
+    --set "gitlab.enableSSHNodePortService=true" \
     --timeout 1800
