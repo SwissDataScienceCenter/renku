@@ -71,7 +71,6 @@ before_script:
 script:
   - ./scripts/travis-build.sh
   - ./scripts/run-tests.sh
-  # TODO - helm lint charts/renku -f charts/minikube-values.yaml --set renku.domain=renku.build
 
 # before_deploy:
 #   # install chartpress

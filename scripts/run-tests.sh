@@ -23,7 +23,7 @@ set -o errexit
 # quit on unbound symbols:
 set -o nounset
 
-docker images --digests
+#docker images --digests
 
 #helm lint charts/renku -f charts/minikube-values.yaml
 
@@ -35,7 +35,7 @@ kubectl run renku-demo -it \
 
 kubectl delete deploy renku-demo
 
-helm test renku
+helm test renku --cleanup
 
 # pytest -v
 sphinx-build -nNW -b spelling -d docs/_build/doctrees docs docs/_build/spelling

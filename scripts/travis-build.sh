@@ -24,7 +24,6 @@ helm dependency update renku
 chartpress
 cd ..
 
-helm test renku --cleanup
 helm upgrade renku charts/renku \
     --install --namespace renku \
     -f charts/minikube-values.yaml \
