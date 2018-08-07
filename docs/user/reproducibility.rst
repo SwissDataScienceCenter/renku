@@ -9,24 +9,23 @@ process with others at any time, and conversely, to reuse the work of others.
 We encourage such cooperation by recording use of both data and code so that
 the lineage and provenance of both can be uniquely determined.
 
-
 In a typical data analysis or modeling project, these types of questions arise
 very frequently:
 
 * How exactly was this model or result obtained? How was the raw data pre-processed?
 * Who is using my data, model, or result and how?
 * What does this new data mean for our last month's report?
-* How can I share my latest analysis with a colleague in the cloud?
+* How can I share my latest analysis with a colleague through the cloud?
 * How can I make sure that our colleagues in another team can reproduce our results exactly?
 
 Answering these questions in a reliable fashion is difficult. Renku provides
 the tools that substantially reduce the effort required on the part of the
-data scientists who wants to keep their work reproducible, reliable and robust.
+data scientists who want to keep their work reproducible, reliable and robust.
 Here, we introduce the essential concepts underlying the design and
 implementation of Renku.
 
 Three important concepts intertwine in Renku to enable reproducible data science.
-These are **lineage**, **version control** and **containerization**. We discuss
+These are **lineage**, **version control** and **environments**. We discuss
 each of these in turn below.
 
 .. _reproducibility-lineage:
@@ -138,10 +137,13 @@ last sane version of your work if everything happens to go off the rails. This
 is a fantastic advantage in a data science process, where experimentation is
 a critical part of the discovery process.
 
+Note that in Renku we make use of `git LFS <https://git-lfs.github.com>`_ which
+allows to keep not only the code but also the data related to an analysis under
+version control while keeping the git repository itself small.
 
-.. _reproducibility-containerization:
+.. _reproducibility-environments:
 
-Containerization
+Environments
 ----------------
 
 Knowing how we converted data into actionable results by recording lineage and
@@ -149,8 +151,8 @@ keeping track of versioning gets us most of the way to being able to fully
 reproducing an analysis workflow. A final piece is encapsulating the actual
 computational environment. In a quantitative sense, using different releases
 of the same library can simple lead to different results. A more practical
-aspect, however, is that replicating a computational environment for reproducibility's
-sake is often simply very time consuming.
+aspect, however, is that replicating a computational environment for
+reproducibility's sake is often simply very time consuming.
 
 "Containerization" can help with both of these problems. A "container" is in
 essence a process running in a fully specified environment, including the
@@ -160,7 +162,8 @@ most popular (but certainly not the only) containerization framework is
 parts of Renku. In terms of user workflows, we try to do as much of the
 boilerplate for you as possible so for the simpler tasks you don't really
 need to worry about the fact that your code is executing in Docker containers.
-For more complex scenarios, some familiarity with Docker will be required.
+See the :ref:`containerization` page for more details on how Docker containers
+are used in Renku.
 
 
 .. _reproducibility-further_reading:
@@ -168,10 +171,14 @@ For more complex scenarios, some familiarity with Docker will be required.
 Further Reading
 ---------------
 
-Renku helps you achieve the goal of fully reproducible data science by bundling together several technologies:
+Renku helps you achieve the goal of fully reproducible data science by
+bundling together several technologies:
 
 
-* for keeping track of the lineage, our CLI relies heavily on the Common Workflow Language. `Here <cwl.html>`_ you can learn more about our CWL integration
-* for version control, we rely on `git <https://git-scm.com/>`_
-* your project includes a container specification from day 1. Check out these `docs <ci.html>`_ to learn more about how we build images for your project and what we do with them 
-
+* For keeping track of the lineage, our CLI relies heavily on the Common
+  Workflow Language. :ref:`Here <cwl>` you can learn more about our CWL integration.
+* For version control, we rely on
+  `git <https://git-scm.com/>`_.
+* Your project includes a container specification from day 1. Check out these
+  :ref:`docs <containerization>` to learn more about how we build images for your project and
+  what we do with them.

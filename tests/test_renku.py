@@ -73,6 +73,9 @@ def test_notebook_launch(browser):
     analysis_link[0].click()
 
     # click the "Launch notebook" button
+    assert browser.is_element_present_by_text(
+        'Launch Notebook', wait_time=10
+    )
     notebook_button = browser.find_by_text('Launch Notebook')
     assert notebook_button
     notebook_button[0].click()
