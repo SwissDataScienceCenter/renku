@@ -23,6 +23,8 @@ set -o errexit
 # quit on unbound symbols:
 set -o nounset
 
+set -ex
+
 #docker images --digests
 
 #helm lint charts/renku -f charts/minikube-values.yaml
