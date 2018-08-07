@@ -27,6 +27,7 @@ set -o nounset
 
 #helm lint charts/renku -f charts/minikube-values.yaml
 
+docker pull renku/renku-demo:latest
 kubectl -n $RENKU_DEPLOY run renku-demo -it \
 --env="GITLAB_URL=http://$MAXIKUBE_HOST:32080/gitlab" \
 --env="KEYCLOAK_URL=http://$MAXIKUBE_HOST:32080" \
