@@ -6,8 +6,7 @@ User Documentation
 .. toctree::
    :maxdepth: 2
 
+   CLI Installation <cli-installation>
    First Steps <firststeps>
-   Reproducibility <reproducibility>
-   Common Workflow Language <cwl>
-   Continuous Integration <ci>
+   Concepts <concepts>
    Troubleshooting <troubleshooting>

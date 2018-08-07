@@ -6,10 +6,10 @@ Content
 - :ref:`im_user_account_service`
 - :ref:`im_admin_console`
 
-**Renku**'s identity management is based on Keycloak. We document the
-steps to add or modify a user security settings. For more information, we
-refer the reader to the Keycloak documentation, which can be found `here
-(Keycloak 3.2) <http://www.keycloak.org/docs/3.2/index.html>`_.
+**Renku**'s identity management is based on Keycloak. In the following two
+paragraphs we document the steps to add a user or modify a users security
+settings. For further information, we refer the reader to the `Keycloak
+documentation <http://www.keycloak.org/docs/>`_.
 
 
 .. _im_user_account_service:

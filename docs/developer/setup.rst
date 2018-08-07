@@ -10,16 +10,19 @@ Running the platform
 The renku source code is hosted on github:
 https://github.com/SwissDataScienceCenter/renku.
 
-Renku is deployed as a collection of microservices (see
-:ref:`service_architecture`) running in Docker containers. To run Renku, only
-a working version of Docker is required. In the Renku repository, we provide a
-`docker-compose` file, which can be used to deploy renku quickly either on a
-local machine or with a cloud provider. However, be aware that if you want to
-use Renku in production with many users, a more complicated deployment will be
-required.
+Renku is deployed as a collection of containerized microservices (see
+:ref:`service_architecture`). To run Renku, only a working version of Docker is
+required. In the Renku repository, we provide a `docker-compose` file,
+which can be used to deploy renku quickly, either on a local machine or with a
+cloud provider. However, if you want to use Renku in production, we strongly
+recommend a kubernetes deployment. In fact, even for local development we
+recommend a :ref:`minikube deployment <minikube>` and the docker-compose
+deployment will soon be deprecated.
 
 Prerequisites
 -------------
+If you want to start developing the Renku platform, you will need the following
+dependencies:
 
 * python 3.6
 * `pip <https://pypi.org/project/pip/>`_ (or `pipenv <https://github.com/pypa/pipenv>`_)
@@ -52,7 +55,7 @@ Get the platform
     $ git clone https://github.com/SwissDataScienceCenter/renku.git
 
 ``renku`` is the "parent" repository of the collection of microservices, each
-of which has their own repository.
+of which has its own repository.
 
 
 .. _quickstart:
@@ -60,14 +63,27 @@ of which has their own repository.
 Quickstart
 ----------
 
-These instructions should only be used for experimentation and development. For
-deployment, see the Kubernetes section below.
+Renku is deployed using Docker containers. For production deployments we
+include kubernetes helm charts; development environments can be created
+using `docker-compose`.
 
+
+Kubernetes
+^^^^^^^^^^
+
+The preferred way to run Renku is via Kubernetes. Locally, this usually means
+using minikube. Please follow the instructions on our :ref:`minikube
+documentation <minikube>`.
 
 Docker
 ^^^^^^
 
-You can get going with Renku in a few minutes by using our pre-built images:
+.. warning::
+
+    This mode of deployment will soon be deprecated.
+
+If you prefer to use plain Docker, you can get going with Renku in a few
+minutes by using our pre-built images:
 
 .. code-block:: console
 
@@ -128,7 +144,7 @@ Once ``make`` completes, you should now have all the service images made:
     renku/renku-storage         latest          e73374425a1f
     renku/renku-ui              latest          3aa6ddac8eee
 
-Use ``docker-compose`` to bring up the platform:
+Use ``make`` to invoke docker-compose and bring up the platform:
 
 .. code-block:: console
 
@@ -145,12 +161,6 @@ Use ``docker-compose`` to bring up the platform:
     ...
 
     [Success] Renku UI should be under http://renku.build and GitLab under http://gitlab.renku.build
-
-
-Kubernetes
-^^^^^^^^^^
-
-Please follow the instructions in ``charts/renku/README.rst``.
 
 
 Identity Management
