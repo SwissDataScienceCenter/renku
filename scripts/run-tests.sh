@@ -37,9 +37,7 @@ kubectl -n $RENKU_DEPLOY run renku-demo -it \
 --image=renku/renku-demo:latest \
 --restart=Never
 
-kubectl -n $RENKU_DEPLOY delete deploy renku-demo
-
-helm test $RENKU_DEPLOY --cleanup
+helm test $RENKU_DEPLOY
 
 # pytest -v
 sphinx-build -nNW -b spelling -d docs/_build/doctrees docs docs/_build/spelling
