@@ -24,8 +24,8 @@ helm dependency update renku
 chartpress
 cd ..
 
-helm upgrade renku charts/renku \
-    --install --namespace renku \
+helm upgrade $RENKU_DEPLOY charts/renku \
+    --install --namespace $RENKU_DEPLOY \
     -f charts/minikube-values.yaml \
     --set "global.renku.domain=10.0.0.38:32080" \
     --set "ui.gitlabUrl=http://10.0.0.38:32080/gitlab" \
@@ -36,5 +36,6 @@ helm upgrade renku charts/renku \
     --set "jupyterhub.hub.extraEnv.GITLAB_URL=http://10.0.0.38:32080/gitlab" \
     --set "jupyterhub.hub.extraEnv.IMAGE_REGISTRY=10.100.123.45:8105" \
     --set "gitlab.registry.externalUrl=http://10.100.123.45:8105/" \
+    --set "gitlab.sshPort=32022" \
     --timeout 1800 \
     --force

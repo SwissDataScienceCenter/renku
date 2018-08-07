@@ -26,6 +26,17 @@ docker info
 kubectl config view
 kubectl get nodes
 
+# Delete any leftovers
+for ns in $(kubectl get ns -ojson | jq -r ".items[].metadata.name" | grep renku); do
+    kubectl delete ns $x;
+done
+for release in $(helm list --all -q | grep renku); do
+    helm delete --purge $release;
+done
+
+# Use a unique name to deploy renku
+export RENKU_DEPLOY="renku-$(openssl rand -hex 4)"
+
 helm init --wait
 helm upgrade --install nginx-ingress --namespace kube-system \
     --set controller.service.type=NodePort \
@@ -33,6 +44,10 @@ helm upgrade --install nginx-ingress --namespace kube-system \
     --set controller.service.nodePorts.https=32443 \
     --set tcp.2222=renku/renku-gitlab:22 \
     stable/nginx-ingress
+# This makes sure the ssh nodePort is set to 32022
+kubectl -n kube-system get svc nginx-ingress-controller -ojson \
+    | jq '.spec.ports = (.spec.ports | map(if (.name | contains("tcp")) then .nodePort = 32022 else . end))' \
+    | kubectl apply -f -
 
 helm repo add renku https://swissdatasciencecenter.github.io/helm-charts/
 helm repo add gitlab https://charts.gitlab.io

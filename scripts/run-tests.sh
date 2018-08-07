@@ -27,15 +27,15 @@ set -o nounset
 
 #helm lint charts/renku -f charts/minikube-values.yaml
 
-kubectl run renku-demo -it \
+kubectl -n $RENKU_DEPLOY run renku-demo -it \
 --env="GITLAB_URL=http://10.0.0.38:32080/gitlab" \
 --env="KEYCLOAK_URL=http://10.0.0.38:32080" \
 --image=renku/renku-demo:latest \
 --restart=Never
 
-kubectl delete deploy renku-demo
+kubectl -n $RENKU_DEPLOY delete deploy renku-demo
 
-helm test renku --cleanup
+helm test $RENKU_DEPLOY --cleanup
 
 # pytest -v
 sphinx-build -nNW -b spelling -d docs/_build/doctrees docs docs/_build/spelling
