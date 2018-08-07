@@ -66,6 +66,9 @@ install:
   - ./scripts/travis-install.sh
 
 before_script:
+  # Use a unique name to deploy renku
+  - export RENKU_DEPLOY="renku-$(openssl rand -hex 4)"
+  - export MAXIKUBE_HOST=$(kubectl get nodes minikube -ojson | jq -r '.status.addresses[] | select(.type | contains("InternalIP")) | .address')
   - ./scripts/travis-before-script.sh
 
 script:

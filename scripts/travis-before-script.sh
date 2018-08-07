@@ -34,10 +34,6 @@ for release in $(helm list --all -q | grep renku); do
     helm delete --purge $release
 done
 
-# Use a unique name to deploy renku
-export RENKU_DEPLOY="renku-$(openssl rand -hex 4)"
-export MAXIKUBE_HOST=$(kubectl get nodes minikube -ojson | jq -r '.status.addresses[] | select(.type | contains("InternalIP")) | .address')
-
 helm init --wait
 helm upgrade --install nginx-ingress --namespace kube-system \
     --set controller.service.type=NodePort \
