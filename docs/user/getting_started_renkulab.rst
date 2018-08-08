@@ -40,3 +40,13 @@ on **Start Jupyter Lab**.
 
 Add input data to your project
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+On the Jupyter Lab interface, we can see that a few files already exist.
+Let's start by adding data using the `Renku CLI <http://renku-python.readthedocs.io/>`_.
+
+From Jupyter Lab, start a terminal.
+
+.. code-block:: console
+
+    renku dataset create weather-ch
+    renku dataset add weather-ch http://www.meteoschweiz.admin.ch/product/output/climate-data/homogenous-monthly-data-processing/data/homog_mo_SMA.txt
