@@ -7,7 +7,11 @@ image:
   tag: latest
   pullPolicy: IfNotPresent
 
-sshPort: 22
+ssh:
+  externalPort: 22
+  nodePortService:
+    enabled: false
+    nodePort: 30022
 
 lfsObjects:
   enabled: false

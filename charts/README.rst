@@ -23,7 +23,6 @@ Requires minikube, kubectl, helm and python.
     $ helm dep build renku
     $ helm upgrade --install nginx-ingress --namespace kube-system \
         --set controller.hostNetwork=true \
-        --set tcp.2222=renku/renku-gitlab:22 \
         stable/nginx-ingress
     $ helm upgrade renku --install \
         --namespace renku \

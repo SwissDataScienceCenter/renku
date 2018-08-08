@@ -1,4 +1,5 @@
-{{- if .Values.enableSSHNodePortService -}}
+{{- if not (empty .Values.ssh.nodePortService) -}}
+{{- if .Values.ssh.nodePortService.enabled -}}
 apiVersion: v1
 kind: Service
 metadata:
@@ -12,11 +13,12 @@ spec:
   type: NodePort
   ports:
     - port: 22
-      nodePort: 30022
+      nodePort: {{ .Values.ssh.nodePortService.nodePort }}
       targetPort: ssh
       protocol: TCP
       name: ssh
   selector:
     app: {{ template "gitlab.name" . }}
     release: {{ .Release.Name }}
+{{- end -}}
 {{- end -}}
