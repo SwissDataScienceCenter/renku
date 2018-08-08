@@ -31,7 +31,11 @@ global:
     urlPrefix: /gitlab
 
 gitlab:
-  sshPort: 2222
+  ssh:
+    externalPort: 30022
+    nodePortService:
+      enabled: true
+      nodePort: 30022
   registry:
     enabled: true
     exposedAs: NodePort
