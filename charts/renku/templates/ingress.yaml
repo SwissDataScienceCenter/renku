@@ -53,7 +53,7 @@ spec:
       {{- end }}
       - path: /jupyterhub
         backend:
-          serviceName: proxy-http
+          serviceName: proxy-public
           servicePort: 8000
       - path: /api
         backend:
