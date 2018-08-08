@@ -23,9 +23,21 @@ set -o errexit
 # quit on unbound symbols:
 set -o nounset
 
-docker images --digests
+set -ex
 
-pytest -v
+# FIXME: make helm lint work
+# helm lint charts/renku -f charts/minikube-values.yaml
+
+docker pull renku/renku-demo:latest
+sleep 5 # can help
+kubectl -n $RENKU_DEPLOY run renku-demo -it \
+--env="GITLAB_URL=http://$MAXIKUBE_HOST:32080/gitlab" \
+--env="KEYCLOAK_URL=http://$MAXIKUBE_HOST:32080" \
+--image=renku/renku-demo:latest \
+--restart=Never
+
+helm test $RENKU_DEPLOY
+
 sphinx-build -nNW -b spelling -d docs/_build/doctrees docs docs/_build/spelling
 sphinx-build -qnNW docs docs/_build/html
 shellcheck */**/*.sh

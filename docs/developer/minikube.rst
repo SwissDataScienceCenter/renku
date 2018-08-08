@@ -72,7 +72,6 @@ Deploying Helm and Nginx ingress
     $ helm init
     $ helm upgrade --install nginx-ingress --namespace kube-system \
         --set controller.hostNetwork=true \
-        --set tcp.2222=renku/renku-gitlab:22 \
         stable/nginx-ingress
 
 Building and deploying components
@@ -97,3 +96,22 @@ You can edit and test code changes from ``renku``, ``renku-ui``, ``renku-gateway
 to check out the changes.
 
 For more on the Renku helm charts, go to ``charts/renku/README.rst``.
+
+Running integration tests
+^^^^^^^^^^^^^^^^^^^^^^^^^
+
+First, run the demo script:
+
+.. code-block:: console
+
+    $ kubectl -n renku run renku-demo -it \
+        --env="GITLAB_URL=http://$(minikube ip)/gitlab" \
+        --env="KEYCLOAK_URL=http://$(minikube ip)" \
+        --image=renku/renku-demo:latest \
+        --restart=Never
+
+Then we can run the tests:
+
+.. code-block:: console
+
+    $ helm test renku

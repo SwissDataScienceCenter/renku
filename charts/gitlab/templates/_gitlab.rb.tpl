@@ -24,7 +24,7 @@ nginx['listen_port'] = 80
 nginx['listen_https'] = false
 
 ## Configure SSH port to be displayed correctly
-gitlab_rails['gitlab_shell_ssh_port'] = {{ default 22 .Values.sshPort }}
+gitlab_rails['gitlab_shell_ssh_port'] = {{ default 22 .Values.ssh.externalPort }}
 
 ### OmniAuth Settings
 ###! Docs: https://docs.gitlab.com/ce/integration/omniauth.html

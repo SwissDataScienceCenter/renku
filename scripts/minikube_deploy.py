@@ -38,7 +38,8 @@ def main():
     yaml.indent(mapping=2, offset=2, sequence=4)
 
     # 1. Check minikube status
-    status_minikube()
+    if not bool(os.environ.get('SKIP_MINIKUBE_STATUS')):
+        status_minikube()
 
     # 2. Build Docker images and update chart version with chartpress
     get_minikube_docker_env()
