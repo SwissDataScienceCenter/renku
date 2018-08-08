@@ -13,5 +13,22 @@ at `renkulab.io <https://renkulab.io>`__, it will teach you how to:
 Create a new project
 ^^^^^^^^^^^^^^^^^^^^
 
-First, head to `renkulab.io <https://renkulab.io>`__ and click on the *Login*
+First, head to `renkulab.io <https://renkulab.io>`__ and click on the **Login**
 button located on the top right corner of the Renku web interface.
+
+You can sign in using with your GitHub or LinkedIn account by
+clicking on the corresponding button.
+
+Once logged in, create a new project by going to the **Projects** (1) page
+and clicking on the **New Project** button (2).
+
+*TODO:* Insert UI screenshot with (1) next to Projects and (2) next to New Project.
+
+Set **tutorial-titanic** as your project title, fill-in a short description
+and set the project visibility to **Public**.
+Click on the **Create** button.
+
+.. warning::
+
+  Be sure to not leave the description field empty. The form will fail
+  silently otherwise.
