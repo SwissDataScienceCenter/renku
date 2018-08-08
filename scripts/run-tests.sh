@@ -25,9 +25,8 @@ set -o nounset
 
 set -ex
 
-#docker images --digests
-
-#helm lint charts/renku -f charts/minikube-values.yaml
+# FIXME: make helm lint work
+# helm lint charts/renku -f charts/minikube-values.yaml
 
 docker pull renku/renku-demo:latest
 sleep 5 # can help
@@ -39,7 +38,6 @@ kubectl -n $RENKU_DEPLOY run renku-demo -it \
 
 helm test $RENKU_DEPLOY
 
-# pytest -v
 sphinx-build -nNW -b spelling -d docs/_build/doctrees docs docs/_build/spelling
 sphinx-build -qnNW docs docs/_build/html
 shellcheck */**/*.sh

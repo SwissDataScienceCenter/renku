@@ -28,12 +28,6 @@ set -ex
 # install graphviz
 sudo apt-get update && sudo apt-get install -y graphviz
 
-# # install geckodriver
-# wget https://github.com/mozilla/geckodriver/releases/download/v0.19.1/geckodriver-v0.19.1-linux64.tar.gz
-# tar -xvzf geckodriver*
-# chmod +x geckodriver
-# sudo mv geckodriver /usr/local/bin
-
 # install kubectl
 curl -Lo kubectl https://storage.googleapis.com/kubernetes-release/release/v1.10.0/bin/linux/amd64/kubectl
 chmod +x kubectl
