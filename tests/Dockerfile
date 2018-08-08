@@ -12,4 +12,4 @@ COPY . /tests
 
 WORKDIR /tests
 RUN pip install -r requirements.txt
-CMD xvfb-run pytest -v
+CMD xvfb-run pytest -v --reruns 3
