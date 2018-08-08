@@ -12,7 +12,7 @@ dependencies:
   version: "0.1.0-171fdef"
   repository: "https://swissdatasciencecenter.github.io/helm-charts/"
 - name: jupyterhub
-  version: "v0.6"
+  version: "v0.7-438397a"
   repository: "https://jupyterhub.github.io/helm-chart"
 - name: postgresql
   version: 0.14.4
