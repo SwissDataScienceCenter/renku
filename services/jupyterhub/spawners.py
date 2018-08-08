@@ -321,7 +321,7 @@ try:
             name = self.pod_name + '-git-repo'
 
             # set the notebook container image
-            self.singleuser_image_spec = self.image
+            self.image_spec = self.image
 
             #: Define a new empty volume.
             self.volumes = [
@@ -343,13 +343,13 @@ try:
             branch = options.get('branch', 'master')
 
             #: Define an init container.
-            self.singleuser_init_containers = [
-                container for container in self.singleuser_init_containers
+            self.init_containers = [
+                container for container in self.init_containers
                 if not container.name.startswith(container_name)
             ]
             init_container = client.V1Container(
                 name=container_name,
-                image='alpine/git',
+                image='alpine/git:latest',
                 command=['sh', '-c'],
                 args=[
                     'rm -rf {mount_path}/* && '
@@ -370,7 +370,7 @@ try:
                 working_dir=mount_path,
                 security_context=client.V1SecurityContext(run_as_user=0)
             )
-            self.singleuser_init_containers.append(init_container)
+            self.init_containers.append(init_container)
 
             #: Share volume mount with notebook.
             self.volume_mounts = [
