@@ -551,7 +551,7 @@ jupyterhub:
         api_token: notebookstoken
     extraEnv:
       DEBUG: 1
-      JUPYTERHUB_NOTEBOOK_DIR: /repo
+      JUPYTERHUB_NOTEBOOK_DIR: /home/jovyan/work
       JUPYTERHUB_SPAWNER_CLASS: spawners.RenkuKubeSpawner
     extraConfig: |
       import os
