@@ -72,31 +72,53 @@ keycloak:
   ## Spawn a keycloak instance
   enabled: true
 
-  ## Keycloak admin user configuration
-  username: admin
-  password: admin
+  keycloak:
 
-  ## Keycloak image
-  # image:
-  #   pullPolicy: IfNotPresent
-  #   repository: jboss/keycloak
-  #   tag: 3.4.3.Final
+    ## Keycloak admin user configuration
+    username: admin
+    password: admin
 
-  ## Pod affinity for Keycloak deployment
-  # affinity: {}
-  ## Node selector for Keycloak deployment
-  # nodeSelector: {}
-  ## Pod tolerations for Keycloak deployment
-  # tolerations: []
+    extraVolumes: |
+      - name: realm-secret
+        secret:
+          secretName: renku
+          items:
+          - key: renku-realm.json
+            path: renku-realm.json
 
-  ## Resource requests/limits for Keycloak
-  # resources: {}
+    extraVolumeMounts: |
+      - name: realm-secret
+        mountPath: "/realm/"
+        readOnly: true
 
-  ## Service configuration for Keycloak
-  ## Modify service.type according to your setup
-  # service:
-  #   port: 80
-  #   type: ClusterIP
+    extraArgs: -Dkeycloak.import=/realm/renku-realm.json
+
+    persistence:
+
+      # Disable deployment of the PostgreSQL chart
+      deployPostgres: false
+
+      # The database vendor. Can be either "postgres", "mysql", "mariadb", or "h2"
+      dbVendor: postgres
+
+      ## The following values only apply if "deployPostgres" is set to "false"
+      dbName: keycloak
+      # !!!
+      ## This value is dependent on the Release name! (but helm charts don't allow templating values here.)
+      # !!!
+      dbHost: renku-postgresql
+      dbPort: 5432 # 5432 is PostgreSQL's default port. For MySQL it would be 3306
+      dbUser: keycloak
+
+      # !!!
+      ## This value is dependent on the Release name! (but helm charts don't allow templating values here.)
+      # !!!
+      existingSecret: renku
+      existingSecretKey: keycloak-password
+
+    ingress:
+      enabled: false
+
 
 postgresql:
   ## postgres image repository

@@ -1,7 +1,7 @@
 {{- if .Values.ingress.enabled -}}
 {{- $keycloakEnabled := .Values.keycloak.enabled -}}
 {{- $keycloakFullname := include "keycloak.fullname" . -}}
-{{- $keycloakServicePort := .Values.keycloak.service.port -}}
+{{- $keycloakServicePort := .Values.keycloak.keycloak.service.port -}}
 {{- $gitlabEnabled := .Values.gitlab.enabled -}}
 {{- $gitlabFullname := include "gitlab.fullname" . -}}
 {{- $gitlabServicePort := 80 -}}
@@ -42,7 +42,7 @@ spec:
       {{- if $keycloakEnabled }}
       - path: /auth
         backend:
-          serviceName: {{ $keycloakFullname }}
+          serviceName: {{ $keycloakFullname }}-http
           servicePort: {{ $keycloakServicePort }}
       {{- end }}
       {{- if $gitlabEnabled }}

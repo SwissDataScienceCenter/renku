@@ -24,6 +24,18 @@ helm dependency update renku
 chartpress
 cd ..
 
+cat > /tmp/keycloak.yaml <<EOF
+keycloak:
+  keycloak:
+    extraVolumes: |
+        - name: realm-secret
+          secret:
+            secretName: $RENKU_DEPLOY
+            items:
+            - key: renku-realm.json
+              path: renku-realm.json
+EOF
+
 helm upgrade $RENKU_DEPLOY charts/renku \
     --install --namespace $RENKU_DEPLOY \
     -f charts/minikube-values.yaml \
@@ -39,4 +51,7 @@ helm upgrade $RENKU_DEPLOY charts/renku \
     --set "gitlab.registry.externalUrl=http://10.100.123.45:8105/" \
     --set "gitlab.sshPort=30022" \
     --set "gitlab.enableSSHNodePortService=true" \
+    --set "keycloak.keycloak.persistence.dbHost=$RENKU_DEPLOY-postgresql" \
+    --set "keycloak.keycloak.persistence.existingSecret=$RENKU_DEPLOY" \
+    -f /tmp/keycloak.yaml \
     --timeout 1800
