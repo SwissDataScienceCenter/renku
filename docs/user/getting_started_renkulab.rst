@@ -48,5 +48,19 @@ From Jupyter Lab, start a terminal.
 
 .. code-block:: console
 
+    cd work
     renku dataset create weather-ch
     renku dataset add weather-ch http://www.meteoschweiz.admin.ch/product/output/climate-data/homogenous-monthly-data-processing/data/homog_mo_SMA.txt
+
+We can see that the two ``renku`` commands manipulate the git repository:
+
+.. code-block:: console
+
+    git log
+    git status
+
+Let's push the two fresh commits by running:
+
+.. code-block:: console
+
+    git push
