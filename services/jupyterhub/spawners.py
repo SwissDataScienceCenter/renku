@@ -66,6 +66,12 @@ class SpawnerMixin():
                 os.environ.get('GITLAB_URL', 'http://gitlab.renku.build'),
             'CI_REF_NAME':
                 self.user_options.get('branch', 'master'),
+            'EMAIL':
+                self.gl_user.email,
+            'GIT_AUTHOR_NAME':
+                self.gl_user.name,
+            'GIT_COMMITTER_NAME':
+                self.gl_user.name,
         })
         return environment
 
@@ -98,6 +104,10 @@ class SpawnerMixin():
         try:
             gl_project = gl.projects.get('{0}/{1}'.format(namespace, project))
             gl_user = gl.users.list(username=self.user.name)[0]
+            self.log.info(
+                'Got user profile: {}'.format(gl_user)
+            )
+            self.gl_user = gl_user
             access_level = gl_project.members.get(gl_user.id).access_level
         except Exception as e:
             self.log.error(e)
