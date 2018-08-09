@@ -30,7 +30,7 @@ RUN apt-get update && apt-get install -yq --no-install-recommends \
     && apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
-RUN curl -s https://packagecloud.io/install/repositories/github/git-lfs/script.deb.sh | sudo bash && sudo apt-get install git-lfs 
+RUN curl -s https://packagecloud.io/install/repositories/github/git-lfs/script.deb.sh | sudo bash && sudo apt-get install git-lfs
 USER jovyan
 
 # install pinned jupyterhub and ensure notebook is installed
@@ -45,5 +45,11 @@ RUN python3 -m pip install /tmp/gitlab_commit_push/ && \
 
 ADD notebook.json /home/jovyan/.jupyter/nbconfig/
 ADD gitlab-commit-push.js /home/jovyan/.local/share/jupyter/nbextensions/
+
+# install renku-python
+RUN python3 -m pip install renku
+
+COPY git-config.bashrc /home/jovyan/
+RUN cat /home/jovyan/git-config.bashrc >> /home/jovyan/.bashrc && rm /home/jovyan/git-config.bashrc
 
 CMD '/usr/local/bin/start-singleuser.sh'
