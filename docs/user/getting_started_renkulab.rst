@@ -4,7 +4,7 @@ Getting Started on `renkulab.io <https://renkulab.io>`__
 ========================================================
 
 This tutorial will help you get started working on the Renku platform deployed
-at `renkulab.io <https://renkulab.io>`__, it will teach you how to:
+at `renkulab.io <https://renkulab.io>`__, it will teach you how to use Renku to:
 
 1. `Create a new project`_
 2. `Add input data to your project`_
@@ -53,6 +53,11 @@ From Jupyter Lab, start a terminal.
     renku dataset create weather-ch
     renku dataset add weather-ch http://www.meteoschweiz.admin.ch/product/output/climate-data/homogenous-monthly-data-processing/data/homog_mo_SMA.txt
 
+.. note::
+
+  Running ``git lfs install --local`` before ``renku dataset add ...`` ensures that
+  the data files will tracked using `Git LFS <https://git-lfs.github.com/>`_.
+
 We can see that the two ``renku`` commands manipulate the git repository:
 
 .. code-block:: console
@@ -65,3 +70,9 @@ Let's push the two fresh commits by running:
 .. code-block:: console
 
     git push
+
+The data file can be opened from Jupyter Lab by going to the **Files** tab
+and traversing the ``data`` folder.
+
+Opening the file, we can see it contains monthly historical data about the
+temperature and precipitations around Zürich, Switzerland.
