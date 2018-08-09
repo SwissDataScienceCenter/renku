@@ -49,6 +49,7 @@ From Jupyter Lab, start a terminal.
 .. code-block:: console
 
     cd work
+    git lfs install --local
     renku dataset create weather-ch
     renku dataset add weather-ch http://www.meteoschweiz.admin.ch/product/output/climate-data/homogenous-monthly-data-processing/data/homog_mo_SMA.txt
 
