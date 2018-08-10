@@ -1,7 +1,7 @@
 # Build as renku/singleuser
 # Run with the DockerSpawner in JupyterHub
 
-ARG JUPYTERHUB_VERSION=0.8.1
+ARG JUPYTERHUB_VERSION=0.9.1
 ARG BASE_IMAGE=jupyterhub/singleuser:$JUPYTERHUB_VERSION
 
 FROM $BASE_IMAGE
