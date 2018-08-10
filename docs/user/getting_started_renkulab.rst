@@ -22,7 +22,10 @@ clicking on the corresponding button.
 Once logged in, create a new project by going to the **Projects** (1) page
 and clicking on the **New Project** button (2).
 
-*TODO:* Insert UI screenshot with (1) next to Projects and (2) next to New Project.
+.. image:: ui_create_project.png
+    :width: 85%
+    :align: center
+    :alt: Create a new project in UI
 
 Set **tutorial-weather** as your project title, fill-in a short description
 and set the project visibility to **Public**.
