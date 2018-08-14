@@ -1,3 +1,4 @@
+dependencies:
 - name: renku-ui
   alias: ui
   version: "0.1.0-26ca8ac"
