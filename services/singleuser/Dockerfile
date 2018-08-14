@@ -52,4 +52,9 @@ RUN python3 -m pip install renku
 COPY git-config.bashrc /home/jovyan/
 RUN cat /home/jovyan/git-config.bashrc >> /home/jovyan/.bashrc && rm /home/jovyan/git-config.bashrc
 
+# Add user `jovyan` to sudoers (passwordless)
+USER root
+RUN echo "jovyan ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
+USER jovyan
+
 CMD '/usr/local/bin/start-singleuser.sh'
