@@ -543,7 +543,7 @@ jupyterhub:
   hub:
     image:
       name: renku/jupyterhub-k8s
-      tag: latest
+      tag: 0.0-unclean-1a673b8
     services:
       notebooks:
         url: http://renku-notebooks
@@ -599,9 +599,10 @@ jupyterhub:
   singleuser:
     image:
       name: renku/singleuser
-      tag: latest
+      tag: 0.0-unclean-1a673b8
     storage:
       type: none
+    defaultUrl: /lab
   # FIXME: bug in prepuller makes helm hang in certain cases. Fixed in 0.7
   # so this should be removed eventually.
   # https://github.com/jupyterhub/zero-to-jupyterhub-k8s/issues/477
@@ -627,12 +628,12 @@ jupyterhub:
 apispec:
   image:
     repository: renku/apispec
-    tag: latest
+    tag: 0.0-unclean-1a673b8
 
 tests:
   image:
     repository: renku/tests
-    tag: latest
+    tag: 0.0-unclean-1a673b8
 
 minio:
   ## Set to true to deploy a minio server, can be used as gateway too.
