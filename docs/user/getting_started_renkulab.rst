@@ -8,7 +8,8 @@ at `renkulab.io <https://renkulab.io>`__, it will teach you how to use Renku to:
 
 1. `Create a new project`_
 2. `Add input data to your project`_
-3. Share your results and collaborate with your peers
+3. `Install and manage Python packages`_
+4. Share your results and collaborate with your peers
 
 Create a new project
 ^^^^^^^^^^^^^^^^^^^^
@@ -27,7 +28,7 @@ and clicking on the **New Project** button (2).
     :align: center
     :alt: Create a new project in UI
 
-Set **tutorial-weather** as your project title, fill-in a short description
+Set **tutorial-zhbikes** as your project title, fill-in a short description
 and set the project visibility to **Public**.
 Click on the **Create** button.
 
@@ -53,8 +54,8 @@ From Jupyter Lab, start a terminal.
 
     cd work
     git lfs install --local
-    renku dataset create weather-ch
-    renku dataset add weather-ch http://www.meteoschweiz.admin.ch/product/output/climate-data/homogenous-monthly-data-processing/data/homog_mo_SMA.txt
+    renku dataset create zhbikes
+    renku dataset add zhbikes https://data.stadt-zuerich.ch/dataset/verkehrszaehlungen_werte_fussgaenger_velo/resource/d17a0a74-1073-46f0-a26e-46a403c061ec/download/2017_verkehrszaehlungen_werte_fussgaenger_velo.csv
 
 .. note::
 
@@ -77,5 +78,29 @@ Let's push the two fresh commits by running:
 The data file can be opened from Jupyter Lab by going to the **Files** tab
 and traversing the ``data`` folder.
 
-Opening the file, we can see it contains monthly historical data about the
-temperature and precipitations around Zürich, Switzerland.
+Opening the file, we can see it contains *todo todo todo*.
+
+Install and manage Python packages
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Continuing on the same terminal session as in last step, we can install python
+packages as usual with ``pip``:
+
+.. code-block:: console
+
+    pip install numpy pandas
+    pip freeze > requirements.txt
+    git add requirements.txt
+    git commit -m"Installed numpy, pandas"
+    git push
+
+.. warning::
+
+  Make sure that you update the ``requirements.txt`` file after you install packages.
+  This ensures that the packages needed to work on your project will be used by your
+  peers when collaborating on a project.
+
+When updating and pushing the ``requirements.txt`` file to your project repository,
+the Renku platform will update the Python stack used to launch your Jupyter Lab instance.
+The next time you use the **Start Jupyter Lab** button, it will come with these
+packages already installed.
