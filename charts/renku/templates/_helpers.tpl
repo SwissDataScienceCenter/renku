@@ -50,7 +50,7 @@ Define subcharts full names
 {{- end -}}
 
 {{- define "keycloak.fullname" -}}
-{{- printf "%s-%s" .Release.Name "keycloak" | replace "+" "_" | trunc 63 | trimSuffix "-" -}}
+{{- printf "%s-%s" .Release.Name "keycloak" | replace "+" "_" | trunc 20 | trimSuffix "-" -}}
 {{- end -}}
 
 {{- define "redis.fullname" -}}

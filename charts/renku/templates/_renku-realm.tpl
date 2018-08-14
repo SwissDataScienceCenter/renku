@@ -3,7 +3,7 @@
 Define the RENKU realm
 TODO: Put back template strings from renku/services/keycloak/renku-realm.json.tpl
 */}}
-{{- define "keycloak.renku.realm" -}}
+{{- define "renku.keycloak.realm" -}}
 {
   "id" : "Renku",
   "realm" : "Renku",

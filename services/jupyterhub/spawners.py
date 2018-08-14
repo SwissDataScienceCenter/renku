@@ -66,6 +66,12 @@ class SpawnerMixin():
                 os.environ.get('GITLAB_URL', 'http://gitlab.renku.build'),
             'CI_REF_NAME':
                 self.user_options.get('branch', 'master'),
+            'EMAIL':
+                self.gl_user.email,
+            'GIT_AUTHOR_NAME':
+                self.gl_user.name,
+            'GIT_COMMITTER_NAME':
+                self.gl_user.name,
         })
         return environment
 
@@ -96,9 +102,13 @@ class SpawnerMixin():
         )
 
         try:
+            gl.auth()
             gl_project = gl.projects.get('{0}/{1}'.format(namespace, project))
-            gl_user = gl.users.list(username=self.user.name)[0]
-            access_level = gl_project.members.get(gl_user.id).access_level
+            self.gl_user = gl.user
+            self.log.info(
+                'Got user profile: {}'.format(self.gl_user)
+            )
+            access_level = gl_project.members.get(self.gl_user.id).access_level
         except Exception as e:
             self.log.error(e)
             raise web.HTTPError(401, 'Not authorized to view project.')
@@ -203,7 +213,7 @@ try:
             )
             container_name = 'init-' + safe_username + '-' + self.name
             volume_name = 'repo-' + safe_username + '-' + container_name
-            volume_path = '/repo'
+            volume_path = '/home/jovyan/work'
 
             try:
                 yield self.docker(
@@ -334,7 +344,7 @@ try:
             self.volumes.append(volume)
 
             #: Define a volume mount for both init and notebook containers.
-            mount_path = '/repo'
+            mount_path = '/home/jovyan/work'
             volume_mount = {
                 'mountPath': mount_path,
                 'name': name,
