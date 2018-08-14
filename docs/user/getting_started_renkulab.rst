@@ -9,7 +9,8 @@ at `renkulab.io <https://renkulab.io>`__, it will teach you how to use Renku to:
 1. `Create a new project`_
 2. `Add input data to your project`_
 3. `Install and manage Python packages`_
-4. Share your results and collaborate with your peers
+4. `Work using Jupyter Lab`_
+5. Share your results and collaborate with your peers
 
 Create a new project
 ^^^^^^^^^^^^^^^^^^^^
@@ -104,3 +105,10 @@ When updating and pushing the ``requirements.txt`` file to your project reposito
 the Renku platform will update the Python stack used to launch your Jupyter Lab instance.
 The next time you use the **Start Jupyter Lab** button, it will come with these
 packages already installed.
+
+Work using Jupyter Lab
+^^^^^^^^^^^^^^^^^^^^^^
+
+Notebook: data_preprocess_ipynb_
+
+.. _data_preprocess_ipynb: ../_static/zhbikes/Data%20Preprocess.ipynb
