@@ -543,7 +543,7 @@ jupyterhub:
   hub:
     image:
       name: renku/jupyterhub-k8s
-      tag: 0.0-unclean-1a673b8
+      tag: latest
     services:
       notebooks:
         url: http://renku-notebooks
@@ -599,7 +599,7 @@ jupyterhub:
   singleuser:
     image:
       name: renku/singleuser
-      tag: 0.0-unclean-1a673b8
+      tag: latest
     storage:
       type: none
     defaultUrl: /lab
@@ -628,12 +628,12 @@ jupyterhub:
 apispec:
   image:
     repository: renku/apispec
-    tag: 0.0-unclean-1a673b8
+    tag: latest
 
 tests:
   image:
     repository: renku/tests
-    tag: 0.0-unclean-1a673b8
+    tag: latest
 
 minio:
   ## Set to true to deploy a minio server, can be used as gateway too.
