@@ -30,14 +30,14 @@ RUN apt-get update && apt-get install -yq --no-install-recommends \
 RUN curl -s https://packagecloud.io/install/repositories/github/git-lfs/script.deb.sh | sudo bash && sudo apt-get install git-lfs=2.4.2
 USER jovyan
 
-# install pinned jupyterhub and ensure notebook is installed
+# install renku-python, jupyterlab and git extension
 RUN python3 -m pip install -U pip && \
-    python3 /tmp/install && \
-    python3 -m pip install notebook jupyter_contrib_nbextensions widgetsnbextension && \
-    jupyter contrib nbextension install --user
-
-# install renku-python
-RUN python3 -m pip install renku
+    python3 -m pip install renku && \
+    pip install -U jupyterlab && \
+    jupyter labextension update @jupyterlab/hub-extension --no-build && \
+    jupyter labextension install @jupyterlab/git && \
+    python3 -m pip install -e git+https://github.com/SwissDataScienceCenter/jupyterlab-git.git@fix-git-current-dir#egg=jupyterlab_git && \
+    jupyter serverextension enable --py jupyterlab_git
 
 COPY git-config.bashrc /home/jovyan/
 RUN cat /home/jovyan/git-config.bashrc >> /home/jovyan/.bashrc && rm /home/jovyan/git-config.bashrc
