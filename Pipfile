@@ -4,7 +4,8 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
-chartpress = "*"
+chartpress = "==0.2.1"
+"ruamel.yaml" = "==0.15.54"
 
 [dev-packages]
 ipython = ">=6.2.0"
