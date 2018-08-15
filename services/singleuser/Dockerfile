@@ -35,7 +35,9 @@ RUN python3 -m pip install -U pip && \
     python3 -m pip install renku && \
     pip install -U jupyterlab && \
     jupyter labextension update @jupyterlab/hub-extension --no-build && \
-    jupyter labextension install @jupyterlab/git && \
+    jupyter labextension install @jupyterlab/git --no-build && \
+    jupyter lab build && \
+    jupyter labextension list && \
     python3 -m pip install -e git+https://github.com/SwissDataScienceCenter/jupyterlab-git.git@fix-git-current-dir#egg=jupyterlab_git && \
     jupyter serverextension enable --py jupyterlab_git
 
