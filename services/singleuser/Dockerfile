@@ -8,9 +8,6 @@ FROM $BASE_IMAGE
 ARG JUPYTERHUB_VERSION
 MAINTAINER Swiss Data Science Center <info@datascience.ch>
 
-
-ADD install /tmp/install
-
 USER root
 # Copied from jupyter-minimal-notebook
 # Install all OS dependencies for fully functional notebook server
