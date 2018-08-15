@@ -39,13 +39,6 @@ RUN python3 -m pip install -U pip && \
     python3 -m pip install notebook jupyter_contrib_nbextensions widgetsnbextension && \
     jupyter contrib nbextension install --user
 
-ADD setup.py gitlab_commit_push.py /tmp/gitlab_commit_push/
-RUN python3 -m pip install /tmp/gitlab_commit_push/ && \
-    jupyter serverextension enable --py gitlab_commit_push
-
-ADD notebook.json /home/jovyan/.jupyter/nbconfig/
-ADD gitlab-commit-push.js /home/jovyan/.local/share/jupyter/nbextensions/
-
 # install renku-python
 RUN python3 -m pip install renku
 
