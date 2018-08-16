@@ -621,6 +621,7 @@ jupyterhub:
       tag: latest
     storage:
       type: none
+    defaultUrl: /lab
   # FIXME: bug in prepuller makes helm hang in certain cases. Fixed in 0.7
   # so this should be removed eventually.
   # https://github.com/jupyterhub/zero-to-jupyterhub-k8s/issues/477
@@ -641,7 +642,7 @@ jupyterhub:
       enabled: false
   cull:
     enabled: true
-    timeout: 600
+    timeout: 86400
     every: 60
 apispec:
   image:
