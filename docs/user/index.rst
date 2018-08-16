@@ -6,8 +6,7 @@ User Documentation
 .. toctree::
    :maxdepth: 2
 
-   Getting Started <getting_started_renkulab>
-   CLI Installation <cli-installation>
    First Steps <firststeps>
+   CLI Installation <cli-installation>
    Concepts <concepts>
    Troubleshooting <troubleshooting>

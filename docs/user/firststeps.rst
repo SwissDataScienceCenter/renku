@@ -1,361 +1,177 @@
-.. _first_steps:
+.. _firsysteps:
 
-First Steps
-===========
+Getting Started on `renkulab.io <https://renkulab.io>`__
+========================================================
 
-.. meta::
-    :description: First steps with Renku
-    :keywords: hello world, first steps, starter, primer
+This tutorial will help you get started working on the Renku platform deployed
+at `renkulab.io <https://renkulab.io>`__, it will teach you how to use Renku to:
 
-This hands-on tutorial will lead you through the creation of a data science
-project using Renku. You will execute familiar data analysis
-tasks, but capturing the lineage of your progress with Renku along the way.
-Finally, if you have access to a running Renku platform, you will use the web
-user interface to inspect the captured lineage and spin up an interactive
-environment.
+1. `Create a new project`_
+2. `Add input data to your project`_
+3. `Install and manage Python packages`_
+4. `Work using Jupyter Lab`_
+5. Share your results and collaborate with your peers
 
-Before continuing with this tutorial, please make sure you have
-:ref:`installed the command-line client <cli_installation>`.
+Create a new project
+^^^^^^^^^^^^^^^^^^^^
 
-Our first Renku project
----------------------------
+First, head to `renkulab.io <https://renkulab.io>`__ and click on the **Login**
+button located on the top right corner of the Renku web interface.
 
-First, create a project directory:
+You can sign in using with your GitHub or LinkedIn account by
+clicking on the corresponding button.
 
-.. code-block:: console
+Once logged in, create a new project by going to the **Projects** (1) page
+and clicking on the **New Project** button (2).
 
-    mkdir -p ~/renku-projects/myproject
-    cd ~/renku-projects/myproject
+.. image:: ui_create_project.png
+    :width: 85%
+    :align: center
+    :alt: Create a new project in UI
 
-Initialize the project as a Renku project:
+Set **tutorial-zhbikes** as your project title, fill-in a short description
+and set the project visibility to **Public**.
+Click on the **Create** button.
 
-.. code-block:: console
+.. warning::
 
-    renku init
+  Be sure to not leave the description field empty. The form will fail
+  silently otherwise.
 
-This command created a git repository for your project and an additional
-`.renku` sub-directory:
+Now that we have a project, we can start working on it by clicking
+on **Start Jupyter Lab**.
 
-.. code-block:: console
+*TODO*: Have a **Start Jupyter Lab** button!!
 
-    ls -la .renku
+Add input data to your project
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-    total 8
-    drwxr-xr-x  3 rok  staff  102 May 22 17:23 .
-    drwxr-xr-x  8 rok  staff  272 May 22 17:23 ..
-    -rw-r--r--  1 rok  staff  308 May 22 17:23 metadata.yml
+On the Jupyter Lab interface, we can see that a few files already exist.
+Let's start by adding data using the `Renku CLI <http://renku-python.readthedocs.io/>`_.
 
-Create a dataset and import data
---------------------------------
-
-Creating datasets is useful to group pieces of data together for e.g. sharing
-or publication.
-
-.. code-block:: console
-
-    renku dataset create mydataset
-
-    Creating a dataset ... OK
-    ls -l data
-
-    total 0
-    drwxr-xr-x  3 rok  staff  102 May 22 17:30 mydataset
-
-At this point, our dataset just consists of metadata in JSON-LD format:
+From Jupyter Lab, start a terminal.
 
 .. code-block:: console
 
-    cat data/mydataset/metadata.yml
+    cd work
+    git lfs install --local
+    renku dataset create zhbikes
+    renku dataset add zhbikes https://data.stadt-zuerich.ch/dataset/verkehrszaehlungen_werte_fussgaenger_velo/resource/d17a0a74-1073-46f0-a26e-46a403c061ec/download/2017_verkehrszaehlungen_werte_fussgaenger_velo.csv
 
-    '@context':
-      added: http://schema.org/dateCreated
-      affiliation: scoro:affiliate
-      authors:
-        '@container': '@list'
-      created: http://schema.org/dateCreated
-      dcterms: http://purl.org/dc/terms/
-      dctypes: http://purl.org/dc/dcmitypes/
-      email: dcterms:email
-      files:
-        '@container': '@index'
-      foaf: http://xmlns.com/foaf/0.1/
-      identifier:
-        '@id': dctypes:Dataset
-        '@type': '@id'
-      name: dcterms:name
-      prov: http://www.w3.org/ns/prov#
-      scoro: http://purl.org/spar/scoro/
-      url: http://schema.org/url
-    '@type': dctypes:Dataset
-    authors:
-    - '@type': dcterms:creator
-      affiliation: null
-      email: roskarr@ethz.ch
-      name: Rok Roskar
-    created: 2018-05-22 15:30:06.071631
-    files: {}
-    identifier: 6a354882-8308-42c0-9516-0b3c55b81f53
-    name: mydataset
+.. note::
 
-We can import data from a variety of sources: local directories, remote URLs,
-local or remote git repositories or other Renku projects. Here, we will import the
-`README` file of this repo from the web:
+  Running ``git lfs install --local`` before ``renku dataset add ...`` ensures that
+  the data files will tracked using `Git LFS <https://git-lfs.github.com/>`_.
+
+We can see that the two ``renku`` commands manipulate the git repository:
 
 .. code-block:: console
 
-    renku dataset add mydataset https://raw.githubusercontent.com/SwissDataScienceCenter/renku/master/README.rst
+    git log
+    git status
 
-Until now, we have created a Renku project and populated it with a dataset and
-some data. Next, we will see how to use Renku to create a repeatable workflow.
-
-
-Running a reproducible analysis
--------------------------------
-
-For the purpose of the tutorial, we will count the number of lines the words
-"science" and "renku" appear on in our `README` document by using standard
-UNIX commands `grep` and `wc`.
-
-First, get all occurrences of "science" and "renku":
+Let's push the two fresh commits by running:
 
 .. code-block:: console
 
-    renku run grep -i science data/mydataset/README.rst > readme_science
-    renku run grep -i renku data/mydataset/README.rst > readme_renku
+    git push
 
-Now, combine these intermediate outputs into our final calculation:
+The data file can be opened from Jupyter Lab by going to the **Files** tab
+and traversing the ``data`` folder.
 
-.. code-block:: console
+Opening the file, we can see it contains *todo todo todo*.
 
-    renku run wc readme_science readme_renku > wc.out
+Install and manage Python packages
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-For each of our invocations of `renku run`, Renku recorded the command we
-executed into a `Common Workflow Language <http://www.commonwl.org/>`_ (CWL)
-step. Renku uses this information to keep track of the lineage of data. For
-example, we can see the full lineage of `wc.out` using the `renku log`
-command:
+Continuing on the same terminal session as in last step, we can install python
+packages as usual with ``pip``:
 
 .. code-block:: console
 
-    renku log wc.out
+    pip install numpy pandas
+    pip freeze > requirements.txt
+    git add requirements.txt
+    git commit -m"Installed numpy, pandas"
+    git push
 
-    *  c53dbfa0 wc.out
-    *    c53dbfa0 .renku/workflow/80a3f98ede2346f6bc686200016b17d6_wc.cwl
-    |\
-    * |  18bb2c64 readme_science
-    * |  18bb2c64 .renku/workflow/edb4c0b1b4b44d2fb2aff45a8960f905_grep.cwl
-    | *  faa4f82a readme_renku
-    | *  faa4f82a .renku/workflow/3b454003c5884ee8b5b8a943665447fe_grep.cwl
-    |/
-    @  c7b5f922 data/mydataset/README.rst
+.. warning::
 
+  Make sure that you update the ``requirements.txt`` file after you install packages.
+  This ensures that the packages needed to work on your project will be used by your
+  peers when collaborating on a project.
 
-This sequence represents the basic building blocks of a reproducible
-scientific analysis workflow enabled by Renku. Each component of the workflow
-we produced is bundled with metadata that allows us to continue to track
-its lineage and therefore to reuse it as a building block in other projects
-and workflows.
+When updating and pushing the ``requirements.txt`` file to your project repository,
+the Renku platform will update the Python stack used to launch your Jupyter Lab instance.
+The next time you use the **Start Jupyter Lab** button, it will come with these
+packages already installed.
 
+Work using Jupyter Lab
+^^^^^^^^^^^^^^^^^^^^^^
 
-Updating results based on new input data
-----------------------------------------
+Create new notebooks
+""""""""""""""""""""
 
-Suppose our input data changes -- what are the consequences for the downstream
-analysis? Renku gives you some simple tools to inspect the state of your
-project and, if necessary, update results in response to new data or even
-changed source code.
+On the Jupyter Lab interface, use the left bar to go to the **Files** tab.
+You can see the list of files and folders from your project.
 
-Lets modify one of the two files we are using here -- open a text editor and
-simply remove the first few lines from ``data/mydataset/README.rst``. When you
-are done, commit your change with this command:
+To create a new notebook, first double click on the **notebooks** folder (1), then
+on the '+' button (2). Select 'Python 3' to create a new notebook (3).
 
-.. code-block:: console
+TODO: images
 
-    git commit -am 'modified README.rst'
+To rename the notebook, right click on its name (``Untitled.ipynb``) and select rename.
 
-To see what effect this has on the steps we have done so far, use the ``renku status`` command:
+TODO: image
 
-.. code-block:: console
+If you are not familiar with the Jupyter Lab, you can read more on their `documentation <https://jupyterlab.readthedocs.io/en/latest/>`_.
+You can take the time to play with the Jupyter Lab interface and new notebooks before continuing.
 
-    renku status
+If you want to save your new notebook(s), go to the console and use ``git`` to
+add your work to the repository.
 
-    On branch master
-    Files generated from outdated inputs:
-      (use "renku log <file>..." to see the full lineage)
-      (use "renku update <file>..." to generate the file from its latest inputs)
+Record you work and make it repeatable
+""""""""""""""""""""""""""""""""""""""
 
-          readme_renku: data/mydataset/README.rst#42a770ef
-          readme_science: data/mydataset/README.rst#42a770ef
-          wc.out: data/mydataset/README.rst#42a770ef, data/mydataset/README.rst#42a770ef
-
-    Input files used in different versions:
-      (use "renku log --revision <sha1> <file>" to see a lineage for the given revision)
-
-          data/mydataset/README.rst: 998dd21c, 42a770ef
-
-There is a lot of information here. First of all, we know that our outputs
-are out of date. Renku tells us that ``readme_renku``, ``readme_science`` and
-``wc.out`` are all outdated, and that the reason is that the ``README.rst`` used
-to create those outputs is different from the one currently in the repository.
-
-Updating our result is simple. Since we recorded all of the steps along the
-way, Renku can generate a workflow to repeat the analysis on the new data. For
-this, we can use the ``update`` command:
+First, let's make sure the project repository is clean.
+Run:
 
 .. code-block:: console
 
-    renku update
-    ...
-    Resolved '.renku/workflow/55e02a7b49c645b1add0fe29f3378cd1.cwl' to 'file://.../.renku/workflow/55e02a7b49c645b1add0fe29f3378cd1.cwl'
-    [workflow 55e02a7b49c645b1add0fe29f3378cd1.cwl] start
-    [step step_2] start
-    [job step_2] /private/var/folders/wz/myhc0xj14n5585p3mmqhdn_c0000gn/T/tmpuxz7xqbm$ grep \
-        -i \
-        renku \
-        /private/var/folders/wz/myhc0xj14n5585p3mmqhdn_c0000gn/T/tmpf6x9prix/stg88c26013-0326-4de2-bd74-945d27f26761/README.rst > /private/var/folders/wz/myhc0xj14n5585p3mmqhdn_c0000gn/T/tmpuxz7xqbm/readme_renku
-    [job step_2] completed success
-    [step step_2] completed success
-    [step step_1] start
-    [job step_1] /private/var/folders/wz/myhc0xj14n5585p3mmqhdn_c0000gn/T/tmpncblg93r$ grep \
-        -i \
-        science \
-        /private/var/folders/wz/myhc0xj14n5585p3mmqhdn_c0000gn/T/tmp0h4e10tl/stg01f29fae-88f7-41d1-857b-7e47e8df78f6/README.rst > /private/var/folders/wz/myhc0xj14n5585p3mmqhdn_c0000gn/T/tmpncblg93r/readme_science
-    [job step_1] completed success
-    [step step_1] completed success
-    [step step_3] start
-    unrecognized extension field `http://commonwl.org/cwltool#generation`.  Did you include a $schemas section?
-    foreign properties set()
-    unrecognized extension field `http://commonwl.org/cwltool#generation`.  Did you include a $schemas section?
-    foreign properties set()
-    [job step_3] /private/var/folders/wz/myhc0xj14n5585p3mmqhdn_c0000gn/T/tmp6x9s0bsp$ wc \
-        /private/var/folders/wz/myhc0xj14n5585p3mmqhdn_c0000gn/T/tmpuqh5otb2/stg6fa92377-d930-4ec0-baa0-10b4402a0295/readme_science \
-        /private/var/folders/wz/myhc0xj14n5585p3mmqhdn_c0000gn/T/tmpuqh5otb2/stg01109c83-b886-4e2a-b195-2b60c619f02a/readme_renku > /private/var/folders/wz/myhc0xj14n5585p3mmqhdn_c0000gn/T/tmp6x9s0bsp/wc.out
-    [job step_3] completed success
-    [step step_3] completed success
-    [workflow 55e02a7b49c645b1add0fe29f3378cd1.cwl] completed success
-    Moving outputs  [                                    ]  3/3
+    git status
 
+Make sure the output ends with ``nothing to commit, working tree clean``.
+Otherwise, use ``git add``, ``git commit`` and ``rm`` to cleanup your project repository.
 
-All the outputs that depended on `README.rst` are now updated.
+In this section, we will use two pre-existing notebooks to demonstrate how you can
+use the `Renku CLI <http://renku-python.readthedocs.io/>`__ to record you work and make it repeatable.
+You can view the content of the notebooks, use the following links: `DataPreprocess.ipynb <http://example.com>`_
+and `Explore.ipynb <http://example.com>`_. (TODO: link to github)
 
-
-Making your project live on the Renku platform
-----------------------------------------------
-
-So far, the project we have created exists only on your machine. When you want
-to share the project with others, it is necessary to upload it to a server. To
-get started, navigate to the Renku platform URL in your browser -- if you spun
-up your own platform for testing purposes following e.g. `the quickstart
-instructions <setup.rst>`_, this will be at http://renku.build.
-
-The first page allows you to explore public data. You can log in by clicking
-in the upper-right of the frame:
-
-.. image:: ../_static/images/renku-login.png
-
-After you log in, create a new project by clicking the "+" in the upper right.
-Call it "First steps" and enter a brief description. Set the project to have
-restricted visibility:
-
-.. image:: ../_static/images/create-project.png
-
-In Renku, the primary means of exchanging information between your machine and
-the server is via your project repository. Under the hood, we are using  the
-`git version control system <https://git-scm.com/>`_ - if you are not
-familiar with it yet, we strongly recommend that you read some of the
-`excellent available documentation <https://git-scm.com/doc/ext>`_ -- it will
-definitely come in handy not only for working with Renku but working with any
-projects requiring version control.
-
-To link the project on your machine to the project we just created, you need
-to create a "remote", which is basically a pointer to a server that will host
-your project on-line. Once you create the project, navigate to the
-``Settings`` tab and copy the text next to the ``SSH`` box:
-
-.. image:: ../_static/images/project-settings.png
-
-Behind the scenes, Renku is using a GitLab server to manage the repositories.
-In order to push to the server you need to add a valid ssh key to your account.
-To do this, log in to gitlab (e.g. http://gitlab.renku.build) and follow
-`the GitLab instructions`_.
-
-.. _`the Gitlab instructions`: https://docs.gitlab.com/ce/ssh/
-
-Once you have an ssh key added, you may return to your terminal and run the
-following commands in your project directory:
+Use the commands below to add the two notebooks to your project.
 
 .. code-block:: console
 
-    git remote add origin <copied text from SSH box above>
-    git push --set-upstream origin master
+    wget -O "notebooks/DataPreprocess.ipynb" <todo>
+    wget -O "notebooks/Explore.ipynb" <todo>
+    git add notebooks
+    git commit -m"Added Data Preprocess and Explore notebooks"
+    git push
 
-You now have a version of your project hosted on-line on the Renku platform.
-
-
-Basic components of the web user interface
-------------------------------------------
-
-The Renku platform provides you with a simple user interface where you can
-initiate discussions (Ku) about any aspect of your project, view interactive
-notebooks and even initiate new computations.
-
-
-Kus
-^^^
-
-A "Ku" is a basic building block of a Renku poem - in our case, it is the
-essential  component of a data analytics process. It is the primary way to
-communicate about results, code, and data with collaborators. Once inside a
-project, you can start a Ku by clicking on the "+" in the upper right and
-selecting "ku":
-
-.. image:: ../_static/images/create-ku.png
-
-Once the Ku is created you can start working on it by creating "contributions" -
-these might be questions you want to ask about the data, descriptions of a
-solution to a problem or anything in between.
-
-The Ku contributions support full markdown formatting and even embedded media
-elements such as images, code files or jupyter notebooks. To embed a file from
-your repository, simply follow the syntax
+Now, let's run the two notebooks:
 
 .. code-block:: console
 
-    ![description](location)
+    mkdir notebooks/papermill
+    renku run papermill notebooks/DataPreprocess.ipynb notebooks/papermill/DataPreprocess.ipynb \
+        -p input_folder data/zhbikes \
+        -p output_file data/preprocessed/zhbikes.feather
+    renku run papermill notebooks/Explore.ipynb notebooks/papermill/Explore.ipynb \
+        -p zhbikes_data data/preprocessed/zhbikes.feather
 
-Note that as you start to type the ``location``, you will automatically be
-shown a mini file-browser with which you can navigate to the file you need.
+`Papermill <https://papermill.readthedocs.io/en/latest/>`_ is a tool useful for
+running Jupyter notebooks as python scripts.
 
-
-File lineage viewer
-^^^^^^^^^^^^^^^^^^^
-
-Navigate to the ``Files`` tab and click on ``Data``. Recall that we used
-``README.rst`` as the basic starting point in the workflow we created earlier.
-Clicking on it will show you the *lineage graph*:
-
-.. image:: ../_static/images/lineage-graph.png
-
-This shows you the dependencies between inputs and outputs as well as the
-execution steps that connect them.
-
-
-Notebooks
-^^^^^^^^^
-
-In Renku, all of the changes to your code and data are recorded and versioned
-automatically. In addition, you have the option to spawn a jupyter notebook to
-interactively work on your project. To start a notebook server, navigate to
-``Notebooks`` under the ``Files`` tab. If you have any notebooks saved in the
-``notebooks`` directory in your project (which at this point of the tutorial
-we do not), they will appear there. Otherwise, you are presented a ``Launch
-Notebooks Server`` button which you can use to create a new (blank) notebook.
-
-
-Where to go from here
-^^^^^^^^^^^^^^^^^^^^^
-To understand in a bit more detail what is happening behind the scenes in this
-short tutorial, you can read through the :ref:`Renku concepts <concepts>` pages.
-
-For documentation of the Renku command-line interface, follow the `renku
-python CLI docs <http://renku-python.readthedocs.io/en/latest/cli.html>`_.
+Here you can see that we wrapped our command line with ``renku run``.
+By doing so, you have created and recorded recipes which will help everyone
+including you to rerun and reuse your work.
