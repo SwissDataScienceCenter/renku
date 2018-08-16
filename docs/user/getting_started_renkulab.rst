@@ -109,6 +109,65 @@ packages already installed.
 Work using Jupyter Lab
 ^^^^^^^^^^^^^^^^^^^^^^
 
-Notebook: data_preprocess_ipynb_
+Create new notebooks
+""""""""""""""""""""
 
-.. _data_preprocess_ipynb: ../_static/zhbikes/Data%20Preprocess.ipynb
+On the Jupyter Lab interface, use the left bar to go to the **Files** tab.
+You can see the list of files and folders from your project.
+
+To create a new notebook, first double click on the **notebooks** folder (1), then
+on the '+' button (2). Select 'Python 3' to create a new notebook (3).
+
+TODO: images
+
+To rename the notebook, right click on its name ('Untitled.ipynb') and select rename.
+
+TODO: image
+
+If you are not familiar with the Jupyter Lab, you can read more on their `documentation <https://jupyterlab.readthedocs.io/en/latest/>`_.
+You can take the time to play with the Jupyter Lab interface and new notebooks before continuing.
+
+If you want to save your new notebook(s), go to the console and use ``git`` to
+add your work to the repository.
+
+Record you work and make it repeatable
+""""""""""""""""""""""""""""""""""""""
+
+First, let's make sure the project repository is clean.
+Run:
+
+.. code-block:: console
+
+    git status
+
+Make sure the output ends with ``nothing to commit, working tree clean``.
+Otherwise, use ``git add``, ``git commit`` and ``rm`` to cleanup your project repository.
+
+In this section, we will use two pre-existing notebooks to demonstrate how you can
+use the `Renku CLI <http://renku-python.readthedocs.io/>`__ to record you work and make it repeatable.
+You can view the content of the notebooks, use the following links: `DataPreprocess.ipynb <http://example.com>`_
+and `Explore.ipynb <http://example.com>`_. (TODO: link to github)
+
+Use the commands below to add the two notebooks to your project.
+
+.. code-block:: console
+
+    wget -O "notebooks/DataPreprocess.ipynb" <todo>
+    wget -O "notebooks/Explore.ipynb" <todo>
+    git add notebooks
+    git commit -m"Added Data Preprocess and Explore notebooks"
+    git push
+
+Now, let's run the two notebooks:
+
+.. code-block:: console
+
+    mkdir notebooks/papermill
+    renku run papermill notebooks/DataPreprocess.ipynb notebooks/papermill/DataPreprocess.ipynb \
+        -p input_folder data/zhbikes \
+        -p output_file data/preprocessed/zhbikes.feather
+    renku run papermill notebooks/Explore.ipynb notebooks/papermill/Explore.ipynb \
+        -p zhbikes_data data/preprocessed/zhbikes.feather
+
+`Papermill <https://papermill.readthedocs.io/en/latest/>`_ is a tool useful for
+running Jupyter notebooks as python scripts.
