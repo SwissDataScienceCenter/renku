@@ -80,7 +80,7 @@ keycloak:
 
     extraInitContainers: |
       - name: theme-provider
-        image: renku/keycloak-theme:latest
+        image: renku/keycloak-theme:v1.0
         imagePullPolicy: IfNotPresent
         command:
           - sh
