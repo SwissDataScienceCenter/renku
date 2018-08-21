@@ -5,10 +5,22 @@ metadata:
   annotations:
     "helm.sh/hook": test-success
 spec:
+  initContainers:
+  - name: renku-demo
+    image: renku/renku-demo:latest
+    env:
+      - name: GITLAB_URL
+        value: {{ template "http" . }}://{{ .Values.global.renku.domain }}{{ .Values.global.gitlab.urlPrefix }}
+      - name: KEYCLOAK_URL
+        value: {{ template "http" . }}://{{ .Values.global.renku.domain }}
   containers:
   - name: {{ .Release.Name }}-test
     image: "{{ .Values.tests.image.repository }}:{{ .Values.tests.image.tag }}"
     env:
       - name: RENKU_ENDPOINT
         value: {{ template "http" . }}://{{ .Values.global.renku.domain }}
+    lifecycle:
+      preStop:
+        exec:
+          command: ["/tests/demo-cleanup.sh"]
   restartPolicy: Never
