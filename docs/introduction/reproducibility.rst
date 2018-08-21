@@ -175,8 +175,8 @@ Renku helps you achieve the goal of fully reproducible data science by
 bundling together several technologies:
 
 
-* For keeping track of the lineage, our CLI relies heavily on the Common
-  Workflow Language. :ref:`Here <cwl>` you can learn more about our CWL integration.
+* Keeping track of lineage means we can construct `workflows` from your analysis
+  steps. :ref:`Here <workflows>` you can learn more about our automatic workflow generation.
 * For version control, we rely on
   `git <https://git-scm.com/>`_.
 * Your project includes a container specification from day 1. Check out these
