@@ -1,16 +1,4 @@
-.. warning::
-
-  This platform is a (very early) beta version. It is made available to early
-  adopters only for the purpose of getting acquainted with the APIs. THIS
-  VERSION IS NOT INTENDED TO BE USED IN PRODUCTION MODE OR WITH SENSITIVE
-  DATA. In this version we have re-factored the earlier platform to focus more
-  on usability. Not all components for on-line knowledge representation are
-  yet in place, but single-user functionality for lineage capture and workflow
-  generation are available via the CLI. We provide no guarantee whatsoever
-  about the security of the data stored on this platform.
-
 .. _renku_introduction:
-
 
 Introduction
 ============
@@ -26,20 +14,61 @@ Introduction
 **Renku** is a software platform designed to foster multidisciplinary data
 (science) collaboration.
 
-The platform:
 
-* Allows data scientists to easily make their analyses reproducible by
-  automatically capturing the lineage of results in a Knowledge Graph
+Features
+--------
 
-* Makes parts of recorded data science pipelines reusable by others as
-  building blocks in their own analyses
+Renku consists of a collection of services, including a web-based user interface
+and a command-line client.
 
-* Provides tools for working with the Knowledge Graph for the purposes of
-  traceability and auditability
+Here is a quick, high-level overview of Renku features as of late August, 2018.
+
+Renku allows you to:
+
+* track the progress of analysis from raw data to results, with the help of
+  a minimal CLI
+* basic knowledge graph creation, limited to single repositories
+* produce reusable workflow components on-the-fly to easily rerun your
+  analysis when data or code change
+* share data across projects with workflow dependency tracking
+* push projects to the cloud for easy sharing and collaboration
+* interactively explore the project at any point of its revision history,
+  complete with a versioned execution enrionment
+* embed notebooks directly in project discussions
+* preview and merge interactive notebook changes in the web UI
 
 
-Vision
-----------
+Anticipated Features in the Short-term (end of 2018)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+* running and re-running of Renku workflows in the cloud
+* visualizing and modifying workflow steps in the web UI
+* basic platform-wide search utilizing the knowledge graph
+
+
+.. _concepts:
+
+Renku Concepts
+--------------
+
+The goal of Renku is to provide data scientists with simple tools to make
+their work reproducible, repeatable, reusable and shareable. To achieve these
+ends, we glue together many different technologies and approaches from data
+science, computer science and software engineering. The pages below serve as
+an introduction to these concepts so that you as a user have a better
+understanding of what takes place behind the scenes as you work with the Renku
+platform.
+
+.. toctree::
+   :maxdepth: 2
+
+    Reproducibility <reproducibility>
+    Workflows <workflows>
+    Containerization <containerization>
+
+
+Long-term vision
+----------------
 
 As in the traditional art form of renku from which it borrows its name, the
 platform encourages the interdisciplinary cooperation (or coopetition) between
@@ -82,13 +111,16 @@ content that data scientists can explore to find good quality data they can
 trust, and confidently reuse in order to eliminate redundant efforts and
 accidental data duplication as much as possible.
 
+
 History
 -------
 
-- 2017.09.19  **Renku** 0.1.0 (Beta) is released to the public, with some of
+- 2018.02.01. A rewrite of **Renku** is underway
+
+- 2017.09.19.  **Renku** 0.1.0 (Beta) is released to the public, with some of
   the planned features and all the faults.
 
-- 2017.02.06  Inauguration of the Swiss Data Science Center, design of
+- 2017.02.06.  Inauguration of the Swiss Data Science Center, design of
   **Renku** is started.
 
 
