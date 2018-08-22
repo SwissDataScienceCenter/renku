@@ -302,4 +302,42 @@ box and click submit.
     :alt: Participate in a Ku in Renku UI
 
 The comments are displayed using the Markdown format (`cheatsheet here <https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet>`_),
-with the powerful addition that you can link to and embed notebook files.
+with the powerful addition that you can embed notebook files and markdown files.
+
+Let' try this with our question about where the data is coming from.
+Copy and paste the following text in the text box and hit **Submit**.
+
+.. code-block:: console
+
+    The readme should be updated with information about the data source:
+
+    ![Readme](README.md)
+
+.. image:: ../_static/images/renku-ui-comment-1.png
+    :width: 85%
+    :align: center
+    :alt: Ku example 1 in Renku UI
+
+Now, you can use **Launch JupyterLab** to open and edit the ``README.md`` file.
+You can mention that the data comes from the city of Zürich, with the following
+link to the `bike data set <https://data.stadt-zuerich.ch/dataset/verkehrszaehlungen_werte_fussgaenger_velo>`_.
+
+To save the changes to the ``Readme.md`` file, open a console by click on the '+' button
+and then selecting **Terminal**.
+
+Use ``git`` to save your changes:
+
+.. code-block:: console
+
+    cd work
+    git add README.md
+    git commit -m "Added data information in the Readme"
+    git push
+
+Now that the ``README.md`` file has been updated, we can **Close** the Ku.
+
+TODO: image
+
+Doing so indicates that the corresponding discussion is closed.
+This can be useful to sort discussions and find out what is currently work in progress
+within the project.
