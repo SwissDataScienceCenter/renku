@@ -8,5 +8,4 @@ User Documentation
 
    CLI Installation <cli-installation>
    First Steps <firststeps>
-   Concepts <concepts>
    Troubleshooting <troubleshooting>
