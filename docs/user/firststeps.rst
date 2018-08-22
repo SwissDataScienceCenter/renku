@@ -114,10 +114,10 @@ packages as usual with ``pip``:
 
 .. code-block:: console
 
-    pip install papermill numpy pandas feather-format
+    pip install papermill numpy pandas feather-format matplotlib seaborn
     pip freeze > requirements.txt
     git add requirements.txt
-    git commit -m"Installed papermill, numpy, pandas, feather-format"
+    git commit -m"Installed papermill, numpy, pandas, feather-format, matplotlib, seaborn"
     git push
 
 .. warning::
@@ -276,7 +276,7 @@ on the **New Ku** button (2).
 In the **New Ku** form, fill in the **Title** and **Description** as follows.
 
 * Title: Data source
-* Desription: Where does the data come from?
+* Description: Where does the data come from?
 
 Do not change the **Visibility** and click on **Create**.
 
@@ -291,3 +291,15 @@ To participate in a given Ku and add comments, click on the title.
     :width: 85%
     :align: center
     :alt: Kus list in Renku UI
+
+This will display the thread of comments from the selected Ku.
+To write something and add it to the discussion, use the text
+box and click submit.
+
+.. image:: ../_static/images/renku-ui-new-ku-comment.png
+    :width: 85%
+    :align: center
+    :alt: Participate in a Ku in Renku UI
+
+The comments are displayed using the Markdown format (`cheatsheet here <https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet>`_),
+with the powerful addition that you can link to and embed notebook files.
