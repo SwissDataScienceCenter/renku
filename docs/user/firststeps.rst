@@ -49,12 +49,27 @@ Let's start by adding data using the `Renku CLI <http://renku-python.readthedocs
 
 From JupyterLab, start a terminal.
 
+.. image:: ../_static/images/jupyterlab-open-terminal.png
+    :width: 85%
+    :align: center
+    :alt: Open terminal in JupyterLab
+
+Use the following commands to add data to your project.
+
 .. code-block:: console
 
     cd work
     git lfs install --local
+    # Output:
+    # Updated git hooks.
+    # Git LFS initialized.
     renku dataset create zhbikes
+    # Output:
+    # Creating a dataset ... OK
     renku dataset add zhbikes https://data.stadt-zuerich.ch/dataset/verkehrszaehlungen_werte_fussgaenger_velo/resource/d17a0a74-1073-46f0-a26e-46a403c061ec/download/2017_verkehrszaehlungen_werte_fussgaenger_velo.csv
+    # Output:
+    # Adding data to dataset  [                                    ]  1/1  https://data.stadt-zuerich.ch/dataset/verkehrszaehlungen_werte_fussgaenger_velo/resource/d17a0a74-
+    # Adding data to dataset  [                                    ]  1/1
 
 .. note::
 
@@ -185,6 +200,7 @@ Let's begin by adding some data to the ``zhbikes`` data set:
 
 .. code-block:: console
 
+    git lfs install --local
     renku dataset add zhbikes https://data.stadt-zuerich.ch/dataset/verkehrszaehlungen_werte_fussgaenger_velo/resource/ed354dde-c0f9-43b3-b05b-08c5f4c3f65a/download/2016_verkehrszaehlungen_werte_fussgaenger_velo.csv
 
 We can now see that ``renku`` sees that output files like ``data/preprocessed/zhbikes.feather`` are outdated:
