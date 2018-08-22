@@ -68,7 +68,7 @@ def test_notebook_launch(browser):
     notebooks_link[0].click()
 
     # click the notebook to be viewed
-    analysis_link = browser.find_link_by_partial_text('Analysis.ipynb')
+    analysis_link = browser.find_link_by_partial_text('notebooks/Analysis.ipynb')
     assert analysis_link
     analysis_link[0].click()
 
