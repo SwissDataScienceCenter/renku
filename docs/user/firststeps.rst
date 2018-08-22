@@ -82,7 +82,7 @@ Opening the file, we can see it contains *todo todo todo*.
 Install and manage Python packages
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Continuing on the same terminal session as in last step, we can install python
+Continuing in the same terminal session as in last step, we can install python
 packages as usual with ``pip``:
 
 .. code-block:: console
