@@ -9,7 +9,7 @@ at `renkulab.io <https://renkulab.io>`__, it will teach you how to use Renku to:
 1. `Create a new project`_
 2. `Add input data to your project`_
 3. `Install and manage Python packages`_
-4. `Work using Jupyter Lab`_
+4. `Work using JupyterLab`_
 5. `Share your results and collaborate with your peers`_
 
 Create a new project
@@ -39,15 +39,15 @@ Click on the **Create** button.
   silently otherwise.
 
 Now that we have a project, we can start working on it by clicking
-on **Launch Jupyter Lab**.
+on **Launch JupyterLab**.
 
 Add input data to your project
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-On the Jupyter Lab interface, we can see that a few files already exist.
+On the JupyterLab interface, we can see that a few files already exist.
 Let's start by adding data using the `Renku CLI <http://renku-python.readthedocs.io/>`_.
 
-From Jupyter Lab, start a terminal.
+From JupyterLab, start a terminal.
 
 .. code-block:: console
 
@@ -74,7 +74,7 @@ Let's push the two fresh commits by running:
 
     git push
 
-The data file can be opened from Jupyter Lab by going to the **Files** tab
+The data file can be opened from JupyterLab by going to the **Files** tab
 and traversing the ``data`` folder.
 
 Opening the file, we can see it contains *todo todo todo*.
@@ -100,17 +100,17 @@ packages as usual with ``pip``:
   peers when collaborating on a project.
 
 When updating and pushing the ``requirements.txt`` file to your project repository,
-the Renku platform will update the Python stack used to launch your Jupyter Lab instance.
-The next time you use the **Launch Jupyter Lab** button, it will come with these
+the Renku platform will update the Python stack used to launch your JupyterLab instance.
+The next time you use the **Launch JupyterLab** button, it will come with these
 packages already installed.
 
-Work using Jupyter Lab
-^^^^^^^^^^^^^^^^^^^^^^
+Work using JupyterLab
+^^^^^^^^^^^^^^^^^^^^^
 
 Create new notebooks
 """"""""""""""""""""
 
-On the Jupyter Lab interface, use the left bar to go to the **Files** tab.
+On the JupyterLab interface, use the left bar to go to the **Files** tab.
 You can see the list of files and folders from your project.
 
 To create a new notebook, first double click on the **notebooks** folder (1), then
@@ -122,8 +122,8 @@ To rename the notebook, right click on its name (``Untitled.ipynb``) and select 
 
 TODO: image
 
-If you are not familiar with the Jupyter Lab, you can read more on their `documentation <https://jupyterlab.readthedocs.io/en/latest/>`_.
-You can take the time to play with the Jupyter Lab interface and new notebooks before continuing.
+If you are not familiar with the JupyterLab, you can read more on their `documentation <https://jupyterlab.readthedocs.io/en/latest/>`_.
+You can take the time to play with the JupyterLab interface and new notebooks before continuing.
 
 If you want to save your new notebook(s), go to the console and use ``git`` to
 add your work to the repository.
