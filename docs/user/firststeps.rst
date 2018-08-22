@@ -322,7 +322,7 @@ Now, you can use **Launch JupyterLab** to open and edit the ``README.md`` file.
 You can mention that the data comes from the city of Zürich, with the following
 link to the `bike data set <https://data.stadt-zuerich.ch/dataset/verkehrszaehlungen_werte_fussgaenger_velo>`_.
 
-To save the changes to the ``Readme.md`` file, open a console by click on the '+' button
+To save the changes to the ``README.md`` file, open a console by click on the '+' button
 and then selecting **Terminal**.
 
 Use ``git`` to save your changes:
@@ -334,10 +334,40 @@ Use ``git`` to save your changes:
     git commit -m "Added data information in the Readme"
     git push
 
-Now that the ``README.md`` file has been updated, we can **Close** the Ku.
+Now that the ``README.md`` file has been updated, we can **Close** the Ku (1).
 
-TODO: image
+.. image:: ../_static/images/renku-ui-close-ku.png
+    :width: 85%
+    :align: center
+    :alt: Close Ku in Renku UI
 
 Doing so indicates that the corresponding discussion is closed.
 This can be useful to sort discussions and find out what is currently work in progress
 within the project.
+
+Now, let's create another Ku and embed a notebook in the discussion.
+
+* Title: General data exploration
+* Description: First look at the data set
+
+Add a comment with the following content.
+
+.. code-block:: console
+
+    Let's explore the dataset! Here is what we know:
+
+    ![Exploration notebook](notebooks/papermill/Explore.ipynb)
+
+As you can see, the content of the notebook is being displayed in the
+comment. You can collapse/expand it by clicking on its corresponding title
+in blue.
+
+.. image:: ../_static/images/renku-ui-embed-notebook.png
+    :width: 85%
+    :align: center
+    :alt: Embedded notebook in Renku UI
+
+Where to go from here?
+^^^^^^^^^^^^^^^^^^^^^^
+
+TODO
