@@ -24,7 +24,7 @@ clicking on the corresponding button.
 Once logged in, create a new project by going to the **Projects** (1) page
 and clicking on the **New Project** button (2).
 
-.. image:: ui_create_project.png
+.. image:: ../_static/images/ui_create_project.png
     :width: 85%
     :align: center
     :alt: Create a new project in UI
@@ -38,7 +38,12 @@ Click on the **Create** button.
   Be sure to not leave the description field empty. The form will fail
   silently otherwise.
 
-TODO: Star project to find it again.
+To more easily find your project later, you can give it a star:
+
+.. image:: ../_static/images/ui_star_project.png
+    :width: 85%
+    :align: center
+    :alt: Star a project
 
 Now that we have a project, we can start working on it by clicking
 on **Launch JupyterLab**.
