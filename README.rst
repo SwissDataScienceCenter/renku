@@ -38,32 +38,11 @@ The platform allows practitioners to:
 
 
 Starting the platform
-------------------
+---------------------
 
-.. code:: console
-
-    $ make start
-
-Please follow the output for next instructions. If the script successfully
-completes, the platform will be up and running. You may now use standard
-docker commandline tools like `docker-compose` to interact with the
-platform components.
-
-A python CLI and API client is available in the `renku-python
-<https://github.com/SwissDataScienceCenter/renku-python>`_ package.
-
-To stop the platform and clean up all the associated containers and volumes,
-you may use
-
-.. code:: console
-
-    $ make wipe
-
-You can find more details about running the platform in the `setup
-<http://renku.readthedocs.io/en/development/user/setup.html>`_ documentation.
-
-Starting the platform with minikube
------------------------------------
+For local development and testing, we provide a script that takes care
+of all the boilerplate. To start Renku on your laptop, you will need
+`minikube <https://kubernetes.io/docs/setup/minikube/>`_ installed.
 
 .. code:: console
 
@@ -95,7 +74,7 @@ without warnings and errors before creating a pull request:
 
 .. code-block:: console
 
-    $ make start
+    $ make minikube-deploy
     $ make test
 
 To build the documentation from source:
