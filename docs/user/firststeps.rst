@@ -125,17 +125,28 @@ Work using JupyterLab
 Create new notebooks
 """"""""""""""""""""
 
-On the JupyterLab interface, use the left bar to go to the **Files** tab.
+On the JupyterLab interface, use the left bar to go to the **Files** (1) tab.
 You can see the list of files and folders from your project.
 
-To create a new notebook, first double click on the **notebooks** folder (1), then
-on the '+' button (2). Select 'Python 3' to create a new notebook (3).
+To create a new notebook, first double click on the **notebooks** folder (2), then
+on the '+' button (3). Select 'Python 3' to create a new notebook (4).
 
-TODO: images
+.. image:: ../_static/images/jupyterlab-files-notebooks.png
+    :width: 85%
+    :align: center
+    :alt: Files tab and notebooks folder in JupyterLab
+
+.. image:: ../_static/images/jupyterlab-new-notebook.png
+    :width: 85%
+    :align: center
+    :alt: New notebook in JupyterLab
 
 To rename the notebook, right click on its name (``Untitled.ipynb``) and select rename.
 
-TODO: image
+.. image:: ../_static/images/jupyterlab-rename.png
+    :width: 85%
+    :align: center
+    :alt: Rename notebook in JupyterLab
 
 If you are not familiar with the JupyterLab, you can read more on their `documentation <https://jupyterlab.readthedocs.io/en/latest/>`_.
 You can take the time to play with the JupyterLab interface and new notebooks before continuing.
@@ -163,10 +174,14 @@ and `Explore.ipynb <http://example.com>`_. (TODO: link to github)
 
 Use the commands below to add the two notebooks to your project.
 
+.. warning::
+
+  TODO: use master branch before merging below.
+
 .. code-block:: console
 
-    wget -O "notebooks/DataPreprocess.ipynb" <todo>
-    wget -O "notebooks/Explore.ipynb" <todo>
+    wget -O "notebooks/DataPreprocess.ipynb" https://raw.githubusercontent.com/SwissDataScienceCenter/renku/getting-started-renkulab/docs/_static/zhbikes/DataPreprocess.ipynb
+    wget -O "notebooks/Explore.ipynb" https://raw.githubusercontent.com/SwissDataScienceCenter/renku/getting-started-renkulab/docs/_static/zhbikes/Explore.ipynb
     git add notebooks
     git commit -m"Added Data Preprocess and Explore notebooks"
     git push
