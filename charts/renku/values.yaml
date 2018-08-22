@@ -78,6 +78,21 @@ keycloak:
     username: admin
     password: admin
 
+    extraInitContainers: |
+      - name: theme-provider
+        image: renku/keycloak-theme:v1.2
+        imagePullPolicy: IfNotPresent
+        command:
+          - sh
+        args:
+          - -c
+          - |
+            echo "Copying theme..."
+            cp -Rfv /renku_theme/* /theme
+        volumeMounts:
+          - name: theme
+            mountPath: /theme
+
     extraVolumes: |
       - name: realm-secret
         secret:
@@ -85,11 +100,15 @@ keycloak:
           items:
           - key: renku-realm.json
             path: renku-realm.json
+      - name: theme
+        emptyDir: {}
 
     extraVolumeMounts: |
       - name: realm-secret
         mountPath: "/realm/"
         readOnly: true
+      - name: theme
+        mountPath: /opt/jboss/keycloak/themes/renku-theme
 
     extraArgs: -Dkeycloak.import=/realm/renku-realm.json
 
