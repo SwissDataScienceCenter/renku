@@ -10,7 +10,7 @@ at `renkulab.io <https://renkulab.io>`__, it will teach you how to use Renku to:
 2. `Add input data to your project`_
 3. `Install and manage Python packages`_
 4. `Work using Jupyter Lab`_
-5. Share your results and collaborate with your peers
+5. `Share your results and collaborate with your peers`_
 
 Create a new project
 ^^^^^^^^^^^^^^^^^^^^
@@ -39,9 +39,7 @@ Click on the **Create** button.
   silently otherwise.
 
 Now that we have a project, we can start working on it by clicking
-on **Start Jupyter Lab**.
-
-*TODO*: Have a **Start Jupyter Lab** button!!
+on **Launch Jupyter Lab**.
 
 Add input data to your project
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -89,10 +87,10 @@ packages as usual with ``pip``:
 
 .. code-block:: console
 
-    pip install numpy pandas
+    pip install papermill numpy pandas feather-format
     pip freeze > requirements.txt
     git add requirements.txt
-    git commit -m"Installed numpy, pandas"
+    git commit -m"Installed papermill, numpy, pandas, feather-format"
     git push
 
 .. warning::
@@ -103,7 +101,7 @@ packages as usual with ``pip``:
 
 When updating and pushing the ``requirements.txt`` file to your project repository,
 the Renku platform will update the Python stack used to launch your Jupyter Lab instance.
-The next time you use the **Start Jupyter Lab** button, it will come with these
+The next time you use the **Launch Jupyter Lab** button, it will come with these
 packages already installed.
 
 Work using Jupyter Lab
@@ -168,6 +166,7 @@ Now, let's run the two notebooks:
         -p output_file data/preprocessed/zhbikes.feather
     renku run papermill notebooks/Explore.ipynb notebooks/papermill/Explore.ipynb \
         -p zhbikes_data data/preprocessed/zhbikes.feather
+    git push
 
 `Papermill <https://papermill.readthedocs.io/en/latest/>`_ is a tool useful for
 running Jupyter notebooks as python scripts.
@@ -175,3 +174,39 @@ running Jupyter notebooks as python scripts.
 Here you can see that we wrapped our command line with ``renku run``.
 By doing so, you have created and recorded recipes which will help everyone
 including you to rerun and reuse your work.
+
+Reuse your own work
+"""""""""""""""""""
+
+Here, we will quickly see one of the advantages of using the ``renku`` command line
+tool.
+
+Let's begin by adding some data to the ``zhbikes`` data set:
+
+.. code-block:: console
+
+    renku dataset add zhbikes https://data.stadt-zuerich.ch/dataset/verkehrszaehlungen_werte_fussgaenger_velo/resource/ed354dde-c0f9-43b3-b05b-08c5f4c3f65a/download/2016_verkehrszaehlungen_werte_fussgaenger_velo.csv
+
+We can now see that ``renku`` sees that output files like ``data/preprocessed/zhbikes.feather`` are outdated:
+
+.. code-block:: console
+
+    renku status
+    # Output:
+    # On branch master
+    # Files generated from newer inputs:
+    #   (use "renku log [<file>...]" to see the full lineage)
+    #   (use "renku update [<file>...]" to generate the file from its latest inputs)
+    #
+    #         data/preprocessed/zhbikes.feather: data/zhbikes#ac8d549b
+    #         notebooks/papermill/DataPreprocess.ipynb: data/zhbikes#ac8d549b
+    #         notebooks/papermill/Explore.ipynb: data/zhbikes#ac8d549b
+
+To update all the outputs, we can run the following.
+
+.. code-block:: console
+
+    renku update
+
+Share your results and collaborate with your peers
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
