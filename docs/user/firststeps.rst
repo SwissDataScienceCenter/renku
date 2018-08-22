@@ -1,4 +1,4 @@
-.. _firsysteps:
+.. _first_steps:
 
 Getting Started on `renkulab.io <https://renkulab.io>`__
 ========================================================
