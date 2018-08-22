@@ -54,6 +54,11 @@ From JupyterLab, start a terminal.
     :align: center
     :alt: Open terminal in JupyterLab
 
+.. note::
+
+  To paste commands to the JupyterLab console, use ``Cmd+V`` on MacOS or
+  ``Ctrl+Shift+V`` on Linux.
+
 Use the following commands to add data to your project.
 
 .. code-block:: console
