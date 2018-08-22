@@ -38,6 +38,8 @@ Click on the **Create** button.
   Be sure to not leave the description field empty. The form will fail
   silently otherwise.
 
+TODO: Star project to find it again.
+
 Now that we have a project, we can start working on it by clicking
 on **Launch JupyterLab**.
 
@@ -246,3 +248,41 @@ To update all the outputs, we can run the following.
 
 Share your results and collaborate with your peers
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+In this section, we will see how to use Renku to collaborate on projects.
+
+Interactive discussions with Kus
+""""""""""""""""""""""""""""""""
+
+Let's start by going back to the `Renku web interface <https://renkulab.io>`__.
+Make sure you are logged in, so you can see the list of projects you starred.
+
+Click on your ``tutorial-zhbikes`` project to open it and then go to the
+**Kus** tab (1).
+
+As you can see it's empty at the moment, so let's start a new discussion by clicking
+on the **New Ku** button (2).
+
+.. image:: ../_static/images/renku-ui-new-ku.png
+    :width: 85%
+    :align: center
+    :alt: New Ku in Renku UI
+
+In the **New Ku** form, fill in the **Title** and **Description** as follows.
+
+* Title: Data source
+* Desription: Where does the data come from?
+
+Do not change the **Visibility** and click on **Create**.
+
+The **Kus** tab should now list the newly created Ku.
+
+In Renku, Kus are interactive discussions you can use to help keep track of your work
+and to collaborate with others.
+
+To participate in a given Ku and add comments, click on the title.
+
+.. image:: ../_static/images/renku-ui-kus-list.png
+    :width: 85%
+    :align: center
+    :alt: Kus list in Renku UI
