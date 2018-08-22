@@ -104,7 +104,14 @@ Let's push the two fresh commits by running:
 The data file can be opened from JupyterLab by going to the **Files** tab
 and traversing the ``data`` folder.
 
-Opening the file, we can see it contains *todo todo todo*.
+Opening the file, we can see it contains some data in CSV format.
+
+.. image:: ../_static/images/jupyterlab-data-open-csv.png
+    :width: 85%
+    :align: center
+    :alt: Files tab and notebooks folder in JupyterLab
+
+The data is about bike traffic in the City of Zürich.
 
 Install and manage Python packages
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
