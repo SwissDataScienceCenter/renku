@@ -80,7 +80,7 @@ keycloak:
 
     extraInitContainers: |
       - name: theme-provider
-        image: renku/keycloak-theme:v1.0
+        image: renku/keycloak-theme:v1.2
         imagePullPolicy: IfNotPresent
         command:
           - sh
@@ -88,7 +88,7 @@ keycloak:
           - -c
           - |
             echo "Copying theme..."
-            cp -R /renku_theme/* /theme
+            cp -Rfv /renku_theme/* /theme
         volumeMounts:
           - name: theme
             mountPath: /theme
