@@ -100,17 +100,7 @@ For more on the Renku helm charts, go to ``charts/renku/README.rst``.
 Running integration tests
 ^^^^^^^^^^^^^^^^^^^^^^^^^
 
-First, run the demo script:
-
-.. code-block:: console
-
-    $ kubectl -n renku run renku-demo -it \
-        --env="GITLAB_URL=http://$(minikube ip)/gitlab" \
-        --env="KEYCLOAK_URL=http://$(minikube ip)" \
-        --image=renku/renku-demo:latest \
-        --restart=Never
-
-Then we can run the tests:
+Run the tests with ``helm``:
 
 .. code-block:: console
 
