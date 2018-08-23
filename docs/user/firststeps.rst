@@ -71,11 +71,6 @@ Use the following commands to add data to your project.
 .. code-block:: console
 
     cd work
-    git lfs install --local
-    # Output:
-    # Updated git hooks.
-    # Git LFS initialized.
-    renku dataset create zhbikes
     # Output:
     # Creating a dataset ... OK
     renku dataset add zhbikes https://data.stadt-zuerich.ch/dataset/verkehrszaehlungen_werte_fussgaenger_velo/resource/d17a0a74-1073-46f0-a26e-46a403c061ec/download/2017_verkehrszaehlungen_werte_fussgaenger_velo.csv
@@ -98,11 +93,6 @@ the project.
 The data file we added is about bike traffic in the City of Zürich, and its sescription
 can be found `here <https://data.stadt-zuerich.ch/dataset/verkehrszaehlungen_werte_fussgaenger_velo>`_.
 As the file name suggests, this file covers the year of 2017.
-
-.. note::
-
-  Running ``git lfs install --local`` before ``renku dataset add ...`` ensures that
-  the data files will tracked using `Git LFS <https://git-lfs.github.com/>`_.
 
 We can see that the two ``renku`` commands manipulate the git repository:
 
@@ -256,7 +246,6 @@ Let's begin by adding some data to the ``zhbikes`` data set:
 
 .. code-block:: console
 
-    git lfs install --local
     renku dataset add zhbikes https://data.stadt-zuerich.ch/dataset/verkehrszaehlungen_werte_fussgaenger_velo/resource/ed354dde-c0f9-43b3-b05b-08c5f4c3f65a/download/2016_verkehrszaehlungen_werte_fussgaenger_velo.csv
 
 This new file corresponds to the year of 2016 and is part of the same bike data set as above.
