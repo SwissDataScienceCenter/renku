@@ -71,9 +71,11 @@ Use the following commands to add data to your project.
 .. code-block:: console
 
     cd work
+
     renku dataset create zhbikes
     # Output:
     # Creating a dataset ... OK
+
     renku dataset add zhbikes https://data.stadt-zuerich.ch/dataset/verkehrszaehlungen_werte_fussgaenger_velo/resource/d17a0a74-1073-46f0-a26e-46a403c061ec/download/2017_verkehrszaehlungen_werte_fussgaenger_velo.csv
     # Output:
     # Adding data to dataset  [                                    ]  1/1  https://data.stadt-zuerich.ch/dataset/verkehrszaehlungen_werte_fussgaenger_velo/resource/d17a0a74-
@@ -100,7 +102,32 @@ We can see that the two ``renku`` commands manipulate the git repository:
 .. code-block:: console
 
     git log
+    # Output similar to:
+    # commit ef542b5ec5a44fdbb16afc3de413308a7daff32f
+    # Author: John Doe <john.doe@example.com>
+    # Date:   Thu Aug 23 11:58:34 2018 +0000
+    #
+    #     renku dataset add zhbikes https://data.stadt-zuerich.ch/dataset/verkehrszaehlungen_werte_fussgaenger_velo/resource/d17a0a74-1073-46f0-a26e-46a403c061ec/download/2
+    # 017_verkehrszaehlungen_werte_fussgaenger_velo.csv
+    #
+    # commit 38ac3261e8b2964c4608a6ca6d30a4f907dc6930
+    # Author: John Doe <john.doe@example.com>
+    # Date:   Thu Aug 23 11:58:30 2018 +0000
+    #
+    #     renku dataset create zhbikes
+    #
+    # commit 3f74a2dfdf5e27c1dc124f6455931089023253b8
+    # Author: John Doe <john.doe@example.com>
+    # Date:   Thu Aug 23 11:55:41 2018 +0000
+    #
+    #     init renku repository
+
     git status
+    # Expected output:
+    # On branch master
+    # Your branch is ahead of 'origin/master' by 2 commits.
+    #   (use "git push" to publish your local commits)
+    # nothing to commit, working directory clean
 
 Let's push the two fresh commits by running:
 
@@ -152,13 +179,16 @@ Create new notebooks
 On the JupyterLab interface, use the left bar to go to the **Files** (1) tab.
 You can see the list of files and folders from your project.
 
-To create a new notebook, first double click on the **notebooks** folder (2), then
-on the '+' button (3). Select 'Python 3' to create a new notebook (4).
+First, create a folder by clicking on the new folder button (2) and name it
+``notebooks`` (3).
 
 .. image:: ../_static/images/jupyterlab-files-notebooks.png
     :width: 85%
     :align: center
     :alt: Files tab and notebooks folder in JupyterLab
+
+To create a new notebook, first double click on the **notebooks** folder (3), then
+on the '+' button (4). Select 'Python 3' to create a new notebook (5).
 
 .. image:: ../_static/images/jupyterlab-new-notebook.png
     :width: 85%
@@ -195,6 +225,10 @@ Run:
 .. code-block:: console
 
     git status
+    # Expected output:
+    # On branch master
+    # Your branch is up-to-date with 'origin/master'.
+    # nothing to commit, working directory clean
 
 Make sure the output ends with ``nothing to commit, working tree clean``.
 Otherwise, use ``git add``, ``git commit`` and ``rm`` to cleanup your project repository.
@@ -212,6 +246,7 @@ Use the commands below to add the two notebooks to your project.
 
 .. code-block:: console
 
+    mkdir -p notebooks
     wget -O "notebooks/DataPreprocess.ipynb" https://raw.githubusercontent.com/SwissDataScienceCenter/renku/getting-started-renkulab/docs/_static/zhbikes/DataPreprocess.ipynb
     wget -O "notebooks/Explore.ipynb" https://raw.githubusercontent.com/SwissDataScienceCenter/renku/getting-started-renkulab/docs/_static/zhbikes/Explore.ipynb
     git add notebooks
@@ -222,7 +257,7 @@ Now, let's run the two notebooks:
 
 .. code-block:: console
 
-    mkdir notebooks/papermill
+    mkdir -p notebooks/papermill
     renku run papermill notebooks/DataPreprocess.ipynb notebooks/papermill/DataPreprocess.ipynb \
         -p input_folder data/zhbikes \
         -p output_file data/preprocessed/zhbikes.feather
@@ -256,21 +291,31 @@ We can now see that ``renku`` sees that output files like ``data/preprocessed/zh
 .. code-block:: console
 
     renku status
-    # Output:
+    # Expected output similar to:
     # On branch master
     # Files generated from newer inputs:
     #   (use "renku log [<file>...]" to see the full lineage)
     #   (use "renku update [<file>...]" to generate the file from its latest inputs)
     #
-    #         data/preprocessed/zhbikes.feather: data/zhbikes#ac8d549b
-    #         notebooks/papermill/DataPreprocess.ipynb: data/zhbikes#ac8d549b
-    #         notebooks/papermill/Explore.ipynb: data/zhbikes#ac8d549b
+    #         data/preprocessed/zhbikes.feather: data/zhbikes#ef542b5e
+    #         notebooks/papermill/DataPreprocess.ipynb: data/zhbikes#ef542b5e
+    #         notebooks/papermill/Explore.ipynb: data/zhbikes#ef542b5e
 
 To update all the outputs, we can run the following.
 
 .. code-block:: console
 
     renku update
+
+That's it! The intermediate data file ``data/preprocessed/zhbikes.feather`` and the
+output notebooks ``notebooks/papermill/DataPreprocess.ipynb``, ``notebooks/papermill/Explore.ipynb``
+are recreated by re-running the ``papermill`` command.
+
+Lastly, let's not forget to push our work:
+
+.. code-block:: console
+
+    git push
 
 Share your results and collaborate with your peers
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
