@@ -83,6 +83,21 @@ Use the following commands to add data to your project.
     # Adding data to dataset  [                                    ]  1/1  https://data.stadt-zuerich.ch/dataset/verkehrszaehlungen_werte_fussgaenger_velo/resource/d17a0a74-
     # Adding data to dataset  [                                    ]  1/1
 
+Let's take the time to see what happened there.
+First, we go to the ``work`` directory as this is a common convention found with JupyterLab.
+The ``work`` directory contains a clone of your project repository, with ``git``
+already configured.
+
+Next we create a dataset named ``zhbikes`` using the `Renku CLI <http://renku-python.readthedocs.io/>`__
+and lastly we add a file to the ``zhbikes`` data set.
+Here, we can see the preferred method of referencing a file to be added which is
+to use a permanent URL.
+By doing so, we create a reference to the source of the file in the metadata of
+the project.
+
+The data file we added is about bike traffic in the City of Zürich, and its sescription
+can be found `here <https://data.stadt-zuerich.ch/dataset/verkehrszaehlungen_werte_fussgaenger_velo>`_.
+
 .. note::
 
   Running ``git lfs install --local`` before ``renku dataset add ...`` ensures that
@@ -110,8 +125,6 @@ Opening the file, we can see it contains some data in CSV format.
     :width: 85%
     :align: center
     :alt: Files tab and notebooks folder in JupyterLab
-
-The data is about bike traffic in the City of Zürich.
 
 Install and manage Python packages
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -327,7 +340,7 @@ Copy and paste the following text in the text box and hit **Submit**.
 
 Now, you can use **Launch JupyterLab** to open and edit the ``README.md`` file.
 You can mention that the data comes from the city of Zürich, with the following
-link to the `bike data set <https://data.stadt-zuerich.ch/dataset/verkehrszaehlungen_werte_fussgaenger_velo>`_.
+link to the `bike data set <https://data.stadt-zuerich.ch/dataset/verkehrszaehlungen_werte_fussgaenger_velo>`__.
 
 To save the changes to the ``README.md`` file, open a console by click on the '+' button
 and then selecting **Terminal**.
