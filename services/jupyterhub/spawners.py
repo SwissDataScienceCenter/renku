@@ -345,7 +345,12 @@ try:
             self.volumes.append(volume)
 
             #: Define a volume mount for both init and notebook containers.
-            mount_path = '/home/jovyan/work'
+            mount_path = f'/home/jovyan/{options["project"]}'
+
+            # set the repository path to the working directory
+            self.working_dir = mount_path
+            self.notebook_dir = mount_path
+
             volume_mount = {
                 'mountPath': mount_path,
                 'name': name,
@@ -371,6 +376,7 @@ try:
                     'git submodule init && git submodule update && '
                     'git reset --hard {commit_sha} &&'
                     'git lfs install --local &&'
+                    'git config push.default simple &&'
                     'chown 1000:100 -Rc {mount_path}'.format(
                         branch=options.get('branch'),
                         commit_sha=options.get('commit_sha'),
