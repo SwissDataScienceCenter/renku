@@ -276,8 +276,8 @@ Share your results and collaborate with your peers
 
 In this section, we will see how to use Renku to collaborate on projects.
 
-Interactive discussions with Kus
-""""""""""""""""""""""""""""""""
+Discussions with Kus
+""""""""""""""""""""
 
 Let's start by going back to the `Renku web interface <https://renkulab.io>`__.
 Make sure you are logged in, so you can see the list of projects you starred.
@@ -302,7 +302,7 @@ Do not change the **Visibility** and click on **Create**.
 
 The **Kus** tab should now list the newly created Ku.
 
-In Renku, Kus are interactive discussions you can use to help keep track of your work
+In Renku, Kus are media-rich discussions you can use to help keep track of your work
 and to collaborate with others.
 
 To participate in a given Ku and add comments, click on the title.
