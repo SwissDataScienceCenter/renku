@@ -71,6 +71,7 @@ Use the following commands to add data to your project.
 .. code-block:: console
 
     cd work
+    renku dataset create zhbikes
     # Output:
     # Creating a dataset ... OK
     renku dataset add zhbikes https://data.stadt-zuerich.ch/dataset/verkehrszaehlungen_werte_fussgaenger_velo/resource/d17a0a74-1073-46f0-a26e-46a403c061ec/download/2017_verkehrszaehlungen_werte_fussgaenger_velo.csv
