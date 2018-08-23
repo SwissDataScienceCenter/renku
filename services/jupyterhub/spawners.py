@@ -264,6 +264,7 @@ try:
                     '(git checkout {branch} || git checkout -b {branch}) && '
                     'git submodule init && git submodule update && '
                     'git reset --hard {commit_sha} && '
+                    'git lfs install --local &&'
                     'chown 1000:100 -Rc {volume_path}'.format(
                         branch=options.get('branch'),
                         commit_sha=options.get('commit_sha'),
@@ -369,6 +370,7 @@ try:
                     '(git checkout {branch} || git checkout -b {branch}) && '
                     'git submodule init && git submodule update && '
                     'git reset --hard {commit_sha} &&'
+                    'git lfs install --local &&'
                     'chown 1000:100 -Rc {mount_path}'.format(
                         branch=options.get('branch'),
                         commit_sha=options.get('commit_sha'),
