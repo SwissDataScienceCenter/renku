@@ -503,7 +503,10 @@ redis:
   master:
     persistence:
       enabled: false
-
+      
+  networkPolicy:
+    enabled: true
+    allowExternal: false
 
 ## Configuration for the UI service
 ui:
