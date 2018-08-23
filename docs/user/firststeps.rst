@@ -90,7 +90,7 @@ to use a permanent URL.
 By doing so, we create a reference to the source of the file in the metadata of
 the project.
 
-The data file we added is about bike traffic in the City of Zürich, and its sescription
+The data file we added is about bike traffic in the City of Zürich, and its description
 can be found `here <https://data.stadt-zuerich.ch/dataset/verkehrszaehlungen_werte_fussgaenger_velo>`_.
 As the file name suggests, this file covers the year of 2017.
 
