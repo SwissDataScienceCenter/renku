@@ -510,6 +510,8 @@ redis:
 
 ## Configuration for the UI service
 ui:
+  #  welcomePage:
+  #    text: "## Some markdown text here!"
   ## UI image
   # image:
   #   pullPolicy: Always
