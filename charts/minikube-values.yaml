@@ -44,6 +44,8 @@ gitlab:
 notebooks:
   jupyterhub_base_url: /jupyterhub/
   jupyterhub_api_token: notebookstoken
+  securityContext:
+    enabled: false
 
 runner:
   enabled: true
