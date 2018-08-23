@@ -493,32 +493,20 @@ gitlab:
 
 ## Redis configuration
 ## Redis is used by Gitlab
-# redis:
-  ## Redis image
-  # image:
-  #   pullPolicy: IfNotPresent
-  #   repository: redis
-  #   tag: 4.0-alpine
+redis:
 
-  ## Pod affinity for Redis deployment
-  # affinity: {}
-  ## Node selector for Redis deployment
-  # nodeSelector: {}
-  ## Pod tolerations for Redis deployment
-  # tolerations: []
+  cluster:
+    enabled: false
 
-  ## Horizontal scaling of pods
-  # replicaCount: 1
-  # antiAffinity: soft
+  usePassword: false
 
-  ## Resource requests/limits for Redis
-  # resources: {}
-
-  ## Service configuration for Redis
-  ## Modify service.type according to your setup
-  # service:
-  #   port: 6379
-  #   type: ClusterIP
+  master:
+    persistence:
+      enabled: false
+      
+  networkPolicy:
+    enabled: true
+    allowExternal: false
 
 ## Configuration for the UI service
 ui:

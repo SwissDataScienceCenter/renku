@@ -6,13 +6,6 @@ charts:
       published: https://swissdatasciencecenter.github.io/helm-charts
     paths:
       - ./gitlab
-  - name: redis
-    imagePrefix: renku/
-    repo:
-      git: SwissDataScienceCenter/helm-charts
-      published: https://swissdatasciencecenter.github.io/helm-charts
-    paths:
-      - ./redis
   - name: renku
     imagePrefix: renku/
     repo:
