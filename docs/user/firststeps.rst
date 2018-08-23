@@ -97,6 +97,7 @@ the project.
 
 The data file we added is about bike traffic in the City of Zürich, and its sescription
 can be found `here <https://data.stadt-zuerich.ch/dataset/verkehrszaehlungen_werte_fussgaenger_velo>`_.
+As the file name suggests, this file covers the year of 2017.
 
 .. note::
 
@@ -257,6 +258,8 @@ Let's begin by adding some data to the ``zhbikes`` data set:
 
     git lfs install --local
     renku dataset add zhbikes https://data.stadt-zuerich.ch/dataset/verkehrszaehlungen_werte_fussgaenger_velo/resource/ed354dde-c0f9-43b3-b05b-08c5f4c3f65a/download/2016_verkehrszaehlungen_werte_fussgaenger_velo.csv
+
+This new file corresponds to the year of 2016 and is part of the same bike data set as above.
 
 We can now see that ``renku`` sees that output files like ``data/preprocessed/zhbikes.feather`` are outdated:
 
