@@ -186,6 +186,14 @@ You can take the time to play with the JupyterLab interface and new notebooks be
 If you want to save your new notebook(s), go to the console and use ``git`` to
 add your work to the repository.
 
+For example, if you want to keep the new notebook(s), run the following.
+
+.. code-block:: console
+
+    git add notebooks # track the notebooks folder
+    git commit -m "Added some notebooks"
+    git push
+
 Record you work and make it repeatable
 """"""""""""""""""""""""""""""""""""""
 
@@ -323,6 +331,12 @@ box and click submit.
 
 The comments are displayed using the Markdown format (`cheatsheet here <https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet>`_),
 with the powerful addition that you can embed notebook files and markdown files.
+The syntax is as follows:
+
+.. code-block:: console
+
+    ![description](file-location)
+
 
 Let' try this with our question about where the data is coming from.
 Copy and paste the following text in the text box and hit **Submit**.
@@ -390,4 +404,6 @@ in blue.
 Where to go from here?
 ^^^^^^^^^^^^^^^^^^^^^^
 
-TODO
+* Explore the documentation
+* Read more about the `Renku CLI <http://renku-python.readthedocs.io/>`_
+* `Join us on Gitter <https://gitter.im/SwissDataScienceCenter/renku>`_
