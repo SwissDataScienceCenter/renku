@@ -17,8 +17,9 @@ use Renku for:
 Create a new project
 ^^^^^^^^^^^^^^^^^^^^
 
-First, head to `renkulab.io <https://renkulab.io>`__ and click on the **Login**
-button located on the top right corner of the Renku web interface.
+First, head to `renkulab.io <https://renkulab.io>`__ (or your own instance of
+Renku) and click on the **Login** button located on the top right corner of
+the Renku web interface.
 
 You can sign in using with your GitHub or LinkedIn account by
 clicking on the corresponding button.
@@ -53,7 +54,7 @@ on **Launch JupyterLab**.
 Add input data to your project
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-On the JupyterLab interface, we can see that a few files already exist.
+In the JupyterLab interface, we can see that a few files already exist.
 Let's start by adding data using the `Renku CLI <http://renku-python.readthedocs.io/>`_.
 
 From JupyterLab, start a terminal.
@@ -68,11 +69,10 @@ From JupyterLab, start a terminal.
   To paste commands to the JupyterLab console, use ``Cmd+V`` on MacOS or
   ``Ctrl+Shift+V`` on Linux.
 
-Use the following commands to add data to your project.
+When you start the terminal, you will already be inside your project
+directory.  Use the following commands to add data to your project.
 
 .. code-block:: console
-
-    cd work
 
     renku dataset create zhbikes
     # Output:
@@ -83,23 +83,22 @@ Use the following commands to add data to your project.
     # Adding data to dataset  [                                    ]  1/1  https://data.stadt-zuerich.ch/dataset/verkehrszaehlungen_werte_fussgaenger_velo/resource/d17a0a74-
     # Adding data to dataset  [                                    ]  1/1
 
-Let's take the time to see what happened there.
-First, we go to the ``work`` directory as this is a common convention found with JupyterLab.
-The ``work`` directory contains a clone of your project repository, with ``git``
-already configured.
+Let's take the time to see what happened there. Opening the terminal puts
+you inside the project directory with ``git`` already configured.
 
-Next we create a dataset named ``zhbikes`` using the `Renku CLI <http://renku-python.readthedocs.io/>`__
-and lastly we add a file to the ``zhbikes`` data set.
-Here, we can see the preferred method of referencing a file to be added which is
-to use a permanent URL.
-By doing so, we create a reference to the source of the file in the metadata of
-the project.
+Next we created a dataset named ``zhbikes`` using the  `Renku CLI <http
+://renku-python.readthedocs.io/>`__ and lastly we added a file to the
+``zhbikes`` data set. Here, we can see the preferred method of referencing a
+file to be added which is to use a permanent URL. By doing so, we create a
+reference to the source of the file in the metadata of the project.
 
-The data file we added is about bike traffic in the City of Zürich, and its description
-can be found `here <https://data.stadt-zuerich.ch/dataset/verkehrszaehlungen_werte_fussgaenger_velo>`_.
-As the file name suggests, this file covers the year of 2017.
+The data file we added is about bike traffic in the City of Zürich, and its
+description can be found `here <https://data.stadt-
+zuerich.ch/dataset/verkehrszaehlungen_werte_fussgaenger_velo>`_. As the file
+name suggests, this file covers the year of 2017.
 
-We can see that the two ``renku`` commands manipulate the git repository:
+We can see that the two ``renku`` commands make use of the underlying git
+repository:
 
 .. code-block:: console
 
@@ -155,22 +154,24 @@ packages as usual with ``pip``:
 
 .. code-block:: console
 
-    pip install papermill numpy pandas feather-format matplotlib seaborn
+    pip install papermill pandas feather-format seaborn
     pip freeze > requirements.txt
     git add requirements.txt
-    git commit -m"Installed papermill, numpy, pandas, feather-format, matplotlib, seaborn"
+    git commit -m"Installed papermill, pandas, feather-format, seaborn"
     git push
 
 .. warning::
 
-  Make sure that you update the ``requirements.txt`` file after you install packages.
-  This ensures that the packages needed to work on your project will be used by your
-  peers when collaborating on a project.
+  Make sure that you update the ``requirements.txt`` file after you install
+  new packages. This ensures that the packages needed to work on your project
+  will be available to your peers when collaborating on a project.
 
-When updating and pushing the ``requirements.txt`` file to your project repository,
-the Renku platform will update the Python stack used to launch your JupyterLab instance.
-The next time you use the **Launch JupyterLab** button, it will come with these
-packages already installed.
+When updating and pushing the ``requirements.txt`` file to your project
+repository, the Renku platform will update the Python stack used to launch
+your JupyterLab instance. If you shut down your notebook server, the next time
+you use the **Launch JupyterLab** button, the packages will come already
+pre-installed in the new server's environment.
+
 
 Work using JupyterLab
 ^^^^^^^^^^^^^^^^^^^^^
@@ -178,8 +179,8 @@ Work using JupyterLab
 Create new notebooks
 """"""""""""""""""""
 
-On the JupyterLab interface, use the left bar to go to the **Files** (1) tab.
-You can see the list of files and folders from your project.
+On the JupyterLab interface, use the left-hand bar to go to the **Files** (1)
+tab. You can see the list of files and folders from your project.
 
 First, create a folder by clicking on the new folder button (2) and name it
 ``notebooks`` (3).
@@ -189,23 +190,26 @@ First, create a folder by clicking on the new folder button (2) and name it
     :align: center
     :alt: Files tab and notebooks folder in JupyterLab
 
-To create a new notebook, first double click on the **notebooks** folder (3), then
-on the '+' button (4). Select 'Python 3' to create a new notebook (5).
+To create a new notebook, first double click on the **notebooks** folder (3),
+then on the '+' button (4). Select 'Python 3' to create a new notebook (5).
 
 .. image:: ../_static/images/jupyterlab-new-notebook.png
     :width: 85%
     :align: center
     :alt: New notebook in JupyterLab
 
-To rename the notebook, right click on its name (``Untitled.ipynb``) and select rename.
+To rename the notebook, right click on its name (``Untitled.ipynb``) and
+select rename.
 
 .. image:: ../_static/images/jupyterlab-rename.png
     :width: 85%
     :align: center
     :alt: Rename notebook in JupyterLab
 
-If you are not familiar with the JupyterLab, you can read more on their `documentation <https://jupyterlab.readthedocs.io/en/latest/>`_.
-You can take the time to play with the JupyterLab interface and new notebooks before continuing.
+If you are not familiar with JupyterLab, you can read more on their
+`documentation <https://jupyterlab.readthedocs.io/en/latest/>`_. You can take
+the time to play with the JupyterLab interface and new notebooks before
+continuing.
 
 If you want to save your new notebook(s), go to the console and use ``git`` to
 add your work to the repository.
@@ -214,7 +218,7 @@ For example, if you want to keep the new notebook(s), run the following.
 
 .. code-block:: console
 
-    git add notebooks # track the notebooks folder
+    git add notebooks # track everything inside the notebooks folder
     git commit -m "Added some notebooks"
     git push
 
@@ -255,11 +259,22 @@ Use the commands below to add the two notebooks to your project.
     git commit -m"Added Data Preprocess and Explore notebooks"
     git push
 
-Now, let's run the two notebooks:
+You can inspect and run the two notebooks as you would any other Jupyter
+notebook inside the JupyterLab session. However, with the `Papermill
+<https://papermill.readthedocs.io/en/latest/>`_  utility, we can also run the
+notebooks as if they were python scripts.
+
+``Papermill`` creates rendered notebooks and to keep things tidy we will make
+a separate directory for these:
 
 .. code-block:: console
 
     mkdir -p notebooks/papermill
+
+To run the notebooks, you can now execute:
+
+.. code-block:: console
+
     renku run papermill notebooks/DataPreprocess.ipynb notebooks/papermill/DataPreprocess.ipynb \
         -p input_folder data/zhbikes \
         -p output_file data/preprocessed/zhbikes.feather
@@ -267,20 +282,17 @@ Now, let's run the two notebooks:
         -p zhbikes_data data/preprocessed/zhbikes.feather
     git push
 
-`Papermill <https://papermill.readthedocs.io/en/latest/>`_ is a tool useful for
-running Jupyter notebooks as python scripts.
-
-Here you can see that we wrapped our command line with ``renku run``.
-By doing so, you have created and recorded recipes which will help everyone
-including you to rerun and reuse your work.
+Here you can see that we wrapped our command line with ``renku run``. By doing
+so, you have automatically created and recorded recipes which will help
+everyone (including you!) to rerun and reuse your work.
 
 Reuse your own work
 """""""""""""""""""
 
-Here, we will quickly see one of the advantages of using the ``renku`` command line
-tool.
+Here, we will quickly see one of the advantages of using the ``renku`` command
+line tool.
 
-Let's begin by adding some data to the ``zhbikes`` data set:
+Let's begin by adding some more data to the ``zhbikes`` data set:
 
 .. code-block:: console
 
@@ -288,7 +300,8 @@ Let's begin by adding some data to the ``zhbikes`` data set:
 
 This new file corresponds to the year of 2016 and is part of the same bike data set as above.
 
-We can now see that ``renku`` sees that output files like ``data/preprocessed/zhbikes.feather`` are outdated:
+We can now see that ``renku`` recognizes that output files like
+``data/preprocessed/zhbikes.feather`` are outdated:
 
 .. code-block:: console
 
