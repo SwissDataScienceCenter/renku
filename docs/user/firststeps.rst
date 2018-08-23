@@ -1,16 +1,18 @@
 .. _first_steps:
 
-Getting Started on `renkulab.io <https://renkulab.io>`__
-========================================================
+Getting Started with Renku
+==========================
 
-This tutorial will help you get started working on the Renku platform deployed
-at `renkulab.io <https://renkulab.io>`__, it will teach you how to use Renku to:
+This tutorial will help you get started working on the Renku platform. Feel
+free to use  `renkulab.io <https://renkulab.io>`_ or any other instance of
+Renku that you can access. Following the steps below, you will  learn how to
+use Renku for:
 
-1. `Create a new project`_
-2. `Add input data to your project`_
-3. `Install and manage Python packages`_
-4. `Work using JupyterLab`_
-5. `Share your results and collaborate with your peers`_
+1. `Creating a new project <Create a new project>`_
+2. `Adding data to your project <Add input data to your project>`_
+3. `Installing and managing Python packages <Install and manage Python packages>`_
+4. `Working with Renku within JupyterLab <Work using JupyterLab>`_
+5. `Sharing your results and collaborating with your peers <Share your results and collaborate with your peers>`_
 
 Create a new project
 ^^^^^^^^^^^^^^^^^^^^
