@@ -241,8 +241,8 @@ Otherwise, use ``git add``, ``git commit`` and ``rm`` to cleanup your project re
 
 In this section, we will use two pre-existing notebooks to demonstrate how you can
 use the `Renku CLI <http://renku-python.readthedocs.io/>`__ to record you work and make it repeatable.
-You can view the content of the notebooks, use the following links: `DataPreprocess.ipynb <http://example.com>`_
-and `Explore.ipynb <http://example.com>`_. (TODO: link to github)
+You can view the content of the notebooks, use the following links: `DataPreprocess.ipynb <https://github.com/SwissDataScienceCenter/renku/blob/master/docs/_static/zhbikes/DataPreprocess.ipynb>`_
+and `Explore.ipynb <https://github.com/SwissDataScienceCenter/renku/blob/master/docs/_static/zhbikes/Explore.ipynb>`_. (TODO: link to github)
 
 Use the commands below to add the two notebooks to your project.
 
