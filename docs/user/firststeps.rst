@@ -64,6 +64,9 @@ From JupyterLab, start a terminal.
     :align: center
     :alt: Open terminal in JupyterLab
 
+If your JupyterLab interface does not have the launcher tab open, you can
+find it in the top bar menu in File > New Launcher.
+
 .. note::
 
   To paste commands to the JupyterLab console, use ``Cmd+V`` on MacOS or
