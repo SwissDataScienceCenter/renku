@@ -57,7 +57,8 @@ Add input data to your project
 In the JupyterLab interface, we can see that a few files already exist.
 Let's start by adding data using the `Renku CLI <http://renku-python.readthedocs.io/>`_.
 
-From JupyterLab, start a terminal.
+From JupyterLab, start a terminal, under File -> New Launcher; 
+it may be handy to start memorizing some key combinations at this point, use Shift+Cmd+L on MacOS or Ctrl+Shift+L on Linux.
 
 .. image:: ../_static/images/jupyterlab-open-terminal.png
     :width: 85%
