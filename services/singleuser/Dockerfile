@@ -6,6 +6,7 @@ ARG BASE_IMAGE=jupyterhub/singleuser:$JUPYTERHUB_VERSION
 
 FROM $BASE_IMAGE
 ARG JUPYTERHUB_VERSION
+ARG RENKU_VERSION=0.2.0rc1
 MAINTAINER Swiss Data Science Center <info@datascience.ch>
 
 
@@ -47,7 +48,7 @@ ADD notebook.json /home/jovyan/.jupyter/nbconfig/
 ADD gitlab-commit-push.js /home/jovyan/.local/share/jupyter/nbextensions/
 
 # install renku-python
-RUN python3 -m pip install renku
+RUN python3 -m pip install renku==$RENKU_VERSION
 
 COPY git-config.bashrc /home/jovyan/
 RUN cat /home/jovyan/git-config.bashrc >> /home/jovyan/.bashrc && rm /home/jovyan/git-config.bashrc
