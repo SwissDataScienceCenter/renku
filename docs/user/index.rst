@@ -6,6 +6,6 @@ User Documentation
 .. toctree::
    :maxdepth: 2
 
-   CLI Installation <cli-installation>
    First Steps <firststeps>
+   CLI Installation <cli-installation>
    Troubleshooting <troubleshooting>
