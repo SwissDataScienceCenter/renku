@@ -75,6 +75,7 @@ directory.  Use the following commands to add data to your project.
 
 .. code-block:: console
 
+    renku init
     renku dataset create zhbikes
     # Output:
     # Creating a dataset ... OK
