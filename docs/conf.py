@@ -110,7 +110,8 @@ html_theme = 'renku'
 html_theme_options = {
     'description':
         'A software platform for reproducible'
-        'and collaborative data science.',
+        'and collaborative data science,
+        'leveraged by federated independent parties.',
     'github_repo': 'renku',
     'extra_nav_links': {
         'renku@GitHub': 'https://github.com/SwissDataScienceCenter/renku',
