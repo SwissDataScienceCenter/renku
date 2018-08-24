@@ -57,7 +57,7 @@ Add input data to your project
 In the JupyterLab interface, we can see that a few files already exist.
 Let's start by adding data using the `Renku CLI <http://renku-python.readthedocs.io/>`_.
 
-From JupyterLab, start a terminal.
+From JupyterLab, start a terminal, under File -> New Launcher.
 
 .. image:: ../_static/images/jupyterlab-open-terminal.png
     :width: 85%
@@ -77,6 +77,7 @@ directory.  Use the following commands to add data to your project.
 
 .. code-block:: console
 
+    cd work
     renku dataset create zhbikes
     # Output:
     # Creating a dataset ... OK
