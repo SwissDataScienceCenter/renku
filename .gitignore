@@ -10,7 +10,6 @@ services/gitlab/runner/
 services/keycloak/data/
 
 charts/renku/charts/*.tgz
-charts/renku/requirements.lock
 
 # Idea software family
 .idea/
