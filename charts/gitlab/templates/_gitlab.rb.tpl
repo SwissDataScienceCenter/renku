@@ -90,6 +90,8 @@ gitlab_rails['lfs_object_store_connection'] = {{ .Values.lfsObjects.storage }}
 
 prometheus['enable'] = false
 
+gitlab_rails['monitoring_whitelist'] = ['127.0.0.0/8', 10.0.0.0/8']
+
 ### GitLab Registry settings
 registry_external_url '{{ .Values.registry.externalUrl }}'
 gitlab_rails['registry_enabled'] = {{ .Values.registry.enabled }}
