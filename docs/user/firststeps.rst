@@ -1,3 +1,6 @@
+
+
+
 .. _first_steps:
 
 Getting Started with Renku
@@ -245,19 +248,15 @@ Otherwise, use ``git add``, ``git commit`` and ``rm`` to cleanup your project re
 In this section, we will use two pre-existing notebooks to demonstrate how you can
 use the `Renku CLI <http://renku-python.readthedocs.io/>`__ to record you work and make it repeatable.
 You can view the content of the notebooks, use the following links: `DataPreprocess.ipynb <https://github.com/SwissDataScienceCenter/renku/blob/master/docs/_static/zhbikes/DataPreprocess.ipynb>`_
-and `Explore.ipynb <https://github.com/SwissDataScienceCenter/renku/blob/master/docs/_static/zhbikes/Explore.ipynb>`_. (TODO: link to github)
+and `Explore.ipynb <https://github.com/SwissDataScienceCenter/renku/blob/master/docs/_static/zhbikes/Explore.ipynb>`_.
 
 Use the commands below to add the two notebooks to your project.
-
-.. warning::
-
-  TODO: use master branch before merging below.
 
 .. code-block:: console
 
     mkdir -p notebooks
-    wget -O "notebooks/DataPreprocess.ipynb" https://raw.githubusercontent.com/SwissDataScienceCenter/renku/getting-started-renkulab/docs/_static/zhbikes/DataPreprocess.ipynb
-    wget -O "notebooks/Explore.ipynb" https://raw.githubusercontent.com/SwissDataScienceCenter/renku/getting-started-renkulab/docs/_static/zhbikes/Explore.ipynb
+    wget -O "notebooks/DataPreprocess.ipynb" https://raw.githubusercontent.com/SwissDataScienceCenter/renku/master/docs/_static/zhbikes/DataPreprocess.ipynb
+    wget -O "notebooks/Explore.ipynb" https://raw.githubusercontent.com/SwissDataScienceCenter/renku/master/docs/_static/zhbikes/Explore.ipynb
     git add notebooks
     git commit -m"Added Data Preprocess and Explore notebooks"
     git push
