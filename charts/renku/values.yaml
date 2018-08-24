@@ -503,7 +503,7 @@ redis:
   master:
     persistence:
       enabled: false
-      
+
   networkPolicy:
     enabled: true
     allowExternal: false
@@ -552,7 +552,7 @@ jupyterhub:
   hub:
     image:
       name: renku/jupyterhub-k8s
-      tag: latest
+      tag: '0.2.0-rc3'
     services:
       notebooks:
         url: http://renku-notebooks
@@ -608,7 +608,7 @@ jupyterhub:
   singleuser:
     image:
       name: renku/singleuser
-      tag: latest
+      tag: '0.2.0-rc3'
     storage:
       type: none
     defaultUrl: /lab
@@ -637,12 +637,12 @@ jupyterhub:
 apispec:
   image:
     repository: renku/apispec
-    tag: latest
+    tag: '0.2.0-rc3'
 
 tests:
   image:
     repository: renku/tests
-    tag: latest
+    tag: '0.2.0-rc3'
 
 minio:
   ## Set to true to deploy a minio server, can be used as gateway too.
