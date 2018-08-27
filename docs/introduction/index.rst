@@ -20,11 +20,11 @@ Features
 
 Renku consists of a collection of services, including a web-based user interface
 and a command-line client, exploiting in a coherent setup the joint features of:
-* GitLab - version control
+* GitLab -  repository management
 * JupyterHub - Interactive Notebooks
 * Kubernetes - Container Orchestration
 * Keycloak - Identity and Access Management
-* Python - Scripting, glue logic and much more...
+* Python - Scripting & glue logic
 
 Here is a quick, high-level overview of Renku features as of late August, 2018.
 
@@ -120,7 +120,6 @@ accidental data duplication as much as possible.
 History
 -------
 
-- 2018.08.01. **Renku** Component Architecture is solidifying now to a more long-term design
 
 - 2018.02.01. A rewrite of **Renku** is underway
 
