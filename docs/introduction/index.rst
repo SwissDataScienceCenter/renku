@@ -20,6 +20,7 @@ Features
 
 Renku consists of a collection of services, including a web-based user interface
 and a command-line client, exploiting in a coherent setup the joint features of:
+
 * GitLab -  repository management
 * JupyterHub - Interactive Notebooks
 * Kubernetes - Container Orchestration
