@@ -133,7 +133,7 @@ keycloak:
       ## This value is dependent on the Release name! (but helm charts don't allow templating values here.)
       # !!!
       existingSecret: renku
-      existingSecretKey: keycloak-password
+      existingSecretKey: keycloak-postgres-password
 
     ingress:
       enabled: false
