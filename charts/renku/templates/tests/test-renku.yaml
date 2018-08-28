@@ -9,10 +9,22 @@ spec:
   - name: renku-demo
     image: renku/renku-demo:latest
     env:
-      - name: GITLAB_URL
-        value: {{ template "http" . }}://{{ .Values.global.renku.domain }}{{ .Values.global.gitlab.urlPrefix }}
       - name: KEYCLOAK_URL
         value: {{ template "http" . }}://{{ .Values.global.renku.domain }}
+      - name: KEYCLOAK_ADMIN_USER
+        value: {{ .Values.keycloak.keycloak.user }}
+      - name: KEYCLOAK_ADMIN_PASSWORD
+        valueFrom:
+          secretKeyRef:
+            name: {{ template "renku.fullname" . }}
+            key: keycloak-password
+      - name: GITLAB_URL
+        value: {{ template "http" . }}://{{ .Values.global.renku.domain }}{{ .Values.global.gitlab.urlPrefix }}
+      - name: GITLAB_SUDO_TOKEN
+        valueFrom:
+          secretKeyRef:
+            name: {{ template "renku.fullname" . }}
+            key: gitlab-sudo-token
   containers:
   - name: {{ .Release.Name }}-test
     image: "{{ .Values.tests.image.repository }}:{{ .Values.tests.image.tag }}"
