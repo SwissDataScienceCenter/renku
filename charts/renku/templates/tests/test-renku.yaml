@@ -22,7 +22,7 @@ spec:
             name: {{ template "renku.fullname" . }}
             key: keycloak-password
       - name: KEYCLOAK_ADMIN_USER
-        value: {{ .Values.keycloak.keycloak.user }}
+        value: {{ .Values.keycloak.keycloak.username }}
       - name: KEYCLOAK_URL
         value: {{ template "http" . }}://{{ .Values.global.renku.domain }}
   containers:
