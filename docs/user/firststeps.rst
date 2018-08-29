@@ -1,21 +1,22 @@
-
-
-
 .. _first_steps:
 
 Getting Started with Renku
 ==========================
 
 This tutorial will help you get started working on the Renku platform. Feel
-free to use  `renkulab.io <https://renkulab.io>`_ or any other instance of
+free to use  `renkulab.io <https://renkulab.io>`__ or any other instance of
 Renku that you can access. Following the steps below, you will  learn how to
 use Renku for:
 
-1. `Creating a new project <Create a new project>`_
-2. `Adding data to your project <Add input data to your project>`_
-3. `Installing and managing Python packages <Install and manage Python packages>`_
-4. `Working with Renku within JupyterLab <Work using JupyterLab>`_
-5. `Sharing your results and collaborating with your peers <Share your results and collaborate with your peers>`_
+1. `Create a new project <create_project_>`_
+2. `Adding data to your project <add_data_>`_
+3. `Installing and managing Python packages <python_environment_>`_
+4. `Working with Renku within JupyterLab <jupyterlab_>`_
+5. `Interactively explore the bicycle counting data <interactive_exploration_>`_
+6. `Create a reproducible analysis <create_workflow_>`_
+7. `Sharing your results and collaborating with your peers <sharing_is_caring_>`_
+
+.. _create_project:
 
 Create a new project
 ^^^^^^^^^^^^^^^^^^^^
@@ -54,6 +55,8 @@ To more easily find your project later, you can give it a star:
 Now that we have a project, we can start working on it by clicking
 on **Launch JupyterLab**.
 
+.. _add_data:
+
 Add input data to your project
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
@@ -86,8 +89,8 @@ directory.  Use the following commands to add data to your project.
 
     renku dataset add zhbikes https://data.stadt-zuerich.ch/dataset/verkehrszaehlungen_werte_fussgaenger_velo/resource/d17a0a74-1073-46f0-a26e-46a403c061ec/download/2017_verkehrszaehlungen_werte_fussgaenger_velo.csv
     # Output:
-    # Adding data to dataset  [                                    ]  1/1  https://data.stadt-zuerich.ch/dataset/verkehrszaehlungen_werte_fussgaenger_velo/resource/d17a0a74-
-    # Adding data to dataset  [                                    ]  1/1
+    # Adding data to dataset  [     ]  1/1  https://data.stadt-zuerich.ch/dataset/verkehrszaehlungen_werte_fussgaenger_velo/resource/d17a0a74-
+    # Adding data to dataset  [     ]  1/1
 
 Let's take the time to see what happened there. Opening the terminal puts
 you inside the project directory with ``git`` already configured.
@@ -152,6 +155,9 @@ Opening the file, we can see it contains some data in CSV format.
     :align: center
     :alt: Files tab and notebooks folder in JupyterLab
 
+
+.. _python_environment:
+
 Install and manage Python packages
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
@@ -178,6 +184,7 @@ your JupyterLab instance. If you shut down your notebook server, the next time
 you use the **Launch JupyterLab** button, the packages will come already
 pre-installed in the new server's environment.
 
+.. _jupyterlab:
 
 Work using JupyterLab
 ^^^^^^^^^^^^^^^^^^^^^
@@ -229,15 +236,17 @@ For example, if you want to keep the new notebook(s), run the following.
     git push
 
 
+.. _interactive_exploration:
+
 Interactively explore the bicycle data
 """"""""""""""""""""""""""""""""""""""
 
 To start working with the bicycle data we have already created a sample
 notebook that does some data cleaning and visualization. We will first
 download the notebook so you can interactively explore the dataset, much like
-you would in a real project. Feel free to execute the cells. When we are ready to generate results, we will
-refactor the code from the notebook into a python module and run it with
-``renku`` to create a repeatable analysis workflow.
+you would in a real project. Feel free to execute the cells. When we are ready
+to generate results, we will refactor the code from the notebook into a python
+module and run it with ``renku`` to create a repeatable analysis workflow.
 
 Use the commands below to add the notebook to your project.
 
@@ -254,9 +263,9 @@ Refactor the notebook
 """""""""""""""""""""
 
 To make our work here more reusable and easier to maintain we will refactor
-the code we have written in the notebook into runnable python scripts.
-We will make two scripts: one that preprocesses the data and saves the result
-and another that will create the figures.
+the code we have written in the notebook into runnable python scripts. We will
+make two scripts: one that does some initial preprocessing of the data and
+saves the result, and another that will create the figures.
 
 Here, we have already done the refactoring work for you - to get the scripts,
 run:
@@ -284,11 +293,19 @@ When you are satisfied with the code you can commit it to your repository:
     git commit -m 'added refactored scripts'
 
 
+.. _create_workflow:
+
 Produce a repeatable workflow
 """""""""""""""""""""""""""""
 
-Here we will use ``renku`` and your refactored scripts to quickly create a
-"workflow".
+Here we will use ``renku`` and the refactored scripts to quickly create a
+"workflow". A workflow consists of a series of steps, each of which consumes
+some inputs, executes code based on those inputs and produces outputs. The
+outputs of one step are frequently the inputs of another - this creates a
+dependency between the code executions and results. ``Renku`` is designed to
+keep track of these dependencies for you. We will illustrate some of these
+concepts with a simple example (see also the :ref:`reproducibility
+<reproducibility>` introduction).
 
 First, let's make sure the project repository is clean.
 Run:
@@ -339,7 +356,8 @@ Let's begin by adding some more data to the ``zhbikes`` data set:
 
     renku dataset add zhbikes https://data.stadt-zuerich.ch/dataset/verkehrszaehlungen_werte_fussgaenger_velo/resource/ed354dde-c0f9-43b3-b05b-08c5f4c3f65a/download/2016_verkehrszaehlungen_werte_fussgaenger_velo.csv
 
-This new file corresponds to the year of 2016 and is part of the same bike data set as above.
+This new file corresponds to the year of 2016 and is part of the same bike
+data set as above.
 
 We can now see that ``renku`` recognizes that output files like
 ``data/preprocessed/zhbikes.parquet`` and the figures are outdated:
@@ -372,6 +390,9 @@ Lastly, let's not forget to push our work:
 
     git push
 
+
+.. _sharing_is_caring:
+
 Share your results and collaborate with your peers
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
@@ -380,14 +401,14 @@ In this section, we will see how to use Renku to collaborate on projects.
 Discussions with Kus
 """"""""""""""""""""
 
-Let's start by going back to the `Renku web interface <https://renkulab.io>`__.
+Let's start by going back to the `Renku web interface <https://renkulab.io>`_.
 Make sure you are logged in, so you can see the list of projects you starred.
 
 Click on your ``tutorial-zhbikes`` project to open it and then go to the
 **Kus** tab (1).
 
-As you can see it's empty at the moment, so let's start a new discussion by clicking
-on the **New Ku** button (2).
+As you can see it's empty at the moment, so let's start a new discussion by
+clicking on the **New Ku** button (2).
 
 .. image:: ../_static/images/renku-ui-new-ku.png
     :width: 85%
@@ -403,8 +424,8 @@ Do not change the **Visibility** and click on **Create**.
 
 The **Kus** tab should now list the newly created Ku.
 
-In Renku, Kus are media-rich discussions you can use to help keep track of your work
-and to collaborate with others.
+In Renku, Kus are media-rich discussions you can use to help keep track of
+your work and to collaborate with others.
 
 To participate in a given Ku and add comments, click on the title.
 
