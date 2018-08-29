@@ -25,6 +25,11 @@ dependencies = [
         'repo_name': 'renku-gateway',
         'chartpress_dir': 'helm-chart',
     },
+    {
+        'chart_name': 'gitlab',
+        'repo_name': 'renku',
+        'chartpress_dir': 'charts',
+    },
 ]
 
 
