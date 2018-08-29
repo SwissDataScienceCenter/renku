@@ -24,8 +24,8 @@ First, head to `renkulab.io <https://renkulab.io>`__ (or your own instance of
 Renku) and click on the **Login** button located on the top right corner of
 the Renku web interface.
 
-You can sign in using with your GitHub or LinkedIn account by
-clicking on the corresponding button.
+On `renkulab.io <http://renkulab.io>`_ you can sign in using with your GitHub
+or LinkedIn account by clicking on the corresponding button.
 
 Once logged in, create a new project by going to the **Projects** (1) page
 and clicking on the **New Project** button (2).
@@ -160,10 +160,10 @@ packages as usual with ``pip``:
 
 .. code-block:: console
 
-    pip install papermill pandas feather-format seaborn
+    pip install pandas fastparquet seaborn
     pip freeze > requirements.txt
     git add requirements.txt
-    git commit -m"Installed papermill, pandas, feather-format, seaborn"
+    git commit -m"Installed pandas, fastparquet, seaborn"
     git push
 
 .. warning::
@@ -228,8 +228,67 @@ For example, if you want to keep the new notebook(s), run the following.
     git commit -m "Added some notebooks"
     git push
 
-Record you work and make it repeatable
+
+Interactively explore the bicycle data
 """"""""""""""""""""""""""""""""""""""
+
+To start working with the bicycle data we have already created a sample
+notebook that does some data cleaning and visualization. We will first
+download the notebook so you can interactively explore the dataset, much like
+you would in a real project. Feel free to execute the cells. When we are ready to generate results, we will
+refactor the code from the notebook into a python module and run it with
+``renku`` to create a repeatable analysis workflow.
+
+Use the commands below to add the notebook to your project.
+
+.. code-block:: console
+
+    mkdir -p notebooks
+    wget -O "notebooks/zhbikes-notebook.ipynb" https://raw.githubusercontent.com/SwissDataScienceCenter/renku/master/docs/_static/zhbikes/ZHBikes.ipynb
+    git add notebooks
+    git commit -m"Added zuerich bike notebook"
+    git push
+
+
+Refactor the notebook
+"""""""""""""""""""""
+
+To make our work here more reusable and easier to maintain we will refactor
+the code we have written in the notebook into runnable python scripts.
+We will make two scripts: one that preprocesses the data and saves the result
+and another that will create the figures.
+
+Here, we have already done the refactoring work for you - to get the scripts,
+run:
+
+.. code-block:: console
+
+    mkdir -p src
+    wget -O "src/clean_data.py" https://raw.githubusercontent.com/SwissDataScienceCenter/renku/master/docs/_static/zhbikes/clean_data.py
+    wget -O "src/plot_data.py" https://raw.githubusercontent.com/SwissDataScienceCenter/renku/master/docs/_static/zhbikes/plot_data.py
+
+Feel free to inspect the code in the file viewer in your JupyterLab session.
+Note that in the scripts, we are saving first the intermediate output with
+the cleaned ``DataFrame`` and finally also the two figures.
+
+In addition, the scripts must be run with parameters -- to the
+``clean_data.py`` script, we must give an input directory and an output path
+for saving the cleaned dataset. The ``plot_data.py`` script takes as input the
+location of the cleaned dataset.
+
+When you are satisfied with the code you can commit it to your repository:
+
+.. code-block:: console
+
+    git add src
+    git commit -m 'added refactored scripts'
+
+
+Produce a repeatable workflow
+"""""""""""""""""""""""""""""
+
+Here we will use ``renku`` and your refactored scripts to quickly create a
+"workflow".
 
 First, let's make sure the project repository is clean.
 Run:
@@ -245,48 +304,28 @@ Run:
 Make sure the output ends with ``nothing to commit, working tree clean``.
 Otherwise, use ``git add``, ``git commit`` and ``rm`` to cleanup your project repository.
 
-In this section, we will use two pre-existing notebooks to demonstrate how you can
-use the `Renku CLI <http://renku-python.readthedocs.io/>`__ to record you work and make it repeatable.
-You can view the content of the notebooks, use the following links: `DataPreprocess.ipynb <https://github.com/SwissDataScienceCenter/renku/blob/master/docs/_static/zhbikes/DataPreprocess.ipynb>`_
-and `Explore.ipynb <https://github.com/SwissDataScienceCenter/renku/blob/master/docs/_static/zhbikes/Explore.ipynb>`_.
-
-Use the commands below to add the two notebooks to your project.
+To run the ``clean_data.py`` script, we would normally do
 
 .. code-block:: console
 
-    mkdir -p notebooks
-    wget -O "notebooks/DataPreprocess.ipynb" https://raw.githubusercontent.com/SwissDataScienceCenter/renku/master/docs/_static/zhbikes/DataPreprocess.ipynb
-    wget -O "notebooks/Explore.ipynb" https://raw.githubusercontent.com/SwissDataScienceCenter/renku/master/docs/_static/zhbikes/Explore.ipynb
-    git add notebooks
-    git commit -m"Added Data Preprocess and Explore notebooks"
-    git push
+    python src/clean_data.py data/zhbikes data/preprocessed/zhbikes.parquet
 
-You can inspect and run the two notebooks as you would any other Jupyter
-notebook inside the JupyterLab session. However, with the `Papermill
-<https://papermill.readthedocs.io/en/latest/>`_  utility, we can also run the
-notebooks as if they were python scripts.
-
-``Papermill`` creates rendered notebooks and to keep things tidy we will make
-a separate directory for these:
+The only change required to execute the script with ``renku`` is
 
 .. code-block:: console
 
-    mkdir -p notebooks/papermill
+    renku run python src/clean_data.py data/zhbikes data/preprocessed/zhbikes.parquet
 
-To run the notebooks, you can now execute:
+Go ahead and run this command -- it will create the preprocessed file for you
+including the specification of *how* this file was created, and commit all the
+changes to the repository.
+
+To generate the figures, run
 
 .. code-block:: console
 
-    renku run papermill notebooks/DataPreprocess.ipynb notebooks/papermill/DataPreprocess.ipynb \
-        -p input_folder data/zhbikes \
-        -p output_file data/preprocessed/zhbikes.feather
-    renku run papermill notebooks/Explore.ipynb notebooks/papermill/Explore.ipynb \
-        -p zhbikes_data data/preprocessed/zhbikes.feather
-    git push
+    renku run python src/plot_data.py data/preprocessed/zhbikes.parquet
 
-Here you can see that we wrapped our command line with ``renku run``. By doing
-so, you have automatically created and recorded recipes which will help
-everyone (including you!) to rerun and reuse your work.
 
 Reuse your own work
 """""""""""""""""""
@@ -303,7 +342,7 @@ Let's begin by adding some more data to the ``zhbikes`` data set:
 This new file corresponds to the year of 2016 and is part of the same bike data set as above.
 
 We can now see that ``renku`` recognizes that output files like
-``data/preprocessed/zhbikes.feather`` are outdated:
+``data/preprocessed/zhbikes.parquet`` and the figures are outdated:
 
 .. code-block:: console
 
@@ -313,10 +352,10 @@ We can now see that ``renku`` recognizes that output files like
     # Files generated from newer inputs:
     #   (use "renku log [<file>...]" to see the full lineage)
     #   (use "renku update [<file>...]" to generate the file from its latest inputs)
-    #
-    #         data/preprocessed/zhbikes.feather: data/zhbikes#ef542b5e
-    #         notebooks/papermill/DataPreprocess.ipynb: data/zhbikes#ef542b5e
-    #         notebooks/papermill/Explore.ipynb: data/zhbikes#ef542b5e
+
+    #         figs/grid_plot.png: data/zhbikes#57c66586
+    #         data/preprocessed/zhbikes.parquet: data/zhbikes#57c66586
+    #         figs/cumulative.png: data/zhbikes#57c66586
 
 To update all the outputs, we can run the following.
 
@@ -324,9 +363,8 @@ To update all the outputs, we can run the following.
 
     renku update
 
-That's it! The intermediate data file ``data/preprocessed/zhbikes.feather`` and the
-output notebooks ``notebooks/papermill/DataPreprocess.ipynb``, ``notebooks/papermill/Explore.ipynb``
-are recreated by re-running the ``papermill`` command.
+That's it! The intermediate data file ``data/preprocessed/zhbikes.feather``
+and the figures in ``figs/``, are recreated by re-running the
 
 Lastly, let's not forget to push our work:
 
