@@ -83,6 +83,7 @@ def main():
         helm_deploy_cmd = [
             'helm', 'upgrade', release,
             renku_chart,
+            '--debug',
             '--install',
             '--namespace', namespace,
             '-f', os.path.join(renku_chartpress_dir, 'minikube-values.yaml'),
@@ -92,8 +93,8 @@ def main():
             '--set', 'ui.gatewayUrl=http://{mip}/api'.format(mip=minikube_ip()),
             '--set', 'gateway.keycloakUrl=http://{mip}'.format(mip=minikube_ip()),
             '--set', 'gateway.gitlabUrl=http://{mip}/gitlab'.format(mip=minikube_ip()),
-            '--set', 'jupyterhub.hub.extraEnv.GITLAB_URL=http://{mip}/gitlab'.format(mip=minikube_ip()),
-            '--set', 'jupyterhub.hub.extraEnv.IMAGE_REGISTRY=10.100.123.45:8105',
+            '--set', 'notebooks.jupyterhub.hub.extraEnv.GITLAB_URL=http://{mip}/gitlab'.format(mip=minikube_ip()),
+            '--set', 'notebooks.jupyterhub.hub.extraEnv.IMAGE_REGISTRY=10.100.123.45:8105',
             '--set', 'gitlab.registry.externalUrl=http://10.100.123.45:8105/',
             '--timeout', '1800',
         ]
