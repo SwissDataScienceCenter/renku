@@ -637,12 +637,12 @@ ui:
 apispec:
   image:
     repository: renku/apispec
-    tag: '0.0-unclean-e465882'
+    tag: '0.0-unclean-6e8b9df'
 
 tests:
   image:
     repository: renku/tests
-    tag: '0.0-unclean-e465882'
+    tag: '0.0-unclean-6e8b9df'
 
 minio:
   ## Set to true to deploy a minio server, can be used as gateway too.
