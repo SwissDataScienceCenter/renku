@@ -15,10 +15,6 @@ dependencies:
   version: "0.2.0-rc3"
   repository: "https://swissdatasciencecenter.github.io/helm-charts/"
   condition: gitlab.enabled
-
-# - name: jupyterhub
-#   version: "v0.7-51c7a58"
-#   repository: "https://jupyterhub.github.io/helm-chart"
 - name: postgresql
   version: 0.14.4
   repository: "@stable"

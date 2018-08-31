@@ -14,8 +14,6 @@ charts:
     paths:
       - .
       - ../services/apispec
-      # - ../services/jupyterhub
-      # - ../services/singleuser
       - ../tests
     images:
       apispec:
@@ -24,21 +22,6 @@ charts:
         valuesPath: apispec.image
         paths:
           - ../services/apispec
-      # jupyterhub-k8s:
-      #   contextPath: ../services/jupyterhub
-      #   dockerfilePath: ../services/jupyterhub/jupyterhub-k8s.Dockerfile
-      #   valuesPath: jupyterhub.hub.image
-      #   paths:
-      #     - ../services/jupyterhub
-      # singleuser:
-      #   contextPath: ../services/singleuser
-      #   buildArgs:
-      #     JUPYTERHUB_VERSION: "0.9.2"
-      #     RENKU_VERSION: "0.2.0rc1"
-      #   dockerfilePath: ../services/singleuser/Dockerfile
-      #   valuesPath: jupyterhub.singleuser.image
-      #   paths:
-      #     - ../services/singleuser
       tests:
         contextPath: ../tests
         dockerfilePath: ../tests/Dockerfile
