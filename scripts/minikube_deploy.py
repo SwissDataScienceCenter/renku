@@ -83,7 +83,6 @@ def main():
         helm_deploy_cmd = [
             'helm', 'upgrade', release,
             renku_chart,
-            '--debug',
             '--install',
             '--namespace', namespace,
             '-f', os.path.join(renku_chartpress_dir, 'minikube-values.yaml'),
