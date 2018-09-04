@@ -124,7 +124,7 @@ Run the tests with ``helm``:
 Accessing the platform components
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-The main web interface for Renku can be accessed by running the follwoing
+The main web interface for Renku can be accessed by running the following
 in the terminal:
 
 .. code-block:: console
