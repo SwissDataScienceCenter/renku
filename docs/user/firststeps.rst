@@ -1,21 +1,22 @@
-
-
-
 .. _first_steps:
 
 Getting Started with Renku
 ==========================
 
 This tutorial will help you get started working on the Renku platform. Feel
-free to use  `renkulab.io <https://renkulab.io>`_ or any other instance of
+free to use  `renkulab.io <https://renkulab.io>`__ or any other instance of
 Renku that you can access. Following the steps below, you will  learn how to
 use Renku for:
 
-1. `Creating a new project <Create a new project>`_
-2. `Adding data to your project <Add input data to your project>`_
-3. `Installing and managing Python packages <Install and manage Python packages>`_
-4. `Working with Renku within JupyterLab <Work using JupyterLab>`_
-5. `Sharing your results and collaborating with your peers <Share your results and collaborate with your peers>`_
+1. `Create a new project <create_project_>`_
+2. `Adding data to your project <add_data_>`_
+3. `Installing and managing Python packages <python_environment_>`_
+4. `Working with Renku within JupyterLab <jupyterlab_>`_
+5. `Interactively explore the bicycle counting data <interactive_exploration_>`_
+6. `Create a reproducible analysis <create_workflow_>`_
+7. `Sharing your results and collaborating with your peers <sharing_is_caring_>`_
+
+.. _create_project:
 
 Create a new project
 ^^^^^^^^^^^^^^^^^^^^
@@ -24,8 +25,8 @@ First, head to `renkulab.io <https://renkulab.io>`__ (or your own instance of
 Renku) and click on the **Login** button located on the top right corner of
 the Renku web interface.
 
-You can sign in using with your GitHub or LinkedIn account by
-clicking on the corresponding button.
+On `renkulab.io <http://renkulab.io>`_ you can sign in using with your GitHub
+or LinkedIn account by clicking on the corresponding button.
 
 Once logged in, create a new project by going to the **Projects** (1) page
 and clicking on the **New Project** button (2).
@@ -53,6 +54,8 @@ To more easily find your project later, you can give it a star:
 
 Now that we have a project, we can start working on it by clicking
 on **Launch JupyterLab**.
+
+.. _add_data:
 
 Add input data to your project
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -86,8 +89,8 @@ directory.  Use the following commands to add data to your project.
 
     renku dataset add zhbikes https://data.stadt-zuerich.ch/dataset/verkehrszaehlungen_werte_fussgaenger_velo/resource/d17a0a74-1073-46f0-a26e-46a403c061ec/download/2017_verkehrszaehlungen_werte_fussgaenger_velo.csv
     # Output:
-    # Adding data to dataset  [                                    ]  1/1  https://data.stadt-zuerich.ch/dataset/verkehrszaehlungen_werte_fussgaenger_velo/resource/d17a0a74-
-    # Adding data to dataset  [                                    ]  1/1
+    # Adding data to dataset  [     ]  1/1  https://data.stadt-zuerich.ch/dataset/verkehrszaehlungen_werte_fussgaenger_velo/resource/d17a0a74-
+    # Adding data to dataset  [     ]  1/1
 
 Let's take the time to see what happened there. Opening the terminal puts
 you inside the project directory with ``git`` already configured.
@@ -152,6 +155,9 @@ Opening the file, we can see it contains some data in CSV format.
     :align: center
     :alt: Files tab and notebooks folder in JupyterLab
 
+
+.. _python_environment:
+
 Install and manage Python packages
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
@@ -160,10 +166,10 @@ packages as usual with ``pip``:
 
 .. code-block:: console
 
-    pip install papermill pandas feather-format seaborn
+    pip install pandas fastparquet seaborn
     pip freeze > requirements.txt
     git add requirements.txt
-    git commit -m"Installed papermill, pandas, feather-format, seaborn"
+    git commit -m"Installed pandas, fastparquet, seaborn"
     git push
 
 .. warning::
@@ -178,6 +184,7 @@ your JupyterLab instance. If you shut down your notebook server, the next time
 you use the **Launch JupyterLab** button, the packages will come already
 pre-installed in the new server's environment.
 
+.. _jupyterlab:
 
 Work using JupyterLab
 ^^^^^^^^^^^^^^^^^^^^^
@@ -228,8 +235,77 @@ For example, if you want to keep the new notebook(s), run the following.
     git commit -m "Added some notebooks"
     git push
 
-Record you work and make it repeatable
+
+.. _interactive_exploration:
+
+Interactively explore the bicycle data
 """"""""""""""""""""""""""""""""""""""
+
+To start working with the bicycle data we have already created a sample
+notebook that does some data cleaning and visualization. We will first
+download the notebook so you can interactively explore the dataset, much like
+you would in a real project. Feel free to execute the cells. When we are ready
+to generate results, we will refactor the code from the notebook into a python
+module and run it with ``renku`` to create a repeatable analysis workflow.
+
+Use the commands below to add the notebook to your project.
+
+.. code-block:: console
+
+    mkdir -p notebooks
+    wget -O "notebooks/zhbikes-notebook.ipynb" https://raw.githubusercontent.com/SwissDataScienceCenter/renku/master/docs/_static/zhbikes/ZHBikes.ipynb
+    git add notebooks
+    git commit -m"Added zuerich bike notebook"
+    git push
+
+
+Refactor the notebook
+"""""""""""""""""""""
+
+To make our work here more reusable and easier to maintain we will refactor
+the code we have written in the notebook into runnable python scripts. We will
+make two scripts: one that does some initial preprocessing of the data and
+saves the result, and another that will create the figures.
+
+Here, we have already done the refactoring work for you - to get the scripts,
+run:
+
+.. code-block:: console
+
+    mkdir -p src
+    wget -O "src/clean_data.py" https://raw.githubusercontent.com/SwissDataScienceCenter/renku/master/docs/_static/zhbikes/clean_data.py
+    wget -O "src/plot_data.py" https://raw.githubusercontent.com/SwissDataScienceCenter/renku/master/docs/_static/zhbikes/plot_data.py
+
+Feel free to inspect the code in the file viewer in your JupyterLab session.
+Note that in the scripts, we are saving first the intermediate output with
+the cleaned ``DataFrame`` and finally also the two figures.
+
+In addition, the scripts must be run with parameters -- to the
+``clean_data.py`` script, we must give an input directory and an output path
+for saving the cleaned dataset. The ``plot_data.py`` script takes as input the
+location of the cleaned dataset.
+
+When you are satisfied with the code you can commit it to your repository:
+
+.. code-block:: console
+
+    git add src
+    git commit -m 'added refactored scripts'
+
+
+.. _create_workflow:
+
+Produce a repeatable workflow
+"""""""""""""""""""""""""""""
+
+Here we will use ``renku`` and the refactored scripts to quickly create a
+"workflow". A workflow consists of a series of steps, each of which consumes
+some inputs, executes code based on those inputs and produces outputs. The
+outputs of one step are frequently the inputs of another - this creates a
+dependency between the code executions and results. ``Renku`` is designed to
+keep track of these dependencies for you. We will illustrate some of these
+concepts with a simple example (see also the :ref:`reproducibility
+<reproducibility>` introduction).
 
 First, let's make sure the project repository is clean.
 Run:
@@ -245,48 +321,28 @@ Run:
 Make sure the output ends with ``nothing to commit, working tree clean``.
 Otherwise, use ``git add``, ``git commit`` and ``rm`` to cleanup your project repository.
 
-In this section, we will use two pre-existing notebooks to demonstrate how you can
-use the `Renku CLI <http://renku-python.readthedocs.io/>`__ to record you work and make it repeatable.
-You can view the content of the notebooks, use the following links: `DataPreprocess.ipynb <https://github.com/SwissDataScienceCenter/renku/blob/master/docs/_static/zhbikes/DataPreprocess.ipynb>`_
-and `Explore.ipynb <https://github.com/SwissDataScienceCenter/renku/blob/master/docs/_static/zhbikes/Explore.ipynb>`_.
-
-Use the commands below to add the two notebooks to your project.
+To run the ``clean_data.py`` script, we would normally do
 
 .. code-block:: console
 
-    mkdir -p notebooks
-    wget -O "notebooks/DataPreprocess.ipynb" https://raw.githubusercontent.com/SwissDataScienceCenter/renku/master/docs/_static/zhbikes/DataPreprocess.ipynb
-    wget -O "notebooks/Explore.ipynb" https://raw.githubusercontent.com/SwissDataScienceCenter/renku/master/docs/_static/zhbikes/Explore.ipynb
-    git add notebooks
-    git commit -m"Added Data Preprocess and Explore notebooks"
-    git push
+    python src/clean_data.py data/zhbikes data/preprocessed/zhbikes.parquet
 
-You can inspect and run the two notebooks as you would any other Jupyter
-notebook inside the JupyterLab session. However, with the `Papermill
-<https://papermill.readthedocs.io/en/latest/>`_  utility, we can also run the
-notebooks as if they were python scripts.
-
-``Papermill`` creates rendered notebooks and to keep things tidy we will make
-a separate directory for these:
+The only change required to execute the script with ``renku`` is
 
 .. code-block:: console
 
-    mkdir -p notebooks/papermill
+    renku run python src/clean_data.py data/zhbikes data/preprocessed/zhbikes.parquet
 
-To run the notebooks, you can now execute:
+Go ahead and run this command -- it will create the preprocessed file for you
+including the specification of *how* this file was created, and commit all the
+changes to the repository.
+
+To generate the figures, run
 
 .. code-block:: console
 
-    renku run papermill notebooks/DataPreprocess.ipynb notebooks/papermill/DataPreprocess.ipynb \
-        -p input_folder data/zhbikes \
-        -p output_file data/preprocessed/zhbikes.feather
-    renku run papermill notebooks/Explore.ipynb notebooks/papermill/Explore.ipynb \
-        -p zhbikes_data data/preprocessed/zhbikes.feather
-    git push
+    renku run python src/plot_data.py data/preprocessed/zhbikes.parquet
 
-Here you can see that we wrapped our command line with ``renku run``. By doing
-so, you have automatically created and recorded recipes which will help
-everyone (including you!) to rerun and reuse your work.
 
 Reuse your own work
 """""""""""""""""""
@@ -300,10 +356,11 @@ Let's begin by adding some more data to the ``zhbikes`` data set:
 
     renku dataset add zhbikes https://data.stadt-zuerich.ch/dataset/verkehrszaehlungen_werte_fussgaenger_velo/resource/ed354dde-c0f9-43b3-b05b-08c5f4c3f65a/download/2016_verkehrszaehlungen_werte_fussgaenger_velo.csv
 
-This new file corresponds to the year of 2016 and is part of the same bike data set as above.
+This new file corresponds to the year of 2016 and is part of the same bike
+data set as above.
 
 We can now see that ``renku`` recognizes that output files like
-``data/preprocessed/zhbikes.feather`` are outdated:
+``data/preprocessed/zhbikes.parquet`` and the figures are outdated:
 
 .. code-block:: console
 
@@ -313,10 +370,10 @@ We can now see that ``renku`` recognizes that output files like
     # Files generated from newer inputs:
     #   (use "renku log [<file>...]" to see the full lineage)
     #   (use "renku update [<file>...]" to generate the file from its latest inputs)
-    #
-    #         data/preprocessed/zhbikes.feather: data/zhbikes#ef542b5e
-    #         notebooks/papermill/DataPreprocess.ipynb: data/zhbikes#ef542b5e
-    #         notebooks/papermill/Explore.ipynb: data/zhbikes#ef542b5e
+
+    #         figs/grid_plot.png: data/zhbikes#57c66586
+    #         data/preprocessed/zhbikes.parquet: data/zhbikes#57c66586
+    #         figs/cumulative.png: data/zhbikes#57c66586
 
 To update all the outputs, we can run the following.
 
@@ -324,15 +381,17 @@ To update all the outputs, we can run the following.
 
     renku update
 
-That's it! The intermediate data file ``data/preprocessed/zhbikes.feather`` and the
-output notebooks ``notebooks/papermill/DataPreprocess.ipynb``, ``notebooks/papermill/Explore.ipynb``
-are recreated by re-running the ``papermill`` command.
+That's it! The intermediate data file ``data/preprocessed/zhbikes.feather``
+and the figures in ``figs/``, are recreated by re-running the
 
 Lastly, let's not forget to push our work:
 
 .. code-block:: console
 
     git push
+
+
+.. _sharing_is_caring:
 
 Share your results and collaborate with your peers
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -342,14 +401,14 @@ In this section, we will see how to use Renku to collaborate on projects.
 Discussions with Kus
 """"""""""""""""""""
 
-Let's start by going back to the `Renku web interface <https://renkulab.io>`__.
+Let's start by going back to the `Renku web interface <https://renkulab.io>`_.
 Make sure you are logged in, so you can see the list of projects you starred.
 
 Click on your ``tutorial-zhbikes`` project to open it and then go to the
 **Kus** tab (1).
 
-As you can see it's empty at the moment, so let's start a new discussion by clicking
-on the **New Ku** button (2).
+As you can see it's empty at the moment, so let's start a new discussion by
+clicking on the **New Ku** button (2).
 
 .. image:: ../_static/images/renku-ui-new-ku.png
     :width: 85%
@@ -365,8 +424,8 @@ Do not change the **Visibility** and click on **Create**.
 
 The **Kus** tab should now list the newly created Ku.
 
-In Renku, Kus are media-rich discussions you can use to help keep track of your work
-and to collaborate with others.
+In Renku, Kus are media-rich discussions you can use to help keep track of
+your work and to collaborate with others.
 
 To participate in a given Ku and add comments, click on the title.
 
