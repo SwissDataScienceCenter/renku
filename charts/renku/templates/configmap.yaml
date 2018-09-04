@@ -123,11 +123,11 @@ data:
       #!/bin/bash
       set -x
 
-      GITLAB_PASSWORD=$(cat /passwords/gitlab-password)
+      GITLAB_POSTGRES_PASSWORD=$(cat /passwords/gitlab-postgres-password)
 
       psql -v ON_ERROR_STOP=1 <<-EOSQL
           create database "{{ .Values.global.gitlab.postgresDatabase }}";
-          create user "{{ .Values.global.gitlab.postgresUser }}" password '$GITLAB_PASSWORD';
+          create user "{{ .Values.global.gitlab.postgresUser }}" password '$GITLAB_POSTGRES_PASSWORD';
       EOSQL
 
       psql -v ON_ERROR_STOP=1 --dbname "{{ .Values.global.gitlab.postgresDatabase }}" <<-EOSQL
@@ -142,11 +142,11 @@ data:
       #!/bin/bash
       set -x
 
-      JUPYTERHUB_PASSWORD=$(cat /passwords/jupyterhub-password)
+      JUPYTERHUB_POSTGRES_PASSWORD=$(cat /passwords/jupyterhub-postgres-password)
 
       psql -v ON_ERROR_STOP=1 <<-EOSQL
           create database "{{ .Values.global.jupyterhub.postgresDatabase }}";
-          create user "{{ .Values.global.jupyterhub.postgresUser }}" password '$JUPYTERHUB_PASSWORD';
+          create user "{{ .Values.global.jupyterhub.postgresUser }}" password '$JUPYTERHUB_POSTGRES_PASSWORD';
       EOSQL
 
       psql -v ON_ERROR_STOP=1 --dbname "{{ .Values.global.jupyterhub.postgresDatabase }}" <<-EOSQL
