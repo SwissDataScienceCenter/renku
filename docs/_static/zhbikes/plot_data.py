@@ -94,6 +94,7 @@ def generate_plots(preprocessed_input):
     remove_if_exists('figs/grid_plot.png')
     plt.savefig('figs/grid_plot.png')
 
+    f = plt.figure(figsize=(15,10))
     sns.set(rc={'figure.figsize': (15, 10)})
     sns.lineplot(
         x="datetime", y="velo_all", hue="counting_station", data=df_weekly)
