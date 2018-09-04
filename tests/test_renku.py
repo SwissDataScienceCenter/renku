@@ -41,16 +41,16 @@ def test_notebook_launch(browser):
     url = urljoin(os.getenv('RENKU_ENDPOINT', 'http://localhost'), '/login')
     browser.visit(url)
 
-    browser.fill('username', 'cramakri')
-    browser.fill('password', 'cramakri')
+    browser.fill('username', 'sdrenku65535')
+    browser.fill('password', 'sdrenku-test1')
     browser.find_by_id('kc-login').click()
     assert 'Renku' in browser.title
 
     # go to the project page
     assert browser.is_element_present_by_text(
-        'cramakri/weather-zh', wait_time=10
+        'sdrenku65535/weather-zh', wait_time=10
     )
-    proj_link = browser.find_link_by_text('cramakri/weather-zh')
+    proj_link = browser.find_link_by_text('sdrenku65535/weather-zh')
     assert proj_link
     proj_link[0].click()
 
