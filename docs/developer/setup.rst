@@ -1,23 +1,13 @@
-.. _setup:
-
-.. spelling::
-
-    Quickstart
+.. _minikube:
 
 Running the platform
 ====================
 
+This page describes how to deploy the Renku platform
+on `minikube <https://github.com/kubernetes/minikube>`__.
+
 The renku source code is hosted on github:
 https://github.com/SwissDataScienceCenter/renku.
-
-Renku is deployed as a collection of containerized microservices (see
-:ref:`service_architecture`). To run Renku, only a working version of Docker is
-required. In the Renku repository, we provide a `docker-compose` file,
-which can be used to deploy renku quickly, either on a local machine or with a
-cloud provider. However, if you want to use Renku in production, we strongly
-recommend a kubernetes deployment. In fact, even for local development we
-recommend a :ref:`minikube deployment <minikube>` and the docker-compose
-deployment will soon be deprecated.
 
 Prerequisites
 -------------
@@ -25,28 +15,17 @@ If you want to start developing the Renku platform, you will need the following
 dependencies:
 
 * python 3.6
-* `pip <https://pypi.org/project/pip/>`_ (or `pipenv <https://github.com/pypa/pipenv>`_)
-* `Docker <http://www.docker.com>`_
-* `Docker Compose >=1.14 <https://docs.docker.com/compose/install/>`_
-  (**Linux Only**)
+* `pipenv <https://github.com/pypa/pipenv>`_
+* `minikube <https://github.com/kubernetes/minikube>`__
+* `kubectl <https://kubernetes.io/docs/tasks/tools/install-kubectl/>`_
+* `helm <https://github.com/kubernetes/helm/blob/master/docs/install.md>`_ (>= 2.9.1)
 * `GNU make <https://www.gnu.org/software/make/>`_
 
-.. note::
+For OS X users, we also recommend to install the
+`hyperkit vm driver for minikube <https://github.com/kubernetes/minikube/blob/master/docs/drivers.md#hyperkit-driver>`_.
 
-    On Mac OS X, we recommend that you set the amount of memory available
-    to Docker to 6GB (under Docker Preferences --> Advanced).
-
-For Kubernetes deployments:
-
-* a `Kubernetes <https://kubernetes.io/>`_ cluster or `minikube <https://kubernetes.io/docs/getting-started-guides/minikube/>`_
-* `helm <https://helm.sh/>`_ (>= 2.9.1)
-
-
-Getting the code and images
----------------------------
-
-Get the platform
-^^^^^^^^^^^^^^^^
+Getting the code
+----------------
 
 .. code-block:: console
 
@@ -57,124 +36,109 @@ Get the platform
 ``renku`` is the "parent" repository of the collection of microservices, each
 of which has its own repository.
 
+Building and deploying to minikube
+----------------------------------
 
-.. _quickstart:
+Install Python dependencies
+^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Quickstart
-----------
-
-Renku is deployed using Docker containers. For production deployments we
-include kubernetes helm charts; development environments can be created
-using `docker-compose`.
-
-
-Kubernetes
-^^^^^^^^^^
-
-The preferred way to run Renku is via Kubernetes. Locally, this usually means
-using minikube. Please follow the instructions on our :ref:`minikube
-documentation <minikube>`.
-
-Docker
-^^^^^^
-
-.. warning::
-
-    This mode of deployment will soon be deprecated.
-
-If you prefer to use plain Docker, you can get going with Renku in a few
-minutes by using our pre-built images:
+Use ``pipenv``:
 
 .. code-block:: console
 
-    $ cd renku
-    $ make .env
-    $ ./scripts/renku-start.sh
+    $ pipenv install
 
-Once the script completes, you can go to http://renku.build to see the
-browser front-end.
+Starting minikube
+^^^^^^^^^^^^^^^^^
 
-`make .env` creates a `.env` file which contains environment variables used
-as configuration for various platform components. You can override these
-values either by specifying them on the command line *when calling `make .env`*,
-or you can modify them in `.env` after it has been created. Note that once
-the `.env` file is in place, the values specified there take precedent.
-
-Using the default configuration, you can login to all services using
-`demo/demo` as the username/password. See :ref:`user_management` for more
-information about handling user accounts.
-
-
-Building from source
-^^^^^^^^^^^^^^^^^^^^
-
-.. note::
-    Unless you are developing Renku components or trying a bleeding edge
-    version of a service, you should not need to build from source.
+Using the default VM driver:
 
 .. code-block:: console
 
-    $ cd renku
-    $ make
+    $ minikube start --memory 6144
 
-This will build the images of *all* Renku services. To build a single service,
-you can simply use, for example
+Using HyperKit:
 
 .. code-block:: console
 
-    $ make renku-ui
+    $ minikube delete # Make sure we do not reuse a minikube vm on virtualbox
+    $ minikube start --memory 6144 --vm-driver hyperkit
 
-``make`` assumes that  the base directory of the platform is the parent
-directory of `renku`. If you want to specify a different path, use the ``-e``
-option:
-
-.. code-block:: console
-
-    $ mkdir -p /path/to/base/renku/directory
-    $ make -e PLATFORM_BASE_DIR=/path/to/base/renku/directory
-
-Once ``make`` completes, you should now have all the service images made:
+If your machine as enough resources, you can increase the allocated
+resources, e.g.
 
 .. code-block:: console
 
-    $ docker images
-    REPOSITORY                  TAG             IMAGE ID
-    renku/gitlab-runner         latest          b36beaf93cba
-    renku/renku-python          latest          0670bbcb22ed
-    renku/renku-storage         latest          e73374425a1f
-    renku/renku-ui              latest          3aa6ddac8eee
+    $ minikube start --cpus 2 --memory 8192 --disk-size 40g
 
-Use ``make`` to invoke docker-compose and bring up the platform:
+Once minikube is started, make sure you can access it by running:
 
 .. code-block:: console
 
-    $ make start
-    [Info] Using Docker network: review=8112d474690a
-    ...
-    renku_reverse-proxy_1 is up-to-date
-    renku_ui_1 is up-to-date
-    renku_db_1 is up-to-date
-    renku_gitlab-runner_1 is up-to-date
-    renku_keycloak_1 is up-to-date
-    renku_gitlab_1 is up-to-date
+    $ kubectl get node
+    NAME       STATUS    ROLES     AGE       VERSION
+    minikube   Ready     <none>    3s        v1.10.0
 
-    ...
+Deploying Helm and Nginx ingress
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-    [Success] Renku UI should be under http://renku.build and GitLab under http://gitlab.renku.build
+.. code-block:: console
 
+    $ helm init
+    $ helm upgrade --install nginx-ingress --namespace kube-system \
+        --set controller.hostNetwork=true \
+        stable/nginx-ingress
 
-Identity Management
--------------------------
+Building and deploying components
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Provide helm chart dependencies:
+
+.. code-block:: console
+
+    $ helm repo add gitlab https://charts.gitlab.io
+    $ helm repo add jupyterhub https://jupyterhub.github.io/helm-chart
+
+Build and deploy:
+
+.. code-block:: console
+
+    $ make minikube-deploy
+
+This command will build and deploy the platform components on minikube.
+You can edit and test code changes from ``renku``, ``renku-ui``, ``renku-gateway`` and
+``renku-notebooks`` then run ``make minikube-deploy``
+to check out the changes.
+
+For more on the Renku helm charts, go to ``charts/renku/README.rst``.
+
+Running integration tests
+^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Run the tests with ``helm``:
+
+.. code-block:: console
+
+    $ helm test renku
+
+Accessing the platform components
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+The main web interface for Renku can be accessed by running the following
+in the terminal:
+
+.. code-block:: console
+
+    $ xdg-open "http://$(minikube ip)"
+
+Here is the list of accessible services:
+
+- ``/`` -> Renku web UI
+- ``/auth`` -> Keycloak, identity manager
+- ``/auth/admin/`` -> Keycloak admin console
+- ``/gitlab`` -> GitLab
 
 A default user ``demo`` with password ``demo`` is configured in the identity
 manager Keycloak. The administration console of Keycloak is available at
-http://localhost/auth/admin, with the user ``admin`` and password ``admin``
+``/auth/admin``, with the user ``admin`` and password ``admin``
 (`Keycloak documentation <http://www.keycloak.org/documentation.html>`_).
-
-
-Platform Endpoint
------------------
-
-By default, the platform is configured to use ``http://renku.build`` as the
-endpoint. You can change this by defining the ``RENKU_ENDPOINT`` environment
-variable before starting the platform services.
