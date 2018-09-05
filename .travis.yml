@@ -79,3 +79,11 @@ deploy:
     script: bash scripts/travis-deploy.sh
     on:
       branch: master
+  - provider: script
+    skip_cleanup: true
+    script:
+      - cd charts
+      - helm update dep renku
+      - pipenv run chartpress --tag $TRAVIS_TAG --push --publish-chart
+    on:
+      tags: true
