@@ -7,7 +7,6 @@ Developer Documentation
    :maxdepth: 2
 
    Running the platform <setup>
-   Development setup on minikube <minikube>
    Architecture <services/services_architecture>
    User Management <identity_management>
    Web API <web>
