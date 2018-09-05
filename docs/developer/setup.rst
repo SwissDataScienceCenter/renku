@@ -98,6 +98,7 @@ Provide helm chart dependencies:
 
     $ helm repo add gitlab https://charts.gitlab.io
     $ helm repo add jupyterhub https://jupyterhub.github.io/helm-chart
+    $ helm repo add renku https://swissdatasciencecenter.github.io/helm-charts
 
 Build and deploy:
 
