@@ -133,7 +133,7 @@ keycloak:
       ## This value is dependent on the Release name! (but helm charts don't allow templating values here.)
       # !!!
       existingSecret: renku
-      existingSecretKey: keycloak-password
+      existingSecretKey: keycloak-postgres-password
 
     ingress:
       enabled: false
@@ -545,95 +545,36 @@ ui:
   ## Set the JupyterHub URL
   # jupyterhubUrl: "http://jupyterhub.renku.build"
 
-## Configuration for the jupyterhub service
-jupyterhub:
-  rbac:
-    enabled: true
-  hub:
-    image:
-      name: renku/jupyterhub-k8s
-      tag: '0.2.0-rc3'
-    services:
-      notebooks:
-        url: http://renku-notebooks
-        admin: true
-        api_token: notebookstoken
-    extraEnv:
-      DEBUG: 1
-      JUPYTERHUB_NOTEBOOK_DIR: /home/jovyan/work
-      JUPYTERHUB_SPAWNER_CLASS: spawners.RenkuKubeSpawner
-    extraConfig: |
-      import os
+# ## Configuration for the notebooks service
+# notebooks:
+  ## Set the notebooks service API token
+  # jupyterhub_api_token: notebookstoken
 
-      # Set the log level by value or name.
-      c.JupyterHub.log_level = 'DEBUG'
+  # jupyterhub:
+    ## Configure rbac
+    # rbac:
+    #   enabled: true
+    ## Set the notebooks service API token
+    # hub:
+    #   services:
+        # notebooks:
+        #   api_token: notebookstoken
+    ## Simple default setup for gitlab oauth
+    # auth:
+    #   type: gitlab
+    #   gitlab:
+    #     clientId: jupyterhub
+    #     clientSecret: dummy-secret
+    #     callbackUrl: '""' # Forces the default callback url
+    ## Configure idle pod culling
+    # cull:
+    #   enabled: true
+    #   timeout: 86400
+    #   every: 60
+    # singleuser:
+    #   # use JupyterLab by default in notebook servers
+    #   defaultUrl: /lab
 
-      # Enable debug-logging of the single-user server
-      c.Spawner.debug = True
-
-      # JupyterHub uses GITLAB_HOST which is a misnomer -- we use GITLAB_URL
-      # everywhere so set this mapping here
-      os.environ['GITLAB_HOST'] = os.getenv('GITLAB_URL')
-
-      #: Automatically begin the login process without showing the button.
-      c.Authenticator.auto_login = True
-
-      #: Enable named-servers
-      c.JupyterHub.allow_named_servers = True
-
-      #: Configure the notebook spawner.
-      c.JupyterHub.spawner_class = os.getenv('JUPYTERHUB_SPAWNER_CLASS',
-                                           'spawners.Spawner')
-
-      c.RenkuKubeSpawner.pod_name_template = 'jupyter-{username}{servername}'
-
-      #: Explicitly set notebook directory because we'll be mounting a host volume to
-      #: it.  Most jupyter/docker-stacks *-notebook images run the Notebook server as
-      #: user `jovyan`, and set the notebook directory to `/home/jovyan/work`.
-      #: We follow the same convention.
-      notebook_dir = os.getenv('JUPYTERHUB_NOTEBOOK_DIR', '/home/jovyan/work')
-      c.Spawner.notebook_dir = notebook_dir
-
-      #: For debugging arguments passed to spawned containers
-      c.Spawner.debug = bool(os.getenv('DEBUG', False))
-
-      # Increase pod initialization timeout to 15 minutes
-      c.KubeSpawner.start_timeout = 60 * 15
-
-      # prevent redirect to /hub if the server is taking slightly longer to start
-      c.JupyterHub.tornado_settings = {
-        'slow_spawn_timeout': 1
-      }
-
-  singleuser:
-    image:
-      name: renku/singleuser
-      tag: '0.2.0-rc3'
-    storage:
-      type: none
-    defaultUrl: /lab
-  # FIXME: bug in prepuller makes helm hang in certain cases. Fixed in 0.7
-  # so this should be removed eventually.
-  # https://github.com/jupyterhub/zero-to-jupyterhub-k8s/issues/477
-  prePuller:
-    hook:
-      enabled: false
-  auth:
-    type: gitlab
-    gitlab:
-      clientId: jupyterhub
-      clientSecret: dummy-secret
-      callbackUrl: '""' # Forces the default callback url
-  proxy:
-    service:
-      type: ClusterIP
-      nodePorts: {}
-    https:
-      enabled: false
-  cull:
-    enabled: true
-    timeout: 86400
-    every: 60
 apispec:
   image:
     repository: renku/apispec

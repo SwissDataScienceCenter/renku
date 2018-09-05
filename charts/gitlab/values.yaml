@@ -25,6 +25,11 @@ lfsObjects:
 service:
   type: ClusterIP
   port: 80
+  metrics:
+    enabled: true
+    annotations:
+      prometheus.io/scrape: "true"
+      prometheus.io/path: /gitlab/-/metrics
 
 persistence:
   enabled: true
