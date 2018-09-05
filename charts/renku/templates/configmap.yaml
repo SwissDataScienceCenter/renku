@@ -28,7 +28,7 @@ data:
     psql -v ON_ERROR_STOP=1 <<-EOSQL
         DELETE FROM oauth_applications WHERE uid='jupyterhub';
         INSERT INTO oauth_applications (name, uid, scopes, redirect_uri, secret, trusted)
-        VALUES ('jupyterhub', 'jupyterhub', 'api read_user', '{{ template "http" . }}://{{ .Values.global.renku.domain }}{{ .Values.jupyterhub.hub.baseUrl }}hub/oauth_callback {{ template "http" . }}://{{ .Values.global.renku.domain }}/jupyterhub/hub/api/oauth2/authorize', '{{ .Values.jupyterhub.auth.gitlab.clientSecret }}', 'true');
+        VALUES ('jupyterhub', 'jupyterhub', 'api read_user', '{{ template "http" . }}://{{ .Values.global.renku.domain }}{{ .Values.notebooks.jupyterhub.hub.baseUrl }}hub/oauth_callback {{ template "http" . }}://{{ .Values.global.renku.domain }}/jupyterhub/hub/api/oauth2/authorize', '{{ .Values.notebooks.jupyterhub.auth.gitlab.clientSecret }}', 'true');
 
         DELETE FROM oauth_applications WHERE uid='renku-ui';
         INSERT INTO oauth_applications (name, uid, scopes, redirect_uri, secret, trusted)
@@ -104,11 +104,11 @@ data:
     #!/bin/bash
     set -x
 
-    KEYCLOAK_PASSWORD=$(cat /passwords/keycloak-password)
+    KEYCLOAK_POSTGRES_PASSWORD=$(cat /passwords/keycloak-postgres-password)
 
     psql -v ON_ERROR_STOP=1 <<-EOSQL
         create database "{{ .Values.global.keycloak.postgresDatabase }}";
-        create user "{{ .Values.global.keycloak.postgresUser }}" password '$KEYCLOAK_PASSWORD';
+        create user "{{ .Values.global.keycloak.postgresUser }}" password '$KEYCLOAK_POSTGRES_PASSWORD';
     EOSQL
 
     psql -v ON_ERROR_STOP=1 --dbname "{{ .Values.global.keycloak.postgresDatabase }}" <<-EOSQL
@@ -123,11 +123,11 @@ data:
       #!/bin/bash
       set -x
 
-      GITLAB_PASSWORD=$(cat /passwords/gitlab-password)
+      GITLAB_POSTGRES_PASSWORD=$(cat /passwords/gitlab-postgres-password)
 
       psql -v ON_ERROR_STOP=1 <<-EOSQL
           create database "{{ .Values.global.gitlab.postgresDatabase }}";
-          create user "{{ .Values.global.gitlab.postgresUser }}" password '$GITLAB_PASSWORD';
+          create user "{{ .Values.global.gitlab.postgresUser }}" password '$GITLAB_POSTGRES_PASSWORD';
       EOSQL
 
       psql -v ON_ERROR_STOP=1 --dbname "{{ .Values.global.gitlab.postgresDatabase }}" <<-EOSQL
@@ -142,11 +142,11 @@ data:
       #!/bin/bash
       set -x
 
-      JUPYTERHUB_PASSWORD=$(cat /passwords/jupyterhub-password)
+      JUPYTERHUB_POSTGRES_PASSWORD=$(cat /passwords/jupyterhub-postgres-password)
 
       psql -v ON_ERROR_STOP=1 <<-EOSQL
           create database "{{ .Values.global.jupyterhub.postgresDatabase }}";
-          create user "{{ .Values.global.jupyterhub.postgresUser }}" password '$JUPYTERHUB_PASSWORD';
+          create user "{{ .Values.global.jupyterhub.postgresUser }}" password '$JUPYTERHUB_POSTGRES_PASSWORD';
       EOSQL
 
       psql -v ON_ERROR_STOP=1 --dbname "{{ .Values.global.jupyterhub.postgresDatabase }}" <<-EOSQL
