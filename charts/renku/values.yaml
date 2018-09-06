@@ -582,12 +582,12 @@ ui:
 apispec:
   image:
     repository: renku/apispec
-    tag: '0.2.0-rc3'
+    tag: '0.2.0-rc4'
 
 tests:
   image:
     repository: renku/tests
-    tag: '0.2.0-rc3'
+    tag: '0.2.0-rc4'
 
 minio:
   ## Set to true to deploy a minio server, can be used as gateway too.
