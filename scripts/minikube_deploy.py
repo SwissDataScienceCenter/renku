@@ -50,6 +50,8 @@ def main():
     get_minikube_docker_env()
     for dep in dependencies:
         chartpress_dir = os.path.join(dependency_dir(dep['repo_name']), dep['chartpress_dir'])
+        subchart_dir = os.path.join(chartpress_dir, dep['repo_name'])
+        update_subchart_dependencies(subchart_dir)
         update_charts(chartpress_dir)
     update_charts(renku_chartpress_dir)
 
@@ -142,6 +144,11 @@ def update_charts(chartpress_dir):
     if chartpress_tag:
         cmd = cmd + ['--tag', chartpress_tag]
     run(cmd, cwd=chartpress_dir).check_returncode()
+
+
+def update_subchart_dependencies(subchart_dir):
+    """Updates subchart dependencies"""
+    run(['helm', 'dep', 'update'], cwd=subchart_dir).check_returncode()
 
 
 def get_minikube_docker_env():
