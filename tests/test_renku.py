@@ -22,6 +22,7 @@ from urllib.parse import urljoin
 
 import pytest
 import splinter
+import time
 
 
 def test_renku_login(browser):
@@ -44,7 +45,18 @@ def test_notebook_launch(browser):
     browser.fill('username', 'sdrenku65535')
     browser.fill('password', 'sdrenku-test1')
     browser.find_by_id('kc-login').click()
+
+    # wait a bit for the page to load, helps to avoid test failures
+    time.sleep(2)
     assert 'Renku' in browser.title
+
+    # go to the projects overview page
+    assert browser.is_element_present_by_text(
+        'Projects', wait_time=10
+    )
+    projects_link = browser.find_link_by_text('Projects')
+    assert projects_link
+    projects_link[0].click()
 
     # go to the project page
     assert browser.is_element_present_by_text(
