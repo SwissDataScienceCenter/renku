@@ -13,6 +13,8 @@ ingress:
 global:
   gitlab:
     urlPrefix: /gitlab
+  renku:
+    version: 'latest'
 
 gitlab:
   ssh:
