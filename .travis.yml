@@ -79,3 +79,4 @@ deploy:
     script: bash scripts/travis-deploy.sh
     on:
       branch: master
+      condition: $TRAVIS_EVENT_TYPE != cron
