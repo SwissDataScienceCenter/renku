@@ -29,7 +29,7 @@ requests==2.19.1
 simplegeneric==0.8.1
 six==1.11.0
 snowballstemmer==1.2.1
--e git+https://github.com/rokroskar/sphinx.git@use-doc-dir#egg=sphinx
+sphinx==1.8.0
 sphinxcontrib-spelling==4.2.0
 sphinxcontrib-websupport==1.1.0
 traitlets==4.3.2

@@ -11,8 +11,8 @@ Introduction
 
    -- Wikipedia
 
-**Renku** is a software platform designed to foster multidisciplinary data
-(science) collaboration.
+**Renku** is a software platform designed to foster multidisciplinary (data)
+science collaboration.
 
 
 Features
@@ -21,7 +21,7 @@ Features
 Renku consists of a collection of services, including a web-based user interface
 and a command-line client, exploiting in a coherent setup the joint features of:
 
-* `GitLab <https://gitlab.com>`_ -  repository management 
+* `GitLab <https://gitlab.com>`_ -  repository management
 * `JupyterHub <http://jupyter.org/hub>`_ - interactive notebooks
 * `Kubernetes <https://kubernetes.io>`_ - container orchestration
 * `Keycloak <https://www.keycloak.org>`_ - identity and access management
@@ -49,7 +49,7 @@ Anticipated Features in the Short-term (end of 2018)
 
 * running and re-running of Renku workflows in the cloud
 * visualizing and modifying workflow steps in the web UI
-* basic platform-wide search utilizing the knowledge graph
+* basic platform-wide search utilizing the Knowledge Graph
 
 
 .. _concepts:
@@ -60,17 +60,58 @@ Renku Concepts
 The goal of Renku is to provide data scientists with simple tools to make
 their work reproducible, repeatable, reusable and shareable. To achieve these
 ends, we glue together many different technologies and approaches from data
-science, computer science and software engineering. The pages below serve as
-an introduction to these concepts so that you as a user have a better
+science, computer science and software engineering. Here we provide an
+introduction to these concepts so that you as a user have a better
 understanding of what takes place behind the scenes as you work with the Renku
 platform.
 
-.. toctree::
-   :maxdepth: 2
 
-    Reproducibility <reproducibility>
-    Workflows <workflows>
-    Containerization <containerization>
+Reproducibility
+^^^^^^^^^^^^^^^
+
+First and foremost, we have designed Renku to enable reproducible data
+science. In addition, Renku enables you to share pieces of your analysis
+process with others at any time, and conversely, to reuse the work of others.
+We encourage such cooperation by recording use of both data and code so that
+the lineage and provenance of both can be uniquely determined.
+
+In a typical data analysis or modeling project, these types of questions arise
+very frequently:
+
+* How exactly was this model or result obtained? How was the raw data pre-processed?
+* Who is using my data, model, or result and how?
+* What does this new data mean for our last month's report?
+* How can I share my latest analysis with a colleague through the cloud?
+* How can I make sure that our colleagues in another team can reproduce our results?
+
+Answering these questions in a reliable fashion is difficult. Renku provides
+the tools that substantially reduce the effort required on the part of the
+data scientists who want to keep their work reproducible, reliable and robust.
+Here, we introduce the essential concepts underlying the design and
+implementation of Renku.
+
+Several important concepts intertwine in Renku to enable reproducible data science.
+These are:
+
+.. toctree::
+  :maxdepth: 1
+
+   Lineage <lineage>
+   Version control <version_control>
+   Environments and containerization <containerization>
+
+
+Re-usability
+^^^^^^^^^^^^
+
+Once a project takes advantage of the lineage-tracking provided by Renku, it
+opens many new possibilities. For example, one can now reuse pieces of the
+project, whether it is a related project building on the previous one or a
+completely new analysis. Importing an object with Renku lineage into another
+Renku project means that the information is automatically carried over. One of
+the upcoming improvements to Renku will be to use this information when
+searching for data or algorithms and allow us to answer queries like "who is
+using my algorithm/dataset and how?"
 
 
 Long-term vision
