@@ -40,7 +40,7 @@ def test_renku_login(browser):
 
 def test_notebook_launch(browser):
     """Test launching a notebook from UI."""
-    with open('users.json', 'r') as f:
+    with open('/tests/users.json', 'r') as f:
       users = json.load(f)
     url = urljoin(os.getenv('RENKU_ENDPOINT', 'http://localhost'), '/login')
     browser.visit(url)
