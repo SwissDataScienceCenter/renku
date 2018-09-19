@@ -8,12 +8,12 @@ free to use  `renkulab.io <https://renkulab.io>`__ or any other instance of
 Renku that you can access. Following the steps below, you will  learn how to
 use Renku for:
 
-1. `Create a new project <create_project_>`_
+1. `Creating a new project <create_project_>`_
 2. `Adding data to your project <add_data_>`_
 3. `Installing and managing Python packages <python_environment_>`_
 4. `Working with Renku within JupyterLab <jupyterlab_>`_
 5. `Interactively explore the bicycle counting data <interactive_exploration_>`_
-6. `Create a reproducible analysis <create_workflow_>`_
+6. `Producing a repeatable analysis <create_workflow_>`_
 7. `Sharing your results and collaborating with your peers <sharing_is_caring_>`_
 
 .. _create_project:
@@ -29,26 +29,21 @@ On `renkulab.io <http://renkulab.io>`_ you can sign in using with your GitHub
 or LinkedIn account by clicking on the corresponding button.
 
 Once logged in, create a new project by going to the **Projects** (1) page
-and clicking on the **New Project** button (2).
+and clicking on the **New Project** button.
 
 .. image:: ../_static/images/ui_create_project.png
-    :width: 85%
+    :width: 100%
     :align: center
     :alt: Create a new project in UI
 
-Set **tutorial-zhbikes** as your project title, fill-in a short description
-and set the project visibility to **Public**.
-Click on the **Create** button.
-
-.. warning::
-
-  Be sure to not leave the description field empty. The form will fail
-  silently otherwise.
+Set **Zürich bikes tutorial** as your project title, fill-in a short
+description and set the project visibility to **Public**. Click on the
+**Create** button.
 
 To more easily find your project later, you can give it a star:
 
 .. image:: ../_static/images/ui_star_project.png
-    :width: 85%
+    :width: 100%
     :align: center
     :alt: Star a project
 
@@ -96,7 +91,7 @@ Let's take the time to see what happened there. Opening the terminal puts
 you inside the project directory with ``git`` already configured.
 
 Next we created a dataset named ``zhbikes`` using the  `Renku CLI <http
-://renku-python.readthedocs.io/>`__ and lastly we added a file to the
+://renku-python.readthedocs.io/>`__ and finally we added a file to the
 ``zhbikes`` data set. Here, we can see the preferred method of referencing a
 file to be added which is to use a permanent URL. By doing so, we create a
 reference to the source of the file in the metadata of the project.
@@ -436,8 +431,7 @@ some inputs, executes code based on those inputs and produces outputs. The
 outputs of one step are frequently the inputs of another - this creates a
 dependency between the code executions and results. ``Renku`` is designed to
 keep track of these dependencies for you. We will illustrate some of these
-concepts with a simple example (see also the :ref:`reproducibility
-<reproducibility>` introduction).
+concepts with a simple example (see also the :ref:`lineage`).
 
 First, let's make sure the project repository is clean.
 Run:
@@ -467,7 +461,9 @@ The only change required to execute the script with ``renku`` is
 
 Go ahead and run this command -- it will create the preprocessed file for you
 including the specification of *how* this file was created, and commit all the
-changes to the repository.
+changes to the repository. See the `renku command line docs <https://renku-
+python.readthedocs.io/en/latest/cli.html>`_ for more information on this and
+other commands.
 
 To generate the figures, run
 
@@ -514,7 +510,10 @@ To update all the outputs, we can run the following.
     renku update
 
 That's it! The intermediate data file ``data/preprocessed/zhbikes.feather``
-and the figures in ``figs/``, are recreated by re-running the
+and the figures in ``figs/``, are recreated by re-running the necessary steps.
+See the `renku update documentation <https://renku-python.readthedocs.io/en/latest/cli.html
+#renku-update>`_ for a detailed explanation of how the workflow is re-
+executed.
 
 Lastly, let's not forget to push our work:
 
@@ -650,6 +649,7 @@ in blue.
 Where to go from here?
 ^^^^^^^^^^^^^^^^^^^^^^
 
+* Create your own project on renkulab.io!
 * Explore the documentation
 * Read more about the `Renku CLI <http://renku-python.readthedocs.io/>`_
 * `Join us on Gitter <https://gitter.im/SwissDataScienceCenter/renku>`_
