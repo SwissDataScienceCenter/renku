@@ -7,7 +7,7 @@ Knowing how we converted data into actionable results by recording lineage and
 keeping track of versioning gets us most of the way to being able to fully
 reproducing an analysis workflow. A final piece is encapsulating the actual
 computational environment. In a quantitative sense, using different releases
-of the same library can simple lead to different results. A more practical
+of the same library can simply lead to different results. A more practical
 aspect, however, is that replicating a computational environment for
 reproducibility's sake is often simply very time consuming.
 
