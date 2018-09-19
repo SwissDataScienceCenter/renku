@@ -52,5 +52,5 @@ spec:
   restartPolicy: Never
   volumes:
     - name: demo-users
-    secret:
-      secretName: {{ template "renku.fullname" . }}
+      secret:
+        secretName: {{ template "renku.fullname" . }}
