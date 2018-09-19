@@ -161,33 +161,165 @@ Opening the file, we can see it contains some data in CSV format.
 Install and manage Python packages
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Continuing in the same terminal session as in last step, we can install python
-packages as usual with ``pip``:
+Here we will see how to use `conda <https://conda.io/docs/index.html>`_
+environments to install packages.
+Using ``conda`` will help you to share your work with others and to make it
+more readily reproducible.
+
+First, notice the presence of ``environment.yml`` in the File tab.
+Double click on it so that it opens in Jupyter Lab.
+
+TODO: image
+
+This is what the contents should look like:
+
+.. code-block:: yaml
+
+    name: tutorial-zhbikes
+    channels:
+    - defaults
+    dependencies:
+    - jupyter
+    - jupyterlab
+    prefix: /opt/conda/envs/tutorial-zhbikes
+
+Let's add ``pandas``, ``fastparquet`` and ``seaborn`` to the list of packages.
+The environment file should now read as follows.
+
+.. code-block:: yaml
+
+    name: tutorial-zhbikes
+    channels:
+    - defaults
+    dependencies:
+    - jupyter
+    - jupyterlab
+    - pandas
+    - fastparquet
+    - seaborn
+    prefix: /opt/conda/envs/tutorial-zhbikes
+
+Make sure you save the modifications to the file by using
+``Cmd+S`` or ``Ctrl+S``.
+Now we can go back to the terminal to install these additional packages.
+
+TODO: image
+
+FIrst, here is how to get a list of exisiting ``conda`` environments:
 
 .. code-block:: console
 
-    pip install pandas fastparquet seaborn
-    pip freeze > requirements.txt
-    git add requirements.txt
+    conda env list
+    # Expected output:
+    # # conda environments:
+    # #
+    # base                  *  /opt/conda
+    # renku                    /opt/conda/envs/renku
+    # test-conda-python        /opt/conda/envs/test-conda-python
+
+The ``*`` denotes the current environment. As you can see, we are using the
+base ``conda`` environment.
+To activate our environment, run the following:
+
+.. code-block:: console
+
+    source activate test-conda-python
+
+Refer to the `conda <https://conda.io/docs/index.html>`__ documentation to learn
+more about how to use ``conda``.
+
+Now, to install the packages, we can run the following command:
+
+.. code-block:: console
+
+    conda env update -f environment.yml
+    # Output should be similar to:
+    # Solving environment: done
+    #
+    #
+    # ==> WARNING: A newer version of conda exists. <==
+    #   current version: 4.5.8
+    #   latest version: 4.5.11
+    #
+    # Please update conda by running
+    #
+    #     $ conda update -n base conda
+    #
+    #
+    #
+    # Downloading and Extracting Packages
+    # thrift-0.11.0        |  105 KB | ###################################################################################################################################################### | 100%
+    # fastparquet-0.1.6    |  225 KB | ###################################################################################################################################################### | 100%
+    # numba-0.39.0         |  2.4 MB | ###################################################################################################################################################### | 100%
+    # seaborn-0.9.0        |  379 KB | ###################################################################################################################################################### | 100%
+    # more-itertools-4.3.0 |   83 KB | ###################################################################################################################################################### | 100%
+    # pluggy-0.7.1         |   25 KB | ###################################################################################################################################################### | 100%
+    # pandas-0.23.4        | 10.0 MB | ###################################################################################################################################################### | 100%
+    # llvmlite-0.24.0      | 15.3 MB | ###################################################################################################################################################### | 100%
+    # atomicwrites-1.2.1   |   11 KB | ###################################################################################################################################################### | 100%
+    # py-1.6.0             |  136 KB | ###################################################################################################################################################### | 100%
+    # pytest-3.8.0         |  317 KB | ###################################################################################################################################################### | 100%
+    # Preparing transaction: done
+    # Verifying transaction: done
+    # Executing transaction: done
+    # #
+    # # To activate this environment, use
+    # #
+    # #     $ conda activate test-conda-python
+    # #
+    # # To deactivate an active environment, use
+    # #
+    # #     $ conda deactivate
+
+The packages have been installed on the JupyterLab instance, but we need to
+make sure that the changes to the ``environment.yml`` file are preserved.
+Let's commit these changes and push them to the project repository:
+
+.. code-block:: console
+
+    git status
+    # Expected output:
+    # On branch master
+    # Your branch is up to date with 'origin/master'.
+    #
+    # Changes not staged for commit:
+    #   (use "git add <file>..." to update what will be committed)
+    #   (use "git checkout -- <file>..." to discard changes in working directory)
+    #
+    #         modified:   environment.yml
+    #
+    # no changes added to commit (use "git add" and/or "git commit -a")
+
+    git add environment.yml
     git commit -m"Installed pandas, fastparquet, seaborn"
     git push
 
 .. warning::
 
-  Make sure that you update the ``requirements.txt`` file after you install
-  new packages. This ensures that the packages needed to work on your project
-  will be available to your peers when collaborating on a project.
+  Make sure that you keep the ``environment.yml`` file up to date.
+  This ensures that everyone can install the packages needed to work
+  on your project.
 
-When updating and pushing the ``requirements.txt`` file to your project
+When updating and pushing the ``environment.yml`` file to your project
 repository, the Renku platform will update the Python stack used to launch
 your JupyterLab instance. If you shut down your notebook server, the next time
 you use the **Launch JupyterLab** button, the packages will come already
 pre-installed in the new server's environment.
 
+Why not just use ``pip install`` or ``conda install``?
+""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+Using ``conda`` environments is a convenient way to help people collaborate
+on a project.
+
+TODO: a bit more, with how to work offline.
+
 .. _jupyterlab:
 
 Work using JupyterLab
 ^^^^^^^^^^^^^^^^^^^^^
+
+TODO: redo screenshots with Jupyter Lab launcher
 
 Create new notebooks
 """"""""""""""""""""
