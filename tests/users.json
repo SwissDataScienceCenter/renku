@@ -1,0 +1,16 @@
+[
+  {
+    "username": "sdrenku65535",
+    "firstName": "Hello",
+    "lastName": "World",
+    "email": "noreply@ethz.ch",
+    "password": "sdrenku-test1"
+  },
+  {
+    "username": "sdrenku65534",
+    "firstName": "Hello2",
+    "lastName": "World2",
+    "email": "noreply2@sdsc.ethz.ch",
+    "password": "sdrenku-test2"
+  }
+]
