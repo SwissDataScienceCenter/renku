@@ -200,7 +200,7 @@ Now we can go back to the terminal to install these additional packages.
 
 TODO: image
 
-FIrst, here is how to get a list of exisiting ``conda`` environments:
+First, here is how to get a list of existing ``conda`` environments:
 
 .. code-block:: console
 
