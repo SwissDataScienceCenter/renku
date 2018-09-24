@@ -12,7 +12,7 @@ dependencies:
   repository: "https://swissdatasciencecenter.github.io/helm-charts/"
   version: "0.2.0-rc4"
 - name: gitlab
-  version: "0.2.0-rc4"
+  version: "0.2.0-886da54"
   repository: "https://swissdatasciencecenter.github.io/helm-charts/"
   condition: gitlab.enabled
 - name: postgresql
