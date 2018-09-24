@@ -25,6 +25,13 @@ spec:
         value: {{ .Values.keycloak.keycloak.username }}
       - name: KEYCLOAK_URL
         value: {{ template "http" . }}://{{ .Values.global.renku.domain }}
+    volumeMounts:
+      {{- if .Values.tests.users_json }}
+      - name: demo-users
+        readOnly: true
+        mountPath: /app/users.json
+        subPath: users.json
+      {{- end }}
   containers:
   - name: {{ .Release.Name }}-test
     image: "{{ .Values.tests.image.repository }}:{{ .Values.tests.image.tag }}"
@@ -35,4 +42,15 @@ spec:
       preStop:
         exec:
           command: ["/tests/demo-cleanup.sh"]
+    volumeMounts:
+      {{- if .Values.tests.users_json }}
+      - name: demo-users
+        readOnly: true
+        mountPath: /tests/users.json
+        subPath: users.json
+      {{- end }}
   restartPolicy: Never
+  volumes:
+    - name: demo-users
+      secret:
+        secretName: {{ template "renku.fullname" . }}
