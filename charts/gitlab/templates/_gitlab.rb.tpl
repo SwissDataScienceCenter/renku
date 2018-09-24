@@ -75,7 +75,7 @@ gitlab_rails['db_port'] = 5432
 ###! Docs: https://docs.gitlab.com/omnibus/settings/redis.html
 
 #### Redis TCP connection
-gitlab_rails['redis_host'] = '{{ template "redis.fullname" . }}-master'
+gitlab_rails['redis_host'] = '{{ include "call-nested" (list . "redis" "redis.fullname") }}-master'
 # gitlab_rails['redis_port'] = 6379
 # gitlab_rails['redis_password'] = nil
 # gitlab_rails['redis_database'] = 0

@@ -12,16 +12,12 @@ dependencies:
   repository: "https://swissdatasciencecenter.github.io/helm-charts/"
   version: "0.2.0-rc4"
 - name: gitlab
-  version: "0.2.0-886da54"
+  version: "0.0-072ab7e"
   repository: "https://swissdatasciencecenter.github.io/helm-charts/"
   condition: gitlab.enabled
 - name: postgresql
   version: 0.14.4
   repository: "@stable"
-- name: redis
-  version: 3.7.2
-  repository: "@stable"
-  condition: gitlab.enabled
 - name: keycloak
   version: 3.2.0
   repository: "@stable"

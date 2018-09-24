@@ -85,3 +85,20 @@ nodeSelector: {}
 tolerations: []
 
 affinity: {}
+
+redis:
+
+  nameOverride: gl-redis
+
+  cluster:
+    enabled: false
+
+  usePassword: false
+
+  master:
+    persistence:
+      enabled: false
+
+  networkPolicy:
+    enabled: true
+    allowExternal: false

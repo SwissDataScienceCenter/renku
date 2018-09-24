@@ -42,7 +42,7 @@ global:
     domain: example.local
     ## Renku version to be used (currently for project creation in
     ## the UI) If not set explicitly the version will be picked up
-    ## from the respective renku (sub)chart. 
+    ## from the respective renku (sub)chart.
     ## version: '0.0.0'
   ## Set to true if using https
   useHTTPS: false
@@ -494,23 +494,6 @@ gitlab:
     #   - hosts:
     #     - registry.example.com
     #     secretName: registry-tls
-
-## Redis configuration
-## Redis is used by Gitlab
-redis:
-
-  cluster:
-    enabled: false
-
-  usePassword: false
-
-  master:
-    persistence:
-      enabled: false
-
-  networkPolicy:
-    enabled: true
-    allowExternal: false
 
 ## Configuration for the UI service
 ui:

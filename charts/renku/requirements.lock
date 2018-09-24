@@ -10,13 +10,10 @@ dependencies:
   version: 0.2.0-rc4
 - name: gitlab
   repository: https://swissdatasciencecenter.github.io/helm-charts/
-  version: 0.2.0-886da54
+  version: 0.0-072ab7e
 - name: postgresql
   repository: https://kubernetes-charts.storage.googleapis.com
   version: 0.14.4
-- name: redis
-  repository: https://kubernetes-charts.storage.googleapis.com
-  version: 3.7.2
 - name: keycloak
   repository: https://kubernetes-charts.storage.googleapis.com
   version: 3.2.0
