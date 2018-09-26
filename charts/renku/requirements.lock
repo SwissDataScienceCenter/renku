@@ -10,7 +10,7 @@ dependencies:
   version: 0.2.0-rc4
 - name: gitlab
   repository: https://swissdatasciencecenter.github.io/helm-charts/
-  version: 0.0-072ab7e
+  version: 0.2.0-88fd7bd
 - name: postgresql
   repository: https://kubernetes-charts.storage.googleapis.com
   version: 0.14.4
@@ -20,5 +20,5 @@ dependencies:
 - name: minio
   repository: https://kubernetes-charts.storage.googleapis.com
   version: 1.6.0
-digest: sha256:f7c7bd3fe4714fe04ddd4f503c3854a23f8b1911cdf4d2960f15ba23ab0ee280
-generated: 2018-09-24T16:09:24.035046691+02:00
+digest: sha256:a54421f03ac67a1550b0ea8fc4d3b99bc493f16e04f45692bc04d21f7027a918
+generated: 2018-09-26T09:10:53.712369739+02:00
