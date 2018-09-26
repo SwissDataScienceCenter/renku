@@ -23,6 +23,7 @@ from urllib.parse import urljoin
 import pytest
 import splinter
 import time
+import json
 
 
 def test_renku_login(browser):
@@ -39,11 +40,13 @@ def test_renku_login(browser):
 
 def test_notebook_launch(browser):
     """Test launching a notebook from UI."""
+    with open('/tests/users.json', 'r') as f:
+      users = json.load(f)
     url = urljoin(os.getenv('RENKU_ENDPOINT', 'http://localhost'), '/login')
     browser.visit(url)
 
-    browser.fill('username', 'cramakri')
-    browser.fill('password', 'cramakri')
+    browser.fill('username', users[0]['username'])
+    browser.fill('password', users[0]['password'])
     browser.find_by_id('kc-login').click()
 
     # wait a bit for the page to load, helps to avoid test failures
@@ -60,9 +63,9 @@ def test_notebook_launch(browser):
 
     # go to the project page
     assert browser.is_element_present_by_text(
-        'cramakri/weather-zh', wait_time=10
+        users[0]['username'] + '/weather-zh', wait_time=10
     )
-    proj_link = browser.find_link_by_text('cramakri/weather-zh')
+    proj_link = browser.find_link_by_text(users[0]['username'] + '/weather-zh')
     assert proj_link
     proj_link[0].click()
 

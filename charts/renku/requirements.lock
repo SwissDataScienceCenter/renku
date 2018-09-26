@@ -1,13 +1,13 @@
 dependencies:
 - name: renku-ui
   repository: https://swissdatasciencecenter.github.io/helm-charts/
-  version: 0.2.0-rc4
+  version: 0.2.0
 - name: renku-notebooks
   repository: https://swissdatasciencecenter.github.io/helm-charts/
-  version: 0.2.0-rc4
+  version: 0.2.0
 - name: renku-gateway
   repository: https://swissdatasciencecenter.github.io/helm-charts/
-  version: 0.2.0-rc4
+  version: 0.2.0
 - name: gitlab
   repository: https://swissdatasciencecenter.github.io/helm-charts/
   version: 0.2.0-88fd7bd

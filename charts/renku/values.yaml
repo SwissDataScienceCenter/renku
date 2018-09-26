@@ -565,12 +565,25 @@ ui:
 apispec:
   image:
     repository: renku/apispec
-    tag: '0.2.0-rc4'
+    tag: '0.2.0'
 
 tests:
   image:
     repository: renku/tests
-    tag: '0.2.0-rc4'
+    tag: '0.2.0'
+  ## User accounts for running `helm test`
+  ## Replace passwords with random strings in a production setup
+  #users_json:
+  #  - username: bwayne
+  #    firstName: Bruce
+  #    lastName: Wayne
+  #    email: bwayne@example.com
+  #    password: IamBatman
+  #  - username: ckent
+  #    firstName: Clark
+  #    lastName: Kent
+  #    email: ckent@example.com
+  #    password: IamSuperman
 
 minio:
   ## Set to true to deploy a minio server, can be used as gateway too.
