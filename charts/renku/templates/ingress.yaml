@@ -19,9 +19,9 @@ metadata:
     chart: {{ template "renku.chart" . }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
-{{- with .Values.ingress.annotations }}
   annotations:
-{{ toYaml . | indent 4 }}
+{{- range $key, $value :=  .Values.ingress.annotations }}
+    {{ $key }}: {{ $value | quote }}
 {{- end }}
 spec:
 {{- if .Values.ingress.tls }}
