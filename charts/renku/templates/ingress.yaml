@@ -21,7 +21,7 @@ metadata:
     heritage: {{ .Release.Service }}
   annotations:
 {{- range $key, $value := .Values.ingress.annotations }}
-    {{ $key }}: "{{ $value }}"
+    {{ $key }}: {{ $value | quote }}
 {{- end }}
 spec:
 {{- if .Values.ingress.tls }}
