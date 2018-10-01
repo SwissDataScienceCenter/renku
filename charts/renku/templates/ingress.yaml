@@ -20,8 +20,8 @@ metadata:
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
   annotations:
-{{- range $key, $value :=  .Values.ingress.annotations }}
-    {{ $key }}: {{ $value | quote }}
+{{- range $key, $value := .Values.ingress.annotations }}
+    {{ $key }}: {{ quote $value }}
 {{- end }}
 spec:
 {{- if .Values.ingress.tls }}
