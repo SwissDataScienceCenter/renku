@@ -227,7 +227,7 @@ For example, if you want to keep the new notebook(s), run the following.
 .. code-block:: console
 
     git add notebooks # track everything inside the notebooks folder
-    git commit -m "Added some notebooks"
+    git commit -m "Added some notebooks" -a
     git push
 
 
