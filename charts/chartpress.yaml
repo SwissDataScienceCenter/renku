@@ -6,25 +6,25 @@ charts:
       published: https://swissdatasciencecenter.github.io/helm-charts
     paths:
       - ./gitlab
-  # - name: renku
-  #   imagePrefix: renku/
-  #   repo:
-  #     git: SwissDataScienceCenter/helm-charts
-  #     published: https://swissdatasciencecenter.github.io/helm-charts
-  #   paths:
-  #     - .
-  #     - ../services/apispec
-  #     - ../tests
-  #   images:
-  #     apispec:
-  #       contextPath: ../services/apispec
-  #       dockerfilePath: ../services/apispec/Dockerfile
-  #       valuesPath: apispec.image
-  #       paths:
-  #         - ../services/apispec
-  #     tests:
-  #       contextPath: ../tests
-  #       dockerfilePath: ../tests/Dockerfile
-  #       valuesPath: tests.image
-  #       paths:
-  #         - ../tests
+  - name: renku
+    imagePrefix: renku/
+    repo:
+      git: SwissDataScienceCenter/helm-charts
+      published: https://swissdatasciencecenter.github.io/helm-charts
+    paths:
+      - .
+      - ../services/apispec
+      - ../tests
+    images:
+      apispec:
+        contextPath: ../services/apispec
+        dockerfilePath: ../services/apispec/Dockerfile
+        valuesPath: apispec.image
+        paths:
+          - ../services/apispec
+      tests:
+        contextPath: ../tests
+        dockerfilePath: ../tests/Dockerfile
+        valuesPath: tests.image
+        paths:
+          - ../tests
