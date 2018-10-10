@@ -32,7 +32,7 @@ data:
 
         DELETE FROM oauth_applications WHERE uid='renku-ui';
         INSERT INTO oauth_applications (name, uid, scopes, redirect_uri, secret, trusted)
-        VALUES ('renku-ui', 'renku-ui', 'api read_user', '{{ template "http" . }}://{{ .Values.global.renku.domain }}/login/redirect/gitlab', 'no-secret-needed', 'true');
+        VALUES ('renku-ui', 'renku-ui', 'api read_user read_repository read_registry openid', '{{ template "http" . }}://{{ .Values.global.renku.domain }}/login/redirect/gitlab {{ template "http" . }}://{{ .Values.global.renku.domain }}/api/auth/gitlab/token', 'no-secret-needed', 'true');
 
         DELETE FROM personal_access_tokens WHERE user_id='1' AND name='managed sudo token';
         INSERT INTO personal_access_tokens ( user_id, token, name, revoked, expires_at, created_at, updated_at, scopes, impersonation)
