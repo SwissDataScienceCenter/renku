@@ -552,9 +552,9 @@ ui:
 
 # ## Configuration for the notebooks service
 # notebooks:
-  ## Set the notebooks service API token
-  # jupyterhub_api_token: notebookstoken
-
+  ## image registry host
+  # imageRegistry:
+  ## JupyterHub setup
   # jupyterhub:
     ## Configure rbac
     # rbac:
