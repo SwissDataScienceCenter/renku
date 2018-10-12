@@ -53,10 +53,6 @@ Define subcharts full names
 {{- printf "%s-%s" .Release.Name "keycloak" | replace "+" "_" | trunc 20 | trimSuffix "-" -}}
 {{- end -}}
 
-{{- define "redis.fullname" -}}
-{{- printf "%s-%s" .Release.Name "redis" | replace "+" "_" | trunc 63 | trimSuffix "-" -}}
-{{- end -}}
-
 {{- define "gitlab.fullname" -}}
 {{- printf "%s-%s" .Release.Name "gitlab" | replace "+" "_" | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
