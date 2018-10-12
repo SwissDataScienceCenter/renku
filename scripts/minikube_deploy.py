@@ -50,8 +50,11 @@ def main():
     get_minikube_docker_env()
     for dep in dependencies:
         chartpress_dir = os.path.join(dependency_dir(dep['repo_name']), dep['chartpress_dir'])
-        subchart_dir = os.path.join(chartpress_dir, dep['repo_name'])
-        update_subchart_dependencies(subchart_dir)
+        subchart_dirs = [os.path.join(chartpress_dir, dep['repo_name'])]
+        if 'chart_name' in dep:
+            subchart_dirs.append(os.path.join(chartpress_dir, dep['chart_name']))
+        for subchart_dir in subchart_dirs:
+            update_subchart_dependencies(subchart_dir)
         update_charts(chartpress_dir)
     update_charts(renku_chartpress_dir)
 
