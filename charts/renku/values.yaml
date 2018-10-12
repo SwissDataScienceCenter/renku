@@ -37,6 +37,10 @@ global:
     postgresPassword: jupyterhub
   gateway:
     clientSecret: dummy-secret
+    ## The client ID for authentication against gitlab
+    gitlabClientId: renku-ui
+    ## The client secret for authentication against gitlab
+    gitlabClientSecret: dummy-secret
   renku:
     ## Domain name for the deployed instance of renku
     domain: example.local
