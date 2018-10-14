@@ -31,6 +31,7 @@ helm repo add renku https://swissdatasciencecenter.github.io/helm-charts/
 helm repo add gitlab https://charts.gitlab.io/
 helm repo add jupyterhub https://jupyterhub.github.io/helm-chart
 helm dependency update renku
+helm dependency update gitlab
 chartpress --push --publish-chart
 git diff
 # push also images tagged with "latest"

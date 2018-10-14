@@ -50,8 +50,11 @@ def main():
     get_minikube_docker_env()
     for dep in dependencies:
         chartpress_dir = os.path.join(dependency_dir(dep['repo_name']), dep['chartpress_dir'])
-        subchart_dir = os.path.join(chartpress_dir, dep['repo_name'])
-        update_subchart_dependencies(subchart_dir)
+        subchart_dirs = [os.path.join(chartpress_dir, dep['repo_name'])]
+        if 'chart_name' in dep:
+            subchart_dirs.append(os.path.join(chartpress_dir, dep['chart_name']))
+        for subchart_dir in subchart_dirs:
+            update_subchart_dependencies(subchart_dir)
         update_charts(chartpress_dir)
     update_charts(renku_chartpress_dir)
 
@@ -100,7 +103,7 @@ def main():
             '--set', 'gateway.keycloakUrl=http://{mip}'.format(mip=minikube_ip()),
             '--set', 'gateway.gitlabUrl=http://{mip}/gitlab'.format(mip=minikube_ip()),
             '--set', 'notebooks.jupyterhub.hub.extraEnv.GITLAB_URL=http://{mip}/gitlab'.format(mip=minikube_ip()),
-            '--set', 'notebooks.jupyterhub.hub.extraEnv.IMAGE_REGISTRY=10.100.123.45:8105',
+            '--set', 'notebooks.imageRegistry=10.100.123.45:8105',
             '--set', 'gitlab.registry.externalUrl=http://10.100.123.45:8105/',
             '--timeout', '1800',
         ]
