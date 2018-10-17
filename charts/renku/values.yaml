@@ -60,10 +60,10 @@ ingress:
   ## Annotations for the created ingress
   annotations:
     ## The ingress class
-    kubernetes.io/ingress.class: 'nginx'
+    kubernetes.io/ingress.class: nginx
     # kubernetes.io/tls-acme: 'true'
     nginx.ingress.kubernetes.io/proxy-body-size: '0' # Adjust to a reasonable value for production to avoid DOS attacks.
-    nginx.ingress.kubernetes.io/proxy-request-buffering: 'off' # Needed if GitLab is behind this ingress
+    nginx.ingress.kubernetes.io/proxy-request-buffering: off   # Needed if GitLab is behind this ingress
 
   ## Hosts for the ingress
   ## Should include at least the value from `global.renku.domain`
@@ -539,6 +539,25 @@ ui:
 
 # ## Configuration for the notebooks service
 # notebooks:
+  ## serverOptions allow for modifications to the notebook pod resource requests
+  # serverOptions:
+  #   resources:
+  #     cpu_request:
+  #       displayName: Number of CPUs
+  #       type: integer
+  #       default: 1
+  #       range: [1, 4]
+  #     mem_request:
+  #       displayName: Memory
+  #       type: enum
+  #       default: 2Gi
+  #       options: [2Gi, 4Gi, 8Gi]
+  #     gpu:
+  #       displayName: Number of GPUs
+  #       type: integer
+  #       default: 0
+  #       range: [0, 2]
+  #   defaultUrl: /lab
   ## image registry host
   # imageRegistry:
   ## JupyterHub setup
@@ -570,12 +589,12 @@ ui:
 apispec:
   image:
     repository: renku/apispec
-    tag: '0.2.0'
+    tag: '0.2.1'
 
 tests:
   image:
     repository: renku/tests
-    tag: '0.2.0'
+    tag: '0.2.1'
   ## User accounts for running `helm test`
   ## Replace passwords with random strings in a production setup
   #users_json:
