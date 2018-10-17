@@ -56,7 +56,7 @@ Add input data to your project
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 In the JupyterLab interface, we can see that a few files already exist.
-Let's start by adding data using the `Renku CLI <http://renku-python.readthedocs.io/>`_.
+Let's start by adding data using the `Renku CLI <https://renku-python.readthedocs.io/en/latest/cli.html>`_.
 
 From JupyterLab, start a terminal.
 
@@ -164,7 +164,7 @@ packages as usual with ``pip``:
     pip install pandas fastparquet seaborn
     pip freeze > requirements.txt
     git add requirements.txt
-    git commit -m"Installed pandas, fastparquet, seaborn"
+    git commit -m "Installed pandas, fastparquet, seaborn"
     git push
 
 .. warning::
@@ -190,16 +190,13 @@ Create new notebooks
 On the JupyterLab interface, use the left-hand bar to go to the **Files** (1)
 tab. You can see the list of files and folders from your project.
 
-First, create a folder by clicking on the new folder button (2) and name it
-``notebooks`` (3).
-
 .. image:: ../_static/images/jupyterlab-files-notebooks.png
     :width: 85%
     :align: center
     :alt: Files tab and notebooks folder in JupyterLab
 
-To create a new notebook, first double click on the **notebooks** folder (3),
-then on the '+' button (4). Select 'Python 3' to create a new notebook (5).
+To create a new notebook, first double click on the **notebooks** folder (2),
+then on the '+' button (3). Select 'Python 3' to create a new notebook (4).
 
 .. image:: ../_static/images/jupyterlab-new-notebook.png
     :width: 85%
@@ -219,8 +216,8 @@ If you are not familiar with JupyterLab, you can read more on their
 the time to play with the JupyterLab interface and new notebooks before
 continuing.
 
-If you want to save your new notebook(s), go to the console and use ``git`` to
-add your work to the repository.
+If you want to save your new notebook(s), you can go to the console and use
+``git`` to add your work to the repository.
 
 For example, if you want to keep the new notebook(s), run the following.
 
@@ -229,6 +226,18 @@ For example, if you want to keep the new notebook(s), run the following.
     git add notebooks # track everything inside the notebooks folder
     git commit -m "Added some notebooks"
     git push
+
+Alternatively, you can click on the git icon on the left-hand side of your
+JupyterLab session (1) to open the git panel. Here you can add untracked files
+by selecting them and clicking (2). Finally, you can enter the commit message
+in (3) and click the checkmark to finish the commit. Currently there is no
+push option in this panel, so you will need to go back to the terminal
+and type ``git push`` to sync with the server.
+
+.. image:: ../_static/images/jupyterlab-git-panel.png
+    :width: 85%
+    :align: center
+    :alt: Commit notebook in JupyterLab
 
 
 .. _interactive_exploration:
@@ -247,10 +256,9 @@ Use the commands below to add the notebook to your project.
 
 .. code-block:: console
 
-    mkdir -p notebooks
     wget -O "notebooks/zhbikes-notebook.ipynb" https://raw.githubusercontent.com/SwissDataScienceCenter/renku/master/docs/_static/zhbikes/ZHBikes.ipynb
     git add notebooks
-    git commit -m"Added zuerich bike notebook"
+    git commit -m "Added zuerich bike notebook"
     git push
 
 
@@ -267,7 +275,7 @@ run:
 
 .. code-block:: console
 
-    mkdir -p src
+    mkdir src
     wget -O "src/clean_data.py" https://raw.githubusercontent.com/SwissDataScienceCenter/renku/master/docs/_static/zhbikes/clean_data.py
     wget -O "src/plot_data.py" https://raw.githubusercontent.com/SwissDataScienceCenter/renku/master/docs/_static/zhbikes/plot_data.py
 
@@ -285,7 +293,7 @@ When you are satisfied with the code you can commit it to your repository:
 .. code-block:: console
 
     git add src
-    git commit -m 'added refactored scripts'
+    git commit -m "added refactored scripts"
 
 
 .. _create_workflow:
@@ -297,12 +305,13 @@ Here we will use ``renku`` and the refactored scripts to quickly create a
 "workflow". A workflow consists of a series of steps, each of which consumes
 some inputs, executes code based on those inputs and produces outputs. The
 outputs of one step are frequently the inputs of another - this creates a
-dependency between the code executions and results. ``Renku`` is designed to
-keep track of these dependencies for you. We will illustrate some of these
-concepts with a simple example (see also the :ref:`lineage`).
+dependency between the code executions and results. When workflows become more
+complex, the bookkeeping can become tedious. That is where ``Renku`` comes in
+-- it is designed to keep track of these dependencies for you. We will
+illustrate some of these concepts with a simple example (see also the
+:ref:`lineage` in the documentation).
 
-First, let's make sure the project repository is clean.
-Run:
+First, let's make sure the project repository is clean. Run:
 
 .. code-block:: console
 
@@ -400,7 +409,8 @@ In this section, we will see how to use Renku to collaborate on projects.
 Discussions with Kus
 """"""""""""""""""""
 
-Let's start by going back to the `Renku web interface <https://renkulab.io>`_.
+Let's start by going back to the Renku web interface on `renkulab.io
+<https://renkulab.io>`_ or whichever instance you are using for this tutorial.
 Make sure you are logged in, so you can see the list of projects you starred.
 
 Click on your ``tutorial-zhbikes`` project to open it and then go to the
@@ -476,7 +486,6 @@ Use ``git`` to save your changes:
 
 .. code-block:: console
 
-    cd work
     git add README.md
     git commit -m "Added data information in the Readme"
     git push
@@ -503,7 +512,7 @@ Add a comment with the following content.
 
     Let's explore the dataset! Here is what we know:
 
-    ![Exploration notebook](notebooks/papermill/Explore.ipynb)
+    ![Exploration notebook](notebooks/zhbikes-notebook.ipynb)
 
 As you can see, the content of the notebook is being displayed in the
 comment. You can collapse/expand it by clicking on its corresponding title
@@ -518,6 +527,6 @@ Where to go from here?
 ^^^^^^^^^^^^^^^^^^^^^^
 
 * Create your own project on renkulab.io!
-* Explore the documentation
+* Explore the `documentation <https://renku.readthedocs.org>`_
 * Read more about the `Renku CLI <http://renku-python.readthedocs.io/>`_
-* `Join us on Gitter <https://gitter.im/SwissDataScienceCenter/renku>`_
+* Join us on `Gitter <https://gitter.im/SwissDataScienceCenter/renku>`_ or `GitHub <https://github.com/SwissDataScienceCenter/renku>`_.
