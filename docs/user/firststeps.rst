@@ -156,13 +156,21 @@ Opening the file, we can see it contains some data in CSV format.
 Install and manage Python packages
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Continuing in the same terminal session as in last step, we can install python
-packages as usual with ``pip``:
+Defining your runtime environment is critical if you would like for others to
+reuse your work. The basic step to achieve this is to manage the software
+libraries that are needed for your code to execute. In Renku, we use common
+conventions  for the environment definitions. In python, the
+`requirements.txt` is one such conventional way to specify the required
+libraries. When  you created your project, an empty `requirements.txt` was
+created - find it in the file browser of your JupyterLab session and double-
+click to open the editor.  We will need `pandas`, `fastparquet` and `seaborn`
+libraries, so enter those  on separate lines in the `requirements.txt` file
+and save it. Going back to the same terminal session as before, we can now
+install these packages with ``pip``:
 
 .. code-block:: console
 
-    pip install pandas fastparquet seaborn
-    pip freeze > requirements.txt
+    pip install -r requirements.txt
     git add requirements.txt
     git commit -m "Installed pandas, fastparquet, seaborn"
     git push
@@ -174,9 +182,9 @@ packages as usual with ``pip``:
   will be available to your peers when collaborating on a project.
 
 When updating and pushing the ``requirements.txt`` file to your project
-repository, the Renku platform will update the Python stack used to launch
-your JupyterLab instance. If you shut down your notebook server, the next time
-you use the **Launch JupyterLab** button, the packages will come already
+repository, the Renku platform will rebuild the software stack used to launch
+your JupyterLab notebook server. If you were to shut it down, the next time
+you use the **Launch JupyterLab** button, the packages you will come already
 pre-installed in the new server's environment.
 
 .. _jupyterlab:
