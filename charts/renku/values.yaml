@@ -37,6 +37,10 @@ global:
     postgresPassword: jupyterhub
   gateway:
     clientSecret: dummy-secret
+    ## The client ID for authentication against gitlab
+    gitlabClientId: renku-ui
+    ## The client secret for authentication against gitlab
+    gitlabClientSecret: dummy-secret
   renku:
     ## Domain name for the deployed instance of renku
     domain: example.local
@@ -496,23 +500,6 @@ gitlab:
     #     - registry.example.com
     #     secretName: registry-tls
 
-## Redis configuration
-## Redis is used by Gitlab
-redis:
-
-  cluster:
-    enabled: false
-
-  usePassword: false
-
-  master:
-    persistence:
-      enabled: false
-
-  networkPolicy:
-    enabled: true
-    allowExternal: false
-
 ## Configuration for the UI service
 ui:
   #  welcomePage:
@@ -552,9 +539,9 @@ ui:
 
 # ## Configuration for the notebooks service
 # notebooks:
-  ## Set the notebooks service API token
-  # jupyterhub_api_token: notebookstoken
-
+  ## image registry host
+  # imageRegistry:
+  ## JupyterHub setup
   # jupyterhub:
     ## Configure rbac
     # rbac:
