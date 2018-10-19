@@ -160,11 +160,11 @@ Defining your runtime environment is critical if you would like for others to
 reuse your work. The basic step to achieve this is to manage the software
 libraries that are needed for your code to execute. In Renku, we use common
 conventions  for the environment definitions. In python, the
-`requirements.txt` is one such conventional way to specify the required
-libraries. When  you created your project, an empty `requirements.txt` was
+``requirements.txt`` is one such conventional way to specify the required
+libraries. When  you created your project, an empty ``requirements.txt`` was
 created - find it in the file browser of your JupyterLab session and double-
-click to open the editor.  We will need `pandas`, `fastparquet` and `seaborn`
-libraries, so enter those  on separate lines in the `requirements.txt` file
+click to open the editor.  We will need ``pandas``, ``fastparquet`` and ``seaborn``
+libraries, so enter those  on separate lines in the ``requirements.txt`` file
 and save it. Going back to the same terminal session as before, we can now
 install these packages with ``pip``:
 
