@@ -165,7 +165,14 @@ libraries. When  you created your project, an empty ``requirements.txt`` was
 created - find it in the file browser of your JupyterLab session and double-
 click to open the editor.  We will need ``pandas``, ``fastparquet`` and ``seaborn``
 libraries, so enter those  on separate lines in the ``requirements.txt`` file
-and save it. Going back to the same terminal session as before, we can now
+and save it:
+
+.. image:: ../_static/images/jupyterlab-setup-requirements.png
+    :width: 85%
+    :align: center
+    :alt: Configuring package dependencies
+
+Going back to the same terminal session as before, we can now
 install these packages with ``pip``:
 
 .. code-block:: console
@@ -196,20 +203,14 @@ Create new notebooks
 """"""""""""""""""""
 
 On the JupyterLab interface, use the left-hand bar to go to the **Files** (1)
-tab. You can see the list of files and folders from your project.
+tab. You can see the list of files and folders from your project. To create a
+new notebook, first double click on the **notebooks** folder (2), then on the
+'+' button (3). Select 'Python 3' to create a new notebook (4).
 
 .. image:: ../_static/images/jupyterlab-files-notebooks.png
     :width: 85%
     :align: center
     :alt: Files tab and notebooks folder in JupyterLab
-
-To create a new notebook, first double click on the **notebooks** folder (2),
-then on the '+' button (3). Select 'Python 3' to create a new notebook (4).
-
-.. image:: ../_static/images/jupyterlab-new-notebook.png
-    :width: 85%
-    :align: center
-    :alt: New notebook in JupyterLab
 
 To rename the notebook, right click on its name (``Untitled.ipynb``) and
 select rename.
