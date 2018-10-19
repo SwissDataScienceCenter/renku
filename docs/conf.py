@@ -64,7 +64,10 @@ master_doc = 'index'
 # General information about the project.
 project = 'RENKU'
 copyright = '2017-2018, Swiss Data Science Center'
-author = 'Eric Bouillet, Julien Eberle, Jiri Kuncar, Izabela Moise, Rok Roskar, Sofiane Sarni, Sandra Savchenko De Jong, Johann-Michael Thiebaut, Fotis Georgatos, Olivier Verscheure'
+author = 'Eric Bouillet, Julien Eberle, Fotis Georgatos, ' \
+         'Jiri Kuncar, Izabela Moise, ' \
+         'Rok Roskar, Sofiane Sarni, Sandra Savchenko De Jong, ' \
+         'Johann-Michael Thiebaut, Olivier Verscheure'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
