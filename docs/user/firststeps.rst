@@ -396,11 +396,17 @@ To update all the outputs, we can run the following.
 
     renku update
 
-That's it! The intermediate data file ``data/preprocessed/zhbikes.feather``
+That's it! The intermediate data file ``data/preprocessed/zhbikes.parquet``
 and the figures in ``figs/``, are recreated by re-running the necessary steps.
 See the `renku update documentation <https://renku-python.readthedocs.io/en/latest/cli.html
 #renku-update>`_ for a detailed explanation of how the workflow is re-
 executed.
+
+.. note::
+
+    A very similar command is `renku rerun <https://renku-python.readthedocs.io/en/latest/cli.html#module-renku.cli.rerun>`__, except that it also allows
+    you to modify the inputs. This is useful, for example, to vary hyperparameters
+    or input data sources.
 
 Lastly, let's not forget to push our work:
 
