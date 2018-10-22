@@ -4,7 +4,7 @@
 
 image:
   repository: gitlab/gitlab-ce
-  tag: 11.1.6-ce.0
+  tag: 11.3.6-ce.0
   pullPolicy: IfNotPresent
 
 ssh:
@@ -13,14 +13,25 @@ ssh:
     enabled: false
     nodePort: 30022
 
+## LFS objects in remote object storage
+## Follows: https://docs.gitlab.com/ce/workflow/lfs/lfs_administration.html#storing-lfs-objects-in-remote-object-storage
 lfsObjects:
   enabled: false
   bucketName: lfs-objects
-  region:
-  access_key:
-  secret_key:
-  host:
-  endpoint:
+  directUpload: false
+  backgroundUpload: true
+  proxyDownload: false
+  connection: |-
+    {
+      'provider' => 'AWS',
+      'region' => 'eu-central-1',
+      'aws_access_key_id' => '1ABCD2EFGHI34JKLM567N',
+      'aws_secret_access_key' => 'abcdefhijklmnopQRSTUVwxyz0123456789ABCDE',
+      # The below options configure an S3 compatible host instead of AWS
+      'host' => 'localhost',
+      'endpoint' => 'http://127.0.0.1:9000',
+      'path_style' => true
+    }
 
 service:
   type: ClusterIP

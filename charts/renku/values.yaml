@@ -406,13 +406,16 @@ gitlab:
   ## LFS objects settings
   ## Used to store git-lfs objects externally
   ## Note: bucket must exist before use, GitLab won't do it
+  ## Follows: https://docs.gitlab.com/ce/workflow/lfs/lfs_administration.html#storing-lfs-objects-in-remote-object-storage
   # lfsObjects:
       ## Set to true to enable remote LFS objects
       # enabled: false
       ## Bucket name
       # bucketName: lfs-objects
-      ## Configuration, see: https://docs.gitlab.com/ce/workflow/lfs/lfs_administration.html
-      # storage: |-
+      # directUpload: false
+      # backgroundUpload: true
+      # proxyDownload: false
+      # connection: |-
       #   {
       #     'provider' => 'AWS',
       #     'region' => 'eu-central-1',
