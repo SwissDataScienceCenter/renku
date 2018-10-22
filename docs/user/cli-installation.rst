@@ -57,7 +57,6 @@ Installing from source
 Using conda, we can very easily install renku from source into an isolated
 environment.
 
-
 Bleeding-edge
 ^^^^^^^^^^^^^
 
