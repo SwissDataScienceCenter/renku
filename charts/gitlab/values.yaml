@@ -21,17 +21,17 @@ lfsObjects:
   directUpload: false
   backgroundUpload: true
   proxyDownload: false
-  connection: |-
-    {
-      'provider' => 'AWS',
-      'region' => 'eu-central-1',
-      'aws_access_key_id' => '1ABCD2EFGHI34JKLM567N',
-      'aws_secret_access_key' => 'abcdefhijklmnopQRSTUVwxyz0123456789ABCDE',
-      # The below options configure an S3 compatible host instead of AWS
-      'host' => 'localhost',
-      'endpoint' => 'http://127.0.0.1:9000',
-      'path_style' => true
-    }
+  # connection: |-
+  #   {
+  #     'provider' => 'AWS',
+  #     'region' => 'eu-central-1',
+  #     'aws_access_key_id' => '1ABCD2EFGHI34JKLM567N',
+  #     'aws_secret_access_key' => 'abcdefhijklmnopQRSTUVwxyz0123456789ABCDE',
+  #     # The below options configure an S3 compatible host instead of AWS
+  #     'host' => 'localhost',
+  #     'endpoint' => 'http://127.0.0.1:9000',
+  #     'path_style' => true
+  #   }
 
 service:
   type: ClusterIP
@@ -67,6 +67,7 @@ persistence:
 
 registry:
   enabled: false
+  exposedAs: Ingress
   # exposedAs: NodePort
   backendHealthcheck: true
   # storage: |-
