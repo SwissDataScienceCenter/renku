@@ -9,15 +9,15 @@ global:
     ## Client secret, set this to a random string.
     ## To change this value after deploying, first generate a new secret using the Keycloak admin console
     ## then paste the generated secret here
-    clientSecret: open_secret
+    clientSecret: changeme-openssl-rand-hex-32
     ## Name of the postgres database to be used by Gitlab
     postgresDatabase: gitlabhq_production
     ## Postgres user for the gitlab database
     postgresUser: gitlab
     ## Postgres password for the gitlab database
-    postgresPassword: gitlab
+    postgresPassword: changeme-openssl-rand-hex-16
     ## Sudo token for sudo API requests
-    sudoToken: dummy-secret
+    sudoToken: changeme-openssl-rand-hex-32
     ## URL prefix for gitlab
     # urlPrefix: /
 
@@ -27,20 +27,20 @@ global:
     ## Postgres user for the Keycloak database
     postgresUser: keycloak
     ## Postgres password for the Keycloak database
-    postgresPassword: keycloak
+    postgresPassword: changeme-openssl-rand-hex-16
   jupyterhub:
     ## Name of the postgres database to be used by jupyterhub
     postgresDatabase: jupyterhub
     ## Postgres user for the jupyterhub database
     postgresUser: jupyterhub
     ## Postgres password for the jupyterhub database
-    postgresPassword: jupyterhub
+    postgresPassword: changeme-openssl-rand-hex-16
   gateway:
-    clientSecret: dummy-secret
+    clientSecret: changeme-uuidgen-r
     ## The client ID for authentication against gitlab
     gitlabClientId: renku-ui
     ## The client secret for authentication against gitlab
-    gitlabClientSecret: dummy-secret
+    gitlabClientSecret: changeme-openssl-rand-hex-32
   renku:
     ## Domain name for the deployed instance of renku
     domain: example.local
