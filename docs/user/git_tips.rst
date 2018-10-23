@@ -46,7 +46,7 @@ easier.
 
 
 Now lets say you decide your data imports and everything that followed was
-wrong and you want to go back to "renku dataset create zhvelo", i.e.
+wrong and you want to go back to ``renku dataset create zhvelo``, i.e.
 commit ``f346c1f36f211840b22a63e7fc2c9bfb52616212``, you would do:
 
 .. code-block:: console

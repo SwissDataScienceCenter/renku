@@ -54,7 +54,7 @@ If you want to have Renku as a project dependency, you may install it using
 Installing from source
 ----------------------
 
-Using conda, we can very easily install renku from source into an isolated
+Using ``conda``, we can very easily install renku from source into an isolated
 environment.
 
 Bleeding-edge
@@ -62,7 +62,7 @@ Bleeding-edge
 
 To install the latest bleeding-edge version of Renku and keep it from
 polluting your application environment, an easy solution is to place it inside
-an  isolated conda environment. If you don't have ``conda`` already, you
+an  isolated ``conda`` environment. If you don't have ``conda`` already, you
 should `install miniconda <https://conda.io/miniconda.html>`__. Once you have
 it installed, you can run
 
@@ -100,7 +100,7 @@ Specific version
 
 To install a specific version of renku the procedure is nearly identical
 the above, but instead of installing from source you install a version with ``pip``.
-For example, after creating the conda environment as described in the previous
+For example, after creating the ``conda`` environment as described in the previous
 section, you can install `renku v0.2.0` with
 
 .. code-block:: console

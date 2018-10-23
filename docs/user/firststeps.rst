@@ -404,9 +404,10 @@ executed.
 
 .. note::
 
-    A very similar command is `renku rerun <https://renku-python.readthedocs.io/en/latest/cli.html#module-renku.cli.rerun>`__, except that it also allows
-    you to modify the inputs. This is useful, for example, to vary hyperparameters
-    or input data sources.
+    A very similar command is `renku rerun <https://renku-
+    python.readthedocs.io/en/latest/cli.html#module-renku.cli.rerun>`__,
+    except that it also allows you to modify the inputs. This is useful, for
+    example, to vary hyper-parameters or input data sources.
 
 Lastly, let's not forget to push our work:
 
