@@ -104,7 +104,7 @@ def main():
             '--set', 'gateway.gitlabUrl=http://{mip}/gitlab'.format(mip=minikube_ip()),
             '--set', 'notebooks.jupyterhub.hub.extraEnv.GITLAB_URL=http://{mip}/gitlab'.format(mip=minikube_ip()),
             '--set', 'notebooks.jupyterhub.hub.services.gateway.oauth_redirect_uri=http://{mip}/api/auth/jupyterhub/token'.format(mip=minikube_ip()),
-            '--set', 'notebooks.imageRegistry=10.100.123.45:8105',
+            '--set', 'notebooks.gitlab.registry.host=10.100.123.45:8105',
             '--set', 'gitlab.registry.externalUrl=http://10.100.123.45:8105/',
             '--timeout', '1800',
         ]
