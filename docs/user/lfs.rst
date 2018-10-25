@@ -39,4 +39,4 @@ Useful git LFS commands
 -----------------------
 
 * ``git lfs ls-files``: shows all the files currently in LFS
-* ``git lfs pull <remote> -I <path>``: pull a specific file from LFS
+* ``git lfs pull -I <path> [remote]``: pull a specific path from LFS. It can be a single file or an entire folder.
