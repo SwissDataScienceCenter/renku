@@ -10,6 +10,7 @@ services/gitlab/runner/
 services/keycloak/data/
 
 charts/renku/charts/*.tgz
+charts/gitlab/charts/*.tgz
 
 # Idea software family
 .idea/
