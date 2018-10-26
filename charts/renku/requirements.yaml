@@ -2,7 +2,7 @@ dependencies:
 - name: renku-ui
   alias: ui
   repository: "https://swissdatasciencecenter.github.io/helm-charts/"
-  version: "0.2.0-592cc08"
+  version: "0.2.1-9fc6260"
 - name: renku-notebooks
   alias: notebooks
   repository: "https://swissdatasciencecenter.github.io/helm-charts/"
@@ -10,10 +10,10 @@ dependencies:
 - name: renku-gateway
   alias: gateway
   repository: "https://swissdatasciencecenter.github.io/helm-charts/"
-  version: "0.2.0-9094770"
+  version: "0.2.1-ba2eb09"
 - name: gitlab
   repository: "https://swissdatasciencecenter.github.io/helm-charts/"
-  version: "0.2.1-57c0569"
+  version: "0.2.1-fd1ccc1"
   condition: gitlab.enabled
 - name: postgresql
   version: 0.14.4
