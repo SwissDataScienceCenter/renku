@@ -40,3 +40,6 @@ Useful git LFS commands
 
 * ``git lfs ls-files``: shows all the files currently in LFS
 * ``git lfs pull -I <path> [remote]``: pull a specific path from LFS. It can be a single file or an entire folder.
+
+Note that you can also use wildcards, e.g. ``git lfs pull -I "data/records_201*.csv"``
+but be sure to include quote characters (``"`` or ``'``) when you use wildcards.
