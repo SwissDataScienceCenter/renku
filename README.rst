@@ -49,7 +49,7 @@ of all the boilerplate. To start Renku on your laptop, you will need
     $ make minikube-deploy
 
 You can find more details about the minikube setup in the `development on minikube
-<http://renku.readthedocs.io/en/latest/developer/minikube.html>`_ documentation.
+<https://renku.readthedocs.io/en/latest/developer/setup.html?highlight=minikube>`_ documentation.
 
 More information about the helm charts can be found in the `charts/README.rst <charts/README.rst>`_ file.
 
