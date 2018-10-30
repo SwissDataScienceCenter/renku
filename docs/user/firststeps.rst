@@ -358,6 +358,12 @@ To generate the figures, run
 
     renku run python src/plot_data.py data/preprocessed/zhbikes.parquet
 
+.. warning::
+
+   Do *not* make any edit to the code before the renku command ``run`` is finished.
+   In oder to keep track of all changes that your runing script is doing renku will 
+   automatically add the changes to Git LFS. If you want to keep working while runing 
+   a renku command, you should create a new branch.
 
 Reuse your own work
 """""""""""""""""""
