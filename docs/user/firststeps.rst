@@ -360,10 +360,10 @@ To generate the figures, run
 
 .. warning::
 
-   Do *not* make any edit to the code before the renku command ``run`` is finished.
+   Do *not* make any edit to the code before the ``renku run`` command is finished.
    In oder to keep track of the outputs of your script, renku will 
-   automatically add the changes to ``git``. If you want to keep working while runing 
-   a renku command, you should create a new branch.
+   automatically add the changes to ``git``. If you want to keep working while running 
+   a ``renku`` command, you should create a new branch.
 
 Reuse your own work
 """""""""""""""""""
