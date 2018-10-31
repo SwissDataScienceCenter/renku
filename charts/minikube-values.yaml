@@ -50,7 +50,7 @@ notebooks:
       baseUrl: '/jupyterhub/'
       db:
         type: postgres
-        url: postgres+psycopg2://jupyterhub:jupyterhub@renku-postgresql:5432/jupyterhub
+        url: postgres+psycopg2://jupyterhub:d6f59c5df645abe2fd1a0572b6bd5a8d@renku-postgresql:5432/jupyterhub
       services:
         notebooks:
           apiToken: notebookstoken
