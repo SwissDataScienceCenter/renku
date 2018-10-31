@@ -9,15 +9,15 @@ global:
     ## Client secret, set this to a random string.
     ## To change this value after deploying, first generate a new secret using the Keycloak admin console
     ## then paste the generated secret here
-    clientSecret: open_secret
+    clientSecret: # use `uuidgen -r`
     ## Name of the postgres database to be used by Gitlab
     postgresDatabase: gitlabhq_production
     ## Postgres user for the gitlab database
     postgresUser: gitlab
     ## Postgres password for the gitlab database
-    postgresPassword: gitlab
+    postgresPassword: # use `openssl rand -hex 16`
     ## Sudo token for sudo API requests
-    sudoToken: dummy-secret
+    sudoToken: # use `openssl rand -hex 32`
     ## URL prefix for gitlab
     # urlPrefix: /
 
@@ -27,20 +27,20 @@ global:
     ## Postgres user for the Keycloak database
     postgresUser: keycloak
     ## Postgres password for the Keycloak database
-    postgresPassword: keycloak
+    postgresPassword: # use `openssl rand -hex 16`
   jupyterhub:
     ## Name of the postgres database to be used by jupyterhub
     postgresDatabase: jupyterhub
     ## Postgres user for the jupyterhub database
     postgresUser: jupyterhub
     ## Postgres password for the jupyterhub database
-    postgresPassword: jupyterhub
+    postgresPassword: # use `openssl rand -hex 16`
   gateway:
-    clientSecret: dummy-secret
+    clientSecret: # use `uuidgen -r`
     ## The client ID for authentication against gitlab
     gitlabClientId: renku-ui
     ## The client secret for authentication against gitlab
-    gitlabClientSecret: dummy-secret
+    gitlabClientSecret: # use `openssl rand -hex 32`
   renku:
     ## Domain name for the deployed instance of renku
     domain: example.local
@@ -406,13 +406,16 @@ gitlab:
   ## LFS objects settings
   ## Used to store git-lfs objects externally
   ## Note: bucket must exist before use, GitLab won't do it
+  ## Follows: https://docs.gitlab.com/ce/workflow/lfs/lfs_administration.html#storing-lfs-objects-in-remote-object-storage
   # lfsObjects:
       ## Set to true to enable remote LFS objects
       # enabled: false
       ## Bucket name
       # bucketName: lfs-objects
-      ## Configuration, see: https://docs.gitlab.com/ce/workflow/lfs/lfs_administration.html
-      # storage: |-
+      # directUpload: false
+      # backgroundUpload: true
+      # proxyDownload: false
+      # connection: |-
       #   {
       #     'provider' => 'AWS',
       #     'region' => 'eu-central-1',
@@ -570,6 +573,13 @@ ui:
     #   services:
         # notebooks:
         #   api_token: notebookstoken
+
+        ## define the client ID and secret for the gateway
+        # gateway:
+        #  oauth_client_id: gateway
+        #  apiToken: # use `openssl rand -hex 32`
+        #  oauth_redirect_uri: http://<gateway>/api/auth/jupyterhub/token
+
     ## Simple default setup for gitlab oauth
     # auth:
     #   type: gitlab

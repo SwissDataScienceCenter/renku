@@ -360,7 +360,7 @@ TODO: Put back template strings from renku/services/keycloak/renku-realm.json.tp
         "surrogateAuthRequired": false,
         "enabled": true,
         "clientAuthenticatorType": "client-secret",
-        "secret": "{{ .Values.global.gateway.clientSecret }}",
+        "secret": "{{ required "Fill in .Values.global.gateway.clientSecret with `uuidgen -r`" .Values.global.gateway.clientSecret }}",
         "redirectUris": [
             "{{ template "http" . }}://{{ .Values.global.renku.domain }}/*"
         ],
@@ -675,7 +675,7 @@ TODO: Put back template strings from renku/services/keycloak/renku-realm.json.tp
     "surrogateAuthRequired": false,
     "enabled": true,
     "clientAuthenticatorType": "client-secret",
-    "secret": "{{ .Values.global.gitlab.clientSecret }}",
+    "secret": "{{ required "Fill in .Values.global.gitlab.clientSecret with `uuidgen -r`" .Values.global.gitlab.clientSecret }}",
     "redirectUris": [
       "{{ template "http" . }}://{{ .Values.global.renku.domain }}/gitlab/users/auth/oauth2_generic/callback"
     ],

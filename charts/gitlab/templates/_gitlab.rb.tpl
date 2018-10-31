@@ -85,7 +85,10 @@ gitlab_rails['redis_host'] = '{{ include "call-nested" (list . "redis" "redis.fu
 {{ if .Values.lfsObjects.enabled -}}
 gitlab_rails['lfs_object_store_enabled'] = true
 gitlab_rails['lfs_object_store_remote_directory'] = "{{ .Values.lfsObjects.bucketName }}"
-gitlab_rails['lfs_object_store_connection'] = {{ .Values.lfsObjects.storage }}
+gitlab_rails['lfs_object_store_direct_upload'] = {{ .Values.lfsObjects.directUpload }}
+gitlab_rails['lfs_object_store_background_upload'] = {{ .Values.lfsObjects.backgroundUpload }}
+gitlab_rails['lfs_object_store_proxy_download'] = {{ .Values.lfsObjects.proxyDownload }}
+gitlab_rails['lfs_object_store_connection'] = eval(ENV['GITLAB_LFS_CONNECTION'])
 {{- end }}
 
 prometheus['enable'] = false
@@ -100,7 +103,7 @@ registry['registry_http_addr'] = '0.0.0.0:8105'
 ### Registry backend storage
 ###! Docs: https://docs.gitlab.com/ce/administration/container_registry.html#container-registry-storage-driver
 {{- if .Values.registry.storage }}
-registry['storage'] = {{ .Values.registry.storage }}
+registry['storage'] = eval(ENV['GITLAB_REGISTRY_STORAGE'])
 {{- end }}
 registry['health_storagedriver_enabled'] = {{ .Values.registry.backendHealthcheck }}
 

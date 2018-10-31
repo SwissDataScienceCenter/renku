@@ -14,7 +14,17 @@ ingress:
 
 global:
   gitlab:
+    clientSecret: e3ecd740-0892-4610-ad69-c7f4886f4533
+    postgresPassword: 3b0aa4bae4fbbe167143f583e35eda18
+    sudoToken: 214981ee49479ecbee56359b70ad25dc87edd0e9ea569b7b8c522c3bf979446a
     urlPrefix: /gitlab
+  keycloak:
+    postgresPassword: 49d0aa1b8a1095415cc975d766933e7b
+  jupyterhub:
+    postgresPassword: d6f59c5df645abe2fd1a0572b6bd5a8d
+  gateway:
+    clientSecret: 259a72d8-2c40-435f-9e0f-24df7c1a7dbc
+    gitlabClientSecret: 4e35410e4116d2280e29c6da6aaaa89fc1ab77364c6352aeb5adbd037d49590a
   renku:
     version: 'latest'
 
@@ -44,6 +54,10 @@ notebooks:
       services:
         notebooks:
           apiToken: notebookstoken
+        gateway:
+          admin: true
+          oauth_client_id: &gatewayClient gateway
+          apiToken: &gatewaySecret 7ed9992425bbdcf03f323310205b2fea34bd9e1a255346f99066800d9440d6f7
     proxy:
       secretToken: f89ddee5ba10f2268fcefcd4e353235c255493095cd65addf29ebebf8df86255
     auth:
@@ -55,6 +69,11 @@ notebooks:
         clientId: jupyterhub
         clientSecret: dummy-secret
         callbackUrl: '""' # Forces the default callback url
+
+gateway:
+  jupyterhub:
+    clientId: *gatewayClient
+    clientSecret: *gatewaySecret
 
 runner:
   enabled: true

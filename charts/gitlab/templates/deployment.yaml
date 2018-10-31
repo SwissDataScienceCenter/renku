@@ -55,6 +55,20 @@ spec:
             secretKeyRef:
               name: {{ template "gitlab.fullname" . }}
               key: shared-runners-registration-token
+        {{- if .Values.lfsObjects.enabled }}
+        - name: GITLAB_LFS_CONNECTION
+          valueFrom:
+            secretKeyRef:
+              name: {{ template "gitlab.fullname" . }}
+              key: gitlab-lfs-connection
+        {{- end }}
+        {{- if .Values.registry.storage }}
+        - name: GITLAB_REGISTRY_STORAGE
+          valueFrom:
+            secretKeyRef:
+              name: {{ template "gitlab.fullname" . }}
+              key: gitlab-registry-storage
+        {{- end }}
         ports:
         - name: ssh
           containerPort: 22

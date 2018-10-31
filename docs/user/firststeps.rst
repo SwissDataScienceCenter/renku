@@ -358,6 +358,12 @@ To generate the figures, run
 
     renku run python src/plot_data.py data/preprocessed/zhbikes.parquet
 
+.. warning::
+
+   Do *not* make any edit to the code before the ``renku run`` command is finished.
+   In oder to keep track of the outputs of your script, renku will 
+   automatically add the changes to ``git``. If you want to keep working while running 
+   a ``renku`` command, you should create a new branch.
 
 Reuse your own work
 """""""""""""""""""
