@@ -573,6 +573,13 @@ ui:
     #   services:
         # notebooks:
         #   api_token: notebookstoken
+
+        ## define the client ID and secret for the gateway
+        # gateway:
+        #  oauth_client_id: gateway
+        #  apiToken: # use `openssl rand -hex 32`
+        #  oauth_redirect_uri: http://<gateway>/api/auth/jupyterhub/token
+
     ## Simple default setup for gitlab oauth
     # auth:
     #   type: gitlab
