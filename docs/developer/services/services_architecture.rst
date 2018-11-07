@@ -49,7 +49,6 @@ The services built by the Renku team are:
 - :ref:`renku-notebooks <notebooks_service>`: a service integrating GitLab repositories with JupyterHub
 - :ref:`renku-gateway <api_gateway>`: an API gateway connecting clients to the APIs of the different backend services
 - renku-python_: python API & Command Line Interface (CLI)
-- renku-storage_: storage service exposing LFS and S3 APIs
 - renku-ui_: web front-end interface
 
 In addition, we make use of:
@@ -85,9 +84,7 @@ familiarized with a few foundational concepts:
 
 
 .. _renku: https://github.com/SwissDataScienceCenter/renku
-.. _renku-notebooks:
 .. _renku-python: https://github.com/SwissDataScienceCenter/renku-python
-.. _renku-storage: https://github.com/SwissDataScienceCenter/renku-storage
 .. _renku-ui: https://github.com/SwissDataScienceCenter/renku-ui
 .. _JupyterHub: https://github.com/jupyterhub/jupyterhub
 .. _GitLab: https://gitlab.com/
