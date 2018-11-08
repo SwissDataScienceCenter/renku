@@ -77,10 +77,8 @@ familiarized with a few foundational concepts:
    :maxdepth: 2
 
    JWT  <../general/json_web_tokens>
-   PBAC <../general/policy_based_access_controls>
 
 - :ref:`json_web_tokens` (JWT)
-- :ref:`policy_based_access_controls` (PBAC)
 
 
 .. _renku: https://github.com/SwissDataScienceCenter/renku
