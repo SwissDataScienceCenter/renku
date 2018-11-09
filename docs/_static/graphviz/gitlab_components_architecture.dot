@@ -1,0 +1,25 @@
+strict digraph architecture {
+  compound=true;
+  newrank=true;
+
+  graph [fontname="Raleway", nodesep="0.8"];
+  node [shape="rect", style="filled,rounded", fontname="Raleway"];
+  edge [fontname="Raleway"]
+
+  Client [fillcolor="#f4d142"]
+  storage [fillcolor="lightblue", label="Object store", shape="cylinder"]
+
+  # main off-the-shelf services
+  GitLab [fillcolor="lightblue"]
+
+  # gitlab-ci
+  runner [fillcolor="lightblue"]
+  registry [fillcolor="lightblue"]
+
+  Client -> GitLab [label=" git push" fontname="courier"]
+  GitLab -> runner [label=" start CI job", lhead=cluster_ci]
+  runner -> registry [label=" push image"]
+  registry -> GitLab [label=" register image"]
+  registry -> storage [label=" push/fetch image"]
+  {rank=same; "runner", registry};
+}

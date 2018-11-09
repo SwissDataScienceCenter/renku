@@ -1,6 +1,7 @@
 strict digraph architecture {
   compound=true;
   newrank=true;
+  ordering=out;
 
   graph [fontname="Raleway", nodesep="0.8"];
   node [shape="rect", style="filled,rounded", fontname="Raleway"];
@@ -10,71 +11,39 @@ strict digraph architecture {
   # main off-the-shelf services
   GitLab [fillcolor="lightblue"]
   Keycloak [fillcolor="lightblue"]
-  JupyterHub [fillcolor="lightblue"]
-
-  # gitlab-ci
-  runner [fillcolor="lightblue"]
-  registry [fillcolor="lightblue"]
+  JupyterHub [label="Notebook service" fillcolor="#f4d142" URL="../developer/services/notebooks_service.html" target="_graphviz"]
+  Notebook [fillcolor="lightblue"]
 
   # clients
   UI [fillcolor="#f4d142"]
   CLI [fillcolor="#f4d142"]
 
-  # custom services
   gateway [fillcolor="#f4d142"]
-  "notebook-service" [fillcolor="#f4d142"]
-  notebook [shape="rect", fillcolor="#f4d142"]
-  "init-container" [shape="rect", fillcolor="#f4d142"]
 
-  # storage
-  storage [fillcolor="lightblue", label="object store", shape="cylinder"]
+  storage [fillcolor="lightblue", label="Object store", shape="cylinder"]
 
   subgraph cluster_clients {
     label="Clients"
     UI
     CLI
-    {rank=same; UI, CLI};
+    Notebook
+    {rank=same; UI, CLI, Notebook};
   }
 
-  subgraph cluster_jupyterhub{
-    label="JupyterHub components"
-    "notebook-service" -> JupyterHub [label="API"]
+  JupyterHub -> Notebook [label=" spawn"]
 
-    subgraph cluster_notebook {
-        label="notebook pod"
-        style="dashed";
-        "init-container"
-        notebook
-        {rank=same; "init-container", notebook}
-      }
-  }
+  CLI -> GitLab [label=" git pull/push" fontname="courier"]
+  Notebook -> GitLab [label=" git pull/push" fontname="courier"]
+  Notebook -> storage [label=" pull/push LFS\n fetch image"]
+  CLI -> gateway [label=" API"]
+  UI -> gateway [label=" API"]
+  GitLab -> Keycloak [label=" OAuth"]
+  JupyterHub -> GitLab [label=" OAuth"]
+  gateway -> GitLab [label=" proxy API"]
+  gateway -> JupyterHub [label=" proxy API"]
+  gateway -> Keycloak [label=" OIDC"]
+  GitLab -> storage [label=" fetch/push image"]
+  CLI -> storage [label=" pull/push LFS"]
 
-  subgraph cluster_gitlab {
-    label="GitLab components"
-    GitLab -> runner [label="start CI job", lhead=cluster_ci]
-    runner -> registry [label="push image"]
-    registry -> GitLab [label="register image"]
-    {rank=same; "runner", registry};
-  }
-
-  JupyterHub -> GitLab [label="OAuth"]
-  "notebook" -> "GitLab" [label="commit back"]
-  "init-container" -> "GitLab" [label="clone repo"]
-
-  CLI -> GitLab [label="git push" fontname="courier"]
-  CLI -> gateway [label="API"]
-  UI -> gateway [label="API"]
-  GitLab -> Keycloak [label="OAuth"]
-  gateway -> GitLab [label="proxy"]
-  gateway -> "notebook-service" [label="proxy", lhead=cluster_jupyterhub]
-  gateway -> Keycloak [label="OIDC"]
-  "notebook-service" -> GitLab [label="repo permissions\nimage build status"]
-  JupyterHub -> notebook [label="spawn", lhead=cluster_notebook]
-  "notebook" -> GitLab [label="fetch image", lhead=cluster_notebook]
-  registry -> storage [label="fetch/push image"]
-  CLI -> storage [label="pull/push LFS"]
-  "init-container" -> storage [label="pull/push LFS", ltail=cluster_notebook]
-
-  { rank=same; GitLab; Keycloak}
-  { rank=same; registry; storage; }
+  {rank=0; UI}
 }
