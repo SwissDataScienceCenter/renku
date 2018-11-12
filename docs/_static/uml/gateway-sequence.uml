@@ -46,38 +46,84 @@ skinparam shadowing false
 
 participant UI
 participant "API Gateway"
-participant Keycloak
-participant GitLab
+participant "Keycloak"
+participant "Gitlab/JupyterHub"
+database Redis order 10 BLUE
 
 autonumber stop
 
 == User login ==
-group OAuth2 flow
-  UI -> "API Gateway": open in browser: /api/auth/login
+  group OAuth2 flow
+    UI -> "API Gateway": open in browser: /api/auth/login
+    activate "API Gateway"
 
-  "API Gateway" -> Keycloak: redirect
-  "Keycloak" -> "Keycloak"
-  note right: User enters credentials
-  "API Gateway" <- Keycloak: redirect (incl. authorization code)
-  group Server-side communication
-    "API Gateway" -> Keycloak: authorization code
+    "API Gateway" -> "Keycloak": redirect
+    activate "Keycloak"
+
+    "API Gateway" -[BLUE]> Redis: store state
+    deactivate "API Gateway"
+
     "Keycloak" -> "Keycloak"
-    note right: Validate authorization code
-    "API Gateway" <- Keycloak: access token, refresh token, ID token
+    note right: User enters credentials
+
+    "API Gateway" <- "Keycloak": redirect (incl. authorization code)
+    deactivate "Keycloak"
+    activate "API Gateway"
+
+    group Server-side communication
+      "API Gateway" <[BLUE]- Redis: retreive state
+      "API Gateway" -> "Keycloak": authorization code
+      activate "Keycloak"
+      "Keycloak" -> "Keycloak"
+      note right: Validate authorization code
+
+      "API Gateway" <- "Keycloak": access token, refresh token, ID token
+      deactivate "Keycloak"
+
+      "API Gateway" -[BLUE]> Redis: store access token, refresh token, ID token
+    end
+
+    UI <- "API Gateway": redirecting page
+    deactivate "API Gateway"
   end
-  UI <- "API Gateway": access token, refresh token, ID token
-end
+
+  ...repeat OAuth2 flow for Gitlab and JupyterHub...
 
 == On startup ==
-"API Gateway" <- Keycloak: Keycloak public key
+  "API Gateway" <- "Keycloak": Keycloak public key
 
 == Resource access ==
-  UI -> "API Gateway": /api/some_resource (access token)
+  UI -> "API Gateway": /api/some_resource (session cookie)
+  activate "API Gateway"
+
+  "API Gateway" <[BLUE]- Redis: retreive Keycloak and Gitlab/JupyterHub access token
   "API Gateway" -> "API Gateway"
-  note right: Validate access token (public key)
-  "API Gateway" -> GitLab: /api/v4/some_resource (GitLab sudo token, user id)
-  GitLab -> GitLab
+  note right: Validate Keycloak's access token stored in the session (public key, expiration date)
+
+  "API Gateway" -> "Gitlab/JupyterHub": /api/version/some_resource (GitLab/JupyterHub user's access token)
+  activate "Gitlab/JupyterHub"
+
+  "Gitlab/JupyterHub" -> "Gitlab/JupyterHub"
   note right: Process request
-  "API Gateway" <- GitLab: API response
+
+  "API Gateway" <- "Gitlab/JupyterHub": API response
+  deactivate "Gitlab/JupyterHub"
+
   UI <- "API Gateway": API response
+  deactivate "API Gateway"
+
+== User logout ==
+
+  UI -> "API Gateway": open in browser: /api/auth/logout
+  activate "API Gateway"
+
+  "API Gateway" -> "Keycloak": redirect logout
+
+  "API Gateway" -[BLUE]> Redis: clear all user's tokens
+  deactivate "API Gateway"
+
+  UI <- "Keycloak": redirect
+
+  ...can be repeated with Gitlab and JupyterHub logout urls...
+
 @enduml

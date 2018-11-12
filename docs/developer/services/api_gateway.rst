@@ -26,6 +26,14 @@ the following ways:
   for the different services, therefore allowing clients to access all resources
   using the same credentials.
 
+- **Extensibility**:
+  By adapting the mapping in the configration file `endpoints.json`, it is possible to
+  introduce other backend services, specifying the url mapping,
+  authentication/authorization scheme and content translation.
+  Base classes for request/response processing and authentication headers can be extended
+  and if needed, rounds of oauth2 login can be appended to the login workflow for
+  retreiving user tokens.
+
 - **Confidential client**:
   The gateway serves as the confidential part of the web UI, which is a single
   page application and can therefore not store client secrets. This allows
@@ -33,17 +41,6 @@ the following ways:
 
 .. _grant: https://tools.ietf.org/html/rfc6749#page-8
 __ grant_
-
-Current state of implementation
--------------------------------
-
-Not all the features mentioned above are already implemented. Currently, the
-API gateway is handling login functionalities for the Renku web UI and acts as
-a proxy between the UI and the GitLab API. The gateway does not yet handle
-user-specific access tokens. Instead it checks the validity of a users access
-token and forwards requests as root on behalf of the authenticated user.
-Furthermore, GitLab resources are simply forwarded to the UI without any
-modifications. Expect more features to be implemented in our 0.2.1 release.
 
 The diagram below illustrates the sequence of events that currently take place
 in the API gateway.
