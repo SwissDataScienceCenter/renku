@@ -27,12 +27,12 @@ the following ways:
   using the same credentials.
 
 - **Extensibility**:
-  By adapting the mapping in the configration file `endpoints.json`, it is possible to
-  introduce other backend services, specifying the url mapping,
+  By adapting the mapping in the configuration file `endpoints.json`, it is possible to
+  introduce other backend services, specifying the URL mapping,
   authentication/authorization scheme and content translation.
   Base classes for request/response processing and authentication headers can be extended
   and if needed, rounds of oauth2 login can be appended to the login workflow for
-  retreiving user tokens.
+  retrieving user tokens.
 
 - **Confidential client**:
   The gateway serves as the confidential part of the web UI, which is a single
