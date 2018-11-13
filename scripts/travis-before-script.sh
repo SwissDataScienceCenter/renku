@@ -36,7 +36,6 @@ done
 
 helm init --wait
 helm upgrade --install nginx-ingress --namespace kube-system \
-    --version 0.30.0 \
     --set controller.service.type=NodePort \
     --set controller.service.nodePorts.http=32080 \
     --set controller.service.nodePorts.https=32443 \
