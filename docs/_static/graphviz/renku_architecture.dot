@@ -9,7 +9,7 @@ strict digraph architecture {
 
 
   # main off-the-shelf services
-  GitLab [fillcolor="lightblue"]
+  GitLab [fillcolor="lightblue" URL="../developer/services/notebooks_service.html#image-builds" target="_graphviz"]
   Keycloak [fillcolor="lightblue"]
   JupyterHub [label="Notebook service" fillcolor="#f4d142" URL="../developer/services/notebooks_service.html" target="_graphviz"]
   Notebook [fillcolor="lightblue"]
@@ -18,7 +18,7 @@ strict digraph architecture {
   UI [fillcolor="#f4d142"]
   CLI [fillcolor="#f4d142"]
 
-  gateway [fillcolor="#f4d142"]
+  gateway [fillcolor="#f4d142" URL="../developer/services/api_gateway.html" target="_graphviz"]
 
   storage [fillcolor="lightblue", label="Object store", shape="cylinder"]
 
