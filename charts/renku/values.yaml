@@ -17,7 +17,8 @@ global:
     ## Postgres password for the gitlab database
     postgresPassword: # use `openssl rand -hex 16`
     ## Sudo token for sudo API requests
-    sudoToken: # use `openssl rand -hex 32`
+    ## Generated using: `openssl rand -hex 32`
+    sudoToken:
     ## URL prefix for gitlab
     # urlPrefix: /
 
@@ -27,20 +28,23 @@ global:
     ## Postgres user for the Keycloak database
     postgresUser: keycloak
     ## Postgres password for the Keycloak database
-    postgresPassword: # use `openssl rand -hex 16`
+    ## Generated using: `openssl rand -hex 16`
+    postgresPassword:
   jupyterhub:
     ## Name of the postgres database to be used by jupyterhub
     postgresDatabase: jupyterhub
     ## Postgres user for the jupyterhub database
     postgresUser: jupyterhub
     ## Postgres password for the jupyterhub database
-    postgresPassword: # use `openssl rand -hex 16`
+    ## Generated using: `openssl rand -hex 16`
+    postgresPassword:
   gateway:
     clientSecret: # use `uuidgen -r`
     ## The client ID for authentication against gitlab
     gitlabClientId: renku-ui
     ## The client secret for authentication against gitlab
-    gitlabClientSecret: # use `openssl rand -hex 32`
+    ## Generated using: `openssl rand -hex 32`
+    gitlabClientSecret:
   renku:
     ## Domain name for the deployed instance of renku
     domain: example.local
