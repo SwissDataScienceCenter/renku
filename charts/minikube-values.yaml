@@ -74,6 +74,7 @@ gateway:
   jupyterhub:
     clientId: *gatewayClient
     clientSecret: *gatewaySecret
+  secretKey: "dummy-secret"
 
 runner:
   enabled: true
