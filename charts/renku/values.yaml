@@ -398,7 +398,8 @@ gitlab:
   # resources: {}
 
   ## Registration token for gitlab runners (initial value, can be regenerated from gitlab admin ui)
-  sharedRunnersRegistrationToken: 8dbf016f5b73d5608390183bbea9ce5fbed83a9dadefa719245ab93eb255cc29
+  ## Generated using: `openssl rand -hex 32`
+  sharedRunnersRegistrationToken:
 
   ## Set to true to make the user 'demo' a GitLab admin
   demoUserIsAdmin: false
