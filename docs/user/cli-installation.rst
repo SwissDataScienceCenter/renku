@@ -101,11 +101,11 @@ Specific version
 To install a specific version of renku the procedure is nearly identical
 the above, but instead of installing from source you install a version with ``pip``.
 For example, after creating the ``conda`` environment as described in the previous
-section, you can install `renku v0.2.0` with
+section, you can install `renku v0.3.0` with
 
 .. code-block:: console
 
-  $(conda env list | grep renku | awk '{print $2}')/bin/pip install renku==0.2.0
+  $(conda env list | grep renku | awk '{print $2}')/bin/pip install renku==0.3.0
 
 
 .. note::
