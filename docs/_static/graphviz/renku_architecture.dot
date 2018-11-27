@@ -32,8 +32,8 @@ strict digraph architecture {
 
   JupyterHub -> Notebook [label=" spawn"]
 
-  CLI -> GitLab [label=" git pull/push" fontname="courier"]
-  Notebook -> GitLab [label=" git pull/push" fontname="courier"]
+  CLI -> GitLab [label=" git pull/push"]
+  Notebook -> GitLab [label=" git pull/push"]
   Notebook -> storage [label=" pull/push LFS\n fetch image"]
   CLI -> gateway [label=" API"]
   UI -> gateway [label=" API"]

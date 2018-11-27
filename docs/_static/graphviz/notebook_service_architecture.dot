@@ -27,7 +27,7 @@ strict digraph architecture {
 
   "notebook-service" -> GitLab [label=" repo permissions\n image build status"]
   JupyterHub -> notebook [label=" spawn", lhead=cluster_notebook]
-  "notebook" -> GitLab [label=" git pull/push" fontname="courier"]
-  "init-container" -> "GitLab" [label=" git clone" fontname="courier"]
+  "notebook" -> GitLab [label=" git pull/push"]
+  "init-container" -> "GitLab" [label=" git clone"]
   notebook -> storage [label=" fetch image\n push/pull LFS"]
 }

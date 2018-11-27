@@ -21,7 +21,7 @@ strict digraph architecture {
     {rank=same; Runner, Registry};
   }
 
-  Client -> Repository [label=" git push" fontname="courier"]
+  Client -> Repository [label=" git push"]
   Registry -> Storage [label=" push/fetch image"]
 
 }
