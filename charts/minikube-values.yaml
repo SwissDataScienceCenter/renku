@@ -37,6 +37,7 @@ gitlab:
   registry:
     enabled: true
     exposedAs: NodePort
+  sharedRunnersRegistrationToken: 755434ddc0d6344c025dff6af796f2232bbb29c055c668bde9f2aaebd1d37266
   demoUserIsAdmin: true
 
 notebooks:
