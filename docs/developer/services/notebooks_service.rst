@@ -31,6 +31,15 @@ If the job does not exist or there is a problem with the image build, a notebook
 server is launched with the default notebook image as specified in the
 platform configuration options.
 
+The architecture of this setup is presented in the figure below. Blue ovals
+represent off-the-shelf services and yellow ovals show heavily
+customized or custom-built components.
+
+.. _fig-notebook-service-architecture:
+
+.. graphviz:: /_static/graphviz/notebook_service_architecture.dot
+
+
 The diagram below illustrates the sequence of events that take place in order
 to launch a new notebook using the notebook service:
 
@@ -55,3 +64,9 @@ This way we guarantee that the user will have an image available for every
 point in the project's history. In future iterations of these services, the
 build process will be optimized to avoid superfluous builds and reduce launch
 latency to improve the user experience.
+
+The image building component interactions are visualized below.
+
+.. _fig-image-build-architecture:
+
+.. graphviz:: /_static/graphviz/gitlab_components_architecture.dot

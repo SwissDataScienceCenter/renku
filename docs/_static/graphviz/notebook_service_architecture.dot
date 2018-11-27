@@ -1,0 +1,33 @@
+strict digraph architecture {
+  compound=true;
+  newrank=true;
+
+  graph [fontname="Raleway", nodesep="0.8"];
+  node [shape="rect", style="filled,rounded", fontname="Raleway"];
+  edge [fontname="Raleway"]
+
+  GitLab [fillcolor="lightblue"]
+  storage [fillcolor="lightblue", label="object store", shape="cylinder"]
+
+  JupyterHub [fillcolor="lightblue"]
+  "notebook-service" [fillcolor="#f4d142" label="Notebook service"]
+  notebook [label="Jupyter\nnotebook", shape="rect", fillcolor="#f4d142"]
+  "init-container" [shape="rect", fillcolor="#f4d142"]
+
+  "notebook-service" -> JupyterHub [label=" API"]
+
+  subgraph cluster_notebook {
+      label="notebook pod"
+      style="dashed";
+      "init-container"
+      notebook
+      notebook -> "init-container" [label=" mount volume"]
+      {rank=same; "init-container", notebook}
+  }
+
+  "notebook-service" -> GitLab [label=" repo permissions\n image build status"]
+  JupyterHub -> notebook [label=" spawn", lhead=cluster_notebook]
+  "notebook" -> GitLab [label=" git pull/push"]
+  "init-container" -> "GitLab" [label=" git clone"]
+  notebook -> storage [label=" fetch image\n push/pull LFS"]
+}

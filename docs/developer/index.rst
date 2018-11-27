@@ -11,4 +11,3 @@ Developer Documentation
    User Management <identity_management>
    Web API <web>
    Services <services/index>
-   UML <diagrams/uml_diagrams>

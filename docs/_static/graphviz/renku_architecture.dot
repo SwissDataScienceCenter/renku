@@ -1,63 +1,49 @@
-digraph architecture {
+strict digraph architecture {
   compound=true;
+  newrank=true;
+  ordering=out;
+
+  graph [fontname="Raleway", nodesep="0.8"];
+  node [shape="rect", style="filled,rounded", fontname="Raleway"];
+  edge [fontname="Raleway"]
 
 
-  GitLab [color="lightblue", style="filled"]
-  Keycloak [color="lightblue", style="filled"]
-  UI [color="#f4d142", style="filled"]
-  CLI [color="#f4d142", style="filled"]
-  gateway [color="#f4d142", style="filled"]
-  JupyterHub [color="lightblue", style="filled"]
-  "notebook-service" [color="#f4d142", style="filled"]
-  spawner [color="#f4d142", style="filled"]
-  "notebook" [shape="rect", color="#f4d142", style="filled"]
-  "init-container" [shape="rect", color="#f4d142", style="filled"]
-  runner [color="lightblue", style="filled"]
-  "build-container" [color="lightblue", style="filled"]
+  # main off-the-shelf services
+  GitLab [fillcolor="lightblue" URL="../developer/services/notebooks_service.html#image-builds" target="_graphviz"]
+  Keycloak [fillcolor="lightblue"]
+  JupyterHub [label="Notebook service" fillcolor="#f4d142" URL="../developer/services/notebooks_service.html" target="_graphviz"]
+  Notebook [fillcolor="lightblue"]
 
-  subgraph auth_layer {
-    GitLab -> Keycloak [label="OIDC"]
-    // {rank=same; Keycloak, GitLab};
-  }
+  # clients
+  UI [fillcolor="#f4d142"]
+  CLI [fillcolor="#f4d142"]
 
-  subgraph cluster_client_side_apps {
-    label="User-facing applications"
+  gateway [fillcolor="#f4d142" URL="../developer/services/api_gateway.html" target="_graphviz"]
+
+  storage [fillcolor="lightblue", label="Object store", shape="cylinder"]
+
+  subgraph cluster_clients {
+    label="Clients"
     UI
     CLI
-    {rank=same; UI, CLI};
+    Notebook
+    {rank=same; UI, CLI, Notebook};
   }
 
-  subgraph cluster_jupyterhub{
-    label="JupyterHub Components"
-    JupyterHub -> spawner [label="notebook spawn"]
-    spawner -> notebook [label="spawn", lhead=cluster_notebook];
-    JupyterHub -> notebook [label="proxy redirect"]
-    "notebook-service" -> JupyterHub [label="notebook API"]
+  JupyterHub -> Notebook [label=" spawn"]
 
-    subgraph cluster_notebook {
-      label="notebook pod"
-      style="dashed";
-      "init-container"
-      "notebook"
-    }
-  }
+  CLI -> GitLab [label=" git pull/push"]
+  Notebook -> GitLab [label=" git pull/push"]
+  Notebook -> storage [label=" pull/push LFS\n fetch image"]
+  CLI -> gateway [label=" API"]
+  UI -> gateway [label=" API"]
+  GitLab -> Keycloak [label=" OAuth"]
+  JupyterHub -> GitLab [label=" OAuth"]
+  gateway -> GitLab [label=" proxy API"]
+  gateway -> JupyterHub [label=" proxy API"]
+  gateway -> Keycloak [label=" OIDC"]
+  GitLab -> storage [label=" fetch/push image"]
+  CLI -> storage [label=" pull/push LFS"]
 
-  subgraph cluster_ci {
-    rankdir=LR;
-    label="GitLab CI"
-    runner -> "build-container" [label="trigger build"]
-    {rank=same; "runner", "build-container"};
-  }
-
-  spawner -> GitLab [label="repo permissions"]
-  JupyterHub -> GitLab [label="OAuth"]
-  "notebook" -> "GitLab" [label="commit back"]
-  "init-container" -> "GitLab" [label="clone repo"]
-  "build-container" -> GitLab [label="push image"]
-  GitLab -> runner [label="start CI job", lhead=cluster_ci]
-
-  CLI -> GitLab [label="push repo"]
-  UI -> gateway [label="API elements"]
-  gateway -> GitLab [label="Forward API request"]
-  UI -> "notebook-service" [label="notebook URL"]
+  {rank=0; UI}
 }
