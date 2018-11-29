@@ -16,9 +16,9 @@ dependencies:
   version: 0.14.4
 - name: keycloak
   repository: https://kubernetes-charts.storage.googleapis.com
-  version: 3.2.0
+  version: 4.0.4
 - name: minio
   repository: https://kubernetes-charts.storage.googleapis.com
   version: 1.6.0
-digest: sha256:f8f3df9c7409b40dc58f7b208dc633e70e368d375b5dd001242673d4b2867899
-generated: 2018-11-23T13:49:58.418946037+01:00
+digest: sha256:5467e99e61549daf0a3f9f812b1e171c3f55fc152ea0ef9b943dcb36f58e69f7
+generated: 2018-11-27T18:01:24.322113441+01:00
