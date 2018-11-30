@@ -7,7 +7,7 @@ metadata:
 spec:
   initContainers:
   - name: renku-demo
-    image: renku/renku-demo:latest
+    image: renku/renku-demo:0.3.0
     env:
       - name: GITLAB_SUDO_TOKEN
         valueFrom:

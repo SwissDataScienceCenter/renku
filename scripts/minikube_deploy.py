@@ -251,7 +251,7 @@ def deploy_runner():
         'gitlab-runner', 'register',
         '-n', '-u', 'http://{mip}/gitlab/'.format(mip=minikube_ip()),
         '--name', 'docker-minikube',
-        '-r', '8dbf016f5b73d5608390183bbea9ce5fbed83a9dadefa719245ab93eb255cc29', # From values.yaml
+        '-r', '755434ddc0d6344c025dff6af796f2232bbb29c055c668bde9f2aaebd1d37266', # From minikube-values.yaml
         '--executor', 'docker',
         '--locked=false',
         '--run-untagged=true',
