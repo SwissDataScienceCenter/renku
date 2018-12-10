@@ -90,6 +90,9 @@ keycloak:
     ## Keycloak admin user configuration
     username: admin
     password: admin
+    
+    readinessProbe:
+      initialDelaySeconds: 120
 
     extraInitContainers: |
       - name: theme-provider
