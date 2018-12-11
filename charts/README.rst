@@ -25,6 +25,7 @@ Requires minikube, kubectl, helm and python.
         --set controller.hostNetwork=true \
         stable/nginx-ingress
     $ helm upgrade renku --install \
+        renku ./renku \
         --namespace renku \
         -f minikube-values.yaml \
         --set global.renku.domain=$(minikube ip) \
@@ -33,9 +34,11 @@ Requires minikube, kubectl, helm and python.
         --set ui.gatewayUrl=http://$(minikube ip)/api \
         --set gateway.keycloakUrl=http://$(minikube ip) \
         --set gateway.gitlabUrl=http://$(minikube ip)/gitlab \
-        --set jupyterhub.hub.extraEnv.GITLAB_URL=http://$(minikube ip)/gitlab \
-        --set gitlab.registry.externalUrl=http://$(minikube ip):30105/ \
-        ./renku
+        --set notebooks.jupyterhub.hub.extraEnv.GITLAB_URL=http://$(minikube ip)/gitlab \
+        --set notebooks.jupyterhub.hub.services.gateway.oauth_redirect_uri=http://$(minikube ip)/api/auth/jupyterhub/token \
+        --set notebooks.gitlab.registry.host=10.100.123.45:8105 \
+        --set gitlab.registry.externalUrl=http://10.100.123.45:8105/ \
+        --timeout 1800
 
 Due to issue `minikube #1568
 <https://github.com/kubernetes/minikube/issues/1568>`_,
