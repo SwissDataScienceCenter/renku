@@ -91,6 +91,8 @@ keycloak:
     username: admin
     password: admin
     
+    livenessProbe:
+      initialDelaySeconds: 180
     readinessProbe:
       initialDelaySeconds: 120
 
