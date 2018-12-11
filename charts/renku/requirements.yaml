@@ -18,6 +18,7 @@ dependencies:
 - name: postgresql
   version: 0.14.4
   repository: "@stable"
+  condition: postgresql.enabled
 - name: keycloak
   version: 4.0.4
   repository: "@stable"
