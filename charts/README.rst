@@ -24,7 +24,7 @@ Requires minikube, kubectl, helm and python.
     $ helm upgrade --install nginx-ingress --namespace kube-system \
         --set controller.hostNetwork=true \
         stable/nginx-ingress
-    $ helm upgrade renku --install \
+    $ helm upgrade --install \
         renku ./renku \
         --namespace renku \
         -f minikube-values.yaml \
