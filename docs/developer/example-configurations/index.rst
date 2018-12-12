@@ -1,4 +1,4 @@
-.. _services:
+.. _example_configurations:
 
 Example configurations
 ======================
