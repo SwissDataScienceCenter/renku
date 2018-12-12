@@ -8,7 +8,7 @@ or if you already have an existing GitLab instance running, you might want to
 use this pre-existing instance as a backend service for Renku.
 
 Here we describe how to run a local version of the
-platform against gitlab.com **and** also use gitlab.com as identity provider.
+platform against gitlab.com **and** also use gitlab.com as an identity provider.
 (In regular Renku deployments, the dependency is the other way around meaning that
 the Renku GitLab instance uses the Renku Keycloak instance as identity provider).
 
@@ -25,7 +25,7 @@ There are two known **caveats** for this setup:
   projects from the gitlab.com registry. These credentials are currently not
   injected into the notebook pod.
 
-- gitlab.com limits the total size of repos to 10 GB (including the files added
+- gitlab.com limits the total size of each repository to 10 GB (including the files added
   to git-lfs). This is fine for development work but very restrictive for actual
   Renku projects.
 
@@ -35,7 +35,7 @@ Step 1
 Browse to **gitlab.com > user settings > applications** and register a new
 client application (Renku-local) with the following settings:
 
-#. Activate all scopes except "sudo"
+#. Activate all scopes except :code:`sudo`
 #. Add the following redirect URLs:
 
   .. code-block:: console
@@ -72,13 +72,13 @@ Step 3
 --------
 Open :code:`http://<your-minikube-ip>/auth` in your browser and login to the
 admin console using admin/admin. Under Identity Providers choose "GitLab" from
-the "Add Provider..." dropdown menu. Add the Application Id and Secret from
+the "Add Provider..." drop-down menu. Add the Application Id and Secret from
 the Renku-local application created in Step 1. Save the identity provider and
-logout from the Keyclaok admin panel.
+logout from the Keycloak admin panel.
 
 Step 4
 --------
-For each created project you will have to modify the .gitlab-ci.yaml
+For each created project you will have to modify the :code:`.gitlab-ci.yaml`
 in the repository for the image build to work. In the image_build job
 
 - remove the :code:`image-build` tag
