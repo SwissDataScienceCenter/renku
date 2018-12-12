@@ -1,0 +1,88 @@
+# Configuration file for deploying the renku chart on minikube
+# against gitlab.com. We also configure the keycloak instance which is part
+# of Renku to use gitlab.com as identity provider. See the developer docs
+# (https://renku.readthedocs.io/en/latest/developer/example-configurations/gitlab.html)
+# for instructions on how to use this values file .
+
+ingress:
+  enabled: true
+  annotations:
+    kubernetes.io/ingress.class: 'nginx'
+    nginx.ingress.kubernetes.io/ssl-redirect: 'false'
+    nginx.ingress.kubernetes.io/proxy-body-size: '0'
+    nginx.ingress.kubernetes.io/proxy-request-buffering: 'off'
+  hosts:
+  - ""
+
+global:
+  gitlab:
+    clientSecret: e3ecd740-0892-4610-ad69-c7f4886f4533
+    postgresPassword: 3b0aa4bae4fbbe167143f583e35eda18
+    sudoToken: 214981ee49479ecbee56359b70ad25dc87edd0e9ea569b7b8c522c3bf979446a
+    urlPrefix: /gitlab
+  keycloak:
+    postgresPassword: 49d0aa1b8a1095415cc975d766933e7b
+  jupyterhub:
+    postgresPassword: d6f59c5df645abe2fd1a0572b6bd5a8d
+  gateway:
+    clientSecret: 259a72d8-2c40-435f-9e0f-24df7c1a7dbc
+    gitlabClientSecret: 4e35410e4116d2280e29c6da6aaaa89fc1ab77364c6352aeb5adbd037d49590a
+  renku:
+    version: 'latest'
+
+gitlab:
+  enabled: false
+
+notebooks:
+  gitlab:
+    url: https://gitlab.com
+    registry:
+      host: registry.gitlab.com
+  securityContext:
+    enabled: false
+  jupyterhub:
+    rbac:
+      enabled: true
+    hub:
+      cookieSecret: 7c232b97bda321be7e59b9834dfadbb89652da1e0150dff9b3dadb9aa8b4caab
+      baseUrl: '/jupyterhub/'
+      db:
+        type: postgres
+        url: postgres+psycopg2://jupyterhub:d6f59c5df645abe2fd1a0572b6bd5a8d@renku-postgresql:5432/jupyterhub
+      services:
+        notebooks:
+          apiToken: notebookstoken
+        gateway:
+          admin: true
+          oauth_client_id: &gatewayClient gateway
+          apiToken: &gatewaySecret 7ed9992425bbdcf03f323310205b2fea34bd9e1a255346f99066800d9440d6f7
+      extraEnv:
+        GITLAB_URL: https://gitlab.com
+    proxy:
+      secretToken: f89ddee5ba10f2268fcefcd4e353235c255493095cd65addf29ebebf8df86255
+    auth:
+      state:
+        enabled: true
+        cryptoKey: 86282f03d9886a64a46ee38f946e9ee27a600df4559584eeb90d0bfbd5a3dc0e
+      type: gitlab
+      gitlab:
+        ## Put Application Id and Application Secret here!
+        clientId:
+        clientSecret:
+        callbackUrl: '""'
+
+gateway:
+  secretKey: 5495ef917488a19d1d4106452c899f5824972acd87edce11fd65e7956bea3bb0
+  gitlabUrl: https://gitlab.com
+  ## Put Application Id and Application Secret here!
+  gitlabClientId:
+  gitlabClientSecret:
+  jupyterhub:
+    clientId: *gatewayClient
+    clientSecret: *gatewaySecret
+
+runner:
+  enabled: true
+
+ui:
+  gitlabUrl: https://gitlab.com

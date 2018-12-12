@@ -7,6 +7,7 @@ Developer Documentation
    :maxdepth: 2
 
    Running the platform <setup>
+   Example configurations <example-configurations/index>
    Architecture <services/services_architecture>
    User Management <identity_management>
    Web API <web>
