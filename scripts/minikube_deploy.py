@@ -49,10 +49,14 @@ def main():
     # 2. Build Docker images and update chart version with chartpress
     get_minikube_docker_env()
     for dep in dependencies:
-        chartpress_dir = os.path.join(dependency_dir(dep['repo_name']), dep['chartpress_dir'])
+        chartpress_dir = os.path.join(
+            dependency_dir(dep['repo_name']), dep['chartpress_dir']
+        )
         subchart_dirs = [os.path.join(chartpress_dir, dep['repo_name'])]
         if 'chart_name' in dep:
-            subchart_dirs.append(os.path.join(chartpress_dir, dep['chart_name']))
+            subchart_dirs.append(
+                os.path.join(chartpress_dir, dep['chart_name'])
+            )
         for subchart_dir in subchart_dirs:
             update_subchart_dependencies(subchart_dir)
         update_charts(chartpress_dir)
@@ -64,23 +68,40 @@ def main():
 
     # 4. Package renku chart, with local versions of dependencies
     with TemporaryDirectory() as tmp:
-        copy_tree(os.path.join(renku_chartpress_dir, 'renku'), os.path.join(tmp, 'renku'))
-        copy_tree(os.path.join(renku_chartpress_dir, 'gitlab'), os.path.join(tmp, 'gitlab'))
+        copy_tree(
+            os.path.join(renku_chartpress_dir, 'renku'),
+            os.path.join(tmp, 'renku')
+        )
+        copy_tree(
+            os.path.join(renku_chartpress_dir, 'gitlab'),
+            os.path.join(tmp, 'gitlab')
+        )
 
         with open(os.path.join(tmp, 'renku', 'requirements.yaml'), 'rt') as f:
             renku_requirements = yaml.load(f)
 
         for dep in dependencies:
-            chartpress_dir = os.path.join(dependency_dir(dep['repo_name']), dep['chartpress_dir'])
+            chartpress_dir = os.path.join(
+                dependency_dir(dep['repo_name']), dep['chartpress_dir']
+            )
             chart_name = dep.get('chart_name', dep['repo_name'])
 
-            with open(os.path.join(chartpress_dir, chart_name, 'Chart.yaml'), 'rt') as f:
+            with open(
+                os.path.join(chartpress_dir, chart_name, 'Chart.yaml'), 'rt'
+            ) as f:
                 chart = yaml.load(f)
             version = chart.get('version')
 
-            req = next(filter(lambda x: x.get('name') == chart_name, renku_requirements.get('dependencies')))
+            req = next(
+                filter(
+                    lambda x: x.get('name') == chart_name,
+                    renku_requirements.get('dependencies')
+                )
+            )
             req['version'] = version
-            req['repository'] = 'file://{}'.format(os.path.abspath(os.path.join(chartpress_dir, chart_name)))
+            req['repository'] = 'file://{}'.format(
+                os.path.abspath(os.path.join(chartpress_dir, chart_name))
+            )
 
         with open(os.path.join(tmp, 'renku', 'requirements.yaml'), 'wt') as f:
             yaml.dump(renku_requirements, f)
@@ -88,25 +109,48 @@ def main():
         run(['cat', 'renku/requirements.yaml'], cwd=tmp).check_returncode()
 
         package_chart('renku', tmp, tmp)
-        renku_chart = os.path.abspath(glob(os.path.join(tmp, 'renku-*.tgz'))[0])
+        renku_chart = os.path.abspath(
+            glob(os.path.join(tmp, 'renku-*.tgz'))[0]
+        )
 
         helm_deploy_cmd = [
-            'helm', 'upgrade', release,
+            'helm',
+            'upgrade',
+            release,
             renku_chart,
             '--install',
-            '--namespace', namespace,
-            '-f', os.path.join(renku_chartpress_dir, 'minikube-values.yaml'),
-            '--set', 'global.renku.domain={mip}'.format(mip=minikube_ip()),
-            '--set', 'ui.gitlabUrl=http://{mip}/gitlab'.format(mip=minikube_ip()),
-            '--set', 'ui.jupyterhubUrl=http://{mip}/jupyterhub'.format(mip=minikube_ip()),
-            '--set', 'ui.gatewayUrl=http://{mip}/api'.format(mip=minikube_ip()),
-            '--set', 'gateway.keycloakUrl=http://{mip}'.format(mip=minikube_ip()),
-            '--set', 'gateway.gitlabUrl=http://{mip}/gitlab'.format(mip=minikube_ip()),
-            '--set', 'notebooks.jupyterhub.hub.extraEnv.GITLAB_URL=http://{mip}/gitlab'.format(mip=minikube_ip()),
-            '--set', 'notebooks.jupyterhub.hub.services.gateway.oauth_redirect_uri=http://{mip}/api/auth/jupyterhub/token'.format(mip=minikube_ip()),
-            '--set', 'notebooks.gitlab.registry.host=10.100.123.45:8105',
-            '--set', 'gitlab.registry.externalUrl=http://10.100.123.45:8105/',
-            '--timeout', '1800',
+            '--namespace',
+            namespace,
+            '-f',
+            os.path.join(renku_chartpress_dir, 'minikube-values.yaml'),
+            '--set',
+            'global.renku.domain={mip}'.format(mip=minikube_ip()),
+            '--set',
+            'ui.gitlabUrl=http://{mip}/gitlab'.format(mip=minikube_ip()),
+            '--set',
+            'ui.jupyterhubUrl=http://{mip}/jupyterhub'.format(
+                mip=minikube_ip()
+            ),
+            '--set',
+            'ui.gatewayUrl=http://{mip}/api'.format(mip=minikube_ip()),
+            '--set',
+            'gateway.keycloakUrl=http://{mip}'.format(mip=minikube_ip()),
+            '--set',
+            'gateway.gitlabUrl=http://{mip}/gitlab'.format(mip=minikube_ip()),
+            '--set',
+            'notebooks.jupyterhub.hub.extraEnv.GITLAB_URL=http://{mip}/gitlab'.
+            format(mip=minikube_ip()),
+            '--set',
+            'notebooks.jupyterhub.hub.services.gateway.oauth_redirect_uri=http://{mip}/api/auth/jupyterhub/token'
+            .format(mip=minikube_ip()),
+            '--set',
+            'notebooks.gitlab.registry.host=10.100.123.45:8105',
+            '--set',
+            'gitlab.registry.externalUrl=http://10.100.123.45:8105/',
+            '--set',
+            'graph-services.gitlab.url=http://{mip}/gitlab'
+            '--timeout',
+            '1800',
         ]
 
         print('Running: {}'.format(' '.join(helm_deploy_cmd)))
@@ -120,7 +164,9 @@ def renku_base_dir():
     """Returns the path to the renku base directory"""
     renku_base_dir = os.environ.get('RENKU_BASE_DIR', '..')
     if not os.path.isabs(renku_base_dir):
-        renku_base_dir = os.path.join(os.path.dirname(__file__), '..', renku_base_dir)
+        renku_base_dir = os.path.join(
+            os.path.dirname(__file__), '..', renku_base_dir
+        )
     return os.path.normpath(renku_base_dir)
 
 
@@ -163,13 +209,15 @@ def get_minikube_docker_env():
     for line in StringIO(env):
         line = line.strip()
         if line.startswith('export'):
-            key, value = line[len('export')+1:].split('=')
+            key, value = line[len('export') + 1:].split('=')
             os.environ[key] = value.strip('"')
 
 
 def get_chartpress_tag(chartpress_dir):
     """Returns a unique tag if the git repository in chartpress_dir is not clean."""
-    result = run(['git','status', '--porcelain'], stdout=PIPE, cwd=chartpress_dir)
+    result = run(['git', 'status', '--porcelain'],
+                 stdout=PIPE,
+                 cwd=chartpress_dir)
     result.check_returncode()
     if result.stdout.decode('utf-8'):
         m = hashlib.sha256()
@@ -185,7 +233,11 @@ def status_minikube():
     try:
         result.check_returncode()
     except CalledProcessError:
-        raise RuntimeError('Minikube is not running:\n{}'.format(result.stdout.decode('utf-8')))
+        raise RuntimeError(
+            'Minikube is not running:\n{}'.format(
+                result.stdout.decode('utf-8')
+            )
+        )
 
 
 def minikube_ip():
@@ -201,7 +253,11 @@ def helm_init():
     try:
         result.check_returncode()
     except CalledProcessError:
-        raise RuntimeError('Could not run helm init:\n{}'.format(result.stdout.decode('utf-8')))
+        raise RuntimeError(
+            'Could not run helm init:\n{}'.format(
+                result.stdout.decode('utf-8')
+            )
+        )
 
 
 def kubectl_use_minikube_context():
@@ -210,61 +266,109 @@ def kubectl_use_minikube_context():
     try:
         result.check_returncode()
     except CalledProcessError:
-        raise RuntimeError('Could not run kubectl config use-context minikube:\n{}'.format(result.stdout.decode('utf-8')))
+        raise RuntimeError(
+            'Could not run kubectl config use-context minikube:\n{}'.format(
+                result.stdout.decode('utf-8')
+            )
+        )
 
 
 def deploy_runner():
     """Deploys gitlab runner with docker executor in minikube"""
-    runner_exists = run(['docker', 'ps', '-q', '-f', 'name=^/gitlab-runner$'], stdout=PIPE)
+    runner_exists = run(['docker', 'ps', '-q', '-f', 'name=^/gitlab-runner$'],
+                        stdout=PIPE)
     try:
         runner_exists.check_returncode()
     except CalledProcessError:
-        raise RuntimeError('Could not run docker ps:\n{}'.format(runner_exists.stdout.decode('utf-8')))
+        raise RuntimeError(
+            'Could not run docker ps:\n{}'.format(
+                runner_exists.stdout.decode('utf-8')
+            )
+        )
 
     runner = runner_exists.stdout.decode('utf-8')
     if runner == '':
         launch_runner = run([
-            'docker', 'run',
-            '-d', '--name', 'gitlab-runner',
-            '--restart', 'always',
-            '-v', '/srv/gitlab-runner/config:/etc/gitlab-runner',
-            '-v', '/var/run/docker.sock:/var/run/docker.sock',
+            'docker',
+            'run',
+            '-d',
+            '--name',
+            'gitlab-runner',
+            '--restart',
+            'always',
+            '-v',
+            '/srv/gitlab-runner/config:/etc/gitlab-runner',
+            '-v',
+            '/var/run/docker.sock:/var/run/docker.sock',
             'gitlab/gitlab-runner:latest',
-        ], stdout=PIPE)
+        ],
+                            stdout=PIPE)
         try:
             launch_runner.check_returncode()
         except CalledProcessError:
-            raise RuntimeError('Could not launch runner:\n{}'.format(launch_runner.stdout.decode('utf-8')))
+            raise RuntimeError(
+                'Could not launch runner:\n{}'.format(
+                    launch_runner.stdout.decode('utf-8')
+                )
+            )
     else:
         unregister_runner = run([
-            'docker', 'exec', '-ti', 'gitlab-runner',
-            'gitlab-runner', 'unregister', '--all-runners',
-        ], stdout=PIPE)
+            'docker',
+            'exec',
+            '-ti',
+            'gitlab-runner',
+            'gitlab-runner',
+            'unregister',
+            '--all-runners',
+        ],
+                                stdout=PIPE)
         try:
             unregister_runner.check_returncode()
         except CalledProcessError:
-            raise RuntimeError('Could not unregister runner:\n{}'.format(unregister_runner.stdout.decode('utf-8')))
+            raise RuntimeError(
+                'Could not unregister runner:\n{}'.format(
+                    unregister_runner.stdout.decode('utf-8')
+                )
+            )
 
-
-    register_runner = run([
-        'docker', 'exec', '-ti', 'gitlab-runner',
-        'gitlab-runner', 'register',
-        '-n', '-u', 'http://{mip}/gitlab/'.format(mip=minikube_ip()),
-        '--name', 'docker-minikube',
-        '-r', '755434ddc0d6344c025dff6af796f2232bbb29c055c668bde9f2aaebd1d37266', # From minikube-values.yaml
-        '--executor', 'docker',
-        '--locked=false',
-        '--run-untagged=true',
-        '--docker-image="docker:stable"',
-        '--docker-privileged',
-        '--docker-volumes', '/var/run/docker.sock:/var/run/docker.sock',
-        '--tag-list', 'image-build',
-        '--docker-pull-policy', 'if-not-present',
-    ], stdout=PIPE)
+    register_runner = run(
+        [
+            'docker',
+            'exec',
+            '-ti',
+            'gitlab-runner',
+            'gitlab-runner',
+            'register',
+            '-n',
+            '-u',
+            'http://{mip}/gitlab/'.format(mip=minikube_ip()),
+            '--name',
+            'docker-minikube',
+            '-r',
+            '755434ddc0d6344c025dff6af796f2232bbb29c055c668bde9f2aaebd1d37266',  # From minikube-values.yaml
+            '--executor',
+            'docker',
+            '--locked=false',
+            '--run-untagged=true',
+            '--docker-image="docker:stable"',
+            '--docker-privileged',
+            '--docker-volumes',
+            '/var/run/docker.sock:/var/run/docker.sock',
+            '--tag-list',
+            'image-build',
+            '--docker-pull-policy',
+            'if-not-present',
+        ],
+        stdout=PIPE
+    )
     try:
         register_runner.check_returncode()
     except CalledProcessError:
-        raise RuntimeError('Could not register runner:\n{}'.format(register_runner.stdout.decode('utf-8')))
+        raise RuntimeError(
+            'Could not register runner:\n{}'.format(
+                register_runner.stdout.decode('utf-8')
+            )
+        )
 
 
 if __name__ == '__main__':
