@@ -79,3 +79,20 @@ gateway:
 
 runner:
   enabled: true
+
+graph:
+  jena:
+    admin:
+      password: 94a635b40afc2cba
+
+  ## if running gitlab on minikube, set on cmd line with --set graph_services.gitlab.url
+  # gitlab:
+  #   url: https://example.com
+
+  webhookService:
+    play:
+      secret: 79=CRbPUHVQg^kvjQyA>zyZ4s7>ElKz;wW4`<??BlJxO6pQTdlx5M<[jWxWylHx[
+
+  triplesGenerator:
+    play:
+      secret: 3Ie]L>Gr7<ZBb]4lZrm5pgY>Ne5d1L<akIq>QQ3=3_>9kzKd<pEm;]7/eFWh/Wr4

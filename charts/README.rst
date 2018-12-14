@@ -38,6 +38,7 @@ Requires minikube, kubectl, helm and python.
         --set notebooks.jupyterhub.hub.services.gateway.oauth_redirect_uri=http://$(minikube ip)/api/auth/jupyterhub/token \
         --set notebooks.gitlab.registry.host=10.100.123.45:8105 \
         --set gitlab.registry.externalUrl=http://10.100.123.45:8105/ \
+        --set graph.gitlab.url=http://$(minikube ip)/gitlab
         --timeout 1800
 
 Due to issue `minikube #1568

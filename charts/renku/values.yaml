@@ -90,7 +90,7 @@ keycloak:
     ## Keycloak admin user configuration
     username: admin
     password: admin
-    
+
     livenessProbe:
       initialDelaySeconds: 180
     readinessProbe:
@@ -538,12 +538,12 @@ ui:
 apispec:
   image:
     repository: renku/apispec
-    tag: '0.3.0'
+    tag: 'latest'
 
 tests:
   image:
     repository: renku/tests
-    tag: '0.3.0'
+    tag: 'latest'
   ## User accounts for running `helm test`
   ## Replace passwords with random strings in a production setup
   #users_json:
@@ -566,3 +566,20 @@ minio:
 gateway:
   ingress:
     enabled: false
+
+## Configuration for renku-graph
+# graph:
+#   jena:
+#     admin:
+#       password:
+
+#   gitlab:
+#     url:
+
+#   webhookService:
+#     play:
+#       secret:
+
+#   triplesGenerator:
+#     play:
+#       secret:

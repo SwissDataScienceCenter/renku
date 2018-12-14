@@ -15,6 +15,10 @@ dependencies:
   repository: "https://swissdatasciencecenter.github.io/helm-charts/"
   version: "0.3.0"
   condition: gitlab.enabled
+- name: renku-graph
+  repository: "https://swissdatasciencecenter.github.io/helm-charts/"
+  version: 0.1.0-25377eb
+  alias: graph
 - name: postgresql
   version: 0.14.4
   repository: "@stable"

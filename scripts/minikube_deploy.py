@@ -30,6 +30,10 @@ dependencies = [
         'repo_name': 'renku',
         'chartpress_dir': 'charts',
     },
+    {
+        'repo_name': 'renku-graph',
+        'chartpress_dir': 'helm-chart',
+    },
 ]
 
 
@@ -148,7 +152,7 @@ def main():
             '--set',
             'gitlab.registry.externalUrl=http://10.100.123.45:8105/',
             '--set',
-            'graph-services.gitlab.url=http://{mip}/gitlab'
+            'graph.gitlab.url=http://{mip}/gitlab'.format(mip=minikube_ip()),
             '--timeout',
             '1800',
         ]
