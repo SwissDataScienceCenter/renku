@@ -85,7 +85,7 @@ graph:
     admin:
       password: 94a635b40afc2cba
 
-  ## if running gitlab on minikube, set on cmd line with --set graph_services.gitlab.url
+  ## if running gitlab on minikube, set on cmd line with --set graph.gitlab.url
   # gitlab:
   #   url: https://example.com
 
