@@ -538,12 +538,12 @@ ui:
 apispec:
   image:
     repository: renku/apispec
-    tag: 'latest'
+    tag: '0.0-unclean-3c0be42'
 
 tests:
   image:
     repository: renku/tests
-    tag: 'latest'
+    tag: '0.0-unclean-3c0be42'
   ## User accounts for running `helm test`
   ## Replace passwords with random strings in a production setup
   #users_json:
