@@ -58,5 +58,6 @@ helm upgrade $RENKU_DEPLOY charts/renku \
     --set "gitlab.enableSSHNodePortService=true" \
     --set "keycloak.keycloak.persistence.dbHost=$RENKU_DEPLOY-postgresql" \
     --set "keycloak.keycloak.persistence.existingSecret=$RENKU_DEPLOY" \
+    --set "graph.gitlab.url=http://$MAXIKUBE_HOST:32080/gitlab" \
     -f /tmp/keycloak.yaml \
     --timeout 1800
