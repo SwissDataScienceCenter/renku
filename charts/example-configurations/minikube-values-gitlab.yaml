@@ -72,6 +72,7 @@ notebooks:
         callbackUrl: '""'
 
 gateway:
+  gatewayEnv: development
   secretKey: 5495ef917488a19d1d4106452c899f5824972acd87edce11fd65e7956bea3bb0
   gitlabUrl: https://gitlab.com
   ## Put Application Id and Application Secret here!
