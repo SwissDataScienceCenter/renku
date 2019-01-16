@@ -14,12 +14,15 @@ Prerequisites
 If you want to start developing the Renku platform, you will need the following
 dependencies:
 
-* python 3.6
-* `pipenv <https://github.com/pypa/pipenv>`_
-* `minikube <https://github.com/kubernetes/minikube>`__
-* `kubectl <https://kubernetes.io/docs/tasks/tools/install-kubectl/>`_
-* `helm <https://github.com/kubernetes/helm/blob/master/docs/install.md>`_ (>= 2.9.1)
-* `GNU make <https://www.gnu.org/software/make/>`_
+.. toctree::
+   :maxdepth: 1
+
+   python 3.6+ <python_setup>
+   pipenv <https://github.com/pypa/pipenv>
+   minikube <https://github.com/kubernetes/minikube>
+   kubectl <https://kubernetes.io/docs/tasks/tools/install-kubectl/>
+   helm (>= 2.9.1) <https://github.com/kubernetes/helm/blob/master/docs/install.md>
+   GNU make <https://www.gnu.org/software/make/>
 
 For OS X users, we also recommend to install the
 `hyperkit vm driver for minikube <https://github.com/kubernetes/minikube/blob/master/docs/drivers.md#hyperkit-driver>`_.
@@ -32,6 +35,8 @@ Getting the code
     $ mkdir src
     $ cd src
     $ git clone https://github.com/SwissDataScienceCenter/renku.git
+    $ cd renku
+    $ cd charts
 
 ``renku`` is the "parent" repository of the collection of microservices, each
 of which has its own repository.
@@ -79,6 +84,25 @@ Once minikube is started, make sure you can access it by running:
     NAME       STATUS    ROLES     AGE       VERSION
     minikube   Ready     <none>    3s        v1.10.0
 
+**Notice**: If minikube didn't start successfully issue ``minikube delete`` before next ``minikube start``.
+
+Once minikube is started issue:
+
+.. code-block:: console
+
+    $ minikube addons enable coredns
+    $ eval $(minikube docker-env)
+
+Installing Chartpress
+^^^^^^^^^^^^^^^^^^^^^
+
+.. code-block:: console
+
+    $ pip install chartpress
+    $ chartpress --tag latest
+
+**Notice**: ``chartpress --tag latest`` has to be issued from ``renku/charts`` folder.
+
 Deploying Helm and Nginx ingress
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
@@ -100,7 +124,7 @@ Provide helm chart dependencies:
     $ helm repo add jupyterhub https://jupyterhub.github.io/helm-chart
     $ helm repo add renku https://swissdatasciencecenter.github.io/helm-charts
 
-Build and deploy:
+Build and deploy (from the ``renku`` root folder):
 
 .. code-block:: console
 
