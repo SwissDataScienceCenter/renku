@@ -5,6 +5,8 @@ auth
 backend
 backends
 blog
+chartpress
+Chartpress
 CLI
 coopetition
 deployer

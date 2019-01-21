@@ -16,7 +16,7 @@ To check which version of python you've got already installed you can use:
 
     $ python -version
 
-If you have python 2 you can consider uninstalling it with
+If you have python 2 you can consider removing it with
 
 .. code-block:: console
 
