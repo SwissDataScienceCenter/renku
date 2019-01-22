@@ -22,7 +22,7 @@ If you have python 2 you can consider removing it with
 
     $ brew uninstall --force python@2
 
-Before installing Python 3 add a following export line to ``~/.profile``
+Before installing Python 3 add the following line to ``~/.profile``
 
 .. code-block:: console
 

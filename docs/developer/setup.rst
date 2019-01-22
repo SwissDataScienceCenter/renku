@@ -96,12 +96,11 @@ Once minikube is started issue:
 Installing Chartpress
 ^^^^^^^^^^^^^^^^^^^^^
 
+We use the ``chartpress`` package to bundle together images and charts.
+
 .. code-block:: console
 
     $ pip install chartpress
-    $ chartpress --tag latest
-
-**Notice**: ``chartpress --tag latest`` has to be issued from ``renku/charts`` folder.
 
 Deploying Helm and Nginx ingress
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
