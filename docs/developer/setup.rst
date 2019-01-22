@@ -93,15 +93,6 @@ Once minikube is started issue:
     $ minikube addons enable coredns
     $ eval $(minikube docker-env)
 
-Installing Chartpress
-^^^^^^^^^^^^^^^^^^^^^
-
-We use the ``chartpress`` package to bundle together images and charts.
-
-.. code-block:: console
-
-    $ pip install chartpress
-
 Deploying Helm and Nginx ingress
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
