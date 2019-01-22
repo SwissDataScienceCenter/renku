@@ -13,6 +13,10 @@ ingress:
   - ""
 
 global:
+  development:
+    gitlabUrl: &renku-gitlab-url # Put the gitlab URL here!
+    gitlabClientId: &gitlab-client-id # Put Application Id here!
+    gitlabClientSecret: &gitlab-client-secret # Put Application Secret here!
   gitlab:
     clientSecret: e3ecd740-0892-4610-ad69-c7f4886f4533
     postgresPassword: 3b0aa4bae4fbbe167143f583e35eda18
@@ -33,9 +37,9 @@ gitlab:
 
 notebooks:
   gitlab:
-    url: https://renkulab.io/gitlab
+    url: *renku-gitlab-url
     registry:
-      host: registry.renkulab.io
+      host: # registry host, e.g. registry.renkulab.io
   securityContext:
     enabled: false
   jupyterhub:
@@ -55,7 +59,7 @@ notebooks:
           oauth_client_id: &gatewayClient gateway
           apiToken: &gatewaySecret 7ed9992425bbdcf03f323310205b2fea34bd9e1a255346f99066800d9440d6f7
       extraEnv:
-         GITLAB_URL: https://renkulab.io/gitlab
+         GITLAB_URL: *renku-gitlab-url
     proxy:
       secretToken: f89ddee5ba10f2268fcefcd4e353235c255493095cd65addf29ebebf8df86255
     auth:
@@ -64,16 +68,16 @@ notebooks:
         cryptoKey: 86282f03d9886a64a46ee38f946e9ee27a600df4559584eeb90d0bfbd5a3dc0e
       type: gitlab
       gitlab:
-        clientId: # Put Application Id here!
-        clientSecret: # Put Application Secret here!
+        clientId: *gitlab-client-id
+        clientSecret: *gitlab-client-secret
         callbackUrl: '""' # Forces the default callback url
 
 gateway:
   secretKey: 5495ef917488a19d1d4106452c899f5824972acd87edce11fd65e7956bea3bb0
   gatewayEnv: development
-  gitlabUrl: https://renkulab.io/gitlab
-  gitlabClientId: # Put Application Id here!
-  gitlabClientSecret: # Put Application Secret here!
+  gitlabUrl: *renku-gitlab-url
+  gitlabClientId: *gitlab-client-id
+  gitlabClientSecret: *gitlab-client-secret
   jupyterhub:
     clientId: *gatewayClient
     clientSecret: *gatewaySecret
