@@ -7,3 +7,4 @@ Example configurations
    :maxdepth: 2
 
    Developing against gitlab.com <gitlab>
+   Developing against another renku deployment <renkulab>
