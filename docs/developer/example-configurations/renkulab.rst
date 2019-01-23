@@ -7,8 +7,8 @@ Here we describe how to run a local version of the platform against
 renkulab.io **and** also use renkulab.io as an identity provider. (In regular
 Renku deployments, the dependency is the other way around meaning that the
 Renku GitLab instance uses the Renku Keycloak instance as identity provider).
-Below, we describe the procedure for renkulab.io, but it can be used with
-any other renku deployment.
+The procedure it can also be used with any other renku deployment by substituting
+the appropriate URL for :code:`renkulab.io`.
 
 Most of the configurations needed are already set in a special `minikube-values.yaml file`_
 which you will have to modify slightly while going through the following steps.
@@ -72,8 +72,8 @@ following:
     --set notebooks.jupyterhub.hub.services.gateway.oauth_redirect_uri=http://$(minikube ip)/api/auth/jupyterhub/token \
     ./renku
 
-Configure OpenID-Connect
-------------------------
+Configure the identity provider
+-------------------------------
 
 Open :code:`http://<your-minikube-ip>/auth` in your browser and login to the
 admin console using admin/admin. Under Identity Providers choose "OpenID Connect" from
