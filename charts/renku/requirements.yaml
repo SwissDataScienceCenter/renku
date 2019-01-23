@@ -17,7 +17,7 @@ dependencies:
   condition: gitlab.enabled
 - name: renku-graph
   repository: "https://swissdatasciencecenter.github.io/helm-charts/"
-  version: 0.1.0-25377eb
+  version: 0.1.0-22ea9bc
   alias: graph
 - name: postgresql
   version: 0.14.4
