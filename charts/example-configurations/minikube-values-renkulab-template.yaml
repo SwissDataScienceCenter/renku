@@ -84,3 +84,17 @@ gateway:
 
 runner:
   enabled: true
+
+graph:
+  jena:
+    admin:
+      password:
+  ## if running gitlab on minikube, set on cmd line with --set graph.gitlab.url
+  gitlab:
+    url: *renku-gitlab-url
+  webhookService:
+    play:
+      secret: # generate with `sbt playGenerateSecret`
+  triplesGenerator:
+    play:
+      secret: # generate with `sbt playGenerateSecret`

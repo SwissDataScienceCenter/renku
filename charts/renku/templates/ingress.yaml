@@ -70,9 +70,5 @@ spec:
         backend:
           serviceName: {{ $graphFullname }}-webhook-service
           servicePort: 80
-      - path: /jena
-        backend:
-          serviceName: renku-jena
-          servicePort: {{ $jenaServicePort }}
   {{- end }}
 {{- end }}
