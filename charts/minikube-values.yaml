@@ -41,7 +41,6 @@ gitlab:
   demoUserIsAdmin: true
 
 notebooks:
-
   securityContext:
     enabled: false
   jupyterhub:
