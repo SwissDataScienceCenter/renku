@@ -9,6 +9,9 @@
 {{- $uiServicePort := .Values.ui.service.port -}}
 {{- $gatewayFullname := include "gateway.fullname" . -}}
 {{- $gatewayServicePort := .Values.gateway.service.port -}}
+{{- $graphFullname := include "graph.fullname" . -}}
+{{- $jenaFullname := include "jena.fullname" . -}}
+{{- $jenaServicePort := .Values.graph.jena.service.port -}}
 ---
 apiVersion: extensions/v1beta1
 kind: Ingress
@@ -63,5 +66,9 @@ spec:
         backend:
           serviceName: {{ $uiFullname }}
           servicePort: {{ $uiServicePort }}
+      - path: /webhook-event
+        backend:
+          serviceName: {{ $graphFullname }}-webhook-service
+          servicePort: 80
   {{- end }}
 {{- end }}

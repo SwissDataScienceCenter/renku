@@ -72,3 +72,7 @@ Define subcharts full names
 {{- define "gateway.fullname" -}}
 {{- printf "%s-%s" .Release.Name "gateway" | replace "+" "_" | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
+
+{{- define "graph.fullname" -}}
+{{- printf "%s-%s" .Release.Name "graph" | replace "+" "_" | trunc 63 | trimSuffix "-" -}}
+{{- end -}}
