@@ -31,6 +31,9 @@ global:
     gitlabClientSecret: 4e35410e4116d2280e29c6da6aaaa89fc1ab77364c6352aeb5adbd037d49590a
   renku:
     version: 'latest'
+  tokenRepository:
+    ## Generated using: `openssl rand -hex 16`
+    postgresPassword: 12db5d7b3f0e38c79ad08b6e7f2bcaf4
 
 gitlab:
   enabled: false
@@ -98,3 +101,6 @@ graph:
   triplesGenerator:
     play:
       secret: # generate with `sbt playGenerateSecret`
+  tokenRepository:
+    tokenEncryption:
+      secret: # generate with `openssl rand -hex 8|base64`

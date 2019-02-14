@@ -138,6 +138,25 @@ data:
       EOSQL
   {{- end }}
 
+  init-tokenRepository-db.sh: |-
+      #!/bin/bash
+      set -x
+
+      TOKEN_REPOSITORY_POSTGRES_PASSWORD=$(cat /passwords/tokenRepository-postgresPassword)
+      TOKEN_REPOSITORY_DB_NAME=projects_tokens
+
+      psql -v ON_ERROR_STOP=1 <<-EOSQL
+        create database "$TOKEN_REPOSITORY_DB_NAME";
+        create user "{{ .Values.global.tokenRepository.postgresUser }}" password '$TOKEN_REPOSITORY_POSTGRES_PASSWORD';
+      EOSQL
+
+      psql postgres -v ON_ERROR_STOP=1 --dbname "$TOKEN_REPOSITORY_DB_NAME" <<-EOSQL
+        create extension if not exists "pg_trgm";
+        revoke all on schema "public" from "public";
+        grant all privileges on database "$TOKEN_REPOSITORY_DB_NAME" to "{{ .Values.global.tokenRepository.postgresUser }}";
+        grant all privileges on schema "public" to "{{ .Values.global.tokenRepository.postgresUser }}";
+      EOSQL
+
   init-jupyterhub-db.sh: |-
       #!/bin/bash
       set -x

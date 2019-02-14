@@ -52,6 +52,10 @@ global:
     ## the UI) If not set explicitly the version will be picked up
     ## from the respective renku (sub)chart.
     version: 0.3.0
+  tokenRepository:
+    postgresUser: tokenstorage
+    ## Generated using: `openssl rand -hex 16`
+    postgresPassword:
   ## Set to true if using https
   useHTTPS: false
 
@@ -583,3 +587,8 @@ gateway:
 #   triplesGenerator:
 #     play:
 #       secret:
+
+#  tokenRepository:
+#    tokenEncryption:
+#      secret:
+
