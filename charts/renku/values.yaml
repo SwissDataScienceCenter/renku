@@ -52,10 +52,13 @@ global:
     ## the UI) If not set explicitly the version will be picked up
     ## from the respective renku (sub)chart.
     version: 0.3.0
-  tokenRepository:
-    postgresUser: tokenstorage
-    ## Generated using: `openssl rand -hex 16`
-    postgresPassword:
+  graph:
+    tokenRepository:
+      ## Name of the postgres user to be used to access the db storing access tokens
+      postgresUser: tokenstorage
+      ## Postgres password to be used to access the db storing access tokens
+      ## Generated using: `openssl rand -hex 16`
+      postgresPassword:
   ## Set to true if using https
   useHTTPS: false
 
