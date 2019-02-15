@@ -103,6 +103,8 @@ graph:
   webhookService:
     play:
       secret: 79=CRbPUHVQg^kvjQyA>zyZ4s7>ElKz;wW4`<??BlJxO6pQTdlx5M<[jWxWylHx[
+    hookToken:
+      secret: NjFkNmJiODgyYjk4OWUzNwo=
 
   triplesGenerator:
     play:

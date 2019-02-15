@@ -586,6 +586,8 @@ gateway:
 #   webhookService:
 #     play:
 #       secret:
+#     hookToken:
+#       secret:
 
 #   triplesGenerator:
 #     play:
