@@ -59,6 +59,9 @@ global:
       ## Postgres password to be used to access the db storing access tokens
       ## Generated using: `openssl rand -hex 16`
       postgresPassword:
+    jena:
+      ## specify which dataset should be used in Jena
+      dataset:
   ## Set to true if using https
   useHTTPS: false
 
@@ -596,4 +599,3 @@ gateway:
 #  tokenRepository:
 #    tokenEncryption:
 #      secret:
-
