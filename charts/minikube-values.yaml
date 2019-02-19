@@ -27,6 +27,9 @@ global:
     gitlabClientSecret: 4e35410e4116d2280e29c6da6aaaa89fc1ab77364c6352aeb5adbd037d49590a
   renku:
     version: 'latest'
+  graph:
+    tokenRepository:
+      postgresPassword: 1bed5ee10efe7132a1904b09e1f3701a
 
 gitlab:
   ssh:
@@ -102,3 +105,7 @@ graph:
   triplesGenerator:
     play:
       secret: 3Ie]L>Gr7<ZBb]4lZrm5pgY>Ne5d1L<akIq>QQ3=3_>9kzKd<pEm;]7/eFWh/Wr4
+
+  tokenRepository:
+    tokenEncryption:
+      secret: MGYxM2JiZTMzY2NhNDg1OQo=
