@@ -184,7 +184,7 @@ global:
     ## doc/charts/globals.md#omniauth
     omniauth:
       enabled: true
-      autoSignInWithProvider: oauth2_generic
+      # autoSignInWithProvider: oauth2_generic
       syncProfileFromProvider: ['oauth2_generic']
       syncProfileAttributes: ['email']
       allowSingleSignOn: ['oauth2_generic']
@@ -280,7 +280,7 @@ global:
 certmanager-issuer:
   ## The email address to register certificates requested from Let's Encrypt.
   ## Required if using Let's Encrypt.
-  # email: "info@datascience.ch"
+  email: "info@datascience.ch"
 
 ## Installation & configuration of stable/cert-manager
 ## See requirements.yaml for current version
