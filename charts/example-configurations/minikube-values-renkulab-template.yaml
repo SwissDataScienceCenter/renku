@@ -100,9 +100,6 @@ graph:
       secret: # generate with `sbt playGenerateSecret`
     hookToken:
       secret: # generate with `openssl rand -hex 8|base64`
-  triplesGenerator:
-    play:
-      secret: # generate with `sbt playGenerateSecret`
   tokenRepository:
     tokenEncryption:
       secret: # generate with `openssl rand -hex 8|base64`

@@ -102,10 +102,6 @@ graph:
     hookToken:
       secret: NjFkNmJiODgyYjk4OWUzNwo=
 
-  triplesGenerator:
-    play:
-      secret: 3Ie]L>Gr7<ZBb]4lZrm5pgY>Ne5d1L<akIq>QQ3=3_>9kzKd<pEm;]7/eFWh/Wr4
-
   tokenRepository:
     tokenEncryption:
       secret: MGYxM2JiZTMzY2NhNDg1OQo=

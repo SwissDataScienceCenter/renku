@@ -592,10 +592,6 @@ gateway:
 #     hookToken:
 #       secret:
 
-#   triplesGenerator:
-#     play:
-#       secret:
-
 #  tokenRepository:
 #    tokenEncryption:
 #      secret:
