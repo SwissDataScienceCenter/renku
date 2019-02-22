@@ -29,6 +29,9 @@ global:
     gitlabClientSecret: 4e35410e4116d2280e29c6da6aaaa89fc1ab77364c6352aeb5adbd037d49590a
   renku:
     version: 'latest'
+  graph:
+    tokenRepository:
+      postgresPassword: 7cbc3ee01539e546c0b80ddebe619d04
 
 gitlab:
   enabled: false
@@ -106,3 +109,7 @@ graph:
   triplesGenerator:
     play:
       secret: 3Ie]L>Gr7<ZBb]4lZrm5pgY>Ne5d1L<akIq>QQ3=3_>9kzKd<pEm;]7/eFWh/Wr4
+
+  tokenRepository:
+    tokenEncryption:
+      secret: YzViMTczYjMxOTI0NDM1OAo=
