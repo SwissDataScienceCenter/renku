@@ -162,6 +162,9 @@ accidental data duplication as much as possible.
 History
 -------
 
+- 2018.11.30. **Renku** v0.3.0 is released with bug-fixes and performance improvements
+
+- 2018.09.25. First functional release of **Renku** v0.2.0; A public deployment is launched at https://renkulab.io.
 
 - 2018.02.01. A rewrite of **Renku** is underway
 
