@@ -51,7 +51,7 @@ global:
     ## Renku version to be used (currently for project creation in
     ## the UI) If not set explicitly the version will be picked up
     ## from the respective renku (sub)chart.
-    version: 0.3.0
+    version: 0.3.1
   graph:
     tokenRepository:
       ## Name of the postgres user to be used to access the db storing access tokens
@@ -490,7 +490,7 @@ ui:
   # jupyterhubUrl: "http://jupyterhub.renku.build"
 
 # ## Configuration for the notebooks service
-# notebooks:
+notebooks:
   ## serverOptions allow for modifications to the notebook pod resource requests
   # serverOptions:
   #   resources:
@@ -513,7 +513,7 @@ ui:
   ## image registry host
   # imageRegistry:
   ## JupyterHub setup
-  # jupyterhub:
+  jupyterhub:
     ## Configure rbac
     # rbac:
     #   enabled: true
@@ -541,7 +541,10 @@ ui:
     #   enabled: true
     #   timeout: 86400
     #   every: 60
-    # singleuser:
+    singleuser:
+      image:
+        name: renku/singleuser
+        tag: 0.3.3-renku0.4.0
     #   # use JupyterLab by default in notebook servers
     #   defaultUrl: /lab
 
@@ -577,8 +580,9 @@ gateway:
   ingress:
     enabled: false
 
-## Configuration for renku-graph
-# graph:
+## Configuration for renku-graph - disabled by default until renku 0.4.0
+graph:
+  enabled: false
 #   jena:
 #     admin:
 #       password:
