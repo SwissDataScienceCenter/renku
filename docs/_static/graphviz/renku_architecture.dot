@@ -1,7 +1,7 @@
 strict digraph architecture {
   compound=true;
   newrank=true;
-  ordering=out;
+  // ordering=out;
 
   graph [fontname="Raleway", nodesep="0.8"];
   node [shape="rect", style="filled,rounded", fontname="Raleway"];
@@ -13,12 +13,14 @@ strict digraph architecture {
   Keycloak [fillcolor="lightblue"]
   JupyterHub [label="Notebook service" fillcolor="#f4d142" URL="../developer/services/notebooks_service.html" target="_graphviz"]
   Notebook [fillcolor="lightblue"]
+  Jena [fillcolor="lightblue"]
 
   # clients
   UI [fillcolor="#f4d142"]
   CLI [fillcolor="#f4d142"]
 
   gateway [fillcolor="#f4d142" URL="../developer/services/api_gateway.html" target="_graphviz"]
+  "Graph service" [fillcolor="#f4d142" URL="../developer/services/graph_service.html" target="_graphviz"]
 
   storage [fillcolor="lightblue", label="Object store", shape="cylinder"]
 
@@ -35,7 +37,6 @@ strict digraph architecture {
   CLI -> GitLab [label=" git pull/push"]
   Notebook -> GitLab [label=" git pull/push"]
   Notebook -> storage [label=" pull/push LFS\n fetch image"]
-  CLI -> gateway [label=" API"]
   UI -> gateway [label=" API"]
   GitLab -> Keycloak [label=" OAuth"]
   JupyterHub -> GitLab [label=" OAuth"]
@@ -44,6 +45,9 @@ strict digraph architecture {
   gateway -> Keycloak [label=" OIDC"]
   GitLab -> storage [label=" fetch/push image"]
   CLI -> storage [label=" pull/push LFS"]
+  GitLab -> "Graph service" [label=" webhook"]
+  "Graph service" -> Jena [label=" push triples"]
+  gateway -> Jena [label=" SPARQL"]
 
   {rank=0; UI}
 }
