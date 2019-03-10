@@ -159,7 +159,6 @@ data:
       EOSQL
   {{- end }}
 
-
   init-jupyterhub-db.sh: |-
       #!/bin/bash
       set -x
