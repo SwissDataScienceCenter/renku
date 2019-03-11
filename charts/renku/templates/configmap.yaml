@@ -138,6 +138,7 @@ data:
       EOSQL
   {{- end }}
 
+  {{- if .Values.graph.enabled }}
   init-tokenRepository-db.sh: |-
       #!/bin/bash
       set -x
@@ -156,6 +157,7 @@ data:
         grant all privileges on database "$TOKEN_REPOSITORY_DB_NAME" to "{{ .Values.global.graph.tokenRepository.postgresUser }}";
         grant all privileges on schema "public" to "{{ .Values.global.graph.tokenRepository.postgresUser }}";
       EOSQL
+  {{- end }}
 
   init-jupyterhub-db.sh: |-
       #!/bin/bash

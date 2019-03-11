@@ -51,7 +51,8 @@ global:
     ## Renku version to be used (currently for project creation in
     ## the UI) If not set explicitly the version will be picked up
     ## from the respective renku (sub)chart.
-    version: 0.3.0
+    version: 0.3.1
+  ## Note that the graph will not turned on by default until renku 0.4.0
   graph:
     tokenRepository:
       ## Name of the postgres user to be used to access the db storing access tokens
@@ -490,7 +491,7 @@ ui:
   # jupyterhubUrl: "http://jupyterhub.renku.build"
 
 # ## Configuration for the notebooks service
-# notebooks:
+notebooks:
   ## serverOptions allow for modifications to the notebook pod resource requests
   # serverOptions:
   #   resources:
@@ -513,7 +514,7 @@ ui:
   ## image registry host
   # imageRegistry:
   ## JupyterHub setup
-  # jupyterhub:
+  jupyterhub:
     ## Configure rbac
     # rbac:
     #   enabled: true
@@ -541,7 +542,10 @@ ui:
     #   enabled: true
     #   timeout: 86400
     #   every: 60
-    # singleuser:
+    singleuser:
+      image:
+        name: renku/singleuser
+        tag: 0.3.3-renku0.4.0
     #   # use JupyterLab by default in notebook servers
     #   defaultUrl: /lab
 
@@ -578,24 +582,36 @@ gateway:
     enabled: false
 
 ## Configuration for renku-graph
-# graph:
-#   jena:
-#     admin:
-#       password:
+graph:
+  ## Enable/disable the graph - disabled by default until renku 0.4.0
+  enabled: false
+  ## Configuration for Apache Jena
+  jena:
+    ## Set the admin password
+    admin:
+      password: 1234
 
-#   gitlab:
-#     url:
+  gitlab:
+    url:
 
-#   webhookService:
-#     play:
-#       secret:
-#     hookToken:
-#       secret:
+  tokenRepository:
+    ## A secret for signing access tokens stored in the database
+    ## Generated using: `openssl rand -hex 8|base64`
+    tokenEncryption:
+      secret: 1234
 
-#   triplesGenerator:
-#     play:
-#       secret:
+  triplesGenerator:
+    play:
+      ## A Play app secret used for built in encryption utilities
+      ## Generated using: `sbt playGenerateSecret`
+      secret: 1234
 
-#  tokenRepository:
-#    tokenEncryption:
-#      secret:
+  webhookService:
+    play:
+      ## A Play app secret used for built in encryption utilities
+      ## Generated using: `sbt playGenerateSecret`
+      secret: 1234
+    hookToken:
+      ## A secret for signing request header tokens to be sent by GitLab with the Push Events
+      ## Generated using: `openssl rand -hex 8|base64`
+      secret: 1234
