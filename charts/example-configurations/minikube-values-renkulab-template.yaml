@@ -32,6 +32,8 @@ global:
   renku:
     version: 'latest'
   graph:
+    dbEventLog:
+      postgresPassword: 58dd574b6a19f9b6b2cedaf20f402abf
     tokenRepository:
       postgresPassword: 12db5d7b3f0e38c79ad08b6e7f2bcaf4
 

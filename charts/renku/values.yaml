@@ -54,6 +54,12 @@ global:
     version: 0.3.1
   ## Note that the graph will not turned on by default until renku 0.4.0
   graph:
+    dbEventLog:
+      ## Name of the postgres user to be used to access the Event Log db
+      postgresUser: eventlog
+      ## Postgres password to be used to access the Event Log db
+      ## Generated using: `openssl rand -hex 16`
+      postgresPassword:
     tokenRepository:
       ## Name of the postgres user to be used to access the db storing access tokens
       postgresUser: tokenstorage
