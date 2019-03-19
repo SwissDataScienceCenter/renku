@@ -606,17 +606,7 @@ graph:
     tokenEncryption:
       secret: 1234
 
-  triplesGenerator:
-    play:
-      ## A Play app secret used for built in encryption utilities
-      ## Generated using: `sbt playGenerateSecret`
-      secret: 1234
-
   webhookService:
-    play:
-      ## A Play app secret used for built in encryption utilities
-      ## Generated using: `sbt playGenerateSecret`
-      secret: 1234
     hookToken:
       ## A secret for signing request header tokens to be sent by GitLab with the Push Events
       ## Generated using: `openssl rand -hex 8|base64`
