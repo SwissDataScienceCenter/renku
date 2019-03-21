@@ -24,6 +24,11 @@ RENKU (連句)
 .. image:: https://readthedocs.org/projects/renku/badge/
     :target: http://renku.readthedocs.io/en/latest/
     :alt: Documentation Status
+    
+.. image:: https://pullreminders.com/badge.svg
+    :target: https://pullreminders.com?ref=badge
+    :alt: Pull Reminders
+    :align: right
 
 **Renku** is a highly-scalable & secure open software platform designed to
 foster multidisciplinary data (science) collaboration.
