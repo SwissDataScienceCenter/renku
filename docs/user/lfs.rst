@@ -40,6 +40,9 @@ Useful git LFS commands
 
 * ``git lfs ls-files``: shows all the files currently in LFS
 * ``git lfs pull -I <path> [remote]``: pull a specific path from LFS. It can be a single file or an entire folder.
+* ``git lfs migrate import --fixup --include-ref=refs/heads/master``: move files into LFS. Use this command if you accidentally committed large files to a repo.
 
 Note that you can also use wild-cards, e.g. ``git lfs pull -I "data/records_201*.csv"``
 but be sure to include quote characters (``"`` or ``'``) when you use wild-cards.
+
+See the `git lfs tutorial <https://github.com/git-lfs/git-lfs/wiki/Tutorial>` for details.
