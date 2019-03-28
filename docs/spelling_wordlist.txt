@@ -21,6 +21,8 @@ io
 Janusgraph
 json
 jupyter
+jupyterlab
+JupyterLab
 Keycloak
 keycloak
 ku
