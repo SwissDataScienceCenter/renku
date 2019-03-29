@@ -17,8 +17,8 @@ It is easiest to install the CLI using `homebrew <https://brew.sh/>`_:
   brew install renku
 
 
-Isolated environments using ``pipx``
-------------------------------------
+Installation with the script manager ``pipx``
+---------------------------------------------
 
 Install and execute Renku in an isolated environment using ``pipx``.
 It will guarantee that there are no version conflicts with dependencies
@@ -65,6 +65,8 @@ To upgrade to the latest development version:
 
     $ pipx upgrade --pip-args=--pre renku
 
+If you run into dependency problems during the CLI installation,
+have a look at the :ref:`cli-troubleshooting`.
 
 ``pip``/``pipenv``
 ------------------
