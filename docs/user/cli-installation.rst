@@ -17,20 +17,56 @@ It is easiest to install the CLI using `homebrew <https://brew.sh/>`_:
   brew install renku
 
 
-Pip Script Installer (``pipsi``)
---------------------------------
+Installation with the script manager ``pipx``
+---------------------------------------------
 
-You can use `pipsi <https://github.com/mitsuhiko/pipsi>`_ to isolate
-dependencies and to guarantee that there are no version conflicts. Make sure
-you have the ``pipsi`` command correctly installed and ``~/.local/bin`` is in
-your ``PATH``.
+Install and execute Renku in an isolated environment using ``pipx``.
+It will guarantee that there are no version conflicts with dependencies
+you are using for your work and research.
 
-.. code-block:: console
+.. note::
 
-  pipsi install renku
-  which renku
-  ~/.local/bin/renku
+  This is the method of installation in the renku docker images,
+  i.e. the default environment you use when you launch a JupyterLab session
+  via the renku browser interface.
 
+`Install pipx <https://github.com/pipxproject/pipx#install-pipx>`_
+and make sure that the ``$PATH`` is correctly configured.
+
+::
+
+    $ python3 -m pip install --user pipx
+    $ pipx ensurepath
+
+Once ``pipx`` is installed use following command to install ``renku``.
+
+::
+
+    $ pipx install renku
+    $ which renku
+    ~/.local/bin/renku
+
+Previously we have recommended to use ``pipsi``. You can still use it or
+`migrate to pipx
+<https://github.com/pipxproject/pipx#migrating-to-pipx-from-pipsi>`_.
+
+Upgrading
+^^^^^^^^^
+
+To upgrade renku to the latest stable version:
+
+::
+
+    $ pipx upgrade renku
+
+To upgrade to the latest development version:
+
+::
+
+    $ pipx upgrade --pip-args=--pre renku
+
+If you run into dependency problems during the CLI installation,
+have a look at the :ref:`cli-troubleshooting`.
 
 ``pip``/``pipenv``
 ------------------
