@@ -139,6 +139,26 @@ data:
   {{- end }}
 
   {{- if .Values.graph.enabled }}
+
+  init-dbEventLog-db.sh: |-
+      #!/bin/bash
+      set -x
+
+      DB_EVENT_LOG_POSTGRES_PASSWORD=$(cat /passwords/graph-dbEventLog-postgresPassword)
+      DB_EVENT_LOG_DB_NAME=event_log
+
+      psql -v ON_ERROR_STOP=1 <<-EOSQL
+        create database "$DB_EVENT_LOG_DB_NAME";
+        create user "{{ .Values.global.graph.dbEventLog.postgresUser }}" password '$DB_EVENT_LOG_POSTGRES_PASSWORD';
+      EOSQL
+
+      psql postgres -v ON_ERROR_STOP=1 --dbname "$DB_EVENT_LOG_DB_NAME" <<-EOSQL
+        create extension if not exists "pg_trgm";
+        revoke all on schema "public" from "public";
+        grant all privileges on database "$DB_EVENT_LOG_DB_NAME" to "{{ .Values.global.graph.dbEventLog.postgresUser }}";
+        grant all privileges on schema "public" to "{{ .Values.global.graph.dbEventLog.postgresUser }}";
+      EOSQL
+
   init-tokenRepository-db.sh: |-
       #!/bin/bash
       set -x
