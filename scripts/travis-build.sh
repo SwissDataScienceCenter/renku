@@ -52,6 +52,7 @@ helm upgrade $RENKU_DEPLOY charts/renku \
     --set "notebooks.jupyterhub.hub.extraEnv.GITLAB_URL=http://$MAXIKUBE_HOST:32080/gitlab" \
     --set "notebooks.jupyterhub.hub.extraEnv.IMAGE_REGISTRY=10.100.123.45:8105" \
     --set "notebooks.jupyterhub.hub.services.gateway.oauth_redirect_uri=http://$MAXIKUBE_HOST:32080/api/auth/jupyterhub/token" \
+    --set "notebooks.jupyterhub.auth.gitlab.callbackUrl=http://$MAXIKUBE_HOST:32080/jupyterhub/hub/oauth_callback" \
     --set "notebooks.gitlab.registry.host=10.100.123.45:8105" \
     --set "gitlab.registry.externalUrl=http://10.100.123.45:8105/" \
     --set "gitlab.sshPort=30022" \
