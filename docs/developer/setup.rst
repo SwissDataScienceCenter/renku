@@ -47,10 +47,11 @@ Building and deploying to minikube
 Install Python dependencies
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Use ``pipenv``:
+Use ``pipenv`` to manage virtual environment:
 
 .. code-block:: console
 
+    $ pipenv shell
     $ pipenv install
 
 Starting minikube
@@ -82,7 +83,7 @@ Once minikube is started, make sure you can access it by running:
 
     $ kubectl get node
     NAME       STATUS    ROLES     AGE       VERSION
-    minikube   Ready     <none>    3s        v1.10.0
+    minikube   Ready     master    3s        v1.14.0
 
 **Notice**: If minikube didn't start successfully issue ``minikube delete`` before next ``minikube start``.
 
@@ -90,7 +91,6 @@ Once minikube is started issue:
 
 .. code-block:: console
 
-    $ minikube addons enable coredns
     $ eval $(minikube docker-env)
 
 Deploying Helm and Nginx ingress
