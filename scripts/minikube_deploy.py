@@ -137,6 +137,7 @@ def main():
             'gateway.gitlabUrl=http://{mip}/gitlab',
             'notebooks.jupyterhub.hub.extraEnv.GITLAB_URL=http://{mip}/gitlab',
             'notebooks.jupyterhub.hub.services.gateway.oauth_redirect_uri=http://{mip}/api/auth/jupyterhub/token',
+            'notebooks.jupyterhub.auth.gitlab.callbackUrl=http://{mip}/jupyterhub/hub/oauth_callback',
             'notebooks.gitlab.registry.host=10.100.123.45:8105',
             'gitlab.registry.externalUrl=http://10.100.123.45:8105/',
             'graph.gitlab.url=http://{mip}/gitlab')).format(mip=minikube_ip()),
