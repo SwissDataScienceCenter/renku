@@ -15,6 +15,7 @@ use Renku for:
 5. `Interactively exploring the bicycle counting data <interactive_exploration_>`_
 6. `Producing a repeatable analysis <create_workflow_>`_
 7. `Sharing your results and collaborating with your peers <sharing_is_caring_>`_
+8. `Where to go from here? <where_to_go>`_
 
 .. _create_project:
 
@@ -73,8 +74,8 @@ then on **Connect** (2)
 
 .. _add_data:
 
-Add input data to your project
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Adding data to your project
+^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 In the JupyterLab interface, we can see that a few files already exist.
 Let's start by adding data using the `Renku CLI <https://renku-python.readthedocs.io/en/latest/cli.html>`__.
@@ -194,8 +195,8 @@ we can see its content (2).
 
 .. _python_environment:
 
-Install and manage Python packages
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Installing and managing Python packages
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Defining your runtime environment is critical if you would like for others to
 reuse your work. The basic step to achieve this is to manage the software
@@ -268,8 +269,8 @@ pre-installed in the new server's environment.
 
 .. _jupyterlab:
 
-Work using JupyterLab
-^^^^^^^^^^^^^^^^^^^^^
+Working with Renku within JupyterLab
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Create new notebooks
 """"""""""""""""""""
@@ -334,8 +335,8 @@ and type ``git push`` to sync with the server.
 
 .. _interactive_exploration:
 
-Interactively explore the bicycle data
-""""""""""""""""""""""""""""""""""""""
+Interactively exploring the bicycle counting data
+"""""""""""""""""""""""""""""""""""""""""""""""""
 
 To start working with the bicycle data, we have already created a sample
 notebook that does some data cleaning and visualization. We will first
@@ -415,8 +416,8 @@ When you are satisfied with the code you can commit it to your repository:
 
 .. _create_workflow:
 
-Produce a repeatable workflow
-"""""""""""""""""""""""""""""
+Producing a repeatable analysis
+"""""""""""""""""""""""""""""""
 
 Here we will use ``renku`` and the refactored scripts to quickly create a
 "workflow". A workflow consists of a series of steps, each of which consumes
@@ -614,8 +615,8 @@ Lastly, let's not forget to push our work:
 
 .. _sharing_is_caring:
 
-Share your results and collaborate with your peers
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Sharing your results and collaborating with your peers
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 In this section, we will see how to use Renku to collaborate on projects.
 
@@ -734,6 +735,8 @@ in blue.
     :width: 85%
     :align: center
     :alt: Embedded notebook in Renku UI
+
+.. _where_to_go:
 
 Where to go from here?
 ^^^^^^^^^^^^^^^^^^^^^^
