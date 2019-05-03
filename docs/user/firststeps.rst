@@ -47,7 +47,7 @@ description (2) and set the project visibility to **Public** (3). Click on the
     :alt: Create a new project
 
 Now that we have a project, we can start working on it by starting a
-new JupyterLab. Click on **Notebook Servers** (1), then on
+new JupyterLab notebook server. Click on **Notebook Servers** (1), then on
 **Start new server** (2).
 
 .. image:: ../_static/images/ui_notebook_servers.png
@@ -55,14 +55,15 @@ new JupyterLab. Click on **Notebook Servers** (1), then on
     :align: center
     :alt: Head to Notebook ui_notebook_servers
 
-The default settings are fine, click on **Launch Server**. You will see
-a new row with a yellow button on the right. Wait until its color turns
-to green and the text from **Starting** to **Running**
+The default settings are fine for this tutorial, just click on
+**Launch Server**. You will see a new row with a yellow button
+on the right. Wait until its color has turned to green and the
+text from **Starting** to **Running**.
 
 .. note::
 
     Please be patient, the first time you start a server it may require
-    up to one minute
+    up to one minute.
 
 You can now connect to the server by clicking on the green button (1),
 then on **Connect** (2)
@@ -74,14 +75,14 @@ then on **Connect** (2)
 
 .. _add_data:
 
-Adding data to your project
+Add data to your project
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 In the JupyterLab interface, we can see that a few files already exist.
 Let's start by adding data using the `Renku CLI <https://renku-python.readthedocs.io/en/latest/cli.html>`__.
 
-From JupyterLab, start a terminal by clicking in the **Launcher** page on
-the bottom right **Terminal** icon (1).
+From JupyterLab, start a terminal by clicking the **Terminal** icon (1)
+on the bottom right of the **Launcher** page.
 
 .. image:: ../_static/images/jupyterlab-open-terminal.png
     :width: 85%
@@ -175,8 +176,8 @@ Let's push the two fresh commits by running:
     # To https://renkulab.io/gitlab/john.doe/zurich-bikes-tutorial.git
     #     b55aea9..91b226b  master --> master
 
-The data file can be opened from JupyterLab by going to the **File** tab
-on the top left (1) and traversing the ``data`` folder (2).
+The data file can be opened from JupyterLab by browsing to the **File** tab
+on the top left (1), then clicking ``data`` folder (2) and ``zhbikes``.
 
 .. image:: ../_static/images/jupyterhub_file_data.png
     :width: 85%
@@ -195,8 +196,8 @@ we can see its content (2).
 
 .. _python_environment:
 
-Installing and managing Python packages
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Install and manage Python packages
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Defining your runtime environment is critical if you would like for others to
 reuse your work. The basic step to achieve this is to manage the software
@@ -269,8 +270,8 @@ pre-installed in the new server's environment.
 
 .. _jupyterlab:
 
-Working with Renku within JupyterLab
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Use Renku from within JupyterLab
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Create new notebooks
 """"""""""""""""""""
@@ -335,8 +336,8 @@ and type ``git push`` to sync with the server.
 
 .. _interactive_exploration:
 
-Interactively exploring the bicycle counting data
-"""""""""""""""""""""""""""""""""""""""""""""""""
+Interactively explore the bicycle count data
+""""""""""""""""""""""""""""""""""""""""""""
 
 To start working with the bicycle data, we have already created a sample
 notebook that does some data cleaning and visualization. We will first
@@ -416,8 +417,8 @@ When you are satisfied with the code you can commit it to your repository:
 
 .. _create_workflow:
 
-Producing a repeatable analysis
-"""""""""""""""""""""""""""""""
+Produce a repeatable workflow
+"""""""""""""""""""""""""""""
 
 Here we will use ``renku`` and the refactored scripts to quickly create a
 "workflow". A workflow consists of a series of steps, each of which consumes
@@ -440,7 +441,7 @@ First, let's make sure the project repository is clean. Run:
     # nothing to commit, working directory clean
 
 Make sure the output ends with ``nothing to commit, working tree clean``.
-Otherwise you have to cleanup your project repository by either commiting
+Otherwise you have to cleanup your project repository by either committing
 your changes or getting rid of them
 
 .. note::
@@ -497,8 +498,8 @@ other commands.
     when it is required by a `renku` command. If you check the
     ``2019_verkehrszaehlungen_werte_fussgaenger_velo.csv`` file you
     will see only a few lines of metadata starting with
-    ``version https:://fit-lfs.github.com/spec/v1``. You can easily
-    fetch the data manually by pulling from the console
+    ``version https://git-lfs.github.com/spec/v1``. You can easily
+    fetch the data manually from the console by running
 
     .. code-block:: console
 
@@ -615,8 +616,8 @@ Lastly, let's not forget to push our work:
 
 .. _sharing_is_caring:
 
-Sharing your results and collaborating with your peers
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Share your results and collaborate with your peers
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 In this section, we will see how to use Renku to collaborate on projects.
 
@@ -629,8 +630,8 @@ in, so you can see your projects list by clicking on ``Projects`` in the top
 navigation bar.
 
 Click on your ``zurich-bikes-tutorial`` project to open it and then go to the
-**Kus** tab (1). As you can see it's empty at the moment, so let's start a new discussion by
-clicking on the **New Ku** button (2).
+**Kus** tab (1). As you can see it's empty at the moment, so let's start a new
+discussion by clicking on the **New Ku** button (2).
 
 .. image:: ../_static/images/renku-ui-new-ku.png
     :width: 85%
@@ -692,8 +693,8 @@ Now, you can use **Launch JupyterLab** to open and edit the ``README.md`` file.
 You can mention that the data comes from the city of Zürich, with the following
 link to the `bike data set <https://data.stadt-zuerich.ch/dataset/verkehrszaehlungen_werte_fussgaenger_velo>`__.
 
-To save the changes to the ``README.md`` file, open a console by click on the '+' button
-and then selecting **Terminal**.
+To save the changes to the ``README.md`` file, open a console by click on
+the '+' button and then selecting **Terminal**.
 
 Use ``git`` to save your changes:
 
