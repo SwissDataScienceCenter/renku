@@ -27,7 +27,7 @@ and a command-line client, exploiting in a coherent setup the joint features of:
 * `Keycloak <https://www.keycloak.org>`_ - identity and access management
 * `Common Workflow Language <https://www.commonwl.org>`_ - analysis workflows & tools description
 
-Here is a quick, high-level overview of Renku features as of late August, 2018.
+Here is a quick, high-level overview of current Renku features.
 
 Renku allows you to:
 
@@ -44,8 +44,8 @@ Renku allows you to:
 * preview and merge interactive notebook changes in the web UI
 
 
-Anticipated Features in the Short-term (end of 2018)
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Anticipated Features in the Short-term
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 * running and re-running of Renku workflows in the cloud
 * visualizing and modifying workflow steps in the web UI
