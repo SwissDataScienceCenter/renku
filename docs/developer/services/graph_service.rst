@@ -17,3 +17,30 @@ architecture is illustrated below.
 .. _fig-graph-service-architecture:
 
 .. graphviz:: /_static/graphviz/graph_service_architecture.dot
+
+
+Sequence diagram of Graph Services APIs and processes.
+""""""""""""""""""""""""""""""""""""""""""""""""""""""
+POST <webhook-service>/projects/:id/webhooks/validation
+
+.. uml:: ../../_static/uml/graph-validate-hook-sequence.uml
+
+POST <webhook-service>/projects/:id/webhooks
+
+.. uml:: ../../_static/uml/graph-create-hook-sequence.uml
+
+GET <webhook-service>/projects/:id/events/status
+
+.. uml:: ../../_static/uml/graph-events-status-sequence.uml
+
+POST <webhook-service>/webhooks/events
+
+.. uml:: ../../_static/uml/graph-push-event-sequence.uml
+
+Commit Events to RDF Triples
+
+.. uml:: ../../_static/uml/graph-commit-event-sequence.uml
+
+Missed commits synchronization job
+
+.. uml:: ../../_static/uml/graph-sync-events-sequence.uml

@@ -1,0 +1,39 @@
+    @startuml
+    hide footbox
+    skinparam shadowing false
+
+    actor Client
+    participant "Webhook\nService" as Webhook
+    database "Event\nLog" as Log
+
+    == Events processing status - events being processed now ==
+    Client->Webhook: GET /projects/:id/events/status
+    activate Webhook
+    Webhook->Log: count all events and events in processing statuses within last 2 minutes
+    activate Log
+    Log->Webhook: done < total (all recently added events count)
+    deactivate Log
+    Webhook->Client: OK with processing progress info
+    deactivate Webhook
+
+    == Events processing status - all recent events processed ==
+    Client->Webhook: GET /projects/:id/events/status
+    activate Webhook
+    Webhook->Log: count all events and events in processing statuses within last 2 minutes
+    activate Log
+    Log->Webhook: done = total (recently added events count)
+    deactivate Log
+    Webhook->Client: OK with progress = 100%
+    deactivate Webhook
+
+    == Events processing status - no recent events ==
+    Client->Webhook: GET /projects/:id/events/status
+    activate Webhook
+    Webhook->Log: count all events and events in processing statuses within last 2 minutes
+    activate Log
+    Log->Webhook: done = total = 0
+    deactivate Log
+    Webhook->Client: NOT_FOUND
+    deactivate Webhook
+
+    @enduml

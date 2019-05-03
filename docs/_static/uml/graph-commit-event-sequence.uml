@@ -1,0 +1,22 @@
+    @startuml
+    hide footbox
+    skinparam shadowing false
+
+    database "Event\nLog" as Log
+    participant "Triples\nGenerator" as Triples
+    participant "Tokens\nRepository" as Tokens
+    database "RDF Store" as Jena
+
+    == Commit Event to RDF Triples ==
+    Triples->Log: pick-up not processed Commit Event and mark as PROCESSING
+    activate Triples
+    Triples->Tokens: GET /projects/:id/tokens
+    activate Tokens
+    Tokens->Triples: OK with Access Token or NOT_FOUND
+    deactivate Tokens
+    Triples->Triples: Create RDF Triples
+    Triples->Jena: Store RDF Triples
+    Triples->Log: Mark Event as TRIPLES_STORE
+    deactivate Triples
+
+    @enduml

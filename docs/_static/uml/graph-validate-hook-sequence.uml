@@ -1,0 +1,63 @@
+    @startuml
+    hide footbox
+    skinparam shadowing false
+
+    actor Client
+    participant "Webhook\nService" as Webhook
+    participant GitLab
+    participant "Tokens\nRepository" as Tokens
+
+    == Webhook validation - valid Access Token ==
+    Client->Webhook: POST /projects/:id/webhooks/validation
+    activate Webhook
+    Webhook->GitLab: GET /api/v4/projects/:id
+    activate GitLab
+    GitLab->Webhook: OK with project visibility
+    deactivate GitLab
+    Webhook->GitLab: GET /api/v4/projects/:id/hooks
+    activate GitLab
+    GitLab->Webhook: OK with project hooks
+    deactivate GitLab
+    alt A relevant Graph Services hook exists
+    Webhook->Tokens: PUT /projects/:id/tokens (if a relevant Graph Services hook exists)
+    activate Tokens
+    Tokens->Webhook: NO_CONTENT
+    deactivate Tokens
+    end
+    Webhook->Client: OK if hook exists, NOT_FOUND if it doesn't
+    deactivate Webhook
+
+    == Webhook validation - invalid Access Token ==
+    Client->Webhook: POST /projects/:id/webhooks/validation
+    activate Webhook
+    Webhook->GitLab: GET /api/v4/projects/:id
+    activate GitLab
+    GitLab->Webhook: UNAUTHORIZED
+    deactivate GitLab
+    Webhook->Tokens: GET /projects/:id/tokens
+    activate Tokens
+    Tokens->Webhook: OK with project token or NOT_FOUND
+    deactivate Tokens
+    Webhook->GitLab: GET /api/v4/projects/:id
+    activate GitLab
+    GitLab->Webhook: OK with project visibility
+    deactivate GitLab
+    Webhook->GitLab: GET /api/v4/projects/:id/hooks
+    activate GitLab
+    GitLab->Webhook: OK with project hooks
+    deactivate GitLab
+    alt A relevant Graph Services hook exists
+    Webhook->Tokens: PUT /projects/:id/tokens
+    activate Tokens
+    Tokens->Webhook: NO_CONTENT
+    deactivate Tokens
+    else A relevant Graph Services hook does not exist
+    Webhook->Tokens: DELETE /projects/:id/tokens
+    activate Tokens
+    Tokens->Webhook: NO_CONTENT
+    deactivate Tokens
+    end
+    Webhook->Client: OK if hook exists, NOT_FOUND if it doesn't
+    deactivate Webhook
+
+    @enduml
