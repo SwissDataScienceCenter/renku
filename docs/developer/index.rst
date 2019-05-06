@@ -10,5 +10,5 @@ Developer Documentation
    Example configurations <example-configurations/index>
    Architecture <services/services_architecture>
    User Management <identity_management>
-   Web API <web>
    Services <services/index>
+   Contributing <contributing/index>

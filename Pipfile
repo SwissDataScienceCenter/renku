@@ -22,6 +22,8 @@ python-dotenv = ">=0.8.2"
 pytest-splinter = ">=1.8.5"
 requests = ">=2.20.0"
 Sphinx = "==1.8.0"
+rerun = "*"
+httpwatcher = "*"
 
 [requires]
 python_version = "3"

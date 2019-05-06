@@ -1,8 +1,8 @@
-.. _developer_web:
+.. _api_guidelines:
 
 
-Renku Web API
-=============
+Renku REST API guidelines
+=========================
 
 This page describes a set of rules and recommendations that a developer of
 any **Renku** related web service should follow when developing new or
