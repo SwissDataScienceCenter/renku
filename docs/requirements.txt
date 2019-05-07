@@ -11,7 +11,7 @@ imagesize==1.0.0
 ipython-genutils==0.2.0
 ipython==6.4.0
 jedi==0.12.1
-jinja2==2.10
+jinja2==2.10.1
 markupsafe==1.0
 packaging==17.1
 parso==0.3.0
@@ -33,5 +33,5 @@ sphinx==1.8.0
 sphinxcontrib-spelling==4.2.0
 sphinxcontrib-websupport==1.1.0
 traitlets==4.3.2
-urllib3==1.23
+urllib3==1.25
 wcwidth==0.1.7
