@@ -38,7 +38,7 @@ Relevant documentation
 Usage in Renku
 --------------
 
-Keycloak serves as an identity provider to Renku by acting as OpenID connect
+Keycloak serves as an identity provider to Renku by acting as an OpenID connect
 provider to the Renku GitLab instance. Personal `access
 <https://tools.ietf.org/html/rfc6749#section-1.4>`_- and `identity tokens
 <http://openid.net/specs/openid-connect-core-1_0.html#CodeIDToken>`_ from
