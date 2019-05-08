@@ -14,22 +14,22 @@
     activate Webhook
     Webhook->Log: find the latest Events of all the projects
     activate Log
-    Log->Webhook: the latest Events of all the projects
+    Log->Webhook: a list of the latest Events of all the projects
     deactivate Log
     group Repeat for all the found projects
     Webhook->Tokens: GET /projects/:id/tokens
     activate Tokens
-    Tokens->Webhook: OK with Access Token or NOT_FOUND
+    Tokens->Webhook: OK (200) with Access Token or NOT_FOUND (404)
     deactivate Tokens
     Webhook->GitLab: GET /api/v4/projects/:id/events?action=pushed
     activate GitLab
-    GitLab->Webhook: OK with the latest Push Event
+    GitLab->Webhook: OK (200) with the latest Push Event
     deactivate GitLab
     Webhook->GitLab: GET /api/v4/projects/:id
     activate GitLab
-    GitLab->Webhook: OK with the Project Info
+    GitLab->Webhook: OK (200) with the Project Info
     deactivate GitLab
-    ref over Webhook, Log: Create missing Commit Events and store them in the Event Log as in the Push Event process
+    ref over Webhook, Log: Create missing Commit Events and store them in the Event Log as in the\n**POST <webhook-service>/webhooks/events**
     deactivate Webhook
     end
     ref over Log, Jena: Commit Event to RDF Triples

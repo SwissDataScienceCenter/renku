@@ -21,26 +21,45 @@ architecture is illustrated below.
 
 Sequence diagram of Graph Services APIs and processes.
 """"""""""""""""""""""""""""""""""""""""""""""""""""""
-POST <webhook-service>/projects/:id/webhooks/validation
+**POST <webhook-service>/projects/:id/webhooks**
 
-.. uml:: ../../_static/uml/graph-validate-hook-sequence.uml
-
-POST <webhook-service>/projects/:id/webhooks
+An endpoint to create a Graph Services webhook for a project in GitLab.
 
 .. uml:: ../../_static/uml/graph-create-hook-sequence.uml
 
-GET <webhook-service>/projects/:id/events/status
+**POST <webhook-service>/projects/:id/webhooks/validation**
 
-.. uml:: ../../_static/uml/graph-events-status-sequence.uml
+An endpoint to validate project's webhook. It checks if a relevant
+Graph Services webhook exists on the repository in GitLab and
+if Graph Services have an Access Token associated with the project
+so they can use it for finding project specific information in GitLab.
 
-POST <webhook-service>/webhooks/events
+.. uml:: ../../_static/uml/graph-validate-hook-sequence.uml
+
+**POST <webhook-service>/webhooks/events**
+
+An endpoint to send Push Events containing information about commits pushed to the GitLab.
 
 .. uml:: ../../_static/uml/graph-push-event-sequence.uml
 
-Commit Events to RDF Triples
+**GET <webhook-service>/projects/:id/events/status**
+
+An endpoint that returns information about processing progress of events for a specific project.
+
+.. uml:: ../../_static/uml/graph-events-status-sequence.uml
+
+**Commit Events to RDF Triples**
+
+A process responsible for translating unprocessed Commit Events from the Event Log
+to RDF Triples in the RDF Store. This process runs continuously
+by polling the Event Log for Commit Events.
 
 .. uml:: ../../_static/uml/graph-commit-event-sequence.uml
 
-Missed commits synchronization job
+**Missed commits synchronization job**
+
+A scheduled job which synchronizes state between the Event Log and GitLab
+and generates Commit Events missing from the Event Log.
+It runs periodically with a configured interval.
 
 .. uml:: ../../_static/uml/graph-sync-events-sequence.uml

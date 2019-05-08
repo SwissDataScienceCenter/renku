@@ -9,31 +9,31 @@
     == Events processing status - events being processed now ==
     Client->Webhook: GET /projects/:id/events/status
     activate Webhook
-    Webhook->Log: count all events and events in processing statuses within last 2 minutes
+    Webhook->Log: count all events and events in processing statuses from the last events batch
     activate Log
-    Log->Webhook: done < total (all recently added events count)
+    Log->Webhook: done < total (all events from the last events batch)
     deactivate Log
-    Webhook->Client: OK with processing progress info
+    Webhook->Client: OK (200) with processing progress info
     deactivate Webhook
 
-    == Events processing status - all recent events processed ==
+    == Events processing status - all events from the last events batch processed ==
     Client->Webhook: GET /projects/:id/events/status
     activate Webhook
-    Webhook->Log: count all events and events in processing statuses within last 2 minutes
+    Webhook->Log: count all events and events in processing statuses from the last events batch
     activate Log
-    Log->Webhook: done = total (recently added events count)
+    Log->Webhook: done = total (all events from the last events batch)
     deactivate Log
-    Webhook->Client: OK with progress = 100%
+    Webhook->Client: OK (200) with progress = 100%
     deactivate Webhook
 
-    == Events processing status - no recent events ==
+    == Events processing status - no events for a given project ==
     Client->Webhook: GET /projects/:id/events/status
     activate Webhook
-    Webhook->Log: count all events and events in processing statuses within last 2 minutes
+    Webhook->Log: count all events and events in processing statuses from the last events batch
     activate Log
-    Log->Webhook: done = total = 0
+    Log->Webhook: no records found
     deactivate Log
-    Webhook->Client: NOT_FOUND
+    Webhook->Client: NOT_FOUND (404)
     deactivate Webhook
 
     @enduml
