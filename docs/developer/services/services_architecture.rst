@@ -26,11 +26,11 @@ Components
 Renku has the following custom components:
 
 - renku_: the meta repository with deployment scripts, documentation and kubernetes helm charts
-- :ref:`renku-notebooks <notebooks_service>`: a service integrating GitLab repositories with JupyterHub
-- :ref:`renku-graph <graph_service>`: a collection of services concerned with activating, building and querying the Renku knowledge graph
 - :ref:`renku-gateway <api_gateway>`: an API gateway connecting clients to the APIs of the different backend services
-- renku-ui_: web front-end interface
+- :ref:`renku-graph <graph_service>`: a collection of services concerned with activating, building and querying the Renku knowledge graph
+- :ref:`renku-notebooks <notebooks_service>`: a service integrating GitLab repositories with JupyterHub
 - renku-python_: python API & Command Line Interface (CLI)
+- renku-ui_: web front-end interface
 
 
 In addition, we make use of:
