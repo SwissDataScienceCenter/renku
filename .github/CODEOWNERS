@@ -1,0 +1,3 @@
+*           @SwissDataScienceCenter/renku-maintainers
+/docs/      @SwissDataScienceCenter/documentation-reviewers
+*.rst       @SwissDataScienceCenter/documentation-reviewers

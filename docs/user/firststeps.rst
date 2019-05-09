@@ -15,6 +15,7 @@ use Renku for:
 5. `Interactively exploring the bicycle counting data <interactive_exploration_>`_
 6. `Producing a repeatable analysis <create_workflow_>`_
 7. `Sharing your results and collaborating with your peers <sharing_is_caring_>`_
+8. `Where to go from here? <where_to_go>`_
 
 .. _create_project:
 
@@ -29,36 +30,59 @@ On renkulab.io_ you can sign in using with your GitHub
 or LinkedIn account by clicking on the corresponding button.
 
 Once logged in, create a new project by going to the **Projects** (1) page
-and clicking on the **New Project** button.
+and clicking on the **New Project** (2) button.
 
 .. image:: ../_static/images/ui_create_project.png
     :width: 100%
     :align: center
-    :alt: Create a new project in UI
+    :alt: Head to new project page
 
-Set **Zürich bikes tutorial** as your project title, fill-in a short
-description and set the project visibility to **Public**. Click on the
-**Create** button.
+Set **Zurich bikes tutorial** as your project title (1), fill-in a short
+description (2) and set the project visibility to **Public** (3). Click on the
+**Create** button (4).
 
-To more easily find your project later, you can give it a star:
-
-.. image:: ../_static/images/ui_star_project.png
+.. image:: ../_static/images/ui_new_project.png
     :width: 100%
     :align: center
-    :alt: Star a project
+    :alt: Create a new project
 
-Now that we have a project, we can start working on it by clicking
-on **Launch JupyterLab**.
+Now that we have a project, we can start working on it by starting a
+new JupyterLab notebook server. Click on **Notebook Servers** (1), then on
+**Start new server** (2).
+
+.. image:: ../_static/images/ui_notebook_servers.png
+    :width: 100%
+    :align: center
+    :alt: Head to Notebook ui_notebook_servers
+
+The default settings are fine for this tutorial, just click on
+**Launch Server**. You will see a new row with a yellow button
+on the right. Wait until its color has turned to green and the
+text from **Starting** to **Running**.
+
+.. note::
+
+    Please be patient, the first time you start a server it may require
+    up to one minute.
+
+You can now connect to the server by clicking on the green button (1),
+then on **Connect** (2)
+
+.. image:: ../_static/images/ui_connect_to_server.png
+    :width: 100%
+    :align: center
+    :alt: Start a new server
 
 .. _add_data:
 
-Add input data to your project
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Add data to your project
+^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 In the JupyterLab interface, we can see that a few files already exist.
 Let's start by adding data using the `Renku CLI <https://renku-python.readthedocs.io/en/latest/cli.html>`__.
 
-From JupyterLab, start a terminal.
+From JupyterLab, start a terminal by clicking the **Terminal** icon (1)
+on the bottom right of the **Launcher** page.
 
 .. image:: ../_static/images/jupyterlab-open-terminal.png
     :width: 85%
@@ -82,7 +106,7 @@ directory.  Use the following commands to add data to your project.
     # Output:
     # Creating a dataset ... OK
 
-    renku dataset add zhbikes https://data.stadt-zuerich.ch/dataset/verkehrszaehlungen_werte_fussgaenger_velo/resource/d17a0a74-1073-46f0-a26e-46a403c061ec/download/2017_verkehrszaehlungen_werte_fussgaenger_velo.csv
+    renku dataset add zhbikes https://data.stadt-zuerich.ch/dataset/verkehrszaehlungen_werte_fussgaenger_velo/resource/d17a0a74-1073-46f0-a26e-46a403c061ec/download/2019_verkehrszaehlungen_werte_fussgaenger_velo.csv
     # Output:
     # Adding data to dataset  [     ]  1/1  https://data.stadt-zuerich.ch/dataset/verkehrszaehlungen_werte_fussgaenger_velo/resource/d17a0a74-
     # Adding data to dataset  [     ]  1/1
@@ -99,7 +123,7 @@ reference to the source of the file in the metadata of the project.
 The data file we added is about bike traffic in the City of Zürich, and its
 description can be found `here <https://data.stadt-
 zuerich.ch/dataset/verkehrszaehlungen_werte_fussgaenger_velo>`_. As the file
-name suggests, this file covers the year of 2017.
+name suggests, this file covers the year of 2019.
 
 We can see that the two ``renku`` commands make use of the underlying git
 repository:
@@ -110,28 +134,31 @@ repository:
     # Output similar to:
     # commit ef542b5ec5a44fdbb16afc3de413308a7daff32f
     # Author: John Doe <john.doe@example.com>
-    # Date:   Thu Aug 23 11:58:34 2018 +0000
+    # Date:   Mon Apr 29 11:58:34 2019 +0000
     #
-    #     renku dataset add zhbikes https://data.stadt-zuerich.ch/dataset/verkehrszaehlungen_werte_fussgaenger_velo/resource/d17a0a74-1073-46f0-a26e-46a403c061ec/download/2
-    # 017_verkehrszaehlungen_werte_fussgaenger_velo.csv
+    #     renku dataset add zhbikes https://data.stadt-zuerich.ch/dataset/verkehrszaehlungen_werte_fussgaenger_velo/resource/d17a0a74-1073-46f0-a26e-46a403c061ec/
+    # download/2019_verkehrszaehlungen_werte_fussgaenger_velo.csv
     #
     # commit 38ac3261e8b2964c4608a6ca6d30a4f907dc6930
     # Author: John Doe <john.doe@example.com>
-    # Date:   Thu Aug 23 11:58:30 2018 +0000
+    # Date:   Mon Apr 29 11:56:30 2019 +0000
     #
     #     renku dataset create zhbikes
     #
     # commit 3f74a2dfdf5e27c1dc124f6455931089023253b8
     # Author: John Doe <john.doe@example.com>
-    # Date:   Thu Aug 23 11:55:41 2018 +0000
+    # Date:   Mon Apr 29 11:53:41 2019 +0000
     #
     #     init renku repository
 
+.. code-block:: console
+
     git status
-    # Expected output:
+    # Output similar to:
     # On branch master
     # Your branch is ahead of 'origin/master' by 2 commits.
     #   (use "git push" to publish your local commits)
+    #
     # nothing to commit, working directory clean
 
 Let's push the two fresh commits by running:
@@ -139,11 +166,27 @@ Let's push the two fresh commits by running:
 .. code-block:: console
 
     git push
+    # Output similar to:
+    # Locking support detected on remote "origin". Consider enabling it with: [...]
+    # Counting objects: 19, done. (1/1), 66 MB | 0 B/s
+    # Delta compression using up to 8 threads.
+    # Compressing objects: 100% (15/15), done.
+    # Writing objects: 100% (19/19), 2.26 KiB | 463.00 KiB/s, done.
+    # Total 19 (delta 3), reused 0 (delta 0)
+    # To https://renkulab.io/gitlab/john.doe/zurich-bikes-tutorial.git
+    #     b55aea9..91b226b  master --> master
 
-The data file can be opened from JupyterLab by going to the **Files** tab
-and traversing the ``data`` folder.
+The data file can be opened from JupyterLab by browsing to the **File** tab
+on the top left (1), then clicking ``data`` folder (2) and ``zhbikes``.
 
-Opening the file, we can see it contains some data in CSV format.
+.. image:: ../_static/images/jupyterhub_file_data.png
+    :width: 85%
+    :align: center
+    :alt: File tab and data folder
+
+Opening the file
+``zhbikes\2019_verkehrszaehlungen_werte_fussgaenger_velo.csv`` (1),
+we can see its content (2).
 
 .. image:: ../_static/images/jupyterlab-data-open-csv.png
     :width: 85%
@@ -162,10 +205,11 @@ libraries that are needed for your code to execute. In Renku, we use common
 conventions  for the environment definitions. In python, the
 ``requirements.txt`` is one such conventional way to specify the required
 libraries. When  you created your project, an empty ``requirements.txt`` was
-created - find it in the file browser of your JupyterLab session and double-
-click to open the editor.  We will need ``pandas``, ``fastparquet`` and ``seaborn``
-libraries, so enter those  on separate lines in the ``requirements.txt`` file
-and save it:
+created - find it in the file browser of your JupyterLab session by clicking
+on the **Home** button (1), then double-click the file (2) to open the editor.
+We will need ``pandas``, ``fastparquet`` and ``seaborn`` libraries, so enter
+those on separate lines in the ``requirements.txt`` file on the right (3) and
+**save it**:
 
 .. image:: ../_static/images/jupyterlab-setup-requirements.png
     :width: 85%
@@ -178,9 +222,39 @@ install these packages with ``pip``:
 .. code-block:: console
 
     pip install -r requirements.txt
+    # Collecting fastparquet (from -r requirements.txt (line 2))
+    #     Downloading https://files.pythonhosted.org/packages/85/b9/dc59386bc5824f86c640e7178fc78986ftp0c81763b924b2e37337ffb6a563
+    #     /fastparquet-0.3.1.tar.gz (149kB)
+    #         100% |████████████████████████████████| 153kB 5.6MB/s
+    # Collecting seaborn (from -r requirements.txt (line 3))
+    #     Downloading https://files.pythonhosted.org/packages/a8/76/220ba4420459d9c4c9c9587c6ce607bf5#6c25b3d3d2de62056efe482dadc
+    #     /seaborn-0.9.0-py3-none-any.whl (208kB)
+    #         100% |████████████████████████████████| 215kB 7.7MB/s
+    # [...]
+    # Building wheels for collected packages: fastparquet, thrift
+    #     Building wheel for fastparquet (setup.py) ... done
+    #     Stored in directory: /home/jovyan/.cache/pip/wheels/f3/27/fb/839c776ec8689ff9ee52ad3e91d7d4d848ac6d7545a127d5b0
+    #     Building wheel for thrift (setup.py) ... done
+    #     Stored in directory: /home/jovyan/.cache/pip/wheels/be/36/81/0f93ba89a1cb7887c91937948519840a72c0ffdd57cac0ae8f
+    # Successfully built fastparquet thrift
+    # Installing collected packages: llvmlite, numba, thrift, fastparquet, pyparsing, kiwisolver, cycler, matplotlib, scipy, seaborn
+    # Successfully installed cycler-0.10.0 fastparquet-0.3.1 kiwisolver-1.1.0 llvmlite-0.28.0 matplotlib-3.0.3 numba-0.43.1 pyparsing-2.4.0
+    #     scipy-1.2.1 seaborn-0.9.0 thrift-0.11.0
+
+.. code-block:: console
+
     git add requirements.txt
     git commit -m "Installed pandas, fastparquet, seaborn"
     git push
+    # [master c1dcfe4] Installed pandas, fastparquet, seaborn
+    #     1 file changed, 3 insertions(+)
+    # Counting objects: 3, done.
+    # Delta compression using up to 8 threads.
+    # Compressing objects: 100% (2/2), done.
+    # Writing objects: 100% (3/3), 313 bytes | 313.00 KiB/s, done.
+    # Total 3 (delta 1), reused 0 (delta 0)
+    # To https://dev.renku.ch/gitlab/john.doe/zurich-bikes-tutorial.git
+    #     91b226b..c1dcfe4  master -> master
 
 .. warning::
 
@@ -196,8 +270,8 @@ pre-installed in the new server's environment.
 
 .. _jupyterlab:
 
-Work using JupyterLab
-^^^^^^^^^^^^^^^^^^^^^
+Use Renku from within JupyterLab
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Create new notebooks
 """"""""""""""""""""
@@ -236,6 +310,16 @@ terminal:
     git add notebooks # track everything inside the notebooks folder
     git commit -m "Added some notebooks"
     git push
+    # [master 0fb9ac1] Installed pandas, fastparquet, seaborn
+    #     1 file changed, 32 insertions(+)
+    #     create mode 100644 notebooks/MyNewNotebook.ipynb
+    # Counting objects: 4, done.
+    # Delta compression using up to 8 threads.
+    # Compressing objects: 100% (4/4), done.
+    # Writing objects: 100% (3/3), 639 bytes | 639.00 KiB/s, done.
+    # Total 4 (delta 1), reused 0 (delta 0)
+    # To https://dev.renku.ch/gitlab/john.doe/zurich-bikes-tutorial.git
+    #     c1dcfe4..0fb9ac1  master -> master
 
 Alternatively, you can click on the git icon on the left-hand side of your
 JupyterLab session (1) to open the git panel. Here you can add untracked files
@@ -252,10 +336,10 @@ and type ``git push`` to sync with the server.
 
 .. _interactive_exploration:
 
-Interactively explore the bicycle data
-""""""""""""""""""""""""""""""""""""""
+Interactively explore the bicycle count data
+""""""""""""""""""""""""""""""""""""""""""""
 
-To start working with the bicycle data we have already created a sample
+To start working with the bicycle data, we have already created a sample
 notebook that does some data cleaning and visualization. We will first
 download the notebook so you can interactively explore the dataset, much like
 you would in a real project. Feel free to execute the cells. When we are ready
@@ -267,9 +351,26 @@ Use the commands below to add the notebook to your project.
 .. code-block:: console
 
     wget -O "notebooks/zhbikes-notebook.ipynb" https://raw.githubusercontent.com/SwissDataScienceCenter/renku/master/docs/_static/zhbikes/ZHBikes.ipynb
+    # Output similar to:
+    # --2019-04-29 14:38:02--  https://raw.githubusercontent.com/SwissDataScienceCenter/renku/master/docs/_static/zhbikes/ZHBikes.ipynb
+    # Resolving raw.githubusercontent.com (raw.githubusercontent.com)... 151.101.112.133
+    # Connecting to raw.githubusercontent.com (raw.githubusercontent.com)|151.101.112.133|:443... connected.
+    # HTTP request sent, awaiting response... 200 OK
+    # Length: 851224 (831K) [text/plain]
+    # Saving to: ‘notebooks/zhbikes-notebook.ipynb’
+    #
+    # notebooks/zhbikes-not 100%[======================>] 831.27K  --.-KB/s    in 0.06s
+    #
+    # 2019-04-29 14:38:03 (12.7 MB/s) - ‘notebooks/zhbikes-notebook.ipynb’ saved [851224/851224]
+
+.. code-block:: console
+
     git add notebooks
     git commit -m "Added zuerich bike notebook"
     git push
+    # [...]
+    # To https://dev.renku.ch/gitlab/john.doe/zurich-bikes-tutorial.git
+    #     0fb9ac1..d0c4d1f  master -> master
 
 
 Refactor the notebook
@@ -288,6 +389,10 @@ run:
     mkdir src
     wget -O "src/clean_data.py" https://raw.githubusercontent.com/SwissDataScienceCenter/renku/master/docs/_static/zhbikes/clean_data.py
     wget -O "src/plot_data.py" https://raw.githubusercontent.com/SwissDataScienceCenter/renku/master/docs/_static/zhbikes/plot_data.py
+    # [...]
+    # 2019-04-29 14:56:52 (114 MB/s) - ‘src/clean_data.py’ saved [1823/1823]
+    # [...]
+    # 2019-04-29 14:56:56 (27.5 MB/s) - ‘src/plot_data.py’ saved [3117/3117]
 
 Feel free to inspect the code in the file viewer in your JupyterLab session.
 Note that in the scripts, we are saving first the intermediate output with
@@ -304,6 +409,10 @@ When you are satisfied with the code you can commit it to your repository:
 
     git add src
     git commit -m "added refactored scripts"
+    git push
+    # [...]
+    # To https://dev.renku.ch/gitlab/john.doe/zurich-bikes-tutorial.git
+    #     a40f192..7922ee1  master -> master
 
 
 .. _create_workflow:
@@ -326,21 +435,36 @@ First, let's make sure the project repository is clean. Run:
 .. code-block:: console
 
     git status
-    # Expected output:
     # On branch master
     # Your branch is up-to-date with 'origin/master'.
+    #
     # nothing to commit, working directory clean
 
 Make sure the output ends with ``nothing to commit, working tree clean``.
-Otherwise, use ``git add``, ``git commit`` and ``rm`` to cleanup your project repository.
+Otherwise you have to cleanup your project repository by either committing
+your changes or getting rid of them
+
+.. note::
+
+    You can undo your changes with:
+
+    .. code-block:: console
+
+        git checkout .
+        git clean -fd
+
+    Otherwise commit:
+
+    .. code-block:: console
+
+        git add -A
+        git commit -m "My own changes"
+        git push
 
 To run the ``clean_data.py`` script, we would normally do
-
-.. code-block:: console
-
-    python src/clean_data.py data/zhbikes data/preprocessed/zhbikes.parquet
-
-The only change required to execute the script with ``renku`` is
+``python src/clean_data.py data/zhbikes data/preprocessed/zhbikes.parquet``.
+The only change required to execute the script with ``renku`` is adding
+``renku run`` before the command
 
 .. code-block:: console
 
@@ -352,7 +476,38 @@ changes to the repository. See the `renku command line docs <https://renku-
 python.readthedocs.io/en/latest/cli.html>`_ for more information on this and
 other commands.
 
-To generate the figures, run
+.. note::
+
+    Did you get an error like this?
+
+    .. code-block:: console
+
+        # Traceback (most recent call last):
+        #   File "src/clean_data.py", line 72, in <module>
+        #     clean_data(args.input, args.output)
+        # [...]
+        # KeyError: "None of [Index(['fk_zaehler', 'datum', 'velo_in', 'velo_out', 'fuss_in', 'fuss_out',\n'objectid'],\n      dtype='object')] are in the [columns]"
+        # Error: Command returned non-zero exit status 1.
+
+    If you played around with the tutorial and you started a new
+    Jupyter server, this may happen. Why?
+    `Under the hood <https://renku-python.readthedocs.io/en/latest/api.html>`_,
+    we use
+    `git-lfs <https://git-lfs.github.com/>`_
+    to save big files and we automatically fetch them only
+    when it is required by a `renku` command. If you check the
+    ``2019_verkehrszaehlungen_werte_fussgaenger_velo.csv`` file you
+    will see only a few lines of metadata starting with
+    ``version https://git-lfs.github.com/spec/v1``. You can easily
+    fetch the data manually from the console by running
+
+    .. code-block:: console
+
+      git lfs pull
+      # Downloading LFS objects: 100% (1/1), 66MB | 22 MB/s
+
+
+All the required data are now available. To generate the figures, run
 
 .. code-block:: console
 
@@ -360,9 +515,10 @@ To generate the figures, run
 
 .. warning::
 
-   Do *not* make any edit to the code before the ``renku run`` command is finished.
-   In oder to keep track of the outputs of your script, renku will 
-   automatically add the changes to ``git``. If you want to keep working while running 
+   Do *not* make any edit to the code before the ``renku run``
+   command is finished. In oder to keep track of the outputs of
+   your script, renku will automatically add the changes to
+   ``git``. If you want to keep working while running
    a ``renku`` command, you should create a new branch.
 
 Reuse your own work
@@ -375,9 +531,11 @@ Let's begin by adding some more data to the ``zhbikes`` data set:
 
 .. code-block:: console
 
-    renku dataset add zhbikes https://data.stadt-zuerich.ch/dataset/verkehrszaehlungen_werte_fussgaenger_velo/resource/ed354dde-c0f9-43b3-b05b-08c5f4c3f65a/download/2016_verkehrszaehlungen_werte_fussgaenger_velo.csv
+    renku dataset add zhbikes https://data.stadt-zuerich.ch/dataset/verkehrszaehlungen_werte_fussgaenger_velo/resource/ed354dde-c0f9-43b3-b05b-08c5f4c3f65a/download/2018_verkehrszaehlungen_werte_fussgaenger_velo.csv
+    # Adding data to dataset  [            ]  1/1  https://data.stadt-zuerich.ch/dataset/verkehrszaehlungen_werte_fussgaenger_velo/resource/ed354dde-c0f9-
+    # Adding data to dataset  [            ]  1/1
 
-This new file corresponds to the year of 2016 and is part of the same bike
+This new file corresponds to the year of 2018 and is part of the same bike
 data set as above.
 
 We can now see that ``renku`` recognizes that output files like
@@ -386,21 +544,46 @@ We can now see that ``renku`` recognizes that output files like
 .. code-block:: console
 
     renku status
-    # Expected output similar to:
     # On branch master
     # Files generated from newer inputs:
     #   (use "renku log [<file>...]" to see the full lineage)
     #   (use "renku update [<file>...]" to generate the file from its latest inputs)
 
-    #         figs/grid_plot.png: data/zhbikes#57c66586
-    #         data/preprocessed/zhbikes.parquet: data/zhbikes#57c66586
-    #         figs/cumulative.png: data/zhbikes#57c66586
+    #         data/preprocessed/zhbikes.parquet: data/zhbikes#cdfb6771
+    #         figs/cumulative.png: data/zhbikes#cdfb6771
+    #         figs/grid_plot.png: data/zhbikes#cdfb6771
 
 To update all the outputs, we can run the following.
 
 .. code-block:: console
 
     renku update
+    # Resolved '.renku/workflow/6610408d093a427888ffae7744a3e072.cwl' to 'file:///home/jovyan/deleteme/.renku/workflow/6610408d093a427888ffae7744a3e072.cwl'
+    # [workflow ] start
+    # [workflow ] starting step step_2
+    # [step step_2] start
+    # [job step_2] /tmp/tmpxbo76axv$ python \
+    #     /tmp/tmpm3icjq_m/stg218e2361-0962-4bb8-92fd-cdcbe857e7a9/clean_data.py \
+    #     /tmp/tmpm3icjq_m/stg411c0870-ee56-4c58-a193-7358b5145d29/zhbikes \
+    #     data/preprocessed/zhbikes.parquet
+    # [job step_2] completed success
+    # [step step_2] completed success
+    # [workflow ] starting step step_1
+    # [step step_1] start
+    # [job step_1] /tmp/tmpaq66jtcf$ python \
+    #     /tmp/tmpn2lxorlf/stg3c758e4e-4914-4954-b960-59890db12f79/plot_data.py \
+    #     /tmp/tmpn2lxorlf/stg821b8957-628d-4ba8-913d-d026b988bcfd/zhbikes.parquet
+    # /opt/conda/lib/python3.6/site-packages/pandas/plotting/_converter.py:129:
+    #     FutureWarning: Using an implicitly registered datetime converter for a matplotlib plotting method. The converter was registered by pandas on import.
+    #     Future versions of pandas will require you to explicitly register matplotlib converters.
+    #
+    # To register the converters:
+    #         >>> from pandas.plotting import register_matplotlib_converters
+    #         >>> register_matplotlib_converters()
+    #   warnings.warn(msg, FutureWarning)
+    # [job step_1] completed success
+    # [step step_1] completed success
+    # [workflow ] completed success
 
 That's it! The intermediate data file ``data/preprocessed/zhbikes.parquet``
 and the figures in ``figs/``, are recreated by re-running the necessary steps.
@@ -420,6 +603,15 @@ Lastly, let's not forget to push our work:
 .. code-block:: console
 
     git push
+    # [...]
+    # Uploading LFS objects: 100% (7/7), 69 MB | 25 MB/s, done
+    # Counting objects: 39, done.
+    # Delta compression using up to 8 threads.
+    # Compressing objects: 100% (36/36), done.
+    # Writing objects: 100% (39/39), 4.59 KiB | 1.15 MiB/s, done.
+    # Total 39 (delta 14), reused 0 (delta 0)
+    # To https://dev.renku.ch/gitlab/lorenzo.cavazzi.tech/deleteme.git
+    #    8892173..8d00b71  master -> master
 
 
 .. _sharing_is_caring:
@@ -434,13 +626,12 @@ Discussions with Kus
 
 Let's start by going back to the Renku web interface on renkulab.io_ or
 whichever instance you are using for this tutorial. Make sure you are logged
-in, so you can see the list of projects you starred.
+in, so you can see your projects list by clicking on ``Projects`` in the top
+navigation bar.
 
-Click on your ``tutorial-zhbikes`` project to open it and then go to the
-**Kus** tab (1).
-
-As you can see it's empty at the moment, so let's start a new discussion by
-clicking on the **New Ku** button (2).
+Click on your ``zurich-bikes-tutorial`` project to open it and then go to the
+**Kus** tab (1). As you can see it's empty at the moment, so let's start a new
+discussion by clicking on the **New Ku** button (2).
 
 .. image:: ../_static/images/renku-ui-new-ku.png
     :width: 85%
@@ -502,8 +693,8 @@ Now, you can use **Launch JupyterLab** to open and edit the ``README.md`` file.
 You can mention that the data comes from the city of Zürich, with the following
 link to the `bike data set <https://data.stadt-zuerich.ch/dataset/verkehrszaehlungen_werte_fussgaenger_velo>`__.
 
-To save the changes to the ``README.md`` file, open a console by click on the '+' button
-and then selecting **Terminal**.
+To save the changes to the ``README.md`` file, open a console by click on
+the '+' button and then selecting **Terminal**.
 
 Use ``git`` to save your changes:
 
@@ -545,6 +736,8 @@ in blue.
     :width: 85%
     :align: center
     :alt: Embedded notebook in Renku UI
+
+.. _where_to_go:
 
 Where to go from here?
 ^^^^^^^^^^^^^^^^^^^^^^
