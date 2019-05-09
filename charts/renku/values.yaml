@@ -84,7 +84,8 @@ ingress:
     kubernetes.io/ingress.class: nginx
     # kubernetes.io/tls-acme: 'true'
     nginx.ingress.kubernetes.io/proxy-body-size: '0' # Adjust to a reasonable value for production to avoid DOS attacks.
-    nginx.ingress.kubernetes.io/proxy-request-buffering: "off"   # Needed if GitLab is behind this ingress
+    # The below line is uncommented as a _temporary_ measure, to streamline our charts generation and avoid a certain yaml bug
+    ## nginx.ingress.kubernetes.io/proxy-request-buffering: "off"   # Needed if GitLab is behind this ingress
 
   ## Hosts for the ingress
   ## Should include at least the value from `global.renku.domain`
