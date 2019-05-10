@@ -38,7 +38,7 @@
     activate Log
     Log->Webhook: no records found
     deactivate Log
-    Webhook->Client: NOT_FOUND (404)
+    Webhook->Client: OK (200) with done = total = 0 and no progress
     deactivate Webhook
 
     == Events processing status - no Graph Services webhook for a given project ==
