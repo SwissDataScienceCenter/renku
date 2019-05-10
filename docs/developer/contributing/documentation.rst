@@ -1,6 +1,6 @@
 .. _documentation:
 
-Contributing to Documentation
+Contributing to the Documentation
 =============================
 
 You have come across some missing or outdated information in the Renku docs? Why
