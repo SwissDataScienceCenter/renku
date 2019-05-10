@@ -1,0 +1,41 @@
+    @startuml
+    hide footbox
+    skinparam shadowing false
+
+    actor Client
+    participant "Webhook\nService" as Webhook
+    participant GitLab
+    participant "Tokens\nRepository" as Tokens
+    database "Event\nLog" as Log
+    participant "Triples\nGenerator" as Triples
+    database "RDF Store" as Jena
+
+    == Push Event ==
+    Client->Webhook: POST /webhooks/events
+    activate Webhook
+    Webhook->Tokens: GET /projects/:id/tokens
+    activate Tokens
+    Tokens->Webhook: OK (200) with Access Token or NOT_FOUND (404)
+    deactivate Tokens
+    group Not processed commits finding process
+    Webhook->Webhook ++ : find commits ids not in the Event Log
+    Webhook->Log: find the most recent event
+    activate Log
+    Log->Webhook: EventId of the most recent event or nothing
+    deactivate Log
+    Webhook->GitLab: GET /api/v4/projects/:id/repository/commits/:id
+    activate GitLab
+    GitLab->Webhook: OK (200) with commit info
+    deactivate GitLab
+    Webhook->Log: filter out parent commits which are already in the Event Log
+    activate Log
+    Log->Webhook: Parent commitIds not in the Event Log
+    deactivate Log
+    return Commit Events not found in the Event Log
+    end
+    Webhook->Log: store Commit Events
+    Webhook->Client: OK (200)
+    deactivate Webhook
+    ref over Log, Jena: Commit Event to RDF Triples
+
+    @enduml
