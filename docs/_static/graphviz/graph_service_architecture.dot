@@ -9,11 +9,11 @@ strict digraph architecture {
   GitLab [fillcolor="lightblue"]
   UI [fillcolor="#f4d142"]
   CLI [fillcolor="#f4d142"]
-  WHS [label="WebhookService" fillcolor="#f4d142"]
-  RDF [label="TriplesGenerator" fillcolor="#f4d142"]
+  WHS [label="Webhook Service" fillcolor="#f4d142"]
+  RDF [label="Triples Generator" fillcolor="#f4d142"]
   Gateway [fillcolor="#f4d142"]
   Jena [label="Apache Jena" fillcolor="lightblue"]
-  MQ1 [fillcolor="lightblue", shape="parallelogram", width=2.0]
+  Log [label="Event Log" fillcolor="lightblue", shape="parallelogram", width=2.0]
 
   subgraph cluster_clients {
     label="Clients"
@@ -24,10 +24,10 @@ strict digraph architecture {
 
   CLI -> GitLab [label=" git push"]
   Gateway -> GitLab [label=" register webhook"]
-  GitLab -> WHS [label=" trigger webhook"]
-  WHS -> MQ1 [label=" write log"]
-  MQ1 -> RDF [label=" read log"]
-  RDF -> Jena [label=" generate triples"]
+  GitLab -> WHS [label=" send Push Event\nwith information about pushed commits"]
+  WHS -> Log [label=" write Commit Events"]
+  Log -> RDF [label=" read Commit Events"]
+  RDF -> Jena [label=" generate RDF triples"]
   Gateway -> Jena [label=" SPARQL query"]
   UI -> Gateway [label=" register webhook\n get data"]
 }
