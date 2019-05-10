@@ -121,8 +121,8 @@ Build and deploy (from the ``renku`` root folder):
     $ make minikube-deploy
 
 This command will build and deploy the platform components on minikube.
-You can edit and test code changes from ``renku``, ``renku-ui``, ``renku-gateway`` and
-``renku-notebooks`` then run ``make minikube-deploy``
+You can edit and test code changes from ``renku``, ``renku-ui``, ``renku-gateway``,
+``renku-notebooks`` and ``renku-graph``, then run ``make minikube-deploy``
 to check out the changes.
 
 For more on the Renku helm charts, go to ``charts/renku/README.rst``.
