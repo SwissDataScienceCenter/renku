@@ -1,7 +1,7 @@
 .. _documentation:
 
 Contributing to the Documentation
-=============================
+=================================
 
 You have come across some missing or outdated information in the Renku docs? Why
 not submit a pull request to fix it. Contributions to the Renku documentation
