@@ -32,11 +32,11 @@
     Tokens->Webhook: NO_CONTENT (204)
     deactivate Tokens
     group Commits history loading
-    Webhook->GitLab: GET /api/v4/projects/:id/events?action=pushed
+    Webhook->GitLab: GET /api/v4/projects/:id/repository/commits
     activate GitLab
-    GitLab->Webhook: OK (200) with the latest Push Event
+    GitLab->Webhook: OK (200) with the latest Commit
     deactivate GitLab
-    ref over Webhook, Log: Push Event to Event Log Events as described for\n**POST <webhook-service>/webhooks/events**
+    ref over Webhook, Log: Latest Commit to Event Log Events as described for\n**POST <webhook-service>/webhooks/events**
     end
     Webhook->Client: CREATED (201)
     deactivate Webhook
