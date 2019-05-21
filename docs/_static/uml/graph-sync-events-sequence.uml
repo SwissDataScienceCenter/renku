@@ -21,9 +21,9 @@
     activate Tokens
     Tokens->Webhook: OK (200) with Access Token or NOT_FOUND (404)
     deactivate Tokens
-    Webhook->GitLab: GET /api/v4/projects/:id/events?action=pushed
+    Webhook->GitLab: GET /api/v4/projects/:id/repository/commits
     activate GitLab
-    GitLab->Webhook: OK (200) with the latest Push Event
+    GitLab->Webhook: OK (200) with the latest Commit
     deactivate GitLab
     Webhook->GitLab: GET /api/v4/projects/:id
     activate GitLab
