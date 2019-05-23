@@ -9,8 +9,9 @@ Python setup
 Installation (MacOS users)
 --------------------------
 
-This setup assumes you've got ``Homebrew`` installed in your computer. If not please look `here <https://brew.sh>`_.
-To check which version of python you've got already installed you can use:
+This setup assumes you have got ``Homebrew`` installed in your computer. If not
+please look `here <https://brew.sh>`_. To check which version of python is
+already installed you can use:
 
 .. code-block:: console
 
