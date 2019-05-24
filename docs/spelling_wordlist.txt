@@ -38,6 +38,7 @@ Nginx
 oauth
 OAuth
 online
+OpenID
 pre
 refactor
 Refactor
@@ -53,6 +54,7 @@ supertypes
 timestamp
 tinkerpop
 typesystem
+Ubuntu
 username
 versioned
 versioning

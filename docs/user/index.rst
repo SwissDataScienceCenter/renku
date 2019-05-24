@@ -9,5 +9,6 @@ User Documentation
    First Steps <firststeps>
    CLI Installation <cli-installation>
    Data in Renku <lfs>
+   Knowledge Graph <knowledge-graph>
    Git tips <git_tips>
    Troubleshooting <troubleshooting>
