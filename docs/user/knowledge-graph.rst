@@ -59,7 +59,7 @@ etc.  This is especially true if your private project references a public
 project - a lineage query will reveal the workflow steps taken within your
 private project using the public data. If sharing this level of metadata is not
 acceptable to you, then please do not enable the Knowledge Graph integration for
-now. For new private (or internal) projects, you will be given an option when
+now. For new private projects, you will be given an option when
 creating the project whether to enable the Graph or not. If you choose not to do
 so initially, you can change your mind later and we will happily add the project
 to the Graph for you. However, while possible, removing a project completely
