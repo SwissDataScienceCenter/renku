@@ -43,6 +43,7 @@ addons:
 branches:
   only:
     - master
+    - \d+\.\d+(\.\d+)?(-\S*)?$
 
 language: python
 
