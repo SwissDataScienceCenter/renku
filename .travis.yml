@@ -75,9 +75,15 @@ script:
   - ./scripts/run-tests.sh
 
 deploy:
-  - provider: script
+  - &script
+    provider: script
     skip_cleanup: true
     script: bash scripts/travis-deploy.sh
-    on:
+    on: &script_on
       branch: master
+      repo: SwissDataScienceCenter/renku
       condition: $TRAVIS_EVENT_TYPE != cron
+  - <<: *script
+    on:
+      <<: *script_on
+      tags: true
