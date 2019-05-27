@@ -551,7 +551,7 @@ notebooks:
     singleuser:
       image:
         name: renku/singleuser
-        tag: 0.3.3-renku0.4.0
+        tag: 0.3.4-renku0.5.0
     #   # use JupyterLab by default in notebook servers
     #   defaultUrl: /lab
 
