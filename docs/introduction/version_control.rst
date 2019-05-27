@@ -9,7 +9,7 @@ the robustness and veracity of your work. In Renku, version control is the
 base upon which everything else is built.
 
 We rely on the currently most widespread version control system, `git <https
-://git-scm.com/>`_. If you are unfamiliar with ``git`` it wouldn't hurt to
+://git-scm.com/>`_. If you are unfamiliar with ``git`` it would not hurt to
 read at least some of their `excellent tutorials <https://git-
 scm.com/docs/gittutorial>`_. In Renku we try to take care of most of the
 boiler plate ``git`` commands for you, but you should still be aware that it

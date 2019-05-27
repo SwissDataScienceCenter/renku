@@ -85,7 +85,7 @@ Once minikube is started, make sure you can access it by running:
     NAME       STATUS    ROLES     AGE       VERSION
     minikube   Ready     master    3s        v1.14.0
 
-**Notice**: If minikube didn't start successfully issue ``minikube delete`` before next ``minikube start``.
+**Notice**: If minikube did not start successfully issue ``minikube delete`` before next ``minikube start``.
 
 Once minikube is started issue:
 
