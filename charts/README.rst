@@ -88,13 +88,13 @@ Deploying from a Helm repository
     $ helm repo add renku https://swissdatasciencecenter.github.io/helm-charts/
     $ helm fetch --devel renku/renku
     $ ls renku-*.tgz
-    renku-0.1.0-XXXXXX.tgz
+    renku-0.4.0.tgz
     $ helm upgrade --install renku --namespace renku \
         -f minikube-values.yaml \
         --set global.renku.domain=$(minikube ip) \
         --set ui.gitlabUrl=http://$(minikube ip)/gitlab \
         --set jupyterhub.hub.extraEnv.GITLAB_HOST=http://$(minikube ip)/gitlab \
-        renku-0.1.0-XXXXXX.tgz
+        renku-*.tgz
 
 
 Tests
