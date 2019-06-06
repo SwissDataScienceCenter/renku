@@ -16,12 +16,12 @@ dependencies:
   version: 0.1.0
 - name: postgresql
   repository: https://kubernetes-charts.storage.googleapis.com
-  version: 0.14.4
+  version: 5.3.2
 - name: keycloak
   repository: https://kubernetes-charts.storage.googleapis.com
   version: 4.0.4
 - name: minio
   repository: https://kubernetes-charts.storage.googleapis.com
   version: 1.6.0
-digest: sha256:a71bb5d25af250ea5280765b3a433cfeb63dd077ca58ae0816ad07e5bd2157c7
-generated: "2019-05-27T15:27:30.285351+02:00"
+digest: sha256:f85fd4ce07d933f1fc19b83e90afe136be74377078edd0ee1f05d763a18f69aa
+generated: "2019-06-05T17:45:25.045574+02:00"

@@ -21,7 +21,7 @@ dependencies:
   version: "0.1.0"
   condition: graph.enabled
 - name: postgresql
-  version: 0.14.4
+  version: 5.3.2
   repository: "@stable"
   condition: postgresql.enabled
 - name: keycloak
