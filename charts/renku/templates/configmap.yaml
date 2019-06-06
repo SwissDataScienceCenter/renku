@@ -33,10 +33,6 @@ data:
         DELETE FROM oauth_applications WHERE uid='{{ .Values.global.gateway.gitlabClientId }}';
         INSERT INTO oauth_applications (name, uid, scopes, redirect_uri, secret, trusted)
         VALUES ('renku-ui', '{{ .Values.global.gateway.gitlabClientId }}', 'api read_user read_repository read_registry openid', '{{ template "http" . }}://{{ .Values.global.renku.domain }}/login/redirect/gitlab {{ template "http" . }}://{{ .Values.global.renku.domain }}/api/auth/gitlab/token', '${GATEWAY_GITLAB_CLIENT_SECRET}', 'true');
-
-        DELETE FROM personal_access_tokens WHERE user_id='1' AND name='managed sudo token';
-        INSERT INTO personal_access_tokens ( user_id, token, name, revoked, expires_at, created_at, updated_at, scopes, impersonation)
-        VALUES ( '1', '${GITLAB_SUDO_TOKEN}', 'managed sudo token', 'f', NULL, NOW(), NOW(), E'--- \n- api\n- read_user\n- sudo\n- read_registry', 'f');
     EOSQL
 
 
