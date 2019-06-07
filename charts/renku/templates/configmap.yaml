@@ -36,8 +36,8 @@ data:
     EOSQL
 
     # configure the logout redirect
-    curl -f -is -X PUT -H "Private-token: ${GITLAB_SUDO_TOKEN}" \
-      ${GITLAB_SERVICE_URL}/api/v4/application/settings?after_sign_out_path={{ template "http" . }}://{{ .Values.global.renku.domain }}/auth/realms/Renku/protocol/openid-connect/logout?redirect_uri={{ template "http" . }}://{{ .Values.global.renku.domain }}/api/auth/logout%3Fgitlab_logout=1
+    # curl -f -is -X PUT -H "Private-token: ${GITLAB_SUDO_TOKEN}" \
+    #   ${GITLAB_SERVICE_URL}/api/v4/application/settings?after_sign_out_path={{ template "http" . }}://{{ .Values.global.renku.domain }}/auth/realms/Renku/protocol/openid-connect/logout?redirect_uri={{ template "http" . }}://{{ .Values.global.renku.domain }}/api/auth/logout%3Fgitlab_logout=1
   {{- end }}
   # Init scripts that populate /docker-entrypoint-initdb.d
 
