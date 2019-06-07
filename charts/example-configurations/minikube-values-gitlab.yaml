@@ -72,31 +72,14 @@ notebooks:
       type: gitlab
       gitlab:
         ## Put Application Id and Application Secret here!
-        clientId:
-        clientSecret:
-        callbackUrl: '""'
-
-gateway:
-  gatewayEnv: development
-  secretKey: 5495ef917488a19d1d4106452c899f5824972acd87edce11fd65e7956bea3bb0
-  gitlabUrl: https://gitlab.com
-  ## Put Application Id and Application Secret here!
-  gitlabClientId:
-  gitlabClientSecret:
-  jupyterhub:
-    clientId: *gatewayClient
-    clientSecret: *gatewaySecret
-
-runner:
-  enabled: true
-
-ui:
-  gitlabUrl: https://gitlab.com
+        clientId: "12345"
+        clientSecret: "12345"
+        callbackUrl:
 
 graph:
   jena:
     admin:
-      password: 94a635b40afc2cba
+      password: &sparql-password 94a635b40afc2cba
 
   ## if running gitlab on minikube, set on cmd line with --set graph.gitlab.url
   gitlab:
@@ -114,4 +97,19 @@ graph:
 
   tokenRepository:
     tokenEncryption:
-      secret: YzViMTczYjMxOTI0NDM1OAo=
+      secret: MGYxM2JiZTMzY2NhNDg1OQo=
+
+gateway:
+  gatewayEnv: development
+  secretKey: 5495ef917488a19d1d4106452c899f5824972acd87edce11fd65e7956bea3bb0
+  jupyterhub:
+    clientId: *gatewayClient
+    clientSecret: *gatewaySecret
+  gitlabUrl: https://gitlab.com
+  ## Put Application Id and Application Secret here!
+  gitlabClientId:
+  gitlabClientSecret:
+  graph:
+    sparql:
+      username: admin
+      password: *sparql-password

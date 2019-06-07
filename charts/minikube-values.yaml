@@ -75,16 +75,6 @@ notebooks:
         clientId: jupyterhub
         clientSecret: dummy-secret
 
-gateway:
-  secretKey: 5495ef917488a19d1d4106452c899f5824972acd87edce11fd65e7956bea3bb0
-  jupyterhub:
-    clientId: *gatewayClient
-    clientSecret: *gatewaySecret
-  graph:
-    sparql:
-      username: admin
-      password: *sparql-password
-
 runner:
   enabled: true
 
@@ -110,3 +100,13 @@ graph:
   tokenRepository:
     tokenEncryption:
       secret: MGYxM2JiZTMzY2NhNDg1OQo=
+
+gateway:
+  secretKey: 5495ef917488a19d1d4106452c899f5824972acd87edce11fd65e7956bea3bb0
+  jupyterhub:
+    clientId: *gatewayClient
+    clientSecret: *gatewaySecret
+  graph:
+    sparql:
+      username: admin
+      password: *sparql-password
