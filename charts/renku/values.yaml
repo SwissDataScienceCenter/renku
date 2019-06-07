@@ -542,7 +542,7 @@ notebooks:
     #   gitlab:
     #     clientId: jupyterhub
     #     clientSecret: dummy-secret
-    #     callbackUrl: '""' # Forces the default callback url
+    #     callbackUrl:  # Null value forces the default callback url
     ## Configure idle pod culling
     # cull:
     #   enabled: true

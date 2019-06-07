@@ -9,7 +9,7 @@ metadata:
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
 data:
-  {{- if .Values.gitlab.enabled }}
+  {{- if and .Values.gitlab.enabled .Values.global.gitlab.sudoToken }}
   init-gitlab.sh: |-
     #!/usr/bin/env bash
     set -ex
@@ -34,28 +34,6 @@ data:
         INSERT INTO oauth_applications (name, uid, scopes, redirect_uri, secret, trusted)
         VALUES ('renku-ui', '{{ .Values.global.gateway.gitlabClientId }}', 'api read_user read_repository read_registry openid', '{{ template "http" . }}://{{ .Values.global.renku.domain }}/login/redirect/gitlab {{ template "http" . }}://{{ .Values.global.renku.domain }}/api/auth/gitlab/token', '${GATEWAY_GITLAB_CLIENT_SECRET}', 'true');
     EOSQL
-
-
-    # set up the admin user -- first check if the user is there already and grab the ID
-    demo_id=$(curl -s -H "Private-Token: ${GITLAB_SUDO_TOKEN}" ${GITLAB_SERVICE_URL}/api/v4/users?username=demo | jq '.[0].id | select(.!=null)')
-
-    if [[ -z "$demo_id" ]]; then
-        method=POST
-    else
-        method=PUT
-    fi
-
-    curl -f -is -X ${method} -H "Private-token: ${GITLAB_SUDO_TOKEN}" \
-        -d  '{"username": "demo",
-        "email": "demo@datascience.ch",
-        "name": "John Doe",
-        "extern_uid": "e144b235-793b-4e2e-bb1f-1f8baccc321f",
-        "provider": "oauth2_generic",
-        "skip_confirmation": "true",
-        "reset_password": "true",
-        "admin": "{{ .Values.gitlab.demoUserIsAdmin }}"}' \
-        -H "Content-Type: application/json" \
-        ${GITLAB_SERVICE_URL}/api/v4/users/${demo_id}
 
     # configure the logout redirect
     curl -f -is -X PUT -H "Private-token: ${GITLAB_SUDO_TOKEN}" \
