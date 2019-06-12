@@ -34,6 +34,8 @@ global:
       postgresPassword: 1bed5ee10efe7132a1904b09e1f3701a
 
 gitlab:
+  oauth:
+    autoSignIn: false
   ssh:
     externalPort: 30022
     nodePortService:

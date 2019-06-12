@@ -7,6 +7,7 @@ charts:
     paths:
       - ./gitlab
   - name: renku
+    resetTag: latest
     imagePrefix: renku/
     repo:
       git: SwissDataScienceCenter/helm-charts
