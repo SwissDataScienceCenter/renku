@@ -4,7 +4,7 @@
 
 image:
   repository: gitlab/gitlab-ce
-  tag: 11.5.6-ce.0
+  tag: 11.8.10-ce.0
   pullPolicy: IfNotPresent
 
 ssh:
@@ -12,6 +12,9 @@ ssh:
   nodePortService:
     enabled: false
     nodePort: 30022
+
+oauth:
+  autoSignIn: false
 
 ## LFS objects in remote object storage
 ## Follows: https://docs.gitlab.com/ce/workflow/lfs/lfs_administration.html#storing-lfs-objects-in-remote-object-storage
