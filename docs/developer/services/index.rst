@@ -8,4 +8,4 @@ Renku Services
 
    Notebooks service <notebooks_service>
    API gateway <api_gateway>
-   Graph service <graph_service>
+   Graph services <graph_services>

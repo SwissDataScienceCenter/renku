@@ -76,3 +76,7 @@ Define subcharts full names
 {{- define "graph.fullname" -}}
 {{- printf "%s-%s" .Release.Name "graph" | replace "+" "_" | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
+
+{{- define "knowledgeGraph.fullname" -}}
+{{- printf "%s-%s" .Release.Name "knowledge-graph" | replace "+" "_" | trunc 63 | trimSuffix "-" -}}
+{{- end -}}
