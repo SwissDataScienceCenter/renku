@@ -596,7 +596,7 @@ graph:
     ## Set the admin password
     admin:
       password: 1234
-    renkuuser:
+    renku:
       password: 5678
 
   gitlab:

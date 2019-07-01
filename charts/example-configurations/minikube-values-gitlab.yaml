@@ -80,7 +80,7 @@ graph:
   jena:
     admin:
       password: 94a635b40afc2cba
-    renkuuser:
+    renku:
       password: &sparql-password d817dc6bf136a8dfd203226c35f16428
 
   ## if running gitlab on minikube, set on cmd line with --set graph.gitlab.url
