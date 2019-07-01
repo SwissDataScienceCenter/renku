@@ -94,6 +94,8 @@ graph:
   jena:
     admin:
       password:
+    renkuuser:
+      password:
   ## if running gitlab on minikube, set on cmd line with --set graph.gitlab.url
   gitlab:
     url: *renku-gitlab-url
