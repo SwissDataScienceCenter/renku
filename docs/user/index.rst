@@ -10,5 +10,6 @@ User Documentation
    CLI Installation <cli-installation>
    Data in Renku <lfs>
    Knowledge Graph <knowledge-graph>
+   Autosave in JupyterLab <autosave>
    Git tips <git_tips>
    Troubleshooting <troubleshooting>
