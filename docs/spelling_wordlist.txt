@@ -2,6 +2,8 @@ admin
 app
 auditability
 auth
+autosave
+autosaved
 backend
 backends
 blog
