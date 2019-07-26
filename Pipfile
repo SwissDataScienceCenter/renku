@@ -20,10 +20,11 @@ python-dotenv = ">=0.8.2"
 renku-sphinx-theme = ">=0.1.0"
 requests = ">=2.20.0"
 rerun = "*"
-Sphinx = "==1.8.0"
+Sphinx = ">=1.8.0"
 sphinxcontrib-spelling = ">=2.3.0"
 sphinxcontrib-websupport = ">=1.0.1"
 splinter = "*"
+black = "*"
 
 [requires]
 python_version = "3"
