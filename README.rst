@@ -30,18 +30,19 @@ RENKU (連句)
     :alt: Pull Reminders
     :align: right
 
-**Renku** is a software platform designed to enable reproducible and collaborative data science.
+**Renku** is a software platform designed to enable reproducible and
+collaborative data science.
 
 The platform:
 
-    * Gives data scientists easy access to configurable, reproducible
-    interactive environments
+- Gives data scientists easy access to configurable, reproducible
+  interactive environments
 
-    * Allows data scientists to make their analyses reproducible by
-    automatically capturing the lineage of results in a Knowledge Graph
+- Allows data scientists to make their analyses reproducible by
+  automatically capturing the lineage of results in a Knowledge Graph
 
-    * Provides tools for working with the Knowledge Graph for the purposes of
-    traceability and auditability
+- Provides tools for working with the Knowledge Graph for the purposes of
+  traceability and auditability
 
 
 If you are a data scientist looking to get started with Renku, head to the
@@ -63,24 +64,23 @@ To try out Renku, you can use our beta deployment at `renkulab.io <https://renku
 Project structure
 -----------------
 
-This repository only hosts the deployment charts and the documentation. The magic
-happens in these sub-repositories:
+This repository only hosts the deployment charts and the documentation.
+The magic happens in these sub-repositories:
 
-- `renku-gateway <https://github.com/SwissDataScienceCenter/renku-gateway>`_: a
-simple API gateway
+- `renku-gateway <https://github.com/SwissDataScienceCenter/renku-gateway>`_:
+  a simple API gateway
 
 - `renku-graph <https://github.com/SwissDataScienceCenter/renku-graph>`_:
-Knowledge Graph services
+  Knowledge Graph services
 
-- `renku-notebooks
-<https://github.com/SwissDataScienceCenter/renku-notebooks>`_: a lightweight
-service for handling interactive notebooks through JupyterHub
+- `renku-notebooks <https://github.com/SwissDataScienceCenter/renku-notebooks>`_:
+  a lightweight service for handling interactive notebooks through JupyterHub
 
 - `renku-jupyter <https://github.com/SwissDataScienceCenter/renku-jupyter>`_:
-base images for interactive sessions
+  base images for interactive sessions
 
 - `renku-python <https://github.com/SwissDataScienceCenter/renku-python>`_:
-the Python CLI and SDK
+  the Python CLI and SDK
 
 - `renku-ui <https://github.com/SwissDataScienceCenter/renku-ui>`_: web frontend
 
