@@ -13,14 +13,13 @@ strict digraph architecture {
   Keycloak [fillcolor="lightblue"]
   JupyterHub [label="Notebook service" fillcolor="#f4d142" URL="../developer/services/notebooks_service.html" target="_graphviz"]
   Notebook [fillcolor="lightblue"]
-  Jena [fillcolor="lightblue"]
 
   # clients
   UI [fillcolor="#f4d142"]
   CLI [fillcolor="#f4d142"]
 
   gateway [fillcolor="#f4d142" URL="../developer/services/api_gateway.html" target="_graphviz"]
-  "Graph service" [fillcolor="#f4d142" URL="../developer/services/graph_services.html" target="_graphviz"]
+  "Knowledge Graph" [fillcolor="#f4d142" URL="../developer/services/graph_services.html" target="_graphviz"]
 
   storage [fillcolor="lightblue", label="Object store", shape="cylinder"]
 
@@ -45,9 +44,8 @@ strict digraph architecture {
   gateway -> Keycloak [label=" OIDC"]
   GitLab -> storage [label=" fetch/push image"]
   CLI -> storage [label=" pull/push LFS"]
-  GitLab -> "Graph service" [label=" webhook"]
-  "Graph service" -> Jena [label=" push triples"]
-  gateway -> Jena [label=" SPARQL"]
+  GitLab -> "Knowledge Graph" [label=" webhook"]
+  gateway -> "Knowledge Graph" [label=" GraphQL"]
 
   {rank=0; UI}
 }
