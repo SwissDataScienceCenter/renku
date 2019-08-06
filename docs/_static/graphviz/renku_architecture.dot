@@ -20,7 +20,7 @@ strict digraph architecture {
   CLI [fillcolor="#f4d142"]
 
   gateway [fillcolor="#f4d142" URL="../developer/services/api_gateway.html" target="_graphviz"]
-  "Graph service" [fillcolor="#f4d142" URL="../developer/services/graph_service.html" target="_graphviz"]
+  "Graph service" [fillcolor="#f4d142" URL="../developer/services/graph_services.html" target="_graphviz"]
 
   storage [fillcolor="lightblue", label="Object store", shape="cylinder"]
 
