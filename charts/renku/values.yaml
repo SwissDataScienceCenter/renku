@@ -618,4 +618,4 @@ graph:
     services:
       renku:
         ## Renku UI base url e.g. https://dev.renku.ch
-        url: https://dev.renku.ch
+        url:
