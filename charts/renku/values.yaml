@@ -617,5 +617,5 @@ graph:
   knowledgeGraph:
     services:
       renku:
-        ## Renku UI base url e.g. https://dev.renku.ch
+        ## Renku base url
         url:
