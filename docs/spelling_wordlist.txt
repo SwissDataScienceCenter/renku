@@ -16,6 +16,7 @@ github
 gitlab
 GitLab
 git-lfs
+GraphQL
 hostname
 Indices
 indices
@@ -50,6 +51,7 @@ renku
 renkulab
 repo
 scala
+SPARQL
 SQLAlchemy
 supertype
 supertypes
