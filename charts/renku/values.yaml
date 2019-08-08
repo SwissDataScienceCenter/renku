@@ -338,6 +338,10 @@ gitlab:
     repository: gitlab/gitlab-ce
     tag: 11.8.10-ce.0
 
+  ## automatically log in to gitlab
+  oauth:
+    autoSignIn: true
+
   ## Pod affinity for Gitlab deployment
   # affinity: {}
   ## Node selector for Gitlab deployment
