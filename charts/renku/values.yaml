@@ -596,15 +596,17 @@ gateway:
 
 ## Configuration for renku-graph
 graph:
-  ## Enable/disable the graph - disabled by default until renku 0.4.0
-  enabled: false
+  ## Enable/disable the graph - enabled by default since renku 0.4.0
+  enabled: true
   ## Configuration for Apache Jena
   jena:
-    ## Set the admin password
-    admin:
-      password: 1234
-    renku:
-      password: 5678
+    users:
+      ## Set the admin password
+      admin:
+        password: 1234
+      ## Password for graph service queries
+      renku:
+        password: 5678
 
   gitlab:
     url:
