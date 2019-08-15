@@ -499,7 +499,10 @@ ui:
   # gitlabClientId: "renku-ui"
   ## Set the JupyterHub URL
   # jupyterhubUrl: "http://jupyterhub.renku.build"
-
+  ## Configuration for where to get the base project templates: a url and ref (usually a tag)
+  # templatesRepository:
+    # url: https://github.com/SwissDataScienceCenter/renku-project-template
+    # ref: 0.1.0
 # ## Configuration for the notebooks service
 notebooks:
   ## serverOptions allow for modifications to the notebook pod resource requests
