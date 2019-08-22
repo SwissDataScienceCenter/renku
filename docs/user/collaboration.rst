@@ -33,7 +33,7 @@ To get access to the project, you can:
 If the project owner has not added you to the project, you can still participate:
 
 * through `Renku platform "Ku"s <make_kus_>`_, where you can post notes and discussion.
-* through `forking a project <forks_for_collaboration_>`_ through the Renku platform, which creates your own copy of the current state of the project that you own.
+* by `forking a project <forks_for_collaboration_>`_, which creates your own copy of the current state of the project.
 
 .. _added_to_project:
 
