@@ -63,7 +63,7 @@ through sample usage, see :ref:`sharing_is_caring`.
 
 .. _forks_for_collaboration:
 
-Fork a project take it in your own direction
+Fork a project and take it in your own direction
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Forking someone else's project on Renku is just like forking any version-controlled
