@@ -1,0 +1,10 @@
+
+   - a Kubernetes cluster <https://kubernetes.io/>
+     - `Kubernetes on Openstack <prerequisites/k8s/openstack>`_
+   - a `loadbalancer <prerequisites/loadbalancer>`_
+   - a `Gitlab runner <prerequisites/gitlabrunner>`_ VM for the docker image builder with **sufficient storage**
+   - a setup of `Helm <prerequisites/tiller>`_
+   - a way to obtain TLS certificates (could be either LetsEncrypt or a certificate) <prerequisites/certificates>
+   - a `DNS <prerequisites/dns>`_ for Renku
+   - an NGINX Ingress Controller configured with RBAC enabled <nginx>
+
