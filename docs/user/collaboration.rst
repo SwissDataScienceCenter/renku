@@ -12,28 +12,61 @@ Finding & accessing public projects
 To find and access projects on the Renku platform that you might want to
 interact with, you can click the **Projects** link in the menu bar followed by
 the **Search** tab. Without entering any search terms, you will see a list of
-all public projects. You can click on the project names to be taken to the
-project's landing page.
+all projects that you have access to. You can click on a project name to be
+taken to the project's landing page.
 
 .. warning::
 
   Note that the search box currently only allows you to search by project title,
   not by username.
 
-By default, the files in public projects created by other people are
-"read only" to you. This means you can see an overview, create and read Kus,
-browse the filesystem in both text and :ref:`lineage` modes. The
-project's **Notebook Servers** tab will inform you that you do not have
-permissions to launch a notebook or make modifications to the code or datasets.
+By default, the files in projects created by other people are "read only" to you.
+This means you can see an overview, create and read Kus, and browse the filesystem
+in both text and :ref:`lineage` modes. The project's **Notebook Servers** tab
+will inform you that you do not have permissions to launch a notebook or make
+modifications to the code or datasets.
 
-To get access to the project, you can:
+If you would like to interact with the notebooks (run, edit, upload data, continue
+your own analyses, etc.), you can:
+
+* `fork the project <forks_for_collaboration_>`_, which creates your own copy of the current state of the repo.
+
+If you have questions, notes, or discussion topics that you would communicate to
+the project's owner(s), you can:
+
+* Make `Renku platform "Ku"s <make_kus_>`_
+
+If you are part of the team and want to work on this project, you can:
 
 * ask the project creator to `add you as a developer <added_to_project_>`_ or maintainer of the project through GitLab.
 
-If the project owner has not added you to the project, you can still participate:
+.. _forks_for_collaboration:
 
-* through `Renku platform "Ku"s <make_kus_>`_, where you can post notes and discussion.
-* by `forking a project <forks_for_collaboration_>`_, which creates your own copy of the current state of the project.
+Fork a project and take it in your own direction
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Forking someone else's project on Renku is just like forking any version-controlled
+project. The Renku platform provides you a fork button on the project's home page
+that creates a fork of the project (with the same name) under your own namespace,
+where you have permissions to launch notebooks and make settings modifications.
+
+One reason you might want to fork someone's project is to use it as a template for
+your own analysis.
+
+.. warning::
+
+  Note that you will be unable to fork a project that has an identical name to a
+  project already in **Your Projects** list. We suggest you change the name of
+  your own project (which you can do in the Renku interface) before forking.
+
+.. _make_kus:
+
+Add collaborators to the conversation through "Ku"s
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+In Renku, Kus are media-rich discussions you can use to help keep track of
+your work and to collaborate with others. To find out more about them and walk
+through sample usage, see :ref:`sharing_is_caring`.
 
 .. _added_to_project:
 
@@ -50,32 +83,6 @@ them to launch an interactive environment to work on the project as usual.
 
 .. warning::
 
-  QUESTION: How are concurrent notebook session edits handled?
-
-.. _make_kus:
-
-Add collaborators to the conversation through "Ku"s
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-In Renku, Kus are media-rich discussions you can use to help keep track of
-your work and to collaborate with others. To find out more about them and walk
-through sample usage, see :ref:`sharing_is_caring`.
-
-.. _forks_for_collaboration:
-
-Fork a project and take it in your own direction
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-Forking someone else's project on Renku is just like forking any version-controlled
-project. The Renku platform provides you a fork button on the project's home page
-that creates a fork of the project (with the same name) under your own namespace,
-where you have permissions to launch notebooks and make settings modifications.
-
-One reason you might want to fork someone's project is to use it as a template for
-your own analysis.
-
-.. warning::
-
-  Note that if you have a project with an identical name to the one you are
-  trying to fork, the fork will fail. We suggest you change the name of your own
-  project (which you can do in the Renku interface) before forking.
+  Note that with multi-person projects it's best for each person to make their
+  changes in separate branches that you can later merge. For more information on
+  how to branch and merge effectively, consult the git documentation.
