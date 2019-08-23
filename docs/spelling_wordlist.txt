@@ -12,6 +12,7 @@ Chartpress
 CLI
 coopetition
 deployer
+filesystem
 github
 gitlab
 GitLab
