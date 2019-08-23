@@ -27,18 +27,15 @@ will inform you that you do not have permissions to launch a notebook or make
 modifications to the code or datasets.
 
 If you would like to interact with the notebooks (run, edit, upload data, continue
-your own analyses, etc.), you can:
-
-* `fork the project <forks_for_collaboration_>`_, which creates your own copy of the current state of the repo.
+your own analyses, etc.), you can `fork the project <forks_for_collaboration_>`_,
+which creates your own copy of the current state of the repo.
 
 If you have questions, notes, or discussion topics that you would communicate to
-the project's owner(s), you can:
+the project's owner(s), you can make `Renku platform "Ku"s <make_kus_>`_
 
-* Make `Renku platform "Ku"s <make_kus_>`_
-
-If you are part of the team and want to work on this project, you can:
-
-* ask the project creator to `add you as a developer <added_to_project_>`_ or maintainer of the project through GitLab.
+If you are part of the team and want to work on this project, you can ask the
+project creator to `add you as a developer <added_to_project_>`_ or maintainer
+of the project through GitLab.
 
 .. _forks_for_collaboration:
 
@@ -74,10 +71,10 @@ Add or be added as a developer on a project
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 To allow someone to make changes to your project, you can use the GitLab
-interface to add them in Settings > Members, with at either Developer or
+interface to add them in ``Settings > Members``, with at either Developer or
 Maintainer privileges.
 
-Adding them here will make this project appear in their ``Your Projects`` list
+Adding them here will make this project appear in their **Your Projects** list
 on the Renku platform, where the **Notebook Servers** tab for the project will allow
 them to launch an interactive environment to work on the project as usual.
 
