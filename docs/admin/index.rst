@@ -14,6 +14,7 @@ To deploy Renku in a cluster, you need to have the following prerequisites:
 
    - a `Kubernetes  <https://kubernetes.io/>`_ cluster
        - `Setup Kubernetes on Openstack <prerequisites/k8s/openstack.html>`_
+       - You can also `Setup a Kubernetes cluser with Rancher <prerequisites/k8s/rancher.html>`_
    - a `loadbalancer <prerequisites/loadbalancer.html>`_
    - a `Gitlab runner <prerequisites/gitlabrunner.html>`_ VM for the docker image builder with **sufficient storage**
    - a setup of `Helm <prerequisites/tiller.html>`_
@@ -54,7 +55,8 @@ To this end, persistent volumes and persistent volume claims need to be created.
      $ kubectl get pvc -n renku
      $ kubectl describe persistentvolumeclaim -n renku  ## this should not show any error, just PVs ready to be used
 
-Ensure that PVs have a `default storageclass` and the following is set:
+Ensure that PVs have a `default storageclass` and the following value is set:
+
    .. code-block:: console
 
      metadata:
@@ -71,10 +73,10 @@ You can find a basic file in `Renku values file <https://github.com/SwissDataSci
 
 Ensure the following has been taken care of before deploying Renku:
 
-- `variables_switchboard` section has URLs and DNS names that correspond to your configuration
-- `credentials` section has correctly populated values. Please see the comments in the renku-values file for more information.
-- check the `resources.requests.memory` value makes sense
-- `lfsObjects` & `registry` require to setup your S3 back-ends, so you need to have that configuration handy and in place
+  - `variables_switchboard` section has URLs and DNS names that correspond to your configuration
+  - `credentials` section has correctly populated values. Please see the comments in the renku-values file for more information.
+  - check the `resources.requests.memory` value makes sense
+  - `lfsObjects` & `registry` require to setup your S3 back-ends, so you need to have that configuration handy and in place
 
 C. Deploying Renku
 ------------------
@@ -86,9 +88,9 @@ To be able to support notebooks in private projects we need to insert the gitlab
 
 .. code-block:: bash
 
-  kubectl -n renku create secret docker-registry renku-notebooks-registry \\
+  $ kubectl -n renku create secret docker-registry renku-notebooks-registry \\
   --docker-server=<registryURL>:<port> --docker-username=root \\
-  --docker-password=<gitlabSudoToken> --docker-email=root@<yourdomain>-renku
+  --docker-password=<gitlabSudoToken> --docker-email=root@renku-mydomain
 
 2. (Optional certificates)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -97,7 +99,7 @@ If you chose to create a certificate instead of using LetsEncrypt or similar, yo
 
 .. code-block:: bash
 
-   kubectl -n renku create secret tls renku-mydomain-ch-tls --cert=certificate.crt --key=certificate.key
+   $ kubectl -n renku create secret tls renku-mydomain-ch-tls --cert=certificate.crt --key=certificate.key
 
 Note that renku-mydomain-ch-tls should correspond to the `ingress TLS value in Renku values file <https://github.com/SwissDataScienceCenter/renku-admin-docs/blob/master/renku-values.yaml#L12>`_
 
@@ -117,6 +119,17 @@ To deploy Renku you can use the following command:
      --timeout 1800
 
 During deployment you can check the Renku pods being started.
+
+4. Post deployment configuration
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+After Renku has been deployed you can make some post deployment configurations.
+For instance, make a user admin on gitlab.
+
+1. turn off automatic redirect to gitlab by setting gitlab.oauth.autoSignIn: false
+2. log in as the root user using the password from gitlab.password
+3. modify any users you want to modify (e.g. to make them admin)
+4. turn the automatic redirect back on
 
 D. Verifying Renku
 ------------------

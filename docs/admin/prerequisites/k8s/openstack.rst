@@ -1,7 +1,7 @@
 .. _openstack:
 
 TODO Re format and reformulate this this (taken from renku-admin-docs)
-=================================================
+======================================================================
 
 k8s-switch
 ============
@@ -107,5 +107,3 @@ $ kubectl get sc
 NAME                PROVISIONER            AGE
 default (default)   kubernetes.io/cinder   47s
 ```
-
-

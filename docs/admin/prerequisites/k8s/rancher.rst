@@ -1,4 +1,4 @@
 .. _vm:
 
-Creating a k8s cluster on a set of VMs
+Creating a k8s cluster with Rancher
 =======================================

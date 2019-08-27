@@ -16,38 +16,38 @@ Steps to setup and configure the HA proxy server.
 
 .. code-block:: console
 
-   sudo yum install haproxy
+   $ sudo yum install haproxy
 
 4. Disable security feature (to be able to ssh from node `2222`).
 
 
 .. code-block:: console
 
-   sudo setenforce Permissive
+   $ sudo setenforce Permissive
 
 5. Edit ssh config file to listen on port `2222`.
 
 .. code-block:: console
 
-   sudo vi /etc/ssh/sshd_config
+   $ sudo vi /etc/ssh/sshd_config
 
 6. Restart the service
 
 .. code-block:: bash
 
-   sudo systemctl restart sshd
+   $ sudo systemctl restart sshd
 
 After, you can verify by logging in again with port `2222`
 
 .. code-block:: bash
 
-   ssh -p 2222 <user@hostname>
+   $ ssh -p 2222 <user@hostname>
 
 7. Edit the haproxy configuration.
 
 .. code-block:: bash
 
-   sudo vi /etc/haproxy/haproxy.cfg
+   $ sudo vi /etc/haproxy/haproxy.cfg
 
 Delete the main frontend, static backend and round robin balancing sections.
 

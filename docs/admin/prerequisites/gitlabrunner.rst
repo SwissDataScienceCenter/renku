@@ -11,18 +11,18 @@ These are the steps needed for setting up a Gitlab Runner. You can make your own
 
 .. code-block:: bash
 
-   sudo yum update docker-ce --disableexcludes=main # In case you use a centos image with older version of docker
-   curl -L https://packages.gitlab.com/install/repositories/runner/gitlab-runner/script.rpm.sh | sudo bash
-   sudo yum install gitlab-runner
+   $ sudo yum update docker-ce --disableexcludes=main # In case you use a centos image with older version of docker
+   $ curl -L https://packages.gitlab.com/install/repositories/runner/gitlab-runner/script.rpm.sh | sudo bash
+   $ sudo yum install gitlab-runner
 
-Ref [Gitlab docs](https://docs.gitlab.com/runner/install/linux-repository.html)
+`Gitlab docs <https://docs.gitlab.com/runner/install/linux-repository.html>`_
 
 2. Run Gitlab-runner
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~
 
 .. code-block:: bash
 
-   sudo docker run -d --name gitlab-runner --restart always \
+   $ sudo docker run -d --name gitlab-runner --restart always \
      -v /srv/gitlab-runner/config:/etc/gitlab-runner \
      -v /var/run/docker.sock:/var/run/docker.sock \
      gitlab/gitlab-runner:latest
@@ -31,13 +31,13 @@ Ref [Gitlab docs](https://docs.gitlab.com/runner/install/linux-repository.html)
 3. Register the Gitlab runner with Gitlab in Renku
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-We use shared Runners.
-Get the token from [change renkulab.io with the deployment DNS]: https://renkulab.io/gitlab/admin/runners
+You can use shared runners.
+Get the registration token from https://renku.mydomain.ch/gitlab/admin/runners
 
 .. code-block:: bash
 
-   sudo docker exec -ti gitlab-runner gitlab-runner \
-     register -n -u https://<RENKU-DEPLOYMENT-DNS>/gitlab/ \
+   $ sudo docker exec -ti gitlab-runner gitlab-runner \
+     register -n -u https://<renku.mydomain.ch>/gitlab/ \
      --name gitlab/gitlab-runner -r  <TOKEN_FROM_GITLAB> \
      --executor docker --locked=false  --run-untagged=true \
      --docker-image="docker:stable"
@@ -49,7 +49,7 @@ Get the token from [change renkulab.io with the deployment DNS]: https://renkula
 
 .. code-block:: bash
 
-  sudo vi /srv/gitlab-runner/config/config.toml
+   $ sudo vi /srv/gitlab-runner/config/config.toml
 
 - Add the desired quantity of runners.
 

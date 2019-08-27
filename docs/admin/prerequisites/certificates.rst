@@ -14,7 +14,6 @@ Copy and edit `manifests/cert-manager-issuer.yaml file <https://github.com/Swiss
 .. code-block:: console
 
    $ helm upgrade --install cert-manager stable/cert-manager -f helm-installs/cert-manager-values.yaml --namespace kube-system
-
    $ kubectl apply -f manifests/cert-manager-issuer.yaml
 
 
@@ -37,6 +36,6 @@ B. Generate manually
 
 Add the previously created certificate as a secret to Renku namespace.
 
-```bash
-kubectl -n renku create secret tls renku-tls --cert=certificate.crt --key=certificate.key
-```
+.. code-block:: console
+
+  $ kubectl -n renku create secret tls renku-tls --cert=certificate.crt --key=certificate.key
