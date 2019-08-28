@@ -473,6 +473,11 @@ ui:
   #   repository: renku/renku-ui
   #   tag: latest
 
+  ## Where to fetch default templates from
+  templatesRepository:
+    url: https://github.com/SwissDataScienceCenter/renku-project-template
+    ref: a7d01246fdbe247752a99b14c0b6e92666910b8c
+
   ingress:
     enabled: false
 
