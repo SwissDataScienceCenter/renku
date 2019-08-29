@@ -619,7 +619,8 @@ Lastly, let's not forget to push our work:
 Share your results and collaborate with your peers
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-In this section, we will see how to use Renku to collaborate on projects.
+In this section, we will see how to use Renku to collaborate on projects. For an
+overview on collaboration, see :ref:`collaborating`.
 
 Discussions with Kus
 """"""""""""""""""""

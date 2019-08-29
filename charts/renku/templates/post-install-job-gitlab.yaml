@@ -41,11 +41,6 @@ spec:
               secretKeyRef:
                 name: {{ template "gitlab.fullname" . }}
                 key: postgres-password
-          - name: GITLAB_SUDO_TOKEN
-            valueFrom:
-              secretKeyRef:
-                name: {{ template "renku.fullname" . }}
-                key: gitlab-sudo-token
           - name: JUPYTERHUB_AUTH_GITLAB_CLIENT_SECRET
             valueFrom:
               secretKeyRef:

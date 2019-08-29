@@ -11,6 +11,7 @@
 {{- $gatewayServicePort := .Values.gateway.service.port -}}
 {{- $graphEnabled := .Values.graph.enabled -}}
 {{- $graphFullname := include "graph.fullname" . -}}
+{{- $knowledgeGraphFullname := include "knowledgeGraph.fullname" . -}}
 {{- if $graphEnabled }}
 {{- $jenaFullname := include "jena.fullname" . -}}
 {{- $jenaServicePort := .Values.graph.jena.service.port -}}
@@ -73,6 +74,10 @@ spec:
       - path: /webhooks/events
         backend:
           serviceName: {{ $graphFullname }}-webhook-service
+          servicePort: 80
+      - path: /knowledge-graph/graphql
+        backend:
+          serviceName: {{ $knowledgeGraphFullname }}
           servicePort: 80
       {{- end }}
   {{- end }}

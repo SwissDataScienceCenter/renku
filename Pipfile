@@ -4,22 +4,30 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
-chartpress = "==0.2.1"
+"urllib3" = ">=1.24.2"
+"jinja2" = ">=2.10.1"
+chartpress = {git = "https://github.com/jupyterhub/chartpress"}
 
 [dev-packages]
+docker = ">=2.4.2"
+httpwatcher = "*"
 ipython = ">=6.2.0"
 plantweb = ">=1.0"
 pyenchant = ">=1.6.11"
+pytest = ">=3.2.1"
+pytest-splinter = ">=1.8.5"
+python-dotenv = ">=0.8.2"
 renku-sphinx-theme = ">=0.1.0"
+requests = ">=2.20.0"
+rerun = "*"
+Sphinx = ">=1.8.0"
 sphinxcontrib-spelling = ">=2.3.0"
 sphinxcontrib-websupport = ">=1.0.1"
-pytest = ">=3.2.1"
 splinter = "*"
-docker = ">=2.4.2"
-python-dotenv = ">=0.8.2"
-pytest-splinter = ">=1.8.5"
-requests = ">=2.20.0"
-Sphinx = "==1.8.0"
+black = "*"
 
 [requires]
 python_version = "3"
+
+[pipenv]
+allow_prereleases = true

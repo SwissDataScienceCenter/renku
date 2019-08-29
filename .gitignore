@@ -18,7 +18,8 @@ charts/gitlab/charts/*.tgz
 # Sbt caches
 .ivy/
 
-
+# Sphinx documentation
+.doctrees
 
 # Created by https://www.gitignore.io/api/vim,macos,linux,emacs,scala,python,visualstudiocode
 # Edit at https://www.gitignore.io/?templates=vim,macos,linux,emacs,scala,python,visualstudiocode

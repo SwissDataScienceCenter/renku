@@ -60,6 +60,33 @@ and wait until all pods are running.
 Now, we can go to: :code:`http://$(minikube-ip)/`
 
 
+Configure the GitLab sign out path
+==================================
+
+There is one manual step that you need to perform in order to get the platform
+fully operational. Go to :code:`http://$(minikube ip)/gitlab` and login as the
+``root`` user (the default password is ``gitlabadmin``. Go to ``Admin area ->
+Settings --> General -> Sign-in Restrictions`` and configure the ``After sign
+out path`` to be:
+
+..code-block:: console
+
+    http://<renku-domain>/auth/realms/Renku/protocol/openid-connect/logout?redirect_uri=http://<renku-domain>/api/auth/logout%3Fgitlab_logout=1
+
+``<renku-domain>`` should just be your minikube ip.
+
+Once you have done this you can redeploy renku with:
+
+.. code-block:: console
+
+    $ helm upgrade renku renku/renku --reuse-values --set gitlab.oauth.autoSignIn=true
+
+This will prevent the separate login screen for GitLab from appearing. If you
+need to change user permissions at a later point you will need to log in as the
+root user again, so do the uprade again toggling the :code:`--set
+gitlab.oauth.autoSignIn` as needed.
+
+
 Building images
 ---------------
 

@@ -34,6 +34,8 @@ global:
       postgresPassword: 1bed5ee10efe7132a1904b09e1f3701a
 
 gitlab:
+  oauth:
+    autoSignIn: false
   ssh:
     externalPort: 30022
     nodePortService:
@@ -75,23 +77,16 @@ notebooks:
         clientId: jupyterhub
         clientSecret: dummy-secret
 
-gateway:
-  secretKey: 5495ef917488a19d1d4106452c899f5824972acd87edce11fd65e7956bea3bb0
-  jupyterhub:
-    clientId: *gatewayClient
-    clientSecret: *gatewaySecret
-  graph:
-    sparql:
-      username: admin
-      password: *sparql-password
-
 runner:
   enabled: true
 
 graph:
   jena:
-    admin:
-      password: &sparql-password 94a635b40afc2cba
+    users:
+      admin:
+        password: 94a635b40afc2cba
+      renku:
+        password: &sparql-password 2b7cd80c595a6e98484c4b8a5ed5e82e
 
   ## if running gitlab on minikube, set on cmd line with --set graph.gitlab.url
   # gitlab:
@@ -110,3 +105,13 @@ graph:
   tokenRepository:
     tokenEncryption:
       secret: MGYxM2JiZTMzY2NhNDg1OQo=
+
+gateway:
+  secretKey: 5495ef917488a19d1d4106452c899f5824972acd87edce11fd65e7956bea3bb0
+  jupyterhub:
+    clientId: *gatewayClient
+    clientSecret: *gatewaySecret
+  graph:
+    sparql:
+      username: admin
+      password: *sparql-password

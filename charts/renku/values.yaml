@@ -15,7 +15,7 @@ global:
     ## Postgres user for the gitlab database
     postgresUser: gitlab
     ## Postgres password for the gitlab database
-    postgresPassword: # use `openssl rand -hex 16`
+    postgresPassword: # use `openssl rand -hex 32`
     ## Sudo token for sudo API requests
     ## Generated using: `openssl rand -hex 32`
     sudoToken:
@@ -28,7 +28,7 @@ global:
     ## Postgres user for the Keycloak database
     postgresUser: keycloak
     ## Postgres password for the Keycloak database
-    ## Generated using: `openssl rand -hex 16`
+    ## Generated using: `openssl rand -hex 32`
     postgresPassword:
   jupyterhub:
     ## Name of the postgres database to be used by jupyterhub
@@ -36,7 +36,7 @@ global:
     ## Postgres user for the jupyterhub database
     postgresUser: jupyterhub
     ## Postgres password for the jupyterhub database
-    ## Generated using: `openssl rand -hex 16`
+    ## Generated using: `openssl rand -hex 32`
     postgresPassword:
   gateway:
     clientSecret: # use `uuidgen -r`
@@ -51,20 +51,20 @@ global:
     ## Renku version to be used (currently for project creation in
     ## the UI) If not set explicitly the version will be picked up
     ## from the respective renku (sub)chart.
-    version: 0.3.2
+    version: 0.4.0
   ## Note that the graph will not turned on by default until renku 0.4.0
   graph:
     dbEventLog:
       ## Name of the postgres user to be used to access the Event Log db
       postgresUser: eventlog
       ## Postgres password to be used to access the Event Log db
-      ## Generated using: `openssl rand -hex 16`
+      ## Generated using: `openssl rand -hex 32`
       postgresPassword:
     tokenRepository:
       ## Name of the postgres user to be used to access the db storing access tokens
       postgresUser: tokenstorage
       ## Postgres password to be used to access the db storing access tokens
-      ## Generated using: `openssl rand -hex 16`
+      ## Generated using: `openssl rand -hex 32`
       postgresPassword:
     jena:
       ## specify which dataset should be used in Jena
@@ -84,7 +84,7 @@ ingress:
     kubernetes.io/ingress.class: nginx
     # kubernetes.io/tls-acme: 'true'
     nginx.ingress.kubernetes.io/proxy-body-size: '0' # Adjust to a reasonable value for production to avoid DOS attacks.
-    nginx.ingress.kubernetes.io/proxy-request-buffering: "off"   # Needed if GitLab is behind this ingress
+    nginx.ingress.kubernetes.io/proxy-request-buffering: 'off' # Needed if GitLab is behind this ingress
 
   ## Hosts for the ingress
   ## Should include at least the value from `global.renku.domain`
@@ -336,7 +336,11 @@ gitlab:
   image:
   #   pullPolicy: IfNotPresent
     repository: gitlab/gitlab-ce
-    tag: 11.7.11-ce.0
+    tag: 11.8.10-ce.0
+
+  ## automatically log in to gitlab
+  oauth:
+    autoSignIn: true
 
   ## Pod affinity for Gitlab deployment
   # affinity: {}
@@ -469,6 +473,11 @@ ui:
   #   repository: renku/renku-ui
   #   tag: latest
 
+  ## Where to fetch default templates from
+  templatesRepository:
+    url: https://github.com/SwissDataScienceCenter/renku-project-template
+    ref: a7d01246fdbe247752a99b14c0b6e92666910b8c
+
   ingress:
     enabled: false
 
@@ -495,7 +504,10 @@ ui:
   # gitlabClientId: "renku-ui"
   ## Set the JupyterHub URL
   # jupyterhubUrl: "http://jupyterhub.renku.build"
-
+  ## Configuration for where to get the base project templates: a url and ref (usually a tag)
+  # templatesRepository:
+    # url: https://github.com/SwissDataScienceCenter/renku-project-template
+    # ref: 0.1.0
 # ## Configuration for the notebooks service
 notebooks:
   ## serverOptions allow for modifications to the notebook pod resource requests
@@ -542,7 +554,7 @@ notebooks:
     #   gitlab:
     #     clientId: jupyterhub
     #     clientSecret: dummy-secret
-    #     callbackUrl: '""' # Forces the default callback url
+    #     callbackUrl:  # Null value forces the default callback url
     ## Configure idle pod culling
     # cull:
     #   enabled: true
@@ -551,7 +563,7 @@ notebooks:
     singleuser:
       image:
         name: renku/singleuser
-        tag: 0.3.3-renku0.4.0
+        tag: 0.3.7-renku0.5.2
     #   # use JupyterLab by default in notebook servers
     #   defaultUrl: /lab
 
@@ -589,25 +601,35 @@ gateway:
 
 ## Configuration for renku-graph
 graph:
-  ## Enable/disable the graph - disabled by default until renku 0.4.0
-  enabled: false
+  ## Enable/disable the graph - enabled by default since renku 0.4.0
+  enabled: true
   ## Configuration for Apache Jena
-  jena:
-    ## Set the admin password
-    admin:
-      password: 1234
+  # jena:
+  #   users:
+  #     ## Set the admin password
+  #     admin:
+  #       password: 1234
+  #     ## Password for graph service queries
+  #     renku:
+  #       password: 5678
 
   gitlab:
     url:
 
-  tokenRepository:
-    ## A secret for signing access tokens stored in the database
-    ## Generated using: `openssl rand -hex 8|base64`
-    tokenEncryption:
-      secret: 1234
+  # tokenRepository:
+  #   ## A secret for signing access tokens stored in the database
+  #   ## Generated using: `openssl rand -hex 8|base64`
+  #   tokenEncryption:
+  #     secret: 1234
 
-  webhookService:
-    hookToken:
-      ## A secret for signing request header tokens to be sent by GitLab with the Push Events
-      ## Generated using: `openssl rand -hex 8|base64`
-      secret: 1234
+  # webhookService:
+  #   hookToken:
+  #     ## A secret for signing request header tokens to be sent by GitLab with the Push Events
+  #     ## Generated using: `openssl rand -hex 8|base64`
+  #     secret: 1234
+
+  # knowledgeGraph:
+  #   services:
+  #     renku:
+  #       ## Renku base url
+  #       url:
