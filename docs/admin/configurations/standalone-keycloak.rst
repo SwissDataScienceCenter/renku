@@ -3,7 +3,6 @@
 Stand-alone Keycloak: Renku configuration
 =========================================
 
-
 If you have your own Keycloak instance that you want to use for authentication with Renku you need to:
 
 - Create a Realm named Renku

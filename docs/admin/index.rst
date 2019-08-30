@@ -16,11 +16,11 @@ To deploy Renku in a cluster, you need to have the following prerequisites:
        - `Setup Kubernetes on Openstack <prerequisites/k8s/openstack.html>`_
        - You can also `Setup a Kubernetes cluser with Rancher <prerequisites/k8s/rancher.html>`_
    - a `loadbalancer <prerequisites/loadbalancer.html>`_
-   - a `Gitlab runner <prerequisites/gitlabrunner.html>`_ VM for the docker image builder with **sufficient storage**
-   - a setup of `Helm <prerequisites/tiller.html>`_
-   - a way to obtain `TLS certificates <prerequisites/certificates.html>`_
-   - an `NGINX Ingress Controller  <prerequisites/nginx.html>`_ configured
-   - a `DNS <prerequisites/dns.html>`_ domain for Renku
+   - a :ref:`gitlabrunner` VM for the docker image builder with **sufficient storage**
+   - :ref:`tiller`
+   - :ref:`certificates`
+   - :ref:`nginx`
+   - :ref:`dns`
 
 Optionally, you can choose to manage your own instances of the following:
 
