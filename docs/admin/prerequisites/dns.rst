@@ -3,7 +3,7 @@
 DNS
 ===
 
-Get a domain name, e.g. `renkulab.io` from a registrar.
+Get a domain name from a registrar.
 
 Create an `A` record pointing to the load balancer and a wildcard `CNAME` :
 
@@ -18,7 +18,7 @@ Now, we can check the DNS setup:
 
 .. code-block:: console
 
-   $ curl -v http://internal.renku.ch/
+   $ curl -v http://mydomain.ch/
 
 The output should be:
 

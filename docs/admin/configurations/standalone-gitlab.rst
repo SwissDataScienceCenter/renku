@@ -1,6 +1,6 @@
 .. _standalone-gitlab:
 
-Stand alone gitlab
+Stand-alone gitlab
 ==================
 
 Gitlab should be configured with an image registry.

@@ -10,7 +10,7 @@ Install the `nginx-ingress`:
    $ helm upgrade --install nginx-ingress stable/nginx-ingress --namespace kube-system -f helm-installs/nginx-values.yaml
    $ helm upgrade --install nginx-ingress stable/nginx-ingress --namespace kube-system --set controller.hostNetwork=true
 
-Verify that the configuration is as expected:
+Verify that the deployment works as expected:
 
 .. code-block:: bash
 
@@ -27,7 +27,7 @@ The output of the previous command should be:
     echo "Visit https://$NODE_IP:$HTTPS_NODE_PORT to access your application via HTTPS."
                   servicePort: 80
 
-Now let's check we can contact the ingress:
+Now let's check that we can contact the ingress:
 
 .. code-block:: bash
 

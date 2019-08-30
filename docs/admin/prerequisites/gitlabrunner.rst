@@ -1,12 +1,12 @@
 .. _gitlabrunner:
 
-Gitlab runner configuration
+GitLab runner configuration
 ===========================
 
-In order for Gitlab to build images that later will be used for launching the Jupyter Notebooks, you need to configure a node that runs a Gitlab runner.
-These are the steps needed for setting up a Gitlab Runner. You can make your own variations of the configuration as you see best fit.
+In order for GitLab to build images that later will be used for launching the Jupyter Notebooks, you need to configure a node that runs a GitLab runner.
+These are the steps needed for setting up a GitLab Runner. You can make your own variations of the configuration as you see best fit.
 
-1. Install Docker and Gitlab runner in the VM
+1. Install Docker and deploy the GitLab runner in the VM
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. code-block:: bash
@@ -17,7 +17,7 @@ These are the steps needed for setting up a Gitlab Runner. You can make your own
 
 `Gitlab docs <https://docs.gitlab.com/runner/install/linux-repository.html>`_
 
-2. Run Gitlab-runner
+2. Run GitLab-runner
 ~~~~~~~~~~~~~~~~~~~~~~
 
 .. code-block:: bash

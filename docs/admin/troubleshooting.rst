@@ -1,6 +1,6 @@
 .. _troubleshooting:
 
-Troubleshooting a Renku clusterdeployment
+Troubleshooting the Renku platform
 =========================================
 
 Gateway in a CrashLoopBackOff state

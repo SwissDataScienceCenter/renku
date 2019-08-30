@@ -7,7 +7,7 @@ Deploying the Renku platform
 
 This guide will help you deploying and customizing your own Renku instance in a cluster.
 
-A. Cluster requirements
+Cluster requirements
 -----------------------
 
 To deploy Renku in a cluster, you need to have the following prerequisites:
@@ -24,22 +24,22 @@ To deploy Renku in a cluster, you need to have the following prerequisites:
 
 Optionally, you can choose to manage your own instances of the following:
 
-   - a `Gitlab stand alone instance <https://about.gitlab.com/install/>`_
-   - a Keycloak stand alone instance
+   - a `Gitlab stand-alone instance <https://about.gitlab.com/install/>`_
+   - a Keycloak stand-alone instance
 
-B. Pre-deployment steps
+Pre-deployment steps
 -----------------------
 
-1. (optional) Stand alone configurations
+1. (optional) Stand-alone configurations
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-   - `Stand alone Gitlab <configurations/standalone-gitlab.html>`_
-   - `Stand alone Keycloak <configurations/standalone-keycloak.html>`_
+   - `Stand-alone Gitlab <configurations/standalone-gitlab.html>`_
+   - `Stand-alone Keycloak <configurations/standalone-keycloak.html>`_
 
 2. Create and configure Renku PVs and PVCs
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-All of Renku information is stored in three volumes: Jena, Postgresql and Gitlab (if not stand alone).
+All of Renku information is stored in three volumes needed by Jena, Postgresql and Gitlab (if not stand-alone).
 To this end, persistent volumes and persistent volume claims need to be created. You can use the following yaml files as a base to execute the `kubectl` commands below.
 
    - `Renku PV yaml file <https://github.com/SwissDataScienceCenter/renku-admin-docs/blob/master/renku-pv.yaml>`_
@@ -55,7 +55,7 @@ To this end, persistent volumes and persistent volume claims need to be created.
      $ kubectl get pvc -n renku
      $ kubectl describe persistentvolumeclaim -n renku  ## this should not show any error, just PVs ready to be used
 
-Ensure that PVs have a `default storageclass` and the following value is set:
+Ensure that PVs have the appropriate storageclass and the following value is set:
 
    .. code-block:: console
 
@@ -81,10 +81,10 @@ Ensure the following has been taken care of before deploying Renku:
 C. Deploying Renku
 ------------------
 
-1. (Optional step for standalone Gitlab)
+1. (Optional step for stand-alone Gitlab)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-To be able to support notebooks in private projects we need to insert the gitlab sudo token as a secret so that docker can download the corresponding image from the registry.
+To be able to support notebooks in private projects we need to insert the gitlab admin token as a secret so that docker can download the corresponding private images from the registry.
 
 .. code-block:: bash
 
@@ -95,18 +95,18 @@ To be able to support notebooks in private projects we need to insert the gitlab
 2. (Optional certificates)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-If you chose to create a certificate instead of using LetsEncrypt or similar, you can create the TLS secret with the following command:
+If you chose to create a certificate manually instead of using LetsEncrypt or similar, you can create the TLS secret with the following command:
 
 .. code-block:: bash
 
    $ kubectl -n renku create secret tls renku-mydomain-ch-tls --cert=certificate.crt --key=certificate.key
 
-Note that renku-mydomain-ch-tls should correspond to the `ingress TLS value in Renku values file <https://github.com/SwissDataScienceCenter/renku-admin-docs/blob/master/renku-values.yaml#L12>`_
+Note that ``renku-mydomain-ch-tls`` should correspond to the `ingress TLS value in Renku values file <https://github.com/SwissDataScienceCenter/renku-admin-docs/blob/master/renku-values.yaml#L12>`_
 
 3. Deploy renku
 ~~~~~~~~~~~~~~~
 
-To deploy Renku you can use the following command:
+Once all the pieces are in place, you can deploy Renku with the following commands:
 
 .. code-block:: console
 
@@ -114,7 +114,7 @@ To deploy Renku you can use the following command:
     $ helm repo add renku https://swissdatasciencecenter.github.io/helm-charts/
     $ helm upgrade --install renku renku/renku \
      --namespace renku \
-     --version $(cat renku-version.txt) \
+     --version <renku-version> \
      -f renku-values.yaml \
      --timeout 1800
 
@@ -126,12 +126,12 @@ During deployment you can check the Renku pods being started.
 After Renku has been deployed you can make some post deployment configurations.
 For instance, make a user admin on gitlab.
 
-1. turn off automatic redirect to gitlab by setting gitlab.oauth.autoSignIn: false
-2. log in as the root user using the password from gitlab.password
+1. turn off automatic redirect to gitlab by setting redeploying with the value ``gitlab.oauth.autoSignIn: false``
+2. log in as the root user using the password from ``gitlab.password``
 3. modify any users you want to modify (e.g. to make them admin)
 4. turn the automatic redirect back on
 
-D. Verifying Renku
+Verifying Renku
 ------------------
 
 Check list:

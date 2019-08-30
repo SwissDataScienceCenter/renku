@@ -3,9 +3,9 @@
 Configuring a Load Balancer
 ===========================
 
-To set up a load balancer for k8s in your cluster you can configure a node with an HAProxy instance or use LBASS from your cloud provider.
+To set up a load balancer for k8s in your cluster you can configure a node with an HAProxy instance or use LoadBalancer-as-a-Service (LBaaS) from your cloud provider.
 
-A. Using an HAProxy loadbalancer
+Using an HAProxy loadbalancer
 ---------------------------------
 
 Steps to setup and configure the HA proxy server.
@@ -93,7 +93,7 @@ Here is a full example of an haproxy.cfg file:
          server <master-hostname> <master-ip>:6443 check port 6443 fall 3 rise 2
 
 
-B. Using an Openstack LBaaS loadbalancer
+Using an Openstack LBaaS loadbalancer
 ----------------------------------------
 
 You can refer to the `Openstack documentation <https://docs.openstack.org/mitaka/networking-guide/config-lbaas.html>`_ for instructions on how to use Openstack LBaaS

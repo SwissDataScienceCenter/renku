@@ -1,6 +1,6 @@
 .. _standalone-keycloak:
 
-Stand alone Keycloak: Renku configuration
+Stand-alone Keycloak: Renku configuration
 =========================================
 
 

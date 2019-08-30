@@ -3,9 +3,9 @@
 Certificates
 ============
 
-You need a certificate for the ingress, you can deploy a certificate manager like LetsEncrypt (A.) or create manually a certificate and instert it as a k8s secret (B.).
+To use TLS you need valid certificates for the ingress by either deploying a certificate manager like LetsEncrypt or creating certificates manually and inserting them as k8s secrets.
 
-A. Use LetsEncrypt
+LetsEncrypt
 ------------------
 
 Copy and edit `manifests/cert-manager-issuer.yaml file <https://github.com/SwissDataScienceCenter/renku-admin-docs/blob/master/manifests/cert-manager-issuer.yaml>`_ to fill in the `email` field.
@@ -29,12 +29,12 @@ Check that we can issue certificates automatically.
 [TODO add simple deployment to test certificates and steps to do it]
 
 
-B. Generate manually
+Generate manually
 --------------------
 
 [TODO generate certificate crt]
 
-Add the previously created certificate as a secret to Renku namespace.
+Add the previously created certificate as a secret to the ``renku`` namespace.
 
 .. code-block:: console
 
