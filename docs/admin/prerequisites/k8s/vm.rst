@@ -1,4 +1,0 @@
-.. _vm:
-
-Creating a k8s cluster on a set of VMs
-=======================================
