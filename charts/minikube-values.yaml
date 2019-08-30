@@ -106,12 +106,6 @@ graph:
     tokenEncryption:
       secret: MGYxM2JiZTMzY2NhNDg1OQo=
 
-  knowledgeGraph:
-    services:
-      renku:
-        url: https://dev.renku.ch
-        resources-url: http://localhost:9004/knowledge-graph
-
 gateway:
   secretKey: 5495ef917488a19d1d4106452c899f5824972acd87edce11fd65e7956bea3bb0
   jupyterhub:
