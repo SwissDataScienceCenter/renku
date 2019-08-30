@@ -633,3 +633,5 @@ graph:
   #     renku:
   #       ## Renku base url
   #       url:
+  #       ## Renku resources base url e.g. https://dev.renku.ch/knowledge-graph
+  #       resources-url:

@@ -106,7 +106,8 @@ graph:
       renku:
         # At the moment the url matches 'gitlab.url' but it should be the Renku UI url
         # once https://github.com/SwissDataScienceCenter/renku-python/issues/554 issue is played
-        url: https://gitlab.com
+        url: https://dev.renku.ch
+        resources-url: https://dev.renku.ch/knowledge-graph
 
 gateway:
   gatewayEnv: development

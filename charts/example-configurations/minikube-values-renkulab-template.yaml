@@ -114,3 +114,4 @@ graph:
     services:
       renku:
         url: # the Renku base url
+        resources-url: # the Renku resources base url e.g. https://dev.renku.ch/knowledge-graph
