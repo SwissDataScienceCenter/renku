@@ -1,48 +1,37 @@
 .. _gitlabrunner:
 
-GitLab runner configuration
+GitLab-runner configuration
 ===========================
 
-In order for GitLab to build images that later will be used for launching the Jupyter Notebooks, you need to configure a node that runs a GitLab runner.
-These are the steps needed for setting up a GitLab Runner. You can make your own variations of the configuration as you see best fit.
+In order for GitLab to build images that later will be used for launching the Jupyter Notebooks, you need to configure a node that runs a GitLab Runner.
+The following are the steps needed for setting up a GitLab Runner in a docker container. Alternatively you can install and run it directly in a VM, see `Gitlab docs <https://docs.gitlab.com/runner/install/linux-repository.html>`_.
 
-1. Install Docker and deploy the GitLab runner in the VM
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-.. code-block:: bash
-
-   $ sudo yum update docker-ce --disableexcludes=main # In case you use a centos image with older version of docker
-   $ curl -L https://packages.gitlab.com/install/repositories/runner/gitlab-runner/script.rpm.sh | sudo bash
-   $ sudo yum install gitlab-runner
-
-`Gitlab docs <https://docs.gitlab.com/runner/install/linux-repository.html>`_
-
-2. Run GitLab-runner
+1. Run GitLab Runner
 ~~~~~~~~~~~~~~~~~~~~~~
 
 .. code-block:: bash
 
-   $ sudo docker run -d --name gitlab-runner --restart always \
+   $ sudo docker run -d --name <gitlab-runner-name> --restart always \
      -v /srv/gitlab-runner/config:/etc/gitlab-runner \
      -v /var/run/docker.sock:/var/run/docker.sock \
      gitlab/gitlab-runner:latest
 
 
-3. Register the Gitlab runner with Gitlab in Renku
+2. Register the GitLab Runner with Gitlab in Renku
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-You can use shared runners.
+You can configure shared runners for renku .
 Get the registration token from https://renku.mydomain.ch/gitlab/admin/runners
 
 .. code-block:: bash
 
-   $ sudo docker exec -ti gitlab-runner gitlab-runner \
+   $ sudo docker exec -ti <gitlab-runner-name> gitlab-runner \
      register -n -u https://<renku.mydomain.ch>/gitlab/ \
      --name gitlab/gitlab-runner -r  <TOKEN_FROM_GITLAB> \
      --executor docker --locked=false  --run-untagged=true \
      --docker-image="docker:stable"
 
-4. Configure Gitlab runner to support more concurrent jobs
+3. Configure GitLab Runner to support more concurrent jobs
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 - Login to the VM and edit the gitlab-runner config file.
@@ -57,9 +46,9 @@ Get the registration token from https://renku.mydomain.ch/gitlab/admin/runners
 
    concurrent = 10
 
-5. (Optional) Configure a way to clean up disk
+4. (Optional) Configure a way to clean up disk
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Even if you provide sufficient storage space for the gitlab runner instance, you might need at some point to clean it up.
+Even if you provide sufficient storage space for the GitLab Runner instance, you might need at some point to clean it up.
 
 To cleanup non used disk space you can use an existing tool like `Gitlab Docker cleanup <https://gitlab.com/gitlab-org/gitlab-runner-docker-cleanup>`_ or run a cronjob that periodically prunes non-used images, volumes, containers and networks.

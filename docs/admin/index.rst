@@ -13,9 +13,6 @@ Cluster requirements
 To deploy Renku in a cluster, you need to have the following prerequisites:
 
    - a `Kubernetes  <https://kubernetes.io/>`_ cluster
-       - `Setup Kubernetes on Openstack <prerequisites/k8s/openstack.html>`_
-       - You can also `Setup a Kubernetes cluser with Rancher <prerequisites/k8s/rancher.html>`_
-   - a `loadbalancer <prerequisites/loadbalancer.html>`_
    - a :ref:`gitlabrunner` VM for the docker image builder with **sufficient storage**
    - :ref:`tiller`
    - :ref:`certificates`
@@ -50,19 +47,8 @@ To this end, persistent volumes and persistent volume claims need to be created.
      $ kubectl create -f renku-pv.yaml
      $ kubectl create ns renku
      $ kubectl -n renku create -f renku-pvc.yaml
-     $ kubectl -n renku edit pvc renku-postgresql
-     $ kubectl get pv
-     $ kubectl get pvc -n renku
-     $ kubectl describe persistentvolumeclaim -n renku  ## this should not show any error, just PVs ready to be used
 
-Ensure that PVs have the appropriate storageclass and the following value is set:
-
-   .. code-block:: console
-
-     metadata:
-       name: default
-       annotations:
-         storageclass.beta.kubernetes.io/is-default-class: "true"
+Ensure that PVs are added correctly and have the appropriate storageclass.
 
 3. Create a renku-values.yaml file
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -82,7 +68,7 @@ C. Deploying Renku
 ------------------
 
 1. (Optional step for stand-alone Gitlab)
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 To be able to support notebooks in private projects we need to insert the gitlab admin token as a secret so that docker can download the corresponding private images from the registry.
 
@@ -143,12 +129,9 @@ Check list:
     2. login with a valid user
     3. create a project
     4. launch a notebook
-  - [TODO] Helm test, integration tests
   - You should be now able to follow "First steps"
 
 E. Troubleshooting
 ------------------
 
-If some Renku pods are not starting please check our `Troubleshooting <troubleshooting.html>`_
-
-[TODO] make a FAQ page
+If some Renku pods are not starting please check our `Troubleshooting <troubleshooting.html>`_.

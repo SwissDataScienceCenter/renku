@@ -1,7 +1,7 @@
 .. _nginx:
 
-NGINX INGRESS CONFIGURATION
-===========================
+NGINX ingress configuration
+============================
 
 Install the `nginx-ingress`:
 
