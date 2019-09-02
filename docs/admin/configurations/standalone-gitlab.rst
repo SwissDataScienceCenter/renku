@@ -8,7 +8,7 @@ Create two Applications in gitlab:
 
 - Renku.
 
-Name: renku-ui
+Name: renku
 
 Callback URLs:
 

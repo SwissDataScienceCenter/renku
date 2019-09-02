@@ -10,7 +10,7 @@ Create an `A` record pointing to the load balancer and, optionally, a wildcard `
 ===============  =====  ================ ========
 NAME             TYPE   TARGET           TTL
 ===============  =====  ================ ========
-mydomain.ch      A      <loadBalancerIP> 15 min.
+mydomain.ch      A      load balancer IP 15 min.
 \*.mydomain.ch   CNAME  mydomain.ch      15 min.
 ===============  =====  ================ ========
 
