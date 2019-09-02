@@ -10,12 +10,16 @@ Cluster requirements
 
 To deploy Renku in a cluster, you need to have the following prerequisites:
 
-   - a `Kubernetes  <https://kubernetes.io/>`_ cluster
-   - a :ref:`gitlabrunner` VM for the docker image builder with **sufficient storage**
-   - :ref:`tiller`
-   - :ref:`certificates`
-   - :ref:`nginx`
-   - :ref:`dns`
+- a `Kubernetes  <https://kubernetes.io/>`_ cluster
+
+.. toctree::
+   :maxdepth: 1
+
+   a GitLab-runner VM for the docker image builder with sufficient storage <prerequisites/gitlabrunner>
+   Tiller <prerequisites/tiller>
+   certificates <prerequisites/certificates>
+   NGINX <prerequisites/nginx>
+   DNS <prerequisites/dns>
 
 Optionally, you can choose to manage your own instances of the following:
 
@@ -28,8 +32,11 @@ Pre-deployment steps
 1. (Optional) Stand-alone configurations
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-   - `Stand-alone Gitlab <configurations/standalone-gitlab.html>`_
-   - `Stand-alone Keycloak <configurations/standalone-keycloak.html>`_
+.. toctree::
+   :maxdepth: 1
+
+   Stand-alone Gitlab <configurations/standalone-gitlab>
+   Stand-alone Keycloak <configurations/standalone-keycloak>
 
 2. Create and configure Renku PVs and PVCs
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -132,4 +139,9 @@ Check list:
 Troubleshooting
 ------------------
 
-If some Renku pods are not starting or present some errors please check our :ref:`admin_troubleshooting` page.
+If some Renku pods are not starting or present some errors please check the troubleshooting page.
+
+.. toctree::
+   :maxdepth: 1
+
+   Troublesooting a Renku deployment <troubleshooting>
