@@ -11,4 +11,5 @@ Developer Documentation
    Architecture <services/services_architecture>
    User Management <identity_management>
    Services <services/index>
+   Testing before deploy<testing>
    Contributing <contributing/index>
