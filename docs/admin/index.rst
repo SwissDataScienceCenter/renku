@@ -53,7 +53,7 @@ To this end, persistent volumes and persistent volume claims need to be created.
      $ kubectl create ns renku
      $ kubectl -n renku create -f renku-pvc.yaml
 
-Ensure that PVs are added correctly and have the appropriate storageclass.
+Ensure that PVs are added correctly and have the appropriate storage class.
 
 3. Create a renku-values.yaml file
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
