@@ -3,8 +3,6 @@
 Deploying the Renku platform
 ============================
 
-[TODO] Give some intro about Renku and a link
-
 This guide will help you deploying and customizing your own Renku instance in a cluster.
 
 Cluster requirements
@@ -27,7 +25,7 @@ Optionally, you can choose to manage your own instances of the following:
 Pre-deployment steps
 -----------------------
 
-1. (optional) Stand-alone configurations
+1. (Optional) Stand-alone configurations
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
    - `Stand-alone Gitlab <configurations/standalone-gitlab.html>`_
@@ -64,10 +62,10 @@ Ensure the following has been taken care of before deploying Renku:
   - check the `resources.requests.memory` value makes sense
   - `lfsObjects` & `registry` require to setup your S3 back-ends, so you need to have that configuration handy and in place
 
-C. Deploying Renku
+Deploying Renku
 ------------------
 
-1. (Optional step for stand-alone Gitlab)
+1. (Optional) Step for stand-alone Gitlab
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 To be able to support notebooks in private projects we need to insert the gitlab admin token as a secret so that docker can download the corresponding private images from the registry.
@@ -78,7 +76,7 @@ To be able to support notebooks in private projects we need to insert the gitlab
   --docker-server=<registryURL>:<port> --docker-username=root \\
   --docker-password=<gitlabSudoToken> --docker-email=root@renku-mydomain
 
-2. (Optional certificates)
+2. (Optional) Certificates
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 If you chose to create a certificate manually instead of using LetsEncrypt or similar, you can create the TLS secret with the following command:
@@ -131,7 +129,7 @@ Check list:
     4. launch a notebook
   - You should be now able to follow "First steps"
 
-E. Troubleshooting
+Troubleshooting
 ------------------
 
-If some Renku pods are not starting please check our `Troubleshooting <troubleshooting.html>`_.
+If some Renku pods are not starting or present some errors please check our :ref:`admin_troubleshooting` page.
