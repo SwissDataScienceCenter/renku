@@ -72,6 +72,9 @@ global:
   ## Set to true if using https
   useHTTPS: false
 
+  ## Set to true to recreate secrets (credentials etc.) when updating the chart
+  recreateSecrets: false
+
 ## Ingress configuration
 ## See: https://kubernetes.io/docs/concepts/services-networking/ingress/
 ingress:
