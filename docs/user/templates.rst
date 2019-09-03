@@ -17,7 +17,9 @@ template for either of these languages is not sufficient for you, or you require
 a different IDE, you can make modifications! Check out :ref:`advanced_interfaces`.
 
 Note that you can create projects that are specifically intended to be templates
-for other projects.
+that others can use by adding to the base Renku template. If you're familiar with
+`Cookiecutter <https://cookiecutter.readthedocs.io/en/latest/>`_, you can also
+create a cookiecutter template as a Renku project.
 
 .. contents:: :local:
 
@@ -26,24 +28,10 @@ for other projects.
 Directory Structure
 ^^^^^^^^^^^^^^^^^^^
 
-The default provided directory structure is approximately the following:
-TODO: TURN THIS INTO A SET OF LINKS TO THE BELOW SECTION
+The default provided directory structure is the following.
 
- .renku
- data
- -- .gitkeep
- notebooks
- -- .gitkeep
- .dockerignore
- .gitignore
- .gitlab-ci.yml
- Dockerfile
- README.md
- environment.yml
- requirements.txt
-
-data and notebooks
-""""""""""""""""""
+``data`` and ``notebooks``
+""""""""""""""""""""""""""
 
 The ``data`` and ``notebooks`` directories are where you should keep your...
 data (added via ``renku dataset``) and notebooks (by double-clicking on a python3
@@ -60,11 +48,11 @@ The ``.gitkeep`` files in these directories by default are a convention used to
 git commit "empty" directories (where normal git behavior is to omit empty
 directories).
 
-environment.yml and requirements.txt
-""""""""""""""""""""""""""""""""""""
+``environment.yml`` and ``requirements.txt``
+""""""""""""""""""""""""""""""""""""""""""""
 
-These two files are where you write in your conda (environment.yml) and pip
-(requirements.txt) library dependencies. This is so that when you kill a notebook
+These two files are where you write in your conda (``environment.yml``) and pip
+(``requirements.txt``) library dependencies. This is so that when you kill a notebook
 or anyone forks your project, (re)starting an interactive environment session
 will pre-install your libraries.
 
@@ -72,26 +60,26 @@ To make it easy to remember to write your dependencies to this file, instead of
 ``pip install <library>`` in a terminal, for instance, you can get into the habit
 of running ``pip install -r requirements.txt``.
 
-.gitignore
-""""""""""
+``.gitignore``
+""""""""""""""
 
 This is your typical .gitignore file that you use for git projects. Write into
 here any files that you don't want to be tracked.
 
-.gitlab-ci.yml
-""""""""""""""
+``.gitlab-ci.yml``
+""""""""""""""""""
 
-This yml file is for "continuous integration" in gitlab. It is configured so
+This yml file is for "continuous integration" in GitLab. It is configured so
 that every time you make a commit, your project's docker image is rebuilt. In
 most cases, this build should be successful. If, however, you are making modifications
-to the Dockerfile, you should pay attention to the CI/CD tab in gitlab to check
+to the ``Dockerfile``, you should pay attention to the CI/CD tab in GitLab to check
 for failing builds. Take a look at :ref:`advanced_interfaces`.
 
-Dockerfile
-""""""""""
+``Dockerfile``
+""""""""""""""
 
 When you run the notebook server, a Docker image is built for your project as
-defined by this Dockerfile. The FROM line in this Dockerfile defines which
+defined by this ``Dockerfile``. The FROM line in this ``Dockerfile`` defines which
 Renku Docker image sets up the base of your project; this includes dependencies
 for the Renku CLI, jupyterlab, and maybe R kernels & RStudio, depending on which
 template you selected upon project creation.
@@ -102,53 +90,57 @@ they are the instructions for conda/pip installations of the libraries in your
 installing, you wont have to make changes to this file. Else, check
 out :ref:`advanced_interfaces`.
 
-.dockerignore
-"""""""""""""
+``.dockerignore``
+"""""""""""""""""
 
 The ``.dockerignore`` file is just like a ``.gitignore`` file, in that it allows
 you to specify which files to ignore in a docker build. If you aren't making
 changes to the docker build, you can .dockerignore this file.
 
-README.md
-"""""""""
+``README.md``
+"""""""""""""
 
-The README.md file is shown on a project's home page. It's good to have at least
+The ``README.md`` file is shown on a project's home page. It's good to have at least
 the name of the project and a brief overview of the project for your intended
 audience.
 
-.renku
-""""""
+``.renku``
+""""""""""
 
-The ``.renku`` directory contains a metadata.yml file which has a set of
+The ``.renku`` directory contains a ``metadata.yml`` file which has a set of
 configurations for renku.
 
 What can I touch? What shouldn't I touch?
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 What you should or shouldn't touch depends on how well aligned your project is
-with the defaults that renku provides. Here are two example use cases:
+with the defaults that Renku provides. Here are two example use cases:
 
-User #1
-"""""""
+User #1: Default everything
+"""""""""""""""""""""""""""
 
 You're a python developer and you're ok with jupyterlab and the version of python
-provided by the base template. You install all of your libraries with pip or conda:
+provided by the base template. You install all of your libraries with pip or conda.
+While you work on this project, you can feel comfortable modifying the following
+(as well as creating your own directories and subdirectories to match your project's
+structure):
 
-* data and notebooks directories
-* .gitignore
-* requirements.txt (pip) and environment.yml (conda)
-* README.md
+* ``data`` and ``notebooks`` directories
+* ``.gitignore``
+* ``requirements.txt`` (pip) and ``environment.yml`` (conda)
+* ``README.md``
 
-User #2
-"""""""
+User #2: Extra dependencies
+"""""""""""""""""""""""""""
 
 You want a different version of python than the one provided, you want to install
 software that requires additional non-python/R dependencies, or you want to make
-other changes, and you're comfortable editing Dockerfiles. Consult :ref:`advanced_interfaces`.
+other changes, and you're comfortable editing Dockerfiles. In addition to the files
+above, you might modify the following. Consult :ref:`advanced_interfaces`.
 
-* Dockerfile
-* .dockerignore
-* .gitlab-ci.yml
+* ``Dockerfile``
+* ``.dockerignore``
+* ``.gitlab-ci.yml``
 
 .. warning::
 
@@ -161,12 +153,20 @@ problem, but you probably want to leave the dotfiles in the level that they're
 in in the default templates. Some of the integrated tools expect to find these
 files in the top level of the project and will fail otherwise.
 
-What else could be included in templates?
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+What else could be templated?
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Here are some ideas for ways you can augment the provided templates.
+Here are some other aspects of a project that could make use of a template:
 
-* documentation templates
+* documentation
 * subdirectories for keeping different parts of a project (note that you'll want to add ``.gitkeep`` files into empty directories to be able to git commit them)
-* python scripts with argparse set up for inputs and outputs
-* Dockerfile with installation of alternate IDE
+* python scripts with ``argparse`` set up for inputs and outputs
+* ``Dockerfile`` with installation of alternate IDE
+
+One way to write templates for these aspects of the project is to create them with
+`Cookiecutter <https://cookiecutter.readthedocs.io/en/latest/>`_. Cookiecutter is
+a CLI that creates projects from project templates. You can define your own
+templates, or check out some of the `curated cookiecutters <https://cookiecutter.readthedocs.io/en/latest/readme.html#data-science>`_.
+Note that some of these clash with the `renku` templates (i.e. content in `Dockerfile`,
+`.gitignore`, etc.). As long as you read the docs above to understand which parts
+are required for `renku`, you should be able to merge these manually.

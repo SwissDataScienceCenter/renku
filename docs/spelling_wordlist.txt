@@ -15,6 +15,9 @@ CI
 CLI
 commandline
 conda
+config
+cookiecutter
+Cookiecutter
 coopetition
 deployer
 Dockerfile
@@ -94,5 +97,6 @@ webhook
 webhooks
 workflow
 workflows
+yaml
 yml
 連句
