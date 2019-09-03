@@ -15,11 +15,11 @@ To deploy Renku in a cluster, you need to have the following prerequisites:
 .. toctree::
    :maxdepth: 1
 
+   Helm <prerequisites/tiller>
+   a certificate <prerequisites/certificates>
+   NGINX ingress <prerequisites/nginx>
+   a DNS domain <prerequisites/dns>
    a GitLab-runner VM for the docker image builder with sufficient storage <prerequisites/gitlabrunner>
-   Tiller <prerequisites/tiller>
-   certificates <prerequisites/certificates>
-   NGINX <prerequisites/nginx>
-   DNS <prerequisites/dns>
 
 Optionally, you can choose to manage your own instances of the following:
 
@@ -60,7 +60,7 @@ Ensure that PVs are added correctly and have the appropriate storage class.
 
 This step is very important as it will define the values that helm will use to install your Renku instance.
 
-You can find a basic file in `Renku values file <https://github.com/SwissDataScienceCenter/renku-admin-docs/blob/master/renku-values.yaml>`_
+You can find a basic configuration file in: `Renku values file <https://github.com/SwissDataScienceCenter/renku-admin-docs/blob/master/renku-values.yaml>`_
 
 Ensure the following has been taken care of before deploying Renku:
 

@@ -1,7 +1,9 @@
 .. _nginx:
 
-NGINX ingress configuration
+NGINX ingress
 ============================
+
+Renku provides some `kubernetes services <https://kubernetes.io/docs/concepts/services-networking/service/>`_ that need to be exposed. Kubernetes uses NGINX Ingress for managing routes and controlling traffic.
 
 Install the `nginx-ingress`:
 

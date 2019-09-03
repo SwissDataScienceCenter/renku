@@ -4,6 +4,7 @@ GitLab-runner configuration
 ===========================
 
 In order for GitLab to build images that later will be used for launching the Jupyter Notebooks, you need to configure a node that runs a GitLab Runner.
+
 The following are the steps needed for setting up a GitLab Runner in a docker container. Alternatively you can install and run it directly in a VM, see `Gitlab docs <https://docs.gitlab.com/runner/install/linux-repository.html>`_.
 
 1. Run GitLab Runner
@@ -20,8 +21,11 @@ The following are the steps needed for setting up a GitLab Runner in a docker co
 2. Register the GitLab Runner with Gitlab in Renku
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-You can configure shared runners for renku .
-Get the registration token from https://renku.mydomain.ch/gitlab/admin/runners
+For this step you need GitLab to be running first. You can do this step after deploying Renku.
+
+We recommend configuring at least one shared runner for Renku and, additionally, other types of runners as needed.
+
+To run the following command first get the registration token from https://renku.mydomain.ch/gitlab/admin/runners
 
 .. code-block:: bash
 
