@@ -473,6 +473,11 @@ ui:
   #   repository: renku/renku-ui
   #   tag: latest
 
+  ## Where to fetch default templates from
+  templatesRepository:
+    url: https://github.com/SwissDataScienceCenter/renku-project-template
+    ref: a7d01246fdbe247752a99b14c0b6e92666910b8c
+
   ingress:
     enabled: false
 
@@ -558,7 +563,7 @@ notebooks:
     singleuser:
       image:
         name: renku/singleuser
-        tag: 0.3.5-renku0.5.2
+        tag: 0.3.7-renku0.5.2
     #   # use JupyterLab by default in notebook servers
     #   defaultUrl: /lab
 
