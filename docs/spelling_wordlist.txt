@@ -10,7 +10,9 @@ blog
 chartpress
 Chartpress
 CLI
+config
 coopetition
+cronjob
 deployer
 filesystem
 github
@@ -37,12 +39,14 @@ metadata
 microservices
 middleware
 minikube
+mydomain
 namespace
 Nginx
 oauth
 OAuth
 online
 OpenID
+Postgresql
 pre
 refactor
 Refactor
@@ -67,6 +71,8 @@ Versioning
 vertices
 webhook
 webhooks
+wildcard
 workflow
 workflows
+yaml
 連句
