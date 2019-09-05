@@ -39,6 +39,7 @@ and architecture.
    Introduction <introduction/index>
    Users <user/index>
    Developers <developer/index>
+   Admins <admin/index>
    License <https://www.apache.org/licenses/LICENSE-2.0>
 
 
