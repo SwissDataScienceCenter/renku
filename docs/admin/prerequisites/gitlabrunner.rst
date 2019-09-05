@@ -5,7 +5,7 @@ GitLab-runner configuration
 
 In order for GitLab to build images that later will be used for launching the Jupyter Notebooks, you need to configure a node that runs a GitLab Runner.
 
-The following are the steps needed for setting up a GitLab Runner in a docker container. Alternatively you can install and run it directly in a VM, see `Gitlab docs <https://docs.gitlab.com/runner/install/linux-repository.html>`_.
+The following are the steps needed for setting up a GitLab Runner in a docker container. Alternatively you can install and run it directly in a VM, see `GitLab documentation <https://docs.gitlab.com/runner/install/linux-repository.html>`_.
 
 1. Run GitLab Runner
 ~~~~~~~~~~~~~~~~~~~~~~
@@ -18,7 +18,7 @@ The following are the steps needed for setting up a GitLab Runner in a docker co
      gitlab/gitlab-runner:latest
 
 
-2. Register the GitLab Runner with Gitlab in Renku
+2. Register the GitLab Runner with GitLab in Renku
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 For this step you need GitLab to be running first. You can do this step after deploying Renku.
@@ -55,4 +55,4 @@ To run the following command first get the registration token from https://renku
 
 Even if you provide sufficient storage space for the GitLab Runner instance, you might need at some point to clean it up.
 
-To cleanup non used disk space you can use an existing tool like `Gitlab Docker cleanup <https://gitlab.com/gitlab-org/gitlab-runner-docker-cleanup>`_ or run a cronjob that periodically prunes non-used images, volumes, containers and networks.
+To cleanup non used disk space you can use an existing tool like `GitLab Docker cleanup <https://gitlab.com/gitlab-org/gitlab-runner-docker-cleanup>`_ or run a cronjob that periodically prunes non-used images, volumes, containers and networks.
