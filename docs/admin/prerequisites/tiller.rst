@@ -1,7 +1,7 @@
 .. _tiller:
 
 Helm
-===================
+======
 
 Renku is deployed via Helm.
 
@@ -10,12 +10,12 @@ Renku is deployed via Helm.
 Helm has two parts: a client side (helm) and a server side (tiller).
 
 Helm client
-------------------------------------
+--------------
 
 To install helm client in your laptop, a cluster VM or wherever you want to run the helm commands from, please refer to `Helm documentation <https://helm.sh/docs/using_helm/#installing-the-helm-client>`_ and `Helm github repository <https://github.com/helm/helm#install>`_.
 
 Tiller
-------------------------------------
+--------
 
 Tiller is the server side of Helm and runs inside the Kubernetes cluster.
 
