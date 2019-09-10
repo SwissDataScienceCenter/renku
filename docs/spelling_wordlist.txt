@@ -19,6 +19,7 @@ config
 cookiecutter
 Cookiecutter
 coopetition
+cronjob
 deployer
 Dockerfile
 dockerfiles
@@ -58,6 +59,7 @@ metadata
 microservices
 middleware
 minikube
+mydomain
 namespace
 Nginx
 oauth
@@ -65,6 +67,7 @@ OAuth
 ok
 online
 OpenID
+Postgresql
 pre
 refactor
 Refactor
@@ -95,6 +98,7 @@ Versioning
 vertices
 webhook
 webhooks
+wildcard
 workflow
 workflows
 yaml
