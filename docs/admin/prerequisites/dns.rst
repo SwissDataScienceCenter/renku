@@ -1,20 +1,21 @@
 .. _dns:
 
 DNS
-===
+====
+
+Renku needs a DNS.
 
 Get a domain name from a registrar.
-
 Create an `A` record pointing to the load balancer and, optionally, a wildcard `CNAME`:
 
-===============  =====  ================ ========
-NAME             TYPE   TARGET           TTL
-===============  =====  ================ ========
-mydomain.ch      A      load balancer IP 15 min.
-\*.mydomain.ch   CNAME  mydomain.ch      15 min.
-===============  =====  ================ ========
+==================  =====  ================== ========
+NAME                TYPE   TARGET             TTL
+==================  =====  ================== ========
+renku.mydomain.ch   A      load balancer IP   15 min.
+\*.mydomain.ch      CNAME  renku.mydomain.ch  15 min.
+==================  =====  ================== ========
 
-Now, we can check the DNS setup:
+Now, check the DNS setup:
 
 .. code-block:: console
 
