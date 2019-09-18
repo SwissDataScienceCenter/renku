@@ -1,10 +1,10 @@
 .. _standalone-gitlab:
 
-Stand-alone gitlab
+Stand-alone GitLab
 ==================
 
-Gitlab should be configured with an image registry.
-Create two Applications in gitlab:
+GitLab should be configured with an image registry.
+Create two Applications in GitLab:
 
 - Renku.
 
