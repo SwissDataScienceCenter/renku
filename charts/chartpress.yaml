@@ -16,6 +16,7 @@ charts:
       - .
       - ../services/apispec
       - ../tests
+      - ../scripts/init-realm
     images:
       apispec:
         contextPath: ../services/apispec
@@ -29,3 +30,9 @@ charts:
         valuesPath: tests.image
         paths:
           - ../tests
+      init-realm:
+        contextPath: ../scripts/init-realm
+        dockerfilePath: ../scripts/init-realm/Dockerfile
+        valuesPath: keycloak.initRealm.image
+        paths:
+          - ../scripts/init-realm
