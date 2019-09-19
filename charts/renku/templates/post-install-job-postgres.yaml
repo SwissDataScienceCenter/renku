@@ -31,6 +31,9 @@ spec:
             - name: passwords
               mountPath: /passwords
               readOnly: true
+            - name: keycloak-passwords
+              mountPath: /keycloak-passwords
+              readOnly: true
           env:
           - name: PGDATABASE
             value: {{ .Values.postgresql.postgresDatabase }}
@@ -50,3 +53,6 @@ spec:
         - name: passwords
           secret:
             secretName: {{ template "renku.fullname" . }}
+        - name: keycloak-passwords
+          secret:
+            secretName: {{ template "renku.fullname" . }}-keycloak

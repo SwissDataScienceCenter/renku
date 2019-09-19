@@ -78,7 +78,7 @@ data:
     #!/bin/bash
     set -x
 
-    KEYCLOAK_POSTGRES_PASSWORD=$(cat /passwords/keycloak-postgres-password)
+    KEYCLOAK_POSTGRES_PASSWORD=$(cat /keycloak-passwords/keycloak-postgres-password)
 
     psql -v ON_ERROR_STOP=1 <<-EOSQL
         create database "{{ .Values.global.keycloak.postgresDatabase }}";
