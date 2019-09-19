@@ -66,7 +66,8 @@ repos = \
 	renku-notebooks \
 	renku-python \
 	renku-storage \
-	renku-ui
+	renku-ui \
+	renku-graph
 
 
 .PHONY: clone checkout pull python-env test
