@@ -524,14 +524,20 @@ notebooks:
   #     type: enum
   #     default: 0.5
   #     options: [0.5, 1.0]
-  #   gpu_request:
+  #   mem_request:
   #     order: 3
-  #     displayName: Number of GPUs
-  #     type: int
-  #     default: 0
-  #     options: [0, 4]
-  #   lfs_auto_fetch:
+  #     displayName: Amount of Memory
+  #     type: enum
+  #     default: 1G
+  #     options: [1G, 2G]
+  #   gpu_request:
   #     order: 4
+  #     displayName: Number of GPUs
+  #     type: enum # use "type: int" instead to get a slider
+  #     default: 0
+  #     options: [0, 0] # use "range: [x, y]" when type is int
+  #   lfs_auto_fetch:
+  #     order: 5
   #     displayName: Automatically fetch LFS data
   #     type: boolean
   #     default: false
