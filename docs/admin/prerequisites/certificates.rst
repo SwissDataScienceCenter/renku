@@ -3,12 +3,18 @@
 Certificates
 ============
 
-To use TLS you need valid certificates for the ingress by either deploying a certificate manager like LetsEncrypt or creating certificates manually and inserting them as k8s secrets.
+To enable HTTPS on the Renku website you need valid certificates for the ingress.
+
+This can be achieved by either deploying a certificate issuer like LetsEncrypt or creating certificates manually and inserting them as Kubernetes secrets.
 
 LetsEncrypt
 ------------------
 
-Copy and edit `manifests/cert-manager-issuer.yaml file <https://github.com/SwissDataScienceCenter/renku-admin-docs/blob/master/manifests/cert-manager-issuer.yaml>`_ to fill in the `email` field.
+If you have installed Helm you can deploy `LetsEncrypt <https://letsencrypt.org/>`_.
+
+The following are steps to install LetsEncrypt using Helm.
+To run the following commands you can use the `cert-manager-values.yaml <https://github.com/SwissDataScienceCenter/renku-admin-docs/blob/master/helm-installs/cert-manager-values.yaml>`_ and `cert-manager-issuer.yaml <https://github.com/SwissDataScienceCenter/renku-admin-docs/blob/master/manifests/cert-manager-issuer.yaml>`_ files.
+Make sure to edit the cert-manager-issuer.yaml file and fill in the correct `email` field.
 
 .. code-block:: console
 
