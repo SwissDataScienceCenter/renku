@@ -4,7 +4,8 @@ Command-line Interface Installation
 ===================================
 
 Interaction with the platform takes place via the Python-based command-line
-interface (CLI) and the Python API.
+interface (CLI) and the Python API. Most available CLI commands are
+documented in our `cheatsheet <https://raw.githubusercontent.com/SwissDataScienceCenter/renku/master/docs/_static/cheatsheet/cheatsheet.pdf>`_
 
 Mac OS X
 --------
