@@ -29,8 +29,8 @@ keycloak:
   keycloak:
     extraVolumes: |
         - name: realm-secret
-          secret:
-            secretName: $RENKU_DEPLOY
+          configMap:
+            name: $RENKU_DEPLOY
             items:
             - key: renku-realm.json
               path: renku-realm.json
@@ -58,7 +58,7 @@ helm upgrade $RENKU_DEPLOY charts/renku \
     --set "gitlab.sshPort=30022" \
     --set "gitlab.enableSSHNodePortService=true" \
     --set "keycloak.keycloak.persistence.dbHost=$RENKU_DEPLOY-postgresql" \
-    --set "keycloak.keycloak.persistence.existingSecret=$RENKU_DEPLOY" \
+    --set "keycloak.keycloak.persistence.existingSecret=$RENKU_DEPLOY-keycloak-postgres" \
     --set "graph.gitlab.url=http://$MAXIKUBE_HOST:32080/gitlab" \
     -f /tmp/keycloak.yaml \
     --timeout 1800

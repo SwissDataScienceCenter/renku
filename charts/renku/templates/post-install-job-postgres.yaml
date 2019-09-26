@@ -28,11 +28,20 @@ spec:
             - name: scripts
               mountPath: /scripts
               readOnly: true
-            - name: passwords
-              mountPath: /passwords
+            - name: keycloak-postgres
+              mountPath: /keycloak-postgres
               readOnly: true
-            - name: keycloak-passwords
-              mountPath: /keycloak-passwords
+            - name: gitlab-sudo
+              mountPath: /gitlab-sudo
+              readOnly: true
+            - name: gitlab-postgres
+              mountPath: /gitlab-postgres
+              readOnly: true
+            - name: jupyterhub-postgres
+              mountPath: /jupyterhub-postgres
+              readOnly: true
+            - name: graph-db-postgres
+              mountPath: /graph-db-postgres
               readOnly: true
           env:
           - name: PGDATABASE
@@ -50,9 +59,18 @@ spec:
         - name: scripts
           configMap:
             name: {{ template "renku.fullname" . }}
-        - name: passwords
+        - name: keycloak-postgres
           secret:
-            secretName: {{ template "renku.fullname" . }}
-        - name: keycloak-passwords
+            secretName: {{ template "renku.fullname" . }}-keycloak-postgres
+        - name: gitlab-sudo
           secret:
-            secretName: {{ template "renku.fullname" . }}-keycloak
+            secretName: {{ template "renku.fullname" . }}-gitlab-sudo
+        - name: gitlab-postgres
+          secret:
+            secretName: {{ template "renku.fullname" . }}-gitlab-postgres
+        - name: jupyterhub-postgres
+          secret:
+            secretName: {{ template "renku.fullname" . }}-jupyterhub-postgres
+        - name: graph-db-postgres
+          secret:
+            secretName: {{ template "renku.fullname" . }}-graph-db-postgres

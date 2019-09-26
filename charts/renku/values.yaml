@@ -15,10 +15,13 @@ global:
     ## Postgres user for the gitlab database
     postgresUser: gitlab
     ## Postgres password for the gitlab database
-    postgresPassword: # use `openssl rand -hex 32`
+    postgresPassword:
+      value:
+      overwriteOnHelmUpgrade: false
     ## Sudo token for sudo API requests
-    ## Generated using: `openssl rand -hex 32`
     sudoToken:
+      value:
+      overwriteOnHelmUpgrade: false
     ## URL prefix for gitlab
     # urlPrefix: /
 
@@ -28,23 +31,30 @@ global:
     ## Postgres user for the Keycloak database
     postgresUser: keycloak
     ## Postgres password for the Keycloak database
-    ## Generated using: `openssl rand -hex 32`
     postgresPassword:
+      value:
+      overwriteOnHelmUpgrade: false
+    ## Admin password for the Keycloak database
+    password:
+      value:
+      overwriteOnHelmUpgrade: false
   jupyterhub:
     ## Name of the postgres database to be used by jupyterhub
     postgresDatabase: jupyterhub
     ## Postgres user for the jupyterhub database
     postgresUser: jupyterhub
     ## Postgres password for the jupyterhub database
-    ## Generated using: `openssl rand -hex 32`
     postgresPassword:
+      value:
+      overwriteOnHelmUpgrade: false
   gateway:
     clientSecret: # use `uuidgen -r`
     ## The client ID for authentication against gitlab
     gitlabClientId: renku-ui
     ## The client secret for authentication against gitlab
-    ## Generated using: `openssl rand -hex 32`
     gitlabClientSecret:
+      value:
+      overwriteOnHelmUpgrade: false
   renku:
     ## Domain name for the deployed instance of renku
     domain: example.local
@@ -58,14 +68,16 @@ global:
       ## Name of the postgres user to be used to access the Event Log db
       postgresUser: eventlog
       ## Postgres password to be used to access the Event Log db
-      ## Generated using: `openssl rand -hex 32`
       postgresPassword:
+        value:
+        overwriteOnHelmUpgrade: false
     tokenRepository:
       ## Name of the postgres user to be used to access the db storing access tokens
       postgresUser: tokenstorage
       ## Postgres password to be used to access the db storing access tokens
-      ## Generated using: `openssl rand -hex 32`
       postgresPassword:
+        value:
+        overwriteOnHelmUpgrade: false
     jena:
       ## specify which dataset should be used in Jena
       dataset:
@@ -105,9 +117,6 @@ keycloak:
   ## Spawn a keycloak instance
   enabled: true
 
-  secret:
-    generate: false
-
   keycloak:
 
     ## Keycloak admin user configuration
@@ -136,8 +145,8 @@ keycloak:
 
     extraVolumes: |
       - name: realm-secret
-        secret:
-          secretName: renku-keycloak
+        configMap:
+          name: renku
           items:
           - key: renku-realm.json
             path: renku-realm.json
@@ -173,7 +182,7 @@ keycloak:
       # !!!
       ## This value is dependent on the Release name! (but helm charts don't allow templating values here.)
       # !!!
-      existingSecret: renku-keycloak
+      existingSecret: '{{ tpl renku.fullname . }}-keycloak-postgres'
       existingSecretKey: keycloak-postgres-password
 
     ingress:
