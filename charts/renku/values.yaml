@@ -525,25 +525,37 @@ ui:
     # ref: 0.1.0
 # ## Configuration for the notebooks service
 notebooks:
-  ## serverOptions allow for modifications to the notebook pod resource requests
+  ## serverOptions allow for modifications to the notebook pod resource requests and the UI rendering
   # serverOptions:
-  #   resources:
-  #     cpu_request:
-  #       displayName: Number of CPUs
-  #       type: integer
-  #       default: 1
-  #       range: [1, 4]
-  #     mem_request:
-  #       displayName: Memory
-  #       type: enum
-  #       default: 2Gi
-  #       options: [2Gi, 4Gi, 8Gi]
-  #     gpu:
-  #       displayName: Number of GPUs
-  #       type: integer
-  #       default: 0
-  #       range: [0, 2]
-  #   defaultUrl: /lab
+  #   defaultUrl:
+  #     order: 1
+  #     displayName: Default Environment
+  #     type: enum
+  #     default: /lab
+  #     options: [/lab]
+  #   cpu_request:
+  #     order: 2
+  #     displayName: Number of CPUs
+  #     type: enum
+  #     default: 0.5
+  #     options: [0.5, 1.0]
+  #   mem_request:
+  #     order: 3
+  #     displayName: Amount of Memory
+  #     type: enum
+  #     default: 1G
+  #     options: [1G, 2G]
+  #   gpu_request:
+  #     order: 4
+  #     displayName: Number of GPUs
+  #     type: enum # use "type: int" instead to get a slider
+  #     default: 0
+  #     options: [0, 0] # use "range: [x, y]" when type is int
+  #   lfs_auto_fetch:
+  #     order: 5
+  #     displayName: Automatically fetch LFS data
+  #     type: boolean
+  #     default: false
   ## image registry host
   # imageRegistry:
   ## JupyterHub setup
