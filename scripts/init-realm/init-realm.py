@@ -167,12 +167,12 @@ if not keycloak_admin_password:
 
 # Acquire a admin access token for the kecyloak API. On timeout
 # or 503 we follow the kubernetes philosophy of just retrying until
-# the service is eventuelly up. After 1 minute we give up and leave
+# the service is eventuelly up. After 5 minutes we give up and leave
 # it to K8s to restart the job.
 n_attempts = 0
 success = False
 
-while not success and n_attempts < 7:
+while not success and n_attempts < 31:
     try:
         sys.stdout.write("Getting an admin access token for Keycloak...")
         keycloak_admin = KeycloakAdmin(
