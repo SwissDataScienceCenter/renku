@@ -111,8 +111,3 @@ graph:
   tokenRepository:
     tokenEncryption:
       secret: # generate with `openssl rand -hex 8|base64`
-  knowledgeGraph:
-    services:
-      renku:
-        url: # the Renku base url
-        resourcesUrl: # the Renku resources base url e.g. https://dev.renku.ch/knowledge-graph
