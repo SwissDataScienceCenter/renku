@@ -80,6 +80,7 @@ def _check_and_create_user(keycloak_admin, new_user):
     usernames = [u["username"] for u in realm_users]
 
     if new_user["username"] in usernames:
+        del new_user["password"]
         sys.stdout.write("found\n")
         realm_user = realm_users[usernames.index(new_user["username"])]
         _check_existing(realm_user, new_user, "user", "username")

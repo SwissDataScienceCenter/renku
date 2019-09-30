@@ -99,7 +99,9 @@ ingress:
 
 ## Keycloak configuration
 keycloak:
-  ## Create a demo/demo user in keycloak?
+  ## Create a demo user in keycloak? Note that the password for the demo
+  ## user must be queried from kubernetes (see the rendered NOTES.txt
+  ## template which is shown after a successul deployment).
   createDemoUser: false
 
   ## Spawn a keycloak instance
