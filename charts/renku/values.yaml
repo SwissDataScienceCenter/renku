@@ -53,8 +53,6 @@ global:
     gitlabClientId: renku-ui
     ## The client secret for authentication against gitlab
     gitlabClientSecret:
-      value:
-      overwriteOnHelmUpgrade: false
   renku:
     ## Domain name for the deployed instance of renku
     domain: example.local
@@ -71,6 +69,7 @@ global:
       postgresPassword:
         value:
         overwriteOnHelmUpgrade: false
+      existingSecret: '{{ template "renku.fullname" . }}-db-postgres'
     tokenRepository:
       ## Name of the postgres user to be used to access the db storing access tokens
       postgresUser: tokenstorage
@@ -78,6 +77,7 @@ global:
       postgresPassword:
         value:
         overwriteOnHelmUpgrade: false
+      existingSecret: '{{ template "renku.fullname" . }}-token-postgres'
     jena:
       ## specify which dataset should be used in Jena
       dataset:
@@ -121,7 +121,9 @@ keycloak:
 
     ## Keycloak admin user configuration
     username: admin
-    password: admin
+    password:
+    existingSecret: keycloak-password-secret
+    existingSecretKey: keycloak-password
 
     livenessProbe:
       initialDelaySeconds: 180
@@ -145,8 +147,8 @@ keycloak:
 
     extraVolumes: |
       - name: realm-secret
-        configMap:
-          name: renku
+        secret:
+          secretName: renku
           items:
           - key: renku-realm.json
             path: renku-realm.json
@@ -182,7 +184,7 @@ keycloak:
       # !!!
       ## This value is dependent on the Release name! (but helm charts don't allow templating values here.)
       # !!!
-      existingSecret: '{{ tpl renku.fullname . }}-keycloak-postgres'
+      existingSecret: renku-keycloak-postgres
       existingSecretKey: keycloak-postgres-password
 
     ingress:

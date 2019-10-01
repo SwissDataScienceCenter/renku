@@ -32,8 +32,7 @@ global:
       value: d6f59c5df645abe2fd1a0572b6bd5a8d
   gateway:
     clientSecret: 259a72d8-2c40-435f-9e0f-24df7c1a7dbc
-    gitlabClientSecret:
-      value: 4e35410e4116d2280e29c6da6aaaa89fc1ab77364c6352aeb5adbd037d49590a
+    gitlabClientSecret: 4e35410e4116d2280e29c6da6aaaa89fc1ab77364c6352aeb5adbd037d49590a
   renku:
     version: 'latest'
   graph:

@@ -29,8 +29,8 @@ keycloak:
   keycloak:
     extraVolumes: |
         - name: realm-secret
-          configMap:
-            name: $RENKU_DEPLOY
+          secret:
+            secretName: $RENKU_DEPLOY
             items:
             - key: renku-realm.json
               path: renku-realm.json

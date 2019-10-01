@@ -44,7 +44,7 @@ spec:
           - name: JUPYTERHUB_AUTH_GITLAB_CLIENT_SECRET
             valueFrom:
               secretKeyRef:
-                name: {{ template "renku.fullname" . }}-jupyterhub-gitlab
+                name: {{ template "renku.fullname" . }}
                 key: jupyterhub-auth-gitlab-client-secret
           - name: GATEWAY_GITLAB_CLIENT_SECRET
             valueFrom:

@@ -28,20 +28,27 @@ spec:
             - name: scripts
               mountPath: /scripts
               readOnly: true
+            - name: passwords
+              mountPath: /passwords
             - name: keycloak-postgres
               mountPath: /keycloak-postgres
               readOnly: true
+            {{- if .Values.gitlab.enabled }}
             - name: gitlab-sudo
               mountPath: /gitlab-sudo
               readOnly: true
             - name: gitlab-postgres
               mountPath: /gitlab-postgres
               readOnly: true
+            {{- end}}
             - name: jupyterhub-postgres
               mountPath: /jupyterhub-postgres
               readOnly: true
             - name: graph-db-postgres
               mountPath: /graph-db-postgres
+              readOnly: true
+            - name: graph-token-postgres
+              mountPath: /graph-token-postgres
               readOnly: true
           env:
           - name: PGDATABASE
@@ -59,18 +66,26 @@ spec:
         - name: scripts
           configMap:
             name: {{ template "renku.fullname" . }}
+        - name: passwords
+          secret:
+            secretName: {{ template "renku.fullname" . }}
         - name: keycloak-postgres
           secret:
             secretName: {{ template "renku.fullname" . }}-keycloak-postgres
+        {{- if .Values.gitlab.enabled }}
         - name: gitlab-sudo
           secret:
             secretName: {{ template "renku.fullname" . }}-gitlab-sudo
         - name: gitlab-postgres
           secret:
             secretName: {{ template "renku.fullname" . }}-gitlab-postgres
+        {{- end}}
         - name: jupyterhub-postgres
           secret:
             secretName: {{ template "renku.fullname" . }}-jupyterhub-postgres
         - name: graph-db-postgres
           secret:
             secretName: {{ template "renku.fullname" . }}-graph-db-postgres
+        - name: graph-token-postgres
+          secret:
+            secretName: {{ template "renku.fullname" . }}-graph-token-postgres

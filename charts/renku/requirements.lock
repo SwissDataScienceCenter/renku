@@ -13,7 +13,7 @@ dependencies:
   version: 0.3.1-6fb1535
 - name: renku-graph
   repository: https://swissdatasciencecenter.github.io/helm-charts/
-  version: 0.10.0
+  version: 0.18.0-52a2375
 - name: postgresql
   repository: https://kubernetes-charts.storage.googleapis.com
   version: 0.14.4
