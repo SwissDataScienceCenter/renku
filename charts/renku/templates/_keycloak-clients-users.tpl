@@ -13,7 +13,19 @@ Define clients and users for Keycloak
     ],
     "webOrigins": [
         "{{ template "http" . }}://{{ .Values.global.renku.domain }}/*"
-    ]
+    ],
+    "protocolMappers": [{
+      "name": "audience for gateway",
+      "protocol": "openid-connect",
+      "protocolMapper": "oidc-audience-mapper",
+      "consentRequired": false,
+      "config": {
+        "included.client.audience": "gateway",
+        "id.token.claim": false,
+        "access.token.claim": true,
+        "userinfo.token.claim": false
+      }
+    }]
   }
 
   {{- if .Values.gitlab.enabled -}}

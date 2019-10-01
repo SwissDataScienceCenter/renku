@@ -36,11 +36,19 @@ def _check_existing(existing_object, new_object, case, idKey):
     about mismatches.
     """
     for key in new_object.keys():
-        if new_object[key] != existing_object[key]:
+        if key not in existing_object:
+            warning = "Found missing key '{}' at {} '{}'!".format(
+                key, case, new_object[idKey]
+            )
+            warnings.warn(warning)
+
+        elif new_object[key] != existing_object[key]:
             warning = "Found mismatch for key '{}' at {} '{}'!".format(
                 key, case, new_object[idKey]
             )
             warnings.warn(warning)
+            warnings.warn("To be created: \n{}".format(json.dumps(new_object[key])))
+            warnings.warn("Existing: \n{}".format(json.dumps(existing_object[key])))
 
 
 def _check_and_create_client(keycloak_admin, new_client):
@@ -60,12 +68,54 @@ def _check_and_create_client(keycloak_admin, new_client):
         # the original respone
         secret = keycloak_admin.get_client_secrets(realm_client["id"])
         realm_client["secret"] = secret["value"]
+
+        # We have to remove the auto-generated IDs of the protocol mapper(s)
+        # before comparing to the to-be-created client.
+        # Also, we have to fix quoted booleans in the JSON document from
+        # the Keycloak API.
+        if "protocolMappers" in realm_client:
+            for mapper in realm_client["protocolMappers"]:
+                del mapper["id"]
+                mapper["config"] = json.loads(
+                    json.dumps(mapper["config"])
+                    .replace('"true"', "true")
+                    .replace('"false"', "false")
+                )
+
         _check_existing(realm_client, new_client, "client", "clientId")
+
+        # If we're dealing with the gateway client which is missing the
+        # necessary protocol mapper to add the client-id to the audience
+        # claim, we add it specifically.
+        mappers_client_ids = ["gateway"]
+        if realm_client["clientId"] in mappers_client_ids:
+            mappers_missing = (
+                "protocolMappers" not in realm_client
+                and "protocolMappers" in new_client
+            )
+            audience_mapper_missing = "audience for gateway" not in [
+                mapper["name"] for mapper in realm_client.get("protocolMappers", [])
+            ]
+            if mappers_missing or audience_mapper_missing:
+                sys.stdout.write(
+                    "found, but without the necessary protocol mapper. Adding it now..."
+                )
+                realm_client["protocolMappers"] = new_client[
+                    "protocolMappers"
+                ] + realm_client.get("protocolMappers", [])
+
+                # We use DELETE followed by POST since PUT does not add the
+                # provided protocolMappers to the client and PATCH is not
+                # supported by the API.
+                keycloak_admin.delete_client(realm_client["id"])
+                keycloak_admin.create_client(realm_client)
+
+                sys.stdout.write("done\n")
 
     else:
         sys.stdout.write("not found\n")
         sys.stdout.write("Creating {} client...".format(new_client["clientId"]))
-        keycloak_admin.create_client(payload=new_client)
+        keycloak_admin.create_client(new_client)
         sys.stdout.write("done\n")
 
 
