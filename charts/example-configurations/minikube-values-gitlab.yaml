@@ -1,11 +1,12 @@
 # Configuration file for deploying the renku chart on minikube
-# against gitlab.com. We also configure the keycloak instance which is part
+# against gitlab.com. We also need to configure the keycloak instance which is part
 # of Renku to use gitlab.com as identity provider. See the developer docs
 # (https://renku.readthedocs.io/en/latest/developer/example-configurations/gitlab.html)
-# for instructions on how to use this values file .
+# for instructions on how to use this values file.
+
 variables:
-  gitlabClientId:      &gitlabClientId      ## Put Application Id here!
-  gitlabClientSecret:  &gitlabClientSecret  ## Put Application Secret here!
+  gitlabClientId:     &gitlabClientId      # Put Application Id here!
+  gitlabClientSecret: &gitlabClientSecret  # Put Application Secret here!
 
 global:
   gitlab:
@@ -32,7 +33,6 @@ notebooks:
 graph:
   gitlab:
     url: *gitlabURL
-
   knowledgeGraph:
     services:
       renku:
@@ -41,7 +41,6 @@ graph:
         url: *gitlabURL
 
 gateway:
-  gatewayEnv: development
   gitlabUrl: *gitlabURL
   gitlabClientId: *gitlabClientId
   gitlabClientSecret: *gitlabClientSecret
