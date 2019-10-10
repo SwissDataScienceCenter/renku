@@ -34,7 +34,7 @@ new client application (Renku-local) with the following settings:
 
   .. code-block:: console
 
-    http://<your-minikube-ip>/auth/realms/Renku/broker/renkulab.io/endpoint
+    http://<your-minikube-ip>/auth/realms/Renku/broker/renkulab/endpoint
     http://<your-minikube-ip>/api/auth/renkulab/token
     http://<your-minikube-ip>/api/auth/jupyterhub/token
     http://<your-minikube-ip>/jupyterhub/hub/oauth_callback
