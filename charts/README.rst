@@ -69,7 +69,7 @@ fully operational. Go to :code:`http://$(minikube ip)/gitlab` and login as the
 Settings --> General -> Sign-in Restrictions`` and configure the ``After sign
 out path`` to be:
 
-..code-block:: console
+::
 
     http://<renku-domain>/auth/realms/Renku/protocol/openid-connect/logout?redirect_uri=http://<renku-domain>/api/auth/logout%3Fgitlab_logout=1
 
@@ -85,7 +85,6 @@ This will prevent the separate login screen for GitLab from appearing. If you
 need to change user permissions at a later point you will need to log in as the
 root user again, so do the uprade again toggling the :code:`--set
 gitlab.oauth.autoSignIn` as needed.
-
 
 Building images
 ---------------
