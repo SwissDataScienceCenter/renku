@@ -50,7 +50,7 @@ spec:
             - name: KEYCLOAK_ADMIN_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: {{ template "renku.fullname" . }}
+                  name: keycloak-password-secret
                   key: keycloak-password
             - name: PYTHONUNBUFFERED
               value: "0"
@@ -59,6 +59,3 @@ spec:
         - name: realm-data
           secret:
             secretName: {{ template "renku.fullname" . }}
-
-
-
