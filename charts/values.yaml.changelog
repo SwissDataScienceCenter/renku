@@ -1,0 +1,7 @@
+# This file is a `values.yaml` change log. All the changes to this yaml file should be listed here so the dev-ops team know what to do when upgrading Renku.
+# The idea for the log is as follows:
+# * on every release of Renku a new record of format `* Renku x.x.x release` is added to mark a new chapter for the changes.
+# * every change to the `values.yaml` is listed as a new line: `** <type of change: NEW|EDIT|DELETE> <details of the change>`
+
+* Renku 0.4.2 release
+** DELETE graph.knowledgeGraph.services.renku.url: no need for this anymore as it's linked to `global.renku.domain` internally

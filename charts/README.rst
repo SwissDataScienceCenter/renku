@@ -39,7 +39,7 @@ Requires minikube, kubectl, helm and python.
         --set notebooks.jupyterhub.auth.gitlab.callbackUrl=http://$(minikube ip)/jupyterhub/hub/oauth_callback \
         --set notebooks.gitlab.registry.host=10.100.123.45:8105 \
         --set gitlab.registry.externalUrl=http://10.100.123.45:8105/ \
-        --set graph.gitlab.url=http://$(minikube ip)/gitlab
+        --set graph.gitlab.url=http://$(minikube ip)/gitlab \
         --timeout 1800
 
 Due to issue `minikube #1568

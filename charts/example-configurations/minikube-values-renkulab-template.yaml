@@ -20,7 +20,7 @@ notebooks:
   jupyterhub:
     hub:
       extraEnv:
-        GITLAB_URL: *renkuGitlabURL
+        GITLAB_URL: *renku-gitlab-url
     auth:
       gitlab:
         clientId: *gitlabClientId
@@ -30,10 +30,6 @@ notebooks:
 graph:
   gitlab:
     url: *renkuGitlabURL
-  knowledgeGraph:
-    services:
-      renku:
-        url: *renkuGitlabURL
 
 gateway:
   gitlabUrl: *renkuGitlabURL
