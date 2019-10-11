@@ -64,12 +64,13 @@ following:
 .. code-block:: console
 
   $ helm upgrade renku --install --namespace renku \
-    -f minikube-values.yaml -f example-configurations/minikube-values-renkulab.yaml \
+    -f example-configurations/minikube-values-renkulab.yaml \
     --set global.renku.domain=$(minikube ip) \
     --set ui.jupyterhubUrl=http://$(minikube ip)/jupyterhub \
     --set ui.gatewayUrl=http://$(minikube ip)/api \
     --set gateway.keycloakUrl=http://$(minikube ip) \
     --set notebooks.jupyterhub.hub.services.gateway.oauth_redirect_uri=http://$(minikube ip)/api/auth/jupyterhub/token \
+    --set notebooks.jupyterhub.auth.gitlab.callbackUrl=http://$(minikube ip)/jupyterhub/hub/oauth_callback \
     ./renku
 
 Configure the identity provider

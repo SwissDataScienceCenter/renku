@@ -29,8 +29,8 @@ There are two known **caveats** for this setup:
   to git-lfs). This is fine for development work but very restrictive for actual
   Renku projects.
 
-Step 1
---------
+Set up the gitlab application
+-----------------------------
 
 Browse to **gitlab.com > user settings > applications** and register a new
 client application (Renku-local) with the following settings:
@@ -45,9 +45,9 @@ client application (Renku-local) with the following settings:
     http://<your-minikube-ip>/api/auth/jupyterhub/token
     http://<your-minikube-ip>/jupyterhub/hub/oauth_callback
 
+Configure the ``values.yaml`` file
+----------------------------------
 
-Step 2
---------
 Open the file :code:`charts/example-configurations/minikube-values-gitlab.yaml`
 in your cloned Renku repository and paste the Application Id and Secret of the
 Renku-local application created in gitlab.com into the designated places.
@@ -66,10 +66,12 @@ replacing the final :code:`helm upgrade` command with the following:
     --set ui.gatewayUrl=http://$(minikube ip)/api \
     --set gateway.keycloakUrl=http://$(minikube ip) \
     --set notebooks.jupyterhub.hub.services.gateway.oauth_redirect_uri=http://$(minikube ip)/api/auth/jupyterhub/token \
+    --set notebooks.jupyterhub.auth.gitlab.callbackUrl=http://$(minikube ip)/jupyterhub/hub/oauth_callback \
     ./renku
 
-Step 3
---------
+Configure the identity provider
+-------------------------------
+
 Open :code:`http://<your-minikube-ip>/auth` in your browser and login to the
 admin console using admin/admin. Under Identity Providers choose "GitLab" from
 the "Add Provider..." drop-down menu. Add the Application Id and Secret from
