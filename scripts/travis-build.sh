@@ -28,12 +28,6 @@ cat > /tmp/keycloak.yaml <<EOF
 keycloak:
   keycloak:
     extraVolumes: |
-        - name: realm-secret
-          secret:
-            secretName: $RENKU_DEPLOY
-            items:
-            - key: renku-realm.json
-              path: renku-realm.json
         - name: theme
           emptyDir: {}
 EOF

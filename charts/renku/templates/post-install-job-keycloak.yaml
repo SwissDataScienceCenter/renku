@@ -1,0 +1,64 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: "{{ .Release.Name }}-post-install-keycloak"
+  labels:
+    heritage: {{ .Release.Service | quote }}
+    release: {{ .Release.Name | quote }}
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+  annotations:
+    "helm.sh/hook": post-install,post-upgrade
+    "helm.sh/hook-weight": "20"
+    "helm.sh/hook-delete-policy": "before-hook-creation"
+spec:
+  template:
+    metadata:
+      name: "{{.Release.Name}}-post-install-keycloak"
+      labels:
+        heritage: {{.Release.Service | quote }}
+        release: {{.Release.Name | quote }}
+        chart: "{{.Chart.Name}}-{{.Chart.Version}}"
+    spec:
+      restartPolicy: Never
+      containers:
+        - name: init-keycloak
+          image: "{{ .Values.keycloak.initRealm.image.repository }}:{{ .Values.keycloak.initRealm.image.tag }}"
+          command: ["python"]
+          args: [
+            "/app/init-realm.py",
+            "--admin-user=$(KEYCLOAK_ADMIN_USER)",
+            "--admin-password=$(KEYCLOAK_ADMIN_PASSWORD)",
+            "--keycloak-url=$(KEYCLOAK_URL)",
+            "--users-file=/app/data/users",
+            "--clients-file=/app/data/clients"
+          ]
+
+          volumeMounts:
+          - name: realm-data
+            mountPath: /app/data
+            readOnly: true
+
+          env:
+            ## NOTE: This template string will be replaced during further refactoring
+            - name: KEYCLOAK_URL
+              value: {{ .Values.keycloakUrl | default (printf "%s://%s/auth/" (include "gateway.protocol" .) .Values.global.renku.domain) | quote}}
+            - name: KEYCLOAK_ADMIN_USER
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "renku.fullname" . }}
+                  key: keycloak-username
+            - name: KEYCLOAK_ADMIN_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "renku.fullname" . }}
+                  key: keycloak-password
+            - name: PYTHONUNBUFFERED
+              value: "0"
+
+      volumes:
+        - name: realm-data
+          secret:
+            secretName: {{ template "renku.fullname" . }}
+
+
+

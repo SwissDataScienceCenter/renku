@@ -114,8 +114,23 @@ ingress:
 
 ## Keycloak configuration
 keycloak:
+  ## Create a demo user in keycloak? Note that the password for the demo
+  ## user must be queried from kubernetes (see the rendered NOTES.txt
+  ## template which is shown after a successul deployment).
+  createDemoUser: false
+
   ## Spawn a keycloak instance
   enabled: true
+
+  ## This section points to an image used to create
+  ## a Renku realm and initialize it with the necessary
+  ## clients during deployment. It should not be necessary
+  ## to modify these values. This step is omitted if no
+  ## keycloak admin username/password is supplied.
+  initRealm:
+    image:
+      repository: renku/init-realm
+      tag: 'latest'
 
   keycloak:
 
@@ -146,23 +161,12 @@ keycloak:
             mountPath: /theme
 
     extraVolumes: |
-      - name: realm-secret
-        secret:
-          secretName: renku
-          items:
-          - key: renku-realm.json
-            path: renku-realm.json
       - name: theme
         emptyDir: {}
 
     extraVolumeMounts: |
-      - name: realm-secret
-        mountPath: "/realm/"
-        readOnly: true
       - name: theme
         mountPath: /opt/jboss/keycloak/themes/renku-theme
-
-    extraArgs: -Dkeycloak.import=/realm/renku-realm.json
 
     persistence:
 

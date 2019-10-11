@@ -39,6 +39,13 @@ global:
       postgresPassword:
         value: 1bed5ee10efe7132a1904b09e1f3701a
 
+keycloak:
+  createDemoUser: true
+  keycloak:
+    username: admin
+    password: admin
+
+
 gitlab:
   oauth:
     autoSignIn: false
