@@ -60,7 +60,7 @@ replacing the final :code:`helm upgrade` command with the following:
 .. code-block:: console
 
   $ helm upgrade renku --install --namespace renku \
-    -f example-configurations/minikube-values-gitlab.yaml \
+    -f minikube-values.yaml -f example-configurations/minikube-values-gitlab.yaml \
     --set global.renku.domain=$(minikube ip) \
     --set ui.jupyterhubUrl=http://$(minikube ip)/jupyterhub \
     --set ui.gatewayUrl=http://$(minikube ip)/api \
