@@ -102,13 +102,6 @@ graph:
     tokenEncryption:
       secret: MGYxM2JiZTMzY2NhNDg1OQo=
 
-  knowledgeGraph:
-    services:
-      renku:
-        # At the moment the url matches 'gitlab.url' but it should be the Renku UI url
-        # once https://github.com/SwissDataScienceCenter/renku-python/issues/554 issue is played
-        url: https://gitlab.com
-
 gateway:
   gatewayEnv: development
   secretKey: 5495ef917488a19d1d4106452c899f5824972acd87edce11fd65e7956bea3bb0
