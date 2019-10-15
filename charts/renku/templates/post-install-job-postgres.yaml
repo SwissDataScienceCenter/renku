@@ -71,7 +71,7 @@ spec:
             secretName: {{ template "renku.fullname" . }}
         - name: keycloak-postgres
           secret:
-            secretName: {{ template "renku.fullname" . }}-keycloak-postgres
+            secretName: renku-keycloak-postgres
         {{- if .Values.gitlab.enabled }}
         - name: gitlab-sudo
           secret:
@@ -82,7 +82,7 @@ spec:
         {{- end}}
         - name: jupyterhub-postgres
           secret:
-            secretName: {{ template "renku.fullname" . }}-jupyterhub-postgres
+            secretName: renku-jupyterhub-postgres
         - name: graph-db-postgres
           secret:
             secretName: {{ template "renku.fullname" . }}-graph-db-postgres

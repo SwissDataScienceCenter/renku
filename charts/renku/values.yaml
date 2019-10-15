@@ -580,6 +580,20 @@ notebooks:
         #  oauth_client_id: gateway
         #  apiToken: # use `openssl rand -hex 32`
         #  oauth_redirect_uri: http://<gateway>/api/auth/jupyterhub/token
+        ## Configure gitlab and postgres:
+        ## Values need to be set to get jupyterhub to work
+       # extraEnv:
+       #  - name: GITLAB_URL
+       #    value: <gitlab url>
+       #  - name: DEBUG
+       #    value: "1"
+       #  - name: JUPYTERHUB_SPAWNER_CLASS
+       #    value: spawners.RenkuKubeSpawner
+       #  - name: PGPASSWORD
+       #    valueFrom:
+       #        secretKeyRef:
+       #          name: renku-jupyterhub-postgres
+       #          key: jupyterhub-postgres-password
 
     ## Simple default setup for gitlab oauth
     # auth:
