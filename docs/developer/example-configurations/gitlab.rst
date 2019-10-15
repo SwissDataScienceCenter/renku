@@ -50,7 +50,7 @@ Configure the ``values.yaml`` file
 
 Open the file :code:`charts/example-configurations/minikube-values-gitlab.yaml`
 in your cloned Renku repository and paste the Application Id and Secret of the
-GitLab application created in gitlab.com into the designated places.
+GitLab client application created in gitlab.com (Renku-local) into the designated places.
 
 Now start the Renku platform following the steps described in the `Renku charts README`_,
 replacing the final :code:`helm upgrade` command with the following:
@@ -78,7 +78,7 @@ the "Add Provider..." drop-down menu. Add the Application Id and Secret from
 the Renku-local application created in Step 1. Save the identity provider and
 logout from the Keycloak admin panel.
 
-Configure Gitlab CI
+Configure GitLab CI
 -------------------
 
 For each created project you will have to modify the :code:`.gitlab-ci.yaml`

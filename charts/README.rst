@@ -69,7 +69,7 @@ fully operational. Go to :code:`http://$(minikube ip)/gitlab` and login as the
 Settings --> General -> Sign-in Restrictions`` and configure the ``After sign
 out path`` to be:
 
-::
+.. code-block:: console
 
     http://<renku-domain>/auth/realms/Renku/protocol/openid-connect/logout?redirect_uri=http://<renku-domain>/api/auth/logout%3Fgitlab_logout=1
 

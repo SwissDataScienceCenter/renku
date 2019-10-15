@@ -28,7 +28,6 @@ notebooks:
       gitlab:
         clientId: *gitlabClientId
         clientSecret: *gitlabClientSecret
-        callbackUrl:
 
 graph:
   gitlab:

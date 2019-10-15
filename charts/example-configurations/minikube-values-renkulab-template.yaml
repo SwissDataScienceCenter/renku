@@ -20,12 +20,11 @@ notebooks:
   jupyterhub:
     hub:
       extraEnv:
-        GITLAB_URL: *renku-gitlab-url
+        GITLAB_URL: *renkuGitlabURL
     auth:
       gitlab:
         clientId: *gitlabClientId
         clientSecret: *gitlabClientSecret
-        callbackUrl: '""' # Forces the default callback url
 
 graph:
   gitlab:
