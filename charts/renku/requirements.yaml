@@ -17,15 +17,15 @@ dependencies:
   condition: gitlab.enabled
 - name: renku-graph
   alias: graph
-  repository: "https://swissdatasciencecenter.github.io/helm-charts/"
-  version: "0.18.0-52a2375"
+  repository: "file:///Users/ableuler/renku/src/renku-graph/helm-chart/renku-graph"
+  version: "0.19.1-dc1aa05"
   condition: graph.enabled
 - name: postgresql
   version: 0.14.4
   repository: "@stable"
   condition: postgresql.enabled
 - name: keycloak
-  version: 4.0.4
+  version: 4.10.1
   repository: "@stable"
   condition: keycloak.enabled
 - name: minio
