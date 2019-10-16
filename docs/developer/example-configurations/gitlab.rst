@@ -1,7 +1,7 @@
 .. _gitlab.com:
 
-gitlab.com
-===========
+Developing against gitlab.com
+=============================
 
 Running GitLab is quite resource-intensive. For development purposes
 or if you already have an existing GitLab instance running, you might want to
@@ -29,8 +29,8 @@ There are two known **caveats** for this setup:
   to git-lfs). This is fine for development work but very restrictive for actual
   Renku projects.
 
-Step 1
---------
+Set up the gitlab application
+-----------------------------
 
 Browse to **gitlab.com > user settings > applications** and register a new
 client application (Renku-local) with the following settings:
@@ -45,12 +45,12 @@ client application (Renku-local) with the following settings:
     http://<your-minikube-ip>/api/auth/jupyterhub/token
     http://<your-minikube-ip>/jupyterhub/hub/oauth_callback
 
+Configure the ``values.yaml`` file
+----------------------------------
 
-Step 2
---------
 Open the file :code:`charts/example-configurations/minikube-values-gitlab.yaml`
 in your cloned Renku repository and paste the Application Id and Secret of the
-Renku-local application created in gitlab.com into the designated places.
+GitLab client application created in gitlab.com (Renku-local) into the designated places.
 
 Now start the Renku platform following the steps described in the `Renku charts README`_,
 replacing the final :code:`helm upgrade` command with the following:
@@ -60,24 +60,27 @@ replacing the final :code:`helm upgrade` command with the following:
 .. code-block:: console
 
   $ helm upgrade renku --install --namespace renku \
-    -f example-configurations/minikube-values-gitlab.yaml \
+    -f minikube-values.yaml -f example-configurations/minikube-values-gitlab.yaml \
     --set global.renku.domain=$(minikube ip) \
     --set ui.jupyterhubUrl=http://$(minikube ip)/jupyterhub \
     --set ui.gatewayUrl=http://$(minikube ip)/api \
     --set gateway.keycloakUrl=http://$(minikube ip) \
     --set notebooks.jupyterhub.hub.services.gateway.oauth_redirect_uri=http://$(minikube ip)/api/auth/jupyterhub/token \
+    --set notebooks.jupyterhub.auth.gitlab.callbackUrl=http://$(minikube ip)/jupyterhub/hub/oauth_callback \
     ./renku
 
-Step 3
---------
+Configure the identity provider
+-------------------------------
+
 Open :code:`http://<your-minikube-ip>/auth` in your browser and login to the
 admin console using admin/admin. Under Identity Providers choose "GitLab" from
 the "Add Provider..." drop-down menu. Add the Application Id and Secret from
 the Renku-local application created in Step 1. Save the identity provider and
 logout from the Keycloak admin panel.
 
-Step 4
---------
+Configure GitLab CI
+-------------------
+
 For each created project you will have to modify the :code:`.gitlab-ci.yaml`
 in the repository for the image build to work. In the image_build job
 
