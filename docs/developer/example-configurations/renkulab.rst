@@ -14,7 +14,7 @@ Most of the configurations needed are already set in a special `minikube-values.
 which you will have to modify slightly while going through the following steps.
 
 .. _`minikube-values.yaml file`:
-  https://github.com/SwissDataScienceCenter/renku/blob/master/charts/example-configurations/minikube-values-renkulab-template.yaml
+  https://github.com/SwissDataScienceCenter/renku/blob/master/charts/example-configurations/minikube-values-renkulab.yaml
 
 Known **caveat** for this setup:
 
@@ -42,8 +42,7 @@ new client application (Renku-local) with the following settings:
 Configure the ``values.yaml`` file
 ----------------------------------
 
-In your cloned Renku repository copy the file :code:`charts/example-configurations/minikube-values-renkulab-
-template.yaml` to :code:`charts/example-configurations/minikube-values-
+In your cloned Renku repository copy the file :code:`charts/example-configurations/minikube-values-renkulab.yaml` to :code:`charts/example-configurations/minikube-values-
 renkulab.yaml`. Complete the :code:`minikube-values-renkulab.yaml` file by
 filling in the Application Id and Application Secret from
 the Renku GitLab application created in Step 1. Also fill out the

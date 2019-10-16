@@ -1,7 +1,7 @@
 .. _gitlab.com:
 
-gitlab.com
-===========
+Developing against gitlab.com
+=============================
 
 Running GitLab is quite resource-intensive. For development purposes
 or if you already have an existing GitLab instance running, you might want to
