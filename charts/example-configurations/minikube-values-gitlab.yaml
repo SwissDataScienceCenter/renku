@@ -17,29 +17,12 @@ ingress:
 global:
   gitlab:
     clientSecret: e3ecd740-0892-4610-ad69-c7f4886f4533
-    postgresPassword:
-      value: 3b0aa4bae4fbbe167143f583e35eda18
-    sudoToken:
-      value: 214981ee49479ecbee56359b70ad25dc87edd0e9ea569b7b8c522c3bf979446a
     urlPrefix: /gitlab
-  keycloak:
-    postgresPassword:
-      value: 49d0aa1b8a1095415cc975d766933e7b
-  jupyterhub:
-    postgresPassword:
-      value: d6f59c5df645abe2fd1a0572b6bd5a8d
   gateway:
     clientSecret: 259a72d8-2c40-435f-9e0f-24df7c1a7dbc
     gitlabClientSecret: 4e35410e4116d2280e29c6da6aaaa89fc1ab77364c6352aeb5adbd037d49590a
   renku:
     version: 'latest'
-  graph:
-    dbEventLog:
-      postgresPassword:
-        value: 48393478cb806eb12660b74fbe2ce2eb
-    tokenRepository:
-      postgresPassword:
-        value: 7cbc3ee01539e546c0b80ddebe619d04
 
 gitlab:
   enabled: false
@@ -59,7 +42,7 @@ notebooks:
       baseUrl: '/jupyterhub/'
       db:
         type: postgres
-        url: postgres+psycopg2://jupyterhub:d6f59c5df645abe2fd1a0572b6bd5a8d@renku-postgresql:5432/jupyterhub
+        url: postgres+psycopg2://jupyterhub@renku-postgresql:5432/jupyterhub
       services:
         notebooks:
           apiToken: notebookstoken
