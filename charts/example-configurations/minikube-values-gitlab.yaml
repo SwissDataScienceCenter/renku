@@ -8,7 +8,7 @@ variables:
   gitlabURL:          &gitlabURL           https://gitlab.com
   gitlabClientId:     &gitlabClientId      # Put Application Id here!
   gitlabClientSecret: &gitlabClientSecret  # Put Application Secret here!
-  notebooksRegistry:  &notebooksRegistry   registry.gitlab.com
+  gitlabRegistryHost: &gitlabRegistryHost  registry.gitlab.com
 
 global:
   gitlab:
@@ -21,7 +21,7 @@ notebooks:
   gitlab:
     url: *gitlabURL
     registry:
-      host: *notebooksRegistry
+      host: *gitlabRegistryHost
   jupyterhub:
     hub:
       extraEnv:
