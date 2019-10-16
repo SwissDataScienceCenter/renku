@@ -5,18 +5,19 @@
 # for instructions on how to use this values file.
 
 variables:
-  gitlabUrl:          &renkuGitlabURL      # Put the gitlab URL here!
+  gitlabURL:          &renkuGitlabURL      # Put the gitlab URL here!
   gitlabClientId:     &gitlabClientId      # Put Application Id here!
   gitlabClientSecret: &gitlabClientSecret  # Put Application Secret here!
+  notebooksRegistry:  &notebooksRegistry   # Put the registry host here! e.g. registry.renkulab.io
 
 gitlab:
   enabled: false
 
 notebooks:
   gitlab:
-    url: *renkuGitlabURL
+    url: *gitlabURL
     registry:
-      host: # Put the registry host here! e.g. registry.renkulab.io
+      host: *notebooksRegistry
   jupyterhub:
     hub:
       extraEnv:

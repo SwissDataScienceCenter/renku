@@ -5,8 +5,10 @@
 # for instructions on how to use this values file.
 
 variables:
+  gitlabURL:          &gitlabURL           https://gitlab.com
   gitlabClientId:     &gitlabClientId      # Put Application Id here!
   gitlabClientSecret: &gitlabClientSecret  # Put Application Secret here!
+  notebooksRegistry:  &notebooksRegistry   registry.gitlab.com
 
 global:
   gitlab:
@@ -17,9 +19,9 @@ gitlab:
 
 notebooks:
   gitlab:
-    url: &gitlabURL           https://gitlab.com
+    url: *gitlabURL
     registry:
-      host: registry.gitlab.com
+      host: *notebooksRegistry
   jupyterhub:
     hub:
       extraEnv:
