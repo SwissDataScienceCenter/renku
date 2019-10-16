@@ -100,7 +100,3 @@ graph:
   tokenRepository:
     tokenEncryption:
       secret: # generate with `openssl rand -hex 8|base64`
-  knowledgeGraph:
-    services:
-      renku:
-        url: # the Renku base url
