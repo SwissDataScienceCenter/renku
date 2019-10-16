@@ -5,8 +5,8 @@ Define clients and users for Keycloak
 {{- define "renku.keycloak.clients" -}}
 [
   {
-    "clientId": "gateway",
-    "baseUrl": "{{ template "http" . }}://{{ .Values.global.renku.domain }}/api",
+    "clientId": "renku",
+    "baseUrl": "{{ template "http" . }}://{{ .Values.global.renku.domain }}",
     "secret": "{{ required "Fill in .Values.global.gateway.clientSecret with `uuidgen -r`" .Values.global.gateway.clientSecret }}",
     "redirectUris": [
         "{{ template "http" . }}://{{ .Values.global.renku.domain }}/*"
@@ -15,12 +15,12 @@ Define clients and users for Keycloak
         "{{ template "http" . }}://{{ .Values.global.renku.domain }}/*"
     ],
     "protocolMappers": [{
-      "name": "audience for gateway",
+      "name": "audience for renku",
       "protocol": "openid-connect",
       "protocolMapper": "oidc-audience-mapper",
       "consentRequired": false,
       "config": {
-        "included.client.audience": "gateway",
+        "included.client.audience": "renku",
         "id.token.claim": false,
         "access.token.claim": true,
         "userinfo.token.claim": false

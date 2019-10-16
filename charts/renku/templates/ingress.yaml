@@ -75,7 +75,7 @@ spec:
         backend:
           serviceName: {{ $webhookServiceFullname }}
           servicePort: 80
-      - path: /knowledge-graph/graphql
+      - path: /knowledge-graph
         backend:
           serviceName: {{ $knowledgeGraphFullname }}
           servicePort: 80
