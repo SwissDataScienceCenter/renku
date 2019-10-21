@@ -34,7 +34,9 @@ for release in $(helm list --all -q | grep renku); do
     helm delete --purge $release
 done
 
-helm init --wait
+helm init --wait --upgrade
+kubectl version
+helm version
 helm upgrade --install nginx-ingress --namespace kube-system \
     --set controller.service.type=NodePort \
     --set controller.service.nodePorts.http=32080 \
