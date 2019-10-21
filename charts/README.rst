@@ -34,7 +34,7 @@ Requires minikube, kubectl, helm and python.
         --set ui.gatewayUrl=http://$(minikube ip)/api \
         --set gateway.keycloakUrl=http://$(minikube ip) \
         --set gateway.gitlabUrl=http://$(minikube ip)/gitlab \
-        --set notebooks.jupyterhub.hub.extraEnv.GITLAB_URL=http://$(minikube ip)/gitlab \
+        --set notebooks.jupyterhub.hub.extraEnv[0].value=http://$(minikube ip)/gitlab \
         --set notebooks.jupyterhub.hub.services.gateway.oauth_redirect_uri=http://$(minikube ip)/api/auth/jupyterhub/token \
         --set notebooks.jupyterhub.auth.gitlab.callbackUrl=http://$(minikube ip)/jupyterhub/hub/oauth_callback \
         --set notebooks.gitlab.registry.host=10.100.123.45:8105 \

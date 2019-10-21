@@ -62,8 +62,10 @@ notebooks:
           oauth_client_id: &gatewayClient gateway
           apiToken: &gatewaySecret 7ed9992425bbdcf03f323310205b2fea34bd9e1a255346f99066800d9440d6f7
       extraEnv:
+        ## The GITLAB_URL value has to be overwritten when installing the chart
+        # with http://$(minikube ip)/gitlab. See the chart README.rst.
         - name: GITLAB_URL
-          value: https://dev.renku.ch/gitlab
+          value: this-value-must-be-overwritten
         - name: DEBUG
           value: "1"
         - name: JUPYTERHUB_SPAWNER_CLASS

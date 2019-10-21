@@ -143,7 +143,7 @@ def main():
             'ui.gatewayUrl=http://{mip}/api',
             'gateway.keycloakUrl=http://{mip}',
             'gateway.gitlabUrl=http://{mip}/gitlab',
-            'notebooks.jupyterhub.hub.extraEnv.GITLAB_URL=http://{mip}/gitlab',
+            'notebooks.jupyterhub.hub.extraEnv[0].value=http://{mip}/gitlab',
             'notebooks.jupyterhub.hub.services.gateway.oauth_redirect_uri=http://{mip}/api/auth/jupyterhub/token',
             'notebooks.jupyterhub.auth.gitlab.callbackUrl=http://{mip}/jupyterhub/hub/oauth_callback',
             'notebooks.gitlab.registry.host=10.100.123.45:8105',
