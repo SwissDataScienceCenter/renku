@@ -24,14 +24,6 @@ helm dependency update renku
 chartpress
 cd ..
 
-cat > /tmp/keycloak.yaml <<EOF
-keycloak:
-  keycloak:
-    extraVolumes: |
-        - name: theme
-          emptyDir: {}
-EOF
-
 helm upgrade $RENKU_DEPLOY charts/renku \
     --install --namespace $RENKU_DEPLOY \
     -f charts/minikube-values.yaml \
@@ -41,10 +33,8 @@ helm upgrade $RENKU_DEPLOY charts/renku \
     --set "ui.gatewayUrl=http://$MAXIKUBE_HOST:32080/api" \
     --set "gateway.keycloakUrl=http://$MAXIKUBE_HOST:32080" \
     --set "gateway.gitlabUrl=http://$MAXIKUBE_HOST:32080/gitlab" \
-    --set "global.jupyterhub.postgresPassword=jupyterhub" \
-    --set "notebooks.jupyterhub.hub.db.url=postgres+psycopg2://jupyterhub:jupyterhub@$RENKU_DEPLOY-postgresql:5432/jupyterhub" \
-    --set "notebooks.jupyterhub.hub.extraEnv.GITLAB_URL=http://$MAXIKUBE_HOST:32080/gitlab" \
-    --set "notebooks.jupyterhub.hub.extraEnv.IMAGE_REGISTRY=10.100.123.45:8105" \
+    --set "notebooks.jupyterhub.hub.db.url=postgres+psycopg2://jupyterhub@$RENKU_DEPLOY-postgresql:5432/jupyterhub" \
+    --set "notebooks.jupyterhub.hub.extraEnv[0].value=http://$MAXIKUBE_HOST:32080/gitlab" \
     --set "notebooks.jupyterhub.hub.services.gateway.oauth_redirect_uri=http://$MAXIKUBE_HOST:32080/api/auth/jupyterhub/token" \
     --set "notebooks.jupyterhub.auth.gitlab.callbackUrl=http://$MAXIKUBE_HOST:32080/jupyterhub/hub/oauth_callback" \
     --set "notebooks.gitlab.registry.host=10.100.123.45:8105" \
@@ -52,7 +42,5 @@ helm upgrade $RENKU_DEPLOY charts/renku \
     --set "gitlab.sshPort=30022" \
     --set "gitlab.enableSSHNodePortService=true" \
     --set "keycloak.keycloak.persistence.dbHost=$RENKU_DEPLOY-postgresql" \
-    --set "keycloak.keycloak.persistence.existingSecret=$RENKU_DEPLOY" \
     --set "graph.gitlab.url=http://$MAXIKUBE_HOST:32080/gitlab" \
-    -f /tmp/keycloak.yaml \
     --timeout 1800

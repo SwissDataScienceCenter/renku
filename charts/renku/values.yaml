@@ -15,10 +15,13 @@ global:
     ## Postgres user for the gitlab database
     postgresUser: gitlab
     ## Postgres password for the gitlab database
-    postgresPassword: # use `openssl rand -hex 32`
+    postgresPassword:
+      value:
+      overwriteOnHelmUpgrade: false
     ## Sudo token for sudo API requests
-    ## Generated using: `openssl rand -hex 32`
     sudoToken:
+      value:
+      overwriteOnHelmUpgrade: false
     ## URL prefix for gitlab
     # urlPrefix: /
 
@@ -28,22 +31,27 @@ global:
     ## Postgres user for the Keycloak database
     postgresUser: keycloak
     ## Postgres password for the Keycloak database
-    ## Generated using: `openssl rand -hex 32`
     postgresPassword:
+      value:
+      overwriteOnHelmUpgrade: false
+    ## Admin password for the Keycloak database
+    password:
+      value:
+      overwriteOnHelmUpgrade: false
   jupyterhub:
     ## Name of the postgres database to be used by jupyterhub
     postgresDatabase: jupyterhub
     ## Postgres user for the jupyterhub database
     postgresUser: jupyterhub
     ## Postgres password for the jupyterhub database
-    ## Generated using: `openssl rand -hex 32`
     postgresPassword:
+      value:
+      overwriteOnHelmUpgrade: false
   gateway:
     clientSecret: # use `uuidgen -r`
     ## The client ID for authentication against gitlab
     gitlabClientId: renku-ui
     ## The client secret for authentication against gitlab
-    ## Generated using: `openssl rand -hex 32`
     gitlabClientSecret:
   renku:
     ## Domain name for the deployed instance of renku
@@ -58,14 +66,18 @@ global:
       ## Name of the postgres user to be used to access the Event Log db
       postgresUser: eventlog
       ## Postgres password to be used to access the Event Log db
-      ## Generated using: `openssl rand -hex 32`
       postgresPassword:
+        value:
+        overwriteOnHelmUpgrade: false
+      existingSecret: '{{ template "renku.fullname" . }}-db-postgres'
     tokenRepository:
       ## Name of the postgres user to be used to access the db storing access tokens
       postgresUser: tokenstorage
       ## Postgres password to be used to access the db storing access tokens
-      ## Generated using: `openssl rand -hex 32`
       postgresPassword:
+        value:
+        overwriteOnHelmUpgrade: false
+      existingSecret: '{{ template "renku.fullname" . }}-token-postgres'
     jena:
       ## specify which dataset should be used in Jena
       dataset:
@@ -121,7 +133,9 @@ keycloak:
 
     ## Keycloak admin user configuration
     username: admin
-    password: # use `openssl rand -hex 32`
+    password:
+    existingSecret: keycloak-password-secret
+    existingSecretKey: keycloak-password
 
     livenessProbe:
       initialDelaySeconds: 180
@@ -171,7 +185,7 @@ keycloak:
       # !!!
       ## This value is dependent on the Release name! (but helm charts don't allow templating values here.)
       # !!!
-      existingSecret: renku
+      existingSecret: renku-keycloak-postgres
       existingSecretKey: keycloak-postgres-password
 
     ingress:
@@ -563,6 +577,20 @@ notebooks:
         #  oauth_client_id: gateway
         #  apiToken: # use `openssl rand -hex 32`
         #  oauth_redirect_uri: http://<gateway>/api/auth/jupyterhub/token
+        ## Configure gitlab and postgres:
+        ## Values need to be set to get jupyterhub to work
+       # extraEnv:
+       #  - name: GITLAB_URL
+       #    value: <gitlab url>
+       #  - name: DEBUG
+       #    value: "1"
+       #  - name: JUPYTERHUB_SPAWNER_CLASS
+       #    value: spawners.RenkuKubeSpawner
+       #  - name: PGPASSWORD
+       #    valueFrom:
+       #        secretKeyRef:
+       #          name: renku-jupyterhub-postgres
+       #          key: jupyterhub-postgres-password
 
     ## Simple default setup for gitlab oauth
     # auth:

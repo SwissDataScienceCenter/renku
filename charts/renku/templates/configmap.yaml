@@ -78,7 +78,7 @@ data:
     #!/bin/bash
     set -x
 
-    KEYCLOAK_POSTGRES_PASSWORD=$(cat /passwords/keycloak-postgres-password)
+    KEYCLOAK_POSTGRES_PASSWORD=$(cat /keycloak-postgres/keycloak-postgres-password)
 
     psql -v ON_ERROR_STOP=1 <<-EOSQL
         create database "{{ .Values.global.keycloak.postgresDatabase }}";
@@ -97,7 +97,7 @@ data:
       #!/bin/bash
       set -x
 
-      GITLAB_POSTGRES_PASSWORD=$(cat /passwords/gitlab-postgres-password)
+      GITLAB_POSTGRES_PASSWORD=$(cat /gitlab-postgres/gitlab-postgres-password)
 
       psql -v ON_ERROR_STOP=1 <<-EOSQL
           create database "{{ .Values.global.gitlab.postgresDatabase }}";
@@ -118,7 +118,7 @@ data:
       #!/bin/bash
       set -x
 
-      DB_EVENT_LOG_POSTGRES_PASSWORD=$(cat /passwords/graph-dbEventLog-postgresPassword)
+      DB_EVENT_LOG_POSTGRES_PASSWORD=$(cat /graph-db-postgres/graph-dbEventLog-postgresPassword)
       DB_EVENT_LOG_DB_NAME=event_log
 
       psql -v ON_ERROR_STOP=1 <<-EOSQL
@@ -137,7 +137,7 @@ data:
       #!/bin/bash
       set -x
 
-      TOKEN_REPOSITORY_POSTGRES_PASSWORD=$(cat /passwords/graph-tokenRepository-postgresPassword)
+      TOKEN_REPOSITORY_POSTGRES_PASSWORD=$(cat /graph-token-postgres/graph-tokenRepository-postgresPassword)
       TOKEN_REPOSITORY_DB_NAME=projects_tokens
 
       psql -v ON_ERROR_STOP=1 <<-EOSQL
@@ -157,7 +157,7 @@ data:
       #!/bin/bash
       set -x
 
-      JUPYTERHUB_POSTGRES_PASSWORD=$(cat /passwords/jupyterhub-postgres-password)
+      JUPYTERHUB_POSTGRES_PASSWORD=$(cat /jupyterhub-postgres/jupyterhub-postgres-password)
 
       psql -v ON_ERROR_STOP=1 <<-EOSQL
           create database "{{ .Values.global.jupyterhub.postgresDatabase }}";
