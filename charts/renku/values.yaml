@@ -34,7 +34,7 @@ global:
     postgresPassword:
       value:
       overwriteOnHelmUpgrade: false
-    ## Admin password for the Keycloak database
+    ## Admin password for Keycloak
     password:
       value:
       overwriteOnHelmUpgrade: false
@@ -133,7 +133,9 @@ keycloak:
 
     ## Keycloak admin user configuration
     username: admin
-    password:
+    ## Do not set an admin password through this chart value. Instead, set it
+    ## through global.keycloak.password.value.
+    # password:
     existingSecret: keycloak-password-secret
     existingSecretKey: keycloak-password
 
