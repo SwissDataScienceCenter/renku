@@ -41,7 +41,7 @@ rm helm.tar.gz
 rm -r linux-amd64
 
 
-# install pipenv
-pip install pipenv
-# install required packages
-pipenv install --dev --system --deploy
+# # install pipenv
+# pip install pipenv
+# # install required packages
+# pipenv install --dev --system --deploy
