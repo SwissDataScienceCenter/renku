@@ -1,0 +1,81 @@
+name: CI/CD
+
+on: [push]
+  # push:
+  #   paths:
+  #   - charts/**
+
+jobs:
+  cleanup:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: rokroskar/workflow-run-cleanup-action@v0.2.1
+      env:
+        GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+  github-env:
+    runs-on: ubuntu-latest
+    steps:
+    - name: get environment
+      run: env
+  # test-pr:
+  #   runs-on: ubuntu-latest
+  #   if: github.ref != 'refs/heads/master'
+  #   steps:
+  #   - uses: actions/checkout@master
+  #   - name: Deploy to k8s
+  #     uses: stefanprodan/kube-tools@v1
+  #     env:
+  #       KUBECONFIG: ${{ github.workspace }}/renkubot-kube.config
+  #       RENKUBOT_KUBECONFIG: ${{ secrets.RENKUBOT_KUBECONFIG }}
+  #       ROK_CD_VALUES: ${{ secrets.ROK_CD_VALUES }}
+  #     with:
+  #       kubectl: 1.16.2
+  #       helm: 2.16.1
+  #       command: |
+  #         set -x
+  #         export RENKU_RELEASE="renku-ci-${GITHUB_SHA:0:7}"
+  #         echo "$RENKUBOT_KUBECONFIG" > renkubot-kube.config
+  #         helm init --client-only
+  #         helm repo add renku https://swissdatasciencecenter.github.io/helm-charts/
+  #         helm repo add gitlab https://charts.gitlab.io/
+  #         helm repo add jupyterhub https://jupyterhub.github.io/helm-chart
+  #         rm -rf charts/renku/charts
+  #         helm dependency update charts/renku
+  #         printf "%s" "$ROK_CD_VALUES" | sed "s/rok-cd/${RENKU_RELEASE}/" > values.yaml
+  #         helm upgrade --install rok-cd-renku \
+  #                     --namespace $RENKU_RELEASE \
+  #                     -f values.yaml \
+  #                     --timeout 1800 charts/renku \
+  #                     --cleanup-on-fail
+  #         helm test $RENKU_RELEASE
+
+
+  deploy:
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/master'
+    steps:
+    - uses: actions/checkout@master
+    - name: Deploy to k8s
+      uses: stefanprodan/kube-tools@v1
+      env:
+        KUBECONFIG: ${{ github.workspace }}/renkubot-kube.config
+        RENKUBOT_KUBECONFIG: ${{ secrets.RENKUBOT_KUBECONFIG }}
+        ROK_CD_VALUES: ${{ secrets.ROK_CD_VALUES }}
+      with:
+        kubectl: 1.16.2
+        helm: 2.16.1
+        command: |
+          set -x
+          echo "$RENKUBOT_KUBECONFIG" > renkubot-kube.config
+          helm init --client-only
+          helm repo add renku https://swissdatasciencecenter.github.io/helm-charts/
+          helm repo add gitlab https://charts.gitlab.io/
+          helm repo add jupyterhub https://jupyterhub.github.io/helm-chart
+          rm -rf charts/renku/charts
+          helm dependency update charts/renku
+          printf "%s" "$ROK_CD_VALUES" > rok_cd_values.yaml
+          helm upgrade --install rok-cd-renku \
+                      --namespace rok \
+                      -f rok_cd_values.yaml \
+                      --timeout 1800 charts/renku \
+                      --cleanup-on-fail
