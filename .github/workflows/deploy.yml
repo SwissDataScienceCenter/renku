@@ -1,0 +1,23 @@
+name: Deploy dev
+
+on: [push]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@master
+    - name: Set up Python
+      uses: actions/setup-python@v1
+      with:
+        version: 3.7
+    - name: Install deploy dependencies
+      run: scripts/travis-install.sh
+    - name: configure k8s
+      env:
+        RENKUBOT_KUBECONFIG_GPG: ${{ secrets.RENKUBOT_KUBECONFIG_GPG }}
+      run: |
+        gpg --quiet --batch --yes --decrypt --passphrase="$RENKUBOT_KUBECONFIG_GPG" \
+            --output renkubot-kube.config scripts/renkubot-kube.config.gpg
+        KUBECONFIG=renkubot-kube.config kubectl -n renku get pods
