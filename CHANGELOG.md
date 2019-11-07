@@ -3,24 +3,26 @@
 
 ## 0.5.0 (released 2019-11-07)
 
+## New Features
+
+⭐️ Datasets are now displayed inside a Renku project
 
 ## Notable improvements
 
+* Changed project URLs to show namespace and name instead of project ID 
+* Reworked collaboration view with issues list and collapsing issue pane 
 * Enabled search by username and group 🔍
 * Fork functionality now allows changing the name 🍴
-* Better tools to get information about interactive environments
-* Better consistency with project and interactive environment URLs
-* Users with developer permissions can now start an interactive environment 🚀
+* Better tools to get information about interactive environments 🕹
+* Better consistency with project and interactive environment URLs 🎯
+
 
 ### Miscellaneous
 * Commit time is local timezone aware
-* Simplified deployment with automatic secrets generation
 * Images and project templates now use Renku [0.7.1](https://github.com/SwissDataScienceCenter/renku-python/releases)
 * User profile redirects to Keycloak profile
+* Simplified deployment with automatic secrets generation
 
-### Features
-
-⭐️ Datasets are now displayed inside a Renku project
 
 ### Individual components
 
@@ -32,7 +34,7 @@ For changes to individual components, check:
 
 ## Bug fixes
 * Lineage visualization bugs addressed
-
+* Users with developer permissions can now start an interactive environment 🚀
 
 ## Upgrading from 0.4.3
 * Update values file according to [the values changelog](https://github.com/SwissDataScienceCenter/renku/blob/master/charts/values.yaml.changelog.md#changes-on-top-of-renku-042)
