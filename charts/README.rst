@@ -4,6 +4,26 @@ Helm Charts for Deploying RENKU on Kubernetes
 Helm 2.9.0 or newer is recommended as we use the :code:`before-hook-creation` hook deletion policy.
 See also: `before-hook-creation delete policy <https://github.com/kubernetes/helm/commit/1d4883bf3c85ea43ed071dff4e02cc47bb66f44f>`_.
 
+
+Deploying from a Helm repository
+--------------------------------
+
+.. code-block:: console
+
+    $ minikube start
+    $ helm init
+    $ helm repo add renku https://swissdatasciencecenter.github.io/helm-charts/
+    $ helm upgrade --install renku --namespace renku \
+        -f minikube-values.yaml \
+        --set global.renku.domain=$(minikube ip) \
+        --set ui.gitlabUrl=http://$(minikube ip)/gitlab \
+        --set jupyterhub.hub.extraEnv.GITLAB_HOST=http://$(minikube ip)/gitlab \
+        --version 0.4.3
+
+See the `helm chart registry <https://swissdatasciencecenter.github.io/helm-charts/>`_ for 
+available versions. 
+
+
 Testing locally
 ---------------
 
@@ -76,25 +96,6 @@ You can the use the same ``helm upgrade`` command as above to redeploy the
 services using the new images. If you ommit the ``--tag latest``,
 ``chartpress`` will tag the images with the current commit sha and update the
 relevant values in the charts.
-
-
-Deploying from a Helm repository
---------------------------------
-
-.. code-block:: console
-
-    $ minikube start
-    $ helm init
-    $ helm repo add renku https://swissdatasciencecenter.github.io/helm-charts/
-    $ helm upgrade --install renku --namespace renku \
-        -f minikube-values.yaml \
-        --set global.renku.domain=$(minikube ip) \
-        --set ui.gitlabUrl=http://$(minikube ip)/gitlab \
-        --set jupyterhub.hub.extraEnv.GITLAB_HOST=http://$(minikube ip)/gitlab \
-        --version 0.4.3
-
-See the `helm chart registry <https://swissdatasciencecenter.github.io/helm-charts/>`_ for 
-available versions. 
 
 
 Tests
