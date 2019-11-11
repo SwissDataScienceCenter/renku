@@ -54,12 +54,12 @@ Requires minikube, kubectl, helm and python.
         --set ui.gatewayUrl=http://$(minikube ip)/api \
         --set gateway.keycloakUrl=http://$(minikube ip) \
         --set gateway.gitlabUrl=http://$(minikube ip)/gitlab \
-        --set notebooks.jupyterhub.hub.extraEnv.GITLAB_URL=http://$(minikube ip)/gitlab \
+        --set notebooks.jupyterhub.hub.extraEnv[0].value=http://$(minikube ip)/gitlab \
         --set notebooks.jupyterhub.hub.services.gateway.oauth_redirect_uri=http://$(minikube ip)/api/auth/jupyterhub/token \
         --set notebooks.jupyterhub.auth.gitlab.callbackUrl=http://$(minikube ip)/jupyterhub/hub/oauth_callback \
         --set notebooks.gitlab.registry.host=10.100.123.45:8105 \
         --set gitlab.registry.externalUrl=http://10.100.123.45:8105/ \
-        --set graph.gitlab.url=http://$(minikube ip)/gitlab
+        --set graph.gitlab.url=http://$(minikube ip)/gitlab \
         --timeout 1800
 
 Due to issue `minikube #1568
@@ -79,6 +79,32 @@ The platform takes some time to start, to check the pods status do:
 and wait until all pods are running.
 Now, we can go to: :code:`http://$(minikube-ip)/`
 
+
+Configure the GitLab sign out path
+==================================
+
+There is one manual step that you need to perform in order to get the platform
+fully operational. Go to :code:`http://$(minikube ip)/gitlab` and login as the
+``root`` user (the default password is ``gitlabadmin``. Go to ``Admin area ->
+Settings --> General -> Sign-in Restrictions`` and configure the ``After sign
+out path`` to be:
+
+.. code-block:: console
+
+    http://<renku-domain>/auth/realms/Renku/protocol/openid-connect/logout?redirect_uri=http://<renku-domain>/api/auth/logout%3Fgitlab_logout=1
+
+``<renku-domain>`` should just be your minikube ip.
+
+Once you have done this you can redeploy renku with:
+
+.. code-block:: console
+
+    $ helm upgrade renku renku/renku --reuse-values --set gitlab.oauth.autoSignIn=true
+
+This will prevent the separate login screen for GitLab from appearing. If you
+need to change user permissions at a later point you will need to log in as the
+root user again, so do the uprade again toggling the :code:`--set
+gitlab.oauth.autoSignIn` as needed.
 
 Building images
 ---------------

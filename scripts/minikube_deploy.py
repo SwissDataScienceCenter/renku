@@ -15,23 +15,28 @@ from ruamel.yaml import YAML
 dependencies = [
     {
         'repo_name': 'renku-ui',
+        'chart_dir': 'helm-chart',
         'chartpress_dir': 'helm-chart',
     },
     {
         'repo_name': 'renku-notebooks',
-        'chartpress_dir': 'helm-chart',
+        'chart_dir': 'helm-chart',
+        'chartpress_dir': '',
     },
     {
         'repo_name': 'renku-gateway',
+        'chart_dir': 'helm-chart',
         'chartpress_dir': 'helm-chart',
     },
     {
         'chart_name': 'gitlab',
         'repo_name': 'renku',
+        'chart_dir': 'charts',
         'chartpress_dir': 'charts',
     },
     {
         'repo_name': 'renku-graph',
+        'chart_dir': 'helm-chart',
         'chartpress_dir': 'helm-chart',
     },
 ]
@@ -53,13 +58,16 @@ def main():
     # 2. Build Docker images and update chart version with chartpress
     get_minikube_docker_env()
     for dep in dependencies:
+        chart_dir = os.path.join(
+            dependency_dir(dep['repo_name']), dep['chart_dir']
+        )
         chartpress_dir = os.path.join(
             dependency_dir(dep['repo_name']), dep['chartpress_dir']
         )
-        subchart_dirs = [os.path.join(chartpress_dir, dep['repo_name'])]
+        subchart_dirs = [os.path.join(chart_dir, dep['repo_name'])]
         if 'chart_name' in dep:
             subchart_dirs.append(
-                os.path.join(chartpress_dir, dep['chart_name'])
+                os.path.join(chart_dir, dep['chart_name'])
             )
         for subchart_dir in subchart_dirs:
             update_subchart_dependencies(subchart_dir)
@@ -85,13 +93,13 @@ def main():
             renku_requirements = yaml.load(f)
 
         for dep in dependencies:
-            chartpress_dir = os.path.join(
-                dependency_dir(dep['repo_name']), dep['chartpress_dir']
+            chart_dir = os.path.join(
+                dependency_dir(dep['repo_name']), dep['chart_dir']
             )
             chart_name = dep.get('chart_name', dep['repo_name'])
 
             with open(
-                os.path.join(chartpress_dir, chart_name, 'Chart.yaml'), 'rt'
+                os.path.join(chart_dir, chart_name, 'Chart.yaml'), 'rt'
             ) as f:
                 chart = yaml.load(f)
             version = chart.get('version')
@@ -104,7 +112,7 @@ def main():
             )
             req['version'] = version
             req['repository'] = 'file://{}'.format(
-                os.path.abspath(os.path.join(chartpress_dir, chart_name))
+                os.path.abspath(os.path.join(chart_dir, chart_name))
             )
 
         with open(os.path.join(tmp, 'renku', 'requirements.yaml'), 'wt') as f:
@@ -135,7 +143,7 @@ def main():
             'ui.gatewayUrl=http://{mip}/api',
             'gateway.keycloakUrl=http://{mip}',
             'gateway.gitlabUrl=http://{mip}/gitlab',
-            'notebooks.jupyterhub.hub.extraEnv.GITLAB_URL=http://{mip}/gitlab',
+            'notebooks.jupyterhub.hub.extraEnv[0].value=http://{mip}/gitlab',
             'notebooks.jupyterhub.hub.services.gateway.oauth_redirect_uri=http://{mip}/api/auth/jupyterhub/token',
             'notebooks.jupyterhub.auth.gitlab.callbackUrl=http://{mip}/jupyterhub/hub/oauth_callback',
             'notebooks.gitlab.registry.host=10.100.123.45:8105',

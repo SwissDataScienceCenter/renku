@@ -73,6 +73,10 @@ Define subcharts full names
 {{- printf "%s-%s" .Release.Name "gateway" | replace "+" "_" | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 
-{{- define "graph.fullname" -}}
-{{- printf "%s-%s" .Release.Name "graph" | replace "+" "_" | trunc 63 | trimSuffix "-" -}}
+{{- define "webhookService.fullname" -}}
+{{- printf "%s-%s" .Release.Name "webhook-service" | replace "+" "_" | trunc 63 | trimSuffix "-" -}}
+{{- end -}}
+
+{{- define "knowledgeGraph.fullname" -}}
+{{- printf "%s-%s" .Release.Name "knowledge-graph" | replace "+" "_" | trunc 63 | trimSuffix "-" -}}
 {{- end -}}

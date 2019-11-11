@@ -29,11 +29,11 @@ set -ex
 sudo apt-get update && sudo apt-get install -y graphviz
 
 # install kubectl
-curl -Lo kubectl https://storage.googleapis.com/kubernetes-release/release/v1.10.0/bin/linux/amd64/kubectl
+curl -Lo kubectl https://storage.googleapis.com/kubernetes-release/release/v1.15.0/bin/linux/amd64/kubectl
 chmod +x kubectl
 sudo mv kubectl /usr/local/bin/
 # install helm
-curl -Lo helm.tar.gz https://storage.googleapis.com/kubernetes-helm/helm-v2.12.3-linux-amd64.tar.gz
+curl -Lo helm.tar.gz https://storage.googleapis.com/kubernetes-helm/helm-v2.14.3-linux-amd64.tar.gz
 tar xvf helm.tar.gz
 chmod +x linux-amd64/helm
 sudo mv linux-amd64/helm /usr/local/bin/

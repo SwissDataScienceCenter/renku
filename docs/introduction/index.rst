@@ -162,9 +162,19 @@ accidental data duplication as much as possible.
 History
 -------
 
-- 2018.11.30. **Renku** v0.3.0 is released with bug-fixes and performance improvements
+- 2019.05.27. **Renku** `v0.4.0 <https://github.com/SwissDataScienceCenter/renku/releases/tag/0.4.0>`_ released
+  with major improvements to the UI and featuring a live Knowledge Graph
 
-- 2018.09.25. First functional release of **Renku** v0.2.0; A public deployment is launched at https://renkulab.io.
+- 2019.04.11. **Renku** `v0.3.2 <https://github.com/SwissDataScienceCenter/renku/releases/tag/0.3.2>`_ is
+  released
+
+- 2019.03.11. **Renku** v0.3.1 is released
+
+- 2018.11.30. **Renku** `v0.3.0 <https://github.com/SwissDataScienceCenter/renku/releases/tag/0.3.0>`_ is
+  released with bug-fixes and performance improvements
+
+- 2018.09.25. First functional release of **Renku** v0.2.0; A public deployment
+  is launched at https://renkulab.io.
 
 - 2018.02.01. A rewrite of **Renku** is underway
 

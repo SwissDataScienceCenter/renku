@@ -10,7 +10,8 @@
 {{- $gatewayFullname := include "gateway.fullname" . -}}
 {{- $gatewayServicePort := .Values.gateway.service.port -}}
 {{- $graphEnabled := .Values.graph.enabled -}}
-{{- $graphFullname := include "graph.fullname" . -}}
+{{- $webhookServiceFullname := include "webhookService.fullname" . -}}
+{{- $knowledgeGraphFullname := include "knowledgeGraph.fullname" . -}}
 {{- if $graphEnabled }}
 {{- $jenaFullname := include "jena.fullname" . -}}
 {{- $jenaServicePort := .Values.graph.jena.service.port -}}
@@ -72,7 +73,11 @@ spec:
       {{- if $graphEnabled }}
       - path: /webhooks/events
         backend:
-          serviceName: {{ $graphFullname }}-webhook-service
+          serviceName: {{ $webhookServiceFullname }}
+          servicePort: 80
+      - path: /knowledge-graph
+        backend:
+          serviceName: {{ $knowledgeGraphFullname }}
           servicePort: 80
       {{- end }}
   {{- end }}

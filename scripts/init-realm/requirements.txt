@@ -1,0 +1,1 @@
+python-keycloak==0.17.5

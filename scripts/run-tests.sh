@@ -28,8 +28,8 @@ set -ex
 # FIXME: make helm lint work
 # helm lint charts/renku -f charts/minikube-values.yaml
 
-sleep 60 # can help
-helm test $RENKU_DEPLOY --timeout 3000
+# sleep 60 # can help
+# helm test $RENKU_DEPLOY --timeout 3000
 
 sphinx-build -nNW -b spelling -d docs/_build/doctrees docs docs/_build/spelling
 sphinx-build -qnNW docs docs/_build/html
