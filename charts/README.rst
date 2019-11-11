@@ -93,7 +93,7 @@ Deploying from a Helm repository
         --set jupyterhub.hub.extraEnv.GITLAB_HOST=http://$(minikube ip)/gitlab \
         --version 0.4.3
 
-See [the helm chart registry](https://swissdatasciencecenter.github.io/helm-charts/) for 
+See the `helm chart registry <https://swissdatasciencecenter.github.io/helm-charts/>`_ for 
 available versions. 
 
 
