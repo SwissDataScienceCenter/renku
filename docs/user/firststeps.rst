@@ -32,7 +32,7 @@ or LinkedIn account by clicking on the corresponding button.
 Once logged in, create a new project by going to the **Projects** (1) page
 and clicking on the **New Project** (2) button.
 
-.. image:: ../_static/images/ui_create_project.png
+.. image:: ../_static/images/ui_01_create-project.png
     :width: 100%
     :align: center
     :alt: Head to new project page
@@ -41,7 +41,7 @@ Set **Zurich bikes tutorial** as your project title (1), fill-in a short
 description (2) and set the project visibility to **Public** (3). Click on the
 **Create** button (4).
 
-.. image:: ../_static/images/ui_new_project.png
+.. image:: ../_static/images/ui_02_new-project.png
     :width: 100%
     :align: center
     :alt: Create a new project
@@ -50,7 +50,7 @@ Now that we have a project, we can start working on it by starting a
 new JupyterLab notebook server. Click on **Environments** (1),
 then on **New** (2).
 
-.. image:: ../_static/images/ui_notebook_servers.png
+.. image:: ../_static/images/ui_03_notebook-servers.png
     :width: 100%
     :align: center
     :alt: Head to environments page
@@ -68,7 +68,7 @@ Wait until its color has turned to green and the status from
 
 You can now connect to the server by clicking on the **Connect** button (1).
 
-.. image:: ../_static/images/ui_connect_to_server.png
+.. image:: ../_static/images/ui_04_connect-to-server.png
     :width: 100%
     :align: center
     :alt: Connect to environment
@@ -622,8 +622,8 @@ Share your results and collaborate with your peers
 In this section, we will see how to use Renku to collaborate on projects. For an
 overview on collaboration, see :ref:`collaborating`.
 
-Discussions with Kus
-""""""""""""""""""""
+Discussions with Issues
+"""""""""""""""""""""""
 
 Let's start by going back to the Renku web interface on renkulab.io_ or
 whichever instance you are using for this tutorial. Make sure you are logged
@@ -631,41 +631,41 @@ in, so you can see your projects list by clicking on ``Projects`` in the top
 navigation bar.
 
 Click on your ``zurich-bikes-tutorial`` project to open it and then go to the
-**Kus** tab (1). As you can see it's empty at the moment, so let's start a new
-discussion by clicking on the **New Ku** button (2).
+**Issues** sub tab (2) of the **Collaboration** tab (1). As you can see it's empty at the moment, so let's start a new
+discussion by clicking on the **New Issue** button (3).
 
-.. image:: ../_static/images/renku-ui-new-ku.png
+.. image:: ../_static/images/ui_05_new-issue.png
     :width: 85%
     :align: center
-    :alt: New Ku in Renku UI
+    :alt: New issue in Renku UI
 
-In the **New Ku** form, fill in the **Title** and **Description** as follows.
+In the **New Issue** form, fill in the **Title** and **Description** as follows.
 
 * Title: Data source
 * Description: Where does the data come from?
 
 Do not change the **Visibility** and click on **Create**.
 
-The **Kus** tab should now list the newly created Ku.
+The **Issues** sub tab should now list the newly created issue.
 
-In Renku, Kus are media-rich discussions you can use to help keep track of
+In Renku, issues are media-rich discussions you can use to help keep track of
 your work and to collaborate with others.
 
-To participate in a given Ku and add comments, click on the title.
+To participate in a given issue and add comments, click on the title.
 
-.. image:: ../_static/images/renku-ui-kus-list.png
+.. image:: ../_static/images/ui_06_issues-list.png
     :width: 85%
     :align: center
     :alt: Kus list in Renku UI
 
-This will display the thread of comments from the selected Ku.
+This will display the thread of comments from the selected issue.
 To write something and add it to the discussion, use the text
 box and click submit.
 
-.. image:: ../_static/images/renku-ui-new-ku-comment.png
+.. image:: ../_static/images/ui_07_new-issue-comment.png
     :width: 85%
     :align: center
-    :alt: Participate in a Ku in Renku UI
+    :alt: Participate in a issue in Renku UI
 
 The comments are displayed using the Markdown format (`cheatsheet here <https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet>`_),
 with the powerful addition that you can embed notebook files and markdown files.
@@ -685,10 +685,10 @@ Copy and paste the following text in the text box and hit **Submit**.
 
     ![Readme](README.md)
 
-.. image:: ../_static/images/renku-ui-comment-1.png
+.. image:: ../_static/images/ui_08_issue-comment-1.png
     :width: 85%
     :align: center
-    :alt: Ku example 1 in Renku UI
+    :alt: Issue example 1 in Renku UI
 
 Now, you can use **Launch JupyterLab** to open and edit the ``README.md`` file.
 You can mention that the data comes from the city of Zürich, with the following
@@ -705,18 +705,18 @@ Use ``git`` to save your changes:
     git commit -m "Added data information in the Readme"
     git push
 
-Now that the ``README.md`` file has been updated, we can **Close** the Ku (1).
+Now that the ``README.md`` file has been updated, we can **Close** the issue (1).
 
-.. image:: ../_static/images/renku-ui-close-ku.png
+.. image:: ../_static/images/ui_09_close-issue.png
     :width: 85%
     :align: center
-    :alt: Close Ku in Renku UI
+    :alt: Close issue in Renku UI
 
 Doing so indicates that the corresponding discussion is closed.
 This can be useful to sort discussions and find out what is currently work in progress
 within the project.
 
-Now, let's create another Ku and embed a notebook in the discussion.
+Now, let's create another issue and embed a notebook in the discussion.
 
 * Title: General data exploration
 * Description: First look at the data set
@@ -733,7 +733,7 @@ As you can see, the content of the notebook is being displayed in the
 comment. You can collapse/expand it by clicking on its corresponding title
 in blue.
 
-.. image:: ../_static/images/renku-ui-embed-notebook.png
+.. image:: ../_static/images/ui_10_embed-notebook.png
     :width: 85%
     :align: center
     :alt: Embedded notebook in Renku UI
