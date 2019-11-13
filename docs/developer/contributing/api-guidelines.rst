@@ -226,7 +226,7 @@ response indicating:
 - next page ``rel="next"``;
 - last page ``rel="last"``.
 
-Link headers are described by `RFC 5988
+Link headers are described by `RFC 8288
 <https://tools.ietf.org/html/rfc5988#page-6>`_.
 
 In cases where the total number of resources is not known in advance, the
