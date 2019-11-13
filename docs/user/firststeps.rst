@@ -47,31 +47,31 @@ description (2) and set the project visibility to **Public** (3). Click on the
     :alt: Create a new project
 
 Now that we have a project, we can start working on it by starting a
-new JupyterLab notebook server. Click on **Notebook Servers** (1), then on
-**Start new server** (2).
+new JupyterLab notebook server. Click on **Environments** (1),
+then on **New** (2).
 
 .. image:: ../_static/images/ui_notebook_servers.png
     :width: 100%
     :align: center
-    :alt: Head to Notebook ui_notebook_servers
+    :alt: Head to environments page
 
 The default settings are fine for this tutorial, just click on
-**Launch Server**. You will see a new row with a yellow button
-on the right. Wait until its color has turned to green and the
-text from **Starting** to **Running**.
+**Start environment** (3). You will see a table with the  status
+of the environment launch (initially in yellow) on the right.
+Wait until its color has turned to green and the status from
+**Pending** to **Running**.
 
 .. note::
 
     Please be patient, the first time you start a server it may require
     up to one minute.
 
-You can now connect to the server by clicking on the green button (1),
-then on **Connect** (2)
+You can now connect to the server by clicking on the **Connect** button (1).
 
 .. image:: ../_static/images/ui_connect_to_server.png
     :width: 100%
     :align: center
-    :alt: Start a new server
+    :alt: Connect to environment
 
 .. _add_data:
 
