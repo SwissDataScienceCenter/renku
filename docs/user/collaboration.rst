@@ -15,14 +15,9 @@ the **Search** tab. Without entering any search terms, you will see a list of
 all projects that you have access to. You can click on a project name to be
 taken to the project's landing page.
 
-.. warning::
-
-  Note that the search box currently only allows you to search by project title,
-  not by username.
-
 By default, the files in projects created by other people are "read only" to you.
-This means you can see an overview, create and read Kus, and browse the filesystem
-in both text and :ref:`lineage` modes. The project's **Notebook Servers** tab
+This means you can see an overview, create and read issues, and browse the filesystem
+in both text and :ref:`lineage` modes. The project's **Environments** tab
 will inform you that you do not have permissions to launch a notebook or make
 modifications to the code or datasets.
 
@@ -31,7 +26,7 @@ your own analyses, etc.), you can `fork the project <forks_for_collaboration_>`_
 which creates your own copy of the current state of the repo.
 
 If you have questions, notes, or discussion topics that you would communicate to
-the project's owner(s), you can make `Renku platform "Ku"s <make_kus_>`_
+the project's owner(s), you can make `issues <make_issues_>`_
 
 If you are part of the team and want to work on this project, you can ask the
 project creator to `add you as a developer <added_to_project_>`_ or maintainer
@@ -50,18 +45,12 @@ where you have permissions to launch notebooks and make settings modifications.
 One reason you might want to fork someone's project is to use it as a template for
 your own analysis.
 
-.. warning::
+.. _make_issues:
 
-  Note that you will be unable to fork a project that has an identical name to a
-  project already in **Your Projects** list. We suggest you change the name of
-  your own project (which you can do in the Renku interface) before forking.
-
-.. _make_kus:
-
-Add collaborators to the conversation through "Ku"s
+Add collaborators to the conversation through Issues
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-In Renku, Kus are media-rich discussions you can use to help keep track of
+In Renku, issues are media-rich discussions you can use to help keep track of
 your work and to collaborate with others. To find out more about them and walk
 through sample usage, see :ref:`sharing_is_caring`.
 
@@ -75,7 +64,7 @@ interface to add them in ``Settings > Members``, with at either Developer or
 Maintainer privileges.
 
 Adding them here will make this project appear in their **Your Projects** list
-on the Renku platform, where the **Notebook Servers** tab for the project will allow
+on the Renku platform, where the **Environments** tab for the project will allow
 them to launch an interactive environment to work on the project as usual.
 
 .. warning::
