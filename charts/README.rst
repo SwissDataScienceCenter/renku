@@ -12,7 +12,6 @@ Create a values file using ``renku/values.yaml`` as a template. Then run:
 
 .. code-block:: console
 
-    $ minikube start
     $ helm init
     $ helm repo add renku https://swissdatasciencecenter.github.io/helm-charts/
     $ helm upgrade --install renku/renku \
