@@ -182,7 +182,7 @@ which have been followed.
 To make following relations more convenient, links to the related resources
 **should** be included in the response body when a given relation is queried.
 In case of a single resource response the links **may** also be included in the
-response `link header <https://tools.ietf.org/html/rfc5988#page-6>`_.
+response `link header <https://tools.ietf.org/html/rfc8288#section-3.5>`_.
 
 
 6. Query Parameters
