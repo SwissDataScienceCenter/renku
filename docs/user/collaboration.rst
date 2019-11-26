@@ -48,7 +48,7 @@ your own analysis.
 .. _make_issues:
 
 Add collaborators to the conversation through Issues
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 In Renku, issues are media-rich discussions you can use to help keep track of
 your work and to collaborate with others. To find out more about them and walk
