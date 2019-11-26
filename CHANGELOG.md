@@ -6,6 +6,7 @@
 ## New Features
 
 ⭐️ Datasets are now displayed inside a Renku project
+
 ⭐️ Datasets can now be searched within available Renku projects
 
 ## Notable improvements
@@ -18,6 +19,7 @@
 * Better consistency with project and interactive environment URLs 🎯
 
 ### Miscellaneous
+
 * Commit time is local timezone aware 🕖
 * Images and project templates now use Renku [0.8.2](https://github.com/SwissDataScienceCenter/renku-python/releases)
 * A Renku docker image with CUDA, Tensorflow and Tensorboard is now available 📣
@@ -34,8 +36,10 @@ For changes to individual components, check:
 * renku-notebooks [0.6.2](https://github.com/SwissDataScienceCenter/renku-notebooks/releases/tag/0.6.2), [0.6.1](https://github.com/SwissDataScienceCenter/renku-notebooks/releases/tag/0.6.1) and [0.6.0](https://github.com/SwissDataScienceCenter/renku-notebooks/releases/tag/0.6.0)
 
 ## Bug fixes
+
 * Lineage visualization bugs addressed 🐞
 * Users with developer permissions can now start an interactive environment 🚀
 
 ## Upgrading from 0.4.3
+
 * Update values file according to [the values changelog](https://github.com/SwissDataScienceCenter/renku/blob/master/charts/values.yaml.changelog.md#changes-on-top-of-renku-042)
