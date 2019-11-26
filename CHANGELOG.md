@@ -1,11 +1,12 @@
 # Renku changes
 
 
-## 0.5.0 (released 2019-11-08)
+## 0.5.0 (released 2019-11-26)
 
 ## New Features
 
 ⭐️ Datasets are now displayed inside a Renku project
+⭐️ Datasets can now be searched within available Renku projects
 
 ## Notable improvements
 
@@ -18,18 +19,19 @@
 
 ### Miscellaneous
 * Commit time is local timezone aware 🕖
-* Images and project templates now use Renku [0.7.1](https://github.com/SwissDataScienceCenter/renku-python/releases)
+* Images and project templates now use Renku [0.8.2](https://github.com/SwissDataScienceCenter/renku-python/releases)
+* A Renku docker image with CUDA, Tensorflow and Tensorboard is now available 📣
 * User profile redirects to Keycloak profile 👤
 * Simplified deployment with automatic secrets generation ✔️
 
 ### Individual components
 
 For changes to individual components, check:
-* renku ui [0.6.4](https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/0.6.4), [0.7.0](https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/0.7.0) and [0.7.1](https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/0.7.1)
+* renku ui [0.7.2](https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/0.7.2), [0.7.1](https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/0.7.1), [0.7.0](https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/0.7.0) and [0.6.4](https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/0.6.4)
 * renku-gateway [0.6.0](https://github.com/SwissDataScienceCenter/renku-gateway/releases/tag/0.6.0)
-* renku-python [0.7.1](https://github.com/SwissDataScienceCenter/renku-notebooks/releases/tag/0.7.1)
-* renku-graph [0.24.7](https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/0.24.7)
-* renku-notebooks [0.6.1](https://github.com/SwissDataScienceCenter/renku-notebooks/releases/tag/0.6.1)
+* renku-python [0.8.2](https://github.com/SwissDataScienceCenter/renku-notebooks/releases/tag/0.8.2), [0.8.1](https://github.com/SwissDataScienceCenter/renku-notebooks/releases/tag/0.8.1), [0.8.0](https://github.com/SwissDataScienceCenter/renku-notebooks/releases/tag/0.8.0), [0.7.2](https://github.com/SwissDataScienceCenter/renku-notebooks/releases/tag/0.7.2) and [0.7.1](https://github.com/SwissDataScienceCenter/renku-notebooks/releases/tag/0.7.1)
+* renku-graph [0.29.3](https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/0.29.3)
+* renku-notebooks [0.6.2](https://github.com/SwissDataScienceCenter/renku-notebooks/releases/tag/0.6.2), [0.6.1](https://github.com/SwissDataScienceCenter/renku-notebooks/releases/tag/0.6.1) and [0.6.0](https://github.com/SwissDataScienceCenter/renku-notebooks/releases/tag/0.6.0)
 
 ## Bug fixes
 * Lineage visualization bugs addressed 🐞
