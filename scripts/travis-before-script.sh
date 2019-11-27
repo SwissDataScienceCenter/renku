@@ -41,6 +41,7 @@ helm upgrade --install nginx-ingress --namespace kube-system \
     --set controller.service.type=NodePort \
     --set controller.service.nodePorts.http=32080 \
     --set controller.service.nodePorts.https=32443 \
+    --set controller.service.clusterIP=""
     stable/nginx-ingress
 
 helm repo add renku https://swissdatasciencecenter.github.io/helm-charts/
