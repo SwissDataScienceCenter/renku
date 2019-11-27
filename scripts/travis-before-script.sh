@@ -37,12 +37,12 @@ done
 helm init --wait --upgrade
 kubectl version
 helm version
-helm list
+helm history nginx-ingress
+helm delete --purge nginx-ingress
 helm upgrade --install nginx-ingress --namespace kube-system \
     --set controller.service.type=NodePort \
     --set controller.service.nodePorts.http=32080 \
-    --set controller.service.nodePorts.https=32443 \
-    --set controller.service.ommitClusterIP=true \
+    --set controller.service.nodePorts.https=32443
     stable/nginx-ingress
 
 helm repo add renku https://swissdatasciencecenter.github.io/helm-charts/
