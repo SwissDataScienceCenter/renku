@@ -37,7 +37,7 @@ done
 helm init --wait --upgrade
 kubectl version
 helm version
-helm history nginx-ingress
+helm history nginx-ingress --max 20
 helm delete --purge nginx-ingress
 helm upgrade --install nginx-ingress --namespace kube-system \
     --set controller.service.type=NodePort \
