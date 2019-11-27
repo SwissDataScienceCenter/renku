@@ -182,7 +182,7 @@ which have been followed.
 To make following relations more convenient, links to the related resources
 **should** be included in the response body when a given relation is queried.
 In case of a single resource response the links **may** also be included in the
-response `link header <https://tools.ietf.org/html/rfc5988#page-6>`_.
+response `link header <https://tools.ietf.org/html/rfc8288#section-3.5>`_.
 
 
 6. Query Parameters
@@ -226,8 +226,8 @@ response indicating:
 - next page ``rel="next"``;
 - last page ``rel="last"``.
 
-Link headers are described by `RFC 5988
-<https://tools.ietf.org/html/rfc5988#page-6>`_.
+Link headers are described by `RFC 8288
+<https://tools.ietf.org/html/rfc8288>`_.
 
 In cases where the total number of resources is not known in advance, the
 parameters ``limit`` and ``offset`` **should** be used instead. In this case,
