@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # -*- coding: utf-8 -*-
 #
-# Copyright 2017-2018 - Swiss Data Science Center (SDSC)
+# Copyright 2017-2019 - Swiss Data Science Center (SDSC)
 # A partnership between École Polytechnique Fédérale de Lausanne (EPFL) and
 # Eidgenössische Technische Hochschule Zürich (ETHZ).
 #
@@ -41,7 +41,7 @@ helm upgrade --install nginx-ingress --namespace kube-system \
     --set controller.service.type=NodePort \
     --set controller.service.nodePorts.http=32080 \
     --set controller.service.nodePorts.https=32443 \
-    --set controller.service.clusterIP=""
+    --set controller.service.clusterIP="" \
     stable/nginx-ingress
 
 helm repo add renku https://swissdatasciencecenter.github.io/helm-charts/
