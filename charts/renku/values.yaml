@@ -673,3 +673,11 @@ graph:
   #     ## A secret for signing request header tokens to be sent by GitLab with the Push Events
   #     ## Generated using: `openssl rand -hex 8|base64`
   #     secret: 1234
+
+## Configuration for renku-core-service
+# repository:
+  ## Default cache directory
+  # cacheDirectory: /svc/cache
+
+  ## Default clone depth
+  # projectCloneDepth: 1
