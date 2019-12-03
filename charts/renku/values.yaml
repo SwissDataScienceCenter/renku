@@ -356,7 +356,7 @@ gitlab:
   image:
   #   pullPolicy: IfNotPresent
     repository: gitlab/gitlab-ce
-    tag: 11.8.10-ce.0
+    tag: 11.9.11-ce.0
 
   ## automatically log in to gitlab
   oauth:
@@ -609,7 +609,7 @@ notebooks:
     singleuser:
       image:
         name: renku/singleuser
-        tag: 0.3.7-renku0.5.2
+        tag: 0.4.3-renku0.8.2
     #   # use JupyterLab by default in notebook servers
     #   defaultUrl: /lab
 
