@@ -204,31 +204,38 @@ each API endpoint.
 
 A generic ``sort`` parameter **must** be used to describe sorting rules. If
 there are multiple fields that a collection can be sorted by, the ``sort``
-parameter **must** accept a list of comma separated fields, indicating
-descending sort priority. A minus sign implies descending sort order in the
-subsequent field.
+parameter **must** accept a list of comma separated fields. The format of the
+``sort`` parameter values has to follow: ``field:ASC|DESC``.
 
 - Retrieving all files, ordered alphabetically by file type and by descending
   file size:
-  ``GET /files?sort=type,-size``
+  ``GET /files?sort=type:ASC,size:DESC``
 
 6.3 Pagination
 ~~~~~~~~~~~~~~
 
 Pagination **must** be supported by all endpoints returning more than just
-a single resource. Pagination **must** implemented using the query
-parameters ``page`` and ``per_page``. Link headers **must** be included in the
-response indicating:
+a single resource. Pagination **must** be implemented using the query
+parameters ``page`` and ``per_page``. Both the parameters have to accept
+any positive integer value and default to 1 and 20 accordingly. Non-positive
+values for both parameters causes endpoint to return ``BAD_REQUEST (400)`` response.
+
+Link headers **must** be included in the response indicating:
 
 - first page ``rel="first"``;
-- previous page ``rel="prev"``;
-- current page ``rel="self"``;
-- next page ``rel="next"``;
+- previous page ``rel="prev"`` (present only when the current page is not the first page);
+- next page ``rel="next"`` (present only when the current page is not the last page);
 - last page ``rel="last"``.
 
 Link headers are described by `RFC 8288
 <https://tools.ietf.org/html/rfc8288>`_.
 
-In cases where the total number of resources is not known in advance, the
-parameters ``limit`` and ``offset`` **should** be used instead. In this case,
-the link for the last page is omitted in the response header.
+Additional headers **must** be included in the response to present information
+about pagination:
+
+- ``Total``	for the total number of items;
+- ``Total-Pages``	for the total number of pages;
+- ``Per-Page`` for the number of items per page;
+- ``Page`` for the index of the current page (starting at 1);
+- ``Prev-Page`` for the index of the previous page (present only when the current page is not the first page);
+- ``Next-Page`` for the index of the next page (present only when the current page is not the last page).
