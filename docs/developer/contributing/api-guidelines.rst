@@ -217,8 +217,10 @@ parameter **must** accept a list of comma separated fields. The format of the
 Pagination **must** be supported by all endpoints returning more than just
 a single resource. Pagination **must** be implemented using the query
 parameters ``page`` and ``per_page``. Both the parameters have to accept
-any positive integer value and default to 1 and 20 accordingly. Non-positive
-values for both parameters causes endpoint to return ``BAD_REQUEST (400)`` response.
+any positive integer value. The ``page`` parameter **must** default to 1 
+while the default for the ``per_page`` should be set to some value reasonable 
+for an endpoint. Non-positive values for both parameters causes 
+endpoint to return ``BAD_REQUEST (400)`` response.
 
 Link headers **must** be included in the response indicating:
 
