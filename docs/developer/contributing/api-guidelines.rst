@@ -227,7 +227,7 @@ Link headers **must** be included in the response indicating:
 - first page ``rel="first"``;
 - previous page ``rel="prev"`` (present only when the current page is not the first page);
 - next page ``rel="next"`` (present only when the current page is not the last page);
-- last page ``rel="last"``.
+- last page ``rel="last"`` (present only when the total number of items is known).
 
 Link headers are described by `RFC 8288
 <https://tools.ietf.org/html/rfc8288>`_.
@@ -235,8 +235,8 @@ Link headers are described by `RFC 8288
 Additional headers **must** be included in the response to present information
 about pagination:
 
-- ``Total``	for the total number of items;
-- ``Total-Pages``	for the total number of pages;
+- ``Total``	for the total number of items (present only when the total number of items is known);
+- ``Total-Pages``	for the total number of pages (present only when the total number of items is known);
 - ``Per-Page`` for the number of items per page;
 - ``Page`` for the index of the current page (starting at 1);
 - ``Prev-Page`` for the index of the previous page (present only when the current page is not the first page);
