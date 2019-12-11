@@ -1,5 +1,4 @@
 name: renku
 runtime: python
-main: "renku_pulumi/__main__.py"
 description: RENKU (連句) is a software platform designed to foster multidisciplinary
   (data) science collaboration.

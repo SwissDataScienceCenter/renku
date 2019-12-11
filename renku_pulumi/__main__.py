@@ -1,10 +1,10 @@
 import pulumi
 from pulumi_kubernetes.helm.v2 import Chart, ChartOpts
 
-from renku_pulumi.charts import (renku_ui, renku_graph, renku_notebooks, renku_gateway,
+from charts import (renku_ui, renku_graph, renku_notebooks, renku_gateway,
     postgresql, minio, keycloak, gitlab)
 
-from renku_pulumi.resources.main import (configmap, ingress, postgres_postinstall_job,
+from resources.main import (configmap, ingress, postgres_postinstall_job,
     gitlab_postinstall_job, keycloak_postinstall_job, gitlab_secrets,
     graph_secrets, jupyterhub_secrets, keycloak_secrets)
 
@@ -23,11 +23,11 @@ def deploy():
     jupyterhub_secrets()
     renku_notebooks(config, global_config)
 
-    renku_gateway(config, global_config)
+    #renku_gateway(config, global_config)
 
-    # if config.require_bool('graph_enabled'):
-    #     graph_secrets()
-    #     renku_graph(config, global_config)
+    if config.require_bool('graph_enabled'):
+        pg, tok = graph_secrets()
+        renku_graph(config, global_config, pg, tok)
 
     if config.require_bool('gitlab_enabled'):
         g = gitlab(config, global_config)

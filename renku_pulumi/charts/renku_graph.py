@@ -6,7 +6,7 @@ from pulumi_random.random_password import RandomPassword
 
 config = pulumi.Config()
 
-def renku_graph(config, global_config):
+def renku_graph(config, global_config, postgres_secret, token_secret):
     graph_config = pulumi.Config('graph')
     values = graph_config.require_object('values')
     k8s_config = pulumi.Config("kubernetes")
@@ -32,13 +32,17 @@ def renku_graph(config, global_config):
     # values.sentry.environmentName = values.sentry.environmentName.format(namespace=k8s_config.require("namespace"))
     # values.sentry.sentryDsnRenkuPython = global_config['sentryDsnRenkuPython']
 
+    values['global']['graph']['dbEventLog']['existingSecret'] = postgres_secret.metadata['name']
+    values['global']['graph']['tokenRepository']['existingSecret'] = token_secret.metadata['name']
+
     return Chart(
         'graph',
         config=ChartOpts(
             chart='renku-graph',
-            version='0.29.3',
+            version='0.32.0-913601f',
             fetch_opts=FetchOpts(
-                repo='https://swissdatasciencecenter.github.io/helm-charts/'
+                #repo='https://swissdatasciencecenter.github.io/helm-charts/'
+                repo='http://127.0.0.1:8879/'
             ),
             values=values
         )
