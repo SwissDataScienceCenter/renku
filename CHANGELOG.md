@@ -1,7 +1,10 @@
 # Renku changes
 
+## 0.5.1 (released 2019-12-04)
 
-## 0.5.0 (released 2019-11-26)
+This is a bugfix release that updates the GitLab version required to allow changing the project name when forking (see [#616](https://github.com/SwissDataScienceCenter/renku-ui/issues/616) and [#626](https://github.com/SwissDataScienceCenter/renku-ui/issues/626)).
+
+## 0.5.0 (released 2019-11-27)
 
 ## New Features
 
