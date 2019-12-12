@@ -12,7 +12,7 @@ def minio(config, global_config):
 
     values['global'] = global_values
     return Chart(
-        'minio',
+        '{}-minio'.format(pulumi.get_stack()),
         config=ChartOpts(
             chart='minio',
             repo='stable',

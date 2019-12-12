@@ -4,6 +4,9 @@ from pulumi_kubernetes.extensions.v1beta1 import Ingress
 def ingress(global_config):
     config = pulumi.Config()
 
+    if not config.get_bool('ingress_enabled'):
+        return
+
     k8s_config = pulumi.Config('kubernetes')
 
     stack = pulumi.get_stack()

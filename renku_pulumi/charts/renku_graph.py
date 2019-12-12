@@ -36,7 +36,7 @@ def renku_graph(config, global_config, postgres_secret, token_secret):
     values['global']['graph']['tokenRepository']['existingSecret'] = token_secret.metadata['name']
 
     return Chart(
-        'graph',
+        '{}-graph'.format(pulumi.get_stack()),
         config=ChartOpts(
             chart='renku-graph',
             version='0.32.0-913601f',

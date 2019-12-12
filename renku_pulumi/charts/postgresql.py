@@ -12,7 +12,7 @@ def postgresql(config, global_config):
 
     values['global'] = global_values
     return Chart(
-        'postgresql',
+        '{}-postgresql'.format(pulumi.get_stack()),
         config=ChartOpts(
             chart='postgresql',
             repo='stable',

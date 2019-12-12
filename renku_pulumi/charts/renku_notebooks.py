@@ -12,7 +12,7 @@ def renku_notebooks(config, global_config):
 
     values['global'] = global_values
     return Chart(
-        'notebooks',
+        '{}-notebooks'.format(pulumi.get_stack()),
         config=ChartOpts(
             chart='renku-notebooks',
             version='0.6.2',

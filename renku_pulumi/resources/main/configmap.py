@@ -1,8 +1,9 @@
 import pulumi
 from pulumi_kubernetes.core.v1 import ConfigMap
+from jinja2 import Template
 
 # Unashamedly copied from: https://github.com/docker-library/postgres/blob/master/9.6/docker-entrypoint.sh
-POSTGRES_INIT_SCRIPT = """#!/bin/bash
+POSTGRES_INIT_SCRIPT = Template("""#!/bin/bash
     set -ex
     env
 
@@ -30,34 +31,34 @@ POSTGRES_INIT_SCRIPT = """#!/bin/bash
         *)        echo "$0: ignoring $f" ;;
       esac
       echo
-    done"""
+    done""", trim_blocks=True, lstrip_blocks=True)
 
-JUPYTERHUB_INIT_SCRIPT = """#!/bin/bash
+JUPYTERHUB_INIT_SCRIPT = Template("""#!/bin/bash
       set -x
 
       JUPYTERHUB_POSTGRES_PASSWORD=$(cat /jupyterhub-postgres/jupyterhub-postgres-password)
 
       psql -v ON_ERROR_STOP=1 <<-EOSQL
-          create database "{{ .Values.global.jupyterhub.postgresDatabase }}";
-          create user "{{ .Values.global.jupyterhub.postgresUser }}" password '$JUPYTERHUB_POSTGRES_PASSWORD';
+          create database "{{ global.jupyterhub.postgresDatabase }}";
+          create user "{{ global.jupyterhub.postgresUser }}" password '$JUPYTERHUB_POSTGRES_PASSWORD';
       EOSQL
 
-      psql -v ON_ERROR_STOP=1 --dbname "{{ .Values.global.jupyterhub.postgresDatabase }}" <<-EOSQL
+      psql -v ON_ERROR_STOP=1 --dbname "{{ global.jupyterhub.postgresDatabase }}" <<-EOSQL
           create extension if not exists "pg_trgm";
           revoke all on schema "public" from "public";
-          grant all privileges on database "{{ .Values.global.jupyterhub.postgresDatabase }}" to "{{ .Values.global.jupyterhub.postgresUser }}";
-          grant all privileges on schema "public" to "{{ .Values.global.jupyterhub.postgresUser }}";
-      EOSQL"""
+          grant all privileges on database "{{ global.jupyterhub.postgresDatabase }}" to "{{ global.jupyterhub.postgresUser }}";
+          grant all privileges on schema "public" to "{{ global.jupyterhub.postgresUser }}";
+      EOSQL""", trim_blocks=True, lstrip_blocks=True)
 
-GITLAB_INIT_SCRIPT = """#!/usr/bin/env bash
+GITLAB_INIT_SCRIPT = Template("""#!/usr/bin/env bash
     set -ex
     env
 
     apt-get update -y
     apt-get install -y curl jq
 
-    GITLAB_SERVICE_URL="http://{{ template "gitlab.fullname" . }}{{ .Values.global.gitlab.urlPrefix }}"
-    GITLAB_URL="{{ .Values.ui.gitlabUrl }}"
+    GITLAB_SERVICE_URL="http://{{ global.gitlab.fullname }}{{ global.gitlab.urlPrefix }}"
+    GITLAB_URL="{{ ui.gitlabUrl }}"
 
     until sleep 1; curl -f -s --connect-timeout 5 ${GITLAB_SERVICE_URL}/help; do
         echo waiting for gitlab
@@ -66,50 +67,51 @@ GITLAB_INIT_SCRIPT = """#!/usr/bin/env bash
     psql -v ON_ERROR_STOP=1 <<-EOSQL
         DELETE FROM oauth_applications WHERE uid='jupyterhub';
         INSERT INTO oauth_applications (name, uid, scopes, redirect_uri, secret, trusted)
-        VALUES ('jupyterhub', 'jupyterhub', 'api read_user', '{{ template "http" . }}://{{ .Values.global.renku.domain }}{{ .Values.notebooks.jupyterhub.hub.baseUrl }}hub/oauth_callback {{ template "http" . }}://{{ .Values.global.renku.domain }}/jupyterhub/hub/api/oauth2/authorize', '${JUPYTERHUB_AUTH_GITLAB_CLIENT_SECRET}', 'true');
+        VALUES ('jupyterhub', 'jupyterhub', 'api read_user', '{{ global.http }}://{{ global.renku.domain }}{{ notebooks.jupyterhub.hub.baseUrl }}hub/oauth_callback {{ global.http }}://{{ global.renku.domain }}/jupyterhub/hub/api/oauth2/authorize', '${JUPYTERHUB_AUTH_GITLAB_CLIENT_SECRET}', 'true');
 
-        DELETE FROM oauth_applications WHERE uid='{{ .Values.global.gateway.gitlabClientId }}';
+        DELETE FROM oauth_applications WHERE uid='{{ global.gateway.gitlabClientId }}';
         INSERT INTO oauth_applications (name, uid, scopes, redirect_uri, secret, trusted)
-        VALUES ('renku-ui', '{{ .Values.global.gateway.gitlabClientId }}', 'api read_user read_repository read_registry openid', '{{ template "http" . }}://{{ .Values.global.renku.domain }}/login/redirect/gitlab {{ template "http" . }}://{{ .Values.global.renku.domain }}/api/auth/gitlab/token', '${GATEWAY_GITLAB_CLIENT_SECRET}', 'true');
+        VALUES ('renku-ui', '{{ global.gateway.gitlabClientId }}', 'api read_user read_repository read_registry openid', '{{ global.http }}://{{ global.renku.domain }}/login/redirect/gitlab {{ global.http }}://{{ global.renku.domain }}/api/auth/gitlab/token', '${GATEWAY_GITLAB_CLIENT_SECRET}', 'true');
     EOSQL
     # configure the logout redirect
     # curl -f -is -X PUT -H "Private-token: ${GITLAB_SUDO_TOKEN}" \
-    #   ${GITLAB_SERVICE_URL}/api/v4/application/settings?after_sign_out_path={{ template "http" . }}://{{ .Values.global.renku.domain }}/auth/realms/Renku/protocol/openid-connect/logout?redirect_uri={{ template "http" . }}://{{ .Values.global.renku.domain }}/api/auth/logout%3Fgitlab_logout=1"""
+    #   ${GITLAB_SERVICE_URL}/api/v4/application/settings?after_sign_out_path={{ global.http }}://{{ global.renku.domain }}/auth/realms/Renku/protocol/openid-connect/logout?redirect_uri={{ global.http }}://{{ global.renku.domain }}/api/auth/logout%3Fgitlab_logout=1""",
+    trim_blocks=True, lstrip_blocks=True)
 
-KEYCLOAK_INIT_SCRIPT = """#!/bin/bash
+KEYCLOAK_INIT_SCRIPT = Template("""#!/bin/bash
     set -x
 
     KEYCLOAK_POSTGRES_PASSWORD=$(cat /keycloak-postgres/keycloak-postgres-password)
 
     psql -v ON_ERROR_STOP=1 <<-EOSQL
-        create database "{{ .Values.global.keycloak.postgresDatabase }}";
-        create user "{{ .Values.global.keycloak.postgresUser }}" password '$KEYCLOAK_POSTGRES_PASSWORD';
+        create database "{{ global.keycloak.postgresDatabase }}";
+        create user "{{ global.keycloak.postgresUser }}" password '$KEYCLOAK_POSTGRES_PASSWORD';
     EOSQL
 
-    psql -v ON_ERROR_STOP=1 --dbname "{{ .Values.global.keycloak.postgresDatabase }}" <<-EOSQL
+    psql -v ON_ERROR_STOP=1 --dbname "{{ global.keycloak.postgresDatabase }}" <<-EOSQL
         revoke all on schema "public" from "public";
-        grant all privileges on database "{{ .Values.global.keycloak.postgresDatabase }}" to "{{ .Values.global.keycloak.postgresUser }}";
-        grant all privileges on schema "public" to "{{ .Values.global.keycloak.postgresUser }}";
-    EOSQL"""
+        grant all privileges on database "{{ global.keycloak.postgresDatabase }}" to "{{ global.keycloak.postgresUser }}";
+        grant all privileges on schema "public" to "{{ global.keycloak.postgresUser }}";
+    EOSQL""", trim_blocks=True, lstrip_blocks=True)
 
-GITLAB_DB_INIT_SCRIPT = """#!/bin/bash
+GITLAB_DB_INIT_SCRIPT = Template("""#!/bin/bash
       set -x
 
       GITLAB_POSTGRES_PASSWORD=$(cat /gitlab-postgres/gitlab-postgres-password)
 
       psql -v ON_ERROR_STOP=1 <<-EOSQL
-          create database "{{ .Values.global.gitlab.postgresDatabase }}";
-          create user "{{ .Values.global.gitlab.postgresUser }}" password '$GITLAB_POSTGRES_PASSWORD';
+          create database "{{ global.gitlab.postgresDatabase }}";
+          create user "{{ global.gitlab.postgresUser }}" password '$GITLAB_POSTGRES_PASSWORD';
       EOSQL
 
-      psql -v ON_ERROR_STOP=1 --dbname "{{ .Values.global.gitlab.postgresDatabase }}" <<-EOSQL
+      psql -v ON_ERROR_STOP=1 --dbname "{{ global.gitlab.postgresDatabase }}" <<-EOSQL
           create extension if not exists "pg_trgm";
           revoke all on schema "public" from "public";
-          grant all privileges on database "{{ .Values.global.gitlab.postgresDatabase }}" to "{{ .Values.global.gitlab.postgresUser }}";
-          grant all privileges on schema "public" to "{{ .Values.global.gitlab.postgresUser }}";
-      EOSQL"""
+          grant all privileges on database "{{ global.gitlab.postgresDatabase }}" to "{{ global.gitlab.postgresUser }}";
+          grant all privileges on schema "public" to "{{ global.gitlab.postgresUser }}";
+      EOSQL""", trim_blocks=True, lstrip_blocks=True)
 
-GRAPH_EVENTLOG_INIT_SCRIPT = """#!/bin/bash
+GRAPH_EVENTLOG_INIT_SCRIPT = Template("""#!/bin/bash
       set -x
 
       DB_EVENT_LOG_POSTGRES_PASSWORD=$(cat /graph-db-postgres/graph-dbEventLog-postgresPassword)
@@ -117,17 +119,17 @@ GRAPH_EVENTLOG_INIT_SCRIPT = """#!/bin/bash
 
       psql -v ON_ERROR_STOP=1 <<-EOSQL
         create database "$DB_EVENT_LOG_DB_NAME";
-        create user "{{ .Values.global.graph.dbEventLog.postgresUser }}" password '$DB_EVENT_LOG_POSTGRES_PASSWORD';
+        create user "{{ global.graph.dbEventLog.postgresUser }}" password '$DB_EVENT_LOG_POSTGRES_PASSWORD';
       EOSQL
 
       psql postgres -v ON_ERROR_STOP=1 --dbname "$DB_EVENT_LOG_DB_NAME" <<-EOSQL
         create extension if not exists "pg_trgm";
         revoke all on schema "public" from "public";
-        grant all privileges on database "$DB_EVENT_LOG_DB_NAME" to "{{ .Values.global.graph.dbEventLog.postgresUser }}";
-        grant all privileges on schema "public" to "{{ .Values.global.graph.dbEventLog.postgresUser }}";
-      EOSQL"""
+        grant all privileges on database "$DB_EVENT_LOG_DB_NAME" to "{{ global.graph.dbEventLog.postgresUser }}";
+        grant all privileges on schema "public" to "{{ global.graph.dbEventLog.postgresUser }}";
+      EOSQL""", trim_blocks=True, lstrip_blocks=True)
 
-GRAPH_TOKENREPO_INIT_SCRIPT = """#!/bin/bash
+GRAPH_TOKENREPO_INIT_SCRIPT = Template("""#!/bin/bash
       set -x
 
       TOKEN_REPOSITORY_POSTGRES_PASSWORD=$(cat /graph-token-postgres/graph-tokenRepository-postgresPassword)
@@ -135,43 +137,50 @@ GRAPH_TOKENREPO_INIT_SCRIPT = """#!/bin/bash
 
       psql -v ON_ERROR_STOP=1 <<-EOSQL
         create database "$TOKEN_REPOSITORY_DB_NAME";
-        create user "{{ .Values.global.graph.tokenRepository.postgresUser }}" password '$TOKEN_REPOSITORY_POSTGRES_PASSWORD';
+        create user "{{ global.graph.tokenRepository.postgresUser }}" password '$TOKEN_REPOSITORY_POSTGRES_PASSWORD';
       EOSQL
 
       psql postgres -v ON_ERROR_STOP=1 --dbname "$TOKEN_REPOSITORY_DB_NAME" <<-EOSQL
         create extension if not exists "pg_trgm";
         revoke all on schema "public" from "public";
-        grant all privileges on database "$TOKEN_REPOSITORY_DB_NAME" to "{{ .Values.global.graph.tokenRepository.postgresUser }}";
-        grant all privileges on schema "public" to "{{ .Values.global.graph.tokenRepository.postgresUser }}";
-      EOSQL"""
-
-
+        grant all privileges on database "$TOKEN_REPOSITORY_DB_NAME" to "{{ global.graph.tokenRepository.postgresUser }}";
+        grant all privileges on schema "public" to "{{ global.graph.tokenRepository.postgresUser }}";
+      EOSQL""", trim_blocks=True, lstrip_blocks=True)
 
 
 def configmap(global_config):
     config = pulumi.Config()
     global_values = pulumi.Config('global')
+    global_values = global_values.require_object('values')
+
+    ui_values = pulumi.Config('ui')
+    ui_values = ui_values.require_object('values')
 
     k8s_config = pulumi.Config('kubernetes')
 
     stack = pulumi.get_stack()
 
+    template_values = {
+        'global': {**global_values, **global_config},
+        'ui': ui_values
+    }
+
     data={
-        'init-postgres.sh': POSTGRES_INIT_SCRIPT,
-        'init-jupyterhub-db.sh': JUPYTERHUB_INIT_SCRIPT
+        'init-postgres.sh': POSTGRES_INIT_SCRIPT.render(**template_values),
+        'init-jupyterhub-db.sh': JUPYTERHUB_INIT_SCRIPT.render(**template_values)
     }
     gitlab_enabled = config.get_bool('gitlab_enabled')
     if gitlab_enabled:
-        data['init-gitlab-db.sh'] = GITLAB_DB_INIT_SCRIPT
+        data['init-gitlab-db.sh'] = GITLAB_DB_INIT_SCRIPT.render(**template_values)
         if 'sudoToken' in global_values['gitlab']:
-            data['init-gitlab.sh'] = GITLAB_INIT_SCRIPT
+            data['init-gitlab.sh'] = GITLAB_INIT_SCRIPT.render(**template_values)
 
     if config.get_bool('keycloak_enabled'):
-        data['init-keycloak-db.sh'] = KEYCLOAK_INIT_SCRIPT
+        data['init-keycloak-db.sh'] = KEYCLOAK_INIT_SCRIPT.render(**template_values)
 
     if config.get_bool('graph_enabled'):
-        data['init-dbEventLog-db.sh'] = GRAPH_EVENTLOG_INIT_SCRIPT
-        data['init-tokenRepository-db.sh'] = GRAPH_TOKENREPO_INIT_SCRIPT
+        data['init-dbEventLog-db.sh'] = GRAPH_EVENTLOG_INIT_SCRIPT.render(**template_values)
+        data['init-tokenRepository-db.sh'] = GRAPH_TOKENREPO_INIT_SCRIPT.render(**template_values)
 
     return ConfigMap(
         "{}-{}".format(stack, pulumi.get_project()),

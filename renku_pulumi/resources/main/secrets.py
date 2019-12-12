@@ -176,6 +176,7 @@ def keycloak_secrets():
     keycloak_postgres_secret = Secret(
         'renku-keycloak-postgres',
         metadata={
+            'name': 'renku-keycloak-postgres',
             'labels':
                 {
                     "app": pulumi.get_project(),
@@ -203,6 +204,7 @@ def keycloak_secrets():
     keycloak_password_secret = Secret(
         'keycloak-password-secret',
         metadata={
+            'name': 'keycloak-password-secret',
             'labels':
                 {
                     "app": pulumi.get_project(),
@@ -218,3 +220,54 @@ def keycloak_secrets():
     )
 
     return keycloak_postgres_secret, keycloak_password_secret
+
+
+def renku_secret():
+    config = pulumi.Config()
+
+    notebooks_values = pulumi.Config('notebooks')
+    notebooks_values = notebooks_values.require_object('values')
+
+    global_values = pulumi.Config('global')
+    global_values = global_values.require_object('values')
+
+    k8s_config = pulumi.Config('kubernetes')
+
+    gitlab_client_secret = notebooks_values['jupyterhub']['auth']['gitlab']['clientSecret']
+
+    if not gitlab_client_secret:
+        gitlab_client_secret = RandomPassword(
+            'keycloak_db_password',
+            length=64,
+            special=True,
+            number=True,
+            upper=True)
+
+    gateway_gitlab_client_secret = global_values['gateway']['gitlabClientSecret']
+
+    if not gateway_gitlab_client_secret:
+        gateway_gitlab_client_secret = RandomPassword(
+            'keycloak_db_password',
+            length=64,
+            special=True,
+            number=True,
+            upper=True)
+
+    secret_name = "{}-{}".format(pulumi.get_stack(), pulumi.get_project())
+
+    return Secret(
+        secret_name,
+        metadata={
+            'name': secret_name,
+            'labels':
+                {
+                    "app": pulumi.get_project(),
+                    "release": pulumi.get_stack()
+                }
+        },
+        type='Opaque',
+        data={
+            'jupyterhub-auth-gitlab-client-secret': gitlab_client_secret,
+            'gateway-gitlab-client-secret': gateway_gitlab_client_secret
+        }
+    )

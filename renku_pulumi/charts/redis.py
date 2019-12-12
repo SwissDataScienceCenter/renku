@@ -3,22 +3,24 @@ from pulumi_kubernetes.helm.v2 import Chart, ChartOpts
 
 config = pulumi.Config()
 
-def keycloak(config, global_config):
-    keycloak_config = pulumi.Config('keycloak')
-    values = keycloak_config.require_object('values')
+def redis(global_config):
+    redis_config = pulumi.Config('redis')
+    values = redis_config.require_object('values')
 
     global_values = pulumi.Config('global')
     global_values = global_values.require_object('values')
 
-    global_config['keycloak'] = values
+    global_config['redis'] = {
+        'fullname': '{}-redis'.format(pulumi.get_stack())
+    }
 
     values['global'] = global_values
     return Chart(
-        '{}-keycloak'.format(pulumi.get_stack()),
+        global_config['redis']['fullname'],
         config=ChartOpts(
-            chart='keycloak',
+            chart='redis',
             repo='stable',
-            version='4.10.1',
+            version='3.7.2',
             values=values
         )
     )

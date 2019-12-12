@@ -12,7 +12,7 @@ def gitlab(config, global_config):
 
     values['global'] = global_values
     return Chart(
-        'gitlab',
+        '{}-gitlab'.format(pulumi.get_stack()),
         config=ChartOpts(
             chart='gitlab',
             repo='stable',

@@ -2,7 +2,7 @@ import pulumi
 
 from pulumi_kubernetes.batch.v1 import Job
 
-def gitlab_postinstall_job(global_config, dependencies=[]):
+def gitlab_postinstall_job(global_config, postgres_secret, dependencies=[]):
     config = pulumi.Config()
     global_values = pulumi.Config('global')
     global_values = global_values.require_object('values')
@@ -66,7 +66,7 @@ def gitlab_postinstall_job(global_config, dependencies=[]):
                                     'name': 'PGPASSWORD',
                                     'valueFrom': {
                                         'secretKeyRef': {
-                                            'name': '{}-{}-gitlab-postgres'.format(stack, project),
+                                            'name': postgres_secret.metadata['name'],
                                             'key': 'gitlab-postgres-password'
                                         }
                                     }
@@ -162,7 +162,7 @@ def keycloak_postinstall_job(global_config, dependencies=[]):
                         'env':[
                             {
                                 'name': 'KEYCLOAK_URL',
-                                'value': '{}://{}/auth/'.format('https', global_values['renku']['domain']) # TODO: where does this value come from?
+                                'value': '{}://{}/auth/'.format(global_config['http'], global_values['renku']['domain']) # TODO: where does this value come from?
                             },
                             {
                                 'name': 'KEYCLOAK_ADMIN_USER',

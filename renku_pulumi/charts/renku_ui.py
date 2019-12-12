@@ -12,7 +12,7 @@ def renku_ui(config, global_config):
 
     values['global'] = global_values
     return Chart(
-        'ui',
+        '{}-ui'.format(pulumi.get_stack()),
         config=ChartOpts(
             chart='renku-ui',
             version='0.7.2',
