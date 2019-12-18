@@ -13,6 +13,9 @@ answering the following questions:
 * Who is using my data or my algorithsm?
 
 The toolchain required to answer all of these questions comfortably is
-long and complex. **Renku** aims to provide researchers with easy
+long and complex. The **Renku Project** aims to provide researchers with easy
 access to these state-of-the-art tools to improve reproducibility,
 increase productivity and enable collaboration.
+
+Head to :ref:`what_is_renku` to learn more about what makes up the **Renku
+Project**.
