@@ -20,7 +20,7 @@ science collaboration.
    :includehidden:
 
    Why Renku <why>
-   What is Renku <what>
+   What is Renku <what_is_renku>
    Getting Started <getting_started>
    Get in touch <get_in_touch>
    Roadmap <roadmap>
