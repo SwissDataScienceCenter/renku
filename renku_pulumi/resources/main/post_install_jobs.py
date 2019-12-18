@@ -200,7 +200,7 @@ def keycloak_postinstall_job(global_config, dependencies=[]):
         opts=pulumi.ResourceOptions(depends_on=dependencies)
     )
 
-def postgres_postinstall_job(global_config, dependencies=[]):
+def postgres_postinstall_job(global_config, graph_db_secret, graph_token_secret, cfg_map, dependencies=[]):
     config = pulumi.Config()
     global_values = pulumi.Config('global')
     global_values = global_values.require_object('values')
@@ -251,7 +251,7 @@ def postgres_postinstall_job(global_config, dependencies=[]):
         {
             'name': 'scripts',
             'configMap': {
-                'name': renku_name
+                'name': cfg_map.metadata['name']
             }
         },
         {
@@ -275,13 +275,13 @@ def postgres_postinstall_job(global_config, dependencies=[]):
         {
             'name': 'graph-db-postgres',
             'secret': {
-                'secretName': '{}-graph-db-postgres'.format(renku_name)
+                'secretName': graph_db_secret.metadata['name']
             }
         },
         {
             'name': 'graph-token-postgres',
             'secret': {
-                'secretName': '{}-graph-token-postgres'.format(renku_name)
+                'secretName': graph_token_secret.metadata['name']
             }
         }
     ]
@@ -339,18 +339,18 @@ def postgres_postinstall_job(global_config, dependencies=[]):
                     'containers':[{
                         'name': 'init-databases',
                         'image': '{}:{}'.format(
-                            config.get('postgresql_image'),
-                            config.get('postgresql_imagetag')),
+                            global_config['postgres']['image'],
+                            global_config['postgres']['imageTag']),
                         'command': ["/bin/bash", "/scripts/init-postgres.sh"],
                         'volumeMounts':volume_mounts,
                         'env':[
                             {
                                 'name': 'PGDATABASE',
-                                'value': config.get('postgres_database')
+                                'value': global_config['postgres']['postgresDatabase']
                             },
                             {
                                 'name': 'PGUSER',
-                                'value': config.get('postgres_user')
+                                'value': global_config['postgres']['postgresUser']
                             },
                             {
                                 'name': 'PGHOST',
@@ -358,7 +358,7 @@ def postgres_postinstall_job(global_config, dependencies=[]):
                             },
                             {
                                 'name': 'PGPASSWORD',
-                                'valueForm':{
+                                'valueFrom':{
                                     'secretKeyRef':{
                                         'name': '{}-postgresql'.format(stack),
                                         'key': 'postgres-password'

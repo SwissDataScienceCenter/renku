@@ -1,7 +1,7 @@
 import pulumi
 from pulumi_kubernetes.core.v1 import Service
 
-def services(global_config):
+def services(global_config, gateway_auth_depl, gateway_depl):
     config = pulumi.Config('gateway')
     gateway_values = config.require_object('values')
 
@@ -19,10 +19,15 @@ def services(global_config):
             {
                 'app': gateway_name,
                 'release': stack
-            }
+            },
+        'name': gateway_name
     }
 
     servicePort = config.get_int('port') or 80
+
+    global_config['gateway'] = gateway_values
+    global_config['gateway']['service']['port'] = servicePort
+    global_config['gateway']['name'] = gateway_name
 
     gateway_service = Service(
         gateway_name,
@@ -44,11 +49,13 @@ def services(global_config):
                 }
             ],
             'selector': gateway_metadata['labels']
-        }
+        },
+        opts=pulumi.ResourceOptions(depends_on=[gateway_depl])
     )
 
     auth_name = '{}-auth'.format(gateway_name)
     auth_metadata = {
+        'name': auth_name,
         'labels':
             {
                 'app': auth_name,
@@ -70,7 +77,8 @@ def services(global_config):
                 }
             ],
             'selector': auth_metadata['labels']
-        }
+        },
+        opts=pulumi.ResourceOptions(depends_on=[gateway_auth_depl])
     )
 
     return gateway_service, auth_service

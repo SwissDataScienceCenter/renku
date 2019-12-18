@@ -42,6 +42,7 @@ def ingress(global_config):
                 }]
             }
         })
+    print(spec)
 
     if gateway_values['ingress']['tls']:
         spec['tls'] = []

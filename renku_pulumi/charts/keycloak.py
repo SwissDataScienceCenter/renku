@@ -3,7 +3,7 @@ from pulumi_kubernetes.helm.v2 import Chart, ChartOpts
 
 config = pulumi.Config()
 
-def keycloak(config, global_config):
+def keycloak(config, global_config, dependencies=[]):
     keycloak_config = pulumi.Config('keycloak')
     values = keycloak_config.require_object('values')
 
@@ -13,6 +13,8 @@ def keycloak(config, global_config):
     global_config['keycloak'] = values
 
     values['global'] = global_values
+
+    dependencies = [d for d in dependencies if d]
     return Chart(
         '{}-keycloak'.format(pulumi.get_stack()),
         config=ChartOpts(
@@ -20,5 +22,6 @@ def keycloak(config, global_config):
             repo='stable',
             version='4.10.1',
             values=values
-        )
+        ),
+        opts=pulumi.ResourceOptions(depends_on=dependencies)
     )

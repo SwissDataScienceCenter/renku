@@ -7,8 +7,8 @@ def minio(config, global_config):
     minio_config = pulumi.Config('minio')
     values = minio_config.require_object('values')
 
-    global_config = pulumi.Config('global')
-    global_values = global_config.require_object('values')
+    global_values = pulumi.Config('global')
+    global_values = global_values.require_object('values')
 
     values['global'] = global_values
     return Chart(

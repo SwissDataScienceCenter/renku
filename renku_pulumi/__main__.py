@@ -20,46 +20,52 @@ def deploy():
     global_config = {}
 
     global_config['http'] = 'https' if global_values['useHTTPS'] else 'http'
+    global_config['global'] = global_values
 
-    configmap(global_config)
+    if config.require_bool('gitlab_enabled'):
+        gps, gss = gitlab_secrets()
+        g = gitlab(config, global_config)
+        gitlab_postinstall_job(global_config, gps, [g, gss])
 
-    ingress(global_config)
+    renku_secret(global_config)
 
-    renku_secret()
+    # ui
+    ui = renku_ui(config, global_config)
 
-    renku_ui(config, global_config)
+    cfg_map = configmap(global_config)
 
     jupyterhub_secrets()
-    renku_notebooks(config, global_config)
+    nb = renku_notebooks(config, global_config)
 
-    #gateway
-    redis(global_config)
-    sc = gateway.secret(global_config)
-    cfg = gateway.configmaps(global_config)
-    gateway.deployments(global_config, sc, cfg)
-    gateway.ingress(global_config)
-    gateway.services(global_config)
+    pg = None
+    tok = None
+    pg_job = None
 
     if config.require_bool('graph_enabled'):
         pg, tok = graph_secrets()
         renku_graph(config, global_config, pg, tok)
 
-    if config.require_bool('gitlab_enabled'):
-        gps, gss = gitlab_secrets()
-        g = gitlab(config, global_config)
-        gitlab_postinstall_job(global_config, gps, [g])
-
     if config.require_bool('postgres_enabled'):
         p = postgresql(config, global_config)
-        postgres_postinstall_job(global_config, [p])
+        pg_job = postgres_postinstall_job(global_config, pg, tok, cfg_map, [p])
 
     if config.require_bool('keycloak_enabled'):
-        keycloak_secrets()
-        k = keycloak(config, global_config)
-        keycloak_postinstall_job(global_config, [k])
+        kp, ks = keycloak_secrets()
+        keycloak_chart = keycloak(config, global_config, [pg_job])
+        keycloak_postinstall_job(global_config, [keycloak_chart, kp, ks])
 
     if config.require_bool('minio_enabled'):
         minio(config, global_config)
+
+    # gateway
+    redis_chart = redis(global_config)
+    sc = gateway.secret(global_config)
+    cfg = gateway.configmaps(global_config)
+    gateway.ingress(global_config)
+    gd, gad = gateway.deployments(global_config, sc, cfg, redis_chart)
+    gs, gas = gateway.services(global_config, gd, gad)
+
+    ing = ingress(global_config)
 
 if __name__ == "__main__":
     deploy()

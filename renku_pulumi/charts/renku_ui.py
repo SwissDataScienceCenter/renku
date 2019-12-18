@@ -4,13 +4,15 @@ from pulumi_kubernetes.helm.v2 import Chart, ChartOpts, FetchOpts
 config = pulumi.Config()
 
 def renku_ui(config, global_config):
-    graph_config = pulumi.Config('graph')
-    values = graph_config.require_object('values')
+    ui_config = pulumi.Config('ui')
+    values = ui_config.require_object('values')
 
-    global_config = pulumi.Config('global')
-    global_values = global_config.require_object('values')
+    global_values = pulumi.Config('global')
+    global_values = global_values.require_object('values')
 
     values['global'] = global_values
+
+    global_config['ui'] = values
     return Chart(
         '{}-ui'.format(pulumi.get_stack()),
         config=ChartOpts(

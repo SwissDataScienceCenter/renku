@@ -3,8 +3,9 @@ from pulumi_kubernetes.extensions.v1beta1 import Ingress
 
 def ingress(global_config):
     config = pulumi.Config()
+    ingress_config = pulumi.Config('ingress')
 
-    if not config.get_bool('ingress_enabled'):
+    if not ingress_config.get_bool('enabled'):
         return
 
     k8s_config = pulumi.Config('kubernetes')
@@ -19,14 +20,14 @@ def ingress(global_config):
             }
     }
 
-    annotations = config.get_object("ingress_annotations")
+    annotations = ingress_config.get_object("annotations")
 
     if annotations:
         metadata['annotations'] = annotations
 
     spec = {}
 
-    tls = config.get_object('ingress_tls')
+    tls = ingress_config.get_object('tls')
 
     if tls:
         spec['tls'] = [{
@@ -34,7 +35,8 @@ def ingress(global_config):
             'secretName': t['secretName']
         } for t in tls]
 
-    hosts = config.get_object('ingress_hosts')
+    hosts = ingress_config.get_object('hosts')
+
 
     if hosts:
         spec['rules'] = []
@@ -53,14 +55,14 @@ def ingress(global_config):
                         {
                             'path': '/api',
                             'backend':{
-                                'serviceName':'{}-gateway'.format(stack),
-                                'servicePort':global_config['gateway']['service']['port']
+                                'serviceName':global_config['gateway']['name'],
+                                'servicePort': global_config['gateway']['service']['port']
                             }
                         },
                         {
                             'path': '/',
                             'backend':{
-                                'serviceName':'{}-ui'.format(stack),
+                                'serviceName':'{}-ui-renku-ui'.format(stack),
                                 'servicePort':global_config['ui']['service']['port']
                             }
                         }
@@ -68,16 +70,16 @@ def ingress(global_config):
                 }
             }
 
-            if pulumi.get_bool('keycloak_enabled'):
+            if config.get_bool('keycloak_enabled'):
                 h['http']['paths'].append({
                     'path': '/auth',
                     'backend': {
-                        'serviceName':'{}-keycloak'.format(stack),
-                        'servicePort':global_config['keycloak']['service']['port']
+                        'serviceName':'{}-keycloak-http'.format(stack),
+                        'servicePort': global_config['keycloak']['keycloak']['service']['port']
                     }
                 })
 
-            if pulumi.get_bool('gitlab_enabled'):
+            if config.get_bool('gitlab_enabled'):
                 h['http']['paths'].append({
                     'path': '/gitlab',
                     'backend': {
@@ -86,11 +88,11 @@ def ingress(global_config):
                     }
                 })
 
-            if pulumi.get_bool('graph_enabled'):
+            if config.get_bool('graph_enabled'):
                 h['http']['paths'].append({
                     'path': '/webhook/events',
                     'backend': {
-                        'serviceName':'{}-webhook-service'.format(stack),
+                        'serviceName':'{}-graph-webhook-service'.format(stack),
                         'servicePort': 80
                     }
                 })
@@ -98,15 +100,12 @@ def ingress(global_config):
                 h['http']['paths'].append({
                     'path': '/knowledge-graph',
                     'backend': {
-                        'serviceName':'{}-knowledge-graph'.format(stack),
+                        'serviceName':'{}-graph-knowledge-graph'.format(stack),
                         'servicePort': 80
                     }
                 })
 
-        spec['rules'] = [{
-            'host': h,
-
-        } for h in hosts]
+            spec['rules'].append(h)
 
     return Ingress(
         "{}-{}".format(stack, pulumi.get_project()),

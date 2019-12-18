@@ -1,7 +1,7 @@
 import pulumi
 from pulumi_kubernetes.apps.v1beta2 import Deployment
 
-def deployments(global_config, gateway_secret, gateway_configmap):
+def deployments(global_config, gateway_secret, gateway_configmap, redis, dependencies=[]):
     config = pulumi.Config('gateway')
     gateway_values = config.require_object('values')
 
@@ -124,7 +124,7 @@ def deployments(global_config, gateway_secret, gateway_configmap):
             'value': gateway_url
         },
         {
-            'name': 'GItLAB_URL',
+            'name': 'GITLAB_URL',
             'value': gitlab_url
         },
         {
@@ -167,7 +167,7 @@ def deployments(global_config, gateway_secret, gateway_configmap):
         },
         {
             'name': 'GATEWAY_REDIS_HOST',
-            'value': '{}-master'.format(global_config['redis']['fullname'])
+            'value': redis.get_resource('apps/v1beta2/StatefulSet', '{}-redis-gw-redis-master'.format(stack)).metadata['name']
         },
         {
             'name': 'GATEWAY_SECRET_KEY',
@@ -184,7 +184,7 @@ def deployments(global_config, gateway_secret, gateway_configmap):
         },
         {
             'name': 'OIDC_CLIENT_ID',
-            'value': gateway_values['oidcClientId'] if 'oidcClientId' in gateway_values else 'gateway'
+            'value': gateway_values['oidcClientId'] if 'oidcClientId' in gateway_values else 'renku'
         },
         {
             'name': 'OIDC_CLIENT_SECRET',
@@ -211,8 +211,10 @@ def deployments(global_config, gateway_secret, gateway_configmap):
         },
         {
             'name': 'WEBHOOK_SERVICE_HOSTNAME',
-            'value': gateway_values['graph']['webhookService']['hostname']
-                or 'http://{}-graph-webhook-service'.format(stack)
+            'value': gateway_values['graph']['webhookService']['hostname'] if gateway_values['graph']['webhookService']
+                and 'hostname' in gateway_values['graph']['webhookService']
+                and gateway_values['graph']['webhookService']['hostname']
+                else 'http://{}-graph-webhook-service'.format(stack)
         }
     ]
 
@@ -223,6 +225,8 @@ def deployments(global_config, gateway_secret, gateway_configmap):
                 'value': global_values['keycloak']['realm']
             }
         )
+
+    dependencies = [d for d in dependencies if d]
 
     auth_deployment = Deployment(
         auth_name,
@@ -270,7 +274,8 @@ def deployments(global_config, gateway_secret, gateway_configmap):
                     'tolerations': gateway_values['tolerations'],
                 }
             }
-        }
+        },
+        opts=pulumi.ResourceOptions(depends_on=dependencies)
     )
 
     return auth_deployment, gateway_deployment
