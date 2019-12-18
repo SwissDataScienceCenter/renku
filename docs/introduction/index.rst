@@ -16,7 +16,7 @@ science collaboration.
 
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 1
    :includehidden:
 
    Why Renku <why>

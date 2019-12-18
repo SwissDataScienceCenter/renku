@@ -32,41 +32,15 @@ The two parts to the Renku Project are:
 
 * **renku**: a commandline interface (CLI) for annotating datasets and running workflows.
 
-Renkulab
---------
-
-Renkulab is a web platform for creating, storing, working on, and sharing your
-data science projects. Our public "flagship" deployment of Renkulab can be found
-at renkulab.io_ and is free for anyone to use.
-
-Renkulab is the glue that makes it possible to develop and share your research entirely
-in the cloud. You can, directly from a project's homepage on Renkulab, launch Jupyterlab
-and RStudio sessions (or anything else you might run from a Docker container) using
-pre-built templates. You can work on your project and when you are done
-push the changes back to the repository for safe storage. Our pre-built base images
-also contain the ``renku`` command-line tool so you don't need to worry about installation
-and benefit from lineage tracking right in the interactive session.
-
-Renkulab automatically builds images for your interactive sessions so the environments
-you or your collaborators use are always up-to-date.
-
-Renkulab can be accessed publicly at renkulab.io_, but there are also several
-institutional deployments of the platform. Contact us if you would like to
-deploy your own instance or see :ref:`admin_documentation`.
+.. include:: renkulab.rst
+  :start-line: 2
+  :end-before: Gitlab
 
 For more details, see the :ref:`renkulab` page and the :ref:`FAQ`.
 
-renku
------
-
-The `renku` part of the Renku Project is a commandline interface (CLI) for annotating
-datasets and wrapping workflows with metadata for aiding iterative development and
-building a lineage of results. You can use this CLI from within an interactive environment
-launched from Renkulab or locally by installing the library onto your machine.
-
-`renku` aims to be "git for data science" by applying version control to executed
-code tied together with the input files that were dependencies and the output files
-that result.
+.. include:: renku.rst
+  :start-line: 2
+  :end-before: Renku can be decomposed
 
 For more details, see the :ref:`renku` page and the `CLI documentation`_.
 
@@ -96,7 +70,7 @@ The Renku Project is as useful for independent researchers and data scientists a
 it is for labs, collaborations, and courses and workshops.
 
 Use Cases
-~~~~~~~~~
+^^^^^^^^^
 
 + share published work
 + create work to be published

@@ -1,7 +1,7 @@
 .. _renkulab:
 
 Renkulab
-========
+--------
 
 Renkulab is a web platform for creating, storing, working on, and sharing your
 data science projects. Our public "flagship" deployment of Renkulab can be found
