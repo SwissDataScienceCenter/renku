@@ -674,7 +674,7 @@ graph:
   #     ## Generated using: `openssl rand -hex 8|base64`
   #     secret: 1234
 
-## Configuration for renku-core-service
+## Configuration for renku-core service
 # repository:
   ## Default cache directory
   # cacheDirectory: /svc/cache

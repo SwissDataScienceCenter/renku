@@ -81,6 +81,6 @@ Define subcharts full names
 {{- printf "%s-%s" .Release.Name "knowledge-graph" | replace "+" "_" | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 
-{{- define "core-service.fullname" -}}
-{{- printf "%s-%s" .Release.Name "core-service" | replace "+" "_" | trunc 63 | trimSuffix "-" -}}
+{{- define "core.fullname" -}}
+{{- printf "%s-%s" .Release.Name "core" | replace "+" "_" | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
