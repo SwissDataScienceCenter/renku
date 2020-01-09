@@ -79,7 +79,7 @@ Add data to your project
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 In the JupyterLab interface, we can see that a few files already exist.
-Let's start by adding data using the `Renku CLI <https://renku-python.readthedocs.io/en/latest/cli.html>`__.
+Let's start by adding data using the `Renku CLI <https://renku-python.readthedocs.io/en/latest/commands.html>`__.
 
 From JupyterLab, start a terminal by clicking the **Terminal** icon (1)
 on the bottom right of the **Launcher** page.
@@ -473,7 +473,7 @@ The only change required to execute the script with ``renku`` is adding
 Go ahead and run this command -- it will create the preprocessed file for you
 including the specification of *how* this file was created, and commit all the
 changes to the repository. See the `renku command line docs <https://renku-
-python.readthedocs.io/en/latest/cli.html>`_ for more information on this and
+python.readthedocs.io/en/latest/commands.html>`_ for more information on this and
 other commands.
 
 .. note::
@@ -587,14 +587,14 @@ To update all the outputs, we can run the following.
 
 That's it! The intermediate data file ``data/preprocessed/zhbikes.parquet``
 and the figures in ``figs/``, are recreated by re-running the necessary steps.
-See the `renku update documentation <https://renku-python.readthedocs.io/en/latest/cli.html
+See the `renku update documentation <https://renku-python.readthedocs.io/en/latest/commands.html
 #renku-update>`_ for a detailed explanation of how the workflow is re-
 executed.
 
 .. note::
 
     A very similar command is `renku rerun <https://renku-
-    python.readthedocs.io/en/latest/cli.html#module-renku.cli.rerun>`__,
+    python.readthedocs.io/en/latest/commands.html#module-renku.cli.rerun>`__,
     except that it also allows you to modify the inputs. This is useful, for
     example, to vary hyper-parameters or input data sources.
 
