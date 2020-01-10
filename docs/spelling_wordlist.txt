@@ -19,6 +19,7 @@ config
 cookiecutter
 Cookiecutter
 coopetition
+CountFlights
 cronjob
 deployer
 Dockerfile
@@ -29,6 +30,7 @@ dockerignore
 dotfiles
 dropdown
 filesystem
+FilterFlights
 github
 gitignore
 gitkeep
@@ -40,6 +42,7 @@ hostname
 Indices
 indices
 io
+ipynb
 ize
 izing
 Janusgraph
@@ -67,8 +70,11 @@ OAuth
 ok
 online
 OpenID
+papermill
 Postgresql
 pre
+prepend
+py
 refactor
 Refactor
 refactored
