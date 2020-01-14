@@ -145,7 +145,7 @@ deployment:
 
       > renku config --local interactive.default_url "/rstudio"
 
-    Verify that your renku.ini file looks like the following.
+    Verify that your ``renku.ini`` file looks like the following.
 
     .. code-block:: console
 
