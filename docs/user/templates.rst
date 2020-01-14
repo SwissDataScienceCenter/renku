@@ -36,7 +36,7 @@ The default provided directory structure is the following.
 
 The ``data`` and ``notebooks`` directories are where you should keep your...
 data (added via ``renku dataset``) and notebooks (by double-clicking on a
-python3 or R kernel image from the Jupyterlab instance while you're inside
+python3 or R kernel image from the JupyterLab instance while you're inside
 the dir), respectively.
 You can add further nesting of directories under these locations to keep your
 project organized.
@@ -85,7 +85,7 @@ at :ref:`advanced_interfaces`.
 When you run the notebook server, a Docker image is built for your project as
 defined by this ``Dockerfile``. The FROM line in this ``Dockerfile`` defines
 which Renku Docker image sets up the base of your project; this includes
-dependencies for the Renku CLI, Jupyterlab, and maybe R kernels & RStudio,
+dependencies for the Renku CLI, JupyterLab, and maybe R kernels & RStudio,
 depending on which template you selected upon project creation.
 
 The lines following ``FROM`` define the installation of your own software
@@ -111,18 +111,24 @@ intended audience.
 ``.renku``
 """"""""""
 
-The ``.renku`` directory contains a ``renku.ini`` file which has a set of
-configurations for interactive environments. It's a good idea to define
-default values if your project has specific resources requirements or if it
-needs to start on a different url.
+The ``.renku`` directory includes a ``renku.ini`` file which contains
+project-level configuration for renku, stored using the
+`INI format <https://en.wikipedia.org/wiki/INI_file>`_. Currently, it
+can be used to specify defaults values for launching interactive environments.
 
-Although the file may be modified manually, it's a better idea to use the
-``renku config --local interactive.<key> <value>`` command.
+**Interactive Environments**
 
-Here is the list of properties you can customize in a standard Renkulab
+If your project has specific resources requirements to run, or if it should
+default to RStudio or anything other than JupyterLab, then you will want to
+provide a configuration for the interactive environments.
+
+Although the file may be modified manually, it is recommended to use the
+``renku config --local interactive.<property> <value>`` command.
+
+Here is the list of properties that can be customized in a standard Renkulab
 deployment:
 
-* ``default_url [string]``: url to use when starting a new interactive
+* ``default_url [string]``: URL to use when starting a new interactive
   environment
 * ``cpu_request [float]``: CPUs quota
 * ``mem_request [float]``: memory quota (in GBs)
@@ -131,25 +137,43 @@ deployment:
 
 .. note::
 
-    We use Jupyterlab as the web interface. You may be interested in launching
-    the Jupyter default instead. You can achieve this by using `/tree` as a
-    ``default_url`` instead of `/lab`.
+    We use JupyterLab as the default web interface for interactive environments.
+    If you work in R, you may prefer to have RStudio. This can be
+    achieved by using `/rstudio` as the ``default_url`` instead of `/lab`.
 
     .. code-block:: console
 
-      > renku config --local interactive.default_url "/tree"
+      > renku config --local interactive.default_url "/rstudio"
 
     Verify that your renku.ini file looks like the following.
 
     .. code-block:: console
 
       [renku "interactive"]
-      default_url = /tree
+      default_url = /rstudio
 
-    If you did this locally, please remember to push back to origin
-    (`renku config` automatically creates a commit ).
-    You can now start a new environment for the latest commit to get
-    the default Jupyter web interface.
+    If you ran this command locally, you will need to push back to the renkulab
+    server, e.g.,
+
+    .. code-block:: console
+
+      > git push
+
+    before this change is available (`renku config` automatically creates a
+    commit).
+
+    You can now start a new environment against the latest commit and you will
+    have RStudio as the default web interface.
+
+.. note::
+
+    Using the same approach as above for RStudio, it is possible to switch the
+    interface from JupyterLab to the classic Jupyter Notebook by using `/tree`
+    as the ``default_url`` instead of `/lab`.
+
+    .. code-block:: console
+
+      > renku config --local interactive.default_url "/tree"
 
 
 
@@ -162,7 +186,7 @@ with the defaults that Renku provides. Here are two example use cases:
 User #1: Default everything
 """""""""""""""""""""""""""
 
-You're a python developer and you're ok with jupyterlab and the version of
+You're a python developer and you're ok with JupyterLab and the version of
 python provided by the base template. You install all of your libraries with
 pip or conda. While you work on this project, you can feel comfortable
 modifying the following (as well as creating your own directories and
