@@ -129,11 +129,12 @@ Here is the list of properties that can be customized in a standard Renkulab
 deployment:
 
 * ``default_url [string]``: URL to use when starting a new interactive
-  environment
-* ``cpu_request [float]``: CPUs quota
-* ``mem_request [float]``: memory quota (in GBs)
-* ``gpu_request [int]``: GPU quota
+  environment (``/lab``, ``/tree``, ...)
+* ``cpu_request [float]``: CPUs quota (``0.5``, ``1``, ...)
+* ``mem_request [string]``: memory quota (``1G``, ``2G``, ...)
+* ``gpu_request [int]``: GPU quota (``0``, ``1``, ...)
 * ``lfs_auto_fetch [bool]``: whether to automatically fetch lfs files or not
+  (``true``, ``false``)
 
 .. note::
 
