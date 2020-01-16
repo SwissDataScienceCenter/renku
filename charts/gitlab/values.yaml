@@ -117,3 +117,7 @@ redis:
   networkPolicy:
     enabled: true
     allowExternal: false
+
+# Enable json logs for all services
+logging:
+  useJson: true
