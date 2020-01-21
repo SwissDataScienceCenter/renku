@@ -60,7 +60,7 @@ Ensure that PVs are added correctly and have the appropriate storage class.
 
 This step is very important as it will define the values that helm will use to install your Renku instance.
 
-You can find a basic configuration file in: `Renku values file <https://github.com/SwissDataScienceCenter/renku-admin-docs/blob/master/renku-values.yaml>`_
+You can find a basic configuration file in: `Renku values file <https://github.com/SwissDataScienceCenter/renku/blob/master/charts/renku/values.yaml>`_
 
 Ensure the following has been taken care of before deploying Renku:
 
