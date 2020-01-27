@@ -26,7 +26,7 @@ case object NewProjectPage extends RenkuPage with TopBar with ScreenCapturing {
       descriptionField.clear() sleep (1 second)
       descriptionField.sendKeys(project.description.value) sleep (1 second)
 
-      if (captureScreenshots) writeScreenshot
+      if (captureScreenshots) saveScreenshot
 
       createButton.click() sleep (1 second)
     }

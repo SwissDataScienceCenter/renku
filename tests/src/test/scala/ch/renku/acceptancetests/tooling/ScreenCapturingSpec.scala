@@ -15,7 +15,7 @@ trait ScreenCapturingSpec extends ScreenCapturing {
     val outcome = test()
 
     if (outcome.isExceptional) {
-      writeScreenshot
+      saveScreenshot
     }
     outcome
   }
