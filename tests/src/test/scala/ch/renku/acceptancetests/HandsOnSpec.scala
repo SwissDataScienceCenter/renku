@@ -2,7 +2,7 @@ package ch.renku.acceptancetests
 
 import ch.renku.acceptancetests.model.projects.ProjectDetails
 import ch.renku.acceptancetests.pages._
-import ch.renku.acceptancetests.tooling.{AcceptanceSpec, HandsOnSpecData}
+import ch.renku.acceptancetests.tooling.{AcceptanceSpec, DocsScreenshots}
 import ch.renku.acceptancetests.workflows._
 
 import org.openqa.selenium.JavascriptExecutor;
@@ -15,7 +15,6 @@ import scala.language.postfixOps
   */
 class HandsOnSpec
     extends AcceptanceSpec
-    with HandsOnSpecData
     with Collaboration
     with Login
     with NewProject
@@ -27,7 +26,10 @@ class HandsOnSpec
 
     implicit val loginType: LoginType = logIntoRenku
 
-    implicit val projectDetails: ProjectDetails = ProjectDetails.generateHandsOnProject(captureScreenshots)
+    implicit val docsScreenshots = new DocsScreenshots(this, browser)
+
+    implicit val projectDetails: ProjectDetails =
+      ProjectDetails.generateHandsOnProject(docsScreenshots.captureScreenshots)
 
     createNewProject
 
@@ -44,16 +46,18 @@ class HandsOnSpec
     logOutOfRenku
   }
 
-  def doHandsOn(implicit projectDetails: ProjectDetails): Unit = {
+  def doHandsOn(implicit projectDetails: ProjectDetails, docsScreenshots: DocsScreenshots): Unit = {
     val projectPage = ProjectPage()
     When("user clicks on the Environments tab")
     click on projectPage.Environments.tab
-    if (captureScreenshots) writeScreenshot
+    docsScreenshots.reachedCheckpoint()
+
     And("then they click on the New link")
     click on projectPage.Environments.newLink sleep (2 seconds)
     And("once the image is built")
     projectPage.Environments.verifyImageReady
-    if (captureScreenshots) writeScreenshot
+    docsScreenshots.reachedCheckpoint()
+
     And("the user clicks on the Start Environment button")
     click on projectPage.Environments.startEnvironment
     Then("they should be redirected to the Environments -> Running tab")
@@ -64,12 +68,12 @@ class HandsOnSpec
     And("the user clicks on the Connect button in the table")
     // Sleep a little while after clicking to give the server a chance to come up
     click on projectPage.Environments.Running.title sleep (15 seconds)
-    if (captureScreenshots) writeScreenshot
+    docsScreenshots.reachedCheckpoint()
     click on projectPage.Environments.Running.connectButton sleep (2 seconds)
     Then("a JupyterLab page is opened on a new tab")
     val jupyterLabPage = JupyterLabPage()
     verify browserSwitchedTo jupyterLabPage sleep (5 seconds)
-    if (captureScreenshots) writeScreenshot
+    docsScreenshots.reachedCheckpoint()
 
     When("the user clicks on the Terminal icon")
     click on jupyterLabPage.terminalIcon sleep (2 seconds)
@@ -94,7 +98,7 @@ class HandsOnSpec
     click on projectPage.Datasets.DatasetsList.flights
   }
 
-  def verifyAnalysisRan(implicit projectDetails: ProjectDetails): Unit = {
+  def verifyAnalysisRan(implicit projectDetails: ProjectDetails, docsScreenshots: DocsScreenshots): Unit = {
     val projectPage = ProjectPage()
     When("the user navigates to the Files tab")
     click on projectPage.Files.tab
@@ -107,7 +111,7 @@ class HandsOnSpec
     And("the correct notebook content")
     // Scroll to the bottom of the page
     webDriver.asInstanceOf[JavascriptExecutor].executeScript("window.scrollBy(0,document.body.scrollHeight)")
-    if (captureScreenshots) writeScreenshot
+    docsScreenshots.reachedCheckpoint()
 
     val resultCell = projectPage.Files.Notebook.cellWithText("There were 4951 flights to Austin, TX in Jan 2019.")
     verify that resultCell contains "There were 4951 flights to Austin, TX in Jan 2019."
