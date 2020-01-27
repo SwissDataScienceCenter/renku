@@ -1,12 +1,34 @@
 # Renku changes
 
+## 0.5.2 (released 2020-01-17)
+
+This is a minor update. It contains mostly bug fixes.
+
+## New features
+
+⭐️ Support pagination in display of datasets
+
+## Bug fixes
+
+* Correctly handle nested groups
+* Progress bar for Knowledge Graph is not stuck at 0% ([#203](https://github.com/SwissDataScienceCenter/renku-graph/issues/203))
+* Knowledge graph supports emails with special chars ([#223](https://github.com/SwissDataScienceCenter/renku-graph/issues/223))
+
+### Individual components
+
+For individual component changes, check:
+
+* renku ui [0.7.3](https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/0.7.3)
+* renku-graph [0.39.0](https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/0.39.0) through [0.30.0](https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/0.30.0)
+
+
 ## 0.5.1 (released 2019-12-04)
 
 This is a bugfix release that updates the GitLab version required to allow changing the project name when forking (see [#616](https://github.com/SwissDataScienceCenter/renku-ui/issues/616) and [#626](https://github.com/SwissDataScienceCenter/renku-ui/issues/626)).
 
 ## 0.5.0 (released 2019-11-27)
 
-## New Features
+## New features
 
 ⭐️ Datasets are now displayed inside a Renku project
 
