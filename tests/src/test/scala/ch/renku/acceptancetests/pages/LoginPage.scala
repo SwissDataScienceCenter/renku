@@ -90,9 +90,9 @@ case object LoginPage extends RenkuPage {
   //       val providerLoginPage = ProviderLoginPage(userCredentials)
   //       if (!(currentUrl startsWith providerLoginPage.url)) {
   //         println("Not on provider")
-  //         spec.writeScreenshot()
+  //         spec.saveScreenshot()
   //         oidcButton.click() sleep (5 seconds)
-  //         spec.writeScreenshot()
+  //         spec.saveScreenshot()
   //       }
   //       providerLoginPage.logIn sleep (5 seconds)
   //       LoginWithProvider

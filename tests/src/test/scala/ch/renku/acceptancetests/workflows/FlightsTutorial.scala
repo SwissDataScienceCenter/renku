@@ -1,14 +1,13 @@
 package ch.renku.acceptancetests.workflows
 
 import ch.renku.acceptancetests.pages.JupyterLabPage
-import ch.renku.acceptancetests.tooling.HandsOnSpecData
 import ch.renku.acceptancetests.tooling.AcceptanceSpec
 
 import scala.concurrent.duration._
 import scala.language.postfixOps
 
 trait FlightsTutorial {
-  self: AcceptanceSpec with HandsOnSpecData =>
+  self: AcceptanceSpec =>
 
   def followFlightsTutorial(jupyterLabPage: JupyterLabPage): Unit = {
     import jupyterLabPage.terminal
