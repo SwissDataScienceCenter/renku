@@ -274,3 +274,6 @@ tags
 .history
 
 # End of https://www.gitignore.io/api/vim,macos,linux,emacs,scala,python,visualstudiocode
+
+### Metals -- Scala Language Server ###
+.metals
