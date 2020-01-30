@@ -1,7 +1,7 @@
 import pulumi
 from pulumi_kubernetes.core.v1 import Service
 
-def services(global_config, gateway_auth_depl, gateway_depl):
+def gateway_service(global_config, gateway_secret, gateway_configmap, gateway_deployment):
     config = pulumi.Config('gateway')
     gateway_values = config.require_object('values')
 
@@ -29,7 +29,7 @@ def services(global_config, gateway_auth_depl, gateway_depl):
     global_config['gateway']['service']['port'] = servicePort
     global_config['gateway']['name'] = gateway_name
 
-    gateway_service = Service(
+    return Service(
         gateway_name,
         metadata=gateway_metadata,
         spec={
@@ -50,8 +50,22 @@ def services(global_config, gateway_auth_depl, gateway_depl):
             ],
             'selector': gateway_metadata['labels']
         },
-        opts=pulumi.ResourceOptions(depends_on=[gateway_depl])
+        opts=pulumi.ResourceOptions(depends_on=[gateway_secret, gateway_configmap, gateway_deployment])
     )
+
+
+def gateway_auth_service(global_config, gateway_secret, gateway_configmap, gateway_auth_deployment, dependencies=[]):
+    config = pulumi.Config('gateway')
+    gateway_values = config.require_object('values')
+
+    global_values = pulumi.Config('global')
+    global_values = global_values.require_object('values')
+
+    k8s_config = pulumi.Config('kubernetes')
+
+    stack = pulumi.get_stack()
+
+    gateway_name = "{}-{}-gateway".format(stack, pulumi.get_project())
 
     auth_name = '{}-auth'.format(gateway_name)
     auth_metadata = {
@@ -63,7 +77,7 @@ def services(global_config, gateway_auth_depl, gateway_depl):
             }
     }
 
-    auth_service = Service(
+    return Service(
         auth_name,
         metadata=auth_metadata,
         spec={
@@ -78,7 +92,5 @@ def services(global_config, gateway_auth_depl, gateway_depl):
             ],
             'selector': auth_metadata['labels']
         },
-        opts=pulumi.ResourceOptions(depends_on=[gateway_auth_depl])
+        opts=pulumi.ResourceOptions(depends_on=[gateway_secret, gateway_configmap, gateway_auth_deployment] + dependencies)
     )
-
-    return gateway_service, auth_service

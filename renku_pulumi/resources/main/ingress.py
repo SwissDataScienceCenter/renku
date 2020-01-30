@@ -1,7 +1,7 @@
 import pulumi
 from pulumi_kubernetes.extensions.v1beta1 import Ingress
 
-def ingress(global_config):
+def ingress(global_config, dependencies=[]):
     config = pulumi.Config()
     ingress_config = pulumi.Config('ingress')
 
@@ -110,5 +110,6 @@ def ingress(global_config):
     return Ingress(
         "{}-{}".format(stack, pulumi.get_project()),
         metadata=metadata,
-        spec=spec
+        spec=spec,
+        opts=pulumi.ResourceOptions(depends_on=dependencies)
     )

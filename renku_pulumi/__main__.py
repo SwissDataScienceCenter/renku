@@ -34,16 +34,15 @@ def deploy():
 
     cfg_map = configmap(global_config)
 
-    jupyterhub_secrets()
-    nb = renku_notebooks(config, global_config)
-
     pg = None
     tok = None
     pg_job = None
+    graph = None
+    kc_job = None
 
     if config.require_bool('graph_enabled'):
         pg, tok = graph_secrets()
-        renku_graph(config, global_config, pg, tok)
+        graph = renku_graph(config, global_config, pg, tok)
 
     if config.require_bool('postgres_enabled'):
         p = postgresql(config, global_config)
@@ -52,20 +51,27 @@ def deploy():
     if config.require_bool('keycloak_enabled'):
         kp, ks = keycloak_secrets()
         keycloak_chart = keycloak(config, global_config, [pg_job])
-        keycloak_postinstall_job(global_config, [keycloak_chart, kp, ks])
 
     if config.require_bool('minio_enabled'):
         minio(config, global_config)
+
+    jupyterhub_secrets()
+    nb = renku_notebooks(config, global_config, dependencies=[pg_job])
 
     # gateway
     redis_chart = redis(global_config)
     sc = gateway.secret(global_config)
     cfg = gateway.configmaps(global_config)
     gateway.ingress(global_config)
-    gd, gad = gateway.deployments(global_config, sc, cfg, redis_chart)
-    gs, gas = gateway.services(global_config, gd, gad)
+    gd = gateway.gateway_deployment(global_config, sc, cfg)
+    gs = gateway.gateway_service(global_config, sc, cfg, gd)
 
-    ing = ingress(global_config)
+    ing = ingress(global_config, dependencies=[gd, nb, ui, graph, keycloak_chart])
+    gad = gateway.gateway_auth_deployment(global_config, sc, cfg, redis_chart, dependencies=[ing])
+    gas = gateway.gateway_auth_service(global_config, sc, cfg, gad)
+
+    if config.require_bool('keycloak_enabled'):
+        kc_job = keycloak_postinstall_job(global_config, [keycloak_chart, kp, ks, ing])
 
 if __name__ == "__main__":
     deploy()

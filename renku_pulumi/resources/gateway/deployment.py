@@ -1,7 +1,8 @@
 import pulumi
 from pulumi_kubernetes.apps.v1beta2 import Deployment
 
-def deployments(global_config, gateway_secret, gateway_configmap, redis, dependencies=[]):
+
+def gateway_deployment(global_config, gateway_secret, gateway_configmap, dependencies=[]):
     config = pulumi.Config('gateway')
     gateway_values = config.require_object('values')
 
@@ -24,7 +25,7 @@ def deployments(global_config, gateway_secret, gateway_configmap, redis, depende
 
     servicePort = config.get_int('port') or 80
 
-    gateway_deployment = Deployment(
+    return Deployment(
         gateway_name,
         metadata=gateway_metadata,
         spec={
@@ -90,6 +91,18 @@ def deployments(global_config, gateway_secret, gateway_configmap, redis, depende
             }
         }
     )
+
+
+def gateway_auth_deployment(global_config, gateway_secret, gateway_configmap, redis, dependencies=[]):
+    config = pulumi.Config('gateway')
+    gateway_values = config.require_object('values')
+
+    global_values = pulumi.Config('global')
+    global_values = global_values.require_object('values')
+
+    k8s_config = pulumi.Config('kubernetes')
+
+    stack = pulumi.get_stack()
 
     auth_name = "{}-{}-gateway-auth".format(stack, pulumi.get_project())
 
@@ -228,7 +241,7 @@ def deployments(global_config, gateway_secret, gateway_configmap, redis, depende
 
     dependencies = [d for d in dependencies if d]
 
-    auth_deployment = Deployment(
+    return Deployment(
         auth_name,
         metadata=auth_metadata,
         spec={
@@ -238,7 +251,7 @@ def deployments(global_config, gateway_secret, gateway_configmap, redis, depende
             },
             'template': {
                 'metadata': auth_metadata,
-                'spec':{
+                'spec': {
                     'containers': [{
                         'name': 'gateway',
                         'image': gateway_values['auth_image'],
@@ -277,5 +290,3 @@ def deployments(global_config, gateway_secret, gateway_configmap, redis, depende
         },
         opts=pulumi.ResourceOptions(depends_on=dependencies)
     )
-
-    return auth_deployment, gateway_deployment

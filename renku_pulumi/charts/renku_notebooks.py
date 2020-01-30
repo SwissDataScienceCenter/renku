@@ -10,7 +10,7 @@ def delete_before_replace_resources(obj, opts):
     if obj['kind'] in types:
         opts.delete_before_replace = True
 
-def renku_notebooks(config, global_config):
+def renku_notebooks(config, global_config, dependencies=[]):
     notebooks_config = pulumi.Config('notebooks')
     values = notebooks_config.require_object('values')
 
@@ -28,5 +28,6 @@ def renku_notebooks(config, global_config):
             ),
             values=values,
             transformations=[delete_before_replace_resources]
-        )
+        ),
+        opts=pulumi.ResourceOptions(depends_on=dependencies)
     )
