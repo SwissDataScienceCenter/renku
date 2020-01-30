@@ -50,7 +50,7 @@ docker-compose run -e RENKU_TEST_URL=https://renku-kuba.dev.renku.ch -e RENKU_TE
 
 __**NOTICE**__
 
-It's very important that version of your Chrome matches the version of the chromedriver. If these versions does not match you have to upgrade one or the other and *reopen* the browser.
+When running locally, it's very important that version of your Chrome matches the version of the chromedriver. If these versions does not match you have to upgrade one or the other and *reopen* the browser. Running with Docker avoids this problem.
 
 # Development
 You can work on the tests using editor of your choice but using either Intellij or VS Code could make your life by far simpler. In both cases you need a Scala plugin installed into your IDE. In case of the VS Code there's a Scalameta plugin which can be installed from https://marketplace.visualstudio.com/items?itemName=scalameta.metals.
@@ -59,7 +59,28 @@ Please use the `scalameta.metals` as a default formatter for the scala sources a
 
 The test are built using the Page Object Pattern (e.g. https://www.pluralsight.com/guides/getting-started-with-page-object-pattern-for-your-selenium-tests) which in short is about wrapping an UI page into a class/object and using it in the test script.
 
-### Project organization
+## Running in console
+
+For development, it can be nice to try things out on the console. For this, get started by running the following:
+
+```bash
+sbt test:console
+```
+
+Once the console is up, execute the following to import the libraries for working with Selenium:
+
+```
+:load src/test/scala/ch/renku/acceptancetests/ReplShell.scala
+```
+
+Then, on the console, you can execute statements like:
+
+```scala
+val webDriver = ReplShell.getChromeWebDriver("https://dev.renku.ch")
+val loginButtons = webDriver.findElements(By.cssSelector("a[href='/login']"))
+```
+
+## Project organization
 All the interesting parts are located in the `src/test/scala/ch/renku/acceptancetests` folder which can be perceived as a tests classes root folder. The test scenarios are suffixed with `Spec` while all the page objects are put into the `pages` subfolder.
 
 # FAQ
