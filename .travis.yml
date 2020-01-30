@@ -43,7 +43,7 @@ addons:
 branches:
   only:
     - master
-    - /\d+\.\d+(\.\d+)?(-\S*)?$/
+    - /\d+\.\d+(\.\d+)?(-rc\d+)?/
 
 language: python
 
