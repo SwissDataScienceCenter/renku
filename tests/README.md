@@ -15,15 +15,16 @@ The tests are run by executing `sbt` in the project's root.
 
 In order to run the acceptance tests, it is necessary to provide information for reaching and logging into the Renku instance. These parameters can be provided either as command-line arguments (using `-D<argument>=<value>`) or in environment variables. If both are specified, the command-line arguments have precedence.
 
-| Argument   | Environment              | Purpose                                                   |
-| ---------- | ------------------------ | --------------------------------------------------------- |
-| env        | RENKU_TEST_URL           | URL to a Renku server, e.g., https://dev.renku.ch         |
-| email      | RENKU_TEST_EMAIL         | user's email e.g. `jakub.chrobasik@epfl.ch`               |
-| username   | RENKU_TEST_USERNAME      | user's username e.g. `jakub.chrobasik1`                   |
-| fullname   | RENKU_TEST_FULL_NAME     | user's full name e.g. `Jakub Józef Chrobasik`             |
-| password   | RENKU_TEST_PASSWORD      | user's password                                           |
-| provider   | RENKU_TEST_PROVIDER      | if non-empty, use an OpenID provider for auth             |
-| docsrun    | RENKU_TEST_DOCS_RUN      | if non-empty, screenshot for docs during hands-on test    |
+| Argument   | Environment               | Purpose                                                   |
+| ---------- | ------------------------- | --------------------------------------------------------- |
+| env        | RENKU_TEST_URL            | URL to a Renku server, e.g., https://dev.renku.ch         |
+| email      | RENKU_TEST_EMAIL          | user's email e.g. `jakub.chrobasik@epfl.ch`               |
+| username   | RENKU_TEST_USERNAME       | user's username e.g. `jakub.chrobasik1`                   |
+| fullname   | RENKU_TEST_FULL_NAME      | user's full name e.g. `Jakub Józef Chrobasik`             |
+| password   | RENKU_TEST_PASSWORD       | user's password                                           |
+| provider   | RENKU_TEST_PROVIDER       | if non-empty, use an OpenID provider for auth             |
+| docsrun    | RENKU_TEST_DOCS_RUN       | if non-empty, screenshot for docs during hands-on test    |
+| extant     | RENKU_TEST_EXTANT_PROJECT | if non-empty, an existing project to use for tests        |
 
 
 For example, the following may be run in the project's root: `sbt -Denv=https://renku-kuba.dev.renku.ch -Demail=<email> -Dusername=<username> -Dfullname='<full user name>' -Dpassword=<password> test`
