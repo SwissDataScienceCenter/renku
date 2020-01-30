@@ -12,30 +12,27 @@ object projects {
 
   final case class ProjectDetails(
       title:       String Refined NonEmpty,
-      description: String Refined NonEmpty
+      description: String Refined NonEmpty,
+      readmeTitle: String
   )
 
   object ProjectDetails {
 
-    def generate: ProjectDetails = ProjectDetails(
-      title = Refined.unsafeApply(
-        s"test ${LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyMMddHHmmss"))}"
-      ),
-      description = prefixParagraph("An automatically generated project for testing: ").generateOne
-    )
+    def generate: ProjectDetails = {
+      val now         = LocalDateTime.now()
+      val desc        = prefixParagraph("An automatically generated project for testing: ").generateOne
+      val readmeTitle = s"test${now.format(DateTimeFormatter.ofPattern("yyyyMMddHHmm_ss"))}"
+      ProjectDetails(Refined.unsafeApply(s"test_${now.format(DateTimeFormatter.ofPattern("yyyy_MM_dd_HHmm_ss"))}"),
+                     desc,
+                     readmeTitle)
+    }
 
-    def generateHandsOnProject(captureScreenshots: Boolean): ProjectDetails = ProjectDetails(
-      title =
-        if (captureScreenshots)
-          Refined.unsafeApply("flights tutorial")
-        else
-          Refined.unsafeApply(s"test ${LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyMMddHHmmss"))}"),
-      description =
-        if (captureScreenshots)
-          Refined.unsafeApply("A renku tutorial project.")
-        else
-          prefixParagraph("An automatically generated project for testing: ").generateOne
-    )
+    def generateHandsOnProject(captureScreenshots: Boolean): ProjectDetails =
+      if (captureScreenshots) {
+        val readmeTitle = "flights tutorial"
+        ProjectDetails(Refined.unsafeApply(readmeTitle), Refined.unsafeApply("A renku tutorial project."), readmeTitle)
+      } else
+        generate
 
     implicit class TitleOps(title: String Refined NonEmpty) {
       lazy val toPathSegment: String = title.value.replace(" ", "-")

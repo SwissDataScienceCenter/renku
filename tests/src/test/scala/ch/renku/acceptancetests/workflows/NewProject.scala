@@ -40,7 +40,7 @@ trait NewProject {
     And("creator name and timestamp")
     verify that projectPage.Files.Info.creatorAndTime contains userCredentials.fullName.value
     And("the readme header which is the project title")
-    verify that projectPage.Files.Info.title is projectDetails.title.value
+    verify that projectPage.Files.Info.title is projectDetails.readmeTitle
     And("the readme content")
     verify that projectPage.Files.Info.content contains "This is a Renku project"
   }
