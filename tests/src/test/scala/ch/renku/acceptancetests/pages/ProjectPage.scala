@@ -33,7 +33,7 @@ class ProjectPage(projectDetails: ProjectDetails, userCredentials: UserCredentia
   def viewInGitLab(implicit webDriver: WebDriver): WebElement = eventually {
     find(
       cssSelector(s"a[href*='/gitlab/${userCredentials.userNamespace}/${projectDetails.title.toPathSegment}']")
-    ) getOrElse fail("View in GitLab button  not found")
+    ) getOrElse fail("View in GitLab button not found")
   }
 
   object Overview {
@@ -260,6 +260,32 @@ class ProjectPage(projectDetails: ProjectDetails, userCredentials: UserCredentia
       find(cssSelector("div.form-group + button.btn.btn-primary")) getOrElse fail(
         "Update button not found"
       )
+    }
+  }
+
+  def forkButton(implicit webDriver: WebDriver): WebElement = eventually {
+    findAll(cssSelector(s"button")).find(_.text == "fork") getOrElse fail("Fork button not found")
+  }
+
+  object ForkDialog {
+
+    def submitFormWith(project: ProjectDetails)(implicit webDriver: WebDriver): Unit =
+      eventually {
+        val tf = titleField
+        // Clear does not work here, just send backspace a bunch of times
+        // tf.clear() sleep (1 second)
+        tf.sendKeys(List.fill(40)("\b").mkString(""))
+        tf.sendKeys(project.title.value) sleep (1 second)
+
+        forkButton.click() sleep (1 second)
+      }
+
+    private def titleField(implicit webDriver: WebDriver): WebElement = eventually {
+      find(cssSelector("input#title")) getOrElse fail("Title field not found")
+    }
+
+    def forkButton(implicit webDriver: WebDriver): WebElement = eventually {
+      find(cssSelector("div.modal-footer > button.btn.btn-primary")) getOrElse fail("Fork button not found")
     }
   }
 }
