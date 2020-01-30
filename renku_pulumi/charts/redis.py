@@ -3,6 +3,7 @@ from pulumi_kubernetes.helm.v2 import Chart, ChartOpts
 
 config = pulumi.Config()
 
+
 def redis(global_config):
     redis_config = pulumi.Config('redis')
     values = redis_config.require_object('values')

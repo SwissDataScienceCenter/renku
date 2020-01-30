@@ -153,7 +153,7 @@ RULES_TEMPLATE = Template("""
     [http.services.webhooks.LoadBalancer]
       method = "drr"
       [[http.services.webhooks.LoadBalancer.servers]]
-        url = "{{ graph.webhookService.hostname | default("http://{}-webhook-service".format(release_name) )  }}"
+        url = "{{ graph.webhookService.hostname | default("http://{}-graph-webhook-service".format(release_name) )  }}"
         weight = 1
 
     [http.services.graphql.LoadBalancer]
