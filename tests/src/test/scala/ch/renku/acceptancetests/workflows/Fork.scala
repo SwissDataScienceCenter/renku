@@ -24,7 +24,7 @@ trait Fork {
 
     val forkedProjectDetails: ProjectDetails = ProjectDetails.generate
 
-    And("fills in the information and submits")
+    And(s"fills in the title (${forkedProjectDetails.title}) and submits")
     projectPage.ForkDialog.submitFormWith(forkedProjectDetails)
 
     Then("the project gets forked and the project page gets displayed")
