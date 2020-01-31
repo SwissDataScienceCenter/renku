@@ -3,12 +3,41 @@ from base64 import b64encode
 import pulumi
 from pulumi_kubernetes.helm.v2 import Chart, ChartOpts, FetchOpts
 from pulumi_random.random_password import RandomPassword
+from deepmerge import always_merger
 
-config = pulumi.Config()
+default_chart_values = {
+    "jena": {
+        "resources": {
+            "requests": {
+                "cpu": "200m",
+                "memory": "1Gi"
+            }
+        },
+        "persistence": {
+            "storageClass": "temporary"
+        }
+    },
+    "webhookService": {
+        "eventsSynchronization": {
+            "initialDelay": "2 minutes",
+            "interval": "1 hour"
+        }
+    },
+    "resources": {
+        "requests": {
+            "cpu": "100m",
+            "memory": "2Gi"
+        }
+    }
+}
+
 
 def renku_graph(config, global_config, postgres_secret, token_secret):
     graph_config = pulumi.Config('graph')
-    values = graph_config.require_object('values')
+    values = graph_config.get_object('values') or {}
+
+    values = always_merger.merge(default_chart_values, values)
+
     k8s_config = pulumi.Config("kubernetes")
 
     global_config = pulumi.Config('global')

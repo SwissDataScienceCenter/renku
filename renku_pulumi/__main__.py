@@ -2,11 +2,11 @@ import pulumi
 from pulumi_kubernetes.helm.v2 import Chart, ChartOpts
 
 from charts import (renku_ui, renku_graph, renku_notebooks, postgresql,
-                    minio, keycloak, gitlab, redis)
+                    minio, keycloak, keycloak_secrets, gitlab, redis)
 
 from resources.main import (configmap, ingress, postgres_postinstall_job,
     gitlab_postinstall_job, keycloak_postinstall_job, gitlab_secrets,
-    graph_secrets, jupyterhub_secrets, keycloak_secrets, renku_secret)
+    graph_secrets, jupyterhub_secrets, renku_secret)
 
 from resources import gateway
 
@@ -49,7 +49,7 @@ def deploy():
         pg_job = postgres_postinstall_job(global_config, pg, tok, cfg_map, [p])
 
     if config.require_bool('keycloak_enabled'):
-        kp, ks = keycloak_secrets()
+        kp, ks, kus = keycloak_secrets(global_config)
         keycloak_chart = keycloak(config, global_config, [pg_job])
 
     if config.require_bool('minio_enabled'):
@@ -71,7 +71,7 @@ def deploy():
     gas = gateway.gateway_auth_service(global_config, sc, cfg, gad)
 
     if config.require_bool('keycloak_enabled'):
-        kc_job = keycloak_postinstall_job(global_config, [keycloak_chart, kp, ks, ing])
+        kc_job = keycloak_postinstall_job(global_config, kus, [keycloak_chart, kp, ks, ing])
 
 if __name__ == "__main__":
     deploy()

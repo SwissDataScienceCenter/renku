@@ -105,7 +105,7 @@ def gitlab_postinstall_job(global_config, postgres_secret, dependencies=[]):
     )
 
 
-def keycloak_postinstall_job(global_config, dependencies=[]):
+def keycloak_postinstall_job(global_config, keycloak_user_secret, dependencies=[]):
     config = pulumi.Config()
     global_values = pulumi.Config('global')
     global_values = global_values.require_object('values')
@@ -159,24 +159,24 @@ def keycloak_postinstall_job(global_config, dependencies=[]):
                             'mountPath': '/app/data',
                             'readOnly': True
                         }],
-                        'env':[
+                        'env': [
                             {
                                 'name': 'KEYCLOAK_URL',
                                 'value': '{}://{}/auth/'.format(global_config['http'], global_values['renku']['domain']) # TODO: where does this value come from?
                             },
                             {
                                 'name': 'KEYCLOAK_ADMIN_USER',
-                                'valueFrom':{
-                                    'secretKeyRef':{
-                                        'name': renku_name,
+                                'valueFrom': {
+                                    'secretKeyRef': {
+                                        'name': keycloak_user_secret.metadata['name'],
                                         'key': 'keycloak-username'
                                     }
                                 }
                             },
                             {
                                 'name': 'KEYCLOAK_ADMIN_PASSWORD',
-                                'valueFrom':{
-                                    'secretKeyRef':{
+                                'valueFrom': {
+                                    'secretKeyRef': {
                                         'name': 'keycloak-password-secret',
                                         'key': 'keycloak-password'
                                     }
@@ -191,7 +191,7 @@ def keycloak_postinstall_job(global_config, dependencies=[]):
                     'volumes': [{
                         'name': 'realm-data',
                         'secret': {
-                            'secretName': renku_name
+                            'secretName': keycloak_user_secret.metadata['name']
                         }
                     }]
                 }

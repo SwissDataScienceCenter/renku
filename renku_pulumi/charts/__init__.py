@@ -1,5 +1,5 @@
 from .gitlab import gitlab
-from .keycloak import keycloak
+from .keycloak import keycloak, keycloak_secrets
 from .minio import minio
 from .postgresql import postgresql
 from .redis import redis
