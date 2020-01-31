@@ -172,9 +172,6 @@ def renku_secret(global_config):
     notebooks_values = pulumi.Config('notebooks')
     notebooks_values = notebooks_values.require_object('values')
 
-    global_values = pulumi.Config('global')
-    global_values = global_values.require_object('values')
-
     k8s_config = pulumi.Config('kubernetes')
 
     gitlab_client_secret = notebooks_values['jupyterhub']['auth']['gitlab']['clientSecret']
@@ -187,7 +184,7 @@ def renku_secret(global_config):
             number=True,
             upper=True)
 
-    gateway_gitlab_client_secret = global_values['gateway']['gitlabClientSecret']
+    gateway_gitlab_client_secret = global_config['global']['gateway']['gitlabClientSecret']
 
     if not gateway_gitlab_client_secret:
         gateway_gitlab_client_secret = RandomPassword(
@@ -204,8 +201,8 @@ def renku_secret(global_config):
                     lambda p: b64encode(p))
         }
 
-    if 'users_json' in global_values['tests']:
-        data['users.json'] = b64encode(json.dumps(global_values['tests']['users_json']))
+    if 'users_json' in global_config['global']['tests']:
+        data['users.json'] = b64encode(json.dumps(global_config['global']['tests']['users_json']))
 
     secret_name = "{}-{}".format(pulumi.get_stack(), pulumi.get_project())
 

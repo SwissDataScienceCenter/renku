@@ -70,10 +70,7 @@ def postgresql(config, global_config):
 
     global_config['postgres'] = values
 
-    global_values = pulumi.Config('global')
-    global_values = global_values.require_object('values')
-
-    values['global'] = global_values
+    values['global'] = global_config['global']
     return Chart(
         '{}-postgresql'.format(pulumi.get_stack()),
         config=ChartOpts(

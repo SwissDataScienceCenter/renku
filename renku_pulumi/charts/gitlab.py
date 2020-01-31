@@ -20,16 +20,14 @@ default_chart_values = {
     }
 }
 
+
 def gitlab(config, global_config):
     gitlab_config = pulumi.Config('gitlab')
     values = gitlab_config.get_object('values') or {}
 
     values = always_merger.merge(default_chart_values, values)
 
-    global_config = pulumi.Config('global')
-    global_values = global_config.require_object('values')
-
-    values['global'] = global_values
+    values['global'] = global_config['global']
     return Chart(
         '{}-gitlab'.format(pulumi.get_stack()),
         config=ChartOpts(

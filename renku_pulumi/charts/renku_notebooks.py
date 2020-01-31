@@ -118,10 +118,7 @@ def renku_notebooks(config, global_config, dependencies=[]):
 
     values = always_merger.merge(default_chart_values, values)
 
-    global_config = pulumi.Config('global')
-    global_values = global_config.require_object('values')
-
-    values['global'] = global_values
+    values['global'] = global_config['global']
     return Chart(
         '{}-notebooks'.format(pulumi.get_stack()),
         config=ChartOpts(

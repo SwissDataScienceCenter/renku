@@ -40,10 +40,7 @@ def renku_graph(config, global_config, postgres_secret, token_secret):
 
     k8s_config = pulumi.Config("kubernetes")
 
-    global_config = pulumi.Config('global')
-    global_values = global_config.require_object('values')
-
-    values['global'] = global_values
+    values['global'] = global_config['global']
 
     #generate passwords
     # admin_password = RandomPassword("admin_password", length=8, special=True, number=True, upper=True)

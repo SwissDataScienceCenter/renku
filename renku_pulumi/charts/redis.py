@@ -32,14 +32,11 @@ def redis(global_config):
 
     values = always_merger.merge(default_chart_values, values)
 
-    global_values = pulumi.Config('global')
-    global_values = global_values.require_object('values')
-
     global_config['redis'] = {
         'fullname': '{}-redis'.format(pulumi.get_stack())
     }
 
-    values['global'] = global_values
+    values['global'] = global_config['global']
     return Chart(
         global_config['redis']['fullname'],
         config=ChartOpts(

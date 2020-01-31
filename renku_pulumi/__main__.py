@@ -9,12 +9,42 @@ from resources.main import (configmap, ingress, postgres_postinstall_job,
     graph_secrets, jupyterhub_secrets, renku_secret)
 
 from resources import gateway
+from deepmerge import always_merger
+
+default_global_values = {
+    "tests": {
+        "image": {
+            "repository": "renku/tests",
+            "tag": "latest"
+        }
+    },
+    "graph": {
+        "dbEventLog": {
+            "postgresPassword": {
+                "value": None,
+                "overwriteOnHelmUpgrade": False
+            },
+            "existingSecret": None
+        },
+        "tokenRepository": {
+            "postgresPassword": {
+                "value": None,
+                "overwriteOnHelmUpgrade": False
+            },
+            "existingSecret": None
+        },
+    },
+    "useHTTPS": True
+}
+
 
 def deploy():
     config = pulumi.Config()
 
     global_values = pulumi.Config('global')
-    global_values = global_values.require_object('values')
+    global_values = global_values.get_object('values') or {}
+
+    global_values = always_merger.merge(default_global_values, global_values)
 
     # global config is used to propagate dynamic values
     global_config = {}

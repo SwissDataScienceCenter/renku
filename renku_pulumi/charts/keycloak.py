@@ -144,9 +144,6 @@ def keycloak_secrets(global_config):
 
     values = always_merger.merge(default_chart_values, values)
 
-    global_values = pulumi.Config('global')
-    global_values = global_values.require_object('values')
-
     k8s_config = pulumi.Config('kubernetes')
 
     keycloak_db_password = config.get('keycloak_db_password')
@@ -226,7 +223,7 @@ def keycloak_secrets(global_config):
         users = b64encode(KEYCLOAK_USERS_TEMPLATE.render(password=client_password))
 
     users_data = {
-        'global': {**global_config, **global_values},
+        'global': {**global_config, **global_config['global']},
         'gitlab_enabled': config.get_bool('gitlab_enabled') or False
     }
 
@@ -260,12 +257,9 @@ def keycloak(config, global_config, dependencies=[]):
 
     values = always_merger.merge(default_chart_values, values)
 
-    global_values = pulumi.Config('global')
-    global_values = global_values.require_object('values')
-
     global_config['keycloak'] = values
 
-    values['global'] = global_values
+    values['global'] = global_config['global']
 
     dependencies = [d for d in dependencies if d]
     return Chart(

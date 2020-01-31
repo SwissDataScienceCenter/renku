@@ -11,10 +11,7 @@ def minio(config, global_config):
 
     values = always_merger.merge(default_chart_values, values)
 
-    global_values = pulumi.Config('global')
-    global_values = global_values.require_object('values')
-
-    values['global'] = global_values
+    values['global'] = global_config['global']
     return Chart(
         '{}-minio'.format(pulumi.get_stack()),
         config=ChartOpts(
