@@ -21,10 +21,12 @@ trait AcceptanceSpecData {
     )
   }
 
-  private lazy val toBaseUrl: String => Either[String, RenkuBaseUrl] =
+  private lazy val toBaseUrl: String => Either[String, RenkuBaseUrl] = (url) => {
+    val baseUrl = if (url.endsWith("/")) url.substring(0, url.length - 1) else url;
     RefType
-      .applyRef[String Refined Url](_)
+      .applyRef[String Refined Url](baseUrl)
       .map(RenkuBaseUrl.apply)
+  }
 
   protected implicit lazy val userCredentials: UserCredentials = {
     for {
@@ -55,7 +57,14 @@ trait AcceptanceSpecData {
 
   protected implicit def gitLabBaseUrlFrom(implicit loginType: LoginType, renkuBaseUrl: RenkuBaseUrl): GitLabBaseUrl =
     loginType match {
-      case LoginWithProvider    => GitLabBaseUrl("https://dev.renku.ch")
+      case LoginWithProvider    => gitLabProviderBaseUrl(renkuBaseUrl.value)
       case LoginWithoutProvider => GitLabBaseUrl(renkuBaseUrl.value)
     }
+
+  private def gitLabProviderBaseUrl(baseUrl: String): GitLabBaseUrl =
+    if (baseUrl.endsWith("dev.renku.ch"))
+      GitLabBaseUrl("https://dev.renku.ch")
+    else
+      GitLabBaseUrl("https://renkulab.io")
+
 }

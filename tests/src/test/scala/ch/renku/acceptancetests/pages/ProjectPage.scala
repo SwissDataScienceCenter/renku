@@ -273,7 +273,7 @@ class ProjectPage(projectDetails: ProjectDetails, userCredentials: UserCredentia
       eventually {
         val tf = titleField
         // Clear does not work here, just send backspace a bunch of times
-        // tf.clear() sleep (1 second)
+        tf.clear() sleep (1 second)
         tf.sendKeys(List.fill(40)("\b").mkString(""))
         tf.sendKeys(project.title.value) sleep (1 second)
 
