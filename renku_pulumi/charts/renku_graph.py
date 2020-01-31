@@ -32,7 +32,7 @@ default_chart_values = {
 }
 
 
-def renku_graph(config, global_config, postgres_secret, token_secret):
+def renku_graph(config, global_config, postgres_secret, token_secret, postgres_chart):
     graph_config = pulumi.Config('graph')
     values = graph_config.get_object('values') or {}
 
@@ -41,6 +41,19 @@ def renku_graph(config, global_config, postgres_secret, token_secret):
     k8s_config = pulumi.Config("kubernetes")
 
     values['global'] = global_config['global']
+
+    sentry = config.get('sentry_dsn')
+
+    if sentry:
+        sent = values.setdefault('sentry', {})
+        sent.setdefault('sentryDsnRenkuPython', sentry)
+
+    stack = pulumi.get_stack()
+
+    if postgres_chart and 'postgresqlHost' not in values:
+        values['postgresqlHost'] = postgres_chart.resources.apply(
+            lambda r: next(s for k, s in r.items() if k.startswith('v1/Service'))
+            ).metadata['name']
 
     #generate passwords
     # admin_password = RandomPassword("admin_password", length=8, special=True, number=True, upper=True)
@@ -62,7 +75,7 @@ def renku_graph(config, global_config, postgres_secret, token_secret):
     values['global']['graph']['tokenRepository']['existingSecret'] = token_secret.metadata['name']
 
     return Chart(
-        '{}-graph'.format(pulumi.get_stack()),
+        '{}-graph'.format(stack),
         config=ChartOpts(
             chart='renku-graph',
             version='0.32.0-913601f',

@@ -64,19 +64,20 @@ def deploy():
 
     cfg_map = configmap(global_config)
 
-    pg = None
-    tok = None
+    p = None
     pg_job = None
     graph = None
     kc_job = None
 
-    if config.require_bool('graph_enabled'):
-        pg, tok = graph_secrets()
-        graph = renku_graph(config, global_config, pg, tok)
+    pg, tok = graph_secrets()
 
     if config.require_bool('postgres_enabled'):
         p = postgresql(config, global_config)
-        pg_job = postgres_postinstall_job(global_config, pg, tok, cfg_map, [p])
+
+    if config.require_bool('graph_enabled'):
+        graph = renku_graph(config, global_config, pg, tok, p)
+
+    pg_job = postgres_postinstall_job(global_config, pg, tok, cfg_map, [p])
 
     if config.require_bool('keycloak_enabled'):
         kp, ks, kus = keycloak_secrets(global_config)

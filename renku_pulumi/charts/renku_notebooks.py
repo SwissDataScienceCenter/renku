@@ -118,6 +118,13 @@ def renku_notebooks(config, global_config, dependencies=[]):
 
     values = always_merger.merge(default_chart_values, values)
 
+    sentry = config.get('sentry_dsn')
+
+    if sentry:
+        hub = values.setdefault('jupyterhub', {})
+        singleuser = hub.setdefault('singleuser', {})
+        singleuser.setdefault('sentryDsn', sentry)
+
     values['global'] = global_config['global']
     return Chart(
         '{}-notebooks'.format(pulumi.get_stack()),
