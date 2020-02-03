@@ -18,9 +18,25 @@ jobs:
       run: scripts/travis-install.sh
     - name: configure k8s
       env:
-        RENKUBOT_KUBECONFIG_GPG: ${{ secrets.RENKUBOT_KUBECONFIG_GPG }}
-        KUBECONFIG: renkubot-kube.config
+        KUBECONFIG: ${{ github.workspace }}/renkubot-kube.config
+        RENKUBOT_KUBECONFIG: ${{ secrets.RENKUBOT_KUBECONFIG }}
+        VALUES: ${{ secrets.ROK_CD_VALUES }}
       run: |
-        gpg --quiet --batch --yes --decrypt --passphrase="$RENKUBOT_KUBECONFIG_GPG" \
-            --output renkubot-kube.config scripts/renkubot-kube.config.gpg
-        kubectl -n renku get pods
+        echo "$RENKUBOT_KUBECONFIG" > renkubot-kube.config
+        helm init --client-only
+        helm repo add renku https://swissdatasciencecenter.github.io/helm-charts/
+        helm repo add gitlab https://charts.gitlab.io/
+        helm repo add jupyterhub https://jupyterhub.github.io/helm-chart
+        cd charts
+        rm -rf renku/charts
+        helm dependency update renku
+        printf "%s" "$VALUES" > rok_cd_values.yaml
+        sudo add-apt-repository ppa:rmescandon/yq
+        sudo apt update
+        sudo apt install yq -y
+        cat rok_cd_values.yaml | yq r - notebooks.jupyterhub.proxy.secretToken
+        helm upgrade --install rok-cd-renku \
+                     --namespace rok \
+                     -f rok_cd_values.yaml \
+                     --timeout 1800 ./renku \
+                     --cleanup-on-fail
