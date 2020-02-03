@@ -3,10 +3,12 @@ name: Deploy dev
 on: [push]
 
 jobs:
-  build:
-
+  deploy:
     runs-on: ubuntu-latest
     steps:
+    - uses: rokroskar/workflow-run-cleanup-action@v0.2.1
+      env:
+        GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
     - uses: actions/checkout@master
     - name: Set up Python
       uses: actions/setup-python@v1
@@ -17,7 +19,8 @@ jobs:
     - name: configure k8s
       env:
         RENKUBOT_KUBECONFIG_GPG: ${{ secrets.RENKUBOT_KUBECONFIG_GPG }}
+        KUBECONFIG: renkubot-kube.config
       run: |
         gpg --quiet --batch --yes --decrypt --passphrase="$RENKUBOT_KUBECONFIG_GPG" \
             --output renkubot-kube.config scripts/renkubot-kube.config.gpg
-        KUBECONFIG=renkubot-kube.config kubectl -n renku get pods
+        kubectl -n renku get pods
