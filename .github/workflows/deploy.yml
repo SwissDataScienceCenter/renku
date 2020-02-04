@@ -1,9 +1,9 @@
 name: Deploy dev
 
-on:
-  push:
-    paths:
-    - charts/**
+on: [push]
+  # push:
+  #   paths:
+  #   - charts/**
 
 jobs:
   deploy:
@@ -13,33 +13,71 @@ jobs:
       env:
         GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
     - uses: actions/checkout@master
-    - name: Set up Python
-      uses: actions/setup-python@v1
-      with:
-        version: 3.7
-    - name: Install deploy dependencies
-      run: scripts/travis-install.sh
-    - name: configure k8s
+    # - name: Set up Python
+    #   uses: actions/setup-python@v1
+    #   with:
+    #     version: 3.7
+    # - name: Install deploy dependencies
+    #   run: |
+    #     # install kubectl
+    #     curl -Lo kubectl https://storage.googleapis.com/kubernetes-release/release/v1.15.0/bin/linux/amd64/kubectl
+    #     chmod +x kubectl
+    #     sudo mv kubectl /usr/local/bin/
+    #     # install helm
+    #     curl -Lo helm.tar.gz https://storage.googleapis.com/kubernetes-helm/helm-v2.14.3-linux-amd64.tar.gz
+    #     tar xvf helm.tar.gz
+    #     chmod +x linux-amd64/helm
+    #     sudo mv linux-amd64/helm /usr/local/bin/
+    #     rm helm.tar.gz
+    #     rm -r linux-amd64
+
+    - name: Run Kubernetes tools
+      uses: stefanprodan/kube-tools@v1
       env:
         KUBECONFIG: ${{ github.workspace }}/renkubot-kube.config
         RENKUBOT_KUBECONFIG: ${{ secrets.RENKUBOT_KUBECONFIG }}
         ROK_CD_VALUES: ${{ secrets.ROK_CD_VALUES }}
-      run: |
-        echo "$RENKUBOT_KUBECONFIG" > renkubot-kube.config
-        helm init --client-only
-        helm repo add renku https://swissdatasciencecenter.github.io/helm-charts/
-        helm repo add gitlab https://charts.gitlab.io/
-        helm repo add jupyterhub https://jupyterhub.github.io/helm-chart
-        cd charts
-        rm -rf renku/charts
-        helm dependency update renku
-        printf "%s" "$ROK_CD_VALUES" > rok_cd_values.yaml
-        sudo add-apt-repository ppa:rmescandon/yq
-        sudo apt update
-        sudo apt install yq -y
-        cat rok_cd_values.yaml | yq r - notebooks.jupyterhub.proxy.secretToken
-        helm upgrade --install rok-cd-renku \
-                     --namespace rok \
-                     -f rok_cd_values.yaml \
-                     --timeout 1800 ./renku \
-                     --cleanup-on-fail
+      with:
+        kubectl: 1.16.2
+        helm: 2.16.1
+        command: |
+          pwd
+          echo "$RENKUBOT_KUBECONFIG" > renkubot-kube.config
+          helm init --client-only
+          helm repo add renku https://swissdatasciencecenter.github.io/helm-charts/
+          helm repo add gitlab https://charts.gitlab.io/
+          helm repo add jupyterhub https://jupyterhub.github.io/helm-chart
+          ls -la
+          rm -rf charts/renku/charts
+          helm dependency update charts/renku
+          printf "%s" "$ROK_CD_VALUES" > rok_cd_values.yaml
+          helm upgrade --install rok-cd-renku \
+                      --namespace rok \
+                      -f rok_cd_values.yaml \
+                      --timeout 1800 charts/renku \
+                      --cleanup-on-fail
+
+    # - name: deploy to k8s
+    #   env:
+    #     KUBECONFIG: ${{ github.workspace }}/renkubot-kube.config
+    #     RENKUBOT_KUBECONFIG: ${{ secrets.RENKUBOT_KUBECONFIG }}
+    #     ROK_CD_VALUES: ${{ secrets.ROK_CD_VALUES }}
+    #   run: |
+    #     echo "$RENKUBOT_KUBECONFIG" > renkubot-kube.config
+    #     helm init --client-only
+    #     helm repo add renku https://swissdatasciencecenter.github.io/helm-charts/
+    #     helm repo add gitlab https://charts.gitlab.io/
+    #     helm repo add jupyterhub https://jupyterhub.github.io/helm-chart
+    #     cd charts
+    #     rm -rf renku/charts
+    #     helm dependency update renku
+    #     printf "%s" "$ROK_CD_VALUES" > rok_cd_values.yaml
+    #     sudo add-apt-repository ppa:rmescandon/yq
+    #     sudo apt update
+    #     sudo apt install yq -y
+    #     cat rok_cd_values.yaml | yq r - notebooks.jupyterhub.proxy.secretToken
+    #     helm upgrade --install rok-cd-renku \
+    #                  --namespace rok \
+    #                  -f rok_cd_values.yaml \
+    #                  --timeout 1800 ./renku \
+    #                  --cleanup-on-fail
