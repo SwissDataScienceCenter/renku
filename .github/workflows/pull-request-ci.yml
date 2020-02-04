@@ -1,0 +1,54 @@
+name: CI/CD
+
+on: [pull_request]
+  # push:
+  #   paths:
+  #   - charts/**
+
+jobs:
+  cleanup:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: rokroskar/workflow-run-cleanup-action@master
+      env:
+        GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+  github-env:
+    runs-on: ubuntu-latest
+    steps:
+    - name: get environment
+      run: env
+  test-pr:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@master
+    - name: Deploy to k8s
+      uses: stefanprodan/kube-tools@v1
+      env:
+        KUBECONFIG: ${{ github.workspace }}/renkubot-kube.config
+        RENKUBOT_KUBECONFIG: ${{ secrets.RENKUBOT_KUBECONFIG }}
+        CI_RENKU_VALUES: ${{ secrets.CI_RENKU_VALUES }}
+      with:
+        kubectl: 1.16.2
+        helm: 2.16.1
+        command: |
+          export RENKU_RELEASE="ci-${GITHUB_SHA:0:7}-renku"
+          export RENKU_NAMESPACE="ci-${GITHUB_HEAD_REF}"
+          echo "$RENKUBOT_KUBECONFIG" > renkubot-kube.config
+          helm init --client-only
+          helm repo add renku https://swissdatasciencecenter.github.io/helm-charts/
+          helm repo add gitlab https://charts.gitlab.io/
+          helm repo add jupyterhub https://jupyterhub.github.io/helm-chart
+          for release in $(helm list --namespace ${RENKU_NAMESPACE} -q); do
+              helm status $release
+          done
+          rm -rf charts/renku/charts
+          helm dependency update charts/renku
+          printf "%s" "$CI_RENKU_VALUES" | sed "s/<replace>/${RENKU_RELEASE}/" > values.yaml
+          echo $RENKU_RELEASE
+          helm upgrade --install $RENKU_RELEASE \
+                      --namespace $RENKU_NAMESPACE \
+                      -f values.yaml \
+                      --timeout 1800 \
+                      --cleanup-on-fail \
+                      charts/renku
+          helm test $RENKU_RELEASE
