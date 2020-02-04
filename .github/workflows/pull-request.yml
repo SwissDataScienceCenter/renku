@@ -17,10 +17,28 @@ jobs:
     steps:
     - name: get environment
       run: env
+    - name: Dump GitHub context
+      env:
+        GITHUB_CONTEXT: ${{ toJson(github) }}
+      run: echo "$GITHUB_CONTEXT"
   deploy-pr:
     runs-on: ubuntu-latest
+    needs: cleanup
     steps:
     - uses: actions/checkout@v2
+    - name: Configure GitLab application
+      env:
+        GITLAB_TOKEN: ${{ secrets.GITLAB_TOKEN }}
+      run: |
+        set -x
+        export BRANCH_HASH=$(echo "$GITHUB_HEAD_REF" | md5sum)
+        echo $BRANCH_HASH
+        export RENKU_RELEASE="ci-${BRANCH_HASH:0:7}-renku"
+        curl -X POST https://dev.renku.ch/gitlab/api/v4/applications \
+                      -H "private-token: $GITLAB_TOKEN" \
+                      --data "name=${RENKU_RELEASE}" \
+                      --data "redirect_uri=https://${RENKU_RELEASE}.dev.renku.ch/auth/realms/Renku/broker/dev-renku/endpoint https://${RENKU_RELEASE}.dev.renku.ch/api/auth/gitlab/token https://${RENKU_RELEASE}.dev.renku.ch/api/auth/jupyterhub/token https://${RENKU_RELEASE}.dev.renku.ch/jupyterhub/hub/oauth_callback" \
+                      --data "scopes=api read_user read_repository read_registry openid" > gitlab_app
     - name: Deploy to k8s
       uses: stefanprodan/kube-tools@v1
       env:
@@ -31,18 +49,17 @@ jobs:
         kubectl: 1.16.2
         helm: 2.16.1
         command: |
+          set -x
           export BRANCH_HASH=$(echo "$GITHUB_HEAD_REF" | md5sum)
-          echo $BRANCH_HASH
           export RENKU_RELEASE="ci-${BRANCH_HASH:0:7}-renku"
           export RENKU_NAMESPACE="ci-${GITHUB_HEAD_REF}"
+          export APP_ID=$(cat gitlab_app | jq -r '.application_id')
+          export APP_SECRET=$(cat gitlab_app | jq -r '.secret')
           echo "$RENKUBOT_KUBECONFIG" > renkubot-kube.config
           helm init --client-only
           helm repo add renku https://swissdatasciencecenter.github.io/helm-charts/
           helm repo add gitlab https://charts.gitlab.io/
           helm repo add jupyterhub https://jupyterhub.github.io/helm-chart
-          for release in $(helm list --namespace ${RENKU_NAMESPACE} -q); do
-              helm status $release
-          done
           rm -rf charts/renku/charts
           helm dependency update charts/renku
           printf "%s" "$CI_RENKU_VALUES" | sed "s/<replace>/${RENKU_RELEASE}/" > values.yaml
@@ -52,25 +69,29 @@ jobs:
                       -f values.yaml \
                       --timeout 1800 \
                       --cleanup-on-fail \
+                      --set gateway.gitlabClientId=${APP_ID} \
+                      --set gateway.gitlabClientSecret=${APP_SECRET} \
+                      --set notebooks.jupyterhub.auth.gitlab.clientId=${APP_ID} \
+                      --set notebooks.jupyterhub.auth.gitlab.clientSecret=${APP_SECRET} \
                       charts/renku
-  # test-pr:
-  #   runs-on: ubuntu-latest
-  #   needs: deploy-pr
-  #   steps:
-  #   - uses: actions/checkout@v2
-  #   - name: Test the PR
-  #     env:
-  #       RENKU_BOT_DEV_PASSWORD: ${{ secrets.RENKU_BOT_DEV_PASSWORD }}
-  #     run: |
-  #       export BRANCH_HASH=$(echo "$GITHUB_HEAD_REF" | md5sum)
-  #       echo $BRANCH_HASH
-  #       export RENKU_RELEASE="ci-${BRANCH_HASH:0:7}-renku"
-  #       cd tests
-  #       docker-compose run -e RENKU_TEST_URL=https://${$RENKU_RELEASE}.dev.renku.ch \
-  #                          -e RENKU_TEST_FULL_NAME="Renku Bot" \
-  #                          -e RENKU_TEST_EMAIL="renku@datascience.ch" \
-  #                          -e RENKU_TEST_USERNAME="renku-test" \
-  #                          -e RENKU_TEST_PASSWORD="$RENKU_BOT_DEV_PASSWORD" sbt
+  test-pr:
+    runs-on: ubuntu-latest
+    needs: deploy-pr
+    steps:
+    - uses: actions/checkout@v2
+    - name: Test the PR
+      env:
+        RENKU_BOT_DEV_PASSWORD: ${{ secrets.RENKU_BOT_DEV_PASSWORD }}
+      run: |
+        export BRANCH_HASH=$(echo "$GITHUB_HEAD_REF" | md5sum)
+        echo $BRANCH_HASH
+        export RENKU_RELEASE="ci-${BRANCH_HASH:0:7}-renku"
+        cd tests
+        docker-compose run -e RENKU_TEST_URL=https://${RENKU_RELEASE}.dev.renku.ch \
+                           -e RENKU_TEST_FULL_NAME="Renku Bot" \
+                           -e RENKU_TEST_EMAIL="renku@datascience.ch" \
+                           -e RENKU_TEST_USERNAME="renku-test" \
+                           -e RENKU_TEST_PASSWORD="$RENKU_BOT_DEV_PASSWORD" sbt
     # - name: Cleanup deployment
     #   if: always()
     #   uses: stefanprodan/kube-tools@v1
@@ -87,3 +108,6 @@ jobs:
     #       helm init --client-only
     #       echo "$RENKUBOT_KUBECONFIG" > renkubot-kube.config
     #       helm delete --purge $RENKU_RELEASE
+    # for release in $(helm list --namespace ${RENKU_NAMESPACE} -q); do
+          #     helm status $release
+          # done
