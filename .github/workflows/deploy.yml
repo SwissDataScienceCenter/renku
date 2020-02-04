@@ -1,6 +1,9 @@
 name: Deploy dev
 
-on: [push]
+on:
+  push:
+    paths:
+    - charts/**
 
 jobs:
   deploy:
@@ -20,7 +23,7 @@ jobs:
       env:
         KUBECONFIG: ${{ github.workspace }}/renkubot-kube.config
         RENKUBOT_KUBECONFIG: ${{ secrets.RENKUBOT_KUBECONFIG }}
-        VALUES: ${{ secrets.ROK_CD_VALUES }}
+        ROK_CD_VALUES: ${{ secrets.ROK_CD_VALUES }}
       run: |
         echo "$RENKUBOT_KUBECONFIG" > renkubot-kube.config
         helm init --client-only
@@ -30,7 +33,7 @@ jobs:
         cd charts
         rm -rf renku/charts
         helm dependency update renku
-        printf "%s" "$VALUES" > rok_cd_values.yaml
+        printf "%s" "$ROK_CD_VALUES" > rok_cd_values.yaml
         sudo add-apt-repository ppa:rmescandon/yq
         sudo apt update
         sudo apt install yq -y
