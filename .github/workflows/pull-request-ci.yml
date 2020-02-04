@@ -1,4 +1,4 @@
-name: CI/CD
+name: Pull Request Test
 
 on: [pull_request]
   # push:
@@ -31,7 +31,9 @@ jobs:
         kubectl: 1.16.2
         helm: 2.16.1
         command: |
-          export RENKU_RELEASE="ci-${GITHUB_SHA:0:7}-renku"
+          export BRANCH_HASH=$(echo "$GITHUB_HEAD_REF" | md5sum)
+          echo $BRANCH_HASH
+          export RENKU_RELEASE="ci-${BRANCH_HASH:0:7}-renku"
           export RENKU_NAMESPACE="ci-${GITHUB_HEAD_REF}"
           echo "$RENKUBOT_KUBECONFIG" > renkubot-kube.config
           helm init --client-only
@@ -52,3 +54,19 @@ jobs:
                       --cleanup-on-fail \
                       charts/renku
           helm test $RENKU_RELEASE
+    # - name: Cleanup deployment
+    #   if: always()
+    #   uses: stefanprodan/kube-tools@v1
+    #   env:
+    #     KUBECONFIG: ${{ github.workspace }}/renkubot-kube.config
+    #     RENKUBOT_KUBECONFIG: ${{ secrets.RENKUBOT_KUBECONFIG }}
+    #   with:
+    #     kubectl: 1.16.2
+    #     helm: 2.16.1
+    #     command: |
+    #       export BRANCH_HASH=$(echo "$GITHUB_HEAD_REF" | md5sum)
+    #       echo $BRANCH_HASH
+    #       export RENKU_RELEASE="ci-${BRANCH_HASH:0:7}-renku"
+    #       helm init --client-only
+    #       echo "$RENKUBOT_KUBECONFIG" > renkubot-kube.config
+    #       helm delete --purge $RENKU_RELEASE
