@@ -1,11 +1,9 @@
-name: Test
-
+name: Deploy and Test PR
 on:
   pull_request:
     types:
     - opened
     - synchronize
-    - closed
     - reopened
 
 jobs:
@@ -102,40 +100,5 @@ jobs:
       if: failure()
       uses: actions/upload-artifact@v1
       with:
-        name: screenshots
+        name: test-artifacts
         path: tests/target
-
-  cleanup:
-    if: github.event.action == 'closed'
-    runs-on: ubuntu-latest
-    steps:
-    - uses: stefanprodan/kube-tools@v1
-      name: k8s teardown
-      env:
-        KUBECONFIG: ${{ github.workspace }}/renkubot-kube.config
-        RENKUBOT_KUBECONFIG: ${{ secrets.RENKUBOT_KUBECONFIG }}
-      with:
-        kubectl: 1.16.2
-        helm: 2.16.1
-        command: |
-          export BRANCH_HASH=$(echo "$GITHUB_HEAD_REF" | md5sum)
-          echo $BRANCH_HASH
-          export RENKU_RELEASE="ci-${BRANCH_HASH:0:7}-renku"
-          helm init --client-only
-          echo "$RENKUBOT_KUBECONFIG" > renkubot-kube.config
-          helm delete --purge $RENKU_RELEASE
-          kubectl delete namespace $RENKU_RELEASE
-    - name: gitlab teardown
-      env:
-        GITLAB_TOKEN: ${{ secrets.GITLAB_TOKEN }}
-      run: |
-        set -x
-        export BRANCH_HASH=$(echo "$GITHUB_HEAD_REF" | md5sum)
-        echo $BRANCH_HASH
-        export RENKU_RELEASE="ci-${BRANCH_HASH:0:7}-renku"
-        apps=$(curl -s https://dev.renku.ch/gitlab/api/v4/applications -H "private-token: ${GITLAB_TOKEN}" | jq -r '.[] | select(.application_name == "${RENKU_RELEASE}") | .id')
-        for app in $apps
-        do
-          # curl -X DELETE https://dev.renku.ch/gitlab/api/v4/applications/${app} -H "private-token: ${GITLAB_TOKEN}"
-          echo "$app"
-        done
