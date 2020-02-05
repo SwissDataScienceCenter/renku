@@ -1,13 +1,17 @@
 name: Test
 
-on: [pull_request]
-  # push:
-  #   paths:
-  #   - charts/**
+on:
+  pull_request:
+    types:
+    - opened
+    - synchronize
+    - closed
+    - reopened
 
 jobs:
-  cleanup:
+  cleanup-previous-runs:
     runs-on: ubuntu-latest
+    if: github.event.action != 'closed'
     steps:
     - uses: rokroskar/workflow-run-cleanup-action@master
       env:
@@ -23,7 +27,8 @@ jobs:
       run: echo "$GITHUB_CONTEXT"
   deploy-pr:
     runs-on: ubuntu-latest
-    needs: cleanup
+    if: github.event.action != 'closed'
+    needs: cleanup-previous-runs
     steps:
     - uses: actions/checkout@v2
     - name: Configure GitLab application
@@ -76,6 +81,7 @@ jobs:
                       charts/renku
   test-pr:
     runs-on: ubuntu-latest
+    if: github.event.action != 'closed'
     needs: deploy-pr
     steps:
     - uses: actions/checkout@v2
@@ -92,22 +98,44 @@ jobs:
                            -e RENKU_TEST_EMAIL="renku@datascience.ch" \
                            -e RENKU_TEST_USERNAME="renku-test" \
                            -e RENKU_TEST_PASSWORD="$RENKU_BOT_DEV_PASSWORD" sbt
-    # - name: Cleanup deployment
-    #   if: always()
-    #   uses: stefanprodan/kube-tools@v1
-    #   env:
-    #     KUBECONFIG: ${{ github.workspace }}/renkubot-kube.config
-    #     RENKUBOT_KUBECONFIG: ${{ secrets.RENKUBOT_KUBECONFIG }}
-    #   with:
-    #     kubectl: 1.16.2
-    #     helm: 2.16.1
-    #     command: |
-    #       export BRANCH_HASH=$(echo "$GITHUB_HEAD_REF" | md5sum)
-    #       echo $BRANCH_HASH
-    #       export RENKU_RELEASE="ci-${BRANCH_HASH:0:7}-renku"
-    #       helm init --client-only
-    #       echo "$RENKUBOT_KUBECONFIG" > renkubot-kube.config
-    #       helm delete --purge $RENKU_RELEASE
-    # for release in $(helm list --namespace ${RENKU_NAMESPACE} -q); do
-          #     helm status $release
-          # done
+    - name: Upload screenshots on failure
+      if: failure()
+      uses: actions/upload-artifact@v1
+      with:
+        name: screenshots
+        path: tests/target
+
+  cleanup:
+    if: github.event.action == 'closed'
+    runs-on: ubuntu-latest
+    steps:
+    - uses: stefanprodan/kube-tools@v1
+      name: k8s teardown
+      env:
+        KUBECONFIG: ${{ github.workspace }}/renkubot-kube.config
+        RENKUBOT_KUBECONFIG: ${{ secrets.RENKUBOT_KUBECONFIG }}
+      with:
+        kubectl: 1.16.2
+        helm: 2.16.1
+        command: |
+          export BRANCH_HASH=$(echo "$GITHUB_HEAD_REF" | md5sum)
+          echo $BRANCH_HASH
+          export RENKU_RELEASE="ci-${BRANCH_HASH:0:7}-renku"
+          helm init --client-only
+          echo "$RENKUBOT_KUBECONFIG" > renkubot-kube.config
+          helm delete --purge $RENKU_RELEASE
+          kubectl delete namespace $RENKU_RELEASE
+    - name: gitlab teardown
+      env:
+        GITLAB_TOKEN: ${{ secrets.GITLAB_TOKEN }}
+      run: |
+        set -x
+        export BRANCH_HASH=$(echo "$GITHUB_HEAD_REF" | md5sum)
+        echo $BRANCH_HASH
+        export RENKU_RELEASE="ci-${BRANCH_HASH:0:7}-renku"
+        apps=$(curl -s https://dev.renku.ch/gitlab/api/v4/applications -H "private-token: ${GITLAB_TOKEN}" | jq -r '.[] | select(.application_name == "${RENKU_RELEASE}") | .id')
+        for app in $apps
+        do
+          # curl -X DELETE https://dev.renku.ch/gitlab/api/v4/applications/${app} -H "private-token: ${GITLAB_TOKEN}"
+          echo "$app"
+        done
