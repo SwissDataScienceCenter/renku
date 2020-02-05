@@ -1,4 +1,4 @@
-name: Test
+name: Teardown PR
 on:
   pull_request:
     types: [closed]
@@ -23,7 +23,6 @@ jobs:
           helm init --client-only
           echo "$RENKUBOT_KUBECONFIG" > renkubot-kube.config
           helm delete --purge $RENKU_RELEASE
-          kubectl delete namespace $RENKU_RELEASE
     - name: gitlab teardown
       env:
         GITLAB_TOKEN: ${{ secrets.GITLAB_TOKEN }}
