@@ -1,13 +1,14 @@
 name: label PRs
 on:
-  pull-request:
+  pull_request:
     types:
     - opened
     - closed
 
-pr-labeler:
-  runs-on: ubuntu-latest
-  steps:
-    - uses: TimonVS/pr-labeler-action@v3
-      env:
-        GITHUB_TOKEN: ${{ secrets.RENKU_CI_TOKEN }}
+jobs:
+  pr-labeler:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: TimonVS/pr-labeler-action@v3
+        env:
+          GITHUB_TOKEN: ${{ secrets.RENKU_CI_TOKEN }}
