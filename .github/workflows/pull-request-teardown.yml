@@ -31,7 +31,7 @@ jobs:
         export BRANCH_HASH=$(echo "$GITHUB_HEAD_REF" | md5sum)
         echo $BRANCH_HASH
         export RENKU_RELEASE="ci-${BRANCH_HASH:0:7}-renku"
-        apps=$(curl -s https://dev.renku.ch/gitlab/api/v4/applications -H "private-token: ${GITLAB_TOKEN}" | jq -r '.[] | select(.application_name == "${RENKU_RELEASE}") | .id')
+        apps=$(curl -s https://dev.renku.ch/gitlab/api/v4/applications -H "private-token: ${GITLAB_TOKEN}" | jq -r ".[] | select(.application_name == \"${RENKU_RELEASE}\") | .id")
         for app in $apps
         do
           # curl -X DELETE https://dev.renku.ch/gitlab/api/v4/applications/${app} -H "private-token: ${GITLAB_TOKEN}"
