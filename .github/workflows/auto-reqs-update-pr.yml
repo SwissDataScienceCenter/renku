@@ -1,0 +1,21 @@
+name: Automatic requirements.yml update PR
+on:
+  push:
+    branches:
+      - 'auto-update/**'
+jobs:
+  auto-pull-request:
+    runs-on: ubuntu-latest
+    steps:
+      - name: pull-request-action
+        uses: vsoch/pull-request-action@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          BRANCH_PREFIX: "auto-update/"
+          PULL_REQUEST_BRANCH: "master"
+  pr-labeler:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: TimonVS/pr-labeler-action@v3
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
