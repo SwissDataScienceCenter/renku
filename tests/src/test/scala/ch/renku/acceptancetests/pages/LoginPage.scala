@@ -54,6 +54,49 @@ case object LoginPage extends RenkuPage {
     }
   }
 
+  private case class UpdateAccountInfoPage(userCredentials: UserCredentials)
+      extends selenium.Page
+      with ScalatestMatchers
+      with Eventually
+      with AcceptanceSpecPatience {
+
+    // N.b. This is not the correct URL, but just here to get the compiler to not complain
+    final override lazy val url: String = "https://dev.renku.ch/auth/realms/Renku/login-actions/first-broker-login"
+
+    def updateInfo(implicit webDriver: WebDriver): Unit = eventually {
+      emailField.clear() sleep (1 second)
+      emailField.sendKeys(userCredentials.email.value) sleep (1 second)
+
+      val nameComps = userCredentials.fullName.split(" ")
+      val firstName = nameComps.head
+      val lastName = nameComps.last
+
+      firstNameField.clear() sleep (1 second)
+      firstNameField.sendKeys(firstName) sleep (1 second)
+
+      lastNameField.clear() sleep (1 second)
+      lastNameField.sendKeys(lastName) sleep (1 second)
+
+      submitButton.click()
+    }
+
+    def emailField(implicit webDriver: WebDriver): WebElement = eventually {
+      find(cssSelector("input#email")) getOrElse fail("Email field not found")
+    }
+
+    def firstNameField(implicit webDriver: WebDriver): WebElement = eventually {
+      find(cssSelector("input#firstName")) getOrElse fail("First name field not found")
+    }
+
+    def lastNameField(implicit webDriver: WebDriver): WebElement = eventually {
+      find(cssSelector("input#lastName")) getOrElse fail("Last name field not found")
+    }
+
+    def submitButton(implicit webDriver: WebDriver): WebElement = eventually {
+      find(cssSelector("#kc-form-buttons > input")) getOrElse fail("Submit button not found")
+    }
+  }
+
   def logInWith(userCredentials: UserCredentials)(implicit webDriver: WebDriver): LoginType = eventually {
     if (userCredentials.useProvider) {
       oidcButton.click() sleep (5 seconds)
@@ -63,6 +106,11 @@ case object LoginPage extends RenkuPage {
         oidcButton.click() sleep (5 seconds)
       }
       providerLoginPage.logIn sleep (5 seconds)
+      // This is a first login, and we need to provide account information
+      if (currentUrl contains "login-actions/first-broker-login") {
+        val updateInfoPage = UpdateAccountInfoPage(userCredentials)
+        updateInfoPage.updateInfo sleep (5 seconds)
+      }
       LoginWithProvider
     } else {
       usernameField.clear() sleep (1 second)
