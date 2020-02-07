@@ -122,6 +122,7 @@ jobs:
         docker-compose run -e RENKU_TEST_URL=https://${RENKU_RELEASE}.dev.renku.ch \
                            -e RENKU_TEST_FULL_NAME="Renku Bot" \
                            -e RENKU_TEST_EMAIL="renku@datascience.ch" \
+                           -e RENKU_TEST_REGISTER="1" \
                            -e RENKU_TEST_USERNAME="renku-test" \
                            -e RENKU_TEST_PASSWORD="$RENKU_BOT_DEV_PASSWORD" sbt
     - name: Upload screenshots on failure
