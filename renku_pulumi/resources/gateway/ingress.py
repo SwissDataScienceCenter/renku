@@ -10,9 +10,6 @@ def ingress(global_config):
     if not values['ingress']['enabled']:
         return
 
-    global_values = pulumi.Config('global')
-    global_values = global_values.require_object('values')
-
     k8s_config = pulumi.Config('kubernetes')
 
     stack = pulumi.get_stack()

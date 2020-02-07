@@ -7,9 +7,6 @@ def gateway_service(global_config, gateway_secret, gateway_configmap, gateway_de
     config = pulumi.Config('gateway')
     values = gateway_values()
 
-    global_values = pulumi.Config('global')
-    global_values = global_values.require_object('values')
-
     k8s_config = pulumi.Config('kubernetes')
 
     stack = pulumi.get_stack()
@@ -59,9 +56,6 @@ def gateway_service(global_config, gateway_secret, gateway_configmap, gateway_de
 def gateway_auth_service(global_config, gateway_secret, gateway_configmap, gateway_auth_deployment, dependencies=[]):
     config = pulumi.Config('gateway')
     values = gateway_values()
-
-    global_values = pulumi.Config('global')
-    global_values = global_values.require_object('values')
 
     k8s_config = pulumi.Config('kubernetes')
 

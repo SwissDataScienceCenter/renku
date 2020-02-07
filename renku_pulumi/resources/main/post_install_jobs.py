@@ -4,8 +4,6 @@ from pulumi_kubernetes.batch.v1 import Job
 
 def gitlab_postinstall_job(global_config, postgres_secret, dependencies=[]):
     config = pulumi.Config()
-    global_values = pulumi.Config('global')
-    global_values = global_values.require_object('values')
 
     k8s_config = pulumi.Config('kubernetes')
 
@@ -52,11 +50,11 @@ def gitlab_postinstall_job(global_config, postgres_secret, dependencies=[]):
                             'env':[
                                 {
                                     'name': 'PGDATABASE',
-                                    'value': global_values['gitlab']['postgresDatabase']
+                                    'value': global_config['global']['gitlab']['postgresDatabase']
                                 },
                                 {
                                     'name': 'PGUSER',
-                                    'value': global_values['gitlab']['postgresUser']
+                                    'value': global_config['global']['gitlab']['postgresUser']
                                 },
                                 {
                                     'name': 'PGHOST',
@@ -107,8 +105,6 @@ def gitlab_postinstall_job(global_config, postgres_secret, dependencies=[]):
 
 def keycloak_postinstall_job(global_config, keycloak_user_secret, dependencies=[]):
     config = pulumi.Config()
-    global_values = pulumi.Config('global')
-    global_values = global_values.require_object('values')
 
     k8s_config = pulumi.Config('kubernetes')
 
@@ -162,7 +158,7 @@ def keycloak_postinstall_job(global_config, keycloak_user_secret, dependencies=[
                         'env': [
                             {
                                 'name': 'KEYCLOAK_URL',
-                                'value': '{}://{}/auth/'.format(global_config['http'], global_values['renku']['domain']) # TODO: where does this value come from?
+                                'value': '{}://{}/auth/'.format(global_config['http'], global_config['global']['renku']['domain']) # TODO: where does this value come from?
                             },
                             {
                                 'name': 'KEYCLOAK_ADMIN_USER',
@@ -202,8 +198,6 @@ def keycloak_postinstall_job(global_config, keycloak_user_secret, dependencies=[
 
 def postgres_postinstall_job(global_config, graph_db_secret, graph_token_secret, cfg_map, dependencies=[]):
     config = pulumi.Config()
-    global_values = pulumi.Config('global')
-    global_values = global_values.require_object('values')
 
     k8s_config = pulumi.Config('kubernetes')
 

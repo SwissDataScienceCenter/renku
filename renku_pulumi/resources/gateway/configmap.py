@@ -168,9 +168,6 @@ def configmaps(global_config):
     config = pulumi.Config('gateway')
     values = gateway_values()
 
-    global_values = pulumi.Config('global')
-    global_values = global_values.require_object('values')
-
     k8s_config = pulumi.Config('kubernetes')
 
     stack = pulumi.get_stack()
@@ -188,7 +185,7 @@ def configmaps(global_config):
     template_values = {
         'release_name': stack,
         'fullname': gateway_name,
-        'global': {**global_values, **global_config},
+        'global': {**global_config['global'], **global_config},
         **values
     }
 

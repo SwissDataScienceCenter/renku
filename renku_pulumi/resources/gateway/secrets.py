@@ -9,9 +9,6 @@ def secret(global_config):
     config = pulumi.Config('gateway')
     values = gateway_values()
 
-    global_values = pulumi.Config('global')
-    global_values = global_values.require_object('values')
-
     k8s_config = pulumi.Config('kubernetes')
 
     stack = pulumi.get_stack()
@@ -27,10 +24,10 @@ def secret(global_config):
     }
 
     if 'oidcClientSecret' not in values:
-        values['oidcClientSecret'] = global_values['gateway']['clientSecret']
+        values['oidcClientSecret'] = global_config['global']['gateway']['clientSecret']
 
     if 'gitlabClientSecret' not in values:
-        values['gitlabClientSecret'] = global_values['gateway']['gitlabClientSecret']
+        values['gitlabClientSecret'] = global_config['global']['gateway']['gitlabClientSecret']
 
     return Secret(
         gateway_name,

@@ -38,13 +38,20 @@ default_global_values = {
 }
 
 
-def deploy():
-    config = pulumi.Config()
-
+def get_global_values():
     global_values = pulumi.Config('global')
     global_values = global_values.get_object('values') or {}
 
+
     global_values = always_merger.merge(default_global_values, global_values)
+
+    return global_values
+
+
+def deploy():
+    config = pulumi.Config()
+
+    global_values = get_global_values()
 
     # global config is used to propagate dynamic values
     global_config = {}

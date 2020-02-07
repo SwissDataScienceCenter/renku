@@ -8,9 +8,6 @@ def gateway_deployment(global_config, gateway_secret, gateway_configmap, depende
     config = pulumi.Config('gateway')
     values = gateway_values()
 
-    global_values = pulumi.Config('global')
-    global_values = global_values.require_object('values')
-
     k8s_config = pulumi.Config('kubernetes')
 
     stack = pulumi.get_stack()
@@ -99,9 +96,6 @@ def gateway_auth_deployment(global_config, gateway_secret, gateway_configmap, re
     config = pulumi.Config('gateway')
     values = gateway_values()
 
-    global_values = pulumi.Config('global')
-    global_values = global_values.require_object('values')
-
     k8s_config = pulumi.Config('kubernetes')
 
     stack = pulumi.get_stack()
@@ -117,21 +111,21 @@ def gateway_auth_deployment(global_config, gateway_secret, gateway_configmap, re
     }
 
     gateway_url = values['hostName'] or '{}://{}'.format(
-        global_config['http'], global_values['renku']['domain'])
+        global_config['http'], global_config['global']['renku']['domain'])
 
     gitlab_url = values['gitlabUrl'] or '{}://{}/gitlab'.format(
-        global_config['http'], global_values['renku']['domain'])
+        global_config['http'], global_config['global']['renku']['domain'])
 
     if 'jupyterhubUrl' not in values:
         values['jupyterhubUrl'] = '{}://{}/jupyterhub'.format(
-            global_config['http'], global_values['renku']['domain'])
+            global_config['http'], global_config['global']['renku']['domain'])
     jupyterhub_url = values['jupyterhubUrl']
 
     if 'keycloakUrl' not in values:
         values['keycloakUrl'] = '{}://{}'.format(
-            global_config['http'], global_values['renku']['domain'])
+            global_config['http'], global_config['global']['renku']['domain'])
     keycloak_url = values['keycloakUrl'] or '{}://{}'.format(
-        global_config['http'], global_values['renku']['domain'])
+        global_config['http'], global_config['global']['renku']['domain'])
 
     env = [
         {
@@ -161,7 +155,7 @@ def gateway_auth_deployment(global_config, gateway_secret, gateway_configmap, re
         },
         {
             'name': 'GITLAB_CLIENT_ID',
-            'value': values['gitlabClientId'] or global_values['gateway']['gitlabClientId']
+            'value': values['gitlabClientId'] or global_config['global']['gateway']['gitlabClientId']
         },
         {
             'name': 'JUPYTERHUB_CLIENT_SECRET',
@@ -233,11 +227,11 @@ def gateway_auth_deployment(global_config, gateway_secret, gateway_configmap, re
         }
     ]
 
-    if 'realm' in global_values['keycloak']:
+    if 'realm' in global_config['global']['keycloak']:
         env.append(
             {
                 'name': 'KEYCLOAK_REALM',
-                'value': global_values['keycloak']['realm']
+                'value': global_config['global']['keycloak']['realm']
             }
         )
 

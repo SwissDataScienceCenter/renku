@@ -150,8 +150,6 @@ EOSQL""", trim_blocks=True, lstrip_blocks=True)
 
 def configmap(global_config):
     config = pulumi.Config()
-    global_values = pulumi.Config('global')
-    global_values = global_values.require_object('values')
 
     ui_values = pulumi.Config('ui')
     ui_values = ui_values.require_object('values')
@@ -161,7 +159,7 @@ def configmap(global_config):
     stack = pulumi.get_stack()
 
     template_values = {
-        'global': {**global_values, **global_config},
+        'global': {**global_config['global'], **global_config},
         'ui': ui_values
     }
 
@@ -172,7 +170,7 @@ def configmap(global_config):
     gitlab_enabled = config.get_bool('gitlab_enabled')
     if gitlab_enabled:
         data['init-gitlab-db.sh'] = GITLAB_DB_INIT_SCRIPT.render(**template_values)
-        if 'sudoToken' in global_values['gitlab']:
+        if 'sudoToken' in global_config['global']['gitlab']:
             data['init-gitlab.sh'] = GITLAB_INIT_SCRIPT.render(**template_values)
 
     if config.get_bool('keycloak_enabled'):
