@@ -8,7 +8,7 @@ import ch.renku.acceptancetests.pages.Page.{Path, Title}
 import eu.timepit.refined.api.Refined
 import eu.timepit.refined.auto._
 
-import org.openqa.selenium.{WebDriver, WebElement}
+import org.openqa.selenium.{By, WebDriver, WebElement}
 import org.scalatestplus.selenium.WebBrowser
 import org.scalatestplus.selenium.WebBrowser.{cssSelector, find, findAll}
 import org.scalatest.time.{Millis, Seconds, Span}
@@ -173,7 +173,9 @@ class ProjectPage(projectDetails: ProjectDetails, userCredentials: UserCredentia
 
     def startEnvironment(implicit webDriver: WebDriver): WebElement = eventually {
       verifyImageReady
-      find(cssSelector("button.btn.btn-primary:last-of-type")) getOrElse fail("Start environment button not found")
+      findAll(cssSelector("button.btn.btn-primary:last-of-type"))
+        .find(_.text == "Start environment")
+        .getOrElse(fail("Start environment button not found"))
     }
 
     def verifyImageReady(implicit webDriver: WebDriver): Unit =
@@ -215,7 +217,8 @@ class ProjectPage(projectDetails: ProjectDetails, userCredentials: UserCredentia
       }
 
       def connectDotButton(implicit webDriver: WebDriver): WebElement = eventually {
-        find(cssSelector("button.btn.btn-primary svg[data-icon='ellipsis-v']"))
+        findAll(cssSelector("button.btn.btn-primary svg[data-icon='ellipsis-v']"))
+          .find(_.findElement(By.xpath("./../..")).getText().equals("Connect"))
           .getOrElse(fail("First row Interactive Environment ... button not found"))
           .parent
       }
