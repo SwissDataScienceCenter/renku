@@ -43,6 +43,13 @@ jobs:
                       -f cd_values.yaml \
                       --timeout 1800 charts/renku \
                       --cleanup-on-fail
+    - name: Notify slack
+      if: success()
+      env:
+        SLACK_BOT_TOKEN: ${{ secrets.RENKU_SLACK_BOT_TOKEN }}
+      uses: pullreminders/slack-action@master
+      with:
+        args: '{\"channel\":\"C9U45DL1H\",\"text\":\"I just deployed renku to https://dev.renku.ch\"}'
   test:
     runs-on: ubuntu-latest
     needs: deploy

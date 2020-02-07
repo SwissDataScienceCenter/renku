@@ -94,6 +94,17 @@ jobs:
                       --set notebooks.jupyterhub.auth.gitlab.clientId=${APP_ID} \
                       --set notebooks.jupyterhub.auth.gitlab.clientSecret=${APP_SECRET} \
                       charts/renku
+    - name: Notify slack
+      if: success()
+      env:
+        RENKU_SLACK_BOT_TOKEN: ${{ secrets.RENKU_SLACK_BOT_TOKEN }}
+      run: |
+        export BRANCH_HASH=$(echo "$GITHUB_HEAD_REF" | md5sum)
+        export RENKU_RELEASE="ci-${BRANCH_HASH:0:7}-renku"
+        curl -X POST https://slack.com/api/chat.postMessage \
+             -H "Authorization: Bearer $RENKU_SLACK_BOT_TOKEN" \
+             --data "channel=C9U45DL1H" \
+             --data "text=I just deployed the branch ${GITHUB_HEAD_REF} at https://${RENKU_RELEASE}.dev.renku.ch"
   test-pr:
     runs-on: ubuntu-latest
     if: github.event.action != 'closed'
