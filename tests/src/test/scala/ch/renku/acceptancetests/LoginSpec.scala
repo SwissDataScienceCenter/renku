@@ -20,41 +20,20 @@ package ch.renku.acceptancetests
 
 import ch.renku.acceptancetests.pages._
 import ch.renku.acceptancetests.tooling.AcceptanceSpec
-import ch.renku.acceptancetests.workflows.LoginType.LoginWithProvider
+import ch.renku.acceptancetests.workflows.Login
+import ch.renku.acceptancetests.workflows.LoginType
 
 import scala.concurrent.duration._
 import scala.language.postfixOps
 
-class LoginSpec extends AcceptanceSpec {
+class LoginSpec extends AcceptanceSpec with Login {
 
   feature("User logging in and out") {
 
-    scenario("Registering a new user in Renku") {
-      Given("user is not logged in on the Landing page")
-      go to LandingPage
-      verify browserAt LandingPage
+    scenario("Logging into Renku") {
+      implicit val loginType: LoginType = logIntoRenku
 
-      When("user clicks on the Login button")
-      click on LandingPage.loginButton
-
-      Then("they should get into the Login Page")
-      verify browserAt LoginPage
-
-      When("user enters credentials and logs in")
-      val loginType = LoginPage logInWith userCredentials
-
-      Then("they should get into the Welcome page")
-      verify browserAt WelcomePage
-
-      When("user clicks the Log out link")
-      click on WelcomePage.TopBar.topRightDropDown
-      click on WelcomePage.TopBar.logoutLink
-
-      unless(loginType == LoginWithProvider) {
-        Then("they should get back into the Landing page")
-        verify browserAt LandingPage
-        verify userCanSee LandingPage.loginButton sleep (1 second)
-      }
+      logOutOfRenku
     }
   }
 }
