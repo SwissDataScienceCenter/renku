@@ -570,7 +570,7 @@ and other commands.
 .. warning::
 
    Do *not* make any edits to the code before the ``renku run``
-   command is finished. In oder to keep track of the outputs of
+   command is finished. In order to keep track of the outputs of
    your script, renku will automatically add the changes to
    ``git``. If you want to modify your project while a ``renku`` command
    is executing, you should create a new branch.
