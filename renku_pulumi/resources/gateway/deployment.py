@@ -1,10 +1,12 @@
 import pulumi
 from pulumi_kubernetes.apps.v1beta2 import Deployment
 
+from .values import gateway_values
+
 
 def gateway_deployment(global_config, gateway_secret, gateway_configmap, dependencies=[]):
     config = pulumi.Config('gateway')
-    gateway_values = config.require_object('values')
+    values = gateway_values()
 
     global_values = pulumi.Config('global')
     global_values = global_values.require_object('values')
@@ -44,7 +46,7 @@ def gateway_deployment(global_config, gateway_secret, gateway_configmap, depende
                     }],
                     'containers': [{
                         'name': 'gateway',
-                        'image': gateway_values['image'],
+                        'image': values['image'],
                         'imagePullPolicy': 'IfNotPresent',
                         'ports': [
                             {
@@ -82,11 +84,11 @@ def gateway_deployment(global_config, gateway_secret, gateway_configmap, depende
                             'successThreshold': 1,
                             'timeoutSeconds': 2
                         },
-                        'resources': gateway_values['resources']
+                        'resources': values['resources']
                     }],
-                    'nodeSelector': gateway_values['nodeSelector'],
-                    'affinity': gateway_values['affinity'],
-                    'tolerations': gateway_values['tolerations'],
+                    'nodeSelector': values['nodeSelector'],
+                    'affinity': values['affinity'],
+                    'tolerations': values['tolerations'],
                 }
             }
         }
@@ -95,7 +97,7 @@ def gateway_deployment(global_config, gateway_secret, gateway_configmap, depende
 
 def gateway_auth_deployment(global_config, gateway_secret, gateway_configmap, redis, dependencies=[]):
     config = pulumi.Config('gateway')
-    gateway_values = config.require_object('values')
+    values = gateway_values()
 
     global_values = pulumi.Config('global')
     global_values = global_values.require_object('values')
@@ -114,21 +116,21 @@ def gateway_auth_deployment(global_config, gateway_secret, gateway_configmap, re
             }
     }
 
-    gateway_url = gateway_values['hostName'] or '{}://{}'.format(
+    gateway_url = values['hostName'] or '{}://{}'.format(
         global_config['http'], global_values['renku']['domain'])
 
-    gitlab_url = gateway_values['gitlabUrl'] or '{}://{}/gitlab'.format(
+    gitlab_url = values['gitlabUrl'] or '{}://{}/gitlab'.format(
         global_config['http'], global_values['renku']['domain'])
 
-    if 'jupyterhubUrl' not in gateway_values:
-        gateway_values['jupyterhubUrl'] = '{}://{}/jupyterhub'.format(
+    if 'jupyterhubUrl' not in values:
+        values['jupyterhubUrl'] = '{}://{}/jupyterhub'.format(
             global_config['http'], global_values['renku']['domain'])
-    jupyterhub_url = gateway_values['jupyterhubUrl']
+    jupyterhub_url = values['jupyterhubUrl']
 
-    if 'keycloakUrl' not in gateway_values:
-        gateway_values['keycloakUrl'] = '{}://{}'.format(
+    if 'keycloakUrl' not in values:
+        values['keycloakUrl'] = '{}://{}'.format(
             global_config['http'], global_values['renku']['domain'])
-    keycloak_url = gateway_values['keycloakUrl'] or '{}://{}'.format(
+    keycloak_url = values['keycloakUrl'] or '{}://{}'.format(
         global_config['http'], global_values['renku']['domain'])
 
     env = [
@@ -159,7 +161,7 @@ def gateway_auth_deployment(global_config, gateway_secret, gateway_configmap, re
         },
         {
             'name': 'GITLAB_CLIENT_ID',
-            'value': gateway_values['gitlabClientId'] or global_values['gateway']['gitlabClientId']
+            'value': values['gitlabClientId'] or global_values['gateway']['gitlabClientId']
         },
         {
             'name': 'JUPYTERHUB_CLIENT_SECRET',
@@ -172,11 +174,11 @@ def gateway_auth_deployment(global_config, gateway_secret, gateway_configmap, re
         },
         {
             'name': 'JUPYTERHUB_CLIENT_ID',
-            'value': gateway_values['jupyterhub']['clientId']
+            'value': values['jupyterhub']['clientId']
         },
         {
             'name': 'GATEWAY_SERVICE_PREFIX',
-            'value': gateway_values['servicePrefix'] if 'servicePrefix' in gateway_values else '/api/'
+            'value': values['servicePrefix'] if 'servicePrefix' in values else '/api/'
         },
         {
             'name': 'GATEWAY_REDIS_HOST',
@@ -193,11 +195,11 @@ def gateway_auth_deployment(global_config, gateway_secret, gateway_configmap, re
         },
         {
             'name': 'GATEWAY_ALLOW_ORIGIN',
-            'value': gateway_values['allowOrigin'] if 'allowOrigin' in gateway_values else ''
+            'value': values['allowOrigin'] if 'allowOrigin' in values else ''
         },
         {
             'name': 'OIDC_CLIENT_ID',
-            'value': gateway_values['oidcClientId'] if 'oidcClientId' in gateway_values else 'renku'
+            'value': values['oidcClientId'] if 'oidcClientId' in values else 'renku'
         },
         {
             'name': 'OIDC_CLIENT_SECRET',
@@ -210,23 +212,23 @@ def gateway_auth_deployment(global_config, gateway_secret, gateway_configmap, re
         },
         {
             'name': 'SPARQL_ENDPOINT',
-            'value': gateway_values['graph']['sparql']['endpoint'] if 'endpoint' in gateway_values['graph']['sparql'] else
+            'value': values['graph']['sparql']['endpoint'] if 'endpoint' in values['graph']['sparql'] else
                 'http://{}-jena:3030/{}/sparql'.format(
                     stack, k8s_config.require("namespace"))
         },
         {
             'name': 'SPARQL_USERNAME',
-            'value': gateway_values['graph']['sparql']['username']
+            'value': values['graph']['sparql']['username']
         },
         {
             'name': 'SPARQL_PASSWORD',
-            'value': gateway_values['graph']['sparql']['password']
+            'value': values['graph']['sparql']['password']
         },
         {
             'name': 'WEBHOOK_SERVICE_HOSTNAME',
-            'value': gateway_values['graph']['webhookService']['hostname'] if gateway_values['graph']['webhookService']
-                and 'hostname' in gateway_values['graph']['webhookService']
-                and gateway_values['graph']['webhookService']['hostname']
+            'value': values['graph']['webhookService']['hostname'] if values['graph']['webhookService']
+                and 'hostname' in values['graph']['webhookService']
+                and values['graph']['webhookService']['hostname']
                 else 'http://{}-graph-webhook-service'.format(stack)
         }
     ]
@@ -254,7 +256,7 @@ def gateway_auth_deployment(global_config, gateway_secret, gateway_configmap, re
                 'spec': {
                     'containers': [{
                         'name': 'gateway',
-                        'image': gateway_values['auth_image'],
+                        'image': values['auth_image'],
                         'imagePullPolicy': 'IfNotPresent',
                         'ports': [
                             {
@@ -282,9 +284,9 @@ def gateway_auth_deployment(global_config, gateway_secret, gateway_configmap, re
                         },
                         'resources': config.get_object('resources') or {}
                     }],
-                    'nodeSelector': gateway_values['nodeSelector'],
-                    'affinity': gateway_values['affinity'],
-                    'tolerations': gateway_values['tolerations'],
+                    'nodeSelector': values['nodeSelector'],
+                    'affinity': values['affinity'],
+                    'tolerations': values['tolerations'],
                 }
             }
         },

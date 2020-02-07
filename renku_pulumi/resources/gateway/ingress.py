@@ -1,11 +1,13 @@
 import pulumi
 from pulumi_kubernetes.extensions.v1beta1 import Ingress
 
+from .values import gateway_values
+
 def ingress(global_config):
     config = pulumi.Config('gateway')
-    gateway_values = config.require_object('values')
+    values = gateway_values()
 
-    if not gateway_values['ingress']['enabled']:
+    if not values['ingress']['enabled']:
         return
 
     global_values = pulumi.Config('global')
@@ -29,12 +31,12 @@ def ingress(global_config):
         'rules': []
     }
 
-    for h in gateway_values['ingress']['hosts']:
+    for h in values['ingress']['hosts']:
         spec['rules'].append({
             'host': h,
             'http': {
-                'paths':[{
-                    'path': gateway_values['ingress']['path'],
+                'paths': [{
+                    'path': values['ingress']['path'],
                     'backend': {
                         'serviceName': gateway_name,
                         'servicePort': 'http'
@@ -44,10 +46,10 @@ def ingress(global_config):
         })
     print(spec)
 
-    if gateway_values['ingress']['tls']:
+    if values['ingress']['tls']:
         spec['tls'] = []
 
-        for t in gateway_values['ingress']['tls']:
+        for t in values['ingress']['tls']:
             spec['tls'].append({
                 'hosts': t['hosts'],
                 'secretName': t['secretName']

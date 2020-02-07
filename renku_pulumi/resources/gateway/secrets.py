@@ -3,9 +3,11 @@ from ..utils import b64encode
 import pulumi
 from pulumi_kubernetes.core.v1 import Secret
 
+from .values import gateway_values
+
 def secret(global_config):
     config = pulumi.Config('gateway')
-    gateway_values = config.require_object('values')
+    values = gateway_values()
 
     global_values = pulumi.Config('global')
     global_values = global_values.require_object('values')
@@ -24,20 +26,20 @@ def secret(global_config):
             }
     }
 
-    if 'oidcClientSecret' not in gateway_values:
-        gateway_values['oidcClientSecret'] = global_values['gateway']['clientSecret']
+    if 'oidcClientSecret' not in values:
+        values['oidcClientSecret'] = global_values['gateway']['clientSecret']
 
-    if 'gitlabClientSecret' not in gateway_values:
-        gateway_values['gitlabClientSecret'] = global_values['gateway']['gitlabClientSecret']
+    if 'gitlabClientSecret' not in values:
+        values['gitlabClientSecret'] = global_values['gateway']['gitlabClientSecret']
 
     return Secret(
         gateway_name,
         metadata=gateway_metadata,
         type='Opaque',
         data={
-            'oidcClientSecret': b64encode(gateway_values['oidcClientSecret']),
-            'gitlabClientSecret': b64encode(gateway_values['gitlabClientSecret']),
-            'jupyterhubClientSecret': b64encode(gateway_values['jupyterhub']['clientSecret']),
-            'gatewaySecret': b64encode(gateway_values['secretKey'])
+            'oidcClientSecret': b64encode(values['oidcClientSecret']),
+            'gitlabClientSecret': b64encode(values['gitlabClientSecret']),
+            'jupyterhubClientSecret': b64encode(values['jupyterhub']['clientSecret']),
+            'gatewaySecret': b64encode(values['secretKey'])
         }
     )

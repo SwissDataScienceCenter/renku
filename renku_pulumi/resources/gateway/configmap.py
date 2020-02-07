@@ -2,6 +2,8 @@ import pulumi
 from pulumi_kubernetes.core.v1 import ConfigMap
 from jinja2 import Template
 
+from .values import gateway_values
+
 TRAEFIK_TEMPLATE = Template("""
 {% if development %}
 [Global]
@@ -164,7 +166,7 @@ RULES_TEMPLATE = Template("""
 
 def configmaps(global_config):
     config = pulumi.Config('gateway')
-    gateway_values = config.require_object('values')
+    values = gateway_values()
 
     global_values = pulumi.Config('global')
     global_values = global_values.require_object('values')
@@ -187,7 +189,7 @@ def configmaps(global_config):
         'release_name': stack,
         'fullname': gateway_name,
         'global': {**global_values, **global_config},
-        **gateway_values
+        **values
     }
 
     return ConfigMap(

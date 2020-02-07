@@ -1,9 +1,11 @@
 import pulumi
 from pulumi_kubernetes.core.v1 import Service
 
+from .values import gateway_values
+
 def gateway_service(global_config, gateway_secret, gateway_configmap, gateway_deployment):
     config = pulumi.Config('gateway')
-    gateway_values = config.require_object('values')
+    values = gateway_values()
 
     global_values = pulumi.Config('global')
     global_values = global_values.require_object('values')
@@ -25,7 +27,7 @@ def gateway_service(global_config, gateway_secret, gateway_configmap, gateway_de
 
     servicePort = config.get_int('port') or 80
 
-    global_config['gateway'] = gateway_values
+    global_config['gateway'] = values
     global_config['gateway']['service']['port'] = servicePort
     global_config['gateway']['name'] = gateway_name
 
@@ -33,8 +35,8 @@ def gateway_service(global_config, gateway_secret, gateway_configmap, gateway_de
         gateway_name,
         metadata=gateway_metadata,
         spec={
-            'type': gateway_values['service']['type'],
-            'ports':[
+            'type': values['service']['type'],
+            'ports': [
                 {
                     'port': servicePort,
                     'targetPort': 'http',
@@ -56,7 +58,7 @@ def gateway_service(global_config, gateway_secret, gateway_configmap, gateway_de
 
 def gateway_auth_service(global_config, gateway_secret, gateway_configmap, gateway_auth_deployment, dependencies=[]):
     config = pulumi.Config('gateway')
-    gateway_values = config.require_object('values')
+    values = gateway_values()
 
     global_values = pulumi.Config('global')
     global_values = global_values.require_object('values')
@@ -81,8 +83,8 @@ def gateway_auth_service(global_config, gateway_secret, gateway_configmap, gatew
         auth_name,
         metadata=auth_metadata,
         spec={
-            'type': gateway_values['service']['type'],
-            'ports':[
+            'type': values['service']['type'],
+            'ports': [
                 {
                     'port': 80,
                     'targetPort': 'http',
