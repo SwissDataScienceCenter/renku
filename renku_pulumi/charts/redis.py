@@ -42,7 +42,7 @@ def redis(global_config):
         config=ChartOpts(
             chart='redis',
             repo='stable',
-            version='3.7.2',
+            version=redis_config.require('version'),
             values=values
         )
     )

@@ -78,10 +78,9 @@ def renku_graph(config, global_config, postgres_secret, token_secret, postgres_c
         '{}-graph'.format(stack),
         config=ChartOpts(
             chart='renku-graph',
-            version='0.32.0-913601f',
+            version=graph_config.require('version'),
             fetch_opts=FetchOpts(
-                #repo='https://swissdatasciencecenter.github.io/helm-charts/'
-                repo='http://127.0.0.1:8879/'
+                repo=graph_config.get('repository') or 'https://swissdatasciencecenter.github.io/helm-charts/'
             ),
             values=values
         )

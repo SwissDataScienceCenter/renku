@@ -39,9 +39,9 @@ def renku_ui(config, global_config):
         '{}-ui'.format(pulumi.get_stack()),
         config=ChartOpts(
             chart='renku-ui',
-            version='0.7.2',
+            version=ui_config.require('version'),
             fetch_opts=FetchOpts(
-                repo='https://swissdatasciencecenter.github.io/helm-charts/'
+                repo=ui_config.get('repository') or 'https://swissdatasciencecenter.github.io/helm-charts/'
             ),
             values=values
         )

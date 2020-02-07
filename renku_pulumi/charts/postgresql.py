@@ -76,7 +76,7 @@ def postgresql(config, global_config):
         config=ChartOpts(
             chart='postgresql',
             repo='stable',
-            version='0.14.4',
+            version=postgres_config.require('version'),
             values=values
         )
     )

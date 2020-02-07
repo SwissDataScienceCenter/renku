@@ -130,9 +130,9 @@ def renku_notebooks(config, global_config, dependencies=[]):
         '{}-notebooks'.format(pulumi.get_stack()),
         config=ChartOpts(
             chart='renku-notebooks',
-            version='0.6.2',
+            version=notebooks_config.require('version'),
             fetch_opts=FetchOpts(
-                repo='https://swissdatasciencecenter.github.io/helm-charts/'
+                repo=notebooks_config.get('repository') or 'https://swissdatasciencecenter.github.io/helm-charts/'
             ),
             values=values,
             transformations=[delete_before_replace_resources]

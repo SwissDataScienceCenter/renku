@@ -33,7 +33,7 @@ def gitlab(config, global_config):
         config=ChartOpts(
             chart='gitlab',
             repo='stable',
-            version='0.4.1-9418599',
+            version=gitlab_config.require('version'),
             values=values
         )
     )

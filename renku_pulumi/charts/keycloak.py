@@ -267,7 +267,7 @@ def keycloak(config, global_config, dependencies=[]):
         config=ChartOpts(
             chart='keycloak',
             repo='stable',
-            version='4.10.1',
+            version=keycloak_config.require('version'),
             values=values
         ),
         opts=pulumi.ResourceOptions(depends_on=dependencies)

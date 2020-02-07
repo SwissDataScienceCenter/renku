@@ -17,7 +17,7 @@ def minio(config, global_config):
         config=ChartOpts(
             chart='minio',
             repo='stable',
-            version='1.6.0',
+            version=minio_config.require('version'),
             values=values
         )
     )
