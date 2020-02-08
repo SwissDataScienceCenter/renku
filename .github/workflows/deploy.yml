@@ -46,10 +46,12 @@ jobs:
     - name: Notify slack
       if: success()
       env:
-        SLACK_BOT_TOKEN: ${{ secrets.RENKU_SLACK_BOT_TOKEN }}
-      uses: pullreminders/slack-action@master
-      with:
-        args: '{\"channel\":\"C9U45DL1H\",\"text\":\"I just deployed renku to https://dev.renku.ch\"}'
+        RENKU_SLACK_BOT_TOKEN: ${{ secrets.RENKU_SLACK_BOT_TOKEN }}
+      run: |
+        curl -X POST https://slack.com/api/chat.postMessage \
+             -H "Authorization: Bearer $RENKU_SLACK_BOT_TOKEN" \
+             --data "channel=C9U45DL1H" \
+             --data "text=https://dev.renku.ch has been updated! :tada:"
   test:
     runs-on: ubuntu-latest
     needs: deploy

@@ -46,19 +46,24 @@ jobs:
     needs: cleanup-previous-runs
     steps:
     - uses: actions/checkout@v2
+    - name: Configure environment
+      run: |
+        BRANCH_HASH=$(echo "$GITHUB_HEAD_REF" | md5sum)
+        echo "::set-env name=RENKU_RELEASE::ci-${BRANCH_HASH:0:7}-renku"
+        echo "::set-env name=RENKU_NAMESPACE::ci-${GITHUB_HEAD_REF}"
     - name: Configure GitLab application
       env:
         GITLAB_TOKEN: ${{ secrets.GITLAB_TOKEN }}
       run: |
-        set -x
-        export BRANCH_HASH=$(echo "$GITHUB_HEAD_REF" | md5sum)
-        echo $BRANCH_HASH
-        export RENKU_RELEASE="ci-${BRANCH_HASH:0:7}-renku"
-        curl -X POST https://dev.renku.ch/gitlab/api/v4/applications \
+        gitlab_app=$(curl -s -X POST https://dev.renku.ch/gitlab/api/v4/applications \
                       -H "private-token: $GITLAB_TOKEN" \
                       --data "name=${RENKU_RELEASE}" \
                       --data "redirect_uri=https://${RENKU_RELEASE}.dev.renku.ch/auth/realms/Renku/broker/dev-renku/endpoint https://${RENKU_RELEASE}.dev.renku.ch/api/auth/gitlab/token https://${RENKU_RELEASE}.dev.renku.ch/api/auth/jupyterhub/token https://${RENKU_RELEASE}.dev.renku.ch/jupyterhub/hub/oauth_callback" \
-                      --data "scopes=api read_user read_repository read_registry openid" > gitlab_app
+                      --data "scopes=api read_user read_repository read_registry openid")
+        APP_ID=$(echo $gitlab_app | jq -r '.application_id')
+        APP_SECRET=$(echo $gitlab_app | jq -r '.secret')
+        echo "::set-env name=APP_ID::${APP_ID}"
+        echo "::set-env name=APP_SECRET::${APP_SECRET}"
     - name: Deploy to k8s
       uses: stefanprodan/kube-tools@v1
       env:
@@ -69,12 +74,6 @@ jobs:
         kubectl: 1.16.2
         helm: 2.16.1
         command: |
-          set -x
-          export BRANCH_HASH=$(echo "$GITHUB_HEAD_REF" | md5sum)
-          export RENKU_RELEASE="ci-${BRANCH_HASH:0:7}-renku"
-          export RENKU_NAMESPACE="ci-${GITHUB_HEAD_REF}"
-          export APP_ID=$(cat gitlab_app | jq -r '.application_id')
-          export APP_SECRET=$(cat gitlab_app | jq -r '.secret')
           echo "$RENKUBOT_KUBECONFIG" > renkubot-kube.config
           helm init --client-only
           helm repo add renku https://swissdatasciencecenter.github.io/helm-charts/
@@ -98,13 +97,12 @@ jobs:
       if: success()
       env:
         RENKU_SLACK_BOT_TOKEN: ${{ secrets.RENKU_SLACK_BOT_TOKEN }}
+        PR_URL: ${{ github.event.pull_request._links.html.href }}
       run: |
-        export BRANCH_HASH=$(echo "$GITHUB_HEAD_REF" | md5sum)
-        export RENKU_RELEASE="ci-${BRANCH_HASH:0:7}-renku"
         curl -X POST https://slack.com/api/chat.postMessage \
              -H "Authorization: Bearer $RENKU_SLACK_BOT_TOKEN" \
              --data "channel=C9U45DL1H" \
-             --data "text=I just deployed the branch ${GITHUB_HEAD_REF} at https://${RENKU_RELEASE}.dev.renku.ch"
+             --data "text=I just deployed the PR ${PR_URL} at https://${RENKU_RELEASE}.dev.renku.ch :rocket:"
   test-pr:
     runs-on: ubuntu-latest
     if: github.event.action != 'closed'
