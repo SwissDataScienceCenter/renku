@@ -20,6 +20,8 @@ jobs:
     steps:
       - name: automerge
         uses: "pascalgn/automerge-action@check-fresh-pr-data"
+        with:
+          args: "--trace"
         env:
           GITHUB_TOKEN: "${{ secrets.RENKU_CI_TOKEN }}"
           MERGE_METHOD: "squash"
