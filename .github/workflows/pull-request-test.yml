@@ -50,7 +50,7 @@ jobs:
       run: |
         BRANCH_HASH=$(echo "$GITHUB_HEAD_REF" | md5sum)
         echo "::set-env name=RENKU_RELEASE::ci-${BRANCH_HASH:0:7}-renku"
-        echo "::set-env name=RENKU_NAMESPACE::ci-${GITHUB_HEAD_REF}"
+        echo "::set-env name=RENKU_NAMESPACE::ci-${BRANCH_HASH:0:7}-renku"
     - name: Configure GitLab application
       env:
         GITLAB_TOKEN: ${{ secrets.GITLAB_TOKEN }}
