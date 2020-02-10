@@ -2,7 +2,7 @@ import pulumi
 from pulumi_kubernetes.helm.v2 import Chart, ChartOpts, FetchOpts
 from pulumi_random.random_id import RandomId
 
-from deepmerge import always_merger
+from deepmerge import Merger
 
 default_chart_values = {
     "gitlab": {"registry": {}},
@@ -81,6 +81,17 @@ default_chart_values = {
 }
 
 
+def no_duplicate_list_merge(config, path, base, nxt):
+    """Custom merge strategy for lists, only merge values that aren't present."""
+    for i in base:
+        if i in nxt:
+            continue
+
+        nxt.insert(0, i)
+
+    return nxt
+
+
 def delete_before_replace_resources(obj, opts):
     """change some resources to be deleted before upgrade to fix deployment errors."""
     types = ["PodDisruptionBudget", "RoleBinding", "Role", "ServiceAccount"]
@@ -127,7 +138,7 @@ def renku_notebooks(config, global_config, secret, postgres, dependencies=[]):
                 {"name": "GITLAB_URL", "value": gitlab_url}
             )
             default_chart_values["jupyterhub"]["hub"]["services"]["gateway"][
-                "oauth_redirect_url"
+                "oauth_redirect_uri"
             ] = "https://{}.{}/api/auth/jupyterhub/token".format(
                 k8s_config.require("namespace"), baseurl
             )
@@ -176,7 +187,16 @@ def renku_notebooks(config, global_config, secret, postgres, dependencies=[]):
         "url"
     ] = "http://{}-renku-notebooks".format(chart_name)
 
-    values = always_merger.merge(default_chart_values, values)
+    merger = Merger(
+        [
+            (list, [no_duplicate_list_merge]),
+            (dict, ["merge"])
+        ],
+        ["override"],
+        ["override"]
+    )
+
+    values = merger.merge(default_chart_values, values)
 
     sentry = config.get("sentry_dsn")
 
