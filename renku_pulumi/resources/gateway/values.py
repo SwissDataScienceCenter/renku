@@ -57,6 +57,11 @@ def gateway_values():
             upper=False,
             lower=True).result
 
+        baseurl = config.get('baseurl')
+
+        if baseurl:
+            default_chart_values['gitlabUrl'] = "https://{}/gitlab".format(baseurl)
+
     gateway_values = always_merger.merge(default_chart_values, gateway_values)
 
     return gateway_values

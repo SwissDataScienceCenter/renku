@@ -151,8 +151,7 @@ EOSQL""", trim_blocks=True, lstrip_blocks=True)
 def configmap(global_config):
     config = pulumi.Config()
 
-    ui_values = pulumi.Config('ui')
-    ui_values = ui_values.require_object('values')
+    ui_values = global_config['ui']
 
     k8s_config = pulumi.Config('kubernetes')
 

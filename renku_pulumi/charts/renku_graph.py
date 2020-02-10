@@ -22,6 +22,7 @@ default_chart_values = {
             "storageClass": "temporary"
         }
     },
+    "gitlab": {},
     "webhookService": {
         "hookToken": {},
         "eventsSynchronization": {
@@ -69,6 +70,11 @@ def renku_graph(config, global_config, postgres_secret, token_secret, postgres_c
         default_chart_values['tokenRepository']['tokenEncryption']['secret'] = RandomId(
             'graph_tokenrepository_secret',
             byte_length=8).hex.apply(lambda r: b64encode(r.encode()).decode('ascii'))
+
+        baseurl = config.get('baseurl')
+
+        if baseurl:
+            default_chart_values['gitlab']['url'] = "https://{}/gitlab".format(baseurl)
 
     values = always_merger.merge(default_chart_values, values)
 

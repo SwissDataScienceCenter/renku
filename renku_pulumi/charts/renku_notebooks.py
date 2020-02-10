@@ -5,6 +5,9 @@ from pulumi_random.random_id import RandomId
 from deepmerge import always_merger
 
 default_chart_values = {
+    "gitlab": {
+        "registry": {}
+    },
     "securityContext": {
         "enabled": False
     },
@@ -66,10 +69,12 @@ default_chart_values = {
             "services": {
                 "notebooks": {},
                 "gateway": {}
-            }
+            },
+            "extraEnv": []
         },
         "auth": {
-            "state": {}
+            "state": {},
+            "gitlab": {}
         },
         "rbac": {
             "enabled": True
@@ -143,6 +148,19 @@ def renku_notebooks(config, global_config, dependencies=[]):
         default_chart_values['jupyterhub']['proxy']['secretToken'] = RandomId(
             'notebook_jupyterhub_proxy_secret_token',
             byte_length=32).hex
+
+        baseurl = config.get('baseurl')
+        k8s_config = pulumi.Config("kubernetes")
+
+        if baseurl:
+            default_chart_values['gitlab']['registry']['host'] = "registry.{}".format(baseurl)
+            gitlab_url = "https://{}/gitlab".format(baseurl)
+            default_chart_values['gitlab']['url'] = gitlab_url
+            default_chart_values['jupyterhub']['hub']['extraEnv'].append({'name': 'GITLAB_URL', 'value': gitlab_url})
+            default_chart_values['jupyterhub']['hub']['services']['gateway']['oauth_redirect_url'] = "https://{}.{}/api/auth/jupyterhub/token".format(
+                k8s_config.require("namespace"), baseurl)
+            default_chart_values['jupyterhub']['auth']['gitlab']['callbackUrl'] = "https://{}.{}/jupyterhub/hub/oauth_callback".format(
+                k8s_config.require("namespace"), baseurl)
 
     if 'gateway' in global_config and 'jupyterhub' in global_config['gateway'] and 'clientSecret' in global_config['gateway']['jupyterhub']:
         default_chart_values['jupyterhub']['hub']['services']['gateway']['apiToken'] = global_config['gateway']['jupyterhub']['clientSecret']

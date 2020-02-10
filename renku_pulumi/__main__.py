@@ -35,6 +35,7 @@ default_global_values = {
             "existingSecret": None
         },
     },
+    "renku": {},
     "useHTTPS": True
 }
 
@@ -52,6 +53,12 @@ def get_global_values(config):
         default_global_values['gateway']['gitlabClientSecret'] = RandomId(
             'gateway_gitlab_client_secret',
             byte_length=32).hex
+
+        baseurl = config.get('baseurl')
+        k8s_config = pulumi.Config("kubernetes")
+
+        if baseurl:
+            default_global_values['renku']['domain'] = "{}.{}".format(k8s_config.require("namespace"), baseurl)
 
     global_values = always_merger.merge(default_global_values, global_values)
 

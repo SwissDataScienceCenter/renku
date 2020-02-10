@@ -1,9 +1,14 @@
 import pulumi
 from pulumi_kubernetes.extensions.v1beta1 import Ingress
+from deepmerge import always_merger
 
 def ingress(global_config, dependencies=[]):
     config = pulumi.Config()
     ingress_config = pulumi.Config('ingress')
+
+    baseurl = config.get('baseurl')
+    is_dev = config.get_bool('dev')
+    k8s_config = pulumi.Config("kubernetes")
 
     if not ingress_config.get_bool('enabled'):
         return
@@ -27,7 +32,12 @@ def ingress(global_config, dependencies=[]):
 
     spec = {}
 
-    tls = ingress_config.get_object('tls')
+    tls = ingress_config.get_object('tls') or []
+
+    if is_dev and baseurl:
+        tls = always_merger.merge(
+            [{'hosts' : ['{}.{}'.format(k8s_config.require("namespace"), baseurl)], 'secretName': '{}-{}-ch-tls'.format(stack, pulumi.get_project())}],
+            tls)
 
     if tls:
         spec['tls'] = [{
@@ -35,8 +45,12 @@ def ingress(global_config, dependencies=[]):
             'secretName': t['secretName']
         } for t in tls]
 
-    hosts = ingress_config.get_object('hosts')
+    hosts = ingress_config.get_object('hosts') or []
 
+    if is_dev and baseurl:
+        hosts = always_merger.merge(
+            ['{}.{}'.format(k8s_config.require("namespace"), baseurl)],
+            hosts)
 
     if hosts:
         spec['rules'] = []

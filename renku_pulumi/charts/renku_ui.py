@@ -30,6 +30,20 @@ def renku_ui(config, global_config):
     ui_config = pulumi.Config('ui')
     values = ui_config.get_object('values') or {}
 
+    if config.get_bool('dev'):
+        k8s_config = pulumi.Config("kubernetes")
+
+        baseurl = config.get('baseurl')
+
+        if baseurl:
+            default_chart_values['baseUrl'] = "https://{}.{}".format(
+                k8s_config.require("namespace"), baseurl)
+            default_chart_values['gitlabUrl'] = "https//{}/gitlab".format(baseurl)
+            default_chart_values['gatewayUrl'] = "https://{}.{}/api".format(
+                k8s_config.require("namespace"), baseurl)
+            default_chart_values['jupyterhubUrl'] = "https://{}.{}/jupyterhub".format(
+                k8s_config.require("namespace"), baseurl)
+
     values = always_merger.merge(default_chart_values, values)
 
     values['global'] = global_config['global']
