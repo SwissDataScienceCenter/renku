@@ -8,5 +8,4 @@ from .renku_notebooks import renku_notebooks
 from .renku_ui import renku_ui
 
 
-__ALL__ = [renku_ui, renku_graph, renku_notebooks, postgresql, minio, keycloak,
-           gitlab]
+__ALL__ = [renku_ui, renku_graph, renku_notebooks, postgresql, minio, keycloak, gitlab]

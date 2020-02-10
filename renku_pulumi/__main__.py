@@ -1,64 +1,77 @@
 import pulumi
 from pulumi_random.random_id import RandomId
 
-from charts import (renku_ui, renku_graph, renku_notebooks, postgresql,
-                    minio, keycloak, keycloak_secrets, gitlab, redis)
+from charts import (
+    renku_ui,
+    renku_graph,
+    renku_notebooks,
+    postgresql,
+    minio,
+    keycloak,
+    keycloak_secrets,
+    gitlab,
+    redis,
+)
 
-from resources.main import (configmap, ingress, postgres_postinstall_job,
-    gitlab_postinstall_job, keycloak_postinstall_job, gitlab_secrets,
-    graph_secrets, jupyterhub_secrets, renku_secret)
+from resources.main import (
+    configmap,
+    ingress,
+    postgres_postinstall_job,
+    gitlab_postinstall_job,
+    keycloak_postinstall_job,
+    gitlab_secrets,
+    graph_secrets,
+    jupyterhub_secrets,
+    renku_secret,
+)
 
 from resources import gateway
 from deepmerge import always_merger
 
 default_global_values = {
-    "tests": {
-        "image": {
-            "repository": "renku/tests",
-            "tag": "latest"
-        }
-    },
+    "tests": {"image": {"repository": "renku/tests", "tag": "latest"}},
     "gateway": {},
     "graph": {
         "dbEventLog": {
-            "postgresPassword": {
-                "value": None,
-                "overwriteOnHelmUpgrade": False
-            },
-            "existingSecret": None
+            "postgresPassword": {"value": None, "overwriteOnHelmUpgrade": False},
+            "existingSecret": None,
         },
         "tokenRepository": {
-            "postgresPassword": {
-                "value": None,
-                "overwriteOnHelmUpgrade": False
-            },
-            "existingSecret": None
+            "postgresPassword": {"value": None, "overwriteOnHelmUpgrade": False},
+            "existingSecret": None,
         },
+        "jena": {},
     },
     "renku": {},
-    "useHTTPS": True
+    "useHTTPS": True,
 }
 
 
 def get_global_values(config):
-    global_values = pulumi.Config('global')
-    global_values = global_values.get_object('values') or {}
+    global_values = pulumi.Config("global")
+    global_values = global_values.get_object("values") or {}
 
-    if config.get_bool('dev'):
-        #set values for dev deployment
-        default_global_values['gateway']['clientSecret'] = RandomId(
-            'gateway_client_secret',
-            byte_length=32).hex
+    stack = pulumi.get_stack()
 
-        default_global_values['gateway']['gitlabClientSecret'] = RandomId(
-            'gateway_gitlab_client_secret',
-            byte_length=32).hex
+    if config.get_bool("dev"):
+        # set values for dev deployment
+        default_global_values["gateway"]["clientSecret"] = RandomId(
+            "gateway_client_secret", byte_length=32
+        ).hex
 
-        baseurl = config.get('baseurl')
+        default_global_values["gateway"]["gitlabClientSecret"] = RandomId(
+            "gateway_gitlab_client_secret", byte_length=32
+        ).hex
+
+        baseurl = config.get("baseurl")
         k8s_config = pulumi.Config("kubernetes")
 
         if baseurl:
-            default_global_values['renku']['domain'] = "{}.{}".format(k8s_config.require("namespace"), baseurl)
+            default_global_values["renku"]["domain"] = "{}.{}".format(
+                k8s_config.require("namespace"), baseurl
+            )
+
+    default_global_values["graph"]["jena"]["dataset"] = stack
 
     global_values = always_merger.merge(default_global_values, global_values)
 
@@ -73,10 +86,10 @@ def deploy():
     # global config is used to propagate dynamic values
     global_config = {}
 
-    global_config['http'] = 'https' if global_values['useHTTPS'] else 'http'
-    global_config['global'] = global_values
+    global_config["http"] = "https" if global_values["useHTTPS"] else "http"
+    global_config["global"] = global_values
 
-    if config.require_bool('gitlab_enabled'):
+    if config.require_bool("gitlab_enabled"):
         gps, gss = gitlab_secrets()
         g = gitlab(config, global_config)
         gitlab_postinstall_job(global_config, gps, [g, gss])
@@ -95,23 +108,23 @@ def deploy():
 
     pg, tok = graph_secrets()
 
-    if config.require_bool('postgres_enabled'):
+    if config.require_bool("postgres_enabled"):
         p = postgresql(config, global_config)
 
-    if config.require_bool('graph_enabled'):
+    if config.require_bool("graph_enabled"):
         graph = renku_graph(config, global_config, pg, tok, p)
 
     pg_job = postgres_postinstall_job(global_config, pg, tok, cfg_map, [p])
 
-    if config.require_bool('keycloak_enabled'):
+    if config.require_bool("keycloak_enabled"):
         kp, ks, kus = keycloak_secrets(global_config)
-        keycloak_chart = keycloak(config, global_config, [pg_job])
+        keycloak_chart = keycloak(config, global_config, p, [pg_job])
 
-    if config.require_bool('minio_enabled'):
+    if config.require_bool("minio_enabled"):
         minio(config, global_config)
 
-    jupyterhub_secrets()
-    nb = renku_notebooks(config, global_config, dependencies=[pg_job])
+    js = jupyterhub_secrets()
+    nb = renku_notebooks(config, global_config, js, p, dependencies=[pg_job])
 
     # gateway
     redis_chart = redis(global_config)
@@ -123,11 +136,16 @@ def deploy():
     gs = gateway.gateway_service(global_config, gateway_values, sc, cfg, gd)
 
     ing = ingress(global_config, dependencies=[gd, nb, ui, graph, keycloak_chart])
-    gad = gateway.gateway_auth_deployment(global_config, gateway_values, sc, cfg, redis_chart, dependencies=[ing])
+    gad = gateway.gateway_auth_deployment(
+        global_config, gateway_values, sc, cfg, redis_chart, dependencies=[ing]
+    )
     gas = gateway.gateway_auth_service(global_config, gateway_values, sc, cfg, gad)
 
-    if config.require_bool('keycloak_enabled'):
-        kc_job = keycloak_postinstall_job(global_config, kus, [keycloak_chart, kp, ks, ing])
+    if config.require_bool("keycloak_enabled"):
+        kc_job = keycloak_postinstall_job(
+            global_config, kus, [keycloak_chart, kp, ks, ing]
+        )
+
 
 if __name__ == "__main__":
     deploy()

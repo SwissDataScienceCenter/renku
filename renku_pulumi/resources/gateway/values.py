@@ -14,53 +14,41 @@ default_chart_values = {
             "extractorfunc": "request.header.cookie",
             "period": "10s",
             "average": 20,
-            "burst": 100
+            "burst": 100,
         }
     },
-    "service": {
-        "port": 80,
-        "type": "ClusterIP"
-    },
+    "service": {"port": 80, "type": "ClusterIP"},
     "image": "traefik:v2.0.0-alpha4",
-    "auth_image": "renku/renku-gateway:0.7.0-991962e",#"renku/renku-gateway:0.6.0",
-    "ingress": {
-        "enabled": False
-    },
-    "graph": {
-        "webhookService": None,
-        "sparql": {}
-    },
-    "resources": {
-        "requests": {
-            "cpu": "100m",
-            "memory": "512Mi"
-        }
-    },
+    "auth_image": "renku/renku-gateway:0.7.0-991962e",  # "renku/renku-gateway:0.6.0",
+    "ingress": {"enabled": False},
+    "graph": {"webhookService": None, "sparql": {}},
+    "resources": {"requests": {"cpu": "100m", "memory": "512Mi"}},
     "nodeSelector": {},
     "tolerations": [],
-    "affinity": {}
+    "affinity": {},
 }
 
 
 def gateway_values():
     """Get gateway values config."""
     config = pulumi.Config()
-    gateway_config = pulumi.Config('gateway')
-    gateway_values = gateway_config.get_object('values') or {}
+    gateway_config = pulumi.Config("gateway")
+    gateway_values = gateway_config.get_object("values") or {}
 
-    if config.get_bool('dev'):
-        default_chart_values['secretKey'] = RandomPassword(
-            'gateway_secretkey',
+    if config.get_bool("dev"):
+        default_chart_values["secretKey"] = RandomPassword(
+            "gateway_secretkey",
             length=32,
             special=False,
             number=True,
             upper=False,
-            lower=True).result
+            lower=True,
+        ).result
 
-        baseurl = config.get('baseurl')
+        baseurl = config.get("baseurl")
 
         if baseurl:
-            default_chart_values['gitlabUrl'] = "https://{}/gitlab".format(baseurl)
+            default_chart_values["gitlabUrl"] = "https://{}/gitlab".format(baseurl)
 
     gateway_values = always_merger.merge(default_chart_values, gateway_values)
 

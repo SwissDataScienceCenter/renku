@@ -4,7 +4,8 @@ from jinja2 import Template
 
 from .values import gateway_values
 
-TRAEFIK_TEMPLATE = Template("""
+TRAEFIK_TEMPLATE = Template(
+    """
 {% if development %}
 [Global]
   debug = true
@@ -29,9 +30,13 @@ TRAEFIK_TEMPLATE = Template("""
     address = ":{{ service.port }}"
 
 [accessLog]
-  bufferingSize = 10""", trim_blocks=True, lstrip_blocks=True)
+  bufferingSize = 10""",
+    trim_blocks=True,
+    lstrip_blocks=True,
+)
 
-RULES_TEMPLATE = Template("""
+RULES_TEMPLATE = Template(
+    """
 [http]
   [http.routers]
     [http.routers.gateway]
@@ -162,37 +167,35 @@ RULES_TEMPLATE = Template("""
       method = "drr"
       [[http.services.graphql.LoadBalancer.servers]]
       url = "{{ global.graph.fullname | default("%s{0}-knowledge-graph".format(release_name)) | format(global.graph.fullname) }}"
-        weight = 1""", trim_blocks=True, lstrip_blocks=True)
+        weight = 1""",
+    trim_blocks=True,
+    lstrip_blocks=True,
+)
+
 
 def configmaps(global_config, values):
-    config = pulumi.Config('gateway')
+    config = pulumi.Config("gateway")
 
-    k8s_config = pulumi.Config('kubernetes')
+    k8s_config = pulumi.Config("kubernetes")
 
     stack = pulumi.get_stack()
 
     gateway_name = "{}-{}-gateway".format(stack, pulumi.get_project())
 
-    gateway_metadata = {
-        'labels':
-            {
-                'app': gateway_name,
-                'release': stack
-            }
-    }
+    gateway_metadata = {"labels": {"app": gateway_name, "release": stack}}
 
     template_values = {
-        'release_name': stack,
-        'fullname': gateway_name,
-        'global': {**global_config['global'], **global_config},
-        **values
+        "release_name": stack,
+        "fullname": gateway_name,
+        "global": {**global_config["global"], **global_config},
+        **values,
     }
 
     return ConfigMap(
         gateway_name,
         metadata=gateway_metadata,
         data={
-            'traefik.toml': TRAEFIK_TEMPLATE.render(template_values),
-            'rules.toml': RULES_TEMPLATE.render(template_values)
-        }
+            "traefik.toml": TRAEFIK_TEMPLATE.render(template_values),
+            "rules.toml": RULES_TEMPLATE.render(template_values),
+        },
     )

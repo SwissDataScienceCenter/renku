@@ -3,7 +3,8 @@ from pulumi_kubernetes.core.v1 import ConfigMap
 from jinja2 import Template
 
 # Unashamedly copied from: https://github.com/docker-library/postgres/blob/master/9.6/docker-entrypoint.sh
-POSTGRES_INIT_SCRIPT = Template("""#!/bin/bash
+POSTGRES_INIT_SCRIPT = Template(
+    """#!/bin/bash
 set -ex
 env
 
@@ -31,9 +32,13 @@ for f in /scripts/init-*-db*; do
     *)        echo "$0: ignoring $f" ;;
     esac
     echo
-done""", trim_blocks=True, lstrip_blocks=True)
+done""",
+    trim_blocks=True,
+    lstrip_blocks=True,
+)
 
-JUPYTERHUB_INIT_SCRIPT = Template("""#!/bin/bash
+JUPYTERHUB_INIT_SCRIPT = Template(
+    """#!/bin/bash
 set -x
 
 JUPYTERHUB_POSTGRES_PASSWORD=$(cat /jupyterhub-postgres/jupyterhub-postgres-password)
@@ -48,9 +53,13 @@ psql -v ON_ERROR_STOP=1 --dbname "{{ global.jupyterhub.postgresDatabase }}" <<-E
     revoke all on schema "public" from "public";
     grant all privileges on database "{{ global.jupyterhub.postgresDatabase }}" to "{{ global.jupyterhub.postgresUser }}";
     grant all privileges on schema "public" to "{{ global.jupyterhub.postgresUser }}";
-EOSQL""", trim_blocks=True, lstrip_blocks=True)
+EOSQL""",
+    trim_blocks=True,
+    lstrip_blocks=True,
+)
 
-GITLAB_INIT_SCRIPT = Template("""#!/usr/bin/env bash
+GITLAB_INIT_SCRIPT = Template(
+    """#!/usr/bin/env bash
 set -ex
 env
 
@@ -76,9 +85,12 @@ EOSQL
 # configure the logout redirect
 # curl -f -is -X PUT -H "Private-token: ${GITLAB_SUDO_TOKEN}" \
 #   ${GITLAB_SERVICE_URL}/api/v4/application/settings?after_sign_out_path={{ global.http }}://{{ global.renku.domain }}/auth/realms/Renku/protocol/openid-connect/logout?redirect_uri={{ global.http }}://{{ global.renku.domain }}/api/auth/logout%3Fgitlab_logout=1""",
-    trim_blocks=True, lstrip_blocks=True)
+    trim_blocks=True,
+    lstrip_blocks=True,
+)
 
-KEYCLOAK_INIT_SCRIPT = Template("""#!/bin/bash
+KEYCLOAK_INIT_SCRIPT = Template(
+    """#!/bin/bash
 set -x
 
 KEYCLOAK_POSTGRES_PASSWORD=$(cat /keycloak-postgres/keycloak-postgres-password)
@@ -92,9 +104,13 @@ psql -v ON_ERROR_STOP=1 --dbname "{{ global.keycloak.postgresDatabase }}" <<-EOS
     revoke all on schema "public" from "public";
     grant all privileges on database "{{ global.keycloak.postgresDatabase }}" to "{{ global.keycloak.postgresUser }}";
     grant all privileges on schema "public" to "{{ global.keycloak.postgresUser }}";
-EOSQL""", trim_blocks=True, lstrip_blocks=True)
+EOSQL""",
+    trim_blocks=True,
+    lstrip_blocks=True,
+)
 
-GITLAB_DB_INIT_SCRIPT = Template("""#!/bin/bash
+GITLAB_DB_INIT_SCRIPT = Template(
+    """#!/bin/bash
 set -x
 
 GITLAB_POSTGRES_PASSWORD=$(cat /gitlab-postgres/gitlab-postgres-password)
@@ -109,9 +125,13 @@ psql -v ON_ERROR_STOP=1 --dbname "{{ global.gitlab.postgresDatabase }}" <<-EOSQL
     revoke all on schema "public" from "public";
     grant all privileges on database "{{ global.gitlab.postgresDatabase }}" to "{{ global.gitlab.postgresUser }}";
     grant all privileges on schema "public" to "{{ global.gitlab.postgresUser }}";
-EOSQL""", trim_blocks=True, lstrip_blocks=True)
+EOSQL""",
+    trim_blocks=True,
+    lstrip_blocks=True,
+)
 
-GRAPH_EVENTLOG_INIT_SCRIPT = Template("""#!/bin/bash
+GRAPH_EVENTLOG_INIT_SCRIPT = Template(
+    """#!/bin/bash
 set -x
 
 DB_EVENT_LOG_POSTGRES_PASSWORD=$(cat /graph-db-postgres/graph-dbEventLog-postgresPassword)
@@ -127,9 +147,13 @@ create extension if not exists "pg_trgm";
 revoke all on schema "public" from "public";
 grant all privileges on database "$DB_EVENT_LOG_DB_NAME" to "{{ global.graph.dbEventLog.postgresUser }}";
 grant all privileges on schema "public" to "{{ global.graph.dbEventLog.postgresUser }}";
-EOSQL""", trim_blocks=True, lstrip_blocks=True)
+EOSQL""",
+    trim_blocks=True,
+    lstrip_blocks=True,
+)
 
-GRAPH_TOKENREPO_INIT_SCRIPT = Template("""#!/bin/bash
+GRAPH_TOKENREPO_INIT_SCRIPT = Template(
+    """#!/bin/bash
 set -x
 
 TOKEN_REPOSITORY_POSTGRES_PASSWORD=$(cat /graph-token-postgres/graph-tokenRepository-postgresPassword)
@@ -145,48 +169,49 @@ create extension if not exists "pg_trgm";
 revoke all on schema "public" from "public";
 grant all privileges on database "$TOKEN_REPOSITORY_DB_NAME" to "{{ global.graph.tokenRepository.postgresUser }}";
 grant all privileges on schema "public" to "{{ global.graph.tokenRepository.postgresUser }}";
-EOSQL""", trim_blocks=True, lstrip_blocks=True)
+EOSQL""",
+    trim_blocks=True,
+    lstrip_blocks=True,
+)
 
 
 def configmap(global_config):
     config = pulumi.Config()
 
-    ui_values = global_config['ui']
+    ui_values = global_config["ui"]
 
-    k8s_config = pulumi.Config('kubernetes')
+    k8s_config = pulumi.Config("kubernetes")
 
     stack = pulumi.get_stack()
 
     template_values = {
-        'global': {**global_config['global'], **global_config},
-        'ui': ui_values
+        "global": {**global_config["global"], **global_config},
+        "ui": ui_values,
     }
 
-    data={
-        'init-postgres.sh': POSTGRES_INIT_SCRIPT.render(**template_values),
-        'init-jupyterhub-db.sh': JUPYTERHUB_INIT_SCRIPT.render(**template_values)
+    data = {
+        "init-postgres.sh": POSTGRES_INIT_SCRIPT.render(**template_values),
+        "init-jupyterhub-db.sh": JUPYTERHUB_INIT_SCRIPT.render(**template_values),
     }
-    gitlab_enabled = config.get_bool('gitlab_enabled')
+    gitlab_enabled = config.get_bool("gitlab_enabled")
     if gitlab_enabled:
-        data['init-gitlab-db.sh'] = GITLAB_DB_INIT_SCRIPT.render(**template_values)
-        if 'sudoToken' in global_config['global']['gitlab']:
-            data['init-gitlab.sh'] = GITLAB_INIT_SCRIPT.render(**template_values)
+        data["init-gitlab-db.sh"] = GITLAB_DB_INIT_SCRIPT.render(**template_values)
+        if "sudoToken" in global_config["global"]["gitlab"]:
+            data["init-gitlab.sh"] = GITLAB_INIT_SCRIPT.render(**template_values)
 
-    if config.get_bool('keycloak_enabled'):
-        data['init-keycloak-db.sh'] = KEYCLOAK_INIT_SCRIPT.render(**template_values)
+    if config.get_bool("keycloak_enabled"):
+        data["init-keycloak-db.sh"] = KEYCLOAK_INIT_SCRIPT.render(**template_values)
 
-    if config.get_bool('graph_enabled'):
-        data['init-dbEventLog-db.sh'] = GRAPH_EVENTLOG_INIT_SCRIPT.render(**template_values)
-        data['init-tokenRepository-db.sh'] = GRAPH_TOKENREPO_INIT_SCRIPT.render(**template_values)
+    if config.get_bool("graph_enabled"):
+        data["init-dbEventLog-db.sh"] = GRAPH_EVENTLOG_INIT_SCRIPT.render(
+            **template_values
+        )
+        data["init-tokenRepository-db.sh"] = GRAPH_TOKENREPO_INIT_SCRIPT.render(
+            **template_values
+        )
 
     return ConfigMap(
         "{}-{}".format(stack, pulumi.get_project()),
-        metadata={
-            'labels':
-                {
-                    'app': pulumi.get_project(),
-                    'release': stack
-                }
-        },
-        data=data
+        metadata={"labels": {"app": pulumi.get_project(), "release": stack}},
+        data=data,
     )
