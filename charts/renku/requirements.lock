@@ -7,7 +7,7 @@ dependencies:
   version: 0.7.3
 - name: renku-notebooks
   repository: https://swissdatasciencecenter.github.io/helm-charts/
-  version: 0.6.2
+  version: 0.6.2-74ebd57
 - name: renku-gateway
   repository: https://swissdatasciencecenter.github.io/helm-charts/
   version: 0.7.0-e5ab38d
@@ -26,5 +26,5 @@ dependencies:
 - name: minio
   repository: https://kubernetes-charts.storage.googleapis.com
   version: 1.6.0
-digest: sha256:4f59630849bfa4e54c7eacbb7ac58ee4be56a2752396cb3f96f1ff0c36356485
-generated: "2020-02-04T22:36:30.642827+01:00"
+digest: sha256:30a1dccde0f00836bc31035e7ba2aa003f2ebcc7f3cebb5dce64d0f0b73b3aa2
+generated: 2020-02-09T20:16:48.873616295Z
