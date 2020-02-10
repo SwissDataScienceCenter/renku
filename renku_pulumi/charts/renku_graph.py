@@ -77,22 +77,6 @@ def renku_graph(config, global_config, postgres_secret, token_secret, postgres_c
             lambda r: next(s for k, s in r.items() if k.startswith("v1/Service"))
         ).metadata["name"]
 
-    # generate passwords
-    # admin_password = RandomPassword("admin_password", length=8, special=True, number=True, upper=True)
-    # values.jena.users.admin['password'] = admin_password.result.apply(lambda p: b64encode(p.encode()).decode('ascii'))
-
-    # renku_password = RandomPassword("renku_password", length=8, special=True, number=True, upper=True)
-    # values.jena.users.renku['password'] = renku_password.result.apply(lambda p: b64encode(p.encode()).decode('ascii'))
-
-    # hook_token = RandomPassword("hook_token", length=8, special=True, number=True, upper=True)
-    # values.webhookService.hookToken.secret = hook_token.result.apply(lambda p: b64encode(p.encode()).decode('ascii'))
-
-    # encryption_token = RandomPassword("encraption_token", length=8, special=True, number=True, upper=True)
-    # values.tokenRepository.tokenEncryption.secret = encryption_token.result.apply(lambda p: b64encode(p.encode()).decode('ascii'))
-
-    # values.sentry.environmentName = values.sentry.environmentName.format(namespace=k8s_config.require("namespace"))
-    # values.sentry.sentryDsnRenkuPython = global_config['sentryDsnRenkuPython']
-
     values["global"]["graph"]["dbEventLog"][
         "existingSecret"
     ] = postgres_secret.metadata["name"]
