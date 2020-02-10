@@ -1,0 +1,131 @@
+name: Deploy and Test PR
+on:
+  pull_request:
+    types:
+    - opened
+    - synchronize
+    - reopened
+
+jobs:
+  cleanup-previous-runs:
+    runs-on: ubuntu-latest
+    if: github.event.action != 'closed'
+    steps:
+    - uses: rokroskar/workflow-run-cleanup-action@master
+      env:
+        GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+  github-env:
+    runs-on: ubuntu-latest
+    steps:
+    - name: get environment
+      run: env
+    - name: Dump GitHub context
+      env:
+        GITHUB_CONTEXT: ${{ toJson(github) }}
+      run: echo "$GITHUB_CONTEXT"
+  test-docs:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - uses: actions/setup-python@v1
+      with:
+        python-version: 3.7
+    - name: install dependencies
+      run: |
+        sudo apt-get update -y && sudo apt-get install graphviz
+        pip install --upgrade pip pipenv
+        pipenv install --deploy --dev --system
+    - name: test the docs build
+      run: |
+        cd docs
+        sphinx-build -nNW -b spelling -d _build/doctrees . _build/spelling
+        sphinx-build -qnNW . _build/html
+  deploy-pr:
+    runs-on: ubuntu-latest
+    if: github.event.action != 'closed'
+    needs: cleanup-previous-runs
+    steps:
+    - uses: actions/checkout@v2
+    - name: Configure environment
+      run: |
+        BRANCH_HASH=$(echo "$GITHUB_HEAD_REF" | md5sum)
+        echo "::set-env name=RENKU_RELEASE::ci-${BRANCH_HASH:0:7}-renku"
+        echo "::set-env name=RENKU_NAMESPACE::ci-${GITHUB_HEAD_REF}"
+    - name: Configure GitLab application
+      env:
+        GITLAB_TOKEN: ${{ secrets.GITLAB_TOKEN }}
+      run: |
+        gitlab_app=$(curl -s -X POST https://dev.renku.ch/gitlab/api/v4/applications \
+                      -H "private-token: $GITLAB_TOKEN" \
+                      --data "name=${RENKU_RELEASE}" \
+                      --data "redirect_uri=https://${RENKU_RELEASE}.dev.renku.ch/auth/realms/Renku/broker/dev-renku/endpoint https://${RENKU_RELEASE}.dev.renku.ch/api/auth/gitlab/token https://${RENKU_RELEASE}.dev.renku.ch/api/auth/jupyterhub/token https://${RENKU_RELEASE}.dev.renku.ch/jupyterhub/hub/oauth_callback" \
+                      --data "scopes=api read_user read_repository read_registry openid")
+        APP_ID=$(echo $gitlab_app | jq -r '.application_id')
+        APP_SECRET=$(echo $gitlab_app | jq -r '.secret')
+        echo "::set-env name=APP_ID::${APP_ID}"
+        echo "::set-env name=APP_SECRET::${APP_SECRET}"
+    - name: Deploy to k8s
+      uses: stefanprodan/kube-tools@v1
+      env:
+        KUBECONFIG: ${{ github.workspace }}/renkubot-kube.config
+        RENKUBOT_KUBECONFIG: ${{ secrets.RENKUBOT_KUBECONFIG }}
+        CI_RENKU_VALUES: ${{ secrets.CI_RENKU_VALUES }}
+      with:
+        kubectl: 1.16.2
+        helm: 2.16.1
+        command: |
+          echo "$RENKUBOT_KUBECONFIG" > renkubot-kube.config
+          helm init --client-only
+          helm repo add renku https://swissdatasciencecenter.github.io/helm-charts/
+          helm repo add gitlab https://charts.gitlab.io/
+          helm repo add jupyterhub https://jupyterhub.github.io/helm-chart
+          rm -rf charts/renku/charts
+          helm dependency update charts/renku
+          printf "%s" "$CI_RENKU_VALUES" | sed "s/<replace>/${RENKU_RELEASE}/" > values.yaml
+          echo $RENKU_RELEASE
+          helm upgrade --install $RENKU_RELEASE \
+                      --namespace $RENKU_NAMESPACE \
+                      -f values.yaml \
+                      --timeout 1800 \
+                      --cleanup-on-fail \
+                      --set gateway.gitlabClientId=${APP_ID} \
+                      --set gateway.gitlabClientSecret=${APP_SECRET} \
+                      --set notebooks.jupyterhub.auth.gitlab.clientId=${APP_ID} \
+                      --set notebooks.jupyterhub.auth.gitlab.clientSecret=${APP_SECRET} \
+                      charts/renku
+    - name: Notify slack
+      if: success()
+      env:
+        RENKU_SLACK_BOT_TOKEN: ${{ secrets.RENKU_SLACK_BOT_TOKEN }}
+        PR_URL: ${{ github.event.pull_request._links.html.href }}
+      run: |
+        curl -X POST https://slack.com/api/chat.postMessage \
+             -H "Authorization: Bearer $RENKU_SLACK_BOT_TOKEN" \
+             --data "channel=C9U45DL1H" \
+             --data "text=I just deployed the PR ${PR_URL} at https://${RENKU_RELEASE}.dev.renku.ch :rocket:"
+  test-pr:
+    runs-on: ubuntu-latest
+    if: github.event.action != 'closed'
+    needs: deploy-pr
+    steps:
+    - uses: actions/checkout@v2
+    - name: Test the PR
+      env:
+        RENKU_BOT_DEV_PASSWORD: ${{ secrets.RENKU_BOT_DEV_PASSWORD }}
+      run: |
+        export BRANCH_HASH=$(echo "$GITHUB_HEAD_REF" | md5sum)
+        echo $BRANCH_HASH
+        export RENKU_RELEASE="ci-${BRANCH_HASH:0:7}-renku"
+        cd tests
+        docker-compose run -e RENKU_TEST_URL=https://${RENKU_RELEASE}.dev.renku.ch \
+                           -e RENKU_TEST_FULL_NAME="Renku Bot" \
+                           -e RENKU_TEST_EMAIL="renku@datascience.ch" \
+                           -e RENKU_TEST_REGISTER="1" \
+                           -e RENKU_TEST_USERNAME="renku-test" \
+                           -e RENKU_TEST_PASSWORD="$RENKU_BOT_DEV_PASSWORD" sbt
+    - name: Upload screenshots on failure
+      if: failure()
+      uses: actions/upload-artifact@v1
+      with:
+        name: test-artifacts
+        path: tests/target
