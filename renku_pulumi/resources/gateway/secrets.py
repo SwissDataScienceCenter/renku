@@ -5,9 +5,8 @@ from pulumi_kubernetes.core.v1 import Secret
 
 from .values import gateway_values
 
-def secret(global_config):
+def secret(global_config, values):
     config = pulumi.Config('gateway')
-    values = gateway_values()
 
     k8s_config = pulumi.Config('kubernetes')
 
@@ -34,9 +33,9 @@ def secret(global_config):
         metadata=gateway_metadata,
         type='Opaque',
         data={
-            'oidcClientSecret': b64encode(values['oidcClientSecret']),
+            'oidcClientSecret': pulumi.Output.from_input(values['oidcClientSecret']).apply(lambda o: b64encode(o)),
             'gitlabClientSecret': b64encode(values['gitlabClientSecret']),
             'jupyterhubClientSecret': b64encode(values['jupyterhub']['clientSecret']),
-            'gatewaySecret': b64encode(values['secretKey'])
+            'gatewaySecret': pulumi.Output.from_input(values['secretKey']).apply(lambda o: b64encode(o))
         }
     )

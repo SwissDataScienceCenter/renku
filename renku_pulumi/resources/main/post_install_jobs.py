@@ -125,7 +125,7 @@ def keycloak_postinstall_job(global_config, keycloak_user_secret, dependencies=[
                 }
         },
         spec={
-            'template':{
+            'template': {
                 'metadata': {
                     'name': name,
                     'labels':
@@ -134,9 +134,9 @@ def keycloak_postinstall_job(global_config, keycloak_user_secret, dependencies=[
                             'release': stack
                         }
                 },
-                'spec':{
-                    'restartPolicy':'Never',
-                    'containers':[{
+                'spec': {
+                    'restartPolicy': 'Never',
+                    'containers': [{
                         'name': 'init-keycloak',
                         'image': '{}:{}'.format(
                             global_config['keycloak']['initRealm']['image']['repository'],
@@ -319,7 +319,7 @@ def postgres_postinstall_job(global_config, graph_db_secret, graph_token_secret,
                 }
         },
         spec={
-            'template':{
+            'template': {
                 'metadata': {
                     'name': name,
                     'labels':
@@ -328,9 +328,9 @@ def postgres_postinstall_job(global_config, graph_db_secret, graph_token_secret,
                             'release': stack
                         }
                 },
-                'spec':{
-                    'restartPolicy':'Never',
-                    'containers':[{
+                'spec': {
+                    'restartPolicy': 'Never',
+                    'containers': [{
                         'name': 'init-databases',
                         'image': '{}:{}'.format(
                             global_config['postgres']['image'],

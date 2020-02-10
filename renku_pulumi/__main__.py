@@ -1,5 +1,5 @@
 import pulumi
-from pulumi_kubernetes.helm.v2 import Chart, ChartOpts
+from pulumi_random.random_id import RandomId
 
 from charts import (renku_ui, renku_graph, renku_notebooks, postgresql,
                     minio, keycloak, keycloak_secrets, gitlab, redis)
@@ -18,6 +18,7 @@ default_global_values = {
             "tag": "latest"
         }
     },
+    "gateway": {},
     "graph": {
         "dbEventLog": {
             "postgresPassword": {
@@ -38,10 +39,19 @@ default_global_values = {
 }
 
 
-def get_global_values():
+def get_global_values(config):
     global_values = pulumi.Config('global')
     global_values = global_values.get_object('values') or {}
 
+    if config.get_bool('dev'):
+        #set values for dev deployment
+        default_global_values['gateway']['clientSecret'] = RandomId(
+            'gateway_client_secret',
+            byte_length=32).hex
+
+        default_global_values['gateway']['gitlabClientSecret'] = RandomId(
+            'gateway_gitlab_client_secret',
+            byte_length=32).hex
 
     global_values = always_merger.merge(default_global_values, global_values)
 
@@ -51,7 +61,7 @@ def get_global_values():
 def deploy():
     config = pulumi.Config()
 
-    global_values = get_global_values()
+    global_values = get_global_values(config)
 
     # global config is used to propagate dynamic values
     global_config = {}
@@ -98,15 +108,16 @@ def deploy():
 
     # gateway
     redis_chart = redis(global_config)
-    sc = gateway.secret(global_config)
-    cfg = gateway.configmaps(global_config)
-    gateway.ingress(global_config)
-    gd = gateway.gateway_deployment(global_config, sc, cfg)
-    gs = gateway.gateway_service(global_config, sc, cfg, gd)
+    gateway_values = gateway.gateway_values()
+    sc = gateway.secret(global_config, gateway_values)
+    cfg = gateway.configmaps(global_config, gateway_values)
+    gateway.ingress(global_config, gateway_values)
+    gd = gateway.gateway_deployment(global_config, gateway_values, sc, cfg)
+    gs = gateway.gateway_service(global_config, gateway_values, sc, cfg, gd)
 
     ing = ingress(global_config, dependencies=[gd, nb, ui, graph, keycloak_chart])
-    gad = gateway.gateway_auth_deployment(global_config, sc, cfg, redis_chart, dependencies=[ing])
-    gas = gateway.gateway_auth_service(global_config, sc, cfg, gad)
+    gad = gateway.gateway_auth_deployment(global_config, gateway_values, sc, cfg, redis_chart, dependencies=[ing])
+    gas = gateway.gateway_auth_service(global_config, gateway_values, sc, cfg, gad)
 
     if config.require_bool('keycloak_enabled'):
         kc_job = keycloak_postinstall_job(global_config, kus, [keycloak_chart, kp, ks, ing])

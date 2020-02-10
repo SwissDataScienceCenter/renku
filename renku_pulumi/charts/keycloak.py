@@ -240,7 +240,7 @@ def keycloak_secrets(global_config):
         type='Opaque',
         data={
             'keycloak-username': b64encode(values['keycloak']['username']),
-            'clients': b64encode(KEYCLOAK_CLIENTS_TEMPLATE.render(**users_data)),
+            'clients': pulumi.Output.from_input(users_data).apply(lambda v: b64encode(KEYCLOAK_CLIENTS_TEMPLATE.render(**v))), #b64encode(KEYCLOAK_CLIENTS_TEMPLATE.render(**users_data)),
             'users': users
         },
         opts=pulumi.ResourceOptions(delete_before_replace=True)

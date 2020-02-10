@@ -3,10 +3,15 @@ from base64 import b64encode
 import pulumi
 from pulumi_kubernetes.helm.v2 import Chart, ChartOpts, FetchOpts
 from pulumi_random.random_password import RandomPassword
+from pulumi_random.random_id import RandomId
 from deepmerge import always_merger
 
 default_chart_values = {
     "jena": {
+        "users": {
+            "admin": {},
+            "renku": {}
+        },
         "resources": {
             "requests": {
                 "cpu": "200m",
@@ -18,10 +23,14 @@ default_chart_values = {
         }
     },
     "webhookService": {
+        "hookToken": {},
         "eventsSynchronization": {
             "initialDelay": "2 minutes",
             "interval": "1 hour"
         }
+    },
+    "tokenRepository": {
+        "tokenEncryption": {}
     },
     "resources": {
         "requests": {
@@ -35,6 +44,31 @@ default_chart_values = {
 def renku_graph(config, global_config, postgres_secret, token_secret, postgres_chart):
     graph_config = pulumi.Config('graph')
     values = graph_config.get_object('values') or {}
+
+    if config.get_bool('dev'):
+        default_chart_values['jena']['users']['admin']['password'] = RandomPassword(
+            'graph_jena_admin_password',
+            length=8,
+            special=False,
+            number=True,
+            upper=False,
+            lower=True).result.apply(lambda r: b64encode(r.encode()).decode('ascii'))
+
+        default_chart_values['jena']['users']['renku']['password'] = RandomPassword(
+            'graph_jena_renku_password',
+            length=8,
+            special=False,
+            number=True,
+            upper=False,
+            lower=True).result.apply(lambda r: b64encode(r.encode()).decode('ascii'))
+
+        default_chart_values['webhookService']['hookToken']['secret'] = RandomId(
+            'graph_webhookservice_secret',
+            byte_length=8).hex.apply(lambda r: b64encode(r.encode()).decode('ascii'))
+
+        default_chart_values['tokenRepository']['tokenEncryption']['secret'] = RandomId(
+            'graph_tokenrepository_secret',
+            byte_length=8).hex.apply(lambda r: b64encode(r.encode()).decode('ascii'))
 
     values = always_merger.merge(default_chart_values, values)
 
@@ -73,6 +107,8 @@ def renku_graph(config, global_config, postgres_secret, token_secret, postgres_c
 
     values['global']['graph']['dbEventLog']['existingSecret'] = postgres_secret.metadata['name']
     values['global']['graph']['tokenRepository']['existingSecret'] = token_secret.metadata['name']
+
+    global_config['graph'] = values
 
     return Chart(
         '{}-graph'.format(stack),

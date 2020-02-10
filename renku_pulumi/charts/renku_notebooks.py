@@ -1,5 +1,7 @@
 import pulumi
 from pulumi_kubernetes.helm.v2 import Chart, ChartOpts, FetchOpts
+from pulumi_random.random_id import RandomId
+
 from deepmerge import always_merger
 
 default_chart_values = {
@@ -60,6 +62,15 @@ default_chart_values = {
         }
     },
     "jupyterhub": {
+        "hub": {
+            "services": {
+                "notebooks": {},
+                "gateway": {}
+            }
+        },
+        "auth": {
+            "state": {}
+        },
         "rbac": {
             "enabled": True
         },
@@ -115,6 +126,26 @@ def delete_before_replace_resources(obj, opts):
 def renku_notebooks(config, global_config, dependencies=[]):
     notebooks_config = pulumi.Config('notebooks')
     values = notebooks_config.get_object('values') or {}
+
+    if config.get_bool('dev'):
+        default_chart_values['jupyterhub']['hub']['cookieSecret'] = RandomId(
+            'notebook_jupyterhub_cookie_secret',
+            byte_length=32).hex
+
+        default_chart_values['jupyterhub']['hub']['services']['notebooks']['apiToken'] = RandomId(
+            'notebook_jupyterhub_notebooks_api_token',
+            byte_length=32).hex
+
+        default_chart_values['jupyterhub']['auth']['state']['cryptoKey'] = RandomId(
+            'notebook_jupyterhub_auth_crypto_key',
+            byte_length=32).hex
+
+        default_chart_values['jupyterhub']['proxy']['secretToken'] = RandomId(
+            'notebook_jupyterhub_proxy_secret_token',
+            byte_length=32).hex
+
+    if 'gateway' in global_config and 'jupyterhub' in global_config['gateway'] and 'clientSecret' in global_config['gateway']['jupyterhub']:
+        default_chart_values['jupyterhub']['hub']['services']['gateway']['apiToken'] = global_config['gateway']['jupyterhub']['clientSecret']
 
     values = always_merger.merge(default_chart_values, values)
 

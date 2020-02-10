@@ -4,9 +4,8 @@ from pulumi_kubernetes.apps.v1beta2 import Deployment
 from .values import gateway_values
 
 
-def gateway_deployment(global_config, gateway_secret, gateway_configmap, dependencies=[]):
-    config = pulumi.Config('gateway')
-    values = gateway_values()
+def gateway_deployment(global_config, values, gateway_secret, gateway_configmap, dependencies=[]):
+    gateway_config = pulumi.Config('gateway')
 
     k8s_config = pulumi.Config('kubernetes')
 
@@ -22,19 +21,19 @@ def gateway_deployment(global_config, gateway_secret, gateway_configmap, depende
             }
     }
 
-    servicePort = config.get_int('port') or 80
+    servicePort = gateway_config.get_int('port') or 80
 
     return Deployment(
         gateway_name,
         metadata=gateway_metadata,
         spec={
-            'replicas': config.get_int('replica_count') or 1,
+            'replicas': gateway_config.get_int('replica_count') or 1,
             'selector': {
                 'matchLabels': gateway_metadata['labels']
             },
             'template': {
                 'metadata': gateway_metadata,
-                'spec':{
+                'spec': {
                     'volumes': [{
                         'name': 'config',
                         'configMap': {
@@ -92,9 +91,13 @@ def gateway_deployment(global_config, gateway_secret, gateway_configmap, depende
     )
 
 
-def gateway_auth_deployment(global_config, gateway_secret, gateway_configmap, redis, dependencies=[]):
-    config = pulumi.Config('gateway')
-    values = gateway_values()
+def gateway_auth_deployment(global_config, values, gateway_secret, gateway_configmap, redis, dependencies=[]):
+    config = pulumi.Config()
+    gateway_config = pulumi.Config('gateway')
+
+    if config.get_bool('dev'):
+        values['graph']['sparql']['username'] = 'renku'
+        values['graph']['sparql']['password'] = global_config['graph']['jena']['users']['renku']['password']
 
     k8s_config = pulumi.Config('kubernetes')
 
@@ -106,7 +109,8 @@ def gateway_auth_deployment(global_config, gateway_secret, gateway_configmap, re
         'labels':
             {
                 'app': auth_name,
-                'release': stack
+                'release': stack,
+                '{}-redis-gw-redis-client'.format(stack): "true"
             }
     }
 
@@ -241,7 +245,7 @@ def gateway_auth_deployment(global_config, gateway_secret, gateway_configmap, re
         auth_name,
         metadata=auth_metadata,
         spec={
-            'replicas': config.get_int('replica_count') or 1,
+            'replicas': gateway_config.get_int('replica_count') or 1,
             'selector': {
                 'matchLabels': auth_metadata['labels']
             },
@@ -276,7 +280,7 @@ def gateway_auth_deployment(global_config, gateway_secret, gateway_configmap, re
                             'initialDelaySeconds': 10,
                             'periodSeconds': 10
                         },
-                        'resources': config.get_object('resources') or {}
+                        'resources': gateway_config.get_object('resources') or {}
                     }],
                     'nodeSelector': values['nodeSelector'],
                     'affinity': values['affinity'],

@@ -164,9 +164,8 @@ RULES_TEMPLATE = Template("""
       url = "{{ global.graph.fullname | default("%s{0}-knowledge-graph".format(release_name)) | format(global.graph.fullname) }}"
         weight = 1""", trim_blocks=True, lstrip_blocks=True)
 
-def configmaps(global_config):
+def configmaps(global_config, values):
     config = pulumi.Config('gateway')
-    values = gateway_values()
 
     k8s_config = pulumi.Config('kubernetes')
 

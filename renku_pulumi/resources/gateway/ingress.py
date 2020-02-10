@@ -3,9 +3,8 @@ from pulumi_kubernetes.extensions.v1beta1 import Ingress
 
 from .values import gateway_values
 
-def ingress(global_config):
+def ingress(global_config, values):
     config = pulumi.Config('gateway')
-    values = gateway_values()
 
     if not values['ingress']['enabled']:
         return
@@ -41,7 +40,6 @@ def ingress(global_config):
                 }]
             }
         })
-    print(spec)
 
     if values['ingress']['tls']:
         spec['tls'] = []

@@ -3,9 +3,8 @@ from pulumi_kubernetes.core.v1 import Service
 
 from .values import gateway_values
 
-def gateway_service(global_config, gateway_secret, gateway_configmap, gateway_deployment):
+def gateway_service(global_config, values, gateway_secret, gateway_configmap, gateway_deployment):
     config = pulumi.Config('gateway')
-    values = gateway_values()
 
     k8s_config = pulumi.Config('kubernetes')
 
@@ -53,9 +52,8 @@ def gateway_service(global_config, gateway_secret, gateway_configmap, gateway_de
     )
 
 
-def gateway_auth_service(global_config, gateway_secret, gateway_configmap, gateway_auth_deployment, dependencies=[]):
+def gateway_auth_service(global_config, values, gateway_secret, gateway_configmap, gateway_auth_deployment, dependencies=[]):
     config = pulumi.Config('gateway')
-    values = gateway_values()
 
     k8s_config = pulumi.Config('kubernetes')
 
