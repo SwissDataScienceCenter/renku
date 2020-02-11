@@ -16,7 +16,7 @@ default_chart_values = {
 }
 
 
-def renku_ui(config, global_config):
+def renku_ui(config, global_config, chart_reqs):
     ui_config = pulumi.Config("ui")
     values = ui_config.get_object("values") or {}
 
@@ -42,15 +42,22 @@ def renku_ui(config, global_config):
     values["global"] = global_config["global"]
 
     global_config["ui"] = values
+
+    chart_repo = chart_reqs.get("ui", "repository")
+    if chart_repo.startswith("http"):
+        repo = None
+        fetchopts = FetchOpts(repo=chart_repo)
+    else:
+        repo = chart_repo
+        fetchopts = None
+
     return Chart(
         "{}-ui".format(pulumi.get_stack()),
         config=ChartOpts(
             chart="renku-ui",
-            version=ui_config.require("version"),
-            fetch_opts=FetchOpts(
-                repo=ui_config.get("repository")
-                or "https://swissdatasciencecenter.github.io/helm-charts/"
-            ),
+            version=chart_reqs.get("ui", "version"),
+            repo=repo,
+            fetch_opts=fetchopts,
             values=values,
         ),
     )

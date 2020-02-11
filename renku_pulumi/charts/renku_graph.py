@@ -22,7 +22,9 @@ default_chart_values = {
 }
 
 
-def renku_graph(config, global_config, postgres_secret, token_secret, postgres_chart):
+def renku_graph(
+    config, global_config, chart_reqs, postgres_secret, token_secret, postgres_chart
+):
     graph_config = pulumi.Config("graph")
     values = graph_config.get_object("values") or {}
 
@@ -91,15 +93,21 @@ def renku_graph(config, global_config, postgres_secret, token_secret, postgres_c
     if postgres_chart:
         dependencies.append(postgres_chart)
 
+    chart_repo = chart_reqs.get("graph", "repository")
+    if chart_repo.startswith("http"):
+        repo = None
+        fetchopts = FetchOpts(repo=chart_repo)
+    else:
+        repo = chart_repo
+        fetchopts = None
+
     return Chart(
         "{}-graph".format(stack),
         config=ChartOpts(
             chart="renku-graph",
-            version=graph_config.require("version"),
-            fetch_opts=FetchOpts(
-                repo=graph_config.get("repository")
-                or "https://swissdatasciencecenter.github.io/helm-charts/"
-            ),
+            version=chart_reqs.get("graph", "version"),
+            repo=repo,
+            fetch_opts=fetchopts,
             values=values,
         ),
         opts=pulumi.ResourceOptions(depends_on=dependencies),

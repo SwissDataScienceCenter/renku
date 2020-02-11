@@ -28,6 +28,8 @@ from resources.main import (
 from resources import gateway
 from deepmerge import always_merger
 
+from configparser import ConfigParser
+
 default_global_values = {
     "tests": {"image": {"repository": "renku/tests", "tag": "latest"}},
     "gateway": {},
@@ -81,6 +83,9 @@ def get_global_values(config):
 def deploy():
     config = pulumi.Config()
 
+    chart_reqs = ConfigParser()
+    chart_reqs.read("chart_requirements.ini")
+
     global_values = get_global_values(config)
 
     # global config is used to propagate dynamic values
@@ -91,13 +96,13 @@ def deploy():
 
     if config.require_bool("gitlab_enabled"):
         gps, gss = gitlab_secrets()
-        g = gitlab(config, global_config)
+        g = gitlab(config, global_config, chart_reqs)
         gitlab_postinstall_job(global_config, gps, [g, gss])
 
     renku_secret(global_config)
 
     # ui
-    ui = renku_ui(config, global_config)
+    ui = renku_ui(config, global_config, chart_reqs)
 
     cfg_map = configmap(global_config)
 
@@ -109,16 +114,16 @@ def deploy():
     pg, tok = graph_secrets()
 
     if config.require_bool("postgres_enabled"):
-        p = postgresql(config, global_config)
+        p = postgresql(config, global_config, chart_reqs)
 
     if config.require_bool("graph_enabled"):
-        graph = renku_graph(config, global_config, pg, tok, p)
+        graph = renku_graph(config, global_config, chart_reqs, pg, tok, p)
 
     pg_job = postgres_postinstall_job(global_config, pg, tok, cfg_map, [p])
 
     if config.require_bool("keycloak_enabled"):
         kp, ks, kus = keycloak_secrets(global_config)
-        keycloak_chart = keycloak(config, global_config, p, [pg_job])
+        keycloak_chart = keycloak(config, global_config, chart_reqs, p, [pg_job])
 
     if config.require_bool("minio_enabled"):
         minio(config, global_config)
@@ -126,10 +131,12 @@ def deploy():
     gateway_values = gateway.gateway_values(global_config)
 
     js = jupyterhub_secrets()
-    nb = renku_notebooks(config, global_config, js, p, dependencies=[pg_job])
+    nb = renku_notebooks(
+        config, global_config, chart_reqs, js, p, dependencies=[pg_job]
+    )
 
     # gateway
-    redis_chart = redis(global_config)
+    redis_chart = redis(global_config, chart_reqs)
     sc = gateway.secret(global_config, gateway_values)
     cfg = gateway.configmaps(global_config, gateway_values)
     gateway.ingress(global_config, gateway_values)

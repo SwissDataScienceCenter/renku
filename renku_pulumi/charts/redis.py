@@ -1,5 +1,5 @@
 import pulumi
-from pulumi_kubernetes.helm.v2 import Chart, ChartOpts
+from pulumi_kubernetes.helm.v2 import Chart, ChartOpts, FetchOpts
 from deepmerge import always_merger
 
 default_chart_values = {
@@ -14,7 +14,7 @@ default_chart_values = {
 }
 
 
-def redis(global_config):
+def redis(global_config, chart_reqs):
     redis_config = pulumi.Config("redis")
     values = redis_config.get_object("values") or {}
 
@@ -23,12 +23,21 @@ def redis(global_config):
     global_config["redis"] = {"fullname": "{}-redis".format(pulumi.get_stack())}
 
     values["global"] = global_config["global"]
+
+    chart_repo = chart_reqs.get("redis", "repository")
+    if chart_repo.startswith("http"):
+        repo = None
+        fetchopts = FetchOpts(repo=chart_repo)
+    else:
+        repo = chart_repo
+        fetchopts = None
     return Chart(
         global_config["redis"]["fullname"],
         config=ChartOpts(
             chart="redis",
-            repo="stable",
-            version=redis_config.require("version"),
+            repo=repo,
+            fetch_opts=fetchopts,
+            version=chart_reqs.get("redis", "version"),
             values=values,
         ),
     )

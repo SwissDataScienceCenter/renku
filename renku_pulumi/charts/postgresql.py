@@ -1,5 +1,5 @@
 import pulumi
-from pulumi_kubernetes.helm.v2 import Chart, ChartOpts
+from pulumi_kubernetes.helm.v2 import Chart, ChartOpts, FetchOpts
 from deepmerge import always_merger
 
 default_chart_values = {
@@ -37,7 +37,7 @@ default_chart_values = {
 }
 
 
-def postgresql(config, global_config):
+def postgresql(config, global_config, chart_reqs):
     postgres_config = pulumi.Config("postgres")
     values = postgres_config.get_object("values") or {}
 
@@ -46,12 +46,21 @@ def postgresql(config, global_config):
     global_config["postgres"] = values
 
     values["global"] = global_config["global"]
+
+    chart_repo = chart_reqs.get("postgres", "repository")
+    if chart_repo.startswith("http"):
+        repo = None
+        fetchopts = FetchOpts(repo=chart_repo)
+    else:
+        repo = chart_repo
+        fetchopts = None
     return Chart(
         "{}-postgresql".format(pulumi.get_stack()),
         config=ChartOpts(
             chart="postgresql",
-            repo="stable",
-            version=postgres_config.require("version"),
+            repo=repo,
+            fetch_opts=fetchopts,
+            version=chart_reqs.get("postgres", "version"),
             values=values,
         ),
     )

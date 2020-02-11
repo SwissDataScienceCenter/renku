@@ -100,7 +100,9 @@ def delete_before_replace_resources(obj, opts):
         opts.delete_before_replace = True
 
 
-def renku_notebooks(config, global_config, secret, postgres, dependencies=[]):
+def renku_notebooks(
+    config, global_config, chart_reqs, secret, postgres, dependencies=[]
+):
     notebooks_config = pulumi.Config("notebooks")
     values = notebooks_config.get_object("values") or {}
 
@@ -217,15 +219,21 @@ def renku_notebooks(config, global_config, secret, postgres, dependencies=[]):
     dependencies = [d for d in dependencies if d]
 
     values["global"] = global_config["global"]
+
+    chart_repo = chart_reqs.get("notebooks", "repository")
+    if chart_repo.startswith("http"):
+        repo = None
+        fetchopts = FetchOpts(repo=chart_repo)
+    else:
+        repo = chart_repo
+        fetchopts = None
     return Chart(
         chart_name,
         config=ChartOpts(
             chart="renku-notebooks",
-            version=notebooks_config.require("version"),
-            fetch_opts=FetchOpts(
-                repo=notebooks_config.get("repository")
-                or "https://swissdatasciencecenter.github.io/helm-charts/"
-            ),
+            version=chart_reqs.get("notebooks", "version"),
+            repo=repo,
+            fetch_opts=fetchopts,
             values=values,
             transformations=[delete_before_replace_resources],
         ),

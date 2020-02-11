@@ -5,7 +5,7 @@ from jinja2 import Template
 import pulumi
 from pulumi import Output
 from pulumi_kubernetes.core.v1 import Secret
-from pulumi_kubernetes.helm.v2 import Chart, ChartOpts
+from pulumi_kubernetes.helm.v2 import Chart, ChartOpts, FetchOpts
 from pulumi_random.random_password import RandomPassword
 
 from deepmerge import always_merger
@@ -216,7 +216,7 @@ def keycloak_secrets(global_config):
     return keycloak_postgres_secret, keycloak_password_secret, keycloak_user_secret
 
 
-def keycloak(config, global_config, postgres, dependencies=[]):
+def keycloak(config, global_config, chart_reqs, postgres, dependencies=[]):
     keycloak_config = pulumi.Config("keycloak")
     values = keycloak_config.get_object("values") or {}
 
@@ -237,6 +237,14 @@ def keycloak(config, global_config, postgres, dependencies=[]):
 
     values["global"] = global_config["global"]
 
+    chart_repo = chart_reqs.get("keycloak", "repository")
+    if chart_repo.startswith("http"):
+        repo = None
+        fetchopts = FetchOpts(repo=chart_repo)
+    else:
+        repo = chart_repo
+        fetchopts = None
+
     dependencies.append(postgres)
 
     dependencies = [d for d in dependencies if d]
@@ -244,8 +252,9 @@ def keycloak(config, global_config, postgres, dependencies=[]):
         "{}-keycloak".format(pulumi.get_stack()),
         config=ChartOpts(
             chart="keycloak",
-            repo="stable",
-            version=keycloak_config.require("version"),
+            repo=repo,
+            fetch_opts=fetchopts,
+            version=chart_reqs.get("keycloak", "version"),
             values=values,
         ),
         opts=pulumi.ResourceOptions(depends_on=dependencies),
