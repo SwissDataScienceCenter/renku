@@ -29,7 +29,7 @@ default_chart_values = {
 }
 
 
-def gateway_values():
+def gateway_values(global_config):
     """Get gateway values config."""
     config = pulumi.Config()
     gateway_config = pulumi.Config("gateway")
@@ -50,6 +50,14 @@ def gateway_values():
         if baseurl:
             default_chart_values["gitlabUrl"] = "https://{}/gitlab".format(baseurl)
 
+    default_chart_values["gitlabClientId"] = global_config["global"]["gitlab"][
+        "clientAppId"
+    ]
+    default_chart_values["gitlabClientSecret"] = global_config["global"]["gitlab"][
+        "clientAppSecret"
+    ]
+
     gateway_values = always_merger.merge(default_chart_values, gateway_values)
+    global_config["gateway"] = gateway_values
 
     return gateway_values

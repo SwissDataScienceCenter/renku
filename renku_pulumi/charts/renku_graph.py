@@ -86,6 +86,11 @@ def renku_graph(config, global_config, postgres_secret, token_secret, postgres_c
 
     global_config["graph"] = values
 
+    dependencies = [postgres_secret, token_secret]
+
+    if postgres_chart:
+        dependencies.append(postgres_chart)
+
     return Chart(
         "{}-graph".format(stack),
         config=ChartOpts(
@@ -97,4 +102,5 @@ def renku_graph(config, global_config, postgres_secret, token_secret, postgres_c
             ),
             values=values,
         ),
+        opts=pulumi.ResourceOptions(depends_on=dependencies),
     )

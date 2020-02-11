@@ -141,13 +141,11 @@ def renku_secret(global_config):
 
     k8s_config = pulumi.Config("kubernetes")
 
-    gitlab_client_secret = notebooks_values["jupyterhub"]["auth"]["gitlab"][
-        "clientSecret"
-    ]
+    gitlab_client_secret = global_config["global"]["gitlab"].get("clientAppSecret")
 
     if not gitlab_client_secret:
         gitlab_client_secret = RandomPassword(
-            "keycloak_db_password", length=64, special=True, number=True, upper=True
+            "gitlab_client_secret", length=64, special=True, number=True, upper=True
         )
 
     gateway_gitlab_client_secret = global_config["global"]["gateway"][
@@ -156,7 +154,11 @@ def renku_secret(global_config):
 
     if not gateway_gitlab_client_secret:
         gateway_gitlab_client_secret = RandomPassword(
-            "keycloak_db_password", length=64, special=True, number=True, upper=True
+            "gateway_gitlab_client_secret",
+            length=64,
+            special=True,
+            number=True,
+            upper=True,
         )
 
     data = {

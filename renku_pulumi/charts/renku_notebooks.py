@@ -162,14 +162,23 @@ def renku_notebooks(config, global_config, secret, postgres, dependencies=[]):
                 )
             )
 
-    if (
-        "gateway" in global_config
-        and "jupyterhub" in global_config["gateway"]
-        and "clientSecret" in global_config["gateway"]["jupyterhub"]
-    ):
-        default_chart_values["jupyterhub"]["hub"]["services"]["gateway"][
-            "apiToken"
-        ] = global_config["gateway"]["jupyterhub"]["clientSecret"]
+    if "gateway" in global_config:
+
+        if (
+            "jupyterhub" in global_config["gateway"]
+            and "clientSecret" in global_config["gateway"]["jupyterhub"]
+        ):
+            default_chart_values["jupyterhub"]["hub"]["services"]["gateway"][
+                "apiToken"
+            ] = global_config["gateway"]["jupyterhub"]["clientSecret"]
+    if "clientAppId" in global_config["global"]["gitlab"]:
+        default_chart_values["jupyterhub"]["auth"]["gitlab"][
+            "clientId"
+        ] = global_config["global"]["gitlab"]["clientAppId"]
+    if "clientAppSecret" in global_config["global"]["gitlab"]:
+        default_chart_values["jupyterhub"]["auth"]["gitlab"][
+            "clientSecret"
+        ] = global_config["global"]["gitlab"]["clientAppSecret"]
 
     default_chart_values["jupyterhub"]["hub"]["extraEnv"].append(
         {
@@ -188,12 +197,9 @@ def renku_notebooks(config, global_config, secret, postgres, dependencies=[]):
     ] = "http://{}-renku-notebooks".format(chart_name)
 
     merger = Merger(
-        [
-            (list, [no_duplicate_list_merge]),
-            (dict, ["merge"])
-        ],
+        [(list, [no_duplicate_list_merge]), (dict, ["merge"])],
         ["override"],
-        ["override"]
+        ["override"],
     )
 
     values = merger.merge(default_chart_values, values)
@@ -204,6 +210,11 @@ def renku_notebooks(config, global_config, secret, postgres, dependencies=[]):
         hub = values.setdefault("jupyterhub", {})
         singleuser = hub.setdefault("singleuser", {})
         singleuser.setdefault("sentryDsn", sentry)
+
+    dependencies.append(secret)
+    dependencies.append(postgres)
+
+    dependencies = [d for d in dependencies if d]
 
     values["global"] = global_config["global"]
     return Chart(

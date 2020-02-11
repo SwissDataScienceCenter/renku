@@ -237,6 +237,8 @@ def keycloak(config, global_config, postgres, dependencies=[]):
 
     values["global"] = global_config["global"]
 
+    dependencies.append(postgres)
+
     dependencies = [d for d in dependencies if d]
     return Chart(
         "{}-keycloak".format(pulumi.get_stack()),

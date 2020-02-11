@@ -46,6 +46,7 @@ default_global_values = {
     "useHTTPS": True,
 }
 
+
 def get_global_values(config):
     global_values = pulumi.Config("global")
     global_values = global_values.get_object("values") or {}
@@ -122,8 +123,7 @@ def deploy():
     if config.require_bool("minio_enabled"):
         minio(config, global_config)
 
-    gateway_values = gateway.gateway_values()
-    global_config['gateway'] = gateway_values
+    gateway_values = gateway.gateway_values(global_config)
 
     js = jupyterhub_secrets()
     nb = renku_notebooks(config, global_config, js, p, dependencies=[pg_job])
