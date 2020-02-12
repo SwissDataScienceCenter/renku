@@ -37,7 +37,6 @@ config:
   #redis:values:
   global:values:
     gitlab:
-      clientSecret:
       postgresDatabase: gitlabhq_production
       postgresUser: gitlab
       urlPrefix: /gitlab
