@@ -1,19 +1,22 @@
 dependencies:
+- name: renku-core
+  repository: https://swissdatasciencecenter.github.io/helm-charts/
+  version: 0.1.0-f5bc391
 - name: renku-ui
   repository: https://swissdatasciencecenter.github.io/helm-charts/
-  version: 0.7.2
+  version: 0.7.4-62170c9
 - name: renku-notebooks
   repository: https://swissdatasciencecenter.github.io/helm-charts/
-  version: 0.6.2
+  version: 0.6.2-612543a
 - name: renku-gateway
   repository: https://swissdatasciencecenter.github.io/helm-charts/
-  version: 0.6.0
+  version: 0.7.0-67de968
 - name: gitlab
   repository: https://swissdatasciencecenter.github.io/helm-charts/
-  version: 0.4.1-9418599
+  version: 0.4.1-791604e
 - name: renku-graph
   repository: https://swissdatasciencecenter.github.io/helm-charts/
-  version: 0.29.3
+  version: 0.44.0
 - name: postgresql
   repository: https://kubernetes-charts.storage.googleapis.com
   version: 0.14.4
@@ -23,5 +26,5 @@ dependencies:
 - name: minio
   repository: https://kubernetes-charts.storage.googleapis.com
   version: 1.6.0
-digest: sha256:dea188a7c655442d93ee5a0c942199c0dc289d433d3cb173b63531c50671d526
-generated: "2019-11-26T14:07:11.787376276+01:00"
+digest: sha256:ca6848a05b6a20f92649175fcceb8eab59e0f07b97b2fae18285807fc0382285
+generated: 2020-02-12T09:20:44.235814594Z

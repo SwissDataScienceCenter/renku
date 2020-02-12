@@ -116,4 +116,13 @@ gitlab_rails['rack_attack_git_basic_auth'] = {
   'enabled' => false
 }
 
+{{ if .Values.logging.useJson -}}
+gitaly['logging_format'] = 'json'
+gitlab_shell['log_format'] = 'json'
+gitlab_workhorse['log_format'] = 'json'
+registry['log_formatter'] = 'json'
+sidekiq['log_format'] = 'json'
+gitlab_pages['log_format'] = 'json'
+{{- end }}
+
 {{- end -}}

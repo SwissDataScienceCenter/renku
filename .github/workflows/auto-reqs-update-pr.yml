@@ -1,0 +1,15 @@
+name: Automatic requirements.yml update PR
+on:
+  push:
+    branches:
+      - 'auto-update/**'
+jobs:
+  auto-pull-request:
+    runs-on: ubuntu-latest
+    steps:
+      - name: pull-request-action
+        uses: vsoch/pull-request-action@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.RENKU_CI_TOKEN }}
+          BRANCH_PREFIX: "auto-update/"
+          PULL_REQUEST_BRANCH: "master"
