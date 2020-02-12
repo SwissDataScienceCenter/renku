@@ -34,7 +34,7 @@ def secret(global_config, values):
                 values["oidcClientSecret"]
             ).apply(lambda o: b64encode(o)),
             "gitlabClientSecret": b64encode(values["gitlabClientSecret"]),
-            "jupyterhubClientSecret": b64encode(values["jupyterhub"]["clientSecret"]),
+            "jupyterhubClientSecret": pulumi.Output.from_input(values["jupyterhub"]["clientSecret"]).apply(lambda o: b64encode(o)),
             "gatewaySecret": pulumi.Output.from_input(values["secretKey"]).apply(
                 lambda o: b64encode(o)
             ),

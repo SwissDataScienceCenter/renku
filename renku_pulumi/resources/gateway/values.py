@@ -1,5 +1,6 @@
 import pulumi
 from pulumi_random.random_password import RandomPassword
+from pulumi_random.random_id import RandomId
 
 from deepmerge import always_merger
 
@@ -26,6 +27,7 @@ default_chart_values = {
     "nodeSelector": {},
     "tolerations": [],
     "affinity": {},
+    "jupyterhub": {}
 }
 
 
@@ -44,6 +46,10 @@ def gateway_values(global_config):
             upper=False,
             lower=True,
         ).result
+
+        default_chart_values["jupyterhub"]["clientSecret"] = RandomId(
+                "gateway_jupyterhub_client_secret", byte_length=32
+            ).hex
 
         baseurl = config.get("baseurl")
 
