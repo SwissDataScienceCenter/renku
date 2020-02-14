@@ -528,6 +528,12 @@ ui:
   # templatesRepository:
     # url: https://github.com/SwissDataScienceCenter/renku-project-template
     # ref: 0.1.5
+  ## Configuration for Sentry
+  # sentry:
+  #   enabled: true
+  #   url: 'https://<key>@sentry.io/<project>'
+  #   namespace: 'renku_namespace'
+
 # ## Configuration for the notebooks service
 notebooks:
   ## serverOptions allow for modifications to the notebook pod resource requests and the UI rendering
