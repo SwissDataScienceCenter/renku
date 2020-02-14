@@ -530,9 +530,9 @@ ui:
     # ref: 0.1.5
   ## Configuration for Sentry
   # sentry:
-  #   enabled: true
-  #   url: 'https://<key>@sentry.io/<project>'
-  #   namespace: 'renku_namespace'
+  #   enabled: false
+  #   url: ''
+  #   namespace: ''
 
 # ## Configuration for the notebooks service
 notebooks:
