@@ -51,7 +51,16 @@ Now that we have a project, we can start working on it by starting a
 new JupyterLab notebook server. Click on **Environments** (1),
 then on **New** (2).
 
-.. image:: ../_static/images/ui_03_notebook-servers.png
+.. image:: ../_static/images/ui_03.1_notebook-servers.png
+    :width: 100%
+    :align: center
+    :alt: Head to environments page
+
+The Docker image takes some time to build, it's possible that the
+status is still **building**. It will automatically refresh when
+it's ready. Sit tight and wait for it to become **available**
+
+.. image:: ../_static/images/ui_03.2_notebook-servers.png
     :width: 100%
     :align: center
     :alt: Head to environments page
@@ -171,7 +180,7 @@ repository:
     #
     #     renku dataset: committing 1 newly added files
     #
-    # commit 3f74a2dfdf5e27c1dc124f6455931089023253b8
+    # commit 3f74a2dfdf5e27c1dc124f6455931089023253b8 (origin/master, origin/HEAD)
     # Author: John Doe <john.doe@example.com>
     # Date:   Mon Apr 29 11:53:41 2019 +0000
     #
@@ -183,12 +192,12 @@ repository:
 
     # Output similar to:
     # On branch master
-    # Your branch is ahead of 'origin/master' by 3 commits.
+    # Your branch is ahead of 'origin/master' by 2 commits.
     #   (use "git push" to publish your local commits)
     #
     # nothing to commit, working directory clean
 
-Let us push the three fresh commits by running:
+Let us push the two fresh commits by running:
 
 .. code-block:: console
 
@@ -196,11 +205,12 @@ Let us push the three fresh commits by running:
 
     # Output similar to:
     # Locking support detected on remote "origin". Consider enabling it with: [...]
-    # Counting objects: 19, done. (1/1), 66 MB | 0 B/s
+    # Uploading LFS objects: 100% (1/1), 7.9 MB | 0 B/s, done
+    # Counting objects: 15, done.
     # Delta compression using up to 8 threads.
-    # Compressing objects: 100% (15/15), done.
-    # Writing objects: 100% (19/19), 2.26 KiB | 463.00 KiB/s, done.
-    # Total 19 (delta 3), reused 0 (delta 0)
+    # Compressing objects: 100% (12/12), done.
+    # Writing objects: 100% (15/15), 2.26 KiB | 463.00 KiB/s, done.
+    # Total 15 (delta 2), reused 0 (delta 0)
     # To https://renkulab.io/gitlab/john.doe/flights-tutorial.git
     #     b55aea9..91b226b  master --> master
 
@@ -520,30 +530,42 @@ and other commands.
 
 .. note::
 
-    Did you get an error like this?
+    Did you accidentally run the python command first? You would get
+    an error like this
+
+    .. code-block:: console
+
+        # Error: The repository is dirty. Please use the "git" command to clean it.
+        # On branch master
+        # Your branch is up to date with 'origin/master'.
+        # Untracked files:
+        # (use "git add <file>..." to include in what will be committed)
+        #         data/output/
+
+    Remove the untracked files and this time execute ``only`` the renku command
+
+    .. code-block:: console
+
+        rm data/output/*
+        renku run python src/00-FilterFlights.py data/201901_us_flights_1/2019-01-flights.csv.zip data/output/2019-01-flights-filtered.csv
+
+.. note::
+
+    Did you get an error like this instead?
 
     .. code-block:: console
 
         # Traceback (most recent call last):
-        # File "src/00-FilterFlights.py", line 16, in <module>
-        #   df = pd.read_csv(input_path)
-        # File "/opt/conda/lib/python3.7/site-packages/pandas/io/parsers.py", line 685, in parser_f
-        #   return _read(filepath_or_buffer, kwds)
-        # File "/opt/conda/lib/python3.7/site-packages/pandas/io/parsers.py", line 457, in _read
-        #   parser = TextFileReader(fp_or_buf, **kwds)
-        # File "/opt/conda/lib/python3.7/site-packages/pandas/io/parsers.py", line 895, in __init__
-        #   self._make_engine(self.engine)
-        # File "/opt/conda/lib/python3.7/site-packages/pandas/io/parsers.py", line 1135, in _make_engine
-        #   self._engine = CParserWrapper(self.f, **self.options)
-        # File "/opt/conda/lib/python3.7/site-packages/pandas/io/parsers.py", line 1917, in __init__
-        #   self._reader = parsers.TextReader(src, **kwds)
-        # File "pandas/_libs/parsers.pyx", line 382, in pandas._libs.parsers.TextReader.__cinit__
-        # File "pandas/_libs/parsers.pyx", line 635, in pandas._libs.parsers.TextReader._setup_parser_source
-        # File "/opt/conda/lib/python3.7/zipfile.py", line 1222, in __init__
-        #   self._RealGetContents()
-        # File "/opt/conda/lib/python3.7/zipfile.py", line 1289, in _RealGetContents
-        #   raise BadZipFile("File is not a zip file")
-        # pfile.BadZipFile: File is not a zip file
+        # File "src/00-FilterFlights.py", line 26, in <module>
+        #     df.to_csv(output_path, index=False)
+        # File "/opt/conda/lib/python3.7/site-packages/pandas/core/generic.py", line 3228, in to_csv
+        #     formatter.save()
+        # File "/opt/conda/lib/python3.7/site-packages/pandas/io/formats/csvs.py", line 183, in save
+        #     compression=self.compression,
+        # File "/opt/conda/lib/python3.7/site-packages/pandas/io/common.py", line 399, in _get_handle
+        #     f = open(path_or_buf, mode, encoding=encoding, newline="")
+        # FileNotFoundError: [Errno 2] No such file or directory: 'data/output/2019-01-flights-filtered.csv'
+        # Error: Command returned non-zero exit status 1.
 
     If in the process of working through the tutorial, you stopped the
     interactive environment and started a new one along the way, this may
@@ -565,6 +587,16 @@ and other commands.
       git lfs pull
 
       # Downloading LFS objects: 100% (1/1), 66MB | 22 MB/s
+
+    Another way to verify that your lfs files have been fetched is running the
+    ``ls-files`` command and check if every file has a "*" (pulled) or a "-"
+    (not pulled)
+
+    .. code-block:: console
+
+      git lfs ls-files
+
+      # 2b1851ab60 * data/201901_us_flights_1/2019-01-flights.csv.zip
 
 
 .. warning::
