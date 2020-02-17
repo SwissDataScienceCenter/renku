@@ -63,7 +63,7 @@ it's ready. Sit tight and wait for it to become **available**
 .. image:: ../_static/images/ui_03.2_notebook-servers.png
     :width: 100%
     :align: center
-    :alt: Head to environments page
+    :alt: Start new environment
 
 The default settings are fine for this tutorial: just click on
 **Start environment** (3). You will see a table with the  status
