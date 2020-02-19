@@ -100,5 +100,12 @@ Contact
 -------
 
 To submit a bug report or a feature request, please `open an issue
-<https://github.com/SwissDataScienceCenter/renku/issues/new>`_. For other
+<https://github.com/SwissDataScienceCenter/renku/issues/new>`_.
+
+To ask a question,
+please write a new topic on `Discourse <https://renku.discourse.group/>`_.
+
+To communicate with the team, reach out on `gitter <https://gitter.im/SwissDataScienceCenter/renku>`_.
+
+For other
 inquiries contact the Swiss Data Science Center (SDSC) https://datascience.ch/.
