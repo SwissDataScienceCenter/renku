@@ -4,6 +4,8 @@ import ch.renku.acceptancetests.pages._
 import ch.renku.acceptancetests.tooling.AcceptanceSpec
 import ch.renku.acceptancetests.workflows.LoginType._
 
+import org.openqa.selenium.StaleElementReferenceException
+
 import scala.concurrent.duration._
 import scala.language.postfixOps
 
@@ -16,6 +18,8 @@ trait Login {
     verify browserAt LandingPage
 
     When("user clicks on the Login button")
+    // Wait for the page to update
+    sleep(2 seconds)
     click on LandingPage.loginButton
     Then("they should get into the Login Page")
     verify browserAt LoginPage

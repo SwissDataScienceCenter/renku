@@ -18,6 +18,10 @@ trait Grammar extends Eventually {
       override val url = page.url
     }
 
+  object sleep {
+    def apply(duration: Duration): Unit = Page.SleepThread(duration)
+  }
+
   object verify {
 
     def that(element: => WebElement): WebElement = element
@@ -53,7 +57,6 @@ trait Grammar extends Eventually {
   }
 
   protected implicit class OperationOps(unit: Unit) {
-    def sleep(duration: Duration): Unit =
-      Thread sleep duration.toMillis
+    def sleep(duration: Duration): Unit = Page.SleepThread(duration)
   }
 }
