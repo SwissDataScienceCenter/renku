@@ -19,9 +19,15 @@ then
   exit 1
 fi
 
+if [[ $GITHUB_REF =~ "tags" ]]
+then
+  CHART_TAG="--tag $(echo ${GITHUB_REF} | cut -d/ -f3)"
+fi
+
 # build this chart to get the version
-chartpress --skip-build
+chartpress --skip-build $CHART_TAG
 CHART_VERSION=$(yq r helm-chart/${CHART_NAME}/Chart.yaml version)
+
 git clone --depth=1 https://${GITHUB_TOKEN}@github.com/${UPSTREAM_REPO} upstream-repo
 
 # update the upstream repo
