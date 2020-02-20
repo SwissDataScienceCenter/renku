@@ -66,6 +66,10 @@ spec:
         backend:
           serviceName: {{ $gatewayFullname }}
           servicePort: {{ $gatewayServicePort }}
+      - path: /entities
+        backend:
+          serviceName: {{ $gatewayFullname }}
+          servicePort: {{ $gatewayServicePort }}
       - path: /
         backend:
           serviceName: {{ $uiFullname }}
