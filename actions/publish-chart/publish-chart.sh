@@ -6,12 +6,6 @@ then
   CHART_TAG="--tag $(echo ${GITHUB_REF} | cut -d/ -f3)"
 fi
 
-if [ -z $CHART_DIR ]
-then
-  echo "CHART_DIR must be set."
-  exit 1
-fi
-
 if [ -z $GITHUB_TOKEN ]
 then
   echo "GITHUB_TOKEN must be set."
@@ -28,8 +22,10 @@ then
   echo "GIT_USER must be set."
 fi
 
+# configure variables
+CHART_PATH=${CHART_PATH:=helm-chart/$(echo $GITHUB_REPOSITORY | cut -d/ -f2)}
 HELM_URL=${HELM_URL:=https://storage.googleapis.com/kubernetes-helm}
-HELM_TGZ=${HELM_TGZ:=helm-v2.14.3-linux-amd64.tar.gz}
+HELM_TGZ=${HELM_TGZ:=helm-v2.16.1-linux-amd64.tar.gz}
 
 # install helm
 mkdir -p /tmp/helm
@@ -42,7 +38,7 @@ helm init --client-only
 git config --global user.email "$GIT_EMAIL"
 git config --global user.name "$GIT_USER"
 
-helm dep update $CHART_DIR
+helm dep update $CHART_PATH
 
 # log in to docker
 echo ${DOCKER_PASSWORD} | docker login -u ${DOCKER_USERNAME} --password-stdin

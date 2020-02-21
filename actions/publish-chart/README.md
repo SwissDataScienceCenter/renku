@@ -22,6 +22,19 @@ It can simply be used as a step in a GitHub actions job:
 ```
 
 Note that the `CI_TOKEN` needs write permissions to wherever the chart is
-published to. All of the environment variables in the exampe above are required.
-Additionaly, you may specify `HELM_URL` and `HELM_TGZ` for an alternate source
-and version of the helm binary.
+published to.
+
+## Configuration
+
+You can set these environment variables:
+
+| Variable name | Default | Required |
+| --------------| --------| ---------|
+| CHART_PATH    | helm-chart/repository_name | No |
+| DOCKER_PASSWORD | None | Yes |
+| DOCKER_USERNAME | None | Yes |
+| GIT_EMAIL     | None | Yes |
+| GIT_USER      | None | Yes |
+| GITHUB_TOKEN  | None | Yes |
+| HELM_URL      | https://storage.googleapis.com/kubernetes-helm | No |
+| HELM_TGZ      | helm-v2.16.1-linux-amd64.tar.gz | No |

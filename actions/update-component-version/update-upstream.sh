@@ -1,18 +1,6 @@
 #!/bin/sh
 set -xe
 
-if [ -z "$UPSTREAM_REPO" ]
-then
-  echo "Must specify UPSTREAM_REPO"
-  exit 1
-fi
-
-if [ -z "$CHART_NAME" ]
-then
-  echo "Must specify CHART_NAME"
-  exit 1
-fi
-
 if [ -z "$GITHUB_TOKEN" ]
 then
   echo "Must specify GITHUB_TOKEN"
@@ -24,19 +12,15 @@ then
   CHART_TAG="--tag $(echo ${GITHUB_REF} | cut -d/ -f3)"
 fi
 
-if [ -z $GIT_EMAIL ]
-then
-  echo "GIT_EMAIL must be set."
-fi
-
-if [ -z $GIT_USER ]
-then
-  echo "GIT_USER must be set."
-fi
+# set up environment variables
+UPSTREAM_REPO=${UPSTREAM_REPO:=SwissDataScienceCenter/renku}
+GIT_EMAIL=${GIT_EMAIL:=renku@datascience.ch}
+GIT_USER=${GIT_USER:="Renku Bot"}
+CHART_NAME=${CHART_NAME:=$(echo $GITHUB_REPOSITORY | cut -d/ -f2)}
 
 # install helm
 HELM_URL=${HELM_URL:=https://storage.googleapis.com/kubernetes-helm}
-HELM_TGZ=${HELM_TGZ:=helm-v2.14.3-linux-amd64.tar.gz}
+HELM_TGZ=${HELM_TGZ:=helm-v2.16.1-linux-amd64.tar.gz}
 
 mkdir -p /tmp/helm
 wget -q ${HELM_URL}/${HELM_TGZ} -O /tmp/helm/${HELM_TGZ}
