@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 set -xe
 
 if [[ $GITHUB_REF =~ "tags" ]]
@@ -6,18 +6,18 @@ then
   CHART_TAG="--tag $(echo ${GITHUB_REF} | cut -d/ -f3)"
 fi
 
-if [ -z $GITHUB_TOKEN ]
+if [ -z "$GITHUB_TOKEN" ]
 then
   echo "GITHUB_TOKEN must be set."
   exit 1
 fi
 
-if [ -z $GIT_EMAIL ]
+if [ -z "$GIT_EMAIL" ]
 then
   echo "GIT_EMAIL must be set."
 fi
 
-if [ -z $GIT_USER ]
+if [ -z "$GIT_USER" ]
 then
   echo "GIT_USER must be set."
 fi

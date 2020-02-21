@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 set -xe
 
 if [ -z "$GITHUB_TOKEN" ]
