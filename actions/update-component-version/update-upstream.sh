@@ -24,6 +24,16 @@ then
   CHART_TAG="--tag $(echo ${GITHUB_REF} | cut -d/ -f3)"
 fi
 
+if [ -z $GIT_EMAIL ]
+then
+  echo "GIT_EMAIL must be set."
+fi
+
+if [ -z $GIT_USER ]
+then
+  echo "GIT_USER must be set."
+fi
+
 # install helm
 HELM_URL=${HELM_URL:=https://storage.googleapis.com/kubernetes-helm}
 HELM_TGZ=${HELM_TGZ:=helm-v2.14.3-linux-amd64.tar.gz}
@@ -44,8 +54,8 @@ git clone --depth=1 https://${GITHUB_TOKEN}@github.com/${UPSTREAM_REPO} upstream
 cd upstream-repo
 
 # set up git
-git config --global user.email "renku@datascience.ch"
-git config --global user.name "Renku Bot"
+git config --global user.email "$GIT_EMAIL"
+git config --global user.name "$GIT_USER"
 
 # update the chart requirements and push
 git checkout -b auto-update/${CHART_NAME}-${CHART_VERSION} master
