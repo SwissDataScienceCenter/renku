@@ -1,5 +1,5 @@
-name: 'Component update'
-description: 'Update component version in a parent deployment chart.'
+name: 'publish-chart'
+description: 'Push images and publish the chart with chartpress.'
 runs:
   using: 'docker'
   image: 'Dockerfile'
