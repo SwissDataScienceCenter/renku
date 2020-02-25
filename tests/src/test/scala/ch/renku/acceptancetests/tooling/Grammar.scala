@@ -13,7 +13,7 @@ import scala.language.implicitConversions
 trait Grammar extends Eventually {
   self: WebBrowser with AcceptanceSpec =>
 
-  implicit def toSeleniuPage[Url <: BaseUrl](page: Page[Url])(implicit baseUrl: Url): selenium.Page =
+  implicit def toSeleniumPage[Url <: BaseUrl](page: Page[Url])(implicit baseUrl: Url): selenium.Page =
     new selenium.Page {
       override val url = page.url
     }
