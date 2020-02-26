@@ -13,10 +13,14 @@ import scala.language.implicitConversions
 trait Grammar extends Eventually {
   self: WebBrowser with AcceptanceSpec =>
 
-  implicit def toSeleniuPage[Url <: BaseUrl](page: Page[Url])(implicit baseUrl: Url): selenium.Page =
+  implicit def toSeleniumPage[Url <: BaseUrl](page: Page[Url])(implicit baseUrl: Url): selenium.Page =
     new selenium.Page {
       override val url = page.url
     }
+
+  object sleep {
+    def apply(duration: Duration): Unit = Page.SleepThread(duration)
+  }
 
   object verify {
 
@@ -53,7 +57,6 @@ trait Grammar extends Eventually {
   }
 
   protected implicit class OperationOps(unit: Unit) {
-    def sleep(duration: Duration): Unit =
-      Thread sleep duration.toMillis
+    def sleep(duration: Duration): Unit = Page.SleepThread(duration)
   }
 }

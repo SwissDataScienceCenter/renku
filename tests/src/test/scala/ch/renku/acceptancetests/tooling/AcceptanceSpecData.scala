@@ -38,7 +38,11 @@ trait AcceptanceSpecData {
         case Some(s) => s.nonEmpty
         case None    => false
       }
-    } yield UserCredentials(email, username, password, fullName, useProvider)
+      register = Option(getProperty("register")) orElse sys.env.get("RENKU_TEST_REGISTER") match {
+        case Some(s) => s.nonEmpty
+        case None    => false
+      }
+    } yield UserCredentials(email, username, password, fullName, useProvider, register)
   } getOrElse showErrorAndStop(
     "You most provide either the arguments -Dusername -Dfullname, -Demail or/and -Dpassword args invalid or missing" +
       " or set the environment variables RENKU_TEST_EMAIL RENKU_TEST_USERNAME RENKU_TEST_PASSWORD and/or RENKU_TEST_FULL_NAME"

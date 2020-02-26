@@ -3,13 +3,16 @@ package ch.renku.acceptancetests.pages
 import ch.renku.acceptancetests.pages.Page._
 import ch.renku.acceptancetests.pages.RenkuPage.RenkuBaseUrl
 import ch.renku.acceptancetests.tooling._
+
 import eu.timepit.refined.W
 import eu.timepit.refined.api.Refined
 import eu.timepit.refined.collection.NonEmpty
 import eu.timepit.refined.string._
+
 import org.openqa.selenium.{By, WebElement}
 import org.scalatest.concurrent.Eventually
 import org.scalatest.{Matchers => ScalatestMatchers}
+import org.scalatest.time.{Millis, Seconds, Span}
 import org.scalatestplus.selenium.WebBrowser
 
 import scala.concurrent.duration.Duration
@@ -30,15 +33,30 @@ abstract class Page[Url <: BaseUrl] extends ScalatestMatchers with Eventually wi
     def parent: WebElement = element.findElement(By.xpath("./.."))
   }
 
-  protected implicit class OperationOps(unit: Unit) {
-    def sleep(duration: Duration): Unit =
-      Thread sleep duration.toMillis
+  object sleep {
+    def apply(duration: Duration): Unit = Page.SleepThread(duration)
   }
+
+  protected implicit class OperationOps(unit: Unit) {
+    def sleep(duration: Duration): Unit = Page.SleepThread(duration)
+  }
+
+  protected def waitUpTo(duration: Duration): PatienceConfig =
+    PatienceConfig(
+      // Wait up to 2 minutes for this operation
+      timeout  = scaled(Span(duration.toSeconds, Seconds)),
+      interval = scaled(Span(2, Seconds))
+    ),
 }
 
 object Page {
   type Path  = String Refined StartsWith[W.`"/"`.T]
   type Title = String Refined NonEmpty
+
+  // Use a unique name to avoid problems on case-insensitive and preserving file systems
+  object SleepThread {
+    def apply(duration: Duration): Unit = Thread sleep duration.toMillis
+  }
 }
 
 abstract class RenkuPage extends Page[RenkuBaseUrl]

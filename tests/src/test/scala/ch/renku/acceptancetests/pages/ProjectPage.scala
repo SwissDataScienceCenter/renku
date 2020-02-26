@@ -153,11 +153,12 @@ class ProjectPage(projectDetails: ProjectDetails, userCredentials: UserCredentia
         find(cssSelector(s"div.tree-container nav")) getOrElse fail("Datasets list not found")
       }
 
-      def flights(implicit webDriver: WebDriver): WebElement = eventually {
-        find(cssSelector("div.tree-container nav a div"))
-          .find(_.text == "2019-01 US Flights")
-          .getOrElse(fail("Dataset 'flights' not found"))
-      }
+      def flights(implicit webDriver: WebDriver): WebElement =
+        eventually {
+          find(cssSelector("div.tree-container nav a div"))
+            .find(_.text == "2019-01 US Flights")
+            .getOrElse(fail("Dataset 'flights' not found"))
+        }(waitUpTo(120 seconds), implicitly[source.Position])
     }
   }
 
@@ -181,17 +182,11 @@ class ProjectPage(projectDetails: ProjectDetails, userCredentials: UserCredentia
     def verifyImageReady(implicit webDriver: WebDriver): Unit =
       eventually {
         findImageReadyBadge getOrElse waitForImageToBeReady
-      }(
-        PatienceConfig(
-          timeout  = scaled(Span(300, Seconds)),
-          interval = scaled(Span(2, Seconds))
-        ),
-        implicitly[source.Position]
-      )
+      }(waitUpTo(10 minutes), implicitly[source.Position])
 
     private def waitForImageToBeReady(implicit webDriver: WebDriver): Unit = {
       find(cssSelector(".badge.badge-warning")) getOrElse fail("Image building info badges not found");
-      Thread.sleep(2000);
+      sleep(2 seconds)
       findImageReadyBadge getOrElse fail("Image not yet built")
     }
 
@@ -280,7 +275,7 @@ class ProjectPage(projectDetails: ProjectDetails, userCredentials: UserCredentia
         tf.sendKeys(List.fill(40)("\b").mkString(""))
         tf.sendKeys(project.title.value) sleep (1 second)
 
-        forkButton.click() sleep (1 second)
+        forkButton.click() sleep (10 second)
       }
 
     private def titleField(implicit webDriver: WebDriver): WebElement = eventually {
