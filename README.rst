@@ -24,15 +24,19 @@ RENKU (連句)
 .. image:: https://readthedocs.org/projects/renku/badge/
     :target: http://renku.readthedocs.io/en/latest/
     :alt: Documentation Status
+    
+.. image:: https://img.shields.io/discourse/status?server=https%3A%2F%2Frenku.discourse.group
+    :target: https://renku.discourse.group/
+    :alt: Discourse
+   
+.. image:: https://img.shields.io/gitter/room/SwissDataScienceCenter/renku
+    :target: https://gitter.im/SwissDataScienceCenter/renku
+    :alt: Gitter
 
 .. image:: https://pullreminders.com/badge.svg
     :target: https://pullreminders.com?ref=badge
     :alt: Pull Reminders
     :align: right
-
-![Discourse status](https://img.shields.io/discourse/status?server=https%3A%2F%2Frenku.discourse.group)
-
-![Gitter](https://img.shields.io/gitter/room/SwissDataScienceCenter/renku)
 
 **Renku** is a software platform designed to enable reproducible and
 collaborative data science.
