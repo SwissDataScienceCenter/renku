@@ -67,7 +67,7 @@ class HandsOnSpec
     projectPage.Environments.Running.verifyEnvironmentReady
     And("the user clicks on the Connect button in the table")
     // Sleep a little while after clicking to give the server a chance to come up
-    click on projectPage.Environments.Running.title sleep (15 seconds)
+    click on projectPage.Environments.Running.title sleep (30 seconds)
     docsScreenshots.reachedCheckpoint()
     click on projectPage.Environments.Running.connectButton sleep (2 seconds)
     Then("a JupyterLab page is opened on a new tab")
