@@ -10,7 +10,8 @@ object users {
       username:    String Refined NonEmpty,
       password:    String Refined NonEmpty,
       fullName:    String Refined NonEmpty,
-      useProvider: Boolean
+      useProvider: Boolean,
+      register:    Boolean
   ) {
 
     /**
