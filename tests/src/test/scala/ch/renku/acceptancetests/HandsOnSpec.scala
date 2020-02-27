@@ -69,7 +69,9 @@ class HandsOnSpec
     // Sleep a little while after clicking to give the server a chance to come up
     click on projectPage.Environments.Running.title sleep (30 seconds)
     docsScreenshots.reachedCheckpoint()
-    click on projectPage.Environments.Running.connectButton sleep (2 seconds)
+
+    projectPage.Environments.Running.connectToJupyterLab
+
     Then("a JupyterLab page is opened on a new tab")
     val jupyterLabPage = JupyterLabPage()
     verify browserSwitchedTo jupyterLabPage sleep (5 seconds)
