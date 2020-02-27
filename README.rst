@@ -30,6 +30,10 @@ RENKU (連句)
     :alt: Pull Reminders
     :align: right
 
+![Discourse status](https://img.shields.io/discourse/status?server=https%3A%2F%2Frenku.discourse.group)
+
+![Gitter](https://img.shields.io/gitter/room/SwissDataScienceCenter/renku)
+
 **Renku** is a software platform designed to enable reproducible and
 collaborative data science.
 
