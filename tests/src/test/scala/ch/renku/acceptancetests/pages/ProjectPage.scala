@@ -4,6 +4,7 @@ import ch.renku.acceptancetests.model.projects.ProjectDetails
 import ch.renku.acceptancetests.model.projects.ProjectDetails._
 import ch.renku.acceptancetests.model.users.UserCredentials
 import ch.renku.acceptancetests.pages.Page.{Path, Title}
+import ch.renku.acceptancetests.tooling.AcceptanceSpec
 
 import eu.timepit.refined.api.Refined
 import eu.timepit.refined.auto._
@@ -14,6 +15,7 @@ import org.scalatestplus.selenium.WebBrowser.{cssSelector, find, findAll}
 import org.scalatest.time.{Millis, Seconds, Span}
 
 import scala.concurrent.duration._
+import scala.jdk.CollectionConverters._
 import scala.language.postfixOps
 
 import org.scalactic.source
@@ -201,6 +203,27 @@ class ProjectPage(projectDetails: ProjectDetails, userCredentials: UserCredentia
           .getOrElse(fail("Environments -> Running title not found"))
       }
 
+      def connectToJupyterLab(implicit webDriver: WebDriver, spec: AcceptanceSpec): Unit = eventually {
+        import spec.{And, Then}
+        And("tries to connect to JupyterLab")
+        connectButton.click
+        sleep(2 seconds)
+
+        // Check if we are connected to JupyterLab
+        val tabs = webDriver.getWindowHandles.asScala.toArray
+        webDriver.switchTo() window tabs(1)
+        if (webDriver.getCurrentUrl contains "/jupyterhub/hub/user") {
+          And("JupyterLab is not up yet")
+          Then("close the window and try again later")
+          // The server isn't up yet. Close the window and try again
+          webDriver.close
+          webDriver.switchTo() window tabs(0)
+          fail("Could not connect to JupyterLab")
+        } else {
+          webDriver.switchTo() window tabs(0)
+        }
+      }
+
       def connectButton(implicit webDriver: WebDriver): WebElement = eventually {
         find(
           cssSelector(
@@ -227,6 +250,7 @@ class ProjectPage(projectDetails: ProjectDetails, userCredentials: UserCredentia
       def verifyEnvironmentReady(implicit webDriver: WebDriver): Unit =
         eventually {
           find(cssSelector(".text-nowrap.p-1.badge.badge-success"))
+            .getOrElse(fail("Interactive environment is not ready"))
         }(waitUpTo(10 minutes), implicitly[source.Position])
     }
   }
