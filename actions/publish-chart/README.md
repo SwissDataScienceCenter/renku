@@ -13,7 +13,7 @@ It can simply be used as a step in a GitHub actions job:
         fetch-depth: 0
     - uses: SwissDataScienceCenter/renku/actions/publish-chart@master
       env:
-        CHART_DIR: helm-chart/mychart  # path to the chart directory
+        CHART_PATH: helm-chart/mychart  # path to the chart directory
         GIT_USER: Bot User
         GIT_EMAIL: bot@example.com
         DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}

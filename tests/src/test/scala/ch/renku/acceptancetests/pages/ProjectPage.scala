@@ -224,9 +224,10 @@ class ProjectPage(projectDetails: ProjectDetails, userCredentials: UserCredentia
           .parent
       }
 
-      def verifyEnvironmentReady(implicit webDriver: WebDriver): Unit = eventually {
-        find(cssSelector(".text-nowrap.p-1.badge.badge-success")) getOrElse waitForImageToBeReady
-      }
+      def verifyEnvironmentReady(implicit webDriver: WebDriver): Unit =
+        eventually {
+          find(cssSelector(".text-nowrap.p-1.badge.badge-success"))
+        }(waitUpTo(10 minutes), implicitly[source.Position])
     }
   }
 
