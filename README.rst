@@ -24,6 +24,14 @@ RENKU (連句)
 .. image:: https://readthedocs.org/projects/renku/badge/
     :target: http://renku.readthedocs.io/en/latest/
     :alt: Documentation Status
+    
+.. image:: https://img.shields.io/discourse/status?server=https%3A%2F%2Frenku.discourse.group
+    :target: https://renku.discourse.group/
+    :alt: Discourse
+   
+.. image:: https://img.shields.io/gitter/room/SwissDataScienceCenter/renku
+    :target: https://gitter.im/SwissDataScienceCenter/renku
+    :alt: Gitter
 
 .. image:: https://pullreminders.com/badge.svg
     :target: https://pullreminders.com?ref=badge
@@ -100,5 +108,12 @@ Contact
 -------
 
 To submit a bug report or a feature request, please `open an issue
-<https://github.com/SwissDataScienceCenter/renku/issues/new>`_. For other
+<https://github.com/SwissDataScienceCenter/renku/issues/new>`_.
+
+To ask a question,
+please write a new topic on `Discourse <https://renku.discourse.group/>`_.
+
+To communicate with the team, reach out on `gitter <https://gitter.im/SwissDataScienceCenter/renku>`_.
+
+For other
 inquiries contact the Swiss Data Science Center (SDSC) https://datascience.ch/.
