@@ -11,6 +11,6 @@ case object LandingPage extends RenkuPage {
   override val title: Title = "Renku"
 
   def loginButton(implicit webDriver: WebDriver): WebElement = eventually {
-    find(cssSelector(".btn.btn-primary.btn-lg")) getOrElse fail("Login button not found")
+    find(cssSelector("#login-button")) getOrElse fail("Login button not found")
   }
 }

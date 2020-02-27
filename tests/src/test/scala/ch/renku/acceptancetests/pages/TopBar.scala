@@ -15,21 +15,20 @@ trait TopBar {
     }
 
     def plusDropdown(implicit webDriver: WebDriver): WebElement = eventually {
-      find(cssSelector("li[class*='nav-item dropdown']:nth-child(1) a[class*='dropdown-toggle']"))
-        .getOrElse(fail("Top Right '+' not found"))
+      find(cssSelector("#plus-dropdown")) getOrElse fail("Top Right '+' not found")
     }
 
     def projectOption(implicit webDriver: WebDriver): WebElement = eventually {
-      find(cssSelector("a[href='/project_new']")) getOrElse fail("Project option not found")
+      find(cssSelector("#navbar-project-new")) getOrElse fail("Project option not found")
     }
 
     def topRightDropDown(implicit webDriver: WebDriver): WebElement = eventually {
-      find(cssSelector("li[class*='nav-item dropdown']:nth-child(2) a[class*='dropdown-toggle']"))
+      find(cssSelector("#profile-dropdown"))
         .getOrElse(fail("Top Right dropdown not found"))
     }
 
     def logoutLink(implicit webDriver: WebDriver): WebElement = eventually {
-      find(cssSelector("a[href*='/auth/logout']")) getOrElse fail("Logout link not found")
+      find(cssSelector("#logout-link")) getOrElse fail("Logout link not found")
     }
   }
 }

@@ -40,6 +40,6 @@ case object NewProjectPage extends RenkuPage with TopBar with ScreenCapturing {
   }
 
   def createButton(implicit webDriver: WebDriver): WebElement = eventually {
-    find(cssSelector("form button.btn.btn-primary:last-of-type")) getOrElse fail("Create button not found")
+    find(cssSelector("#create-new-project")) getOrElse fail("Create button not found")
   }
 }
