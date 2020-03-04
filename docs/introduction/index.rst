@@ -1,27 +1,16 @@
 .. _renku_introduction:
 
-Introduction
-============
+About Renku
+===========
 
-.. epigraph::
-
-   **Renku** (連句 "linked verses"), is a Japanese form of popular
-   collaborative linked verse poetry, written by more than one author
-   working together.*
-
-   -- Wikipedia
-
-**Renku** is a software platform designed to foster multidisciplinary (data)
-science collaboration.
-
+The Renku Project is as useful for independent researchers and data scientists as
+it is for labs, collaborations, and courses and workshops.
 
 .. toctree::
    :maxdepth: 1
-   :includehidden:
 
-   Why Renku <why>
-   What is Renku <what_is_renku>
-   Getting Started <getting_started>
-   Get in touch <get_in_touch>
-   Roadmap <roadmap>
-   Release notes <release_notes>
+   why.rst
+   what_is_renku.rst
+   renkulab.rst
+   renku.rst
+   renkulab_and_renku.rst

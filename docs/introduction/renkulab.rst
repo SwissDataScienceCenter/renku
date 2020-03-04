@@ -35,8 +35,8 @@ Jupyterlab & RStudio
 
 * Interactive environments that you can launch from a project's home page on renkulab
 * push changes back to renkulab's gitlab
-* project-level configurations: i.e. container #CPU/GPU, memory
-* user-level configurable environment: i.e. .bashrc
+* project-level configurations: e.g. container #CPU/GPU, memory
+* user-level configurable environment: e.g. ``.bashrc``
 
 Knowledge Graph
 ~~~~~~~~~~~~~~~

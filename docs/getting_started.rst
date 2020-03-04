@@ -3,12 +3,6 @@
 Getting Started
 ---------------
 
-Renku and Renkulab
-^^^^^^^^^^^^^^^^^^
-
-Installation
-^^^^^^^^^^^^
-
 Tutorials
 ^^^^^^^^^
 
@@ -17,3 +11,7 @@ Tutorials
    :includehidden:
 
    First steps <tutorials/firststeps>
+   Renku-izing your project <tutorials/migrating_to_renku>
+
+
+More topics to come!

@@ -8,24 +8,25 @@ and useful. We welcome all sorts of feedback, be it bug reports,
 project template suggestions, feature requests or, best of all,
 pull requests.
 
-Pull requests
-~~~~~~~~~~~~~
+Questions
+~~~~~~~~~
 
-We are an Apache-2 licensed open source project and would be very happy to
-accept your contributions! Please get in touch on our `github page`_!
+For quick questions, you can find us on our `gitter channel`_.
+
+For usage-related issues or longer questions, a good place
+to open a discussion is the `discourse forum`_.
 
 Bugs
 ~~~~
 
 If you find a bug, please report it on our `issue tracker`_.
 
-Questions
-~~~~~~~~~
+Pull requests
+~~~~~~~~~~~~~
 
-For quick questions, you can find us on our `gitter channel`_.
+We are an Apache-2 licensed open source project and would be very happy to
+accept your contributions! Please get in touch on our `github page`_!
 
-If you have something more elaborate to discuss, a good place
-to open a discussion is the `discourse forum`_.
 
 .. _`github page`: https://github.com/SwissDataScienceCenter/renku
 
