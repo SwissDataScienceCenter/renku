@@ -3,48 +3,125 @@
 Renku CLI
 ---------
 
-The core of the Renku Project is the ``renku`` command-line interface (CLI), which offers
-tools for easily capturing your data science process as you work. With these tools, you
-can describe and annotate data and workflows, providing information that is used to
-build the lineage of your results, simplifying iterative development and making your
-work reproducible. The CLI can be used within Renkulab or locally, on your own machine.
+The core of the Renku Project is the ``renku`` command-line interface (CLI),
+which offers tools for easily capturing your data science process as you work.
+With these tools, you can describe and annotate data and workflows, providing
+information that is used to build the lineage of your results, simplifying
+iterative development and making your work reproducible. The CLI can be used
+within Renkulab or locally, on your own machine.
 
 The importance of version control for working with code is widely recognized.
 `renku` aims to be "git for research", by extending version control to encompass
 elements central to research: data and processes.
 
-If that's too abstract, you can check out :ref:`firststeps` or see it in action in this video!
+If that's too abstract, you can check out :ref:`first_steps` tutorial.
 
-``renku`` can be decomposed into to the following pieces that are exposed to the user.
+``renku`` can be decomposed into to the following pieces that are exposed to the
+user.
 
-.. _git:
 git
 ~~~
 
-* when a renku command is run, a commit is created with the files that were added or changed during the command execution
-* this commit also includes some hidden ``.renku`` metadata that holds the dataset metadata or describes the workflow
-* the commit message contains the command you executed, so you can check ``git log`` to see what you did in the past (running a workflow, creating a dataset, initializing a project)
+Data and code change frequently in a typical project. Knowing which *exact*
+version of code and data produced a particular result is critical for ensuring
+the robustness and veracity of your work. In Renku, version control is the
+base upon which everything else is built.
 
-git-LFS (or other external storage)
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-* when you add data from outside a project with ``renku dataset`` commands, or call ``renku run`` to generate output data, these files are automatically flagged to be stored in the git-lfs object store upon `git push` to a Renkulab server
-* keeping large files in LFS gives users the ability to control the amount of local space used by a project; LFS files can be left as pointers, and take up virtually no space, or can be pulled if needed
+We rely on the currently most widespread version control system, `git <https
+://git-scm.com/>`_. If you are unfamiliar with ``git`` it would not hurt to
+read at least some of their `excellent tutorials <https://git-
+scm.com/docs/gittutorial>`_. In Renku we try to take care of most of the
+boiler plate ``git`` commands for you, but you should still be aware that it
+is being used under the hood.
+
+The added benefit of using a version control system like ``git`` is that it also
+automatically encourages you to be creative, explore new ideas, and break things.
+"Branching" is extremely light-weight in ``git`` and allows you to freely
+experiment with complete peace-of-mind that you can always simply restore your
+last sane version of your work if everything happens to go off the rails. This
+is a fantastic advantage in data science, where experimentation is
+a critical part of the discovery process.
+
+Note that in Renku we make use of `git LFS <https://git-lfs.github.com>`_ which
+allows to keep not only the code but also the data related to an analysis under
+version control while keeping the git repository itself small.
+
+Git is used automatically by ``renku``:
+
+* when a ``renku`` command is run, a commit is created with the files that were
+  added or changed during the command execution
+
+* this commit also includes some hidden ``.renku`` metadata that holds the
+  dataset metadata or describes the workflow
+
+* the commit message contains the command you executed, so you can check ``git
+  log`` to see what you did in the past (running a workflow, creating a dataset,
+  initializing a project)
+
+
+External storage (git-LFS by default)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Git is an excellent version control system for text-based files, but is not
+ideal for binary data. Therefore, the usual solution is to keep the data out
+of the repository somehow while still preserving links to it for versioning
+purposes.
+
+By default, Renku projects use `git-LFS <https://git-lfs.github.com/>`_ for
+handling data. If you use ``renku`` commands, most of the data handling is done
+for you. For example:
+
+* when you add data with ``renku dataset`` commands
+
+* when you call ``renku run`` to generate output data
+
+Whichever files are flagged for storing with git-LFS, they are automatically
+separated from other repository files when you push to the server. They can
+be retrieved again from the external (LFS) storage when needed if the
+repository is cloned elsewhere.
+
+Keeping large files in LFS gives users the ability to control the amount of
+local space used by a project; LFS files can be left as pointers, and take up
+virtually no space, or can be pulled if needed.
+
+Renku provides a convenience command ``renku storage pull`` for retrieving data
+from LFS. Similarly, any ``renku`` command (e.g. ``renku run``) will check whether
+the data it needs is stored in LFS and if so it will preemptively fetch it.
+
 
 Datasets
 ~~~~~~~~
 
-* import & publish datasets from/to places like `Zenodo <https://zenodo.org/>`_ and `Dataverse <https://dataverse.harvard.edu/>`_ that have DOIs
-* auto-populate metadata for imported datasets (and created datasets based on their origins)
-* user-annotation of datasets with `schema.org <https://schema.org>`_ metadata
+* import & publish datasets from/to repositories like `Zenodo
+  <https://zenodo.org/>`_ and `Dataverse <https://dataverse.harvard.edu/>`_ that
+  have DOIs
+
+* auto-populate metadata for imported datasets (and created datasets
+  based on their origins)
+
+* user-annotation of datasets with `schema.org <https://schema.org>`_ or
+  domain-specific metadata
 
 
 Lineage of results
 ~~~~~~~~~~~~~~~~~~
 
-* tracking lineage for a workflow (generate a graph that shows input, execution, and output nodes)
-* simplified iterative workflow development (keep making changes to the code/data until you get the output you want)
-* compare outputs generated by the same (maybe stoachastic) workflow: ``renku rerun``
-* ...check out the `CLI documentation`_ for more!
+Capturing the :ref:`lineage of results <lineage>` is critical for understanding
+what input data were used, what code was run, and what results were produced
+
+The ``renku`` CLI gives researchers and analysts simple tools to:
+
+* track lineage for a workflow (generate a graph that shows input, execution,
+  and output nodes)
+
+* iteratively develop a workflow (keep making changes to the code/data until you
+  get the output you want)
+
+* compare outputs generated by the same (maybe stoachastic) workflow: ``renku
+  rerun``
+
+Consult the the `CLI documentation`_ for more!
+
 
 Installing
 ~~~~~~~~~~

@@ -3,8 +3,11 @@
 About Renku
 ===========
 
-The Renku Project is as useful for independent researchers and data scientists as
-it is for labs, collaborations, and courses and workshops.
+**The Renku Project** provides a platform and tools for reproducible and
+collaborative data analysis. It is aimed at independent researchers and data
+scientists as well as labs, collaborations, and courses and workshops. Renku can
+be used by anyone who deals with data, whether they are a researcher, data
+analyst, project owner, or data provider.
 
 .. toctree::
    :maxdepth: 1

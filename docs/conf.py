@@ -60,12 +60,12 @@ source_suffix = [".rst", ".md"]
 master_doc = "index"
 
 # General information about the project.
-project = "RENKU"
-copyright = "2017-2019, Swiss Data Science Center"
+project = "Renku"
+copyright = "2017-2020, Swiss Data Science Center"
 author = (
     "Mohammad Alisafaee, Andreas Bleuler, Eric Bouillet, Lorenzo Cavazzi, "
-    "Jakub Chrobasik, Pamela Delgado, Julien Eberle, Virginia Friedrich, "
-    "Fotis Georgatos, Jiri Kuncar, Izabela Moise, Chandrasekhar Ramakrishnan, "
+    "Christine Choirat, Jakub Chrobasik, Pamela Delgado, Julien Eberle, Virginia Friedrich, "
+    "Fotis Georgatos, Ralf Grubenmann, Emma Jablonski, Jiri Kuncar, Izabela Moise, Chandrasekhar Ramakrishnan, "
     "Rok Roškar, Sofiane Sarni, Sandra Savchenko De Jong, Johann-Michael Thiebaut, "
     "Olivier Verscheure"
 )
@@ -112,8 +112,8 @@ html_theme = "renku"
 # documentation.
 #
 html_theme_options = {
-    "description": "A software platform for reproducible"
-    " and collaborative data science.",
+    "description": "A software platform and tools for "
+    "reproducible and collaborative data analysis.",
     "github_repo": "renku",
     "extra_nav_links": {
         "renku@GitHub": "https://github.com/SwissDataScienceCenter/renku"
