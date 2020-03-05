@@ -1,7 +1,7 @@
 .. _renku:
 
 Renku CLI
----------
+=========
 
 The core of the Renku Project is the ``renku`` command-line interface (CLI),
 which offers tools for easily capturing your data science process as you work.
@@ -20,7 +20,7 @@ If that's too abstract, you can check out :ref:`first_steps` tutorial.
 user.
 
 git
-~~~
+---
 
 Data and code change frequently in a typical project. Knowing which *exact*
 version of code and data produced a particular result is critical for ensuring
@@ -60,7 +60,7 @@ Git is used automatically by ``renku``:
 
 
 External storage (git-LFS by default)
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-------------------------------------
 
 Git is an excellent version control system for text-based files, but is not
 ideal for binary data. Therefore, the usual solution is to keep the data out
@@ -90,7 +90,7 @@ the data it needs is stored in LFS and if so it will preemptively fetch it.
 
 
 Datasets
-~~~~~~~~
+--------
 
 * import & publish datasets from/to repositories like `Zenodo
   <https://zenodo.org/>`_ and `Dataverse <https://dataverse.harvard.edu/>`_ that
@@ -104,7 +104,7 @@ Datasets
 
 
 Lineage of results
-~~~~~~~~~~~~~~~~~~
+------------------
 
 Capturing the :ref:`lineage of results <lineage>` is critical for understanding
 what input data were used, what code was run, and what results were produced
@@ -124,7 +124,7 @@ Consult the the `CLI documentation`_ for more!
 
 
 Installing
-~~~~~~~~~~
+----------
 
 You can follow these `installation instructions`_ for running renku locally if you wish to
 forego using renkulab or need to interact with your project locally.

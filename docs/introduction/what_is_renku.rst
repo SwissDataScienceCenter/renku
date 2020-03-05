@@ -1,7 +1,7 @@
 .. _what_is_renku_verbose:
 
 What is Renku?
---------------
+==============
 
 The Renku Project is a web platform (:ref:`renkulab`) and a command-line
 interface (:ref:`renku`) built on top of open source components for researchers,
@@ -12,16 +12,12 @@ data scientists, educators, and students to help manage:
 * execution environments, and
 * workflows
 
-in a way that helps make research:
-
-* repeatable,
-* reproducible,
-* reusable, and
-* shareable
-
+Renku combines many widely-used open-source tools in order to make any project
+on the platform reproducible, repeatable, reusable and shareable from the start.
+Version control for data and code, containerization for runtime environments and
+automatic workflow capture are the core pillars on which the platform is built.
 
 Renku can be used by
-
 
 **researchers** to:
 
@@ -33,7 +29,7 @@ Renku can be used by
 
 **data owners** to:
 
-* bundle data with rich metadata
+* bundle data with rich metadata to facilitate use and reuse
 
 * discover uses of their data
 
@@ -45,13 +41,6 @@ Renku can be used by
 
 * manage resource access and in-class collaboration
 
-
-Renku is developed as an open source project by the Swiss Data Science Center in a
-team split between EPFL and ETHZ.
-
-.. toctree::
-   :maxdepth: 2
-   :hidden:
-
-   renkulab.rst
-   renku.rst
+To lean more about the hosted part of the platform, read about :ref:`Renkulab
+<renkulab>`. To explore the possibilities of the lower-level tools, head to the
+:ref:`renku` documentation.

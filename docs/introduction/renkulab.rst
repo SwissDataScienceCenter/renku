@@ -1,7 +1,7 @@
 .. _renkulab:
 
 Renkulab
---------
+========
 
 Renkulab is a web platform for creating, storing, working on, and sharing your
 data science projects. Our public "flagship" deployment of Renkulab can be found
@@ -24,7 +24,7 @@ Please contact us if you would like to deploy your own instance or see
 
 
 Gitlab
-~~~~~~
+------
 
 * storing project repositories
 
@@ -36,7 +36,7 @@ Gitlab
 * managing groups & permissions
 
 Jupyterlab & RStudio
-~~~~~~~~~~~~~~~~~~~~
+--------------------
 
 * Interactive environments that you can launch from a project's home page on
   renkulab
@@ -48,7 +48,7 @@ Jupyterlab & RStudio
 * user-level configurable environment: e.g. ``.bashrc``
 
 Knowledge Graph
-~~~~~~~~~~~~~~~
+---------------
 
 * projects search: public projects and private projects for which you have
   access rights

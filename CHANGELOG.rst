@@ -1,7 +1,9 @@
 .. _changelog:
 
-0.6.0 (released 2020-03-06)
----------------------------
+0.6.0
+-----
+
+**Released 2020-03-06**
 
 This release includes exciting new features and provides an improved
 user experience, mostly with respect to dataset handling.
@@ -96,8 +98,10 @@ Upgrading from 0.5.2
 -  No changes required in the values file for this upgrade
 
 
-0.5.1 (released 2019-12-04)
----------------------------
+0.5.1
+-----
+
+**Released 2019-12-04**
 
 This is a bugfix release that updates the GitLab version required to
 allow changing the project name when forking (see
@@ -105,8 +109,10 @@ allow changing the project name when forking (see
 and
 `#626 <https://github.com/SwissDataScienceCenter/renku-ui/issues/626>`__).
 
-0.5.0 (released 2019-11-27)
----------------------------
+0.5.0
+-----
+
+**Released 2019-11-27**
 
 New Features
 ~~~~~~~~~~~~
@@ -140,28 +146,32 @@ Miscellaneous
 Individual components
 ~~~~~~~~~~~~~~~~~~~~~
 
-For changes to individual components, check: \* renku ui
-`0.7.2 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/0.7.2>`__,
-`0.7.1 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/0.7.1>`__,
-`0.7.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/0.7.0>`__
-and
-`0.6.4 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/0.6.4>`__
-\* renku-gateway
-`0.6.0 <https://github.com/SwissDataScienceCenter/renku-gateway/releases/tag/0.6.0>`__
-\* renku-python
-`0.8.2 <https://github.com/SwissDataScienceCenter/renku-notebooks/releases/tag/0.8.2>`__,
-`0.8.1 <https://github.com/SwissDataScienceCenter/renku-notebooks/releases/tag/0.8.1>`__,
-`0.8.0 <https://github.com/SwissDataScienceCenter/renku-notebooks/releases/tag/0.8.0>`__,
-`0.7.2 <https://github.com/SwissDataScienceCenter/renku-notebooks/releases/tag/0.7.2>`__
-and
-`0.7.1 <https://github.com/SwissDataScienceCenter/renku-notebooks/releases/tag/0.7.1>`__
-\* renku-graph
-`0.29.3 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/0.29.3>`__
-\* renku-notebooks
-`0.6.2 <https://github.com/SwissDataScienceCenter/renku-notebooks/releases/tag/0.6.2>`__,
-`0.6.1 <https://github.com/SwissDataScienceCenter/renku-notebooks/releases/tag/0.6.1>`__
-and
-`0.6.0 <https://github.com/SwissDataScienceCenter/renku-notebooks/releases/tag/0.6.0>`__
+For changes to individual components, check:
+
+* renku ui `0.7.2
+  <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/0.7.2>`__,
+  `0.7.1
+  <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/0.7.1>`__,
+  `0.7.0
+  <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/0.7.0>`__ and
+  `0.6.4
+  <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/0.6.4>`__
+
+* renku-gateway `0.6.0 <https://github.com/SwissDataScienceCenter/renku-gateway/releases/tag/0.6.0>`__
+
+* renku-python `0.8.2 <https://github.com/SwissDataScienceCenter/renku-notebooks/releases/tag/0.8.2>`__,
+  `0.8.1 <https://github.com/SwissDataScienceCenter/renku-notebooks/releases/tag/0.8.1>`__,
+  `0.8.0 <https://github.com/SwissDataScienceCenter/renku-notebooks/releases/tag/0.8.0>`__,
+  `0.7.2 <https://github.com/SwissDataScienceCenter/renku-notebooks/releases/tag/0.7.2>`__
+  and
+  `0.7.1 <https://github.com/SwissDataScienceCenter/renku-notebooks/releases/tag/0.7.1>`__
+
+* renku-graph `0.29.3 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/0.29.3>`__
+
+* renku-notebooks `0.6.2 <https://github.com/SwissDataScienceCenter/renku-notebooks/releases/tag/0.6.2>`__,
+  `0.6.1 <https://github.com/SwissDataScienceCenter/renku-notebooks/releases/tag/0.6.1>`__
+  and
+  `0.6.0 <https://github.com/SwissDataScienceCenter/renku-notebooks/releases/tag/0.6.0>`__
 
 Bug fixes
 ~~~~~~~~~
@@ -177,16 +187,20 @@ Upgrading from 0.4.3
    changelog <https://github.com/SwissDataScienceCenter/renku/blob/master/charts/values.yaml.changelog.md#changes-on-top-of-renku-042>`__
 
 
-0.4.3 (released 2019-10-30)
----------------------------
+0.4.3
+-----
+
+**Released 2019-10-30**
 
 This is a bugfix release that fixes a SPARQL query in the graph service which
 was causing Jena to stall and run out of memory (See
-https://github.com/SwissDataScienceCenter/renku-graph/issues/159 and
-https://github.com/SwissDataScienceCenter/renku-graph/issues/163)
+`#159 <https://github.com/SwissDataScienceCenter/renku-graph/issues/159>`_ and
+`#163 <https://github.com/SwissDataScienceCenter/renku-graph/issues/163>`_).
 
-0.4.2 (released 2019-08-28)
----------------------------
+0.4.2
+-----
+
+**Released 2019-08-28**
 
 This is a relatively minor update.
 
