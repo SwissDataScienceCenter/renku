@@ -11,6 +11,7 @@ User Documentation
    Templates <templates>
    Collaborating <collaboration>
    Knowledge Graph <knowledge-graph>
+   Lineage <lineage>
    Advanced Interfaces <advanced_interfaces>
    Autosave in JupyterLab <autosave>
    Document your project <how_to_documentation>
