@@ -16,7 +16,8 @@ The Renku Project Docs
 
    -- Wikipedia
 
-**The Renku Project** aims to foster multidisciplinary (data) science collaboration.
+**The Renku Project** provides a platform and tools for reproducible and
+collaborative data analysis.
 
 It consists of:
 
