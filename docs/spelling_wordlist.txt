@@ -11,6 +11,7 @@ backends
 balancer
 Bergstrom
 blog
+bugfix
 chartpress
 Chartpress
 ci
@@ -28,6 +29,7 @@ customizable
 dataset
 datasets
 deployer
+discoverable
 Dockerfile
 dockerfiles
 Dockerfiles
@@ -51,6 +53,7 @@ Indices
 interoperability
 io
 ipynb
+iteratively
 ize
 izing
 Janusgraph
@@ -98,10 +101,15 @@ renv
 repo
 reproducibility
 Reproducibility
+reusability
+Reusability
 righthand
+roadmap
+Roadmap
 rstudio
 RStudio
 runtime
+runtimes
 scala
 SPARQL
 spawner
@@ -110,11 +118,14 @@ subdirectories
 supertype
 supertypes
 templated
+Tensorboard
+Tensorflow
 timestamp
 tinkerpop
 txt
 typesystem
 Ubuntu
+ui
 untracked
 untracked
 username

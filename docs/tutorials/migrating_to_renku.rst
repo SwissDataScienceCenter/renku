@@ -3,9 +3,9 @@
 Renku-izing your project
 ========================
 
-So, at this point you've gone through :ref:`first_steps` and learned how Renku can
-help your research be more reproducible and collaborative. The following guide
-will help you migrate your existing projects into the Renku platform.
+So, at this point you have gone through :ref:`first_steps` and learned how Renku
+can help your research be more reproducible and collaborative. The following
+guide will help you migrate your existing projects into the Renku platform.
 
 .. _practical_renku_usage:
 
@@ -99,7 +99,7 @@ remote and pushing the code. Perform the following, replacing ``<namespace>`` wi
 the username that appears on the renkulab-generated GitLab instance (unless you
 are pushing to a group), and ``<project-name>`` with the name you are giving your project.
 
-If your project doesn't have a remote yet (check ``git remote``), you can use ``origin``::
+If your project does not have a remote yet (check ``git remote``), you can use ``origin``::
 
   $ git remote add origin git@renkulab.io/<namespace>/<project-name>.git
   $ git push origin master

@@ -44,10 +44,10 @@ Get in touch
 ------------
 
 * `discourse <https://renku.discourse.group>`_: questions concerning renkulab or
-  renku cli usage, release notes
+  renku CLI usage, release notes
 
 * github: `renkulab <https://github.com/SwissDataScienceCenter/renku>`_ & `renku
-  (cli) <https://github.com/SwissDataScienceCenter/renku-python>`_: create
+  (CLI) <https://github.com/SwissDataScienceCenter/renku-python>`_: create
   platform-usability and software-bug issues
 
 * `gitter <https://gitter.im/SwissDataScienceCenter/renku>`_: communicate with

@@ -12,7 +12,7 @@ be faced with answering the following questions:
 * How is this type of data or algorithm usually used?
 * Who is using my data or my algorithms?
 
-The toolchain required to answer all of these questions comfortably is
+The tool-chain required to answer all of these questions comfortably is
 long and complex. The **Renku Project** aims to provide researchers with easy
 access to these state-of-the-art tools to improve reproducibility,
 increase productivity through reusability and enable collaboration.
