@@ -8,6 +8,30 @@
 The Renku Project Docs
 ======================
 
+
+.. toctree::
+   :maxdepth: 2
+   :hidden:
+
+   About Renku <introduction/index>
+   Getting started <getting_started>
+   Get in touch <get_in_touch>
+   Roadmap <roadmap>
+   Release notes <release_notes>
+
+
+.. toctree::
+   :maxdepth: 1
+   :caption: Detailed documentation:
+   :includehidden:
+   :hidden:
+
+   Users <user/index>
+   Developers <developer/index>
+   Admins <admin/index>
+   License <https://www.apache.org/licenses/LICENSE-2.0>
+
+
 .. epigraph::
 
    **Renku** (連句 "linked verses"), is a Japanese form of popular
@@ -40,6 +64,8 @@ Renku project <renku_introduction>`.
 If you are looking for detailed **renku** command-line interface (CLI) documentation,
 consult the `renku-python docs <https://renku-python.readthedocs.io/en/latest/>`_.
 
+
+
 Get in touch
 ------------
 
@@ -56,27 +82,3 @@ Get in touch
 
 Renku is developed as an open source project by the Swiss Data Science Center in a
 team split between EPFL and ETHZ.
-
-
-.. toctree::
-   :maxdepth: 2
-   :hidden:
-
-   About Renku <introduction/index>
-   Getting started <getting_started>
-   Get in touch <get_in_touch>
-   Roadmap <roadmap>
-   Release notes <release_notes>
-
-----------
-
-.. toctree::
-   :maxdepth: 1
-   :caption: Detailed documentation:
-   :includehidden:
-   :hidden:
-
-   Users <user/index>
-   Developers <developer/index>
-   Admins <admin/index>
-   License <https://www.apache.org/licenses/LICENSE-2.0>
