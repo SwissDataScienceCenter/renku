@@ -6,20 +6,20 @@ Why Renku?
 If you carry out research or analysis with code and data, chances are you will
 be faced with answering the following questions:
 
-* How do I repeat an analysis I did 1 month ago?
+* How do I re-run an analysis I did a month ago?
 * How does new data change my results?
 * How can I easily share my analysis with others?
 * How is this type of data or algorithm usually used?
 * Who is using my data or my algorithms?
 
-The tool-chain required to answer all of these questions comfortably is
-long and complex. The **Renku Project** aims to provide researchers with easy
-access to these state-of-the-art tools to improve reproducibility,
-increase productivity through reusability and enable collaboration.
+The toolchain required to answer all of these questions is long and complex. The
+**Renku Project** provides easy access to these state-of-the-art tools to
+improve reproducibility, increase productivity through reusability and enable
+collaboration.
 
 Renku can be used by
 
-**researchers** to:
+**Researchers** to:
 
 * automatically capture the dependencies of their analysis inputs and outputs
 
@@ -27,7 +27,7 @@ Renku can be used by
 
 * discover and publish data
 
-**data owners** to:
+**Data owners** to:
 
 * bundle data with rich metadata to facilitate use and reuse
 
@@ -35,9 +35,9 @@ Renku can be used by
 
 * connect with analysts for collaboration
 
-**educators** to:
+**Educators** to:
 
-* prepare just-bring-a-browser courses
+* prepare zero-install environments for courses
 
 * manage resource access and in-class collaboration
 

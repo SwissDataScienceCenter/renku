@@ -4,7 +4,7 @@ Renku CLI
 =========
 
 The core of the Renku Project is the ``renku`` command-line interface (CLI),
-which offers tools for easily capturing your data science process as you work.
+which offers tools for easily capturing your data-science process as you work.
 With these tools, you can describe and annotate data and workflows, providing
 information that is used to build the lineage of your results, simplifying
 iterative development and making your work reproducible. The CLI can be used
@@ -12,7 +12,7 @@ within Renkulab or locally, on your own machine.
 
 The importance of version control for working with code is widely recognized.
 `renku` aims to be "git for research", by extending version control to encompass
-elements central to research: data and processes.
+elements central to research data and processes.
 
 If that's too abstract, you can check out :ref:`first_steps` tutorial.
 
@@ -34,42 +34,36 @@ scm.com/docs/gittutorial>`_. In Renku we try to take care of most of the
 boiler plate ``git`` commands for you, but you should still be aware that it
 is being used under the hood.
 
-The added benefit of using a version control system like ``git`` is that it also
-automatically encourages you to be creative, explore new ideas, and break things.
-"Branching" is extremely light-weight in ``git`` and allows you to freely
-experiment with complete peace-of-mind that you can always simply restore your
-last sane version of your work if everything happens to go off the rails. This
-is a fantastic advantage in data science, where experimentation is
-a critical part of the discovery process.
+One additional benefit of using a version control system like ``git`` is that it
+encourages you to be creative and explore new ideas, without fear of breaking
+things. With ``git``, you can experiment with complete peace-of-mind that you
+can always restore to the last working version of your project if everything
+happens to go off the rails. This is a fantastic advantage in data science,
+where experimentation is a critical part of the discovery process.
 
-Note that in Renku we make use of `git LFS <https://git-lfs.github.com>`_ which
-allows to keep not only the code but also the data related to an analysis under
-version control while keeping the git repository itself small.
+Note that in Renku, we make use of `git LFS <https://git-lfs.github.com>`_ which
+allows keeping not only the code, but also the data related to an analysis under
+version control, while keeping the git repository itself small.
 
-Git is used automatically by ``renku``:
+Whenever a command that changes the contents of your project is executed,
+``renku`` invokes ``git`` to record information about what was added or changed:
 
-* when a ``renku`` command is run, a commit is created with the files that were
-  added or changed during the command execution
+* this commit also includes some internal metadata with detailed
+  information about what was done
 
-* this commit also includes some hidden ``.renku`` metadata that holds the
-  dataset metadata or describes the workflow
-
-* the commit message contains the command you executed, so you can check ``git
-  log`` to see what you did in the past (running a workflow, creating a dataset,
-  initializing a project)
+* the commit message contains the command you executed, so you can check the git
+  log to see what you did in the past (running a workflow, creating a dataset,
+  or initializing a project)
 
 
 External storage (git-LFS by default)
 -------------------------------------
 
-Git is an excellent version control system for text-based files, but is not
-ideal for binary data. Therefore, the usual solution is to keep the data out
-of the repository somehow while still preserving links to it for versioning
-purposes.
-
-By default, Renku projects use `git-LFS <https://git-lfs.github.com/>`_ for
-handling data. If you use ``renku`` commands, most of the data handling is done
-for you. For example:
+Git is very efficient in handling text-based files, but is not ideal for binary
+data. For reproducibility, though, it is necessary to version data and keep
+track of it together with analysis code. Therefore, by default, Renku projects
+use `git-LFS <https://git-lfs.github.com/>`_ for handling data. If you use
+``renku`` commands, most of the data handling is done for you. For example:
 
 * when you add data with ``renku dataset`` commands
 
@@ -85,12 +79,14 @@ local space used by a project; LFS files can be left as pointers, and take up
 virtually no space, or can be pulled if needed.
 
 Renku provides a convenience command ``renku storage pull`` for retrieving data
-from LFS. Similarly, any ``renku`` command (e.g. ``renku run``) will check whether
-the data it needs is stored in LFS and if so it will preemptively fetch it.
+from LFS. Similarly, any ``renku`` command (e.g. ``renku run``) will check
+whether the data it needs is stored in LFS, and if so, it will preemptively
+fetch it.
 
 
 Datasets
 --------
+
 
 * import & publish datasets from/to repositories like `Zenodo
   <https://zenodo.org/>`_ and `Dataverse <https://dataverse.harvard.edu/>`_ that
