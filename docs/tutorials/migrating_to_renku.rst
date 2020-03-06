@@ -1,11 +1,11 @@
 .. _migrating_to_renku:
 
-Migrating to Renku
-==================
+Renku-izing your project
+========================
 
-So, at this point you've gone through :ref:`first_steps` and learned how Renku can
-help your research be more reproducible and collaborative. The following guide
-will help you migrate your existing projects into the Renku platform.
+So, at this point you have gone through :ref:`first_steps` and learned how Renku
+can help your research be more reproducible and collaborative. The following
+guide will help you migrate your existing projects into the Renku platform.
 
 .. _practical_renku_usage:
 
@@ -15,7 +15,7 @@ Practical Renku Usage & Migration Tips
 In addition to supplementing your research with reproducibility bits,
 Renku aims to help you use current best practices for data science workflows in
 an unobtrusive way. Therefore, when you initialize a new Renku project in either
-the commandline interface or through the web platform, a template set of directories
+the command-line interface or through the web platform, a template set of directories
 and files will be created for you. These files deal with setting up ``renku``,
 ``docker``, software dependencies, and organizational structure parts of your
 project. For the full specification of files and directories present in the
@@ -64,7 +64,7 @@ this:
 Renku-ize your project with Renku CLI
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-In order to Renku-ize your project, you'll need the Renku commandline interface
+In order to Renku-ize your project, you'll need the Renku command-line interface
 (CLI). You can find the quick installation instructions
 `here <https://renku-python.readthedocs.io/en/latest/index.html>`_.
 
@@ -99,7 +99,7 @@ remote and pushing the code. Perform the following, replacing ``<namespace>`` wi
 the username that appears on the renkulab-generated GitLab instance (unless you
 are pushing to a group), and ``<project-name>`` with the name you are giving your project.
 
-If your project doesn't have a remote yet (check ``git remote``), you can use ``origin``::
+If your project does not have a remote yet (check ``git remote``), you can use ``origin``::
 
   $ git remote add origin git@renkulab.io/<namespace>/<project-name>.git
   $ git push origin master

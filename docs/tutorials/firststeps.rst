@@ -13,7 +13,7 @@ Following the steps below, you will learn how to use Renku for:
 2. `Adding data to your project <add_data_>`_
 3. `Installing and managing Python packages <python_environment_>`_
 4. `Working with Renku within JupyterLab <jupyterlab_>`_
-5. `Interactively exploring the bicycle counting data <interactive_exploration_>`_
+5. `Interactively exploring a dataset <interactive_exploration_>`_
 6. `Producing a repeatable analysis <create_workflow_>`_
 7. `Sharing your results and collaborating with your peers <sharing_is_caring_>`_
 8. `Where to go from here? <where_to_go_>`_
@@ -21,7 +21,7 @@ Following the steps below, you will learn how to use Renku for:
 .. _create_project:
 
 Create a new project
-^^^^^^^^^^^^^^^^^^^^
+--------------------
 
 First, head to renkulab.io_ (or your own instance of
 Renku) and click on the **Login** button located on the top right corner of
@@ -86,7 +86,7 @@ You can now connect to the server by clicking on the **Connect** button (1).
 .. _add_data:
 
 Add data to your project
-^^^^^^^^^^^^^^^^^^^^^^^^
+------------------------
 
 In the JupyterLab interface, we can see that a few files already exist.
 Let's start by adding data using the `Renku CLI <https://renku-python.readthedocs.io/en/latest/commands.html>`__.
@@ -218,7 +218,7 @@ Let us push the two fresh commits by running:
 .. _python_environment:
 
 Install and manage Python packages
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+----------------------------------
 
 Defining your runtime environment is critical if you would like others to be
 able to reuse your work. To achieve this, it is necessary to manage the
@@ -318,10 +318,10 @@ available in the new environment.
 .. _jupyterlab:
 
 Use Renku from within JupyterLab
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+--------------------------------
 
 Create new notebooks
-""""""""""""""""""""
+^^^^^^^^^^^^^^^^^^^^
 
 In the JupyterLab interface, use the file navigator in the left sidebar to go
 to the **Files** (1) tab. Here, you see a listing of files and folders from
@@ -382,7 +382,7 @@ message in (3) and click the check mark to make a commit.
 .. _interactive_exploration:
 
 Interactively explore the flights data
-""""""""""""""""""""""""""""""""""""""
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 At this point in a data-science project, you would normally start by looking at
 the data, trying to understand its structure, and see how to go about answering
@@ -424,7 +424,7 @@ You should look at the notebook by navigating to
 you should feel free to execute it to see what it does.
 
 Refactor the notebook
-"""""""""""""""""""""
+^^^^^^^^^^^^^^^^^^^^^
 
 To make our filtering step easier to reuse and easier to maintain, we will
 refactor what we have written in the notebook into a Python script. To do this
@@ -459,10 +459,10 @@ Again, the code needs to be added to the repository:
 .. _create_workflow:
 
 Build a reproducible workflow
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+-----------------------------
 
 Create a workflow step
-""""""""""""""""""""""
+^^^^^^^^^^^^^^^^^^^^^^
 
 Now we will use ``renku`` to create a reproducible, reusable "workflow". A
 workflow consists of a series of steps, each of which may consume some input
@@ -630,7 +630,7 @@ we can see its contents (2).
 
 
 Add a second workflow step
-""""""""""""""""""""""""""
+^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 We will now develop a notebook to count the flights in the filtered data file.
 As before, we will fast-forward through this step by downloading the solution.
@@ -729,7 +729,7 @@ a new notebook containing the executed cells as output.
 
 
 Update your results
-"""""""""""""""""""
+^^^^^^^^^^^^^^^^^^^
 
 Here, we will quickly see one of the advantages of using the ``renku`` command
 line tool.
@@ -889,13 +889,13 @@ Before calling it a day, we should not forget to push our work:
 .. _sharing_is_caring:
 
 Share your results and collaborate with your peers
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+--------------------------------------------------
 
 In this section, we will see how to use Renku to collaborate on projects. For
 an overview on collaboration, see :ref:`collaborating`.
 
 Discussions with Issues
-"""""""""""""""""""""""
+^^^^^^^^^^^^^^^^^^^^^^^
 
 Let us start by going back to the Renku web interface on renkulab.io_ or
 whichever instance you are using for this tutorial. Make sure you are logged
@@ -1016,12 +1016,12 @@ title in blue.
 .. _where_to_go:
 
 Where to go from here?
-^^^^^^^^^^^^^^^^^^^^^^
+----------------------
 
 * Create your own project on renkulab.io!
 * Explore the documentation_
 * Read more about the `Renku CLI <http://renku-python.readthedocs.io/>`__
-* Join us on `Gitter <https://gitter.im/SwissDataScienceCenter/renku>`_, `GitHub <https://github.com/SwissDataScienceCenter/renku>`_, or `Discource <https://renku.discourse.group>`_
+* Join us on `Gitter <https://gitter.im/SwissDataScienceCenter/renku>`_, `GitHub <https://github.com/SwissDataScienceCenter/renku>`_, or `Discourse <https://renku.discourse.group>`_
 
 .. _renkulab.io: https://renkulab.io
 .. _documentation: https://renku.readthedocs.io/

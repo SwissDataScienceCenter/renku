@@ -97,9 +97,9 @@ file. Else, check out :ref:`advanced_interfaces`.
 ``.dockerignore``
 """""""""""""""""
 
-The ``.dockerignore`` file is just like a ``.gitignore`` file, in that it
-allows you to specify which files to ignore in a docker build. If you aren't
-making changes to the docker build, you can .dockerignore this file.
+The ``.dockerignore`` file is just like a ``.gitignore`` file, in that it allows
+you to specify which files to ignore in a docker build. If you are not making
+changes to the docker build, you can .dockerignore this file.
 
 ``README.md``
 """""""""""""
@@ -178,10 +178,10 @@ deployment:
 
 
 
-What can I touch? What shouldn't I touch?
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+What can I touch? What should I not touch?
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-What you should or shouldn't touch depends on how well aligned your project is
+What you should or should not touch depends on how well aligned your project is
 with the defaults that Renku provides. Here are two example use cases:
 
 User #1: Default everything
@@ -213,7 +213,7 @@ Consult :ref:`advanced_interfaces`.
 
 .. warning::
 
-  Modifying these files can result in an image that doesn't build. Resetting to
+  Modifying these files can result in an image that does not build. Resetting to
   default values and killing and restarting the notebook should bring you back
   to a working state.
 
