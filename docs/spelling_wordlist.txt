@@ -60,6 +60,7 @@ Janusgraph
 Jena
 json
 jupyter
+JupyterHub
 jupyterlab
 JupyterLab
 keycloak
@@ -86,6 +87,7 @@ papermill
 parameterizable
 parametrized
 Postgresql
+powerline
 pre
 prepend
 preprocessed

@@ -35,7 +35,7 @@ Notable improvements
 Miscellaneous
 ^^^^^^^^^^^^^
 
--  R-markdown rmd files can be visualized within Renkulab ✔️
+-  R-markdown ``rmd`` files can be visualized within Renkulab ✔️
 
 -  Group avatars are displayed 👤
 
@@ -57,7 +57,7 @@ Miscellaneous
 
 -  Python now comes with powerline to simplify the command line prompt
 
--  Jupyterhub has been updated to version 1.1.0
+-  JupyterHub has been updated to version 1.1.0
 
 -  Prometheus metrics available for graph services
 
