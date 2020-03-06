@@ -1,6 +1,67 @@
-# Renku changes
+# 0.6.0 (released 2020-03-06)
 
-## 0.5.2 (released 2020-01-17)
+This release includes exciting new features and provides an improved user experience, mostly with respect to dataset handling.
+
+## New features
+
+⭐️ Datasets can be created from the UI
+
+⭐️ Files can be added to a dataset from the UI
+
+⭐️ Datasets can now be exported to [Dataverse](https://dataverse.org/)
+
+
+## Notable improvements
+
+🚄 Support project-level default settings for environments
+
+🚄 Relevant project/namespace information is shown at `/projects/user-groupname/` path
+
+🚄 Cleanup error messages for Renku CLI usage
+
+🚄 Dataset importing is faster with Renku CLI
+
+🚄 Restructured our [documentation](https://renku.readthedocs.io/)
+
+### Miscellaneous
+
+* R-markdown rmd files can be visualized within Renkulab ✔️
+* Group avatars are displayed 👤
+* Improved presentation for merge request and issues
+* A Gitlab IDE link has been made available for working with Renku projects
+* Link to see a project's fork information
+
+* Docker images and project templates now use Renku [0.9.1](https://github.com/SwissDataScienceCenter/renku-python/releases)
+* A Renku docker image with [Bioconductor](https://github.com/Bioconductor/bioconductor_docker) is now available 📣
+* R projects now have the directory structures fixed
+* Python now comes with powerline to simplify the command line prompt
+
+* Jupyterhub has been updated to version 1.1.0
+
+* Prometheus metrics available for graph services
+
+## Bug fixes
+
+* LFS data is now retrieved when the checkbox is selected 🐞
+* Close the fork dialog after forking
+* Various fixes for lineage including performance
+
+### Individual components
+
+For changes to individual components, check:
+* renku ui [0.7.3](https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/0.7.3) and [0.8.0](https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/0.8.0)
+* renku-gateway [0.7.0](https://github.com/SwissDataScienceCenter/renku-gateway/releases/tag/0.7.0)
+* renku-python [0.9.0](https://github.com/SwissDataScienceCenter/renku-notebooks/releases/tag/0.9.0) and [0.9.1](https://github.com/SwissDataScienceCenter/renku-notebooks/releases/tag/0.9.1)
+* renku-graph [0.48.0](https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/0.48.0)
+* renku-notebooks [0.6.2](https://github.com/SwissDataScienceCenter/renku-notebooks/releases/tag/0.6.2)
+
+
+## Upgrading from 0.5.2
+
+* No changes required in the values file for this upgrade
+
+
+# 0.5.2 (released 2020-01-17)
 
 This is a minor update. It contains mostly bug fixes.
 
@@ -22,11 +83,11 @@ For individual component changes, check:
 * renku-graph [0.39.0](https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/0.39.0) through [0.30.0](https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/0.30.0)
 
 
-## 0.5.1 (released 2019-12-04)
+# 0.5.1 (released 2019-12-04)
 
 This is a bugfix release that updates the GitLab version required to allow changing the project name when forking (see [#616](https://github.com/SwissDataScienceCenter/renku-ui/issues/616) and [#626](https://github.com/SwissDataScienceCenter/renku-ui/issues/626)).
 
-## 0.5.0 (released 2019-11-27)
+# 0.5.0 (released 2019-11-27)
 
 ## New features
 
