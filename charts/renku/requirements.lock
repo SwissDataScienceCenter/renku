@@ -1,30 +1,30 @@
 dependencies:
-- name: renku-core
-  repository: https://swissdatasciencecenter.github.io/helm-charts/
-  version: 0.9.2-56105b8
-- name: renku-ui
-  repository: https://swissdatasciencecenter.github.io/helm-charts/
-  version: 0.8.1-182dead
-- name: renku-notebooks
-  repository: https://swissdatasciencecenter.github.io/helm-charts/
-  version: 0.7.0-b80c064
-- name: renku-gateway
-  repository: https://swissdatasciencecenter.github.io/helm-charts/
-  version: 0.7.0
-- name: gitlab
-  repository: https://swissdatasciencecenter.github.io/helm-charts/
-  version: 0.4.1-791604e
-- name: renku-graph
-  repository: https://swissdatasciencecenter.github.io/helm-charts/
-  version: 0.51.0
-- name: postgresql
-  repository: https://kubernetes-charts.storage.googleapis.com
-  version: 0.14.4
-- name: keycloak
-  repository: https://kubernetes-charts.storage.googleapis.com
-  version: 4.10.1
-- name: minio
-  repository: https://kubernetes-charts.storage.googleapis.com
-  version: 1.6.0
-digest: sha256:eaf061042daefcd5e0eec103cacbedd26debc6e4c939cbab1f6129993f2fe58b
-generated: "2020-03-19T16:27:51.190285872Z"
+  - name: renku-core
+    repository: https://swissdatasciencecenter.github.io/helm-charts/
+    version: 0.9.2-56105b8
+  - name: renku-ui
+    repository: https://swissdatasciencecenter.github.io/helm-charts/
+    version: 0.8.1-90d98aa
+  - name: renku-notebooks
+    repository: https://swissdatasciencecenter.github.io/helm-charts/
+    version: 0.7.0-b80c064
+  - name: renku-gateway
+    repository: https://swissdatasciencecenter.github.io/helm-charts/
+    version: 0.7.0
+  - name: gitlab
+    repository: https://swissdatasciencecenter.github.io/helm-charts/
+    version: 0.4.1-791604e
+  - name: renku-graph
+    repository: https://swissdatasciencecenter.github.io/helm-charts/
+    version: 0.51.0
+  - name: postgresql
+    repository: https://kubernetes-charts.storage.googleapis.com
+    version: 0.14.4
+  - name: keycloak
+    repository: https://kubernetes-charts.storage.googleapis.com
+    version: 4.10.1
+  - name: minio
+    repository: https://kubernetes-charts.storage.googleapis.com
+    version: 1.6.0
+digest: sha256:2a895912f9c81ff7c7f467655eedd60c95fee5f08a76a0c752ad27bcdd220352
+generated: 2020-03-19T16:15:24.542180001Z
