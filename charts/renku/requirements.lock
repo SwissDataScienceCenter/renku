@@ -16,7 +16,7 @@ dependencies:
   version: 0.4.1-791604e
 - name: renku-graph
   repository: https://swissdatasciencecenter.github.io/helm-charts/
-  version: 0.51.0
+  version: 0.52.0
 - name: postgresql
   repository: https://kubernetes-charts.storage.googleapis.com
   version: 0.14.4
@@ -26,5 +26,5 @@ dependencies:
 - name: minio
   repository: https://kubernetes-charts.storage.googleapis.com
   version: 1.6.0
-digest: sha256:ce724dbb73df05a59dc79530f465a35af99fb4ed9710639184ad5ead920f8310
-generated: "2020-03-24T10:27:13.806806941Z"
+digest: sha256:6bbfb965ae1ea49856ffe00ce1b58688b3db51f9f7c97e09bc9f52e805a9e396
+generated: "2020-03-24T12:14:00.755812+01:00"
