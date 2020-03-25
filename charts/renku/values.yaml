@@ -526,7 +526,7 @@ ui:
   ## Configuration for where to get the base project templates: a url and ref (usually a tag)
   templatesRepository:
     # url: https://github.com/SwissDataScienceCenter/renku-project-template
-    ref: 0.1.6
+    # ref: 0.1.6
 
   ## Configuration for Sentry
   # sentry:
