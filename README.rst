@@ -47,17 +47,19 @@ data analyst, project owner, or data provider.
 
 It consists of:
 
-* :ref:`Renkulab <renkulab>`, a web-based platform designed to facilitate
-  collaboration, reproducibility, and discovery.
+* `Renkulab <https://renku.readthedocs.io/en/latest/introduction/renkulab.html#renkulab>`_,
+  a web-based platform designed to facilitate collaboration, reproducibility, and discovery.
 
-* :ref:`Renku <renku>`, a command-line interface (CLI) for managing code,
-  datasets, and workflows that you can use on Renkulab or install locally.
+* `Renku <https://renku.readthedocs.io/en/latest/introduction/renku.html#renku>`_,
+  a command-line interface (CLI) (`docs <https://renku-python.readthedocs.io/en/latest/>`_,
+  `repo <https://github.com/SwissDataScienceCenter/renku-python>`_) for managing code, datasets,
+  and workflows that you can use on Renkulab or install locally.
 
 A public instance of **Renkulab** is available at https://renkulab.io, and several
 other deployments at various institutions. Go ahead - log in, try it out, and
 `let us know what you think <http://bit.ly/renku-feedback>`_! You can follow the
-:ref:`first_steps` tutorial in python or R or :ref:`continue reading about the
-Renku project <renku_introduction>`.
+`first_steps <https://renku.readthedocs.io/en/latest/tutorials/firststeps.html>`_ tutorial in python or R or `continue reading about the
+Renku project <https://renku.readthedocs.io/en/latest/introduction/index.html#renku-introduction>`_.
 
 
 If you are looking for detailed **renku** command-line interface (CLI) documentation,
