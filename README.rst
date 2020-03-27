@@ -107,7 +107,7 @@ Get in touch
 * `discourse <https://renku.discourse.group>`_: questions concerning renkulab or
   renku CLI usage, release notes
 
-* github: `renkulab <https://github.com/SwissDataScienceCenter/renku>`_ & `renku
+* `github <https://github.com/SwissDataScienceCenter/renku>`_ & `renku
   (CLI) <https://github.com/SwissDataScienceCenter/renku-python>`_: create
   platform-usability and software-bug issues
 
