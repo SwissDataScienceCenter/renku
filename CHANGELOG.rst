@@ -1,5 +1,77 @@
 .. _changelog:
 
+0.6.1
+-----
+
+**Released 2020-04-01**
+
+New features
+~~~~~~~~~~~~
+
+⭐️ Datasets can be imported from data repositories through the UI
+
+⭐️ Datasets allow uploading file hierarchies in zip format
+
+⭐️ CLI: Datasets metadata is editable. Please see the `Dataset documentation <https://renku-python.readthedocs.io/en/latest/commands.html#module-renku.cli.dataset>`__ for details.
+
+⭐️ CLI: enable importing renku datasets
+
+⭐️ CLI: Enable working with data external to the repository `#974 <https://github.com/SwissDataScienceCenter/renku-python/pull/974>`__
+
+Notable improvements
+~~~~~~~~~~~~~~~~~~~~
+
+🚄  A file upload can be canceled when creating a dataset
+
+🚄  Environments tab displays information about the resources requested
+
+🚄  Environments tab provides an easy access to the branch/commit file listing
+
+🚄  Improvements to the handling of markdown content
+
+🚄  CLI: starting this version a new migration mechanism is in place, renku command will insist on migrating metadata if its outdated.
+
+Miscellaneous
+^^^^^^^^^^^^^
+
+- Various improvements on markdown display for collaboration
+
+- Make help channels more visible
+
+- CLI: wildcard support when adding data from git
+
+- Docker images and project templates use Renku `0.10.2 <https://github.com/SwissDataScienceCenter/renku-python/releases>`__
+
+- A new minimal Renku project template is available on project creation! Use this template if you're using a language other than R or python, or if you're renku-izing an existing python project.
+
+- Newer renkulab docker images also provide interactive environments with a nicer shell (powerline).
+
+Bug fixes
+~~~~~~~~~
+
+* Datasets now show file listing with folder hierarchy
+* Search uses clearer labeling
+* Various fixes to dataset command line bugs
+
+Individual components
+~~~~~~~~~~~~~~~~~~~~~
+
+For changes to individual components, check:
+
+* renku ui `0.9.1 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/0.9.1>`__ and `0.9.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/0.9.0>`__
+* renku-python `0.10.2 <https://github.com/SwissDataScienceCenter/renku-notebooks/releases/tag/0.10.2>`__
+* renku-notebooks `0.7.1 <https://github.com/SwissDataScienceCenter/renku-notebooks/releases/tag/0.7.1>`__
+
+* renku-graph `0.55.4 to 0.49.0 <https://github.com/SwissDataScienceCenter/renku-graph>`__
+
+Upgrading from 0.6.1
+~~~~~~~~~~~~~~~~~~~~
+
+* No new values required in the values file
+* The version in the welcome page can be updated at `ui.welcomePage.text`
+
+
+
 0.6.0
 -----
 
