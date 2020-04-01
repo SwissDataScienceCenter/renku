@@ -11,11 +11,11 @@ are the following:
 * bugs! students might have different operating systems than the instructors and
   the versions might not be the same or might not exist at all, in some cases
 
-Renkulab bypasses the struggle by allowing instructors to create copy-able templates
-as starting points for students to use the instructional material:
+Renkulab bypasses the struggle by allowing instructors to create templates
+as starting points for students to interact with the instructional material:
 
-* the instructor creates a new project and writes of the dependencies in one place
-  (e.g. a `Dockerfile` and/or `requirements.txt` and/or `install.R`)
+* the instructor creates a new project and writes the dependencies in one place
+  (e.g. a ``Dockerfile`` and/or ``requirements.txt`` and/or ``install.R``)
 * students "fork" (make a copy) of the project to use as a starting point
 * students can launch interactive environments (e.g. JupyterLab and/or RStudio)
   where these dependencies are pre-installed.
@@ -23,11 +23,11 @@ as starting points for students to use the instructional material:
 From their copy of the starter project that the instructor creates, students can
 then independently build on the project from inside the interactive environment
 by adding and modifying code, extra software dependencies, etc., which they can
-then save (by `git commit & git push`) back to Renkulab.
+then save (by ``git commit`` & ``git push``) back to Renkulab.
 
 FAQ
 ===
 
 Privacy & Group Settings: If I create a project on the public instance of Renkulab, who will be able to access it?
 
-If I make an update to the course material, how can I ensure that students will receive these updates?
+Updates: If I make an update to the course material, how can I ensure that students will receive these updates?
