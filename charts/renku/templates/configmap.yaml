@@ -170,3 +170,18 @@ data:
           grant all privileges on database "{{ .Values.global.jupyterhub.postgresDatabase }}" to "{{ .Values.global.jupyterhub.postgresUser }}";
           grant all privileges on schema "public" to "{{ .Values.global.jupyterhub.postgresUser }}";
       EOSQL
+{{ if .Values.global.anonymousSessions.enabled }}
+      JUPYTERHUB_TMP_POSTGRES_PASSWORD=$(cat /jupyterhub-tmp-postgres/jupyterhub-tmp-postgres-password)
+
+      psql -v ON_ERROR_STOP=1 <<-EOSQL
+          create database "{{ .Values.global.jupyterhub.postgresDatabase }}-tmp";
+          create user "{{ .Values.global.jupyterhub.postgresUser }}-tmp" password '$JUPYTERHUB_TMP_POSTGRES_PASSWORD';
+      EOSQL
+
+      psql -v ON_ERROR_STOP=1 --dbname "{{ .Values.global.jupyterhub.postgresDatabase }}-tmp" <<-EOSQL
+          create extension if not exists "pg_trgm";
+          revoke all on schema "public" from "public";
+          grant all privileges on database "{{ .Values.global.jupyterhub.postgresDatabase }}-tmp" to "{{ .Values.global.jupyterhub.postgresUser }}-tmp";
+          grant all privileges on schema "public" to "{{ .Values.global.jupyterhub.postgresUser }}-tmp";
+      EOSQL
+{{ end }}
