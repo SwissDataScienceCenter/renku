@@ -8,3 +8,28 @@ You have configured a demo user for the platform. The details (password) of this
 can be accessed using the following one-liner (you need to have jq installed).
 kubectl get secrets -n <k8s-namespace> {{ template "renku.fullname" . }} -o json | jq -r .data.users | base64 --decode
 {{- end -}}
+
+{{- if .Values.global.anonymousSessions.enabled -}}
+You have enabled anonymous interactive sessions. For this feature to work you
+will have to perform a few manual steps. These are the ready-made or almost ready
+commands that you will need. Check out the docs for more information:
+https://renku.readthedocs.io/en/latest/admin/index.html#enabling-notebooks-for-anonymous-users
+
+{{ if .Values.global.anonymousSessions.autoCreateTmpNamespace -}}
+A secondary namespace {{ .Release.Namespace }}-tmp has been created.
+{{ else }}
+Please create a secondary namespace using the following command:
+$ kubectl create namespace {{ .Release.Namespace }}-tmp
+{{- end }}
+
+You have to copy a secret into this secondary namespace using this command:
+$ kubectl get secret renku-jupyterhub-tmp-postgres -n {{ .Release.Namespace }} -o yaml | grep -v '^\s*namespace:\s' | kubectl apply -n {{ .Release.Namespace }}-tmp -f -
+
+The following two commands have to be executed from renku-notebooks/helm-chart.
+
+The command to create a values file for your secondary notebooks-service deployment:
+$ pipenv run ./make-values-tmp.py  --values-file <path-to-renku-values> --renku-namespace {{ .Release.Namespace }}
+
+Finally, the command for deploying the secondary notebooks service:
+$ helm upgrade --install {{ .Release.Namespace }}-tmp-notebooks --namespace {{ .Release.Namespace }}-tmp -f ./notebooks-tmp-values.yaml --timeout 1800  ./renku-notebooks
+{{ end }}

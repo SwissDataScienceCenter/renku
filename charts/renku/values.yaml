@@ -83,6 +83,20 @@ global:
       dataset:
   ## Set to true if using https
   useHTTPS: false
+  anonymousSessions:
+    ## Set to true to enable anonymous sessions through
+    ## a secondary Jupyterhub instance
+    enabled: false
+    ## Set the postgres password for you secondary JH deployment
+    ## or force the (re)generation of it on helm upgrade.
+    postgresPassword:
+      value:
+      overwriteOnHelmUpgrade: false
+    ## Set to false to avoid auotmatically creating the secondary
+    ## k8s namespace for the tmp notebooks-service deployment. This
+    ## can be necessary to avoid permission problems in renku.dev.ch
+    ## deployments.
+    autoCreateTmpNamespace: true
 
 ## Ingress configuration
 ## See: https://kubernetes.io/docs/concepts/services-networking/ingress/
@@ -575,13 +589,14 @@ notebooks:
     # rbac:
     #   enabled: true
     ## Set the notebooks service API token
-    # hub:
-    #   services:
+    hub:
+      services:
         # notebooks:
         #   api_token: notebookstoken
 
         ## define the client ID and secret for the gateway
-        # gateway:
+        gateway:
+          oauth_no_confirm: true
         #  oauth_client_id: gateway
         #  apiToken: # use `openssl rand -hex 32`
         #  oauth_redirect_uri: http://<gateway>/api/auth/jupyterhub/token

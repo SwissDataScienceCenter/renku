@@ -5,6 +5,12 @@ Please follow this convention when adding a new row
 * `<type: NEW|EDIT|DELETE> - *<resource name>*: <details>`
 
 ----
+## Changes on top of Renku 0.6.1
+Interactive sessions for logged-out users are now possible, see
+[the docs](https://renku.readthedocs.io/en/latest/admin/index.html#enabling-notebooks-for-anonymous-users).
+* NEW - *global.anonymousSessions.enabled*: set to true to turn on notebook sessions
+for logged out users.
+* NEW - *global.anonymousSessions.postgresPassword.overwriteOnHelmUpgrade*: set to `true` when upgrading an existing deployment, then back to `false` (default value).
 
 ## Changes on top of Renku 0.5.2
 * NEW - *ui.sentry*: added Sentry information for logging runtime exceptions
