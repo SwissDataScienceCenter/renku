@@ -12,7 +12,7 @@ User Documentation
    Collaborating <collaboration>
    Knowledge Graph <knowledge-graph>
    Lineage <lineage>
-   Advanced Interfaces <advanced_interfaces>
+   Interactive Environments <interactive_environments>
    Autosave in JupyterLab <autosave>
    Document your project <how_to_documentation>
    Git tips <git_tips>

@@ -1,7 +1,7 @@
 .. _courses:
 
-Renkulab as an Educational Platform
-===================================
+Renkulab for Teaching Courses
+=============================
 
 One of the bottlenecks in teaching analysis and programming skills is that often
 a large portion of the session is spent installing software. A few reasons for this
@@ -26,7 +26,7 @@ by adding and modifying code, extra software dependencies, etc., which they can
 then save (by ``git commit`` & ``git push``) back to Renkulab.
 
 FAQ
-===
+---
 
 Privacy & Group Settings: If I create a project on the public instance of Renkulab, who will be able to access it?
 
