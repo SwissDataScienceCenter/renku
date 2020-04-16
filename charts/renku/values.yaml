@@ -92,7 +92,7 @@ global:
     postgresPassword:
       value:
       overwriteOnHelmUpgrade: false
-    ## Set to false to avoid auotmatically creating the secondary
+    ## Set to false to avoid automatically creating the secondary
     ## k8s namespace for the tmp notebooks-service deployment. This
     ## can be necessary to avoid permission problems in SDSC dev setups, 
     ## other than that it should not be necessary to touch this setting. 
