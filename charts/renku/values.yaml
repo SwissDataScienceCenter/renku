@@ -94,7 +94,7 @@ global:
       overwriteOnHelmUpgrade: false
     ## Set to false to avoid auotmatically creating the secondary
     ## k8s namespace for the tmp notebooks-service deployment. This
-    ## can be necessary to avoid permission problems in renku.dev.ch
+    ## can be necessary to avoid permission problems in dev.renku.ch
     ## deployments.
     autoCreateTmpNamespace: true
 
