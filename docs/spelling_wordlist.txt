@@ -87,6 +87,7 @@ OpenID
 papermill
 parameterizable
 parametrized
+pipenv
 Postgresql
 powerline
 pre

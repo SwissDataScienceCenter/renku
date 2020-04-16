@@ -122,42 +122,15 @@ For instance, make a user admin on GitLab.
 3. modify any users you want to modify (e.g. to make them admin)
 4. turn the automatic redirect back on
 
-Enabling notebooks for anonymous users
---------------------------------------
+5. (Optional) Notebooks for anonymous users
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Logged-out users can be given the permission to launch interactive sessions from public notebooks. This feature is
+turned off by default. For details on how to enable this feature, see the dedicated section.
 
-Interactive sessions launched from public notebooks can be made available to
-logged-out users. However, this feature is deactivated by default. In order
-to activate it, you need a secondary deployment of the renku-notebooks chart
-(including a secondary Jupyterhub as a dependency) to handle the anonymous
-("temporary") sessions.
+.. toctree::
+   :maxdepth: 1
 
-1. Set :code:`global.anonymousSessions.enabled: true` in your values.yaml file. If you are
-   updating an existing deployment you have to set :code:`global.anonymousSessions.postgresPassword.overwriteOnHelmUpgrade: true`
-   for the upgrade and then back to `false` for upcoming deployments.
-
-2. Deploy renkulab (or update your existing deployment) just as you would otherwise.
-
-3. Copy a necessary secret from your primary to your secondary namespace (the exact command
-   should have been rendered and displayed after a successful deployment in the previous step:
-
-.. code-block:: bash
-
-   kubectl get secret renku-jupyterhub-tmp-postgres -n <primary-namespace> -o yaml | grep -v '^\s*namespace:\s' | kubectl apply -n <secondary-namespace> -f -
-
-4. Now change to the :code:`helm-chart` folder of the :code:`renku-notebooks` repository and use the `./make-values.py <https://github.com/SwissDataScienceCenter/renku-notebooks/blob/master/helm-chart/make-values.py>`_
-   script to create a values file for your secondary notebooks deployment:
-
-.. code-block:: bash
-
-   pipenv run ./make-values-tmp.py  --values-file <renku-values> --renku-namespace <primary-namespace>
-
-5. From :code:`renku-notebooks/helm-charts` deploy the secondary renku-notebooks deployment:
-
-.. code-block:: bash
-
-   helm upgrade --install <some-unique-release-name> --namespace <secondary-namespace> -f <notebooks-tmp-values> --timeout 1800  ./renku-notebooks
-
-Note that the release name has to be unique in the entire cluster. For example, you might want to include the target namespace in the release name.
+   Enabling notebooks for anonymous users <anonymous-sessions>
 
 Verifying Renku
 ------------------
