@@ -92,10 +92,9 @@ global:
     postgresPassword:
       value:
       overwriteOnHelmUpgrade: false
-    ## Set to false to avoid auotmatically creating the secondary
+    ## Set to false to avoid automatically creating the secondary
     ## k8s namespace for the tmp notebooks-service deployment. This
-    ## can be necessary to avoid permission problems in renku.dev.ch
-    ## deployments.
+    ## can be necessary to avoid kubernetes RBAC problems. 
     autoCreateTmpNamespace: true
 
 ## Ingress configuration
