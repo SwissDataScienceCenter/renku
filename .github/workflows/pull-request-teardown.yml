@@ -17,9 +17,9 @@ jobs:
         kubectl: 1.16.2
         helm: 2.16.1
         command: |
-          export BRANCH_HASH=$(echo "$GITHUB_HEAD_REF" | md5sum)
-          echo $BRANCH_HASH
-          export RENKU_RELEASE="ci-${BRANCH_HASH:0:7}-renku"
+          export PR_NUMBER=$(echo $GITHUB_REF | awk 'BEGIN { FS = "/" } ; { print $3 }')
+          echo $PR_NUMBER
+          export RENKU_RELEASE="ci-${PR_NUMBER}-renku"
           helm init --client-only
           echo "$RENKUBOT_KUBECONFIG" > renkubot-kube.config
           helm delete --purge $RENKU_RELEASE
@@ -28,9 +28,9 @@ jobs:
         GITLAB_TOKEN: ${{ secrets.GITLAB_TOKEN }}
       run: |
         set -x
-        export BRANCH_HASH=$(echo "$GITHUB_HEAD_REF" | md5sum)
-        echo $BRANCH_HASH
-        export RENKU_RELEASE="ci-${BRANCH_HASH:0:7}-renku"
+        export PR_NUMBER=$(echo $GITHUB_REF | awk 'BEGIN { FS = "/" } ; { print $3 }')
+        echo $PR_NUMBER
+        export RENKU_RELEASE="ci-${PR_NUMBER}-renku"
         apps=$(curl -s https://dev.renku.ch/gitlab/api/v4/applications -H "private-token: ${GITLAB_TOKEN}" | jq -r ".[] | select(.application_name == \"${RENKU_RELEASE}\") | .id")
         for app in $apps
         do
