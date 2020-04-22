@@ -48,7 +48,6 @@ helm repo add renku https://swissdatasciencecenter.github.io/helm-charts/
 helm dep update charts/renku
 
 git add charts/renku/requirements.yaml
-git add charts/renku/requirements.lock
 git commit -m "chore: updating ${CHART_NAME} version to ${CHART_VERSION}"
 git push origin auto-update/${CHART_NAME}-${CHART_VERSION}
 
