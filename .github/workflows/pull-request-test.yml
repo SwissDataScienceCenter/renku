@@ -48,9 +48,9 @@ jobs:
     - uses: actions/checkout@v2
     - name: Configure environment
       run: |
-        BRANCH_HASH=$(echo "$GITHUB_HEAD_REF" | md5sum)
-        echo "::set-env name=RENKU_RELEASE::ci-${BRANCH_HASH:0:7}-renku"
-        echo "::set-env name=RENKU_NAMESPACE::ci-${BRANCH_HASH:0:7}-renku"
+        PR_NUMBER=$(echo $GITHUB_REF | awk 'BEGIN { FS = "/" } ; { print $3 }')
+        echo "::set-env name=RENKU_RELEASE::ci-${PR_NUMBER}-renku"
+        echo "::set-env name=RENKU_NAMESPACE::ci-${PR_NUMBER}-renku"
     - name: Configure GitLab application
       env:
         GITLAB_TOKEN: ${{ secrets.GITLAB_TOKEN }}
@@ -113,9 +113,9 @@ jobs:
       env:
         RENKU_BOT_DEV_PASSWORD: ${{ secrets.RENKU_BOT_DEV_PASSWORD }}
       run: |
-        export BRANCH_HASH=$(echo "$GITHUB_HEAD_REF" | md5sum)
-        echo $BRANCH_HASH
-        export RENKU_RELEASE="ci-${BRANCH_HASH:0:7}-renku"
+        export PR_NUMBER=$(echo $GITHUB_REF | awk 'BEGIN { FS = "/" } ; { print $3 }')
+        echo $PR_NUMBER
+        export RENKU_RELEASE="ci-${PR_NUMBER}-renku"
         cd tests
         docker-compose run -e RENKU_TEST_URL=https://${RENKU_RELEASE}.dev.renku.ch \
                            -e RENKU_TEST_FULL_NAME="Renku Bot" \
