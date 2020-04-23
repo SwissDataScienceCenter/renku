@@ -4,6 +4,15 @@ on:
     types: [closed]
 
 jobs:
+  github-env:
+    runs-on: ubuntu-latest
+    steps:
+    - name: get environment
+      run: env
+    - name: Dump GitHub context
+      env:
+        GITHUB_CONTEXT: ${{ toJson(github) }}
+      run: echo "$GITHUB_CONTEXT"
   cleanup:
     if: github.event.action == 'closed'
     runs-on: ubuntu-latest
