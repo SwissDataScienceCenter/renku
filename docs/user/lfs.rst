@@ -35,6 +35,24 @@ JupyterLab sessions by default. As a result, you do need to be aware of dealing
 with data stored in LFS if you want to use it efficiently in your work with
 renku.
 
+Renku LFS configuration
+-----------------------
+Renku by default only stores files larger than 100kb in LFS, to prevent
+littering LFS with files. This limit can be changed by running:
+
+.. code-block:: console
+
+    $ renku config lfs_threshold <size>
+
+where ``<size>`` is a file size formatted like ``10b``, ``100kb``, ``0.5mb`` or
+``10gb``.
+
+Additionally, paths can be excluded from LFS storage by renku commands by
+editing the ``.renkulfsignore`` file in the project root folder. This file
+follows ``.gitignore`` `convention <https://git-scm.com/docs/gitignore#_pattern_format>`
+Files matching a pattern in ``.renkulfsignore`` will never be added to git LFS
+by a renku command like ``renku run`` or ``renku dataset add``.
+
 Useful git LFS commands
 -----------------------
 
