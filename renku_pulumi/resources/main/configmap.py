@@ -187,6 +187,7 @@ def configmap(global_config):
     template_values = {
         "global": {**global_config["global"], **global_config},
         "ui": ui_values,
+        "notebooks": global_config['notebooks']
     }
 
     data = {
@@ -196,8 +197,7 @@ def configmap(global_config):
     gitlab_enabled = config.get_bool("gitlab_enabled")
     if gitlab_enabled:
         data["init-gitlab-db.sh"] = GITLAB_DB_INIT_SCRIPT.render(**template_values)
-        if "sudoToken" in global_config["global"]["gitlab"]:
-            data["init-gitlab.sh"] = GITLAB_INIT_SCRIPT.render(**template_values)
+        data["init-gitlab.sh"] = GITLAB_INIT_SCRIPT.render(**template_values)
 
     if config.get_bool("keycloak_enabled"):
         data["init-keycloak-db.sh"] = KEYCLOAK_INIT_SCRIPT.render(**template_values)

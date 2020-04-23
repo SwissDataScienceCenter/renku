@@ -6,6 +6,10 @@ Expand the name of the chart.
 {{- default .Chart.Name .Values.nameOverride | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 
+{{- define "gitlab.fullname" -}}
+{{- printf "%s-%s" .Release.Name "gitlab" | replace "+" "_" | trunc 63 | trimSuffix "-" -}}
+{{- end -}}
+
 {{/*
 Create chart name and version as used by the chart label.
 */}}
@@ -22,3 +26,14 @@ Hack for calling templates in a fake scope (until this is solved https://github.
 {{- $template := index . 2 }}
 {{- include $template (dict "Chart" (dict "Name" $subchart) "Values" (index $dot.Values $subchart) "Release" $dot.Release "Capabilities" $dot.Capabilities) }}
 {{- end }}
+
+{{/*
+Define http scheme
+*/}}
+{{- define "http" -}}
+{{- if .Values.global.useHTTPS -}}
+https
+{{- else -}}
+http
+{{- end -}}
+{{- end -}}

@@ -23,7 +23,7 @@ default_chart_values = {
 
 
 def renku_graph(
-    config, global_config, chart_reqs, postgres_secret, token_secret, postgres_chart
+    config, global_config, chart_reqs, postgres_secret, token_secret, postgres_chart, dependencies=[]
 ):
     graph_config = pulumi.Config("graph")
     values = graph_config.get_object("values") or {}
@@ -88,10 +88,12 @@ def renku_graph(
 
     global_config["graph"] = values
 
-    dependencies = [postgres_secret, token_secret]
+    dependencies = [postgres_secret, token_secret] + dependencies
 
     if postgres_chart:
         dependencies.append(postgres_chart)
+
+    dependencies = [d for d in dependencies if d]
 
     chart_repo = chart_reqs.get("graph", "repository")
     if chart_repo.startswith("http"):

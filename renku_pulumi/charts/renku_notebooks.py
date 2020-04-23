@@ -218,6 +218,7 @@ def renku_notebooks(
 
     dependencies = [d for d in dependencies if d]
 
+    global_config['notebooks'] = values
     values["global"] = global_config["global"]
 
     chart_repo = chart_reqs.get("notebooks", "repository")

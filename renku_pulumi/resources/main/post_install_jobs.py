@@ -1,9 +1,10 @@
 import pulumi
+from pulumi.resource import CustomTimeouts
 
 from pulumi_kubernetes.batch.v1 import Job
 
 
-def gitlab_postinstall_job(global_config, postgres_secret, dependencies=[]):
+def gitlab_postinstall_job(global_config, cfg_map, renku_secret, postgres_secret, gitlab_chart, dependencies=[]):
     config = pulumi.Config()
 
     k8s_config = pulumi.Config("kubernetes")
@@ -11,9 +12,13 @@ def gitlab_postinstall_job(global_config, postgres_secret, dependencies=[]):
     stack = pulumi.get_stack()
     project = pulumi.get_project()
 
-    renku_name = "{}-{}".format(stack, project)
+    renku_name = cfg_map.metadata['name']
 
     name = "{}-post-install-gitlab".format(stack)
+
+    # force dependency for helm chart, see https://github.com/pulumi/pulumi-kubernetes/issues/861 for issue
+    gitlab_deployment = gitlab_chart.resources.apply(
+        lambda r: next(s for k, s in r.items() if k.startswith("apps/v1beta2/Deployment")))
 
     return Job(
         name,
@@ -23,6 +28,7 @@ def gitlab_postinstall_job(global_config, postgres_secret, dependencies=[]):
                 "metadata": {
                     "name": name,
                     "labels": {"app": pulumi.get_project(), "release": stack},
+                    "dummy_dependency": gitlab_deployment.metadata['name'],
                 },
                 "spec": {
                     "restartPolicy": "Never",
@@ -68,7 +74,7 @@ def gitlab_postinstall_job(global_config, postgres_secret, dependencies=[]):
                                     "name": "JUPYTERHUB_AUTH_GITLAB_CLIENT_SECRET",
                                     "valueFrom": {
                                         "secretKeyRef": {
-                                            "name": renku_name,
+                                            "name": renku_secret.metadata['name'],
                                             "key": "jupyterhub-auth-gitlab-client-secret",
                                         }
                                     },
@@ -77,7 +83,7 @@ def gitlab_postinstall_job(global_config, postgres_secret, dependencies=[]):
                                     "name": "GATEWAY_GITLAB_CLIENT_SECRET",
                                     "valueFrom": {
                                         "secretKeyRef": {
-                                            "name": renku_name,
+                                            "name": renku_secret.metadata['name'],
                                             "key": "gateway-gitlab-client-secret",
                                         }
                                     },
@@ -86,10 +92,10 @@ def gitlab_postinstall_job(global_config, postgres_secret, dependencies=[]):
                         }
                     ],
                     "volumes": [{"name": "init", "configMap": {"name": renku_name}}],
-                },
+                }
             }
         },
-        opts=pulumi.ResourceOptions(depends_on=dependencies),
+        opts=pulumi.ResourceOptions(depends_on=dependencies, custom_timeouts=CustomTimeouts(create="30m")),
     )
 
 
@@ -189,7 +195,7 @@ def keycloak_postinstall_job(global_config, keycloak_user_secret, dependencies=[
 
 
 def postgres_postinstall_job(
-    global_config, graph_db_secret, graph_token_secret, cfg_map, dependencies=[]
+    global_config, graph_db_secret, graph_token_secret, cfg_map, gitlab_postgres_secret=None, dependencies=[]
 ):
     config = pulumi.Config()
 
@@ -251,7 +257,6 @@ def postgres_postinstall_job(
     if config.get_bool("gitlab_enabled"):
         volume_mounts.extend(
             [
-                {"name": "gitlab-sudo", "mountPath": "/gitlab-sudo", "readOnly": True},
                 {
                     "name": "gitlab-postgres",
                     "mountPath": "/gitlab-postgres",
@@ -263,12 +268,8 @@ def postgres_postinstall_job(
         volumes.extend(
             [
                 {
-                    "name": "gitlab-sudo",
-                    "secret": {"secretName": "{}-gitlab-sudo".format(renku_name)},
-                },
-                {
                     "name": "gitlab-postgres",
-                    "secret": {"secretName": "{}-gitlab-postgres".format(renku_name)},
+                    "secret": {"secretName": gitlab_postgres_secret.metadata["name"]}
                 },
             ]
         )

@@ -33,6 +33,7 @@ from configparser import ConfigParser
 default_global_values = {
     "tests": {"image": {"repository": "renku/tests", "tag": "latest"}},
     "gateway": {},
+    "gitlab": {},
     "graph": {
         "dbEventLog": {
             "postgresPassword": {"value": None, "overwriteOnHelmUpgrade": False},
@@ -65,6 +66,10 @@ def get_global_values(config):
             "gateway_gitlab_client_secret", byte_length=32
         ).hex
 
+        default_global_values["gitlab"]["clientSecret"] = RandomId(
+            "gitlab_client_secret", byte_length=32
+        ).hex
+
         baseurl = config.get("baseurl")
         k8s_config = pulumi.Config("kubernetes")
 
@@ -74,6 +79,7 @@ def get_global_values(config):
             )
 
     default_global_values["graph"]["jena"]["dataset"] = stack
+    default_global_values["gitlab"]["fullname"] = "{}-gitlab".format(stack)
 
     global_values = always_merger.merge(default_global_values, global_values)
 
@@ -94,65 +100,72 @@ def deploy():
     global_config["http"] = "https" if global_values["useHTTPS"] else "http"
     global_config["global"] = global_values
 
-    if config.require_bool("gitlab_enabled"):
-        gps, gss = gitlab_secrets()
-        g = gitlab(config, global_config, chart_reqs)
-        gitlab_postinstall_job(global_config, gps, [g, gss])
-
-    renku_secret(global_config)
+    rs = renku_secret(global_config)
 
     # ui
     ui = renku_ui(config, global_config, chart_reqs)
 
-    cfg_map = configmap(global_config)
-
-    p = None
-    pg_job = None
+    postgres = None
+    postgres_job = None
     graph = None
-    kc_job = None
+    keycloak_chart = None
+    gitlab_chart = None
+    gitlab_job = None
+    gitlab_postgres_secret = None
 
-    pg, tok = graph_secrets()
+    graph_postgres, graph_token = graph_secrets()
 
     if config.require_bool("postgres_enabled"):
-        p = postgresql(config, global_config, chart_reqs)
+        postgres = postgresql(config, global_config, chart_reqs)
 
-    if config.require_bool("graph_enabled"):
-        graph = renku_graph(config, global_config, chart_reqs, pg, tok, p)
+    jupyterhub_secret = jupyterhub_secrets()
+    notebooks = renku_notebooks(
+        config, global_config, chart_reqs, jupyterhub_secret, postgres, dependencies=[postgres_job, gitlab_job]
+    )
 
-    pg_job = postgres_postinstall_job(global_config, pg, tok, cfg_map, [p])
+    config_map = configmap(global_config)
+
+    if config.require_bool("gitlab_enabled"):
+        gitlab_postgres_secret = gitlab_secrets()
+
+    postgres_job = postgres_postinstall_job(global_config, graph_postgres, graph_token, config_map, gitlab_postgres_secret=gitlab_postgres_secret, dependencies=[postgres, gitlab_postgres_secret])
 
     if config.require_bool("keycloak_enabled"):
-        kp, ks, kus = keycloak_secrets(global_config)
-        keycloak_chart = keycloak(config, global_config, chart_reqs, p, [pg_job])
+        keycloak_postgres, keycloak_password, keycloak_users = keycloak_secrets(global_config)
+        keycloak_chart = keycloak(config, global_config, chart_reqs, postgres, [postgres_job])
+
+    if config.require_bool("gitlab_enabled"):
+        gitlab_chart = gitlab(config, global_config, chart_reqs, postgres, gitlab_postgres_secret, [postgres_job, keycloak_chart])
+        gitlab_job = gitlab_postinstall_job(global_config, config_map, rs, gitlab_postgres_secret, gitlab_chart)
+
+    if config.require_bool("graph_enabled"):
+        graph = renku_graph(config, global_config, chart_reqs, graph_postgres, graph_token, postgres, dependencies=[gitlab_job])
 
     if config.require_bool("minio_enabled"):
         minio(config, global_config)
 
     gateway_values = gateway.gateway_values(global_config)
 
-    js = jupyterhub_secrets()
-    nb = renku_notebooks(
-        config, global_config, chart_reqs, js, p, dependencies=[pg_job]
-    )
-
     # gateway
     redis_chart = redis(global_config, chart_reqs)
-    sc = gateway.secret(global_config, gateway_values)
-    cfg = gateway.configmaps(global_config, gateway_values)
+    gateway_secret = gateway.secret(global_config, gateway_values)
+    gateway_config = gateway.configmaps(global_config, gateway_values)
     gateway.ingress(global_config, gateway_values)
-    gd = gateway.gateway_deployment(global_config, gateway_values, sc, cfg)
-    gs = gateway.gateway_service(global_config, gateway_values, sc, cfg, gd)
+    gateway_deployment = gateway.gateway_deployment(global_config, gateway_values, gateway_secret, gateway_config)
+    gateway.gateway_service(global_config, gateway_values, gateway_secret, gateway_config, gateway_deployment)
 
-    ing = ingress(global_config, dependencies=[gd, nb, ui, graph, keycloak_chart])
-    gad = gateway.gateway_auth_deployment(
-        global_config, gateway_values, sc, cfg, redis_chart, dependencies=[ing]
+    renku_ingress = ingress(global_config, dependencies=[gateway_deployment, notebooks, ui, graph, keycloak_chart, gitlab_job])
+    gateway_auth = gateway.gateway_auth_deployment(
+        global_config, gateway_values, gateway_secret, gateway_config, redis_chart, dependencies=[renku_ingress]
     )
-    gas = gateway.gateway_auth_service(global_config, gateway_values, sc, cfg, gad)
+    gateway.gateway_auth_service(global_config, gateway_values, gateway_secret, gateway_config, gateway_auth)
 
     if config.require_bool("keycloak_enabled"):
-        kc_job = keycloak_postinstall_job(
-            global_config, kus, [keycloak_chart, kp, ks, ing]
+        keycloak_postinstall_job(
+            global_config, keycloak_users, [keycloak_chart, keycloak_postgres, keycloak_password, renku_ingress, gitlab_job]
         )
+
+    pulumi.export('global_config', pulumi.Output.secret(global_config))
 
 
 if __name__ == "__main__":

@@ -36,7 +36,7 @@ spec:
         - name: PGPASSWORD
           valueFrom:
             secretKeyRef:
-              name: {{ template "gitlab.fullname" . }}-postgres
+              name: {{ .Values.postgresSecret }}
               key: gitlab-postgres-password
         - name: GITLAB_CLIENT_SECRET
           valueFrom:

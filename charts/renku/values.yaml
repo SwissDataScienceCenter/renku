@@ -127,7 +127,7 @@ keycloak:
   initRealm:
     image:
       repository: renku/init-realm
-      tag: 'latest'
+      tag: '0.5.1-dev-pulumi'
 
   keycloak:
 
@@ -616,12 +616,12 @@ notebooks:
 apispec:
   image:
     repository: renku/apispec
-    tag: 'latest'
+    tag: '0.5.1-dev-pulumi'
 
 tests:
   image:
     repository: renku/tests
-    tag: 'latest'
+    tag: '0.5.1-dev-pulumi'
   ## User accounts for running `helm test`
   ## Replace passwords with random strings in a production setup
   #users_json:

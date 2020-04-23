@@ -77,10 +77,9 @@ default_chart_values = {
         "existingSecret": "keycloak-password-secret",
         "existingSecretKey": "keycloak-password",
         "service": {"type": "ClusterIP", "port": 80},
-        "persistence": {},
         "test": {"enabled": False},
-        "livenessProbe": {"initialDelaySeconds": 180},
-        "readinessProbe": {"initialDelaySeconds": 120},
+        "livenessProbe": {"initialDelaySeconds": 80},
+        "readinessProbe": {"initialDelaySeconds": 60},
         "extraInitContainers": """- name: theme-provider
   image: renku/keycloak-theme:v1.2
   imagePullPolicy: IfNotPresent

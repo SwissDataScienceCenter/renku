@@ -21,7 +21,7 @@ def gitlab_secrets():
             "gitlab_db_password", length=64, special=False, number=True, upper=True
         )
 
-    gitlab_postgres_secret = Secret(
+    return Secret(
         "{}-gitlab-postgres".format(pulumi.get_stack()),
         metadata={
             "labels": {"app": pulumi.get_project(), "release": pulumi.get_stack()}
@@ -33,28 +33,6 @@ def gitlab_secrets():
             ).result.apply(lambda p: b64encode(p))
         },
     )
-
-    gitlab_sudo_token = config.get("gitlab_sudo_token")
-
-    if not gitlab_sudo_token:
-        gitlab_sudo_token = RandomPassword(
-            "gitlab_sudo_token", length=64, special=False, number=True, upper=True
-        )
-
-    gitlab_sudo_secret = Secret(
-        "{}-gitlab-sudo".format(pulumi.get_stack()),
-        metadata={
-            "labels": {"app": pulumi.get_project(), "release": pulumi.get_stack()}
-        },
-        type="Opaque",
-        data={
-            "gitlab-sudo-token": Output.from_input(gitlab_sudo_token).result.apply(
-                lambda p: b64encode(p)
-            )
-        },
-    )
-
-    return gitlab_postgres_secret, gitlab_sudo_secret
 
 
 def graph_secrets():
