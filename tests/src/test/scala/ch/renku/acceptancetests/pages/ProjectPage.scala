@@ -123,7 +123,7 @@ class ProjectPage(projectDetails: ProjectDetails, userCredentials: UserCredentia
       }
 
       def content(implicit webDriver: WebDriver): WebElement = eventually {
-        find(cssSelector("div.card-body h1 + p")) getOrElse fail("Files -> Info content not found")
+        find(cssSelector("div.card-body h1 + h2 + p")) getOrElse fail("Files -> Info content not found")
       }
     }
 

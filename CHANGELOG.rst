@@ -1,5 +1,23 @@
 .. _changelog:
 
+0.6.2
+-----
+
+New features
+~~~~~~~~~~~~
+
+- Logged-in users without developer access can launch interactive sessions from a project.
+
+- Interactive sessions can be enabled for logged-out users. Please see the
+  `documentation <https://renku.readthedocs.io/en/latest/admin/index.html#enabling-notebooks-for-anonymous-users>`__ for details.
+
+Upgrading from 0.6.1
+~~~~~~~~~~~~~~~~~~~~
+
+* If you want to enable interactive sessions for anonymous users, see the
+  `values changelog <https://github.com/SwissDataScienceCenter/renku/blob/master/charts/values.yaml.changelog.md>`__ file.
+
+
 0.6.1
 -----
 
