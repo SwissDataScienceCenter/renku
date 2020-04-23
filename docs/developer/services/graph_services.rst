@@ -55,11 +55,18 @@ An endpoint that returns information about processing progress of events for a s
 
 .. uml:: ../../_static/uml/graph-events-status-sequence.uml
 
+**Subscription to unprocessed Commit Events**
+
+A process initiated and maintained by Triples Generator instances
+so Event Log can send them Events requiring generation of triples.
+
+.. uml:: ../../_static/uml/graph-commit-events-subscription-sequence.uml
+
 **Commit Events to RDF Triples**
 
 A process responsible for translating unprocessed Commit Events from the Event Log
 to RDF Triples in the RDF Store. This process runs continuously
-by polling the Event Log for Commit Events.
+by polling the Event Log for unprocessed Commit Events.
 
 .. uml:: ../../_static/uml/graph-commit-event-sequence.uml
 

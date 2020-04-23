@@ -2,22 +2,28 @@
     hide footbox
     skinparam shadowing false
 
-    database "Event\nLog" as Log
-    participant "Triples\nGenerator" as Triples
-    participant "Tokens\nRepository" as Tokens
+    database "Event\nLog DB" as ELDB
+    participant "Event\nLog" as EL
+    participant "Triples\nGenerator" as TG
+    participant "Tokens\nRepository" as TR
     database "RDF Store" as Jena
 
     == Commit Event to RDF Triples ==
-    Triples->Log: pick-up not processed Commit Event and mark it as PROCESSING
-    activate Triples
-    Triples->Tokens: GET /projects/:id/tokens
-    activate Tokens
-    Tokens->Triples: OK (200) with the Access Token or NOT_FOUND (404)
-    deactivate Tokens
-    Triples->Triples: Run '//renku log//' to create RDF Triples
-    Triples->Triples: Parse RDF Triples
-    Triples->Jena: Store RDF Triples
-    Triples->Log: Mark Commit Event as TRIPLES_STORE
-    deactivate Triples
+    EL->ELDB: pops Commit Event having\nstatus NEW or RECOVERABLE_FAILURE\nand mark it as PROCESSING
+    activate EL
+    EL->TG: POST /events
+    activate TG
+    TG->EL: ACCEPTED (202)\nor TOO_MANY_REQUESTS (429)
+    deactivate EL
+    TG->TR: GET /projects/:id/tokens
+    activate TR
+    TR->TG: OK (200) with the Access Token\nor NOT_FOUND (404)
+    deactivate TR
+    TG->TG: Run '//renku log//' to create RDF Triples
+    TG->TG: Parse RDF Triples
+    TG->TG: Curate RFG Triples
+    TG->Jena: Store RDF Triples
+    TG->EL: PATCH /events/:id/projects/:id/status\nto change Event's status to\nTRIPLES_STORE, RECOVERABLE_FAILURE\nor NON_RECOVERABLE_FAILURE
+    deactivate TR
 
     @enduml

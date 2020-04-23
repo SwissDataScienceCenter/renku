@@ -1,0 +1,14 @@
+    @startuml
+    hide footbox
+    skinparam shadowing false
+
+    participant "Triples\nGenerator" as TG
+    participant "Event\nLog" as EL
+
+    == Subscription for unprocessed Commit Events in the Event Log ==
+    TG->EL: POST /events/subscriptions?status=READY
+    activate EL
+    EL->TG: ACCEPTED (202)
+    deactivate EL
+
+    @enduml

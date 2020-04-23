@@ -5,16 +5,16 @@
     participant "Webhook\nService" as Webhook
     participant GitLab
     participant "Tokens\nRepository" as Tokens
-    database "Event\nLog" as Log
+    participant "Event\nLog" as Log
     participant "Triples\nGenerator" as Triples
     database "RDF Store" as Jena
 
     == Missed Events Synchronisation Job ==
     Webhook->Webhook: Trigger Events Synchronisation process
     activate Webhook
-    Webhook->Log: find the latest Events of all the projects
+    Webhook->Log: GET /events/latest\nto find the latest Events of all the projects
     activate Log
-    Log->Webhook: a list of the latest Events of all the projects
+    Log->Webhook: OK (200) with a list of the latest Events of all the projects
     deactivate Log
     group Repeat for all the found projects
     Webhook->Tokens: GET /projects/:id/tokens
