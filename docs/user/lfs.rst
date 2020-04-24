@@ -37,8 +37,9 @@ renku.
 
 Renku LFS configuration
 -----------------------
-Renku by default only stores files larger than 100kb in LFS, to prevent
-littering LFS with files. This limit can be changed by running:
+Renku by default stores all files larger than 100kb in LFS to prevent
+slowing down git (and thus ``renku``) with large files. This limit can be
+changed by running:
 
 .. code-block:: console
 
