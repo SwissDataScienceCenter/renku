@@ -10,6 +10,11 @@ import eu.timepit.refined.collection.NonEmpty
 
 object projects {
 
+  final case class ProjectIdentifier(
+    namespace: String Refined NonEmpty,
+    slug: String Refined NonEmpty
+  )
+
   final case class ProjectDetails(
       title:       String Refined NonEmpty,
       description: String Refined NonEmpty,
