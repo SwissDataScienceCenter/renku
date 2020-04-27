@@ -2,6 +2,7 @@ package ch.renku.acceptancetests.pages
 
 import ch.renku.acceptancetests.model.projects.ProjectDetails
 import ch.renku.acceptancetests.model.projects.ProjectDetails._
+import ch.renku.acceptancetests.model.projects.ProjectIdentifier
 import ch.renku.acceptancetests.model.users.UserCredentials
 import ch.renku.acceptancetests.pages.Page.{Path, Title}
 import ch.renku.acceptancetests.tooling.AcceptanceSpec
@@ -22,21 +23,23 @@ import org.scalactic.source
 
 object ProjectPage {
   def apply()(implicit projectDetails: ProjectDetails, userCredentials: UserCredentials): ProjectPage =
-    new ProjectPage(projectDetails, userCredentials)
+    new ProjectPage(projectDetails.title.toPathSegment, userCredentials.userNamespace)
+  def apply(projectId: ProjectIdentifier): ProjectPage =
+    new ProjectPage(projectId.slug, projectId.namespace)
 }
 
-class ProjectPage(projectDetails: ProjectDetails, userCredentials: UserCredentials) extends RenkuPage with TopBar {
+class ProjectPage(projectSlug: String, namespace: String) extends RenkuPage with TopBar {
 
   override val title: Title = "Renku"
   override val path: Path = Refined.unsafeApply(
-    s"/projects/${userCredentials.userNamespace}/${projectDetails.title.toPathSegment}"
+    s"/projects/${namespace}/${projectSlug}"
   )
 
   override def pageReadyElement(implicit webDriver: WebDriver): Option[WebElement] = Some(Overview.tab)
 
   def viewInGitLab(implicit webDriver: WebDriver): WebElement = eventually {
     find(
-      cssSelector(s"a[href*='/gitlab/${userCredentials.userNamespace}/${projectDetails.title.toPathSegment}']")
+      cssSelector(s"a[href*='/gitlab/${namespace}/${projectSlug}']")
     ) getOrElse fail("View in GitLab button not found")
   }
 
@@ -229,7 +232,7 @@ class ProjectPage(projectDetails: ProjectDetails, userCredentials: UserCredentia
       def connectButton(implicit webDriver: WebDriver): WebElement = eventually {
         find(
           cssSelector(
-            s"a[href*='/jupyterhub/user/${userCredentials.userNamespace}/${projectDetails.title.toPathSegment}-']"
+            s"a[href*='/jupyterhub/user/${namespace}/${projectSlug}-']"
           )
         ) getOrElse fail(
           "First row Interactive Environment Connect button not found"
