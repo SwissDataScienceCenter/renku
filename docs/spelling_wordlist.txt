@@ -25,9 +25,11 @@ Cookiecutter
 coopetition
 CountFlights
 cronjob
+Cuda
 customizable
 dataset
 datasets
+Dataverse
 deployer
 discoverable
 Dockerfile

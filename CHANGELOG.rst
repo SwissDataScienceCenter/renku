@@ -29,7 +29,7 @@ Bug fixes
 Miscellaneous
 ^^^^^^^^^^^^^
 
-- A maintenance page can now be displayed for scheduled maintenances
+- A maintenance page can now be displayed for when Renkulab is undergoing an scheduled maintenance
 - Help page and dropdown contain links to Renku and Renku CLI Docs
 - Easy UI access to Gitlab, user settings and user profile
 - Python environments now include a plugin to monitor memory usage visually
