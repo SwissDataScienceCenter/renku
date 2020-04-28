@@ -51,8 +51,7 @@ Upgrading from 0.6.1
 ~~~~~~~~~~~~~~~~~~~~
 
 * If you want to enable interactive sessions for anonymous users, see the
-  `values changelog <https://github.com/SwissDataScienceCenter/renku/blob/master/charts/values.yaml.changelog.md>`__ file.
-and `anonymous sessions documentation <https://renku.readthedocs.io/en/latest/admin/anonymous-sessions.html>`__
+  `values changelog <https://github.com/SwissDataScienceCenter/renku/blob/master/charts/values.yaml.changelog.md>`__ file and `anonymous sessions documentation <https://renku.readthedocs.io/en/latest/admin/anonymous-sessions.html>`__
 
 
 0.6.1
