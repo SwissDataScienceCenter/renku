@@ -51,7 +51,8 @@ In order to run the acceptance tests, it is necessary to provide information for
 | register   | RENKU_TEST_REGISTER       | if non-empty, an register new user; has precedence over provider |
 | docsrun    | RENKU_TEST_DOCS_RUN       | if non-empty, screenshot for docs during hands-on test           |
 | extant     | RENKU_TEST_EXTANT_PROJECT | if non-empty, an existing project to use for tests               |
-
+| anon       | RENKU_TEST_ANON_PROJECT   | namespace/name for the project to test anonymously / without developer privileges: defaults to cramakri/covid-19-dashboard |
+| anonAvail  | RENKU_TEST_ANON_AVAILABLE | if true, anonymous environments will be tested. Defaults to true on dev.renku.ch, false everywhere else. |
 
 For example, the following may be run in the project's root: `sbt -Denv=https://renku-kuba.dev.renku.ch -Demail=<email> -Dusername=<username> -Dfullname='<full user name>' -Dpassword=<password> test`
 

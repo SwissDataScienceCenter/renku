@@ -179,6 +179,14 @@ class ProjectPage(projectSlug: String, namespace: String) extends RenkuPage with
       find(cssSelector(s"a[href='$path/environments/new']")) getOrElse fail("New environment link not found")
     }
 
+    def anonymousUnsupported(implicit webDriver: WebDriver): WebElement = eventually {
+      findAll(cssSelector(s"div > div > div > div > p"))
+        .find(
+          _.text == "This Renkulab deployment doesn't allow unauthenticated users to start Interactive Environments."
+        )
+        .getOrElse(fail("Unsupported environment notification not found"))
+    }
+
     def startEnvironment(implicit webDriver: WebDriver): WebElement = eventually {
       verifyImageReady
       findAll(cssSelector("button.btn.btn-primary:last-of-type"))
@@ -192,7 +200,9 @@ class ProjectPage(projectSlug: String, namespace: String) extends RenkuPage with
       }(waitUpTo(10 minutes), implicitly[source.Position])
 
     private def waitForImageToBeReady(implicit webDriver: WebDriver): Unit = {
-      find(cssSelector(".badge.badge-warning")) getOrElse fail("Image building info badges not found");
+      find(cssSelector(".badge.badge-warning")) orElse findImageReadyBadge getOrElse fail(
+        "Image building info badges not found"
+      );
       sleep(2 seconds)
       findImageReadyBadge getOrElse fail("Image not yet built")
     }
@@ -208,16 +218,31 @@ class ProjectPage(projectSlug: String, namespace: String) extends RenkuPage with
           .getOrElse(fail("Environments -> Running title not found"))
       }
 
-      def connectToJupyterLab(implicit webDriver: WebDriver, spec: AcceptanceSpec): Unit = eventually {
+      def connectToJupyterLab(implicit webDriver: WebDriver, spec: AcceptanceSpec): Unit =
+        connectToJupyterLab(s"a[href*='/jupyterhub/user/']")
+
+      def connectToAnonymousJupyterLab(implicit webDriver: WebDriver, spec: AcceptanceSpec): Unit =
+        connectToJupyterLab(s"a[href*='/jupyterhub-tmp/user/']")
+
+      def connectButton(buttonSelector: String)(implicit webDriver: WebDriver): WebElement = eventually {
+        find(
+          cssSelector(buttonSelector)
+        ) getOrElse fail(
+          "First row Interactive Environment Connect button not found"
+        )
+      }
+
+      private def connectToJupyterLab(buttonSelector:               String)(implicit webDriver: WebDriver,
+                                                              spec: AcceptanceSpec): Unit = eventually {
         import spec.{And, Then}
         And("tries to connect to JupyterLab")
-        connectButton.click
+        connectButton(buttonSelector).click
         sleep(2 seconds)
 
         // Check if we are connected to JupyterLab
         val tabs = webDriver.getWindowHandles.asScala.toArray
         webDriver.switchTo() window tabs(1)
-        if (webDriver.getCurrentUrl contains "/jupyterhub/hub/user") {
+        if (webDriver.getCurrentUrl contains "spawn-pending") {
           And("JupyterLab is not up yet")
           Then("close the window and try again later")
           // The server isn't up yet. Close the window and try again
@@ -227,16 +252,6 @@ class ProjectPage(projectSlug: String, namespace: String) extends RenkuPage with
         } else {
           webDriver.switchTo() window tabs(0)
         }
-      }
-
-      def connectButton(implicit webDriver: WebDriver): WebElement = eventually {
-        find(
-          cssSelector(
-            s"a[href*='/jupyterhub/user/${namespace}/${projectSlug}-']"
-          )
-        ) getOrElse fail(
-          "First row Interactive Environment Connect button not found"
-        )
       }
 
       def connectDotButton(implicit webDriver: WebDriver): WebElement = eventually {
