@@ -120,6 +120,8 @@ html_theme_options = {
     "extra_nav_links": {
         "renku@GitHub": "https://github.com/SwissDataScienceCenter/renku"
     },
+    "fixed_sidebar":True,
+    "show_relbars": True,
 }
 
 # Add any paths that contain custom static files (such as style sheets) here,
