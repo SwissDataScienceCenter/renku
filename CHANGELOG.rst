@@ -36,7 +36,7 @@ Miscellaneous
 - Easy UI access to GitLab projects, user settings and user profile 👤
 - Python environments now include a plugin to monitor memory usage visually 📈
 - A new Renku docker image with `Julia <https://julialang.org/>`__ is now available. 📣 To use it just replace the first line of your Dockerfile with `FROM renku/renkulab:renku0.10.3-julia1.3.1-0.6.2`
-- The Tensorflow Renku docker image with Cuda and `Tensorflow 1.14 <https://www.tensorflow.org/>`__ is now available with the latest Renku `0.10.3`. To use it just replace the first line of your Dockerfile with `FROM renku/renkulab:renku0.10.3-cuda10.0-tf1.14-0.6.2`
+- The Tensorflow Renku docker image with Cuda and `Tensorflow 1.14 <https://www.tensorflow.org/>`__ is now available with the latest Renku ``0.10.3``. To use it just replace the first line of your Dockerfile with ``FROM renku/renkulab:renku0.10.3-cuda10.0-tf1.14-0.6.2``
 - Docker images in project templates use Renku `0.10.3 <https://github.com/SwissDataScienceCenter/renku-python/releases/tag/0.10.3>`__
 
 Individual components
