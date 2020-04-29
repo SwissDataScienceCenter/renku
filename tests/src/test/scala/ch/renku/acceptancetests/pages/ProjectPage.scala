@@ -157,7 +157,7 @@ class ProjectPage(projectDetails: ProjectDetails, userCredentials: UserCredentia
 
       def flights(implicit webDriver: WebDriver): WebElement =
         eventually {
-          find(cssSelector("div.tree-container nav a div"))
+          find(cssSelector("div.project-list-row > div > b > span.issue-title > a"))
             .find(_.text == "2019-01 US Flights")
             .getOrElse(fail("Dataset 'flights' not found"))
         }(waitUpTo(120 seconds), implicitly[source.Position])
