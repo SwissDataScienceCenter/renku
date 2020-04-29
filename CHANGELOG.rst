@@ -32,7 +32,7 @@ Miscellaneous
 ^^^^^^^^^^^^^
 
 - A maintenance page can now be displayed for when Renkulab is undergoing a scheduled maintenance 🔧
-- Help page and dropdown contain links to Renku and Renku CLI documentation ℹ️
+- Help page and dropdown contain links to Renku and Renku CLI documentation 📖
 - Easy UI access to GitLab projects, user settings and user profile 👤
 - Python environments now include a plugin to monitor memory usage visually 📈
 - A new Renku docker image with `Julia <https://julialang.org/>`__ is now available. 📣 To use it just replace the first line of your Dockerfile with `FROM renku/renkulab:renku0.10.3-julia1.3.1-0.6.2`
