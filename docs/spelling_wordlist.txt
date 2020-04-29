@@ -64,6 +64,7 @@ JupyterHub
 Jupyterhub
 jupyterlab
 JupyterLab
+kb
 keycloak
 Keycloak
 ku
