@@ -32,8 +32,8 @@ Miscellaneous
 ^^^^^^^^^^^^^
 
 - A maintenance page can now be displayed for when Renkulab is undergoing a scheduled maintenance 🔧
-- Help page and dropdown contain links to Renku and Renku CLI Docs ℹ️
-- Easy UI access to Gitlab, user settings and user profile 👤
+- Help page and dropdown contain links to Renku and Renku CLI documentation ℹ️
+- Easy UI access to GitLab projects, user settings and user profile 👤
 - Python environments now include a plugin to monitor memory usage visually 📈
 - A new Renku docker image with `Julia <https://julialang.org/>`__ is now available. 📣 To use it just replace the first line of your Dockerfile with `FROM renku/renkulab:renku0.10.3-julia1.3.1-0.6.2`
 - The Tensorflow Renku docker image with Cuda and `Tensorflow 1.14 <https://www.tensorflow.org/>`__ is now available with the latest Renku `0.10.3`. To use it just replace the first line of your Dockerfile with `FROM renku/renkulab:renku0.10.3-cuda10.0-tf1.14-0.6.2`
@@ -45,7 +45,7 @@ Individual components
 For changes to individual components, check:
 
 * renku-ui `0.9.2 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/0.9.2>`__
-* renku-notebooks `0.7.3 <https://github.com/SwissDataScienceCenter/renku-notebooks/releases>`__
+* renku-notebooks `0.7.3 <https://github.com/SwissDataScienceCenter/renku-notebooks/releases/tag/0.7.3>`__
 * renku-python `0.10.3 <https://github.com/SwissDataScienceCenter/renku-python/releases/tag/0.10.3>`__
 * renku-gateway `0.7.1 <https://github.com/SwissDataScienceCenter/renku-notebooks/releases/tag/0.7.1>`__
 
