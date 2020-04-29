@@ -25,9 +25,11 @@ Cookiecutter
 coopetition
 CountFlights
 cronjob
+Cuda
 customizable
 dataset
 datasets
+Dataverse
 deployer
 discoverable
 Dockerfile
@@ -64,6 +66,7 @@ JupyterHub
 Jupyterhub
 jupyterlab
 JupyterLab
+kb
 keycloak
 Keycloak
 ku
