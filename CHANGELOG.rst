@@ -6,16 +6,54 @@
 New features
 ~~~~~~~~~~~~
 
-- Logged-in users without developer access can launch interactive sessions from a project.
+⭐️ Environments: logged-in users without developer access can launch interactive sessions from a project.
 
-- Interactive sessions can be enabled for logged-out users. Please see the
-  `documentation <https://renku.readthedocs.io/en/latest/admin/index.html#enabling-notebooks-for-anonymous-users>`__ for details.
+⭐️ Environments: interactive sessions can be enabled for logged-out users. Please see the
+  `documentation <https://renku.readthedocs.io/en/latest/admin/anonymous-sessions.html>`__ for details.
+
+⭐️ Hiding/showing code cells is now possible from the UI
+
+
+Notable improvements
+~~~~~~~~~~~~~~~~~~~~
+
+🚄 Datasets: dataset creation and import unified in the UI
+
+Bug fixes
+~~~~~~~~~
+
+* Datasets now include the folder hierarchy in file listings
+* Datasets: avoid recursive addition of the data directory in Renku CLI
+* Datasets: fix export to Dataverse
+* Datasets: fix metadata commit after `renku dataset unlink`
+* Environments: improve styling
+
+Miscellaneous
+^^^^^^^^^^^^^
+
+- A maintenance page can now be displayed for when Renkulab is undergoing a scheduled maintenance 🔧
+- Help page and dropdown contain links to Renku and Renku CLI documentation 📖
+- Easy UI access to GitLab projects, user settings and user profile 👤
+- Python environments now include a plugin to monitor memory usage visually 📈
+- A new Renku docker image with `Julia <https://julialang.org/>`__ is now available. 📣 To use it just replace the first line of your Dockerfile with ``FROM renku/renkulab:renku0.10.3-julia1.3.1-0.6.2``
+- The Tensorflow Renku docker image with Cuda and `Tensorflow 1.14 <https://www.tensorflow.org/>`__ is now available with the latest Renku ``0.10.3``. To use it just replace the first line of your Dockerfile with ``FROM renku/renkulab:renku0.10.3-cuda10.0-tf1.14-0.6.2``
+- Docker images in project templates use Renku `0.10.3 <https://github.com/SwissDataScienceCenter/renku-python/releases/tag/0.10.3>`__
+
+Individual components
+~~~~~~~~~~~~~~~~~~~~~
+
+For changes to individual components, check:
+
+* renku-ui `0.9.2 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/0.9.2>`__
+* renku-notebooks `0.7.3 <https://github.com/SwissDataScienceCenter/renku-notebooks/releases/tag/0.7.3>`__
+* renku-python `0.10.3 <https://github.com/SwissDataScienceCenter/renku-python/releases/tag/0.10.3>`__
+* renku-gateway `0.7.1 <https://github.com/SwissDataScienceCenter/renku-notebooks/releases/tag/0.7.1>`__
 
 Upgrading from 0.6.1
 ~~~~~~~~~~~~~~~~~~~~
 
 * If you want to enable interactive sessions for anonymous users, see the
-  `values changelog <https://github.com/SwissDataScienceCenter/renku/blob/master/charts/values.yaml.changelog.md>`__ file.
+  `values changelog <https://github.com/SwissDataScienceCenter/renku/blob/master/charts/values.yaml.changelog.md>`__ file and `anonymous sessions documentation <https://renku.readthedocs.io/en/latest/admin/anonymous-sessions.html>`__
 
 
 0.6.1
@@ -76,8 +114,8 @@ Individual components
 
 For changes to individual components, check:
 
-* renku ui `0.9.1 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/0.9.1>`__ and `0.9.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/0.9.0>`__
-* renku-python `0.10.2 <https://github.com/SwissDataScienceCenter/renku-notebooks/releases/tag/0.10.2>`__
+* renku-ui `0.9.1 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/0.9.1>`__ and `0.9.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/0.9.0>`__
+* renku-python `0.10.0 <https://github.com/SwissDataScienceCenter/renku-notebooks/releases/tag/0.10.0>`__
 * renku-notebooks `0.7.1 <https://github.com/SwissDataScienceCenter/renku-notebooks/releases/tag/0.7.1>`__
 
 * renku-graph `0.55.4 to 0.49.0 <https://github.com/SwissDataScienceCenter/renku-graph>`__
@@ -163,7 +201,7 @@ Individual components
 
 For changes to individual components, check:
 
-* renku ui:
+* renku-ui:
   `0.7.3 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/0.7.3>`__
   and
   `0.8.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/0.8.0>`__
@@ -238,7 +276,7 @@ Individual components
 
 For changes to individual components, check:
 
-* renku ui `0.7.2
+* renku-ui `0.7.2
   <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/0.7.2>`__,
   `0.7.1
   <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/0.7.1>`__,
