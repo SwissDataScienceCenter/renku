@@ -6,7 +6,7 @@ If all things were set up correctly, you will soon be able to access it at:
 {{ if .Values.keycloak.createDemoUser -}}
 You have configured a demo user for the platform. The details (password) of this user
 can be accessed using the following one-liner (you need to have jq installed).
-kubectl get secrets -n <k8s-namespace> {{ template "renku.fullname" . }} -o json | jq -r .data.users | base64 --decode
+kubectl get secrets -n {{ .Release.Namespace }} {{ template "renku.fullname" . }} -o json | jq -r .data.users | base64 --decode
 {{- end -}}
 
 {{- if .Values.global.anonymousSessions.enabled -}}
