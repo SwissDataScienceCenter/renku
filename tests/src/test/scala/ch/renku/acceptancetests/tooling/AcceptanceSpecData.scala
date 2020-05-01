@@ -14,8 +14,10 @@ import eu.timepit.refined.string.Url
 
 trait AcceptanceSpecData {
 
+  private val testsDefaults = TestsDefaults()
+
   protected implicit lazy val renkuBaseUrl: RenkuBaseUrl = {
-    val env = Option(getProperty("env")) orElse sys.env.get("RENKU_TEST_URL") orElse Some("https://dev.renku.ch")
+    val env = Option(getProperty("env")) orElse sys.env.get("RENKU_TEST_URL") orElse testsDefaults.env
     toBaseUrl(env.get) getOrElse showErrorAndStop(
       "-Denv argument or RENKU_TEST_URL environment variable is not a valid URL"
     )
@@ -30,10 +32,10 @@ trait AcceptanceSpecData {
 
   protected implicit lazy val userCredentials: UserCredentials = {
     for {
-      email    <- Option(getProperty("email")) orElse sys.env.get("RENKU_TEST_EMAIL") flatMap toNonEmpty
-      username <- Option(getProperty("username")) orElse sys.env.get("RENKU_TEST_USERNAME") flatMap toNonEmpty
-      password <- Option(getProperty("password")) orElse sys.env.get("RENKU_TEST_PASSWORD") flatMap toNonEmpty
-      fullName <- Option(getProperty("fullname")) orElse sys.env.get("RENKU_TEST_FULL_NAME") flatMap toNonEmpty
+      email    <- Option(getProperty("email")) orElse sys.env.get("RENKU_TEST_EMAIL") orElse testsDefaults.email flatMap toNonEmpty
+      username <- Option(getProperty("username")) orElse sys.env.get("RENKU_TEST_USERNAME") orElse testsDefaults.username flatMap toNonEmpty
+      password <- Option(getProperty("password")) orElse sys.env.get("RENKU_TEST_PASSWORD") orElse testsDefaults.password flatMap toNonEmpty
+      fullName <- Option(getProperty("fullname")) orElse sys.env.get("RENKU_TEST_FULL_NAME") orElse testsDefaults.fullname flatMap toNonEmpty
       useProvider = Option(getProperty("provider")) orElse sys.env.get("RENKU_TEST_PROVIDER") match {
         case Some(s) => s.nonEmpty
         case None    => false
@@ -44,7 +46,7 @@ trait AcceptanceSpecData {
       }
     } yield UserCredentials(email, username, password, fullName, useProvider, register)
   } getOrElse showErrorAndStop(
-    "You most provide either the arguments -Dusername -Dfullname, -Demail or/and -Dpassword args invalid or missing" +
+    "You must provide either the arguments -Dusername -Dfullname, -Demail or/and -Dpassword args invalid or missing" +
       " or set the environment variables RENKU_TEST_EMAIL RENKU_TEST_USERNAME RENKU_TEST_PASSWORD and/or RENKU_TEST_FULL_NAME"
   )
 

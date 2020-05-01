@@ -8,6 +8,7 @@
 .sbt
 project/.bloop
 project/metals.sbt
+tests-defaults.conf
 
 ### Intellij+all ###
 # Covers JetBrains IDEs: IntelliJ, RubyMine, PhpStorm, AppCode, PyCharm, CLion, Android Studio and WebStorm

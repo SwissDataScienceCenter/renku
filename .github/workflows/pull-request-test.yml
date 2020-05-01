@@ -40,6 +40,12 @@ jobs:
         cd docs
         sphinx-build -nNW -b spelling -d _build/doctrees . _build/spelling
         sphinx-build -qnNW . _build/html
+    - name: Upload docs
+      uses: actions/upload-artifact@v2
+      if: success()
+      with:
+        name: docs
+        path: docs/_build/html/
   deploy-pr:
     runs-on: ubuntu-latest
     if: github.event.action != 'closed'
