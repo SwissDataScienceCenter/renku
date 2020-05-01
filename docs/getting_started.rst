@@ -3,16 +3,15 @@
 Getting Started
 ---------------
 
-Tutorials
-^^^^^^^^^
+The following tutorials are available for getting acquainted with Renku. We recommend
+you start with the :ref:`first_steps`! Reach out to us on the `Renku Forum <https://renku.discourse.group/>`_
+to request more topics.
 
 .. toctree::
-   :maxdepth: 2
+   :glob:
+   :maxdepth: 1
    :includehidden:
 
-   First steps <tutorials/firststeps>
-   Creating course templates <tutorials/courses>
-   Renku-izing your project <tutorials/migrating_to_renku>
-
+   tutorials/*
 
 More topics to come!

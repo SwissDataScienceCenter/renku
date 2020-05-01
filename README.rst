@@ -58,7 +58,7 @@ It consists of:
 A public instance of **Renkulab** is available at https://renkulab.io, and several
 other deployments at various institutions. Go ahead - log in, try it out, and
 `let us know what you think <http://bit.ly/renku-feedback>`_! You can follow the
-`first_steps <https://renku.readthedocs.io/en/latest/tutorials/firststeps.html>`_ tutorial in python or R or `continue reading about the
+`first_steps <https://renku.readthedocs.io/en/latest/tutorials/01_firststeps.html>`_ tutorial in python or R or `continue reading about the
 Renku project <https://renku.readthedocs.io/en/latest/introduction/index.html#renku-introduction>`_.
 
 
