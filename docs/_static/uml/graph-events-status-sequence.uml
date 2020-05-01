@@ -11,7 +11,7 @@
     Client->Webhook: GET /projects/:id/events/status
     activate Webhook
     ref over Webhook, Log: Hook Validation as described for\n**POST <webhook-service>/projects/:id/webhooks/validation**\nreturning OK
-    Webhook->Log: GET /events/projects/:id/status
+    Webhook->Log: GET /processing-status?project-id=:id
     activate Log
     Log->Webhook: OK (200) with done, total and progress\nof events in the last events batch
     deactivate Log
@@ -22,7 +22,7 @@
     Client->Webhook: GET /projects/:id/events/status
     activate Webhook
     ref over Webhook, Log: Hook Validation as described for\n**POST <webhook-service>/projects/:id/webhooks/validation**\nreturning OK
-    Webhook->Log: GET /events/projects/:id/status
+    Webhook->Log: GET /processing-status?project-id=:id
     activate Log
     Log->Webhook: OK (200) with done = total (all events from the last events batch)
     deactivate Log
@@ -33,7 +33,7 @@
     Client->Webhook: GET /projects/:id/events/status
     activate Webhook
     ref over Webhook, Log: Hook Validation as described for\n**POST <webhook-service>/projects/:id/webhooks/validation**\nreturning OK
-    Webhook->Log: GET /events/projects/:id/status
+    Webhook->Log: GET /processing-status?project-id=:id
     activate Log
     Log->Webhook: NOT_FOUND (404)
     deactivate Log

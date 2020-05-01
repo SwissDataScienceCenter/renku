@@ -12,7 +12,7 @@
     == Missed Events Synchronisation Job ==
     Webhook->Webhook: Trigger Events Synchronisation process
     activate Webhook
-    Webhook->Log: GET /events/latest\nto find the latest Events of all the projects
+    Webhook->Log: GET /events?latest_per_project=true\nto find the latest Events of all the projects
     activate Log
     Log->Webhook: OK (200) with a list of the latest Events of all the projects
     deactivate Log

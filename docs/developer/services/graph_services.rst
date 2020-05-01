@@ -77,3 +77,11 @@ and generates Commit Events missing from the Event Log.
 It runs periodically with a configured interval.
 
 .. uml:: ../../_static/uml/graph-sync-events-sequence.uml
+
+
+**Knowledge Graph re-provisioning process**
+
+A process executed on Triples Generator start-up that checks if triples
+in the RDF Store were generated with the version of renku-python currently set in the Triples Generator.
+
+.. uml:: ../../_static/uml/graph-reprovisioning-sequence.uml

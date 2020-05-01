@@ -23,7 +23,7 @@
     TG->TG: Parse RDF Triples
     TG->TG: Curate RFG Triples
     TG->Jena: Store RDF Triples
-    TG->EL: PATCH /events/:id/projects/:id/status\nto change Event's status to\nTRIPLES_STORE, RECOVERABLE_FAILURE\nor NON_RECOVERABLE_FAILURE
+    TG->EL: PATCH /events/:event-id/:project-id\nto change Event's status to TRIPLES_STORE,\nRECOVERABLE_FAILURE or NON_RECOVERABLE_FAILURE
     deactivate TR
 
     @enduml

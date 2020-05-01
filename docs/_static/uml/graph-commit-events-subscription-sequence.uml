@@ -5,8 +5,8 @@
     participant "Triples\nGenerator" as TG
     participant "Event\nLog" as EL
 
-    == Subscription for unprocessed Commit Events in the Event Log ==
-    TG->EL: POST /events/subscriptions?status=READY
+    == Subscription for Commit Events with status NEW or RECOVERABLE_FAILURE in the Event Log ==
+    TG->EL: POST /subscriptions
     activate EL
     EL->TG: ACCEPTED (202)
     deactivate EL
