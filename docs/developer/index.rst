@@ -6,7 +6,7 @@ Developer Documentation
 .. toctree::
    :maxdepth: 2
 
-   Running the platform <setup>
+   Running the platform locally <setup>
    Example configurations <example-configurations/index>
    Architecture <services/services_architecture>
    User Management <identity_management>
