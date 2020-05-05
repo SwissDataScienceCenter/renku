@@ -29,6 +29,7 @@ trait Grammar extends Eventually {
     def browserAt[Url <: BaseUrl](page: Page[Url])(implicit baseUrl: Url): Unit = eventually {
       currentUrl should startWith(page.url)
       pageTitle  shouldBe page.title.toString()
+      if (!page.pageReadyElement.exists(_.isDisplayed)) fail(s"'${page.title}' Page cannot be loaded")
     }
 
     def browserSwitchedTo[Url <: BaseUrl](page: Page[Url])(implicit baseUrl: Url): Unit = eventually {

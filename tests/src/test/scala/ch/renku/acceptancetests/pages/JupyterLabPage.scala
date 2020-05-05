@@ -23,6 +23,8 @@ class JupyterLabPage(projectDetails: ProjectDetails, userCredentials: UserCreden
     s"/jupyterhub/user/${userCredentials.userNamespace}/${projectDetails.title.toPathSegment}"
   )
 
+  override def pageReadyElement(implicit webDriver: WebDriver): Option[WebElement] = Some(terminalIcon)
+
   def terminalIcon(implicit webDriver: WebDriver): WebElement = eventually {
     find(cssSelector("div[data-icon=terminal]")) getOrElse fail("Terminal icon not found")
   }
