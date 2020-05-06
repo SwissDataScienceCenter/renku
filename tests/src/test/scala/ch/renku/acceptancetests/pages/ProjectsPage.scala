@@ -12,6 +12,8 @@ case object ProjectsPage extends RenkuPage with TopBar {
   override val path:  Path  = "/projects"
   override val title: Title = "Renku"
 
+  override def pageReadyElement(implicit webDriver: WebDriver): Option[WebElement] = Some(YourProjects.tab)
+
   object YourProjects {
 
     def tab(implicit webDriver: WebDriver): WebElement = eventually {

@@ -20,6 +20,8 @@ case object LoginPage extends RenkuPage {
   override val path:  Path  = "/auth/realms/Renku/protocol/openid-connect/auth"
   override val title: Title = "Log in to Renku"
 
+  override def pageReadyElement(implicit webDriver: WebDriver): Option[WebElement] = Some(logInButton)
+
   /**
     * When a renku instance uses another openID connect provider, the user may get a second login page.
     */
@@ -33,10 +35,10 @@ case object LoginPage extends RenkuPage {
 
     def logInWith(userCredentials: UserCredentials)(implicit webDriver: WebDriver): Unit = eventually {
       usernameField.clear() sleep (1 second)
-      usernameField.sendKeys(userCredentials.email.value) sleep (1 second)
+      usernameField.enterValue(userCredentials.email.value) sleep (1 second)
 
       passwordField.clear() sleep (1 second)
-      passwordField.sendKeys(userCredentials.password.value) sleep (1 second)
+      passwordField.enterValue(userCredentials.password.value) sleep (1 second)
 
       logInButton.click()
     }
@@ -65,17 +67,17 @@ case object LoginPage extends RenkuPage {
 
     def updateInfo(implicit webDriver: WebDriver): Unit = eventually {
       emailField.clear() sleep (1 second)
-      emailField.sendKeys(userCredentials.email.value) sleep (1 second)
+      emailField.enterValue(userCredentials.email.value) sleep (1 second)
 
       val nameComps = userCredentials.fullName.split(" ")
       val firstName = nameComps.head
       val lastName  = nameComps.last
 
       firstNameField.clear() sleep (1 second)
-      firstNameField.sendKeys(firstName) sleep (1 second)
+      firstNameField.enterValue(firstName) sleep (1 second)
 
       lastNameField.clear() sleep (1 second)
-      lastNameField.sendKeys(lastName) sleep (1 second)
+      lastNameField.enterValue(lastName) sleep (1 second)
 
       submitButton.click()
     }
@@ -111,19 +113,19 @@ case object LoginPage extends RenkuPage {
       val lastName  = nameComps.last
 
       firstNameField.clear() sleep (1 second)
-      firstNameField.sendKeys(firstName) sleep (1 second)
+      firstNameField.enterValue(firstName) sleep (1 second)
 
       lastNameField.clear() sleep (1 second)
-      lastNameField.sendKeys(lastName) sleep (1 second)
+      lastNameField.enterValue(lastName) sleep (1 second)
 
       emailField.clear() sleep (1 second)
-      emailField.sendKeys(userCredentials.email.value) sleep (1 second)
+      emailField.enterValue(userCredentials.email.value) sleep (1 second)
 
       passwordField.clear() sleep (1 seconds)
-      passwordField.sendKeys(userCredentials.password.value) sleep (3 seconds)
+      passwordField.enterValue(userCredentials.password.value) sleep (3 seconds)
 
       confirmPasswordField.clear() sleep (1 second)
-      confirmPasswordField.sendKeys(userCredentials.password.value) sleep (3 seconds)
+      confirmPasswordField.enterValue(userCredentials.password.value) sleep (3 seconds)
 
       registerButton.click()
     }
@@ -175,10 +177,10 @@ case object LoginPage extends RenkuPage {
 
   def logInWith(userCredentials: UserCredentials)(implicit webDriver: WebDriver): Unit = eventually {
     usernameField.clear() sleep (1 second)
-    usernameField.sendKeys(userCredentials.email.value) sleep (1 second)
+    usernameField.enterValue(userCredentials.email.value) sleep (1 second)
 
     passwordField.clear() sleep (1 second)
-    passwordField.sendKeys(userCredentials.password.value) sleep (1 second)
+    passwordField.enterValue(userCredentials.password.value) sleep (1 second)
 
     logInButton.click()
   }

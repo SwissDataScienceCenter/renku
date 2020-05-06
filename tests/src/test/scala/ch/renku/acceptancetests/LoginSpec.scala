@@ -18,12 +18,9 @@
 
 package ch.renku.acceptancetests
 
-import ch.renku.acceptancetests.pages._
 import ch.renku.acceptancetests.tooling.AcceptanceSpec
-import ch.renku.acceptancetests.workflows.Login
-import ch.renku.acceptancetests.workflows.LoginType
+import ch.renku.acceptancetests.workflows.{Login, LoginType}
 
-import scala.concurrent.duration._
 import scala.language.postfixOps
 
 class LoginSpec extends AcceptanceSpec with Login {

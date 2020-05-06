@@ -32,6 +32,8 @@ class ProjectPage(projectDetails: ProjectDetails, userCredentials: UserCredentia
     s"/projects/${userCredentials.userNamespace}/${projectDetails.title.toPathSegment}"
   )
 
+  override def pageReadyElement(implicit webDriver: WebDriver): Option[WebElement] = Some(Overview.tab)
+
   def viewInGitLab(implicit webDriver: WebDriver): WebElement = eventually {
     find(
       cssSelector(s"a[href*='/gitlab/${userCredentials.userNamespace}/${projectDetails.title.toPathSegment}']")
@@ -262,7 +264,7 @@ class ProjectPage(projectDetails: ProjectDetails, userCredentials: UserCredentia
     }
 
     def addProjectTags(tags: String)(implicit webDriver: WebDriver): Unit = eventually {
-      (projectTags sendKeys tags) sleep (2 seconds)
+      (projectTags enterValue tags) sleep (2 seconds)
       updateButton.click() sleep (2 seconds)
     }
 
@@ -271,7 +273,7 @@ class ProjectPage(projectDetails: ProjectDetails, userCredentials: UserCredentia
     }
 
     def updateProjectDescription(description: String)(implicit webDriver: WebDriver): Unit = eventually {
-      (projectDescription sendKeys description) sleep (2 seconds)
+      (projectDescription enterValue description) sleep (2 seconds)
       updateButton.click() sleep (2 seconds)
     }
 
@@ -297,8 +299,8 @@ class ProjectPage(projectDetails: ProjectDetails, userCredentials: UserCredentia
         val tf = titleField
         // Clear does not work here, just send backspace a bunch of times
         tf.clear() sleep (1 second)
-        tf.sendKeys(List.fill(40)("\b").mkString(""))
-        tf.sendKeys(project.title.value) sleep (1 second)
+        tf enterValue List.fill(40)("\b").mkString("")
+        tf enterValue project.title.value sleep (1 second)
 
         forkButton.click() sleep (10 second)
       }
