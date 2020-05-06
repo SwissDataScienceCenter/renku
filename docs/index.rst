@@ -15,6 +15,7 @@ The Renku Project Docs
 
    About Renku <introduction/index>
    Getting started <getting_started>
+   Upgrading a Renku Project <upgrading_renku>
    Get in touch <get_in_touch>
    Roadmap <roadmap>
    Release notes <release_notes>
