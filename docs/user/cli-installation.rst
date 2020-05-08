@@ -7,15 +7,15 @@ Interaction with the platform takes place via the Python-based command-line
 interface (CLI) and the Python API. Most available CLI commands are
 documented in our `cheatsheet <https://raw.githubusercontent.com/SwissDataScienceCenter/renku/master/docs/_static/cheatsheet/cheatsheet.pdf>`_
 
-Mac OS X
---------
+Using the CLI in an Interactive Environment
+-------------------------------------------
 
-It is easiest to install the CLI using `homebrew <https://brew.sh/>`_:
+The ``renku`` command-line interface is already installed if you start an
+Interactive Environment from RenkuLab with a project you created on RenkuLab or
+initialized via ``renku init`` in a local repository.
 
-.. code-block:: console
-
-  brew tap swissdatasciencecenter/renku
-  brew install renku
+See renku_cli_upgrade_ for upgrading to the latest version of the CLI for
+Interactive Environments.
 
 
 Installation with the script manager ``pipx``
@@ -50,6 +50,8 @@ Once ``pipx`` is installed use following command to install ``renku``.
 Previously we have recommended to use ``pipsi``. You can still use it or
 `migrate to pipx
 <https://github.com/pipxproject/pipx#migrating-to-pipx-from-pipsi>`_.
+
+.. _upgrading_local:
 
 Upgrading
 ^^^^^^^^^
