@@ -11,57 +11,52 @@ interactive environments).
 Using new features on RenkuLab
 ------------------------------
 
-Often, changes to the RenkuLab UI and KG don't require you to do anything special
-to benefit from the new features. For instance, when we added the ability for
-anonymous (i.e. not logged in) users to launch interactive environments, it
-automatically applied for all projects.
+New features in the UI and KG on RenkuLab are announced in the :ref:`release_notes`.
 
-Other changes to the RenkuLab UI do
-require you to update project settings to make use of the features.
+When we update components of the RenkuLab platform, usually you will have access
+to these new features without doing anything special. E.g. when we added the ability
+for anonymous (i.e. not logged in) users to launch interactive environments, all
+projects were immediately accessible to anonymous users without the project owner
+needing to change any settings.
 
-You can read the CHANGELOG for more details.
+.. _renku-cli-upgrade:
 
-Using new features in the ``renku`` CLI
----------------------------------------
+Using new features ``renku`` CLI features
+-----------------------------------------
 
-When we release a new version of ``renku``, the CLI, you do have to take actions
-if you want to update your project to the latest version.
+Note: This section is for upgrading the version of ``renku`` CLI installed into
+the Interactive Environments on RenkuLab for your project. See upgrading-local_
+for upgrading your local machine's version of ``renku``.
 
-On RenkuLab, e.g. for Interactive Environments
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+When we release a new version of ``renku``, the CLI, you do have to make some
+(minimal) changes to the ``Dockerfile`` in your project to ensure that the
+Interactive Environment on RenkuLab will use the image with the correct version.
 
-In an Interactive Environment, the version of ``renku`` is controlled by the image
-built from the ``Dockerfile`` in the project. By default, the first line defines
-a pre-built RenkuLab compatible image (e.g. an image that can launch JupyterLab
-and/or RStudio, with a bunch of other convenient software installs). This image
-defines a fixed version of the ``renku`` CLI, indicated in the name.
+The version of the ``renku`` CLI is defined in the base image specified in the
+``FROM`` line (usually line 1) of the ``Dockerfile`` in your repo.
 
-For example, ``renku/renkulab-py3.7:renku0.10.3-0.6.2`` has ``renku`` version 0.10.3.
-If a new release is available, you can check https://github.com/SwissDataScienceCenter/renkulab-docker
-for the latest version of the flavor you're using (e.g. python, cuda, R, Biocondutor, etc.).
-Then, replace the ``FROM`` line with the new image name, and commit & push the changes.
-Pushing the changes causes gitlab to build the new image. Then, you can launch a new
-interactive environment from the latest commit, and you'll have the latest version
-of renku CLI.
+1. Replace this line with the latest available image for the "flavor" you're using,
+   which you can find by:
 
-You can read the CHANGELOG for the ``renku`` CLI here.
+* checking the `renkulab-docker repo README.md <https://github.com/SwissDataScienceCenter/renkulab-docker/blob/master/README.md>`_
+  for the naming conventions of the "flavor" of image you're updating (e.g. if you're using
+  the "minimal python project", you will look in the py3.7 section)
+* visiting the dockerhub page linked in the naming conventions section in the above ``README``
+* choosing the latest available tagged image
 
+Note that the version of the ``renku`` CLI is defined in the image name. For example,
+``renku/renkulab-py:3.7-renku0.10.3-0.6.2`` has CLI version ``0.10.3``. Please choose
+an image with the renku version specified (e.g. ``-renku0.10.3-`` and not ``-renku-``),
+unless you absolutely need the latest development version of ``renku``, since it makes
+debugging and reproducibility much simpler.
 
-Locally
-~~~~~~~
+2. Push your changes (either from the GitLab editor, or in a running Interactive
+   Environment), and start up a new Interactive Environment to use this new image.
 
-If you are working locally (e.g. running ``renku`` commands in a terminal on your
-laptop), and you have installed renku with ``pipx`` (recommended), follow these
-instructions.
+3. When you start to run ``renku`` commands, you might be asked to call ``renku migrate``.
+   This command ensures that the metadata in your project is updated.
 
-To upgrade renku to the latest stable version:
-
-::
-
-    $ pipx upgrade renku
-
-To upgrade to the latest development version:
-
-::
-
-    $ pipx upgrade --pip-args=--pre renku
+Note: ``renku`` is installed in the image with ``pipx``. You can also upgrade ``renku``
+in a running Interactive Environment by following the docs for upgrading your local
+installation of ``renku``, however these changes will not hold through the next
+time you launch an Interactive Environment. Thus, we recommend updating the image.
