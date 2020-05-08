@@ -54,7 +54,7 @@ Previously we have recommended to use ``pipsi``. You can still use it or
 .. _upgrading_local:
 
 Upgrading
-^^^^^^^^^
+---------
 
 To upgrade renku to the latest stable version:
 
