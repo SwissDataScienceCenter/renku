@@ -25,7 +25,7 @@ Using new features ``renku`` CLI features
 -----------------------------------------
 
 Note: This section is for upgrading the version of ``renku`` CLI installed into
-the Interactive Environments on RenkuLab for your project. See upgrading_local_
+the Interactive Environments on RenkuLab for your project. See :ref:`upgrading_local`
 for upgrading your local machine's version of ``renku``.
 
 When we release a new version of ``renku``, the CLI, you do have to make some
