@@ -1,0 +1,20 @@
+    @startuml
+    hide footbox
+    skinparam shadowing false
+
+    actor Client
+    boundary Service
+    database "Filesystem Cache" as Filesystem
+    database "Memory Cache" as Cache
+    boundary Worker
+    entity "Remote Git" as Git
+
+    == List cloned projects for a given user ==
+    Client->Service: POST /<prefix>/cache.project_list
+    activate Service
+    Service->Cache: Get all cloned projects for a given user
+    Cache->Service: Serialize all metadata objects
+    Service->Filesystem: Ensure projects still exists
+    Service->Client: Return sorted list of all user projects
+
+    @enduml
