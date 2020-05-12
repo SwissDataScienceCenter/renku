@@ -52,7 +52,9 @@ trait Environments {
     val projectId   = anonEnvConfig.projectId
     val projectPage = ProjectPage(projectId)
     go to projectPage
-    When("user clicks on the Environments tab")
+    When("user is logged out")
+    And(s"goes to $projectId")
+    And("clicks on the Environments tab to launch an anonymous notebook")
     click on projectPage.Environments.tab
     if (anonEnvConfig.isAvailable) {
       And("anonymous environments are supported")
@@ -65,10 +67,11 @@ trait Environments {
   }
 
   def launchUnprivilegedEnvironment(implicit anonEnvConfig: AnonEnvConfig): JupyterLabPage = {
-    val projectId   = anonEnvConfig.projectId
+    val projectId            = anonEnvConfig.projectId
     implicit val projectPage = ProjectPage(projectId)
     go to projectPage
-    When("user clicks on the Environments tab")
+    When(s"user goes to $projectId")
+    And("clicks on the Environments tab to launch an unprivileged notebook")
     click on projectPage.Environments.tab
 
     clickNewAndWaitForImageBuild
@@ -91,6 +94,7 @@ trait Environments {
 
   def anonymousEnvironmentSupported(pp: ProjectPage, projectId: ProjectIdentifier): JupyterLabPage = {
     implicit val projectPage = pp;
+    sleep(5 seconds)
     clickNewAndWaitForImageBuild
     clickStartEnvironmentAndWaitForReady
 
