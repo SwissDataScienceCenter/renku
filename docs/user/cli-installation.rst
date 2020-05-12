@@ -14,7 +14,7 @@ The ``renku`` command-line interface is already installed if you start an
 Interactive Environment from RenkuLab with a project you created on RenkuLab or
 initialized via ``renku init`` in a local repository.
 
-See renku_cli_upgrade_ for upgrading to the latest version of the CLI for
+See :ref:`renku_cli_upgrade` for upgrading to the latest version of the CLI for
 Interactive Environments.
 
 
