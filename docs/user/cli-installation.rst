@@ -62,6 +62,12 @@ To upgrade renku to the latest stable version:
 
     $ pipx upgrade renku
 
+To install renku at a specific version:
+
+::
+
+    $ pipx install --force renku==0.10.3
+
 To upgrade to the latest development version:
 
 ::

@@ -24,9 +24,12 @@ needing to change any settings.
 Using new ``renku`` CLI features
 --------------------------------
 
-Note: This section is for upgrading the version of ``renku`` CLI installed into
-the Interactive Environments on RenkuLab for your project. See :ref:`upgrading_local`
-for upgrading your local machine's version of ``renku``.
+
+.. note::
+
+  This section is for upgrading the version of ``renku`` CLI installed into
+  the Interactive Environments on RenkuLab for your project. See :ref:`upgrading_local`
+  for upgrading your local machine's version of ``renku``.
 
 When we release a new version of the ``renku`` CLI, you do have to make some
 (minimal) changes to the ``Dockerfile`` in your project to ensure that the
@@ -56,7 +59,11 @@ debugging and reproducibility much simpler.
 3. When you start to run ``renku`` commands, you might be asked to call ``renku migrate``.
    This command ensures that the metadata in your project is updated.
 
-Note: ``renku`` is installed in the image with ``pipx``. You can also upgrade ``renku``
-in a running Interactive Environment by following the docs for upgrading your local
-installation of ``renku``, however these changes will not hold through the next
-time you launch an Interactive Environment. Thus, we recommend updating the image.
+.. note::
+
+  ``renku`` is installed in the image with ``pipx``. You can also upgrade ``renku``
+  in a running Interactive Environment by adding the recommended ``pipx`` install
+  from :ref:`upgrading your local installation <upgrading_local>` to your ``Dockerfile``,
+  however you'll miss out on other changes to the image. You can also do the ``pipx``
+  installation in the terminal of the Interactive Environment, however these
+  changes will not hold through the next time you launch.
