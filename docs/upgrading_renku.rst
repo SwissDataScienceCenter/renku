@@ -21,14 +21,14 @@ needing to change any settings.
 
 .. _renku_cli_upgrade:
 
-Using new features ``renku`` CLI features
------------------------------------------
+Using new ``renku`` CLI features
+--------------------------------
 
 Note: This section is for upgrading the version of ``renku`` CLI installed into
 the Interactive Environments on RenkuLab for your project. See :ref:`upgrading_local`
 for upgrading your local machine's version of ``renku``.
 
-When we release a new version of ``renku``, the CLI, you do have to make some
+When we release a new version of the ``renku`` CLI, you do have to make some
 (minimal) changes to the ``Dockerfile`` in your project to ensure that the
 Interactive Environment on RenkuLab will use the image with the correct version.
 
@@ -40,7 +40,7 @@ The version of the ``renku`` CLI is defined in the base image specified in the
 
 * checking the `renkulab-docker repo README.md <https://github.com/SwissDataScienceCenter/renkulab-docker/blob/master/README.md>`_
   for the naming conventions of the "flavor" of image you're updating (e.g. if you're using
-  the "minimal python project", you will look in the py3.7 section)
+  the "minimal python project", you will look in the ``py`` section)
 * visiting the dockerhub page linked in the naming conventions section in the above ``README``
 * choosing the latest available tagged image
 
