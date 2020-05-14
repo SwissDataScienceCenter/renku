@@ -16,7 +16,10 @@ object TestsDefaults {
 
   def apply(): TestsDefaults =
     if (Paths.get(defaultConfigFileName).toFile.exists())
-      ConfigSource.file(defaultConfigFileName).load[TestsDefaults].getOrElse(TestsDefaults(Some("https://dev.renku.ch")))
+      ConfigSource
+        .file(defaultConfigFileName)
+        .load[TestsDefaults]
+        .getOrElse(TestsDefaults(Some("https://dev.renku.ch")))
     else
       TestsDefaults(Some("https://dev.renku.ch"))
 }

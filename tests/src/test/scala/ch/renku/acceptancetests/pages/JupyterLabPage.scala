@@ -1,6 +1,6 @@
 package ch.renku.acceptancetests.pages
 
-import ch.renku.acceptancetests.model.projects.ProjectDetails
+import ch.renku.acceptancetests.model.projects.{ProjectDetails, ProjectIdentifier}
 import ch.renku.acceptancetests.model.projects.ProjectDetails._
 import ch.renku.acceptancetests.model.users.UserCredentials
 import ch.renku.acceptancetests.pages.Page.{Path, Title}
@@ -13,15 +13,20 @@ import org.scalatestplus.selenium.WebBrowser.{cssSelector, find}
 
 object JupyterLabPage {
   def apply()(implicit projectDetails: ProjectDetails, userCredentials: UserCredentials): JupyterLabPage =
-    new JupyterLabPage(projectDetails, userCredentials)
+    new JupyterLabPage(projectDetails.title.toPathSegment, userCredentials.userNamespace)
+
+  def apply(projectId: ProjectIdentifier): JupyterLabPage =
+    new JupyterLabPage(projectId.slug, projectId.namespace)
 }
 
-class JupyterLabPage(projectDetails: ProjectDetails, userCredentials: UserCredentials) extends RenkuPage {
+class JupyterLabPage(projectSlug: String, namespace: String) extends RenkuPage {
 
   override val title: Title = "JupyterLab"
   override val path: Path = Refined.unsafeApply(
-    s"/jupyterhub/user/${userCredentials.userNamespace}/${projectDetails.title.toPathSegment}"
+    s"/jupyterhub/user/${namespace}/${projectSlug}"
   )
+
+  override def pageReadyElement(implicit webDriver: WebDriver): Option[WebElement] = Some(terminalIcon)
 
   def terminalIcon(implicit webDriver: WebDriver): WebElement = eventually {
     find(cssSelector("div[data-icon=terminal]")) getOrElse fail("Terminal icon not found")

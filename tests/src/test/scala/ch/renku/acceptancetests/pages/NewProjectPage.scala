@@ -16,15 +16,17 @@ case object NewProjectPage extends RenkuPage with TopBar with ScreenCapturing {
   override val path:  Path  = "/project_new"
   override val title: Title = "Renku"
 
+  override def pageReadyElement(implicit webDriver: WebDriver): Option[WebElement] = Some(createButton)
+
   def submitFormWith(
       project:          ProjectDetails
   )(implicit webDriver: WebDriver, browser: WebBrowser with Driver, captureScreenshots: Boolean = false): Unit =
     eventually {
       titleField.clear() sleep (1 second)
-      titleField.sendKeys(project.title.value) sleep (1 second)
+      titleField.enterValue(project.title.value) sleep (1 second)
 
       descriptionField.clear() sleep (1 second)
-      descriptionField.sendKeys(project.description.value) sleep (1 second)
+      descriptionField.enterValue(project.description.value) sleep (1 second)
 
       if (captureScreenshots) saveScreenshot
 

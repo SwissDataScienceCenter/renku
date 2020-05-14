@@ -2,6 +2,7 @@ package ch.renku.acceptancetests.pages
 
 import ch.renku.acceptancetests.model.projects.ProjectDetails
 import ch.renku.acceptancetests.model.projects.ProjectDetails._
+import ch.renku.acceptancetests.model.projects.ProjectIdentifier
 import ch.renku.acceptancetests.model.users.UserCredentials
 import ch.renku.acceptancetests.pages.Page.{Path, Title}
 import ch.renku.acceptancetests.tooling.AcceptanceSpec
@@ -22,19 +23,23 @@ import org.scalactic.source
 
 object ProjectPage {
   def apply()(implicit projectDetails: ProjectDetails, userCredentials: UserCredentials): ProjectPage =
-    new ProjectPage(projectDetails, userCredentials)
+    new ProjectPage(projectDetails.title.toPathSegment, userCredentials.userNamespace)
+  def apply(projectId: ProjectIdentifier): ProjectPage =
+    new ProjectPage(projectId.slug, projectId.namespace)
 }
 
-class ProjectPage(projectDetails: ProjectDetails, userCredentials: UserCredentials) extends RenkuPage with TopBar {
+class ProjectPage(projectSlug: String, namespace: String) extends RenkuPage with TopBar {
 
   override val title: Title = "Renku"
   override val path: Path = Refined.unsafeApply(
-    s"/projects/${userCredentials.userNamespace}/${projectDetails.title.toPathSegment}"
+    s"/projects/${namespace}/${projectSlug}"
   )
+
+  override def pageReadyElement(implicit webDriver: WebDriver): Option[WebElement] = Some(Overview.tab)
 
   def viewInGitLab(implicit webDriver: WebDriver): WebElement = eventually {
     find(
-      cssSelector(s"a[href*='/gitlab/${userCredentials.userNamespace}/${projectDetails.title.toPathSegment}']")
+      cssSelector(s"a[href*='/gitlab/${namespace}/${projectSlug}']")
     ) getOrElse fail("View in GitLab button not found")
   }
 
@@ -174,6 +179,14 @@ class ProjectPage(projectDetails: ProjectDetails, userCredentials: UserCredentia
       find(cssSelector(s"a[href='$path/environments/new']")) getOrElse fail("New environment link not found")
     }
 
+    def anonymousUnsupported(implicit webDriver: WebDriver): WebElement = eventually {
+      findAll(cssSelector(s"div > div > div > div > p"))
+        .find(
+          _.text == "This Renkulab deployment doesn't allow unauthenticated users to start Interactive Environments."
+        )
+        .getOrElse(fail("Unsupported environment notification not found"))
+    }
+
     def startEnvironment(implicit webDriver: WebDriver): WebElement = eventually {
       verifyImageReady
       findAll(cssSelector("button.btn.btn-primary:last-of-type"))
@@ -187,7 +200,9 @@ class ProjectPage(projectDetails: ProjectDetails, userCredentials: UserCredentia
       }(waitUpTo(10 minutes), implicitly[source.Position])
 
     private def waitForImageToBeReady(implicit webDriver: WebDriver): Unit = {
-      find(cssSelector(".badge.badge-warning")) getOrElse fail("Image building info badges not found");
+      find(cssSelector(".badge.badge-warning")) orElse findImageReadyBadge getOrElse fail(
+        "Image building info badges not found"
+      );
       sleep(2 seconds)
       findImageReadyBadge getOrElse fail("Image not yet built")
     }
@@ -203,16 +218,31 @@ class ProjectPage(projectDetails: ProjectDetails, userCredentials: UserCredentia
           .getOrElse(fail("Environments -> Running title not found"))
       }
 
-      def connectToJupyterLab(implicit webDriver: WebDriver, spec: AcceptanceSpec): Unit = eventually {
+      def connectToJupyterLab(implicit webDriver: WebDriver, spec: AcceptanceSpec): Unit =
+        connectToJupyterLab(s"a[href*='/jupyterhub/user/']")
+
+      def connectToAnonymousJupyterLab(implicit webDriver: WebDriver, spec: AcceptanceSpec): Unit =
+        connectToJupyterLab(s"a[href*='/jupyterhub-tmp/user/']")
+
+      def connectButton(buttonSelector: String)(implicit webDriver: WebDriver): WebElement = eventually {
+        find(
+          cssSelector(buttonSelector)
+        ) getOrElse fail(
+          "First row Interactive Environment Connect button not found"
+        )
+      }
+
+      private def connectToJupyterLab(buttonSelector:               String)(implicit webDriver: WebDriver,
+                                                              spec: AcceptanceSpec): Unit = eventually {
         import spec.{And, Then}
         And("tries to connect to JupyterLab")
-        connectButton.click
+        connectButton(buttonSelector).click
         sleep(2 seconds)
 
         // Check if we are connected to JupyterLab
         val tabs = webDriver.getWindowHandles.asScala.toArray
         webDriver.switchTo() window tabs(1)
-        if (webDriver.getCurrentUrl contains "/jupyterhub/hub/user") {
+        if (webDriver.getCurrentUrl contains "spawn-pending") {
           And("JupyterLab is not up yet")
           Then("close the window and try again later")
           // The server isn't up yet. Close the window and try again
@@ -222,16 +252,6 @@ class ProjectPage(projectDetails: ProjectDetails, userCredentials: UserCredentia
         } else {
           webDriver.switchTo() window tabs(0)
         }
-      }
-
-      def connectButton(implicit webDriver: WebDriver): WebElement = eventually {
-        find(
-          cssSelector(
-            s"a[href*='/jupyterhub/user/${userCredentials.userNamespace}/${projectDetails.title.toPathSegment}-']"
-          )
-        ) getOrElse fail(
-          "First row Interactive Environment Connect button not found"
-        )
       }
 
       def connectDotButton(implicit webDriver: WebDriver): WebElement = eventually {
@@ -262,7 +282,7 @@ class ProjectPage(projectDetails: ProjectDetails, userCredentials: UserCredentia
     }
 
     def addProjectTags(tags: String)(implicit webDriver: WebDriver): Unit = eventually {
-      (projectTags sendKeys tags) sleep (2 seconds)
+      (projectTags enterValue tags) sleep (2 seconds)
       updateButton.click() sleep (2 seconds)
     }
 
@@ -271,7 +291,7 @@ class ProjectPage(projectDetails: ProjectDetails, userCredentials: UserCredentia
     }
 
     def updateProjectDescription(description: String)(implicit webDriver: WebDriver): Unit = eventually {
-      (projectDescription sendKeys description) sleep (2 seconds)
+      (projectDescription enterValue description) sleep (2 seconds)
       updateButton.click() sleep (2 seconds)
     }
 
@@ -297,8 +317,8 @@ class ProjectPage(projectDetails: ProjectDetails, userCredentials: UserCredentia
         val tf = titleField
         // Clear does not work here, just send backspace a bunch of times
         tf.clear() sleep (1 second)
-        tf.sendKeys(List.fill(40)("\b").mkString(""))
-        tf.sendKeys(project.title.value) sleep (1 second)
+        tf enterValue List.fill(40)("\b").mkString("")
+        tf enterValue project.title.value sleep (1 second)
 
         forkButton.click() sleep (10 second)
       }

@@ -3,34 +3,45 @@ package ch.renku.acceptancetests.pages
 import ch.renku.acceptancetests.pages.Page._
 import ch.renku.acceptancetests.pages.RenkuPage.RenkuBaseUrl
 import ch.renku.acceptancetests.tooling._
-
 import eu.timepit.refined.W
 import eu.timepit.refined.api.Refined
 import eu.timepit.refined.collection.NonEmpty
 import eu.timepit.refined.string._
-
-import org.openqa.selenium.{By, WebElement}
+import org.openqa.selenium.{By, WebDriver, WebElement}
 import org.scalatest.concurrent.Eventually
+import org.scalatest.time.{Seconds, Span}
 import org.scalatest.{Matchers => ScalatestMatchers}
-import org.scalatest.time.{Millis, Seconds, Span}
 import org.scalatestplus.selenium.WebBrowser
 
-import scala.concurrent.duration.Duration
-import scala.language.implicitConversions
+import scala.concurrent.duration._
+import scala.language.{implicitConversions, postfixOps}
 
 abstract class Page[Url <: BaseUrl] extends ScalatestMatchers with Eventually with AcceptanceSpecPatience {
 
   val path:  Path
   val title: Title
-  def url(implicit baseUrl: Url): String = s"$baseUrl$path"
+  def pageReadyElement(implicit webDriver: WebDriver): Option[WebElement]
+  def url(implicit baseUrl:                Url): String = s"$baseUrl$path"
 
   protected implicit def toWebElement(element: WebBrowser.Element): WebElement =
     element.underlying
   protected implicit def toMaybeWebElement(maybeElement: Option[WebBrowser.Element]): Option[WebElement] =
     maybeElement.map(_.underlying)
 
-  protected implicit class WebElementOps(element: WebBrowser.Element) {
+  protected implicit class ElementOps(element: WebBrowser.Element) {
+
     def parent: WebElement = element.findElement(By.xpath("./.."))
+
+    def enterValue(value: String): Unit = value foreach { char =>
+      element.sendKeys(char.toString) sleep (100 millis)
+    }
+  }
+
+  protected implicit class WebElementOps(element: WebElement) {
+
+    def enterValue(value: String): Unit = value foreach { char =>
+      element.sendKeys(char.toString) sleep (100 millis)
+    }
   }
 
   object sleep {
@@ -46,7 +57,7 @@ abstract class Page[Url <: BaseUrl] extends ScalatestMatchers with Eventually wi
       // Wait up to 2 minutes for this operation
       timeout  = scaled(Span(duration.toSeconds, Seconds)),
       interval = scaled(Span(2, Seconds))
-    ),
+    )
 }
 
 object Page {
