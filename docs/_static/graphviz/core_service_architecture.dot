@@ -7,8 +7,8 @@ strict digraph architecture {
   edge [fontname="Raleway"]
 
   Service [fillcolor="lightblue"]
-  Filesystem [fillcolor="#f4d142"]
-  Cache [fillcolor="#f4d142"]
+  "Filesystem Cache" [fillcolor="#f4d142"]
+  "Memory Cache" [fillcolor="#f4d142"]
   GitLab [fillcolor=""]
   Worker [fillcolor="lightblue"]
 
@@ -20,23 +20,12 @@ strict digraph architecture {
 
   }
 
-  subgraph resource_types {
-      Resource [fillcolor="#f4d142"]
-      Files [fillcolor="#fcba03"]
-      Projects [fillcolor="#fcba03"]
-
-      label="Resource Types"
-      Resource -> Files
-      Resource -> Projects
-      {rank=same; Files, Projects}
-    }
-
-  Service -> Filesystem [label=" persist resource"]
-  Service -> Cache [label=" persist resource metadata"]
+  Service -> "Filesystem Cache" [label=" persist resource"]
+  Service -> "Memory Cache" [label=" persist resource metadata"]
   Service -> GitLab [label=" sync with remote"]
 
-  Filesystem -> Worker [label=" execute operation on cached resource"]
-  Cache -> Worker [label=" read/write resource metadata"]
+  "Filesystem Cache" -> Worker [label=" execute operation on cached resource"]
+  "Memory Cache" -> Worker [label=" read/write resource metadata"]
 
   Worker -> GitLab [label=" sync with remote"]
 

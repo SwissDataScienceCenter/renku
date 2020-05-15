@@ -13,7 +13,9 @@ Following diagram describes components and architecture of the service:
 
 .. graphviz:: /_static/graphviz/core_service_architecture.dot
 
-
+The resources are segmented by user and could not be shared between them.
+They could be files or projects on top of which user executes subsequent operations. Each resource within the service
+has a default time to live after which the resource is evicted.
 
 Sequence diagram of service APIs
 """"""""""""""""""""""""""""""""
