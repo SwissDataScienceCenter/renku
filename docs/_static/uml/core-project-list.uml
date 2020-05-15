@@ -14,7 +14,7 @@
     activate Service
     Service->Cache: Get all cloned projects for a given user
     Cache->Service: Serialize all metadata objects
-    Service->Filesystem: Ensure projects still exists
+    Service<->Filesystem: Ensure projects still exists
     Service->Client: Return sorted list of all user projects
 
     @enduml

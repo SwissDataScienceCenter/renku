@@ -17,12 +17,12 @@
     Service<->Cache: Return metadata for project in which operation is being executed
     Service<->Filesystem: Check that file/project exists
     Service<->Cache: Enqueue a job for import a dataset
-    Service<->Client: Return a job identifier to the client
+    Service->Client: Return a job identifier to the client
 
     == Execute operation asynchronous ==
     Worker<->Web: Import data and metadata
-    Worker<->Filesystem: Add downloaded files and metadata to the project dataset
-    Worker<->Cache: Report Progress
+    Worker->Filesystem: Add downloaded files and metadata to the project dataset
+    Worker->Cache: Report Progress
     Worker->Git: Sync with remote repository
 
     == Check for the job status ==

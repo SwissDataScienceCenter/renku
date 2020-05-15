@@ -16,6 +16,6 @@
     Service<->Filesystem: Check that file/project exists
     Service<->Filesystem: Add a file to the project dataset
     Service->Git: Sync with remote repository
-    Service<->Client: Return list of files which were successfully added
+    Service->Client: Return list of files which were successfully added
 
     @enduml

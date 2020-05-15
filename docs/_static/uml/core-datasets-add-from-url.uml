@@ -19,10 +19,10 @@
     Service<->Cache: Enqueue a job for downloading the file
     Service<->Client: Return a job identifier to the client
 
-    == Execute operation asynchronous ==
+    == Execute operation asynchronously ==
     Worker<->Web: Download the file
-    Worker<->Filesystem: Add downloaded file to the project dataset
-    Worker<->Cache: Report Progress
+    Worker->Filesystem: Add downloaded file to the project dataset
+    Worker->Cache: Report Progress
     Worker->Git: Sync with remote repository
 
     == Check for the job status ==

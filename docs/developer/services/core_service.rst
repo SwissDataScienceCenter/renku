@@ -46,20 +46,20 @@ An endpoint to list all cloned project to the service cache for a given user.
 **GET /<prefix>/datasets.list**
 
 An endpoint to list of all datasets within a given project. This command is equivalent
-to `renku dataset` command.
+to ``renku dataset`` command.
 
 .. uml:: ../../_static/uml/core-datasets-list.uml
 
 **GET /<prefix>/datasets.files_list**
 
 An endpoint to list all dataset files within a given project. This command is equivalent
-to `renku dataset ls-files` command.
+to ``renku dataset ls-files`` command.
 
 .. uml:: ../../_static/uml/core-datasets-files-list.uml
 
 **POST /<prefix>/datasets.add**
 
-An endpoint to add a file to dataset. This command is equivalent to `renku dataset add` command.
+An endpoint to add a file to dataset. This command is equivalent to ``renku dataset add`` command.
 
 The following diagram describes the case when we are adding a file from a local service cache
 (e.g. user uploaded files):
@@ -73,7 +73,7 @@ large file by downloading it from some external place.
 
 **POST /<prefix>/datasets.create**
 
-An endpoint to create a new dataset within a project. This command is equivalent to `renku dataset create` command.
+An endpoint to create a new dataset within a project. This command is equivalent to ``renku dataset create`` command.
 
 .. uml:: ../../_static/uml/core-datasets-create.uml
 
@@ -81,13 +81,13 @@ An endpoint to create a new dataset within a project. This command is equivalent
 **POST /<prefix>/datasets.import**
 
 An endpoint for importing datasets from external providers. This command is equivalent
-to `renku dataset import` command.
+to ``renku dataset import`` command.
 
 .. uml:: ../../_static/uml/core-datasets-import.uml
 
 **POST /<prefix>/datasets.edit**
 
-An endpoint for editing dataset metadata. This command is equivalent to `renku dataset edit` command.
+An endpoint for editing dataset metadata. This command is equivalent to ``renku dataset edit`` command.
 
 .. uml:: ../../_static/uml/core-datasets-edit.uml
 

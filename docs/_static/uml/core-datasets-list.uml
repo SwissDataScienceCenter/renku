@@ -13,7 +13,7 @@
     Client->Service: POST /<prefix>/datasets.list
     activate Service
     Service<->Cache: Return metadata for project in which operation is being executed
-    Service->Filesystem: Inspect project dataset metadata
-    Service<->Client: Return datasets found in the project
+    Service<->Filesystem: Inspect project dataset metadata
+    Service->Client: Return datasets found in the project
 
     @enduml

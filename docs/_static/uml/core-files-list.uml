@@ -14,7 +14,7 @@
     activate Service
     Service->Cache: Request files cached metadata for a given user
     Cache->Service: List of files uploaded for a given user
-    Service->Filesystem: Filter out files which don't exists on the filesystem
+    Service<->Filesystem: Filter out files which don't exists on the filesystem
     Service->Client: Return sorted files for a given user
 
     @enduml

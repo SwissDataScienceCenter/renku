@@ -14,8 +14,8 @@
     activate Service
     Service<->Cache: Return metadata for project in which operation is being executed
     Service<->Filesystem: Check that file/project exists
-    Service<->Filesystem: Update metadata for a dataset within a project
+    Service->Filesystem: Update metadata for a dataset within a project
     Service->Git: Sync with remote repository
-    Service<->Client: Return edited fields
+    Service->Client: Return edited fields
 
     @enduml
