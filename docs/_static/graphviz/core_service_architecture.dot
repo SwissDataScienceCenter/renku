@@ -1,16 +1,21 @@
 strict digraph architecture {
   compound=true;
   newrank=true;
+  rankdir=LR;
 
   graph [fontname="Raleway", nodesep="0.8"];
   node [shape="rect", style="filled,rounded", fontname="Raleway"];
   edge [fontname="Raleway"]
 
   Service [fillcolor="lightblue"]
+  Worker [fillcolor="lightblue"]
+
   "Filesystem Cache" [fillcolor="#f4d142"]
   "Memory Cache" [fillcolor="#f4d142"]
   GitLab [fillcolor=""]
-  Worker [fillcolor="lightblue"]
+
+  Worker -> "Filesystem Cache" [label=" execute operation on cached resource"]
+  Worker -> "Memory Cache" [label=" read/write resource metadata"]
 
   subgraph service_clients {
     label="Clients"
@@ -24,8 +29,7 @@ strict digraph architecture {
   Service -> "Memory Cache" [label=" persist resource metadata"]
   Service -> GitLab [label=" sync with remote"]
 
-  "Filesystem Cache" -> Worker [label=" execute operation on cached resource"]
-  "Memory Cache" -> Worker [label=" read/write resource metadata"]
+
 
   Worker -> GitLab [label=" sync with remote"]
 
