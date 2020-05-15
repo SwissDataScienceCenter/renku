@@ -29,5 +29,18 @@ strict digraph architecture {
 
   Worker -> GitLab [label=" sync with remote"]
 
+  subgraph cluster_service_cache {
+    color="lightgray";
+    label="Service Cache";
+    "Filesystem Cache" [fillcolor="#f4d142"]
+    "Memory Cache" [fillcolor="#f4d142"]
+  }
+
+  subgraph cluster_service_client {
+      color="lightgray";
+      label="Clients";
+      UI
+      SDK
+    }
 
 }
