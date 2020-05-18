@@ -6,7 +6,7 @@
     participant "Webhook\nService" as Webhook
     participant GitLab
     participant "Tokens\nRepository" as Tokens
-    database "Event\nLog" as Log
+    participant "Event\nLog" as Log
 
     == Webhook creation - hook does exists ==
     Client->Webhook: POST /projects/:id/webhooks
