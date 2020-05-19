@@ -27,6 +27,7 @@ skip in publish := true
 publishTo := Some(Resolver.file("Unused transient repository", file("target/unusedrepo")))
 
 libraryDependencies += "ch.qos.logback"          % "logback-classic" % "1.2.3"
+libraryDependencies += "com.github.pureconfig"   %% "pureconfig"     % "0.12.3" % Test
 libraryDependencies += "eu.timepit"              %% "refined"        % "0.9.9" % Test
 libraryDependencies += "org.slf4j"               % "slf4j-log4j12"   % "1.7.28" % Test
 libraryDependencies += "org.scalacheck"          %% "scalacheck"     % "1.14.0" % Test
@@ -59,4 +60,5 @@ headerLicense := Some(
        |WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
        |See the License for the specific language governing permissions and
        |limitations under the License.""".stripMargin
-  ))
+  )
+)

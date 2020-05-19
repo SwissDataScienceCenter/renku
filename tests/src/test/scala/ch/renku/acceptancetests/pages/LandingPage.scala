@@ -10,6 +10,8 @@ case object LandingPage extends RenkuPage {
   override val path:  Path  = "/"
   override val title: Title = "Renku"
 
+  override def pageReadyElement(implicit webDriver: WebDriver): Option[WebElement] = Some(loginButton)
+
   def loginButton(implicit webDriver: WebDriver): WebElement = eventually {
     find(cssSelector("#login-button")) getOrElse fail("Login button not found")
   }

@@ -1,10 +1,10 @@
 .. _migrating_to_renku:
 
-Renku-izing your project
-========================
+Import Existing Project
+=======================
 
 So, at this point you have gone through :ref:`first_steps` and learned how Renku
-can help your research be more reproducible and collaborative. The following
+can help your data analysis be more reproducible and collaborative. The following
 guide will help you migrate your existing projects into the Renku platform.
 
 .. _practical_renku_usage:
@@ -13,7 +13,7 @@ Practical Renku Usage & Migration Tips
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 In addition to supplementing your research with reproducibility bits,
-Renku aims to help you use current best practices for data science workflows in
+Renku aims to help you use current best practices for data analysis workflows in
 an unobtrusive way. Therefore, when you initialize a new Renku project in either
 the command-line interface or through the web platform, a template set of directories
 and files will be created for you. These files deal with setting up ``renku``,
