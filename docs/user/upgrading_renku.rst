@@ -24,7 +24,6 @@ needing to change any settings.
 Using new ``renku`` CLI features
 --------------------------------
 
-
 .. note::
 
   This section is for upgrading the version of ``renku`` CLI installed into
@@ -59,11 +58,32 @@ debugging and reproducibility much simpler.
 3. When you start to run ``renku`` commands, you might be asked to call ``renku migrate``.
    This command ensures that the metadata in your project is updated.
 
-.. note::
+Test drive
+^^^^^^^^^^
 
-  ``renku`` is installed in the image with ``pipx``. You can also upgrade ``renku``
-  in a running Interactive Environment by adding the recommended ``pipx`` install
-  from :ref:`upgrading your local installation <upgrading_local>` to your ``Dockerfile``,
-  however you'll miss out on other changes to the image. You can also do the ``pipx``
-  installation in the terminal of the Interactive Environment, however these
-  changes will not hold through the next time you launch.
+If you just want to try out the latest version of ``renku`` without building a new
+image yet, you can follow the ``pipx`` installation instructions from
+:ref:`upgrading your local installation <upgrading_local>`. Installing in this way,
+like any other terminal install, will not hold through the next time you launch.
+
+Keep in mind that your project's metadata will be upgraded when you start running
+the new version ``renku`` commands - don't push these changes if you want to revert
+back to an older version.
+
+You should follow the steps in the previous section to swap out the base image
+once you're satisfied with latest ``renku``.
+
+Lazy upgrade
+^^^^^^^^^^^^
+
+If you want to use the latest version of ``renku`` but for some reason cannot rebuild
+from scratch the docker image for your project (e.g. dependency issues), you can
+add the ``pipx`` installation from :ref:`upgrading your local installation <upgrading_local>`
+to the end of your ``Dockerfile``; e.g. ``RUN pipx upgrade renku==<VERSION> --force``.
+
+When the gitlab CI builds an image using the ``Dockerfile`` in your project, it
+re-uses layers of installs that haven't changed between builds, which speeds up
+the build process. But, when you swap out the base image (as is recommended), all
+of the subsequent layers might need to rebuild.
+
+We still recommend swapping out the base image when possible.

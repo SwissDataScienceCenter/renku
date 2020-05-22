@@ -7,6 +7,7 @@ User Documentation
    :maxdepth: 2
 
    CLI Installation <cli-installation>
+   Upgrading Renku <upgrading_renku>
    Data in Renku <lfs>
    Templates <templates>
    Collaborating <collaboration>
