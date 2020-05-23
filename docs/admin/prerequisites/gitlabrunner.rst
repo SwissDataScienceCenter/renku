@@ -33,7 +33,7 @@ To run the following command first get the registration token from https://renku
      register -n -u https://<renku.mydomain.ch>/gitlab/ \
      --name gitlab/gitlab-runner -r  <TOKEN_FROM_GITLAB> \
      --executor docker --locked=false  --run-untagged=true \
-     --docker-image="docker:stable"
+     --tag-list=image-build --docker-image="docker:stable"
 
 3. Configure GitLab Runner to support more concurrent jobs
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

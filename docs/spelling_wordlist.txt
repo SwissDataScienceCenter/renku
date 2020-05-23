@@ -50,6 +50,7 @@ gitlab
 GitLab
 GraphQL
 hostname
+hyperkit
 indices
 Indices
 interoperability
@@ -74,11 +75,13 @@ kubernetes
 kus
 lefthand
 lfs
+localhost
 Matlab
 metadata
 microservices
 middleware
 minikube
+minimalistic
 mydomain
 namespace
 Nginx
@@ -122,6 +125,7 @@ SPARQL
 spawner
 SQLAlchemy
 subdirectories
+sudo
 supertype
 supertypes
 templated
@@ -141,6 +145,7 @@ versioned
 versioning
 Versioning
 vertices
+vm
 webhook
 webhooks
 wildcard
