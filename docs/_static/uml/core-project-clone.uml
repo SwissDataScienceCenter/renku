@@ -1,0 +1,23 @@
+    @startuml
+    hide footbox
+    skinparam shadowing false
+
+    actor Client
+    boundary Service
+    box "Service Cache"
+        database "Filesystem Cache" as Filesystem
+        database "Memory Cache" as Cache
+    end box
+    boundary Worker
+    entity "Remote Git" as Git
+
+    == Clone project to the service cache ==
+    Client->Service: POST /<prefix>/cache.project_clone
+    activate Service
+    Service->Git: Clone project for a given user
+    Git->Service: Persist cloned project
+    Service->Filesystem: Persist cloned project
+    Service->Cache: Store metadata about cloned project
+    Service->Client: Return generated project_id reference
+
+    @enduml
