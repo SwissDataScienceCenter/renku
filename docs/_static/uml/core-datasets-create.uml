@@ -1,0 +1,23 @@
+    @startuml
+    hide footbox
+    skinparam shadowing false
+
+    actor Client
+    boundary Service
+    box "Service Cache"
+        database "Filesystem Cache" as Filesystem
+        database "Memory Cache" as Cache
+    end box
+    boundary Worker
+    entity "Remote Git" as Git
+
+    == Create a new dataset in given project ==
+    Client->Service: POST /<prefix>/datasets.create
+    activate Service
+    Service<->Cache: Return metadata for project in which operation is being executed
+    Service<->Filesystem: Check that file/project exists
+    Service<->Filesystem: Create a new dataset within the project
+    Service->Git: Sync with remote repository
+    Service->Client: Return dataset reference name for a created dataset
+
+    @enduml
