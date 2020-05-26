@@ -660,6 +660,9 @@ minio:
 gateway:
   ingress:
     enabled: false
+  ## Uncomment this if you are using a GitLab version
+  ## prior to 12.7.0.
+  # oldGitLabLogout: true
 
 ## Configuration for renku-graph
 graph:
