@@ -100,3 +100,19 @@ An endpoint for editing dataset metadata. This command is equivalent to the ``re
 
 .. uml:: ../../_static/uml/core-datasets-edit.uml
 
+
+**GET /<prefix>/templates.read_manifest**
+
+An endpoint for reading manifest files from external templates repositories. This command
+is equivalent to the ``renku init -l`` command.
+
+.. uml:: ../../_static/uml/core-templates-read.uml
+
+
+**POST /<prefix>/templates.create_project**
+
+An endpoint for creating projects from an external templates repository. This command
+is equivalent to the ``renku init -s`` command.
+
+.. uml:: ../../_static/uml/core-templates-create.uml
+
