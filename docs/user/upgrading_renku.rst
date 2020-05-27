@@ -12,7 +12,7 @@ You can find the changes `in the renku-python docs <https://renku-python.readthe
 If you're instead looking for a list of new features available in RenkuLab, they
 are announced in the :ref:`release_notes`. When we update components of the
 RenkuLab platform, you won't usually have to do anything special. E.g. when we
-added the ability for anonymous (i.e. not logged in) users to launch interactive
+added the ability for anonymous (not logged in) users to launch interactive
 environments, each project was immediately accessible without the project owner
 needing to change any settings.
 
