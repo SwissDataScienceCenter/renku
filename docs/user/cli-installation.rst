@@ -4,8 +4,8 @@ Command-line Interface Installation
 ===================================
 
 The Python-based command-line interface (CLI) and the Python API that we call
-``renku`` is available for use via RenkuLab interactive environments and is also
-installable on your local machine. Most available CLI commands are
+``renku`` is available for use via RenkuLab interactive environments and you can
+also install it on your local machine. Most available CLI commands are
 documented in our `cheatsheet <https://raw.githubusercontent.com/SwissDataScienceCenter/renku/master/docs/_static/cheatsheet/cheatsheet.pdf>`_
 
 Using the CLI on RenkuLab
