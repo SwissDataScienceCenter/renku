@@ -15,7 +15,7 @@ trait Collaboration {
     click on projectPage.Collaboration.tab
     And("they navigate to the Merge Requests sub tab")
     click on projectPage.Collaboration.MergeRequests.tab
-    Then("they should see a 'No merge requests' info")
+    Then("they should see a 'No merge requests to display' info")
     verify userCanSee projectPage.Collaboration.MergeRequests.noMergeRequests
   }
 }
