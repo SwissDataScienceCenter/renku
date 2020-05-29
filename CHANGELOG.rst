@@ -1,5 +1,62 @@
 .. _changelog:
 
+0.6.3
+-----
+
+New feature
+~~~~~~~~~~~~
+
+⭐️ Project: commit list is now displayed
+
+Notable improvements
+~~~~~~~~~~~~~~~~~~~~
+
+🚄 Datasets: dataset creation and import unified in the UI
+
+🚄 Environments: auto-saved branches are filtered per username
+
+🚄 Improve markdown rendering and highlight code
+
+🚄 Editing markdown files is easier as ``ckeditor`` is partially integrated inside Renku
+
+Bug fixes
+~~~~~~~~~
+
+* Dataset contains all folders from unzipped file
+* If a dataset fails, non-failed datasets are displayed
+* Improved UX for when datasets take too long
+* Datasets: no failure when adding ignored files
+
+Miscellaneous
+^^^^^^^^^^^^^
+
+- Default templates now use the latest R (4.0.0); `bioc 3_11 <https://www.bioconductor.org/news/bioc_3_11_release>`__ also now available
+- Docker images in project templates use Renku `0.10.4 <https://github.com/SwissDataScienceCenter/renku-python/releases/tag/0.10.4>`__
+
+Breaking changes
+~~~~~~~~~~~~~~~~
+
+GitLab version: we now assume a GitLab version >= 12.9.0 per default.
+GitLab versions < 12.7.0 are supported too, but a ``.gateway.oldGitLabLogout: true`` has to be set explicitly.
+
+Individual components
+~~~~~~~~~~~~~~~~~~~~~
+
+For changes to individual components, check:
+
+* renku-ui `0.10.2 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/0.10.2>`__
+* renku-python `0.10.4 <https://github.com/SwissDataScienceCenter/renku-python/releases/tag/0.10.4>`__
+* renku-gateway `0.8.0 <https://github.com/SwissDataScienceCenter/renku-notebooks/releases/tag/0.8.0>`__
+* renku-notebooks `0.7.4 <https://github.com/SwissDataScienceCenter/renku-notebooks/releases/tag/0.7.4>`__
+
+* renku-graph `1.0.3 to 0.55.4 <https://github.com/SwissDataScienceCenter/renku-graph>`__
+
+Upgrading from 0.6.2
+~~~~~~~~~~~~~~~~~~~~
+
+* No new values required in the values file
+* The version in the welcome page can be updated at `ui.welcomePage.text`
+
 0.6.2
 -----
 
@@ -44,7 +101,7 @@ Individual components
 
 For changes to individual components, check:
 
-* renku-ui `0.9.2 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/0.9.2>`__
+* renku-ui `0.10.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/0.10.0>`__
 * renku-notebooks `0.7.3 <https://github.com/SwissDataScienceCenter/renku-notebooks/releases/tag/0.7.3>`__
 * renku-python `0.10.3 <https://github.com/SwissDataScienceCenter/renku-python/releases/tag/0.10.3>`__
 * renku-gateway `0.7.1 <https://github.com/SwissDataScienceCenter/renku-notebooks/releases/tag/0.7.1>`__
@@ -54,6 +111,7 @@ Upgrading from 0.6.1
 
 * If you want to enable interactive sessions for anonymous users, see the
   `values changelog <https://github.com/SwissDataScienceCenter/renku/blob/master/charts/values.yaml.changelog.md>`__ file and `anonymous sessions documentation <https://renku.readthedocs.io/en/latest/admin/anonymous-sessions.html>`__
+* The version in the welcome page can be updated at `ui.welcomePage.text`
 
 
 0.6.1
