@@ -95,7 +95,7 @@ gitlab_rails['lfs_object_store_connection'] = eval(ENV['GITLAB_LFS_CONNECTION'])
 
 prometheus['enable'] = false
 gitlab_rails['monitoring_whitelist'] = ['127.0.0.0/8', '10.0.0.0/8']
-gitlab_rails['env'] = { 'prometheus_multiproc_dir' => '/dev/shm' }
+gitlab_rails['env'] = { 'prometheus_multiproc_dir' => '/dev/shm/gitlab' }
 
 ### GitLab Registry settings
 registry_external_url '{{ .Values.registry.externalUrl }}'
