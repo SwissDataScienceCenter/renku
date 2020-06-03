@@ -64,7 +64,7 @@ all the necessary python dependencies:
 Start minikube
 ^^^^^^^^^^^^^^
 Next we start minikube. Don't forget to specify the version with the
-`--kubernetes-version` flag to avoid incompatibilites with the most recent
+`--kubernetes-version` flag to avoid incompatibilities with the most recent
 kubernetes versions.
 
 **Tip**: For OS X users we recommend using the hyperkit vm driver by adding the
@@ -110,7 +110,7 @@ the the kubernetes cluster. Also, we deploy `nginx ingress <https://github.com/k
         stable/nginx-ingress
 
 **Notice**: after the `init` command, you may need to wait up to 1 minute
-before you can succesfully run ``helm upgrade``.
+before you can successfully run ``helm upgrade``.
 
 
 Build and pull all necessary charts
