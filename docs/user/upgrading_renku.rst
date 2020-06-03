@@ -1,7 +1,7 @@
 .. upgrading_renku:
 
-Upgrading a Renku Project
-=========================
+Upgrading your Renku project
+============================
 
 The Renku Project is in constant flux! This means that often there are changes
 to RenkuLab (e.g. the web platform (UI) and the knowledge graph (KG)), and the
@@ -18,8 +18,8 @@ needing to change any settings.
 
 .. _renku_cli_upgrade:
 
-Upgrading the ``renku`` CLI in your image
------------------------------------------
+Upgrading your image to use the latest ``renku`` CLI version
+------------------------------------------------------------
 
 .. note::
 
@@ -71,13 +71,14 @@ back to an older version.
 You should follow the steps in the previous section to swap out the base image
 once you're satisfied with latest ``renku``.
 
-Lazy upgrade
-^^^^^^^^^^^^
+Only updating the renku CLI
+^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 If you want to use the latest version of ``renku`` but for some reason cannot rebuild
-from scratch the docker image for your project (e.g. dependency issues), you can
-add the ``pipx`` installation from :ref:`upgrading your local installation <upgrading_local>`
-to the end of your ``Dockerfile``; e.g. ``RUN pipx upgrade renku==<VERSION> --force``.
+from scratch the rest of the docker image layers for your project (e.g. dependency issues),
+you can add the ``pipx`` installation from
+:ref:`upgrading your local installation <upgrading_local>` to the end of your ``Dockerfile``;
+e.g. ``RUN pipx install renku==<VERSION> --force``.
 
 When the gitlab CI builds an image using the ``Dockerfile`` in your project, it
 re-uses layers of installs that haven't changed between builds, which speeds up
