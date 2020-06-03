@@ -11,8 +11,6 @@ New feature
 Notable improvements
 ~~~~~~~~~~~~~~~~~~~~
 
-🚄 Datasets: dataset creation and import unified in the UI
-
 🚄 Environments: auto-saved branches are filtered per username
 
 🚄 Improve markdown rendering and code highlighting
