@@ -30,14 +30,14 @@ Bug fixes
 Miscellaneous
 ^^^^^^^^^^^^^
 
-- Default templates now use the latest R (4.0.0); `bioc 3_11 <https://www.bioconductor.org/news/bioc_3_11_release>`__ also now available
-- Docker images in project templates use Renku `0.10.4 <https://github.com/SwissDataScienceCenter/renku-python/releases/tag/0.10.4>`__
+- Default R templates now use the latest R (4.0.0); `bioc 3_11 <https://www.bioconductor.org/news/bioc_3_11_release>`__ also now available
+- Docker images in project templates use ``renku`` `0.10.4 <https://github.com/SwissDataScienceCenter/renku-python/releases/tag/0.10.4>`__
 
 Breaking changes
 ~~~~~~~~~~~~~~~~
 
-GitLab version: the Renku chart now installs GitLab >= 12.9.0 per default.
-GitLab versions < 12.7.0 are supported too, but a ``.gateway.oldGitLabLogout: true`` has to be set explicitly. Note that GitLab versions where `12.7.0 <= version < 12.9.0` are not supported. 
+GitLab version: the Renku chart now installs GitLab >= 12.9.0 by default.
+GitLab versions < 12.7.0 are supported too, but a ``.gateway.oldGitLabLogout: true`` has to be set explicitly. Note that GitLab versions where `12.7.0 <= version < 12.9.0` are not supported.
 
 Individual components
 ~~~~~~~~~~~~~~~~~~~~~
