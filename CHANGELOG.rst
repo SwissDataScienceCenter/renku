@@ -6,7 +6,7 @@
 New feature
 ~~~~~~~~~~~~
 
-⭐️ Project: commit list is now displayed
+⭐️ Project details now include a listing of the commit history
 
 Notable improvements
 ~~~~~~~~~~~~~~~~~~~~
