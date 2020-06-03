@@ -192,7 +192,7 @@ Start the renku platform using helm:
 
   $ helm upgrade renku --install --namespace renku ./renku \
     -f minikube-values.yaml -f example-configurations/external-gitlab-values.yaml \
-    --timeout 1800 \
+    --timeout 3600 \
     --set global.renku.domain=$RENKU_DOMAIN \
     --set notebooks.jupyterhub.hub.services.gateway.oauth_redirect_uri=http://$RENKU_DOMAIN/api/auth/jupyterhub/token \
     --set notebooks.jupyterhub.auth.gitlab.callbackUrl=http://$RENKU_DOMAIN/jupyterhub/hub/oauth_callback
