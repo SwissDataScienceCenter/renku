@@ -36,7 +36,7 @@ Miscellaneous
 Breaking changes
 ~~~~~~~~~~~~~~~~
 
-GitLab version: we now assume a GitLab version >= 12.9.0 per default.
+GitLab version: the Renku chart now installs GitLab >= 12.9.0 per default.
 GitLab versions < 12.7.0 are supported too, but a ``.gateway.oldGitLabLogout: true`` has to be set explicitly. Note that GitLab versions where `12.7.0 <= version < 12.9.0` are not supported. 
 
 Individual components
