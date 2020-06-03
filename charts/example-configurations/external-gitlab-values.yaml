@@ -13,7 +13,7 @@ variables:
   gitlabClientSecret: &gitlabClientSecret  # Put GitLab Secret here!
   gitlabRegistryHost: &gitlabRegistryHost  # registry.gitlab.com or registry.renkulab.io
 
-# Comment out or remove this block when using renkulab.io/gitlab
+# Comment out this block when using renkulab.io/gitlab or any other GitLab on-premises
 global:
   gitlab:
     urlPrefix: ""
