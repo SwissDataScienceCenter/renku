@@ -15,7 +15,7 @@ Notable improvements
 
 🚄 Environments: auto-saved branches are filtered per username
 
-🚄 Improve markdown rendering and highlight code
+🚄 Improve markdown rendering and code highlighting
 
 🚄 Editing markdown files is easier as ``ckeditor`` is partially integrated inside Renku
 
