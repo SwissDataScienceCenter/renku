@@ -23,7 +23,7 @@ Bug fixes
 ~~~~~~~~~
 
 * Dataset contains all folders from unzipped file
-* If a dataset fails, non-failed datasets are displayed
+* Failing to retrieve metadata for one dataset does not cause the others to fail
 * Improved UX for when datasets take too long
 * Datasets: no failure when adding ignored files
 
