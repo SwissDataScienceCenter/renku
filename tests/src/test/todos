@@ -1,0 +1,6 @@
+x make the DSL nice so we can pass the 'answers'
+x the commands logging (stout is probably not the best)
+x make the exception to appear when a command execution fail
+x maybe an issue for debug logging
+- do the whole flights tutorial in the new way
+- do renku install / verify the version

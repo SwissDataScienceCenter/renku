@@ -15,6 +15,10 @@
         <appender-ref ref="ASYNC_STDOUT"/>
     </logger>
 
+    <logger name="test" level="DEBUG" additivity="false">
+        <appender-ref ref="ASYNC_STDOUT"/>
+    </logger>
+
     <logger name="com.github.tomakehurst.wiremock" level="OFF"/>
 
     <root level="OFF">

@@ -11,8 +11,8 @@ import eu.timepit.refined.collection.NonEmpty
 object projects {
 
   final case class ProjectIdentifier(
-    namespace: String Refined NonEmpty,
-    slug: String Refined NonEmpty
+      namespace: String Refined NonEmpty,
+      slug:      String Refined NonEmpty
   )
 
   final case class ProjectDetails(
@@ -20,6 +20,10 @@ object projects {
       description: String Refined NonEmpty,
       readmeTitle: String
   )
+
+  final case class ProjectUrl(value: String) {
+    override lazy val toString: String = value
+  }
 
   object ProjectDetails {
 

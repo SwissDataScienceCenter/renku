@@ -21,7 +21,7 @@ class HandsOnSpec
     with NewProject
     with RemoveProject
     with Settings
-    with FlightsTutorial {
+    with FlightsTutorialJupyter {
 
   scenario("User can do hands-on tutorial") {
 
@@ -48,7 +48,7 @@ class HandsOnSpec
   }
 
   def doHandsOn(implicit projectDetails: ProjectDetails, docsScreenshots: DocsScreenshots): Unit = {
-    val projectPage = ProjectPage()
+    val projectPage    = ProjectPage()
     val jupyterLabPage = launchEnvironment
 
     When("the user clicks on the Terminal icon")
