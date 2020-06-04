@@ -79,8 +79,8 @@ class ProjectPage(projectSlug: String, namespace: String) extends RenkuPage with
       }
 
       def noMergeRequests(implicit webDriver: WebDriver): WebElement = eventually {
-        find(cssSelector("div.row div.col p"))
-          .find(_.text == "No merge requests.")
+        findAll(cssSelector("div.row div"))
+          .find(_.text == "No merge requests to display.")
           .getOrElse(fail("No merge requests info not found"))
       }
     }
