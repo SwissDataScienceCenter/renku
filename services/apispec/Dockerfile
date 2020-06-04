@@ -1,9 +1,9 @@
-FROM python:3.6-alpine
+FROM python:3.7-alpine
 
 RUN apk --no-cache add --update \
     build-base \
     linux-headers \
-    python-dev
+    python3-dev
 
 COPY requirements.txt /code/requirements.txt
 WORKDIR /code
