@@ -28,8 +28,9 @@ Bug fixes
 Miscellaneous
 ^^^^^^^^^^^^^
 
-- Default R templates now use the latest R (4.0.0); `bioc 3_11 <https://www.bioconductor.org/news/bioc_3_11_release>`__ also now available
-- Docker images in project templates use ``renku`` `0.10.4 <https://github.com/SwissDataScienceCenter/renku-python/releases/tag/0.10.4>`__
+- The default R template now uses the latest R (4.0.0). To update it in an existing R project, replace the first line in the Dockerfile with ``FROM renku/renkulab-r:4.0.0-renku0.10.4-0.6.3``
+- A Bioconductor image with `bioc 3_11 <https://www.bioconductor.org/news/bioc_3_11_release>`__ is now available. To use it replace the first line in the Dockerfile with ``FROM renku/renkulab-bioc:RELEASE_3_11-renku0.10.4-0.6.3``
+- Docker images in project templates use ``renku`` `0.10.4 <https://github.com/SwissDataScienceCenter/renku-python/releases/tag/v0.10.4>`__
 
 Breaking changes
 ~~~~~~~~~~~~~~~~
