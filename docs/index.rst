@@ -14,7 +14,8 @@ The Renku Project Docs
    :hidden:
 
    About Renku <introduction/index>
-   Getting started <getting_started>
+   Getting Started <getting_started>
+   Using Renku <user/index>
    Get in touch <get_in_touch>
    Roadmap <roadmap>
    Release notes <release_notes>
