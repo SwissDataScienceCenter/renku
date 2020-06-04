@@ -3,6 +3,7 @@ package ch.renku.acceptancetests.workflows
 import java.nio.file.Path
 
 import ch.renku.acceptancetests.model.projects.ProjectUrl
+import ch.renku.acceptancetests.model.users.UserCredentials
 import ch.renku.acceptancetests.tooling._
 import ch.renku.acceptancetests.tooling.console._
 import eu.timepit.refined.auto._
@@ -11,7 +12,7 @@ import org.scalatest.{FeatureSpec, GivenWhenThen, Matchers => ScalatestMatchers}
 trait FlightsTutorial extends GivenWhenThen with Matchers with ScalatestMatchers {
   self: FeatureSpec =>
 
-  def followFlightsTutorial(projectUrl: ProjectUrl): Unit = {
+  def followTheFlightsTutorial(projectUrl: ProjectUrl)(implicit userCredentials: UserCredentials): Unit = {
 
     implicit val projectFolder: Path = createTempFolder
 
@@ -31,50 +32,60 @@ trait FlightsTutorial extends GivenWhenThen with Matchers with ScalatestMatchers
     console %> (c"echo pandas==0.25.3" >> "requirements.txt")
     console %> (c"echo seaborn==0.9.0" >> "requirements.txt")
 
-//    And("installs the packages")
-//    terminal %> "pip install -r requirements.txt" sleep (1 minute)
-//    terminal %> "git add requirements.txt" sleep (1 second)
-//    terminal %> "git commit -m 'Installed pandas and seaborn'" sleep (1 second)
-//    terminal %> "git push" sleep (5 seconds)
-//    And("downloads the tutorial step 1 notebook")
-//    terminal %> "wget -O notebooks/00-FilterFlights.ipynb https://renkulab.io/gitlab/renku-tutorial/renku-tutorial-flights/raw/master/.tutorial/meta/templates/00-FilterFlights-doi.ipynb" sleep (8 seconds)
-//    And("commits it")
-//    terminal %> "git add notebooks" sleep (1 second)
-//    terminal %> "git commit -m 'Created notebook to filter flights to AUS, TX.'" sleep (1 second)
-//    terminal %> "git push" sleep (5 seconds)
-//    And("downloads the tutorial step 1 python file")
-//    terminal %> "mkdir src" sleep (1 second)
-//    terminal %> "wget -O src/00-FilterFlights.py https://renkulab.io/gitlab/renku-tutorial/renku-tutorial-flights/raw/master/.tutorial/meta/templates/00-FilterFlights.py" sleep (8 seconds)
-//    And("commits it")
-//    terminal %> "git add src" sleep (1 second)
-//    terminal %> "git commit -m 'Extracted logic from FilterFlights notebook into script.'" sleep (1 second)
-//    terminal %> "git push" sleep (5 seconds)
-//    And("runs step 1")
-//    terminal %> "mkdir data/output" sleep (1 second)
-//    terminal %> "renku run python src/00-FilterFlights.py data/201901_us_flights_1/2019-01-flights.csv.zip data/output/2019-01-flights-filtered.csv" sleep (17 seconds)
-//    And("downloads the tutorial step 2 notebook")
-//    terminal %> "wget -O notebooks/01-CountFlights.ipynb https://renkulab.io/gitlab/renku-tutorial/renku-tutorial-flights/raw/master/.tutorial/meta/templates/01-CountFlights.ipynb" sleep (8 seconds)
-//    And("commits it")
-//    terminal %> "git add notebooks" sleep (1 second)
-//    terminal %> "git commit -m 'Created notebook to count flights.'" sleep (1 second)
-//    terminal %> "git push" sleep (5 seconds)
-//    And("runs the notebook")
-//    terminal %> """renku run papermill \
-//notebooks/01-CountFlights.ipynb \
-//notebooks/01-CountFlights.ran.ipynb \
-//-p input_path data/output/2019-01-flights-filtered.csv  \
-//-p output_path data/output/2019-01-flights-count.txt""" sleep (17 seconds)
-//    And("pushes the results to the remote")
-//    terminal %> "git push" sleep (10 seconds)
-//    And("updates the code")
-//    terminal %> "sed -ie 's/DFW/AUS/g' src/00-FilterFlights.py"
-//    terminal %> "rm src/00-FilterFlights.pye"
-//    terminal %> "git add src/00-FilterFlights.py"
-//    terminal %> "git commit -m 'Fixed filter to use AUS, not DFW.'"
-//    And("and updates the results")
-//    terminal %> "renku update" sleep (10 seconds)
-//    And("pushes the results to the remote")
-//    terminal %> "git push" sleep (10 seconds)
-//    Then("the user is done with the basic workflow")
+    And("installs the packages")
+    console %> c"pip install -r requirements.txt"
+    console %> c"git add requirements.txt"
+    console %> c"git commit -m 'Installed pandas and seaborn'"
+    console %> c"git push"
+
+    And("downloads the tutorial step 1 notebook")
+    console %> c"wget -O $projectFolder/notebooks/00-FilterFlights.ipynb https://renkulab.io/gitlab/renku-tutorial/renku-tutorial-flights/raw/master/.tutorial/meta/templates/00-FilterFlights-doi.ipynb"
+    And("commits it")
+    console %> c"git add notebooks"
+    console %> c"git commit -m 'Created notebook to filter flights to AUS, TX.'"
+    console %> c"git push"
+
+    And("downloads the tutorial step 1 python file")
+    console %> c"mkdir $projectFolder/src"
+    console %> c"wget -O $projectFolder/src/00-FilterFlights.py https://renkulab.io/gitlab/renku-tutorial/renku-tutorial-flights/raw/master/.tutorial/meta/templates/00-FilterFlights.py"
+
+    And("commits it")
+    console %> c"git add src"
+    console %> c"git commit -m 'Extracted logic from FilterFlights notebook into script.'"
+    console %> c"git push"
+
+    And("runs step 1")
+    console %> c"mkdir $projectFolder/data/output"
+    console %> c"renku run python src/00-FilterFlights.py data/201901_us_flights_1/2019-01-flights.csv.zip data/output/2019-01-flights-filtered.csv"
+
+    And("downloads the tutorial step 2 notebook")
+    console %> c"wget -O $projectFolder/notebooks/01-CountFlights.ipynb https://renkulab.io/gitlab/renku-tutorial/renku-tutorial-flights/raw/master/.tutorial/meta/templates/01-CountFlights.ipynb"
+    And("commits it")
+    console %> c"git add notebooks"
+    console %> c"git commit -m 'Created notebook to count flights.'"
+    console %> c"git push"
+
+    And("runs the notebook")
+    console %> c"""
+    |renku run papermill 
+    |notebooks/01-CountFlights.ipynb 
+    |notebooks/01-CountFlights.ran.ipynb 
+    |-p input_path data/output/2019-01-flights-filtered.csv 
+    |-p output_path data/output/2019-01-flights-count.txt"""
+    And("pushes the results to the remote")
+    console %> c"git push"
+
+    And("updates the code")
+    console %> c"sed -ie 's/DFW/AUS/g' $projectFolder/src/00-FilterFlights.py"
+    console %> c"rm src/00-FilterFlights.pye"
+    console %> c"git add src/00-FilterFlights.py"
+    console %> c"git commit -m 'Fixed filter to use AUS, not DFW.'"
+
+    And("and updates the results")
+    console %> c"renku update"
+    And("pushes the results to the remote")
+    console %> c"git push"
+
+    Then("the user is done with the basic workflow")
   }
 }

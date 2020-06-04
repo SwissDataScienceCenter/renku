@@ -28,7 +28,7 @@ private class CommandExecutor(command: Command) {
   }.unsafeRunSync()
 
   private def buildProcess(implicit workPath: Path) =
-    command.maybeFileName.foldLeft(Process(command.toString, workPath.toFile)) { (process, fileName) =>
+    command.maybeFileName.foldLeft(Process(command.toString.stripMargin, workPath.toFile)) { (process, fileName) =>
       process #>> new File(workPath.toUri resolve fileName.value)
     }
 

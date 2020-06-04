@@ -4,3 +4,6 @@ x make the exception to appear when a command execution fail
 x maybe an issue for debug logging
 - do the whole flights tutorial in the new way
 - do renku install / verify the version
+- git push and auth - maybe inputing username and password is fine
+- add info how to prepare local env so you can run the tests from an IDE
+- configure global git username and email on the local machine if not done yet (git config --global user.name)
