@@ -43,7 +43,7 @@ Individual components
 For changes to individual components, check:
 
 * renku-ui `0.10.2 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/0.10.2>`__
-* renku-python `0.10.4 <https://github.com/SwissDataScienceCenter/renku-python/releases/tag/0.10.4>`__
+* renku-python `0.10.4 <https://github.com/SwissDataScienceCenter/renku-python/releases/tag/v0.10.4>`__
 * renku-gateway `0.8.0 <https://github.com/SwissDataScienceCenter/renku-notebooks/releases/tag/0.8.0>`__
 * renku-notebooks `0.7.4 <https://github.com/SwissDataScienceCenter/renku-notebooks/releases/tag/0.7.4>`__
 
