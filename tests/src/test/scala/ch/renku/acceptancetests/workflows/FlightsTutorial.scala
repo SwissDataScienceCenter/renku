@@ -24,11 +24,13 @@ trait FlightsTutorial extends GivenWhenThen with Matchers with ScalatestMatchers
     And("imports a dataset from the dataverse")
     console %> c"renku dataset import 10.7910/DVN/WTZS4K".userInput("y")
 
-//    And("pushes the changes to the remote")
-//    terminal %> "git push" sleep (10 seconds)
-//    And("adds some Python packages to the requirements.txt")
-//    terminal %> "echo pandas==0.25.3 >> requirements.txt" sleep (1 second)
-//    terminal %> "echo seaborn==0.9.0 >> requirements.txt" sleep (1 second)
+    And("pushes the changes to the remote")
+    console %> c"git push"
+
+    And("adds some Python packages to the requirements.txt")
+    console %> (c"echo pandas==0.25.3" >> "requirements.txt")
+    console %> (c"echo seaborn==0.9.0" >> "requirements.txt")
+
 //    And("installs the packages")
 //    terminal %> "pip install -r requirements.txt" sleep (1 minute)
 //    terminal %> "git add requirements.txt" sleep (1 second)

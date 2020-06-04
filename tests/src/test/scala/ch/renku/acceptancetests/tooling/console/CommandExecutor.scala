@@ -1,13 +1,13 @@
 package ch.renku.acceptancetests.tooling.console
 
-import java.io.InputStream
+import java.io.{File, InputStream}
 import java.nio.file.Path
 import java.util
 import java.util.concurrent.ConcurrentLinkedQueue
 
 import cats.effect.IO
-import ch.renku.acceptancetests.tooling.TestLogger.logger
 import cats.implicits._
+import ch.renku.acceptancetests.tooling.TestLogger.logger
 import ch.renku.acceptancetests.tooling.console.Command.UserInput
 
 import scala.jdk.CollectionConverters._
@@ -21,11 +21,16 @@ private class CommandExecutor(command: Command) {
     implicit val output: util.Collection[String] = new ConcurrentLinkedQueue[String]()
 
     IO {
-      command.userInputs.foldLeft(Process(command.toString, workPath.toFile)) { (process, userInput) =>
+      command.userInputs.foldLeft(buildProcess) { (process, userInput) =>
         process #< userInput.asStream
       } lazyLines ProcessLogger(logLine _) foreach logLine
     } recoverWith consoleException
   }.unsafeRunSync()
+
+  private def buildProcess(implicit workPath: Path) =
+    command.maybeFileName.foldLeft(Process(command.toString, workPath.toFile)) { (process, fileName) =>
+      process #>> new File(workPath.toUri resolve fileName.value)
+    }
 
   private def logLine(line: String)(implicit output: util.Collection[String]): Unit = line.trim match {
     case "" => ()
