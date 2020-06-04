@@ -84,6 +84,52 @@ class ProjectPage(projectSlug: String, namespace: String) extends RenkuPage with
           .getOrElse(fail("No merge requests info not found"))
       }
     }
+
+    object Issues {
+
+      def tab(implicit webDriver: WebDriver): WebElement = eventually {
+        find(cssSelector(s"a[href='$path/collaboration/issues']")) getOrElse fail("Issues tab not found")
+      }
+
+      def newIssueLink(implicit webDriver: WebDriver): WebElement = eventually {
+        findAll(cssSelector(s"a[href='$path/collaboration/issues/issue_new']"))
+          .find(_.text == "New Issue")
+          .getOrElse(fail("New Issue button not found"))
+      }
+
+      def issueTitleElements(implicit webDriver: WebDriver): List[WebBrowser.Element] = eventually {
+        findAll(cssSelector("span.issue-title a")) toList
+      }
+
+      def issueTitles(implicit webDriver: WebDriver): List[String] =
+        issueTitleElements.map(_.text)
+
+      def noIssues(implicit webDriver: WebDriver): WebElement = eventually {
+        findAll(cssSelector("div.row div"))
+          .find(_.text == "No issues to display.")
+          .getOrElse(fail("No issues info not found"))
+      }
+
+      object NewIssue {
+        def titleField(implicit webDriver: WebDriver): WebElement = eventually {
+          find(cssSelector("input#title")) getOrElse fail("Title field not found")
+        }
+
+        def markdownSwitch(implicit webDriver: WebDriver): WebElement = eventually {
+          find(cssSelector("div.float-right.custom-switch.custom-control > label")) getOrElse
+            fail("Markdown switch not found")
+        }
+
+        def descriptionField(implicit webDriver: WebDriver): WebElement = eventually {
+          find(cssSelector("textarea#textareatext-area")) getOrElse fail("Description field not found")
+        }
+
+        def createIssueButton(implicit webDriver: WebDriver): WebElement = eventually {
+          findAll(cssSelector("button[type='submit']")).find(_.text == "Create Issue") getOrElse fail("Create Issue button not found")
+        }
+
+      }
+    }
   }
 
   object Files {

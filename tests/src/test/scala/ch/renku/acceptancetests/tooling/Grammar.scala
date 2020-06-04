@@ -1,14 +1,14 @@
 package ch.renku.acceptancetests.tooling
 
 import ch.renku.acceptancetests.pages.Page
-import org.openqa.selenium.WebElement
+import org.openqa.selenium.{By, WebElement}
 import org.scalatest.concurrent.Eventually
 import org.scalatestplus.selenium
 import org.scalatestplus.selenium.WebBrowser
 
-import scala.concurrent.duration.Duration
+import scala.concurrent.duration._
 import scala.jdk.CollectionConverters._
-import scala.language.implicitConversions
+import scala.language.{implicitConversions, postfixOps}
 
 trait Grammar extends Eventually {
   self: WebBrowser with AcceptanceSpec =>
@@ -65,5 +65,22 @@ trait Grammar extends Eventually {
 
   protected implicit class OperationOps(unit: Unit) {
     def sleep(duration: Duration): Unit = Page.SleepThread(duration)
+  }
+
+  protected implicit def toWebElement(element: WebBrowser.Element): WebElement =
+    element.underlying
+
+  protected implicit class ElementOps(element: WebBrowser.Element) {
+
+    def enterValue(value: String): Unit = value foreach { char =>
+      element.sendKeys(char.toString) sleep (100 millis)
+    }
+  }
+
+  protected implicit class WebElementOps(element: WebElement) {
+
+    def enterValue(value: String): Unit = value foreach { char =>
+      element.sendKeys(char.toString) sleep (100 millis)
+    }
   }
 }
