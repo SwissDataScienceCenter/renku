@@ -30,10 +30,15 @@ object projects {
   object ProjectUrl {
 
     implicit class ProjectUrlOps(projectUrl: ProjectUrl)(implicit userCredentials: UserCredentials) {
+      import ch.renku.acceptancetests.tooling.UrlEncoder.urlEncode
+
       lazy val addGitCredentials: String = {
         val protocol = new URL(projectUrl.value).getProtocol
         projectUrl.value
-          .replace(s"$protocol://", s"$protocol://${userCredentials.username}:${userCredentials.password}@")
+          .replace(
+            s"$protocol://",
+            s"$protocol://${urlEncode(userCredentials.username.value)}:${urlEncode(userCredentials.password.value)}@"
+          )
       }
     }
   }

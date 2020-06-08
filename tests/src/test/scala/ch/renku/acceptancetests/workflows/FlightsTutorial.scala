@@ -3,7 +3,6 @@ package ch.renku.acceptancetests.workflows
 import java.nio.file.Path
 
 import ch.renku.acceptancetests.model.projects.ProjectUrl
-import ch.renku.acceptancetests.model.projects.ProjectUrl._
 import ch.renku.acceptancetests.model.users.UserCredentials
 import ch.renku.acceptancetests.tooling._
 import ch.renku.acceptancetests.tooling.console._
@@ -69,11 +68,11 @@ trait FlightsTutorial extends GivenWhenThen with Matchers with ScalatestMatchers
     And("runs the notebook")
     console %>
       c"""
-         |renku run papermill
-         |notebooks/01-CountFlights.ipynb
-         |notebooks/01-CountFlights.ran.ipynb
-         |-p input_path data/output/2019-01-flights-filtered.csv
-         |-p output_path data/output/2019-01-flights-count.txt"""
+      |renku run papermill
+      |notebooks/01-CountFlights.ipynb
+      |notebooks/01-CountFlights.ran.ipynb
+      |-p input_path data/output/2019-01-flights-filtered.csv
+      |-p output_path data/output/2019-01-flights-count.txt"""
     And("pushes the results to the remote")
     console %> c"git push"
 
