@@ -1,10 +1,12 @@
 package ch.renku.acceptancetests.model
 
+import java.net.URL
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
 import ch.renku.acceptancetests.generators.Generators.Implicits._
 import ch.renku.acceptancetests.generators.Generators._
+import ch.renku.acceptancetests.model.users.UserCredentials
 import eu.timepit.refined.api.Refined
 import eu.timepit.refined.collection.NonEmpty
 
@@ -23,6 +25,17 @@ object projects {
 
   final case class ProjectUrl(value: String) {
     override lazy val toString: String = value
+  }
+
+  object ProjectUrl {
+
+    implicit class ProjectUrlOps(projectUrl: ProjectUrl)(implicit userCredentials: UserCredentials) {
+      lazy val addGitCredentials: String = {
+        val protocol = new URL(projectUrl.value).getProtocol
+        projectUrl.value
+          .replace(s"$protocol://", s"$protocol://${userCredentials.username}:${userCredentials.password}@")
+      }
+    }
   }
 
   object ProjectDetails {
@@ -46,5 +59,7 @@ object projects {
     implicit class TitleOps(title: String Refined NonEmpty) {
       lazy val toPathSegment: String = title.value.replace(" ", "-")
     }
+
   }
+
 }

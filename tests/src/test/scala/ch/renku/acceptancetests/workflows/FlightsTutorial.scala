@@ -3,6 +3,7 @@ package ch.renku.acceptancetests.workflows
 import java.nio.file.Path
 
 import ch.renku.acceptancetests.model.projects.ProjectUrl
+import ch.renku.acceptancetests.model.projects.ProjectUrl._
 import ch.renku.acceptancetests.model.users.UserCredentials
 import ch.renku.acceptancetests.tooling._
 import ch.renku.acceptancetests.tooling.console._
@@ -17,7 +18,7 @@ trait FlightsTutorial extends GivenWhenThen with Matchers with ScalatestMatchers
     implicit val projectFolder: Path = createTempFolder
 
     When("the user clones the project locally")
-    console %> c"git clone $projectUrl $projectFolder"
+    console %> c"git clone ${projectUrl.addGitCredentials} $projectFolder"
 
     And("enables git lfs")
     console %> c"git lfs install --local"
@@ -66,12 +67,13 @@ trait FlightsTutorial extends GivenWhenThen with Matchers with ScalatestMatchers
     console %> c"git push"
 
     And("runs the notebook")
-    console %> c"""
-    |renku run papermill 
-    |notebooks/01-CountFlights.ipynb 
-    |notebooks/01-CountFlights.ran.ipynb 
-    |-p input_path data/output/2019-01-flights-filtered.csv 
-    |-p output_path data/output/2019-01-flights-count.txt"""
+    console %>
+      c"""
+         |renku run papermill
+         |notebooks/01-CountFlights.ipynb
+         |notebooks/01-CountFlights.ran.ipynb
+         |-p input_path data/output/2019-01-flights-filtered.csv
+         |-p output_path data/output/2019-01-flights-count.txt"""
     And("pushes the results to the remote")
     console %> c"git push"
 
