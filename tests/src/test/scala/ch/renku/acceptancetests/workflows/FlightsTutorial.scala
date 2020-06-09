@@ -9,12 +9,14 @@ import ch.renku.acceptancetests.tooling.console._
 import eu.timepit.refined.auto._
 import org.scalatest.{FeatureSpec, GivenWhenThen, Matchers => ScalatestMatchers}
 
-trait FlightsTutorial extends GivenWhenThen with Matchers with ScalatestMatchers {
+trait FlightsTutorial extends GivenWhenThen with Matchers with ScalatestMatchers with CLIConfiguration {
   self: FeatureSpec =>
 
   def followTheFlightsTutorial(projectUrl: ProjectUrl)(implicit userCredentials: UserCredentials): Unit = {
 
     implicit val projectFolder: Path = createTempFolder
+
+    `setup git configuration`
 
     When("the user clones the project locally")
     console %> c"git clone ${projectUrl.addGitCredentials} $projectFolder"

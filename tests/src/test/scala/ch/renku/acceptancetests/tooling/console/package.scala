@@ -7,8 +7,17 @@ import java.time.format.DateTimeFormatter
 
 package object console {
 
+  /**
+    * Execute a command, throws an exception if the command fails
+    */
   def %>(command: Command)(implicit workPath: Path): Unit =
     new CommandExecutor(command).execute
+
+  /**
+    * Execute a command and return a String either stdout or stderr and does not throw an exception
+    */
+  def %%>(command: Command)(implicit workPath: Path): String =
+    new CommandExecutor(command).safeExecute
 
   def createTempFolder: Path = {
     val workDirectory    = Paths.get("target")

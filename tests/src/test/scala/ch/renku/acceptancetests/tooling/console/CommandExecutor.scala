@@ -16,16 +16,29 @@ import scala.sys.process._
 
 private class CommandExecutor(command: Command) {
 
-  def execute(implicit workPath: Path): Unit = {
+  def execute(implicit workPath: Path): String = {
 
     implicit val output: util.Collection[String] = new ConcurrentLinkedQueue[String]()
 
     IO {
-      command.userInputs.foldLeft(buildProcess) { (process, userInput) =>
-        process #< userInput.asStream
-      } lazyLines ProcessLogger(logLine _) foreach logLine
+      executeCommand
+      output.asString
     } recoverWith consoleException
   }.unsafeRunSync()
+
+  def safeExecute(implicit workPath: Path): String = {
+    implicit val output: util.Collection[String] = new ConcurrentLinkedQueue[String]()
+
+    IO {
+      executeCommand
+      output.asString
+    } recover outputAsString
+  }.unsafeRunSync()
+
+  private def executeCommand(implicit workPath: Path, output: util.Collection[String]): Unit =
+    command.userInputs.foldLeft(buildProcess) { (process, userInput) =>
+      process #< userInput.asStream
+    } lazyLines ProcessLogger(logLine _) foreach logLine
 
   private def buildProcess(implicit workPath: Path) =
     command.maybeFileName.foldLeft(Process(command.toString.stripMargin, workPath.toFile)) { (process, fileName) =>
@@ -39,11 +52,19 @@ private class CommandExecutor(command: Command) {
       logger debug line
   }
 
-  private def consoleException(implicit output: util.Collection[String]): PartialFunction[Throwable, IO[Unit]] = {
+  private def consoleException(implicit output: util.Collection[String]): PartialFunction[Throwable, IO[String]] = {
     case _ =>
       ConsoleException {
-        s"$command failed with:\n${output.asScala.mkString("\n")}"
-      }.raiseError[IO, Unit]
+        s"$command failed with:\n${output.asString}"
+      }.raiseError[IO, String]
+  }
+
+  private def outputAsString(implicit output: util.Collection[String]): PartialFunction[Throwable, String] = {
+    case _ => output.asString
+  }
+
+  private implicit class OutputOps(output: util.Collection[String]) {
+    lazy val asString: String = output.asScala.mkString("\n")
   }
 
   private implicit class UserInputOps(userInput: UserInput) {
