@@ -19,10 +19,11 @@ package object console {
   def %%>(command: Command)(implicit workPath: Path): String =
     new CommandExecutor(command).safeExecute
 
+  val rootWorkDirectory: Path = Paths.get("target")
+
   def createTempFolder: Path = {
-    val workDirectory    = Paths.get("target")
     val timestampPattern = DateTimeFormatter.ofPattern("yyyy_MM_dd_HHmm_ss")
-    val folder           = workDirectory.toUri resolve (now format timestampPattern)
+    val folder           = rootWorkDirectory.toUri resolve (now format timestampPattern)
     createDirectory(Paths.get(folder))
   }
 

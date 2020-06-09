@@ -1,6 +1,13 @@
 package ch.renku.acceptancetests.tooling
 
-import eu.timepit.refined.api.Refined
-import eu.timepit.refined.collection.NonEmpty
+final case class RenkuCliConfig(version: RenkuVersion, installCommand: RenkuInstallCommand)
 
-case class RenkuVersion(value: String Refined NonEmpty)
+final case class RenkuVersion(value: String) {
+  assert(value.trim.nonEmpty, "'$value' not a valid renku version")
+  override lazy val toString: String = value
+}
+
+final case class RenkuInstallCommand(value: String) {
+  assert(value.trim.nonEmpty, "'$value' not a valid renku install command")
+  override lazy val toString: String = value
+}

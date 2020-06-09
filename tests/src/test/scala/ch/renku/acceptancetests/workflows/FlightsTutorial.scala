@@ -12,9 +12,13 @@ import org.scalatest.{FeatureSpec, GivenWhenThen, Matchers => ScalatestMatchers}
 trait FlightsTutorial extends GivenWhenThen with Matchers with ScalatestMatchers with CLIConfiguration {
   self: FeatureSpec =>
 
-  def followTheFlightsTutorial(projectUrl: ProjectUrl)(implicit userCredentials: UserCredentials): Unit = {
+  def followTheFlightsTutorial(
+      projectUrl:             ProjectUrl
+  )(implicit userCredentials: UserCredentials, renkuCliConfig: RenkuCliConfig): Unit = {
 
     implicit val projectFolder: Path = createTempFolder
+
+    `verify renku version`
 
     `setup git configuration`
 
