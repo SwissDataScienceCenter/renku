@@ -13,13 +13,13 @@ The `docker-compose` command has to be available. For installation steps see: ht
 For running with docker, the parameters to the test need to be provided as environment variables:
 
 ```
-docker-compose run -e RENKU_TEST_URL=https://renku-kuba.dev.renku.ch -e RENKU_TEST_FULL_NAME="<full user name>" -e RENKU_TEST_EMAIL=<email> -e RENKU_TEST_USERNAME=<username> -e RENKU_TEST_PASSWORD=<password> sbt
+docker-compose run -e RENKU_TEST_URL=https://renku-kuba.dev.renku.ch -e RENKU_TEST_FULL_NAME="<full user name>" -e RENKU_TEST_EMAIL=<email> -e RENKU_TEST_USERNAME=<username> -e RENKU_TEST_PASSWORD=<password> -e RENKU_TEST_CLI_VERSION=<renkuVersion> sbt
 ```
 
 By default, all tests are run. You can provide an argument to run a specific test:
 
 ```
-docker-compose run -e RENKU_TEST_URL=https://renku-kuba.dev.renku.ch -e RENKU_TEST_FULL_NAME="<full user name>" -e RENKU_TEST_EMAIL=<email> -e RENKU_TEST_USERNAME=<username> -e RENKU_TEST_PASSWORD=<password> sbt  /tests/docker-run-tests.sh *<test-class-name>*
+docker-compose run -e RENKU_TEST_URL=https://renku-kuba.dev.renku.ch -e RENKU_TEST_FULL_NAME="<full user name>" -e RENKU_TEST_EMAIL=<email> -e RENKU_TEST_USERNAME=<username> -e RENKU_TEST_PASSWORD=<password> -e RENKU_TEST_CLI_VERSION=<renkuVersion> sbt  /tests/docker-run-tests.sh *<test-class-name>*
 ```
 
 ## Running using sbt
@@ -53,8 +53,9 @@ In order to run the acceptance tests, it is necessary to provide information for
 | extant     | RENKU_TEST_EXTANT_PROJECT | if non-empty, an existing project to use for tests               |
 | anon       | RENKU_TEST_ANON_PROJECT   | namespace/name for the project to test anonymously / without developer privileges: defaults to cramakri/covid-19-dashboard |
 | anonAvail  | RENKU_TEST_ANON_AVAILABLE | if true, anonymous environments will be tested. Defaults to true on dev.renku.ch, false everywhere else. |
+| renkuVersion | RENKU_TEST_CLI_VERSION      | renku cli version to be used on command line e.g `0.10.4`        |
 
-For example, the following may be run in the project's root: `sbt -Denv=https://renku-kuba.dev.renku.ch -Demail=<email> -Dusername=<username> -Dfullname='<full user name>' -Dpassword=<password> test`
+For example, the following may be run in the project's root: `sbt -Denv=https://renku-kuba.dev.renku.ch -Demail=<email> -Dusername=<username> -Dfullname='<full user name>' -Dpassword=<password> -DrenkuVersion=<renkuVersion> test`
 
 In the case there's a need of running a single test the `test` part should be replaced with `"testOnly *<test-class-name>*"`.
 

@@ -73,4 +73,11 @@ trait AcceptanceSpecData {
     else
       GitLabBaseUrl("https://renkulab.io")
 
+  lazy val renkuVersion: RenkuVersion = {
+    Option(getProperty("renkuVersion"))
+      .orElse(sys.env.get("RENKU_TEST_CLI_VERSION"))
+      .orElse(testsDefaults.renkuVersion)
+      .map(RenkuVersion(_))
+      .getOrElse(showErrorAndStop("No renku cli version found"))
+  }
 }

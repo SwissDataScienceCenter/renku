@@ -1,10 +1,11 @@
 package ch.renku.acceptancetests.tooling
 
-case class TestsDefaults(env:      Option[String],
-                         email:    Option[String] = None,
-                         username: Option[String] = None,
-                         password: Option[String] = None,
-                         fullname: Option[String] = None)
+case class TestsDefaults(env:          Option[String],
+                         email:        Option[String] = None,
+                         username:     Option[String] = None,
+                         password:     Option[String] = None,
+                         fullname:     Option[String] = None,
+                         renkuVersion: Option[String] = None)
 
 object TestsDefaults {
   import java.nio.file.Paths
