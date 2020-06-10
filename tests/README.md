@@ -53,7 +53,7 @@ In order to run the acceptance tests, it is necessary to provide information for
 | extant     | RENKU_TEST_EXTANT_PROJECT | if non-empty, an existing project to use for tests               |
 | anon       | RENKU_TEST_ANON_PROJECT   | namespace/name for the project to test anonymously / without developer privileges: defaults to cramakri/covid-19-dashboard |
 | anonAvail  | RENKU_TEST_ANON_AVAILABLE | if true, anonymous environments will be tested. Defaults to true on dev.renku.ch, false everywhere else. |
-| renkuVersion | RENKU_TEST_CLI_VERSION      | renku cli version to be used on command line e.g `0.10.4`        |
+| renkuVersion | RENKU_TEST_CLI_VERSION  | renku cli version to be used on command line e.g `0.10.4`        |
 
 For example, the following may be run in the project's root: `sbt -Denv=https://renku-kuba.dev.renku.ch -Demail=<email> -Dusername=<username> -Dfullname='<full user name>' -Dpassword=<password> -DrenkuVersion=<renkuVersion> test`
 
@@ -63,7 +63,8 @@ On some machines, providing values with spaces using `-D` causes sbt to complain
 
 __**NOTICE**__
 
-When running locally, it's very important that version of your Chrome matches the version of the chromedriver. If these versions does not match you have to upgrade one or the other and *reopen* the browser. Running with Docker avoids this problem.
+* When running locally, it's very important to match version of your Chrome with the version of the chromedriver. If these versions are not the same you have to upgrade one or the other and *reopen* the browser. Running with Docker avoids this problem.
+* There's a `tests-execution.log` file created in the `target` directory of the tests where `DEBUG` log statements generated during tests execution are written. This information might be useful when investigating tests failures.
 
 ## Running in console
 

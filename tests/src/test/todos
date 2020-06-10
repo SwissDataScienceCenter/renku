@@ -8,8 +8,9 @@ x git push and auth - maybe inputing username and password is fine
 - add info how to prepare local env so you can run the tests from an IDE
 x configure global git username and email on the local machine if not done yet (git config --global user.name)
 - integrate the new flights tutorial into the HandsOnSpec
-x make CliSpec running with the docker-compose
 - remove CliSpec
-- adding trait for cli commands?
-- decide whether the log level for the tests should be muted
+x make CliSpec running with the docker-compose
+x decide whether the log level for the tests should be muted
+- obfuscate user credentials in the logs
 - maybe default the renku version
+- adding trait for cli commands?
