@@ -23,6 +23,8 @@ object TestsDefaults {
         .load[TestsDefaults]
         .fold(error => throw new Exception(error.prettyPrint()), identity)
     else
-      TestsDefaults(env                 = Some("https://dev.renku.ch"),
-                    renkuInstallCommand = "python3 -m pip install 'renku==%s' --user")
+      TestsDefaults(
+        env                 = Some("https://dev.renku.ch"),
+        renkuInstallCommand = "python3 -m pip install 'renku==%s'"
+      )
 }

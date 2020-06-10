@@ -16,10 +16,10 @@ trait CLIConfiguration extends GivenWhenThen {
 
     When("the user has configured its git username and email")
     val configuredUsername = console %%> c"git config --global user.name"
-    if (configuredUsername.trim.isEmpty) console %> c"git config --global user.name ${userCredentials.fullName}"
+    if (configuredUsername.trim.isEmpty) console %> c"git config --global user.name '${userCredentials.fullName}'"
 
     val configuredEmail: String = console %%> c"git config --global user.email"
-    if (configuredEmail.trim.isEmpty) console %> c"git config --global user.email ${userCredentials.email}"
+    if (configuredEmail.trim.isEmpty) console %> c"git config --global user.email '${userCredentials.email}'"
   }
 
   def `verify renku version`(implicit cliConfig: RenkuCliConfig): Unit = {
