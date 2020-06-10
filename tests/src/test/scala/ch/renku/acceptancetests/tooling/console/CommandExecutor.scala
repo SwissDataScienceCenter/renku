@@ -7,6 +7,7 @@ import java.util.concurrent.ConcurrentLinkedQueue
 
 import cats.effect.IO
 import cats.implicits._
+import ch.renku.acceptancetests.model.users.UserCredentials
 import ch.renku.acceptancetests.tooling.TestLogger.logger
 import ch.renku.acceptancetests.tooling.console.Command.UserInput
 
@@ -16,7 +17,7 @@ import scala.sys.process._
 
 private class CommandExecutor(command: Command) {
 
-  def execute(implicit workPath: Path): String = {
+  def execute(implicit workPath: Path, userCredentials: UserCredentials): String = {
 
     implicit val output: util.Collection[String] = new ConcurrentLinkedQueue[String]()
 
@@ -26,7 +27,7 @@ private class CommandExecutor(command: Command) {
     } recoverWith consoleException
   }.unsafeRunSync()
 
-  def safeExecute(implicit workPath: Path): String = {
+  def safeExecute(implicit workPath: Path, userCredentials: UserCredentials): String = {
     implicit val output: util.Collection[String] = new ConcurrentLinkedQueue[String]()
 
     IO {
@@ -35,7 +36,9 @@ private class CommandExecutor(command: Command) {
     } recover outputAsString
   }.unsafeRunSync()
 
-  private def executeCommand(implicit workPath: Path, output: util.Collection[String]): Unit =
+  private def executeCommand(implicit workPath: Path,
+                             output:            util.Collection[String],
+                             userCredentials:   UserCredentials): Unit =
     command.userInputs.foldLeft(buildProcess) { (process, userInput) =>
       process #< userInput.asStream
     } lazyLines ProcessLogger(logLine _) foreach logLine
@@ -45,11 +48,14 @@ private class CommandExecutor(command: Command) {
       process #>> new File(workPath.toUri resolve fileName.value)
     }
 
-  private def logLine(line: String)(implicit output: util.Collection[String]): Unit = line.trim match {
+  private def logLine(
+      line:          String
+  )(implicit output: util.Collection[String], userCredentials: UserCredentials): Unit = line.trim match {
     case "" => ()
     case line =>
-      output add line
-      logger debug line
+      val obfuscatedLine = line.replace(userCredentials.password.value, "###")
+      output add obfuscatedLine
+      logger debug obfuscatedLine
   }
 
   private def consoleException(implicit output: util.Collection[String]): PartialFunction[Throwable, IO[String]] = {

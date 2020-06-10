@@ -22,7 +22,7 @@ trait CLIConfiguration extends GivenWhenThen {
     if (configuredEmail.trim.isEmpty) console %> c"git config --global user.email '${userCredentials.email}'"
   }
 
-  def `verify renku version`(implicit cliConfig: RenkuCliConfig): Unit = {
+  def `verify renku version`(implicit cliConfig: RenkuCliConfig, userCredentials: UserCredentials): Unit = {
     implicit val workFolder: Path = rootWorkDirectory
 
     When(s"the user has renku v${cliConfig.version} installed")

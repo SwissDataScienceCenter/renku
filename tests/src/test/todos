@@ -11,6 +11,6 @@ x configure global git username and email on the local machine if not done yet (
 - remove CliSpec
 x make CliSpec running with the docker-compose
 x decide whether the log level for the tests should be muted
-- obfuscate user credentials in the logs
+x obfuscate user credentials in the logs
 - maybe default the renku version
 - adding trait for cli commands?
