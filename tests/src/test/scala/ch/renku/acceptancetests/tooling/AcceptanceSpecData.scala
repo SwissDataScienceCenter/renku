@@ -2,6 +2,7 @@ package ch.renku.acceptancetests.tooling
 
 import java.lang.System.getProperty
 
+import cats.implicits._
 import ch.renku.acceptancetests.model.users.UserCredentials
 import ch.renku.acceptancetests.pages.GitLabPages.GitLabBaseUrl
 import ch.renku.acceptancetests.pages.RenkuPage.RenkuBaseUrl
@@ -76,7 +77,7 @@ trait AcceptanceSpecData {
   implicit lazy val renkuCliConfig: RenkuCliConfig = RenkuCliConfig(
     version = Option(getProperty("renkuVersion"))
       .orElse(sys.env.get("RENKU_TEST_CLI_VERSION"))
-      .orElse(testsDefaults.renkuVersion)
+      .orElse(testsDefaults.renkuVersion.some)
       .map(RenkuVersion)
       .getOrElse(showErrorAndStop("No renku cli version found")),
     installCommand = RenkuInstallCommand(testsDefaults.renkuInstallCommand)

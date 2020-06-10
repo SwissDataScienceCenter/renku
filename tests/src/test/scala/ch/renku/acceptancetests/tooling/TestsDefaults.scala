@@ -5,7 +5,7 @@ final case class TestsDefaults(env:                 Option[String],
                                username:            Option[String] = None,
                                password:            Option[String] = None,
                                fullname:            Option[String] = None,
-                               renkuVersion:        Option[String] = None,
+                               renkuVersion:        String,
                                renkuInstallCommand: String)
 
 object TestsDefaults {
@@ -25,6 +25,7 @@ object TestsDefaults {
     else
       TestsDefaults(
         env                 = Some("https://dev.renku.ch"),
+        renkuVersion        = "0.10.4",
         renkuInstallCommand = "python3 -m pip install 'renku==%s'"
       )
 }
