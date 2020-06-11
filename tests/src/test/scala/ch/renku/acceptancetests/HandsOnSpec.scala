@@ -75,7 +75,11 @@ class HandsOnSpec
     val projectPage = ProjectPage()
     When("the user navigates to the Datasets tab")
     click on projectPage.Datasets.tab
-    Then(s"they should see the '$datasetName' dataset")
+
+    And("the events are processed")
+    verify userCanSee projectPage.Datasets.title
+
+    Then(s"the user should see a link to the '$datasetName' dataset")
     verify userCanSee projectPage.Datasets.DatasetsList.link(to = datasetName)
   }
 

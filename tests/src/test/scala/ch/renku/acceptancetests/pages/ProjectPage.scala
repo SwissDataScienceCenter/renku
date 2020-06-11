@@ -198,16 +198,16 @@ class ProjectPage(projectSlug: String, namespace: String) extends RenkuPage with
       find(cssSelector(s"a[href='$path/datasets']")) getOrElse fail("Datasets tab not found")
     }
 
+    def title(implicit webDriver: WebDriver): WebElement =
+      eventually {
+        findAll(cssSelector("h2")).find(_.text.trim == "Datasets") getOrElse fail("Datasets title not found")
+      }(waitUpTo(5 minutes), implicitly[source.Position])
+
     object DatasetsList {
-
-      def list(implicit webDriver: WebDriver): WebElement = eventually {
-        find(cssSelector(s"div.tree-container nav")) getOrElse fail("Datasets list not found")
-      }
-
       def link(to: DatasetName)(implicit webDriver: WebDriver): WebElement =
         eventually {
           findAll(cssSelector("div.project-list-row div b span.issue-title a"))
-            .find(_.text == to.toString)
+            .find(_.text.trim == to.toString.trim)
             .getOrElse(fail(s"Dataset '$to' not found"))
         }(waitUpTo(120 seconds), implicitly[source.Position])
     }
