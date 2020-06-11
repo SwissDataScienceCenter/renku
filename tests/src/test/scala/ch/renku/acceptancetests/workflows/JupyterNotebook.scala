@@ -15,6 +15,6 @@ trait JupyterNotebook {
 
     terminal %> s"renku dataset create '$datasetName'" sleep (2 seconds)
     And("pushes it")
-    terminal %> "git push" sleep (5 seconds)
+    terminal %> "git push" sleep (30 seconds)
   }
 }

@@ -198,10 +198,9 @@ class ProjectPage(projectSlug: String, namespace: String) extends RenkuPage with
       find(cssSelector(s"a[href='$path/datasets']")) getOrElse fail("Datasets tab not found")
     }
 
-    def title(implicit webDriver: WebDriver): WebElement =
-      eventually {
-        findAll(cssSelector("h2")).find(_.text.trim == "Datasets") getOrElse fail("Datasets title not found")
-      }(waitUpTo(5 minutes), implicitly[source.Position])
+    def title(implicit webDriver: WebDriver): WebElement = eventually {
+      findAll(cssSelector("h2")).find(_.text.trim == "Datasets") getOrElse fail("Datasets title not found")
+    }
 
     object DatasetsList {
       def link(to: DatasetName)(implicit webDriver: WebDriver): WebElement =
@@ -219,9 +218,10 @@ class ProjectPage(projectSlug: String, namespace: String) extends RenkuPage with
       find(cssSelector(s"a[href='$path/environments']")) getOrElse fail("Environments tab not found")
     }
 
-    def newLink(implicit webDriver: WebDriver): WebElement = eventually {
-      find(cssSelector(s"a[href='$path/environments/new']")) getOrElse fail("New environment link not found")
-    }
+    def newLink(implicit webDriver: WebDriver): WebElement =
+      eventually {
+        find(cssSelector(s"a[href='$path/environments/new']")) getOrElse fail("New environment link not found")
+      }(waitUpTo(2 minutes), implicitly[source.Position])
 
     def anonymousUnsupported(implicit webDriver: WebDriver): WebElement = eventually {
       findAll(cssSelector(s"div > div > div > div > p"))

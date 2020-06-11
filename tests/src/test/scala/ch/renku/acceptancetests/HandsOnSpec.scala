@@ -5,7 +5,7 @@ import ch.renku.acceptancetests.model.projects.ProjectDetails
 import ch.renku.acceptancetests.pages._
 import ch.renku.acceptancetests.tooling.{AcceptanceSpec, DocsScreenshots}
 import ch.renku.acceptancetests.workflows._
-import org.openqa.selenium.JavascriptExecutor
+import org.openqa.selenium.{JavascriptExecutor, WebDriver}
 
 import scala.concurrent.duration._
 import scala.language.postfixOps
@@ -28,7 +28,7 @@ class HandsOnSpec
 
     implicit val loginType: LoginType = logIntoRenku
 
-    implicit val docsScreenshots = new DocsScreenshots(this, browser)
+    implicit val docsScreenshots: DocsScreenshots = new DocsScreenshots(this, browser)
 
     implicit val projectDetails: ProjectDetails =
       ProjectDetails.generateHandsOnProject(docsScreenshots.captureScreenshots)
@@ -77,9 +77,12 @@ class HandsOnSpec
     click on projectPage.Datasets.tab
 
     And("the events are processed")
-    verify userCanSee projectPage.Datasets.title
+    val datasetPageTitle = projectPage.Datasets.title(_: WebDriver)
+    reload whenUserCannotSee datasetPageTitle
 
     Then(s"the user should see a link to the '$datasetName' dataset")
+    val datasetLink = projectPage.Datasets.DatasetsList.link(to = datasetName)(_: WebDriver)
+    reload whenUserCannotSee datasetLink
     verify userCanSee projectPage.Datasets.DatasetsList.link(to = datasetName)
   }
 
