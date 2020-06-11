@@ -38,7 +38,10 @@ class HandsOnSpec
     verifyDatasetCreated
     verifyAnalysisRan
 
-    verifyCollaborationIsEmpty
+    verifyMergeRequestsIsEmpty
+    verifyIssuesIsEmpty
+    createNewIssue
+
     setProjectTags
     setProjectDescription
     removeProjectInGitLab
