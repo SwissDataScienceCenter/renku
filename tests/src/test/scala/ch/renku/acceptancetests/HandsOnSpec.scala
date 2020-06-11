@@ -1,11 +1,11 @@
 package ch.renku.acceptancetests
 
+import ch.renku.acceptancetests.model.datasets.DatasetName
 import ch.renku.acceptancetests.model.projects.ProjectDetails
 import ch.renku.acceptancetests.pages._
 import ch.renku.acceptancetests.tooling.{AcceptanceSpec, DocsScreenshots}
 import ch.renku.acceptancetests.workflows._
-
-import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.JavascriptExecutor
 
 import scala.concurrent.duration._
 import scala.language.postfixOps
@@ -21,7 +21,8 @@ class HandsOnSpec
     with NewProject
     with RemoveProject
     with Settings
-    with FlightsTutorialJupyter {
+    with JupyterNotebook
+    with FlightsTutorial {
 
   scenario("User can do hands-on tutorial") {
 
@@ -34,8 +35,12 @@ class HandsOnSpec
 
     createNewProject
 
-    doHandsOn
-    verifyDatasetCreated
+    val projectHttpUrl     = findProjectHttpUrl
+    val flightsDatasetName = followTheFlightsTutorialOnUsersMachine(projectHttpUrl)
+    verifyDatasetCreated(flightsDatasetName)
+
+    verifyUserCanWorkWithJupyterNotebook
+
     verifyAnalysisRan
 
     verifyMergeRequestsIsEmpty
@@ -50,23 +55,28 @@ class HandsOnSpec
     logOutOfRenku
   }
 
-  def doHandsOn(implicit projectDetails: ProjectDetails, docsScreenshots: DocsScreenshots): Unit = {
-    val projectPage    = ProjectPage()
+  def verifyUserCanWorkWithJupyterNotebook(implicit projectDetails: ProjectDetails,
+                                           docsScreenshots:         DocsScreenshots): Unit = {
     val jupyterLabPage = launchEnvironment
 
     When("the user clicks on the Terminal icon")
     click on jupyterLabPage.terminalIcon sleep (2 seconds)
-    followFlightsTutorial(jupyterLabPage)
+    val datasetName = DatasetName.generate
+    And("the user creates a dataset")
+    `create a dataset`(jupyterLabPage, datasetName)
 
     stopEnvironment
+
+    Then("the user can see the created dataset")
+    verifyDatasetCreated(datasetName)
   }
 
-  def verifyDatasetCreated(implicit projectDetails: ProjectDetails): Unit = {
+  def verifyDatasetCreated(datasetName: DatasetName)(implicit projectDetails: ProjectDetails): Unit = {
     val projectPage = ProjectPage()
     When("the user navigates to the Datasets tab")
     click on projectPage.Datasets.tab
-    Then("they should see the flights dataset")
-    click on projectPage.Datasets.DatasetsList.flights
+    Then(s"they should see the '$datasetName' dataset")
+    verify userCanSee projectPage.Datasets.DatasetsList.link(to = datasetName)
   }
 
   def verifyAnalysisRan(implicit projectDetails: ProjectDetails, docsScreenshots: DocsScreenshots): Unit = {

@@ -1,6 +1,6 @@
 package ch.renku.acceptancetests.workflows
 
-import ch.renku.acceptancetests.model.projects.ProjectDetails
+import ch.renku.acceptancetests.model.projects.{ProjectDetails, ProjectUrl}
 import ch.renku.acceptancetests.pages._
 import ch.renku.acceptancetests.tooling.AcceptanceSpec
 
@@ -30,4 +30,13 @@ trait Settings {
     Then("they should see the updated project description")
     verify that projectPage.Overview.projectDescription contains addedDescription
   }
+
+  def findProjectHttpUrl(implicit projectDetails: ProjectDetails): ProjectUrl = {
+    val projectPage = ProjectPage()
+    When("the user navigates to the Settings tab")
+    click on projectPage.Settings.tab
+    Then("the user can find the project Http Url")
+    ProjectUrl(projectPage.Settings.projectHttpUrl.getText)
+  }
+
 }

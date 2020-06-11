@@ -43,6 +43,9 @@ docker-compose run -e RENKU_TEST_URL=https://renku-kuba.dev.renku.ch -e RENKU_TE
 -e RENKU_TEST_CLI_VERSION=<renkuVersion> sbt
 /tests/docker-run-tests.sh *<test-class-name>*
 ```
+__**IMPORTANT**__
+
+Once you do changes to the `Dockerfile` do not forget to build the image with `docker-compose build`.
 
 ## Running using sbt
 

@@ -1,25 +1,21 @@
 package ch.renku.acceptancetests.pages
 
-import ch.renku.acceptancetests.model.projects.ProjectDetails
+import ch.renku.acceptancetests.model.datasets.DatasetName
 import ch.renku.acceptancetests.model.projects.ProjectDetails._
-import ch.renku.acceptancetests.model.projects.ProjectIdentifier
+import ch.renku.acceptancetests.model.projects.{ProjectDetails, ProjectIdentifier}
 import ch.renku.acceptancetests.model.users.UserCredentials
 import ch.renku.acceptancetests.pages.Page.{Path, Title}
 import ch.renku.acceptancetests.tooling.AcceptanceSpec
-
 import eu.timepit.refined.api.Refined
 import eu.timepit.refined.auto._
-
 import org.openqa.selenium.{By, WebDriver, WebElement}
+import org.scalactic.source
 import org.scalatestplus.selenium.WebBrowser
 import org.scalatestplus.selenium.WebBrowser.{cssSelector, find, findAll}
-import org.scalatest.time.{Millis, Seconds, Span}
 
 import scala.concurrent.duration._
 import scala.jdk.CollectionConverters._
 import scala.language.postfixOps
-
-import org.scalactic.source
 
 object ProjectPage {
   def apply()(implicit projectDetails: ProjectDetails, userCredentials: UserCredentials): ProjectPage =
@@ -125,7 +121,9 @@ class ProjectPage(projectSlug: String, namespace: String) extends RenkuPage with
         }
 
         def createIssueButton(implicit webDriver: WebDriver): WebElement = eventually {
-          findAll(cssSelector("button[type='submit']")).find(_.text == "Create Issue") getOrElse fail("Create Issue button not found")
+          findAll(cssSelector("button[type='submit']")).find(_.text == "Create Issue") getOrElse fail(
+            "Create Issue button not found"
+          )
         }
 
       }
@@ -206,11 +204,11 @@ class ProjectPage(projectSlug: String, namespace: String) extends RenkuPage with
         find(cssSelector(s"div.tree-container nav")) getOrElse fail("Datasets list not found")
       }
 
-      def flights(implicit webDriver: WebDriver): WebElement =
+      def link(to: DatasetName)(implicit webDriver: WebDriver): WebElement =
         eventually {
-          find(cssSelector("div.project-list-row > div > b > span.issue-title > a"))
-            .find(_.text == "2019-01 US Flights")
-            .getOrElse(fail("Dataset 'flights' not found"))
+          findAll(cssSelector("div.project-list-row div b span.issue-title a"))
+            .find(_.text == to.toString)
+            .getOrElse(fail(s"Dataset '$to' not found"))
         }(waitUpTo(120 seconds), implicitly[source.Position])
     }
   }
@@ -349,6 +347,11 @@ class ProjectPage(projectSlug: String, namespace: String) extends RenkuPage with
       find(cssSelector("div.form-group + button.btn.btn-primary")) getOrElse fail(
         "Update button not found"
       )
+    }
+
+    def projectHttpUrl(implicit webDriver: WebDriver): WebElement = eventually {
+      findAll(cssSelector("table.table.table-sm td"))
+        .find(e => e.text.matches("^http.+.git$")) getOrElse fail("Project http url not found")
     }
   }
 

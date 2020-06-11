@@ -2,6 +2,7 @@ package ch.renku.acceptancetests.workflows
 
 import java.nio.file.Path
 
+import ch.renku.acceptancetests.model.datasets.DatasetName
 import ch.renku.acceptancetests.model.projects.ProjectUrl
 import ch.renku.acceptancetests.model.users.UserCredentials
 import ch.renku.acceptancetests.tooling._
@@ -12,9 +13,9 @@ import org.scalatest.{FeatureSpec, GivenWhenThen, Matchers => ScalatestMatchers}
 trait FlightsTutorial extends GivenWhenThen with Matchers with ScalatestMatchers with CLIConfiguration {
   self: FeatureSpec =>
 
-  def followTheFlightsTutorial(
+  def followTheFlightsTutorialOnUsersMachine(
       projectUrl:             ProjectUrl
-  )(implicit userCredentials: UserCredentials, renkuCliConfig: RenkuCliConfig): Unit = {
+  )(implicit userCredentials: UserCredentials, renkuCliConfig: RenkuCliConfig): DatasetName = {
 
     implicit val projectFolder: Path = createTempFolder
 
@@ -31,9 +32,6 @@ trait FlightsTutorial extends GivenWhenThen with Matchers with ScalatestMatchers
     And("imports a dataset from the dataverse")
     console %> c"renku dataset import 10.7910/DVN/WTZS4K".userInput("y")
 
-    And("pushes the changes to the remote")
-    console %> c"git push"
-
     And("adds some Python packages to the requirements.txt")
     console %> (c"echo pandas==0.25.3" >> "requirements.txt")
     console %> (c"echo seaborn==0.9.0" >> "requirements.txt")
@@ -42,14 +40,12 @@ trait FlightsTutorial extends GivenWhenThen with Matchers with ScalatestMatchers
     console %> c"pip install -r requirements.txt"
     console %> c"git add requirements.txt"
     console %> c"git commit -m 'Installed pandas and seaborn'"
-    console %> c"git push"
 
     And("downloads the tutorial step 1 notebook")
     console %> c"wget -O $projectFolder/notebooks/00-FilterFlights.ipynb https://renkulab.io/gitlab/renku-tutorial/renku-tutorial-flights/raw/master/.tutorial/meta/templates/00-FilterFlights-doi.ipynb"
     And("commits it")
     console %> c"git add notebooks"
     console %> c"git commit -m 'Created notebook to filter flights to AUS, TX.'"
-    console %> c"git push"
 
     And("downloads the tutorial step 1 python file")
     console %> c"mkdir $projectFolder/src"
@@ -58,7 +54,6 @@ trait FlightsTutorial extends GivenWhenThen with Matchers with ScalatestMatchers
     And("commits it")
     console %> c"git add src"
     console %> c"git commit -m 'Extracted logic from FilterFlights notebook into script.'"
-    console %> c"git push"
 
     And("runs step 1")
     console %> c"mkdir $projectFolder/data/output"
@@ -69,7 +64,6 @@ trait FlightsTutorial extends GivenWhenThen with Matchers with ScalatestMatchers
     And("commits it")
     console %> c"git add notebooks"
     console %> c"git commit -m 'Created notebook to count flights.'"
-    console %> c"git push"
 
     And("runs the notebook")
     console %>
@@ -79,8 +73,6 @@ trait FlightsTutorial extends GivenWhenThen with Matchers with ScalatestMatchers
       |notebooks/01-CountFlights.ran.ipynb
       |-p input_path data/output/2019-01-flights-filtered.csv
       |-p output_path data/output/2019-01-flights-count.txt"""
-    And("pushes the results to the remote")
-    console %> c"git push"
 
     And("updates the code")
     console %> c"sed -ie 's/DFW/AUS/g' $projectFolder/src/00-FilterFlights.py"
@@ -90,9 +82,10 @@ trait FlightsTutorial extends GivenWhenThen with Matchers with ScalatestMatchers
 
     And("and updates the results")
     console %> c"renku update"
-    And("pushes the results to the remote")
+    And("pushes all the commits to the remote")
     console %> c"git push"
 
     Then("the user is done with the basic workflow")
+    DatasetName("2019-01 US Flights")
   }
 }
