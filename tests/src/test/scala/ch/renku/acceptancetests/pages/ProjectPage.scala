@@ -6,6 +6,7 @@ import ch.renku.acceptancetests.model.projects.ProjectIdentifier
 import ch.renku.acceptancetests.model.users.UserCredentials
 import ch.renku.acceptancetests.pages.Page.{Path, Title}
 import ch.renku.acceptancetests.tooling.AcceptanceSpec
+import ch.renku.acceptancetests.tooling.AcceptanceSpecPatience
 
 import eu.timepit.refined.api.Refined
 import eu.timepit.refined.auto._
@@ -211,7 +212,7 @@ class ProjectPage(projectSlug: String, namespace: String) extends RenkuPage with
           find(cssSelector("div.project-list-row > div > b > span.issue-title > a"))
             .find(_.text == "2019-01 US Flights")
             .getOrElse(fail("Dataset 'flights' not found"))
-        }(waitUpTo(120 seconds), implicitly[source.Position])
+        }(waitUpTo(AcceptanceSpecPatience.WAIT_SCALE * 120 seconds), implicitly[source.Position])
     }
   }
 
@@ -243,7 +244,7 @@ class ProjectPage(projectSlug: String, namespace: String) extends RenkuPage with
     def verifyImageReady(implicit webDriver: WebDriver): Unit =
       eventually {
         findImageReadyBadge getOrElse waitForImageToBeReady
-      }(waitUpTo(10 minutes), implicitly[source.Position])
+      }(waitUpTo(AcceptanceSpecPatience.WAIT_SCALE * 10 minutes), implicitly[source.Position])
 
     private def waitForImageToBeReady(implicit webDriver: WebDriver): Unit = {
       find(cssSelector(".badge.badge-warning")) orElse findImageReadyBadge getOrElse fail(
@@ -317,7 +318,7 @@ class ProjectPage(projectSlug: String, namespace: String) extends RenkuPage with
         eventually {
           find(cssSelector(".text-nowrap.p-1.badge.badge-success"))
             .getOrElse(fail("Interactive environment is not ready"))
-        }(waitUpTo(10 minutes), implicitly[source.Position])
+        }(waitUpTo(AcceptanceSpecPatience.WAIT_SCALE * 10 minutes), implicitly[source.Position])
     }
   }
 
