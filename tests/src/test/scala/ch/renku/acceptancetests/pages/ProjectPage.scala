@@ -28,14 +28,14 @@ class ProjectPage(projectSlug: String, namespace: String) extends RenkuPage with
 
   override val title: Title = "Renku"
   override val path: Path = Refined.unsafeApply(
-    s"/projects/${namespace}/${projectSlug}"
+    s"/projects/$namespace/$projectSlug"
   )
 
   override def pageReadyElement(implicit webDriver: WebDriver): Option[WebElement] = Some(Overview.tab)
 
   def viewInGitLab(implicit webDriver: WebDriver): WebElement = eventually {
     find(
-      cssSelector(s"a[href*='/gitlab/${namespace}/${projectSlug}']")
+      cssSelector(s"a[href*='/gitlab/$namespace/$projectSlug']")
     ) getOrElse fail("View in GitLab button not found")
   }
 
@@ -221,7 +221,7 @@ class ProjectPage(projectSlug: String, namespace: String) extends RenkuPage with
     def newLink(implicit webDriver: WebDriver): WebElement =
       eventually {
         find(cssSelector(s"a[href='$path/environments/new']")) getOrElse fail("New environment link not found")
-      }(waitUpTo(2 minutes), implicitly[source.Position])
+      }(waitUpTo(1 minute), implicitly[source.Position])
 
     def anonymousUnsupported(implicit webDriver: WebDriver): WebElement = eventually {
       findAll(cssSelector(s"div > div > div > div > p"))
@@ -246,7 +246,7 @@ class ProjectPage(projectSlug: String, namespace: String) extends RenkuPage with
     private def waitForImageToBeReady(implicit webDriver: WebDriver): Unit = {
       find(cssSelector(".badge.badge-warning")) orElse findImageReadyBadge getOrElse fail(
         "Image building info badges not found"
-      );
+      )
       sleep(2 seconds)
       findImageReadyBadge getOrElse fail("Image not yet built")
     }
@@ -280,7 +280,7 @@ class ProjectPage(projectSlug: String, namespace: String) extends RenkuPage with
                                                               spec: AcceptanceSpec): Unit = eventually {
         import spec.{And, Then}
         And("tries to connect to JupyterLab")
-        connectButton(buttonSelector).click
+        connectButton(buttonSelector).click()
         sleep(2 seconds)
 
         // Check if we are connected to JupyterLab
@@ -290,7 +290,7 @@ class ProjectPage(projectSlug: String, namespace: String) extends RenkuPage with
           And("JupyterLab is not up yet")
           Then("close the window and try again later")
           // The server isn't up yet. Close the window and try again
-          webDriver.close
+          webDriver.close()
           webDriver.switchTo() window tabs(0)
           fail("Could not connect to JupyterLab")
         } else {
@@ -300,7 +300,7 @@ class ProjectPage(projectSlug: String, namespace: String) extends RenkuPage with
 
       def connectDotButton(implicit webDriver: WebDriver): WebElement = eventually {
         findAll(cssSelector("button.btn.btn-primary svg[data-icon='ellipsis-v']"))
-          .find(_.findElement(By.xpath("./../..")).getText().equals("Connect"))
+          .find(_.findElement(By.xpath("./../..")).getText.equals("Connect"))
           .getOrElse(fail("First row Interactive Environment ... button not found"))
           .parent
       }
