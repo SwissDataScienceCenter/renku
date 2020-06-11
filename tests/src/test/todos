@@ -5,7 +5,7 @@ x maybe an issue for debug logging
 x do the whole flights tutorial in the new way
 x do renku install / verify the version
 x git push and auth - maybe inputing username and password is fine
-- add info how to prepare local env so you can run the tests from an IDE
+x add info how to prepare local env so you can run the tests from an IDE
 x configure global git username and email on the local machine if not done yet (git config --global user.name)
 - integrate the new flights tutorial into the HandsOnSpec
 - remove CliSpec

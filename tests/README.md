@@ -34,6 +34,13 @@ In order to run the tests you need to install:
   * Mac users: `brew tap homebrew/cask && brew cask install chromedriver`
   * Debian based users: `sudo apt-get install chromium-chromedriver`
   * for other see: https://github.com/SeleniumHQ/selenium/wiki/ChromeDriver
+* Python 3, pip and the following packages which can be installed using `python3 -m pip install '<package-name>==<version>'`:
+  * papermill < 1.2.0
+  * requests >= 2.20.0
+  * jupyterhub = 1.1.0
+  * nbresuse = 0.3.3
+  * jupyterlab-git = 0.20.0
+  * pipx >= 0.15.0.0
 
 #### Running
 The tests are run by executing `sbt` in the project's root.
@@ -93,6 +100,8 @@ You can work on the tests using editor of your choice but using either Intellij 
 Please use the `scalameta.metals` as a default formatter for the scala sources and **I strongly encourage to click the `Format on save` feature**.
 
 The test are built using the Page Object Pattern (e.g. https://www.pluralsight.com/guides/getting-started-with-page-object-pattern-for-your-selenium-tests) which in short is about wrapping an UI page into a class/object and using it in the test script.
+
+As mentioned above there's a `target/tests-execution.log` file where tests debug statements from tests execution are written.
 
 ## Project organization
 All the interesting parts are located in the `src/test/scala/ch/renku/acceptancetests` folder which can be perceived as a tests classes root folder. The test scenarios are suffixed with `Spec` while all the page objects are put into the `pages` subfolder.
