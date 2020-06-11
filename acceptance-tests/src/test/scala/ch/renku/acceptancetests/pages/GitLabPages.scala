@@ -10,6 +10,10 @@ import eu.timepit.refined.auto._
 import eu.timepit.refined.string.Url
 import org.openqa.selenium.{WebDriver, WebElement}
 import org.scalatestplus.selenium.WebBrowser.{cssSelector, find}
+import org.scalatestplus.selenium.{Driver, WebBrowser}
+
+import scala.concurrent.duration._
+import scala.language.postfixOps
 
 object GitLabPages {
 
@@ -43,6 +47,7 @@ class GitLabPages(
     def settingsLink(implicit webDriver: WebDriver): WebElement = eventually {
       find(cssSelector("span.nav-item-name.qa-settings-item")) getOrElse fail("Settings link not found")
     }
+
   }
 
   case object GitLabProjectsPage extends GitLabPage {
