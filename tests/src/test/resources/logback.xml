@@ -17,6 +17,7 @@
             <charset>UTF-8</charset>
             <pattern>%d %-5level %logger{5} - %message%n</pattern>
         </encoder>
+        <append>false</append>
     </appender>
 
     <appender name="ASYNC_FILE" class="ch.qos.logback.classic.AsyncAppender">
