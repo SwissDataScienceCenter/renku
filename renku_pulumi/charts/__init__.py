@@ -3,7 +3,7 @@ from .keycloak import keycloak, keycloak_secrets
 from .minio import minio
 from .postgresql import postgresql
 from .redis import redis
-from .renku_graph import renku_graph
+from .renku_graph import GraphChart
 from .renku_notebooks import renku_notebooks
 from .renku_ui import renku_ui
 

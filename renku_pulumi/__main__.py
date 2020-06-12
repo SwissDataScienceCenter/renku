@@ -3,7 +3,7 @@ from pulumi_random.random_id import RandomId
 
 from charts import (
     renku_ui,
-    renku_graph,
+    GraphChart,
     renku_notebooks,
     postgresql,
     minio,
@@ -139,7 +139,7 @@ def deploy():
         gitlab_job = gitlab_postinstall_job(global_config, config_map, rs, gitlab_postgres_secret, gitlab_chart)
 
     if config.require_bool("graph_enabled"):
-        graph = renku_graph(config, global_config, chart_reqs, graph_postgres, graph_token, postgres, dependencies=[gitlab_job])
+        graph = GraphChart(config, graph_postgres, graph_token, postgres, global_config=global_config, dependencies=[gitlab_job])
 
     if config.require_bool("minio_enabled"):
         minio(config, global_config)
