@@ -5,7 +5,6 @@ import org.scalatest.time.{Millis, Seconds, Span}
 
 trait AcceptanceSpecPatience extends AbstractPatienceConfiguration { this: PatienceConfiguration =>
 
-
   implicit abstract override val patienceConfig: PatienceConfig = PatienceConfig(
     timeout  = scaled(Span(AcceptanceSpecPatience.WAIT_SCALE * 30, Seconds)),
     interval = scaled(Span(150, Millis))

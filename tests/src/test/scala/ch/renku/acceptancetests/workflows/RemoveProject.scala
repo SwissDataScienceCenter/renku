@@ -14,7 +14,7 @@ trait RemoveProject {
   def removeProjectInGitLab(implicit projectDetails: ProjectDetails, gitLabBaseUrl: GitLabBaseUrl): Unit = {
     val projectPage = ProjectPage()
     When("the user clicks on the 'View in GitLab'")
-    click on projectPage.viewInGitLab sleep (1 second)
+    click on projectPage.viewInGitLab sleep (2 second)
     Then("a new tab with GitLab page should open")
     val gitLabPages = GitLabPages()
     verify browserSwitchedTo gitLabPages.ProjectPage

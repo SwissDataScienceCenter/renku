@@ -11,11 +11,24 @@
         <appender-ref ref="STDOUT"/>
     </appender>
 
-    <logger name="application" level="OFF" additivity="false">
-        <appender-ref ref="ASYNC_STDOUT"/>
-    </logger>
+    <appender name="FILE" class="ch.qos.logback.core.FileAppender">
+        <file>target/tests-execution.log</file>
+        <encoder>
+            <charset>UTF-8</charset>
+            <pattern>%d %-5level %logger{5} - %message%n</pattern>
+        </encoder>
+        <append>false</append>
+    </appender>
+
+    <appender name="ASYNC_FILE" class="ch.qos.logback.classic.AsyncAppender">
+        <appender-ref ref="FILE"/>
+    </appender>
 
     <logger name="com.github.tomakehurst.wiremock" level="OFF"/>
+
+    <logger name="test" level="DEBUG" additivity="false">
+        <appender-ref ref="ASYNC_FILE"/>
+    </logger>
 
     <root level="OFF">
         <appender-ref ref="ASYNC_STDOUT"/>
