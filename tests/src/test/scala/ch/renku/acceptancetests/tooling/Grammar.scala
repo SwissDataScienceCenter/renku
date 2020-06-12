@@ -1,8 +1,10 @@
 package ch.renku.acceptancetests.tooling
 
+import cats.implicits._
 import ch.renku.acceptancetests.pages.Page
-import org.openqa.selenium.{By, WebElement}
+import org.openqa.selenium.{WebDriver, WebElement}
 import org.scalatest.concurrent.Eventually
+import org.scalatest.exceptions.TestFailedException
 import org.scalatestplus.selenium
 import org.scalatestplus.selenium.WebBrowser
 
@@ -51,6 +53,19 @@ trait Grammar extends Eventually {
     def userCanSee(element: => WebElement): Unit = eventually {
       element.isDisplayed shouldBe true
     }
+  }
+
+  object reload {
+
+    @scala.annotation.tailrec
+    def whenUserCannotSee(element: WebDriver => WebElement, attempt: Int = 1): Unit =
+      if (attempt <= 10 && Either
+            .catchOnly[TestFailedException](!element(webDriver).isDisplayed)
+            .fold(_ => true, identity)) {
+        webDriver.navigate().refresh()
+        whenUserCannotSee(element, attempt + 1)
+      } else
+        element(webDriver).isDisplayed
   }
 
   def unless(test: Boolean)(testFun: => Any): Unit =

@@ -13,7 +13,7 @@ trait ScreenCapturing {
   /**
     * Public helper function to write a screenshot of the current browser state.
     */
-  def saveScreenshot(implicit browser: WebBrowser with Driver, webDriver: WebDriver) = {
+  def saveScreenshot(implicit browser: WebBrowser with Driver, webDriver: WebDriver): Unit = {
     val captureDir = Paths.get("target")
     browser.setCaptureDir(captureDir.toFile.getAbsolutePath)
 
