@@ -5,15 +5,14 @@ import java.lang.System.getProperty
 import ch.renku.acceptancetests.model.projects.ProjectIdentifier
 import eu.timepit.refined.api.Refined
 
-case class AnonEnvConfig(projectId: ProjectIdentifier,
-                         isAvailable: Boolean = false)
+case class AnonEnvConfig(projectId: ProjectIdentifier, isAvailable: Boolean = false)
 
 /**
   * Configuration for the anonymous environment
   */
 trait AnonEnv extends AcceptanceSpecData {
 
-  implicit protected lazy val anonEnvConfig: AnonEnvConfig = {
+  protected implicit lazy val anonEnvConfig: AnonEnvConfig = {
     AnonEnvConfig(anonProjectIdentifier, isAnonEnvAvailable)
   }
 

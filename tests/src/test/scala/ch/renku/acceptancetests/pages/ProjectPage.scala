@@ -1,26 +1,21 @@
 package ch.renku.acceptancetests.pages
 
-import ch.renku.acceptancetests.model.projects.ProjectDetails
+import ch.renku.acceptancetests.model.datasets.DatasetName
 import ch.renku.acceptancetests.model.projects.ProjectDetails._
-import ch.renku.acceptancetests.model.projects.ProjectIdentifier
+import ch.renku.acceptancetests.model.projects.{ProjectDetails, ProjectIdentifier}
 import ch.renku.acceptancetests.model.users.UserCredentials
 import ch.renku.acceptancetests.pages.Page.{Path, Title}
 import ch.renku.acceptancetests.tooling.AcceptanceSpec
-import ch.renku.acceptancetests.tooling.AcceptanceSpecPatience
-
 import eu.timepit.refined.api.Refined
 import eu.timepit.refined.auto._
-
 import org.openqa.selenium.{By, WebDriver, WebElement}
+import org.scalactic.source
 import org.scalatestplus.selenium.WebBrowser
 import org.scalatestplus.selenium.WebBrowser.{cssSelector, find, findAll}
-import org.scalatest.time.{Millis, Seconds, Span}
 
 import scala.concurrent.duration._
 import scala.jdk.CollectionConverters._
 import scala.language.postfixOps
-
-import org.scalactic.source
 
 object ProjectPage {
   def apply()(implicit projectDetails: ProjectDetails, userCredentials: UserCredentials): ProjectPage =
@@ -33,14 +28,14 @@ class ProjectPage(projectSlug: String, namespace: String) extends RenkuPage with
 
   override val title: Title = "Renku"
   override val path: Path = Refined.unsafeApply(
-    s"/projects/${namespace}/${projectSlug}"
+    s"/projects/$namespace/$projectSlug"
   )
 
   override def pageReadyElement(implicit webDriver: WebDriver): Option[WebElement] = Some(Overview.tab)
 
   def viewInGitLab(implicit webDriver: WebDriver): WebElement = eventually {
     find(
-      cssSelector(s"a[href*='/gitlab/${namespace}/${projectSlug}']")
+      cssSelector(s"a[href*='/gitlab/$namespace/$projectSlug']")
     ) getOrElse fail("View in GitLab button not found")
   }
 
@@ -126,7 +121,9 @@ class ProjectPage(projectSlug: String, namespace: String) extends RenkuPage with
         }
 
         def createIssueButton(implicit webDriver: WebDriver): WebElement = eventually {
-          findAll(cssSelector("button[type='submit']")).find(_.text == "Create Issue") getOrElse fail("Create Issue button not found")
+          findAll(cssSelector("button[type='submit']")).find(_.text == "Create Issue") getOrElse fail(
+            "Create Issue button not found"
+          )
         }
 
       }
@@ -201,18 +198,17 @@ class ProjectPage(projectSlug: String, namespace: String) extends RenkuPage with
       find(cssSelector(s"a[href='$path/datasets']")) getOrElse fail("Datasets tab not found")
     }
 
+    def title(implicit webDriver: WebDriver): WebElement = eventually {
+      findAll(cssSelector("h2")).find(_.text.trim == "Datasets") getOrElse fail("Datasets title not found")
+    }
+
     object DatasetsList {
-
-      def list(implicit webDriver: WebDriver): WebElement = eventually {
-        find(cssSelector(s"div.tree-container nav")) getOrElse fail("Datasets list not found")
-      }
-
-      def flights(implicit webDriver: WebDriver): WebElement =
+      def link(to: DatasetName)(implicit webDriver: WebDriver): WebElement =
         eventually {
-          find(cssSelector("div.project-list-row > div > b > span.issue-title > a"))
-            .find(_.text == "2019-01 US Flights")
-            .getOrElse(fail("Dataset 'flights' not found"))
-        }(waitUpTo(AcceptanceSpecPatience.WAIT_SCALE * 120 seconds), implicitly[source.Position])
+          findAll(cssSelector("div.project-list-row div b span.issue-title a"))
+            .find(_.text.trim == to.toString.trim)
+            .getOrElse(fail(s"Dataset '$to' not found"))
+        }(waitUpTo(120 seconds), implicitly[source.Position])
     }
   }
 
@@ -222,9 +218,10 @@ class ProjectPage(projectSlug: String, namespace: String) extends RenkuPage with
       find(cssSelector(s"a[href='$path/environments']")) getOrElse fail("Environments tab not found")
     }
 
-    def newLink(implicit webDriver: WebDriver): WebElement = eventually {
-      find(cssSelector(s"a[href='$path/environments/new']")) getOrElse fail("New environment link not found")
-    }
+    def newLink(implicit webDriver: WebDriver): WebElement =
+      eventually {
+        find(cssSelector(s"a[href='$path/environments/new']")) getOrElse fail("New environment link not found")
+      }(waitUpTo(1 minute), implicitly[source.Position])
 
     def anonymousUnsupported(implicit webDriver: WebDriver): WebElement = eventually {
       findAll(cssSelector(s"div > div > div > div > p"))
@@ -244,12 +241,12 @@ class ProjectPage(projectSlug: String, namespace: String) extends RenkuPage with
     def verifyImageReady(implicit webDriver: WebDriver): Unit =
       eventually {
         findImageReadyBadge getOrElse waitForImageToBeReady
-      }(waitUpTo(AcceptanceSpecPatience.WAIT_SCALE * 10 minutes), implicitly[source.Position])
+      }(waitUpTo(10 minutes), implicitly[source.Position])
 
     private def waitForImageToBeReady(implicit webDriver: WebDriver): Unit = {
       find(cssSelector(".badge.badge-warning")) orElse findImageReadyBadge getOrElse fail(
         "Image building info badges not found"
-      );
+      )
       sleep(2 seconds)
       findImageReadyBadge getOrElse fail("Image not yet built")
     }
@@ -283,7 +280,7 @@ class ProjectPage(projectSlug: String, namespace: String) extends RenkuPage with
                                                               spec: AcceptanceSpec): Unit = eventually {
         import spec.{And, Then}
         And("tries to connect to JupyterLab")
-        connectButton(buttonSelector).click
+        connectButton(buttonSelector).click()
         sleep(2 seconds)
 
         // Check if we are connected to JupyterLab
@@ -293,7 +290,7 @@ class ProjectPage(projectSlug: String, namespace: String) extends RenkuPage with
           And("JupyterLab is not up yet")
           Then("close the window and try again later")
           // The server isn't up yet. Close the window and try again
-          webDriver.close
+          webDriver.close()
           webDriver.switchTo() window tabs(0)
           fail("Could not connect to JupyterLab")
         } else {
@@ -303,7 +300,7 @@ class ProjectPage(projectSlug: String, namespace: String) extends RenkuPage with
 
       def connectDotButton(implicit webDriver: WebDriver): WebElement = eventually {
         findAll(cssSelector("button.btn.btn-primary svg[data-icon='ellipsis-v']"))
-          .find(_.findElement(By.xpath("./../..")).getText().equals("Connect"))
+          .find(_.findElement(By.xpath("./../..")).getText.equals("Connect"))
           .getOrElse(fail("First row Interactive Environment ... button not found"))
           .parent
       }
@@ -318,7 +315,7 @@ class ProjectPage(projectSlug: String, namespace: String) extends RenkuPage with
         eventually {
           find(cssSelector(".text-nowrap.p-1.badge.badge-success"))
             .getOrElse(fail("Interactive environment is not ready"))
-        }(waitUpTo(AcceptanceSpecPatience.WAIT_SCALE * 10 minutes), implicitly[source.Position])
+        }(waitUpTo(10 minutes), implicitly[source.Position])
     }
   }
 
@@ -350,6 +347,11 @@ class ProjectPage(projectSlug: String, namespace: String) extends RenkuPage with
       find(cssSelector("div.form-group + button.btn.btn-primary")) getOrElse fail(
         "Update button not found"
       )
+    }
+
+    def projectHttpUrl(implicit webDriver: WebDriver): WebElement = eventually {
+      findAll(cssSelector("table.table.table-sm td"))
+        .find(e => e.text.matches("^http.+.git$")) getOrElse fail("Project http url not found")
     }
   }
 
