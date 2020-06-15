@@ -130,6 +130,7 @@ jobs:
                            -e RENKU_TEST_USERNAME="renku-test" \
                            -e RENKU_TEST_PASSWORD="$RENKU_BOT_DEV_PASSWORD" sbt
     - name: Prepare artifact for packaging on failure
+      if: failure()
       run: |
         mkdir tests/test-artifacts
         cp tests/target/*.png tests/test-artifacts 2>/dev/null || :
