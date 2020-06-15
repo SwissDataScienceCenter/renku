@@ -129,9 +129,17 @@ jobs:
                            -e RENKU_TEST_REGISTER="1" \
                            -e RENKU_TEST_USERNAME="renku-test" \
                            -e RENKU_TEST_PASSWORD="$RENKU_BOT_DEV_PASSWORD" sbt
+    - name: Prepare artifact for packaging on failure
+      if: failure()
+      run: |
+        mkdir tests/test-artifacts
+        cp tests/target/*.png tests/test-artifacts 2>/dev/null || :
+        cp tests/target/*.log tests/test-artifacts 2>/dev/null || :
+        sudo rm -rf tests/target/20*/.renku/cache 2>/dev/null || :
+        cp -r tests/target/20* tests/test-artifacts 2>/dev/null || :
     - name: Upload screenshots on failure
       if: failure()
       uses: actions/upload-artifact@v1
       with:
         name: test-artifacts
-        path: tests/target
+        path: tests/test-artifacts
