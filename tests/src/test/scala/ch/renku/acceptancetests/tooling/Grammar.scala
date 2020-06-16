@@ -21,7 +21,7 @@ trait Grammar extends Eventually {
     }
 
   object sleep {
-    def apply(duration: Duration): Unit = Page.SleepThread(duration)
+    def apply(duration: Duration): Unit = Page SleepThread duration
   }
 
   object verify {
@@ -68,6 +68,20 @@ trait Grammar extends Eventually {
         element(webDriver).isDisplayed
   }
 
+  object pause {
+
+    @scala.annotation.tailrec
+    def asLongAsBrowserAt[Url <: BaseUrl](page: Page[Url], attempt: Int = 1)(implicit baseUrl: Url): Unit =
+      if (attempt <= 10 && (currentUrl startsWith page.url)) {
+        sleep(patienceConfig.timeout.millisPart millis)
+        asLongAsBrowserAt(page, attempt + 1)
+      } else if (attempt > 10 && (currentUrl startsWith page.url))
+        fail {
+          s"Expected to be redirected from the ${page.path} but " +
+            s"it did not happen after ${((patienceConfig.timeout.millisPart millis) * attempt).toSeconds}s"
+        }
+  }
+
   def unless(test: Boolean)(testFun: => Any): Unit =
     if (!test) testFun
 
@@ -79,7 +93,7 @@ trait Grammar extends Eventually {
   }
 
   protected implicit class OperationOps(unit: Unit) {
-    def sleep(duration: Duration): Unit = Page.SleepThread(duration)
+    def sleep(duration: Duration): Unit = Page SleepThread duration
   }
 
   protected implicit def toWebElement(element: WebBrowser.Element): WebElement =
