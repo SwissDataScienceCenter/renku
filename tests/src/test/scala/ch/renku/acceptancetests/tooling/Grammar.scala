@@ -71,15 +71,19 @@ trait Grammar extends Eventually {
   object pause {
 
     @scala.annotation.tailrec
-    def asLongAsBrowserAt[Url <: BaseUrl](page: Page[Url], attempt: Int = 1)(implicit baseUrl: Url): Unit =
-      if (attempt <= 10 && (currentUrl startsWith page.url)) {
-        sleep(patienceConfig.timeout.millisPart millis)
+    def asLongAsBrowserAt[Url <: BaseUrl](page: Page[Url], attempt: Int = 1)(implicit baseUrl: Url): Unit = {
+      val frequencyFactor = 3
+      val maxAttempts     = 10 * frequencyFactor
+
+      if (attempt <= maxAttempts && (currentUrl startsWith page.url)) {
+        sleep((patienceConfig.timeout.millisPart / frequencyFactor) millis)
         asLongAsBrowserAt(page, attempt + 1)
-      } else if (attempt > 10 && (currentUrl startsWith page.url))
+      } else if (attempt > maxAttempts && (currentUrl startsWith page.url))
         fail {
           s"Expected to be redirected from the ${page.path} but " +
             s"it did not happen after ${((patienceConfig.timeout.millisPart millis) * attempt).toSeconds}s"
         }
+    }
   }
 
   def unless(test: Boolean)(testFun: => Any): Unit =
