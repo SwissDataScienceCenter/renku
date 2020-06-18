@@ -19,7 +19,8 @@ trait NewProject {
 
     When("user fills in and submits the new project details form")
     NewProjectPage submitFormWith projectDetails
-    Then("the project gets created and the Project page gets displayed")
+    pause asLongAsBrowserAt NewProjectPage
+    Then(s"the project '${projectDetails.title}' gets created and the Project page gets displayed")
     val projectPage = ProjectPage()
     verify browserAt projectPage
 
