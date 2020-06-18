@@ -7,7 +7,7 @@ services:
     ports:
       - "4444:4444"
   sbt:
-    image: hseeberger/scala-sbt:8u222_1.3.3_2.13.1
+    build: .
     command: ['/tests/docker-run-tests.sh']
     environment:
       - DOCKER=1

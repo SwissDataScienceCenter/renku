@@ -30,17 +30,22 @@ The `docker-compose` command has to be available. For installation steps see: ht
 For running with docker, the parameters to the test need to be provided as environment variables:
 
 ```
-docker-compose run -e RENKU_TEST_URL=https://renku-kuba.dev.renku.ch -e RENKU_TEST_FULL_NAME="<full user
-name>" -e RENKU_TEST_EMAIL=<email> -e RENKU_TEST_USERNAME=<username> -e RENKU_TEST_PASSWORD=<password> sbt
+docker-compose run -e RENKU_TEST_URL=https://renku-kuba.dev.renku.ch -e RENKU_TEST_FULL_NAME="<full user name>"
+-e RENKU_TEST_EMAIL=<email> -e RENKU_TEST_USERNAME=<username> -e RENKU_TEST_PASSWORD=<password>
+-e RENKU_TEST_CLI_VERSION=<renkuVersion> sbt
 ```
 
 By default, all tests are run. You can provide an argument to run a specific test:
 
 ```
-docker-compose run -e RENKU_TEST_URL=https://renku-kuba.dev.renku.ch -e RENKU_TEST_FULL_NAME="<full user
-name>" -e RENKU_TEST_EMAIL=<email> -e RENKU_TEST_USERNAME=<username> -e RENKU_TEST_PASSWORD=<password> sbt
+docker-compose run -e RENKU_TEST_URL=https://renku-kuba.dev.renku.ch -e RENKU_TEST_FULL_NAME="<full user name>"
+-e RENKU_TEST_EMAIL=<email> -e RENKU_TEST_USERNAME=<username> -e RENKU_TEST_PASSWORD=<password>  
+-e RENKU_TEST_CLI_VERSION=<renkuVersion> sbt
 /tests/docker-run-tests.sh *<test-class-name>*
 ```
+__**IMPORTANT**__
+
+Once you do changes to the `Dockerfile` do not forget to build the image with `docker-compose build`.
 
 ## Running using sbt
 
@@ -54,6 +59,13 @@ In order to run the tests you need to install:
   * Mac users: `brew tap homebrew/cask && brew cask install chromedriver`
   * Debian based users: `sudo apt-get install chromium-chromedriver`
   * for other see: https://github.com/SeleniumHQ/selenium/wiki/ChromeDriver
+* Python 3, pip and the following packages which can be installed using `python3 -m pip install '<package-name>==<version>'`:
+  * papermill < 1.2.0
+  * requests >= 2.20.0
+  * jupyterhub = 1.1.0
+  * nbresuse = 0.3.3
+  * jupyterlab-git = 0.20.0
+  * pipx >= 0.15.0.0
 
 #### Running
 The tests are run by executing `sbt` in the project's root.
@@ -79,10 +91,10 @@ To create a `tests-defaults.conf` file, copy the `tests-defaults.conf.template` 
 | extant     | RENKU_TEST_EXTANT_PROJECT | if non-empty, an existing project to use for tests               |
 | anon       | RENKU_TEST_ANON_PROJECT   | namespace/name for the project to test anonymously               |
 | anonAvail  | RENKU_TEST_ANON_AVAILABLE | if true, anonymous environments will be tested.                  |
+| renkuVersion | RENKU_TEST_CLI_VERSION  | renku cli version to be used on command line e.g `0.10.4`        |
 
 For example, the following may be run in the project's root: `sbt -Denv=https://renku-kuba.dev.renku.ch
--Demail=<email> -Dusername=<username> -Dfullname='<full user name>' -Dpassword=<password> test`
-
+-Demail=<email> -Dusername=<username> -Dfullname='<full user name>' -Dpassword=<password> -DrenkuVersion=<renkuVersion> test`
 
 In the case there's a need of running a single test the `test` part should be replaced with `"testOnly
 *<test-class-name>*"`.
@@ -94,10 +106,10 @@ class`. In this case, the environment variables should be used to provide the va
 
 __**NOTICE**__
 
-When running locally, it's very important that version of your Chrome matches the version of the chromedriver.
+* When running locally, it's very important that version of your Chrome matches the version of the chromedriver.
 If these versions does not match you have to upgrade one or the other and *reopen* the browser. Running with
 Docker avoids this problem.
-
+* There's a `tests-execution.log` file created in the `target` directory of the tests where `DEBUG` log statements generated during tests execution are written. This information might be useful when investigating tests failures.
 
 ## Running in console
 
@@ -138,6 +150,8 @@ The test are built using the Page Object Pattern (e.g.
 https://www.pluralsight.com/guides/getting-started-with-page-object-pattern-for-your-selenium-tests) which in
 short is about wrapping an UI page into a class/object and using it in the test script.
 
+
+As mentioned above there's a `target/tests-execution.log` file where tests debug statements from tests execution are written.
 
 ## Project organization
 
