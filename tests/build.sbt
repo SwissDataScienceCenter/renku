@@ -19,7 +19,7 @@
 organization := "ch.renku"
 name := "renku-acceptance-tests"
 version := "0.1.0"
-scalaVersion := "2.13.1"
+scalaVersion := "2.13.2"
 
 parallelExecution in Test := false
 
@@ -33,7 +33,7 @@ libraryDependencies += "org.slf4j"               % "slf4j-log4j12"   % "1.7.28" 
 libraryDependencies += "org.scalacheck"          %% "scalacheck"     % "1.14.0" % Test
 libraryDependencies += "org.scalatest"           %% "scalatest"      % "3.0.8" % Test
 libraryDependencies += "org.seleniumhq.selenium" % "selenium-java"   % "3.141.59" % Test
-libraryDependencies += "org.typelevel"           %% "cats-core"      % "2.0.0"
+libraryDependencies += "org.typelevel"           %% "cats-effect"    % "2.1.3" % Test
 
 scalacOptions += "-feature"
 scalacOptions += "-unchecked"

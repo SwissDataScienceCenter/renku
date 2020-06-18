@@ -29,7 +29,9 @@ class JupyterLabPage(projectSlug: String, namespace: String) extends RenkuPage {
   override def pageReadyElement(implicit webDriver: WebDriver): Option[WebElement] = Some(terminalIcon)
 
   def terminalIcon(implicit webDriver: WebDriver): WebElement = eventually {
-    find(cssSelector("div.jp-LauncherCard [data-icon='ui-components:terminal']")) getOrElse fail("Terminal icon not found")
+    find(cssSelector("div.jp-LauncherCard [data-icon='ui-components:terminal']")) getOrElse fail(
+      "Terminal icon not found"
+    )
   }
 
   object terminal {

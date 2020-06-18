@@ -30,7 +30,7 @@ case object NewProjectPage extends RenkuPage with TopBar with ScreenCapturing {
 
       if (captureScreenshots) saveScreenshot
 
-      createButton.click() sleep (1 second)
+      createButton.click() sleep (2 seconds)
     }
 
   private def titleField(implicit webDriver: WebDriver): WebElement = eventually {
