@@ -1,10 +1,11 @@
 from .base_chart import BaseChart
+import pulumi
 
 
 class GraphChart(BaseChart):
     """Renku Graph chart."""
-
-    chart_name = "graph"
+    name = "graph"
+    chart_name = "renku-graph"
     default_values_template = {
         "jena": {
             "users": {"admin": {}, "renku": {}},
@@ -42,20 +43,22 @@ class GraphChart(BaseChart):
         """Get chart default values."""
         default_values = super().default_values
 
-        if self.pulumi_config.get_bool("dev"):
+        config = pulumi.Config()
+
+        if config.get_bool("dev"):
             default_values["jena"]["users"]["admin"]["password"] = \
-                self.generated_random_password("graph_jena_admin_password", 8)
+                self.generate_random_password("graph_jena_admin_password", 8)
 
             default_values["jena"]["users"]["renku"]["password"] = \
-                self.generated_random_password("graph_jena_renku_password", 8)
+                self.generate_random_password("graph_jena_renku_password", 8)
 
             default_values["webhookService"]["hookToken"]["secret"] = \
-                self.generated_random_id("graph_webhookservice_secret")
+                self.generate_random_id("graph_webhookservice_secret")
 
             default_values["tokenRepository"]["tokenEncryption"]["secret"] = \
-                self.generated_random_id("graph_tokenrepository_secret")
+                self.generate_random_id("graph_tokenrepository_secret")
 
-            baseurl = self.pulumi_config.get("baseurl")
+            baseurl = config.get("baseurl")
 
             if baseurl:
                 default_values["gitlab"]["url"] = "https://{}/gitlab".format(
@@ -65,7 +68,12 @@ class GraphChart(BaseChart):
 
     def values_post_process(self, values):
         values = super().values_post_process(values)
-        sentry = self.pulumi_config.get("sentry_dsn")
+
+        values["global"] = self.global_config["global"]
+
+        config = pulumi.Config()
+
+        sentry = config.get("sentry_dsn")
 
         if sentry:
             sent = values.setdefault("sentry", {})

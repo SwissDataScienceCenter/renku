@@ -1,6 +1,8 @@
 graph:
-  version: 0.41.0-n003.hbb61b81
-  repository: https://swissdatasciencecenter.github.io/helm-charts/
+  #version: 0.41.0
+  #repository: https://swissdatasciencecenter.github.io/helm-charts/
+  version: 0.32.0-913601f
+  repository: http://127.0.0.1:8879/
 
 keycloak:
   version: 4.10.1
