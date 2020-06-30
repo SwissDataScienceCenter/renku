@@ -1,5 +1,33 @@
 .. _changelog:
 
+0.6.4
+-----
+
+This is primarily a bugfix release.
+
+Bug fixes
+~~~~~~~~~
+
+* Fixes a bug which prevented the selection of a non-master branch when launching an environment.
+
+Notable improvements
+~~~~~~~~~~~~~~~~~~~~
+
+* Improved display of merge requests in the UI
+
+Individual components
+~~~~~~~~~~~~~~~~~~~~~
+
+For changes to individual components, check:
+
+* renku-ui `0.10.3 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/0.10.3>`__
+
+Upgrading from 0.6.3
+~~~~~~~~~~~~~~~~~~~~
+
+* No new values required in the values file
+* The version in the welcome page can be updated at `ui.welcomePage.text`
+
 0.6.3
 -----
 
