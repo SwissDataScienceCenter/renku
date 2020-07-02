@@ -23,7 +23,7 @@ trait AnonEnv extends AcceptanceSpecData {
         ProjectIdentifier(Refined.unsafeApply(projectId(0)), Refined.unsafeApply(projectId(1)))
       }
       case None =>
-        ProjectIdentifier(Refined.unsafeApply("cramakri"), Refined.unsafeApply("covid-19-dashboard"))
+        ProjectIdentifier(Refined.unsafeApply("andi"), Refined.unsafeApply("public-test-project"))
     }
   }
 
