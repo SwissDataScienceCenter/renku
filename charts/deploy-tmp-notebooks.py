@@ -2,6 +2,7 @@
 
 import argparse
 import os
+import random
 import re
 import secrets
 import subprocess
@@ -20,6 +21,12 @@ TEMPORARY_NOTEBOOKS_SERVICE_NAME = "notebooks-tmp"
 
 
 JUPYTERHUB_POSTGRES_SECRET_NAME = "renku-jupyterhub-tmp-postgres"
+
+
+def random_hex_seeded(length, seed):
+    """Get a random hex string of a given lenth with a specific seed."""
+    random.seed(seed)
+    return bytearray(random.getrandbits(8) for _ in range(length)).hex()
 
 
 def get_values(release_name, kube_context):
@@ -56,7 +63,7 @@ def make_tmp_values(values, renku_namespace, out_path=None):
     }
 
     hub_section = new_values["jupyterhub"]["hub"]
-    hub_section["cookie_secret"] = secrets.token_hex(32)
+    hub_section["cookieSecret"] = random_hex_seeded(32, hub_section["cookieSecret"])
     hub_section["baseUrl"] = "{}-tmp/".format(hub_section["baseUrl"].rstrip("/"))
     hub_section["db"]["url"] = (
         hub_section["db"]["url"]
@@ -83,15 +90,21 @@ def make_tmp_values(values, renku_namespace, out_path=None):
     hub_section["services"]["notebooks"]["url"] = "http://{}".format(
         TEMPORARY_NOTEBOOKS_SERVICE_NAME
     )
-    hub_section["services"]["notebooks"]["apiToken"] = secrets.token_hex(32)
+    hub_section["services"]["notebooks"]["apiToken"] = random_hex_seeded(
+        32, hub_section["services"]["notebooks"]["apiToken"]
+    )
     del hub_section["services"]["gateway"]
 
     auth_section = new_values["jupyterhub"]["auth"]
-    auth_section["state"]["cryptoKey"] = secrets.token_hex(32)
+    auth_section["state"]["cryptoKey"] = random_hex_seeded(
+        32, auth_section["state"]["cryptoKey"]
+    )
     auth_section["type"] = "tmp"
     del auth_section["gitlab"]
 
-    new_values["jupyterhub"]["proxy"]["secretToken"] = secrets.token_hex(32)
+    new_values["jupyterhub"]["proxy"]["secretToken"] = random_hex_seeded(
+        32, new_values["jupyterhub"]["proxy"]["secretToken"]
+    )
 
     # Add some reasonably short defaults for server culling
     new_values["jupyterhub"]["cull"] = {"enabled": True, "timeout": 3600, "every": 60}
