@@ -61,6 +61,7 @@ jobs:
         RENKU_BOT_DEV_PASSWORD: ${{ secrets.RENKU_BOT_DEV_PASSWORD }}
       run: |
         cd tests
+        COMPOSE_DOCKER_CLI_BUILD=1 DOCKER_BUILDKIT=1 docker-compose build sbt
         docker-compose run -e RENKU_TEST_URL=https://dev.renku.ch \
                            -e RENKU_TEST_FULL_NAME="Renku Bot" \
                            -e RENKU_TEST_EMAIL="renku@datascience.ch" \
@@ -114,6 +115,7 @@ jobs:
         if: github.ref == 'refs/heads/master' && !startsWith(github.ref, 'refs/tags/')
         env:
           GITHUB_TOKEN: ${{ secrets.RENKU_CI_TOKEN }}
+          DOCKER_BUILDKIT: "1"
         run: |
           cd charts
           chartpress --push --publish-chart
