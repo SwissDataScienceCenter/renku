@@ -61,17 +61,26 @@ jobs:
         RENKU_BOT_DEV_PASSWORD: ${{ secrets.RENKU_BOT_DEV_PASSWORD }}
       run: |
         cd tests
+        COMPOSE_DOCKER_CLI_BUILD=1 DOCKER_BUILDKIT=1 docker-compose build sbt
         docker-compose run -e RENKU_TEST_URL=https://dev.renku.ch \
                            -e RENKU_TEST_FULL_NAME="Renku Bot" \
                            -e RENKU_TEST_EMAIL="renku@datascience.ch" \
                            -e RENKU_TEST_USERNAME="renku-test" \
                            -e RENKU_TEST_PASSWORD="$RENKU_BOT_DEV_PASSWORD" sbt
+    - name: Prepare artifact for packaging on failure
+      if: failure()
+      run: |
+        mkdir tests/test-artifacts
+        cp tests/target/*.png tests/test-artifacts 2>/dev/null || :
+        cp tests/target/*.log tests/test-artifacts 2>/dev/null || :
+        sudo rm -rf tests/target/20*/.renku/cache 2>/dev/null || :
+        cp -r tests/target/20* tests/test-artifacts 2>/dev/null || :
     - name: Upload screenshots on failure
       if: failure()
       uses: actions/upload-artifact@v1
       with:
         name: test-artifacts
-        path: tests/target
+        path: tests/test-artifacts
   chart:
     needs: test
     runs-on: ubuntu-latest
@@ -106,6 +115,7 @@ jobs:
         if: github.ref == 'refs/heads/master' && !startsWith(github.ref, 'refs/tags/')
         env:
           GITHUB_TOKEN: ${{ secrets.RENKU_CI_TOKEN }}
+          DOCKER_BUILDKIT: "1"
         run: |
           cd charts
           chartpress --push --publish-chart
