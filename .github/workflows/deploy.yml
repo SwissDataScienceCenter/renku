@@ -67,6 +67,15 @@ jobs:
                            -e RENKU_TEST_EMAIL="renku@datascience.ch" \
                            -e RENKU_TEST_USERNAME="renku-test" \
                            -e RENKU_TEST_PASSWORD="$RENKU_BOT_DEV_PASSWORD" sbt
+    - name: Notify slack
+      if: failure()
+      env:
+        RENKU_SLACK_BOT_TOKEN: ${{ secrets.RENKU_SLACK_BOT_TOKEN }}
+      run: |
+        curl -X POST https://slack.com/api/chat.postMessage \
+             -H "Authorization: Bearer $RENKU_SLACK_BOT_TOKEN" \
+             --data "channel=C9U45DL1H" \
+             --data "text=Acceptance tests on https://dev.renku.ch failed! :scream_cat:"
     - name: Prepare artifact for packaging on failure
       if: failure()
       run: |
