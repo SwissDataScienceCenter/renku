@@ -10,6 +10,7 @@ backend
 backends
 balancer
 Bergstrom
+Bioconductor
 blog
 bugfix
 chartpress
@@ -51,6 +52,7 @@ GitLab
 GraphQL
 hostname
 hyperkit
+hypervisor
 indices
 Indices
 interoperability

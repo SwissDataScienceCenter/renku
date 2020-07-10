@@ -63,8 +63,15 @@ all the necessary python dependencies:
 
 Start minikube
 ^^^^^^^^^^^^^^
-Next we start minikube. For OS X users we recommend using the hyperkit vm driver by
-adding the `--vm-driver hyperkit` flag to the command.
+Next we start minikube. Don't forget to specify the version with the
+`--kubernetes-version` flag to avoid incompatibilities with the most recent
+kubernetes versions.
+
+**Tip**: For OS X users we recommend using the hyperkit vm driver by adding the
+`--vm-driver-hyperkit` flag to the command.
+For Linux users, installing VirtualBox as hypervisor is the simplest option.
+For other solutions, please refer to the
+`installing minikube docs <https://kubernetes.io/docs/tasks/tools/install-minikube/#install-a-hypervisor>`_.
 
 .. code-block:: console
 
@@ -102,6 +109,9 @@ the the kubernetes cluster. Also, we deploy `nginx ingress <https://github.com/k
         --set controller.hostNetwork=true \
         stable/nginx-ingress
 
+**Notice**: after the `init` command, you may need to wait up to 1 minute
+before you can successfully run ``helm upgrade``.
+
 
 Build and pull all necessary charts
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -138,14 +148,16 @@ the ``gitlab.com`` client application and recreate your Renku deployment
 (see next steps).
 
 
-Set up the gitlab.com client application
+Set up the gitlab client application
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Browse to **gitlab.com > user settings > applications** and register a new
-client application (Renku-local) with the following settings:
+Browse to GitLab, then click on the user icon and select
+**settings > applications**. Register a new client application with the
+following settings:
 
-#. Activate all scopes except :code:`sudo`
-#. Add the following redirect URLs (use the value of the previously exported
+#. Name: renku-local
+#. Scopes: all except :code:`sudo`
+#. Redirect URI (use the value of the previously exported
    environment variable $RENKU_DOMAIN for <renku-domain>):
 
   .. code-block:: console
@@ -155,14 +167,20 @@ client application (Renku-local) with the following settings:
     http://<renku-domain>/api/auth/jupyterhub/token
     http://<renku-domain>/jupyterhub/hub/oauth_callback
 
+Copy the ``Application Id`` and the ``Secret`` that appear at the end of
+this procedure.
+
 
 Configure the ``values.yaml`` file
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Open the file ``charts/example-configurations/external-gitlab-values.yaml``
-in your cloned Renku repository and paste the ``Application Id`` and the
-``Secret`` of the GitLab client application created in ``gitlab.com``
-(Renku-local) into the designated places at the top of the file.
+in your cloned Renku repository.
+You need to modify the values in the first lines by specifying all the
+required ``variables`` and commenting out ``global`` if you are **not** using
+a cloud instance of GitLab (like gitlab.com).
+Use the ``Application Id`` and the ``Secret`` from the GitLab client
+application created in the previous step.
 
 
 Deploy Renku to minikube
@@ -174,14 +192,20 @@ Start the renku platform using helm:
 
   $ helm upgrade renku --install --namespace renku ./renku \
     -f minikube-values.yaml -f example-configurations/external-gitlab-values.yaml \
-    --timeout 1800 \
+    --timeout 3600 \
     --set global.renku.domain=$RENKU_DOMAIN \
     --set notebooks.jupyterhub.hub.services.gateway.oauth_redirect_uri=http://$RENKU_DOMAIN/api/auth/jupyterhub/token \
     --set notebooks.jupyterhub.auth.gitlab.callbackUrl=http://$RENKU_DOMAIN/jupyterhub/hub/oauth_callback
 
-Executing this command for the first time can easily take 15 minutes (depending
-on your internet connection speed) as all the necessary docker images need to be
-pulled. This would therefore be a good moment to grab yourself a coffee...
+Executing this command for the first time can easily take a long time depending
+on your internet connection speed (even 30+ minutes) as all the necessary docker
+images need to be pulled. Do not interrupt the `upgrade` command.
+
+If you want to verify that things are moving on, open a new terminal any type 
+``kubectl -n renku get pod``. The `renku-keycloak-*` pod is the slowest. If the
+`Ready` column reports `0/1` and `Restarts` is not higher than `1`, all is going
+as expected.
+This would be a good moment to grab yourself a coffee...
 
 Once the above command has returned you should be able to access the platform using
 your browser under ``http://<some-name>.localhost.run``.
