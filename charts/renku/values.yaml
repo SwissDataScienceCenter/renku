@@ -492,6 +492,14 @@ gitlab:
     #     - registry.example.com
     #     secretName: registry-tls
 
+  ## Add some extra configuration to gitlab.rb
+  # extraConfig: |
+  #     ## Fix number of unicorn workers
+  #     unicorn['worker_processes'] = 7
+
+  #     ## Fix something else
+  #     ...
+
 ## Configuration for the UI service
 ui:
   #  welcomePage:
