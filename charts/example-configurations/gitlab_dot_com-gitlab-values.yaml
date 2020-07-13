@@ -8,10 +8,10 @@
 # for instructions on how to use this values file.
 
 variables:
-  gitlabURL:          &gitlabURL           # https://gitlab.com or https://renkulab.io/gitlab
-  gitlabClientId:     &gitlabClientId      # Put GitLab Application Id here!
-  gitlabClientSecret: &gitlabClientSecret  # Put GitLab Secret here!
-  gitlabRegistryHost: &gitlabRegistryHost  # registry.gitlab.com or registry.renkulab.io
+  gitlabURL:          &gitlabURL           https://gitlab.com  # Or another gitlab available at the root path
+  gitlabClientId:     &gitlabClientId      # TODO: Put GitLab Application Id here!
+  gitlabClientSecret: &gitlabClientSecret  # TODO: Put GitLab Secret here!
+  gitlabRegistryHost: &gitlabRegistryHost  registry.gitlab.com  # Or the registry for this instance
 
 # Comment out this block when using `renkulab.io/gitlab` or any other GitLab running under
 # `<some-host-name>/gitlab`.

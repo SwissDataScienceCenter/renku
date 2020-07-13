@@ -8,9 +8,10 @@ This page describes how to deploy the Renku platform on
 `minikube <https://github.com/kubernetes/minikube>`_.
 Running GitLab (which is a part of Renku) is quite resource
 intensive. For this reason we describe a setup which excludes
-GitLab from the Renku deployment and instead uses `<gitlab.com>`_
-as GitLab backend. For the Renku graph features to function
-properly in this setup, `<gitlab.com>`_ needs to be able to contact
+GitLab from the Renku deployment and instead uses a GitLab
+instance running elsewhere, for example, `gitlab.com <https://gitlab.com>`_
+as the GitLab backend. For the Renku graph features to function
+properly in this setup, the GitLab instance needs to be able to contact
 the locally running platform through a webhook. This can be
 achieved through many services like `ngrok <https://ngrok.com/>`_
 or the like. We are going to use `localhost.run <http://localhost.run>`_,
@@ -174,13 +175,32 @@ this procedure.
 Configure the ``values.yaml`` file
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Open the file ``charts/example-configurations/external-gitlab-values.yaml``
-in your cloned Renku repository.
-You need to modify the values in the first lines by specifying all the
-required ``variables`` and commenting out ``global`` if you are **not** using
-a cloud instance of GitLab (like gitlab.com).
-Use the ``Application Id`` and the ``Secret`` from the GitLab client
-application created in the previous step.
+The ``values.yaml`` file will depend on the URL that GitLab is running under.
+We have two templates available in the cloned repository in the folder
+``charts/example-configurations/``.
+
+The flagship ``gitlab.com`` instance is available at the root of the domain.
+If you are using ``gitlab.com`` or any other instance where GitLab is
+accessible at the root of the domain, use the file
+``charts/example-configurations/gitlab_dot_com-gitlab-values.yaml`` as
+a template and copy this file to 
+``charts/example-configurations/external-gitlab-values.yaml``.
+
+If you are using `renkulab.io/gitlab <https://renkulab.io/gitlab>`_ or another instance of GitLab
+that is accessible under the path ``/gitlab``, then use
+``charts/example-configurations/renkulab-gitlab-values.yaml`` as
+a template and copy this file to 
+``charts/example-configurations/external-gitlab-values.yaml``.
+
+(If the GitLab instance is available under a different path than either
+the root or ``/gitlab``, use the ``gitlab_dot_com-gitlab-values.yaml``
+file as a template and adapt the path.)
+
+To complete the template, you should open 
+``charts/example-configurations/external-gitlab-values.yaml`` and enter
+the required ``variables`` that are indicated by ``TODO:``. You need to
+provide the ``Application Id`` and the
+``Secret`` from the GitLab client application created in the previous step.
 
 
 Deploy Renku to minikube
