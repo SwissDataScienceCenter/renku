@@ -1,5 +1,20 @@
 .. _changelog:
 
+0.6.5
+-----
+
+This is a release which only updates the version of the gitlab chart dependency.
+
+Improvements
+~~~~~~~~~~~~~~~~~~~~
+
+* More flexibility in configuring the gitlab instance through the values file.
+
+Upgrading from 0.6.4
+~~~~~~~~~~~~~~~~~~~~
+
+* No new values required, a `gitlab.extraConfig` block can be used to add settings to the `gitlab.rb` configuration file.
+
 0.6.4
 -----
 
