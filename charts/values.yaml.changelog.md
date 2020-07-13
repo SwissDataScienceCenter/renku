@@ -5,6 +5,11 @@ Please follow this convention when adding a new row
 * `<type: NEW|EDIT|DELETE> - *<resource name>*: <details>`
 
 ----
+## Changes on top of Renku 0.6.5
+* DELETE - *ui.templatesRepository*
+* NEW - *ui.templates*: the UI project creation has been overhauled and the settings are stored here.
+* NEW - *ui.templates.repositories* - list of renku templates repositories to be used in the ui. Each object contains a `url` pointing to the repository, a `ref` specifying the target tag or commit, a `name` acting as a user friendly short name.
+
 ## Changes on top of Renku 0.6.1
 Interactive sessions for logged-out users are now possible, see
 [the docs](https://renku.readthedocs.io/en/latest/admin/index.html#enabling-notebooks-for-anonymous-users).

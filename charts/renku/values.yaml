@@ -532,10 +532,13 @@ ui:
   ## Set the JupyterHub URL
   # jupyterhubUrl: "http://jupyterhub.renku.build"
 
-  ## Configuration for where to get the base project templates: a url and ref (usually a tag)
-  templatesRepository:
-    # url: https://github.com/SwissDataScienceCenter/renku-project-template
-    # ref: 0.1.6
+  ## Configuration for Renku templates
+  templates:
+    # custom: true
+    # repositories:
+    #   - url: https://github.com/SwissDataScienceCenter/renku-project-template
+    #     ref: 0.1.11
+    #     name: Renku
 
   ## Configuration for Sentry
   # sentry:
