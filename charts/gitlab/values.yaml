@@ -121,3 +121,11 @@ redis:
 # Enable json logs for all services
 logging:
   useJson: true
+
+## Add some extra configuration to gitlab.rb
+# extraConfig: |
+#     ## Fix number of unicorn workers
+#     unicorn['worker_processes'] = 7
+
+#     ## Fix something else
+#     ...

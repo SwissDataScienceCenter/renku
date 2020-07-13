@@ -125,4 +125,6 @@ sidekiq['log_format'] = 'json'
 gitlab_pages['log_format'] = 'json'
 {{- end }}
 
+{{ .Values.extraConfig }}
+
 {{- end -}}
