@@ -637,11 +637,6 @@ notebooks:
     #   # use JupyterLab by default in notebook servers
     #   defaultUrl: /lab
 
-apispec:
-  image:
-    repository: renku/apispec
-    tag: 'latest'
-
 tests:
   image:
     repository: renku/tests
