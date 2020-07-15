@@ -278,17 +278,17 @@ repository. Each of them requires an entry with the following parameters:
   `Jinja template engine <https://palletsprojects.com/p/jinja/>`_ in both
   files content and filenames. You can therefore ask users for specific values
   for any number of variables. The syntax is
-  ``<variable_name>: <vairable_description>``, where the name will be used as
+  ``<variable_name>: <variable_description>``, where the name will be used as
   the variable name provided to the engine and the description will be
   presented to the user to explain the variable's intended use.
 
 Use your repository
 """""""""""""""""""
 
-If you installed the renku command line locally, you can provide your template
-repository to the ``renku init`` command. We recommend you to **always**
-specify a tag (or a commit) when creating a new project from a custom repository.
-You can find further details in
+If you installed the renku command line interface locally, you can provide
+your template repository to the ``renku init`` command. We recommend you to
+**always** specify a tag (or a commit) when creating a new project from a
+custom repository. You can find further details in
 `renku init docs <https://renku-python.readthedocs.io/en/latest/commands.html#use-a-different-template>`_.
 
 If you are using the UI through a RenkuLab instance, you can ask the
