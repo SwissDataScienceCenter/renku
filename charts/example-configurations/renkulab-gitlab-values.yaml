@@ -1,0 +1,57 @@
+# Configuration file for deploying renku using an existing GitLab
+# instance. Examples for gitlab.com and renkulab.io/gitlab are
+# explicitly given.
+# See
+# https://github.com/SwissDataScienceCenter/renku/blob/master/charts/README.rst
+# and
+# https://renku.readthedocs.io/en/latest/developer/example-configurations/external-gitlab)
+# for instructions on how to use this values file.
+
+variables:
+  gitlabURL:          &gitlabURL           https://renkulab.io/gitlab  # Or another gitlab available at /gitlab
+  gitlabClientId:     &gitlabClientId      # TODO: Put GitLab Application Id here!
+  gitlabClientSecret: &gitlabClientSecret  # TODO: Put GitLab Secret here!
+  gitlabRegistryHost: &gitlabRegistryHost  registry.renkulab.io  # Or the registry for this instance
+
+# Comment out this block when using `renkulab.io/gitlab` or any other GitLab running under
+# `<some-host-name>/gitlab`.
+# Commenting this block will set the gitlab url prefix back to its default chart value (`/gitlab`).
+# global:
+#   gitlab:
+#     urlPrefix: ""
+
+gitlab:
+  enabled: false
+
+notebooks:
+  gitlab:
+    url: *gitlabURL
+    registry:
+      host: *gitlabRegistryHost
+  jupyterhub:
+    hub:
+      extraEnv:
+        - name: GITLAB_URL
+          value: *gitlabURL
+        - name: DEBUG
+          value: "1"
+        - name: JUPYTERHUB_SPAWNER_CLASS
+          value: spawners.RenkuKubeSpawner
+        - name: PGPASSWORD
+          valueFrom:
+              secretKeyRef:
+                name: renku-jupyterhub-postgres
+                key: jupyterhub-postgres-password
+    auth:
+      gitlab:
+        clientId: *gitlabClientId
+        clientSecret: *gitlabClientSecret
+
+graph:
+  gitlab:
+    url: *gitlabURL
+
+gateway:
+  gitlabUrl: *gitlabURL
+  gitlabClientId: *gitlabClientId
+  gitlabClientSecret: *gitlabClientSecret
