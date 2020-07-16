@@ -17,16 +17,9 @@ charts:
       published: https://swissdatasciencecenter.github.io/helm-charts
     paths:
       - .
-      - ../services/apispec
       - ../tests
       - ../scripts/init-realm
     images:
-      apispec:
-        contextPath: ../services/apispec
-        dockerfilePath: ../services/apispec/Dockerfile
-        valuesPath: apispec.image
-        paths:
-          - ../services/apispec
       tests:
         buildArgs:
           BUILDKIT_INLINE_CACHE: "1"

@@ -34,7 +34,7 @@ Building images
 ---------------
 
 If you want to build the Renku images required by the chart locally
-(``apispec``, ``singleuser``, ``jupyterhub-k8s``, ``tests``, ``notebooks``),
+(``singleuser``, ``jupyterhub-k8s``, ``tests``, ``notebooks``),
 you can do so by using ``chartpress``.
 
 .. code-block:: console
