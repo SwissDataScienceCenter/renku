@@ -5,6 +5,20 @@
 ## Global variables
 ## Shared values/secrets
 global:
+  postgresql:
+    ## Create a database user
+    ## Default: postgres
+    postgresqlUser: postgres
+    ## Default: random 10 character string
+    postgresqlPassword: postgres
+
+    ## Use Existing secret instead of creating one
+    ## It must have a postgres-password key containing the desired password
+    # existingSecret: 'secret'
+
+    ## Create a database
+    ## Default: the postgres user
+    postgresqlDatabase: postgres
   gitlab:
     ## Client secret, set this to a random string.
     ## To change this value after deploying, first generate a new secret using the Keycloak admin console
@@ -205,11 +219,9 @@ keycloak:
 
 postgresql:
   ## postgres image repository
-  image: postgres
-  ## postgres image version
-  ## ref: https://hub.docker.com/r/library/postgres/tags/
-  ##
-  imageTag: '9.6'
+  image:
+    repository: bitnami/postgresql
+    tag: 9.6
 
   ## Specify a imagePullPolicy
   ## 'Always' if imageTag is 'latest', else set to 'IfNotPresent'
@@ -222,22 +234,10 @@ postgresql:
   ##
   # imagePullSecrets: myregistrykey
 
-  ## Create a database user
-  ## Default: postgres
-  postgresUser: postgres
-  ## Default: random 10 character string
-  postgresPassword: postgres
-
   ## Inject postgresPassword via a volume mount instead of environment variable
   # usePasswordFile: false
 
-  ## Use Existing secret instead of creating one
-  ## It must have a postgres-password key containing the desired password
-  # existingSecret: 'secret'
 
-  ## Create a database
-  ## Default: the postgres user
-  postgresDatabase: postgres
 
   ## Specify initdb arguments, e.g. --data-checksums
   ## ref: https://github.com/docker-library/docs/blob/master/postgres/content.md#postgres_initdb_args
@@ -280,8 +280,9 @@ postgresql:
 
   metrics:
     enabled: false
-    image: wrouesnel/postgres_exporter
-    imageTag: v0.1.1
+    image:
+      repository: bitnami/postgres-exporter
+      tag: 0.8.0
     imagePullPolicy: IfNotPresent
     resources:
       requests:
