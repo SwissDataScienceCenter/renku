@@ -252,7 +252,7 @@ Create a template repository
 
 We maintain an
 `official Renku template repository <https://github.com/SwissDataScienceCenter/renku-project-template>`_
-that provides a few basic templates you can use for initiating your projects.
+that provides a few basic templates you can use to initiate your projects.
 That should cover the most common use cases, but we assume users want to
 create their own templates to speed up the bootstrap phase of a new project.
 
@@ -276,7 +276,7 @@ repository. Each of them requires an entry with the following parameters:
   presented to the user when choosing between templates.
 * ``variables``: we support the
   `Jinja template engine <https://palletsprojects.com/p/jinja/>`_ in both
-  files content and filenames. You can therefore ask users for specific values
+  file content and filenames. You can therefore ask users for specific values
   for any number of variables. The syntax is
   ``<variable_name>: <variable_description>``, where the name will be used as
   the variable name provided to the engine and the description will be
@@ -286,7 +286,7 @@ Use your repository
 """""""""""""""""""
 
 If you installed the renku command line interface locally, you can provide
-your template repository to the ``renku init`` command. We recommend you to
+your template repository to the ``renku init`` command. We recommend you
 **always** specify a tag (or a commit) when creating a new project from a
 custom repository. You can find further details in
 `renku init docs <https://renku-python.readthedocs.io/en/latest/commands.html#use-a-different-template>`_.
