@@ -62,6 +62,7 @@ trait Grammar extends Eventually {
       if (attempt <= 10 && Either
             .catchOnly[TestFailedException](!element(webDriver).isDisplayed)
             .fold(_ => true, identity)) {
+        sleep(5 seconds)
         webDriver.navigate().refresh()
         whenUserCannotSee(element, attempt + 1)
       } else
