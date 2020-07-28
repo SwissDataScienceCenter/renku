@@ -632,10 +632,23 @@ notebooks:
     #   every: 60
     singleuser:
       image:
-        name: renku/singleuser
-        tag: 0.4.3-renku0.8.2
+        name: renku/renkulab-py
+        tag: 3.7-renku0.10.4-0.6.3
     #   # use JupyterLab by default in notebook servers
     #   defaultUrl: /lab
+
+    # The following section disables some of the default JupyterHub
+    # optimizations which can interfere with simple setups. See
+    # https://zero-to-jupyterhub.readthedocs.io/en/latest/administrator/optimization.html
+    # for details.
+    scheduling:
+      userScheduler:
+        enabled: false
+      userPlaceholder:
+        enabled: false
+    prePuller:
+      continuous:
+        enabled: false
 
 tests:
   image:
