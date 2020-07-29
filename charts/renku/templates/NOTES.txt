@@ -18,3 +18,6 @@ $ pipenv run ./deploy-tmp-notebooks.py  --release-name {{ .Release.Name }} --ren
 Check out the docs for more information related to this command: https://renku.readthedocs.io/en/latest/admin/anonymous-sessions.html
 
 {{ end }}
+
+You may need to customize some aspects of your RenkuLab deployment (E.G. the Privacy page).
+Please refer to the following documentation: https://renku.readthedocs.io/en/latest/admin/index.html#additional-configurations
