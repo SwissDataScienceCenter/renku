@@ -26,7 +26,7 @@ trait RemoveProject {
     And("they click on the Remove project button")
     click on gitLabPages.SettingsPage.Advanced.removeProject sleep (1 second)
     And("they confirm the project removal")
-    gitLabPages.SettingsPage.Advanced confirmRemoval projectDetails sleep (1 second)
+    gitLabPages.SettingsPage.Advanced confirmRemoval projectDetails sleep (5 seconds)
   }
 
   def verifyProjectWasRemoved(implicit projectDetails: ProjectDetails): Unit = {

@@ -48,8 +48,9 @@ object projects {
     def generate: ProjectDetails = {
       val now         = LocalDateTime.now()
       val desc        = prefixParagraph("An automatically generated project for testing: ").generateOne
-      val readmeTitle = s"test${now.format(DateTimeFormatter.ofPattern("yyyyMMddHHmm_ss"))}"
-      ProjectDetails(Refined.unsafeApply(s"test_${now.format(DateTimeFormatter.ofPattern("yyyy_MM_dd_HHmm_ss"))}"),
+      val readmeTitle = s"test ${now.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH-mm-ss"))}"
+      val template    = "Renku/python-minimal"
+      ProjectDetails(Refined.unsafeApply(s"test ${now.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH-mm-ss"))}"),
                      desc,
                      readmeTitle)
     }
