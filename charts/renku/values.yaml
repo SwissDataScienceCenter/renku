@@ -551,6 +551,14 @@ ui:
   #   url: ''
   #   namespace: ''
 
+  ## Configuration for statuspage.io integration
+  statuspage:
+    # Provide the id for the statuspage, which is the subdomain of statuspage.io
+    # used in the API queries. This can be found from the /api path.
+    # E.g., under https://renkulab.statuspage.io/api you see that summary
+    # is available under https://5bcn9bqff4qt.statuspage.io/api/v2/summary.json, so
+    # id: 5bcn9bqff4qt
+
 # ## Configuration for the notebooks service
 notebooks:
   ## serverOptions allow for modifications to the notebook pod resource requests and the UI rendering
@@ -632,15 +640,23 @@ notebooks:
     #   every: 60
     singleuser:
       image:
-        name: renku/singleuser
-        tag: 0.4.3-renku0.8.2
+        name: renku/renkulab-py
+        tag: 3.7-renku0.10.4-0.6.3
     #   # use JupyterLab by default in notebook servers
     #   defaultUrl: /lab
 
-apispec:
-  image:
-    repository: renku/apispec
-    tag: 'latest'
+    # The following section disables some of the default JupyterHub
+    # optimizations which can interfere with simple setups. See
+    # https://zero-to-jupyterhub.readthedocs.io/en/latest/administrator/optimization.html
+    # for details.
+    scheduling:
+      userScheduler:
+        enabled: false
+      userPlaceholder:
+        enabled: false
+    prePuller:
+      continuous:
+        enabled: false
 
 tests:
   image:
