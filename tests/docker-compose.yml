@@ -11,6 +11,8 @@ services:
       context: .
       cache_from:
         - renku/tests:latest
+      args:
+        - renku_python_ref=master
     command: ['/tests/docker-run-tests.sh']
     environment:
       - DOCKER=1

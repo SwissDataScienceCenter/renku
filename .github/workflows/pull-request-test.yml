@@ -106,6 +106,7 @@ jobs:
                     --set notebooks.jupyterhub.auth.gitlab.clientId=${APP_ID} \
                     --set notebooks.jupyterhub.auth.gitlab.clientSecret=${APP_SECRET} \
                     --set global.anonymousSessions.enabled=true \
+                    --set graph.triplesGenerator.renkuPythonDevVersion="git+https://github.com/SwissDataScienceCenter/renku-python.git@master#egg=renku" \
                     charts/renku
     - name: Turn on anonymous notebooks
       env:
@@ -139,7 +140,7 @@ jobs:
         echo $PR_NUMBER
         export RENKU_RELEASE="ci-${PR_NUMBER}-renku"
         cd tests
-        COMPOSE_DOCKER_CLI_BUILD=1 DOCKER_BUILDKIT=1 docker-compose build sbt
+        COMPOSE_DOCKER_CLI_BUILD=1 DOCKER_BUILDKIT=1 docker-compose build --build-arg renku_python_ref=master sbt
         docker-compose run -e RENKU_TEST_URL=https://${RENKU_RELEASE}.dev.renku.ch \
                            -e RENKU_TEST_FULL_NAME="Renku Bot" \
                            -e RENKU_TEST_EMAIL="renku@datascience.ch" \
