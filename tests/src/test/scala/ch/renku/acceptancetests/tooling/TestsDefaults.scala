@@ -24,6 +24,8 @@ object TestsDefaults {
         .fold(error => throw new Exception(error.prettyPrint()), identity)
     else
       TestsDefaults(
-        env                 = Some("https://dev.renku.ch")
+        env                 = Some("https://dev.renku.ch"),
+        renkuVersion        = "0.10.4",
+        renkuInstallCommand = "python3 --version"
       )
 }

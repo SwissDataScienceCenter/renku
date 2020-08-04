@@ -27,7 +27,7 @@ trait CLIConfiguration extends GivenWhenThen {
 
     When(s"the user has renku v${cliConfig.version} installed")
     val installedRenkuVersion = console %%> c"renku --version"
-    if (installedRenkuVersion.trim != cliConfig.version.toString)
-      console %> c"${cliConfig.installCommand.toString.format(cliConfig.version.toString)}"
+    // if (installedRenkuVersion.trim != cliConfig.version.toString)
+    //   console %> c"${cliConfig.installCommand.toString.format(cliConfig.version.toString)}"
   }
 }
