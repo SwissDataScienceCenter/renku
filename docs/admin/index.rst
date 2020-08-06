@@ -156,33 +156,32 @@ The UI has a privacy page with a completely configurable content, suited for sho
 any policy/terms related information, like the `Privacy Policy Statement` or the
 `Terms of Use`.
 
-The content is read from the privacy ``ConfigMap`` installed with RenkuLab, precisely
-the ``privacy_statement`` key.
+The content is read from a ``ConfigMap``. You need to configure the values in
+``ui.privacy.page`` to enable the feature and set the reference ConfigMap name and key.
+Both ``ui.privacy.enabled`` and ``ui.privacy.page.enabled`` need to be ``true`` for
+enabling the privacy page.
 
 .. note::
 
-  The exact name of the privacy ConfigMap may slightly vary depending on your specific
-  RenkuLab configuration. The default is ``renku-ui-privacy``. All the variations
-  will end with `-privacy` in the name.
+  If you don't set the ConfigMap name and key,
+  `a sample <https://github.com/SwissDataScienceCenter/renku-ui/blob/master/helm-chart/renku-ui/templates/configmap.yaml>`_
+  will be used instead. You can start from is as a template to create your customized ConfigMap.
 
-We support the `Markdown syntax <https://en.wikipedia.org/wiki/Markdown>`_ for the
+The `Markdown syntax <https://en.wikipedia.org/wiki/Markdown>`_ is fully supported for the
 privacy page content.
-
-You can refer to the current
-`ConfigMap in the renku-ui repository <https://github.com/SwissDataScienceCenter/renku-ui/blob/master/helm-chart/renku-ui/templates/configmap.yaml>`_
-to find an example of the default Markdown.
-
 
 Cookie banner
 ~~~~~~~~~~~~~
 
 Since RenkuLab requires user identification and implements a login system, cookies are
 required at all levels to provide basic functionality. Please mind that cookies are also used
-for anonymous users (i.e. without an account or not currently logged in).
+for anonymous users (i.e. without an account or not currently logged in). To comply with
+international laws, it's strongly advised to explicitly require consent to the user for storing
+these data and using cookies.
 
-To comply with international laws, it's strongly advised to explicitly require consent to the
-user for storing these data and using cookies. The default cookie banner simply informs the
-user about these requirements and points to the privacy page for further details.
+To activate this feature, please set ``ui.privacy.enabled: true``. We have already configured a
+default cookie banner to inform the users about the aforementioned requirements and points to
+point them to the privacy page for further details.
 
 It's possible to customize the banner to your own needs, changing both the appearance and the
 content. We use `cookie consent <https://github.com/Mastermindzh/react-cookie-consent>`_ to

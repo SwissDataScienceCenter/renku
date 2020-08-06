@@ -540,11 +540,30 @@ ui:
   ## Set the JupyterHub URL
   # jupyterhubUrl: "http://jupyterhub.renku.build"
 
-  ## Configuration for where to get the base project templates: a url and ref (usually a tag)
-  templatesRepository:
-    # url: https://github.com/SwissDataScienceCenter/renku-project-template
-    # ref: 0.1.6
 
+  ## Configuration for where to get the base project templates: a url and ref (usually a tag)
+  # templatesRepository:
+  #   url: https://github.com/SwissDataScienceCenter/renku-project-template
+  #   ref: 0.1.6
+
+  ## Privacy settings allow to configure the content of a Privacy Page through a configMap
+  ## and to show a banner to comply with privacy related laws
+  # privacy:
+  #   enabled: true
+  #   page:
+  #     enabled: true
+  #     configMapName: privacy-page
+  #     configMapKey: privacy_statement
+  #   banner:
+  #     content: |
+  #       This website requires cookies in order to ensure basic functionality. Further details
+  #       in our <u><a class="text-white" href="/privacy">Privacy Policy</a></u>.
+  #     layout:
+  #       disableStyles: true
+  #       containerClasses: fixed-bottom p-3 bg-dark
+  #       contentClasses: text-white small
+  #       buttonClasses: btn btn-sm btn-light mr-2
+  #       buttonWrapperClasses: mt-2
   ## Configuration for Sentry
   # sentry:
   #   enabled: false
@@ -605,18 +624,18 @@ notebooks:
         #  oauth_redirect_uri: http://<gateway>/api/auth/jupyterhub/token
         ## Configure gitlab and postgres:
         ## Values need to be set to get jupyterhub to work
-       # extraEnv:
-       #  - name: GITLAB_URL
-       #    value: <gitlab url>
-       #  - name: DEBUG
-       #    value: "1"
-       #  - name: JUPYTERHUB_SPAWNER_CLASS
-       #    value: spawners.RenkuKubeSpawner
-       #  - name: PGPASSWORD
-       #    valueFrom:
-       #        secretKeyRef:
-       #          name: renku-jupyterhub-postgres
-       #          key: jupyterhub-postgres-password
+        # extraEnv:
+        #  - name: GITLAB_URL
+        #    value: <gitlab url>
+        #  - name: DEBUG
+        #    value: "1"
+        #  - name: JUPYTERHUB_SPAWNER_CLASS
+        #    value: spawners.RenkuKubeSpawner
+        #  - name: PGPASSWORD
+        #    valueFrom:
+        #        secretKeyRef:
+        #          name: renku-jupyterhub-postgres
+        #          key: jupyterhub-postgres-password
 
     ## Simple default setup for gitlab oauth
     # auth:
