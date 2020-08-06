@@ -165,7 +165,7 @@ enabling the privacy page.
 
   If you don't set the ConfigMap name and key,
   `a sample <https://github.com/SwissDataScienceCenter/renku-ui/blob/master/helm-chart/renku-ui/templates/configmap.yaml>`_
-  will be used instead. You can start from is as a template to create your customized ConfigMap.
+  will be used instead. You can start from it as a template to create your customized ConfigMap.
 
 The `Markdown syntax <https://en.wikipedia.org/wiki/Markdown>`_ is fully supported for the
 privacy page content.
