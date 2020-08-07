@@ -73,7 +73,7 @@ And we need to capture this change in git.
 .. code-block:: console
 
     git add requirements.txt
-    git commit -m"Installed pandas and seaborn"
+    git commit -m "Installed pandas and seaborn"
     git push
 
     # [master 1772863] Installed pandas and seaborn
