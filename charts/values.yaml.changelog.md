@@ -5,6 +5,10 @@ Please follow this convention when adding a new row
 * `<type: NEW|EDIT|DELETE> - *<resource name>*: <details>`
 
 ----
+## Changes on top of Renku 0.6.5
+* NEW - *ui.statuspage.id*: the id for the statuspage.io instance. See the values.yml file
+for more detailed documentation.
+
 ## Changes on top of Renku 0.6.1
 Interactive sessions for logged-out users are now possible, see
 [the docs](https://renku.readthedocs.io/en/latest/admin/index.html#enabling-notebooks-for-anonymous-users).

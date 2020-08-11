@@ -112,7 +112,7 @@ and other commands.
     If in the process of working through the tutorial, you stopped the
     interactive environment and started a new one along the way, this may
     happen. Why?
-    `Under the hood <https://renku-python.readthedocs.io/en/latest/api.html>`_,
+    `Under the hood <https://renku.readthedocs.io/en/latest/user/lfs.html>`_,
     we use
     `git-lfs <https://git-lfs.github.com/>`_
     to save large files, and these files may not be fetched when a new
