@@ -14,7 +14,7 @@ dependencies:
 - name: renku-gateway
   alias: gateway
   repository: "https://swissdatasciencecenter.github.io/helm-charts/"
-  version: 0.8.1-58c6938
+  version: 0.8.1-11cf9a7
 - name: gitlab
   repository: "https://swissdatasciencecenter.github.io/helm-charts/"
   version: 0.5.2
