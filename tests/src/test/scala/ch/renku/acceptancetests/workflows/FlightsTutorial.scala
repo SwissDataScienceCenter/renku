@@ -26,6 +26,9 @@ trait FlightsTutorial extends GivenWhenThen with Matchers with ScalatestMatchers
     When("the user clones the project locally")
     console %> c"git clone ${projectUrl.addGitCredentials} $projectFolder"
 
+    And("migrates the project")
+    console %> c"renku migrate"
+
     And("enables git lfs")
     console %> c"git lfs install --local"
 
