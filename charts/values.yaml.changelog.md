@@ -5,7 +5,7 @@ Please follow this convention when adding a new row
 * `<type: NEW|EDIT|DELETE> - *<resource name>*: <details>`
 
 ----
-## Upgrading to Renku 0.7.0
+## Upgrading to Renku 0.7.0 (INCLUDES BREAKING CHANGES!)
 * EDIT - *postgresql.persistence.existingClaim*: Renku `0.7.0` upgrades the postgres chart dependency, which requires modification of the postgres data volume of existing deployments. See [this helper job manifest](https://github.com/SwissDataScienceCenter/renku/blob/master/charts/utils/migrate-pg-to-bitnami.yaml).
 * EDIT - *postgresql.postgresPassword* renamed to *postgresql.postgresqlPassword*.
 
