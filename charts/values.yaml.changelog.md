@@ -7,6 +7,7 @@ Please follow this convention when adding a new row
 ----
 ## Upgrading to Renku 0.7.0
 * EDIT - *postgresql.persistence.existingClaim*: Renku `0.7.0` upgrades the postgres chart dependency, which requires modification of the postgres data volume of existing deployments. See [this helper job manifest](https://github.com/SwissDataScienceCenter/renku/blob/master/charts/utils/migrate-pg-to-bitnami.yaml).
+* EDIT - *postgresql.postgresPassword* renamed to *postgresql.postgresqlPassword*.
 
 ## Changes on top of Renku 0.6.5
 * NEW - *ui.statuspage.id*: the id for the statuspage.io instance. See the values.yml file
