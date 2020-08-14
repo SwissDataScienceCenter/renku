@@ -568,10 +568,6 @@ tests:
   #    email: ckent@example.com
   #    password: IamSuperman
 
-minio:
-  ## Set to true to deploy a minio server, can be used as gateway too.
-  enabled: false
-
 ## Configuration for the Gateway service
 gateway:
   ingress:

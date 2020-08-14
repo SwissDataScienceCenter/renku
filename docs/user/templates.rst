@@ -10,12 +10,13 @@ over. The two main aspects of the project that can be templated are:
 * the directory structure & files
 * the Docker image that builds your environment
 
-When you create a project on the Renku platform, you can choose between
-two base templates: a minimal python setup, and a minimal R setup. In many
-cases, you can use these templates as-is (see
-the :ref:`directory_structure` below). If the base template for either of
-these languages is not sufficient for you, or you require a different IDE,
-you can make modifications! Check out :ref:`advanced_interfaces`.
+When you create a project on the RenkuLab platform, you can choose between
+a few templates. You should see at least a Python setup (Basic Python Project)
+and a R setup (Basic R Project). In many cases, you can use these templates
+as-is (see the :ref:`directory_structure` below). If you prefer another
+language, you require a different IDE, or the base templates don't meet your
+needs for any other reason, you can create new ones!
+Check out :ref:`advanced_interfaces`.
 
 Note that you can create projects that are specifically intended to be templates
 that others can use by adding to the base Renku template. If you're familiar
@@ -243,3 +244,58 @@ Note that some of these clash with the `renku` templates (i.e. content in
 `Dockerfile`, `.gitignore`, etc.). As long as you read the docs above to
 understand which parts are required for `renku`, you should be able to merge
 these manually.
+
+.. _create_template_repo:
+
+Create a template repository
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+We maintain an
+`official Renku template repository <https://github.com/SwissDataScienceCenter/renku-project-template>`_
+that provides a few basic templates you can use to initiate your projects.
+That should cover the most common use cases, but we assume users want to
+create their own templates to speed up the bootstrap phase of a new project.
+
+The easiest way to create your own templates is to clone our
+`Renku template repository <https://github.com/SwissDataScienceCenter/renku-project-template>`_
+and modify it as you need.
+
+``manifest.yaml``
+"""""""""""""""""
+
+The
+`manifest file <https://github.com/SwissDataScienceCenter/renku-project-template/blob/master/manifest.yaml>`_
+contains all the specifications needed by the ``renku init`` function to
+create a new project. You can specify multiple templates in the same
+repository. Each of them requires an entry with the following parameters:
+
+* ``folder``: the target folder inside the repository where the template files
+  are stored. Please use a different folder for each template.
+* ``name``: a short user friendly name.
+* ``description``: a brief description of your template. This will be
+  presented to the user when choosing between templates.
+* ``variables``: we support the
+  `Jinja template engine <https://palletsprojects.com/p/jinja/>`_ in both
+  file content and filenames. You can therefore ask users for specific values
+  for any number of variables. The syntax is
+  ``<variable_name>: <variable_description>``, where the name will be used as
+  the variable name provided to the engine and the description will be
+  presented to the user to explain the variable's intended use.
+
+Use your repository
+"""""""""""""""""""
+
+If you installed the renku command line interface locally, you can provide
+your template repository to the ``renku init`` command. We recommend you
+**always** specify a tag (or a commit) when creating a new project from a
+custom repository. You can find further details in
+`renku init docs <https://renku-python.readthedocs.io/en/latest/commands.html#use-a-different-template>`_.
+
+If you are using the UI through a RenkuLab instance, you can ask the
+administrators to include your repository in the official repository list
+available in the 
+`renku-values file <https://renku.readthedocs.io/en/latest/admin/index.html#create-a-renku-values-yaml-file>`_.
+
+We are currently working on adding full support for custom template
+repositories in RenkuLab so that you can manually specify external resources
+not included in the configuration file.

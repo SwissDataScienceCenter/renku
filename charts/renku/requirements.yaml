@@ -32,7 +32,3 @@ dependencies:
   version: 4.10.1
   repository: "@stable"
   condition: keycloak.enabled
-- name: minio
-  version: 1.6.0
-  repository: "@stable"
-  condition: minio.enabled
