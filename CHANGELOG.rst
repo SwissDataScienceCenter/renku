@@ -1,5 +1,27 @@
 .. _changelog:
 
+0.6.6
+-----
+
+This is a release that improves the way images for private projects get pulled, no more GitLab sudo token needed!
+
+Notable improvements
+~~~~~~~~~~~~~~~~~~~~
+
+* use user credentials for pulling images for private projects
+* user oauth token is removed from repository URL
+
+Breaking changes
+~~~~~~~~~~~~~~~~
+
+* kubernetes versions < 1.14 are not supported anymore
+
+
+Upgrading from 0.6.5
+~~~~~~~~~~~~~~~~~~~~
+
+* The version in the welcome page can be updated at `ui.welcomePage.text`
+
 0.6.5
 -----
 
