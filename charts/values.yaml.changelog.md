@@ -5,6 +5,8 @@ Please follow this convention when adding a new row
 * `<type: NEW|EDIT|DELETE> - *<resource name>*: <details>`
 
 ----
+* DELETE - *minio.enabled*: minio has been removed from the Renku dependencies, deploy minio as a standalone service if you need it.
+
 ## Changes on top of Renku 0.6.5
 * NEW - *ui.statuspage.id*: the id for the statuspage.io instance. See the values.yml file
 for more detailed documentation.
