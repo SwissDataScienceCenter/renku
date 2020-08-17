@@ -282,6 +282,22 @@ repository. Each of them requires an entry with the following parameters:
   the variable name provided to the engine and the description will be
   presented to the user to explain the variable's intended use.
 
+In addition to the custom variables mentioned above, we also provide some
+renku-specific variables that are always available in templates, namely:
+
+* ``name``: The name of the project.
+* ``__template_source__``: The git repository the template originated from or
+  ``renku`` if the template was distributed as a part of ``renku-python``.
+* ``__template_ref__``: The branch/tag of the template repository.
+* ``__template_id__``: The id of the template inside the repository.
+* ``__namespace__``: The project namespace (only set when creating a project
+  online in renkulab).
+* ``__repository__``: The repository where the project resides in (only set
+  when creating a project online in renkulab).
+* ``__project_slug__``: The project slug (``<namespace>/<sanitized project
+  name>``) (only set when creating a project online in renkulab).
+
+
 Use your repository
 """""""""""""""""""
 
@@ -293,7 +309,7 @@ custom repository. You can find further details in
 
 If you are using the UI through a RenkuLab instance, you can ask the
 administrators to include your repository in the official repository list
-available in the 
+available in the
 `renku-values file <https://renku.readthedocs.io/en/latest/admin/index.html#create-a-renku-values-yaml-file>`_.
 
 We are currently working on adding full support for custom template
