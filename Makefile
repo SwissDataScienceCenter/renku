@@ -42,16 +42,6 @@
 # $ pip install -U pip && pip install pipenv
 # $ pipenv run cd helm-charts; chartpress
 #
-# Deploying Renku
-# ---------------
-#
-# To deploy the Renku platform on your local minikube, run
-#
-# $ make minikube-deploy
-#
-# This will first build all the necessary images from the currently
-# checked-out repositories before deploying the entire renku service stack
-# to your minikube.
 
 PLATFORM_BASE_DIR?=..
 PLATFORM_BASE_REPO_URL?=https://github.com/SwissDataScienceCenter
@@ -87,10 +77,6 @@ checkout: $(foreach s, $(repos), $(s)-checkout)
 	cd $< && git pull
 
 pull: $(foreach s, $(repos), $(s)-pull)
-
-.PHONY: minikube-deploy
-minikube-deploy: clone
-	pipenv run python scripts/minikube_deploy.py
 
 python-env:
 	@pipenv run python -V

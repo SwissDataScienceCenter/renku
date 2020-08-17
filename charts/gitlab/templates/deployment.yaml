@@ -1,4 +1,4 @@
-apiVersion: apps/v1beta2
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: {{ template "gitlab.fullname" . }}
@@ -36,8 +36,8 @@ spec:
         - name: PGPASSWORD
           valueFrom:
             secretKeyRef:
-              name: {{ template "gitlab.fullname" . }}
-              key: postgres-password
+              name: {{ template "gitlab.fullname" . }}-postgres
+              key: gitlab-postgres-password
         - name: GITLAB_CLIENT_SECRET
           valueFrom:
             secretKeyRef:

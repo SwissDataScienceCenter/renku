@@ -6,5 +6,15 @@ If all things were set up correctly, you will soon be able to access it at:
 {{ if .Values.keycloak.createDemoUser -}}
 You have configured a demo user for the platform. The details (password) of this user
 can be accessed using the following one-liner (you need to have jq installed).
-kubectl get secrets -n <k8s-namespace> {{ template "renku.fullname" . }} -o json | jq -r .data.users | base64 --decode
+kubectl get secrets -n {{ .Release.Namespace }} {{ template "renku.fullname" . }} -o json | jq -r .data.users | base64 --decode
 {{- end -}}
+
+{{- if .Values.global.anonymousSessions.enabled -}}
+You have enabled anonymous interactive sessions. For this feature to work you
+will have to perform an additional step.
+
+$ pipenv run ./deploy-tmp-notebooks.py  --release-name {{ .Release.Name }} --renku-namespace {{ .Release.Namespace }}
+
+Check out the docs for more information related to this command: https://renku.readthedocs.io/en/latest/admin/anonymous-sessions.html
+
+{{ end }}

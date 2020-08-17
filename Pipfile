@@ -6,7 +6,8 @@ name = "pypi"
 [packages]
 "urllib3" = ">=1.24.2"
 "jinja2" = ">=2.10.1"
-chartpress = {git = "https://github.com/jupyterhub/chartpress"}
+chartpress = "==0.3.2"
+kubernetes = "*"
 
 [dev-packages]
 docker = ">=2.4.2"

@@ -22,7 +22,7 @@ spec:
       restartPolicy: Never
       containers:
         - name: init-databases
-          image: "{{ .Values.postgresql.image }}:{{ .Values.postgresql.imageTag }}"
+          image: "{{ .Values.postgresql.image.repository }}:{{ .Values.postgresql.image.tag }}"
           command: ["/bin/bash", "/scripts/init-postgres.sh"]
           volumeMounts:
             - name: scripts
@@ -30,19 +30,43 @@ spec:
               readOnly: true
             - name: passwords
               mountPath: /passwords
+            - name: keycloak-postgres
+              mountPath: /keycloak-postgres
+              readOnly: true
+            {{- if .Values.gitlab.enabled }}
+            - name: gitlab-sudo
+              mountPath: /gitlab-sudo
+              readOnly: true
+            - name: gitlab-postgres
+              mountPath: /gitlab-postgres
+              readOnly: true
+            {{- end}}
+            - name: jupyterhub-postgres
+              mountPath: /jupyterhub-postgres
+              readOnly: true
+            {{ if .Values.global.anonymousSessions.enabled }}
+            - name: jupyterhub-tmp-postgres
+              mountPath: /jupyterhub-tmp-postgres
+              readOnly: true
+            {{ end }}
+            - name: graph-db-postgres
+              mountPath: /graph-db-postgres
+              readOnly: true
+            - name: graph-token-postgres
+              mountPath: /graph-token-postgres
               readOnly: true
           env:
           - name: PGDATABASE
-            value: {{ .Values.postgresql.postgresDatabase }}
+            value: {{ .Values.postgresql.postgresqlDatabase }}
           - name: PGUSER
-            value: {{ .Values.postgresql.postgresUser }}
+            value: {{ .Values.postgresql.postgresqlUsername }}
           - name: PGHOST
             value: {{ template "postgresql.fullname" . }}
           - name: PGPASSWORD
             valueFrom:
               secretKeyRef:
                 name: {{ template "postgresql.fullname" . }}
-                key: postgres-password
+                key: postgresql-password
       volumes:
         - name: scripts
           configMap:
@@ -50,3 +74,28 @@ spec:
         - name: passwords
           secret:
             secretName: {{ template "renku.fullname" . }}
+        - name: keycloak-postgres
+          secret:
+            secretName: renku-keycloak-postgres
+        {{- if .Values.gitlab.enabled }}
+        - name: gitlab-sudo
+          secret:
+            secretName: {{ template "renku.fullname" . }}-gitlab-sudo
+        - name: gitlab-postgres
+          secret:
+            secretName: {{ template "renku.fullname" . }}-gitlab-postgres
+        {{- end}}
+        - name: jupyterhub-postgres
+          secret:
+            secretName: renku-jupyterhub-postgres
+        {{ if .Values.global.anonymousSessions.enabled }}
+        - name: jupyterhub-tmp-postgres
+          secret:
+            secretName: renku-jupyterhub-tmp-postgres
+        {{ end }}
+        - name: graph-db-postgres
+          secret:
+            secretName: {{ template "renku.fullname" . }}-graph-db-postgres
+        - name: graph-token-postgres
+          secret:
+            secretName: {{ template "renku.fullname" . }}-graph-token-postgres

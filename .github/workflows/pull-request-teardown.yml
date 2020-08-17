@@ -1,0 +1,48 @@
+name: Teardown PR
+on:
+  pull_request:
+    types: [closed]
+
+jobs:
+  github-env:
+    runs-on: ubuntu-latest
+    steps:
+    - name: get environment
+      run: env
+    - name: Dump GitHub context
+      env:
+        GITHUB_CONTEXT: ${{ toJson(github) }}
+      run: echo "$GITHUB_CONTEXT"
+  cleanup:
+    if: github.event.action == 'closed'
+    runs-on: ubuntu-latest
+    steps:
+    - uses: stefanprodan/kube-tools@v1
+      name: k8s teardown
+      env:
+        KUBECONFIG: ${{ github.workspace }}/renkubot-kube.config
+        RENKUBOT_KUBECONFIG: ${{ secrets.RENKUBOT_KUBECONFIG }}
+      with:
+        kubectl: 1.16.2
+        helm: 2.16.1
+        command: |
+          export PR_NUMBER=${{ github.event.number }}
+          echo $PR_NUMBER
+          export RENKU_RELEASE="ci-${PR_NUMBER}-renku"
+          helm init --client-only
+          echo "$RENKUBOT_KUBECONFIG" > renkubot-kube.config
+          helm delete --purge $RENKU_RELEASE
+          helm delete --purge $RENKU_RELEASE-tmp-notebooks || true
+    - name: gitlab teardown
+      env:
+        GITLAB_TOKEN: ${{ secrets.GITLAB_TOKEN }}
+      run: |
+        set -x
+        export PR_NUMBER=${{ github.event.number }}
+        echo $PR_NUMBER
+        export RENKU_RELEASE="ci-${PR_NUMBER}-renku"
+        apps=$(curl -s https://dev.renku.ch/gitlab/api/v4/applications -H "private-token: ${GITLAB_TOKEN}" | jq -r ".[] | select(.application_name == \"${RENKU_RELEASE}\") | .id")
+        for app in $apps
+        do
+          curl -X DELETE https://dev.renku.ch/gitlab/api/v4/applications/${app} -H "private-token: ${GITLAB_TOKEN}"
+        done

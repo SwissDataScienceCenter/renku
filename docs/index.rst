@@ -5,48 +5,41 @@
 
 .. Add :numbered: to toctree options in order to have numbered items.
 
-Welcome to Renku!
-=================
+The Renku Project Docs
+======================
 
-**Renku** is a software platform designed to enable reproducible and
-collaborative data science.
-
-The platform:
-
-* Allows data scientists to easily make their analyses reproducible by
-  automatically capturing the lineage of results in a Knowledge Graph
-
-* Turns parts of recorded data science pipelines into building blocks that can
-  be reused by others in their own analyses
-
-* Provides tools for working with the Knowledge Graph for the purposes of
-  traceability and auditability
-
-If you are a data scientist looking to get started with Renku, head to the
-:ref:`first_steps` tutorial for a quick look at how Renku can be used for a
-data science project. To read up on the concepts behind Renku, you may go
-straight to the :ref:`concepts` pages.
-
-If you are a developer or a service provider, have a look at the
-:ref:`developer_documentation` for information about installation, deployment,
-and architecture.
 
 .. toctree::
    :maxdepth: 2
-   :caption: Table of Contents:
-   :includehidden:
+   :hidden:
 
-   Introduction <introduction/index>
+   About Renku <introduction/index>
+   Getting Started <getting_started>
+   Using Renku <user/index>
+   Get in touch <get_in_touch>
+   Roadmap <roadmap>
+   Release notes <release_notes>
+
+
+.. toctree::
+   :maxdepth: 1
+   :caption: Detailed documentation:
+   :includehidden:
+   :hidden:
+
    Users <user/index>
    Developers <developer/index>
    Admins <admin/index>
    License <https://www.apache.org/licenses/LICENSE-2.0>
 
 
-Indices and tables
-==================
+.. epigraph::
 
-* :ref:`genindex`
-* :ref:`search`
+   **Renku** (連句 "linked verses"), is a Japanese form of popular
+   collaborative linked verse poetry, written by more than one author
+   working together.*
 
-.. * :ref:`modindex`
+   -- Wikipedia
+
+.. include:: ../README.rst
+  :start-line: 41

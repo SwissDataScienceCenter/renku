@@ -1,0 +1,27 @@
+name: Automatic requirements.yml update PR
+on:
+  push:
+    branches:
+      - 'auto-update/**'
+jobs:
+  auto-pull-request:
+    runs-on: ubuntu-latest
+    steps:
+      - name: close existing PRs
+        run: |
+          renku_repo="https://api.github.com/repos/SwissDataScienceCenter/renku"
+          # find the repo that made the PR
+          regex='renku-[a-z]+'
+          [[ ${GITHUB_REF} =~ $regex ]]
+          pr_repo=$BASH_REMATCH
+          # find other PRs from that repo
+          other_prs=$(curl -s ${renku_repo}/pulls | jq ".[] | select(.head.ref | test(\"auto-update/${pr_repo}\")) | .number")
+          for pr in $other_prs ; do curl -s -H "Authorization: token $GITHUB_TOKEN" -X PATCH -d '{"state": "closed"}' ${renku_repo}/pulls/${pr} ; done
+        env:
+          GITHUB_TOKEN: ${{ secrets.RENKU_CI_TOKEN }}
+      - name: pull-request-action
+        uses: vsoch/pull-request-action@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.RENKU_CI_TOKEN }}
+          BRANCH_PREFIX: "auto-update/"
+          PULL_REQUEST_BRANCH: "master"

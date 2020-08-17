@@ -1,90 +1,69 @@
-.. _gitlab.com:
+.. _external_gitlab:
 
-gitlab.com
-===========
+Deploying Renku with an external GitLab
+=======================================
 
-Running GitLab is quite resource-intensive. For development purposes
-or if you already have an existing GitLab instance running, you might want to
-use this pre-existing instance as a backend service for Renku.
+GitLab is a component of the Renku platform. Running it is quite resource-intensive.
+For development purposes or if you already have an existing GitLab instance running,
+you might want to use this instance as a backend service for Renku.
 
-Here we describe how to run a local version of the
-platform against gitlab.com **and** also use gitlab.com as an identity provider.
-(In regular Renku deployments, the dependency is the other way around meaning that
-the Renku GitLab instance uses the Renku Keycloak instance as identity provider).
+In the section about :ref:`running Renku locally <running_on_minikube>` we give a
+detailed description of how to bring up a local version of the platform using `<gitlab.com>`_
+while also using ``gitlab.com`` as an identity provider. Note that in Renku deployments
+which include their own GitLab, the dependency is the other way around, meaning
+that the Renku GitLab instance uses the Renku Keycloak instance as identity provider.
 
-Most of the configurations needed are already set in a special `minikube-values.yaml file`_
-which you will have to modify slightly while going through the following steps.
 
-.. _`minikube-values.yaml file`:
-  https://github.com/SwissDataScienceCenter/renku/blob/master/charts/example-configurations/minikube-values-gitlab.yaml
+Caveats
+-------
 
-There are two known **caveats** for this setup:
+There are known **caveats** for a setup using an external GitLab instance:
 
 - Notebook servers can only be launched from public projects. This is due to the
   fact that the users credentials are needed for pulling images for private
-  projects from the gitlab.com registry. These credentials are currently not
-  injected into the notebook pod.
+  projects from the GitLab registry. In deployments which include "their own"
+  GitLab instance, we use a GitLab API token with sudo permissions for this purpose.
+  This is obviously not possible when using an existing GitLab instance that you are
+  not managing yourself.
 
-- gitlab.com limits the total size of each repository to 10 GB (including the files added
-  to git-lfs). This is fine for development work but very restrictive for actual
+- ``gitlab.com`` limits the total size of each repository to 10 GB (including the files added
+  to git-lfs). This is fine for development work but quite restrictive for actual
   Renku projects.
 
-Step 1
---------
-
-Browse to **gitlab.com > user settings > applications** and register a new
-client application (Renku-local) with the following settings:
-
-#. Activate all scopes except :code:`sudo`
-#. Add the following redirect URLs:
-
-  .. code-block:: console
-
-    http://<your-minikube-ip>/auth/realms/Renku/broker/gitlab/endpoint
-    http://<your-minikube-ip>/api/auth/gitlab/token
-    http://<your-minikube-ip>/api/auth/jupyterhub/token
-    http://<your-minikube-ip>/jupyterhub/hub/oauth_callback
+- Depending on how CI runners are configured on the GitLab instance which you are using,
+  you might have to adapt the ``.gitlab-ci.yaml`` file in your projects. See the
+  :ref:`paragraph on configuring GitLab CI <runner_extra_config>`.
 
 
-Step 2
---------
-Open the file :code:`charts/example-configurations/minikube-values-gitlab.yaml`
-in your cloned Renku repository and paste the Application Id and Secret of the
-Renku-local application created in gitlab.com into the designated places.
+gitlab.com
+----------
+The extra configuration needed for a deployment against ``gitlab.com`` is in a
+specific `values file <https://github.com/SwissDataScienceCenter/renku/blob/master/charts/example-configurations/external-gitlab-values.yaml>`_.
+This file can also be used as a secondary values file in a Renku deployment which is
+running in the cloud.
 
-Now start the Renku platform following the steps described in the `Renku charts README`_,
-replacing the final :code:`helm upgrade` command with the following:
 
-.. _`Renku charts README`: https://github.com/SwissDataScienceCenter/renku/blob/master/charts/README.rst
+renkulab.io
+-----------
+You can also use the GitLab instance of the SDSCs public renku deployment
+`<renkulab.io/gitlab>`_ as a GitLab backend. The same
+`values file <https://github.com/SwissDataScienceCenter/renku/blob/master/charts/example-configurations/external-gitlab-values.yaml>`_.
+has the necessary configurations for such a deployment indicated. All the steps
+necessary for such a setup are identical to the ones when using ``gitlab.com``,
+except for the configuration of ``renkulab.io/gitlab`` as the upstream identity provider
+for your Keycloak instance. Instead of ``gitlab.com`` pick the generic OICD provider
+option and fill in the following information:
 
-.. code-block:: console
-
-  $ helm upgrade renku --install --namespace renku \
-    -f example-configurations/minikube-values-gitlab.yaml \
-    --set global.renku.domain=$(minikube ip) \
-    --set ui.jupyterhubUrl=http://$(minikube ip)/jupyterhub \
-    --set ui.gatewayUrl=http://$(minikube ip)/api \
-    --set gateway.keycloakUrl=http://$(minikube ip) \
-    --set notebooks.jupyterhub.hub.services.gateway.oauth_redirect_uri=http://$(minikube ip)/api/auth/jupyterhub/token \
-    ./renku
-
-Step 3
---------
-Open :code:`http://<your-minikube-ip>/auth` in your browser and login to the
-admin console using admin/admin. Under Identity Providers choose "GitLab" from
-the "Add Provider..." drop-down menu. Add the Application Id and Secret from
-the Renku-local application created in Step 1. Save the identity provider and
-logout from the Keycloak admin panel.
-
-Step 4
---------
-For each created project you will have to modify the :code:`.gitlab-ci.yaml`
-in the repository for the image build to work. In the image_build job
-
-- remove the :code:`image-build` tag
-- add the following entry:
-
-.. code-block:: console
-
-  services:
-    - docker:dind
++-------------------+------------------------------------------------+
+| Field             | Value                                          |
++===================+================================================+
+| Alias             | renkulab                                       |
++-------------------+------------------------------------------------+
+| Authorization URL | https://renkulab.io/gitlab/oauth/authorize     |
++-------------------+------------------------------------------------+
+| Token URL         | https://renkulab.io/gitlab/oauth/token         |
++-------------------+------------------------------------------------+
+| Client ID         | [Application Id of GitLab client application]  |
++-------------------+------------------------------------------------+
+| Client Secret     | [Secret of GitLab client application]          |
++-------------------+------------------------------------------------+

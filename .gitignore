@@ -9,9 +9,6 @@ services/gitlab/runner/
 
 services/keycloak/data/
 
-charts/renku/charts/*.tgz
-charts/gitlab/charts/*.tgz
-
 # Idea software family
 .idea/
 
@@ -21,8 +18,14 @@ charts/gitlab/charts/*.tgz
 # Sphinx documentation
 .doctrees
 
-# Created by https://www.gitignore.io/api/vim,macos,linux,emacs,scala,python,visualstudiocode
-# Edit at https://www.gitignore.io/?templates=vim,macos,linux,emacs,scala,python,visualstudiocode
+### Metals -- Scala Language Server ###
+.metals
+
+# The requirements lockfile is generated when packaging the chart
+charts/renku/requirements.lock
+
+# Created by https://www.gitignore.io/api/vim,macos,linux,emacs,scala,python,visualstudiocode,helm
+# Edit at https://www.gitignore.io/?templates=vim,macos,linux,emacs,scala,python,visualstudiocode,helm
 
 ### Emacs ###
 # -*- mode: gitignore; -*-
@@ -74,6 +77,10 @@ flycheck_*.el
 # network security
 /network-security.data
 
+
+### Helm ###
+# Chart dependencies
+**/charts/*.tgz
 
 ### Linux ###
 
@@ -173,15 +180,6 @@ coverage.xml
 *.mo
 *.pot
 
-# Django stuff:
-*.log
-local_settings.py
-db.sqlite3
-
-# Flask stuff:
-instance/
-.webassets-cache
-
 # Scrapy stuff:
 .scrapy
 
@@ -191,20 +189,13 @@ docs/_build/
 # PyBuilder
 target/
 
-# Jupyter Notebook
-.ipynb_checkpoints
-
-# IPython
-profile_default/
-ipython_config.py
-
 # pyenv
 .python-version
 
 # pipenv
 #   According to pypa/pipenv#598, it is recommended to include Pipfile.lock in version control.
 #   However, in case of collaboration, if having platform-specific dependencies or dependencies
-#   having no cross-platform support, pipenv may install dependencies that don’t work, or not
+#   having no cross-platform support, pipenv may install dependencies that don't work, or not
 #   install all needed dependencies.
 #Pipfile.lock
 
@@ -214,21 +205,17 @@ celerybeat-schedule
 # SageMath parsed files
 *.sage.py
 
-# Environments
-.env
-.venv
-env/
-venv/
-ENV/
-env.bak/
-venv.bak/
-
 # Spyder project settings
 .spyderproject
 .spyproject
 
 # Rope project settings
 .ropeproject
+
+# Mr Developer
+.mr.developer.cfg
+.project
+.pydevproject
 
 # mkdocs documentation
 /site
@@ -243,6 +230,8 @@ dmypy.json
 
 ### Scala ###
 *.class
+*.log
+*.metals
 
 ### Vim ###
 # Swap
@@ -254,23 +243,25 @@ dmypy.json
 
 # Session
 Session.vim
+Sessionx.vim
 
 # Temporary
 .netrwhist
+
 # Auto-generated tag files
 tags
+
 # Persistent undo
 [._]*.un~
 
+# Coc configuration directory
+.vim
+
 ### VisualStudioCode ###
 .vscode
-!.vscode/settings.json
-!.vscode/tasks.json
-!.vscode/launch.json
-!.vscode/extensions.json
 
 ### VisualStudioCode Patch ###
 # Ignore all local history of files
 .history
 
-# End of https://www.gitignore.io/api/vim,macos,linux,emacs,scala,python,visualstudiocode
+# End of https://www.gitignore.io/api/vim,macos,linux,emacs,scala,python,visualstudiocode,helm

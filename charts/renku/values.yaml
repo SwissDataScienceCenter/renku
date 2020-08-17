@@ -15,10 +15,13 @@ global:
     ## Postgres user for the gitlab database
     postgresUser: gitlab
     ## Postgres password for the gitlab database
-    postgresPassword: # use `openssl rand -hex 32`
+    postgresPassword:
+      value:
+      overwriteOnHelmUpgrade: false
     ## Sudo token for sudo API requests
-    ## Generated using: `openssl rand -hex 32`
     sudoToken:
+      value:
+      overwriteOnHelmUpgrade: false
     ## URL prefix for gitlab
     # urlPrefix: /
 
@@ -28,22 +31,27 @@ global:
     ## Postgres user for the Keycloak database
     postgresUser: keycloak
     ## Postgres password for the Keycloak database
-    ## Generated using: `openssl rand -hex 32`
     postgresPassword:
+      value:
+      overwriteOnHelmUpgrade: false
+    ## Admin password for Keycloak
+    password:
+      value:
+      overwriteOnHelmUpgrade: false
   jupyterhub:
     ## Name of the postgres database to be used by jupyterhub
     postgresDatabase: jupyterhub
     ## Postgres user for the jupyterhub database
     postgresUser: jupyterhub
     ## Postgres password for the jupyterhub database
-    ## Generated using: `openssl rand -hex 32`
     postgresPassword:
+      value:
+      overwriteOnHelmUpgrade: false
   gateway:
     clientSecret: # use `uuidgen -r`
     ## The client ID for authentication against gitlab
     gitlabClientId: renku-ui
     ## The client secret for authentication against gitlab
-    ## Generated using: `openssl rand -hex 32`
     gitlabClientSecret:
   renku:
     ## Domain name for the deployed instance of renku
@@ -58,19 +66,32 @@ global:
       ## Name of the postgres user to be used to access the Event Log db
       postgresUser: eventlog
       ## Postgres password to be used to access the Event Log db
-      ## Generated using: `openssl rand -hex 32`
       postgresPassword:
+        value:
+        overwriteOnHelmUpgrade: false
+      existingSecret: '{{ template "renku.fullname" . }}-db-postgres'
     tokenRepository:
       ## Name of the postgres user to be used to access the db storing access tokens
       postgresUser: tokenstorage
       ## Postgres password to be used to access the db storing access tokens
-      ## Generated using: `openssl rand -hex 32`
       postgresPassword:
+        value:
+        overwriteOnHelmUpgrade: false
+      existingSecret: '{{ template "renku.fullname" . }}-token-postgres'
     jena:
       ## specify which dataset should be used in Jena
       dataset:
   ## Set to true if using https
   useHTTPS: false
+  anonymousSessions:
+    ## Set to true to enable anonymous sessions through
+    ## a secondary Jupyterhub instance
+    enabled: false
+    ## Set the postgres password for you secondary JH deployment
+    ## or force the (re)generation of it on helm upgrade.
+    postgresPassword:
+      value:
+      overwriteOnHelmUpgrade: false
 
 ## Ingress configuration
 ## See: https://kubernetes.io/docs/concepts/services-networking/ingress/
@@ -121,7 +142,11 @@ keycloak:
 
     ## Keycloak admin user configuration
     username: admin
-    password: # use `openssl rand -hex 32`
+    ## Do not set an admin password through this chart value. Instead, set it
+    ## through global.keycloak.password.value.
+    # password:
+    existingSecret: keycloak-password-secret
+    existingSecretKey: keycloak-password
 
     livenessProbe:
       initialDelaySeconds: 180
@@ -171,162 +196,54 @@ keycloak:
       # !!!
       ## This value is dependent on the Release name! (but helm charts don't allow templating values here.)
       # !!!
-      existingSecret: renku
+      existingSecret: renku-keycloak-postgres
       existingSecretKey: keycloak-postgres-password
 
     ingress:
       enabled: false
 
 
+# Postgresql configuration
+# The bitnami postgres chart offers a variety of configuration options, most of
+# which are not explicitly mentioned here. We predominantly list the values where we
+# deviate from the defaults or where we expect the some deployment specific values
+# to be set. For all options and their defaults see:
+# https://github.com/bitnami/charts/tree/master/bitnami/postgresql#parameters
+# For production deployments check out
+# https://github.com/bitnami/charts/blob/master/bitnami/postgresql/values-production.yaml
 postgresql:
-  ## postgres image repository
-  image: postgres
-  ## postgres image version
-  ## ref: https://hub.docker.com/r/library/postgres/tags/
-  ##
-  imageTag: '9.6'
 
-  ## Specify a imagePullPolicy
-  ## 'Always' if imageTag is 'latest', else set to 'IfNotPresent'
-  ## ref: http://kubernetes.io/docs/user-guide/images/#pre-pulling-images
-  ##
-  # imagePullPolicy:
+  ## We use the defaults here. Note that these basic configs could also be set as
+  ## global values such that sub-charts can access them too.
+  postgresqlDatabase: postgres
+  postgresqlUsername: postgres
 
-  ## Specify imagePullSecrets
-  ## ref: https://kubernetes.io/docs/concepts/containers/images/#specifying-imagepullsecrets-on-a-pod
-  ##
-  # imagePullSecrets: myregistrykey
+  ## The admin password should be set explicitly, otherwise a random string will be
+  ## created. Alternatively an existing secret can be provided. Note that postgres
+  ## DOES NOT tolerate a change of the admin password when upgrading.
+  # postgresqlPassword:
 
-  ## Create a database user
-  ## Default: postgres
-  postgresUser: postgres
-  ## Default: random 10 character string
-  postgresPassword: postgres
+  ## Use an existing secret instead of creating a new one. It must have a
+  ## postgresql-password key containing the password for the posgres user.
+  # existingSecret:
 
-  ## Inject postgresPassword via a volume mount instead of environment variable
-  # usePasswordFile: false
+  image:
+    repository: bitnami/postgresql
+    tag: 9.6
 
-  ## Use Existing secret instead of creating one
-  ## It must have a postgres-password key containing the desired password
-  # existingSecret: 'secret'
-
-  ## Create a database
-  ## Default: the postgres user
-  postgresDatabase: postgres
-
-  ## Specify initdb arguments, e.g. --data-checksums
-  ## ref: https://github.com/docker-library/docs/blob/master/postgres/content.md#postgres_initdb_args
-  ## ref: https://www.postgresql.org/docs/current/static/app-initdb.html
-  # postgresInitdbArgs:
-
-  ## Use an alternate scheduler, e.g. "stork".
-  ## ref: https://kubernetes.io/docs/tasks/administer-cluster/configure-multiple-schedulers/
-  ##
-  # schedulerName:
-
-  ## Specify runtime config parameters as a dict, using camelCase, e.g.
-  ## {"sharedBuffers": "500MB"}
-  ## ref: https://www.postgresql.org/docs/current/static/runtime-config.html
-  # postgresConfig:
-
-  ## Persist data to a persistent volume
   persistence:
+    ## We use the defaults here, but they will probably be modified for most deployments.
     enabled: true
-
-    ## A manually managed Persistent Volume and Claim
-    ## Requires persistence.enabled: true
-    ## If defined, PVC must be created manually before volume will be bound
+    size: 8Gi
+    ## Provide an existing PersistentVolumeClaim to be reused.
     # existingClaim:
 
-    ## database data Persistent Volume Storage Class
-    ## If defined, storageClassName: <storageClass>
-    ## If set to "-", storageClassName: "", which disables dynamic provisioning
-    ## If undefined (the default) or set to null, no storageClassName spec is
-    ##   set, choosing the default provisioner.  (gp2 on AWS, standard on
-    ##   GKE, AWS & OpenStack)
-    ##
-    # storageClass: "-"
-    accessMode: ReadWriteOnce
-    size: 8Gi
-    subPath: postgresql-db
-    mountPath: /var/lib/postgresql/data/pgdata
-
-    # annotations: {}
-
-  metrics:
+  # Consider replication. These are the defaults for the basic settings.
+  replication:
     enabled: false
-    image: wrouesnel/postgres_exporter
-    imageTag: v0.1.1
-    imagePullPolicy: IfNotPresent
-    resources:
-      requests:
-        memory: 256Mi
-        cpu: 100m
-      ## Define additional custom metrics
-      ## ref: https://github.com/wrouesnel/postgres_exporter#adding-new-metrics-via-a-config-file
-      # customMetrics:
-      #   pg_database:
-      #     query: "SELECT d.datname AS name, CASE WHEN pg_catalog.has_database_privilege(d.datname, 'CONNECT') THEN pg_catalog.pg_database_size(d.datname) ELSE 0 END AS size FROM pg_catalog.pg_database d where datname not in ('template0', 'template1', 'postgres')"
-      #     metrics:
-      #       - name:
-      #           usage: "LABEL"
-      #           description: "Name of the database"
-      #       - size_bytes:
-      #           usage: "GAUGE"
-      #           description: "Size of the database in bytes"
-
-  ## Configure resource requests and limits
-  ## ref: http://kubernetes.io/docs/user-guide/compute-resources/
-  ##
-  resources:
-    requests:
-      memory: 256Mi
-      cpu: 100m
-
-  service:
-    type: ClusterIP
-    port: 5432
-    externalIPs: []
-    ## Manually set NodePort value
-    ## Requires service.type: NodePort
-    # nodePort:
-
-  networkPolicy:
-    ## Enable creation of NetworkPolicy resources.
-    ##
-    enabled: false
-
-    ## The Policy model to apply. When set to false, only pods with the correct
-    ## client label will have network access to the port PostgreSQL is listening
-    ## on. When true, PostgreSQL will accept connections from any source
-    ## (with the correct destination port).
-    ##
-    allowExternal: true
-
-  ## Node labels and tolerations for pod assignment
-  ## ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#nodeselector
-  ## ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#taints-and-tolerations-beta-feature
-  nodeSelector: {}
-  tolerations: []
-  affinity: {}
-
-  # Override default liveness & readiness probes
-  probes:
-    liveness:
-      initialDelay: 60
-      timeoutSeconds: 5
-      failureThreshold: 6
-    readiness:
-      initialDelay: 5
-      timeoutSeconds: 3
-      periodSeconds: 5
-  ## Annotations for the deployment and nodes.
-  deploymentAnnotations: {}
-  podAnnotations: {}
-
-  ## Deployment pods replace strategy
-  ## ref: https://kubernetes.io/docs/concepts/workloads/controllers/deployment/#strategy
-  # strategy: {}
+    user: repl_user
+    password: repl_password # generate a random password `openssl rand -hex 32`
+    slaveReplicas: 1
 
 
 ## Gitlab configuration
@@ -340,7 +257,7 @@ gitlab:
   image:
   #   pullPolicy: IfNotPresent
     repository: gitlab/gitlab-ce
-    tag: 11.8.10-ce.0
+    tag: 11.9.11-ce.0
 
   ## automatically log in to gitlab
   oauth:
@@ -467,6 +384,14 @@ gitlab:
     #     - registry.example.com
     #     secretName: registry-tls
 
+  ## Add some extra configuration to gitlab.rb
+  # extraConfig: |
+  #     ## Fix number of unicorn workers
+  #     unicorn['worker_processes'] = 7
+
+  #     ## Fix something else
+  #     ...
+
 ## Configuration for the UI service
 ui:
   #  welcomePage:
@@ -476,11 +401,6 @@ ui:
   #   pullPolicy: Always
   #   repository: renku/renku-ui
   #   tag: latest
-
-  ## Where to fetch default templates from
-  templatesRepository:
-    url: https://github.com/SwissDataScienceCenter/renku-project-template
-    ref: a7d01246fdbe247752a99b14c0b6e92666910b8c
 
   ingress:
     enabled: false
@@ -500,18 +420,37 @@ ui:
   # service:
   #   port: 80
   #   type: ClusterIP
+
   ## Set the GitLab URL
   # gitlabUrl: "http://gitlab.renku.build"
+
   ## Configure application ID from "{{ gitlabUrl }}/oauth/application"
   ## by setting redirect URL to "{{ baseUrl }}/login/redirect/gitlab"
   ## and set the application ID as the "gitlabClientId" chart value.
   # gitlabClientId: "renku-ui"
+
   ## Set the JupyterHub URL
   # jupyterhubUrl: "http://jupyterhub.renku.build"
+
   ## Configuration for where to get the base project templates: a url and ref (usually a tag)
-  # templatesRepository:
+  templatesRepository:
     # url: https://github.com/SwissDataScienceCenter/renku-project-template
-    # ref: 0.1.0
+    # ref: 0.1.6
+
+  ## Configuration for Sentry
+  # sentry:
+  #   enabled: false
+  #   url: ''
+  #   namespace: ''
+
+  ## Configuration for statuspage.io integration
+  statuspage:
+    # Provide the id for the statuspage, which is the subdomain of statuspage.io
+    # used in the API queries. This can be found from the /api path.
+    # E.g., under https://renkulab.statuspage.io/api you see that summary
+    # is available under https://5bcn9bqff4qt.statuspage.io/api/v2/summary.json, so
+    # id: 5bcn9bqff4qt
+
 # ## Configuration for the notebooks service
 notebooks:
   ## serverOptions allow for modifications to the notebook pod resource requests and the UI rendering
@@ -553,16 +492,31 @@ notebooks:
     # rbac:
     #   enabled: true
     ## Set the notebooks service API token
-    # hub:
-    #   services:
+    hub:
+      services:
         # notebooks:
         #   api_token: notebookstoken
 
         ## define the client ID and secret for the gateway
-        # gateway:
+        gateway:
+          oauth_no_confirm: true
         #  oauth_client_id: gateway
         #  apiToken: # use `openssl rand -hex 32`
         #  oauth_redirect_uri: http://<gateway>/api/auth/jupyterhub/token
+        ## Configure gitlab and postgres:
+        ## Values need to be set to get jupyterhub to work
+       # extraEnv:
+       #  - name: GITLAB_URL
+       #    value: <gitlab url>
+       #  - name: DEBUG
+       #    value: "1"
+       #  - name: JUPYTERHUB_SPAWNER_CLASS
+       #    value: spawners.RenkuKubeSpawner
+       #  - name: PGPASSWORD
+       #    valueFrom:
+       #        secretKeyRef:
+       #          name: renku-jupyterhub-postgres
+       #          key: jupyterhub-postgres-password
 
     ## Simple default setup for gitlab oauth
     # auth:
@@ -578,15 +532,23 @@ notebooks:
     #   every: 60
     singleuser:
       image:
-        name: renku/singleuser
-        tag: 0.3.7-renku0.5.2
+        name: renku/renkulab-py
+        tag: 3.7-renku0.10.4-0.6.3
     #   # use JupyterLab by default in notebook servers
     #   defaultUrl: /lab
 
-apispec:
-  image:
-    repository: renku/apispec
-    tag: 'latest'
+    # The following section disables some of the default JupyterHub
+    # optimizations which can interfere with simple setups. See
+    # https://zero-to-jupyterhub.readthedocs.io/en/latest/administrator/optimization.html
+    # for details.
+    scheduling:
+      userScheduler:
+        enabled: false
+      userPlaceholder:
+        enabled: false
+    prePuller:
+      continuous:
+        enabled: false
 
 tests:
   image:
@@ -606,14 +568,13 @@ tests:
   #    email: ckent@example.com
   #    password: IamSuperman
 
-minio:
-  ## Set to true to deploy a minio server, can be used as gateway too.
-  enabled: false
-
 ## Configuration for the Gateway service
 gateway:
   ingress:
     enabled: false
+  ## Uncomment this if you are using a GitLab version
+  ## prior to 12.7.0.
+  # oldGitLabLogout: true
 
 ## Configuration for renku-graph
 graph:
@@ -643,3 +604,11 @@ graph:
   #     ## A secret for signing request header tokens to be sent by GitLab with the Push Events
   #     ## Generated using: `openssl rand -hex 8|base64`
   #     secret: 1234
+
+## Configuration for renku-core service
+# repository:
+  ## Default cache directory
+  # cacheDirectory: /svc/cache
+
+  ## Default clone depth
+  # projectCloneDepth: 1

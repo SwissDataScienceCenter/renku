@@ -4,7 +4,7 @@
 
 image:
   repository: gitlab/gitlab-ce
-  tag: 11.8.10-ce.0
+  tag: 12.9.5-ce.0
   pullPolicy: IfNotPresent
 
 ssh:
@@ -117,3 +117,15 @@ redis:
   networkPolicy:
     enabled: true
     allowExternal: false
+
+# Enable json logs for all services
+logging:
+  useJson: true
+
+## Add some extra configuration to gitlab.rb
+# extraConfig: |
+#     ## Fix number of unicorn workers
+#     unicorn['worker_processes'] = 7
+
+#     ## Fix something else
+#     ...

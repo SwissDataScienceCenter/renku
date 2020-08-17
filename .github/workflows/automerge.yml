@@ -1,0 +1,29 @@
+name: automerge
+on:
+  pull_request:
+    types:
+      - labeled
+      - unlabeled
+      - synchronize
+      - opened
+      - edited
+      - ready_for_review
+      - reopened
+      - unlocked
+  pull_request_review:
+    types:
+      - submitted
+  status: {}
+jobs:
+  automerge:
+    runs-on: ubuntu-latest
+    steps:
+      - name: automerge
+        uses: "pascalgn/automerge-action@v0.7.3"
+        env:
+          GITHUB_TOKEN: "${{ secrets.RENKU_CI_TOKEN }}"
+          MERGE_METHOD: "squash"
+          MERGE_DELETE_BRANCH: "true"
+          MERGE_LABELS: "automerge,!do-not-merge"
+          MERGE_RETRIES: 120
+          MERGE_RETRY_SLEEP: 60000
