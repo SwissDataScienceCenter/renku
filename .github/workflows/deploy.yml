@@ -7,7 +7,6 @@ on:
     - scripts/**
     - tests/**
     branches: ['master']
-    tags: ['*']
 
 jobs:
   github-env:
