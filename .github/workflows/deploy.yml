@@ -66,7 +66,7 @@ jobs:
                            -e RENKU_TEST_FULL_NAME="Renku Bot" \
                            -e RENKU_TEST_EMAIL="renku@datascience.ch" \
                            -e RENKU_TEST_USERNAME="renku-test" \
-                           -e RENKU_TEST_CLI_VERSION="0.11.0"
+                           -e RENKU_TEST_CLI_VERSION="0.11.0" \
                            -e RENKU_TEST_PASSWORD="$RENKU_BOT_DEV_PASSWORD" sbt
     - name: Notify slack
       if: failure()
