@@ -1,0 +1,44 @@
+## A k8s job manifest to migrate an existing postgres data volume for using it
+## with a bitnami postgresql image. This is necessary when upgrading to the
+## 0.7.0 version of the renku chart. See:
+## https://github.com/SwissDataScienceCenter/renku/blob/master/charts/values.yaml.changelog.md
+
+## This job will do two things:
+## - rename /postgresql-db to /data
+##   (together with the mount point /bitnami/postgresql this will match the default
+##   PGDATA dir /bitnami/postgresql/data)
+## - change ownership of /data to the non-root user 1001 of group 1001
+##   (default user running postgres in the bitnami images)
+
+## For applying this migration, make sure that a pv and pvc for the volume exist in
+## kubernetes. Fill in the namespace and the name of the pvc below and apply this manifest:
+## kubectl apply -f migrate-pg-to-bitnami.yaml
+
+## While you could apply this transformation to your existing volume, we
+## recommend to copy the volume, apply this migration job to the copy and
+## provide the migrated copy as an existingClaim in the postgresql block
+## of your values file when upgrading. This will ensure that helm can roll
+## back changes if something goes wrong.
+
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: migrate-pg-to-bitnami
+  namespace: # Add your namespace here (must contain the volume claim!)
+spec:
+  template:
+    spec:
+      restartPolicy: Never
+      volumes:
+        - name: pg-vol
+          persistentVolumeClaim:
+            claimName: # Add the name of your volume claim here
+      containers:
+        - name: change-name-permission
+          image: ubuntu
+          command: ["/bin/bash", "-c"]
+          args: ["mv /pg-vol/postgresql-db /pg-vol/data && chown -R 1001:1001 /pg-vol/data"]
+          volumeMounts:
+            - mountPath: /pg-vol
+              name: pg-vol
