@@ -25,7 +25,7 @@ object TestsDefaults {
     else
       TestsDefaults(
         env                 = Some("https://dev.renku.ch"),
-        //renkuVersion        = "0.10.4",
+        renkuVersion        = "0.10.4",
         renkuInstallCommand = "python3 -m pip install 'renku==%s'"
       )
 }
