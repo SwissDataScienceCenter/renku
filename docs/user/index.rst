@@ -15,6 +15,5 @@ User Documentation
    Lineage <lineage>
    Advanced Interfaces <advanced_interfaces>
    Autosave in JupyterLab <autosave>
-   Document your project <how_to_documentation>
    Git tips <git_tips>
    Troubleshooting <troubleshooting>
