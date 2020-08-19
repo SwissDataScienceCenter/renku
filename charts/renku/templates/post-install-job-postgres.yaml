@@ -22,7 +22,7 @@ spec:
       restartPolicy: Never
       containers:
         - name: init-databases
-          image: "{{ .Values.postgresql.image }}:{{ .Values.postgresql.imageTag }}"
+          image: "{{ .Values.postgresql.image.repository }}:{{ .Values.postgresql.image.tag }}"
           command: ["/bin/bash", "/scripts/init-postgres.sh"]
           volumeMounts:
             - name: scripts
@@ -57,16 +57,16 @@ spec:
               readOnly: true
           env:
           - name: PGDATABASE
-            value: {{ .Values.postgresql.postgresDatabase }}
+            value: {{ .Values.postgresql.postgresqlDatabase }}
           - name: PGUSER
-            value: {{ .Values.postgresql.postgresUser }}
+            value: {{ .Values.postgresql.postgresqlUsername }}
           - name: PGHOST
             value: {{ template "postgresql.fullname" . }}
           - name: PGPASSWORD
             valueFrom:
               secretKeyRef:
                 name: {{ template "postgresql.fullname" . }}
-                key: postgres-password
+                key: postgresql-password
       volumes:
         - name: scripts
           configMap:
