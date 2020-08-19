@@ -2,7 +2,7 @@ dependencies:
 - name: renku-core
   alias: core
   repository: "https://swissdatasciencecenter.github.io/helm-charts/"
-  version: 0.10.5-ad4ba1b
+  version: 0.11.1
 - name: renku-ui
   alias: ui
   repository: "https://swissdatasciencecenter.github.io/helm-charts/"
@@ -10,11 +10,11 @@ dependencies:
 - name: renku-notebooks
   alias: notebooks
   repository: "https://swissdatasciencecenter.github.io/helm-charts/"
-  version: 0.7.5-8e63617
+  version: 0.8.0-2481eb1
 - name: renku-gateway
   alias: gateway
   repository: "https://swissdatasciencecenter.github.io/helm-charts/"
-  version: 0.8.1-b12be38
+  version: 0.9.0-cb2a149
 - name: gitlab
   repository: "https://swissdatasciencecenter.github.io/helm-charts/"
   version: 0.5.2
@@ -25,14 +25,10 @@ dependencies:
   version: 1.3.0
   condition: graph.enabled
 - name: postgresql
-  version: 0.14.4
-  repository: "@stable"
+  version: 9.1.1
+  repository: "https://charts.bitnami.com/bitnami"
   condition: postgresql.enabled
 - name: keycloak
   version: 4.10.1
   repository: "@stable"
   condition: keycloak.enabled
-- name: minio
-  version: 1.6.0
-  repository: "@stable"
-  condition: minio.enabled

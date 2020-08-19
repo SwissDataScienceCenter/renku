@@ -18,9 +18,11 @@ and clicking on the **New Project** (2) button.
     :align: center
     :alt: Head to new project page
 
-Enter **Flights Tutorial** as your project title (1); fill in a short
-description (2); if you wish, change the visibility (or leave it *public*) (3).
-Click on the **Create** button (4).
+Enter **Flights Tutorial** as your project title (1); if you wish, change
+the visibility (or leave it *public*) (2); select the "Basic Python Project"
+template (3); fill in an optional description (4) and any other parameters
+appearing after selecting the template.
+Click on the **Create project** button (5).
 
 .. image:: ../../_static/images/ui_02_new-project.png
     :width: 100%
