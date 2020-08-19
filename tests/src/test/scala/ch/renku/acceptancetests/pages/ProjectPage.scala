@@ -201,7 +201,9 @@ class ProjectPage(projectSlug: String, namespace: String) extends RenkuPage with
     }
 
     def title(implicit webDriver: WebDriver): WebElement = eventually {
-      findAll(cssSelector("h2")).find(_.text.trim == "Datasets") getOrElse fail("Datasets title not found")
+      findAll(cssSelector("h2"))
+        .find(_.text.startsWith("Datasets"))
+        .getOrElse(fail("Datasets title not found"))
     }
 
     object DatasetsList {
