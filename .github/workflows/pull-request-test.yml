@@ -69,11 +69,17 @@ jobs:
         PR_NUMBER=${{ github.event.number }}
         echo "::set-env name=RENKU_RELEASE::ci-${PR_NUMBER}-renku"
         echo "::set-env name=RENKU_NAMESPACE::ci-${PR_NUMBER}-renku"
-        RENKU_PYTHON_VERSION=$(cat ./charts/renku/requirements.yaml | yq -r '.dependencies[] | select(.name == "renku-core") | .version')
+        RENKU_PYTHON_VERSION=v$(cat ./charts/renku/requirements.yaml | yq -r '.dependencies[] | select(.name == "renku-core") | .version')
         RENKU_PYTHON_COMMIT=$(echo $RENKU_PYTHON_VERSION | grep -o -P '(?<=-)[0-9a-fA-F]+') || true
         if [ $RENKU_PYTHON_COMMIT ]; then export RENKU_PYTHON_VERSION=$RENKU_PYTHON_COMMIT; fi
-        echo "Using python version $RENKU_PYTHON_VERSION"
+        echo "Using renku-python version $RENKU_PYTHON_VERSION"
         echo "::set-env name=RENKU_PYTHON_VERSION::${RENKU_PYTHON_VERSION}"
+        echo $RENKU_PYTHON_VERSION > renku_python_version
+    - name: Store renku-python version
+      uses: actions/upload-artifact@v1
+      with:
+        name: renku_python_version
+        path: renku_python_version
     - name: Configure GitLab application
       env:
         GITLAB_TOKEN: ${{ secrets.GITLAB_TOKEN }}
@@ -140,6 +146,10 @@ jobs:
     needs: deploy-pr
     steps:
     - uses: actions/checkout@v2
+    - name: Fetch renku-python version
+      uses: actions/download-artifact@v1
+      with:
+        name: renku_python_version
     - name: Test the PR
       env:
         RENKU_BOT_DEV_PASSWORD: ${{ secrets.RENKU_BOT_DEV_PASSWORD }}
@@ -147,15 +157,18 @@ jobs:
         export PR_NUMBER=${{ github.event.number }}
         echo $PR_NUMBER
         export RENKU_RELEASE="ci-${PR_NUMBER}-renku"
+
+        export RENKU_PYTHON_VERSION=$(cat renku_python_version/renku_python_version)
         cd tests
-        echo "Passing python version $RENKU_PYTHON_VERSION"
+
+        echo "Passing renku-python version $RENKU_PYTHON_VERSION"
         COMPOSE_DOCKER_CLI_BUILD=1 DOCKER_BUILDKIT=1 docker-compose build --build-arg renku_python_ref=${RENKU_PYTHON_VERSION} sbt
         docker-compose run -e RENKU_TEST_URL=https://${RENKU_RELEASE}.dev.renku.ch \
                            -e RENKU_TEST_FULL_NAME="Renku Bot" \
                            -e RENKU_TEST_EMAIL="renku@datascience.ch" \
                            -e RENKU_TEST_REGISTER="1" \
                            -e RENKU_TEST_USERNAME="renku-test" \
-                           -e RENKU_TEST_CLI_VERSION="0.11.1" \
+                           -e RENKU_TEST_CLI_VERSION="${RENKU_PYTHON_VERSION}" \
                            -e RENKU_TEST_PASSWORD="$RENKU_BOT_DEV_PASSWORD" \
                            -e RENKU_TEST_ANON_AVAILABLE="true" sbt
     - name: Prepare artifact for packaging on failure
