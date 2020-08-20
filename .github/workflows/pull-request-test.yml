@@ -69,7 +69,9 @@ jobs:
         PR_NUMBER=${{ github.event.number }}
         echo "::set-env name=RENKU_RELEASE::ci-${PR_NUMBER}-renku"
         echo "::set-env name=RENKU_NAMESPACE::ci-${PR_NUMBER}-renku"
-        RENKU_PYTHON_VERSION=$(cat renku/requirements.yaml | yq '.dependencies[] | select(.name == "renku-core") | .version')
+        RENKU_PYTHON_VERSION=$(cat charts/renku/requirements.yaml | yq -r '.dependencies[] | select(.name == "renku-core") | .version')
+        RENKU_PYTHON_COMMIT=$(echo $RENKU_PYTHON_VERSION | grep -o -P '(?<=-)[0-9a-fA-F]+')
+        if [ $RENKU_PYTHON_COMMIT ]; then export RENKU_PYTHON_VERSION=$RENKU_PYTHON_COMMIT; fi
         echo "Using python version $RENKU_PYTHON_VERSION"
     - name: Configure GitLab application
       env:
