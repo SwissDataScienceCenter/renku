@@ -94,12 +94,13 @@ jobs:
         helm repo add jupyterhub https://jupyterhub.github.io/helm-chart
         rm -rf charts/renku/charts
         helm dependency update charts/renku
+        printf "%s\n" "ui:" "  templates:" "    repositories:" "      - url: https://github.com/SwissDataScienceCenter/renku-project-template" "        ref: master" "        name: Renku" "" > tmpvalues.yaml
         printf "%s" "$CI_RENKU_VALUES" | sed "s/<replace>/${RENKU_RELEASE}/" > values.yaml
-        printf "%s\n" "ui:" "  templates:" "    repositories:" "      - url: https://github.com/SwissDataScienceCenter/renku-project-template" "        ref: master" "        name: Renku" > tmpvalues.yaml
         kubectl create namespace $RENKU_NAMESPACE || true
         helm upgrade --install $RENKU_RELEASE \
                     --namespace $RENKU_NAMESPACE \
                     -f values.yaml \
+                    -f tmpvalues.yaml \
                     --timeout 1800 \
                     --cleanup-on-fail \
                     --set gateway.gitlabClientId=${APP_ID} \
@@ -108,7 +109,6 @@ jobs:
                     --set notebooks.jupyterhub.auth.gitlab.clientSecret=${APP_SECRET} \
                     --set global.anonymousSessions.enabled=true \
                     --set graph.triplesGenerator.renkuPythonDevVersion="renku==0.11.0" \
-                    -f tmpvalues.yaml \
                     charts/renku
     - name: Turn on anonymous notebooks
       env:
