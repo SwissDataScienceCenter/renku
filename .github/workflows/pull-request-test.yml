@@ -115,7 +115,7 @@ jobs:
                     --set notebooks.jupyterhub.auth.gitlab.clientId=${APP_ID} \
                     --set notebooks.jupyterhub.auth.gitlab.clientSecret=${APP_SECRET} \
                     --set global.anonymousSessions.enabled=true \
-                    --set graph.triplesGenerator.renkuPythonDevVersion="renku==0.11.1" \
+                    --set graph.triplesGenerator.renkuPythonDevVersion="git+https://github.com/SwissDataScienceCenter/renku-python.git@${RENKU_PYTHON_VERSION}#egg=renku" \
                     charts/renku
     - name: Turn on anonymous notebooks
       env:
