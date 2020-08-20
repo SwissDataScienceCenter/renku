@@ -46,7 +46,6 @@ Moreover, you will probably want to create other top-level directories,
 like ``src`` for keeping scripts that you create from your notebooks when
 your analysis stabilizes, and ``docs`` if you wish to keep your documentation
 separate from the analysis.
-See :ref:`how_to_documentation` for documentation tips.
 
 The ``.gitkeep`` files in these directories by default are a convention used to
 git commit "empty" directories (where normal git behavior is to omit empty
@@ -293,7 +292,7 @@ custom repository. You can find further details in
 
 If you are using the UI through a RenkuLab instance, you can ask the
 administrators to include your repository in the official repository list
-available in the 
+available in the
 `renku-values file <https://renku.readthedocs.io/en/latest/admin/index.html#create-a-renku-values-yaml-file>`_.
 
 We are currently working on adding full support for custom template
