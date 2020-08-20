@@ -24,6 +24,7 @@ jobs:
         GITHUB_CONTEXT: ${{ toJson(github) }}
       run: echo "$GITHUB_CONTEXT"
   test-docs:
+    if: false
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
