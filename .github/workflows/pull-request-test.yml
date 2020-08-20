@@ -148,7 +148,8 @@ jobs:
         echo $PR_NUMBER
         export RENKU_RELEASE="ci-${PR_NUMBER}-renku"
         cd tests
-        COMPOSE_DOCKER_CLI_BUILD=1 DOCKER_BUILDKIT=1 docker-compose build sbt --build-arg renku_python_ref=${RENKU_PYTHON_VERSION}
+        echo "Passing python version $RENKU_PYTHON_VERSION"
+        COMPOSE_DOCKER_CLI_BUILD=1 DOCKER_BUILDKIT=1 docker-compose build --build-arg renku_python_ref=${RENKU_PYTHON_VERSION} sbt
         docker-compose run -e RENKU_TEST_URL=https://${RENKU_RELEASE}.dev.renku.ch \
                            -e RENKU_TEST_FULL_NAME="Renku Bot" \
                            -e RENKU_TEST_EMAIL="renku@datascience.ch" \
