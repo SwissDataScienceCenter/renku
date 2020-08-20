@@ -95,9 +95,7 @@ jobs:
         rm -rf charts/renku/charts
         helm dependency update charts/renku
         printf "%s" "$CI_RENKU_VALUES" | sed "s/<replace>/${RENKU_RELEASE}/" > values.yaml
-        printf "%s\n" "ui:" "  templates:" \
-          "    repositories:" "      - url: https://github.com/SwissDataScienceCenter/renku-project-template" \
-          "        ref: master" "        name: Renku" > tmpvalues.yaml
+        printf "%s\n" "ui:" "  templates:" "    repositories:" "      - url: https://github.com/SwissDataScienceCenter/renku-project-template" "        ref: master" "        name: Renku" > tmpvalues.yaml
         kubectl create namespace $RENKU_NAMESPACE || true
         helm upgrade --install $RENKU_RELEASE \
                     --namespace $RENKU_NAMESPACE \
