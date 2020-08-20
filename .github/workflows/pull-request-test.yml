@@ -62,8 +62,7 @@ jobs:
         sudo snap install kubectl --channel=1.16/stable --classic
         sudo snap install helm --channel=2.16/stable --classic
         echo "::set-env name=PATH::/snap/bin:$PATH"
-        pip install --upgrade pip pipenv
-        pip install yq
+        pip install --upgrade pip pipenv yq
         pipenv install --deploy --dev --system
     - name: Configure environment
       run: |
@@ -74,6 +73,7 @@ jobs:
         RENKU_PYTHON_COMMIT=$(echo $RENKU_PYTHON_VERSION | grep -o -P '(?<=-)[0-9a-fA-F]+') || true
         if [ $RENKU_PYTHON_COMMIT ]; then export RENKU_PYTHON_VERSION=$RENKU_PYTHON_COMMIT; fi
         echo "Using python version $RENKU_PYTHON_VERSION"
+        echo "::set-env name=RENKU_PYTHON_VERSION::${RENKU_PYTHON_VERSION}"
     - name: Configure GitLab application
       env:
         GITLAB_TOKEN: ${{ secrets.GITLAB_TOKEN }}
