@@ -94,13 +94,11 @@ jobs:
         helm repo add jupyterhub https://jupyterhub.github.io/helm-chart
         rm -rf charts/renku/charts
         helm dependency update charts/renku
-        printf "%s\n" "ui:" "  templates:" "    repositories:" "      - url: https://github.com/SwissDataScienceCenter/renku-project-template" "        ref: master" "        name: Renku" "" > tmpvalues.yaml
         printf "%s" "$CI_RENKU_VALUES" | sed "s/<replace>/${RENKU_RELEASE}/" > values.yaml
         kubectl create namespace $RENKU_NAMESPACE || true
         helm upgrade --install $RENKU_RELEASE \
                     --namespace $RENKU_NAMESPACE \
                     -f values.yaml \
-                    -f tmpvalues.yaml \
                     --timeout 1800 \
                     --cleanup-on-fail \
                     --set gateway.gitlabClientId=${APP_ID} \
