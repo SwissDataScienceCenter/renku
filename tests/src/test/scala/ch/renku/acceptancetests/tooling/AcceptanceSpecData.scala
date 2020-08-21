@@ -73,14 +73,4 @@ trait AcceptanceSpecData {
       GitLabBaseUrl("https://dev.renku.ch")
     else
       GitLabBaseUrl("https://renkulab.io")
-
-  implicit lazy val renkuCliConfig: RenkuCliConfig = RenkuCliConfig(
-    version = sys.env
-      .get("RENKU_TEST_CLI_VERSION")
-      .orElse(Option(getProperty("renkuVersion")))
-      .orElse(testsDefaults.renkuVersion.some)
-      .map(RenkuVersion)
-      .getOrElse(showErrorAndStop("No renku cli version found")),
-    installCommand = RenkuInstallCommand(testsDefaults.renkuInstallCommand)
-  )
 }
