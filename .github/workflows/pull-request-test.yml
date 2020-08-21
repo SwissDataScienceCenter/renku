@@ -120,7 +120,6 @@ jobs:
                     --set notebooks.jupyterhub.auth.gitlab.clientId=${APP_ID} \
                     --set notebooks.jupyterhub.auth.gitlab.clientSecret=${APP_SECRET} \
                     --set global.anonymousSessions.enabled=true \
-                    --set graph.triplesGenerator.renkuPythonDevVersion="git+https://github.com/SwissDataScienceCenter/renku-python.git@${RENKU_PYTHON_VERSION}#egg=renku" \
                     charts/renku
     - name: Turn on anonymous notebooks
       env:
@@ -168,7 +167,6 @@ jobs:
                            -e RENKU_TEST_EMAIL="renku@datascience.ch" \
                            -e RENKU_TEST_REGISTER="1" \
                            -e RENKU_TEST_USERNAME="renku-test" \
-                           -e RENKU_TEST_CLI_VERSION="${RENKU_PYTHON_VERSION}" \
                            -e RENKU_TEST_PASSWORD="$RENKU_BOT_DEV_PASSWORD" \
                            -e RENKU_TEST_ANON_AVAILABLE="true" sbt
     - name: Prepare artifact for packaging on failure
