@@ -133,10 +133,13 @@ jobs:
     needs: deploy-pr
     steps:
     - uses: actions/checkout@v2
+    - uses: actions/setup-python@v1
+      with:
+        python-version: 3.7
     - name: Install dependencies
       run: |
         sudo apt-get update -y && sudo apt-get install -y grep
-        pip install --upgrade pip yq
+        pip install yq
     - name: Test the PR
       env:
         RENKU_BOT_DEV_PASSWORD: ${{ secrets.RENKU_BOT_DEV_PASSWORD }}
