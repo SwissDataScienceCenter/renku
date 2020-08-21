@@ -58,11 +58,9 @@ jobs:
     - name: Install dependencies
       run: |
         sudo apt-get update -y && sudo apt-get install -y snapd
-        sudo apt-get install -y grep
         sudo snap install kubectl --channel=1.16/stable --classic
         sudo snap install helm --channel=2.16/stable --classic
         echo "::set-env name=PATH::/snap/bin:$PATH"
-        pip install --upgrade pip pipenv yq
         pipenv install --deploy --dev --system
     - name: Configure environment
       run: |
@@ -134,6 +132,10 @@ jobs:
     needs: deploy-pr
     steps:
     - uses: actions/checkout@v2
+    - name: Install dependencies
+      run: |
+        sudo apt-get update -y && sudo apt-get install -y grep
+        pip install --upgrade pip yq
     - name: Test the PR
       env:
         RENKU_BOT_DEV_PASSWORD: ${{ secrets.RENKU_BOT_DEV_PASSWORD }}
