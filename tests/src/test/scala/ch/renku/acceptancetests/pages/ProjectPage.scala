@@ -172,7 +172,9 @@ class ProjectPage(projectSlug: String, namespace: String) extends RenkuPage with
       }
 
       def content(implicit webDriver: WebDriver): WebElement = eventually {
-        find(cssSelector("div.card-body h1 + h2 + p")) getOrElse fail("Files -> Info content not found")
+        findAll(cssSelector("div.card-body h2 + p"))
+          .find(_.text.startsWith("This is a Renku project"))
+          .getOrElse(fail("Files -> Info content not found"))
       }
     }
 
@@ -199,7 +201,9 @@ class ProjectPage(projectSlug: String, namespace: String) extends RenkuPage with
     }
 
     def title(implicit webDriver: WebDriver): WebElement = eventually {
-      findAll(cssSelector("h2")).find(_.text.trim == "Datasets") getOrElse fail("Datasets title not found")
+      findAll(cssSelector("h2"))
+        .find(_.text.startsWith("Datasets"))
+        .getOrElse(fail("Datasets title not found"))
     }
 
     object DatasetsList {

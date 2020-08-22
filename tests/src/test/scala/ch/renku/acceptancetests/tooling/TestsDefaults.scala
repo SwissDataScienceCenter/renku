@@ -1,12 +1,10 @@
 package ch.renku.acceptancetests.tooling
 
-final case class TestsDefaults(env:                 Option[String],
-                               email:               Option[String] = None,
-                               username:            Option[String] = None,
-                               password:            Option[String] = None,
-                               fullname:            Option[String] = None,
-                               renkuVersion:        String,
-                               renkuInstallCommand: String)
+final case class TestsDefaults(env:      Option[String],
+                               email:    Option[String] = None,
+                               username: Option[String] = None,
+                               password: Option[String] = None,
+                               fullname: Option[String] = None)
 
 object TestsDefaults {
   import java.nio.file.Paths
@@ -24,8 +22,6 @@ object TestsDefaults {
         .fold(error => throw new Exception(error.prettyPrint()), identity)
     else
       TestsDefaults(
-        env                 = Some("https://dev.renku.ch"),
-        renkuVersion        = "0.10.4",
-        renkuInstallCommand = "python3 -m pip install 'renku==%s'"
+        env = Some("https://dev.renku.ch")
       )
 }
