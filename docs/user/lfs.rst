@@ -50,7 +50,7 @@ where ``<size>`` is a file size formatted like ``10b``, ``100kb``, ``0.5mb`` or
 
 Additionally, paths can be excluded from LFS storage by renku commands by
 editing the ``.renkulfsignore`` file in the project root folder. This file
-follows ``.gitignore`` `convention <https://git-scm.com/docs/gitignore#_pattern_format>`
+follows ``.gitignore`` `convention <https://git-scm.com/docs/gitignore#_pattern_format>`_
 Files matching a pattern in ``.renkulfsignore`` will never be added to git LFS
 by a renku command like ``renku run`` or ``renku dataset add``.
 
@@ -64,4 +64,4 @@ Useful git LFS commands
 Note that you can also use wild-cards, e.g. ``git lfs pull -I "data/records_201*.csv"``
 but be sure to include quote characters (``"`` or ``'``) when you use wild-cards.
 
-See the `git lfs tutorial <https://github.com/git-lfs/git-lfs/wiki/Tutorial>` for details.
+See the `git lfs tutorial <https://github.com/git-lfs/git-lfs/wiki/Tutorial>`_ for details.
