@@ -11,6 +11,7 @@ RUN mkdir -p /usr/share/man/man1 && \
 
 RUN apt-get install -y git git-lfs gcc wget nodejs
 
+ARG renku_python_ref=master
 RUN python3 -m pip install \
     'papermill<1.2.0' \
     'requests>=2.20.0' \
@@ -20,4 +21,4 @@ RUN python3 -m pip install \
     'pipx>=0.15.0.0' \
     'pandas==0.25.3' \
     'seaborn==0.9.0' \
-    'renku'
+    git+https://github.com/SwissDataScienceCenter/renku-python.git@${renku_python_ref}

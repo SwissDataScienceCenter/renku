@@ -15,11 +15,9 @@ trait FlightsTutorial extends GivenWhenThen with Matchers with ScalatestMatchers
 
   def followTheFlightsTutorialOnUsersMachine(
       projectUrl:             ProjectUrl
-  )(implicit userCredentials: UserCredentials, renkuCliConfig: RenkuCliConfig): DatasetName = {
+  )(implicit userCredentials: UserCredentials): DatasetName = {
 
     implicit val projectFolder: Path = createTempFolder
-
-    `verify renku version`
 
     `setup git configuration`
 

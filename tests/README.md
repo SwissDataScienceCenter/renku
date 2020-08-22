@@ -31,16 +31,14 @@ For running with docker, the parameters to the test need to be provided as envir
 
 ```
 docker-compose run -e RENKU_TEST_URL=https://renku-kuba.dev.renku.ch -e RENKU_TEST_FULL_NAME="<full user name>"
--e RENKU_TEST_EMAIL=<email> -e RENKU_TEST_USERNAME=<username> -e RENKU_TEST_PASSWORD=<password>
--e RENKU_TEST_CLI_VERSION=<renkuVersion> sbt
+-e RENKU_TEST_EMAIL=<email> -e RENKU_TEST_USERNAME=<username> -e RENKU_TEST_PASSWORD=<password> sbt
 ```
 
 By default, all tests are run. You can provide an argument to run a specific test:
 
 ```
 docker-compose run -e RENKU_TEST_URL=https://renku-kuba.dev.renku.ch -e RENKU_TEST_FULL_NAME="<full user name>"
--e RENKU_TEST_EMAIL=<email> -e RENKU_TEST_USERNAME=<username> -e RENKU_TEST_PASSWORD=<password>  
--e RENKU_TEST_CLI_VERSION=<renkuVersion> sbt
+-e RENKU_TEST_EMAIL=<email> -e RENKU_TEST_USERNAME=<username> -e RENKU_TEST_PASSWORD=<password> sbt
 /tests/docker-run-tests.sh *<test-class-name>*
 ```
 __**IMPORTANT**__
@@ -91,7 +89,6 @@ To create a `tests-defaults.conf` file, copy the `tests-defaults.conf.template` 
 | extant     | RENKU_TEST_EXTANT_PROJECT | if non-empty, an existing project to use for tests               |
 | anon       | RENKU_TEST_ANON_PROJECT   | namespace/name for the project to test anonymously               |
 | anonAvail  | RENKU_TEST_ANON_AVAILABLE | if true, anonymous environments will be tested.                  |
-| renkuVersion | RENKU_TEST_CLI_VERSION  | renku cli version to be used on command line e.g `0.10.4`        |
 
 For example, the following may be run in the project's root: `sbt -Denv=https://renku-kuba.dev.renku.ch
 -Demail=<email> -Dusername=<username> -Dfullname='<full user name>' -Dpassword=<password> -DrenkuVersion=<renkuVersion> test`
