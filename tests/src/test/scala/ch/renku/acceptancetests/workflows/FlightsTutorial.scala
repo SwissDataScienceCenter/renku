@@ -15,16 +15,17 @@ trait FlightsTutorial extends GivenWhenThen with Matchers with ScalatestMatchers
 
   def followTheFlightsTutorialOnUsersMachine(
       projectUrl:             ProjectUrl
-  )(implicit userCredentials: UserCredentials, renkuCliConfig: RenkuCliConfig): DatasetName = {
+  )(implicit userCredentials: UserCredentials): DatasetName = {
 
     implicit val projectFolder: Path = createTempFolder
-
-    `verify renku version`
 
     `setup git configuration`
 
     When("the user clones the project locally")
     console %> c"git clone ${projectUrl.addGitCredentials} $projectFolder"
+
+    And("migrates the project")
+    console %> c"renku migrate"
 
     And("enables git lfs")
     console %> c"git lfs install --local"

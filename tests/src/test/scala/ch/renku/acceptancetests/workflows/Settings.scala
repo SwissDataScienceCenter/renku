@@ -22,13 +22,13 @@ trait Settings {
 
   def setProjectDescription(implicit projectDetails: ProjectDetails): Unit = {
     val projectPage = ProjectPage()
-    When("the user updates the Project Description")
-    val addedDescription = " some added description"
-    projectPage.Settings updateProjectDescription addedDescription
+    When("the user set the Project Description")
+    val gitlabDescription = "GitLab description"
+    projectPage.Settings updateProjectDescription gitlabDescription
     And("they navigate to the Overview tab")
     click on projectPage.Overview.tab
     Then("they should see the updated project description")
-    verify that projectPage.Overview.projectDescription contains addedDescription
+    verify that projectPage.Overview.projectDescription contains gitlabDescription
   }
 
   def findProjectHttpUrl(implicit projectDetails: ProjectDetails): ProjectUrl = {
