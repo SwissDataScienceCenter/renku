@@ -5,10 +5,14 @@ Please follow this convention when adding a new row
 * `<type: NEW|EDIT|DELETE> - *<resource name>*: <details>`
 
 ----
+
 ## Upgrading to Renku 0.7.0 (INCLUDES BREAKING CHANGES!)
 * EDIT - *postgresql.persistence.existingClaim*: Renku `0.7.0` upgrades the postgres chart dependency, which requires modification of the postgres data volume of existing deployments. See [this helper job manifest](https://github.com/SwissDataScienceCenter/renku/blob/master/charts/utils/migrate-pg-to-bitnami.yaml).
 * EDIT - *postgresql.postgresPassword* renamed to *postgresql.postgresqlPassword*.
 * DELETE - *minio.enabled*: minio has been removed from the Renku dependencies, deploy minio as a standalone service if you need it.
+* DELETE - *ui.templatesRepository*
+* NEW - *ui.templates*: the UI project creation has been overhauled and can be configured here.
+* NEW - *ui.templates.repositories* - list of renku templates repositories to be used in the ui. Each object contains a `url` pointing to the repository, a `ref` specifying the target tag or commit, a `name` acting as a user friendly short name.
 
 ## Changes on top of Renku 0.6.5
 * NEW - *ui.statuspage.id*: the id for the statuspage.io instance. See the values.yml file
