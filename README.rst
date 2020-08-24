@@ -39,48 +39,34 @@ RENKU (連句)
     :align: right
 
 
-**The Renku Project** provides a platform and tools for reproducible and
-collaborative data analysis projects. It is aimed at independent researchers and
-data scientists as well as labs, collaborations, and courses and workshops.
-Renku can be used by anyone who deals with data, whether they are a researcher,
-data analyst, project owner, or data provider.
+**The Renku Project** is a platform that bundles together various tools for
+reproducible and collaborative data analysis projects. It is aimed at
+independent researchers and data scientists as well as labs, collaborations, and
+courses and workshops. Renku can be used by anyone who deals with data, whether
+they are a researcher, data analyst, project owner, or data provider.
 
-Renku is based on three core concepts:
+Renku ensures **reproducibility** by automatically tracking your analysis
+workflows and saving them together with your versioned data, code, and
+environment specification. Every result can be replayed either to repeat a
+calculation or to re-execute on new data or with a different choice of
+parameters.
 
-Reproducibility
----------------
-
-Want to repeat an experiment from a month ago? Publish a reproducible, run-anywhere pipeline
-with the results of your research paper? Ensure that a result can be recomputed on new data?
-
-Renku ensures **reproducibility** by automatically tracking your analysis workflows and
-saving them together with your versioned data, code, and environment specification.
-
-
-Reusability
------------
-
-Want to disover how a popular dataset is used? Incorporate an accepted workflow into your project?
-Discover applications of an algorithm?
-
-Renku enables **reusability** by storing and querying the connections between
-datasets, code executions, and results in a Knowledge Graph.
-
-
-Collaboration
--------------
-
-Want to share a notebook with your collaborators? Or a dashboard with the general public?
+Renku encourages **reusability** by storing and querying the connections between
+datasets, code executions, and results in a Knowledge Graph. Producers and
+consumers of analysis artifacts can always recover the full provenance of a
+result, establishing trust and reducing boilerplate.
 
 Renku stimulates **collaboration** among peers and across disciplines by
-guaranteeing that fully configured interactive computational environments are always just
-a click away.
+guaranteeing that a media-rich discussion space and fully configured, shareable
+interactive computational environments are always just a click away.
+Collaborators can easily work on projects together or in parallel, combining
+their work in a systematic and safe manner.
 
 
 Getting Started
 ---------------
 
-The Renku Project consists of `Renkulab
+The Renku platform consists of `Renkulab
 <https://renku.readthedocs.io/en/latest/introduction/renkulab.html#renkulab>`_,
 a web-based application and `Renku
 <https://renku.readthedocs.io/en/latest/introduction/renku.html#renku>`_, a
@@ -89,7 +75,7 @@ the Knowledge Graph.
 
 A public instance of **Renkulab** is available at https://renkulab.io, and
 several other deployments at various institutions. To start exploring Renku,
-feel free to try it out! You can follow the `first steps
+feel free to make an account try it out! You can follow the `first steps
 <https://renku.readthedocs.io/en/latest/tutorials/01_firststeps.html>`_ tutorial
 in python or R or `continue reading about the Renku project
 <https://renku.readthedocs.io/en/latest/introduction/index.html#renku-introduction>`_.
@@ -106,8 +92,8 @@ Please review our `contributing guidelines
 before submitting a pull request.
 
 
-Get in touch
-------------
+Getting in touch
+----------------
 
 * `discourse <https://renku.discourse.group>`_: questions concerning renkulab or
   renku CLI usage, release notes
