@@ -1,5 +1,5 @@
 ..
-    Copyright 2017-2019 - Swiss Data Science Center (SDSC)
+    Copyright 2017-2020 - Swiss Data Science Center (SDSC)
     A partnership between École Polytechnique Fédérale de Lausanne (EPFL) and
     Eidgenössische Technische Hochschule Zürich (ETHZ).
 
@@ -33,20 +33,14 @@ RENKU (連句)
     :target: https://gitter.im/SwissDataScienceCenter/renku
     :alt: Gitter
 
-.. image:: https://pullreminders.com/badge.svg
-    :target: https://pullreminders.com?ref=badge
-    :alt: Pull Reminders
-    :align: right
-
-
 **The Renku Project** is a platform that bundles together various tools for
 reproducible and collaborative data analysis projects. It is aimed at
 independent researchers and data scientists as well as labs, collaborations, and
 courses and workshops. Renku can be used by anyone who deals with data, whether
 they are a researcher, data analyst, project owner, or data provider.
 
-Renku ensures **reproducibility** by automatically tracking your analysis
-workflows and saving them together with your versioned data, code, and
+Renku promotes **reproducibility** by providing tools to track your analysis
+workflows and save them together with your versioned data, code, and
 environment specification. Every result can be replayed either to repeat a
 calculation or to re-execute on new data or with a different choice of
 parameters.
@@ -66,15 +60,15 @@ their work in a systematic and safe manner.
 Getting Started
 ---------------
 
-The Renku platform consists of `Renkulab
+The Renku platform consists of `RenkuLab
 <https://renku.readthedocs.io/en/latest/introduction/renkulab.html#renkulab>`_,
 a web-based application and `Renku
 <https://renku.readthedocs.io/en/latest/introduction/renku.html#renku>`_, a
 command-line tool for managing code, data, workflows and making practical use of
 the Knowledge Graph.
 
-A public instance of **Renkulab** is available at https://renkulab.io, and
-several other deployments at various institutions. To start exploring Renku,
+A public instance of **RenkuLab** is available at https://renkulab.io, and there
+are several other deployments at various institutions. To start exploring Renku,
 feel free to make an account try it out! You can follow the `first steps
 <https://renku.readthedocs.io/en/latest/tutorials/01_firststeps.html>`_ tutorial
 in python or R or `continue reading about the Renku project
@@ -94,6 +88,10 @@ before submitting a pull request.
 
 Getting in touch
 ----------------
+
+There are several channels you can use to communicate with us; we monitor all of
+them, so your messages will always get to us, but communication will be slightly
+more streamlined if you pick a channel that most suits your purpose and needs.
 
 * `discourse <https://renku.discourse.group>`_: questions concerning renkulab or
   renku CLI usage, release notes
