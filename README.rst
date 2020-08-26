@@ -71,7 +71,7 @@ A public instance of **RenkuLab** is available at https://renkulab.io, and there
 are several other deployments at various institutions. To start exploring Renku,
 feel free to make an account try it out! You can follow the `first steps
 <https://renku.readthedocs.io/en/latest/tutorials/01_firststeps.html>`_ tutorial
-in python or R or `continue reading about the Renku project
+or `continue reading about the Renku project
 <https://renku.readthedocs.io/en/latest/introduction/index.html#renku-introduction>`_.
 
 
