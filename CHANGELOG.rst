@@ -1,5 +1,20 @@
 .. _changelog:
 
+0.6.7
+-----
+
+This is a bugfix release.
+
+Bug fixes
+~~~~~~~~~~~~~~~~~~~~
+
+* fix pulling of lfs data in the init container of interactive environments
+
+Upgrading from 0.6.6
+~~~~~~~~~~~~~~~~~~~~
+
+* The version in the welcome page can be updated at `ui.welcomePage.text`
+
 0.6.6
 -----
 
