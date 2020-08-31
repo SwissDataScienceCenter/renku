@@ -72,18 +72,7 @@ Ensure the following has been taken care of before deploying Renku:
 Deploying Renku
 ------------------
 
-1. (Optional) Step for stand-alone GitLab
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-To be able to support notebooks in private projects we need to insert the GitLab admin token as a secret so that docker can download the corresponding private images from the registry.
-
-.. code-block:: bash
-
-  $ kubectl -n renku create secret docker-registry renku-notebooks-registry \\
-  --docker-server=<registryURL>:<port> --docker-username=root \\
-  --docker-password=<gitlabSudoToken> --docker-email=root@renku-mydomain
-
-2. (Optional) Certificates
+1. (Optional) Certificates
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 If you chose to create a certificate manually instead of using LetsEncrypt or similar, you can create the TLS secret with the following command:
@@ -94,7 +83,7 @@ If you chose to create a certificate manually instead of using LetsEncrypt or si
 
 Note that ``renku-mydomain-ch-tls`` should correspond to the `ingress TLS value in Renku values file <https://github.com/SwissDataScienceCenter/renku-admin-docs/blob/master/renku-values.yaml#L12>`_
 
-3. Deploy renku
+2. Deploy renku
 ~~~~~~~~~~~~~~~
 
 Once all the pieces are in place, you can deploy Renku with the following commands:
@@ -111,7 +100,7 @@ Once all the pieces are in place, you can deploy Renku with the following comman
 
 During deployment you can check the Renku pods being started.
 
-4. Post deployment configuration
+3. Post deployment configuration
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 After Renku has been deployed you can make some post deployment configurations.
@@ -122,7 +111,7 @@ For instance, make a user admin on GitLab.
 3. modify any users you want to modify (e.g. to make them admin)
 4. turn the automatic redirect back on
 
-5. (Optional) Notebooks for anonymous users
+4. (Optional) Notebooks for anonymous users
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Logged-out users can be given the permission to launch interactive sessions from public notebooks. This feature is
 turned off by default. For details on how to enable this feature, see the dedicated section.

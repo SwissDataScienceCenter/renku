@@ -9,7 +9,7 @@ metadata:
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
 data:
-  {{- if and .Values.gitlab.enabled .Values.global.gitlab.sudoToken }}
+  {{- if and .Values.gitlab.enabled }}
   init-gitlab.sh: |-
     #!/usr/bin/env bash
     set -ex
