@@ -34,9 +34,6 @@ spec:
               mountPath: /keycloak-postgres
               readOnly: true
             {{- if .Values.gitlab.enabled }}
-            - name: gitlab-sudo
-              mountPath: /gitlab-sudo
-              readOnly: true
             - name: gitlab-postgres
               mountPath: /gitlab-postgres
               readOnly: true
@@ -78,9 +75,6 @@ spec:
           secret:
             secretName: renku-keycloak-postgres
         {{- if .Values.gitlab.enabled }}
-        - name: gitlab-sudo
-          secret:
-            secretName: {{ template "renku.fullname" . }}-gitlab-sudo
         - name: gitlab-postgres
           secret:
             secretName: {{ template "renku.fullname" . }}-gitlab-postgres

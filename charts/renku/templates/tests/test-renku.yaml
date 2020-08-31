@@ -9,11 +9,6 @@ spec:
   - name: renku-demo
     image: renku/renku-demo:0.3.0
     env:
-      - name: GITLAB_SUDO_TOKEN
-        valueFrom:
-          secretKeyRef:
-            name: {{ template "renku.fullname" . }}-gitlab-sudo
-            key: gitlab-sudo-token
       - name: GITLAB_URL
         value: {{ template "http" . }}://{{ .Values.global.renku.domain }}{{ .Values.global.gitlab.urlPrefix }}
       - name: KEYCLOAK_ADMIN_PASSWORD

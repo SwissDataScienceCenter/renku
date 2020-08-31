@@ -13,6 +13,7 @@ Please follow this convention when adding a new row
 * DELETE - *ui.templatesRepository*
 * NEW - *ui.templates*: the UI project creation has been overhauled and can be configured here.
 * NEW - *ui.templates.repositories* - list of renku templates repositories to be used in the ui. Each object contains a `url` pointing to the repository, a `ref` specifying the target tag or commit, a `name` acting as a user friendly short name.
+* DELETE - *global.gitlab.sudoToken* - this is no longer needed.
 
 ## Changes on top of Renku 0.6.5
 * NEW - *ui.statuspage.id*: the id for the statuspage.io instance. See the values.yml file
