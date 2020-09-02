@@ -18,10 +18,6 @@ global:
     postgresPassword:
       value:
       overwriteOnHelmUpgrade: false
-    ## Sudo token for sudo API requests
-    sudoToken:
-      value:
-      overwriteOnHelmUpgrade: false
     ## URL prefix for gitlab
     # urlPrefix: /
 
