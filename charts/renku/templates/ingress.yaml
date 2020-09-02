@@ -61,7 +61,7 @@ spec:
       - path: /jupyterhub
         backend:
           serviceName: proxy-public
-          servicePort: 8000
+          servicePort: 80
       - path: /api
         backend:
           serviceName: {{ $gatewayFullname }}
