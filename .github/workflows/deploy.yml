@@ -56,12 +56,24 @@ jobs:
     needs: deploy
     steps:
     - uses: actions/checkout@v2
+    - uses: actions/setup-python@v1
+      with:
+        python-version: 3.7
+    - name: Install dependencies
+      run: |
+        sudo apt-get update -y && sudo apt-get install -y grep
+        pip install yq
     - name: Test
       env:
         RENKU_BOT_DEV_PASSWORD: ${{ secrets.RENKU_BOT_DEV_PASSWORD }}
       run: |
+        RENKU_PYTHON_VERSION=v$(cat ./charts/renku/requirements.yaml | yq -r '.dependencies[] | select(.name == "renku-core") | .version')
+        RENKU_PYTHON_COMMIT=$(echo $RENKU_PYTHON_VERSION | grep -o -P '(?<=-)[0-9a-fA-F]+') || true
+        if [ $RENKU_PYTHON_COMMIT ]; then export RENKU_PYTHON_VERSION=$RENKU_PYTHON_COMMIT; fi
+        echo "Passing renku-python version $RENKU_PYTHON_VERSION"
+
         cd tests
-        COMPOSE_DOCKER_CLI_BUILD=1 DOCKER_BUILDKIT=1 docker-compose build sbt
+        COMPOSE_DOCKER_CLI_BUILD=1 DOCKER_BUILDKIT=1 docker-compose build --build-arg renku_python_ref=${RENKU_PYTHON_VERSION} sbt
         docker-compose run -e RENKU_TEST_URL=https://dev.renku.ch \
                            -e RENKU_TEST_FULL_NAME="Renku Bot" \
                            -e RENKU_TEST_EMAIL="renku@datascience.ch" \

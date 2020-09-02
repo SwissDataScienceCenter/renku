@@ -1,5 +1,5 @@
 ..
-    Copyright 2017-2019 - Swiss Data Science Center (SDSC)
+    Copyright 2017-2020 - Swiss Data Science Center (SDSC)
     A partnership between École Polytechnique Fédérale de Lausanne (EPFL) and
     Eidgenössische Technische Hochschule Zürich (ETHZ).
 
@@ -33,38 +33,78 @@ RENKU (連句)
     :target: https://gitter.im/SwissDataScienceCenter/renku
     :alt: Gitter
 
-.. image:: https://pullreminders.com/badge.svg
-    :target: https://pullreminders.com?ref=badge
-    :alt: Pull Reminders
-    :align: right
+**The Renku Project** is a platform that bundles together various tools for
+reproducible and collaborative data analysis projects. It is aimed at
+independent researchers and data scientists as well as labs, collaborations, and
+courses and workshops. Renku can be used by anyone who deals with data, whether
+they are a researcher, data analyst, project owner, or data provider.
+
+Renku promotes **reproducibility** by providing tools to track your analysis
+workflows and save them together with your versioned data, code, and
+environment specification. Every result can be replayed either to repeat a
+calculation or to re-execute on new data or with a different choice of
+parameters.
+
+Renku encourages **reusability** by storing and querying the connections between
+datasets, code executions, and results in a Knowledge Graph. Producers and
+consumers of analysis artifacts can always recover the full provenance of a
+result, establishing trust and reducing boilerplate.
+
+Renku stimulates **collaboration** among peers and across disciplines by
+guaranteeing that a media-rich discussion space and fully configured, shareable
+interactive computational environments are always just a click away.
+Collaborators can easily work on projects together or in parallel, combining
+their work in a systematic and safe manner.
 
 
-**The Renku Project** provides a platform and tools for reproducible and
-collaborative data analysis projects. It is aimed at independent researchers and
-data scientists as well as labs, collaborations, and courses and workshops.
-Renku can be used by anyone who deals with data, whether they are a researcher,
-data analyst, project owner, or data provider.
+Getting Started
+---------------
 
-It consists of:
+The Renku platform consists of `RenkuLab
+<https://renku.readthedocs.io/en/latest/introduction/renkulab.html#renkulab>`_,
+a web-based application and `Renku
+<https://renku.readthedocs.io/en/latest/introduction/renku.html#renku>`_, a
+command-line tool for managing code, data, workflows and making practical use of
+the Knowledge Graph.
 
-* `Renkulab <https://renku.readthedocs.io/en/latest/introduction/renkulab.html#renkulab>`_,
-  a web-based platform designed to facilitate collaboration, reproducibility, and discovery.
-
-* `Renku <https://renku.readthedocs.io/en/latest/introduction/renku.html#renku>`_,
-  a command-line interface (CLI) (`docs <https://renku-python.readthedocs.io/en/latest/>`_,
-  `repo <https://github.com/SwissDataScienceCenter/renku-python>`_) for managing code, datasets,
-  and workflows that you can use on Renkulab or install locally.
-
-A public instance of **Renkulab** is available at https://renkulab.io, and several
-other deployments at various institutions. Go ahead - log in, try it out, and
-`let us know what you think <http://bit.ly/renku-feedback>`_! You can follow the
-`first_steps <https://renku.readthedocs.io/en/latest/tutorials/01_firststeps.html>`_ tutorial in python or R or `continue reading about the
-Renku project <https://renku.readthedocs.io/en/latest/introduction/index.html#renku-introduction>`_.
+A public instance of **RenkuLab** is available at https://renkulab.io, and there
+are several other deployments at various institutions. To start exploring Renku,
+feel free to make an account try it out! You can follow the `first steps
+<https://renku.readthedocs.io/en/latest/tutorials/01_firststeps.html>`_ tutorial
+or `continue reading about the Renku project
+<https://renku.readthedocs.io/en/latest/introduction/index.html#renku-introduction>`_.
 
 
-If you are looking for detailed **renku** command-line interface (CLI) documentation,
-consult the `renku-python docs <https://renku-python.readthedocs.io/en/latest/>`_.
+Contributing
+------------
 
+We're happy to receive contributions of all kinds, whether it is an idea for a
+new feature, a bug report or a pull request!
+
+Please review our `contributing guidelines
+<https://github.com/SwissDataScienceCenter/renku/blob/master/CONTRIBUTING.rst>`_
+before submitting a pull request.
+
+
+Getting in touch
+----------------
+
+There are several channels you can use to communicate with us; we monitor all of
+them, so your messages will always get to us, but communication will be slightly
+more streamlined if you pick a channel that most suits your purpose and needs.
+
+* `discourse <https://renku.discourse.group>`_: questions concerning renkulab or
+  renku CLI usage, release notes
+
+* `github <https://github.com/SwissDataScienceCenter/renku>`_ & `renku
+  (CLI) <https://github.com/SwissDataScienceCenter/renku-python>`_: create
+  platform-usability and software-bug issues
+
+* `gitter <https://gitter.im/SwissDataScienceCenter/renku>`_: communicate with
+  the team
+
+Renku is developed as an open source project by the Swiss Data Science Center in
+a team split between EPFL and ETHZ.
 
 
 Project structure
@@ -89,31 +129,8 @@ The Renku project consists of several sub-repositories:
 
 - `renku-ui <https://github.com/SwissDataScienceCenter/renku-ui>`_: web front-end
 
+- `renku-project-templates <https://github.com/SwissDataScienceCenter/renku-project-templates>`_:
+  base templates used for instantiating renku projects.
 
-Contributing
-------------
-
-We're happy to receive contributions of all kinds, whether it is an idea for a
-new feature, a bug report or a pull request!
-
-Please review our `contributing guidelines
-<https://github.com/SwissDataScienceCenter/renku/blob/master/CONTRIBUTING.rst>`_
-before submitting a pull request.
-
-
-Get in touch
-------------
-
-* `discourse <https://renku.discourse.group>`_: questions concerning renkulab or
-  renku CLI usage, release notes
-
-* `github <https://github.com/SwissDataScienceCenter/renku>`_ & `renku
-  (CLI) <https://github.com/SwissDataScienceCenter/renku-python>`_: create
-  platform-usability and software-bug issues
-
-* `gitter <https://gitter.im/SwissDataScienceCenter/renku>`_: communicate with
-  the team
-
-
-Renku is developed as an open source project by the Swiss Data Science Center in
-a team split between EPFL and ETHZ.
+- `renkulab-docker <https://github.com/SwissDataScienceCenter/renkulab-docker>`_: docker
+  images used for renku interactive environments.
