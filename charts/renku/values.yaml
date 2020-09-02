@@ -512,10 +512,11 @@ notebooks:
   jupyterhub:
     ## Configure rbac
     # rbac:
-    #   enabled: true
-    ## Set the notebooks service API token
+    #   enabled: true    
     hub:
+      baseUrl: /jupyterhub/
       services:
+        ## Set the notebooks service API token
         # notebooks:
         #   api_token: notebookstoken
 
