@@ -29,6 +29,7 @@ keycloak:
 
 
 gitlab:
+  enabled: true
   oauth:
     autoSignIn: false
   ssh:
@@ -39,6 +40,7 @@ gitlab:
   registry:
     enabled: true
     exposedAs: NodePort
+    externalUrl: http://10.100.123.45:8105/
   sharedRunnersRegistrationToken: 755434ddc0d6344c025dff6af796f2232bbb29c055c668bde9f2aaebd1d37266
   demoUserIsAdmin: true
 
@@ -85,7 +87,10 @@ notebooks:
       gitlab:
         clientId: jupyterhub
         clientSecret: dummy-secret
-
+  gitlab:
+    registry:
+      host: 10.100.123.45:8105
+      
 runner:
   enabled: true
 
