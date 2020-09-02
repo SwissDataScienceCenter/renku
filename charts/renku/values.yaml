@@ -540,6 +540,10 @@ notebooks:
         #        secretKeyRef:
         #          name: renku-jupyterhub-postgres
         #          key: jupyterhub-postgres-password
+    
+    proxy:
+      ## Must be set explicitly, generate using `openssl rand -hex 32`
+      secretToken: 
 
     ## Simple default setup for gitlab oauth
     # auth:
