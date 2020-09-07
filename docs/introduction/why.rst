@@ -21,7 +21,7 @@ Renku can be used by
 
 **Researchers** to:
 
-* automatically capture the dependencies of their analysis inputs and outputs
+* automatically capture the workflow of their analysis
 
 * share research results though live interactive environments
 

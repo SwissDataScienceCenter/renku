@@ -7,10 +7,10 @@ The Renku Project is a web platform (:ref:`renkulab`) and a command-line
 interface (:ref:`renku`) built on top of open source components for researchers,
 data scientists, educators, and students to help manage:
 
-* code
 * data
-* execution environments
+* code
 * workflows
+* execution environments
 
 Renku combines many widely-used open-source tools to equip every project on the
 platform with resources that aid reproducibility, reusability and collaboration.

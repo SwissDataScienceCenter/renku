@@ -18,10 +18,6 @@ global:
     postgresPassword:
       value:
       overwriteOnHelmUpgrade: false
-    ## Sudo token for sudo API requests
-    sudoToken:
-      value:
-      overwriteOnHelmUpgrade: false
     ## URL prefix for gitlab
     # urlPrefix: /
 
@@ -516,10 +512,11 @@ notebooks:
   jupyterhub:
     ## Configure rbac
     # rbac:
-    #   enabled: true
-    ## Set the notebooks service API token
+    #   enabled: true    
     hub:
+      baseUrl: /jupyterhub/
       services:
+        ## Set the notebooks service API token
         # notebooks:
         #   api_token: notebookstoken
 
@@ -543,6 +540,10 @@ notebooks:
         #        secretKeyRef:
         #          name: renku-jupyterhub-postgres
         #          key: jupyterhub-postgres-password
+    
+    proxy:
+      ## Must be set explicitly, generate using `openssl rand -hex 32`
+      secretToken: 
 
     ## Simple default setup for gitlab oauth
     # auth:
