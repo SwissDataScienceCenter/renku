@@ -289,10 +289,12 @@ renku-specific variables that are always available in templates, namely:
   ``renku`` if the template was distributed as a part of ``renku-python``.
 * ``__template_ref__``: The branch/tag of the template repository.
 * ``__template_id__``: The id of the template inside the repository.
-* ``__namespace__``: The project namespace (only set when creating a project
-  online in renkulab).
 * ``__repository__``: The repository where the project resides in (only set
   when creating a project online in renkulab).
+* ``__namespace__``: The project namespace (only set when creating a project
+  online in renkulab).
+* ``__sanitized_project_name__``: Sanitized name of the project (without 
+  special characters) as used in Gitlab and URLs.
 * ``__project_slug__``: The project slug (``<namespace>/<sanitized project
   name>``) (only set when creating a project online in renkulab).
 
