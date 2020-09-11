@@ -21,4 +21,5 @@ RUN python3 -m pip install \
     'pipx>=0.15.0.0' \
     'pandas==0.25.3' \
     'seaborn==0.9.0' \
+    'nbconvert==5.6.1'
     git+https://github.com/SwissDataScienceCenter/renku-python.git@${renku_python_ref}
