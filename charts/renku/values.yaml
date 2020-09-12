@@ -6,9 +6,9 @@
 ## Shared values/secrets
 global:
   gitlab:
-    ## Client secret, set this to a random string.
-    ## To change this value after deploying, first generate a new secret using the Keycloak admin console
-    ## then paste the generated secret here
+    ## Secret of the gitlab client app in keycloak. Only needed if gitlab is deployed as part of Renku
+    ## and thus relies on keycloak for authentication. To change this value after deploying, first
+    ## generate a new secret using the Keycloak admin console then paste the generated secret here and redeploy.
     clientSecret: # use `uuidgen -r`
     ## Name of the postgres database to be used by Gitlab
     postgresDatabase: gitlabhq_production
@@ -512,9 +512,16 @@ notebooks:
   jupyterhub:
     ## Configure rbac
     # rbac:
-    #   enabled: true    
+    #   enabled: true
     hub:
+      ## Base path under which Jupyterhub is running, note the trailing slash!
       baseUrl: /jupyterhub/
+
+      ## Secret used for signing JH cookies. Must be explicitly set, otherwise all
+      ## users are logged out whenever the hub pod is recreated!
+      ## See https://zero-to-jupyterhub.readthedocs.io/en/latest/reference/reference.html#hub-cookiesecret
+      cookieSecret: # `openssl rand -hex 32`
+
       services:
         ## Set the notebooks service API token
         # notebooks:
@@ -540,18 +547,26 @@ notebooks:
         #        secretKeyRef:
         #          name: renku-jupyterhub-postgres
         #          key: jupyterhub-postgres-password
-    
+
     proxy:
       ## Must be set explicitly, generate using `openssl rand -hex 32`
-      secretToken: 
+      secretToken:
 
-    ## Simple default setup for gitlab oauth
-    # auth:
+    ## Configure Jupyterhub to use GitLab as OAuth2 provider
+    auth:
     #   type: gitlab
     #   gitlab:
     #     clientId: jupyterhub
     #     clientSecret: dummy-secret
     #     callbackUrl:  # Null value forces the default callback url
+
+    ## Store encrypted auth state in the JH db (enabled by default).
+    ## Key for encryption must be set explicitly!
+    ## See https://zero-to-jupyterhub.readthedocs.io/en/latest/reference/reference.html?highlight=cryptokey#auth-state
+      state:
+        # enabled: true
+        cryptoKey: # `openssl rand -hex 32`
+
     ## Configure idle pod culling
     # cull:
     #   enabled: true
