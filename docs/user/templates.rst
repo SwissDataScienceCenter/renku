@@ -280,6 +280,17 @@ repository. Each of them requires an entry with the following parameters:
   ``<variable_name>: <variable_description>``, where the name will be used as
   the variable name provided to the engine and the description will be
   presented to the user to explain the variable's intended use.
+* ``allow_template_update``: When set to ``true``, indicates that this template
+  supports being updated. When the template gets updated, projects created from
+  it will get updated with the new template files. Defaults to ``false``. Also see 
+  ``immutable_template_files``.
+* ``immutable_template_files``: A list of file paths inside the template (relative to the project
+  root) that should not be changed by users for ``allow_template_update`` to 
+  work. Users changing any of these files will get a warning when trying to
+  commit those changes. Template files not in this list won't get updated
+  on template update if they were modified by a user. If a user does change
+  one of these files, automated template update is no longer supported on that
+  project, to prevent broken/inconsistent projects.
 
 In addition to the custom variables mentioned above, we also provide some
 renku-specific variables that are always available in templates, namely:
