@@ -1,5 +1,33 @@
 .. _changelog:
 
+0.6.8
+-----
+
+This is a UI feature/bugfix release.
+
+Bug fixes
+~~~~~~~~~~~~~~~~~~~~
+
+* more robust UI when interactive environments do not start
+
+Notable improvements
+~~~~~~~~~~~~~~~~~~~~
+
+* render Julia source and project files in the UI
+* notify user of app status using statuspage.io
+* support for intuitive relative paths in Markdown and Issues
+* privacy policy page and cookie consent banner
+* support for air-gapped environments
+
+
+Individual components
+~~~~~~~~~~~~~~~~~~~~~
+
+For changes to individual components, check:
+
+* renku-ui `0.10.4 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/0.10.4>`__
+
+
 0.6.7
 -----
 
