@@ -280,6 +280,35 @@ repository. Each of them requires an entry with the following parameters:
   ``<variable_name>: <variable_description>``, where the name will be used as
   the variable name provided to the engine and the description will be
   presented to the user to explain the variable's intended use.
+* ``allow_template_update``: When set to ``true``, indicates that this template
+  supports being updated. When the template gets updated, projects created from
+  it will get updated with the new template files. Defaults to ``false``. Also see 
+  ``immutable_template_files``.
+* ``immutable_template_files``: A list of file paths inside the template (relative to the project
+  root) that should not be changed by users for ``allow_template_update`` to 
+  work. Users changing any of these files will get a warning when trying to
+  commit those changes. Template files not in this list won't get updated
+  on template update if they were modified by a user. If a user does change
+  one of these files, automated template update is no longer supported on that
+  project, to prevent broken/inconsistent projects.
+
+In addition to the custom variables mentioned above, we also provide some
+renku-specific variables that are always available in templates, namely:
+
+* ``name``: The name of the project.
+* ``__template_source__``: The git repository the template originated from or
+  ``renku`` if the template was distributed as a part of ``renku-python``.
+* ``__template_ref__``: The branch/tag of the template repository.
+* ``__template_id__``: The id of the template inside the repository.
+* ``__repository__``: The repository where the project resides in (only set
+  when creating a project online in renkulab).
+* ``__namespace__``: The project namespace (only set when creating a project
+  online in renkulab).
+* ``__sanitized_project_name__``: Sanitized name of the project (without 
+  special characters) as used in Gitlab and URLs.
+* ``__project_slug__``: The project slug (``<namespace>/<sanitized project
+  name>``) (only set when creating a project online in renkulab).
+
 
 Use your repository
 """""""""""""""""""
