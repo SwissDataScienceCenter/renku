@@ -1,14 +1,16 @@
 package ch.renku.acceptancetests.tooling
 
+import cats.implicits._
 import ch.renku.acceptancetests.pages.Page
-import org.openqa.selenium.WebElement
+import org.openqa.selenium.{WebDriver, WebElement}
 import org.scalatest.concurrent.Eventually
+import org.scalatest.exceptions.TestFailedException
 import org.scalatestplus.selenium
 import org.scalatestplus.selenium.WebBrowser
 
-import scala.concurrent.duration.Duration
+import scala.concurrent.duration._
 import scala.jdk.CollectionConverters._
-import scala.language.implicitConversions
+import scala.language.{implicitConversions, postfixOps}
 
 trait Grammar extends Eventually {
   self: WebBrowser with AcceptanceSpec =>
@@ -19,7 +21,7 @@ trait Grammar extends Eventually {
     }
 
   object sleep {
-    def apply(duration: Duration): Unit = Page.SleepThread(duration)
+    def apply(duration: Duration): Unit = Page SleepThread duration
   }
 
   object verify {
@@ -53,6 +55,38 @@ trait Grammar extends Eventually {
     }
   }
 
+  object reload {
+
+    @scala.annotation.tailrec
+    def whenUserCannotSee(element: WebDriver => WebElement, attempt: Int = 1): Unit =
+      if (attempt <= 10 && Either
+            .catchOnly[TestFailedException](!element(webDriver).isDisplayed)
+            .fold(_ => true, identity)) {
+        sleep(5 seconds)
+        webDriver.navigate().refresh()
+        whenUserCannotSee(element, attempt + 1)
+      } else
+        element(webDriver).isDisplayed
+  }
+
+  object pause {
+
+    @scala.annotation.tailrec
+    def asLongAsBrowserAt[Url <: BaseUrl](page: Page[Url], attempt: Int = 1)(implicit baseUrl: Url): Unit = {
+      val frequencyFactor = 3
+      val maxAttempts     = 10 * frequencyFactor
+
+      if (attempt <= maxAttempts && (currentUrl startsWith page.url)) {
+        sleep((patienceConfig.timeout.millisPart / frequencyFactor) millis)
+        asLongAsBrowserAt(page, attempt + 1)
+      } else if (attempt > maxAttempts && (currentUrl startsWith page.url))
+        fail {
+          s"Expected to be redirected from the ${page.path} but " +
+            s"it did not happen after ${((patienceConfig.timeout.millisPart millis) * attempt).toSeconds}s"
+        }
+    }
+  }
+
   def unless(test: Boolean)(testFun: => Any): Unit =
     if (!test) testFun
 
@@ -64,6 +98,23 @@ trait Grammar extends Eventually {
   }
 
   protected implicit class OperationOps(unit: Unit) {
-    def sleep(duration: Duration): Unit = Page.SleepThread(duration)
+    def sleep(duration: Duration): Unit = Page SleepThread duration
+  }
+
+  protected implicit def toWebElement(element: WebBrowser.Element): WebElement =
+    element.underlying
+
+  protected implicit class ElementOps(element: WebBrowser.Element) {
+
+    def enterValue(value: String): Unit = value foreach { char =>
+      element.sendKeys(char.toString) sleep (100 millis)
+    }
+  }
+
+  protected implicit class WebElementOps(element: WebElement) {
+
+    def enterValue(value: String): Unit = value foreach { char =>
+      element.sendKeys(char.toString) sleep (100 millis)
+    }
   }
 }

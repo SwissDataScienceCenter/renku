@@ -1,10 +1,10 @@
 package ch.renku.acceptancetests.tooling
 
-case class TestsDefaults(env:      Option[String],
-                         email:    Option[String] = None,
-                         username: Option[String] = None,
-                         password: Option[String] = None,
-                         fullname: Option[String] = None)
+final case class TestsDefaults(env:      Option[String],
+                               email:    Option[String] = None,
+                               username: Option[String] = None,
+                               password: Option[String] = None,
+                               fullname: Option[String] = None)
 
 object TestsDefaults {
   import java.nio.file.Paths
@@ -19,7 +19,9 @@ object TestsDefaults {
       ConfigSource
         .file(defaultConfigFileName)
         .load[TestsDefaults]
-        .getOrElse(TestsDefaults(Some("https://dev.renku.ch")))
+        .fold(error => throw new Exception(error.prettyPrint()), identity)
     else
-      TestsDefaults(Some("https://dev.renku.ch"))
+      TestsDefaults(
+        env = Some("https://dev.renku.ch")
+      )
 }

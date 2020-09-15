@@ -1,4 +1,4 @@
-version: '3'
+version: '3.2'
 services:
   chrome:
     image: selenium/standalone-chrome:3.141.59-xenon
@@ -7,7 +7,10 @@ services:
     ports:
       - "4444:4444"
   sbt:
-    image: hseeberger/scala-sbt:8u222_1.3.3_2.13.1
+    build:
+      context: .
+      cache_from:
+        - renku/tests:latest
     command: ['/tests/docker-run-tests.sh']
     environment:
       - DOCKER=1

@@ -1,7 +1,7 @@
 package ch.renku.acceptancetests
 
-import ch.renku.acceptancetests.model.projects.ProjectDetails
-import ch.renku.acceptancetests.tooling.{AcceptanceSpec, ExistingProjectSpecData}
+import ch.renku.acceptancetests.model.projects.{ProjectDetails, ProjectIdentifier}
+import ch.renku.acceptancetests.tooling.{AcceptanceSpec, AnonEnv, ExistingProjectSpecData}
 import ch.renku.acceptancetests.workflows._
 import ch.renku.acceptancetests.pages._
 
@@ -12,6 +12,8 @@ import scala.language.postfixOps
   */
 class ExistingProjectSpec
     extends AcceptanceSpec
+    with AnonEnv
+    with Environments
     with ExistingProjectSpecData
     with Collaboration
     with Login
@@ -20,16 +22,17 @@ class ExistingProjectSpec
     with Settings
     with Fork {
 
-  scenario("User can fork a project") {
+  scenario("User can list datasets") {
     existingProjectDetails match {
-      case Some(projectDetails) => {
+      case Some(pd) => {
+        launchAnonymousEnvironment map (_ => stopEnvironment(anonEnvConfig.projectId))
         implicit val loginType: LoginType = logIntoRenku
-        And("an existing project to fork")
-        forkTestCase(projectDetails, loginType)
+        launchUnprivilegedEnvironment
+        stopEnvironment(anonEnvConfig.projectId)
         logOutOfRenku
       }
       case None => {
-        Given("no existing project to fork")
+        Given("no existing project to list datasets")
         Then("do not test anything")
       }
     }

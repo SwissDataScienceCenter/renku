@@ -2,6 +2,7 @@ package ch.renku.acceptancetests.tooling
 
 import java.lang.System.getProperty
 
+import cats.implicits._
 import ch.renku.acceptancetests.model.users.UserCredentials
 import ch.renku.acceptancetests.pages.GitLabPages.GitLabBaseUrl
 import ch.renku.acceptancetests.pages.RenkuPage.RenkuBaseUrl
@@ -17,14 +18,14 @@ trait AcceptanceSpecData {
   private val testsDefaults = TestsDefaults()
 
   protected implicit lazy val renkuBaseUrl: RenkuBaseUrl = {
-    val env = Option(getProperty("env")) orElse sys.env.get("RENKU_TEST_URL") orElse testsDefaults.env
+    val env = sys.env.get("RENKU_TEST_URL") orElse Option(getProperty("env")) orElse testsDefaults.env
     toBaseUrl(env.get) getOrElse showErrorAndStop(
       "-Denv argument or RENKU_TEST_URL environment variable is not a valid URL"
     )
   }
 
-  private lazy val toBaseUrl: String => Either[String, RenkuBaseUrl] = (url) => {
-    val baseUrl = if (url.endsWith("/")) url.substring(0, url.length - 1) else url;
+  private lazy val toBaseUrl: String => Either[String, RenkuBaseUrl] = url => {
+    val baseUrl = if (url.endsWith("/")) url.substring(0, url.length - 1) else url
     RefType
       .applyRef[String Refined Url](baseUrl)
       .map(RenkuBaseUrl.apply)
@@ -32,15 +33,15 @@ trait AcceptanceSpecData {
 
   protected implicit lazy val userCredentials: UserCredentials = {
     for {
-      email    <- Option(getProperty("email")) orElse sys.env.get("RENKU_TEST_EMAIL") orElse testsDefaults.email flatMap toNonEmpty
-      username <- Option(getProperty("username")) orElse sys.env.get("RENKU_TEST_USERNAME") orElse testsDefaults.username flatMap toNonEmpty
-      password <- Option(getProperty("password")) orElse sys.env.get("RENKU_TEST_PASSWORD") orElse testsDefaults.password flatMap toNonEmpty
-      fullName <- Option(getProperty("fullname")) orElse sys.env.get("RENKU_TEST_FULL_NAME") orElse testsDefaults.fullname flatMap toNonEmpty
-      useProvider = Option(getProperty("provider")) orElse sys.env.get("RENKU_TEST_PROVIDER") match {
+      email    <- sys.env.get("RENKU_TEST_EMAIL") orElse Option(getProperty("email")) orElse testsDefaults.email flatMap toNonEmpty
+      username <- sys.env.get("RENKU_TEST_USERNAME") orElse Option(getProperty("username")) orElse testsDefaults.username flatMap toNonEmpty
+      password <- sys.env.get("RENKU_TEST_PASSWORD") orElse Option(getProperty("password")) orElse testsDefaults.password flatMap toNonEmpty
+      fullName <- sys.env.get("RENKU_TEST_FULL_NAME") orElse Option(getProperty("fullname")) orElse testsDefaults.fullname flatMap toNonEmpty
+      useProvider = sys.env.get("RENKU_TEST_PROVIDER") orElse Option(getProperty("provider")) match {
         case Some(s) => s.nonEmpty
         case None    => false
       }
-      register = Option(getProperty("register")) orElse sys.env.get("RENKU_TEST_REGISTER") match {
+      register = sys.env.get("RENKU_TEST_REGISTER") orElse Option(getProperty("register")) match {
         case Some(s) => s.nonEmpty
         case None    => false
       }
@@ -72,5 +73,4 @@ trait AcceptanceSpecData {
       GitLabBaseUrl("https://dev.renku.ch")
     else
       GitLabBaseUrl("https://renkulab.io")
-
 }

@@ -26,7 +26,10 @@ class MinimalFunctionalitySpec
 
     createNewProject
 
-    verifyCollaborationIsEmpty
+    verifyMergeRequestsIsEmpty
+    verifyIssuesIsEmpty
+    createNewIssue
+
     setProjectTags
     setProjectDescription
 
