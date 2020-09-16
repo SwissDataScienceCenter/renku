@@ -88,6 +88,7 @@ jobs:
         CI_RENKU_VALUES: ${{ secrets.CI_RENKU_VALUES }}
       run: |
         echo "$RENKUBOT_KUBECONFIG" > renkubot-kube.config
+        helm repo add stable 	https://kubernetes-charts.storage.googleapis.com
         helm repo add renku https://swissdatasciencecenter.github.io/helm-charts/
         helm repo add gitlab https://charts.gitlab.io/
         helm repo add jupyterhub https://jupyterhub.github.io/helm-chart
