@@ -127,6 +127,8 @@ SPARQL
 spawner
 SQLAlchemy
 subdirectories
+submodule
+submodules
 sudo
 supertype
 supertypes

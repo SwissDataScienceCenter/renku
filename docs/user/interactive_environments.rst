@@ -19,9 +19,9 @@ on Renkulab, you get the bonus capabilities:
 
 * you can save your work from within the environment back to Renkulab
 
-* it's a sharable, reproducible, :ref:`customizable<customizing>` container defined by the ``Dockerfile``
+* it's a shareable, reproducible, :ref:`customizable<customizing>` container defined by the ``Dockerfile``
 
-* you have all the extensibility provided by the renku-python_ command-line interface (CLI)
+* you have all the functionality provided by the renku-python_ command-line interface (CLI)
 
 Which Interactive Environment will launch?
 ------------------------------------------
@@ -67,9 +67,9 @@ Here's the run down for the configuration options.
 |                              |                                                                                           |
 |                              | order to be able to launch an environment.                                                |
 +------------------------------+-------------------------------------------------------------------------------------------+
-| Automatically fetch LFS data | Leave de-selected by default. If you find that workflows                                  |
+| Automatically fetch LFS data | Leave off by default. If you find that workflows                                          |
 |                              | you used to be able to run have stopped working,                                          |
-|                              | check the contents of the file(s) -- if plaintext and contains                            |
+|                              | check the contents of the file(s) -- if plain text and contains                           |
 |                              | strings that are not your data, run ``renku storage pull <filepath>``                     |
 |                              | to get the relevant files, or ``git lfs pull`` to get all of the                          |
 |                              | files at once.                                                                            |
@@ -137,9 +137,9 @@ interactive environments before increasing the timeout.
 * Your project could not be cloned
 
 If you accidentally added 100s of MBs or GBs of data to your repo and didn't
-specify that it should be stored in gitLFS, it might take too long to clone. In
+specify that it should be stored in git LFS, it might take too long to clone. In
 this case, read the docs on how to rewrite history and move these files into
-gitLFS.
+git LFS.
 
 Another potential cause is if the project has submodules that are private.
 
@@ -200,7 +200,7 @@ three ``git`` commands to stage, commit, and push your changes:
 If you are new to git, these resources might be useful:
 
 * [git documentation](https://git-scm.com/doc)
-* [A great interactive cheatsheet](http://ndpsoftware.com/git-cheatsheet.html)
+* [A great interactive cheat-sheet](http://ndpsoftware.com/git-cheatsheet.html)
 * [An intro to git](https://rogerdudler.github.io/git-guide/)
 
 Saving via Git Plugin
