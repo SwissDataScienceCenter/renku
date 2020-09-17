@@ -14,11 +14,14 @@ of code before combining everything into a (reproducible) workflow.
 You can run your own Interactive Environments independently from Renkulab, but
 on Renkulab, you get the bonus capabilities:
 
-* a :ref:`configurable` amount of resources (memory, CPU, and sometimes GPU) is
+* a configurable amount of resources (memory, CPU, and sometimes GPU) is
   available on launch
-* you can :ref:`save` your work from within the environment back to Renkulab
-* it's a sharable, reproducible, :ref:`customizable` container defined by the ``Dockerfile``
-* you have all the extensibility provided by the :ref:`renku-python` command-line interface (CLI)
+
+* you can save your work from within the environment back to Renkulab
+
+* it's a sharable, reproducible, :ref:`customizing` container defined by the ``Dockerfile``
+
+* you have all the extensibility provided by the `renku-python <https://renku-python.readthedocs.io/en/latest/>`_ command-line interface (CLI)
 
 Which Interactive Environment will launch?
 ------------------------------------------
@@ -31,7 +34,7 @@ that is available to launch. Here's a guide to the templates provided:
 * ``Basic R Project``: RStudio AND JupyterLab with R kernel
 * ``Minimal Renku`` (language-agnostic): JupyterLab
 
-This can be customized -- see :ref:`customizable`.
+This can be customized -- see :ref:`customizing`.
 
 Starting a new Interactive Environment
 --------------------------------------
@@ -43,26 +46,35 @@ it crashed on you, you might want to increase some processing power or memory.
 
 Here's the run down for the configuration options.
 
-Option        Description
-============= =======================================================================
-branch        default master, but if you're doing work on another branch, switch!
-commit        default latest, but you can launch the environment from an earlier
-              commit; also useful if your latest commit's build failed (see below).
-environment   ``lab``: JupyterLab; ``rstudio``: RStudio; if you're using a python
-              template, the ``rstudio`` endpoint will not work.
-# CPUs        the number of CPUs available; select the lowest # available unless
-              you have reason not to
-memory        the amount of RAM available; select the lowest # available unless
-              you have reason not to
-# GPUs        the number of GPUs available; select the lowest # available unless
-              you have reason not to. You might have to wait for GPUs to free up in
-              order to be able to launch an environment.
-Automatically See section on :ref:`git LFS`. Leave de-selected by default. If you
-fetch LFS     find that workflows you used to be able to run have stopped working,
-data          check the contents of the file(s) -- if plaintext and contains
-              strings that are not your data, run ``renku storage pull <filepath>``
-              to get the relevant files, or ``git lfs pull`` to get all of the
-              files at once.
++------------------------------+-------------------------------------------------------------------------------------------+
+| Option                       | Description                                                                               |
++==============================+===========================================================================================+
+| branch                       | default master, but if you're doing work on another branch, switch!                       |
++------------------------------+-------------------------------------------------------------------------------------------+
+| commit                       | default latest, but you can launch the environment from an earlier commit;                |
+|                              |                                                                                           |
+|                              | also useful if your latest commit's build failed (see below).                             |
++------------------------------+-------------------------------------------------------------------------------------------+
+| environment                  | ``lab``: JupyterLab; ``rstudio``: RStudio; if you're using a python template,             |
+|                              |                                                                                           |
+|                              | the ``rstudio`` endpoint will not work.                                                   |
++------------------------------+-------------------------------------------------------------------------------------------+
+| # CPUs                       | the number of CPUs available; select the lowest # available unless you have reason not to |
++------------------------------+-------------------------------------------------------------------------------------------+
+| memory                       | the amount of RAM available; select the lowest # available unless you have reason not to  |
++------------------------------+-------------------------------------------------------------------------------------------+
+| # GPUs                       | the number of GPUs available; You might have to wait for GPUs to free up in               |
+|                              |                                                                                           |
+|                              | order to be able to launch an environment.                                                |
++------------------------------+-------------------------------------------------------------------------------------------+
+| Automatically fetch LFS data | Leave de-selected by default. If you find that workflows                                  |
+|                              | you used to be able to run have stopped working,                                          |
+|                              | check the contents of the file(s) -- if plaintext and contains                            |
+|                              | strings that are not your data, run ``renku storage pull <filepath>``                     |
+|                              | to get the relevant files, or ``git lfs pull`` to get all of the                          |
+|                              | files at once.                                                                            |
++------------------------------+-------------------------------------------------------------------------------------------+
+
 
 What if the Dockerfile isn't available?
 ---------------------------------------
@@ -119,7 +131,7 @@ minimal dependencies to keep it lightweight.
 * The build timed out
 
 By default, image builds are configured to time out after an hour. If your build
-takes longer than that, you might want to check out the section on :ref:`customizable`
+takes longer than that, you might want to check out the section on :ref:`customizing`
 interactive environments before increasing the timeout.
 
 * Your project could not be cloned
@@ -155,6 +167,7 @@ What's in my Interactive Environment?
 
 For adding or changing software installed into your Interactive Environment,
 check out :ref:`Customizing`
+
 
 Saving your work
 ----------------
@@ -215,12 +228,7 @@ and try again. However, for these stuck notebooks it is not yet possible.
 You can reach out to us on `discourse <https://renku.discourse.group>`_ in this
 case.
 
-Reproducibility
----------------
-
-What are the limitations of the Interactive Environments?
----------------------------------------------------------
-
+.. _customizing:
 
 How can I customize my Interactive Environment?
 -----------------------------------------------
@@ -244,6 +252,7 @@ Renku projects use Docker for containerization. While we
 have a set of defaults that we build into a minimal Python and R image
 image, there are several reasons why you might want to build on top of these or
 write your own entirely.
+
 
 Dockerfile structure
 ~~~~~~~~~~~~~~~~~~~~
@@ -288,7 +297,7 @@ and re-build the image:
 #. When you're satisfied with the edits, scroll down and write a meaningful **commit message** (you'll thank yourself later).
 #. Click the green **Commit changes** button.
 
-You may find the [official docker documentation](https://docs.docker.com/engine/reference/builder/) useful 
+You may find the [official docker documentation](https://docs.docker.com/engine/reference/builder/) useful
 during this process.
 
 Now you have committed the changes to your ``Dockerfile``. Since you have made a commit,
@@ -320,7 +329,7 @@ the messages in the log to determine why and hint at what you can do to fix it.
   interface at **Settings** > **CI/CD** > **General pipelines** > **Timeout**.
 
 Using your new Docker image
-~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Passing CI/CD is great, but in order to use the new image you need to
 (re)start your interactive environment.
@@ -380,10 +389,3 @@ These two images are available on `dockerhub <https://hub.docker.com/r/renku/>`_
 If you can't work with the template ``Dockerfile`` provided, you can pull one of
 these base ``Dockerfile`` s and add the ``renku``, ``git``, and ``jupyter``
 parts to another base image that you might have.
-
-Examples
---------
-
-* Matlab via VNC
-
-Coming soon.
