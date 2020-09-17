@@ -18,6 +18,8 @@ and try again. However, for these stuck notebooks it is not yet possible.
 You can reach out to us on `discourse <https://renku.discourse.group>`_ in this
 case.
 
+.. _saving:
+
 Saving your work
 ----------------
 
@@ -83,7 +85,7 @@ The next time you start a new JupyterLab server from the same branch/commit
 combination, you will be notified and the autosaved data will be automatically
 loaded in your session. Please note that nothing will be pushed automatically
 to the origin, therefore you won't see any changes in your project's files
-in Renku, nor will the :ref:`lineage` be updated.
+in Renku, nor will the :ref:`provenance <provenance>` be updated.
 
 Local branches you created but never pushed to the origin will not be saved.
 

@@ -5,7 +5,7 @@ Customizing interactive environments
 
 Very quickly you will want to make changes to the default configuration of your
 interactive sessions. The default environments we provide are pretty bare-bones
-so if you want to have easy access to your prefered packages, some simple steps
+so if you want to have easy access to your preferred packages, some simple steps
 at the start of your project will get you on the way quickly.
 
 
@@ -59,7 +59,7 @@ You can add to this ``Dockerfile`` in any way you'd like.
 Dockerfile development
 ----------------------
 
-Before we get into modifying Dockefiles, if you want to know how to update
+Before we get into modifying Dockerfiles, if you want to know how to update
 the base version of your renkulab image, see `Upgrading Renku <upgrading_renku>`_.
 
 If you're going to be making simple modifications to the ``Dockerfile`` (i.e. changing

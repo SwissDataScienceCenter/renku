@@ -126,4 +126,4 @@ input, we can make sure to recompute only the necessary steps and not the
 entire pipeline, potentially avoiding expensive calculations in complex
 settings. For understanding the basic functionality, head to
 `renkulab.io <https://renkulab.io>`_ and follow :ref:`first_steps`. See also
-the Renkulab :ref:`knowledge graph<knowledge-graph>` documentaion.
+the Renkulab :ref:`knowledge graph<knowledge-graph>` documentation.
