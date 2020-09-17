@@ -73,7 +73,7 @@ which is stored in Renkulab's instance of GitLab. The container is then launched
 from that built image.
 
 An image build from the ``Dockerfile`` in the project is kicked off automatically
-using GitLab's CI/CD configured by the project's ``.gitlab-ci.yml`` when you:
+using GitLab's CI/CD pipelines configured by the project's ``.gitlab-ci.yml`` when you:
 
  * create the project
  * fork a project (in which the new build happens for the fork)
@@ -87,7 +87,7 @@ The Dockerfile is still building
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 If the ``Dockerfile`` has a "still building" message, you can either wait patiently,
-or watch it build by clicking associated link to see the streaming log messages
+or watch it build by clicking the associated link to see the streaming log messages
 on GitLab. This can be useful if you've made changes to the ``Dockerfile`` or added
 lines to ``requirements.txt``, ``environment.yml``, or ``install.R``, where something
 might have gone wrong.
@@ -223,7 +223,7 @@ The launch is enabled by the content in the following files in your project:
 
 * ``Dockerfile``: defines the type of interactive environment and other software
   installed in the environment, including the ``renku`` command-line installation.
-* ``.gitlab-ci.yml``: defines the docker build of the image based on the project's
+* ``.gitlab-ci.yml``: controls the docker build of the image based on the project's
   ``Dockerfile``.
 
 
@@ -234,8 +234,8 @@ Modifying the template's Dockerfile
 The `Dockerfile` in the project is what defines the environment. In the template
 provided, the `Dockerfile`
 
-Renku Project uses Docker for containerization, which While we
-have a set of defaults that we build into a minimal Python and R images
+Renku projects use Docker for containerization. While we
+have a set of defaults that we build into a minimal Python and R image
 image, there are several reasons why you might want to build on top of these or
 write your own entirely.
 
@@ -282,6 +282,9 @@ and re-build the image:
 #. When you're satisfied with the edits, scroll down and write a meaningful **commit message** (you'll thank yourself later).
 #. Click the green **Commit changes** button.
 
+You may find the [official docker documentation](https://docs.docker.com/engine/reference/builder/) useful 
+during this process.
+
 Now you have committed the changes to your ``Dockerfile``. Since you have made a commit,
 the CI/CD pipeline will kick off (pre-configured for you as a ``renkulab-runner``
 inside the GitLab CI/CD settings). It will attempt to rebuild your project with
@@ -307,10 +310,10 @@ the messages in the log to determine why and hint at what you can do to fix it.
   Note that the settings have been configured for this build to time out and fail
   after one hour. While a long running build might be indicative of a bug in your
   ``Dockerfile``, it's possible that your build might take a long time. If this is the
-  case, you can change these settings via the lefthand column of the GitLab
+  case, you can change the limits in the project settings via the lefthand column of the GitLab
   interface at **Settings** > **CI/CD** > **General pipelines** > **Timeout**.
 
-Using your new Dockerfile
+Using your new Docker image
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Passing CI/CD is great, but in order to use the new image you need to
@@ -319,7 +322,7 @@ Passing CI/CD is great, but in order to use the new image you need to
 To do this, go back to the Renku platform, and from the project's landing page,
 first check in the **Files** tab that your changes to the ``Dockerfile`` are
 present. If not, you can force-refresh the page. Then, go to the **Notebook
-servers** tab. If you have any running notebooks, those will remain built with
+servers** tab. If you have any running notebooks, those will keep running the image which was built with
 the older version(s) of the ``Dockerfile``. You can **Start new server** and
 **Launch server** to start a notebook with the latest image.
 
@@ -333,7 +336,9 @@ the `next section <_more_extensive_docker>`_.
 
 .. _more_extensive_docker:
 
-For more extensive modifications
+for more extensive modifications.
+
+More extensive modifications
 --------------------------------
 
 If you want to make more extensive modifications, say ones that would require
@@ -364,7 +369,7 @@ here:
 * a `JupyterLab base <https://github.com/SwissDataScienceCenter/renku-jupyter/tree/master/docker/base>`_ (with renku installed on top)
 * a `rocker (R + RStudio) base <https://github.com/SwissDataScienceCenter/renku-jupyter/tree/master/docker/r>`_ (with conda and renku installed on top)
 
-These two images are pushed into `dockerhub <https://hub.docker.com/r/renku/>`_.
+These two images are available on `dockerhub <https://hub.docker.com/r/renku/>`_.
 
 If you can't work with the template ``Dockerfile`` provided, you can pull one of
 these base ``Dockerfile`` s and add the ``renku``, ``git``, and ``jupyter``
