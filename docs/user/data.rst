@@ -1,4 +1,4 @@
-.. _lfs:
+.. _data:
 
 Data in Renku
 =============

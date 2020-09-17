@@ -1,10 +1,10 @@
-.. _lineage:
+.. _provenance:
 
-Lineage of results
-==================
+Provenance of results
+=====================
 
 One of the most important ideas behind Renku is the concept of capturing the
-**lineage** of the analysis process. Lets assume we are working with ``input
+**provenance** of the analysis process. Lets assume we are working with ``input
 data``, ``code``, and ``results``:
 
 .. graphviz::
@@ -28,7 +28,7 @@ data``, ``code``, and ``results``:
     }
 
 If you write a piece of code that takes some input data, processes it and
-writes some output to disk, the **lineage graph** would look something like
+writes some output to disk, the **provenance graph** would look something like
 this:
 
 .. graphviz::
@@ -69,25 +69,25 @@ Naturally, a ``result`` may also be used as ``input data`` to a subsequent step:
 In a real analysis, such a graph may become very complex. Without a detailed
 record of the connections between the different data, code and result blocks,
 it may be impossible to efficiently regenerate parts of the chain. Keeping
-track of the lineage allows us to easily recreate the final result if the
+track of the provenance allows us to easily recreate the final result if the
 original raw data changes, for example, or to examine what happens when we
-change our preprocessing pipeline. Recording lineage is also critical for
+change our preprocessing pipeline. Recording provenance is also critical for
 enabling data and code audits, should they be required.
 
 We hope that using Renku will encourage people to share their data, results,
-and analysis codes. By capturing the lineage not only within, but also *across*
+and analysis codes. By capturing the provenance not only within, but also *across*
 projects we ensure that if you use someone else's results you can always
 track exactly where they came from. Conversely, you can also see how someone
 is using your shared data or code in their analysis. Renku will allow you to
 explore these connections in detail.
 
 
-Recording Lineage in Renku
---------------------------
+Recording Provenance in Renku
+-----------------------------
 
-Keeping track of lineage manually is a tedious process. In Renku we try to
+Keeping track of provenance manually is a tedious process. In Renku we try to
 automate this as much as possible by providing a simple command-line interface which,
-when used correctly, should take care of lineage recording for you. The basic
+when used correctly, should take care of provenance recording for you. The basic
 idea is as follows: anything you run in the terminal to produce a result simply
 needs to have `renku run` pre-pended to it and you are done. This will work best
 if these assumptions are met:
@@ -111,18 +111,19 @@ the following consequences:
 
 CWL is an emerging standard for describing scientific workflows. By using this
 standard, we hope to ensure the longevity of results as well as the interoperability
-of lineage information recorded in Renku with other tools and platforms.
+of provenance information recorded in Renku with other tools and platforms.
 
 
-Applying the Lineage
---------------------
+Applying the Provenance
+-----------------------
 
-In Renku, we want to provide tools that not only record the lineage but also
-give you easy access to its benefits. Once the lineage is recorded, there are
+In Renku, we want to provide tools that not only record the provenance but also
+give you easy access to its benefits. Once the provenance is recorded, there are
 several ways in which it can become immediately beneficial. The most common
 usage is to **update** results when any of the input data or code
 dependencies change. By knowing exactly which results depend on a particular
 input, we can make sure to recompute only the necessary steps and not the
 entire pipeline, potentially avoiding expensive calculations in complex
 settings. For understanding the basic functionality, head to
-`renkulab.io <https://renkulab.io>`_ and follow :ref:`first_steps`.
+`renkulab.io <https://renkulab.io>`_ and follow :ref:`first_steps`. See also
+the Renkulab :ref:`knowledge graph<knowledge-graph>` documentaion.
