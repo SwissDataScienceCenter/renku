@@ -32,6 +32,7 @@ jobs:
           helm init --client-only
           echo "$RENKUBOT_KUBECONFIG" > renkubot-kube.config
           helm delete --purge $RENKU_RELEASE
+          helm delete --purge $RENKU_RELEASE-tmp-notebooks || true
     - name: gitlab teardown
       env:
         GITLAB_TOKEN: ${{ secrets.GITLAB_TOKEN }}

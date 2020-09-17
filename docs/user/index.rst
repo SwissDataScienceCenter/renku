@@ -7,6 +7,7 @@ User Documentation
    :maxdepth: 2
 
    CLI Installation <cli-installation>
+   Upgrading Renku <upgrading_renku>
    Data in Renku <lfs>
    Templates <templates>
    Collaborating <collaboration>
@@ -14,6 +15,5 @@ User Documentation
    Lineage <lineage>
    Interactive Environments <interactive_environments>
    Autosave in JupyterLab <autosave>
-   Document your project <how_to_documentation>
    Git tips <git_tips>
    Troubleshooting <troubleshooting>

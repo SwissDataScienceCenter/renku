@@ -1,0 +1,20 @@
+version: '3.2'
+services:
+  chrome:
+    image: selenium/standalone-chrome:3.141.59-xenon
+    volumes:
+      - /dev/shm:/dev/shm
+    ports:
+      - "4444:4444"
+  sbt:
+    build:
+      context: .
+      cache_from:
+        - renku/tests:latest
+    command: ['/tests/docker-run-tests.sh']
+    environment:
+      - DOCKER=1
+    volumes:
+      - .:/tests
+    depends_on:
+      - chrome

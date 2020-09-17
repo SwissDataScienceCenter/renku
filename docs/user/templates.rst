@@ -10,12 +10,13 @@ over. The two main aspects of the project that can be templated are:
 * the directory structure & files
 * the Docker image that builds your environment
 
-When you create a project on the Renku platform, you can choose between
-two base templates: a minimal python setup, and a minimal R setup. In many
-cases, you can use these templates as-is (see
-the :ref:`directory_structure` below). If the base template for either of
-these languages is not sufficient for you, or you require a different IDE,
-you can make modifications! Check out :ref:`interactive_environments`.
+When you create a project on the RenkuLab platform, you can choose between
+a few templates. You should see at least a Python setup (Basic Python Project)
+and a R setup (Basic R Project). In many cases, you can use these templates
+as-is (see the :ref:`directory_structure` below). If you prefer another
+language, you require a different IDE, or the base templates don't meet your
+needs for any other reason, you can create new ones!
+Check out :ref:`interactive_environments`.
 
 Note that you can create projects that are specifically intended to be templates
 that others can use by adding to the base Renku template. If you're familiar
@@ -45,7 +46,6 @@ Moreover, you will probably want to create other top-level directories,
 like ``src`` for keeping scripts that you create from your notebooks when
 your analysis stabilizes, and ``docs`` if you wish to keep your documentation
 separate from the analysis.
-See :ref:`how_to_documentation` for documentation tips.
 
 The ``.gitkeep`` files in these directories by default are a convention used to
 git commit "empty" directories (where normal git behavior is to omit empty
@@ -243,3 +243,87 @@ Note that some of these clash with the `renku` templates (i.e. content in
 `Dockerfile`, `.gitignore`, etc.). As long as you read the docs above to
 understand which parts are required for `renku`, you should be able to merge
 these manually.
+
+.. _create_template_repo:
+
+Create a template repository
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+We maintain an
+`official Renku template repository <https://github.com/SwissDataScienceCenter/renku-project-template>`_
+that provides a few basic templates you can use to initiate your projects.
+That should cover the most common use cases, but we assume users want to
+create their own templates to speed up the bootstrap phase of a new project.
+
+The easiest way to create your own templates is to clone our
+`Renku template repository <https://github.com/SwissDataScienceCenter/renku-project-template>`_
+and modify it as you need.
+
+``manifest.yaml``
+"""""""""""""""""
+
+The
+`manifest file <https://github.com/SwissDataScienceCenter/renku-project-template/blob/master/manifest.yaml>`_
+contains all the specifications needed by the ``renku init`` function to
+create a new project. You can specify multiple templates in the same
+repository. Each of them requires an entry with the following parameters:
+
+* ``folder``: the target folder inside the repository where the template files
+  are stored. Please use a different folder for each template.
+* ``name``: a short user friendly name.
+* ``description``: a brief description of your template. This will be
+  presented to the user when choosing between templates.
+* ``variables``: we support the
+  `Jinja template engine <https://palletsprojects.com/p/jinja/>`_ in both
+  file content and filenames. You can therefore ask users for specific values
+  for any number of variables. The syntax is
+  ``<variable_name>: <variable_description>``, where the name will be used as
+  the variable name provided to the engine and the description will be
+  presented to the user to explain the variable's intended use.
+* ``allow_template_update``: When set to ``true``, indicates that this template
+  supports being updated. When the template gets updated, projects created from
+  it will get updated with the new template files. Defaults to ``false``. Also see 
+  ``immutable_template_files``.
+* ``immutable_template_files``: A list of file paths inside the template (relative to the project
+  root) that should not be changed by users for ``allow_template_update`` to 
+  work. Users changing any of these files will get a warning when trying to
+  commit those changes. Template files not in this list won't get updated
+  on template update if they were modified by a user. If a user does change
+  one of these files, automated template update is no longer supported on that
+  project, to prevent broken/inconsistent projects.
+
+In addition to the custom variables mentioned above, we also provide some
+renku-specific variables that are always available in templates, namely:
+
+* ``name``: The name of the project.
+* ``__template_source__``: The git repository the template originated from or
+  ``renku`` if the template was distributed as a part of ``renku-python``.
+* ``__template_ref__``: The branch/tag of the template repository.
+* ``__template_id__``: The id of the template inside the repository.
+* ``__repository__``: The repository where the project resides in (only set
+  when creating a project online in renkulab).
+* ``__namespace__``: The project namespace (only set when creating a project
+  online in renkulab).
+* ``__sanitized_project_name__``: Sanitized name of the project (without 
+  special characters) as used in Gitlab and URLs.
+* ``__project_slug__``: The project slug (``<namespace>/<sanitized project
+  name>``) (only set when creating a project online in renkulab).
+
+
+Use your repository
+"""""""""""""""""""
+
+If you installed the renku command line interface locally, you can provide
+your template repository to the ``renku init`` command. We recommend you
+**always** specify a tag (or a commit) when creating a new project from a
+custom repository. You can find further details in
+`renku init docs <https://renku-python.readthedocs.io/en/latest/commands.html#use-a-different-template>`_.
+
+If you are using the UI through a RenkuLab instance, you can ask the
+administrators to include your repository in the official repository list
+available in the
+`renku-values file <https://renku.readthedocs.io/en/latest/admin/index.html#create-a-renku-values-yaml-file>`_.
+
+We are currently working on adding full support for custom template
+repositories in RenkuLab so that you can manually specify external resources
+not included in the configuration file.
