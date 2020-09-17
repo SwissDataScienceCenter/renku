@@ -2,6 +2,7 @@ package ch.renku.acceptancetests.pages
 
 import ch.renku.acceptancetests.model.projects.ProjectDetails
 import ch.renku.acceptancetests.model.projects.ProjectDetails._
+import ch.renku.acceptancetests.model.projects.ProjectIdentifier
 import ch.renku.acceptancetests.model.users.UserCredentials
 import ch.renku.acceptancetests.pages.Page.{Path, Title}
 import ch.renku.acceptancetests.tooling.BaseUrl
