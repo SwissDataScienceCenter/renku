@@ -22,7 +22,7 @@ Improvements
 
 🚄 markdown: display of relative paths, and improvement in file preview
 
-🚄 julia: source and project files correctly rendered in the file browser
+🚄 Julia: source and project files correctly rendered in the file browser
 
 Bug fixes
 ~~~~~~~~~
