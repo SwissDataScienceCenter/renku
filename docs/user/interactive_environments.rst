@@ -19,9 +19,9 @@ on Renkulab, you get the bonus capabilities:
 
 * you can save your work from within the environment back to Renkulab
 
-* it's a sharable, reproducible, :ref:`customizing` container defined by the ``Dockerfile``
+* it's a sharable, reproducible, :ref:`customizable<customizing>` container defined by the ``Dockerfile``
 
-* you have all the extensibility provided by the `renku-python <https://renku-python.readthedocs.io/en/latest/>`_ command-line interface (CLI)
+* you have all the extensibility provided by the renku-python_ command-line interface (CLI)
 
 Which Interactive Environment will launch?
 ------------------------------------------
@@ -137,9 +137,9 @@ interactive environments before increasing the timeout.
 * Your project could not be cloned
 
 If you accidentally added 100s of MBs or GBs of data to your repo and didn't
-specify that it should be stored in gitLFS (see: :ref:`gitLFS`), it might take
-too long to clone. In this case, read the docs on how to rewrite history and move
-these files into gitLFS.
+specify that it should be stored in gitLFS, it might take too long to clone. In
+this case, read the docs on how to rewrite history and move these files into
+gitLFS.
 
 Another potential cause is if the project has submodules that are private.
 
@@ -157,17 +157,18 @@ What's in my Interactive Environment?
 -------------------------------------
 
 * your project, which is cloned into the environment (but by default *without
-  files that are stored in git LFS*. :ref:`what does this mean?`)
+  files that are stored in git LFS*)
 * all the default software required to launch the environment and common software
   for code development (``git``, ``git LFS``, ``vim``, etc.)
 * any software you added via ``requirements.txt``, ``environment.yml``, ``install.R``,
   or directly into the ``Dockerfile``
-* the renku command-line interface :ref:`docs`
+* the renku command-line interface renku-python_.
 * the amount of CPUs, memory, and (possibly) GPUs that you configured before launch
 
 For adding or changing software installed into your Interactive Environment,
 check out :ref:`Customizing`
 
+.. _saving:
 
 Saving your work
 ----------------
@@ -214,7 +215,7 @@ Stopping an Interactive Environment
 -----------------------------------
 
 If you know you're not going to be actively working on your project, it's good
-manners to :ref:`Saving your work` and stop the interactive environment, so that
+manners to :ref:`save your work<saving>` and stop the interactive environment, so that
 you can release the resources you were consuming. You can do this from the Environments
 tab on the Renkulab UI.
 
@@ -346,12 +347,9 @@ added in the ``Dockerfile`` is present in the container. If it is not, you can
 go back to the GitLab interface and continue to make changes until you are
 satisfied.
 
-Looking to make more extensive modifications? Build running too long? Check out
-the `next section <_more_extensive_docker>`_.
+Looking to make more extensive modifications? Build running too long? Keep
+on reading through the section below.
 
-.. _more_extensive_docker:
-
-for more extensive modifications.
 
 More extensive modifications
 --------------------------------
@@ -389,3 +387,6 @@ These two images are available on `dockerhub <https://hub.docker.com/r/renku/>`_
 If you can't work with the template ``Dockerfile`` provided, you can pull one of
 these base ``Dockerfile`` s and add the ``renku``, ``git``, and ``jupyter``
 parts to another base image that you might have.
+
+
+.. _renku-python: https://renku-python.readthedocs.org
