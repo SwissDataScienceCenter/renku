@@ -87,7 +87,7 @@ jobs:
         curl -X POST https://slack.com/api/chat.postMessage \
              -H "Authorization: Bearer $RENKU_SLACK_BOT_TOKEN" \
              --data "channel=C9U45DL1H" \
-             --data "text=Acceptance acceptance-tests on https://dev.renku.ch failed! :scream_cat:"
+             --data "text=Acceptance tests on https://dev.renku.ch failed! :scream_cat:"
     - name: Prepare artifact for packaging on failure
       if: failure()
       run: |
