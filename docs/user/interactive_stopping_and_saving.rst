@@ -27,10 +27,10 @@ Interactive environments persist for 24 hours. If left unattended, they might sh
 down without warning. They also might crash if you run a process that eats more
 memory than you've allocated. Thus, it's best to save often.
 
-There are two ways to save your work back to RenkuLab from an Interactive Environment
+There are two ways to save your work back to RenkuLab from an interactive environment
 (both available in JupyterLab and RStudio), and behind the scenes both are using ``git``
 staging (``add``), ``commit``, and ``push``. You can type these commands directly
-into the available terminal interface of your Interactive Environment, or click
+into the available terminal interface of your interactive environment, or click
 some buttons via the git plugins.
 
 When you push your changes back to RenkuLab, the GitLab CI/CD is triggered to build
@@ -40,7 +40,7 @@ start a new environment.
 Saving via Terminal
 ~~~~~~~~~~~~~~~~~~~
 
-In the Terminal interface inside the Interactive environment, call the following
+In the Terminal interface inside the interactive environment, call the following
 three ``git`` commands to stage, commit, and push your changes:
 
 1. ``git add *``

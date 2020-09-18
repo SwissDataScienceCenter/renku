@@ -12,7 +12,7 @@ and RStudio) that you can launch to develop and run your code and data workflows
 They're commonly used for exploratory analysis because you can try out short blocks
 of code before combining everything into a (reproducible) workflow.
 
-You can run your own Interactive Environments independently from RenkuLab, but
+You can run your own interactive environments independently from RenkuLab, but
 on RenkuLab, you get the bonus capabilities:
 
 * a configurable amount of resources (memory, CPU, and sometimes GPU) is
