@@ -5,7 +5,7 @@ on:
     paths:
     - charts/**
     - scripts/**
-    - tests/**
+    - acceptance-tests/**
     branches: ['master']
     tags: ['*']
 
@@ -72,7 +72,7 @@ jobs:
         if [ $RENKU_PYTHON_COMMIT ]; then export RENKU_PYTHON_VERSION=$RENKU_PYTHON_COMMIT; fi
         echo "Passing renku-python version $RENKU_PYTHON_VERSION"
 
-        cd tests
+        cd acceptance-tests
         COMPOSE_DOCKER_CLI_BUILD=1 DOCKER_BUILDKIT=1 docker-compose build --build-arg renku_python_ref=${RENKU_PYTHON_VERSION} sbt
         docker-compose run -e RENKU_TEST_URL=https://dev.renku.ch \
                            -e RENKU_TEST_FULL_NAME="Renku Bot" \
@@ -91,17 +91,17 @@ jobs:
     - name: Prepare artifact for packaging on failure
       if: failure()
       run: |
-        mkdir tests/test-artifacts
-        cp tests/target/*.png tests/test-artifacts 2>/dev/null || :
-        cp tests/target/*.log tests/test-artifacts 2>/dev/null || :
-        sudo rm -rf tests/target/20*/.renku/cache 2>/dev/null || :
-        cp -r tests/target/20* tests/test-artifacts 2>/dev/null || :
+        mkdir acceptance-tests/test-artifacts
+        cp acceptance-tests/target/*.png acceptance-tests/test-artifacts 2>/dev/null || :
+        cp acceptance-tests/target/*.log acceptance-tests/test-artifacts 2>/dev/null || :
+        sudo rm -rf acceptance-tests/target/20*/.renku/cache 2>/dev/null || :
+        cp -r acceptance-tests/target/20* acceptance-tests/test-artifacts 2>/dev/null || :
     - name: Upload screenshots on failure
       if: failure()
       uses: actions/upload-artifact@v1
       with:
         name: test-artifacts
-        path: tests/test-artifacts
+        path: acceptance-tests/test-artifacts
   chart:
     needs: test
     runs-on: ubuntu-latest
