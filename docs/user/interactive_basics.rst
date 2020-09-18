@@ -1,24 +1,24 @@
 .. _interactive_basics:
 
 
-Interactive environment Basics
+Interactive Environment Basics
 ==============================
 
 What is an Interactive Environment?
 -----------------------------------
 
-Interactive environments on Renkulab are web-based user interfaces (like JupyterLab
+Interactive environments on RenkuLab are web-based user interfaces (like JupyterLab
 and RStudio) that you can launch to develop and run your code and data workflows.
 They're commonly used for exploratory analysis because you can try out short blocks
 of code before combining everything into a (reproducible) workflow.
 
-You can run your own Interactive Environments independently from Renkulab, but
-on Renkulab, you get the bonus capabilities:
+You can run your own Interactive Environments independently from RenkuLab, but
+on RenkuLab, you get the bonus capabilities:
 
 * a configurable amount of resources (memory, CPU, and sometimes GPU) is
   available on launch
 
-* you can save your work from within the environment back to Renkulab
+* you can save your work from within the environment back to RenkuLab
 
 * it's a shareable, reproducible, :ref:`customizable<customizing>` container defined by the ``Dockerfile``
 
@@ -44,7 +44,7 @@ check out :ref:`customizing`
 Which Interactive Environment will launch?
 ------------------------------------------
 
-The template you choose when you create a project on Renkulab (or locally call
+The template you choose when you create a project on RenkuLab (or locally call
 ``renku init`` on your project) determines the kind of interactive environment
 that is available to launch. Here's a guide to the templates provided:
 
@@ -100,7 +100,7 @@ What if the Dockerfile isn't available?
 
 When you select the configurations for ``branch`` and ``commit``, a check is run
 to see if there's an image for this state available in the project's image registry,
-which is stored in Renkulab's instance of GitLab. The container is then launched
+which is stored in RenkuLab's instance of GitLab. The container is then launched
 from that built image.
 
 An image build from the ``Dockerfile`` in the project is kicked off automatically
@@ -111,7 +111,7 @@ using GitLab's CI/CD pipelines configured by the project's ``.gitlab-ci.yml`` wh
  * push changes to the project
 
 It can sometimes take a long time to build for various reasons, but if you've just
-created the project on Renkulab from one of the templates it should take less than
+created the project on RenkuLab from one of the templates it should take less than
 a minute.
 
 The Dockerfile is still building
@@ -165,8 +165,8 @@ Another potential cause is if the project has submodules that are private.
 The Dockerfile is unavailable
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Renkulab uses its internal instance of GitLab to build and store an image in the
-registry each time you create a project, push changes, or use the Renkulab UI to fork
+RenkuLab uses its internal instance of GitLab to build and store an image in the
+registry each time you create a project, push changes, or use the RenkuLab UI to fork
 a project. Thus, if you manage to get into a state that skips any of these steps,
 the image might be unavailable. It's a workaround, but the easiest way to get out
 of this state is to manually trigger a build by adding a new trivial commit through

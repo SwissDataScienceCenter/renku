@@ -6,7 +6,7 @@ Stopping and Saving
 If you know you're not going to be actively working on your project, it's good
 manners to :ref:`save your work<saving>` and stop the interactive environment, so that
 you can release the resources you were consuming. You can do this from the Environments
-tab on the Renkulab UI.
+tab on the RenkuLab UI.
 
 Sometimes an environment will get stuck pending launch (e.g. because you requested
 GPUs and they are not yet available). In this case you can view the status and
@@ -27,13 +27,13 @@ Interactive environments persist for 24 hours. If left unattended, they might sh
 down without warning. They also might crash if you run a process that eats more
 memory than you've allocated. Thus, it's best to save often.
 
-There are two ways to save your work back to Renkulab from an Interactive Environment
+There are two ways to save your work back to RenkuLab from an Interactive Environment
 (both available in JupyterLab and RStudio), and behind the scenes both are using ``git``
 staging (``add``), ``commit``, and ``push``. You can type these commands directly
 into the available terminal interface of your Interactive Environment, or click
 some buttons via the git plugins.
 
-When you push your changes back to Renkulab, the GitLab CI/CD is triggered to build
+When you push your changes back to RenkuLab, the GitLab CI/CD is triggered to build
 a new image out of the ``Dockerfile``, which will be available the next time you
 start a new environment.
 
