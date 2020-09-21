@@ -1,6 +1,4 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<!-- Created with Inkscape (http://www.inkscape.org/) -->
-
 <svg
    xmlns:dc="http://purl.org/dc/elements/1.1/"
    xmlns:cc="http://creativecommons.org/ns#"
@@ -15,7 +13,7 @@
    viewBox="0 0 210 297"
    version="1.1"
    id="svg8"
-   inkscape:version="0.92.4 5da689c313, 2019-01-14"
+   inkscape:version="1.0.1 (3bc2e813f5, 2020-09-07)"
    sodipodi:docname="cheatsheet.svg">
   <defs
      id="defs2">
@@ -39,18 +37,19 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="1.14"
-     inkscape:cx="377.07444"
-     inkscape:cy="671.82087"
+     inkscape:cx="97.249879"
+     inkscape:cy="636.73315"
      inkscape:document-units="mm"
-     inkscape:current-layer="g1820"
+     inkscape:current-layer="g1818"
      showgrid="false"
-     inkscape:window-width="3440"
-     inkscape:window-height="1404"
-     inkscape:window-x="0"
-     inkscape:window-y="24"
-     inkscape:window-maximized="1"
+     inkscape:window-width="3788"
+     inkscape:window-height="2055"
+     inkscape:window-x="20"
+     inkscape:window-y="79"
+     inkscape:window-maximized="0"
      showguides="true"
-     inkscape:guide-bbox="true">
+     inkscape:guide-bbox="true"
+     inkscape:document-rotation="0">
     <sodipodi:guide
        position="104.90329,317.78347"
        orientation="1,0"
@@ -139,7 +138,7 @@
        transform="translate(105.3046,148.07383)"
        id="g1470">
       <path
-         style="display:inline;fill:none;stroke:#90ca42;stroke-width:0.26458332px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+         style="display:inline;fill:none;stroke:#90ca42;stroke-width:0.264583px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
          d="M -100.25824,123.21943 H 100.59798"
          id="path1462"
          inkscape:connector-curvature="0" />
@@ -171,11 +170,11 @@
     </g>
     <g
        inkscape:label="Resources"
-       transform="translate(138.53147,126.05188)"
+       transform="translate(138.53147,143.63312)"
        id="g2273">
       <text
          xml:space="preserve"
-         style="font-style:normal;font-weight:normal;font-size:10.58333302px;line-height:0.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+         style="font-style:normal;font-weight:normal;font-size:10.5833px;line-height:0.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
          x="-28.659218"
          y="71.273628"
          id="text2231"><tspan
@@ -183,76 +182,71 @@
            sodipodi:role="line"
            x="-28.659218"
            y="71.273628"
-           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.52777767px;line-height:0.25;font-family:'Caviar Dreams';-inkscape-font-specification:'Caviar Dreams';stroke-width:0.26458332">Public instance of Renku:</tspan><tspan
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.52778px;line-height:0.25;font-family:'Caviar Dreams';-inkscape-font-specification:'Caviar Dreams';stroke-width:0.264583">Public instance of Renku:</tspan><tspan
            sodipodi:role="line"
            x="-28.659218"
-           y="74.692642"
-           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.52777767px;line-height:0.25;font-family:'Caviar Dreams';-inkscape-font-specification:'Caviar Dreams';stroke-width:0.26458332"
+           y="75.047455"
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.52778px;line-height:0.25;font-family:'Caviar Dreams';-inkscape-font-specification:'Caviar Dreams';stroke-width:0.264583"
            id="tspan2285">  https://renkulab.io/</tspan><tspan
            sodipodi:role="line"
            x="-28.659218"
-           y="78.111664"
-           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.52777767px;line-height:0.25;font-family:'Caviar Dreams';-inkscape-font-specification:'Caviar Dreams';stroke-width:0.26458332"
+           y="78.821281"
            id="tspan2299" /><tspan
            sodipodi:role="line"
            x="-28.659218"
-           y="80.7575"
-           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.52777767px;line-height:0.25;font-family:'Caviar Dreams';-inkscape-font-specification:'Caviar Dreams';stroke-width:0.26458332"
+           y="81.46711"
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.52778px;line-height:0.25;font-family:'Caviar Dreams';-inkscape-font-specification:'Caviar Dreams';stroke-width:0.264583"
            id="tspan2287">Github:</tspan><tspan
            sodipodi:role="line"
            x="-28.659218"
-           y="84.176514"
-           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.52777767px;line-height:0.25;font-family:'Caviar Dreams';-inkscape-font-specification:'Caviar Dreams';stroke-width:0.26458332"
+           y="85.240936"
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.52778px;line-height:0.25;font-family:'Caviar Dreams';-inkscape-font-specification:'Caviar Dreams';stroke-width:0.264583"
            id="tspan2281">  https://github.com/SwissDataScienceCenter/renku</tspan><tspan
            sodipodi:role="line"
            x="-28.659218"
-           y="87.595528"
-           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.52777767px;line-height:0.25;font-family:'Caviar Dreams';-inkscape-font-specification:'Caviar Dreams';stroke-width:0.26458332"
+           y="89.014763"
            id="tspan2301" /><tspan
            sodipodi:role="line"
            x="-28.659218"
-           y="90.241364"
-           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.52777767px;line-height:0.25;font-family:'Caviar Dreams';-inkscape-font-specification:'Caviar Dreams';stroke-width:0.26458332"
+           y="91.660591"
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.52778px;line-height:0.25;font-family:'Caviar Dreams';-inkscape-font-specification:'Caviar Dreams';stroke-width:0.264583"
            id="tspan2289">Documentation:</tspan><tspan
            sodipodi:role="line"
            x="-28.659218"
-           y="93.660385"
-           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.52777767px;line-height:0.25;font-family:'Caviar Dreams';-inkscape-font-specification:'Caviar Dreams';stroke-width:0.26458332"
+           y="95.434418"
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.52778px;line-height:0.25;font-family:'Caviar Dreams';-inkscape-font-specification:'Caviar Dreams';stroke-width:0.264583"
            id="tspan2291">  https://renku.readthedocs.io/en/latest/</tspan><tspan
            sodipodi:role="line"
            x="-28.659218"
-           y="97.079399"
-           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.52777767px;line-height:0.25;font-family:'Caviar Dreams';-inkscape-font-specification:'Caviar Dreams';stroke-width:0.26458332"
+           y="99.208244"
            id="tspan2303" /><tspan
            sodipodi:role="line"
            x="-28.659218"
-           y="99.725235"
-           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.52777767px;line-height:0.25;font-family:'Caviar Dreams';-inkscape-font-specification:'Caviar Dreams';stroke-width:0.26458332"
+           y="101.85406"
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.52778px;line-height:0.25;font-family:'Caviar Dreams';-inkscape-font-specification:'Caviar Dreams';stroke-width:0.264583"
            id="tspan2293">Renku-Python Documentation:</tspan><tspan
            sodipodi:role="line"
            x="-28.659218"
-           y="103.14425"
-           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.52777767px;line-height:0.25;font-family:'Caviar Dreams';-inkscape-font-specification:'Caviar Dreams';stroke-width:0.26458332"
+           y="105.62789"
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.52778px;line-height:0.25;font-family:'Caviar Dreams';-inkscape-font-specification:'Caviar Dreams';stroke-width:0.264583"
            id="tspan2295">  https://renku-python.readthedocs.io/en/latest/</tspan><tspan
            sodipodi:role="line"
            x="-28.659218"
-           y="106.56326"
-           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.52777767px;line-height:0.25;font-family:'Caviar Dreams';-inkscape-font-specification:'Caviar Dreams';stroke-width:0.26458332"
+           y="109.40173"
            id="tspan2305" /><tspan
            sodipodi:role="line"
            x="-28.659218"
-           y="109.2091"
-           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.52777767px;line-height:0.25;font-family:'Caviar Dreams';-inkscape-font-specification:'Caviar Dreams';stroke-width:0.26458332"
+           y="112.04755"
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.52778px;line-height:0.25;font-family:'Caviar Dreams';-inkscape-font-specification:'Caviar Dreams';stroke-width:0.264583"
            id="tspan2307">SDSC:</tspan><tspan
            sodipodi:role="line"
            x="-28.659218"
-           y="112.62812"
-           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.52777767px;line-height:0.25;font-family:'Caviar Dreams';-inkscape-font-specification:'Caviar Dreams';stroke-width:0.26458332"
+           y="115.82137"
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.52778px;line-height:0.25;font-family:'Caviar Dreams';-inkscape-font-specification:'Caviar Dreams';stroke-width:0.264583"
            id="tspan2309">  https://datascience.ch/</tspan><tspan
            sodipodi:role="line"
            x="-28.659218"
-           y="116.04713"
-           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.52777767px;line-height:0.25;font-family:'Caviar Dreams';-inkscape-font-specification:'Caviar Dreams';stroke-width:0.26458332"
+           y="119.5952"
            id="tspan2297" /></text>
       <g
          inkscape:label="Header"
@@ -271,14 +265,15 @@
                height="70.839378"
                width="257.61969"
                id="rect2261" /></flowRegion><flowPara
-             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:29.33333397px;font-family:'Caviar Dreams';-inkscape-font-specification:'Caviar Dreams';text-align:center;text-anchor:middle;fill:#333333;fill-opacity:1"
-             id="flowPara2265">Resources</flowPara></flowRoot>        <rect
+             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:29.3333px;font-family:'Caviar Dreams';-inkscape-font-specification:'Caviar Dreams';text-align:center;text-anchor:middle;fill:#333333;fill-opacity:1"
+             id="flowPara2265">Resources</flowPara></flowRoot>
+        <rect
            y="62.043823"
            x="15.517194"
            height="1.6036171"
            width="6.6817384"
            id="rect2269"
-           style="fill:#90ca42;fill-opacity:1;stroke-width:0.23570955" />
+           style="fill:#90ca42;fill-opacity:1;stroke-width:0.23571" />
       </g>
     </g>
     <g
@@ -286,11 +281,11 @@
        transform="translate(138.334,-0.10780726)"
        id="g1985">
       <g
-         transform="translate(-33.687426,89.353583)"
+         transform="translate(-33.687426,107.25761)"
          inkscape:label="status"
          id="g2217">
         <rect
-           style="fill:#e6e6e6;stroke-width:0.50839645"
+           style="fill:#e6e6e6;stroke-width:0.508396"
            id="rect2207"
            width="95.627975"
            height="5.9614139"
@@ -298,7 +293,7 @@
            y="67.946434" />
         <text
            xml:space="preserve"
-           style="font-style:normal;font-weight:normal;font-size:10.58333302px;line-height:0.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+           style="font-style:normal;font-weight:normal;font-size:10.5833px;line-height:0.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
            x="5.8586307"
            y="72.160866"
            id="text2211"><tspan
@@ -306,20 +301,20 @@
              sodipodi:role="line"
              x="5.8586307"
              y="72.160866"
-             style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:4.23333311px;line-height:0.25;font-family:Inconsolata;-inkscape-font-specification:'Inconsolata Bold';fill:#666666;stroke-width:0.26458332">$ renku status [--no-output]</tspan></text>
+             style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:4.23333px;line-height:0.25;font-family:Inconsolata;-inkscape-font-specification:'Inconsolata Bold';fill:#666666;stroke-width:0.264583">$ renku status [--no-output]</tspan></text>
         <text
            id="text2215"
            y="78.208488"
            x="5.7830358"
-           style="font-style:normal;font-weight:normal;font-size:10.58333302px;line-height:0.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+           style="font-style:normal;font-weight:normal;font-size:10.5833px;line-height:0.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
            xml:space="preserve"><tspan
              id="tspan2213"
-             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.52777767px;line-height:0.25;font-family:'Caviar Dreams';-inkscape-font-specification:'Caviar Dreams';stroke-width:0.26458332"
+             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.52778px;line-height:0.25;font-family:'Caviar Dreams';-inkscape-font-specification:'Caviar Dreams';stroke-width:0.264583"
              y="78.208488"
              x="5.7830358"
              sodipodi:role="line">Show status of the Renku repository. With --no-output:</tspan><tspan
-             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.52777767px;line-height:0.25;font-family:'Caviar Dreams';-inkscape-font-specification:'Caviar Dreams';stroke-width:0.26458332"
-             y="81.627502"
+             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.52778px;line-height:0.25;font-family:'Caviar Dreams';-inkscape-font-specification:'Caviar Dreams';stroke-width:0.264583"
+             y="81.982315"
              x="5.7830358"
              sodipodi:role="line"
              id="tspan2219">Don't show output files.</tspan></text>
@@ -327,35 +322,35 @@
       <g
          id="g2205"
          inkscape:label="storage pull"
-         transform="translate(-33.687426,76.653577)">
+         transform="translate(-33.687426,94.557607)">
         <rect
            y="67.946434"
            x="5.0081844"
            height="5.9614139"
            width="95.627975"
            id="rect2195"
-           style="fill:#e6e6e6;stroke-width:0.50839645" />
+           style="fill:#e6e6e6;stroke-width:0.508396" />
         <text
            id="text2199"
            y="72.160866"
            x="5.8586307"
-           style="font-style:normal;font-weight:normal;font-size:10.58333302px;line-height:0.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+           style="font-style:normal;font-weight:normal;font-size:10.5833px;line-height:0.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
            xml:space="preserve"><tspan
-             style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:4.23333311px;line-height:0.25;font-family:Inconsolata;-inkscape-font-specification:'Inconsolata Bold';fill:#666666;stroke-width:0.26458332"
+             style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:4.23333px;line-height:0.25;font-family:Inconsolata;-inkscape-font-specification:'Inconsolata Bold';fill:#666666;stroke-width:0.264583"
              y="72.160866"
              x="5.8586307"
              sodipodi:role="line"
              id="tspan2197">$ renku storage pull &lt;path&gt;...</tspan></text>
         <text
            xml:space="preserve"
-           style="font-style:normal;font-weight:normal;font-size:10.58333302px;line-height:0.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+           style="font-style:normal;font-weight:normal;font-size:10.5833px;line-height:0.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
            x="5.7830358"
            y="78.208488"
            id="text2203"><tspan
              sodipodi:role="line"
              x="5.7830358"
              y="78.208488"
-             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.52777767px;line-height:0.25;font-family:'Caviar Dreams';-inkscape-font-specification:'Caviar Dreams';stroke-width:0.26458332"
+             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.52778px;line-height:0.25;font-family:'Caviar Dreams';-inkscape-font-specification:'Caviar Dreams';stroke-width:0.264583"
              id="tspan2201">Pull &lt;path&gt;'s from external storage.</tspan></text>
       </g>
       <g
@@ -364,7 +359,7 @@
          id="g2193"
          style="display:none">
         <rect
-           style="fill:#e6e6e6;stroke-width:0.50839645"
+           style="fill:#e6e6e6;stroke-width:0.508396"
            id="rect2183"
            width="95.627975"
            height="5.9614139"
@@ -372,7 +367,7 @@
            y="67.946434" />
         <text
            xml:space="preserve"
-           style="font-style:normal;font-weight:normal;font-size:10.58333302px;line-height:0.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+           style="font-style:normal;font-weight:normal;font-size:10.5833px;line-height:0.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
            x="5.8586307"
            y="72.160866"
            id="text2187"><tspan
@@ -380,15 +375,15 @@
              sodipodi:role="line"
              x="5.8586307"
              y="72.160866"
-             style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:4.23333311px;line-height:0.25;font-family:Inconsolata;-inkscape-font-specification:'Inconsolata Bold';fill:#666666;stroke-width:0.26458332">$ renku image pull</tspan></text>
+             style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:4.23333px;line-height:0.25;font-family:Inconsolata;-inkscape-font-specification:'Inconsolata Bold';fill:#666666;stroke-width:0.264583">$ renku image pull</tspan></text>
         <text
            id="text2191"
            y="78.208488"
            x="5.7830358"
-           style="font-style:normal;font-weight:normal;font-size:10.58333302px;line-height:0.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+           style="font-style:normal;font-weight:normal;font-size:10.5833px;line-height:0.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
            xml:space="preserve"><tspan
              id="tspan2189"
-             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.52777767px;line-height:0.25;font-family:'Caviar Dreams';-inkscape-font-specification:'Caviar Dreams';stroke-width:0.26458332"
+             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.52778px;line-height:0.25;font-family:'Caviar Dreams';-inkscape-font-specification:'Caviar Dreams';stroke-width:0.264583"
              y="78.208488"
              x="5.7830358"
              sodipodi:role="line">Pull an existing image from the project registry.</tspan></text>
@@ -396,43 +391,43 @@
       <g
          id="g2055"
          inkscape:label="githooks uninstall"
-         transform="translate(-33.687426,64.482748)">
+         transform="translate(-33.687426,82.386776)">
         <rect
            y="67.946434"
            x="5.0081844"
            height="5.9614139"
            width="95.627975"
            id="rect2045"
-           style="fill:#e6e6e6;stroke-width:0.50839645" />
+           style="fill:#e6e6e6;stroke-width:0.508396" />
         <text
            id="text2049"
            y="72.160866"
            x="5.8586307"
-           style="font-style:normal;font-weight:normal;font-size:10.58333302px;line-height:0.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+           style="font-style:normal;font-weight:normal;font-size:10.5833px;line-height:0.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
            xml:space="preserve"><tspan
-             style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:4.23333311px;line-height:0.25;font-family:Inconsolata;-inkscape-font-specification:'Inconsolata Bold';fill:#666666;stroke-width:0.26458332"
+             style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:4.23333px;line-height:0.25;font-family:Inconsolata;-inkscape-font-specification:'Inconsolata Bold';fill:#666666;stroke-width:0.264583"
              y="72.160866"
              x="5.8586307"
              sodipodi:role="line"
              id="tspan2047">$ renku githooks uninstall</tspan></text>
         <text
            xml:space="preserve"
-           style="font-style:normal;font-weight:normal;font-size:10.58333302px;line-height:0.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+           style="font-style:normal;font-weight:normal;font-size:10.5833px;line-height:0.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
            x="5.7830358"
            y="78.208488"
            id="text2053"><tspan
              sodipodi:role="line"
              x="5.7830358"
              y="78.208488"
-             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.52777767px;line-height:0.25;font-family:'Caviar Dreams';-inkscape-font-specification:'Caviar Dreams';stroke-width:0.26458332"
+             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.52778px;line-height:0.25;font-family:'Caviar Dreams';-inkscape-font-specification:'Caviar Dreams';stroke-width:0.264583"
              id="tspan2051">Uninstall Renku Git hooks.</tspan></text>
       </g>
       <g
-         transform="translate(-33.687426,51.782749)"
+         transform="translate(-33.687426,69.686777)"
          inkscape:label="githooks install"
          id="g2043">
         <rect
-           style="fill:#e6e6e6;stroke-width:0.50839645"
+           style="fill:#e6e6e6;stroke-width:0.508396"
            id="rect2033"
            width="95.627975"
            height="5.9614139"
@@ -440,7 +435,7 @@
            y="67.946434" />
         <text
            xml:space="preserve"
-           style="font-style:normal;font-weight:normal;font-size:10.58333302px;line-height:0.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+           style="font-style:normal;font-weight:normal;font-size:10.5833px;line-height:0.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
            x="5.8586307"
            y="72.160866"
            id="text2037"><tspan
@@ -448,15 +443,15 @@
              sodipodi:role="line"
              x="5.8586307"
              y="72.160866"
-             style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:4.23333311px;line-height:0.25;font-family:Inconsolata;-inkscape-font-specification:'Inconsolata Bold';fill:#666666;stroke-width:0.26458332">$ renku githooks install [--force]</tspan></text>
+             style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:4.23333px;line-height:0.25;font-family:Inconsolata;-inkscape-font-specification:'Inconsolata Bold';fill:#666666;stroke-width:0.264583">$ renku githooks install [--force]</tspan></text>
         <text
            id="text2041"
            y="78.208488"
            x="5.7830358"
-           style="font-style:normal;font-weight:normal;font-size:10.58333302px;line-height:0.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+           style="font-style:normal;font-weight:normal;font-size:10.5833px;line-height:0.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
            xml:space="preserve"><tspan
              id="tspan2039"
-             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.52777767px;line-height:0.25;font-family:'Caviar Dreams';-inkscape-font-specification:'Caviar Dreams';stroke-width:0.26458332"
+             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.52778px;line-height:0.25;font-family:'Caviar Dreams';-inkscape-font-specification:'Caviar Dreams';stroke-width:0.264583"
              y="78.208488"
              x="5.7830358"
              sodipodi:role="line">Install Renku Git hooks. With --force: Override existing hooks.</tspan></text>
@@ -464,43 +459,43 @@
       <g
          id="g2031"
          inkscape:label="Doctor"
-         transform="translate(-33.687426,39.611908)">
+         transform="translate(-33.687426,57.515936)">
         <rect
            y="67.946434"
            x="5.0081844"
            height="5.9614139"
            width="95.627975"
            id="rect2021"
-           style="fill:#e6e6e6;stroke-width:0.50839645" />
+           style="fill:#e6e6e6;stroke-width:0.508396" />
         <text
            id="text2025"
            y="72.160866"
            x="5.8586307"
-           style="font-style:normal;font-weight:normal;font-size:10.58333302px;line-height:0.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+           style="font-style:normal;font-weight:normal;font-size:10.5833px;line-height:0.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
            xml:space="preserve"><tspan
-             style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:4.23333311px;line-height:0.25;font-family:Inconsolata;-inkscape-font-specification:'Inconsolata Bold';fill:#666666;stroke-width:0.26458332"
+             style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:4.23333px;line-height:0.25;font-family:Inconsolata;-inkscape-font-specification:'Inconsolata Bold';fill:#666666;stroke-width:0.264583"
              y="72.160866"
              x="5.8586307"
              sodipodi:role="line"
              id="tspan2023">$ renku doctor</tspan></text>
         <text
            xml:space="preserve"
-           style="font-style:normal;font-weight:normal;font-size:10.58333302px;line-height:0.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+           style="font-style:normal;font-weight:normal;font-size:10.5833px;line-height:0.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
            x="5.7830358"
            y="78.208488"
            id="text2029"><tspan
              sodipodi:role="line"
              x="5.7830358"
              y="78.208488"
-             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.52777767px;line-height:0.25;font-family:'Caviar Dreams';-inkscape-font-specification:'Caviar Dreams';stroke-width:0.26458332"
+             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.52778px;line-height:0.25;font-family:'Caviar Dreams';-inkscape-font-specification:'Caviar Dreams';stroke-width:0.264583"
              id="tspan2027">Check system and repository for potential problems.</tspan></text>
       </g>
       <g
-         transform="translate(-33.687426,27.441073)"
+         transform="translate(-33.687426,45.345101)"
          inkscape:label="Migrate"
          id="g2019">
         <rect
-           style="fill:#e6e6e6;stroke-width:0.50839645"
+           style="fill:#e6e6e6;stroke-width:0.508396"
            id="rect2009"
            width="95.627975"
            height="5.9614139"
@@ -508,7 +503,7 @@
            y="67.946434" />
         <text
            xml:space="preserve"
-           style="font-style:normal;font-weight:normal;font-size:10.58333302px;line-height:0.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+           style="font-style:normal;font-weight:normal;font-size:10.5833px;line-height:0.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
            x="5.8586307"
            y="72.160866"
            id="text2013"><tspan
@@ -516,59 +511,59 @@
              sodipodi:role="line"
              x="5.8586307"
              y="72.160866"
-             style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:4.23333311px;line-height:0.25;font-family:Inconsolata;-inkscape-font-specification:'Inconsolata Bold';fill:#666666;stroke-width:0.26458332">$ renku migrate datasets</tspan></text>
+             style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:4.23333px;line-height:0.25;font-family:Inconsolata;-inkscape-font-specification:'Inconsolata Bold';fill:#666666;stroke-width:0.264583">$ renku migrate</tspan></text>
         <text
            id="text2017"
            y="78.208488"
            x="5.7830358"
-           style="font-style:normal;font-weight:normal;font-size:10.58333302px;line-height:0.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+           style="font-style:normal;font-weight:normal;font-size:10.5833px;line-height:0.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
            xml:space="preserve"><tspan
              id="tspan2015"
-             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.52777767px;line-height:0.25;font-family:'Caviar Dreams';-inkscape-font-specification:'Caviar Dreams';stroke-width:0.26458332"
+             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.52778px;line-height:0.25;font-family:'Caviar Dreams';-inkscape-font-specification:'Caviar Dreams';stroke-width:0.264583"
              y="78.208488"
              x="5.7830358"
-             sodipodi:role="line">Migrate datasets to the current Renku version.</tspan></text>
+             sodipodi:role="line">Migrate metadata to the current Renku version.</tspan></text>
       </g>
       <g
          id="g1957"
          inkscape:label="Move file"
-         transform="translate(-33.687426,14.741071)">
+         transform="translate(-33.687426,32.645099)">
         <rect
            y="67.946434"
            x="5.0081844"
            height="5.9614139"
            width="95.627975"
            id="rect1947"
-           style="fill:#e6e6e6;stroke-width:0.50839645" />
+           style="fill:#e6e6e6;stroke-width:0.508396" />
         <text
            id="text1951"
            y="72.160866"
            x="5.8586307"
-           style="font-style:normal;font-weight:normal;font-size:10.58333302px;line-height:0.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+           style="font-style:normal;font-weight:normal;font-size:10.5833px;line-height:0.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
            xml:space="preserve"><tspan
-             style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:4.23333311px;line-height:0.25;font-family:Inconsolata;-inkscape-font-specification:'Inconsolata Bold';fill:#666666;stroke-width:0.26458332"
+             style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:4.23333px;line-height:0.25;font-family:Inconsolata;-inkscape-font-specification:'Inconsolata Bold';fill:#666666;stroke-width:0.264583"
              y="72.160866"
              x="5.8586307"
              sodipodi:role="line"
              id="tspan1949">$ renku mv [&lt;path&gt;...] &lt;destination&gt;</tspan></text>
         <text
            xml:space="preserve"
-           style="font-style:normal;font-weight:normal;font-size:10.58333302px;line-height:0.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+           style="font-style:normal;font-weight:normal;font-size:10.5833px;line-height:0.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
            x="5.7830358"
            y="78.208488"
            id="text1955"><tspan
              sodipodi:role="line"
              x="5.7830358"
              y="78.208488"
-             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.52777767px;line-height:0.25;font-family:'Caviar Dreams';-inkscape-font-specification:'Caviar Dreams';stroke-width:0.26458332"
+             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.52778px;line-height:0.25;font-family:'Caviar Dreams';-inkscape-font-specification:'Caviar Dreams';stroke-width:0.264583"
              id="tspan1953">Move &lt;path&gt;'s  to &lt;destination&gt;.</tspan></text>
       </g>
       <g
-         transform="translate(-33.687426,-1.1339286)"
+         transform="translate(-33.687426,16.770099)"
          inkscape:label="Remove file"
          id="g1971">
         <rect
-           style="fill:#e6e6e6;stroke-width:0.50839645"
+           style="fill:#e6e6e6;stroke-width:0.508396"
            id="rect1959"
            width="95.627975"
            height="5.9614139"
@@ -576,7 +571,7 @@
            y="67.946434" />
         <text
            xml:space="preserve"
-           style="font-style:normal;font-weight:normal;font-size:10.58333302px;line-height:0.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+           style="font-style:normal;font-weight:normal;font-size:10.5833px;line-height:0.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
            x="5.8586307"
            y="72.160866"
            id="text1963"><tspan
@@ -584,21 +579,21 @@
              sodipodi:role="line"
              x="5.8586307"
              y="72.160866"
-             style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:4.23333311px;line-height:0.25;font-family:Inconsolata;-inkscape-font-specification:'Inconsolata Bold';fill:#666666;stroke-width:0.26458332">$ renku rm [&lt;path&gt;...]</tspan></text>
+             style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:4.23333px;line-height:0.25;font-family:Inconsolata;-inkscape-font-specification:'Inconsolata Bold';fill:#666666;stroke-width:0.264583">$ renku rm [&lt;path&gt;...]</tspan></text>
         <text
            id="text1969"
            y="78.208488"
            x="5.7830358"
-           style="font-style:normal;font-weight:normal;font-size:10.58333302px;line-height:0.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+           style="font-style:normal;font-weight:normal;font-size:10.5833px;line-height:0.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
            xml:space="preserve"><tspan
-             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.52777767px;line-height:0.25;font-family:'Caviar Dreams';-inkscape-font-specification:'Caviar Dreams';stroke-width:0.26458332"
+             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.52778px;line-height:0.25;font-family:'Caviar Dreams';-inkscape-font-specification:'Caviar Dreams';stroke-width:0.264583"
              y="78.208488"
              x="5.7830358"
              sodipodi:role="line"
              id="tspan1965">Remove &lt;path&gt;'s from a renku repository. Removes from</tspan><tspan
              id="tspan1967"
-             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.52777767px;line-height:0.25;font-family:'Caviar Dreams';-inkscape-font-specification:'Caviar Dreams';stroke-width:0.26458332"
-             y="81.627502"
+             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.52778px;line-height:0.25;font-family:'Caviar Dreams';-inkscape-font-specification:'Caviar Dreams';stroke-width:0.264583"
+             y="81.982315"
              x="5.7830358"
              sodipodi:role="line">datasets and Git.</tspan></text>
       </g>
@@ -619,14 +614,55 @@
                height="70.839378"
                width="257.61969"
                id="rect1973" /></flowRegion><flowPara
-             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:29.33333397px;font-family:'Caviar Dreams';-inkscape-font-specification:'Caviar Dreams';text-align:center;text-anchor:middle;fill:#333333;fill-opacity:1"
-             id="flowPara1977">Misc</flowPara></flowRoot>        <rect
+             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:29.3333px;font-family:'Caviar Dreams';-inkscape-font-specification:'Caviar Dreams';text-align:center;text-anchor:middle;fill:#333333;fill-opacity:1"
+             id="flowPara1977">Misc</flowPara></flowRoot>
+        <rect
            y="62.043823"
            x="15.517194"
            height="1.6036171"
            width="6.6817384"
            id="rect1981"
-           style="fill:#90ca42;fill-opacity:1;stroke-width:0.23570955" />
+           style="fill:#90ca42;fill-opacity:1;stroke-width:0.23571" />
+      </g>
+      <g
+         transform="translate(-33.675588,-0.2663727)"
+         inkscape:label="Remove file"
+         id="g1971-2"
+         style="display:inline">
+        <rect
+           style="fill:#e6e6e6;stroke-width:0.508396"
+           id="rect1959-9"
+           width="95.627975"
+           height="5.9614139"
+           x="5.0081844"
+           y="67.946434" />
+        <text
+           xml:space="preserve"
+           style="font-style:normal;font-weight:normal;font-size:10.5833px;line-height:0.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
+           x="5.8586307"
+           y="72.160866"
+           id="text1963-1"><tspan
+             id="tspan1961-2"
+             sodipodi:role="line"
+             x="5.8586307"
+             y="72.160866"
+             style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:4.23333px;line-height:0.25;font-family:Inconsolata;-inkscape-font-specification:'Inconsolata Bold';fill:#666666;stroke-width:0.264583">$ renku save [-m &lt;message&gt;]</tspan></text>
+        <text
+           id="text1969-7"
+           y="78.208488"
+           x="5.7830358"
+           style="font-style:normal;font-weight:normal;font-size:10.5833px;line-height:0.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
+           xml:space="preserve"><tspan
+             id="tspan1967-9"
+             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.52778px;line-height:0.25;font-family:'Caviar Dreams';-inkscape-font-specification:'Caviar Dreams';stroke-width:0.264583"
+             y="78.208488"
+             x="5.7830358"
+             sodipodi:role="line">Save (commit) and push all local changes.</tspan><tspan
+             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.52778px;line-height:0.25;font-family:'Caviar Dreams';-inkscape-font-specification:'Caviar Dreams';stroke-width:0.264583"
+             y="81.982315"
+             x="5.7830358"
+             sodipodi:role="line"
+             id="tspan492">With -m: Set a message for the changes made.</tspan></text>
       </g>
     </g>
     <g
@@ -635,35 +671,75 @@
        inkscape:label="Config">
       <text
          id="text2113"
-         y="103.02361"
-         x="-27.600883"
-         style="font-style:normal;font-weight:normal;font-size:10.58333302px;line-height:0.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+         y="120.45056"
+         x="-28.258312"
+         style="font-style:normal;font-weight:normal;font-size:10.5833px;line-height:0.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
          xml:space="preserve"><tspan
-           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.52777767px;line-height:0.25;font-family:'Caviar Dreams';-inkscape-font-specification:'Caviar Dreams';stroke-width:0.26458332"
-           y="103.02361"
-           x="-27.600883"
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.52778px;line-height:0.25;font-family:'Caviar Dreams';-inkscape-font-specification:'Caviar Dreams';stroke-width:0.264583"
+           y="120.45056"
+           x="-28.258312"
            sodipodi:role="line"
            id="tspan2149">Available config options:</tspan><tspan
-           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.52777767px;line-height:0.25;font-family:'Caviar Dreams';-inkscape-font-specification:'Caviar Dreams';stroke-width:0.26458332"
-           y="106.44263"
-           x="-27.600883"
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.52778px;line-height:0.25;font-family:'Caviar Dreams';-inkscape-font-specification:'Caviar Dreams';stroke-width:0.264583"
+           y="124.22439"
+           x="-28.258312"
            sodipodi:role="line"
            id="tspan2171">• <tspan
    style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-family:'Caviar Dreams';-inkscape-font-specification:'Caviar Dreams Bold'"
    id="tspan2175">registry: </tspan>Docker image registry.</tspan><tspan
-           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.52777767px;line-height:0.25;font-family:'Caviar Dreams';-inkscape-font-specification:'Caviar Dreams';stroke-width:0.26458332"
-           y="109.86165"
-           x="-27.600883"
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.52778px;line-height:0.25;font-family:'Caviar Dreams';-inkscape-font-specification:'Caviar Dreams';stroke-width:0.264583"
+           y="127.99821"
+           x="-28.258312"
            sodipodi:role="line"
            id="tspan2173">• <tspan
    style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-family:'Caviar Dreams';-inkscape-font-specification:'Caviar Dreams Bold'"
-   id="tspan2179">zenodo.access_token: </tspan>Token for Zenodo export.</tspan></text>
+   id="tspan2179">zenodo.access_token: </tspan>Token for Zenodo export.</tspan><tspan
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.52778px;line-height:0.25;font-family:'Caviar Dreams';-inkscape-font-specification:'Caviar Dreams';stroke-width:0.264583"
+           y="131.77205"
+           x="-28.258312"
+           sodipodi:role="line"
+           id="tspan430">• <tspan
+   style="font-weight:bold"
+   id="tspan432">dataverse.access_token</tspan>: Token for Dataverse export.</tspan><tspan
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.52778px;line-height:0.25;font-family:'Caviar Dreams';-inkscape-font-specification:'Caviar Dreams';stroke-width:0.264583"
+           y="135.54587"
+           x="-28.258312"
+           sodipodi:role="line"
+           id="tspan434">• <tspan
+   style="font-weight:bold"
+   id="tspan437">dataverse.server_url</tspan>: Url of the Dataverse instance.</tspan><tspan
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.52778px;line-height:0.25;font-family:'Caviar Dreams';-inkscape-font-specification:'Caviar Dreams';stroke-width:0.264583"
+           y="139.3197"
+           x="-28.258312"
+           sodipodi:role="line"
+           id="tspan439">• <tspan
+   style="font-weight:bold"
+   id="tspan441">show_lfs_message</tspan>: Whether to show the LFS warning</tspan><tspan
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.52778px;line-height:0.25;font-family:'Caviar Dreams';-inkscape-font-specification:'Caviar Dreams';stroke-width:0.264583"
+           y="143.09352"
+           x="-28.258312"
+           sodipodi:role="line"
+           id="tspan443">   message.</tspan><tspan
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.52778px;line-height:0.25;font-family:'Caviar Dreams';-inkscape-font-specification:'Caviar Dreams';stroke-width:0.264583"
+           y="146.86736"
+           x="-28.258312"
+           sodipodi:role="line"
+           id="tspan445">• <tspan
+   style="font-weight:bold"
+   id="tspan447">lfs_threshold</tspan>: Threshold below which files aren't added</tspan><tspan
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.52778px;line-height:0.25;font-family:'Caviar Dreams';-inkscape-font-specification:'Caviar Dreams';stroke-width:0.264583"
+           y="150.64117"
+           x="-28.258312"
+           sodipodi:role="line"
+           id="tspan449">   to git LFS. Accepts values like <tspan
+   style="font-style:italic"
+   id="tspan451">100kb, 1mb or 0.5gb</tspan></tspan></text>
       <g
          transform="translate(-33.687426,14.741071)"
          inkscape:label="edit config"
          id="g2115">
         <rect
-           style="fill:#e6e6e6;stroke-width:0.50839645"
+           style="fill:#e6e6e6;stroke-width:0.508396"
            id="rect2105"
            width="95.627975"
            height="5.9614139"
@@ -671,7 +747,7 @@
            y="67.946434" />
         <text
            xml:space="preserve"
-           style="font-style:normal;font-weight:normal;font-size:10.58333302px;line-height:0.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+           style="font-style:normal;font-weight:normal;font-size:10.5833px;line-height:0.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
            x="5.8586307"
            y="72.160866"
            id="text2109"><tspan
@@ -679,23 +755,23 @@
              sodipodi:role="line"
              x="5.8586307"
              y="72.160866"
-             style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:4.23333311px;line-height:0.25;font-family:Inconsolata;-inkscape-font-specification:'Inconsolata Bold';fill:#666666;stroke-width:0.26458332">$ renku config [--global] &lt;key&gt; &lt;value&gt;</tspan></text>
+             style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:4.23333px;line-height:0.25;font-family:Inconsolata;-inkscape-font-specification:'Inconsolata Bold';fill:#666666;stroke-width:0.264583">$ renku config set [--global] &lt;key&gt; &lt;value&gt;</tspan></text>
         <text
            xml:space="preserve"
-           style="font-style:normal;font-weight:normal;font-size:10.58333302px;line-height:0.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+           style="font-style:normal;font-weight:normal;font-size:10.5833px;line-height:0.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
            x="5.7830358"
            y="78.208488"
            id="text2155"><tspan
              sodipodi:role="line"
              x="5.7830358"
              y="78.208488"
-             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.52777767px;line-height:0.25;font-family:'Caviar Dreams';-inkscape-font-specification:'Caviar Dreams';stroke-width:0.26458332"
+             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.52778px;line-height:0.25;font-family:'Caviar Dreams';-inkscape-font-specification:'Caviar Dreams';stroke-width:0.264583"
              id="tspan2151">Set Renku config &lt;key&gt; to &lt;value&gt;. With --global: Read </tspan><tspan
              id="tspan2153"
              sodipodi:role="line"
              x="5.7830358"
-             y="81.627502"
-             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.52777767px;line-height:0.25;font-family:'Caviar Dreams';-inkscape-font-specification:'Caviar Dreams';stroke-width:0.26458332">from global settings.</tspan></text>
+             y="81.982315"
+             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.52778px;line-height:0.25;font-family:'Caviar Dreams';-inkscape-font-specification:'Caviar Dreams';stroke-width:0.264583">from global settings.</tspan></text>
       </g>
       <g
          id="g2129"
@@ -707,33 +783,33 @@
            height="5.9614139"
            width="95.627975"
            id="rect2117"
-           style="fill:#e6e6e6;stroke-width:0.50839645" />
+           style="fill:#e6e6e6;stroke-width:0.508396" />
         <text
            id="text2121"
            y="72.160866"
            x="5.8586307"
-           style="font-style:normal;font-weight:normal;font-size:10.58333302px;line-height:0.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+           style="font-style:normal;font-weight:normal;font-size:10.5833px;line-height:0.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
            xml:space="preserve"><tspan
-             style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:4.23333311px;line-height:0.25;font-family:Inconsolata;-inkscape-font-specification:'Inconsolata Bold';fill:#666666;stroke-width:0.26458332"
+             style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:4.23333px;line-height:0.25;font-family:Inconsolata;-inkscape-font-specification:'Inconsolata Bold';fill:#666666;stroke-width:0.264583"
              y="72.160866"
              x="5.8586307"
              sodipodi:role="line"
-             id="tspan2119">$ renku config [--global] &lt;key&gt;</tspan></text>
+             id="tspan2119">$ renku config show [--global] &lt;key&gt;</tspan></text>
         <text
            xml:space="preserve"
-           style="font-style:normal;font-weight:normal;font-size:10.58333302px;line-height:0.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+           style="font-style:normal;font-weight:normal;font-size:10.5833px;line-height:0.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
            x="5.7830358"
            y="78.208488"
            id="text2127"><tspan
              sodipodi:role="line"
              x="5.7830358"
              y="78.208488"
-             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.52777767px;line-height:0.25;font-family:'Caviar Dreams';-inkscape-font-specification:'Caviar Dreams';stroke-width:0.26458332"
+             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.52778px;line-height:0.25;font-family:'Caviar Dreams';-inkscape-font-specification:'Caviar Dreams';stroke-width:0.264583"
              id="tspan2125">Show Renku config value for &lt;key&gt;. With --global: Read </tspan><tspan
              sodipodi:role="line"
              x="5.7830358"
-             y="81.627502"
-             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.52777767px;line-height:0.25;font-family:'Caviar Dreams';-inkscape-font-specification:'Caviar Dreams';stroke-width:0.26458332"
+             y="81.982315"
+             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.52778px;line-height:0.25;font-family:'Caviar Dreams';-inkscape-font-specification:'Caviar Dreams';stroke-width:0.264583"
              id="tspan2147">from global settings.</tspan></text>
       </g>
       <g
@@ -754,13 +830,54 @@
                y="206.31134"
                style="fill:#333333;fill-opacity:1" /></flowRegion><flowPara
              id="flowPara2135"
-             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:29.33333397px;font-family:'Caviar Dreams';-inkscape-font-specification:'Caviar Dreams';text-align:center;text-anchor:middle;fill:#333333;fill-opacity:1">Config</flowPara></flowRoot>        <rect
-           style="fill:#90ca42;fill-opacity:1;stroke-width:0.23570955"
+             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:29.3333px;font-family:'Caviar Dreams';-inkscape-font-specification:'Caviar Dreams';text-align:center;text-anchor:middle;fill:#333333;fill-opacity:1">Config</flowPara></flowRoot>
+        <rect
+           style="fill:#90ca42;fill-opacity:1;stroke-width:0.23571"
            id="rect2139"
            width="6.6817384"
            height="1.6036171"
            x="15.517194"
            y="62.043823" />
+      </g>
+      <g
+         transform="translate(-33.826265,30.855077)"
+         inkscape:label="edit config"
+         id="g2115-3"
+         style="display:inline">
+        <rect
+           style="fill:#e6e6e6;stroke-width:0.508396"
+           id="rect2105-6"
+           width="95.627975"
+           height="5.9614139"
+           x="5.0081844"
+           y="67.946434" />
+        <text
+           xml:space="preserve"
+           style="font-style:normal;font-weight:normal;font-size:10.5833px;line-height:0.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
+           x="5.8586307"
+           y="72.160866"
+           id="text2109-7"><tspan
+             id="tspan2107-5"
+             sodipodi:role="line"
+             x="5.8586307"
+             y="72.160866"
+             style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:4.23333px;line-height:0.25;font-family:Inconsolata;-inkscape-font-specification:'Inconsolata Bold';fill:#666666;stroke-width:0.264583">$ renku config remove [--global] &lt;key&gt; </tspan></text>
+        <text
+           xml:space="preserve"
+           style="font-style:normal;font-weight:normal;font-size:10.5833px;line-height:0.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
+           x="5.7830358"
+           y="78.208488"
+           id="text2155-3"><tspan
+             sodipodi:role="line"
+             x="5.7830358"
+             y="78.208488"
+             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.52778px;line-height:0.25;font-family:'Caviar Dreams';-inkscape-font-specification:'Caviar Dreams';stroke-width:0.264583"
+             id="tspan2151-5">Delete &lt;key&gt; from Renku config. With --global: Delete </tspan><tspan
+             id="tspan2153-6"
+             sodipodi:role="line"
+             x="5.7830358"
+             y="81.982315"
+             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.52778px;line-height:0.25;font-family:'Caviar Dreams';-inkscape-font-specification:'Caviar Dreams';stroke-width:0.264583">from global settings.</tspan></text>
       </g>
     </g>
     <g
@@ -778,21 +895,21 @@
            height="5.9614134"
            width="95.627975"
            id="rect1997"
-           style="fill:#e6e6e6;stroke-width:0.50839645" />
+           style="fill:#e6e6e6;stroke-width:0.508396" />
         <text
            id="text2001"
            y="72.160866"
            x="5.8586307"
-           style="font-style:normal;font-weight:normal;font-size:10.58333302px;line-height:0.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+           style="font-style:normal;font-weight:normal;font-size:10.5833px;line-height:0.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
            xml:space="preserve"><tspan
              id="tspan1999"
-             style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:4.23333311px;line-height:0.25;font-family:Inconsolata;-inkscape-font-specification:'Inconsolata Bold';fill:#666666;stroke-width:0.26458332"
+             style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:4.23333px;line-height:0.25;font-family:Inconsolata;-inkscape-font-specification:'Inconsolata Bold';fill:#666666;stroke-width:0.264583"
              y="72.160866"
              x="5.8586307"
              sodipodi:role="line">$ renku show outputs [--revision &lt;rev&gt;]</tspan></text>
         <text
            xml:space="preserve"
-           style="font-style:normal;font-weight:normal;font-size:10.58333302px;line-height:0.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+           style="font-style:normal;font-weight:normal;font-size:10.5833px;line-height:0.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
            x="5.7830358"
            y="77.679321"
            id="text2005"><tspan
@@ -800,14 +917,14 @@
              sodipodi:role="line"
              x="5.7830358"
              y="77.679321"
-             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.52777767px;line-height:0.25;font-family:'Caviar Dreams';-inkscape-font-specification:'Caviar Dreams';stroke-width:0.26458332">Show all output files. With &lt;rev&gt;: Show at revision.</tspan></text>
+             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.52778px;line-height:0.25;font-family:'Caviar Dreams';-inkscape-font-specification:'Caviar Dreams';stroke-width:0.264583">Show all output files. With &lt;rev&gt;: Show at revision.</tspan></text>
       </g>
       <g
          transform="translate(-33.687426,11.566069)"
          inkscape:label="inputs"
          id="g596">
         <rect
-           style="fill:#e6e6e6;stroke-width:0.50839645"
+           style="fill:#e6e6e6;stroke-width:0.508396"
            id="rect584"
            width="95.627975"
            height="5.9614134"
@@ -815,22 +932,22 @@
            y="67.946434" />
         <text
            xml:space="preserve"
-           style="font-style:normal;font-weight:normal;font-size:10.58333302px;line-height:0.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+           style="font-style:normal;font-weight:normal;font-size:10.5833px;line-height:0.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
            x="5.8586307"
            y="72.160866"
            id="text588"><tspan
              sodipodi:role="line"
              x="5.8586307"
              y="72.160866"
-             style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:4.23333311px;line-height:0.25;font-family:Inconsolata;-inkscape-font-specification:'Inconsolata Bold';fill:#666666;stroke-width:0.26458332"
+             style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:4.23333px;line-height:0.25;font-family:Inconsolata;-inkscape-font-specification:'Inconsolata Bold';fill:#666666;stroke-width:0.264583"
              id="tspan1989">$ renku show inputs [--revision &lt;rev&gt;]</tspan></text>
         <text
            id="text594"
            y="77.679321"
            x="5.7830358"
-           style="font-style:normal;font-weight:normal;font-size:10.58333302px;line-height:0.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+           style="font-style:normal;font-weight:normal;font-size:10.5833px;line-height:0.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
            xml:space="preserve"><tspan
-             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.52777767px;line-height:0.25;font-family:'Caviar Dreams';-inkscape-font-specification:'Caviar Dreams';stroke-width:0.26458332"
+             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.52778px;line-height:0.25;font-family:'Caviar Dreams';-inkscape-font-specification:'Caviar Dreams';stroke-width:0.264583"
              y="77.679321"
              x="5.7830358"
              sodipodi:role="line"
@@ -846,28 +963,28 @@
            height="5.9614139"
            width="95.627975"
            id="rect547"
-           style="fill:#e6e6e6;stroke-width:0.50839645" />
+           style="fill:#e6e6e6;stroke-width:0.508396" />
         <text
            id="text551"
            y="72.160866"
            x="5.8586307"
-           style="font-style:normal;font-weight:normal;font-size:10.58333302px;line-height:0.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+           style="font-style:normal;font-weight:normal;font-size:10.5833px;line-height:0.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
            xml:space="preserve"><tspan
-             style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:4.23333311px;line-height:0.25;font-family:Inconsolata;-inkscape-font-specification:'Inconsolata Bold';fill:#666666;stroke-width:0.26458332"
+             style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:4.23333px;line-height:0.25;font-family:Inconsolata;-inkscape-font-specification:'Inconsolata Bold';fill:#666666;stroke-width:0.264583"
              y="72.160866"
              x="5.8586307"
              sodipodi:role="line"
              id="tspan549">$ renku show siblings [&lt;path&gt;...]</tspan></text>
         <text
            xml:space="preserve"
-           style="font-style:normal;font-weight:normal;font-size:10.58333302px;line-height:0.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+           style="font-style:normal;font-weight:normal;font-size:10.5833px;line-height:0.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
            x="5.7830358"
            y="78.208488"
            id="text559"><tspan
              sodipodi:role="line"
              x="5.7830358"
              y="78.208488"
-             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.52777767px;line-height:0.25;font-family:'Caviar Dreams';-inkscape-font-specification:'Caviar Dreams';stroke-width:0.26458332"
+             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.52778px;line-height:0.25;font-family:'Caviar Dreams';-inkscape-font-specification:'Caviar Dreams';stroke-width:0.264583"
              id="tspan582">Show sibling output files created by the same command.</tspan></text>
       </g>
       <g
@@ -888,8 +1005,9 @@
                y="206.31134"
                style="fill:#333333;fill-opacity:1" /></flowRegion><flowPara
              id="flowPara567"
-             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:29.33333397px;font-family:'Caviar Dreams';-inkscape-font-specification:'Caviar Dreams';text-align:center;text-anchor:middle;fill:#333333;fill-opacity:1">Show</flowPara></flowRoot>        <rect
-           style="fill:#90ca42;fill-opacity:1;stroke-width:0.23570955"
+             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:29.3333px;font-family:'Caviar Dreams';-inkscape-font-specification:'Caviar Dreams';text-align:center;text-anchor:middle;fill:#333333;fill-opacity:1">Show</flowPara></flowRoot>
+        <rect
+           style="fill:#90ca42;fill-opacity:1;stroke-width:0.23571"
            id="rect571"
            width="6.6817384"
            height="1.6036171"
@@ -911,21 +1029,21 @@
            height="5.9614139"
            width="95.627975"
            id="rect1931"
-           style="fill:#e6e6e6;stroke-width:0.50839645" />
+           style="fill:#e6e6e6;stroke-width:0.508396" />
         <text
            id="text1935"
            y="72.160866"
            x="5.8586307"
-           style="font-style:normal;font-weight:normal;font-size:10.58333302px;line-height:0.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+           style="font-style:normal;font-weight:normal;font-size:10.5833px;line-height:0.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
            xml:space="preserve"><tspan
-             style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:4.23333311px;line-height:0.25;font-family:Inconsolata;-inkscape-font-specification:'Inconsolata Bold';fill:#666666;stroke-width:0.26458332"
+             style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:4.23333px;line-height:0.25;font-family:Inconsolata;-inkscape-font-specification:'Inconsolata Bold';fill:#666666;stroke-width:0.264583"
              y="72.160866"
              x="5.8586307"
              sodipodi:role="line"
              id="tspan1933">$ renku workflow remove &lt;name&gt;</tspan></text>
         <text
            xml:space="preserve"
-           style="font-style:normal;font-weight:normal;font-size:10.58333302px;line-height:0.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+           style="font-style:normal;font-weight:normal;font-size:10.5833px;line-height:0.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
            x="5.7830358"
            y="78.208488"
            id="text1941"><tspan
@@ -933,14 +1051,14 @@
              sodipodi:role="line"
              x="5.7830358"
              y="78.208488"
-             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.52777767px;line-height:0.25;font-family:'Caviar Dreams';-inkscape-font-specification:'Caviar Dreams';stroke-width:0.26458332">Remove the &lt;name&gt; workflow.</tspan></text>
+             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.52778px;line-height:0.25;font-family:'Caviar Dreams';-inkscape-font-specification:'Caviar Dreams';stroke-width:0.264583">Remove the &lt;name&gt; workflow.</tspan></text>
       </g>
       <g
          transform="translate(-33.687426,11.566069)"
          inkscape:label="set-name"
          id="g1927">
         <rect
-           style="fill:#e6e6e6;stroke-width:0.50839645"
+           style="fill:#e6e6e6;stroke-width:0.508396"
            id="rect1917"
            width="95.627975"
            height="5.9614139"
@@ -948,7 +1066,7 @@
            y="67.946434" />
         <text
            xml:space="preserve"
-           style="font-style:normal;font-weight:normal;font-size:10.58333302px;line-height:0.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+           style="font-style:normal;font-weight:normal;font-size:10.5833px;line-height:0.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
            x="5.8586307"
            y="72.160866"
            id="text1921"><tspan
@@ -956,20 +1074,20 @@
              sodipodi:role="line"
              x="5.8586307"
              y="72.160866"
-             style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:4.23333311px;line-height:0.25;font-family:Inconsolata;-inkscape-font-specification:'Inconsolata Bold';fill:#666666;stroke-width:0.26458332">$ renku workflow set-name &lt;name&gt; [&lt;path&gt;]</tspan></text>
+             style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:4.23333px;line-height:0.25;font-family:Inconsolata;-inkscape-font-specification:'Inconsolata Bold';fill:#666666;stroke-width:0.264583">$ renku workflow set-name &lt;name&gt; [&lt;path&gt;]</tspan></text>
         <text
            id="text1925"
            y="78.208488"
            x="5.7830358"
-           style="font-style:normal;font-weight:normal;font-size:10.58333302px;line-height:0.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+           style="font-style:normal;font-weight:normal;font-size:10.5833px;line-height:0.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
            xml:space="preserve"><tspan
-             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.52777767px;line-height:0.25;font-family:'Caviar Dreams';-inkscape-font-specification:'Caviar Dreams';stroke-width:0.26458332"
+             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.52778px;line-height:0.25;font-family:'Caviar Dreams';-inkscape-font-specification:'Caviar Dreams';stroke-width:0.264583"
              y="78.208488"
              x="5.7830358"
              sodipodi:role="line"
              id="tspan1923">Set a &lt;name&gt; for the last workflow. With &lt;path&gt;: Link file to</tspan><tspan
-             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.52777767px;line-height:0.25;font-family:'Caviar Dreams';-inkscape-font-specification:'Caviar Dreams';stroke-width:0.26458332"
-             y="81.627502"
+             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.52778px;line-height:0.25;font-family:'Caviar Dreams';-inkscape-font-specification:'Caviar Dreams';stroke-width:0.264583"
+             y="81.982315"
              x="5.7830358"
              sodipodi:role="line"
              id="tspan1929">workflow.</tspan></text>
@@ -984,21 +1102,21 @@
            height="5.9614139"
            width="95.627975"
            id="rect1882"
-           style="fill:#e6e6e6;stroke-width:0.50839645" />
+           style="fill:#e6e6e6;stroke-width:0.508396" />
         <text
            id="text1886"
            y="72.160866"
            x="5.8586307"
-           style="font-style:normal;font-weight:normal;font-size:10.58333302px;line-height:0.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+           style="font-style:normal;font-weight:normal;font-size:10.5833px;line-height:0.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
            xml:space="preserve"><tspan
-             style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:4.23333311px;line-height:0.25;font-family:Inconsolata;-inkscape-font-specification:'Inconsolata Bold';fill:#666666;stroke-width:0.26458332"
+             style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:4.23333px;line-height:0.25;font-family:Inconsolata;-inkscape-font-specification:'Inconsolata Bold';fill:#666666;stroke-width:0.264583"
              y="72.160866"
              x="5.8586307"
              sodipodi:role="line"
              id="tspan1884">$ renku workflow create [-o &lt;file&gt;] &lt;path&gt;...</tspan></text>
         <text
            xml:space="preserve"
-           style="font-style:normal;font-weight:normal;font-size:10.58333302px;line-height:0.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+           style="font-style:normal;font-weight:normal;font-size:10.5833px;line-height:0.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
            x="5.7830358"
            y="78.208488"
            id="text1894"><tspan
@@ -1006,7 +1124,7 @@
              sodipodi:role="line"
              x="5.7830358"
              y="78.208488"
-             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.52777767px;line-height:0.25;font-family:'Caviar Dreams';-inkscape-font-specification:'Caviar Dreams';stroke-width:0.26458332">Create a workflow description.</tspan></text>
+             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.52778px;line-height:0.25;font-family:'Caviar Dreams';-inkscape-font-specification:'Caviar Dreams';stroke-width:0.264583">Create a workflow description.</tspan></text>
       </g>
       <g
          id="g1908"
@@ -1026,8 +1144,9 @@
                y="206.31134"
                style="fill:#333333;fill-opacity:1" /></flowRegion><flowPara
              id="flowPara1902"
-             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:29.33333397px;font-family:'Caviar Dreams';-inkscape-font-specification:'Caviar Dreams';text-align:center;text-anchor:middle;fill:#333333;fill-opacity:1">Workflow</flowPara></flowRoot>        <rect
-           style="fill:#90ca42;fill-opacity:1;stroke-width:0.23570955"
+             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:29.3333px;font-family:'Caviar Dreams';-inkscape-font-specification:'Caviar Dreams';text-align:center;text-anchor:middle;fill:#333333;fill-opacity:1">Workflow</flowPara></flowRoot>
+        <rect
+           style="fill:#90ca42;fill-opacity:1;stroke-width:0.23571"
            id="rect1906"
            width="6.6817384"
            height="1.6036171"
@@ -1049,15 +1168,15 @@
          clip-path="url(#clipPath3728)" />
       <text
          xml:space="preserve"
-         style="font-style:normal;font-weight:normal;font-size:10.58333302px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
-         x="75.236374"
+         style="font-style:normal;font-weight:normal;font-size:10.5833px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
+         x="66.881256"
          y="32.536804"
          id="text1814"><tspan
            sodipodi:role="line"
            id="tspan1812"
-           x="75.236374"
+           x="66.881256"
            y="32.536804"
-           style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:14.11111069px;font-family:'Caviar Dreams';-inkscape-font-specification:'Caviar Dreams Bold';fill:#ffffff;stroke-width:0.26458332">RENKU CHEATSHEET</tspan></text>
+           style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:14.1111px;font-family:'Caviar Dreams';-inkscape-font-specification:'Caviar Dreams Bold';fill:#ffffff;stroke-width:0.264583">RENKU CHEATSHEET</tspan></text>
       <image
          width="30.563374"
          height="29.62793"
@@ -1081,7 +1200,7 @@
          inkscape:connector-curvature="0"
          id="path604"
          d="M -100.25824,124.27777 H 100.59798"
-         style="display:inline;fill:none;stroke:#90ca42;stroke-width:0.26458332px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
+         style="display:inline;fill:none;stroke:#90ca42;stroke-width:0.264583px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
       <image
          style="display:inline"
          width="57.125175"
@@ -1110,14 +1229,14 @@
     </g>
     <g
        inkscape:label="Log"
-       transform="translate(33.687424,180.1783)"
+       transform="translate(33.687424,182.67089)"
        id="g464">
       <g
          transform="translate(-33.687426,-1.1339286)"
          inkscape:label="Log"
          id="g450">
         <rect
-           style="fill:#e6e6e6;stroke-width:0.50839645"
+           style="fill:#e6e6e6;stroke-width:0.508396"
            id="rect432"
            width="95.627975"
            height="5.9614139"
@@ -1125,7 +1244,7 @@
            y="67.946434" />
         <text
            xml:space="preserve"
-           style="font-style:normal;font-weight:normal;font-size:10.58333302px;line-height:0.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+           style="font-style:normal;font-weight:normal;font-size:10.5833px;line-height:0.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
            x="5.8586307"
            y="72.160866"
            id="text438"><tspan
@@ -1133,25 +1252,25 @@
              sodipodi:role="line"
              x="5.8586307"
              y="72.160866"
-             style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:4.23333311px;line-height:0.25;font-family:Inconsolata;-inkscape-font-specification:'Inconsolata Bold';fill:#666666;stroke-width:0.26458332">$ renku log [--revision &lt;rev&gt;] [&lt;path&gt;...]</tspan></text>
+             style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:4.23333px;line-height:0.25;font-family:Inconsolata;-inkscape-font-specification:'Inconsolata Bold';fill:#666666;stroke-width:0.264583">$ renku log [--revision &lt;rev&gt;] [&lt;path&gt;...]</tspan></text>
         <text
            id="text448"
            y="78.208488"
            x="5.7830358"
-           style="font-style:normal;font-weight:normal;font-size:10.58333302px;line-height:0.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+           style="font-style:normal;font-weight:normal;font-size:10.5833px;line-height:0.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
            xml:space="preserve"><tspan
              id="tspan446"
-             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.52777767px;line-height:0.25;font-family:'Caviar Dreams';-inkscape-font-specification:'Caviar Dreams';stroke-width:0.26458332"
+             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.52778px;line-height:0.25;font-family:'Caviar Dreams';-inkscape-font-specification:'Caviar Dreams';stroke-width:0.264583"
              y="78.208488"
              x="5.7830358"
              sodipodi:role="line">Show provenance of data created in Renku. With &lt;path&gt;:</tspan><tspan
-             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.52777767px;line-height:0.25;font-family:'Caviar Dreams';-inkscape-font-specification:'Caviar Dreams';stroke-width:0.26458332"
-             y="81.627502"
+             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.52778px;line-height:0.25;font-family:'Caviar Dreams';-inkscape-font-specification:'Caviar Dreams';stroke-width:0.264583"
+             y="81.982315"
              x="5.7830358"
              sodipodi:role="line"
              id="tspan481">Show only provenance of some files. With --revision: Limit to</tspan><tspan
-             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.52777767px;line-height:0.25;font-family:'Caviar Dreams';-inkscape-font-specification:'Caviar Dreams';stroke-width:0.26458332"
-             y="85.046524"
+             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.52778px;line-height:0.25;font-family:'Caviar Dreams';-inkscape-font-specification:'Caviar Dreams';stroke-width:0.264583"
+             y="85.756142"
              x="5.7830358"
              sodipodi:role="line"
              id="tspan483">a commit or commit range (Git syntax).</tspan></text>
@@ -1173,14 +1292,15 @@
                height="70.839378"
                width="257.61969"
                id="rect452" /></flowRegion><flowPara
-             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:29.33333397px;font-family:'Caviar Dreams';-inkscape-font-specification:'Caviar Dreams';text-align:center;text-anchor:middle;fill:#333333;fill-opacity:1"
-             id="flowPara456">Log</flowPara></flowRoot>        <rect
+             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:29.3333px;font-family:'Caviar Dreams';-inkscape-font-specification:'Caviar Dreams';text-align:center;text-anchor:middle;fill:#333333;fill-opacity:1"
+             id="flowPara456">Log</flowPara></flowRoot>
+        <rect
            y="62.043823"
            x="15.517194"
            height="1.6036171"
            width="6.6817384"
            id="rect460"
-           style="fill:#90ca42;fill-opacity:1;stroke-width:0.23570955" />
+           style="fill:#90ca42;fill-opacity:1;stroke-width:0.23571" />
       </g>
     </g>
     <g
@@ -1197,21 +1317,21 @@
            height="5.8910565"
            width="95.627975"
            id="rect529"
-           style="fill:#e6e6e6;stroke-width:0.50538749" />
+           style="fill:#e6e6e6;stroke-width:0.505387" />
         <text
            id="text533"
            y="72.160866"
            x="5.8586307"
-           style="font-style:normal;font-weight:normal;font-size:10.58333302px;line-height:0.5;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+           style="font-style:normal;font-weight:normal;font-size:10.5833px;line-height:0.5;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
            xml:space="preserve"><tspan
              id="tspan531"
-             style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:4.23333311px;line-height:0.5;font-family:Inconsolata;-inkscape-font-specification:'Inconsolata Bold';fill:#666666;stroke-width:0.26458332"
+             style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:4.23333px;line-height:0.5;font-family:Inconsolata;-inkscape-font-specification:'Inconsolata Bold';fill:#666666;stroke-width:0.264583"
              y="72.160866"
              x="5.8586307"
-             sodipodi:role="line">$ renku update [&lt;path&gt;...]</tspan></text>
+             sodipodi:role="line">$ renku update [--all] [&lt;path&gt;...]</tspan></text>
         <text
            xml:space="preserve"
-           style="font-style:normal;font-weight:normal;font-size:10.58333302px;line-height:0.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+           style="font-style:normal;font-weight:normal;font-size:10.5833px;line-height:0.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
            x="5.7830358"
            y="77.679321"
            id="text539"><tspan
@@ -1219,19 +1339,24 @@
              sodipodi:role="line"
              x="5.7830358"
              y="77.679321"
-             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.52777767px;line-height:0.25;font-family:'Caviar Dreams';-inkscape-font-specification:'Caviar Dreams';stroke-width:0.26458332">Update all outdated output files created by renku run.</tspan><tspan
+             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.52778px;line-height:0.25;font-family:'Caviar Dreams';-inkscape-font-specification:'Caviar Dreams';stroke-width:0.264583">Update outdated output files created by renku run.</tspan><tspan
              sodipodi:role="line"
              x="5.7830358"
-             y="81.098335"
-             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.52777767px;line-height:0.25;font-family:'Caviar Dreams';-inkscape-font-specification:'Caviar Dreams';stroke-width:0.26458332"
-             id="tspan545">With &lt;path&gt;'s: Only recreate these files. </tspan></text>
+             y="81.453148"
+             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.52778px;line-height:0.25;font-family:'Caviar Dreams';-inkscape-font-specification:'Caviar Dreams';stroke-width:0.264583"
+             id="tspan545">With &lt;path&gt;'s: Only recreate these files. </tspan><tspan
+             sodipodi:role="line"
+             x="5.7830358"
+             y="85.226974"
+             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.52778px;line-height:0.25;font-family:'Caviar Dreams';-inkscape-font-specification:'Caviar Dreams';stroke-width:0.264583"
+             id="tspan453">With --all: Update all outdated output files.</tspan></text>
       </g>
       <g
          transform="translate(-33.687426,52.702765)"
          inkscape:label="rerun"
          id="g525">
         <rect
-           style="fill:#e6e6e6;stroke-width:0.50538749"
+           style="fill:#e6e6e6;stroke-width:0.505387"
            id="rect515"
            width="95.627975"
            height="5.8910565"
@@ -1239,28 +1364,28 @@
            y="67.946434" />
         <text
            xml:space="preserve"
-           style="font-style:normal;font-weight:normal;font-size:10.58333302px;line-height:0.5;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+           style="font-style:normal;font-weight:normal;font-size:10.5833px;line-height:0.5;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
            x="5.8586307"
            y="72.160866"
            id="text519"><tspan
              sodipodi:role="line"
              x="5.8586307"
              y="72.160866"
-             style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:4.23333311px;line-height:0.5;font-family:Inconsolata;-inkscape-font-specification:'Inconsolata Bold';fill:#666666;stroke-width:0.26458332"
+             style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:4.23333px;line-height:0.5;font-family:Inconsolata;-inkscape-font-specification:'Inconsolata Bold';fill:#666666;stroke-width:0.264583"
              id="tspan517">$ renku rerun &lt;path&gt;...</tspan></text>
         <text
            id="text523"
            y="77.679321"
            x="5.7830358"
-           style="font-style:normal;font-weight:normal;font-size:10.58333302px;line-height:0.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+           style="font-style:normal;font-weight:normal;font-size:10.5833px;line-height:0.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
            xml:space="preserve"><tspan
-             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.52777767px;line-height:0.25;font-family:'Caviar Dreams';-inkscape-font-specification:'Caviar Dreams';stroke-width:0.26458332"
+             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.52778px;line-height:0.25;font-family:'Caviar Dreams';-inkscape-font-specification:'Caviar Dreams';stroke-width:0.264583"
              y="77.679321"
              x="5.7830358"
              id="tspan521"
              sodipodi:role="line">Recreate the file(s) &lt;path&gt; by rerunning the commands </tspan><tspan
-             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.52777767px;line-height:0.25;font-family:'Caviar Dreams';-inkscape-font-specification:'Caviar Dreams';stroke-width:0.26458332"
-             y="81.098335"
+             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.52778px;line-height:0.25;font-family:'Caviar Dreams';-inkscape-font-specification:'Caviar Dreams';stroke-width:0.264583"
+             y="81.453148"
              x="5.7830358"
              sodipodi:role="line"
              id="tspan527">that created them.</tspan></text>
@@ -1275,21 +1400,21 @@
            height="5.8910565"
            width="95.627975"
            id="rect340"
-           style="fill:#e6e6e6;stroke-width:0.50538749" />
+           style="fill:#e6e6e6;stroke-width:0.505387" />
         <text
            id="text344"
            y="72.160866"
            x="5.8586307"
-           style="font-style:normal;font-weight:normal;font-size:10.58333302px;line-height:0.5;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+           style="font-style:normal;font-weight:normal;font-size:10.5833px;line-height:0.5;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
            xml:space="preserve"><tspan
              id="tspan342"
-             style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:4.23333311px;line-height:0.5;font-family:Inconsolata;-inkscape-font-specification:'Inconsolata Bold';fill:#666666;stroke-width:0.26458332"
+             style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:4.23333px;line-height:0.5;font-family:Inconsolata;-inkscape-font-specification:'Inconsolata Bold';fill:#666666;stroke-width:0.264583"
              y="72.160866"
              x="5.8586307"
              sodipodi:role="line">$ renku run --success-code=&lt;n&gt; &lt;command&gt;</tspan></text>
         <text
            xml:space="preserve"
-           style="font-style:normal;font-weight:normal;font-size:10.58333302px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+           style="font-style:normal;font-weight:normal;font-size:10.5833px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
            x="5.7830358"
            y="77.679321"
            id="text348"><tspan
@@ -1297,14 +1422,14 @@
              id="tspan346"
              x="5.7830358"
              y="77.679321"
-             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.52777767px;font-family:'Caviar Dreams';-inkscape-font-specification:'Caviar Dreams';stroke-width:0.26458332">Run a command and treat &lt;n&gt; as successful exit-code.</tspan></text>
+             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.52778px;font-family:'Caviar Dreams';-inkscape-font-specification:'Caviar Dreams';stroke-width:0.264583">Run a command and treat &lt;n&gt; as successful exit-code.</tspan></text>
       </g>
       <g
          transform="translate(-33.687426,23.59858)"
          inkscape:label="run no output"
          id="g362">
         <rect
-           style="fill:#e6e6e6;stroke-width:0.71045333"
+           style="fill:#e6e6e6;stroke-width:0.710453"
            id="rect352"
            width="95.627975"
            height="11.64167"
@@ -1312,27 +1437,27 @@
            y="67.946434" />
         <text
            xml:space="preserve"
-           style="font-style:normal;font-weight:normal;font-size:10.58333302px;line-height:0.5;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+           style="font-style:normal;font-weight:normal;font-size:10.5833px;line-height:0.5;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
            x="5.8586307"
            y="72.160866"
            id="text356"><tspan
              sodipodi:role="line"
              x="5.8586307"
              y="72.160866"
-             style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:4.23333311px;line-height:0.5;font-family:Inconsolata;-inkscape-font-specification:'Inconsolata Bold';fill:#666666;stroke-width:0.26458332"
+             style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:4.23333px;line-height:0.5;font-family:Inconsolata;-inkscape-font-specification:'Inconsolata Bold';fill:#666666;stroke-width:0.264583"
              id="tspan354">$ renku run &lt;command&gt; [--input &lt;in_file&gt;...]</tspan><tspan
              sodipodi:role="line"
              x="5.8586307"
-             y="77.45253"
-             style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:4.23333311px;line-height:0.5;font-family:Inconsolata;-inkscape-font-specification:'Inconsolata Bold';fill:#666666;stroke-width:0.26458332"
+             y="77.530037"
+             style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:4.23333px;line-height:0.5;font-family:Inconsolata;-inkscape-font-specification:'Inconsolata Bold';fill:#666666;stroke-width:0.264583"
              id="tspan404">  --no-output</tspan></text>
         <text
            id="text360"
            y="83.50016"
            x="5.7830358"
-           style="font-style:normal;font-weight:normal;font-size:10.58333302px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+           style="font-style:normal;font-weight:normal;font-size:10.5833px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
            xml:space="preserve"><tspan
-             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.52777767px;font-family:'Caviar Dreams';-inkscape-font-specification:'Caviar Dreams';stroke-width:0.26458332"
+             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.52778px;font-family:'Caviar Dreams';-inkscape-font-specification:'Caviar Dreams';stroke-width:0.264583"
              y="83.50016"
              x="5.7830358"
              id="tspan358"
@@ -1348,26 +1473,26 @@
            height="9.2106829"
            width="95.627975"
            id="rect364"
-           style="fill:#e6e6e6;stroke-width:0.63193703" />
+           style="fill:#e6e6e6;stroke-width:0.631937" />
         <text
            id="text368"
            y="72.160866"
            x="5.8586307"
-           style="font-style:normal;font-weight:normal;font-size:10.58333302px;line-height:0.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+           style="font-style:normal;font-weight:normal;font-size:10.5833px;line-height:0.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
            xml:space="preserve"><tspan
-             style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:4.23333311px;line-height:0.25;font-family:Inconsolata;-inkscape-font-specification:'Inconsolata Bold';fill:#666666;stroke-width:0.26458332"
+             style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:4.23333px;line-height:0.25;font-family:Inconsolata;-inkscape-font-specification:'Inconsolata Bold';fill:#666666;stroke-width:0.264583"
              y="72.160866"
              x="5.8586307"
              id="tspan366"
              sodipodi:role="line">$ renku run &lt;command&gt; [--input &lt;in_file&gt;...]</tspan><tspan
-             style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:4.23333311px;line-height:0.25;font-family:Inconsolata;-inkscape-font-specification:'Inconsolata Bold';fill:#666666;stroke-width:0.26458332"
-             y="75.412117"
+             style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:4.23333px;line-height:0.25;font-family:Inconsolata;-inkscape-font-specification:'Inconsolata Bold';fill:#666666;stroke-width:0.264583"
+             y="75.677963"
              x="5.8586307"
              sodipodi:role="line"
              id="tspan392">  [--output &lt;out_file&gt;...]</tspan></text>
         <text
            xml:space="preserve"
-           style="font-style:normal;font-weight:normal;font-size:10.58333302px;line-height:0.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+           style="font-style:normal;font-weight:normal;font-size:10.5833px;line-height:0.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
            x="5.7830358"
            y="80.854324"
            id="text372"><tspan
@@ -1375,21 +1500,21 @@
              id="tspan370"
              x="5.7830358"
              y="80.854324"
-             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.52777767px;line-height:0.25;font-family:'Caviar Dreams';-inkscape-font-specification:'Caviar Dreams';stroke-width:0.26458332">Execute a &lt;command&gt; with Renku tracking inputs and</tspan><tspan
+             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.52778px;line-height:0.25;font-family:'Caviar Dreams';-inkscape-font-specification:'Caviar Dreams';stroke-width:0.264583">Execute a &lt;command&gt; with Renku tracking inputs and</tspan><tspan
              sodipodi:role="line"
              x="5.7830358"
-             y="84.273338"
-             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.52777767px;line-height:0.25;font-family:'Caviar Dreams';-inkscape-font-specification:'Caviar Dreams';stroke-width:0.26458332"
+             y="84.628151"
+             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.52778px;line-height:0.25;font-family:'Caviar Dreams';-inkscape-font-specification:'Caviar Dreams';stroke-width:0.264583"
              id="tspan394">outputs. Input and output files are automatically detected</tspan><tspan
              sodipodi:role="line"
              x="5.7830358"
-             y="87.69236"
-             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.52777767px;line-height:0.25;font-family:'Caviar Dreams';-inkscape-font-specification:'Caviar Dreams';stroke-width:0.26458332"
+             y="88.401978"
+             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.52778px;line-height:0.25;font-family:'Caviar Dreams';-inkscape-font-specification:'Caviar Dreams';stroke-width:0.264583"
              id="tspan398">from the command string. With --input and/or --output: </tspan><tspan
              sodipodi:role="line"
              x="5.7830358"
-             y="91.111374"
-             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.52777767px;line-height:0.25;font-family:'Caviar Dreams';-inkscape-font-specification:'Caviar Dreams';stroke-width:0.26458332"
+             y="92.175804"
+             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.52778px;line-height:0.25;font-family:'Caviar Dreams';-inkscape-font-specification:'Caviar Dreams';stroke-width:0.264583"
              id="tspan396">Manually specify input or output files to track.</tspan></text>
       </g>
       <g
@@ -1409,8 +1534,9 @@
                y="206.31134"
                style="fill:#333333;fill-opacity:1" /></flowRegion><flowPara
              id="flowPara380"
-             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:29.33333397px;font-family:'Caviar Dreams';-inkscape-font-specification:'Caviar Dreams';text-align:center;text-anchor:middle;fill:#333333;fill-opacity:1">Running</flowPara></flowRoot>        <rect
-           style="fill:#90ca42;fill-opacity:1;stroke-width:0.23570955"
+             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:29.3333px;font-family:'Caviar Dreams';-inkscape-font-specification:'Caviar Dreams';text-align:center;text-anchor:middle;fill:#333333;fill-opacity:1">Running</flowPara></flowRoot>
+        <rect
+           style="fill:#90ca42;fill-opacity:1;stroke-width:0.23571"
            id="rect384"
            width="6.6817384"
            height="1.6036171"
@@ -1428,7 +1554,7 @@
          id="g1287"
          style="display:inline">
         <rect
-           style="fill:#e6e6e6;stroke-width:0.50915557"
+           style="fill:#e6e6e6;stroke-width:0.509156"
            id="rect1277"
            width="95.627975"
            height="5.979229"
@@ -1436,7 +1562,7 @@
            y="67.946434" />
         <text
            xml:space="preserve"
-           style="font-style:normal;font-weight:normal;font-size:10.58333302px;line-height:0.5;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+           style="font-style:normal;font-weight:normal;font-size:10.5833px;line-height:0.5;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
            x="5.8586307"
            y="72.160866"
            id="text1281"
@@ -1444,16 +1570,16 @@
              sodipodi:role="line"
              x="5.8586307"
              y="72.160866"
-             style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:4.23333311px;line-height:0.5;font-family:Inconsolata;-inkscape-font-specification:'Inconsolata Bold';fill:#666666;stroke-width:0.26458332"
+             style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:4.23333px;line-height:0.5;font-family:Inconsolata;-inkscape-font-specification:'Inconsolata Bold';fill:#666666;stroke-width:0.264583"
              id="tspan1279">$ renku dataset rm-tags &lt;dataset&gt; &lt;tags..&gt;</tspan></text>
         <text
            id="text1285"
            y="77.679321"
            x="5.7830358"
-           style="font-style:normal;font-weight:normal;font-size:10.58333302px;line-height:0.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+           style="font-style:normal;font-weight:normal;font-size:10.5833px;line-height:0.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
            xml:space="preserve"><tspan
              id="tspan1283"
-             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.52777767px;line-height:0.25;font-family:'Caviar Dreams';-inkscape-font-specification:'Caviar Dreams';stroke-width:0.26458332"
+             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.52778px;line-height:0.25;font-family:'Caviar Dreams';-inkscape-font-specification:'Caviar Dreams';stroke-width:0.264583"
              y="77.679321"
              x="5.7830358"
              sodipodi:role="line">Remove tags from a dataset</tspan></text>
@@ -1469,29 +1595,29 @@
            height="5.979229"
            width="95.627975"
            id="rect1261"
-           style="fill:#e6e6e6;stroke-width:0.50915557" />
+           style="fill:#e6e6e6;stroke-width:0.509156" />
         <text
            inkscape:label="text250"
            id="text1267"
            y="72.160866"
            x="5.8586307"
-           style="font-style:normal;font-weight:normal;font-size:10.58333302px;line-height:0.5;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+           style="font-style:normal;font-weight:normal;font-size:10.5833px;line-height:0.5;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
            xml:space="preserve"><tspan
              id="tspan1265"
-             style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:4.23333311px;line-height:0.5;font-family:Inconsolata;-inkscape-font-specification:'Inconsolata Bold';fill:#666666;stroke-width:0.26458332"
+             style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:4.23333px;line-height:0.5;font-family:Inconsolata;-inkscape-font-specification:'Inconsolata Bold';fill:#666666;stroke-width:0.264583"
              y="72.160866"
              x="5.8586307"
              sodipodi:role="line">$ renku dataset ls-tags &lt;dataset&gt;</tspan></text>
         <text
            xml:space="preserve"
-           style="font-style:normal;font-weight:normal;font-size:10.58333302px;line-height:0.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+           style="font-style:normal;font-weight:normal;font-size:10.5833px;line-height:0.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
            x="5.7830358"
            y="77.679321"
            id="text1271"><tspan
              sodipodi:role="line"
              x="5.7830358"
              y="77.679321"
-             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.52777767px;line-height:0.25;font-family:'Caviar Dreams';-inkscape-font-specification:'Caviar Dreams';stroke-width:0.26458332"
+             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.52778px;line-height:0.25;font-family:'Caviar Dreams';-inkscape-font-specification:'Caviar Dreams';stroke-width:0.264583"
              id="tspan1269">Show all tags for a dataset</tspan></text>
       </g>
       <g
@@ -1500,7 +1626,7 @@
          id="g1223"
          style="display:inline">
         <rect
-           style="fill:#e6e6e6;stroke-width:0.69326633"
+           style="fill:#e6e6e6;stroke-width:0.693266"
            id="rect1211"
            width="95.627975"
            height="11.085223"
@@ -1508,7 +1634,7 @@
            y="67.946434" />
         <text
            xml:space="preserve"
-           style="font-style:normal;font-weight:normal;font-size:10.58333302px;line-height:0.5;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+           style="font-style:normal;font-weight:normal;font-size:10.5833px;line-height:0.5;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
            x="5.8586307"
            y="72.160866"
            id="text1215"
@@ -1517,20 +1643,20 @@
              sodipodi:role="line"
              x="5.8586307"
              y="72.160866"
-             style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:4.23333311px;line-height:0.5;font-family:Inconsolata;-inkscape-font-specification:'Inconsolata Bold';fill:#666666;stroke-width:0.26458332">$ renku dataset tag &lt;dataset&gt; &lt;tag&gt; </tspan><tspan
+             style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:4.23333px;line-height:0.5;font-family:Inconsolata;-inkscape-font-specification:'Inconsolata Bold';fill:#666666;stroke-width:0.264583">$ renku dataset tag &lt;dataset&gt; &lt;tag&gt; </tspan><tspan
              sodipodi:role="line"
              x="5.8586307"
-             y="77.45253"
-             style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:4.23333311px;line-height:0.5;font-family:Inconsolata;-inkscape-font-specification:'Inconsolata Bold';fill:#666666;stroke-width:0.26458332"
+             y="77.530037"
+             style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:4.23333px;line-height:0.5;font-family:Inconsolata;-inkscape-font-specification:'Inconsolata Bold';fill:#666666;stroke-width:0.264583"
              id="tspan1253">  [-d description]</tspan></text>
         <text
            id="text1221"
            y="82.441826"
            x="5.7830358"
-           style="font-style:normal;font-weight:normal;font-size:10.58333302px;line-height:0.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+           style="font-style:normal;font-weight:normal;font-size:10.5833px;line-height:0.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
            xml:space="preserve"><tspan
              id="tspan1219"
-             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.52777767px;line-height:0.25;font-family:'Caviar Dreams';-inkscape-font-specification:'Caviar Dreams';stroke-width:0.26458332"
+             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.52778px;line-height:0.25;font-family:'Caviar Dreams';-inkscape-font-specification:'Caviar Dreams';stroke-width:0.264583"
              y="82.441826"
              x="5.7830358"
              sodipodi:role="line">Add a tag for the dataset at the current point in time</tspan></text>
@@ -1546,22 +1672,22 @@
            height="6.3273644"
            width="95.627975"
            id="rect1844"
-           style="fill:#e6e6e6;stroke-width:0.52376842" />
+           style="fill:#e6e6e6;stroke-width:0.523768" />
         <text
            inkscape:label="text250"
            id="text1848"
            y="72.160866"
            x="5.8586307"
-           style="font-style:normal;font-weight:normal;font-size:10.58333302px;line-height:0.5;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+           style="font-style:normal;font-weight:normal;font-size:10.5833px;line-height:0.5;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
            xml:space="preserve"><tspan
-             style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:4.23333311px;line-height:0.5;font-family:Inconsolata;-inkscape-font-specification:'Inconsolata Bold';fill:#666666;stroke-width:0.26458332"
+             style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:4.23333px;line-height:0.5;font-family:Inconsolata;-inkscape-font-specification:'Inconsolata Bold';fill:#666666;stroke-width:0.264583"
              y="72.160866"
              x="5.8586307"
              sodipodi:role="line"
              id="tspan1846">$ renku dataset export &lt;dataset&gt; &lt;provider&gt;</tspan></text>
         <text
            xml:space="preserve"
-           style="font-style:normal;font-weight:normal;font-size:10.58333302px;line-height:0.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+           style="font-style:normal;font-weight:normal;font-size:10.5833px;line-height:0.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
            x="5.7830358"
            y="78.208488"
            id="text1854"><tspan
@@ -1569,11 +1695,11 @@
              sodipodi:role="line"
              x="5.7830358"
              y="78.208488"
-             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.52777767px;line-height:0.25;font-family:'Caviar Dreams';-inkscape-font-specification:'Caviar Dreams';stroke-width:0.26458332">Export the dataset &lt;dataset&gt; to &lt;provider&gt;. Providers:</tspan><tspan
+             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.52778px;line-height:0.25;font-family:'Caviar Dreams';-inkscape-font-specification:'Caviar Dreams';stroke-width:0.264583">Export the dataset &lt;dataset&gt; to &lt;provider&gt;. Providers:</tspan><tspan
              sodipodi:role="line"
              x="5.7830358"
-             y="81.627502"
-             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.52777767px;line-height:0.25;font-family:'Caviar Dreams';-inkscape-font-specification:'Caviar Dreams';stroke-width:0.26458332"
+             y="81.982315"
+             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.52778px;line-height:0.25;font-family:'Caviar Dreams';-inkscape-font-specification:'Caviar Dreams';stroke-width:0.264583"
              id="tspan1860">Zenodo. Also lets you chose what dataset tag to export.</tspan></text>
       </g>
       <g
@@ -1581,7 +1707,7 @@
          inkscape:label="Import"
          id="g1836">
         <rect
-           style="fill:#e6e6e6;stroke-width:0.52376842"
+           style="fill:#e6e6e6;stroke-width:0.523768"
            id="rect1822"
            width="95.627975"
            height="6.3273644"
@@ -1589,7 +1715,7 @@
            y="67.946434" />
         <text
            xml:space="preserve"
-           style="font-style:normal;font-weight:normal;font-size:10.58333302px;line-height:0.5;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+           style="font-style:normal;font-weight:normal;font-size:10.5833px;line-height:0.5;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
            x="5.8586307"
            y="72.160866"
            id="text1828"
@@ -1598,20 +1724,20 @@
              sodipodi:role="line"
              x="5.8586307"
              y="72.160866"
-             style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:4.23333311px;line-height:0.5;font-family:Inconsolata;-inkscape-font-specification:'Inconsolata Bold';fill:#666666;stroke-width:0.26458332">$ renku dataset import &lt;uri&gt;</tspan></text>
+             style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:4.23333px;line-height:0.5;font-family:Inconsolata;-inkscape-font-specification:'Inconsolata Bold';fill:#666666;stroke-width:0.264583">$ renku dataset import &lt;uri&gt;</tspan></text>
         <text
            id="text1834"
            y="78.208488"
            x="5.7830358"
-           style="font-style:normal;font-weight:normal;font-size:10.58333302px;line-height:0.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+           style="font-style:normal;font-weight:normal;font-size:10.5833px;line-height:0.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
            xml:space="preserve"><tspan
              id="tspan1832"
-             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.52777767px;line-height:0.25;font-family:'Caviar Dreams';-inkscape-font-specification:'Caviar Dreams';stroke-width:0.26458332"
+             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.52778px;line-height:0.25;font-family:'Caviar Dreams';-inkscape-font-specification:'Caviar Dreams';stroke-width:0.264583"
              y="78.208488"
              x="5.7830358"
              sodipodi:role="line">Import a dataset. &lt;uri&gt; can be a Zenodo or Dataverse</tspan><tspan
-             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.52777767px;line-height:0.25;font-family:'Caviar Dreams';-inkscape-font-specification:'Caviar Dreams';stroke-width:0.26458332"
-             y="81.627502"
+             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.52778px;line-height:0.25;font-family:'Caviar Dreams';-inkscape-font-specification:'Caviar Dreams';stroke-width:0.264583"
+             y="81.982315"
              x="5.7830358"
              sodipodi:role="line"
              id="tspan1842">URL or DOI.</tspan></text>
@@ -1626,27 +1752,27 @@
            height="10.969177"
            width="95.627975"
            id="rect262"
-           style="fill:#e6e6e6;stroke-width:0.68962806" />
+           style="fill:#e6e6e6;stroke-width:0.689628" />
         <text
            inkscape:label="text250"
            id="text266"
            y="72.160866"
            x="5.8586307"
-           style="font-style:normal;font-weight:normal;font-size:10.58333302px;line-height:0.5;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+           style="font-style:normal;font-weight:normal;font-size:10.5833px;line-height:0.5;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
            xml:space="preserve"><tspan
              id="tspan264"
-             style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:4.23333311px;line-height:0.5;font-family:Inconsolata;-inkscape-font-specification:'Inconsolata Bold';fill:#666666;stroke-width:0.26458332"
+             style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:4.23333px;line-height:0.5;font-family:Inconsolata;-inkscape-font-specification:'Inconsolata Bold';fill:#666666;stroke-width:0.264583"
              y="72.160866"
              x="5.8586307"
              sodipodi:role="line">$ renku dataset unlink &lt;dataset&gt; </tspan><tspan
-             style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:4.23333311px;line-height:0.5;font-family:Inconsolata;-inkscape-font-specification:'Inconsolata Bold';fill:#666666;stroke-width:0.26458332"
-             y="77.45253"
+             style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:4.23333px;line-height:0.5;font-family:Inconsolata;-inkscape-font-specification:'Inconsolata Bold';fill:#666666;stroke-width:0.264583"
+             y="77.530037"
              x="5.8586307"
              sodipodi:role="line"
              id="tspan274">  [--include &lt;path_or_pattern&gt;]</tspan></text>
         <text
            xml:space="preserve"
-           style="font-style:normal;font-weight:normal;font-size:10.58333302px;line-height:0.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+           style="font-style:normal;font-weight:normal;font-size:10.5833px;line-height:0.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
            x="5.7830358"
            y="82.970993"
            id="text270"><tspan
@@ -1654,11 +1780,11 @@
              id="tspan268"
              x="5.7830358"
              y="82.970993"
-             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.52777767px;line-height:0.25;font-family:'Caviar Dreams';-inkscape-font-specification:'Caviar Dreams';stroke-width:0.26458332">Unlink (all) files from a dataset. With --include: Specify </tspan><tspan
+             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.52778px;line-height:0.25;font-family:'Caviar Dreams';-inkscape-font-specification:'Caviar Dreams';stroke-width:0.264583">Unlink (all) files from a dataset. With --include: Specify </tspan><tspan
              sodipodi:role="line"
              x="5.7830358"
-             y="86.390007"
-             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.52777767px;line-height:0.25;font-family:'Caviar Dreams';-inkscape-font-specification:'Caviar Dreams';stroke-width:0.26458332"
+             y="86.74482"
+             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.52778px;line-height:0.25;font-family:'Caviar Dreams';-inkscape-font-specification:'Caviar Dreams';stroke-width:0.264583"
              id="tspan276">single path or pattern of files to unlink.</tspan></text>
       </g>
       <g
@@ -1666,7 +1792,7 @@
          inkscape:label="List files"
          id="g256">
         <rect
-           style="fill:#e6e6e6;stroke-width:0.4996224"
+           style="fill:#e6e6e6;stroke-width:0.499622"
            id="rect246"
            width="95.627975"
            height="5.7574215"
@@ -1674,7 +1800,7 @@
            y="67.946434" />
         <text
            xml:space="preserve"
-           style="font-style:normal;font-weight:normal;font-size:10.58333302px;line-height:0.5;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+           style="font-style:normal;font-weight:normal;font-size:10.5833px;line-height:0.5;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
            x="5.8586307"
            y="72.160866"
            id="text250"
@@ -1682,15 +1808,15 @@
              sodipodi:role="line"
              x="5.8586307"
              y="72.160866"
-             style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:4.23333311px;line-height:0.5;font-family:Inconsolata;-inkscape-font-specification:'Inconsolata Bold';fill:#666666;stroke-width:0.26458332"
+             style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:4.23333px;line-height:0.5;font-family:Inconsolata;-inkscape-font-specification:'Inconsolata Bold';fill:#666666;stroke-width:0.264583"
              id="tspan258">$ renku dataset ls-files</tspan></text>
         <text
            id="text254"
            y="77.679321"
            x="5.7830358"
-           style="font-style:normal;font-weight:normal;font-size:10.58333302px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+           style="font-style:normal;font-weight:normal;font-size:10.5833px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
            xml:space="preserve"><tspan
-             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.52777767px;font-family:'Caviar Dreams';-inkscape-font-specification:'Caviar Dreams';stroke-width:0.26458332"
+             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.52778px;font-family:'Caviar Dreams';-inkscape-font-specification:'Caviar Dreams';stroke-width:0.264583"
              y="77.679321"
              x="5.7830358"
              id="tspan252"
@@ -1701,7 +1827,7 @@
          inkscape:label="Add Data target"
          id="g233">
         <rect
-           style="fill:#e6e6e6;stroke-width:0.84447557"
+           style="fill:#e6e6e6;stroke-width:0.844476"
            id="rect219"
            width="95.627975"
            height="16.448202"
@@ -1709,38 +1835,38 @@
            y="67.946434" />
         <text
            xml:space="preserve"
-           style="font-style:normal;font-weight:normal;font-size:10.58333302px;line-height:0.5;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+           style="font-style:normal;font-weight:normal;font-size:10.5833px;line-height:0.5;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
            x="5.8586307"
            y="72.160866"
            id="text223"><tspan
              sodipodi:role="line"
              x="5.8586307"
              y="72.160866"
-             style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:4.23333311px;line-height:0.5;font-family:Inconsolata;-inkscape-font-specification:'Inconsolata Bold';fill:#666666;stroke-width:0.26458332"
+             style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:4.23333px;line-height:0.5;font-family:Inconsolata;-inkscape-font-specification:'Inconsolata Bold';fill:#666666;stroke-width:0.264583"
              id="tspan221">$ renku dataset add &lt;dataset&gt; </tspan><tspan
              sodipodi:role="line"
              x="5.8586307"
-             y="77.45253"
-             style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:4.23333311px;line-height:0.5;font-family:Inconsolata;-inkscape-font-specification:'Inconsolata Bold';fill:#666666;stroke-width:0.26458332"
+             y="77.530037"
+             style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:4.23333px;line-height:0.5;font-family:Inconsolata;-inkscape-font-specification:'Inconsolata Bold';fill:#666666;stroke-width:0.264583"
              id="tspan235">  --target &lt;path&gt; [--relative-to &lt;rel-path&gt;]</tspan><tspan
              sodipodi:role="line"
              x="5.8586307"
-             y="82.744202"
-             style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:4.23333311px;line-height:0.5;font-family:Inconsolata;-inkscape-font-specification:'Inconsolata Bold';fill:#666666;stroke-width:0.26458332"
+             y="82.899216"
+             style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:4.23333px;line-height:0.5;font-family:Inconsolata;-inkscape-font-specification:'Inconsolata Bold';fill:#666666;stroke-width:0.264583"
              id="tspan237">  &lt;github-url&gt;</tspan></text>
         <text
            id="text231"
            y="87.733498"
            x="5.7830358"
-           style="font-style:normal;font-weight:normal;font-size:10.58333302px;line-height:0.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+           style="font-style:normal;font-weight:normal;font-size:10.5833px;line-height:0.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
            xml:space="preserve"><tspan
              id="tspan229"
-             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.52777767px;line-height:0.25;font-family:'Caviar Dreams';-inkscape-font-specification:'Caviar Dreams';stroke-width:0.26458332"
+             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.52778px;line-height:0.25;font-family:'Caviar Dreams';-inkscape-font-specification:'Caviar Dreams';stroke-width:0.264583"
              y="87.733498"
              x="5.7830358"
              sodipodi:role="line">Add only data contained in &lt;path&gt; from Git</tspan><tspan
-             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.52777767px;line-height:0.25;font-family:'Caviar Dreams';-inkscape-font-specification:'Caviar Dreams';stroke-width:0.26458332"
-             y="91.152512"
+             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.52778px;line-height:0.25;font-family:'Caviar Dreams';-inkscape-font-specification:'Caviar Dreams';stroke-width:0.264583"
+             y="91.507324"
              x="5.7830358"
              sodipodi:role="line"
              id="tspan244">With --relative-to: Trim &lt;rel-path&gt; from &lt;path&gt; locally.</tspan></text>
@@ -1760,16 +1886,16 @@
            id="text147"
            y="72.160866"
            x="5.8586307"
-           style="font-style:normal;font-weight:normal;font-size:10.58333302px;line-height:0.5;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+           style="font-style:normal;font-weight:normal;font-size:10.5833px;line-height:0.5;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
            xml:space="preserve"><tspan
              id="tspan145"
-             style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:4.23333311px;line-height:0.5;font-family:Inconsolata;-inkscape-font-specification:'Inconsolata Bold';fill:#666666;stroke-width:0.26458332"
+             style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:4.23333px;line-height:0.5;font-family:Inconsolata;-inkscape-font-specification:'Inconsolata Bold';fill:#666666;stroke-width:0.264583"
              y="72.160866"
              x="5.8586307"
              sodipodi:role="line">$ renku dataset add &lt;dataset&gt; &lt;url&gt;</tspan></text>
         <text
            xml:space="preserve"
-           style="font-style:normal;font-weight:normal;font-size:10.58333302px;line-height:0.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+           style="font-style:normal;font-weight:normal;font-size:10.5833px;line-height:0.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
            x="5.7830358"
            y="77.679321"
            id="text151"><tspan
@@ -1777,16 +1903,16 @@
              id="tspan149"
              x="5.7830358"
              y="77.679321"
-             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.52777767px;line-height:0.25;font-family:'Caviar Dreams';-inkscape-font-specification:'Caviar Dreams';stroke-width:0.26458332">Add data from &lt;url&gt; to a dataset</tspan><tspan
+             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.52778px;line-height:0.25;font-family:'Caviar Dreams';-inkscape-font-specification:'Caviar Dreams';stroke-width:0.264583">Add data from &lt;url&gt; to a dataset</tspan><tspan
              sodipodi:role="line"
              x="5.7830358"
-             y="81.098335"
-             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.52777767px;line-height:0.25;font-family:'Caviar Dreams';-inkscape-font-specification:'Caviar Dreams';stroke-width:0.26458332"
+             y="81.453148"
+             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.52778px;line-height:0.25;font-family:'Caviar Dreams';-inkscape-font-specification:'Caviar Dreams';stroke-width:0.264583"
              id="tspan215">&lt;url&gt; can be a local file path, an http(s) address or a Git </tspan><tspan
              sodipodi:role="line"
              x="5.7830358"
-             y="84.517357"
-             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.52777767px;line-height:0.25;font-family:'Caviar Dreams';-inkscape-font-specification:'Caviar Dreams';stroke-width:0.26458332"
+             y="85.226974"
+             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.52778px;line-height:0.25;font-family:'Caviar Dreams';-inkscape-font-specification:'Caviar Dreams';stroke-width:0.264583"
              id="tspan217">git+http or git+ssh repository. </tspan></text>
       </g>
       <g
@@ -1794,7 +1920,7 @@
          inkscape:label="Remove Dataset"
          id="g167">
         <rect
-           style="fill:#e6e6e6;stroke-width:0.50538749"
+           style="fill:#e6e6e6;stroke-width:0.505387"
            id="rect155"
            width="95.627975"
            height="5.8910565"
@@ -1802,22 +1928,22 @@
            y="67.946434" />
         <text
            xml:space="preserve"
-           style="font-style:normal;font-weight:normal;font-size:10.58333302px;line-height:0.5;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+           style="font-style:normal;font-weight:normal;font-size:10.5833px;line-height:0.5;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
            x="5.8586307"
            y="72.160866"
            id="text161"><tspan
              sodipodi:role="line"
              x="5.8586307"
              y="72.160866"
-             style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:4.23333311px;line-height:0.5;font-family:Inconsolata;-inkscape-font-specification:'Inconsolata Bold';fill:#666666;stroke-width:0.26458332"
+             style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:4.23333px;line-height:0.5;font-family:Inconsolata;-inkscape-font-specification:'Inconsolata Bold';fill:#666666;stroke-width:0.264583"
              id="tspan159">$ renku dataset rm &lt;dataset&gt;</tspan></text>
         <text
            id="text165"
            y="77.679321"
            x="5.7830358"
-           style="font-style:normal;font-weight:normal;font-size:10.58333302px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+           style="font-style:normal;font-weight:normal;font-size:10.5833px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
            xml:space="preserve"><tspan
-             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.52777767px;font-family:'Caviar Dreams';-inkscape-font-specification:'Caviar Dreams';stroke-width:0.26458332"
+             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.52778px;font-family:'Caviar Dreams';-inkscape-font-specification:'Caviar Dreams';stroke-width:0.264583"
              y="77.679321"
              x="5.7830358"
              id="tspan163"
@@ -1833,21 +1959,21 @@
            height="5.7574215"
            width="95.627975"
            id="rect169"
-           style="fill:#e6e6e6;stroke-width:0.4996224" />
+           style="fill:#e6e6e6;stroke-width:0.499622" />
         <text
            id="text175"
            y="72.160866"
            x="5.8586307"
-           style="font-style:normal;font-weight:normal;font-size:10.58333302px;line-height:0.5;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+           style="font-style:normal;font-weight:normal;font-size:10.5833px;line-height:0.5;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
            xml:space="preserve"><tspan
              id="tspan173"
-             style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:4.23333311px;line-height:0.5;font-family:Inconsolata;-inkscape-font-specification:'Inconsolata Bold';fill:#666666;stroke-width:0.26458332"
+             style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:4.23333px;line-height:0.5;font-family:Inconsolata;-inkscape-font-specification:'Inconsolata Bold';fill:#666666;stroke-width:0.264583"
              y="72.160866"
              x="5.8586307"
-             sodipodi:role="line">$ renku dataset</tspan></text>
+             sodipodi:role="line">$ renku dataset ls</tspan></text>
         <text
            xml:space="preserve"
-           style="font-style:normal;font-weight:normal;font-size:10.58333302px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+           style="font-style:normal;font-weight:normal;font-size:10.5833px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
            x="5.7830358"
            y="77.679321"
            id="text179"><tspan
@@ -1855,14 +1981,14 @@
              id="tspan177"
              x="5.7830358"
              y="77.679321"
-             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.52777767px;font-family:'Caviar Dreams';-inkscape-font-specification:'Caviar Dreams';stroke-width:0.26458332">List all datasets in the project.</tspan></text>
+             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.52778px;font-family:'Caviar Dreams';-inkscape-font-specification:'Caviar Dreams';stroke-width:0.264583">List all datasets in the project.</tspan></text>
       </g>
       <g
          transform="translate(-33.687426,-1.1339286)"
          inkscape:label="create dataset"
          id="g193">
         <rect
-           style="fill:#e6e6e6;stroke-width:0.52781844"
+           style="fill:#e6e6e6;stroke-width:0.527818"
            id="rect183"
            width="95.627975"
            height="6.4255953"
@@ -1870,7 +1996,7 @@
            y="67.946434" />
         <text
            xml:space="preserve"
-           style="font-style:normal;font-weight:normal;font-size:10.58333302px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+           style="font-style:normal;font-weight:normal;font-size:10.5833px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
            x="5.8586307"
            y="72.160866"
            id="text187"><tspan
@@ -1878,14 +2004,14 @@
              id="tspan185"
              x="5.8586307"
              y="72.160866"
-             style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:4.23333311px;font-family:Inconsolata;-inkscape-font-specification:'Inconsolata Bold';fill:#666666;stroke-width:0.26458332">$ renku dataset create &lt;dataset&gt;</tspan></text>
+             style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:4.23333px;font-family:Inconsolata;-inkscape-font-specification:'Inconsolata Bold';fill:#666666;stroke-width:0.264583">$ renku dataset create &lt;dataset&gt;</tspan></text>
         <text
            id="text191"
            y="78.208488"
            x="5.7830358"
-           style="font-style:normal;font-weight:normal;font-size:10.58333302px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+           style="font-style:normal;font-weight:normal;font-size:10.5833px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
            xml:space="preserve"><tspan
-             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.52777767px;font-family:'Caviar Dreams';-inkscape-font-specification:'Caviar Dreams';stroke-width:0.26458332"
+             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.52778px;font-family:'Caviar Dreams';-inkscape-font-specification:'Caviar Dreams';stroke-width:0.264583"
              y="78.208488"
              x="5.7830358"
              id="tspan189"
@@ -1907,14 +2033,15 @@
                height="70.839378"
                width="257.61969"
                id="rect195" /></flowRegion><flowPara
-             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:29.33333397px;font-family:'Caviar Dreams';-inkscape-font-specification:'Caviar Dreams';text-align:center;text-anchor:middle;fill:#333333;fill-opacity:1"
-             id="flowPara199">Datasets</flowPara></flowRoot>        <rect
+             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:29.3333px;font-family:'Caviar Dreams';-inkscape-font-specification:'Caviar Dreams';text-align:center;text-anchor:middle;fill:#333333;fill-opacity:1"
+             id="flowPara199">Datasets</flowPara></flowRoot>
+        <rect
            y="62.043823"
            x="15.517194"
            height="1.6036171"
            width="6.6817384"
            id="rect203"
-           style="fill:#90ca42;fill-opacity:1;stroke-width:0.23570955" />
+           style="fill:#90ca42;fill-opacity:1;stroke-width:0.23571" />
       </g>
     </g>
     <g
@@ -1926,7 +2053,7 @@
          inkscape:label="Init Force"
          id="g139">
         <rect
-           style="fill:#e6e6e6;stroke-width:0.68541437"
+           style="fill:#e6e6e6;stroke-width:0.685414"
            id="rect127"
            width="95.627975"
            height="10.835543"
@@ -1934,7 +2061,7 @@
            y="67.946434" />
         <text
            xml:space="preserve"
-           style="font-style:normal;font-weight:normal;font-size:10.58333302px;line-height:0.5;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+           style="font-style:normal;font-weight:normal;font-size:10.5833px;line-height:0.5;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
            x="5.8586307"
            y="72.160866"
            id="text133"><tspan
@@ -1942,19 +2069,19 @@
              id="tspan129"
              x="5.8586307"
              y="72.160866"
-             style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:4.23333311px;line-height:0.5;font-family:Inconsolata;-inkscape-font-specification:'Inconsolata Bold';fill:#666666;stroke-width:0.26458332">$ cd my_project</tspan><tspan
+             style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:4.23333px;line-height:0.5;font-family:Inconsolata;-inkscape-font-specification:'Inconsolata Bold';fill:#666666;stroke-width:0.264583">$ cd my_project</tspan><tspan
              sodipodi:role="line"
              x="5.8586307"
-             y="77.45253"
-             style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:4.23333311px;line-height:0.5;font-family:Inconsolata;-inkscape-font-specification:'Inconsolata Bold';fill:#666666;stroke-width:0.26458332"
+             y="77.530037"
+             style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:4.23333px;line-height:0.5;font-family:Inconsolata;-inkscape-font-specification:'Inconsolata Bold';fill:#666666;stroke-width:0.264583"
              id="tspan131">$ renku init --force</tspan></text>
         <text
            id="text137"
            y="82.441826"
            x="5.7830358"
-           style="font-style:normal;font-weight:normal;font-size:10.58333302px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+           style="font-style:normal;font-weight:normal;font-size:10.5833px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
            xml:space="preserve"><tspan
-             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.52777767px;font-family:'Caviar Dreams';-inkscape-font-specification:'Caviar Dreams';stroke-width:0.26458332"
+             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.52778px;font-family:'Caviar Dreams';-inkscape-font-specification:'Caviar Dreams';stroke-width:0.264583"
              y="82.441826"
              x="5.7830358"
              id="tspan135"
@@ -1970,26 +2097,26 @@
            height="10.835543"
            width="95.627975"
            id="rect113"
-           style="fill:#e6e6e6;stroke-width:0.68541437" />
+           style="fill:#e6e6e6;stroke-width:0.685414" />
         <text
            id="text119"
            y="72.160866"
            x="5.8586307"
-           style="font-style:normal;font-weight:normal;font-size:10.58333302px;line-height:0.5;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+           style="font-style:normal;font-weight:normal;font-size:10.5833px;line-height:0.5;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
            xml:space="preserve"><tspan
-             style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:4.23333311px;line-height:0.5;font-family:Inconsolata;-inkscape-font-specification:'Inconsolata Bold';fill:#666666;stroke-width:0.26458332"
+             style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:4.23333px;line-height:0.5;font-family:Inconsolata;-inkscape-font-specification:'Inconsolata Bold';fill:#666666;stroke-width:0.264583"
              y="72.160866"
              x="5.8586307"
              id="tspan115"
              sodipodi:role="line">$ cd my_project</tspan><tspan
              id="tspan117"
-             style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:4.23333311px;line-height:0.5;font-family:Inconsolata;-inkscape-font-specification:'Inconsolata Bold';fill:#666666;stroke-width:0.26458332"
-             y="77.45253"
+             style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:4.23333px;line-height:0.5;font-family:Inconsolata;-inkscape-font-specification:'Inconsolata Bold';fill:#666666;stroke-width:0.264583"
+             y="77.530037"
              x="5.8586307"
              sodipodi:role="line">$ renku init</tspan></text>
         <text
            xml:space="preserve"
-           style="font-style:normal;font-weight:normal;font-size:10.58333302px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+           style="font-style:normal;font-weight:normal;font-size:10.5833px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
            x="5.7830358"
            y="82.441826"
            id="text123"><tspan
@@ -1997,14 +2124,14 @@
              id="tspan121"
              x="5.7830358"
              y="82.441826"
-             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.52777767px;font-family:'Caviar Dreams';-inkscape-font-specification:'Caviar Dreams';stroke-width:0.26458332">Starting a Renku project.</tspan></text>
+             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.52778px;font-family:'Caviar Dreams';-inkscape-font-specification:'Caviar Dreams';stroke-width:0.264583">Starting a Renku project.</tspan></text>
       </g>
       <g
          transform="translate(-33.687426,11.427739)"
          inkscape:label="Homebrew install"
          id="g109">
         <rect
-           style="fill:#e6e6e6;stroke-width:0.68541437"
+           style="fill:#e6e6e6;stroke-width:0.685414"
            id="rect99"
            width="95.627975"
            height="10.835543"
@@ -2012,7 +2139,7 @@
            y="67.946434" />
         <text
            xml:space="preserve"
-           style="font-style:normal;font-weight:normal;font-size:10.58333302px;line-height:0.5;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+           style="font-style:normal;font-weight:normal;font-size:10.5833px;line-height:0.5;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
            x="5.8586307"
            y="72.160866"
            id="text103"><tspan
@@ -2020,19 +2147,19 @@
              id="tspan101"
              x="5.8586307"
              y="72.160866"
-             style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:4.23333311px;line-height:0.5;font-family:Inconsolata;-inkscape-font-specification:'Inconsolata Bold';fill:#666666;stroke-width:0.26458332">$ brew tap swissdatasciencecenter/renku</tspan><tspan
+             style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:4.23333px;line-height:0.5;font-family:Inconsolata;-inkscape-font-specification:'Inconsolata Bold';fill:#666666;stroke-width:0.264583">$ brew tap swissdatasciencecenter/renku</tspan><tspan
              sodipodi:role="line"
              x="5.8586307"
-             y="77.45253"
-             style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:4.23333311px;line-height:0.5;font-family:Inconsolata;-inkscape-font-specification:'Inconsolata Bold';fill:#666666;stroke-width:0.26458332"
+             y="77.530037"
+             style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:4.23333px;line-height:0.5;font-family:Inconsolata;-inkscape-font-specification:'Inconsolata Bold';fill:#666666;stroke-width:0.264583"
              id="tspan111">$ brew install renku</tspan></text>
         <text
            id="text107"
            y="82.441826"
            x="5.7830358"
-           style="font-style:normal;font-weight:normal;font-size:10.58333302px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+           style="font-style:normal;font-weight:normal;font-size:10.5833px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
            xml:space="preserve"><tspan
-             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.52777767px;font-family:'Caviar Dreams';-inkscape-font-specification:'Caviar Dreams';stroke-width:0.26458332"
+             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.52778px;font-family:'Caviar Dreams';-inkscape-font-specification:'Caviar Dreams';stroke-width:0.264583"
              y="82.441826"
              x="5.7830358"
              id="tspan105"
@@ -2048,21 +2175,21 @@
            height="6.4255953"
            width="95.627975"
            id="rect35"
-           style="fill:#e6e6e6;stroke-width:0.52781844" />
+           style="fill:#e6e6e6;stroke-width:0.527818" />
         <text
            id="text33"
            y="72.160866"
            x="5.8586307"
-           style="font-style:normal;font-weight:normal;font-size:10.58333302px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+           style="font-style:normal;font-weight:normal;font-size:10.5833px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
            xml:space="preserve"><tspan
-             style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:4.23333311px;font-family:Inconsolata;-inkscape-font-specification:'Inconsolata Bold';fill:#666666;stroke-width:0.26458332"
+             style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:4.23333px;font-family:Inconsolata;-inkscape-font-specification:'Inconsolata Bold';fill:#666666;stroke-width:0.264583"
              y="72.160866"
              x="5.8586307"
              id="tspan31"
              sodipodi:role="line">$ pip install renku</tspan></text>
         <text
            xml:space="preserve"
-           style="font-style:normal;font-weight:normal;font-size:10.58333302px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+           style="font-style:normal;font-weight:normal;font-size:10.5833px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
            x="5.7830358"
            y="78.208488"
            id="text95"><tspan
@@ -2070,7 +2197,7 @@
              id="tspan93"
              x="5.7830358"
              y="78.208488"
-             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.52777767px;font-family:'Caviar Dreams';-inkscape-font-specification:'Caviar Dreams';stroke-width:0.26458332">Install with pip.</tspan></text>
+             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.52778px;font-family:'Caviar Dreams';-inkscape-font-specification:'Caviar Dreams';stroke-width:0.264583">Install with pip.</tspan></text>
       </g>
       <g
          id="g51"
@@ -2089,8 +2216,9 @@
                y="206.31134"
                style="fill:#333333;fill-opacity:1" /></flowRegion><flowPara
              id="flowPara3761"
-             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:29.33333397px;font-family:'Caviar Dreams';-inkscape-font-specification:'Caviar Dreams';text-align:center;text-anchor:middle;fill:#333333;fill-opacity:1">Getting Started</flowPara></flowRoot>        <rect
-           style="fill:#90ca42;fill-opacity:1;stroke-width:0.23570955"
+             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:29.3333px;font-family:'Caviar Dreams';-inkscape-font-specification:'Caviar Dreams';text-align:center;text-anchor:middle;fill:#333333;fill-opacity:1">Getting Started</flowPara></flowRoot>
+        <rect
+           style="fill:#90ca42;fill-opacity:1;stroke-width:0.23571"
            id="rect4568"
            width="6.6817384"
            height="1.6036171"
@@ -2113,12 +2241,12 @@
       <text
          id="text24"
          y="32.536804"
-         x="75.236374"
-         style="font-style:normal;font-weight:normal;font-size:10.58333302px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+         x="66.553459"
+         style="font-style:normal;font-weight:normal;font-size:10.5833px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
          xml:space="preserve"><tspan
-           style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:14.11111069px;font-family:'Caviar Dreams';-inkscape-font-specification:'Caviar Dreams Bold';fill:#ffffff;stroke-width:0.26458332"
+           style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:14.1111px;font-family:'Caviar Dreams';-inkscape-font-specification:'Caviar Dreams Bold';fill:#ffffff;stroke-width:0.264583"
            y="32.536804"
-           x="75.236374"
+           x="66.553459"
            id="tspan22"
            sodipodi:role="line">RENKU CHEATSHEET</tspan></text>
       <image
