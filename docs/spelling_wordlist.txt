@@ -43,6 +43,7 @@ dropdown
 filesystem
 FilterFlights
 findable
+gapped
 git-lfs
 github
 gitignore
@@ -53,6 +54,7 @@ GraphQL
 hostname
 hyperkit
 hypervisor
+init
 indices
 Indices
 interoperability
@@ -126,6 +128,7 @@ scala
 SPARQL
 spawner
 SQLAlchemy
+statuspage
 subdirectories
 sudo
 supertype
