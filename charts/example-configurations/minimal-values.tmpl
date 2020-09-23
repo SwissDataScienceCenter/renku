@@ -1,0 +1,195 @@
+#
+# Basic PoC configuration file for Renku 0.6.7
+#
+
+---
+variables_switchboard:
+  mainURL:                   &mainURL                       [domain]
+  jupyterhubURL:             &jupyterhubURL                 https://[domain]/jupyterhub
+  gatewayURL:                &gatewayURL                    https://[domain]/api
+  jupyterhubAuthCallbackUrl: &jupyterhub_gitlab_callbackUrl https://[domain]/jupyterhub/hub/oauth_callback
+  oauth_redirect_uri:        &oauth_redirect_uri            https://[domain]/api/auth/jupyterhub/token
+  ingressTLS:                &ingressTLS                    [ingress-tls]
+
+  gitlabURL:                 &gitlabURL                     https://[gitlab-domain]
+  gitlabPrefix:              &gitlabURLPrefix               [gitlab-prefix]           ## /gitlab if part of Renku, / otherwise
+  gitlabClientId:            &gitlabClientId                [gitlab-application-clientID]
+  gitlabClientSecret:        &gitlabClientSecret            [gitlab-application-secret]
+
+  registryName:              &registryName                  [gitlab-registry]
+  registryURL:               &registryURL                   https://[gitlab-registry]
+  registry_tls:              &registry_tls                  [registry-ingress-tls]
+
+credentials:
+  pass101: &global_gitlab_clientSecret                      [random]        ## Taken from gitlab client in keycloak
+  pass102: &global_gitlab_postgresPassword                  [random]        ## openssl rand -hex 32
+  pass103: &global_keycloak_password                        [random]        ## openssl rand -hex 32
+  pass104: &global_keycloak_postgresPassword                [random]        ## openssl rand -hex 32
+  pass105: &global_jupyterhub_postgresPassword              [random]        ## openssl rand -hex 32
+  pass106: &global_graph_tokenRepository                    [random]        ## openssl rand -hex 32 ## to check if needed
+  pass107: &global_graph_dbEventLog                         [random]        ## openssl rand -hex 32 ## to check if needed
+  pass108: &global_gateway_clientSecret                     [random]        ## Taken from gateway client in keycloak
+  pass109: &global_gateway_gitlabClientId                   [random]        ## Taken from renku-ui gitlab application ID
+  pass110: &global_gateway_gitlabClientSecret               [random]        ## Taken from renku-ui gitlab application secret
+
+  pass201: &postgresql_postgresPassword                     [random]        ## openssl rand -hex 32
+
+  pass301: &nb_jupyterhub_hub_cookieSecret                  [random]        ## openssl rand -hex 32
+  pass303: &nb_jupyterhub_hub_services_notebooks_apiToken   [random]        ## openssl rand -hex 32
+  pass304: &nb_jupyterhub_hub_services_gateway_apiToken     [random]        ## openssl rand -hex 32
+  pass305: &nb_jupyterhub_proxy_secretToken                 [random]        ## openssl rand -hex 32
+  pass306: &nb_jupyterhub_auth_state_cryptoKey              [random]        ## openssl rand -hex 32
+  pass307: &nb_jupyterhub_auth_gitlab_clientId              [random]        ## Taken from jupyterhub gitlab application id
+  pass308: &nb_jupyterhub_auth_gitlab_clientSecret          [random]        ## Taken from jupyterhub gitlab application secret
+
+  pass401: &gateway_secretKey                               [random]        ## openssl rand -hex 32
+
+  pass501: &graph_sparql_password                           [random]        ## openssl rand -hex 32
+  pass502: &graph_jena_admin_password                       [random]        ## openssl rand -hex 32
+  pass503: &graph_webhook_service_secret                    [randombase64]  ## openssl rand -hex 8|base64
+  pass504: &graph_token_repository_secret                   [randombase64]  ## openssl rand -hex 8|base64
+
+ingress:
+  enabled: true
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    nginx.ingress.kubernetes.io/proxy-body-size: '0'
+    nginx.ingress.kubernetes.io/proxy-request-buffering: 'off'
+  hosts:
+  - *mainURL
+  tls:
+  - hosts:
+    - *mainURL
+    secretName: *ingressTLS
+
+global:
+  useHTTPS: true
+  gitlab:
+    clientSecret: *global_gitlab_clientSecret
+    urlPrefix: *gitlabPrefix
+    postgresPassword:
+      value: *global_gitlab_postgresPassword
+
+  gateway:
+    clientSecret: *global_gateway_clientSecret
+    gitlabClientId: *global_gateway_gitlabClientId
+    gitlabClientSecret: *global_gateway_gitlabClientSecret
+  renku:
+    domain: *mainURL
+  keycloak:
+    password:
+      value: *global_keycloak_password
+    postgresPassword:
+      value: *global_keycloak_postgresPassword
+  jupyterhub:
+    postgresPassword:
+      value: *global_jupyterhub_postgresPassword
+
+keycloak:
+  keycloak:
+    username: admin
+gitlab:
+  enabled: [gitlab-enabled]
+  oauth:
+    autoSignIn: false
+  ssh:
+    externalPort: 22
+    nodePortService:
+      enabled: true
+      nodePort: 32022
+  registry:
+    enabled: true
+    externalUrl: *registryURL
+    backendHealthcheck: false
+    exposedAs: Ingress
+    ingress:
+      annotations:
+        kubernetes.io/ingress.class: nginx
+        nginx.ingress.kubernetes.io/proxy-body-size: '0'
+        nginx.ingress.kubernetes.io/proxy-request-buffering: 'off'
+      hosts:
+      - *registryName
+      tls:
+      - hosts:
+        - *registryName
+        secretName: *registry_tls
+  sharedRunnersRegistrationToken: a19dc76c919ba5b742bafeb3e36a4174aac52dd0035c2a100abef20a68e460b2
+  demoUserIsAdmin: true
+
+ui:
+  gatewayUrl: *gatewayURL
+  jupyterhubUrl: *jupyterhubURL
+
+notebooks:
+  securityContext:
+    enabled: false
+  gitlab:
+    registry:
+      host: *registryName
+  jupyterhub:
+    rbac:
+      enabled: true
+    hub:
+      cookieSecret: *nb_jupyterhub_hub_cookieSecret
+      baseUrl: '/jupyterhub/'
+      db:
+        type: postgres
+        url: postgres+psycopg2://jupyterhub@renku-postgresql:5432/jupyterhub
+      services:
+        notebooks:
+          apiToken: *nb_jupyterhub_hub_services_notebooks_apiToken
+        gateway:
+          admin: true
+          oauth_client_id: &gatewayClient gateway
+          apiToken: *nb_jupyterhub_hub_services_gateway_apiToken
+          oauth_redirect_uri: *oauth_redirect_uri
+      extraEnv:
+        - name: GITLAB_URL
+          value: *gitlabURL
+        - name: DEBUG
+          value: "1"
+        - name: JUPYTERHUB_SPAWNER_CLASS
+          value: spawners.RenkuKubeSpawner
+        - name: PGPASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: renku-jupyterhub-postgres
+              key: jupyterhub-postgres-password
+    proxy:
+      secretToken: *nb_jupyterhub_proxy_secretToken
+    auth:
+      state:
+        enabled: true
+        cryptoKey: *nb_jupyterhub_auth_state_cryptoKey
+      gitlab:
+        clientId: *gitlabClientId
+        clientSecret: *gitlabClientSecret
+        callbackUrl: *jupyterhub_gitlab_callbackUrl
+
+graph:
+  jena:
+    users:
+      admin:
+        password: *graph_jena_admin_password
+      renku:
+        password: &sparql-password *graph_sparql_password
+  gitlab:
+    url: *gitlabURL
+  webhookService:
+    hookToken:
+      secret: *graph_webhook_service_secret
+  tokenRepository:
+    tokenEncryption:
+      secret: *graph_token_repository_secret
+gateway:
+  gitlabUrl: *gitlabURL
+  gitlabClientId: *gitlabClientId
+  gitlabClientSecret: *gitlabClientSecret
+  secretKey: *gateway_secretKey
+  jupyterhub:
+    clientId: *gatewayClient
+    clientSecret: *nb_jupyterhub_hub_services_gateway_apiToken
+  graph:
+    sparql:
+      username: renku
+      password: *sparql-password
