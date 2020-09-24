@@ -31,7 +31,8 @@ but RenkuLab offers the following advantages:
 What's in my Interactive Environment?
 -------------------------------------
 
-* your project, which is cloned into the environment (but by default *without
+* your project, which is cloned into the environment on startup
+* your data (if the option ``Automatically fetch LFS data`` is selected)
   files that are stored in git LFS*)
 
 * all the software required to launch the environment and common tools for
