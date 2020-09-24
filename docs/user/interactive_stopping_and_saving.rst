@@ -111,9 +111,8 @@ If you are working on the ``master`` branch, the command looks like this:
 Push changes regularly
 ~~~~~~~~~~~~~~~~~~~~~~
 
-This feature is intended to prevent losing your work but you should not rely
-on it. Server or network failures can prevent the webhook to trigger, along
-with a number of other events that could still cause a permanent loss of your
-non-pushed work. Furthermore, :ref:`knowledge-graph` indexing will not be
-triggered by the autosave function. Therefore, you should still commit your
-work regularly and push it to the origin.
+The autosave feature is intended to prevent loss of work, but it is not a
+replacement for `git`. By making commits in `git`, you track your changes, and
+pushing back to RenkuLab ensures that they are visible to others. And although
+we are always working to improve robustness, in some situations, autosave can
+fail. So the most secure way to keep your work is to commit and push to origin.

@@ -12,17 +12,20 @@ and RStudio) that you can launch to develop and run your code and data workflows
 They're commonly used for exploratory analysis because you can try out short blocks
 of code before combining everything into a (reproducible) workflow.
 
-You can run your own interactive environments independently from RenkuLab, but
-on RenkuLab, you get the bonus capabilities:
+You can run JupyterLab or RStudio within a project independently from RenkuLab,
+but RenkuLab offers the following advantages:
 
-* a configurable amount of resources (memory, CPU, and sometimes GPU) is
-  available on launch
+* environments hosted in the cloud with a configurable amount of resources
+  (memory, CPU, and sometimes GPU)
 
-* you can save your work from within the environment back to RenkuLab
+* autosaving of work back to RenkuLab, so you can recover in the event of a
+  crash
 
-* it's a shareable, reproducible, :ref:`customizable<customizing>` container defined by the ``Dockerfile``
+* environments are defined using Docker, so they can be shared and reproducibly
+  re-created
 
-* you have all the functionality provided by the renku-python_ command-line interface (CLI)
+* the functionality provided by the renku-python_ command-line interface (CLI)
+  is automatically available
 
 
 What's in my Interactive Environment?
@@ -30,11 +33,16 @@ What's in my Interactive Environment?
 
 * your project, which is cloned into the environment (but by default *without
   files that are stored in git LFS*)
-* all the default software required to launch the environment and common software
-  for code development (``git``, ``git LFS``, ``vim``, etc.)
-* any software you added via ``requirements.txt``, ``environment.yml``, ``install.R``,
-  or directly into the ``Dockerfile``
+
+* all the software required to launch the environment and common tools for
+  working with code (``git``, ``git LFS``, ``vim``, etc.)
+
+* any dependencies you specified via conda (requirements.txt), using
+  language-specific dependency-management facilities (``requirements.txt``,
+  ``install.R``, etc.) or installed in the ``Dockerfile``
+
 * the renku command-line interface renku-python_.
+
 * the amount of CPUs, memory, and (possibly) GPUs that you configured before launch
 
 For adding or changing software installed into your project's interactive environment,
@@ -46,24 +54,21 @@ Which Interactive Environment will launch?
 
 The template you choose when you create a project on RenkuLab (or locally call
 ``renku init`` on your project) determines the kind of interactive environment
-that is available to launch. Here's a guide to the templates provided:
-
-* ``Basic Python Project``: JupyterLab
-* ``Basic R Project``: RStudio AND JupyterLab with R kernel
-* ``Minimal Renku`` (language-agnostic): JupyterLab
-
-This can be customized -- see :ref:`customizing`.
+that is available to launch. Once it is initialized, your project can easily be
+modified, for example to install additional libraries into the environment - see
+:ref:`customizing`. We provide templates for basic Python, R, and Julia
+projects. If you wish to use custom templates for your projects, you can build
+your own! Please refer to the :ref:`templating <templates>` documentation.
 
 
 Starting a new Interactive Environment
 --------------------------------------
 
-When you choose to start a new interactive environment, you will need to select
-some configurations. If you're not sure what options to select, it's best to keep
-the defaults. If, however, you've tried launching a project with the defaults and
-it crashed on you, you might want to increase some processing power or memory.
-
-Here's the run down for the configuration options.
+When starting a new interactive environment, you will be asked to configure it.
+The default configuration should work well for most situations. If, however,
+you encountered problems with an environment (for example, a crash), you might
+want to increase some processing power or memory. Here's the rundown of the
+configuration options.
 
 +------------------------------+-------------------------------------------------------------------------------------------+
 | Option                       | Description                                                                               |
@@ -78,9 +83,11 @@ Here's the run down for the configuration options.
 |                              |                                                                                           |
 |                              | the ``rstudio`` endpoint will not work.                                                   |
 +------------------------------+-------------------------------------------------------------------------------------------+
-| # CPUs                       | the number of CPUs available; select the lowest # available unless you have reason not to |
+| # CPUs                       | the number of CPUs available; resources are shared, so please select the lowest amount    |
+|                              | that will work for your use case.                                                         |
 +------------------------------+-------------------------------------------------------------------------------------------+
-| memory                       | the amount of RAM available; select the lowest # available unless you have reason not to  |
+| memory                       | the amount of RAM available; resources are shared, so please select the lowest amount     |
+|                              | that will work for your use case.                                                         |
 +------------------------------+-------------------------------------------------------------------------------------------+
 | # GPUs                       | the number of GPUs available; You might have to wait for GPUs to free up in               |
 |                              |                                                                                           |
@@ -95,36 +102,39 @@ Here's the run down for the configuration options.
 +------------------------------+-------------------------------------------------------------------------------------------+
 
 
-What if the Dockerfile isn't available?
----------------------------------------
+What if the Docker image is not available?
+------------------------------------------
 
-When you select the configurations for ``branch`` and ``commit``, a check is run
-to see if there's an image for this state available in the project's image registry,
-which is stored in RenkuLab's instance of GitLab. The container is then launched
-from that built image.
+Interactive environments are backed by Docker images. When launching a new
+interactive environment a container is created from the image that matches the
+selected ``branch`` and ``commit``.
 
-An image build from the ``Dockerfile`` in the project is kicked off automatically
-using GitLab's CI/CD pipelines configured by the project's ``.gitlab-ci.yml`` when you:
+A GitLab's CI/CD pipeline automatically builds a new image using the project's
+``Dockerfile`` when any of the following happens:
 
- * create the project
- * fork a project (in which the new build happens for the fork)
- * push changes to the project
+  * creating of a project
+  * forking a project (in which the new build happens for the fork)
+  * pushing changes to the project
 
-It can sometimes take a long time to build for various reasons, but if you've just
-created the project on RenkuLab from one of the templates it should take less than
-a minute.
+(This is defined in the project's ``.gitlab-ci.yml`` file.)
 
-The Dockerfile is still building
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+It can sometimes take some time to build an image for various reasons, but if
+you've just created the project on RenkuLab from one of the templates it should
+take less than  a minute.
 
-If the ``Dockerfile`` has a "still building" message, you can either wait patiently,
+
+The Docker image is still building
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+If the Docker image has a "still building" message, you can either wait patiently,
 or watch it build by clicking the associated link to see the streaming log messages
 on GitLab. This can be useful if you've made changes to the ``Dockerfile`` or added
 lines to ``requirements.txt``, ``environment.yml``, or ``install.R``, where something
 might have gone wrong.
 
-The Dockerfile build failed
-~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The Docker image build failed
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 If this happens, it's best to click the link to view the logs on GitLab so you
 can see what happened. Here are some common reasons for build failure:
@@ -162,8 +172,8 @@ git LFS.
 
 Another potential cause is if the project has submodules that are private.
 
-The Dockerfile is unavailable
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+The Docker image is not available
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 RenkuLab uses its internal instance of GitLab to build and store an image in the
 registry each time you create a project, push changes, or use the RenkuLab UI to fork
