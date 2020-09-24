@@ -66,7 +66,7 @@ to push those changes.
 Autosave in JupyterLab
 ----------------------
 
-When you stop a JupyterLab notebook, an automatic check looks for any work
+When you stop an interactive environment, an automatic check looks for any work
 that has not been pushed to the remote repository, including untracked and
 modified files. If something is found, a new "autosave" branch is created
 and pushed to GitLab.
