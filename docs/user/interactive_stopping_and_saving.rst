@@ -81,7 +81,7 @@ and pushed to GitLab.
 Restore unsaved work
 ~~~~~~~~~~~~~~~~~~~~
 
-The next time you start a new JupyterLab server from the same branch/commit
+The next time you start a new interactive environment from the same branch/commit
 combination, you will be notified and the autosaved data will be automatically
 loaded in your session. Please note that nothing will be pushed automatically
 to the origin, therefore you won't see any changes in your project's files
