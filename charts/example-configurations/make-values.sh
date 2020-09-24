@@ -82,7 +82,10 @@ then
 	gitlabregistry="registry.$DOMAIN"
 	registryingresstls=`echo registry-${DOMAIN}-tls | tr . -`
 
-  ## TODO fill gitlabappid and secret
+	GITLABAPPID=`openssl rand -hex 8|base64`
+	sed -i "s/\[gitlab-application-clientID\]/$GITLABAPPID/g" $FILE
+	GITLABAPPSECRET=`openssl rand -hex 8|base64`
+	sed -i "s/\[gitlab-application-secret\]/$GITLABAPPSECRET/g" $FILE
 
 else
 	echo "External Gitlab provided $GITLABDOMAIN"
