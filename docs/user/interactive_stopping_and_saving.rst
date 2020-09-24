@@ -23,7 +23,7 @@ case.
 Saving your work
 ----------------
 
-Interactive environments persist for 24 hours. If left unattended, they might shut
+Interactive environments are kept running as long as they in use. In the default RenkuLab configuration, idle environments are stopped after 24 hours of inactivity. Furthermore, interactive environments can crash, for example if you run a process that eats more memory than you've allocated. Thus, it's best to save often.
 down without warning. They also might crash if you run a process that eats more
 memory than you've allocated. Thus, it's best to save often.
 
