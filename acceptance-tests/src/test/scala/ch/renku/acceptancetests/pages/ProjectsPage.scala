@@ -6,7 +6,11 @@ import ch.renku.acceptancetests.model.users.UserCredentials
 import ch.renku.acceptancetests.pages.Page.{Path, Title}
 import eu.timepit.refined.auto._
 import org.openqa.selenium.{WebDriver, WebElement}
-import org.scalatestplus.selenium.WebBrowser.{cssSelector, find}
+import org.scalatestplus.selenium.WebBrowser
+import org.scalatestplus.selenium.WebBrowser.{cssSelector, find, findAll}
+
+import scala.jdk.CollectionConverters._
+import scala.language.postfixOps
 
 case object ProjectsPage extends RenkuPage with TopBar {
   override val path:  Path  = "/projects"
@@ -30,5 +34,15 @@ case object ProjectsPage extends RenkuPage with TopBar {
     )(implicit webDriver: WebDriver, userCredentials: UserCredentials): Option[WebElement] = eventually {
       find(cssSelector(s"a[href='/projects/${userCredentials.username}/${project.title.toPathSegment}']"))
     }
+
+    /**
+     * Return all the project links.
+     */
+    def projectLinks(implicit webDriver: WebDriver): List[WebBrowser.Element] =
+      findAll(
+        cssSelector(
+          "main > div:nth-child(4) > div > div:nth-child(3) > div > div > div.d-flex.flex-fill.flex-column.ml-2.mw-0.flex-sm-row > div.d-flex.flex-column.text-truncate > p:nth-child(1) > b > a"
+        )
+      ) toList
   }
 }
