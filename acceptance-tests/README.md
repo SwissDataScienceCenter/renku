@@ -89,6 +89,8 @@ To create a `tests-defaults.conf` file, copy the `tests-defaults.conf.template` 
 | extant     | RENKU_TEST_EXTANT_PROJECT | if non-empty, an existing project to use for tests               |
 | anon       | RENKU_TEST_ANON_PROJECT   | namespace/name for the project to test anonymously               |
 | anonAvail  | RENKU_TEST_ANON_AVAILABLE | if true, anonymous environments will be tested.                  |
+| batchRem   | RENKU_TEST_BATCH_REMOVE   | if true, run the BatchRemoveProjectSpec                          |
+| remPattern | RENKU_TEST_REMOVE_PATTERN | pattern to match to decide if a project should be batch removed  |
 
 For example, the following may be run in the project's root: `sbt -Denv=https://renku-kuba.dev.renku.ch
 -Demail=<email> -Dusername=<username> -Dfullname='<full user name>' -Dpassword=<password> -DrenkuVersion=<renkuVersion> test`
