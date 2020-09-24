@@ -63,7 +63,7 @@ to push those changes.
 
 .. _autosave:
 
-Autosave in JupyterLab
+Autosave in interactive environments
 ----------------------
 
 When you stop an interactive environment, an automatic check looks for any work
