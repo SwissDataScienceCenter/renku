@@ -18,11 +18,14 @@ but RenkuLab offers the following advantages:
 * environments hosted in the cloud with a configurable amount of resources
   (memory, CPU, and sometimes GPU)
 
+* environments are defined using Docker, so they can be shared and reproducibly
+  re-created
+
 * autosaving of work back to RenkuLab, so you can recover in the event of a
   crash
 
-* environments are defined using Docker, so they can be shared and reproducibly
-  re-created
+* a git client pre-configured with your credentials to easily push your changes
+  back to the server
 
 * the functionality provided by the renku-python_ command-line interface (CLI)
   is automatically available
@@ -32,6 +35,7 @@ What's in my Interactive Environment?
 -------------------------------------
 
 * your project, which is cloned into the environment on startup
+
 * your data (if the option ``Automatically fetch LFS data`` is selected)
   files that are stored in git LFS*)
 
