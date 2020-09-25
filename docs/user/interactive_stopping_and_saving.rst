@@ -24,7 +24,6 @@ Saving your work
 ----------------
 
 Interactive environments are kept running as long as they in use. In the default RenkuLab configuration, idle environments are stopped after 24 hours of inactivity. Furthermore, interactive environments can crash, for example if you run a process that eats more memory than you've allocated. Thus, it's best to save often.
-memory than you've allocated. Thus, it's best to save often.
 
 There are two ways to save your work back to RenkuLab from an interactive environment
 (both available in JupyterLab and RStudio), and behind the scenes both are using ``git``
