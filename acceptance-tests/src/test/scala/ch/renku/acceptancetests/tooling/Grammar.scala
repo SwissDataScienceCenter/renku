@@ -42,7 +42,7 @@ trait Grammar extends Eventually {
 
     def browserSwitchedTo[Url <: BaseUrl](page: Page[Url])(implicit baseUrl: Url): Unit = eventually {
       if (webDriver.getWindowHandles.asScala exists forTabWith(page)) ()
-      else throw new Exception(s"Cannot find window with ${page.url}")
+      else throw new Exception(s"Cannot find window with ${page.url} and title ${page.title.toString()}")
     }
 
     private def forTabWith[Url <: BaseUrl](page: Page[Url])(handle: String)(implicit baseUrl: Url): Boolean = {
