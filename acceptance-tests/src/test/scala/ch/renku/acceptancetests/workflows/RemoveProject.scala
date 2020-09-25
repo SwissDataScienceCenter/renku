@@ -1,6 +1,6 @@
 package ch.renku.acceptancetests.workflows
 
-import ch.renku.acceptancetests.model.projects.ProjectDetails
+import ch.renku.acceptancetests.model.projects.{ProjectDetails, ProjectIdentifier}
 import ch.renku.acceptancetests.pages.GitLabPages.GitLabBaseUrl
 import ch.renku.acceptancetests.pages._
 import ch.renku.acceptancetests.tooling.AcceptanceSpec
@@ -13,13 +13,15 @@ trait RemoveProject {
 
   def removeProjectInGitLab(implicit projectDetails: ProjectDetails, gitLabBaseUrl: GitLabBaseUrl): Unit = {
     val projectPage = ProjectPage()
+    // Wait a bit before clicking on the UI
+    sleep (2 seconds)
     When("the user clicks on the 'View in GitLab'")
-    click on projectPage.viewInGitLab sleep (2 second)
+    click on projectPage.viewInGitLab sleep (2 seconds)
     Then("a new tab with GitLab page should open")
     val gitLabPages = GitLabPages()
     verify browserSwitchedTo gitLabPages.ProjectPage
     When("the user navigates to the Project Settings")
-    go to gitLabPages.SettingsPage
+    go to gitLabPages.SettingsPage sleep (2 seconds)
     verify browserSwitchedTo gitLabPages.SettingsPage
     And("they click on the Expand button in the Advanced section")
     click on gitLabPages.SettingsPage.Advanced.expandButton sleep (1 second)

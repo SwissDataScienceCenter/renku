@@ -6,7 +6,7 @@ import ch.renku.acceptancetests.model.projects.ProjectDetails
 import eu.timepit.refined.api.Refined
 
 /**
-  * Configuration specific to the HandsOn spec.
+  * Configuration specific to the ExistingProject spec.
   */
 trait ExistingProjectSpecData {
 

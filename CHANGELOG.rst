@@ -1,5 +1,57 @@
 .. _changelog:
 
+
+0.6.8
+-----
+
+This is a minor release that contains improvements and fixes to the UI.
+
+New features
+~~~~~~~~~~~~
+
+⭐️ support for air-gapped deployments: RenkuLab's UI contains all resources necessary to run (no connection to the internet needed).
+
+⭐️ integration with statuspage.io: users get a visual notification for incidents and scheduled maintenance, additionally they can check the status of RenkuLab's components in ``<renkulab>/help/status``.
+
+Improvements
+~~~~~~~~~~~~
+
+🚄 anonymous users: can navigate in public projects' collaboration tab
+
+🚄 privacy: add privacy page and cookie consent banner
+
+🚄 markdown: display of relative paths, and improvement in file preview
+
+🚄 Julia: source and project files correctly rendered in the file browser
+
+Bug fixes
+~~~~~~~~~
+
+🐛 500 error code is handled at the UI when starting environments
+
+🐛 fix rendering issues with WYSIWYG editor toolbar
+
+Upgrading from 0.6.7
+~~~~~~~~~~~~~~~~~~~~
+
+* The version in the welcome page can be updated at ``ui.welcomePage.text`` in the values file.
+* The integration with `statuspage.io <https://www.atlassian.com/software/statuspage>`__ can be enabled by adding the unique project ID at ``ui.statuspage.id`` in the values file
+
+0.6.7
+-----
+
+This is a bugfix release.
+
+Bug fixes
+~~~~~~~~~
+
+🐛 fix pulling of lfs data in the init container of interactive environments
+
+Upgrading from 0.6.6
+~~~~~~~~~~~~~~~~~~~~
+
+* The version in the welcome page can be updated at ``ui.welcomePage.text`` in the values file.
+
 0.6.6
 -----
 
@@ -20,7 +72,7 @@ Breaking changes
 Upgrading from 0.6.5
 ~~~~~~~~~~~~~~~~~~~~
 
-* The version in the welcome page can be updated at `ui.welcomePage.text`
+* The version in the welcome page can be updated at ``ui.welcomePage.text`` in the values file.
 
 0.6.5
 -----

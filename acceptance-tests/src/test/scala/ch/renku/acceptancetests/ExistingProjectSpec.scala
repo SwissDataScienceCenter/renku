@@ -24,7 +24,7 @@ class ExistingProjectSpec
     existingProjectDetails match {
       case Some(projectDetails) => {
         implicit val loginType: LoginType = logIntoRenku
-        And("an existing project to fork")
+        Given("an existing project to fork")
         forkTestCase(projectDetails, loginType)
         logOutOfRenku
       }
