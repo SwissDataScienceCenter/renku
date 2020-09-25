@@ -62,7 +62,7 @@ to push those changes.
 .. _autosave:
 
 Autosave in interactive environments
-----------------------
+------------------------------------
 
 When you stop an interactive environment, an automatic check looks for any work
 that has not been pushed to the remote repository, including untracked and

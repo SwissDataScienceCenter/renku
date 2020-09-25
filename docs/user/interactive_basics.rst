@@ -21,7 +21,7 @@ but RenkuLab offers the following advantages:
 * environments are defined using Docker, so they can be shared and reproducibly
   re-created
 
-* autosaving of work back to RenkuLab, so you can recover in the event of a
+* auto-saving of work back to RenkuLab, so you can recover in the event of a
   crash
 
 * a git client pre-configured with your credentials to easily push your changes
