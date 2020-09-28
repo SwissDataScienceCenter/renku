@@ -17,7 +17,7 @@ taken to the project's landing page.
 
 By default, the files in projects created by other people are "read only" to you.
 This means you can see an overview, create and read issues, and browse the filesystem
-in both text and :ref:`lineage` modes. The project's **Environments** tab
+in both text and :ref:`provenance` modes. The project's **Environments** tab
 will inform you that you do not have permissions to launch a notebook or make
 modifications to the code or datasets.
 

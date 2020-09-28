@@ -13,7 +13,7 @@ frequently the inputs of another --- this creates a dependency between the code
 execution and results. When workflows become more complex, the bookkeeping can
 be tedious. That is where Renku comes in --- it is designed to keep
 track of these dependencies for you. We will illustrate some of these concepts
-with a simple example (see also the :ref:`lineage` in the documentation_).
+with a simple example (see also the :ref:`provenance` in the documentation_).
 
 First, let us make sure the project repository is clean. Run:
 
