@@ -43,6 +43,7 @@ dropdown
 filesystem
 FilterFlights
 findable
+gapped
 git-lfs
 github
 gitignore
@@ -53,6 +54,7 @@ GraphQL
 hostname
 hyperkit
 hypervisor
+init
 indices
 Indices
 interoperability
@@ -111,6 +113,7 @@ Renku
 renkulab
 renv
 repo
+reproducibly
 reproducibility
 Reproducibility
 reusability
@@ -126,7 +129,10 @@ scala
 SPARQL
 spawner
 SQLAlchemy
+statuspage
 subdirectories
+submodule
+submodules
 sudo
 supertype
 supertypes
