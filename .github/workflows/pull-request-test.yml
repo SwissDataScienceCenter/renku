@@ -86,6 +86,7 @@ jobs:
         KUBECONFIG: ${{ github.workspace }}/renkubot-kube.config
         RENKUBOT_KUBECONFIG: ${{ secrets.RENKUBOT_KUBECONFIG }}
         CI_RENKU_VALUES: ${{ secrets.CI_RENKU_VALUES }}
+        RENKUBOT_RANCHER_APISECRET: ${{ secrets.RENKUBOT_RANCHER_APISECRET }}
       run: |
         echo "$RENKUBOT_KUBECONFIG" > renkubot-kube.config
         helm repo add stable 	https://kubernetes-charts.storage.googleapis.com
@@ -95,7 +96,12 @@ jobs:
         rm -rf charts/renku/charts
         helm dependency update charts/renku
         printf "%s" "$CI_RENKU_VALUES" | sed "s/<replace>/${RENKU_RELEASE}/" > values.yaml
-        kubectl create namespace $RENKU_NAMESPACE || true
+        curl -u "token-fxgsb:$RENKUBOT_RANCHER_APISECRET" \
+        -X POST \
+        -H 'Accept: application/json' \
+        -H 'Content-Type: application/json' \
+        -d '{"containerDefaultResourceLimit":null, "name":"${RENKU_RELEASE}", "projectId":"c-l6jt4:p-rz88m", "resourceQuota":null}' \
+        'https://rancher.renku.ch/v3/cluster/c-l6jt4/namespaces'
         helm upgrade --install $RENKU_RELEASE \
                     --namespace $RENKU_NAMESPACE \
                     -f values.yaml \
