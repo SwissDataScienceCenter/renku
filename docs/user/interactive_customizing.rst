@@ -1,27 +1,34 @@
-.. _advanced_interfaces:
+.. _customizing:
 
-Advanced Interfaces
-===================
+Customizing interactive environments
+====================================
 
-Python and R are two of the most common programming languages for data science,
-and correspondingly JupyterLab and RStudio are common IDEs (Interactive Development
-Environments) for exploratory research. In Renku, we provide project `templates <templating>`_
-to easily set up one of these environments.
+Very quickly you will want to make changes to the default configuration of your
+interactive sessions. The default environments we provide are pretty bare-bones
+so if you want to have easy access to your preferred packages, some simple steps
+at the start of your project will get you on the way quickly.
 
-But what if you want to use a different interface, like MATLAB? Or what if you
-want to install software that requires extra non-python or R dependencies on the
-machine?
 
-Dockerfile modifications
-------------------------
+Important files
+---------------
 
-In Renku we use Docker for containerization. While we
-have a set of defaults that we build into a minimal Python and R images
-image, there are several reasons why you might want to build on top of these or
-write your own entirely.
+The launch is enabled by the content in the following files in your project:
+
+* language-specific files like ``requirements.txt`` or ``install.R``
+
+* ``Dockerfile``: defines the type of interactive environment and other software
+  installed in the environment, including the ``renku`` command-line installation.
+
+* ``.gitlab-ci.yml``: controls the docker build of the image based on the project's
+  ``Dockerfile``.
+
+The most basic modifications are installations of additional packages. This can be
+done automatically for Python and R projects if you add the packages you want
+to ``requirements.txt`` and ``install.R`` respectively.
+
 
 Dockerfile structure
-~~~~~~~~~~~~~~~~~~~~
+--------------------
 
 The project's ``Dockerfile`` lives in the top level of the project directory. In
 the default ``Dockerfile`` provided in the template, the first line is a ``FROM``
@@ -50,7 +57,10 @@ You can add to this ``Dockerfile`` in any way you'd like.
 .. _docker_dev:
 
 Dockerfile development
-~~~~~~~~~~~~~~~~~~~~~~
+----------------------
+
+Before we get into modifying Dockerfiles, if you want to know how to update
+the base version of your renkulab image, see `Upgrading Renku <upgrading_renku>`_.
 
 If you're going to be making simple modifications to the ``Dockerfile`` (i.e. changing
 the base Docker image version number), you can use the following steps to update
@@ -62,6 +72,9 @@ and re-build the image:
 #. Make your edits in this window.
 #. When you're satisfied with the edits, scroll down and write a meaningful **commit message** (you'll thank yourself later).
 #. Click the green **Commit changes** button.
+
+You may find the [official docker documentation](https://docs.docker.com/engine/reference/builder/) useful
+during this process.
 
 Now you have committed the changes to your ``Dockerfile``. Since you have made a commit,
 the CI/CD pipeline will kick off (pre-configured for you as a ``renkulab-runner``
@@ -88,11 +101,11 @@ the messages in the log to determine why and hint at what you can do to fix it.
   Note that the settings have been configured for this build to time out and fail
   after one hour. While a long running build might be indicative of a bug in your
   ``Dockerfile``, it's possible that your build might take a long time. If this is the
-  case, you can change these settings via the lefthand column of the GitLab
+  case, you can change the limits in the project settings via the lefthand column of the GitLab
   interface at **Settings** > **CI/CD** > **General pipelines** > **Timeout**.
 
-Using your new Dockerfile
-~~~~~~~~~~~~~~~~~~~~~~~~~
+Using your new Docker image
+---------------------------
 
 Passing CI/CD is great, but in order to use the new image you need to
 (re)start your interactive environment.
@@ -100,7 +113,7 @@ Passing CI/CD is great, but in order to use the new image you need to
 To do this, go back to the Renku platform, and from the project's landing page,
 first check in the **Files** tab that your changes to the ``Dockerfile`` are
 present. If not, you can force-refresh the page. Then, go to the **Notebook
-servers** tab. If you have any running notebooks, those will remain built with
+servers** tab. If you have any running notebooks, those will keep running the image which was built with
 the older version(s) of the ``Dockerfile``. You can **Start new server** and
 **Launch server** to start a notebook with the latest image.
 
@@ -109,13 +122,12 @@ added in the ``Dockerfile`` is present in the container. If it is not, you can
 go back to the GitLab interface and continue to make changes until you are
 satisfied.
 
-Looking to make more extensive modifications? Build running too long? Check out
-the `next section <_more_extensive_docker>`_.
+Looking to make more extensive modifications? Build running too long? Keep
+on reading through the section below.
 
-.. _more_extensive_docker:
 
-For more extensive modifications
---------------------------------
+More extensive modifications
+----------------------------
 
 If you want to make more extensive modifications, say ones that would require
 longer build times, you may wish to test the docker build on your own machine.
@@ -145,15 +157,15 @@ here:
 * a `JupyterLab base <https://github.com/SwissDataScienceCenter/renku-jupyter/tree/master/docker/base>`_ (with renku installed on top)
 * a `rocker (R + RStudio) base <https://github.com/SwissDataScienceCenter/renku-jupyter/tree/master/docker/r>`_ (with conda and renku installed on top)
 
-These two images are pushed into `dockerhub <https://hub.docker.com/r/renku/>`_.
+These two images are available on `dockerhub <https://hub.docker.com/r/renku/>`_.
 
 If you can't work with the template ``Dockerfile`` provided, you can pull one of
 these base ``Dockerfile`` s and add the ``renku``, ``git``, and ``jupyter``
 parts to another base image that you might have.
 
-Examples
---------
 
-* Matlab via VNC
+Getting Help
+------------
 
-Coming soon.
+If you are stuck with a specific modification you'd like to make, do reach out to the
+`Renku community forum <https://renku.discourse.group>`_!
