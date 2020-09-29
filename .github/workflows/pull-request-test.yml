@@ -101,7 +101,9 @@ jobs:
         -H 'Accept: application/json' \
         -H 'Content-Type: application/json' \
         -d "name:${RENKU_RELEASE}" \
-        -d '{"containerDefaultResourceLimit":null, "projectId":"c-l6jt4:p-rz88m", "resourceQuota":null}' \
+        -d "containerDefaultResourceLimit:null" \
+        -d "resourceQuota:null" \
+        -d '{"projectId":"c-l6jt4:p-rz88m", }' \
         'https://rancher.renku.ch/v3/cluster/c-l6jt4/namespaces'
         helm upgrade --install $RENKU_RELEASE \
                     --namespace $RENKU_NAMESPACE \
