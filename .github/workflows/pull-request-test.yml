@@ -98,7 +98,7 @@ jobs:
         printf "%s" "$CI_RENKU_VALUES" | sed "s/<replace>/${RENKU_RELEASE}/" > values.yaml
         curl -u "token-fxgsb:$RENKUBOT_RANCHER_APISECRET" \
         -X POST \
-        -d "name=${RENKU_RELEASE}" \
+        -d "name=${RENKU_NAMESPACE}" \
         -d "projectId=c-l6jt4:p-rz88m" \
         'https://rancher.renku.ch/v3/cluster/c-l6jt4/namespaces'
         helm upgrade --install $RENKU_RELEASE \

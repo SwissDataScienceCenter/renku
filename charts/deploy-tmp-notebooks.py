@@ -29,7 +29,7 @@ def random_hex_seeded(length, seed):
     return bytearray(random.getrandbits(8) for _ in range(length)).hex()
 
 
-def get_values(release_name, kube_context):
+def get_values(release_name, kube_context, renku_namespace):
     """Get the values file from an existing helm release."""
     values = subprocess.run(
         [
@@ -39,6 +39,8 @@ def get_values(release_name, kube_context):
             f"{release_name}",
             "--kube-context",
             f"{kube_context}",
+            "--nampespace",
+            f"{renku_namespace}",
         ],
         stdout=subprocess.PIPE,
     ).stdout.decode("utf-8")
@@ -252,7 +254,7 @@ These values will override the ones automatically derived from primary Renku dep
     copy_secret(k8s_api_client, renku_namespace, tmp_namespace)
 
     # Create a values file for the secondary renku-notebooks deployment
-    renku_values = get_values(args.release_name, kube_context)
+    renku_values = get_values(args.release_name, kube_context, renku_namespace)
     tmp_values_path = make_tmp_values(renku_values, renku_namespace)
 
     # Deploy through the helm CLI
