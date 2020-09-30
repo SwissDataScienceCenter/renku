@@ -31,6 +31,14 @@ def random_hex_seeded(length, seed):
 
 def get_values(release_name, kube_context, renku_namespace):
     """Get the values file from an existing helm release."""
+    helm_version = subprocess.run(
+        [
+            "helm",
+            "version",
+        ],
+        stdout=subprocess.PIPE,
+    ).stdout.decode("utf-8")
+    sys.stdout.write(f"Helm version {helm_version} \n")
     values = subprocess.run(
         [
             "helm",
