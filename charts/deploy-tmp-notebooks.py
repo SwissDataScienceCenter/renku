@@ -47,7 +47,7 @@ def get_values(release_name, kube_context, renku_namespace):
             f"{release_name}",
             "--kube-context",
             f"{kube_context}",
-            "--nampespace",
+            "--namespace",
             f"{renku_namespace}",
         ],
         stdout=subprocess.PIPE,
