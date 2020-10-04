@@ -1,0 +1,42 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: {{ template "renku.fullname" . }}-user-pod-egress
+  labels:
+    app: {{ template "renku.name" . }}
+    chart: {{ template "renku.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  policyTypes:
+  - Egress
+  egress: 
+  - to:
+    # allow DNS resolution (internal and external)
+    ports:
+    - port: 53
+      protocol: UDP
+    - port: 53
+      protocol: TCP
+  - to:
+    # allow connection to internal apps that is necessary
+    - podSelector:
+        matchLabels:
+          app: jupyterhub
+  - to:
+    # allow access to web outside of cluster only
+    - ipBlock:
+        cidr: 0.0.0.0/0
+        except:
+        - 10.0.0.0/8
+        - 172.16.0.0/12
+        - 192.168.0.0/16
+    ports:
+    - port: 80
+      protocol: TCP
+    - port: 443
+      protocol: TCP
+  podSelector:
+    matchLabels:
+      app: jupyterhub
+      component: singleuser-server
