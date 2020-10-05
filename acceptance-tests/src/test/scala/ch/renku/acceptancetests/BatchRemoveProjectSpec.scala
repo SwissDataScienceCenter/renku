@@ -79,7 +79,7 @@ class BatchRemoveProjectSpec extends AcceptanceSpec with BatchRemoveProjectSpecD
     title match {
       case Some(s) => {
         implicit val projectDetails =
-        ProjectDetails(Refined.unsafeApply(s), Refined.unsafeApply(""), "")
+          ProjectDetails(Refined.unsafeApply(s), Refined.unsafeApply(""), "")
         And(s"found project $s to remove")
         removeProjectInGitLab
         Then("remove project")
