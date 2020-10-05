@@ -40,12 +40,14 @@ class ProjectPage(projectSlug: String, namespace: String) extends RenkuPage with
   }
 
   def projectTitle(implicit webDriver: WebDriver): Option[String] = {
-    val fullTitle = find(cssSelector("div > main > div:nth-child(2) > div > div > div.row > div.col-12.col-md > h3")) map (_.text)
-    val visibility = find(cssSelector("div > main > div:nth-child(2) > div > div > div.row > div.col-12.col-md > h3 > span")) map (_.text);
+    val fullTitle =
+      find(cssSelector("div > main > div:nth-child(2) > div > div > div.row > div.col-12.col-md > h3")) map (_.text)
+    val visibility = find(
+      cssSelector("div > main > div:nth-child(2) > div > div > div.row > div.col-12.col-md > h3 > span")
+    ) map (_.text);
     (fullTitle, visibility) match {
-      case (Some(t), Some(v)) => {
+      case (Some(t), Some(v)) =>
         Some(t.substring(0, t.length - v.length) trim)
-      }
       case _ => None
     }
   }
@@ -293,7 +295,7 @@ class ProjectPage(projectSlug: String, namespace: String) extends RenkuPage with
 
       def title(implicit webDriver: WebDriver): WebElement = eventually {
         find(cssSelector("div.row div.col h3"))
-          .map(element => { element.text shouldBe "Interactive Environments"; element })
+          .map { element => element.text shouldBe "Interactive Environments"; element }
           .getOrElse(fail("Environments -> Running title not found"))
       }
 
@@ -311,8 +313,9 @@ class ProjectPage(projectSlug: String, namespace: String) extends RenkuPage with
         )
       }
 
-      private def connectToJupyterLab(buttonSelector:               String)(implicit webDriver: WebDriver,
-                                                              spec: AcceptanceSpec): Unit = eventually {
+      private def connectToJupyterLab(
+          buttonSelector:   String
+      )(implicit webDriver: WebDriver, spec: AcceptanceSpec): Unit = eventually {
         import spec.{And, Then}
         And("tries to connect to JupyterLab")
         connectButton(buttonSelector).click()
