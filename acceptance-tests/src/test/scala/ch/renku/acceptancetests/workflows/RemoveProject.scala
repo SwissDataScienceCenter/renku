@@ -1,6 +1,6 @@
 package ch.renku.acceptancetests.workflows
 
-import ch.renku.acceptancetests.model.projects.{ProjectDetails, ProjectIdentifier}
+import ch.renku.acceptancetests.model.projects.ProjectDetails
 import ch.renku.acceptancetests.pages.GitLabPages.GitLabBaseUrl
 import ch.renku.acceptancetests.pages._
 import ch.renku.acceptancetests.tooling.AcceptanceSpec

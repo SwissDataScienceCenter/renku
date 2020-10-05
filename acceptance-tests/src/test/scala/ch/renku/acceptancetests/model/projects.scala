@@ -19,21 +19,21 @@ object projects {
 
   final case class ProjectDetails(
       title:       String Refined NonEmpty,
-      visibility: Visibility,
+      visibility:  Visibility,
       description: String Refined NonEmpty,
       readmeTitle: String
   )
 
   sealed trait Visibility {
     override def toString: String = this match {
-      case Public => "Public"
-      case Private => "Private"
+      case Public   => "Public"
+      case Private  => "Private"
       case Internal => "Internal"
     }
   }
-  case object Public extends Visibility
+  case object Public   extends Visibility
   case object Internal extends Visibility
-  case object Private extends Visibility
+  case object Private  extends Visibility
 
   final case class ProjectUrl(value: String) {
     override lazy val toString: String = value
@@ -57,24 +57,34 @@ object projects {
 
   object ProjectDetails {
 
-    def generate: ProjectDetails = {
-      val now         = LocalDateTime.now()
-      val desc        = prefixParagraph("An automatically generated project for testing: ").generateOne
-      val readmeTitle = s"test ${now.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH-mm-ss"))}"
-      val template    = "Renku/python-minimal"
-      ProjectDetails(Refined.unsafeApply(s"test ${now.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH-mm-ss"))}"),
-                      Public,
-                     desc,
-                     readmeTitle
+    def generate(maybeTitle:       Option[String Refined NonEmpty] = None,
+                 maybeVisibility:  Option[Visibility]              = None,
+                 maybeDescription: Option[String Refined NonEmpty] = None,
+                 maybeTemplate:    Option[String Refined NonEmpty] = None): ProjectDetails = {
+      val now = LocalDateTime.now()
+      val title = maybeTitle.getOrElse(
+        Refined.unsafeApply(s"test ${now.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH-mm-ss"))}")
       )
+      val visibility = maybeVisibility.getOrElse(Public)
+
+      val desc =
+        maybeDescription.getOrElse(prefixParagraph("An automatically generated project for testing: ").generateOne)
+      val readmeTitle = s"test ${now.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH-mm-ss"))}"
+      val template    = maybeTemplate.getOrElse("Renku/python-minimal")
+      ProjectDetails(title, visibility, desc, readmeTitle)
     }
 
     def generateHandsOnProject(captureScreenshots: Boolean): ProjectDetails =
       if (captureScreenshots) {
         val readmeTitle = "flights tutorial"
-        ProjectDetails(Refined.unsafeApply(readmeTitle), Public, Refined.unsafeApply("A renku tutorial project."), readmeTitle)
+        ProjectDetails(Refined.unsafeApply(readmeTitle),
+                       Public,
+                       Refined.unsafeApply("A renku tutorial project."),
+                       readmeTitle)
       } else
-        generate
+        generate()
+
+    def generatePrivateProject: ProjectDetails = generate(maybeVisibility = Some(Private))
 
     implicit class TitleOps(title: String Refined NonEmpty) {
       lazy val toPathSegment: String = title.value.replace(" ", "-")

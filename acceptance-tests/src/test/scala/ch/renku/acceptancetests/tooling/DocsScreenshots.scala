@@ -2,8 +2,8 @@ package ch.renku.acceptancetests.tooling
 
 import java.lang.System.getProperty
 
-import org.scalatestplus.selenium.{Driver, WebBrowser}
 import org.openqa.selenium.WebDriver
+import org.scalatestplus.selenium.{Driver, WebBrowser}
 
 /**
   * Helper class for capturing screenshots for documentation.
