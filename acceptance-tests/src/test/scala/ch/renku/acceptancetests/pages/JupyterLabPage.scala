@@ -37,9 +37,10 @@ class JupyterLabPage(projectSlug: String, namespace: String) extends RenkuPage {
   object terminal {
 
     def %>(command: String)(implicit webDriver: WebDriver): Unit = eventually {
-      val terminalElement = find(cssSelector("#jp-Terminal-0 > div > div.xterm-screen > canvas.xterm-cursor-layer")) getOrElse fail(
-        "Terminal not found"
-      )
+      val terminalElement =
+        find(cssSelector("#jp-Terminal-0 > div > div.xterm-screen > canvas.xterm-cursor-layer")) getOrElse fail(
+          "Terminal not found"
+        )
 
       new Actions(webDriver)
         .moveToElement(terminalElement)

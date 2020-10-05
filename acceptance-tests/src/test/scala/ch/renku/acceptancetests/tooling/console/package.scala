@@ -32,8 +32,8 @@ package object console {
   implicit class CommandOps(val context: StringContext) {
 
     def c(args: Any*): Command = Command {
-      context.parts.zipAll(args, "", "").foldLeft("") {
-        case (command, (part, arg)) => s"$command$part$arg"
+      context.parts.zipAll(args, "", "").foldLeft("") { case (command, (part, arg)) =>
+        s"$command$part$arg"
       }
     }
   }

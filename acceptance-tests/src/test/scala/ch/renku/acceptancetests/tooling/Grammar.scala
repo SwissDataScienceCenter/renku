@@ -29,8 +29,8 @@ trait Grammar extends Eventually {
     def that(element: => WebElement): WebElement = element
 
     def browserAt[Url <: BaseUrl](page: Page[Url])(implicit baseUrl: Url): Unit = eventually {
-      currentUrl should startWith(page.url)
-      pageTitle  shouldBe page.title.toString()
+      currentUrl  should startWith(page.url)
+      pageTitle shouldBe page.title.toString()
       verifyElementsAreDisplayed(page)
     }
 
@@ -59,9 +59,11 @@ trait Grammar extends Eventually {
 
     @scala.annotation.tailrec
     def whenUserCannotSee(element: WebDriver => WebElement, attempt: Int = 1): Unit =
-      if (attempt <= 10 && Either
-            .catchOnly[TestFailedException](!element(webDriver).isDisplayed)
-            .fold(_ => true, identity)) {
+      if (
+        attempt <= 10 && Either
+          .catchOnly[TestFailedException](!element(webDriver).isDisplayed)
+          .fold(_ => true, identity)
+      ) {
         sleep(5 seconds)
         webDriver.navigate().refresh()
         whenUserCannotSee(element, attempt + 1)
@@ -92,8 +94,8 @@ trait Grammar extends Eventually {
 
   protected implicit class WebElementGrammar(element: WebElement) {
     def is(expected:       String): Unit = element.getText               shouldBe expected
-    def contains(expected: String): Unit = element.getText               should include(expected)
-    def matches(pattern:   String): Unit = element.getText               should fullyMatch regex pattern
+    def contains(expected: String): Unit = element.getText                 should include(expected)
+    def matches(pattern:   String): Unit = element.getText                 should fullyMatch regex pattern
     def hasValue(expected: String): Unit = element.getAttribute("value") shouldBe expected
   }
 
