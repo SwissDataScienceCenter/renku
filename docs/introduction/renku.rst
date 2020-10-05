@@ -6,7 +6,7 @@ Renku CLI
 The core of the Renku Project is the ``renku`` command-line interface (CLI),
 which offers tools for easily capturing your data-science process as you work.
 With these tools, you can describe and annotate data and workflows, providing
-information that is used to build the lineage of your results, simplifying
+information that is used to build the provenance of your results, simplifying
 iterative development and making your work reproducible. The CLI can be used
 within Renkulab or locally, on your own machine.
 
@@ -102,12 +102,12 @@ Datasets
 Lineage of results
 ------------------
 
-Capturing the :ref:`lineage of results <lineage>` is critical for understanding
+Capturing the :ref:`provenance of results <provenance>` is critical for understanding
 what input data were used, what code was run, and what results were produced
 
 The ``renku`` CLI gives researchers and analysts simple tools to:
 
-* track lineage for a workflow (generate a graph that shows input, execution,
+* track provenance for a workflow (generate a graph that shows input, execution,
   and output nodes)
 
 * iteratively develop a workflow (keep making changes to the code/data until you

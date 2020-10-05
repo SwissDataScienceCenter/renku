@@ -25,9 +25,9 @@ case object NewProjectPage extends RenkuPage with TopBar with ScreenCapturing {
       titleField.clear() sleep (5 seconds)
       titleField.enterValue(project.title.value) sleep (1 second)
 
-      templateField.click() sleep(1 second)
-      templateOption.click() sleep(1 second)
-      templateField.click() sleep(1 second)
+      templateField.click() sleep (1 second)
+      templateOption.click() sleep (1 second)
+      templateField.click() sleep (1 second)
 
       descriptionField.clear() sleep (1 second)
       descriptionField.enterValue(project.description.value) sleep (1 second)
@@ -37,7 +37,7 @@ case object NewProjectPage extends RenkuPage with TopBar with ScreenCapturing {
       createButton.click() sleep (5 seconds)
     }
 
-   private def titleField(implicit webDriver: WebDriver): WebElement = eventually {
+  private def titleField(implicit webDriver: WebDriver): WebElement = eventually {
     find(cssSelector("input#title")) getOrElse fail("Title field not found")
   }
 

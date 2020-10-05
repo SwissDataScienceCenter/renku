@@ -6,7 +6,7 @@ The Renku Knowledge Graph
 The Knowledge Graph is the backbone of Renku. It is currently in beta and is
 used to record and query the relationships between data and code. In the future
 we will also use the Knowledge Graph to store and retrieve metadata and to
-provide search functionality. See the :ref:`lineage` section for a high-level
+provide search functionality. See the :ref:`provenance` section for a high-level
 description. A simple Knowledge Graph in the current Renku web user interface
 looks something like this:
 
@@ -36,7 +36,7 @@ enable the integration via a pop-up button:
 File Lineage Display
 --------------------
 
-To see the current lineage information of any file in your project, select the
+To see the current provenance information of any file in your project, select the
 file in your file browser and click either the ``Lineage View`` drop down
 
 .. image:: ../_static/images/kg_lineage_view1.png
