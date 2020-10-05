@@ -19,9 +19,21 @@ object projects {
 
   final case class ProjectDetails(
       title:       String Refined NonEmpty,
+      visibility: Visibility,
       description: String Refined NonEmpty,
       readmeTitle: String
   )
+
+  sealed trait Visibility {
+    override def toString: String = this match {
+      case Public => "Public"
+      case Private => "Private"
+      case Internal => "Internal"
+    }
+  }
+  case object Public extends Visibility
+  case object Internal extends Visibility
+  case object Private extends Visibility
 
   final case class ProjectUrl(value: String) {
     override lazy val toString: String = value
@@ -51,6 +63,7 @@ object projects {
       val readmeTitle = s"test ${now.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH-mm-ss"))}"
       val template    = "Renku/python-minimal"
       ProjectDetails(Refined.unsafeApply(s"test ${now.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH-mm-ss"))}"),
+                      Public,
                      desc,
                      readmeTitle
       )
@@ -59,7 +72,7 @@ object projects {
     def generateHandsOnProject(captureScreenshots: Boolean): ProjectDetails =
       if (captureScreenshots) {
         val readmeTitle = "flights tutorial"
-        ProjectDetails(Refined.unsafeApply(readmeTitle), Refined.unsafeApply("A renku tutorial project."), readmeTitle)
+        ProjectDetails(Refined.unsafeApply(readmeTitle), Public, Refined.unsafeApply("A renku tutorial project."), readmeTitle)
       } else
         generate
 

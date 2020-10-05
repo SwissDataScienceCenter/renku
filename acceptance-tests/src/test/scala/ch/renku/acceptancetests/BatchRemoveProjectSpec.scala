@@ -1,11 +1,10 @@
 package ch.renku.acceptancetests
 
-import ch.renku.acceptancetests.model.projects.{ProjectDetails, ProjectIdentifier}
+import ch.renku.acceptancetests.model.projects.{ProjectDetails, ProjectIdentifier, Public}
 import ch.renku.acceptancetests.tooling.{AcceptanceSpec, BatchRemoveProjectSpecData}
 import ch.renku.acceptancetests.workflows._
 import ch.renku.acceptancetests.pages._
 import ch.renku.acceptancetests.pages.GitLabPages.GitLabBaseUrl
-
 import org.scalatestplus.selenium.WebBrowser
 import eu.timepit.refined.api.Refined
 
@@ -77,7 +76,7 @@ class BatchRemoveProjectSpec extends AcceptanceSpec with BatchRemoveProjectSpecD
     title match {
       case Some(s) =>
         implicit val projectDetails =
-          ProjectDetails(Refined.unsafeApply(s), Refined.unsafeApply(""), "")
+          ProjectDetails(Refined.unsafeApply(s), Public, Refined.unsafeApply(""), "") // TODO: get the visibility value from somewhere
         And(s"found project $s to remove")
         removeProjectInGitLab
         Then("remove project")
