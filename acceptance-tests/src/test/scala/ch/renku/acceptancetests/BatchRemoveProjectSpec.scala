@@ -38,14 +38,14 @@ class BatchRemoveProjectSpec extends AcceptanceSpec with BatchRemoveProjectSpecD
     }
   }
 
-  def loginAndRemoveProjects(config: BatchRemoveConfig) = {
+  def loginAndRemoveProjects(config: BatchRemoveConfig): Unit = {
     implicit val loginType: LoginType = logIntoRenku
     Given("projects to remove")
     removeProjects(config, loginType)
     logOutOfRenku
   }
 
-  def removeProjects(config: BatchRemoveConfig, loginType: LoginType)(implicit gitLabBaseUrl: GitLabBaseUrl) = {
+  def removeProjects(config: BatchRemoveConfig, loginType: LoginType)(implicit gitLabBaseUrl: GitLabBaseUrl): Unit = {
     When("user goes to the projects page")
     go to ProjectsPage sleep (5 seconds)
     verify browserAt ProjectsPage
@@ -68,7 +68,7 @@ class BatchRemoveProjectSpec extends AcceptanceSpec with BatchRemoveProjectSpecD
     go to ProjectsPage sleep (5 seconds)
   }
 
-  def removeProject(projectId: ProjectIdentifier, loginType: LoginType)(implicit gitLabBaseUrl: GitLabBaseUrl) = {
+  def removeProject(projectId: ProjectIdentifier, loginType: LoginType)(implicit gitLabBaseUrl: GitLabBaseUrl): Unit = {
     // Go to the project page to get the title
     val projectPage = ProjectPage(projectId)
     go to projectPage sleep (5 seconds)
