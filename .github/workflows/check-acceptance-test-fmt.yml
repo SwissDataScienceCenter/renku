@@ -7,6 +7,8 @@ jobs:
     name: Scala formatting check
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v2
       - name: run scalafmt
         run: |
-          sbt test:scalafmt
+          cd acceptance-tests
+          sbt test:scalafmtCheck
