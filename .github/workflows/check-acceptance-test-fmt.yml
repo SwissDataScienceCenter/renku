@@ -1,0 +1,12 @@
+name: Check format for acceptance tests
+
+on:
+  [pull_request]
+jobs:
+  formatting-check:
+    name: Scala formatting check
+    runs-on: ubuntu-latest
+    steps:
+      - name: run scalafmt
+        run: |
+          sbt test:scalafmt
