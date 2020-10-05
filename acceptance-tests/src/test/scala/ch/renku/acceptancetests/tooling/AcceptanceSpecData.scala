@@ -33,18 +33,26 @@ trait AcceptanceSpecData {
 
   protected implicit lazy val userCredentials: UserCredentials = {
     for {
-      email    <- sys.env.get("RENKU_TEST_EMAIL") orElse Option(getProperty("email")) orElse testsDefaults.email flatMap toNonEmpty
-      username <- sys.env.get("RENKU_TEST_USERNAME") orElse Option(getProperty("username")) orElse testsDefaults.username flatMap toNonEmpty
-      password <- sys.env.get("RENKU_TEST_PASSWORD") orElse Option(getProperty("password")) orElse testsDefaults.password flatMap toNonEmpty
-      fullName <- sys.env.get("RENKU_TEST_FULL_NAME") orElse Option(getProperty("fullname")) orElse testsDefaults.fullname flatMap toNonEmpty
+      email <- sys.env.get("RENKU_TEST_EMAIL") orElse Option(
+                 getProperty("email")
+               ) orElse testsDefaults.email flatMap toNonEmpty
+      username <- sys.env.get("RENKU_TEST_USERNAME") orElse Option(
+                    getProperty("username")
+                  ) orElse testsDefaults.username flatMap toNonEmpty
+      password <- sys.env.get("RENKU_TEST_PASSWORD") orElse Option(
+                    getProperty("password")
+                  ) orElse testsDefaults.password flatMap toNonEmpty
+      fullName <- sys.env.get("RENKU_TEST_FULL_NAME") orElse Option(
+                    getProperty("fullname")
+                  ) orElse testsDefaults.fullname flatMap toNonEmpty
       useProvider = sys.env.get("RENKU_TEST_PROVIDER") orElse Option(getProperty("provider")) match {
-        case Some(s) => s.nonEmpty
-        case None    => false
-      }
+                      case Some(s) => s.nonEmpty
+                      case None    => false
+                    }
       register = sys.env.get("RENKU_TEST_REGISTER") orElse Option(getProperty("register")) match {
-        case Some(s) => s.nonEmpty
-        case None    => false
-      }
+                   case Some(s) => s.nonEmpty
+                   case None    => false
+                 }
     } yield UserCredentials(email, username, password, fullName, useProvider, register)
   } getOrElse showErrorAndStop(
     "You must provide either the arguments -Dusername -Dfullname, -Demail or/and -Dpassword args invalid or missing" +

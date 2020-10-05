@@ -9,7 +9,6 @@ import org.openqa.selenium.{WebDriver, WebElement}
 import org.scalatestplus.selenium.WebBrowser
 import org.scalatestplus.selenium.WebBrowser.{cssSelector, find, findAll}
 
-import scala.jdk.CollectionConverters._
 import scala.language.postfixOps
 
 case object ProjectsPage extends RenkuPage with TopBar {
@@ -36,8 +35,8 @@ case object ProjectsPage extends RenkuPage with TopBar {
     }
 
     /**
-     * Return all the project links.
-     */
+      * Return all the project links.
+      */
     def projectLinks(implicit webDriver: WebDriver): List[WebBrowser.Element] =
       findAll(
         cssSelector(

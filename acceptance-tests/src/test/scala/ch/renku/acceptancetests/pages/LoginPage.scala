@@ -4,9 +4,9 @@ import ch.renku.acceptancetests.model.users.UserCredentials
 import ch.renku.acceptancetests.pages.Page._
 import ch.renku.acceptancetests.tooling._
 import ch.renku.acceptancetests.workflows.LoginType
-import ch.renku.acceptancetests.workflows.LoginType.{LoginWithProvider, LoginWithoutProvider}
+import ch.renku.acceptancetests.workflows.LoginType.LoginWithProvider
 import eu.timepit.refined.auto._
-import org.openqa.selenium.{StaleElementReferenceException, WebDriver, WebElement}
+import org.openqa.selenium.{WebDriver, WebElement}
 import org.scalatest.concurrent.Eventually
 import org.scalatest.{Matchers => ScalatestMatchers}
 import org.scalatestplus.selenium
