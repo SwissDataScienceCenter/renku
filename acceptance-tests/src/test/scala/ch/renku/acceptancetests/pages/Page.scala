@@ -55,7 +55,7 @@ abstract class Page[Url <: BaseUrl] extends ScalatestMatchers with Eventually wi
   protected def waitUpTo(duration: Duration): PatienceConfig =
     PatienceConfig(
       // Wait up to 2 minutes for this operation
-      timeout  = scaled(Span(AcceptanceSpecPatience.WAIT_SCALE * duration.toSeconds, Seconds)),
+      timeout = scaled(Span(AcceptanceSpecPatience.WAIT_SCALE * duration.toSeconds, Seconds)),
       interval = scaled(Span(2, Seconds))
     )
 }

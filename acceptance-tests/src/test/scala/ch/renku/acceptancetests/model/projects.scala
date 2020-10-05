@@ -52,7 +52,8 @@ object projects {
       val template    = "Renku/python-minimal"
       ProjectDetails(Refined.unsafeApply(s"test ${now.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH-mm-ss"))}"),
                      desc,
-                     readmeTitle)
+                     readmeTitle
+      )
     }
 
     def generateHandsOnProject(captureScreenshots: Boolean): ProjectDetails =

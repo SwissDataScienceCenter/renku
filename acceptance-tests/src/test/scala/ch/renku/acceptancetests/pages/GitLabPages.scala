@@ -2,7 +2,6 @@ package ch.renku.acceptancetests.pages
 
 import ch.renku.acceptancetests.model.projects.ProjectDetails
 import ch.renku.acceptancetests.model.projects.ProjectDetails._
-import ch.renku.acceptancetests.model.projects.ProjectIdentifier
 import ch.renku.acceptancetests.model.users.UserCredentials
 import ch.renku.acceptancetests.pages.Page.{Path, Title}
 import ch.renku.acceptancetests.tooling.BaseUrl
@@ -11,9 +10,7 @@ import eu.timepit.refined.auto._
 import eu.timepit.refined.string.Url
 import org.openqa.selenium.{WebDriver, WebElement}
 import org.scalatestplus.selenium.WebBrowser.{cssSelector, find}
-import org.scalatestplus.selenium.{Driver, WebBrowser}
 
-import scala.concurrent.duration._
 import scala.language.postfixOps
 
 object GitLabPages {

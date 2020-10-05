@@ -4,7 +4,8 @@ final case class TestsDefaults(env:      Option[String],
                                email:    Option[String] = None,
                                username: Option[String] = None,
                                password: Option[String] = None,
-                               fullname: Option[String] = None)
+                               fullname: Option[String] = None
+)
 
 object TestsDefaults {
   import java.nio.file.Paths

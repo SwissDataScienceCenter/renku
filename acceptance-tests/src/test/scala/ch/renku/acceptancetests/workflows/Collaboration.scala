@@ -55,8 +55,9 @@ trait Collaboration {
     issueTitles.find(_ == issueTitle) getOrElse fail("Issue with expected title could not be found.")
   }
 
-  def `create an issue with title and description`(title:       String,
-                                                   description: String)(implicit projectPage: ProjectPage): Unit = {
+  def `create an issue with title and description`(title: String, description: String)(implicit
+      projectPage:                                        ProjectPage
+  ): Unit = {
     val tf = projectPage.Collaboration.Issues.NewIssue.titleField
     tf.clear() sleep (1 second)
     tf enterValue title sleep (1 second)

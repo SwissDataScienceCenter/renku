@@ -50,7 +50,8 @@ object Generators {
   }
 
   def paragraph(minWords: Int Refined Positive = 2,
-                maxWords: Int Refined Positive = 10): Gen[String Refined NonEmpty] = {
+                maxWords: Int Refined Positive = 10
+  ): Gen[String Refined NonEmpty] = {
     require(minWords.value <= maxWords.value)
     (
       for {
@@ -62,7 +63,8 @@ object Generators {
 
   def prefixParagraph(prefix:   String,
                       minWords: Int Refined Positive = 2,
-                      maxWords: Int Refined Positive = 10): Gen[String Refined NonEmpty] = {
+                      maxWords: Int Refined Positive = 10
+  ): Gen[String Refined NonEmpty] = {
     require(minWords.value <= maxWords.value)
     (
       for {
@@ -89,7 +91,8 @@ object Generators {
     } yield chars.mkString("")
 
   def nonEmptyStringsList(minElements: Int Refined Positive = 1,
-                          maxElements: Int Refined Positive = 5): Gen[List[String Refined NonEmpty]] =
+                          maxElements: Int Refined Positive = 5
+  ): Gen[List[String Refined NonEmpty]] =
     for {
       size  <- choose(minElements.value, maxElements.value)
       lines <- Gen.listOfN(size, nonEmptyStrings())
@@ -123,13 +126,14 @@ object Generators {
 
   def relativePaths(minSegments: Int = 1, maxSegments: Int = 10): Gen[String] = {
     require(minSegments <= maxSegments,
-            s"Generate relative paths with minSegments=$minSegments and maxSegments=$maxSegments makes no sense")
+            s"Generate relative paths with minSegments=$minSegments and maxSegments=$maxSegments makes no sense"
+    )
 
     for {
       partsNumber <- Gen.choose(minSegments, maxSegments)
       partsGenerator = nonEmptyStrings(
-        charsGenerator = frequency(9 -> alphaChar, 1 -> oneOf('-', '_'))
-      )
+                         charsGenerator = frequency(9 -> alphaChar, 1 -> oneOf('-', '_'))
+                       )
       parts <- Gen.listOfN(partsNumber, partsGenerator)
     } yield parts.mkString("/")
   }
@@ -138,9 +142,9 @@ object Generators {
 
   val httpUrls: Gen[String] = for {
     protocol <- Arbitrary.arbBool.arbitrary map {
-                 case true  => "http"
-                 case false => "https"
-               }
+                  case true  => "http"
+                  case false => "https"
+                }
     port <- httpPorts
     host <- nonEmptyStrings()
   } yield s"$protocol://$host:$port"
