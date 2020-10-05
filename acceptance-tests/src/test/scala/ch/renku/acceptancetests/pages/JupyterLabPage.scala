@@ -1,7 +1,7 @@
 package ch.renku.acceptancetests.pages
 
-import ch.renku.acceptancetests.model.projects.{ProjectDetails, ProjectIdentifier}
 import ch.renku.acceptancetests.model.projects.ProjectDetails._
+import ch.renku.acceptancetests.model.projects.{ProjectDetails, ProjectIdentifier}
 import ch.renku.acceptancetests.model.users.UserCredentials
 import ch.renku.acceptancetests.pages.Page.{Path, Title}
 import eu.timepit.refined.api.Refined

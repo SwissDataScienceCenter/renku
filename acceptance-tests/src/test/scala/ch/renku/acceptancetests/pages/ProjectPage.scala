@@ -41,7 +41,9 @@ class ProjectPage(projectSlug: String, namespace: String) extends RenkuPage with
 
   def projectTitle(implicit webDriver: WebDriver): Option[String] = {
     val fullTitle = find(cssSelector("div > main > div:nth-child(2) > div > div > div.row > div.col-12.col-md > h3")) map (_.text)
-    val visibility = find(cssSelector("div > main > div:nth-child(2) > div > div > div.row > div.col-12.col-md > h3 > span")) map (_.text);
+    val visibility = find(
+      cssSelector("div > main > div:nth-child(2) > div > div > div.row > div.col-12.col-md > h3 > span")
+    ) map (_.text);
     (fullTitle, visibility) match {
       case (Some(t), Some(v)) => {
         Some(t.substring(0, t.length - v.length) trim)
