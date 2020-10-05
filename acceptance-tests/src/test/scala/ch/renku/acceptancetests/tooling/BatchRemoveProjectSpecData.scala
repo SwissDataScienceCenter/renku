@@ -7,7 +7,9 @@ import java.lang.System.getProperty
   */
 trait BatchRemoveProjectSpecData {
 
-  case class BatchRemoveConfig(batchRemove: Boolean = false, pattern: String = "test-(\\d{4})-(\\d{2})-(\\d{2})-(\\d{2})-(\\d{2})-(\\d{2})")
+  case class BatchRemoveConfig(batchRemove: Boolean = false,
+                               pattern:     String = "test-(\\d{4})-(\\d{2})-(\\d{2})-(\\d{2})-(\\d{2})-(\\d{2})"
+  )
 
   protected lazy val batchRemoveConfig: Option[BatchRemoveConfig] = {
 
@@ -18,12 +20,11 @@ trait BatchRemoveProjectSpecData {
     val projectNamePattern = Option(getProperty("remPattern")) orElse sys.env.get("RENKU_TEST_REMOVE_PATTERN");
 
     batchRemove match {
-      case Some(b) => {
+      case Some(b) =>
         projectNamePattern match {
           case Some(p) => Some(BatchRemoveConfig(b, p))
-          case None => Some(BatchRemoveConfig(b))
+          case None    => Some(BatchRemoveConfig(b))
         }
-      }
       case None => None
     }
   }

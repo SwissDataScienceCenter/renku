@@ -26,18 +26,16 @@ class BatchRemoveProjectSpec extends AcceptanceSpec with BatchRemoveProjectSpecD
 
   scenario("User can delete many projects project") {
     batchRemoveConfig match {
-      case Some(config) => {
+      case Some(config) =>
         if (config.batchRemove) {
           loginAndRemoveProjects(config)
         } else {
           Given("specifically asked to not remove projects")
           Then("do not remove anything")
         }
-      }
-      case None => {
+      case None =>
         Given("not asked to remove projects")
         Then("do not remove anything")
-      }
     }
   }
 
@@ -56,11 +54,11 @@ class BatchRemoveProjectSpec extends AcceptanceSpec with BatchRemoveProjectSpecD
     val pattern: Regex = config.pattern.r
     val projectLinks = ProjectsPage.YourProjects.projectLinks
     And("lists projects to remove")
-    val toRemoveLinks = projectLinks.filter({ elt =>
+    val toRemoveLinks = projectLinks.filter { elt =>
       val href = elt getAttribute "href"
       val last = (href split "/") last;
       pattern matches last
-    })
+    }
     val removeIds = toRemoveLinks map (elt => {
       val projectUrlComps = elt getAttribute "href" split "/"
       val namespace       = projectUrlComps(projectUrlComps.size - 2)
@@ -77,17 +75,15 @@ class BatchRemoveProjectSpec extends AcceptanceSpec with BatchRemoveProjectSpecD
     go to projectPage sleep (5 seconds)
     val title = projectPage.projectTitle
     title match {
-      case Some(s) => {
+      case Some(s) =>
         implicit val projectDetails =
-        ProjectDetails(Refined.unsafeApply(s), Refined.unsafeApply(""), "")
+          ProjectDetails(Refined.unsafeApply(s), Refined.unsafeApply(""), "")
         And(s"found project $s to remove")
         removeProjectInGitLab
         Then("remove project")
-      }
-      case None => {
+      case None =>
         And(s"could not get the title for $projectId")
         Then("do not remove")
-      }
     }
   }
 

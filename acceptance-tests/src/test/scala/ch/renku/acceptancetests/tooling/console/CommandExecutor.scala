@@ -36,9 +36,11 @@ private class CommandExecutor(command: Command) {
     } recover outputAsString
   }.unsafeRunSync()
 
-  private def executeCommand(implicit workPath: Path,
-                             output:            util.Collection[String],
-                             userCredentials:   UserCredentials): Unit =
+  private def executeCommand(implicit
+      workPath:        Path,
+      output:          util.Collection[String],
+      userCredentials: UserCredentials
+  ): Unit =
     command.userInputs.foldLeft(buildProcess) { (process, userInput) =>
       process #< userInput.asStream
     } lazyLines ProcessLogger(logLine _) foreach logLine
@@ -65,8 +67,8 @@ private class CommandExecutor(command: Command) {
       }.raiseError[IO, String]
   }
 
-  private def outputAsString(implicit output: util.Collection[String]): PartialFunction[Throwable, String] = {
-    case _ => output.asString
+  private def outputAsString(implicit output: util.Collection[String]): PartialFunction[Throwable, String] = { case _ =>
+    output.asString
   }
 
   private implicit class OutputOps(output: util.Collection[String]) {
