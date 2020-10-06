@@ -1,6 +1,6 @@
 package ch.renku.acceptancetests
 
-import ch.renku.acceptancetests.model.projects.{ProjectDetails, ProjectIdentifier, Public}
+import ch.renku.acceptancetests.model.projects.{ProjectDetails, ProjectIdentifier, Visibility}
 import ch.renku.acceptancetests.tooling.{AcceptanceSpec, BatchRemoveProjectSpecData}
 import ch.renku.acceptancetests.workflows._
 import ch.renku.acceptancetests.pages._
@@ -64,7 +64,7 @@ class BatchRemoveProjectSpec extends AcceptanceSpec with BatchRemoveProjectSpecD
       val slug            = projectUrlComps last;
       ProjectIdentifier(Refined.unsafeApply(namespace), Refined.unsafeApply(slug))
     })
-    removeIds map (removeProject(_, loginType))
+    removeIds foreach (removeProject(_, loginType))
     go to ProjectsPage sleep (5 seconds)
   }
 
@@ -75,8 +75,8 @@ class BatchRemoveProjectSpec extends AcceptanceSpec with BatchRemoveProjectSpecD
     val title = projectPage.projectTitle
     title match {
       case Some(s) =>
-        implicit val projectDetails =
-          ProjectDetails(Refined.unsafeApply(s), Public, Refined.unsafeApply(""), "") // TODO: get the visibility value from somewhere
+        implicit val projectDetails: ProjectDetails =
+          ProjectDetails(Refined.unsafeApply(s), Visibility.Public, Refined.unsafeApply(""), "")
         And(s"found project $s to remove")
         removeProjectInGitLab
         Then("remove project")

@@ -23,7 +23,7 @@ class HandsOnSpec
     with Settings
     with JupyterNotebook
     with FlightsTutorial
-    with CommonVerifications {
+    with Datasets {
 
   scenario("User can do hands-on tutorial") {
 
@@ -34,7 +34,7 @@ class HandsOnSpec
     implicit val projectDetails: ProjectDetails =
       ProjectDetails.generateHandsOnProject(docsScreenshots.captureScreenshots)
 
-    createNewProject
+    createNewProject(projectDetails)
 
     val projectHttpUrl     = findProjectHttpUrl
     val flightsDatasetName = followTheFlightsTutorialOnUsersMachine(projectHttpUrl)
@@ -51,7 +51,7 @@ class HandsOnSpec
     setProjectTags
     setProjectDescription
     removeProjectInGitLab
-    verifyProjectWasRemoved
+    verifyProjectWasRemovedInRenku
 
     logOutOfRenku
   }

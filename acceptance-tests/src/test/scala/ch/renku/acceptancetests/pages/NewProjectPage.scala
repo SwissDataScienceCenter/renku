@@ -49,7 +49,7 @@ case object NewProjectPage extends RenkuPage with TopBar with ScreenCapturing {
   }
 
   private def visibilityOption(visibility: Visibility)(implicit webDriver: WebDriver): WebElement = eventually {
-    find(cssSelector(s"option[value='$visibility']")) getOrElse fail("Visibility option not found")
+    find(cssSelector(s"option[value='${visibility.value}']")) getOrElse fail("Visibility option not found")
   }
 
   private def templateField(implicit webDriver: WebDriver): WebElement = eventually {

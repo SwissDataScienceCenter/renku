@@ -11,6 +11,7 @@ object TestsDefaults {
   import java.nio.file.Paths
 
   import pureconfig.ConfigSource
+  import pureconfig.generic.auto._
 
   private val defaultConfigFileName = "./tests-defaults.conf"
 

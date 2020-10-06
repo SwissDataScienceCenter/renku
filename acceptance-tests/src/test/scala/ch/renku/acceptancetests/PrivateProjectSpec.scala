@@ -1,9 +1,8 @@
 package ch.renku.acceptancetests
 
-import ch.renku.acceptancetests.model.datasets.DatasetName
-import ch.renku.acceptancetests.model.projects.ProjectDetails
+import ch.renku.acceptancetests.model.projects.{ProjectDetails, Visibility}
 import ch.renku.acceptancetests.tooling.{AcceptanceSpec, DocsScreenshots}
-import ch.renku.acceptancetests.workflows.{Collaboration, Environments, FlightsTutorial, JupyterNotebook, Login, LoginType, NewProject, RemoveProject, Settings}
+import ch.renku.acceptancetests.workflows.{BrowserNavigation, Collaboration, Datasets, Environments, JupyterNotebook, Login, LoginType, NewProject, RemoveProject, Settings}
 
 class PrivateProjectSpec
     extends AcceptanceSpec
@@ -14,20 +13,18 @@ class PrivateProjectSpec
     with RemoveProject
     with Settings
     with JupyterNotebook
-    with FlightsTutorial
-    with CommonVerifications {
+    with Datasets
+    with BrowserNavigation {
 
   scenario("User can launch Jupyter notebook when the project is private") {
     implicit val loginType:       LoginType       = logIntoRenku
     implicit val docsScreenshots: DocsScreenshots = new DocsScreenshots(this, browser)
-    implicit val projectDetails: ProjectDetails =
-      ProjectDetails.generateHandsOnProject(docsScreenshots.captureScreenshots)
+    implicit val projectDetails:  ProjectDetails  = ProjectDetails.generate(visibility = Visibility.Private)
 
-    createNewProject
-    val projectHttpUrl     = findProjectHttpUrl
-    val flightsDatasetName = followTheFlightsTutorialOnUsersMachine(projectHttpUrl)
-    verifyDatasetCreated(flightsDatasetName)
-
+    createNewProject(projectDetails)
     verifyUserCanWorkWithJupyterNotebook
+    removeProjectInGitLab
+    switchToRenkuTab
+    logOutOfRenku
   }
 }
