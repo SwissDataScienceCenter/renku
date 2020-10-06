@@ -117,6 +117,7 @@ jobs:
         KUBECONFIG: ${{ github.workspace }}/renkubot-kube.config
         RENKUBOT_KUBECONFIG: ${{ secrets.RENKUBOT_KUBECONFIG }}
         CI_RENKU_VALUES: ${{ secrets.CI_RENKU_VALUES }}
+        RENKUBOT_RANCHER_APISECRET: ${{ secrets.RENKUBOT_RANCHER_APISECRET }}
       run: |
         echo "$RENKUBOT_KUBECONFIG" > renkubot-kube.config
         curl -u "token-fxgsb:$RENKUBOT_RANCHER_APISECRET" \
