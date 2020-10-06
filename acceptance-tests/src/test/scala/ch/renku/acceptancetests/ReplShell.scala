@@ -1,5 +1,8 @@
-import org.openqa.selenium.WebDriver
-import org.scalatestplus.selenium.Chrome
+import org.openqa.selenium.{By, WebDriver}
+import org.openqa.selenium.chrome.ChromeOptions
+import org.openqa.selenium.remote.RemoteWebDriver
+import org.scalatestplus.selenium.{Chrome, Driver, WebBrowser}
+import scala.jdk.CollectionConverters._
 
 /**
   * Import packages necessary for working with selenium in the console.
