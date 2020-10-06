@@ -279,7 +279,7 @@ These values will override the ones automatically derived from primary Renku dep
         "-f",
         f"{tmp_values_path}",
         "--timeout",
-        "1800",
+        "1800s",
         "--kube-context",
         f"{kube_context}",
     ]
