@@ -120,11 +120,6 @@ jobs:
         RENKUBOT_RANCHER_APISECRET: ${{ secrets.RENKUBOT_RANCHER_APISECRET }}
       run: |
         echo "$RENKUBOT_KUBECONFIG" > renkubot-kube.config
-        curl -u "token-fxgsb:$RENKUBOT_RANCHER_APISECRET" \
-        -X POST \
-        -d "name=${RENKU_NAMESPACE}-tmp" \
-        -d "projectId=c-l6jt4:p-rz88m" \
-        'https://rancher.renku.ch/v3/cluster/c-l6jt4/namespaces'
         charts/deploy-tmp-notebooks.py --release-name $RENKU_RELEASE --renku-namespace $RENKU_NAMESPACE
     - name: Notify slack
       if: success()
