@@ -32,11 +32,11 @@ jobs:
           export RENKU_NAMESPACE="ci-${PR_NUMBER}-renku"
           echo "$RENKUBOT_KUBECONFIG" > renkubot-kube.config
           helm uninstall $RENKU_RELEASE --namespace $RENKU_NAMESPACE
-          kubectl delete --all job --namespace $RENKU_NAMESPACE
+          kubectl delete all --all --namespace $RENKU_NAMESPACE
           kubectl delete --all secrets --namespace $RENKU_NAMESPACE
           kubectl delete ns $RENKU_NAMESPACE
           helm uninstall $RENKU_RELEASE-tmp-notebooks --namespace $RENKU_NAMESPACE-tmp || true
-          kubectl delete --all job --namespace $RENKU_NAMESPACE-tmp || true
+          kubectl delete all --all --namespace $RENKU_NAMESPACE-tmp || true
           kubectl delete --all secrets --namespace $RENKU_NAMESPACE-tmp || true
           kubectl delete ns $RENKU_NAMESPACE-tmp || true
     - name: gitlab teardown
