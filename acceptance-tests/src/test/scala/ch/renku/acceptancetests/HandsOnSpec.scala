@@ -55,8 +55,10 @@ class HandsOnSpec
     logOutOfRenku
   }
 
-  def verifyUserCanWorkWithJupyterNotebook(implicit projectDetails: ProjectDetails,
-                                           docsScreenshots:         DocsScreenshots): Unit = {
+  def verifyUserCanWorkWithJupyterNotebook(implicit
+      projectDetails:  ProjectDetails,
+      docsScreenshots: DocsScreenshots
+  ): Unit = {
     val jupyterLabPage = launchEnvironment
 
     When("the user clicks on the Terminal icon")
