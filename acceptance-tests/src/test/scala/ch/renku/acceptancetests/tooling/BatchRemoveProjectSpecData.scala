@@ -8,7 +8,8 @@ import java.lang.System.getProperty
 trait BatchRemoveProjectSpecData {
 
   case class BatchRemoveConfig(batchRemove: Boolean = false,
-                               pattern:     String  = "test-(\\d{4})-(\\d{2})-(\\d{2})-(\\d{2})-(\\d{2})-(\\d{2})")
+                               pattern:     String = "test-(\\d{4})-(\\d{2})-(\\d{2})-(\\d{2})-(\\d{2})-(\\d{2})"
+  )
 
   protected lazy val batchRemoveConfig: Option[BatchRemoveConfig] = {
 
