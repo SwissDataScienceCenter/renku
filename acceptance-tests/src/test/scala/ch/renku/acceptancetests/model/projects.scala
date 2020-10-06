@@ -21,6 +21,7 @@ object projects {
       title:       String Refined NonEmpty,
       visibility:  Visibility,
       description: String Refined NonEmpty,
+      template:    Template,
       readmeTitle: String
   )
 
@@ -31,6 +32,8 @@ object projects {
     case object Private  extends Visibility(value = "private")
     case object Internal extends Visibility(value = "internal")
   }
+
+  case class Template(name: String Refined NonEmpty)
 
   final case class ProjectUrl(value: String) {
     override lazy val toString: String = value
@@ -66,17 +69,19 @@ object projects {
       val desc =
         maybeDescription.getOrElse(prefixParagraph("An automatically generated project for testing: ").generateOne)
       val readmeTitle = s"test ${now.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH-mm-ss"))}"
-      val template    = maybeTemplate.getOrElse("Renku/python-minimal")
-      ProjectDetails(title, visibility, desc, readmeTitle)
+      val template    = Template(maybeTemplate.getOrElse(Refined.unsafeApply("Renku/python-minimal")))
+      ProjectDetails(title, visibility, desc, template, readmeTitle)
     }
 
     def generateHandsOnProject(captureScreenshots: Boolean): ProjectDetails =
       if (captureScreenshots) {
         val readmeTitle = "flights tutorial"
-        ProjectDetails(Refined.unsafeApply(readmeTitle),
-                       Visibility.Public,
-                       Refined.unsafeApply("A renku tutorial project."),
-                       readmeTitle
+        ProjectDetails(
+          Refined.unsafeApply(readmeTitle),
+          Visibility.Public,
+          Refined.unsafeApply("A renku tutorial project."),
+          Template(Refined.unsafeApply("This template isn't used")),
+          readmeTitle
         )
       } else
         generate()
