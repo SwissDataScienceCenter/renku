@@ -1,4 +1,4 @@
-FROM python:3-slim
+FROM python:3.7-slim
 
 RUN apt-get update && apt-get install -y curl gnupg
 
@@ -9,7 +9,7 @@ RUN mkdir -p /usr/share/man/man1 && \
     apt-get update && \
     apt-get install -y openjdk-11-jdk sbt
 
-RUN apt-get install -y git git-lfs gcc wget nodejs
+RUN apt-get install -y git git-lfs gcc wget nodejs 
 
 ARG renku_python_ref=master
 RUN python3 -m pip install \
