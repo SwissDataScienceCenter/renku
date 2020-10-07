@@ -13,13 +13,11 @@
 # All configuration values have a default; values that are commented out
 # serve to show the default.
 
-# If extensions (or modules to document with autodoc) are in another directory,
-# add these directories to sys.path here. If the directory is relative to the
-# documentation root, use os.path.abspath to make it absolute, like shown here.
-#
-# import os
-# import sys
-# sys.path.insert(0, os.path.abspath('.'))
+import os
+import sys
+from os.path import abspath, join, dirname
+
+sys.path.insert(0, abspath(join(dirname(__file__))))
 
 # -- General configuration ------------------------------------------------
 
@@ -120,7 +118,7 @@ html_theme_options = {
     "extra_nav_links": {
         "renku@GitHub": "https://github.com/SwissDataScienceCenter/renku"
     },
-    "fixed_sidebar":True,
+    "fixed_sidebar": True,
     "show_relbars": True,
 }
 
@@ -214,3 +212,20 @@ graphviz_output_format = "svg"
 
 # suppress the warning about graph being overriden
 suppress_warnings = ["app.add_directive"]
+
+
+# sidebar
+on_rtd = os.environ.get("READTHEDOCS", None) == "True"
+rtd_version = os.environ.get("READTHEDOCS_VERSION", "latest")
+if rtd_version not in ["stable", "latest", "develop"]:
+    rtd_version = "stable"
+
+intersphinx_mapping = {
+    "python": ("https://docs.python.org/", None),
+}
+
+# -- Custom Document processing ----------------------------------------------
+
+from gensidebar import generate_sidebar
+
+generate_sidebar(on_rtd, rtd_version, "renku")

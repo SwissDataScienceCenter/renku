@@ -9,28 +9,7 @@ The Renku Project Docs
 ======================
 
 
-.. toctree::
-   :maxdepth: 2
-   :hidden:
-
-   About Renku <introduction/index>
-   Getting Started <getting_started>
-   Using Renku <user/index>
-   Get in touch <get_in_touch>
-   Roadmap <roadmap>
-   Release notes <release_notes>
-
-
-.. toctree::
-   :maxdepth: 1
-   :caption: Detailed documentation:
-   :includehidden:
-   :hidden:
-
-   Users <user/index>
-   Developers <developer/index>
-   Admins <admin/index>
-   License <https://www.apache.org/licenses/LICENSE-2.0>
+.. include:: _sidebar.rst.inc
 
 
 .. epigraph::
