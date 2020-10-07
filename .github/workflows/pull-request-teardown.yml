@@ -35,10 +35,10 @@ jobs:
           kubectl delete all --all --namespace $RENKU_NAMESPACE
           kubectl delete --all secrets --namespace $RENKU_NAMESPACE
           kubectl delete ns $RENKU_NAMESPACE
-          helm uninstall $RENKU_RELEASE-tmp-notebooks --namespace $RENKU_NAMESPACE-tmp || true
-          kubectl delete all --all --namespace $RENKU_NAMESPACE-tmp || true
-          kubectl delete --all secrets --namespace $RENKU_NAMESPACE-tmp || true
-          kubectl delete ns $RENKU_NAMESPACE-tmp || true
+          helm uninstall $RENKU_RELEASE-tmp-notebooks --namespace $RENKU_NAMESPACE-tmp
+          kubectl delete all --all --namespace $RENKU_NAMESPACE-tmp
+          kubectl delete --all secrets --namespace $RENKU_NAMESPACE-tmp
+          kubectl delete ns $RENKU_NAMESPACE-tmp
     - name: gitlab teardown
       env:
         GITLAB_TOKEN: ${{ secrets.GITLAB_TOKEN }}
