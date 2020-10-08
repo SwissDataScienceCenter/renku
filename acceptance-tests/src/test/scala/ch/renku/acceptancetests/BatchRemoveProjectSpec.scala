@@ -1,11 +1,10 @@
 package ch.renku.acceptancetests
 
-import ch.renku.acceptancetests.model.projects.{ProjectDetails, ProjectIdentifier}
+import ch.renku.acceptancetests.model.projects.{ProjectDetails, ProjectIdentifier, Visibility}
 import ch.renku.acceptancetests.tooling.{AcceptanceSpec, BatchRemoveProjectSpecData}
 import ch.renku.acceptancetests.workflows._
 import ch.renku.acceptancetests.pages._
 import ch.renku.acceptancetests.pages.GitLabPages.GitLabBaseUrl
-
 import org.scalatestplus.selenium.WebBrowser
 import eu.timepit.refined.api.Refined
 
@@ -39,14 +38,14 @@ class BatchRemoveProjectSpec extends AcceptanceSpec with BatchRemoveProjectSpecD
     }
   }
 
-  def loginAndRemoveProjects(config: BatchRemoveConfig) = {
+  def loginAndRemoveProjects(config: BatchRemoveConfig): Unit = {
     implicit val loginType: LoginType = logIntoRenku
     Given("projects to remove")
     removeProjects(config, loginType)
     logOutOfRenku
   }
 
-  def removeProjects(config: BatchRemoveConfig, loginType: LoginType)(implicit gitLabBaseUrl: GitLabBaseUrl) = {
+  def removeProjects(config: BatchRemoveConfig, loginType: LoginType)(implicit gitLabBaseUrl: GitLabBaseUrl): Unit = {
     When("user goes to the projects page")
     go to ProjectsPage sleep (5 seconds)
     verify browserAt ProjectsPage
@@ -65,19 +64,19 @@ class BatchRemoveProjectSpec extends AcceptanceSpec with BatchRemoveProjectSpecD
       val slug            = projectUrlComps last;
       ProjectIdentifier(Refined.unsafeApply(namespace), Refined.unsafeApply(slug))
     })
-    removeIds map (removeProject(_, loginType))
+    removeIds foreach (removeProject(_, loginType))
     go to ProjectsPage sleep (5 seconds)
   }
 
-  def removeProject(projectId: ProjectIdentifier, loginType: LoginType)(implicit gitLabBaseUrl: GitLabBaseUrl) = {
+  def removeProject(projectId: ProjectIdentifier, loginType: LoginType)(implicit gitLabBaseUrl: GitLabBaseUrl): Unit = {
     // Go to the project page to get the title
     val projectPage = ProjectPage(projectId)
     go to projectPage sleep (5 seconds)
     val title = projectPage.projectTitle
     title match {
       case Some(s) =>
-        implicit val projectDetails =
-          ProjectDetails(Refined.unsafeApply(s), Refined.unsafeApply(""), "")
+        implicit val projectDetails: ProjectDetails =
+          ProjectDetails(Refined.unsafeApply(s), Visibility.Public, Refined.unsafeApply(""), "")
         And(s"found project $s to remove")
         removeProjectInGitLab
         Then("remove project")
