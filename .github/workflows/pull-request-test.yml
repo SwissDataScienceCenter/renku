@@ -88,7 +88,7 @@ jobs:
         RENKUBOT_KUBECONFIG: ${{ secrets.RENKUBOT_KUBECONFIG }}
         CI_RENKU_VALUES: ${{ secrets.CI_RENKU_VALUES }}
         RENKUBOT_RANCHER_APISECRET: ${{ secrets.RENKUBOT_RANCHER_APISECRET }}
-        CI_PROJET_ID: ${{ secrets.CI_PROJET_ID }}
+        CI_PROJECT_ID: ${{ secrets.CI_PROJECT_ID }}
       run: |
         echo "$RENKUBOT_KUBECONFIG" > renkubot-kube.config
         helm repo add stable 	https://kubernetes-charts.storage.googleapis.com
@@ -101,7 +101,7 @@ jobs:
         curl -u "token-fxgsb:$RENKUBOT_RANCHER_APISECRET" \
         -X POST \
         -d "name=${RENKU_NAMESPACE}" \
-        -d "projectId=${CI_PROJET_ID}" \
+        -d "projectId=${CI_PROJECT_ID}" \
         'https://rancher.renku.ch/v3/cluster/c-l6jt4/namespaces'
         helm upgrade --install $RENKU_RELEASE \
                     --namespace $RENKU_NAMESPACE \
@@ -125,7 +125,7 @@ jobs:
         curl -u "token-fxgsb:$RENKUBOT_RANCHER_APISECRET" \
         -X POST \
         -d "name=${RENKU_TMP_NAMESPACE}" \
-        -d "projectId=${CI_PROJET_ID}" \
+        -d "projectId=${CI_PROJECT_ID}" \
         'https://rancher.renku.ch/v3/cluster/c-l6jt4/namespaces'
         charts/deploy-tmp-notebooks.py --release-name $RENKU_RELEASE --renku-namespace $RENKU_NAMESPACE
     - name: Notify slack
