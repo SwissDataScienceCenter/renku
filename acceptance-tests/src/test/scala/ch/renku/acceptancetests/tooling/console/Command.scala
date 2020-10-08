@@ -1,6 +1,6 @@
 package ch.renku.acceptancetests.tooling.console
 
-import Command._
+import ch.renku.acceptancetests.tooling.console.Command._
 
 final case class Command(
     command:       String,
