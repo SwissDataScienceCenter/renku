@@ -68,6 +68,7 @@ jobs:
         PR_NUMBER=${{ github.event.number }}
         echo "::set-env name=RENKU_RELEASE::ci-${PR_NUMBER}-renku"
         echo "::set-env name=RENKU_NAMESPACE::ci-${PR_NUMBER}-renku"
+        echo "::set-env name=RENKU_TMP_NAMESPACE::ci-${PR_NUMBER}-renku-tmp"
     - name: Configure GitLab application
       env:
         GITLAB_TOKEN: ${{ secrets.GITLAB_TOKEN }}
@@ -123,7 +124,7 @@ jobs:
         echo "$RENKUBOT_KUBECONFIG" > renkubot-kube.config
         curl -u "token-fxgsb:$RENKUBOT_RANCHER_APISECRET" \
         -X POST \
-        -d "name=${RENKU_NAMESPACE}-tmp" \
+        -d "name=${RENKU_TMP_NAMESPACE}" \
         -d "projectId=${CI_PROJET_ID}" \
         'https://rancher.renku.ch/v3/cluster/c-l6jt4/namespaces'
         charts/deploy-tmp-notebooks.py --release-name $RENKU_RELEASE --renku-namespace $RENKU_NAMESPACE
