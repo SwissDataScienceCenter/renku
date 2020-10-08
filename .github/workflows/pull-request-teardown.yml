@@ -24,15 +24,21 @@ jobs:
         RENKUBOT_KUBECONFIG: ${{ secrets.RENKUBOT_KUBECONFIG }}
       with:
         kubectl: 1.16.2
-        helm: 2.16.1
+        helm: 3.3.1
         command: |
           export PR_NUMBER=${{ github.event.number }}
           echo $PR_NUMBER
           export RENKU_RELEASE="ci-${PR_NUMBER}-renku"
-          helm init --client-only
+          export RENKU_NAMESPACE="ci-${PR_NUMBER}-renku"
           echo "$RENKUBOT_KUBECONFIG" > renkubot-kube.config
-          helm delete --purge $RENKU_RELEASE
-          helm delete --purge $RENKU_RELEASE-tmp-notebooks || true
+          helm uninstall $RENKU_RELEASE --namespace $RENKU_NAMESPACE
+          kubectl delete all --all --namespace $RENKU_NAMESPACE
+          kubectl delete --all secrets --namespace $RENKU_NAMESPACE
+          kubectl delete ns $RENKU_NAMESPACE
+          helm uninstall $RENKU_RELEASE-tmp-notebooks --namespace $RENKU_NAMESPACE-tmp
+          kubectl delete all --all --namespace $RENKU_NAMESPACE-tmp
+          kubectl delete --all secrets --namespace $RENKU_NAMESPACE-tmp
+          kubectl delete ns $RENKU_NAMESPACE-tmp
     - name: gitlab teardown
       env:
         GITLAB_TOKEN: ${{ secrets.GITLAB_TOKEN }}

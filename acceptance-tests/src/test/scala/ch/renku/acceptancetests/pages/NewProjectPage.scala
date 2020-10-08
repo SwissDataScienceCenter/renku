@@ -55,7 +55,7 @@ case object NewProjectPage extends RenkuPage with TopBar with ScreenCapturing {
   }
 
   private def templateField(implicit webDriver: WebDriver): WebElement = eventually {
-    find(cssSelector("select#template")) getOrElse fail("Template field not found")
+    find(cssSelector("select#template")) getOrElse fail("Template field not found ")
   }
 
   private def templateOption(template: Template)(implicit webDriver: WebDriver): WebElement =
