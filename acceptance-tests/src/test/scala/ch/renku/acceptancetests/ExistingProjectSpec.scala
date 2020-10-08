@@ -20,18 +20,16 @@ class ExistingProjectSpec
     with Settings
     with Fork {
 
-  scenario("User can fork a project") {
+  scenario("User can fork a public project") {
     existingProjectDetails match {
-      case Some(projectDetails) => {
+      case Some(projectDetails) =>
         implicit val loginType: LoginType = logIntoRenku
         Given("an existing project to fork")
         forkTestCase(projectDetails, loginType)
         logOutOfRenku
-      }
-      case None => {
+      case None =>
         Given("no existing project to fork")
         Then("do not test anything")
-      }
     }
   }
 

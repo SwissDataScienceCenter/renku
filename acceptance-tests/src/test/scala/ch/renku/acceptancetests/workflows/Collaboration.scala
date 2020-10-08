@@ -3,12 +3,9 @@ package ch.renku.acceptancetests.workflows
 import ch.renku.acceptancetests.model.projects.ProjectDetails
 import ch.renku.acceptancetests.pages._
 import ch.renku.acceptancetests.tooling.AcceptanceSpec
-import ch.renku.acceptancetests.pages.GitLabPages.GitLabBaseUrl
-import org.openqa.selenium.{WebDriver, WebElement}
-import scala.jdk.CollectionConverters._
-import org.scalatestplus.selenium.WebBrowser.{cssSelector, find}
-import scala.language.postfixOps
+
 import scala.concurrent.duration._
+import scala.language.postfixOps
 
 trait Collaboration {
   self: AcceptanceSpec =>
@@ -55,8 +52,9 @@ trait Collaboration {
     issueTitles.find(_ == issueTitle) getOrElse fail("Issue with expected title could not be found.")
   }
 
-  def `create an issue with title and description`(title:       String,
-                                                   description: String)(implicit projectPage: ProjectPage): Unit = {
+  def `create an issue with title and description`(title: String, description: String)(implicit
+      projectPage:                                        ProjectPage
+  ): Unit = {
     val tf = projectPage.Collaboration.Issues.NewIssue.titleField
     tf.clear() sleep (1 second)
     tf enterValue title sleep (1 second)

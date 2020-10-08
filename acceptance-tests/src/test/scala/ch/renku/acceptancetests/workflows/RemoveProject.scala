@@ -1,6 +1,6 @@
 package ch.renku.acceptancetests.workflows
 
-import ch.renku.acceptancetests.model.projects.{ProjectDetails, ProjectIdentifier}
+import ch.renku.acceptancetests.model.projects.ProjectDetails
 import ch.renku.acceptancetests.pages.GitLabPages.GitLabBaseUrl
 import ch.renku.acceptancetests.pages._
 import ch.renku.acceptancetests.tooling.AcceptanceSpec
@@ -8,13 +8,13 @@ import ch.renku.acceptancetests.tooling.AcceptanceSpec
 import scala.concurrent.duration._
 import scala.language.postfixOps
 
-trait RemoveProject {
+trait RemoveProject extends BrowserNavigation {
   self: AcceptanceSpec =>
 
   def removeProjectInGitLab(implicit projectDetails: ProjectDetails, gitLabBaseUrl: GitLabBaseUrl): Unit = {
     val projectPage = ProjectPage()
     // Wait a bit before clicking on the UI
-    sleep (2 seconds)
+    sleep(2 seconds)
     When("the user clicks on the 'View in GitLab'")
     click on projectPage.viewInGitLab sleep (2 seconds)
     Then("a new tab with GitLab page should open")
@@ -31,10 +31,9 @@ trait RemoveProject {
     gitLabPages.SettingsPage.Advanced confirmRemoval projectDetails sleep (5 seconds)
   }
 
-  def verifyProjectWasRemoved(implicit projectDetails: ProjectDetails): Unit = {
+  def verifyProjectWasRemovedInRenku(implicit projectDetails: ProjectDetails): Unit = {
     val projectPage = ProjectPage()
-    When("the user switches back to the Renku tab")
-    verify browserSwitchedTo projectPage
+    switchToRenkuTab
     And("they click on the Projects in the Top Bar")
     click on projectPage.TopBar.projects sleep (2 seconds)
     Then(s"the '${projectDetails.title}' project should not be listed")

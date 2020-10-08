@@ -4,7 +4,6 @@ import ch.renku.acceptancetests.model.projects.ProjectDetails
 import ch.renku.acceptancetests.tooling.{AcceptanceSpec, AnonEnv, DocsScreenshots}
 import ch.renku.acceptancetests.workflows._
 import ch.renku.acceptancetests.pages.ProjectPage
-import org.openqa.selenium.JavascriptExecutor;
 
 import scala.concurrent.duration._
 import scala.language.postfixOps
@@ -24,9 +23,9 @@ class MinimalFunctionalitySpec
 
     implicit val loginType: LoginType = logIntoRenku
 
-    implicit val projectDetails: ProjectDetails = ProjectDetails.generate
+    implicit val projectDetails: ProjectDetails = ProjectDetails.generate()
 
-    createNewProject
+    createNewProject(projectDetails)
 
     verifyMergeRequestsIsEmpty
     verifyIssuesIsEmpty
@@ -42,7 +41,7 @@ class MinimalFunctionalitySpec
 
     go to ProjectPage()
     removeProjectInGitLab
-    verifyProjectWasRemoved
+    verifyProjectWasRemovedInRenku
 
     launchUnprivilegedEnvironment
     stopEnvironment(anonEnvConfig.projectId)
@@ -54,8 +53,7 @@ class MinimalFunctionalitySpec
   }
 
   def addChangeToProject(implicit projectDetails: ProjectDetails): Unit = {
-    val projectPage = ProjectPage()
-    implicit val docsScreenshots = new DocsScreenshots(this, browser) {
+    implicit val docsScreenshots: DocsScreenshots = new DocsScreenshots(this, browser) {
       override lazy val captureScreenshots: Boolean = false
     }
     val jupyterLabPage = launchEnvironment

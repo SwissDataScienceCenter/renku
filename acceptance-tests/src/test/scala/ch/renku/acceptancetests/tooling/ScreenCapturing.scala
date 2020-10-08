@@ -5,8 +5,8 @@ import java.nio.file.Paths
 import java.time.LocalDateTime.now
 import java.time.format.DateTimeFormatter.ofPattern
 
-import org.scalatestplus.selenium.{Driver, WebBrowser}
 import org.openqa.selenium.WebDriver
+import org.scalatestplus.selenium.{Driver, WebBrowser}
 
 trait ScreenCapturing {
 
