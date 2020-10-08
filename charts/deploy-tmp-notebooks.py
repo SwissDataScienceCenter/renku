@@ -75,7 +75,9 @@ def make_tmp_values(values, renku_namespace, out_path=None):
 
     hub_section = new_values["jupyterhub"]["hub"]
     hub_section["cookieSecret"] = random_hex_seeded(32, hub_section["cookieSecret"])
-    hub_section["baseUrl"] = "{}-tmp/".format(hub_section["baseUrl"].rstrip("/"))
+    hub_section["baseUrl"] = "{}-tmp/".format(
+        hub_section.get("baseUrl", "/jupyterhub/").rstrip("/")
+    )
     hub_section["db"]["url"] = (
         hub_section["db"]["url"]
         .replace("jupyterhub", "jupyterhub-tmp")
@@ -161,15 +163,19 @@ def copy_secret(k8s_api_client, renku_namespace, tmp_namespace):
     jh_postgres_secret.metadata = k8s.client.V1ObjectMeta(
         namespace=tmp_namespace, name=JUPYTERHUB_POSTGRES_SECRET_NAME
     )
+
+    # Delete the secret if it already exists
     try:
-        k8s_api_client.create_namespaced_secret(tmp_namespace, jh_postgres_secret)
+        k8s_api_client.delete_namespaced_secret(
+            JUPYTERHUB_POSTGRES_SECRET_NAME, tmp_namespace
+        )
     except k8s.client.rest.ApiException as e:
-        if e.status == 409:
-            sys.stdout.write(
-                f"Secret {JUPYTERHUB_POSTGRES_SECRET_NAME} exists, skipping...\n"
-            )
+        if e.status == 404:
+            pass
         else:
             raise e
+
+    k8s_api_client.create_namespaced_secret(tmp_namespace, jh_postgres_secret)
 
 
 def check_notebooks_chart_version():
