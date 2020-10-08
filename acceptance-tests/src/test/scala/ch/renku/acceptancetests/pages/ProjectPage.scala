@@ -18,8 +18,14 @@ import scala.jdk.CollectionConverters._
 import scala.language.postfixOps
 
 object ProjectPage {
+
+  // TODO: refactor title so it's a tiny type
   def apply()(implicit projectDetails: ProjectDetails, userCredentials: UserCredentials): ProjectPage =
     new ProjectPage(projectDetails.title.toPathSegment, userCredentials.userNamespace)
+
+  def createFrom(projectDetails: ProjectDetails)(implicit userCredentials: UserCredentials): ProjectPage =
+    new ProjectPage(projectDetails.title.toPathSegment, userCredentials.userNamespace)
+
   def apply(projectId: ProjectIdentifier): ProjectPage =
     new ProjectPage(projectId.slug, projectId.namespace)
 }
@@ -44,7 +50,7 @@ class ProjectPage(projectSlug: String, namespace: String) extends RenkuPage with
       find(cssSelector("div > main > div:nth-child(2) > div > div > div.row > div.col-12.col-md > h3")) map (_.text)
     val visibility = find(
       cssSelector("div > main > div:nth-child(2) > div > div > div.row > div.col-12.col-md > h3 > span")
-    ) map (_.text);
+    ) map (_.text)
     (fullTitle, visibility) match {
       case (Some(t), Some(v)) =>
         Some(t.substring(0, t.length - v.length) trim)
@@ -295,7 +301,9 @@ class ProjectPage(projectSlug: String, namespace: String) extends RenkuPage with
 
       def title(implicit webDriver: WebDriver): WebElement = eventually {
         find(cssSelector("div.row div.col h3"))
-          .map { element => element.text shouldBe "Interactive Environments"; element }
+          .map { element =>
+            element.text shouldBe "Interactive Environments"; element
+          }
           .getOrElse(fail("Environments -> Running title not found"))
       }
 

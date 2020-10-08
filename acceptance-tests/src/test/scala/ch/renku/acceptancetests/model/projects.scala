@@ -19,9 +19,18 @@ object projects {
 
   final case class ProjectDetails(
       title:       String Refined NonEmpty,
+      visibility:  Visibility,
       description: String Refined NonEmpty,
       readmeTitle: String
   )
+
+  sealed abstract class Visibility(val value: String)
+
+  object Visibility {
+    case object Public   extends Visibility(value = "public")
+    case object Private  extends Visibility(value = "private")
+    case object Internal extends Visibility(value = "internal")
+  }
 
   final case class ProjectUrl(value: String) {
     override lazy val toString: String = value
@@ -45,23 +54,34 @@ object projects {
 
   object ProjectDetails {
 
-    def generate: ProjectDetails = {
-      val now         = LocalDateTime.now()
-      val desc        = prefixParagraph("An automatically generated project for testing: ").generateOne
-      val readmeTitle = s"test ${now.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH-mm-ss"))}"
-      val template    = "Renku/python-minimal"
-      ProjectDetails(Refined.unsafeApply(s"test ${now.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH-mm-ss"))}"),
-                     desc,
-                     readmeTitle
+    def generate(maybeTitle:       Option[String Refined NonEmpty] = None,
+                 visibility:       Visibility = Visibility.Public,
+                 maybeDescription: Option[String Refined NonEmpty] = None,
+                 maybeTemplate:    Option[String Refined NonEmpty] = None
+    ): ProjectDetails = {
+      val now = LocalDateTime.now()
+      val title = maybeTitle.getOrElse(
+        Refined.unsafeApply(s"test ${now.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH-mm-ss"))}")
       )
+      val desc =
+        maybeDescription.getOrElse(prefixParagraph("An automatically generated project for testing: ").generateOne)
+      val readmeTitle = s"test ${now.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH-mm-ss"))}"
+      val template    = maybeTemplate.getOrElse("Renku/python-minimal")
+      ProjectDetails(title, visibility, desc, readmeTitle)
     }
 
     def generateHandsOnProject(captureScreenshots: Boolean): ProjectDetails =
       if (captureScreenshots) {
         val readmeTitle = "flights tutorial"
-        ProjectDetails(Refined.unsafeApply(readmeTitle), Refined.unsafeApply("A renku tutorial project."), readmeTitle)
+        ProjectDetails(Refined.unsafeApply(readmeTitle),
+                       Visibility.Public,
+                       Refined.unsafeApply("A renku tutorial project."),
+                       readmeTitle
+        )
       } else
-        generate
+        generate()
+
+    def generatePrivateProject: ProjectDetails = generate(visibility = Visibility.Private)
 
     implicit class TitleOps(title: String Refined NonEmpty) {
       lazy val toPathSegment: String = title.value.replace(" ", "-")
