@@ -11,7 +11,7 @@ trait Environments {
   self: AcceptanceSpec =>
 
   def launchEnvironment(implicit projectDetails: ProjectDetails, docsScreenshots: DocsScreenshots): JupyterLabPage = {
-    implicit val projectPage = ProjectPage()
+    implicit val projectPage: ProjectPage = ProjectPage()
     When("user clicks on the Environments tab")
     click on projectPage.Environments.tab
     docsScreenshots.reachedCheckpoint()
@@ -27,7 +27,7 @@ trait Environments {
     Then("a JupyterLab page is opened on a new tab")
     val jupyterLabPage = JupyterLabPage()
     verify browserSwitchedTo jupyterLabPage sleep (5 seconds)
-    return jupyterLabPage
+    jupyterLabPage
   }
 
   def stopEnvironment(implicit projectDetails: ProjectDetails): Unit =
@@ -67,8 +67,8 @@ trait Environments {
   }
 
   def launchUnprivilegedEnvironment(implicit anonEnvConfig: AnonEnvConfig): JupyterLabPage = {
-    val projectId            = anonEnvConfig.projectId
-    implicit val projectPage = ProjectPage(projectId)
+    val projectId = anonEnvConfig.projectId
+    implicit val projectPage: ProjectPage = ProjectPage(projectId)
     go to projectPage
     When(s"user goes to $projectId")
     And("clicks on the Environments tab to launch an unprivileged notebook")
@@ -93,7 +93,7 @@ trait Environments {
   }
 
   def anonymousEnvironmentSupported(pp: ProjectPage, projectId: ProjectIdentifier): JupyterLabPage = {
-    implicit val projectPage = pp;
+    implicit val projectPage: ProjectPage = pp
     sleep(5 seconds)
     clickNewAndWaitForImageBuild
     clickStartEnvironmentAndWaitForReady
@@ -107,14 +107,14 @@ trait Environments {
     jupyterLabPage
   }
 
-  def clickNewAndWaitForImageBuild(implicit projectPage: ProjectPage) = {
+  def clickNewAndWaitForImageBuild(implicit projectPage: ProjectPage): Unit = {
     And("then they click on the New link")
     click on projectPage.Environments.newLink sleep (2 seconds)
     And("once the image is built")
     projectPage.Environments.verifyImageReady
   }
 
-  def clickStartEnvironmentAndWaitForReady(implicit projectPage: ProjectPage) = {
+  def clickStartEnvironmentAndWaitForReady(implicit projectPage: ProjectPage): Unit = {
     And("the user clicks on the Start Environment button")
     click on projectPage.Environments.startEnvironment
     Then("they should be redirected to the Environments -> Running tab")

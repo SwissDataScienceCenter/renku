@@ -59,7 +59,7 @@ jobs:
       run: |
         sudo apt-get update -y && sudo apt-get install -y snapd
         sudo snap install kubectl --channel=1.16/stable --classic
-        sudo snap install helm --channel=2.16/stable --classic
+        sudo snap install helm --channel=3.3/stable --classic
         echo "::set-env name=PATH::/snap/bin:$PATH"
         pip install --upgrade pip pipenv
         pipenv install --deploy --dev --system
@@ -68,6 +68,7 @@ jobs:
         PR_NUMBER=${{ github.event.number }}
         echo "::set-env name=RENKU_RELEASE::ci-${PR_NUMBER}-renku"
         echo "::set-env name=RENKU_NAMESPACE::ci-${PR_NUMBER}-renku"
+        echo "::set-env name=RENKU_TMP_NAMESPACE::ci-${PR_NUMBER}-renku-tmp"
     - name: Configure GitLab application
       env:
         GITLAB_TOKEN: ${{ secrets.GITLAB_TOKEN }}
@@ -86,20 +87,26 @@ jobs:
         KUBECONFIG: ${{ github.workspace }}/renkubot-kube.config
         RENKUBOT_KUBECONFIG: ${{ secrets.RENKUBOT_KUBECONFIG }}
         CI_RENKU_VALUES: ${{ secrets.CI_RENKU_VALUES }}
+        RENKUBOT_RANCHER_APISECRET: ${{ secrets.RENKUBOT_RANCHER_APISECRET }}
+        CI_PROJECT_ID: ${{ secrets.CI_PROJECT_ID }}
       run: |
         echo "$RENKUBOT_KUBECONFIG" > renkubot-kube.config
-        helm init --client-only
+        helm repo add stable 	https://kubernetes-charts.storage.googleapis.com
         helm repo add renku https://swissdatasciencecenter.github.io/helm-charts/
         helm repo add gitlab https://charts.gitlab.io/
         helm repo add jupyterhub https://jupyterhub.github.io/helm-chart
         rm -rf charts/renku/charts
         helm dependency update charts/renku
         printf "%s" "$CI_RENKU_VALUES" | sed "s/<replace>/${RENKU_RELEASE}/" > values.yaml
-        kubectl create namespace $RENKU_NAMESPACE || true
+        curl -u "token-fxgsb:$RENKUBOT_RANCHER_APISECRET" \
+        -X POST \
+        -d "name=${RENKU_NAMESPACE}" \
+        -d "projectId=${CI_PROJECT_ID}" \
+        'https://rancher.renku.ch/v3/cluster/c-l6jt4/namespaces'
         helm upgrade --install $RENKU_RELEASE \
                     --namespace $RENKU_NAMESPACE \
                     -f values.yaml \
-                    --timeout 1800 \
+                    --timeout 1800s \
                     --cleanup-on-fail \
                     --set gateway.gitlabClientId=${APP_ID} \
                     --set gateway.gitlabClientSecret=${APP_SECRET} \
@@ -112,8 +119,15 @@ jobs:
         KUBECONFIG: ${{ github.workspace }}/renkubot-kube.config
         RENKUBOT_KUBECONFIG: ${{ secrets.RENKUBOT_KUBECONFIG }}
         CI_RENKU_VALUES: ${{ secrets.CI_RENKU_VALUES }}
+        RENKUBOT_RANCHER_APISECRET: ${{ secrets.RENKUBOT_RANCHER_APISECRET }}
+        CI_PROJECT_ID: ${{ secrets.CI_PROJECT_ID }}
       run: |
         echo "$RENKUBOT_KUBECONFIG" > renkubot-kube.config
+        curl -u "token-fxgsb:$RENKUBOT_RANCHER_APISECRET" \
+        -X POST \
+        -d "name=${RENKU_TMP_NAMESPACE}" \
+        -d "projectId=${CI_PROJECT_ID}" \
+        'https://rancher.renku.ch/v3/cluster/c-l6jt4/namespaces'
         charts/deploy-tmp-notebooks.py --release-name $RENKU_RELEASE --renku-namespace $RENKU_NAMESPACE
     - name: Notify slack
       if: success()
