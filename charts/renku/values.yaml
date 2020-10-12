@@ -579,18 +579,18 @@ notebooks:
     #   # use JupyterLab by default in notebook servers
     #   defaultUrl: /lab
 
-    # The following section disables some of the default JupyterHub
+    # By default Renku notebooks disables some of the default JupyterHub
     # optimizations which can interfere with simple setups. See
     # https://zero-to-jupyterhub.readthedocs.io/en/latest/administrator/optimization.html
-    # for details.
-    scheduling:
-      userScheduler:
-        enabled: false
-      userPlaceholder:
-        enabled: false
-    prePuller:
-      continuous:
-        enabled: false
+    # for details. You can re-enable this by uncommenting the following section
+    # scheduling:
+    #   userScheduler:
+    #     enabled: true
+    #   userPlaceholder:
+    #     enabled: true
+    # prePuller:
+    #   continuous:
+    #     enabled: true
 
 tests:
   image:
