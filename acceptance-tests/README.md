@@ -30,8 +30,7 @@ The `docker-compose` command has to be available. For installation steps see: ht
 For running with docker, the parameters to the test need to be provided as environment variables:
 
 ```
-docker-compose run -e RENKU_TEST_URL=https://renku-kuba.dev.renku.ch -e RENKU_TEST_FULL_NAME="<full user name>"
--e RENKU_TEST_EMAIL=<email> -e RENKU_TEST_USERNAME=<username> -e RENKU_TEST_PASSWORD=<password> sbt
+docker-compose run -e RENKU_TEST_URL=https://renku-kuba.dev.renku.ch -e RENKU_TEST_FULL_NAME="<full user name>" -e RENKU_TEST_EMAIL=<email> -e RENKU_TEST_USERNAME=<username> -e RENKU_TEST_PASSWORD=<password> sbt
 ```
 
 By default, all tests are run. You can provide an argument to run a specific test:

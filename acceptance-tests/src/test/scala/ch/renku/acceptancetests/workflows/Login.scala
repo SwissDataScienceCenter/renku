@@ -4,8 +4,6 @@ import ch.renku.acceptancetests.pages._
 import ch.renku.acceptancetests.tooling.AcceptanceSpec
 import ch.renku.acceptancetests.workflows.LoginType._
 
-import org.openqa.selenium.StaleElementReferenceException
-
 import scala.concurrent.duration._
 import scala.language.postfixOps
 

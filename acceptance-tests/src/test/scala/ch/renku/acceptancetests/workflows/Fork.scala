@@ -14,7 +14,7 @@ trait Fork {
     go to projectPage
     val forkedProject = forkProject
     removeProjectInGitLab(forkedProject.projectDetails, implicitly)
-    verifyProjectWasRemoved(forkedProject.projectDetails)
+    verifyProjectWasRemovedInRenku(forkedProject.projectDetails)
   }
 
   def forkProject(implicit projectDetails: ProjectDetails): ForkedProject = {
@@ -22,7 +22,7 @@ trait Fork {
     When("user clicks on the fork button")
     click on projectPage.forkButton
 
-    val forkedProjectDetails: ProjectDetails = ProjectDetails.generate
+    val forkedProjectDetails: ProjectDetails = ProjectDetails.generate()
 
     And(s"fills in the title (${forkedProjectDetails.title}) and submits")
     projectPage.ForkDialog.submitFormWith(forkedProjectDetails)
@@ -31,7 +31,7 @@ trait Fork {
     val forkedProjectPage = ProjectPage()(forkedProjectDetails, implicitly)
     verify browserAt forkedProjectPage
 
-    return new ForkedProject(forkedProjectDetails)
+    new ForkedProject(forkedProjectDetails)
   }
 
   class ForkedProject(val projectDetails: ProjectDetails) {}

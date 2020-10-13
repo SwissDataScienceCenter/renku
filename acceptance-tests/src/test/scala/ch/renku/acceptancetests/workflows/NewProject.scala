@@ -10,7 +10,7 @@ import scala.language.postfixOps
 trait NewProject {
   self: AcceptanceSpec =>
 
-  def createNewProject(implicit projectDetails: ProjectDetails, captureScreenshots: Boolean = false): Unit = {
+  def createNewProject(projectDetails: ProjectDetails)(implicit captureScreenshots: Boolean = false): Unit = {
     When("user clicks on the 'New Project' menu item")
     click on WelcomePage.TopBar.plusDropdown
     click on WelcomePage.TopBar.projectOption
@@ -21,7 +21,8 @@ trait NewProject {
     NewProjectPage submitFormWith projectDetails
     pause asLongAsBrowserAt NewProjectPage
     Then(s"the project '${projectDetails.title}' gets created and the Project page gets displayed")
-    val projectPage = ProjectPage()
+
+    val projectPage = ProjectPage createFrom projectDetails
     verify browserAt projectPage
 
     When("the user navigates to the Overview -> Description tab")
