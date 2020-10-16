@@ -122,10 +122,6 @@ def make_tmp_values(values, renku_namespace, out_path=None):
     # Add some reasonably short defaults for server culling
     new_values["jupyterhub"]["cull"] = {"enabled": True, "timeout": 3600, "every": 60}
 
-    # Disable user userScheduler
-    new_values["jupyterhub"]["scheduling"]["userScheduler"] = {"enabled": False }
-    new_values["jupyterhub"]["scheduling"]["userPlaceholder"] = {"enabled": False }
-
     # Configure ingress rule for /jupyterhub-tmp/
     new_values["ingress"] = values["ingress"]
     new_values["ingress"]["jupyterhubPath"] = new_values["jupyterhub"]["hub"]["baseUrl"]
