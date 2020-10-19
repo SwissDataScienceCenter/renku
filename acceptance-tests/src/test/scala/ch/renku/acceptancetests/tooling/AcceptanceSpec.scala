@@ -1,10 +1,13 @@
 package ch.renku.acceptancetests.tooling
 
+import ch.renku.acceptancetests.workflows.{Environments, JupyterNotebook}
 import org.openqa.selenium.WebDriver
 import org.openqa.selenium.chrome.ChromeOptions
 import org.openqa.selenium.remote.RemoteWebDriver
 import org.scalatest.{BeforeAndAfterAll, FeatureSpec, GivenWhenThen, Matchers => ScalatestMatchers}
 import org.scalatestplus.selenium.{Chrome, Driver, WebBrowser}
+
+import scala.language.postfixOps
 
 trait AcceptanceSpec
     extends FeatureSpec
@@ -13,8 +16,10 @@ trait AcceptanceSpec
     with Matchers
     with ScalatestMatchers
     with WebBrowser
+    with Environments
     with Driver
     with Grammar
+    with JupyterNotebook
     with ScreenCapturingSpec
     with AcceptanceSpecData
     with AcceptanceSpecPatience {
@@ -31,4 +36,5 @@ trait AcceptanceSpec
       case None =>
         Chrome.webDriver
     }
+
 }

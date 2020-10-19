@@ -29,8 +29,16 @@ def random_hex_seeded(length, seed):
     return bytearray(random.getrandbits(8) for _ in range(length)).hex()
 
 
-def get_values(release_name, kube_context):
+def get_values(release_name, kube_context, renku_namespace):
     """Get the values file from an existing helm release."""
+    helm_version = subprocess.run(
+        [
+            "helm",
+            "version",
+        ],
+        stdout=subprocess.PIPE,
+    ).stdout.decode("utf-8")
+    sys.stdout.write(f"Helm version {helm_version} \n")
     values = subprocess.run(
         [
             "helm",
@@ -39,6 +47,8 @@ def get_values(release_name, kube_context):
             f"{release_name}",
             "--kube-context",
             f"{kube_context}",
+            "--namespace",
+            f"{renku_namespace}",
         ],
         check=True,
         stdout=subprocess.PIPE,
@@ -65,7 +75,9 @@ def make_tmp_values(values, renku_namespace, out_path=None):
 
     hub_section = new_values["jupyterhub"]["hub"]
     hub_section["cookieSecret"] = random_hex_seeded(32, hub_section["cookieSecret"])
-    hub_section["baseUrl"] = "{}-tmp/".format(hub_section["baseUrl"].rstrip("/"))
+    hub_section["baseUrl"] = "{}-tmp/".format(
+        hub_section.get("baseUrl", "/jupyterhub/").rstrip("/")
+    )
     hub_section["db"]["url"] = (
         hub_section["db"]["url"]
         .replace("jupyterhub", "jupyterhub-tmp")
@@ -147,15 +159,19 @@ def copy_secret(k8s_api_client, renku_namespace, tmp_namespace):
     jh_postgres_secret.metadata = k8s.client.V1ObjectMeta(
         namespace=tmp_namespace, name=JUPYTERHUB_POSTGRES_SECRET_NAME
     )
+
+    # Delete the secret if it already exists
     try:
-        k8s_api_client.create_namespaced_secret(tmp_namespace, jh_postgres_secret)
+        k8s_api_client.delete_namespaced_secret(
+            JUPYTERHUB_POSTGRES_SECRET_NAME, tmp_namespace
+        )
     except k8s.client.rest.ApiException as e:
-        if e.status == 409:
-            sys.stdout.write(
-                f"Secret {JUPYTERHUB_POSTGRES_SECRET_NAME} exists, skipping...\n"
-            )
+        if e.status == 404:
+            pass
         else:
             raise e
+
+    k8s_api_client.create_namespaced_secret(tmp_namespace, jh_postgres_secret)
 
 
 def check_notebooks_chart_version():
@@ -255,7 +271,7 @@ These values will override the ones automatically derived from primary Renku dep
     copy_secret(k8s_api_client, renku_namespace, tmp_namespace)
 
     # Create a values file for the secondary renku-notebooks deployment
-    renku_values = get_values(args.release_name, kube_context)
+    renku_values = get_values(args.release_name, kube_context, renku_namespace)
     tmp_values_path = make_tmp_values(renku_values, renku_namespace)
 
     # Deploy through the helm CLI
@@ -272,7 +288,7 @@ These values will override the ones automatically derived from primary Renku dep
         "-f",
         f"{tmp_values_path}",
         "--timeout",
-        "1800",
+        "1800s",
         "--kube-context",
         f"{kube_context}",
     ]

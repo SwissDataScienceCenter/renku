@@ -20,7 +20,7 @@ class ExistingProjectSpec
     with Settings
     with Fork {
 
-  scenario("User can fork a project") {
+  scenario("User can fork a public project") {
     existingProjectDetails match {
       case Some(projectDetails) =>
         implicit val loginType: LoginType = logIntoRenku
