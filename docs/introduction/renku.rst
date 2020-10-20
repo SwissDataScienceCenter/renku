@@ -1,102 +1,49 @@
 .. _renku:
 
-Renku CLI
-=========
+Renku Client
+============
 
-The core of the Renku Project is the ``renku`` command-line interface (CLI),
+The core of the Renku Project is the ``renku`` command-line client,
 which offers tools for easily capturing your data-science process as you work.
 With these tools, you can describe and annotate data and workflows, providing
 information that is used to build the provenance of your results, simplifying
-iterative development and making your work reproducible. The CLI can be used
+iterative development and making your work reproducible. The client can be used
 within Renkulab or locally, on your own machine.
 
 The importance of version control for working with code is widely recognized.
-`renku` aims to be "git for research", by extending version control to encompass
-elements central to research data and processes.
-
-If that's too abstract, you can check out :ref:`first_steps` tutorial.
-
-``renku`` can be decomposed into to the following pieces that are exposed to the
-user.
-
-git
----
-
-Data and code change frequently in a typical project. Knowing which *exact*
-version of code and data produced a particular result is critical for ensuring
-the robustness and veracity of your work. In Renku, version control is the
-base upon which everything else is built.
-
-We rely on the currently most widespread version control system, `git <https
-://git-scm.com/>`_. If you are unfamiliar with ``git`` it would not hurt to
-read at least some of their `excellent tutorials <https://git-
-scm.com/docs/gittutorial>`_. In Renku we try to take care of most of the
-boiler plate ``git`` commands for you, but you should still be aware that it
-is being used under the hood.
-
-One additional benefit of using a version control system like ``git`` is that it
-encourages you to be creative and explore new ideas, without fear of breaking
-things. With ``git``, you can experiment with complete peace-of-mind that you
-can always restore to the last working version of your project if everything
-happens to go off the rails. This is a fantastic advantage in data science,
-where experimentation is a critical part of the discovery process.
-
-Note that in Renku, we make use of `git LFS <https://git-lfs.github.com>`_ which
-allows keeping not only the code, but also the data related to an analysis under
-version control, while keeping the git repository itself small.
-
-Whenever a command that changes the contents of your project is executed,
-``renku`` invokes ``git`` to record information about what was added or changed:
-
-* this commit also includes some internal metadata with detailed
-  information about what was done
-
-* the commit message contains the command you executed, so you can check the git
-  log to see what you did in the past (running a workflow, creating a dataset,
-  or initializing a project)
-
-
-External storage (git-LFS by default)
--------------------------------------
-
-Git is very efficient in handling text-based files, but is not ideal for binary
-data. For reproducibility, though, it is necessary to version data and keep
-track of it together with analysis code. Therefore, by default, Renku projects
-use `git-LFS <https://git-lfs.github.com/>`_ for handling data. If you use
-``renku`` commands, most of the data handling is done for you. For example:
-
-* when you add data with ``renku dataset`` commands
-
-* when you call ``renku run`` to generate output data
-
-Whichever files are flagged for storing with git-LFS, they are automatically
-separated from other repository files when you push to the server. They can
-be retrieved again from the external (LFS) storage when needed if the
-repository is cloned elsewhere.
-
-Keeping large files in LFS gives users the ability to control the amount of
-local space used by a project; LFS files can be left as pointers, and take up
-virtually no space, or can be pulled if needed.
-
-Renku provides a convenience command ``renku storage pull`` for retrieving data
-from LFS. Similarly, any ``renku`` command (e.g. ``renku run``) will check
-whether the data it needs is stored in LFS, and if so, it will preemptively
-fetch it.
-
+``renku`` aims to be "git for research", by extending version control to encompass
+the complete research and data exploration life-cycle. It lets you manage
+versioned datasets, automatically create workflows and keep track of
+computational environments. Check out :ref:`first_steps` tutorial for a complete
+example.
 
 Datasets
 --------
 
+The ``renku`` client can  be used to create "datasets", which are just
+collections of data files bundled together and enriched with some metadata.
 
-* import & publish datasets from/to repositories like `Zenodo
-  <https://zenodo.org/>`_ and `Dataverse <https://dataverse.harvard.edu/>`_ that
-  have DOIs
+It is easy to create datasets
 
-* auto-populate metadata for imported datasets (and created datasets
-  based on their origins)
+.. code-block:: shell
 
-* user-annotation of datasets with `schema.org <https://schema.org>`_ or
-  domain-specific metadata
+  renku dataset create mydataset
+
+add files
+
+.. code-block:: shell
+
+  renku dataset add mydataset datafile
+
+and even import existing datasets from public repositories like `Zenodo
+<https://zenodo.org/>`_ and `Dataverse <https://dataverse.harvard.edu/>`_:
+
+.. code-block:: shell
+
+  renku dataset import https://zenodo.org/record/3981451
+
+The full metadata from the data repository is preserved and mirrored in the
+knowledge graph for easy retrieval and search.
 
 
 Lineage of results
@@ -105,18 +52,15 @@ Lineage of results
 Capturing the :ref:`provenance of results <provenance>` is critical for understanding
 what input data were used, what code was run, and what results were produced
 
-The ``renku`` CLI gives researchers and analysts simple tools to:
+The ``renku`` client gives researchers and analysts simple tools to
+automatically track provenance and iteratively develop a workflow.
 
-* track provenance for a workflow (generate a graph that shows input, execution,
-  and output nodes)
+Creating a workflow is done by invoking ``renku run`` in front
 
-* iteratively develop a workflow (keep making changes to the code/data until you
-  get the output you want)
+.. code-block:: shell
 
-* compare outputs generated by the same (maybe stochastic) workflow: ``renku
-  rerun``
-
-Consult the the `CLI documentation`_ for more!
+  renku run echo "hello-world!" > hello
+  renku run wc hello > hello.wc
 
 
 Installing

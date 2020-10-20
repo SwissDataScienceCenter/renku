@@ -19,4 +19,3 @@ team split between EPFL and ETHZ.
    what_is_renku.rst
    renkulab.rst
    renku.rst
-   renkulab_and_renku.rst
