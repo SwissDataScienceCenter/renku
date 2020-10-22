@@ -43,7 +43,7 @@ changed by running:
 
 .. code-block:: console
 
-    $ renku config lfs_threshold <size>
+    $ renku config set lfs_threshold <size>
 
 where ``<size>`` is a file size formatted like ``10b``, ``100kb``, ``0.5mb`` or
 ``10gb``.
