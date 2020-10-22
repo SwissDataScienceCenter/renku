@@ -123,7 +123,7 @@ default to RStudio or anything other than JupyterLab, then you will want to
 provide a configuration for the interactive environments.
 
 Although the file may be modified manually, it is recommended to use the
-``renku config --local interactive.<property> <value>`` command.
+``renku config set interactive.<property> <value>`` command.
 
 Here is the list of properties that can be customized in a standard Renkulab
 deployment:
@@ -144,7 +144,7 @@ deployment:
 
     .. code-block:: console
 
-      > renku config --local interactive.default_url "/rstudio"
+      > renku config set interactive.default_url "/rstudio"
 
     Verify that your ``renku.ini`` file looks like the following.
 
@@ -174,7 +174,7 @@ deployment:
 
     .. code-block:: console
 
-      > renku config --local interactive.default_url "/tree"
+      > renku config set interactive.default_url "/tree"
 
 
 

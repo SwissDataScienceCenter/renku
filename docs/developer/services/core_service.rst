@@ -96,7 +96,7 @@ to the ``renku dataset import`` command.
 **GET /<prefix>/datasets.list**
 
 An endpoint to list of all datasets within a given project. This command is equivalent
-to the ``renku dataset`` command.
+to the ``renku dataset ls`` command.
 
 .. uml:: ../../_static/uml/core-datasets-list.uml
 
