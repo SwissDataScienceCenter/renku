@@ -44,9 +44,6 @@ git config --global user.name "$GIT_USER"
 # update the chart requirements and push
 git checkout -b auto-update/${CHART_NAME}-${CHART_VERSION} master
 yq w -i charts/renku/requirements.yaml "dependencies.(name==${CHART_NAME}).version" $CHART_VERSION
-helm repo add renku https://swissdatasciencecenter.github.io/helm-charts/
-helm repo add bitnami https://charts.bitnami.com/bitnami
-helm dep update charts/renku
 
 git add charts/renku/requirements.yaml
 git commit -m "chore: updating ${CHART_NAME} version to ${CHART_VERSION}"
