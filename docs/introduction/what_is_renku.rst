@@ -6,7 +6,7 @@ What is Renku?
 The Renku Project is a web platform (:ref:`renkulab`) and a command-line
 interface (:ref:`renku`) built on top of open source components for researchers,
 data scientists, educators, and students to help manage their **data**,
-**code**, **workflows**, and **computational environments**.
+**code**, **workflows**, **provenance**, and **computational environments**.
 
 Renku combines many widely-used open-source tools to equip every project on the
 platform with resources that aid reproducibility, reusability and collaboration.
@@ -28,14 +28,14 @@ launch JupyterLab and RStudio sessions (or anything else you might run from a
 Docker container) using pre-built templates. You can work on your project and
 when you are done push the changes back to the repository for safe storage. Our
 pre-built base images also contain the ``renku`` command-line tool so you don't
-need to worry about installation and benefit from provenance tracking right in
-the interactive session. Renkulab automatically builds images for your
+need to worry about installation and can benefit from provenance tracking right
+in the interactive session. Renkulab automatically builds images for your
 interactive sessions so the computational environments you or your collaborators
 use are always up-to-date.
 
 The main components that make up Renkulab are `GitLab <https://gitlab.com>`_ for
 repository management, version control, and continuous-integration pipelines;
-`JupyterHub <https://jupyter.org>`_ for interactive sessions;ß a Knowledge Graph
+`JupyterHub <https://jupyter.org>`_ for interactive sessions; a Knowledge Graph
 for search and discovery; a few custom services for all renku-specific tasks
 like handling datasets.
 
@@ -64,7 +64,7 @@ Datasets
 ~~~~~~~~
 
 The ``renku`` client can  be used to create "datasets", which are just
-collections of data files bundled together and enriched with some metadata.
+collections of data files bundled together and enriched with metadata.
 
 It is easy to create datasets
 
@@ -85,8 +85,8 @@ and even import existing datasets from public repositories like `Zenodo
 
   renku dataset import https://zenodo.org/record/3981451
 
-The full metadata from the data repository is preserved and mirrored in the
-knowledge graph for easy retrieval and search.
+The full metadata of the data repository is preserved and mirrored in the
+Knowledge Graph for easy retrieval and search.
 
 
 Provenance of results

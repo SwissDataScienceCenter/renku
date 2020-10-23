@@ -24,8 +24,7 @@ analysis. The sources of all the important elements can be identified even if
 they span multiple projects or might originate in external public repositories.
 This cross-linking of research artifacts is made possible through the Renku
 :ref:`Knowledge Graph <knowledge-graph>`. The analysis steps can be re-executed
-to ensure the veracity of the results or reused in other projects on different
-data or rerun with different parameters.
+to ensure the veracity of the results or rerun with different parameters.
 
 The final results can be packaged into a dataset and easily published with all
 the requisite metadata on public repositories like `Zenodo

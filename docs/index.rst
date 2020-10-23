@@ -21,4 +21,4 @@ The Renku Project Documentation
    -- Wikipedia
 
 .. include:: ../README.rst
-  :start-line: 35
+  :start-after: renku:
