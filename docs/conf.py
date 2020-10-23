@@ -13,13 +13,14 @@
 # All configuration values have a default; values that are commented out
 # serve to show the default.
 
-# If extensions (or modules to document with autodoc) are in another directory,
-# add these directories to sys.path here. If the directory is relative to the
-# documentation root, use os.path.abspath to make it absolute, like shown here.
-#
-# import os
-# import sys
-# sys.path.insert(0, os.path.abspath('.'))
+import os
+import sys
+from os.path import abspath, join, dirname
+
+import requests
+import yaml
+
+sys.path.insert(0, abspath(join(dirname(__file__))))
 
 # -- General configuration ------------------------------------------------
 
@@ -77,7 +78,7 @@ author = (
 # built documents.
 #
 # The short X.Y version.
-version = "0.4"
+version = os.environ.get("READTHEDOCS_VERSION", "latest")
 # The full version, including alpha/beta/rc tags.
 release = "0.6.0"
 
@@ -120,7 +121,7 @@ html_theme_options = {
     "extra_nav_links": {
         "renku@GitHub": "https://github.com/SwissDataScienceCenter/renku"
     },
-    "fixed_sidebar":True,
+    "fixed_sidebar": True,
     "show_relbars": True,
 }
 
@@ -214,3 +215,36 @@ graphviz_output_format = "svg"
 
 # suppress the warning about graph being overriden
 suppress_warnings = ["app.add_directive"]
+
+
+# sidebar
+on_rtd = os.environ.get("READTHEDOCS", None) == "True"
+renku_python_version = version
+
+if renku_python_version not in ["stable", "latest"]:
+    # tag build, update respective renku-python as well
+    with open("./charts/renku/requirements.yaml", "r") as f:
+        requirements = yaml.load(f)
+    renku_core_entry = next(
+        (d for d in requirements["dependencies"] if d["name"] == "renku-core"), None
+    )
+    renku_python_version = "v{}".format(renku_core_entry["version"])
+
+    # retrigger build of renku-python docs so they point to the correct version
+    token = os.environ.get("RTD_TOKEN")
+
+    r = requests.post(
+        f"https://readthedocs.org/api/v3/projects/renku-python/versions/{renku_python_version}/builds/",
+        headers={"Authorization": f"Token {token}"},
+    )
+    r.raise_for_status()
+
+intersphinx_mapping = {
+    "python": ("https://docs.python.org/", None),
+}
+
+# -- Custom Document processing ----------------------------------------------
+
+from gensidebar import generate_sidebar
+
+generate_sidebar(on_rtd, renku_python_version, "renku")

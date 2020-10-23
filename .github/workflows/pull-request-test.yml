@@ -36,6 +36,8 @@ jobs:
         pip install --upgrade pip pipenv
         pipenv install --deploy --dev --system
     - name: test the docs build
+      env:
+        SIDEBAR: 1
       run: |
         cd docs
         sphinx-build -nNW -b spelling -d _build/doctrees . _build/spelling
