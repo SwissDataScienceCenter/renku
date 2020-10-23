@@ -78,7 +78,7 @@ author = (
 # built documents.
 #
 # The short X.Y version.
-version = "0.4"
+version = os.environ.get("READTHEDOCS_VERSION", "latest")
 # The full version, including alpha/beta/rc tags.
 release = "0.6.0"
 
@@ -219,21 +219,22 @@ suppress_warnings = ["app.add_directive"]
 
 # sidebar
 on_rtd = os.environ.get("READTHEDOCS", None) == "True"
-rtd_version = os.environ.get("READTHEDOCS_VERSION", "latest")
-if rtd_version not in ["stable", "latest"]:
+renku_python_version = version
+
+if renku_python_version not in ["stable", "latest"]:
     # tag build, update respective renku-python as well
     with open("./charts/renku/requirements.yaml", "r") as f:
         requirements = yaml.load(f)
     renku_core_entry = next(
         (d for d in requirements["dependencies"] if d["name"] == "renku-core"), None
     )
-    rtd_version = "v{}".format(renku_core_entry["version"])
+    renku_python_version = "v{}".format(renku_core_entry["version"])
 
     # retrigger build of renku-python docs so they point to the correct version
     token = os.environ.get("RTD_TOKEN")
 
     r = requests.post(
-        f"https://readthedocs.org/api/v3/projects/renku/versions/{rtd_version}/builds/",
+        f"https://readthedocs.org/api/v3/projects/renku-python/versions/{renku_python_version}/builds/",
         headers={"Authorization": f"Token {token}"},
     )
     r.raise_for_status()
@@ -246,4 +247,4 @@ intersphinx_mapping = {
 
 from gensidebar import generate_sidebar
 
-generate_sidebar(on_rtd, rtd_version, "renku")
+generate_sidebar(on_rtd, renku_python_version, "renku")
