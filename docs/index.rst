@@ -5,8 +5,8 @@
 
 .. Add :numbered: to toctree options in order to have numbered items.
 
-The Renku Project Docs
-======================
+The Renku Project Documentation
+===============================
 
 
 .. include:: _sidebar.rst.inc
@@ -21,4 +21,4 @@ The Renku Project Docs
    -- Wikipedia
 
 .. include:: ../README.rst
-  :start-line: 41
+  :start-after: renku:
