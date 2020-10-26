@@ -26,6 +26,7 @@ sphinxcontrib-spelling = ">=2.3.0"
 sphinxcontrib-websupport = ">=1.0.1"
 splinter = "*"
 black = "*"
+sphinx-rtd-theme = "==0.5.0"
 
 [requires]
 python_version = "3"
