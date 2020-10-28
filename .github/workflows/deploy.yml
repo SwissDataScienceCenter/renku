@@ -9,6 +9,8 @@ on:
     - .github/**
     branches: ['master']
     tags: ['*']
+  workflow_dispatch:
+
 
 jobs:
   github-env:
