@@ -40,6 +40,10 @@ New features
 Improvements
 ~~~~~~~~~~~~
 
+- **Dataset deletion**: Datasets used to stick around even after getting deleted
+  from the project. This has now been fixed and deleted datasets no longer appear in
+  the dataset listings.
+
 - **git credentials**: the interactive sessions now handle your git credentials
   in a way that allows you to seamlessly access any of your private repositories
   on renkulab from within an interactive session.
@@ -50,7 +54,7 @@ Improvements
   been corrected and should hopefully save many repositories from improperly
   handled data!
 
-- **graph redesign**: Under the hood the renku-python library has a completely
+- **graph redesign**: Under the hood, the renku-python library has a completely
   redesigned knowledge graph model. This enormous effort doesn't translate to
   user-visible improvements yet, but they're coming in the next release!
 
