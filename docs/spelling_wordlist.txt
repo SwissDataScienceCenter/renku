@@ -11,6 +11,7 @@ backends
 balancer
 Bergstrom
 Bioconductor
+Bitnami
 blog
 bugfix
 chartpress

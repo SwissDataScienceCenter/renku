@@ -20,7 +20,7 @@ New features
 
 - **Data import**: files can be imported into datasets directly from a URL.
 
-- **Project migration**: the metadata of renku projects occassionaly changes. In
+- **Project migration**: the metadata of renku projects occasionally changes. In
   order for all the components to work well together, the metadata must be kept
   in sync. Previously you needed to do this manually with the CLI but now it's
   as easy as clicking a button.
@@ -33,8 +33,7 @@ New features
 - **Improved editor**: All text editing components are using an enhanced editor
   that allows seamless switching between WYSIWYG and markdown.
 
-
-- **``renku save``**: the Renku CLI now features a ``save`` command that
+- **renku save**: the Renku CLI now features a ``save`` command that
   simplifies the process of committing and pushing your project to the server.
 
 
@@ -47,7 +46,7 @@ Improvements
 
 - **git hooks in interactive sessions**: git hooks were not previously installed
   per default in interactive sessions, which meant that some nice features like
-  automatially pushing large files to LFS did not work correctly. This has now
+  automatically pushing large files to LFS did not work correctly. This has now
   been corrected and should hopefully save many repositories from improperly
   handled data!
 
@@ -73,16 +72,17 @@ need to be migrated. You can do this on the command line by running ``renku
 migrate`` in your project or follow the instructions in the UI when prompted.
 
 
-Changes in the platform deployment
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Changes and improvements in the platform deployment
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-- **Breaking change**: deploying renku now requires kubernetes version >= 1.16
+- **Breaking change: Postgresql chart**: we have switched to the Bitnami version
+  of the Postgresql
+  helm chart - this requires a manual intervention when upgrading from renku
+  ``0.6.8``.
+
+- **Kubernetes**: renku is now compatible with kubernetes >= 1.16 (tested on 1.16)
 
 - **Helm3**: the renku helm charts are now compatible with helm 3
-
-- **Postgres update**: we have switched to the Bitnami version of the Postgres
-  helm chart - this requires a manual intervention when upgrading from renku
-  ``0.6.4``.
 
 
 0.6.8
