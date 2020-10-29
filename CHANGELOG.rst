@@ -1,5 +1,89 @@
 .. _changelog:
 
+0.7.0
+-----
+
+This release brings a lot of important new features to both Renkulab and the
+Renku CLI. It's our best one yet!
+
+New features
+~~~~~~~~~~~~
+
+- **Project templates**: you can now create custom templates for your projects and
+  use them on project initialization. Great for groups or courses! See the
+  `docs <https://renku.readthedocs.io/en/latest/user/templates.html>`_ for more
+  details.
+
+- **Datasets**: you can now search for datasets and import them into projects
+  directly from the Renkulab web UI. The dataset import and creation flow has
+  also been much improved thanks to changes in the core service backend.
+
+- **Data import**: files can be imported into datasets directly from a URL.
+
+- **Project migration**: the metadata of renku projects occassionaly changes. In
+  order for all the components to work well together, the metadata must be kept
+  in sync. Previously you needed to do this manually with the CLI but now it's
+  as easy as clicking a button.
+
+- **Template simplification**: We have decoupled the CLI version from the base image and
+  made it easier to override in your own environments. See the `project template
+  README <https://github.com/SwissDataScienceCenter/renku-project-template/blob/master/README.md>`_
+  for details.
+
+- **Improved editor**: All text editing components are using an enhanced editor
+  that allows seamless switching between WYSIWYG and markdown.
+
+
+- **``renku save``**: the Renku CLI now features a ``save`` command that
+  simplifies the process of committing and pushing your project to the server.
+
+
+Improvements
+~~~~~~~~~~~~
+
+- **git credentials**: the interactive sessions now handle your git credentials
+  in a way that allows you to seamlessly access any of your private repositories
+  on renkulab from within an interactive session.
+
+- **git hooks in interactive sessions**: git hooks were not previously installed
+  per default in interactive sessions, which meant that some nice features like
+  automatially pushing large files to LFS did not work correctly. This has now
+  been corrected and should hopefully save many repositories from improperly
+  handled data!
+
+- **graph redesign**: Under the hood the renku-python library has a completely
+  redesigned knowledge graph model. This enormous effort doesn't translate to
+  user-visible improvements yet, but they're coming in the next release!
+
+
+Many other improvements and bug fixes across all of the renku components, which
+have significantly improved the stability of the entire platform!
+
+
+Upgrading user projects
+~~~~~~~~~~~~~~~~~~~~~~~
+
+To upgrade your existing renkulab project to the latest images, the easiest is
+if you copy/paste a ``Dockerfile`` that suits your project
+(python/R/Bioconductor) from the `renku project templates repository
+<https://github.com/SwissDataScienceCenter/renku-project-template/blob/master/python-minimal/Dockerfile>`_.
+
+Note that even if you upgrade the image, the project in the repository will still
+need to be migrated. You can do this on the command line by running ``renku
+migrate`` in your project or follow the instructions in the UI when prompted.
+
+
+Changes in the platform deployment
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+- **Breaking change**: deploying renku now requires kubernetes version >= 1.16
+
+- **Helm3**: the renku helm charts are now compatible with helm 3
+
+- **Postgres update**: we have switched to the Bitnami version of the Postgres
+  helm chart - this requires a manual intervention when upgrading from renku
+  ``0.6.4``.
+
 
 0.6.8
 -----
