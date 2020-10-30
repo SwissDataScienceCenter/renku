@@ -16,7 +16,9 @@ New features
 
 - **Datasets**: you can now search for datasets and import them into projects
   directly from the Renkulab web UI. The dataset import and creation flow has
-  also been much improved thanks to changes in the core service backend.
+  also been much improved thanks to changes in the core service backend. Note
+  that importing datasets from other renku projects from the UI currently works
+  only for datasets in public repositories.
 
 - **Data import**: files can be imported into datasets directly from a URL.
 
