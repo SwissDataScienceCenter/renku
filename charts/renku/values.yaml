@@ -389,7 +389,7 @@ gitlab:
   #     ...
 
 ## Configuration for the UI service
-# ui:
+ui:
   #  welcomePage:
   #    text: "## Some markdown text here!"
   ## UI image
