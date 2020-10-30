@@ -437,7 +437,7 @@ gitlab:
   #       name: Renku
 
   ## Configuration for where to get the base project templates: a url and ref (usually a tag)
-  templatesRepository:
+  templates:
     custom: true
     repositories:
       - url: https://github.com/SwissDataScienceCenter/renku-project-template
