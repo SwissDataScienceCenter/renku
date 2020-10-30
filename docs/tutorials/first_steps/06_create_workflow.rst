@@ -366,11 +366,13 @@ Renku is telling us that ``src/00-FilterFlights.py`` was changed and
 ``data/output/2019-01-flights-filtered.csv``, ``01-CountFlights.ran.ipynb``,
 ``data/output/2019-01-flights-count.txt`` all need to be updated as a result.
 We do not need to remember how to update them: Renku already knows this. We can
-just ask it to make the update by running ``renku update``.
+just ask it to make the update by running ``renku update --all`` or ``renku update 
+data/output/2019-01-flights-filtered.csv 01-CountFlights.ran.ipynb 
+data/output/2019-01-flights-count.txt``.
 
 .. code-block:: console
 
-    renku update
+    renku update --all
 
     # Resolved '.renku/workflow/2fd4341a00c945fbaf00cb3f0942c674.cwl' to 'file:///work/flights-tutorial/.renku/workflow/2fd4341a00c945fbaf00cb3f0942c674.cwl'
     # [workflow ] start

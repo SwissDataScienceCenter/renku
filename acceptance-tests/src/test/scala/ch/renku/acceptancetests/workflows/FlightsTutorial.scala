@@ -82,7 +82,7 @@ trait FlightsTutorial extends GivenWhenThen with Matchers with ScalatestMatchers
     console %> c"git commit -m 'Fixed filter to use AUS, not DFW.'"
 
     And("and updates the results")
-    console %> c"renku update"
+    console %> c"renku update --all"
     And("pushes all the commits to the remote")
     console %> c"git push"
 
