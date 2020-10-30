@@ -7,7 +7,6 @@ on:
     - scripts/**
     - acceptance-tests/**
     branches: ['master']
-    tags: ['*']
   workflow_dispatch:
 
 
