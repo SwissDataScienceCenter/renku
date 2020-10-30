@@ -433,13 +433,8 @@ gitlab:
   #   custom: true
   #   repositories:
   #     - url: https://github.com/SwissDataScienceCenter/renku-project-template
-  #       ref: 0.1.11
+  #       ref: 0.1.12
   #       name: Renku
-
-  ## Configuration for where to get the base project templates: a url and ref (usually a tag)
-  # templatesRepository:
-  #   url: https://github.com/SwissDataScienceCenter/renku-project-template
-  #   ref: 0.1.6
 
   ## Privacy settings allow to configure the content of a Privacy Page through a configMap
   ## and to show a banner to comply with privacy related laws
