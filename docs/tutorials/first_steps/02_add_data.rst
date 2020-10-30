@@ -65,7 +65,7 @@ You can list the datasets in a project by running the following:
 
 .. code-block:: console
 
-        renku dataset ls
+        renku dataset
 
         # ID                                    DISPLAY_NAME         VERSION    CREATED              CREATORS
         # ------------------------------------  -------------------  ---------  -------------------  ---------------
