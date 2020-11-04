@@ -54,7 +54,7 @@ normally execute the following:
 .. code-block:: console
 
     mkdir -p data/output        # Create the output directory
-    python src/00-FilterFlights.py data/201901_us_flights_1/2019-01-flights.csv.zip data/output/2019-01-flights-filtered.csv
+    python src/00-FilterFlights.py data/flight-data/2019-01-flights.csv.zip data/output/2019-01-flights-filtered.csv
 
 For renku to capture information about the execution, we need to make a small
 change: we prepend ``renku run`` to the python command.
@@ -62,7 +62,7 @@ change: we prepend ``renku run`` to the python command.
 .. code-block:: console
 
     mkdir -p data/output        # Create the output directory
-    renku run python src/00-FilterFlights.py data/201901_us_flights_1/2019-01-flights.csv.zip data/output/2019-01-flights-filtered.csv
+    renku run python src/00-FilterFlights.py data/flight-data/2019-01-flights.csv.zip data/output/2019-01-flights-filtered.csv
 
 Go ahead and run this command: it will create the preprocessed data file,
 including the specification of *how* this file was created, and commit all the
@@ -89,7 +89,7 @@ and other commands.
     .. code-block:: console
 
         rm data/output/*
-        renku run python src/00-FilterFlights.py data/201901_us_flights_1/2019-01-flights.csv.zip data/output/2019-01-flights-filtered.csv
+        renku run python src/00-FilterFlights.py data/flight-data/2019-01-flights.csv.zip data/output/2019-01-flights-filtered.csv
 
 .. note::
 
@@ -119,7 +119,7 @@ and other commands.
     environment is started. We try to retrieve them automatically when needed
     for a renku command, but that may not always work.
 
-    If you check the ``data/201901_us_flights_1/2019-01-flights.csv.zip`` file you
+    If you check the ``data/flight-data/2019-01-flights.csv.zip`` file you
     will see only a few lines of metadata starting with
     ``version https://git-lfs.github.com/spec/v1``. You can easily
     fetch the data manually from the console by running
@@ -138,7 +138,7 @@ and other commands.
 
       git lfs ls-files
 
-      # 2b1851ab60 * data/201901_us_flights_1/2019-01-flights.csv.zip
+      # 2b1851ab60 * data/flight-data/2019-01-flights.csv.zip
 
 
 .. warning::
@@ -366,8 +366,8 @@ Renku is telling us that ``src/00-FilterFlights.py`` was changed and
 ``data/output/2019-01-flights-filtered.csv``, ``01-CountFlights.ran.ipynb``,
 ``data/output/2019-01-flights-count.txt`` all need to be updated as a result.
 We do not need to remember how to update them: Renku already knows this. We can
-just ask it to make the update by running ``renku update --all`` or ``renku update 
-data/output/2019-01-flights-filtered.csv 01-CountFlights.ran.ipynb 
+just ask it to make the update by running ``renku update --all`` or ``renku update
+data/output/2019-01-flights-filtered.csv 01-CountFlights.ran.ipynb
 data/output/2019-01-flights-count.txt``.
 
 .. code-block:: console
