@@ -226,7 +226,7 @@ renku_python_version = version
 
 if renku_python_version not in ["stable", "latest"]:
     # tag build, update respective renku-python as well
-    with open("./charts/renku/requirements.yaml", "r") as f:
+    with open("../charts/renku/requirements.yaml", "r") as f:
         requirements = yaml.load(f)
     renku_core_entry = next(
         (d for d in requirements["dependencies"] if d["name"] == "renku-core"), None
