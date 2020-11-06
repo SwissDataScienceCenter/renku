@@ -1,5 +1,28 @@
 .. _changelog:
 
+0.7.1
+-----
+
+This release features an update to the UI and default project templates, bumping
+the default renku CLI version to ``0.12.0``.
+
+Improvements
+~~~~~~~~~~~~
+
+- **Project status**: unified project KG and migration status under a new project element
+
+- **Datasets**: added new metadata fields on creation and edit
+
+- **CLI**: clean up of command syntax
+
+Fixes
+~~~~~
+
+- **Graph building**: several improvements to graph building, including a fix
+  for metadata compaction in renku-core that caused some entities to not
+  get processed.
+
+
 0.7.0
 -----
 
