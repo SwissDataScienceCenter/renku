@@ -644,9 +644,13 @@ graph:
   #     secret: 1234
 
 ## Configuration for renku-core service
-# repository:
-  ## Default cache directory
-  # cacheDirectory: /svc/cache
+core:
+  # increase the TTL of projects in cache due to a bug in cleanup - will be fixed in 0.12.1
+  cleanupProjectsTTL: 21600
+  cleanupFilesTTL: 21600
+  # repository:
+    ## Default cache directory
+    # cacheDirectory: /svc/cache
 
-  ## Default clone depth
-  # projectCloneDepth: 1
+    ## Default clone depth
+    # projectCloneDepth: 1
