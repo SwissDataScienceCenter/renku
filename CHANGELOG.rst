@@ -3,17 +3,9 @@
 0.7.1
 -----
 
-This release features an update to the UI and default project templates, bumping
-the default renku CLI version to ``0.12.0``.
-
-Improvements
-~~~~~~~~~~~~
-
-- **Project status**: unified project KG and migration status under a new project element
-
-- **Datasets**: added new metadata fields on creation and edit
-
-- **CLI**: clean up of command syntax
+This release features an update to the default project templates, bumping
+the default `renku CLI version to ``0.12.0`` <https://github.com/SwissDataScienceCenter/renku-python/releases/tag/v0.12.0>`_
+and some backend bug fixes.
 
 Fixes
 ~~~~~
