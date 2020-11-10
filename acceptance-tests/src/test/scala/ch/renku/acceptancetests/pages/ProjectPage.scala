@@ -253,8 +253,8 @@ class ProjectPage(projectSlug: String, namespace: String) extends RenkuPage with
     object DatasetsList {
       def link(to: DatasetPage)(implicit webDriver: WebDriver): WebElement =
         eventually {
-          find(cssSelector(s"div.project-list-row a[href='${to.path}']"))
-            .orElse(find(cssSelector(s"div.project-list-row a[href='${to.path}/']")))
+          find(cssSelector(s"div.project-list-row a[href='${to.path}' i]"))
+            .orElse(find(cssSelector(s"div.project-list-row a[href='${to.path}/' i]")))
             .getOrElse(fail(s"Dataset '${to.path}' not found"))
         }(waitUpTo(120 seconds), implicitly[source.Position])
     }

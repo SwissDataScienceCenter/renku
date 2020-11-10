@@ -5,6 +5,8 @@ import ch.renku.acceptancetests.pages.Page.{Path, Title}
 import eu.timepit.refined.api.Refined
 import eu.timepit.refined.auto._
 import org.openqa.selenium.{WebDriver, WebElement}
+import org.scalactic.source
+import scala.concurrent.duration._
 import org.scalatestplus.selenium.WebBrowser.{cssSelector, find}
 
 import scala.language.postfixOps
@@ -17,7 +19,7 @@ class DatasetPage(datasetName: DatasetName, projectPage: ProjectPage) extends Re
 
   override val title: Title = "Renku"
   override val path: Path = Refined.unsafeApply(
-    s"${projectPage.path}/datasets/${datasetName.toString.toLowerCase}"
+    s"${projectPage.path}/datasets/$datasetName"
   )
 
   override def pageReadyElement(implicit webDriver: WebDriver): Option[WebElement] = Some(datasetTitle)
@@ -31,9 +33,10 @@ class DatasetPage(datasetName: DatasetName, projectPage: ProjectPage) extends Re
   }
 
   object ProjectsList {
-    def link(to: ProjectPage)(implicit webDriver: WebDriver): WebElement =
-      find(cssSelector(s"td a[href='${to.path}']"))
+    def link(to: ProjectPage)(implicit webDriver: WebDriver): WebElement = eventually {
+      find(cssSelector(s"td a[href='${to.path}' i]"))
         .getOrElse(fail(s"Project '${to.path}' not found"))
+    }(waitUpTo(20 seconds), implicitly[source.Position])
   }
 
   object ModificationForm {

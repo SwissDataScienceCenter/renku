@@ -92,8 +92,8 @@ trait Datasets {
 
     Then("the user should see its dataset and to which project it belongs")
     verify browserAt datasetPage
-    val projectList = datasetPage.ProjectsList.link(projectPage)(_: WebDriver)
-    reload whenUserCannotSee projectList
+    val projectLink = datasetPage.ProjectsList.link(projectPage)(_: WebDriver)
+    reload whenUserCannotSee projectLink
     verify userCanSee datasetPage.ProjectsList.link(projectPage)
 
     datasetPage
