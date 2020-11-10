@@ -255,7 +255,7 @@ class ProjectPage(projectSlug: String, namespace: String) extends RenkuPage with
         eventually {
           find(cssSelector(s"div.project-list-row a[href='${to.path}']"))
             .orElse(find(cssSelector(s"div.project-list-row a[href='${to.path}/']")))
-            .getOrElse(fail(s"Dataset '$to' not found"))
+            .getOrElse(fail(s"Dataset '${to.path}' not found"))
         }(waitUpTo(120 seconds), implicitly[source.Position])
     }
   }
