@@ -389,7 +389,16 @@ gitlab:
   #     ...
 
 ## Configuration for the UI service
-# ui:
+ui:
+
+  ## Configuration for Renku templates
+  templates:
+    custom: true
+    repositories:
+      - url: https://github.com/SwissDataScienceCenter/renku-project-template
+        ref: 0.1.13
+        name: Renku
+
   #  welcomePage:
   #    text: "## Some markdown text here!"
   ## UI image
@@ -427,14 +436,6 @@ gitlab:
 
   ## Set the JupyterHub URL
   # jupyterhubUrl: "http://jupyterhub.renku.build"
-
-  ## Configuration for Renku templates
-  # templates:
-  #   custom: true
-  #   repositories:
-  #     - url: https://github.com/SwissDataScienceCenter/renku-project-template
-  #       ref: 0.1.12
-  #       name: Renku
 
   ## Privacy settings allow to configure the content of a Privacy Page through a configMap
   ## and to show a banner to comply with privacy related laws
@@ -643,9 +644,13 @@ graph:
   #     secret: 1234
 
 ## Configuration for renku-core service
-# repository:
-  ## Default cache directory
-  # cacheDirectory: /svc/cache
+core:
+  # increase the TTL of projects in cache due to a bug in cleanup - will be fixed in 0.12.1
+  cleanupProjectsTTL: 21600
+  cleanupFilesTTL: 21600
+  # repository:
+    ## Default cache directory
+    # cacheDirectory: /svc/cache
 
-  ## Default clone depth
-  # projectCloneDepth: 1
+    ## Default clone depth
+    # projectCloneDepth: 1
