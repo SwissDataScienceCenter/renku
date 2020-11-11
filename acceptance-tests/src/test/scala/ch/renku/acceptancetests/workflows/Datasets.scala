@@ -27,7 +27,6 @@ trait Datasets {
     Then(s"the user should see a link to the '$datasetName' dataset")
     val datasetLink = projectPage.Datasets.DatasetsList.link(to = datasetPage)(_: WebDriver)
     reload whenUserCannotSee datasetLink
-    verify userCanSee projectPage.Datasets.DatasetsList.link(to = datasetPage)
   }
 
   def `create a dataset`(datasetName: DatasetName)(implicit projectPage: ProjectPage): DatasetPage = {
@@ -42,7 +41,7 @@ trait Datasets {
     verify that newDatasetPage.ModificationForm.formTitle contains "Add Dataset"
 
     And(s"the user add the title '$datasetName' to the new dataset")
-    `changing its title`(to = datasetName.toString).execute(newDatasetPage)
+    `changing its title`(to = datasetName.toString).modifying(newDatasetPage)
 
     And("the user saves the modification")
     click on newDatasetPage.ModificationForm.datasetSubmitButton sleep (10 seconds)
@@ -53,7 +52,6 @@ trait Datasets {
     verify that datasetPage.datasetTitle contains datasetName.value
     val projectLink = datasetPage.ProjectsList.link(projectPage)(_: WebDriver)
     reload whenUserCannotSee projectLink
-    verify userCanSee datasetPage.ProjectsList.link(projectPage)
 
     datasetPage
   }
@@ -81,10 +79,10 @@ trait Datasets {
     verify userCanSee datasetPage.ModificationForm.formTitle
 
     And(s"the user modifies the dataset by ${by.name}")
-    by.execute(datasetPage)
+    by.modifying(datasetPage)
     and.toList.foreach { by =>
       And(s"by ${by.name}")
-      by.execute(datasetPage)
+      by.modifying(datasetPage)
     }
 
     And("the user saves the modification")
@@ -94,13 +92,12 @@ trait Datasets {
     verify browserAt datasetPage
     val projectLink = datasetPage.ProjectsList.link(projectPage)(_: WebDriver)
     reload whenUserCannotSee projectLink
-    verify userCanSee datasetPage.ProjectsList.link(projectPage)
 
     datasetPage
   }
 
   case class Modification private (name: String, field: DatasetPage => WebElement, newValue: String) {
-    def execute(datasetPage: DatasetPage): Unit = field(datasetPage).enterValue(newValue)
+    def modifying(datasetPage: DatasetPage): Unit = field(datasetPage).enterValue(newValue)
   }
 
   object Modification {

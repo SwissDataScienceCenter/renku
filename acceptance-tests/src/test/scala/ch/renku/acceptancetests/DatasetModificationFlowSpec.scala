@@ -10,7 +10,7 @@ import ch.renku.acceptancetests.workflows._
 
 import scala.language.postfixOps
 
-class DatasetModificationFlow extends AcceptanceSpec with Login with NewProject with RemoveProject with Datasets {
+class DatasetModificationFlowSpec extends AcceptanceSpec with Login with NewProject with RemoveProject with Datasets {
 
   scenario("From the UI the user can modify a dataset and only interact with its latest version") {
     import Modification._
@@ -21,9 +21,11 @@ class DatasetModificationFlow extends AcceptanceSpec with Login with NewProject 
     implicit val projectPage = ProjectPage()
     val datasetName          = DatasetName.generate
     val newDescription       = paragraph().generateOne
+
+    Given("a new renku project")
     createNewProject(projectDetails)
 
-    Given("a new dataset")
+    And("a new dataset for this project")
     val originalDatasetPage = `create a dataset`(datasetName)
 
     val newTitle = DatasetTitle.generate
