@@ -1,6 +1,5 @@
 package ch.renku.acceptancetests.pages
 
-import ch.renku.acceptancetests.model.datasets.DatasetName
 import ch.renku.acceptancetests.model.projects.ProjectDetails._
 import ch.renku.acceptancetests.model.projects.{ProjectDetails, ProjectIdentifier}
 import ch.renku.acceptancetests.model.users.UserCredentials
@@ -245,12 +244,18 @@ class ProjectPage(projectSlug: String, namespace: String) extends RenkuPage with
         .getOrElse(fail("Datasets title not found"))
     }
 
+    def addADatasetButton(implicit webDriver: WebDriver): WebElement = eventually {
+      findAll(cssSelector("a"))
+        .find(element => element.text.contains("Add Dataset") || element.text.contains("Add a Dataset"))
+        .getOrElse(fail("Add a Dataset button not found"))
+    }
+
     object DatasetsList {
-      def link(to: DatasetName)(implicit webDriver: WebDriver): WebElement =
+      def link(to: DatasetPage)(implicit webDriver: WebDriver): WebElement =
         eventually {
-          findAll(cssSelector("div.project-list-row div b span.issue-title a"))
-            .find(_.text.trim == to.toString.trim)
-            .getOrElse(fail(s"Dataset '$to' not found"))
+          find(cssSelector(s"div.project-list-row a[href='${to.path}' i]"))
+            .orElse(find(cssSelector(s"div.project-list-row a[href='${to.path}/' i]")))
+            .getOrElse(fail(s"Dataset '${to.path}' not found"))
         }(waitUpTo(120 seconds), implicitly[source.Position])
     }
   }
