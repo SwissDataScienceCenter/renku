@@ -99,7 +99,9 @@ repository:
     # Author: John Doe <john.doe@example.com>
     # Date:   Mon Apr 29 11:53:41 2019 +0000
     #
-    #     init renku repository
+    #     service: renku init -n "Flights tutorial"
+    #       -s "https://github.com/SwissDataScienceCenter/renku-project-template"
+    #       -r "0.1.12" -t "python-minimal" -p "description"="My first Renku project"
 
 .. code-block:: console
 
