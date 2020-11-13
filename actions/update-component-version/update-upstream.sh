@@ -14,6 +14,7 @@ fi
 
 # set up environment variables
 UPSTREAM_REPO=${UPSTREAM_REPO:=SwissDataScienceCenter/renku}
+UPSTREAM_BRANCH=${UPSTREAM_BRANCH:=development}
 GIT_EMAIL=${GIT_EMAIL:=renku@datascience.ch}
 GIT_USER=${GIT_USER:="Renku Bot"}
 CHART_NAME=${CHART_NAME:=$(echo $GITHUB_REPOSITORY | cut -d/ -f2)}
@@ -32,7 +33,7 @@ git config --global user.email "$GIT_EMAIL"
 git config --global user.name "$GIT_USER"
 
 # update the chart requirements and push
-git checkout -b auto-update/${CHART_NAME}-${CHART_VERSION} master
+git checkout -b auto-update/${CHART_NAME}-${CHART_VERSION} ${UPSTREAM_BRANCH}
 yq w -i charts/renku/requirements.yaml "dependencies.(name==${CHART_NAME}).version" $CHART_VERSION
 
 git add charts/renku/requirements.yaml

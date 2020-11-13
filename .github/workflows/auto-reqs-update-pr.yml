@@ -24,4 +24,4 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.RENKU_CI_TOKEN }}
           BRANCH_PREFIX: "auto-update/"
-          PULL_REQUEST_BRANCH: "master"
+          PULL_REQUEST_BRANCH: "development"
