@@ -349,7 +349,7 @@ what changed and what needs to be updated.
     renku status
 
     # On branch master
-    # Files generated from newer inputs:
+    # Outdated outputs:
     #   (use "renku log [<file>...]" to see the full lineage)
     #   (use "renku update [<file>...]" to generate the file from its latest inputs)
     #
@@ -357,7 +357,7 @@ what changed and what needs to be updated.
     #         data/output/2019-01-flights-filtered.csv: src/00-FilterFlights.py#10d92afb
     #         notebooks/01-CountFlights.ran.ipynb: src/00-FilterFlights.py#10d92afb
     #
-    # Input files used in different versions:
+    # Modified inputs:
     #   (use "renku log --revision <sha1> <file>" to see a lineage for the given revision)
     #
     #         src/00-FilterFlights.py: 10d92afb, 9630da17
