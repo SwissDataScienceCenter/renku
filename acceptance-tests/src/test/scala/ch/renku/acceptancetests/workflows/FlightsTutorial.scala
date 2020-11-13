@@ -87,6 +87,6 @@ trait FlightsTutorial extends GivenWhenThen with Matchers with ScalatestMatchers
     console %> c"git push"
 
     Then("the user is done with the basic workflow")
-    DatasetName("2019-01 US Flights")
+    DatasetName("flight-data")
   }
 }

@@ -29,8 +29,8 @@ trait Grammar extends Eventually {
     def that(element: => WebElement): WebElement = element
 
     def browserAt[Url <: BaseUrl](page: Page[Url])(implicit baseUrl: Url): Unit = eventually {
-      currentUrl  should startWith(page.url)
-      pageTitle shouldBe page.title.toString()
+      currentUrl.toLowerCase should startWith(page.url.toLowerCase)
+      pageTitle            shouldBe page.title.toString()
       verifyElementsAreDisplayed(page)
     }
 
