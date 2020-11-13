@@ -29,7 +29,7 @@ jobs:
         sudo apt-get update -y && sudo apt-get install -y snapd
         sudo snap install kubectl --channel=1.16/stable --classic
         sudo snap install helm --channel=3.3/stable --classic
-        echo "::set-env name=PATH::/snap/bin:$PATH"
+        echo "PATH=/snap/bin:$PATH" >> $GITHUB_ENV
         pip install --upgrade pip pipenv
         pipenv install --deploy --dev --system
     - name: Deploy master to dev
