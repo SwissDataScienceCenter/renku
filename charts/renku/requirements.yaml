@@ -30,5 +30,5 @@ dependencies:
   condition: postgresql.enabled
 - name: keycloak
   version: 4.10.1
-  repository: "@stable"
+  repository: "@codecentric"
   condition: keycloak.enabled
