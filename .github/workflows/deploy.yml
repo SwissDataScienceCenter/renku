@@ -32,7 +32,7 @@ jobs:
         echo "PATH=/snap/bin:$PATH" >> $GITHUB_ENV
         pip install --upgrade pip pipenv
         pipenv install --deploy --dev --system
-    - name: Deploy master to dev
+    - name: Deploy development to the dev cluster
       env:
         KUBECONFIG: ${{ github.workspace }}/renkubot-kube.config
         RENKUBOT_KUBECONFIG: ${{ secrets.RENKUBOT_KUBECONFIG }}
@@ -123,7 +123,7 @@ jobs:
   chart:
     needs: test
     runs-on: ubuntu-latest
-    if: "startsWith(github.ref, 'refs/tags/') || github.ref == 'refs/heads/master'"
+    if: "startsWith(github.ref, 'refs/tags/') || github.ref == 'refs/heads/development'"
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-python@v1
@@ -151,7 +151,7 @@ jobs:
           helm dep update charts/renku
           helm dep update charts/gitlab
       - name: Push helm chart and images
-        if: github.ref == 'refs/heads/master' && !startsWith(github.ref, 'refs/tags/')
+        if: github.ref == 'refs/heads/development' && !startsWith(github.ref, 'refs/tags/')
         env:
           GITHUB_TOKEN: ${{ secrets.RENKU_CI_TOKEN }}
           DOCKER_BUILDKIT: "1"

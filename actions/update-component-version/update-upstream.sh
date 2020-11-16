@@ -23,7 +23,7 @@ CHART_NAME=${CHART_NAME:=$(echo $GITHUB_REPOSITORY | cut -d/ -f2)}
 chartpress --skip-build $CHART_TAG
 CHART_VERSION=$(yq r helm-chart/${CHART_NAME}/Chart.yaml version)
 
-git clone --depth=1 https://${GITHUB_TOKEN}@github.com/${UPSTREAM_REPO} upstream-repo
+git clone --depth=1 --branch=${UPSTREAM_BRANCH} https://${GITHUB_TOKEN}@github.com/${UPSTREAM_REPO} upstream-repo
 
 # update the upstream repo
 cd upstream-repo
