@@ -24,12 +24,13 @@ pyenchant==2.0.0
 pygments==2.2.0
 pyparsing==2.2.0
 pytz==2018.5
-renku-sphinx-theme==0.1.0
+PyYAML==5.3.1
 requests>=2.20.0
 simplegeneric==0.8.1
 six==1.11.0
 snowballstemmer==1.2.1
 sphinx==1.8.0
+sphinx-rtd-theme==0.5.0
 sphinxcontrib-spelling==4.2.0
 sphinxcontrib-websupport==1.1.0
 traitlets==4.3.2

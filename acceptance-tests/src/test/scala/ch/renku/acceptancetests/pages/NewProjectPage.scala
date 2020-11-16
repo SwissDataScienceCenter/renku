@@ -1,9 +1,11 @@
 package ch.renku.acceptancetests.pages
 
-import ch.renku.acceptancetests.model.projects.{ProjectDetails, Visibility}
+import ch.renku.acceptancetests.model.projects.{ProjectDetails, Template, Visibility}
 import ch.renku.acceptancetests.pages.Page.{Path, Title}
 import ch.renku.acceptancetests.tooling.ScreenCapturing
+import eu.timepit.refined.api.Refined
 import eu.timepit.refined.auto._
+import eu.timepit.refined.collection.NonEmpty
 import org.openqa.selenium.{WebDriver, WebElement}
 import org.scalatestplus.selenium.WebBrowser.{cssSelector, find}
 import org.scalatestplus.selenium.{Driver, WebBrowser}
@@ -29,7 +31,7 @@ case object NewProjectPage extends RenkuPage with TopBar with ScreenCapturing {
       visibilityOption(project.visibility).click() sleep (1 second)
 
       templateField.click() sleep (1 second)
-      templateOption.click() sleep (1 second)
+      templateOption(project.template).click() sleep (1 second)
       templateField.click() sleep (1 second)
 
       descriptionField.clear() sleep (1 second)
@@ -56,9 +58,10 @@ case object NewProjectPage extends RenkuPage with TopBar with ScreenCapturing {
     find(cssSelector("select#template")) getOrElse fail("Template field not found ")
   }
 
-  private def templateOption(implicit webDriver: WebDriver): WebElement = eventually {
-    find(cssSelector("option[value='Renku/python-minimal']")) getOrElse fail("Template option not found")
-  }
+  private def templateOption(template: Template)(implicit webDriver: WebDriver): WebElement =
+    eventually {
+      find(cssSelector(s"option[value='${template.name}']")) getOrElse fail("Template option not found")
+    }
 
   private def descriptionField(implicit webDriver: WebDriver): WebElement = eventually {
     find(cssSelector("input#parameter-description")) getOrElse fail("Description parameter field not found")

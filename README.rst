@@ -15,6 +15,8 @@
     See the License for the specific language governing permissions and
     limitations under the License... raw:: html
 
+.. _renku:
+
 RENKU (連句)
 ============
 
@@ -69,7 +71,7 @@ the Knowledge Graph.
 
 A public instance of **RenkuLab** is available at https://renkulab.io, and there
 are several other deployments at various institutions. To start exploring Renku,
-feel free to make an account try it out! You can follow the `first steps
+feel free to make an account and try it out! You can follow the `first steps
 <https://renku.readthedocs.io/en/latest/tutorials/01_firststeps.html>`_ tutorial
 or `continue reading about the Renku project
 <https://renku.readthedocs.io/en/latest/introduction/index.html#renku-introduction>`_.

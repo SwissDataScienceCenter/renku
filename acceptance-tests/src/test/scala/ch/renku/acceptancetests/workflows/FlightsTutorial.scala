@@ -31,7 +31,7 @@ trait FlightsTutorial extends GivenWhenThen with Matchers with ScalatestMatchers
     console %> c"git lfs install --local"
 
     And("imports a dataset from the dataverse")
-    console %> c"renku dataset import 10.7910/DVN/WTZS4K".userInput("y")
+    console %> c"renku dataset import --name flight-data 10.7910/DVN/WTZS4K".userInput("y")
 
     And("adds some Python packages to the requirements.txt")
     console %> (c"echo pandas==0.25.3" >> "requirements.txt")
@@ -58,7 +58,7 @@ trait FlightsTutorial extends GivenWhenThen with Matchers with ScalatestMatchers
 
     And("runs step 1")
     console %> c"mkdir $projectFolder/data/output"
-    console %> c"renku run python src/00-FilterFlights.py data/201901_us_flights_1/2019-01-flights.csv.zip data/output/2019-01-flights-filtered.csv"
+    console %> c"renku run python src/00-FilterFlights.py data/flight-data/2019-01-flights.csv.zip data/output/2019-01-flights-filtered.csv"
 
     And("downloads the tutorial step 2 notebook")
     console %> c"wget -O $projectFolder/notebooks/01-CountFlights.ipynb https://renkulab.io/gitlab/renku-tutorial/renku-tutorial-flights/raw/master/.tutorial/meta/templates/01-CountFlights.ipynb"
@@ -82,11 +82,11 @@ trait FlightsTutorial extends GivenWhenThen with Matchers with ScalatestMatchers
     console %> c"git commit -m 'Fixed filter to use AUS, not DFW.'"
 
     And("and updates the results")
-    console %> c"renku update"
+    console %> c"renku update --all"
     And("pushes all the commits to the remote")
     console %> c"git push"
 
     Then("the user is done with the basic workflow")
-    DatasetName("2019-01 US Flights")
+    DatasetName("flight-data")
   }
 }

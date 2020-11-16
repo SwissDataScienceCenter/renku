@@ -43,7 +43,7 @@ data, answer yes.
 
 .. code-block:: console
 
-    renku dataset import 10.7910/DVN/WTZS4K
+    renku dataset import --name flight-data 10.7910/DVN/WTZS4K
 
     # Output:
     # CHECKSUM    NAME                       SIZE (MB)  TYPE
@@ -65,11 +65,11 @@ You can list the datasets in a project by running the following:
 
 .. code-block:: console
 
-        renku dataset
+        renku dataset ls
 
-        # ID                                    DISPLAY_NAME         VERSION    CREATED              CREATORS
-        # ------------------------------------  -------------------  ---------  -------------------  ---------------
-        # c5c74efd-5982-4c75-a1eb-4be870c51cc5  201901_us_flights_1  1          2020-01-16 16:51:12  [your name]
+        # ID                                    NAME         TITLE               VERSION
+        # ------------------------------------  -----------  ------------------  ---------
+        # 29f121ea-cf16-4512-932f-7b195480cb9b  flight-data  2019-01 US Flights  1.0
 
 The file we added contains data on flight take-offs and landings at US airports, and it
 comes originally from `here <https://www.transtats.bts.gov>`_. As the file
@@ -87,7 +87,7 @@ repository:
     # Author: John Doe <john.doe@example.com>
     # Date:   Mon Apr 29 11:58:34 2019 +0000
     #
-    #     renku dataset import 10.7910/DVN/WTZS4K
+    #     renku dataset import --name flight-data 10.7910/DVN/WTZS4K
     #
     # commit 3809ce796933bd554ec65df0737b6ecf00b069e1
     # Author: John Doe <john.doe@example.com>
@@ -99,7 +99,9 @@ repository:
     # Author: John Doe <john.doe@example.com>
     # Date:   Mon Apr 29 11:53:41 2019 +0000
     #
-    #     init renku repository
+    #     service: renku init -n "Flights tutorial"
+    #       -s "https://github.com/SwissDataScienceCenter/renku-project-template"
+    #       -r "0.1.12" -t "python-minimal" -p "description"="My first Renku project"
 
 .. code-block:: console
 

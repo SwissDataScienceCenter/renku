@@ -389,7 +389,16 @@ gitlab:
   #     ...
 
 ## Configuration for the UI service
-# ui:
+ui:
+
+  ## Configuration for Renku templates
+  templates:
+    custom: true
+    repositories:
+      - url: https://github.com/SwissDataScienceCenter/renku-project-template
+        ref: 0.1.13
+        name: Renku
+
   #  welcomePage:
   #    text: "## Some markdown text here!"
   ## UI image
@@ -427,19 +436,6 @@ gitlab:
 
   ## Set the JupyterHub URL
   # jupyterhubUrl: "http://jupyterhub.renku.build"
-
-  ## Configuration for Renku templates
-  # templates:
-  #   custom: true
-  #   repositories:
-  #     - url: https://github.com/SwissDataScienceCenter/renku-project-template
-  #       ref: 0.1.11
-  #       name: Renku
-
-  ## Configuration for where to get the base project templates: a url and ref (usually a tag)
-  # templatesRepository:
-  #   url: https://github.com/SwissDataScienceCenter/renku-project-template
-  #   ref: 0.1.6
 
   ## Privacy settings allow to configure the content of a Privacy Page through a configMap
   ## and to show a banner to comply with privacy related laws
@@ -579,18 +575,18 @@ notebooks:
     #   # use JupyterLab by default in notebook servers
     #   defaultUrl: /lab
 
-    # The following section disables some of the default JupyterHub
+    # By default Renku notebooks disables some of the default JupyterHub
     # optimizations which can interfere with simple setups. See
     # https://zero-to-jupyterhub.readthedocs.io/en/latest/administrator/optimization.html
-    # for details.
-    scheduling:
-      userScheduler:
-        enabled: false
-      userPlaceholder:
-        enabled: false
-    prePuller:
-      continuous:
-        enabled: false
+    # for details. You can re-enable this by uncommenting the following section
+    # scheduling:
+    #   userScheduler:
+    #     enabled: true
+    #   userPlaceholder:
+    #     enabled: true
+    # prePuller:
+    #   continuous:
+    #     enabled: true
 
 tests:
   image:
@@ -648,9 +644,13 @@ graph:
   #     secret: 1234
 
 ## Configuration for renku-core service
-# repository:
-  ## Default cache directory
-  # cacheDirectory: /svc/cache
+core:
+  # increase the TTL of projects in cache due to a bug in cleanup - will be fixed in 0.12.1
+  cleanupProjectsTTL: 21600
+  cleanupFilesTTL: 21600
+  # repository:
+    ## Default cache directory
+    # cacheDirectory: /svc/cache
 
-  ## Default clone depth
-  # projectCloneDepth: 1
+    ## Default clone depth
+    # projectCloneDepth: 1

@@ -36,6 +36,8 @@ jobs:
         pip install --upgrade pip pipenv
         pipenv install --deploy --dev --system
     - name: test the docs build
+      env:
+        SIDEBAR: 1
       run: |
         cd docs
         sphinx-build -nNW -b spelling -d _build/doctrees . _build/spelling
@@ -60,15 +62,15 @@ jobs:
         sudo apt-get update -y && sudo apt-get install -y snapd
         sudo snap install kubectl --channel=1.16/stable --classic
         sudo snap install helm --channel=3.3/stable --classic
-        echo "::set-env name=PATH::/snap/bin:$PATH"
+        echo "PATH=/snap/bin:$PATH" >> $GITHUB_ENV
         pip install --upgrade pip pipenv
         pipenv install --deploy --dev --system
     - name: Configure environment
       run: |
         PR_NUMBER=${{ github.event.number }}
-        echo "::set-env name=RENKU_RELEASE::ci-${PR_NUMBER}-renku"
-        echo "::set-env name=RENKU_NAMESPACE::ci-${PR_NUMBER}-renku"
-        echo "::set-env name=RENKU_TMP_NAMESPACE::ci-${PR_NUMBER}-renku-tmp"
+        echo "RENKU_RELEASE=ci-${PR_NUMBER}-renku" >> $GITHUB_ENV
+        echo "RENKU_NAMESPACE=ci-${PR_NUMBER}-renku" >> $GITHUB_ENV
+        echo "RENKU_TMP_NAMESPACE=ci-${PR_NUMBER}-renku-tmp" >> $GITHUB_ENV
     - name: Configure GitLab application
       env:
         GITLAB_TOKEN: ${{ secrets.GITLAB_TOKEN }}
@@ -80,8 +82,8 @@ jobs:
                       --data "scopes=api read_user read_repository read_registry openid")
         APP_ID=$(echo $gitlab_app | jq -r '.application_id')
         APP_SECRET=$(echo $gitlab_app | jq -r '.secret')
-        echo "::set-env name=APP_ID::${APP_ID}"
-        echo "::set-env name=APP_SECRET::${APP_SECRET}"
+        echo "APP_ID=${APP_ID}" >> $GITHUB_ENV
+        echo "APP_SECRET=${APP_SECRET}" >> $GITHUB_ENV
     - name: Deploy to k8s
       env:
         KUBECONFIG: ${{ github.workspace }}/renkubot-kube.config
@@ -92,6 +94,7 @@ jobs:
       run: |
         echo "$RENKUBOT_KUBECONFIG" > renkubot-kube.config
         helm repo add stable 	https://kubernetes-charts.storage.googleapis.com
+        helm repo add codecentric https://codecentric.github.io/helm-charts
         helm repo add renku https://swissdatasciencecenter.github.io/helm-charts/
         helm repo add gitlab https://charts.gitlab.io/
         helm repo add jupyterhub https://jupyterhub.github.io/helm-chart
