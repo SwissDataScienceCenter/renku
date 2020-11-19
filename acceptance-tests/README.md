@@ -92,7 +92,7 @@ To create a `tests-defaults.conf` file, copy the `tests-defaults.conf.template` 
 | remPattern | RENKU_TEST_REMOVE_PATTERN | pattern to match to decide if a project should be batch removed  |
 
 For example, the following may be run in the project's root: `sbt -Denv=https://renku-kuba.dev.renku.ch
--Demail=<email> -Dusername=<username> -Dfullname='<full user name>' -Dpassword=<password> -DrenkuVersion=<renkuVersion> test`
+-Demail=<email> -Dusername=<username> -Dfullname='<full user name>' -Dpassword=<password> test`
 
 In the case there's a need of running a single test the `test` part should be replaced with `"testOnly
 *<test-class-name>*"`.

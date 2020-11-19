@@ -313,10 +313,10 @@ class ProjectPage(projectSlug: String, namespace: String) extends RenkuPage with
       }
 
       def connectToJupyterLab(implicit webDriver: WebDriver, spec: AcceptanceSpec): Unit =
-        connectToJupyterLab(s"a[href*='/jupyterhub/user/']")
+        connectToJupyterLab(s"table a[href*='/jupyterhub/user/']")
 
       def connectToAnonymousJupyterLab(implicit webDriver: WebDriver, spec: AcceptanceSpec): Unit =
-        connectToJupyterLab(s"a[href*='/jupyterhub-tmp/user/']")
+        connectToJupyterLab(s"table a[href*='/jupyterhub-tmp/user/']")
 
       def connectButton(buttonSelector: String)(implicit webDriver: WebDriver): WebElement = eventually {
         find(
