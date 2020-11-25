@@ -3,9 +3,9 @@
 Customizing interactive environments
 ====================================
 
-Very quickly you will want to make changes to the default configuration of your
-interactive sessions. The default environments we provide are pretty bare-bones
-so if you want to have easy access to your preferred packages, some simple steps
+Very soon, you will want to make changes to the default configuration of your
+interactive sessions. The default environments we provide are pretty bare-bones.
+If you want to have easy access to your preferred packages, some simple steps
 at the start of your project will get you on the way quickly.
 
 
@@ -14,13 +14,17 @@ Important files
 
 The launch is enabled by the content in the following files in your project:
 
-* language-specific files like ``requirements.txt`` or ``install.R``
-
 * ``Dockerfile``: defines the type of interactive environment and other software
   installed in the environment, including the ``renku`` command-line installation.
 
 * ``.gitlab-ci.yml``: controls the docker build of the image based on the project's
   ``Dockerfile``.
+
+* ``requirements.txt`` or ``install.R``: language-specific files controlling the
+  libraries.
+
+* ``.renku/renku.ini``: renku project configurations containing a
+  ``[renku "interactive"]`` section.
 
 The most basic modifications are installations of additional packages. This can be
 done automatically for Python and R projects if you add the packages you want
@@ -31,16 +35,18 @@ Dockerfile structure
 --------------------
 
 The project's ``Dockerfile`` lives in the top level of the project directory. In
-the default ``Dockerfile`` provided in the template, the first line is a ``FROM``
-statement that specifies a `versioned base docker image <https://github.com/SwissDataScienceCenter/renku-jupyter>`_.
+the default ``Dockerfile`` provided in the template, the first line is a
+``RENKU_BASE_IMAGE`` argument used to feed the following ``FROM`` instruction.
+It specifies a
+`versioned base docker image <https://github.com/SwissDataScienceCenter/renku-jupyter>`_.
 We add new versions periodically, but the heart of it is the set of installations
 of jupyterlab/rstudio, git, and renku::
 
-  FROM renku/singleuser:0.3.5-renku0.5.2
+  ARG RENKU_BASE_IMAGE=renku/renkulab-py:3.7-0.7.3
 
-  # or, for RStudio in the build
+  # or, for RStudio
 
-  FROM renku/singleuser-r:0.3.5-renku0.5.2
+  ARG RENKU_BASE_IMAGE=renku/renkulab-r:4.0.0-0.7.3
 
 The next two statements install user-specified libraries from ``environment.yml``
 and ``requirements.txt``::
@@ -48,9 +54,13 @@ and ``requirements.txt``::
   # install the python dependencies
   COPY requirements.txt environment.yml /tmp/
   RUN conda env update -q -f /tmp/environment.yml && \
-  /opt/conda/bin/pip install -r /tmp/requirements.txt && \
-  conda clean -y --all && \
-  conda env export -n "root"
+    /opt/conda/bin/pip install -r /tmp/requirements.txt && \
+    conda clean -y --all && \
+    conda env export -n "root"
+
+Then we specify the renku version to be installed through ``pipx``::
+
+  ARG RENKU_VERSION=0.12.1
 
 You can add to this ``Dockerfile`` in any way you'd like.
 
@@ -62,7 +72,7 @@ Dockerfile development
 Before we get into modifying Dockerfiles, if you want to know how to update
 the base version of your renkulab image, see `Upgrading Renku <upgrading_renku>`_.
 
-If you're going to be making simple modifications to the ``Dockerfile`` (i.e. changing
+If you're going to make simple modifications to the ``Dockerfile`` (i.e. changing
 the base Docker image version number), you can use the following steps to update
 and re-build the image:
 
@@ -73,8 +83,8 @@ and re-build the image:
 #. When you're satisfied with the edits, scroll down and write a meaningful **commit message** (you'll thank yourself later).
 #. Click the green **Commit changes** button.
 
-You may find the [official docker documentation](https://docs.docker.com/engine/reference/builder/) useful
-during this process.
+You may find the `official docker documentation <https://docs.docker.com/engine/reference/builder/>`_
+useful during this process.
 
 Now you have committed the changes to your ``Dockerfile``. Since you have made a commit,
 the CI/CD pipeline will kick off (pre-configured for you as a ``renkulab-runner``
@@ -162,6 +172,58 @@ These two images are available on `dockerhub <https://hub.docker.com/r/renku/>`_
 If you can't work with the template ``Dockerfile`` provided, you can pull one of
 these base ``Dockerfile`` s and add the ``renku``, ``git``, and ``jupyter``
 parts to another base image that you might have.
+
+
+Renku project configurations
+----------------------------
+
+When starting a new Interactive Environment, most of the options can be manually
+changed by the user. Depending on the specific RenkuLab deployment, you can select
+more RAM, a higher CPU quota, etc.
+
+Your project may even include a package with an advanced UI (like
+`Streamlit <https://renku.discourse.group/t/how-to-deploy-streamlit-in-renku/169>`_)
+and you probably want to choose it as default.
+
+It's possible to set a default value for all these options using the project
+configurations stored in the ``.renku/renku.ini`` file.
+Once you do that, each time a user tries to start a new environment, those options will
+be pre-selected.
+
+.. note::
+
+  Manually modifying the ``renku.ini`` file is not recommended.
+  You can use the
+  `renku config command <https://renku-python.readthedocs.io/en/latest/commands.html#module-renku.cli.config>`_
+  form an interactive environment.
+
+    renku config set interactive.default_url "/tree"
+
+  We are working on adding a user friendly solution to set default options on
+  the project's settings page.
+
+**What are the specific options?**
+
+You can find a comprehensive list of options :ref:`on this page <renku_ini>`. Most commonly,
+you may want to change the ``default_url`` or set a specific ``image``.
+
+The first case is useful when you prefer to show a different default UI, like the standard
+Jupyter interface ``/tree``, or when you need support for a different interface,
+like R studio ``/rstudio`` or  ``/streamlit`` (not included in the standard Python template).
+
+The ``image`` is useful when you settle on a Docker image and you don't need to change it
+anymore. The benefit is particularly evident when building a new image takes a lot of time
+(e.g. you added big packages) or when you expect the project to be used by a lot of people
+over a short period of time (e.g. you use it in a presentation or a lecture).
+
+Even if it's common to start the environment with the default values, setting a default value
+doesn't prevent a user from changing it.
+
+.. note::
+
+  Mind that not all the RenkuLab deployments have the same set of options or allow to choose
+  the same values. If no GPUs are available, setting the default number to ``1`` can't work.
+  Should this be the case, a warning will show before starting a new environment.
 
 
 Getting Help

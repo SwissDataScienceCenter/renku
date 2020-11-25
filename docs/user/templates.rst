@@ -69,6 +69,8 @@ habit of running ``pip install -r requirements.txt``.
 This is your typical .gitignore file that you use for git projects. Write into
 here any files that you don't want to be tracked.
 
+.. _gitlab_ci_yml:
+
 ``.gitlab-ci.yml``
 """"""""""""""""""
 
@@ -108,6 +110,8 @@ The ``README.md`` file is shown on a project's home page. It's good to have at
 least the name of the project and a brief overview of the project for your
 intended audience.
 
+.. _renku_ini:
+
 ``.renku``
 """"""""""
 
@@ -135,6 +139,8 @@ deployment:
 * ``gpu_request [int]``: GPU quota (``0``, ``1``, ...)
 * ``lfs_auto_fetch [bool]``: whether to automatically fetch lfs files or not
   (``true``, ``false``)
+* ``image [string]``: optional pinned Docker image
+  (``registry.renkulab.io/namespace/my-project:a1b2c3d``)
 
 .. note::
 
