@@ -276,7 +276,7 @@ repository. Each of them requires an entry with the following parameters:
 
 * ``folder``: the target folder inside the repository where the template files
   are stored. Please use a different folder for each template.
-* ``name``: a short user friendly name.
+* ``name``: a short user-friendly name.
 * ``description``: a brief description of your template. This will be
   presented to the user when choosing between templates.
 * ``variables``: we support the

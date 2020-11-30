@@ -31,6 +31,58 @@ done automatically for Python and R projects if you add the packages you want
 to ``requirements.txt`` and ``install.R`` respectively.
 
 
+Renku project configurations
+----------------------------
+
+When starting a new Interactive Environment, most of the options can be manually
+changed by the user. Depending on the specific RenkuLab deployment, you can select
+more RAM, a higher CPU quota, etc.
+
+Your project may even include a package with an advanced UI (like
+`Streamlit <https://renku.discourse.group/t/how-to-deploy-streamlit-in-renku/169>`_)
+and you probably want to choose it as default.
+
+It's possible to set a default value for all these options using the project
+configurations stored in the ``.renku/renku.ini`` file.
+Once you do that, each time a user tries to start a new environment, those options will
+be pre-selected.
+
+.. note::
+
+  Manually modifying the ``renku.ini`` file is not recommended.
+  You can use the
+  `renku config command <https://renku-python.readthedocs.io/en/latest/commands.html#module-renku.cli.config>`_
+  from an interactive environment, for example:
+
+    renku config set interactive.default_url "/tree"
+
+  We are working on adding a user-friendly solution to set default options on
+  the project's settings page.
+
+**What are the specific options?**
+
+You can find a comprehensive list of options :ref:`on this page <renku_ini>`. Most commonly,
+you may want to change the ``default_url`` or set a specific ``image``.
+
+The first case is useful when you prefer to show a different default UI, like the standard
+Jupyter interface ``/tree``, or when you need support for a different interface,
+like R studio ``/rstudio`` or  ``/streamlit`` (not included in the standard Python template).
+
+The ``image`` is useful when you settle on a Docker image and you don't need to change it
+anymore. The benefit is particularly evident when building a new image takes a lot of time
+(e.g. you added big packages) or when you expect the project to be used by a lot of people
+over a short period of time (e.g. you use it in a presentation or a lecture).
+
+Even if it's common to start the environment with the default values, setting a default value
+doesn't prevent a user from changing it.
+
+.. note::
+
+  Mind that not all the RenkuLab deployments have the same set of options or allow to choose
+  the same values. If no GPUs are available, setting the default number to ``1`` can't work.
+  Should this be the case, a warning will show before starting a new environment.
+
+
 Dockerfile structure
 --------------------
 
@@ -38,7 +90,7 @@ The project's ``Dockerfile`` lives in the top level of the project directory. In
 the default ``Dockerfile`` provided in the template, the first line is a
 ``RENKU_BASE_IMAGE`` argument used to feed the following ``FROM`` instruction.
 It specifies a
-`versioned base docker image <https://github.com/SwissDataScienceCenter/renku-jupyter>`_.
+`versioned base docker image <https://github.com/SwissDataScienceCenter/renkulab-docker>`_.
 We add new versions periodically, but the heart of it is the set of installations
 of jupyterlab/rstudio, git, and renku::
 
@@ -65,6 +117,7 @@ Then we specify the renku version to be installed through ``pipx``::
 You can add to this ``Dockerfile`` in any way you'd like.
 
 .. _docker_dev:
+
 
 Dockerfile development
 ----------------------
@@ -113,6 +166,7 @@ the messages in the log to determine why and hint at what you can do to fix it.
   ``Dockerfile``, it's possible that your build might take a long time. If this is the
   case, you can change the limits in the project settings via the lefthand column of the GitLab
   interface at **Settings** > **CI/CD** > **General pipelines** > **Timeout**.
+
 
 Using your new Docker image
 ---------------------------
@@ -172,58 +226,6 @@ These two images are available on `dockerhub <https://hub.docker.com/r/renku/>`_
 If you can't work with the template ``Dockerfile`` provided, you can pull one of
 these base ``Dockerfile`` s and add the ``renku``, ``git``, and ``jupyter``
 parts to another base image that you might have.
-
-
-Renku project configurations
-----------------------------
-
-When starting a new Interactive Environment, most of the options can be manually
-changed by the user. Depending on the specific RenkuLab deployment, you can select
-more RAM, a higher CPU quota, etc.
-
-Your project may even include a package with an advanced UI (like
-`Streamlit <https://renku.discourse.group/t/how-to-deploy-streamlit-in-renku/169>`_)
-and you probably want to choose it as default.
-
-It's possible to set a default value for all these options using the project
-configurations stored in the ``.renku/renku.ini`` file.
-Once you do that, each time a user tries to start a new environment, those options will
-be pre-selected.
-
-.. note::
-
-  Manually modifying the ``renku.ini`` file is not recommended.
-  You can use the
-  `renku config command <https://renku-python.readthedocs.io/en/latest/commands.html#module-renku.cli.config>`_
-  form an interactive environment.
-
-    renku config set interactive.default_url "/tree"
-
-  We are working on adding a user friendly solution to set default options on
-  the project's settings page.
-
-**What are the specific options?**
-
-You can find a comprehensive list of options :ref:`on this page <renku_ini>`. Most commonly,
-you may want to change the ``default_url`` or set a specific ``image``.
-
-The first case is useful when you prefer to show a different default UI, like the standard
-Jupyter interface ``/tree``, or when you need support for a different interface,
-like R studio ``/rstudio`` or  ``/streamlit`` (not included in the standard Python template).
-
-The ``image`` is useful when you settle on a Docker image and you don't need to change it
-anymore. The benefit is particularly evident when building a new image takes a lot of time
-(e.g. you added big packages) or when you expect the project to be used by a lot of people
-over a short period of time (e.g. you use it in a presentation or a lecture).
-
-Even if it's common to start the environment with the default values, setting a default value
-doesn't prevent a user from changing it.
-
-.. note::
-
-  Mind that not all the RenkuLab deployments have the same set of options or allow to choose
-  the same values. If no GPUs are available, setting the default number to ``1`` can't work.
-  Should this be the case, a warning will show before starting a new environment.
 
 
 Getting Help

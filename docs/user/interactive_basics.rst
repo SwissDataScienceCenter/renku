@@ -20,7 +20,8 @@ but RenkuLab offers the following advantages:
 
 * Environments are defined using Docker, so they can be shared and reproducibly re-created.
 
-* Auto-saving of work back to RenkuLab, so you can recover in the event of a crash.
+* Auto-saving of work back to RenkuLab, so you can recover when your environment is shut down
+  (this happens automatically after 24 hours of inactivity).
 
 * A git client pre-configured with your credentials to easily push your changes
   back to the server.
@@ -122,9 +123,10 @@ A GitLab's CI/CD pipeline automatically builds a new image using the project's
   * Forking a project (in which the new build happens for the fork).
   * Pushing changes to the project.
 
-This is defined in the project's :ref:`.gitlab-ci.yml file <gitlab_ci_yml>`. If the project
-references a pinned image, the UI will not check for the image availability - that is
-usually provided by the project's maintainer and it doesn't change at every new commit.
+The pipeline is defined in the project's :ref:`.gitlab-ci.yml file <gitlab_ci_yml>`. If the
+project :ref:`references a specific image <renku_ini>` to use for all environments, the UI
+will not check for the image availability - that is usually provided by the project's
+maintainer and it doesn't change at every new commit.
 
 It may take a long time to build an image for various reasons, but if you've just created the
 project on RenkuLab from one of the templates, it generally takes less than a minute or two.
