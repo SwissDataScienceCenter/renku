@@ -137,6 +137,8 @@ def configure_requirements(tempdir, reqs, component_versions):
 if __name__ == "__main__":
     from argparse import ArgumentParser
 
+    print(os.environ)
+
     parser = ArgumentParser()
     for component in components:
         parser.add_argument(

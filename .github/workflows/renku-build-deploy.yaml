@@ -9,3 +9,5 @@ jobs:
     - uses: actions/checkout@v2
     - name: renku build and deploy
       uses: ./actions/deploy-renku
+      env:
+        renku_core: "@v0.11.0"
