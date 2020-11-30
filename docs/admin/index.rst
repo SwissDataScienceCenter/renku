@@ -16,15 +16,15 @@ To deploy Renku in a cluster, you need to have the following prerequisites:
    :maxdepth: 1
 
    Helm <prerequisites/tiller>
-   a certificate (or LetsEncrypt) <prerequisites/certificates>
-   NGINX ingress <prerequisites/nginx>
    a DNS domain <prerequisites/dns>
+   and its certificate (or a cert-manager LetsEncrypt) <prerequisites/certificates>
+   NGINX (or other) ingress <prerequisites/nginx>
    a GitLab-runner VM for the docker image builder with sufficient storage <prerequisites/gitlabrunner>
 
 Optionally, you can choose to manage your own instances of the following:
 
-   - a `GitLab stand-alone instance <https://about.gitlab.com/install/>`_
-   - a Keycloak stand-alone instance
+   - using an existing `GitLab instance <https://about.gitlab.com/install/>`_
+   - using an existing Keycloak instance
 
 Officially supported versions
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -35,7 +35,7 @@ The following component versions have been tested in production.
 Renku version         Kubernetes     Helm
 ===================   ============   ============
 0.6.x                 1.14, 1.15     2
-0.7.x (coming soon)   1.16, 1.17     3
+0.7.x                 1.16, 1.17     3
 ===================   ============   ============
 
 Pre-deployment steps
@@ -76,14 +76,22 @@ This step is very important as it will define the values that helm will use to i
 Basic configuration
 ^^^^^^^^^^^^^^^^^^^^
 
-The basic configuration file with is in: `Renku values file <https://github.com/SwissDataScienceCenter/renku/blob/master/charts/renku/values.yaml>`_
+The basic Helm configuration file is in the Renku repository: `Renku values file <https://github.com/SwissDataScienceCenter/renku/blob/master/charts/renku/values.yaml>`_
 
-You can also use the `make-values.sh <https://github.com/SwissDataScienceCenter/renku/blob/master/charts/example-configurations/make-values.sh>`_ script to generate a valid values file with your DNS and (optionally) your Gitlab URL, application ID and secret.
+You can use the `make-values.sh <https://github.com/SwissDataScienceCenter/renku/blob/master/charts/example-configurations/make-values.sh>`_ script to generate automatically a minimal Renku values file. You need to provide your DNS and (optionally) your Gitlab URL, application ID and secret.
+This script needs the `minimal-values.tmpl <https://github.com/SwissDataScienceCenter/renku/blob/master/charts/example-configurations/minimal-values.tmpl>`_ file
 
-Before deploying Renku please make sure to have the following configured:
+.. code-block:: bash
 
-  - URLs and DNS names that correspond to your configuration
-  - all the necessary secrets
+  $ ./make-values.sh -d renku.mydomain.ch -o renku-values.yaml
+
+
+After preparing your values and before deploying Renku please make sure to check the following in the values file:
+
+  - the URLs and DNS names are correct
+  - all the necessary secrets are configured
+  - verify ingress configuration is correct
+  - add/verify, if necessary, the persistent volume claims
 
 Further configuration
 ^^^^^^^^^^^^^^^^^^^^^^
@@ -93,7 +101,7 @@ You might want to modify some default values, here are some examples:
    * Logged-out users can be given the permission to launch interactive sessions from public notebooks. This feature is turned off by default. For details on how to enable this feature, see the dedicated section below.
    * A custom privacy notice and cookie banner can be configured (as of Renku 0.6.8). See the dedicated section below.
    * Resources requests and limits can be adjusted for the diverse RenkuLab components
-   * For not stand-alone Gitlab you can configure an S3 backend for `lfs objects <https://docs.gitlab.com/ce/administration/lfs/index.html>`_ and `registry <https://docs.gitlab.com/ee/administration/packages/container_registry.html>`_, this configuration can be added in the ``gitlab`` section
+   * For not independent GitLab you can configure an S3 backend for `lfs objects <https://docs.gitlab.com/ce/administration/lfs/index.html>`_ and `registry <https://docs.gitlab.com/ee/administration/packages/container_registry.html>`_, this configuration can be added in the ``gitlab`` section
    * It is possible to dedicate some nodes for running user environments.
 
    .. toctree::
@@ -108,7 +116,7 @@ Deploying RenkuLab
 1. (Optional) Certificates
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-If you chose to create a certificate manually instead of using LetsEncrypt or similar, you can create the TLS secret with the following command:
+If you chose to create a certificate manually instead of using LetsEncrypt or similar, you can create the corresponding TLS secret with the following command:
 
 .. code-block:: bash
 
@@ -127,12 +135,13 @@ Once all the pieces are in place, you can deploy Renku with the following comman
     $ helm repo add renku https://swissdatasciencecenter.github.io/helm-charts/
     $ helm upgrade --install renku renku/renku \
      --namespace renku \
-     --version <renku-version> \
      -f renku-values.yaml \
-     --timeout 1800
+     --timeout 1800s
 
 During deployment you can check the Renku pods being started.
+If deploying for the first time, GitLab and Keycloak take around 15 minutes to get started. It is normal to see other pods of components that depend on these to be in a `CrashLoopBackOff` state.
 
+Once all the pods are correctly running or completed, a `GitLab Runner <prerequisites/gitlabrunner>`_ can be configured.
 
 3. Verifying RenkuLab deployment
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -144,9 +153,10 @@ Check list:
   * RenkuLab pods should not show errors.
   * Perform a quick check:
     #. go to your RenkuLab instance domain
-    #. login with a valid user (you can register a new one)
-    #. create a project
-    #. launch a notebook
+    #. login with a valid user, you can register a new one (this will verify various authentication steps)
+    #. create a project (this will verify further authentication, templates and GitLab runner)
+    #. add a dataset (this will verify the core backend, LFS objects, and Knowledge Graph components work)
+    #. launch an environment (this will verify the notebooks component and GitLab image registry)
   * You should be now able to follow "First steps"
 
 If some Renku pods are not starting or present some errors please check the troubleshooting page.
@@ -156,15 +166,15 @@ If some Renku pods are not starting or present some errors please check the trou
 
    Troublesooting a Renku deployment <troubleshooting>
 
-**Note**. For deployments with stand-alone GitLab and/or Keycloak, the post-install jobs need to be deleted manually in order for the Helm deployment succeeds.
+**Note**. For deployments with existing GitLab and/or Keycloak, the post-install jobs need to be deleted manually in order for the Helm deployment to succeed.
 
 4. Post deployment configurations
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 After Renku has been deployed you can make some post deployment configurations.
 
-Not stand-alone GitLab
-^^^^^^^^^^^^^^^^^^^^^^^
+GitLab deployed as part of Renku
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 If your RenkuLab deployment includes GitLab you need to follow some additional steps to configure a user admin on GitLab.
 
@@ -173,7 +183,7 @@ If your RenkuLab deployment includes GitLab you need to follow some additional s
 #. modify any users you want to modify (e.g. to make them admin)
 #. turn the ``autoSignIn`` setting back on
 
-Stand-alone GitLab as identity provider
+Independent GitLab as identity provider
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 If the RenkuLab deployment is using an existing GitLab, this application could be configured as an identity provider for RenkuLab's keycloak. This way all of the users from the existing GitLab instance could authenticate.
@@ -196,4 +206,4 @@ Following, you can upgrade Renku via Helm.
      --namespace renku \
      --version <renku-version> \
      -f renku-values.yaml \
-     --timeout 1800
+     --timeout 1800s

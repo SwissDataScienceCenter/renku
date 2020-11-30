@@ -27,9 +27,11 @@ For more information, please check `LetsEncrypt cert-manager Helm documentation 
 Generate manually
 --------------------
 
-You can also use a self-signed certificate created manually.
-Add the previously created certificate as a secret to the ``renku`` namespace.
+You can also use an SSL certificate issued by a certificate authority.
+Add the mentioned certificate as a secret to the ``renku`` namespace.
 
 .. code-block:: console
 
   $ kubectl -n renku create secret tls renku-tls --cert=certificate.crt --key=certificate.key
+
+If GitLab is deployed as part of Renku you also need a certificate for the registry, this can be included in the ``.crt`` file.

@@ -3,7 +3,7 @@
 DNS
 ====
 
-Renku needs a DNS.
+Renku requires a DNS domain.
 
 Get a domain name from a registrar.
 Create an `A` record pointing to the load balancer and, optionally, a wildcard `CNAME`:
