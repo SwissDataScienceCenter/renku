@@ -79,7 +79,13 @@ Basic configuration
 The basic Helm configuration file is in the Renku repository: `Renku values file <https://github.com/SwissDataScienceCenter/renku/blob/master/charts/renku/values.yaml>`_
 
 You can use the `make-values.sh <https://github.com/SwissDataScienceCenter/renku/blob/master/charts/example-configurations/make-values.sh>`_ script to generate automatically a minimal Renku values file. You need to provide your DNS and (optionally) your Gitlab URL, application ID and secret.
-This script needs the `minimal-values.tmpl <https://github.com/SwissDataScienceCenter/renku/blob/master/charts/example-configurations/minimal-values.tmpl>`_ file
+This script needs bash >=4.0 and openssl installed and the `minimal-values.tmpl <https://github.com/SwissDataScienceCenter/renku/blob/master/charts/example-configurations/minimal-values.tmpl>`_ file
+
+For MacOS:
+.. code-block:: bash
+
+  $ brew install bash
+  $ brew install openssl
 
 .. code-block:: bash
 
