@@ -109,7 +109,7 @@ class RenkuRequirement(object):
     def setup(self):
         """Checkout the repo and run chartpress."""
         self.clone()
-        self.chartpress(skip_build=True)
+        self.chartpress()
 
 
 def configure_requirements(tempdir, reqs, component_versions):
@@ -139,8 +139,14 @@ if __name__ == "__main__":
 
     parser = ArgumentParser()
     for component in components:
-        parser.add_argument(f"--{component}", help=f"Version or ref for {component}")
-    parser.add_argument("--renku", help="Main chart ref")
+        parser.add_argument(
+            f"--{component}",
+            help=f"Version or ref for {component}",
+            default=os.environ.get(component.replace("-", "_")),
+        )
+    parser.add_argument(
+        "--renku", help="Main chart ref", default=os.environ.get("RENKU")
+    )
     parser.add_argument(
         "--values-file",
         help="Value file path",
@@ -188,7 +194,7 @@ if __name__ == "__main__":
         yaml.dump(reqs, f)
 
     ## 3. run helm dep update renku
-    check_call(["helm3", "dep", "update", "renku"], cwd=renku_dir / "charts")
+    check_call(["helm", "dep", "update", "renku"], cwd=renku_dir / "charts")
 
     ## 4. deploy
     values_file = args.values_file
@@ -200,7 +206,7 @@ if __name__ == "__main__":
 
     check_call(
         [
-            "helm3",
+            "helm",
             "upgrade",
             "--install",
             release,

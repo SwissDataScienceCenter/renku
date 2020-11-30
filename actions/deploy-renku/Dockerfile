@@ -7,4 +7,4 @@ RUN apk add python3 docker && \
     pip3 install -U pip chartpress==0.3.2
 
 COPY deploy_dev_renku.py /
-CMD [ "python3 /deploy_dev_renku.py" ]
+CMD ["python3", "/deploy_dev_renku.py"]
