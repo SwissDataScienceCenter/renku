@@ -1,0 +1,11 @@
+name: test renku deploy
+
+on: [push]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: renku build and deploy
+      uses: ./actions/deploy-renku
