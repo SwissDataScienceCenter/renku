@@ -5,6 +5,7 @@
 ---
 domain_configurations:
   mainURL:                   &mainURL                       [domain]
+  baseURL:                   &baseURL                       https://[domain]
   jupyterhubURL:             &jupyterhubURL                 https://[domain]/jupyterhub
   gatewayURL:                &gatewayURL                    https://[domain]/api
   jupyterhubAuthCallbackUrl: &jupyterhub_gitlab_callbackUrl https://[domain]/jupyterhub/hub/oauth_callback
@@ -12,7 +13,7 @@ domain_configurations:
   ingressTLS:                &ingressTLS                    [ingress-tls]
 
   gitlabURL:                 &gitlabURL                     https://[gitlab-domain]
-  gitlabPrefix:              &gitlabURLPrefix               [gitlab-prefix]           ## /gitlab if part of Renku, / otherwise
+  gitlabPrefix:              &gitlabPrefix                  [gitlab-prefix]           ## /gitlab if part of Renku, / otherwise
   gitlabClientId:            &gitlabClientId                [gitlab-application-clientID]
   gitlabClientSecret:        &gitlabClientSecret            [gitlab-application-secret]
 
@@ -86,7 +87,7 @@ gitlab:
   ## Spawn a gitlab instance
   enabled: [gitlab-enabled]
   ## Password for the `root` user
-  password: gitlabadmin
+  password:  [random]        ## openssl rand -hex 32
 
   ## automatically log in to gitlab
   oauth:
@@ -95,6 +96,13 @@ gitlab:
   ## Registration token for gitlab runners (initial value, can be regenerated from gitlab admin ui)
   ## Generated using: `openssl rand -hex 32`
   sharedRunnersRegistrationToken:  [random]        ## openssl rand -hex 32
+  ssh:
+    externalPort: 22
+    nodePortService:
+      enabled: true
+      nodePort: 32022
+# persistence:
+#   existingClaim: renku-gitlab
 
   ## Set to true to make the user 'demo' a GitLab admin
   demoUserIsAdmin: true
@@ -123,17 +131,25 @@ gitlab:
       #     'path_style' => true
       #   }
 
-  ssh:
-    externalPort: 22
-    nodePortService:
-      enabled: true
-      nodePort: 32022
   registry:
     ## Set to true to enable Gitlab registry
     enabled: true
     ## The URL to access the registry
     externalUrl: *registryURL
     backendHealthcheck: false
+    ## Registry storage configuration. Used to store registry docker images externally
+    # storage: |-
+    #   {
+    #     'swift' => {
+    #       'authurl' => '',
+    #       'username' => '',
+    #       'password' => '',
+    #       'region' => '',
+    #       'container' => 'registry',
+    #       'tenantid' => '',
+    #       'domain' => 'Default'
+    #     }
+    #   }
     exposedAs: Ingress
     ingress:
       annotations:
@@ -146,16 +162,28 @@ gitlab:
         - *registryName
         secretName: *registry_tls
 
+postgresql:
+  postgresqlPassword:   [random]        ## openssl rand -hex 32
+#  persistence:
+#    existingClaim: renku-postgresql
+
 ## Configuration for the UI service
 ui:
   #  welcomePage:
   #    text: "## Some markdown text here!"
   gatewayUrl: *gatewayURL
+  baseUrl: *baseURL
+  gitlabUrl: *gitlabURL
   jupyterhubUrl: *jupyterhubURL
+#  welcomePage:
+#    text: |
+#      Fill-in what will go in the welcome page of your Renkulab deployment
 
 ## Configuration for the notebooks service
 notebooks:
   gitlab:
+    ## specify the GitLab instance URL
+    url: *gitlabURL
     registry:
       host: *registryName
   jupyterhub:
@@ -167,6 +195,7 @@ notebooks:
       ## users are logged out whenever the hub pod is recreated!
       ## See https://zero-to-jupyterhub.readthedocs.io/en/latest/reference/reference.html#hub-cookiesecret
       cookieSecret:  [random]        ## openssl rand -hex 32
+      baseUrl: '/jupyterhub/'
       db:
         type: postgres
         url: postgres+psycopg2://jupyterhub@renku-postgresql:5432/jupyterhub
@@ -216,11 +245,11 @@ gateway:
   secretKey: &gateway_secretKey   [random]        ## openssl rand -hex 32
   jupyterhub:
     clientId: *gatewayClient
-    clientSecret: *nb_jupyterhub_hub_services_gateway_apiToken
+    clientSecret: [random]        ## openssl rand -hex 32
   graph:
     sparql:
       username: renku
-      password: *sparql_password
+      password: &sparql_password [random]        ## openssl rand -hex 32
 
 ## Configuration for renku-graph
 graph:
@@ -230,7 +259,9 @@ graph:
       admin:
         password:   [random]        ## openssl rand -hex 32
       renku:
-        password: &sparql_password [random]        ## openssl rand -hex 32
+        password: *sparql_password
+#    persistence:
+#      existingClaim: renku-jena
   gitlab:
     url: *gitlabURL
 
@@ -244,4 +275,3 @@ graph:
     ## Generated using: `openssl rand -hex 8|base64`
     hookToken:
       secret:  [randombase64]  ## openssl rand -hex 8|base64
-
