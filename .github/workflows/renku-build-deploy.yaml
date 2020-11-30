@@ -10,4 +10,12 @@ jobs:
     - name: renku build and deploy
       uses: ./actions/deploy-renku
       env:
+        DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+        DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+        RENKU_NAMESPACE: rok
+        RENKU_RELEASE: rok-renku
+        RENKU_VALUES_FILE: "${{ github.workspace }}/values.yaml"
+        RENKUBOT_KUBECONFIG: ${{ secrets.RENKUBOT_KUBECONFIG }}
+        RENKU_VALUES: ${{ secrets.ROK_RENKU_VALUES }}
+        KUBECONFIG: "${{ github.workspace }}/renkubot-kube.config"
         renku_core: "@v0.11.0"
