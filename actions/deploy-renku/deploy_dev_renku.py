@@ -217,6 +217,8 @@ if __name__ == "__main__":
             values_file,
             "--namespace",
             namespace,
+            "--timeout",
+            "20m"
         ],
         cwd=renku_dir / "charts",
     )
