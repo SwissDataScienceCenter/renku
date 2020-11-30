@@ -1,5 +1,28 @@
 .. _changelog:
 
+0.7.2
+-----
+
+This release brings several smaller improvements and bug-fixes, the most
+notable of which are:
+
+New features
+~~~~~~~~~~~~
+- **Datasets** Add new fields and the possibility to edit existing fields to
+  the web UI.
+- **Knowledge Graph** Improve information flow related to KG integration and
+  Renku version updates in the UI.
+
+Fixes
+~~~~~
+
+- **Project creation**: improve name validation, the handling of non ASCII
+  characters and a bug which led to failures when fetching the available templates.
+- **Graph processing**: fix a bug in prioritizing events for processing.
+
+For details check out the individual component updates.
+
+
 0.7.1
 -----
 
