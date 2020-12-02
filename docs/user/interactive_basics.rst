@@ -43,11 +43,12 @@ What's in my Interactive Environment?
 
 * Any dependencies you specified via conda (``environment.yml``), using
   language-specific dependency-management facilities (``requirements.txt``,
-  ``install.R``, etc.) or installed in the ``Dockerfile``.
+  ``install.R``, etc.) or installed in the ``Dockerfile``. An exception to
+  this is if :ref:`project sets a specific image <renku_ini>`.
 
 * The renku command-line interface renku-python_.
 
-* The amount of CPUs, memory, and (possibly) GPUs that you configured before launch
+* The amount of CPUs, memory, and (possibly) GPUs that you configured before launch.
 
 For adding or changing software installed into your project's interactive environment,
 check out :ref:`customizing`

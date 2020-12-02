@@ -73,8 +73,9 @@ anymore. The benefit is particularly evident when building a new image takes a l
 (e.g. you added big packages) or when you expect the project to be used by a lot of people
 over a short period of time (e.g. you use it in a presentation or a lecture).
 
-Even if it's common to start the environment with the default values, setting a default value
-doesn't prevent a user from changing it.
+Even if it's common to start the environment with the default values, keep in mind that users
+can still change most pre-selected settings before starting a new environment (apart from the
+image).
 
 .. note::
 
