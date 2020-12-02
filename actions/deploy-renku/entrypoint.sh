@@ -26,24 +26,26 @@ yq w -i values.yaml "gateway.gitlabClientSecret" "$APP_SECRET"
 yq w -i values.yaml "notebooks.jupyterhub.auth.gitlab.clientId" "$APP_ID"
 yq w -i values.yaml "notebooks.jupyterhub.auth.gitlab.clientSecret" "$APP_SECRET"
 
-# enable anonymous sessions
-yq w -i values.yaml "global.anoymousSessions.enabled" "true"
+# enable anonymous notebooks
+yq w -i values.yaml "global.anonymousSessions.enabled" "true"
 
-# # create the namespace in a Rancher project
+# create the namespace in a Rancher project
 curl -u "token-fxgsb:$RENKUBOT_RANCHER_APISECRET" \
         -X POST \
         -d "name=${RENKU_NAMESPACE}" \
-        -d "projectId=${CI_PROJECT_ID}" \
+        -d "projectId=${RANCHER_PROJECT_ID}" \
         'https://rancher.renku.ch/v3/cluster/c-l6jt4/namespaces'
 
 curl -u "token-fxgsb:$RENKUBOT_RANCHER_APISECRET" \
         -X POST \
         -d "name=${RENKU_TMP_NAMESPACE}" \
-        -d "projectId=${CI_PROJECT_ID}" \
+        -d "projectId=${RANCHER_PROJECT_ID}" \
         'https://rancher.renku.ch/v3/cluster/c-l6jt4/namespaces'
 
-# # deploy renku - reads config from environment variables
+# deploy renku - reads config from environment variables
 /deploy_dev_renku.py
 
-# # deploy anonymous notebook namespace
+# deploy anonymous notebooks
+helm repo add renku https://swissdatasciencecenter.github.io/helm-charts
+helm repo update
 charts/deploy-tmp-notebooks.py --release-name $RENKU_RELEASE --renku-namespace $RENKU_NAMESPACE

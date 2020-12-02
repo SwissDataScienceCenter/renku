@@ -146,7 +146,7 @@ if __name__ == "__main__":
             default=os.environ.get(component.replace("-", "_")),
         )
     parser.add_argument(
-        "--renku", help="Main chart ref", default=os.environ.get("RENKU")
+        "--renku", help="Main chart ref", default=os.environ.get("renku")
     )
     parser.add_argument(
         "--values-file",
