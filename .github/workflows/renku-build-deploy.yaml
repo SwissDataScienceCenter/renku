@@ -18,7 +18,7 @@ jobs:
         CI_PROJECT_ID: ${{ secrets.CI_PROJECT_ID }}
         DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
         DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
-        GITLAB_TOKEN: ${{ secrets.DEV_GITLAB_TOKEN }}
+        GITLAB_TOKEN: ${{ secrets.GITLAB_TOKEN }}
         KUBECONFIG: "${{ github.workspace }}/renkubot-kube.config"
         RENKU_NAMESPACE: ci-${{ github.event.number }}-renku
         RENKU_TMP_NAMESPACE: ci-${{ github.event.number }}-renku-tmp

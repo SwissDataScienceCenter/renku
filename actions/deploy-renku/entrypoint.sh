@@ -29,22 +29,21 @@ yq w -i values.yaml "notebooks.jupyterhub.auth.gitlab.clientSecret" "$APP_SECRET
 # enable anonymous sessions
 yq w -i values.yaml "global.anoymousSessions.enabled" "true"
 
-cat values.yaml
 # # create the namespace in a Rancher project
-# curl -u "token-fxgsb:$RENKUBOT_RANCHER_APISECRET" \
-#         -X POST \
-#         -d "name=${RENKU_NAMESPACE}" \
-#         -d "projectId=${CI_PROJECT_ID}" \
-#         'https://rancher.renku.ch/v3/cluster/c-l6jt4/namespaces'
+curl -u "token-fxgsb:$RENKUBOT_RANCHER_APISECRET" \
+        -X POST \
+        -d "name=${RENKU_NAMESPACE}" \
+        -d "projectId=${CI_PROJECT_ID}" \
+        'https://rancher.renku.ch/v3/cluster/c-l6jt4/namespaces'
 
-# curl -u "token-fxgsb:$RENKUBOT_RANCHER_APISECRET" \
-#         -X POST \
-#         -d "name=${RENKU_TMP_NAMESPACE}" \
-#         -d "projectId=${CI_PROJECT_ID}" \
-#         'https://rancher.renku.ch/v3/cluster/c-l6jt4/namespaces'
+curl -u "token-fxgsb:$RENKUBOT_RANCHER_APISECRET" \
+        -X POST \
+        -d "name=${RENKU_TMP_NAMESPACE}" \
+        -d "projectId=${CI_PROJECT_ID}" \
+        'https://rancher.renku.ch/v3/cluster/c-l6jt4/namespaces'
 
 # # deploy renku - reads config from environment variables
-# /deploy_dev_renku.py
+/deploy_dev_renku.py
 
 # # deploy anonymous notebook namespace
-# charts/deploy-tmp-notebooks.py --release-name $RENKU_RELEASE --renku-namespace $RENKU_NAMESPACE
+charts/deploy-tmp-notebooks.py --release-name $RENKU_RELEASE --renku-namespace $RENKU_NAMESPACE
