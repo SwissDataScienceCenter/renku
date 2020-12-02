@@ -1,21 +1,30 @@
 name: test renku deploy
 
-on: [push]
+on:
+  pull_request:
+    types:
+    - opened
+    - synchronize
+    - reopened
 
 jobs:
-  build:
+  deploy:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
     - name: renku build and deploy
       uses: ./actions/deploy-renku
       env:
-        DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+        CI_PROJECT_ID: ${{ secrets.CI_PROJECT_ID }}
         DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
-        RENKU_NAMESPACE: rok
-        RENKU_RELEASE: rok-renku
-        RENKU_VALUES_FILE: "${{ github.workspace }}/values.yaml"
-        RENKUBOT_KUBECONFIG: ${{ secrets.RENKUBOT_KUBECONFIG }}
-        RENKU_VALUES: ${{ secrets.ROK_RENKU_VALUES }}
+        DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+        GITLAB_TOKEN: ${{ secrets.DEV_GITLAB_TOKEN }}
         KUBECONFIG: "${{ github.workspace }}/renkubot-kube.config"
+        RENKU_NAMESPACE: ci-${{ github.event.number }}-renku
+        RENKU_TMP_NAMESPACE: ci-${{ github.event.number }}-renku-tmp
+        RENKU_RELEASE: ci-${{ github.event.number }}-renku
+        RENKU_VALUES_FILE: "${{ github.workspace }}/values.yaml"
+        RENKU_VALUES: ${{ secrets.CI_RENKU_VALUES }}
+        RENKUBOT_KUBECONFIG: ${{ secrets.RENKUBOT_KUBECONFIG }}
+        RENKUBOT_RANCHER_APISECRET: ${{ secrets.RENKUBOT_RANCHER_APISECRET }}
         renku_core: "@v0.11.0"

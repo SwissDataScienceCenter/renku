@@ -12,7 +12,6 @@
 import argparse
 import os
 import pprint
-import re
 import tempfile
 
 from pathlib import Path
@@ -184,7 +183,7 @@ if __name__ == "__main__":
         ]
     )
     if args.renku:
-        check_call(["git", "checkout", args.renku], cwd=renku_dir)
+        check_call(["git", "checkout", args.renku.strip("@")], cwd=renku_dir)
 
     with open(reqs_path) as f:
         reqs = yaml.load(f)
@@ -218,7 +217,7 @@ if __name__ == "__main__":
             "--namespace",
             namespace,
             "--timeout",
-            "20m"
+            "20m",
         ],
         cwd=renku_dir / "charts",
     )
