@@ -1,7 +1,5 @@
 #!/bin/sh
 
-set -ex
-
 # set up docker credentials
 echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin
 
@@ -45,9 +43,9 @@ curl -H "Authorization: Bearer $RENKUBOT_RANCHER_BEARER_TOKEN" \
         'https://rancher.renku.ch/v3/cluster/c-l6jt4/namespaces'
 
 # deploy renku - reads config from environment variables
-python3 /deploy_dev_renku.py
+python3 /deploy-dev-renku.py
 
 # deploy anonymous notebooks
 helm repo add renku https://swissdatasciencecenter.github.io/helm-charts
 helm repo update
-charts/deploy-tmp-notebooks.py --release-name $RENKU_RELEASE --renku-namespace $RENKU_NAMESPACE
+python3 /deploy-tmp-notebooks.py --release-name $RENKU_RELEASE --renku-namespace $RENKU_NAMESPACE
