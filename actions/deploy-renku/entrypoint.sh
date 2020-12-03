@@ -1,5 +1,7 @@
 #!/bin/sh
 
+set -ex
+
 # set up docker credentials
 echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin
 
@@ -30,13 +32,13 @@ yq w -i values.yaml "notebooks.jupyterhub.auth.gitlab.clientSecret" "$APP_SECRET
 yq w -i values.yaml "global.anonymousSessions.enabled" "true"
 
 # create the namespace in a Rancher project
-curl -u "token-fxgsb:$RENKUBOT_RANCHER_APISECRET" \
+curl -H "Authorization: Bearer $RENKUBOT_RANCHER_BEARER_TOKEN" \
         -X POST \
         -d "name=${RENKU_NAMESPACE}" \
         -d "projectId=${RANCHER_PROJECT_ID}" \
         'https://rancher.renku.ch/v3/cluster/c-l6jt4/namespaces'
 
-curl -u "token-fxgsb:$RENKUBOT_RANCHER_APISECRET" \
+curl -H "Authorization: Bearer $RENKUBOT_RANCHER_BEARER_TOKEN" \
         -X POST \
         -d "name=${RENKU_TMP_NAMESPACE}" \
         -d "projectId=${RANCHER_PROJECT_ID}" \
