@@ -55,18 +55,18 @@ jobs:
     - name: renku build and deploy
       uses: ./actions/deploy-renku
       env:
-        RANCHER_PROJECT_ID: ${{ secrets.CI_PROJECT_ID }}
-        DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
-        DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
-        GITLAB_TOKEN: ${{ secrets.GITLAB_TOKEN }}
+        RANCHER_PROJECT_ID: ${{ secrets.CI_RANCHER_PROJECT }}
+        DOCKER_PASSWORD: ${{ secrets.RENKU_DOCKER_PASSWORD }}
+        DOCKER_USERNAME: ${{ secrets.RENKU_DOCKER_USERNAME }}
+        GITLAB_TOKEN: ${{ secrets.DEV_GITLAB_TOKEN }}
         KUBECONFIG: "${{ github.workspace }}/renkubot-kube.config"
         RENKU_NAMESPACE: ci-${{ github.event.number }}-renku
         RENKU_TMP_NAMESPACE: ci-${{ github.event.number }}-renku-tmp
         RENKU_RELEASE: ci-${{ github.event.number }}-renku
         RENKU_VALUES_FILE: "${{ github.workspace }}/values.yaml"
         RENKU_VALUES: ${{ secrets.CI_RENKU_VALUES }}
-        RENKUBOT_KUBECONFIG: ${{ secrets.RENKUBOT_KUBECONFIG }}
-        RENKUBOT_RANCHER_APISECRET: ${{ secrets.RENKUBOT_RANCHER_APISECRET }}
+        RENKUBOT_KUBECONFIG: ${{ secrets.RENKUBOT_DEV_KUBECONFIG }}
+        RENKUBOT_RANCHER_BEARER_TOKEN: ${{ secrets.RENKUBOT_RANCHER_BEARER_TOKEN }}
         renku: "@${{ github.head_ref }}"
   test-pr:
     runs-on: ubuntu-latest
