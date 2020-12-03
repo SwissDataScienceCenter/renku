@@ -43,7 +43,7 @@ curl -u "token-fxgsb:$RENKUBOT_RANCHER_APISECRET" \
         'https://rancher.renku.ch/v3/cluster/c-l6jt4/namespaces'
 
 # deploy renku - reads config from environment variables
-/deploy_dev_renku.py
+python3 /deploy_dev_renku.py
 
 # deploy anonymous notebooks
 helm repo add renku https://swissdatasciencecenter.github.io/helm-charts
