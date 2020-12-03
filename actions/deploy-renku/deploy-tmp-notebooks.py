@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 
+
 import argparse
 import os
 import random
@@ -7,6 +8,8 @@ import re
 import secrets
 import subprocess
 import sys
+
+from pathlib import Path
 
 import kubernetes as k8s
 import ruamel.yaml
@@ -196,7 +199,7 @@ def check_notebooks_chart_version():
 def main():
     """Script that will handle all necessary parts to for creating a secondary
     renku notebooks deployment from a primary Renku deployment which has anonymous
-    sessions enabled. """
+    sessions enabled."""
 
     argparser = argparse.ArgumentParser(description=main.__doc__)
     argparser.add_argument(
@@ -235,6 +238,12 @@ These values will override the ones automatically derived from primary Renku dep
         action="store_false",
         help="Only display the helm command for deployment, do not execute it.",
     )
+    argparser.add_argument(
+        "--notebooks-version",
+        help="Provide an explicit version for renku-notebooks.",
+        default=None,
+    )
+
     argparser.set_defaults(cleanup=True, deploy=True)
     args = argparser.parse_args()
 
@@ -250,7 +259,7 @@ These values will override the ones automatically derived from primary Renku dep
         kube_context = k8s.config.list_kube_config_contexts()[1]["name"]
 
     # Get the chart version from the renku requirements.yaml
-    renku_notebooks_version = check_notebooks_chart_version()
+    renku_notebooks_version = args.notebooks_version or check_notebooks_chart_version()
     sys.stdout.write(f"Found renku-notebooks version {renku_notebooks_version}\n")
 
     # Get an k8s api client from the specified local context

@@ -30,13 +30,13 @@ yq w -i values.yaml "notebooks.jupyterhub.auth.gitlab.clientSecret" "$APP_SECRET
 yq w -i values.yaml "global.anonymousSessions.enabled" "true"
 
 # create the namespace in a Rancher project
-curl -H "Authorization: Bearer $RENKUBOT_RANCHER_BEARER_TOKEN" \
+curl -s -H "Authorization: Bearer $RENKUBOT_RANCHER_BEARER_TOKEN" \
         -X POST \
         -d "name=${RENKU_NAMESPACE}" \
         -d "projectId=${RANCHER_PROJECT_ID}" \
         'https://rancher.renku.ch/v3/cluster/c-l6jt4/namespaces'
 
-curl -H "Authorization: Bearer $RENKUBOT_RANCHER_BEARER_TOKEN" \
+curl -s -H "Authorization: Bearer $RENKUBOT_RANCHER_BEARER_TOKEN" \
         -X POST \
         -d "name=${RENKU_TMP_NAMESPACE}" \
         -d "projectId=${RANCHER_PROJECT_ID}" \
@@ -48,4 +48,7 @@ python3 /deploy-dev-renku.py
 # deploy anonymous notebooks
 helm repo add renku https://swissdatasciencecenter.github.io/helm-charts
 helm repo update
-python3 /deploy-tmp-notebooks.py --release-name $RENKU_RELEASE --renku-namespace $RENKU_NAMESPACE
+
+# fetch the deployed renku-notebooks version
+NOTEBOOKS_VERSION=$(kubectl -n "$RENKU_NAMESPACE" get configmaps notebook-helper-scripts -ojson | jq -r ".metadata.labels.chart")
+python3 /deploy-tmp-notebooks.py --release-name $RENKU_RELEASE --renku-namespace $RENKU_NAMESPACE --notebooks-version ${NOTEBOOKS_VERSION:10}
