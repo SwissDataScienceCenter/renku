@@ -1,51 +1,58 @@
+{{ if .Values.tests.enabled -}}
 apiVersion: v1
 kind: Pod
 metadata:
-  name: "{{ .Release.Name }}-test"
+  name: '{{ .Release.Name }}-acceptance-tests'
   annotations:
-    "helm.sh/hook": test-success
+    "helm.sh/hook": test
 spec:
-  initContainers:
-  - name: renku-demo
-    image: renku/renku-demo:0.3.0
-    env:
-      - name: GITLAB_URL
-        value: {{ template "http" . }}://{{ .Values.global.renku.domain }}{{ .Values.global.gitlab.urlPrefix }}
-      - name: KEYCLOAK_ADMIN_PASSWORD
-        valueFrom:
-          secretKeyRef:
-            name: {{ template "renku.fullname" . }}-keycloak-password
-            key: keycloak-password
-      - name: KEYCLOAK_ADMIN_USER
-        value: {{ .Values.keycloak.keycloak.username }}
-      - name: KEYCLOAK_URL
-        value: {{ template "http" . }}://{{ .Values.global.renku.domain }}
-    volumeMounts:
-      {{- if .Values.tests.users_json }}
-      - name: demo-users
-        readOnly: true
-        mountPath: /app/users.json
-        subPath: users.json
-      {{- end }}
-  containers:
-  - name: {{ .Release.Name }}-test
-    image: "{{ .Values.tests.image.repository }}:{{ .Values.tests.image.tag }}"
-    env:
-      - name: RENKU_ENDPOINT
-        value: {{ template "http" . }}://{{ .Values.global.renku.domain }}
-    lifecycle:
-      preStop:
-        exec:
-          command: ["/tests/demo-cleanup.sh"]
-    volumeMounts:
-      {{- if .Values.tests.users_json }}
-      - name: demo-users
-        readOnly: true
-        mountPath: /tests/users.json
-        subPath: users.json
-      {{- end }}
-  restartPolicy: Never
   volumes:
-    - name: demo-users
-      secret:
-        secretName: {{ template "renku.fullname" . }}-users
+  - name: dshm
+    emptyDir:
+      medium: Memory
+  restartPolicy: Never
+  containers:
+  - name: sbt
+    image: {{ .Values.tests.image.repository }}:{{ .Values.tests.image.tag }}
+    env:
+      - name: RENKU_TEST_URL
+        value: '{{ template "http" . }}://{{ .Values.global.renku.domain }}'
+      - name: RENKU_TEST_EMAIL
+        value: '{{ .Values.tests.parameters.email }}'
+      - name: RENKU_TEST_USERNAME
+        value: '{{ .Values.tests.parameters.username }}'
+      - name: RENKU_TEST_FULL_NAME
+        value: '{{ .Values.tests.parameters.fullname }}'
+      - name: RENKU_TEST_PASSWORD
+        value: '{{ .Values.tests.parameters.password }}'
+      - name: RENKU_TEST_PROVIDER
+        value: '{{ .Values.tests.parameters.provider }}'
+      - name: RENKU_TEST_REGISTER
+        value: '{{ .Values.tests.parameters.testRegister | default "true" }}'
+      - name: RENKU_TEST_DOCS_RUN
+        value: '{{ .Values.tests.parameters.docsRun | default "" }}'
+      - name: RENKU_TEST_EXTANT_PROJECT
+        value: '{{ .Values.tests.parameters.extantProject | default "" }}'
+      - name: RENKU_TEST_ANON_PROJECT
+        value: '{{ .Values.tests.parameters.anonProject | default "" }}'
+      - name: RENKU_TEST_ANON_AVAILABLE
+        value: '{{ .Values.tests.parameters.anonAvailable | default "false" }}'
+      - name: RENKU_TEST_BATCH_REMOVE
+        value: '{{ .Values.tests.parameters.batchRemove | default "false"}}'
+      - name: RENKU_TEST_REMOVE_PATTERN
+        value: '{{ .Values.tests.parameters.removePattern | default "" }}'
+    volumeMounts:
+      - mountPath: /dev/shm
+        name: dshm
+    {{ if .Values.tests.parameters.testTarget -}}
+    args:
+      - '{{ .Values.tests.parameters.testTarget }}'
+    {{ end }}
+    resources:
+      requests:
+        memory: "4G"
+        cpu: "2"
+      limits:
+        memory: "4G"
+        cpu: "2"
+{{- end }}

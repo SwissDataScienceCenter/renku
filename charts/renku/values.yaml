@@ -134,6 +134,10 @@ keycloak:
       repository: renku/init-realm
       tag: 'latest'
 
+  ## Skip Keycloak testing when running Helm test
+  test:
+    enabled: false
+
   keycloak:
 
     ## Keycloak admin user configuration
@@ -589,22 +593,25 @@ notebooks:
     #     enabled: true
 
 tests:
+  enabled: false
   image:
     repository: renku/tests
     tag: 'latest'
-  ## User accounts for running `helm test`
-  ## Replace passwords with random strings in a production setup
-  #users_json:
-  #  - username: bwayne
-  #    firstName: Bruce
-  #    lastName: Wayne
-  #    email: bwayne@example.com
-  #    password: IamBatman
-  #  - username: ckent
-  #    firstName: Clark
-  #    lastName: Kent
-  #    email: ckent@example.com
-  #    password: IamSuperman
+  ## User account for running `helm test`
+  #parameters:
+  #  email: bwayne@example.com
+  #  username: bwayne
+  #  fullname: Bruce Wayne
+  #  password: IamBatman
+  #  provider:
+  #  testRegister: true
+  #  docsRun:
+  #  extantProject:
+  #  anonProject:
+  #  anonAvailable: false
+  #  batchRemove: false
+  #  removePattern:
+  #  testTarget:
 
 ## Configuration for the Gateway service
 gateway:
