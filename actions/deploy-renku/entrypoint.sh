@@ -51,4 +51,7 @@ helm repo update
 
 # fetch the deployed renku-notebooks version
 NOTEBOOKS_VERSION=$(kubectl -n "$RENKU_NAMESPACE" get configmaps notebook-helper-scripts -ojson | jq -r ".metadata.labels.chart")
-python3 /deploy-tmp-notebooks.py --release-name $RENKU_RELEASE --renku-namespace $RENKU_NAMESPACE --notebooks-version ${NOTEBOOKS_VERSION:10}
+python3 /deploy-tmp-notebooks.py --release-name "$RENKU_RELEASE" \
+                                 --renku-namespace "$RENKU_NAMESPACE" \
+                                 --tmp-namespace "$RENKU_TMP_NAMESPACE" \
+                                 --notebooks-version "${NOTEBOOKS_VERSION:10}"
