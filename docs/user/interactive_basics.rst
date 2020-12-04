@@ -15,40 +15,40 @@ of code before combining everything into a (reproducible) workflow.
 You can run JupyterLab or RStudio within a project independently from RenkuLab,
 but RenkuLab offers the following advantages:
 
-* environments hosted in the cloud with a configurable amount of resources
-  (memory, CPU, and sometimes GPU)
+* Environments hosted in the cloud with a configurable amount of resources
+  (memory, CPU, and sometimes GPU).
 
-* environments are defined using Docker, so they can be shared and reproducibly
-  re-created
+* Environments are defined using Docker, so they can be shared and reproducibly re-created.
 
-* auto-saving of work back to RenkuLab, so you can recover in the event of a
-  crash
+* Auto-saving of work back to RenkuLab, so you can recover when your environment is shut down
+  (this happens automatically after 24 hours of inactivity).
 
-* a git client pre-configured with your credentials to easily push your changes
-  back to the server
+* A git client pre-configured with your credentials to easily push your changes
+  back to the server.
 
-* the functionality provided by the renku-python_ command-line interface (CLI)
-  is automatically available
+* The functionality provided by the renku-python_ command-line interface (CLI)
+  is automatically available.
 
 
 What's in my Interactive Environment?
 -------------------------------------
 
-* your project, which is cloned into the environment on startup
+* Your project, which is cloned into the environment on startup.
 
-* your data (if the option ``Automatically fetch LFS data`` is selected)
-  files that are stored in git LFS*)
+* Your data files (if the option ``Automatically fetch LFS data`` is selected)
+  that are stored in git LFS*.
 
-* all the software required to launch the environment and common tools for
-  working with code (``git``, ``git LFS``, ``vim``, etc.)
+* All the software required to launch the environment and common tools for
+  working with code (``git``, ``git LFS``, ``vim``, etc.).
 
-* any dependencies you specified via conda (requirements.txt), using
+* Any dependencies you specified via conda (``environment.yml``), using
   language-specific dependency-management facilities (``requirements.txt``,
-  ``install.R``, etc.) or installed in the ``Dockerfile``
+  ``install.R``, etc.) or installed in the ``Dockerfile``. An exception to
+  this is if :ref:`project sets a specific image <renku_ini>`.
 
-* the renku command-line interface renku-python_.
+* The renku command-line interface renku-python_.
 
-* the amount of CPUs, memory, and (possibly) GPUs that you configured before launch
+* The amount of CPUs, memory, and (possibly) GPUs that you configured before launch.
 
 For adding or changing software installed into your project's interactive environment,
 check out :ref:`customizing`
@@ -78,32 +78,35 @@ configuration options.
 +------------------------------+-------------------------------------------------------------------------------------------+
 | Option                       | Description                                                                               |
 +==============================+===========================================================================================+
-| branch                       | default master, but if you're doing work on another branch, switch!                       |
+| Branch                       | Default is ``master``. You can switch if you are working on another branch                |
 +------------------------------+-------------------------------------------------------------------------------------------+
-| commit                       | default latest, but you can launch the environment from an earlier commit;                |
-|                              |                                                                                           |
-|                              | also useful if your latest commit's build failed (see below).                             |
+| Commit                       | Default is the latest, but you can launch the environment from an earlier commit. This is |
+|                              | especially useful if your latest commit's build failed (see below) or you have unsaved    |
+|                              | work that was automatically recovered.                                                    |
 +------------------------------+-------------------------------------------------------------------------------------------+
-| environment                  | ``lab``: JupyterLab; ``rstudio``: RStudio; if you're using a python template,             |
-|                              |                                                                                           |
-|                              | the ``rstudio`` endpoint will not work.                                                   |
+| Default Image                | This provides information about the Docker image used by the Interactive Environment.     |
+|                              | When it fails, you can try to rebuild it, or you can check the GitLab job logs.           |
+|                              | An image can also be pinned so that new commits will not require a new image              |
+|                              | each time.                                                                                |
 +------------------------------+-------------------------------------------------------------------------------------------+
-| # CPUs                       | the number of CPUs available; resources are shared, so please select the lowest amount    |
-|                              | that will work for your use case.                                                         |
+| Default environment          | Default is ``/lab``, it loads the JupyterLab interface. If you are working with ``R``,    |
+|                              | you may want to use ``/rstudio`` for RStudio. Mind that the corresponding packages need   |
+|                              | to be installed in the image. If you're using a python template, the ``rstudio`` endpoint |
+|                              | will not work.                                                                            |
 +------------------------------+-------------------------------------------------------------------------------------------+
-| memory                       | the amount of RAM available; resources are shared, so please select the lowest amount     |
-|                              | that will work for your use case.                                                         |
+| Number of CPUs               | The number of CPUs available, or the quota. Resources are shared, so please select the    |
+|                              | lowest amount that will work for your use case. Usually, the default value works well.    |
 +------------------------------+-------------------------------------------------------------------------------------------+
-| # GPUs                       | the number of GPUs available; You might have to wait for GPUs to free up in               |
-|                              |                                                                                           |
-|                              | order to be able to launch an environment.                                                |
+| Amount of Memory             | The amount of RAM available. Resources are shared, so please select the lowest amount     |
+|                              | that will work for your use case. Usually, the default value works well.                  |
 +------------------------------+-------------------------------------------------------------------------------------------+
-| Automatically fetch LFS data | Leave off by default. If you find that workflows                                          |
-|                              | you used to be able to run have stopped working,                                          |
-|                              | check the contents of the file(s) -- if plain text and contains                           |
-|                              | strings that are not your data, run ``renku storage pull <filepath>``                     |
-|                              | to get the relevant files, or ``git lfs pull`` to get all of the                          |
-|                              | files at once.                                                                            |
+| Number of GPUs               | The number of GPUs available. If you can't select any number, no GPUs are available in    |
+|                              | RenkuLab deployment you are using. If you request any, you might need to wait for GPUs    |
+|                              | to free up in order to be able to launch an environment.                                  |
++------------------------------+-------------------------------------------------------------------------------------------+
+| Automatically fetch LFS data | Default is off. All the lfs data will be automatically fetched in if turned on. This is   |
+|                              | convenient, but it may considerably slow down the start time if the project contains a    |
+|                              | lot of data. Refer to :ref:`Data in Renku <data>` for further information                 |
 +------------------------------+-------------------------------------------------------------------------------------------+
 
 
@@ -111,21 +114,23 @@ What if the Docker image is not available?
 ------------------------------------------
 
 Interactive environments are backed by Docker images. When launching a new
-interactive environment a container is created from the image that matches the
+interactive environment, a container is created from the image that matches the
 selected ``branch`` and ``commit``.
 
 A GitLab's CI/CD pipeline automatically builds a new image using the project's
 ``Dockerfile`` when any of the following happens:
 
-  * creating of a project
-  * forking a project (in which the new build happens for the fork)
-  * pushing changes to the project
+  * Creating of a project.
+  * Forking a project (in which the new build happens for the fork).
+  * Pushing changes to the project.
 
-(This is defined in the project's ``.gitlab-ci.yml`` file.)
+The pipeline is defined in the project's :ref:`.gitlab-ci.yml file <gitlab_ci_yml>`. If the
+project :ref:`references a specific image <renku_ini>` to use for all environments, the UI
+will not check for the image availability - that is usually provided by the project's
+maintainer and it doesn't change at every new commit.
 
-It can sometimes take some time to build an image for various reasons, but if
-you've just created the project on RenkuLab from one of the templates it should
-take less than  a minute.
+It may take a long time to build an image for various reasons, but if you've just created the
+project on RenkuLab from one of the templates, it generally takes less than a minute or two.
 
 
 The Docker image is still building
@@ -144,31 +149,34 @@ The Docker image build failed
 If this happens, it's best to click the link to view the logs on GitLab so you
 can see what happened. Here are some common reasons for build failure:
 
-* Software installation failure
+Software installation failure
+*****************************
 
-**problem** You added a new software library to ``requirements.txt``, ``environment.yml``,
+**Problem:** You added a new software library to ``requirements.txt``, ``environment.yml``,
 or ``install.R``, but something was wrong with the installation (e.g. typo in
 the name, extra dependencies required for the library but unavailable).
 
-**how to fix this**
+**How to fix this:**
 You can use the GitLab editor or clone your project locally to fix the installation,
 possibly by adding the extra dependencies it asks for into the ``Dockerfile``
 (the commented out section in the file explains how to do this). As an alternative,
 you can start an interactive environment from an earlier commit.
 
-**how to avoid this** First try installing into your running interactive environment,
+**How to avoid this:** First try installing into your running interactive environment,
 e.g. by running ``pip install -r requirements.txt`` in the terminal on JupyterLab.
 You might not have needed to install extra dependencies when installing on your
 local machine, but the operating system (OS) defined in the ``Dockerfile`` has
 minimal dependencies to keep it lightweight.
 
-* The build timed out
+The build timed out
+*******************
 
 By default, image builds are configured to time out after an hour. If your build
 takes longer than that, you might want to check out the section on :ref:`customizing`
 interactive environments before increasing the timeout.
 
-* Your project could not be cloned
+Your project could not be cloned
+********************************
 
 If you accidentally added 100s of MBs or GBs of data to your repo and didn't
 specify that it should be stored in git LFS, it might take too long to clone. In
