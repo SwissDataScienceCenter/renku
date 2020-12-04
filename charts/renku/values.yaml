@@ -131,8 +131,8 @@ keycloak:
   ## keycloak admin username/password is supplied.
   initRealm:
     image:
-      repository: renku/init-realm
-      tag: 'latest'
+      repository: degano/init-realm
+      tag: '0.7.4-b5b472d'
 
   ## Skip Keycloak testing when running Helm test
   test:
@@ -595,8 +595,8 @@ notebooks:
 tests:
   enabled: false
   image:
-    repository: renku/tests
-    tag: 'latest'
+    repository: degano/tests
+    tag: '0.7.4-340d844'
   ## User account for running `helm test`
   #parameters:
   #  email: bwayne@example.com

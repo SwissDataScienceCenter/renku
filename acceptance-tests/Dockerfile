@@ -30,6 +30,9 @@ RUN python3 -m pip install \
     'seaborn==0.9.0' \
     git+https://github.com/SwissDataScienceCenter/renku-python.git@${renku_python_ref}
 
+RUN wget --quiet https://dl.min.io/client/mc/release/linux-amd64/mc -O /usr/local/bin/mc && \
+    chmod 0755 /usr/local/bin/mc
+
 ENV DOCKER="1"
 COPY . /tests
 ENTRYPOINT ["/tests/docker-run-tests.sh"]

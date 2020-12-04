@@ -92,6 +92,8 @@ jobs:
         RENKUBOT_RANCHER_APISECRET: ${{ secrets.RENKUBOT_RANCHER_APISECRET }}
         CI_PROJECT_ID: ${{ secrets.CI_PROJECT_ID }}
         RENKU_BOT_DEV_PASSWORD: ${{ secrets.RENKU_BOT_DEV_PASSWORD }}
+        OS_DEV_ACCESS: ${{ secrets.OS_DEV_ACCESS }}
+        OS_DEV_SECRET: ${{ secrets.OS_DEV_SECRET }}
       run: |
         echo "$RENKUBOT_KUBECONFIG" > renkubot-kube.config
         helm repo add stable https://charts.helm.sh/stable
@@ -117,10 +119,18 @@ jobs:
                     --set notebooks.jupyterhub.auth.gitlab.clientId=${APP_ID} \
                     --set notebooks.jupyterhub.auth.gitlab.clientSecret=${APP_SECRET} \
                     --set global.anonymousSessions.enabled=true \
+                    --set tests.enabled="true" \
                     --set tests.parameters.username="renku-test" \
                     --set tests.parameters.fullname="Renku Bot" \
                     --set tests.parameters.email="renku@datascience.ch" \
                     --set tests.parameters.password="$RENKU_BOT_DEV_PASSWORD" \
+                    --set tests.parameters.anonAvailable="true" \
+                    --set tests.resultsS3.host="os.zhdk.cloud.switch.ch" \
+                    --set tests.resultsS3.bucket="dev-acceptance-tests-results" \
+                    --set tests.resultsS3.filename="tests-artifacts-${GITHUB_SHA}" \
+                    --set tests.resultsS3.accessKey=$OS_DEV_ACCESS \
+                    --set tests.resultsS3.secretKey=$OS_DEV_SECRET \
+                    --set keycloak.test.enabled=false \
                     charts/renku
     - name: Turn on anonymous notebooks
       env:
@@ -162,37 +172,28 @@ jobs:
         pip install yq
     - name: Test the PR
       env:
-        RENKU_BOT_DEV_PASSWORD: ${{ secrets.RENKU_BOT_DEV_PASSWORD }}
+        KUBECONFIG: ${{ github.workspace }}/renkubot-kube.config
+        RENKUBOT_KUBECONFIG: ${{ secrets.RENKUBOT_KUBECONFIG }}
+        RELEASE: ci-${{ github.event.number }}-renku
       run: |
-        export PR_NUMBER=${{ github.event.number }}
-        echo $PR_NUMBER
-        export RENKU_RELEASE="ci-${PR_NUMBER}-renku"
-
-        RENKU_PYTHON_VERSION=v$(cat ./charts/renku/requirements.yaml | yq -r '.dependencies[] | select(.name == "renku-core") | .version')
-        RENKU_PYTHON_COMMIT=$(echo $RENKU_PYTHON_VERSION | grep -o -P '(?<=-)[0-9a-fA-F]+') || true
-        if [ $RENKU_PYTHON_COMMIT ]; then export RENKU_PYTHON_VERSION=$RENKU_PYTHON_COMMIT; fi
-        echo "Passing renku-python version $RENKU_PYTHON_VERSION"
-
-        cd acceptance-tests
-        COMPOSE_DOCKER_CLI_BUILD=1 DOCKER_BUILDKIT=1 docker-compose build --build-arg renku_python_ref=${RENKU_PYTHON_VERSION} sbt
-        docker-compose run -e RENKU_TEST_URL=https://${RENKU_RELEASE}.dev.renku.ch \
-                           -e RENKU_TEST_FULL_NAME="Renku Bot" \
-                           -e RENKU_TEST_EMAIL="renku@datascience.ch" \
-                           -e RENKU_TEST_REGISTER="1" \
-                           -e RENKU_TEST_USERNAME="renku-test" \
-                           -e RENKU_TEST_PASSWORD="$RENKU_BOT_DEV_PASSWORD" \
-                           -e RENKU_TEST_ANON_AVAILABLE="true" sbt
-    - name: Prepare artifact for packaging on failure
+        echo "$RENKUBOT_KUBECONFIG" > renkubot-kube.config
+        helm test $RELEASE --namespace $RELEASE --timeout 40m --logs
+    - name: Download artifact for packaging on failure
+      env:
+        OS_DEV_ACCESS: ${{ secrets.OS_DEV_ACCESS }}
+        OS_DEV_SECRET: ${{ secrets.OS_DEV_SECRET }}
       if: failure()
       run: |
-        mkdir acceptance-tests/test-artifacts
-        cp acceptance-tests/target/*.png acceptance-tests/test-artifacts 2>/dev/null || :
-        cp acceptance-tests/target/*.log acceptance-tests/test-artifacts 2>/dev/null || :
-        sudo rm -rf acceptance-tests/target/20*/.renku/cache 2>/dev/null || :
-        cp -r acceptance-tests/target/20* acceptance-tests/test-artifacts 2>/dev/null || :
+        sudo wget --quiet https://dl.min.io/client/mc/release/linux-amd64/mc -O /usr/local/bin/mc
+        sudo chmod 0755 /usr/local/bin/mc
+        export MC_HOST_bucket="https://${OS_DEV_ACCESS}:${OS_DEV_SECRET}@os.zhdk.cloud.switch.ch"
+        mkdir test-artifacts/
+        mc cp bucket/dev-acceptance-tests-results/tests-artifacts-${GITHUB_SHA}.tgz .
+        mc rm bucket/dev-acceptance-tests-results/tests-artifacts-${GITHUB_SHA}.tgz
+        tar -C test-artifacts/ -xzvf tests-artifacts-${GITHUB_SHA}.tgz
     - name: Upload screenshots on failure
       if: failure()
       uses: actions/upload-artifact@v1
       with:
         name: acceptance-test-artifacts
-        path: acceptance-tests/test-artifacts
+        path: test-artifacts/

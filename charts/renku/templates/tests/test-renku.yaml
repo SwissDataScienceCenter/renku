@@ -41,6 +41,16 @@ spec:
         value: '{{ .Values.tests.parameters.batchRemove | default "false"}}'
       - name: RENKU_TEST_REMOVE_PATTERN
         value: '{{ .Values.tests.parameters.removePattern | default "" }}'
+      - name: RENKU_TEST_S3_HOST
+        value: '{{ .Values.tests.resultsS3.host }}'
+      - name: RENKU_TEST_S3_BUCKET
+        value: '{{ .Values.tests.resultsS3.bucket }}'
+      - name: RENKU_TEST_S3_FILENAME
+        value: '{{ .Values.tests.resultsS3.filename }}'
+      - name: RENKU_TEST_S3_ACCESS_KEY
+        value: '{{ .Values.tests.resultsS3.accessKey }}'
+      - name: RENKU_TEST_S3_SECRET_KEY
+        value: '{{ .Values.tests.resultsS3.secretKey }}'
     volumeMounts:
       - mountPath: /dev/shm
         name: dshm
