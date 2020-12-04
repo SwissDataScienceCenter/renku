@@ -5,6 +5,7 @@ on:
     - opened
     - synchronize
     - reopened
+    - closed
 
 jobs:
   cleanup-previous-runs:
@@ -14,16 +15,8 @@ jobs:
     - uses: rokroskar/workflow-run-cleanup-action@master
       env:
         GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
-  github-env:
-    runs-on: ubuntu-latest
-    steps:
-    - name: get environment
-      run: env
-    - name: Dump GitHub context
-      env:
-        GITHUB_CONTEXT: ${{ toJson(github) }}
-      run: echo "$GITHUB_CONTEXT"
   test-docs:
+    if: github.event.action != 'closed'
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
@@ -49,6 +42,8 @@ jobs:
         name: docs
         path: docs/_build/html/
   deploy-pr:
+    if: github.event.action != 'closed'
+    needs: cleanup-previous-runs
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
@@ -117,3 +112,17 @@ jobs:
       with:
         name: acceptance-test-artifacts
         path: acceptance-tests/test-artifacts
+  cleanup:
+    if: github.event.action == 'closed'
+    runs-on: ubuntu-20.04
+    steps:
+    - uses: actions/checkout@v2
+    - name: renku teardown
+      uses: ./actions/teardown-renku
+      env:
+        GITLAB_TOKEN: ${{ secrets.DEV_GITLAB_TOKEN }}
+        KUBECONFIG: "${{ github.workspace }}/renkubot-kube.config"
+        RENKU_NAMESPACE: ci-renku-${{ github.event.number }}
+        RENKU_RELEASE: ci-renku-${{ github.event.number }}
+        RENKU_TMP_NAMESPACE: ci-renku-${{ github.event.number }}-tmp
+        RENKUBOT_KUBECONFIG: ${{ secrets.RENKUBOT_DEV_KUBECONFIG }}
