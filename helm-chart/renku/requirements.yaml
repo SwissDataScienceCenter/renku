@@ -22,7 +22,7 @@ dependencies:
 - name: renku-graph
   alias: graph
   repository: "https://swissdatasciencecenter.github.io/helm-charts/"
-  version: 1.18.12
+  version: 1.18.13
   condition: graph.enabled
 - name: postgresql
   version: 9.1.1
