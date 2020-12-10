@@ -9,7 +9,7 @@ Templates now use this new Renku CLI version ``0.12.2`` by default.
 New features
 ~~~~~~~~~~~~
 
-- **Migrations** A migrationscheck command has been added.
+- **Migrations** A ``migrationscheck`` command has been added.
 - **Git LFS** Large files are automatically added to LFS.
 
 
