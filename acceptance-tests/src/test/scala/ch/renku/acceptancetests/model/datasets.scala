@@ -10,9 +10,18 @@ object datasets {
     override lazy val toString: String = value.value
   }
 
+  final case class DatasetTitle(value: String Refined NonEmpty) {
+    override lazy val toString: String = value.value
+  }
+
   object DatasetName {
     def generate: DatasetName =
       DatasetName(nonEmptyStrings().generateOne)
+  }
+
+  object DatasetTitle {
+    def generate: DatasetTitle =
+      DatasetTitle(nonEmptyStrings().generateOne)
   }
 
 }

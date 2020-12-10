@@ -6,8 +6,8 @@ on:
     - charts/**
     - scripts/**
     - acceptance-tests/**
-    branches: ['master']
-    tags: ['*']
+    - .github/**
+    branches: ['development']
   workflow_dispatch:
 
 
@@ -21,29 +21,45 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
-    - name: Deploy master to dev
-      uses: stefanprodan/kube-tools@v1
+    - uses: actions/setup-python@v1
+      with:
+        python-version: 3.7
+    - name: Install dependencies
+      run: |
+        sudo apt-get update -y && sudo apt-get install -y snapd
+        sudo snap install kubectl --channel=1.16/stable --classic
+        sudo snap install helm --channel=3.3/stable --classic
+        echo "PATH=/snap/bin:$PATH" >> $GITHUB_ENV
+        pip install --upgrade pip pipenv
+        pipenv install --deploy --dev --system
+    - name: Deploy development to the dev cluster
       env:
         KUBECONFIG: ${{ github.workspace }}/renkubot-kube.config
         RENKUBOT_KUBECONFIG: ${{ secrets.RENKUBOT_KUBECONFIG }}
         CD_VALUES: ${{ secrets.CD_VALUES }}
-      with:
-        kubectl: 1.16.2
-        helm: 2.16.1
-        command: |
-          echo "$RENKUBOT_KUBECONFIG" > renkubot-kube.config
-          helm init --client-only
-          helm repo add renku https://swissdatasciencecenter.github.io/helm-charts/
-          helm repo add gitlab https://charts.gitlab.io/
-          helm repo add jupyterhub https://jupyterhub.github.io/helm-chart
-          rm -rf charts/renku/charts
-          helm dependency update charts/renku
-          printf "%s" "$CD_VALUES" > cd_values.yaml
-          helm upgrade --install renku \
-                      --namespace renku \
-                      -f cd_values.yaml \
-                      --timeout 1800 charts/renku \
-                      --cleanup-on-fail
+      run: |
+        echo "$RENKUBOT_KUBECONFIG" > renkubot-kube.config
+        helm repo add stable 	https://kubernetes-charts.storage.googleapis.com
+        helm repo add codecentric https://codecentric.github.io/helm-charts
+        helm repo add renku https://swissdatasciencecenter.github.io/helm-charts/
+        helm repo add gitlab https://charts.gitlab.io/
+        helm repo add jupyterhub https://jupyterhub.github.io/helm-chart
+        rm -rf charts/renku/charts
+        helm dependency update charts/renku
+        printf "%s" "$CD_VALUES" > cd_values.yaml
+        helm upgrade --install renku \
+                    --namespace renku \
+                    -f cd_values.yaml \
+                    --timeout 1800s \
+                    --cleanup-on-fail \
+                    charts/renku
+    - name: Turn on anonymous notebooks
+      env:
+        KUBECONFIG: ${{ github.workspace }}/renkubot-kube.config
+        RENKUBOT_KUBECONFIG: ${{ secrets.RENKUBOT_KUBECONFIG }}
+      run: |
+        echo "$RENKUBOT_KUBECONFIG" > renkubot-kube.config
+        charts/deploy-tmp-notebooks.py --release-name renku --renku-namespace renku
     - name: Notify slack
       if: success()
       env:
@@ -107,7 +123,7 @@ jobs:
   chart:
     needs: test
     runs-on: ubuntu-latest
-    if: "startsWith(github.ref, 'refs/tags/') || github.ref == 'refs/heads/master'"
+    if: "startsWith(github.ref, 'refs/tags/') || github.ref == 'refs/heads/development'"
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-python@v1
@@ -135,7 +151,7 @@ jobs:
           helm dep update charts/renku
           helm dep update charts/gitlab
       - name: Push helm chart and images
-        if: github.ref == 'refs/heads/master' && !startsWith(github.ref, 'refs/tags/')
+        if: github.ref == 'refs/heads/development' && !startsWith(github.ref, 'refs/tags/')
         env:
           GITHUB_TOKEN: ${{ secrets.RENKU_CI_TOKEN }}
           DOCKER_BUILDKIT: "1"

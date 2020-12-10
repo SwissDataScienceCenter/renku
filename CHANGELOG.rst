@@ -1,5 +1,43 @@
 .. _changelog:
 
+0.7.2
+-----
+
+This release brings several smaller improvements and bug-fixes, the most
+notable of which are:
+
+New features
+~~~~~~~~~~~~
+- **Datasets** Add new fields and the possibility to edit existing fields to
+  the web UI.
+- **Knowledge Graph** Improve information flow related to KG integration and
+  Renku version updates in the UI.
+
+Fixes
+~~~~~
+
+- **Project creation**: improve name validation, the handling of non ASCII
+  characters and a bug which led to failures when fetching the available templates.
+- **Graph processing**: fix a bug in prioritizing events for processing.
+
+For details check out the individual component updates.
+
+
+0.7.1
+-----
+
+This release features an update to the default project templates, bumping
+the default `renku CLI version to ``0.12.0`` <https://github.com/SwissDataScienceCenter/renku-python/releases/tag/v0.12.0>`_
+and some backend bug fixes.
+
+Fixes
+~~~~~
+
+- **Graph building**: several improvements to graph building, including a fix
+  for metadata compaction in renku-core that caused some entities to not
+  get processed.
+
+
 0.7.0
 -----
 

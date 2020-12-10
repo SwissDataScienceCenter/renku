@@ -149,6 +149,7 @@ Ubuntu
 ui
 untracked
 untracked
+url
 username
 versioned
 versioning

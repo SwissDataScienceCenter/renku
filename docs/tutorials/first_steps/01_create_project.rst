@@ -19,9 +19,9 @@ and clicking on the **New Project** (2) button.
     :alt: Head to new project page
 
 Enter **Flights Tutorial** as your project title (1); if you wish, change
-the visibility (or leave it *public*) (2); select the "Basic Python Project"
-template (3); fill in an optional description (4) and any other parameters
-appearing after selecting the template.
+the visibility (or leave it *public*) (2); select the
+"Renku / Basic Python Project" template (3); fill in an optional description
+(4) and any other parameters appearing after selecting the template.
 Click on the **Create project** button (5).
 
 .. image:: ../../_static/images/ui_02_new-project.png
@@ -40,7 +40,7 @@ then on **New** (2).
 
 The Docker image takes some time to build, it's possible that the
 status is still **building**. It will automatically refresh when
-it's ready. Sit tight and wait for it to become **available**
+it's ready. Sit tight and wait for it to become **available**.
 
 .. image:: ../../_static/images/ui_03.2_notebook-servers.png
     :width: 100%
