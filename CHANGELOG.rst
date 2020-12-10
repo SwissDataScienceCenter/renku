@@ -11,6 +11,7 @@ New features
 
 - **Migrations** A ``migrationscheck`` command has been added.
 - **Git LFS** Large files are automatically added to LFS.
+- **Core** Renku CLI commit messages are shorten to 100 characters for readability.
 
 
 Fixes
