@@ -1,5 +1,26 @@
 .. _changelog:
 
+0.7.3
+-----
+
+This is a minor release that contains mainly improvements and fixes to the Renku CLI.
+Templates now use this new Renku CLI version ``0.12.2`` by default.
+
+New features
+~~~~~~~~~~~~
+
+- **Migrations** A migrationscheck command has been added.
+- **Git LFS** Large files are automatically added to LFS.
+
+
+Fixes
+~~~~~
+
+- **Auth credentials**: the way Renku environments handle oauth credentials has been improved.
+
+For details check out the individual component updates.
+
+
 0.7.2
 -----
 
