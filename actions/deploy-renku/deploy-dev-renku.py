@@ -174,17 +174,8 @@ if __name__ == "__main__":
     reqs_path = renku_dir / "helm-chart/renku/requirements.yaml"
 
     ## 1. clone the renku repo
-    # check_call(
-    #     [
-    #         "git",
-    #         "clone",
-    #         "https://github.com/SwissDataScienceCenter/renku.git",
-    #         renku_dir,
-    #     ]
-    # )
-    # if args.renku:
-    #     check_call(["git", "checkout", args.renku.strip("@")], cwd=renku_dir)
-    renku_req = RenkuRequirement("renku", )
+    renku_req = RenkuRequirement(component="renku", version=args.renku or "@master", tempdir=tempdir)
+    renku_req.clone()
 
     with open(reqs_path) as f:
         reqs = yaml.load(f)
@@ -195,8 +186,8 @@ if __name__ == "__main__":
     with open(reqs_path, "w") as f:
         yaml.dump(reqs, f)
 
-    ## 3. run helm dep update renku
-    check_call(["helm", "dep", "update", "renku"], cwd=renku_dir / "charts")
+    ## 3. render the renku chart for deployment
+    renku_req.chartpress()
 
     ## 4. deploy
     values_file = args.values_file
@@ -220,7 +211,7 @@ if __name__ == "__main__":
             "--timeout",
             "20m",
         ],
-        cwd=renku_dir / "charts",
+        cwd=renku_dir / "helm-chart",
     )
 
     tempdir_.cleanup()
