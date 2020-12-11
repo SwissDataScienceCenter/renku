@@ -171,19 +171,20 @@ if __name__ == "__main__":
     tempdir = Path(tempdir_.name)
 
     renku_dir = tempdir / "renku"
-    reqs_path = renku_dir / "charts/renku/requirements.yaml"
+    reqs_path = renku_dir / "helm-chart/renku/requirements.yaml"
 
     ## 1. clone the renku repo
-    check_call(
-        [
-            "git",
-            "clone",
-            "https://github.com/SwissDataScienceCenter/renku.git",
-            renku_dir,
-        ]
-    )
-    if args.renku:
-        check_call(["git", "checkout", args.renku.strip("@")], cwd=renku_dir)
+    # check_call(
+    #     [
+    #         "git",
+    #         "clone",
+    #         "https://github.com/SwissDataScienceCenter/renku.git",
+    #         renku_dir,
+    #     ]
+    # )
+    # if args.renku:
+    #     check_call(["git", "checkout", args.renku.strip("@")], cwd=renku_dir)
+    renku_req = RenkuRequirement("renku", )
 
     with open(reqs_path) as f:
         reqs = yaml.load(f)
