@@ -54,13 +54,6 @@ For changes to individual components, check:
 * renku-core
   `0.12.2 <https://github.com/SwissDataScienceCenter/renku-python/releases/tag/0.12.2>`__
 
-* renku-notebooks
-  `0.8.6 <https://github.com/SwissDataScienceCenter/renku-notebooks/releases/tag/0.8.6>`__
-
-* renku-graph
-    `0.48.0 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/0.48.0>`__
-
-
 Upgrading from 0.7.2
 ~~~~~~~~~~~~~~~~~~~~
 
