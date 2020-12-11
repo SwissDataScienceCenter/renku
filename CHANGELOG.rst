@@ -3,24 +3,70 @@
 0.7.3
 -----
 
-This is a minor release that contains mainly improvements and fixes to the Renku CLI.
-Templates now use this new Renku CLI version ``0.12.2`` by default.
+This release contains some very nice improvements to the file and datasets management and visualization as well as project migrations.
 
 New features
 ~~~~~~~~~~~~
 
-- **Migrations** A ``migrationscheck`` command has been added.
-- **Git LFS** Large files are automatically added to LFS.
-- **Core** Renku CLI commit messages are shorten to 100 characters for readability.
+- **Dataset removal** A dataset can be now removed from a project from the UI. Note that if a removed dataset was part of a project with the Knowledge Graph activated, its metadata will not be removed.
+
+- **Pinned environments image** An image tag can be specified for launching environments. This can be done in the `renku configuration file <https://renku.readthedocs.io/en/latest/user/templates.html?highlight=.dockerignore#renku>`_.
+
+- **Notifications** A notification system has been added so that users get notified for updates and events related to their projects.
+
+- **Project migration** An automatic migration to a new Renku version is possible. Information about the latest and current Renku CLI and template versions are displayed in the ``Status`` section of a project. Additionally, a ``migrationscheck`` command is available in Renku CLI.
+
+Improvements
+~~~~~~~~~~~~
+
+- **Dataset upload** When uploading files, a progress bar is displayed.
+
+- **Dataset visualization** When listing datasets, the description and author's list of a dataset are cropped. Full description and author list are still available on mouse hovering.
+
+- **File preview** Preview of C++ and Fortran files is supported.
+
+- **File download** Files can be downloaded from the Renku UI.
+
+- **Autosaved work** Commits with autosaved content are marked with ``*`` and dialog is more specific.
+
+- **Autosave git LFS** When a session is closed and work is automatically saved, large files are added to LFS according to the project's settings see `renku config documentation <https://renku-python.readthedocs.io/en/v0.12.0/commands.html#available-configuration-values>`_.
+
+- **Core** Renku CLI commit messages are shortened to 100 characters for readability.
+
+- **New projects** Templates to create new projects now use the new Renku CLI version ``0.12.2`` by default.
 
 
 Fixes
 ~~~~~
 
-- **Auth credentials**: the way Renku environments handle oauth credentials has been improved.
+- **Auth**: the way Renku environments handle the users GitLab credentials has been improved.
 
-For details check out the individual component updates.
 
+Individual components
+~~~~~~~~~~~~~~~~~~~~~
+
+For changes to individual components, check:
+
+* renku-ui:
+  `0.11.3 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/0.11.3>`__
+
+* renku-gateway
+  `0.9.3 <https://github.com/SwissDataScienceCenter/renku-gateway/releases/tag/0.9.3>`__
+
+* renku-core
+  `0.12.2 <https://github.com/SwissDataScienceCenter/renku-python/releases/tag/0.12.2>`__
+
+* renku-notebooks
+  `0.8.6 <https://github.com/SwissDataScienceCenter/renku-notebooks/releases/tag/0.8.6>`__
+
+* renku-graph
+    `0.48.0 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/0.48.0>`__
+
+
+Upgrading from 0.7.2
+~~~~~~~~~~~~~~~~~~~~
+
+-  No changes required in the values file for this upgrade
 
 0.7.2
 -----
