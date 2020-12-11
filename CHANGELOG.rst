@@ -8,20 +8,20 @@ This release contains some very nice improvements to the file and datasets manag
 New features
 ~~~~~~~~~~~~
 
-- **Dataset removal** A dataset can be now removed from a project from the UI. Note that if a removed dataset was part of a project with the Knowledge Graph activated, its metadata will not be removed.
+- **Dataset removal** A dataset can be now removed from a project, either from the UI or with the Renku CLI.
 
 - **Pinned environments image** An image tag can be specified for launching environments. This can be done in the `renku configuration file <https://renku.readthedocs.io/en/latest/user/templates.html?highlight=.dockerignore#renku>`_.
 
 - **Notifications** A notification system has been added so that users get notified for updates and events related to their projects.
 
-- **Project migration** An automatic migration to a new Renku version is possible. Information about the latest and current Renku CLI and template versions are displayed in the ``Status`` section of a project. Additionally, a ``migrationscheck`` command is available in Renku CLI.
+- **Project migration** Project migration has been improved, allowing users to migrate the template, Dockerfile and Renku version with just one click. Information about the latest and current Renku CLI and template versions are displayed in the Status section of a project. Additionally, a migrationscheck command is available in Renku CLI.
 
 Improvements
 ~~~~~~~~~~~~
 
 - **Dataset upload** When uploading files, a progress bar is displayed.
 
-- **Dataset visualization** When listing datasets, the description and author's list of a dataset are cropped. Full description and author list are still available on mouse hovering.
+- **Dataset visualization** For a better experience on dataset listing inside projects, description and author list have been cropped. The full content of both is still available when accessing the dataset.
 
 - **File preview** Preview of C++ and Fortran files is supported.
 
