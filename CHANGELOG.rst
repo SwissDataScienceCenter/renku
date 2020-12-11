@@ -17,7 +17,7 @@ New features
 Fixes
 ~~~~~
 
-- **Auth credentials**: the way Renku environments handle oauth credentials has been improved.
+- **Auth credentials**: the way Renku environments handle git credentials has been improved.
 
 For details check out the individual component updates.
 
