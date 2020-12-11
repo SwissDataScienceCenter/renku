@@ -10,9 +10,7 @@ New features
 
 - **Dataset removal** A dataset can be now removed from a project, either from the UI or with the Renku CLI.
 
-- **Pinned environments image** An image tag can be specified for launching environments. This can be done in the `renku configuration file <https://renku.readthedocs.io/en/latest/user/templates.html?highlight=.dockerignore#renku>`_.
-
-- **Notifications** A notification system has been added so that users get notified for updates and events related to their projects.
+- **Pinned environments image** A project can pin interactive environments to a specific image, independent of the content of the project. This can be useful for situations like courses where everyone should use the environment defined by the instructor. To take advantage, see the `renku configuration file documentation <https://renku.readthedocs.io/en/latest/user/templates.html?highlight=.dockerignore#renku>`_.
 
 - **Project migration** Project migration has been improved, allowing users to migrate the template, Dockerfile and Renku version with just one click. Information about the latest and current Renku CLI and template versions are displayed in the Status section of a project. Additionally, a migrationscheck command is available in Renku CLI.
 
