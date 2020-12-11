@@ -39,7 +39,7 @@ Improvements
 Fixes
 ~~~~~
 
-- **Auth**: the way Renku environments handle the users GitLab credentials has been improved.
+- **Auth credentials**: the way Renku environments handle git credentials has been improved.
 
 
 Individual components
