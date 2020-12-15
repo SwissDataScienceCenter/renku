@@ -1,5 +1,10 @@
 .. _changelog:
 
+0.7.4
+-----
+
+This is a patch release that includes a notebooks change and some improvements to the Knowledge Graph.
+
 0.7.3
 -----
 
