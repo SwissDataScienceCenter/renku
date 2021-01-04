@@ -24,7 +24,7 @@ fi
 
 # configure variables
 CHART_PATH=${CHART_PATH:=helm-chart/$(echo $GITHUB_REPOSITORY | cut -d/ -f2)}
-HELM_URL=${HELM_URL:=https://storage.googleapis.com/kubernetes-helm}
+HELM_URL=${HELM_URL:=https://charts.helm.sh/stable}
 HELM_TGZ=${HELM_TGZ:=helm-v2.16.1-linux-amd64.tar.gz}
 
 # install helm
