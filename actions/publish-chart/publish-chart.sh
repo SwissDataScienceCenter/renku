@@ -38,6 +38,8 @@ helm init --client-only
 git config --global user.email "$GIT_EMAIL"
 git config --global user.name "$GIT_USER"
 
+helm repo add stable https://charts.helm.sh/stable
+
 helm dep update $CHART_PATH
 
 # log in to docker
