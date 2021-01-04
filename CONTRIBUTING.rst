@@ -27,6 +27,7 @@ If you do not already have a development environment set up, you will probably f
 * PRs should include a short, descriptive title. The titles will be used to compile changelogs for releases, so think about the title in that context.
 * Small improvements need not reference an issue, but PRs that introduce larger changes or add new functionality should refer to an issue.
 * Structure your commits in meaningful units, each with an understandable purpose and coherent commit message. For example, if your proposed changes contain a refactoring and a new feature, make two PRs.
+* Format commit messages using the [Conventional Commits](https://www.conventionalcommits.org/) style
 
 Finally, if your change is for one of the renku subprojects, you should also consult the
 guidelines for contributions within the subproject.

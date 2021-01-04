@@ -6,8 +6,12 @@ User Documentation
 .. toctree::
    :maxdepth: 2
 
-   First Steps <firststeps>
-   CLI Installation <cli-installation>
-   Data in Renku <lfs>
+   Interactive Environments <interactive_environments>
+   Command-line interface <cli-installation>
+   Data in Renku <data>
+   Templates <templates>
+   Collaborating <collaboration>
+   Knowledge Graph <knowledge-graph>
+   provenance
    Git tips <git_tips>
    Troubleshooting <troubleshooting>

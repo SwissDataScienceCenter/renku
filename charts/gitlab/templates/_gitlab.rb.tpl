@@ -29,7 +29,9 @@ gitlab_rails['gitlab_shell_ssh_port'] = {{ default 22 .Values.ssh.externalPort }
 ### OmniAuth Settings
 ###! Docs: https://docs.gitlab.com/ce/integration/omniauth.html
 gitlab_rails['omniauth_enabled'] = true
+{{- if .Values.oauth.autoSignIn }}
 gitlab_rails['omniauth_auto_sign_in_with_provider'] = 'oauth2_generic'
+{{- end }}
 gitlab_rails['omniauth_allow_single_sign_on'] = ['oauth2_generic']
 gitlab_rails['omniauth_block_auto_created_users'] = false
 gitlab_rails['omniauth_providers'] = [
@@ -113,5 +115,16 @@ registry['health_storagedriver_enabled'] = {{ .Values.registry.backendHealthchec
 gitlab_rails['rack_attack_git_basic_auth'] = {
   'enabled' => false
 }
+
+{{ if .Values.logging.useJson -}}
+gitaly['logging_format'] = 'json'
+gitlab_shell['log_format'] = 'json'
+gitlab_workhorse['log_format'] = 'json'
+registry['log_formatter'] = 'json'
+sidekiq['log_format'] = 'json'
+gitlab_pages['log_format'] = 'json'
+{{- end }}
+
+{{ .Values.extraConfig }}
 
 {{- end -}}

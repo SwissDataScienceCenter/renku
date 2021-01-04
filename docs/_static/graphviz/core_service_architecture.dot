@@ -1,0 +1,50 @@
+strict digraph architecture {
+  compound=true;
+  newrank=true;
+  rankdir=LR;
+
+  graph [fontname="Raleway", nodesep="0.8"];
+  node [shape="rect", style="filled,rounded", fontname="Raleway"];
+  edge [fontname="Raleway"]
+
+  Service [fillcolor="lightblue"]
+  Worker [fillcolor="lightblue"]
+
+  "Filesystem Cache" [fillcolor="#f4d142"]
+  "Memory Cache" [fillcolor="#f4d142"]
+  GitLab [fillcolor=""]
+
+  Worker -> "Filesystem Cache" [label=" execute operation on cached resource"]
+  Worker -> "Memory Cache" [label=" read/write resource metadata"]
+
+  subgraph service_clients {
+    label="Clients"
+    UI -> Service
+    SDK -> Service
+    {rank=same; UI, SDK};
+
+  }
+
+  Service -> "Filesystem Cache" [label=" persist resource"]
+  Service -> "Memory Cache" [label=" persist resource metadata"]
+  Service -> GitLab [label=" sync with remote"]
+
+
+
+  Worker -> GitLab [label=" sync with remote"]
+
+  subgraph cluster_service_cache {
+    color="lightgray";
+    label="Service Cache";
+    "Filesystem Cache" [fillcolor="#f4d142"]
+    "Memory Cache" [fillcolor="#f4d142"]
+  }
+
+  subgraph cluster_service_client {
+      color="lightgray";
+      label="Clients";
+      UI
+      SDK
+    }
+
+}

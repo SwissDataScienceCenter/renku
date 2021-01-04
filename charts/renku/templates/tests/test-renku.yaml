@@ -9,17 +9,12 @@ spec:
   - name: renku-demo
     image: renku/renku-demo:0.3.0
     env:
-      - name: GITLAB_SUDO_TOKEN
-        valueFrom:
-          secretKeyRef:
-            name: {{ template "renku.fullname" . }}
-            key: gitlab-sudo-token
       - name: GITLAB_URL
         value: {{ template "http" . }}://{{ .Values.global.renku.domain }}{{ .Values.global.gitlab.urlPrefix }}
       - name: KEYCLOAK_ADMIN_PASSWORD
         valueFrom:
           secretKeyRef:
-            name: {{ template "renku.fullname" . }}
+            name: {{ template "renku.fullname" . }}-keycloak-password
             key: keycloak-password
       - name: KEYCLOAK_ADMIN_USER
         value: {{ .Values.keycloak.keycloak.username }}
@@ -53,4 +48,4 @@ spec:
   volumes:
     - name: demo-users
       secret:
-        secretName: {{ template "renku.fullname" . }}
+        secretName: {{ template "renku.fullname" . }}-users

@@ -1,0 +1,24 @@
+    @startuml
+    hide footbox
+    skinparam shadowing false
+
+    actor Client
+    boundary Service
+    box "Service Cache"
+        database "Filesystem Cache" as Filesystem
+        database "Memory Cache" as Cache
+    end box
+    boundary Worker
+    entity "Remote Git" as Git
+    entity "External Templates Repository" as External
+
+    == Read manifest from a templates repository ==
+    Client->Service: GET /<prefix>/templates.read_manifest
+    activate Service
+
+    Service->External: Clone templates repository
+    External->Filesystem: Persist project
+    Service<->Filesystem: Check templates validity and read manifest
+    Service->Client: Return manifest content
+
+    @enduml

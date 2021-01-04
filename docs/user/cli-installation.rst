@@ -3,34 +3,77 @@
 Command-line Interface Installation
 ===================================
 
-Interaction with the platform takes place via the Python-based command-line
-interface (CLI) and the Python API.
+The Python-based command-line interface (CLI) and the Python API that we call
+``renku`` is available for use via RenkuLab interactive environments and you can
+also install it on your local machine. Most available CLI commands are
+documented in our `cheatsheet <https://raw.githubusercontent.com/SwissDataScienceCenter/renku/master/docs/_static/cheatsheet/cheatsheet.pdf>`_
 
-Mac OS X
---------
+Using the CLI on RenkuLab
+-------------------------
 
-It is easiest to install the CLI using `homebrew <https://brew.sh/>`_:
+The ``renku`` command-line interface is already installed if you start an
+Interactive Environment from RenkuLab with a project you created on RenkuLab or
+initialized via ``renku init`` in a local repository.
 
-.. code-block:: console
-
-  brew tap swissdatasciencecenter/renku
-  brew install renku
+See :ref:`renku_cli_upgrade` for upgrading to the latest version of the CLI for
+Interactive Environments.
 
 
-Pip Script Installer (``pipsi``)
---------------------------------
+Local installation with the script manager ``pipx``
+---------------------------------------------------
 
-You can use `pipsi <https://github.com/mitsuhiko/pipsi>`_ to isolate
-dependencies and to guarantee that there are no version conflicts. Make sure
-you have the ``pipsi`` command correctly installed and ``~/.local/bin`` is in
-your ``PATH``.
+Install and execute Renku in an isolated environment using ``pipx``.
+It will guarantee that there are no version conflicts with dependencies
+you are using for your work and research.
 
-.. code-block:: console
+.. note::
 
-  pipsi install renku
-  which renku
-  ~/.local/bin/renku
+  This is the method of installation in the renku docker images,
+  i.e. the default environment you use when you launch a JupyterLab session
+  via the renku browser interface.
 
+`Install pipx <https://github.com/pipxproject/pipx#install-pipx>`_
+and make sure that the ``$PATH`` is correctly configured.
+
+::
+
+    $ python3 -m pip install --user pipx
+    $ pipx ensurepath
+
+Once ``pipx`` is installed use following command to install ``renku``.
+
+::
+
+    $ pipx install renku
+    $ which renku
+    ~/.local/bin/renku
+
+
+.. _upgrading_local:
+
+Upgrading
+^^^^^^^^^
+
+To upgrade renku to the latest stable version:
+
+::
+
+    $ pipx upgrade renku
+
+To install renku at a specific version:
+
+::
+
+    $ pipx install --force renku==0.10.3
+
+To upgrade to the latest development version:
+
+::
+
+    $ pipx upgrade --pip-args=--pre renku
+
+If you run into dependency problems during the CLI installation,
+have a look at the :ref:`cli-troubleshooting`.
 
 ``pip``/``pipenv``
 ------------------

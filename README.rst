@@ -1,5 +1,5 @@
 ..
-    Copyright 2017-2018 - Swiss Data Science Center (SDSC)
+    Copyright 2017-2020 - Swiss Data Science Center (SDSC)
     A partnership between École Polytechnique Fédérale de Lausanne (EPFL) and
     Eidgenössische Technische Hochschule Zürich (ETHZ).
 
@@ -15,78 +15,124 @@
     See the License for the specific language governing permissions and
     limitations under the License... raw:: html
 
+.. _renku:
+
 RENKU (連句)
 ============
 
-.. image:: https://img.shields.io/travis/SwissDataScienceCenter/renku.svg
-   :target: https://travis-ci.org/SwissDataScienceCenter/renku
+.. image:: https://github.com/SwissDataScienceCenter/renku/workflows/Deploy%20and%20Test/badge.svg?branch=development
+   :target: https://github.com/SwissDataScienceCenter/renku/actions?query=workflow%3A%22Deploy+and+Test%22
 
 .. image:: https://readthedocs.org/projects/renku/badge/
     :target: http://renku.readthedocs.io/en/latest/
     :alt: Documentation Status
 
-**Renku** is a highly-scalable & secure open software platform designed to
-foster multidisciplinary data (science) collaboration.
+.. image:: https://img.shields.io/discourse/status?server=https%3A%2F%2Frenku.discourse.group
+    :target: https://renku.discourse.group/
+    :alt: Discourse
 
-The platform allows practitioners to:
+.. image:: https://img.shields.io/gitter/room/SwissDataScienceCenter/renku
+    :target: https://gitter.im/SwissDataScienceCenter/renku
+    :alt: Gitter
 
-* Securely manage, share and process large-scale data across untrusted
-  parties operating in a federated environment.
+**The Renku Project** is a platform that bundles together various tools for
+reproducible and collaborative data analysis projects. It is aimed at
+independent researchers and data scientists as well as labs, collaborations, and
+courses and workshops. Renku can be used by anyone who deals with data, whether
+they are a researcher, data analyst, project owner, or data provider.
 
-* Capture complete lineage automatically up to the original raw data for
-  detailed traceability (auditability & reproducibility).
+Renku promotes **reproducibility** by providing tools to track your analysis
+workflows and save them together with your versioned data, code, and
+environment specification. Every result can be replayed either to repeat a
+calculation or to re-execute on new data or with a different choice of
+parameters.
+
+Renku encourages **reusability** by storing and querying the connections between
+datasets, code executions, and results in a Knowledge Graph. Producers and
+consumers of analysis artifacts can always recover the full provenance of a
+result, establishing trust and reducing boilerplate.
+
+Renku stimulates **collaboration** among peers and across disciplines by
+guaranteeing that a media-rich discussion space and fully configured, shareable
+interactive computational environments are always just a click away.
+Collaborators can easily work on projects together or in parallel, combining
+their work in a systematic and safe manner.
 
 
-Starting the platform
----------------------
+Getting Started
+---------------
 
-For local development and testing, we provide a script that takes care
-of all the boilerplate. To start Renku on your laptop, you will need
-`minikube <https://kubernetes.io/docs/setup/minikube/>`_ installed.
+The Renku platform consists of `RenkuLab
+<https://renku.readthedocs.io/en/latest/introduction/renkulab.html#renkulab>`_,
+a web-based application and `Renku
+<https://renku.readthedocs.io/en/latest/introduction/renku.html#renku>`_, a
+command-line tool for managing code, data, workflows and making practical use of
+the Knowledge Graph.
 
-.. code:: console
-
-    $ make minikube-deploy
-
-You can find more details about the minikube setup in the `development on minikube
-<https://renku.readthedocs.io/en/latest/developer/setup.html>`_ documentation.
-
-More information about the helm charts can be found in the `charts/README.rst <charts/README.rst>`_ file.
-
-Where to go next
-----------------
-
-The full documentation is available at
-https://renku.readthedocs.io/en/latest/.
-
-First-time users should try our `first steps
-<https://renku.readthedocs.io/en/latest/user/firststeps.html>`_ tutorial.
+A public instance of **RenkuLab** is available at https://renkulab.io, and there
+are several other deployments at various institutions. To start exploring Renku,
+feel free to make an account and try it out! You can follow the `first steps
+<https://renku.readthedocs.io/en/latest/tutorials/01_firststeps.html>`_ tutorial
+or `continue reading about the Renku project
+<https://renku.readthedocs.io/en/latest/introduction/index.html#renku-introduction>`_.
 
 
 Contributing
 ------------
 
 We're happy to receive contributions of all kinds, whether it is an idea for a
-new feature, a bug report or a pull request.
+new feature, a bug report or a pull request!
 
-Please make sure that the integration tests pass and the documentation builds
-without warnings and errors before creating a pull request:
-
-.. code-block:: console
-
-    $ make minikube-deploy
-    $ make test
-
-To build the documentation from source:
-
-.. code-block:: console
-
-    $ pip install -r docs/requirements.txt
-    $ cd docs && make html
+Please review our `contributing guidelines
+<https://github.com/SwissDataScienceCenter/renku/blob/master/CONTRIBUTING.rst>`_
+before submitting a pull request.
 
 
-Contact
--------
+Getting in touch
+----------------
 
-To submit a bug report or a feature request, please open an issue. For other
-inquiries contact the Swiss Data Science Center (SDSC) https://datascience.ch/
+There are several channels you can use to communicate with us; we monitor all of
+them, so your messages will always get to us, but communication will be slightly
+more streamlined if you pick a channel that most suits your purpose and needs.
+
+* `discourse <https://renku.discourse.group>`_: questions concerning renkulab or
+  renku CLI usage, release notes
+
+* `github <https://github.com/SwissDataScienceCenter/renku>`_ & `renku
+  (CLI) <https://github.com/SwissDataScienceCenter/renku-python>`_: create
+  platform-usability and software-bug issues
+
+* `gitter <https://gitter.im/SwissDataScienceCenter/renku>`_: communicate with
+  the team
+
+Renku is developed as an open source project by the Swiss Data Science Center in
+a team split between EPFL and ETHZ.
+
+
+Project structure
+-----------------
+
+The Renku project consists of several sub-repositories:
+
+- `renku-gateway <https://github.com/SwissDataScienceCenter/renku-gateway>`_:
+  a simple API gateway
+
+- `renku-graph <https://github.com/SwissDataScienceCenter/renku-graph>`_:
+  Knowledge Graph services
+
+- `renku-notebooks <https://github.com/SwissDataScienceCenter/renku-notebooks>`_:
+  a lightweight service for handling interactive notebooks through JupyterHub
+
+- `renku-jupyter <https://github.com/SwissDataScienceCenter/renku-jupyter>`_:
+  base images for interactive sessions
+
+- `renku-python <https://github.com/SwissDataScienceCenter/renku-python>`_:
+  the Python CLI, SDK, and core backend service
+
+- `renku-ui <https://github.com/SwissDataScienceCenter/renku-ui>`_: web front-end
+
+- `renku-project-templates <https://github.com/SwissDataScienceCenter/renku-project-templates>`_:
+  base templates used for instantiating renku projects.
+
+- `renkulab-docker <https://github.com/SwissDataScienceCenter/renkulab-docker>`_: docker
+  images used for renku interactive environments.

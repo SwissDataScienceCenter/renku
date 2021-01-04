@@ -1,0 +1,25 @@
+    @startuml
+    hide footbox
+    skinparam shadowing false
+
+    actor Client
+    boundary Service
+    box "Service Cache"
+        database "Filesystem Cache" as Filesystem
+        database "Memory Cache" as Cache
+    end box
+    boundary Worker
+    entity "Remote Git" as Git
+
+
+
+    == Add file to dataset ==
+    Client->Service: POST /<prefix>/datasets.add with `file_id` key
+    activate Service
+    Service<->Cache: Return metadata for project in which operation is being executed
+    Service<->Filesystem: Check that file/project exists
+    Service<->Filesystem: Add a file to the project dataset
+    Service->Git: Sync with remote repository
+    Service->Client: Return list of files which were successfully added
+
+    @enduml

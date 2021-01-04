@@ -1,0 +1,27 @@
+    @startuml
+    hide footbox
+    skinparam shadowing false
+
+    actor Client
+    boundary Service
+    box "Service Cache"
+        database "Filesystem Cache" as Filesystem
+        database "Memory Cache" as Cache
+    end box
+    boundary Worker
+    entity "Remote Git" as Git
+    entity "External Templates Repository" as External
+
+    == Create new project from external templates repository ==
+    Client->Service: GET /<prefix>/templates.create_project
+    activate Service
+
+    Service<->External: Clone templates repository
+    External->Filesystem: Persist project
+    Service<->Filesystem: Check templates validity
+    Service<->Filesystem: Create new project
+    Filesystem->Git: Push to remote repository
+    Git->Service: Get repository info
+
+    Service->Client: Return new project info
+    @enduml

@@ -1,0 +1,35 @@
+    @startuml
+    hide footbox
+    skinparam shadowing false
+
+    actor Client
+    boundary Service
+    box "Service Cache"
+        database "Filesystem Cache" as Filesystem
+        database "Memory Cache" as Cache
+    end box
+    boundary Worker
+    entity "Remote Git" as Git
+    entity Web
+
+    == Add file to dataset ==
+    Client->Service: POST /<prefix>/datasets.add with `file_url` key
+    activate Service
+
+    Service<->Cache: Return metadata for project in which operation is being executed
+    Service<->Filesystem: Check that file/project exists
+    Service<->Cache: Enqueue a job for downloading the file
+    Service<->Client: Return a job identifier to the client
+
+    == Execute operation asynchronously ==
+    Worker<->Web: Download the file
+    Worker->Filesystem: Add downloaded file to the project dataset
+    Worker->Cache: Report Progress
+    Worker->Git: Sync with remote repository
+
+    == Check for the job status ==
+    Client->Service: GET /<prefix>/jobs
+    Service<->Cache: Get the status of the job
+    Service->Client: Return state of the job to the user
+
+    @enduml

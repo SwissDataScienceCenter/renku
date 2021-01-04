@@ -9,8 +9,6 @@ services/gitlab/runner/
 
 services/keycloak/data/
 
-charts/renku/charts/*.tgz
-charts/gitlab/charts/*.tgz
 *.dev.values.yaml
 
 # Idea software family
@@ -19,8 +17,18 @@ charts/gitlab/charts/*.tgz
 # Sbt caches
 .ivy/
 
+# Sphinx documentation
+.doctrees
+docs/_sidebar.rst.inc
 
-# Created by https://www.gitignore.io/api/vim,macos,linux,emacs,scala,python
+### Metals -- Scala Language Server ###
+.metals
+
+# The requirements lockfile is generated when packaging the chart
+charts/renku/requirements.lock
+
+# Created by https://www.gitignore.io/api/vim,macos,linux,emacs,scala,python,visualstudiocode,helm
+# Edit at https://www.gitignore.io/?templates=vim,macos,linux,emacs,scala,python,visualstudiocode,helm
 
 ### Emacs ###
 # -*- mode: gitignore; -*-
@@ -70,23 +78,13 @@ projectile-bookmarks.eld
 # directory configuration
 .dir-locals.el
 
-# saveplace
-places
+# network security
+/network-security.data
 
-# url cache
-url/cache/
 
-# cedet
-ede-projects.el
-
-# smex
-smex-items
-
-# company-statistics
-company-statistics-cache.el
-
-# anaconda-mode
-anaconda-mode/
+### Helm ###
+# Chart dependencies
+**/charts/*.tgz
 
 ### Linux ###
 
@@ -103,7 +101,8 @@ anaconda-mode/
 .nfs*
 
 ### macOS ###
-*.DS_Store
+# General
+.DS_Store
 .AppleDouble
 .LSOverride
 
@@ -151,9 +150,12 @@ parts/
 sdist/
 var/
 wheels/
+pip-wheel-metadata/
+share/python-wheels/
 *.egg-info/
 .installed.cfg
 *.egg
+MANIFEST
 
 # PyInstaller
 #  Usually these files are written by a python script from a template
@@ -168,22 +170,19 @@ pip-delete-this-directory.txt
 # Unit test / coverage reports
 htmlcov/
 .tox/
+.nox/
 .coverage
 .coverage.*
 .cache
-.pytest_cache/
 nosetests.xml
 coverage.xml
 *.cover
 .hypothesis/
+.pytest_cache/
 
 # Translations
 *.mo
 *.pot
-
-# Flask stuff:
-instance/
-.webassets-cache
 
 # Scrapy stuff:
 .scrapy
@@ -194,26 +193,21 @@ docs/_build/
 # PyBuilder
 target/
 
-# Jupyter Notebook
-.ipynb_checkpoints
-
 # pyenv
 .python-version
 
+# pipenv
+#   According to pypa/pipenv#598, it is recommended to include Pipfile.lock in version control.
+#   However, in case of collaboration, if having platform-specific dependencies or dependencies
+#   having no cross-platform support, pipenv may install dependencies that don't work, or not
+#   install all needed dependencies.
+#Pipfile.lock
+
 # celery beat schedule file
-celerybeat-schedule.*
+celerybeat-schedule
 
 # SageMath parsed files
 *.sage.py
-
-# Environments
-.env
-.venv
-env/
-venv/
-ENV/
-env.bak/
-venv.bak/
 
 # Spyder project settings
 .spyderproject
@@ -222,26 +216,56 @@ venv.bak/
 # Rope project settings
 .ropeproject
 
+# Mr Developer
+.mr.developer.cfg
+.project
+.pydevproject
+
 # mkdocs documentation
 /site
 
 # mypy
 .mypy_cache/
+.dmypy.json
+dmypy.json
+
+# Pyre type checker
+.pyre/
 
 ### Scala ###
 *.class
 *.log
+*.metals
 
 ### Vim ###
-# swap
-.sw[a-p]
-.*.sw[a-p]
-# session
+# Swap
+[._]*.s[a-v][a-z]
+[._]*.sw[a-p]
+[._]s[a-rt-v][a-z]
+[._]ss[a-gi-z]
+[._]sw[a-p]
+
+# Session
 Session.vim
-# temporary
+Sessionx.vim
+
+# Temporary
 .netrwhist
-# auto-generated tag files
+
+# Auto-generated tag files
 tags
 
+# Persistent undo
+[._]*.un~
 
-# End of https://www.gitignore.io/api/vim,macos,linux,emacs,scala,python
+# Coc configuration directory
+.vim
+
+### VisualStudioCode ###
+.vscode
+
+### VisualStudioCode Patch ###
+# Ignore all local history of files
+.history
+
+# End of https://www.gitignore.io/api/vim,macos,linux,emacs,scala,python,visualstudiocode,helm

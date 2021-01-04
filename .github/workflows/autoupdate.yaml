@@ -1,0 +1,16 @@
+name: autoupdate
+on:
+  # This will trigger on all pushes to all branches.
+  push: {}
+jobs:
+  autoupdate:
+    name: autoupdate
+    runs-on: ubuntu-18.04
+    steps:
+      - uses: docker://chinthakagodawita/autoupdate-action:v1
+        env:
+          GITHUB_TOKEN: "${{ secrets.RENKU_CI_TOKEN }}"
+          PR_FILTER: "labelled"
+          PR_LABELS: "autoupdate"
+          MERGE_MSG: "Branch was auto-updated."
+

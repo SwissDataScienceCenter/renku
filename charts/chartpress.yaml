@@ -1,30 +1,36 @@
 charts:
-  - name: gitlab
-    imagePrefix: renku/
-    repo:
-      git: SwissDataScienceCenter/helm-charts
-      published: https://swissdatasciencecenter.github.io/helm-charts
-    paths:
-      - ./gitlab
+  ## gitlab and renku chart versions are not evolving together. Uncomment
+  ## this only when explicitly building the gitlab chart and set the appropriate tag.
+  # - name: gitlab
+  #   imagePrefix: renku/
+  #   repo:
+  #     git: SwissDataScienceCenter/helm-charts
+  #     published: https://swissdatasciencecenter.github.io/helm-charts
+  #   paths:
+  #     - ./gitlab
+
   - name: renku
+    resetTag: latest
     imagePrefix: renku/
     repo:
       git: SwissDataScienceCenter/helm-charts
       published: https://swissdatasciencecenter.github.io/helm-charts
     paths:
       - .
-      - ../services/apispec
-      - ../tests
+      - ../acceptance-tests
+      - ../scripts/init-realm
     images:
-      apispec:
-        contextPath: ../services/apispec
-        dockerfilePath: ../services/apispec/Dockerfile
-        valuesPath: apispec.image
-        paths:
-          - ../services/apispec
       tests:
-        contextPath: ../tests
-        dockerfilePath: ../tests/Dockerfile
+        buildArgs:
+          BUILDKIT_INLINE_CACHE: "1"
+        contextPath: ../acceptance-tests
+        dockerfilePath: ../acceptance-tests/Dockerfile
         valuesPath: tests.image
         paths:
-          - ../tests
+          - ../acceptance-tests
+      init-realm:
+        contextPath: ../scripts/init-realm
+        dockerfilePath: ../scripts/init-realm/Dockerfile
+        valuesPath: keycloak.initRealm.image
+        paths:
+          - ../scripts/init-realm
