@@ -29,5 +29,3 @@ You can set these environment variables:
 | UPSTREAM_REPO | SwissDataScienceCenter/renku |
 | GIT_EMAIL     | renku@datascience.ch |
 | GIT_USER      | Renku Bot |
-| HELM_URL      | https://charts.helm.sh/stable |
-| HELM_TGZ      | helm-v2.16.1-linux-amd64.tar.gz |
