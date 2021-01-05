@@ -38,7 +38,7 @@ There are known **caveats** for a setup using an external GitLab instance:
 gitlab.com
 ----------
 The extra configuration needed for a deployment against ``gitlab.com`` is in a
-specific `values file <https://github.com/SwissDataScienceCenter/renku/blob/master/charts/example-configurations/external-gitlab-values.yaml>`_.
+specific `values file <https://github.com/SwissDataScienceCenter/renku/blob/master/charts/example-configurations/gitlab_dot_com-gitlab-values.yaml>`_.
 This file can also be used as a secondary values file in a Renku deployment which is
 running in the cloud.
 
@@ -46,8 +46,8 @@ running in the cloud.
 renkulab.io
 -----------
 You can also use the GitLab instance of the SDSCs public renku deployment
-`<renkulab.io/gitlab>`_ as a GitLab backend. The same
-`values file <https://github.com/SwissDataScienceCenter/renku/blob/master/charts/example-configurations/external-gitlab-values.yaml>`_.
+`<https://renkulab.io/gitlab>`_ as a GitLab backend. The same
+`values file <https://github.com/SwissDataScienceCenter/renku/blob/master/charts/example-configurations/gitlab_dot_com-gitlab-values.yaml>`_.
 has the necessary configurations for such a deployment indicated. All the steps
 necessary for such a setup are identical to the ones when using ``gitlab.com``,
 except for the configuration of ``renkulab.io/gitlab`` as the upstream identity provider

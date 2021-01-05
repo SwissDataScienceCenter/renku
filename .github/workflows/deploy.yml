@@ -39,7 +39,7 @@ jobs:
         CD_VALUES: ${{ secrets.CD_VALUES }}
       run: |
         echo "$RENKUBOT_KUBECONFIG" > renkubot-kube.config
-        helm repo add stable 	https://kubernetes-charts.storage.googleapis.com
+        helm repo add stable https://charts.helm.sh/stable
         helm repo add codecentric https://codecentric.github.io/helm-charts
         helm repo add renku https://swissdatasciencecenter.github.io/helm-charts/
         helm repo add gitlab https://charts.gitlab.io/
@@ -142,7 +142,7 @@ jobs:
           git config --global user.email renku@datascience.ch
       - name: update and test chart
         env:
-          HELM_URL: https://storage.googleapis.com/kubernetes-helm
+          HELM_URL: https://charts.helm.sh/stable
           HELM_TGZ: helm-v2.16.1-linux-amd64.tar.gz
           TEMP_DIR: ${{ runner.temp }}
         run: |

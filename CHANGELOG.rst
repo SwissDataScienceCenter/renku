@@ -1,5 +1,92 @@
 .. _changelog:
 
+0.7.4
+-----
+
+This is a patch release that includes a notebooks change and some improvements to the Knowledge Graph.
+
+0.7.3
+-----
+
+This release contains some very nice improvements to the file and datasets management and visualization as well as project migrations.
+
+New features
+~~~~~~~~~~~~
+
+- **Dataset removal** A dataset can be now removed from a project, either from the UI or with the Renku CLI.
+
+- **Pinned environments image** A project can pin interactive environments to a specific image, independent of the content of the project. This can be useful for situations like courses where everyone should use the environment defined by the instructor. To take advantage, see the `renku configuration file documentation <https://renku.readthedocs.io/en/latest/user/templates.html?highlight=.dockerignore#renku>`_.
+
+- **Project migration** Project migration has been improved, allowing users to migrate the template, Dockerfile and Renku version with just one click. Information about the latest and current Renku CLI and template versions are displayed in the Status section of a project. Additionally, a migrationscheck command is available in Renku CLI.
+
+Improvements
+~~~~~~~~~~~~
+
+- **Dataset upload** When uploading files, a progress bar is displayed.
+
+- **Dataset visualization** For a better experience on dataset listing inside projects, description and author list have been cropped. The full content of both is still available when accessing the dataset.
+
+- **File preview** Preview of C++ and Fortran files is supported.
+
+- **File download** Files can be downloaded from the Renku UI.
+
+- **Autosaved work** Commits with autosaved content are marked with ``*`` and dialog is more specific.
+
+- **Autosave git LFS** When a session is closed and work is automatically saved, large files are added to LFS according to the project's settings see `renku config documentation <https://renku-python.readthedocs.io/en/v0.12.0/commands.html#available-configuration-values>`_.
+
+- **Core** Renku CLI commit messages are shortened to 100 characters for readability.
+
+- **New projects** Templates to create new projects now use the new Renku CLI version ``0.12.2`` by default.
+
+
+Fixes
+~~~~~
+
+- **Auth credentials**: the way Renku environments handle git credentials has been improved.
+
+
+Individual components
+~~~~~~~~~~~~~~~~~~~~~
+
+For changes to individual components, check:
+
+* renku-ui:
+  `0.11.3 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/0.11.3>`__
+
+* renku-gateway
+  `0.9.3 <https://github.com/SwissDataScienceCenter/renku-gateway/releases/tag/0.9.3>`__
+
+* renku-core
+  `0.12.2 <https://github.com/SwissDataScienceCenter/renku-python/releases/tag/0.12.2>`__
+
+Upgrading from 0.7.2
+~~~~~~~~~~~~~~~~~~~~
+
+-  No changes required in the values file for this upgrade
+
+0.7.2
+-----
+
+This release brings several smaller improvements and bug-fixes, the most
+notable of which are:
+
+New features
+~~~~~~~~~~~~
+- **Datasets** Add new fields and the possibility to edit existing fields to
+  the web UI.
+- **Knowledge Graph** Improve information flow related to KG integration and
+  Renku version updates in the UI.
+
+Fixes
+~~~~~
+
+- **Project creation**: improve name validation, the handling of non ASCII
+  characters and a bug which led to failures when fetching the available templates.
+- **Graph processing**: fix a bug in prioritizing events for processing.
+
+For details check out the individual component updates.
+
+
 0.7.1
 -----
 
