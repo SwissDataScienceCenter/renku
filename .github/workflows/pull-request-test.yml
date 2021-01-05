@@ -45,6 +45,9 @@ jobs:
     if: github.event.action != 'closed'
     needs: cleanup-previous-runs
     runs-on: ubuntu-latest
+    environment:
+      name: 'ci-renku-${{ github.event.number }}'
+      url: 'https://ci-renku-${{ github.event.number }}.dev.renku.ch'
     steps:
     - uses: actions/checkout@v2
     - name: renku build and deploy
