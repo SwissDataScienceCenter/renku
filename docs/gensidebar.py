@@ -84,7 +84,7 @@ def generate_sidebar(on_rtd, rtd_version, conf_api):
     write("Renku Platform", "platform", "renku")
 
     toctree(None, max_depth=3, hidden=True, include_hidden=False)
-    write("Renku Python CLI and Service", "introduction", "renku-python")
+    write("Renku Client", "introduction", "renku-python")
 
     toctree(None, max_depth=1, hidden=True)
     write("Get in touch", "get_in_touch", "renku")

@@ -37,4 +37,4 @@ You can set these environment variables:
 | GIT_USER      | None | Yes |
 | GITHUB_TOKEN  | None | Yes |
 | HELM_URL      | https://storage.googleapis.com/kubernetes-helm | No |
-| HELM_TGZ      | helm-v2.16.1-linux-amd64.tar.gz | No |
+| HELM_TGZ      | helm-v2.17.0-linux-amd64.tar.gz | No |
