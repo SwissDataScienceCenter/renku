@@ -20,7 +20,7 @@
 RENKU (連句)
 ============
 
-.. image:: https://github.com/SwissDataScienceCenter/renku/workflows/Deploy%20and%20Test/badge.svg
+.. image:: https://github.com/SwissDataScienceCenter/renku/workflows/Deploy%20and%20Test/badge.svg?branch=development
    :target: https://github.com/SwissDataScienceCenter/renku/actions?query=workflow%3A%22Deploy+and+Test%22
 
 .. image:: https://readthedocs.org/projects/renku/badge/
