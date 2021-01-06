@@ -47,14 +47,22 @@ jobs:
     runs-on: ubuntu-latest
     environment:
       name: ci-renku-${{ github.event.number }}
-      url: ${{ steps.set_env_url.outputs.env_url }}
     steps:
     - uses: actions/checkout@v2
-    - name: set environment URL
-      id: set_env_url
-      run: echo "::set-output name=env_url::"https://${RENKU_RELEASE}.dev.renku.ch"\n"
-      env:
-        RENKU_RELEASE: ci-renku-${{ github.event.number }}
+    - name: Find Comment
+      uses: peter-evans/find-comment@v1
+      id: findcomment
+      with:
+        issue-number: ${{ github.event.pull_request.number }}
+        comment-author: 'RenkuBot'
+    - name: Create comment pre deploy
+      if: ${{ steps.findcomment.outputs.comment-id == 0 }}
+      uses: peter-evans/create-or-update-comment@v1
+      with:
+        token: ${{ secrets.RENKUBOT_GITHUB_TOKEN }}
+        issue-number: ${{ github.event.pull_request.number }}
+        body: |
+          A deployment for this PR is being prepared - you will be able to access it at https://ci-renku-${{ github.event.number }}.dev.renku.ch
     - name: renku build and deploy
       uses: ./actions/deploy-renku
       env:
