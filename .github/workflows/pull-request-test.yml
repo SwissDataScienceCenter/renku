@@ -50,28 +50,28 @@ jobs:
       name: ci-renku-${{ github.event.number }}
     steps:
     - uses: actions/checkout@v2
+    - id: deploy-comment
+      uses: ./actions/check-pr-description
+      with:
+        string: /deploy
+        pr_ref: ${{ github.event.number }}
     - name: Check existing renkubot comment
+      if: ${{ steps.deploy-comment.outputs.pr-contains-string }}
       uses: peter-evans/find-comment@v1
       id: findcomment
       with:
         issue-number: ${{ github.event.pull_request.number }}
         comment-author: 'RenkuBot'
     - name: Create comment pre deploy
-      if: ${{ steps.findcomment.outputs.comment-id == 0 }}
+      if: "${{ steps.findcomment.outputs.comment-id == 0 }} && ${{ steps.deploy-comment.outputs.pr-contains-string }}"
       uses: peter-evans/create-or-update-comment@v1
       with:
         token: ${{ secrets.RENKUBOT_GITHUB_TOKEN }}
         issue-number: ${{ github.event.pull_request.number }}
         body: |
-          A deployment for this PR is being prepared - you will be able to access it at https://ci-renku-${{ github.event.number }}.dev.renku.ch
-    - name: Check if PR should be deployed and tested
-      uses: peter-evans/find-comment@v1
-      id: deploy-comment
-      with:
-        issue-number: ${{ github.event.pull_request.number }}
-        body-includes: "/deploy"
+          You can access the deployment of this PR at https://ci-renku-${{ github.event.number }}.dev.renku.ch
     - name: renku build and deploy
-      if: ${{ steps.deploy-comment.outputs.comment-body != 0 }}
+      if: ${{ steps.deploy-comment.outputs.pr-contains-string }}
       uses: ./actions/deploy-renku
       env:
         DOCKER_PASSWORD: ${{ secrets.RENKU_DOCKER_PASSWORD }}
@@ -96,19 +96,18 @@ jobs:
     - uses: actions/setup-python@v1
       with:
         python-version: 3.7
-    - name: Check if PR should be deployed and tested
-      uses: peter-evans/find-comment@v1
-      id: deploy-comment
+    - id: deploy-comment
+      uses: ./actions/check-pr-description
       with:
-        issue-number: ${{ github.event.pull_request.number }}
-        body-includes: "/deploy"
+        string: /deploy
+        pr_ref: ${{ github.event.number }}
     - name: Install dependencies
-      if: ${{ steps.deploy-comment.outputs.comment-body != 0 }}
+      if: ${{ steps.deploy-comment.outputs.pr-contains-string }}
       run: |
         sudo apt-get update -y && sudo apt-get install -y grep
         pip install yq
     - name: Test the PR
-      if: ${{ steps.deploy-comment.outputs.comment-body != 0 }}
+      if: ${{ steps.deploy-comment.outputs.pr-contains-string }}
       env:
         RENKU_BOT_DEV_PASSWORD: ${{ secrets.RENKU_BOT_DEV_PASSWORD }}
       run: |

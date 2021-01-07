@@ -1,0 +1,21 @@
+name: 'check PR description'
+description: Check the PR description for a string.
+inputs:
+  string:
+    description: string to check for
+    required: true
+  pr_ref:
+    description: Pull request ID
+    required: true
+outputs:
+  pr-contains-string:
+    description: true/false whether the PR description contains the string
+    value: ${{ steps.check-string.outputs.pr-contains-string }}
+runs:
+  using: "composite"
+  steps:
+    - id: check-string
+      run: |
+        pr_contains_string=$(curl -s https://api.github.com/repos/${GITHUB_REPOSITORY}/pulls/${{ inputs.pr_ref }} | jq ".body | test(\"${{ inputs.string }}\")")
+        echo "::set-output name=pr-contains-string::$pr_contains_string\n"
+      shell: bash
