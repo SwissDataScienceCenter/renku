@@ -6,17 +6,18 @@ on:
     - synchronize
     - reopened
     - closed
+  issue_comment:
 
 jobs:
   cleanup-previous-runs:
     runs-on: ubuntu-latest
-    if: github.event.action != 'closed'
+    if: "github.event.action != 'closed' && ${{ github.event.issue.pull_request }}"
     steps:
     - uses: rokroskar/workflow-run-cleanup-action@master
       env:
         GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
   test-docs:
-    if: github.event.action != 'closed'
+    if: "github.event.action != 'closed' && ${{ github.event.issue.pull_request }}"
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
@@ -42,14 +43,14 @@ jobs:
         name: docs
         path: docs/_build/html/
   deploy-pr:
-    if: github.event.action != 'closed'
+    if: "github.event.action != 'closed' && ${{ github.event.issue.pull_request }}"
     needs: cleanup-previous-runs
     runs-on: ubuntu-latest
     environment:
       name: ci-renku-${{ github.event.number }}
     steps:
     - uses: actions/checkout@v2
-    - name: Find Comment
+    - name: Check existing renkubot comment
       uses: peter-evans/find-comment@v1
       id: findcomment
       with:
@@ -63,7 +64,14 @@ jobs:
         issue-number: ${{ github.event.pull_request.number }}
         body: |
           A deployment for this PR is being prepared - you will be able to access it at https://ci-renku-${{ github.event.number }}.dev.renku.ch
+    - name: Check if PR should be deployed and tested
+      uses: peter-evans/find-comment@v1
+      id: deploy-comment
+      with:
+        issue-number: ${{ github.event.pull_request.number }}
+        body-includes: "/deploy"
     - name: renku build and deploy
+      if: ${{ steps.deploy-comment.outputs.comment-body != 0 }}
       uses: ./actions/deploy-renku
       env:
         DOCKER_PASSWORD: ${{ secrets.RENKU_DOCKER_PASSWORD }}
@@ -81,18 +89,26 @@ jobs:
         renku: "@${{ github.head_ref }}"
   test-pr:
     runs-on: ubuntu-latest
-    if: github.event.action != 'closed'
+    if: "github.event.action != 'closed' && ${{ github.event.issue.pull_request }}"
     needs: deploy-pr
     steps:
     - uses: actions/checkout@v2
     - uses: actions/setup-python@v1
       with:
         python-version: 3.7
+    - name: Check if PR should be deployed and tested
+      uses: peter-evans/find-comment@v1
+      id: deploy-comment
+      with:
+        issue-number: ${{ github.event.pull_request.number }}
+        body-includes: "/deploy"
     - name: Install dependencies
+      if: ${{ steps.deploy-comment.outputs.comment-body != 0 }}
       run: |
         sudo apt-get update -y && sudo apt-get install -y grep
         pip install yq
     - name: Test the PR
+      if: ${{ steps.deploy-comment.outputs.comment-body != 0 }}
       env:
         RENKU_BOT_DEV_PASSWORD: ${{ secrets.RENKU_BOT_DEV_PASSWORD }}
       run: |
@@ -129,7 +145,7 @@ jobs:
         name: acceptance-test-artifacts
         path: acceptance-tests/test-artifacts
   cleanup:
-    if: github.event.action == 'closed'
+    if: "github.event.action == 'closed' && ${{ github.event.issue.pull_request }}"
     runs-on: ubuntu-20.04
     steps:
     - uses: actions/checkout@v2
