@@ -7,7 +7,7 @@
 # RENKU_VALUES_FILE
 # RENKU_RELEASE
 # RENKU_NAMESPACE
-#
+# RENKU_ANONYMOUS_SESSIONS
 
 import argparse
 import os
@@ -159,6 +159,12 @@ if __name__ == "__main__":
     parser.add_argument(
         "--release", help="Release name", default=os.environ.get("RENKU_RELEASE")
     )
+    parser.add_argument(
+        "--anonymous-sessions",
+        help="Enable anonymous sessions by setting to \"true\"",
+        action=argparse.BooleanOptionalAction,
+        default=os.environ.get("RENKU_ANONYMOUS_SESSIONS")=='true',
+    )
 
     args = parser.parse_args()
     component_versions = {
@@ -197,8 +203,7 @@ if __name__ == "__main__":
     print(f'*** Dependencies for release "{release}" under namespace "{namespace}" ***')
     pprint.pp(reqs)
 
-    check_call(
-        [
+    helm_command = [
             "helm",
             "upgrade",
             "--install",
@@ -210,8 +215,40 @@ if __name__ == "__main__":
             namespace,
             "--timeout",
             "20m",
-        ],
+        ]
+
+    if args.anonymous_sessions:
+        helm_command += ["--set", "global.anonymousSessions.enabled=true"]
+
+    # deploy the main chart
+    check_call(
+        helm_command,
         cwd=renku_dir / "helm-chart",
     )
+
+    # enable anonymous notebooks if needed
+    if args.anonymous_sessions:
+        from deploy_tmp_notebooks import (
+            deploy_tmp_notebooks,
+            check_notebooks_chart_version,
+        )
+
+        renku_notebooks_version = component_versions.get(
+            "renku-notebooks"
+        ) or check_notebooks_chart_version(renku_chart_path=renku_dir / "helm-chart")
+
+        local_path = (
+            tempdir / "renku_notebooks/helm-chart"
+            if renku_notebooks_version.startswith("@")
+            else None
+        )
+
+        deploy_tmp_notebooks(
+            release,
+            namespace,
+            renku_notebooks_version,
+            namespace + "-tmp",
+            local_path=local_path,
+        )
 
     tempdir_.cleanup()

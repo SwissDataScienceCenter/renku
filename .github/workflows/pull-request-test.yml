@@ -85,6 +85,7 @@ jobs:
         RENKU_VALUES: ${{ secrets.CI_RENKU_VALUES }}
         RENKUBOT_KUBECONFIG: ${{ secrets.RENKUBOT_DEV_KUBECONFIG }}
         RENKUBOT_RANCHER_BEARER_TOKEN: ${{ secrets.RENKUBOT_RANCHER_BEARER_TOKEN }}
+        RENKU_ANONYMOUS_SESSIONS: true
         renku: "@${{ github.head_ref }}"
   test-pr:
     runs-on: ubuntu-latest

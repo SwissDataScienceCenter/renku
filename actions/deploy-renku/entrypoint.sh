@@ -44,14 +44,3 @@ curl -s -H "Authorization: Bearer $RENKUBOT_RANCHER_BEARER_TOKEN" \
 
 # deploy renku - reads config from environment variables
 python3 /deploy-dev-renku.py
-
-# deploy anonymous notebooks
-helm repo add renku https://swissdatasciencecenter.github.io/helm-charts
-helm repo update
-
-# fetch the deployed renku-notebooks version
-NOTEBOOKS_VERSION=$(kubectl -n "$RENKU_NAMESPACE" get configmaps notebook-helper-scripts -ojson | jq -r ".metadata.labels.chart")
-python3 /deploy-tmp-notebooks.py --release-name "$RENKU_RELEASE" \
-                                 --renku-namespace "$RENKU_NAMESPACE" \
-                                 --tmp-namespace "$RENKU_TMP_NAMESPACE" \
-                                 --notebooks-version "${NOTEBOOKS_VERSION:10}"
