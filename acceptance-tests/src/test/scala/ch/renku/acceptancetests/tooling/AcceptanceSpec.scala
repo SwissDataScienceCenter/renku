@@ -31,7 +31,7 @@ trait AcceptanceSpec
       case Some(_) =>
         new ChromeDriver(
           new ChromeDriverService.Builder().withWhitelistedIps("127.0.0.1").build,
-          new ChromeOptions().addArguments("--no-sandbox", "--headless")
+          new ChromeOptions().addArguments("--no-sandbox", "--headless", "--disable-gpu")
         )
       case None =>
         Chrome.webDriver
