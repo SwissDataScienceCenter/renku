@@ -165,6 +165,12 @@ if __name__ == "__main__":
         action=argparse.BooleanOptionalAction,
         default=os.environ.get("RENKU_ANONYMOUS_SESSIONS")=='true',
     )
+    parser.add_argument(
+        "--tests-enabled",
+        help="Enable setting up tests",
+        action=argparse.BooleanOptionalAction,
+        default=os.environ.get("RENKU_TESTS_ENABLED")=='true',
+    )
 
     args = parser.parse_args()
     component_versions = {
@@ -198,7 +204,7 @@ if __name__ == "__main__":
     ## 4. deploy
     values_file = args.values_file
     release = args.release
-    namespace = args.namespace
+    namespace = args.namespace or release
 
     print(f'*** Dependencies for release "{release}" under namespace "{namespace}" ***')
     pprint.pp(reqs)
@@ -219,6 +225,15 @@ if __name__ == "__main__":
 
     if args.anonymous_sessions:
         helm_command += ["--set", "global.anonymousSessions.enabled=true"]
+
+    if args.tests_enabled:
+        helm_command += [
+            "--set", "tests.enabled=true",
+            "--set", "tests.parameters.username=\"renku-test\"",
+            "--set", "tests.parameters.fullname=\"Renku Bot\"",
+            "--set", "tests.parameters.email=\"renku@datascience.ch\"",
+            "--set", "tests.parameters.password=\"$RENKU_BOT_DEV_PASSWORD\""
+        ]
 
     # deploy the main chart
     check_call(

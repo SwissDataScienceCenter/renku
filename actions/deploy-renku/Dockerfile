@@ -9,5 +9,5 @@ RUN apk add python3 docker jq && \
     kubernetes \
     ruamel.yaml
 
-COPY deploy-dev-renku.py deploy-tmp-notebooks.py entrypoint.sh /
+COPY deploy-dev-renku.py deploy_tmp_notebooks.py entrypoint.sh /
 ENTRYPOINT /entrypoint.sh
