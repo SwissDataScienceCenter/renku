@@ -162,13 +162,13 @@ if __name__ == "__main__":
     parser.add_argument(
         "--anonymous-sessions",
         help="Enable anonymous sessions by setting to \"true\"",
-        action=argparse.BooleanOptionalAction,
+        action="store_true",
         default=os.environ.get("RENKU_ANONYMOUS_SESSIONS")=='true',
     )
     parser.add_argument(
         "--tests-enabled",
         help="Enable setting up tests",
-        action=argparse.BooleanOptionalAction,
+        action="store_true",
         default=os.environ.get("RENKU_TESTS_ENABLED")=='true',
     )
 
