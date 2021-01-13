@@ -596,7 +596,7 @@ tests:
   enabled: false
   image:
     repository: degano/tests
-    tag: '0.7.4-340d844'
+    tag: '0.7.4-f2ef7ab'
   ## User account for running `helm test`
   #parameters:
   #  email: bwayne@example.com
