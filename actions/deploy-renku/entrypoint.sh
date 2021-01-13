@@ -1,5 +1,8 @@
 #!/bin/sh
 
+RENKU_NAMESPACE=${RENKU_NAMESPACE:-$RENKU_RELEASE}
+RENKU_TMP_NAMESPACE=${RENKU_TMP_NAMESPACE:-${RENKU_NAMESPACE}-tmp}
+
 # set up docker credentials
 echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin
 
@@ -43,4 +46,7 @@ curl -s -H "Authorization: Bearer $RENKUBOT_RANCHER_BEARER_TOKEN" \
         'https://rancher.renku.ch/v3/cluster/c-l6jt4/namespaces'
 
 # deploy renku - reads config from environment variables
+helm repo add renku https://swissdatasciencecenter.github.io/helm-charts
+helm repo update
+
 python3 /deploy-dev-renku.py
