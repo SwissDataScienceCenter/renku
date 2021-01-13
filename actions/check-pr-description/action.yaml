@@ -18,4 +18,6 @@ runs:
       run: |
         pr_contains_string=$(curl -s https://api.github.com/repos/${GITHUB_REPOSITORY}/pulls/${{ inputs.pr_ref }} | jq ".body | test(\"${{ inputs.string }}\")")
         echo "::set-output name=pr-contains-string::$pr_contains_string\n"
+        echo $pr_contains_string
+        echo "https://api.github.com/repos/${GITHUB_REPOSITORY}/pulls/${{ inputs.pr_ref }}"
       shell: bash

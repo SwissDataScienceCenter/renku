@@ -70,7 +70,7 @@ jobs:
         body: |
           You can access the deployment of this PR at https://ci-renku-${{ github.event.number }}.dev.renku.ch
     - name: renku build and deploy
-      if: ${{ steps.deploy-comment.outputs.pr-contains-string }}
+      if: steps.deploy-comment.outputs.pr-contains-string == "true"
       uses: ./actions/deploy-renku
       env:
         DOCKER_PASSWORD: ${{ secrets.RENKU_DOCKER_PASSWORD }}
@@ -102,12 +102,11 @@ jobs:
         string: /deploy
         pr_ref: ${{ github.event.number }}
     - name: Install dependencies
-      if: ${{ steps.deploy-comment.outputs.pr-contains-string }}
       run: |
         sudo apt-get update -y && sudo apt-get install -y grep
         pip install yq
     - name: Test the PR
-      if: ${{ steps.deploy-comment.outputs.pr-contains-string }}
+      if: steps.deploy-comment.outputs.pr-contains-string == "true"
       env:
         RENKU_BOT_DEV_PASSWORD: ${{ secrets.RENKU_BOT_DEV_PASSWORD }}
       run: |
