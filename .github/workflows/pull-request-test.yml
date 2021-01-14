@@ -54,23 +54,8 @@ jobs:
       with:
         string: /deploy
         pr_ref: ${{ github.event.number }}
-    - name: Check existing renkubot comment
-      if: ${{ steps.deploy-comment.outputs.pr-contains-string }}
-      uses: peter-evans/find-comment@v1
-      id: findcomment
-      with:
-        issue-number: ${{ github.event.pull_request.number }}
-        comment-author: 'RenkuBot'
-    - name: Create comment pre deploy
-      if: "steps.findcomment.outputs.comment-id == 0 && steps.deploy-comment.outputs.pr-contains-string"
-      uses: peter-evans/create-or-update-comment@v1
-      with:
-        token: ${{ secrets.RENKUBOT_GITHUB_TOKEN }}
-        issue-number: ${{ github.event.pull_request.number }}
-        body: |
-          You can access the deployment of this PR at https://ci-renku-${{ github.event.number }}.dev.renku.ch
     - name: renku build and deploy
-      if: steps.deploy-comment.outputs.pr-contains-string == "true"
+      if: steps.deploy-comment.outputs.pr-contains-string == 'true'
       uses: ./actions/deploy-renku
       env:
         DOCKER_PASSWORD: ${{ secrets.RENKU_DOCKER_PASSWORD }}
@@ -87,6 +72,22 @@ jobs:
         RENKU_ANONYMOUS_SESSIONS: true
         RENKU_TESTS_ENABLED: true
         renku: "@${{ github.head_ref }}"
+    - name: Check existing renkubot comment
+      if: ${{ steps.deploy-comment.outputs.pr-contains-string }}
+      uses: peter-evans/find-comment@v1
+      id: findcomment
+      with:
+        issue-number: ${{ github.event.pull_request.number }}
+        comment-author: 'RenkuBot'
+    - name: Create comment pre deploy
+      if: "steps.findcomment.outputs.comment-id == 0 && steps.deploy-comment.outputs.pr-contains-string == 'true'"
+      uses: peter-evans/create-or-update-comment@v1
+      with:
+        token: ${{ secrets.RENKUBOT_GITHUB_TOKEN }}
+        issue-number: ${{ github.event.pull_request.number }}
+        body: |
+          You can access the deployment of this PR at https://ci-renku-${{ github.event.number }}.dev.renku.ch
+
   test-pr:
     runs-on: ubuntu-latest
     if: github.event.action != 'closed'
@@ -106,7 +107,7 @@ jobs:
         sudo apt-get update -y && sudo apt-get install -y grep
         pip install yq
     - name: Test the PR
-      if: steps.deploy-comment.outputs.pr-contains-string == "true"
+      if: steps.deploy-comment.outputs.pr-contains-string == 'true'
       env:
         RENKU_BOT_DEV_PASSWORD: ${{ secrets.RENKU_BOT_DEV_PASSWORD }}
       run: |
