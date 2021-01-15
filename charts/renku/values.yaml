@@ -604,7 +604,7 @@ tests:
   #  fullname: Bruce Wayne
   #  password: IamBatman
   #  provider:
-  #  testRegister: true
+  #  register:
   #  docsRun:
   #  extantProject:
   #  anonProject:

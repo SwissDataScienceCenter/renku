@@ -125,6 +125,7 @@ jobs:
                     --set tests.parameters.email="renku@datascience.ch" \
                     --set tests.parameters.password="$RENKU_BOT_DEV_PASSWORD" \
                     --set tests.parameters.anonAvailable="true" \
+                    --set tests.parameters.register="true" \
                     --set tests.resultsS3.host="os.zhdk.cloud.switch.ch" \
                     --set tests.resultsS3.bucket="dev-acceptance-tests-results" \
                     --set tests.resultsS3.filename="tests-artifacts-${GITHUB_SHA}" \
