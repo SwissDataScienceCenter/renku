@@ -3,7 +3,7 @@ name: Deploy and Test
 on:
   push:
     paths:
-    - charts/**
+    - helm-chart/**
     - scripts/**
     - acceptance-tests/**
     - .github/**
@@ -44,22 +44,22 @@ jobs:
         helm repo add renku https://swissdatasciencecenter.github.io/helm-charts/
         helm repo add gitlab https://charts.gitlab.io/
         helm repo add jupyterhub https://jupyterhub.github.io/helm-chart
-        rm -rf charts/renku/charts
-        helm dependency update charts/renku
+        rm -rf helm-chart/renku/charts
+        helm dependency update helm-chart/renku
         printf "%s" "$CD_VALUES" > cd_values.yaml
         helm upgrade --install renku \
                     --namespace renku \
                     -f cd_values.yaml \
                     --timeout 1800s \
                     --cleanup-on-fail \
-                    charts/renku
+                    helm-chart/renku
     - name: Turn on anonymous notebooks
       env:
         KUBECONFIG: ${{ github.workspace }}/renkubot-kube.config
         RENKUBOT_KUBECONFIG: ${{ secrets.RENKUBOT_KUBECONFIG }}
       run: |
         echo "$RENKUBOT_KUBECONFIG" > renkubot-kube.config
-        charts/deploy-tmp-notebooks.py --release-name renku --renku-namespace renku
+        helm-chart/deploy-tmp-notebooks.py --release-name renku --renku-namespace renku
     - name: Notify slack
       if: success()
       env:
@@ -85,7 +85,7 @@ jobs:
       env:
         RENKU_BOT_DEV_PASSWORD: ${{ secrets.RENKU_BOT_DEV_PASSWORD }}
       run: |
-        RENKU_PYTHON_VERSION=v$(cat ./charts/renku/requirements.yaml | yq -r '.dependencies[] | select(.name == "renku-core") | .version')
+        RENKU_PYTHON_VERSION=v$(cat ./helm-chart/renku/requirements.yaml | yq -r '.dependencies[] | select(.name == "renku-core") | .version')
         RENKU_PYTHON_COMMIT=$(echo $RENKU_PYTHON_VERSION | grep -o -P '(?<=-)[0-9a-fA-F]+') || true
         if [ $RENKU_PYTHON_COMMIT ]; then export RENKU_PYTHON_VERSION=$RENKU_PYTHON_COMMIT; fi
         echo "Passing renku-python version $RENKU_PYTHON_VERSION"
@@ -148,8 +148,8 @@ jobs:
         run: |
           PATH=${{ runner.temp }}/linux-amd64/:$PATH
           scripts/install-helm.sh
-          helm dep update charts/renku
-          helm dep update charts/gitlab
+          helm dep update helm-chart/renku
+          helm dep update helm-chart/gitlab
       - name: Push helm chart and images
         if: github.ref == 'refs/heads/development' && !startsWith(github.ref, 'refs/tags/')
         env:

@@ -5,6 +5,7 @@ on:
     - opened
     - synchronize
     - reopened
+    - closed
 
 jobs:
   cleanup-previous-runs:
@@ -14,16 +15,8 @@ jobs:
     - uses: rokroskar/workflow-run-cleanup-action@master
       env:
         GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
-  github-env:
-    runs-on: ubuntu-latest
-    steps:
-    - name: get environment
-      run: env
-    - name: Dump GitHub context
-      env:
-        GITHUB_CONTEXT: ${{ toJson(github) }}
-      run: echo "$GITHUB_CONTEXT"
   test-docs:
+    if: github.event.action != 'closed'
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
@@ -48,109 +41,62 @@ jobs:
       with:
         name: docs
         path: docs/_build/html/
+  check-deploy:
+    runs-on: ubuntu-20.04
+    outputs:
+      pr-contains-string: ${{ steps.deploy-comment.outputs.pr-contains-string }}
+    steps:
+      - id: deploy-comment
+        uses: SwissDataScienceCenter/renku/actions/check-pr-description@000-deploy-action
+        with:
+          string: /deploy
+          pr_ref: ${{ github.event.number }}
   deploy-pr:
-    runs-on: ubuntu-latest
     if: github.event.action != 'closed'
-    needs: cleanup-previous-runs
+    needs: [cleanup-previous-runs, check-deploy]
+    runs-on: ubuntu-latest
+    environment:
+      name: ci-renku-${{ github.event.number }}
     steps:
     - uses: actions/checkout@v2
-    - uses: actions/setup-python@v1
-      with:
-        python-version: 3.7
-    - name: Install dependencies
-      run: |
-        sudo apt-get update -y && sudo apt-get install -y snapd
-        sudo snap install kubectl --channel=1.16/stable --classic
-        sudo snap install helm --channel=3.3/stable --classic
-        echo "PATH=/snap/bin:$PATH" >> $GITHUB_ENV
-        pip install --upgrade pip pipenv
-        pipenv install --deploy --dev --system
-    - name: Configure environment
-      run: |
-        PR_NUMBER=${{ github.event.number }}
-        echo "RENKU_RELEASE=ci-${PR_NUMBER}-renku" >> $GITHUB_ENV
-        echo "RENKU_NAMESPACE=ci-${PR_NUMBER}-renku" >> $GITHUB_ENV
-        echo "RENKU_TMP_NAMESPACE=ci-${PR_NUMBER}-renku-tmp" >> $GITHUB_ENV
-    - name: Configure GitLab application
+    - name: renku build and deploy
+      if: needs.check-deploy.outputs.pr-contains-string == 'true'
+      uses: ./actions/deploy-renku
       env:
-        GITLAB_TOKEN: ${{ secrets.GITLAB_TOKEN }}
-      run: |
-        gitlab_app=$(curl -s -X POST https://dev.renku.ch/gitlab/api/v4/applications \
-                      -H "private-token: $GITLAB_TOKEN" \
-                      --data "name=${RENKU_RELEASE}" \
-                      --data "redirect_uri=https://${RENKU_RELEASE}.dev.renku.ch/auth/realms/Renku/broker/dev-renku/endpoint https://${RENKU_RELEASE}.dev.renku.ch/api/auth/gitlab/token https://${RENKU_RELEASE}.dev.renku.ch/api/auth/jupyterhub/token https://${RENKU_RELEASE}.dev.renku.ch/jupyterhub/hub/oauth_callback" \
-                      --data "scopes=api read_user read_repository read_registry openid")
-        APP_ID=$(echo $gitlab_app | jq -r '.application_id')
-        APP_SECRET=$(echo $gitlab_app | jq -r '.secret')
-        echo "APP_ID=${APP_ID}" >> $GITHUB_ENV
-        echo "APP_SECRET=${APP_SECRET}" >> $GITHUB_ENV
-    - name: Deploy to k8s
-      env:
-        KUBECONFIG: ${{ github.workspace }}/renkubot-kube.config
-        RENKUBOT_KUBECONFIG: ${{ secrets.RENKUBOT_KUBECONFIG }}
-        CI_RENKU_VALUES: ${{ secrets.CI_RENKU_VALUES }}
-        RENKUBOT_RANCHER_APISECRET: ${{ secrets.RENKUBOT_RANCHER_APISECRET }}
-        CI_PROJECT_ID: ${{ secrets.CI_PROJECT_ID }}
+        DOCKER_PASSWORD: ${{ secrets.RENKU_DOCKER_PASSWORD }}
+        DOCKER_USERNAME: ${{ secrets.RENKU_DOCKER_USERNAME }}
+        GITLAB_TOKEN: ${{ secrets.DEV_GITLAB_TOKEN }}
+        KUBECONFIG: "${{ github.workspace }}/renkubot-kube.config"
+        RANCHER_PROJECT_ID: ${{ secrets.CI_RANCHER_PROJECT }}
+        RENKU_RELEASE: ci-renku-${{ github.event.number }}
+        RENKU_VALUES_FILE: "${{ github.workspace }}/values.yaml"
+        RENKU_VALUES: ${{ secrets.CI_RENKU_VALUES }}
+        RENKUBOT_KUBECONFIG: ${{ secrets.RENKUBOT_DEV_KUBECONFIG }}
+        RENKUBOT_RANCHER_BEARER_TOKEN: ${{ secrets.RENKUBOT_RANCHER_BEARER_TOKEN }}
         RENKU_BOT_DEV_PASSWORD: ${{ secrets.RENKU_BOT_DEV_PASSWORD }}
-      run: |
-        echo "$RENKUBOT_KUBECONFIG" > renkubot-kube.config
-        helm repo add stable https://charts.helm.sh/stable
-        helm repo add codecentric https://codecentric.github.io/helm-charts
-        helm repo add renku https://swissdatasciencecenter.github.io/helm-charts/
-        helm repo add gitlab https://charts.gitlab.io/
-        helm repo add jupyterhub https://jupyterhub.github.io/helm-chart
-        rm -rf charts/renku/charts
-        helm dependency update charts/renku
-        printf "%s" "$CI_RENKU_VALUES" | sed "s/<replace>/${RENKU_RELEASE}/" > values.yaml
-        curl -u "token-fxgsb:$RENKUBOT_RANCHER_APISECRET" \
-        -X POST \
-        -d "name=${RENKU_NAMESPACE}" \
-        -d "projectId=${CI_PROJECT_ID}" \
-        'https://rancher.renku.ch/v3/cluster/c-l6jt4/namespaces'
-        helm upgrade --install $RENKU_RELEASE \
-                    --namespace $RENKU_NAMESPACE \
-                    -f values.yaml \
-                    --timeout 1800s \
-                    --cleanup-on-fail \
-                    --set gateway.gitlabClientId=${APP_ID} \
-                    --set gateway.gitlabClientSecret=${APP_SECRET} \
-                    --set notebooks.jupyterhub.auth.gitlab.clientId=${APP_ID} \
-                    --set notebooks.jupyterhub.auth.gitlab.clientSecret=${APP_SECRET} \
-                    --set global.anonymousSessions.enabled=true \
-                    --set tests.parameters.username="renku-test" \
-                    --set tests.parameters.fullname="Renku Bot" \
-                    --set tests.parameters.email="renku@datascience.ch" \
-                    --set tests.parameters.password="$RENKU_BOT_DEV_PASSWORD" \
-                    charts/renku
-    - name: Turn on anonymous notebooks
-      env:
-        KUBECONFIG: ${{ github.workspace }}/renkubot-kube.config
-        RENKUBOT_KUBECONFIG: ${{ secrets.RENKUBOT_KUBECONFIG }}
-        CI_RENKU_VALUES: ${{ secrets.CI_RENKU_VALUES }}
-        RENKUBOT_RANCHER_APISECRET: ${{ secrets.RENKUBOT_RANCHER_APISECRET }}
-        CI_PROJECT_ID: ${{ secrets.CI_PROJECT_ID }}
-      run: |
-        echo "$RENKUBOT_KUBECONFIG" > renkubot-kube.config
-        curl -u "token-fxgsb:$RENKUBOT_RANCHER_APISECRET" \
-        -X POST \
-        -d "name=${RENKU_TMP_NAMESPACE}" \
-        -d "projectId=${CI_PROJECT_ID}" \
-        'https://rancher.renku.ch/v3/cluster/c-l6jt4/namespaces'
-        charts/deploy-tmp-notebooks.py --release-name $RENKU_RELEASE --renku-namespace $RENKU_NAMESPACE
-    - name: Notify slack
-      if: success()
-      env:
-        RENKU_SLACK_BOT_TOKEN: ${{ secrets.RENKU_SLACK_BOT_TOKEN }}
-        PR_URL: ${{ github.event.pull_request._links.html.href }}
-      run: |
-        curl -X POST https://slack.com/api/chat.postMessage \
-             -H "Authorization: Bearer $RENKU_SLACK_BOT_TOKEN" \
-             --data "channel=C9U45DL1H" \
-             --data "text=I just deployed the PR ${PR_URL} at https://${RENKU_RELEASE}.dev.renku.ch :rocket:"
+        RENKU_ANONYMOUS_SESSIONS: true
+        RENKU_TESTS_ENABLED: true
+        renku: "@${{ github.head_ref }}"
+    - name: Check existing renkubot comment
+      if: needs.check-deploy.outputs.pr-contains-string == 'true'
+      uses: peter-evans/find-comment@v1
+      id: findcomment
+      with:
+        issue-number: ${{ github.event.pull_request.number }}
+        comment-author: 'RenkuBot'
+    - name: Create comment pre deploy
+      if: "steps.findcomment.outputs.comment-id == 0 && needs.check-deploy.outputs.pr-contains-string == 'true'"
+      uses: peter-evans/create-or-update-comment@v1
+      with:
+        token: ${{ secrets.RENKUBOT_GITHUB_TOKEN }}
+        issue-number: ${{ github.event.pull_request.number }}
+        body: |
+          You can access the deployment of this PR at https://ci-renku-${{ github.event.number }}.dev.renku.ch
+
   test-pr:
     runs-on: ubuntu-latest
     if: github.event.action != 'closed'
-    needs: deploy-pr
+    needs: [check-deploy, deploy-pr]
     steps:
     - uses: actions/checkout@v2
     - uses: actions/setup-python@v1
@@ -161,14 +107,15 @@ jobs:
         sudo apt-get update -y && sudo apt-get install -y grep
         pip install yq
     - name: Test the PR
+      if: needs.check-deploy.outputs.pr-contains-string == 'true'
       env:
         RENKU_BOT_DEV_PASSWORD: ${{ secrets.RENKU_BOT_DEV_PASSWORD }}
       run: |
         export PR_NUMBER=${{ github.event.number }}
         echo $PR_NUMBER
-        export RENKU_RELEASE="ci-${PR_NUMBER}-renku"
+        export RENKU_RELEASE="ci-renku-${PR_NUMBER}"
 
-        RENKU_PYTHON_VERSION=v$(cat ./charts/renku/requirements.yaml | yq -r '.dependencies[] | select(.name == "renku-core") | .version')
+        RENKU_PYTHON_VERSION=v$(cat ./helm-chart/renku/requirements.yaml | yq -r '.dependencies[] | select(.name == "renku-core") | .version')
         RENKU_PYTHON_COMMIT=$(echo $RENKU_PYTHON_VERSION | grep -o -P '(?<=-)[0-9a-fA-F]+') || true
         if [ $RENKU_PYTHON_COMMIT ]; then export RENKU_PYTHON_VERSION=$RENKU_PYTHON_COMMIT; fi
         echo "Passing renku-python version $RENKU_PYTHON_VERSION"
@@ -196,3 +143,15 @@ jobs:
       with:
         name: acceptance-test-artifacts
         path: acceptance-tests/test-artifacts
+  cleanup:
+    if: github.event.action == 'closed'
+    runs-on: ubuntu-20.04
+    steps:
+    - uses: actions/checkout@v2
+    - name: renku teardown
+      uses: ./actions/teardown-renku
+      env:
+        GITLAB_TOKEN: ${{ secrets.DEV_GITLAB_TOKEN }}
+        KUBECONFIG: "${{ github.workspace }}/renkubot-kube.config"
+        RENKU_RELEASE: ci-renku-${{ github.event.number }}
+        RENKUBOT_KUBECONFIG: ${{ secrets.RENKUBOT_DEV_KUBECONFIG }}

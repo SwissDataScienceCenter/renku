@@ -177,27 +177,27 @@ Configure the ``values.yaml`` file
 
 The ``values.yaml`` file will depend on the URL that GitLab is running under.
 We have two templates available in the cloned repository in the folder
-``charts/example-configurations/``.
+``helm-chart/example-configurations/``.
 
 The flagship ``gitlab.com`` instance is available at the root of the domain.
 If you are using ``gitlab.com`` or any other instance where GitLab is
 accessible at the root of the domain, use the file
-``charts/example-configurations/gitlab_dot_com-gitlab-values.yaml`` as
-a template and copy this file to 
-``charts/example-configurations/external-gitlab-values.yaml``.
+``helm-chart/example-configurations/gitlab_dot_com-gitlab-values.yaml`` as
+a template and copy this file to
+``helm-chart/example-configurations/external-gitlab-values.yaml``.
 
 If you are using `renkulab.io/gitlab <https://renkulab.io/gitlab>`_ or another instance of GitLab
 that is accessible under the path ``/gitlab``, then use
-``charts/example-configurations/renkulab-gitlab-values.yaml`` as
-a template and copy this file to 
-``charts/example-configurations/external-gitlab-values.yaml``.
+``helm-chart/example-configurations/renkulab-gitlab-values.yaml`` as
+a template and copy this file to
+``helm-chart/example-configurations/external-gitlab-values.yaml``.
 
 (If the GitLab instance is available under a different path than either
 the root or ``/gitlab``, use the ``gitlab_dot_com-gitlab-values.yaml``
 file as a template and adapt the path.)
 
-To complete the template, you should open 
-``charts/example-configurations/external-gitlab-values.yaml`` and enter
+To complete the template, you should open
+``helm-chart/example-configurations/external-gitlab-values.yaml`` and enter
 the required ``variables`` that are indicated by ``TODO:``. You need to
 provide the ``Application Id`` and the
 ``Secret`` from the GitLab client application created in the previous step.
@@ -221,7 +221,7 @@ Executing this command for the first time can easily take a long time depending
 on your internet connection speed (even 30+ minutes) as all the necessary docker
 images need to be pulled. Do not interrupt the `upgrade` command.
 
-If you want to verify that things are moving on, open a new terminal any type 
+If you want to verify that things are moving on, open a new terminal any type
 ``kubectl -n renku get pod``. The `renku-keycloak-*` pod is the slowest. If the
 `Ready` column reports `0/1` and `Restarts` is not higher than `1`, all is going
 as expected.
