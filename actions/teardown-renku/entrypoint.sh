@@ -3,6 +3,10 @@
 # set up kube context and values file
 echo "$RENKUBOT_KUBECONFIG" > "$KUBECONFIG" && chmod 400 "$KUBECONFIG"
 
+# set namespace defaults
+RENKU_NAMESPACE=${RENKU_NAMESPACE:-$RENKU_RELEASE}
+RENKU_TMP_NAMESPACE=${RENKU_TMP_NAMESPACE:-${RENKU_NAMESPACE}-tmp}
+
 # delete the PR namespace
 kubectl delete ns $RENKU_NAMESPACE
 kubectl delete ns $RENKU_TMP_NAMESPACE

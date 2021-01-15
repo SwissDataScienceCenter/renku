@@ -153,7 +153,5 @@ jobs:
       env:
         GITLAB_TOKEN: ${{ secrets.DEV_GITLAB_TOKEN }}
         KUBECONFIG: "${{ github.workspace }}/renkubot-kube.config"
-        RENKU_NAMESPACE: ci-renku-${{ github.event.number }}
         RENKU_RELEASE: ci-renku-${{ github.event.number }}
-        RENKU_TMP_NAMESPACE: ci-renku-${{ github.event.number }}-tmp
         RENKUBOT_KUBECONFIG: ${{ secrets.RENKUBOT_DEV_KUBECONFIG }}
