@@ -256,7 +256,7 @@ def deploy_tmp_notebooks(
 
     # check if the notebooks version is a local path
     if local_path:
-        helm_command += ["renku-notebooks", str(local_path)]
+        helm_command += [str(local_path)]
     else:
         helm_command += ["renku/renku-notebooks", "--version", renku_notebooks_version]
 
@@ -348,7 +348,7 @@ These values will override the ones automatically derived from primary Renku dep
         deploy=args.deploy,
         extra_values=args.extra_values,
         kube_context=args.kube_context,
-        local_path=None,
+        local_path=args.local_path,
     )
 
 
