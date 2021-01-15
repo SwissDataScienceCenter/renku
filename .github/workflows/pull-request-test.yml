@@ -46,8 +46,9 @@ jobs:
     outputs:
       pr-contains-string: ${{ steps.deploy-comment.outputs.pr-contains-string }}
     steps:
+      - uses: actions/checkout@v2
       - id: deploy-comment
-        uses: SwissDataScienceCenter/renku/actions/check-pr-description@000-deploy-action
+        uses: ./actions/check-pr-description
         with:
           string: /deploy
           pr_ref: ${{ github.event.number }}
