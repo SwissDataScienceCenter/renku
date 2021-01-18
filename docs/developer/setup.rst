@@ -49,7 +49,7 @@ Get the code by cloning the Renku repository:
 .. code-block:: console
 
     $ git clone https://github.com/SwissDataScienceCenter/renku.git
-    $ cd renku/charts
+    $ cd renku/helm-chart
 
 
 Install python dependencies
