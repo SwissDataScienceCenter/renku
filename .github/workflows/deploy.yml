@@ -12,54 +12,25 @@ on:
 
 
 jobs:
-  github-env:
-    runs-on: ubuntu-latest
-    steps:
-    - name: get environment
-      run: env
   deploy:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
+    environment:
+      name: dev
+      url: https://dev.renku.ch
     steps:
     - uses: actions/checkout@v2
-    - uses: actions/setup-python@v1
-      with:
-        python-version: 3.7
-    - name: Install dependencies
-      run: |
-        sudo apt-get update -y && sudo apt-get install -y snapd
-        sudo snap install kubectl --channel=1.16/stable --classic
-        sudo snap install helm --channel=3.3/stable --classic
-        echo "PATH=/snap/bin:$PATH" >> $GITHUB_ENV
-        pip install --upgrade pip pipenv
-        pipenv install --deploy --dev --system
-    - name: Deploy development to the dev cluster
+    - name: deploy renku
+      uses: ./actions/deploy-renku
       env:
-        KUBECONFIG: ${{ github.workspace }}/renkubot-kube.config
-        RENKUBOT_KUBECONFIG: ${{ secrets.RENKUBOT_KUBECONFIG }}
-        CD_VALUES: ${{ secrets.CD_VALUES }}
-      run: |
-        echo "$RENKUBOT_KUBECONFIG" > renkubot-kube.config
-        helm repo add stable https://charts.helm.sh/stable
-        helm repo add codecentric https://codecentric.github.io/helm-charts
-        helm repo add renku https://swissdatasciencecenter.github.io/helm-charts/
-        helm repo add gitlab https://charts.gitlab.io/
-        helm repo add jupyterhub https://jupyterhub.github.io/helm-chart
-        rm -rf helm-chart/renku/charts
-        helm dependency update helm-chart/renku
-        printf "%s" "$CD_VALUES" > cd_values.yaml
-        helm upgrade --install renku \
-                    --namespace renku \
-                    -f cd_values.yaml \
-                    --timeout 1800s \
-                    --cleanup-on-fail \
-                    helm-chart/renku
-    - name: Turn on anonymous notebooks
-      env:
-        KUBECONFIG: ${{ github.workspace }}/renkubot-kube.config
-        RENKUBOT_KUBECONFIG: ${{ secrets.RENKUBOT_KUBECONFIG }}
-      run: |
-        echo "$RENKUBOT_KUBECONFIG" > renkubot-kube.config
-        helm-chart/deploy-tmp-notebooks.py --release-name renku --renku-namespace renku
+        KUBECONFIG: "${{ github.workspace }}/renkubot-kube.config"
+        RENKU_RELEASE: renku
+        RENKU_VALUES_FILE: "${{ github.workspace }}/values.yaml"
+        RENKU_VALUES: ${{ secrets.CD_VALUES }}
+        RENKUBOT_KUBECONFIG: ${{ secrets.RENKUBOT_DEV_KUBECONFIG }}
+        RENKU_BOT_DEV_PASSWORD: ${{ secrets.RENKU_BOT_DEV_PASSWORD }}
+        RENKU_ANONYMOUS_SESSIONS: true
+        RENKU_TESTS_ENABLED: true
+        renku: "@development"
     - name: Notify slack
       if: success()
       env:
