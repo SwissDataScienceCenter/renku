@@ -112,9 +112,9 @@ it installed, you can run
 .. code-block:: console
 
   conda create -y -n renku python=3.6
-  $(conda env list | grep renku | awk '{print $2}')/bin/pip install -e git+https://github.com/SwissDataScienceCenter/renku-python.git#egg=renku
+  $(conda env list | grep 'renku ' | awk '{print $2}')/bin/pip install -e git+https://github.com/SwissDataScienceCenter/renku-python.git#egg=renku
   mkdir -p ~/.renku/bin
-  ln -s "$(conda env list | grep renku | awk '{print $2}')/bin/renku" ~/.renku/bin/renku
+  ln -s "$(conda env list | grep 'renku ' | awk '{print $2}')/bin/renku" ~/.renku/bin/renku
 
 This will create an isolated environment for renku and link the binary to
 ``.renku/bin`` in your home directory. If you want to use it, you should
@@ -135,7 +135,7 @@ When you want to update the installed version again, simply do
 
 .. code-block:: console
 
-  $(conda env list | grep renku | awk '{print $2}')/bin/pip install -e git+https://github.com/SwissDataScienceCenter/renku-python.git#egg=renku
+  $(conda env list | grep 'renku ' | awk '{print $2}')/bin/pip install -e git+https://github.com/SwissDataScienceCenter/renku-python.git#egg=renku
 
 
 Specific version
@@ -148,7 +148,7 @@ section, you can install `renku v0.3.0` with
 
 .. code-block:: console
 
-  $(conda env list | grep renku | awk '{print $2}')/bin/pip install renku==0.3.0
+  $(conda env list | grep 'renku ' | awk '{print $2}')/bin/pip install renku==0.3.0
 
 
 .. note::
