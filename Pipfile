@@ -29,7 +29,7 @@ black = "*"
 sphinx-rtd-theme = "==0.5.0"
 
 [requires]
-python_version = "3"
+python_version = "3.8"
 
 [pipenv]
 allow_prereleases = true
