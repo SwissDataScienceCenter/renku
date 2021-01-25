@@ -52,10 +52,8 @@ class RenkuRequirement(object):
         if self.is_git_ref:
             self.clone()
             self.chartpress(skip_build=True)
-            with open(
-                self.repo_dir / "helm-chart" / self.component / "Chart.yaml"
-            ) as f:
-                chart = yaml.load(f)
+            with open(self.repo_dir / "helm-chart" / self.component / "Chart.yaml") as f:
+                chart = yaml.load(f, Loader=yaml.SafeLoader)
             return chart.get("version")
         return self.version_
 
@@ -97,9 +95,7 @@ class RenkuRequirement(object):
 
     def chartpress(self, skip_build=False):
         """Run chartpress."""
-        check_call(
-            ["helm", "dep", "update", f"helm-chart/{self.component}"], cwd=self.repo_dir
-        )
+        check_call(["helm", "dep", "update", f"helm-chart/{self.component}"], cwd=self.repo_dir)
         cmd = ["chartpress", "--push"]
         if skip_build:
             cmd.append("--skip-build")
@@ -143,9 +139,7 @@ if __name__ == "__main__":
             help=f"Version or ref for {component}",
             default=os.environ.get(component.replace("-", "_")),
         )
-    parser.add_argument(
-        "--renku", help="Main chart ref", default=os.environ.get("renku")
-    )
+    parser.add_argument("--renku", help="Main chart ref", default=os.environ.get("renku"))
     parser.add_argument(
         "--values-file",
         help="Value file path",
@@ -156,26 +150,15 @@ if __name__ == "__main__":
         help="Namespace for this release",
         default=os.environ.get("RENKU_NAMESPACE"),
     )
-    parser.add_argument(
-        "--release", help="Release name", default=os.environ.get("RENKU_RELEASE")
-    )
+    parser.add_argument("--release", help="Release name", default=os.environ.get("RENKU_RELEASE"))
     parser.add_argument(
         "--anonymous-sessions",
-        help="Enable anonymous sessions by setting to \"true\"",
+        help='Enable anonymous sessions by setting to "true"',
         action="store_true",
-        default=os.environ.get("RENKU_ANONYMOUS_SESSIONS")=='true',
+        default=os.environ.get("RENKU_ANONYMOUS_SESSIONS") == "true",
     )
-    parser.add_argument(
-        "--tests-enabled",
-        help="Enable setting up tests",
-        action="store_true",
-        default=os.environ.get("RENKU_TESTS_ENABLED")=='true',
-    )
-
     args = parser.parse_args()
-    component_versions = {
-        a: b for a, b in vars(args).items() if a.replace("_", "-") in components
-    }
+    component_versions = {a: b for a, b in vars(args).items() if a.replace("_", "-") in components}
 
     tempdir_ = tempfile.TemporaryDirectory()
     tempdir = Path(tempdir_.name)
@@ -184,13 +167,11 @@ if __name__ == "__main__":
     reqs_path = renku_dir / "helm-chart/renku/requirements.yaml"
 
     ## 1. clone the renku repo
-    renku_req = RenkuRequirement(
-        component="renku", version=args.renku or "@master", tempdir=tempdir
-    )
+    renku_req = RenkuRequirement(component="renku", version=args.renku or "@master", tempdir=tempdir)
     renku_req.clone()
 
     with open(reqs_path) as f:
-        reqs = yaml.load(f)
+        reqs = yaml.load(f, Loader=yaml.SafeLoader)
 
     ## 2. set the chosen versions in the requirements.yaml file
     reqs = configure_requirements(tempdir, reqs, component_versions)
@@ -210,30 +191,21 @@ if __name__ == "__main__":
     pprint.pp(reqs)
 
     helm_command = [
-            "helm",
-            "upgrade",
-            "--install",
-            release,
-            "./renku",
-            "-f",
-            values_file,
-            "--namespace",
-            namespace,
-            "--timeout",
-            "20m",
-        ]
+        "helm",
+        "upgrade",
+        "--install",
+        release,
+        "./renku",
+        "-f",
+        values_file,
+        "--namespace",
+        namespace,
+        "--timeout",
+        "20m",
+    ]
 
-    if args.anonymous_sessions:
-        helm_command += ["--set", "global.anonymousSessions.enabled=true"]
-
-    if args.tests_enabled:
-        helm_command += [
-            "--set", "tests.enabled=true",
-            "--set", "tests.parameters.username=\"renku-test\"",
-            "--set", "tests.parameters.fullname=\"Renku Bot\"",
-            "--set", "tests.parameters.email=\"renku@datascience.ch\"",
-            "--set", "tests.parameters.password=\"$RENKU_BOT_DEV_PASSWORD\""
-        ]
+    if os.getenv("TEST_ARTIFACTS_PATH"):
+        helm_command += ["--set", f'tests.resultsS3.filename={os.getenv("TEST_ARTIFACTS_PATH")}']
 
     # deploy the main chart
     check_call(
@@ -248,15 +220,11 @@ if __name__ == "__main__":
             check_notebooks_chart_version,
         )
 
-        renku_notebooks_version = component_versions.get(
-            "renku-notebooks"
-        ) or check_notebooks_chart_version(renku_chart_path=renku_dir / "helm-chart")
-
-        local_path = (
-            tempdir / "renku_notebooks/helm-chart"
-            if renku_notebooks_version.startswith("@")
-            else None
+        renku_notebooks_version = component_versions.get("renku-notebooks") or check_notebooks_chart_version(
+            renku_chart_path=renku_dir / "helm-chart"
         )
+
+        local_path = tempdir / "renku_notebooks/helm-chart" if renku_notebooks_version.startswith("@") else None
 
         deploy_tmp_notebooks(
             release,
