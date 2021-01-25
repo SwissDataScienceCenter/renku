@@ -118,7 +118,7 @@ To create a `tests-defaults.conf` file, copy the `tests-defaults.conf.template` 
 | fullname   | RENKU_TEST_FULL_NAME      | user's full name e.g. `Jakub Józef Chrobasik`                    |
 | password   | RENKU_TEST_PASSWORD       | user's password                                                  |
 | provider   | RENKU_TEST_PROVIDER       | if non-empty, use an OpenID provider for auth                    |
-| register   | RENKU_TEST_REGISTER       | if non-empty, an register new user; has precedence over provider |
+| register   | RENKU_TEST_REGISTER       | if non-empty, register a new user; has precedence over provider  |
 | docsrun    | RENKU_TEST_DOCS_RUN       | if non-empty, screenshot for docs during hands-on test           |
 | extant     | RENKU_TEST_EXTANT_PROJECT | if non-empty, an existing project to use for tests               |
 | anon       | RENKU_TEST_ANON_PROJECT   | namespace/name for the project to test anonymously               |
