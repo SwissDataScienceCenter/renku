@@ -220,11 +220,11 @@ if __name__ == "__main__":
             check_notebooks_chart_version,
         )
 
-        renku_notebooks_version = component_versions.get("renku-notebooks") or check_notebooks_chart_version(
+        renku_notebooks_version = component_versions.get("renku_notebooks") or check_notebooks_chart_version(
             renku_chart_path=renku_dir / "helm-chart"
         )
 
-        local_path = tempdir / "renku_notebooks/helm-chart" if renku_notebooks_version.startswith("@") else None
+        local_path = tempdir / "renku-notebooks/helm-chart/renku-notebooks" if renku_notebooks_version.startswith("@") else None
 
         deploy_tmp_notebooks(
             release,
