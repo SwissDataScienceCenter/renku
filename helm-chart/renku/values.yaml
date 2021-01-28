@@ -612,6 +612,12 @@ tests:
   #  batchRemove: false
   #  removePattern:
   #  testTarget:
+  #resultsS3:
+  #  host:
+  #  bucket:
+  #  filename:
+  #  accessKey:
+  #  secretKey:
 
 ## Configuration for the Gateway service
 gateway:

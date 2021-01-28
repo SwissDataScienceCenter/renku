@@ -59,14 +59,22 @@ The `helm test` command can also be used to execute the tests against a Helm rel
 When testing a Renku release that relies on an external GitLab instance, the test user must already
 have an existing account on that GitLab instance with login credentials specified in the
 values.yaml file. Note that the same user (with the same username/password combination!) must also exist in the Keycloak instance which is part of the Renku release being tested. Alternatively, if the `.Values.tests.registerTestUser` is set to `true`, the test suit will try to register a new user with the provided details.
+In case of failing tests an archive with the test results is produced and can be -optionally- pushed to a S3 bucket. The
+parameters to use the S3 bucket needs to be provided in the `values.yaml` file.
 ```yaml
 tests:
   ## User account for running `helm test`
-  testUser:
-   username: foo.bar
-   fullname: Foo Bar
-   email: foo.bar@example.com
-   password: FooBar
+  parameters:
+    username: foo.bar
+    fullname: Foo Bar
+    email: foo.bar@example.com
+    password: FooBar
+  resultsS3:
+    host:
+    bucket:
+    filename:
+    accessKey:
+    secretKey:
 ```
 The tests can now be executed:
 ```bash
