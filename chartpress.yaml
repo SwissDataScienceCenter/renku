@@ -9,28 +9,28 @@ charts:
   #   paths:
   #     - ./gitlab
 
-  - name: renku
+  - name: helm-chart/renku
     resetTag: latest
     imagePrefix: renku/
     repo:
       git: SwissDataScienceCenter/helm-charts
       published: https://swissdatasciencecenter.github.io/helm-charts
     paths:
-      - .
-      - ../acceptance-tests
-      - ../scripts/init-realm
+      - helm-chart
+      - acceptance-tests
+      - scripts/init-realm
     images:
       tests:
         buildArgs:
           BUILDKIT_INLINE_CACHE: "1"
-        contextPath: ../acceptance-tests
-        dockerfilePath: ../acceptance-tests/Dockerfile
+        contextPath: acceptance-tests
+        dockerfilePath: acceptance-tests/Dockerfile
         valuesPath: tests.image
         paths:
-          - ../acceptance-tests
+          - acceptance-tests
       init-realm:
-        contextPath: ../scripts/init-realm
-        dockerfilePath: ../scripts/init-realm/Dockerfile
+        contextPath: scripts/init-realm
+        dockerfilePath: scripts/init-realm/Dockerfile
         valuesPath: keycloak.initRealm.image
         paths:
-          - ../scripts/init-realm
+          - scripts/init-realm

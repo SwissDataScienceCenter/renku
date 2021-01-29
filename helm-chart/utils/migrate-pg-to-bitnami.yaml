@@ -1,7 +1,7 @@
 ## A k8s job manifest to migrate an existing postgres data volume for using it
 ## with a bitnami postgresql image. This is necessary when upgrading to the
 ## 0.7.0 version of the renku chart. See:
-## https://github.com/SwissDataScienceCenter/renku/blob/master/charts/values.yaml.changelog.md
+## https://github.com/SwissDataScienceCenter/renku/blob/master/helm-chart/values.yaml.changelog.md
 
 ## This job will do two things:
 ## - rename /postgresql-db to /data

@@ -34,9 +34,9 @@ git config --global user.name "$GIT_USER"
 
 # update the chart requirements and push
 git checkout -b auto-update/${CHART_NAME}-${CHART_VERSION} ${UPSTREAM_BRANCH}
-yq w -i charts/renku/requirements.yaml "dependencies.(name==${CHART_NAME}).version" $CHART_VERSION
+yq w -i helm-chart/renku/requirements.yaml "dependencies.(name==${CHART_NAME}).version" $CHART_VERSION
 
-git add charts/renku/requirements.yaml
+git add helm-chart/renku/requirements.yaml
 git commit -m "chore: updating ${CHART_NAME} version to ${CHART_VERSION}"
 git push origin auto-update/${CHART_NAME}-${CHART_VERSION}
 
