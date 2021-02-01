@@ -93,8 +93,10 @@ then
 
 	GITLABAPPID=`openssl rand -hex 8|base64`
 	sed -i "s/\[gitlab-application-clientID\]/$GITLABAPPID/g" $FILE
+  sed -i "s/\[hub-gitlab-application-clientID\]/$GITLABAPPID/g" $FILE
 	GITLABAPPSECRET=`openssl rand -hex 8|base64`
 	sed -i "s/\[gitlab-application-secret\]/$GITLABAPPSECRET/g" $FILE
+  sed -i "s/\[hub-gitlab-application-secret\]/$GITLABAPPID/g" $FILE
 
 else
 	echo "External Gitlab provided $GITLABDOMAIN"

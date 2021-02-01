@@ -107,8 +107,8 @@ You might want to modify some default values, here are some examples:
    * Logged-out users can be given the permission to launch interactive sessions from public notebooks. This feature is turned off by default. For details on how to enable this feature, see the dedicated section below.
    * A custom privacy notice and cookie banner can be configured (as of Renku 0.6.8). See the dedicated section below.
    * Resources requests and limits can be adjusted for the diverse RenkuLab components
-   * For not independent GitLab you can configure an S3 backend for `lfs objects <https://docs.gitlab.com/ce/administration/lfs/index.html>`_ and `registry <https://docs.gitlab.com/ee/administration/packages/container_registry.html>`_, this configuration can be added in the ``gitlab`` section
-   * It is possible to dedicate some nodes for running user environments.
+   * For deployments that include GitLab you can configure an S3 backend for `lfs objects <https://docs.gitlab.com/ce/administration/lfs/index.html>`_ and `registry <https://docs.gitlab.com/ee/administration/packages/container_registry.html>`_, this configuration can be added in the ``gitlab`` section
+   * It is possible to dedicate some nodes for running interactive user sessions.
 
    .. toctree::
       :maxdepth: 1
@@ -170,14 +170,14 @@ If some Renku pods are not starting or present some errors please check the trou
 .. toctree::
    :maxdepth: 1
 
-   Troublesooting a Renku deployment <troubleshooting>
+   Troubleshooting a RenkuLab deployment <troubleshooting>
 
 **Note**. For deployments with existing GitLab and/or Keycloak, the post-install jobs need to be deleted manually in order for the Helm deployment to succeed.
 
 4. Post deployment configurations
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-After Renku has been deployed you can make some post deployment configurations.
+After RenkuLab has been deployed you can make some post deployment configurations.
 
 GitLab deployed as part of Renku
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^

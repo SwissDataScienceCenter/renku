@@ -17,6 +17,9 @@ domain_configurations:
   gitlabClientId:            &gitlabClientId                [gitlab-application-clientID]
   gitlabClientSecret:        &gitlabClientSecret            [gitlab-application-secret]
 
+  hubGitlabClientId:         &hubGitlabClientId             [hub-gitlab-application-clientID] ## If external GitLab, use gitlab-application-clientID
+  hubGitlabClientSecret:     &hubGitlabClientSecr           [hub-gitlab-application-secret]  ## If external GitLab, use gitlab-application-secret
+
   registryName:              &registryName                  [gitlab-registry]
   registryURL:               &registryURL                   https://[gitlab-registry]
   registry_tls:              &registry_tls                  [registry-ingress-tls]
@@ -205,8 +208,8 @@ notebooks:
           apiToken:   [random]        ## openssl rand -hex 32
         ## define the client ID and secret for the gateway
         gateway:
-          oauth_client_id: &gatewayClient gateway
-          apiToken:   [random]        ## openssl rand -hex 32
+          oauth_client_id: &gwJHclientId gateway
+          apiToken: &gwJHclientId  [random]        ## openssl rand -hex 32
           oauth_redirect_uri: *oauth_redirect_uri
       extraEnv:
         - name: GITLAB_URL
@@ -227,8 +230,8 @@ notebooks:
     ## Configure Jupyterhub to use GitLab as OAuth2 provider
     auth:
       gitlab:
-        clientId: *gitlabClientId
-        clientSecret: *gitlabClientSecret
+        clientId: *hubGitlabClientId
+        clientSecret: *hubGitlabClientSecret
         callbackUrl: *jupyterhub_gitlab_callbackUrl
     ## Store encrypted auth state in the JH db (enabled by default).
     ## Key for encryption must be set explicitly!
@@ -244,8 +247,8 @@ gateway:
   gitlabClientSecret: *gitlabClientSecret
   secretKey: &gateway_secretKey   [random]        ## openssl rand -hex 32
   jupyterhub:
-    clientId: *gatewayClient
-    clientSecret: [random]        ## openssl rand -hex 32
+    clientId: *gwJHclientId
+    clientSecret: *gwJHclientSecret
   graph:
     sparql:
       username: renku
