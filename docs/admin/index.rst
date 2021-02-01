@@ -172,7 +172,7 @@ If some Renku pods are not starting or present some errors please check the trou
 
    Troubleshooting a RenkuLab deployment <troubleshooting>
 
-**Note**. For deployments with existing GitLab and/or Keycloak, the post-install jobs need to be deleted manually in order for the Helm deployment to succeed.
+**Note**. For deployments with existing Keycloak, the post-install jobs need to be deleted manually in order for the Helm deployment to succeed.
 
 4. Post deployment configurations
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

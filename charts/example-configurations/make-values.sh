@@ -91,12 +91,14 @@ then
 	gitlabregistry="registry.$DOMAIN"
 	registryingresstls=`echo registry-${DOMAIN}-tls | tr . -`
 
-	GITLABAPPID=`openssl rand -hex 8|base64`
+	GITLABAPPID="renku-ui"
+  HUBGITLABAPPID="jupyterhub"
 	sed -i "s/\[gitlab-application-clientID\]/$GITLABAPPID/g" $FILE
-  sed -i "s/\[hub-gitlab-application-clientID\]/$GITLABAPPID/g" $FILE
+  sed -i "s/\[hub-gitlab-application-clientID\]/$HUBGITLABAPPID/g" $FILE
 	GITLABAPPSECRET=`openssl rand -hex 8|base64`
+  HUBGITLABAPPSECRET=`openssl rand -hex 8|base64`
 	sed -i "s/\[gitlab-application-secret\]/$GITLABAPPSECRET/g" $FILE
-  sed -i "s/\[hub-gitlab-application-secret\]/$GITLABAPPID/g" $FILE
+  sed -i "s/\[hub-gitlab-application-secret\]/$HUBGITLABAPPSECRET/g" $FILE
 
 else
 	echo "External Gitlab provided $GITLABDOMAIN"
@@ -112,6 +114,8 @@ else
 
 	sed -i "s/\[gitlab-application-clientID\]/$GITLABAPPID/g" $FILE
 	sed -i "s/\[gitlab-application-secret\]/$GITLABAPPSECRET/g" $FILE
+  sed -i "s/\[hub-gitlab-application-clientID\]/$GITLABAPPID/g" $FILE
+  sed -i "s/\[hub-gitlab-application-secret\]/$GITLABAPPSECRET/g" $FILE
 
 fi
 
