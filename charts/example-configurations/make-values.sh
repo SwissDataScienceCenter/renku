@@ -8,11 +8,12 @@ usage()
 #	echo -e "This script will help you configure a valid renku values file. \nYou need to provide the domain, other arguments are optional."
 #	echo		"If no Gitlab URL is provided, Gitlab will be included in the deployment values."
 #	echo    "If Gitlab URL is provided, the application ID and secret need to be provided as well."
-  echo -e "Usage: \n ./make-values.sh \t[ -d | --domain ]\n\t\t\t[ -o | --output-file ] \n\t\t\t[ -h | --http ] \n\t\t\t[ -g | --gitlab-domain ] [ -i | --gitlab-appid ] [ -s | --gitlab-appsecret ]"
+##  echo -e "Usage: \n ./make-values.sh \t[ -d | --domain ]\n\t\t\t[ -o | --output-file ] \n\t\t\t[ -h | --http ] \n\t\t\t[ -g | --gitlab-domain ] [ -i | --gitlab-appid ] [ -s | --gitlab-appsecret ]"
+  echo -e "Usage: \n ./make-values.sh \t[ -d | --domain ]\n\t\t\t[ -o | --output-file ] \n\t\t\t[ -g | --gitlab-domain ] [ -i | --gitlab-appid ] [ -s | --gitlab-appsecret ]"
   echo -e "\nFlags:\n"
   echo -e " -d, --domain \t\t Domain where to access Renku UI from."
   echo -e " -o, --output-file \t Path where to save the resulting values file. Default: renku-values.yaml."
-  echo -e " -h, --http \t\t Use http instead of HTTPS connection."
+##  echo -e " -h, --http \t\t Use http instead of HTTPS connection."
   echo -e " -g, --gitlab-domain \t External GitLab instance. If specified, gitlab-appid and gitlab-appsecret must be defined. Default: Renku will include a GitLab deployment."
   echo -e " -i, --gitlab-appid \t External GitLab instance application ID."
   echo -e " -s, --gitlab-appsecret  External GitLab instance application secret."
@@ -37,7 +38,7 @@ do
   case "$1" in
     -d | --domain)           DOMAIN="$2"            ; shift 2 ;;
     -o | --output-file)      FILE="$2"              ; shift 2 ;;
-    -h | --http)             HTTP="True"            ; shift 1 ;;
+##    -h | --http)             HTTP="True"            ; shift 1 ;;
     -g | --gitlab-domain)    GITLABDOMAIN="$2"      ; shift 2 ;;
     -i | --gitlab-appid)     GITLABAPPID="$2"       ; shift 2 ;;
 		-s | --gitlab-appsecret) GITLABAPPSECRET="$2"   ; shift 2 ;;
