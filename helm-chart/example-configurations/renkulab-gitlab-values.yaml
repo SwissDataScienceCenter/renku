@@ -2,7 +2,7 @@
 # instance. Examples for gitlab.com and renkulab.io/gitlab are
 # explicitly given.
 # See
-# https://github.com/SwissDataScienceCenter/renku/blob/master/charts/README.rst
+# https://github.com/SwissDataScienceCenter/renku/blob/master/helm-chart/README.rst
 # and
 # https://renku.readthedocs.io/en/latest/developer/example-configurations/external-gitlab)
 # for instructions on how to use this values file.

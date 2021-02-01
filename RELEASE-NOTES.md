@@ -37,7 +37,7 @@ These are the steps that need to be followed to make a new release of Renku.
 
 5. Tag release candidate locally `$ git tag 0.5.0-rc1`. Do `$ chartpress --tag 0.5.0-rc1 --push --publish-chart` then do `$ helm repo update` to get the latest charts. Alternatively, push the tag with `$ git push --tags` and let travis do the build.
 
-6. Prepare the values file to upgrade `stable.dev.renku.ch`, from the last stable Renku release, by looking at the changes in [values changelog](https://github.com/SwissDataScienceCenter/renku/blob/master/charts/values.yaml.changelog.md).
+6. Prepare the values file to upgrade `stable.dev.renku.ch`, from the last stable Renku release, by looking at the changes in [values changelog](https://github.com/SwissDataScienceCenter/renku/blob/master/helm-chart/values.yaml.changelog.md).
 
 7. Verify the release candidate chart by upgrading the stable dev deployment `stable.dev.renku.ch` (use the newly created version `--version 0.5.0-rc1`). This is to make sure that all the versions of everything are bundled correctly with the release.
 

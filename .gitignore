@@ -25,7 +25,7 @@ docs/_sidebar.rst.inc
 .metals
 
 # The requirements lockfile is generated when packaging the chart
-charts/renku/requirements.lock
+helm-chart/renku/requirements.lock
 
 # Created by https://www.gitignore.io/api/vim,macos,linux,emacs,scala,python,visualstudiocode,helm
 # Edit at https://www.gitignore.io/?templates=vim,macos,linux,emacs,scala,python,visualstudiocode,helm
