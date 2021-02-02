@@ -11,7 +11,7 @@ New features
 Fixes
 ~~~~~
 
-- **UI** Improve preformance of file preview
+- **UI** Improve performance of file preview
 
 - **UI** Show project datasets even if user is not logged in
 
@@ -42,7 +42,7 @@ For changes to individual components, check:
 
   * graph services can work with custom CA certificates
 
-  * small improvements and bugfixes
+  * small improvements and bug-fixes
 
 0.7.4
 -----
