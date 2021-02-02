@@ -32,6 +32,14 @@ For changes to individual components, check:
   `0.13.0 <https://github.com/SwissDataScienceCenter/renku-python/releases/tag/v0.13.0>`__,
   `0.12.3 <https://github.com/SwissDataScienceCenter/renku-python/releases/tag/v0.12.3>`__
 
+* renku-graph:
+
+  * GET /knowledge-graph/projects/:name resource is now secured
+  
+  * graph services can work with custom CA certificates
+  
+  * small improvements and bugfixes
+
 0.7.4
 -----
 
