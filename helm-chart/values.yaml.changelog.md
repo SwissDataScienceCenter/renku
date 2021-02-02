@@ -1,11 +1,13 @@
 # `values.yaml` changelog
-All the changes should be listed here so the dev-ops team knows what to do when upgrading Renku.
+Necessary changes to the values files for upgrading the Renku chart version are listed here.
+For changes that require manual steps other than changing values, please check out [the chart readme](https://github.com/SwissDataScienceCenter/renku/tree/master/helm-chart#upgrading).
 
 Please follow this convention when adding a new row
 * `<type: NEW|EDIT|DELETE> - *<resource name>*: <details>`
 
 ----
 
+## Upgrading to Renku 0.8.0 (INCLUDES BREAKING CHANGES!)
 * Keycloak chart dependency upgraded from `4.10.2` to `9.8.1`, check out [the instructions](https://github.com/codecentric/helm-charts/tree/master/charts/keycloak#upgrading) on how to upgrade aspects not covered by default in the Renku chart. Most notably, keycloak values are
 less nested, so at the level of the Renku chart values, *keycloak.keycloak.X.Y* becomes *keycloak.X.Y*.
 * EDIT - the section *keycloak.keycloak.persistence* has been removed. Database connection
