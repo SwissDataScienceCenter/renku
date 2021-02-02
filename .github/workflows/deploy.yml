@@ -7,7 +7,7 @@ on:
     - scripts/**
     - acceptance-tests/**
     - .github/**
-    branches: ['development']
+    branches: ['master']
   workflow_dispatch:
 
 
