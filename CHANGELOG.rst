@@ -8,6 +8,10 @@ New features
 
 - **Dataset show** Dataset metadata can now also be seen in the Renku CLI using the ``renku dataset show`` command.
 
+- **Knowledge graph** Access control to resources on knowledge graph.
+
+- **RenkuLab** Support for deployments which use TLS certificates issued by a private CA.
+
 Fixes
 ~~~~~
 
@@ -36,13 +40,8 @@ For changes to individual components, check:
   `0.13.0 <https://github.com/SwissDataScienceCenter/renku-python/releases/tag/v0.13.0>`__,
   `0.12.3 <https://github.com/SwissDataScienceCenter/renku-python/releases/tag/v0.12.3>`__
 
-* renku-graph:
-
-  * GET /knowledge-graph/projects/:name resource is now secured
-
-  * graph services can work with custom CA certificates
-
-  * small improvements and bug-fixes
+* renku-ui:
+  `0.11.4 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/v0.11.4>`__
 
 0.7.4
 -----
