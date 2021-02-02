@@ -400,7 +400,7 @@ ui:
     custom: true
     repositories:
       - url: https://github.com/SwissDataScienceCenter/renku-project-template
-        ref: 0.1.15
+        ref: 0.1.16
         name: Renku
 
   #  welcomePage:
