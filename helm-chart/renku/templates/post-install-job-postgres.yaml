@@ -1,4 +1,3 @@
-{{- if .Values.postgresql.enabled }}
 apiVersion: batch/v1
 kind: Job
 metadata:
@@ -94,4 +93,3 @@ spec:
         - name: graph-token-postgres
           secret:
             secretName: {{ template "renku.fullname" . }}-graph-token-postgres
-{{- end }}
