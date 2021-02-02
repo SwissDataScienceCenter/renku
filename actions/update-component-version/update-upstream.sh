@@ -14,7 +14,7 @@ fi
 
 # set up environment variables
 UPSTREAM_REPO=${UPSTREAM_REPO:=SwissDataScienceCenter/renku}
-UPSTREAM_BRANCH=${UPSTREAM_BRANCH:=development}
+UPSTREAM_BRANCH=${UPSTREAM_BRANCH:=master}
 GIT_EMAIL=${GIT_EMAIL:=renku@datascience.ch}
 GIT_USER=${GIT_USER:="Renku Bot"}
 CHART_NAME=${CHART_NAME:=$(echo $GITHUB_REPOSITORY | cut -d/ -f2)}

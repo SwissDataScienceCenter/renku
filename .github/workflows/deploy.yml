@@ -7,7 +7,7 @@ on:
     - scripts/**
     - acceptance-tests/**
     - .github/**
-    branches: ['development']
+    branches: ['master']
   workflow_dispatch:
 
 
@@ -127,7 +127,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.RENKU_CI_TOKEN }}
           DOCKER_BUILDKIT: "1"
         run: |
-          cd charts
           chartpress --push --publish-chart
           chartpress --push --tag latest
       - name: Push tagged helm chart and images
@@ -135,5 +134,4 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.RENKU_CI_TOKEN }}
         run: |
-          cd charts
           chartpress --push --publish-chart --tag $(echo ${GITHUB_REF} | cut -d'/' -f 3)
