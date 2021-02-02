@@ -6,7 +6,7 @@
 New features
 ~~~~~~~~~~~~
 
-- **Dataset show** Dataset metadata can now also be seen in the Renku CLi using the ``renku dataset show`` command.
+- **Dataset show** Dataset metadata can now also be seen in the Renku CLI using the ``renku dataset show`` command.
 
 Fixes
 ~~~~~
@@ -17,7 +17,7 @@ Fixes
 
 - **Interactive sessions** Fix status information on session termination.
 
-- **Project migration** Feedback and speed of the recently introduced migration for workflows has been improved to handle for very large projects better.
+- **Project migration** Feedback and speed of the recently introduced migration for workflows has been improved to handle very large projects better.
 
 
 Individual components
@@ -27,6 +27,10 @@ For changes to individual components, check:
 
 * renku-notebooks:
   `0.8.7 <https://github.com/SwissDataScienceCenter/renku-notebooks/releases/tag/0.8.7>`__
+  
+* renku-core:
+  `0.13.0 <https://github.com/SwissDataScienceCenter/renku-python/releases/tag/v0.13.0>`__,
+  `0.12.3 <https://github.com/SwissDataScienceCenter/renku-python/releases/tag/v0.12.3>`__
 
 0.7.4
 -----
