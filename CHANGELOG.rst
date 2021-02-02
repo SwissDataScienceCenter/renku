@@ -1,5 +1,29 @@
 .. _changelog:
 
+0.7.5
+-----
+
+New features
+~~~~~~~~~~~~
+
+Fixes
+~~~~~
+
+- **Interactive sessions** Fix a bug that made the automatic pull of LFS data on session start fail for private repositories.
+
+- **Interactive sessions** Improve handling of failed session launches.
+
+- **Interactive sessions** Fix status information on session termination.
+
+
+Individual components
+~~~~~~~~~~~~~~~~~~~~~
+
+For changes to individual components, check:
+
+* renku-notebooks:
+  `0.8.7 <https://github.com/SwissDataScienceCenter/renku-notebooks/releases/tag/0.8.7>`__
+
 0.7.4
 -----
 
