@@ -60,3 +60,4 @@ spec:
         - name: realm-data
           secret:
             secretName: {{ template "renku.fullname" . }}
+{{- end }}

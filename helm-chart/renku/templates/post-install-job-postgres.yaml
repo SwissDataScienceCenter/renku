@@ -94,3 +94,4 @@ spec:
         - name: graph-token-postgres
           secret:
             secretName: {{ template "renku.fullname" . }}-graph-token-postgres
+{{- end }}
