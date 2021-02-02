@@ -11,6 +11,10 @@ New features
 Fixes
 ~~~~~
 
+- **UI** Improve preformance of file preview
+
+- **UI** Show project datasets even if user is not logged in
+
 - **Interactive sessions** Fix a bug that made the automatic pull of LFS data on session start fail for private repositories.
 
 - **Interactive sessions** Improve handling of failed session launches.
@@ -27,7 +31,7 @@ For changes to individual components, check:
 
 * renku-notebooks:
   `0.8.7 <https://github.com/SwissDataScienceCenter/renku-notebooks/releases/tag/0.8.7>`__
-  
+
 * renku-core:
   `0.13.0 <https://github.com/SwissDataScienceCenter/renku-python/releases/tag/v0.13.0>`__,
   `0.12.3 <https://github.com/SwissDataScienceCenter/renku-python/releases/tag/v0.12.3>`__
@@ -35,9 +39,9 @@ For changes to individual components, check:
 * renku-graph:
 
   * GET /knowledge-graph/projects/:name resource is now secured
-  
+
   * graph services can work with custom CA certificates
-  
+
   * small improvements and bugfixes
 
 0.7.4
