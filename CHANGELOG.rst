@@ -6,6 +6,8 @@
 New features
 ~~~~~~~~~~~~
 
+- **Dataset show** Dataset metadata can now also be seen in the Renku CLi using the ``renku dataset show`` command.
+
 Fixes
 ~~~~~
 
@@ -14,6 +16,8 @@ Fixes
 - **Interactive sessions** Improve handling of failed session launches.
 
 - **Interactive sessions** Fix status information on session termination.
+
+- **Project migration** Feedback and speed of the recently introduced migration for workflows has been improved to handle for very large projects better.
 
 
 Individual components
