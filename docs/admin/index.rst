@@ -156,7 +156,7 @@ Check list:
 
   * Helm command completed successfully.
   * RenkuLab pods should be all running and jobs completed.
-  * RenkuLab pods should not show errors.
+  * RenkuLab pods logs should not show errors.
   * Perform a quick check:
      #. go to your RenkuLab instance domain (this will verify the ingress is working properly)
      #. login with a valid user, you can register a new one (this will verify various authentication steps)
