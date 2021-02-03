@@ -1,5 +1,48 @@
 .. _changelog:
 
+0.7.5
+-----
+
+New features
+~~~~~~~~~~~~
+
+- **Dataset show** Dataset metadata can now also be seen in the Renku CLI using the ``renku dataset show`` command.
+
+- **Knowledge graph** Access control to resources on knowledge graph.
+
+- **RenkuLab** Support for deployments which use TLS certificates issued by a private CA.
+
+Fixes
+~~~~~
+
+- **UI** Improve performance of file preview
+
+- **UI** Show project datasets even if user is not logged in
+
+- **Interactive sessions** Fix a bug that made the automatic pull of LFS data on session start fail for private repositories.
+
+- **Interactive sessions** Improve handling of failed session launches.
+
+- **Interactive sessions** Fix status information on session termination.
+
+- **Project migration** Feedback and speed of the recently introduced migration for workflows has been improved to handle very large projects better.
+
+
+Individual components
+~~~~~~~~~~~~~~~~~~~~~
+
+For changes to individual components, check:
+
+* renku-notebooks:
+  `0.8.7 <https://github.com/SwissDataScienceCenter/renku-notebooks/releases/tag/0.8.7>`__
+
+* renku-core:
+  `0.13.0 <https://github.com/SwissDataScienceCenter/renku-python/releases/tag/v0.13.0>`__,
+  `0.12.3 <https://github.com/SwissDataScienceCenter/renku-python/releases/tag/v0.12.3>`__
+
+* renku-ui:
+  `0.11.4 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/v0.11.4>`__
+
 0.7.4
 -----
 

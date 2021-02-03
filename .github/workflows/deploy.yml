@@ -30,7 +30,7 @@ jobs:
         RENKU_BOT_DEV_PASSWORD: ${{ secrets.RENKU_BOT_DEV_PASSWORD }}
         RENKU_ANONYMOUS_SESSIONS: true
         RENKU_TESTS_ENABLED: true
-        renku: "@development"
+        renku: "@master"
     - name: Notify slack
       if: success()
       env:
