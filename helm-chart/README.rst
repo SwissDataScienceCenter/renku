@@ -81,7 +81,7 @@ and the `keycloak docs<https://www.keycloak.org/docs/latest/upgrading/>`_.
 - If they have not been explicitly defined (and thus autocreated through a helm hook), make sure to get the value
   of get the `keycloak-postgres-password` from the `renku-keycloak-postgres` secret and add it to your values file
   as `global.keycloak.postgresPassword.value`. Do the same for `keycloak-password` from the `keycloak-password-secret`
-  and add it as `global.keycloak.postgres.value`.
+  and add it as `global.keycloak.password.value`.
 
 - Delete the two secrets which need to be recreated as well as the keycloak StatefulSet:
 .. code-block:: bash
@@ -95,4 +95,3 @@ and the `keycloak docs<https://www.keycloak.org/docs/latest/upgrading/>`_.
   will unfortunately not work. Instead, recover the postgres volume from your backup, remove both secrets mentioned
   above and the keycloak StatefulSet, make sure `global.keycloak.postgresPassword.value` and `global.keycloak.password.value`
   set also in your original values file. Then perform an *upgrade* to the previously deployed Renku chart version.
-
