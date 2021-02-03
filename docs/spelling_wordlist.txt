@@ -53,6 +53,7 @@ gitkeep
 gitlab
 GitLab
 GraphQL
+https
 hostname
 hyperkit
 hypervisor

@@ -27,7 +27,7 @@ For more information, please check `LetsEncrypt cert-manager Helm documentation 
 Generate manually
 --------------------
 
-You can also use an SSL certificate issued by a certificate authority.
+You can also use an SSL certificate issued by another certificate authority.
 Add the mentioned certificate as a secret to the ``renku`` namespace.
 
 .. code-block:: console

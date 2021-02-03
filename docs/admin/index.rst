@@ -158,11 +158,11 @@ Check list:
   * RenkuLab pods should be all running and jobs completed.
   * RenkuLab pods should not show errors.
   * Perform a quick check:
-    #. go to your RenkuLab instance domain
-    #. login with a valid user, you can register a new one (this will verify various authentication steps)
-    #. create a project (this will verify further authentication, templates and GitLab runner)
-    #. add a dataset (this will verify the core backend, LFS objects, and Knowledge Graph components work)
-    #. launch an environment (this will verify the notebooks component and GitLab image registry)
+     #. go to your RenkuLab instance domain (this will verify the ingress is working properly)
+     #. login with a valid user, you can register a new one (this will verify various authentication steps)
+     #. create a project (this will verify further authentication, templates and GitLab runner)
+     #. add a dataset (this will verify the core backend, LFS objects, and Knowledge Graph components work)
+     #. launch an environment (this will verify the notebooks component and GitLab image registry)
   * You should be now able to follow "First steps"
 
 If some Renku pods are not starting or present some errors please check the troubleshooting page.
@@ -172,7 +172,33 @@ If some Renku pods are not starting or present some errors please check the trou
 
    Troubleshooting a RenkuLab deployment <troubleshooting>
 
-4. Post deployment configurations
+4. Acceptance tests (optional)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+If the Helm deployment ran successfully according to the check list above, you might want to run Renku's acceptance tests.
+You simply need to:
+
+  * create a user for testing (with no admin rights) and optionally have an S3 bucket credentials for saving screenshots in case a test fails.
+  * fill in the credentials (notably email and password) in the `test section in the values file <https://github.com/SwissDataScienceCenter/renku/blob/master/helm-chart/renku/values.yaml#L595-L620>`_ and update the deployment
+
+  .. code-block:: console
+
+    $ helm upgrade --install renku renku/renku \
+     --namespace renku \
+     --version <renku-version> \
+     -f renku-values.yaml \
+     --timeout 1800s
+
+  * run the tests. This will create a test pod that needs around 4GB of RAM available. Note that running the complete acceptance test suit takes around 40 minutes to complete.
+
+  .. code-block:: console
+
+      $ helm test renku \
+       --namespace renku \
+       --log-file renku-tests.log \
+       --timeout 40m
+
+5. Post deployment configurations
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 After RenkuLab has been deployed you can make some post deployment configurations.
@@ -182,7 +208,7 @@ GitLab deployed as part of Renku
 
 If your RenkuLab deployment includes GitLab you need to follow some additional steps to configure an admin user on GitLab.
 
-#. turn off automatic redirect to GitLab by setting redeploying with the value ``gitlab.oauth.autoSignIn: false``
+#. turn off automatic redirection to GitLab by redeploying with the value ``gitlab.oauth.autoSignIn: false``
 #. log in as the root user using the password from ``gitlab.password``
 #. modify any users you want to modify (e.g. to make them admin)
 #. turn the ``autoSignIn`` setting back on
@@ -192,15 +218,15 @@ Independent GitLab as identity provider
 
 If the RenkuLab deployment is relying on an existing GitLab instance, this instance could be configured as an identity provider for RenkuLab's keycloak. This way all of the users from the existing GitLab instance can log into RenkuLab with their existing login information.
 
-#. Go to https://<renku-domain>/auth (or to your stand-alone Keycloak dashboard), login to ``Admin console`` using admin username and the decoded password stored in ``keycloak-password-secret``.
-#. Add an ``Identity Provider`` of type ```OpenID Connect v1.0``.
-#. Set ``Alias`` to <renku-domain>, ``Authorization URL`` to https://<gitlab-domain>/oauth/authorize , ``Token URL`` to https://<gitlab-domain>/oauth/token and ``Client ID`` and ``Client Secret`` to the values used in step 1.
+#. Go to \https://<renku-domain>/auth (or to your stand-alone Keycloak dashboard), login to ``Admin console`` using ``admin`` as username and the decoded password stored in ``keycloak-password-secret``.
+#. Add an ``Identity Provider`` of type ``OpenID Connect v1.0``.
+#. Set ``Alias`` to <renku-domain>, ``Authorization URL`` to \https://<gitlab-domain>/oauth/authorize, ``Token URL`` to \https://<gitlab-domain>/oauth/token and ``Client ID`` and ``Client Secret`` to the values used in step 1.
 #. Click ``Save``. The new Identity Provider should appear and any user from the stand-alone GitLab instance should be able to login.
 
-Updating RenkuLab
+Upgrading RenkuLab
 ------------------
 
-To update RenkuLab to a newer version please check the **Upgrading from 0.x.x** section of the `release notes <https://github.com/SwissDataScienceCenter/renku/releases>`_ in case the renku-values.yaml file needs to be modified.
+To upgrade RenkuLab to a newer version please check the **Upgrading from 0.x.x** section of the `release notes <https://github.com/SwissDataScienceCenter/renku/releases>`_ in case the renku-values.yaml file needs to be modified.
 Following, you can upgrade Renku via Helm.
 
 .. code-block:: console
