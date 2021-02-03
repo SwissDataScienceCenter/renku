@@ -75,19 +75,26 @@ and the `keycloak docs<https://www.keycloak.org/docs/latest/upgrading/>`_.
 - Before starting, make sure to check out `the values changelog for this upgrade<https://github.com/SwissDataScienceCenter/renku/blob/master/helm-chart/values.yaml.changelog.md#upgrading-to-renku-080-includes-breaking-changes>`_
   and update your values file accordingly.
 
-- The upgrade of keycloak will perform an irreversible database migration. It is therefore recommended
-  to back up your postgres volume before performing this upgrade.
+- The upgrade of keycloak will perform an **irreversible database migration**. It is therefore recommended
+  to **back up your postgres volume** before performing this upgrade.
 
-- If they have not been explicitly defined (and thus autocreated through a helm hook), make sure to get the value
-  of get the `keycloak-postgres-password` from the `renku-keycloak-postgres` secret and add it to your values file
-  as `global.keycloak.postgresPassword.value`. Do the same for `keycloak-password` from the `keycloak-password-secret`
-  and add it as `global.keycloak.password.value`.
+- **Warning: Persist keycloak-related secrets!**
+
+  If `global.keycloak.postgresPassword.value` and `global.keycloak.postgresPassword.value`
+  have not been explicitly defined in the values file (and thus have been autocreated by helm),
+  add them to the values file now.
+
+  * Get the `keycloak-postgres-password` from the `renku-keycloak-postgres` secret and add it as `global.keycloak.postgresPassword.value`.
+  * Get the `keycloak-password` from the `keycloak-password-secret` and add it as `global.keycloak.password.value`.
+
 
 - Delete the two secrets which need to be recreated as well as the keycloak StatefulSet:
+
 .. code-block:: bash
 
-   kubectl delete secrets -n <namespace> keycloak-password-secret renku-keycloak-postgres
-   kubectl delete statefulsets.apps -n <namespace> <release-name>-keyclo
+    kubectl delete secrets -n <namespace> keycloak-password-secret renku-keycloak-postgres
+    KEYCLOAK_NAME=`kubectl get statefulsets.apps -n <namespace> -l app=keycloak --no-headers=true -o custom-columns=":metadata.name"`
+    kubectl delete statefulsets.apps -n <namespace> $KEYCLOAK_NAME
 
 - Perform the appropriate `helm upgrade` command to use the new chart version and your modified values file.
 
