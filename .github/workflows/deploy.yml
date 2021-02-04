@@ -22,6 +22,8 @@ jobs:
     - name: deploy renku
       uses: ./actions/deploy-renku
       env:
+        DOCKER_PASSWORD: ${{ secrets.RENKU_DOCKER_PASSWORD }}
+        DOCKER_USERNAME: ${{ secrets.RENKU_DOCKER_USERNAME }}
         KUBECONFIG: "${{ github.workspace }}/renkubot-kube.config"
         RENKU_RELEASE: renku
         RENKU_VALUES_FILE: "${{ github.workspace }}/values.yaml"
@@ -94,7 +96,7 @@ jobs:
   chart:
     needs: test
     runs-on: ubuntu-latest
-    if: "startsWith(github.ref, 'refs/tags/') || github.ref == 'refs/heads/development'"
+    if: "startsWith(github.ref, 'refs/tags/') || github.ref == 'refs/heads/master'"
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-python@v1
