@@ -53,6 +53,7 @@ gitkeep
 gitlab
 GitLab
 GraphQL
+https
 hostname
 hyperkit
 hypervisor
@@ -97,6 +98,7 @@ OAuth
 ok
 online
 OpenID
+openssl
 papermill
 parameterizable
 parametrized
