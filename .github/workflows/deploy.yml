@@ -2,12 +2,14 @@ name: Deploy and Test
 
 on:
   push:
+    branches: ['master']
+    # Note that branch patterns are ignored for tag pushes.
     paths:
     - helm-chart/**
     - scripts/**
     - acceptance-tests/**
     - .github/**
-    branches: ['master']
+    tags: ['*']
   workflow_dispatch:
 
 
@@ -22,6 +24,8 @@ jobs:
     - name: deploy renku
       uses: ./actions/deploy-renku
       env:
+        DOCKER_PASSWORD: ${{ secrets.RENKU_DOCKER_PASSWORD }}
+        DOCKER_USERNAME: ${{ secrets.RENKU_DOCKER_USERNAME }}
         KUBECONFIG: "${{ github.workspace }}/renkubot-kube.config"
         RENKU_RELEASE: renku
         RENKU_VALUES_FILE: "${{ github.workspace }}/values.yaml"
@@ -30,7 +34,7 @@ jobs:
         RENKU_BOT_DEV_PASSWORD: ${{ secrets.RENKU_BOT_DEV_PASSWORD }}
         RENKU_ANONYMOUS_SESSIONS: true
         RENKU_TESTS_ENABLED: true
-        renku: "@development"
+        renku: "@master"
     - name: Notify slack
       if: success()
       env:
@@ -94,7 +98,7 @@ jobs:
   chart:
     needs: test
     runs-on: ubuntu-latest
-    if: "startsWith(github.ref, 'refs/tags/') || github.ref == 'refs/heads/development'"
+    if: "startsWith(github.ref, 'refs/tags/') || github.ref == 'refs/heads/master'"
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-python@v1
@@ -122,7 +126,7 @@ jobs:
           helm dep update helm-chart/renku
           helm dep update helm-chart/gitlab
       - name: Push helm chart and images
-        if: github.ref == 'refs/heads/development' && !startsWith(github.ref, 'refs/tags/')
+        if: github.ref == 'refs/heads/master' && !startsWith(github.ref, 'refs/tags/')
         env:
           GITHUB_TOKEN: ${{ secrets.RENKU_CI_TOKEN }}
           DOCKER_BUILDKIT: "1"
