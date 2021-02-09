@@ -1,7 +1,7 @@
 package ch.renku.acceptancetests.workflows
 
 import ch.renku.acceptancetests.model.datasets
-import ch.renku.acceptancetests.model.datasets.DatasetName
+import ch.renku.acceptancetests.model.datasets.{DatasetName, DatasetURL}
 import ch.renku.acceptancetests.model.projects.ProjectDetails
 import ch.renku.acceptancetests.pages.{DatasetPage, ProjectPage}
 import ch.renku.acceptancetests.tooling.AcceptanceSpec
@@ -56,6 +56,22 @@ trait Datasets {
     datasetPage
   }
 
+   def `import a dataset`(datasetName: DatasetName, datasetFile: DatasetURL)(implicit projectPage: ProjectPage): DatasetPage = {
+     import Modification._
+     val newDatasetName = datasets.DatasetName("new")
+     val newDatasetPage = DatasetPage(newDatasetName)
+     Given("the user is on the Datasets tab")
+     click on projectPage.Datasets.tab
+
+     When("the user clicks on the Add Dataset button")
+     click on projectPage.Datasets.addADatasetButton
+     verify that newDatasetPage.ModificationForm.formTitle contains "Add Dataset"
+
+     /**/
+     val datasetPage = DatasetPage(datasetName)
+     datasetPage
+  }
+
   def `navigate to dataset`(datasetPage: DatasetPage)(implicit projectPage: ProjectPage): Unit = {
 
     Given("the user is on the Datasets tab")
@@ -69,7 +85,7 @@ trait Datasets {
   }
 
   def `modify the dataset`(datasetPage: DatasetPage, by: Modification, and: Modification*)(implicit
-      projectPage:                      ProjectPage
+                                                                                           projectPage:                      ProjectPage
   ): DatasetPage = {
     Given(s"the user is on the page of the dataset")
     `navigate to dataset`(datasetPage)

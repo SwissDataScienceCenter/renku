@@ -250,6 +250,12 @@ class ProjectPage(projectSlug: String, namespace: String) extends RenkuPage with
         .getOrElse(fail("Add a Dataset button not found"))
     }
 
+    def importADatasetButton(implicit webDriver: WebDriver): WebElement = eventually {
+      findAll(cssSelector("a"))
+        .find(element => element.text.contains("Import Dataset") || element.text.contains("Import a Dataset"))
+        .getOrElse(fail("Import Dataset button not found"))
+    }
+
     object DatasetsList {
       def link(to: DatasetPage)(implicit webDriver: WebDriver): WebElement =
         eventually {

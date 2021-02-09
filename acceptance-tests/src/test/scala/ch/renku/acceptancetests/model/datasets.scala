@@ -14,6 +14,10 @@ object datasets {
     override lazy val toString: String = value.value
   }
 
+  final case class DatasetURL(value: String Refined NonEmpty) {
+    override lazy val toString: String = value.value
+  }
+
   object DatasetName {
     def generate: DatasetName =
       DatasetName(nonEmptyStrings().generateOne)
@@ -22,6 +26,11 @@ object datasets {
   object DatasetTitle {
     def generate: DatasetTitle =
       DatasetTitle(nonEmptyStrings().generateOne)
+  }
+
+  object DatasetURL {
+    def generate: DatasetURL =
+      DatasetURL(nonEmptyStrings().generateOne)
   }
 
 }
