@@ -6,6 +6,7 @@ on:
     - synchronize
     - reopened
     - closed
+    - edited
 
 jobs:
   cleanup-previous-runs:
