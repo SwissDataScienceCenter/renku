@@ -612,7 +612,8 @@ tests:
   #  batchRemove: false
   #  removePattern:
   #  testTarget:
-  #resultsS3:
+  resultsS3:
+    enabled: false
   #  host:
   #  bucket:
   #  filename:
