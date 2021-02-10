@@ -57,7 +57,7 @@ spec:
       - name: RENKU_TEST_REMOVE_PATTERN
         value: '{{ .Values.tests.parameters.removePattern }}'
       {{ end }}
-      {{ if .Values.tests.tests.resultsS3.enabled }}
+      {{ if .Values.tests.resultsS3.enabled }}
       - name: RENKU_TEST_S3_HOST
         value: '{{ .Values.tests.resultsS3.host }}'
       - name: RENKU_TEST_S3_BUCKET
