@@ -1,5 +1,10 @@
 .. _changelog:
 
+0.7.7
+-----
+
+This is a bugfix release, it contains fixes for the user interactive sessions (`0.8.9 <https://github.com/SwissDataScienceCenter/renku-notebooks/releases/tag/0.8.9>`__), the UI `0.11.5 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/0.11.5>`__) and the knowledge graph (versions `1.27.3 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/1.27.3>`__ to `1.30.1 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/1.30.1>`__).
+
 
 0.7.6
 -----
