@@ -27,11 +27,4 @@ object datasets {
     def generate: DatasetTitle =
       DatasetTitle(nonEmptyStrings().generateOne)
   }
-
-  // Pamela to check/complete/fix
-  object DatasetURL {
-    def generate: DatasetURL =
-      DatasetURL(nonEmptyStrings().generateOne)
-  }
-
 }

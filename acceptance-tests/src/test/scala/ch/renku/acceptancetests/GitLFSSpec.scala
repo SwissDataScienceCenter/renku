@@ -21,8 +21,12 @@ class GitLFSSpec  extends AcceptanceSpec
     createNewProject(projectDetails)
 
     And("an imported dataset for this project")
-    val originalDatasetPage = `import a dataset`(datasetName)
+    val importedDatasetPage = `import a dataset`(datasetURL)
 
+    removeProjectInGitLab
+    verifyProjectWasRemovedInRenku
+
+    logOutOfRenku
 
   }
 

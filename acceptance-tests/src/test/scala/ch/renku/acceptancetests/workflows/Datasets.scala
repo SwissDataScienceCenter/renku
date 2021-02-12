@@ -56,16 +56,35 @@ trait Datasets {
     datasetPage
   }
 
-   def `import a dataset`(datasetName: DatasetName, datasetFile: DatasetURL)(implicit projectPage: ProjectPage): DatasetPage = {
-     import Modification._
-     val newDatasetName = datasets.DatasetName("new")
-     val newDatasetPage = DatasetPage(newDatasetName)
-     Given("the user is on the Datasets tab")
-     click on projectPage.Datasets.tab
+  def `import a dataset`(datasetURL: DatasetURL)(implicit projectPage: ProjectPage): DatasetPage = {
+    import Import._
+    // val importDatasetURL = datasets.DatasetURL("10.7910/DVN/WTZS4K") // to parametrize?
+    // val importedDatasetName = datasets.DatasetName("2019-01 US Flights")
+    val generatedDatasetName = datasets.DatasetName.generate
+    val importedDatasetPage = DatasetPage(generatedDatasetName)
+    Given("the user is on the Datasets tab")
+    click on projectPage.Datasets.tab
 
-     When("the user clicks on the Add Dataset button")
-     click on projectPage.Datasets.addADatasetButton
-     verify that newDatasetPage.ModificationForm.formTitle contains "Add Dataset"
+    When("the user clicks on the Add Dataset button")
+    click on projectPage.Datasets.addADatasetButton
+    verify that importedDatasetPage.ModificationForm.formTitle contains "Add Dataset"
+
+    When("the user clicks on the Import Dataset button")
+    click on projectPage.Datasets.importDatasetButton
+    verify that importedDatasetPage.ImportForm.formTitle contains "Import Dataset"
+
+    And(s"the user imports a dataset from the datasetURL '$datasetURL'")
+    `setting its import url`(to = datasetURL.toString).importing(importedDatasetPage)
+
+    And("the user imports the dataset")
+    click on importedDatasetPage.ImportForm.datasetSubmitButton sleep (20 seconds)
+
+    val datasetPage = DatasetPage(datasetName)
+    Then("the user should see its newly imported dataset and the project it belongs to")
+    verify browserAt datasetPage
+    verify that datasetPage.datasetTitle contains datasetName.value
+    val projectLink = datasetPage.ProjectsList.link(projectPage)(_: WebDriver)
+    reload whenUserCannotSee projectLink
 
      /**/
      val datasetPage = DatasetPage(datasetName)
@@ -123,5 +142,15 @@ trait Datasets {
 
     def `changing its description`(to: String): Modification =
       Modification("changing its description", datasetPage => datasetPage.ModificationForm.datasetDescriptionField, to)
+  }
+
+  case class Import private (name: String, field: DatasetPage => WebElement, newValue: String) {
+    def importing(datasetPage: DatasetPage): Unit = field(datasetPage).enterValue(newValue)
+  }
+
+  object Import {
+
+    def `setting its import url`(to: String): Import =
+      Import("importing dataset with URL", datasetPage => datasetPage.ImportForm.datasetURLField, to)
   }
 }

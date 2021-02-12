@@ -61,4 +61,21 @@ class DatasetPage(datasetName: DatasetName, projectPage: ProjectPage) extends Re
       find(cssSelector("button[type='submit']")) getOrElse fail("Dataset form submit button not found")
     }
   }
+
+  object ImportForm {
+
+    def formTitle(implicit webDriver: WebDriver): WebElement = eventually {
+      find(cssSelector("h3.uk-heading-divider")) getOrElse fail("Form title not found")
+    }
+
+    def datasetURLField(implicit webDriver: WebDriver): WebElement = eventually {
+      find(cssSelector("input[name='uri']")) getOrElse fail("Dataset title field not found")
+    }
+
+
+    def datasetSubmitButton(implicit webDriver: WebDriver): WebElement = eventually {
+      find(cssSelector("button[type='submit']")) getOrElse fail("Dataset form submit button not found")
+    }
+  }
+
 }
