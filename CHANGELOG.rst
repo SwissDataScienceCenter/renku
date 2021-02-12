@@ -3,8 +3,13 @@
 0.7.7
 -----
 
-This is a bugfix release, it contains fixes for the user interactive sessions (`0.8.9 <https://github.com/SwissDataScienceCenter/renku-notebooks/releases/tag/0.8.9>`__), the UI `0.11.5 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/0.11.5>`__) and the knowledge graph (versions `1.27.3 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/1.27.3>`__ to `1.30.1 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/1.30.1>`__).
+Improvements and fixes
+~~~~~~~~~~~~~~~~~~~~~~~
 
+- **User interface** Improve UX for non-logged users (`0.11.5 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/0.11.5>`__)
+- **User interactive sessions** Some bug fixes (`0.8.9 <https://github.com/SwissDataScienceCenter/renku-notebooks/releases/tag/0.8.9>`__)
+- **Knowledge graph** Bug fixes and small improvements (`1.27.3 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/1.27.3>`__ to `1.27.5 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/1.27.5>`__).
+- **Deployment** Helm tests enabled to run our acceptance tests suite (`enable and run acceptance tests through Helm <https://renku.readthedocs.io/en/0.7.7/admin/index.html#acceptance-tests-optional>`__). A `make-values.sh <https://github.com/SwissDataScienceCenter/renku/blob/0.7.7/charts/example-configurations/make-values.sh>`__ script is available to generate a minimal values file for PoC deployments, for more information please refer to (`our deployment documentation <https://renku.readthedocs.io/en/latest/admin/index.html#create-a-renku-values-yaml-file>`__)
 
 0.7.6
 -----
