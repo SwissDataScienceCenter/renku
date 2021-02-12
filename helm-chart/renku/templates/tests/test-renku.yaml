@@ -57,6 +57,7 @@ spec:
       - name: RENKU_TEST_REMOVE_PATTERN
         value: '{{ .Values.tests.parameters.removePattern }}'
       {{ end }}
+      {{ if .Values.tests.resultsS3.enabled }}
       - name: RENKU_TEST_S3_HOST
         value: '{{ .Values.tests.resultsS3.host }}'
       - name: RENKU_TEST_S3_BUCKET
@@ -67,6 +68,7 @@ spec:
         value: '{{ .Values.tests.resultsS3.accessKey }}'
       - name: RENKU_TEST_S3_SECRET_KEY
         value: '{{ .Values.tests.resultsS3.secretKey }}'
+      {{ end }}
     volumeMounts:
       - mountPath: /dev/shm
         name: dshm
