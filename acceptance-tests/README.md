@@ -205,3 +205,35 @@ objects are put into the `pages` subfolder.
 * Q: I'm getting `Error: Could not find or load main class`
 
   A: Please verify version of sbt in your computer using `sbt sbtVersion` but run it not from the project root.
+  
+  
+* Q:  `value seconds is not a member of Int`
+
+  A:  
+
+```
+  import scala.language.postfixOps
+import scala.concurrent.duration._
+```
+
+* Q: 
+
+```
+postfix operator seconds needs to be enabled
+by making the implicit value scala.language.postfixOps visible.
+```
+  A: 
+  
+  ```
+    import scala.language.postfixOps
+```
+* Q: 
+```
+type mismatch;
+ found   : String("Parent Group")
+ required: eu.timepit.refined.api.Refined[String,eu.timepit.refined.collection.NonEmpty]
+```
+A: 
+```
+import eu.timepit.refined.auto._
+```
