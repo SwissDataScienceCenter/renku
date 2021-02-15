@@ -38,13 +38,13 @@ trait Datasets {
 
     When("the user clicks on the Add Dataset button")
     click on projectPage.Datasets.addADatasetButton
-    verify that newDatasetPage.ModificationForm.formTitle contains "Add Dataset"
+    verify that newDatasetPage.DatasetModificationForm.formTitle contains "Add Dataset"
 
     And(s"the user add the title '$datasetName' to the new dataset")
     `changing its title`(to = datasetName.toString).modifying(newDatasetPage)
 
     And("the user saves the modification")
-    click on newDatasetPage.ModificationForm.datasetSubmitButton sleep (10 seconds)
+    click on newDatasetPage.DatasetModificationForm.datasetSubmitButton sleep (10 seconds)
 
     val datasetPage = DatasetPage(datasetName)
     Then("the user should see its newly created dataset and the project it belongs to")
@@ -56,28 +56,27 @@ trait Datasets {
     datasetPage
   }
 
-  def `import a dataset`(datasetURL: DatasetURL)(implicit projectPage: ProjectPage): DatasetPage = {
+  def `import a dataset`(datasetURL: DatasetURL, datasetName: DatasetName)(implicit projectPage: ProjectPage): DatasetPage = {
     import Import._
-    // val importDatasetURL = datasets.DatasetURL("10.7910/DVN/WTZS4K") // to parametrize?
-    // val importedDatasetName = datasets.DatasetName("2019-01 US Flights")
     val generatedDatasetName = datasets.DatasetName.generate
-    val importedDatasetPage = DatasetPage(generatedDatasetName)
+    val newDatasetPage = DatasetPage(generatedDatasetName)
     Given("the user is on the Datasets tab")
     click on projectPage.Datasets.tab
 
     When("the user clicks on the Add Dataset button")
     click on projectPage.Datasets.addADatasetButton
-    verify that importedDatasetPage.ModificationForm.formTitle contains "Add Dataset"
+    verify that newDatasetPage.DatasetModificationForm.formTitle contains "Add Dataset"
 
     When("the user clicks on the Import Dataset button")
     click on projectPage.Datasets.importDatasetButton
-    verify that importedDatasetPage.ImportForm.formTitle contains "Import Dataset"
+    verify that newDatasetPage.ImportForm.datasetSubmitButton contains "Import Dataset"
 
     And(s"the user imports a dataset from the datasetURL '$datasetURL'")
-    `setting its import url`(to = datasetURL.toString).importing(importedDatasetPage)
+    // importedDatasetPage.ImportForm.datasetURLField.enterValue(datasetURL)
+    `setting its import url`(to = datasetURL.toString).importing(newDatasetPage)
 
     And("the user imports the dataset")
-    click on importedDatasetPage.ImportForm.datasetSubmitButton sleep (20 seconds)
+    click on newDatasetPage.ImportForm.datasetSubmitButton sleep (20 seconds)
 
     val datasetPage = DatasetPage(datasetName)
     Then("the user should see its newly imported dataset and the project it belongs to")
@@ -86,9 +85,7 @@ trait Datasets {
     val projectLink = datasetPage.ProjectsList.link(projectPage)(_: WebDriver)
     reload whenUserCannotSee projectLink
 
-     /**/
-     val datasetPage = DatasetPage(datasetName)
-     datasetPage
+    datasetPage
   }
 
   def `navigate to dataset`(datasetPage: DatasetPage)(implicit projectPage: ProjectPage): Unit = {
@@ -111,7 +108,7 @@ trait Datasets {
 
     When(s"the user clicks on the modify button")
     click on datasetPage.modifyButton
-    verify userCanSee datasetPage.ModificationForm.formTitle
+    verify userCanSee datasetPage.DatasetModificationForm.formTitle
 
     And(s"the user modifies the dataset by ${by.name}")
     by.modifying(datasetPage)
@@ -121,7 +118,7 @@ trait Datasets {
     }
 
     And("the user saves the modification")
-    click on datasetPage.ModificationForm.datasetSubmitButton
+    click on datasetPage.DatasetModificationForm.datasetSubmitButton
 
     Then("the user should see its dataset and to which project it belongs")
     verify browserAt datasetPage
@@ -138,10 +135,11 @@ trait Datasets {
   object Modification {
 
     def `changing its title`(to: String): Modification =
-      Modification("changing its title", datasetPage => datasetPage.ModificationForm.datasetTitleField, to)
+      Modification("changing its title", datasetPage => datasetPage.DatasetModificationForm.datasetTitleField, to)
 
     def `changing its description`(to: String): Modification =
-      Modification("changing its description", datasetPage => datasetPage.ModificationForm.datasetDescriptionField, to)
+      Modification("changing its description", datasetPage => datasetPage.DatasetModificationForm.datasetDescriptionField, to)
+
   }
 
   case class Import private (name: String, field: DatasetPage => WebElement, newValue: String) {

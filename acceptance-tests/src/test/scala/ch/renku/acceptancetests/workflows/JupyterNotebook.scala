@@ -37,19 +37,17 @@ trait JupyterNotebook extends Datasets {
     verifyDatasetCreated(datasetName)
   }
 
-  // Pamela to check/complete/fix
-  def verifyUserCanSeeImportedDatasetOnJupyterNotebook(implicit
+  def verifyAutoLFSDatasetOnJupyterNotebook(implicit
                                            projectDetails:  ProjectDetails,
-                                           docsScreenshots: DocsScreenshots
+                                           docsScreenshots: DocsScreenshots,
+                                           datasetName: DatasetName
                                           ): Unit = {
-    val jupyterLabPage = launchEnvironment
+    val jupyterLabPage = launchEnvironmentAutoFetch
 
     When("the user clicks on the Terminal icon")
     click on jupyterLabPage.terminalIcon sleep (2 seconds)
-    val datasetName = DatasetName.generate
-    And("the user creates a dataset")
-    `create a dataset`(jupyterLabPage, datasetName)
 
+    // Verify the dataset with datasetName is not in LFS
     stopEnvironment
 
     Then("the user can see the created dataset")

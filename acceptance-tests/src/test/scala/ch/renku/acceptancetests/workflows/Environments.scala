@@ -30,6 +30,30 @@ trait Environments {
     jupyterLabPage
   }
 
+
+  def launchEnvironmentAutoFetch(implicit projectDetails: ProjectDetails, docsScreenshots: DocsScreenshots): JupyterLabPage = {
+    implicit val projectPage: ProjectPage = ProjectPage()
+    When("user clicks on the Environments tab")
+    click on projectPage.Environments.tab
+    docsScreenshots.reachedCheckpoint()
+
+    clickNewAndWaitForImageBuild
+    docsScreenshots.reachedCheckpoint()
+
+    turnAutoFetchOn
+    docsScreenshots.reachedCheckpoint()
+
+    clickStartEnvironmentAndWaitForReady
+    docsScreenshots.reachedCheckpoint()
+
+    projectPage.Environments.Running.connectToJupyterLab
+
+    Then("a JupyterLab page is opened on a new tab")
+    val jupyterLabPage = JupyterLabPage()
+    verify browserSwitchedTo jupyterLabPage sleep (5 seconds)
+    jupyterLabPage
+  }
+
   def stopEnvironment(implicit projectDetails: ProjectDetails): Unit =
     stopEnvironmentOnProjectPage(ProjectPage())
 
@@ -112,6 +136,11 @@ trait Environments {
     click on projectPage.Environments.newLink sleep (2 seconds)
     And("once the image is built")
     projectPage.Environments.verifyImageReady
+  }
+
+  def turnAutoFetchOn(implicit projectPage: ProjectPage): Unit = {
+    And("then they turn on the Auto-fetch option")
+    click on projectPage.Environments.autoFetch
   }
 
   def clickStartEnvironmentAndWaitForReady(implicit projectPage: ProjectPage): Unit = {

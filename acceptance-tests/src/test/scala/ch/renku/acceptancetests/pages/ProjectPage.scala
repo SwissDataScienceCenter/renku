@@ -251,7 +251,7 @@ class ProjectPage(projectSlug: String, namespace: String) extends RenkuPage with
     }
 
     def importDatasetButton(implicit webDriver: WebDriver): WebElement = eventually {
-      findAll(cssSelector("a"))
+      findAll(cssSelector("button"))
         .find(element => element.text.contains("Import Dataset") || element.text.contains("Import a Dataset"))
         .getOrElse(fail("Import Dataset button not found"))
     }
@@ -275,6 +275,11 @@ class ProjectPage(projectSlug: String, namespace: String) extends RenkuPage with
     def newLink(implicit webDriver: WebDriver): WebElement =
       eventually {
         find(cssSelector(s"a[href='$path/environments/new']")) getOrElse fail("New environment link not found")
+      }(waitUpTo(1 minute), implicitly[source.Position])
+
+    def autoFetch(implicit webDriver: WebDriver): WebElement =
+      eventually {
+        find(cssSelector("input[id='option-lfs_auto_fetch']")) getOrElse fail("Auto-fetch option not found")
       }(waitUpTo(1 minute), implicitly[source.Position])
 
     def anonymousUnsupported(implicit webDriver: WebDriver): WebElement = eventually {

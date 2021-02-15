@@ -39,7 +39,7 @@ class DatasetPage(datasetName: DatasetName, projectPage: ProjectPage) extends Re
     }(waitUpTo(20 seconds), implicitly[source.Position])
   }
 
-  object ModificationForm {
+  object DatasetModificationForm {
 
     def formTitle(implicit webDriver: WebDriver): WebElement = eventually {
       find(cssSelector("h3.uk-heading-divider")) getOrElse fail("Form title not found")
@@ -60,6 +60,7 @@ class DatasetPage(datasetName: DatasetName, projectPage: ProjectPage) extends Re
     def datasetSubmitButton(implicit webDriver: WebDriver): WebElement = eventually {
       find(cssSelector("button[type='submit']")) getOrElse fail("Dataset form submit button not found")
     }
+
   }
 
   object ImportForm {
