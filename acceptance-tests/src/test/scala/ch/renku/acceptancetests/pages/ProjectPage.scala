@@ -155,7 +155,7 @@ class ProjectPage(projectSlug: String, namespace: String) extends RenkuPage with
         }
 
         def descriptionField(implicit webDriver: WebDriver): WebElement = eventually {
-          find(cssSelector("textarea#textareatext-area")) getOrElse fail("Description field not found")
+          find(cssSelector("textarea#descriptiontext-area")) getOrElse fail("Description field not found")
         }
 
         def createIssueButton(implicit webDriver: WebDriver): WebElement = eventually {
