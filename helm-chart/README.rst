@@ -61,7 +61,7 @@ To run tests on the deployment, use
 Upgrading
 ---------
 Most information related to upgrading from one chart version to another is covered
-in the `values changelog file<https://github.com/SwissDataScienceCenter/renku/blob/master/helm-chart/values.yaml.changelog.md>`_.
+in the `values changelog file <https://github.com/SwissDataScienceCenter/renku/blob/master/helm-chart/values.yaml.changelog.md>`_.
 For upgrades that require some steps other than modifying the values files to be
 executed, we add some instructions here.
 
@@ -69,10 +69,10 @@ Upgrading to 0.8.0
 ******************
 This upgrade comes with an upgrade of the keycloak chart from ``4.10.2`` to ``9.8.1``! For
 details on this upgrade check the dedicated section in the
-`the keycloak chart docs<https://github.com/codecentric/helm-charts/tree/master/charts/keycloak#upgrading>`_
-and the `keycloak docs<https://www.keycloak.org/docs/latest/upgrading/>`_.
+`the keycloak chart docs <https://github.com/codecentric/helm-charts/tree/master/charts/keycloak#upgrading>`_
+and the `keycloak docs <https://www.keycloak.org/docs/latest/upgrading/>`_.
 
-- Before starting, make sure to check out `the values changelog for this upgrade<https://github.com/SwissDataScienceCenter/renku/blob/master/helm-chart/values.yaml.changelog.md#upgrading-to-renku-080-includes-breaking-changes>`_
+- Before starting, make sure to check out `the values changelog for this upgrade <https://github.com/SwissDataScienceCenter/renku/blob/master/helm-chart/values.yaml.changelog.md#upgrading-to-renku-080-includes-breaking-changes>`_
   and update your values file accordingly.
 
 - The upgrade of keycloak will perform an **irreversible database migration**. It is therefore recommended
