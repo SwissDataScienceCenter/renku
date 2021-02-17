@@ -67,7 +67,7 @@ executed, we add some instructions here.
 
 Upgrading to 0.8.0
 ******************
-This upgrade comes with an upgrade of the keycloak chart from `4.10.2` to `9.8.1`! For
+This upgrade comes with an upgrade of the keycloak chart from ``4.10.2`` to ``9.8.1``! For
 details on this upgrade check the dedicated section in the
 `the keycloak chart docs<https://github.com/codecentric/helm-charts/tree/master/charts/keycloak#upgrading>`_
 and the `keycloak docs<https://www.keycloak.org/docs/latest/upgrading/>`_.
@@ -80,12 +80,22 @@ and the `keycloak docs<https://www.keycloak.org/docs/latest/upgrading/>`_.
 
 - **Warning: Persist keycloak-related secrets!**
 
-  If `global.keycloak.postgresPassword.value` and `global.keycloak.postgresPassword.value`
+  If ``global.keycloak.postgresPassword.value`` and ``global.keycloak.password.value``
   have not been explicitly defined in the values file (and thus have been autocreated by helm),
   add them to the values file now.
 
-  * Get the `keycloak-postgres-password` from the `renku-keycloak-postgres` secret and add it as `global.keycloak.postgresPassword.value`.
-  * Get the `keycloak-password` from the `keycloak-password-secret` and add it as `global.keycloak.password.value`.
+  * Get the ``keycloak-postgres-password`` from the ``renku-keycloak-postgres`` secret and add it as ``global.keycloak.postgresPassword.value``.
+  * Get the ``keycloak-password`` from the ``keycloak-password-secret`` and add it as ``global.keycloak.password.value``.
+
+  This should result in something like
+.. code-block:: bash
+
+    global:
+      keycloack:
+        postgresPassword:
+          value: <actual-keycloak-postgres-password>
+        password:
+          value: <actual-keycloak-admin-password>
 
 
 - Delete the two secrets which need to be recreated as well as the keycloak StatefulSet:
@@ -96,9 +106,9 @@ and the `keycloak docs<https://www.keycloak.org/docs/latest/upgrading/>`_.
     KEYCLOAK_NAME=`kubectl get statefulsets.apps -n <namespace> -l app=keycloak --no-headers=true -o custom-columns=":metadata.name"`
     kubectl delete statefulsets.apps -n <namespace> $KEYCLOAK_NAME
 
-- Perform the appropriate `helm upgrade` command to use the new chart version and your modified values file.
+- Perform the appropriate ``helm upgrade`` command to use the new chart version and your modified values file.
 
-- If you should find yourself in the place where you have to rollback these changes, a simple `helm rollback`
+- If you should find yourself in the place where you have to rollback these changes, a simple ``helm rollback``
   will unfortunately not work. Instead, recover the postgres volume from your backup, remove both secrets mentioned
-  above and the keycloak StatefulSet, make sure `global.keycloak.postgresPassword.value` and `global.keycloak.password.value`
+  above and the keycloak StatefulSet, make sure ``global.keycloak.postgresPassword.value`` and ``global.keycloak.password.value``
   set also in your original values file. Then perform an *upgrade* to the previously deployed Renku chart version.
