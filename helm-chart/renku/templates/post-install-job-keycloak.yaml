@@ -46,13 +46,13 @@ spec:
             - name: KEYCLOAK_ADMIN_USER
               valueFrom:
                 secretKeyRef:
-                  name: {{ template "renku.fullname" . }}
-                  key: keycloak-username
+                  name: keycloak-password-secret
+                  key: KEYCLOAK_USER
             - name: KEYCLOAK_ADMIN_PASSWORD
               valueFrom:
                 secretKeyRef:
                   name: keycloak-password-secret
-                  key: keycloak-password
+                  key: KEYCLOAK_PASSWORD
             - name: PYTHONUNBUFFERED
               value: "0"
 

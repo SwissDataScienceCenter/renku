@@ -1,10 +1,20 @@
 # `values.yaml` changelog
-All the changes should be listed here so the dev-ops team knows what to do when upgrading Renku.
+Necessary changes to the values files for upgrading the Renku chart version are listed here.
+For changes that require manual steps other than changing values, please check out [the chart readme](https://github.com/SwissDataScienceCenter/renku/tree/master/helm-chart#upgrading).
 
 Please follow this convention when adding a new row
 * `<type: NEW|EDIT|DELETE> - *<resource name>*: <details>`
 
 ----
+
+## Upgrading to Renku 0.8.0 (INCLUDES BREAKING CHANGES!)
+* Keycloak chart dependency upgraded from `4.10.2` to `9.8.1`, check out [the instructions](https://github.com/codecentric/helm-charts/tree/master/charts/keycloak#upgrading) on how to upgrade aspects not covered by default in the Renku chart. Most notably, keycloak values are
+less nested, so at the level of the Renku chart values, *keycloak.keycloak.X.Y* becomes *keycloak.X.Y*.
+* EDIT - the section *keycloak.keycloak.persistence* has been removed. Database connection
+details are specified through the *keycloak.extraEnv* and *keycloak.extraEnvFrom* blocks. See
+the [Renku values file](https://github.com/SwissDataScienceCenter/renku/blob/master/helm-chart/renku/values.yaml) for reference.
+* EDIT - *keycloak.keycloak.username* has been moved to *global.keycloak.user*.
+
 
 ## Upgrading to Renku 0.7.0 (INCLUDES BREAKING CHANGES!)
 * EDIT - *postgresql.persistence.existingClaim*: Renku `0.7.0` upgrades the postgres chart dependency, which requires modification of the postgres data volume of existing deployments. See [this helper job manifest](https://github.com/SwissDataScienceCenter/renku/blob/master/helm-chart/utils/migrate-pg-to-bitnami.yaml).
