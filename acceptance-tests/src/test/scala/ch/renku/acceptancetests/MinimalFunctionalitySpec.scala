@@ -21,7 +21,7 @@ class MinimalFunctionalitySpec
 
   scenario("User can use basic functionality of Renku") {
 
-    implicit val loginType: LoginType = logIntoRenku
+    implicit val loginType: LoginType = `log in to Renku`
 
     implicit val projectDetails: ProjectDetails = ProjectDetails.generate()
 
@@ -40,13 +40,13 @@ class MinimalFunctionalitySpec
     forkTestCase
 
     go to ProjectPage()
-    removeProjectInGitLab
-    verifyProjectWasRemovedInRenku
+    `remove project in GitLab`(projectDetails)
+    `verify project is removed`
 
     launchUnprivilegedEnvironment
     stopEnvironment(anonEnvConfig.projectId)
 
-    logOutOfRenku
+    `log out of Renku`
 
     launchAnonymousEnvironment map (_ => stopEnvironment(anonEnvConfig.projectId))
 

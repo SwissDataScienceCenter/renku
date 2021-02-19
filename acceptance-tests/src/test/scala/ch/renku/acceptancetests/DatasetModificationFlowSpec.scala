@@ -14,37 +14,29 @@ class DatasetModificationFlowSpec extends AcceptanceSpec with Login with NewProj
 
   scenario("From the UI the user can modify a dataset and only interact with its latest version") {
     import Modification._
-    implicit val loginType:       LoginType       = logIntoRenku
+    implicit val loginType:       LoginType       = `log in to Renku`
     implicit val docsScreenshots: DocsScreenshots = new DocsScreenshots(this, browser)
     implicit val projectDetails:  ProjectDetails  = ProjectDetails.generate()
-
-    implicit val projectPage = ProjectPage()
-    val datasetName          = DatasetName.generate
-    val newDescription       = paragraph().generateOne
+    implicit val projectPage:     ProjectPage     = ProjectPage()
 
     Given("a new renku project")
     createNewProject(projectDetails)
 
     And("a new dataset for this project")
+    val datasetName         = DatasetName.generate
     val originalDatasetPage = `create a dataset`(datasetName)
 
-    val newTitle = DatasetTitle.generate
+    val newTitle       = DatasetTitle.generate
+    val newDescription = paragraph().generateOne
     When("the user modifies the dataset")
     `modify the dataset`(originalDatasetPage,
                          by = `changing its title`(to = newTitle.toString),
                          and = `changing its description`(to = newDescription.value)
     )
 
-    val secondTitle = DatasetTitle.generate
-    And("the user modifies a 2nd time the dataset")
-    `modify the dataset`(originalDatasetPage, by = `changing its title`(to = secondTitle.toString))
+    `remove project in GitLab`(projectDetails)
+    `verify project is removed`
 
-    Then("the user should see only the latest version of the dataset")
-    verifyDatasetCreated(datasetName)
-
-    removeProjectInGitLab
-    verifyProjectWasRemovedInRenku
-
-    logOutOfRenku
+    `log out of Renku`
   }
 }

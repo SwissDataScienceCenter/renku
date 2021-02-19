@@ -9,13 +9,22 @@ import ch.renku.acceptancetests.generators.Generators._
 import ch.renku.acceptancetests.model.users.UserCredentials
 import eu.timepit.refined.api.Refined
 import eu.timepit.refined.collection.NonEmpty
+import ch.renku.acceptancetests.model.projects.ProjectDetails._
 
 object projects {
 
   final case class ProjectIdentifier(
       namespace: String Refined NonEmpty,
       slug:      String Refined NonEmpty
-  )
+  ) {
+    def asProjectPath(implicit userCredentials: UserCredentials): String =
+      s"$namespace/$slug"
+  }
+
+  object ProjectIdentifier {
+    def unsafeApply(namespace: String, slug: String): ProjectIdentifier =
+      ProjectIdentifier(Refined.unsafeApply(namespace), Refined.unsafeApply(slug))
+  }
 
   final case class ProjectDetails(
       title:       String Refined NonEmpty,
@@ -23,7 +32,18 @@ object projects {
       description: String Refined NonEmpty,
       template:    Template,
       readmeTitle: String
-  )
+  ) {
+    def asProjectIdentifier(implicit userCredentials: UserCredentials): ProjectIdentifier =
+      ProjectIdentifier(
+        namespace = Refined.unsafeApply(userCredentials.userNamespace),
+        slug = Refined.unsafeApply(title.toPathSegment)
+      )
+
+    def asProjectPath(implicit userCredentials: UserCredentials): String = {
+      val identifier = asProjectIdentifier
+      s"${identifier.namespace}/${identifier.slug}"
+    }
+  }
 
   sealed abstract class Visibility(val value: String)
 
@@ -91,7 +111,5 @@ object projects {
     implicit class TitleOps(title: String Refined NonEmpty) {
       lazy val toPathSegment: String = title.value.replace(" ", "-")
     }
-
   }
-
 }

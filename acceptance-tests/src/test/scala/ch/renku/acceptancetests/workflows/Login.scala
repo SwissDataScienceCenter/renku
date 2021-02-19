@@ -10,7 +10,7 @@ import scala.language.postfixOps
 trait Login {
   self: AcceptanceSpec =>
 
-  def logIntoRenku: LoginType = {
+  def `log in to Renku`: LoginType = {
     Given("user is not logged in")
     go to LandingPage sleep (1 second)
     verify browserAt LandingPage
@@ -128,7 +128,7 @@ trait Login {
     lt
   }
 
-  def logOutOfRenku(implicit loginType: LoginType): Unit = {
+  def `log out of Renku`(implicit loginType: LoginType): Unit = {
     When("user clicks the Log out link")
     click on WelcomePage.TopBar.topRightDropDown
     click on WelcomePage.TopBar.logoutLink

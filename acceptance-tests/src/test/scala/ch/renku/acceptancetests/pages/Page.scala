@@ -1,7 +1,7 @@
 package ch.renku.acceptancetests.pages
 
+import ch.renku.acceptancetests.model.{BaseUrl, RenkuBaseUrl}
 import ch.renku.acceptancetests.pages.Page._
-import ch.renku.acceptancetests.pages.RenkuPage.RenkuBaseUrl
 import ch.renku.acceptancetests.tooling._
 import eu.timepit.refined.W
 import eu.timepit.refined.api.Refined
@@ -71,7 +71,3 @@ object Page {
 }
 
 abstract class RenkuPage extends Page[RenkuBaseUrl]
-
-object RenkuPage {
-  case class RenkuBaseUrl(value: String Refined Url) extends BaseUrl(value)
-}

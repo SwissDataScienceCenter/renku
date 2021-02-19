@@ -28,9 +28,9 @@ class LoginSpec extends AcceptanceSpec with Login {
   feature("User logging in and out") {
 
     scenario("Logging into Renku") {
-      implicit val loginType: LoginType = logIntoRenku
+      implicit val loginType: LoginType = `log in to Renku`
 
-      logOutOfRenku
+      `log out of Renku`
     }
   }
 }

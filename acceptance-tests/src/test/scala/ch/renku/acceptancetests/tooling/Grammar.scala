@@ -1,6 +1,7 @@
 package ch.renku.acceptancetests.tooling
 
 import cats.implicits._
+import ch.renku.acceptancetests.model.BaseUrl
 import ch.renku.acceptancetests.pages.Page
 import org.openqa.selenium.{WebDriver, WebElement}
 import org.scalatest.concurrent.Eventually

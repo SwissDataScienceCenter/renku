@@ -1,15 +1,12 @@
 package ch.renku.acceptancetests
 
-import ch.renku.acceptancetests.model.projects.{ProjectDetails, ProjectIdentifier, Template, Visibility}
+import ch.renku.acceptancetests.model.projects._
+import ch.renku.acceptancetests.pages._
 import ch.renku.acceptancetests.tooling.{AcceptanceSpec, BatchRemoveProjectSpecData}
 import ch.renku.acceptancetests.workflows._
-import ch.renku.acceptancetests.pages._
-import ch.renku.acceptancetests.pages.GitLabPages.GitLabBaseUrl
-import org.scalatestplus.selenium.WebBrowser
-import eu.timepit.refined.api.Refined
 
-import scala.language.postfixOps
 import scala.concurrent.duration._
+import scala.language.postfixOps
 import scala.util.matching.Regex
 
 /**
@@ -26,9 +23,8 @@ class BatchRemoveProjectSpec extends AcceptanceSpec with BatchRemoveProjectSpecD
   scenario("User can delete many projects project") {
     batchRemoveConfig match {
       case Some(config) =>
-        if (config.batchRemove) {
-          loginAndRemoveProjects(config)
-        } else {
+        if (config.batchRemove) `login and remove projects`(config)
+        else {
           Given("specifically asked to not remove projects")
           Then("do not remove anything")
         }
@@ -38,14 +34,16 @@ class BatchRemoveProjectSpec extends AcceptanceSpec with BatchRemoveProjectSpecD
     }
   }
 
-  def loginAndRemoveProjects(config: BatchRemoveConfig): Unit = {
-    implicit val loginType: LoginType = logIntoRenku
+  def `login and remove projects`(config: BatchRemoveConfig): Unit = {
+    implicit val loginType: LoginType = `log in to Renku`
+
     Given("projects to remove")
-    removeProjects(config, loginType)
-    logOutOfRenku
+    removeProjects(config)
+
+    `log out of Renku`
   }
 
-  def removeProjects(config: BatchRemoveConfig, loginType: LoginType)(implicit gitLabBaseUrl: GitLabBaseUrl): Unit = {
+  private def removeProjects(config: BatchRemoveConfig): Unit = {
     When("user goes to the projects page")
     go to ProjectsPage sleep (5 seconds)
     verify browserAt ProjectsPage
@@ -62,33 +60,24 @@ class BatchRemoveProjectSpec extends AcceptanceSpec with BatchRemoveProjectSpecD
       val projectUrlComps = elt getAttribute "href" split "/"
       val namespace       = projectUrlComps(projectUrlComps.size - 2)
       val slug            = projectUrlComps last;
-      ProjectIdentifier(Refined.unsafeApply(namespace), Refined.unsafeApply(slug))
+      ProjectIdentifier.unsafeApply(namespace, slug)
     })
-    removeIds foreach (removeProject(_, loginType))
+    removeIds foreach removeProject
     go to ProjectsPage sleep (5 seconds)
   }
 
-  def removeProject(projectId: ProjectIdentifier, loginType: LoginType)(implicit gitLabBaseUrl: GitLabBaseUrl): Unit = {
+  private def removeProject(projectId: ProjectIdentifier): Unit = {
     // Go to the project page to get the title
     val projectPage = ProjectPage(projectId)
     go to projectPage sleep (5 seconds)
-    val title = projectPage.projectTitle
-    title match {
+    projectPage.projectTitle match {
       case Some(s) =>
-        implicit val projectDetails: ProjectDetails =
-          ProjectDetails(Refined.unsafeApply(s),
-                         Visibility.Public,
-                         Refined.unsafeApply(""),
-                         Template(Refined.unsafeApply("Unused")),
-                         ""
-          )
         And(s"found project $s to remove")
-        removeProjectInGitLab
         Then("remove project")
+        `remove project in GitLab`(projectId)
       case None =>
         And(s"could not get the title for $projectId")
         Then("do not remove")
     }
   }
-
 }

@@ -13,8 +13,8 @@ trait Fork {
     val projectPage = ProjectPage()
     go to projectPage
     val forkedProject = forkProject
-    removeProjectInGitLab(forkedProject.projectDetails, implicitly)
-    verifyProjectWasRemovedInRenku(forkedProject.projectDetails)
+    `remove project in GitLab`(forkedProject.projectDetails)
+    `verify project is removed`(forkedProject.projectDetails)
   }
 
   def forkProject(implicit projectDetails: ProjectDetails): ForkedProject = {

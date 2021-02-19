@@ -1,11 +1,7 @@
 package ch.renku.acceptancetests.tooling
 
-import java.lang.System.getProperty
-
-import cats.implicits._
+import ch.renku.acceptancetests.model._
 import ch.renku.acceptancetests.model.users.UserCredentials
-import ch.renku.acceptancetests.pages.GitLabPages.GitLabBaseUrl
-import ch.renku.acceptancetests.pages.RenkuPage.RenkuBaseUrl
 import ch.renku.acceptancetests.workflows.LoginType
 import ch.renku.acceptancetests.workflows.LoginType.{LoginWithProvider, LoginWithoutProvider}
 import eu.timepit.refined.api.{RefType, Refined}
@@ -13,22 +9,34 @@ import eu.timepit.refined.auto._
 import eu.timepit.refined.collection.NonEmpty
 import eu.timepit.refined.string.Url
 
+import java.lang.System.getProperty
+
 trait AcceptanceSpecData {
 
   private val testsDefaults = TestsDefaults()
 
   protected implicit lazy val renkuBaseUrl: RenkuBaseUrl = {
-    val env = sys.env.get("RENKU_TEST_URL") orElse Option(getProperty("env")) orElse testsDefaults.env
-    toBaseUrl(env.get) getOrElse showErrorAndStop(
+    val maybeEnv = sys.env.get("RENKU_TEST_URL") orElse Option(getProperty("env")) orElse testsDefaults.env
+    maybeEnv flatMap as(RenkuBaseUrl.apply) getOrElse showErrorAndStop(
       "-Denv argument or RENKU_TEST_URL environment variable is not a valid URL"
     )
   }
 
-  private lazy val toBaseUrl: String => Either[String, RenkuBaseUrl] = url => {
+  protected implicit lazy val gitLabBaseUrl: GitLabBaseUrl = {
+    val maybeGitLabUrl = sys.env
+      .get("GITLAB_TEST_URL")
+      .orElse(Option(getProperty("gitLabUrl")))
+      .orElse(testsDefaults.gitlaburl flatMap toNonEmpty map (_.value))
+    maybeGitLabUrl flatMap as(GitLabBaseUrl.apply) getOrElse showErrorAndStop(
+      "-DgitLabUrl argument or GITLAB_TEST_URL environment variable is not a valid URL"
+    )
+  }
+
+  protected implicit lazy val gitLabAPIUrl: GitLabApiUrl = GitLabApiUrl(gitLabBaseUrl)
+
+  private def as[T <: BaseUrl](factory: String Refined Url => T): String => Option[T] = url => {
     val baseUrl = if (url.endsWith("/")) url.substring(0, url.length - 1) else url
-    RefType
-      .applyRef[String Refined Url](baseUrl)
-      .map(RenkuBaseUrl.apply)
+    RefType.applyRef[String Refined Url](baseUrl).map(factory).toOption
   }
 
   protected implicit lazy val userCredentials: UserCredentials = {

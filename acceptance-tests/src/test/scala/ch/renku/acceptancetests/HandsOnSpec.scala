@@ -1,11 +1,10 @@
 package ch.renku.acceptancetests
 
-import ch.renku.acceptancetests.model.datasets.DatasetName
 import ch.renku.acceptancetests.model.projects.ProjectDetails
 import ch.renku.acceptancetests.pages._
 import ch.renku.acceptancetests.tooling.{AcceptanceSpec, DocsScreenshots}
 import ch.renku.acceptancetests.workflows._
-import org.openqa.selenium.{JavascriptExecutor, WebDriver}
+import org.openqa.selenium.JavascriptExecutor
 
 import scala.concurrent.duration._
 import scala.language.postfixOps
@@ -27,7 +26,7 @@ class HandsOnSpec
 
   scenario("User can do hands-on tutorial") {
 
-    implicit val loginType: LoginType = logIntoRenku
+    implicit val loginType: LoginType = `log in to Renku`
 
     implicit val docsScreenshots: DocsScreenshots = new DocsScreenshots(this, browser)
 
@@ -50,10 +49,10 @@ class HandsOnSpec
 
     setProjectTags
     setProjectDescription
-    removeProjectInGitLab
-    verifyProjectWasRemovedInRenku
+    `remove project in GitLab`(projectDetails)
+    `verify project is removed`
 
-    logOutOfRenku
+    `log out of Renku`
   }
   def verifyAnalysisRan(implicit projectDetails: ProjectDetails, docsScreenshots: DocsScreenshots): Unit = {
     val projectPage = ProjectPage()

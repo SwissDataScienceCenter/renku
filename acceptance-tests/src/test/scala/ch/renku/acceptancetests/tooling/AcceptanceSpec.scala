@@ -3,9 +3,9 @@ package ch.renku.acceptancetests.tooling
 import ch.renku.acceptancetests.workflows.{Environments, JupyterNotebook}
 import org.openqa.selenium.WebDriver
 import org.openqa.selenium.chrome.{ChromeDriver, ChromeDriverService, ChromeOptions}
-import org.openqa.selenium.remote.RemoteWebDriver
 import org.scalatest.{BeforeAndAfterAll, FeatureSpec, GivenWhenThen, Matchers => ScalatestMatchers}
 import org.scalatestplus.selenium.{Chrome, Driver, WebBrowser}
+
 import scala.language.postfixOps
 
 trait AcceptanceSpec
@@ -19,6 +19,7 @@ trait AcceptanceSpec
     with Driver
     with Grammar
     with JupyterNotebook
+    with GitLab
     with ScreenCapturingSpec
     with AcceptanceSpecData
     with AcceptanceSpecPatience {
@@ -33,8 +34,6 @@ trait AcceptanceSpec
           new ChromeDriverService.Builder().withWhitelistedIps("127.0.0.1").build,
           new ChromeOptions().addArguments("--no-sandbox", "--headless", "--disable-gpu")
         )
-      case None =>
-        Chrome.webDriver
+      case None => Chrome.webDriver
     }
-
 }

@@ -17,14 +17,14 @@ class PrivateProjectSpec
     with BrowserNavigation {
 
   scenario("User can launch Jupyter notebook when the project is private") {
-    implicit val loginType:       LoginType       = logIntoRenku
+    implicit val loginType:       LoginType       = `log in to Renku`
     implicit val docsScreenshots: DocsScreenshots = new DocsScreenshots(this, browser)
     implicit val projectDetails:  ProjectDetails  = ProjectDetails.generate(visibility = Visibility.Private)
 
     createNewProject(projectDetails)
     verifyUserCanWorkWithJupyterNotebook
-    removeProjectInGitLab
+    `remove project in GitLab`(projectDetails)
     switchToRenkuTab
-    logOutOfRenku
+    `log out of Renku`
   }
 }
