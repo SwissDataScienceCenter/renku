@@ -1,6 +1,6 @@
 package ch.renku.acceptancetests.workflows
 
-import ch.renku.acceptancetests.model.datasets.DatasetName
+import ch.renku.acceptancetests.model.datasets.{DatasetName, DatasetDir}
 import ch.renku.acceptancetests.model.projects.ProjectDetails
 import ch.renku.acceptancetests.pages.JupyterLabPage
 import ch.renku.acceptancetests.tooling.{AcceptanceSpec, DocsScreenshots}
@@ -17,6 +17,13 @@ trait JupyterNotebook extends Datasets {
     terminal %> s"renku dataset create '$datasetName'" sleep (2 seconds)
     And("pushes it")
     terminal %> "git push" sleep (30 seconds)
+  }
+
+  def `verify zipped dataset`(jupyterLabPage: JupyterLabPage, datasetDir: DatasetDir): Unit = {
+    import jupyterLabPage.terminal
+
+    val listZippedDatasetOutput = terminal %> s"unzip -l '$datasetDir'"
+    // check listZippedDatasetOutput is not the same as 'unzip:  cannot find or open data'
   }
 
   def verifyUserCanWorkWithJupyterNotebook(implicit
@@ -40,17 +47,17 @@ trait JupyterNotebook extends Datasets {
   def verifyAutoLFSDatasetOnJupyterNotebook(implicit
                                            projectDetails:  ProjectDetails,
                                            docsScreenshots: DocsScreenshots,
-                                           datasetName: DatasetName
+                                           datasetDir: DatasetDir
                                           ): Unit = {
     val jupyterLabPage = launchEnvironmentAutoFetch
 
     When("the user clicks on the Terminal icon")
     click on jupyterLabPage.terminalIcon sleep (2 seconds)
 
-    // Verify the dataset with datasetName is not in LFS
+    And("the user verifies the dataset is pulled from LFS")
+    `verify zipped dataset`(jupyterLabPage, datasetDir)
+
     stopEnvironment
 
-    Then("the user can see the created dataset")
-    verifyDatasetCreated(datasetName)
   }
 }

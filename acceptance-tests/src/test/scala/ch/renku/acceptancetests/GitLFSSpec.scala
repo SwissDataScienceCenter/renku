@@ -1,20 +1,22 @@
 package ch.renku.acceptancetests
 
-import ch.renku.acceptancetests.model.datasets.{DatasetName, DatasetURL}
+import ch.renku.acceptancetests.model.datasets.{DatasetDir, DatasetName, DatasetURL}
 import ch.renku.acceptancetests.model.projects.ProjectDetails
-import ch.renku.acceptancetests.pages.ProjectPage
+import ch.renku.acceptancetests.pages.{DatasetPage, ProjectPage}
 import ch.renku.acceptancetests.tooling.{AcceptanceSpec, DocsScreenshots}
 import ch.renku.acceptancetests.workflows._
 import eu.timepit.refined.auto._
+import org.openqa.selenium.WebDriver
+
 import scala.language.postfixOps
 import scala.concurrent.duration._
 
-// Pamela to check/complete/fix
 class GitLFSSpec  extends AcceptanceSpec
   with Collaboration
   with Environments
   with Login
   with NewProject
+  with RemoveProject
   with Datasets{
 
   scenario("User can start a notebook with auto-fetch LFS") {
@@ -22,6 +24,7 @@ class GitLFSSpec  extends AcceptanceSpec
     implicit val loginType: LoginType = logIntoRenku
     implicit val projectDetails: ProjectDetails = ProjectDetails.generate()
     implicit val projectPage: ProjectPage = ProjectPage()
+    implicit val docsScreenshots: DocsScreenshots = new DocsScreenshots(this, browser)
 
     Given("a renku project with imported dataset")
     createNewProject(projectDetails)
@@ -30,12 +33,15 @@ class GitLFSSpec  extends AcceptanceSpec
     val importedDatasetName = DatasetName("2019-01 US Flights")
     And("an imported dataset for this project")
     val importedDatasetPage = `import a dataset`(importDatasetURL, importedDatasetName)
+    val test = importedDatasetPage.path.value
+    val datasetPage = DatasetPage(importedDatasetName)
+    val datasetLink = projectPage.Datasets.DatasetsList.link(to = datasetPage)(_: WebDriver)
 
-    // Verify dataset was imported
-    verifyAutoLFSDatasetOnJupyterNotebook
+    val importedDatasetDirectory = DatasetDir("201901_us_flights_10/2019-01-flights.csv.zip")
+    verifyAutoLFSDatasetOnJupyterNotebook(projectDetails, docsScreenshots, importedDatasetDirectory)
 
-    // removeProjectInGitLab
-    // verifyProjectWasRemovedInRenku
+    removeProjectInGitLab
+    verifyProjectWasRemovedInRenku
 
     logOutOfRenku
 

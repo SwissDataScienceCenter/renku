@@ -7,6 +7,7 @@ import ch.renku.acceptancetests.pages.{DatasetPage, ProjectPage}
 import ch.renku.acceptancetests.tooling.AcceptanceSpec
 import eu.timepit.refined.auto._
 import org.openqa.selenium.{WebDriver, WebElement}
+import org.scalatestplus.selenium.WebBrowser.{cssSelector, findAll}
 
 import scala.concurrent.duration._
 import scala.language.postfixOps
@@ -56,7 +57,7 @@ trait Datasets {
     datasetPage
   }
 
-  def `import a dataset`(datasetURL: DatasetURL, datasetName: DatasetName)(implicit projectPage: ProjectPage): DatasetPage = {
+  def `import a dataset`(datasetURL: DatasetURL, datasetName: DatasetName)(implicit projectPage: ProjectPage, projectDetails: ProjectDetails): DatasetPage = {
     import Import._
     val generatedDatasetName = datasets.DatasetName.generate
     val newDatasetPage = DatasetPage(generatedDatasetName)
@@ -72,18 +73,18 @@ trait Datasets {
     verify that newDatasetPage.ImportForm.datasetSubmitButton contains "Import Dataset"
 
     And(s"the user imports a dataset from the datasetURL '$datasetURL'")
-    // importedDatasetPage.ImportForm.datasetURLField.enterValue(datasetURL)
     `setting its import url`(to = datasetURL.toString).importing(newDatasetPage)
 
     And("the user imports the dataset")
-    click on newDatasetPage.ImportForm.datasetSubmitButton sleep (20 seconds)
+    click on newDatasetPage.ImportForm.datasetSubmitButton sleep (40 seconds)
 
     val datasetPage = DatasetPage(datasetName)
-    Then("the user should see its newly imported dataset and the project it belongs to")
-    verify browserAt datasetPage
-    verify that datasetPage.datasetTitle contains datasetName.value
-    val projectLink = datasetPage.ProjectsList.link(projectPage)(_: WebDriver)
-    reload whenUserCannotSee projectLink
+    When("the user navigates to the Datasets tab")
+    click on projectPage.Datasets.tab
+
+    Then("the user should see its newly imported dataset")
+    val datasetTitle = projectPage.Datasets.datasetTitle(datasetName)(_: WebDriver)
+    reload whenUserCannotSee datasetTitle
 
     datasetPage
   }

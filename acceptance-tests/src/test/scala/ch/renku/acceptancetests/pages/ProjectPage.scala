@@ -1,5 +1,6 @@
 package ch.renku.acceptancetests.pages
 
+import ch.renku.acceptancetests.model.datasets.DatasetName
 import ch.renku.acceptancetests.model.projects.ProjectDetails._
 import ch.renku.acceptancetests.model.projects.{ProjectDetails, ProjectIdentifier}
 import ch.renku.acceptancetests.model.users.UserCredentials
@@ -241,6 +242,13 @@ class ProjectPage(projectSlug: String, namespace: String) extends RenkuPage with
     def title(implicit webDriver: WebDriver): WebElement = eventually {
       findAll(cssSelector("h2"))
         .find(_.text.startsWith("Datasets"))
+        .getOrElse(fail("Datasets title not found"))
+    }
+
+
+    def datasetTitle(datasetName: DatasetName)(implicit webDriver: WebDriver): WebElement = eventually {
+      findAll(cssSelector("a"))
+        .find(_.text.startsWith(datasetName.value))
         .getOrElse(fail("Datasets title not found"))
     }
 

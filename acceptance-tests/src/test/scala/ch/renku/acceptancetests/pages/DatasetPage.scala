@@ -32,6 +32,12 @@ class DatasetPage(datasetName: DatasetName, projectPage: ProjectPage) extends Re
     find(cssSelector("a[href='modify']")) getOrElse fail("Dataset -> Modify button not found")
   }
 
+  def link(to: DatasetPage)(implicit webDriver: WebDriver): WebElement = eventually {
+    find(cssSelector(s"td a[href='${to.path}' i]"))
+      .getOrElse(fail(s"Dataset '${to.path}' not found"))
+  }(waitUpTo(20 seconds), implicitly[source.Position])
+
+
   object ProjectsList {
     def link(to: ProjectPage)(implicit webDriver: WebDriver): WebElement = eventually {
       find(cssSelector(s"td a[href='${to.path}' i]"))
