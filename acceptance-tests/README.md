@@ -30,7 +30,8 @@ To run through docker-compose, the tests parameters need to be provided as envir
 
 ```
 docker-compose run \
--e RENKU_TEST_URL=https://renku-kuba.dev.renku.ch \
+-e RENKU_TEST_URL=https://kuba.dev.renku.ch \
+-e GITLAB_TEST_URL=https://kuba.dev.renku.ch/gitlab \
 -e RENKU_TEST_FULL_NAME="<full user name>" \
 -e RENKU_TEST_EMAIL=<email> \
 -e RENKU_TEST_USERNAME=<username> \
@@ -41,7 +42,8 @@ sbt
 By default, all tests are run. You can provide an argument to run a specific test:
 ```
 docker-compose run \
--e RENKU_TEST_URL=https://renku-kuba.dev.renku.ch \
+-e RENKU_TEST_URL=https://kuba.dev.renku.ch \
+-e GITLAB_TEST_URL=https://kuba.dev.renku.ch/gitlab \
 -e RENKU_TEST_FULL_NAME="<full user name>" \
 -e RENKU_TEST_EMAIL=<email> \
 -e RENKU_TEST_USERNAME=<username> \
