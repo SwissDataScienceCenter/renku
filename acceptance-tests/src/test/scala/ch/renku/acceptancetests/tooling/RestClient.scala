@@ -40,6 +40,11 @@ trait RestClient extends Http4sClientDsl[IO] {
 
   private lazy val clientBuilder = BlazeClientBuilder[IO](ExecutionContext.global)
 
+  def GET(baseUrl: BaseUrl): Request[IO] = Request[IO](
+    Method.GET,
+    uri = Uri.fromString(baseUrl.toString).fold(error => fail(error.getMessage()), identity)
+  )
+
   def POST(baseUrl: BaseUrl): Request[IO] = Request[IO](
     Method.POST,
     Uri.fromString(baseUrl.toString).fold(error => fail(error.getMessage()), identity)

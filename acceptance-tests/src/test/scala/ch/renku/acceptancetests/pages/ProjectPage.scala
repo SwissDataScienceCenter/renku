@@ -449,4 +449,9 @@ class ProjectPage(projectSlug: String, namespace: String) extends RenkuPage with
       find(cssSelector("div.modal-footer > button.btn.btn-primary")) getOrElse fail("Fork button not found")
     }
   }
+
+  lazy val asProjectIdentifier: ProjectIdentifier = ProjectIdentifier(
+    namespace = Refined.unsafeApply(namespace),
+    slug = Refined.unsafeApply(projectSlug)
+  )
 }

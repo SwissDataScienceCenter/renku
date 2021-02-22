@@ -20,26 +20,20 @@ package ch.renku.acceptancetests.workflows
 
 import ch.renku.acceptancetests.model.projects.{ProjectDetails, ProjectIdentifier}
 import ch.renku.acceptancetests.pages._
-import ch.renku.acceptancetests.tooling.AcceptanceSpec
-import org.http4s.Status.Accepted
+import ch.renku.acceptancetests.tooling.{AcceptanceSpec, GitLabApi}
 
 import scala.concurrent.duration._
 import scala.language.postfixOps
 
 trait RemoveProject extends BrowserNavigation {
-  self: AcceptanceSpec =>
+  self: AcceptanceSpec with GitLabApi =>
 
   def `remove project in GitLab`(implicit projectDetails: ProjectDetails): Unit =
     `remove project in GitLab`(projectDetails.asProjectIdentifier)
 
   def `remove project in GitLab`(implicit projectId: ProjectIdentifier): Unit = {
     When(s"the '${projectId.slug}' project is removed")
-
-    DELETE(gitLabAPIUrl / "projects" / projectId.asProjectPath)
-      .withAuthorizationToken(oauthAccessToken)
-      .send
-      .expect(status = Accepted, otherwiseLog = s"Deletion of '${projectId.slug}' project in GitLab failed")
-
+    `delete project in GitLab`(projectId)
     sleep(1 second)
   }
 

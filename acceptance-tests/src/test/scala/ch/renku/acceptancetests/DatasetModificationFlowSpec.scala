@@ -23,12 +23,18 @@ import ch.renku.acceptancetests.generators.Generators.paragraph
 import ch.renku.acceptancetests.model.datasets.{DatasetName, DatasetTitle}
 import ch.renku.acceptancetests.model.projects.ProjectDetails
 import ch.renku.acceptancetests.pages.ProjectPage
-import ch.renku.acceptancetests.tooling.{AcceptanceSpec, DocsScreenshots}
+import ch.renku.acceptancetests.tooling.{AcceptanceSpec, DocsScreenshots, KnowledgeGraphApi}
 import ch.renku.acceptancetests.workflows._
 
 import scala.language.postfixOps
 
-class DatasetModificationFlowSpec extends AcceptanceSpec with Login with NewProject with RemoveProject with Datasets {
+class DatasetModificationFlowSpec
+    extends AcceptanceSpec
+    with Login
+    with NewProject
+    with RemoveProject
+    with Datasets
+    with KnowledgeGraphApi {
 
   scenario("From the UI the user can modify a dataset and only interact with its latest version") {
     import Modification._
