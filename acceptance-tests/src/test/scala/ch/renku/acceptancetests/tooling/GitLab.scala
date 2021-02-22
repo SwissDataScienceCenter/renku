@@ -18,17 +18,27 @@
 
 package ch.renku.acceptancetests.tooling
 
-import org.scalatest.Outcome
+import ch.renku.acceptancetests.model.AuthorizationToken.OAuthAccessToken
+import org.http4s.Status.Ok
+import org.http4s.UrlForm
+import org.scalatest.Matchers.fail
 
-trait ScreenCapturingSpec extends ScreenCapturing {
-  this: AcceptanceSpec =>
+trait GitLab extends RestClient {
+  self: AcceptanceSpecData =>
 
-  override def withFixture(test: NoArgTest): Outcome = {
-    val outcome = test()
-
-    if (outcome.isExceptional) {
-      saveScreenshot
-    }
-    outcome
-  }
+  lazy val oauthAccessToken: OAuthAccessToken =
+    POST(gitLabBaseUrl / "oauth" / "token")
+      .withEntity(
+        UrlForm(
+          "grant_type" -> "password",
+          "username"   -> userCredentials.username.toString(),
+          "password"   -> userCredentials.password.toString()
+        )
+      )
+      .send
+      .whenReceived(status = Ok)
+      .bodyAsJson
+      .extract(jsonRoot.`access_token`.string.getOption)
+      .map(OAuthAccessToken.apply)
+      .getOrElse(fail("OAuth Access Token couldn't be obtained"))
 }

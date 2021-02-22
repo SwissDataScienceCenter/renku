@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 Swiss Data Science Center (SDSC)
+ * Copyright 2021 Swiss Data Science Center (SDSC)
  * A partnership between École Polytechnique Fédérale de Lausanne (EPFL) and
  * Eidgenössische Technische Hochschule Zürich (ETHZ).
  *
@@ -28,9 +28,9 @@ class LoginSpec extends AcceptanceSpec with Login {
   feature("User logging in and out") {
 
     scenario("Logging into Renku") {
-      implicit val loginType: LoginType = logIntoRenku
+      implicit val loginType: LoginType = `log in to Renku`
 
-      logOutOfRenku
+      `log out of Renku`
     }
   }
 }

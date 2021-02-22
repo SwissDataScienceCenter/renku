@@ -16,19 +16,20 @@
  * limitations under the License.
  */
 
-package ch.renku.acceptancetests.tooling
+package ch.renku.acceptancetests.model
 
-import org.scalatest.Outcome
+import org.http4s.AuthScheme.Bearer
+import org.http4s.Credentials.Token
+import org.http4s.Header
+import org.http4s.headers.Authorization
 
-trait ScreenCapturingSpec extends ScreenCapturing {
-  this: AcceptanceSpec =>
+sealed trait AuthorizationToken {
+  val value: String
+  def asHeader: Header
+}
 
-  override def withFixture(test: NoArgTest): Outcome = {
-    val outcome = test()
-
-    if (outcome.isExceptional) {
-      saveScreenshot
-    }
-    outcome
+object AuthorizationToken {
+  final case class OAuthAccessToken(value: String) extends AuthorizationToken {
+    override lazy val asHeader: Header = Authorization(Token(Bearer, value))
   }
 }
