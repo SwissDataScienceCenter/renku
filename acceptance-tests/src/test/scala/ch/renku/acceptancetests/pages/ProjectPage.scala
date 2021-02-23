@@ -396,7 +396,7 @@ class ProjectPage(projectSlug: String, namespace: String) extends RenkuPage with
 
     def addProjectTags(tags: String)(implicit webDriver: WebDriver): Unit = eventually {
       (projectTags enterValue tags) sleep (2 seconds)
-      updateButton.click() sleep (2 seconds)
+      updateButton.click() sleep (5 seconds)
     }
 
     def projectTags(implicit webDriver: WebDriver): WebElement = eventually {
@@ -405,7 +405,7 @@ class ProjectPage(projectSlug: String, namespace: String) extends RenkuPage with
 
     def updateProjectDescription(description: String)(implicit webDriver: WebDriver): Unit = eventually {
       (projectDescription enterValue description) sleep (2 seconds)
-      updateButton.click() sleep (2 seconds)
+      updateButton.click() sleep (5 seconds)
     }
 
     def projectDescription(implicit webDriver: WebDriver): WebElement = eventually {
