@@ -409,9 +409,6 @@ ui:
   #   repository: renku/renku-ui
   #   tag: latest
 
-  # ingress:
-  #  enabled: false
-
   ## Pod affinity for UI deployment
   # affinity: {}
   ## Node selector for UI deployment
@@ -427,17 +424,6 @@ ui:
   # service:
   #   port: 80
   #   type: ClusterIP
-
-  ## Set the GitLab URL
-  # gitlabUrl: "http://gitlab.renku.build"
-
-  ## Configure application ID from "{{ gitlabUrl }}/oauth/application"
-  ## by setting redirect URL to "{{ baseUrl }}/login/redirect/gitlab"
-  ## and set the application ID as the "gitlabClientId" chart value.
-  # gitlabClientId: "renku-ui"
-
-  ## Set the JupyterHub URL
-  # jupyterhubUrl: "http://jupyterhub.renku.build"
 
   ## Privacy settings allow to configure the content of a Privacy Page through a configMap
   ## and to show a banner to comply with privacy related laws
