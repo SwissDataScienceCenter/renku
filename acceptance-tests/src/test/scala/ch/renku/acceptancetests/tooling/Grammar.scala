@@ -94,7 +94,7 @@ trait Grammar extends Eventually {
 
     @scala.annotation.tailrec
     def asLongAsBrowserAt[Url <: BaseUrl](page: Page[Url], attempt: Int = 1)(implicit baseUrl: Url): Unit = {
-      val frequencyFactor = 3
+      val frequencyFactor = 6
       val maxAttempts     = 10 * frequencyFactor
 
       if (attempt <= maxAttempts && (currentUrl startsWith page.url)) {

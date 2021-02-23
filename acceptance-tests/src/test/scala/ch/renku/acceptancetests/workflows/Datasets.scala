@@ -22,19 +22,18 @@ import ch.renku.acceptancetests.model.datasets
 import ch.renku.acceptancetests.model.datasets.DatasetName
 import ch.renku.acceptancetests.model.projects.ProjectDetails
 import ch.renku.acceptancetests.pages.{DatasetPage, ProjectPage}
-import ch.renku.acceptancetests.tooling.AcceptanceSpec
+import ch.renku.acceptancetests.tooling.{AcceptanceSpec, KnowledgeGraphApi}
 import eu.timepit.refined.auto._
 import org.openqa.selenium.{WebDriver, WebElement}
-
 import scala.concurrent.duration._
 import scala.language.postfixOps
 
 trait Datasets {
-  self: AcceptanceSpec =>
+  self: AcceptanceSpec with KnowledgeGraphApi =>
 
   def verifyDatasetCreated(datasetName: DatasetName)(implicit projectDetails: ProjectDetails): Unit = {
-    implicit val projectPage = ProjectPage()
-    val datasetPage          = DatasetPage(datasetName)
+    implicit val projectPage: ProjectPage = ProjectPage()
+    val datasetPage = DatasetPage(datasetName)
     When("the user navigates to the Datasets tab")
     click on projectPage.Datasets.tab
 
@@ -61,15 +60,19 @@ trait Datasets {
     And(s"the user add the title '$datasetName' to the new dataset")
     `changing its title`(to = datasetName.toString).modifying(newDatasetPage)
 
-    And("the user saves the modification")
-    click on newDatasetPage.ModificationForm.datasetSubmitButton sleep (10 seconds)
+    And("the user saves the changes")
+    click on newDatasetPage.ModificationForm.datasetSubmitButton
+    pause asLongAsBrowserAt newDatasetPage
+
+    And("all the events are processed by the knowledge-graph")
+    `wait for KG to process events`(projectPage.asProjectIdentifier)
 
     val datasetPage = DatasetPage(datasetName)
     Then("the user should see its newly created dataset and the project it belongs to")
+    reloadPage() sleep (1 second)
     verify browserAt datasetPage
     verify that datasetPage.datasetTitle contains datasetName.value
-    val projectLink = datasetPage.ProjectsList.link(projectPage)(_: WebDriver)
-    reload whenUserCannotSee projectLink
+    datasetPage.ProjectsList.link(projectPage).isDisplayed shouldBe true
 
     datasetPage
   }
@@ -92,7 +95,7 @@ trait Datasets {
     Given(s"the user is on the page of the dataset")
     `navigate to dataset`(datasetPage)
 
-    When(s"the user clicks on the modify button")
+    When("the user clicks on the modify button")
     click on datasetPage.modifyButton
     verify userCanSee datasetPage.ModificationForm.formTitle
 
@@ -106,10 +109,14 @@ trait Datasets {
     And("the user saves the modification")
     click on datasetPage.ModificationForm.datasetSubmitButton
 
-    Then("the user should see its dataset and to which project it belongs")
     verify browserAt datasetPage
-    val projectLink = datasetPage.ProjectsList.link(projectPage)(_: WebDriver)
-    reload whenUserCannotSee projectLink
+
+    And("all the events are processed by the knowledge-graph")
+    `wait for KG to process events`(projectPage.asProjectIdentifier)
+
+    Then("the user should see its dataset and to which project it belongs")
+    reloadPage() sleep (1 second)
+    datasetPage.ProjectsList.link(projectPage).isDisplayed shouldBe true
 
     datasetPage
   }

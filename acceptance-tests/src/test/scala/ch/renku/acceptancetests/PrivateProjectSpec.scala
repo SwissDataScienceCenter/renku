@@ -19,7 +19,7 @@
 package ch.renku.acceptancetests
 
 import ch.renku.acceptancetests.model.projects.{ProjectDetails, Visibility}
-import ch.renku.acceptancetests.tooling.{AcceptanceSpec, DocsScreenshots}
+import ch.renku.acceptancetests.tooling.{AcceptanceSpec, DocsScreenshots, KnowledgeGraphApi}
 import ch.renku.acceptancetests.workflows.{BrowserNavigation, Collaboration, Datasets, Environments, JupyterNotebook, Login, LoginType, NewProject, RemoveProject, Settings}
 
 class PrivateProjectSpec
@@ -32,6 +32,7 @@ class PrivateProjectSpec
     with Settings
     with JupyterNotebook
     with Datasets
+    with KnowledgeGraphApi
     with BrowserNavigation {
 
   scenario("User can launch Jupyter notebook when the project is private") {

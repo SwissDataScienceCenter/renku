@@ -20,7 +20,7 @@ package ch.renku.acceptancetests
 
 import ch.renku.acceptancetests.model.projects.ProjectDetails
 import ch.renku.acceptancetests.pages._
-import ch.renku.acceptancetests.tooling.{AcceptanceSpec, DocsScreenshots}
+import ch.renku.acceptancetests.tooling.{AcceptanceSpec, DocsScreenshots, KnowledgeGraphApi}
 import ch.renku.acceptancetests.workflows._
 import org.openqa.selenium.JavascriptExecutor
 
@@ -40,7 +40,8 @@ class HandsOnSpec
     with Settings
     with JupyterNotebook
     with FlightsTutorial
-    with Datasets {
+    with Datasets
+    with KnowledgeGraphApi {
 
   scenario("User can do hands-on tutorial") {
 
@@ -55,6 +56,10 @@ class HandsOnSpec
 
     val projectHttpUrl     = findProjectHttpUrl
     val flightsDatasetName = followTheFlightsTutorialOnUsersMachine(projectHttpUrl)
+
+    When("all the events are processed by the knowledge-graph")
+    `wait for KG to process events`(projectDetails.asProjectIdentifier)
+
     verifyDatasetCreated(flightsDatasetName)
 
     verifyUserCanWorkWithJupyterNotebook

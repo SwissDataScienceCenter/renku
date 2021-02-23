@@ -37,7 +37,7 @@ trait AcceptanceSpec
     with Driver
     with Grammar
     with JupyterNotebook
-    with GitLab
+    with GitLabApi
     with ScreenCapturingSpec
     with AcceptanceSpecData
     with AcceptanceSpecPatience {

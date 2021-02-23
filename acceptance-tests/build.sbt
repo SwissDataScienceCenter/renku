@@ -21,7 +21,7 @@ name := "renku-acceptance-tests"
 version := "0.1.0"
 scalaVersion := "2.13.2"
 
-parallelExecution in Test := false
+parallelExecution in Test := true
 
 enablePlugins(AutomateHeaderPlugin)
 
@@ -44,7 +44,7 @@ libraryDependencies += "org.scalacheck"         %% "scalacheck"          % "1.14
 libraryDependencies += "org.scalatest"          %% "scalatest"           % "3.0.8"       % Test
 libraryDependencies += "org.seleniumhq.selenium" % "selenium-java"       % "3.141.59"    % Test
 libraryDependencies += "org.slf4j"               % "slf4j-log4j12"       % "1.7.28"      % Test
-libraryDependencies += "org.typelevel"          %% "cats-effect"         % "2.1.3"       % Test
+libraryDependencies += "org.typelevel"          %% "cats-effect"         % "2.3.1"       % Test
 
 scalacOptions += "-feature"
 scalacOptions += "-unchecked"

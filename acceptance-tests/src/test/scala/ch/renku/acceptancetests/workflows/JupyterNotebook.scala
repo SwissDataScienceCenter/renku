@@ -21,12 +21,12 @@ package ch.renku.acceptancetests.workflows
 import ch.renku.acceptancetests.model.datasets.DatasetName
 import ch.renku.acceptancetests.model.projects.ProjectDetails
 import ch.renku.acceptancetests.pages.JupyterLabPage
-import ch.renku.acceptancetests.tooling.{AcceptanceSpec, DocsScreenshots}
+import ch.renku.acceptancetests.tooling.{AcceptanceSpec, DocsScreenshots, KnowledgeGraphApi}
 
 import scala.concurrent.duration._
 import scala.language.postfixOps
 
-trait JupyterNotebook extends Datasets {
+trait JupyterNotebook extends Datasets with KnowledgeGraphApi {
   self: AcceptanceSpec =>
 
   def `create a dataset`(jupyterLabPage: JupyterLabPage, datasetName: DatasetName): Unit = {

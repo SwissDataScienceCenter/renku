@@ -19,11 +19,12 @@
 package ch.renku.acceptancetests.tooling
 
 import ch.renku.acceptancetests.model.AuthorizationToken.OAuthAccessToken
-import org.http4s.Status.Ok
+import ch.renku.acceptancetests.model.projects.ProjectIdentifier
+import org.http4s.Status.{Accepted, Ok}
 import org.http4s.UrlForm
 import org.scalatest.Matchers.fail
 
-trait GitLab extends RestClient {
+trait GitLabApi extends RestClient {
   self: AcceptanceSpecData =>
 
   lazy val oauthAccessToken: OAuthAccessToken =
@@ -41,4 +42,19 @@ trait GitLab extends RestClient {
       .extract(jsonRoot.`access_token`.string.getOption)
       .map(OAuthAccessToken.apply)
       .getOrElse(fail("OAuth Access Token couldn't be obtained"))
+
+  def `get GitLab project id`(projectId: ProjectIdentifier): Int =
+    GET(gitLabAPIUrl / "projects" / projectId.asProjectPath)
+      .withAuthorizationToken(oauthAccessToken)
+      .send
+      .whenReceived(status = Ok)
+      .bodyAsJson
+      .extract(jsonRoot.id.int.getOption)
+      .getOrElse(fail(s"Cannot find '${projectId.asProjectPath}' project in GitLab"))
+
+  def `delete project in GitLab`(projectId: ProjectIdentifier): Unit =
+    DELETE(gitLabAPIUrl / "projects" / projectId.asProjectPath)
+      .withAuthorizationToken(oauthAccessToken)
+      .send
+      .expect(status = Accepted, otherwiseLog = s"Deletion of '${projectId.slug}' project in GitLab failed")
 }

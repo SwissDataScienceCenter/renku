@@ -79,7 +79,7 @@ trait Collaboration {
     projectPage.Collaboration.Issues.NewIssue.markdownSwitch click;
     projectPage.Collaboration.Issues.NewIssue.descriptionField enterValue description sleep (1 second)
     projectPage.Collaboration.Issues.NewIssue.createIssueButton click;
-    sleep(3 seconds)
+    sleep(6 seconds)
   }
 
   def verifyBranchWasAdded(implicit projectDetails: ProjectDetails): Unit = {
