@@ -28,7 +28,9 @@ import scala.language.postfixOps
 trait Login {
   self: AcceptanceSpec =>
 
-  def `log in to Renku`: LoginType = {
+  private var maybeLoginType: Option[LoginType] = None
+
+  def `log in to Renku`: Unit = {
     Given("user is not logged in")
     go to LandingPage sleep (1 second)
     verify browserAt LandingPage
@@ -40,16 +42,13 @@ trait Login {
     Then("they should get into the Login Page")
     verify browserAt LoginPage
 
-    val loginType = if (userCredentials.useProvider) {
-      logIntoRenkuUsingProvider
-    } else {
-      logIntoRenkuDirectly
-    }
+    val loginType =
+      if (userCredentials.useProvider) logIntoRenkuUsingProvider
+      else logIntoRenkuDirectly
+    maybeLoginType = Some(loginType)
 
     Then("they should get into the Welcome page")
     verify browserAt WelcomePage
-
-    loginType
   }
 
   private def logIntoRenkuUsingProvider: LoginType = {
@@ -146,12 +145,12 @@ trait Login {
     lt
   }
 
-  def `log out of Renku`(implicit loginType: LoginType): Unit = {
+  def `log out of Renku`: Unit = {
     When("user clicks the Log out link")
     click on WelcomePage.TopBar.topRightDropDown
     click on WelcomePage.TopBar.logoutLink
 
-    unless(loginType == LoginWithProvider) {
+    unless(maybeLoginType contains LoginWithProvider) {
       Then("they should get back into the Landing page")
       verify browserAt LandingPage
       verify userCanSee LandingPage.loginButton sleep (1 second)

@@ -39,9 +39,9 @@ class MinimalFunctionalitySpec
 
   scenario("User can use basic functionality of Renku") {
 
-    implicit val loginType: LoginType = `log in to Renku`
-
     implicit val projectDetails: ProjectDetails = ProjectDetails.generate()
+
+    `log in to Renku`
 
     createNewProject(projectDetails)
 

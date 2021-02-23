@@ -18,10 +18,8 @@
 
 package ch.renku.acceptancetests
 
-import ch.renku.acceptancetests.model.projects.ProjectDetails
 import ch.renku.acceptancetests.tooling.{AcceptanceSpec, ExistingProjectSpecData}
 import ch.renku.acceptancetests.workflows._
-import ch.renku.acceptancetests.pages._
 
 import scala.language.postfixOps
 
@@ -41,9 +39,9 @@ class ExistingProjectSpec
   scenario("User can fork a public project") {
     existingProjectDetails match {
       case Some(projectDetails) =>
-        implicit val loginType: LoginType = `log in to Renku`
+        `log in to Renku`
         Given("an existing project to fork")
-        forkTestCase(projectDetails, loginType)
+        forkTestCase(projectDetails)
         `log out of Renku`
       case None =>
         Given("no existing project to fork")

@@ -38,10 +38,11 @@ class DatasetModificationFlowSpec
 
   scenario("From the UI the user can modify a dataset and only interact with its latest version") {
     import Modification._
-    implicit val loginType:       LoginType       = `log in to Renku`
     implicit val docsScreenshots: DocsScreenshots = new DocsScreenshots(this, browser)
     implicit val projectDetails:  ProjectDetails  = ProjectDetails.generate()
     implicit val projectPage:     ProjectPage     = ProjectPage()
+
+    `log in to Renku`
 
     Given("a new renku project")
     createNewProject(projectDetails)

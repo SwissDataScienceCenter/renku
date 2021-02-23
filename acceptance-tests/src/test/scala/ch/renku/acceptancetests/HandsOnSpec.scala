@@ -45,12 +45,12 @@ class HandsOnSpec
 
   scenario("User can do hands-on tutorial") {
 
-    implicit val loginType: LoginType = `log in to Renku`
-
     implicit val docsScreenshots: DocsScreenshots = new DocsScreenshots(this, browser)
 
     implicit val projectDetails: ProjectDetails =
       ProjectDetails.generateHandsOnProject(docsScreenshots.captureScreenshots)
+
+    `log in to Renku`
 
     createNewProject(projectDetails)
 

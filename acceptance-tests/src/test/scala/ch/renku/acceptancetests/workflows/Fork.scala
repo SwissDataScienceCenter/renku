@@ -27,7 +27,7 @@ import scala.language.postfixOps
 trait Fork {
   self: AcceptanceSpec with RemoveProject =>
 
-  def forkTestCase(implicit projectDetails: ProjectDetails, loginType: LoginType): Unit = {
+  def forkTestCase(implicit projectDetails: ProjectDetails): Unit = {
     val projectPage = ProjectPage()
     go to projectPage
     val forkedProject = forkProject

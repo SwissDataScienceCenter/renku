@@ -53,7 +53,7 @@ class BatchRemoveProjectSpec extends AcceptanceSpec with BatchRemoveProjectSpecD
   }
 
   def `login and remove projects`(config: BatchRemoveConfig): Unit = {
-    implicit val loginType: LoginType = `log in to Renku`
+    `log in to Renku`
 
     Given("projects to remove")
     removeProjects(config)
