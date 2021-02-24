@@ -27,7 +27,7 @@ import scala.concurrent.duration._
 trait NewProject {
   self: AcceptanceSpec =>
 
-  def createNewProject(projectDetails: ProjectDetails)(implicit captureScreenshots: Boolean = false): Unit = {
+  def createNewProject(projectDetails: ProjectDetails): Unit = {
     When("user clicks on the 'New Project' menu item")
     click on WelcomePage.TopBar.plusDropdown
     click on WelcomePage.TopBar.projectOption

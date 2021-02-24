@@ -20,9 +20,8 @@ package ch.renku.acceptancetests
 
 import ch.renku.acceptancetests.model.projects.ProjectDetails
 import ch.renku.acceptancetests.pages._
-import ch.renku.acceptancetests.tooling.{AcceptanceSpec, DocsScreenshots, KnowledgeGraphApi}
+import ch.renku.acceptancetests.tooling.{AcceptanceSpec, KnowledgeGraphApi}
 import ch.renku.acceptancetests.workflows._
-import org.openqa.selenium.JavascriptExecutor
 
 import scala.concurrent.duration._
 
@@ -43,8 +42,6 @@ class HandsOnSpec
     with KnowledgeGraphApi {
 
   scenario("User can do hands-on tutorial") {
-
-    implicit val docsScreenshots: DocsScreenshots = new DocsScreenshots(this, browser)
 
     implicit val projectDetails: ProjectDetails =
       ProjectDetails.generateHandsOnProject(docsScreenshots.captureScreenshots)
@@ -71,7 +68,7 @@ class HandsOnSpec
     `log out of Renku`
   }
 
-  def verifyAnalysisRan(implicit projectDetails: ProjectDetails, docsScreenshots: DocsScreenshots): Unit = {
+  def verifyAnalysisRan(implicit projectDetails: ProjectDetails): Unit = {
     val projectPage = ProjectPage()
     When("the user navigates to the Files tab")
     click on projectPage.Files.tab
@@ -82,10 +79,7 @@ class HandsOnSpec
     Then("they should see a file header with the notebook filename")
     verify that projectPage.Files.Info.heading contains "notebooks/01-CountFlights.ran.ipynb"
     And("the correct notebook content")
-    // Scroll to the bottom of the page
-    webDriver.asInstanceOf[JavascriptExecutor].executeScript("window.scrollBy(0,document.body.scrollHeight)")
-    docsScreenshots.reachedCheckpoint()
-
+    docsScreenshots.takeScreenshot(executeBefore = "window.scrollBy(0,document.body.scrollHeight)")
     val resultCell = projectPage.Files.Notebook.cellWithText("There were 4951 flights to Austin, TX in Jan 2019.")
     verify that resultCell contains "There were 4951 flights to Austin, TX in Jan 2019."
   }

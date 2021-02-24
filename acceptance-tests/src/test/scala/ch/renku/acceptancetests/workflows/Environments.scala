@@ -20,24 +20,24 @@ package ch.renku.acceptancetests.workflows
 
 import ch.renku.acceptancetests.model.projects.{ProjectDetails, ProjectIdentifier}
 import ch.renku.acceptancetests.pages._
-import ch.renku.acceptancetests.tooling.{AcceptanceSpec, AnonEnvConfig, DocsScreenshots}
+import ch.renku.acceptancetests.tooling.{AcceptanceSpec, AnonEnvConfig}
 
 import scala.concurrent.duration._
 
 trait Environments {
   self: AcceptanceSpec =>
 
-  def launchEnvironment(implicit projectDetails: ProjectDetails, docsScreenshots: DocsScreenshots): JupyterLabPage = {
+  def launchEnvironment(implicit projectDetails: ProjectDetails): JupyterLabPage = {
     implicit val projectPage: ProjectPage = ProjectPage()
     When("user clicks on the Environments tab")
     click on projectPage.Environments.tab
-    docsScreenshots.reachedCheckpoint()
+    docsScreenshots.takeScreenshot()
 
     clickNewAndWaitForImageBuild
-    docsScreenshots.reachedCheckpoint()
+    docsScreenshots.takeScreenshot()
 
     clickStartEnvironmentAndWaitForReady
-    docsScreenshots.reachedCheckpoint()
+    docsScreenshots.takeScreenshot()
 
     projectPage.Environments.Running.connectToJupyterLab
 

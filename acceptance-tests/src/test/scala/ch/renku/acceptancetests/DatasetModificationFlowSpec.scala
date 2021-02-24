@@ -23,7 +23,7 @@ import ch.renku.acceptancetests.generators.Generators.paragraph
 import ch.renku.acceptancetests.model.datasets.{DatasetName, DatasetTitle}
 import ch.renku.acceptancetests.model.projects.ProjectDetails
 import ch.renku.acceptancetests.pages.ProjectPage
-import ch.renku.acceptancetests.tooling.{AcceptanceSpec, DocsScreenshots, KnowledgeGraphApi}
+import ch.renku.acceptancetests.tooling.{AcceptanceSpec, KnowledgeGraphApi}
 import ch.renku.acceptancetests.workflows._
 
 class DatasetModificationFlowSpec
@@ -36,9 +36,8 @@ class DatasetModificationFlowSpec
 
   scenario("From the UI the user can modify a dataset and only interact with its latest version") {
     import Modification._
-    implicit val docsScreenshots: DocsScreenshots = new DocsScreenshots(this, browser)
-    implicit val projectDetails:  ProjectDetails  = ProjectDetails.generate()
-    implicit val projectPage:     ProjectPage     = ProjectPage()
+    implicit val projectDetails: ProjectDetails = ProjectDetails.generate()
+    implicit val projectPage:    ProjectPage    = ProjectPage()
 
     `log in to Renku`
 

@@ -52,4 +52,6 @@ trait AcceptanceSpec
         )
       case None => Chrome.webDriver
     }
+
+  protected implicit val docsScreenshots: DocsScreenshots = DocsScreenshots(this, webDriver)
 }

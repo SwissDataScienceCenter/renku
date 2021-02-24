@@ -20,17 +20,16 @@ package ch.renku.acceptancetests.pages
 
 import ch.renku.acceptancetests.model.projects.{ProjectDetails, Template, Visibility}
 import ch.renku.acceptancetests.pages.Page.{Path, Title}
-import ch.renku.acceptancetests.tooling.ScreenCapturing
+import ch.renku.acceptancetests.tooling.DocsScreenshots
 import ch.renku.acceptancetests.tooling.TestLogger._
 import eu.timepit.refined.auto._
 import org.openqa.selenium.{WebDriver, WebElement}
 import org.scalatestplus.selenium.WebBrowser.{cssSelector, find}
-import org.scalatestplus.selenium.{Driver, WebBrowser}
 
 import scala.annotation.tailrec
 import scala.concurrent.duration._
 
-case object NewProjectPage extends RenkuPage with TopBar with ScreenCapturing {
+case object NewProjectPage extends RenkuPage with TopBar {
 
   override val path:  Path  = "/projects/new"
   override val title: Title = "Renku"
@@ -47,25 +46,24 @@ case object NewProjectPage extends RenkuPage with TopBar with ScreenCapturing {
 
   def submitFormWith(
       project:          ProjectDetails
-  )(implicit webDriver: WebDriver, browser: WebBrowser with Driver, captureScreenshots: Boolean = false): Unit =
-    eventually {
-      titleField.clear() sleep (5 seconds)
-      titleField.enterValue(project.title.value) sleep (1 second)
+  )(implicit webDriver: WebDriver, docsScreenshots: DocsScreenshots): Unit = eventually {
+    titleField.clear() sleep (5 seconds)
+    titleField.enterValue(project.title.value) sleep (1 second)
 
-      visibilityField.click() sleep (1 second)
-      visibilityOption(project.visibility).click() sleep (1 second)
+    visibilityField.click() sleep (1 second)
+    visibilityOption(project.visibility).click() sleep (1 second)
 
-      templateField.click() sleep (1 second)
-      templateOption(project.template).click() sleep (1 second)
-      templateField.click() sleep (1 second)
+    templateField.click() sleep (1 second)
+    templateOption(project.template).click() sleep (1 second)
+    templateField.click() sleep (1 second)
 
-      descriptionField.clear() sleep (1 second)
-      descriptionField.enterValue(project.description.value) sleep (1 second)
+    descriptionField.clear() sleep (1 second)
+    descriptionField.enterValue(project.description.value) sleep (1 second)
 
-      if (captureScreenshots) saveScreenshot
+    docsScreenshots.takeScreenshot()
 
-      createButton.click() sleep (5 seconds)
-    }
+    createButton.click() sleep (5 seconds)
+  }
 
   private def titleField(implicit webDriver: WebDriver): WebElement = eventually {
     find(cssSelector("input#title")) getOrElse fail("Title field not found")

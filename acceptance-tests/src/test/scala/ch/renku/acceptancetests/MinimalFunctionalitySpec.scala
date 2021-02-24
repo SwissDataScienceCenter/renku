@@ -19,9 +19,9 @@
 package ch.renku.acceptancetests
 
 import ch.renku.acceptancetests.model.projects.ProjectDetails
+import ch.renku.acceptancetests.pages.ProjectPage
 import ch.renku.acceptancetests.tooling.{AcceptanceSpec, AnonEnv, DocsScreenshots}
 import ch.renku.acceptancetests.workflows._
-import ch.renku.acceptancetests.pages.ProjectPage
 
 import scala.concurrent.duration._
 
@@ -70,10 +70,9 @@ class MinimalFunctionalitySpec
   }
 
   private def addChangeToProject(implicit projectDetails: ProjectDetails): Unit = {
-    implicit val docsScreenshots: DocsScreenshots = new DocsScreenshots(this, browser) {
-      override lazy val captureScreenshots: Boolean = false
-    }
-    val jupyterLabPage = launchEnvironment
+    docsScreenshots.disable()
+    val jupyterLabPage = launchEnvironment(projectDetails)
+    docsScreenshots.enable()
 
     When("the user clicks on the Terminal icon")
     click on jupyterLabPage.terminalIcon sleep (2 seconds)

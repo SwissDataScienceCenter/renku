@@ -19,8 +19,8 @@
 package ch.renku.acceptancetests
 
 import ch.renku.acceptancetests.model.projects.{ProjectDetails, Visibility}
-import ch.renku.acceptancetests.tooling.{AcceptanceSpec, DocsScreenshots, KnowledgeGraphApi}
-import ch.renku.acceptancetests.workflows.{BrowserNavigation, Collaboration, Datasets, Environments, JupyterNotebook, Login, LoginType, NewProject, RemoveProject, Settings}
+import ch.renku.acceptancetests.tooling.{AcceptanceSpec, KnowledgeGraphApi}
+import ch.renku.acceptancetests.workflows._
 
 class PrivateProjectSpec
     extends AcceptanceSpec
@@ -36,8 +36,7 @@ class PrivateProjectSpec
     with BrowserNavigation {
 
   scenario("User can launch Jupyter notebook when the project is private") {
-    implicit val docsScreenshots: DocsScreenshots = new DocsScreenshots(this, browser)
-    implicit val projectDetails:  ProjectDetails  = ProjectDetails.generate(visibility = Visibility.Private)
+    implicit val projectDetails: ProjectDetails = ProjectDetails.generate(visibility = Visibility.Private)
 
     `log in to Renku`
     createNewProject(projectDetails)

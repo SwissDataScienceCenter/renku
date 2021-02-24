@@ -20,8 +20,6 @@ package ch.renku.acceptancetests.tooling
 
 import ch.renku.acceptancetests.model._
 import ch.renku.acceptancetests.model.users.UserCredentials
-import ch.renku.acceptancetests.workflows.LoginType
-import ch.renku.acceptancetests.workflows.LoginType.{LoginWithProvider, LoginWithoutProvider}
 import eu.timepit.refined.api.{RefType, Refined}
 import eu.timepit.refined.auto._
 import eu.timepit.refined.collection.NonEmpty
@@ -95,16 +93,4 @@ trait AcceptanceSpecData {
     System.exit(1)
     throw new IllegalArgumentException(message)
   }
-
-  protected implicit def gitLabBaseUrlFrom(implicit loginType: LoginType, renkuBaseUrl: RenkuBaseUrl): GitLabBaseUrl =
-    loginType match {
-      case LoginWithProvider    => gitLabProviderBaseUrl(renkuBaseUrl.value)
-      case LoginWithoutProvider => GitLabBaseUrl(renkuBaseUrl.value)
-    }
-
-  private def gitLabProviderBaseUrl(baseUrl: String): GitLabBaseUrl =
-    if (baseUrl.endsWith("dev.renku.ch"))
-      GitLabBaseUrl("https://dev.renku.ch")
-    else
-      GitLabBaseUrl("https://renkulab.io")
 }
