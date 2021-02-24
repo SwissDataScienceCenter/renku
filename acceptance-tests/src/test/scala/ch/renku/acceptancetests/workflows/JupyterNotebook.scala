@@ -50,6 +50,9 @@ trait JupyterNotebook extends Datasets with KnowledgeGraphApi {
 
     stopEnvironment
 
+    When("all the events are processed by the knowledge-graph")
+    `wait for KG to process events`(projectDetails.asProjectIdentifier)
+
     Then("the user can see the created dataset")
     verifyDatasetCreated(datasetName)
   }

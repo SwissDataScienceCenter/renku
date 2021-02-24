@@ -65,17 +65,12 @@ class HandsOnSpec
 
     verifyAnalysisRan
 
-    verifyMergeRequestsIsEmpty
-    verifyIssuesIsEmpty
-    createNewIssue
-
-    setProjectTags
-    setProjectDescription
     `remove project in GitLab`(projectDetails)
     `verify project is removed`
 
     `log out of Renku`
   }
+
   def verifyAnalysisRan(implicit projectDetails: ProjectDetails, docsScreenshots: DocsScreenshots): Unit = {
     val projectPage = ProjectPage()
     When("the user navigates to the Files tab")
