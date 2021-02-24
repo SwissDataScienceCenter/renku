@@ -21,6 +21,7 @@ package ch.renku.acceptancetests.workflows
 import ch.renku.acceptancetests.model.projects.{ProjectDetails, ProjectIdentifier}
 import ch.renku.acceptancetests.pages._
 import ch.renku.acceptancetests.tooling.{AcceptanceSpec, AnonEnvConfig}
+import org.openqa.selenium.WebDriver
 
 import scala.concurrent.duration._
 
@@ -133,9 +134,12 @@ trait Environments {
 
   def clickStartEnvironmentAndWaitForReady(implicit projectPage: ProjectPage): Unit = {
     And("the user clicks on the Start Environment button")
-    click on projectPage.Environments.startEnvironment
-    Then("they should be redirected to the Environments -> Running tab")
-    verify userCanSee projectPage.Environments.Running.title
+    click on projectPage.Environments.startEnvironment sleep (5 seconds)
+
+    `try few times before giving up` { (_: WebDriver) =>
+      Then("they should be redirected to the Environments -> Running tab")
+      verify userCanSee projectPage.Environments.Running.title
+    }
 
     When("the environment is ready")
     projectPage.Environments.Running.verifyEnvironmentReady

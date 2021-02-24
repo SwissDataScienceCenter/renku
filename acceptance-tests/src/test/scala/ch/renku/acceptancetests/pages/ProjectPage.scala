@@ -323,7 +323,8 @@ class ProjectPage(projectSlug: String, namespace: String) extends RenkuPage with
       def title(implicit webDriver: WebDriver): WebElement = eventually {
         find(cssSelector("div.row div.col h3"))
           .map { element =>
-            element.text shouldBe "Interactive Environments"; element
+            element.text shouldBe "Interactive Environments"
+            element
           }
           .getOrElse(fail("Environments -> Running title not found"))
       }
