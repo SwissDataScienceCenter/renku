@@ -29,7 +29,7 @@ import org.scalatestplus.selenium.WebBrowser
 
 import scala.concurrent.duration._
 import scala.jdk.CollectionConverters._
-import scala.language.{implicitConversions, postfixOps}
+import scala.language.implicitConversions
 
 trait Grammar extends Eventually {
   self: WebBrowser with AcceptanceSpec =>
@@ -114,7 +114,7 @@ trait Grammar extends Eventually {
       } else if (attempt > maxAttempts && (currentUrl startsWith page.url))
         fail {
           s"Expected to be redirected from the ${page.path} but " +
-            s"it did not happen after ${((patienceConfig.timeout.millisPart millis) * attempt).toSeconds}s"
+            s"gets stuck on $currentUrl for ${((patienceConfig.timeout.millisPart millis) * attempt).toSeconds}s"
         }
     }
   }

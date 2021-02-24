@@ -31,7 +31,7 @@ import org.scalatest.{FeatureSpec, GivenWhenThen, Matchers => ScalatestMatchers}
 trait FlightsTutorial extends GivenWhenThen with Matchers with ScalatestMatchers with CLIConfiguration {
   self: FeatureSpec =>
 
-  def followTheFlightsTutorialOnUsersMachine(
+  def `follow the flights tutorial`(
       projectUrl:             ProjectUrl
   )(implicit userCredentials: UserCredentials): DatasetName = {
 

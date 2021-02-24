@@ -32,7 +32,7 @@ case object NewProjectPage extends RenkuPage with TopBar {
   override val path:  Path  = "/projects/new"
   override val title: Title = "Renku"
 
-  override def pageReadyElement(implicit webDriver: WebDriver): Option[WebElement] = Some(templateField)
+  override def pageReadyElement(implicit webDriver: WebDriver): Option[WebElement] = Some(createButton)
 
   def submitFormWith(
       project:          ProjectDetails

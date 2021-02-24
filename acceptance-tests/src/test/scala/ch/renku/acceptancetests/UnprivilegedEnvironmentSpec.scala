@@ -18,33 +18,16 @@
 
 package ch.renku.acceptancetests
 
-import ch.renku.acceptancetests.tooling.{AcceptanceSpec, ExistingProjectSpecData}
+import ch.renku.acceptancetests.tooling.{AcceptanceSpec, AnonEnv}
 import ch.renku.acceptancetests.workflows._
 
-/**
-  * Run tests on an existing project.
-  */
-class ExistingProjectSpec
-    extends AcceptanceSpec
-    with ExistingProjectSpecData
-    with Collaboration
-    with Login
-    with NewProject
-    with RemoveProject
-    with Settings
-    with Fork {
+class UnprivilegedEnvironmentSpec extends AcceptanceSpec with AnonEnv with Login {
 
-  scenario("User can fork a public project") {
-    existingProjectDetails match {
-      case Some(projectDetails) =>
-        `log in to Renku`
-        Given("an existing project to fork")
-        forkTestCase(projectDetails)
-        `log out of Renku`
-      case None =>
-        Given("no existing project to fork")
-        Then("do not test anything")
-    }
+  scenario("User can launch unprivileged environment") {
+    `log in to Renku`
+    `launch unprivileged environment`
+    `stop environment`(anonEnvConfig.projectId)
+    `log out of Renku`
+    `launch anonymous environment`(anonEnvConfig) map (_ => `stop environment`(anonEnvConfig.projectId))
   }
-
 }

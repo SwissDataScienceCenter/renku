@@ -54,8 +54,8 @@ trait Settings {
     }
   }
 
-  def findProjectHttpUrl(implicit projectDetails: ProjectDetails): ProjectUrl = {
-    val projectPage = ProjectPage()
+  def `find project Http URL in the Settings Page`(projectDetails: ProjectDetails): ProjectUrl = {
+    val projectPage = ProjectPage()(projectDetails, userCredentials)
     When("the user navigates to the Settings tab")
     click on projectPage.Settings.tab
     Then("the user can find the project Http Url")

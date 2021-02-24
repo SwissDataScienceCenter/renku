@@ -30,11 +30,9 @@ import scala.concurrent.duration._
   */
 class HandsOnSpec
     extends AcceptanceSpec
-    with Collaboration
     with Environments
     with Login
-    with NewProject
-    with RemoveProject
+    with Project
     with Settings
     with JupyterNotebook
     with FlightsTutorial
@@ -43,32 +41,26 @@ class HandsOnSpec
 
   scenario("User can do hands-on tutorial") {
 
-    implicit val projectDetails: ProjectDetails =
-      ProjectDetails.generateHandsOnProject(docsScreenshots.captureScreenshots)
-
     `log in to Renku`
 
-    createNewProject(projectDetails)
+    `create or open a project`
 
-    val projectHttpUrl     = findProjectHttpUrl
-    val flightsDatasetName = followTheFlightsTutorialOnUsersMachine(projectHttpUrl)
+    val projectUrl         = `find project Http URL in the Settings Page`(projectDetails)
+    val flightsDatasetName = `follow the flights tutorial`(projectUrl)
 
     When("all the events are processed by the knowledge-graph")
     `wait for KG to process events`(projectDetails.asProjectIdentifier)
 
-    verifyDatasetCreated(flightsDatasetName)
+    `verify dataset was created`(flightsDatasetName)
 
-    verifyUserCanWorkWithJupyterNotebook
+    `verify user can work with Jupyter notebook`
 
-    verifyAnalysisRan
-
-    `remove project in GitLab`(projectDetails)
-    `verify project is removed`
+    `verify analysis was ran`
 
     `log out of Renku`
   }
 
-  def verifyAnalysisRan(implicit projectDetails: ProjectDetails): Unit = {
+  private def `verify analysis was ran`(implicit projectDetails: ProjectDetails): Unit = {
     val projectPage = ProjectPage()
     When("the user navigates to the Files tab")
     click on projectPage.Files.tab

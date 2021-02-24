@@ -21,28 +21,18 @@ package ch.renku.acceptancetests
 import ch.renku.acceptancetests.generators.Generators.Implicits._
 import ch.renku.acceptancetests.generators.Generators.paragraph
 import ch.renku.acceptancetests.model.datasets.{DatasetName, DatasetTitle}
-import ch.renku.acceptancetests.model.projects.ProjectDetails
-import ch.renku.acceptancetests.pages.ProjectPage
 import ch.renku.acceptancetests.tooling.{AcceptanceSpec, KnowledgeGraphApi}
 import ch.renku.acceptancetests.workflows._
 
-class DatasetModificationFlowSpec
-    extends AcceptanceSpec
-    with Login
-    with NewProject
-    with RemoveProject
-    with Datasets
-    with KnowledgeGraphApi {
+class DatasetModificationFlowSpec extends AcceptanceSpec with Login with Project with Datasets with KnowledgeGraphApi {
 
   scenario("From the UI the user can modify a dataset and only interact with its latest version") {
     import Modification._
-    implicit val projectDetails: ProjectDetails = ProjectDetails.generate()
-    implicit val projectPage:    ProjectPage    = ProjectPage()
 
     `log in to Renku`
 
     Given("a new renku project")
-    createNewProject(projectDetails)
+    `create or open a project`
 
     And("a new dataset for this project")
     val datasetName         = DatasetName.generate
@@ -55,9 +45,6 @@ class DatasetModificationFlowSpec
                          by = `changing its title`(to = newTitle.toString),
                          and = `changing its description`(to = newDescription.value)
     )
-
-    `remove project in GitLab`(projectDetails)
-    `verify project is removed`
 
     `log out of Renku`
   }

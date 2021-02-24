@@ -51,7 +51,7 @@ trait Environments {
   def stopEnvironment(implicit projectDetails: ProjectDetails): Unit =
     stopEnvironmentOnProjectPage(ProjectPage())
 
-  def stopEnvironment(projectId: ProjectIdentifier): Unit =
+  def `stop environment`(projectId: ProjectIdentifier): Unit =
     stopEnvironmentOnProjectPage(ProjectPage(projectId))
 
   def stopEnvironmentOnProjectPage(projectPage: ProjectPage): Unit = {
@@ -66,7 +66,7 @@ trait Environments {
     verify userCanSee projectPage.Environments.newLink
   }
 
-  def launchAnonymousEnvironment(implicit anonEnvConfig: AnonEnvConfig): Option[JupyterLabPage] = {
+  def `launch anonymous environment`(anonEnvConfig: AnonEnvConfig): Option[JupyterLabPage] = {
     val projectId   = anonEnvConfig.projectId
     val projectPage = ProjectPage(projectId)
     go to projectPage
@@ -84,7 +84,7 @@ trait Environments {
     }
   }
 
-  def launchUnprivilegedEnvironment(implicit anonEnvConfig: AnonEnvConfig): JupyterLabPage = {
+  def `launch unprivileged environment`(implicit anonEnvConfig: AnonEnvConfig): JupyterLabPage = {
     val projectId = anonEnvConfig.projectId
     implicit val projectPage: ProjectPage = ProjectPage(projectId)
     go to projectPage

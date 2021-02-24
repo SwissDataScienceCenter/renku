@@ -31,7 +31,7 @@ import scala.concurrent.duration._
 trait Datasets {
   self: AcceptanceSpec with KnowledgeGraphApi =>
 
-  def verifyDatasetCreated(datasetName: DatasetName)(implicit projectDetails: ProjectDetails): Unit = {
+  def `verify dataset was created`(datasetName: DatasetName)(implicit projectDetails: ProjectDetails): Unit = {
     implicit val projectPage: ProjectPage = ProjectPage()
     val datasetPage = DatasetPage(datasetName)
     When("the user navigates to the Datasets tab")

@@ -18,16 +18,16 @@
 
 package ch.renku.acceptancetests.model
 
-import java.net.URL
-import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
-
 import ch.renku.acceptancetests.generators.Generators.Implicits._
 import ch.renku.acceptancetests.generators.Generators._
+import ch.renku.acceptancetests.model.projects.ProjectDetails._
 import ch.renku.acceptancetests.model.users.UserCredentials
 import eu.timepit.refined.api.Refined
 import eu.timepit.refined.collection.NonEmpty
-import ch.renku.acceptancetests.model.projects.ProjectDetails._
+
+import java.net.URL
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 
 object projects {
 
@@ -110,21 +110,6 @@ object projects {
       val template    = Template(maybeTemplate.getOrElse(Refined.unsafeApply("Renku/python-minimal")))
       ProjectDetails(title, visibility, desc, template, readmeTitle)
     }
-
-    def generateHandsOnProject(captureScreenshots: Boolean): ProjectDetails =
-      if (captureScreenshots) {
-        val readmeTitle = "flights tutorial"
-        ProjectDetails(
-          Refined.unsafeApply(readmeTitle),
-          Visibility.Public,
-          Refined.unsafeApply("A renku tutorial project."),
-          Template(Refined.unsafeApply("This template isn't used")),
-          readmeTitle
-        )
-      } else
-        generate()
-
-    def generatePrivateProject: ProjectDetails = generate(visibility = Visibility.Private)
 
     implicit class TitleOps(title: String Refined NonEmpty) {
       lazy val toPathSegment: String = title.value.replace(" ", "-")

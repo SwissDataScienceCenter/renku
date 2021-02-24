@@ -36,7 +36,7 @@ trait JupyterNotebook extends Datasets with KnowledgeGraphApi {
     terminal %> "git push" sleep (30 seconds)
   }
 
-  def verifyUserCanWorkWithJupyterNotebook(implicit projectDetails: ProjectDetails): Unit = {
+  def `verify user can work with Jupyter notebook`(implicit projectDetails: ProjectDetails): Unit = {
     val jupyterLabPage = launchEnvironment
 
     When("the user clicks on the Terminal icon")
@@ -51,6 +51,6 @@ trait JupyterNotebook extends Datasets with KnowledgeGraphApi {
     `wait for KG to process events`(projectDetails.asProjectIdentifier)
 
     Then("the user can see the created dataset")
-    verifyDatasetCreated(datasetName)
+    `verify dataset was created`(datasetName)
   }
 }

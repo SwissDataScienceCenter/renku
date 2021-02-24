@@ -18,31 +18,15 @@
 
 package ch.renku.acceptancetests
 
-import ch.renku.acceptancetests.model.projects.{ProjectDetails, Visibility}
-import ch.renku.acceptancetests.tooling.{AcceptanceSpec, KnowledgeGraphApi}
+import ch.renku.acceptancetests.tooling.AcceptanceSpec
 import ch.renku.acceptancetests.workflows._
 
-class PrivateProjectSpec
-    extends AcceptanceSpec
-    with Collaboration
-    with Environments
-    with Login
-    with NewProject
-    with RemoveProject
-    with Settings
-    with JupyterNotebook
-    with Datasets
-    with KnowledgeGraphApi
-    with BrowserNavigation {
+class PrivateProjectSpec extends AcceptanceSpec with Login with PrivateProject with JupyterNotebook {
 
   scenario("User can launch Jupyter notebook when the project is private") {
-    implicit val projectDetails: ProjectDetails = ProjectDetails.generate(visibility = Visibility.Private)
-
     `log in to Renku`
-    createNewProject(projectDetails)
-    verifyUserCanWorkWithJupyterNotebook
-    `remove project in GitLab`(projectDetails)
-    switchToRenkuTab
+    `create or open a project`
+    `verify user can work with Jupyter notebook`
     `log out of Renku`
   }
 }

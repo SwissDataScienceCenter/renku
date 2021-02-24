@@ -19,30 +19,24 @@
 package ch.renku.acceptancetests
 
 import ch.renku.acceptancetests.model.projects.ProjectDetails
-import ch.renku.acceptancetests.pages.ProjectPage
-import ch.renku.acceptancetests.tooling.{AcceptanceSpec, AnonEnv, DocsScreenshots}
+import ch.renku.acceptancetests.tooling.AcceptanceSpec
 import ch.renku.acceptancetests.workflows._
 
 import scala.concurrent.duration._
 
 class MinimalFunctionalitySpec
     extends AcceptanceSpec
-    with AnonEnv
     with Collaboration
-    with Environments
     with Login
-    with NewProject
-    with RemoveProject
+    with Project
     with Settings
     with Fork {
 
   scenario("User can use basic functionality of Renku") {
 
-    implicit val projectDetails: ProjectDetails = ProjectDetails.generate()
-
     `log in to Renku`
 
-    createNewProject(projectDetails)
+    `create or open a project`
 
     verifyMergeRequestsIsEmpty
     verifyIssuesIsEmpty
@@ -54,19 +48,9 @@ class MinimalFunctionalitySpec
     setProjectTags
     setProjectDescription
 
-    forkTestCase
-
-    go to ProjectPage()
-    `remove project in GitLab`(projectDetails)
-    `verify project is removed`
-
-    launchUnprivilegedEnvironment
-    stopEnvironment(anonEnvConfig.projectId)
+    `fork project`(projectDetails)
 
     `log out of Renku`
-
-    launchAnonymousEnvironment map (_ => stopEnvironment(anonEnvConfig.projectId))
-
   }
 
   private def addChangeToProject(implicit projectDetails: ProjectDetails): Unit = {
