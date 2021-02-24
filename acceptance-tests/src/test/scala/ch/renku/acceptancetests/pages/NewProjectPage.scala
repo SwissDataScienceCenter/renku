@@ -55,7 +55,7 @@ case object NewProjectPage extends RenkuPage with TopBar {
 
     templateField.click() sleep (1 second)
     templateOption(project.template).click() sleep (1 second)
-    templateField.click() sleep (1 second)
+    templateField.click() sleep (5 second)
 
     descriptionField.clear() sleep (1 second)
     descriptionField.enterValue(project.description.value) sleep (1 second)
