@@ -70,12 +70,10 @@ abstract class Page[Url <: BaseUrl] extends ScalatestMatchers with Eventually wi
     def sleep(duration: Duration): Unit = Page.SleepThread(duration)
   }
 
-  protected def waitUpTo(duration: Duration): PatienceConfig =
-    PatienceConfig(
-      // Wait up to 2 minutes for this operation
-      timeout = scaled(Span(AcceptanceSpecPatience.WAIT_SCALE * duration.toSeconds, Seconds)),
-      interval = scaled(Span(2, Seconds))
-    )
+  protected def waitUpTo(duration: Duration): PatienceConfig = PatienceConfig(
+    timeout = scaled(Span(AcceptanceSpecPatience.WAIT_SCALE * duration.toSeconds, Seconds)),
+    interval = scaled(Span(1, Seconds))
+  )
 }
 
 object Page {

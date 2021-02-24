@@ -21,6 +21,7 @@ package ch.renku.acceptancetests.workflows
 import ch.renku.acceptancetests.model.projects.ProjectDetails
 import ch.renku.acceptancetests.pages._
 import ch.renku.acceptancetests.tooling.AcceptanceSpec
+import org.openqa.selenium.WebDriver
 
 import scala.concurrent.duration._
 import scala.language.postfixOps
@@ -64,22 +65,25 @@ trait Collaboration {
     val issueDesc  = "test description"
     `create an issue with title and description`(issueTitle, issueDesc)
 
-    Then("the new issue should be displayed in the list")
-    val issueTitles = projectPage.Collaboration.Issues.issueTitles
-    if (issueTitles.size < 1) fail("There should be at least one issue")
-    issueTitles.find(_ == issueTitle) getOrElse fail("Issue with expected title could not be found.")
+    `try few times before giving up` { (_: WebDriver) =>
+      Then("the new issue should be displayed in the list")
+      val issueTitles = projectPage.Collaboration.Issues.issueTitles
+      if (issueTitles.size < 1) fail("There should be at least one issue")
+      issueTitles.find(_ == issueTitle) getOrElse fail("Issue with expected title could not be found.")
+    }
   }
 
-  def `create an issue with title and description`(title: String, description: String)(implicit
-      projectPage:                                        ProjectPage
-  ): Unit = {
+  def `create an issue with title and description`(
+      title:              String,
+      description:        String
+  )(implicit projectPage: ProjectPage): Unit = {
     val tf = projectPage.Collaboration.Issues.NewIssue.titleField
     tf.clear() sleep (1 second)
     tf enterValue title sleep (1 second)
     projectPage.Collaboration.Issues.NewIssue.markdownSwitch click;
     projectPage.Collaboration.Issues.NewIssue.descriptionField enterValue description sleep (1 second)
     projectPage.Collaboration.Issues.NewIssue.createIssueButton click;
-    sleep(6 seconds)
+    sleep(1 second)
   }
 
   def verifyBranchWasAdded(implicit projectDetails: ProjectDetails): Unit = {

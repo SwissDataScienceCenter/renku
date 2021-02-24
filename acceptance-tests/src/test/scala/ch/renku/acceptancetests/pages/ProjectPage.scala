@@ -304,16 +304,15 @@ class ProjectPage(projectSlug: String, namespace: String) extends RenkuPage with
         .getOrElse(fail("Start environment button not found"))
     }
 
-    def verifyImageReady(implicit webDriver: WebDriver): Unit =
-      eventually {
-        findImageReadyBadge getOrElse waitForImageToBeReady
-      }(waitUpTo(10 minutes), implicitly[source.Position])
+    def verifyImageReady(implicit webDriver: WebDriver): Unit = eventually {
+      findImageReadyBadge getOrElse waitForImageToBeReady
+    }(waitUpTo(10 minutes), implicitly[source.Position])
 
     private def waitForImageToBeReady(implicit webDriver: WebDriver): Unit = {
       find(cssSelector(".badge.badge-warning")) orElse findImageReadyBadge getOrElse fail(
         "Image building info badges not found"
       )
-      sleep(2 seconds)
+      sleep(1 second)
       findImageReadyBadge getOrElse fail("Image not yet built")
     }
 
@@ -380,11 +379,10 @@ class ProjectPage(projectSlug: String, namespace: String) extends RenkuPage with
           .parent
       }
 
-      def verifyEnvironmentReady(implicit webDriver: WebDriver): Unit =
-        eventually {
-          find(cssSelector(".text-nowrap.p-1.badge.badge-success"))
-            .getOrElse(fail("Interactive environment is not ready"))
-        }(waitUpTo(10 minutes), implicitly[source.Position])
+      def verifyEnvironmentReady(implicit webDriver: WebDriver): Unit = eventually {
+        find(cssSelector(".text-nowrap.p-1.badge.badge-success"))
+          .getOrElse(fail("Interactive environment is not ready"))
+      }(waitUpTo(10 minutes), implicitly[source.Position])
     }
   }
 

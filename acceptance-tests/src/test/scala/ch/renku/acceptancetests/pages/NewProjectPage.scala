@@ -21,13 +21,13 @@ package ch.renku.acceptancetests.pages
 import ch.renku.acceptancetests.model.projects.{ProjectDetails, Template, Visibility}
 import ch.renku.acceptancetests.pages.Page.{Path, Title}
 import ch.renku.acceptancetests.tooling.ScreenCapturing
-import eu.timepit.refined.api.Refined
+import ch.renku.acceptancetests.tooling.TestLogger._
 import eu.timepit.refined.auto._
-import eu.timepit.refined.collection.NonEmpty
 import org.openqa.selenium.{WebDriver, WebElement}
 import org.scalatestplus.selenium.WebBrowser.{cssSelector, find}
 import org.scalatestplus.selenium.{Driver, WebBrowser}
 
+import scala.annotation.tailrec
 import scala.concurrent.duration._
 import scala.language.postfixOps
 
@@ -36,7 +36,15 @@ case object NewProjectPage extends RenkuPage with TopBar with ScreenCapturing {
   override val path:  Path  = "/projects/new"
   override val title: Title = "Renku"
 
-  override def pageReadyElement(implicit webDriver: WebDriver): Option[WebElement] = Some(createButton)
+  override def pageReadyElement(implicit webDriver: WebDriver): Option[WebElement] = waitForPageReadyElement
+
+  @tailrec
+  private def waitForPageReadyElement(implicit webDriver: WebDriver): Option[WebElement] =
+    if (webDriver.getPageSource contains "Fetching") {
+      logger info "Waiting for the NewProjectPage to load"
+      sleep(1 second)
+      waitForPageReadyElement
+    } else Some(createButton)
 
   def submitFormWith(
       project:          ProjectDetails

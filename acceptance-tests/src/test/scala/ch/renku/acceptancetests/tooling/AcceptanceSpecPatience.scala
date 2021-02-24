@@ -19,12 +19,12 @@
 package ch.renku.acceptancetests.tooling
 
 import org.scalatest.concurrent.{AbstractPatienceConfiguration, PatienceConfiguration}
-import org.scalatest.time.{Millis, Seconds, Span}
+import org.scalatest.time.{Millis, Minutes, Span}
 
 trait AcceptanceSpecPatience extends AbstractPatienceConfiguration { this: PatienceConfiguration =>
 
   implicit abstract override val patienceConfig: PatienceConfig = PatienceConfig(
-    timeout = scaled(Span(AcceptanceSpecPatience.WAIT_SCALE * 30, Seconds)),
+    timeout = scaled(Span(AcceptanceSpecPatience.WAIT_SCALE * 1, Minutes)),
     interval = scaled(Span(150, Millis))
   )
 }

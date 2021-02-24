@@ -21,6 +21,7 @@ package ch.renku.acceptancetests.workflows
 import ch.renku.acceptancetests.model.projects.{ProjectDetails, ProjectUrl}
 import ch.renku.acceptancetests.pages._
 import ch.renku.acceptancetests.tooling.AcceptanceSpec
+import org.openqa.selenium.WebDriver
 
 import scala.language.postfixOps
 
@@ -34,8 +35,11 @@ trait Settings {
     And("they add some tags")
     val tags = "automated-test"
     projectPage.Settings addProjectTags tags
-    Then("the tags should be added")
-    verify that projectPage.Settings.projectTags hasValue tags
+
+    `try few times before giving up` { (_: WebDriver) =>
+      Then("the tags should be added")
+      verify that projectPage.Settings.projectTags hasValue tags
+    }
   }
 
   def setProjectDescription(implicit projectDetails: ProjectDetails): Unit = {
@@ -43,10 +47,13 @@ trait Settings {
     When("the user set the Project Description")
     val gitlabDescription = "GitLab description"
     projectPage.Settings updateProjectDescription gitlabDescription
-    And("they navigate to the Overview tab")
-    click on projectPage.Overview.tab
-    Then("they should see the updated project description")
-    verify that projectPage.Overview.projectDescription contains gitlabDescription
+
+    `try few times before giving up` { (_: WebDriver) =>
+      And("they navigate to the Overview tab")
+      click on projectPage.Overview.tab
+      Then("they should see the updated project description")
+      verify that projectPage.Overview.projectDescription contains gitlabDescription
+    }
   }
 
   def findProjectHttpUrl(implicit projectDetails: ProjectDetails): ProjectUrl = {

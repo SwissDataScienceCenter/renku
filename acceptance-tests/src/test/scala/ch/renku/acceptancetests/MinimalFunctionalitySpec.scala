@@ -70,7 +70,7 @@ class MinimalFunctionalitySpec
 
   }
 
-  def addChangeToProject(implicit projectDetails: ProjectDetails): Unit = {
+  private def addChangeToProject(implicit projectDetails: ProjectDetails): Unit = {
     implicit val docsScreenshots: DocsScreenshots = new DocsScreenshots(this, browser) {
       override lazy val captureScreenshots: Boolean = false
     }
@@ -79,6 +79,7 @@ class MinimalFunctionalitySpec
     When("the user clicks on the Terminal icon")
     click on jupyterLabPage.terminalIcon sleep (2 seconds)
     createBranchInJupyterLab(jupyterLabPage)
+    `wait for KG to process events`(projectDetails.asProjectIdentifier)
 
     stopEnvironment
   }

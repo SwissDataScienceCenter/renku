@@ -18,7 +18,7 @@
 
 package ch.renku.acceptancetests.tooling
 
-import cats.implicits._
+import cats.syntax.all._
 import ch.renku.acceptancetests.model.BaseUrl
 import ch.renku.acceptancetests.pages.Page
 import org.openqa.selenium.{WebDriver, WebElement}
@@ -77,24 +77,35 @@ trait Grammar extends Eventually {
   object reload {
 
     @scala.annotation.tailrec
-    def whenUserCannotSee(element: WebDriver => WebElement, attempt: Int = 1): Unit =
+    def whenUserCannotSee(findElement: WebDriver => WebElement, attempt: Int = 1): Unit =
       if (
-        attempt <= 10 && Either
-          .catchOnly[TestFailedException](!element(webDriver).isDisplayed)
+        attempt <= 10 &&
+        Either
+          .catchOnly[TestFailedException](!findElement(webDriver).isDisplayed)
           .fold(_ => true, identity)
       ) {
         sleep(5 seconds)
         webDriver.navigate().refresh()
-        whenUserCannotSee(element, attempt + 1)
+        whenUserCannotSee(findElement, attempt + 1)
       } else
-        element(webDriver).isDisplayed
+        findElement(webDriver).isDisplayed
   }
+
+  def `try few times before giving up`[V](section: WebDriver => V, attempt: Int = 1)(implicit webDriver: WebDriver): V =
+    Either.catchOnly[TestFailedException](section(webDriver)) match {
+      case Right(successValue)         => successValue
+      case Left(error) if attempt > 10 => throw error
+      case Left(_) =>
+        sleep(5 seconds)
+        webDriver.navigate().refresh()
+        `try few times before giving up`(section, attempt + 1)
+    }
 
   object pause {
 
     @scala.annotation.tailrec
     def asLongAsBrowserAt[Url <: BaseUrl](page: Page[Url], attempt: Int = 1)(implicit baseUrl: Url): Unit = {
-      val frequencyFactor = 6
+      val frequencyFactor = 12
       val maxAttempts     = 10 * frequencyFactor
 
       if (attempt <= maxAttempts && (currentUrl startsWith page.url)) {
