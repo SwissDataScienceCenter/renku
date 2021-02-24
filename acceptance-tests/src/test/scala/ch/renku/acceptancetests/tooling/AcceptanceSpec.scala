@@ -24,8 +24,6 @@ import org.openqa.selenium.chrome.{ChromeDriver, ChromeDriverService, ChromeOpti
 import org.scalatest.{BeforeAndAfterAll, FeatureSpec, GivenWhenThen, Matchers => ScalatestMatchers}
 import org.scalatestplus.selenium.{Chrome, Driver, WebBrowser}
 
-import scala.language.postfixOps
-
 trait AcceptanceSpec
     extends FeatureSpec
     with GivenWhenThen

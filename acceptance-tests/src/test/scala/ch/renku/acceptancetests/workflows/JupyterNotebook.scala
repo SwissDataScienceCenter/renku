@@ -24,7 +24,6 @@ import ch.renku.acceptancetests.pages.JupyterLabPage
 import ch.renku.acceptancetests.tooling.{AcceptanceSpec, DocsScreenshots, KnowledgeGraphApi}
 
 import scala.concurrent.duration._
-import scala.language.postfixOps
 
 trait JupyterNotebook extends Datasets with KnowledgeGraphApi {
   self: AcceptanceSpec =>

@@ -23,7 +23,6 @@ import ch.renku.acceptancetests.tooling.AcceptanceSpec
 import ch.renku.acceptancetests.workflows.LoginType._
 
 import scala.concurrent.duration._
-import scala.language.postfixOps
 
 trait Login {
   self: AcceptanceSpec =>

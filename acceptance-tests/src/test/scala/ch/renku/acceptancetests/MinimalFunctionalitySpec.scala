@@ -24,7 +24,6 @@ import ch.renku.acceptancetests.workflows._
 import ch.renku.acceptancetests.pages.ProjectPage
 
 import scala.concurrent.duration._
-import scala.language.postfixOps
 
 class MinimalFunctionalitySpec
     extends AcceptanceSpec

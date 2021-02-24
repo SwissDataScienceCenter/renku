@@ -25,7 +25,6 @@ import ch.renku.acceptancetests.workflows._
 import org.openqa.selenium.JavascriptExecutor
 
 import scala.concurrent.duration._
-import scala.language.postfixOps
 
 /**
   * Run the HandsOn from the documentation.

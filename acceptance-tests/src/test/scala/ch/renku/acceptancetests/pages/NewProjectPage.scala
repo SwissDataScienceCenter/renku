@@ -29,7 +29,6 @@ import org.scalatestplus.selenium.{Driver, WebBrowser}
 
 import scala.annotation.tailrec
 import scala.concurrent.duration._
-import scala.language.postfixOps
 
 case object NewProjectPage extends RenkuPage with TopBar with ScreenCapturing {
 

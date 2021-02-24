@@ -23,7 +23,6 @@ import ch.renku.acceptancetests.pages._
 import ch.renku.acceptancetests.tooling.{AcceptanceSpec, GitLabApi}
 
 import scala.concurrent.duration._
-import scala.language.postfixOps
 
 trait RemoveProject extends BrowserNavigation {
   self: AcceptanceSpec with GitLabApi =>

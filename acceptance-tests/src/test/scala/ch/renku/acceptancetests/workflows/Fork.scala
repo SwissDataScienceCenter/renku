@@ -22,8 +22,6 @@ import ch.renku.acceptancetests.model.projects.ProjectDetails
 import ch.renku.acceptancetests.pages._
 import ch.renku.acceptancetests.tooling.AcceptanceSpec
 
-import scala.language.postfixOps
-
 trait Fork {
   self: AcceptanceSpec with RemoveProject =>
 

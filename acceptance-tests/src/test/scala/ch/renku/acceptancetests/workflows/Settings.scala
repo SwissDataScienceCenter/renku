@@ -23,8 +23,6 @@ import ch.renku.acceptancetests.pages._
 import ch.renku.acceptancetests.tooling.AcceptanceSpec
 import org.openqa.selenium.WebDriver
 
-import scala.language.postfixOps
-
 trait Settings {
   self: AcceptanceSpec =>
 

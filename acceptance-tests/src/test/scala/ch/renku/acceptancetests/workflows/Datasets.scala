@@ -25,8 +25,8 @@ import ch.renku.acceptancetests.pages.{DatasetPage, ProjectPage}
 import ch.renku.acceptancetests.tooling.{AcceptanceSpec, KnowledgeGraphApi}
 import eu.timepit.refined.auto._
 import org.openqa.selenium.{WebDriver, WebElement}
+
 import scala.concurrent.duration._
-import scala.language.postfixOps
 
 trait Datasets {
   self: AcceptanceSpec with KnowledgeGraphApi =>

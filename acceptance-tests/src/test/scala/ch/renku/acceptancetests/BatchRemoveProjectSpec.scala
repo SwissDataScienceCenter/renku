@@ -24,7 +24,6 @@ import ch.renku.acceptancetests.tooling.{AcceptanceSpec, BatchRemoveProjectSpecD
 import ch.renku.acceptancetests.workflows._
 
 import scala.concurrent.duration._
-import scala.language.postfixOps
 import scala.util.matching.Regex
 
 /**

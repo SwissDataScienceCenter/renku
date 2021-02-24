@@ -27,8 +27,6 @@ import org.scalactic.source
 import scala.concurrent.duration._
 import org.scalatestplus.selenium.WebBrowser.{cssSelector, find}
 
-import scala.language.postfixOps
-
 object DatasetPage {
   def apply(datasetName: DatasetName)(implicit projectPage: ProjectPage) = new DatasetPage(datasetName, projectPage)
 }

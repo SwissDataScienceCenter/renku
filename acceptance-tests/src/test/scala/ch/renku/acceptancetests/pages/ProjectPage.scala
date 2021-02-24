@@ -32,7 +32,6 @@ import org.scalatestplus.selenium.WebBrowser.{cssSelector, find, findAll}
 
 import scala.concurrent.duration._
 import scala.jdk.CollectionConverters._
-import scala.language.postfixOps
 
 object ProjectPage {
 

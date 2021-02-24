@@ -30,7 +30,6 @@ import ch.renku.acceptancetests.tooling.TestLogger.logger
 import ch.renku.acceptancetests.tooling.console.Command.UserInput
 
 import scala.jdk.CollectionConverters._
-import scala.language.postfixOps
 import scala.sys.process._
 
 private class CommandExecutor(command: Command) {

@@ -21,8 +21,6 @@ package ch.renku.acceptancetests
 import ch.renku.acceptancetests.tooling.AcceptanceSpec
 import ch.renku.acceptancetests.workflows.{Login, LoginType}
 
-import scala.language.postfixOps
-
 class LoginSpec extends AcceptanceSpec with Login {
 
   feature("User logging in and out") {

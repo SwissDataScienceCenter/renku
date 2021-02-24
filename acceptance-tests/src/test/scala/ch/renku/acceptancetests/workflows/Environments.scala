@@ -23,7 +23,6 @@ import ch.renku.acceptancetests.pages._
 import ch.renku.acceptancetests.tooling.{AcceptanceSpec, AnonEnvConfig, DocsScreenshots}
 
 import scala.concurrent.duration._
-import scala.language.postfixOps
 
 trait Environments {
   self: AcceptanceSpec =>

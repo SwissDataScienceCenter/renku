@@ -26,8 +26,6 @@ import ch.renku.acceptancetests.pages.ProjectPage
 import ch.renku.acceptancetests.tooling.{AcceptanceSpec, DocsScreenshots, KnowledgeGraphApi}
 import ch.renku.acceptancetests.workflows._
 
-import scala.language.postfixOps
-
 class DatasetModificationFlowSpec
     extends AcceptanceSpec
     with Login

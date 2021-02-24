@@ -50,6 +50,7 @@ scalacOptions += "-feature"
 scalacOptions += "-unchecked"
 scalacOptions += "-deprecation"
 scalacOptions += "-Xfatal-warnings"
+scalacOptions += "-language:postfixOps"
 
 organizationName := "Swiss Data Science Center (SDSC)"
 startYear := Some(java.time.LocalDate.now().getYear)

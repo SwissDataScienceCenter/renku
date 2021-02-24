@@ -21,8 +21,6 @@ package ch.renku.acceptancetests
 import ch.renku.acceptancetests.tooling.{AcceptanceSpec, ExistingProjectSpecData}
 import ch.renku.acceptancetests.workflows._
 
-import scala.language.postfixOps
-
 /**
   * Run tests on an existing project.
   */

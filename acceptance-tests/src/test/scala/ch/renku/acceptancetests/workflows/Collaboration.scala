@@ -24,7 +24,6 @@ import ch.renku.acceptancetests.tooling.AcceptanceSpec
 import org.openqa.selenium.WebDriver
 
 import scala.concurrent.duration._
-import scala.language.postfixOps
 
 trait Collaboration {
   self: AcceptanceSpec =>

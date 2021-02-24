@@ -27,8 +27,6 @@ import org.openqa.selenium.{WebDriver, WebElement}
 import org.scalatestplus.selenium.WebBrowser
 import org.scalatestplus.selenium.WebBrowser.{cssSelector, find, findAll}
 
-import scala.language.postfixOps
-
 case object ProjectsPage extends RenkuPage with TopBar {
   override val path:  Path  = "/projects"
   override val title: Title = "Renku"
