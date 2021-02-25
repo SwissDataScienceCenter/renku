@@ -23,6 +23,7 @@ trait JupyterNotebook extends Datasets {
     import jupyterLabPage.terminal
 
     val listZippedDatasetOutput = terminal %> s"unzip -l '$datasetDir'"
+    Then( message= "The output is ")
     // check listZippedDatasetOutput is not the same as 'unzip:  cannot find or open data'
   }
 

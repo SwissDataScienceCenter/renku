@@ -29,15 +29,15 @@ class GitLFSSpec  extends AcceptanceSpec
     Given("a renku project with imported dataset")
     createNewProject(projectDetails)
 
-    val importDatasetURL = DatasetURL("10.7910/DVN/WTZS4K") // to parametrize?
+    val importDatasetURL = DatasetURL("10.7910/DVN/WTZS4K") // TODO parametrize?
     val importedDatasetName = DatasetName("2019-01 US Flights")
     And("an imported dataset for this project")
     val importedDatasetPage = `import a dataset`(importDatasetURL, importedDatasetName)
-    val test = importedDatasetPage.path.value
-    val datasetPage = DatasetPage(importedDatasetName)
-    val datasetLink = projectPage.Datasets.DatasetsList.link(to = datasetPage)(_: WebDriver)
+    // val test = importedDatasetPage.path.value
+    // val datasetPage = DatasetPage(importedDatasetName)
+    // val datasetLink = projectPage.Datasets.DatasetsList.link(to = datasetPage)(_: WebDriver)
 
-    val importedDatasetDirectory = DatasetDir("201901_us_flights_10/2019-01-flights.csv.zip")
+    val importedDatasetDirectory = DatasetDir("201901_us_flights_10/2019-01-flights.csv.zip") // TODO get path from datasets link element
     verifyAutoLFSDatasetOnJupyterNotebook(projectDetails, docsScreenshots, importedDatasetDirectory)
 
     removeProjectInGitLab
