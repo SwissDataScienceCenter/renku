@@ -34,7 +34,7 @@ trait Datasets {
     implicit val projectPage: ProjectPage = ProjectPage()
     val datasetPage = DatasetPage(datasetName)
     When("the user navigates to the Datasets tab")
-    click on projectPage.Datasets.tab
+    click on projectPage.Datasets.tab sleep (1 second)
 
     And("the events are processed")
     val datasetPageTitle = projectPage.Datasets.title(_: WebDriver)
@@ -79,10 +79,10 @@ trait Datasets {
   def `navigate to the dataset`(datasetPage: DatasetPage)(implicit projectPage: ProjectPage): Unit = {
 
     Given("the user is on the Datasets tab")
-    click on projectPage.Datasets.tab
+    click on projectPage.Datasets.tab sleep (1 second)
 
     When(s"the user clicks on the dataset name")
-    click on projectPage.Datasets.DatasetsList.link(to = datasetPage)
+    click on projectPage.Datasets.DatasetsList.link(to = datasetPage) sleep (1 second)
 
     Then(s"the user should see the dataset details")
     verify browserAt datasetPage
@@ -95,7 +95,7 @@ trait Datasets {
     `navigate to the dataset`(datasetPage)
 
     When("the user clicks on the modify button")
-    click on datasetPage.modifyButton
+    click on datasetPage.modifyButton sleep (1 second)
     verify userCanSee datasetPage.ModificationForm.formTitle
 
     And(s"the user modifies the dataset by ${by.name}")
@@ -106,7 +106,7 @@ trait Datasets {
     }
 
     And("the user saves the modification")
-    click on datasetPage.ModificationForm.datasetSubmitButton
+    click on datasetPage.ModificationForm.datasetSubmitButton sleep (2 seconds)
 
     verify browserAt datasetPage
 
