@@ -36,13 +36,21 @@ case object ProjectsPage extends RenkuPage with TopBar {
   object YourProjects {
 
     def tab(implicit webDriver: WebDriver): WebElement = eventually {
-      find(cssSelector("li.nav-item a[href^='/projects?']")) getOrElse fail("Projects -> Your Projects tab not found")
+      find(cssSelector("#link-projects-your")) getOrElse fail("Projects -> Your Projects tab not found")
+    }
+
+    def searchField(implicit webDriver: WebDriver): WebElement = eventually {
+      find(cssSelector("#searchQuery")) getOrElse fail("Projects -> Filter by project field not found")
+    }
+
+    def searchButton(implicit webDriver: WebDriver): WebElement = eventually {
+      find(cssSelector("#searchButton")) getOrElse fail("Projects -> Search button not found")
     }
 
     def linkTo(
         project:          ProjectDetails
     )(implicit webDriver: WebDriver, userCredentials: UserCredentials): WebElement =
-      maybeLinkTo(project) getOrElse fail(s"Projects -> Your Projects -> '${project.title}' link not found")
+      maybeLinkTo(project) getOrElse fail(s"'${project.title}' not found")
 
     def maybeLinkTo(
         project:          ProjectDetails

@@ -1,7 +1,7 @@
 package ch.renku.acceptancetests.workflows
 
 import ch.renku.acceptancetests.model.projects.{ProjectDetails, Template, Visibility}
-import ch.renku.acceptancetests.pages.{NewProjectPage, ProjectPage, WelcomePage}
+import ch.renku.acceptancetests.pages.{NewProjectPage, ProjectPage, ProjectsPage, WelcomePage}
 import ch.renku.acceptancetests.tooling.AcceptanceSpec
 import eu.timepit.refined.api.Refined
 import org.openqa.selenium.WebDriver
@@ -31,6 +31,7 @@ trait Project extends RemoveProject with BeforeAndAfterAll {
 
   private lazy val maybeExistingProject: Option[ProjectDetails] =
     (Option(getProperty("extant")) orElse sys.env.get("RENKU_TEST_EXTANT_PROJECT"))
+      .map(_.trim)
       .map { readMeTitle =>
         ProjectDetails(Refined.unsafeApply(readMeTitle),
                        projectVisibility,
@@ -43,14 +44,43 @@ trait Project extends RemoveProject with BeforeAndAfterAll {
   protected implicit lazy val projectPage: ProjectPage = ProjectPage()
 
   def `create or open a project`: Unit = maybeExistingProject match {
-    case Some(_) => ()
-    case _       => `create new project`
+    case Some(_) => `open a project`
+    case _       => `create a new project`
   }
 
-  private def `create new project`: Unit = {
+  private def `open a project`: Unit = {
+    val projectPage = ProjectPage()
+
+    When("user click on the Projects in the Top Bar")
+    click on projectPage.TopBar.projects sleep (2 seconds)
+
+    And("they click on the 'Your Projects' tab")
+    click on ProjectsPage.YourProjects.tab
+
+    And("they enter project title in the search box")
+    ProjectsPage.YourProjects.searchField.clear() sleep (1 second)
+    ProjectsPage.YourProjects.searchField.enterValue(projectDetails.title.value) sleep (1 second)
+
+    And("they click the Search button")
+    click on ProjectsPage.YourProjects.searchButton sleep (1 second)
+
+    Then(s"the '${projectDetails.title}' project should be listed")
+    val projectLink = ProjectsPage.YourProjects.linkTo(projectDetails)
+
+    When("they click on the link")
+    click on projectLink sleep (1 second)
+
+    `try few times before giving up` { (_: WebDriver) =>
+      Then(s"they should see the '${projectDetails.title}' project page")
+      verify browserAt projectPage
+    }
+  }
+
+  private def `create a new project`: Unit = {
     When("user clicks on the 'New Project' menu item")
     click on WelcomePage.TopBar.plusDropdown
     click on WelcomePage.TopBar.projectOption sleep (5 seconds)
+
     `try few times before giving up` { (_: WebDriver) =>
       Then("the New Project page gets displayed")
       verify browserAt NewProjectPage
