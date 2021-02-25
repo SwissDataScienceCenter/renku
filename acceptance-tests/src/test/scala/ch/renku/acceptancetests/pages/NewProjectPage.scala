@@ -52,7 +52,7 @@ case object NewProjectPage
 
     docsScreenshots.takeScreenshot()
 
-    createButton.click() sleep (5 seconds)
+    createButton.click() sleep (10 seconds)
   }
 
   private def titleField(implicit webDriver: WebDriver): WebElement = eventually {

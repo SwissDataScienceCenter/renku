@@ -49,7 +49,7 @@ trait Grammar extends Eventually {
 
     def browserAt[Url <: BaseUrl](page: Page[Url])(implicit baseUrl: Url): Unit = eventually {
       currentUrl.toLowerCase should startWith(page.url.toLowerCase)
-      pageTitle            shouldBe page.title.toString()
+      pageTitle            shouldBe page.title
       verifyElementsAreDisplayed(page)
     }
 
@@ -61,12 +61,12 @@ trait Grammar extends Eventually {
 
     def browserSwitchedTo[Url <: BaseUrl](page: Page[Url])(implicit baseUrl: Url): Unit = eventually {
       if (webDriver.getWindowHandles.asScala exists forTabWith(page)) ()
-      else throw new Exception(s"Cannot find window with ${page.url} and title ${page.title.toString()}")
+      else throw new Exception(s"Cannot find window with ${page.url} and title ${page.title}")
     }
 
     private def forTabWith[Url <: BaseUrl](page: Page[Url])(handle: String)(implicit baseUrl: Url): Boolean = {
       webDriver.switchTo() window handle
-      (currentUrl startsWith page.url) && (pageTitle == page.title.toString())
+      (currentUrl startsWith page.url) && (pageTitle == page.title)
     }
 
     def userCanSee(element: => WebElement): Unit = eventually {
@@ -113,8 +113,8 @@ trait Grammar extends Eventually {
         asLongAsBrowserAt(page, attempt + 1)
       } else if (attempt > maxAttempts && (currentUrl startsWith page.url))
         fail {
-          s"Expected to be redirected from the ${page.path} but " +
-            s"gets stuck on $currentUrl for ${((patienceConfig.timeout.millisPart millis) * attempt).toSeconds}s"
+          s"Expected to be redirected from ${page.url} page " +
+            s"but gets stuck on $currentUrl for ${((patienceConfig.timeout.millisPart millis) * attempt).toSeconds}s"
         }
     }
   }
