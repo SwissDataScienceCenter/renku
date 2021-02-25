@@ -92,7 +92,7 @@ trait Grammar extends Eventually {
   }
 
   def `try few times before giving up`[V](section: WebDriver => V, attempt: Int = 1)(implicit webDriver: WebDriver): V =
-    Either.catchOnly[TestFailedException](section(webDriver)) match {
+    Either.catchOnly[RuntimeException](section(webDriver)) match {
       case Right(successValue)         => successValue
       case Left(error) if attempt > 10 => throw error
       case Left(_) =>
