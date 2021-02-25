@@ -129,7 +129,7 @@ trait Environments {
     And("then they click on the New link")
     click on projectPage.Environments.newLink sleep (2 seconds)
     And("once the image is built")
-    projectPage.Environments.verifyImageReady
+    projectPage.Environments.verifyImageReady sleep (2 seconds)
   }
 
   private def `start environment & wait util it's not ready`(implicit projectPage: ProjectPage): Unit = {

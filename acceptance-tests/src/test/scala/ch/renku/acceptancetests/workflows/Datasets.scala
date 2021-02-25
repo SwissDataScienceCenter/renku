@@ -50,17 +50,17 @@ trait Datasets {
     val newDatasetName = datasets.DatasetName("new")
     val newDatasetPage = DatasetPage(newDatasetName)
     Given("the user is on the Datasets tab")
-    click on projectPage.Datasets.tab
+    click on projectPage.Datasets.tab sleep (1 second)
 
     When("the user clicks on the Add Dataset button")
-    click on projectPage.Datasets.addADatasetButton
+    click on projectPage.Datasets.addADatasetButton sleep (1 second)
     verify that newDatasetPage.ModificationForm.formTitle contains "Add Dataset"
 
     And(s"the user add the title '$datasetName' to the new dataset")
-    `changing its title`(to = datasetName.toString).modifying(newDatasetPage)
+    `changing its title`(to = datasetName.toString).modifying(newDatasetPage) sleep (1 second)
 
     And("the user saves the changes")
-    click on newDatasetPage.ModificationForm.datasetSubmitButton
+    click on newDatasetPage.ModificationForm.datasetSubmitButton sleep (2 second)
     pause asLongAsBrowserAt newDatasetPage
 
     And("all the events are processed by the knowledge-graph")
@@ -121,7 +121,8 @@ trait Datasets {
   }
 
   case class Modification private (name: String, field: DatasetPage => WebElement, newValue: String) {
-    def modifying(datasetPage: DatasetPage): Unit = field(datasetPage).enterValue(newValue)
+    def modifying(datasetPage: DatasetPage): Unit =
+      field(datasetPage) enterValue newValue sleep (1 second)
   }
 
   object Modification {

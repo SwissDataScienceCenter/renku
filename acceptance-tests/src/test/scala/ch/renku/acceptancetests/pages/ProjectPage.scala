@@ -294,7 +294,7 @@ class ProjectPage(projectSlug: String, namespace: String)
     }
 
     def startEnvironment(implicit webDriver: WebDriver): WebElement = eventually {
-      verifyImageReady
+      verifyImageReady sleep (2 seconds)
       findAll(cssSelector("div > form > button.btn.btn-primary"))
         .find(_.text == "Start environment")
         .getOrElse(fail("Start environment button not found"))

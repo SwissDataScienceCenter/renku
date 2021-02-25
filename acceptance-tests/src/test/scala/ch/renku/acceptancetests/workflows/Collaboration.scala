@@ -30,9 +30,9 @@ trait Collaboration {
   def `verify there are no merge requests`: Unit = {
     val projectPage = ProjectPage()
     When("the user navigates to the Collaboration tab")
-    click on projectPage.Collaboration.tab
+    click on projectPage.Collaboration.tab sleep (1 second)
     And("they navigate to the Merge Requests sub tab")
-    click on projectPage.Collaboration.MergeRequests.tab
+    click on projectPage.Collaboration.MergeRequests.tab sleep (1 second)
     Then("they should see a 'No merge requests to display' info")
     verify userCanSee projectPage.Collaboration.MergeRequests.noMergeRequests
   }
@@ -40,9 +40,9 @@ trait Collaboration {
   def `verify there are no issues`: Unit = {
     val projectPage = ProjectPage()
     When("the user navigates to the Collaboration tab")
-    click on projectPage.Collaboration.tab
+    click on projectPage.Collaboration.tab sleep (1 second)
     And("they navigate to the Issues sub tab")
-    click on projectPage.Collaboration.Issues.tab
+    click on projectPage.Collaboration.Issues.tab sleep (1 second)
     Then("they should see a 'No issues to display' info")
     verify userCanSee projectPage.Collaboration.Issues.noIssues
   }
@@ -50,13 +50,11 @@ trait Collaboration {
   def `create a new issue`: Unit = {
     implicit val projectPage = ProjectPage()
     When("the user navigates to the Collaboration tab")
-    click on projectPage.Collaboration.tab
+    click on projectPage.Collaboration.tab sleep (1 second)
     And("they navigate to the Issues sub tab")
-    click on projectPage.Collaboration.Issues.tab
-    // Give some time for the tab change to take effect
-    sleep(1 second)
+    click on projectPage.Collaboration.Issues.tab sleep (2 seconds)
     And("the user clicks on the 'New Issue' button")
-    click on projectPage.Collaboration.Issues.newIssueLink
+    click on projectPage.Collaboration.Issues.newIssueLink sleep (1 second)
 
     And("they fill out the form")
     val issueTitle = "test issue"
@@ -76,16 +74,15 @@ trait Collaboration {
     val tf          = projectPage.Collaboration.Issues.NewIssue.titleField
     tf.clear() sleep (1 second)
     tf enterValue title sleep (1 second)
-    click on projectPage.Collaboration.Issues.NewIssue.markdownSwitch;
+    click on projectPage.Collaboration.Issues.NewIssue.markdownSwitch sleep (1 second)
     projectPage.Collaboration.Issues.NewIssue.descriptionField enterValue description sleep (1 second)
-    click on projectPage.Collaboration.Issues.NewIssue.createIssueButton;
-    sleep(1 second)
+    click on projectPage.Collaboration.Issues.NewIssue.createIssueButton sleep (1 second)
   }
 
   def `verify branch was added`: Unit = {
     val projectPage = ProjectPage()
     When("the user navigates to the Collaboration tab")
-    click on projectPage.Collaboration.tab
+    click on projectPage.Collaboration.tab sleep (1 second)
     Then("they should see a 'Do you want to create a merge request for branch...' banner")
     verify userCanSee projectPage.Collaboration.MergeRequests.futureMergeRequestBanner
   }
@@ -93,17 +90,13 @@ trait Collaboration {
   def `create a new merge request`: Unit = {
     implicit val projectPage = ProjectPage()
     When("the user navigates to the Collaboration tab")
-    click on projectPage.Collaboration.tab
+    click on projectPage.Collaboration.tab sleep (1 second)
     And("they navigate to the Merge Request sub tab")
-    click on projectPage.Collaboration.MergeRequests.tab
-    // Give some time for the tab change to take effect
-    sleep(4 second)
+    click on projectPage.Collaboration.MergeRequests.tab sleep (5 second)
     And("the user clicks on the 'Create Merge Request' button")
-    click on projectPage.Collaboration.MergeRequests.createMergeRequestButton
-    sleep(4 seconds)
+    click on projectPage.Collaboration.MergeRequests.createMergeRequestButton sleep (5 second)
     And("they navigate to the MergeRequest sub tab")
-    click on projectPage.Collaboration.MergeRequests.tab
-    sleep(3 seconds)
+    click on projectPage.Collaboration.MergeRequests.tab sleep (4 second)
     Then("the new Merge Request should be displayed in the list")
     val mrTitles = projectPage.Collaboration.MergeRequests.mergeRequestsTitles
     if (mrTitles isEmpty) fail("There should be at least one merge request")
