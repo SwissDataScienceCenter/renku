@@ -30,7 +30,7 @@ class MinimalFunctionalitySpec
     with Login
     with Project
     with Settings
-    with Fork {
+    with Forks {
 
   scenario("User can use basic functionality of Renku") {
 
@@ -38,31 +38,31 @@ class MinimalFunctionalitySpec
 
     `create or open a project`
 
-    verifyMergeRequestsIsEmpty
-    verifyIssuesIsEmpty
-    createNewIssue
+    `verify there are no merge requests`
+    `verify there are no issues`
+    `create a new issue`
 
-    addChangeToProject
-    createNewMergeRequest
+    `add change to the project`
+    `create a new merge request`
 
-    setProjectTags
-    setProjectDescription
+    `set project tags`
+    `set project description`
 
-    `fork project`(projectDetails)
+    `fork project`
 
     `log out of Renku`
   }
 
-  private def addChangeToProject(implicit projectDetails: ProjectDetails): Unit = {
+  private def `add change to the project`(implicit projectDetails: ProjectDetails): Unit = {
     docsScreenshots.disable()
-    val jupyterLabPage = launchEnvironment(projectDetails)
+    val jupyterLabPage = `launch an environment`(projectDetails)
     docsScreenshots.enable()
 
     When("the user clicks on the Terminal icon")
     click on jupyterLabPage.terminalIcon sleep (2 seconds)
-    createBranchInJupyterLab(jupyterLabPage)
+    `create a branch in JupyterLab`(jupyterLabPage)
     `wait for KG to process events`(projectDetails.asProjectIdentifier)
 
-    stopEnvironment
+    `stop environment`
   }
 }

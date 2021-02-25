@@ -19,7 +19,7 @@
 package ch.renku.acceptancetests
 
 import ch.renku.acceptancetests.tooling.AcceptanceSpec
-import ch.renku.acceptancetests.workflows.{Login, LoginType}
+import ch.renku.acceptancetests.workflows.Login
 
 class LoginSpec extends AcceptanceSpec with Login {
 

@@ -18,15 +18,15 @@
 
 package ch.renku.acceptancetests.workflows
 
-import ch.renku.acceptancetests.model.projects.{ProjectDetails, ProjectUrl}
+import ch.renku.acceptancetests.model.projects.ProjectUrl
 import ch.renku.acceptancetests.pages._
 import ch.renku.acceptancetests.tooling.AcceptanceSpec
 import org.openqa.selenium.WebDriver
 
 trait Settings {
-  self: AcceptanceSpec =>
+  self: AcceptanceSpec with Project =>
 
-  def setProjectTags(implicit projectDetails: ProjectDetails): Unit = {
+  def `set project tags`: Unit = {
     val projectPage = ProjectPage()
     When("the user navigates to the Settings tab")
     click on projectPage.Settings.tab
@@ -40,7 +40,7 @@ trait Settings {
     }
   }
 
-  def setProjectDescription(implicit projectDetails: ProjectDetails): Unit = {
+  def `set project description`: Unit = {
     val projectPage = ProjectPage()
     When("the user set the Project Description")
     val gitlabDescription = "GitLab description"
@@ -54,12 +54,11 @@ trait Settings {
     }
   }
 
-  def `find project Http URL in the Settings Page`(projectDetails: ProjectDetails): ProjectUrl = {
+  def `find project Http URL in the Settings Page`: ProjectUrl = {
     val projectPage = ProjectPage()(projectDetails, userCredentials)
     When("the user navigates to the Settings tab")
     click on projectPage.Settings.tab
     Then("the user can find the project Http Url")
     ProjectUrl(projectPage.Settings.projectHttpUrl.getText)
   }
-
 }

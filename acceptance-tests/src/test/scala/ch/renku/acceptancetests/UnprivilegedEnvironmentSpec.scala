@@ -28,6 +28,10 @@ class UnprivilegedEnvironmentSpec extends AcceptanceSpec with AnonEnv with Login
     `launch unprivileged environment`
     `stop environment`(anonEnvConfig.projectId)
     `log out of Renku`
-    `launch anonymous environment`(anonEnvConfig) map (_ => `stop environment`(anonEnvConfig.projectId))
+  }
+
+  scenario("User can launch anonymous environment") {
+    `launch anonymous environment`(anonEnvConfig)
+      .map(_ => `stop environment`(anonEnvConfig.projectId))
   }
 }

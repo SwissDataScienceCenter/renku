@@ -23,6 +23,7 @@ import ch.renku.acceptancetests.generators.Generators._
 import ch.renku.acceptancetests.model.projects.ProjectDetails._
 import ch.renku.acceptancetests.model.users.UserCredentials
 import eu.timepit.refined.api.Refined
+import eu.timepit.refined.auto._
 import eu.timepit.refined.collection.NonEmpty
 
 import java.net.URL
@@ -104,8 +105,9 @@ object projects {
       val title = maybeTitle.getOrElse(
         Refined.unsafeApply(s"test ${now.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH-mm-ss"))}")
       )
-      val desc =
-        maybeDescription.getOrElse(prefixParagraph("An automatically generated project for testing: ").generateOne)
+      val desc = maybeDescription.getOrElse(
+        prefixParagraph("An automatically generated project for testing: ", maxWords = 5).generateOne
+      )
       val readmeTitle = s"test ${now.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH-mm-ss"))}"
       val template    = Template(maybeTemplate.getOrElse(Refined.unsafeApply("Renku/python-minimal")))
       ProjectDetails(title, visibility, desc, template, readmeTitle)

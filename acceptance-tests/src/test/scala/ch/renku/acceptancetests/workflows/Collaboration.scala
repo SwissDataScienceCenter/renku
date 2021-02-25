@@ -18,7 +18,6 @@
 
 package ch.renku.acceptancetests.workflows
 
-import ch.renku.acceptancetests.model.projects.ProjectDetails
 import ch.renku.acceptancetests.pages._
 import ch.renku.acceptancetests.tooling.AcceptanceSpec
 import org.openqa.selenium.WebDriver
@@ -26,9 +25,9 @@ import org.openqa.selenium.WebDriver
 import scala.concurrent.duration._
 
 trait Collaboration {
-  self: AcceptanceSpec =>
+  self: AcceptanceSpec with Project =>
 
-  def verifyMergeRequestsIsEmpty(implicit projectDetails: ProjectDetails): Unit = {
+  def `verify there are no merge requests`: Unit = {
     val projectPage = ProjectPage()
     When("the user navigates to the Collaboration tab")
     click on projectPage.Collaboration.tab
@@ -38,7 +37,7 @@ trait Collaboration {
     verify userCanSee projectPage.Collaboration.MergeRequests.noMergeRequests
   }
 
-  def verifyIssuesIsEmpty(implicit projectDetails: ProjectDetails): Unit = {
+  def `verify there are no issues`: Unit = {
     val projectPage = ProjectPage()
     When("the user navigates to the Collaboration tab")
     click on projectPage.Collaboration.tab
@@ -48,7 +47,7 @@ trait Collaboration {
     verify userCanSee projectPage.Collaboration.Issues.noIssues
   }
 
-  def createNewIssue(implicit projectDetails: ProjectDetails): Unit = {
+  def `create a new issue`: Unit = {
     implicit val projectPage = ProjectPage()
     When("the user navigates to the Collaboration tab")
     click on projectPage.Collaboration.tab
@@ -72,20 +71,18 @@ trait Collaboration {
     }
   }
 
-  def `create an issue with title and description`(
-      title:              String,
-      description:        String
-  )(implicit projectPage: ProjectPage): Unit = {
-    val tf = projectPage.Collaboration.Issues.NewIssue.titleField
+  def `create an issue with title and description`(title: String, description: String): Unit = {
+    val projectPage = ProjectPage()
+    val tf          = projectPage.Collaboration.Issues.NewIssue.titleField
     tf.clear() sleep (1 second)
     tf enterValue title sleep (1 second)
-    projectPage.Collaboration.Issues.NewIssue.markdownSwitch click;
+    click on projectPage.Collaboration.Issues.NewIssue.markdownSwitch;
     projectPage.Collaboration.Issues.NewIssue.descriptionField enterValue description sleep (1 second)
-    projectPage.Collaboration.Issues.NewIssue.createIssueButton click;
+    click on projectPage.Collaboration.Issues.NewIssue.createIssueButton;
     sleep(1 second)
   }
 
-  def verifyBranchWasAdded(implicit projectDetails: ProjectDetails): Unit = {
+  def `verify branch was added`: Unit = {
     val projectPage = ProjectPage()
     When("the user navigates to the Collaboration tab")
     click on projectPage.Collaboration.tab
@@ -93,7 +90,7 @@ trait Collaboration {
     verify userCanSee projectPage.Collaboration.MergeRequests.futureMergeRequestBanner
   }
 
-  def createNewMergeRequest(implicit projectDetails: ProjectDetails): Unit = {
+  def `create a new merge request`: Unit = {
     implicit val projectPage = ProjectPage()
     When("the user navigates to the Collaboration tab")
     click on projectPage.Collaboration.tab
@@ -113,7 +110,7 @@ trait Collaboration {
     mrTitles.find(_ == "test-branch") getOrElse fail("Merge Request with expected title could not be found.")
   }
 
-  def createBranchInJupyterLab(jupyterLabPage: JupyterLabPage): Unit = {
+  def `create a branch in JupyterLab`(jupyterLabPage: JupyterLabPage): Unit = {
     import jupyterLabPage.terminal
     And("Creates a test branch")
     terminal %> "git checkout -b test-branch" sleep (10 seconds)
@@ -126,5 +123,4 @@ trait Collaboration {
     And("Checks out master again")
     terminal %> "git checkout master" sleep (4 seconds)
   }
-
 }

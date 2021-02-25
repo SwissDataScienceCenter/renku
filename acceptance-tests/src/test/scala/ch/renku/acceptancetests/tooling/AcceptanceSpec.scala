@@ -21,7 +21,7 @@ package ch.renku.acceptancetests.tooling
 import ch.renku.acceptancetests.workflows.{Environments, JupyterNotebook}
 import org.openqa.selenium.WebDriver
 import org.openqa.selenium.chrome.{ChromeDriver, ChromeDriverService, ChromeOptions}
-import org.scalatest.{BeforeAndAfterAll, FeatureSpec, GivenWhenThen, Matchers => ScalatestMatchers}
+import org.scalatest._
 import org.scalatestplus.selenium.{Chrome, Driver, WebBrowser}
 
 trait AcceptanceSpec
@@ -29,7 +29,6 @@ trait AcceptanceSpec
     with GivenWhenThen
     with BeforeAndAfterAll
     with Matchers
-    with ScalatestMatchers
     with WebBrowser
     with Environments
     with Driver

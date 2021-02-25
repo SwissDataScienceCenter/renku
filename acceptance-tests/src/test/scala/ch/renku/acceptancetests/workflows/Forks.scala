@@ -22,10 +22,10 @@ import ch.renku.acceptancetests.model.projects.ProjectDetails
 import ch.renku.acceptancetests.pages._
 import ch.renku.acceptancetests.tooling.AcceptanceSpec
 
-trait Fork {
-  self: AcceptanceSpec with RemoveProject =>
+trait Forks {
+  self: AcceptanceSpec with Project =>
 
-  def `fork project`(projectDetails: ProjectDetails): Unit = {
+  def `fork project`: Unit = {
     val projectPage = ProjectPage()(projectDetails, userCredentials)
     go to projectPage
 
@@ -41,7 +41,7 @@ trait Fork {
     val forkedProjectPage = ProjectPage()(forkedProjectDetails, userCredentials)
     verify browserAt forkedProjectPage
 
-    `remove project in GitLab`(forkedProjectDetails)
+    `remove project in GitLab`(forkedProjectDetails.asProjectIdentifier)
     `verify project is removed`(forkedProjectDetails)
   }
 }

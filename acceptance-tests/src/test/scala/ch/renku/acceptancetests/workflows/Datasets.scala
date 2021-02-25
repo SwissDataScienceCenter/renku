@@ -77,7 +77,7 @@ trait Datasets {
     datasetPage
   }
 
-  def `navigate to dataset`(datasetPage: DatasetPage)(implicit projectPage: ProjectPage): Unit = {
+  def `navigate to the dataset`(datasetPage: DatasetPage)(implicit projectPage: ProjectPage): Unit = {
 
     Given("the user is on the Datasets tab")
     click on projectPage.Datasets.tab
@@ -93,7 +93,7 @@ trait Datasets {
       projectPage:                      ProjectPage
   ): DatasetPage = {
     Given(s"the user is on the page of the dataset")
-    `navigate to dataset`(datasetPage)
+    `navigate to the dataset`(datasetPage)
 
     When("the user clicks on the modify button")
     click on datasetPage.modifyButton

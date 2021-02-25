@@ -30,5 +30,4 @@ trait BrowserNavigation {
     When("the user switches back to the Renku tab")
     verify browserSwitchedTo projectPage
   }
-
 }

@@ -31,19 +31,15 @@ class DatasetModificationFlowSpec extends AcceptanceSpec with Login with Project
 
     `log in to Renku`
 
-    Given("a new renku project")
     `create or open a project`
 
-    And("a new dataset for this project")
-    val datasetName         = DatasetName.generate
-    val originalDatasetPage = `create a dataset`(datasetName)
+    When("the user wants to create a new dataset for the project")
+    val originalDatasetPage = `create a dataset`(DatasetName.generate)
 
-    val newTitle       = DatasetTitle.generate
-    val newDescription = paragraph().generateOne
-    When("the user modifies the dataset")
+    When("the user wants to modify the dataset")
     `modify the dataset`(originalDatasetPage,
-                         by = `changing its title`(to = newTitle.toString),
-                         and = `changing its description`(to = newDescription.value)
+                         by = `changing its title`(to = DatasetTitle.generate.toString),
+                         and = `changing its description`(to = paragraph().generateOne.value)
     )
 
     `log out of Renku`

@@ -382,7 +382,7 @@ class ProjectPage(projectSlug: String, namespace: String) extends RenkuPage with
       def verifyEnvironmentReady(implicit webDriver: WebDriver): Unit = eventually {
         find(cssSelector(".text-nowrap.p-1.badge.badge-success"))
           .getOrElse(fail("Interactive environment is not ready"))
-      }(waitUpTo(10 minutes), implicitly[source.Position])
+      }
     }
   }
 

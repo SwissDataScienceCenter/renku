@@ -61,11 +61,10 @@ case object ProjectsPage extends RenkuPage with TopBar {
     /**
       * Return all the project links.
       */
-    def projectLinks(implicit webDriver: WebDriver): List[WebBrowser.Element] =
-      findAll(
-        cssSelector(
-          "main > div:nth-child(4) > div > div:nth-child(3) > div > div > div.d-flex.flex-fill.flex-column.ml-2.mw-0.flex-sm-row > div.d-flex.flex-column.text-truncate > p:nth-child(1) > b > a"
-        )
-      ) toList
+    def projectLinks(implicit webDriver: WebDriver): List[WebBrowser.Element] = findAll(
+      cssSelector(
+        "main > div:nth-child(4) > div > div:nth-child(3) > div > div > div.d-flex.flex-fill.flex-column.ml-2.mw-0.flex-sm-row > div.d-flex.flex-column.text-truncate > p:nth-child(1) > b > a"
+      )
+    ) toList
   }
 }
