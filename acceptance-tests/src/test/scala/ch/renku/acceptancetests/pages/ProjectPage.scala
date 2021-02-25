@@ -289,7 +289,7 @@ class ProjectPage(projectSlug: String, namespace: String) extends RenkuPage with
       }(waitUpTo(1 minute), implicitly[source.Position])
 
     def anonymousUnsupported(implicit webDriver: WebDriver): WebElement = eventually {
-      findAll(cssSelector(s"div > div > div > div > p"))
+      findAll(cssSelector("div > div > div > div > p"))
         .find(
           _.text == "This Renkulab deployment doesn't allow unauthenticated users to start Interactive Environments."
         )
@@ -298,7 +298,7 @@ class ProjectPage(projectSlug: String, namespace: String) extends RenkuPage with
 
     def startEnvironment(implicit webDriver: WebDriver): WebElement = eventually {
       verifyImageReady
-      findAll(cssSelector("button.btn.btn-primary:last-of-type"))
+      findAll(cssSelector("div > form > button.btn.btn-primary"))
         .find(_.text == "Start environment")
         .getOrElse(fail("Start environment button not found"))
     }

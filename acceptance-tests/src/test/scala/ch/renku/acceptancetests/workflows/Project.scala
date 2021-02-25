@@ -104,8 +104,11 @@ trait Project extends RemoveProject with BeforeAndAfterAll {
       verify browserAt NewProjectPage
     }
 
-    When("user fills in and submits the new project details form")
-    NewProjectPage submitFormWith projectDetails
+    `try few times before giving up` { (_: WebDriver) =>
+      When("user fills in and submits the new project details form")
+      NewProjectPage submitFormWith projectDetails
+    }
+
     pause asLongAsBrowserAt NewProjectPage
     Then(s"the project '${projectDetails.title}' gets created and the Project page gets displayed")
 
