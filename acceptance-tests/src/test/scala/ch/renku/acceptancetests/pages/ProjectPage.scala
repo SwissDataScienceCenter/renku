@@ -293,11 +293,19 @@ class ProjectPage(projectSlug: String, namespace: String)
         .getOrElse(fail("Unsupported environment notification not found"))
     }
 
-    def startEnvironment(implicit webDriver: WebDriver): WebElement = eventually {
+    def startEnvironment(implicit webDriver: WebDriver): WebElement =
+      maybeStartEnvironment getOrElse fail("Start environment button not found")
+
+    def maybeStartEnvironment(implicit webDriver: WebDriver): Option[WebElement] = eventually {
       verifyImageReady sleep (2 seconds)
       findAll(cssSelector("div > form > button.btn.btn-primary"))
         .find(_.text == "Start environment")
-        .getOrElse(fail("Start environment button not found"))
+    }
+
+    def connectToJupyterLabLink(implicit webDriver: WebDriver): WebElement = eventually {
+      findAll(cssSelector("a[href*='jupyterhub/user/']"))
+        .find(_.text == "Connect")
+        .getOrElse(fail("Connect to environment button not found"))
     }
 
     def verifyImageReady(implicit webDriver: WebDriver): Unit = eventually {
@@ -327,7 +335,7 @@ class ProjectPage(projectSlug: String, namespace: String)
       }
 
       def connectToJupyterLab(implicit webDriver: WebDriver, spec: AcceptanceSpec): Unit =
-        connectToJupyterLab(s"table a[href*='/jupyterhub/user/']")
+        connectToJupyterLab(s"a[href*='/jupyterhub/user/']")
 
       def connectToAnonymousJupyterLab(implicit webDriver: WebDriver, spec: AcceptanceSpec): Unit =
         connectToJupyterLab(s"table a[href*='/jupyterhub-tmp/user/']")

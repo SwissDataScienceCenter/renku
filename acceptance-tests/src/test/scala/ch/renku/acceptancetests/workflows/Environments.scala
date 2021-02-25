@@ -132,22 +132,26 @@ trait Environments {
     projectPage.Environments.verifyImageReady sleep (2 seconds)
   }
 
-  private def `start environment & wait util it's not ready`(implicit projectPage: ProjectPage): Unit = {
-    And("the user clicks on the Start Environment button")
-    click on projectPage.Environments.startEnvironment sleep (5 seconds)
+  private def `start environment & wait util it's not ready`(implicit projectPage: ProjectPage): Unit =
+    projectPage.Environments.maybeStartEnvironment match {
+      case None =>
+        projectPage.Environments.connectToJupyterLabLink.isDisplayed shouldBe true
+      case Some(startEnvButton) =>
+        And("the user clicks on the Start Environment button")
+        click on startEnvButton sleep (5 seconds)
 
-    `try few times before giving up` { (_: WebDriver) =>
-      Then("they should be redirected to the Environments -> Running tab")
-      verify userCanSee projectPage.Environments.Running.title
+        `try few times before giving up` { (_: WebDriver) =>
+          Then("they should be redirected to the Environments -> Running tab")
+          verify userCanSee projectPage.Environments.Running.title
+        }
+
+        `try few times before giving up` { (_: WebDriver) =>
+          When("the environment is ready")
+          projectPage.Environments.Running.verifyEnvironmentReady
+        }
+
+        And("the user clicks on the Connect button in the table")
+        // Sleep a little while after clicking to give the server a chance to come up
+        click on projectPage.Environments.Running.title sleep (30 seconds)
     }
-
-    `try few times before giving up` { (_: WebDriver) =>
-      When("the environment is ready")
-      projectPage.Environments.Running.verifyEnvironmentReady
-    }
-
-    And("the user clicks on the Connect button in the table")
-    // Sleep a little while after clicking to give the server a chance to come up
-    click on projectPage.Environments.Running.title sleep (30 seconds)
-  }
 }
