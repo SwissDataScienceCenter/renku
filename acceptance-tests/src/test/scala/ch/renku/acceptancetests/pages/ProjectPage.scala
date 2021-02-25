@@ -399,6 +399,8 @@ class ProjectPage(projectSlug: String, namespace: String)
 
     def addProjectTags(tags: String)(implicit webDriver: WebDriver): Unit = eventually {
       (projectTags enterValue tags) sleep (2 seconds)
+      if (projectTags.getAttribute("value") != tags)
+        (projectTags enterValue tags) sleep (2 seconds)
       updateButton.click() sleep (5 seconds)
     }
 
@@ -408,6 +410,8 @@ class ProjectPage(projectSlug: String, namespace: String)
 
     def updateProjectDescription(description: String)(implicit webDriver: WebDriver): Unit = eventually {
       (projectDescription enterValue description) sleep (2 seconds)
+      if (projectDescription.getAttribute("value") != description)
+        (projectDescription enterValue description) sleep (2 seconds)
       updateButton.click() sleep (5 seconds)
     }
 
