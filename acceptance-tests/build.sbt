@@ -21,7 +21,7 @@ name := "renku-acceptance-tests"
 version := "0.1.0"
 scalaVersion := "2.13.2"
 
-parallelExecution in Test := true
+parallelExecution in Test := false
 
 enablePlugins(AutomateHeaderPlugin)
 
