@@ -19,7 +19,6 @@
 package ch.renku.acceptancetests.tooling
 
 import ch.renku.acceptancetests.model.projects.ProjectIdentifier
-import eu.timepit.refined.api.Refined
 
 import java.lang.System.getProperty
 
@@ -40,9 +39,8 @@ trait AnonEnv extends AcceptanceSpecData {
         projectIdComponents match {
           case username :: tail =>
             tail.headOption match {
-              case Some(projectName) =>
-                ProjectIdentifier(Refined.unsafeApply(username), Refined.unsafeApply(projectName))
-              case None => defaultProjectIdentifier
+              case Some(projectName) => ProjectIdentifier(username, projectName)
+              case None              => defaultProjectIdentifier
             }
           case _ => defaultProjectIdentifier
         }
@@ -50,8 +48,7 @@ trait AnonEnv extends AcceptanceSpecData {
     }
   }
 
-  private val defaultProjectIdentifier =
-    ProjectIdentifier(Refined.unsafeApply("andi"), Refined.unsafeApply("public-test-project"))
+  private val defaultProjectIdentifier = ProjectIdentifier("andi", "public-test-project")
 
   protected lazy val isAnonEnvAvailable: Boolean = {
     Option(getProperty("anonAvail")) orElse sys.env.get("RENKU_TEST_ANON_AVAILABLE") match {

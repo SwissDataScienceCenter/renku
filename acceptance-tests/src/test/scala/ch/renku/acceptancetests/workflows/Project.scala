@@ -19,9 +19,8 @@
 package ch.renku.acceptancetests.workflows
 
 import ch.renku.acceptancetests.model.projects.{ProjectDetails, Template, Visibility}
-import ch.renku.acceptancetests.pages.{NewProjectPage, ProjectPage, ProjectsPage, WelcomePage}
+import ch.renku.acceptancetests.pages._
 import ch.renku.acceptancetests.tooling.AcceptanceSpec
-import eu.timepit.refined.api.Refined
 import org.openqa.selenium.WebDriver
 import org.scalatest.BeforeAndAfterAll
 
@@ -51,11 +50,11 @@ trait Project extends RemoveProject with BeforeAndAfterAll {
     (Option(getProperty("extant")) orElse sys.env.get("RENKU_TEST_EXTANT_PROJECT"))
       .map(_.trim)
       .map { readMeTitle =>
-        ProjectDetails(Refined.unsafeApply(readMeTitle),
+        ProjectDetails(readMeTitle,
                        projectVisibility,
-                       Refined.unsafeApply("unused"),
-                       Template(Refined.unsafeApply("Not used")),
-                       readMeTitle
+                       description = "unused",
+                       template = Template("Not used"),
+                       readmeTitle = readMeTitle
         )
       }
 
@@ -77,7 +76,7 @@ trait Project extends RemoveProject with BeforeAndAfterAll {
 
     And("they enter project title in the search box")
     ProjectsPage.YourProjects.searchField.clear() sleep (1 second)
-    ProjectsPage.YourProjects.searchField.enterValue(projectDetails.title.value) sleep (1 second)
+    ProjectsPage.YourProjects.searchField.enterValue(projectDetails.title) sleep (1 second)
 
     And("they click the Search button")
     click on ProjectsPage.YourProjects.searchButton sleep (1 second)
@@ -130,7 +129,7 @@ trait Project extends RemoveProject with BeforeAndAfterAll {
     And("the commit hash")
     verify that projectPage.Files.Info.commit matches "^Commit: [0-9a-f]{8}$"
     And("creator name and timestamp")
-    verify that projectPage.Files.Info.creatorAndTime contains userCredentials.fullName.value
+    verify that projectPage.Files.Info.creatorAndTime contains userCredentials.fullName
     And("the readme header which is the project title")
     verify that projectPage.Files.Info.title is projectDetails.readmeTitle
     And("the readme content")

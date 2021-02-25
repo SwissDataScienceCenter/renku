@@ -19,11 +19,9 @@
 package ch.renku.acceptancetests.pages
 
 import ch.renku.acceptancetests.model.users.UserCredentials
-import ch.renku.acceptancetests.pages.Page._
 import ch.renku.acceptancetests.tooling._
 import ch.renku.acceptancetests.workflows.LoginType
 import ch.renku.acceptancetests.workflows.LoginType.LoginWithProvider
-import eu.timepit.refined.auto._
 import org.openqa.selenium.{WebDriver, WebElement}
 import org.scalatest.concurrent.Eventually
 import org.scalatest.{Matchers => ScalatestMatchers}
@@ -33,10 +31,11 @@ import org.scalatestplus.selenium.WebBrowser._
 import scala.concurrent.duration._
 import scala.language.{implicitConversions, postfixOps}
 
-case object LoginPage extends RenkuPage {
-
-  override val path:  Path  = "/auth/realms/Renku/protocol/openid-connect/auth"
-  override val title: Title = "Log in to Renku"
+case object LoginPage
+    extends RenkuPage(
+      path = "/auth/realms/Renku/protocol/openid-connect/auth",
+      title = "Log in to Renku"
+    ) {
 
   override def pageReadyElement(implicit webDriver: WebDriver): Option[WebElement] = Some(logInButton)
 
@@ -53,10 +52,10 @@ case object LoginPage extends RenkuPage {
 
     def logInWith(userCredentials: UserCredentials)(implicit webDriver: WebDriver): Unit = eventually {
       usernameField.clear() sleep (1 second)
-      usernameField.enterValue(userCredentials.email.value) sleep (1 second)
+      usernameField.enterValue(userCredentials.email) sleep (1 second)
 
       passwordField.clear() sleep (1 second)
-      passwordField.enterValue(userCredentials.password.value) sleep (1 second)
+      passwordField.enterValue(userCredentials.password) sleep (1 second)
 
       logInButton.click()
     }
@@ -85,7 +84,7 @@ case object LoginPage extends RenkuPage {
 
     def updateInfo(implicit webDriver: WebDriver): Unit = eventually {
       emailField.clear() sleep (1 second)
-      emailField.enterValue(userCredentials.email.value) sleep (1 second)
+      emailField.enterValue(userCredentials.email) sleep (1 second)
 
       val nameComps = userCredentials.fullName.split(" ")
       val firstName = nameComps.head
@@ -137,13 +136,13 @@ case object LoginPage extends RenkuPage {
       lastNameField.enterValue(lastName) sleep (1 second)
 
       emailField.clear() sleep (1 second)
-      emailField.enterValue(userCredentials.email.value) sleep (1 second)
+      emailField.enterValue(userCredentials.email) sleep (1 second)
 
       passwordField.clear() sleep (1 seconds)
-      passwordField.enterValue(userCredentials.password.value) sleep (3 seconds)
+      passwordField.enterValue(userCredentials.password) sleep (3 seconds)
 
       confirmPasswordField.clear() sleep (1 second)
-      confirmPasswordField.enterValue(userCredentials.password.value) sleep (3 seconds)
+      confirmPasswordField.enterValue(userCredentials.password) sleep (3 seconds)
 
       registerButton.click()
     }
@@ -195,10 +194,10 @@ case object LoginPage extends RenkuPage {
 
   def logInWith(userCredentials: UserCredentials)(implicit webDriver: WebDriver): Unit = eventually {
     usernameField.clear() sleep (1 second)
-    usernameField.enterValue(userCredentials.email.value) sleep (1 second)
+    usernameField.enterValue(userCredentials.email) sleep (1 second)
 
     passwordField.clear() sleep (1 second)
-    passwordField.enterValue(userCredentials.password.value) sleep (1 second)
+    passwordField.enterValue(userCredentials.password) sleep (1 second)
 
     logInButton.click()
   }
@@ -226,7 +225,7 @@ case object LoginPage extends RenkuPage {
       println("Not on OpenID login provider page, trying again")
       oidcButton.click() sleep (5 seconds)
     }
-    return providerLoginPage
+    providerLoginPage
   }
 
   def openRegistrationForm(implicit webDriver: WebDriver): LoginType = {

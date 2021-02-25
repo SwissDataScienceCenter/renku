@@ -21,10 +21,7 @@ package ch.renku.acceptancetests.pages
 import ch.renku.acceptancetests.model.projects.ProjectDetails._
 import ch.renku.acceptancetests.model.projects.{ProjectDetails, ProjectIdentifier}
 import ch.renku.acceptancetests.model.users.UserCredentials
-import ch.renku.acceptancetests.pages.Page.{Path, Title}
 import ch.renku.acceptancetests.tooling.AcceptanceSpec
-import eu.timepit.refined.api.Refined
-import eu.timepit.refined.auto._
 import org.openqa.selenium.{By, WebDriver, WebElement}
 import org.scalactic.source
 import org.scalatestplus.selenium.WebBrowser
@@ -46,12 +43,12 @@ object ProjectPage {
     new ProjectPage(projectId.slug, projectId.namespace)
 }
 
-class ProjectPage(projectSlug: String, namespace: String) extends RenkuPage with TopBar {
-
-  override val title: Title = "Renku"
-  override val path: Path = Refined.unsafeApply(
-    s"/projects/$namespace/$projectSlug"
-  )
+class ProjectPage(projectSlug: String, namespace: String)
+    extends RenkuPage(
+      path = s"/projects/$namespace/$projectSlug",
+      title = "Renku"
+    )
+    with TopBar {
 
   override def pageReadyElement(implicit webDriver: WebDriver): Option[WebElement] = Some(Overview.tab)
 
@@ -434,7 +431,7 @@ class ProjectPage(projectSlug: String, namespace: String) extends RenkuPage with
         // Clear does not work here, just send backspace a bunch of times
         tf.clear() sleep (1 second)
         tf enterValue List.fill(40)("\b").mkString("")
-        tf enterValue project.title.value sleep (1 second)
+        tf enterValue project.title sleep (1 second)
 
         forkButton.click() sleep (10 second)
       }
@@ -448,8 +445,5 @@ class ProjectPage(projectSlug: String, namespace: String) extends RenkuPage with
     }
   }
 
-  lazy val asProjectIdentifier: ProjectIdentifier = ProjectIdentifier(
-    namespace = Refined.unsafeApply(namespace),
-    slug = Refined.unsafeApply(projectSlug)
-  )
+  lazy val asProjectIdentifier: ProjectIdentifier = ProjectIdentifier(namespace, projectSlug)
 }

@@ -42,7 +42,7 @@ trait AcceptanceSpecData {
     val maybeGitLabUrl = sys.env
       .get("GITLAB_TEST_URL")
       .orElse(Option(getProperty("gitLabUrl")))
-      .orElse(testsDefaults.gitlaburl flatMap toNonEmpty map (_.value))
+      .orElse(testsDefaults.gitlaburl flatMap toNonEmpty)
     maybeGitLabUrl flatMap as(GitLabBaseUrl.apply) getOrElse showErrorAndStop(
       "-DgitLabUrl argument or GITLAB_TEST_URL environment variable is not a valid URL"
     )
@@ -83,10 +83,10 @@ trait AcceptanceSpecData {
       " or set the environment variables RENKU_TEST_EMAIL RENKU_TEST_USERNAME RENKU_TEST_PASSWORD and/or RENKU_TEST_FULL_NAME"
   )
 
-  private lazy val toNonEmpty: String => Option[String Refined NonEmpty] =
-    RefType
-      .applyRef[String Refined NonEmpty](_)
-      .toOption
+  private def toNonEmpty(value: String): Option[String] = value.trim match {
+    case ""       => None
+    case nonBlank => Some(nonBlank)
+  }
 
   private def showErrorAndStop[T](message: String Refined NonEmpty): T = {
     Console.err.println(message)

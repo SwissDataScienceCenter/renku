@@ -19,7 +19,6 @@
 package ch.renku.acceptancetests.tooling
 
 import ch.renku.acceptancetests.model.projects.{ProjectDetails, Template, Visibility}
-import eu.timepit.refined.api.Refined
 import org.openqa.selenium.{JavascriptExecutor, WebDriver}
 
 import java.lang.System.getProperty
@@ -60,10 +59,10 @@ class DocsScreenshots(test: ScreenCapturing, webDriver: WebDriver) {
   lazy val projectDetails: ProjectDetails = {
     val readmeTitle = "flights tutorial"
     ProjectDetails(
-      Refined.unsafeApply(readmeTitle),
+      readmeTitle,
       Visibility.Public,
-      Refined.unsafeApply("A renku tutorial project."),
-      Template(Refined.unsafeApply("This template isn't used")),
+      "A renku tutorial project.",
+      Template("This template isn't used"),
       readmeTitle
     )
   }

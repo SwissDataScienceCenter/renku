@@ -21,15 +21,16 @@ package ch.renku.acceptancetests.pages
 import ch.renku.acceptancetests.model.projects.ProjectDetails
 import ch.renku.acceptancetests.model.projects.ProjectDetails._
 import ch.renku.acceptancetests.model.users.UserCredentials
-import ch.renku.acceptancetests.pages.Page.{Path, Title}
-import eu.timepit.refined.auto._
 import org.openqa.selenium.{WebDriver, WebElement}
 import org.scalatestplus.selenium.WebBrowser
 import org.scalatestplus.selenium.WebBrowser.{cssSelector, find, findAll}
 
-case object ProjectsPage extends RenkuPage with TopBar {
-  override val path:  Path  = "/projects"
-  override val title: Title = "Renku"
+case object ProjectsPage
+    extends RenkuPage(
+      path = "/projects",
+      title = "Renku"
+    )
+    with TopBar {
 
   override def pageReadyElement(implicit webDriver: WebDriver): Option[WebElement] = Some(YourProjects.tab)
 

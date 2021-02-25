@@ -76,9 +76,10 @@ class BatchRemoveProjectSpec extends AcceptanceSpec with Login with RemoveProjec
     }
     val removeIds = toRemoveLinks map (elt => {
       val projectUrlComps = elt getAttribute "href" split "/"
-      val namespace       = projectUrlComps(projectUrlComps.size - 2)
-      val slug            = projectUrlComps last;
-      ProjectIdentifier.unsafeApply(namespace, slug)
+      ProjectIdentifier(
+        namespace = projectUrlComps(projectUrlComps.size - 2),
+        slug = projectUrlComps last
+      )
     })
     removeIds foreach removeProject
     go to ProjectsPage sleep (5 seconds)
@@ -110,7 +111,7 @@ class BatchRemoveProjectSpec extends AcceptanceSpec with Login with RemoveProjec
       case Some(s) => Some(s.toBoolean)
       case None    => None
     }
-    val projectNamePattern = Option(getProperty("remPattern")) orElse sys.env.get("RENKU_TEST_REMOVE_PATTERN");
+    val projectNamePattern = Option(getProperty("remPattern")) orElse sys.env.get("RENKU_TEST_REMOVE_PATTERN")
 
     batchRemove match {
       case Some(b) =>

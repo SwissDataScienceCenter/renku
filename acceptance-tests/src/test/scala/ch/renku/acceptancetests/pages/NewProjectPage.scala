@@ -19,18 +19,18 @@
 package ch.renku.acceptancetests.pages
 
 import ch.renku.acceptancetests.model.projects.{ProjectDetails, Template, Visibility}
-import ch.renku.acceptancetests.pages.Page.{Path, Title}
 import ch.renku.acceptancetests.tooling.DocsScreenshots
-import eu.timepit.refined.auto._
 import org.openqa.selenium.{WebDriver, WebElement}
 import org.scalatestplus.selenium.WebBrowser.{cssSelector, find}
 
 import scala.concurrent.duration._
 
-case object NewProjectPage extends RenkuPage with TopBar {
-
-  override val path:  Path  = "/projects/new"
-  override val title: Title = "Renku"
+case object NewProjectPage
+    extends RenkuPage(
+      path = "/projects/new",
+      title = "Renku"
+    )
+    with TopBar {
 
   override def pageReadyElement(implicit webDriver: WebDriver): Option[WebElement] = Some(createButton)
 
@@ -38,7 +38,7 @@ case object NewProjectPage extends RenkuPage with TopBar {
       project:          ProjectDetails
   )(implicit webDriver: WebDriver, docsScreenshots: DocsScreenshots): Unit = eventually {
     titleField.clear() sleep (5 seconds)
-    titleField.enterValue(project.title.value) sleep (1 second)
+    titleField.enterValue(project.title) sleep (1 second)
 
     visibilityField.click() sleep (1 second)
     visibilityOption(project.visibility).click() sleep (1 second)
@@ -48,7 +48,7 @@ case object NewProjectPage extends RenkuPage with TopBar {
     templateField.click() sleep (10 second)
 
     descriptionField.clear() sleep (1 second)
-    descriptionField.enterValue(project.description.value) sleep (1 second)
+    descriptionField.enterValue(project.description) sleep (1 second)
 
     docsScreenshots.takeScreenshot()
 
