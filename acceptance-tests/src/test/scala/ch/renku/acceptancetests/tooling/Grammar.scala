@@ -97,7 +97,7 @@ trait Grammar extends Eventually {
       case Left(error) if attempt > 10 => throw error
       case Left(_) =>
         sleep(5 seconds)
-        webDriver.navigate().refresh()
+        reloadPage()
         `try few times before giving up`(section, attempt + 1)
     }
 
