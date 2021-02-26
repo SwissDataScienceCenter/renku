@@ -99,8 +99,8 @@ ingress:
   ## Annotations for the created ingress
   annotations:
     ## The ingress class
-    cert-manager.io/cluster-issuer: letsencrypt-production
     kubernetes.io/ingress.class: nginx
+    # kubernetes.io/tls-acme: 'true'
     nginx.ingress.kubernetes.io/proxy-body-size: '0' # Adjust to a reasonable value for production to avoid DOS attacks.
     nginx.ingress.kubernetes.io/proxy-request-buffering: 'off' # Needed if GitLab is behind this ingress
     nginx.ingress.kubernetes.io/proxy-buffer-size: '8k' # Default is 4k, larger size necessary for keycloak
@@ -372,8 +372,8 @@ gitlab:
     ## Find below an example of values
     # ingress:
     #   annotations:
-    #     cert-manager.io/cluster-issuer: letsencrypt-production
     #     kubernetes.io/ingress.class: nginx
+    #     kubernetes.io/tls-acme: "true"
     #     nginx.ingress.kubernetes.io/proxy-body-size: '0'
     #   hosts:
     #   - registry.example.com
