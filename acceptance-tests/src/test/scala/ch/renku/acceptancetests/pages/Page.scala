@@ -57,7 +57,12 @@ abstract class Page[Url <: BaseUrl](val path: String, val title: String)
 
   protected implicit class WebElementOps(element: WebElement) {
 
-    def enterValue(value: String): Unit = value foreach { char =>
+    def enterValue(value: String): Unit = {
+      typeInValue(value)
+      if (element.getAttribute("value") != value) typeInValue(value)
+    }
+
+    private def typeInValue(value: String): Unit = value foreach { char =>
       element.sendKeys(char.toString) sleep (100 millis)
     }
   }
