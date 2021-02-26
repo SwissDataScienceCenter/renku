@@ -23,7 +23,6 @@ import org.http4s.Status.Ok
 import org.scalatest.Matchers.fail
 
 import scala.concurrent.duration._
-import scala.language.postfixOps
 import scala.annotation.tailrec
 
 trait KnowledgeGraphApi extends RestClient {

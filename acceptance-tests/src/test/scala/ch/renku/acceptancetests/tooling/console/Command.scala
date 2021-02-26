@@ -35,9 +35,6 @@ final case class Command(
 }
 
 object Command {
-  import eu.timepit.refined.api.Refined
-  import eu.timepit.refined.collection.NonEmpty
-
-  type UserInput = String Refined NonEmpty
-  type Filename  = String Refined NonEmpty
+  type UserInput = String
+  type Filename  = String
 }

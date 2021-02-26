@@ -19,12 +19,7 @@
 package ch.renku.acceptancetests.pages
 
 import ch.renku.acceptancetests.model.{BaseUrl, RenkuBaseUrl}
-import ch.renku.acceptancetests.pages.Page._
 import ch.renku.acceptancetests.tooling._
-import eu.timepit.refined.W
-import eu.timepit.refined.api.Refined
-import eu.timepit.refined.collection.NonEmpty
-import eu.timepit.refined.string._
 import org.openqa.selenium.{By, WebDriver, WebElement}
 import org.scalatest.concurrent.Eventually
 import org.scalatest.time.{Seconds, Span}
@@ -32,12 +27,18 @@ import org.scalatest.{Matchers => ScalatestMatchers}
 import org.scalatestplus.selenium.WebBrowser
 
 import scala.concurrent.duration._
-import scala.language.{implicitConversions, postfixOps}
+import scala.language.implicitConversions
 
-abstract class Page[Url <: BaseUrl] extends ScalatestMatchers with Eventually with AcceptanceSpecPatience {
+abstract class Page[Url <: BaseUrl](val path: String, val title: String)
+    extends ScalatestMatchers
+    with WebElementOps
+    with Eventually
+    with AcceptanceSpecPatience {
 
-  val path:  Path
-  val title: Title
+  require(path.trim.nonEmpty, s"$getClass cannot have empty path")
+  require(path startsWith "/", s"$getClass path has to start with '/'")
+  require(title.trim.nonEmpty, s"$getClass cannot have empty title")
+
   def pageReadyElement(implicit webDriver: WebDriver): Option[WebElement]
   def url(implicit baseUrl:                Url): String = s"$baseUrl$path"
 
@@ -47,19 +48,7 @@ abstract class Page[Url <: BaseUrl] extends ScalatestMatchers with Eventually wi
     maybeElement.map(_.underlying)
 
   protected implicit class ElementOps(element: WebBrowser.Element) {
-
-    def parent: WebElement = element.findElement(By.xpath("./.."))
-
-    def enterValue(value: String): Unit = value foreach { char =>
-      element.sendKeys(char.toString) sleep (100 millis)
-    }
-  }
-
-  protected implicit class WebElementOps(element: WebElement) {
-
-    def enterValue(value: String): Unit = value foreach { char =>
-      element.sendKeys(char.toString) sleep (100 millis)
-    }
+    lazy val parent: WebElement = element.findElement(By xpath "./..")
   }
 
   object sleep {
@@ -70,17 +59,13 @@ abstract class Page[Url <: BaseUrl] extends ScalatestMatchers with Eventually wi
     def sleep(duration: Duration): Unit = Page.SleepThread(duration)
   }
 
-  protected def waitUpTo(duration: Duration): PatienceConfig =
-    PatienceConfig(
-      // Wait up to 2 minutes for this operation
-      timeout = scaled(Span(AcceptanceSpecPatience.WAIT_SCALE * duration.toSeconds, Seconds)),
-      interval = scaled(Span(2, Seconds))
-    )
+  protected def waitUpTo(duration: Duration): PatienceConfig = PatienceConfig(
+    timeout = scaled(Span(AcceptanceSpecPatience.WAIT_SCALE * duration.toSeconds, Seconds)),
+    interval = scaled(Span(1, Seconds))
+  )
 }
 
 object Page {
-  type Path  = String Refined StartsWith[W.`"/"`.T]
-  type Title = String Refined NonEmpty
 
   // Use a unique name to avoid problems on case-insensitive and preserving file systems
   object SleepThread {
@@ -88,4 +73,4 @@ object Page {
   }
 }
 
-abstract class RenkuPage extends Page[RenkuBaseUrl]
+abstract class RenkuPage(path: String, title: String) extends Page[RenkuBaseUrl](path, title)

@@ -18,28 +18,21 @@
 
 package ch.renku.acceptancetests.tooling
 
-import java.lang.System.getProperty
+import org.scalactic.source
+import org.scalatest.Tag
 
-import ch.renku.acceptancetests.model.projects.{ProjectDetails, Template, Visibility}
-import eu.timepit.refined.api.Refined
+trait BddWording {
+  this: AcceptanceSpec =>
 
-/**
-  * Configuration specific to the ExistingProject spec.
-  */
-trait ExistingProjectSpecData {
+  import TestLogger.logger
 
-  protected lazy val existingProjectDetails: Option[ProjectDetails] = {
-    Option(getProperty("extant")) orElse sys.env.get("RENKU_TEST_EXTANT_PROJECT") match {
-      case Some(readMeTitle) =>
-        Some(
-          ProjectDetails(Refined.unsafeApply(readMeTitle),
-                         Visibility.Public,
-                         Refined.unsafeApply("unused"),
-                         Template(Refined.unsafeApply("Not used")),
-                         readMeTitle
-          )
-        )
-      case None => None
-    }
+  def Scenario(test: String, testTags: Tag*)(testFun: => Any)(implicit pos: source.Position): Unit = {
+    logger.info(test)
+    scenario(s"$test - done", testTags: _*)(testFun)
   }
+
+  def Given(string: String): Unit = logger.info(s"Given $string")
+  def When(string:  String): Unit = logger.info(s"When $string")
+  def Then(string:  String): Unit = logger.info(s"Then $string")
+  def And(string:   String): Unit = logger.info(s"And $string")
 }

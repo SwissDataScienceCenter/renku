@@ -19,67 +19,50 @@
 package ch.renku.acceptancetests
 
 import ch.renku.acceptancetests.model.projects.ProjectDetails
-import ch.renku.acceptancetests.tooling.{AcceptanceSpec, AnonEnv, DocsScreenshots}
+import ch.renku.acceptancetests.tooling.AcceptanceSpec
 import ch.renku.acceptancetests.workflows._
-import ch.renku.acceptancetests.pages.ProjectPage
 
 import scala.concurrent.duration._
-import scala.language.postfixOps
 
 class MinimalFunctionalitySpec
     extends AcceptanceSpec
-    with AnonEnv
     with Collaboration
-    with Environments
     with Login
-    with NewProject
-    with RemoveProject
+    with Project
     with Settings
-    with Fork {
+    with Forks {
 
-  scenario("User can use basic functionality of Renku") {
+  Scenario("User can use basic functionality of Renku") {
 
-    implicit val loginType: LoginType = `log in to Renku`
+    `log in to Renku`
 
-    implicit val projectDetails: ProjectDetails = ProjectDetails.generate()
+    `create or open a project`
 
-    createNewProject(projectDetails)
+    `verify there are no merge requests`
+    `verify there are no issues`
+    `create a new issue`
 
-    verifyMergeRequestsIsEmpty
-    verifyIssuesIsEmpty
-    createNewIssue
+    `add change to the project`
+    `create a new merge request`
 
-    addChangeToProject
-    createNewMergeRequest
+    `set project tags`
+    `set project description`
 
-    setProjectTags
-    setProjectDescription
-
-    forkTestCase
-
-    go to ProjectPage()
-    `remove project in GitLab`(projectDetails)
-    `verify project is removed`
-
-    launchUnprivilegedEnvironment
-    stopEnvironment(anonEnvConfig.projectId)
+    `fork project`
 
     `log out of Renku`
-
-    launchAnonymousEnvironment map (_ => stopEnvironment(anonEnvConfig.projectId))
-
   }
 
-  def addChangeToProject(implicit projectDetails: ProjectDetails): Unit = {
-    implicit val docsScreenshots: DocsScreenshots = new DocsScreenshots(this, browser) {
-      override lazy val captureScreenshots: Boolean = false
-    }
-    val jupyterLabPage = launchEnvironment
+  private def `add change to the project`(implicit projectDetails: ProjectDetails): Unit = {
+    docsScreenshots.disable()
+    val jupyterLabPage = `launch an environment`(projectDetails)
+    docsScreenshots.enable()
 
     When("the user clicks on the Terminal icon")
     click on jupyterLabPage.terminalIcon sleep (2 seconds)
-    createBranchInJupyterLab(jupyterLabPage)
+    `create a branch in JupyterLab`(jupyterLabPage)
+    `wait for KG to process events`(projectDetails.asProjectIdentifier)
 
-    stopEnvironment
+    `stop environment`
   }
 }
