@@ -147,7 +147,7 @@ trait Login {
   def `log out of Renku`: Unit = {
     When("user clicks the Log out link")
     click on WelcomePage.TopBar.topRightDropDown
-    click on WelcomePage.TopBar.logoutLink
+    click on WelcomePage.TopBar.logoutLink sleep (2 seconds)
 
     unless(maybeLoginType contains LoginWithProvider) {
       Then("they should get back into the Landing page")

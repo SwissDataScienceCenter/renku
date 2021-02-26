@@ -73,9 +73,9 @@ trait Collaboration {
     val projectPage = ProjectPage()
     val tf          = projectPage.Collaboration.Issues.NewIssue.titleField
     tf.clear() sleep (1 second)
-    tf enterValue title sleep (1 second)
+    tf enterValue title
     click on projectPage.Collaboration.Issues.NewIssue.markdownSwitch sleep (1 second)
-    projectPage.Collaboration.Issues.NewIssue.descriptionField enterValue description sleep (1 second)
+    projectPage.Collaboration.Issues.NewIssue.descriptionField enterValue description
     click on projectPage.Collaboration.Issues.NewIssue.createIssueButton sleep (1 second)
   }
 

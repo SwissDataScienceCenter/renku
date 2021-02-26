@@ -52,10 +52,10 @@ case object LoginPage
 
     def logInWith(userCredentials: UserCredentials)(implicit webDriver: WebDriver): Unit = eventually {
       usernameField.clear() sleep (1 second)
-      usernameField.enterValue(userCredentials.email) sleep (1 second)
+      usernameField.enterValue(userCredentials.email)
 
       passwordField.clear() sleep (1 second)
-      passwordField.enterValue(userCredentials.password) sleep (1 second)
+      passwordField.enterValue(userCredentials.password)
 
       logInButton.click()
     }
@@ -84,17 +84,17 @@ case object LoginPage
 
     def updateInfo(implicit webDriver: WebDriver): Unit = eventually {
       emailField.clear() sleep (1 second)
-      emailField.enterValue(userCredentials.email) sleep (1 second)
+      emailField.enterValue(userCredentials.email)
 
       val nameComps = userCredentials.fullName.split(" ")
       val firstName = nameComps.head
       val lastName  = nameComps.last
 
       firstNameField.clear() sleep (1 second)
-      firstNameField.enterValue(firstName) sleep (1 second)
+      firstNameField.enterValue(firstName)
 
       lastNameField.clear() sleep (1 second)
-      lastNameField.enterValue(lastName) sleep (1 second)
+      lastNameField.enterValue(lastName)
 
       submitButton.click()
     }
@@ -130,19 +130,19 @@ case object LoginPage
       val lastName  = nameComps.last
 
       firstNameField.clear() sleep (1 second)
-      firstNameField.enterValue(firstName) sleep (1 second)
+      firstNameField.enterValue(firstName)
 
       lastNameField.clear() sleep (1 second)
-      lastNameField.enterValue(lastName) sleep (1 second)
+      lastNameField.enterValue(lastName)
 
       emailField.clear() sleep (1 second)
-      emailField.enterValue(userCredentials.email) sleep (1 second)
+      emailField.enterValue(userCredentials.email)
 
       passwordField.clear() sleep (1 seconds)
-      passwordField.enterValue(userCredentials.password) sleep (3 seconds)
+      passwordField.enterValue(userCredentials.password)
 
       confirmPasswordField.clear() sleep (1 second)
-      confirmPasswordField.enterValue(userCredentials.password) sleep (3 seconds)
+      confirmPasswordField.enterValue(userCredentials.password)
 
       registerButton.click()
     }
@@ -194,10 +194,10 @@ case object LoginPage
 
   def logInWith(userCredentials: UserCredentials)(implicit webDriver: WebDriver): Unit = eventually {
     usernameField.clear() sleep (1 second)
-    usernameField.enterValue(userCredentials.email) sleep (1 second)
+    usernameField.enterValue(userCredentials.email)
 
     passwordField.clear() sleep (1 second)
-    passwordField.enterValue(userCredentials.password) sleep (1 second)
+    passwordField.enterValue(userCredentials.password)
 
     logInButton.click()
   }

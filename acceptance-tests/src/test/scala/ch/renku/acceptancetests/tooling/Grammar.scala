@@ -31,7 +31,7 @@ import scala.concurrent.duration._
 import scala.jdk.CollectionConverters._
 import scala.language.implicitConversions
 
-trait Grammar extends Eventually {
+trait Grammar extends WebElementOps with Eventually {
   self: WebBrowser with AcceptanceSpec =>
 
   implicit def toSeleniumPage[Url <: BaseUrl](page: Page[Url])(implicit baseUrl: Url): selenium.Page =
@@ -135,18 +135,4 @@ trait Grammar extends Eventually {
 
   protected implicit def toWebElement(element: WebBrowser.Element): WebElement =
     element.underlying
-
-  protected implicit class ElementOps(element: WebBrowser.Element) {
-
-    def enterValue(value: String): Unit = value foreach { char =>
-      element.sendKeys(char.toString) sleep (100 millis)
-    }
-  }
-
-  protected implicit class WebElementOps(element: WebElement) {
-
-    def enterValue(value: String): Unit = value foreach { char =>
-      element.sendKeys(char.toString) sleep (100 millis)
-    }
-  }
 }

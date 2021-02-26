@@ -398,7 +398,7 @@ class ProjectPage(projectSlug: String, namespace: String)
     }
 
     def addProjectTags(tags: String)(implicit webDriver: WebDriver): Unit = eventually {
-      (projectTags enterValue tags) sleep (2 seconds)
+      projectTags enterValue tags
       updateButton.click() sleep (5 seconds)
     }
 
@@ -407,7 +407,7 @@ class ProjectPage(projectSlug: String, namespace: String)
     }
 
     def updateProjectDescription(description: String)(implicit webDriver: WebDriver): Unit = eventually {
-      (projectDescription enterValue description) sleep (2 seconds)
+      projectDescription enterValue description
       updateButton.click() sleep (5 seconds)
     }
 
@@ -439,7 +439,7 @@ class ProjectPage(projectSlug: String, namespace: String)
         // Clear does not work here, just send backspace a bunch of times
         tf.clear() sleep (1 second)
         tf enterValue List.fill(40)("\b").mkString("")
-        tf enterValue project.title sleep (1 second)
+        tf enterValue project.title
 
         forkButton.click() sleep (10 second)
       }

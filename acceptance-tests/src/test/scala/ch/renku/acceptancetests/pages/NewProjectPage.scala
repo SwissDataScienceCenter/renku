@@ -38,7 +38,7 @@ case object NewProjectPage
       project:          ProjectDetails
   )(implicit webDriver: WebDriver, docsScreenshots: DocsScreenshots): Unit = eventually {
     titleField.clear() sleep (5 seconds)
-    titleField.enterValue(project.title) sleep (1 second)
+    titleField.enterValue(project.title)
 
     visibilityField.click() sleep (1 second)
     visibilityOption(project.visibility).click() sleep (1 second)
@@ -48,7 +48,7 @@ case object NewProjectPage
     templateField.click() sleep (10 second)
 
     descriptionField.clear() sleep (1 second)
-    descriptionField.enterValue(project.description) sleep (1 second)
+    descriptionField.enterValue(project.description)
 
     docsScreenshots.takeScreenshot()
 

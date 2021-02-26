@@ -122,7 +122,7 @@ trait Datasets {
 
   case class Modification private (name: String, field: DatasetPage => WebElement, newValue: String) {
     def modifying(datasetPage: DatasetPage): Unit =
-      field(datasetPage) enterValue newValue sleep (1 second)
+      field(datasetPage) enterValue newValue
   }
 
   object Modification {

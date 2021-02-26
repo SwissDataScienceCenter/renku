@@ -76,7 +76,7 @@ trait Project extends RemoveProject with BeforeAndAfterAll {
 
     And("they enter project title in the search box")
     ProjectsPage.YourProjects.searchField.clear() sleep (1 second)
-    ProjectsPage.YourProjects.searchField.enterValue(projectDetails.title) sleep (1 second)
+    ProjectsPage.YourProjects.searchField.enterValue(projectDetails.title)
 
     And("they click the Search button")
     click on ProjectsPage.YourProjects.searchButton sleep (1 second)

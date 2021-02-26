@@ -27,10 +27,11 @@ import org.scalatest.{Matchers => ScalatestMatchers}
 import org.scalatestplus.selenium.WebBrowser
 
 import scala.concurrent.duration._
-import scala.language.{implicitConversions, postfixOps}
+import scala.language.implicitConversions
 
 abstract class Page[Url <: BaseUrl](val path: String, val title: String)
     extends ScalatestMatchers
+    with WebElementOps
     with Eventually
     with AcceptanceSpecPatience {
 
@@ -47,24 +48,7 @@ abstract class Page[Url <: BaseUrl](val path: String, val title: String)
     maybeElement.map(_.underlying)
 
   protected implicit class ElementOps(element: WebBrowser.Element) {
-
-    def parent: WebElement = element.findElement(By xpath "./..")
-
-    def enterValue(value: String): Unit = value foreach { char =>
-      element.sendKeys(char.toString) sleep (100 millis)
-    }
-  }
-
-  protected implicit class WebElementOps(element: WebElement) {
-
-    def enterValue(value: String): Unit = {
-      typeInValue(value) sleep (500 millis)
-      if (element.getAttribute("value") != value) typeInValue(value)
-    }
-
-    private def typeInValue(value: String): Unit = value foreach { char =>
-      element.sendKeys(char.toString) sleep (100 millis)
-    }
+    lazy val parent: WebElement = element.findElement(By xpath "./..")
   }
 
   object sleep {
