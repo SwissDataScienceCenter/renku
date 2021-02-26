@@ -58,7 +58,7 @@ abstract class Page[Url <: BaseUrl](val path: String, val title: String)
   protected implicit class WebElementOps(element: WebElement) {
 
     def enterValue(value: String): Unit = {
-      typeInValue(value)
+      typeInValue(value) sleep (500 millis)
       if (element.getAttribute("value") != value) typeInValue(value)
     }
 

@@ -23,12 +23,12 @@ import ch.renku.acceptancetests.model.projects.ProjectUrl
 import ch.renku.acceptancetests.model.users.UserCredentials
 import ch.renku.acceptancetests.tooling._
 import ch.renku.acceptancetests.tooling.console._
-import org.scalatest.{FeatureSpec, GivenWhenThen, Matchers}
+import org.scalatest.Matchers
 
 import java.nio.file.Path
 
-trait FlightsTutorial extends GivenWhenThen with Matchers with CLIConfiguration {
-  self: FeatureSpec =>
+trait FlightsTutorial extends Matchers with CLIConfiguration {
+  self: AcceptanceSpec =>
 
   def `follow the flights tutorial`(
       projectUrl:             ProjectUrl

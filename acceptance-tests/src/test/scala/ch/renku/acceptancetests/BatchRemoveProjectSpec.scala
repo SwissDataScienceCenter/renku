@@ -38,7 +38,7 @@ import scala.util.matching.Regex
   */
 class BatchRemoveProjectSpec extends AcceptanceSpec with Login with RemoveProject {
 
-  scenario("User can delete many projects project") {
+  Scenario("User can delete many projects project") {
     batchRemoveConfig match {
       case Some(config) =>
         if (config.batchRemove) `login and remove projects`(config)

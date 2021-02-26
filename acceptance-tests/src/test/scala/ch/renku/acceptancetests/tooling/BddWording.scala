@@ -16,22 +16,23 @@
  * limitations under the License.
  */
 
-package ch.renku.acceptancetests
+package ch.renku.acceptancetests.tooling
 
-import ch.renku.acceptancetests.tooling.{AcceptanceSpec, AnonEnv}
-import ch.renku.acceptancetests.workflows._
+import org.scalactic.source
+import org.scalatest.Tag
 
-class UnprivilegedEnvironmentSpec extends AcceptanceSpec with AnonEnv with Login {
+trait BddWording {
+  this: AcceptanceSpec =>
 
-  Scenario("User can launch unprivileged environment") {
-    `log in to Renku`
-    `launch unprivileged environment`
-    `stop environment`(anonEnvConfig.projectId)
-    `log out of Renku`
+  import TestLogger.logger
+
+  def Scenario(test: String, testTags: Tag*)(testFun: => Any)(implicit pos: source.Position): Unit = {
+    logger.info(test)
+    scenario(s"$test - done", testTags: _*)(testFun)
   }
 
-  Scenario("User can launch anonymous environment") {
-    `launch anonymous environment`(anonEnvConfig)
-      .map(_ => `stop environment`(anonEnvConfig.projectId))
-  }
+  def Given(string: String): Unit = logger.info(s"Given $string")
+  def When(string:  String): Unit = logger.info(s"When $string")
+  def Then(string:  String): Unit = logger.info(s"Then $string")
+  def And(string:   String): Unit = logger.info(s"And $string")
 }

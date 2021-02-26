@@ -26,7 +26,7 @@ import org.scalatestplus.selenium.{Chrome, Driver, WebBrowser}
 
 trait AcceptanceSpec
     extends FeatureSpec
-    with GivenWhenThen
+    with BddWording
     with BeforeAndAfterAll
     with Matchers
     with WebBrowser

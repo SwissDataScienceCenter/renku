@@ -26,7 +26,7 @@ import ch.renku.acceptancetests.workflows._
 
 class DatasetModificationFlowSpec extends AcceptanceSpec with Login with Project with Datasets with KnowledgeGraphApi {
 
-  scenario("From the UI the user can modify a dataset and only interact with its latest version") {
+  Scenario("From the UI the user can modify a dataset and only interact with its latest version") {
     import Modification._
 
     `log in to Renku`

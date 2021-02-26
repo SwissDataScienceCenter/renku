@@ -25,7 +25,7 @@ class LoginSpec extends AcceptanceSpec with Login {
 
   feature("User logging in and out") {
 
-    scenario("Logging into Renku") {
+    Scenario("Logging into Renku") {
       `log in to Renku`
       `log out of Renku`
     }

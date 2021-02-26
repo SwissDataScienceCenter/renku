@@ -1,9 +1,11 @@
 <configuration>
 
+    <statusListener class="ch.qos.logback.core.status.NopStatusListener" />
+
     <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>
             <charset>UTF-8</charset>
-            <pattern>%d %-5level %logger{5} - %message%n</pattern>
+            <pattern>%d %-5level %message%n</pattern>
         </encoder>
     </appender>
 
@@ -28,6 +30,10 @@
 
     <logger name="test" level="DEBUG" additivity="false">
         <appender-ref ref="ASYNC_FILE"/>
+    </logger>
+
+    <logger name="test" level="INFO" additivity="false">
+        <appender-ref ref="ASYNC_STDOUT"/>
     </logger>
 
     <root level="OFF">

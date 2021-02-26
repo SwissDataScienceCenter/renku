@@ -32,7 +32,7 @@ class MinimalFunctionalitySpec
     with Settings
     with Forks {
 
-  scenario("User can use basic functionality of Renku") {
+  Scenario("User can use basic functionality of Renku") {
 
     `log in to Renku`
 
