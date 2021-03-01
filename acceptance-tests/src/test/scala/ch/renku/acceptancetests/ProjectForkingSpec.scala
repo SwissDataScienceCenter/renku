@@ -16,16 +16,27 @@
  * limitations under the License.
  */
 
-package ch.renku.acceptancetests.workflows
+package ch.renku.acceptancetests
 
 import ch.renku.acceptancetests.model.projects.ProjectDetails
-import ch.renku.acceptancetests.pages._
+import ch.renku.acceptancetests.pages.ProjectPage
 import ch.renku.acceptancetests.tooling.AcceptanceSpec
+import ch.renku.acceptancetests.workflows._
 
-trait Forks {
-  self: AcceptanceSpec with Project =>
+class ProjectForkingSpec extends AcceptanceSpec with Login with Project {
 
-  def `fork project`: Unit = {
+  Scenario("User can fork a project") {
+
+    `log in to Renku`
+
+    `create, open or continue with a project`
+
+    `fork the project`
+
+    `log out of Renku`
+  }
+
+  private def `fork the project`: Unit = {
     val projectPage = ProjectPage()(projectDetails, userCredentials)
     go to projectPage
 

@@ -214,29 +214,18 @@ objects are put into the `pages` subfolder.
 
   A:  
 
-```
-  import scala.language.postfixOps
-import scala.concurrent.duration._
-```
-
-* Q: 
-
-```
-postfix operator seconds needs to be enabled
-by making the implicit value scala.language.postfixOps visible.
-```
-  A: 
-  
   ```
-    import scala.language.postfixOps
-```
+  import scala.concurrent.duration._
+  ```
+
 * Q: 
-```
-type mismatch;
- found   : String("Parent Group")
- required: eu.timepit.refined.api.Refined[String,eu.timepit.refined.collection.NonEmpty]
-```
-A: 
-```
-import eu.timepit.refined.auto._
-```
+  ```
+  type mismatch;
+   found   : String("Parent Group")
+   required: eu.timepit.refined.api.Refined[String,eu.timepit.refined.collection.NonEmpty]
+  ```
+ 
+  A: 
+  ```
+  import eu.timepit.refined.auto._
+  ```

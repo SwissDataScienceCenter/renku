@@ -24,14 +24,14 @@ import ch.renku.acceptancetests.model.datasets.{DatasetName, DatasetTitle}
 import ch.renku.acceptancetests.tooling.{AcceptanceSpec, KnowledgeGraphApi}
 import ch.renku.acceptancetests.workflows._
 
-class DatasetModificationFlowSpec extends AcceptanceSpec with Login with Project with Datasets with KnowledgeGraphApi {
+class DatasetModificationSpec extends AcceptanceSpec with Login with Project with Datasets with KnowledgeGraphApi {
+  import Modification._
 
   Scenario("From the UI the user can modify a dataset and only interact with its latest version") {
-    import Modification._
 
     `log in to Renku`
 
-    `create or open a project`
+    `create, open or continue with a project`
 
     When("the user wants to create a new dataset for the project")
     val originalDatasetPage = `create a dataset`(DatasetName.generate)

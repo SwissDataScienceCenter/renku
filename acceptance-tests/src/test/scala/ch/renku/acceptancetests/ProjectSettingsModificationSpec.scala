@@ -21,12 +21,17 @@ package ch.renku.acceptancetests
 import ch.renku.acceptancetests.tooling.AcceptanceSpec
 import ch.renku.acceptancetests.workflows._
 
-class PrivateProjectSpec extends AcceptanceSpec with Login with PrivateProject with JupyterNotebook {
+class ProjectSettingsModificationSpec extends AcceptanceSpec with Login with Project with Settings {
 
-  Scenario("User can launch Jupyter notebook when the project is private") {
+  Scenario("User can set project tags and description") {
+
     `log in to Renku`
-    `create or open a project`
-    `verify user can work with Jupyter notebook`
+
+    `create, open or continue with a project`
+
+    `set project tags`
+    `set project description`
+
     `log out of Renku`
   }
 }

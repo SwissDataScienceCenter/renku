@@ -43,7 +43,7 @@ class HandsOnSpec
 
     `log in to Renku`
 
-    `create or open a project`
+    `create, open or continue with a project`
 
     val projectUrl         = `find project Http URL in the Settings Page`
     val flightsDatasetName = `follow the flights tutorial`(projectUrl)

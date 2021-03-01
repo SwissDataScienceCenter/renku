@@ -18,15 +18,19 @@
 
 package ch.renku.acceptancetests
 
-import ch.renku.acceptancetests.tooling.{AcceptanceSpec, AnonEnv}
+import ch.renku.acceptancetests.tooling.AcceptanceSpec
 import ch.renku.acceptancetests.workflows._
 
-class UnprivilegedEnvironmentSpec extends AcceptanceSpec with AnonEnv with Login {
+class JupyterNotebookForPrivateProjectSpec extends AcceptanceSpec with Login with PrivateProject with JupyterNotebook {
 
-  Scenario("User can launch unprivileged environment") {
+  Scenario("User can launch Jupyter notebook when the project is private") {
+
     `log in to Renku`
-    `launch unprivileged environment`
-    `stop environment`(anonEnvConfig.projectId)
+
+    `create, open or continue with a project`
+
+    `verify user can work with Jupyter notebook`
+
     `log out of Renku`
   }
 }
