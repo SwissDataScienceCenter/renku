@@ -18,19 +18,17 @@
 
 package ch.renku.acceptancetests.tooling.console
 
-import java.io.{File, InputStream}
-import java.nio.file.Path
-import java.util
-import java.util.concurrent.ConcurrentLinkedQueue
-
 import cats.effect.IO
 import cats.implicits._
 import ch.renku.acceptancetests.model.users.UserCredentials
 import ch.renku.acceptancetests.tooling.TestLogger.logger
 import ch.renku.acceptancetests.tooling.console.Command.UserInput
 
+import java.io.{File, InputStream}
+import java.nio.file.Path
+import java.util
+import java.util.concurrent.ConcurrentLinkedQueue
 import scala.jdk.CollectionConverters._
-import scala.language.postfixOps
 import scala.sys.process._
 
 private class CommandExecutor(command: Command) {
@@ -65,7 +63,7 @@ private class CommandExecutor(command: Command) {
 
   private def buildProcess(implicit workPath: Path) =
     command.maybeFileName.foldLeft(Process(command.toString.stripMargin, workPath.toFile)) { (process, fileName) =>
-      process #>> new File(workPath.toUri resolve fileName.value)
+      process #>> new File(workPath.toUri resolve fileName)
     }
 
   private def logLine(
@@ -73,7 +71,7 @@ private class CommandExecutor(command: Command) {
   )(implicit output: util.Collection[String], userCredentials: UserCredentials): Unit = line.trim match {
     case "" => ()
     case line =>
-      val obfuscatedLine = line.replace(userCredentials.password.value, "###")
+      val obfuscatedLine = line.replace(userCredentials.password, "###")
       output add obfuscatedLine
       logger debug obfuscatedLine
   }
@@ -97,7 +95,7 @@ private class CommandExecutor(command: Command) {
     import java.nio.charset.StandardCharsets.UTF_8
 
     lazy val asStream: InputStream = new java.io.ByteArrayInputStream(
-      userInput.value.getBytes(UTF_8.name)
+      userInput.getBytes(UTF_8.name)
     )
   }
 }

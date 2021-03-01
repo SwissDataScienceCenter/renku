@@ -18,20 +18,19 @@
 
 package ch.renku.acceptancetests.workflows
 
-import java.nio.file.Path
-
 import ch.renku.acceptancetests.model.datasets.DatasetName
 import ch.renku.acceptancetests.model.projects.ProjectUrl
 import ch.renku.acceptancetests.model.users.UserCredentials
 import ch.renku.acceptancetests.tooling._
 import ch.renku.acceptancetests.tooling.console._
-import eu.timepit.refined.auto._
-import org.scalatest.{FeatureSpec, GivenWhenThen, Matchers => ScalatestMatchers}
+import org.scalatest.Matchers
 
-trait FlightsTutorial extends GivenWhenThen with Matchers with ScalatestMatchers with CLIConfiguration {
-  self: FeatureSpec =>
+import java.nio.file.Path
 
-  def followTheFlightsTutorialOnUsersMachine(
+trait FlightsTutorial extends Matchers with CLIConfiguration {
+  self: AcceptanceSpec =>
+
+  def `follow the flights tutorial`(
       projectUrl:             ProjectUrl
   )(implicit userCredentials: UserCredentials): DatasetName = {
 

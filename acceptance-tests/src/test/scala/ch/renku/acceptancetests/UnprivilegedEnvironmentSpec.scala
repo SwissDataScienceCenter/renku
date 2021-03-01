@@ -16,20 +16,22 @@
  * limitations under the License.
  */
 
-package ch.renku.acceptancetests.tooling
+package ch.renku.acceptancetests
 
-trait Matchers {
+import ch.renku.acceptancetests.tooling.{AcceptanceSpec, AnonEnv}
+import ch.renku.acceptancetests.workflows._
 
-//  class VisibleMatcher extends Matcher[Option[Element]] {
-//
-//    def apply(left: Option[Element]): MatchResult =
-//      MatchResult(
-//        left.nonEmpty,
-//        s"""not vi""",
-//        s"""File $name ended with extension "$expectedExtension""""
-//      )
-//  }
-//
-//  def visible = new VisibleMatcher
+class UnprivilegedEnvironmentSpec extends AcceptanceSpec with AnonEnv with Login {
 
+  Scenario("User can launch unprivileged environment") {
+    `log in to Renku`
+    `launch unprivileged environment`
+    `stop environment`(anonEnvConfig.projectId)
+    `log out of Renku`
+  }
+
+  Scenario("User can launch anonymous environment") {
+    `launch anonymous environment`(anonEnvConfig)
+      .map(_ => `stop environment`(anonEnvConfig.projectId))
+  }
 }

@@ -18,16 +18,14 @@
 
 package ch.renku.acceptancetests.workflows
 
+import ch.renku.acceptancetests.model.users.UserCredentials
+import ch.renku.acceptancetests.tooling.console._
+import ch.renku.acceptancetests.tooling.{AcceptanceSpec, console}
+
 import java.nio.file.Path
 
-import ch.renku.acceptancetests.model.users.UserCredentials
-import ch.renku.acceptancetests.tooling.console
-import ch.renku.acceptancetests.tooling.console._
-import org.scalatest.{FeatureSpec, GivenWhenThen}
-
-trait CLIConfiguration extends GivenWhenThen {
-
-  self: FeatureSpec =>
+trait CLIConfiguration {
+  self: AcceptanceSpec =>
 
   def `setup git configuration`(implicit userCredentials: UserCredentials): Unit = {
     implicit val workFolder: Path = rootWorkDirectory

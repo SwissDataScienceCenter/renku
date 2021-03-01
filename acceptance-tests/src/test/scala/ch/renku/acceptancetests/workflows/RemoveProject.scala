@@ -23,13 +23,9 @@ import ch.renku.acceptancetests.pages._
 import ch.renku.acceptancetests.tooling.{AcceptanceSpec, GitLabApi}
 
 import scala.concurrent.duration._
-import scala.language.postfixOps
 
 trait RemoveProject extends BrowserNavigation {
   self: AcceptanceSpec with GitLabApi =>
-
-  def `remove project in GitLab`(implicit projectDetails: ProjectDetails): Unit =
-    `remove project in GitLab`(projectDetails.asProjectIdentifier)
 
   def `remove project in GitLab`(implicit projectId: ProjectIdentifier): Unit = {
     When(s"the '${projectId.slug}' project is removed")

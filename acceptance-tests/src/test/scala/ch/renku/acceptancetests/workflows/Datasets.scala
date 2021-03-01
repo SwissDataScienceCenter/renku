@@ -23,19 +23,18 @@ import ch.renku.acceptancetests.model.datasets.DatasetName
 import ch.renku.acceptancetests.model.projects.ProjectDetails
 import ch.renku.acceptancetests.pages.{DatasetPage, ProjectPage}
 import ch.renku.acceptancetests.tooling.{AcceptanceSpec, KnowledgeGraphApi}
-import eu.timepit.refined.auto._
 import org.openqa.selenium.{WebDriver, WebElement}
+
 import scala.concurrent.duration._
-import scala.language.postfixOps
 
 trait Datasets {
   self: AcceptanceSpec with KnowledgeGraphApi =>
 
-  def verifyDatasetCreated(datasetName: DatasetName)(implicit projectDetails: ProjectDetails): Unit = {
+  def `verify dataset was created`(datasetName: DatasetName)(implicit projectDetails: ProjectDetails): Unit = {
     implicit val projectPage: ProjectPage = ProjectPage()
     val datasetPage = DatasetPage(datasetName)
     When("the user navigates to the Datasets tab")
-    click on projectPage.Datasets.tab
+    click on projectPage.Datasets.tab sleep (1 second)
 
     And("the events are processed")
     val datasetPageTitle = projectPage.Datasets.title(_: WebDriver)
@@ -51,17 +50,17 @@ trait Datasets {
     val newDatasetName = datasets.DatasetName("new")
     val newDatasetPage = DatasetPage(newDatasetName)
     Given("the user is on the Datasets tab")
-    click on projectPage.Datasets.tab
+    click on projectPage.Datasets.tab sleep (1 second)
 
     When("the user clicks on the Add Dataset button")
-    click on projectPage.Datasets.addADatasetButton
+    click on projectPage.Datasets.addADatasetButton sleep (1 second)
     verify that newDatasetPage.ModificationForm.formTitle contains "Add Dataset"
 
     And(s"the user add the title '$datasetName' to the new dataset")
-    `changing its title`(to = datasetName.toString).modifying(newDatasetPage)
+    `changing its title`(to = datasetName.toString).modifying(newDatasetPage) sleep (1 second)
 
     And("the user saves the changes")
-    click on newDatasetPage.ModificationForm.datasetSubmitButton
+    click on newDatasetPage.ModificationForm.datasetSubmitButton sleep (2 second)
     pause asLongAsBrowserAt newDatasetPage
 
     And("all the events are processed by the knowledge-graph")
@@ -77,13 +76,13 @@ trait Datasets {
     datasetPage
   }
 
-  def `navigate to dataset`(datasetPage: DatasetPage)(implicit projectPage: ProjectPage): Unit = {
+  def `navigate to the dataset`(datasetPage: DatasetPage)(implicit projectPage: ProjectPage): Unit = {
 
     Given("the user is on the Datasets tab")
-    click on projectPage.Datasets.tab
+    click on projectPage.Datasets.tab sleep (1 second)
 
     When(s"the user clicks on the dataset name")
-    click on projectPage.Datasets.DatasetsList.link(to = datasetPage)
+    click on projectPage.Datasets.DatasetsList.link(to = datasetPage) sleep (1 second)
 
     Then(s"the user should see the dataset details")
     verify browserAt datasetPage
@@ -93,10 +92,10 @@ trait Datasets {
       projectPage:                      ProjectPage
   ): DatasetPage = {
     Given(s"the user is on the page of the dataset")
-    `navigate to dataset`(datasetPage)
+    `navigate to the dataset`(datasetPage)
 
     When("the user clicks on the modify button")
-    click on datasetPage.modifyButton
+    click on datasetPage.modifyButton sleep (1 second)
     verify userCanSee datasetPage.ModificationForm.formTitle
 
     And(s"the user modifies the dataset by ${by.name}")
@@ -107,7 +106,7 @@ trait Datasets {
     }
 
     And("the user saves the modification")
-    click on datasetPage.ModificationForm.datasetSubmitButton
+    click on datasetPage.ModificationForm.datasetSubmitButton sleep (2 seconds)
 
     verify browserAt datasetPage
 
@@ -122,7 +121,8 @@ trait Datasets {
   }
 
   case class Modification private (name: String, field: DatasetPage => WebElement, newValue: String) {
-    def modifying(datasetPage: DatasetPage): Unit = field(datasetPage).enterValue(newValue)
+    def modifying(datasetPage: DatasetPage): Unit =
+      field(datasetPage) enterValue newValue
   }
 
   object Modification {

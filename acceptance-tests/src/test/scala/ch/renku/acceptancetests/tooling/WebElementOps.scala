@@ -18,18 +18,26 @@
 
 package ch.renku.acceptancetests.tooling
 
-import org.scalatest.concurrent.{AbstractPatienceConfiguration, PatienceConfiguration}
-import org.scalatest.time.{Millis, Minutes, Span}
+import org.openqa.selenium.WebElement
 
-trait AcceptanceSpecPatience extends AbstractPatienceConfiguration { this: PatienceConfiguration =>
+import java.lang.Thread.sleep
 
-  implicit abstract override val patienceConfig: PatienceConfig = PatienceConfig(
-    timeout = scaled(Span(AcceptanceSpecPatience.WAIT_SCALE * 1, Minutes)),
-    interval = scaled(Span(150, Millis))
-  )
-}
+trait WebElementOps {
 
-object AcceptanceSpecPatience {
-  // Scale all wait times by a constant value.
-  val WAIT_SCALE = 2;
+  implicit class WebElementOps(element: WebElement) {
+
+    def enterValue(value: String): Unit = {
+      typeInValue(value)
+      sleep(1000)
+      if (element.getAttribute("value") != value) {
+        typeInValue(value)
+        sleep(1000)
+      }
+    }
+
+    private def typeInValue(value: String): Unit = value foreach { char =>
+      element.sendKeys(char.toString)
+      sleep(100)
+    }
+  }
 }

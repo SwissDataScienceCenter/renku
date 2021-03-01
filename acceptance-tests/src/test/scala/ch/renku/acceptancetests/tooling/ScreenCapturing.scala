@@ -23,15 +23,13 @@ import java.nio.file.Paths
 import java.time.LocalDateTime.now
 import java.time.format.DateTimeFormatter.ofPattern
 
-import org.openqa.selenium.WebDriver
-import org.scalatestplus.selenium.{Driver, WebBrowser}
-
 trait ScreenCapturing {
+  self: AcceptanceSpec =>
 
   /**
     * Public helper function to write a screenshot of the current browser state.
     */
-  def saveScreenshot(implicit browser: WebBrowser with Driver, webDriver: WebDriver): Unit = {
+  def saveScreenshot(): Unit = {
     val captureDir = Paths.get("target")
     browser.setCaptureDir(captureDir.toFile.getAbsolutePath)
 
