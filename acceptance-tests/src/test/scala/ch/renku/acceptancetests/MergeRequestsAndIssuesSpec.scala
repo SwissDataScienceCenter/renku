@@ -18,12 +18,17 @@
 
 package ch.renku.acceptancetests
 
-import ch.renku.acceptancetests.tooling.AcceptanceSpec
+import ch.renku.acceptancetests.tooling.{AcceptanceSpec, KnowledgeGraphApi}
 import ch.renku.acceptancetests.workflows._
 
 import scala.concurrent.duration._
 
-class MergeRequestsAndIssuesSpec extends AcceptanceSpec with Collaboration with Login with Project {
+class MergeRequestsAndIssuesSpec
+    extends AcceptanceSpec
+    with Collaboration
+    with Login
+    with Project
+    with KnowledgeGraphApi {
 
   Scenario("User can create and view issues") {
 
