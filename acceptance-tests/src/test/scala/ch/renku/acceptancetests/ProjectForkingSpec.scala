@@ -29,7 +29,7 @@ class ProjectForkingSpec extends AcceptanceSpec with Login with Project {
 
     `log in to Renku`
 
-    `create, open or continue with a project`
+    `create, continue or open a project`
 
     `fork the project`
 

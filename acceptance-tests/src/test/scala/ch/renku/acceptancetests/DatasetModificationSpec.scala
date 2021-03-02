@@ -31,7 +31,7 @@ class DatasetModificationSpec extends AcceptanceSpec with Login with Project wit
 
     `log in to Renku`
 
-    `create, open or continue with a project`
+    `create, continue or open a project`
 
     When("the user wants to create a new dataset for the project")
     val originalDatasetPage = `create a dataset`(DatasetName.generate)

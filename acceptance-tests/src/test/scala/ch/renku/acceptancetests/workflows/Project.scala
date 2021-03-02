@@ -48,7 +48,7 @@ trait Project extends RemoveProject with BeforeAndAfterAll {
 
   protected implicit lazy val projectPage: ProjectPage = ProjectPage()
 
-  def `create, open or continue with a project`: Unit = maybeExtantProject match {
+  def `create, continue or open a project`: Unit = maybeExtantProject match {
     case Some(_) => `open a project`
     case _       => `create or continue with a project`
   }

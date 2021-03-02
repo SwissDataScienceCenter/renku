@@ -29,7 +29,7 @@ class MergeRequestsAndIssuesSpec extends AcceptanceSpec with Collaboration with 
 
     `log in to Renku`
 
-    `create, open or continue with a project`
+    `create, continue or open a project`
 
     `verify there are no issues`
 
@@ -46,7 +46,7 @@ class MergeRequestsAndIssuesSpec extends AcceptanceSpec with Collaboration with 
 
     `log in to Renku`
 
-    `create, open or continue with a project`
+    `create, continue or open a project`
 
     `verify there are no merge requests`
 

@@ -27,7 +27,7 @@ class JupyterNotebookForPrivateProjectSpec extends AcceptanceSpec with Login wit
 
     `log in to Renku`
 
-    `create, open or continue with a project`
+    `create, continue or open a project`
 
     `verify user can work with Jupyter notebook`
 

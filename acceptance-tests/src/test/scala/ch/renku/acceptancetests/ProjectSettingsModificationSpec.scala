@@ -27,7 +27,7 @@ class ProjectSettingsModificationSpec extends AcceptanceSpec with Login with Pro
 
     `log in to Renku`
 
-    `create, open or continue with a project`
+    `create, continue or open a project`
 
     `set project tags`
     `set project description`
