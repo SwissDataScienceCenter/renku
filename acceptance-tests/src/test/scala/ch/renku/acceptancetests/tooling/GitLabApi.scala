@@ -20,7 +20,7 @@ package ch.renku.acceptancetests.tooling
 
 import ch.renku.acceptancetests.model.AuthorizationToken.OAuthAccessToken
 import ch.renku.acceptancetests.model.projects.ProjectIdentifier
-import org.http4s.Status.{Accepted, Ok}
+import org.http4s.Status._
 import org.http4s.UrlForm
 import org.scalatest.Matchers.fail
 
@@ -32,8 +32,8 @@ trait GitLabApi extends RestClient {
       .withEntity(
         UrlForm(
           "grant_type" -> "password",
-          "username"   -> userCredentials.username.toString(),
-          "password"   -> userCredentials.password.toString()
+          "username"   -> userCredentials.username,
+          "password"   -> userCredentials.password
         )
       )
       .send
@@ -51,6 +51,16 @@ trait GitLabApi extends RestClient {
       .bodyAsJson
       .extract(jsonRoot.id.int.getOption)
       .getOrElse(fail(s"Cannot find '${projectId.asProjectPath}' project in GitLab"))
+
+  def `project exists in GitLab`(projectId: ProjectIdentifier): Boolean =
+    GET(gitLabAPIUrl / "projects" / projectId.asProjectPath)
+      .withAuthorizationToken(oauthAccessToken)
+      .send
+      .responseStatus match {
+      case Ok       => true
+      case NotFound => false
+      case other    => fail(s"Finding '${projectId.slug}' project in GitLab failed with $other status")
+    }
 
   def `delete project in GitLab`(projectId: ProjectIdentifier): Unit =
     DELETE(gitLabAPIUrl / "projects" / projectId.asProjectPath)

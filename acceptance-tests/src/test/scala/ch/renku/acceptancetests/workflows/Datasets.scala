@@ -20,18 +20,16 @@ package ch.renku.acceptancetests.workflows
 
 import ch.renku.acceptancetests.model.datasets
 import ch.renku.acceptancetests.model.datasets.DatasetName
-import ch.renku.acceptancetests.model.projects.ProjectDetails
-import ch.renku.acceptancetests.pages.{DatasetPage, ProjectPage}
+import ch.renku.acceptancetests.pages.DatasetPage
 import ch.renku.acceptancetests.tooling.{AcceptanceSpec, KnowledgeGraphApi}
 import org.openqa.selenium.{WebDriver, WebElement}
 
 import scala.concurrent.duration._
 
 trait Datasets {
-  self: AcceptanceSpec with KnowledgeGraphApi =>
+  self: AcceptanceSpec with Project with KnowledgeGraphApi =>
 
-  def `verify dataset was created`(datasetName: DatasetName)(implicit projectDetails: ProjectDetails): Unit = {
-    implicit val projectPage: ProjectPage = ProjectPage()
+  def `verify dataset was created`(datasetName: DatasetName): Unit = {
     val datasetPage = DatasetPage(datasetName)
     When("the user navigates to the Datasets tab")
     click on projectPage.Datasets.tab sleep (1 second)
@@ -45,7 +43,7 @@ trait Datasets {
     reload whenUserCannotSee datasetLink
   }
 
-  def `create a dataset`(datasetName: DatasetName)(implicit projectPage: ProjectPage): DatasetPage = {
+  def `create a dataset`(datasetName: DatasetName): DatasetPage = {
     import Modification._
     val newDatasetName = datasets.DatasetName("new")
     val newDatasetPage = DatasetPage(newDatasetName)
@@ -76,7 +74,7 @@ trait Datasets {
     datasetPage
   }
 
-  def `navigate to the dataset`(datasetPage: DatasetPage)(implicit projectPage: ProjectPage): Unit = {
+  def `navigate to the dataset`(datasetPage: DatasetPage): Unit = {
 
     Given("the user is on the Datasets tab")
     click on projectPage.Datasets.tab sleep (1 second)
@@ -88,9 +86,7 @@ trait Datasets {
     verify browserAt datasetPage
   }
 
-  def `modify the dataset`(datasetPage: DatasetPage, by: Modification, and: Modification*)(implicit
-      projectPage:                      ProjectPage
-  ): DatasetPage = {
+  def `modify the dataset`(datasetPage: DatasetPage, by: Modification, and: Modification*): DatasetPage = {
     Given(s"the user is on the page of the dataset")
     `navigate to the dataset`(datasetPage)
 

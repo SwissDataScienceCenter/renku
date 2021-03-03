@@ -33,7 +33,6 @@ trait AcceptanceSpec
     with Environments
     with Driver
     with Grammar
-    with JupyterNotebook
     with GitLabApi
     with ScreenCapturingSpec
     with AcceptanceSpecData

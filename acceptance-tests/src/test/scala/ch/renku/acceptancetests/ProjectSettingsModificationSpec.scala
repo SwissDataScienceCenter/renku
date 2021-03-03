@@ -18,15 +18,20 @@
 
 package ch.renku.acceptancetests
 
-import ch.renku.acceptancetests.tooling.{AcceptanceSpec, AnonEnv}
+import ch.renku.acceptancetests.tooling.AcceptanceSpec
 import ch.renku.acceptancetests.workflows._
 
-class UnprivilegedEnvironmentSpec extends AcceptanceSpec with AnonEnv with Login {
+class ProjectSettingsModificationSpec extends AcceptanceSpec with Login with Project with Settings {
 
-  Scenario("User can launch unprivileged environment") {
+  Scenario("User can set project tags and description") {
+
     `log in to Renku`
-    `launch unprivileged environment`
-    `stop environment`(anonEnvConfig.projectId)
+
+    `create, continue or open a project`
+
+    `set project tags`
+    `set project description`
+
     `log out of Renku`
   }
 }
