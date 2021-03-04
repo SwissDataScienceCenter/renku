@@ -28,7 +28,6 @@ trait Collaboration {
   self: AcceptanceSpec with Project =>
 
   def `verify there are no merge requests`: Unit = {
-    val projectPage = ProjectPage()
     When("the user navigates to the Collaboration tab")
     click on projectPage.Collaboration.tab sleep (1 second)
     And("they navigate to the Merge Requests sub tab")
@@ -38,7 +37,6 @@ trait Collaboration {
   }
 
   def `verify there are no issues`: Unit = {
-    val projectPage = ProjectPage()
     When("the user navigates to the Collaboration tab")
     click on projectPage.Collaboration.tab sleep (1 second)
     And("they navigate to the Issues sub tab")
@@ -47,8 +45,7 @@ trait Collaboration {
     verify userCanSee projectPage.Collaboration.Issues.noIssues
   }
 
-  def `create a new issue`: Unit = {
-    implicit val projectPage = ProjectPage()
+  def `create a new issue`(title: String, description: String): Unit = {
     When("the user navigates to the Collaboration tab")
     click on projectPage.Collaboration.tab sleep (1 second)
     And("they navigate to the Issues sub tab")
@@ -57,21 +54,19 @@ trait Collaboration {
     click on projectPage.Collaboration.Issues.newIssueLink sleep (1 second)
 
     And("they fill out the form")
-    val issueTitle = "test issue"
-    val issueDesc  = "test description"
-    `create an issue with title and description`(issueTitle, issueDesc)
+    `create an issue with title and description`(title, description)
+  }
 
+  def `view the issue`(issueTitle: String): Unit =
     `try few times before giving up` { (_: WebDriver) =>
       Then("the new issue should be displayed in the list")
       val issueTitles = projectPage.Collaboration.Issues.issueTitles
       if (issueTitles.size < 1) fail("There should be at least one issue")
       issueTitles.find(_ == issueTitle) getOrElse fail("Issue with expected title could not be found.")
     }
-  }
 
   def `create an issue with title and description`(title: String, description: String): Unit = {
-    val projectPage = ProjectPage()
-    val tf          = projectPage.Collaboration.Issues.NewIssue.titleField
+    val tf = projectPage.Collaboration.Issues.NewIssue.titleField
     tf.clear() sleep (1 second)
     tf enterValue title
     click on projectPage.Collaboration.Issues.NewIssue.markdownSwitch sleep (1 second)
@@ -80,7 +75,6 @@ trait Collaboration {
   }
 
   def `verify branch was added`: Unit = {
-    val projectPage = ProjectPage()
     When("the user navigates to the Collaboration tab")
     click on projectPage.Collaboration.tab sleep (1 second)
     Then("they should see a 'Do you want to create a merge request for branch...' banner")
@@ -88,7 +82,6 @@ trait Collaboration {
   }
 
   def `create a new merge request`: Unit = {
-    implicit val projectPage = ProjectPage()
     When("the user navigates to the Collaboration tab")
     click on projectPage.Collaboration.tab sleep (1 second)
     And("they navigate to the Merge Request sub tab")
@@ -97,13 +90,16 @@ trait Collaboration {
     click on projectPage.Collaboration.MergeRequests.createMergeRequestButton sleep (5 second)
     And("they navigate to the MergeRequest sub tab")
     click on projectPage.Collaboration.MergeRequests.tab sleep (4 second)
-    Then("the new Merge Request should be displayed in the list")
-    val mrTitles = projectPage.Collaboration.MergeRequests.mergeRequestsTitles
-    if (mrTitles isEmpty) fail("There should be at least one merge request")
-    mrTitles.find(_ == "test-branch") getOrElse fail("Merge Request with expected title could not be found.")
   }
 
-  def `create a branch in JupyterLab`(jupyterLabPage: JupyterLabPage): Unit = {
+  def `view the merge request`(title: String): Unit = {
+    Then("the new Merge Request should be displayed in the list")
+    val mrTitles = projectPage.Collaboration.MergeRequests.mergeRequestsTitles
+    if (mrTitles.isEmpty) fail("There should be at least one merge request")
+    mrTitles.find(_ == title) getOrElse fail("Merge Request with expected title could not be found.")
+  }
+
+  def `create a branch in JupyterLab`(jupyterLabPage: JupyterLabPage, branchName: String): Unit = {
     import jupyterLabPage.terminal
     And("Creates a test branch")
     terminal %> "git checkout -b test-branch" sleep (10 seconds)

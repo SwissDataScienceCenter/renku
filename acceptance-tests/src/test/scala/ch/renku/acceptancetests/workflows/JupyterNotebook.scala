@@ -19,13 +19,12 @@
 package ch.renku.acceptancetests.workflows
 
 import ch.renku.acceptancetests.model.datasets.DatasetName
-import ch.renku.acceptancetests.model.projects.ProjectDetails
 import ch.renku.acceptancetests.pages.JupyterLabPage
 import ch.renku.acceptancetests.tooling.{AcceptanceSpec, KnowledgeGraphApi}
 
 import scala.concurrent.duration._
 
-trait JupyterNotebook extends Datasets with KnowledgeGraphApi {
+trait JupyterNotebook extends Datasets with Project with KnowledgeGraphApi {
   self: AcceptanceSpec =>
 
   def `create a dataset`(jupyterLabPage: JupyterLabPage, datasetName: DatasetName): Unit = {
@@ -36,7 +35,7 @@ trait JupyterNotebook extends Datasets with KnowledgeGraphApi {
     terminal %> "git push" sleep (30 seconds)
   }
 
-  def `verify user can work with Jupyter notebook`(implicit projectDetails: ProjectDetails): Unit = {
+  def `verify user can work with Jupyter notebook`: Unit = {
     val jupyterLabPage = `launch an environment`
 
     When("the user clicks on the Terminal icon")

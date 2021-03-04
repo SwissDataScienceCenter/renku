@@ -18,49 +18,63 @@
 
 package ch.renku.acceptancetests
 
-import ch.renku.acceptancetests.model.projects.ProjectDetails
-import ch.renku.acceptancetests.tooling.AcceptanceSpec
+import ch.renku.acceptancetests.tooling.{AcceptanceSpec, KnowledgeGraphApi}
 import ch.renku.acceptancetests.workflows._
 
 import scala.concurrent.duration._
 
-class MinimalFunctionalitySpec
+class MergeRequestsAndIssuesSpec
     extends AcceptanceSpec
     with Collaboration
     with Login
     with Project
-    with Settings
-    with Forks {
+    with KnowledgeGraphApi {
 
-  Scenario("User can use basic functionality of Renku") {
+  Scenario("User can create and view issues") {
 
     `log in to Renku`
 
-    `create or open a project`
+    `create, continue or open a project`
 
-    `verify there are no merge requests`
     `verify there are no issues`
-    `create a new issue`
 
-    `add change to the project`
-    `create a new merge request`
+    val issueTitle = "test issue"
+    val issueDesc  = "test description"
+    `create a new issue`(issueTitle, issueDesc)
 
-    `set project tags`
-    `set project description`
-
-    `fork project`
+    `view the issue`(issueTitle)
 
     `log out of Renku`
   }
 
-  private def `add change to the project`(implicit projectDetails: ProjectDetails): Unit = {
+  Scenario("User can create and view merge requests") {
+
+    `log in to Renku`
+
+    `create, continue or open a project`
+
+    `verify there are no merge requests`
+
+    val branchName = "test-branch"
+    `add change to the project`(branchName)
+
+    `create a new merge request`
+
+    `view the merge request`(branchName)
+
+    `log out of Renku`
+  }
+
+  private def `add change to the project`(branchName: String): Unit = {
     docsScreenshots.disable()
     val jupyterLabPage = `launch an environment`(projectDetails)
     docsScreenshots.enable()
 
     When("the user clicks on the Terminal icon")
     click on jupyterLabPage.terminalIcon sleep (2 seconds)
-    `create a branch in JupyterLab`(jupyterLabPage)
+
+    `create a branch in JupyterLab`(jupyterLabPage, branchName)
+
     `wait for KG to process events`(projectDetails.asProjectIdentifier)
 
     `stop environment`

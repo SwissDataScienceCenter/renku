@@ -74,6 +74,8 @@ trait RestClient extends Http4sClientDsl[IO] {
           s"${request.method} ${request.uri} returned ${response.status} which is not expected $status"
         )
 
+    lazy val responseStatus: Status = response.status
+
     def expect(status: Status, otherwiseLog: String): Unit =
       if (response.status != status)
         fail(
