@@ -21,22 +21,18 @@ package ch.renku.acceptancetests.tooling
 import ch.renku.acceptancetests.workflows.{Environments, JupyterNotebook}
 import org.openqa.selenium.WebDriver
 import org.openqa.selenium.chrome.{ChromeDriver, ChromeDriverService, ChromeOptions}
-import org.scalatest.{BeforeAndAfterAll, FeatureSpec, GivenWhenThen, Matchers => ScalatestMatchers}
+import org.scalatest._
 import org.scalatestplus.selenium.{Chrome, Driver, WebBrowser}
-
-import scala.language.postfixOps
 
 trait AcceptanceSpec
     extends FeatureSpec
-    with GivenWhenThen
+    with BddWording
     with BeforeAndAfterAll
     with Matchers
-    with ScalatestMatchers
     with WebBrowser
     with Environments
     with Driver
     with Grammar
-    with JupyterNotebook
     with GitLabApi
     with ScreenCapturingSpec
     with AcceptanceSpecData
@@ -54,4 +50,6 @@ trait AcceptanceSpec
         )
       case None => Chrome.webDriver
     }
+
+  protected implicit val docsScreenshots: DocsScreenshots = DocsScreenshots(this, webDriver)
 }

@@ -16,20 +16,15 @@
  * limitations under the License.
  */
 
-package ch.renku.acceptancetests.tooling
+package ch.renku.acceptancetests
 
-import org.scalatest.concurrent.{AbstractPatienceConfiguration, PatienceConfiguration}
-import org.scalatest.time.{Millis, Minutes, Span}
+import ch.renku.acceptancetests.tooling.{AcceptanceSpec, AnonEnv}
+import ch.renku.acceptancetests.workflows._
 
-trait AcceptanceSpecPatience extends AbstractPatienceConfiguration { this: PatienceConfiguration =>
+class AnonymousEnvironmentSpec extends AcceptanceSpec with AnonEnv with Login {
 
-  implicit abstract override val patienceConfig: PatienceConfig = PatienceConfig(
-    timeout = scaled(Span(AcceptanceSpecPatience.WAIT_SCALE * 1, Minutes)),
-    interval = scaled(Span(150, Millis))
-  )
-}
-
-object AcceptanceSpecPatience {
-  // Scale all wait times by a constant value.
-  val WAIT_SCALE = 2;
+  Scenario("User can launch anonymous environment") {
+    `launch anonymous environment`(anonEnvConfig)
+      .map(_ => `stop environment`(anonEnvConfig.projectId))
+  }
 }

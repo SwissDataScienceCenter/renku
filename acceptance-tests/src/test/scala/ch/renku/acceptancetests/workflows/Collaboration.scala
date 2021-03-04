@@ -18,99 +18,88 @@
 
 package ch.renku.acceptancetests.workflows
 
-import ch.renku.acceptancetests.model.projects.ProjectDetails
 import ch.renku.acceptancetests.pages._
 import ch.renku.acceptancetests.tooling.AcceptanceSpec
+import org.openqa.selenium.WebDriver
 
 import scala.concurrent.duration._
-import scala.language.postfixOps
 
 trait Collaboration {
-  self: AcceptanceSpec =>
+  self: AcceptanceSpec with Project =>
 
-  def verifyMergeRequestsIsEmpty(implicit projectDetails: ProjectDetails): Unit = {
-    val projectPage = ProjectPage()
+  def `verify there are no merge requests`: Unit = {
     When("the user navigates to the Collaboration tab")
-    click on projectPage.Collaboration.tab
+    click on projectPage.Collaboration.tab sleep (1 second)
     And("they navigate to the Merge Requests sub tab")
-    click on projectPage.Collaboration.MergeRequests.tab
+    click on projectPage.Collaboration.MergeRequests.tab sleep (1 second)
     Then("they should see a 'No merge requests to display' info")
     verify userCanSee projectPage.Collaboration.MergeRequests.noMergeRequests
   }
 
-  def verifyIssuesIsEmpty(implicit projectDetails: ProjectDetails): Unit = {
-    val projectPage = ProjectPage()
+  def `verify there are no issues`: Unit = {
     When("the user navigates to the Collaboration tab")
-    click on projectPage.Collaboration.tab
+    click on projectPage.Collaboration.tab sleep (1 second)
     And("they navigate to the Issues sub tab")
-    click on projectPage.Collaboration.Issues.tab
+    click on projectPage.Collaboration.Issues.tab sleep (1 second)
     Then("they should see a 'No issues to display' info")
     verify userCanSee projectPage.Collaboration.Issues.noIssues
   }
 
-  def createNewIssue(implicit projectDetails: ProjectDetails): Unit = {
-    implicit val projectPage = ProjectPage()
+  def `create a new issue`(title: String, description: String): Unit = {
     When("the user navigates to the Collaboration tab")
-    click on projectPage.Collaboration.tab
+    click on projectPage.Collaboration.tab sleep (1 second)
     And("they navigate to the Issues sub tab")
-    click on projectPage.Collaboration.Issues.tab
-    // Give some time for the tab change to take effect
-    sleep(1 second)
+    click on projectPage.Collaboration.Issues.tab sleep (2 seconds)
     And("the user clicks on the 'New Issue' button")
-    click on projectPage.Collaboration.Issues.newIssueLink
+    click on projectPage.Collaboration.Issues.newIssueLink sleep (1 second)
 
     And("they fill out the form")
-    val issueTitle = "test issue"
-    val issueDesc  = "test description"
-    `create an issue with title and description`(issueTitle, issueDesc)
-
-    Then("the new issue should be displayed in the list")
-    val issueTitles = projectPage.Collaboration.Issues.issueTitles
-    if (issueTitles.size < 1) fail("There should be at least one issue")
-    issueTitles.find(_ == issueTitle) getOrElse fail("Issue with expected title could not be found.")
+    `create an issue with title and description`(title, description)
   }
 
-  def `create an issue with title and description`(title: String, description: String)(implicit
-      projectPage:                                        ProjectPage
-  ): Unit = {
+  def `view the issue`(issueTitle: String): Unit =
+    `try few times before giving up` { (_: WebDriver) =>
+      Then("the new issue should be displayed in the list")
+      val issueTitles = projectPage.Collaboration.Issues.issueTitles
+      if (issueTitles.size < 1) fail("There should be at least one issue")
+      issueTitles.find(_ == issueTitle) getOrElse fail("Issue with expected title could not be found.")
+    }
+
+  def `create an issue with title and description`(title: String, description: String): Unit = {
     val tf = projectPage.Collaboration.Issues.NewIssue.titleField
     tf.clear() sleep (1 second)
-    tf enterValue title sleep (1 second)
-    projectPage.Collaboration.Issues.NewIssue.markdownSwitch click;
-    projectPage.Collaboration.Issues.NewIssue.descriptionField enterValue description sleep (1 second)
-    projectPage.Collaboration.Issues.NewIssue.createIssueButton click;
-    sleep(6 seconds)
+    tf enterValue title
+    click on projectPage.Collaboration.Issues.NewIssue.markdownSwitch sleep (1 second)
+    projectPage.Collaboration.Issues.NewIssue.descriptionField enterValue description
+    click on projectPage.Collaboration.Issues.NewIssue.createIssueButton sleep (1 second)
   }
 
-  def verifyBranchWasAdded(implicit projectDetails: ProjectDetails): Unit = {
-    val projectPage = ProjectPage()
+  def `verify branch was added`: Unit = {
     When("the user navigates to the Collaboration tab")
-    click on projectPage.Collaboration.tab
+    click on projectPage.Collaboration.tab sleep (1 second)
     Then("they should see a 'Do you want to create a merge request for branch...' banner")
     verify userCanSee projectPage.Collaboration.MergeRequests.futureMergeRequestBanner
   }
 
-  def createNewMergeRequest(implicit projectDetails: ProjectDetails): Unit = {
-    implicit val projectPage = ProjectPage()
+  def `create a new merge request`: Unit = {
     When("the user navigates to the Collaboration tab")
-    click on projectPage.Collaboration.tab
+    click on projectPage.Collaboration.tab sleep (1 second)
     And("they navigate to the Merge Request sub tab")
-    click on projectPage.Collaboration.MergeRequests.tab
-    // Give some time for the tab change to take effect
-    sleep(4 second)
+    click on projectPage.Collaboration.MergeRequests.tab sleep (5 second)
     And("the user clicks on the 'Create Merge Request' button")
-    click on projectPage.Collaboration.MergeRequests.createMergeRequestButton
-    sleep(4 seconds)
+    click on projectPage.Collaboration.MergeRequests.createMergeRequestButton sleep (5 second)
     And("they navigate to the MergeRequest sub tab")
-    click on projectPage.Collaboration.MergeRequests.tab
-    sleep(3 seconds)
-    Then("the new Merge Request should be displayed in the list")
-    val mrTitles = projectPage.Collaboration.MergeRequests.mergeRequestsTitles
-    if (mrTitles isEmpty) fail("There should be at least one merge request")
-    mrTitles.find(_ == "test-branch") getOrElse fail("Merge Request with expected title could not be found.")
+    click on projectPage.Collaboration.MergeRequests.tab sleep (4 second)
   }
 
-  def createBranchInJupyterLab(jupyterLabPage: JupyterLabPage): Unit = {
+  def `view the merge request`(title: String): Unit = {
+    Then("the new Merge Request should be displayed in the list")
+    val mrTitles = projectPage.Collaboration.MergeRequests.mergeRequestsTitles
+    if (mrTitles.isEmpty) fail("There should be at least one merge request")
+    mrTitles.find(_ == title) getOrElse fail("Merge Request with expected title could not be found.")
+  }
+
+  def `create a branch in JupyterLab`(jupyterLabPage: JupyterLabPage, branchName: String): Unit = {
     import jupyterLabPage.terminal
     And("Creates a test branch")
     terminal %> "git checkout -b test-branch" sleep (10 seconds)
@@ -123,5 +112,4 @@ trait Collaboration {
     And("Checks out master again")
     terminal %> "git checkout master" sleep (4 seconds)
   }
-
 }

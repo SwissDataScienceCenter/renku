@@ -76,10 +76,10 @@ This step is very important as it will define the values that helm will use to i
 Basic configuration
 ^^^^^^^^^^^^^^^^^^^^
 
-The basic Helm configuration file is in the Renku repository: `Renku values file <https://github.com/SwissDataScienceCenter/renku/blob/master/charts/renku/values.yaml>`_
+The basic Helm configuration file is in the Renku repository: `Renku values file <https://github.com/SwissDataScienceCenter/renku/blob/master/helm-chart/renku/values.yaml>`_
 
-You can use the `make-values.sh <https://github.com/SwissDataScienceCenter/renku/blob/master/charts/example-configurations/make-values.sh>`_ script to generate automatically a minimal Renku values file. You need to provide your DNS and (optionally) your Gitlab URL, application ID and secret.
-This script needs bash >=4.0 and openssl installed and the `minimal-values.tmpl <https://github.com/SwissDataScienceCenter/renku/blob/master/charts/example-configurations/minimal-values.tmpl>`_ file
+You can use the `make-values.sh <https://github.com/SwissDataScienceCenter/renku/blob/master/helm-chart/example-configurations/make-values.sh>`_ script to generate automatically a minimal Renku values file. You need to provide your DNS and (optionally) your Gitlab URL, application ID and secret.
+This script needs bash >=4.0 and openssl installed and the `minimal-values.tmpl <https://github.com/SwissDataScienceCenter/renku/blob/master/helm-chart/example-configurations/minimal-values.tmpl>`_ file
 
 For MacOS:
 .. code-block:: bash
@@ -128,7 +128,7 @@ If you chose to create a certificate manually instead of using LetsEncrypt or si
 
    $ kubectl -n renku create secret tls renku-mydomain-ch-tls --cert=certificate.crt --key=certificate.key
 
-Note that ``renku-mydomain-ch-tls`` should correspond to the `ingress TLS value in Renku values file <https://github.com/SwissDataScienceCenter/renku/blob/master/charts/example-configurations/minimal-values.tmpl#L12>`_
+Note that ``renku-mydomain-ch-tls`` should correspond to the `ingress TLS value in Renku values file <https://github.com/SwissDataScienceCenter/renku/blob/master/helm-chart/example-configurations/minimal-values.tmpl#L12>`_
 
 2. Deploy RenkuLab
 ~~~~~~~~~~~~~~~~~~~~

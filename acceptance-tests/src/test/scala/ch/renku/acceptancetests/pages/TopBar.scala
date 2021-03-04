@@ -27,9 +27,7 @@ trait TopBar {
   object TopBar {
 
     def projects(implicit webDriver: WebDriver): WebElement = eventually {
-      find(cssSelector("ul.navbar-nav.mr-auto a[href='/projects']")) getOrElse fail(
-        "Top Right 'Projects' link not found"
-      )
+      find(cssSelector("#link-projects")) getOrElse fail("Top Right 'Projects' link not found")
     }
 
     def plusDropdown(implicit webDriver: WebDriver): WebElement = eventually {

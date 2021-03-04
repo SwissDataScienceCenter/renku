@@ -18,43 +18,47 @@
 
 package ch.renku.acceptancetests.workflows
 
-import ch.renku.acceptancetests.model.projects.{ProjectDetails, ProjectUrl}
+import ch.renku.acceptancetests.model.projects.ProjectUrl
 import ch.renku.acceptancetests.pages._
 import ch.renku.acceptancetests.tooling.AcceptanceSpec
-
-import scala.language.postfixOps
+import org.openqa.selenium.WebDriver
 
 trait Settings {
-  self: AcceptanceSpec =>
+  self: AcceptanceSpec with Project =>
 
-  def setProjectTags(implicit projectDetails: ProjectDetails): Unit = {
+  def `set project tags`: Unit = {
     val projectPage = ProjectPage()
     When("the user navigates to the Settings tab")
     click on projectPage.Settings.tab
     And("they add some tags")
     val tags = "automated-test"
     projectPage.Settings addProjectTags tags
-    Then("the tags should be added")
-    verify that projectPage.Settings.projectTags hasValue tags
+
+    `try few times before giving up` { (_: WebDriver) =>
+      Then("the tags should be added")
+      verify that projectPage.Settings.projectTags hasValue tags
+    }
   }
 
-  def setProjectDescription(implicit projectDetails: ProjectDetails): Unit = {
+  def `set project description`: Unit = {
     val projectPage = ProjectPage()
     When("the user set the Project Description")
     val gitlabDescription = "GitLab description"
     projectPage.Settings updateProjectDescription gitlabDescription
-    And("they navigate to the Overview tab")
-    click on projectPage.Overview.tab
-    Then("they should see the updated project description")
-    verify that projectPage.Overview.projectDescription contains gitlabDescription
+
+    `try few times before giving up` { (_: WebDriver) =>
+      And("they navigate to the Overview tab")
+      click on projectPage.Overview.tab
+      Then("they should see the updated project description")
+      verify that projectPage.Overview.projectDescription contains gitlabDescription
+    }
   }
 
-  def findProjectHttpUrl(implicit projectDetails: ProjectDetails): ProjectUrl = {
-    val projectPage = ProjectPage()
+  def `find project Http URL in the Settings Page`: ProjectUrl = {
+    val projectPage = ProjectPage()(projectDetails, userCredentials)
     When("the user navigates to the Settings tab")
     click on projectPage.Settings.tab
     Then("the user can find the project Http Url")
     ProjectUrl(projectPage.Settings.projectHttpUrl.getText)
   }
-
 }

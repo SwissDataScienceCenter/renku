@@ -16,20 +16,21 @@
  * limitations under the License.
  */
 
-package ch.renku.acceptancetests.tooling
+package ch.renku.acceptancetests
 
-import org.scalatest.concurrent.{AbstractPatienceConfiguration, PatienceConfiguration}
-import org.scalatest.time.{Millis, Minutes, Span}
+import ch.renku.acceptancetests.tooling.AcceptanceSpec
+import ch.renku.acceptancetests.workflows._
 
-trait AcceptanceSpecPatience extends AbstractPatienceConfiguration { this: PatienceConfiguration =>
+class JupyterNotebookForPrivateProjectSpec extends AcceptanceSpec with Login with PrivateProject with JupyterNotebook {
 
-  implicit abstract override val patienceConfig: PatienceConfig = PatienceConfig(
-    timeout = scaled(Span(AcceptanceSpecPatience.WAIT_SCALE * 1, Minutes)),
-    interval = scaled(Span(150, Millis))
-  )
-}
+  Scenario("User can launch Jupyter notebook when the project is private") {
 
-object AcceptanceSpecPatience {
-  // Scale all wait times by a constant value.
-  val WAIT_SCALE = 2;
+    `log in to Renku`
+
+    `create, continue or open a project`
+
+    `verify user can work with Jupyter notebook`
+
+    `log out of Renku`
+  }
 }

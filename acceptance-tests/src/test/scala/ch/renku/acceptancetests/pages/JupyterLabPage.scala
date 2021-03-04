@@ -21,9 +21,6 @@ package ch.renku.acceptancetests.pages
 import ch.renku.acceptancetests.model.projects.ProjectDetails._
 import ch.renku.acceptancetests.model.projects.{ProjectDetails, ProjectIdentifier}
 import ch.renku.acceptancetests.model.users.UserCredentials
-import ch.renku.acceptancetests.pages.Page.{Path, Title}
-import eu.timepit.refined.api.Refined
-import eu.timepit.refined.auto._
 import org.openqa.selenium.Keys.RETURN
 import org.openqa.selenium.interactions.Actions
 import org.openqa.selenium.{WebDriver, WebElement}
@@ -37,12 +34,11 @@ object JupyterLabPage {
     new JupyterLabPage(projectId.slug, projectId.namespace)
 }
 
-class JupyterLabPage(projectSlug: String, namespace: String) extends RenkuPage {
-
-  override val title: Title = "JupyterLab"
-  override val path: Path = Refined.unsafeApply(
-    s"/jupyterhub/user/${namespace}/${projectSlug}"
-  )
+class JupyterLabPage(projectSlug: String, namespace: String)
+    extends RenkuPage(
+      path = s"/jupyterhub/user/$namespace/$projectSlug",
+      title = "JupyterLab"
+    ) {
 
   override def pageReadyElement(implicit webDriver: WebDriver): Option[WebElement] = Some(terminalIcon)
 

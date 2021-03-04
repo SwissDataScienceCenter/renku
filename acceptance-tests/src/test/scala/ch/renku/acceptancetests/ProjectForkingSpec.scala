@@ -16,41 +16,43 @@
  * limitations under the License.
  */
 
-package ch.renku.acceptancetests.workflows
+package ch.renku.acceptancetests
 
 import ch.renku.acceptancetests.model.projects.ProjectDetails
-import ch.renku.acceptancetests.pages._
+import ch.renku.acceptancetests.pages.ProjectPage
 import ch.renku.acceptancetests.tooling.AcceptanceSpec
+import ch.renku.acceptancetests.workflows._
 
-import scala.language.postfixOps
+class ProjectForkingSpec extends AcceptanceSpec with Login with Project {
 
-trait Fork {
-  self: AcceptanceSpec with RemoveProject =>
+  Scenario("User can fork a project") {
 
-  def forkTestCase(implicit projectDetails: ProjectDetails, loginType: LoginType): Unit = {
-    val projectPage = ProjectPage()
-    go to projectPage
-    val forkedProject = forkProject
-    `remove project in GitLab`(forkedProject.projectDetails)
-    `verify project is removed`(forkedProject.projectDetails)
+    `log in to Renku`
+
+    `create, continue or open a project`
+
+    `fork the project`
+
+    `log out of Renku`
   }
 
-  def forkProject(implicit projectDetails: ProjectDetails): ForkedProject = {
-    val projectPage = ProjectPage()
+  private def `fork the project`: Unit = {
+    val projectPage = ProjectPage()(projectDetails, userCredentials)
+    go to projectPage
+
     When("user clicks on the fork button")
     click on projectPage.forkButton
 
-    val forkedProjectDetails: ProjectDetails = ProjectDetails.generate()
+    val forkedProjectDetails = ProjectDetails.generate()
 
     And(s"fills in the title (${forkedProjectDetails.title}) and submits")
     projectPage.ForkDialog.submitFormWith(forkedProjectDetails)
 
     Then("the project gets forked and the project page gets displayed")
-    val forkedProjectPage = ProjectPage()(forkedProjectDetails, implicitly)
+    val forkedProjectPage = ProjectPage()(forkedProjectDetails, userCredentials)
     verify browserAt forkedProjectPage
 
-    new ForkedProject(forkedProjectDetails)
+    `remove project in GitLab`(forkedProjectDetails.asProjectIdentifier)
+    `verify project is removed`(forkedProjectDetails)
   }
-
-  class ForkedProject(val projectDetails: ProjectDetails) {}
 }

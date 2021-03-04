@@ -18,34 +18,58 @@
 
 package ch.renku.acceptancetests.tooling
 
-import java.lang.System.getProperty
+import ch.renku.acceptancetests.model.projects.{ProjectDetails, Template, Visibility}
+import org.openqa.selenium.{JavascriptExecutor, WebDriver}
 
-import org.openqa.selenium.WebDriver
-import org.scalatestplus.selenium.{Driver, WebBrowser}
+import java.lang.System.getProperty
 
 /**
   * Helper class for capturing screenshots for documentation.
-  *
-  * @param frame Object that can capture a screen
-  * @param captureScreenshots True if should screenshot at checkpoint
   */
-class DocsScreenshots(test: AcceptanceSpec, browser: WebBrowser with Driver) {
+class DocsScreenshots(test: ScreenCapturing, webDriver: WebDriver) {
 
-  lazy val captureScreenshots: Boolean = {
+  val captureScreenshots: Boolean =
     Option(getProperty("docsrun")) orElse sys.env.get("RENKU_TEST_DOCS_RUN") match {
       case Some(s) => s.nonEmpty
       case None    => false
     }
-  }
+
+  private var screenshotSuppressed: Boolean = false
+
+  def disable(): Unit = screenshotSuppressed = true
+  def enable():  Unit = screenshotSuppressed = false
 
   /**
     * Informs helper to make a screenshot if we are capturing them.
     */
-  def reachedCheckpoint(): Unit = {
-    implicit val b:         WebBrowser with Driver = browser
-    implicit val webDriver: WebDriver              = test.webDriver
-    if (captureScreenshots)
-      test.saveScreenshot
+
+  def takeScreenshot(): Unit = takeScreenshot(executeBefore = None)
+
+  def takeScreenshot(executeBefore: String): Unit = takeScreenshot(Some(executeBefore))
+
+  def takeScreenshot(executeBefore: Option[String]): Unit = {
+
+    executeBefore.map { script =>
+      webDriver.asInstanceOf[JavascriptExecutor].executeScript(script)
+    }
+
+    if (captureScreenshots && !screenshotSuppressed) test.saveScreenshot()
   }
 
+  lazy val projectDetails: ProjectDetails = {
+    val readmeTitle = "flights tutorial"
+    ProjectDetails(
+      readmeTitle,
+      Visibility.Public,
+      "A renku tutorial project.",
+      Template("This template isn't used"),
+      readmeTitle
+    )
+  }
+}
+
+object DocsScreenshots {
+
+  def apply(test: ScreenCapturing, webDriver: WebDriver): DocsScreenshots =
+    new DocsScreenshots(test, webDriver)
 }
