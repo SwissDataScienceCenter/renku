@@ -98,20 +98,16 @@ running in your minikube virtual machine).
     $ eval $(minikube docker-env)
 
 
-Deploy tiller and the NGINX ingress controller
+Deploy the NGINX ingress controller
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-Helm needs a server-side component which is called tiller and runs inside
-the the kubernetes cluster. Also, we deploy `nginx ingress <https://github.com/kubernetes/ingress-nginx>`_.
+We need an ingress controller to expose HTTP and HTTPS routes from outside the cluster to services within the cluster.
+We use `nginx ingress <https://github.com/kubernetes/ingress-nginx>`_.
 
 .. code-block:: console
 
-    $ helm init
     $ helm upgrade --install nginx-ingress --namespace kube-system \
         --set controller.hostNetwork=true \
         stable/nginx-ingress
-
-**Notice**: after the `init` command, you may need to wait up to 1 minute
-before you can successfully run ``helm upgrade``.
 
 
 Build and pull all necessary charts
