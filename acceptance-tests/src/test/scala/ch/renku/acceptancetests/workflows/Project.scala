@@ -31,7 +31,7 @@ trait PrivateProject extends Project with BeforeAndAfterAll {
   self: AcceptanceSpec =>
 
   protected override lazy val projectVisibility: Visibility = Visibility.Private
-  protected implicit override val projectDetails: ProjectDetails =
+  protected implicit override lazy val projectDetails: ProjectDetails =
     ProjectDetails.generate().copy(visibility = projectVisibility)
 }
 
@@ -40,30 +40,22 @@ trait Project extends RemoveProject with BeforeAndAfterAll {
 
   protected lazy val projectVisibility: Visibility = Visibility.Public
 
-  protected implicit val projectDetails: ProjectDetails =
+  protected implicit lazy val projectDetails: ProjectDetails =
     Option
       .when(docsScreenshots.captureScreenshots)(docsScreenshots.projectDetails)
-      .orElse(maybeExistingProject)
+      .orElse(maybeExtantProject)
       .getOrElse(ProjectDetails.generate())
-
-  private lazy val maybeExistingProject: Option[ProjectDetails] =
-    (Option(getProperty("extant")) orElse sys.env.get("RENKU_TEST_EXTANT_PROJECT"))
-      .map(_.trim)
-      .map { readMeTitle =>
-        ProjectDetails(readMeTitle,
-                       projectVisibility,
-                       description = "unused",
-                       template = Template("Not used"),
-                       readmeTitle = readMeTitle
-        )
-      }
 
   protected implicit lazy val projectPage: ProjectPage = ProjectPage()
 
-  def `create or open a project`: Unit = maybeExistingProject match {
+  def `create, continue or open a project`: Unit = maybeExtantProject match {
     case Some(_) => `open a project`
-    case _       => `create a new project`
+    case _       => `create or continue with a project`
   }
+
+  private def `create or continue with a project`: Unit =
+    if (`project exists in GitLab`(projectDetails.asProjectIdentifier)) `open a project`
+    else `create a new project`
 
   private def `open a project`: Unit = {
     val projectPage = ProjectPage()
@@ -136,8 +128,20 @@ trait Project extends RemoveProject with BeforeAndAfterAll {
     verify that projectPage.Files.Info.content contains "This is a Renku project"
   }
 
+  private lazy val maybeExtantProject: Option[ProjectDetails] =
+    (Option(getProperty("extant")) orElse sys.env.get("RENKU_TEST_EXTANT_PROJECT"))
+      .map(_.trim)
+      .map { readMeTitle =>
+        ProjectDetails(readMeTitle,
+                       projectVisibility,
+                       description = "unused",
+                       template = Template("Not used"),
+                       readmeTitle = readMeTitle
+        )
+      }
+
   protected override def afterAll(): Unit = {
-    maybeExistingProject match {
+    maybeExtantProject match {
       case Some(_) => ()
       case _       => `remove project in GitLab`(projectDetails.asProjectIdentifier)
     }

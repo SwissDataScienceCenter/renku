@@ -36,7 +36,7 @@ import scala.util.matching.Regex
   *
   * It needs to be explicitly activated to avoid accidentally destroying projects.
   */
-class BatchRemoveProjectSpec extends AcceptanceSpec with Login with RemoveProject {
+class BatchProjectRemovalSpec extends AcceptanceSpec with Login with RemoveProject {
 
   Scenario("User can delete many projects project") {
     batchRemoveConfig match {
