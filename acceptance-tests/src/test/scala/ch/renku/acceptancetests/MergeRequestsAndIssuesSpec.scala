@@ -45,6 +45,8 @@ class MergeRequestsAndIssuesSpec
     `view the issue`(issueTitle)
 
     `log out of Renku`
+
+    sleep(10 seconds)
   }
 
   Scenario("User can create and view merge requests") {
