@@ -51,7 +51,6 @@ class DatasetPage(datasetName: DatasetName, projectPage: ProjectPage)
       .getOrElse(fail(s"Dataset '${to.path}' not found"))
   }(waitUpTo(20 seconds), implicitly[source.Position])
 
-
   object ProjectsList {
     def link(to: ProjectPage)(implicit webDriver: WebDriver): WebElement = eventually {
       find(cssSelector(s"td a[href='${to.path}' i]"))
@@ -59,7 +58,7 @@ class DatasetPage(datasetName: DatasetName, projectPage: ProjectPage)
     }(waitUpTo(20 seconds), implicitly[source.Position])
   }
 
-  object DatasetModificationForm {
+  object ModificationForm {
 
     def formTitle(implicit webDriver: WebDriver): WebElement = eventually {
       find(cssSelector("h3.uk-heading-divider")) getOrElse fail("Form title not found")
@@ -93,10 +92,8 @@ class DatasetPage(datasetName: DatasetName, projectPage: ProjectPage)
       find(cssSelector("input[name='uri']")) getOrElse fail("Dataset title field not found")
     }
 
-
     def datasetSubmitButton(implicit webDriver: WebDriver): WebElement = eventually {
       find(cssSelector("button[type='submit']")) getOrElse fail("Dataset form submit button not found")
     }
   }
-
 }

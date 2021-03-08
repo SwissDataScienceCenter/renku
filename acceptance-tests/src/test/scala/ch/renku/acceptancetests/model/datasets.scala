@@ -30,13 +30,12 @@ object datasets {
     override lazy val toString: String = value
   }
 
-  final case class DatasetURL(value: String Refined NonEmpty) {
-    override lazy val toString: String = value.value
+  final case class DatasetURL(value: String) {
+    override lazy val toString: String = value
   }
 
-
-  final case class DatasetDir(value: String Refined NonEmpty) {
-    override lazy val toString: String = value.value
+  final case class DatasetDir(value: String) {
+    override lazy val toString: String = value
   }
 
   object DatasetName {

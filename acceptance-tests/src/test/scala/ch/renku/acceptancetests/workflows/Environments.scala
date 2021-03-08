@@ -1,26 +1,43 @@
+/*
+ * Copyright 2021 Swiss Data Science Center (SDSC)
+ * A partnership between École Polytechnique Fédérale de Lausanne (EPFL) and
+ * Eidgenössische Technische Hochschule Zürich (ETHZ).
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package ch.renku.acceptancetests.workflows
 
 import ch.renku.acceptancetests.model.projects.{ProjectDetails, ProjectIdentifier}
 import ch.renku.acceptancetests.pages._
-import ch.renku.acceptancetests.tooling.{AcceptanceSpec, AnonEnvConfig, DocsScreenshots}
+import ch.renku.acceptancetests.tooling.{AcceptanceSpec, AnonEnvConfig}
+import org.openqa.selenium.WebDriver
 
 import scala.concurrent.duration._
-import scala.language.postfixOps
 
 trait Environments {
   self: AcceptanceSpec =>
 
-  def launchEnvironment(implicit projectDetails: ProjectDetails, docsScreenshots: DocsScreenshots): JupyterLabPage = {
-    implicit val projectPage: ProjectPage = ProjectPage()
+  def `launch an environment`(implicit projectDetails: ProjectDetails, projectPage: ProjectPage): JupyterLabPage = {
     When("user clicks on the Environments tab")
     click on projectPage.Environments.tab
-    docsScreenshots.reachedCheckpoint()
+    docsScreenshots.takeScreenshot()
 
-    clickNewAndWaitForImageBuild
-    docsScreenshots.reachedCheckpoint()
+    `click new & wait for image to build`
+    docsScreenshots.takeScreenshot()
 
-    clickStartEnvironmentAndWaitForReady
-    docsScreenshots.reachedCheckpoint()
+    `start environment & wait util it's not ready`
+    docsScreenshots.takeScreenshot()
 
     projectPage.Environments.Running.connectToJupyterLab
 
@@ -30,13 +47,13 @@ trait Environments {
     jupyterLabPage
   }
 
-  def stopEnvironment(implicit projectDetails: ProjectDetails): Unit =
+  def `stop environment`(implicit projectDetails: ProjectDetails): Unit =
     stopEnvironmentOnProjectPage(ProjectPage())
 
-  def stopEnvironment(projectId: ProjectIdentifier): Unit =
+  def `stop environment`(projectId: ProjectIdentifier): Unit =
     stopEnvironmentOnProjectPage(ProjectPage(projectId))
 
-  def stopEnvironmentOnProjectPage(projectPage: ProjectPage): Unit = {
+  private def stopEnvironmentOnProjectPage(projectPage: ProjectPage): Unit = {
     When("the user switches back to the Renku tab")
     verify browserSwitchedTo projectPage
     And("the Environments tab")
@@ -48,23 +65,18 @@ trait Environments {
     verify userCanSee projectPage.Environments.newLink
   }
 
-  def launchEnvironmentAutoFetch(implicit
-      projectDetails:  ProjectDetails,
-      docsScreenshots: DocsScreenshots
+  def `launch an environment with Auto Fetch`(implicit
+      projectDetails: ProjectDetails,
+      projectPage:    ProjectPage
   ): JupyterLabPage = {
-    implicit val projectPage: ProjectPage = ProjectPage()
     When("user clicks on the Environments tab")
     click on projectPage.Environments.tab
-    docsScreenshots.reachedCheckpoint()
 
-    clickNewAndWaitForImageBuild
-    docsScreenshots.reachedCheckpoint()
+    `click new & wait for image to build`
 
-    turnAutoFetchOn
-    docsScreenshots.reachedCheckpoint()
+    `turn Auto Fetch On`
 
-    clickStartEnvironmentAndWaitForReady
-    docsScreenshots.reachedCheckpoint()
+    `start environment & wait util it's not ready`
 
     projectPage.Environments.Running.connectToJupyterLab
 
@@ -74,7 +86,7 @@ trait Environments {
     jupyterLabPage
   }
 
-  def launchAnonymousEnvironment(implicit anonEnvConfig: AnonEnvConfig): Option[JupyterLabPage] = {
+  def `launch anonymous environment`(anonEnvConfig: AnonEnvConfig): Option[JupyterLabPage] = {
     val projectId   = anonEnvConfig.projectId
     val projectPage = ProjectPage(projectId)
     go to projectPage
@@ -84,15 +96,15 @@ trait Environments {
     click on projectPage.Environments.tab
     if (anonEnvConfig.isAvailable) {
       And("anonymous environments are supported")
-      Some(anonymousEnvironmentSupported(projectPage, projectId))
+      Some(`anonymous environment supported`(projectPage, projectId))
     } else {
       And("anonymous environments are not supported")
-      anonymousEnvironmentUnsupported(projectPage)
+      `anonymous environment unsupported`(projectPage)
       None
     }
   }
 
-  def launchUnprivilegedEnvironment(implicit anonEnvConfig: AnonEnvConfig): JupyterLabPage = {
+  def `launch unprivileged environment`(implicit anonEnvConfig: AnonEnvConfig): JupyterLabPage = {
     val projectId = anonEnvConfig.projectId
     implicit val projectPage: ProjectPage = ProjectPage(projectId)
     go to projectPage
@@ -100,8 +112,8 @@ trait Environments {
     And("clicks on the Environments tab to launch an unprivileged notebook")
     click on projectPage.Environments.tab
 
-    clickNewAndWaitForImageBuild
-    clickStartEnvironmentAndWaitForReady
+    `click new & wait for image to build`
+    `start environment & wait util it's not ready`
 
     projectPage.Environments.Running.connectToJupyterLab
 
@@ -112,17 +124,17 @@ trait Environments {
     jupyterLabPage
   }
 
-  def anonymousEnvironmentUnsupported(projectPage: ProjectPage): Option[JupyterLabPage] = {
+  private def `anonymous environment unsupported`(projectPage: ProjectPage): Option[JupyterLabPage] = {
     Then("they should see a message")
     projectPage.Environments.anonymousUnsupported
     None
   }
 
-  def anonymousEnvironmentSupported(pp: ProjectPage, projectId: ProjectIdentifier): JupyterLabPage = {
+  private def `anonymous environment supported`(pp: ProjectPage, projectId: ProjectIdentifier): JupyterLabPage = {
     implicit val projectPage: ProjectPage = pp
     sleep(5 seconds)
-    clickNewAndWaitForImageBuild
-    clickStartEnvironmentAndWaitForReady
+    `click new & wait for image to build`
+    `start environment & wait util it's not ready`
 
     projectPage.Environments.Running.connectToAnonymousJupyterLab
 
@@ -133,28 +145,38 @@ trait Environments {
     jupyterLabPage
   }
 
-  def clickNewAndWaitForImageBuild(implicit projectPage: ProjectPage): Unit = {
+  private def `click new & wait for image to build`(implicit projectPage: ProjectPage): Unit = {
     And("then they click on the New link")
     click on projectPage.Environments.newLink sleep (2 seconds)
     And("once the image is built")
-    projectPage.Environments.verifyImageReady
+    projectPage.Environments.verifyImageReady sleep (2 seconds)
   }
 
-  def turnAutoFetchOn(implicit projectPage: ProjectPage): Unit = {
+  private def `turn Auto Fetch On`(implicit projectPage: ProjectPage): Unit = {
     And("then they turn on the Auto-fetch option")
     click on projectPage.Environments.autoFetch
   }
 
-  def clickStartEnvironmentAndWaitForReady(implicit projectPage: ProjectPage): Unit = {
-    And("the user clicks on the Start Environment button")
-    click on projectPage.Environments.startEnvironment
-    Then("they should be redirected to the Environments -> Running tab")
-    verify userCanSee projectPage.Environments.Running.title
+  private def `start environment & wait util it's not ready`(implicit projectPage: ProjectPage): Unit =
+    projectPage.Environments.maybeStartEnvironment match {
+      case None =>
+        projectPage.Environments.connectToJupyterLabLink.isDisplayed shouldBe true
+      case Some(startEnvButton) =>
+        And("the user clicks on the Start Environment button")
+        click on startEnvButton sleep (5 seconds)
 
-    When("the environment is ready")
-    projectPage.Environments.Running.verifyEnvironmentReady
-    And("the user clicks on the Connect button in the table")
-    // Sleep a little while after clicking to give the server a chance to come up
-    click on projectPage.Environments.Running.title sleep (30 seconds)
-  }
+        `try few times before giving up` { (_: WebDriver) =>
+          Then("they should be redirected to the Environments -> Running tab")
+          verify userCanSee projectPage.Environments.Running.title
+        }
+
+        `try few times before giving up` { (_: WebDriver) =>
+          When("the environment is ready")
+          projectPage.Environments.Running.verifyEnvironmentReady
+        }
+
+        And("the user clicks on the Connect button in the table")
+        // Sleep a little while after clicking to give the server a chance to come up
+        click on projectPage.Environments.Running.title sleep (30 seconds)
+    }
 }
