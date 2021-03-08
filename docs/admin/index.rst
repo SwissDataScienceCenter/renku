@@ -15,7 +15,7 @@ To deploy Renku in a cluster, you need to have the following prerequisites:
 .. toctree::
    :maxdepth: 1
 
-   Helm <prerequisites/tiller>
+   Helm <prerequisites/helm>
    a DNS domain <prerequisites/dns>
    and its certificate (or a cert-manager LetsEncrypt) <prerequisites/certificates>
    NGINX (or other) ingress <prerequisites/nginx>
