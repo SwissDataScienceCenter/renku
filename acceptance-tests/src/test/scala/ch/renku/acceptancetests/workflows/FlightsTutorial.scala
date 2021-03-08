@@ -1,19 +1,36 @@
-package ch.renku.acceptancetests.workflows
+/*
+ * Copyright 2021 Swiss Data Science Center (SDSC)
+ * A partnership between École Polytechnique Fédérale de Lausanne (EPFL) and
+ * Eidgenössische Technische Hochschule Zürich (ETHZ).
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 
-import java.nio.file.Path
+package ch.renku.acceptancetests.workflows
 
 import ch.renku.acceptancetests.model.datasets.DatasetName
 import ch.renku.acceptancetests.model.projects.ProjectUrl
 import ch.renku.acceptancetests.model.users.UserCredentials
 import ch.renku.acceptancetests.tooling._
 import ch.renku.acceptancetests.tooling.console._
-import eu.timepit.refined.auto._
-import org.scalatest.{FeatureSpec, GivenWhenThen, Matchers => ScalatestMatchers}
+import org.scalatest.Matchers
 
-trait FlightsTutorial extends GivenWhenThen with Matchers with ScalatestMatchers with CLIConfiguration {
-  self: FeatureSpec =>
+import java.nio.file.Path
 
-  def followTheFlightsTutorialOnUsersMachine(
+trait FlightsTutorial extends Matchers with CLIConfiguration {
+  self: AcceptanceSpec =>
+
+  def `follow the flights tutorial`(
       projectUrl:             ProjectUrl
   )(implicit userCredentials: UserCredentials): DatasetName = {
 

@@ -1,6 +1,6 @@
 package ch.renku.acceptancetests.workflows
 
-import ch.renku.acceptancetests.model.datasets.{DatasetName, DatasetDir}
+import ch.renku.acceptancetests.model.datasets.{DatasetDir, DatasetName}
 import ch.renku.acceptancetests.model.projects.ProjectDetails
 import ch.renku.acceptancetests.pages.JupyterLabPage
 import ch.renku.acceptancetests.tooling.{AcceptanceSpec, DocsScreenshots}
@@ -23,7 +23,7 @@ trait JupyterNotebook extends Datasets {
     import jupyterLabPage.terminal
 
     val listZippedDatasetOutput = terminal %> s"unzip -l '$datasetDir'"
-    Then( message= "The output is ")
+    Then(message = "The output is ")
     // check listZippedDatasetOutput is not the same as 'unzip:  cannot find or open data'
   }
 
@@ -46,10 +46,10 @@ trait JupyterNotebook extends Datasets {
   }
 
   def verifyAutoLFSDatasetOnJupyterNotebook(implicit
-                                           projectDetails:  ProjectDetails,
-                                           docsScreenshots: DocsScreenshots,
-                                           datasetDir: DatasetDir
-                                          ): Unit = {
+      projectDetails:  ProjectDetails,
+      docsScreenshots: DocsScreenshots,
+      datasetDir:      DatasetDir
+  ): Unit = {
     val jupyterLabPage = launchEnvironmentAutoFetch
 
     When("the user clicks on the Terminal icon")

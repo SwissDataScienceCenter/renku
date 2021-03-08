@@ -156,6 +156,7 @@ gitlab:
     exposedAs: Ingress
     ingress:
       annotations:
+        cert-manager.io/cluster-issuer: letsencrypt-production
         kubernetes.io/ingress.class: nginx
         nginx.ingress.kubernetes.io/proxy-body-size: '0'
       hosts:
@@ -209,7 +210,7 @@ notebooks:
         ## define the client ID and secret for the gateway
         gateway:
           oauth_client_id: &gwJHclientId gateway
-          apiToken: &gwJHclientId  [random]        ## openssl rand -hex 32
+          apiToken: &gwJHclientSecret  [random]        ## openssl rand -hex 32
           oauth_redirect_uri: *oauth_redirect_uri
       extraEnv:
         - name: GITLAB_URL

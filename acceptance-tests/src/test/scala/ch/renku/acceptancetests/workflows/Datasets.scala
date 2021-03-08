@@ -1,13 +1,12 @@
 package ch.renku.acceptancetests.workflows
 
 import ch.renku.acceptancetests.model.datasets
-import ch.renku.acceptancetests.model.datasets.{DatasetName, DatasetURL}
+import ch.renku.acceptancetests.model.datasets.DatasetName
 import ch.renku.acceptancetests.model.projects.ProjectDetails
 import ch.renku.acceptancetests.pages.{DatasetPage, ProjectPage}
 import ch.renku.acceptancetests.tooling.AcceptanceSpec
 import eu.timepit.refined.auto._
 import org.openqa.selenium.{WebDriver, WebElement}
-import org.scalatestplus.selenium.WebBrowser.{cssSelector, findAll}
 
 import scala.concurrent.duration._
 import scala.language.postfixOps
@@ -39,13 +38,13 @@ trait Datasets {
 
     When("the user clicks on the Add Dataset button")
     click on projectPage.Datasets.addADatasetButton
-    verify that newDatasetPage.DatasetModificationForm.formTitle contains "Add Dataset"
+    verify that newDatasetPage.ModificationForm.formTitle contains "Add Dataset"
 
     And(s"the user add the title '$datasetName' to the new dataset")
     `changing its title`(to = datasetName.toString).modifying(newDatasetPage)
 
     And("the user saves the modification")
-    click on newDatasetPage.DatasetModificationForm.datasetSubmitButton sleep (10 seconds)
+    click on newDatasetPage.ModificationForm.datasetSubmitButton sleep (10 seconds)
 
     val datasetPage = DatasetPage(datasetName)
     Then("the user should see its newly created dataset and the project it belongs to")
@@ -57,10 +56,13 @@ trait Datasets {
     datasetPage
   }
 
-  def `import a dataset`(datasetURL: DatasetURL, datasetName: DatasetName)(implicit projectPage: ProjectPage, projectDetails: ProjectDetails): DatasetPage = {
+  def `import a dataset`(datasetURL: DatasetURL, datasetName: DatasetName)(implicit
+      projectPage:                   ProjectPage,
+      projectDetails:                ProjectDetails
+  ): DatasetPage = {
     import Import._
     val generatedDatasetName = datasets.DatasetName.generate
-    val newDatasetPage = DatasetPage(generatedDatasetName)
+    val newDatasetPage       = DatasetPage(generatedDatasetName)
     Given("the user is on the Datasets tab")
     click on projectPage.Datasets.tab
 
@@ -102,14 +104,14 @@ trait Datasets {
   }
 
   def `modify the dataset`(datasetPage: DatasetPage, by: Modification, and: Modification*)(implicit
-                                                                                           projectPage:                      ProjectPage
+      projectPage:                      ProjectPage
   ): DatasetPage = {
     Given(s"the user is on the page of the dataset")
     `navigate to dataset`(datasetPage)
 
     When(s"the user clicks on the modify button")
     click on datasetPage.modifyButton
-    verify userCanSee datasetPage.DatasetModificationForm.formTitle
+    verify userCanSee datasetPage.ModificationForm.formTitle
 
     And(s"the user modifies the dataset by ${by.name}")
     by.modifying(datasetPage)
@@ -119,7 +121,7 @@ trait Datasets {
     }
 
     And("the user saves the modification")
-    click on datasetPage.DatasetModificationForm.datasetSubmitButton
+    click on datasetPage.ModificationForm.datasetSubmitButton
 
     Then("the user should see its dataset and to which project it belongs")
     verify browserAt datasetPage
@@ -136,11 +138,10 @@ trait Datasets {
   object Modification {
 
     def `changing its title`(to: String): Modification =
-      Modification("changing its title", datasetPage => datasetPage.DatasetModificationForm.datasetTitleField, to)
+      Modification("changing its title", datasetPage => datasetPage.ModificationForm.datasetTitleField, to)
 
     def `changing its description`(to: String): Modification =
-      Modification("changing its description", datasetPage => datasetPage.DatasetModificationForm.datasetDescriptionField, to)
-
+      Modification("changing its description", datasetPage => datasetPage.ModificationForm.datasetDescriptionField, to)
   }
 
   case class Import private (name: String, field: DatasetPage => WebElement, newValue: String) {

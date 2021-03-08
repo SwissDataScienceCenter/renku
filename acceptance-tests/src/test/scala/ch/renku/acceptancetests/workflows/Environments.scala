@@ -30,8 +30,28 @@ trait Environments {
     jupyterLabPage
   }
 
+  def stopEnvironment(implicit projectDetails: ProjectDetails): Unit =
+    stopEnvironmentOnProjectPage(ProjectPage())
 
-  def launchEnvironmentAutoFetch(implicit projectDetails: ProjectDetails, docsScreenshots: DocsScreenshots): JupyterLabPage = {
+  def stopEnvironment(projectId: ProjectIdentifier): Unit =
+    stopEnvironmentOnProjectPage(ProjectPage(projectId))
+
+  def stopEnvironmentOnProjectPage(projectPage: ProjectPage): Unit = {
+    When("the user switches back to the Renku tab")
+    verify browserSwitchedTo projectPage
+    And("the Environments tab")
+    click on projectPage.Environments.tab
+    And("they turn off the interactive session they started before")
+    click on projectPage.Environments.Running.connectDotButton
+    click on projectPage.Environments.Running.stopButton sleep (10 seconds)
+    Then("the session gets stopped and they can see the New Session link")
+    verify userCanSee projectPage.Environments.newLink
+  }
+
+  def launchEnvironmentAutoFetch(implicit
+      projectDetails:  ProjectDetails,
+      docsScreenshots: DocsScreenshots
+  ): JupyterLabPage = {
     implicit val projectPage: ProjectPage = ProjectPage()
     When("user clicks on the Environments tab")
     click on projectPage.Environments.tab
@@ -52,24 +72,6 @@ trait Environments {
     val jupyterLabPage = JupyterLabPage()
     verify browserSwitchedTo jupyterLabPage sleep (5 seconds)
     jupyterLabPage
-  }
-
-  def stopEnvironment(implicit projectDetails: ProjectDetails): Unit =
-    stopEnvironmentOnProjectPage(ProjectPage())
-
-  def stopEnvironment(projectId: ProjectIdentifier): Unit =
-    stopEnvironmentOnProjectPage(ProjectPage(projectId))
-
-  def stopEnvironmentOnProjectPage(projectPage: ProjectPage): Unit = {
-    When("the user switches back to the Renku tab")
-    verify browserSwitchedTo projectPage
-    And("the Environments tab")
-    click on projectPage.Environments.tab
-    And("they turn off the interactive session they started before")
-    click on projectPage.Environments.Running.connectDotButton
-    click on projectPage.Environments.Running.stopButton sleep (10 seconds)
-    Then("the session gets stopped and they can see the New Session link")
-    verify userCanSee projectPage.Environments.newLink
   }
 
   def launchAnonymousEnvironment(implicit anonEnvConfig: AnonEnvConfig): Option[JupyterLabPage] = {
