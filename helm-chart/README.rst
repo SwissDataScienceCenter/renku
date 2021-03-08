@@ -1,7 +1,7 @@
 Helm Charts for Deploying RENKU on Kubernetes
 =============================================
 
-Helm 2.9.1 or later (but currently not Helm 3) is necessary as we use
+Helm 2.9.1 or later (including Helm 3) is necessary as we use
 the :code:`before-hook-creation` hook deletion policy. See also:
 `before-hook-creation delete policy <https://github.com/kubernetes/helm/commit/1d4883bf3c85ea43ed071dff4e02cc47bb66f44f>`_.
 
@@ -17,8 +17,7 @@ Create a values file using ``renku/values.yaml`` as a template. Then run:
     $ helm repo add renku https://swissdatasciencecenter.github.io/helm-charts/
     $ helm upgrade --install renku/renku \
         --namespace renku \
-        -f my-values.yaml \
-        --version 0.6.2
+        -f my-values.yaml
 
 See the `helm chart registry <https://swissdatasciencecenter.github.io/helm-charts/>`_ for
 available versions.
