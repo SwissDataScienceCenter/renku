@@ -12,7 +12,6 @@ Features
 
 * **Projects**: update the project fork flow to match project creation
 
-* **CLI**: add ``renku storage migrate`` command to migrate git files to lfs
 * **CLI**: add service component management commands
 
 Improvements
@@ -40,7 +39,8 @@ Bug Fixes
 * **User interface**: fix broken markdown preview caused by links without a reference
 * **User interface**: handle sub-groups on projects list
 
-* **Core Service**: call git commands for batches of files to prevent hitting argument length limits
+* **Core**: call git commands for batches of files to prevent hitting argument length limits
+
 * **Core Service**: correctly handle HTTP server errors and ref on project.clone
 * **Core Service**: use project_id as part of project filesystem path
 
