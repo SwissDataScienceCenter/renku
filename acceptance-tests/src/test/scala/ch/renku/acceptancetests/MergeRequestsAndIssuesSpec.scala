@@ -45,6 +45,8 @@ class MergeRequestsAndIssuesSpec
     `view the issue`(issueTitle)
 
     `log out of Renku`
+
+    sleep(10 seconds)
   }
 
   Scenario("User can create and view merge requests") {
@@ -67,7 +69,7 @@ class MergeRequestsAndIssuesSpec
 
   private def `add change to the project`(branchName: String): Unit = {
     docsScreenshots.disable()
-    val jupyterLabPage = `launch an environment`(projectDetails)
+    val jupyterLabPage = `launch an environment`
     docsScreenshots.enable()
 
     When("the user clicks on the Terminal icon")
