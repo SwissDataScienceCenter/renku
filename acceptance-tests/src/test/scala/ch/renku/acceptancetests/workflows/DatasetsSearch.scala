@@ -18,17 +18,23 @@
 
 package ch.renku.acceptancetests.workflows
 
-import ch.renku.acceptancetests.model.projects.ProjectIdentifier
-import ch.renku.acceptancetests.tooling.{AcceptanceSpec, GitLabApi}
-
+import ch.renku.acceptancetests.pages.DatasetsPage
+import ch.renku.acceptancetests.tooling.AcceptanceSpec
 import scala.concurrent.duration._
 
-trait RemoveProject extends BrowserNavigation {
-  self: AcceptanceSpec with GitLabApi =>
+trait DatasetsSearch {
+  self: AcceptanceSpec =>
 
-  def `remove project in GitLab`(implicit projectId: ProjectIdentifier): Unit = {
-    When(s"the '${projectId.slug}' project is removed")
-    `delete project in GitLab`(projectId)
-    sleep(1 second)
+  def `search for dataset with phrase`(phrase: String): Unit = {
+    When("the user click the Datasets link on the top bar")
+    click on DatasetsPage.TopBar.datasets
+    sleep(5 seconds)
+    Then("they should see the Datasets search page")
+    verify browserAt DatasetsPage
+
+    When(s"the user types in the '$phrase' in the search field")
+    DatasetsPage.searchBox enterValue phrase
+    And("clicks the search button")
+    click on DatasetsPage.searchButton sleep (5 seconds)
   }
 }

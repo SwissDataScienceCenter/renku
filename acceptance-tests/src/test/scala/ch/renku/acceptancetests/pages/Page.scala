@@ -44,8 +44,12 @@ abstract class Page[Url <: BaseUrl](val path: String, val title: String)
 
   protected implicit def toWebElement(element: WebBrowser.Element): WebElement =
     element.underlying
+
   protected implicit def toMaybeWebElement(maybeElement: Option[WebBrowser.Element]): Option[WebElement] =
     maybeElement.map(_.underlying)
+
+  protected implicit def toListWebElement(elements: Iterable[WebBrowser.Element]): List[WebElement] =
+    elements.map(_.underlying).toList
 
   protected implicit class ElementOps(element: WebBrowser.Element) {
     lazy val parent: WebElement = element.findElement(By xpath "./..")
