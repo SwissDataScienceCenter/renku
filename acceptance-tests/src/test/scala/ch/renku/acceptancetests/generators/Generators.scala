@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 Swiss Data Science Center (SDSC)
+ * Copyright 2021 Swiss Data Science Center (SDSC)
  * A partnership between École Polytechnique Fédérale de Lausanne (EPFL) and
  * Eidgenössische Technische Hochschule Zürich (ETHZ).
  *
@@ -34,19 +34,17 @@ import scala.language.{implicitConversions, postfixOps}
 
 object Generators {
 
-  def nonEmptyStrings(maxLength: Int = 10, charsGenerator: Gen[Char] = alphaChar): Gen[String Refined NonEmpty] = {
+  def nonEmptyStrings(maxLength: Int = 10, charsGenerator: Gen[Char] = alphaChar): Gen[String] = {
     require(maxLength > 0)
 
     val lengths =
       if (maxLength == 1) choose(1, maxLength)
       else frequency(1 -> choose(1, maxLength), 9 -> choose(2, maxLength))
 
-    (
-      for {
-        length <- lengths
-        chars  <- listOfN(length, charsGenerator)
-      } yield chars.mkString("")
-    ) map Refined.unsafeApply
+    for {
+      length <- lengths
+      chars  <- listOfN(length, charsGenerator)
+    } yield chars.mkString("")
   }
 
   def paragraph(minWords: Int Refined Positive = 2,
@@ -61,17 +59,12 @@ object Generators {
     ) map Refined.unsafeApply
   }
 
-  def prefixParagraph(prefix:   String,
-                      minWords: Int Refined Positive = 2,
-                      maxWords: Int Refined Positive = 10
-  ): Gen[String Refined NonEmpty] = {
-    require(minWords.value <= maxWords.value)
-    (
-      for {
-        words     <- Gen.choose(minWords.value, maxWords.value)
-        paragraph <- listOfN(words, nonEmptyStrings())
-      } yield prefix + paragraph.mkString(" ")
-    ) map Refined.unsafeApply
+  def prefixParagraph(prefix: String, minWords: Int = 2, maxWords: Int = 10): Gen[String] = {
+    require(minWords <= maxWords)
+    for {
+      words     <- Gen.choose(minWords, maxWords)
+      paragraph <- listOfN(words, nonEmptyStrings())
+    } yield prefix + paragraph.mkString(" ")
   }
 
   def emails: Gen[String Refined NonEmpty] = {
@@ -92,7 +85,7 @@ object Generators {
 
   def nonEmptyStringsList(minElements: Int Refined Positive = 1,
                           maxElements: Int Refined Positive = 5
-  ): Gen[List[String Refined NonEmpty]] =
+  ): Gen[List[String]] =
     for {
       size  <- choose(minElements.value, maxElements.value)
       lines <- Gen.listOfN(size, nonEmptyStrings())

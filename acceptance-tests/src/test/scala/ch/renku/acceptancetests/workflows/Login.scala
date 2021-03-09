@@ -1,3 +1,21 @@
+/*
+ * Copyright 2021 Swiss Data Science Center (SDSC)
+ * A partnership between École Polytechnique Fédérale de Lausanne (EPFL) and
+ * Eidgenössische Technische Hochschule Zürich (ETHZ).
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package ch.renku.acceptancetests.workflows
 
 import ch.renku.acceptancetests.pages._
@@ -5,12 +23,13 @@ import ch.renku.acceptancetests.tooling.AcceptanceSpec
 import ch.renku.acceptancetests.workflows.LoginType._
 
 import scala.concurrent.duration._
-import scala.language.postfixOps
 
 trait Login {
   self: AcceptanceSpec =>
 
-  def logIntoRenku: LoginType = {
+  private var maybeLoginType: Option[LoginType] = None
+
+  def `log in to Renku`: Unit = {
     Given("user is not logged in")
     go to LandingPage sleep (1 second)
     verify browserAt LandingPage
@@ -22,16 +41,13 @@ trait Login {
     Then("they should get into the Login Page")
     verify browserAt LoginPage
 
-    val loginType = if (userCredentials.useProvider) {
-      logIntoRenkuUsingProvider
-    } else {
-      logIntoRenkuDirectly
-    }
+    val loginType =
+      if (userCredentials.useProvider) logIntoRenkuUsingProvider
+      else logIntoRenkuDirectly
+    maybeLoginType = Some(loginType)
 
     Then("they should get into the Welcome page")
     verify browserAt WelcomePage
-
-    loginType
   }
 
   private def logIntoRenkuUsingProvider: LoginType = {
@@ -128,12 +144,12 @@ trait Login {
     lt
   }
 
-  def logOutOfRenku(implicit loginType: LoginType): Unit = {
+  def `log out of Renku`: Unit = {
     When("user clicks the Log out link")
     click on WelcomePage.TopBar.topRightDropDown
-    click on WelcomePage.TopBar.logoutLink
+    click on WelcomePage.TopBar.logoutLink sleep (2 seconds)
 
-    unless(loginType == LoginWithProvider) {
+    unless(maybeLoginType contains LoginWithProvider) {
       Then("they should get back into the Landing page")
       verify browserAt LandingPage
       verify userCanSee LandingPage.loginButton sleep (1 second)

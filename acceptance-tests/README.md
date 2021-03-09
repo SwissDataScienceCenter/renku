@@ -30,7 +30,8 @@ To run through docker-compose, the tests parameters need to be provided as envir
 
 ```
 docker-compose run \
--e RENKU_TEST_URL=https://renku-kuba.dev.renku.ch \
+-e RENKU_TEST_URL=https://kuba.dev.renku.ch \
+-e GITLAB_TEST_URL=https://kuba.dev.renku.ch/gitlab \
 -e RENKU_TEST_FULL_NAME="<full user name>" \
 -e RENKU_TEST_EMAIL=<email> \
 -e RENKU_TEST_USERNAME=<username> \
@@ -41,7 +42,8 @@ sbt
 By default, all tests are run. You can provide an argument to run a specific test:
 ```
 docker-compose run \
--e RENKU_TEST_URL=https://renku-kuba.dev.renku.ch \
+-e RENKU_TEST_URL=https://kuba.dev.renku.ch \
+-e GITLAB_TEST_URL=https://kuba.dev.renku.ch/gitlab \
 -e RENKU_TEST_FULL_NAME="<full user name>" \
 -e RENKU_TEST_EMAIL=<email> \
 -e RENKU_TEST_USERNAME=<username> \
@@ -118,21 +120,22 @@ order is command-line argument, environment variable and the defaults file.
 
 To create a `tests-defaults.conf` file, copy the `tests-defaults.conf.template` file and fill in the values.
 
-| Argument   | Environment               | Purpose                                                          |
-| ---------- | ------------------------- | ---------------------------------------------------------------- |
-| env        | RENKU_TEST_URL            | URL to a Renku server, e.g., https://dev.renku.ch                |
-| email      | RENKU_TEST_EMAIL          | user's email e.g. `jakub.chrobasik@epfl.ch`                      |
-| username   | RENKU_TEST_USERNAME       | user's username e.g. `jakub.chrobasik1`                          |
-| fullname   | RENKU_TEST_FULL_NAME      | user's full name e.g. `Jakub Józef Chrobasik`                    |
-| password   | RENKU_TEST_PASSWORD       | user's password                                                  |
-| provider   | RENKU_TEST_PROVIDER       | if non-empty, use an OpenID provider for auth                    |
-| register   | RENKU_TEST_REGISTER       | if non-empty, register a new user; has precedence over provider  |
-| docsrun    | RENKU_TEST_DOCS_RUN       | if non-empty, screenshot for docs during hands-on test           |
-| extant     | RENKU_TEST_EXTANT_PROJECT | if non-empty, an existing project to use for tests               |
-| anon       | RENKU_TEST_ANON_PROJECT   | namespace/name for the project to test anonymously               |
-| anonAvail  | RENKU_TEST_ANON_AVAILABLE | if true, anonymous environments will be tested.                  |
-| batchRem   | RENKU_TEST_BATCH_REMOVE   | if true, run the BatchRemoveProjectSpec                          |
-| remPattern | RENKU_TEST_REMOVE_PATTERN | pattern to match to decide if a project should be batch removed  |
+| Argument   | Environment               | Purpose                                                                                             |
+| ---------- | ------------------------- | --------------------------------------------------------------------------------------------------- |
+| env        | RENKU_TEST_URL            | URL to a Renku server, e.g., https://dev.renku.ch                                                   |
+| gitLabUrl  | GITLAB_TEST_URL           | URL to a GitLab server, e.g., https://dev.renku.ch/gitlab; defaulted to env/gitlab if not specified |
+| email      | RENKU_TEST_EMAIL          | user's email e.g. `jakub.chrobasik@epfl.ch`                                                         |
+| username   | RENKU_TEST_USERNAME       | user's username e.g. `jakub.chrobasik1`                                                             |
+| fullname   | RENKU_TEST_FULL_NAME      | user's full name e.g. `Jakub Józef Chrobasik`                                                       |
+| password   | RENKU_TEST_PASSWORD       | user's password                                                                                     |
+| provider   | RENKU_TEST_PROVIDER       | if non-empty, use an OpenID provider for auth                                                       |
+| register   | RENKU_TEST_REGISTER       | if non-empty, register a new user; has precedence over provider                                     |
+| docsrun    | RENKU_TEST_DOCS_RUN       | if non-empty, screenshot for docs during hands-on test                                              |
+| extant     | RENKU_TEST_EXTANT_PROJECT | if non-empty, an existing project to use for tests                                                  |
+| anon       | RENKU_TEST_ANON_PROJECT   | namespace/name for the project to test anonymously                                                  |
+| anonAvail  | RENKU_TEST_ANON_AVAILABLE | if true, anonymous environments will be tested.                                                     |
+| batchRem   | RENKU_TEST_BATCH_REMOVE   | if true, run the BatchRemoveProjectSpec                                                             |
+| remPattern | RENKU_TEST_REMOVE_PATTERN | pattern to match to decide if a project should be batch removed                                     |
 
 For example, the following may be run in the project's root: `sbt -Denv=https://renku-kuba.dev.renku.ch
 -Demail=<email> -Dusername=<username> -Dfullname='<full user name>' -Dpassword=<password> test`
@@ -211,29 +214,18 @@ objects are put into the `pages` subfolder.
 
   A:  
 
-```
-  import scala.language.postfixOps
-import scala.concurrent.duration._
-```
-
-* Q: 
-
-```
-postfix operator seconds needs to be enabled
-by making the implicit value scala.language.postfixOps visible.
-```
-  A: 
-  
   ```
-    import scala.language.postfixOps
-```
+  import scala.concurrent.duration._
+  ```
+
 * Q: 
-```
-type mismatch;
- found   : String("Parent Group")
- required: eu.timepit.refined.api.Refined[String,eu.timepit.refined.collection.NonEmpty]
-```
-A: 
-```
-import eu.timepit.refined.auto._
-```
+  ```
+  type mismatch;
+   found   : String("Parent Group")
+   required: eu.timepit.refined.api.Refined[String,eu.timepit.refined.collection.NonEmpty]
+  ```
+ 
+  A: 
+  ```
+  import eu.timepit.refined.auto._
+  ```

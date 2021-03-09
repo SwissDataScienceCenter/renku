@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 Swiss Data Science Center (SDSC)
+ * Copyright 2021 Swiss Data Science Center (SDSC)
  * A partnership between École Polytechnique Fédérale de Lausanne (EPFL) and
  * Eidgenössische Technische Hochschule Zürich (ETHZ).
  *
@@ -19,18 +19,15 @@
 package ch.renku.acceptancetests
 
 import ch.renku.acceptancetests.tooling.AcceptanceSpec
-import ch.renku.acceptancetests.workflows.{Login, LoginType}
-
-import scala.language.postfixOps
+import ch.renku.acceptancetests.workflows.Login
 
 class LoginSpec extends AcceptanceSpec with Login {
 
   feature("User logging in and out") {
 
-    scenario("Logging into Renku") {
-      implicit val loginType: LoginType = logIntoRenku
-
-      logOutOfRenku
+    Scenario("Logging into Renku") {
+      `log in to Renku`
+      `log out of Renku`
     }
   }
 }

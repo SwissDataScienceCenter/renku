@@ -30,7 +30,8 @@ global:
     postgresPassword:
       value:
       overwriteOnHelmUpgrade: false
-    ## Admin password for Keycloak
+    ## Admin username/password for Keycloak
+    user: admin
     password:
       value:
       overwriteOnHelmUpgrade: false
@@ -98,10 +99,11 @@ ingress:
   ## Annotations for the created ingress
   annotations:
     ## The ingress class
+    cert-manager.io/cluster-issuer: letsencrypt-production
     kubernetes.io/ingress.class: nginx
-    # kubernetes.io/tls-acme: 'true'
     nginx.ingress.kubernetes.io/proxy-body-size: '0' # Adjust to a reasonable value for production to avoid DOS attacks.
     nginx.ingress.kubernetes.io/proxy-request-buffering: 'off' # Needed if GitLab is behind this ingress
+    nginx.ingress.kubernetes.io/proxy-buffer-size: '8k' # Default is 4k, larger size necessary for keycloak
 
   ## Hosts for the ingress
   ## Should include at least the value from `global.renku.domain`
@@ -116,13 +118,54 @@ ingress:
 
 ## Keycloak configuration
 keycloak:
+
+  ## Spawn a keycloak instance
+  enabled: true
+
+  postgresql:
+    # Disable PostgreSQL dependency
+    enabled: false
+
+  extraEnv: |
+    - name: DB_VENDOR
+      value: postgres
+    - name: DB_PORT
+      value: "5432"
+    - name:  PROXY_ADDRESS_FORWARDING
+      value: "true"
+
+
+  # The following environment variables are provided to keycloak
+  # as extraEnvFrom secrets.
+
+  # renku-keycloak-postgres
+  # - DB_ADDR: database host                            value: <RELEASE-NAME>-postgresql
+  # - DB_DATABASE: database name for keycloak           value: global.keycloak.postgresDatabase
+  # - DB_USER: database username for keycloak database  value: global.keycloak.postgresUser
+  # - DB_PASSWORD: database password for keycloak       value: global.keycloak.postgresPassword.value
+  # keycloak-password-secret
+  # - KEYCLOAK_USER: keyclaok admin username            value: global.keycloak.user
+  # - KEYCLOAK_PASSWORD: keycloak admin password        value: global.keycloak.password.value
+
+  extraEnvFrom: |
+    - secretRef:
+        name: renku-keycloak-postgres
+    - secretRef:
+        name: keycloak-password-secret
+
+  extraVolumeMounts: |
+    - name: theme
+      mountPath: /opt/jboss/keycloak/themes/renku-theme
+
+  extraVolumes: |
+    - name: theme
+      emptyDir: {}
+
+
   ## Create a demo user in keycloak? Note that the password for the demo
   ## user must be queried from kubernetes (see the rendered NOTES.txt
   ## template which is shown after a successul deployment).
   createDemoUser: false
-
-  ## Spawn a keycloak instance
-  enabled: true
 
   ## This section points to an image used to create
   ## a Renku realm and initialize it with the necessary
@@ -138,69 +181,24 @@ keycloak:
   test:
     enabled: false
 
-  keycloak:
+  extraInitContainers: |
+    - name: theme-provider
+      image: renku/keycloak-theme:v1.2
+      imagePullPolicy: IfNotPresent
+      command:
+        - sh
+      args:
+        - -c
+        - |
+          echo "Copying theme..."
+          cp -Rfv /renku_theme/* /theme
+      volumeMounts:
+        - name: theme
+          mountPath: /theme
 
-    ## Keycloak admin user configuration
-    username: admin
-    ## Do not set an admin password through this chart value. Instead, set it
-    ## through global.keycloak.password.value.
-    # password:
-    existingSecret: keycloak-password-secret
-    existingSecretKey: keycloak-password
 
-    livenessProbe:
-      initialDelaySeconds: 180
-    readinessProbe:
-      initialDelaySeconds: 120
-
-    extraInitContainers: |
-      - name: theme-provider
-        image: renku/keycloak-theme:v1.2
-        imagePullPolicy: IfNotPresent
-        command:
-          - sh
-        args:
-          - -c
-          - |
-            echo "Copying theme..."
-            cp -Rfv /renku_theme/* /theme
-        volumeMounts:
-          - name: theme
-            mountPath: /theme
-
-    extraVolumes: |
-      - name: theme
-        emptyDir: {}
-
-    extraVolumeMounts: |
-      - name: theme
-        mountPath: /opt/jboss/keycloak/themes/renku-theme
-
-    persistence:
-
-      # Disable deployment of the PostgreSQL chart
-      deployPostgres: false
-
-      # The database vendor. Can be either "postgres", "mysql", "mariadb", or "h2"
-      dbVendor: postgres
-
-      ## The following values only apply if "deployPostgres" is set to "false"
-      dbName: keycloak
-      # !!!
-      ## This value is dependent on the Release name! (but helm charts don't allow templating values here.)
-      # !!!
-      dbHost: renku-postgresql
-      dbPort: 5432 # 5432 is PostgreSQL's default port. For MySQL it would be 3306
-      dbUser: keycloak
-
-      # !!!
-      ## This value is dependent on the Release name! (but helm charts don't allow templating values here.)
-      # !!!
-      existingSecret: renku-keycloak-postgres
-      existingSecretKey: keycloak-postgres-password
-
-    ingress:
-      enabled: false
+  ingress:
+    enabled: false
 
 
 # Postgresql configuration
@@ -374,8 +372,8 @@ gitlab:
     ## Find below an example of values
     # ingress:
     #   annotations:
+    #     cert-manager.io/cluster-issuer: letsencrypt-production
     #     kubernetes.io/ingress.class: nginx
-    #     kubernetes.io/tls-acme: "true"
     #     nginx.ingress.kubernetes.io/proxy-body-size: '0'
     #   hosts:
     #   - registry.example.com

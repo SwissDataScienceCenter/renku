@@ -1,12 +1,27 @@
+/*
+ * Copyright 2021 Swiss Data Science Center (SDSC)
+ * A partnership between École Polytechnique Fédérale de Lausanne (EPFL) and
+ * Eidgenössische Technische Hochschule Zürich (ETHZ).
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package ch.renku.acceptancetests.pages
 
 import ch.renku.acceptancetests.model.projects.ProjectDetails._
 import ch.renku.acceptancetests.model.projects.{ProjectDetails, ProjectIdentifier}
 import ch.renku.acceptancetests.model.users.UserCredentials
-import ch.renku.acceptancetests.pages.Page.{Path, Title}
 import ch.renku.acceptancetests.tooling.AcceptanceSpec
-import eu.timepit.refined.api.Refined
-import eu.timepit.refined.auto._
 import org.openqa.selenium.{By, WebDriver, WebElement}
 import org.scalactic.source
 import org.scalatestplus.selenium.WebBrowser
@@ -14,7 +29,6 @@ import org.scalatestplus.selenium.WebBrowser.{cssSelector, find, findAll}
 
 import scala.concurrent.duration._
 import scala.jdk.CollectionConverters._
-import scala.language.postfixOps
 
 object ProjectPage {
 
@@ -29,12 +43,12 @@ object ProjectPage {
     new ProjectPage(projectId.slug, projectId.namespace)
 }
 
-class ProjectPage(projectSlug: String, namespace: String) extends RenkuPage with TopBar {
-
-  override val title: Title = "Renku"
-  override val path: Path = Refined.unsafeApply(
-    s"/projects/$namespace/$projectSlug"
-  )
+class ProjectPage(projectSlug: String, namespace: String)
+    extends RenkuPage(
+      path = s"/projects/$namespace/$projectSlug",
+      title = "Renku"
+    )
+    with TopBar {
 
   override def pageReadyElement(implicit webDriver: WebDriver): Option[WebElement] = Some(Overview.tab)
 
@@ -272,30 +286,37 @@ class ProjectPage(projectSlug: String, namespace: String) extends RenkuPage with
       }(waitUpTo(1 minute), implicitly[source.Position])
 
     def anonymousUnsupported(implicit webDriver: WebDriver): WebElement = eventually {
-      findAll(cssSelector(s"div > div > div > div > p"))
+      findAll(cssSelector("div > div > div > div > p"))
         .find(
           _.text == "This Renkulab deployment doesn't allow unauthenticated users to start Interactive Environments."
         )
         .getOrElse(fail("Unsupported environment notification not found"))
     }
 
-    def startEnvironment(implicit webDriver: WebDriver): WebElement = eventually {
-      verifyImageReady
-      findAll(cssSelector("button.btn.btn-primary:last-of-type"))
+    def startEnvironment(implicit webDriver: WebDriver): WebElement =
+      maybeStartEnvironment getOrElse fail("Start environment button not found")
+
+    def maybeStartEnvironment(implicit webDriver: WebDriver): Option[WebElement] = eventually {
+      verifyImageReady sleep (2 seconds)
+      findAll(cssSelector("div > form > button.btn.btn-primary"))
         .find(_.text == "Start environment")
-        .getOrElse(fail("Start environment button not found"))
     }
 
-    def verifyImageReady(implicit webDriver: WebDriver): Unit =
-      eventually {
-        findImageReadyBadge getOrElse waitForImageToBeReady
-      }(waitUpTo(10 minutes), implicitly[source.Position])
+    def connectToJupyterLabLink(implicit webDriver: WebDriver): WebElement = eventually {
+      findAll(cssSelector("a[href*='jupyterhub/user/']"))
+        .find(_.text == "Connect")
+        .getOrElse(fail("Connect to environment button not found"))
+    }
+
+    def verifyImageReady(implicit webDriver: WebDriver): Unit = eventually {
+      findImageReadyBadge getOrElse waitForImageToBeReady
+    }(waitUpTo(10 minutes), implicitly[source.Position])
 
     private def waitForImageToBeReady(implicit webDriver: WebDriver): Unit = {
       find(cssSelector(".badge.badge-warning")) orElse findImageReadyBadge getOrElse fail(
         "Image building info badges not found"
       )
-      sleep(2 seconds)
+      sleep(1 second)
       findImageReadyBadge getOrElse fail("Image not yet built")
     }
 
@@ -307,13 +328,14 @@ class ProjectPage(projectSlug: String, namespace: String) extends RenkuPage with
       def title(implicit webDriver: WebDriver): WebElement = eventually {
         find(cssSelector("div.row div.col h3"))
           .map { element =>
-            element.text shouldBe "Interactive Environments"; element
+            element.text shouldBe "Interactive Environments"
+            element
           }
           .getOrElse(fail("Environments -> Running title not found"))
       }
 
       def connectToJupyterLab(implicit webDriver: WebDriver, spec: AcceptanceSpec): Unit =
-        connectToJupyterLab(s"table a[href*='/jupyterhub/user/']")
+        connectToJupyterLab(s"a[href*='/jupyterhub/user/']")
 
       def connectToAnonymousJupyterLab(implicit webDriver: WebDriver, spec: AcceptanceSpec): Unit =
         connectToJupyterLab(s"table a[href*='/jupyterhub-tmp/user/']")
@@ -362,11 +384,10 @@ class ProjectPage(projectSlug: String, namespace: String) extends RenkuPage with
           .parent
       }
 
-      def verifyEnvironmentReady(implicit webDriver: WebDriver): Unit =
-        eventually {
-          find(cssSelector(".text-nowrap.p-1.badge.badge-success"))
-            .getOrElse(fail("Interactive environment is not ready"))
-        }(waitUpTo(10 minutes), implicitly[source.Position])
+      def verifyEnvironmentReady(implicit webDriver: WebDriver): Unit = eventually {
+        find(cssSelector(".text-nowrap.p-1.badge.badge-success"))
+          .getOrElse(fail("Interactive environment is not ready"))
+      }
     }
   }
 
@@ -377,8 +398,8 @@ class ProjectPage(projectSlug: String, namespace: String) extends RenkuPage with
     }
 
     def addProjectTags(tags: String)(implicit webDriver: WebDriver): Unit = eventually {
-      (projectTags enterValue tags) sleep (2 seconds)
-      updateButton.click() sleep (2 seconds)
+      projectTags enterValue tags
+      updateButton.click() sleep (5 seconds)
     }
 
     def projectTags(implicit webDriver: WebDriver): WebElement = eventually {
@@ -386,8 +407,8 @@ class ProjectPage(projectSlug: String, namespace: String) extends RenkuPage with
     }
 
     def updateProjectDescription(description: String)(implicit webDriver: WebDriver): Unit = eventually {
-      (projectDescription enterValue description) sleep (2 seconds)
-      updateButton.click() sleep (2 seconds)
+      projectDescription enterValue description
+      updateButton.click() sleep (5 seconds)
     }
 
     def projectDescription(implicit webDriver: WebDriver): WebElement = eventually {
@@ -418,7 +439,7 @@ class ProjectPage(projectSlug: String, namespace: String) extends RenkuPage with
         // Clear does not work here, just send backspace a bunch of times
         tf.clear() sleep (1 second)
         tf enterValue List.fill(40)("\b").mkString("")
-        tf enterValue project.title.value sleep (1 second)
+        tf enterValue project.title
 
         forkButton.click() sleep (10 second)
       }
@@ -431,4 +452,6 @@ class ProjectPage(projectSlug: String, namespace: String) extends RenkuPage with
       find(cssSelector("div.modal-footer > button.btn.btn-primary")) getOrElse fail("Fork button not found")
     }
   }
+
+  lazy val asProjectIdentifier: ProjectIdentifier = ProjectIdentifier(namespace, projectSlug)
 }

@@ -46,7 +46,7 @@ Define clients and users for Keycloak
 [
   {{- if .Values.keycloak.createDemoUser -}}
   {
-    "username": "demo",
+    "username": "demo@datascience.ch",
     "password": "{{ randAlphaNum 32 }}",
     "enabled": true,
     "emailVerified": true,
