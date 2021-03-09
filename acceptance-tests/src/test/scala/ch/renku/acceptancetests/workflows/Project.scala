@@ -21,7 +21,6 @@ package ch.renku.acceptancetests.workflows
 import ch.renku.acceptancetests.model.projects.{ProjectDetails, Template, Visibility}
 import ch.renku.acceptancetests.pages._
 import ch.renku.acceptancetests.tooling.AcceptanceSpec
-import org.openqa.selenium.WebDriver
 import org.scalatest.BeforeAndAfterAll
 
 import java.lang.System.getProperty
@@ -46,7 +45,7 @@ trait Project extends RemoveProject with BeforeAndAfterAll {
       .orElse(maybeExtantProject)
       .getOrElse(ProjectDetails.generate())
 
-  protected implicit lazy val projectPage: ProjectPage = ProjectPage()
+  protected implicit lazy val projectPage: ProjectPage = ProjectPage.createFrom(projectDetails)
 
   def `create, continue or open a project`: Unit = maybeExtantProject match {
     case Some(_) => `open a project`
@@ -58,7 +57,6 @@ trait Project extends RemoveProject with BeforeAndAfterAll {
     else `create a new project`
 
   private def `open a project`: Unit = {
-    val projectPage = ProjectPage()
 
     When("user click on the Projects in the Top Bar")
     click on projectPage.TopBar.projects sleep (2 seconds)
@@ -79,7 +77,7 @@ trait Project extends RemoveProject with BeforeAndAfterAll {
     When("they click on the link")
     click on projectLink sleep (1 second)
 
-    `try few times before giving up` { (_: WebDriver) =>
+    `try few times before giving up` { _ =>
       Then(s"they should see the '${projectDetails.title}' project page")
       verify browserAt projectPage
     }
@@ -90,12 +88,12 @@ trait Project extends RemoveProject with BeforeAndAfterAll {
     click on WelcomePage.TopBar.plusDropdown
     click on WelcomePage.TopBar.projectOption sleep (5 seconds)
 
-    `try few times before giving up` { (_: WebDriver) =>
+    `try few times before giving up` { _ =>
       Then("the New Project page gets displayed")
       verify browserAt NewProjectPage
     }
 
-    `try few times before giving up` { (_: WebDriver) =>
+    `try few times before giving up` { _ =>
       When("user fills in and submits the new project details form")
       NewProjectPage submitFormWith projectDetails
     }

@@ -18,8 +18,7 @@
 
 package ch.renku.acceptancetests.workflows
 
-import ch.renku.acceptancetests.model.projects.{ProjectDetails, ProjectIdentifier}
-import ch.renku.acceptancetests.pages._
+import ch.renku.acceptancetests.model.projects.ProjectIdentifier
 import ch.renku.acceptancetests.tooling.{AcceptanceSpec, GitLabApi}
 
 import scala.concurrent.duration._
@@ -31,15 +30,5 @@ trait RemoveProject extends BrowserNavigation {
     When(s"the '${projectId.slug}' project is removed")
     `delete project in GitLab`(projectId)
     sleep(1 second)
-  }
-
-  def `verify project is removed`(implicit projectDetails: ProjectDetails): Unit = {
-    val projectPage = ProjectPage()
-    switchToRenkuTab
-    And("they click on the Projects in the Top Bar")
-    click on projectPage.TopBar.projects sleep (2 seconds)
-    Then(s"the '${projectDetails.title}' project should not be listed")
-    click on ProjectsPage.YourProjects.tab
-    ProjectsPage.YourProjects.maybeLinkTo(projectDetails) shouldBe None
   }
 }

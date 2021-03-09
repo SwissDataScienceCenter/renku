@@ -37,7 +37,7 @@ class ProjectForkingSpec extends AcceptanceSpec with Login with Project {
   }
 
   private def `fork the project`: Unit = {
-    val projectPage = ProjectPage()(projectDetails, userCredentials)
+
     go to projectPage
 
     When("user clicks on the fork button")
@@ -49,10 +49,12 @@ class ProjectForkingSpec extends AcceptanceSpec with Login with Project {
     projectPage.ForkDialog.submitFormWith(forkedProjectDetails)
 
     Then("the project gets forked and the project page gets displayed")
-    val forkedProjectPage = ProjectPage()(forkedProjectDetails, userCredentials)
-    verify browserAt forkedProjectPage
+    val forkedProjectPage = ProjectPage.createFrom(forkedProjectDetails)
+
+    `try few times before giving up` { _ =>
+      verify browserAt forkedProjectPage
+    }
 
     `remove project in GitLab`(forkedProjectDetails.asProjectIdentifier)
-    `verify project is removed`(forkedProjectDetails)
   }
 }

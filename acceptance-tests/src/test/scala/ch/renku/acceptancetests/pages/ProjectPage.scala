@@ -32,10 +32,6 @@ import scala.jdk.CollectionConverters._
 
 object ProjectPage {
 
-  // TODO: refactor title so it's a tiny type
-  def apply()(implicit projectDetails: ProjectDetails, userCredentials: UserCredentials): ProjectPage =
-    new ProjectPage(projectDetails.title.toPathSegment, userCredentials.userNamespace)
-
   def createFrom(projectDetails: ProjectDetails)(implicit userCredentials: UserCredentials): ProjectPage =
     new ProjectPage(projectDetails.title.toPathSegment, userCredentials.userNamespace)
 
@@ -43,7 +39,7 @@ object ProjectPage {
     new ProjectPage(projectId.slug, projectId.namespace)
 }
 
-class ProjectPage(projectSlug: String, namespace: String)
+class ProjectPage(val projectSlug: String, val namespace: String)
     extends RenkuPage(
       path = s"/projects/$namespace/$projectSlug",
       title = "Renku"
@@ -433,16 +429,15 @@ class ProjectPage(projectSlug: String, namespace: String)
 
   object ForkDialog {
 
-    def submitFormWith(project: ProjectDetails)(implicit webDriver: WebDriver): Unit =
-      eventually {
-        val tf = titleField
-        // Clear does not work here, just send backspace a bunch of times
-        tf.clear() sleep (1 second)
-        tf enterValue List.fill(40)("\b").mkString("")
-        tf enterValue project.title
+    def submitFormWith(project: ProjectDetails)(implicit webDriver: WebDriver): Unit = eventually {
+      val tf = titleField
+      // Clear does not work here, just send backspace a bunch of times
+      tf.clear() sleep (1 second)
+      tf enterValue List.fill(40)("\b").mkString("")
+      tf enterValue project.title
 
-        forkButton.click() sleep (10 second)
-      }
+      forkButton.click() sleep (10 second)
+    }
 
     private def titleField(implicit webDriver: WebDriver): WebElement = eventually {
       find(cssSelector("input#title")) getOrElse fail("Title field not found")

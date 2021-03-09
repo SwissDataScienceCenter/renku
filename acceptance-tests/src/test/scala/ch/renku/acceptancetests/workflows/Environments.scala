@@ -18,18 +18,17 @@
 
 package ch.renku.acceptancetests.workflows
 
-import ch.renku.acceptancetests.model.projects.{ProjectDetails, ProjectIdentifier}
+import ch.renku.acceptancetests.model.projects.ProjectIdentifier
 import ch.renku.acceptancetests.pages._
 import ch.renku.acceptancetests.tooling.{AcceptanceSpec, AnonEnvConfig}
-import org.openqa.selenium.WebDriver
 
 import scala.concurrent.duration._
 
 trait Environments {
   self: AcceptanceSpec =>
 
-  def `launch an environment`(implicit projectDetails: ProjectDetails): JupyterLabPage = {
-    implicit val projectPage: ProjectPage = ProjectPage()
+  def `launch an environment`(implicit projectPage: ProjectPage): JupyterLabPage = {
+
     When("user clicks on the Environments tab")
     click on projectPage.Environments.tab
     docsScreenshots.takeScreenshot()
@@ -48,8 +47,8 @@ trait Environments {
     jupyterLabPage
   }
 
-  def `stop environment`(implicit projectDetails: ProjectDetails): Unit =
-    stopEnvironmentOnProjectPage(ProjectPage())
+  def `stop environment`(implicit projectPage: ProjectPage): Unit =
+    stopEnvironmentOnProjectPage(projectPage)
 
   def `stop environment`(projectId: ProjectIdentifier): Unit =
     stopEnvironmentOnProjectPage(ProjectPage(projectId))
@@ -140,12 +139,12 @@ trait Environments {
         And("the user clicks on the Start Environment button")
         click on startEnvButton sleep (5 seconds)
 
-        `try few times before giving up` { (_: WebDriver) =>
+        `try few times before giving up` { _ =>
           Then("they should be redirected to the Environments -> Running tab")
           verify userCanSee projectPage.Environments.Running.title
         }
 
-        `try few times before giving up` { (_: WebDriver) =>
+        `try few times before giving up` { _ =>
           When("the environment is ready")
           projectPage.Environments.Running.verifyEnvironmentReady
         }
