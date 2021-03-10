@@ -13,7 +13,7 @@ jobs:
     runs-on: ubuntu-latest
     if: github.event.action != 'closed'
     steps:
-    - uses: mustaphazorgati/workflow-run-cleanup-action@master
+    - uses: mustaphazorgati/workflow-run-cleanup-action@fix-2
       env:
         GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
   test-docs:
