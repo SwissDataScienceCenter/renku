@@ -30,9 +30,13 @@ trait Login {
   private var maybeLoginType: Option[LoginType] = None
 
   def `log in to Renku`: Unit = {
+
     Given("user is not logged in")
-    go to LandingPage sleep (1 second)
-    verify browserAt LandingPage
+
+    `try few times before giving up` { _ =>
+      go to LandingPage sleep (2 seconds)
+      verify browserAt LandingPage
+    }
 
     When("user clicks on the Login button")
     // Wait for the page to update
