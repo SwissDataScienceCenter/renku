@@ -3,13 +3,11 @@ name: Deploy and Test
 on:
   push:
     branches: ['master']
-    # Note that branch patterns are ignored for tag pushes.
     paths:
     - helm-chart/**
     - scripts/**
     - acceptance-tests/**
     - .github/**
-    tags: ['*']
   workflow_dispatch:
 
 

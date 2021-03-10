@@ -1,47 +1,47 @@
-#!/bin/bash
+#!/bin/sh
 set -xe
 
-if [[ $GITHUB_REF =~ "tags" ]]
-then
+if echo $GITHUB_REF | grep "tags" - > /dev/null; then
   CHART_TAG="--tag $(echo ${GITHUB_REF} | cut -d/ -f3)"
 fi
 
-if [ -z "$GITHUB_TOKEN" ]
-then
+if [ -z "$GITHUB_TOKEN" ]; then
   echo "GITHUB_TOKEN must be set."
   exit 1
 fi
 
-if [ -z "$GIT_EMAIL" ]
-then
+if [ -z "$GIT_EMAIL" ]; then
   echo "GIT_EMAIL must be set."
+  exit 1
 fi
 
-if [ -z "$GIT_USER" ]
-then
+if [ -z "$GIT_USER" ]; then
   echo "GIT_USER must be set."
+  exit 1
 fi
 
-# configure variables
-CHART_PATH=${CHART_PATH:=helm-chart/$(echo $GITHUB_REPOSITORY | cut -d/ -f2)}
-HELM_URL=${HELM_URL:=https://storage.googleapis.com/kubernetes-helm}
-HELM_TGZ=${HELM_TGZ:=helm-v2.17.0-linux-amd64.tar.gz}
+if [ -z "$CHART_NAME" ]; then
+  echo "CHART_NAME must be set."
+  exit 1
+fi
 
-# install helm
-mkdir -p /tmp/helm
-wget -q ${HELM_URL}/${HELM_TGZ} -O /tmp/helm/${HELM_TGZ}
-tar -C /tmp/helm -xzv -f /tmp/helm/${HELM_TGZ}
-PATH=/tmp/helm/linux-amd64/:$PATH
-helm init --client-only
+if [ -z "$CHART_DIR" ]; then
+  CHART_DIR="helm-chart/"
+fi
+
+if [ ! -z "$IMAGE_PREFIX" ]; then
+  IMAGE_PREFIX="--image-prefix ${IMAGE_PREFIX}"
+fi
 
 # set up git
 git config --global user.email "$GIT_EMAIL"
 git config --global user.name "$GIT_USER"
 
-helm dep update $CHART_PATH
+helm dep update $CHART_DIR/$CHART_NAME
 
 # log in to docker
 echo ${DOCKER_PASSWORD} | docker login -u ${DOCKER_USERNAME} --password-stdin
 
 # build and push the chart and images
-chartpress --push --publish-chart $CHART_TAG
+cd $CHART_DIR
+chartpress --push --publish-chart $CHART_TAG $IMAGE_PREFIX

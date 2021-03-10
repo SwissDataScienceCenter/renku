@@ -99,7 +99,7 @@ class RenkuRequirement(object):
         cmd = ["chartpress", "--push"]
         if skip_build:
             cmd.append("--skip-build")
-        check_call(cmd, cwd=self.repo_dir)
+        check_call(cmd, cwd=f"{self.repo_dir}/helm-chart")
 
     def setup(self):
         """Checkout the repo and run chartpress."""
@@ -224,7 +224,9 @@ if __name__ == "__main__":
             renku_chart_path=renku_dir / "helm-chart"
         )
 
-        local_path = tempdir / "renku-notebooks/helm-chart/renku-notebooks" if renku_notebooks_version.startswith("@") else None
+        local_path = (
+            tempdir / "renku-notebooks/helm-chart/renku-notebooks" if renku_notebooks_version.startswith("@") else None
+        )
 
         deploy_tmp_notebooks(
             release,
