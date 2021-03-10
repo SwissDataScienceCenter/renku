@@ -117,6 +117,7 @@ Build and pull all necessary charts
 
     $ helm repo add jupyterhub https://jupyterhub.github.io/helm-chart
     $ helm repo add renku https://swissdatasciencecenter.github.io/helm-charts
+    $ cd helm-chart/
     $ pipenv run chartpress --tag latest
     $ helm dep build renku
 

@@ -1,0 +1,23 @@
+name: Publish and deploy on staging
+
+on:
+  push:
+    tags: ["*"]
+  workflow_dispatch:
+
+jobs:
+  publish:
+    runs-on: ubuntu-20.04
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        fetch-depth: 0
+    - uses: ./actions/publish-chart
+      env:
+        CHART_PATH: helm-chart/
+        CHART_NAME: renku
+        GIT_USER: chart-bot
+        GIT_EMAIL: chart-bot@example.com
+        DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+        DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+        GITHUB_TOKEN: ${{ secrets.CI_TOKEN }}

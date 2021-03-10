@@ -39,6 +39,7 @@ you can do so by using ``chartpress``.
 .. code-block:: console
 
     $ pip install chartpress
+    $ cd helm-chart/
     $ chartpress --tag latest
 
 You can the use the same ``helm upgrade`` command as above to redeploy the
