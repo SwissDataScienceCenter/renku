@@ -1,5 +1,67 @@
 .. _changelog:
 
+0.7.8
+-----
+
+Features
+~~~~~~~~~~
+
+* **Datasets**: show a notification when uploading big files
+* **Datasets**: improve naming for imported datasets
+* **Datasets**: sort by date on the free-text dataset search
+
+* **Projects**: update the project fork flow to match project creation
+
+* **CLI**: add service component management commands
+
+Improvements
+~~~~~~~~~~~~~
+
+* **Datasets**: the dataset details returns information about project it belongs to
+
+* **Lineage**: prevent showing the whole graph when displaying a single file's lineage
+* **Lineage**: support for committers name changing
+* **Knowledge Graph**: improve provisioning flow; re-process stale events sooner, use smaller processes
+
+* **Core**: exclude renku metadata from being added to git lfs
+
+Bug Fixes
+~~~~~~~~~~~
+
+* **Datasets**: fix creation date when searching datasets
+* **Datasets**: fail gracefully when trying to access a missing dataset
+* **Datasets**: dataset import to move temporary files and become more resilient to errors
+* **Datasets**: handle datasets with ',' in the name correctly
+
+* **Environments**: image pull secret for pod restart
+* **Environments**: support for long project title
+
+* **User interface**: check lfs status properly when previewing a file
+* **User interface**: fix broken markdown preview caused by links without a reference
+* **User interface**: handle sub-groups on projects list
+
+* **Core**: call git commands for batches of files to prevent hitting argument length limits
+
+* **Core Service**: correctly handle HTTP server errors and ref on project.clone
+* **Core Service**: use project_id as part of project filesystem path
+
+
+Individual components
+~~~~~~~~~~~~~~~~~~~~~
+
+For changes to individual components, please check:
+
+* renku-ui:
+  `0.11.8 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/v0.11.8>`__,
+  `0.11.7 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/v0.11.7>`__
+
+* renku-core and renku-python:
+  `0.14.0 <https://github.com/SwissDataScienceCenter/renku-python/releases/tag/v0.14.0>`__
+
+* renku-notebooks:
+  `0.8.10 <https://github.com/SwissDataScienceCenter/renku-notebooks/releases/tag/0.8.10>`__
+
+
 0.7.7
 -----
 
@@ -109,7 +171,7 @@ Individual components
 
 For changes to individual components, check:
 
-* renku-ui:
+* renku-ui
   `0.11.3 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/0.11.3>`__
 
 * renku-gateway
