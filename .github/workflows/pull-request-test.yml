@@ -92,7 +92,7 @@ jobs:
         token: ${{ secrets.RENKUBOT_GITHUB_TOKEN }}
         issue-number: ${{ github.event.pull_request.number }}
         body: |
-          You can access the PR deployment at https://ci-renku-${{ github.event.number }}.dev.renku.ch
+          You can access the deployment at https://ci-renku-${{ github.event.number }}.dev.renku.ch
 
   test-pr:
     runs-on: ubuntu-latest
