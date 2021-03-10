@@ -3,13 +3,11 @@ name: Deploy and Test
 on:
   push:
     branches: ['master']
-    # Note that branch patterns are ignored for tag pushes.
     paths:
     - helm-chart/**
     - scripts/**
     - acceptance-tests/**
     - .github/**
-    tags: ['*']
   workflow_dispatch:
 
 
@@ -78,47 +76,3 @@ jobs:
              -H "Authorization: Bearer $RENKU_SLACK_BOT_TOKEN" \
              --data "channel=C9U45DL1H" \
              --data "text=Acceptance tests on https://dev.renku.ch failed! :scream_cat:"
-  chart:
-    needs: test
-    runs-on: ubuntu-latest
-    if: "startsWith(github.ref, 'refs/tags/') || github.ref == 'refs/heads/master'"
-    steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-python@v1
-        with:
-          python-version: 3.7
-      - name: Docker Login
-        uses: Azure/docker-login@v1
-        with:
-          username: ${{ secrets.DOCKER_USERNAME }}
-          password: ${{ secrets.DOCKER_PASSWORD }}
-      - name: Configure build
-        run: |
-          python -m pip install --upgrade pip pipenv
-          pipenv install --deploy --system --dev
-          git config --global user.name renku-bot
-          git config --global user.email renku@datascience.ch
-      - name: update and test chart
-        env:
-          HELM_URL: https://charts.helm.sh/stable
-          HELM_TGZ: helm-v2.16.1-linux-amd64.tar.gz
-          TEMP_DIR: ${{ runner.temp }}
-        run: |
-          PATH=${{ runner.temp }}/linux-amd64/:$PATH
-          scripts/install-helm.sh
-          helm dep update helm-chart/renku
-          helm dep update helm-chart/gitlab
-      - name: Push helm chart and images
-        if: github.ref == 'refs/heads/master' && !startsWith(github.ref, 'refs/tags/')
-        env:
-          GITHUB_TOKEN: ${{ secrets.RENKU_CI_TOKEN }}
-          DOCKER_BUILDKIT: "1"
-        run: |
-          chartpress --push --publish-chart
-          chartpress --push --tag latest
-      - name: Push tagged helm chart and images
-        if: startsWith(github.ref, 'refs/tags/')
-        env:
-          GITHUB_TOKEN: ${{ secrets.RENKU_CI_TOKEN }}
-        run: |
-          chartpress --push --publish-chart --tag $(echo ${GITHUB_REF} | cut -d'/' -f 3)
