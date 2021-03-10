@@ -31,6 +31,7 @@ Bug Fixes
 * **Datasets**: fix creation date when searching datasets
 * **Datasets**: fail gracefully when trying to access a missing dataset
 * **Datasets**: dataset import to move temporary files and become more resilient to errors
+* **Datasets**: handle datasets with ',' in the name correctly
 
 * **Environments**: image pull secret for pod restart
 * **Environments**: support for long project title
@@ -51,6 +52,7 @@ Individual components
 For changes to individual components, please check:
 
 * renku-ui:
+  `0.11.8 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/v0.11.8>`__,
   `0.11.7 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/v0.11.7>`__
 
 * renku-core and renku-python:
