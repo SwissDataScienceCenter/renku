@@ -18,11 +18,11 @@
 
 package ch.renku.acceptancetests.tooling
 
-import ch.renku.acceptancetests.workflows.{Environments, JupyterNotebook}
+import ch.renku.acceptancetests.workflows.Environments
 import org.openqa.selenium.WebDriver
 import org.openqa.selenium.chrome.{ChromeDriver, ChromeDriverService, ChromeOptions}
 import org.scalatest._
-import org.scalatestplus.selenium.{Chrome, Driver, WebBrowser}
+import org.scalatestplus.selenium.{Chrome, WebBrowser}
 
 trait AcceptanceSpec
     extends FeatureSpec
@@ -31,7 +31,6 @@ trait AcceptanceSpec
     with Matchers
     with WebBrowser
     with Environments
-    with Driver
     with Grammar
     with GitLabApi
     with ScreenCapturingSpec
@@ -39,17 +38,23 @@ trait AcceptanceSpec
     with AcceptanceSpecPatience {
 
   protected implicit val browser: AcceptanceSpec = this
-  implicit lazy val webDriver:    WebDriver      = getWebDriver
 
-  private def getWebDriver: WebDriver =
+  implicit lazy val webDriver: WebDriver = startWebDriver
+
+  protected implicit val docsScreenshots: DocsScreenshots = DocsScreenshots(this, webDriver)
+
+  protected override def afterAll(): Unit = {
+    webDriver.quit()
+    super.afterAll()
+  }
+
+  private def startWebDriver: WebDriver =
     sys.env.get("DOCKER") match {
       case Some(_) =>
         new ChromeDriver(
           new ChromeDriverService.Builder().withWhitelistedIps("127.0.0.1").build,
           new ChromeOptions().addArguments("--no-sandbox", "--headless", "--disable-gpu")
         )
-      case None => Chrome.webDriver
+      case None => new ChromeDriver()
     }
-
-  protected implicit val docsScreenshots: DocsScreenshots = DocsScreenshots(this, webDriver)
 }
