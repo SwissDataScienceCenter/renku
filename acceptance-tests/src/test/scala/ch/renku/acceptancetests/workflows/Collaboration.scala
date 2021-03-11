@@ -58,7 +58,7 @@ trait Collaboration {
   }
 
   def `view the issue`(issueTitle: String): Unit =
-    `try few times before giving up` { (_: WebDriver) =>
+    `try few times before giving up` { _ =>
       Then("the new issue should be displayed in the list")
       val issueTitles = projectPage.Collaboration.Issues.issueTitles
       if (issueTitles.size < 1) fail("There should be at least one issue")

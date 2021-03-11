@@ -66,7 +66,7 @@ trait Datasets {
 
     val datasetPage = DatasetPage(datasetName)
     Then("the user should see its newly created dataset and the project it belongs to")
-    reloadPage() sleep (1 second)
+    reloadPage() sleep (2 seconds)
     verify browserAt datasetPage
     verify that datasetPage.datasetTitle contains datasetName.value
     datasetPage.ProjectsList.link(projectPage).isDisplayed shouldBe true
@@ -110,7 +110,7 @@ trait Datasets {
     `wait for KG to process events`(projectPage.asProjectIdentifier)
 
     Then("the user should see its dataset and to which project it belongs")
-    reloadPage() sleep (1 second)
+    reloadPage() sleep (2 seconds)
     datasetPage.ProjectsList.link(projectPage).isDisplayed shouldBe true
 
     datasetPage

@@ -30,6 +30,10 @@ trait TopBar {
       find(cssSelector("#link-projects")) getOrElse fail("Top Right 'Projects' link not found")
     }
 
+    def datasets(implicit webDriver: WebDriver): WebElement = eventually {
+      find(cssSelector("a[href='/datasets']")) getOrElse fail("Top Right 'Datasets' link not found")
+    }
+
     def plusDropdown(implicit webDriver: WebDriver): WebElement = eventually {
       find(cssSelector("#plus-dropdown")) getOrElse fail("Top Right '+' not found")
     }

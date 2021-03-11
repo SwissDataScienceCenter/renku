@@ -24,6 +24,7 @@ object datasets {
 
   final case class DatasetName(value: String) {
     override lazy val toString: String = value
+    lazy val asPath:            String = value.replace(" ", "-")
   }
 
   final case class DatasetTitle(value: String) {
@@ -31,7 +32,12 @@ object datasets {
   }
 
   object DatasetName {
+
     def generate: DatasetName = DatasetName(nonEmptyStrings().generateOne)
+    def generate(containing: String): DatasetName = DatasetName(sentenceContaining(containing).generateOne)
+
+    implicit lazy val ordering: Ordering[DatasetName] =
+      (x: DatasetName, y: DatasetName) => x.value compareTo y.value
   }
 
   object DatasetTitle {

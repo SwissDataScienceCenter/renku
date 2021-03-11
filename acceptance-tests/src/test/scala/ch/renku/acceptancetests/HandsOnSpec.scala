@@ -18,8 +18,6 @@
 
 package ch.renku.acceptancetests
 
-import ch.renku.acceptancetests.model.projects.ProjectDetails
-import ch.renku.acceptancetests.pages._
 import ch.renku.acceptancetests.tooling.{AcceptanceSpec, KnowledgeGraphApi}
 import ch.renku.acceptancetests.workflows._
 
@@ -60,8 +58,7 @@ class HandsOnSpec
     `log out of Renku`
   }
 
-  private def `verify analysis was ran`(implicit projectDetails: ProjectDetails): Unit = {
-    val projectPage = ProjectPage()
+  private def `verify analysis was ran`: Unit = {
     When("the user navigates to the Files tab")
     click on projectPage.Files.tab
     And("they click on the notebooks folder in the File View")
