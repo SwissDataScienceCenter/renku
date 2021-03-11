@@ -35,6 +35,26 @@ JupyterLab sessions by default. As a result, you do need to be aware of dealing
 with data stored in LFS if you want to use it efficiently in your work with
 renku.
 
+Uploading Data to Renkulab and Creating Datasets with the CLI
+-------------------------------------------------------------
+
+You can use the ``renku dataset`` CLI command to create a dataset with data
+that is already present in your JupyterLab or RStudio environment or with 
+data that is on your local computer. For example, you can drag and drop files 
+from your computer into the JupyterLab window to upload them and then 
+use the ``renku dataset`` command to create a dataset, add the files to the 
+dataset and also check them in git with LFS. Assuming that you have uploaded 
+three files at the root of your repository named ``file1.csv``, ``file2.csv``
+and ``file3.csv``, you can run the following command to create a dataset from them:
+
+::
+
+    $ renku dataset add --create my-new-dataset file1.csv file2.csv file3.csv
+
+Beside creating a renku dataset, the command will automatically track the 
+files with LFS and commit them. In addition, you can use shell-like wildcards 
+(e.g. *, **, ?) when specifying paths to be added instead of explicitly naming every file.
+
 Renku LFS configuration
 -----------------------
 Renku by default stores all files larger than 100kb in LFS to prevent
