@@ -33,8 +33,11 @@ object datasets {
 
   object DatasetName {
 
-    def generate: DatasetName = DatasetName(nonEmptyStrings().generateOne)
-    def generate(containing: String): DatasetName = DatasetName(sentenceContaining(containing).generateOne)
+    def generate: DatasetName = DatasetName(nonEmptyStrings().generateOne.toLowerCase)
+    def generate(containing: String): DatasetName = DatasetName {
+      val name = sentenceContaining(containing).generateOne
+      s"${name.head.toLower}${name.tail}"
+    }
 
     implicit lazy val ordering: Ordering[DatasetName] =
       (x: DatasetName, y: DatasetName) => x.value compareTo y.value
