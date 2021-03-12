@@ -65,7 +65,8 @@ Upgrading from 0.7.7
 ~~~~~~~~~~~~~~~~~~~~~
 
 
-* **Breaking change**  Keycloak chart dependency has been upgraded from ``4.10.2`` to ``9.8.1`` which will trigger an irreversible database migration, check out `the upgrade instructions <https://github.com/SwissDataScienceCenter/renku/tree/master/helm-chart#upgrading-to-078`__ for more details. 
+**Breaking change**  Keycloak chart dependency has been upgraded from ``4.10.2`` to ``9.8.1`` which will trigger an irreversible database migration, check out `the upgrade instructions <https://github.com/SwissDataScienceCenter/renku/tree/master/helm-chart#upgrading-to-078`__ for more details. 
+
 Most notably, keycloak values are less nested, so at the level of the Renku chart values, keycloak.keycloak.X.Y becomes keycloak.X.Y. You can also check out `the instructions <https://github.com/codecentric/helm-charts/tree/master/charts/keycloak#upgrading>`__ on how to upgrade aspects not covered by default in the Renku chart.
 
 If the Renkulab deployment includes keycloak, the values file should be modified as follows:
