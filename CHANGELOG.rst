@@ -65,10 +65,11 @@ Upgrading from 0.7.7
 ~~~~~~~~~~~~~~~~~~~~~
 
 
-* **Breaking change**  Keycloak chart dependency has been upgraded from ``4.10.2`` to ``9.8.1``, check out the instructions on how to upgrade aspects not covered by default in the Renku chart. Most notably, keycloak values are less nested, so at the level of the Renku chart values, keycloak.keycloak.X.Y becomes keycloak.X.Y.
+* **Breaking change**  Keycloak chart dependency has been upgraded from ``4.10.2`` to ``9.8.1`` which will trigger an irreversible database migration, check out `the upgrade instructions <https://github.com/SwissDataScienceCenter/renku/tree/master/helm-chart#upgrading-to-078`__ for more details. 
+Most notably, keycloak values are less nested, so at the level of the Renku chart values, keycloak.keycloak.X.Y becomes keycloak.X.Y. You can also check out `the instructions <https://github.com/codecentric/helm-charts/tree/master/charts/keycloak#upgrading>`__ on how to upgrade aspects not covered by default in the Renku chart.
 
 If the Renkulab deployment includes keycloak, the values file should be modified as follows:
-* DELETE - the section keycloak.keycloak.persistence has been removed. Database connection details are specified through the keycloak.extraEnv and keycloak.extraEnvFrom blocks. See the Renku values file for reference.
+* DELETE - the section keycloak.keycloak.persistence has been removed. Database connection details are specified through the keycloak.extraEnv and keycloak.extraEnvFrom blocks. See the `Renku values file <https://github.com/SwissDataScienceCenter/renku/blob/0.7.8/helm-chart/renku/values.yaml#L129-L154>`__ for reference.
 * EDIT - keycloak.keycloak.username has been moved to global.keycloak.user.
 
 Finally, before applying the helm upgrade, the Keycloak statefulset should be deleted.
