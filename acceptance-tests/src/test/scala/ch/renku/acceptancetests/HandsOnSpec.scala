@@ -1,62 +1,64 @@
+/*
+ * Copyright 2021 Swiss Data Science Center (SDSC)
+ * A partnership between École Polytechnique Fédérale de Lausanne (EPFL) and
+ * Eidgenössische Technische Hochschule Zürich (ETHZ).
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package ch.renku.acceptancetests
 
-import ch.renku.acceptancetests.model.datasets.DatasetName
-import ch.renku.acceptancetests.model.projects.ProjectDetails
-import ch.renku.acceptancetests.pages._
-import ch.renku.acceptancetests.tooling.{AcceptanceSpec, DocsScreenshots}
+import ch.renku.acceptancetests.tooling.{AcceptanceSpec, KnowledgeGraphApi}
 import ch.renku.acceptancetests.workflows._
-import org.openqa.selenium.{JavascriptExecutor, WebDriver}
 
 import scala.concurrent.duration._
-import scala.language.postfixOps
 
 /**
   * Run the HandsOn from the documentation.
   */
 class HandsOnSpec
     extends AcceptanceSpec
-    with Collaboration
     with Environments
     with Login
-    with NewProject
-    with RemoveProject
+    with Project
     with Settings
     with JupyterNotebook
     with FlightsTutorial
-    with Datasets {
+    with Datasets
+    with KnowledgeGraphApi {
 
-  scenario("User can do hands-on tutorial") {
+  Scenario("User can do hands-on tutorial") {
 
-    implicit val loginType: LoginType = logIntoRenku
+    `log in to Renku`
 
-    implicit val docsScreenshots: DocsScreenshots = new DocsScreenshots(this, browser)
+    `create, continue or open a project`
 
-    implicit val projectDetails: ProjectDetails =
-      ProjectDetails.generateHandsOnProject(docsScreenshots.captureScreenshots)
+    val projectUrl         = `find project Http URL in the Settings Page`
+    val flightsDatasetName = `follow the flights tutorial`(projectUrl)
 
-    createNewProject(projectDetails)
+    When("all the events are processed by the knowledge-graph")
+    `wait for KG to process events`(projectDetails.asProjectIdentifier)
 
-    val projectHttpUrl     = findProjectHttpUrl
-    val flightsDatasetName = followTheFlightsTutorialOnUsersMachine(projectHttpUrl)
-    verifyDatasetCreated(flightsDatasetName)
+    `verify dataset was created`(flightsDatasetName)
 
-    verifyUserCanWorkWithJupyterNotebook
+    `verify user can work with Jupyter notebook`
 
-    verifyAnalysisRan
+    `verify analysis was ran`
 
-    verifyMergeRequestsIsEmpty
-    verifyIssuesIsEmpty
-    createNewIssue
-
-    setProjectTags
-    setProjectDescription
-    removeProjectInGitLab
-    verifyProjectWasRemovedInRenku
-
-    logOutOfRenku
+    `log out of Renku`
   }
-  def verifyAnalysisRan(implicit projectDetails: ProjectDetails, docsScreenshots: DocsScreenshots): Unit = {
-    val projectPage = ProjectPage()
+
+  private def `verify analysis was ran`: Unit = {
     When("the user navigates to the Files tab")
     click on projectPage.Files.tab
     And("they click on the notebooks folder in the File View")
@@ -66,10 +68,7 @@ class HandsOnSpec
     Then("they should see a file header with the notebook filename")
     verify that projectPage.Files.Info.heading contains "notebooks/01-CountFlights.ran.ipynb"
     And("the correct notebook content")
-    // Scroll to the bottom of the page
-    webDriver.asInstanceOf[JavascriptExecutor].executeScript("window.scrollBy(0,document.body.scrollHeight)")
-    docsScreenshots.reachedCheckpoint()
-
+    docsScreenshots.takeScreenshot(executeBefore = "window.scrollBy(0,document.body.scrollHeight)")
     val resultCell = projectPage.Files.Notebook.cellWithText("There were 4951 flights to Austin, TX in Jan 2019.")
     verify that resultCell contains "There were 4951 flights to Austin, TX in Jan 2019."
   }

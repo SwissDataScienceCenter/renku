@@ -6,13 +6,14 @@ on:
     - synchronize
     - reopened
     - closed
+    - edited
 
 jobs:
   cleanup-previous-runs:
     runs-on: ubuntu-latest
     if: github.event.action != 'closed'
     steps:
-    - uses: rokroskar/workflow-run-cleanup-action@master
+    - uses: rokroskar/workflow-run-cleanup-action@213fe75c3e785223a02c3cc50b1639f1deeb9eec
       env:
         GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
   test-docs:
