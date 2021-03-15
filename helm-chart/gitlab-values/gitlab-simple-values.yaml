@@ -1,0 +1,43 @@
+USER-SUPPLIED VALUES:
+certmanager:
+  install: false
+global:
+  edition: ce
+  hosts:
+    domain: glnative.dev.renku.ch
+    externalIP: 86.119.39.201
+    https: true
+  ingress:
+    annotations:
+      kubernetes.io/ingress.class: nginx
+      cert-manager.io/cluster-issuer: letsencrypt-production
+    configureCertmanager: false
+    enabled: true
+    omniauth:
+      enabled: false
+    tls:
+      enabled: true
+    # https://gitlab.com/gitlab-org/charts/gitlab/-/blob/master/doc/charts/globals.md#configure-ingress-settings
+    # Using external cert-manager requires to define the secrets, otherwise this secret needs to be a wildcard
+    #  secretName: gitlab-glnative-dev-renku-ch-tls
+  time_zone: CET
+nginx-ingress:
+  enabled: false
+prometheus:
+  install: false
+gitlab:
+  webservice:
+    ingress:
+      tls:
+        secretName: gitlab-glnative-dev-renku-ch-tls
+
+registry:
+  ingress:
+    tls:
+      secretName: registry-gl-native-dev-renku-ch-tls
+
+minio:
+  ingress:
+    tls:
+      secretName: minio-gl-native-dev-renku-ch-tls
+
