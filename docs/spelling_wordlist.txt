@@ -41,6 +41,8 @@ dockerhub
 dockerignore
 dotfiles
 dropdown
+extraEnv
+extraEnvFrom
 filesystem
 FilterFlights
 findable
@@ -135,6 +137,7 @@ SPARQL
 spawner
 SQLAlchemy
 statuspage
+statefulset
 subdirectories
 submodule
 submodules
