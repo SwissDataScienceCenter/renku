@@ -1,5 +1,5 @@
 #
-# Basic configuration file for Renku 0.7.1
+# Basic configuration file for Renku 0.7.8
 #
 
 ---
@@ -8,6 +8,7 @@ domain_configurations:
   baseURL:                   &baseURL                       https://[domain]
   jupyterhubURL:             &jupyterhubURL                 https://[domain]/jupyterhub
   gatewayURL:                &gatewayURL                    https://[domain]/api
+  uiserverURL:               &uiserverURL                   https://[domain]/ui-server
   jupyterhubAuthCallbackUrl: &jupyterhub_gitlab_callbackUrl https://[domain]/jupyterhub/hub/oauth_callback
   oauth_redirect_uri:        &oauth_redirect_uri            https://[domain]/api/auth/jupyterhub/token
   ingressTLS:                &ingressTLS                    [ingress-tls]
@@ -178,6 +179,7 @@ ui:
   gatewayUrl: *gatewayURL
   baseUrl: *baseURL
   gitlabUrl: *gitlabURL
+  uiserverUrl: *uiserverURL
   jupyterhubUrl: *jupyterhubURL
 #  welcomePage:
 #    text: |
