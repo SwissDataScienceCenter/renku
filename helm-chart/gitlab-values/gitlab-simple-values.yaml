@@ -1,6 +1,4 @@
-USER-SUPPLIED VALUES:
-certmanager:
-  install: false
+## Default values file + full documentation at https://gitlab.com/gitlab-org/charts/gitlab/-/blob/master/values.yaml
 global:
   edition: ce
   hosts:
@@ -13,14 +11,48 @@ global:
       cert-manager.io/cluster-issuer: letsencrypt-production
     configureCertmanager: false
     enabled: true
+    # OmniAuth Settings
+    # https://gitlab.com/gitlab-org/charts/gitlab/-/blob/master/doc/charts/globals.md#omniauth
     omniauth:
-      enabled: false
+      enabled: true
+      autoSignInWithProvider: oauth2_generic
+      # allowSingleSignOn: true
+      allowSingleSignOn: ['oauth2_generic']
+      blockAutoCreatedUsers: false
+      providers: [
+       {
+        'name' => 'oauth2_generic',
+        'app_id' => 'gitlab',
+        ## This should match global.gitlab.clientSecret in renku-values.yaml
+        ##  'app_secret' => ENV['GITLAB_CLIENT_SECRET'],
+        'app_secret' => 415736e7ef6dcc5c3a95095497361630656e7e11edc9f18271f4e8b4dd0da309,
+        'args' => {
+          client_options: {
+            # Traefik maps keycloak to the URL below
+            # CAREFUL: This must be accessible from inside the keycloak container
+            # for server-to-server communication.
+            # 'site' => '{{ template "http" . }}://{{ .Values.global.renku.domain }}/auth/',
+            'site' => 'https://glnative.dev.renku.ch/auth/'
+            'authorize_url' => '/auth/realms/Renku/protocol/openid-connect/auth',
+            'user_info_url' => '/auth/realms/Renku/protocol/openid-connect/userinfo',
+            'token_url' => '/auth/realms/Renku/protocol/openid-connect/token'
+          },
+          user_response_structure: {
+            attributes: { email:'email', first_name:'given_name', last_name:'family_name', name:'name', nickname:'preferred_username' }, # if the nickname attribute of a user is called 'username'
+            id_path: 'sub'
+          }
+        },
+        label: 'Renku Login'
+       }
+      ]
     tls:
       enabled: true
     # https://gitlab.com/gitlab-org/charts/gitlab/-/blob/master/doc/charts/globals.md#configure-ingress-settings
     # Using external cert-manager requires to define the secrets, otherwise this secret needs to be a wildcard
     #  secretName: gitlab-glnative-dev-renku-ch-tls
   time_zone: CET
+certmanager:
+  install: false
 nginx-ingress:
   enabled: false
 prometheus:
@@ -30,14 +62,11 @@ gitlab:
     ingress:
       tls:
         secretName: gitlab-glnative-dev-renku-ch-tls
-
 registry:
   ingress:
     tls:
       secretName: registry-gl-native-dev-renku-ch-tls
-
 minio:
   ingress:
     tls:
       secretName: minio-gl-native-dev-renku-ch-tls
-
