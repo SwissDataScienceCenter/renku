@@ -1,0 +1,202 @@
+#
+# Basic configuration file for Renku 0.7.1
+#
+
+---
+domain_configurations:
+  mainURL:                   &mainURL                       glnative.dev.renku.ch
+  baseURL:                   &baseURL                       https://glnative.dev.renku.ch
+  jupyterhubURL:             &jupyterhubURL                 https://glnative.dev.renku.ch/jupyterhub
+  gatewayURL:                &gatewayURL                    https://glnative.dev.renku.ch/api
+  jupyterhubAuthCallbackUrl: &jupyterhub_gitlab_callbackUrl https://glnative.dev.renku.ch/jupyterhub/hub/oauth_callback
+  oauth_redirect_uri:        &oauth_redirect_uri            https://glnative.dev.renku.ch/api/auth/jupyterhub/token
+  ingressTLS:                &ingressTLS                    glnative-dev-renku-ch-tls
+
+  gitlabURL:                 &gitlabURL                     https://gitlab.glnative.dev.renku.ch
+  gitlabPrefix:              &gitlabPrefix                  /           ## /gitlab if part of Renku, / otherwise
+  gitlabClientId:            &gitlabClientId                c0e46f604ad1797a5da29b40410207a9352b1b979f95878e7f767f2943efdb5b
+  gitlabClientSecret:        &gitlabClientSecret            19d27c7e768b149b496b52c6beabcc46e96f8ee2eceaea1539ea5c293993bb80
+
+  hubGitlabClientId:         &hubGitlabClientId             c0e46f604ad1797a5da29b40410207a9352b1b979f95878e7f767f2943efdb5b
+  hubGitlabClientSecret:     &hubGitlabClientSecret         19d27c7e768b149b496b52c6beabcc46e96f8ee2eceaea1539ea5c293993bb80
+
+  registryName:              &registryName                  registry.glnative.dev.renku.ch
+  ## registryURL:               &registryURL                   https://registry.glnative.dev.renku.ch
+  ## registry_tls:              &registry_tls                  registry-glnative-dev-renku-ch-tls
+
+## Global variables
+## Shared values/secrets
+global:
+  gitlab:
+    ## Secret of the gitlab client app in keycloak. Only needed if gitlab is deployed as part of Renku
+    ## and thus relies on keycloak for authentication. To change this value after deploying, first
+    ## generate a new secret using the Keycloak admin console then paste the generated secret here and redeploy.
+    ##     clientSecret: # use `uuidgen -r`
+    clientSecret:  415736e7ef6dcc5c3a95095497361630656e7e11edc9f18271f4e8b4dd0da309        ## Taken from gitlab client in keycloak
+    ## URL prefix for gitlab
+    urlPrefix: *gitlabPrefix
+
+  keycloak:
+    ## Postgres password for the Keycloak database
+    postgresPassword:
+      value:  fcab6ca0c8fed6c3a39cc8bca9fae4a289dc898c03194cdc4e56e2d65e0a9f9e        ## openssl rand -hex 32
+    ## Admin password for Keycloak
+    password:
+      value:  e0d7a242e12c2435db01c5b7a22242c4b90cc3dadca1636c92dbf6b48b3f0745        ## openssl rand -hex 32
+  jupyterhub:
+    ## Postgres password for the jupyterhub database
+    postgresPassword:
+      value:  8459b3bd3fed8f52f0e811b6cae9717f8e439928719a7b9e0e5780403c97e35f        ## openssl rand -hex 32
+  gateway:
+    ## clientSecret: # use `uuidgen -r`
+    clientSecret:  f337cd4e4a9d74309a8b1302f9f64c42743e4ff49543db63a7dc72a3479dace8        ## Taken from gateway client in keycloak
+    ## The client secret for authentication against gitlab
+    gitlabClientSecret:   6acc3a4755e6da37da2a0438a9a1b3c6eb12379d6ed2074f6aa79bf6c6965d3f        ## Taken from renku-ui gitlab application secret
+  renku:
+    ## Domain name for the deployed instance of renku
+   domain: *mainURL
+  ## Note that the graph will not turned on by default until renku 0.4.0
+  graph:
+    dbEventLog:
+      ## Postgres password to be used to access the Event Log db
+      postgresPassword:
+        value:  199f23f2080a580888b38b15345730106683af9e620502d8405194e2f4789ff1        ## openssl rand -hex 32
+    tokenRepository:
+      ## Postgres password to be used to access the db storing access tokens
+      postgresPassword:
+        value:  9d8fe68e89329198b32ba67a4534bc9648b8178541d66f1b89d14fbbebfa919e        ## openssl rand -hex 32
+  useHTTPS: true
+
+## Ingress configuration
+## See: https://kubernetes.io/docs/concepts/services-networking/ingress/
+ingress:
+  enabled: true
+  ## Hosts for the ingress
+  ## Should include at least the value from `global.renku.domain`
+  hosts:
+  - *mainURL
+
+  ## TLS setting for the ingress
+  tls:
+  - hosts:
+    - *mainURL
+    secretName: *ingressTLS
+
+## Gitlab configuration
+gitlab:
+  ## Spawn a gitlab instance
+  enabled: false
+
+postgresql:
+  postgresqlPassword:   2c0170c0126ef2d69da6c9cf51f17640d04700589f48b5bc8421a280dee91db7        ## openssl rand -hex 32
+#  persistence:
+#    existingClaim: renku-postgresql
+
+## Configuration for the UI service
+ui:
+  #  welcomePage:
+  #    text: "## Some markdown text here!"
+  gatewayUrl: *gatewayURL
+  baseUrl: *baseURL
+  gitlabUrl: *gitlabURL
+  jupyterhubUrl: *jupyterhubURL
+#  welcomePage:
+#    text: |
+#      Fill-in what will go in the welcome page of your Renkulab deployment
+
+## Configuration for the notebooks service
+notebooks:
+  gitlab:
+    ## specify the GitLab instance URL
+    url: *gitlabURL
+    registry:
+      host: *registryName
+  jupyterhub:
+    ## Configure rbac
+    rbac:
+      enabled: true
+    hub:
+      ## Secret used for signing JH cookies. Must be explicitly set, otherwise all
+      ## users are logged out whenever the hub pod is recreated!
+      ## See https://zero-to-jupyterhub.readthedocs.io/en/latest/reference/reference.html#hub-cookiesecret
+      cookieSecret:  14812d8143e5ce40d6164468ac4fea60aaac6847fd309f109b6cfc0d7e0e2150        ## openssl rand -hex 32
+      baseUrl: '/jupyterhub/'
+      db:
+        type: postgres
+        url: postgres+psycopg2://jupyterhub@renku-postgresql:5432/jupyterhub
+      services:
+        ## Set the notebooks service API token
+        notebooks:
+          apiToken:   09d0b54f194e0e8f39302077b3c999b62ddbcd490e7809a9a5ef13104d4c57a8        ## openssl rand -hex 32
+        ## define the client ID and secret for the gateway
+        gateway:
+          oauth_client_id: &gwJHclientId gateway
+          apiToken: &gwJHclientSecret  13686fbc85fcc19dfe7f777bdba097b37fd1ca5682aefadc1b19cd29e694fd15        ## openssl rand -hex 32
+          oauth_redirect_uri: *oauth_redirect_uri
+      extraEnv:
+        - name: GITLAB_URL
+          value: *gitlabURL
+        - name: DEBUG
+          value: "1"
+        - name: JUPYTERHUB_SPAWNER_CLASS
+          value: spawners.RenkuKubeSpawner
+        - name: PGPASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: renku-jupyterhub-postgres
+              key: jupyterhub-postgres-password
+    proxy:
+      ## Must be set explicitly, generate using `openssl rand -hex 32`
+      secretToken:   12d140845952bbcfe021ac2ff287aebd3b36a26d18909d605c868b4e6e86feda        ## openssl rand -hex 32
+
+    ## Configure Jupyterhub to use GitLab as OAuth2 provider
+    auth:
+      gitlab:
+        clientId: *hubGitlabClientId
+        clientSecret: *hubGitlabClientSecret
+        callbackUrl: *jupyterhub_gitlab_callbackUrl
+    ## Store encrypted auth state in the JH db (enabled by default).
+    ## Key for encryption must be set explicitly!
+    ## See https://zero-to-jupyterhub.readthedocs.io/en/latest/reference/reference.html?highlight=cryptokey#auth-state
+      state:
+        enabled: true
+        cryptoKey:    93bd677e75c47d91775856591bf64d145068bee47cd43c0adeb822036d2ee045        ## openssl rand -hex 32
+
+## Configuration for the Gateway service
+gateway:
+  gitlabUrl: *gitlabURL
+  gitlabClientId: *gitlabClientId
+  gitlabClientSecret: *gitlabClientSecret
+  secretKey: &gateway_secretKey   57e4bbeaf12eadbcf6d6a9739b7628d72e391ed676df8e9524b47f9fde88ad21        ## openssl rand -hex 32
+  jupyterhub:
+    clientId: *gwJHclientId
+    clientSecret: *gwJHclientSecret
+  graph:
+    sparql:
+      username: renku
+      password: &sparql_password d20cb9019cb601f0f8d9f7429440ab7e8489b3bbf75420c7a58e6e836da45a32        ## openssl rand -hex 32
+
+## Configuration for renku-graph
+graph:
+  ## Configuration for Apache Jena
+  jena:
+    users:
+      admin:
+        password:   c4b42e20260a197f907ef8e9ac57fcfb391d1e54fb0b91557eea6df3b469e699        ## openssl rand -hex 32
+      renku:
+        password: *sparql_password
+#    persistence:
+#      existingClaim: renku-jena
+  gitlab:
+    url: *gitlabURL
+
+  tokenRepository:
+    ## A secret for signing access tokens stored in the database
+    ## Generated using: `openssl rand -hex 8|base64`
+    tokenEncryption:
+      secret:  YThhNzU4ZmNiYzgyZjMwYQo=  ## openssl rand -hex 8|base64
+  webhookService:
+    ## A secret for signing request header tokens to be sent by GitLab with the Push Events
+    ## Generated using: `openssl rand -hex 8|base64`
+    hookToken:
+      secret:  OGY1ODk3MzYwNDAxNDczMQo=  ## openssl rand -hex 8|base64
