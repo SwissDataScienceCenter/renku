@@ -54,7 +54,7 @@ global:
     ## clientSecret: # use `uuidgen -r`
     clientSecret:  [random]        ## Taken from gateway client in keycloak
     ## The client secret for authentication against gitlab
-    gitlabClientSecret:   [random]        ## Taken from renku-ui gitlab application secret
+    gitlabClientSecret: *gitlabClientSecret
   renku:
     ## Domain name for the deployed instance of renku
    domain: *mainURL
