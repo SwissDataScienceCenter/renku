@@ -1,0 +1,24 @@
+name: 'oauth2_generic'
+label: 'Renku Login'
+app_id: 'gitlab'
+## This should match global.gitlab.clientSecret in renku-values.yaml
+##  'app_secret' => ENV['GITLAB_CLIENT_SECRET'],
+app_secret: 415736e7ef6dcc5c3a95095497361630656e7e11edc9f18271f4e8b4dd0da309,
+args:
+  client_options:
+    # Traefik maps keycloak to the URL below
+    # CAREFUL: This must be accessible from inside the keycloak container
+    # for server-to-server communication.
+    # 'site' => '{{ template "http" . }}://{{ .Values.global.renku.domain }}/auth/',
+    site: 'https://glnative.dev.renku.ch/auth/'
+    authorize_url: '/auth/realms/Renku/protocol/openid-connect/auth'
+    user_info_url: '/auth/realms/Renku/protocol/openid-connect/userinfo'
+    token_url: '/auth/realms/Renku/protocol/openid-connect/token'
+  user_response_structure:
+    attributes:
+      email:'email'
+      first_name:'given_name'
+      last_name:'family_name'
+      name:'name'
+      nickname:'preferred_username' # if the nickname attribute of a user is called 'username'
+    id_path: 'sub'
