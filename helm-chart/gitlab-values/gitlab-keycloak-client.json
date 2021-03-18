@@ -1,6 +1,6 @@
 {
     "clientId": "gitlab",
-    "baseUrl": "https://sv-renku-git.epfl.ch",
+    "baseUrl": "https://gitlab.glnative.dev.renku.ch",
     "surrogateAuthRequired": false,
     "enabled": true,
     "clientAuthenticatorType": "client-secret",

@@ -32,7 +32,7 @@ global:
     ## and thus relies on keycloak for authentication. To change this value after deploying, first
     ## generate a new secret using the Keycloak admin console then paste the generated secret here and redeploy.
     ##     clientSecret: # use `uuidgen -r`
-    clientSecret:  415736e7ef6dcc5c3a95095497361630656e7e11edc9f18271f4e8b4dd0da309        ## Taken from gitlab client in keycloak
+    clientSecret:  22d60579-6bd6-44a0-9316-78a9fac0a6c9        ## Taken from gitlab client in keycloak
     ## URL prefix for gitlab
     urlPrefix: *gitlabPrefix
 
