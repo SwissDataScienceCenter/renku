@@ -1,24 +1,19 @@
-name: 'oauth2_generic'
+name: 'openid_connect'
 label: 'Renku Login'
-app_id: 'gitlab'
-## This should match global.gitlab.clientSecret in renku-values.yaml
-##  'app_secret' => ENV['GITLAB_CLIENT_SECRET'],
-app_secret: '22d60579-6bd6-44a0-9316-78a9fac0a6c9'
 args:
+  name: 'openid_connect'
+  # scope: ['openid','email']
+  response_type: 'code'
+  issuer: 'https://glnative.dev.renku.ch/auth/realms/Renku'
+  discovery: true # if set to false, uncomment enpoints in client_options
+  client_auth_method: 'query' # or 'basic' ?
+  # uid_field: 'preferred_username'
+  send_scope_to_token_endpoint: false
   client_options:
-    # Traefik maps keycloak to the URL below
-    # CAREFUL: This must be accessible from inside the keycloak container
-    # for server-to-server communication.
-    # 'site' => '{{ template "http" . }}://{{ .Values.global.renku.domain }}/auth/',
-    site: 'http://glnative.dev.renku.ch/auth/'
-    authorize_url: '/auth/realms/Renku/protocol/openid-connect/auth'
-    user_info_url: '/auth/realms/Renku/protocol/openid-connect/userinfo'
-    token_url: '/auth/realms/Renku/protocol/openid-connect/token'
-  user_response_structure:
-    attributes:
-      email: 'email'
-      first_name: 'given_name'
-      last_name: 'family_name'
-      name: 'name'
-      nickname: 'preferred_username' # if the nickname attribute of a user is called 'username'
-    id_path: 'preferred_username'
+    identifier: 'gitlab'
+    secret: '22d60579-6bd6-44a0-9316-78a9fac0a6c9'
+    redirect_uri: 'https://gitlab.glnative.dev.renku.ch/users/auth/openid_connect/callback'
+    # authorization_endpoint: '/auth/realms/Renku/protocol/openid-connect/auth'
+    # token_endpoint: '/auth/realms/Renku/protocol/openid-connect/token'
+    # userinfo_endpoint: '/auth/realms/Renku/protocol/openid-connect/userinfo'
+    # jwks_uri: '/auth/realms/Renku/protocol/openid-connect/certs'
