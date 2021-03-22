@@ -7,7 +7,7 @@ Please follow this convention when adding a new row
 
 ----
 
-## Upgrading to Renku 0.8.0 (INCLUDES BREAKING CHANGES!)
+## Upgrading to Renku 0.7.8 (INCLUDES BREAKING CHANGES!)
 * Keycloak chart dependency upgraded from `4.10.2` to `9.8.1`, check out [the instructions](https://github.com/codecentric/helm-charts/tree/master/charts/keycloak#upgrading) on how to upgrade aspects not covered by default in the Renku chart. Most notably, keycloak values are
 less nested, so at the level of the Renku chart values, *keycloak.keycloak.X.Y* becomes *keycloak.X.Y*.
 * EDIT - the section *keycloak.keycloak.persistence* has been removed. Database connection
