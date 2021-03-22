@@ -17,7 +17,7 @@ jobs:
         run: echo ::set-output name=tag::${GITHUB_REF#refs/*/}
       - uses: ./actions/publish-chart
         env:
-          CHART_PATH: helm-chart/
+          CHART_DIR: helm-chart/
           CHART_NAME: renku
           GIT_USER: chart-bot
           GIT_EMAIL: chart-bot@example.com
@@ -53,8 +53,8 @@ jobs:
       - name: "Deploy"
         uses: "deliverybot/helm@v1"
         with:
-          release: "alessandro-renku"
-          namespace: "alessandro"
+          release: "staging-renku"
+          namespace: "staging"
           chart: "renku"
           helm: "helm3"
           version: "${{ steps.vars.outputs.tag }}"
@@ -96,7 +96,7 @@ jobs:
           RENKUBOT_KUBECONFIG: ${{ secrets.RENKUBOT_DEV_KUBECONFIG }}
         run: |
           echo "$RENKUBOT_KUBECONFIG" > renkubot-kube.config
-          helm test alessandro-renku --namespace alessandro --timeout 40m --logs
+          helm test staging-renku --namespace staging --timeout 40m --logs
       - name: Download artifact for packaging on failure
         if: failure()
         uses: ./actions/download-test-artifacts
