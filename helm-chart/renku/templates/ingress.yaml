@@ -7,6 +7,8 @@
 {{- $gitlabServicePort := 80 -}}
 {{- $uiFullname := include "ui.fullname" . -}}
 {{- $uiServicePort := .Values.ui.service.port -}}
+{{- $uiserverFullname := include "uiserver.fullname" . -}}
+{{- $uiserverServicePort := .Values.uiserver.service.port -}}
 {{- $gatewayFullname := include "gateway.fullname" . -}}
 {{- $gatewayServicePort := .Values.gateway.service.port -}}
 {{- $graphEnabled := .Values.graph.enabled -}}
@@ -74,6 +76,10 @@ spec:
         backend:
           serviceName: {{ $uiFullname }}
           servicePort: {{ $uiServicePort }}
+      - path: /ui-server
+        backend:
+          serviceName: {{ $uiserverFullname }}
+          servicePort: {{ $uiserverServicePort }}
       {{- if $graphEnabled }}
       - path: /webhooks/events
         backend:
