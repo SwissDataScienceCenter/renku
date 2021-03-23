@@ -6,7 +6,7 @@ name = "pypi"
 [packages]
 "urllib3" = ">=1.24.2"
 "jinja2" = ">=2.10.1"
-chartpress = "==0.3.2"
+chartpress = "==0.7.0"
 kubernetes = "*"
 
 [dev-packages]

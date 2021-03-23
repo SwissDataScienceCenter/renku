@@ -13,9 +13,7 @@ It can simply be used as a step in a GitHub actions job:
         fetch-depth: 0
     - uses: SwissDataScienceCenter/renku/actions/publish-chart@master
       env:
-        CHART_PATH: helm-chart/mychart  # path to the chart directory
-        GIT_USER: Bot User
-        GIT_EMAIL: bot@example.com
+        CHART_DIR: helm-chart/mychart  # path to the chart directory
         DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
         DOCKER_PASSWORD: ${{ secrest.DOCKER_PASSWORD }}
         GITHUB_TOKEN: ${{ secrets.CI_TOKEN }}
@@ -30,11 +28,10 @@ You can set these environment variables:
 
 | Variable name | Default | Required |
 | --------------| --------| ---------|
-| CHART_PATH    | helm-chart/repository_name | No |
+| CHART_DIR    | helm-chart/ | No |
 | DOCKER_PASSWORD | None | Yes |
 | DOCKER_USERNAME | None | Yes |
 | GIT_EMAIL     | None | Yes |
 | GIT_USER      | None | Yes |
 | GITHUB_TOKEN  | None | Yes |
-| HELM_URL      | https://storage.googleapis.com/kubernetes-helm | No |
-| HELM_TGZ      | helm-v2.17.0-linux-amd64.tar.gz | No |
+| IMAGE_PREFIX  | None | No  |
