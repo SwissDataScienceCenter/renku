@@ -25,6 +25,7 @@ components = [
     "renku-graph",
     "renku-notebooks",
     "renku-ui",
+    "renku-ui-server"
 ]
 
 

@@ -54,7 +54,7 @@ jobs:
         RENKUBOT_KUBECONFIG: ${{ secrets.RENKUBOT_DEV_KUBECONFIG }}
       run: |
         echo "$RENKUBOT_KUBECONFIG" > renkubot-kube.config
-        helm test renku --namespace renku --timeout 40m --logs
+        helm test renku --namespace renku --timeout 80m --logs
     - name: Download artifact for packaging on failure
       if: failure()
       uses: ./actions/download-test-artifacts
