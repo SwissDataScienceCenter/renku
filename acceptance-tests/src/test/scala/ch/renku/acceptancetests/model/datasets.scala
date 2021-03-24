@@ -35,8 +35,7 @@ object datasets {
 
     def generate: DatasetName = DatasetName(nonEmptyStrings().generateOne.toLowerCase)
     def generate(containing: String): DatasetName = DatasetName {
-      val name = sentenceContaining(containing).generateOne
-      s"${name.head.toLower}${name.tail}"
+      sentenceContaining(containing).generateOne.toLowerCase
     }
 
     implicit lazy val ordering: Ordering[DatasetName] =
