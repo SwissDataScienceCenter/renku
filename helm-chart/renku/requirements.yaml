@@ -21,7 +21,7 @@ dependencies:
   version: 0.9.4
 - name: gitlab
   repository: "https://swissdatasciencecenter.github.io/helm-charts/"
-  version: 0.5.2
+  version: 0.5.3
   condition: gitlab.enabled
 - name: renku-graph
   alias: graph
