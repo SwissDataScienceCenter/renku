@@ -35,7 +35,15 @@ global:
       providers:
        - secret: renku-oauth-provider
          key: provider
-
+    lfs:
+      #  directUpload: false
+      #  backgroundUpload: true
+      enabled: true
+      proxy_download: false
+      bucket: glnative-dev-lfs-objects
+      connection:
+        secret: glnative-lfs-connection
+        key: openstack-connection
 certmanager:
   install: false
 nginx-ingress:
