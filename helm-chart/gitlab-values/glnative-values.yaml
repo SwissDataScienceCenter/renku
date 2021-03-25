@@ -20,7 +20,7 @@ domain_configurations:
   hubGitlabClientId:         &hubGitlabClientId             c0e46f604ad1797a5da29b40410207a9352b1b979f95878e7f767f2943efdb5b
   hubGitlabClientSecret:     &hubGitlabClientSecret         19d27c7e768b149b496b52c6beabcc46e96f8ee2eceaea1539ea5c293993bb80
 
-  registryName:              &registryName                  registry.gitlab.glnative.dev.renku.ch
+  registryName:              &registryName                  registry.glnative.dev.renku.ch
   ## registryURL:               &registryURL                   https://registry.gitlab.glnative.dev.renku.ch
   ## registry_tls:              &registry_tls                  registry-gitlab-glnative-dev-renku-ch-tls
 
