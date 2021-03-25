@@ -88,7 +88,7 @@ Launching the interactive environment locally
 ---------------------------------------------
 
 Finally, if we wanted to launch an environment locally with the image that was
-built for this commit we can do
+built for this commit. From the project's root directory, run
 
 .. code-block::
 
