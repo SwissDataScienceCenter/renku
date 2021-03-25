@@ -53,6 +53,7 @@ github
 gitignore
 gitkeep
 gitlab
+gitlabClientSecret
 GitLab
 GraphQL
 https
