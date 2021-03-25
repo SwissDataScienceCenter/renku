@@ -196,7 +196,7 @@ You simply need to:
       $ helm test renku \
        --namespace renku \
        --log-file renku-tests.log \
-       --timeout 40m
+       --timeout 80m
 
 5. Post deployment configurations
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

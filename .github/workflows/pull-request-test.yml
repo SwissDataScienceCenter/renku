@@ -108,7 +108,7 @@ jobs:
         RENKU_RELEASE: ci-renku-${{ github.event.number }}
       run: |
         echo "$RENKUBOT_KUBECONFIG" > renkubot-kube.config
-        helm test ${RENKU_RELEASE} --namespace ${RENKU_RELEASE} --timeout 40m --logs
+        helm test ${RENKU_RELEASE} --namespace ${RENKU_RELEASE} --timeout 80m --logs
     - name: Download artifact for packaging on failure
       if: failure()
       uses: ./actions/download-test-artifacts
