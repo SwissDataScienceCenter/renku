@@ -44,7 +44,8 @@ service:
     annotations:
       prometheus.io/scrape: "true"
       prometheus.io/path: /gitlab/-/metrics
-
+minio:
+  enabled: false
 persistence:
   enabled: true
 
