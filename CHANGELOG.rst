@@ -1,5 +1,21 @@
 .. _changelog:
 
+
+0.7.9
+-----
+
+Bug Fixes
+~~~~~~~~~~
+ 
+* **Core**: add error handling if push from temporary branch fails
+* **Core**: fix handling of '@' in filenames
+* **Core**: fix save and push to correctly handle merge conflicts
+* **Service**: sync service cache with remote before operations to prevent cache getting out of sync
+* **Datasets**: allow importing a dataset from a non-public project
+* **Graph**: fix fail to update event status when triples generation fails
+
+* **Deployment**: fix gateway gitlabClientSecret in minimal-values template
+
 0.7.8
 -----
 
