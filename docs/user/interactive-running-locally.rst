@@ -31,7 +31,7 @@ or you just prefer to build the image locally, you can certainly do so
 with Docker. To build the image, run this command from the root directory
 of your project:
 
-.. code-block::
+.. code-block:: console
 
     $ docker build -t <imageName>:<tag> .
 
@@ -39,7 +39,7 @@ The ``imageName`` and ``tag`` can be anything you want, but you might want to
 try to use something you will remember. To see which images you have in
 your local Docker registry, run
 
-.. code-block::
+.. code-block:: console
 
     $ docker images
 
@@ -69,7 +69,7 @@ like ``https://renkulab.io/gitlab/rok.roskar/flights-tutorial.git`` then the
 
 You can get the ``commit-sha`` by running ``git log`` in your repository, e.g.
 
-.. code-block::
+.. code-block:: console
 
     $ git log
 
@@ -90,7 +90,7 @@ Launching the interactive environment locally
 Finally, if we wanted to launch an environment locally with the image that was
 built for this commit. From the project's root directory, run
 
-.. code-block::
+.. code-block:: console
 
     $ repoName=$(basename -s .git `git config --get remote.origin.url`); \
         docker run --rm -ti -v ${PWD}:/work/$repoName \
@@ -106,7 +106,7 @@ the working directory (``--workdir``). Once the image downloads and the
 container is created, you will see a series of log messages ending in something
 like:
 
-.. code-block::
+.. code-block:: console
 
 
     To access the notebook, open this file in a browser:
