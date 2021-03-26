@@ -201,3 +201,8 @@ graph:
     ## Generated using: `openssl rand -hex 8|base64`
     hookToken:
       secret:  OTk2M2NjYWRlM2I4MGNmOQo=  ## openssl rand -hex 8|base64
+core:
+  image:
+    repository: renku/renku-core
+    tag: '0.14.1'
+    pullPolicy: IfNotPresent
