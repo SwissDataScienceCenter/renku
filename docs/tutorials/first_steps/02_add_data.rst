@@ -23,13 +23,13 @@ find it in the top bar menu in *File* > *New Launcher*.
   ``Ctrl+Shift+V`` on Linux.
 
 When you start the terminal, you will already be inside your project
-directory. So you are ready to create a dataset.
+directory, so you are ready to create a dataset.
 
-Renku can create datasets containing data from a variety of sources. Renku
+Renku can create datasets containing data from a variety of sources. It
 supports adding data from the local file system or a URL. Renku can also
 import data from a data repository like the
 `Dataverse <https://dataverse.harvard.edu>`_ or `Zenodo <https://zenodo.org>`_.
-The advantage of data in a data repository is that it can contain metadata that
+The advantage importing data from a data repository is that it can contain metadata that
 can be used to help interpret it. Another advantage is that data repositories
 assign `DOIs <https://www.doi.org>`_ to data which can be used to
 succinctly identify it and guarantee that the data will be findable and
@@ -43,14 +43,16 @@ data, answer yes.
 
 .. code-block:: console
 
-    renku dataset import --name flight-data 10.7910/DVN/WTZS4K
+    $ renku dataset import --name flight-data 10.7910/DVN/WTZS4K
 
-    # Output:
-    # CHECKSUM    NAME                       SIZE (MB)  TYPE
-    # ----------  -----------------------  -----------  ---------------
-    #             2019-01-flights.csv.zip       7.9301  application/zip
-    # Do you wish to download this version? [y/N]: y
-    # OK
+    Output:
+    CHECKSUM    NAME                       SIZE (MB)  TYPE
+    ----------  -----------------------  -----------  ---------------
+                2019-01-flights.csv.zip       7.9301  application/zip
+    Do you wish to download this version? [y/N]: y
+    Info: Adding these files to Git LFS:
+          data/2019-01_us_fli_1.0/2019-01-flights.csv.zip
+    OK
 
 Let us take a moment to understand what happened there. Opening the terminal
 puts you inside the project directory with ``git`` already configured.
@@ -65,11 +67,11 @@ You can list the datasets in a project by running the following:
 
 .. code-block:: console
 
-        renku dataset ls
+    $ renku dataset ls
 
-        # ID                                    NAME         TITLE               VERSION
-        # ------------------------------------  -----------  ------------------  ---------
-        # 29f121ea-cf16-4512-932f-7b195480cb9b  flight-data  2019-01 US Flights  1.0
+    ID                                    NAME         TITLE               VERSION
+    ------------------------------------  -----------  ------------------  ---------
+    29f121ea-cf16-4512-932f-7b195480cb9b  flight-data  2019-01 US Flights  1.0
 
 The file we added contains data on flight take-offs and landings at US airports, and it
 comes originally from `here <https://www.transtats.bts.gov>`_. As the file
@@ -80,57 +82,53 @@ repository:
 
 .. code-block:: console
 
-    git log
+    $ git log
 
-    # Output similar to:
-    # commit ef542b5ec5a44fdbb16afc3de413308a7daff32f
-    # Author: John Doe <john.doe@example.com>
-    # Date:   Mon Apr 29 11:58:34 2019 +0000
-    #
-    #     renku dataset import --name flight-data 10.7910/DVN/WTZS4K
-    #
-    # commit 3809ce796933bd554ec65df0737b6ecf00b069e1
-    # Author: John Doe <john.doe@example.com>
-    # Date:   Mon Apr 29 11:58:33 2019 +0000
-    #
-    #     renku dataset: committing 1 newly added files
-    #
-    # commit 3f74a2dfdf5e27c1dc124f6455931089023253b8 (origin/master, origin/HEAD)
-    # Author: John Doe <john.doe@example.com>
-    # Date:   Mon Apr 29 11:53:41 2019 +0000
-    #
-    #     service: renku init -n "Flights tutorial"
-    #       -s "https://github.com/SwissDataScienceCenter/renku-project-template"
-    #       -r "0.1.12" -t "python-minimal" -p "description"="My first Renku project"
+    Output similar to:
+    commit ef542b5ec5a44fdbb16afc3de413308a7daff32f
+    Author: John Doe <john.doe@example.com>
+    Date:   Mon Apr 29 11:58:34 2019 +0000
+
+        renku dataset import --name flight-data 10.7910/DVN/WTZS4K
+
+    commit 3809ce796933bd554ec65df0737b6ecf00b069e1
+    Author: John Doe <john.doe@example.com>
+    Date:   Mon Apr 29 11:58:33 2019 +0000
+
+        renku dataset: committing 1 newly added files
+
+    commit 3f74a2dfdf5e27c1dc124f6455931089023253b8 (origin/master, origin/HEAD)
+    Author: John Doe <john.doe@example.com>
+    Date:   Mon Apr 29 11:53:41 2019 +0000
+
+        service: renku init -n "Flights tutorial"
+          -s "https://github.com/SwissDataScienceCenter/renku-project-template"
+          -r "0.1.12" -t "python-minimal" -p "description"="My first Renku project"
 
 .. code-block:: console
 
-    git status
+    $ git status
 
-    # Output similar to:
-    # On branch master
-    # Your branch is ahead of 'origin/master' by 2 commits.
-    #   (use "git push" to publish your local commits)
-    #
-    # nothing to commit, working directory clean
+    Output similar to:
+    On branch master
+    Your branch is ahead of 'origin/master' by 2 commits.
+      (use "git push" to publish your local commits)
+
+    nothing to commit, working directory clean
 
 Let us push the two fresh commits by running:
 
 .. code-block:: console
 
-    git push
+    $ git push
 
-    # Output similar to:
-    # Locking support detected on remote "origin". Consider enabling it with: [...]
-    # Uploading LFS objects: 100% (1/1), 7.9 MB | 0 B/s, done
-    # Counting objects: 15, done.
-    # Delta compression using up to 8 threads.
-    # Compressing objects: 100% (12/12), done.
-    # Writing objects: 100% (15/15), 2.26 KiB | 463.00 KiB/s, done.
-    # Total 15 (delta 2), reused 0 (delta 0)
-    # To https://renkulab.io/gitlab/john.doe/flights-tutorial.git
-    #     b55aea9..91b226b  master --> master
-
-.. _renkulab.io: https://renkulab.io
-.. _documentation: https://renku.readthedocs.io/
-.. _papermill: https://papermill.readthedocs.io/en/latest/
+    Output similar to:
+    Locking support detected on remote "origin". Consider enabling it with: [...]
+    Uploading LFS objects: 100% (1/1), 7.9 MB | 0 B/s, done
+    Counting objects: 15, done.
+    Delta compression using up to 8 threads.
+    Compressing objects: 100% (12/12), done.
+    Writing objects: 100% (15/15), 2.26 KiB | 463.00 KiB/s, done.
+    Total 15 (delta 2), reused 0 (delta 0)
+    To https://renkulab.io/gitlab/john.doe/flights-tutorial.git
+        b55aea9..91b226b  master --> master
