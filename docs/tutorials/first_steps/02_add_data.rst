@@ -29,7 +29,11 @@ Renku can create datasets containing data from a variety of sources. It
 supports adding data from the local file system or a URL. Renku can also
 import data from a data repository like the
 `Dataverse <https://dataverse.harvard.edu>`_ or `Zenodo <https://zenodo.org>`_.
+<<<<<<< HEAD
 The advantage of importing data from a data repository is that it can contain metadata that
+=======
+The advantage importing data from a data repository is that it can contain metadata that
+>>>>>>> chore: update first steps tutorial
 can be used to help interpret it. Another advantage is that data repositories
 assign `DOIs <https://www.doi.org>`_ to data which can be used to
 succinctly identify it and guarantee that the data will be findable and
