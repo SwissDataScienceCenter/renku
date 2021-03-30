@@ -35,7 +35,7 @@ You will need the following tools installed on your machine:
    docker <https://www.docker.com/>
    minikube <https://github.com/kubernetes/minikube>
    kubectl <https://kubernetes.io/docs/tasks/tools/install-kubectl/>
-   helm 2 (>=2.9.1) <https://github.com/kubernetes/helm/blob/master/docs/install.md>
+   helm 2 (>=2.9.1) <https://helm.sh/docs/intro/install/>
    jq <https://stedolan.github.io/jq/>
 
 For OS X users, we also recommend to install the
