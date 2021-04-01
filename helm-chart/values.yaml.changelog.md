@@ -15,6 +15,10 @@ Please follow this convention when adding a new row
 * NEW - *global.gateway.cliClientSecret* has been added when introducing a new "renku-cli" client application in keycloak. Generate through `openssl rand -hex 32`.
 
 
+## Upgrading to Renku 0.7.10
+* NEW - *ui.homepage* has been added for customizing the content on the RenkuLab home page. See the values.yml file for more detailed documentation.
+
+
 ## Upgrading to Renku 0.7.9
 * NEW - *ui.uiserverUrl* has been added. The default value is `<domain>/ui-server`.
 
