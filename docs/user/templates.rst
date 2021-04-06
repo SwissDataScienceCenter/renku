@@ -265,6 +265,9 @@ The easiest way to create your own templates is to clone our
 `Renku template repository <https://github.com/SwissDataScienceCenter/renku-project-template>`_
 and modify it as you need.
 
+
+.. _manifest-yaml:
+
 ``manifest.yaml``
 """""""""""""""""
 
@@ -316,8 +319,8 @@ renku-specific variables that are always available in templates, namely:
   name>``) (only set when creating a project online in renkulab).
 
 
-Use your repository
-"""""""""""""""""""
+Use custom repositories
+^^^^^^^^^^^^^^^^^^^^^^^
 
 If you installed the renku command line interface locally, you can provide
 your template repository to the ``renku init`` command. We recommend you
@@ -325,11 +328,165 @@ your template repository to the ``renku init`` command. We recommend you
 custom repository. You can find further details in
 `renku init docs <https://renku-python.readthedocs.io/en/latest/commands.html#use-a-different-template>`_.
 
-If you are using the UI through a RenkuLab instance, you can ask the
-administrators to include your repository in the official repository list
-available in the
+If you are using a RenkuLab instance, you can change the `Template source`
+to ``Custom`` on the project creation page. You will be able to insert
+a URL pointing to your template repository.
+
+.. image:: ../_static/images/templates_custom.png
+  :width: 100%
+  :align: center
+  :alt: Custom template source
+
+Fill in the reference and click on `Fetch templates`. This will parse and
+validate the repository, showing the list of available templates.
+
+An error may occur while fetching the templates for many reasons.
+Most of the time, the template repository is invalid (in that case,
+:ref:`double-check the manifest file<manifest-yaml>`), or the URL/reference
+combination is wrong. The UI should show a meaningful error description.
+
+.. note::
+
+  Remember to provide the URL to the **git repository**. For GitHub and
+  other code management systems, you can provide the link used to clone
+  through ``https``, ending with ``.git``. You can usually leave the
+  ``.git`` extension out, but pay particular attention when you try to
+  copy-paste directly from your browser. Even an additional final slash can
+  lead to an invalid URL, and the error may be confusing.
+  This is what you get if you use
+  `https://github.com/SwissDataScienceCenter/renku-project-template/` instead
+  of `https://github.com/SwissDataScienceCenter/renku-project-template`:
+
+  .. image:: ../_static/images/templates_url_error.png
+    :width: 100%
+    :align: center
+    :alt: Error fetching custom templates
+
+If you think your template may be useful for the broader community, you can
+have more visibility by including it in the
+`community-contributed project templates repository <https://github.com/SwissDataScienceCenter/contributed-project-templates>`_.
+Feel free to push a pull request and we will validate it.
+
+If you are working in a dedicated RenkuLab deployment and your local
+community needs the templates, you should contact the administrators to
+include your repository in the RenkuLab template source through the
 `renku-values file <https://renku.readthedocs.io/en/latest/admin/index.html#create-a-renku-values-yaml-file>`_.
 
-We are currently working on adding full support for custom template
-repositories in RenkuLab so that you can manually specify external resources
-not included in the configuration file.
+
+Create shareable links with pre-filled fields
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Most of the time, you want your repository to be immediately available
+to the target audience, maybe even having some variables set to specific
+values. We know manually entering the same values, again and again, is a
+tedious process, so we come up with a solution to automatically pre-fill
+some of the fields in the project creation page.
+
+You can create a link containing metadata embedded in a query parameter.
+Once you enter that link in a browser, the UI will automatically fetch
+the required data and pre-fill the fields for you.
+
+To create a shareable link, start by filling in all the fields as you would
+do when creating a new project. Instead of clicking on `Create project`,
+click on the dropdown on the right side of the same button and then on
+`Create link`.
+
+You should see a modal where you can select which fields to include in the
+metadata. Some may not be clickable (no value provided), and others are
+deselected by default. The URL updates in real-time, and you can copy it
+for future reference or share it with others.
+
+.. image:: ../_static/images/templates_shareable_link.png
+  :width: 100%
+  :align: center
+  :alt: Custom template source
+
+.. note::
+
+  You can include any of the listed fields in the link, but you should be
+  careful when including namespace and visibility. Your user namespace cannot
+  be available to any other users, and group namespaces may require specific
+  permission. The visibility is generally tied to the namespace visibility,
+  although ``private`` should always be available since it is the most
+  restrictive one.
+  
+  It would be best to prefer fixed references for custom template
+  repositories, especially when selecting a template and providing values for
+  variables. This means commits and tags are a good choice, while branches
+  are not. Otherwise, the template or the variables may change in a later
+  version, resulting in a corrupted link.
+
+
+Programmatically compute shareable links
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+The shareable link generation process is trivial but not intuitive since the
+base64 encoded string obfuscates the details (we do that to prevent problems
+with special chars in the URL).
+
+If you need to to compute the shareable links programmatically, all you need is
+to create a dictionary with the necessary information, serialize it to a Json
+string, and base64 encode it.
+
+We use the ``stringify`` function from the
+`JavaScript JSON object <https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/JSON>`_
+to serialize the dictionary, and a minor variation of the
+`JavaScript btoa function <https://developer.mozilla.org/en-US/docs/Web/API/WindowOrWorkerGlobalScope/btoa>`_
+to base64 encode the string. You can use them as a reference. All the major
+programming languages have a straight equivalent in their base packages.
+
+The structure of the dictionary is the following:
+
+.. code-block::
+
+  {
+    "title": <string>,
+    "namespace": <string>,
+    "visibility": <string>,
+    "url": <string>,
+    "ref": <string>,
+    "template": <string>,
+    "variables": {
+      <variable_name>: <string>
+    }
+  }
+
+Here is an example with Python:
+
+.. code-block:: python
+
+  # 1. Create a dictionary with all the required data
+
+  raw_data = {
+    "title":"test",
+    "url":"https://github.com/SwissDataScienceCenter/renku-project-template",
+    "ref":"0.1.17",
+    "template":"Custom/python-minimal",
+    "variables": {
+      "description":"test description"
+    }
+  }
+
+  # 2. Serialize to a string
+
+  import json
+  serialized_data = json.dumps(raw_data)
+
+  # 3. Encode in base64
+  import base64
+  data = base64.b64encode(str.encode(serialized_data))
+
+  # 4. Use the output to compose the URL
+  print(data)
+
+  > b'eyJ0aXRsZSI6ICJ0ZXN0IiwgInVybCI6ICJodHRwczovL2dpdGh1Yi5jb20vU3dpc3NEYX
+    RhU2NpZW5jZUNlbnRlci9yZW5rdS1wcm9qZWN0LXRlbXBsYXRlIiwgInJlZiI6ICIwLjEuMT
+    ciLCAidGVtcGxhdGUiOiAiQ3VzdG9tL3B5dGhvbi1taW5pbWFsIiwgInZhcmlhYmxlcyI6IH
+    siZGVzY3JpcHRpb24iOiAidGVzdCBkZXNjcmlwdGlvbiJ9fQ=='
+
+  # The link will be
+  # https://<renkulab_url>/projects/new?data=eyJ0aXRs...biJ9fQ==
+
+The final string may be slightly different based on the specific library
+used or the local settings (E.G., including spaces in the serialized
+object string, produces extra characters).
