@@ -166,78 +166,78 @@ if __name__ == "__main__":
     }
     pprint.pp(component_versions)
 
-    tempdir_ = tempfile.TemporaryDirectory()
-    tempdir = Path(tempdir_.name)
+    # tempdir_ = tempfile.TemporaryDirectory()
+    # tempdir = Path(tempdir_.name)
 
-    renku_dir = tempdir / "renku"
-    reqs_path = renku_dir / "helm-chart/renku/requirements.yaml"
+    # renku_dir = tempdir / "renku"
+    # reqs_path = renku_dir / "helm-chart/renku/requirements.yaml"
 
-    ## 1. clone the renku repo
-    renku_req = RenkuRequirement(component="renku", version=args.renku or "@master", tempdir=tempdir)
-    renku_req.clone()
+    # ## 1. clone the renku repo
+    # renku_req = RenkuRequirement(component="renku", version=args.renku or "@master", tempdir=tempdir)
+    # renku_req.clone()
 
-    with open(reqs_path) as f:
-        reqs = yaml.load(f, Loader=yaml.SafeLoader)
+    # with open(reqs_path) as f:
+    #     reqs = yaml.load(f, Loader=yaml.SafeLoader)
 
-    ## 2. set the chosen versions in the requirements.yaml file
-    reqs = configure_requirements(tempdir, reqs, component_versions)
+    # ## 2. set the chosen versions in the requirements.yaml file
+    # reqs = configure_requirements(tempdir, reqs, component_versions)
 
-    with open(reqs_path, "w") as f:
-        yaml.dump(reqs, f)
+    # with open(reqs_path, "w") as f:
+    #     yaml.dump(reqs, f)
 
-    ## 3. render the renku chart for deployment
-    renku_req.chartpress()
+    # ## 3. render the renku chart for deployment
+    # renku_req.chartpress()
 
-    ## 4. deploy
-    values_file = args.values_file
-    release = args.release
-    namespace = args.namespace or release
+    # ## 4. deploy
+    # values_file = args.values_file
+    # release = args.release
+    # namespace = args.namespace or release
 
-    print(f'*** Dependencies for release "{release}" under namespace "{namespace}" ***')
-    pprint.pp(reqs)
+    # print(f'*** Dependencies for release "{release}" under namespace "{namespace}" ***')
+    # pprint.pp(reqs)
 
-    helm_command = [
-        "helm",
-        "upgrade",
-        "--install",
-        release,
-        "./renku",
-        "-f",
-        values_file,
-        "--namespace",
-        namespace,
-        "--timeout",
-        "20m",
-    ]
+    # helm_command = [
+    #     "helm",
+    #     "upgrade",
+    #     "--install",
+    #     release,
+    #     "./renku",
+    #     "-f",
+    #     values_file,
+    #     "--namespace",
+    #     namespace,
+    #     "--timeout",
+    #     "20m",
+    # ]
 
-    if os.getenv("TEST_ARTIFACTS_PATH"):
-        helm_command += ["--set", f'tests.resultsS3.filename={os.getenv("TEST_ARTIFACTS_PATH")}']
+    # if os.getenv("TEST_ARTIFACTS_PATH"):
+    #     helm_command += ["--set", f'tests.resultsS3.filename={os.getenv("TEST_ARTIFACTS_PATH")}']
 
-    # deploy the main chart
-    check_call(
-        helm_command,
-        cwd=renku_dir / "helm-chart",
-    )
+    # # deploy the main chart
+    # check_call(
+    #     helm_command,
+    #     cwd=renku_dir / "helm-chart",
+    # )
 
-    # enable anonymous notebooks if needed
-    if args.anonymous_sessions:
-        from deploy_tmp_notebooks import (
-            deploy_tmp_notebooks,
-            check_notebooks_chart_version,
-        )
+    # # enable anonymous notebooks if needed
+    # if args.anonymous_sessions:
+    #     from deploy_tmp_notebooks import (
+    #         deploy_tmp_notebooks,
+    #         check_notebooks_chart_version,
+    #     )
 
-        renku_notebooks_version = component_versions.get("renku_notebooks") or check_notebooks_chart_version(
-            renku_chart_path=renku_dir / "helm-chart"
-        )
+    #     renku_notebooks_version = component_versions.get("renku_notebooks") or check_notebooks_chart_version(
+    #         renku_chart_path=renku_dir / "helm-chart"
+    #     )
 
-        local_path = tempdir / "renku-notebooks/helm-chart/renku-notebooks" if renku_notebooks_version.startswith("@") else None
+    #     local_path = tempdir / "renku-notebooks/helm-chart/renku-notebooks" if renku_notebooks_version.startswith("@") else None
 
-        deploy_tmp_notebooks(
-            release,
-            namespace,
-            renku_notebooks_version,
-            namespace + "-tmp",
-            local_path=local_path,
-        )
+    #     deploy_tmp_notebooks(
+    #         release,
+    #         namespace,
+    #         renku_notebooks_version,
+    #         namespace + "-tmp",
+    #         local_path=local_path,
+    #     )
 
-    tempdir_.cleanup()
+    # tempdir_.cleanup()
