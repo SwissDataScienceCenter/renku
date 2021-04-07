@@ -160,6 +160,7 @@ if __name__ == "__main__":
     )
     args = parser.parse_args()
     component_versions = {a: b for a, b in vars(args).items() if a.replace("_", "-") in components}
+    pprint.pp(component_versions)
 
     tempdir_ = tempfile.TemporaryDirectory()
     tempdir = Path(tempdir_.name)

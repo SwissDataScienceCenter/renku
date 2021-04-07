@@ -78,6 +78,8 @@ jobs:
         RENKUBOT_RANCHER_BEARER_TOKEN: ${{ secrets.RENKUBOT_RANCHER_BEARER_TOKEN }}
         TEST_ARTIFACTS_PATH: "tests-artifacts-${{ github.sha }}"
         renku: "@${{ github.head_ref }}"
+        renku-ui: ""
+        renku-gateway: "WRONG_VERSION"
     - name: Check existing renkubot comment
       if: needs.check-deploy.outputs.pr-contains-string == 'true'
       uses: peter-evans/find-comment@v1
