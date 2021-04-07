@@ -132,14 +132,14 @@ def configure_requirements(tempdir, reqs, component_versions):
 
 if __name__ == "__main__":
     from argparse import ArgumentParser
-    import json
 
     parser = ArgumentParser()
     for component in components:
+        default = os.environ.get(component.replace("-", "_"))
         parser.add_argument(
             f"--{component}",
             help=f"Version or ref for {component}",
-            default=os.environ.get(component.replace("-", "_")),
+            default=default if default else None,
         )
     parser.add_argument("--renku", help="Main chart ref", default=os.environ.get("renku"))
     parser.add_argument(
@@ -161,7 +161,6 @@ if __name__ == "__main__":
     )
     args = parser.parse_args()
     pprint.pp(args)
-    print(json.dumps(args))
     component_versions = {a: b for a, b in vars(args).items() if a.replace("_", "-") in components}
     pprint.pp(component_versions)
 
