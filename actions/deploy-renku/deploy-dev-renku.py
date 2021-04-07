@@ -132,6 +132,7 @@ def configure_requirements(tempdir, reqs, component_versions):
 
 if __name__ == "__main__":
     from argparse import ArgumentParser
+    import json
 
     parser = ArgumentParser()
     for component in components:
@@ -160,6 +161,7 @@ if __name__ == "__main__":
     )
     args = parser.parse_args()
     pprint.pp(args)
+    print(json.dumps(args))
     component_versions = {a: b for a, b in vars(args).items() if a.replace("_", "-") in components}
     pprint.pp(component_versions)
 
