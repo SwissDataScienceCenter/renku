@@ -159,6 +159,7 @@ if __name__ == "__main__":
         default=os.environ.get("RENKU_ANONYMOUS_SESSIONS") == "true",
     )
     args = parser.parse_args()
+    pprint.pp(args)
     component_versions = {a: b for a, b in vars(args).items() if a.replace("_", "-") in components}
     pprint.pp(component_versions)
 
