@@ -159,11 +159,7 @@ if __name__ == "__main__":
         default=os.environ.get("RENKU_ANONYMOUS_SESSIONS") == "true",
     )
     args = parser.parse_args()
-    component_versions = {
-        a: b
-        for a, b in vars(args).items()
-        if a.replace("_", "-") in components and b
-    }
+    component_versions = {a: b for a, b in vars(args).items() if a.replace("_", "-") in components}
     pprint.pp(component_versions)
 
     # tempdir_ = tempfile.TemporaryDirectory()
