@@ -95,6 +95,7 @@ minikube
 minimalistic
 mydomain
 namespace
+namespaces
 Nginx
 oauth
 OAuth
