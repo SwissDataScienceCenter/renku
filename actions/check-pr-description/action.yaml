@@ -31,7 +31,7 @@ outputs:
     value: ${{ steps.check-string.outputs.renku-ui }}
   test-enabled:
     description: whether the tests should run or not
-    value: ${{ steps.check-string.outputs.test_enabled }}
+    value: ${{ steps.check-string.outputs.test-enabled }}
 runs:
   using: "composite"
   steps:
