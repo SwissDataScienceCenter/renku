@@ -46,6 +46,12 @@ jobs:
     runs-on: ubuntu-20.04
     outputs:
       pr-contains-string: ${{ steps.deploy-comment.outputs.pr-contains-string }}
+      renku-core: ${{ steps.deploy-comment.outputs.renku-core}}
+      renku-gateway: ${{ steps.deploy-comment.outputs.renku-gateway}}
+      renku-graph: ${{ steps.deploy-comment.outputs.renku-graph}}
+      renku-notebooks: ${{ steps.deploy-comment.outputs.renku-notebooks}}
+      renku-ui: ${{ steps.deploy-comment.outputs.renku-ui}}
+      renku-ui-server: ${{ steps.deploy-comment.outputs.renku-ui-server}}
     steps:
       - uses: actions/checkout@v2
       - id: deploy-comment
@@ -78,6 +84,12 @@ jobs:
         RENKUBOT_RANCHER_BEARER_TOKEN: ${{ secrets.RENKUBOT_RANCHER_BEARER_TOKEN }}
         TEST_ARTIFACTS_PATH: "tests-artifacts-${{ github.sha }}"
         renku: "@${{ github.head_ref }}"
+        renku_core: "${{ needs.check-deploy.outputs.renku-core }}"
+        renku_gateway: "${{ needs.check-deploy.outputs.renku-gateway }}"
+        renku_graph: "${{ needs.check-deploy.outputs.renku-graph }}"
+        renku_notebooks: "${{ needs.check-deploy.outputs.renku-notebooks }}"
+        renku_ui: "${{ needs.check-deploy.outputs.renku-ui }}"
+        renku_ui_server: "${{ needs.check-deploy.outputs.renku-ui-server }}"
     - name: Check existing renkubot comment
       if: needs.check-deploy.outputs.pr-contains-string == 'true'
       uses: peter-evans/find-comment@v1
