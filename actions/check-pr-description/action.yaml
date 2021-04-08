@@ -1,8 +1,8 @@
 name: 'check PR description'
-description: Check the PR description for a string.
+description: Check the PR description for a string and the following command.
 inputs:
   string:
-    description: string to check for
+    description: String to check for
     required: true
   pr_ref:
     description: Pull request ID
@@ -11,13 +11,78 @@ outputs:
   pr-contains-string:
     description: true/false whether the PR description contains the string
     value: ${{ steps.check-string.outputs.pr-contains-string }}
+  renku:
+    description: renku reference as specified in the command string
+    value: ${{ steps.check-string.outputs.renku }}
+  renku-core:
+    description: renku-core reference as specified in the command string
+    value: ${{ steps.check-string.outputs.renku-core }}
+  renku-gateway:
+    description: renku-gateway reference as specified in the command string
+    value: ${{ steps.check-string.outputs.renku-gateway }}
+  renku-graph:
+    description: renku-graph reference as specified in the command string
+    value: ${{ steps.check-string.outputs.renku-graph }}
+  renku-notebooks:
+    description: renku-notebooks reference as specified in the command string
+    value: ${{ steps.check-string.outputs.renku-notebooks }}
+  renku-ui:
+    description: renku-ui reference as specified in the command string
+    value: ${{ steps.check-string.outputs.renku-ui }}
+  renku-ui-server:
+    description: renku-ui-server reference as specified in the command string
+    value: ${{ steps.check-string.outputs.renku-ui-server }}
 runs:
   using: "composite"
   steps:
     - id: check-string
       run: |
-        pr_contains_string=$(curl -s https://api.github.com/repos/${GITHUB_REPOSITORY}/pulls/${{ inputs.pr_ref }} | jq ".body | test(\"${{ inputs.string }}\")")
+        echo "Target PR: https://api.github.com/repos/${GITHUB_REPOSITORY}/pulls/${{ inputs.pr_ref }}"
+        pr_text=$(curl -s https://api.github.com/repos/${GITHUB_REPOSITORY}/pulls/${{ inputs.pr_ref }} | jq '.body')
+        pr_contains_string=$(echo $pr_text | jq 'test("${{ inputs.string }}")')
         echo "::set-output name=pr-contains-string::$pr_contains_string"
-        echo $pr_contains_string
-        echo "https://api.github.com/repos/${GITHUB_REPOSITORY}/pulls/${{ inputs.pr_ref }}"
+        echo "String found: $pr_contains_string"
+        if [ "$pr_contains_string" = true ] ; then
+          command=$(echo $pr_text | jq -r 'split("${{ inputs.string }} ") | last | split("\r\n") | first')
+          if [[ $command != *"${{ inputs.string }}"* ]]; then
+            echo "Command found: $command"
+            match="renku=(\S*)"
+            if [[ $command =~ $match ]]; then
+              echo "renku reference: ${BASH_REMATCH[1]}"
+              echo "::set-output name=renku::${BASH_REMATCH[1]}"
+            fi
+            match="renku-core=(\S*)"
+            if [[ $command =~ $match ]]; then
+              echo "renku-core reference: ${BASH_REMATCH[1]}"
+              echo "::set-output name=renku-core::${BASH_REMATCH[1]}"
+            fi
+            match="renku-gateway=(\S*)"
+            if [[ $command =~ $match ]]; then
+              echo "renku-gateway reference: ${BASH_REMATCH[1]}"
+              echo "::set-output name=renku-gateway::${BASH_REMATCH[1]}"
+            fi
+            match="renku-graph=(\S*)"
+            if [[ $command =~ $match ]]; then
+              echo "renku-graph reference: ${BASH_REMATCH[1]}"
+              echo "::set-output name=renku-graph::${BASH_REMATCH[1]}"
+            fi
+            match="renku-notebooks=(\S*)"
+            if [[ $command =~ $match ]]; then
+              echo "renku-notebooks reference: ${BASH_REMATCH[1]}"
+              echo "::set-output name=renku-notebooks::${BASH_REMATCH[1]}"
+            fi
+            match="renku-ui=(\S*)"
+            if [[ $command =~ $match ]]; then
+              echo "renku-ui reference: ${BASH_REMATCH[1]}"
+              echo "::set-output name=renku-ui::${BASH_REMATCH[1]}"
+            fi
+            match="renku-ui-server=(\S*)"
+            if [[ $command =~ $match ]]; then
+              echo "renku-ui-server reference: ${BASH_REMATCH[1]}"
+              echo "::set-output name=renku-ui-server::${BASH_REMATCH[1]}"
+            fi
+          else
+            echo "No command found"
+          fi
+        fi
       shell: bash
