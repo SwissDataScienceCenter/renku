@@ -29,9 +29,9 @@ outputs:
   renku-ui:
     description: renku-ui reference as specified in the command string
     value: ${{ steps.check-string.outputs.renku-ui }}
-  renku-ui-server:
-    description: renku-ui-server reference as specified in the command string
-    value: ${{ steps.check-string.outputs.renku-ui-server }}
+  test-enabled:
+    description: whether the tests should run or not
+    value: ${{ steps.check-string.outputs.test_enabled }}
 runs:
   using: "composite"
   steps:
@@ -42,6 +42,7 @@ runs:
         pr_contains_string=$(echo $pr_text | jq 'test("${{ inputs.string }}")')
         echo "::set-output name=pr-contains-string::$pr_contains_string"
         echo "String found: $pr_contains_string"
+        test_enabled=true
         if [ "$pr_contains_string" = true ] ; then
           command=$(echo $pr_text | jq -r 'split("${{ inputs.string }} ") | last | split("\r\n") | first')
           if [[ $command != *"${{ inputs.string }}"* ]]; then
@@ -49,40 +50,41 @@ runs:
             match="renku=(\S*)"
             if [[ $command =~ $match ]]; then
               echo "renku reference: ${BASH_REMATCH[1]}"
-              echo "::set-output name=renku::${BASH_REMATCH[1]}"
+              echo "::set-output name=renku::@${BASH_REMATCH[1]}"
             fi
             match="renku-core=(\S*)"
             if [[ $command =~ $match ]]; then
               echo "renku-core reference: ${BASH_REMATCH[1]}"
-              echo "::set-output name=renku-core::${BASH_REMATCH[1]}"
+              echo "::set-output name=renku-core::@${BASH_REMATCH[1]}"
             fi
             match="renku-gateway=(\S*)"
             if [[ $command =~ $match ]]; then
               echo "renku-gateway reference: ${BASH_REMATCH[1]}"
-              echo "::set-output name=renku-gateway::${BASH_REMATCH[1]}"
+              echo "::set-output name=renku-gateway::@${BASH_REMATCH[1]}"
             fi
             match="renku-graph=(\S*)"
             if [[ $command =~ $match ]]; then
               echo "renku-graph reference: ${BASH_REMATCH[1]}"
-              echo "::set-output name=renku-graph::${BASH_REMATCH[1]}"
+              echo "::set-output name=renku-graph::@${BASH_REMATCH[1]}"
             fi
             match="renku-notebooks=(\S*)"
             if [[ $command =~ $match ]]; then
               echo "renku-notebooks reference: ${BASH_REMATCH[1]}"
-              echo "::set-output name=renku-notebooks::${BASH_REMATCH[1]}"
+              echo "::set-output name=renku-notebooks::@${BASH_REMATCH[1]}"
             fi
             match="renku-ui=(\S*)"
             if [[ $command =~ $match ]]; then
               echo "renku-ui reference: ${BASH_REMATCH[1]}"
-              echo "::set-output name=renku-ui::${BASH_REMATCH[1]}"
+              echo "::set-output name=renku-ui::@${BASH_REMATCH[1]}"
             fi
-            match="renku-ui-server=(\S*)"
+            match="#notest"
             if [[ $command =~ $match ]]; then
-              echo "renku-ui-server reference: ${BASH_REMATCH[1]}"
-              echo "::set-output name=renku-ui-server::${BASH_REMATCH[1]}"
+              test_enabled=false
             fi
           else
             echo "No command found"
           fi
         fi
+        echo "Test enabled: $test_enabled"
+        echo "::set-output name=test-enabled::${test_enabled}"
       shell: bash
