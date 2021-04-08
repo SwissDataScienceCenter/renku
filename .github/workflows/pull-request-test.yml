@@ -51,7 +51,6 @@ jobs:
       renku-graph: ${{ steps.deploy-comment.outputs.renku-graph}}
       renku-notebooks: ${{ steps.deploy-comment.outputs.renku-notebooks}}
       renku-ui: ${{ steps.deploy-comment.outputs.renku-ui}}
-      renku-ui-server: ${{ steps.deploy-comment.outputs.renku-ui-server}}
     steps:
       - uses: actions/checkout@v2
       - id: deploy-comment
@@ -89,7 +88,6 @@ jobs:
         renku_graph: "${{ needs.check-deploy.outputs.renku-graph }}"
         renku_notebooks: "${{ needs.check-deploy.outputs.renku-notebooks }}"
         renku_ui: "${{ needs.check-deploy.outputs.renku-ui }}"
-        renku_ui_server: "${{ needs.check-deploy.outputs.renku-ui-server }}"
     - name: Check existing renkubot comment
       if: needs.check-deploy.outputs.pr-contains-string == 'true'
       uses: peter-evans/find-comment@v1
