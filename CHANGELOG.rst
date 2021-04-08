@@ -17,7 +17,8 @@ Improvements
 
 * **Docker images**: update all of the base libraries and change the underlying operating system to Ubuntu 20.04 as well as upgrades the python version to 3.8.
 * **Templates**: bump Bioconductor version to 3.12
-* **Templates**: use Renku CLI 1.14.1 and above mentioned docker images
+* **Templates**: bump R version to 4.0.4
+* **Templates**: use Renku CLI 0.14.1 and above mentioned docker images
 
 * **Knowledge graph**: new service used for routing commits synchronization
 
