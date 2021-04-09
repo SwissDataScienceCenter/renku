@@ -1,5 +1,43 @@
 .. _changelog:
 
+0.7.10
+------
+
+Features
+~~~~~~~~
+
+* **Docker images**: a new base-image extension is added that includes a full desktop server, which allows users to run Linux desktop applications directly from their RenkuLab sessions. For more information please refer to this `discourse  post <https://renku.discourse.group/t/feature-virtual-desktop-vnc-for-renkulab/308>`__
+
+Improvements
+~~~~~~~~~~~~~
+
+* **Projects**: improve UX when forking a project, and handle up to 1000 namespaces 
+* **Projects**: allow setting project avatar
+* **Environments**: simplify getting the registry image URL for running sessions
+
+* **Docker images**: update all of the base libraries and change the underlying operating system to Ubuntu 20.04 as well as upgrades the python version to 3.8.
+* **Templates**: bump Bioconductor version to 3.12
+* **Templates**: bump R version to 4.0.4
+* **Templates**: use Renku CLI 0.14.1 and above mentioned docker images
+
+* **Knowledge graph**: new service used for routing commits synchronization
+
+Bug Fixes
+~~~~~~~~~~
+
+* **Collaboration**: fix issue page not loading properly
+
+Individual components
+~~~~~~~~~~~~~~~~~~~~~
+
+For changes to individual components, please check:
+
+* renku-ui:
+  `0.11.9 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/0.11.9>`__
+
+* renku-graph:
+  `1.36.0 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/1.36.0>`__,
+  `1.35.0 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/1.35.0>`__
 
 0.7.9
 -----
