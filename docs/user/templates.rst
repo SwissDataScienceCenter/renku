@@ -322,10 +322,11 @@ renku-specific variables that are always available in templates, namely:
 Use custom repositories
 ^^^^^^^^^^^^^^^^^^^^^^^
 
-If you installed the renku command line interface locally, you can provide
-your template repository to the ``renku init`` command. We recommend you
-**always** specify a tag (or a commit) when creating a new project from a
-custom repository. You can find further details in
+If you installed the renku command-line interface locally, you can specify a
+template repository as an argument to the ``renku init`` command. If you do
+this, we recommend that you **also** specify a tag (or a commit) when creating 
+a new project from a custom repository to ensure that the action is reproducible. 
+You can find further details in
 `renku init docs <https://renku-python.readthedocs.io/en/latest/commands.html#use-a-different-template>`_.
 
 If you are using a RenkuLab instance, you can change the `Template source`
