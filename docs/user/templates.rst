@@ -289,17 +289,18 @@ repository. Each of them requires an entry with the following parameters:
   ``<variable_name>: <variable_description>``, where the name will be used as
   the variable name provided to the engine and the description will be
   presented to the user to explain the variable's intended use.
-* ``allow_template_update``: When set to ``true``, indicates that this template
-  supports being updated. When the template gets updated, projects created from
-  it will get updated with the new template files. Defaults to ``false``. Also see 
-  ``immutable_template_files``.
-* ``immutable_template_files``: A list of file paths inside the template (relative to the project
-  root) that should not be changed by users for ``allow_template_update`` to 
-  work. Users changing any of these files will get a warning when trying to
-  commit those changes. Template files not in this list won't get updated
-  on template update if they were modified by a user. If a user does change
-  one of these files, automated template update is no longer supported on that
-  project, to prevent broken/inconsistent projects.
+* ``allow_template_update``: When set to ``true``, indicates that this
+  template supports being updated. When the template gets updated, projects
+  created from it will get updated with the new template files. Defaults to
+  ``false``. Also see ``immutable_template_files``.
+* ``immutable_template_files``: A list of file paths inside the template
+  (relative to the project root) that should not be changed by users for
+  ``allow_template_update`` to work. Users changing any of these files will
+  get a warning when trying to commit those changes. Template files not in
+  this list won't get updated on template update if they were modified by a
+  user. If a user does change one of these files, automated template update
+  is no longer supported on that project, to prevent broken/inconsistent
+  projects.
 
 In addition to the custom variables mentioned above, we also provide some
 renku-specific variables that are always available in templates, namely:
@@ -319,8 +320,8 @@ renku-specific variables that are always available in templates, namely:
   name>``) (only set when creating a project online in renkulab).
 
 
-Use custom repositories
-^^^^^^^^^^^^^^^^^^^^^^^
+Use custom template repositories
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 If you installed the renku command-line interface locally, you can specify a
 template repository as an argument to the ``renku init`` command. If you do
@@ -374,13 +375,13 @@ include your repository in the RenkuLab template source through the
 `renku-values file <https://renku.readthedocs.io/en/latest/admin/index.html#create-a-renku-values-yaml-file>`_.
 
 
-Create shareable links with pre-filled fields
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Create shareable project-creation links with pre-filled fields
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-There are times where you may have many users that each need to create their own
-repository, but some of the parameters are shared across all the repositories. An example
-could be in a course where each student needs their own repository, but all should use the
-same template and metadata.
+There are times where you may have many users that each need to create their
+own repository, but some of the parameters are shared across all the
+repositories. An example could be in a course where each student needs their
+own repository, but all should use the same template and metadata.
 
 For this case, it is possible to generate a project-creation link containing 
 metadata embedded in a query parameter. When that link is entered in a 
@@ -392,10 +393,10 @@ do when creating a new project. Instead of clicking on `Create project`,
 click on the dropdown on the right side of the same button and then on
 `Create link`.
 
-You should see a modal where you can select which fields to include in the
-metadata. Some may not be clickable (no value provided), and others are
-deselected by default. The URL updates in real-time, and you can copy it
-for future reference or share it with others.
+You should see a modal dialog where you can select which fields to include
+in the metadata. Some may not be clickable (no value provided), and others
+are deselected by default. The URL updates in real-time and can be copied to
+share with others.
 
 .. image:: ../_static/images/templates_shareable_link.png
   :width: 100%
