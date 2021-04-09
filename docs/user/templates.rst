@@ -377,15 +377,15 @@ include your repository in the RenkuLab template source through the
 Create shareable links with pre-filled fields
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Most of the time, you want your repository to be immediately available
-to the target audience, maybe even having some variables set to specific
-values. We know manually entering the same values, again and again, is a
-tedious process, so we come up with a solution to automatically pre-fill
-some of the fields in the project creation page.
+There are times where you may have many users that each need to create their own
+repository, but some of the parameters are shared across all the repositories. An example
+could be in a course where each student needs their own repository, but all should use the
+same template and metadata.
 
-You can create a link containing metadata embedded in a query parameter.
-Once you enter that link in a browser, the UI will automatically fetch
-the required data and pre-fill the fields for you.
+For this case, it is possible to generate a project-creation link containing 
+metadata embedded in a query parameter. When that link is entered in a 
+web browser, the UI will  automatically fetch the required information and 
+pre-fill the fields.
 
 To create a shareable link, start by filling in all the fields as you would
 do when creating a new project. Instead of clicking on `Create project`,
