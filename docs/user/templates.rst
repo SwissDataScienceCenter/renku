@@ -366,7 +366,7 @@ combination is wrong. The UI should show a meaningful error description.
 If you think your template may be useful for the broader community, you can
 have more visibility by including it in the
 `community-contributed project templates repository <https://github.com/SwissDataScienceCenter/contributed-project-templates>`_.
-Feel free to push a pull request and we will validate it.
+Feel free to open a pull request and we will validate it.
 
 If you are working in a dedicated RenkuLab deployment and your local
 community needs the templates, you should contact the administrators to
