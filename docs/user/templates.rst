@@ -329,9 +329,9 @@ a new project from a custom repository to ensure that the action is reproducible
 You can find further details in
 `renku init docs <https://renku-python.readthedocs.io/en/latest/commands.html#use-a-different-template>`_.
 
-If you are using a RenkuLab instance, you can change the `Template source`
-to ``Custom`` on the project creation page. You will be able to insert
-a URL pointing to your template repository.
+If you are using a RenkuLab instance, you can use a custom template repository by
+changing the `Template source` to ``Custom`` on the project creation page. There, 
+you will be able to insert a URL pointing to your template repository.
 
 .. image:: ../_static/images/templates_custom.png
   :width: 100%
