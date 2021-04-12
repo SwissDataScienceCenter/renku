@@ -94,19 +94,24 @@ Now your project is ready to be sent to the web platform!
 Push your project to renkulab
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Pushing your project to Renku's GitLab instance boils down to adding the right
-remote and pushing the code. Perform the following, replacing ``<namespace>`` with
-the username that appears on the renkulab-generated GitLab instance (unless you
-are pushing to a group), and ``<project-name>`` with the name you are giving your project.
+Before you can push your project to Renku you need to create a GitLab repository
+to store the data and code at Renku's `GitLab deployment <https://renkulab.io/gitlab>`_.
+Renku will adopt the GitLab settings that exist in your repository when it comes to
+access and security. For example, making your GitLab repository public also makes the related
+Renku project public. In addition, granting access to specific users is also done through
+GitLab. When you create the repository in GitLab you can select the namespace that
+the project will belong to (this can be your personal namespace or a group) and the
+project (i.e. repository) name. The instructions below show how you can use the namespace 
+and project name to push your code into the newly created project.
 
 If your project does not have a remote yet (check ``git remote``), you can use ``origin``::
 
-  $ git remote add origin git@renkulab.io/<namespace>/<project-name>.git
+  $ git remote add origin git@renkulab.io:<namespace>/<project-name>.git
   $ git push origin master
 
 If there is already a remote::
 
-  $ git remote add renku git@renkulab.io/<namespace>/<project-name>.git
+  $ git remote add renku git@renkulab.io:<namespace>/<project-name>.git
   $ git push renku master
 
 View your project on renkulab.io
