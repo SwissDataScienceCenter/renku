@@ -39,7 +39,7 @@ Uploading Data to Renkulab and Creating Datasets with the CLI
 -------------------------------------------------------------
 
 You can use the ``renku dataset`` CLI command to create a dataset with data
-that is already present in your JupyterLab or RStudio environment or with 
+that is already present in your JupyterLab or RStudio session or with 
 data that is on your local computer. For example, you can drag and drop files 
 from your computer into the JupyterLab window to upload them and then 
 use the ``renku dataset`` command to create a dataset, add the files to the 
