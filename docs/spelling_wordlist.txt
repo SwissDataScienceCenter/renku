@@ -41,6 +41,8 @@ dockerhub
 dockerignore
 dotfiles
 dropdown
+extraEnv
+extraEnvFrom
 filesystem
 FilterFlights
 findable
@@ -51,6 +53,7 @@ github
 gitignore
 gitkeep
 gitlab
+gitlabClientSecret
 GitLab
 GraphQL
 https
@@ -92,6 +95,7 @@ minikube
 minimalistic
 mydomain
 namespace
+namespaces
 Nginx
 oauth
 OAuth
@@ -109,6 +113,7 @@ pre
 prepend
 preprocessed
 preprocessing
+programmatically
 py
 refactor
 Refactor
@@ -135,6 +140,7 @@ SPARQL
 spawner
 SQLAlchemy
 statuspage
+statefulset
 subdirectories
 submodule
 submodules

@@ -64,7 +64,7 @@ in the `values changelog file <https://github.com/SwissDataScienceCenter/renku/b
 For upgrades that require some steps other than modifying the values files to be
 executed, we add some instructions here.
 
-Upgrading to 0.8.0
+Upgrading to 0.7.8
 ******************
 This upgrade comes with an upgrade of the keycloak chart from ``4.10.2`` to ``9.8.1``! For
 details on this upgrade check the dedicated section in the

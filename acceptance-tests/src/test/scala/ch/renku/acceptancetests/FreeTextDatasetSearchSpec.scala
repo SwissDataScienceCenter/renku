@@ -39,7 +39,7 @@ class FreeTextDatasetSearchSpec
 
     `create, continue or open a project`
 
-    val commonWord   = nonEmptyStrings().generateOne
+    val commonWord   = nonEmptyStrings().generateOne.toLowerCase
     val dataset1Name = DatasetName.generate(containing = commonWord)
     `create a dataset`(dataset1Name)
     val dataset2Name = DatasetName.generate(containing = commonWord)

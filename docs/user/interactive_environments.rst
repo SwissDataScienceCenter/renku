@@ -21,3 +21,4 @@ are covered on the pages that follow:
   Stopping and Saving <interactive_stopping_and_saving>
   Customizing interactive environments <interactive_customizing>
   upgrading_renku
+  Running interactive environments locally <interactive-running-locally>

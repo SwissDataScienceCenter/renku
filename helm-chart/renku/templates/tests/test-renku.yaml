@@ -18,7 +18,7 @@ spec:
       - name: RENKU_TEST_URL
         value: '{{ template "http" . }}://{{ .Values.global.renku.domain }}'
       - name: GITLAB_TEST_URL
-        value: '{{ .Values.ui.gitlabUrl }}'
+        value: {{ .Values.gateway.gitlabUrl | default (printf "%s://%s/gitlab" (include "http" .) .Values.global.renku.domain) | quote }}
       - name: RENKU_TEST_EMAIL
         value: '{{ .Values.tests.parameters.email }}'
       - name: RENKU_TEST_USERNAME
@@ -80,11 +80,11 @@ spec:
     {{ end }}
     resources:
       requests:
-        memory: "4G"
-        cpu: "2"
+        memory: "3G"
+        cpu: "1000m"
         ephemeral-storage: "1G"
       limits:
-        memory: "4G"
-        cpu: "2"
+        memory: "3G"
+        cpu: "1500m"
         ephemeral-storage: "2G"
 {{- end }}
