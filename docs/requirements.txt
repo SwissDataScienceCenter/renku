@@ -24,7 +24,7 @@ pyenchant==2.0.0
 pygments==2.7.4
 pyparsing==2.2.0
 pytz==2018.5
-PyYAML==5.3.1
+PyYAML==5.4
 requests>=2.20.0
 simplegeneric==0.8.1
 six==1.11.0
