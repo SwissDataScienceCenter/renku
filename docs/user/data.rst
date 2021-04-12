@@ -35,7 +35,7 @@ JupyterLab sessions by default. As a result, you do need to be aware of dealing
 with data stored in LFS if you want to use it efficiently in your work with
 renku.
 
-Uploading Data to Renkulab and Creating Datasets with the CLI
+Uploading Data to a Renkulab session to create a Dataset with the CLI
 -------------------------------------------------------------
 
 You can use the ``renku dataset`` CLI command to create a dataset with data
