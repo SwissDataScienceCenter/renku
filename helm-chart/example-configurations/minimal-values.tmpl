@@ -1,5 +1,5 @@
 #
-# Basic configuration file for Renku 0.7.1
+# Basic configuration file for Renku
 #
 
 ---
@@ -8,6 +8,7 @@ domain_configurations:
   baseURL:                   &baseURL                       https://[domain]
   jupyterhubURL:             &jupyterhubURL                 https://[domain]/jupyterhub
   gatewayURL:                &gatewayURL                    https://[domain]/api
+  uiserverURL:               &uiserverURL                   https://[domain]/ui-server
   jupyterhubAuthCallbackUrl: &jupyterhub_gitlab_callbackUrl https://[domain]/jupyterhub/hub/oauth_callback
   oauth_redirect_uri:        &oauth_redirect_uri            https://[domain]/api/auth/jupyterhub/token
   ingressTLS:                &ingressTLS                    [ingress-tls]
@@ -54,7 +55,7 @@ global:
     ## clientSecret: # use `uuidgen -r`
     clientSecret:  [random]        ## Taken from gateway client in keycloak
     ## The client secret for authentication against gitlab
-    gitlabClientSecret:   [random]        ## Taken from renku-ui gitlab application secret
+    gitlabClientSecret: *gitlabClientSecret
   renku:
     ## Domain name for the deployed instance of renku
    domain: *mainURL
@@ -178,6 +179,7 @@ ui:
   gatewayUrl: *gatewayURL
   baseUrl: *baseURL
   gitlabUrl: *gitlabURL
+  uiserverUrl: *uiserverURL
   jupyterhubUrl: *jupyterhubURL
 #  welcomePage:
 #    text: |

@@ -1,5 +1,135 @@
 .. _changelog:
 
+0.7.10
+------
+
+Features
+~~~~~~~~
+
+* **Docker images**: a new base-image extension is added that includes a full desktop server, which allows users to run Linux desktop applications directly from their RenkuLab sessions. For more information please refer to this `discourse  post <https://renku.discourse.group/t/feature-virtual-desktop-vnc-for-renkulab/308>`__
+
+Improvements
+~~~~~~~~~~~~~
+
+* **Projects**: improve UX when forking a project, and handle up to 1000 namespaces 
+* **Projects**: allow setting project avatar
+* **Environments**: simplify getting the registry image URL for running sessions
+
+* **Docker images**: update all of the base libraries and change the underlying operating system to Ubuntu 20.04 as well as upgrades the python version to 3.8.
+* **Templates**: bump Bioconductor version to 3.12
+* **Templates**: bump R version to 4.0.4
+* **Templates**: use Renku CLI 0.14.1 and above mentioned docker images
+
+* **Knowledge graph**: new service used for routing commits synchronization
+
+Bug Fixes
+~~~~~~~~~~
+
+* **Collaboration**: fix issue page not loading properly
+
+Individual components
+~~~~~~~~~~~~~~~~~~~~~
+
+For changes to individual components, please check:
+
+* renku-ui:
+  `0.11.9 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/0.11.9>`__
+
+* renku-graph:
+  `1.36.0 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/1.36.0>`__,
+  `1.35.0 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/1.35.0>`__
+
+0.7.9
+-----
+
+Bug Fixes
+~~~~~~~~~~
+ 
+* **Core**: add error handling if push from temporary branch fails
+* **Core**: fix handling of '@' in filenames
+* **Core**: fix save and push to correctly handle merge conflicts
+* **Service**: sync service cache with remote before operations to prevent cache getting out of sync
+* **Datasets**: allow importing a dataset from a non-public project
+* **Graph**: fix fail to update event status when triples generation fails
+
+* **Deployment**: fix gateway gitlabClientSecret in minimal-values template
+
+0.7.8
+-----
+
+Features
+~~~~~~~~~~
+
+* **Datasets**: show a notification when uploading big files
+* **Datasets**: improve naming for imported datasets
+* **Datasets**: sort by date on the free-text dataset search
+
+* **Projects**: update the project fork flow to match project creation
+
+* **CLI**: add service component management commands
+
+Improvements
+~~~~~~~~~~~~~
+
+* **Datasets**: the dataset details returns information about project it belongs to
+
+* **Lineage**: prevent showing the whole graph when displaying a single file's lineage
+* **Lineage**: support for committers name changing
+* **Knowledge Graph**: improve provisioning flow; re-process stale events sooner, use smaller processes
+
+* **Core**: exclude renku metadata from being added to git lfs
+
+Bug Fixes
+~~~~~~~~~~~
+
+* **Datasets**: fix creation date when searching datasets
+* **Datasets**: fail gracefully when trying to access a missing dataset
+* **Datasets**: dataset import to move temporary files and become more resilient to errors
+* **Datasets**: handle datasets with ',' in the name correctly
+
+* **Environments**: image pull secret for pod restart
+* **Environments**: support for long project title
+
+* **User interface**: check lfs status properly when previewing a file
+* **User interface**: fix broken markdown preview caused by links without a reference
+* **User interface**: handle sub-groups on projects list
+
+* **Core**: call git commands for batches of files to prevent hitting argument length limits
+
+* **Core Service**: correctly handle HTTP server errors and ref on project.clone
+* **Core Service**: use project_id as part of project filesystem path
+
+
+Individual components
+~~~~~~~~~~~~~~~~~~~~~
+
+For changes to individual components, please check:
+
+* renku-ui:
+  `0.11.8 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/v0.11.8>`__,
+  `0.11.7 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/v0.11.7>`__
+
+* renku-core and renku-python:
+  `0.14.0 <https://github.com/SwissDataScienceCenter/renku-python/releases/tag/v0.14.0>`__
+
+* renku-notebooks:
+  `0.8.10 <https://github.com/SwissDataScienceCenter/renku-notebooks/releases/tag/0.8.10>`__
+
+Upgrading from 0.7.7
+~~~~~~~~~~~~~~~~~~~~~
+
+
+**Breaking change**  Keycloak chart dependency has been upgraded from ``4.10.2`` to ``9.8.1`` which will trigger an irreversible database migration, check out `the upgrade instructions <https://github.com/SwissDataScienceCenter/renku/blob/master/helm-chart/README.rst#upgrading>`__ for more details. 
+
+Most notably, keycloak values are less nested, so at the level of the Renku chart values, keycloak.keycloak.X.Y becomes keycloak.X.Y. You can also check out `the instructions <https://github.com/codecentric/helm-charts/tree/master/charts/keycloak#upgrading>`__ on how to upgrade aspects not covered by default in the Renku chart.
+
+If the Renkulab deployment includes keycloak, the values file should be modified as follows:
+* DELETE - the section keycloak.keycloak.persistence has been removed. Database connection details are specified through the keycloak.extraEnv and keycloak.extraEnvFrom blocks. See the `Renku values file <https://github.com/SwissDataScienceCenter/renku/blob/0.7.8/helm-chart/renku/values.yaml#L129-L154>`__ for reference.
+* EDIT - keycloak.keycloak.username has been moved to global.keycloak.user.
+
+Finally, before applying the helm upgrade, the Keycloak statefulset should be deleted.
+
+
 0.7.7
 -----
 
@@ -109,7 +239,7 @@ Individual components
 
 For changes to individual components, check:
 
-* renku-ui:
+* renku-ui
   `0.11.3 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/0.11.3>`__
 
 * renku-gateway
