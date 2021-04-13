@@ -45,5 +45,5 @@ The string should look like the following:
 /deploy #notest renku-ui=0.11.9
 ```
 
-Further information for renku-team members can be found here:
-https://github.com/SwissDataScienceCenter/sdsc-dev-docs/
+Further information can be found here:
+https://renku.readthedocs.io/en/latest/developer/contributing/pull-requests.html
