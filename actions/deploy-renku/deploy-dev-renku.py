@@ -135,10 +135,11 @@ if __name__ == "__main__":
 
     parser = ArgumentParser()
     for component in components:
+        default = os.environ.get(component.replace("-", "_"))
         parser.add_argument(
             f"--{component}",
             help=f"Version or ref for {component}",
-            default=os.environ.get(component.replace("-", "_")),
+            default=default if default else None,
         )
     parser.add_argument("--renku", help="Main chart ref", default=os.environ.get("renku"))
     parser.add_argument(
