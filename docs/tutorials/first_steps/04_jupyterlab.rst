@@ -64,8 +64,9 @@ the new notebook(s), run the following in the terminal:
 If you prefer to use a GUI, an extension providing access to the basic git
 commands is built into JupyterLab. Click on the git icon on the left sidebar of
 JupyterLab (1) to open the git panel. Here, you can add untracked files by
-selecting them and clicking the up arrow (2). Finally, you can enter a commit
-message in (3) and click the check mark to make a commit.
+selecting them and clicking the up arrow (2). You can enter a commit message in
+(3) and click the ``Commit`` button. Finally, sync your changes with the server
+by clicking on the push icon (4).
 
 .. image:: ../../_static/images/jupyterlab-git-panel.png
     :width: 85%

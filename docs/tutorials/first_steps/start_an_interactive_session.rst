@@ -5,8 +5,8 @@ Start an interactive environment
 
 One of the main collaborative features of the Renku platform are hosted
 interactive environments. These environments are fully-featured Jupyter notebook
-servers running either JupyterLab, RStudio or VSCode. In this tutorial,
-we will use JupyterLab.
+servers running either JupyterLab, RStudio, VSCode or a fully-featured Linux
+desktop using VNC. In this tutorial, we will use JupyterLab.
 
 In the previous step we :ref:`created a new project <create_project>` using
 the Python template; we can start working with the project right from the
