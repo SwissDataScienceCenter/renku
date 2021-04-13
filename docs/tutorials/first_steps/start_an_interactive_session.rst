@@ -28,7 +28,7 @@ it's ready. Sit tight and wait for it to become **available**.
     :alt: Start new environment
 
 The default settings are fine for this tutorial: just click on
-**Start environment** (3). You will see a table with the  status
+**Start environment** (3). You will see a table with the status
 of the environment launch (initially in yellow) on the right.
 Wait until its color has turned to green and the status from
 *Pending* to *Running*.
