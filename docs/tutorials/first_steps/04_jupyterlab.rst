@@ -14,13 +14,8 @@ notebook (4).
     :align: center
     :alt: Files tab and notebooks folder in JupyterLab
 
-<<<<<<< HEAD
 To rename the notebook, right-click on its name (``Untitled.ipynb``), select
 rename, and enter a new name (like ``mynotebook.ipynb``).
-=======
-To rename the notebook, right-click on its name (``Untitled.ipynb``) and
-select rename.
->>>>>>> chore: update first steps tutorial
 
 .. image:: ../../_static/images/jupyterlab-rename.png
     :width: 85%
@@ -66,20 +61,12 @@ the new notebook(s), run the following in the terminal:
     To https://dev.renku.ch/gitlab/john.doe/flights-tutorial.git
         c1dcfe4..0fb9ac1  master -> master
 
-<<<<<<< HEAD
 If you prefer to use a GUI, an extension providing access to the basic git
 commands is built into JupyterLab. Click on the git icon on the left sidebar of
 JupyterLab (1) to open the git panel. Here, you can add untracked files by
 selecting them and clicking the up arrow (2). You can enter a commit message in
 (3) and click the ``Commit`` button. Finally, sync your changes with the server
 by clicking on the push icon (4).
-=======
-If you prefer to use a UI, an extension providing access to the basic git
-commands is built into JupyterLab. Click on the git icon on the left sidebar of
-JupyterLab (1) to open the git panel. Here, you can add untracked files by
-selecting them and clicking the up arrow (2). Finally, you can enter a commit
-message in (3) and click the check mark to make a commit.
->>>>>>> chore: update first steps tutorial
 
 .. image:: ../../_static/images/jupyterlab-git-panel.png
     :width: 85%

@@ -5,13 +5,8 @@ Start an interactive environment
 
 One of the main collaborative features of the Renku platform are hosted
 interactive environments. These environments are fully-featured Jupyter notebook
-<<<<<<< HEAD
 servers running either JupyterLab, RStudio, VSCode or a fully-featured Linux
 desktop using VNC. In this tutorial, we will use JupyterLab.
-=======
-servers running either JupyterLab, RStudio or VSCode. In this tutorial,
-we will use JupyterLab.
->>>>>>> chore: update first steps tutorial
 
 In the previous step we :ref:`created a new project <create_project>` using
 the Python template; we can start working with the project right from the
@@ -33,11 +28,7 @@ it's ready. Sit tight and wait for it to become **available**.
     :alt: Start new environment
 
 The default settings are fine for this tutorial: just click on
-<<<<<<< HEAD
 **Start environment** (3). You will see a table with the status
-=======
-**Start environment** (3). You will see a table with the  status
->>>>>>> chore: update first steps tutorial
 of the environment launch (initially in yellow) on the right.
 Wait until its color has turned to green and the status from
 *Pending* to *Running*.
