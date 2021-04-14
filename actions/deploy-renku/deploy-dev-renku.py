@@ -126,7 +126,15 @@ def configure_requirements(tempdir, reqs, component_versions):
                 if dep["name"] == component.replace("_", "-"):
                     dep["version"] = req.version
                     dep["repository"] = req.helm_repo
+                    if dep["name"] == "renku-ui":
+                        renku_ui_version = req.version
+                        renku_ui_repository = req.helm_repo
                     continue
+    # keep renku-ui-server version aligned with renku-ui
+    for dep in reqs["dependencies"]:
+        if dep["name"] == "renku-ui-server":
+            dep["version"] = renku_ui_version
+            dep["repository"] = renku_ui_repository
     return reqs
 
 
