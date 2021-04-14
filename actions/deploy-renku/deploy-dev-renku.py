@@ -128,15 +128,7 @@ def configure_requirements(tempdir, reqs, component_versions):
                 if dep["name"] == component.replace("_", "-"):
                     dep["version"] = req.version
                     dep["repository"] = req.helm_repo
-                    # if dep["name"] == "renku-ui":
-                    #     renku_ui_version = req.version
-                    #     renku_ui_repository = req.helm_repo
                     continue
-    # keep renku-ui-server version aligned with renku-ui
-    # for dep in reqs["dependencies"]:
-    #     if dep["name"] == "renku-ui-server":
-    #         dep["version"] = renku_ui_version
-    #         dep["repository"] = renku_ui_repository
     return reqs
 
 
@@ -186,20 +178,12 @@ if __name__ == "__main__":
         reqs = yaml.load(f, Loader=yaml.SafeLoader)
 
     ## 2. set the chosen versions in the requirements.yaml file
-    #if dep["name"].replace("_", "-") == "renku-ui":
-    print("DEBUG: tempdir")
-    pprint.pp(tempdir)
-    print("DEBUG: reqs")
-    pprint.pp(reqs)
-    print("DEBUG: component_versions")
-    pprint.pp(component_versions)
-    # print("DEBUG FINISHED")
+
     # keep renku-ui-server version aligned with renku-ui
     if component_versions["renku_ui"] and not component_versions["renku_ui_server"]:
         component_versions["renku_ui_server"] = component_versions["renku_ui"]
+
     reqs = configure_requirements(tempdir, reqs, component_versions)
-    print("DEBUG: reqs")
-    pprint.pp(reqs)
 
     with open(reqs_path, "w") as f:
         yaml.dump(reqs, f)
