@@ -195,8 +195,8 @@ if __name__ == "__main__":
     pprint.pp(component_versions)
     # print("DEBUG FINISHED")
     # keep renku-ui-server version aligned with renku-ui
-    if component_versions["renku-ui"] and not component_versions["renku-ui-server"]:
-        component_versions["renku-ui-server"] = component_versions["renku-ui"]
+    if component_versions["renku_ui"] and not component_versions["renku_ui_server"]:
+        component_versions["renku_ui_server"] = component_versions["renku_ui"]
     reqs = configure_requirements(tempdir, reqs, component_versions)
     print("DEBUG: reqs")
     pprint.pp(reqs)
