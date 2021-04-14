@@ -64,11 +64,13 @@ class RenkuRequirement(object):
             return f"file://{self.tempdir}/{self.repo}/helm-chart/{self.component}"
         return "https://swissdatasciencecenter.github.io/helm-charts/"
 
-    # handle the special case of renku-python
+    # handle the special case of renku-python and renku-ui-server
     @property
     def repo(self):
         if self.component == "renku-core":
             return "renku-python"
+        if self.component == "renku-ui-server":
+            return "renku-ui"
         return self.component
 
     @property
@@ -126,16 +128,16 @@ def configure_requirements(tempdir, reqs, component_versions):
                 if dep["name"] == component.replace("_", "-"):
                     dep["version"] = req.version
                     dep["repository"] = req.helm_repo
-                    if dep["name"] == "renku-ui":
-                        renku_ui_version = req.version
-                        renku_ui_repository = req.helm_repo
+                    # if dep["name"] == "renku-ui":
+                    #     renku_ui_version = req.version
+                    #     renku_ui_repository = req.helm_repo
                     continue
     # keep renku-ui-server version aligned with renku-ui
-    for dep in reqs["dependencies"]:
-        if dep["name"] == "renku-ui-server":
-            dep["version"] = renku_ui_version
-            dep["repository"] = renku_ui_repository
-    return reqs
+    # for dep in reqs["dependencies"]:
+    #     if dep["name"] == "renku-ui-server":
+    #         dep["version"] = renku_ui_version
+    #         dep["repository"] = renku_ui_repository
+    # return reqs
 
 
 if __name__ == "__main__":
@@ -192,6 +194,9 @@ if __name__ == "__main__":
     print("DEBUG: component_versions")
     pprint.pp(component_versions)
     # print("DEBUG FINISHED")
+    # keep renku-ui-server version aligned with renku-ui
+    if component_versions["renku-ui"] and not component_versions["renku-ui-server"]:
+        component_versions["renku-ui-server"] = component_versions["renku-ui"]
     reqs = configure_requirements(tempdir, reqs, component_versions)
     print("DEBUG: reqs")
     pprint.pp(reqs)
