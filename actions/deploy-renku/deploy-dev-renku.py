@@ -119,6 +119,7 @@ def configure_requirements(tempdir, reqs, component_versions):
         if version:
             # form and setup the requirement
             req = RenkuRequirement(component.replace("_", "-"), version, tempdir)
+            pprint.pp(req)
             if req.ref:
                 req.setup()
                 # replace the requirement
