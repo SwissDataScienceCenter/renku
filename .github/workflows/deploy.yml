@@ -37,7 +37,7 @@ jobs:
     - uses: 8398a7/action-slack@v3
       with:
         status: custom
-        fields: job,ref
+        fields: job,commit
         custom_payload: |
           {
             attachments: [{
@@ -75,7 +75,7 @@ jobs:
     - uses: 8398a7/action-slack@v3
       with:
         status: custom
-        fields: job,ref
+        fields: job,commit
         custom_payload: |
           {
             attachments: [{
