@@ -119,7 +119,6 @@ def configure_requirements(tempdir, reqs, component_versions):
         if version:
             # form and setup the requirement
             req = RenkuRequirement(component.replace("_", "-"), version, tempdir)
-            pprint.pp(req)
             if req.ref:
                 req.setup()
                 # replace the requirement
@@ -177,7 +176,17 @@ if __name__ == "__main__":
         reqs = yaml.load(f, Loader=yaml.SafeLoader)
 
     ## 2. set the chosen versions in the requirements.yaml file
+    #if dep["name"].replace("_", "-") == "renku-ui":
+    print("DEBUG: tempdir")
+    pprint.pp(tempdir)
+    print("DEBUG: reqs")
+    pprint.pp(reqs)
+    print("DEBUG: component_versions")
+    pprint.pp(component_versions)
+    # print("DEBUG FINISHED")
     reqs = configure_requirements(tempdir, reqs, component_versions)
+    print("DEBUG: reqs")
+    pprint.pp(reqs)
 
     with open(reqs_path, "w") as f:
         yaml.dump(reqs, f)
