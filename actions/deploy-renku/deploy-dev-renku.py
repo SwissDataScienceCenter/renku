@@ -137,7 +137,7 @@ def configure_requirements(tempdir, reqs, component_versions):
     #     if dep["name"] == "renku-ui-server":
     #         dep["version"] = renku_ui_version
     #         dep["repository"] = renku_ui_repository
-    # return reqs
+    return reqs
 
 
 if __name__ == "__main__":
