@@ -59,8 +59,7 @@ case object ProjectsPage
       find(cssSelector(s"a[href='/projects/${userCredentials.username}/${project.title.toPathSegment}']"))
     }
 
-    /**
-      * Return all the project links.
+    /** Return all the project links.
       */
     def projectLinks(implicit webDriver: WebDriver): List[WebBrowser.Element] = findAll(
       cssSelector(
