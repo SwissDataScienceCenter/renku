@@ -267,7 +267,7 @@ class ProjectPage(val projectSlug: String, val namespace: String)
           find(cssSelector(s"div.project-list-row a[href='${to.path}' i]"))
             .orElse(find(cssSelector(s"div.project-list-row a[href='${to.path}/' i]")))
             .getOrElse(fail(s"Dataset '${to.path}' not found"))
-        }(waitUpTo(20 seconds), implicitly[Retrying[WebBrowser.Element]], implicitly[source.Position])
+        }(waitUpTo(120 seconds), implicitly[Retrying[WebBrowser.Element]], implicitly[source.Position])
     }
   }
 
