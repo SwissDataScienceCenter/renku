@@ -14,7 +14,7 @@ is configurable by altering the ``renku/values.yaml`` file.
 Configuring the content
 ~~~~~~~~~~~~~~~~~~~~~~~
 
-There two pieces of information that most deployments will want to customize: the
+There are two pieces of information that most deployments will want to customize: the
 link to the tutorial and the list of projects to highlight on the homepage.
 
 ui.homepage.tutorialLink
@@ -82,4 +82,3 @@ property in CSS is allowed, including PNG, JPG, and SVG.
    A convenient place to store an image you want to use would be in a Git repository
    hosted in the GitLab used by RenkuLab. The repo can be a plain Git repo (it does not
    need to be a Renku repo).
-
