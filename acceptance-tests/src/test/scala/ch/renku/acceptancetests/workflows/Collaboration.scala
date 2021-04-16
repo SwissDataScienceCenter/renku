@@ -20,7 +20,6 @@ package ch.renku.acceptancetests.workflows
 
 import ch.renku.acceptancetests.pages._
 import ch.renku.acceptancetests.tooling.AcceptanceSpec
-import org.openqa.selenium.WebDriver
 
 import scala.concurrent.duration._
 

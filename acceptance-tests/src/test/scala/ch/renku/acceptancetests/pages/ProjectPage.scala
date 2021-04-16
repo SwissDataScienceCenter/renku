@@ -24,6 +24,7 @@ import ch.renku.acceptancetests.model.users.UserCredentials
 import ch.renku.acceptancetests.tooling.AcceptanceSpec
 import org.openqa.selenium.{By, WebDriver, WebElement}
 import org.scalactic.source
+import org.scalatest.enablers.Retrying
 import org.scalatestplus.selenium.WebBrowser
 import org.scalatestplus.selenium.WebBrowser.{cssSelector, find, findAll}
 
@@ -266,7 +267,7 @@ class ProjectPage(val projectSlug: String, val namespace: String)
           find(cssSelector(s"div.project-list-row a[href='${to.path}' i]"))
             .orElse(find(cssSelector(s"div.project-list-row a[href='${to.path}/' i]")))
             .getOrElse(fail(s"Dataset '${to.path}' not found"))
-        }(waitUpTo(120 seconds), implicitly[source.Position])
+        }(waitUpTo(20 seconds), implicitly[Retrying[WebBrowser.Element]], implicitly[source.Position])
     }
   }
 
@@ -279,7 +280,7 @@ class ProjectPage(val projectSlug: String, val namespace: String)
     def newLink(implicit webDriver: WebDriver): WebElement =
       eventually {
         find(cssSelector(s"a[href='$path/environments/new']")) getOrElse fail("New environment link not found")
-      }(waitUpTo(1 minute), implicitly[source.Position])
+      }(waitUpTo(1 minute), implicitly[Retrying[WebBrowser.Element]], implicitly[source.Position])
 
     def anonymousUnsupported(implicit webDriver: WebDriver): WebElement = eventually {
       findAll(cssSelector("div > div > div > div > p"))
@@ -306,7 +307,7 @@ class ProjectPage(val projectSlug: String, val namespace: String)
 
     def verifyImageReady(implicit webDriver: WebDriver): Unit = eventually {
       findImageReadyBadge getOrElse waitForImageToBeReady
-    }(waitUpTo(10 minutes), implicitly[source.Position])
+    }(waitUpTo(10 minutes), implicitly[Retrying[Any]], implicitly[source.Position])
 
     private def waitForImageToBeReady(implicit webDriver: WebDriver): Unit = {
       find(cssSelector(".badge.badge-warning")) orElse findImageReadyBadge getOrElse fail(

@@ -22,8 +22,8 @@ import ch.renku.acceptancetests.model.{BaseUrl, RenkuBaseUrl}
 import ch.renku.acceptancetests.tooling._
 import org.openqa.selenium.{By, WebDriver, WebElement}
 import org.scalatest.concurrent.Eventually
+import org.scalatest.matchers.should.{Matchers => ScalatestMatchers}
 import org.scalatest.time.{Seconds, Span}
-import org.scalatest.{Matchers => ScalatestMatchers}
 import org.scalatestplus.selenium.WebBrowser
 
 import scala.concurrent.duration._

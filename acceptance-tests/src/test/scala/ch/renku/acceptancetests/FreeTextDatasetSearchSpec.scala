@@ -18,12 +18,12 @@
 
 package ch.renku.acceptancetests
 
+import ch.renku.acceptancetests.generators.Generators.Implicits._
+import ch.renku.acceptancetests.generators.Generators._
 import ch.renku.acceptancetests.model.datasets.DatasetName
 import ch.renku.acceptancetests.pages.DatasetsPage
 import ch.renku.acceptancetests.tooling.{AcceptanceSpec, KnowledgeGraphApi}
-import ch.renku.acceptancetests.workflows.{Datasets, DatasetsSearch, Login, Project}
-import ch.renku.acceptancetests.generators.Generators._
-import ch.renku.acceptancetests.generators.Generators.Implicits._
+import ch.renku.acceptancetests.workflows._
 
 class FreeTextDatasetSearchSpec
     extends AcceptanceSpec
