@@ -87,10 +87,14 @@ trait Collaboration {
   }
 
   def `create a new merge request`: Unit = {
-    When("the user navigates to the Collaboration tab")
-    click on projectPage.Collaboration.tab sleep (1 second)
-    And("they navigate to the Merge Request sub tab")
-    click on projectPage.Collaboration.MergeRequests.tab sleep (5 second)
+    `try few times before giving up` { _ =>
+      When("the user navigates to the Collaboration tab")
+      click on projectPage.Collaboration.tab sleep (1 second)
+      And("they navigate to the Merge Request sub tab")
+      click on projectPage.Collaboration.MergeRequests.tab sleep (5 second)
+      And("they can see the 'Create Merge Request' button")
+      verify userCanSee projectPage.Collaboration.MergeRequests.createMergeRequestButton
+    }
     And("the user clicks on the 'Create Merge Request' button")
     click on projectPage.Collaboration.MergeRequests.createMergeRequestButton sleep (5 second)
     And("they navigate to the MergeRequest sub tab")
