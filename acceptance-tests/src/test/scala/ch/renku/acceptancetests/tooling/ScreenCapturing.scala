@@ -26,8 +26,7 @@ import java.time.format.DateTimeFormatter.ofPattern
 trait ScreenCapturing {
   self: AcceptanceSpec =>
 
-  /**
-    * Public helper function to write a screenshot of the current browser state.
+  /** Public helper function to write a screenshot of the current browser state.
     */
   def saveScreenshot(): Unit = {
     val captureDir = Paths.get("target")
