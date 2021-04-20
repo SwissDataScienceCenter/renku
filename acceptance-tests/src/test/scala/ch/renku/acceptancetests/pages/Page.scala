@@ -18,7 +18,7 @@
 
 package ch.renku.acceptancetests.pages
 
-import ch.renku.acceptancetests.model.{BaseUrl, RenkuBaseUrl}
+import ch.renku.acceptancetests.model.{BaseUrl, GitLabBaseUrl, RenkuBaseUrl}
 import ch.renku.acceptancetests.tooling._
 import org.openqa.selenium.{By, WebDriver, WebElement}
 import org.scalatest.concurrent.Eventually
@@ -78,3 +78,4 @@ object Page {
 }
 
 abstract class RenkuPage(path: String, title: String) extends Page[RenkuBaseUrl](path, title)
+abstract class GitLabPage(path: String, title: String) extends Page[GitLabBaseUrl](path, title)
