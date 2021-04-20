@@ -36,11 +36,15 @@ class MergeRequestsAndIssuesSpec
 
     `create, continue or open a project`
 
+    `navigate to the issues tab`
+
     `verify there are no issues`
 
     val issueTitle = "test issue"
     val issueDesc  = "test description"
     `create a new issue`(issueTitle, issueDesc)
+
+    `navigate to the issues tab`
 
     `view the issue`(issueTitle)
 
@@ -55,12 +59,16 @@ class MergeRequestsAndIssuesSpec
 
     `create, continue or open a project`
 
+    `navigate to the merge requests tab`
+
     `verify there are no merge requests`
 
     val branchName = "test-branch"
     `add change to the project`(branchName)
 
     `create a new merge request`
+
+    `navigate to the merge requests tab`
 
     `view the merge request`(branchName)
 

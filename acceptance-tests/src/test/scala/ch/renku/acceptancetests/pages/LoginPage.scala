@@ -24,7 +24,7 @@ import ch.renku.acceptancetests.workflows.LoginType
 import ch.renku.acceptancetests.workflows.LoginType.LoginWithProvider
 import org.openqa.selenium.{WebDriver, WebElement}
 import org.scalatest.concurrent.Eventually
-import org.scalatest.{Matchers => ScalatestMatchers}
+import org.scalatest.matchers.should.{Matchers => ScalatestMatchers}
 import org.scalatestplus.selenium
 import org.scalatestplus.selenium.WebBrowser._
 
@@ -39,8 +39,7 @@ case object LoginPage
 
   override def pageReadyElement(implicit webDriver: WebDriver): Option[WebElement] = Some(logInButton)
 
-  /**
-    * When a renku instance uses another openID connect provider, the user may get a second login page.
+  /** When a renku instance uses another openID connect provider, the user may get a second login page.
     */
   case class ProviderLoginPage()
       extends selenium.Page

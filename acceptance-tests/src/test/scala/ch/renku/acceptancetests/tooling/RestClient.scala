@@ -24,11 +24,11 @@ import ch.renku.acceptancetests.model.{AuthorizationToken, BaseUrl}
 import io.circe.Json
 import io.circe.optics.JsonPath
 import io.circe.optics.JsonPath.root
+import org.http4s._
 import org.http4s.circe._
 import org.http4s.client.blaze.BlazeClientBuilder
 import org.http4s.client.dsl.Http4sClientDsl
-import org.http4s._
-import org.scalatest.Matchers.fail
+import org.scalatest.Assertions.fail
 
 import scala.concurrent.ExecutionContext
 

@@ -20,15 +20,16 @@ package ch.renku.acceptancetests.tooling
 
 import org.scalactic.source
 import org.scalatest.Tag
+import org.scalatest.featurespec.AnyFeatureSpecLike
 
-trait BddWording {
-  this: AcceptanceSpec =>
+trait BddWording extends AnyFeatureSpecLike {
+  self: AcceptanceSpec =>
 
   import TestLogger.logger
 
-  def Scenario(test: String, testTags: Tag*)(testFun: => Any)(implicit pos: source.Position): Unit = {
+  override def Scenario(test: String, testTags: Tag*)(testFun: => Any)(implicit pos: source.Position): Unit = {
     logger.info(test)
-    scenario(s"$test - done", testTags: _*)(testFun)
+    super.Scenario(s"$test - done", testTags: _*)(testFun)
   }
 
   def Given(string: String): Unit = logger.info(s"Given $string")
