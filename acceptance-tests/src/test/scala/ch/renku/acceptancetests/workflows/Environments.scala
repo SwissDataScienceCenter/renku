@@ -131,8 +131,10 @@ trait Environments {
     projectPage.Environments.verifyImageReady sleep (2 seconds)
   }
 
-  private def `start environment & wait util it's not ready`(implicit projectPage: ProjectPage): Unit =
-    projectPage.Environments.maybeStartEnvironment match {
+  private def `start environment & wait util it's not ready`(implicit projectPage: ProjectPage): Unit = {
+    projectPage.Environments.verifyImageReady sleep (2 seconds)
+
+    projectPage.Environments.maybeStartEnvironmentButton match {
       case None =>
         projectPage.Environments.connectToJupyterLabLink.isDisplayed shouldBe true
       case Some(startEnvButton) =>
@@ -153,4 +155,5 @@ trait Environments {
         // Sleep a little while after clicking to give the server a chance to come up
         click on projectPage.Environments.Running.title sleep (30 seconds)
     }
+  }
 }
