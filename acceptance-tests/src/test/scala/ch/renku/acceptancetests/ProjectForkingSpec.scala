@@ -48,6 +48,8 @@ class ProjectForkingSpec extends AcceptanceSpec with Login with Project {
     And(s"fills in the title (${forkedProjectDetails.title}) and submits")
     projectPage.ForkDialog.submitFormWith(forkedProjectDetails)
 
+    pause asLongAsBrowserAt projectPage
+
     Then("the project gets forked and the project page gets displayed")
     val forkedProjectPage = ProjectPage.createFrom(forkedProjectDetails)
 

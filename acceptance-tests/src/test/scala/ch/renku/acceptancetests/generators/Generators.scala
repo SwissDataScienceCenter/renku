@@ -18,8 +18,6 @@
 
 package ch.renku.acceptancetests.generators
 
-import java.time._
-import java.time.temporal.ChronoUnit.{DAYS, MINUTES => MINS}
 import eu.timepit.refined.api.Refined
 import eu.timepit.refined.auto._
 import eu.timepit.refined.collection.NonEmpty
@@ -28,6 +26,8 @@ import eu.timepit.refined.string.Url
 import org.scalacheck.Gen._
 import org.scalacheck.{Arbitrary, Gen}
 
+import java.time._
+import java.time.temporal.ChronoUnit.{DAYS, MINUTES => MINS}
 import scala.concurrent.duration._
 import scala.language.implicitConversions
 

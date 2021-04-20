@@ -20,6 +20,7 @@ package ch.renku.acceptancetests.workflows
 
 import ch.renku.acceptancetests.pages.DatasetsPage
 import ch.renku.acceptancetests.tooling.AcceptanceSpec
+
 import scala.concurrent.duration._
 
 trait DatasetsSearch {
