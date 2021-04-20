@@ -63,9 +63,9 @@ abstract class Page[Url <: BaseUrl](val path: String, val title: String)
     def sleep(duration: Duration): Unit = Page.SleepThread(duration)
   }
 
-  protected def waitUpTo(duration: Duration): PatienceConfig = PatienceConfig(
+  protected def waitUpTo(duration: Duration, interval: Duration = 1 second): PatienceConfig = PatienceConfig(
     timeout = scaled(Span(AcceptanceSpecPatience.WAIT_SCALE * duration.toSeconds, Seconds)),
-    interval = scaled(Span(1, Seconds))
+    interval = scaled(Span(interval.toSeconds, Seconds))
   )
 }
 
