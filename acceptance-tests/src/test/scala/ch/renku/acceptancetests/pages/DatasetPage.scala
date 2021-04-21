@@ -21,6 +21,8 @@ package ch.renku.acceptancetests.pages
 import ch.renku.acceptancetests.model.datasets.DatasetName
 import org.openqa.selenium.{WebDriver, WebElement}
 import org.scalactic.source
+import org.scalatest.enablers.Retrying
+import org.scalatestplus.selenium.WebBrowser
 import org.scalatestplus.selenium.WebBrowser.{cssSelector, find}
 
 import scala.concurrent.duration._
@@ -50,7 +52,7 @@ class DatasetPage(datasetName: DatasetName, projectPage: ProjectPage)
     def link(to: ProjectPage)(implicit webDriver: WebDriver): WebElement = eventually {
       find(cssSelector(s"td a[href='${to.path}' i]"))
         .getOrElse(fail(s"Project '${to.path}' not found"))
-    }(waitUpTo(20 seconds), implicitly[source.Position])
+    }(waitUpTo(20 seconds), implicitly[Retrying[WebBrowser.Element]], implicitly[source.Position])
   }
 
   object ModificationForm {

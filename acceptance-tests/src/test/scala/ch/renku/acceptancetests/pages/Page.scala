@@ -18,12 +18,12 @@
 
 package ch.renku.acceptancetests.pages
 
-import ch.renku.acceptancetests.model.{BaseUrl, RenkuBaseUrl}
+import ch.renku.acceptancetests.model.{BaseUrl, GitLabBaseUrl, RenkuBaseUrl}
 import ch.renku.acceptancetests.tooling._
 import org.openqa.selenium.{By, WebDriver, WebElement}
 import org.scalatest.concurrent.Eventually
+import org.scalatest.matchers.should.{Matchers => ScalatestMatchers}
 import org.scalatest.time.{Seconds, Span}
-import org.scalatest.{Matchers => ScalatestMatchers}
 import org.scalatestplus.selenium.WebBrowser
 
 import scala.concurrent.duration._
@@ -63,9 +63,9 @@ abstract class Page[Url <: BaseUrl](val path: String, val title: String)
     def sleep(duration: Duration): Unit = Page.SleepThread(duration)
   }
 
-  protected def waitUpTo(duration: Duration): PatienceConfig = PatienceConfig(
+  protected def waitUpTo(duration: Duration, interval: Duration = 1 second): PatienceConfig = PatienceConfig(
     timeout = scaled(Span(AcceptanceSpecPatience.WAIT_SCALE * duration.toSeconds, Seconds)),
-    interval = scaled(Span(1, Seconds))
+    interval = scaled(Span(interval.toSeconds, Seconds))
   )
 }
 
@@ -78,3 +78,4 @@ object Page {
 }
 
 abstract class RenkuPage(path: String, title: String) extends Page[RenkuBaseUrl](path, title)
+abstract class GitLabPage(path: String, title: String) extends Page[GitLabBaseUrl](path, title)

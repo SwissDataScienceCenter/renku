@@ -23,7 +23,7 @@ import ch.renku.acceptancetests.workflows.Login
 
 class LoginSpec extends AcceptanceSpec with Login {
 
-  feature("User logging in and out") {
+  Feature("User logging in and out") {
 
     Scenario("Logging into Renku") {
       `log in to Renku`

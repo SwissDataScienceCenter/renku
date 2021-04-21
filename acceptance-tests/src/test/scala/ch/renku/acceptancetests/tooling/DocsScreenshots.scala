@@ -23,8 +23,7 @@ import org.openqa.selenium.{JavascriptExecutor, WebDriver}
 
 import java.lang.System.getProperty
 
-/**
-  * Helper class for capturing screenshots for documentation.
+/** Helper class for capturing screenshots for documentation.
   */
 class DocsScreenshots(test: ScreenCapturing, webDriver: WebDriver) {
 
@@ -39,8 +38,7 @@ class DocsScreenshots(test: ScreenCapturing, webDriver: WebDriver) {
   def disable(): Unit = screenshotSuppressed = true
   def enable():  Unit = screenshotSuppressed = false
 
-  /**
-    * Informs helper to make a screenshot if we are capturing them.
+  /** Informs helper to make a screenshot if we are capturing them.
     */
 
   def takeScreenshot(): Unit = takeScreenshot(executeBefore = None)

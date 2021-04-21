@@ -29,19 +29,10 @@ import scala.concurrent.duration._
 trait Datasets {
   self: AcceptanceSpec with Project with KnowledgeGraphApi =>
 
-  def `verify dataset was created`(datasetName: DatasetName): Unit = {
-    val datasetPage = DatasetPage(datasetName)
-    When("the user navigates to the Datasets tab")
-    click on projectPage.Datasets.tab sleep (1 second)
-
-    And("the events are processed")
-    val datasetPageTitle = projectPage.Datasets.title(_: WebDriver)
-    reload whenUserCannotSee datasetPageTitle
-
-    Then(s"the user should see a link to the '$datasetName' dataset")
-    val datasetLink = projectPage.Datasets.DatasetsList.link(to = datasetPage)(_: WebDriver)
-    reload whenUserCannotSee datasetLink
-  }
+  def `verify dataset was created`(datasetName: DatasetName): Unit =
+    `try few times before giving up` { _ =>
+      `navigate to the dataset`(DatasetPage(datasetName))
+    }
 
   def `create a dataset`(datasetName: DatasetName): DatasetPage = {
     import Modification._
