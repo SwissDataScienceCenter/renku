@@ -51,6 +51,7 @@ For changes to individual components, please check:
   `v0.14.2 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/v0.14.2>`__
 
 * renku-graph:
+  `1.36.2 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/1.36.2>`__,
   `1.36.1 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/1.36.1>`__
 
 
