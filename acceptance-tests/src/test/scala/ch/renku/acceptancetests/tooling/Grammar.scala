@@ -123,10 +123,12 @@ trait Grammar extends WebElementOps with Eventually {
     if (!test) testFun
 
   protected implicit class WebElementGrammar(element: WebElement) {
-    def is(expected:       String): Unit = element.getText               shouldBe expected
-    def contains(expected: String): Unit = element.getText                 should include(expected)
-    def matches(pattern:   String): Unit = element.getText                 should fullyMatch regex pattern
-    def hasValue(expected: String): Unit = element.getAttribute("value") shouldBe expected
+    def is(expected:                 String): Unit = element.getText shouldBe expected
+    def contains(expected:           String): Unit = element.getText   should include(expected)
+    def matches(pattern:             String): Unit = element.getText   should fullyMatch regex pattern
+    def hasValue(expected:           String): Unit = element.getAttribute("value") shouldBe expected
+    def attributeContains(attribute: String, expected: String): Unit =
+      element.getAttribute(attribute) should include(expected)
   }
 
   protected implicit class OperationOps(unit: Unit) {
