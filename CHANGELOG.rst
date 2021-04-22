@@ -7,14 +7,13 @@ Features
 ~~~~~~~~
 
 * **Renku CLI**: support moving files between datasets with ``renku mv`` (`CLI documentation <https://renku-python.readthedocs.io/en/latest/commands.html#module-renku.cli.move>`__).
-* **Renku CLI**: support template and docker migration.
+* **Renku CLI**: ability to update local project from its template and to update the Dockerfile to install the current version of renku-python using renku migrate.
 
 * **Projects**: ability to generate project-creation links, embedding metadata to automatically pre-fill input fields. For more details on how to use this feature please read our `documentation <https://renku.readthedocs.io/en/latest/user/templates.html#create-shareable-project-creation-links-with-pre-filled-fields>`__.
 
 Improvements
 ~~~~~~~~~~~~~
 
-* **Renku CLI**: ability to update local project from its template and to update the Dockerfile to install the current version of renku-python using renku migrate.
 * **Renku CLI**: support for Unicode paths in renku run (including emojis).
 
 * **Projects**: add preview for common hidden files.
@@ -28,7 +27,6 @@ Bug Fixes
 * **Environments**: If Automatically fetch LFS data enabled, unset LFS auth mode in init container
 * **Projects**: restore support for project-level default environments parameters (e.g. CPU and memory requests).
 
-* **Renku CLI**: fix renku rerun/update with unicode input/output paths.
 * **Core service**: fix project_clone with git ref specified.
 
 
