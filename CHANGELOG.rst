@@ -1,5 +1,58 @@
 .. _changelog:
 
+0.7.11
+------
+
+Features
+~~~~~~~~
+
+* **Renku CLI**: support moving files between datasets with ``renku mv`` (`CLI documentation <https://renku-python.readthedocs.io/en/latest/commands.html#module-renku.cli.move>`__).
+* **Renku CLI**: ability to update local project from its template and to update the Dockerfile to install the current version of renku-python using renku migrate.
+
+* **Projects**: ability to generate project-creation links, embedding metadata to automatically pre-fill input fields. For more details on how to use this feature please read our `documentation <https://renku.readthedocs.io/en/latest/user/templates.html#create-shareable-project-creation-links-with-pre-filled-fields>`__.
+
+Improvements
+~~~~~~~~~~~~~
+
+* **Renku CLI**: support for Unicode paths in renku run (including emojis).
+
+* **Projects**: add preview for common hidden files.
+
+* **Templates**: use Renku CLI 0.14.2
+
+
+Bug Fixes
+~~~~~~~~~~
+
+* **Environments**: If Automatically fetch LFS data enabled, unset LFS auth mode in init container
+* **Projects**: restore support for project-level default environments parameters (e.g. CPU and memory requests).
+
+* **Core service**: fix project_clone with git ref specified.
+
+* **Knowledge graph**: event status update process to remove delivery info in a single transaction
+* **Knowledge graph**: improvements in lost subscriber node finding algorithm
+
+
+Individual components
+~~~~~~~~~~~~~~~~~~~~~
+
+For changes to individual components, please check:
+
+* renku-ui:
+  `0.11.11 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/0.11.11>`__,
+  `0.11.10 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/0.11.10>`__
+
+* renku-notebooks:
+  `0.8.11 <https://github.com/SwissDataScienceCenter/renku-notebooks/releases/tag/0.8.11>`__
+
+* renku-python:
+  `v0.14.2 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/v0.14.2>`__
+
+* renku-graph:
+  `1.36.2 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/1.36.2>`__,
+  `1.36.1 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/1.36.1>`__
+
+
 0.7.10
 ------
 
