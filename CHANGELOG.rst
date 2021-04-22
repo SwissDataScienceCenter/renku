@@ -29,7 +29,6 @@ Bug Fixes
 
 * **Core service**: fix project_clone with git ref specified.
 
-
 * **Knowledge graph**: event status update process to remove delivery info in a single transaction
 * **Knowledge graph**: improvements in lost subscriber node finding algorithm
 
@@ -40,6 +39,7 @@ Individual components
 For changes to individual components, please check:
 
 * renku-ui:
+  `0.11.11 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/0.11.11>`__,
   `0.11.10 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/0.11.10>`__
 
 * renku-notebooks:
