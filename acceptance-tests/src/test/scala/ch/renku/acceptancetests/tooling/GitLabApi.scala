@@ -22,7 +22,7 @@ import ch.renku.acceptancetests.model.AuthorizationToken.OAuthAccessToken
 import ch.renku.acceptancetests.model.projects.ProjectIdentifier
 import org.http4s.Status._
 import org.http4s.UrlForm
-import org.scalatest.Matchers.fail
+import org.scalatest.Assertions.fail
 
 trait GitLabApi extends RestClient {
   self: AcceptanceSpecData =>

@@ -20,10 +20,10 @@ package ch.renku.acceptancetests.tooling
 
 import ch.renku.acceptancetests.model.projects.ProjectIdentifier
 import org.http4s.Status.Ok
-import org.scalatest.Matchers.fail
+import org.scalatest.Assertions.fail
 
-import scala.concurrent.duration._
 import scala.annotation.tailrec
+import scala.concurrent.duration._
 
 trait KnowledgeGraphApi extends RestClient {
   self: AcceptanceSpecData with GitLabApi with Grammar =>

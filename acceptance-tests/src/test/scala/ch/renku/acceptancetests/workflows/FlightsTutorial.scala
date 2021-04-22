@@ -23,7 +23,7 @@ import ch.renku.acceptancetests.model.projects.ProjectUrl
 import ch.renku.acceptancetests.model.users.UserCredentials
 import ch.renku.acceptancetests.tooling._
 import ch.renku.acceptancetests.tooling.console._
-import org.scalatest.Matchers
+import org.scalatest.matchers.should.Matchers
 
 import java.nio.file.Path
 

@@ -27,8 +27,7 @@ import java.lang.System.getProperty
 import scala.concurrent.duration._
 import scala.util.matching.Regex
 
-/**
-  * Delete many projects.
+/** Delete many projects.
   *
   * During testing, test projects can accumulate and they are tedious to clean up. This spec
   * will delete all projects that match a pattern and can be used to batch delete projects

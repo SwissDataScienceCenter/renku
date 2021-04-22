@@ -24,6 +24,7 @@ import ch.renku.acceptancetests.model.users.UserCredentials
 import ch.renku.acceptancetests.tooling.AcceptanceSpec
 import org.openqa.selenium.{By, WebDriver, WebElement}
 import org.scalactic.source
+import org.scalatest.enablers.Retrying
 import org.scalatestplus.selenium.WebBrowser
 import org.scalatestplus.selenium.WebBrowser.{cssSelector, find, findAll}
 
@@ -266,7 +267,7 @@ class ProjectPage(val projectSlug: String, val namespace: String)
           find(cssSelector(s"div.project-list-row a[href='${to.path}' i]"))
             .orElse(find(cssSelector(s"div.project-list-row a[href='${to.path}/' i]")))
             .getOrElse(fail(s"Dataset '${to.path}' not found"))
-        }(waitUpTo(120 seconds), implicitly[source.Position])
+        }(waitUpTo(120 seconds), implicitly[Retrying[WebBrowser.Element]], implicitly[source.Position])
     }
   }
 
@@ -276,10 +277,9 @@ class ProjectPage(val projectSlug: String, val namespace: String)
       find(cssSelector(s"a[href='$path/environments']")) getOrElse fail("Environments tab not found")
     }
 
-    def newLink(implicit webDriver: WebDriver): WebElement =
-      eventually {
-        find(cssSelector(s"a[href='$path/environments/new']")) getOrElse fail("New environment link not found")
-      }(waitUpTo(1 minute), implicitly[source.Position])
+    def newLink(implicit webDriver: WebDriver): WebElement = eventually {
+      find(cssSelector(s"a[href='$path/environments/new']")) getOrElse fail("New environment link not found")
+    }(waitUpTo(1 minute), implicitly[Retrying[WebBrowser.Element]], implicitly[source.Position])
 
     def anonymousUnsupported(implicit webDriver: WebDriver): WebElement = eventually {
       findAll(cssSelector("div > div > div > div > p"))
@@ -289,13 +289,8 @@ class ProjectPage(val projectSlug: String, val namespace: String)
         .getOrElse(fail("Unsupported environment notification not found"))
     }
 
-    def startEnvironment(implicit webDriver: WebDriver): WebElement =
-      maybeStartEnvironment getOrElse fail("Start environment button not found")
-
-    def maybeStartEnvironment(implicit webDriver: WebDriver): Option[WebElement] = eventually {
-      verifyImageReady sleep (2 seconds)
-      findAll(cssSelector("div > form > button.btn.btn-primary"))
-        .find(_.text == "Start environment")
+    def maybeStartEnvironmentButton(implicit webDriver: WebDriver): Option[WebElement] = eventually {
+      findAll(cssSelector("div > form > button.btn.btn-primary")).find(_.text == "Start environment")
     }
 
     def connectToJupyterLabLink(implicit webDriver: WebDriver): WebElement = eventually {
@@ -305,18 +300,14 @@ class ProjectPage(val projectSlug: String, val namespace: String)
     }
 
     def verifyImageReady(implicit webDriver: WebDriver): Unit = eventually {
-      findImageReadyBadge getOrElse waitForImageToBeReady
-    }(waitUpTo(10 minutes), implicitly[source.Position])
+      maybeImageReadyBadge getOrElse {
+        sleep(1 second)
+        webDriver.navigate.refresh()
+        fail("Image not ready")
+      }
+    }(waitUpTo(10 minutes, interval = 3 seconds), implicitly[Retrying[WebBrowser.Element]], implicitly[source.Position])
 
-    private def waitForImageToBeReady(implicit webDriver: WebDriver): Unit = {
-      find(cssSelector(".badge.badge-warning")) orElse findImageReadyBadge getOrElse fail(
-        "Image building info badges not found"
-      )
-      sleep(1 second)
-      findImageReadyBadge getOrElse fail("Image not yet built")
-    }
-
-    private def findImageReadyBadge(implicit webDriver: WebDriver): Option[WebBrowser.Element] =
+    private def maybeImageReadyBadge(implicit webDriver: WebDriver): Option[WebBrowser.Element] =
       find(cssSelector(".badge.badge-success"))
 
     object Running {

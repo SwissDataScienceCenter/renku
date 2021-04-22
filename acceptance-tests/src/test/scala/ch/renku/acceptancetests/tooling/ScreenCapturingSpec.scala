@@ -26,7 +26,7 @@ trait ScreenCapturingSpec extends ScreenCapturing {
   override def withFixture(test: NoArgTest): Outcome = {
     val outcome = test()
 
-    if (outcome.isExceptional) saveScreenshot
+    if (outcome.isExceptional) saveScreenshot()
 
     outcome
   }
