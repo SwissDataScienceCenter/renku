@@ -14,6 +14,7 @@
 {{- $graphEnabled := .Values.graph.enabled -}}
 {{- $webhookServiceFullname := include "webhookService.fullname" . -}}
 {{- $knowledgeGraphFullname := include "knowledgeGraph.fullname" . -}}
+{{- $renkuFullname := include "renku.fullname" . -}}
 {{- if $graphEnabled }}
 {{- $jenaFullname := include "jena.fullname" . -}}
 {{- $jenaServicePort := .Values.graph.jena.service.port -}}
@@ -90,5 +91,9 @@ spec:
           serviceName: {{ $knowledgeGraphFullname }}
           servicePort: 80
       {{- end }}
+      - path: /swagger
+        backend:
+          serviceName: {{ $renkuFullname }}-swagger
+          servicePort: 80
   {{- end }}
 {{- end }}
