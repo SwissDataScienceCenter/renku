@@ -22,8 +22,12 @@ spec:
           env:
             - name: BASE_URL
               value: /swagger
-            - name: URL
-              value: /api/renku/spec.json
+            - name: URLS
+              value: >
+                [
+                  {"url": "/api/renku/spec.json", "name": "core service"},
+                  {"url": "/jupyterhub/services/notebooks/api/v1/spec", "name": "notebooks service"}
+                ]
             - name: OAUTH2_REDIRECT_URL
               value: https://{{ .Values.global.renku.domain }}/swagger/oauth2-redirect.html
           ports:
