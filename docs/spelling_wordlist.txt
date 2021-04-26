@@ -159,6 +159,7 @@ txt
 typesystem
 Ubuntu
 ui
+unicode
 untracked
 untracked
 url

@@ -19,8 +19,7 @@
 import org.openqa.selenium.WebDriver
 import org.scalatestplus.selenium.Chrome
 
-/**
-  * Import packages necessary for working with selenium in the console.
+/** Import packages necessary for working with selenium in the console.
   *
   * To get started,
   * - run `sbt test:console`

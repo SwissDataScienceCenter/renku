@@ -398,7 +398,7 @@ ui:
     custom: true
     repositories:
       - url: https://github.com/SwissDataScienceCenter/renku-project-template
-        ref: 0.1.18
+        ref: 0.1.19
         name: Renku
       - url: https://github.com/SwissDataScienceCenter/contributed-project-templates
         ref: 0.1.0

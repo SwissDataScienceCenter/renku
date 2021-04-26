@@ -29,8 +29,7 @@ object users {
       register:    Boolean
   ) {
 
-    /**
-      * Return the user namespace given the user credentials.
+    /** Return the user namespace given the user credentials.
       */
     def userNamespace: String = username.replace("+", "")
   }

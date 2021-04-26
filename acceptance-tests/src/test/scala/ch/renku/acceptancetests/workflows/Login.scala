@@ -18,10 +18,12 @@
 
 package ch.renku.acceptancetests.workflows
 
+import ch.renku.acceptancetests.pages.LoginPage.oidcButton
 import ch.renku.acceptancetests.pages._
 import ch.renku.acceptancetests.tooling.AcceptanceSpec
 import ch.renku.acceptancetests.workflows.LoginType._
 
+import scala.annotation.tailrec
 import scala.concurrent.duration._
 
 trait Login {
@@ -45,107 +47,13 @@ trait Login {
     Then("they should get into the Login Page")
     verify browserAt LoginPage
 
-    val loginType =
-      if (userCredentials.useProvider) logIntoRenkuUsingProvider
-      else logIntoRenkuDirectly
-    maybeLoginType = Some(loginType)
+    maybeLoginType = Some {
+      if (userCredentials.useProvider) `log in to Renku using provider`
+      else `log in to Renku directly`
+    }
 
     Then("they should get into the Welcome page")
     verify browserAt WelcomePage
-  }
-
-  private def logIntoRenkuUsingProvider: LoginType = {
-    When("user clicks on the provider login page")
-    val providerLoginPage = LoginPage openProviderLoginPage
-
-    And("enters credentials and logs in")
-    providerLoginPage logInWith userCredentials
-
-    val authorizationPage = LoginPage.AuthorizeApplicationPage()
-    if (currentUrl startsWith authorizationPage.url) {
-      And("authorizes the application")
-      authorizationPage authorize;
-      // It may be necessary to authorize twice
-      if (currentUrl startsWith authorizationPage.url) {
-        And("authorizes the application a second time")
-        authorizationPage authorize
-      }
-    }
-
-    // This is a first login, and we need to provide account information
-    if (currentUrl contains "login-actions/first-broker-login") {
-      val updateInfoPage = LoginPage.UpdateAccountInfoPage(userCredentials)
-      And("updates user information")
-      updateInfoPage.updateInfo sleep (5 seconds)
-    }
-
-    // Authorization may come later
-    if (currentUrl startsWith authorizationPage.url) {
-      And("authorizes the application")
-      authorizationPage authorize;
-      // It may be necessary to authorize twice
-      if (currentUrl startsWith authorizationPage.url) {
-        And("authorizes the application a second time")
-        authorizationPage authorize
-      }
-    }
-    LoginWithProvider
-  }
-
-  private def logIntoRenkuDirectly: LoginType = {
-    When("user enters credentials and logs in")
-    LoginPage logInWith userCredentials
-
-    if (LoginPage loginSucceeded) {
-      val providerLoginPage = LoginPage.ProviderLoginPage()
-      val lt = if (currentUrl startsWith providerLoginPage.url) {
-        And("enters information with the provider")
-        providerLoginPage logInWith userCredentials
-        LoginWithProvider
-      } else LoginWithoutProvider
-      val authorizationPage = LoginPage.AuthorizeApplicationPage()
-      if (currentUrl startsWith authorizationPage.url) {
-        And("authorizes the application")
-        authorizationPage authorize;
-        // It may be necessary to authorize twice
-        if (currentUrl startsWith authorizationPage.url) {
-          And("authorizes the application a second time")
-          authorizationPage authorize
-        }
-      }
-      lt
-    } else {
-      if (userCredentials.register) {
-        And("login fails")
-        Then("try to register the user")
-        registerNewUserWithRenku
-      } else fail("Incorrect user credentials.")
-    }
-  }
-
-  private def registerNewUserWithRenku: LoginType = {
-    When("user opens registration form")
-    val lt = LoginPage openRegistrationForm;
-
-    And("registers")
-    val registerPage = LoginPage.RegisterNewUserPage()
-    registerPage registerNewUserWith userCredentials
-
-    And("logs into provider")
-    val providerLoginPage = LoginPage.ProviderLoginPage()
-    providerLoginPage logInWith userCredentials
-
-    val authorizationPage = LoginPage.AuthorizeApplicationPage()
-    if (currentUrl startsWith authorizationPage.url) {
-      And("authorizes the application")
-      authorizationPage authorize;
-      // It may be necessary to authorize twice
-      if (currentUrl startsWith authorizationPage.url) {
-        And("authorizes the application a second time")
-        authorizationPage authorize
-      }
-    }
-    lt
   }
 
   def `log out of Renku`: Unit = {
@@ -159,6 +67,81 @@ trait Login {
       verify userCanSee LandingPage.loginButton sleep (1 second)
     }
   }
+
+  private def `log in to Renku using provider`: LoginType = {
+    When("user clicks on the provider login page")
+    LoginPage.oidcButton.click() sleep (5 seconds)
+
+    if (!(currentUrl contains ProviderLoginPage.path)) {
+      println("Not on OpenID login provider page, trying again")
+      oidcButton.click() sleep (5 seconds)
+    }
+
+    And("enters credentials and logs in")
+    ProviderLoginPage logInWith userCredentials
+
+    `authorize application if necessary`()
+
+    // This is a first login, and we need to provide account information
+    if (currentUrl contains "login-actions/first-broker-login") {
+      And("updates user information")
+      UpdateAccountInfoPage(userCredentials).updateInfo sleep (5 seconds)
+    }
+
+    // Authorization may come later
+    `authorize application if necessary`()
+
+    LoginWithProvider
+  }
+
+  private def `log in to Renku directly`: LoginType = {
+    When("user enters credentials and logs in")
+    LoginPage logInWith userCredentials
+
+    if (LoginPage loginSucceeded) {
+      val loginType =
+        if (currentUrl contains ProviderLoginPage.path) {
+          And("enters information with the provider")
+          ProviderLoginPage logInWith userCredentials
+          LoginWithProvider
+        } else LoginWithoutProvider
+
+      `authorize application if necessary`()
+
+      loginType
+    } else {
+      if (userCredentials.register) {
+        And("login fails")
+        Then("try to register the user")
+        `register new user with Renku`
+      } else fail("Incorrect user credentials.")
+    }
+  }
+
+  private def `register new user with Renku`: LoginType = {
+    When("user opens registration form")
+    LoginPage openRegistrationForm;
+
+    And("registers")
+    RegisterNewUserPage registerNewUserWith userCredentials
+
+    And("logs into provider")
+    ProviderLoginPage logInWith userCredentials
+
+    `authorize application if necessary`()
+
+    LoginWithProvider
+  }
+
+  @tailrec
+  private def `authorize application if necessary`(attempt: String = "first"): Unit =
+    if (currentUrl startsWith AuthorizeApplicationPage.url) {
+      And(s"authorizes the application for the $attempt time")
+      AuthorizeApplicationPage authorize;
+
+      // It may be necessary to authorize twice
+      `authorize application if necessary`(attempt = "second")
+    }
 }
 
 sealed trait LoginType

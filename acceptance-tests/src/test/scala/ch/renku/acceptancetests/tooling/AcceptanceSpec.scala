@@ -22,13 +22,15 @@ import ch.renku.acceptancetests.workflows.Environments
 import org.openqa.selenium.WebDriver
 import org.openqa.selenium.chrome.{ChromeDriver, ChromeDriverService, ChromeOptions}
 import org.scalatest._
-import org.scalatestplus.selenium.{Chrome, WebBrowser}
+import org.scalatest.featurespec.AnyFeatureSpec
+import org.scalatest.matchers.should
+import org.scalatestplus.selenium.WebBrowser
 
 trait AcceptanceSpec
-    extends FeatureSpec
+    extends AnyFeatureSpec
     with BddWording
     with BeforeAndAfterAll
-    with Matchers
+    with should.Matchers
     with WebBrowser
     with Environments
     with Grammar

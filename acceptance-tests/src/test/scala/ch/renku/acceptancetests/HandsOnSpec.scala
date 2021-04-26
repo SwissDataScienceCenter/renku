@@ -23,8 +23,7 @@ import ch.renku.acceptancetests.workflows._
 
 import scala.concurrent.duration._
 
-/**
-  * Run the HandsOn from the documentation.
+/** Run the HandsOn from the documentation.
   */
 class HandsOnSpec
     extends AcceptanceSpec
