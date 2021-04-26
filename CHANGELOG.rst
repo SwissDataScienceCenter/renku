@@ -1,5 +1,14 @@
 .. _changelog:
 
+0.7.12
+------
+
+Bug Fixes
+~~~~~~~~~
+
+* **Notebooks**: fix release image pipeline
+* **Notebooks API**: enable endpoint for getting autosave information
+
 0.7.11
 ------
 
