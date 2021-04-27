@@ -472,6 +472,7 @@ ui:
   #   custom:
   #     enabled: true
   #     main:
+  #       # Custom homepage content as single string markdown
   #       contentMd: |
   #         ## RenkuLab @ Yoyodyne
   #         Welcome to the **Yoyodyne** RenkuLab instance!
