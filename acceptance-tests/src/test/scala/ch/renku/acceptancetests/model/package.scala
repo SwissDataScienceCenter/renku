@@ -29,6 +29,18 @@ package object model {
     override val value: String Refined Url = Refined.unsafeApply(s"$baseUrl/api/v4")
   }
 
+  final case class CliVersion(value: String) {
+    override lazy val toString: String = value
+  }
+  object CliVersion {
+
+    def get(version: String): Either[Throwable, CliVersion] = Either.cond(
+      test = version.trim matches "\\d+\\.\\d+\\.\\d+.*",
+      right = CliVersion(version.trim),
+      left = new IllegalArgumentException(s"Invalid $version Renku CLI version")
+    )
+  }
+
   abstract class BaseUrl {
     val value: String Refined Url
     override lazy val toString: String = value.toString()

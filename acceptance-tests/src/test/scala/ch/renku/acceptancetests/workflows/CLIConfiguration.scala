@@ -18,6 +18,7 @@
 
 package ch.renku.acceptancetests.workflows
 
+import ch.renku.acceptancetests.model.CliVersion
 import ch.renku.acceptancetests.model.users.UserCredentials
 import ch.renku.acceptancetests.tooling.console._
 import ch.renku.acceptancetests.tooling.{AcceptanceSpec, console}
@@ -26,6 +27,23 @@ import java.nio.file.Path
 
 trait CLIConfiguration {
   self: AcceptanceSpec =>
+
+  def `setup renku CLI`: Unit = {
+    implicit val workFolder: Path = rootWorkDirectory
+
+    Given(s"renku API supports Renku CLI $cliVersion")
+    apiCliVersion shouldBe cliVersion
+
+    CliVersion.get(console %%> c"renku --version") match {
+      case Right(`cliVersion`) =>
+        Given(s"renku CLI $cliVersion installed")
+      case _ =>
+        Given(s"there's no Renku CLI $cliVersion installed")
+        console %%> c"python3 -m pip uninstall --yes renku"
+        Then(s"the user installs Renku CLI $cliVersion")
+        console %> c"python3 -m pip install 'renku==$cliVersion' --user"
+    }
+  }
 
   def `setup git configuration`(implicit userCredentials: UserCredentials): Unit = {
     implicit val workFolder: Path = rootWorkDirectory
