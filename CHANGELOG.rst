@@ -1,5 +1,18 @@
 .. _changelog:
 
+0.7.12
+------
+
+Features
+~~~~~~~~~
+
+* **Notebooks API**: enable endpoint for getting autosave information
+
+Bug Fixes
+~~~~~~~~~~
+
+* **Notebooks**: missing annotation handling in marshmallow
+
 0.7.11
 ------
 
