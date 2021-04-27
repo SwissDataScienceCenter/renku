@@ -20,6 +20,7 @@ package ch.renku.acceptancetests.workflows
 
 import ch.renku.acceptancetests.model.CliVersion
 import ch.renku.acceptancetests.model.users.UserCredentials
+import ch.renku.acceptancetests.tooling.TestLogger.logger
 import ch.renku.acceptancetests.tooling.console._
 import ch.renku.acceptancetests.tooling.{AcceptanceSpec, console}
 
@@ -31,8 +32,8 @@ trait CLIConfiguration {
   def `setup renku CLI`: Unit = {
     implicit val workFolder: Path = rootWorkDirectory
 
-    Given(s"renku API supports Renku CLI $cliVersion")
-    apiCliVersion shouldBe cliVersion
+    if (apiCliVersion != cliVersion)
+      logger.warn(s"Local Renku CLI is in version $cliVersion while Renku API is on $apiCliVersion")
 
     CliVersion.get(console %%> c"renku --version") match {
       case Right(`cliVersion`) =>

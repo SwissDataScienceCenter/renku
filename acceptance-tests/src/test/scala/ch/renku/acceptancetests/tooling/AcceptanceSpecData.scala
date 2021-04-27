@@ -26,6 +26,7 @@ import eu.timepit.refined.string.Url
 import java.lang.System.getProperty
 
 trait AcceptanceSpecData {
+  self: RenkuApi =>
 
   private val testsDefaults = TestsDefaults()
 
@@ -53,8 +54,8 @@ trait AcceptanceSpecData {
       sys.env
         .get("RENKU_CLI_VERSION")
         .orElse(Option(getProperty("cliVersion")))
-        .orElse(testsDefaults.cliversion)
-        .getOrElse(showErrorAndStop("-DcliVersion argument or RENKU_CLI_VERSION not specified"))
+        .orElse(testsDefaults.cliversion flatMap toNonEmpty)
+        .getOrElse(apiCliVersion.value)
     }
     .fold(throw _, identity)
 
