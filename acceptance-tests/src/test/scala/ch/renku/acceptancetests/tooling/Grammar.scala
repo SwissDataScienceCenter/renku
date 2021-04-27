@@ -110,6 +110,7 @@ trait Grammar extends WebElementOps with Eventually {
 
       if (attempt <= maxAttempts && (currentUrl startsWith page.url)) {
         sleep((patienceConfig.timeout.millisPart / frequencyFactor) millis)
+        reloadPage()
         asLongAsBrowserAt(page, attempt + 1)
       } else if (attempt > maxAttempts && (currentUrl startsWith page.url))
         fail {
