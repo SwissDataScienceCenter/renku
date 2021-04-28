@@ -115,7 +115,8 @@ trait Grammar extends WebElementOps with Eventually {
       } else if (attempt > maxAttempts && (currentUrl startsWith page.url))
         fail {
           s"Expected to be redirected from ${page.url} page " +
-            s"but gets stuck on $currentUrl for ${((patienceConfig.timeout.millisPart millis) * attempt).toSeconds}s"
+            s"but gets stuck on $currentUrl for " +
+            s"${((patienceConfig.timeout.millisPart millis) / frequencyFactor * attempt).toSeconds}s"
         }
     }
   }
