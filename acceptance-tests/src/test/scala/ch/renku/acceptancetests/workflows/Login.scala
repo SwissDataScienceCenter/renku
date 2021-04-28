@@ -45,7 +45,6 @@ trait Login {
     sleep(2 seconds)
     click on LandingPage.loginButton
     Then("they should get into the Login Page")
-    verify browserAt LoginPage
 
     maybeLoginType = Some {
       if (userCredentials.useProvider) `log in to Renku using provider`
