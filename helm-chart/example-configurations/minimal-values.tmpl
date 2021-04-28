@@ -54,6 +54,7 @@ global:
   gateway:
     ## clientSecret: # use `uuidgen -r`
     clientSecret:  [random]        ## Taken from gateway client in keycloak
+    cliClientSecret: [random]
     ## The client secret for authentication against gitlab
     gitlabClientSecret: *gitlabClientSecret
   renku:

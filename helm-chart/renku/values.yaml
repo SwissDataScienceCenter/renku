@@ -45,7 +45,10 @@ global:
       value:
       overwriteOnHelmUpgrade: false
   gateway:
+    ## The client secret for the renku client application registered in keycloak.
     clientSecret: # use `uuidgen -r`
+    ## The client secret for the renku-cli client application registered in keycloak.
+    cliClientSecret: # use `uuidgen -r`
     ## The client ID for authentication against gitlab
     gitlabClientId: renku-ui
     ## The client secret for authentication against gitlab
