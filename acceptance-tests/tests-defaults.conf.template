@@ -2,6 +2,7 @@
 
 env = "https://dev.renku.ch"
 gitlaburl = "https://dev.renku.ch/gitlab"
+cliversion = ""
 email = ""
 username = ""
 password = ""

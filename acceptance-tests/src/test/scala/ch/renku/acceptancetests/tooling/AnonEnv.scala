@@ -27,6 +27,7 @@ case class AnonEnvConfig(projectId: ProjectIdentifier, isAvailable: Boolean = fa
 /** Configuration for the anonymous environment
   */
 trait AnonEnv extends AcceptanceSpecData {
+  self: RenkuApi =>
 
   protected implicit lazy val anonEnvConfig: AnonEnvConfig =
     AnonEnvConfig(anonProjectIdentifier, isAnonEnvAvailable)

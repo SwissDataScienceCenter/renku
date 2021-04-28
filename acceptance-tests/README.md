@@ -121,8 +121,9 @@ order is command-line argument, environment variable and the defaults file.
 To create a `tests-defaults.conf` file, copy the `tests-defaults.conf.template` file and fill in the values.
 
 | Argument   | Environment               | Purpose                                                                                             |
-| ---------- | ------------------------- | --------------------------------------------------------------------------------------------------- |
+| ---------- | ------------------------- | ----------------------------------------------------------------------------------------------------|
 | env        | RENKU_TEST_URL            | URL to a Renku server, e.g., https://dev.renku.ch                                                   |
+| cliVersion | RENKU_CLI_VERSION         | the version of Renku CLI the tests should use; read from the renku API if not specified             |
 | gitLabUrl  | GITLAB_TEST_URL           | URL to a GitLab server, e.g., https://dev.renku.ch/gitlab; defaulted to env/gitlab if not specified |
 | email      | RENKU_TEST_EMAIL          | user's email e.g. `jakub.chrobasik@epfl.ch`                                                         |
 | username   | RENKU_TEST_USERNAME       | user's username e.g. `jakub.chrobasik1`                                                             |
