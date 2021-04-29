@@ -44,7 +44,6 @@ the changes or committing them to the repository.
 
         $ renku save -m "My own changes"
 
-<<<<<<< HEAD
 First, we will create the output directory:
 
 .. code-block:: console
@@ -54,11 +53,6 @@ First, we will create the output directory:
 The ``filter_flights.py`` script takes two input parameters: 1. a file to
 process as an input 2. a path for storing the output. So to run it, we would
 normally execute the following (do not actually run this line!):
-=======
-The ``filter_flights.py`` or ``filter_flights.R`` script takes two input
-parameters: 1. a file to process as an input 2. a path for storing the output.
-So to run it, we would normally execute the following:
->>>>>>> first pass for R complement: text only
 
 .. code-block:: console
 
