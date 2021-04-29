@@ -1,9 +1,10 @@
+{{- if .Values.swagger.enabled }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: {{ include "renku.fullname" . }}-swagger
 spec:
-  replicas: {{ .Values.replicaCount }}
+  replicas: 1
   strategy:
     type: Recreate
   selector:
@@ -48,20 +49,6 @@ spec:
             httpGet:
               path: /swagger
               port: http
-          resources:
-            {{- toYaml .Values.resources | nindent 12 }}
-      {{- with .Values.nodeSelector }}
-      nodeSelector:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
-    {{- with .Values.affinity }}
-      affinity:
-        {{- toYaml . | nindent 8 }}
-    {{- end }}
-    {{- with .Values.tolerations }}
-      tolerations:
-        {{- toYaml . | nindent 8 }}
-    {{- end }}
 ---
 apiVersion: v1
 kind: Service
@@ -77,3 +64,4 @@ spec:
   selector:
     app.kubernetes.io/name: {{ include "renku.name" . }}-swagger
     app.kubernetes.io/instance: {{ .Release.Name }}
+{{- end }}

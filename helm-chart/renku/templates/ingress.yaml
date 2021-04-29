@@ -19,6 +19,7 @@
 {{- $jenaFullname := include "jena.fullname" . -}}
 {{- $jenaServicePort := .Values.graph.jena.service.port -}}
 {{- end }}
+{{- $swaggerEnabled := .Values.swagger.enabled -}}
 ---
 apiVersion: networking.k8s.io/v1beta1
 kind: Ingress
@@ -91,9 +92,11 @@ spec:
           serviceName: {{ $knowledgeGraphFullname }}
           servicePort: 80
       {{- end }}
+      {{- if $swaggerEnabled }}
       - path: /swagger
         backend:
           serviceName: {{ $renkuFullname }}-swagger
           servicePort: 80
+      {{- end }}
   {{- end }}
 {{- end }}
