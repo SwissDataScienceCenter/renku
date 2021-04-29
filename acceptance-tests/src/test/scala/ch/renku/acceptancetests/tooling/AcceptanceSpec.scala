@@ -35,6 +35,7 @@ trait AcceptanceSpec
     with Environments
     with Grammar
     with GitLabApi
+    with RenkuApi
     with ScreenCapturingSpec
     with AcceptanceSpecData
     with AcceptanceSpecPatience {

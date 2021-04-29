@@ -63,7 +63,7 @@ master_doc = "index"
 
 # General information about the project.
 project = "Renku"
-copyright = "2017-2020, Swiss Data Science Center"
+copyright = "2017-2021, Swiss Data Science Center"
 author = (
     "Mohammad Alisafaee, Andreas Bleuler, Eric Bouillet, \n"
     "Lorenzo Cavazzi, Christine Choirat, Jakub Chrobasik, \n"
