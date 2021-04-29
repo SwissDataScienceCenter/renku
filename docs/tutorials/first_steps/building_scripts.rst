@@ -15,7 +15,7 @@ ready for the command-line.
 
 
 Again, for the tutorial, we have already done the refactoring work for you, and
-you can just download the script from `here
+you can just download the script from `here for Python
 <https://renkulab.io/projects/renku-tutorials/renku-tutorial-flights-material/files/blob/src/filter_flights.py>`_:
 
 .. code-block:: python
@@ -44,7 +44,7 @@ you can just download the script from `here
     # Save the result
     df.to_csv(output_path, index=False)
 
-or for R, from `here <https://renkulab.io/projects>`_:
+or `here for R <https://renkulab.io/projects>`_:
 
 .. code-block:: r
 
