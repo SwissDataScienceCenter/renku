@@ -30,6 +30,12 @@ spec:
                 ]
             - name: OAUTH2_REDIRECT_URL
               value: https://{{ .Values.global.renku.domain }}/swagger/oauth2-redirect.html
+            - name: OAUTH_USE_PKCE
+              value: "true"
+            - name: OAUTH_CLIENT_ID
+              value: "swagger"
+            - name: OAUTH_CLIENT_SECRET
+              value: ""
           ports:
             - name: http
               containerPort: 8080
