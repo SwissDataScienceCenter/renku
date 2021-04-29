@@ -30,7 +30,7 @@ Define clients and users for Keycloak
     {
     "clientId": "renku-cli",
     "baseUrl": "{{ template "http" . }}://{{ .Values.global.renku.domain }}",
-    "secret": "{{ required "Fill in .Values.global.gateway.clientSecret with `uuidgen -r`" .Values.global.gateway.cliClientSecret }}",
+    "secret": "{{ required "Fill in .Values.global.gateway.cliClientSecret with `uuidgen -r`" .Values.global.gateway.cliClientSecret }}",
     "redirectUris": [
         "{{ template "http" . }}://{{ .Values.global.renku.domain }}/*"
     ],
@@ -39,6 +39,32 @@ Define clients and users for Keycloak
     ],
     "protocolMappers": [{
       "name": "renku audience for renku cli",
+      "protocol": "openid-connect",
+      "protocolMapper": "oidc-audience-mapper",
+      "consentRequired": false,
+      "config": {
+        "included.client.audience": "renku",
+        "id.token.claim": false,
+        "access.token.claim": true,
+        "userinfo.token.claim": false
+      }
+    }]
+  },
+  {
+    "clientId": "swagger",
+    "publicClient": true,
+    "baseUrl": "{{ template "http" . }}://{{ .Values.global.renku.domain }}",
+    "redirectUris": [
+        "{{ template "http" . }}://{{ .Values.global.renku.domain }}/*"
+    ],
+    "webOrigins": [
+        "{{ template "http" . }}://{{ .Values.global.renku.domain }}/*"
+    ],
+    "attributes": {
+        "pkce.code.challenge.method": "S256"
+    },
+    "protocolMappers": [{
+      "name": "renku audience for the swagger UI",
       "protocol": "openid-connect",
       "protocolMapper": "oidc-audience-mapper",
       "consentRequired": false,
