@@ -17,7 +17,7 @@ running interactive session and drag and drop the downloaded notebook there.
 
 For an RStudio view, download `this script <https::>`_ and upload it your project. 
 You may also want to create a ``src`` folder within the project to keep the 
-scripts organised. 
+scripts organized. 
 
 In either case, use the ``renku save`` command to save your results, like the
 following:
