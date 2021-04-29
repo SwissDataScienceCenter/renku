@@ -1,0 +1,67 @@
+{{- if .Values.swagger.enabled }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "renku.fullname" . }}-swagger
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: {{ include "renku.name" . }}-swagger
+      app.kubernetes.io/instance: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: {{ include "renku.name" . }}-swagger
+        app.kubernetes.io/instance: {{ .Release.Name }}
+    spec:
+      containers:
+        - name: swagger
+          image: swaggerapi/swagger-ui
+          env:
+            - name: BASE_URL
+              value: /swagger
+            - name: URLS
+              value: >
+                [
+                  {"url": "/api/renku/spec.json", "name": "core service"},
+                  {"url": "/jupyterhub/services/notebooks/api/v1/spec", "name": "notebooks service"}
+                ]
+            - name: OAUTH2_REDIRECT_URL
+              value: https://{{ .Values.global.renku.domain }}/swagger/oauth2-redirect.html
+            - name: OAUTH_USE_PKCE
+              value: "true"
+            - name: OAUTH_CLIENT_ID
+              value: "swagger"
+            - name: OAUTH_CLIENT_SECRET
+              value: ""
+          ports:
+            - name: http
+              containerPort: 8080
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /swagger
+              port: http
+          readinessProbe:
+            httpGet:
+              path: /swagger
+              port: http
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "renku.fullname" . }}-swagger
+spec:
+  type: ClusterIP
+  ports:
+    - port: 80
+      targetPort: http
+      protocol: TCP
+      name: http
+  selector:
+    app.kubernetes.io/name: {{ include "renku.name" . }}-swagger
+    app.kubernetes.io/instance: {{ .Release.Name }}
+{{- end }}
