@@ -30,7 +30,7 @@ Define clients and users for Keycloak
     {
     "clientId": "renku-cli",
     "baseUrl": "{{ template "http" . }}://{{ .Values.global.renku.domain }}",
-    "secret": "{{ required "Fill in .Values.global.gateway.clientSecret with `uuidgen -r`" .Values.global.gateway.cliClientSecret }}",
+    "secret": "{{ required "Fill in .Values.global.gateway.cliClientSecret with `uuidgen -r`" .Values.global.gateway.cliClientSecret }}",
     "redirectUris": [
         "{{ template "http" . }}://{{ .Values.global.renku.domain }}/*"
     ],
