@@ -1,7 +1,7 @@
 .. _add_packages:
 
 Install and manage Python or R packages
-----------------------------------
+---------------------------------------
 
 Defining your runtime environment is critical if you would like others to be
 able to reuse your work. To achieve this, it is necessary to manage the
