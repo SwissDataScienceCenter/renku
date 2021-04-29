@@ -3,7 +3,7 @@
 Building scripts
 ----------------
 
-In order to best utilise renku's powerful commands, it is usually a good idea
+In order to best utilize renku's powerful commands, it is usually a good idea
 to refactor interactive notebooks and other exploratory tools into scripts,
 once that part of the pipeline has been tested by the user.
 
