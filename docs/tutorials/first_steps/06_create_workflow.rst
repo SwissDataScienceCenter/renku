@@ -85,9 +85,13 @@ change: we prepend ``renku run`` to the Python or R command:
 or
 
 .. code-block:: console
+
     # Create the output directory
     $ mkdir -p data/output
-    $ renku run R -f
+    $ renku run R -f src/filter_flights.R
+
+    Info: Adding these files to Git LFS:
+          data/output/flights-filtered.csv
 
 Go ahead and run this command: it will create the preprocessed data file,
 including the specification of *how* this file was created, and commit all the
