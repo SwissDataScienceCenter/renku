@@ -5,23 +5,23 @@
 ## Global variables
 ## Shared values/secrets
 global:
+  ## This section is used to store common GitLab-related values referred in Renku components
   gitlab:
+    ## Spawn a gitlab instance
+    enabled: true
+    ## The URL path prefix under which gitlab is running.
+    ## If GitLab is deployed along side with Renku, it should be equal to 'https://gitlab.'<global.renku.domain>
+    url:
+    registryHost:
+    ## The gitlab application ID and secret for Renku
+    appSecret:
+    appId: renku
+
+  keycloak:
     ## Secret of the gitlab client app in keycloak. Only needed if gitlab is deployed as part of Renku
     ## and thus relies on keycloak for authentication. To change this value after deploying, first
     ## generate a new secret using the Keycloak admin console then paste the generated secret here and redeploy.
-    clientSecret: # use `uuidgen -r`
-    ## Name of the postgres database to be used by Gitlab
-    postgresDatabase: gitlabhq_production
-    ## Postgres user for the gitlab database
-    postgresUser: gitlab
-    ## Postgres password for the gitlab database
-    postgresPassword:
-      value:
-      overwriteOnHelmUpgrade: false
-    ## URL prefix for gitlab
-    # urlPrefix: /
-
-  keycloak:
+    gitlabClientSecret:  # use `uuidgen -r`
     ## Name of the postgres database to be used by Keycloak
     postgresDatabase: keycloak
     ## Postgres user for the Keycloak database
@@ -89,6 +89,54 @@ global:
     postgresPassword:
       value:
       overwriteOnHelmUpgrade: false
+
+  ## Global section of GitLab, not needed if not signupEnabled
+  edition: ce
+  hosts:
+    ## Domain name for the deployed instance of Gitlab (could use the same as Renku)
+    ## This will yield a GitLab deployment under gitlab.example.local
+    domain: example.local
+    ## ExternalIP of where the above domain points to
+    externalIP:
+    https: true
+  ## Uses conventional settings for ingress
+  ## Find below an example of values
+  # ingress:
+  #  annotations:
+  #    kubernetes.io/ingress.class: nginx
+  #    cert-manager.io/cluster-issuer: letsencrypt-production
+  #  configureCertmanager: false
+  #  enabled: true
+  #  tls:
+  #    enabled: true
+  time_zone: CET
+  appConfig:
+    # OmniAuth Settings for using Renku's Keycloak as an auth provider
+    # https://gitlab.com/gitlab-org/charts/gitlab/-/blob/master/doc/charts/globals.md#omniauth
+    # Openid connect reference
+    # https://docs.gitlab.com/ee/administration/auth/oidc.html
+    omniauth:
+      enabled: true
+      autoSignInWithProvider: openid_connect
+      # User accounts will be created automatically when authentication was successful.
+      allowSingleSignOn: ['openid_connect']
+      blockAutoCreatedUsers: false
+      providers:
+       - secret: renku-oauth-provider
+         key: provider
+    ## LFS objects settings
+    ## Used to store git-lfs objects externally
+    ## Note: bucket must exist before use, GitLab won't do it
+    ## A secret containing the connection details should be created in the namespace prior to deployment
+    ## Follows: https://docs.gitlab.com/ce/workflow/lfs/lfs_administration.html#storing-lfs-objects-in-remote-object-storage
+    # lfs:
+    #  enabled: true
+    #  proxy_download: false
+    #  bucket: lfs-objects
+    #  connection:
+    #    secret: gitlab-lfs-connection
+    #    key: lfs-connection
+
 
 ## Ingress configuration
 ## See: https://kubernetes.io/docs/concepts/services-networking/ingress/
@@ -246,149 +294,26 @@ postgresql:
 
 ## Gitlab configuration
 gitlab:
-  ## Spawn a gitlab instance
-  enabled: true
-  ## Password for the `root` user
-  password: gitlabadmin
-
-  ## Gitlab image
-  image:
-  #   pullPolicy: IfNotPresent
-    repository: gitlab/gitlab-ce
-    tag: 11.9.11-ce.0
-
-  ## automatically log in to gitlab
-  oauth:
-    autoSignIn: true
-
-  ## Pod affinity for Gitlab deployment
-  # affinity: {}
-  ## Node selector for Gitlab deployment
-  # nodeSelector: {}
-  ## Pod tolerations for Gitlab deployment
-  # tolerations: []
-
-  ## Resource requests/limits for Gitlab
-  # resources: {}
-
-  ## Registration token for gitlab runners (initial value, can be regenerated from gitlab admin ui)
-  ## Generated using: `openssl rand -hex 32`
-  sharedRunnersRegistrationToken:
-
-  ## Set to true to make the user 'demo' a GitLab admin
-  demoUserIsAdmin: false
-
-  ## External port for git ssh protocol
-  ## This setting affects the copy-paste repo git+ssh URL
-  # sshPort: 22
-
-  ## LFS objects settings
-  ## Used to store git-lfs objects externally
-  ## Note: bucket must exist before use, GitLab won't do it
-  ## Follows: https://docs.gitlab.com/ce/workflow/lfs/lfs_administration.html#storing-lfs-objects-in-remote-object-storage
-  # lfsObjects:
-      ## Set to true to enable remote LFS objects
-      # enabled: false
-      ## Bucket name
-      # bucketName: lfs-objects
-      # directUpload: false
-      # backgroundUpload: true
-      # proxyDownload: false
-      # connection: |-
-      #   {
-      #     'provider' => 'AWS',
-      #     'region' => 'eu-central-1',
-      #     'aws_access_key_id' => '1ABCD2EFGHI34JKLM567N',
-      #     'aws_secret_access_key' => 'abcdefhijklmnopQRSTUVwxyz0123456789ABCDE',
-      #     # The below options configure an S3 compatible host instead of AWS
-      #     'host' => 'localhost',
-      #     'endpoint' => 'http://127.0.0.1:9000',
-      #     'path_style' => true
-      #   }
-
-  ## Persistent Volume settings
-  persistence:
-    ## Set to false to disable the use of Persistent Volume
-    ## The databases will be lost when the pod is terminated!
-    # enabled: true
-
-    ## A manually managed Persistent Volume and Claim
-    ## Requires persistence.enabled: true
-    ## If defined, PVC must be created manually before volume will be bound
-    # existingClaim:
-
-    ## database data Persistent Volume Storage Class
-    ## If defined, storageClassName: <storageClass>
-    ## If set to "-", storageClassName: "", which disables dynamic provisioning
-    ## If undefined (the default) or set to null, no storageClassName spec is
-    ##   set, choosing the default provisioner.  (gp2 on AWS, standard on
-    ##   GKE, AWS & OpenStack)
-    ##
-    # storageClass:
-
-    # accessMode: ReadWriteOnce
-    size: 30Gi
-
-    ## Mount points for the PV
-    ## Setup according to the volumes declared in the Gitlab image
-    # gitlab_data:
-    #   subPath: data
-    #   mountPath: /var/opt/gitlab
-    # gitlab_config:
-    #   subPath: config
-    #   mountPath: /etc/gitlab
-    # gitlab_logs:
-    #   subPath: logs
-    #   mountPath: /var/log/gitlab
-
-  ## Service configuration for Gitlab
-  ## Modify service.type according to your setup
-  # service:
-  #   port: 80
-  #   type: ClusterIP
-
-  ## Container image registry settings
-  registry:
-    ## Set to true to enable Gitlab registry
+  certmanager:
+    install: false
+  nginx-ingress:
     enabled: false
-    ## The URL to access the registry
-    # externalUrl:
-    ## Set `exposedAs` to "NodePort" when deploying on minikube
-    ## Set `exposedAs` to "Ingress" to expose the registry on an alternate domain.
-    # exposedAs: NodePort
-    ## Storage driver configuration for the registry
-    ## See: https://docs.gitlab.com/ee/administration/container_registry.html#container-registry-storage-driver
-    # storage: |-
-    #   {
-    #     's3' => {
-    #       'accesskey' => 's3-access-key',
-    #       'secretkey' => 's3-secret-key-for-access-key',
-    #       'bucket' => 'your-s3-bucket',
-    #       'region' => 'your-s3-region'
-    #     }
-    #   }
-    ## Registry ingress, when `exposedAs` is set to "Ingress"
-    ## Uses conventional settings for ingress
-    ## Find below an example of values
-    # ingress:
-    #   annotations:
-    #     cert-manager.io/cluster-issuer: letsencrypt-production
-    #     kubernetes.io/ingress.class: nginx
-    #     nginx.ingress.kubernetes.io/proxy-body-size: '0'
-    #   hosts:
-    #   - registry.example.com
-    #   tls:
-    #   - hosts:
-    #     - registry.example.com
-    #     secretName: registry-tls
+  prometheus:
+    install: false
+  gitlab:
+    webservice:
+      ingress:
+        tls:
+          secretName: gitlab-example-local-tls
+  registry:
+    ingress:
+      tls:
+        secretName: registry-example-local-tls
+  minio:
+    ingress:
+      tls:
+        secretName: minio-example-local-tls
 
-  ## Add some extra configuration to gitlab.rb
-  # extraConfig: |
-  #     ## Fix number of unicorn workers
-  #     unicorn['worker_processes'] = 7
-
-  #     ## Fix something else
-  #     ...
 
 ## Configuration for the UI service
 ui:

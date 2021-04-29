@@ -31,10 +31,10 @@ Define clients and users for Keycloak
   {{- if .Values.gitlab.enabled -}}
   ,{
     "clientId": "gitlab",
-    "baseUrl": "{{ template "http" . }}://{{ .Values.global.renku.domain }}/gitlab",
-    "secret": "{{ required "Fill in .Values.global.gitlab.clientSecret with `uuidgen -r`" .Values.global.gitlab.clientSecret }}",
+    "baseUrl": "{{ .Values.global.gitlab.gitlabURL }}",
+    "secret": "{{ required "Fill in .Values.global.keycloak.gitlabClientSecret with `uuidgen -r`" .Values.global.keycloak.gitlabClientSecret }}",
     "redirectUris": [
-      "{{ template "http" . }}://{{ .Values.global.renku.domain }}/gitlab/users/auth/oauth2_generic/callback"
+      "{{ .Values.global.gitlab.gitlabURL }}/users/auth/oauth2_generic/callback"
     ],
     "webOrigins": []
   }
