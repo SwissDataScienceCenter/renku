@@ -3,10 +3,10 @@
 Add data to your project
 ------------------------
 
-In the JupyterLab interface, we can see that a few files already exist.
+In the JupyterLab interface or RStudio files panel, we can see that a few files already exist.
 Let's start by adding data using the `Renku CLI <https://renku-python.readthedocs.io/en/latest/commands.html>`__.
 
-From JupyterLab, start a terminal by clicking the **Terminal** icon (1)
+For JupyterLab, start a terminal by clicking the **Terminal** icon (1)
 on the bottom right of the **Launcher** page.
 
 .. image:: ../../_static/images/jupyterlab-open-terminal.png
@@ -21,6 +21,8 @@ find it in the top bar menu in *File* > *New Launcher*.
 
   To paste commands to the JupyterLab console, use ``Cmd+V`` on MacOS or
   ``Ctrl+Shift+V`` on Linux.
+
+For RStudio, click the Terminal tab, which is next to the Console tab.
 
 When you start the terminal, you will already be inside your project
 directory, so you are ready to create a dataset.

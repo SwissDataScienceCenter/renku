@@ -1,7 +1,7 @@
 .. _jupyterlab:
 
-Creating new work and using git in JupyterLab
----------------------------------------------
+Python: creating new work and using git in JupyterLab
+-----------------------------------------------------
 
 In the JupyterLab interface, use the file navigator in the left sidebar to go
 to the **Files** (1) tab. Here, you see a listing of files and folders from
