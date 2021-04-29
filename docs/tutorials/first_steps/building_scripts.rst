@@ -44,7 +44,7 @@ you can just download the script from `here
     # Save the result
     df.to_csv(output_path, index=False)
 
-or for R, from `here <https>_:
+or for R, from `here <https://renkulab.io/projects>`_:
 
 .. code-block:: r
 
