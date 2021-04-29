@@ -1,11 +1,18 @@
-.. _refactor_notebook:
+.. _building_scripts:
 
-Refactor the notebook
----------------------
+Building scripts
+----------------
 
-To make our filtering step easier to reuse and easier to maintain, we will
-refactor what we have written in the notebook into a Python script. To do this
-we convert the code in the notebook into a regular Python *.py* file.
+In order to best utilise renku's powerful commands, it is usually a good idea
+to refactor interactive notebooks and other exploratory tools into scripts,
+once that part of the pipeline has been tested by the user.
+
+For Jupyter notebooks, this usually amounts to refactoring it into a Python
+script. For R scripts are usually the standard way of exploring data within
+RStudio anyway, but nevertheless there is some care to be taken when making
+scripts which are designed to be run within a console or 'sourced' to be 
+ready for the command-line.
+
 
 Again, for the tutorial, we have already done the refactoring work for you, and
 you can just download the script from `here
@@ -37,6 +44,11 @@ you can just download the script from `here
     # Save the result
     df.to_csv(output_path, index=False)
 
+or for R, from `here <https>_:
+
+.. code-block:: r
+
+    #
 
 As before, you can download it and drag & drop into the JupyterLab session or
 copy/paste the code above and create a new file in your JupyterLab session. We

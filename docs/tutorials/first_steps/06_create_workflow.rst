@@ -44,6 +44,7 @@ the changes or committing them to the repository.
 
         $ renku save -m "My own changes"
 
+<<<<<<< HEAD
 First, we will create the output directory:
 
 .. code-block:: console
@@ -53,13 +54,26 @@ First, we will create the output directory:
 The ``filter_flights.py`` script takes two input parameters: 1. a file to
 process as an input 2. a path for storing the output. So to run it, we would
 normally execute the following (do not actually run this line!):
+=======
+The ``filter_flights.py`` or ``filter_flights.R`` script takes two input
+parameters: 1. a file to process as an input 2. a path for storing the output.
+So to run it, we would normally execute the following:
+>>>>>>> first pass for R complement: text only
 
 .. code-block:: console
 
     $ python src/filter_flights.py data/flight-data/2019-01-flights.csv.zip data/output/flights-filtered.csv
 
+or
+
+.. code-block:: console
+
+    # Create the output directory
+    $ mkdir -p data/output
+    $ R -f 
+
 For renku to capture information about the execution, we need to make a small
-change: we prepend ``renku run`` to the python command.
+change: we prepend ``renku run`` to the Python or R command:
 
 .. code-block:: console
 
@@ -67,6 +81,13 @@ change: we prepend ``renku run`` to the python command.
 
     Info: Adding these files to Git LFS:
           data/output/flights-filtered.csv
+
+or
+
+.. code-block:: console
+    # Create the output directory
+    $ mkdir -p data/output
+    $ renku run R -f
 
 Go ahead and run this command: it will create the preprocessed data file,
 including the specification of *how* this file was created, and commit all the
@@ -209,6 +230,9 @@ and then drop it into the `src` directory as with the `filter_flights.py` script
     with open(output_path, 'w') as f:
         f.write(result)
 
+.. code-block:: R
+
+    ##
 
 After uploading the script to the environment, make sure you save your work:
 
@@ -252,6 +276,12 @@ We can now use ``renku run`` to generate the second step of our workflow:
 .. code-block:: console
 
     $ renku run python src/count_flights.py data/output/flights-filtered.csv data/output/flights-count.txt
+    $ renku save
+
+or
+
+.. code-block::console
+    $ renku run R -f
     $ renku save
 
 .. _documentation: https://renku.readthedocs.org

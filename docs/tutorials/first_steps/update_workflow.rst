@@ -13,13 +13,20 @@ This does not seem quite right. Austin, TX is not a very large airport, but
 that number would mean that it had a flight landing on average
 every two minutes, around the clock, during the entire month of January 2019.
 
-Go back and take a look at the file ``src/filter_flights.py`` file: it
-contains an error! In the code block
+Go back and take a look at the ``src/filter_flights.py`` or
+ ``src/filter_flights.R`` files: they contain an error! In the code block
 
 .. code-block:: console
 
     # Select only flights to Austin (AUS)
     df = df[df['DEST'] == 'DFW']
+
+or
+
+.. code-block:: console
+    
+    # Select only flights to Austin (AUS)
+    data %>% filter(DEST == "DFW")
 
 we want to select flights to Austin-Bergstrom (AUS), but mistakenly select
 flights to a different airport, ``DFW``. This would explain the discrepancy
