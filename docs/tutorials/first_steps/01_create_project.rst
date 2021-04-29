@@ -20,7 +20,7 @@ and clicking on the **New Project** (2) button.
 
 Enter **Flights Tutorial** as your project title (1); if you wish, change
 the visibility (or leave it *public*) (2); select the
-"Renku / Basic Python Project" template (3); fill in an optional description
+"Renku / Basic Python Project" or "Renku / Basic R Project" template (3); fill in an optional description
 (4) and any other parameters appearing after selecting the template.
 Click on the **Create project** button (5).
 

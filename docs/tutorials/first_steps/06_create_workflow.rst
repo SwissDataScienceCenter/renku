@@ -44,9 +44,9 @@ the changes or committing them to the repository.
 
         $ renku save -m "My own changes"
 
-The ``filter_flights.py`` script takes two input parameters: 1. a file to
-process as an input 2. a path for storing the output. So to run it, we would
-normally execute the following:
+The ``filter_flights.py`` or ``filter_flights.R`` script takes two input
+parameters: 1. a file to process as an input 2. a path for storing the output.
+So to run it, we would normally execute the following:
 
 .. code-block:: console
 
@@ -54,8 +54,16 @@ normally execute the following:
     $ mkdir -p data/output
     $ python src/filter_flights.py data/flight-data/2019-01-flights.csv.zip data/output/flights-filtered.csv
 
+or
+
+.. code-block:: console
+
+    # Create the output directory
+    $ mkdir -p data/output
+    $ R -f 
+
 For renku to capture information about the execution, we need to make a small
-change: we prepend ``renku run`` to the python command.
+change: we prepend ``renku run`` to the Python or R command:
 
 .. code-block:: console
 
@@ -65,6 +73,13 @@ change: we prepend ``renku run`` to the python command.
 
     Info: Adding these files to Git LFS:
           data/output/flights-filtered.csv
+
+or
+
+.. code-block:: console
+    # Create the output directory
+    $ mkdir -p data/output
+    $ renku run R -f
 
 Go ahead and run this command: it will create the preprocessed data file,
 including the specification of *how* this file was created, and commit all the
@@ -179,9 +194,11 @@ We will now use a second script to count the flights in the filtered data file.
 As before, we will fast-forward through this step by downloading the solution.
 You can copy over `the interactive notebook
 <https://renkulab.io/projects/renku-tutorials/renku-tutorial-flights-material/files/blob/notebooks/count_flights.ipynb>`_.
-to your project as before if you wish to play with the data interactively. For
-the next step you must download the script from `here
-<https://renkulab.io/projects/renku-tutorials/renku-tutorial-flights-material/files/blob/src/count_flights.py>`_:
+to your project as before if you wish to play with the data interactively. 
+
+For the script versions to be run with the ``renku run`` command, download them
+from here `here
+<https://renkulab.io/projects/renku-tutorials/renku-tutorial-flights-material/files/blob/src/count_flights.py>`_: or `here <https:>`_:
 
 .. code-block:: python
 
@@ -209,6 +226,9 @@ the next step you must download the script from `here
     with open(output_path, 'w') as f:
         f.write(result)
 
+.. code-block:: R
+
+    ##
 
 After downloading the script, make sure you save your work:
 
@@ -252,6 +272,12 @@ We can now use ``renku run`` to generate the second step of our workflow:
 .. code-block:: console
 
     $ renku run python src/count_flights.py data/output/flights-filtered.csv data/output/flights-count.txt
+    $ renku save
+
+or
+
+.. code-block::console
+    $ renku run R -f
     $ renku save
 
 .. _documentation: https://renku.readthedocs.org
