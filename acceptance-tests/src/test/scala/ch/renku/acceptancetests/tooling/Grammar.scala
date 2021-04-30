@@ -105,15 +105,16 @@ trait Grammar extends WebElementOps with Eventually {
 
     @scala.annotation.tailrec
     def asLongAsBrowserAt[Url <: BaseUrl](page: Page[Url], attempt: Int = 1)(implicit baseUrl: Url): Unit = {
-      val maxAttempts = 120
+      val maxAttempts   = 120
+      val checkInterval = 1 second
 
       if (attempt <= maxAttempts && (currentUrl startsWith page.url)) {
-        sleep(1 second)
+        sleep(checkInterval)
         asLongAsBrowserAt(page, attempt + 1)
       } else if (attempt > maxAttempts && (currentUrl startsWith page.url))
         fail {
           s"Expected to be redirected from ${page.url} page " +
-            s"but gets stuck on $currentUrl for ${((patienceConfig.timeout.millisPart millis) * attempt).toSeconds}s"
+            s"but gets stuck on $currentUrl for ${(checkInterval * attempt).toSeconds}s"
         }
     }
   }
