@@ -6,23 +6,33 @@ Add data to your project
 In the JupyterLab interface or RStudio files panel, we can see that a few files already exist.
 Let's start by adding data using the `Renku CLI <https://renku-python.readthedocs.io/en/latest/commands.html>`__.
 
-For JupyterLab, start a terminal by clicking the **Terminal** icon (1)
-on the bottom right of the **Launcher** page.
+.. tabbed:: JupyterLab
 
-.. image:: ../../_static/images/jupyterlab-open-terminal.png
-    :width: 85%
-    :align: center
-    :alt: Open terminal in JupyterLab
+    For JupyterLab, start a terminal by clicking the **Terminal** icon (1)
+    on the bottom right of the **Launcher** page.
 
-If your JupyterLab interface does not have the launcher tab open, you can
-find it in the top bar menu in *File* > *New Launcher*.
+    .. image:: ../../_static/images/jupyterlab-open-terminal.png
+        :width: 85%
+        :align: center
+        :alt: Open terminal in JupyterLab
 
-.. note::
+    If your JupyterLab interface does not have the launcher tab open, you can
+    find it in the top bar menu in *File* > *New Launcher*.
 
-  To paste commands to the JupyterLab console, use ``Cmd+V`` on MacOS or
-  ``Ctrl+Shift+V`` on Linux.
+    .. note::
 
-For RStudio, click the Terminal tab, which is next to the Console tab.
+      To paste commands to the JupyterLab console, use ``Cmd+V`` on MacOS or
+      ``Ctrl+Shift+V`` on Linux.
+
+.. tabbed:: RStudio
+
+    For RStudio, click the Terminal tab, which is next to the Console tab.
+
+    .. image:: ../../_static/images/rstudio-open-terminal.png
+        :width: 85%
+        :align: center
+        :alt: Open terminal in RStudio
+
 
 When you start the terminal, you will already be inside your project
 directory, so you are ready to create a dataset.
