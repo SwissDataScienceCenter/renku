@@ -20,21 +20,21 @@ an error! In the code block
 
     .. code-block:: console
 
-    # Select only flights to Austin (AUS)
-    df = df[df['DEST'] == 'DFW']
+        # Select only flights to Austin (AUS)
+        df = df[df['DEST'] == 'DFW']
 
 .. tabbed:: Julia
 
     .. code-block:: console
 
-    # Placeholder
+        # Placeholder
 
 .. tabbed:: R
 
     .. code-block:: console
 
-    # Select only flights to Austin (AUS)
-    data %>% filter(DEST == "DFW")
+        # Select only flights to Austin (AUS)
+        data %>% filter(DEST == "DFW")
 
 
 we want to select flights to Austin-Bergstrom (AUS), but mistakenly select
