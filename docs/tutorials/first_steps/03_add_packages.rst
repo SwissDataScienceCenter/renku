@@ -1,68 +1,103 @@
 .. _add_packages:
 
-Install and manage Python or R packages
----------------------------------------
+Installing and managing packages
+--------------------------------
 
 Defining your runtime environment is critical if you would like others to be
 able to reuse your work. To achieve this, it is necessary to manage the
 software libraries that are needed for your code to execute. In Renku, we rely
 on existing conventions for specifying the execution environment. 
 
-Python packages
-^^^^^^^^^^^^^^^
+.. tabbed:: Python
 
-In Python, the ``requirements.txt`` file is a standard way to
-specify the required libraries. When you created your project, an empty
-``requirements.txt`` was also created --- find it in the file browser of your
-JupyterLab session by clicking on the **root** button (1), then double-click
-the file (2) to open the editor. For the tutorial, we will need the ``pandas``
-and ``seaborn`` libraries. We will require specific versions to ensure that the
-same environment can be recreated in the future. Enter the following into the
-``requirements.txt`` file on the right (3)
+    In Python, the ``requirements.txt`` file is a standard way to
+    specify the required libraries. When you created your project, an empty
+    ``requirements.txt`` was also created --- find it in the file browser of your
+    JupyterLab session by clicking on the **root** button (1), then double-click
+    the file (2) to open the editor. For the tutorial, we will need the ``pandas``
+    and ``seaborn`` libraries. We will require specific versions to ensure that the
+    same environment can be recreated in the future. Enter the following into the
+    ``requirements.txt`` file on the right (3)
 
-.. code-block:: console
+    .. code-block:: console
 
-    pandas==1.2.3
+        pandas==1.2.3
 
-and **save** it:
+    and **save** it:
 
-.. image:: ../../_static/images/ui_04.1_jupyterlab-setup-requirements.png
-    :width: 85%
-    :align: center
-    :alt: Configuring package dependencies
+    .. image:: ../../_static/images/ui_04.1_jupyterlab-setup-requirements.png
+        :width: 85%
+        :align: center
+        :alt: Configuring Python package dependencies
 
-Going back to the same terminal session as before, we can now
-install these packages with ``pip``:
+    Going back to the same terminal session as before, we can now
+    install these packages with ``pip``:
 
-.. code-block:: console
+    .. code-block:: console
 
-    $ pip install -r requirements.txt
+        $ pip install -r requirements.txt
 
-    ...
-    Installing collected packages: numpy, pytz, pandas
-    Successfully installed numpy-1.20.2 pandas-1.2.3 pytz-2021.1
+        ...
+        Installing collected packages: numpy, pytz, pandas
+        Successfully installed numpy-1.20.2 pandas-1.2.3 pytz-2021.1
 
-R packages
-^^^^^^^^^^
+.. tabbed:: Julia
 
-In R, users may be familiar with running the ``install.packages``
-function in the console. To create a reproducible environment for each time 
-your session opens, we will specify the necessary packages in the ``install.R``
-file. We will demonstrate this with the ``tidyverse`` package. Simply enter
-the following in that file.
+    In Julia, the ``Project.toml`` file specifies package dependencies of
+    the project. An empty ``Project.toml`` file is already in the project
+    directory when creating the project.
 
-.. code-block:: console
+    The easiest way to add packages to a project is to use the ``Pkg`` API. You can
+    either use the terminal or start a new Julia Jupyter notebook to run the
+    following pattern:
 
-    install.packages("tidyverse")
+    .. code-block:: console
 
-Save the file and return to the console in order to run it with 
+        julia> using Pkg
 
-.. code-block:: console
+        julia> Pkg.add("ZipFile")
 
-    R -f install.R
+    This adds the ``ZipFile`` package.
+
+    .. image:: ../../_static/images/ui_0.11.11_jupyterlab-setup-Pkg.png
+        :width: 85%
+        :align: center
+        :alt: Configuring Julia package dependencies
+        
+    This change will be reflected in the ``Project.toml`` file, as below.
+
+    .. image:: ../../_static/images/ui_0.11.11_jupyterlab-setup-Project.toml.png
+        :width: 85%
+        :align: center
+        :alt: Viewing Julia package dependencies
     
-To add more packages for more complex projects, simply add the required
-``install.packages`` commands to a new line in the ``install.R`` file.
+    You can also specify the version of a particular package, as follows.
+
+    .. code-block:: julia
+
+        Pkg.add(name="Example", version="0.3.1")
+
+
+.. tabbed:: R
+
+    In R, users may be familiar with running the ``install.packages``
+    function in the console. To create a reproducible environment for each time 
+    your session opens, we will specify the necessary packages in the ``install.R``
+    file. We will demonstrate this with the ``tidyverse`` package. Simply enter
+    the following in that file.
+
+    .. code-block:: console
+
+        install.packages("tidyverse")
+
+    Save the file and return to the console in order to run it with 
+
+    .. code-block:: console
+
+        R -f install.R
+        
+    To add more packages for more complex projects, simply add the required
+    ``install.packages`` commands to a new line in the ``install.R`` file.
 
 
 Saving package additions
@@ -82,13 +117,12 @@ be done with the ``renku save`` command from the Terminal:
 
 .. warning::
 
-  Make sure that you update the *requirements.txt* or *install.R* file 
-  after you install new packages. This ensures that the packages needed
-  to work on your project will be available to your peers when 
+  Make sure that you update the *requirements.txt*, *Project.toml* or 
+  *install.R* file after you install new packages. This ensures that the
+  packages needed to work on your project will be available to your peers when
   collaborating on a project.
 
-When an updated *requirements.txt* or *install.R* file is pushed to RenkuLab,
-RenkuLab will rebuild the software stack used for sessions. If you shut
-down a session, the next time you start a new one,
-the packages specified in ``requirements.txt`` or ``install.R`` will already be
-available.
+When an updated *requirements.txt*, *Project.toml* or *install.R* file is 
+pushed to RenkuLab, RenkuLab will rebuild the software stack used for sessions.
+If you shut down a session, the next time you start a new one, the packages
+specified in the respective specification file will already be available.

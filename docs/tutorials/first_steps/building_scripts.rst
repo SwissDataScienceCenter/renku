@@ -16,39 +16,47 @@ ready for the command-line.
 
 Again, for the tutorial, we have already done the refactoring work for you, and
 you can just download the script from `here for Python
-<https://renkulab.io/projects/renku-tutorials/renku-tutorial-flights-material/files/blob/src/filter_flights.py>`_:
+<https://renkulab.io/projects/renku-tutorials/renku-tutorial-flights-material/files/blob/src/filter_flights.py>`_: or `here for R <https://renkulab.io/projects>`_:
 
-.. code-block:: python
+.. tabbed:: Python
 
-    #
-    # Usage: python filter_flights.py <input-path> <output-path>
-    #
+    .. code-block:: python
+    
+        #
+        # Usage: python filter_flights.py <input-path> <output-path>
+        #
+    
+        import pandas as pd
+        import sys
 
-    import pandas as pd
-    import sys
+        # It would be more robust to use argparse or click, but we want this to be simple
+        if len(sys.argv) < 3:
+	    sys.exit("Please invoke with two arguments: input and output paths")
 
-    # It would be more robust to use argparse or click, but we want this to be simple
-    if len(sys.argv) < 3:
-        sys.exit("Please invoke with two arguments: input and output paths")
-
-    input_path = sys.argv[1]
-    output_path = sys.argv[2]
+        input_path = sys.argv[1]
+        output_path = sys.argv[2]
 
 
-    # Read in the data
-    df = pd.read_csv(input_path)
+        # Read in the data
+        df = pd.read_csv(input_path)
 
-    # Select only flights to Austin (AUS)
-    df = df[df['DEST'] == 'DFW']
+        # Select only flights to Austin (AUS)
+        df = df[df['DEST'] == 'DFW']
 
-    # Save the result
-    df.to_csv(output_path, index=False)
+        # Save the result
+        df.to_csv(output_path, index=False)
 
-or `here for R <https://renkulab.io/projects>`_:
+.. tabbed:: R
 
-.. code-block:: r
+    .. code-block:: r
 
-    #
+        #
+
+.. tabbed:: Julia
+    
+    .. code-block:: julia
+    
+        #
 
 As before, you can download it and drag & drop into the JupyterLab session or
 copy/paste the code above and create a new file in your JupyterLab session. We
