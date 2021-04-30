@@ -10,6 +10,18 @@ our question: *how many flights had Austin, TX as their destination.*
 In this tutorial, we will jump-start the process by using some notebooks and scripts 
 that have already been prepared.
 
+.. tabbed:: Python
+
+    Placeholder
+
+.. tabbed:: Julia 
+
+    Placeholder
+
+.. tabbed:: R
+
+    Placeholder
+
 For a Jupyter notebook view, go to `the first example notebook 
 <https://renkulab.io/projects/renku-tutorials/renku-tutorial-flights-material/files/blob/notebooks/FilterFlights.ipynb>`_
 and download the file to your computer. Go to the ``notebooks`` directory in your

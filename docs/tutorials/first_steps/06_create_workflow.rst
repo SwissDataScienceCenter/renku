@@ -44,46 +44,64 @@ the changes or committing them to the repository.
 
         $ renku save -m "My own changes"
 
-The ``filter_flights.py`` or ``filter_flights.R`` script takes two input
+The ``filter_flights.\*`` script takes two input
 parameters: 1. a file to process as an input 2. a path for storing the output.
 So to run it, we would normally execute the following:
 
-.. code-block:: console
+.. tabbed:: Python 
 
-    # Create the output directory
-    $ mkdir -p data/output
-    $ python src/filter_flights.py data/flight-data/2019-01-flights.csv.zip data/output/flights-filtered.csv
+    .. code-block:: console
 
-or
+        # Create the output directory
+        $ mkdir -p data/output
+        $ python src/filter_flights.py data/flight-data/2019-01-flights.csv.zip data/output/flights-filtered.csv
 
-.. code-block:: console
+.. tabbed:: Julia 
 
-    # Create the output directory
-    $ mkdir -p data/output
-    $ R -f 
+    .. code-block:: console
+
+        # Placeholder
+
+.. tabbed:: R
+    
+    .. code-block:: console
+
+        # Create the output directory
+        $ mkdir -p data/output
+        $ R -f 
+
+
 
 For renku to capture information about the execution, we need to make a small
-change: we prepend ``renku run`` to the Python or R command:
+change: we prepend ``renku run`` to relevant command:
 
-.. code-block:: console
+.. tabbed:: Python
 
-    # Create the output directory
-    $ mkdir -p data/output
-    $ renku run python src/filter_flights.py data/flight-data/2019-01-flights.csv.zip data/output/flights-filtered.csv
+    .. code-block:: console
 
-    Info: Adding these files to Git LFS:
-          data/output/flights-filtered.csv
+        # Create the output directory
+        $ mkdir -p data/output
+        $ renku run python src/filter_flights.py data/flight-data/2019-01-flights.csv.zip data/output/flights-filtered.csv
 
-or
+        Info: Adding these files to Git LFS:
+            data/output/flights-filtered.csv
 
-.. code-block:: console
+.. tabbed:: Julia 
 
-    # Create the output directory
-    $ mkdir -p data/output
-    $ renku run R -f src/filter_flights.R
+    .. code-block:: console
 
-    Info: Adding these files to Git LFS:
-          data/output/flights-filtered.csv
+        # Placeholder
+
+.. tabbed:: R
+
+    .. code-block:: console
+
+        # Create the output directory
+        $ mkdir -p data/output
+        $ renku run R -f src/filter_flights.R
+
+        Info: Adding these files to Git LFS:
+            data/output/flights-filtered.csv
 
 Go ahead and run this command: it will create the preprocessed data file,
 including the specification of *how* this file was created, and commit all the
@@ -230,7 +248,7 @@ from here `here for Python
     with open(output_path, 'w') as f:
         f.write(result)
 
-.. code-block:: R
+.. code-block:: r
 
     ##
 

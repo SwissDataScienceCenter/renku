@@ -13,20 +13,29 @@ This does not seem quite right. Austin, TX is not a very large airport, but
 that number would mean that it had a flight landing on average
 every two minutes, around the clock, during the entire month of January 2019.
 
-Go back and take a look at the ``src/filter_flights.py`` or
- ``src/filter_flights.R`` files: they contain an error! In the code block
+Go back and take a look at the ``src/filter_flights.\*`` script: it contains 
+an error! In the code block
 
-.. code-block:: console
+.. tabbed:: Python
+
+    .. code-block:: console
 
     # Select only flights to Austin (AUS)
     df = df[df['DEST'] == 'DFW']
 
-or
+.. tabbed:: Julia
 
-.. code-block:: console
-    
+    .. code-block:: console
+
+    # Placeholder
+
+.. tabbed:: R
+
+    .. code-block:: console
+
     # Select only flights to Austin (AUS)
     data %>% filter(DEST == "DFW")
+
 
 we want to select flights to Austin-Bergstrom (AUS), but mistakenly select
 flights to a different airport, ``DFW``. This would explain the discrepancy
@@ -47,7 +56,7 @@ execute ``git status`` you should see something like the following:
       (use "git add <file>..." to update what will be committed)
       (use "git checkout -- <file>..." to discard changes in working directory)
 
-            modified:   src/filter_flights.py
+            modified:   src/filter_flights.\*
 
     no changes added to commit (use "git add" and/or "git commit -a")
 
