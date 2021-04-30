@@ -15,6 +15,21 @@ printf "%s" "$RENKU_VALUES" | sed "s/<replace>/${RENKU_RELEASE}/" > $RENKU_VALUE
 # enable anonymous notebooks
 yq w -i $RENKU_VALUES_FILE "global.anonymousSessions.enabled" "true"
 
+# enable user session PVCs
+yq w -i $RENKU_VALUES_FILE "notebooks.userSessionPersistentVolumes.enabled" "true"
+yq w -i $RENKU_VALUES_FILE "notebooks.userSessionPersistentVolumes.storageClass" "temporary"
+
+# set values for requesting PVC size
+yq w -i $RENKU_VALUES_FILE "notebooks.serverOptions.disk_request.order" "4"
+yq w -i $RENKU_VALUES_FILE "notebooks.serverOptions.disk_request.displayName" "Amount of disk space"
+yq w -i $RENKU_VALUES_FILE "notebooks.serverOptions.disk_request.type" "enum"
+yq w -i $RENKU_VALUES_FILE "notebooks.serverOptions.disk_request.default" "4G"
+yq w -i $RENKU_VALUES_FILE "notebooks.serverOptions.disk_request.options.[0]" "1G"
+yq w -i $RENKU_VALUES_FILE "notebooks.serverOptions.disk_request.options.[1]" "2G"
+yq w -i $RENKU_VALUES_FILE "notebooks.serverOptions.disk_request.options.[2]" "4G"
+yq w -i $RENKU_VALUES_FILE "notebooks.serverOptions.disk_request.options.[3]" "8G"
+
+
 # register the GitLab app
 if [[ -n "$GITLAB_TOKEN" ]]; then
 gitlab_app=$(curl -s -X POST https://dev.renku.ch/gitlab/api/v4/applications \
