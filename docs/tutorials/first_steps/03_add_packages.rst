@@ -25,7 +25,7 @@ on existing conventions for specifying the execution environment.
 
     and **save** it:
 
-    .. image:: ../../_static/images/ui_04.1_jupyterlab-setup-requirements.png
+    .. figure:: ../../_static/images/ui_04.1_jupyterlab-setup-requirements.png
         :width: 85%
         :align: center
         :alt: Configuring Python package dependencies
@@ -51,26 +51,28 @@ on existing conventions for specifying the execution environment.
     either use the terminal or start a new Julia Jupyter notebook to run the
     following pattern:
 
-    .. code-block:: console
+    .. code-block:: julia
 
-        julia> using Pkg
+        using Pkg
 
-        julia> Pkg.add("ZipFile")
+        Pkg.add("ZipFile")
 
     This adds the ``ZipFile`` package.
 
-    .. image:: ../../_static/images/ui_0.11.11_jupyterlab-setup-Pkg.png
+    .. figure:: ../../_static/images/ui_0.11.11_jupyterlab-setup-Pkg.png
         :width: 85%
         :align: center
         :alt: Configuring Julia package dependencies
         
+
     This change will be reflected in the ``Project.toml`` file, as below.
 
-    .. image:: ../../_static/images/ui_0.11.11_jupyterlab-setup-Project.toml.png
+    .. figure:: ../../_static/images/ui_0.11.11_jupyterlab-setup-Project.toml.png
         :width: 85%
         :align: center
         :alt: Viewing Julia package dependencies
     
+
     You can also specify the version of a particular package, as follows.
 
     .. code-block:: julia
@@ -86,7 +88,7 @@ on existing conventions for specifying the execution environment.
     file. We will demonstrate this with the ``tidyverse`` package. Simply enter
     the following in that file.
 
-    .. code-block:: console
+    .. code-block:: r
 
         install.packages("tidyverse")
 

@@ -12,24 +12,24 @@ that have already been prepared.
 
 .. tabbed:: Python
 
-    Placeholder
+    Go to `the first example Python notebook 
+    <https://renkulab.io/projects/renku-tutorials/renku-tutorial-flights-material/files/blob/notebooks/FilterFlights.ipynb>`_
+    and download the file to your computer. Go to the ``notebooks`` directory in your
+    running interactive session and drag and drop the downloaded notebook there. 
 
 .. tabbed:: Julia 
 
-    Placeholder
+    Go to `the first example Julia notebook 
+    <https://renkulab.io/projects/renku-tutorial/flights-tutorial-julia/files/blob/.tutorial/meta/templates/FilterFlights.ipynb>`_
+    and download the file to your computer. Go to the ``notebooks`` directory in your
+    running interactive session and drag and drop the downloaded notebook there. 
 
 .. tabbed:: R
 
-    Placeholder
+    Go to `this example script <https://renkulab.io/projects/renku-tutorial/flights-tutorial-r/files/blob/.tutorial/meta/templates/FilterFlights.R>`_ 
+    download the file to your computer. Make the ``src`` directory in your
+    running interactive session and drag and drop the downloaded script there. 
 
-For a Jupyter notebook view, go to `the first example notebook 
-<https://renkulab.io/projects/renku-tutorials/renku-tutorial-flights-material/files/blob/notebooks/FilterFlights.ipynb>`_
-and download the file to your computer. Go to the ``notebooks`` directory in your
-running interactive session and drag and drop the downloaded notebook there. 
-
-For an RStudio view, download `this script <https::>`_ and upload it your project. 
-You may also want to create a ``src`` folder within the project to keep the 
-scripts organized. 
 
 In either case, use the ``renku save`` command to save your results, like the
 following:

@@ -8,17 +8,17 @@ to refactor interactive notebooks and other exploratory tools into scripts,
 once that part of the pipeline has been tested by the user.
 
 For Jupyter notebooks, this usually amounts to refactoring it into a Python
-script. For R scripts are usually the standard way of exploring data within
-RStudio anyway, but nevertheless there is some care to be taken when making
-scripts which are designed to be run within a console or 'sourced' to be 
+or Julia script. For R scripts are usually the standard way of exploring data
+within RStudio anyway, but nevertheless there is some care to be taken when
+making scripts which are designed to be run within a console or 'sourced' to be 
 ready for the command-line.
 
-
 Again, for the tutorial, we have already done the refactoring work for you, and
-you can just download the script from `here for Python
-<https://renkulab.io/projects/renku-tutorials/renku-tutorial-flights-material/files/blob/src/filter_flights.py>`_: or `here for R <https://renkulab.io/projects>`_:
+you can just download the relevant scripts.
 
 .. tabbed:: Python
+
+    `Download Python script <https://renkulab.io/projects/renku-tutorials/renku-tutorial-flights-material/files/blob/src/filter_flights.py>`_
 
     .. code-block:: python
     
@@ -46,17 +46,23 @@ you can just download the script from `here for Python
         # Save the result
         df.to_csv(output_path, index=False)
 
+
+.. tabbed:: Julia
+    
+        `Download Julia script <https://renkulab.io/projects/renku-tutorials/renku-tutorial-flights-material/files/blob/src/filter_flights.py>`_
+    
+        .. code-block:: julia
+        
+            #
+            
 .. tabbed:: R
+
+    `Download R script <https://renkulab.io/projects/renku-tutorials/renku-tutorial-flights-material/files/blob/src/filter_flights.py>`_
 
     .. code-block:: r
 
         #
 
-.. tabbed:: Julia
-    
-    .. code-block:: julia
-    
-        #
 
 As before, you can download it and drag & drop into the JupyterLab session or
 upload the file into your ``src`` directory. 
