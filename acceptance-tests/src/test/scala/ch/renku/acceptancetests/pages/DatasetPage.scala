@@ -44,6 +44,10 @@ class DatasetPage(datasetName: DatasetName, projectPage: ProjectPage)
     find(cssSelector(".col-md-8 > h4")) getOrElse fail("Dataset -> Dataset title not found")
   }
 
+  def datasetFiles(implicit webDriver: WebDriver): WebElement = eventually {
+    find(cssSelector(".pl-3 > .order-third > a")) getOrElse fail("Dataset -> Dataset file not found")
+  }
+
   def modifyButton(implicit webDriver: WebDriver): WebElement = eventually {
     find(cssSelector("a[href='modify']")) getOrElse fail("Dataset -> Modify button not found")
   }
@@ -75,6 +79,14 @@ class DatasetPage(datasetName: DatasetName, projectPage: ProjectPage)
 
     def datasetSubmitButton(implicit webDriver: WebDriver): WebElement = eventually {
       find(cssSelector("button[type='submit']")) getOrElse fail("Dataset form submit button not found")
+    }
+
+    def fileUploadField(implicit webDriver: WebDriver): WebElement = eventually {
+      find(cssSelector("input[name='fileUrl']")) getOrElse fail("Dataset file upload field not found")
+    }
+
+    def fileUploadButton(implicit webDriver: WebDriver): WebElement = eventually {
+      find(cssSelector("button[id='addFileButton']")) getOrElse fail("Dataset file upload button not found")
     }
   }
 }

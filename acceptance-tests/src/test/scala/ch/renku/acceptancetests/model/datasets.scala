@@ -27,6 +27,11 @@ object datasets {
     lazy val asPath:            String = value.replace(" ", "-")
   }
 
+  final case class FileUrl(value: String) {
+    override lazy val toString: String = value
+    lazy val asFileName:        String = value.splitAt(value.lastIndexOf("/"))._2
+  }
+
   final case class DatasetTitle(value: String) {
     override lazy val toString: String = value
   }
