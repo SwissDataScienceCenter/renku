@@ -230,10 +230,26 @@ Add a second workflow step
 
 We will now use a second script to count the flights in the filtered data file.
 As before, we will fast-forward through this step by downloading the solution.
-For the next step you must download the script from `here
-<https://renkulab.io/projects/renku-tutorials/renku-tutorial-flights-material/files/blob/src/count_flights.py>`_,
-and then drop it into the `src` directory as with the `filter_flights.py` script.:
 
+The respective interactive versions can be found below and you can copy them
+to your project as before if you wish to play with the data interactively. 
+We also provide the script versions to be run with the ``renku run`` command.
+
+.. tabbed:: Python
+
+    For the next step you must download the script from `here
+    <https://renkulab.io/projects/renku-tutorials/renku-tutorial-flights-material/files/blob/src/count_flights.py>`_,
+    and then drop it into the `src` directory as with the `filter_flights.py` script.
+
+.. tabbed:: Julia
+
+    Link 
+
+.. tabbed:: R
+
+    Link
+
+    
 .. code-block:: python
 
     #
@@ -305,7 +321,7 @@ We can now use ``renku run`` to generate the second step of our workflow:
 
 .. code-block:: console
 
-    $ renku run python src/count_flights.py data/output/flights-filtered.csv data/output/flights-count.txt
+    $ renku run python src/count_flights.* data/output/flights-filtered.csv data/output/flights-count.txt
     $ renku save
 
 or
