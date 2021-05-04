@@ -23,7 +23,7 @@ spec:
       restartPolicy: Never
       containers:
         - name: configure-gitlab
-          image: "postgres:11.9.0"
+          image: "postgres:11.9"
           command: ["/bin/bash", "/scripts/init-gitlab.sh"]
           volumeMounts:
             - name: init
@@ -39,7 +39,7 @@ spec:
           - name: PGPASSWORD
             valueFrom:
               secretKeyRef:
-                name: {{ template "renku.fullname" . }}-gitlab-postgres
+                name: {{ template "postgresql.fullname" . }}-password
                 key: gitlab-postgres-password
           - name: RENKU_AUTH_GITLAB_CLIENT_SECRET
             valueFrom:

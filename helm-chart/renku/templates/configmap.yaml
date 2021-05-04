@@ -9,7 +9,7 @@ metadata:
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
 data:
-  {{- if .Values.gitlab.enabled }}
+  {{- if .Values.global.gitlab.enabled }}
   init-gitlab.sh: |-
     #!/usr/bin/env bash
     set -ex
@@ -85,6 +85,27 @@ data:
         grant all privileges on database "{{ .Values.global.keycloak.postgresDatabase }}" to "{{ .Values.global.keycloak.postgresUser }}";
         grant all privileges on schema "public" to "{{ .Values.global.keycloak.postgresUser }}";
     EOSQL
+  {{- end }}
+
+  {{- if .Values.global.gitlab.enabled }}
+  init-gitlab-db.sh: |-
+      #!/bin/bash
+      set -x
+
+      GITLAB_POSTGRES_PASSWORD=$(cat /gitlab-postgres/gitlab-postgres-password)
+
+      psql -v ON_ERROR_STOP=1 <<-EOSQL
+          create database "{{ .Values.global.gitlab.postgresDatabase }}";
+          create user "{{ .Values.global.gitlab.postgresUser }}" password '$GITLAB_POSTGRES_PASSWORD';
+      EOSQL
+
+      psql -v ON_ERROR_STOP=1 --dbname "{{ .Values.global.gitlab.postgresDatabase }}" <<-EOSQL
+          create extension if not exists "pg_trgm";
+          create extension if not exists "btree_gist";
+          revoke all on schema "public" from "public";
+          grant all privileges on database "{{ .Values.global.gitlab.postgresDatabase }}" to "{{ .Values.global.gitlab.postgresUser }}";
+          grant all privileges on schema "public" to "{{ .Values.global.gitlab.postgresUser }}";
+      EOSQL
   {{- end }}
 
   {{- if .Values.graph.enabled }}

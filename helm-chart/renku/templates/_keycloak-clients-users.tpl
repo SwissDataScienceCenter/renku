@@ -31,10 +31,10 @@ Define clients and users for Keycloak
   {{- if .Values.gitlab.enabled -}}
   ,{
     "clientId": "gitlab",
-    "baseUrl": "{{ .Values.global.gitlab.gitlabURL }}",
+    "baseUrl": "{{ .Values.global.gitlab.url }}",
     "secret": "{{ required "Fill in .Values.global.keycloak.gitlabClientSecret with `uuidgen -r`" .Values.global.keycloak.gitlabClientSecret }}",
     "redirectUris": [
-      "{{ .Values.global.gitlab.gitlabURL }}/users/auth/oauth2_generic/callback"
+      "{{ .Values.global.gitlab.url }}/users/auth/oauth2_generic/callback"
     ],
     "webOrigins": []
   }
