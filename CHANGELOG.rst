@@ -1,5 +1,16 @@
 .. _changelog:
 
+0.7.13
+------
+
+Bug Fixes
+~~~~~~~~~~
+
+* **Knowledge Graph**: improve lineage visualization by skipping overridden edges
+* **Knowledge Graph**: fix rest client to classify failure responses properly
+
+For more details please check renku-graph  `1.36.3 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/1.36.3>`__
+
 0.7.12
 ------
 
