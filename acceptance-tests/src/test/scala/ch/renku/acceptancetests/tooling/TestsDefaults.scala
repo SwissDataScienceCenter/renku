@@ -18,12 +18,13 @@
 
 package ch.renku.acceptancetests.tooling
 
-final case class TestsDefaults(env:       Option[String],
-                               gitlaburl: Option[String] = None,
-                               email:     Option[String] = None,
-                               username:  Option[String] = None,
-                               password:  Option[String] = None,
-                               fullname:  Option[String] = None
+final case class TestsDefaults(env:        Option[String],
+                               gitlaburl:  Option[String] = None,
+                               cliversion: Option[String] = None,
+                               email:      Option[String] = None,
+                               username:   Option[String] = None,
+                               password:   Option[String] = None,
+                               fullname:   Option[String] = None
 )
 
 object TestsDefaults {

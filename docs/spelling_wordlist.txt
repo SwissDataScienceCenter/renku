@@ -115,6 +115,8 @@ preprocessed
 preprocessing
 programmatically
 py
+readme
+rebase
 refactor
 Refactor
 refactored
@@ -157,6 +159,7 @@ txt
 typesystem
 Ubuntu
 ui
+unicode
 untracked
 untracked
 url

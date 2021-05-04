@@ -21,13 +21,12 @@ package ch.renku.acceptancetests.tooling
 import ch.renku.acceptancetests.model._
 import ch.renku.acceptancetests.model.users.UserCredentials
 import eu.timepit.refined.api.{RefType, Refined}
-import eu.timepit.refined.auto._
-import eu.timepit.refined.collection.NonEmpty
 import eu.timepit.refined.string.Url
 
 import java.lang.System.getProperty
 
 trait AcceptanceSpecData {
+  self: RenkuApi =>
 
   private val testsDefaults = TestsDefaults()
 
@@ -49,6 +48,16 @@ trait AcceptanceSpecData {
   }
 
   protected implicit lazy val gitLabAPIUrl: GitLabApiUrl = GitLabApiUrl(gitLabBaseUrl)
+
+  protected implicit lazy val cliVersion: CliVersion = CliVersion
+    .get {
+      sys.env
+        .get("RENKU_CLI_VERSION")
+        .orElse(Option(getProperty("cliVersion")))
+        .orElse(testsDefaults.cliversion flatMap toNonEmpty)
+        .getOrElse(apiCliVersion.value)
+    }
+    .fold(throw _, identity)
 
   private def as[T <: BaseUrl](factory: String Refined Url => T): String => Option[T] = url => {
     val baseUrl = if (url.endsWith("/")) url.substring(0, url.length - 1) else url
@@ -88,7 +97,7 @@ trait AcceptanceSpecData {
     case nonBlank => Some(nonBlank)
   }
 
-  private def showErrorAndStop[T](message: String Refined NonEmpty): T = {
+  private def showErrorAndStop[T](message: String): T = {
     Console.err.println(message)
     System.exit(1)
     throw new IllegalArgumentException(message)

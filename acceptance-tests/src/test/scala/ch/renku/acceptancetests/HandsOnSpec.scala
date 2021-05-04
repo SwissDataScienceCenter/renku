@@ -40,6 +40,8 @@ class HandsOnSpec
 
     `log in to Renku`
 
+    `setup renku CLI`
+
     `create, continue or open a project`
 
     val projectUrl         = `find project Http URL in the Settings Page`
