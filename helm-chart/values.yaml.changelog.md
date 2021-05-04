@@ -6,7 +6,7 @@ Please follow this convention when adding a new row
 * `<type: NEW|EDIT|DELETE> - *<resource name>*: <details>`
 
 ----
-## Unreleased
+## Upgrading to Renku 0.7.13
 * NEW - *global.gateway.cliClientSecret* has been added when introducing a new "renku-cli" client application in keycloak. Generate through `openssl rand -hex 32`.
 
 
