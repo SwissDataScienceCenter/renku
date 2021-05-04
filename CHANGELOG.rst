@@ -11,6 +11,11 @@ Bug Fixes
 
 For more details please check renku-graph  `1.36.3 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/1.36.3>`__
 
+Upgrading from 0.7.12
+~~~~~~~~~~~~~~~~~~~~~
+
+A new client application ``renku-cli`` in keycloak has been added. This needs a value for ``global.gateway.cliClientSecret`` which could be generated through ``openssl rand -hex 32``.
+
 0.7.12
 ------
 
