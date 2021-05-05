@@ -34,7 +34,7 @@ Define clients and users for Keycloak
     "baseUrl": "{{ .Values.global.gitlab.url }}",
     "secret": "{{ required "Fill in .Values.global.keycloak.gitlabClientSecret with `uuidgen -r`" .Values.global.keycloak.gitlabClientSecret }}",
     "redirectUris": [
-      "{{ .Values.global.gitlab.url }}/users/auth/oauth2_generic/callback"
+      "{{ .Values.global.gitlab.url }}/users/auth/openid_connect/callback"
     ],
     "webOrigins": []
   }
