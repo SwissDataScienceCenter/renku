@@ -1,0 +1,55 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: data-renku-postgresql-tmp
+  namespace: renku ## EDIT
+spec:
+  storageClassName: csi-cinder-sc-delete ## EDIT
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 20Gi ## EDIT
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: postgresql-dump
+  namespace: renku ## EDIT
+spec:
+  restartPolicy: Never
+  volumes:
+    - name: pg-vol-old
+      persistentVolumeClaim:
+        claimName: data-renku-postgresql-0 ## EDIT - the PVC that backs your current database.
+    - name: pg-vol-tmp
+      persistentVolumeClaim:
+        claimName: data-renku-postgresql-tmp
+  containers:
+    - name: postgresql-dump
+      image: bitnami/postgresql:9.6 ## EDIT - your current postgresql version
+      resources:
+        # This should be fine for most settings.
+        limits:
+          cpu: 500m
+          memory: 512Mi
+        requests:
+          cpu: 500m
+          memory: 512Mi
+      securityContext:
+        # We conciously run this as root, bitnami
+        # images do not do this per default.
+        runAsUser: 0
+      env:
+        - name: POSTGRES_USER
+          value: postgres
+        - name: POSTGRES_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: renku-postgresql ## EDIT
+              key: postgresql-password
+      volumeMounts:
+        - mountPath: /bitnami/postgresql
+          name: pg-vol-old
+        - mountPath: /psql-dump-data/
+          name: pg-vol-tmp

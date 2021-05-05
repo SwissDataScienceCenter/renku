@@ -1,0 +1,55 @@
+# This creates a new persistent volume claim that you can use with your postgresql instance
+# going forward. Uncomment this if needed. If you don't have dynamic provisioning enabled
+# or you want to create the PV upfront, comment this part.
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: data-renku-postgresql-v11 ## EDIT
+  namespace: renku
+spec:
+  storageClassName: csi-cinder-sc-retain ## EDIT
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 8Gi ## EDIT
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: postgresql-load
+  namespace: renku ## EDIT
+spec:
+  restartPolicy: Never
+  volumes:
+    - name: pg-vol-new
+      persistentVolumeClaim:
+        claimName: data-renku-postgresql-v11 ## EDIT - match PVC name chosen above.
+    - name: pg-vol-tmp
+      persistentVolumeClaim:
+        claimName: data-renku-postgresql-tmp
+  containers:
+    - name: postgresql-load
+      image: bitnami/postgresql:11
+      resources:
+        limits:
+          cpu: 500m
+          memory: 512Mi
+        requests:
+          cpu: 500m
+          memory: 512Mi
+      securityContext:
+        runAsUser: 0
+      env:
+        - name: POSTGRES_USER
+          value: postgres
+        - name: POSTGRES_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: renku-postgresql ## EDIT
+              key: postgresql-password
+      volumeMounts:
+        - mountPath: /bitnami/postgresql
+          name: pg-vol-new
+        - mountPath: /psql-dump-data/
+          name: pg-vol-tmp

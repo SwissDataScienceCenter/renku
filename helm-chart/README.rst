@@ -64,6 +64,10 @@ in the `values changelog file <https://github.com/SwissDataScienceCenter/renku/b
 For upgrades that require some steps other than modifying the values files to be
 executed, we add some instructions here.
 
+Unreleased
+**********
+We bump the posgresql version from 9.6 to 11. Follow [these instructions](https://github.com/SwissDataScienceCenter/renku/tree/master/helm-chart/utils/postgres_migrations/version_upgrades/README.md).
+
 Upgrading to 0.7.8
 ******************
 This upgrade comes with an upgrade of the keycloak chart from ``4.10.2`` to ``9.8.1``! For
