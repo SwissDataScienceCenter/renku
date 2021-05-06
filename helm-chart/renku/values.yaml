@@ -258,7 +258,10 @@ gitlab:
   image:
   #   pullPolicy: IfNotPresent
     repository: gitlab/gitlab-ce
-    tag: 11.9.11-ce.0
+    # Check out the gitlab docs on upgrading versions - in particular major
+    # versions - before changing the image tag.
+    #  https://docs.gitlab.com/ce/update/#upgrading-to-a-new-major-version
+    tag: 13.10.4-ce.0
 
   ## automatically log in to gitlab
   oauth:

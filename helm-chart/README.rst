@@ -64,9 +64,45 @@ in the `values changelog file <https://github.com/SwissDataScienceCenter/renku/b
 For upgrades that require some steps other than modifying the values files to be
 executed, we add some instructions here.
 
-Unreleased
-**********
-We bump the posgresql version from 9.6 to 11. Follow [these instructions](https://github.com/SwissDataScienceCenter/renku/tree/master/helm-chart/utils/postgres_migrations/version_upgrades/README.md).
+Upgrading to 0.8.0
+******************
+We bump the posgresql version from 9.6 to 11 and the GitLab major version from 11 to 13.
+It is important to first perform the postgresql upgrade, then upgrade to the ``0.8.0`` chart version
+while keeping the GitLab version fixed, and finally upgrade the GitLab version.
+
+1. Upgrading postgresql
++++++++++++++++++++++++
+Follow [these instructions](https://github.com/SwissDataScienceCenter/renku/tree/master/helm-chart/utils/postgres_migrations/version_upgrades/README.md)
+for the postgresql upgrade.
+
+2. Bump the chart version
++++++++++++++++++++++++++
+Now it's time to upgrade to the 0.8.0 version of the Renku chart. Before doing this, make sure
+to pin the GitLab version by setting ``gitlab.image.tag`` in your values file. If you had not pinned
+this version explicitly before, pin it to ``11.9.11-ce.0`` which is the default version set in the Renku
+chart prior to the upgrade. Otherwise you can leave it at the previously pinned version. Then deploy the
+the new chart version through ``helm upgrade ... --version 0.8.0 ...``.
+
+3. Upgrade GitLab
++++++++++++++++++
+Please read the `GitLab documentation on this topic <https://docs.gitlab.com/ce/update>`_ before proceeding.
+Following the `recommended upgrade paths<https://docs.gitlab.com/ce/update/#upgrade-paths>`_) and assuming
+your GitLab instance is at version ``11.9.11``, this means that your upgrade path will be
+``11.11.8 -> 12.0.12 -> 12.1.17 -> 12.10.14 -> 13.0.14 -> 13.1.11 -> 13.10.4``. The corresponding
+image tags are:
+
+- 11.11.8-ce.0
+- 12.0.12-ce.0
+- 12.1.17-ce.0
+- 12.10.14-ce.0
+- 13.0.14-ce.0
+- 13.1.11-ce.0
+- 13.10.4-ce.0 (default in the Renku ``0.8.0`` helm chart)
+
+For each step, set the corresponding tag in your values file at ``gitlab.image.tag``, redeploy through
+helm and wait for the gitlab pod to be recreated and all migrations to finish. Repeat this procedure until
+you've reached the target version of this upgrade ``13.10.4-ce.0``. Note that this version does not have
+to be selected explicitly in your own values file as it is the default of the ``0.8.0`` renku chart.
 
 Upgrading to 0.7.8
 ******************
