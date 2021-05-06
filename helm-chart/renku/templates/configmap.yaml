@@ -106,6 +106,7 @@ data:
 
       psql -v ON_ERROR_STOP=1 --dbname "{{ .Values.global.gitlab.postgresDatabase }}" <<-EOSQL
           create extension if not exists "pg_trgm";
+          create extension if not exists "btree_gist";
           revoke all on schema "public" from "public";
           grant all privileges on database "{{ .Values.global.gitlab.postgresDatabase }}" to "{{ .Values.global.gitlab.postgresUser }}";
           grant all privileges on schema "public" to "{{ .Values.global.gitlab.postgresUser }}";
