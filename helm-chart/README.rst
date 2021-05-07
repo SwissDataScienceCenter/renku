@@ -66,22 +66,22 @@ executed, we add some instructions here.
 
 Upgrading to 0.8.0
 ******************
-We bump the posgresql version from 9.6 to 11 and the GitLab major version from 11 to 13.
+We bump the PostgreSQL version from 9.6 to 11 and the GitLab major version from 11 to 13.
 It is important to first perform the postgresql upgrade, then upgrade to the ``0.8.0`` chart version
 while keeping the GitLab version fixed, and finally upgrade the GitLab version.
 
 1. Upgrading postgresql
 +++++++++++++++++++++++
-Follow [these instructions](https://github.com/SwissDataScienceCenter/renku/tree/master/helm-chart/utils/postgres_migrations/version_upgrades/README.md)
+If PostgreSQL was deployed as part of Renku, please follow [these instructions](https://github.com/SwissDataScienceCenter/renku/tree/master/helm-chart/utils/postgres_migrations/version_upgrades/README.md)
 for the postgresql upgrade.
 
 2. Bump the chart version
 +++++++++++++++++++++++++
-Now it's time to upgrade to the 0.8.0 version of the Renku chart. Before doing this, make sure
+Now it's time to upgrade to the ``0.8.0`` version of the Renku chart. Before doing this, make sure
 to pin the GitLab version by setting ``gitlab.image.tag`` in your values file. If you had not pinned
 this version explicitly before, pin it to ``11.9.11-ce.0`` which is the default version set in the Renku
 chart prior to the upgrade. Otherwise you can leave it at the previously pinned version. Then deploy the
-the new chart version through ``helm upgrade ... --version 0.8.0 ...``.
+new chart version through ``helm upgrade ... --version 0.8.0 ...``.
 
 3. Upgrade GitLab
 +++++++++++++++++
