@@ -1,0 +1,60 @@
+# Note: you can get the size of your current DB by running the following
+# command (adapt names and namespaces accordingly):
+# kubectl -n renku exec renku-postgresql-0 -- bash -c 'PGUSER=$POSTGRES_USER PGPASSWORD=$POSTGRES_PASSWORD psql -c "SELECT pg_database.datname as "database_name", pg_database_size(pg_database.datname)/1024/1024 AS size_in_mb FROM pg_database ORDER by size_in_mb DESC;"'
+---
+# This creates a new persistent volume claim that you can use with your postgresql instance
+# going forward and changes permission for the main container to run without root privileges.
+# If you don't have dynamic provisioning enabled  or you want to create the PV/PVC up front
+# manually and just run the  "change-permission" job on it.
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: data-renku-postgresql-v11 ## EDIT (optional) - change the name if you like
+spec:
+  storageClassName: ## EDIT
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: ## EDIT - Size of your new database volume.
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: change-permission
+spec:
+  template:
+    spec:
+      volumes:
+        - name: pg-vol-new
+          persistentVolumeClaim:
+            claimName: data-renku-postgresql-v11
+      restartPolicy: OnFailure
+      containers:
+        - name: change-permission
+          image: ubuntu
+          command: ["bash", "-c"]
+          args:
+            [
+              "mkdir -p /bitnami/postgresql/data && chown -R 1001:1001 /bitnami/postgresql/data",
+            ]
+          securityContext:
+            runAsUser: 0
+          volumeMounts:
+            - mountPath: /bitnami/postgresql
+              name: pg-vol-new
+---
+# This creates a temporary persistent volume to hold the data while moving it
+# to the new instace. Use a storage class with dynamic provisioning here, otherwise
+# create a PV to match this PVC manually.
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: data-renku-postgresql-tmp
+spec:
+  storageClassName: ## EDIT
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: ## EDIT - Twice the size of all current DBs combined should be more than enough.

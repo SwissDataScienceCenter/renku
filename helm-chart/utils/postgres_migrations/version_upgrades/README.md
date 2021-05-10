@@ -12,8 +12,8 @@ While `pg_upgrade` would achieve this task with much shorter downtime and if des
 
 - Modify the example manifest files in this folder according to your needs. You can use the followig command to figure out the total amount of data currently stored in your database. This will give you a fair estimate of the size of your data dump.
 
-```sql
-SELECT pg_database.datname as "database_name", pg_database_size(pg_database.datname)/1024/1024 AS size_in_mb FROM pg_database ORDER by size_in_mb DESC;
+```bash
+kubectl -n renku exec renku-postgresql-0 -- bash -c 'PGUSER=$POSTGRES_USER PGPASSWORD=$POSTGRES_PASSWORD psql -c "SELECT pg_database.datname as "database_name", pg_database_size(pg_database.datname)/1024/1024 AS size_in_mb FROM pg_database ORDER by size_in_mb DESC;"'
 ```
 
 - If you're not using dynamic volume provisioning, create a new empty PV/PVC that will contain the data of your upgraded postresql instance.

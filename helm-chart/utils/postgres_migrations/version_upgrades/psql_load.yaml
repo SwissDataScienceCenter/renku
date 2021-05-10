@@ -1,35 +1,17 @@
-# This creates a new persistent volume claim that you can use with your postgresql instance
-# going forward. Uncomment this if needed. If you don't have dynamic provisioning enabled
-# or you want to create the PV upfront, comment this part.
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: data-renku-postgresql-v11 ## EDIT
-  namespace: renku
-spec:
-  storageClassName: csi-cinder-sc-retain ## EDIT
-  accessModes:
-    - ReadWriteOnce
-  resources:
-    requests:
-      storage: 8Gi ## EDIT
----
 apiVersion: v1
 kind: Pod
 metadata:
-  name: postgresql-load
-  namespace: renku ## EDIT
+  name: postgresql-load-server
+  labels:
+    app: postgresql-load-server
 spec:
   restartPolicy: Never
   volumes:
     - name: pg-vol-new
       persistentVolumeClaim:
-        claimName: data-renku-postgresql-v11 ## EDIT - match PVC name chosen above.
-    - name: pg-vol-tmp
-      persistentVolumeClaim:
-        claimName: data-renku-postgresql-tmp
+        claimName: data-renku-postgresql-v11 ## EDIT(optional) - match name of the new PVC.
   containers:
-    - name: postgresql-load
+    - name: postgresql-load-server
       image: bitnami/postgresql:11
       resources:
         limits:
@@ -38,18 +20,66 @@ spec:
         requests:
           cpu: 500m
           memory: 512Mi
-      securityContext:
-        runAsUser: 0
       env:
         - name: POSTGRES_USER
           value: postgres
         - name: POSTGRES_PASSWORD
           valueFrom:
             secretKeyRef:
-              name: renku-postgresql ## EDIT
+              name: renku-postgresql ## EDIT(optional) - most likely <renku-release-name>-postgresql
               key: postgresql-password
       volumeMounts:
         - mountPath: /bitnami/postgresql
           name: pg-vol-new
-        - mountPath: /psql-dump-data/
-          name: pg-vol-tmp
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: postgresql-load-server
+spec:
+  selector:
+    app: postgresql-load-server
+  ports:
+    - protocol: TCP
+      port: 5432
+      targetPort: 5432
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: postgresql-load-job
+spec:
+  template:
+    spec:
+      volumes:
+        - name: pg-vol-tmp
+          persistentVolumeClaim:
+            claimName: data-renku-postgresql-tmp
+      restartPolicy: OnFailure
+      containers:
+        - name: postgresql-load
+          image: bitnami/postgresql:11
+          command: ["bash", "-c"]
+          args: ["psql -f /psql-dump-data/dump postgres"]
+          resources:
+            limits:
+              cpu: 100m
+              memory: 256Mi
+            requests:
+              cpu: 100m
+              memory: 256Mi
+          securityContext:
+            runAsUser: 0
+          env:
+            - name: PGHOST
+              value: postgresql-load-server
+            - name: PGUSER
+              value: postgres
+            - name: PGPASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: renku-postgresql ## EDIT(optional) - most likely <renku-release-name>-postgresql
+                  key: postgresql-password
+          volumeMounts:
+            - mountPath: /psql-dump-data/
+              name: pg-vol-tmp
