@@ -24,6 +24,7 @@ global:
     # https://docs.gitlab.com/ee/administration/auth/oidc.html
     omniauth:
       enabled: true
+      ## enabled: false
       autoSignInWithProvider: openid_connect
       # allowSingleSignOn: true
       # CAUTION!

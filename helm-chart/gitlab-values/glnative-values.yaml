@@ -50,6 +50,7 @@ global:
   gateway:
     ## clientSecret: # use `uuidgen -r`
     clientSecret:  6b42848bfa6cfa475774e4d0fb249fb9c88b6d3d49d78ff9b341a70fa2e25ba2        ## Taken from gateway client in keycloak
+    cliClientSecret:  e810a3bfa93b0dbf77ce43969cfa2eef21bc4fb0fe793f52b33c64a98dc352d9
     ## The client secret for authentication against gitlab
     gitlabClientSecret:   760d7021b2f1958cd3cae4d911283e84335c7b78256d61362e8de2c773291d53        ## Taken from renku-ui gitlab application secret
   renku:
@@ -86,6 +87,12 @@ ingress:
 gitlab:
   ## Spawn a gitlab instance
   enabled: false
+
+keycloak:
+  resources:
+    requests:
+      cpu: 100m
+      memory: 512Mi
 
 postgresql:
   postgresqlPassword:   a547938759db514ad3693adbc859dbf851b70303a8c82b2fab1e6df8c9991421        ## openssl rand -hex 32
@@ -134,6 +141,10 @@ notebooks:
           oauth_client_id: &gwJHclientId gateway
           apiToken: &gwJHclientSecret  39ac038b3081454c772d0145d90f91f4cc508be7250c5b5e16c7ec62a2817e35        ## openssl rand -hex 32
           oauth_redirect_uri: *oauth_redirect_uri
+      resources:
+        requests:
+          cpu: 200m
+          memory: 256Mi
       extraEnv:
         - name: GITLAB_URL
           value: *gitlabURL
@@ -149,7 +160,11 @@ notebooks:
     proxy:
       ## Must be set explicitly, generate using `openssl rand -hex 32`
       secretToken:   99095a3d900c8f3ae6a9ea3b1b1d011709b68c751cf72b9753da67911f363135        ## openssl rand -hex 32
-
+      chp:
+        resources:
+          requests:
+            cpu: 100m
+            memory: 256Mi
     ## Configure Jupyterhub to use GitLab as OAuth2 provider
     auth:
       gitlab:
@@ -176,7 +191,16 @@ gateway:
     sparql:
       username: renku
       password: &sparql_password 953ae81b0da2310a3a6c319560ab46cd0641dacf7f72ca9ecb07a37df3f2a7bc        ## openssl rand -hex 32
-
+  redis:
+    master:
+      resources:
+        requests:
+          cpu: 100m
+          memory: 256Mi
+  resources:
+    requests:
+      cpu: 100m
+      memory: 256Mi
 ## Configuration for renku-graph
 graph:
   ## Configuration for Apache Jena
@@ -186,6 +210,10 @@ graph:
         password:   7040c655a48739965cff115059d0d80a51b9bef5d9a813b22d7da64b953c974f        ## openssl rand -hex 32
       renku:
         password: *sparql_password
+    resources:
+      requests:
+        cpu: 200m
+        memory: 512Mi
 #    persistence:
 #      existingClaim: renku-jena
   gitlab:
