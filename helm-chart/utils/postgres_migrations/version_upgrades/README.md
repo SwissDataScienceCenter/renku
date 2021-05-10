@@ -10,37 +10,33 @@ While `pg_upgrade` would achieve this task with much shorter downtime and if des
 
 ## Preparation
 
-- Modify the example manifest files in this folder according to your needs. You can use the followig command to figure out the total amount of data currently stored in your database. This will give you a fair estimate of the size of your data dump.
+- Modify the example manifest files in this folder according to your needs (see the locations marked with `## EDIT` comments). You can use the followig command to figure out the total amount of data currently stored in your database. This will give you a fair estimate of the size of your data dump.
 
 ```bash
 kubectl -n renku exec renku-postgresql-0 -- bash -c 'PGUSER=$POSTGRES_USER PGPASSWORD=$POSTGRES_PASSWORD psql -c "SELECT pg_database.datname as "database_name", pg_database_size(pg_database.datname)/1024/1024 AS size_in_mb FROM pg_database ORDER by size_in_mb DESC;"'
 ```
 
 - If you're not using dynamic volume provisioning, create a new empty PV/PVC that will contain the data of your upgraded postresql instance.
-- Remove the renku postgresql statefulSet. You might also want to scale down the services which try to connect to the postgresql instance, but it is not strictly required.
+- Remove the renku postgresql statefulSet.
 - While we are not going to modify the data in your original data volume, you still might want to take this opportunity to store a snapshot of that volume.
 
-## Dumping the data
+## Create the volumes
 
-- Execute `kubectl apply -f psql_dump.yaml`, wait for the `postgresql-dump` pod to become available.
-- Execute the following command inside the container:
-`PGUSER=$POSTGRES_USER PGPASSWORD=$POSTGRES_PASSWORD pg_dumpall -f /psql-dump-data/dump`
-- Once this command has completed, delete the `postgresql-dump` pod.
+- Execute `kubectl apply -n <your-namespace> -f volumes.yaml`. This will create a new PVC for your upgraded PostgreSQL instance and one to hold the temporary data. Also, it will set the right file system permissions on the newly created volume. Wait for the `change-permission` job to complete and delete the job through `kubectl delete job -n <your-namespace> change-permission`.
 
-## Loading the data
+## Dump the data
 
-- Execute `kubectl apply -f psql_load.yaml`, wait for the `postgresql-load` pod to become available.
-- Execute the following commands inside the container:
+- Execute `kubectl apply -n <your-namespace> -f psql_dump.yaml` and wait until the `postgresql-dump-job` has completed. Remove the temporary resources using `kubectl delete -n <your-namespace> -f psql_dump.yaml`.
 
-```bash
-PGUSER=$POSTGRES_USER PGPASSWORD=$POSTGRES_PASSWORD psql -f /psql-dump-data/dump postgres
-chown -R 1001:1001 /bitnami/postgresql/data
-```
+## Load the data
 
-- Once these commands have completed, delete the `postgresql-load` pod.
-- Add or modify the `postgresql.persistence.existingClaim` entry in your values file (provide the name of the new PVC here.)
-- Bump the postresql version `postgresql.image.tag` in your values file to `11` and
-redeploy Renku through helm.
+- Execute `kubectl apply -f psql_load.yaml` and wait for the `postgresql-load-job` to complete. This might take a while - for example 20 minutes when testing with a PostgreSQL instance holding 1.5 GB of data.
+- Remove the temporary resources using `kubectl delete -n <your-namespace> -f psql_load.yaml`.
+
+## Restart PostgreSQL
+
+- Add or modify the `postgresql.persistence.existingClaim` entry in your values file (provide the name of the new PVC, so probably `data-renku-postgresql-v11`).
+- Bump the postresql version `postgresql.image.tag` in your values file to the target version and redeploy Renku through helm.
 
 ## Cleanup
 
