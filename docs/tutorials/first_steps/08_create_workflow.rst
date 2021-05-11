@@ -13,7 +13,7 @@ frequently the inputs of another --- this creates a dependency between the code
 execution and results. When workflows become more complex, the bookkeeping can
 be tedious. That is where Renku comes in --- it is designed to keep
 track of these dependencies for you. We will illustrate some of these concepts
-with a simple example (see also the :ref:`provenance` in the documentation_).
+with a simple example (see also the :ref:`provenance` in the documentation).
 
 First, let us make sure the project repository is clean. Run:
 
@@ -44,30 +44,15 @@ the changes or committing them to the repository.
 
         $ renku save -m "My own changes"
 
-<<<<<<< HEAD
-First, we will create the output directory:
-=======
+
 The ``filter_flights.\*`` script takes two input
 parameters: 1. a file to process as an input 2. a path for storing the output.
 So to run it, we would normally execute the following:
->>>>>>> set up placeholders for python/julia/r tabs in sphinx
 
 .. tabbed:: Python 
 
-<<<<<<< HEAD
-    $ mkdir -p data/output
-
-The ``filter_flights.py`` script takes two input parameters: 1. a file to
-process as an input 2. a path for storing the output. So to run it, we would
-normally execute the following (do not actually run this line!):
-
-.. code-block:: console
-
-    $ python src/filter_flights.py data/flight-data/2019-01-flights.csv.zip data/output/flights-filtered.csv
-=======
     .. code-block:: console
->>>>>>> set up placeholders for python/julia/r tabs in sphinx
-
+    
         # Create the output directory
         $ mkdir -p data/output
         $ python src/filter_flights.py data/flight-data/2019-01-flights.csv.zip data/output/flights-filtered.csv
@@ -76,16 +61,13 @@ normally execute the following (do not actually run this line!):
 
     .. code-block:: console
 
-        # Placeholder
+        $ julia FilterFlights.jl data/flight-data/2019-01-flights.csv.zip data/output/flights-filtered.csv
 
 .. tabbed:: R
     
     .. code-block:: console
 
-        # Create the output directory
-        $ mkdir -p data/output
-        $ R -f 
-
+        $ Rscript RunFilterFlights.R data/flight-data/2019-01-flights.csv.zip data/output/flights-filtered.csv
 
 
 For renku to capture information about the execution, we need to make a small
@@ -106,15 +88,16 @@ change: we prepend ``renku run`` to relevant command:
 
     .. code-block:: console
 
-        # Placeholder
+        $ renku run julia FilterFlights.jl data/flight-data/2019-01-flights.csv.zip data/output/flights-filtered.csv
+
+        Info: Adding these files to Git LFS:
+            data/output/flights-filtered.csv
 
 .. tabbed:: R
 
     .. code-block:: console
 
-        # Create the output directory
-        $ mkdir -p data/output
-        $ renku run R -f src/filter_flights.R
+        $ renku run Rscript RunFilterFlights.R data/flight-data/2019-01-flights.csv.zip data/output/flights-filtered.csv
 
         Info: Adding these files to Git LFS:
             data/output/flights-filtered.csv
@@ -127,8 +110,8 @@ and other commands.
 
 .. note::
 
-    Did you accidentally run the plain python command first? You would get
-    an error like this
+    Did you accidentally run the plain Python, Julia or R command first?
+    You would get an error like this
 
     .. code-block:: console
 
@@ -144,7 +127,9 @@ and other commands.
     .. code-block:: console
 
         $ rm data/output/*
-        $ renku run python src/filter_flights.py data/flight-data/2019-01-flights.csv.zip data/output/flights-filtered.csv
+        $ renku run X filterFlights.X data/flight-data/2019-01-flights.csv.zip data/output/flights-filtered.csv
+
+    where X stands for the particular language you are using.
 
 .. note::
 
@@ -243,44 +228,16 @@ We also provide the script versions to be run with the ``renku run`` command.
 
 .. tabbed:: Julia
 
-    Link 
+    `Download Julia script
+    <https://renkulab.io/projects/renku-tutorial/flights-tutorial-julia/files/blob/.tutorial/meta/templates/CountFlights.jl>`_
 
 .. tabbed:: R
 
-    Link
+    `Download R script
+    <https://renkulab.io/projects/renku-tutorial/flights-tutorial-r/files/blob/.tutorial/meta/templates/CountFlights.R>`_
 
-    
-.. code-block:: python
 
-    #
-    # Usage: python count_flights.py <input-path> <output-path>
-    #
-
-    import pandas as pd
-    import sys
-
-    # It would be more robust to use argparse or click, but we want this to be simple
-    if len(sys.argv) < 3:
-        sys.exit("Please invoke with two arguments: input and output paths")
-
-    input_path = sys.argv[1]
-    output_path = sys.argv[2]
-
-    # read in the data
-    df = pd.read_csv(input_path)
-
-    # determine the number of flights
-    flights_count = len(df)
-
-    # save the result
-    with open(output_path, 'w') as f:
-        f.write(result)
-
-.. code-block:: r
-
-    ##
-
-After uploading the script to the environment, make sure you save your work:
+After uploading the script to your project, make sure you save your work:
 
 .. code-block:: console
 
@@ -321,13 +278,7 @@ We can now use ``renku run`` to generate the second step of our workflow:
 
 .. code-block:: console
 
-    $ renku run python src/count_flights.* data/output/flights-filtered.csv data/output/flights-count.txt
+    $ renku run X src/CountFlights.* data/output/flights-filtered.csv data/output/flights-count.txt
     $ renku save
 
-or
-
-.. code-block::console
-    $ renku run R -f
-    $ renku save
-
-.. _documentation: https://renku.readthedocs.org
+where X is the relevant language.

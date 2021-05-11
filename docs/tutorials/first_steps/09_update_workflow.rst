@@ -13,7 +13,7 @@ This does not seem quite right. Austin, TX is not a very large airport, but
 that number would mean that it had a flight landing on average
 every two minutes, around the clock, during the entire month of January 2019.
 
-Go back and take a look at the ``src/filter_flights.\*`` script: it contains 
+Go back and take a look at the filtering script: it contains 
 an error! In the code block
 
 .. tabbed:: Python
@@ -27,7 +27,8 @@ an error! In the code block
 
     .. code-block:: console
 
-        # Placeholder
+        # Filter to flights to Austin, TX
+        df = full_df[full_df.DEST .== "DFW", :]
 
 .. tabbed:: R
 
@@ -56,7 +57,7 @@ execute ``git status`` you should see something like the following:
       (use "git add <file>..." to update what will be committed)
       (use "git checkout -- <file>..." to discard changes in working directory)
 
-            modified:   src/filter_flights.\*
+            modified:   src/filter_flights.py
 
     no changes added to commit (use "git add" and/or "git commit -a")
 
@@ -77,7 +78,8 @@ again, while being careful to do so in the correct order.
 
 So without Renku, updating a project in response to a change can be tedious and
 error-prone. But *with* Renku, it is very easy. We can just ask the system
-what changed and what needs to be updated.
+what changed and what needs to be updated. The outputs are analogous for all
+programming languages.
 
 .. code-block:: console
 

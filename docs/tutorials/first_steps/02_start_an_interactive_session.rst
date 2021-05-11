@@ -9,7 +9,7 @@ servers running either JupyterLab, RStudio, VSCode or a fully-featured Linux
 desktop using VNC. In this tutorial, we will showcase the project with JupyterLab and RStudio environments.
 
 In the previous step we :ref:`created a new project <create_project>` using
-the Python or R template; we can start working with the project right from the
+the Python, Julia or R template; we can start working with the project right from the
 browser by starting a session in either JupyterLab or RStudio. Click on **Environments**
 (1), then on **New** (2).
 
