@@ -9,10 +9,11 @@ spec:
   volumes:
     - name: pg-vol-new
       persistentVolumeClaim:
-        claimName: data-renku-postgresql-v11 ## EDIT(optional) - match name of the new PVC.
+        claimName: ## EDIT - match name of the new PVC, for example data-renku-postgresql-v<postgresql-major-version>
+
   containers:
     - name: postgresql-load-server
-      image: bitnami/postgresql:11
+      image: ## EDIT - your target postgresql image/version
       resources:
         limits:
           cpu: 500m
@@ -58,7 +59,7 @@ spec:
       restartPolicy: OnFailure
       containers:
         - name: postgresql-load
-          image: bitnami/postgresql:11
+          image: ## EDIT - your target postgresql image/version
           command: ["bash", "-c"]
           args: ["psql -f /psql-dump-data/dump postgres"]
           resources:

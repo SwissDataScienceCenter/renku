@@ -9,9 +9,9 @@
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: data-renku-postgresql-v11 ## EDIT (optional) - change the name if you like
+  name: ## EDIT - we suggest data-renku-postgresql-v<postgresql-major-version>
 spec:
-  storageClassName: ## EDIT
+  storageClassName: ## EDIT - your preferred storage class for long-term volumes
   accessModes:
     - ReadWriteOnce
   resources:
@@ -28,7 +28,7 @@ spec:
       volumes:
         - name: pg-vol-new
           persistentVolumeClaim:
-            claimName: data-renku-postgresql-v11
+            claimName: ## EDIT - match name of the new PVC, for example data-renku-postgresql-v<postgresql-major-version>
       restartPolicy: OnFailure
       containers:
         - name: change-permission
@@ -52,7 +52,7 @@ kind: PersistentVolumeClaim
 metadata:
   name: data-renku-postgresql-tmp
 spec:
-  storageClassName: ## EDIT
+  storageClassName: ## EDIT - your preferred storage class for temporary volumes
   accessModes:
     - ReadWriteOnce
   resources:

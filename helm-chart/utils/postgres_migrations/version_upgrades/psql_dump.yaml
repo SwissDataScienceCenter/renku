@@ -60,7 +60,7 @@ spec:
             claimName: data-renku-postgresql-tmp
       containers:
         - name: postgresql-dump
-          image: bitnami/postgresql:9.6
+          image: ## EDIT - your current postgresql image/version
           command: ["bash", "-c"]
           args: ["pg_dumpall -f /psql-dump-data/dump"]
           resources:

@@ -26,6 +26,7 @@ kubectl -n renku exec renku-postgresql-0 -- bash -c 'PGUSER=$POSTGRES_USER PGPAS
 
 ## Dump the data
 
+- Verify that your existing PostgreSQL statefulSet and its pod have been deleted from kubernetes.
 - Execute `kubectl apply -n <your-namespace> -f psql_dump.yaml` and wait until the `postgresql-dump-job` has completed. Remove the temporary resources using `kubectl delete -n <your-namespace> -f psql_dump.yaml`.
 
 ## Load the data
@@ -35,7 +36,7 @@ kubectl -n renku exec renku-postgresql-0 -- bash -c 'PGUSER=$POSTGRES_USER PGPAS
 
 ## Restart PostgreSQL
 
-- Add or modify the `postgresql.persistence.existingClaim` entry in your values file (provide the name of the new PVC, so probably `data-renku-postgresql-v11`).
+- Add or modify the `postgresql.persistence.existingClaim` entry in your values file (provide the name of the new PVC, so probably `data-renku-postgresql-v<postgresql-major-version>`).
 - Bump the postresql version `postgresql.image.tag` in your values file to the target version and redeploy Renku through helm.
 
 ## Cleanup
