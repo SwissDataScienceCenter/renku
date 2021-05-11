@@ -1,6 +1,6 @@
-# Upgrading postgresql
+# Upgrading PostgreSQL
 
-Here we describe how the version of a PostgreSQL instance which is installed through the Renku chart can be upgraded. While minor version upgrades are unproblematic and do not need any manual intervention, major version upgrades require some care. There are two recommended ways of performing this task:
+Here we describe how the version of a PostgreSQL instance which is installed through the Renku chart can be upgraded. While the naming of resources in these instructions suggest that the PostgreSQL instance to be upgraded was deployed as a component of a RenkuLab deployment, there is nothing else that is Renku-specific about these instrcutions. Minor version upgrades are usually unproblematic and do not need any manual intervention. Major version upgrades on the other hand require some care. There are two recommended ways of performing this task:
 
 1) Dump all the data in the old instance using `pd_dumpall`, start a fresh instance using the target version and import the previous data dump. You can find detailed instructions on this below.
 
