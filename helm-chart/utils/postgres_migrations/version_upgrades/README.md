@@ -1,6 +1,6 @@
 # Upgrading PostgreSQL
 
-Here we describe how the version of a PostgreSQL instance which is installed through the Renku chart can be upgraded. While the naming of resources in these instructions suggest that the PostgreSQL instance to be upgraded was deployed as a component of a RenkuLab deployment, there is nothing else that is Renku-specific about these instrcutions. Minor version upgrades are usually unproblematic and do not need any manual intervention. Major version upgrades on the other hand require some care. There are two recommended ways of performing this task:
+Here we describe how the version of a PostgreSQL instance which is installed through the Renku chart can be upgraded. While the naming of resources in these instructions suggest that the PostgreSQL instance to be upgraded was deployed as a component of a RenkuLab deployment, there is nothing else that is Renku-specific about these instructions. Minor version upgrades are usually unproblematic and do not need any manual intervention. Major version upgrades on the other hand require some care. There are two recommended ways of performing this task:
 
 1) Dump all the data in the old instance using `pd_dumpall`, start a fresh instance using the target version and import the previous data dump. You can find detailed instructions on this below.
 
@@ -38,7 +38,7 @@ kubectl -n renku exec renku-postgresql-0 -- bash -c 'PGUSER=$POSTGRES_USER PGPAS
 
 - Add or modify the `postgresql.persistence.existingClaim` entry in your values file (provide the name of the new PVC, so probably `data-renku-postgresql-v<postgresql-major-version>`).
 - Bump the postresql version `postgresql.image.tag` in your values file to the target version and redeploy Renku through helm.
-
+Run `helm upgrade` to apply the above value changes.
 ## Cleanup
 
 - Delete the temporary volume which held the dump: `kubectl delete -n <your-namespace> data-renku-postgresql-tmp`. If the chosen storage class does not have the `Reclaim Policy` set to `Delete`, you want to also delete the PV.
