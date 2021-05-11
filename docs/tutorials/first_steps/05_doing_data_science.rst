@@ -10,7 +10,7 @@ Ways to do data science in Renku
     to the **Files** (1) tab. Here, you see a listing of files and folders from
     your project. To create a new notebook, first double-click on the **notebooks**
     folder (2), then on the **'+'** button (3). Select *Python 3* or 
-    *Julia \*.\*.\** to create a new notebook (4).
+    *Julia 1.\*.\** to create a new notebook (4).
 
     .. image:: ../../_static/images/jupyterlab-files-notebooks.png
         :width: 85%
@@ -84,7 +84,7 @@ Ways to do data science in Renku
     a file explorer (4).
 
     .. image:: ../../_static/images/rstudio-ui.png
-        :width: 85%
+        :width: 100%
         :align: center
         :alt: RStudio User Interface
 
@@ -106,7 +106,7 @@ Ways to do data science in Renku
     graphical user interface (GUI) to git.
 
     .. image:: ../../_static/images/rstudio-git-ui.png
-        :width: 85%
+        :width: 100%
         :align: center
         :alt: RStudio User Interface
 

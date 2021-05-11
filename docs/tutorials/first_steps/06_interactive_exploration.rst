@@ -28,10 +28,10 @@ that have already been prepared.
 
     Go to `this example script <https://renkulab.io/projects/renku-tutorial/flights-tutorial-r/files/blob/.tutorial/meta/templates/FilterFlights.R>`_ 
     download the file to your computer. Make the ``src`` directory in your
-    running interactive session and drag and drop the downloaded script there. 
+    running interactive session and upload the script there.
 
 
-In either case, use the ``renku save`` command to save your results, like the
+In each case, use the ``renku save`` command to save your results, like the
 following:
 
 .. code-block:: console

@@ -48,8 +48,8 @@ on existing conventions for specifying the execution environment.
     directory when creating the project.
 
     The easiest way to add packages to a project is to use the ``Pkg`` API. You can
-    either use the terminal or start a new Julia Jupyter notebook to run the
-    following pattern:
+    either use the terminal (2) or start a new Julia Jupyter notebook to run the
+    following pattern (3):
 
     .. code-block:: julia
 
