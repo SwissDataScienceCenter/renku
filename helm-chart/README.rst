@@ -67,7 +67,7 @@ executed, we add some instructions here.
 Upgrading to 0.8.0
 ******************
 We bump the PostgreSQL version from 9.6 to 11 and the GitLab major version from 11 to 13.
-It is important to first perform the postgresql upgrade, then upgrade to the ``0.8.0`` chart version
+It is important to first perform the PostgreSQL upgrade, then upgrade to the ``0.8.0`` chart version
 while keeping the GitLab version fixed, and finally upgrade the GitLab version.
 
 1. Upgrading postgresql
