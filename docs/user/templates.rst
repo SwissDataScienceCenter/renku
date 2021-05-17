@@ -314,7 +314,7 @@ renku-specific variables that are always available in templates, namely:
   when creating a project online in renkulab).
 * ``__namespace__``: The project namespace (only set when creating a project
   online in renkulab).
-* ``__sanitized_project_name__``: Sanitized name of the project (without 
+* ``__sanitized_project_name__``: Sanitized name of the project (without
   special characters) as used in Gitlab and URLs.
 * ``__project_slug__``: The project slug (``<namespace>/<sanitized project
   name>``) (only set when creating a project online in renkulab).
@@ -325,13 +325,13 @@ Use custom template repositories
 
 If you installed the renku command-line interface locally, you can specify a
 template repository as an argument to the ``renku init`` command. If you do
-this, we recommend that you **also** specify a tag (or a commit) when creating 
-a new project from a custom repository to ensure that the action is reproducible. 
+this, we recommend that you **also** specify a tag (or a commit) when creating
+a new project from a custom repository to ensure that the action is reproducible.
 You can find further details in
 `renku init docs <https://renku-python.readthedocs.io/en/latest/commands.html#use-a-different-template>`_.
 
 If you are using a RenkuLab instance, you can use a custom template repository by
-changing the `Template source` to ``Custom`` on the project creation page. There, 
+changing the `Template source` to ``Custom`` on the project creation page. There,
 you will be able to insert a URL pointing to your template repository.
 
 .. image:: ../_static/images/templates_custom.png
@@ -383,9 +383,9 @@ own repository, but some of the parameters are shared across all the
 repositories. An example could be in a course where each student needs their
 own repository, but all should use the same template and metadata.
 
-For this case, it is possible to generate a project-creation link containing 
-metadata embedded in a query parameter. When that link is entered in a 
-web browser, the UI will  automatically fetch the required information and 
+For this case, it is possible to generate a project-creation link containing
+metadata embedded in a query parameter. When that link is entered in a
+web browser, the UI will  automatically fetch the required information and
 pre-fill the fields.
 
 To create a shareable link, start by filling in all the fields as you would
@@ -411,7 +411,7 @@ share with others.
   permission. The visibility is generally tied to the namespace visibility,
   although ``private`` should always be available since it is the most
   restrictive one.
-  
+
   It would be best to prefer fixed references for custom template
   repositories, especially when selecting a template and providing values for
   variables. This means commits and tags are a good choice, while branches
@@ -439,7 +439,7 @@ programming languages have a straight equivalent in their base packages.
 
 The structure of the dictionary is the following:
 
-.. code-block::
+.. code-block:: JSON
 
   {
     "title": <string>,

@@ -44,14 +44,18 @@ the changes or committing them to the repository.
 
         $ renku save -m "My own changes"
 
-The ``filter_flights.py`` script takes two input parameters: 1. a file to
-process as an input 2. a path for storing the output. So to run it, we would
-normally execute the following:
+First, we will create the output directory:
 
 .. code-block:: console
 
-    # Create the output directory
     $ mkdir -p data/output
+
+The ``filter_flights.py`` script takes two input parameters: 1. a file to
+process as an input 2. a path for storing the output. So to run it, we would
+normally execute the following (do not actually run this line!):
+
+.. code-block:: console
+
     $ python src/filter_flights.py data/flight-data/2019-01-flights.csv.zip data/output/flights-filtered.csv
 
 For renku to capture information about the execution, we need to make a small
@@ -59,8 +63,6 @@ change: we prepend ``renku run`` to the python command.
 
 .. code-block:: console
 
-    # Create the output directory
-    $ mkdir -p data/output
     $ renku run python src/filter_flights.py data/flight-data/2019-01-flights.csv.zip data/output/flights-filtered.csv
 
     Info: Adding these files to Git LFS:
@@ -177,10 +179,7 @@ Add a second workflow step
 
 We will now use a second script to count the flights in the filtered data file.
 As before, we will fast-forward through this step by downloading the solution.
-You can copy over `the interactive notebook
-<https://renkulab.io/projects/renku-tutorials/renku-tutorial-flights-material/files/blob/notebooks/count_flights.ipynb>`_.
-to your project as before if you wish to play with the data interactively. For
-the next step you must download the script from `here
+For the next step you must download the script from `here
 <https://renkulab.io/projects/renku-tutorials/renku-tutorial-flights-material/files/blob/src/count_flights.py>`_:
 
 .. code-block:: python

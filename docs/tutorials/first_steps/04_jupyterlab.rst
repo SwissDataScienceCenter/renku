@@ -14,8 +14,8 @@ notebook (4).
     :align: center
     :alt: Files tab and notebooks folder in JupyterLab
 
-To rename the notebook, right-click on its name (``Untitled.ipynb``) and
-select rename.
+To rename the notebook, right-click on its name (``Untitled.ipynb``), select
+rename, and enter a new name (like ``mynotebook.ipynb``).
 
 .. image:: ../../_static/images/jupyterlab-rename.png
     :width: 85%
