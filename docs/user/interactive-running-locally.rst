@@ -119,3 +119,6 @@ To access the running environment, copy the last of these links (starting with
 ``https://127.0.0.1``) into your browser and you should drop straight into
 the jupyter lab session. The rest should feel rather familiar - your environment
 should be identical to what you are used to seeing in your RenkuLab sessions.
+
+For RStudio projects, after you navigate to the jupyterlab session, change the
+URL end-point to ``/rstudio/`` instead of ``/lab``.
