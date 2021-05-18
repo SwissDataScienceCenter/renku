@@ -95,7 +95,7 @@ built for this commit. From the project's root directory, run
     $ repoName=$(basename -s .git `git config --get remote.origin.url`); \
         docker run --rm -ti -v ${PWD}:/work/$repoName \
         --workdir /work/$repoName -p 8888:8888 \
-        registry.renkulab.io/rok.roskar/flights-tutorial:53cbd6a jupyter lab
+        registry.renkulab.io/rok.roskar/flights-tutorial:53cbd6a jupyter lab --ip=0.0.0.0
 
 Replace the image name here with whatever image you derived for your project and
 commit above (or if you built your own image, the image/tag combo you used).
@@ -119,3 +119,6 @@ To access the running environment, copy the last of these links (starting with
 ``https://127.0.0.1``) into your browser and you should drop straight into
 the jupyter lab session. The rest should feel rather familiar - your environment
 should be identical to what you are used to seeing in your RenkuLab sessions.
+
+For RStudio projects, after you navigate to the jupyterlab session, change the
+URL end-point to ``/rstudio/`` instead of ``/lab``.
