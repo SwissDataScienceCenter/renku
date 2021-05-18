@@ -66,15 +66,13 @@ executed, we add some instructions here.
 
 Upgrading to 0.8.x
 ******************
-We have changed the name of the `serverOptions` section in the `values.yaml`. To keep the same settings
-as before simply rename your existing `serverOptions` section to `serverOptionsUI` and add a new section 
-called `serverOptionsDefaults`. The information in this new `serverOptionsDefaults` section
-is used for any server options that are not specified explicitly when launching a session. This allows a renku
-admin to leave out a specific option from the `serverOptionsUI` section and apply the value specified in the
-`serverOptionsDefaults` section for all sessions. Please note that the default values specified in the 
-`serverOptionsDefaults` should be available as one of the options in `serverOptionsUI` - if the specific option
-appears in both sections. The defaults in the `serverOptionsUI` section now only refer to the default selection
-that is shown to the user in the UI.
+We have added add a new section called `serverDefaults` to the `values.yaml` for the notebook service. 
+The information in this new `serverDefaults` section is used for any server options that are not specified 
+explicitly when launching a session. This allows a renku admin to leave out a specific option from the 
+`serverOptions` section and apply the value specified in the `serverDefaults` section for all sessions. 
+Please note that the default values specified in the  `serverDefaults` should be available as one of the options 
+in `serverOptions` - if the specific option appears in both sections. The defaults in the `serverOptions` 
+section now only refer to the default selection that is shown to the user in the UI.
 
 Upgrading to 0.8.0
 ******************
