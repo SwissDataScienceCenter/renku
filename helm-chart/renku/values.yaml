@@ -9,9 +9,11 @@ global:
   gitlab:
     ## Spawn a gitlab instance
     enabled: true
-    ## The URL path prefix under which gitlab is running.
+    ## The URL path under which gitlab is running.
     ## If GitLab is deployed along side with Renku, it should be equal to 'https://gitlab.'<global.renku.domain>
     url:
+    ## The URL path for the registry that hosts the docker images.
+    ## If GitLab is deployed along side with Renku, it should be equal to 'https://registry.gitlab.'<global.renku.domain>
     registryHost:
     ## The gitlab application ID and secret for Renku
     appSecret:
@@ -97,10 +99,10 @@ global:
       value:
       overwriteOnHelmUpgrade: false
 
-  ## Global section of GitLab, not needed if not signupEnabled
+  ## Global section of GitLab, not needed for external GitLab
   edition: ce
   hosts:
-    ## Domain name for the deployed instance of Gitlab (could use the same as Renku)
+    ## Domain name for the deployed instance of Gitlab (can use the same as Renku)
     ## This will yield a GitLab deployment under gitlab.example.local
     domain:
     ## ExternalIP of where the above domain points to
@@ -135,6 +137,20 @@ global:
       providers:
        - secret: renku-oauth-provider
          key: provider
+  ##  lfs:
+    ##  enabled: true
+    ##  proxy_download: false
+    ##  bucket: renku-lfs-objects
+    ##  connection:
+    ##    secret: gitlab-s3-buckets
+    ##    key: lfs-s3-bucket
+    ##    secretContent:
+    ##      provider: 'AWS'
+    ##      endpoint: 'https://<fill-endpoint>'
+    ##      aws_access_key_id: '<fill-key-id>'
+    ##      aws_secret_access_key: '<fill-access-key>'
+    ##      aws_signature_version: 2
+    ##      path_style: true
 
 ## Ingress configuration
 ## See: https://kubernetes.io/docs/concepts/services-networking/ingress/
