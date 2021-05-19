@@ -1,0 +1,87 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: postgresql-dump-server
+  labels:
+    app: postgresql-dump-server
+spec:
+  restartPolicy: Always
+  volumes:
+    - name: pg-vol-old
+      persistentVolumeClaim:
+        claimName: ## EDIT - the PVC that backs your current database.
+  containers:
+    - name: postgresql-dump-server
+      image: ## EDIT - your current postgresql image/version
+      resources:
+        limits:
+          cpu: 500m
+          memory: 512Mi
+        requests:
+          cpu: 500m
+          memory: 512Mi
+      env:
+        - name: POSTGRES_USER
+          value: postgres
+        - name: POSTGRES_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: renku-postgresql ## EDIT(optional) - most likely <renku-release-name>-postgresql
+              key: postgresql-password
+      ports:
+        - containerPort: 5432
+      volumeMounts:
+        - mountPath: /bitnami/postgresql
+          name: pg-vol-old
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: postgresql-dump-server
+spec:
+  selector:
+    app: postgresql-dump-server
+  ports:
+    - protocol: TCP
+      port: 5432
+      targetPort: 5432
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: postgresql-dump-job
+spec:
+  template:
+    spec:
+      restartPolicy: OnFailure
+      volumes:
+        - name: pg-vol-tmp
+          persistentVolumeClaim:
+            claimName: data-renku-postgresql-tmp
+      containers:
+        - name: postgresql-dump
+          image: ## EDIT - your current postgresql image/version
+          command: ["bash", "-c"]
+          args: ["pg_dumpall -f /psql-dump-data/dump"]
+          resources:
+            limits:
+              cpu: 100m
+              memory: 256Mi
+            requests:
+              cpu: 100m
+              memory: 256Mi
+          securityContext:
+            runAsUser: 0
+          env:
+            - name: PGHOST
+              value: postgresql-dump-server
+            - name: PGUSER
+              value: postgres
+            - name: PGPASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: renku-postgresql ## EDIT(optional) - most likely <renku-release-name>-postgresql
+                  key: postgresql-password
+          volumeMounts:
+            - mountPath: /psql-dump-data/
+              name: pg-vol-tmp

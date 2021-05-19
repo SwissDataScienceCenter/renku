@@ -127,7 +127,7 @@ object AuthorizeApplicationPage
   def authorizeButton(implicit webDriver: WebDriver): WebElement = eventually {
     find(
       cssSelector(
-        "#content-body > main > div > div > div.modal-body > div > form:nth-child(2) > input.btn.btn-success.prepend-left-10"
+        "input[data-qa-selector='authorization_button']"
       )
     ) getOrElse fail("Authorize button not found")
   }

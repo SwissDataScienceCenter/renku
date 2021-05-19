@@ -6,6 +6,14 @@ Please follow this convention when adding a new row
 * `<type: NEW|EDIT|DELETE> - *<resource name>*: <details>`
 
 ----
+## Unreleased (breaking changes)
+* NEW/EDIT *postgresql.persistence.existingClaim* will most likely need to be modified in the course of upgrading your postgresql version. See [these instructions](https://github.com/SwissDataScienceCenter/renku/tree/master/helm-chart/utils/postgres_migrations/version_upgrades/README.md)
+* NEW/EDIT/DELETE *gitlab.image.tag* might have to be adjusted as we do a GitLab major version bump in with this release. See [these instructions](https://github.com/SwissDataScienceCenter/renku/tree/master/helm-chart#upgrading-to-080)
+
+
+## Upgrading to Renku 0.7.13
+* NEW - *global.gateway.cliClientSecret* has been added when introducing a new "renku-cli" client application in keycloak. Generate through `openssl rand -hex 32`.
+
 
 ## Upgrading to Renku 0.7.9
 * NEW - *ui.uiserverUrl* has been added. The default value is `<domain>/ui-server`.

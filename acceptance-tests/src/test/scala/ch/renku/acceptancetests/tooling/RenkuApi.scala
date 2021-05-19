@@ -16,26 +16,22 @@
  * limitations under the License.
  */
 
-package ch.renku.acceptancetests.workflows
+package ch.renku.acceptancetests.tooling
 
-import ch.renku.acceptancetests.pages.DatasetsPage
-import ch.renku.acceptancetests.tooling.AcceptanceSpec
+import ch.renku.acceptancetests.model.CliVersion
+import org.http4s.Status._
+import org.scalatest.Assertions.fail
 
-import scala.concurrent.duration._
+trait RenkuApi extends RestClient {
+  self: AcceptanceSpecData =>
 
-trait DatasetsSearch {
-  self: AcceptanceSpec =>
-
-  def `search for dataset with phrase`(phrase: String): Unit = {
-    When("the user click the Datasets link on the top bar")
-    click on DatasetsPage.TopBar.datasets
-    sleep(10 seconds)
-    Then("they should see the Datasets search page")
-    verify browserAt DatasetsPage
-
-    When(s"the user types in the '$phrase' in the search field")
-    DatasetsPage.searchBox enterValue phrase
-    And("clicks the search button")
-    click on DatasetsPage.searchButton sleep (5 seconds)
+  lazy val apiCliVersion: CliVersion = {
+    val url = renkuBaseUrl / "api" / "renku" / "version"
+    GET(url).send
+      .whenReceived(status = Ok)
+      .bodyAsJson
+      .extract(jsonRoot.`result`.`latest_version`.string.getOption)
+      .map(CliVersion.get(_).fold(error => fail(error.getMessage), identity))
+      .getOrElse(fail(s"CLI version couldn't be obtained from $url"))
   }
 }

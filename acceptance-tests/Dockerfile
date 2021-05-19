@@ -20,7 +20,6 @@ RUN mkdir -p /usr/share/man/man1 && \
     wget --quiet https://dl.min.io/client/mc/release/linux-amd64/mc -O /usr/local/bin/mc && \
     chmod 0755 /usr/local/bin/mc
 
-ARG renku_python_ref=master
 RUN python3 -m pip install \
     'papermill==2.1.3' \
     'requests>=2.20.0' \
@@ -29,8 +28,7 @@ RUN python3 -m pip install \
     'jupyterlab-git==0.20.0' \
     'pipx>=0.15.0.0' \
     'pandas==0.25.3' \
-    'seaborn==0.9.0' \
-    git+https://github.com/SwissDataScienceCenter/renku-python.git@${renku_python_ref}
+    'seaborn==0.9.0'
 
 ENV DOCKER="1"
 COPY . /tests
