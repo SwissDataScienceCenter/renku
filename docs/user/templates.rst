@@ -439,7 +439,7 @@ programming languages have a straight equivalent in their base packages.
 
 The structure of the dictionary is the following:
 
-.. code-block:: JSON
+.. code-block:: console
 
   {
     "title": <string>,
