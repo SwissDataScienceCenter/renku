@@ -140,7 +140,10 @@ trait Datasets {
 
     Then("the user should see its dataset and to which project it belongs")
     reloadPage() sleep (2 seconds)
-    datasetPage.ProjectsList.link(projectPage).isDisplayed shouldBe true
+
+    `try few times before giving up` { _ =>
+      datasetPage.ProjectsList.link(projectPage).isDisplayed shouldBe true
+    }
 
     datasetPage
   }
