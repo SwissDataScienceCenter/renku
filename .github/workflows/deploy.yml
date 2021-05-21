@@ -33,7 +33,7 @@ jobs:
         RENKU_ANONYMOUS_SESSIONS: true
         RENKU_TESTS_ENABLED: true
         TEST_ARTIFACTS_PATH: "tests-artifacts-${{ github.sha }}"
-        renku: "@master"
+        renku: "@ui-design-2021"
     - uses: 8398a7/action-slack@v3
       with:
         status: custom
