@@ -13,4 +13,14 @@ Follow the steps below to learn how to use Renku to:
    :glob:
    :titlesonly:
 
-   first_steps/*
+   first_steps/01_create_project
+   first_steps/start_an_interactive_session
+   first_steps/02_add_data
+   first_steps/03_python_environment
+   first_steps/04_jupyterlab
+   first_steps/05_interactive_exploration
+   first_steps/refactor_filter_notebook
+   first_steps/06_create_workflow
+   first_steps/update_workflow
+   first_steps/07_sharing_is_caring
+   first_steps/08_where_to_go

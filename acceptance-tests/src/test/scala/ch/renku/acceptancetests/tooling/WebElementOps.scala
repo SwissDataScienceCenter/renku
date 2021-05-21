@@ -30,6 +30,8 @@ trait WebElementOps {
       typeInValue(value)
       sleep(1000)
       if (element.getAttribute("value") != value) {
+        element.clear()
+        sleep(500)
         typeInValue(value)
         sleep(1000)
       }
