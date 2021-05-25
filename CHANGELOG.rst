@@ -13,7 +13,7 @@ Improvements
 * **Project templates**: Community contributed template ``AiiDA`` has been updated. See `a06ab24 <https://github.com/SwissDataScienceCenter/contributed-project-templates/commit/a06ab248e92203343e48854ddc118c4488dd3379>`__.
 * **Project templates**: Project templates come with Renku CLI ``v0.15.2`` by default.
 * **Renku CLI**: add support to dataset update for detecting changes to local files.
-* **Renku CLI**: add support to import/export `OLOS <https://olos.swiss/>`__ datasets.
+* **Renku CLI**: add support to export `OLOS <https://olos.swiss/>`__ datasets.
 * **Renku CLI**: add JSON output format to ``renku dataset ls`` and ``renku dataset ls-files``.
 * **Renku CLI**: detect filename from `content-disposition header <https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Disposition>`__ when adding a dataset.
 
