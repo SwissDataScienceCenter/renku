@@ -59,8 +59,8 @@ trait Environments {
     And("the Environments tab")
     click on projectPage.Environments.tab sleep (10 seconds)
     And("they turn off the interactive session they started before")
-    click on projectPage.Environments.Running.connectDotButton
-    And("click on connect button")
+    click on projectPage.Environments.Running.sessionDropdownMenu sleep (2 seconds)
+    And("click on stop button")
     click on projectPage.Environments.Running.stopButton sleep (10 seconds)
     Then("the session gets stopped and they can see the New Session link")
     verify userCanSee projectPage.Environments.newLink
