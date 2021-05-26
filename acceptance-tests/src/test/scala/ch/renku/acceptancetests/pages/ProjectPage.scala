@@ -291,15 +291,15 @@ class ProjectPage(val projectSlug: String, val namespace: String)
       findAll(cssSelector("div > form > button.btn.btn-primary")).find(_.text == "Start environment")
     }
 
-    def connectToJupyterLabLink(implicit webDriver: WebDriver): WebElement = eventually {
+     def connectToJupyterLabLink(implicit webDriver: WebDriver): WebElement = eventually {
       findAll(cssSelector("a[href*='jupyterhub/user/']"))
-        .find(_.text == "Connect")
+        .find(_.text.endsWith("Open in new tab"))
         .getOrElse(fail("Connect to environment button not found"))
     }
 
     def verifyImageReady(implicit webDriver: WebDriver): Unit = eventually {
       maybeImageReadyBadge getOrElse {
-        sleep(2 second)
+        sleep(5 second)
         webDriver.navigate.refresh()
         fail("Image not ready")
       }
@@ -320,10 +320,10 @@ class ProjectPage(val projectSlug: String, val namespace: String)
       }
 
       def connectToJupyterLab(implicit webDriver: WebDriver, spec: AcceptanceSpec): Unit =
-        connectToJupyterLab(s"a[href*='/jupyterhub/user/']")
+        connectToJupyterLab(s"div.sessionsButton > button", s"a[href*='/jupyterhub/user/']")
 
       def connectToAnonymousJupyterLab(implicit webDriver: WebDriver, spec: AcceptanceSpec): Unit =
-        connectToJupyterLab(s"a[href*='/jupyterhub-tmp/user/']")
+        connectToJupyterLab(s"div.sessionsButton > button", s"a[href*='/jupyterhub-tmp/user/']")
 
       def connectButton(buttonSelector: String)(implicit webDriver: WebDriver): WebElement = eventually {
         find(
@@ -334,10 +334,15 @@ class ProjectPage(val projectSlug: String, val namespace: String)
       }
 
       private def connectToJupyterLab(
+          buttonDropdown:   String,
           buttonSelector:   String
       )(implicit webDriver: WebDriver, spec: AcceptanceSpec): Unit = eventually {
         import spec.{And, Then}
         And("tries to connect to JupyterLab " + buttonSelector)
+        if (!buttonDropdown.isEmpty()) {
+          connectButton(buttonDropdown).click()
+          sleep(2 seconds)
+        }
         connectButton(buttonSelector).click()
         sleep(2 seconds)
 
