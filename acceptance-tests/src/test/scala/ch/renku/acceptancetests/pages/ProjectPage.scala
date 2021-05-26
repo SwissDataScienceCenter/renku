@@ -320,10 +320,10 @@ class ProjectPage(val projectSlug: String, val namespace: String)
       }
 
       def connectToJupyterLab(implicit webDriver: WebDriver, spec: AcceptanceSpec): Unit =
-        connectToJupyterLab(s"div.sessionsButton > button", s"a[href*='/jupyterhub/user/']")
+        connectToJupyterLab(s"a[href*='/jupyterhub/user/']", s"div.sessionsButton > button")
 
       def connectToAnonymousJupyterLab(implicit webDriver: WebDriver, spec: AcceptanceSpec): Unit =
-        connectToJupyterLab(s"div.sessionsButton > button", s"a[href*='/jupyterhub-tmp/user/']")
+        connectToJupyterLab(s"a[href*='/jupyterhub-tmp/user/']", s"div.sessionsButton > button")
 
       def connectButton(buttonSelector: String)(implicit webDriver: WebDriver): WebElement = eventually {
         find(
@@ -334,8 +334,8 @@ class ProjectPage(val projectSlug: String, val namespace: String)
       }
 
       private def connectToJupyterLab(
-          buttonDropdown:   String,
-          buttonSelector:   String
+          buttonSelector:   String,
+          buttonDropdown:   String
       )(implicit webDriver: WebDriver, spec: AcceptanceSpec): Unit = eventually {
         import spec.{And, Then}
         And("tries to connect to JupyterLab " + buttonSelector)
@@ -361,16 +361,15 @@ class ProjectPage(val projectSlug: String, val namespace: String)
         }
       }
 
-      def connectDotButton(implicit webDriver: WebDriver): WebElement = eventually {
-        findAll(cssSelector("button.btn.btn-secondary svg[data-icon='ellipsis-v']"))
-          .find(_.findElement(By.xpath("./../..")).getText.equals("Connect"))
-          .getOrElse(fail("First row Interactive Environment ... button not found"))
-          .parent
+      def sessionDropdownMenu(implicit webDriver: WebDriver): WebElement = eventually {
+        findAll(cssSelector("div.sessionsButton > button"))
+          .find(_.text.isEmpty())
+          .getOrElse(fail("Session dropdown button not found"))
       }
 
       def stopButton(implicit webDriver: WebDriver): WebElement = eventually {
         find(cssSelector("button.dropdown-item svg[data-icon='stop-circle']"))
-          .getOrElse(fail("First row Interactive Environment Stop button not found"))
+          .getOrElse(fail("Session stop button not found in the dropdown"))
           .parent
       }
 
