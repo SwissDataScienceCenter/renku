@@ -291,7 +291,7 @@ class ProjectPage(val projectSlug: String, val namespace: String)
       findAll(cssSelector("div > form > button.btn.btn-primary")).find(_.text == "Start environment")
     }
 
-     def connectToJupyterLabLink(implicit webDriver: WebDriver): WebElement = eventually {
+    def connectToJupyterLabLink(implicit webDriver: WebDriver): WebElement = eventually {
       findAll(cssSelector("a[href*='jupyterhub/user/']"))
         .find(_.text.endsWith("Open in new tab"))
         .getOrElse(fail("Connect to environment button not found"))
