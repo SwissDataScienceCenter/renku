@@ -61,7 +61,8 @@ So to run it, we would normally execute the following:
 
     .. code-block:: console
 
-        $ julia FilterFlights.jl data/flight-data/2019-01-flights.csv.zip data/output/flights-filtered.csv
+        # Here for comparison -- do not run these lines
+        $ # julia FilterFlights.jl data/flight-data/2019-01-flights.csv.zip data/output/flights-filtered.csv
 
 .. tabbed:: R
     
