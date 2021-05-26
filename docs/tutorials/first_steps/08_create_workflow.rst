@@ -53,9 +53,9 @@ So to run it, we would normally execute the following:
 
     .. code-block:: console
     
-        # Create the output directory
-        $ mkdir -p data/output
-        $ python src/filter_flights.py data/flight-data/2019-01-flights.csv.zip data/output/flights-filtered.csv
+        # Here for comparison -- do not run these lines
+        $ # mkdir -p data/output
+        $ # python src/filter_flights.py data/flight-data/2019-01-flights.csv.zip data/output/flights-filtered.csv
 
 .. tabbed:: Julia 
 
