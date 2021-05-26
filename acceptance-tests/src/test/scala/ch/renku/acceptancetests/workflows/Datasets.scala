@@ -22,9 +22,10 @@ import ch.renku.acceptancetests.model.datasets
 import ch.renku.acceptancetests.model.datasets.{DatasetName, FileUrl}
 import ch.renku.acceptancetests.pages.DatasetPage
 import ch.renku.acceptancetests.tooling.{AcceptanceSpec, KnowledgeGraphApi}
-import org.openqa.selenium.{WebDriver, WebElement}
+import org.openqa.selenium.{StaleElementReferenceException, WebElement}
 
 import scala.concurrent.duration._
+import scala.util.Try
 
 trait Datasets {
   self: AcceptanceSpec with Project with KnowledgeGraphApi =>
@@ -38,6 +39,7 @@ trait Datasets {
     import Modification._
     val newDatasetName = datasets.DatasetName("new")
     val newDatasetPage = DatasetPage(newDatasetName)
+
     Given("the user is on the Datasets tab")
     click on projectPage.Datasets.tab sleep (1 second)
 
@@ -69,6 +71,7 @@ trait Datasets {
     import Modification._
     val newDatasetName = datasets.DatasetName("new")
     val newDatasetPage = DatasetPage(newDatasetName)
+
     Given("the user is on the Datasets tab")
     click on projectPage.Datasets.tab sleep (1 second)
 
@@ -140,14 +143,23 @@ trait Datasets {
 
     Then("the user should see its dataset and to which project it belongs")
     reloadPage() sleep (2 seconds)
-    datasetPage.ProjectsList.link(projectPage).isDisplayed shouldBe true
+
+    `try few times before giving up` { _ =>
+      datasetPage.ProjectsList.link(projectPage).isDisplayed shouldBe true
+    }
 
     datasetPage
   }
 
   case class Modification private (name: String, field: DatasetPage => WebElement, newValue: String) {
-    def modifying(datasetPage: DatasetPage): Unit =
+    def modifying(datasetPage: DatasetPage): Unit = Try {
       field(datasetPage) enterValue newValue
+    } fold (retryOnStaleElement(datasetPage), identity)
+
+    private def retryOnStaleElement(datasetPage: DatasetPage): Throwable => Unit = {
+      case _: StaleElementReferenceException => modifying(datasetPage)
+      case other => throw other
+    }
   }
 
   object Modification {
