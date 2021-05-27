@@ -21,7 +21,7 @@ ui.homepage.tutorialLink
 ^^^^^^^^^^^^^^^^^^^^^^^^
 
 ``ui.homepage.tutorialLink`` contains the URL that is used when a user navigates to
-the tutorial. The default is to take the user to the tutorial in the documentaion:
+the tutorial. The default is to take the user to the tutorial in the documentation:
 https://renku.readthedocs.io/en/latest/tutorials/01_firststeps.html. If your
 deployment has a custom tutorial, for example, one hosted on the deployment itself,
 you can replace the link to the tutorial.
@@ -31,7 +31,7 @@ ui.homepage.projects
 
 A deployment may want to highlight certain projects that are hosted on it.
 The field ``ui.homepage.projects`` makes that possible. It contains a list of projects,
-which are by default empty. To get your projects here you should povide a list of 
+which are by default empty. To get your projects here you should provide a list of 
 objects with the field ``projectPath``, which should contain the fully qualified name
 of the projects. E.g.,::
 
