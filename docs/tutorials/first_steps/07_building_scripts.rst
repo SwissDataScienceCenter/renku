@@ -96,10 +96,10 @@ you can just download the relevant scripts.
         
         args <- commandArgs(trailingOnly = TRUE)
 
-        if (length(args) != 2) {
-        stop("At least two arguments must be supplied (input and output files).",
-            call. = FALSE)
-        }
+	if (length(args) != 2) {
+	  stop("At least two arguments must be supplied (input and output files).",
+	       call. = FALSE)
+	}
         
         inputPath <- args[1]
         outputPath <- args[2]

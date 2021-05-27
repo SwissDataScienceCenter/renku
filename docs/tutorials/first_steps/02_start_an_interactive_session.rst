@@ -6,7 +6,7 @@ Start an interactive session
 One of the main collaborative features of the Renku platform are hosted
 sessions. These sessions are fully-featured Jupyter notebook
 servers running either JupyterLab, RStudio, VSCode or a fully-featured Linux
-desktop using VNC. In this tutorial, we will showcase the project with JupyterLab and RStudio environments.
+desktop using VNC. We will use JupyterLab and RStudio for this tutorial.
 
 In the previous step we :ref:`created a new project <create_project>` using
 the Python, Julia or R template; we can start working with the project right from the
