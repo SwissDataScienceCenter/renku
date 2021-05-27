@@ -62,7 +62,7 @@ spec:
           serviceName: {{ $gitlabFullname }}
           servicePort: {{ $gitlabServicePort }}
       {{- end }}
-      - path: /repo
+      - path: /repos
         backend:
           serviceName: {{ $gatewayFullname }}
           servicePort: {{ $gatewayServicePort }}
