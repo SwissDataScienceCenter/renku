@@ -339,7 +339,9 @@ class ProjectPage(val projectSlug: String, val namespace: String)
       )(implicit webDriver: WebDriver, spec: AcceptanceSpec): Unit = eventually {
         import spec.{And, Then}
         And("tries to connect to JupyterLab " + buttonSelector)
-        if (!buttonDropdown.isEmpty()) {
+        sleep(2 seconds)
+        // check the dropdown availability even when provided to prevent occasional failures
+        if (!buttonDropdown.isEmpty() && (findAll(cssSelector(buttonDropdown)) toList).size > 0) {
           connectButton(buttonDropdown).click()
           sleep(2 seconds)
         }
