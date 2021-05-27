@@ -31,7 +31,7 @@ kubectl -n renku exec renku-postgresql-0 -- bash -c 'PGUSER=$POSTGRES_USER PGPAS
 
 ## Load the data
 
-- Execute `kubectl apply -f psql_load.yaml` and wait for the `postgresql-load-job` to complete. This might take a while - for example 20 minutes when testing with a PostgreSQL instance holding 1.5 GB of data.
+- Execute `kubectl apply -n <your-namespace> -f psql_load.yaml` and wait for the `postgresql-load-job` to complete. This might take a while - for example 20 minutes when testing with a PostgreSQL instance holding 1.5 GB of data.
 - Remove the temporary resources using `kubectl delete -n <your-namespace> -f psql_load.yaml`.
 
 ## Restart PostgreSQL
