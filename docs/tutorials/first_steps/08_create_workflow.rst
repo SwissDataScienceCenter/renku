@@ -53,21 +53,22 @@ So to run it, we would normally execute the following:
 
     .. code-block:: console
     
-        # Create the output directory
-        $ mkdir -p data/output
-        $ python src/filter_flights.py data/flight-data/2019-01-flights.csv.zip data/output/flights-filtered.csv
+        # Here for comparison -- do not run these lines
+        $ # mkdir -p data/output
+        $ # python src/filter_flights.py data/flight-data/2019-01-flights.csv.zip data/output/flights-filtered.csv
 
 .. tabbed:: Julia 
 
     .. code-block:: console
 
-        $ julia FilterFlights.jl data/flight-data/2019-01-flights.csv.zip data/output/flights-filtered.csv
+        # Here for comparison -- do not run these lines
+        $ # julia FilterFlights.jl data/flight-data/2019-01-flights.csv.zip data/output/flights-filtered.csv
 
 .. tabbed:: R
     
     .. code-block:: console
-
-        $ Rscript RunFilterFlights.R data/flight-data/2019-01-flights.csv.zip data/output/flights-filtered.csv
+        # Here for comparison -- do not run these lines
+        $ # Rscript RunFilterFlights.R data/flight-data/2019-01-flights.csv.zip data/output/flights-filtered.csv
 
 
 For renku to capture information about the execution, we need to make a small
