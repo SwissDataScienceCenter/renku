@@ -136,7 +136,7 @@ trait Login {
   private def `authorize application if necessary`(attempt: String = "first"): Unit =
     if (currentUrl startsWith AuthorizeApplicationPage.url) {
       And(s"authorizes the application for the $attempt time")
-      AuthorizeApplicationPage authorize;
+      AuthorizeApplicationPage authorize
 
       // It may be necessary to authorize twice
       `authorize application if necessary`(attempt = "second")
