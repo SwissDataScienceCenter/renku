@@ -18,6 +18,7 @@
 
 package ch.renku.acceptancetests.tooling
 
+import ch.renku.acceptancetests.model.AuthorizationToken
 import ch.renku.acceptancetests.model.AuthorizationToken.OAuthAccessToken
 import ch.renku.acceptancetests.model.projects.ProjectIdentifier
 import org.http4s.Status._
@@ -27,7 +28,10 @@ import org.scalatest.Assertions.fail
 trait GitLabApi extends RestClient {
   self: AcceptanceSpecData =>
 
-  lazy val oauthAccessToken: OAuthAccessToken =
+  lazy val authorizationToken: AuthorizationToken =
+    userCredentials.maybeGitLabAccessToken getOrElse oauthAccessToken
+
+  private lazy val oauthAccessToken: OAuthAccessToken =
     POST(gitLabBaseUrl / "oauth" / "token")
       .withEntity(
         UrlForm(
@@ -45,7 +49,7 @@ trait GitLabApi extends RestClient {
 
   def `get GitLab project id`(projectId: ProjectIdentifier): Int =
     GET(gitLabAPIUrl / "projects" / projectId.asProjectPath)
-      .withAuthorizationToken(oauthAccessToken)
+      .withAuthorizationToken(authorizationToken)
       .send
       .whenReceived(status = Ok)
       .bodyAsJson
@@ -54,7 +58,7 @@ trait GitLabApi extends RestClient {
 
   def `project exists in GitLab`(projectId: ProjectIdentifier): Boolean =
     GET(gitLabAPIUrl / "projects" / projectId.asProjectPath)
-      .withAuthorizationToken(oauthAccessToken)
+      .withAuthorizationToken(authorizationToken)
       .send
       .responseStatus match {
       case Ok       => true
@@ -64,7 +68,7 @@ trait GitLabApi extends RestClient {
 
   def `delete project in GitLab`(projectId: ProjectIdentifier): Unit =
     DELETE(gitLabAPIUrl / "projects" / projectId.asProjectPath)
-      .withAuthorizationToken(oauthAccessToken)
+      .withAuthorizationToken(authorizationToken)
       .send
       .expect(status = Accepted, otherwiseLog = s"Deletion of '${projectId.slug}' project in GitLab failed")
 }

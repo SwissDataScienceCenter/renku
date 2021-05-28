@@ -20,6 +20,7 @@ package ch.renku.acceptancetests.model
 
 import ch.renku.acceptancetests.generators.Generators.Implicits._
 import ch.renku.acceptancetests.generators.Generators._
+import ch.renku.acceptancetests.model.AuthorizationToken.{OAuthAccessToken, PersonalAccessToken}
 import ch.renku.acceptancetests.model.projects.ProjectDetails._
 import ch.renku.acceptancetests.model.users.UserCredentials
 
@@ -69,15 +70,19 @@ object projects {
   object ProjectUrl {
 
     implicit class ProjectUrlOps(projectUrl: ProjectUrl)(implicit userCredentials: UserCredentials) {
-      import ch.renku.acceptancetests.tooling.UrlEncoder.urlEncode
 
-      lazy val addGitCredentials: String = {
+      def add(authorizationToken: AuthorizationToken): String = {
         val protocol = new URL(projectUrl.value).getProtocol
         projectUrl.value
           .replace(
             s"$protocol://",
-            s"$protocol://${urlEncode(userCredentials.username)}:${urlEncode(userCredentials.password)}@"
+            s"$protocol://${tokenPart(authorizationToken)}"
           )
+      }
+
+      private lazy val tokenPart: AuthorizationToken => String = {
+        case OAuthAccessToken(token)    => s"oauth2:$token@"
+        case PersonalAccessToken(token) => s"gitlab-ci-token:$token@"
       }
     }
   }
