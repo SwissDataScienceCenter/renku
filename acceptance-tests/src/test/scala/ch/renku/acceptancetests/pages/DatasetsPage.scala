@@ -35,11 +35,11 @@ object DatasetsPage
   }
 
   def searchButton(implicit webDriver: WebDriver): WebElement = eventually {
-    find(cssSelector("form button.btn.btn-primary")) getOrElse fail("Datasets -> search button cannot be found")
+    find(cssSelector("#searchButton")) getOrElse fail("Datasets -> search button cannot be found")
   }
 
   def searchResultLinks(implicit webDriver: WebDriver): List[WebElement] = eventually {
-    findAll(cssSelector("div.col-sm-12.col-md-8 div.card-body a[href^='/datasets/']")).toList
+    findAll(cssSelector(".rk-search-result > div > div.title")).toList
   }
 
   def maybeBouncer(implicit webDriver: WebDriver): Option[WebElement] = eventually {
