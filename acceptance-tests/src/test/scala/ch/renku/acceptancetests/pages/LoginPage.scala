@@ -19,7 +19,7 @@
 package ch.renku.acceptancetests.pages
 
 import ch.renku.acceptancetests.model.users.UserCredentials
-import org.openqa.selenium.{WebDriver, WebElement}
+import org.openqa.selenium.{JavascriptExecutor, WebDriver, WebElement}
 import org.scalatestplus.selenium.WebBrowser._
 
 import scala.concurrent.duration._
@@ -122,14 +122,12 @@ object AuthorizeApplicationPage
 
   override def pageReadyElement(implicit webDriver: WebDriver): Option[WebElement] = Some(authorizeButton)
 
-  def authorize(implicit webDriver: WebDriver): Unit = authorizeButton.click()
+  def authorize(implicit webDriver: WebDriver): Unit =
+    webDriver.asInstanceOf[JavascriptExecutor].executeScript("arguments[0].click()", authorizeButton)
 
   def authorizeButton(implicit webDriver: WebDriver): WebElement = eventually {
-    find(
-      cssSelector(
-        "input[data-qa-selector='authorization_button']"
-      )
-    ) getOrElse fail("Authorize button not found")
+    find(cssSelector("input[data-qa-selector='authorization_button']"))
+      .getOrElse(fail("Authorize button not found"))
   }
 }
 
