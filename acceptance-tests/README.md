@@ -120,23 +120,24 @@ order is command-line argument, environment variable and the defaults file.
 
 To create a `tests-defaults.conf` file, copy the `tests-defaults.conf.template` file and fill in the values.
 
-| Argument   | Environment               | Purpose                                                                                             |
-| ---------- | ------------------------- | ----------------------------------------------------------------------------------------------------|
-| env        | RENKU_TEST_URL            | URL to a Renku server, e.g., https://dev.renku.ch                                                   |
-| cliVersion | RENKU_CLI_VERSION         | the version of Renku CLI the tests should use; read from the renku API if not specified             |
-| gitLabUrl  | GITLAB_TEST_URL           | URL to a GitLab server, e.g., https://dev.renku.ch/gitlab; defaulted to env/gitlab if not specified |
-| email      | RENKU_TEST_EMAIL          | user's email e.g. `jakub.chrobasik@epfl.ch`                                                         |
-| username   | RENKU_TEST_USERNAME       | user's username e.g. `jakub.chrobasik1`                                                             |
-| fullname   | RENKU_TEST_FULL_NAME      | user's full name e.g. `Jakub Józef Chrobasik`                                                       |
-| password   | RENKU_TEST_PASSWORD       | user's password                                                                                     |
-| provider   | RENKU_TEST_PROVIDER       | if non-empty, use an OpenID provider for auth                                                       |
-| register   | RENKU_TEST_REGISTER       | if non-empty, register a new user; has precedence over provider                                     |
-| docsrun    | RENKU_TEST_DOCS_RUN       | if non-empty, screenshot for docs during hands-on test                                              |
-| extant     | RENKU_TEST_EXTANT_PROJECT | if non-empty, an existing project to use for tests                                                  |
-| anon       | RENKU_TEST_ANON_PROJECT   | namespace/name for the project to test anonymously                                                  |
-| anonAvail  | RENKU_TEST_ANON_AVAILABLE | if true, anonymous environments will be tested.                                                     |
-| batchRem   | RENKU_TEST_BATCH_REMOVE   | if true, run the BatchRemoveProjectSpec                                                             |
-| remPattern | RENKU_TEST_REMOVE_PATTERN | pattern to match to decide if a project should be batch removed                                     |
+| Argument          | Environment                    | Purpose                                                                                                                                                                                                                                                |
+| ----------------- | ------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| env               | RENKU_TEST_URL                 | URL to a Renku server, e.g., https://dev.renku.ch                                                                                                                                                                                                      |
+| cliVersion        | RENKU_CLI_VERSION              | the version of Renku CLI the tests should use; read from the renku API if not specified                                                                                                                                                                |
+| gitLabUrl         | GITLAB_TEST_URL                | URL to a GitLab server, e.g., https://dev.renku.ch/gitlab; defaulted to env/gitlab if not specified                                                                                                                                                    |
+| email             | RENKU_TEST_EMAIL               | user's email e.g. `jakub.chrobasik@epfl.ch`                                                                                                                                                                                                            |
+| username          | RENKU_TEST_USERNAME            | user's username e.g. `jakub.chrobasik1`                                                                                                                                                                                                                |
+| fullname          | RENKU_TEST_FULL_NAME           | user's full name e.g. `Jakub Józef Chrobasik`                                                                                                                                                                                                          |
+| password          | RENKU_TEST_PASSWORD            | user's password                                                                                                                                                                                                                                        |
+| gitlabaccesstoken | RENKU_TEST_GITLAB_ACCESS_TOKEN | user's personal access token in GitLab with `api`, `read_api`, `read_repository`, `write_repository` scopes (optional - if missing credentials are used to obtain an oauth token which requires the given `username` and `password` to work on GitLab) |
+| provider          | RENKU_TEST_PROVIDER            | if non-empty, use an OpenID provider for auth                                                                                                                                                                                                          |
+| register          | RENKU_TEST_REGISTER            | if non-empty, register a new user; has precedence over provider                                                                                                                                                                                        |
+| docsrun           | RENKU_TEST_DOCS_RUN            | if non-empty, screenshot for docs during hands-on test                                                                                                                                                                                                 |
+| extant            | RENKU_TEST_EXTANT_PROJECT      | if non-empty, an existing project to use for tests                                                                                                                                                                                                     |
+| anon              | RENKU_TEST_ANON_PROJECT        | namespace/name for the project to test anonymously                                                                                                                                                                                                     |
+| anonAvail         | RENKU_TEST_ANON_AVAILABLE      | if true, anonymous environments will be tested.                                                                                                                                                                                                        |
+| batchRem          | RENKU_TEST_BATCH_REMOVE        | if true, run the BatchRemoveProjectSpec                                                                                                                                                                                                                |
+| remPattern        | RENKU_TEST_REMOVE_PATTERN      | pattern to match to decide if a project should be batch removed                                                                                                                                                                                        |
 
 For example, the following may be run in the project's root: `sbt -Denv=https://renku-kuba.dev.renku.ch
 -Demail=<email> -Dusername=<username> -Dfullname='<full user name>' -Dpassword=<password> test`
