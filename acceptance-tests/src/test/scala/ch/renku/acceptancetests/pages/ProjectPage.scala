@@ -76,7 +76,7 @@ class ProjectPage(val projectSlug: String, val namespace: String)
     }
 
     def projectDescription(implicit webDriver: WebDriver): WebElement = eventually {
-      find(cssSelector("div.row span.lead")) getOrElse fail("Overview -> Project Description not found")
+      find(cssSelector(".project-description")) getOrElse fail("Overview -> Project Description not found")
     }
 
     def descriptionButton(implicit webDriver: WebDriver): WebElement = eventually {
@@ -123,12 +123,11 @@ class ProjectPage(val projectSlug: String, val namespace: String)
       }
 
       def mrTitleElements(implicit webDriver: WebDriver): List[WebBrowser.Element] = eventually {
-        findAll(cssSelector("span.issue-title a")) toList
+        findAll(cssSelector(".rk-search-result > div > div.title")).toList
       }
 
       def mergeRequestsTitles(implicit webDriver: WebDriver): List[String] =
         mrTitleElements.map(_.text)
-
     }
 
     object Issues {
@@ -144,7 +143,7 @@ class ProjectPage(val projectSlug: String, val namespace: String)
       }
 
       def issueTitleElements(implicit webDriver: WebDriver): List[WebBrowser.Element] = eventually {
-        findAll(cssSelector("span.issue-title a")) toList
+        findAll(cssSelector(".rk-search-result > div > div.title")).toList
       }
 
       def issueTitles(implicit webDriver: WebDriver): List[String] =
@@ -162,7 +161,7 @@ class ProjectPage(val projectSlug: String, val namespace: String)
         }
 
         def markdownSwitch(implicit webDriver: WebDriver): WebElement = eventually {
-          find(cssSelector("div.float-right.custom-switch.custom-control > label")) getOrElse
+          find(cssSelector("#CKEditorSwitch")) getOrElse
             fail("Markdown switch not found")
         }
 
@@ -171,7 +170,7 @@ class ProjectPage(val projectSlug: String, val namespace: String)
         }
 
         def createIssueButton(implicit webDriver: WebDriver): WebElement = eventually {
-          findAll(cssSelector("button[type='submit']")).find(_.text == "Create Issue") getOrElse fail(
+          findAll(cssSelector("button[type='submit']")).find(_.text.contains("Create Issue")) getOrElse fail(
             "Create Issue button not found"
           )
         }
@@ -210,7 +209,7 @@ class ProjectPage(val projectSlug: String, val namespace: String)
     object Info {
 
       def heading(implicit webDriver: WebDriver): WebElement = eventually {
-        find(cssSelector("div.card div.align-items-baseline.card-header")) getOrElse fail(
+        find(cssSelector("#file-card-header")) getOrElse fail(
           "Files -> Info heading not found"
         )
       }
@@ -275,10 +274,9 @@ class ProjectPage(val projectSlug: String, val namespace: String)
     object DatasetsList {
       def link(to: DatasetPage)(implicit webDriver: WebDriver): WebElement =
         eventually {
-          find(cssSelector(s"div.project-list-row a[href='${to.path}' i]"))
-            .orElse(find(cssSelector(s"div.project-list-row a[href='${to.path}/' i]")))
+          find(cssSelector(s"a[href='${to.path}/'] > div > div.title"))
             .getOrElse(fail(s"Dataset '${to.path}' not found"))
-        }(waitUpTo(120 seconds), implicitly[Retrying[WebBrowser.Element]], implicitly[source.Position])
+        }(waitUpTo(60 seconds), implicitly[Retrying[WebBrowser.Element]], implicitly[source.Position])
     }
   }
 
@@ -312,14 +310,14 @@ class ProjectPage(val projectSlug: String, val namespace: String)
 
     def verifyImageReady(implicit webDriver: WebDriver): Unit = eventually {
       maybeImageReadyBadge getOrElse {
-        sleep(1 second)
+        sleep(2 second)
         webDriver.navigate.refresh()
         fail("Image not ready")
       }
     }(waitUpTo(10 minutes, interval = 3 seconds), implicitly[Retrying[WebBrowser.Element]], implicitly[source.Position])
 
     private def maybeImageReadyBadge(implicit webDriver: WebDriver): Option[WebBrowser.Element] =
-      find(cssSelector(".badge.badge-success"))
+      find(cssSelector(".badge.bg-success"))
 
     object Running {
 
@@ -336,7 +334,7 @@ class ProjectPage(val projectSlug: String, val namespace: String)
         connectToJupyterLab(s"a[href*='/jupyterhub/user/']")
 
       def connectToAnonymousJupyterLab(implicit webDriver: WebDriver, spec: AcceptanceSpec): Unit =
-        connectToJupyterLab(s"table a[href*='/jupyterhub-tmp/user/']")
+        connectToJupyterLab(s"a[href*='/jupyterhub-tmp/user/']")
 
       def connectButton(buttonSelector: String)(implicit webDriver: WebDriver): WebElement = eventually {
         find(
@@ -350,7 +348,7 @@ class ProjectPage(val projectSlug: String, val namespace: String)
           buttonSelector:   String
       )(implicit webDriver: WebDriver, spec: AcceptanceSpec): Unit = eventually {
         import spec.{And, Then}
-        And("tries to connect to JupyterLab")
+        And("tries to connect to JupyterLab " + buttonSelector)
         connectButton(buttonSelector).click()
         sleep(2 seconds)
 
@@ -370,7 +368,7 @@ class ProjectPage(val projectSlug: String, val namespace: String)
       }
 
       def connectDotButton(implicit webDriver: WebDriver): WebElement = eventually {
-        findAll(cssSelector("button.btn.btn-primary svg[data-icon='ellipsis-v']"))
+        findAll(cssSelector("button.btn.btn-secondary svg[data-icon='ellipsis-v']"))
           .find(_.findElement(By.xpath("./../..")).getText.equals("Connect"))
           .getOrElse(fail("First row Interactive Environment ... button not found"))
           .parent
@@ -383,7 +381,7 @@ class ProjectPage(val projectSlug: String, val namespace: String)
       }
 
       def verifyEnvironmentReady(implicit webDriver: WebDriver): Unit = eventually {
-        find(cssSelector(".text-nowrap.p-1.badge.badge-success"))
+        find(cssSelector(".text-nowrap.p-1.badge.bg-success"))
           .getOrElse(fail("Interactive environment is not ready"))
       }
     }
@@ -414,7 +412,7 @@ class ProjectPage(val projectSlug: String, val namespace: String)
     }
 
     def updateButton(implicit webDriver: WebDriver): WebElement = eventually {
-      find(cssSelector("div.form-group + button.btn.btn-primary")) getOrElse fail(
+      find(cssSelector(".updateProjectSettings")) getOrElse fail(
         "Update button not found"
       )
     }

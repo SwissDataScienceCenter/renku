@@ -84,6 +84,9 @@ trait Project extends RemoveProject with BeforeAndAfterAll {
   }
 
   private def `create a new project`: Unit = {
+    if (WelcomePage.TopBar.mainNavToggler.isDisplayed())
+      click on WelcomePage.TopBar.mainNavToggler
+
     When("user clicks on the 'New Project' menu item")
     click on WelcomePage.TopBar.plusDropdown
     click on WelcomePage.TopBar.projectOption sleep (5 seconds)
