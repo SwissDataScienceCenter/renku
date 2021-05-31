@@ -293,13 +293,13 @@ class ProjectPage(val projectSlug: String, val namespace: String)
 
     def connectToJupyterLabLink(implicit webDriver: WebDriver): WebElement = eventually {
       findAll(cssSelector("a[href*='jupyterhub/user/']"))
-        .find(_.text == "Connect")
+        .find(_.text.endsWith("Open in new tab"))
         .getOrElse(fail("Connect to environment button not found"))
     }
 
     def verifyImageReady(implicit webDriver: WebDriver): Unit = eventually {
       maybeImageReadyBadge getOrElse {
-        sleep(2 second)
+        sleep(5 second)
         webDriver.navigate.refresh()
         fail("Image not ready")
       }
@@ -320,10 +320,10 @@ class ProjectPage(val projectSlug: String, val namespace: String)
       }
 
       def connectToJupyterLab(implicit webDriver: WebDriver, spec: AcceptanceSpec): Unit =
-        connectToJupyterLab(s"a[href*='/jupyterhub/user/']")
+        connectToJupyterLab(s"a[href*='/jupyterhub/user/']", s"div.sessionsButton > button")
 
       def connectToAnonymousJupyterLab(implicit webDriver: WebDriver, spec: AcceptanceSpec): Unit =
-        connectToJupyterLab(s"a[href*='/jupyterhub-tmp/user/']")
+        connectToJupyterLab(s"a[href*='/jupyterhub-tmp/user/']", s"div.sessionsButton > button")
 
       def connectButton(buttonSelector: String)(implicit webDriver: WebDriver): WebElement = eventually {
         find(
@@ -334,10 +334,17 @@ class ProjectPage(val projectSlug: String, val namespace: String)
       }
 
       private def connectToJupyterLab(
-          buttonSelector:   String
+          buttonSelector:   String,
+          buttonDropdown:   String
       )(implicit webDriver: WebDriver, spec: AcceptanceSpec): Unit = eventually {
         import spec.{And, Then}
         And("tries to connect to JupyterLab " + buttonSelector)
+        sleep(2 seconds)
+        // check the dropdown availability even when provided to prevent occasional failures
+        if (!buttonDropdown.isEmpty() && (findAll(cssSelector(buttonDropdown)) toList).size > 0) {
+          connectButton(buttonDropdown).click()
+          sleep(2 seconds)
+        }
         connectButton(buttonSelector).click()
         sleep(2 seconds)
 
@@ -356,16 +363,15 @@ class ProjectPage(val projectSlug: String, val namespace: String)
         }
       }
 
-      def connectDotButton(implicit webDriver: WebDriver): WebElement = eventually {
-        findAll(cssSelector("button.btn.btn-secondary svg[data-icon='ellipsis-v']"))
-          .find(_.findElement(By.xpath("./../..")).getText.equals("Connect"))
-          .getOrElse(fail("First row Interactive Environment ... button not found"))
-          .parent
+      def sessionDropdownMenu(implicit webDriver: WebDriver): WebElement = eventually {
+        findAll(cssSelector("div.sessionsButton > button"))
+          .find(_.text.isEmpty())
+          .getOrElse(fail("Session dropdown button not found"))
       }
 
       def stopButton(implicit webDriver: WebDriver): WebElement = eventually {
         find(cssSelector("button.dropdown-item svg[data-icon='stop-circle']"))
-          .getOrElse(fail("First row Interactive Environment Stop button not found"))
+          .getOrElse(fail("Session stop button not found in the dropdown"))
           .parent
       }
 
