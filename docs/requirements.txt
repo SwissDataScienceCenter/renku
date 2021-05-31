@@ -20,7 +20,7 @@ pickleshare==0.7.4
 plantweb==1.1.0
 prompt-toolkit==1.0.15
 ptyprocess==0.6.0
-pyenchant==2.0.0
+pyenchant==3.*
 pygments==2.7.4
 pyparsing==2.2.0
 pytz==2018.5
@@ -29,11 +29,11 @@ requests>=2.20.0
 simplegeneric==0.8.1
 six==1.11.0
 snowballstemmer==1.2.1
-sphinx==2.0.0
+sphinx==3.*
 sphinx-copybutton==0.3.1
 sphinx-panels==0.5.2
 sphinx-rtd-theme==0.5.0
-sphinxcontrib-spelling==4.2.0
+sphinxcontrib-spelling==7.*
 sphinxcontrib-websupport==1.1.0
 traitlets==4.3.2
 urllib3<1.26.0
