@@ -23,7 +23,7 @@ you can just download the relevant scripts.
     .. code-block:: python
     
         #
-        # Usage: python filter_flights.py <input-path> <output-path>
+        # Usage: python src/filter_flights.py <input-path> <output-path>
         #
     
         import pandas as pd
@@ -54,7 +54,7 @@ you can just download the relevant scripts.
     .. code-block:: julia
         
         #
-        # Usage: julia FilterFlights.jl <input-path> <output-path>
+        # Usage: julia src/FilterFlights.jl <input-path> <output-path>
         #
 
         using CSV, ZipFile, DataFrames
@@ -91,7 +91,7 @@ you can just download the relevant scripts.
     .. code-block:: r
         
         #
-        # Usage: Rscript RunFilterFlights.R <input-path> <output-path>
+        # Usage: Rscript src/RunFilterFlights.R <input-path> <output-path>
         #
         
         args <- commandArgs(trailingOnly = TRUE)
@@ -119,7 +119,7 @@ you can just download the relevant scripts.
         
         write.csv(filteredData, outputPath, row.names = FALSE)
         
-    
+
 
 
 As before, you can download it and drag & drop into the JupyterLab session or
@@ -133,3 +133,31 @@ You can inspect the code in the file viewer in your JupyterLab session or RStudi
 .. code-block:: console
 
     $ renku save -m 'added filter script'
+
+
+Organizing scripts within your project
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+For this tutorial we have organized our scripts such that they live in the
+``src`` folder. If your project grows to requiring several programming languages
+or bash scripts, you may want to organize them into separate folders as we have
+demonstrated in the example below.
+
+::
+
+    my-project
+    ├── .renku
+    ├── data
+    ├── notebooks
+    ├── Dockerfile
+    ├── requirements.txt
+    ├── environment.yml
+    └── src
+        ├── bash
+        │   └── init.sh
+        ├── julia
+        │   └── FilterFlights.jl
+        ├── python
+        │   └── filter_flights.py
+        └── r
+            └── RunFilterFlights.r

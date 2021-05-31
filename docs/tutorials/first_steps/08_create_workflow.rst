@@ -62,14 +62,14 @@ So to run it, we would normally execute the following:
     .. code-block:: console
 
         # Here for comparison -- do not run these lines
-        $ # julia FilterFlights.jl data/flight-data/2019-01-flights.csv.zip data/output/flights-filtered.csv
+        $ # julia src/FilterFlights.jl data/flight-data/2019-01-flights.csv.zip data/output/flights-filtered.csv
 
 .. tabbed:: R
     
     .. code-block:: console
     
         # Here for comparison -- do not run these lines
-        $ # Rscript RunFilterFlights.R data/flight-data/2019-01-flights.csv.zip data/output/flights-filtered.csv
+        $ # Rscript src/RunFilterFlights.R data/flight-data/2019-01-flights.csv.zip data/output/flights-filtered.csv
 
 
 For renku to capture information about the execution, we need to make a small
@@ -90,7 +90,7 @@ change: we prepend ``renku run`` to relevant command:
 
     .. code-block:: console
 
-        $ renku run julia FilterFlights.jl data/flight-data/2019-01-flights.csv.zip data/output/flights-filtered.csv
+        $ renku run julia src/FilterFlights.jl data/flight-data/2019-01-flights.csv.zip data/output/flights-filtered.csv
 
         Info: Adding these files to Git LFS:
             data/output/flights-filtered.csv
@@ -99,7 +99,7 @@ change: we prepend ``renku run`` to relevant command:
 
     .. code-block:: console
 
-        $ renku run Rscript RunFilterFlights.R data/flight-data/2019-01-flights.csv.zip data/output/flights-filtered.csv
+        $ renku run Rscript src/RunFilterFlights.R data/flight-data/2019-01-flights.csv.zip data/output/flights-filtered.csv
 
         Info: Adding these files to Git LFS:
             data/output/flights-filtered.csv
@@ -129,7 +129,7 @@ and other commands.
     .. code-block:: console
 
         $ rm data/output/*
-        $ renku run X filterFlights.X data/flight-data/2019-01-flights.csv.zip data/output/flights-filtered.csv
+        $ renku run X src/filterFlights.X data/flight-data/2019-01-flights.csv.zip data/output/flights-filtered.csv
 
     where X stands for the particular language you are using.
 
@@ -226,17 +226,19 @@ We also provide the script versions to be run with the ``renku run`` command.
 
     For the next step you must download the script from `here
     <https://renkulab.io/projects/renku-tutorials/renku-tutorial-flights-material/files/blob/src/count_flights.py>`_,
-    and then drop it into the `src` directory as with the `filter_flights.py` script.
+    and then drop it into the ``src`` directory as with the `filter_flights.py` script.
 
 .. tabbed:: Julia
 
     `Download Julia script
     <https://renkulab.io/projects/renku-tutorial/flights-tutorial-julia/files/blob/.tutorial/meta/templates/CountFlights.jl>`_
+    and drop it in the ``src`` directory.
 
 .. tabbed:: R
 
     `Download R script
-    <https://renkulab.io/projects/renku-tutorial/flights-tutorial-r/files/blob/.tutorial/meta/templates/CountFlights.R>`_
+    <https://renkulab.io/projects/renku-tutorial/flights-tutorial-r/files/blob/.tutorial/meta/templates/CountFlights.R>`_,
+    and drop it in the ``src`` directory.
 
 
 After uploading the script to your project, make sure you save your work:
