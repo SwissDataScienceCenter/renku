@@ -18,6 +18,7 @@
 
 package ch.renku.acceptancetests.tooling
 
+import ch.renku.acceptancetests.model.AuthorizationToken.PersonalAccessToken
 import ch.renku.acceptancetests.model._
 import ch.renku.acceptancetests.model.users.UserCredentials
 import eu.timepit.refined.api.{RefType, Refined}
@@ -86,7 +87,19 @@ trait AcceptanceSpecData {
                    case Some(s) => s.nonEmpty
                    case None    => false
                  }
-    } yield UserCredentials(email, username, password, fullName, useProvider, register)
+      maybeGitLabAccessToken = sys.env
+                                 .get("RENKU_TEST_GITLAB_ACCESS_TOKEN")
+                                 .orElse(Option(getProperty("gitlabaccesstoken")))
+                                 .orElse(testsDefaults.gitlabaccesstoken)
+                                 .flatMap(toNonEmpty)
+    } yield UserCredentials(email,
+                            username,
+                            password,
+                            fullName,
+                            maybeGitLabAccessToken map PersonalAccessToken.apply,
+                            useProvider,
+                            register
+    )
   } getOrElse showErrorAndStop(
     "You must provide either the arguments -Dusername -Dfullname, -Demail or/and -Dpassword args invalid or missing" +
       " or set the environment variables RENKU_TEST_EMAIL RENKU_TEST_USERNAME RENKU_TEST_PASSWORD and/or RENKU_TEST_FULL_NAME"
