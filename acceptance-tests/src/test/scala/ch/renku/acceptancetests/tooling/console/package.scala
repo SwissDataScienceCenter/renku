@@ -20,10 +20,13 @@ package ch.renku.acceptancetests.tooling
 
 import ch.renku.acceptancetests.model.users.UserCredentials
 
+import java.io.{BufferedWriter, OutputStream, OutputStreamWriter}
 import java.nio.file.Files.createDirectory
 import java.nio.file.{Path, Paths}
 import java.time.LocalDateTime.now
 import java.time.format.DateTimeFormatter
+import java.util.concurrent.LinkedBlockingQueue
+import scala.sys.process.{BasicIO, Process}
 
 package object console {
 
@@ -31,6 +34,13 @@ package object console {
     */
   def %>(command: Command)(implicit workPath: Path, userCredentials: UserCredentials): Unit =
     new CommandExecutor(command).execute
+
+  def %>&>(command: Command)(implicit workPath: Path, userCredentials: UserCredentials): DetachedCommand = {
+    val detachedCommand = new DetachedCommand()
+    val process         = Process(command.toString)
+    process run BasicIO.standard(inputFn(detachedCommand)(_))
+    detachedCommand
+  }
 
   /** Execute a command and return a String either stdout or stderr and does not throw an exception
     */
@@ -58,5 +68,19 @@ package object console {
     def /(otherPath: Path) = Paths.get(path.toString, otherPath.toString)
 
     def /(otherPath: String) = Paths.get(path.toString, otherPath)
+  }
+
+  final class DetachedCommand() {
+    val inputString = new LinkedBlockingQueue[String](1)
+
+    def write(content: String): Unit =
+      inputString.put(content)
+  }
+
+  private def inputFn(detachedCommand: DetachedCommand)(stdIn: OutputStream): Unit = {
+    val writer = new BufferedWriter(new OutputStreamWriter(stdIn))
+    writer.write(detachedCommand.inputString.take() + "\n\n")
+    writer.flush()
+    stdIn.close()
   }
 }

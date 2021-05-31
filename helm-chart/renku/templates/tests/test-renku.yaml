@@ -71,6 +71,8 @@ spec:
       - name: RENKU_TEST_S3_SECRET_KEY
         value: '{{ .Values.tests.resultsS3.secretKey }}'
       {{ end }}
+      - name: BROWSER
+        value: '{{ .Values.tests.parameters.browser }}'
     volumeMounts:
       - mountPath: /dev/shm
         name: dshm

@@ -22,6 +22,10 @@ version := "0.1.0"
 scalaVersion := "2.13.8"
 
 Test / parallelExecution := false
+Test / fork := true
+Test / envVars := Map(
+  "BROWSER" -> "google-chrome:google-chrome-stable:chrome:chromium:open -a /Applications/Google\\ Chrome.app %s"
+)
 
 enablePlugins(AutomateHeaderPlugin)
 

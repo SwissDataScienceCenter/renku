@@ -18,11 +18,14 @@
 
 package ch.renku.acceptancetests.workflows
 
+import ch.renku.acceptancetests.model.users.UserCredentials
 import ch.renku.acceptancetests.pages.LoginPage.oidcButton
 import ch.renku.acceptancetests.pages._
-import ch.renku.acceptancetests.tooling.AcceptanceSpec
+import ch.renku.acceptancetests.tooling.console._
+import ch.renku.acceptancetests.tooling.{AcceptanceSpec, console}
 import ch.renku.acceptancetests.workflows.LoginType._
 
+import java.nio.file.Path
 import scala.annotation.tailrec
 import scala.concurrent.duration._
 
@@ -71,6 +74,47 @@ trait Login extends GitLabCredentials {
       verify browserAt LandingPage
       verify userCanSee LandingPage.loginButton sleep (1 second)
     }
+  }
+
+  def `log in to Renku from CLI`(implicit userCredentials: UserCredentials): Unit = {
+    implicit val workingDirectory: Path = createTempFolder
+
+    `log in from CLI`
+  }
+
+  def `log in to Renku from CLI project`(implicit projectDirectory: Path, userCredentials: UserCredentials): Unit =
+    `log in from CLI`(projectDirectory, userCredentials, argument = "--git")
+
+  def `log out of Renku from CLI`(): Unit = {
+    implicit val workingDirectory: Path = createTempFolder
+
+    console %> c"renku logout"
+  }
+
+  private def `log in from CLI`(implicit
+      projectDirectory: Path,
+      userCredentials:  UserCredentials,
+      argument:         String = ""
+  ): Unit = {
+    When("User logs in to Renku from CLI")
+    val detachedCommand = console %>&> c"renku login $argument $renkuBaseUrl"
+
+    Then("CLI prompts for token")
+
+    `try few times before giving up` { _ =>
+      sleep(2 seconds)
+      verify browserSwitchedTo LoginPage
+    }
+
+    maybeLoginType = Some {
+      if (userCredentials.useProvider) `log in to Renku using provider`
+      else `log in to Renku directly`
+    }
+
+    Then("they should get into a CLI Token Page")
+    verify browserAt CliTokenLoginPage
+
+    detachedCommand write CliTokenLoginPage.cliToken.getText
   }
 
   private def `log in to Renku using provider`: LoginType = {
@@ -125,7 +169,7 @@ trait Login extends GitLabCredentials {
 
   private def `register new user with Renku`: LoginType = {
     When("user opens registration form")
-    LoginPage openRegistrationForm;
+    LoginPage openRegistrationForm
 
     And("registers")
     RegisterNewUserPage registerNewUserWith userCredentials

@@ -19,6 +19,7 @@
 package ch.renku.acceptancetests.pages
 
 import ch.renku.acceptancetests.model.users.UserCredentials
+import ch.renku.acceptancetests.pages.WelcomePage.fail
 import org.openqa.selenium.{JavascriptExecutor, WebDriver, WebElement}
 import org.scalatestplus.selenium.WebBrowser._
 
@@ -184,6 +185,21 @@ object RegisterNewUserPage
 
   def registerButton(implicit webDriver: WebDriver): WebElement = eventually {
     find(cssSelector("#kc-form-buttons > input")) getOrElse fail("Register button not found")
+  }
+}
+
+object CliTokenLoginPage
+    extends RenkuPage(
+      path = "/api/auth/login/next",
+      title = "Renku - login"
+    ) {
+
+  override def pageReadyElement(implicit webDriver: WebDriver): Option[WebElement] = Some(cliToken)
+
+  def cliToken(implicit webDriver: WebDriver): WebElement = eventually {
+    find(tagName("code")) getOrElse fail(
+      s"CLI token with tag <code> not found on page ${webDriver.getTitle}"
+    )
   }
 }
 
