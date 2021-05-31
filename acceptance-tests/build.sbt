@@ -19,7 +19,7 @@
 organization := "ch.renku"
 name := "renku-acceptance-tests"
 version := "0.1.0"
-scalaVersion := "2.13.5"
+scalaVersion := "2.13.6"
 
 Test / parallelExecution := false
 
@@ -29,23 +29,23 @@ publish / skip := true
 publishTo := Some(Resolver.file("Unused transient repository", file("target/unusedrepo")))
 
 val circeVersion  = "0.13.0"
-val http4sVersion = "0.21.22"
+val http4sVersion = "0.21.23"
 
 libraryDependencies += "ch.qos.logback"          % "logback-classic"     % "1.2.3"
-libraryDependencies += "com.github.pureconfig"  %% "pureconfig"          % "0.14.1"      % Test
-libraryDependencies += "eu.timepit"             %% "refined"             % "0.9.23"      % Test
+libraryDependencies += "com.github.pureconfig"  %% "pureconfig"          % "0.15.0"      % Test
+libraryDependencies += "eu.timepit"             %% "refined"             % "0.9.25"      % Test
 libraryDependencies += "io.circe"               %% "circe-core"          % circeVersion  % Test
 libraryDependencies += "io.circe"               %% "circe-literal"       % circeVersion  % Test
 libraryDependencies += "io.circe"               %% "circe-parser"        % circeVersion  % Test
 libraryDependencies += "io.circe"               %% "circe-optics"        % circeVersion  % Test
 libraryDependencies += "org.http4s"             %% "http4s-blaze-client" % http4sVersion % Test
 libraryDependencies += "org.http4s"             %% "http4s-circe"        % http4sVersion % Test
-libraryDependencies += "org.scalacheck"         %% "scalacheck"          % "1.14.3"      % Test
-libraryDependencies += "org.scalatest"          %% "scalatest"           % "3.2.7"       % Test
-libraryDependencies += "org.scalatestplus"      %% "selenium-3-141"      % "3.2.7.0"     % Test
+libraryDependencies += "org.scalacheck"         %% "scalacheck"          % "1.15.4"      % Test
+libraryDependencies += "org.scalatest"          %% "scalatest"           % "3.2.9"       % Test
+libraryDependencies += "org.scalatestplus"      %% "selenium-3-141"      % "3.2.9.0"     % Test
 libraryDependencies += "org.seleniumhq.selenium" % "selenium-java"       % "3.141.59"    % Test
 libraryDependencies += "org.slf4j"               % "slf4j-log4j12"       % "1.7.30"      % Test
-libraryDependencies += "org.typelevel"          %% "cats-effect"         % "2.4.1"       % Test
+libraryDependencies += "org.typelevel"          %% "cats-effect"         % "2.5.1"       % Test
 
 scalacOptions += "-feature"
 scalacOptions += "-unchecked"

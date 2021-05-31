@@ -1,5 +1,51 @@
 .. _changelog:
 
+0.8.0
+------
+
+This release includes a new version for PostgreSQL and GitLab as well as various improvements and bug fixes to Renku CLI and Environments.
+If your PostgreSQL and/or GitLab were deployed as part of Renku, please make sure to backup your volumes before following the upgrade instructions.
+
+Improvements
+~~~~~~~~~~~~~
+
+* **PostgreSQL and GitLab upgrade**: We bump the PostgreSQL version from 9.6 to 11 and the GitLab major version from 11 to 13.
+* **Project templates**: Community contributed template ``AiiDA`` has been updated. See `a06ab24 <https://github.com/SwissDataScienceCenter/contributed-project-templates/commit/a06ab248e92203343e48854ddc118c4488dd3379>`__.
+* **Project templates**: Project templates come with Renku CLI ``v0.15.2`` by default.
+* **Renku CLI**: add support to dataset update for detecting changes to local files.
+* **Renku CLI**: add support to export `OLOS <https://olos.swiss/>`__ datasets.
+* **Renku CLI**: add JSON output format to ``renku dataset ls`` and ``renku dataset ls-files``.
+* **Renku CLI**: detect filename from `content-disposition header <https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Disposition>`__ when adding a dataset.
+
+Bug Fixes
+~~~~~~~~~~
+
+* **Environments**: remove storage options when launching environments if PVC feature is not enabled.
+* **Project templates**: fix project creation to use pinned Renku CLI version.
+
+Individual components
+~~~~~~~~~~~~~~~~~~~~~
+
+For changes to individual components, please check:
+
+* renku-notebooks:
+  `0.8.12 <https://github.com/SwissDataScienceCenter/renku-notebooks/releases/tag/0.8.12>`__
+
+* renku-python:
+  `v0.15.1 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/v0.15.1>`__,
+  `v0.15.0 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/v0.15.0>`__
+
+Upgrading from 0.7.13
+~~~~~~~~~~~~~~~~~~~~~
+
+**BREAKING CHANGES**
+
+Please follow [these instructions](https://github.com/SwissDataScienceCenter/renku/tree/master/helm-chart#upgrading-to-080) carefully.
+
+The resulting changes in the values file should be:
+* NEW/EDIT *postgresql.persistence.existingClaim* will most likely need to be modified in the course of upgrading your PostgreSQL version. See [these instructions](https://github.com/SwissDataScienceCenter/renku/tree/master/helm-chart/utils/postgres_migrations/version_upgrades/README.md)
+* NEW/EDIT/DELETE *gitlab.image.tag* might have to be adjusted as we do a GitLab major version bump in with this release.
+
 0.7.13
 ------
 
@@ -93,7 +139,7 @@ Features
 Improvements
 ~~~~~~~~~~~~~
 
-* **Projects**: improve UX when forking a project, and handle up to 1000 namespaces 
+* **Projects**: improve UX when forking a project, and handle up to 1000 namespaces
 * **Projects**: allow setting project avatar
 * **Environments**: simplify getting the registry image URL for running sessions
 
@@ -126,7 +172,7 @@ For changes to individual components, please check:
 
 Bug Fixes
 ~~~~~~~~~~
- 
+
 * **Core**: add error handling if push from temporary branch fails
 * **Core**: fix handling of '@' in filenames
 * **Core**: fix save and push to correctly handle merge conflicts
@@ -201,7 +247,7 @@ Upgrading from 0.7.7
 ~~~~~~~~~~~~~~~~~~~~~
 
 
-**Breaking change**  Keycloak chart dependency has been upgraded from ``4.10.2`` to ``9.8.1`` which will trigger an irreversible database migration, check out `the upgrade instructions <https://github.com/SwissDataScienceCenter/renku/blob/master/helm-chart/README.rst#upgrading>`__ for more details. 
+**Breaking change**  Keycloak chart dependency has been upgraded from ``4.10.2`` to ``9.8.1`` which will trigger an irreversible database migration, check out `the upgrade instructions <https://github.com/SwissDataScienceCenter/renku/blob/master/helm-chart/README.rst#upgrading>`__ for more details.
 
 Most notably, keycloak values are less nested, so at the level of the Renku chart values, keycloak.keycloak.X.Y becomes keycloak.X.Y. You can also check out `the instructions <https://github.com/codecentric/helm-charts/tree/master/charts/keycloak#upgrading>`__ on how to upgrade aspects not covered by default in the Renku chart.
 
