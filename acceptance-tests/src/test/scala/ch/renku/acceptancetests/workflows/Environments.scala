@@ -134,7 +134,13 @@ trait Environments {
 
   private def `start environment & wait util it's not ready`(implicit projectPage: ProjectPage): Unit = {
     projectPage.Environments.verifyImageReady sleep (2 seconds)
+    try `try to click the environment button`
+    catch {
+      case e: org.openqa.selenium.ElementClickInterceptedException => `try to click the environment button`
+    }
+  }
 
+  private def `try to click the environment button`(implicit projectPage: ProjectPage): Unit =
     projectPage.Environments.maybeStartEnvironmentButton match {
       case None =>
         projectPage.Environments.connectToJupyterLabLink.isDisplayed shouldBe true
@@ -156,5 +162,4 @@ trait Environments {
         // Sleep a little while after clicking to give the server a chance to come up
         click on projectPage.Environments.Running.title sleep (30 seconds)
     }
-  }
 }
