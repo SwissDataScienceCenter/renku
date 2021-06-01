@@ -154,8 +154,8 @@ Adding data from the local file system
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Often the data you wish to use on Renku is not available on a remote repository.
-In this case you will have to use the data upload user interfaces in JupyterLab
-or RStudio. For this example, suppose that we have downloaded the 
+In this case you can either create a dataset using the RenkuLab UI or use the data upload user interface in JupyterLab
+or RStudio. Within a running session, the latter is the easier option. For this example, suppose that we have downloaded the 
 ``2019-01-flights.csv.zip`` file to our local computer and wish to upload this
 to our Renku project and add it as a dataset. We start with working in the
 terminal to set up the Renku dataset.
