@@ -138,7 +138,7 @@ Utilize renkulab.io features
 
 At this point you can also continue development as usual by starting up a JupyterLab
 or RStudio session from the Renku web platform (if you don't remember how to do
-this, you can check out :ref:`jupyterlab`).
+this, you can check out :ref:`doing_data_science`).
 
 To make full use of the Renku reproducibility features, you will want to check
 back to the tutorial for how to :ref:`add_data`, and ``renku run`` and
