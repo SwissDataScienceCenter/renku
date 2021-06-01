@@ -3,24 +3,36 @@
 Add data to your project
 ------------------------
 
-In the JupyterLab interface, we can see that a few files already exist.
+In the JupyterLab interface or RStudio files panel, we can see that a few files already exist.
 Let's start by adding data using the `Renku CLI <https://renku-python.readthedocs.io/en/latest/commands.html>`__.
 
-From JupyterLab, start a terminal by clicking the **Terminal** icon (1)
-on the bottom right of the **Launcher** page.
+.. tabbed:: JupyterLab
 
-.. image:: ../../_static/images/jupyterlab-open-terminal.png
-    :width: 85%
-    :align: center
-    :alt: Open terminal in JupyterLab
+    For JupyterLab, start a terminal by clicking the **Terminal** icon (1)
+    on the bottom right of the **Launcher** page.
 
-If your JupyterLab interface does not have the launcher tab open, you can
-find it in the top bar menu in *File* > *New Launcher*.
+    .. image:: ../../_static/images/jupyterlab-open-terminal.png
+        :width: 85%
+        :align: center
+        :alt: Open terminal in JupyterLab
 
-.. note::
+    If your JupyterLab interface does not have the launcher tab open, you can
+    find it in the top bar menu in *File* > *New Launcher*.
 
-  To paste commands to the JupyterLab console, use ``Cmd+V`` on MacOS or
-  ``Ctrl+Shift+V`` on Linux.
+    .. note::
+
+      To paste commands to the JupyterLab console, use ``Cmd+V`` on MacOS or
+      ``Ctrl+Shift+V`` on Linux.
+
+.. tabbed:: RStudio
+
+    For RStudio, click the Terminal tab, which is next to the Console tab.
+
+    .. image:: ../../_static/images/rstudio-open-terminal.png
+        :width: 85%
+        :align: center
+        :alt: Open terminal in RStudio
+
 
 When you start the terminal, you will already be inside your project
 directory, so you are ready to create a dataset.
@@ -29,6 +41,10 @@ Renku can create datasets containing data from a variety of sources. It
 supports adding data from the local file system or a URL. Renku can also
 import data from a data repository like the
 `Dataverse <https://dataverse.harvard.edu>`_ or `Zenodo <https://zenodo.org>`_.
+
+Adding data from a remote repository
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
 The advantage of importing data from a data repository is that it can contain metadata that
 can be used to help interpret it. Another advantage is that data repositories
 assign `DOIs <https://www.doi.org>`_ to data which can be used to
@@ -132,3 +148,96 @@ Let us push the two fresh commits by running:
     Total 15 (delta 2), reused 0 (delta 0)
     To https://renkulab.io/gitlab/john.doe/flights-tutorial.git
         b55aea9..91b226b  master --> master
+
+
+Adding data from the local file system
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Often the data you wish to use on Renku is not available on a remote repository.
+In this case you can either create a dataset using the RenkuLab UI or use the data upload user interface in JupyterLab
+or RStudio. Within a running session, the latter is the easier option. For this example, suppose that we have downloaded the 
+``2019-01-flights.csv.zip`` file to our local computer and wish to upload this
+to our Renku project and add it as a dataset. We start with working in the
+terminal to set up the Renku dataset.
+
+First let us create a Renku dataset called ``flight-data`` with the title
+'2019-01 US Flights'.
+
+.. code-block:: console
+
+    $ renku dataset create flight-data --title "2019-01 US Flights"
+    Creating a dataset ... OK
+
+Then create a folder called ``flight-data`` in the ``data`` folder.
+
+.. code-block:: console
+
+    $ mkdir data/flight-data
+
+Navigate to the ``flight-data`` folder and click on the upload button as shown
+in the two examples below. Select the ``zip`` folder corresponding to our dataset and upload it.
+
+
+.. tabbed:: JupyterLab
+
+    .. image:: ../../_static/images/jupyterlab-upload-data.png
+        :width: 85%
+        :align: center
+        :alt: Upload data in JupyterLab
+
+
+    Note that in JupyterLab, ``zip`` folders are not automatically unzipped
+    once they are uploaded. You should then see 
+
+    .. image:: ../../_static/images/jupyterlab-data-uploaded.png
+        :width: 85%
+        :align: center
+        :alt: Uploaded data in JupyterLab
+
+.. tabbed:: RStudio
+
+    .. image:: ../../_static/images/rstudio-upload-data.png
+        :width: 85%
+        :align: center
+        :alt: Upload data in RStudio
+
+
+    Note that in RStudio, ``zip`` folders are automatically unzipped once
+    they are uploaded. You should then see 
+
+    .. image:: ../../_static/images/rstudio-data-uploaded.png
+        :width: 85%
+        :align: center
+        :alt: Uploaded data in RStudio
+
+
+    For the rest of this tutorial, we continue with the assumption that
+    you have uploaded the data using the dataset import from the remote
+    repository as indicated in the previous section. That is, the ``csv`` file
+    will still be zipped in the proceeding sections.
+
+
+After we upload the file, we need to add the file to the Renku dataset. Navigate
+back to the working directory and add the file to the ``flight-data`` Renku
+dataset.
+
+.. code-block:: console
+
+    $ renku dataset add flight-data data/flight-data/2019-01-flights.csv.zip
+    Warning: Adding data from local Git repository: Use remote's Git URL instead to enable lineage information and updates.
+    Info: Adding these files to Git LFS:
+            data/flight-data/2019-01-flights.csv.zip
+    To disable this message in the future, run:
+            renku config set show_lfs_message False
+    OK
+
+
+Check that the right file has been associated with the ``flight-data`` Renku 
+dataset by running
+
+.. code-block:: console
+
+    $ renku dataset ls-files
+    DATASET NAME    ADDED                  SIZE  PATH                                      LFS
+    --------------  -------------------  ------  ----------------------------------------  -----
+    flight-data     2021-05-31 09:47:41   46 MB  data/flight-data/2019-01-flights.csv.zip  *

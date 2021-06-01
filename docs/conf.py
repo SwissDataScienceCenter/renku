@@ -45,6 +45,7 @@ extensions = [
     "sphinxcontrib.spelling",
     "sphinx_rtd_theme",
     "sphinx_copybutton",
+    "sphinx_panels"
 ]
 
 # Plantweb configuration
