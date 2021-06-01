@@ -153,14 +153,14 @@ Let us push the two fresh commits by running:
 Adding data from the local file system
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Often the data you wish to use on RENKU is not available on a remote repository.
+Often the data you wish to use on Renku is not available on a remote repository.
 In this case you will have to use the data upload user interfaces in JupyterLab
 or RStudio. For this example, suppose that we have downloaded the 
 ``2019-01-flights.csv.zip`` file to our local computer and wish to upload this
-to our RENKU project and add it as a dataset. We start with working in the
-terminal to set up the RENKU dataset.
+to our Renku project and add it as a dataset. We start with working in the
+terminal to set up the Renku dataset.
 
-First let us create a RENKU dataset called ``flight-data`` with the title
+First let us create a Renku dataset called ``flight-data`` with the title
 '2019-01 US Flights'.
 
 .. code-block:: console
@@ -217,8 +217,8 @@ in the two examples below. Select the ``zip`` folder corresponding to our datase
     will still be zipped in the proceeding sections.
 
 
-After we upload the file, we need to add the file to the RENKU dataset. Navigate
-back to the working directory and add the file to the ``flight-data`` RENKU
+After we upload the file, we need to add the file to the Renku dataset. Navigate
+back to the working directory and add the file to the ``flight-data`` Renku
 dataset.
 
 .. code-block:: console
@@ -232,7 +232,7 @@ dataset.
     OK
 
 
-Check that the right file has been associated with the ``flight-data`` RENKU 
+Check that the right file has been associated with the ``flight-data`` Renku 
 dataset by running
 
 .. code-block:: console
