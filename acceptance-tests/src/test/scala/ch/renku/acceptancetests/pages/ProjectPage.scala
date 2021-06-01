@@ -75,7 +75,7 @@ class ProjectPage(val projectSlug: String, val namespace: String)
     }
 
     def projectDescription(implicit webDriver: WebDriver): WebElement = eventually {
-      find(cssSelector(".project-description")) getOrElse fail("Overview -> Project Description not found")
+      find(cssSelector(".rk-project-description")) getOrElse fail("Overview -> Project Description not found")
     }
 
     def descriptionButton(implicit webDriver: WebDriver): WebElement = eventually {
