@@ -40,6 +40,10 @@ terminal windows/tabs.
 A browser tab with your docs updating live every time a documentation file
 changes should have opened automatically.
 
+Any images or non-text snippets that you wish to include in the documentation
+can be put into the ``docs/_static`` folder. For example, screenshots can go
+in the ``docs/_static/images`` folder.
+
 Running documentation tests
 ---------------------------
 
