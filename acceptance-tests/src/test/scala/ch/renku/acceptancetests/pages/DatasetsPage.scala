@@ -39,7 +39,7 @@ object DatasetsPage
   }
 
   def searchResultLinks(implicit webDriver: WebDriver): List[WebElement] = eventually {
-    findAll(cssSelector(".rk-search-result > div > div.title")).toList
+    findAll(cssSelector(".rk-search-result-card > a > div > div.title")).toList
   }
 
   def maybeBouncer(implicit webDriver: WebDriver): Option[WebElement] = eventually {
