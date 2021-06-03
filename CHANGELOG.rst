@@ -1,5 +1,10 @@
 .. _changelog:
 
+0.8.1
+-----
+
+This is a bugfix release that includes a fix of the link on a project forks in Renku UI.
+
 0.8.0
 ------
 
