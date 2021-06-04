@@ -13,13 +13,30 @@ This does not seem quite right. Austin, TX is not a very large airport, but
 that number would mean that it had a flight landing on average
 every two minutes, around the clock, during the entire month of January 2019.
 
-Go back and take a look at the file ``src/filter_flights.py`` file: it
-contains an error! In the code block
+Go back and take a look at the filtering script: it contains 
+an error! In the code block
 
-.. code-block:: console
+.. tabbed:: Python
 
-    # Select only flights to Austin (AUS)
-    df = df[df['DEST'] == 'DFW']
+    .. code-block:: console
+
+        # Select only flights to Austin (AUS)
+        df = df[df['DEST'] == 'DFW']
+
+.. tabbed:: Julia
+
+    .. code-block:: console
+
+        # Filter to flights to Austin, TX
+        df = full_df[full_df.DEST .== "DFW", :]
+
+.. tabbed:: R
+
+    .. code-block:: console
+
+        # Select only flights to Austin (AUS)
+        data %>% filter(DEST == "DFW")
+
 
 we want to select flights to Austin-Bergstrom (AUS), but mistakenly select
 flights to a different airport, ``DFW``. This would explain the discrepancy
@@ -61,7 +78,8 @@ again, while being careful to do so in the correct order.
 
 So without Renku, updating a project in response to a change can be tedious and
 error-prone. But *with* Renku, it is very easy. We can just ask the system
-what changed and what needs to be updated.
+what changed and what needs to be updated. The outputs are analogous for all
+programming languages.
 
 .. code-block:: console
 
