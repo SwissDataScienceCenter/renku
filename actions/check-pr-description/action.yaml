@@ -29,6 +29,9 @@ outputs:
   renku-ui:
     description: renku-ui reference as specified in the command string
     value: ${{ steps.check-string.outputs.renku-ui }}
+  extra-values:
+    description: extra values passed to helm
+    value: ${{ steps.check-string.outputs.extra-values }}
   test-enabled:
     description: whether the tests should run or not
     value: ${{ steps.check-string.outputs.test-enabled }}
@@ -80,6 +83,11 @@ runs:
             match="#notest"
             if [[ $command =~ $match ]]; then
               test_enabled=false
+            fi
+            match="extra-values=(\S*)"
+            if [[ $command =~ $match ]]; then
+              echo "extra values: ${BASH_REMATCH[1]}"
+              echo "::set-output name=extra-values::${BASH_REMATCH[1]}"
             fi
           else
             echo "No command found"
