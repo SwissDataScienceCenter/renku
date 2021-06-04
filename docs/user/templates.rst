@@ -16,7 +16,7 @@ and a R setup (Basic R Project). In many cases, you can use these templates
 as-is (see the :ref:`directory_structure` below). If you prefer another
 language, you require a different IDE, or the base templates don't meet your
 needs for any other reason, you can create new ones!
-Check out :ref:`interactive_environments`.
+Check out :ref:`sessions`.
 
 Note that you can create projects that are specifically intended to be templates
 that others can use by adding to the base Renku template. If you're familiar
@@ -56,8 +56,7 @@ directories).
 
 These two files are where you write in your conda (``environment.yml``) and pip
 (``requirements.txt``) library dependencies. This is so that when you kill a
-notebook or anyone forks your project, (re)starting an interactive environment
-session will pre-install your libraries.
+notebook or anyone forks your project, (re)starting a session will pre-install your libraries.
 
 To make it easy to remember to write your dependencies to this file, instead of
 ``pip install <library>`` in a terminal, for instance, you can get into the
@@ -79,7 +78,7 @@ that every time you make a commit, your project's docker image is rebuilt. In
 most cases, this build should be successful. If, however, you are making
 modifications to the ``Dockerfile``, you should pay attention to the CI/CD tab
 in GitLab to check for failing builds. Take a look
-at :ref:`interactive_environments`.
+at :ref:`sessions`.
 
 ``Dockerfile``
 """"""""""""""
@@ -94,7 +93,7 @@ The lines following ``FROM`` define the installation of your own software
 dependencies; they are the instructions for conda/pip installations of the
 libraries in your ``requirements.txt`` file. If there's nothing special
 about the libraries you're installing, you wont have to make changes to this
-file. Else, check out :ref:`interactive_environments`.
+file. Else, check out :ref:`sessions`.
 
 ``.dockerignore``
 """""""""""""""""
@@ -118,13 +117,13 @@ intended audience.
 The ``.renku`` directory includes a ``renku.ini`` file which contains
 project-level configuration for renku, stored using the
 `INI format <https://en.wikipedia.org/wiki/INI_file>`_. Currently, it
-can be used to specify defaults values for launching interactive environments.
+can be used to specify defaults values for launching sessions.
 
-**Interactive Environments**
+**Sessions**
 
 If your project has specific resources requirements to run, or if it should
 default to RStudio or anything other than JupyterLab, then you will want to
-provide a configuration for the interactive environments.
+provide a configuration for the sessions.
 
 Although the file may be modified manually, it is recommended to use the
 ``renku config set interactive.<property> <value>`` command.
@@ -132,8 +131,7 @@ Although the file may be modified manually, it is recommended to use the
 Here is the list of properties that can be customized in a standard Renkulab
 deployment:
 
-* ``default_url [string]``: URL to use when starting a new interactive
-  environment (``/lab``, ``/tree``, ...)
+* ``default_url [string]``: URL to use when starting a new session (``/lab``, ``/tree``, ...)
 * ``cpu_request [float]``: CPUs quota (``0.5``, ``1``, ...)
 * ``mem_request [string]``: memory quota (``1G``, ``2G``, ...)
 * ``gpu_request [int]``: GPU quota (``0``, ``1``, ...)
@@ -144,7 +142,7 @@ deployment:
 
 .. note::
 
-    We use JupyterLab as the default web interface for interactive environments.
+    We use JupyterLab as the default web interface for sessions.
     If you work in R, you may prefer to have RStudio. This can be
     achieved by using `/rstudio` as the ``default_url`` instead of `/lab`.
 
@@ -211,7 +209,7 @@ You want a different version of python than the one provided, you want to
 install software that requires additional non-python/R dependencies, or you
 want to make other changes, and you're comfortable editing Dockerfiles. In
 addition to the files above, you might modify the following.
-Consult :ref:`interactive_environments`.
+Consult :ref:`sessions`.
 
 * ``Dockerfile``
 * ``.dockerignore``

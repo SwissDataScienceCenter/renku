@@ -1,4 +1,4 @@
-.. _local_interactive_environments:
+.. _local_sessions:
 
 Running RenkuLab Interactive Sessions on Your Own Machine
 =========================================================
@@ -84,10 +84,10 @@ name of this image, including the tag would be
 ``registry.renkulab.io/rok.roskar/flights-tutorial:53cbd6a``.
 
 
-Launching the interactive environment locally
+Launching the session locally
 ---------------------------------------------
 
-Finally, if we wanted to launch an environment locally with the image that was
+Finally, if we wanted to launch a session locally with the image that was
 built for this commit. From the project's root directory, run
 
 .. code-block:: console

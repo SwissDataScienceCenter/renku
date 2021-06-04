@@ -152,7 +152,7 @@ and other commands.
         Error: Command returned non-zero exit status 1.
 
     If in the process of working through the tutorial, you stopped the
-    interactive environment and started a new one along the way, this may
+    session and started a new one along the way, this may
     happen. Why?
     `Under the hood <https://renku.readthedocs.io/en/latest/user/data.html>`_,
     we use
