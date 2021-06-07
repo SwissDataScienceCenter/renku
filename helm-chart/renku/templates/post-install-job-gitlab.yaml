@@ -23,7 +23,7 @@ spec:
       restartPolicy: Never
       containers:
         - name: configure-gitlab
-          image: "postgres:11.9"
+          image: "postgres:11.11"
           command: ["/bin/bash", "/scripts/init-gitlab.sh"]
           volumeMounts:
             - name: init
