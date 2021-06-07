@@ -54,7 +54,10 @@ global:
       value:
       overwriteOnHelmUpgrade: false
   gateway:
+    ## The client secret for the renku client application registered in keycloak.
     clientSecret: # use `uuidgen -r`
+    ## The client secret for the renku-cli client application registered in keycloak.
+    cliClientSecret: # use `uuidgen -r`
     ## The client ID for authentication against gitlab
     gitlabClientId: renku-ui
     ## The client secret for authentication against gitlab
@@ -286,11 +289,11 @@ postgresql:
 
   ## Use an existing secret instead of creating a new one. It must have a
   ## postgresql-password key containing the password for the posgres user.
-  ## existingSecret: '{{ tpl .Release.Name }}-postgresql-password'
+  # existingSecret:
 
   image:
     repository: bitnami/postgresql
-    tag: 11.9.0
+    tag: 11.11.0
 
   persistence:
     ## We use the defaults here, but they will probably be modified for most deployments.
@@ -309,6 +312,7 @@ postgresql:
 
 ## Gitlab configuration
 gitlab:
+  ## Spawn a gitlab instance
   enabled: true
   postgresql:
     install: false
@@ -327,10 +331,10 @@ ui:
     custom: true
     repositories:
       - url: https://github.com/SwissDataScienceCenter/renku-project-template
-        ref: 0.1.19
+        ref: 0.1.20
         name: Renku
       - url: https://github.com/SwissDataScienceCenter/contributed-project-templates
-        ref: 0.1.0
+        ref: 0.2.0
         name: Community
 
   #  welcomePage:

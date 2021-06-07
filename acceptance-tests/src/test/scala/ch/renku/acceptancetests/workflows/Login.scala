@@ -45,7 +45,6 @@ trait Login {
     sleep(2 seconds)
     click on LandingPage.loginButton
     Then("they should get into the Login Page")
-    verify browserAt LoginPage
 
     maybeLoginType = Some {
       if (userCredentials.useProvider) `log in to Renku using provider`
@@ -137,7 +136,7 @@ trait Login {
   private def `authorize application if necessary`(attempt: String = "first"): Unit =
     if (currentUrl startsWith AuthorizeApplicationPage.url) {
       And(s"authorizes the application for the $attempt time")
-      AuthorizeApplicationPage authorize;
+      AuthorizeApplicationPage authorize
 
       // It may be necessary to authorize twice
       `authorize application if necessary`(attempt = "second")

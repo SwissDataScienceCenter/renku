@@ -14,10 +14,12 @@
 {{- $graphEnabled := .Values.graph.enabled -}}
 {{- $webhookServiceFullname := include "webhookService.fullname" . -}}
 {{- $knowledgeGraphFullname := include "knowledgeGraph.fullname" . -}}
+{{- $renkuFullname := include "renku.fullname" . -}}
 {{- if $graphEnabled }}
 {{- $jenaFullname := include "jena.fullname" . -}}
 {{- $jenaServicePort := .Values.graph.jena.service.port -}}
 {{- end }}
+{{- $swaggerEnabled := .Values.swagger.enabled -}}
 ---
 apiVersion: networking.k8s.io/v1beta1
 kind: Ingress
@@ -54,6 +56,10 @@ spec:
           serviceName: {{ $keycloakFullname }}-http
           servicePort: {{ $keycloakServicePort }}
       {{- end }}
+      - path: /repos
+        backend:
+          serviceName: {{ $gatewayFullname }}
+          servicePort: {{ $gatewayServicePort }}
       - path: /jupyterhub
         backend:
           serviceName: proxy-public
@@ -82,6 +88,12 @@ spec:
       - path: /knowledge-graph
         backend:
           serviceName: {{ $knowledgeGraphFullname }}
+          servicePort: 80
+      {{- end }}
+      {{- if $swaggerEnabled }}
+      - path: /swagger
+        backend:
+          serviceName: {{ $renkuFullname }}-swagger
           servicePort: 80
       {{- end }}
   {{- end }}
