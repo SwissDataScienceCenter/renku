@@ -30,7 +30,7 @@ outputs:
     description: renku-ui reference as specified in the command string
     value: ${{ steps.check-string.outputs.renku-ui }}
   extra-values:
-    description: extra values passed to helm
+    description: extra values passed to helm, separate multiple values with commas: key1=val1,key2=val2
     value: ${{ steps.check-string.outputs.extra-values }}
   test-enabled:
     description: whether the tests should run or not
