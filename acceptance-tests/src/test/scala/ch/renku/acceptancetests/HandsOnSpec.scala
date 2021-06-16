@@ -54,10 +54,7 @@ class HandsOnSpec
 
     `verify user can work with Jupyter notebook`
 
-    `verify analysis was ran`
-
-    // This should prevent menu flickering due to UI not completely loaded
-    sleep (5 seconds)
+    `verify analysis was ran` sleep (5 seconds)
 
     `log out of Renku`
   }
