@@ -56,6 +56,9 @@ class HandsOnSpec
 
     `verify analysis was run`
 
+    // This should prevent menu flickering due to UI not completely loaded
+    sleep (5 seconds)
+
     `log out of Renku`
   }
 
