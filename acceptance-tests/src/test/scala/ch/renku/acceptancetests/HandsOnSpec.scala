@@ -27,7 +27,7 @@ import scala.concurrent.duration._
   */
 class HandsOnSpec
     extends AcceptanceSpec
-    with Environments
+    with Sessions
     with Login
     with Project
     with Settings

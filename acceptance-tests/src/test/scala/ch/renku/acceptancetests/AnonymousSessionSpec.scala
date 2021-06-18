@@ -18,13 +18,13 @@
 
 package ch.renku.acceptancetests
 
-import ch.renku.acceptancetests.tooling.{AcceptanceSpec, AnonEnv}
+import ch.renku.acceptancetests.tooling.{AcceptanceSpec, AnonSession}
 import ch.renku.acceptancetests.workflows._
 
-class AnonymousEnvironmentSpec extends AcceptanceSpec with AnonEnv with Login {
+class AnonymousSessionSpec extends AcceptanceSpec with AnonSession with Login {
 
-  Scenario("User can launch anonymous environment") {
-    `launch anonymous environment`(anonEnvConfig)
-      .map(_ => `stop environment`(anonEnvConfig.projectId))
+  Scenario("User can launch anonymous session") {
+    `launch anonymous session`(AnonSessionConfig)
+      .map(_ => `stop session`(AnonSessionConfig.projectId))
   }
 }

@@ -269,32 +269,32 @@ class ProjectPage(val projectSlug: String, val namespace: String)
     }
   }
 
-  object Environments {
+  object Sessions {
 
     def tab(implicit webDriver: WebDriver): WebElement = eventually {
-      find(cssSelector(s"a[href='$path/environments']")) getOrElse fail("Environments tab not found")
+      find(cssSelector(s"a[href='$path/sessions']")) getOrElse fail("sessions tab not found")
     }
 
     def newLink(implicit webDriver: WebDriver): WebElement = eventually {
-      find(cssSelector(s"a[href='$path/environments/new']")) getOrElse fail("New environment link not found")
+      find(cssSelector(s"a[href='$path/sessions/new']")) getOrElse fail("New session link not found")
     }(waitUpTo(1 minute), implicitly[Retrying[WebBrowser.Element]], implicitly[source.Position])
 
     def anonymousUnsupported(implicit webDriver: WebDriver): WebElement = eventually {
       findAll(cssSelector("div > div > div > div > p"))
         .find(
-          _.text == "This Renkulab deployment doesn't allow unauthenticated users to start Interactive Environments."
+          _.text == "This Renkulab deployment doesn't allow unauthenticated users to start sessions."
         )
-        .getOrElse(fail("Unsupported environment notification not found"))
+        .getOrElse(fail("Unsupported session notification not found"))
     }
 
-    def maybeStartEnvironmentButton(implicit webDriver: WebDriver): Option[WebElement] = eventually {
-      findAll(cssSelector("div > form > button.btn.btn-primary")).find(_.text == "Start environment")
+    def maybeStartSessionButton(implicit webDriver: WebDriver): Option[WebElement] = eventually {
+      findAll(cssSelector("div > form > button.btn.btn-primary")).find(_.text == "Start session")
     }
 
     def connectToJupyterLabLink(implicit webDriver: WebDriver): WebElement = eventually {
       findAll(cssSelector("a[href*='jupyterhub/user/']"))
         .find(_.text.endsWith("Open in new tab"))
-        .getOrElse(fail("Connect to environment button not found"))
+        .getOrElse(fail("Connect to session button not found"))
     }
 
     def verifyImageReady(implicit webDriver: WebDriver): Unit = eventually {
@@ -313,10 +313,10 @@ class ProjectPage(val projectSlug: String, val namespace: String)
       def title(implicit webDriver: WebDriver): WebElement = eventually {
         find(cssSelector("div.row div.col h3"))
           .map { element =>
-            element.text shouldBe "Interactive Environments"
+            element.text shouldBe "Sessions"
             element
           }
-          .getOrElse(fail("Environments -> Running title not found"))
+          .getOrElse(fail("Sessions -> Running title not found"))
       }
 
       def connectToJupyterLab(implicit webDriver: WebDriver, spec: AcceptanceSpec): Unit =
@@ -329,7 +329,7 @@ class ProjectPage(val projectSlug: String, val namespace: String)
         find(
           cssSelector(buttonSelector)
         ) getOrElse fail(
-          "First row Interactive Environment Connect button not found"
+          "First row Connect button not found in sessions"
         )
       }
 
@@ -375,9 +375,9 @@ class ProjectPage(val projectSlug: String, val namespace: String)
           .parent
       }
 
-      def verifyEnvironmentReady(implicit webDriver: WebDriver): Unit = eventually {
+      def verifySessionReady(implicit webDriver: WebDriver): Unit = eventually {
         find(cssSelector(".text-nowrap.p-1.badge.bg-success"))
-          .getOrElse(fail("Interactive environment is not ready"))
+          .getOrElse(fail("Session is not ready"))
       }
     }
   }

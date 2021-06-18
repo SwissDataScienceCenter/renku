@@ -22,15 +22,15 @@ import ch.renku.acceptancetests.model.projects.ProjectIdentifier
 
 import java.lang.System.getProperty
 
-case class AnonEnvConfig(projectId: ProjectIdentifier, isAvailable: Boolean = false)
+case class AnonSessionConfig(projectId: ProjectIdentifier, isAvailable: Boolean = false)
 
-/** Configuration for the anonymous environment
+/** Configuration for the anonymous session
   */
-trait AnonEnv extends AcceptanceSpecData {
+trait AnonSession extends AcceptanceSpecData {
   self: RenkuApi =>
 
-  protected implicit lazy val anonEnvConfig: AnonEnvConfig =
-    AnonEnvConfig(anonProjectIdentifier, isAnonEnvAvailable)
+  protected implicit lazy val AnonSessionConfig: AnonSessionConfig =
+    AnonSessionConfig(anonProjectIdentifier, isAnonSessionAvailable)
 
   protected lazy val anonProjectIdentifier: ProjectIdentifier = {
     Option(getProperty("anon")) orElse sys.env.get("RENKU_TEST_ANON_PROJECT") match {
@@ -50,7 +50,7 @@ trait AnonEnv extends AcceptanceSpecData {
 
   private val defaultProjectIdentifier = ProjectIdentifier("andi", "public-test-project")
 
-  protected lazy val isAnonEnvAvailable: Boolean = {
+  protected lazy val isAnonSessionAvailable: Boolean = {
     Option(getProperty("anonAvail")) orElse sys.env.get("RENKU_TEST_ANON_AVAILABLE") match {
       case Some(s) => s.toLowerCase == "true"
       case None    => renkuBaseUrl.value.value contains "dev.renku.ch"
