@@ -1,0 +1,52 @@
+/*
+    FINISH ADDING FONTS!!!
+    TO DO THIS, CONVERT FONT IN WOFF TO OTHER FORMATS THEN ADD THEM
+*/
+
+/* Webfont: Calcutta-Bold */
+@font-face {
+    font-family: 'Calcutta';
+    src: url('fonts/calcutta/Calcutta-Bold.eot'); /* IE9 Compat Modes */
+    src: url('fonts/calcutta/Calcutta-Bold.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
+         url('fonts/calcutta/Calcutta-Bold.woff') format('woff'), /* Modern Browsers */
+        url('fonts/calcutta/Calcutta-Bold.ttf') format('truetype'), /* Safari, Android, iOS */
+         url('fonts/calcutta/Calcutta-Bold.svg#Calcutta-Bold') format('svg'); /* Legacy iOS */
+    font-style: normal;
+    font-weight: 700;
+    text-rendering: optimizeLegibility !important;
+}
+
+/* Webfont: Calcutta-Medium */
+@font-face {
+    font-family: 'Calcutta';
+    src: url('fonts/calcutta/Calcutta-Medium.eot'); /* IE9 Compat Modes */
+    src: url('fonts/calcutta/Calcutta-Medium.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
+         url('fonts/calcutta/Calcutta-Medium.woff') format('woff'), /* Modern Browsers */
+        url('fonts/calcutta/Calcutta-Medium.ttf') format('truetype'), /* Safari, Android, iOS */
+         url('fonts/calcutta/Calcutta-Medium.svg#Calcutta-Medium') format('svg'); /* Legacy iOS */
+    font-style: normal;
+    font-weight: 500;
+    text-rendering: optimizeLegibility !important;
+}
+
+/* Webfont: Calcutta-Regular */
+@font-face {
+    font-family: 'Calcutta';
+    src: url('fonts/calcutta/Calcutta-Regular.eot'); /* IE9 Compat Modes */
+    src: url('fonts/calcutta/Calcutta-Regular.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
+         url('fonts/calcutta/Calcutta-Regular.woff') format('woff'), /* Modern Browsers */
+         url('fonts/calcutta/Calcutta-Regular.ttf') format('truetype'), /* Safari, Android, iOS */
+         url('fonts/calcutta/Calcutta-Regular.svg#Calcutta-Regular') format('svg'); /* Legacy iOS */
+    font-style: normal;
+    font-weight: 400;
+    text-rendering: optimizeLegibility;
+}
+
+body {
+    font-family: 'Calcutta', sans-serif;
+}
+
+h1,h2,h3,h4,h5,h6{
+    font-family: 'Calcutta', sans-serif;
+}
+/* $font-family-base: 'Calcutta', sans-serif; */

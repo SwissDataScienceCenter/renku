@@ -1,0 +1,11 @@
+/* Webfont: Calcutta-Medium */@font-face {
+    font-family: 'Calcutta-Medium';
+    src: url('Calcutta-Medium.eot'); /* IE9 Compat Modes */
+    src: url('Calcutta-Medium.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
+         url('Calcutta-Medium.woff') format('woff'), /* Modern Browsers */
+         url('Calcutta-Medium.ttf') format('truetype'), /* Safari, Android, iOS */
+         url('Calcutta-Medium.svg#Calcutta-Medium') format('svg'); /* Legacy iOS */
+    font-style: normal;
+    font-weight: normal;
+    text-rendering: optimizeLegibility;
+}
