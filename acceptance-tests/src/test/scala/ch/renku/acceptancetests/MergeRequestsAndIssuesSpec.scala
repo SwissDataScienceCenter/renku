@@ -77,7 +77,7 @@ class MergeRequestsAndIssuesSpec
 
   private def `add change to the project`(branchName: String): Unit = {
     docsScreenshots.disable()
-    val jupyterLabPage = `launch an environment`
+    val jupyterLabPage = `launch a session`
     docsScreenshots.enable()
 
     When("the user clicks on the Terminal icon")
@@ -87,6 +87,6 @@ class MergeRequestsAndIssuesSpec
 
     `wait for KG to process events`(projectDetails.asProjectIdentifier)
 
-    `stop environment`
+    `stop session`
   }
 }
