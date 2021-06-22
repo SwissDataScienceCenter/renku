@@ -16,28 +16,27 @@ environment anywhere that `Docker <https://www.docker.com>`_ is available.
 .. note::
 
     All of the instructions below assume that you have cloned your project
-    locally and that you have `Docker
-    installed <https://docs.docker.com/get-docker/>`_. On Linux systems, Docker
-    requires root privileges - if you do not have root access to the host, you
-    might consider `rootless
-    Docker <https://docs.docker.com/engine/security/rootless/>`_.
+    locally and that you have `Docker installed
+    <https://docs.docker.com/get-docker/>`_. On Linux systems, Docker requires
+    root privileges - if you do not have root access to the host, you might
+    consider `rootless Docker
+    <https://docs.docker.com/engine/security/rootless/>`_.
 
 
 Building your own image
 -----------------------
 
-If you are working on a project that has not yet been pushed to the server,
-or you just prefer to build the image locally, you can certainly do so
-with Docker. To build the image, run this command from the root directory
-of your project:
+If you are working on a project that has not yet been pushed to the server, or
+you just prefer to build the image locally, you can certainly do so with Docker.
+To build the image, run this command from the root directory of your project:
 
 .. code-block:: console
 
     $ docker build -t <imageName>:<tag> .
 
 The ``imageName`` and ``tag`` can be anything you want, but you might want to
-try to use something you will remember. To see which images you have in
-your local Docker registry, run
+try to use something you will remember. To see which images you have in your
+local Docker registry, run
 
 .. code-block:: console
 
@@ -47,57 +46,80 @@ your local Docker registry, run
 Using the images built on RenkuLab
 ----------------------------------
 
-If your repository on RenkuLab is public, the easiest way to spin up your
-runtime environment locally is by pulling the image that has already been built.
+The easiest way to spin up your runtime environment locally is by pulling the
+image that has already been built.
+
 First, make sure that your project has been pushed and that the image build is
 complete. If you are not sure, the easiest way to check is to navigate to your
 project in RenkuLab and go to launch a new session - if the "Start environment"
 button is available, it means the image has been built already.
 
 To pull the image, you need to construct the image name. This is typically the
-format to expect: ``registry.<renku-host>/<namespace>/<project>:<commit-sha>``.
-Lets break down the meaning of these terms in brackets:
+format to expect:
+``registry.<renku-host>/<namespace>/<project>:<commit-sha-7>``. Lets break down
+the meaning of these terms in brackets:
 
-* ``renku-host`` is the hostname of the RenkuLab instance, e.g. ``renkulab.io``
+* ``renku-host`` is the hostname of the RenkuLab instance
 * ``namespace`` is either the username or the group name of the project owner
 * ``project`` is the project name
-* ``commit-sha`` is the first 7 characters of the ``commit-sha``
+* ``commit-sha-7`` is the first **7** characters of your commit's ``SHA`` 
 
-``namespace`` and ``project`` are easy - if your repository remote is something
-like ``https://renkulab.io/gitlab/rok.roskar/flights-tutorial.git`` then the
-``<namespace>/<project>`` is ``rok.roskar/flights-tutorial``.
+Let's take the project
+`<https://renkulab.io/projects/rok.roskar/flights-tutorial.git>`_ as an example:
 
-You can get the ``commit-sha`` by running ``git log`` in your repository, e.g.
+* ``renku-host``: ``renkulab.io``
+* ``namespace``: ``rok.roskar``
+* ``project``: ``flights-tutorial``
+* ``commit-sha-7`` of the latest commit can be retrieved by running:
 
 .. code-block:: console
 
-    $ git log
+    $ git rev-parse origin/HEAD | cut -c 1-7
 
-    commit 53cbd6a11dc5b0d139b2563b5aad83ae4f676b18 (HEAD -> master, origin/master, origin/HEAD)
-    Author: Rok Roskar <rok.roskar@sdsc.ethz.ch>
-    Date:   Tue Nov 3 17:15:31 2020 +0100
+    54dc19f
 
-    renku graph generate
+So the full name of this image, including the tag would be
+``registry.renkulab.io/rok.roskar/flights-tutorial:54dc19f``.
 
-The ``commit-sha`` here is ``53cbd6a11dc5b0d139b2563b5aad83ae4f676b18`` so the full
-name of this image, including the tag would be
-``registry.renkulab.io/rok.roskar/flights-tutorial:53cbd6a``.
+Alternatively, you can find all available images in GitLab's Container Registry
+interface, e.g.,
+`<https://renkulab.io/gitlab/rok.roskar/flights-tutorial/container_registry>`_.
 
 
 Launching the interactive environment locally
 ---------------------------------------------
 
-Finally, if we wanted to launch an environment locally with the image that was
-built for this commit. From the project's root directory, run
+Finally, we can launch an environment locally with the image that has been built 
+for the chosen commit. 
 
-.. code-block:: console
+.. note::
 
-    $ repoName=$(basename -s .git `git config --get remote.origin.url`); \
-        docker run --rm -ti -v ${PWD}:/work/$repoName \
-        --workdir /work/$repoName -p 8888:8888 \
-        registry.renkulab.io/rok.roskar/flights-tutorial:53cbd6a jupyter lab --ip=0.0.0.0
+    If your project is ``private`` or ``internal``, then you need to first login
+    to the targeted registry:
 
-Replace the image name here with whatever image you derived for your project and
+    .. code-block:: console
+
+        $ docker login registry.renkulab.io
+    
+    You will then be asked to enter your ``Username`` and ``Password``:
+
+    * ``Username`` is your username, e.g., ``rok.roskar``
+    * ``Password`` is your `Personal Access Tokens
+      <https://docs.gitlab.com/ee/user/profile/personal_access_tokens.html>`_
+      with at least ``read_registry`` access, which can be created in GitLab,
+      e.g., `<https://renkulab.io/gitlab/-/profile/personal_access_tokens>`_
+
+From the project's root directory, run
+
+.. code-block:: shell
+
+    $ imageName=registry.renkulab.io/rok.roskar/flights-tutorial:54dc19f
+    $ repoName=$(basename -s .git `git config --get remote.origin.url`)
+    $ docker run --rm -ti -v ${PWD}:/work/${repoName} \
+      --workdir /work/${repoName} -p 8888:8888 \
+      ${imageName} jupyter lab --ip=0.0.0.0
+
+Replace ``imageName`` here with whatever image you derived for your project and
 commit above (or if you built your own image, the image/tag combo you used).
 This command instructs docker to run the image from the remote registry and to
 override its default command with ``jupyter lab``. It also sets the port (``-p``
@@ -108,17 +130,18 @@ like:
 
 .. code-block:: console
 
-
     To access the notebook, open this file in a browser:
-    file:///home/jovyan/.local/share/jupyter/runtime/nbserver-23-open.html
+        file:///home/jovyan/.local/share/jupyter/runtime/nbserver-24-open.html
     Or copy and paste one of these URLs:
-    http://eb6ec2fdfdd0:8888/?token=43ed80d538c4d444ee364b7fa5c0b4df30efcb65df9bca58
-    or http://127.0.0.1:8888/?token=43ed80d538c4d444ee364b7fa5c0b4df30efcb65df9bca58
+        http://c1e432281137:8888/?token=616bc995658cb9f46673a8fcf486d5c0468f6c6058deb645
+     or http://127.0.0.1:8888/?token=616bc995658cb9f46673a8fcf486d5c0468f6c6058deb645
 
 To access the running environment, copy the last of these links (starting with
-``https://127.0.0.1``) into your browser and you should drop straight into
-the jupyter lab session. The rest should feel rather familiar - your environment
+``https://127.0.0.1``) into your browser and you should drop straight into the
+jupyter lab session. The rest should feel rather familiar - your environment
 should be identical to what you are used to seeing in your RenkuLab sessions.
 
-For RStudio projects, after you navigate to the jupyterlab session, change the
-URL end-point to ``/rstudio/`` instead of ``/lab``.
+In the jupyterlab session, you can change the URL end-point from ``/lab`` to
+``/rstudio`` for RStudio projects, or ``/vnc`` for VNC projects.
+
+
