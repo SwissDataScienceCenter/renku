@@ -41,11 +41,6 @@ spec:
             - name: jupyterhub-postgres
               mountPath: /jupyterhub-postgres
               readOnly: true
-            {{ if .Values.global.anonymousSessions.enabled }}
-            - name: jupyterhub-tmp-postgres
-              mountPath: /jupyterhub-tmp-postgres
-              readOnly: true
-            {{ end }}
             - name: graph-db-postgres
               mountPath: /graph-db-postgres
               readOnly: true
@@ -82,11 +77,6 @@ spec:
         - name: jupyterhub-postgres
           secret:
             secretName: renku-jupyterhub-postgres
-        {{ if .Values.global.anonymousSessions.enabled }}
-        - name: jupyterhub-tmp-postgres
-          secret:
-            secretName: renku-jupyterhub-tmp-postgres
-        {{ end }}
         - name: graph-db-postgres
           secret:
             secretName: {{ template "renku.fullname" . }}-graph-db-postgres
