@@ -23,7 +23,11 @@ case.
 Saving your work
 ----------------
 
-Interactive environments are kept running as long as they in use. In the default RenkuLab configuration, idle environments are stopped after 24 hours of inactivity. Furthermore, interactive environments can crash, for example if you run a process that eats more memory than you've allocated. Thus, it's best to save often.
+Interactive environments are kept running as long as they in use. In the default
+RenkuLab configuration, idle environments are stopped after 24 hours of
+inactivity. Furthermore, interactive environments can crash, for example if you
+run a process that eats more memory than you've allocated. Thus, it's best to
+save often.
 
 There are two ways to save your work back to RenkuLab from an interactive environment
 (both available in JupyterLab and RStudio), and behind the scenes both are using ``git``
@@ -38,8 +42,24 @@ start a new environment.
 Saving via Terminal
 ~~~~~~~~~~~~~~~~~~~
 
-In the Terminal interface inside the interactive environment, call the following
-three ``git`` commands to stage, commit, and push your changes:
+In the Terminal interface inside the interactive environment, it is easiest to
+use a simple ``renku save`` command to commit and push (i.e. save) any of the changes made
+in your project. For example, after updating the ``README.md``:
+
+.. code-block:: console
+
+  renku save
+  Successfully saved to remote branch master:
+          README.md
+  OK
+
+You can also add a custom message with the ``-m`` flag.
+
+.. note::
+
+  ``renku save`` will add commit and push any new *or* modified files
+
+If you would like to it manually to have finer control, you need these three steps:
 
 1. ``git add *``
 2. ``git commit -m "my short but descriptive message of the changes I made"``
@@ -47,9 +67,9 @@ three ``git`` commands to stage, commit, and push your changes:
 
 If you are new to git, these resources might be useful:
 
-* [git documentation](https://git-scm.com/doc)
-* [A great interactive cheat-sheet](http://ndpsoftware.com/git-cheatsheet.html)
-* [An intro to git](https://rogerdudler.github.io/git-guide/)
+* `git documentation <https://git-scm.com/doc>`_
+* `A great interactive cheat-sheet <http://ndpsoftware.com/git-cheatsheet.html>`_
+* `An intro to git <https://rogerdudler.github.io/git-guide/>`_
 
 Saving via Git Plugin
 ~~~~~~~~~~~~~~~~~~~~~
@@ -110,7 +130,7 @@ Push changes regularly
 ~~~~~~~~~~~~~~~~~~~~~~
 
 The autosave feature is intended to prevent loss of work, but it is not a
-replacement for `git`. By making commits in `git`, you track your changes, and
-pushing back to RenkuLab ensures that they are visible to others. And although
-we are always working to improve robustness, in some situations, autosave can
-fail. So the most secure way to keep your work is to commit and push to origin.
+replacement for `git`. By using ``renku save`` or making commits in `git`, you
+track your changes and ensure that they are visible to others. And although we
+are always working to improve robustness, in some situations, autosave can fail.
+So the most secure way to keep your work is to commit and push to origin.
