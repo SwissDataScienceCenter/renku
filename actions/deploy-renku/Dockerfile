@@ -7,7 +7,8 @@ RUN apk add python3 docker jq && \
     pip3 install -U pip \
     chartpress==1.0.0 \
     kubernetes \
-    ruamel.yaml
+    'ruamel.yaml<0.17.10' \
+    'ruamel.yaml.clib<0.2.4'
 
 COPY deploy-dev-renku.py deploy_tmp_notebooks.py entrypoint.sh /
 ENTRYPOINT /entrypoint.sh
