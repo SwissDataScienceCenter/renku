@@ -276,7 +276,8 @@ class ProjectPage(val projectSlug: String, val namespace: String)
     }
 
     def newLink(implicit webDriver: WebDriver): WebElement = eventually {
-      find(cssSelector(s"a[href='$path/sessions/new']")) getOrElse fail("New session link not found")
+      find(cssSelector(s"div.d-flex > div > a[href='$path/sessions/new']"))
+        .getOrElse(fail("New session link not found"))
     }(waitUpTo(1 minute), implicitly[Retrying[WebBrowser.Element]], implicitly[source.Position])
 
     def anonymousUnsupported(implicit webDriver: WebDriver): WebElement = eventually {
