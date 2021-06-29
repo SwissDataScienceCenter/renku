@@ -19,7 +19,7 @@ sections (i.e. `serverOptions` and `serverDefaults`) then the value in the `serv
 section should be one of the options specified in the `serverOptions` section and 
 are rendered in the UI for the users to select from.
 
-## Upgrading to Renku 0.8.0
+## Upgrading to Renku 0.8.0 (breaking changes)
 * NEW/EDIT *postgresql.persistence.existingClaim* will most likely need to be modified in the course of upgrading your postgresql version. See [these instructions](https://github.com/SwissDataScienceCenter/renku/tree/master/helm-chart/utils/postgres_migrations/version_upgrades/README.md)
 * NEW/EDIT/DELETE *gitlab.image.tag* might have to be adjusted as we do a GitLab major version bump in with this release. See [these instructions](https://github.com/SwissDataScienceCenter/renku/tree/master/helm-chart#upgrading-to-080)
 

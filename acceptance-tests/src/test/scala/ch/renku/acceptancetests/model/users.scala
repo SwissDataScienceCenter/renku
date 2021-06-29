@@ -18,15 +18,18 @@
 
 package ch.renku.acceptancetests.model
 
+import ch.renku.acceptancetests.model.AuthorizationToken.PersonalAccessToken
+
 object users {
 
   final case class UserCredentials(
-      email:       String,
-      username:    String,
-      password:    String,
-      fullName:    String,
-      useProvider: Boolean,
-      register:    Boolean
+      email:                  String,
+      username:               String,
+      password:               String,
+      fullName:               String,
+      maybeGitLabAccessToken: Option[PersonalAccessToken],
+      useProvider:            Boolean,
+      register:               Boolean
   ) {
 
     /** Return the user namespace given the user credentials.

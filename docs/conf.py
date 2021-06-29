@@ -44,6 +44,8 @@ extensions = [
     "sphinx.ext.viewcode",
     "sphinxcontrib.spelling",
     "sphinx_rtd_theme",
+    "sphinx_copybutton",
+    "sphinx_panels"
 ]
 
 # Plantweb configuration
@@ -66,12 +68,12 @@ project = "Renku"
 copyright = "2017-2021, Swiss Data Science Center"
 author = (
     "Mohammad Alisafaee, Andreas Bleuler, Eric Bouillet, \n"
-    "Lorenzo Cavazzi, Christine Choirat, Jakub Chrobasik, \n"
+    "Lorenzo Cavazzi, Christine Choirat, Jakub Chrobasik, Alessandro Degano, \n"
     "Pamela Delgado, Julien Eberle, Virginia Friedrich, \n"
     "Fotis Georgatos, Ralf Grubenmann, Emma Jablonski, \n"
-    "Jiri Kuncar, Izabela Moise, Chandrasekhar Ramakrishnan, \n"
-    "Rok Roškar, Sofiane Sarni, Sandra Savchenko De Jong, \n"
-    "Johann-Michael Thiebaut, Olivier Verscheure"
+    "Jiri Kuncar, David Kunzmann, Travis Lee, Izabela Moise, Tasko Olevski, Samuel Picek, \n"
+    "Chandrasekhar Ramakrishnan, Rok Roškar, Sofiane Sarni, \n"
+    "Sandra Savchenko De Jong, Johann-Michael Thiebaut, Olivier Verscheure"
 )
 
 # The version info for the project you're documenting, acts as replacement for
@@ -219,6 +221,10 @@ graphviz_output_format = "svg"
 # suppress the warning about graph being overriden
 suppress_warnings = ["app.add_directive"]
 
+# copybutton config
+
+copybutton_prompt_text = r">>> |\.\.\. |\$ |In \[\d*\]: | {2,5}\.\.\.: | {5,8}: "
+copybutton_prompt_is_regexp = True
 
 # sidebar
 on_rtd = os.environ.get("READTHEDOCS", None) == "True"

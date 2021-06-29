@@ -19,14 +19,7 @@ from subprocess import check_call
 
 import yaml
 
-components = [
-    "renku-core",
-    "renku-gateway",
-    "renku-graph",
-    "renku-notebooks",
-    "renku-ui",
-    "renku-ui-server"
-]
+components = ["renku-core", "renku-gateway", "renku-graph", "renku-notebooks", "renku-ui", "renku-ui-server"]
 
 
 class RenkuRequirement(object):
@@ -154,6 +147,11 @@ if __name__ == "__main__":
         help="Namespace for this release",
         default=os.environ.get("RENKU_NAMESPACE"),
     )
+    parser.add_argument(
+        "--extra-values",
+        help="Set additional values (comma-separated)",
+        default=os.environ.get("extra_values"),
+    )
     parser.add_argument("--release", help="Release name", default=os.environ.get("RENKU_RELEASE"))
     parser.add_argument(
         "--anonymous-sessions",
@@ -161,6 +159,7 @@ if __name__ == "__main__":
         action="store_true",
         default=os.environ.get("RENKU_ANONYMOUS_SESSIONS") == "true",
     )
+
     args = parser.parse_args()
     component_versions = {a: b for a, b in vars(args).items() if a.replace("_", "-") in components}
 
@@ -216,6 +215,10 @@ if __name__ == "__main__":
     if os.getenv("TEST_ARTIFACTS_PATH"):
         helm_command += ["--set", f'tests.resultsS3.filename={os.getenv("TEST_ARTIFACTS_PATH")}']
 
+    # pass additional values to the deployment
+    if args.extra_values:
+        helm_command += ["--set", args.extra_values]
+
     # deploy the main chart
     check_call(
         helm_command,
@@ -233,7 +236,9 @@ if __name__ == "__main__":
             renku_chart_path=renku_dir / "helm-chart"
         )
 
-        local_path = tempdir / "renku-notebooks/helm-chart/renku-notebooks" if renku_notebooks_version.startswith("@") else None
+        local_path = (
+            tempdir / "renku-notebooks/helm-chart/renku-notebooks" if renku_notebooks_version.startswith("@") else None
+        )
 
         deploy_tmp_notebooks(
             release,
