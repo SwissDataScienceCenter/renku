@@ -109,7 +109,7 @@ trait Project extends RemoveProject with BeforeAndAfterAll {
 
     When("the user navigates to the Overview -> Description tab")
     click on projectPage.Overview.tab
-    click on projectPage.Overview.descriptionButton
+    click on projectPage.Overview.overviewGeneralButton
     Then("they should see project's README.md content")
     verify that projectPage.Overview.Description.title is "README.md"
 
