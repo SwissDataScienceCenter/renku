@@ -318,6 +318,7 @@ renku-specific variables that are always available in templates, namely:
   special characters) as used in Gitlab and URLs.
 * ``__project_slug__``: The project slug (``<namespace>/<sanitized project
   name>``) (only set when creating a project online in renkulab).
+* ``__renku_version__``: Renku version to be used for the project.
 
 
 Use custom template repositories
