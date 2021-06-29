@@ -78,10 +78,9 @@ class ProjectPage(val projectSlug: String, val namespace: String)
       find(cssSelector(".rk-project-description")) getOrElse fail("Overview -> Project Description not found")
     }
 
-    def descriptionButton(implicit webDriver: WebDriver): WebElement = eventually {
-      find(cssSelector(s"div.row ul.nav.flex-column li.nav-item a[href='$path']:last-of-type"))
-        .find(_.text == "Description")
-        .getOrElse(fail("Overview -> Description button not found"))
+    def overviewGeneralButton(implicit webDriver: WebDriver): WebElement = eventually {
+      find(cssSelector(s"#nav-overview-general"))
+        .getOrElse(fail("Overview -> General button not found"))
     }
 
     object Description {
