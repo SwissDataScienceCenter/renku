@@ -59,8 +59,15 @@ class HandsOnSpec
     // This should prevent menu flickering due to UI not completely loaded
     sleep (5 seconds)
 
-    `log out of Renku`
+    `try to logout 🤷`
   }
+
+  private def `try to logout 🤷` : Boolean =
+    return try { `log out of Renku`; return true }
+    catch {
+      case e: org.openqa.selenium.ElementNotInteractableException => false
+      case _: Throwable                                           => false
+    }
 
   private def `verify analysis was run`: Unit = {
     When("the user navigates to the Files tab")
