@@ -45,7 +45,7 @@ trait TopBar {
 
     def clickOnTopRightDropDown(implicit webDriver: WebDriver): Unit = eventually {
       val profileButton =
-        find(cssSelector("#profile-dropdown > svg"))
+        find(cssSelector("#profile-dropdown"))
           .getOrElse(fail("Top Right dropdown not found"))
 
       new Actions(webDriver)
