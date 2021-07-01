@@ -410,6 +410,12 @@ ui:
         ref: 0.2.0
         name: Community
 
+  canary:
+    enabled: true
+    image:
+      repository: renku/renku-ui
+      tag: "1.0.0-beta2"
+
   #  welcomePage:
   #    text: "## Some markdown text here!"
   ## UI image
