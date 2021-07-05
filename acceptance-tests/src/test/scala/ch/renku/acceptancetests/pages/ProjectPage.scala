@@ -102,10 +102,14 @@ class ProjectPage(val projectSlug: String, val namespace: String)
         find(cssSelector(s"a[href='$path/collaboration/mergerequests']")) getOrElse fail("Merge Requests tab not found")
       }
 
-      def noMergeRequests(implicit webDriver: WebDriver): WebElement = eventually {
-        findAll(cssSelector("div.row div"))
-          .find(_.text == "No merge requests to display.")
-          .getOrElse(fail("No merge requests info not found"))
+      def gitLabMrLink(implicit webDriver: WebDriver): WebElement = eventually {
+        find(cssSelector(s"a[href*='/gitlab/$namespace/$projectSlug/-/merge_requests']"))
+          .getOrElse(fail("GitLab MR link not found"))
+      }
+
+      def collaborationIframe(implicit webDriver: WebDriver): WebElement = eventually {
+        find(cssSelector("#collaboration-iframe"))
+          .getOrElse(fail("MR iFrame not found"))
       }
 
       def futureMergeRequestBanner(implicit webDriver: WebDriver): WebElement = eventually {
@@ -119,13 +123,6 @@ class ProjectPage(val projectSlug: String, val namespace: String)
           "Create Merge Request button not found"
         )
       }
-
-      def mrTitleElements(implicit webDriver: WebDriver): List[WebBrowser.Element] = eventually {
-        findAll(cssSelector(".rk-search-result > div > div.title")).toList
-      }
-
-      def mergeRequestsTitles(implicit webDriver: WebDriver): List[String] =
-        mrTitleElements.map(_.text)
     }
 
     object Issues {
@@ -134,23 +131,14 @@ class ProjectPage(val projectSlug: String, val namespace: String)
         find(cssSelector(s"a[href='$path/collaboration/issues']")) getOrElse fail("Issues tab not found")
       }
 
-      def newIssueLink(implicit webDriver: WebDriver): WebElement = eventually {
-        findAll(cssSelector(s"a[href='$path/collaboration/issues/issue_new']"))
-          .find(_.text == "New Issue")
-          .getOrElse(fail("New Issue button not found"))
+      def gitLabIssuesLink(implicit webDriver: WebDriver): WebElement = eventually {
+        find(cssSelector(s"a[href*='/gitlab/$namespace/$projectSlug/-/issues']"))
+          .getOrElse(fail("GitLab issue link not found"))
       }
 
-      def issueTitleElements(implicit webDriver: WebDriver): List[WebBrowser.Element] = eventually {
-        findAll(cssSelector(".rk-search-result > div > div.title")).toList
-      }
-
-      def issueTitles(implicit webDriver: WebDriver): List[String] =
-        issueTitleElements.map(_.text)
-
-      def noIssues(implicit webDriver: WebDriver): WebElement = eventually {
-        findAll(cssSelector("div.row div"))
-          .find(_.text == "No issues to display.")
-          .getOrElse(fail("No issues info not found"))
+      def collaborationIframe(implicit webDriver: WebDriver): WebElement = eventually {
+        find(cssSelector("#collaboration-iframe"))
+          .getOrElse(fail("Issues iFrame not found"))
       }
 
       object NewIssue {
