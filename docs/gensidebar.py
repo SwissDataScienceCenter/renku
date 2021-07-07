@@ -79,16 +79,17 @@ def generate_sidebar(on_rtd, rtd_version, conf_api):
 
     toctree(None, hidden=True)
     write("About Renku", "introduction/index", "renku")
-    write("Getting Started", "getting_started", "renku")
-    write("Using Renku", "user/index", "renku")
-    write("Renku Platform", "platform", "renku")
+    write("Getting Started", "getting-started", "renku")
+    write("How-to Guides", "how-to-guides/index", "renku")
+    write("Topic guides", "topic-guides/index", "renku")
+    write("Reference", "reference/index", "renku")
 
     toctree(None, max_depth=3, hidden=True, include_hidden=False)
     write("Renku Client", "introduction", "renku-python")
 
     toctree(None, max_depth=1, hidden=True)
-    write("Get in touch", "get_in_touch", "renku")
-    write("Release Notes", "release_notes", "renku")
+    write("Get in touch", "get-in-touch", "renku")
+    write("Release Notes", "release-notes", "renku")
     write_external("License", "https://www.apache.org/licenses/LICENSE-2.0")
     endl()
 
