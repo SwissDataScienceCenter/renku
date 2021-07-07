@@ -1,11 +1,11 @@
-.. _courses:
+.. _teaching_with_renkulab:
 
 Teaching with Renku
 ===================
 
 We know that teaching data science and software engineering is a challenging
 task for a variety of reasons, for both teachers and students. Teachers often
-note that: 
+note that:
 
 * getting students to install software is a long process;
 
@@ -31,7 +31,7 @@ We want to give your teachings the best Renku experience, whether they are one-o
 workshops or weekly lab sessions. This means ensuring adequate computational
 resources for you and your sessions, with a Renku admin on hand if there are
 problems with the platform. As such, we would very much appreciate if you could
-*announce* your teaching using the following form: 
+*announce* your teaching using the following form:
 https://renkulab.io/projects/team-renku/renku-teaching-announcements-google/files/blob/Form.ipynb.
 
 If you are not able to use Google forms due to institutional restrictions, please
@@ -48,11 +48,11 @@ Fork pattern
 ^^^^^^^^^^^^
 
 Forking is one of the natural ways to share a teacher's project with students.
-Once a teacher has set up the required dependencies in their ``Dockerfile``, 
+Once a teacher has set up the required dependencies in their ``Dockerfile``,
 ``requirements.txt``, ``install.R`` and/or ``environments.yml`` file, students
-can use `fork` the project to their own account. This essentially copies the 
+can use `fork` the project to their own account. This essentially copies the
 files and dependencies at that point in time. Forking is available through both
-the GitLab and Renku user interfaces. 
+the GitLab and Renku user interfaces.
 
 An advantage of forks is that they are able to be tracked by both the original
 repository author and people who have forked that project. It is also possible
@@ -64,8 +64,8 @@ Template pattern
 
 Another way of sharing material for a course is through templates. A teacher
 would set up dependencies and materials as they would in the fork pattern, but
-instead they would share instead a project initiation link to the template, 
-where students fill in their own metadata. In this case, student's fully own 
+instead they would share instead a project initiation link to the template,
+where students fill in their own metadata. In this case, student's fully own
 the repository and there is no link from the template repository to the
 instantiated one (except for its metadata). See
 https://renku.readthedocs.io/en/latest/user/templates.html for more details.
@@ -75,7 +75,7 @@ Hands on demos
 
 When you want students to access interactive sessions quickly without necessarily
 saving outputs, it is possible to share a 'one-click' start link to a project
-that you have prepared earlier. 
+that you have prepared earlier.
 
 .. figure:: ../_static/images/one-click-start.png
         :width: 85%
@@ -96,5 +96,5 @@ is built for each fork. However, this may be unnecessary and it would be better
 to optimize this by *pinning* the Docker image beforehand. This means that the
 trainer would have determined the Docker image for all of the students to use
 and when these projects are forked, there is no need to build a new Docker image.
-See the following Discourse post for the details: 
+See the following Discourse post for the details:
 https://renku.discourse.group/t/how-to-pin-a-docker-image/240

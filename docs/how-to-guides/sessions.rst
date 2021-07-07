@@ -17,8 +17,7 @@ are covered on the pages that follow:
 .. toctree::
   :maxdepth: 1
 
-  Basics <session_basics>
-  Stopping and Saving <session_stopping_and_saving>
-  Customizing sessions <session_customizing>
-  upgrading_renku
-  Running sessions locally <session-running-locally>
+  session-stopping-and-saving
+  session-customizing
+  upgrading-renku
+  session-running-locally

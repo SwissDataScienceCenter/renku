@@ -14,6 +14,7 @@
 # serve to show the default.
 
 import os
+import re
 import sys
 from os.path import abspath, join, dirname
 
@@ -240,7 +241,8 @@ copybutton_prompt_is_regexp = True
 on_rtd = os.environ.get("READTHEDOCS", None) == "True"
 renku_python_version = version
 
-if renku_python_version not in ["stable", "latest"]:
+# if this is a non-development release, use the latest release of renku-python
+if re.match(r'[0-9]\.[0-9]\.[0-9]', renku_python_version):
     # tag build, update respective renku-python as well
     with open("../helm-chart/renku/requirements.yaml", "r") as f:
         requirements = yaml.load(f)
