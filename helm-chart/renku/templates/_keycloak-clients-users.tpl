@@ -51,9 +51,9 @@ Define clients and users for Keycloak
     }]
   },
   {
-    "clientId": "{{ .Values.global.gateway.jupyterserverClientId }}",
+    "clientId": "{{ .Values.notebooks.oidc.clientId }}",
     "baseUrl": "{{ template "http" . }}://{{ .Values.global.renku.domain }}",
-    "secret": "{{ required "Fill in .Values.global.gateway.jupyterserverClientSecret with `uuidgen -r`" .Values.global.gateway.jupyterserverClientSecret }}",
+    "secret": "{{ required "Fill in .Values.notebooks.oidc.clientSecret with `uuidgen -r`" .Values.notebooks.oidc.clientSecret }}",
     "redirectUris": [
         "{{ template "http" . }}://{{ .Values.global.renku.domain }}/*"
     ],

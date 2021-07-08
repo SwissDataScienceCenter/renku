@@ -44,9 +44,6 @@ global:
     gitlabClientId: renku-ui
     ## The client secret for authentication against gitlab
     gitlabClientSecret:
-    ## The secret for the keycloak client that will be used by amalthea
-    jupyterserverClientId: renku-jupyterserver
-    jupyterserverClientSecret: # use `uuidgen -r`
   renku:
     ## Domain name for the deployed instance of renku
     domain: example.local
@@ -506,6 +503,8 @@ notebooks:
   ## image registry host
   # imageRegistry:
   oidc:
+    clientId: renku-jupyterserver
+    clientSecret: # use `uuidgen -r`
     token_url:
     auth_url:
   session_ingress:
