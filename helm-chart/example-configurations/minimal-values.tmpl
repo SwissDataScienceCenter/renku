@@ -18,9 +18,6 @@ domain_configurations:
   gitlabClientId:            &gitlabClientId                [gitlab-application-clientID]
   gitlabClientSecret:        &gitlabClientSecret            [gitlab-application-secret]
 
-  hubGitlabClientId:         &hubGitlabClientId             [hub-gitlab-application-clientID] ## If external GitLab, use gitlab-application-clientID
-  hubGitlabClientSecret:     &hubGitlabClientSecret         [hub-gitlab-application-secret]  ## If external GitLab, use gitlab-application-secret
-
   registryName:              &registryName                  [gitlab-registry]
   registryURL:               &registryURL                   https://[gitlab-registry]
   registry_tls:              &registry_tls                  [registry-ingress-tls]
