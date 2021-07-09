@@ -6,14 +6,14 @@ Upgrading your Renku project
 The Renku Project is in constant flux! This means that often there are changes
 to RenkuLab (e.g. the web platform (UI) and the knowledge graph (KG)), and the
 ``renku`` command-line interface (CLI). These docs will explain how to benefit from
-changes to the ``renku CLI`` when you're using an interactive environment on RenkuLab.
+changes to the ``renku CLI`` when you're using a session on RenkuLab.
 You can find the changes `in the renku-python docs <https://renku-python.readthedocs.io/en/latest/changes.html>`_.
 
 If you're instead looking for a list of new features available in RenkuLab, they
 are announced in the :ref:`release_notes`. When we update components of the
 RenkuLab platform, you won't usually have to do anything special. E.g. when we
-added the ability for anonymous (not logged in) users to launch interactive
-environments, each project was immediately accessible without the project owner
+added the ability for anonymous (not logged in) users to launch sessions, 
+each project was immediately accessible without the project owner
 needing to change any settings.
 
 .. _renku_cli_upgrade:
@@ -24,12 +24,12 @@ Upgrading your image to use the latest ``renku`` CLI version
 .. note::
 
   This section is for upgrading the version of ``renku`` CLI installed into
-  the Interactive Environments on RenkuLab for your project. See :ref:`upgrading_local`
+  the Sessions on RenkuLab for your project. See :ref:`upgrading_local`
   for upgrading your local machine's version of ``renku``.
 
 When we release a new version of the ``renku`` CLI, you do have to make some
 (minimal) changes to the ``Dockerfile`` in your project to ensure that the
-Interactive Environment on RenkuLab will use the image with the correct version.
+Session on RenkuLab will use the image with the correct version.
 
 The version of the ``renku`` CLI is defined in the base image specified in the
 ``FROM`` line (usually line 1) of the ``Dockerfile`` in your repo.
@@ -49,9 +49,8 @@ an image with the renku version specified (e.g. ``-renku0.10.4-`` and not ``-ren
 unless you absolutely need the latest development version of ``renku``, since it makes
 debugging and reproducibility much simpler.
 
-2. Push your changes (either from the GitLab editor, or in a running Interactive
-   Environment), and start up a new Interactive Environment from the latest commit
-   to use this new image.
+2. Push your changes (either from the GitLab editor, or in a running Session), 
+   and start up a new Session from the latest commit to use this new image.
 
 3. When you start to run ``renku`` commands, you might be asked to call ``renku migrate``.
    This command ensures that the metadata in your project is updated.

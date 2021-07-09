@@ -121,7 +121,7 @@ If everything went smoothly, you should be able to view your project at
 https://renkulab.io/gitlab/<namespace>/<project-name>. When you push code to this
 repo, the CI/CD pipeline will run according to settings in the ``.gitlab-ci.yml``
 file, rebuilding your docker image as specified by the ``Dockerfile`` in the repo.
-If your build fails, see :ref:`interactive_environments`.
+If your build fails, see :ref:`sessions`.
 
 .. warning::
 

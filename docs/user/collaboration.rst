@@ -65,7 +65,7 @@ Maintainer privileges.
 
 Adding them here will make this project appear in their **Your Projects** list
 on the Renku platform, where the **Environments** tab for the project will allow
-them to launch an interactive environment to work on the project as usual.
+them to launch a session to work on the project as usual.
 
 .. warning::
 
