@@ -6,7 +6,7 @@
 Bug Fixes
 ~~~~~~~~~
 
--  css for the Login button on the provider page
+-  CSS for the Login button on the provider page
    (`#2178 <https://github.com/SwissDataScienceCenter/renku/issues/2178>`__)
    (`d1a0149 <https://github.com/SwissDataScienceCenter/renku/commit/d1a01499622e3dcfc566c942e28eef6e7983be31>`__)
 
