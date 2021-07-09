@@ -1,6 +1,6 @@
-.. _start_interactive_session:
+.. _start_session:
 
-Start an interactive session
+Start a session
 --------------------------------
 
 One of the main collaborative features of the Renku platform are hosted

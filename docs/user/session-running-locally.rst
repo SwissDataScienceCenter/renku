@@ -1,4 +1,4 @@
-.. _local_interactive_environments:
+.. _local_sessions:
 
 Running RenkuLab Interactive Sessions on Your Own Machine
 =========================================================
@@ -86,10 +86,10 @@ interface, e.g.,
 `<https://renkulab.io/gitlab/rok.roskar/flights-tutorial/container_registry>`_.
 
 
-Launching the interactive environment locally
+Launching the session locally
 ---------------------------------------------
 
-Finally, we can launch an environment locally with the image that has been built 
+Finally, we can launch a session locally with the image that has been built 
 for the chosen commit. 
 
 .. note::

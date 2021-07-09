@@ -1,6 +1,6 @@
 .. _customizing:
 
-Customizing interactive environments
+Customizing sessions
 ====================================
 
 Very soon, you will want to make changes to the default configuration of your
@@ -14,7 +14,7 @@ Important files
 
 The launch is enabled by the content in the following files in your project:
 
-* ``Dockerfile``: defines the type of interactive environment and other software
+* ``Dockerfile``: defines the type of session and other software
   installed in the environment, including the ``renku`` command-line installation.
 
 * ``.gitlab-ci.yml``: controls the docker build of the image based on the project's
@@ -34,7 +34,7 @@ to ``requirements.txt`` and ``install.R`` respectively.
 Renku project configurations
 ----------------------------
 
-When starting a new Interactive Environment, most of the options can be manually
+When starting a new Session, most of the options can be manually
 changed by the user. Depending on the specific RenkuLab deployment, you can select
 more RAM, a higher CPU quota, etc.
 
@@ -52,7 +52,7 @@ be pre-selected.
   Manually modifying the ``renku.ini`` file is not recommended.
   You can use the
   `renku config command <https://renku-python.readthedocs.io/en/latest/commands.html#module-renku.cli.config>`_
-  from an interactive environment, for example:
+  from a session, for example:
 
     renku config set interactive.default_url "/tree"
 
@@ -173,7 +173,7 @@ Using your new Docker image
 ---------------------------
 
 Passing CI/CD is great, but in order to use the new image you need to
-(re)start your interactive environment.
+(re)start your session.
 
 To do this, go back to the Renku platform, and from the project's landing page,
 first check in the **Files** tab that your changes to the ``Dockerfile`` are
