@@ -262,6 +262,8 @@ keycloak_admin.create_realm(
         "ssoSessionIdleTimeout": 86400,
         "ssoSessionMaxLifespan": 604800,
         "registrationEmailAsUsername": True,
+        "loginTheme": "renku-theme",
+        "accountTheme": "renku-theme",
     },
     skip_exists=True,
 )
@@ -269,6 +271,7 @@ sys.stdout.write("done\n")
 
 # Switching to the newly created realm
 keycloak_admin.realm_name = args.realm
+
 
 for new_client in new_clients:
     _check_and_create_client(keycloak_admin, new_client)
