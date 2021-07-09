@@ -3,6 +3,10 @@
 0.8.2
 -----
 
+This release includes a beta version of the new user interface for Renku. Over the next few releases
+we will gradually phase out the old user interface. However, for the time being you can use both. Simply switch 
+between the two by clicking the link on the Renku home page.
+
 Bug Fixes
 ~~~~~~~~~
 
