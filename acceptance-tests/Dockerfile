@@ -28,8 +28,8 @@ RUN python3 -m pip install \
     'nbresuse==0.3.3' \
     'jupyterlab-git==0.20.0' \
     'pipx>=0.15.0.0' \
-    'pandas==0.25.3' \
-    'seaborn==0.9.0'
+    'pandas==1.3.0' \
+    'seaborn==0.11.1'
 
 ENV DOCKER="1"
 COPY . /tests

@@ -51,8 +51,8 @@ trait FlightsTutorial extends Matchers with CLIConfiguration {
     console %> c"renku dataset import --name flight-data 10.7910/DVN/WTZS4K".userInput("y")
 
     And("adds some Python packages to the requirements.txt")
-    console %> (c"echo pandas==0.25.3" >> "requirements.txt")
-    console %> (c"echo seaborn==0.9.0" >> "requirements.txt")
+    console %> (c"echo pandas==1.3.0" >> "requirements.txt")
+    console %> (c"echo seaborn==0.11.1" >> "requirements.txt")
 
     And("installs the packages")
     console %> c"pip install -r requirements.txt"
