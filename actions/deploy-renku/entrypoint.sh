@@ -19,7 +19,7 @@ if [[ -n "$GITLAB_TOKEN" ]]; then
 gitlab_app=$(curl -s -X POST https://dev.renku.ch/gitlab/api/v4/applications \
                       -H "private-token: $GITLAB_TOKEN" \
                       --data "name=${RENKU_RELEASE}" \
-                      --data "redirect_uri=https://${RENKU_RELEASE}.dev.renku.ch/auth/realms/Renku/broker/dev-renku/endpoint https://${RENKU_RELEASE}.dev.renku.ch/api/auth/gitlab/token https://${RENKU_RELEASE}.dev.renku.ch/api/auth/jupyterhub/token https://${RENKU_RELEASE}.dev.renku.ch/jupyterhub/hub/oauth_callback" \
+                      --data "redirect_uri=https://${RENKU_RELEASE}.dev.renku.ch/auth/realms/Renku/broker/dev-renku/endpoint https://${RENKU_RELEASE}.dev.renku.ch/api/auth/gitlab/token" \
                       --data "scopes=api read_user read_repository read_registry openid")
 APP_ID=$(echo $gitlab_app | jq -r '.application_id')
 APP_SECRET=$(echo $gitlab_app | jq -r '.secret')
