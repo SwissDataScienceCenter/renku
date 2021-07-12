@@ -1,7 +1,6 @@
 #!/bin/sh
 
 RENKU_NAMESPACE=${RENKU_NAMESPACE:-$RENKU_RELEASE}
-RENKU_TMP_NAMESPACE=${RENKU_TMP_NAMESPACE:-${RENKU_NAMESPACE}-tmp}
 
 # set up docker credentials
 echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin
@@ -28,10 +27,7 @@ APP_SECRET=$(echo $gitlab_app | jq -r '.secret')
 # gateway gitlab app/secret
 yq w -i $RENKU_VALUES_FILE "gateway.gitlabClientId" "$APP_ID"
 yq w -i $RENKU_VALUES_FILE "gateway.gitlabClientSecret" "$APP_SECRET"
-
-# jupyterhub gitlab app/secret
-yq w -i $RENKU_VALUES_FILE "notebooks.jupyterhub.auth.gitlab.clientId" "$APP_ID"
-yq w -i $RENKU_VALUES_FILE "notebooks.jupyterhub.auth.gitlab.clientSecret" "$APP_SECRET"
+yq w -i $RENKU_VALUES_FILE "global.gateway.gitlabClientSecret" "$APP_SECRET"
 fi
 
 # create the namespace in a Rancher project
@@ -41,14 +37,6 @@ curl -s -H "Authorization: Bearer $RENKUBOT_RANCHER_BEARER_TOKEN" \
         -d "name=${RENKU_NAMESPACE}" \
         -d "projectId=${RANCHER_PROJECT_ID}" \
         'https://rancher.renku.ch/v3/cluster/c-l6jt4/namespaces'
-
-if [[ $RENKU_ANONYMOUS_SESSIONS = "true" ]]; then
-curl -s -H "Authorization: Bearer $RENKUBOT_RANCHER_BEARER_TOKEN" \
-        -X POST \
-        -d "name=${RENKU_TMP_NAMESPACE}" \
-        -d "projectId=${RANCHER_PROJECT_ID}" \
-        'https://rancher.renku.ch/v3/cluster/c-l6jt4/namespaces'
-fi
 fi
 
 # deploy renku - reads config from environment variables
