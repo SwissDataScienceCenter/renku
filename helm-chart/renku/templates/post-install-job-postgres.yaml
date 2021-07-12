@@ -38,9 +38,6 @@ spec:
               mountPath: /gitlab-postgres
               readOnly: true
             {{- end}}
-            - name: jupyterhub-postgres
-              mountPath: /jupyterhub-postgres
-              readOnly: true
             - name: graph-db-postgres
               mountPath: /graph-db-postgres
               readOnly: true
@@ -74,9 +71,6 @@ spec:
           secret:
             secretName: {{ template "renku.fullname" . }}-gitlab-postgres
         {{- end}}
-        - name: jupyterhub-postgres
-          secret:
-            secretName: renku-jupyterhub-postgres
         - name: graph-db-postgres
           secret:
             secretName: {{ template "renku.fullname" . }}-graph-db-postgres
