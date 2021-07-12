@@ -1,6 +1,6 @@
-.. _interactive_environments:
+.. _sessions:
 
-Interactive Environments on RenkuLab
+Sessions on RenkuLab
 ====================================
 
 RenkuLab provides convenient interactive computing environments based on
@@ -17,8 +17,8 @@ are covered on the pages that follow:
 .. toctree::
   :maxdepth: 1
 
-  Basics <interactive_basics>
-  Stopping and Saving <interactive_stopping_and_saving>
-  Customizing interactive environments <interactive_customizing>
+  Basics <session_basics>
+  Stopping and Saving <session_stopping_and_saving>
+  Customizing sessions <session_customizing>
   upgrading_renku
-  Running interactive environments locally <interactive-running-locally>
+  Running sessions locally <session-running-locally>

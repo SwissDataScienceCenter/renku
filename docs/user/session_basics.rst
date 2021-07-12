@@ -1,13 +1,13 @@
-.. _interactive_basics:
+.. _session_basics:
 
 
-Interactive Environment Basics
+Session Basics
 ==============================
 
-What is an Interactive Environment?
+What is a Session?
 -----------------------------------
 
-Interactive environments on RenkuLab are web-based user interfaces (like JupyterLab
+Sessions on RenkuLab are web-based user interfaces (like JupyterLab
 and RStudio) that you can launch to develop and run your code and data workflows.
 They're commonly used for exploratory analysis because you can try out short blocks
 of code before combining everything into a (reproducible) workflow.
@@ -30,7 +30,7 @@ but RenkuLab offers the following advantages:
   is automatically available.
 
 
-What's in my Interactive Environment?
+What's in my Session?
 -------------------------------------
 
 * Your project, which is cloned into the environment on startup.
@@ -50,15 +50,15 @@ What's in my Interactive Environment?
 
 * The amount of CPUs, memory, and (possibly) GPUs that you configured before launch.
 
-For adding or changing software installed into your project's interactive environment,
+For adding or changing software installed into your project's session,
 check out :ref:`customizing`
 
 
-Which Interactive Environment will launch?
+Which Session will launch?
 ------------------------------------------
 
 The template you choose when you create a project on RenkuLab (or locally call
-``renku init`` on your project) determines the kind of interactive environment
+``renku init`` on your project) determines the kind of session
 that is available to launch. Once it is initialized, your project can easily be
 modified, for example to install additional libraries into the environment - see
 :ref:`customizing`. We provide templates for basic Python, R, and Julia
@@ -66,10 +66,10 @@ projects. If you wish to use custom templates for your projects, you can build
 your own! Please refer to the :ref:`templating <templates>` documentation.
 
 
-Starting a new Interactive Environment
+Starting a new Session
 --------------------------------------
 
-When starting a new interactive environment, you will be asked to configure it.
+When starting a new session, you will be asked to configure it.
 The default configuration should work well for most situations. If, however,
 you encountered problems with an environment (for example, a crash), you might
 want to increase some processing power or memory. Here's the rundown of the
@@ -84,7 +84,7 @@ configuration options.
 |                              | especially useful if your latest commit's build failed (see below) or you have unsaved    |
 |                              | work that was automatically recovered.                                                    |
 +------------------------------+-------------------------------------------------------------------------------------------+
-| Default Image                | This provides information about the Docker image used by the Interactive Environment.     |
+| Default Image                | This provides information about the Docker image used by the Session.                     |
 |                              | When it fails, you can try to rebuild it, or you can check the GitLab job logs.           |
 |                              | An image can also be pinned so that new commits will not require a new image              |
 |                              | each time.                                                                                |
@@ -113,8 +113,8 @@ configuration options.
 What if the Docker image is not available?
 ------------------------------------------
 
-Interactive environments are backed by Docker images. When launching a new
-interactive environment, a container is created from the image that matches the
+Sessions are backed by Docker images. When launching a new
+session, a container is created from the image that matches the
 selected ``branch`` and ``commit``.
 
 A GitLab's CI/CD pipeline automatically builds a new image using the project's
@@ -160,9 +160,9 @@ the name, extra dependencies required for the library but unavailable).
 You can use the GitLab editor or clone your project locally to fix the installation,
 possibly by adding the extra dependencies it asks for into the ``Dockerfile``
 (the commented out section in the file explains how to do this). As an alternative,
-you can start an interactive environment from an earlier commit.
+you can start a session from an earlier commit.
 
-**How to avoid this:** First try installing into your running interactive environment,
+**How to avoid this:** First try installing into your running session,
 e.g. by running ``pip install -r requirements.txt`` in the terminal on JupyterLab.
 You might not have needed to install extra dependencies when installing on your
 local machine, but the operating system (OS) defined in the ``Dockerfile`` has
@@ -173,7 +173,7 @@ The build timed out
 
 By default, image builds are configured to time out after an hour. If your build
 takes longer than that, you might want to check out the section on :ref:`customizing`
-interactive environments before increasing the timeout.
+sessions before increasing the timeout.
 
 Your project could not be cloned
 ********************************

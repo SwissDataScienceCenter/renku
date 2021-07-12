@@ -4,7 +4,7 @@ Stopping and Saving
 ===================
 
 If you know you're not going to be actively working on your project, it's good
-manners to :ref:`save your work<saving>` and stop the interactive environment, so that
+manners to :ref:`save your work<saving>` and stop the session, so that
 you can release the resources you were consuming. You can do this from the Environments
 tab on the RenkuLab UI.
 
@@ -23,16 +23,16 @@ case.
 Saving your work
 ----------------
 
-Interactive environments are kept running as long as they in use. In the default
-RenkuLab configuration, idle environments are stopped after 24 hours of
-inactivity. Furthermore, interactive environments can crash, for example if you
+Sessions are kept running as long as they in use. In the default
+RenkuLab configuration, idle sessions are stopped after 24 hours of
+inactivity. Furthermore, sessions can crash, for example if you
 run a process that eats more memory than you've allocated. Thus, it's best to
 save often.
 
-There are two ways to save your work back to RenkuLab from an interactive environment
+There are two ways to save your work back to RenkuLab from a session
 (both available in JupyterLab and RStudio), and behind the scenes both are using ``git``
 staging (``add``), ``commit``, and ``push``. You can type these commands directly
-into the available terminal interface of your interactive environment, or click
+into the available terminal interface of your session, or click
 some buttons via the git plugins.
 
 When you push your changes back to RenkuLab, the GitLab CI/CD is triggered to build
@@ -42,7 +42,7 @@ start a new environment.
 Saving via Terminal
 ~~~~~~~~~~~~~~~~~~~
 
-In the Terminal interface inside the interactive environment, it is easiest to
+In the Terminal interface inside the session, it is easiest to
 use a simple ``renku save`` command to commit and push (i.e. save) any of the changes made
 in your project. For example, after updating the ``README.md``:
 
@@ -81,10 +81,10 @@ to push those changes.
 
 .. _autosave:
 
-Autosave in interactive environments
+Autosave in sessions
 ------------------------------------
 
-When you stop an interactive environment, an automatic check looks for any work
+When you stop a session, an automatic check looks for any work
 that has not been pushed to the remote repository, including untracked and
 modified files. If something is found, a new "autosave" branch is created
 and pushed to GitLab.
@@ -99,7 +99,7 @@ and pushed to GitLab.
 Restore unsaved work
 ~~~~~~~~~~~~~~~~~~~~
 
-The next time you start a new interactive environment from the same branch/commit
+The next time you start a new session from the same branch/commit
 combination, you will be notified and the autosaved data will be automatically
 loaded in your session. Please note that nothing will be pushed automatically
 to the `master` branch, therefore you won't see any changes in your project's files
