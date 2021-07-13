@@ -139,7 +139,7 @@ trait Environments {
         projectPage.Environments.connectToJupyterLabLink.isDisplayed shouldBe true
       case Some(startEnvButton) =>
         And("the user clicks on the Start Environment button")
-        click on startEnvButton sleep (30 seconds)
+        click on startEnvButton sleep (300 seconds)
 
         `try few times before giving up` { _ =>
           Then("they should be redirected to the Environments -> Running tab")
