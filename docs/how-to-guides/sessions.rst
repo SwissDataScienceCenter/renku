@@ -1,7 +1,7 @@
 .. _sessions:
 
 Sessions on RenkuLab
-====================================
+====================
 
 RenkuLab provides convenient interactive computing environments based on
 `JupyterLab <https://jupyterlab.readthedocs.io/en/stable/>`_. You can use them

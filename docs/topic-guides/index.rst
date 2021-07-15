@@ -6,7 +6,7 @@ Topic guides
 .. toctree::
    :maxdepth: 2
 
-   interactive_basics
+   session-basics
    data
    knowledge-graph
    provenance

@@ -11,7 +11,7 @@ aimed at active users of Renku and target specific use-cases or common issues.
    :maxdepth: 2
 
 
-   interactive-environments
+   sessions
    cli-installation
    migrating-projects-to-renku
    collaboration

@@ -3,8 +3,4 @@
 Reference
 =========
 
-.. toctree::
-   :maxdepth: 2
-
-   Services <services/index>
-   templates
+.. include:: _sidebar.rst.inc
