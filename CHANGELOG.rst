@@ -1,5 +1,10 @@
 .. _changelog:
 
+0.8.3
+-----
+
+This is a bugfix release that includes fixes to Knowledge Graph. For more details please check the renku-graph `1.36.6 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/1.36.6>`__ release notes.
+
 0.8.2
 -----
 
