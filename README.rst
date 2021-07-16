@@ -135,4 +135,4 @@ The Renku project consists of several sub-repositories:
   base templates used for instantiating renku projects.
 
 - `renkulab-docker <https://github.com/SwissDataScienceCenter/renkulab-docker>`_: docker
-  images used for renku interactive environments.
+  images used for renku sessions.

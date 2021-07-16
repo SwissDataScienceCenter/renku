@@ -12,7 +12,7 @@ JupyterHub integration
 `JupyterHub <https://jupyterhub.readthedocs.io/en/stable/>`_ is a multi-user
 server for spawning interactive `Jupyter notebooks <https://jupyter-
 notebook.readthedocs.io/en/stable/>`_. Renku uses JupyterHub to manage
-interactive environments and the ``notebooks-service`` extends the standard
+sessions and the ``notebooks-service`` extends the standard
 JupyterHub functionality by providing tight integration with GitLab.
 
 The notebooks are provided by the JupyterHub server. A new "named" server is

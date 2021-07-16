@@ -1,5 +1,54 @@
 .. _changelog:
 
+0.8.3
+-----
+
+This is a bugfix release that includes fixes to Knowledge Graph. For more details please check the renku-graph `1.36.6 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/1.36.6>`__ release notes.
+
+0.8.2
+-----
+
+This release includes a beta version of the new user interface for Renku. Over the next few releases
+we will gradually phase out the old user interface. However, for the time being you can use both. Simply switch 
+between the two by clicking the link on the Renku home page.
+
+Bug Fixes
+~~~~~~~~~
+
+-  CSS for the Login button on the provider page
+   (`#2178 <https://github.com/SwissDataScienceCenter/renku/issues/2178>`__)
+   (`d1a0149 <https://github.com/SwissDataScienceCenter/renku/commit/d1a01499622e3dcfc566c942e28eef6e7983be31>`__)
+
+Features
+~~~~~~~~
+
+-  **chart:** configure the Renku realm to use the Renku keycloak theme
+   (`d527865 <https://github.com/SwissDataScienceCenter/renku/commit/d5278654f4ec13533c3ef3b79b022bef0c66317d>`__),
+   closes
+   `#2022 <https://github.com/SwissDataScienceCenter/renku/issues/2022>`__
+-  **chart:** use keycloak theme with UI 1.0.0 design
+   (`35d8980 <https://github.com/SwissDataScienceCenter/renku/commit/35d8980fbd467819ae659fc9239b237bee932135>`__),
+   closes
+   `#2022 <https://github.com/SwissDataScienceCenter/renku/issues/2022>`__
+-  **docs:** new design for renku docs
+   (`#2166 <https://github.com/SwissDataScienceCenter/renku/issues/2166>`__)
+   (`f2f3985 <https://github.com/SwissDataScienceCenter/renku/commit/f2f398512252fc115f793e41dc4375a3e8bb69c5>`__)
+
+Individual components
+~~~~~~~~~~~~~~~~~~~~~
+
+For changes to individual components, please check:
+
+* renku-graph:
+  `1.36.5 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/1.36.5>`__
+
+* renku-core and renku-python:
+  `v0.16.0 <https://github.com/SwissDataScienceCenter/renku-python/releases/tag/v0.16.0>`__
+
+* renku-ui:
+  `0.11.13 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/0.11.13>`__,
+  `1.0.0-beta3 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/1.0.0-beta3>`__
+
 0.8.1
 -----
 
