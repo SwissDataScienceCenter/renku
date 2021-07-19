@@ -40,14 +40,14 @@ curl -s -H "Authorization: Bearer $RENKUBOT_RANCHER_BEARER_TOKEN" \
         -X POST \
         -d "name=${RENKU_NAMESPACE}" \
         -d "projectId=${RANCHER_PROJECT_ID}" \
-        'https://rancher.renku.ch/v3/cluster/c-l6jt4/namespaces'
+        'https://rancher.iac.dev.renku.ch/v3/cluster/c-nmhfg/namespaces'
 
 if [[ $RENKU_ANONYMOUS_SESSIONS = "true" ]]; then
 curl -s -H "Authorization: Bearer $RENKUBOT_RANCHER_BEARER_TOKEN" \
         -X POST \
         -d "name=${RENKU_TMP_NAMESPACE}" \
         -d "projectId=${RANCHER_PROJECT_ID}" \
-        'https://rancher.renku.ch/v3/cluster/c-l6jt4/namespaces'
+        'https://rancher.iac.dev.renku.ch/v3/cluster/c-nmhfg/namespaces'
 fi
 fi
 
