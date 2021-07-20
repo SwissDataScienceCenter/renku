@@ -66,10 +66,6 @@ spec:
         backend:
           serviceName: {{ $gatewayFullname }}
           servicePort: {{ $gatewayServicePort }}
-      - path: /jupyterhub
-        backend:
-          serviceName: {{ $gatewayFullname }}
-          servicePort: {{ $gatewayServicePort }}
       - path: /api
         backend:
           serviceName: {{ $gatewayFullname }}
