@@ -36,6 +36,8 @@ trait DatasetsSearch {
     When(s"the user types in the '$phrase' in the search field")
     DatasetsPage.searchBox enterValue phrase
     And("clicks the search button")
-    click on DatasetsPage.searchButton sleep (5 seconds)
+    click on DatasetsPage.searchButton sleep (1 second)
+
+    DatasetsPage.waitIfBouncing
   }
 }

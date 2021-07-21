@@ -47,13 +47,15 @@ object DatasetsPage
   }
 
   override def pageReadyElement(implicit webDriver: WebDriver): Option[WebElement] = {
-    @tailrec def waitIfBouncing: Option[WebElement] = maybeBouncer match {
-      case Some(_) =>
-        sleep(1 second)
-        waitIfBouncing
-      case _ => Some(searchResultLinks.headOption getOrElse searchBox)
-    }
-
     waitIfBouncing
+    Some(searchResultLinks.headOption getOrElse searchBox)
+  }
+
+  @tailrec def waitIfBouncing(implicit webDriver: WebDriver): Unit = maybeBouncer match {
+    case Some(_) =>
+      sleep(1 second)
+      waitIfBouncing
+    case _ =>
+      sleep(1 second)
   }
 }
