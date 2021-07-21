@@ -38,7 +38,7 @@ fi
 if [[ -n "$RANCHER_PROJECT_ID" ]]; then
   NAMESPACE_EXISTS=$( curl -s -H "Authorization: Bearer $RENKUBOT_RANCHER_BEARER_TOKEN" \
         -X GET \
-        -d "projectId=<${RANCHER_PROJECT_ID}" \
+        -d "projectId=${RANCHER_PROJECT_ID}" \
         "${RANCHER_DEV_API_ENDPOINT}/namespaces"| grep $RENKU_NAMESPACE)
   if [[ -n NAMESPACE_EXISTS ]]; then
     curl -s -H "Authorization: Bearer $RENKUBOT_RANCHER_BEARER_TOKEN" \
@@ -50,7 +50,7 @@ if [[ -n "$RANCHER_PROJECT_ID" ]]; then
   if [[ $RENKU_ANONYMOUS_SESSIONS = "true" ]]; then
     NAMESPACE_EXISTS=$( curl -s -H "Authorization: Bearer $RENKUBOT_RANCHER_BEARER_TOKEN" \
         -X GET \
-        -d "projectId=<${RANCHER_PROJECT_ID}" \
+        -d "projectId=${RANCHER_PROJECT_ID}" \
         "${RANCHER_DEV_API_ENDPOINT}/namespaces"| grep $RENKU_TMP_NAMESPACE)
     if [[ -n NAMESPACE_EXISTS ]]; then
 
