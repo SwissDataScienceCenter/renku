@@ -79,7 +79,7 @@ trait RestClient extends Http4sClientDsl[IO] {
     private def retryOnConnectionProblem[T](client: Client[IO]): PartialFunction[Throwable, IO[Response[IO]]] = {
       case NonFatal(cause) =>
         cause match {
-          case e @ (_: ConnectionFailure | _: ConnectException | _: Command.EOF.type) =>
+          case e @ (_: ConnectionFailure | _: ConnectException | _: Command.EOF.type | _: InvalidBodyException) =>
             for {
               _      <- logger.warn(s"Connectivity problem to ${request.method} ${request.uri}. Retrying...", e).pure[IO]
               _      <- IO.timer(global) sleep (1 second)
