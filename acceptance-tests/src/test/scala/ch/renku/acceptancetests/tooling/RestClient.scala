@@ -18,27 +18,34 @@
 
 package ch.renku.acceptancetests.tooling
 
+import TestLogger._
 import cats.effect.IO._
 import cats.effect.{ContextShift, IO}
+import cats.syntax.all._
 import ch.renku.acceptancetests.model.{AuthorizationToken, BaseUrl}
 import io.circe.Json
 import io.circe.optics.JsonPath
 import io.circe.optics.JsonPath.root
 import org.http4s._
+import org.http4s.blaze.pipeline.Command
 import org.http4s.circe._
 import org.http4s.client.blaze.BlazeClientBuilder
 import org.http4s.client.dsl.Http4sClientDsl
+import org.http4s.client.{Client, ConnectionFailure}
 import org.scalatest.Assertions.fail
 
-import scala.concurrent.ExecutionContext
+import java.net.ConnectException
+import scala.concurrent.ExecutionContext.Implicits._
+import scala.concurrent.duration._
+import scala.util.control.NonFatal
 
 trait RestClient extends Http4sClientDsl[IO] {
 
   val jsonRoot: JsonPath = root
 
-  private implicit lazy val contextShift: ContextShift[IO] = IO.contextShift(ExecutionContext.global)
+  private implicit lazy val contextShift: ContextShift[IO] = IO.contextShift(global)
 
-  private lazy val clientBuilder = BlazeClientBuilder[IO](ExecutionContext.global)
+  private lazy val clientBuilder = BlazeClientBuilder[IO](global)
 
   def GET(baseUrl: BaseUrl): Request[IO] = Request[IO](
     Method.GET,
@@ -61,7 +68,26 @@ trait RestClient extends Http4sClientDsl[IO] {
       request.withHeaders(Headers of authorizationToken.asHeader)
 
     def send: (Request[IO], Response[IO]) =
-      request -> clientBuilder.resource.use(client => client.run(request).use(IO.pure)).unsafeRunSync()
+      request -> clientBuilder.resource.use(sendRequest).unsafeRunSync()
+
+    private def sendRequest(client: Client[IO]) =
+      client
+        .run(request)
+        .use(IO.pure)
+        .recoverWith(retryOnConnectionProblem(client))
+
+    private def retryOnConnectionProblem[T](client: Client[IO]): PartialFunction[Throwable, IO[Response[IO]]] = {
+      case NonFatal(cause) =>
+        cause match {
+          case e @ (_: ConnectionFailure | _: ConnectException | _: Command.EOF.type | _: InvalidBodyException) =>
+            for {
+              _      <- logger.warn(s"Connectivity problem to ${request.method} ${request.uri}. Retrying...", e).pure[IO]
+              _      <- IO.timer(global) sleep (1 second)
+              result <- sendRequest(client)
+            } yield result
+          case other => other.raiseError[IO, Response[IO]]
+        }
+    }
   }
 
   implicit class ResponseOps(reqAndResp: (Request[IO], Response[IO])) {
@@ -86,8 +112,6 @@ trait RestClient extends Http4sClientDsl[IO] {
   }
 
   implicit class JsonOps(json: Json) {
-
     def extract[V](extractor: Json => V): V = extractor(json)
-
   }
 }

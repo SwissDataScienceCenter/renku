@@ -6,7 +6,7 @@ User Documentation
 .. toctree::
    :maxdepth: 2
 
-   Interactive Environments <interactive_environments>
+   Sessions <sessions>
    Command-line interface <cli-installation>
    Data in Renku <data>
    Templates <templates>

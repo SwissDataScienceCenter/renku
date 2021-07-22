@@ -83,6 +83,7 @@ jobs:
         RENKU_VALUES: ${{ secrets.CI_RENKU_VALUES }}
         RENKUBOT_KUBECONFIG: ${{ secrets.RENKUBOT_DEV_KUBECONFIG }}
         RENKUBOT_RANCHER_BEARER_TOKEN: ${{ secrets.RENKUBOT_RANCHER_BEARER_TOKEN }}
+        RANCHER_DEV_API_ENDPOINT: ${{ secrets.RANCHER_DEV_API_ENDPOINT }}
         TEST_ARTIFACTS_PATH: "tests-artifacts-${{ github.sha }}"
         renku: "@${{ github.head_ref }}"
         renku_core: "${{ needs.check-deploy.outputs.renku-core }}"
@@ -117,7 +118,7 @@ jobs:
       if: "needs.check-deploy.outputs.pr-contains-string == 'true' && needs.check-deploy.outputs.test-enabled == 'true'"
       env:
         KUBECONFIG: ${{ github.workspace }}/renkubot-kube.config
-        RENKUBOT_KUBECONFIG: ${{ secrets.RENKUBOT_KUBECONFIG }}
+        RENKUBOT_KUBECONFIG: ${{ secrets.RENKUBOT_DEV_KUBECONFIG }}
         RENKU_RELEASE: ci-renku-${{ github.event.number }}
       run: |
         echo "$RENKUBOT_KUBECONFIG" > renkubot-kube.config

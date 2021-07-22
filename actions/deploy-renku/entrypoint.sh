@@ -36,19 +36,31 @@ fi
 
 # create the namespace in a Rancher project
 if [[ -n "$RANCHER_PROJECT_ID" ]]; then
-curl -s -H "Authorization: Bearer $RENKUBOT_RANCHER_BEARER_TOKEN" \
+  NAMESPACE_EXISTS=$( curl -s -H "Authorization: Bearer $RENKUBOT_RANCHER_BEARER_TOKEN" \
+        -X GET \
+        -d "projectId=${RANCHER_PROJECT_ID}" \
+        "${RANCHER_DEV_API_ENDPOINT}/namespaces"| grep $RENKU_NAMESPACE)
+  if [[ -n NAMESPACE_EXISTS ]]; then
+    curl -s -H "Authorization: Bearer $RENKUBOT_RANCHER_BEARER_TOKEN" \
         -X POST \
         -d "name=${RENKU_NAMESPACE}" \
         -d "projectId=${RANCHER_PROJECT_ID}" \
-        'https://rancher.renku.ch/v3/cluster/c-l6jt4/namespaces'
+        "${RANCHER_DEV_API_ENDPOINT}/namespaces"
+  fi
+  if [[ $RENKU_ANONYMOUS_SESSIONS = "true" ]]; then
+    NAMESPACE_EXISTS=$( curl -s -H "Authorization: Bearer $RENKUBOT_RANCHER_BEARER_TOKEN" \
+        -X GET \
+        -d "projectId=${RANCHER_PROJECT_ID}" \
+        "${RANCHER_DEV_API_ENDPOINT}/namespaces"| grep $RENKU_TMP_NAMESPACE)
+    if [[ -n NAMESPACE_EXISTS ]]; then
 
-if [[ $RENKU_ANONYMOUS_SESSIONS = "true" ]]; then
-curl -s -H "Authorization: Bearer $RENKUBOT_RANCHER_BEARER_TOKEN" \
+      curl -s -H "Authorization: Bearer $RENKUBOT_RANCHER_BEARER_TOKEN" \
         -X POST \
         -d "name=${RENKU_TMP_NAMESPACE}" \
         -d "projectId=${RANCHER_PROJECT_ID}" \
-        'https://rancher.renku.ch/v3/cluster/c-l6jt4/namespaces'
-fi
+        "${RANCHER_DEV_API_ENDPOINT}/namespaces"
+    fi
+  fi
 fi
 
 # deploy renku - reads config from environment variables
