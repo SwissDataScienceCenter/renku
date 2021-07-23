@@ -41,6 +41,7 @@ dockerhub
 dockerignore
 dotfiles
 dropdown
+entrypoint
 extraEnv
 extraEnvFrom
 filesystem
@@ -105,6 +106,7 @@ OpenID
 openssl
 papermill
 parameterizable
+parametrize
 parametrized
 pipenv
 Postgresql

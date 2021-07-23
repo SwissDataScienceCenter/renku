@@ -3,13 +3,13 @@
 0.8.4
 -----
 
-This version of Renku introduces the ability to use persistent volumes for user sesssions. This is optional and can be enabled in the values
+This version of Renku introduces the ability to use persistent volumes for user sessions. This is optional and can be enabled in the values
 file for the helm chart. In addition to enabling this feature users have the ability to select the storage class used by the persistent 
-volumes. We strongly reccomend that a storage class with a `Delete` reclaim policy is used, otherwise persistent volumes from all user
+volumes. We strongly recommend that a storage class with a `Delete` reclaim policy is used, otherwise persistent volumes from all user
 sessions will keep accumulating. 
 
 Also, unlike previous versions, with 0.8.4 the amount of disk storage will be **strongly enforced**, 
-regardless of whether persistent volumes are used or not. With persisten volumes users will simply run out of space. However, 
+regardless of whether persistent volumes are used or not. With persistent volumes users will simply run out of space. However, 
 when persistent volumes are not used, going over the amount of storage that a user has requested when starting their session 
 will result in eviction of the k8s pod that runs the session and termination of the session. Therefore, admins are advised 
 to review and set proper options for disk sizes in the `notebooks.serverOptions` portion of the values file.
