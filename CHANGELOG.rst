@@ -25,7 +25,7 @@ Bug Fixes
 
 -  **CI/CD:** CI action entrypoint typo
    (`3858df0 <https://github.com/SwissDataScienceCenter/renku/commit/3858df02182abeab26e324914fd7bcae7e7226ff>`__)
--  **Acceptance Tests:**flaky FreeTextDatasetSearchSpec
+-  **Acceptance Tests:** flaky FreeTextDatasetSearchSpec
    (`a872504 <https://github.com/SwissDataScienceCenter/renku/commit/a872504becb41c1a761cbe02525cae3ebdb6ebea>`__)
 -  **Acceptance Tests:** retry when EOF occurs on the Rest Client
    (`#2211 <https://github.com/SwissDataScienceCenter/renku/issues/2211>`__)
