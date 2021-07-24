@@ -51,6 +51,41 @@ For changes to individual components, please check:
 * renku-notebooks:
   `0.8.15 <https://github.com/SwissDataScienceCenter/renku-notebooks/releases/tag/0.8.15>`__
 
+Upgrading from 0.8.3
+~~~~~~~~~~~~~~~~~~~~
+
+When upgrading from 0.8.3 the following steps should be taken based on whether you would 
+like to use persistent volumes for user sessions or not:
+
+Use persistent volumes:
+1. Edit the `notebooks.userSessionPersistentVolumes` section of the
+[values.yaml file](https://github.com/SwissDataScienceCenter/renku/blob/master/helm-chart/renku/values.yaml#L527)
+changing the `enabled` flag to true and selecting a storage class to be used with every user session. It is strongly
+reccomended to select a storage class with a `Delete` retention policy to avoid the accumulation of persistent volumes
+with every session launch.
+2. Review and modify (if needed) [the disk request options in the values.yaml file]
+(https://github.com/SwissDataScienceCenter/renku/blob/master/helm-chart/renku/values.yaml#L506).
+3. Review and modify (if needed) the [the server defaults in the values.yaml file]
+(https://github.com/SwissDataScienceCenter/renku/blob/master/helm-chart/renku/values.yaml#L479). These will be
+used if a specific server options is omitted in the request to create a session and should be compatible 
+with any matching values in the `serverOptions` section. It also allows an administrator to omit an option
+from the selection menu that is defined in the `serverOptions` section and have renku always use the default from the 
+`serverDefaults` section.
+
+Do not use persistent volumes:
+1. Review and modify (if needed) [the disk request options in the values.yaml file]
+(https://github.com/SwissDataScienceCenter/renku/blob/master/helm-chart/renku/values.yaml#L506). Please note that
+if a user consumes more disk space than they requested (or more than what is set in the `serverDefaults` of the 
+values file) then the user's session will be evicted. This is necessary because if
+a user consumes a lot of space on the node where their session is scheduled k8s starts to evict user sessions on that node
+regardless of whether they are using a lot of disk space or not. This sometimes results in the eviction of multiple
+sessions and not the session that is consuming the most storage resources.
+2. Review and modify (if needed) the [the server defaults in the values.yaml file]
+(https://github.com/SwissDataScienceCenter/renku/blob/master/helm-chart/renku/values.yaml#L479). These will be
+used if a specific server options is omitted in the request to create a session and should be compatible 
+with any matching values in the `serverOptions` section. It also allows an administrator to omit an option
+from the selection menu that is defined in the `serverOptions` section and have renku always use the default from the 
+`serverDefaults` section.
 
 0.8.3
 -----
