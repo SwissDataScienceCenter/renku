@@ -61,7 +61,7 @@ Use persistent volumes:
 1. Edit the `notebooks.userSessionPersistentVolumes` section of the
 [values.yaml file](https://github.com/SwissDataScienceCenter/renku/blob/master/helm-chart/renku/values.yaml#L527)
 changing the `enabled` flag to true and selecting a storage class to be used with every user session. It is strongly
-reccomended to select a storage class with a `Delete` retention policy to avoid the accumulation of persistent volumes
+recommended to select a storage class with a `Delete` retention policy to avoid the accumulation of persistent volumes
 with every session launch.
 2. Review and modify (if needed) [the disk request options in the values.yaml file]
 (https://github.com/SwissDataScienceCenter/renku/blob/master/helm-chart/renku/values.yaml#L506).

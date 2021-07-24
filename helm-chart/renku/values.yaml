@@ -521,7 +521,7 @@ notebooks:
   #     type: boolean
   #     default: false
   ## Enable the use of persistent volumes for user sessions below. The storage class
-  ## can be omited in which case the default is used. However, we strongly reccomend that you use a storage class
+  ## can be omited in which case the default is used. However, we strongly recommend that you use a storage class
   ## with a `Delete` reclaim policy because otherwise the persistent volumes will keep accumulating
   ## regardless of how the user sessions are shut down and will require manual intervention to clean them up.
   # userSessionPersistentVolumes:

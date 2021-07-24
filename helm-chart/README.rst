@@ -76,7 +76,7 @@ section now only refer to the default selection that is shown to the user in the
 
 This ability to use persistent volumes for user sesssions is also introduced with this release. This is optional and can be enabled in the values
 file for the helm chart. In addition to enabling this feature users have the ability to select the storage class used by the persistent 
-volumes. We strongly reccomend that a storage class with a `Delete` reclaim policy is used, otherwise persistent volumes from all user
+volumes. We strongly recommend that a storage class with a `Delete` reclaim policy is used, otherwise persistent volumes from all user
 sessions will keep accumulating. 
 
 Lastly, unlike previous versions, with 0.8.4 the amount of disk storage will be **strongly enforced**, 
