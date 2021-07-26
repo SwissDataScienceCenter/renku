@@ -1,5 +1,92 @@
 .. _changelog:
 
+0.8.4
+-----
+
+This version of Renku introduces the ability to use persistent volumes for user sessions. This is optional and can be enabled in the values
+file for the helm chart. In addition to enabling this feature users have the ability to select the storage class used by the persistent 
+volumes. We strongly recommend that a storage class with a `Delete` reclaim policy is used, otherwise persistent volumes from all user
+sessions will keep accumulating. 
+
+Also, unlike previous versions, with 0.8.4 the amount of disk storage will be **strongly enforced**, 
+regardless of whether persistent volumes are used or not. With persistent volumes users will simply run out of space. However, 
+when persistent volumes are not used, going over the amount of storage that a user has requested when starting their session 
+will result in eviction of the k8s pod that runs the session and termination of the session. Therefore, admins are advised 
+to review and set proper options for disk sizes in the `notebooks.serverOptions` portion of the values file.
+
+Improvements
+~~~~~~~~~~~~~
+
+* **UI**: Add banner advertising new version to logged-in users and various improvements in the new canary deployment itself.
+* **Notbooks**: Ability to use persistent volumes for user sessions.
+
+Bug Fixes
+~~~~~~~~~
+
+-  **CI/CD:** CI action entrypoint typo
+   (`3858df0 <https://github.com/SwissDataScienceCenter/renku/commit/3858df02182abeab26e324914fd7bcae7e7226ff>`__)
+-  **Acceptance Tests:** flaky FreeTextDatasetSearchSpec
+   (`a872504 <https://github.com/SwissDataScienceCenter/renku/commit/a872504becb41c1a761cbe02525cae3ebdb6ebea>`__)
+-  **Acceptance Tests:** retry when EOF occurs on the Rest Client
+   (`#2211 <https://github.com/SwissDataScienceCenter/renku/issues/2211>`__)
+   (`e81a212 <https://github.com/SwissDataScienceCenter/renku/commit/e81a21229621463b4be4759f8c4b16714de097c4>`__)
+-  **Acceptance Tests:** Wait for the dataset search results
+   (`#2210 <https://github.com/SwissDataScienceCenter/renku/issues/2210>`__)
+   (`132ec8b <https://github.com/SwissDataScienceCenter/renku/commit/132ec8b813ad6777ae309699d1769cdf07380571>`__)
+
+Features
+~~~~~~~~
+
+-  **CI/CD:** parametrize rancher API endpoint
+   (`46a5155 <https://github.com/SwissDataScienceCenter/renku/commit/46a51551da48225156f7e6c3a526a310574e674f>`__)
+
+Individual components
+~~~~~~~~~~~~~~~~~~~~~
+
+For changes to individual components, please check:
+
+* renku-ui:
+  `1.0.0-beta4 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/1.0.0-beta4>`__
+  `0.11.14 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/0.11.14>`__
+* renku-notebooks:
+  `0.8.15 <https://github.com/SwissDataScienceCenter/renku-notebooks/releases/tag/0.8.15>`__
+
+Upgrading from 0.8.3
+~~~~~~~~~~~~~~~~~~~~
+
+When upgrading from 0.8.3 the following steps should be taken based on whether you would 
+like to use persistent volumes for user sessions or not:
+
+Use persistent volumes:
+1. Edit the `notebooks.userSessionPersistentVolumes` section of the
+[values.yaml file](https://github.com/SwissDataScienceCenter/renku/blob/master/helm-chart/renku/values.yaml#L527)
+changing the `enabled` flag to true and selecting a storage class to be used with every user session. It is strongly
+recommended to select a storage class with a `Delete` retention policy to avoid the accumulation of persistent volumes
+with every session launch.
+2. Review and modify (if needed) [the disk request options in the values.yaml file]
+(https://github.com/SwissDataScienceCenter/renku/blob/master/helm-chart/renku/values.yaml#L506).
+3. Review and modify (if needed) the [the server defaults in the values.yaml file]
+(https://github.com/SwissDataScienceCenter/renku/blob/master/helm-chart/renku/values.yaml#L479). These will be
+used if a specific server options is omitted in the request to create a session and should be compatible 
+with any matching values in the `serverOptions` section. It also allows an administrator to omit an option
+from the selection menu that is defined in the `serverOptions` section and have renku always use the default from the 
+`serverDefaults` section.
+
+Do not use persistent volumes:
+1. Review and modify (if needed) [the disk request options in the values.yaml file]
+(https://github.com/SwissDataScienceCenter/renku/blob/master/helm-chart/renku/values.yaml#L506). Please note that
+if a user consumes more disk space than they requested (or more than what is set in the `serverDefaults` of the 
+values file) then the user's session will be evicted. This is necessary because if
+a user consumes a lot of space on the node where their session is scheduled k8s starts to evict user sessions on that node
+regardless of whether they are using a lot of disk space or not. This sometimes results in the eviction of multiple
+sessions and not the session that is consuming the most storage resources.
+2. Review and modify (if needed) the [the server defaults in the values.yaml file]
+(https://github.com/SwissDataScienceCenter/renku/blob/master/helm-chart/renku/values.yaml#L479). These will be
+used if a specific server options is omitted in the request to create a session and should be compatible 
+with any matching values in the `serverOptions` section. It also allows an administrator to omit an option
+from the selection menu that is defined in the `serverOptions` section and have renku always use the default from the 
+`serverDefaults` section.
+
 0.8.3
 -----
 
