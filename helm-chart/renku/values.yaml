@@ -489,17 +489,30 @@ notebooks:
   #     type: enum
   #     default: 1G
   #     options: [1G, 2G]
-  #   gpu_request:
+  #   disk_request:
   #     order: 4
+  #     displayName: Amount of disk space requested
+  #     type: enum
+  #     default: "1G"
+  #     options: ["1G", "10G"]
+  #   gpu_request:
+  #     order: 5
   #     displayName: Number of GPUs
   #     type: enum # use "type: int" instead to get a slider
   #     default: 0
   #     options: [0, 0] # use "range: [x, y]" when type is int
   #   lfs_auto_fetch:
-  #     order: 5
+  #     order: 6
   #     displayName: Automatically fetch LFS data
   #     type: boolean
   #     default: false
+  ## Enable the use of persistent volumes for user sessions below. The storage class
+  ## can be omited in which case the default is used. However, we strongly recommend that you use a storage class
+  ## with a `Delete` reclaim policy because otherwise the persistent volumes will keep accumulating
+  ## regardless of how the user sessions are shut down and will require manual intervention to clean them up.
+  # userSessionPersistentVolumes:
+  #   enabled: false
+  #   storageClass:
   ## image registry host
   # imageRegistry:
   oidc:
