@@ -1,5 +1,18 @@
 .. _changelog:
 
+0.8.5
+-----
+
+This is just a bugfix release that addresses a problem in the notebook service where project names were causing the creation of PVCs in k8s to fail because of characters that k8s does not allow in PVC names (i.e. uppercase letters and underscores).
+
+Individual components
+~~~~~~~~~~~~~~~~~~~~~
+
+For changes to individual components, please check:
+
+* renku-notebooks:
+  `0.8.16 <https://github.com/SwissDataScienceCenter/renku-notebooks/releases/tag/0.8.16>`__
+
 0.8.4
 -----
 
