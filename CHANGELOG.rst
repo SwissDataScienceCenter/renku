@@ -1,5 +1,18 @@
 .. _changelog:
 
+0.8.6
+-----
+
+This is just a bugfix release that addresses a problem in the notebook service caused by different naming conventions for user session PVCs.
+
+Individual components
+~~~~~~~~~~~~~~~~~~~~~
+
+For changes to individual components, please check:
+
+* renku-notebooks:
+  `0.8.17 <https://github.com/SwissDataScienceCenter/renku-notebooks/releases/tag/0.8.17>`__
+
 0.8.5
 -----
 
