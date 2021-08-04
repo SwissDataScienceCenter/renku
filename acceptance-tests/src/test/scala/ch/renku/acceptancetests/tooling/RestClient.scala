@@ -18,11 +18,11 @@
 
 package ch.renku.acceptancetests.tooling
 
-import TestLogger._
 import cats.effect.IO._
 import cats.effect.{ContextShift, IO}
 import cats.syntax.all._
 import ch.renku.acceptancetests.model.{AuthorizationToken, BaseUrl}
+import ch.renku.acceptancetests.tooling.TestLogger._
 import io.circe.Json
 import io.circe.optics.JsonPath
 import io.circe.optics.JsonPath.root
@@ -96,9 +96,7 @@ trait RestClient extends Http4sClientDsl[IO] {
     def whenReceived(status: Status): (Request[IO], Response[IO]) =
       if (response.status == status) reqAndResp
       else
-        fail(
-          s"${request.method} ${request.uri} returned ${response.status} which is not expected $status"
-        )
+        fail(s"${request.method} ${request.uri} returned ${response.status} which is not expected $status.")
 
     lazy val responseStatus: Status = response.status
 
