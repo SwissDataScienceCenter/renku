@@ -21,7 +21,7 @@
 {{- end }}
 {{- $swaggerEnabled := .Values.swagger.enabled -}}
 ---
-apiVersion: networking.k8s.io/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: {{ template "renku.fullname" . }}
