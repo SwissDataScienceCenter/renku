@@ -10,7 +10,7 @@ Improvements
 
 * **UI**: redesign header to take less vertical space.
 * **Knowledge Graph**: dataset free-text search performance improvements.
-* **Authentication**: enable ``renku login`` support for CLI.
+* **Authentication**: enable ``renku login`` support for CLI so that users can interact with private repositories without using a GitLab password or an ssh key.
 
 Bug Fixes
 ~~~~~~~~~
