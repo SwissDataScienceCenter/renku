@@ -25,6 +25,7 @@ import ch.renku.acceptancetests.tooling.AcceptanceSpec
 import org.openqa.selenium.{By, WebDriver, WebElement}
 import org.scalactic.source
 import org.scalatest.enablers.Retrying
+import org.scalatestplus.selenium
 import org.scalatestplus.selenium.WebBrowser
 import org.scalatestplus.selenium.WebBrowser.{cssSelector, find, findAll}
 
@@ -187,12 +188,22 @@ class ProjectPage(val projectSlug: String, val namespace: String)
 
     object FileView {
 
+      def lineageTab(implicit webDriver: WebDriver): WebElement = eventually {
+        findAll(cssSelector(s"button[type=button]")).find(_.text == "Lineage") getOrElse fail(s"Lineage tab not found")
+      }
+
       def file(fileName: String)(implicit webDriver: WebDriver): WebElement = eventually {
         find(cssSelector(s"a[href='$path/files/blob/$fileName']")) getOrElse fail(s"$fileName not found")
       }
 
       def folder(folderName: String)(implicit webDriver: WebDriver): WebElement = eventually {
         findAll(cssSelector(s"div.fs-element")).find(_.text == folderName) getOrElse fail(s"$folderName not found")
+      }
+
+      def lineage(implicit webDriver: WebDriver): WebElement = eventually {
+        find(cssSelector(s"div.graphContainer > svg")) getOrElse fail(
+          s"Lineage SVG not found"
+        )
       }
     }
 

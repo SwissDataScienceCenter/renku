@@ -53,4 +53,10 @@ package object console {
       }
     }
   }
+
+  implicit class PathOps(path: Path) {
+    def /(otherPath: Path) = Paths.get(path.toString, otherPath.toString)
+
+    def /(otherPath: String) = Paths.get(path.toString, otherPath)
+  }
 }

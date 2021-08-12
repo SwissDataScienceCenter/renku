@@ -1,5 +1,41 @@
 .. _changelog:
 
+0.8.7
+-----
+
+This is a small release that contains mainly bug fixes to the user sessions and to the UI.
+
+Improvements
+~~~~~~~~~~~~~
+
+* **UI**: redesign header to take less vertical space.
+* **Knowledge Graph**: dataset free-text search performance improvements.
+* **Authentication**: enable ``renku login`` support for CLI so that users can interact with private repositories without using a GitLab password or an ssh key.
+
+Bug Fixes
+~~~~~~~~~
+
+* **Environments**: listing orphaned user sessions tied to a deleted project/branch/namespace.
+* **Environments**: bugs with mistyped variable and missing branches in autosave.
+* **UI**: prevent values duplication on session enumerations.
+
+Individual components
+~~~~~~~~~~~~~~~~~~~~~
+
+For changes to individual components, please check:
+
+* renku-notebooks:
+  `0.8.18 <https://github.com/SwissDataScienceCenter/renku-notebooks/releases/tag/0.8.18>`__
+
+* renku-gateway:
+  `0.9.5 <https://github.com/SwissDataScienceCenter/renku-gateway/releases/tag/0.9.5>`__
+
+* renku-ui:
+  `1.0.0-beta5 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/1.0.0-beta5>`__
+
+* renku-graph:
+  `1.36.7 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/1.36.7>`__
+
 0.8.6
 -----
 
@@ -30,21 +66,21 @@ For changes to individual components, please check:
 -----
 
 This version of Renku introduces the ability to use persistent volumes for user sessions. This is optional and can be enabled in the values
-file for the helm chart. In addition to enabling this feature users have the ability to select the storage class used by the persistent 
+file for the helm chart. In addition to enabling this feature users have the ability to select the storage class used by the persistent
 volumes. We strongly recommend that a storage class with a `Delete` reclaim policy is used, otherwise persistent volumes from all user
-sessions will keep accumulating. 
+sessions will keep accumulating.
 
-Also, unlike previous versions, with 0.8.4 the amount of disk storage will be **strongly enforced**, 
-regardless of whether persistent volumes are used or not. With persistent volumes users will simply run out of space. However, 
-when persistent volumes are not used, going over the amount of storage that a user has requested when starting their session 
-will result in eviction of the k8s pod that runs the session and termination of the session. Therefore, admins are advised 
+Also, unlike previous versions, with 0.8.4 the amount of disk storage will be **strongly enforced**,
+regardless of whether persistent volumes are used or not. With persistent volumes users will simply run out of space. However,
+when persistent volumes are not used, going over the amount of storage that a user has requested when starting their session
+will result in eviction of the k8s pod that runs the session and termination of the session. Therefore, admins are advised
 to review and set proper options for disk sizes in the `notebooks.serverOptions` portion of the values file.
 
 Improvements
 ~~~~~~~~~~~~~
 
 * **UI**: Add banner advertising new version to logged-in users and various improvements in the new canary deployment itself.
-* **Notbooks**: Ability to use persistent volumes for user sessions.
+* **Environments**: Ability to use persistent volumes for user sessions.
 
 Bug Fixes
 ~~~~~~~~~
@@ -102,7 +138,7 @@ This is a bugfix release that includes fixes to Knowledge Graph. For more detail
 -----
 
 This release includes a beta version of the new user interface for Renku. Over the next few releases
-we will gradually phase out the old user interface. However, for the time being you can use both. Simply switch 
+we will gradually phase out the old user interface. However, for the time being you can use both. Simply switch
 between the two by clicking the link on the Renku home page.
 
 Bug Fixes

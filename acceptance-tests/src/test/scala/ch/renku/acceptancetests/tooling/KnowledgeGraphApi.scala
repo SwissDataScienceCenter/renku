@@ -19,6 +19,9 @@
 package ch.renku.acceptancetests.tooling
 
 import ch.renku.acceptancetests.model.projects.ProjectIdentifier
+import io.circe.{Json, JsonObject}
+import org.http4s.circe._
+import io.circe.literal.JsonStringContext
 import org.http4s.Status.Ok
 import org.scalatest.Assertions.fail
 
@@ -32,6 +35,26 @@ trait KnowledgeGraphApi extends RestClient {
     sleep(1 second)
     val gitLabProjectId = `get GitLab project id`(projectId)
     checkStatusAndWait(projectId, gitLabProjectId)
+  }
+
+  def findLineage(projectPath: String, filePath: String): JsonObject = {
+    val query = s"""
+                   |{ 
+                   |  lineage(projectPath: "$projectPath", filePath: "$filePath") {
+                   |    nodes { id location label type } 
+                   |    edges { source target } 
+                   |  } 
+                   |}
+                   |""".stripMargin
+
+    val body = json"""{ "query": $query }"""
+    POST(renkuBaseUrl / "api" / "kg" / "graphql")
+      .withEntity(body)
+      .send
+      .whenReceived(status = Ok)
+      .bodyAsJson
+      .extract(jsonRoot.data.lineage.obj.getOption)
+      .getOrElse(fail(s"Cannot find lineage data for project $projectPath file $filePath"))
   }
 
   @tailrec
@@ -59,4 +82,5 @@ trait KnowledgeGraphApi extends RestClient {
       .bodyAsJson
       .extract(jsonRoot.total.int.getOption)
       .getOrElse(fail(s"Cannot find processing status for '${projectId.slug}'"))
+
 }
