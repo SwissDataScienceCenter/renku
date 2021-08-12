@@ -64,6 +64,27 @@ in the `values changelog file <https://github.com/SwissDataScienceCenter/renku/b
 For upgrades that require some steps other than modifying the values files to be
 executed, we add some instructions here.
 
+Upgrading to 0.8.4
+******************
+We have added add a new section called `serverDefaults` to the `values.yaml` for the notebook service. 
+The information in this new `serverDefaults` section is used for any server options that are not specified 
+explicitly when launching a session. This allows a renku admin to leave out a specific option from the 
+`serverOptions` section and apply the value specified in the `serverDefaults` section for all sessions. 
+Please note that the default values specified in the  `serverDefaults` should be available as one of the options 
+in `serverOptions` - if the specific option appears in both sections. The defaults in the `serverOptions` 
+section now only refer to the default selection that is shown to the user in the UI.
+
+This ability to use persistent volumes for user sesssions is also introduced with this release. This is optional and can be enabled in the values
+file for the helm chart. In addition to enabling this feature users have the ability to select the storage class used by the persistent 
+volumes. We strongly recommend that a storage class with a `Delete` reclaim policy is used, otherwise persistent volumes from all user
+sessions will keep accumulating. 
+
+Lastly, unlike previous versions, with 0.8.4 the amount of disk storage will be **strongly enforced**, 
+regardless of whether persistent volumes are used or not. With persistent volumes users will simply run out of space. However, 
+when persistent volumes are not used, going over the amount of storage that a user has requested when starting their session 
+will result in eviction of the k8s pod that runs the session and termination of the session. Therefore, admins are advised 
+to review and set proper options for disk sizes in the `notebooks.serverOptions` portion of the values file.
+
 Upgrading to 0.8.0
 ******************
 We bump the PostgreSQL version from 9.6 to 11 and the GitLab major version from 11 to 13.

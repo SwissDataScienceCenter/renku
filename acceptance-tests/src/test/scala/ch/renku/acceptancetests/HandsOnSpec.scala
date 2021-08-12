@@ -54,12 +54,12 @@ class HandsOnSpec
 
     `verify user can work with Jupyter notebook`
 
-    `verify analysis was ran`
+    `verify analysis was run`
 
     `log out of Renku`
   }
 
-  private def `verify analysis was ran`: Unit = {
+  private def `verify analysis was run`: Unit = {
     When("the user navigates to the Files tab")
     click on projectPage.Files.tab
     And("they click on the notebooks folder in the File View")

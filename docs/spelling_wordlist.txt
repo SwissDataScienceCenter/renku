@@ -41,6 +41,7 @@ dockerhub
 dockerignore
 dotfiles
 dropdown
+entrypoint
 extraEnv
 extraEnvFrom
 filesystem
@@ -93,6 +94,7 @@ middleware
 migrationscheck
 minikube
 minimalistic
+mistyped
 mydomain
 namespace
 namespaces
@@ -105,6 +107,7 @@ OpenID
 openssl
 papermill
 parameterizable
+parametrize
 parametrized
 pipenv
 Postgresql
