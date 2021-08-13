@@ -37,14 +37,14 @@ spec:
     http:
       paths:
       - path: /kibana
-        pathType: prefix
+        pathType: Prefix
         backend:
           service:
             name: {{ $kibanaFullName }}
             port:
               number: {{ $kibanaPort }}
       - path: /elasticsearch
-        pathType: prefix
+        pathType: Prefix
         backend:
           service:
             name: {{ $elasticsearchFullName }}
