@@ -52,7 +52,7 @@ spec:
       paths:
       {{- if $keycloakEnabled }}
       - path: /auth
-        pathType: prefix
+        pathType: Prefix
         backend:
           service:
             name: {{ $keycloakFullname }}-http
@@ -61,7 +61,7 @@ spec:
       {{- end }}
       {{- if $gitlabEnabled }}
       - path: /gitlab
-        pathType: prefix
+        pathType: Prefix
         backend:
           service:
             name: {{ $gitlabFullname }}
@@ -69,42 +69,42 @@ spec:
               number: {{ $gitlabServicePort }}
       {{- end }}
       - path: /repos
-        pathType: prefix
+        pathType: Prefix
         backend:
           service:
             name: {{ $gatewayFullname }}
             port:
               number: {{ $gatewayServicePort }}
       - path: /jupyterhub
-        pathType: prefix
+        pathType: Prefix
         backend:
           service:
             name: proxy-public
             port:
               number: 80
       - path: /api
-        pathType: prefix
+        pathType: Prefix
         backend:
           service:
             name: {{ $gatewayFullname }}
             port:
               number: {{ $gatewayServicePort }}
       - path: /entities
-        pathType: prefix
+        pathType: Prefix
         backend:
           service:
             name: {{ $gatewayFullname }}
             port:
               number: {{ $gatewayServicePort }}
       - path: /
-        pathType: prefix
+        pathType: Prefix
         backend:
           service:
             name: {{ $uiFullname }}
             port:
               number: {{ $uiServicePort }}
       - path: /ui-server
-        pathType: prefix
+        pathType: Prefix
         backend:
           service:
             name: {{ $uiserverFullname }}
@@ -112,14 +112,14 @@ spec:
               number: {{ $uiserverServicePort }}
       {{- if $graphEnabled }}
       - path: /webhooks/events
-        pathType: prefix
+        pathType: Prefix
         backend:
           service:
             name: {{ $webhookServiceFullname }}
             port:
               number: 80
       - path: /knowledge-graph
-        pathType: prefix
+        pathType: Prefix
         backend:
           service:
             name: {{ $knowledgeGraphFullname }}
@@ -128,7 +128,7 @@ spec:
       {{- end }}
       {{- if $swaggerEnabled }}
       - path: /swagger
-        pathType: prefix
+        pathType: Prefix
         backend:
           service:
             name: {{ $renkuFullname }}-swagger
