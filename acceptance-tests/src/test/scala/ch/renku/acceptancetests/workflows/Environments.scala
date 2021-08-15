@@ -43,7 +43,6 @@ trait Environments {
 
     Then("a JupyterLab page is opened on a new tab")
     val jupyterLabPage = JupyterLabPage()
-    verify browserSwitchedTo jupyterLabPage sleep (5 seconds)
     jupyterLabPage
   }
 
@@ -98,8 +97,6 @@ trait Environments {
 
     Then("a JupyterLab page is opened on a new tab")
     val jupyterLabPage = JupyterLabPage(projectId)
-    // TODO This does not work for some reason
-    // verify browserSwitchedTo jupyterLabPage sleep (5 seconds)
     jupyterLabPage
   }
 
@@ -119,8 +116,6 @@ trait Environments {
 
     Then("a JupyterLab page is opened on a new tab")
     val jupyterLabPage = JupyterLabPage(projectId)
-    // TODO This does not work for some reason
-    // verify browserSwitchedTo jupyterLabPage sleep (5 seconds)
     jupyterLabPage
   }
 
