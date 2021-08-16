@@ -61,7 +61,11 @@ trait Grammar extends WebElementOps with Eventually {
 
     def browserSwitchedTo[Url <: BaseUrl](page: Page[Url])(implicit baseUrl: Url): Unit = eventually {
       if (webDriver.getWindowHandles.asScala exists forTabWith(page)) ()
-      else throw new Exception(s"Cannot find window with ${page.url} and title ${page.title}")
+      else
+        throw new Exception(
+          s"Cannot find window with URL starting with ${page.url} and title ${page.title}, " +
+            s"instead I am at ${currentUrl} and title ${pageTitle}."
+        )
     }
 
     private def forTabWith[Url <: BaseUrl](page: Page[Url])(handle: String)(implicit baseUrl: Url): Boolean = {

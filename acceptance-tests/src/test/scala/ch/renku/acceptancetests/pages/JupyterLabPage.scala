@@ -26,16 +26,14 @@ import org.scalatestplus.selenium.WebBrowser.{cssSelector, find}
 
 object JupyterLabPage {
 
-  def apply()(implicit projectPage: ProjectPage): JupyterLabPage =
-    new JupyterLabPage(projectPage.projectSlug, projectPage.namespace)
+  def apply(): JupyterLabPage =
+    new JupyterLabPage()
 
-  def apply(projectId: ProjectIdentifier): JupyterLabPage =
-    new JupyterLabPage(projectId.slug, projectId.namespace)
 }
 
-class JupyterLabPage(projectSlug: String, namespace: String)
+class JupyterLabPage()
     extends RenkuPage(
-      path = s"/sessions/$projectSlug",
+      path = s"/sessions/",
       title = "JupyterLab"
     ) {
 
