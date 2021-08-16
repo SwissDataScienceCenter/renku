@@ -39,7 +39,7 @@ trait Environments {
     `start environment & wait util it's not ready`
     docsScreenshots.takeScreenshot()
 
-    projectPage.Environments.Running.connectToJupyterLab sleep(10 seconds)
+    projectPage.Environments.Running.connectToJupyterLab sleep (10 seconds)
 
     Then("a JupyterLab page is opened on a new tab")
     val jupyterLabPage = JupyterLabPage()
@@ -93,7 +93,7 @@ trait Environments {
     `click new & wait for image to build`
     `start environment & wait util it's not ready`
 
-    projectPage.Environments.Running.connectToJupyterLab sleep(10 seconds)
+    projectPage.Environments.Running.connectToJupyterLab sleep (10 seconds)
 
     Then("a JupyterLab page is opened on a new tab")
     val jupyterLabPage = JupyterLabPage(projectId)
@@ -112,7 +112,7 @@ trait Environments {
     `click new & wait for image to build`
     `start environment & wait util it's not ready`
 
-    projectPage.Environments.Running.connectToAnonymousJupyterLab sleep(10 seconds)
+    projectPage.Environments.Running.connectToAnonymousJupyterLab sleep (10 seconds)
 
     Then("a JupyterLab page is opened on a new tab")
     val jupyterLabPage = JupyterLabPage(projectId)
