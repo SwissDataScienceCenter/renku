@@ -36,7 +36,7 @@ spec:
           service:
             name: {{ $gitlabFullname }}
             port:
-              port: {{ 8105 }}
+              number: {{ 8105 }}
   {{- end }}
 {{- end }}
 {{- end }}
