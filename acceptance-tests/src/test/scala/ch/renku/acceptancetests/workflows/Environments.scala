@@ -27,7 +27,9 @@ import scala.concurrent.duration._
 trait Environments {
   self: AcceptanceSpec =>
 
-  def `launch an environment`(implicit projectPage: ProjectPage): JupyterLabPage = {
+  def `launch an environment`(implicit
+      projectPage: ProjectPage
+  ): JupyterLabPage = {
 
     When("user clicks on the Environments tab")
     click on projectPage.Environments.tab
@@ -36,13 +38,14 @@ trait Environments {
     `click new & wait for image to build`
     docsScreenshots.takeScreenshot()
 
-    `start environment & wait util it's not ready`
+    `start environment & wait util it's ready`
     docsScreenshots.takeScreenshot()
 
-    projectPage.Environments.Running.connectToJupyterLab sleep (10 seconds)
+    projectPage.Environments.Running.connectToJupyterLab
 
     Then("a JupyterLab page is opened on a new tab")
     val jupyterLabPage = JupyterLabPage()
+    verify browserSwitchedTo jupyterLabPage sleep (5 seconds)
     jupyterLabPage
   }
 
@@ -64,7 +67,9 @@ trait Environments {
     verify userCanSee projectPage.Environments.newLink
   }
 
-  def `launch anonymous environment`(anonEnvConfig: AnonEnvConfig): Option[JupyterLabPage] = {
+  def `launch anonymous environment`(
+      anonEnvConfig: AnonEnvConfig
+  ): Option[JupyterLabPage] = {
     val projectId   = anonEnvConfig.projectId
     val projectPage = ProjectPage(projectId)
     go to projectPage
@@ -82,7 +87,9 @@ trait Environments {
     }
   }
 
-  def `launch unprivileged environment`(implicit anonEnvConfig: AnonEnvConfig): JupyterLabPage = {
+  def `launch unprivileged environment`(implicit
+      anonEnvConfig: AnonEnvConfig
+  ): JupyterLabPage = {
     val projectId = anonEnvConfig.projectId
     implicit val projectPage: ProjectPage = ProjectPage(projectId)
     go to projectPage
@@ -90,45 +97,58 @@ trait Environments {
     And("clicks on the Environments tab to launch an unprivileged notebook")
     click on projectPage.Environments.tab
 
+    // We sleep a little to complete anonymous "login"
+    sleep(5 seconds)
     `click new & wait for image to build`
-    `start environment & wait util it's not ready`
+    `start environment & wait util it's ready`
 
-    projectPage.Environments.Running.connectToJupyterLab sleep (10 seconds)
+    projectPage.Environments.Running.connectToJupyterLab
 
     Then("a JupyterLab page is opened on a new tab")
-    val jupyterLabPage = JupyterLabPage(projectId)
+    val jupyterLabPage = JupyterLabPage()
+    verify browserSwitchedTo jupyterLabPage sleep (5 seconds)
     jupyterLabPage
   }
 
-  private def `anonymous environment unsupported`(projectPage: ProjectPage): Option[JupyterLabPage] = {
+  private def `anonymous environment unsupported`(
+      projectPage: ProjectPage
+  ): Option[JupyterLabPage] = {
     Then("they should see a message")
     projectPage.Environments.anonymousUnsupported
     None
   }
 
-  private def `anonymous environment supported`(pp: ProjectPage, projectId: ProjectIdentifier): JupyterLabPage = {
+  private def `anonymous environment supported`(
+      pp:        ProjectPage,
+      projectId: ProjectIdentifier
+  ): JupyterLabPage = {
     implicit val projectPage: ProjectPage = pp
-    sleep(5 seconds)
-    `click new & wait for image to build`
-    `start environment & wait util it's not ready`
 
-    projectPage.Environments.Running.connectToAnonymousJupyterLab sleep (10 seconds)
+    `click new & wait for image to build`
+
+    `start environment & wait util it's ready`
+
+    projectPage.Environments.Running.connectToAnonymousJupyterLab
 
     Then("a JupyterLab page is opened on a new tab")
-    val jupyterLabPage = JupyterLabPage(projectId)
+    val jupyterLabPage = JupyterLabPage()
+    verify browserSwitchedTo jupyterLabPage sleep (5 seconds)
     jupyterLabPage
   }
 
-  private def `click new & wait for image to build`(implicit projectPage: ProjectPage): Unit = {
+  private def `click new & wait for image to build`(implicit
+      projectPage: ProjectPage
+  ): Unit = {
     And("then they click on the New link")
     click on projectPage.Environments.newLink sleep (2 seconds)
     And("once the image is built")
     projectPage.Environments.verifyImageReady sleep (2 seconds)
   }
 
-  private def `start environment & wait util it's not ready`(implicit projectPage: ProjectPage): Unit = {
+  private def `start environment & wait util it's ready`(implicit
+      projectPage: ProjectPage
+  ): Unit = {
     projectPage.Environments.verifyImageReady sleep (2 seconds)
-
     projectPage.Environments.maybeStartEnvironmentButton match {
       case None =>
         projectPage.Environments.connectToJupyterLabLink.isDisplayed shouldBe true
@@ -148,7 +168,7 @@ trait Environments {
 
         And("the user clicks on the Connect button in the table")
         // Sleep a little while after clicking to give the server a chance to come up
-        click on projectPage.Environments.Running.title sleep (30 seconds)
+        click on projectPage.Environments.Running.title sleep (15 seconds)
     }
   }
 }
