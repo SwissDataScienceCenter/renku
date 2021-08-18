@@ -64,6 +64,146 @@ in the `values changelog file <https://github.com/SwissDataScienceCenter/renku/b
 For upgrades that require some steps other than modifying the values files to be
 executed, we add some instructions here.
 
+
+Upgrading to 0.9.0
+******************
+Our chart requirements changed to include the GitLab cloud native charts.
+
+Reference: https://docs.gitlab.com/charts/installation/migration/package_to_helm.html
+
+
+1. Move LFS, registry storage, artifacts and uploads to an S3 object store
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+**Note** If your Renku deployment uses an external GitLab you can skip this step.
+
+Reference: https://docs.gitlab.com/ee/administration/uploads.html#s3-compatible-connection-settings
+
+A. Configure your values file and redeploy.
+
+For configuring S3 for LFS objects and registry storage, please refer to an earlier version of Renku values file, ``LFS`` and ``registry`` gitlab sections respectively.
+For artifacts and uploads you can add the configuration under ``extraConfig`` gitlab section in your Renku values file, as the example below.
+
+.. code-block:: console
+
+extraConfig: |
+  gitlab_rails['uploads_object_store_enabled'] = true
+  gitlab_rails['uploads_object_store_remote_directory'] = "renku-gitlab-uploads" ## Bucket name
+  gitlab_rails['uploads_object_store_connection'] = {
+    'provider' => 'AWS',
+    'region' => 'ZH',
+    'aws_access_key_id' => 'xyz',
+    'aws_secret_access_key' => 'xyz',
+    'endpoint' => 'https://os.zhdk.cloud.switch.ch',
+    'aws_signature_version' => 2,
+    'path_style' => true,
+  }
+  gitlab_rails['artifacts_enabled'] = true
+  gitlab_rails['artifacts_object_store_enabled'] = true
+  gitlab_rails['artifacts_object_store_remote_directory'] = "renku-gitlab-artifacts" ## Bucket name
+  gitlab_rails['artifacts_object_store_connection'] = {
+    'provider' => 'AWS',
+    'region' => 'ZH',
+    'aws_access_key_id' => 'xyz',
+    'aws_secret_access_key' => 'xyz',
+    'endpoint' => 'https://os.zhdk.cloud.switch.ch',
+    'aws_signature_version' => 2,
+    'path_style' => true,
+  }
+
+B. Migrate local files to object store
+
+We use gitlab-rake tasks to migrate existing local files to object store. You can execute the following instructions if you use ``kubectl exec -ti <gitlab-pod-name> -n renku bash``.
+
+**Note** This might take some time depending on how much data your deployment has, however during the migration the service will be up and users can work seamlessly.
+
+.. code-block:: console
+
+  gitlab-rake gitlab:uploads:migrate:all
+  gitlab-rake gitlab:artifacts:migrate
+  gitlab-rake "gitlab:packages:migrate"
+  gitlab-rake gitlab:lfs:migrate
+
+
+To verify that all the objects are on object store and not stored locally you can open a shell on the PostgreSQL pod.
+You will need the postgres user password at hand, you can find it in the ``renku-postgresql`` secret.
+
+``psql -U postgres -d gitlabhq_production``
+
+.. code-block:: console
+
+  gitlabhq_production=# SELECT count(*) AS total, sum(case when store = '1' then 1 else 0 end) AS filesystem, sum(case when store = '2' then 1 else 0 end) AS objectstg FROM uploads;
+  gitlabhq_production=# SELECT count(*) AS total, sum(case when file_store = '1' then 1 else 0 end) AS filesystem, sum(case when file_store = '2' then 1 else 0 end) AS objectstg FROM ci_job_artifacts;
+  gitlabhq_production=# SELECT count(*) AS total, sum(case when file_store = '1' then 1 else 0 end) AS filesystem, sum(case when file_store = '2' then 1 else 0 end) AS objectstg FROM lfs_objects;
+
+
+You should see an output similar to this:
+
+  total | filesystem | objectstg
+  ------+------------+-----------
+  2409 |          0 |      2409
+
+
+2. Create a snapshot
+++++++++++++++++++++++
+
+Once artifacts, lfs and uploads have been migrated to object store you can create a tarball backup.
+In order to reduce the service down time you can prepare steps 3 and 4 before creating the snapshot.
+
+.. code-block:: console
+
+   gitlab-rake gitlab:backup:create SKIP=artifacts,lfs,uploads
+
+You might need to increase gitlab user's rights just for this and the following step.
+The easiest is to make the gitlab user a super user temporarily.
+
+```
+   ALTER USER gitlab WITH SUPERUSER;
+```
+
+3. Create GitLab-related secrets needed for new charts
+++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+Reference: https://docs.gitlab.com/charts/backup-restore/restore.html
+
+Now we create the necessary secret for rails.
+Create a file with the below content and fill it with the secrets in ``/etc/gitlab/gitlab-secrets.json``.
+
+.. code-block:: console
+
+  production:
+    db_key_base: <your key base value>
+    secret_key_base: <your secret key base value>
+    otp_key_base: <your otp key base value>
+    openid_connect_signing_key: <your openid signing key>
+    ci_jwt_signing_key: <your ci jwt signing key>
+
+``` kubectl create secret generic renku-rails-secret-name --from-file=secrets.yml=<local-yaml-filepath> -n renku```
+
+4. Prepare the new Renku values file
++++++++++++++++++++++++++++++++++++++
+
+
+gateway.gitlabUrl = https://gitlab.<your-renku-dns>
+graph.gitlab.url = https://gitlab.<your-renku-dns>
+global.gitlab.urlPrefix = /
+
+global.keycloak.gitlabClientSecret = <old-global.gitlab.clientSecret>
+global.gitlab.appSecret = <old-global.gitlab.clientSecret>
+
+gateway.gitlabClientId = renku
+notebooks.jupyterhub.auth.gitlab.clientId = renku
+gateway.gitlabClientSecret = 
+
+5. Deploy the new chart including GitLab
+++++++++++++++++++++++++++++++++++++++++
+
+6. Restore GitLab's data from the backup
+++++++++++++++++++++++++++++++++++++++++
+
+7. Verify all is in order
+++++++++++++++++++++++++++
+
 Upgrading to 0.8.0
 ******************
 We bump the PostgreSQL version from 9.6 to 11 and the GitLab major version from 11 to 13.
