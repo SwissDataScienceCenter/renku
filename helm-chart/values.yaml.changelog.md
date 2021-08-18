@@ -6,6 +6,13 @@ Please follow this convention when adding a new row
 * `<type: NEW|EDIT|DELETE> - *<resource name>*: <details>`
 
 ----
+## Upgrading to Renku 0.8.4
+* NEW *notebooks.serverDefaults* has been added with default values that will be
+used to create a session when specific server options are left out of the request to launch
+a session. See the [values.yaml file](https://github.com/SwissDataScienceCenter/renku/tree/master/helm-chart/renku/values.yaml) for more details.
+* NEW *notebooks.userSessionPersistentVolumes* has been added which enables the use of persistent volumes for user sessions. The use of persistent volumes is disabled by default however. To turn this feature on set the `enabled` flag and specify a storage class that should be used. We strongly recommend using a storage class with a `Delete` retain policy because otherwise the persistent volumes from the user sessions will keep accumulating and will require manual intervention for cleanup. 
+
+
 ## Upgrading to Renku 0.8.0 (breaking changes)
 * NEW/EDIT *postgresql.persistence.existingClaim* will most likely need to be modified in the course of upgrading your postgresql version. See [these instructions](https://github.com/SwissDataScienceCenter/renku/tree/master/helm-chart/utils/postgres_migrations/version_upgrades/README.md)
 * NEW/EDIT/DELETE *gitlab.image.tag* might have to be adjusted as we do a GitLab major version bump in with this release. See [these instructions](https://github.com/SwissDataScienceCenter/renku/tree/master/helm-chart#upgrading-to-080)

@@ -102,7 +102,7 @@ jobs:
         uses: ./actions/download-test-artifacts
         env:
           RENKU_VALUES: ${{ secrets.STAGING_VALUES_FILE }}
-          TEST_ARTIFACTS_PATH: "tests-artifacts-${{ github.sha }}"
+          TEST_ARTIFACTS_PATH: "staging-test-artifacts"
       - name: Upload screenshots on failure
         if: failure()
         uses: actions/upload-artifact@v1

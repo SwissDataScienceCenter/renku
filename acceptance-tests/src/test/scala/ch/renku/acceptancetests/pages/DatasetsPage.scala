@@ -20,6 +20,9 @@ package ch.renku.acceptancetests.pages
 import org.openqa.selenium.{WebDriver, WebElement}
 import org.scalatestplus.selenium.WebBrowser.{cssSelector, find, findAll}
 
+import scala.annotation.tailrec
+import scala.concurrent.duration._
+
 object DatasetsPage
     extends RenkuPage(
       path = s"/datasets",
@@ -39,7 +42,20 @@ object DatasetsPage
     findAll(cssSelector("div.col-sm-12.col-md-8 div.card-body a[href^='/datasets/']")).toList
   }
 
-  override def pageReadyElement(implicit webDriver: WebDriver): Option[WebElement] = Some(
-    searchResultLinks.headOption getOrElse searchBox
-  )
+  def maybeBouncer(implicit webDriver: WebDriver): Option[WebElement] = eventually {
+    findAll(cssSelector(".bouncer")).toList.headOption
+  }
+
+  override def pageReadyElement(implicit webDriver: WebDriver): Option[WebElement] = {
+    waitIfBouncing
+    Some(searchResultLinks.headOption getOrElse searchBox)
+  }
+
+  @tailrec def waitIfBouncing(implicit webDriver: WebDriver): Unit = maybeBouncer match {
+    case Some(_) =>
+      sleep(1 second)
+      waitIfBouncing
+    case _ =>
+      sleep(1 second)
+  }
 }

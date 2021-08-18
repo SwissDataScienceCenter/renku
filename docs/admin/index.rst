@@ -35,7 +35,8 @@ The following component versions have been tested in production.
 Renku version         Kubernetes     Helm
 ===================   ============   ============
 0.6.x                 1.14, 1.15     2
-0.7.x, 0.8.x          1.16 - 1.20    3
+0.7.x                 1.16, 1.17     3
+0.8.x                 1.19, 1.20     3
 ===================   ============   ============
 
 Pre-deployment steps

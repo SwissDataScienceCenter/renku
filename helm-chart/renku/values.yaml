@@ -248,7 +248,7 @@ keycloak:
 
   extraInitContainers: |
     - name: theme-provider
-      image: renku/keycloak-theme:v1.2
+      image: renku/keycloak-theme:2.0.0
       imagePullPolicy: IfNotPresent
       command:
         - sh
@@ -331,11 +331,17 @@ ui:
     custom: true
     repositories:
       - url: https://github.com/SwissDataScienceCenter/renku-project-template
-        ref: 0.1.21
+        ref: 0.1.22
         name: Renku
       - url: https://github.com/SwissDataScienceCenter/contributed-project-templates
         ref: 0.2.0
         name: Community
+
+  canary:
+    enabled: true
+    image:
+      repository: renku/renku-ui
+      tag: "1.0.0-beta5"
 
   #  welcomePage:
   #    text: "## Some markdown text here!"
@@ -395,6 +401,15 @@ ui:
 
 # ## Configuration for the notebooks service
 notebooks:
+  ## serverDefaults specifies defaults used when server options parameters
+  ## are not specified in the post request to renku notebooks to start a session.
+  # serverDefaults:
+  #   defaultUrl: /lab
+  #   cpu_request: 0.5
+  #   mem_request: 1G
+  #   disk_request: 1G
+  #   gpu_request: 0
+  #   lfs_auto_fetch: false
   ## serverOptions allow for modifications to the notebook pod resource requests and the UI rendering
   # serverOptions:
   #   defaultUrl:
@@ -415,17 +430,30 @@ notebooks:
   #     type: enum
   #     default: 1G
   #     options: [1G, 2G]
-  #   gpu_request:
+  #   disk_request:
   #     order: 4
+  #     displayName: Amount of disk space requested
+  #     type: enum
+  #     default: "1G"
+  #     options: ["1G", "10G"]
+  #   gpu_request:
+  #     order: 5
   #     displayName: Number of GPUs
   #     type: enum # use "type: int" instead to get a slider
   #     default: 0
   #     options: [0, 0] # use "range: [x, y]" when type is int
   #   lfs_auto_fetch:
-  #     order: 5
+  #     order: 6
   #     displayName: Automatically fetch LFS data
   #     type: boolean
   #     default: false
+  ## Enable the use of persistent volumes for user sessions below. The storage class
+  ## can be omited in which case the default is used. However, we strongly recommend that you use a storage class
+  ## with a `Delete` reclaim policy because otherwise the persistent volumes will keep accumulating
+  ## regardless of how the user sessions are shut down and will require manual intervention to clean them up.
+  # userSessionPersistentVolumes:
+  #   enabled: false
+  #   storageClass:
   ## image registry host
   # imageRegistry:
   ## JupyterHub setup

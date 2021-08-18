@@ -21,7 +21,7 @@
 {{- end }}
 {{- $swaggerEnabled := .Values.swagger.enabled -}}
 ---
-apiVersion: networking.k8s.io/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: {{ template "renku.fullname" . }}
@@ -31,6 +31,8 @@ metadata:
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
   annotations:
+    nginx.ingress.kubernetes.io/configuration-snippet: |
+        more_set_headers "Content-Security-Policy: frame-ancestors 'self' {{ .Values.ui.baseUrl }}";      
 {{- range $key, $value := .Values.ingress.annotations }}
     {{ $key }}: {{ $value | quote }}
 {{- end }}
@@ -55,6 +57,12 @@ spec:
         backend:
           serviceName: {{ $keycloakFullname }}-http
           servicePort: {{ $keycloakServicePort }}
+      {{- end }}
+      {{- if $gitlabEnabled }}
+      - path: /gitlab
+        backend:
+          serviceName: {{ $gitlabFullname }}
+          servicePort: {{ $gitlabServicePort }}
       {{- end }}
       - path: /repos
         backend:

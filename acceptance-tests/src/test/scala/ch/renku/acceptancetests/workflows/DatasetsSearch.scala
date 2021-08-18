@@ -29,13 +29,15 @@ trait DatasetsSearch {
   def `search for dataset with phrase`(phrase: String): Unit = {
     When("the user click the Datasets link on the top bar")
     click on DatasetsPage.TopBar.datasets
-    sleep(10 seconds)
+    sleep(1 second)
     Then("they should see the Datasets search page")
     verify browserAt DatasetsPage
 
     When(s"the user types in the '$phrase' in the search field")
     DatasetsPage.searchBox enterValue phrase
     And("clicks the search button")
-    click on DatasetsPage.searchButton sleep (5 seconds)
+    click on DatasetsPage.searchButton sleep (1 second)
+
+    DatasetsPage.waitIfBouncing
   }
 }

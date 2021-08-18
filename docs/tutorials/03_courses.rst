@@ -17,11 +17,11 @@ as starting points for students to interact with the instructional material:
 * the instructor creates a new project and writes the dependencies in one place
   (e.g. a ``Dockerfile`` and/or ``requirements.txt`` and/or ``install.R``)
 * students "fork" (make a copy) of the project to use as a starting point
-* students can launch interactive environments (e.g. JupyterLab and/or RStudio)
+* students can launch sessions (e.g. JupyterLab and/or RStudio)
   where these dependencies are pre-installed.
 
 From their copy of the starter project that the instructor creates, students can
-then independently build on the project from inside the interactive environment
+then independently build on the project from inside the session
 by adding and modifying code, extra software dependencies, etc., which they can
 then save (by ``git commit`` & ``git push``) back to Renkulab.
 

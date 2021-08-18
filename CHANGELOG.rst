@@ -1,5 +1,183 @@
 .. _changelog:
 
+0.8.7
+-----
+
+This is a small release that contains mainly bug fixes to the user sessions and to the UI.
+
+Improvements
+~~~~~~~~~~~~~
+
+* **UI**: redesign header to take less vertical space.
+* **Knowledge Graph**: dataset free-text search performance improvements.
+* **Authentication**: enable ``renku login`` support for CLI so that users can interact with private repositories without using a GitLab password or an ssh key.
+
+Bug Fixes
+~~~~~~~~~
+
+* **Environments**: listing orphaned user sessions tied to a deleted project/branch/namespace.
+* **Environments**: bugs with mistyped variable and missing branches in autosave.
+* **UI**: prevent values duplication on session enumerations.
+
+Individual components
+~~~~~~~~~~~~~~~~~~~~~
+
+For changes to individual components, please check:
+
+* renku-notebooks:
+  `0.8.18 <https://github.com/SwissDataScienceCenter/renku-notebooks/releases/tag/0.8.18>`__
+
+* renku-gateway:
+  `0.9.5 <https://github.com/SwissDataScienceCenter/renku-gateway/releases/tag/0.9.5>`__
+
+* renku-ui:
+  `1.0.0-beta5 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/1.0.0-beta5>`__
+
+* renku-graph:
+  `1.36.7 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/1.36.7>`__
+
+0.8.6
+-----
+
+This is just a bugfix release that addresses a problem in the notebook service caused by different naming conventions for user session PVCs.
+
+Individual components
+~~~~~~~~~~~~~~~~~~~~~
+
+For changes to individual components, please check:
+
+* renku-notebooks:
+  `0.8.17 <https://github.com/SwissDataScienceCenter/renku-notebooks/releases/tag/0.8.17>`__
+
+0.8.5
+-----
+
+This is just a bugfix release that addresses a problem in the notebook service where project names were causing the creation of PVCs in k8s to fail because of characters that k8s does not allow in PVC names (i.e. uppercase letters and underscores).
+
+Individual components
+~~~~~~~~~~~~~~~~~~~~~
+
+For changes to individual components, please check:
+
+* renku-notebooks:
+  `0.8.16 <https://github.com/SwissDataScienceCenter/renku-notebooks/releases/tag/0.8.16>`__
+
+0.8.4
+-----
+
+This version of Renku introduces the ability to use persistent volumes for user sessions. This is optional and can be enabled in the values
+file for the helm chart. In addition to enabling this feature users have the ability to select the storage class used by the persistent
+volumes. We strongly recommend that a storage class with a `Delete` reclaim policy is used, otherwise persistent volumes from all user
+sessions will keep accumulating.
+
+Also, unlike previous versions, with 0.8.4 the amount of disk storage will be **strongly enforced**,
+regardless of whether persistent volumes are used or not. With persistent volumes users will simply run out of space. However,
+when persistent volumes are not used, going over the amount of storage that a user has requested when starting their session
+will result in eviction of the k8s pod that runs the session and termination of the session. Therefore, admins are advised
+to review and set proper options for disk sizes in the `notebooks.serverOptions` portion of the values file.
+
+Improvements
+~~~~~~~~~~~~~
+
+* **UI**: Add banner advertising new version to logged-in users and various improvements in the new canary deployment itself.
+* **Environments**: Ability to use persistent volumes for user sessions.
+
+Bug Fixes
+~~~~~~~~~
+
+-  **CI/CD:** CI action entrypoint typo
+   (`3858df0 <https://github.com/SwissDataScienceCenter/renku/commit/3858df02182abeab26e324914fd7bcae7e7226ff>`__)
+-  **Acceptance Tests:** flaky FreeTextDatasetSearchSpec
+   (`a872504 <https://github.com/SwissDataScienceCenter/renku/commit/a872504becb41c1a761cbe02525cae3ebdb6ebea>`__)
+-  **Acceptance Tests:** retry when EOF occurs on the Rest Client
+   (`#2211 <https://github.com/SwissDataScienceCenter/renku/issues/2211>`__)
+   (`e81a212 <https://github.com/SwissDataScienceCenter/renku/commit/e81a21229621463b4be4759f8c4b16714de097c4>`__)
+-  **Acceptance Tests:** Wait for the dataset search results
+   (`#2210 <https://github.com/SwissDataScienceCenter/renku/issues/2210>`__)
+   (`132ec8b <https://github.com/SwissDataScienceCenter/renku/commit/132ec8b813ad6777ae309699d1769cdf07380571>`__)
+
+Features
+~~~~~~~~
+
+-  **CI/CD:** parametrize rancher API endpoint
+   (`46a5155 <https://github.com/SwissDataScienceCenter/renku/commit/46a51551da48225156f7e6c3a526a310574e674f>`__)
+
+Individual components
+~~~~~~~~~~~~~~~~~~~~~
+
+For changes to individual components, please check:
+
+* renku-ui:
+  `1.0.0-beta4 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/1.0.0-beta4>`__
+  `0.11.14 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/0.11.14>`__
+* renku-notebooks:
+  `0.8.15 <https://github.com/SwissDataScienceCenter/renku-notebooks/releases/tag/0.8.15>`__
+
+Upgrading from 0.8.3
+~~~~~~~~~~~~~~~~~~~~
+
+When upgrading from 0.8.3 the following steps should be taken based on whether you would like to use persistent volumes for user sessions or not:
+
+**Use persistent volumes:**
+
+  1. Edit the `notebooks.userSessionPersistentVolumes` section of the `values.yaml file <https://github.com/SwissDataScienceCenter/renku/blob/master/helm-chart/renku/values.yaml#L527>`_ changing the `enabled` flag to true and selecting a storage class to be used with every user session. It is strongly recommended to select a storage class with a `Delete` retention policy to avoid the accumulation of persistent volumes with every session launch.
+  2. Review and modify (if needed) `the disk request options in the values.yaml file <https://github.com/SwissDataScienceCenter/renku/blob/master/helm-chart/renku/values.yaml#L506>`_.
+  3. Review and modify (if needed) the `the server defaults in the values.yaml file <https://github.com/SwissDataScienceCenter/renku/blob/master/helm-chart/renku/values.yaml#L479>`_. These will be used if a specific server options is omitted in the request to create a session and should be compatible with any matching values in the `serverOptions` section. It also allows an administrator to omit an option from the selection menu that is defined in the `serverOptions` section and have renku always use the default from the `serverDefaults` section.
+
+**Do not use persistent volumes:**
+
+  1. Review and modify (if needed) `the disk request options in the values.yaml file <https://github.com/SwissDataScienceCenter/renku/blob/master/helm-chart/renku/values.yaml#L506>`_. Please note that if a user consumes more disk space than they requested (or more than what is set in the `serverDefaults` of the values file) then the user's session will be evicted. This is necessary because if a user consumes a lot of space on the node where their session is scheduled k8s starts to evict user sessions on that node regardless of whether they are using a lot of disk space or not. This sometimes results in the eviction of multiple sessions and not the session that is consuming the most storage resources.
+  2. Review and modify (if needed) the `the server defaults in the values.yaml file <https://github.com/SwissDataScienceCenter/renku/blob/master/helm-chart/renku/values.yaml#L479>`_. These will be used if a specific server options is omitted in the request to create a session and should be compatible with any matching values in the `serverOptions` section. It also allows an administrator to omit an option from the selection menu that is defined in the `serverOptions` section and have renku always use the default from the `serverDefaults` section.
+
+0.8.3
+-----
+
+This is a bugfix release that includes fixes to Knowledge Graph. For more details please check the renku-graph `1.36.6 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/1.36.6>`__ release notes.
+
+0.8.2
+-----
+
+This release includes a beta version of the new user interface for Renku. Over the next few releases
+we will gradually phase out the old user interface. However, for the time being you can use both. Simply switch
+between the two by clicking the link on the Renku home page.
+
+Bug Fixes
+~~~~~~~~~
+
+-  CSS for the Login button on the provider page
+   (`#2178 <https://github.com/SwissDataScienceCenter/renku/issues/2178>`__)
+   (`d1a0149 <https://github.com/SwissDataScienceCenter/renku/commit/d1a01499622e3dcfc566c942e28eef6e7983be31>`__)
+
+Features
+~~~~~~~~
+
+-  **chart:** configure the Renku realm to use the Renku keycloak theme
+   (`d527865 <https://github.com/SwissDataScienceCenter/renku/commit/d5278654f4ec13533c3ef3b79b022bef0c66317d>`__),
+   closes
+   `#2022 <https://github.com/SwissDataScienceCenter/renku/issues/2022>`__
+-  **chart:** use keycloak theme with UI 1.0.0 design
+   (`35d8980 <https://github.com/SwissDataScienceCenter/renku/commit/35d8980fbd467819ae659fc9239b237bee932135>`__),
+   closes
+   `#2022 <https://github.com/SwissDataScienceCenter/renku/issues/2022>`__
+-  **docs:** new design for renku docs
+   (`#2166 <https://github.com/SwissDataScienceCenter/renku/issues/2166>`__)
+   (`f2f3985 <https://github.com/SwissDataScienceCenter/renku/commit/f2f398512252fc115f793e41dc4375a3e8bb69c5>`__)
+
+Individual components
+~~~~~~~~~~~~~~~~~~~~~
+
+For changes to individual components, please check:
+
+* renku-graph:
+  `1.36.5 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/1.36.5>`__
+
+* renku-core and renku-python:
+  `v0.16.0 <https://github.com/SwissDataScienceCenter/renku-python/releases/tag/v0.16.0>`__
+
+* renku-ui:
+  `0.11.13 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/0.11.13>`__,
+  `1.0.0-beta3 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/1.0.0-beta3>`__
+
 0.8.1
 -----
 
