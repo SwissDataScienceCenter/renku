@@ -94,6 +94,7 @@ middleware
 migrationscheck
 minikube
 minimalistic
+mistyped
 mydomain
 namespace
 namespaces

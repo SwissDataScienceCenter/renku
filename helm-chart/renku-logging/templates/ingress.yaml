@@ -4,7 +4,7 @@
 {{- $kibanaPort := .Values.kibana.service.port -}}
 {{- $elasticsearchFullName := include "elasticsearch.fullname" . -}}
 {{- $elasticsearchPort := 9200 -}}
-apiVersion: networking.k8s.io/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: {{ template "renku-logging.fullname" . }}
@@ -37,12 +37,18 @@ spec:
     http:
       paths:
       - path: /kibana
+        pathType: Prefix
         backend:
-          serviceName: {{ $kibanaFullName }}
-          servicePort: {{ $kibanaPort }}
+          service:
+            name: {{ $kibanaFullName }}
+            port:
+              number: {{ $kibanaPort }}
       - path: /elasticsearch
+        pathType: Prefix
         backend:
-          serviceName: {{ $elasticsearchFullName }}
-          servicePort: {{ $elasticsearchPort }}
+          service:
+            name: {{ $elasticsearchFullName }}
+            port:
+              number: {{ $elasticsearchPort }}
   {{- end }}
 {{- end }}
