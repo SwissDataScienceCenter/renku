@@ -20,7 +20,6 @@ dependencies:
   alias: gateway
   ## repository: "https://swissdatasciencecenter.github.io/helm-charts/"
   repository: "file://../../../renku-gateway/helm-chart/renku-gateway"
-  ## version: 0.9.4
   version: 0.9.5
 - name: gitlab
   repository: "https://charts.gitlab.io/"

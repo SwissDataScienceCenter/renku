@@ -182,17 +182,26 @@ Create a file with the below content and fill it with the secrets in ``/etc/gitl
 4. Prepare the new Renku values file
 +++++++++++++++++++++++++++++++++++++
 
+You need to make the following changes to your renku values file:
 
+GitLab is now hosted in a subdomain rather than the `/gitlab` prefix.
+```
 gateway.gitlabUrl = https://gitlab.<your-renku-dns>
 graph.gitlab.url = https://gitlab.<your-renku-dns>
 global.gitlab.urlPrefix = /
+```
 
+The GitLab clientSecret now needs to be
+```
 global.keycloak.gitlabClientSecret = <old-global.gitlab.clientSecret>
 global.gitlab.appSecret = <old-global.gitlab.clientSecret>
+```
 
+```
 gateway.gitlabClientId = renku
 notebooks.jupyterhub.auth.gitlab.clientId = renku
-gateway.gitlabClientSecret = 
+gateway.gitlabClientSecret =
+```
 
 5. Deploy the new chart including GitLab
 ++++++++++++++++++++++++++++++++++++++++
@@ -205,23 +214,23 @@ gateway.gitlabClientSecret =
 
 Upgrading to 0.8.4
 ******************
-We have added add a new section called `serverDefaults` to the `values.yaml` for the notebook service. 
-The information in this new `serverDefaults` section is used for any server options that are not specified 
-explicitly when launching a session. This allows a renku admin to leave out a specific option from the 
-`serverOptions` section and apply the value specified in the `serverDefaults` section for all sessions. 
-Please note that the default values specified in the  `serverDefaults` should be available as one of the options 
-in `serverOptions` - if the specific option appears in both sections. The defaults in the `serverOptions` 
+We have added add a new section called `serverDefaults` to the `values.yaml` for the notebook service.
+The information in this new `serverDefaults` section is used for any server options that are not specified
+explicitly when launching a session. This allows a renku admin to leave out a specific option from the
+`serverOptions` section and apply the value specified in the `serverDefaults` section for all sessions.
+Please note that the default values specified in the  `serverDefaults` should be available as one of the options
+in `serverOptions` - if the specific option appears in both sections. The defaults in the `serverOptions`
 section now only refer to the default selection that is shown to the user in the UI.
 
 This ability to use persistent volumes for user sesssions is also introduced with this release. This is optional and can be enabled in the values
-file for the helm chart. In addition to enabling this feature users have the ability to select the storage class used by the persistent 
+file for the helm chart. In addition to enabling this feature users have the ability to select the storage class used by the persistent
 volumes. We strongly recommend that a storage class with a `Delete` reclaim policy is used, otherwise persistent volumes from all user
-sessions will keep accumulating. 
+sessions will keep accumulating.
 
-Lastly, unlike previous versions, with 0.8.4 the amount of disk storage will be **strongly enforced**, 
-regardless of whether persistent volumes are used or not. With persistent volumes users will simply run out of space. However, 
-when persistent volumes are not used, going over the amount of storage that a user has requested when starting their session 
-will result in eviction of the k8s pod that runs the session and termination of the session. Therefore, admins are advised 
+Lastly, unlike previous versions, with 0.8.4 the amount of disk storage will be **strongly enforced**,
+regardless of whether persistent volumes are used or not. With persistent volumes users will simply run out of space. However,
+when persistent volumes are not used, going over the amount of storage that a user has requested when starting their session
+will result in eviction of the k8s pod that runs the session and termination of the session. Therefore, admins are advised
 to review and set proper options for disk sizes in the `notebooks.serverOptions` portion of the values file.
 
 
