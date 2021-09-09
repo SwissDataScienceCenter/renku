@@ -15,7 +15,7 @@ jobs:
       - name: Set version
         id: vars
         run: echo ::set-output name=tag::${GITHUB_REF#refs/*/}
-      - uses: SwissDataScienceCenter/renku-actions/publish-chart@7e9d5062
+      - uses: SwissDataScienceCenter/renku-actions/publish-chart@7e9d50622eabf764b76ababf0bcb4f34e97af2e5
         env:
           CHART_DIR: helm-chart/
           CHART_NAME: renku
@@ -99,7 +99,7 @@ jobs:
           helm test staging-renku --namespace staging --timeout 80m --logs
       - name: Download artifact for packaging on failure
         if: failure()
-        uses: SwissDataScienceCenter/renku-actions/download-test-artifacts@7e9d5062
+        uses: SwissDataScienceCenter/renku-actions/download-test-artifacts@7e9d50622eabf764b76ababf0bcb4f34e97af2e5
         env:
           RENKU_VALUES: ${{ secrets.STAGING_VALUES_FILE }}
           TEST_ARTIFACTS_PATH: "staging-test-artifacts"
