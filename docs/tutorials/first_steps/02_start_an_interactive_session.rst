@@ -21,7 +21,7 @@ There are a few ways of initiating a session. The one-click **Start** button
     :alt: Head to sessions page
 
 This is sufficient for this tutorial, however you may also click on
-**New session** (2) to customise the settings with which to start a session. 
+**New session** (2) to customize the settings with which to start a session. 
 For example, you can select the computational requirements and commit to launch from. 
 
 .. image:: ../../_static/images/ui_03_start-session-docker.png
