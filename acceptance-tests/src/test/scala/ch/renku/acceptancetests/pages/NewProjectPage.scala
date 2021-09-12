@@ -47,8 +47,6 @@ case object NewProjectPage
     templateOption(project.template).click() sleep (1 second)
     templateField.click() sleep (10 second)
 
-    descriptionField.clear() sleep (1 second)
-
     docsScreenshots.takeScreenshot()
 
     createButton.click() sleep (10 seconds)
@@ -75,9 +73,6 @@ case object NewProjectPage
       find(cssSelector(s"option[value='${template.name}']")) getOrElse fail("Template option not found")
     }
 
-  private def descriptionField(implicit webDriver: WebDriver): WebElement = eventually {
-    find(cssSelector("input#parameter-description")) getOrElse fail("Description parameter field not found")
-  }
 
   def createButton(implicit webDriver: WebDriver): WebElement = eventually {
     find(cssSelector("#create-new-project")) getOrElse fail("Create button not found")
