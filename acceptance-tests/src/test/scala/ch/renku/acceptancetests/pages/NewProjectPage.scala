@@ -48,7 +48,6 @@ case object NewProjectPage
     templateField.click() sleep (10 second)
 
     descriptionField.clear() sleep (1 second)
-    descriptionField.enterValue(project.description)
 
     docsScreenshots.takeScreenshot()
 
