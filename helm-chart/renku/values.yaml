@@ -410,12 +410,13 @@ ui:
         ref: 0.2.0
         name: Community
 
-  canary:
-    enabled: true
-    image:
-      repository: renku/renku-ui
-      tag: "1.0.0-beta5"
-
+  ## Configuration for a canary version of the UI
+  # canary:
+  #   enabled: true
+  #   image:
+  #     repository: renku/renku-ui
+  #     tag: "1.0.0-beta5"
+  ## Configuration for the welcome page text
   #  welcomePage:
   #    text: "## Some markdown text here!"
   ## UI image
