@@ -73,7 +73,6 @@ case object NewProjectPage
       find(cssSelector(s"option[value='${template.name}']")) getOrElse fail("Template option not found")
     }
 
-
   def createButton(implicit webDriver: WebDriver): WebElement = eventually {
     find(cssSelector("#create-new-project")) getOrElse fail("Create button not found")
   }
