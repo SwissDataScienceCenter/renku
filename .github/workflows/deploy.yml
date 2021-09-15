@@ -19,7 +19,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: deploy renku
-        uses: SwissDataScienceCenter/renku-actions/deploy-renku@7e9d50622eabf764b76ababf0bcb4f34e97af2e5
+        uses: SwissDataScienceCenter/renku-actions/deploy-renku@v0.3.0
         env:
           DOCKER_PASSWORD: ${{ secrets.RENKU_DOCKER_PASSWORD }}
           DOCKER_USERNAME: ${{ secrets.RENKU_DOCKER_USERNAME }}
@@ -61,7 +61,7 @@ jobs:
           helm test renku --namespace renku --timeout 80m --logs
       - name: Download artifact for packaging on failure
         if: failure()
-        uses: SwissDataScienceCenter/renku-actions/download-test-artifacts@7e9d50622eabf764b76ababf0bcb4f34e97af2e5
+        uses: SwissDataScienceCenter/renku-actions/download-test-artifacts@v0.3.0
         env:
           RENKU_VALUES: ${{ secrets.CI_RENKU_VALUES }}
           TEST_ARTIFACTS_PATH: "tests-artifacts-${{ github.sha }}"
