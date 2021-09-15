@@ -190,8 +190,11 @@ notebooks:
     enabled: true
   oidc:
     clientSecret:   [random]        ## openssl rand -hex 32
-    token_url: *notebookSessionTokenUrl
-    auth_url: *notebookSessionAuthUrl  
+    tokenUrl: *notebookSessionTokenUrl
+    authUrl: *notebookSessionAuthUrl
+  sessionIngress:
+    host: *mainURL
+    tlsSecret: *ingressTLS
 
 ## Configuration for the Gateway service
 gateway:
