@@ -67,8 +67,8 @@ trait RestClient extends Http4sClientDsl[IO] {
     def withAuthorizationToken(authorizationToken: AuthorizationToken): Request[IO] =
       request.withHeaders(Headers of authorizationToken.asHeader)
 
-    def send: (Request[IO], Response[IO]) =
-      request -> clientBuilder.resource.use(sendRequest).unsafeRunSync()
+    def send: (Request[IO], IO[Response[IO]]) =
+      request -> clientBuilder.resource.use(sendRequest)
 
     private def sendRequest(client: Client[IO]) =
       client
@@ -90,23 +90,27 @@ trait RestClient extends Http4sClientDsl[IO] {
     }
   }
 
-  implicit class ResponseOps(reqAndResp: (Request[IO], Response[IO])) {
+  implicit class ResponseOps(reqAndResp: (Request[IO], IO[Response[IO]])) {
     private lazy val (request, response) = reqAndResp
 
-    def whenReceived(status: Status): (Request[IO], Response[IO]) =
-      if (response.status == status) reqAndResp
-      else
-        fail(s"${request.method} ${request.uri} returned ${response.status} which is not expected $status.")
+    def whenReceived(status: Status): (Request[IO], IO[Response[IO]]) =
+      request -> response.flatMap { res =>
+        if (res.status == status) response
+        else
+          fail(s"${request.method} ${request.uri} returned ${res.status} which is not expected $status.")
+      }
 
-    lazy val responseStatus: Status = response.status
+    lazy val responseStatus: Status = response.unsafeRunSync().status
 
-    def expect(status: Status, otherwiseLog: String): Unit =
-      if (response.status != status)
+    def expect(status: Status, otherwiseLog: String): Unit = {
+      val responseStatus = response.unsafeRunSync().status
+      if (responseStatus != status)
         fail(
-          s"$otherwiseLog -> ${request.method} ${request.uri} returned ${response.status} which is not expected $status"
+          s"$otherwiseLog -> ${request.method} ${request.uri} returned $responseStatus which is not expected $status"
         )
+    }
 
-    def bodyAsJson: Json = response.as[Json].unsafeRunSync()
+    def bodyAsJson: Json = response.flatMap(_.as[Json]).unsafeRunSync()
   }
 
   implicit class JsonOps(json: Json) {
