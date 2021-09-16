@@ -18,6 +18,7 @@
 
 package ch.renku.acceptancetests.tooling
 
+import cats.syntax.all._
 import ch.renku.acceptancetests.model.AuthorizationToken
 import ch.renku.acceptancetests.model.AuthorizationToken.OAuthAccessToken
 import ch.renku.acceptancetests.model.projects.ProjectIdentifier
@@ -40,9 +41,7 @@ trait GitLabApi extends RestClient {
           "password"   -> userCredentials.password
         )
       )
-      .send
-      .whenReceived(status = Ok)
-      .bodyAsJson
+      .send(whenReceived(status = Ok) >=> bodyToJson)
       .extract(jsonRoot.`access_token`.string.getOption)
       .map(OAuthAccessToken.apply)
       .getOrElse(fail("OAuth Access Token couldn't be obtained"))
@@ -50,25 +49,23 @@ trait GitLabApi extends RestClient {
   def `get GitLab project id`(projectId: ProjectIdentifier): Int =
     GET(gitLabAPIUrl / "projects" / projectId.asProjectPath)
       .withAuthorizationToken(authorizationToken)
-      .send
-      .whenReceived(status = Ok)
-      .bodyAsJson
+      .send(whenReceived(status = Ok) >=> bodyToJson)
       .extract(jsonRoot.id.int.getOption)
       .getOrElse(fail(s"Cannot find '${projectId.asProjectPath}' project in GitLab"))
 
   def `project exists in GitLab`(projectId: ProjectIdentifier): Boolean =
     GET(gitLabAPIUrl / "projects" / projectId.asProjectPath)
       .withAuthorizationToken(authorizationToken)
-      .send
-      .responseStatus match {
-      case Ok       => true
-      case NotFound => false
-      case other    => fail(s"Finding '${projectId.slug}' project in GitLab failed with $other status")
-    }
+      .send(mapResponse {
+        _.status match {
+          case Ok       => true
+          case NotFound => false
+          case other    => fail(s"Finding '${projectId.slug}' project in GitLab failed with $other status")
+        }
+      })
 
   def `delete project in GitLab`(projectId: ProjectIdentifier): Unit =
     DELETE(gitLabAPIUrl / "projects" / projectId.asProjectPath)
       .withAuthorizationToken(authorizationToken)
-      .send
-      .expect(status = Accepted, otherwiseLog = s"Deletion of '${projectId.slug}' project in GitLab failed")
+      .send(expect(status = Accepted, otherwiseLog = s"Deletion of '${projectId.slug}' project in GitLab failed"))
 }
