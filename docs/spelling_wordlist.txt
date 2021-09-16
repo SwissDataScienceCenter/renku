@@ -13,6 +13,7 @@ Bergstrom
 Bioconductor
 Bitnami
 blog
+BMP
 bugfix
 chartpress
 Chartpress
@@ -72,6 +73,7 @@ ize
 izing
 Janusgraph
 Jena
+JPEG
 json
 jupyter
 JupyterHub
@@ -110,6 +112,7 @@ parameterizable
 parametrize
 parametrized
 pipenv
+PNG
 Postgresql
 powerline
 pre
