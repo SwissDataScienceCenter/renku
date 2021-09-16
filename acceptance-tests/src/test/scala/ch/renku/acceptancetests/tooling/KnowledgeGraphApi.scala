@@ -18,11 +18,12 @@
 
 package ch.renku.acceptancetests.tooling
 
+import cats.syntax.all._
 import ch.renku.acceptancetests.model.projects.ProjectIdentifier
-import io.circe.{Json, JsonObject}
-import org.http4s.circe._
+import io.circe.JsonObject
 import io.circe.literal.JsonStringContext
 import org.http4s.Status.Ok
+import org.http4s.circe._
 import org.scalatest.Assertions.fail
 
 import scala.annotation.tailrec
@@ -50,9 +51,7 @@ trait KnowledgeGraphApi extends RestClient {
     val body = json"""{ "query": $query }"""
     POST(renkuBaseUrl / "api" / "kg" / "graphql")
       .withEntity(body)
-      .send
-      .whenReceived(status = Ok)
-      .bodyAsJson
+      .send(whenReceived(status = Ok) >=> bodyToJson)
       .extract(jsonRoot.data.lineage.obj.getOption)
       .getOrElse(fail(s"Cannot find lineage data for project $projectPath file $filePath"))
   }
@@ -70,16 +69,14 @@ trait KnowledgeGraphApi extends RestClient {
     }
 
   private def findProgress(projectId: ProjectIdentifier, gitLabProjectId: Int): Double =
-    GET(renkuBaseUrl / "api" / "projects" / gitLabProjectId.toString / "graph" / "status").send
-      .whenReceived(status = Ok)
-      .bodyAsJson
+    GET(renkuBaseUrl / "api" / "projects" / gitLabProjectId.toString / "graph" / "status")
+      .send(whenReceived(status = Ok) >=> bodyToJson)
       .extract(jsonRoot.progress.double.getOption)
       .getOrElse(fail(s"Cannot find processing status for '${projectId.slug}'"))
 
   private def findTotalDone(projectId: ProjectIdentifier, gitLabProjectId: Int): Int =
-    GET(renkuBaseUrl / "api" / "projects" / gitLabProjectId.toString / "graph" / "status").send
-      .whenReceived(status = Ok)
-      .bodyAsJson
+    GET(renkuBaseUrl / "api" / "projects" / gitLabProjectId.toString / "graph" / "status")
+      .send(whenReceived(status = Ok) >=> bodyToJson)
       .extract(jsonRoot.total.int.getOption)
       .getOrElse(fail(s"Cannot find processing status for '${projectId.slug}'"))
 
