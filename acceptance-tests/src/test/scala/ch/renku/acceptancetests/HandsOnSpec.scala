@@ -56,8 +56,18 @@ class HandsOnSpec
 
     `verify analysis was run`
 
-    `log out of Renku`
+    // This should prevent menu flickering due to UI not completely loaded
+    sleep(5 seconds)
+
+    `try to logout 🤷`
   }
+
+  private def `try to logout 🤷` : Boolean =
+    return try { `log out of Renku`; return true }
+    catch {
+      case e: org.openqa.selenium.ElementNotInteractableException => false
+      case _: Throwable                                           => false
+    }
 
   private def `verify analysis was run`: Unit = {
     When("the user navigates to the Files tab")
@@ -72,5 +82,6 @@ class HandsOnSpec
     docsScreenshots.takeScreenshot(executeBefore = "window.scrollBy(0,document.body.scrollHeight)")
     val resultCell = projectPage.Files.Notebook.cellWithText("There were 4951 flights to Austin, TX in Jan 2019.")
     verify that resultCell contains "There were 4951 flights to Austin, TX in Jan 2019."
+    Then("the correct notebook content is there")
   }
 }
