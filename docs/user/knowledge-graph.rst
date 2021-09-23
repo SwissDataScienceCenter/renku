@@ -27,11 +27,20 @@ activating the Knowledge Graph integration.
 Activation
 ----------
 
-The Knowledge Graph is activated by default on all new projects. On projects
-that were in place before this feature was released, the user is prompted to
+The Knowledge Graph is activated by default on all new Public or Internal projects.
+On projects that were in place before this feature was released, the user is prompted to
 enable the integration via a pop-up button:
 
 .. image:: ../_static/images/kg_activation.png
+
+For Private projects, there is an option to opt-out of the Knowledge Graph, if you do not want
+your metadata to be able to be queried without access.
+
+.. image:: ../_static/images/kg_opt_out.png
+
+You can then turn on Knowledge Graph integration at a later time if you wish.
+
+.. image:: ../_static/images/kg_turn_on.png
 
 File Lineage Display
 --------------------
