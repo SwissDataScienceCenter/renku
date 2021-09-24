@@ -1,5 +1,45 @@
 .. _changelog:
 
+0.9.0
+-----
+
+This release switches to the **new UI**  🎉 by default.
+The biggest changes compared to the earlier UI version are explained on the RenkuLab home page
+and include:
+
+* New aesthetics, look and feel
+* Sessions (formerly "interactive environments") shown in the UI within their RenkuLab context
+* Issues and Merge Requests shown in the UI within RenkuLab context
+
+Improvements
+~~~~~~~~~~~~
+
+* **Collaboration**: add Fork tab to collaboration page, add ``open in tab button`` to collaboration pages.
+* **Datasets**: support for dataset marquee image in projects
+
+Bug Fixes
+~~~~~~~~~
+
+* **Projects**: handle primary branched named other than master
+* **Templates**: Template updating issue with  (see this `forum post <https://renku.discourse.group/t/error-during-environment-creation/407/7>`__).
+* **Renku core**: Update rdflib 6 and remove rdflib-jsonld which could not be installed with setuptools ``>58.0.2``.
+* **CLI**: Fix `renku rm` failure in specific cases.
+
+
+Individual components
+~~~~~~~~~~~~~~~~~~~~~
+
+For a full list of improvements and bug fixes in individual components, please check:
+
+* renku-ui:
+  `1.0.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/1.0.0>`__
+
+* renku-core:
+  `0.16.1 <https://github.com/SwissDataScienceCenter/renku-python/releases/0.16.1>`__
+
+* renku-graph:
+  `1.37.0 <https://github.com/SwissDataScienceCenter/renku-graph/releases/1.37.0>`__
+
 0.8.7
 -----
 
