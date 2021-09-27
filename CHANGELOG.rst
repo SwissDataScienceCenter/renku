@@ -40,6 +40,15 @@ For a full list of improvements and bug fixes in individual components, please c
 * renku-graph:
   `1.37.0 <https://github.com/SwissDataScienceCenter/renku-graph/releases/1.37.0>`__
 
+Upgrading from 0.8.7
+~~~~~~~~~~~~~~~~~~~~
+
+Although no special changes are needed in your values file for upgrading to Renku ``0.9.0``, we want to bring a couple of configurations to your attention:
+
+* To configure and customize the welcome page you have some options, please read the related `values file section <https://github.com/SwissDataScienceCenter/renku/blob/master/helm-chart/renku/values.yaml#L476>`__.
+* To enable the new Keycloak renku-theme, you can login to the admin console of ``<renku-deployment-url>/auth``, go to Realm settings, theme and choose ``renku-theme``.
+* The ingress should now include a configuration snippet to support showing sessions in iframes (automatically added by our chart templates).
+
 0.8.7
 -----
 
