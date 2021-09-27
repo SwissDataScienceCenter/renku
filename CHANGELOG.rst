@@ -14,15 +14,15 @@ and include:
 Improvements
 ~~~~~~~~~~~~
 
-* **Collaboration**: add Fork tab to collaboration page, add ``open in tab button`` to collaboration pages.
+* **Collaboration**: add ``Fork`` tab and ``Open in Tab`` buttons to collaboration pages.
 * **Datasets**: support for dataset marquee image in projects
 
 Bug Fixes
 ~~~~~~~~~
 
-* **Projects**: handle primary branched named other than master
+* **Projects**: handle primary branches named other than master
 * **Templates**: Template updating issue with  (see this `forum post <https://renku.discourse.group/t/error-during-environment-creation/407/7>`__).
-* **Renku core**: Update rdflib 6 and remove rdflib-jsonld which could not be installed with setuptools ``>58.0.2``.
+* **Renku core / CLI**: Update rdflib 6 and remove rdflib-jsonld which could not be installed with setuptools ``>58.0.2``.
 * **CLI**: Fix `renku rm` failure in specific cases.
 
 
