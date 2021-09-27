@@ -63,6 +63,7 @@ https
 hostname
 hyperkit
 hypervisor
+iframes
 init
 indices
 Indices
