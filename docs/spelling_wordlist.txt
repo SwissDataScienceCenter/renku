@@ -8,6 +8,7 @@ autosave
 autosaved
 backend
 backends
+backgroundImage
 balancer
 Bergstrom
 Bioconductor
@@ -22,6 +23,7 @@ circumventable
 CLI
 conda
 config
+contentMd
 cookiecutter
 Cookiecutter
 coopetition
@@ -61,6 +63,7 @@ https
 hostname
 hyperkit
 hypervisor
+iframes
 init
 indices
 Indices
@@ -73,6 +76,7 @@ izing
 Janusgraph
 Jena
 json
+jsonld
 jupyter
 JupyterHub
 Jupyterhub
@@ -118,6 +122,7 @@ preprocessed
 preprocessing
 programmatically
 py
+rdflib
 readme
 rebase
 refactor
@@ -158,6 +163,7 @@ Tensorflow
 timestamp
 tinkerpop
 toolchain
+tutorialLink
 txt
 typesystem
 Ubuntu

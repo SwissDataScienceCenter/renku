@@ -1,5 +1,56 @@
 .. _changelog:
 
+0.9.0
+-----
+
+This release switches to the **new UI**  🎉 by default.
+The biggest changes compared to the earlier UI version are explained on the RenkuLab home page
+and include:
+
+* New aesthetics, look and feel
+* Sessions (formerly "interactive environments") shown in the UI within their RenkuLab context
+* Issues and Merge Requests shown in the UI within RenkuLab context
+
+Improvements
+~~~~~~~~~~~~
+
+* **Collaboration**: add ``Fork`` tab and ``Open in Tab`` buttons to collaboration pages.
+* **Datasets**: support for dataset marquee image in projects
+* **Sessions**: improve functioning and experience of sessions in iframes
+* **File Browser**: allow resizing of file-system navigation view
+
+Bug Fixes
+~~~~~~~~~
+
+* **Projects**: handle primary branches named other than master
+* **Templates**: template updating issue with  (see this `forum post <https://renku.discourse.group/t/error-during-environment-creation/407/7>`__).
+* **Renku core / CLI**: update rdflib 6 and remove rdflib-jsonld which could not be installed with setuptools ``>58.0.2``.
+* **CLI**: fix `renku rm` failure in specific cases.
+
+
+Individual components
+~~~~~~~~~~~~~~~~~~~~~
+
+For a full list of improvements and bug fixes in individual components, please check:
+
+* renku-ui:
+  `1.0.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/1.0.0>`__
+
+* renku-core:
+  `0.16.1 <https://github.com/SwissDataScienceCenter/renku-python/releases/0.16.1>`__
+
+* renku-graph:
+  `1.37.0 <https://github.com/SwissDataScienceCenter/renku-graph/releases/1.37.0>`__
+
+Upgrading from 0.8.7
+~~~~~~~~~~~~~~~~~~~~
+
+Although no special changes are needed in your values file for upgrading to Renku ``0.9.0``, we want to bring a couple of configurations to your attention:
+
+* To configure and customize the welcome page you have some options, please read the related `values file section <https://github.com/SwissDataScienceCenter/renku/blob/master/helm-chart/renku/values.yaml#L476>`__.
+* To enable the new Keycloak renku-theme, you can login to the admin console of ``<renku-deployment-url>/auth``, go to Realm settings, theme and choose ``renku-theme``.
+* The ingress should now include a configuration snippet to support showing sessions in iframes (automatically added by our chart templates).
+
 0.8.7
 -----
 
