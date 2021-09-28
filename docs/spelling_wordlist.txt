@@ -63,6 +63,7 @@ https
 hostname
 hyperkit
 hypervisor
+iframes
 init
 indices
 Indices
@@ -75,6 +76,7 @@ izing
 Janusgraph
 Jena
 json
+jsonld
 jupyter
 JupyterHub
 Jupyterhub
@@ -120,6 +122,7 @@ preprocessed
 preprocessing
 programmatically
 py
+rdflib
 readme
 rebase
 refactor
