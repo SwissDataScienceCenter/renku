@@ -292,8 +292,8 @@ class ProjectPage(val projectSlug: String, val namespace: String)
     }
 
     def connectToJupyterLabLink(implicit webDriver: WebDriver): WebElement = eventually {
-      findAll(cssSelector("table a[href*='/sessions/'][role='button']"))
-        .find(_.text == "Connect")
+      findAll(cssSelector("a[href*='/sessions/']"))
+        .find(_.text.endsWith("Open in new tab"))
         .getOrElse(fail("Connect to session button not found"))
     }
 
@@ -320,10 +320,10 @@ class ProjectPage(val projectSlug: String, val namespace: String)
       }
 
       def connectToJupyterLab(implicit webDriver: WebDriver, spec: AcceptanceSpec): Unit =
-        connectToJupyterLab(s"table a[href*='/sessions/'][role='button']", s"div.sessionsButton > button")
+        connectToJupyterLab(s"a[href*='/sessions/']", s"div.sessionsButton > button")
 
       def connectToAnonymousJupyterLab(implicit webDriver: WebDriver, spec: AcceptanceSpec): Unit =
-        connectToJupyterLab(s"table a[href*='/sessions/'][role='button']", s"div.sessionsButton > button")
+        connectToJupyterLab(s"a[href*='/sessions/']", s"div.sessionsButton > button")
 
       def connectButton(buttonSelector: String)(implicit webDriver: WebDriver): WebElement = eventually {
         find(
