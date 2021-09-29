@@ -294,7 +294,7 @@ class ProjectPage(val projectSlug: String, val namespace: String)
     def connectToJupyterLabLink(implicit webDriver: WebDriver): WebElement = eventually {
       findAll(cssSelector("table a[href*='/sessions/'][role='button']"))
         .find(_.text == "Connect")
-        .getOrElse(fail("Connect to environment button not found"))
+        .getOrElse(fail("Connect to session button not found"))
     }
 
     def verifyImageReady(implicit webDriver: WebDriver): Unit = eventually {

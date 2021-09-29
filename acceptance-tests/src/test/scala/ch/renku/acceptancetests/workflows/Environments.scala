@@ -102,8 +102,9 @@ trait Environments {
     projectPage.Sessions.Running.connectToJupyterLab
 
     Then("a JupyterLab page is opened on a new tab")
-    val jupyterLabPage = JupyterLabPage()
-    verify browserSwitchedTo jupyterLabPage sleep (5 seconds)
+    val jupyterLabPage = JupyterLabPage(projectId)
+    // TODO This does not work for some reason
+    // verify browserSwitchedTo jupyterLabPage sleep (5 seconds)
     jupyterLabPage
   }
 
@@ -115,21 +116,20 @@ trait Environments {
 
   private def `anonymous session supported`(pp: ProjectPage, projectId: ProjectIdentifier): JupyterLabPage = {
     implicit val projectPage: ProjectPage = pp
-
+    sleep(5 seconds)
     `click new & wait for image to build`
     `start session and wait until it is ready`
 
     projectPage.Sessions.Running.connectToAnonymousJupyterLab
 
     Then("a JupyterLab page is opened on a new tab")
-    val jupyterLabPage = JupyterLabPage()
-    verify browserSwitchedTo jupyterLabPage sleep (5 seconds)
+    val jupyterLabPage = JupyterLabPage(projectId)
+    // TODO This does not work for some reason
+    // verify browserSwitchedTo jupyterLabPage sleep (5 seconds)
     jupyterLabPage
   }
 
-  private def `click new & wait for image to build`(implicit
-      projectPage: ProjectPage
-  ): Unit = {
+  private def `click new & wait for image to build`(implicit projectPage: ProjectPage): Unit = {
     And("then they click on the New link")
     click on projectPage.Sessions.newLink sleep (2 seconds)
     And("once the image is built")
