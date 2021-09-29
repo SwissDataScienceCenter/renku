@@ -320,10 +320,10 @@ class ProjectPage(val projectSlug: String, val namespace: String)
       }
 
       def connectToJupyterLab(implicit webDriver: WebDriver, spec: AcceptanceSpec): Unit =
-        connectToJupyterLab(s"table a[href*='/sessions/'][role='button']")
+        connectToJupyterLab(s"table a[href*='/sessions/'][role='button']", s"div.sessionsButton > button")
 
       def connectToAnonymousJupyterLab(implicit webDriver: WebDriver, spec: AcceptanceSpec): Unit =
-        connectToJupyterLab(s"table a[href*='/sessions/'][role='button']")
+        connectToJupyterLab(s"table a[href*='/sessions/'][role='button']", s"div.sessionsButton > button")
 
       def connectButton(buttonSelector: String)(implicit webDriver: WebDriver): WebElement = eventually {
         find(

@@ -102,7 +102,7 @@ trait Environments {
     projectPage.Sessions.Running.connectToJupyterLab
 
     Then("a JupyterLab page is opened on a new tab")
-    val jupyterLabPage = JupyterLabPage(projectId)
+    val jupyterLabPage = JupyterLabPage()
     // TODO This does not work for some reason
     // verify browserSwitchedTo jupyterLabPage sleep (5 seconds)
     jupyterLabPage
@@ -123,7 +123,7 @@ trait Environments {
     projectPage.Sessions.Running.connectToAnonymousJupyterLab
 
     Then("a JupyterLab page is opened on a new tab")
-    val jupyterLabPage = JupyterLabPage(projectId)
+    val jupyterLabPage = JupyterLabPage()
     // TODO This does not work for some reason
     // verify browserSwitchedTo jupyterLabPage sleep (5 seconds)
     jupyterLabPage
