@@ -94,13 +94,15 @@ trait Environments {
     And("clicks on the Sessions tab to launch an unprivileged session")
     click on projectPage.Sessions.tab
 
+    // We sleep a little to complete anonymous "login"
+    sleep(5 seconds)
     `click new & wait for image to build`
     `start session and wait until it is ready`
 
     projectPage.Sessions.Running.connectToJupyterLab
 
     Then("a JupyterLab page is opened on a new tab")
-    val jupyterLabPage = JupyterLabPage(projectId)
+    val jupyterLabPage = JupyterLabPage()
     // TODO This does not work for some reason
     // verify browserSwitchedTo jupyterLabPage sleep (5 seconds)
     jupyterLabPage
@@ -121,7 +123,7 @@ trait Environments {
     projectPage.Sessions.Running.connectToAnonymousJupyterLab
 
     Then("a JupyterLab page is opened on a new tab")
-    val jupyterLabPage = JupyterLabPage(projectId)
+    val jupyterLabPage = JupyterLabPage()
     // TODO This does not work for some reason
     // verify browserSwitchedTo jupyterLabPage sleep (5 seconds)
     jupyterLabPage
