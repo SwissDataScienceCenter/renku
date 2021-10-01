@@ -3,7 +3,7 @@
 0.9.1
 -----
 
-This is a bugfix release that includes fixes to KG, see `1.37.2 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/1.37.2>__` and `1.37.1 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/1.37.1>__`.
+This bugfix release includes fixes to the Knowledge Graph component, see `1.37.2 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/1.37.2>__` and `1.37.1 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/1.37.1>__`.
 
 0.9.0
 -----
