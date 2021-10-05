@@ -13,6 +13,10 @@ platform with resources that aid reproducibility, reusability and collaboration.
 Version control for data and code, containerization for runtime environments and
 automatic workflow capture are the core pillars on which the platform is built.
 
+.. image:: renku/docs/introduction/renkulab-component-diagram.drawio.png
+  :width: 400
+  :alt: Renku Component Diagram
+
 .. _renkulab:
 
 Renkulab
