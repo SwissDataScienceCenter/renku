@@ -545,6 +545,10 @@ notebooks:
   # userSessionPersistentVolumes:
   #   enabled: false
   #   storageClass:
+  ##  To fully disable the limits for emptyDirs make sure that no
+  ##  ephemeral-storage limits are specified in notebooks.singleuser.extraResource
+  ##  in addition to setting the value to false below
+  #   useEmptyDirSizeLimit: true 
   ## image registry host
   # imageRegistry:
   ## JupyterHub setup
