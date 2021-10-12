@@ -32,9 +32,6 @@ For a full list of improvements and bug fixes in individual components, please c
 * renku-notebooks:
   `0.8.19 <https://github.com/SwissDataScienceCenter/renku-notebooks/releases/0.8.19>`__
 
-* renku-graph:
-  `1.37.3 <https://github.com/SwissDataScienceCenter/renku-graph/releases/1.37.3>`__
-
 0.9.1
 -----
 
