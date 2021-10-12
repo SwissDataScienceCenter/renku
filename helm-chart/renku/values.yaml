@@ -390,10 +390,10 @@ ui:
     custom: true
     repositories:
       - url: https://github.com/SwissDataScienceCenter/renku-project-template
-        ref: 0.2.0
+        ref: 0.2.1
         name: Renku
       - url: https://github.com/SwissDataScienceCenter/contributed-project-templates
-        ref: 0.3.0
+        ref: 0.3.1
         name: Community
 
   ## Configuration for a canary version of the UI
@@ -539,7 +539,7 @@ notebooks:
     token_url:
     auth_url:
   session_ingress:
-    host: 
+    host:
     tls_secret:
     annotations: |
       {kubernetes.io/ingress.class: nginx,
