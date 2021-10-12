@@ -1,4 +1,4 @@
-both modified:   helm-chart/renku/values.yaml## Default values for renku.
+## Default values for renku.
 ## This is a YAML-formatted file.
 ## Declare variables to be passed into your templates.
 
