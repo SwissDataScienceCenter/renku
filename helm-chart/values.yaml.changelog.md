@@ -6,7 +6,11 @@ Please follow this convention when adding a new row
 * `<type: NEW|EDIT|DELETE> - *<resource name>*: <details>`
 
 ----
-## Unreleased (ui 1.0.0)
+## Unreleased (Renku 0.9.3?)
+* NEW - *uiserver* has been added with the required values for the ui-server component.
+
+
+## Upgrading to Renku 0.9.0
 * NEW - *ui.homepage* has been added for customizing the content on the RenkuLab home page. See the values.yml file for more detailed documentation.
 
 

@@ -624,6 +624,25 @@ core:
     ## Default clone depth
     # projectCloneDepth: 1
 
+## Configuration for renku-ui-server
+uiserver:
+  serverData: {}
+    ## server data to correctly build the path and the routes
+    # url: https://url.uiserver.fake
+    # port: 8080
+    # prefix: /ui-server
+  gateway: {}
+    ## details to contact the gateway to redirect after the keycloak authentication is finished
+    # url: https://url.gateway.fake
+    # loginSuffix: /auth/login
+    # logoutSuffix: /auth/logout
+  authentication: {}
+    ## keycloak configration data for the Renku realm
+    # url: https://url.keycloak.fake/auth/realms/Renku
+    # id: renku
+    # secret: 1234abcd # do not provide any value here to use the global gateway client secret
+    # expirationTolerance: 10
+
 ## Configuration for the Swagger-UI available at <renku-domain>/swagger
 swagger:
   enabled: true
