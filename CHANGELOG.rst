@@ -1,5 +1,37 @@
 .. _changelog:
 
+0.9.2
+-----
+
+This is a bugfix release that includes various minor fixes: templates and core use a new bugfix CLI version, as well as other fixes for external to SDSC deployments and improved login style.
+
+Improvements
+~~~~~~~~~~~~
+
+* **Sessions**: make enforced limits configurable when using ``emptyDir`` disk space.
+
+Bug Fixes
+~~~~~~~~~
+
+* **Templates**: Renku and custom templates updated to use Renku ``0.16.2`` (should fix `pyshacl and renku conflicting dependencies <https://renku.discourse.group/t/failing-image-build/429/6>`__).
+* **Renku core / CLI**: pin pyshacl to version ``0.17.0.post1``.
+* **Login**: make social identity providers style match internal ones.
+* **UI**: configurable welcome page for external deployments.
+
+Individual components
+~~~~~~~~~~~~~~~~~~~~~
+
+For a full list of improvements and bug fixes in individual components, please check:
+
+* renku-ui:
+  `1.0.1 <https://github.com/SwissDataScienceCenter/renku-ui/releases/1.0.1>`__
+
+* renku-core:
+  `0.16.2 <https://github.com/SwissDataScienceCenter/renku-python/releases/v0.16.2>`__
+
+* renku-notebooks:
+  `0.8.19 <https://github.com/SwissDataScienceCenter/renku-notebooks/releases/0.8.19>`__
+
 0.9.1
 -----
 

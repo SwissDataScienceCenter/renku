@@ -186,7 +186,7 @@ keycloak:
 
   extraInitContainers: |
     - name: theme-provider
-      image: renku/keycloak-theme:2.0.0
+      image: renku/keycloak-theme:2.0.1
       imagePullPolicy: IfNotPresent
       command:
         - sh
@@ -404,10 +404,10 @@ ui:
     custom: true
     repositories:
       - url: https://github.com/SwissDataScienceCenter/renku-project-template
-        ref: 0.2.0
+        ref: 0.2.1
         name: Renku
       - url: https://github.com/SwissDataScienceCenter/contributed-project-templates
-        ref: 0.3.0
+        ref: 0.3.1
         name: Community
 
   ## Configuration for a canary version of the UI
