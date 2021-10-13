@@ -13,7 +13,7 @@ Improvements
 Bug Fixes
 ~~~~~~~~~
 
-* **Templates**: Renku and custom templates updated to use Renku ``0.6.2`` (should fix `pyshacl and renku conflicting dependencies <https://renku.discourse.group/t/failing-image-build/429/6>`__).
+* **Templates**: Renku and custom templates updated to use Renku ``0.16.2`` (should fix `pyshacl and renku conflicting dependencies <https://renku.discourse.group/t/failing-image-build/429/6>`__).
 * **Renku core / CLI**: pin pyshacl to version ``0.17.0.post1``.
 * **Login**: make social identity providers style match internal ones.
 * **UI**: configurable welcome page for external deployments.
