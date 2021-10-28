@@ -35,7 +35,7 @@ use are always up-to-date.
 
 The main components that make up Renkulab are `GitLab <https://gitlab.com>`_ for
 repository management, version control, and continuous-integration pipelines;
-`JupyterHub <https://jupyter.org>`_ for interactive sessions; a Knowledge Graph
+`Jupyter servers <https://jupyter.org>`_ for interactive sessions; a Knowledge Graph
 for search and discovery; a few custom services for all renku-specific tasks
 like handling datasets.
 

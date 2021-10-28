@@ -65,10 +65,6 @@ Define subcharts full names
 {{- printf "%s-%s" .Release.Name "uiserver" | replace "+" "_" | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 
-{{- define "jupyterhub.fullname" -}}
-{{- printf "%s-%s" .Release.Name "jupyterhub" | replace "+" "_" | trunc 63 | trimSuffix "-" -}}
-{{- end -}}
-
 {{- define "notebooks.fullname" -}}
 {{- printf "%s-%s" .Release.Name "notebooks" | replace "+" "_" | trunc 63 | trimSuffix "-" -}}
 {{- end -}}

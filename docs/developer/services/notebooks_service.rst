@@ -6,21 +6,25 @@ Notebooks service
 The notebooks service provides an interactive computing environment for every
 commit in a project's history to each user that has sufficient access rights.
 
-JupyterHub integration
+Amalthea integration
 ----------------------
 
-`JupyterHub <https://jupyterhub.readthedocs.io/en/stable/>`_ is a multi-user
-server for spawning interactive `Jupyter notebooks <https://jupyter-
-notebook.readthedocs.io/en/stable/>`_. Renku uses JupyterHub to manage
+`Amalthea <https://github.com/SwissDataScienceCenter/amalthea>`_ is a
+k8s operator for spawning interactive `Jupyter notebooks <https://jupyter-
+notebook.readthedocs.io/en/stable/>`_. Renku uses Amalthea to manage
 sessions and the ``notebooks-service`` extends the standard
-JupyterHub functionality by providing tight integration with GitLab.
+Amalthea functionality by providing tight integration with GitLab.
 
-The notebooks are provided by the JupyterHub server. A new "named" server is
+The notebooks are provided by the Jupyter Server. A new "named" server is
 spawned for every unique request. A notebook server launch is initiated by
-accessing the
-``<PLATFORM_URL>/<JUPYTERHUB_PREFIX>/services/notebooks/<namespace>/<project-
-name>/<commit-sha>`` URL. This means that two users collaborating on a project
-use the same URL, but each will receive their own notebook server.
+posting a request to the ``<PLATFORM_URL>/api/notebooks/servers`` URL with the.
+The request needs to contain information about the project, commit, Docker image
+and resources that are required by the specific server. 
+In addition, if two or more users collaborating on a project
+use the same URL with the same data passed in the request, 
+each will receive their own notebook server.
+
+https://dev.renku.ch/
 
 By default, a Renku project will include a ``.gitlab-ci.yml`` file that
 contains an ``image_build`` stage which creates an image for every push (see the

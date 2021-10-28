@@ -1,11 +1,11 @@
-.. _running_on_minikube:
+.. _running_on_kind:
 
 Running the platform
 ====================
 
 
 This page describes how to deploy the Renku platform on
-`minikube <https://github.com/kubernetes/minikube>`_.
+`kind <https://kind.sigs.k8s.io/>`_.
 Running GitLab (which is a part of Renku) is quite resource
 intensive. For this reason we describe a setup which excludes
 GitLab from the Renku deployment and instead uses a GitLab
@@ -33,13 +33,10 @@ You will need the following tools installed on your machine:
    python 3.6+ <python_setup>
    pipenv <https://github.com/pypa/pipenv>
    docker <https://www.docker.com/>
-   minikube <https://github.com/kubernetes/minikube>
+   kind <https://kind.sigs.k8s.io/>
    kubectl <https://kubernetes.io/docs/tasks/tools/install-kubectl/>
    helm 2 (>=2.9.1) <https://helm.sh/docs/intro/install/>
    jq <https://stedolan.github.io/jq/>
-
-For OS X users, we also recommend to install the
-`hyperkit vm driver for minikube <https://github.com/kubernetes/minikube/blob/master/docs/drivers.md#hyperkit-driver>`_.
 
 
 Clone the repo
@@ -62,52 +59,53 @@ all the necessary python dependencies:
     $ pipenv install --dev
 
 
-Start minikube
-^^^^^^^^^^^^^^
-Next we start minikube. Don't forget to specify the version with the
-`--kubernetes-version` flag to avoid incompatibilities with the most recent
-kubernetes versions.
-
-**Tip**: For OS X users we recommend using the hyperkit vm driver by adding the
-`--vm-driver-hyperkit` flag to the command.
-For Linux users, installing VirtualBox as hypervisor is the simplest option.
-For other solutions, please refer to the
-`installing minikube docs <https://kubernetes.io/docs/tasks/tools/install-minikube/#install-a-hypervisor>`_.
+Start kind
+^^^^^^^^^^
+Next we start kind. We make it so that ports 8080 and 8443 on the 
+host machine are forward respectively to port 80 and 443 to the cluster.
+This will allow you to access renku.
 
 .. code-block:: console
 
-    $ minikube start --memory 6144 --kubernetes-version=1.14.8
+    $ cat <<EOF | kind create cluster --name kind --config=-
+    kind: Cluster
+    apiVersion: kind.x-k8s.io/v1alpha4
+    nodes:
+    - role: control-plane
+      kubeadmConfigPatches:
+      - |
+        kind: InitConfiguration
+        nodeRegistration:
+          kubeletExtraArgs:
+            node-labels: "ingress-ready=true"
+      extraPortMappings:
+      - containerPort: 80
+        hostPort: 8080
+        protocol: TCP
+    EOF
 
-Once minikube has started, make sure you can access it by running:
+Once kind has started, make sure you can access it by running:
 
 .. code-block:: console
 
     $ kubectl get node
-    NAME       STATUS    ROLES     AGE       VERSION
-    minikube   Ready     master    3s        v1.14.0
-
-**Notice**: If minikube did not start successfully issue
-``minikube delete`` before next ``minikube start``.
-
-Once minikube has started, issue the following command (this will
-configure your docker CLI to communicate with the docker daemon
-running in your minikube virtual machine).
-
-.. code-block:: console
-
-    $ eval $(minikube docker-env)
+    NAME                 STATUS   ROLES                  AGE   VERSION
+    kind-control-plane   Ready    control-plane,master   43s   v1.21.1
 
 
 Deploy the NGINX ingress controller
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 We need an ingress controller to expose HTTP and HTTPS routes from outside the cluster to services within the cluster.
-We use `nginx ingress <https://github.com/kubernetes/ingress-nginx>`_.
+We use `nginx ingress <https://github.com/kubernetes/ingress-nginx>`_. Deploy the ingress controller and then
+run the wait command below to make sure it becomes fully available before proceeding further.
 
 .. code-block:: console
 
-    $ helm upgrade --install nginx-ingress --namespace kube-system \
-        --set controller.hostNetwork=true \
-        stable/nginx-ingress
+    $ kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/main/deploy/static/provider/kind/deploy.yaml
+    $ kubectl wait --namespace ingress-nginx \
+        --for=condition=ready pod \
+        --selector=app.kubernetes.io/component=controller \
+        --timeout=300s
 
 
 Build and pull all necessary charts
@@ -115,28 +113,23 @@ Build and pull all necessary charts
 
 .. code-block:: console
 
-    $ helm repo add jupyterhub https://jupyterhub.github.io/helm-chart
     $ helm repo add renku https://swissdatasciencecenter.github.io/helm-charts
-    $ pipenv run chartpress --tag latest
-    $ helm dep build renku
+    $ pipenv run chartpress
+    $ helm dep update renku
 
 
 Set up localhost.run
 ^^^^^^^^^^^^^^^^^^^^
 We use a service called `localhost.run <http://localhost.run>`_ to
-expose the platform by establishing an ssh tunnel.
+expose the platform by establishing an ssh tunnel. 
 
 .. code-block:: console
 
-    $ ssh -R 80:$(minikube ip):80 ssh.localhost.run
+    $ ssh -R 80:localhost:8080 ssh.localhost.run
 
 This will start the tunnel and display your hostname of the style
-``http://<some-name>.localhost.run``. Copy it and export it (without
-the ``http(s)://``) into ``RENKU_DOMAIN``.
-
-.. code-block:: console
-
-    $ export RENKU_DOMAIN=<some-name>.localhost.run
+``http://<some-name>.lhr.domains``. In subsequent steps this domain
+will be added to the configuration for Renku.
 
 **Note:** When you stop and restart the tunnel without waiting
 for too long, you should receive the same subdomain that you have
@@ -144,6 +137,12 @@ previously had. If this is not the case you will have to reconfigure
 the ``gitlab.com`` client application and recreate your Renku deployment
 (see next steps).
 
+**Note:** The second port number in the ``ssh`` command above (i.e. ``8080``) should
+be the same as the port number you connected on your host machine to the kind cluster.
+If you use a different port number in the command when you create your kind cluster then
+make sure you use that port number here as well. Using a commond port on the host side
+like ``80`` is not reccommended because it can cause issues with the routing between 
+Renku, the host and the kind cluster.
 
 Set up the gitlab client application
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -154,15 +153,13 @@ following settings:
 
 #. Name: renku-local
 #. Scopes: all except :code:`sudo`
-#. Redirect URI (use the value of the previously exported
-   environment variable $RENKU_DOMAIN for <renku-domain>):
+#. Redirect URIs (for ``<renku-domain>`` use the value provided by the ``localhost.run`` service,
+   from earlier - this domain usually has a format like ``<some-name>.lhr.domains``):
 
   .. code-block:: console
 
-    http://<renku-domain>/auth/realms/Renku/broker/gitlab/endpoint
-    http://<renku-domain>/api/auth/gitlab/token
-    http://<renku-domain>/api/auth/jupyterhub/token
-    http://<renku-domain>/jupyterhub/hub/oauth_callback
+    https://<renku-domain>/login/redirect/gitlab
+    https://<renku-domain>/api/auth/gitlab/token
 
 Copy the ``Application Id`` and the ``Secret`` that appear at the end of
 this procedure.
@@ -199,19 +196,17 @@ provide the ``Application Id`` and the
 ``Secret`` from the GitLab client application created in the previous step.
 
 
-Deploy Renku to minikube
-^^^^^^^^^^^^^^^^^^^^^^^^
+Deploy Renku to kind
+^^^^^^^^^^^^^^^^^^^^^
 
 Start the renku platform using helm:
 
 .. code-block:: console
 
+  $ kubectl create namespace renku
   $ helm upgrade renku --install --namespace renku ./renku \
     -f minikube-values.yaml -f example-configurations/external-gitlab-values.yaml \
-    --timeout 3600 \
-    --set global.renku.domain=$RENKU_DOMAIN \
-    --set notebooks.jupyterhub.hub.services.gateway.oauth_redirect_uri=http://$RENKU_DOMAIN/api/auth/jupyterhub/token \
-    --set notebooks.jupyterhub.auth.gitlab.callbackUrl=http://$RENKU_DOMAIN/jupyterhub/hub/oauth_callback
+    --timeout 3600s
 
 Executing this command for the first time can easily take a long time depending
 on your internet connection speed (even 30+ minutes) as all the necessary docker
@@ -224,13 +219,13 @@ as expected.
 This would be a good moment to grab yourself a coffee...
 
 Once the above command has returned you should be able to access the platform using
-your browser under ``http://<some-name>.localhost.run``.
+your browser under ``http://<some-name>.lhr.domains``.
 
 Manage Keycloak
 ^^^^^^^^^^^^^^^
 `Keycloak <http://www.keycloak.org/documentation.html>`_ is an identity
 management solution which is deployed as a part of Renku. You can access
-the admin interface at ``http://<some-name>.localhost.run/auth``. The
+the admin interface at ``http://<some-name>.lhr.domains/auth``. The
 admin username is "admin" and the admin password can be looked up in
 the corresponding kubernetes secret:
 
