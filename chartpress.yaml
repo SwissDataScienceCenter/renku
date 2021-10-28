@@ -19,6 +19,7 @@ charts:
       - helm-chart
       - acceptance-tests
       - scripts/init-realm
+      - certificates
     images:
       tests:
         buildArgs:
@@ -34,6 +35,12 @@ charts:
         valuesPath: keycloak.initRealm.image
         paths:
           - scripts/init-realm
+      certificates:
+        contextPath: certificates
+        dockerfilePath: certificates/Dockerfile
+        valuesPath: global.certificates.image
+        paths:
+          - certificates
   - name: helm-chart/certificates
     resetTag: latest
     imagePrefix: renku/

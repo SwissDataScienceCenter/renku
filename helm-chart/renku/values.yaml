@@ -79,6 +79,19 @@ global:
     ## a secondary Jupyterhub instance
     enabled: false
 
+  ## Specify a secret that containes the certificate
+  ## if you would like to use a custom CA. The key for the secret
+  ## should have the .crt extension otherwise it is ignored. The
+  ## keys across all secrets are mounted as files in one location so
+  ## the keys across all secrets have to be unique. In addition to the 
+  ## changes here modifications need to be made in the keycloak section below
+  certificates:
+    image:
+      repository: renku/certificates
+      tag: 'latest'
+    customCAs:
+      - secret:
+
 ## Ingress configuration
 ## See: https://kubernetes.io/docs/concepts/services-networking/ingress/
 ingress:
@@ -88,7 +101,6 @@ ingress:
   ## Annotations for the created ingress
   annotations:
     ## The ingress class
-    cert-manager.io/cluster-issuer: letsencrypt-production
     kubernetes.io/ingress.class: nginx
     nginx.ingress.kubernetes.io/proxy-body-size: '0' # Adjust to a reasonable value for production to avoid DOS attacks.
     nginx.ingress.kubernetes.io/proxy-request-buffering: 'off' # Needed if GitLab is behind this ingress
@@ -123,7 +135,6 @@ keycloak:
     - name:  PROXY_ADDRESS_FORWARDING
       value: "true"
 
-
   # The following environment variables are provided to keycloak
   # as extraEnvFrom secrets.
 
@@ -145,11 +156,26 @@ keycloak:
   extraVolumeMounts: |
     - name: theme
       mountPath: /opt/jboss/keycloak/themes/renku-theme
+    - name: etc-ssl-certs
+      mountPath: /etc/pki/ca-trust/extracted
+      readOnly: true
 
   extraVolumes: |
     - name: theme
       emptyDir: {}
-
+    - name: etc-ssl-certs
+      emptyDir:
+        medium: "Memory"
+    {{- if .Values.global.certificates.customCAs }}
+    - name: custom-ca-certs
+      projected:
+        defaultMode: 0777
+        sources:
+        {{- range $customCA := .Values.global.certificates.customCAs }}
+          - secret:
+              name: {{ $customCA.secret }}
+        {{- end -}}
+    {{- end -}}
 
   ## Create a demo user in keycloak? Note that the password for the demo
   ## user must be queried from kubernetes (see the rendered NOTES.txt
@@ -184,7 +210,22 @@ keycloak:
       volumeMounts:
         - name: theme
           mountPath: /theme
-
+    - name: init-certificates
+      securityContext:
+        allowPrivilegeEscalation: false
+        runAsGroup: 65534
+        runAsUser: 65534
+      image: "registry.access.redhat.com/ubi8/ubi:8.4"
+      command: ["sh", "-c"]
+      args: ["mkdir -p /etc/pki/ca-trust/extracted/openssl/ /etc/pki/ca-trust/extracted/pem/ /etc/pki/ca-trust/extracted/java/ /etc/pki/ca-trust/extracted/edk2 && update-ca-trust"]
+      volumeMounts:
+        - name: etc-ssl-certs
+          mountPath: /etc/pki/ca-trust/extracted
+    {{- if .Values.global.certificates.customCAs }}
+        - name: custom-ca-certs
+          mountPath: /usr/share/pki/ca-trust-source/anchors
+          readOnly: true
+    {{- end -}}
 
   ingress:
     enabled: false
