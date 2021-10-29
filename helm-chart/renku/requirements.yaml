@@ -36,3 +36,7 @@ dependencies:
   version: 9.8.1
   repository: "https://codecentric.github.io/helm-charts"
   condition: keycloak.enabled
+- name: redis
+  version: 10.7.11
+  repository: "https://charts.bitnami.com/bitnami"
+  condition: redis.install
