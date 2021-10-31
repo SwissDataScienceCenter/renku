@@ -3,6 +3,14 @@
 0.9.2
 -----
 
+Improvements
+~~~~~~~~~~~~
+
+* **UI**: more persistent notifications for maintenance or downtime
+
+0.9.2
+-----
+
 This is a bugfix release that includes various minor fixes: templates and core use a new bugfix CLI version, as well as other fixes for external to SDSC deployments and improved login style.
 
 Improvements
