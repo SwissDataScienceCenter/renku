@@ -241,35 +241,3 @@ suppress_warnings = ["app.add_directive"]
 
 copybutton_prompt_text = r">>> |\.\.\. |\$ |In \[\d*\]: | {2,5}\.\.\.: | {5,8}: "
 copybutton_prompt_is_regexp = True
-
-# sidebar
-on_rtd = os.environ.get("READTHEDOCS", None) == "True"
-renku_python_version = version
-
-if renku_python_version not in ["stable", "latest"]:
-    # tag build, update respective renku-python as well
-    with open("../helm-chart/renku/requirements.yaml", "r") as f:
-        requirements = yaml.load(f)
-    renku_core_entry = next(
-        (d for d in requirements["dependencies"] if d["name"] == "renku-core"), None
-    )
-    renku_python_version = "v{}".format(renku_core_entry["version"])
-
-    # retrigger build of renku-python docs so they point to the correct version
-    token = os.environ.get("RTD_TOKEN")
-
-    r = requests.post(
-        f"https://readthedocs.org/api/v3/projects/renku-python/versions/{renku_python_version}/builds/",
-        headers={"Authorization": f"Token {token}"},
-    )
-    r.raise_for_status()
-
-intersphinx_mapping = {
-    "python": ("https://docs.python.org/", None),
-}
-
-# -- Custom Document processing ----------------------------------------------
-
-from gensidebar import generate_sidebar
-
-generate_sidebar(on_rtd, renku_python_version, "renku")
