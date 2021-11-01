@@ -3,4 +3,9 @@
 Reference
 =========
 
-.. include:: _sidebar.rst.inc
+.. toctree::
+    :maxdepth: 2
+
+    Services <services/index>
+    Templates <templates>
+    Renku CLI commands <../renku-python/docs/commands>
