@@ -133,6 +133,7 @@ deployment:
 
 * ``default_url [string]``: URL to use when starting a new session (``/lab``, ``/tree``, ...)
 * ``cpu_request [float]``: CPUs quota (``0.5``, ``1``, ...)
+* ``disk_request [string]``: disk storage quota (``1G``, ``4G``, ...)
 * ``mem_request [string]``: memory quota (``1G``, ``2G``, ...)
 * ``gpu_request [int]``: GPU quota (``0``, ``1``, ...)
 * ``lfs_auto_fetch [bool]``: whether to automatically fetch lfs files or not
