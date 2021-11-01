@@ -46,7 +46,7 @@ global:
     gitlabClientSecret:
   uiserver:
     ## The client secret for the renku-ui client application registered in keycloak.
-    clientSecret:
+    clientSecret:  # use `uuidgen -r`
   renku:
     ## Domain name for the deployed instance of renku
     domain: example.local
