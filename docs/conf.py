@@ -18,9 +18,6 @@ import os
 import sys
 from os.path import abspath, join, dirname
 
-import requests
-import yaml
-
 sys.path.insert(0, abspath(join(dirname(__file__))))
 
 # -- General configuration ------------------------------------------------
@@ -40,7 +37,6 @@ extensions = [
     "sphinx.ext.githubpages",
     "sphinx.ext.graphviz",
     "sphinx.ext.ifconfig",
-    "sphinx.ext.intersphinx",
     "sphinx.ext.todo",
     "sphinx.ext.viewcode",
     "sphinxcontrib.spelling",
@@ -223,9 +219,6 @@ texinfo_documents = [
         "Miscellaneous",
     )
 ]
-
-# Example configuration for intersphinx: refer to the Python standard library.
-intersphinx_mapping = {"python": ("https://docs.python.org/3/", None)}
 
 # spellchecking config
 spelling_show_suggestions = True
