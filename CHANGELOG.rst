@@ -13,7 +13,7 @@ Improvements
 Bug Fixes
 ~~~~~~~~~
 
-* **Templates**: Renku and custom templates updated to use Renku ``0.6.2`` (should fix `pyshacl and renku conflicting dependencies <https://renku.discourse.group/t/failing-image-build/429/6>`__).
+* **Templates**: Renku and custom templates updated to use Renku ``0.16.2`` (should fix `pyshacl and renku conflicting dependencies <https://renku.discourse.group/t/failing-image-build/429/6>`__).
 * **Renku core / CLI**: pin pyshacl to version ``0.17.0.post1``.
 * **Login**: make social identity providers style match internal ones.
 * **UI**: configurable welcome page for external deployments.
@@ -29,8 +29,12 @@ For a full list of improvements and bug fixes in individual components, please c
 * renku-core:
   `0.16.2 <https://github.com/SwissDataScienceCenter/renku-python/releases/v0.16.2>`__
 
-* renku-notebooks:
+* renku-notebooks: 
+  `0.8.20 <https://github.com/SwissDataScienceCenter/renku-notebooks/releases/0.8.20>`__ and
   `0.8.19 <https://github.com/SwissDataScienceCenter/renku-notebooks/releases/0.8.19>`__
+
+* renku-graph:
+  `1.37.5 <https://github.com/SwissDataScienceCenter/renku-graph/releases/1.37.5>`__
 
 0.9.1
 -----
