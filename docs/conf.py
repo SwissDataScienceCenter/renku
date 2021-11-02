@@ -17,6 +17,7 @@ import glob
 import os
 import sys
 from os.path import abspath, join, dirname
+from pathlib import Path
 
 sys.path.insert(0, abspath(join(dirname(__file__))))
 
@@ -99,7 +100,9 @@ exclude_patterns += [
     str(p) for p in glob.glob("renku-python/*") if p not in {"renku-python/docs"}
 ]
 
-exclude_patterns += ["renku-python/docs/index.rst"]
+exclude_patterns += [
+    str(p) for p in Path("renku-python").rglob("*.rst") if p not in {Path("renku-python/docs/reference/commands.rst")}
+]
 
 # The name of the Pygments (syntax highlighting) style to use.
 # pygments_style = 'sphinx'

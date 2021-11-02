@@ -27,6 +27,7 @@ checksums
 ci
 CI
 circumventable
+cli
 CLI
 conda
 config
