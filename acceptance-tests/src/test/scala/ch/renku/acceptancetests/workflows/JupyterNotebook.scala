@@ -18,6 +18,7 @@
 
 package ch.renku.acceptancetests.workflows
 
+import ch.renku.acceptancetests.model.CliVersion
 import ch.renku.acceptancetests.model.datasets.DatasetName
 import ch.renku.acceptancetests.pages.JupyterLabPage
 import ch.renku.acceptancetests.tooling.{AcceptanceSpec, KnowledgeGraphApi}
@@ -27,12 +28,24 @@ import scala.concurrent.duration._
 trait JupyterNotebook extends Datasets with Project with KnowledgeGraphApi {
   self: AcceptanceSpec =>
 
+  def `update renku to the correct verion`(jupyterLabPage: JupyterLabPage): Unit = {
+    import jupyterLabPage.terminal
+    val versionToInstall = cliVersion match {
+      case version: CliVersion.ReleasedVersion => s"renku==$version"
+      case version: CliVersion.NonReleasedVersion =>
+        s"git+https://github.com/SwissDataScienceCenter/renku-python.git@${version.commitSha}"
+    }
+    terminal %> s"pip install $versionToInstall --force" sleep (1 minute)
+
+    terminal %> s"renku migrate" sleep (2 seconds)
+  }
+
   def `create a dataset`(jupyterLabPage: JupyterLabPage, datasetName: DatasetName): Unit = {
     import jupyterLabPage.terminal
 
     terminal %> s"renku dataset create '$datasetName'" sleep (2 seconds)
-    And("pushes it")
-    terminal %> "git push" sleep (30 seconds)
+    And("saves it")
+    terminal %> "renku save" sleep (30 seconds)
   }
 
   def `verify user can work with Jupyter notebook`: Unit = {
@@ -40,6 +53,10 @@ trait JupyterNotebook extends Datasets with Project with KnowledgeGraphApi {
 
     When("the user clicks on the Terminal icon")
     click on jupyterLabPage.terminalIcon sleep (2 seconds)
+
+    And("install the correct version of renku")
+    `update renku to the correct verion`(jupyterLabPage)
+
     val datasetName = DatasetName.generate
     And("the user creates a dataset")
     `create a dataset`(jupyterLabPage, datasetName)
