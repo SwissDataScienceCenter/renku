@@ -99,6 +99,8 @@ exclude_patterns += [
     str(p) for p in glob.glob("renku-python/*") if p not in {"renku-python/docs"}
 ]
 
+exclude_patterns += ["renku-python/docs/index.rst"]
+
 # The name of the Pygments (syntax highlighting) style to use.
 # pygments_style = 'sphinx'
 
