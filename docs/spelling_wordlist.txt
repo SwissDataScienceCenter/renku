@@ -122,6 +122,7 @@ preprocessed
 preprocessing
 programmatically
 py
+pyshacl
 rdflib
 readme
 rebase
