@@ -14,7 +14,7 @@ The Renku Project Documentation
    :maxdepth: 2
 
    About Renku <introduction/index>
-   Getting Started <getting-started>
+   Tutorials <tutorials>
    How-to Guides <how-to-guides/index>
    Topic guides <topic-guides/index>
    Reference <reference/index>
