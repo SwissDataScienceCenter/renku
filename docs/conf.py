@@ -231,6 +231,11 @@ graphviz_output_format = "svg"
 suppress_warnings = ["app.add_directive"]
 
 # copybutton config
-
 copybutton_prompt_text = r">>> |\.\.\. |\$ |In \[\d*\]: | {2,5}\.\.\.: | {5,8}: "
 copybutton_prompt_is_regexp = True
+
+# configure mocking for renku-python
+autoclass_content = "both"
+autodoc_mock_imports = ["persistent", "ZODB"]
+autodoc_typehints = "none"
+autodoc_typehints_description_target = "documented"
