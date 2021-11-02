@@ -6,7 +6,7 @@ Please follow this convention when adding a new row
 * `<type: NEW|EDIT|DELETE> - *<resource name>*: <details>`
 
 ----
-## Unreleased (Renku 0.9.3?)
+## Unreleased (Renku 0.9.4?)
 * NEW - *uiserver* has been added with the required values for the ui-server component.
 * NEW - *global.uiserver.clientSecret* has been added when introducing a new "renku-ui" client application in keycloak. Generate through `openssl rand -hex 32`.
 
