@@ -33,3 +33,15 @@ The Renku Project Documentation
 
 .. include:: ../README.rst
   :start-after: renku:
+  :end-before: documentation:
+
+Documentation
+-------------
+
+* :ref:`tutorials`: how to get your Renku work off the ground
+* :ref:`topic-guides`: discussions about concepts central to Renku
+* :ref:`how_to_guides`: recipes for common use-cases with Renku for users and administrators
+* :ref:`reference`: syntax, structure, architecture, etc.
+
+.. include:: ../README.rst
+  :start-after: contributing:
