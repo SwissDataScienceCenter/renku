@@ -3,7 +3,7 @@
 0.10.0
 ------
 
-This release includes the new user session controller in replacement of Jupyterhub, which will incur in breaking changes (notably, all user sessions will need to be closed) when upgrading to it.
+This release includes a new user session controller replacing Jupyterhub. The new controller is not compatible with user sessions created by Jupyterhub, therefore all user sessions need to be terminated prior to upgrading to 0.10.0.
 
 Improvements
 ~~~~~~~~~~~~
@@ -32,7 +32,7 @@ For a full list of improvements and bug fixes in individual components, please c
 Upgrading from 0.9.3
 ~~~~~~~~~~~~~~~~~~~~
 
-**BREAKING CHANGES!!** The admin should plan and warn ahead of time the users about their sessions being terminated when doing the upgrade. The new notification feature introduced in `0.9.3` can help getting the message more loudly.
+**BREAKING CHANGES!!** The admin should plan and warn users ahead of time that their sessions will be terminated when doing the upgrade. The new "Loud" statuspage component introduced in `0.9.3` can help get  the message across. 
 
 * The use of Amalthea and removal of Jupyterhub will require some changes. Namely:
   - All references to Jupyterhub in the ``values.yaml`` have been removed and are not required anymore.
