@@ -124,7 +124,7 @@ The Renku project consists of several sub-repositories:
   a lightweight service for handling interactive notebooks through Jupyter servers
   and a k8s operator
 
-- `renku-jupyter <https://github.com/SwissDataScienceCenter/renkulab-docker>`_:
+- `renkulab-docker <https://github.com/SwissDataScienceCenter/renkulab-docker>`_:
   base images for interactive sessions
 
 - `renku-python <https://github.com/SwissDataScienceCenter/renku-python>`_:

@@ -121,7 +121,7 @@ Build and pull all necessary charts
 Set up localhost.run
 ^^^^^^^^^^^^^^^^^^^^
 We use a service called `localhost.run <http://localhost.run>`_ to
-expose the platform by establishing an ssh tunnel. 
+expose the platform by establishing an ssh tunnel.
 
 .. code-block:: console
 
