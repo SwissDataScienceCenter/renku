@@ -128,9 +128,13 @@ The Renku project consists of several sub-repositories:
   Knowledge Graph services
 
 - `renku-notebooks <https://github.com/SwissDataScienceCenter/renku-notebooks>`_:
-  a lightweight service for handling interactive notebooks through JupyterHub
+  a lightweight service for handling interactive notebooks through Jupyter servers
+  and a k8s operator
 
-- `renku-jupyter <https://github.com/SwissDataScienceCenter/renku-jupyter>`_:
+- `amalthea <https://github.com/SwissDataScienceCenter/amalthea>`_: k8s operator for
+  Jupyter servers.
+
+- `renkulab-docker <https://github.com/SwissDataScienceCenter/renkulab-docker>`_:
   base images for interactive sessions
 
 - `renku-python <https://github.com/SwissDataScienceCenter/renku-python>`_:

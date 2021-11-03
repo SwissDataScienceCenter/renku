@@ -7,7 +7,7 @@ GitLab is a component of the Renku platform. Running it is quite resource-intens
 For development purposes or if you already have an existing GitLab instance running,
 you might want to use this instance as a backend service for Renku.
 
-In the section about :ref:`running Renku locally <running_on_minikube>` we give a
+In the section about :ref:`running Renku locally <running_on_kind>` we give a
 detailed description of how to bring up a local version of the platform using `<gitlab.com>`_
 while also using ``gitlab.com`` as an identity provider. Note that in Renku deployments
 which include their own GitLab, the dependency is the other way around, meaning

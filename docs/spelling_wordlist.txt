@@ -1,5 +1,6 @@
 acyclic
 admin
+Amalthea
 analytics
 app
 argv
