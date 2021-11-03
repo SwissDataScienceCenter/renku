@@ -140,8 +140,8 @@ the ``gitlab.com`` client application and recreate your Renku deployment
 **Note:** The second port number in the ``ssh`` command above (i.e. ``8080``) should
 be the same as the port number you connected on your host machine to the kind cluster.
 If you use a different port number in the command when you create your kind cluster then
-make sure you use that port number here as well. Using a commond port on the host side
-like ``80`` is not reccommended because it can cause issues with the routing between 
+make sure you use that port number here as well. Using a common port on the host side
+like ``80`` is not recommended because it can cause issues with the routing between 
 Renku, the host and the kind cluster.
 
 Set up the gitlab client application
