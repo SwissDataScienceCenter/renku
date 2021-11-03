@@ -18,7 +18,6 @@
 
 package ch.renku.acceptancetests.workflows
 
-import ch.renku.acceptancetests.model.CliVersion
 import ch.renku.acceptancetests.model.datasets.DatasetName
 import ch.renku.acceptancetests.pages.JupyterLabPage
 import ch.renku.acceptancetests.tooling.{AcceptanceSpec, KnowledgeGraphApi}
@@ -28,18 +27,6 @@ import scala.concurrent.duration._
 trait JupyterNotebook extends Datasets with Project with KnowledgeGraphApi {
   self: AcceptanceSpec =>
 
-  def `update renku to the correct verion`(jupyterLabPage: JupyterLabPage): Unit = {
-    import jupyterLabPage.terminal
-    val versionToInstall = cliVersion match {
-      case version: CliVersion.ReleasedVersion => s"renku==$version"
-      case version: CliVersion.NonReleasedVersion =>
-        s"git+https://github.com/SwissDataScienceCenter/renku-python.git@${version.commitSha}"
-    }
-    terminal %> s"pip install $versionToInstall --force" sleep (1 minute)
-
-    terminal %> s"renku migrate" sleep (2 seconds)
-  }
-
   def `create a dataset`(jupyterLabPage: JupyterLabPage, datasetName: DatasetName): Unit = {
     import jupyterLabPage.terminal
 
@@ -48,14 +35,33 @@ trait JupyterNotebook extends Datasets with Project with KnowledgeGraphApi {
     terminal %> "renku save" sleep (30 seconds)
   }
 
+  def `verify the project is up to date`: Unit = {
+    When("the user goes to the project overview")
+    click on projectPage.Overview.tab
+
+    And("goes to the status tab")
+    click on projectPage.Overview.statusLink
+
+    And("sees the current project version")
+    verify userCanSee projectPage.Overview.currentProjectVersion(matches = cliVersion)
+
+    projectPage.Overview.maybeUpdateButton match {
+      case Some(updateButton) =>
+        Then("the user should update the project")
+        click on updateButton
+        Then("Project is up to date")
+        verify userCanSee projectPage.Overview.currentProjectIsUpToDate
+      case None =>
+        Then("Project is up to date")
+        verify userCanSee projectPage.Overview.currentProjectIsUpToDate
+    }
+  }
+
   def `verify user can work with Jupyter notebook`: Unit = {
     val jupyterLabPage = `launch a session`
 
     When("the user clicks on the Terminal icon")
     click on jupyterLabPage.terminalIcon sleep (2 seconds)
-
-    And("install the correct version of renku")
-    `update renku to the correct verion`(jupyterLabPage)
 
     val datasetName = DatasetName.generate
     And("the user creates a dataset")
