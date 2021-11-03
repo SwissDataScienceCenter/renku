@@ -47,4 +47,4 @@ log-in process. While there is currently no Renku backend service which uses the
 Keycloak access token for authorizing access to its resources, this is likely
 to change in the future.
 
-Note that the access tokens issued by JupyterHub and GitLab are **not** JWTs.
+Note that the access tokens issued by GitLab are **not** JWTs.
