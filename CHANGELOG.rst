@@ -1,5 +1,56 @@
 .. _changelog:
 
+0.10.0
+------
+
+This release includes the new user session controller in replacement of Jupyterhub, which will incur in breaking changes (notably, all user sessions will need to be closed) when upgrading to it.
+
+Improvements
+~~~~~~~~~~~~
+
+* **Documentation**: updated documentation on proper teaching etiquette and steps to use renkulab for teaching.
+* **User sessions**: use `Amalthea <https://github.com/SwissDataScienceCenter/amalthea>`__ to control sessions through a k8s operator.
+
+Bug fixes
+~~~~~~~~~~
+
+* **Authentication**: log out from GitLab when logging out from Renku.
+* **Authentication**: fix Keycloak token authentication.
+
+Individual components
+~~~~~~~~~~~~~~~~~~~~~
+
+For a full list of improvements and bug fixes in individual components, please check:
+
+* renku-notebooks:
+  `1.0.0 <https://github.com/SwissDataScienceCenter/renku-notebooks/releases/1.0.0>`__
+
+* renku-gateway:
+  `0.10.1 <https://github.com/SwissDataScienceCenter/renku-graph/releases/0.10.1>`__ and
+  `0.10.0 <https://github.com/SwissDataScienceCenter/renku-graph/releases/0.10.0>`__
+
+Upgrading from 0.9.3
+~~~~~~~~~~~~~~~~~~~~
+
+**BREAKING CHANGES!!** The admin should plan and warn ahead of time the users about their sessions being terminated when doing the upgrade. The new notification feature introduced in `0.9.3` can help getting the message more loudly.
+
+* The use of Amalthea and removal of Jupyterhub will require some changes. Namely:
+  - All references to Jupyterhub in the ``values.yaml`` have been removed and are not required anymore.
+  - Amalthea is installed from a separate helm chart which is now a dependency of the ``renku-notebooks`` helm chart.
+  - Several new sections have been added to the ``values.yaml`` file which are required by Amalthea. Please refer to the renku values file for more details.
+* Some older images with Rstudio will open Rstudio in a directory one level above the repository. This can be fixed by upgrading to a newer version of the base image in the Dockerfile in the relevant renku project.
+* This version is not backward compatible with the user sessions from older versions. During the deployment the admin should clean up all remaining user sessions and then deploy this version.
+
+0.9.3
+-----
+
+This is a very minor release that allows messages about maintenance and downtime to be displayed more prominently in the UI. This way the interruptions from upcoming releases can be more effectively communicated to users.
+
+Improvements
+~~~~~~~~~~~~
+
+* **UI**: possibility to make maintenance/downtime notifications more prominently shown. To use this feature, the admin needs to create a new statuspage component called Loud and thick when wanting the message to appear more prominently.
+
 0.9.2
 -----
 
@@ -29,7 +80,7 @@ For a full list of improvements and bug fixes in individual components, please c
 * renku-core:
   `0.16.2 <https://github.com/SwissDataScienceCenter/renku-python/releases/v0.16.2>`__
 
-* renku-notebooks: 
+* renku-notebooks:
   `0.8.20 <https://github.com/SwissDataScienceCenter/renku-notebooks/releases/0.8.20>`__ and
   `0.8.19 <https://github.com/SwissDataScienceCenter/renku-notebooks/releases/0.8.19>`__
 
