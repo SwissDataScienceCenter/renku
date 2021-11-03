@@ -3,7 +3,7 @@
 0.10.0
 ------
 
-This release includes a new user session controller replacing Jupyterhub. The new controller is not compatible with user sessions created by Jupyterhub, therefore all user sessions need to be terminated prior to upgrading to 0.10.0.
+This release includes a new user session controller replacing Jupyterhub. The new controller is not compatible with user sessions created by Jupyterhub, therefore all user sessions need to be terminated prior to upgrading to ``0.10.0``.
 
 Improvements
 ~~~~~~~~~~~~
@@ -32,7 +32,7 @@ For a full list of improvements and bug fixes in individual components, please c
 Upgrading from 0.9.3
 ~~~~~~~~~~~~~~~~~~~~
 
-**BREAKING CHANGES!!** The admin should plan and warn users ahead of time that their sessions will be terminated when doing the upgrade. The new "Loud" statuspage component introduced in `0.9.3` can help get  the message across. 
+**BREAKING CHANGES!!** The admin should plan and warn users ahead of time that their sessions will be terminated when doing the upgrade. The new ``Loud`` statuspage component introduced in `0.9.3` can help get  the message across.
 
 * The use of Amalthea and removal of Jupyterhub will require some changes. Namely:
   - All references to Jupyterhub in the ``values.yaml`` have been removed and are not required anymore.
@@ -40,6 +40,7 @@ Upgrading from 0.9.3
   - Several new sections have been added to the ``values.yaml`` file which are required by Amalthea. Please refer to the renku values file for more details.
 * Some older images with Rstudio will open Rstudio in a directory one level above the repository. This can be fixed by upgrading to a newer version of the base image in the Dockerfile in the relevant renku project.
 * This version is not backward compatible with the user sessions from older versions. During the deployment the admin should clean up all remaining user sessions and then deploy this version.
+* Anonymous sessions do not require a separate namespace and renku-notebooks deployment, if enabled in the values file they now run in the same namespace as regular user sessions.
 
 0.9.3
 -----
