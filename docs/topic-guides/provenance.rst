@@ -100,18 +100,27 @@ An example execution would look something like:
 
 .. code-block:: console
 
-    $ renku run python run_analysis.py -i inputs -o outputs
+    $ renku run --name run-analysis -- python run_analysis.py -i inputs -o outputs
 
 Wrapping the execution of ``python run_analysis.py`` with ``renku run`` had
 the following consequences:
 
 1. The command was executed.
-2. If it completed successfully, a `Common Workflow Language (CWL) <https://www.commonwl.org/>`_ tool specification was created, linking this command-line invocation to the inputs and outputs.
-3. Everything was committed to the git repository.
+2. If it completed successfully, a ``Plan`` entry was created with its ``name``
+   set to the name specified with ``--name``. This is a workflow specification
+   allowing the command to be re-executed with potentially modified
+   inputs/outputs in the Renku workflow system. Think of ``Plans`` as recipes
+   for executing workflows.
+3. A ``Run`` entry was created, which is a record of this execution. ``Runs``
+   allow keeping track of what was done in a project and how files were
+   created, ensuring reproducibility of data.
+4. Everything was committed to the git repository.
 
-CWL is an emerging standard for describing scientific workflows. By using this
-standard, we hope to ensure the longevity of results as well as the interoperability
-of provenance information recorded in Renku with other tools and platforms.
+Renku uses its own Knowledge Graph based approach to store metadata about
+workflow executions and recipes (``Runs`` and ``Plans``, respectively). It has
+a plugin system that allows exporting these workflows to various workflow
+languages such as CWL as well as executing them with different workflow
+execution backends.
 
 
 Applying the Provenance
@@ -120,10 +129,11 @@ Applying the Provenance
 In Renku, we want to provide tools that not only record the provenance but also
 give you easy access to its benefits. Once the provenance is recorded, there are
 several ways in which it can become immediately beneficial. The most common
-usage is to **update** results when any of the input data or code
+usage is to **renku update** results when any of the input data or code
 dependencies change. By knowing exactly which results depend on a particular
 input, we can make sure to recompute only the necessary steps and not the
 entire pipeline, potentially avoiding expensive calculations in complex
-settings. For understanding the basic functionality, head to
+settings. In addition, recorded workflows can be executed independently using
+**renku workflow execute**.For understanding the basic functionality, head to
 `renkulab.io <https://renkulab.io>`_ and follow :ref:`first_steps`. See also
 the Renkulab :ref:`knowledge graph<knowledge-graph>` documentation.
