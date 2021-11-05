@@ -6,7 +6,6 @@
 domain_configurations:
   mainURL:                   &mainURL                       [domain]
   baseURL:                   &baseURL                       https://[domain]
-  jupyterhubURL:             &jupyterhubURL                 https://[domain]/jupyterhub
   gatewayURL:                &gatewayURL                    https://[domain]/api
   uiserverURL:               &uiserverURL                   https://[domain]/ui-server
   notebookSessionAuthUrl:    &notebookSessionAuthUrl        https://[domain]/auth/realms/Renku/protocol/openid-connect/auth
@@ -174,7 +173,6 @@ ui:
   baseUrl: *baseURL
   gitlabUrl: *gitlabURL
   uiserverUrl: *uiserverURL
-  jupyterhubUrl: *jupyterhubURL
 #  welcomePage:
 #    text: |
 #      Fill-in what will go in the welcome page of your Renkulab deployment
