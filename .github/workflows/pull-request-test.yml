@@ -27,8 +27,10 @@ jobs:
       - name: install dependencies
         run: |
           sudo apt-get update -y && sudo apt-get install graphviz
-          pip install --upgrade pip pipenv
-          pipenv install --deploy --dev --system
+          git submodule sync
+          git submodule update --init --force docs/renku-python
+          pip install --upgrade pip
+          pip install -r docs/requirements.txt
       - name: test the docs build
         env:
           SIDEBAR: 1
