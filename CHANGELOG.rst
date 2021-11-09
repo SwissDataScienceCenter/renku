@@ -4,7 +4,12 @@
 ------
 
 This is a bugfix release that contains a fix for launching R sessions with our newest component that manages user sessions (Amalthea).
-See `renku-notebooks 1.1.1 <https://github.com/SwissDataScienceCenter/renku-notebooks/releases/tag/1.1.1>__` and `amalthea 0.1.3 <https://github.com/SwissDataScienceCenter/amalthea/releases/tag/0.1.3>__` for more details.
+See `renku-notebooks 1.1.1 <https://github.com/SwissDataScienceCenter/renku-notebooks/releases/tag/1.1.1>`__ and `amalthea 0.1.3 <https://github.com/SwissDataScienceCenter/amalthea/releases/tag/0.1.3>`__ for more details.
+
+Improvements
+~~~~~~~~~~~~
+
+Our documentation has been restructured, now articles are reorganized into ``Tutorials``, ``How-to guides``, ``Topic Guides`` and ``Reference`` (see `#2191 <https://github.com/SwissDataScienceCenter/renku/pull/2191>`__).
 
 0.10.0
 ------
