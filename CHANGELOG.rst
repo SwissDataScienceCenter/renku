@@ -1,5 +1,11 @@
 .. _changelog:
 
+0.10.1
+------
+
+This is a bugfix release that contains a fix for launching R sessions with our newest component that manages user sessions (Amalthea).
+See `renku-notebooks 1.1.1 <https://github.com/SwissDataScienceCenter/renku-notebooks/releases/tag/1.1.1>__` and `amalthea 0.1.3 <https://github.com/SwissDataScienceCenter/amalthea/releases/tag/0.1.3>__` for more details.
+
 0.10.0
 ------
 
