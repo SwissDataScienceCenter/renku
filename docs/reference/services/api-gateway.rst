@@ -4,7 +4,7 @@ API gateway
 ===========
 
 The API gateway acts as a middle layer between the Renku clients and the
-different backend services (GitLab, JupyterHub, Renku storage service, ...).
+different backend services (GitLab, Renku notebooks, Renku core service, ...).
 More specifically, the API gateway makes life easier for client developers in
 the following ways:
 
@@ -15,9 +15,9 @@ the following ways:
   all clients.
 
 - **Resource specific routing**:
-  Notebook servers are stored in JupyterHub, project details in GitLab and datasets
-  have to be fetched through the storage service - this must not be the worry of
-  each client (developer), instead it is handled by the gateway.
+  Notebook servers are stored in custom k8s resources created by Amalthea.
+  Project details in GitLab and datasets have to be fetched through the storage service 
+  - this must not be the worry of each client (developer), instead it is handled by the gateway.
 
 - **Token handling**:
   Even with all backend services offering the possibility to rely on an OpenID-connect

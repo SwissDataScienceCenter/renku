@@ -8,17 +8,36 @@
 # for instructions on how to use this values file.
 
 variables:
-  gitlabURL:          &gitlabURL           https://gitlab.com  # Or another gitlab available at the root path
-  gitlabClientId:     &gitlabClientId      # TODO: Put GitLab Application Id here!
-  gitlabClientSecret: &gitlabClientSecret  # TODO: Put GitLab Secret here!
-  gitlabRegistryHost: &gitlabRegistryHost  registry.gitlab.com  # Or the registry for this instance
+  gitlabURL:                        &gitlabURL                          https://gitlab.com  # Or another gitlab available at the root path
+  gitlabClientId:                   &gitlabClientId                     # TODO: Put GitLab Application Id here!
+  gitlabClientSecret:               &gitlabClientSecret                 # TODO: Put GitLab Secret here!
+  gitlabRegistryHost:               &gitlabRegistryHost                 registry.gitlab.com  # Or the registry for this instance
+  mainURL:                          &mainURL                            # TODO: Put the domain where renku is deployed here (i.e. example.com) - do not forget adding this in the keycloak section below
+  notebookSessionTokenUrl:          &notebookSessionTokenUrl            https://gitlab.com/oauth/token
+  notebookSessionAuthUrl:           &notebookSessionAuthUrl             https://gitlab.com/oauth/authorize
+  notebookSessionOidcClientSecret:  &notebookSessionOidcClientSecret    # TODO: generate with openssl rand -hex 32
 
-# Comment out this block when using `renkulab.io/gitlab` or any other GitLab running under
-# `<some-host-name>/gitlab`.
-# Commenting this block will set the gitlab url prefix back to its default chart value (`/gitlab`).
+## TODO:  Edit the domain name below in the KEYCLOAK_FRONTEND_URL value
+keycloak:
+  extraEnv: |
+    - name: KEYCLOAK_FRONTEND_URL
+      value: https://<domain-name>/auth
+    - name: DB_VENDOR
+      value: postgres
+    - name: DB_PORT
+      value: "5432"
+    - name:  PROXY_ADDRESS_FORWARDING
+      value: "true"
+
 global:
+  ## Comment out the gitlab block when using `renkulab.io/gitlab` or any other GitLab running under
+  ## `<some-host-name>/gitlab`.
+  ## Commenting this block will set the gitlab url prefix back to its default chart value (`/gitlab`).
   gitlab:
     urlPrefix: ""
+  useHTTPS: true
+  renku:
+    domain: *mainURL
 
 gitlab:
   enabled: false
@@ -28,24 +47,12 @@ notebooks:
     url: *gitlabURL
     registry:
       host: *gitlabRegistryHost
-  jupyterhub:
-    hub:
-      extraEnv:
-        - name: GITLAB_URL
-          value: *gitlabURL
-        - name: DEBUG
-          value: "1"
-        - name: JUPYTERHUB_SPAWNER_CLASS
-          value: spawners.RenkuKubeSpawner
-        - name: PGPASSWORD
-          valueFrom:
-              secretKeyRef:
-                name: renku-jupyterhub-postgres
-                key: jupyterhub-postgres-password
-    auth:
-      gitlab:
-        clientId: *gitlabClientId
-        clientSecret: *gitlabClientSecret
+  oidc:
+    clientSecret: *notebookSessionOidcClientSecret
+    tokenUrl: *notebookSessionTokenUrl
+    authUrl: *notebookSessionAuthUrl
+  sessionIngress:
+    host: *mainURL
 
 graph:
   gitlab:
@@ -55,3 +62,7 @@ gateway:
   gitlabUrl: *gitlabURL
   gitlabClientId: *gitlabClientId
   gitlabClientSecret: *gitlabClientSecret
+
+ingress:
+  hosts:
+    - *mainURL

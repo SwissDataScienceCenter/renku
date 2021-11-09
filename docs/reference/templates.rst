@@ -300,6 +300,11 @@ repository. Each of them requires an entry with the following parameters:
   user. If a user does change one of these files, automated template update
   is no longer supported on that project, to prevent broken/inconsistent
   projects.
+* ``icon``: A relative path to an image file inside the repository that is associated
+  with the template. This icon is presented to users in the UI on the template
+  selection screen. Valid formats are PNG, JPEG and BMP. Icons are limited to a
+  resolution of 256x256, if the icon you provided is larger than this, it will
+  be scaled down.
 
 In addition to the custom variables mentioned above, we also provide some
 renku-specific variables that are always available in templates, namely:
