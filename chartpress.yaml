@@ -41,11 +41,3 @@ charts:
         valuesPath: global.certificates.image
         paths:
           - certificates
-  - name: helm-chart/certificates
-    resetTag: latest
-    imagePrefix: renku/
-    repo:
-      git: SwissDataScienceCenter/helm-charts
-      published: https://swissdatasciencecenter.github.io/helm-charts
-    paths:
-      - helm-chart/certificates
