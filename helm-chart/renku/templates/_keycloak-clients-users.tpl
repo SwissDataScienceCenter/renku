@@ -51,6 +51,29 @@ Define clients and users for Keycloak
     }]
   },
   {
+    "clientId": "renku-ui",
+    "baseUrl": "{{ template "http" . }}://{{ .Values.global.renku.domain }}",
+    "secret": "{{ required "Fill in .Values.global.uiserver.clientSecret with `uuidgen -r`" .Values.global.uiserver.clientSecret }}",
+    "redirectUris": [
+        "{{ template "http" . }}://{{ .Values.global.renku.domain }}/*"
+    ],
+    "webOrigins": [
+        "{{ template "http" . }}://{{ .Values.global.renku.domain }}/*"
+    ],
+    "protocolMappers": [{
+      "name": "renku audience for renku ui server",
+      "protocol": "openid-connect",
+      "protocolMapper": "oidc-audience-mapper",
+      "consentRequired": false,
+      "config": {
+        "included.client.audience": "renku",
+        "id.token.claim": false,
+        "access.token.claim": true,
+        "userinfo.token.claim": false
+      }
+    }]
+  },
+  {
     "clientId": "{{ .Values.notebooks.oidc.clientId }}",
     "baseUrl": "{{ template "http" . }}://{{ .Values.global.renku.domain }}",
     "secret": "{{ required "Fill in .Values.notebooks.oidc.clientSecret with `uuidgen -r`" .Values.notebooks.oidc.clientSecret }}",
