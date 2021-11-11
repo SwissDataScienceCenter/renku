@@ -88,11 +88,18 @@ global:
     existingSecret: redis-secret
     existingSecretPasswordKey: redis-password
 
-    ## Specify the redis host. This will fall-back to
-    ## RELEASE-NAME-redis if left empty.
-    # host: my-redis.instance
+    ## Specify the redis host and port. Notice that these settings only affect
+    ## the subcharts which represent the applications which are clients to redis, 
+    ## but not the redis cluster deployment itself. 
+    ## If you're deploying redis through this chart and you want to deviate from
+    ## the defaults, you'll have to match whatever you set here in the non-global 
+    ## redis section which defines the actual redis cluster.
+    ## The hostname will fall-back to RELEASE-NAME-redis if left empty and the port
+    ## will be set to the respective defaults depending on the isSentinel setting.
+    # host: RELEASE-NAME-redis 
+    # port: 6379/26379
 
-    # Set to true if the redis host points to a redis sentinel.
+    # Set to true if redis host/port point to a redis sentinel.
     isSentinel: true
 
   ## Set to true if using https
