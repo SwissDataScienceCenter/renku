@@ -9,7 +9,18 @@ The Renku Project Documentation
 ===============================
 
 
-.. include:: _sidebar.rst.inc
+.. toctree::
+   :hidden:
+   :maxdepth: 2
+
+   About Renku <introduction/index>
+   Tutorials <tutorials>
+   How-to Guides <how-to-guides/index>
+   Topic guides <topic-guides/index>
+   Reference <reference/index>
+   Get in touch <get-in-touch>
+   Release Notes <release-notes>
+   License <https://www.apache.org/licenses/LICENSE-2.0>
 
 
 .. epigraph::
@@ -22,3 +33,15 @@ The Renku Project Documentation
 
 .. include:: ../README.rst
   :start-after: renku:
+  :end-before: documentation:
+
+Documentation
+-------------
+
+* :ref:`tutorials`: how to get your Renku work off the ground
+* :ref:`topic-guides`: discussions about concepts central to Renku
+* :ref:`how_to_guides`: recipes for common use-cases with Renku for users and administrators
+* :ref:`reference`: syntax, structure, architecture, etc.
+
+.. include:: ../README.rst
+  :start-after: contributing:

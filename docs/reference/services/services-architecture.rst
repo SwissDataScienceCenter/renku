@@ -28,14 +28,14 @@ Renku has the following custom components:
 - renku_: the meta repository with deployment scripts, documentation and kubernetes helm charts
 - :ref:`renku-gateway <api_gateway>`: an API gateway connecting clients to the APIs of the different backend services
 - :ref:`renku-graph <graph_services>`: a collection of services concerned with activating, building and querying the Renku knowledge graph
-- :ref:`renku-notebooks <notebooks_service>`: a service integrating GitLab repositories with JupyterHub
+- :ref:`renku-notebooks <notebooks_service>`: a service integrating GitLab repositories with Amalthea and Jupyter servers
 - renku-python_: python API & Command Line Interface (CLI)
 - renku-ui_: web front-end interface
 
 
 In addition, we make use of:
 
-- JupyterHub_: management of interactive notebook servers
+- Amalthea_: k8s operator used to launch Jupyter servers
 - GitLab_: repository management, CI and various related APIs
 - Keycloak_: identity management and user authentication
 
@@ -48,24 +48,9 @@ are either built or extended by us.
 .. graphviz:: /_static/graphviz/renku_architecture.dot
 
 
-Important Concepts
-------------------
-
-In order to develop for the platform, it is strongly advised to get
-familiarized with a few foundational concepts:
-
-.. toctree::
-   :hidden:
-   :maxdepth: 2
-
-   JWT  <../general/json_web_tokens>
-
-- :ref:`json_web_tokens` (JWT)
-
-
 .. _renku: https://github.com/SwissDataScienceCenter/renku
 .. _renku-python: https://github.com/SwissDataScienceCenter/renku-python
 .. _renku-ui: https://github.com/SwissDataScienceCenter/renku-ui
-.. _JupyterHub: https://github.com/jupyterhub/jupyterhub
+.. _Amalthea: https://github.com/SwissDataScienceCenter/amalthea
 .. _GitLab: https://gitlab.com/
 .. _Keycloak: https://www.keycloak.org/
