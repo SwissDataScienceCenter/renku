@@ -79,7 +79,7 @@ global:
     ## a secondary Jupyterhub instance
     enabled: false
 
-  ## Specify a secret that containes the certificate
+  ## Specify the name of an existing K8s secret that contains the certificate
   ## if you would like to use a custom CA. The key for the secret
   ## should have the .crt extension otherwise it is ignored. The
   ## keys across all secrets are mounted as files in one location so
