@@ -19,6 +19,7 @@ global:
   gateway:
     clientSecret: 259a72d8-2c40-435f-9e0f-24df7c1a7dbc
     gitlabClientSecret: 4e35410e4116d2280e29c6da6aaaa89fc1ab77364c6352aeb5adbd037d49590a
+    cliClientSecret: a49d5d2f0679544b63491a37e0ba2ed08ec4cfc3082f002c8a5a6b81ee201278
   renku:
     version: 'latest'
 
@@ -26,7 +27,6 @@ keycloak:
   createDemoUser: true
   keycloak:
     username: admin
-
 
 gitlab:
   enabled: true
@@ -47,49 +47,22 @@ gitlab:
 notebooks:
   securityContext:
     enabled: false
-  jupyterhub:
-    rbac:
-      enabled: true
-    hub:
-      cookieSecret: 7c232b97bda321be7e59b9834dfadbb89652da1e0150dff9b3dadb9aa8b4caab
-      baseUrl: '/jupyterhub/'
-      db:
-        type: postgres
-        url: postgres+psycopg2://jupyterhub@renku-postgresql:5432/jupyterhub
-      services:
-        notebooks:
-          apiToken: notebookstoken
-        gateway:
-          admin: true
-          oauth_client_id: &gatewayClient gateway
-          apiToken: &gatewaySecret 7ed9992425bbdcf03f323310205b2fea34bd9e1a255346f99066800d9440d6f7
-      extraEnv:
-        ## The GITLAB_URL value has to be overwritten when installing the chart
-        # with http://$(minikube ip)/gitlab. See the chart README.rst.
-        - name: GITLAB_URL
-          value: this-value-must-be-overwritten
-        - name: DEBUG
-          value: "1"
-        - name: JUPYTERHUB_SPAWNER_CLASS
-          value: spawners.RenkuKubeSpawner
-        - name: PGPASSWORD
-          valueFrom:
-              secretKeyRef:
-                name: renku-jupyterhub-postgres
-                key: jupyterhub-postgres-password
-    proxy:
-      secretToken: f89ddee5ba10f2268fcefcd4e353235c255493095cd65addf29ebebf8df86255
-    auth:
-      state:
-        enabled: true
-        cryptoKey: 86282f03d9886a64a46ee38f946e9ee27a600df4559584eeb90d0bfbd5a3dc0e
-      type: gitlab
-      gitlab:
-        clientId: jupyterhub
-        clientSecret: dummy-secret
   gitlab:
     registry:
       host: 10.100.123.45:8105
+  userSessionPersistentVolumes:
+    enabled: true
+  oidc:
+    allowUnverifiedEmail: true
+  sessionIngress:
+    annotations:
+      kubernetes.io/ingress.class: nginx
+      nginx.ingress.kubernetes.io/proxy-body-size: "0"
+      nginx.ingress.kubernetes.io/proxy-buffer-size: 8k
+      nginx.ingress.kubernetes.io/proxy-request-buffering: "off"
+      nginx.ingress.kubernetes.io/ssl-redirect: "false"
+      nginx.ingress.kubernetes.io/configuration-snippet: |
+        more_set_headers "Content-Security-Policy: frame-ancestors 'self' ";
       
 runner:
   enabled: true
@@ -122,10 +95,11 @@ graph:
 
 gateway:
   secretKey: 5495ef917488a19d1d4106452c899f5824972acd87edce11fd65e7956bea3bb0
-  jupyterhub:
-    clientId: *gatewayClient
-    clientSecret: *gatewaySecret
   graph:
     sparql:
       username: admin
       password: *sparql-password
+
+ui:
+  canary:
+    enabled: false
