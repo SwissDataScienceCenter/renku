@@ -29,6 +29,8 @@ class JupyterNotebookForPrivateProjectSpec extends AcceptanceSpec with Login wit
 
     `create, continue or open a project`
 
+    `verify the project is up to date`
+
     `verify user can work with Jupyter notebook`
 
     `log out of Renku`

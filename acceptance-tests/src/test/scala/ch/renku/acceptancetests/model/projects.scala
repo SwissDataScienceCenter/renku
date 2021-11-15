@@ -102,7 +102,7 @@ object projects {
         prefixParagraph("An automatically generated project for testing: ", maxWords = 5).generateOne
       )
       val readmeTitle = s"test ${now.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH-mm-ss"))}"
-      val template    = Template(maybeTemplate getOrElse "Renku/python-minimal")
+      val template    = Template(maybeTemplate getOrElse "Basic Python")
       ProjectDetails(title, visibility, desc, template, readmeTitle)
     }
 

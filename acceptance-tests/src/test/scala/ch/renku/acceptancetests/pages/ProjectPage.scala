@@ -18,14 +18,14 @@
 
 package ch.renku.acceptancetests.pages
 
+import ch.renku.acceptancetests.model.CliVersion
 import ch.renku.acceptancetests.model.projects.ProjectDetails._
 import ch.renku.acceptancetests.model.projects.{ProjectDetails, ProjectIdentifier}
 import ch.renku.acceptancetests.model.users.UserCredentials
 import ch.renku.acceptancetests.tooling.AcceptanceSpec
-import org.openqa.selenium.{By, WebDriver, WebElement}
+import org.openqa.selenium.{WebDriver, WebElement}
 import org.scalactic.source
 import org.scalatest.enablers.Retrying
-import org.scalatestplus.selenium
 import org.scalatestplus.selenium.WebBrowser
 import org.scalatestplus.selenium.WebBrowser.{cssSelector, find, findAll}
 
@@ -74,6 +74,25 @@ class ProjectPage(val projectSlug: String, val namespace: String)
     def tab(implicit webDriver: WebDriver): WebElement = eventually {
       find(cssSelector(s"a[href='$path']")) getOrElse fail("Overview tab not found")
     }
+
+    def statusLink(implicit webDriver: WebDriver): WebElement = eventually {
+      find(cssSelector(s"a[href='$path/overview/status']")) getOrElse fail("Overview -> Status link not found")
+    }
+
+    def currentProjectVersion(matches: CliVersion)(implicit webDriver: WebDriver): WebElement = eventually {
+      findAll(cssSelector(s"div > p > strong")).find(element =>
+        element.text == "Project Version:" && element.parent.getText.contains(matches.value)
+      ) getOrElse fail(" Overview -> Project Version not found")
+    }
+
+    def currentProjectIsUpToDate(implicit webDriver: WebDriver): WebElement = eventually {
+      find(cssSelector(s"div.card-body div.alert-success")).flatMap(element =>
+        if (element.text == "The current version is up to date.") Some(element) else None
+      ) getOrElse fail(" Overview -> Project Version not found")
+    }
+
+    def maybeUpdateButton(implicit webDriver: WebDriver): Option[WebElement] =
+      findAll(cssSelector(s"div.alert-warning button")).find(button => button.text == "Update")
 
     def projectDescription(implicit webDriver: WebDriver): WebElement = eventually {
       find(cssSelector(".rk-project-description")) getOrElse fail("Overview -> Project Description not found")
