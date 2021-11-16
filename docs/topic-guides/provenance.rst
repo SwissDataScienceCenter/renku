@@ -119,7 +119,8 @@ the following consequences:
 Renku uses its own Knowledge Graph based approach to store metadata about
 workflow executions and recipes (``Runs`` and ``Plans``, respectively). It has
 a plugin system that allows exporting these workflows to various workflow
-languages such as CWL as well as executing them with different workflow
+languages such as `Common Workflow Language (CWL) <https://www.commonwl.org/>`_ 
+as well as executing them with different workflow
 execution backends.
 
 

@@ -63,9 +63,9 @@ Getting Started
 ---------------
 
 The Renku platform consists of `RenkuLab
-<https://renku.readthedocs.io/en/latest/introduction/renkulab.html#renkulab>`_,
-a web-based application and `Renku
-<https://renku.readthedocs.io/en/latest/introduction/renku.html#renku>`_, a
+<https://renku.readthedocs.io/en/latest/introduction/what-is-renku.html#renkulab>`_,
+a web-based application and `Renku Client
+<https://renku.readthedocs.io/en/latest/introduction/what-is-renku.html#renku-client>`_, a
 command-line tool for managing code, data, workflows and making practical use of
 the Knowledge Graph.
 
@@ -82,9 +82,9 @@ Documentation
 -------------
 
 * `Tutorials <https://renku.readthedocs.io/en/latest/tutorials.html>`_: how to get your Renku work off the ground
-* `Topic Guides <https://renku.readthedocs.io/en/latest/topic-guides.html>`_: discussions about concepts central to Renku
-* `How-to Guides <https://renku.readthedocs.io/en/latest/how-to-guides.html>`_: recipes for common use-cases with Renku for users and administrators
-* `Reference <https://renku.readthedocs.io/en/latest/reference.html>`_: syntax, structure, architecture, etc.
+* `Topic Guides <https://renku.readthedocs.io/en/latest/topic-guides/index.html>`_: discussions about concepts central to Renku
+* `How-to Guides <https://renku.readthedocs.io/en/latest/how-to-guides/index.html>`_: recipes for common use-cases with Renku for users and administrators
+* `Reference <https://renku.readthedocs.io/en/latest/reference/index.html>`_: syntax, structure, architecture, etc.
 
 .. _contributing:
 
@@ -146,7 +146,7 @@ The Renku project consists of several sub-repositories:
 
 - `renku-ui <https://github.com/SwissDataScienceCenter/renku-ui>`_: web front-end
 
-- `renku-project-templates <https://github.com/SwissDataScienceCenter/renku-project-templates>`_:
+- `renku-project-templates <https://github.com/SwissDataScienceCenter/renku-project-template>`_:
   base templates used for instantiating renku projects.
 
 - `renkulab-docker <https://github.com/SwissDataScienceCenter/renkulab-docker>`_: docker
