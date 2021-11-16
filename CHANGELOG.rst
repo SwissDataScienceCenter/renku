@@ -1,5 +1,23 @@
 .. _changelog:
 
+0.10.2
+------
+
+This is a bugfix release that includes various fixes and improvements to user sessions.
+See `renku-notebooks 1.2.0 <https://github.com/SwissDataScienceCenter/renku-notebooks/releases/tag/1.2.0>`__ and `amalthea 0.2.1 <https://github.com/SwissDataScienceCenter/amalthea/releases/tag/0.2.1>`__ for more details.
+
+Improvements
+~~~~~~~~~~~~
+
+* **Chart**: Add ``tolerations``, ``affinity`` and ``nodeSelector`` for user sessions.
+
+Bug fixes
+~~~~~~~~~~
+
+* **User sessions**: checkout the correct alternative branch.
+* **User sessions**: use correct fallback renku image.
+* **Anonymous sessions**: fix failing probes.
+
 0.10.1
 ------
 
