@@ -101,7 +101,10 @@ exclude_patterns += [
 ]
 
 exclude_patterns += [
-    str(p) for p in Path("renku-python").rglob("*.rst") if p not in {Path("renku-python/docs/reference/commands.rst")}
+    str(p) for p in Path("renku-python").rglob("*.rst") if p not in {
+        Path("renku-python/docs/reference/commands.rst"),
+        Path("renku-python/docs/api.rst")
+    }
 ]
 
 # The name of the Pygments (syntax highlighting) style to use.
