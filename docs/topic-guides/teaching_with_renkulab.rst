@@ -32,11 +32,7 @@ workshops or weekly lab sessions. This means ensuring adequate computational
 resources for you and your sessions, with a Renku admin on hand if there are
 problems with the platform. As such, we would very much appreciate if you could
 *announce* your teaching using the following form:
-https://renkulab.io/projects/team-renku/renku-teaching-announcements-google/files/blob/Form.ipynb.
-
-If you are not able to use Google forms due to institutional restrictions, please
-use the following Microsoft form:
-https://renkulab.io/projects/team-renku/renku-teaching-announcements-microsoft/files/blob/Form.ipynb.
+https://renkulab.io/projects/team-renku/renku-teaching-announcements/files/blob/Form.ipynb.
 
 Ways of using Renku to teach
 ----------------------------
