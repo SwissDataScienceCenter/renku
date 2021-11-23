@@ -127,6 +127,7 @@ OpenID
 openssl
 papermill
 parameterizable
+parametrization
 parametrize
 parametrized
 pipenv
