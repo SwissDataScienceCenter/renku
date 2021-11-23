@@ -34,3 +34,9 @@ charts:
         valuesPath: keycloak.initRealm.image
         paths:
           - scripts/init-realm
+      certificates:
+        contextPath: certificates
+        dockerfilePath: certificates/Dockerfile
+        valuesPath: global.certificates.image
+        paths:
+          - certificates
