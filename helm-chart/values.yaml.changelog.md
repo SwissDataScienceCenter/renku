@@ -6,14 +6,24 @@ Please follow this convention when adding a new row
 * `<type: NEW|EDIT|DELETE> - *<resource name>*: <details>`
 
 ----
-## Unreleased (Renku 0.10.2?)
-* NEW - *uiserver* has been added with the required values for the ui-server component.
-* NEW - *global.uiserver.clientSecret* has been added when introducing a new "renku-ui" client application in keycloak. Generate through `openssl rand -hex 32`.
+## Unreleased (Renku 0.11.0)
+* NEW/EDIT *postgresql.persistence.existingClaim* might need to be modified in the course of upgrading your PostgreSQL version. See [these instructions](https://github.com/SwissDataScienceCenter/renku/tree/master/helm-chart/utils/postgres_migrations/version_upgrades/README.md)
+* NEW/EDIT/DELETE *gitlab.image.tag* might have to be adjusted as we do a GitLab major version bump in with this release. See [these instructions](https://github.com/SwissDataScienceCenter/renku/tree/master/helm-chart#upgrading-to-0110)
 
+## Unreleased (Renku 0.10.3)
+* NEW - *uiserver* has been added with the required values for the ui-server component.
+* NEW - *global.uiserver.clientSecret* has been added when introducing a new `renku-ui` client application in keycloak. Generate through `openssl rand -hex 32`.
+
+## Upgrading to Renku 0.10.0 (breaking changes)
+The use of Amalthea and removal of Jupyterhub require some changes.
+This version is not backward compatible with the user sessions from older versions. During the deployment the admin should clean up all remaining user sessions and then deploy this version.
+
+* NEW - *notebooks.amalthea* several new sections have been added to the `values.yaml` file which are required by Amalthea. Please refer to the renku values file for more details.
+* DELETE - *notebooks.jupyter* and all references to Jupyterhub in the values have been removed and are not required anymore.
+* DELETE - anonymous sessions do not require a separate namespace and renku-notebooks deployment, if enabled in the values file they now run in the same namespace as regular user sessions.
 
 ## Upgrading to Renku 0.9.0
 * NEW - *ui.homepage* has been added for customizing the content on the RenkuLab home page. See the values.yml file for more detailed documentation.
-
 
 ## Upgrading to Renku 0.8.4
 * NEW *notebooks.serverDefaults* has been added with default values that will be
