@@ -24,7 +24,6 @@ Bug fixes
 * **User sessions**: keep auto-saved branches after restoring a session with a newer commit.
 * **User sessions**: a different package is used to decode sessions authorization token.
 * **Anonymous sessions**: not crash anonymous sessions if these are disabled in a deployment.
-* **
 
 Individual components
 ~~~~~~~~~~~~~~~~~~~~~
