@@ -1,5 +1,47 @@
 .. _changelog:
 
+0.10.3
+------
+
+This is a bugfix release that includes various fixes to user sessions and some improvements to the UI.
+
+Improvements
+~~~~~~~~~~~~
+
+* **Datasets**: allow canceling a search before it completes.
+* **User sessions**: rearrange session menu options.
+* **User sessions**: update Renku commands cheat sheet.
+* **UI**: notify user when a new renkulab version is available.
+* **File display**: highlight code syntax in markdown files.
+* **File display**: support preview of Matlab files.
+* **File display**: add PDF file viewer.
+* **File display**: render LaTeX math.
+
+
+Bug fixes
+~~~~~~~~~~
+* **User sessions**: CPU limit enforcement is now configurable. Admins should refer to the `values documentation <https://github.com/SwissDataScienceCenter/renku-notebooks/blob/1.2.1/helm-chart/renku-notebooks/values.yaml#L155-L160>`__ to configure this in a Renku deployment.
+* **User sessions**: keep auto-saved branches after restoring a session with a newer commit.
+* **User sessions**: a different package is used to decode sessions authorization token.
+* **Anonymous sessions**: not crash anonymous sessions if these are disabled in a deployment.
+* **
+
+Individual components
+~~~~~~~~~~~~~~~~~~~~~
+
+For a full list of improvements and bug fixes in individual components, please check:
+
+* renku-ui:
+  `1.2.1 <https://github.com/SwissDataScienceCenter/renku-ui/releases/1.2.1>`__,
+  `1.2.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/1.2.0>`__ and
+  `1.1.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/1.1.0>`__
+
+* renku-notebooks:
+  `1.2.1 <https://github.com/SwissDataScienceCenter/renku-notebooks/releases/1.2.1>`__
+
+* renku-gateway:
+  `0.10.2 <https://github.com/SwissDataScienceCenter/renku-gateway/releases/0.10.2>`__
+
 0.10.2
 ------
 
@@ -55,8 +97,8 @@ For a full list of improvements and bug fixes in individual components, please c
   `1.0.0 <https://github.com/SwissDataScienceCenter/renku-notebooks/releases/1.0.0>`__
 
 * renku-gateway:
-  `0.10.1 <https://github.com/SwissDataScienceCenter/renku-graph/releases/0.10.1>`__ and
-  `0.10.0 <https://github.com/SwissDataScienceCenter/renku-graph/releases/0.10.0>`__
+  `0.10.1 <https://github.com/SwissDataScienceCenter/renku-gateway/releases/0.10.1>`__ and
+  `0.10.0 <https://github.com/SwissDataScienceCenter/renku-gateway/releases/0.10.0>`__
 
 Upgrading from 0.9.3
 ~~~~~~~~~~~~~~~~~~~~
