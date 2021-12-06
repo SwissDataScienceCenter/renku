@@ -18,6 +18,7 @@
 
 package ch.renku.acceptancetests.tooling
 
+import cats.Applicative
 import cats.effect.IO._
 import cats.effect.{ContextShift, IO}
 import cats.syntax.all._
@@ -67,47 +68,48 @@ trait RestClient extends Http4sClientDsl[IO] {
     def withAuthorizationToken(authorizationToken: AuthorizationToken): Request[IO] =
       request.withHeaders(Headers of authorizationToken.asHeader)
 
-    def send: (Request[IO], Response[IO]) =
-      request -> clientBuilder.resource.use(sendRequest).unsafeRunSync()
+    def send[A](processResponse: Response[IO] => IO[A]): A =
+      clientBuilder.resource.use(sendRequest(processResponse)).unsafeRunSync()
 
-    private def sendRequest(client: Client[IO]) =
+    private def sendRequest[A](processResponse: Response[IO] => IO[A])(client: Client[IO]): IO[A] =
       client
         .run(request)
-        .use(IO.pure)
-        .recoverWith(retryOnConnectionProblem(client))
+        .use(response =>
+          processResponse(response).recoverWith(retryOnConnectionProblem(client, request)(processResponse))
+        )
 
-    private def retryOnConnectionProblem[T](client: Client[IO]): PartialFunction[Throwable, IO[Response[IO]]] = {
-      case NonFatal(cause) =>
-        cause match {
-          case e @ (_: ConnectionFailure | _: ConnectException | _: Command.EOF.type | _: InvalidBodyException) =>
-            for {
-              _      <- logger.warn(s"Connectivity problem to ${request.method} ${request.uri}. Retrying...", e).pure[IO]
-              _      <- IO.timer(global) sleep (1 second)
-              result <- sendRequest(client)
-            } yield result
-          case other => other.raiseError[IO, Response[IO]]
-        }
+    private def retryOnConnectionProblem[A](client: Client[IO], request: Request[IO])(
+        processResponse:                            Response[IO] => IO[A]
+    ): PartialFunction[Throwable, IO[A]] = { case NonFatal(cause) =>
+      cause match {
+        case e @ (_: ConnectionFailure | _: ConnectException | _: Command.EOF.type | _: InvalidBodyException) =>
+          for {
+            _      <- logger.warn(s"Connectivity problem to ${request.method} ${request.uri}. Retrying...", e).pure[IO]
+            _      <- IO.timer(global) sleep (1 second)
+            result <- sendRequest(processResponse)(client)
+          } yield result
+        case other => fail(s"${request.method} ${request.uri} ${other.getMessage}")
+      }
     }
   }
 
-  implicit class ResponseOps(reqAndResp: (Request[IO], Response[IO])) {
-    private lazy val (request, response) = reqAndResp
-
-    def whenReceived(status: Status): (Request[IO], Response[IO]) =
-      if (response.status == status) reqAndResp
-      else
-        fail(s"${request.method} ${request.uri} returned ${response.status} which is not expected $status.")
-
-    lazy val responseStatus: Status = response.status
-
-    def expect(status: Status, otherwiseLog: String): Unit =
-      if (response.status != status)
-        fail(
-          s"$otherwiseLog -> ${request.method} ${request.uri} returned ${response.status} which is not expected $status"
-        )
-
-    def bodyAsJson: Json = response.as[Json].unsafeRunSync()
+  def whenReceived(status: Status): Response[IO] => IO[Response[IO]] = { response =>
+    if (response.status == status) response.pure[IO]
+    else
+      new Exception(s"returned ${response.status} which is not expected $status.").raiseError
   }
+
+  def bodyToJson: Response[IO] => IO[Json] = _.as[Json]
+
+  def expect(status: Status, otherwiseLog: String): Response[IO] => IO[Unit] = { response =>
+    Applicative[IO].whenA(response.status != status) {
+      new Exception(
+        s"returned ${response.status} which is not expected $status. $otherwiseLog"
+      ).raiseError
+    }
+  }
+
+  def mapResponse[A](f: PartialFunction[Response[IO], A]): Response[IO] => IO[A] = response => f(response).pure[IO]
 
   implicit class JsonOps(json: Json) {
     def extract[V](extractor: Json => V): V = extractor(json)

@@ -3,9 +3,9 @@ kind: Job
 metadata:
   name: "{{ .Release.Name }}-post-install-postgres"
   labels:
-    heritage: {{ .Release.Service | quote }}
-    release: {{ .Release.Name | quote }}
-    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+    heritage: {{ .Release.Service }}
+    release: {{ .Release.Name }}
+    chart: {{ template "renku.chart" . }}
   annotations:
     "helm.sh/hook": post-install,post-upgrade
     "helm.sh/hook-weight": "10"
@@ -15,9 +15,9 @@ spec:
     metadata:
       name: "{{.Release.Name}}-post-install-postgres"
       labels:
-        heritage: {{.Release.Service | quote }}
-        release: {{.Release.Name | quote }}
-        chart: "{{.Chart.Name}}-{{.Chart.Version}}"
+        heritage: {{ .Release.Service }}
+        release: {{ .Release.Name }}
+        chart: {{ template "renku.chart" . }}
     spec:
       restartPolicy: Never
       containers:
@@ -38,14 +38,6 @@ spec:
               mountPath: /gitlab-postgres
               readOnly: true
             {{- end}}
-            - name: jupyterhub-postgres
-              mountPath: /jupyterhub-postgres
-              readOnly: true
-            {{ if .Values.global.anonymousSessions.enabled }}
-            - name: jupyterhub-tmp-postgres
-              mountPath: /jupyterhub-tmp-postgres
-              readOnly: true
-            {{ end }}
             - name: graph-db-postgres
               mountPath: /graph-db-postgres
               readOnly: true
@@ -79,14 +71,6 @@ spec:
           secret:
             secretName: {{ template "postgresql.fullname" . }}-password
         {{- end}}
-        - name: jupyterhub-postgres
-          secret:
-            secretName: renku-jupyterhub-postgres
-        {{ if .Values.global.anonymousSessions.enabled }}
-        - name: jupyterhub-tmp-postgres
-          secret:
-            secretName: renku-jupyterhub-tmp-postgres
-        {{ end }}
         - name: graph-db-postgres
           secret:
             secretName: {{ template "renku.fullname" . }}-graph-db-postgres

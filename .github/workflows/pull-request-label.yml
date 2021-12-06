@@ -11,4 +11,4 @@ jobs:
     steps:
       - uses: TimonVS/pr-labeler-action@v3
         env:
-          GITHUB_TOKEN: ${{ secrets.RENKU_CI_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.RENKUBOT_GITHUB_TOKEN }}
