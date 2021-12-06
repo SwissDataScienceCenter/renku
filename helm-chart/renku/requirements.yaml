@@ -23,7 +23,7 @@ dependencies:
   version: 0.10.2
 - name: gitlab
   repository: "https://charts.gitlab.io/"
-  version: 4.10.5
+  version: 5.4.2
   condition: gitlab.enabled
 - name: renku-graph
   alias: graph
