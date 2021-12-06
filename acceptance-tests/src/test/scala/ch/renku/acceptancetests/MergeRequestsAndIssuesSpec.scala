@@ -38,7 +38,11 @@ class MergeRequestsAndIssuesSpec
 
     `navigate to the issues tab`
 
-    `verify that the GitLab issues iFrame is visible`
+    // Availability of the iFrame depends on the specifc deployment
+    try `verify that the GitLab issues iFrame is visible`
+    catch {
+      case _: Throwable => `verify that the GitLab issues iFrame cannot be shown`
+    }
     `verify that the GitLab issues page link is visible`
 
     `log out of Renku`
@@ -54,7 +58,11 @@ class MergeRequestsAndIssuesSpec
 
     `navigate to the merge requests tab`
 
-    `verify that the GitLab MR iFrame is visible`
+    // Availability of the iFrame depends on the specifc deployment
+    try `verify that the GitLab MR iFrame is visible`
+    catch {
+      case _: Throwable => `verify that the GitLab issues iFrame cannot be shown`
+    }
     `verify that the GitLab MR page link is visible`
 
     `log out of Renku`

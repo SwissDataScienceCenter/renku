@@ -142,6 +142,12 @@ class ProjectPage(val projectSlug: String, val namespace: String)
           .getOrElse(fail("Issues iFrame not found"))
       }
 
+      def unavailableCollaborationIframe(implicit webDriver: WebDriver): WebElement = eventually {
+        findAll(cssSelector("div > div.my-4"))
+          .find(_.text.startsWith("This Gitlab instance cannot be embedded"))
+          .getOrElse(fail("Message iFrame cannot be embedded - not found"))
+      }
+
       object NewIssue {
         def titleField(implicit webDriver: WebDriver): WebElement = eventually {
           find(cssSelector("input#title")) getOrElse fail("Title field not found")
