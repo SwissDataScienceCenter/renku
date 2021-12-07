@@ -60,7 +60,7 @@ object CliVersion {
     private val validator = raw"\d+\.\d+\.\d+(?:\.post\d+)?\.dev\d+\+g([0-9a-f]{5,40})"
 
     def get(value: String): Option[CliVersion] =
-      Option.when(value.trim matches validator)(new NonReleasedVersion(value.trim.take(24)))
+      Option.when(value.trim matches validator)(new NonReleasedVersion(value.trim))
   }
 }
 
