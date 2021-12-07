@@ -25,6 +25,7 @@ if [ ! -z $RENKU_TEST_S3_HOST ] && [ $TESTS_RC != 0 ]; then
   cp target/*.png test-artifacts
   cp target/*.log test-artifacts
   rm -rf target/20*/.renku/cache
+  rm -rf target/20*/.gitattributes
   cp -r target/20* test-artifacts
   tar czvf tests-artifacts.tgz test-artifacts
   mv tests-artifacts.tgz ${RENKU_TEST_S3_FILENAME}.tgz
