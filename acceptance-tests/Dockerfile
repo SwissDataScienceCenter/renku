@@ -8,15 +8,19 @@ RUN apt-get update && \
     git-lfs \
     gnupg \
     nodejs \
-    wget
+    wget \
+    curl
 
 # This 'mkdir' is just to make the openjdk-11-jdk installation to pass
 RUN mkdir -p /usr/share/man/man1 && \
-    echo "deb https://repo.scala-sbt.org/scalasbt/debian all main" | tee /etc/apt/sources.list.d/sbt.list && \
-    echo "deb https://repo.scala-sbt.org/scalasbt/debian /" | tee /etc/apt/sources.list.d/sbt_old.list && \
-    wget --quiet -O - "https://keyserver.ubuntu.com/pks/lookup?op=get&search=0x2EE0EA64E40A89B84B2DF73499E82A75642AC823" | apt-key add && \
     apt-get update && \
-    apt-get install -y openjdk-11-jdk sbt && \
+    apt-get install -y openjdk-11-jdk
+
+# Install sbt
+RUN echo "deb https://repo.scala-sbt.org/scalasbt/debian all main" | tee /etc/apt/sources.list.d/sbt.list && \
+    echo "deb https://repo.scala-sbt.org/scalasbt/debian /" |  tee /etc/apt/sources.list.d/sbt_old.list && \
+    curl -sL "https://keyserver.ubuntu.com/pks/lookup?op=get&search=0x2EE0EA64E40A89B84B2DF73499E82A75642AC823" | apt-key add && \
+    apt-get update &&  apt-get install sbt && \
     rm -rf /var/cache/apt && \
     wget --quiet https://dl.min.io/client/mc/release/linux-amd64/mc -O /usr/local/bin/mc && \
     chmod 0755 /usr/local/bin/mc
