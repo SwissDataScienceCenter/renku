@@ -302,7 +302,7 @@ class ProjectPage(val projectSlug: String, val namespace: String)
         .find(_.text.endsWith("Open in new tab"))
         .getOrElse(fail("Connect to session button not found"))
     }
-    
+
     def buttonShowBranch(implicit webDriver: WebDriver): WebElement = eventually {
       findAll(cssSelector("div.mb-3 > button"))
         .find(_.text.startsWith("Do you want to select the branch"))
