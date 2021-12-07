@@ -19,6 +19,7 @@ charts:
       - helm-chart
       - acceptance-tests
       - scripts/init-realm
+      - certificates
     images:
       tests:
         buildArgs:
@@ -34,3 +35,10 @@ charts:
         valuesPath: keycloak.initRealm.image
         paths:
           - scripts/init-realm
+      certificates:
+        contextPath: certificates
+        dockerfilePath: certificates/Dockerfile
+        # Note: Add back the values path with https://github.com/SwissDataScienceCenter/renku-notebooks/pull/788
+        # valuesPath: global.certificates.image
+        paths:
+          - certificates
