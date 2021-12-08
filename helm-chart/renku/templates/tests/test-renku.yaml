@@ -79,12 +79,5 @@ spec:
       - '{{ .Values.tests.parameters.testTarget }}'
     {{ end }}
     resources:
-      requests:
-        memory: "3G"
-        cpu: "1000m"
-        ephemeral-storage: "1G"
-      limits:
-        memory: "3G"
-        cpu: "1500m"
-        ephemeral-storage: "2G"
+{{ toYaml .Values.tests.resources | indent 6 }}
 {{- end }}
