@@ -25,15 +25,16 @@ RUN echo "deb https://repo.scala-sbt.org/scalasbt/debian all main" | tee /etc/ap
     wget --quiet https://dl.min.io/client/mc/release/linux-amd64/mc -O /usr/local/bin/mc && \
     chmod 0755 /usr/local/bin/mc
 
-RUN python3 -m pip install \
-    'papermill==2.1.3' \
-    'requests>=2.20.0' \
-    'jupyterhub==1.1.0' \
-    'nbresuse==0.3.3' \
-    'jupyterlab-git==0.20.0' \
-    'pipx>=0.15.0.0' \
-    'pandas==1.3.0' \
-    'seaborn==0.11.1'
+RUN python3 -m pip install --upgrade 'pip==21.3.1' && \
+    python3 -m pip install \
+      'papermill==2.1.3' \
+      'requests>=2.20.0' \
+      'jupyterhub==1.1.0' \
+      'nbresuse==0.3.3' \
+      'jupyterlab-git==0.20.0' \
+      'pipx>=0.15.0.0' \
+      'pandas==1.3.0' \
+      'seaborn==0.11.1'
 
 ENV DOCKER="1"
 COPY . /tests
