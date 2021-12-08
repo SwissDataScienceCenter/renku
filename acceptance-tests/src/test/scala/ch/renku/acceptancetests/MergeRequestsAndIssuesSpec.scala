@@ -22,6 +22,7 @@ import ch.renku.acceptancetests.tooling.{AcceptanceSpec, KnowledgeGraphApi}
 import ch.renku.acceptancetests.workflows._
 
 import scala.concurrent.duration._
+import scala.util.Try
 
 class MergeRequestsAndIssuesSpec
     extends AcceptanceSpec
@@ -39,10 +40,10 @@ class MergeRequestsAndIssuesSpec
     `navigate to the issues tab`
 
     // Availability of the iFrame depends on the specifc deployment
-    try `verify that the GitLab issues iFrame is visible`
-    catch {
-      case _: Throwable => `verify that the GitLab issues iFrame cannot be shown`
-    }
+    Try(`verify that the GitLab issues iFrame is visible`).recover(_ =>
+      `verify that the GitLab issues iFrame cannot be shown`
+    )
+
     `verify that the GitLab issues page link is visible`
 
     `log out of Renku`
@@ -59,10 +60,10 @@ class MergeRequestsAndIssuesSpec
     `navigate to the merge requests tab`
 
     // Availability of the iFrame depends on the specifc deployment
-    try `verify that the GitLab MR iFrame is visible`
-    catch {
-      case _: Throwable => `verify that the GitLab issues iFrame cannot be shown`
-    }
+    Try(`verify that the GitLab MR iFrame is visible`).recover(_ =>
+      `verify that the GitLab issues iFrame cannot be shown`
+    )
+
     `verify that the GitLab MR page link is visible`
 
     `log out of Renku`
