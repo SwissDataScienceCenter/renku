@@ -2,7 +2,7 @@ name: Publish all merges to master
 
 on:
   push:
-    branches: ["master"]
+    branches: ["publish_chart_on_merge"]
     paths:
       - helm-chart/**
       - scripts/**
@@ -52,5 +52,5 @@ jobs:
         if: always()
       - uses: actions-ecosystem/action-push-tag@v1
         with:
-          tag: ${{ steps.bump-semver.outputs.new_version }}
-          message: "${{ steps.bump-semver.outputs.new_version }}: PR #${{ github.event.pull_request.number }} ${{ github.event.pull_request.title }}"
+          tag: ${{ env.publish_version }}
+          message: "${{ env.publish_version }}: PR #${{ github.event.pull_request.number }} ${{ github.event.pull_request.title }}"
