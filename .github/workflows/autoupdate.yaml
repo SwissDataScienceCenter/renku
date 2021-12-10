@@ -9,7 +9,7 @@ jobs:
     steps:
       - uses: docker://chinthakagodawita/autoupdate-action:v1
         env:
-          GITHUB_TOKEN: "${{ secrets.RENKU_CI_TOKEN }}"
+          GITHUB_TOKEN: "${{ secrets.RENKUBOT_GITHUB_TOKEN }}"
           PR_FILTER: "labelled"
           PR_LABELS: "autoupdate"
           MERGE_MSG: "Branch was auto-updated."

@@ -6,19 +6,19 @@ dependencies:
 - name: renku-ui
   alias: ui
   repository: "https://swissdatasciencecenter.github.io/helm-charts/"
-  version: 1.1.0
+  version: 1.2.1
 - name: renku-ui-server
   alias: uiserver
   repository: "https://swissdatasciencecenter.github.io/helm-charts/"
-  version: 1.1.0
+  version: 1.2.1
 - name: renku-notebooks
   alias: notebooks
   repository: "https://swissdatasciencecenter.github.io/helm-charts/"
-  version: 1.2.0
+  version: 1.2.1
 - name: renku-gateway
   alias: gateway
   repository: "https://swissdatasciencecenter.github.io/helm-charts/"
-  version: 0.10.1
+  version: 0.10.2
 - name: gitlab
   repository: "https://swissdatasciencecenter.github.io/helm-charts/"
   version: 0.6.0
@@ -39,3 +39,7 @@ dependencies:
 - name: certificates
   version: 0.0.1
   repository: "https://swissdatasciencecenter.github.io/helm-charts/"
+- name: redis
+  version: 10.7.11
+  repository: "https://charts.bitnami.com/bitnami"
+  condition: redis.install

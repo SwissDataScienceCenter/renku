@@ -75,6 +75,36 @@ global:
     jena:
       ## specify which dataset should be used in Jena
       dataset:
+
+  # Connection details for a globally used redis instance for the
+  # entire platform. For specifying an actual instance as part of
+  # this chart, check out the non-global "redis" section.
+  redis:
+    # Specify which renku component should use which DB index
+    dbIndex:
+      gateway: "0"
+      # coreService: "1"
+      # uiServer: "2"
+
+    # Note: these two entries MUST match the ones in redis.auth if redis is
+    # installed through this chart.
+    existingSecret: redis-secret
+    existingSecretPasswordKey: redis-password
+
+    ## Specify the redis host and port. Notice that these settings only affect
+    ## the subcharts which represent the applications which are clients to redis, 
+    ## but not the redis cluster deployment itself. 
+    ## If you're deploying redis through this chart and you want to deviate from
+    ## the defaults, you'll have to match whatever you set here in the non-global 
+    ## redis section which defines the actual redis cluster.
+    ## The hostname will fall-back to RELEASE-NAME-redis if left empty and the port
+    ## will be set to the respective defaults depending on the isSentinel setting.
+    # host: RELEASE-NAME-redis 
+    # port: 6379/26379
+
+    # Set to true if redis host/port point to a redis sentinel.
+    isSentinel: true
+
   ## Set to true if using https
   useHTTPS: false
   anonymousSessions:
@@ -105,9 +135,9 @@ ingress:
     ## The ingress class
     cert-manager.io/cluster-issuer: letsencrypt-production # TO DO: should be changed because not everyone is using cert-manager
     kubernetes.io/ingress.class: nginx
-    nginx.ingress.kubernetes.io/proxy-body-size: '0' # Adjust to a reasonable value for production to avoid DOS attacks.
-    nginx.ingress.kubernetes.io/proxy-request-buffering: 'off' # Needed if GitLab is behind this ingress
-    nginx.ingress.kubernetes.io/proxy-buffer-size: '8k' # Default is 4k, larger size necessary for keycloak
+    nginx.ingress.kubernetes.io/proxy-body-size: "0" # Adjust to a reasonable value for production to avoid DOS attacks.
+    nginx.ingress.kubernetes.io/proxy-request-buffering: "off" # Needed if GitLab is behind this ingress
+    nginx.ingress.kubernetes.io/proxy-buffer-size: "8k" # Default is 4k, larger size necessary for keycloak
 
   ## Hosts for the ingress
   ## Should include at least the value from `global.renku.domain`
@@ -122,7 +152,6 @@ ingress:
 
 ## Keycloak configuration
 keycloak:
-
   ## Spawn a keycloak instance
   enabled: true
 
@@ -193,7 +222,7 @@ keycloak:
   initRealm:
     image:
       repository: renku/init-realm
-      tag: 'latest'
+      tag: "latest"
 
   ## Skip Keycloak testing when running Helm test
   test:
@@ -233,7 +262,6 @@ keycloak:
   ingress:
     enabled: false
 
-
 # Postgresql configuration
 # The bitnami postgres chart offers a variety of configuration options, most of
 # which are not explicitly mentioned here. We predominantly list the values where we
@@ -243,7 +271,6 @@ keycloak:
 # For production deployments check out
 # https://github.com/bitnami/charts/blob/master/bitnami/postgresql/values-production.yaml
 postgresql:
-
   ## We use the defaults here. Note that these basic configs could also be set as
   ## global values such that sub-charts can access them too.
   postgresqlDatabase: postgres
@@ -276,6 +303,78 @@ postgresql:
     password: repl_password # generate a random password `openssl rand -hex 32`
     slaveReplicas: 1
 
+redis:
+  # Configuration that is unknown to the redis chart but picked up
+  # by the renku chart.
+
+  # If set to true, a HA redis will be included in the Renku release.
+  install: true
+  # If set to true, we'll create a k8s secret to be used as existingSecret
+  # for password auth.
+  createSecret: true
+  # The actual password, ignored if createSecret is false.
+  password: # openssl rand -hex 32
+
+  # Configuration that is passed on to the redis chart, for details and
+  # further config options check out
+  # https://github.com/bitnami/charts/tree/master/bitnami/redis
+
+  ## config for newer redis versions, here for later reference
+  # replicas:
+  #   replicaCount: 2
+  # auth:
+  #   enabled: true
+  #   sentinel: true
+  #   existingSecret: redis-secret
+  #   existingSecretPasswordKey: redis-password
+
+  usePassword: true
+  existingSecret: redis-secret
+  existingSecretPasswordKey: redis-password
+
+  master:
+    # Fixed redis bug prevents us from using this before
+    # we bump the redis chart version
+    # spreadConstraints:
+    #   - maxSkew: 1
+    #     topologyKey: node
+    #     whenUnsatisfiable: DoNotSchedule
+    #     labelSelector:
+    #       matchLabels:
+    #         app: redis
+    persistence:
+      enabled: false
+    resources:
+      requests:
+        cpu: 200m
+        memory: 256Mi
+  slave:
+    # Fixed redis bug prevents us from using this before
+    # we bump the redis chart version
+    # spreadConstraints:
+    #   - maxSkew: 1
+    #     topologyKey: node
+    #     whenUnsatisfiable: DoNotSchedule
+    #     labelSelector:
+    #       matchLabels:
+    #         app: redis
+    persistence:
+      enabled: false
+    resources:
+      requests:
+        cpu: 200m
+        memory: 256Mi
+  sentinel:
+    enabled: true
+    resources:
+      requests:
+        cpu: 200m
+        memory: 64Mi
+    downAfterMilliseconds: 1000
+    failoverTimeout: 2000
+  networkPolicy:
+    enabled: true
+    allowExternal: false
 
 ## Gitlab configuration
 gitlab:
@@ -286,7 +385,7 @@ gitlab:
 
   ## Gitlab image
   image:
-  #   pullPolicy: IfNotPresent
+    #   pullPolicy: IfNotPresent
     repository: gitlab/gitlab-ce
     # Check out the gitlab docs on upgrading versions - in particular major
     # versions - before changing the image tag.
@@ -323,24 +422,24 @@ gitlab:
   ## Note: bucket must exist before use, GitLab won't do it
   ## Follows: https://docs.gitlab.com/ce/workflow/lfs/lfs_administration.html#storing-lfs-objects-in-remote-object-storage
   # lfsObjects:
-      ## Set to true to enable remote LFS objects
-      # enabled: false
-      ## Bucket name
-      # bucketName: lfs-objects
-      # directUpload: false
-      # backgroundUpload: true
-      # proxyDownload: false
-      # connection: |-
-      #   {
-      #     'provider' => 'AWS',
-      #     'region' => 'eu-central-1',
-      #     'aws_access_key_id' => '1ABCD2EFGHI34JKLM567N',
-      #     'aws_secret_access_key' => 'abcdefhijklmnopQRSTUVwxyz0123456789ABCDE',
-      #     # The below options configure an S3 compatible host instead of AWS
-      #     'host' => 'localhost',
-      #     'endpoint' => 'http://127.0.0.1:9000',
-      #     'path_style' => true
-      #   }
+  ## Set to true to enable remote LFS objects
+  # enabled: false
+  ## Bucket name
+  # bucketName: lfs-objects
+  # directUpload: false
+  # backgroundUpload: true
+  # proxyDownload: false
+  # connection: |-
+  #   {
+  #     'provider' => 'AWS',
+  #     'region' => 'eu-central-1',
+  #     'aws_access_key_id' => '1ABCD2EFGHI34JKLM567N',
+  #     'aws_secret_access_key' => 'abcdefhijklmnopQRSTUVwxyz0123456789ABCDE',
+  #     # The below options configure an S3 compatible host instead of AWS
+  #     'host' => 'localhost',
+  #     'endpoint' => 'http://127.0.0.1:9000',
+  #     'path_style' => true
+  #   }
 
   ## Persistent Volume settings
   persistence:
@@ -428,7 +527,6 @@ gitlab:
 
 ## Configuration for the UI service
 ui:
-
   ## Configuration for Renku templates
   templates:
     custom: true
@@ -497,11 +595,11 @@ ui:
 
   ## Configuration for statuspage.io integration
   # statuspage:
-    ## Provide the id for the statuspage, which is the subdomain of statuspage.io
-    ## used in the API queries. This can be found from the /api path.
-    ## E.g., under https://renkulab.statuspage.io/api you see that summary
-    ## is available under https://5bcn9bqff4qt.statuspage.io/api/v2/summary.json, so
-    # id: 5bcn9bqff4qt
+  ## Provide the id for the statuspage, which is the subdomain of statuspage.io
+  ## used in the API queries. This can be found from the /api path.
+  ## E.g., under https://renkulab.statuspage.io/api you see that summary
+  ## is available under https://5bcn9bqff4qt.statuspage.io/api/v2/summary.json, so
+  # id: 5bcn9bqff4qt
 
   ## Home settings allow configuration of the home page shown on RenkuLab when the user
   ## is not logged in.
@@ -595,7 +693,16 @@ tests:
   enabled: false
   image:
     repository: renku/tests
-    tag: 'latest'
+    tag: "latest"
+  resources:
+    requests:
+      memory: "3G"
+      cpu: "1500m"
+      ephemeral-storage: "3G"
+    limits:
+      memory: "3G"
+      cpu: "1500m"
+      ephemeral-storage: "3G"
   ## User account for running `helm test`
   #parameters:
   #  email: bwayne@example.com
@@ -662,11 +769,11 @@ core:
   cleanupProjectsTTL: 21600
   cleanupFilesTTL: 21600
   # repository:
-    ## Default cache directory
-    # cacheDirectory: /svc/cache
+  ## Default cache directory
+  # cacheDirectory: /svc/cache
 
-    ## Default clone depth
-    # projectCloneDepth: 1
+  ## Default clone depth
+  # projectCloneDepth: 1
 
 ## Configuration for renku-ui-server
 uiserver:

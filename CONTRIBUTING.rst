@@ -32,5 +32,5 @@ If you do not already have a development environment set up, you will probably f
 Finally, if your change is for one of the renku subprojects, you should also consult the
 guidelines for contributions within the subproject.
 
-.. _developer documentation: https://renku.readthedocs.io/en/latest/developer/index.html
-.. _contributor license agreement: https://github.com/SwissDataScienceCenter/documentation/wiki/Legal-matter
+.. _developer documentation: https://renku.readthedocs.io/en/latest/how-to-guides/admin/index.html
+.. _contributor license agreement: https://github.com/SwissDataScienceCenter/renku/wiki/Legal

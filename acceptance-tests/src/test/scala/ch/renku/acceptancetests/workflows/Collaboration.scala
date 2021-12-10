@@ -55,6 +55,11 @@ trait Collaboration {
     verify userCanSee projectPage.Collaboration.Issues.collaborationIframe
   }
 
+  def `verify that the GitLab issues iFrame cannot be shown`: Unit = {
+    Then("they should see the GitLab issues page with a warning message about iFrame")
+    verify userCanSee projectPage.Collaboration.Issues.unavailableCollaborationIframe
+  }
+
   def `verify that the GitLab issues page link is visible`: Unit = {
     Then("they should see a link to the GitLab issues page")
     verify userCanSee projectPage.Collaboration.Issues.gitLabIssuesLink
