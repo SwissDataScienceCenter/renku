@@ -6,13 +6,18 @@ Please follow this convention when adding a new row
 * `<type: NEW|EDIT|DELETE> - *<resource name>*: <details>`
 
 ----
-## Unreleased (Renku 0.11.0)
+## Upgrading to Renku 0.11.0
 * NEW/EDIT *postgresql.persistence.existingClaim* might need to be modified in the course of upgrading your PostgreSQL version. See [these instructions](https://github.com/SwissDataScienceCenter/renku/tree/master/helm-chart/utils/postgres_migrations/version_upgrades/README.md)
 * NEW/EDIT/DELETE *gitlab.image.tag* might have to be adjusted as we do a GitLab major version bump in with this release. See [these instructions](https://github.com/SwissDataScienceCenter/renku/tree/master/helm-chart#upgrading-to-0110)
 
-## Unreleased (Renku 0.10.3)
+## Upgrading to Renku 0.10.3
+* NEW - *redis-password* Generate through `openssl rand -hex 32`.
+
+## Upgrading to Renku 0.10.2
 * NEW - *uiserver* has been added with the required values for the ui-server component.
 * NEW - *global.uiserver.clientSecret* has been added when introducing a new `renku-ui` client application in keycloak. Generate through `openssl rand -hex 32`.
+* NEW - *notebooks.amalthea.resourceUsageCheck.enabled* needs to be set to false for the time being.
+* NEW - *notebooks.sessionTolerations* and *notebooks.sessionAffinity* is now configurable in order to have user session dedicated nodes.
 
 ## Upgrading to Renku 0.10.0 (breaking changes)
 The use of Amalthea and removal of Jupyterhub require some changes.
