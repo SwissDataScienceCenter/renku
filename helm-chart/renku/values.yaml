@@ -121,8 +121,8 @@ global:
     image:
       repository: renku/certificates
       tag: 'latest'
-    customCAs:
-      - secret:
+    customCAs: []
+      # - secret:
 
 ## Ingress configuration
 ## See: https://kubernetes.io/docs/concepts/services-networking/ingress/
