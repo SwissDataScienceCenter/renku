@@ -60,28 +60,68 @@ Upgrading
 ---------
 Most information related to upgrading from one chart version to another is covered
 in the `values changelog file <https://github.com/SwissDataScienceCenter/renku/blob/master/helm-chart/values.yaml.changelog.md>`_.
-For upgrades that require some steps other than modifying the values files to be
-executed, we add some instructions here.
+For upgrades that require some steps other than modifying the values files to be executed, we add some instructions here.
+
+Upgrading to 0.11.0
+*******************
+We bump the PostgreSQL version from ``11`` to ``12.8`` and the GitLab major version from ``13`` to ``14``.
+It is important to first perform the PostgreSQL upgrade, then upgrade to the ``0.11.0`` renku chart version
+while keeping the GitLab version fixed, and finally upgrade the GitLab version.
+
+1. Upgrade PostgreSQL
++++++++++++++++++++++++
+
+If PostgreSQL was deployed as part of Renku, please follow [these instructions](https://github.com/SwissDataScienceCenter/renku/tree/master/helm-chart/utils/postgres_migrations/version_upgrades/README.md) to upgrade to PostgreSQL ``12.8``.
+
+Now the renku chart can be upgraded to the ``0.11.0`` version. Before doing this, make sure to pin the GitLab version by setting ``gitlab.image.tag`` in your values file.
+If you had not pinned this version explicitly before, pin it to ``13.10.4-ce.0`` which is the default version set in the renku chart prior to the upgrade. Otherwise you can leave it at the previously pinned version.
+Then deploy the new chart version through ``helm upgrade ... --version 0.11.0 ...``.
+
+2. Upgrade GitLab
++++++++++++++++++
+
+Please read the `GitLab documentation on this topic <https://docs.gitlab.com/ce/update>`_ before proceeding.
+
+The following instructions assume your GitLab instance is at version ``13.10.Z``.
+
+For each of the upgrade steps below we recommend setting the corresponding tag in the values file at ``gitlab.image.tag``, redeploy through helm, wait for the GitLab pod to be up, and make a quick test/monitor.
+
+1. Upgrade using image 13.10.4-ce.0 (default in the renku ``0.8.0``, ``0.9.0`` and ``0.10.0`` helm chart)
+2. Upgrade using image 13.12.15-ce.0
+3. A few things are deprecated/unsupported in GitLab ``14``, so before upgrading to this major version you might need to:
+- upgrade PostgreSQL version to ``12`` (if not yet done, please follow the above ``Upgrade PostgreSQL`` instructions).
+- ``Unicorn`` is deprecated and replaced by ``Puma``, you should then `convert old ``Unicorn`` settings to ``Puma`` <https://docs.gitlab.com/ee/administration/operations/puma.html#convert-unicorn-settings-to-puma>`__.
+- migrate to hashed storage (`documentation reference <https://docs.gitlab.com/ee/administration/raketasks/storage.html#migrate-to-hashed-storage>`__), from a shell within the GitLab pod execute:
+```
+gitlab-rake gitlab:storage:migrate_to_hashed
+```
+4. Upgrade using image 14.0.12-ce.0. This major version change will trigger `batched background migrations <https://docs.gitlab.com/ee/update/#batched-background-migrations>`__, these can take hours or even days and should be over before moving on to the next upgrade.
+To check the progress login as admin and got to Admin Area -> Monitoring -> Background Migrations.
+5. Upgrade using image 14.1.8-ce.0
+6. Upgrade using image 14.2.6-ce.0
+7. Upgrade using image 14.3.4-ce.0
+8. Upgrade using image 14.4.2-ce.0 (default in the Renku ``0.11.0`` helm chart)
+Note that this version does not have to be selected explicitly in your own values file anymore as it is the default of the ``0.11.0`` renku chart.
 
 Upgrading to 0.8.4
 ******************
-We have added add a new section called `serverDefaults` to the `values.yaml` for the notebook service. 
-The information in this new `serverDefaults` section is used for any server options that are not specified 
-explicitly when launching a session. This allows a renku admin to leave out a specific option from the 
-`serverOptions` section and apply the value specified in the `serverDefaults` section for all sessions. 
-Please note that the default values specified in the  `serverDefaults` should be available as one of the options 
-in `serverOptions` - if the specific option appears in both sections. The defaults in the `serverOptions` 
+We have added add a new section called `serverDefaults` to the `values.yaml` for the notebook service.
+The information in this new `serverDefaults` section is used for any server options that are not specified
+explicitly when launching a session. This allows a renku admin to leave out a specific option from the
+`serverOptions` section and apply the value specified in the `serverDefaults` section for all sessions.
+Please note that the default values specified in the  `serverDefaults` should be available as one of the options
+in `serverOptions` - if the specific option appears in both sections. The defaults in the `serverOptions`
 section now only refer to the default selection that is shown to the user in the UI.
 
 This ability to use persistent volumes for user sesssions is also introduced with this release. This is optional and can be enabled in the values
-file for the helm chart. In addition to enabling this feature users have the ability to select the storage class used by the persistent 
+file for the helm chart. In addition to enabling this feature users have the ability to select the storage class used by the persistent
 volumes. We strongly recommend that a storage class with a `Delete` reclaim policy is used, otherwise persistent volumes from all user
-sessions will keep accumulating. 
+sessions will keep accumulating.
 
-Lastly, unlike previous versions, with 0.8.4 the amount of disk storage will be **strongly enforced**, 
-regardless of whether persistent volumes are used or not. With persistent volumes users will simply run out of space. However, 
-when persistent volumes are not used, going over the amount of storage that a user has requested when starting their session 
-will result in eviction of the k8s pod that runs the session and termination of the session. Therefore, admins are advised 
+Lastly, unlike previous versions, with 0.8.4 the amount of disk storage will be **strongly enforced**,
+regardless of whether persistent volumes are used or not. With persistent volumes users will simply run out of space. However,
+when persistent volumes are not used, going over the amount of storage that a user has requested when starting their session
+will result in eviction of the k8s pod that runs the session and termination of the session. Therefore, admins are advised
 to review and set proper options for disk sizes in the `notebooks.serverOptions` portion of the values file.
 
 Upgrading to 0.8.0
@@ -92,8 +132,8 @@ while keeping the GitLab version fixed, and finally upgrade the GitLab version.
 
 1. Upgrading postgresql
 +++++++++++++++++++++++
-If PostgreSQL was deployed as part of Renku, please follow [these instructions](https://github.com/SwissDataScienceCenter/renku/tree/master/helm-chart/utils/postgres_migrations/version_upgrades/README.md)
-for the postgresql upgrade.
+If PostgreSQL was deployed as part of Renku, please follow `these instructions <https://github.com/SwissDataScienceCenter/renku/tree/master/helm-chart/utils/postgres_migrations/version_upgrades/README.md>`__
+for the PostgreSQL upgrade.
 
 2. Bump the chart version
 +++++++++++++++++++++++++
@@ -106,7 +146,7 @@ new chart version through ``helm upgrade ... --version 0.8.0 ...``.
 3. Upgrade GitLab
 +++++++++++++++++
 Please read the `GitLab documentation on this topic <https://docs.gitlab.com/ce/update>`_ before proceeding.
-Following the `recommended upgrade paths <https://docs.gitlab.com/ce/update/#upgrade-paths>`_) and assuming
+Following the `recommended upgrade paths <https://docs.gitlab.com/ce/update/#upgrade-paths>`_ and assuming
 your GitLab instance is at version ``11.9.11``, this means that your upgrade path will be
 ``11.11.8 -> 12.0.12 -> 12.1.17 -> 12.10.14 -> 13.0.14 -> 13.1.11 -> 13.10.4``. The corresponding
 image tags are:
