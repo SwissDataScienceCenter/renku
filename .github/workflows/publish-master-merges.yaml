@@ -19,11 +19,13 @@ jobs:
           fetch-depth: 0
       - uses: actions-ecosystem/action-get-latest-tag@v1
         id: get-latest-tag
+      - id: get-stable-version
+        run: echo "stable_version=$(echo ${{ steps.get-latest-tag.outputs.tag }} | cut -d'.' -f1-3)" >> $GITHUB_ENV
       - uses: actions-ecosystem/action-bump-semver@v1
         id: bump-semver
         with:
-          current_version: ${{ steps.get-latest-tag.outputs.tag }}
-          level: prepatch
+          current_version: ${{ env.stable_version }}
+          level: prerelease
       - id: set-version
         run: echo "publish_version=${{ steps.bump-semver.outputs.new_version }}.$(echo ${{ github.sha }} | cut -c 1-7)" >> $GITHUB_ENV
       - uses: SwissDataScienceCenter/renku-actions/publish-chart@v0.3.0
