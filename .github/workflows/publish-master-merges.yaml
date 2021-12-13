@@ -2,7 +2,7 @@ name: Publish all merges to master
 
 on:
   push:
-    branches: ["master"]
+    branches: ["test_pre_release_bump"]
     paths:
       - helm-chart/**
       - scripts/**
@@ -19,40 +19,43 @@ jobs:
           fetch-depth: 0
       - uses: actions-ecosystem/action-get-latest-tag@v1
         id: get-latest-tag
-      - id: get-stable-version
-        run: echo "stable_version=$(echo ${{ steps.get-latest-tag.outputs.tag }} | cut -d'.' -f1-3)" >> $GITHUB_ENV
+      # - id: get-stable-version
+      #   run: echo "stable_version=$(echo ${{ steps.get-latest-tag.outputs.tag }} | cut -d'.' -f1-3)" >> $GITHUB_ENV
       - uses: actions-ecosystem/action-bump-semver@v1
         id: bump-semver
         with:
-          current_version: ${{ env.stable_version }}
+          # current_version: ${{ env.stable_version }}
+          current_version: ${{ steps.get-latest-tag.outputs.tag }}
           level: prerelease
       - id: set-version
         run: echo "publish_version=${{ steps.bump-semver.outputs.new_version }}.$(echo ${{ github.sha }} | cut -c 1-7)" >> $GITHUB_ENV
-      - uses: SwissDataScienceCenter/renku-actions/publish-chart@v0.3.0
-        env:
-          CHART_DIR: helm-chart/
-          CHART_TAG: "--tag ${{env.publish_version}}"
-          CHART_NAME: renku
-          GIT_USER: renku-bot
-          GIT_EMAIL: renku@datascience.ch
-          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
-          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
-          GITHUB_TOKEN: ${{ secrets.RENKUBOT_GITHUB_TOKEN }}
-      - uses: 8398a7/action-slack@v3
-        with:
-          status: custom
-          fields: job,ref
-          custom_payload: |
-            {
-              attachments: [{
-                color: '${{ job.status }}' === 'success' ? 'good' : '${{ job.status }}' === 'failure' ? 'danger' : 'warning',
-                text: `${process.env.AS_JOB} version ${{ env.publish_version }}: ${{ job.status }}.`,
-              }]
-            }
-        env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
-        if: always()
-      - uses: actions-ecosystem/action-push-tag@v1
-        with:
-          tag: ${{ env.publish_version }}
-          message: "${{ env.publish_version }}: PR #${{ github.event.pull_request.number }} ${{ github.event.pull_request.title }}"
+      - id: echo
+        run: echo ${{env.publish_version}}
+      # - uses: SwissDataScienceCenter/renku-actions/publish-chart@v0.3.0
+      #   env:
+      #     CHART_DIR: helm-chart/
+      #     CHART_TAG: "--tag ${{env.publish_version}}"
+      #     CHART_NAME: renku
+      #     GIT_USER: renku-bot
+      #     GIT_EMAIL: renku@datascience.ch
+      #     DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+      #     DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+      #     GITHUB_TOKEN: ${{ secrets.RENKUBOT_GITHUB_TOKEN }}
+      # - uses: 8398a7/action-slack@v3
+      #   with:
+      #     status: custom
+      #     fields: job,ref
+      #     custom_payload: |
+      #       {
+      #         attachments: [{
+      #           color: '${{ job.status }}' === 'success' ? 'good' : '${{ job.status }}' === 'failure' ? 'danger' : 'warning',
+      #           text: `${process.env.AS_JOB} version ${{ env.publish_version }}: ${{ job.status }}.`,
+      #         }]
+      #       }
+      #   env:
+      #     SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+      #   if: always()
+      # - uses: actions-ecosystem/action-push-tag@v1
+      #   with:
+      #     tag: ${{ env.publish_version }}
+      #     message: "${{ env.publish_version }}: PR #${{ github.event.pull_request.number }} ${{ github.event.pull_request.title }}"
