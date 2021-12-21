@@ -313,7 +313,7 @@ class ProjectPage(val projectSlug: String, val namespace: String)
     }
 
     def maybeStartSessionButton(implicit webDriver: WebDriver): Option[WebElement] = eventually {
-      findAll(cssSelector("div > form > button.btn.btn-primary")).find(_.text == "Start session")
+      findAll(cssSelector("form > div > button.btn.btn-primary")).find(_.text == "Start session")
     }
 
     def connectToJupyterLabLink(implicit webDriver: WebDriver): WebElement = eventually {
