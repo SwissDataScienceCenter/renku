@@ -1,5 +1,21 @@
 .. _changelog:
 
+0.11.0
+------
+
+This is a major release that includes an important upgrade to GitLab and PostgreSQL components: `14` and `12` major versions respectively.
+
+Upgrading from 0.10.3
+~~~~~~~~~~~~~~~~~~~~~
+
+**BREAKING CHANGES**
+
+Please follow [these instructions](https://github.com/SwissDataScienceCenter/renku/tree/master/helm-chart#upgrading-to-0110) carefully.
+
+The resulting changes in the values file should be:
+* NEW/EDIT *postgresql.persistence.existingClaim* will most likely need to be modified in the course of upgrading your PostgreSQL version. See [these instructions](https://github.com/SwissDataScienceCenter/renku/tree/master/helm-chart/utils/postgres_migrations/version_upgrades/README.md)
+* NEW/EDIT/DELETE *gitlab.image.tag* might have to be adjusted as we do a GitLab major version bump in with this release.
+
 0.10.3
 ------
 
