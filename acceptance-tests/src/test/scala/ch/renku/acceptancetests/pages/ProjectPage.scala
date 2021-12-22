@@ -79,20 +79,22 @@ class ProjectPage(val projectSlug: String, val namespace: String)
       find(cssSelector(s"a[href='$path/overview/status']")) getOrElse fail("Overview -> Status link not found")
     }
 
-    def currentProjectVersion(matches: CliVersion)(implicit webDriver: WebDriver): WebElement = eventually {
-      findAll(cssSelector(s"div > p > strong")).find(element =>
-        element.text == "Project Version:" && element.parent.getText.contains(matches.value)
-      ) getOrElse fail(" Overview -> Project Version not found")
+    def currentProjectVersion(implicit webDriver: WebDriver): WebElement = eventually {
+      find(cssSelector(s"span#project_version")) getOrElse fail(
+        s"Overview -> Project Version not found"
+      )
+    }
+    def currentProjectVersion(is: CliVersion)(implicit webDriver: WebDriver): WebElement = eventually {
+      find(cssSelector(s"span#project_version")).find(element => element.text == is.value) getOrElse fail(
+        s"Overview -> Project Version with version ${is.value} not found"
+      )
     }
 
-    def currentProjectIsUpToDate(implicit webDriver: WebDriver): WebElement = eventually {
-      find(cssSelector(s"div.card-body div.alert-success")).flatMap(element =>
-        if (element.text == "The current version is up to date.") Some(element) else None
-      ) getOrElse fail(" Overview -> Project Version not found")
+    def updateButton(implicit webDriver: WebDriver): WebElement = eventually {
+      findAll(cssSelector(s"button.btn.btn-info")).find(button => button.text == "Update") getOrElse fail(
+        "Overview -> Update button not found"
+      )
     }
-
-    def maybeUpdateButton(implicit webDriver: WebDriver): Option[WebElement] =
-      findAll(cssSelector(s"div.alert-warning button")).find(button => button.text == "Update")
 
     def projectDescription(implicit webDriver: WebDriver): WebElement = eventually {
       find(cssSelector(".rk-project-description")) getOrElse fail("Overview -> Project Description not found")
