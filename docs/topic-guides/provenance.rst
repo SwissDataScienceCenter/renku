@@ -107,7 +107,7 @@ the following consequences:
 
 1. The command was executed.
 2. If it completed successfully, a ``Plan`` entry was created with its ``name``
-   set to the name specified with ``--name``. This is a workflow specification
+   set to the name specified by ``--name``. This is a workflow specification
    allowing the command to be re-executed with potentially modified
    inputs/outputs in the Renku workflow system. Think of ``Plans`` as recipes
    for executing workflows.
@@ -135,6 +135,6 @@ dependencies change. By knowing exactly which results depend on a particular
 input, we can make sure to recompute only the necessary steps and not the
 entire pipeline, potentially avoiding expensive calculations in complex
 settings. In addition, recorded workflows can be executed independently using
-**renku workflow execute**.For understanding the basic functionality, head to
+**renku workflow execute**. For understanding the basic functionality, head to
 `renkulab.io <https://renkulab.io>`_ and follow :ref:`first_steps`. See also
 the Renkulab :ref:`knowledge graph<knowledge-graph>` documentation.
