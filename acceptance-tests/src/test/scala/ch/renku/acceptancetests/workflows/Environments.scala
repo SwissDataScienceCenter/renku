@@ -18,8 +18,6 @@
 
 package ch.renku.acceptancetests.workflows
 
-import org.openqa.selenium.interactions.Actions
-
 import ch.renku.acceptancetests.model.projects.ProjectIdentifier
 import ch.renku.acceptancetests.pages._
 import ch.renku.acceptancetests.tooling.{AcceptanceSpec, AnonEnvConfig}
@@ -150,9 +148,6 @@ trait Environments {
         projectPage.Sessions.connectToJupyterLabLink.isDisplayed shouldBe true
       case Some(startEnvButton) =>
         And("the user clicks on the Start session button")
-        new Actions(webDriver)
-          .moveToElement(startEnvButton)
-          .perform();
         click on startEnvButton sleep (5 seconds)
 
         `try few times before giving up` { _ =>

@@ -1,0 +1,40 @@
+name: Publish helm chart
+
+on:
+  push:
+    tags: ["*"]
+  workflow_dispatch:
+
+jobs:
+  publish-chart:
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - name: Set version
+        id: vars
+        run: echo ::set-output name=tag::${GITHUB_REF#refs/*/}
+      - uses: SwissDataScienceCenter/renku-actions/publish-chart@v0.3.2
+        env:
+          CHART_DIR: helm-chart/
+          CHART_NAME: renku
+          GIT_USER: chart-bot
+          GIT_EMAIL: chart-bot@example.com
+          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+          GITHUB_TOKEN: ${{ secrets.RENKUBOT_GITHUB_TOKEN }}
+      - uses: 8398a7/action-slack@v3
+        with:
+          status: custom
+          fields: job,ref
+          custom_payload: |
+            {
+              attachments: [{
+                color: '${{ job.status }}' === 'success' ? 'good' : '${{ job.status }}' === 'failure' ? 'danger' : 'warning',
+                text: `${process.env.AS_JOB} version ${{ steps.vars.outputs.tag }}: ${{ job.status }}.`,
+              }]
+            }
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+        if: always()

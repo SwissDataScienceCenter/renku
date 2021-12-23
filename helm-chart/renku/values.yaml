@@ -92,14 +92,14 @@ global:
     existingSecretPasswordKey: redis-password
 
     ## Specify the redis host and port. Notice that these settings only affect
-    ## the subcharts which represent the applications which are clients to redis, 
-    ## but not the redis cluster deployment itself. 
+    ## the subcharts which represent the applications which are clients to redis,
+    ## but not the redis cluster deployment itself.
     ## If you're deploying redis through this chart and you want to deviate from
-    ## the defaults, you'll have to match whatever you set here in the non-global 
+    ## the defaults, you'll have to match whatever you set here in the non-global
     ## redis section which defines the actual redis cluster.
     ## The hostname will fall-back to RELEASE-NAME-redis if left empty and the port
     ## will be set to the respective defaults depending on the isSentinel setting.
-    # host: RELEASE-NAME-redis 
+    # host: RELEASE-NAME-redis
     # port: 6379/26379
 
     # Set to true if redis host/port point to a redis sentinel.
@@ -242,7 +242,7 @@ postgresql:
 
   image:
     repository: bitnami/postgresql
-    tag: 11.11.0
+    tag: 12.8.0
 
   persistence:
     ## We use the defaults here, but they will probably be modified for most deployments.
@@ -345,7 +345,7 @@ gitlab:
     # Check out the gitlab docs on upgrading versions - in particular major
     # versions - before changing the image tag.
     #  https://docs.gitlab.com/ce/update/#upgrading-to-a-new-major-version
-    tag: 13.10.4-ce.0
+    tag: 14.4.4-ce.0
 
   ## automatically log in to gitlab
   oauth:
@@ -649,6 +649,15 @@ tests:
   image:
     repository: renku/tests
     tag: "latest"
+  resources:
+    requests:
+      memory: "3G"
+      cpu: "1500m"
+      ephemeral-storage: "3G"
+    limits:
+      memory: "3G"
+      cpu: "1500m"
+      ephemeral-storage: "3G"
   ## User account for running `helm test`
   #parameters:
   #  email: bwayne@example.com

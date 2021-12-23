@@ -142,6 +142,12 @@ class ProjectPage(val projectSlug: String, val namespace: String)
           .getOrElse(fail("Issues iFrame not found"))
       }
 
+      def unavailableCollaborationIframe(implicit webDriver: WebDriver): WebElement = eventually {
+        findAll(cssSelector("div > div.my-4"))
+          .find(_.text.startsWith("This Gitlab instance cannot be embedded"))
+          .getOrElse(fail("Message iFrame cannot be embedded - not found"))
+      }
+
       object NewIssue {
         def titleField(implicit webDriver: WebDriver): WebElement = eventually {
           find(cssSelector("input#title")) getOrElse fail("Title field not found")
@@ -288,7 +294,7 @@ class ProjectPage(val projectSlug: String, val namespace: String)
     }
 
     def maybeStartSessionButton(implicit webDriver: WebDriver): Option[WebElement] = eventually {
-      findAll(cssSelector("div > form > button.btn.btn-primary")).find(_.text == "Start session")
+      findAll(cssSelector("button.btn.btn-primary")).find(_.text == "Start session")
     }
 
     def connectToJupyterLabLink(implicit webDriver: WebDriver): WebElement = eventually {
@@ -297,16 +303,31 @@ class ProjectPage(val projectSlug: String, val namespace: String)
         .getOrElse(fail("Connect to session button not found"))
     }
 
-    def verifyImageReady(implicit webDriver: WebDriver): Unit = eventually {
-      maybeImageReadyBadge getOrElse {
-        sleep(5 second)
-        webDriver.navigate.refresh()
-        fail("Image not ready")
-      }
-    }(waitUpTo(10 minutes, interval = 3 seconds), implicitly[Retrying[WebBrowser.Element]], implicitly[source.Position])
+    def buttonShowBranch(implicit webDriver: WebDriver): WebElement = eventually {
+      findAll(cssSelector("div.mb-3 > button"))
+        .find(_.text.startsWith("Do you want to select the branch"))
+        .getOrElse(fail("Expanding selection to branch, commit, image not found"))
+    }
+
+    def maybeButtonHideBranch(implicit webDriver: WebDriver): Option[WebElement] = eventually {
+      findAll(cssSelector("div.mb-3 > button")).find(_.text.startsWith("Hide branch"))
+    }
 
     private def maybeImageReadyBadge(implicit webDriver: WebDriver): Option[WebBrowser.Element] =
       find(cssSelector(".badge.bg-success"))
+
+    def verifyImageReady(implicit webDriver: WebDriver): Unit = eventually {
+      sleep(1 second)
+      maybeButtonHideBranch getOrElse {
+        buttonShowBranch.click()
+        sleep(5 seconds)
+      }
+      maybeImageReadyBadge getOrElse {
+        sleep(10 seconds)
+        webDriver.navigate.refresh()
+        fail("Image not ready")
+      }
+    }(waitUpTo(5 minutes, interval = 5 seconds), implicitly[Retrying[WebBrowser.Element]], implicitly[source.Position])
 
     object Running {
 
