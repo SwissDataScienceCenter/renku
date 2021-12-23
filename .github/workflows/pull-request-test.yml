@@ -55,10 +55,11 @@ jobs:
       renku-ui: ${{ steps.deploy-comment.outputs.renku-ui}}
       test-enabled: ${{ steps.deploy-comment.outputs.test-enabled}}
       extra-values: ${{ steps.deploy-comment.outputs.extra-values}}
+      persist: ${{ steps.deploy-comment.outputs.persist }}
     steps:
       - uses: actions/checkout@v2
       - id: deploy-comment
-        uses: SwissDataScienceCenter/renku-actions/check-pr-description@v0.3.2
+        uses: SwissDataScienceCenter/renku-actions/check-pr-description@test-and-cleanup-action
         with:
           string: /deploy
           pr_ref: ${{ github.event.number }}
