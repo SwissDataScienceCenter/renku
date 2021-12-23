@@ -115,7 +115,6 @@ jobs:
     if: github.event.action != 'closed'
     needs: [check-deploy, deploy-pr]
     steps:
-      - uses: actions/checkout@v2
       - name: Test the PR
         if: "needs.check-deploy.outputs.pr-contains-string == 'true' && needs.check-deploy.outputs.test-enabled == 'true'"
         env:
@@ -123,8 +122,8 @@ jobs:
           RENKUBOT_KUBECONFIG: ${{ secrets.RENKUBOT_DEV_KUBECONFIG }}
           RENKU_RELEASE: ci-renku-${{ github.event.number }}
         run: |
-          echo "$RENKUBOT_KUBECONFIG" > renkubot-kube.config
-          helm test ${RENKU_RELEASE} --namespace ${RENKU_RELEASE} --timeout 80m --logs
+          echo "$RENKUBOT_KUBECONFIG" > renkubot-kube.config && chmod 400 renkubot-kube.config
+          helm --kubeconfig renkubot-kube.config test ${RENKU_RELEASE} --namespace ${RENKU_RELEASE} --timeout 80m --logs
       - name: Download artifact for packaging on failure
         if: failure()
         uses: SwissDataScienceCenter/renku-actions/download-test-artifacts@v0.3.2
