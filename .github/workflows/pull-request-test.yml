@@ -134,3 +134,4 @@ jobs:
         GITLAB_TOKEN: ${{ secrets.DEV_GITLAB_TOKEN }}
         RENKUBOT_KUBECONFIG: ${{ secrets.RENKUBOT_DEV_KUBECONFIG }}
         MAX_AGE_SECONDS: 0
+        DELETE_NAMESPACE: "true"
