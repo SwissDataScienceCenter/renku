@@ -90,20 +90,15 @@ For each of the upgrade steps below we recommend setting the corresponding tag i
 2. Upgrade using image 13.12.15-ce.0
 3. A few things are deprecated/unsupported in GitLab ``14``, so before upgrading to this major version you might need to:
 
-  - upgrade PostgreSQL version to ``12`` (if not yet done, please follow the above ``Upgrade PostgreSQL`` instructions).
-  - ``Unicorn`` is deprecated and replaced by ``Puma``, you should then `convert old ``Unicorn`` settings to ``Puma`` <https://docs.gitlab.com/ee/administration/operations/puma.html#convert-unicorn-settings-to-puma>`__.
-  - migrate to hashed storage (`documentation reference <https://docs.gitlab.com/ee/administration/raketasks/storage.html#migrate-to-hashed-storage>`__), from a shell within the GitLab pod execute:
-  ```
-  gitlab-rake gitlab:storage:migrate_to_hashed
-  ```
+ - upgrade PostgreSQL version to ``12.8`` (if not yet done, please follow the above ``Upgrade PostgreSQL`` instructions).
+ - ``Unicorn`` is deprecated and replaced by ``Puma``, you should then `convert old Unicorn settings to Puma <https://docs.gitlab.com/ee/administration/operations/puma.html#convert-unicorn-settings-to-puma>`__.
+ - migrate to hashed storage (`documentation reference <https://docs.gitlab.com/ee/administration/raketasks/storage.html#migrate-to-hashed-storage>`__), from a shell within the GitLab pod execute: ``gitlab-rake gitlab:storage:migrate_to_hashed``
 
-4. Upgrade using image 14.0.12-ce.0 (or greater). This major version change will trigger `batched background migrations <https://docs.gitlab.com/ee/update/#batched-background-migrations>`__, these can take hours or even days and should be over before moving on to the next upgrade.
-To check the progress login as admin and got to Admin Area -> Monitoring -> Background Migrations.
+4. Upgrade using image 14.0.12-ce.0 (or greater). This major version change will trigger `batched background migrations <https://docs.gitlab.com/ee/update/#batched-background-migrations>`__, these can take hours or even days and should be over before moving on to the next upgrade. To check the progress login as admin and got to Admin Area -> Monitoring -> Background Migrations.
 5. Upgrade using image 14.1.Z-ce.0
 6. Upgrade using image 14.2.Z-ce.0
 7. Upgrade using image 14.3.Z-ce.0
-8. Upgrade using image 14.4.4-ce.0 (default in the Renku ``0.11.0`` helm chart)
-Note that this version does not have to be selected explicitly in your own values file anymore as it is the default of the ``0.11.0`` renku chart.
+8. Upgrade using image 14.4.4-ce.0 (default in the Renku ``0.11.0`` helm chart). Note that this version does not have to be selected explicitly in your own values file anymore as it is the default of the ``0.11.0`` renku chart.
 
 Upgrading to 0.8.4
 ******************
