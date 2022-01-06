@@ -28,7 +28,7 @@ import scala.language.implicitConversions
 object LoginPage
     extends RenkuPage(
       path = "/auth/realms/Renku/protocol/openid-connect/auth",
-      title = "Log in to Renku"
+      title = "Sign in to Renku"
     ) {
 
   override def pageReadyElement(implicit webDriver: WebDriver): Option[WebElement] = Some(logInButton)
@@ -86,7 +86,7 @@ object LoginPage
 object ProviderLoginPage
     extends RenkuPage(
       path = "/auth/realms/Renku/protocol/openid-connect/auth",
-      title = "Log in to Renku"
+      title = "Sign in to Renku"
     ) {
 
   override def pageReadyElement(implicit webDriver: WebDriver): Option[WebElement] = Some(logInButton)
@@ -134,7 +134,7 @@ object AuthorizeApplicationPage
 object RegisterNewUserPage
     extends RenkuPage(
       path = "/auth/realms/Renku/login-actions/registration",
-      title = "Log in to Renku"
+      title = "Sign in to Renku"
     ) {
 
   override def pageReadyElement(implicit webDriver: WebDriver): Option[WebElement] = Some(registerButton)
@@ -190,7 +190,7 @@ object RegisterNewUserPage
 case class UpdateAccountInfoPage(userCredentials: UserCredentials)
     extends RenkuPage(
       path = "/auth/realms/Renku/login-actions/first-broker-login",
-      title = "Log in to Renku"
+      title = "Sign in to Renku"
     ) {
 
   override def pageReadyElement(implicit webDriver: WebDriver): Option[WebElement] = Some(submitButton)
