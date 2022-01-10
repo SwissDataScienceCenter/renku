@@ -38,11 +38,21 @@ object DatasetsPage
     find(cssSelector("#searchButton")) getOrElse fail("Datasets -> search button cannot be found")
   }
 
-  def orderByButton(datasetOrdering: DatasetSearchOrdering)(implicit webDriver: WebDriver): WebElement = eventually {
-    findAll(cssSelector("button.dropdown-item")).find(elem => elem.getText == datasetOrdering.value) getOrElse fail(
-      s"Datasets -> order by ${datasetOrdering.value} button not found"
-    )
-  }
+  def orderByDropdownMenu(
+      currentOrdering:  DatasetSearchOrdering = DatasetSearchOrdering.ProjectsCount
+  )(implicit webDriver: WebDriver): WebElement =
+    eventually {
+      findAll(cssSelector("button.dropdown-toggle")).find(elem => elem.getText == currentOrdering.value) getOrElse fail(
+        s"Datasets -> current ordering ${currentOrdering.value} button not found"
+      )
+    }
+
+  def orderByDropdownItem(datasetOrdering: DatasetSearchOrdering)(implicit webDriver: WebDriver): WebElement =
+    eventually {
+      findAll(cssSelector("button.dropdown-item")).find(elem => elem.getText == datasetOrdering.value) getOrElse fail(
+        s"Datasets -> order by ${datasetOrdering.value} button not found"
+      )
+    }
 
   def searchResultLinks(implicit webDriver: WebDriver): List[WebElement] = eventually {
     findAll(cssSelector(".rk-search-result-card > a > div > div.title")).toList
@@ -75,7 +85,7 @@ object DatasetsPage
       val value = "Date"
     }
     case object ProjectsCount extends DatasetSearchOrdering {
-      val value = "Projects Count"
+      val value = "Projects count"
     }
   }
 }

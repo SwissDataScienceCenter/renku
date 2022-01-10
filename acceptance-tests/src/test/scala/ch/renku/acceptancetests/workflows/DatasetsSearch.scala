@@ -37,8 +37,10 @@ trait DatasetsSearch {
 
     When(s"the user types in the '$phrase' in the search field")
     DatasetsPage.searchBox enterValue phrase
+    And("opens the order by dropdown menu")
+    click on DatasetsPage.orderByDropdownMenu() sleep (1 second)
     And(s"changes the ordering to ${orderBy.value}")
-    click on DatasetsPage.orderByButton(orderBy) sleep (1 second)
+    click on DatasetsPage.orderByDropdownItem(orderBy) sleep (1 second)
     And("clicks the search button")
     click on DatasetsPage.searchButton sleep (1 second)
 
