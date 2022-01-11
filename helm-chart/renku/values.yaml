@@ -697,11 +697,7 @@ tests:
   resources:
     requests:
       memory: "3G"
-      cpu: "1500m"
-      ephemeral-storage: "3G"
-    limits:
-      memory: "3G"
-      cpu: "1500m"
+      cpu: "500m"
       ephemeral-storage: "3G"
   ## User account for running `helm test`
   #parameters:

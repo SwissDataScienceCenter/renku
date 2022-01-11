@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Swiss Data Science Center (SDSC)
+ * Copyright 2022 Swiss Data Science Center (SDSC)
  * A partnership between École Polytechnique Fédérale de Lausanne (EPFL) and
  * Eidgenössische Technische Hochschule Zürich (ETHZ).
  *
@@ -57,13 +57,15 @@ trait Datasets {
     And("all the events are processed by the knowledge-graph ")
     `wait for KG to process events`(projectPage.asProjectIdentifier)
 
-    val datasetPage = DatasetPage(datasetName)
     Then("the user should see its newly created dataset without the KG warning message")
+    val datasetPage = DatasetPage(datasetName)
     reloadPage() sleep (2 seconds)
-    verify browserAt datasetPage
-    verify that datasetPage.datasetTitle contains datasetName.value
-    val datasetNotInKgWarningSign = datasetPage.datasetNotInKgWarning
-    if (datasetNotInKgWarningSign.size > 0) fail("The dataset is not in the KG")
+
+    `try few times before giving up` { _ =>
+      verify browserAt datasetPage
+      verify that datasetPage.datasetTitle contains datasetName.value
+      if (datasetPage.datasetNotInKgWarning.nonEmpty) fail("The dataset is not in the KG")
+    }
 
     datasetPage
   }
@@ -99,10 +101,12 @@ trait Datasets {
     val datasetPage = DatasetPage(datasetName)
     Then("the user should see its newly created dataset without the KG warning message")
     reloadPage() sleep (2 seconds)
-    verify browserAt datasetPage
-    verify that datasetPage.datasetTitle contains datasetName.value
-    val datasetNotInKgWarningSign = datasetPage.datasetNotInKgWarning
-    if (datasetNotInKgWarningSign.size > 0) fail("The dataset is not in the KG")
+
+    `try few times before giving up` { _ =>
+      verify browserAt datasetPage
+      verify that datasetPage.datasetTitle contains datasetName.value
+      if (datasetPage.datasetNotInKgWarning.nonEmpty) fail("The dataset is not in the KG")
+    }
 
     datasetPage
   }
@@ -146,8 +150,7 @@ trait Datasets {
     reloadPage() sleep (2 seconds)
 
     `try few times before giving up` { _ =>
-      val datasetNotInKgWarningSign = datasetPage.datasetNotInKgWarning
-      if (datasetNotInKgWarningSign.size > 0) fail("The dataset is not in the KG")
+      if (datasetPage.datasetNotInKgWarning.nonEmpty) fail("The dataset is not in the KG")
     }
 
     val newTitle = by.newValue
