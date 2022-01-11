@@ -22,6 +22,7 @@ import ch.renku.acceptancetests.generators.Generators.Implicits._
 import ch.renku.acceptancetests.generators.Generators._
 import ch.renku.acceptancetests.model.datasets.DatasetName
 import ch.renku.acceptancetests.pages.DatasetsPage
+import ch.renku.acceptancetests.pages.DatasetsPage.DatasetSearchOrdering.Title
 import ch.renku.acceptancetests.tooling.{AcceptanceSpec, KnowledgeGraphApi}
 import ch.renku.acceptancetests.workflows._
 
@@ -45,10 +46,10 @@ class FreeTextDatasetSearchSpec
     val dataset2Name = DatasetName.generate(containing = commonWord)
     `create a dataset`(dataset2Name)
 
-    `search for dataset with phrase`(commonWord)
+    `search for dataset with phrase`(commonWord, orderBy = Title)
 
     Then("the expected datasets should be shown")
-    val expectedDatasets  = List(dataset1Name, dataset2Name).sorted.map(_.toString)
+    val expectedDatasets  = List(dataset1Name, dataset2Name).sorted.map(_.toString).reverse
     val foundDatasetLinks = DatasetsPage.searchResultLinks.map(_.getText)
     foundDatasetLinks.filter(expectedDatasets.contains) shouldBe expectedDatasets
 
