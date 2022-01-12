@@ -48,7 +48,8 @@ trait FlightsTutorial extends Matchers with CLIConfiguration {
     console %> c"git lfs install --local"
 
     And("imports a dataset from the dataverse")
-    console %> c"renku dataset import --name flight-data https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/WTZS4K".userInput("y")
+    console %> c"renku dataset import --name flight-data https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/WTZS4K"
+      .userInput("y")
 
     And("adds some Python packages to the requirements.txt")
     console %> (c"echo pandas==1.3.0" >> "requirements.txt")
