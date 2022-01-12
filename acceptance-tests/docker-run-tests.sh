@@ -26,6 +26,7 @@ if [ ! -z $RENKU_TEST_S3_HOST ]; then
   MIRROR_JOB_ID=$(echo $!)
 fi
 
+
 echo "Target: " $TARGET
 sbt -Dsbt.color=always -Dsbt.supershell=false -Dsbt.global.base=/tests/.sbt/global -Dsbt.boot.directory=/tests/.sbt/boot/ -Dsbt.coursier.home=/tests/.sbt/coursier/ scalafmtAll "$TARGET"
 TESTS_RC=$(echo $!)
