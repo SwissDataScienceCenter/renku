@@ -1,4 +1,4 @@
-#!/usr/bin/bash
+#!/bin/bash
 
 if [ "$#" -lt "1" ]; then
   TARGET="test"
