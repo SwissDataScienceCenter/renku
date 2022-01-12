@@ -69,7 +69,7 @@ object LoginPage
   }
 
   def loginSucceeded(implicit webDriver: WebDriver): Boolean = eventually {
-    find(cssSelector("#kc-content-wrapper > div.alert.alert-error")) match {
+    find(cssSelector("span#input-error")) match {
       // If we find the alert, login failed!
       case Some(_) => false
       case None    => true
