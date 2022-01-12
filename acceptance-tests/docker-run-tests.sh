@@ -27,17 +27,19 @@ fi
 
 echo "Target: " $TARGET
 sbt -Dsbt.color=always -Dsbt.supershell=false -Dsbt.global.base=/tests/.sbt/global -Dsbt.boot.directory=/tests/.sbt/boot/ -Dsbt.coursier.home=/tests/.sbt/coursier/ scalafmtAll "$TARGET"
-TESTS_RC=$?
+TESTS_RC=$(echo $!)
 
 # cleanup the background mirroring job
 if [ ! -z $MIRROR_JOB_ID ]
 then
+  echo "Terminating test artifacts background mirroring job."
   kill -15 $MIRROR_JOB_ID
 fi
 
 # if tests pass then remove the bucket
 if [ $TESTS_RC -eq 0 ]
 then
+  echo "The tests PASSED with return code $TESTS_RC, removing the test artifacts at $RENKU_TEST_S3_BUCKET/$RENKU_TEST_S3_FILENAME."
   MC_HOST_bucket="https://${RENKU_TEST_S3_ACCESS_KEY}:${RENKU_TEST_S3_SECRET_KEY}@${RENKU_TEST_S3_HOST}" mc rm --recursive --force bucket/${RENKU_TEST_S3_BUCKET}/${RENKU_TEST_S3_FILENAME}/
 fi
 
