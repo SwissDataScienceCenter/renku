@@ -21,6 +21,7 @@ if [ ! -z $RENKU_TEST_S3_HOST ]; then
   fi
   # mirror the test results folder in the background
   # the sleep command ensures the tests have started before mirroring starts
+  echo "Will upload test artefacts from target to https://XXXX:XXXX@${RENKU_TEST_S3_HOST} bucket/${RENKU_TEST_S3_BUCKET}/${RENKU_TEST_S3_FILENAME}"
   sleep 60 && MC_HOST_bucket="https://${RENKU_TEST_S3_ACCESS_KEY}:${RENKU_TEST_S3_SECRET_KEY}@${RENKU_TEST_S3_HOST}" mc mirror --overwrite --remove --watch --exclude "scala*/*" --exclude "streams/*" --exclude "task-temp-directory/*" --exclude "global-logging/*"  --exclude "target/20*/.gitattributes" --exclude "target/20*/.renku/cache" target bucket/${RENKU_TEST_S3_BUCKET}/${RENKU_TEST_S3_FILENAME}/ 2> /dev/null 1> /dev/null &
   MIRROR_JOB_ID=$(echo $!)
 fi
