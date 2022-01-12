@@ -43,4 +43,4 @@ then
   MC_HOST_bucket="https://${RENKU_TEST_S3_ACCESS_KEY}:${RENKU_TEST_S3_SECRET_KEY}@${RENKU_TEST_S3_HOST}" mc rm --recursive --force bucket/${RENKU_TEST_S3_BUCKET}/${RENKU_TEST_S3_FILENAME}/
 fi
 
-exit TESTS_RC
+exit $TESTS_RC
