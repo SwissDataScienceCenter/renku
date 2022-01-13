@@ -29,7 +29,7 @@ fi
 
 echo "Target: " $TARGET
 sbt -Dsbt.color=always -Dsbt.supershell=false -Dsbt.global.base=/tests/.sbt/global -Dsbt.boot.directory=/tests/.sbt/boot/ -Dsbt.coursier.home=/tests/.sbt/coursier/ scalafmtAll "$TARGET"
-TESTS_RC=$(echo $!)
+TESTS_RC=$?
 echo "Tests completed with exit code $TESTS_RC"
 
 # cleanup the background mirroring job
