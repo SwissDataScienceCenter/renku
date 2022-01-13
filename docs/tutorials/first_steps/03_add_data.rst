@@ -52,14 +52,14 @@ succinctly identify it and guarantee that the data will be findable and
 accessible for a longer period of time (usually at least 20 years).
 
 The DOI for the
-dataset we want to import is `10.7910/DVN/WTZS4K <https://www.doi.org/10.7910/DVN/WTZS4K>`_.
+dataset we want to import is `https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/WTZS4K <https://www.doi.org/https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/WTZS4K>`_.
 
 Execute the following line and when prompted if you really want to download the
 data, answer yes.
 
 .. code-block:: console
 
-    $ renku dataset import --name flight-data 10.7910/DVN/WTZS4K
+    $ renku dataset import --name flight-data https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/WTZS4K
 
     Output:
     CHECKSUM    NAME                       SIZE (MB)  TYPE
@@ -105,7 +105,7 @@ repository:
     Author: John Doe <john.doe@example.com>
     Date:   Mon Apr 29 11:58:34 2019 +0000
 
-        renku dataset import --name flight-data 10.7910/DVN/WTZS4K
+        renku dataset import --name flight-data https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/WTZS4K
 
     commit 3809ce796933bd554ec65df0737b6ecf00b069e1
     Author: John Doe <john.doe@example.com>
@@ -155,7 +155,7 @@ Adding data from the local file system
 
 Often the data you wish to use on Renku is not available on a remote repository.
 In this case you can either create a dataset using the RenkuLab UI or use the data upload user interface in JupyterLab
-or RStudio. Within a running session, the latter is the easier option. For this example, suppose that we have downloaded the 
+or RStudio. Within a running session, the latter is the easier option. For this example, suppose that we have downloaded the
 ``2019-01-flights.csv.zip`` file to our local computer and wish to upload this
 to our Renku project and add it as a dataset. We start with working in the
 terminal to set up the Renku dataset.
@@ -187,7 +187,7 @@ in the two examples below. Select the ``zip`` folder corresponding to our datase
 
 
     Note that in JupyterLab, ``zip`` folders are not automatically unzipped
-    once they are uploaded. You should then see 
+    once they are uploaded. You should then see
 
     .. image:: ../../_static/images/jupyterlab-data-uploaded.png
         :width: 85%
@@ -203,7 +203,7 @@ in the two examples below. Select the ``zip`` folder corresponding to our datase
 
 
     Note that in RStudio, ``zip`` folders are automatically unzipped once
-    they are uploaded. You should then see 
+    they are uploaded. You should then see
 
     .. image:: ../../_static/images/rstudio-data-uploaded.png
         :width: 85%
@@ -232,7 +232,7 @@ dataset.
     OK
 
 
-Check that the right file has been associated with the ``flight-data`` Renku 
+Check that the right file has been associated with the ``flight-data`` Renku
 dataset by running
 
 .. code-block:: console
