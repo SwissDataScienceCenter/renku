@@ -139,7 +139,6 @@ Once all the pieces are in place, you can deploy Renku with the following comman
 
 .. code-block:: console
 
-    $ helm init
     $ helm repo add renku https://swissdatasciencecenter.github.io/helm-charts/
     $ helm upgrade --install renku renku/renku \
      --namespace renku \
