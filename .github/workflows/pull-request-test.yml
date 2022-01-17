@@ -123,6 +123,7 @@ jobs:
         gitlab-token: ${{ secrets.DEV_GITLAB_TOKEN }}
         persist: "${{ needs.check-deploy.outputs.persist }}"
         ci-renku-values: ${{ secrets.CI_RENKU_VALUES }}
+        test-timeout-mins: "80"
   cleanup:
     if: github.event.action == 'closed'
     runs-on: ubuntu-20.04
