@@ -1,5 +1,11 @@
 .. _changelog:
 
+0.11.2
+------
+
+Minor release fixing a bug in the Renku template for Keycloak.
+
+
 0.11.1
 ------
 
@@ -9,8 +15,14 @@ New Feature highlights:
 ~~~~~~~~~~~~~~~~~~~~~~~
 
 * **UI**: updates to style of alerts, menus, and tables
+
 * **User sessions**: allow stopping a session that is not fully started
+
+.. image:: images/renku-ui-1.3.0-session-shutdown.gif
+
 * **User sessions**: support links for sharing sessions with additional options
+
+.. image:: images/renku-ui-1.3.0-launch-links.gif
 
 Note: this release also updates the version of the keycloak chart to ``16.0.4``,
 but no manual admin action should be needed.
