@@ -67,7 +67,8 @@ def _check_and_create_client(keycloak_admin, new_client):
         # We have to separately query the secret as it is not part of
         # the original respone
         secret = keycloak_admin.get_client_secrets(realm_client["id"])
-        realm_client["secret"] = secret["value"]
+        # public clients don't have secrets so default to None
+        realm_client["secret"] = secret.get("value", None)
 
         # We have to remove the auto-generated IDs of the protocol mapper(s)
         # before comparing to the to-be-created client.

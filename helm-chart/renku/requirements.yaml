@@ -33,7 +33,7 @@ dependencies:
   repository: "https://charts.bitnami.com/bitnami"
   condition: postgresql.enabled
 - name: keycloak
-  version: 9.8.1
+  version: 16.0.4
   repository: "https://codecentric.github.io/helm-charts"
   condition: keycloak.enabled
 - name: certificates

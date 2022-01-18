@@ -230,7 +230,7 @@ keycloak:
 
   extraInitContainers: |
     - name: theme-provider
-      image: renku/keycloak-theme:2.0.1
+      image: renku/keycloak-theme:3.0.1
       imagePullPolicy: IfNotPresent
       command:
         - sh
