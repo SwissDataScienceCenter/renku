@@ -1,5 +1,11 @@
 .. _changelog:
 
+0.11.2
+------
+
+Minor release fixing a bug in the Renku template for Keycloak.
+
+
 0.11.1
 ------
 
@@ -9,8 +15,10 @@ New Feature highlights:
 ~~~~~~~~~~~~~~~~~~~~~~~
 
 * **UI**: updates to style of alerts, menus, and tables
-* **User sessions**: allow stopping a session that is not fully started
-* **User sessions**: support links for sharing sessions with additional options
+
+* **User sessions**: allow stopping a session that is not fully started (`example stopping session <https://github.com/SwissDataScienceCenter/renku/blob/0.11.2/docs/_static/changelog-images/renku-ui-1.3.0-session-shutdown.gif>`_)
+
+* **User sessions**: support links for sharing sessions with additional options (`example sharing a link <https://github.com/SwissDataScienceCenter/renku/blob/0.11.2/docs/_static/changelog-images/renku-ui-1.3.0-launch-links.gif>`_)
 
 Note: this release also updates the version of the keycloak chart to ``16.0.4``,
 but no manual admin action should be needed.
