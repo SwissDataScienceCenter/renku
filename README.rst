@@ -20,9 +20,6 @@
 RENKU (連句)
 ============
 
-.. image:: https://github.com/SwissDataScienceCenter/renku/actions/workflows/deploy.yml/badge.svg
-   :target: https://github.com/SwissDataScienceCenter/renku/actions/workflows/deploy.yml
-
 .. image:: https://readthedocs.org/projects/renku/badge/
     :target: http://renku.readthedocs.io/en/latest/
     :alt: Documentation Status

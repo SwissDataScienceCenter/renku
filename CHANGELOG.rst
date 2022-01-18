@@ -16,13 +16,9 @@ New Feature highlights:
 
 * **UI**: updates to style of alerts, menus, and tables
 
-* **User sessions**: allow stopping a session that is not fully started
+* **User sessions**: allow stopping a session that is not fully started (`example stopping session <_static/changelog-images/renku-ui-1.3.0-session-shutdown.gif>`_)
 
-.. image:: images/renku-ui-1.3.0-session-shutdown.gif
-
-* **User sessions**: support links for sharing sessions with additional options
-
-.. image:: images/renku-ui-1.3.0-launch-links.gif
+* **User sessions**: support links for sharing sessions with additional options (`example sharing a link <_static/changelog-images/renku-ui-1.3.0-launch-links.gif>`_)
 
 Note: this release also updates the version of the keycloak chart to ``16.0.4``,
 but no manual admin action should be needed.
