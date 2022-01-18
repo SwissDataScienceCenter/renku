@@ -113,7 +113,7 @@ jobs:
 
   test-pr:
     runs-on: ubuntu-20.04
-    if: ${{ github.event.action != 'closed' && needs.check-deploy.outputs.pr-contains-string == 'true' }}
+    if: ${{ github.event.action != 'closed' && needs.check-deploy.outputs.pr-contains-string == 'true' && needs.check-deploy.outputs.test-enabled == 'true' }}
     needs: [check-deploy, deploy-pr]
     steps:
     - uses: SwissDataScienceCenter/renku-actions/test-renku@v0.4.1
