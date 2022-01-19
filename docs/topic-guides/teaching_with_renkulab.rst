@@ -31,8 +31,8 @@ We want to give your teachings the best Renku experience, whether they are one-o
 workshops or weekly lab sessions. This means ensuring adequate computational
 resources for you and your sessions, with a Renku admin on hand if there are
 problems with the platform. As such, we would very much appreciate if you could
-*announce* your teaching using the following form:
-https://renkulab.io/projects/team-renku/renku-teaching-announcements/files/blob/Form.ipynb.
+*announce* your teaching using the following form: `Announce your Renku teaching
+<https://form.jotform.com/213221777284356>`_.
 
 Ways of using Renku to teach
 ----------------------------
