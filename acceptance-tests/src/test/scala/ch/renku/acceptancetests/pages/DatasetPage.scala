@@ -46,7 +46,7 @@ class DatasetPage(datasetName: DatasetName, projectPage: ProjectPage)
   }
 
   def datasetNotInKgWarning(implicit webDriver: WebDriver): List[WebBrowser.Element] = eventually {
-    findAll(cssSelector("#notInKGWarning")) toList
+    findAll(cssSelector("div.alert.alert-warning > .alert-content")) toList
   }
 
   def datasetFiles(implicit webDriver: WebDriver): WebElement = eventually {
