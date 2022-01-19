@@ -24,14 +24,14 @@ Renku solves many of those problems by building on containerized environments,
 providing a simple package set-up for Python, R and Julia, free computing resources,
 and a completely browser-based application to do your work.
 
-Announce your teachings!
-------------------------
+Announce your courses!
+----------------------
 
-We want to give your teachings the best Renku experience, whether they are one-off
+We want to give your course the best Renku experience, whether they are one-off
 workshops or weekly lab sessions. This means ensuring adequate computational
 resources for you and your sessions, with a Renku admin on hand if there are
 problems with the platform. As such, we would very much appreciate if you could
-*announce* your teaching using the following form: `Announce your Renku teaching
+*announce* your course using the following form: `Announce your Renku course
 <https://form.jotform.com/213221777284356>`_.
 
 Ways of using Renku to teach
