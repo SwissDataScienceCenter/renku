@@ -7,14 +7,12 @@ The image built from this repo should be added as an `initContainer` to all k8s 
 Releasing, building and publishing this library Helm chart is all done manually.
 
 Please follow the steps below to publish a new certificates version:
-1. Tag the commit from which the release is based with: `git tag certificates-X.X.X`
-2. Push the tag: `git push --tags`
-3. Navigate to the `certificates` folder and build the image, tagging with the same tag (i.e. `X.X.X`) as the certificates chart.
+1. Navigate to the `certificates` folder and build the image, tagging with the same tag (i.e. `X.X.X`) as the certificates chart.
 
 ```
 docker build -t renku/certificates:X.X.X .
 docker push renku/certificates:X.X.X
 ```
 
-4. Publish the certificates chart: `chartpress --publish-chart --tag X.X.X`
-5. Update the tag of the certificates image and the certificates chart in the main Renku Helm chart and all dependent Helm charts 
+2. Publish the certificates chart: `chartpress --publish-chart --tag X.X.X`
+3. Update the tag of the certificates image and the certificates chart in the main Renku Helm chart and all dependent Helm charts 
