@@ -1,5 +1,11 @@
 .. _changelog:
 
+0.11.3
+------
+
+Minor release fixing a bug in the acceptance tests.
+
+
 0.11.2
 ------
 
