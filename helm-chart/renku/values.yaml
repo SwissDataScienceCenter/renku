@@ -120,7 +120,7 @@ global:
   certificates:
     image:
       repository: renku/certificates
-      tag: 'latest'
+      tag: '0.0.1'
     customCAs: []
       # - secret:
 
