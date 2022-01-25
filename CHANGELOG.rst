@@ -1,5 +1,40 @@
 .. _changelog:
 
+0.11.3
+------
+
+Minor release fixing a bug in the acceptance tests.
+
+
+0.11.2
+------
+
+Minor release fixing a bug in the Renku template for Keycloak.
+
+
+0.11.1
+------
+
+This is a minor release featuring improvements to the Renku UI.
+
+New Feature highlights:
+~~~~~~~~~~~~~~~~~~~~~~~
+
+* **UI**: updates to style of alerts, menus, and tables
+
+* **User sessions**: allow stopping a session that is not fully started (`example stopping session <https://github.com/SwissDataScienceCenter/renku/blob/0.11.2/docs/_static/changelog-images/renku-ui-1.3.0-session-shutdown.gif>`_)
+
+* **User sessions**: support links for sharing sessions with additional options (`example sharing a link <https://github.com/SwissDataScienceCenter/renku/blob/0.11.2/docs/_static/changelog-images/renku-ui-1.3.0-launch-links.gif>`_)
+
+Note: this release also updates the version of the keycloak chart to ``16.0.4``,
+but no manual admin action should be needed.
+
+For full release notes see:
+
+* `renku-ui 1.3.0 <https://github.com/SwissDataScienceCenter/renku-ui/blob/master/CHANGELOG.md#130-2022-01-07>`_
+* `renku-graph 1.37.7 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/1.37.7>`_
+* `renku-gateway 0.10.3 <https://github.com/SwissDataScienceCenter/renku-gateway/releases/tag/0.10.3>`_
+
 0.11.0
 ------
 
@@ -10,10 +45,11 @@ Upgrading from 0.10.3
 
 **BREAKING CHANGES**
 
-Please follow [these instructions](https://github.com/SwissDataScienceCenter/renku/tree/master/helm-chart#upgrading-to-0110) carefully.
+Please follow `these instructions <https://github.com/SwissDataScienceCenter/renku/tree/master/helm-chart#upgrading-to-0110>`_ carefully.
 
 The resulting changes in the values file should be:
-* NEW/EDIT *postgresql.persistence.existingClaim* will most likely need to be modified in the course of upgrading your PostgreSQL version. See [these instructions](https://github.com/SwissDataScienceCenter/renku/tree/master/helm-chart/utils/postgres_migrations/version_upgrades/README.md)
+
+* NEW/EDIT *postgresql.persistence.existingClaim* will most likely need to be modified in the course of upgrading your PostgreSQL version. See `postgres migration instructions <https://github.com/SwissDataScienceCenter/renku/tree/master/helm-chart/utils/postgres_migrations/version_upgrades/README.md>`_
 * NEW/EDIT/DELETE *gitlab.image.tag* might have to be adjusted as we do a GitLab major version bump in with this release.
 
 0.10.3

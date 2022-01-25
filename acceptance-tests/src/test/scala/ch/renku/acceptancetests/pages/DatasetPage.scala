@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Swiss Data Science Center (SDSC)
+ * Copyright 2022 Swiss Data Science Center (SDSC)
  * A partnership between École Polytechnique Fédérale de Lausanne (EPFL) and
  * Eidgenössische Technische Hochschule Zürich (ETHZ).
  *
@@ -46,7 +46,7 @@ class DatasetPage(datasetName: DatasetName, projectPage: ProjectPage)
   }
 
   def datasetNotInKgWarning(implicit webDriver: WebDriver): List[WebBrowser.Element] = eventually {
-    findAll(cssSelector("#notInKGWarning")) toList
+    findAll(cssSelector("div.alert.alert-warning > .alert-content")) toList
   }
 
   def datasetFiles(implicit webDriver: WebDriver): WebElement = eventually {
