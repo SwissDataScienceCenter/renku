@@ -3,8 +3,8 @@ ARG FROM_IMAGE=alpine
 ARG ALPINE_VERSION=3.14
 FROM $FROM_IMAGE:$ALPINE_VERSION
 
-ARG CA_PKG_VERSION=20191127-r5
-RUN apk --update --no-cache add ca-certificates=${CA_PKG_VERSION} java-cacerts
+ARG CA_PKG_VERSION=20211220-r0
+RUN apk --update --no-cache add ca-certificates=${CA_PKG_VERSION} java-cacerts=1.0-r1
 
 COPY scripts/bundle-certificates.sh /scripts/
 
