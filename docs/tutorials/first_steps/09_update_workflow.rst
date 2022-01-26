@@ -13,7 +13,7 @@ This does not seem quite right. Austin, TX is not a very large airport, but
 that number would mean that it had a flight landing on average
 every two minutes, around the clock, during the entire month of January 2019.
 
-Go back and take a look at the filtering script: it contains 
+Go back and take a look at the filtering script: it contains
 an error! In the code block
 
 .. tabbed:: Python
@@ -84,19 +84,15 @@ programming languages.
 .. code-block:: console
 
     $ renku status
+    Outdated outputs(2):
+    (use `renku update --all` to generate the file from its latest inputs)
 
-    On branch master
-    Outdated outputs:
-         (use "renku log [<file>...]" to see the full lineage)
-         (use "renku update [<file>...]" to generate the file from its latest inputs)
+        data/output/flights-count.txt: src/filter_flights.py
+        data/output/flights-filtered.csv: src/filter_flights.py
 
-                data/output/flights-count.txt: src/filter_flights.pycfaf152b
-                data/output/flights-filtered.csv: src/filter_flights.pycfaf152b
+    Modified inputs(1):
 
-    Modified inputs:
-        (use "renku log --revision <sha1> <file>" to see a lineage for the given revision)
-
-                src/filter_flights.py: bfd5e408, cfaf152b
+            src/filter_flights.py
 
 Renku is telling us that ``src/filter_flights.py`` was changed and
 ``data/output/flights-filtered.csv``, ``data/output/flights-count.txt`` all need
@@ -110,7 +106,8 @@ data/output/flights-count.txt``.
     $ renku update --all
 
     ...
-    [workflow ] completed success
+    INFO:cwltool:[workflow ] completed success
+    Moving outputs  [                                    ]  2/2
 
 **Wasn't that easy!?**
 
