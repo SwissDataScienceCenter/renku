@@ -19,7 +19,6 @@ charts:
       - helm-chart
       - acceptance-tests
       - scripts/init-realm
-      - certificates
     images:
       tests:
         buildArgs:
@@ -36,10 +35,3 @@ charts:
         paths:
           - scripts/init-realm
           - scripts/init-realm/init-realm.py
-      certificates:
-        contextPath: certificates
-        dockerfilePath: certificates/Dockerfile
-        # Note: Add back the values path with https://github.com/SwissDataScienceCenter/renku-notebooks/pull/788
-        # valuesPath: global.certificates.image
-        paths:
-          - certificates
