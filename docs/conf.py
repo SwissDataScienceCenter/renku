@@ -20,6 +20,7 @@ from os.path import abspath, join, dirname
 from pathlib import Path
 
 sys.path.insert(0, abspath(join(dirname(__file__))))
+sys.path.append(abspath(join(dirname(__file__), "renku-python/docs/_ext")))
 
 # -- General configuration ------------------------------------------------
 
@@ -43,7 +44,8 @@ extensions = [
     "sphinxcontrib.spelling",
     "sphinx_rtd_theme",
     "sphinx_copybutton",
-    "sphinx_panels"
+    "sphinx_panels",
+    "cheatsheet",
 ]
 
 # Plantweb configuration
