@@ -1,5 +1,54 @@
 .. _changelog:
 
+0.12.0
+------
+
+This is an important upgrade that enables v1.0 of ``renku-python`` (renku CLI)
+to work with the renku web interface, renkulab. The ``renku-python`` component
+in addition provides the service that manages project creation, datasets and
+knowledge graph metadata production. Therefore major changes were needed to all
+of the other components that make up the renku platform. For the most part, many
+of the changes will not be immediately visible to users of the renku web
+application.
+
+However, from this point on, new projects created on renkulab will use renku CLI
+>= v1.0. We therefore strongly urge all users to have a look at the myriad of
+excellent new features that this major release enables by checkout out the
+`release notes
+<https://github.com/SwissDataScienceCenter/renku-python/blob/1.0.0-release-notes/renku-release-notes-1.0.0.md>`_.
+Most notably, this release completely changes the storage and generation of the
+knowledge graph metadata, with vastly improved performance and functionality. We
+have gone to great lengths to ensure a smooth transition for older projects and
+for continuity in the CLI, but please report issues on
+https://renku.discourse.group or
+https://github.com/SwissDataScienceCenter/renku/issues.
+
+Detailed release notes follow below.
+
+Users:
+~~~~~~
+
+* Support for ``renku-python >= 1.0`` - plugins, workflows, speed 🥳 `read all
+  about it!
+  <https://github.com/SwissDataScienceCenter/renku-python/blob/1.0.0-release-notes/renku-release-notes-1.0.0.md>`_
+* Improved backwards compatibilty for older projects - this means fewer
+  mandatory project updates and interruptions 🎯
+* Streamlined update dialog in project status view 🚀
+* Estimates of project update duration for peace-of-mind 😯
+
+Administrators:
+~~~~~~~~~~~~~~~
+
+* BREAKING CHANGES: carefully plan the outage for this upgrade. Because of the
+  underyling changes to the knowledge graph structure, the entire KG has to be
+  rebuilt. Based on our experience, this is orders of magnitude faster than in
+  earlier iterations, but depending on the number of project it could still take
+  some time. The platform will be usable during this time, but KG features may
+  not fully work (e.g. dataset search)
+
+
+
+
 0.11.3
 ------
 
