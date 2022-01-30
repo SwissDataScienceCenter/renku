@@ -31,7 +31,7 @@ Users:
 * Support for ``renku-python >= 1.0`` - plugins, workflows, speed 🥳 `read all
   about it!
   <https://github.com/SwissDataScienceCenter/renku-python/blob/1.0.0-release-notes/renku-release-notes-1.0.0.md>`_
-* Improved backwards compatibilty for older projects - this means fewer
+* Improved backwards compatibility for older projects - this means fewer
   mandatory project updates and interruptions 🎯
 * Streamlined update dialog in project status view 🚀
 * Estimates of project update duration for peace-of-mind 😯
@@ -40,7 +40,7 @@ Administrators:
 ~~~~~~~~~~~~~~~
 
 * BREAKING CHANGES: carefully plan the outage for this upgrade. Because of the
-  underyling changes to the knowledge graph structure, the entire KG has to be
+  underlying changes to the knowledge graph structure, the entire KG has to be
   rebuilt. Based on our experience, this is orders of magnitude faster than in
   earlier iterations, but depending on the number of project it could still take
   some time. The platform will be usable during this time, but KG features may
