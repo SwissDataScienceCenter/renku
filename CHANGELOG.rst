@@ -35,18 +35,28 @@ Users:
   mandatory project updates and interruptions 🎯
 * Streamlined update dialog in project status view 🚀
 * Estimates of project update duration for peace-of-mind 😯
+* improved display of math formulas in markdown preview
+* more robust autosave infrastructure
+* support for project-template-defined parameter validation
+* support for icons and description for project templates
+* (bug fix) fix problems with dataset "add to project" button
+
+For full release notes of individual components see:
+
+* UI: https://github.com/SwissDataScienceCenter/renku-ui/releases
+* Graph: https://github.com/SwissDataScienceCenter/renku-graph/releases
+* CLI: https://github.com/SwissDataScienceCenter/renku-python/releases
+
 
 Administrators:
 ~~~~~~~~~~~~~~~
 
-* BREAKING CHANGES: carefully plan the outage for this upgrade. Because of the
-  underlying changes to the knowledge graph structure, the entire KG has to be
-  rebuilt. Based on our experience, this is orders of magnitude faster than in
-  earlier iterations, but depending on the number of project it could still take
-  some time. The platform will be usable during this time, but KG features may
-  not fully work (e.g. dataset search)
-
-
+BREAKING CHANGES: carefully plan the outage for this upgrade. Because of the
+underlying changes to the knowledge graph structure, the entire KG has to be
+rebuilt. Based on our experience, this is orders of magnitude faster than in
+earlier iterations, but depending on the number of project it could still take
+some time. The platform will be usable during this time, but KG features may not
+fully work (e.g. dataset search)
 
 
 0.11.3
