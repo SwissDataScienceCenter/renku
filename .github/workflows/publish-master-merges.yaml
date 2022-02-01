@@ -23,15 +23,20 @@ jobs:
           repository: ${{ github.repository }}
           excludes: prerelease, draft
       - id: get-stable-version
-        run: echo "stable_version=$(echo ${{ steps.get-latest-release-tag.outputs.release }} | cut -d'.' -f1-3)" >> $GITHUB_ENV
+        run:
+          echo "stable_version=$(echo ${{
+          steps.get-latest-release-tag.outputs.release }} | cut -d'.' -f1-3)" >>
+          $GITHUB_ENV
       - uses: actions-ecosystem/action-bump-semver@v1
         id: bump-semver
         with:
           current_version: ${{ env.stable_version }}
           level: prerelease
       - id: set-version
-        run: echo "publish_version=${{ steps.bump-semver.outputs.new_version }}.$(echo ${{ github.sha }} | cut -c 1-7)" >> $GITHUB_ENV
-      - uses: SwissDataScienceCenter/renku-actions/publish-chart@v0.4.1
+        run:
+          echo "publish_version=${{ steps.bump-semver.outputs.new_version
+          }}.$(echo ${{ github.sha }} | cut -c 1-7)" >> $GITHUB_ENV
+      - uses: SwissDataScienceCenter/renku-actions/publish-chart@v0.5.0
         env:
           CHART_DIR: helm-chart/
           CHART_TAG: "--tag ${{env.publish_version}}"
@@ -58,4 +63,7 @@ jobs:
       - uses: actions-ecosystem/action-push-tag@v1
         with:
           tag: ${{ env.publish_version }}
-          message: "${{ env.publish_version }}: PR #${{ github.event.pull_request.number }} ${{ github.event.pull_request.title }}"
+          message:
+            "${{ env.publish_version }}: PR #${{
+            github.event.pull_request.number }} ${{
+            github.event.pull_request.title }}"
