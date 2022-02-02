@@ -31,8 +31,26 @@ trait JupyterNotebook extends Datasets with Project with KnowledgeGraphApi {
     import jupyterLabPage.terminal
 
     terminal %> s"renku dataset create '$datasetName'" sleep (2 seconds)
-    And("pushes it")
-    terminal %> "git push" sleep (30 seconds)
+    And("saves it")
+    terminal %> "renku save" sleep (30 seconds)
+  }
+
+  def `verify the project is up to date`: Unit = {
+    When("the user goes to the project overview")
+    click on projectPage.Overview.tab
+
+    And("goes to the status tab")
+    click on projectPage.Overview.statusLink
+
+    verify userCanSee projectPage.Overview.currentProjectVersion
+    val currentVersion = projectPage.Overview.currentProjectVersion.getText
+    if (currentVersion != cliVersion.value) {
+      And("the user updates the project")
+      click on projectPage.Overview.updateButton
+    } else ()
+
+    Then("Project is up to date")
+    verify userCanSee projectPage.Overview.currentProjectVersion(is = cliVersion)
   }
 
   def `verify user can work with Jupyter notebook`: Unit = {
@@ -40,6 +58,7 @@ trait JupyterNotebook extends Datasets with Project with KnowledgeGraphApi {
 
     When("the user clicks on the Terminal icon")
     click on jupyterLabPage.terminalIcon sleep (2 seconds)
+
     val datasetName = DatasetName.generate
     And("the user creates a dataset")
     `create a dataset`(jupyterLabPage, datasetName)
