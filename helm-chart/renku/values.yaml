@@ -592,6 +592,7 @@ ui:
   #   enabled: false
   #   url: ''
   #   namespace: ''
+  #   sampleRate: 0 # sampling rate for tracing -- values must be between 0 and 1
 
   ## Configuration for statuspage.io integration
   # statuspage:
