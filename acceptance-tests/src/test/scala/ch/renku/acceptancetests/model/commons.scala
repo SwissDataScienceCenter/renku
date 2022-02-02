@@ -57,7 +57,7 @@ object CliVersion {
   }
 
   object NonReleasedVersion {
-    private val validator = raw"\d+\.\d+\.\d+(?:\.post\d+)?\.dev\d+\+g([0-9a-f]{5,40})"
+    private val validator = raw"\d+\.\d+\.\d+(?:(?:\-?rc\d+)?|(?:\.post\d+)?)\.dev\d+\+g([0-9a-f]{5,40})"
 
     def get(value: String): Option[CliVersion] =
       Option.when(value.trim matches validator)(new NonReleasedVersion(value.trim))
