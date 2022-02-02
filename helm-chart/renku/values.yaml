@@ -592,6 +592,7 @@ ui:
   #   enabled: false
   #   url: ''
   #   namespace: ''
+  #   sampleRate: 0 # sampling rate for tracing -- values must be between 0 and 1
 
   ## Configuration for statuspage.io integration
   # statuspage:
@@ -789,6 +790,12 @@ uiserver:
     # id: renku
     # secret: 1234abcd # do not provide any value here to use the global gateway client secret
     # expirationTolerance: 10
+  sentry: {}
+    ## Configuration for Sentry
+    # enabled: false
+    # url: '' # Sentry target URL
+    # namespace: '' # namespace used to log errors
+    # sampleRate: 0 # sampling rate for tracing -- values must be between 0 and 1
 
 ## Configuration for the Swagger-UI available at <renku-domain>/swagger
 swagger:
