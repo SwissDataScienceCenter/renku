@@ -21,24 +21,20 @@ jobs:
         with:
           version: '3.8.0'
         id: setup-helm
-      - id: get-latest-helm-charts
+      - id: get-latest-version
         run: |
           helm repo add renku https://swissdatasciencecenter.github.io/helm-charts/
           helm repo update
-          helm search repo renku --devel -o yaml > .latest-charts.yaml
-      - id: get-latest-version
-        uses: mikefarah/yq@v4.19.1
-        with:
-          cmd: yq '.[] | select(.name == "renku/renku") | .version' .latest-charts.yaml | cut -d'.' -f1-3
+          LATEST_VERSION=$(helm search repo renku --devel -o yaml | jq -r '.[] | select(.name == "renku/renku") | .version' | cut -d'.' -f1-3)
+          echo "::set-output name=latest_version::$LATEST_VERSION"
       - uses: actions-ecosystem/action-bump-semver@v1
         id: bump-semver
         with:
-          current_version: ${{ steps.get-latest-version.outputs.result }}
+          current_version: ${{ steps.get-latest-version.outputs.latest_version }}
           level: prerelease
       - id: set-version
         run: |
           echo "publish_version=${{ steps.bump-semver.outputs.new_version }}.$(echo ${{ github.sha }} | cut -c 1-7)" >> $GITHUB_ENV
-          rm .latest-charts.yaml
       - uses: SwissDataScienceCenter/renku-actions/publish-chart@v0.5.0
         env:
           CHART_DIR: helm-chart/
