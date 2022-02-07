@@ -18,14 +18,14 @@
 
 package ch.renku.acceptancetests.pages
 
+import ch.renku.acceptancetests.model.CliVersion
 import ch.renku.acceptancetests.model.projects.ProjectDetails._
 import ch.renku.acceptancetests.model.projects.{ProjectDetails, ProjectIdentifier}
 import ch.renku.acceptancetests.model.users.UserCredentials
 import ch.renku.acceptancetests.tooling.AcceptanceSpec
-import org.openqa.selenium.{By, WebDriver, WebElement}
+import org.openqa.selenium.{WebDriver, WebElement}
 import org.scalactic.source
 import org.scalatest.enablers.Retrying
-import org.scalatestplus.selenium
 import org.scalatestplus.selenium.WebBrowser
 import org.scalatestplus.selenium.WebBrowser.{cssSelector, find, findAll}
 
@@ -73,6 +73,27 @@ class ProjectPage(val projectSlug: String, val namespace: String)
 
     def tab(implicit webDriver: WebDriver): WebElement = eventually {
       find(cssSelector(s"a[href='$path']")) getOrElse fail("Overview tab not found")
+    }
+
+    def statusLink(implicit webDriver: WebDriver): WebElement = eventually {
+      find(cssSelector(s"a[href='$path/overview/status']")) getOrElse fail("Overview -> Status link not found")
+    }
+
+    def currentProjectVersion(implicit webDriver: WebDriver): WebElement = eventually {
+      find(cssSelector(s"span#project_version")) getOrElse fail(
+        s"Overview -> Project Version not found"
+      )
+    }
+    def currentProjectVersion(is: CliVersion)(implicit webDriver: WebDriver): WebElement = eventually {
+      find(cssSelector(s"span#project_version")).find(element => element.text == is.value) getOrElse fail(
+        s"Overview -> Project Version with version ${is.value} not found"
+      )
+    }
+
+    def updateButton(implicit webDriver: WebDriver): WebElement = eventually {
+      findAll(cssSelector(s"button.btn.btn-info")).find(button => button.text == "Update") getOrElse fail(
+        "Overview -> Update button not found"
+      )
     }
 
     def projectDescription(implicit webDriver: WebDriver): WebElement = eventually {

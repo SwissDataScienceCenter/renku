@@ -59,7 +59,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - id: deploy-comment
-        uses: SwissDataScienceCenter/renku-actions/check-pr-description@v0.4.1
+        uses: SwissDataScienceCenter/renku-actions/check-pr-description@v0.5.0
         with:
           string: /deploy
           pr_ref: ${{ github.event.number }}
@@ -73,20 +73,17 @@ jobs:
       - uses: actions/checkout@v2
       - name: renku build and deploy
         if: needs.check-deploy.outputs.pr-contains-string == 'true'
-        uses: SwissDataScienceCenter/renku-actions/deploy-renku@v0.4.1
+        uses: SwissDataScienceCenter/renku-actions/deploy-renku@v0.5.0
         env:
           DOCKER_PASSWORD: ${{ secrets.RENKU_DOCKER_PASSWORD }}
           DOCKER_USERNAME: ${{ secrets.RENKU_DOCKER_USERNAME }}
           GITLAB_TOKEN: ${{ secrets.DEV_GITLAB_TOKEN }}
           KUBECONFIG: "${{ github.workspace }}/renkubot-kube.config"
-          RANCHER_PROJECT_ID: ${{ secrets.CI_RANCHER_PROJECT }}
           RENKU_ANONYMOUS_SESSIONS: true
           RENKU_RELEASE: ci-renku-${{ github.event.number }}
           RENKU_VALUES_FILE: "${{ github.workspace }}/values.yaml"
           RENKU_VALUES: ${{ secrets.CI_RENKU_VALUES }}
           RENKUBOT_KUBECONFIG: ${{ secrets.RENKUBOT_DEV_KUBECONFIG }}
-          RENKUBOT_RANCHER_BEARER_TOKEN: ${{ secrets.RENKUBOT_RANCHER_BEARER_TOKEN }}
-          RANCHER_DEV_API_ENDPOINT: ${{ secrets.RANCHER_DEV_API_ENDPOINT }}
           TEST_ARTIFACTS_PATH: "tests-artifacts-${{ github.sha }}"
           renku: "@${{ github.head_ref }}"
           renku_core: "${{ needs.check-deploy.outputs.renku-core }}"
@@ -103,7 +100,9 @@ jobs:
           issue-number: ${{ github.event.pull_request.number }}
           comment-author: "RenkuBot"
       - name: Create comment pre deploy
-        if: "steps.findcomment.outputs.comment-id == 0 && needs.check-deploy.outputs.pr-contains-string == 'true'"
+        if:
+          "steps.findcomment.outputs.comment-id == 0 &&
+          needs.check-deploy.outputs.pr-contains-string == 'true'"
         uses: peter-evans/create-or-update-comment@v1
         with:
           token: ${{ secrets.RENKUBOT_GITHUB_TOKEN }}
@@ -113,26 +112,29 @@ jobs:
 
   test-pr:
     runs-on: ubuntu-20.04
-    if: ${{ github.event.action != 'closed' && needs.check-deploy.outputs.pr-contains-string == 'true' && needs.check-deploy.outputs.test-enabled == 'true' }}
+    if:
+      ${{ github.event.action != 'closed' &&
+      needs.check-deploy.outputs.pr-contains-string == 'true' &&
+      needs.check-deploy.outputs.test-enabled == 'true' }}
     needs: [check-deploy, deploy-pr]
     steps:
-    - uses: SwissDataScienceCenter/renku-actions/test-renku@v0.4.1
-      with:
-        renkubot-kubeconfig: ${{ secrets.RENKUBOT_DEV_KUBECONFIG }}
-        renku-release: ci-renku-${{ github.event.number }}
-        gitlab-token: ${{ secrets.DEV_GITLAB_TOKEN }}
-        persist: "${{ needs.check-deploy.outputs.persist }}"
-        ci-renku-values: ${{ secrets.CI_RENKU_VALUES }}
-        test-timeout-mins: "80"
+      - uses: SwissDataScienceCenter/renku-actions/test-renku@v0.5.0
+        with:
+          renkubot-kubeconfig: ${{ secrets.RENKUBOT_DEV_KUBECONFIG }}
+          renku-release: ci-renku-${{ github.event.number }}
+          gitlab-token: ${{ secrets.DEV_GITLAB_TOKEN }}
+          persist: "${{ needs.check-deploy.outputs.persist }}"
+          ci-renku-values: ${{ secrets.CI_RENKU_VALUES }}
+          test-timeout-mins: "80"
   cleanup:
     if: github.event.action == 'closed'
     runs-on: ubuntu-20.04
     steps:
-    - name: renku teardown
-      uses: SwissDataScienceCenter/renku-actions/cleanup-renku-ci-deployments@v0.4.1
-      env:
-        HELM_RELEASE_REGEX: "^ci-renku-${{ github.event.number }}$"
-        GITLAB_TOKEN: ${{ secrets.DEV_GITLAB_TOKEN }}
-        RENKUBOT_KUBECONFIG: ${{ secrets.RENKUBOT_DEV_KUBECONFIG }}
-        MAX_AGE_SECONDS: 0
-        DELETE_NAMESPACE: "true"
+      - name: renku teardown
+        uses: SwissDataScienceCenter/renku-actions/cleanup-renku-ci-deployments@v0.5.0
+        env:
+          HELM_RELEASE_REGEX: "^ci-renku-${{ github.event.number }}$"
+          GITLAB_TOKEN: ${{ secrets.DEV_GITLAB_TOKEN }}
+          RENKUBOT_KUBECONFIG: ${{ secrets.RENKUBOT_DEV_KUBECONFIG }}
+          MAX_AGE_SECONDS: 0
+          DELETE_NAMESPACE: "true"
