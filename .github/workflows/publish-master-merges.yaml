@@ -17,16 +17,10 @@ jobs:
       - uses: actions/checkout@v2
         with:
           fetch-depth: 0
-      - id: get-latest-release-tag
-        uses: pozetroninc/github-action-get-latest-release@v0.6.0
-        with:
-          repository: ${{ github.repository }}
-          excludes: prerelease, draft
+      - uses: WyriHaximus/github-action-get-previous-tag@v1
+        id: get-latest-tag
       - id: get-stable-version
-        run:
-          echo "stable_version=$(echo ${{
-          steps.get-latest-release-tag.outputs.release }} | cut -d'.' -f1-3)" >>
-          $GITHUB_ENV
+        run: echo "stable_version=$(echo ${{ steps.get-latest-tag.outputs.tag }} | cut -d'.' -f1-3)" >> $GITHUB_ENV
       - uses: actions-ecosystem/action-bump-semver@v1
         id: bump-semver
         with:
