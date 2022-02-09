@@ -46,6 +46,7 @@ For full release notes of individual components see:
 * UI: https://github.com/SwissDataScienceCenter/renku-ui/releases
 * Graph: https://github.com/SwissDataScienceCenter/renku-graph/releases
 * CLI: https://github.com/SwissDataScienceCenter/renku-python/releases
+* Notebooks: https://github.com/SwissDataScienceCenter/renku-notebooks/releases
 
 
 Administrators:
