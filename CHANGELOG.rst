@@ -54,7 +54,7 @@ Administrators:
 BREAKING CHANGES: carefully plan the outage for this upgrade. Because of the
 underlying changes to the knowledge graph structure, the entire KG has to be
 rebuilt. Based on our experience, this is orders of magnitude faster than in
-earlier iterations, but depending on the number of project it could still take
+earlier iterations, but depending on the number of projects it could still take
 some time. The platform will be usable during this time, but KG features may not
 fully work (e.g. dataset search)
 
