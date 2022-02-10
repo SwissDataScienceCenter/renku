@@ -45,7 +45,7 @@ Upgrading the base image used for interactive sessions
 
 In addition to updating the CLI version, you may also want to update the base image 
 used for sessions in your project. We periodically release new base images with 
-uprades to underlying libraries and packages. The base image is specified 
+upgrades to underlying libraries and packages. The base image is specified 
 on the ``ARG RENKU_BASE_IMAGE`` line in your ``Dockerfile``, for example it might
 read ``renku/renkulab-py:3.9-0.11.0``. This means that it is a python-based image 
 using Python 3.9 and image release ``0.11.0``. To change it, simply modify the base image
