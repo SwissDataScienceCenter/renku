@@ -532,10 +532,10 @@ ui:
     custom: true
     repositories:
       - url: https://github.com/SwissDataScienceCenter/renku-project-template
-        ref: 7598ddf356e28c80747f93ce97a55a69082b5cf1
+        ref: 0.3.0
         name: Renku
       - url: https://github.com/SwissDataScienceCenter/contributed-project-templates
-        ref: 0.3.1
+        ref: 0.4.0
         name: Community
 
   ## Configuration for a canary version of the UI
