@@ -51,5 +51,8 @@ read ``renku/renkulab-py:3.9-0.11.0``. This means that it is a python-based imag
 using Python 3.9 and image release ``0.11.0``. To change it, simply modify the base image
 referenced on that line. For a list of base images see
 `current images <https://github.com/SwissDataScienceCenter/renkulab-docker#current-images>`_.
-Changing the base image does not automatically mean that the Renku CLI version will 
+When choosing an updated image, try to stick to released versions like `renku/renkulab-py:3.9-0.11.0` 
+and not ones that include a commit hash like `renku/renkulab-py:3.9-14f93c5`. Those are 
+to be considered "development" versions. 
+Note: changing the base image does not automatically mean that the Renku CLI version will 
 also change - see the section above for details on how to update it. 
