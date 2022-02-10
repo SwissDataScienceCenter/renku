@@ -13,7 +13,7 @@ application.
 
 However, from this point on, new projects created on renkulab will use renku CLI
 >= v1.0. We therefore strongly urge all users to have a look at the myriad of
-excellent new features that this major release enables by checkout out the
+excellent new features that this major release enables by checking out out the
 `release notes
 <https://github.com/SwissDataScienceCenter/renku-python/blob/1.0.0-release-notes/renku-release-notes-1.0.0.md>`_.
 Most notably, this release completely changes the storage and generation of the
