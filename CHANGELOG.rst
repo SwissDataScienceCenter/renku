@@ -41,7 +41,7 @@ Users:
 * support for icons and description for project templates
 * (bug fix) fix problems with dataset "add to project" button
 * partial support for custom CA certificates
-* experimental support for s3 storage in user sessions
+* experimental support for cloud storage in user sessions
 
 For full release notes of individual components see:
 
