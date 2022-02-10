@@ -1,5 +1,77 @@
 .. _changelog:
 
+0.12.0
+------
+
+This is an important upgrade that enables v1.0 of `renku-python` (renku CLI) to work with the 
+renku web interface, renkulab. The upgrade requires regenerating the metadata in the knowledge 
+graph, which means that for a period of time, searching and accessing datasets and lineage 
+information will be limited and incomplete. The metadata regeneration is done automatically 
+and doesn't require any action from you. 
+
+Updating projects
+~~~~~~~~~~~~~~~~~
+
+You might be prompted to update your project to the new version of Renku. As a general rule, 
+this update should take less than 30 seconds, and we will provide an estimate of the time 
+required. The update will migrate the metadata for your project and, for most projects, 
+update the base image and the version of the Renku CLI used in interactive sessions. For 
+large projects with thousands of commits or many renku workflows, we recommend doing the 
+migration manually. Please don’t hesitate to `reach out <https://renku.discourse.group>`_ 
+or `open an issue <https://github.com/SwissDataScienceCenter/renku/issues>`_ if you 
+encounter problems or are unsure how to proceed. 
+
+Most importantly, from this point on, new projects created on renkulab will use renku 
+CLI ``>= v1.0``. We therefore strongly urge all users to have a look at the myriad of 
+excellent new features that this major release enables by checking out the 
+`renku-python release notes <https://github.com/SwissDataScienceCenter/renku-python/blob/1.0.0-release-notes/renku-release-notes-1.0.0.md>`_. 
+This release completely changes the storage and generation of the knowledge graph metadata, 
+with vastly improved performance and functionality. We have gone to great lengths to 
+ensure a smooth transition for older projects and for continuity in the CLI, but 
+please report issues on `discourse <https://renku.discourse.group>`_ or 
+`GitHub <https://github.com/SwissDataScienceCenter/renku/issues>`_.
+
+We hope you like the new features - if you have further questions suggestions for improvements, let us know!
+
+Detailed release notes follow below.
+
+Users
+~~~~~
+
+* Support for ``renku-python >= 1.0`` - plugins, workflows, speed 🥳 `read all
+  about it!
+  <https://github.com/SwissDataScienceCenter/renku-python/blob/1.0.0-release-notes/renku-release-notes-1.0.0.md>`_
+* Improved backwards compatibility for older projects - this means fewer
+  mandatory project updates and interruptions 🎯
+* (UI) Streamlined update dialog in project status view 🚀
+* (UI) Estimates of project update duration for peace-of-mind 😯
+* (UI) improved display of math formulas in markdown preview
+* (UI/sessions) more robust autosave infrastructure
+* (UI/core) support for project-template-defined parameter validation
+* (UI/core) support for icons and description for project templates
+* (bug fix) fix problems with dataset "add to project" button
+* (UI/sessions) experimental support for cloud storage in user sessions
+
+For full release notes of individual components see:
+
+* UI: https://github.com/SwissDataScienceCenter/renku-ui/releases
+* Graph: https://github.com/SwissDataScienceCenter/renku-graph/releases
+* CLI: https://github.com/SwissDataScienceCenter/renku-python/releases
+* Notebooks: https://github.com/SwissDataScienceCenter/renku-notebooks/releases
+
+
+Administrators
+~~~~~~~~~~~~~~
+
+BREAKING CHANGES: carefully plan the outage for this upgrade. Because of the
+underlying changes to the knowledge graph structure, the entire KG has to be
+rebuilt. Based on our experience, this is orders of magnitude faster than in
+earlier iterations, but depending on the number of projects it could still take
+some time. The platform will be usable during this time, but KG features may not
+fully work (e.g. dataset search)
+
+* (gateway/notebooks) partial support for custom CA certificates
+
 0.11.3
 ------
 
