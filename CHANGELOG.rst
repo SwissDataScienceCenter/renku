@@ -33,15 +33,14 @@ Users:
   <https://github.com/SwissDataScienceCenter/renku-python/blob/1.0.0-release-notes/renku-release-notes-1.0.0.md>`_
 * Improved backwards compatibility for older projects - this means fewer
   mandatory project updates and interruptions 🎯
-* Streamlined update dialog in project status view 🚀
-* Estimates of project update duration for peace-of-mind 😯
-* improved display of math formulas in markdown preview
-* more robust autosave infrastructure
-* support for project-template-defined parameter validation
-* support for icons and description for project templates
+* (UI) Streamlined update dialog in project status view 🚀
+* (UI) Estimates of project update duration for peace-of-mind 😯
+* (UI) improved display of math formulas in markdown preview
+* (UI/sessions) more robust autosave infrastructure
+* (UI/core) support for project-template-defined parameter validation
+* (UI/core) support for icons and description for project templates
 * (bug fix) fix problems with dataset "add to project" button
-* partial support for custom CA certificates
-* experimental support for cloud storage in user sessions
+* (UI/sessions) experimental support for cloud storage in user sessions
 
 For full release notes of individual components see:
 
@@ -61,6 +60,7 @@ earlier iterations, but depending on the number of projects it could still take
 some time. The platform will be usable during this time, but KG features may not
 fully work (e.g. dataset search)
 
+* (gateway/notebooks) partial support for custom CA certificates
 
 0.11.3
 ------
