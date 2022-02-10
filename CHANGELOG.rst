@@ -3,30 +3,40 @@
 0.12.0
 ------
 
-This is an important upgrade that enables v1.0 of ``renku-python`` (renku CLI)
-to work with the renku web interface, renkulab. The ``renku-python`` component
-in addition provides the service that manages project creation, datasets and
-knowledge graph metadata production. Therefore major changes were needed to all
-of the other components that make up the renku platform. For the most part, many
-of the changes will not be immediately visible to users of the renku web
-application.
+This is an important upgrade that enables v1.0 of `renku-python` (renku CLI) to work with the 
+renku web interface, renkulab. The upgrade requires regenerating the metadata in the knowledge 
+graph, which means that for a period of time, searching and accessing datasets and lineage 
+information will be limited and incomplete. The metadata regeneration is done automatically 
+and doesn't require any action from you. 
 
-However, from this point on, new projects created on renkulab will use renku CLI
->= v1.0. We therefore strongly urge all users to have a look at the myriad of
-excellent new features that this major release enables by checking out the
-`release notes
-<https://github.com/SwissDataScienceCenter/renku-python/blob/1.0.0-release-notes/renku-release-notes-1.0.0.md>`_.
-Most notably, this release completely changes the storage and generation of the
-knowledge graph metadata, with vastly improved performance and functionality. We
-have gone to great lengths to ensure a smooth transition for older projects and
-for continuity in the CLI, but please report issues on
-https://renku.discourse.group or
-https://github.com/SwissDataScienceCenter/renku/issues.
+Updating projects
+~~~~~~~~~~~~~~~~~
+
+You might be prompted to update your project to the new version of Renku. As a general rule, 
+this update should take less than 30 seconds, and we will provide an estimate of the time 
+required. The update will migrate the metadata for your project and, for most projects, 
+update the base image and the version of the Renku CLI used in interactive sessions. For 
+large projects with thousands of commits or many renku workflows, we recommend doing the 
+migration manually. Please don’t hesitate to `reach out <https://renku.discourse.group>`_ 
+or `open an issue <https://github.com/SwissDataScienceCenter/renku/issues>`_ if you 
+encounter problems or are unsure how to proceed. 
+
+Most importantly, from this point on, new projects created on renkulab will use renku 
+CLI ``>= v1.0``. We therefore strongly urge all users to have a look at the myriad of 
+excellent new features that this major release enables by checking out the 
+`renku-python release notes <https://github.com/SwissDataScienceCenter/renku-python/blob/1.0.0-release-notes/renku-release-notes-1.0.0.md>`_. 
+This release completely changes the storage and generation of the knowledge graph metadata, 
+with vastly improved performance and functionality. We have gone to great lengths to 
+ensure a smooth transition for older projects and for continuity in the CLI, but 
+please report issues on `discourse <https://renku.discourse.group>`_ or 
+`GitHub <https://github.com/SwissDataScienceCenter/renku/issues>`_.
+
+We hope you like the new features - if you have further questions suggestions for improvements, let us know!
 
 Detailed release notes follow below.
 
-Users:
-~~~~~~
+Users
+~~~~~
 
 * Support for ``renku-python >= 1.0`` - plugins, workflows, speed 🥳 `read all
   about it!
@@ -50,8 +60,8 @@ For full release notes of individual components see:
 * Notebooks: https://github.com/SwissDataScienceCenter/renku-notebooks/releases
 
 
-Administrators:
-~~~~~~~~~~~~~~~
+Administrators
+~~~~~~~~~~~~~~
 
 BREAKING CHANGES: carefully plan the outage for this upgrade. Because of the
 underlying changes to the knowledge graph structure, the entire KG has to be
