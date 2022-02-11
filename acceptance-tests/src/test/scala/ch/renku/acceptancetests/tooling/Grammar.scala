@@ -24,17 +24,14 @@ import ch.renku.acceptancetests.pages.Page
 import org.openqa.selenium.{WebDriver, WebElement}
 import org.scalatest.concurrent.Eventually
 import org.scalatest.exceptions.TestFailedException
-import org.scalatest.exceptions._
 import org.scalatestplus.selenium
 import org.scalatestplus.selenium.WebBrowser
 
 import scala.concurrent.duration._
 import scala.jdk.CollectionConverters._
 import scala.language.implicitConversions
-import cats.instances.boolean
-import java.{util => ju}
 
-trait Grammar extends WebElementOps with Eventually {
+trait Grammar extends WebElementOps with Scripts with Eventually {
   self: WebBrowser with AcceptanceSpec =>
 
   implicit def toSeleniumPage[Url <: BaseUrl](page: Page[Url])(implicit baseUrl: Url): selenium.Page =
@@ -67,7 +64,7 @@ trait Grammar extends WebElementOps with Eventually {
       else
         throw new Exception(
           s"Cannot find window with URL starting with ${page.url} and title ${page.title}, " +
-            s"instead I am at ${currentUrl} and title ${pageTitle}."
+            s"instead I am at $currentUrl and title $pageTitle."
         )
     }
 

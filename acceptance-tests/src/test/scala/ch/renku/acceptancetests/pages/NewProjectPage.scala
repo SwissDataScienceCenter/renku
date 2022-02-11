@@ -46,9 +46,13 @@ case object NewProjectPage
     visibilityField.click() sleep (1 second)
     visibilityOption(project.visibility).click() sleep (1 second)
 
+    scrollDown
+
     templateCard(project.template).click() sleep (5 seconds)
 
     docsScreenshots.takeScreenshot()
+
+    scrollDown
 
     createButton.click() sleep (10 seconds)
   }
