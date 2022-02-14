@@ -58,9 +58,10 @@ trait GitLabApi extends RestClient {
       .withAuthorizationToken(authorizationToken)
       .send(mapResponse {
         _.status match {
-          case Ok       => true
-          case NotFound => false
-          case other    => fail(s"Finding '${projectId.slug}' project in GitLab failed with $other status")
+          case Ok           => true
+          case NotFound     => false
+          case Unauthorized => false
+          case other        => fail(s"Finding '${projectId.slug}' project in GitLab failed with $other status")
         }
       })
 
