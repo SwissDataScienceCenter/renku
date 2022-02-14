@@ -1,5 +1,526 @@
 .. _changelog:
 
+0.12.0
+------
+
+This is an important upgrade that enables v1.0 of `renku-python` (renku CLI) to work with the 
+renku web interface, renkulab. The upgrade requires regenerating the metadata in the knowledge 
+graph, which means that for a period of time, searching and accessing datasets and lineage 
+information will be limited and incomplete. The metadata regeneration is done automatically 
+and doesn't require any action from you. 
+
+Updating projects
+~~~~~~~~~~~~~~~~~
+
+You might be prompted to update your project to the new version of Renku. As a general rule, 
+this update should take less than 30 seconds, and we will provide an estimate of the time 
+required. The update will migrate the metadata for your project and, for most projects, 
+update the base image and the version of the Renku CLI used in interactive sessions. For 
+large projects with thousands of commits or many renku workflows, we recommend doing the 
+migration manually. Please don’t hesitate to `reach out <https://renku.discourse.group>`_ 
+or `open an issue <https://github.com/SwissDataScienceCenter/renku/issues>`_ if you 
+encounter problems or are unsure how to proceed. 
+
+Most importantly, from this point on, new projects created on renkulab will use renku 
+CLI ``>= v1.0``. We therefore strongly urge all users to have a look at the myriad of 
+excellent new features that this major release enables by checking out the 
+`renku-python release notes <https://github.com/SwissDataScienceCenter/renku-python/blob/1.0.0-release-notes/renku-release-notes-1.0.0.md>`_. 
+This release completely changes the storage and generation of the knowledge graph metadata, 
+with vastly improved performance and functionality. We have gone to great lengths to 
+ensure a smooth transition for older projects and for continuity in the CLI, but 
+please report issues on `discourse <https://renku.discourse.group>`_ or 
+`GitHub <https://github.com/SwissDataScienceCenter/renku/issues>`_.
+
+We hope you like the new features - if you have further questions suggestions for improvements, let us know!
+
+Detailed release notes follow below.
+
+Users
+~~~~~
+
+* Support for ``renku-python >= 1.0`` - plugins, workflows, speed 🥳 `read all
+  about it!
+  <https://github.com/SwissDataScienceCenter/renku-python/blob/1.0.0-release-notes/renku-release-notes-1.0.0.md>`_
+* Improved backwards compatibility for older projects - this means fewer
+  mandatory project updates and interruptions 🎯
+* (UI) Streamlined update dialog in project status view 🚀
+* (UI) Estimates of project update duration for peace-of-mind 😯
+* (UI) improved display of math formulas in markdown preview
+* (UI/sessions) more robust autosave infrastructure
+* (UI/core) support for project-template-defined parameter validation
+* (UI/core) support for icons and description for project templates
+* (bug fix) fix problems with dataset "add to project" button
+* (UI/sessions) experimental support for cloud storage in user sessions
+
+For full release notes of individual components see:
+
+* UI: https://github.com/SwissDataScienceCenter/renku-ui/releases
+* Graph: https://github.com/SwissDataScienceCenter/renku-graph/releases
+* CLI: https://github.com/SwissDataScienceCenter/renku-python/releases
+* Notebooks: https://github.com/SwissDataScienceCenter/renku-notebooks/releases
+
+
+Administrators
+~~~~~~~~~~~~~~
+
+BREAKING CHANGES: carefully plan the outage for this upgrade. Because of the
+underlying changes to the knowledge graph structure, the entire KG has to be
+rebuilt. Based on our experience, this is orders of magnitude faster than in
+earlier iterations, but depending on the number of projects it could still take
+some time. The platform will be usable during this time, but KG features may not
+fully work (e.g. dataset search)
+
+* (gateway/notebooks) partial support for custom CA certificates
+
+0.11.3
+------
+
+Minor release fixing a bug in the acceptance tests.
+
+
+0.11.2
+------
+
+Minor release fixing a bug in the Renku template for Keycloak.
+
+
+0.11.1
+------
+
+This is a minor release featuring improvements to the Renku UI.
+
+New Feature highlights:
+~~~~~~~~~~~~~~~~~~~~~~~
+
+* **UI**: updates to style of alerts, menus, and tables
+
+* **User sessions**: allow stopping a session that is not fully started (`example stopping session <https://github.com/SwissDataScienceCenter/renku/blob/0.11.2/docs/_static/changelog-images/renku-ui-1.3.0-session-shutdown.gif>`_)
+
+* **User sessions**: support links for sharing sessions with additional options (`example sharing a link <https://github.com/SwissDataScienceCenter/renku/blob/0.11.2/docs/_static/changelog-images/renku-ui-1.3.0-launch-links.gif>`_)
+
+Note: this release also updates the version of the keycloak chart to ``16.0.4``,
+but no manual admin action should be needed.
+
+For full release notes see:
+
+* `renku-ui 1.3.0 <https://github.com/SwissDataScienceCenter/renku-ui/blob/master/CHANGELOG.md#130-2022-01-07>`_
+* `renku-graph 1.37.7 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/1.37.7>`_
+* `renku-gateway 0.10.3 <https://github.com/SwissDataScienceCenter/renku-gateway/releases/tag/0.10.3>`_
+
+0.11.0
+------
+
+This is a major release that includes an important upgrade to GitLab and PostgreSQL components: `14` and `12` major versions respectively.
+
+Upgrading from 0.10.3
+~~~~~~~~~~~~~~~~~~~~~
+
+**BREAKING CHANGES**
+
+Please follow `these instructions <https://github.com/SwissDataScienceCenter/renku/tree/master/helm-chart#upgrading-to-0110>`_ carefully.
+
+The resulting changes in the values file should be:
+
+* NEW/EDIT *postgresql.persistence.existingClaim* will most likely need to be modified in the course of upgrading your PostgreSQL version. See `postgres migration instructions <https://github.com/SwissDataScienceCenter/renku/tree/master/helm-chart/utils/postgres_migrations/version_upgrades/README.md>`_
+* NEW/EDIT/DELETE *gitlab.image.tag* might have to be adjusted as we do a GitLab major version bump in with this release.
+
+0.10.3
+------
+
+This is a bugfix release that includes various fixes to user sessions and some improvements to the UI.
+
+Improvements
+~~~~~~~~~~~~
+
+* **Datasets**: allow canceling a search before it completes.
+* **User sessions**: rearrange session menu options.
+* **User sessions**: update Renku commands cheat sheet.
+* **UI**: notify user when a new renkulab version is available.
+* **File display**: highlight code syntax in markdown files.
+* **File display**: support preview of Matlab files.
+* **File display**: add PDF file viewer.
+* **File display**: render LaTeX math.
+
+
+Bug fixes
+~~~~~~~~~~
+* **User sessions**: CPU limit enforcement is now configurable. Admins should refer to the `values documentation <https://github.com/SwissDataScienceCenter/renku-notebooks/blob/1.2.1/helm-chart/renku-notebooks/values.yaml#L155-L160>`__ to configure this in a Renku deployment.
+* **User sessions**: keep auto-saved branches after restoring a session with a newer commit.
+* **User sessions**: a different package is used to decode sessions authorization token.
+* **Anonymous sessions**: not crash anonymous sessions if these are disabled in a deployment.
+
+Individual components
+~~~~~~~~~~~~~~~~~~~~~
+
+For a full list of improvements and bug fixes in individual components, please check:
+
+* renku-ui:
+  `1.2.1 <https://github.com/SwissDataScienceCenter/renku-ui/releases/1.2.1>`__,
+  `1.2.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/1.2.0>`__ and
+  `1.1.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/1.1.0>`__
+
+* renku-notebooks:
+  `1.2.1 <https://github.com/SwissDataScienceCenter/renku-notebooks/releases/1.2.1>`__
+
+* renku-gateway:
+  `0.10.2 <https://github.com/SwissDataScienceCenter/renku-gateway/releases/0.10.2>`__
+
+0.10.2
+------
+
+This is a bugfix release that includes various fixes and improvements to user sessions.
+See `renku-notebooks 1.2.0 <https://github.com/SwissDataScienceCenter/renku-notebooks/releases/tag/1.2.0>`__ and `amalthea 0.2.1 <https://github.com/SwissDataScienceCenter/amalthea/releases/tag/0.2.1>`__ for more details.
+
+Improvements
+~~~~~~~~~~~~
+
+* **Chart**: Add ``tolerations``, ``affinity`` and ``nodeSelector`` for user sessions.
+
+Bug fixes
+~~~~~~~~~~
+
+* **User sessions**: checkout the correct alternative branch.
+* **User sessions**: use correct fallback renku image.
+* **Anonymous sessions**: fix failing probes.
+
+0.10.1
+------
+
+This is a bugfix release that contains a fix for launching R sessions with our newest component that manages user sessions (Amalthea).
+See `renku-notebooks 1.1.1 <https://github.com/SwissDataScienceCenter/renku-notebooks/releases/tag/1.1.1>`__ and `amalthea 0.1.3 <https://github.com/SwissDataScienceCenter/amalthea/releases/tag/0.1.3>`__ for more details.
+
+Improvements
+~~~~~~~~~~~~
+
+Our documentation has been restructured, now articles are reorganized into ``Tutorials``, ``How-to guides``, ``Topic Guides`` and ``Reference`` (see `#2191 <https://github.com/SwissDataScienceCenter/renku/pull/2191>`__).
+
+0.10.0
+------
+
+This release includes a new user session controller replacing Jupyterhub. The new controller is not compatible with user sessions created by Jupyterhub, therefore all user sessions need to be terminated prior to upgrading to ``0.10.0``.
+
+Improvements
+~~~~~~~~~~~~
+
+* **Documentation**: updated documentation on proper teaching etiquette and steps to use renkulab for teaching.
+* **User sessions**: use `Amalthea <https://github.com/SwissDataScienceCenter/amalthea>`__ to control sessions through a k8s operator.
+
+Bug fixes
+~~~~~~~~~~
+
+* **Authentication**: log out from GitLab when logging out from Renku.
+* **Authentication**: fix Keycloak token authentication.
+
+Individual components
+~~~~~~~~~~~~~~~~~~~~~
+
+For a full list of improvements and bug fixes in individual components, please check:
+
+* renku-notebooks:
+  `1.0.0 <https://github.com/SwissDataScienceCenter/renku-notebooks/releases/1.0.0>`__
+
+* renku-gateway:
+  `0.10.1 <https://github.com/SwissDataScienceCenter/renku-gateway/releases/0.10.1>`__ and
+  `0.10.0 <https://github.com/SwissDataScienceCenter/renku-gateway/releases/0.10.0>`__
+
+Upgrading from 0.9.3
+~~~~~~~~~~~~~~~~~~~~
+
+**BREAKING CHANGES!!** The admin should plan and warn users ahead of time that their sessions will be terminated when doing the upgrade. The new ``Loud`` statuspage component introduced in `0.9.3` can help get  the message across.
+
+* The use of Amalthea and removal of Jupyterhub will require some changes. Namely:
+  - All references to Jupyterhub in the ``values.yaml`` have been removed and are not required anymore.
+  - Amalthea is installed from a separate helm chart which is now a dependency of the ``renku-notebooks`` helm chart.
+  - Several new sections have been added to the ``values.yaml`` file which are required by Amalthea. Please refer to the renku values file for more details.
+* Some older images with Rstudio will open Rstudio in a directory one level above the repository. This can be fixed by upgrading to a newer version of the base image in the Dockerfile in the relevant renku project.
+* This version is not backward compatible with the user sessions from older versions. During the deployment the admin should clean up all remaining user sessions and then deploy this version.
+* Anonymous sessions do not require a separate namespace and renku-notebooks deployment, if enabled in the values file they now run in the same namespace as regular user sessions.
+
+0.9.3
+-----
+
+This is a very minor release that allows messages about maintenance and downtime to be displayed more prominently in the UI. This way the interruptions from upcoming releases can be more effectively communicated to users.
+
+Improvements
+~~~~~~~~~~~~
+
+* **UI**: possibility to make maintenance/downtime notifications more prominently shown. To use this feature, the admin needs to create a new statuspage component called Loud and thick when wanting the message to appear more prominently.
+
+0.9.2
+-----
+
+This is a bugfix release that includes various minor fixes: templates and core use a new bugfix CLI version, as well as other fixes for external to SDSC deployments and improved login style.
+
+Improvements
+~~~~~~~~~~~~
+
+* **Sessions**: make enforced limits configurable when using ``emptyDir`` disk space.
+
+Bug Fixes
+~~~~~~~~~
+
+* **Templates**: Renku and custom templates updated to use Renku ``0.16.2`` (should fix `pyshacl and renku conflicting dependencies <https://renku.discourse.group/t/failing-image-build/429/6>`__).
+* **Renku core / CLI**: pin pyshacl to version ``0.17.0.post1``.
+* **Login**: make social identity providers style match internal ones.
+* **UI**: configurable welcome page for external deployments.
+
+Individual components
+~~~~~~~~~~~~~~~~~~~~~
+
+For a full list of improvements and bug fixes in individual components, please check:
+
+* renku-ui:
+  `1.0.1 <https://github.com/SwissDataScienceCenter/renku-ui/releases/1.0.1>`__
+
+* renku-core:
+  `0.16.2 <https://github.com/SwissDataScienceCenter/renku-python/releases/v0.16.2>`__
+
+* renku-notebooks:
+  `0.8.20 <https://github.com/SwissDataScienceCenter/renku-notebooks/releases/0.8.20>`__ and
+  `0.8.19 <https://github.com/SwissDataScienceCenter/renku-notebooks/releases/0.8.19>`__
+
+* renku-graph:
+  `1.37.5 <https://github.com/SwissDataScienceCenter/renku-graph/releases/1.37.5>`__
+
+0.9.1
+-----
+
+This bugfix release includes fixes to the Knowledge Graph component, see `1.37.2 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/1.37.2>__` and `1.37.1 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/1.37.1>__`.
+
+0.9.0
+-----
+
+This release switches to the **new UI**  🎉 by default.
+The biggest changes compared to the earlier UI version are explained on the RenkuLab home page
+and include:
+
+* New aesthetics, look and feel
+* Sessions (formerly "interactive environments") shown in the UI within their RenkuLab context
+* Issues and Merge Requests shown in the UI within RenkuLab context
+
+Improvements
+~~~~~~~~~~~~
+
+* **Collaboration**: add ``Fork`` tab and ``Open in Tab`` buttons to collaboration pages.
+* **Datasets**: support for dataset marquee image in projects
+* **Sessions**: improve functioning and experience of sessions in iframes
+* **File Browser**: allow resizing of file-system navigation view
+
+Bug Fixes
+~~~~~~~~~
+
+* **Projects**: handle primary branches named other than master
+* **Templates**: template updating issue with  (see this `forum post <https://renku.discourse.group/t/error-during-environment-creation/407/7>`__).
+* **Renku core / CLI**: update rdflib 6 and remove rdflib-jsonld which could not be installed with setuptools ``>58.0.2``.
+* **CLI**: fix `renku rm` failure in specific cases.
+
+
+Individual components
+~~~~~~~~~~~~~~~~~~~~~
+
+For a full list of improvements and bug fixes in individual components, please check:
+
+* renku-ui:
+  `1.0.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/1.0.0>`__
+
+* renku-core:
+  `0.16.1 <https://github.com/SwissDataScienceCenter/renku-python/releases/0.16.1>`__
+
+* renku-graph:
+  `1.37.0 <https://github.com/SwissDataScienceCenter/renku-graph/releases/1.37.0>`__
+
+Upgrading from 0.8.7
+~~~~~~~~~~~~~~~~~~~~
+
+Although no special changes are needed in your values file for upgrading to Renku ``0.9.0``, we want to bring a couple of configurations to your attention:
+
+* To configure and customize the welcome page you have some options, please read the related `values file section <https://github.com/SwissDataScienceCenter/renku/blob/master/helm-chart/renku/values.yaml#L476>`__.
+* To enable the new Keycloak renku-theme, you can login to the admin console of ``<renku-deployment-url>/auth``, go to Realm settings, theme and choose ``renku-theme``.
+* The ingress should now include a configuration snippet to support showing sessions in iframes (automatically added by our chart templates).
+
+0.8.7
+-----
+
+This is a small release that contains mainly bug fixes to the user sessions and to the UI.
+
+Improvements
+~~~~~~~~~~~~~
+
+* **UI**: redesign header to take less vertical space.
+* **Knowledge Graph**: dataset free-text search performance improvements.
+* **Authentication**: enable ``renku login`` support for CLI so that users can interact with private repositories without using a GitLab password or an ssh key.
+
+Bug Fixes
+~~~~~~~~~
+
+* **Environments**: listing orphaned user sessions tied to a deleted project/branch/namespace.
+* **Environments**: bugs with mistyped variable and missing branches in autosave.
+* **UI**: prevent values duplication on session enumerations.
+
+Individual components
+~~~~~~~~~~~~~~~~~~~~~
+
+For changes to individual components, please check:
+
+* renku-notebooks:
+  `0.8.18 <https://github.com/SwissDataScienceCenter/renku-notebooks/releases/tag/0.8.18>`__
+
+* renku-gateway:
+  `0.9.5 <https://github.com/SwissDataScienceCenter/renku-gateway/releases/tag/0.9.5>`__
+
+* renku-ui:
+  `1.0.0-beta5 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/1.0.0-beta5>`__
+
+* renku-graph:
+  `1.36.7 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/1.36.7>`__
+
+0.8.6
+-----
+
+This is just a bugfix release that addresses a problem in the notebook service caused by different naming conventions for user session PVCs.
+
+Individual components
+~~~~~~~~~~~~~~~~~~~~~
+
+For changes to individual components, please check:
+
+* renku-notebooks:
+  `0.8.17 <https://github.com/SwissDataScienceCenter/renku-notebooks/releases/tag/0.8.17>`__
+
+0.8.5
+-----
+
+This is just a bugfix release that addresses a problem in the notebook service where project names were causing the creation of PVCs in k8s to fail because of characters that k8s does not allow in PVC names (i.e. uppercase letters and underscores).
+
+Individual components
+~~~~~~~~~~~~~~~~~~~~~
+
+For changes to individual components, please check:
+
+* renku-notebooks:
+  `0.8.16 <https://github.com/SwissDataScienceCenter/renku-notebooks/releases/tag/0.8.16>`__
+
+0.8.4
+-----
+
+This version of Renku introduces the ability to use persistent volumes for user sessions. This is optional and can be enabled in the values
+file for the helm chart. In addition to enabling this feature users have the ability to select the storage class used by the persistent
+volumes. We strongly recommend that a storage class with a `Delete` reclaim policy is used, otherwise persistent volumes from all user
+sessions will keep accumulating.
+
+Also, unlike previous versions, with 0.8.4 the amount of disk storage will be **strongly enforced**,
+regardless of whether persistent volumes are used or not. With persistent volumes users will simply run out of space. However,
+when persistent volumes are not used, going over the amount of storage that a user has requested when starting their session
+will result in eviction of the k8s pod that runs the session and termination of the session. Therefore, admins are advised
+to review and set proper options for disk sizes in the `notebooks.serverOptions` portion of the values file.
+
+Improvements
+~~~~~~~~~~~~~
+
+* **UI**: Add banner advertising new version to logged-in users and various improvements in the new canary deployment itself.
+* **Environments**: Ability to use persistent volumes for user sessions.
+
+Bug Fixes
+~~~~~~~~~
+
+-  **CI/CD:** CI action entrypoint typo
+   (`3858df0 <https://github.com/SwissDataScienceCenter/renku/commit/3858df02182abeab26e324914fd7bcae7e7226ff>`__)
+-  **Acceptance Tests:** flaky FreeTextDatasetSearchSpec
+   (`a872504 <https://github.com/SwissDataScienceCenter/renku/commit/a872504becb41c1a761cbe02525cae3ebdb6ebea>`__)
+-  **Acceptance Tests:** retry when EOF occurs on the Rest Client
+   (`#2211 <https://github.com/SwissDataScienceCenter/renku/issues/2211>`__)
+   (`e81a212 <https://github.com/SwissDataScienceCenter/renku/commit/e81a21229621463b4be4759f8c4b16714de097c4>`__)
+-  **Acceptance Tests:** Wait for the dataset search results
+   (`#2210 <https://github.com/SwissDataScienceCenter/renku/issues/2210>`__)
+   (`132ec8b <https://github.com/SwissDataScienceCenter/renku/commit/132ec8b813ad6777ae309699d1769cdf07380571>`__)
+
+Features
+~~~~~~~~
+
+-  **CI/CD:** parametrize rancher API endpoint
+   (`46a5155 <https://github.com/SwissDataScienceCenter/renku/commit/46a51551da48225156f7e6c3a526a310574e674f>`__)
+
+Individual components
+~~~~~~~~~~~~~~~~~~~~~
+
+For changes to individual components, please check:
+
+* renku-ui:
+  `1.0.0-beta4 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/1.0.0-beta4>`__
+  `0.11.14 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/0.11.14>`__
+* renku-notebooks:
+  `0.8.15 <https://github.com/SwissDataScienceCenter/renku-notebooks/releases/tag/0.8.15>`__
+
+Upgrading from 0.8.3
+~~~~~~~~~~~~~~~~~~~~
+
+When upgrading from 0.8.3 the following steps should be taken based on whether you would like to use persistent volumes for user sessions or not:
+
+**Use persistent volumes:**
+
+  1. Edit the `notebooks.userSessionPersistentVolumes` section of the `values.yaml file <https://github.com/SwissDataScienceCenter/renku/blob/master/helm-chart/renku/values.yaml#L527>`_ changing the `enabled` flag to true and selecting a storage class to be used with every user session. It is strongly recommended to select a storage class with a `Delete` retention policy to avoid the accumulation of persistent volumes with every session launch.
+  2. Review and modify (if needed) `the disk request options in the values.yaml file <https://github.com/SwissDataScienceCenter/renku/blob/master/helm-chart/renku/values.yaml#L506>`_.
+  3. Review and modify (if needed) the `the server defaults in the values.yaml file <https://github.com/SwissDataScienceCenter/renku/blob/master/helm-chart/renku/values.yaml#L479>`_. These will be used if a specific server options is omitted in the request to create a session and should be compatible with any matching values in the `serverOptions` section. It also allows an administrator to omit an option from the selection menu that is defined in the `serverOptions` section and have renku always use the default from the `serverDefaults` section.
+
+**Do not use persistent volumes:**
+
+  1. Review and modify (if needed) `the disk request options in the values.yaml file <https://github.com/SwissDataScienceCenter/renku/blob/master/helm-chart/renku/values.yaml#L506>`_. Please note that if a user consumes more disk space than they requested (or more than what is set in the `serverDefaults` of the values file) then the user's session will be evicted. This is necessary because if a user consumes a lot of space on the node where their session is scheduled k8s starts to evict user sessions on that node regardless of whether they are using a lot of disk space or not. This sometimes results in the eviction of multiple sessions and not the session that is consuming the most storage resources.
+  2. Review and modify (if needed) the `the server defaults in the values.yaml file <https://github.com/SwissDataScienceCenter/renku/blob/master/helm-chart/renku/values.yaml#L479>`_. These will be used if a specific server options is omitted in the request to create a session and should be compatible with any matching values in the `serverOptions` section. It also allows an administrator to omit an option from the selection menu that is defined in the `serverOptions` section and have renku always use the default from the `serverDefaults` section.
+
+0.8.3
+-----
+
+This is a bugfix release that includes fixes to Knowledge Graph. For more details please check the renku-graph `1.36.6 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/1.36.6>`__ release notes.
+
+0.8.2
+-----
+
+This release includes a beta version of the new user interface for Renku. Over the next few releases
+we will gradually phase out the old user interface. However, for the time being you can use both. Simply switch
+between the two by clicking the link on the Renku home page.
+
+Bug Fixes
+~~~~~~~~~
+
+-  CSS for the Login button on the provider page
+   (`#2178 <https://github.com/SwissDataScienceCenter/renku/issues/2178>`__)
+   (`d1a0149 <https://github.com/SwissDataScienceCenter/renku/commit/d1a01499622e3dcfc566c942e28eef6e7983be31>`__)
+
+Features
+~~~~~~~~
+
+-  **chart:** configure the Renku realm to use the Renku keycloak theme
+   (`d527865 <https://github.com/SwissDataScienceCenter/renku/commit/d5278654f4ec13533c3ef3b79b022bef0c66317d>`__),
+   closes
+   `#2022 <https://github.com/SwissDataScienceCenter/renku/issues/2022>`__
+-  **chart:** use keycloak theme with UI 1.0.0 design
+   (`35d8980 <https://github.com/SwissDataScienceCenter/renku/commit/35d8980fbd467819ae659fc9239b237bee932135>`__),
+   closes
+   `#2022 <https://github.com/SwissDataScienceCenter/renku/issues/2022>`__
+-  **docs:** new design for renku docs
+   (`#2166 <https://github.com/SwissDataScienceCenter/renku/issues/2166>`__)
+   (`f2f3985 <https://github.com/SwissDataScienceCenter/renku/commit/f2f398512252fc115f793e41dc4375a3e8bb69c5>`__)
+
+Individual components
+~~~~~~~~~~~~~~~~~~~~~
+
+For changes to individual components, please check:
+
+* renku-graph:
+  `1.36.5 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/1.36.5>`__
+
+* renku-core and renku-python:
+  `v0.16.0 <https://github.com/SwissDataScienceCenter/renku-python/releases/tag/v0.16.0>`__
+
+* renku-ui:
+  `0.11.13 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/0.11.13>`__,
+  `1.0.0-beta3 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/1.0.0-beta3>`__
+
+0.8.1
+-----
+
+This is a bugfix release that includes a fix of the link on a project forks in Renku UI.
+
 0.8.0
 ------
 

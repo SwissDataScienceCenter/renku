@@ -21,7 +21,7 @@ jobs:
       - name: automerge
         uses: "pascalgn/automerge-action@v0.7.3"
         env:
-          GITHUB_TOKEN: "${{ secrets.RENKU_CI_TOKEN }}"
+          GITHUB_TOKEN: "${{ secrets.RENKUBOT_GITHUB_TOKEN }}"
           MERGE_METHOD: "squash"
           MERGE_DELETE_BRANCH: "true"
           MERGE_LABELS: "automerge,!do-not-merge"

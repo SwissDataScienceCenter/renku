@@ -13,14 +13,14 @@
 # All configuration values have a default; values that are commented out
 # serve to show the default.
 
+import glob
 import os
 import sys
 from os.path import abspath, join, dirname
-
-import requests
-import yaml
+from pathlib import Path
 
 sys.path.insert(0, abspath(join(dirname(__file__))))
+sys.path.append(abspath(join(dirname(__file__), "renku-python/docs/_ext")))
 
 # -- General configuration ------------------------------------------------
 
@@ -39,12 +39,13 @@ extensions = [
     "sphinx.ext.githubpages",
     "sphinx.ext.graphviz",
     "sphinx.ext.ifconfig",
-    "sphinx.ext.intersphinx",
     "sphinx.ext.todo",
     "sphinx.ext.viewcode",
     "sphinxcontrib.spelling",
     "sphinx_rtd_theme",
     "sphinx_copybutton",
+    "sphinx_panels",
+    "cheatsheet",
 ]
 
 # Plantweb configuration
@@ -94,7 +95,19 @@ language = None
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
 # This patterns also effect to html_static_path and html_extra_path
-exclude_patterns = ["_build/*"]
+exclude_patterns = ["_build/*", "**/.github", "**/.eggs", ".venv/*", "README.md"]
+
+# append renku-python except for its docs
+exclude_patterns += [
+    str(p) for p in glob.glob("renku-python/*") if p not in {"renku-python/docs"}
+]
+
+exclude_patterns += [
+    str(p) for p in Path("renku-python").rglob("*.rst") if p not in {
+        Path("renku-python/docs/reference/commands.rst"),
+        Path("renku-python/docs/api.rst")
+    }
+]
 
 # The name of the Pygments (syntax highlighting) style to use.
 # pygments_style = 'sphinx'
@@ -110,14 +123,14 @@ numfig = True
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
 #
-html_theme = "sphinx_rtd_theme"
+html_theme = "renku"
 
 # Theme options are theme-specific and customize the look and feel of a theme
 # further.  For a list of options available for each theme, see the
 # documentation.
 #
 html_theme_options = {
-    'logo_only': False,
+    'logo_only': True,
     'display_version': True,
     'prev_next_buttons_location': 'bottom',
     'style_external_links': False,
@@ -134,6 +147,12 @@ html_theme_options = {
 # so a file named "default.css" will overwrite the builtin "default.css".
 html_static_path = ["_static"]
 
+# These paths are either relative to html_static_path
+# or fully qualified paths (eg. https://...)
+html_css_files = [
+  "css/override-theme.css"
+]
+
 # Custom sidebar templates, must be a dictionary that maps document names
 # to template names.
 #
@@ -148,6 +167,10 @@ html_sidebars = {
         "donate.html",
     ]
 }
+
+html_logo = "_static/icons/logo.svg"
+
+html_favicon = "_static/icons/favicon.ico"
 
 # -- Options for HTMLHelp output ------------------------------------------
 
@@ -207,9 +230,6 @@ texinfo_documents = [
     )
 ]
 
-# Example configuration for intersphinx: refer to the Python standard library.
-intersphinx_mapping = {"python": ("https://docs.python.org/3/", None)}
-
 # spellchecking config
 spelling_show_suggestions = True
 spelling_lang = "en_US"
@@ -221,38 +241,11 @@ graphviz_output_format = "svg"
 suppress_warnings = ["app.add_directive"]
 
 # copybutton config
-
 copybutton_prompt_text = r">>> |\.\.\. |\$ |In \[\d*\]: | {2,5}\.\.\.: | {5,8}: "
 copybutton_prompt_is_regexp = True
 
-# sidebar
-on_rtd = os.environ.get("READTHEDOCS", None) == "True"
-renku_python_version = version
-
-if renku_python_version not in ["stable", "latest"]:
-    # tag build, update respective renku-python as well
-    with open("../helm-chart/renku/requirements.yaml", "r") as f:
-        requirements = yaml.load(f)
-    renku_core_entry = next(
-        (d for d in requirements["dependencies"] if d["name"] == "renku-core"), None
-    )
-    renku_python_version = "v{}".format(renku_core_entry["version"])
-
-    # retrigger build of renku-python docs so they point to the correct version
-    token = os.environ.get("RTD_TOKEN")
-
-    r = requests.post(
-        f"https://readthedocs.org/api/v3/projects/renku-python/versions/{renku_python_version}/builds/",
-        headers={"Authorization": f"Token {token}"},
-    )
-    r.raise_for_status()
-
-intersphinx_mapping = {
-    "python": ("https://docs.python.org/", None),
-}
-
-# -- Custom Document processing ----------------------------------------------
-
-from gensidebar import generate_sidebar
-
-generate_sidebar(on_rtd, renku_python_version, "renku")
+# configure mocking for renku-python
+autoclass_content = "both"
+autodoc_mock_imports = ["persistent", "ZODB"]
+autodoc_typehints = "none"
+autodoc_typehints_description_target = "documented"

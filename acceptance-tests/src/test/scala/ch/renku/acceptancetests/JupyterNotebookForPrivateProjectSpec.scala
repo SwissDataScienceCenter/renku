@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Swiss Data Science Center (SDSC)
+ * Copyright 2022 Swiss Data Science Center (SDSC)
  * A partnership between École Polytechnique Fédérale de Lausanne (EPFL) and
  * Eidgenössische Technische Hochschule Zürich (ETHZ).
  *
@@ -28,6 +28,8 @@ class JupyterNotebookForPrivateProjectSpec extends AcceptanceSpec with Login wit
     `log in to Renku`
 
     `create, continue or open a project`
+
+    `verify the project is up to date`
 
     `verify user can work with Jupyter notebook`
 

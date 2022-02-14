@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Swiss Data Science Center (SDSC)
+ * Copyright 2022 Swiss Data Science Center (SDSC)
  * A partnership between École Polytechnique Fédérale de Lausanne (EPFL) and
  * Eidgenössische Technische Hochschule Zürich (ETHZ).
  *
@@ -56,7 +56,7 @@ case object ProjectsPage
     def maybeLinkTo(
         project:          ProjectDetails
     )(implicit webDriver: WebDriver, userCredentials: UserCredentials): Option[WebElement] = eventually {
-      find(cssSelector(s"a[href='/projects/${userCredentials.username}/${project.title.toPathSegment}']"))
+      find(cssSelector(s"a[href='/projects/${userCredentials.userNamespace}/${project.title.toPathSegment}']"))
     }
 
     /** Return all the project links.

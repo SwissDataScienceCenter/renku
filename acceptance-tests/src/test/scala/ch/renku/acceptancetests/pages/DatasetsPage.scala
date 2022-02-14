@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Swiss Data Science Center (SDSC)
+ * Copyright 2022 Swiss Data Science Center (SDSC)
  * A partnership between École Polytechnique Fédérale de Lausanne (EPFL) and
  * Eidgenössische Technische Hochschule Zürich (ETHZ).
  *
@@ -20,6 +20,9 @@ package ch.renku.acceptancetests.pages
 import org.openqa.selenium.{WebDriver, WebElement}
 import org.scalatestplus.selenium.WebBrowser.{cssSelector, find, findAll}
 
+import scala.annotation.tailrec
+import scala.concurrent.duration._
+
 object DatasetsPage
     extends RenkuPage(
       path = s"/datasets",
@@ -32,14 +35,57 @@ object DatasetsPage
   }
 
   def searchButton(implicit webDriver: WebDriver): WebElement = eventually {
-    find(cssSelector("form button.btn.btn-primary")) getOrElse fail("Datasets -> search button cannot be found")
+    find(cssSelector("#searchButton")) getOrElse fail("Datasets -> search button cannot be found")
   }
+
+  def orderByDropdownMenu(
+      currentOrdering:  DatasetSearchOrdering = DatasetSearchOrdering.ProjectsCount
+  )(implicit webDriver: WebDriver): WebElement =
+    eventually {
+      findAll(cssSelector("button.dropdown-toggle")).find(elem => elem.getText == currentOrdering.value) getOrElse fail(
+        s"Datasets -> current ordering ${currentOrdering.value} button not found"
+      )
+    }
+
+  def orderByDropdownItem(datasetOrdering: DatasetSearchOrdering)(implicit webDriver: WebDriver): WebElement =
+    eventually {
+      findAll(cssSelector("button.dropdown-item")).find(elem => elem.getText == datasetOrdering.value) getOrElse fail(
+        s"Datasets -> order by ${datasetOrdering.value} button not found"
+      )
+    }
 
   def searchResultLinks(implicit webDriver: WebDriver): List[WebElement] = eventually {
-    findAll(cssSelector("div.col-sm-12.col-md-8 div.card-body a[href^='/datasets/']")).toList
+    findAll(cssSelector(".rk-search-result-card > a > div > div.title")).toList
   }
 
-  override def pageReadyElement(implicit webDriver: WebDriver): Option[WebElement] = Some(
-    searchResultLinks.headOption getOrElse searchBox
-  )
+  def maybeBouncer(implicit webDriver: WebDriver): Option[WebElement] = eventually {
+    findAll(cssSelector(".bouncer")).toList.headOption
+  }
+
+  override def pageReadyElement(implicit webDriver: WebDriver): Option[WebElement] = {
+    waitIfBouncing
+    Some(searchResultLinks.headOption getOrElse searchBox)
+  }
+
+  @tailrec def waitIfBouncing(implicit webDriver: WebDriver): Unit = maybeBouncer match {
+    case Some(_) =>
+      sleep(1 second)
+      waitIfBouncing
+    case _ =>
+      sleep(1 second)
+  }
+  trait DatasetSearchOrdering {
+    def value: String
+  }
+  object DatasetSearchOrdering {
+    case object Title extends DatasetSearchOrdering {
+      val value = "Title"
+    }
+    case object Date extends DatasetSearchOrdering {
+      val value = "Date"
+    }
+    case object ProjectsCount extends DatasetSearchOrdering {
+      val value = "Projects count"
+    }
+  }
 }

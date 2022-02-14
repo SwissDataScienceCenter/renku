@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Swiss Data Science Center (SDSC)
+ * Copyright 2022 Swiss Data Science Center (SDSC)
  * A partnership between École Polytechnique Fédérale de Lausanne (EPFL) and
  * Eidgenössische Technische Hochschule Zürich (ETHZ).
  *
@@ -23,8 +23,8 @@ import ch.renku.acceptancetests.workflows._
 
 class AnonymousEnvironmentSpec extends AcceptanceSpec with AnonEnv with Login {
 
-  Scenario("User can launch anonymous environment") {
-    `launch anonymous environment`(anonEnvConfig)
-      .map(_ => `stop environment`(anonEnvConfig.projectId))
+  Scenario("User can launch session") {
+    `launch anonymous session`(anonEnvConfig)
+      .map(_ => `stop session`(anonEnvConfig.projectId))
   }
 }

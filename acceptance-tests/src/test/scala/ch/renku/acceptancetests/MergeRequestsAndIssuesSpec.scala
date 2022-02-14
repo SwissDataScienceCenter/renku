@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Swiss Data Science Center (SDSC)
+ * Copyright 2022 Swiss Data Science Center (SDSC)
  * A partnership between École Polytechnique Fédérale de Lausanne (EPFL) and
  * Eidgenössische Technische Hochschule Zürich (ETHZ).
  *
@@ -22,6 +22,7 @@ import ch.renku.acceptancetests.tooling.{AcceptanceSpec, KnowledgeGraphApi}
 import ch.renku.acceptancetests.workflows._
 
 import scala.concurrent.duration._
+import scala.util.Try
 
 class MergeRequestsAndIssuesSpec
     extends AcceptanceSpec
@@ -30,7 +31,7 @@ class MergeRequestsAndIssuesSpec
     with Project
     with KnowledgeGraphApi {
 
-  Scenario("User can create and view issues") {
+  Scenario("User can access issues") {
 
     `log in to Renku`
 
@@ -38,22 +39,19 @@ class MergeRequestsAndIssuesSpec
 
     `navigate to the issues tab`
 
-    `verify there are no issues`
+    // Availability of the iFrame depends on the specifc deployment
+    Try(`verify that the GitLab issues iFrame is visible`).recover(_ =>
+      `verify that the GitLab issues iFrame cannot be shown`
+    )
 
-    val issueTitle = "test issue"
-    val issueDesc  = "test description"
-    `create a new issue`(issueTitle, issueDesc)
-
-    `navigate to the issues tab`
-
-    `view the issue`(issueTitle)
+    `verify that the GitLab issues page link is visible`
 
     `log out of Renku`
 
     sleep(10 seconds)
   }
 
-  Scenario("User can create and view merge requests") {
+  Scenario("User can access merge requests") {
 
     `log in to Renku`
 
@@ -61,32 +59,13 @@ class MergeRequestsAndIssuesSpec
 
     `navigate to the merge requests tab`
 
-    `verify there are no merge requests`
+    // Availability of the iFrame depends on the specifc deployment
+    Try(`verify that the GitLab MR iFrame is visible`).recover(_ =>
+      `verify that the GitLab issues iFrame cannot be shown`
+    )
 
-    val branchName = "test-branch"
-    `add change to the project`(branchName)
-
-    `create a new merge request`
-
-    `navigate to the merge requests tab`
-
-    `view the merge request`(branchName)
+    `verify that the GitLab MR page link is visible`
 
     `log out of Renku`
-  }
-
-  private def `add change to the project`(branchName: String): Unit = {
-    docsScreenshots.disable()
-    val jupyterLabPage = `launch an environment`
-    docsScreenshots.enable()
-
-    When("the user clicks on the Terminal icon")
-    click on jupyterLabPage.terminalIcon sleep (2 seconds)
-
-    `create a branch in JupyterLab`(jupyterLabPage, branchName)
-
-    `wait for KG to process events`(projectDetails.asProjectIdentifier)
-
-    `stop environment`
   }
 }

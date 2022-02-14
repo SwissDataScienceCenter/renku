@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Swiss Data Science Center (SDSC)
+ * Copyright 2022 Swiss Data Science Center (SDSC)
  * A partnership between École Polytechnique Fédérale de Lausanne (EPFL) and
  * Eidgenössische Technische Hochschule Zürich (ETHZ).
  *
@@ -21,7 +21,7 @@ package ch.renku.acceptancetests.pages
 import ch.renku.acceptancetests.model.projects.{ProjectDetails, Template, Visibility}
 import ch.renku.acceptancetests.tooling.DocsScreenshots
 import org.openqa.selenium.{WebDriver, WebElement}
-import org.scalatestplus.selenium.WebBrowser.{cssSelector, find}
+import org.scalatestplus.selenium.WebBrowser.{cssSelector, find, findAll}
 
 import scala.concurrent.duration._
 
@@ -40,15 +40,13 @@ case object NewProjectPage
     titleField.clear() sleep (5 seconds)
     titleField.enterValue(project.title)
 
+    descriptionField.clear() sleep (1 second)
+    descriptionField.enterValue(project.description)
+
     visibilityField.click() sleep (1 second)
     visibilityOption(project.visibility).click() sleep (1 second)
 
-    templateField.click() sleep (1 second)
-    templateOption(project.template).click() sleep (1 second)
-    templateField.click() sleep (10 second)
-
-    descriptionField.clear() sleep (1 second)
-    descriptionField.enterValue(project.description)
+    templateCard(project.template).click() sleep (5 seconds)
 
     docsScreenshots.takeScreenshot()
 
@@ -59,6 +57,10 @@ case object NewProjectPage
     find(cssSelector("input#title")) getOrElse fail("Title field not found")
   }
 
+  private def descriptionField(implicit webDriver: WebDriver): WebElement = eventually {
+    find(cssSelector("input#description")) getOrElse fail("Description field not found")
+  }
+
   private def visibilityField(implicit webDriver: WebDriver): WebElement = eventually {
     find(cssSelector("select#visibility")) getOrElse fail("Visibility field not found")
   }
@@ -67,17 +69,11 @@ case object NewProjectPage
     find(cssSelector(s"option[value='${visibility.value}']")) getOrElse fail("Visibility option not found")
   }
 
-  private def templateField(implicit webDriver: WebDriver): WebElement = eventually {
-    find(cssSelector("select#template")) getOrElse fail("Template field not found ")
-  }
-
-  private def templateOption(template: Template)(implicit webDriver: WebDriver): WebElement =
-    eventually {
-      find(cssSelector(s"option[value='${template.name}']")) getOrElse fail("Template option not found")
-    }
-
-  private def descriptionField(implicit webDriver: WebDriver): WebElement = eventually {
-    find(cssSelector("input#parameter-description")) getOrElse fail("Description parameter field not found")
+  private def templateCard(template: Template)(implicit webDriver: WebDriver): WebElement = eventually {
+    findAll(cssSelector("div.template-card > div.card-footer > p"))
+      .find(_.text.startsWith(template.name))
+      .getOrElse(fail("Target template not found"))
+      .parent
   }
 
   def createButton(implicit webDriver: WebDriver): WebElement = eventually {

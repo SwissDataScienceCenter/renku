@@ -35,15 +35,6 @@ global:
     password:
       value:
       overwriteOnHelmUpgrade: false
-  jupyterhub:
-    ## Name of the postgres database to be used by jupyterhub
-    postgresDatabase: jupyterhub
-    ## Postgres user for the jupyterhub database
-    postgresUser: jupyterhub
-    ## Postgres password for the jupyterhub database
-    postgresPassword:
-      value:
-      overwriteOnHelmUpgrade: false
   gateway:
     ## The client secret for the renku client application registered in keycloak.
     clientSecret: # use `uuidgen -r`
@@ -53,6 +44,9 @@ global:
     gitlabClientId: renku-ui
     ## The client secret for authentication against gitlab
     gitlabClientSecret:
+  uiserver:
+    ## The client secret for the renku-ui client application registered in keycloak.
+    clientSecret:  # use `uuidgen -r`
   renku:
     ## Domain name for the deployed instance of renku
     domain: example.local
@@ -81,17 +75,54 @@ global:
     jena:
       ## specify which dataset should be used in Jena
       dataset:
+
+  # Connection details for a globally used redis instance for the
+  # entire platform. For specifying an actual instance as part of
+  # this chart, check out the non-global "redis" section.
+  redis:
+    # Specify which renku component should use which DB index
+    dbIndex:
+      gateway: "0"
+      # coreService: "1"
+      # uiServer: "2"
+
+    # Note: these two entries MUST match the ones in redis.auth if redis is
+    # installed through this chart.
+    existingSecret: redis-secret
+    existingSecretPasswordKey: redis-password
+
+    ## Specify the redis host and port. Notice that these settings only affect
+    ## the subcharts which represent the applications which are clients to redis,
+    ## but not the redis cluster deployment itself.
+    ## If you're deploying redis through this chart and you want to deviate from
+    ## the defaults, you'll have to match whatever you set here in the non-global
+    ## redis section which defines the actual redis cluster.
+    ## The hostname will fall-back to RELEASE-NAME-redis if left empty and the port
+    ## will be set to the respective defaults depending on the isSentinel setting.
+    # host: RELEASE-NAME-redis
+    # port: 6379/26379
+
+    # Set to true if redis host/port point to a redis sentinel.
+    isSentinel: true
+
   ## Set to true if using https
   useHTTPS: false
   anonymousSessions:
-    ## Set to true to enable anonymous sessions through
-    ## a secondary Jupyterhub instance
+    ## Set to true to enable anonymous sessions
     enabled: false
-    ## Set the postgres password for you secondary JH deployment
-    ## or force the (re)generation of it on helm upgrade.
-    postgresPassword:
-      value:
-      overwriteOnHelmUpgrade: false
+
+  ## Specify the name of an existing K8s secret that contains the certificate
+  ## if you would like to use a custom CA. The key for the secret
+  ## should have the .crt extension otherwise it is ignored. The
+  ## keys across all secrets are mounted as files in one location so
+  ## the keys across all secrets have to be unique. In addition to the 
+  ## changes here modifications need to be made in the keycloak section below
+  certificates:
+    image:
+      repository: renku/certificates
+      tag: '0.0.1'
+    customCAs: []
+      # - secret:
 
 ## Ingress configuration
 ## See: https://kubernetes.io/docs/concepts/services-networking/ingress/
@@ -102,11 +133,11 @@ ingress:
   ## Annotations for the created ingress
   annotations:
     ## The ingress class
-    cert-manager.io/cluster-issuer: letsencrypt-production
+    cert-manager.io/cluster-issuer: letsencrypt-production # TO DO: should be changed because not everyone is using cert-manager
     kubernetes.io/ingress.class: nginx
-    nginx.ingress.kubernetes.io/proxy-body-size: '0' # Adjust to a reasonable value for production to avoid DOS attacks.
-    nginx.ingress.kubernetes.io/proxy-request-buffering: 'off' # Needed if GitLab is behind this ingress
-    nginx.ingress.kubernetes.io/proxy-buffer-size: '8k' # Default is 4k, larger size necessary for keycloak
+    nginx.ingress.kubernetes.io/proxy-body-size: "0" # Adjust to a reasonable value for production to avoid DOS attacks.
+    nginx.ingress.kubernetes.io/proxy-request-buffering: "off" # Needed if GitLab is behind this ingress
+    nginx.ingress.kubernetes.io/proxy-buffer-size: "8k" # Default is 4k, larger size necessary for keycloak
 
   ## Hosts for the ingress
   ## Should include at least the value from `global.renku.domain`
@@ -121,7 +152,6 @@ ingress:
 
 ## Keycloak configuration
 keycloak:
-
   ## Spawn a keycloak instance
   enabled: true
 
@@ -136,7 +166,6 @@ keycloak:
       value: "5432"
     - name:  PROXY_ADDRESS_FORWARDING
       value: "true"
-
 
   # The following environment variables are provided to keycloak
   # as extraEnvFrom secrets.
@@ -159,11 +188,26 @@ keycloak:
   extraVolumeMounts: |
     - name: theme
       mountPath: /opt/jboss/keycloak/themes/renku-theme
+    - name: etc-ssl-certs
+      mountPath: /etc/pki/ca-trust/extracted
+      readOnly: true
 
   extraVolumes: |
     - name: theme
       emptyDir: {}
-
+    - name: etc-ssl-certs
+      emptyDir:
+        medium: "Memory"
+    {{- if .Values.global.certificates.customCAs }}
+    - name: custom-ca-certs
+      projected:
+        defaultMode: 0777
+        sources:
+        {{- range $customCA := .Values.global.certificates.customCAs }}
+          - secret:
+              name: {{ $customCA.secret }}
+        {{- end -}}
+    {{- end -}}
 
   ## Create a demo user in keycloak? Note that the password for the demo
   ## user must be queried from kubernetes (see the rendered NOTES.txt
@@ -178,7 +222,7 @@ keycloak:
   initRealm:
     image:
       repository: renku/init-realm
-      tag: 'latest'
+      tag: "latest"
 
   ## Skip Keycloak testing when running Helm test
   test:
@@ -186,7 +230,7 @@ keycloak:
 
   extraInitContainers: |
     - name: theme-provider
-      image: renku/keycloak-theme:v1.2
+      image: renku/keycloak-theme:3.0.2
       imagePullPolicy: IfNotPresent
       command:
         - sh
@@ -198,11 +242,25 @@ keycloak:
       volumeMounts:
         - name: theme
           mountPath: /theme
-
+    - name: init-certificates
+      securityContext:
+        allowPrivilegeEscalation: false
+        runAsGroup: 65534
+        runAsUser: 65534
+      image: "registry.access.redhat.com/ubi8/ubi:8.4"
+      command: ["sh", "-c"]
+      args: ["mkdir -p /etc/pki/ca-trust/extracted/openssl/ /etc/pki/ca-trust/extracted/pem/ /etc/pki/ca-trust/extracted/java/ /etc/pki/ca-trust/extracted/edk2 && update-ca-trust"]
+      volumeMounts:
+        - name: etc-ssl-certs
+          mountPath: /etc/pki/ca-trust/extracted
+    {{- if .Values.global.certificates.customCAs }}
+        - name: custom-ca-certs
+          mountPath: /usr/share/pki/ca-trust-source/anchors
+          readOnly: true
+    {{- end -}}
 
   ingress:
     enabled: false
-
 
 # Postgresql configuration
 # The bitnami postgres chart offers a variety of configuration options, most of
@@ -213,7 +271,6 @@ keycloak:
 # For production deployments check out
 # https://github.com/bitnami/charts/blob/master/bitnami/postgresql/values-production.yaml
 postgresql:
-
   ## We use the defaults here. Note that these basic configs could also be set as
   ## global values such that sub-charts can access them too.
   postgresqlDatabase: postgres
@@ -230,7 +287,7 @@ postgresql:
 
   image:
     repository: bitnami/postgresql
-    tag: 11.11.0
+    tag: 12.8.0
 
   persistence:
     ## We use the defaults here, but they will probably be modified for most deployments.
@@ -246,6 +303,78 @@ postgresql:
     password: repl_password # generate a random password `openssl rand -hex 32`
     slaveReplicas: 1
 
+redis:
+  # Configuration that is unknown to the redis chart but picked up
+  # by the renku chart.
+
+  # If set to true, a HA redis will be included in the Renku release.
+  install: true
+  # If set to true, we'll create a k8s secret to be used as existingSecret
+  # for password auth.
+  createSecret: true
+  # The actual password, ignored if createSecret is false.
+  password: # openssl rand -hex 32
+
+  # Configuration that is passed on to the redis chart, for details and
+  # further config options check out
+  # https://github.com/bitnami/charts/tree/master/bitnami/redis
+
+  ## config for newer redis versions, here for later reference
+  # replicas:
+  #   replicaCount: 2
+  # auth:
+  #   enabled: true
+  #   sentinel: true
+  #   existingSecret: redis-secret
+  #   existingSecretPasswordKey: redis-password
+
+  usePassword: true
+  existingSecret: redis-secret
+  existingSecretPasswordKey: redis-password
+
+  master:
+    # Fixed redis bug prevents us from using this before
+    # we bump the redis chart version
+    # spreadConstraints:
+    #   - maxSkew: 1
+    #     topologyKey: node
+    #     whenUnsatisfiable: DoNotSchedule
+    #     labelSelector:
+    #       matchLabels:
+    #         app: redis
+    persistence:
+      enabled: false
+    resources:
+      requests:
+        cpu: 200m
+        memory: 256Mi
+  slave:
+    # Fixed redis bug prevents us from using this before
+    # we bump the redis chart version
+    # spreadConstraints:
+    #   - maxSkew: 1
+    #     topologyKey: node
+    #     whenUnsatisfiable: DoNotSchedule
+    #     labelSelector:
+    #       matchLabels:
+    #         app: redis
+    persistence:
+      enabled: false
+    resources:
+      requests:
+        cpu: 200m
+        memory: 256Mi
+  sentinel:
+    enabled: true
+    resources:
+      requests:
+        cpu: 200m
+        memory: 64Mi
+    downAfterMilliseconds: 1000
+    failoverTimeout: 2000
+  networkPolicy:
+    enabled: true
+    allowExternal: false
 
 ## Gitlab configuration
 gitlab:
@@ -256,12 +385,12 @@ gitlab:
 
   ## Gitlab image
   image:
-  #   pullPolicy: IfNotPresent
+    #   pullPolicy: IfNotPresent
     repository: gitlab/gitlab-ce
     # Check out the gitlab docs on upgrading versions - in particular major
     # versions - before changing the image tag.
     #  https://docs.gitlab.com/ce/update/#upgrading-to-a-new-major-version
-    tag: 13.10.4-ce.0
+    tag: 14.4.4-ce.0
 
   ## automatically log in to gitlab
   oauth:
@@ -293,24 +422,24 @@ gitlab:
   ## Note: bucket must exist before use, GitLab won't do it
   ## Follows: https://docs.gitlab.com/ce/workflow/lfs/lfs_administration.html#storing-lfs-objects-in-remote-object-storage
   # lfsObjects:
-      ## Set to true to enable remote LFS objects
-      # enabled: false
-      ## Bucket name
-      # bucketName: lfs-objects
-      # directUpload: false
-      # backgroundUpload: true
-      # proxyDownload: false
-      # connection: |-
-      #   {
-      #     'provider' => 'AWS',
-      #     'region' => 'eu-central-1',
-      #     'aws_access_key_id' => '1ABCD2EFGHI34JKLM567N',
-      #     'aws_secret_access_key' => 'abcdefhijklmnopQRSTUVwxyz0123456789ABCDE',
-      #     # The below options configure an S3 compatible host instead of AWS
-      #     'host' => 'localhost',
-      #     'endpoint' => 'http://127.0.0.1:9000',
-      #     'path_style' => true
-      #   }
+  ## Set to true to enable remote LFS objects
+  # enabled: false
+  ## Bucket name
+  # bucketName: lfs-objects
+  # directUpload: false
+  # backgroundUpload: true
+  # proxyDownload: false
+  # connection: |-
+  #   {
+  #     'provider' => 'AWS',
+  #     'region' => 'eu-central-1',
+  #     'aws_access_key_id' => '1ABCD2EFGHI34JKLM567N',
+  #     'aws_secret_access_key' => 'abcdefhijklmnopQRSTUVwxyz0123456789ABCDE',
+  #     # The below options configure an S3 compatible host instead of AWS
+  #     'host' => 'localhost',
+  #     'endpoint' => 'http://127.0.0.1:9000',
+  #     'path_style' => true
+  #   }
 
   ## Persistent Volume settings
   persistence:
@@ -398,18 +527,24 @@ gitlab:
 
 ## Configuration for the UI service
 ui:
-
   ## Configuration for Renku templates
   templates:
     custom: true
     repositories:
       - url: https://github.com/SwissDataScienceCenter/renku-project-template
-        ref: 0.1.20
+        ref: 0.3.0
         name: Renku
       - url: https://github.com/SwissDataScienceCenter/contributed-project-templates
-        ref: 0.2.0
+        ref: 0.4.0
         name: Community
 
+  ## Configuration for a canary version of the UI
+  # canary:
+  #   enabled: true
+  #   image:
+  #     repository: renku/renku-ui
+  #     tag: "1.0.0-beta5"
+  ## Configuration for the welcome page text
   #  welcomePage:
   #    text: "## Some markdown text here!"
   ## UI image
@@ -457,17 +592,44 @@ ui:
   #   enabled: false
   #   url: ''
   #   namespace: ''
+  #   sampleRate: 0 # sampling rate for tracing -- values must be between 0 and 1
 
   ## Configuration for statuspage.io integration
   # statuspage:
-    ## Provide the id for the statuspage, which is the subdomain of statuspage.io
-    ## used in the API queries. This can be found from the /api path.
-    ## E.g., under https://renkulab.statuspage.io/api you see that summary
-    ## is available under https://5bcn9bqff4qt.statuspage.io/api/v2/summary.json, so
-    # id: 5bcn9bqff4qt
+  ## Provide the id for the statuspage, which is the subdomain of statuspage.io
+  ## used in the API queries. This can be found from the /api path.
+  ## E.g., under https://renkulab.statuspage.io/api you see that summary
+  ## is available under https://5bcn9bqff4qt.statuspage.io/api/v2/summary.json, so
+  # id: 5bcn9bqff4qt
+
+  ## Home settings allow configuration of the home page shown on RenkuLab when the user
+  ## is not logged in.
+  # homepage:
+  #   custom:
+  #     enabled: true
+  #     main:
+  #       # Custom homepage content as single string markdown
+  #       contentMd: |
+  #         ## RenkuLab @ Yoyodyne
+  #         Welcome to the **Yoyodyne** RenkuLab instance!
+  #       backgroundImage:
+  #         url: https://eoimages.gsfc.nasa.gov/images/imagerecords/79000/79803/earth_night_rotate_lrg.jpg
+  #   tutorialLink: https://renku.readthedocs.io/en/latest/tutorials/01_firststeps.html
+  #   projects:
+  #     - projectPath: renku-tutorials/e-rum-2020
+  #     - projectPath: covid-19/covid-19-forecast
 
 # ## Configuration for the notebooks service
 notebooks:
+  ## serverDefaults specifies defaults used when server options parameters
+  ## are not specified in the post request to renku notebooks to start a session.
+  # serverDefaults:
+  #   defaultUrl: /lab
+  #   cpu_request: 0.5
+  #   mem_request: 1G
+  #   disk_request: 1G
+  #   gpu_request: 0
+  #   lfs_auto_fetch: false
   ## serverOptions allow for modifications to the notebook pod resource requests and the UI rendering
   # serverOptions:
   #   defaultUrl:
@@ -488,108 +650,56 @@ notebooks:
   #     type: enum
   #     default: 1G
   #     options: [1G, 2G]
-  #   gpu_request:
+  #   disk_request:
   #     order: 4
+  #     displayName: Amount of disk space requested
+  #     type: enum
+  #     default: "1G"
+  #     options: ["1G", "10G"]
+  #   gpu_request:
+  #     order: 5
   #     displayName: Number of GPUs
   #     type: enum # use "type: int" instead to get a slider
   #     default: 0
   #     options: [0, 0] # use "range: [x, y]" when type is int
   #   lfs_auto_fetch:
-  #     order: 5
+  #     order: 6
   #     displayName: Automatically fetch LFS data
   #     type: boolean
   #     default: false
+  ## Enable the use of persistent volumes for user sessions below. The storage class
+  ## can be omited in which case the default is used. However, we strongly recommend that you use a storage class
+  ## with a `Delete` reclaim policy because otherwise the persistent volumes will keep accumulating
+  ## regardless of how the user sessions are shut down and will require manual intervention to clean them up.
+  # userSessionPersistentVolumes:
+  #   enabled: false
+  #   storageClass:
   ## image registry host
   # imageRegistry:
-  ## JupyterHub setup
-  jupyterhub:
-    ## Configure rbac
-    # rbac:
-    #   enabled: true
-    hub:
-      ## Base path under which Jupyterhub is running, note the trailing slash!
-      baseUrl: /jupyterhub/
-
-      ## Secret used for signing JH cookies. Must be explicitly set, otherwise all
-      ## users are logged out whenever the hub pod is recreated!
-      ## See https://zero-to-jupyterhub.readthedocs.io/en/latest/reference/reference.html#hub-cookiesecret
-      cookieSecret: # `openssl rand -hex 32`
-
-      services:
-        ## Set the notebooks service API token
-        # notebooks:
-        #   api_token: notebookstoken
-
-        ## define the client ID and secret for the gateway
-        gateway:
-          oauth_no_confirm: true
-        #  oauth_client_id: gateway
-        #  apiToken: # use `openssl rand -hex 32`
-        #  oauth_redirect_uri: http://<gateway>/api/auth/jupyterhub/token
-        ## Configure gitlab and postgres:
-        ## Values need to be set to get jupyterhub to work
-        # extraEnv:
-        #  - name: GITLAB_URL
-        #    value: <gitlab url>
-        #  - name: DEBUG
-        #    value: "1"
-        #  - name: JUPYTERHUB_SPAWNER_CLASS
-        #    value: spawners.RenkuKubeSpawner
-        #  - name: PGPASSWORD
-        #    valueFrom:
-        #        secretKeyRef:
-        #          name: renku-jupyterhub-postgres
-        #          key: jupyterhub-postgres-password
-
-    proxy:
-      ## Must be set explicitly, generate using `openssl rand -hex 32`
-      secretToken:
-
-    ## Configure Jupyterhub to use GitLab as OAuth2 provider
-    auth:
-    #   type: gitlab
-    #   gitlab:
-    #     clientId: jupyterhub
-    #     clientSecret: dummy-secret
-    #     callbackUrl:  # Null value forces the default callback url
-
-    ## Store encrypted auth state in the JH db (enabled by default).
-    ## Key for encryption must be set explicitly!
-    ## See https://zero-to-jupyterhub.readthedocs.io/en/latest/reference/reference.html?highlight=cryptokey#auth-state
-      state:
-        # enabled: true
-        cryptoKey: # `openssl rand -hex 32`
-
-    ## Configure idle pod culling
-    # cull:
-    #   enabled: true
-    #   timeout: 86400
-    #   every: 60
-    singleuser:
-      image:
-        name: renku/renkulab-py
-        tag: 3.7-renku0.10.4-0.6.3
-    #   # use JupyterLab by default in notebook servers
-    #   defaultUrl: /lab
-
-    # By default Renku notebooks disables some of the default JupyterHub
-    # optimizations which can interfere with simple setups. See
-    # https://zero-to-jupyterhub.readthedocs.io/en/latest/administrator/optimization.html
-    # for details. You can re-enable this by uncommenting the following section
-    # scheduling:
-    #   userScheduler:
-    #     enabled: true
-    #   userPlaceholder:
-    #     enabled: true
-    # prePuller:
-    #   continuous:
-    #     enabled: true
+  oidc:
+    clientId: renku-jupyterserver
+    clientSecret: # use `uuidgen -r`
+    token_url:
+    auth_url:
+  session_ingress:
+    host:
+    tls_secret:
+    annotations: |
+      {kubernetes.io/ingress.class: nginx,
+      nginx.ingress.kubernetes.io/proxy-body-size: "0",
+      nginx.ingress.kubernetes.io/proxy-buffer-size: 8k,
+      nginx.ingress.kubernetes.io/proxy-request-buffering: "off"}
 
 tests:
   enabled: false
   image:
     repository: renku/tests
-    tag: 'latest'
+    tag: "latest"
+  resources:
+    requests:
+      memory: "3G"
+      cpu: "500m"
+      ephemeral-storage: "3G"
   ## User account for running `helm test`
   #parameters:
   #  email: bwayne@example.com
@@ -656,11 +766,36 @@ core:
   cleanupProjectsTTL: 21600
   cleanupFilesTTL: 21600
   # repository:
-    ## Default cache directory
-    # cacheDirectory: /svc/cache
+  ## Default cache directory
+  # cacheDirectory: /svc/cache
 
-    ## Default clone depth
-    # projectCloneDepth: 1
+  ## Default clone depth
+  # projectCloneDepth: 1
+
+## Configuration for renku-ui-server
+uiserver:
+  serverData: {}
+    ## server data to correctly build the path and the routes
+    # url: https://url.uiserver.fake
+    # port: 8080
+    # prefix: /ui-server
+  gateway: {}
+    ## details to contact the gateway to redirect after the keycloak authentication is finished
+    # url: https://url.gateway.fake
+    # loginSuffix: /auth/login
+    # logoutSuffix: /auth/logout
+  authentication: {}
+    ## keycloak configration data for the Renku realm
+    # url: https://url.keycloak.fake/auth/realms/Renku
+    # id: renku
+    # secret: 1234abcd # do not provide any value here to use the global gateway client secret
+    # expirationTolerance: 10
+  sentry: {}
+    ## Configuration for Sentry
+    # enabled: false
+    # url: '' # Sentry target URL
+    # namespace: '' # namespace used to log errors
+    # sampleRate: 0 # sampling rate for tracing -- values must be between 0 and 1
 
 ## Configuration for the Swagger-UI available at <renku-domain>/swagger
 swagger:

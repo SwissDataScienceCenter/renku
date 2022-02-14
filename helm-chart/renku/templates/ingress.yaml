@@ -21,7 +21,7 @@
 {{- end }}
 {{- $swaggerEnabled := .Values.swagger.enabled -}}
 ---
-apiVersion: networking.k8s.io/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: {{ template "renku.fullname" . }}
@@ -31,6 +31,8 @@ metadata:
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
   annotations:
+    nginx.ingress.kubernetes.io/configuration-snippet: |
+        more_set_headers "Content-Security-Policy: frame-ancestors 'self' {{ .Values.ui.baseUrl }}";      
 {{- range $key, $value := .Values.ingress.annotations }}
     {{ $key }}: {{ $value | quote }}
 {{- end }}
@@ -52,51 +54,81 @@ spec:
       paths:
       {{- if $keycloakEnabled }}
       - path: /auth
+        pathType: Prefix
         backend:
-          serviceName: {{ $keycloakFullname }}-http
-          servicePort: {{ $keycloakServicePort }}
+          service:
+            name: {{ $keycloakFullname }}-http
+            port:
+              name: {{ $keycloakServicePort }}
       {{- end }}
       {{- if $gitlabEnabled }}
       - path: /gitlab
+        pathType: Prefix
         backend:
-          serviceName: {{ $gitlabFullname }}
-          servicePort: {{ $gitlabServicePort }}
+          service:
+            name: {{ $gitlabFullname }}
+            port:
+              number: {{ $gitlabServicePort }}
       {{- end }}
-      - path: /jupyterhub
+      - path: /repos
+        pathType: Prefix
         backend:
-          serviceName: proxy-public
-          servicePort: 80
+          service:
+            name: {{ $gatewayFullname }}
+            port:
+              number: {{ $gatewayServicePort }}
       - path: /api
+        pathType: Prefix
         backend:
-          serviceName: {{ $gatewayFullname }}
-          servicePort: {{ $gatewayServicePort }}
+          service:
+            name: {{ $gatewayFullname }}
+            port:
+              number: {{ $gatewayServicePort }}
       - path: /entities
+        pathType: Prefix
         backend:
-          serviceName: {{ $gatewayFullname }}
-          servicePort: {{ $gatewayServicePort }}
+          service:
+            name: {{ $gatewayFullname }}
+            port:
+              number: {{ $gatewayServicePort }}
       - path: /
+        pathType: Prefix
         backend:
-          serviceName: {{ $uiFullname }}
-          servicePort: {{ $uiServicePort }}
+          service:
+            name: {{ $uiFullname }}
+            port:
+              number: {{ $uiServicePort }}
       - path: /ui-server
+        pathType: Prefix
         backend:
-          serviceName: {{ $uiserverFullname }}
-          servicePort: {{ $uiserverServicePort }}
+          service:
+            name: {{ $uiserverFullname }}
+            port:
+              number: {{ $uiserverServicePort }}
       {{- if $graphEnabled }}
       - path: /webhooks/events
+        pathType: Prefix
         backend:
-          serviceName: {{ $webhookServiceFullname }}
-          servicePort: 80
+          service:
+            name: {{ $webhookServiceFullname }}
+            port:
+              number: 80
       - path: /knowledge-graph
+        pathType: Prefix
         backend:
-          serviceName: {{ $knowledgeGraphFullname }}
-          servicePort: 80
+          service:
+            name: {{ $knowledgeGraphFullname }}
+            port:
+              number: 80
       {{- end }}
       {{- if $swaggerEnabled }}
       - path: /swagger
+        pathType: Prefix
         backend:
-          serviceName: {{ $renkuFullname }}-swagger
-          servicePort: 80
+          service:
+            name: {{ $renkuFullname }}-swagger
+            port:
+              number: 80
       {{- end }}
   {{- end }}
 {{- end }}

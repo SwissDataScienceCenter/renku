@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Swiss Data Science Center (SDSC)
+ * Copyright 2022 Swiss Data Science Center (SDSC)
  * A partnership between École Polytechnique Fédérale de Lausanne (EPFL) and
  * Eidgenössische Technische Hochschule Zürich (ETHZ).
  *
@@ -19,6 +19,8 @@
 package ch.renku.acceptancetests.workflows
 
 import ch.renku.acceptancetests.pages.DatasetsPage
+import ch.renku.acceptancetests.pages.DatasetsPage.DatasetSearchOrdering
+import ch.renku.acceptancetests.pages.DatasetsPage.DatasetSearchOrdering.ProjectsCount
 import ch.renku.acceptancetests.tooling.AcceptanceSpec
 
 import scala.concurrent.duration._
@@ -26,16 +28,22 @@ import scala.concurrent.duration._
 trait DatasetsSearch {
   self: AcceptanceSpec =>
 
-  def `search for dataset with phrase`(phrase: String): Unit = {
+  def `search for dataset with phrase`(phrase: String, orderBy: DatasetSearchOrdering = ProjectsCount): Unit = {
     When("the user click the Datasets link on the top bar")
     click on DatasetsPage.TopBar.datasets
-    sleep(10 seconds)
+    sleep(1 second)
     Then("they should see the Datasets search page")
     verify browserAt DatasetsPage
 
     When(s"the user types in the '$phrase' in the search field")
     DatasetsPage.searchBox enterValue phrase
+    And("opens the order by dropdown menu")
+    click on DatasetsPage.orderByDropdownMenu() sleep (1 second)
+    And(s"changes the ordering to ${orderBy.value}")
+    click on DatasetsPage.orderByDropdownItem(orderBy) sleep (1 second)
     And("clicks the search button")
-    click on DatasetsPage.searchButton sleep (5 seconds)
+    click on DatasetsPage.searchButton sleep (1 second)
+
+    DatasetsPage.waitIfBouncing
   }
 }

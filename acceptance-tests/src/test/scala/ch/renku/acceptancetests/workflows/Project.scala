@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Swiss Data Science Center (SDSC)
+ * Copyright 2022 Swiss Data Science Center (SDSC)
  * A partnership between École Polytechnique Fédérale de Lausanne (EPFL) and
  * Eidgenössische Technische Hochschule Zürich (ETHZ).
  *
@@ -84,6 +84,9 @@ trait Project extends RemoveProject with BeforeAndAfterAll {
   }
 
   private def `create a new project`: Unit = {
+    if (WelcomePage.TopBar.mainNavToggler.isDisplayed())
+      click on WelcomePage.TopBar.mainNavToggler
+
     When("user clicks on the 'New Project' menu item")
     click on WelcomePage.TopBar.plusDropdown
     click on WelcomePage.TopBar.projectOption sleep (5 seconds)
@@ -106,7 +109,7 @@ trait Project extends RemoveProject with BeforeAndAfterAll {
 
     When("the user navigates to the Overview -> Description tab")
     click on projectPage.Overview.tab
-    click on projectPage.Overview.descriptionButton
+    click on projectPage.Overview.overviewGeneralButton
     Then("they should see project's README.md content")
     verify that projectPage.Overview.Description.title is "README.md"
 

@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Swiss Data Science Center (SDSC)
+ * Copyright 2022 Swiss Data Science Center (SDSC)
  * A partnership between École Polytechnique Fédérale de Lausanne (EPFL) and
  * Eidgenössische Technische Hochschule Zürich (ETHZ).
  *
@@ -23,10 +23,10 @@ import ch.renku.acceptancetests.workflows._
 
 class UnprivilegedEnvironmentSpec extends AcceptanceSpec with AnonEnv with Login {
 
-  Scenario("User can launch unprivileged environment") {
+  Scenario("User can launch unprivileged session") {
     `log in to Renku`
-    `launch unprivileged environment`
-    `stop environment`(anonEnvConfig.projectId)
+    `launch unprivileged session`
+    `stop session`(anonEnvConfig.projectId)
     `log out of Renku`
   }
 }

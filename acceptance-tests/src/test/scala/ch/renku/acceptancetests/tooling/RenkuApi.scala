@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Swiss Data Science Center (SDSC)
+ * Copyright 2022 Swiss Data Science Center (SDSC)
  * A partnership between École Polytechnique Fédérale de Lausanne (EPFL) and
  * Eidgenössische Technische Hochschule Zürich (ETHZ).
  *
@@ -18,6 +18,7 @@
 
 package ch.renku.acceptancetests.tooling
 
+import cats.syntax.all._
 import ch.renku.acceptancetests.model.CliVersion
 import org.http4s.Status._
 import org.scalatest.Assertions.fail
@@ -27,9 +28,8 @@ trait RenkuApi extends RestClient {
 
   lazy val apiCliVersion: CliVersion = {
     val url = renkuBaseUrl / "api" / "renku" / "version"
-    GET(url).send
-      .whenReceived(status = Ok)
-      .bodyAsJson
+    GET(url)
+      .send(whenReceived(status = Ok) >=> bodyToJson)
       .extract(jsonRoot.`result`.`latest_version`.string.getOption)
       .map(CliVersion.get(_).fold(error => fail(error.getMessage), identity))
       .getOrElse(fail(s"CLI version couldn't be obtained from $url"))

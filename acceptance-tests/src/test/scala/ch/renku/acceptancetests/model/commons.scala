@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Swiss Data Science Center (SDSC)
+ * Copyright 2022 Swiss Data Science Center (SDSC)
  * A partnership between École Polytechnique Fédérale de Lausanne (EPFL) and
  * Eidgenössische Technische Hochschule Zürich (ETHZ).
  *
@@ -42,7 +42,7 @@ object CliVersion {
 
   final class ReleasedVersion private (val value: String) extends CliVersion
   object ReleasedVersion {
-    private val validator = raw"\d+\.\d+\.\d+(\.dev\d+)?"
+    private val validator = raw"\d+\.\d+\.\d+(\.post\d+)?(\.dev\d+)?"
 
     def get(value: String): Option[CliVersion] =
       Option.when(value.trim matches validator)(new ReleasedVersion(value.trim))
@@ -57,7 +57,7 @@ object CliVersion {
   }
 
   object NonReleasedVersion {
-    private val validator = raw"\d+\.\d+\.\d+\.dev\d+\+g([0-9a-f]{5,40})"
+    private val validator = raw"\d+\.\d+\.\d+(?:(?:\-?rc\d+)?|(?:\.post\d+)?)\.dev\d+\+g([0-9a-f]{5,40})"
 
     def get(value: String): Option[CliVersion] =
       Option.when(value.trim matches validator)(new NonReleasedVersion(value.trim))

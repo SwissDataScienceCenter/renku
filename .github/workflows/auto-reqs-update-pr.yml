@@ -18,11 +18,11 @@ jobs:
           other_prs=$(curl -s ${renku_repo}/pulls | jq ".[] | select((.head.ref | test(\"auto-update/${pr_repo}\")) and (.head.ref != \"${GITHUB_REF:11}\")) | .number")
           for pr in $other_prs ; do curl -s -H "Authorization: token $GITHUB_TOKEN" -X PATCH -d '{"state": "closed"}' ${renku_repo}/pulls/${pr} ; done
         env:
-          GITHUB_TOKEN: ${{ secrets.RENKU_CI_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.RENKUBOT_GITHUB_TOKEN }}
       - name: pull-request-action
         uses: vsoch/pull-request-action@master
         env:
-          GITHUB_TOKEN: ${{ secrets.RENKU_CI_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.RENKUBOT_GITHUB_TOKEN }}
           BRANCH_PREFIX: "auto-update/"
           PULL_REQUEST_BRANCH: "master"
           PULL_REQUEST_BODY: "This is an automated pull request.\n\n/deploy"

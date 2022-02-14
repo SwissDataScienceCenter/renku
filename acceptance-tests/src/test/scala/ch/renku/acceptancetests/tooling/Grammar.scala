@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Swiss Data Science Center (SDSC)
+ * Copyright 2022 Swiss Data Science Center (SDSC)
  * A partnership between École Polytechnique Fédérale de Lausanne (EPFL) and
  * Eidgenössische Technische Hochschule Zürich (ETHZ).
  *
@@ -24,12 +24,15 @@ import ch.renku.acceptancetests.pages.Page
 import org.openqa.selenium.{WebDriver, WebElement}
 import org.scalatest.concurrent.Eventually
 import org.scalatest.exceptions.TestFailedException
+import org.scalatest.exceptions._
 import org.scalatestplus.selenium
 import org.scalatestplus.selenium.WebBrowser
 
 import scala.concurrent.duration._
 import scala.jdk.CollectionConverters._
 import scala.language.implicitConversions
+import cats.instances.boolean
+import java.{util => ju}
 
 trait Grammar extends WebElementOps with Eventually {
   self: WebBrowser with AcceptanceSpec =>
@@ -61,7 +64,11 @@ trait Grammar extends WebElementOps with Eventually {
 
     def browserSwitchedTo[Url <: BaseUrl](page: Page[Url])(implicit baseUrl: Url): Unit = eventually {
       if (webDriver.getWindowHandles.asScala exists forTabWith(page)) ()
-      else throw new Exception(s"Cannot find window with ${page.url} and title ${page.title}")
+      else
+        throw new Exception(
+          s"Cannot find window with URL starting with ${page.url} and title ${page.title}, " +
+            s"instead I am at ${currentUrl} and title ${pageTitle}."
+        )
     }
 
     private def forTabWith[Url <: BaseUrl](page: Page[Url])(handle: String)(implicit baseUrl: Url): Boolean = {

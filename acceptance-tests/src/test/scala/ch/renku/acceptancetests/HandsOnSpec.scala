@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Swiss Data Science Center (SDSC)
+ * Copyright 2022 Swiss Data Science Center (SDSC)
  * A partnership between École Polytechnique Fédérale de Lausanne (EPFL) and
  * Eidgenössische Technische Hochschule Zürich (ETHZ).
  *
@@ -54,12 +54,22 @@ class HandsOnSpec
 
     `verify user can work with Jupyter notebook`
 
-    `verify analysis was ran`
+    `verify analysis was run`
 
-    `log out of Renku`
+    // This should prevent menu flickering due to UI not completely loaded
+    sleep(5 seconds)
+
+    `try to logout 🤷`
   }
 
-  private def `verify analysis was ran`: Unit = {
+  private def `try to logout 🤷` : Boolean =
+    return try { `log out of Renku`; return true }
+    catch {
+      case e: org.openqa.selenium.ElementNotInteractableException => false
+      case _: Throwable                                           => false
+    }
+
+  private def `verify analysis was run`: Unit = {
     When("the user navigates to the Files tab")
     click on projectPage.Files.tab
     And("they click on the notebooks folder in the File View")
@@ -72,5 +82,6 @@ class HandsOnSpec
     docsScreenshots.takeScreenshot(executeBefore = "window.scrollBy(0,document.body.scrollHeight)")
     val resultCell = projectPage.Files.Notebook.cellWithText("There were 4951 flights to Austin, TX in Jan 2019.")
     verify that resultCell contains "There were 4951 flights to Austin, TX in Jan 2019."
+    Then("the correct notebook content is there")
   }
 }

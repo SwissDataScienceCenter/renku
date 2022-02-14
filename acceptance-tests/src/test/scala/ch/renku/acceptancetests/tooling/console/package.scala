@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Swiss Data Science Center (SDSC)
+ * Copyright 2022 Swiss Data Science Center (SDSC)
  * A partnership between École Polytechnique Fédérale de Lausanne (EPFL) and
  * Eidgenössische Technische Hochschule Zürich (ETHZ).
  *
@@ -52,5 +52,11 @@ package object console {
         s"$command$part$arg"
       }
     }
+  }
+
+  implicit class PathOps(path: Path) {
+    def /(otherPath: Path) = Paths.get(path.toString, otherPath.toString)
+
+    def /(otherPath: String) = Paths.get(path.toString, otherPath)
   }
 }

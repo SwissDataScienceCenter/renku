@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Swiss Data Science Center (SDSC)
+ * Copyright 2022 Swiss Data Science Center (SDSC)
  * A partnership between École Polytechnique Fédérale de Lausanne (EPFL) and
  * Eidgenössische Technische Hochschule Zürich (ETHZ).
  *
@@ -19,11 +19,12 @@
 package ch.renku.acceptancetests.pages
 
 import ch.renku.acceptancetests.model.datasets.DatasetName
+import org.openqa.selenium.interactions.Actions
 import org.openqa.selenium.{WebDriver, WebElement}
 import org.scalactic.source
 import org.scalatest.enablers.Retrying
 import org.scalatestplus.selenium.WebBrowser
-import org.scalatestplus.selenium.WebBrowser.{cssSelector, find}
+import org.scalatestplus.selenium.WebBrowser.{cssSelector, find, findAll}
 
 import scala.concurrent.duration._
 
@@ -41,7 +42,11 @@ class DatasetPage(datasetName: DatasetName, projectPage: ProjectPage)
   override def pageReadyElement(implicit webDriver: WebDriver): Option[WebElement] = Some(datasetTitle)
 
   def datasetTitle(implicit webDriver: WebDriver): WebElement = eventually {
-    find(cssSelector(".col-md-8 > h4")) getOrElse fail("Dataset -> Dataset title not found")
+    find(cssSelector(".col-md-8 > h3")) getOrElse fail("Dataset -> Dataset title not found")
+  }
+
+  def datasetNotInKgWarning(implicit webDriver: WebDriver): List[WebBrowser.Element] = eventually {
+    findAll(cssSelector(".not-in-kg-warning")) toList
   }
 
   def datasetFiles(implicit webDriver: WebDriver): WebElement = eventually {
@@ -77,8 +82,17 @@ class DatasetPage(datasetName: DatasetName, projectPage: ProjectPage)
       find(cssSelector("div[role='textbox']")) getOrElse fail("Dataset description field not found")
     }
 
-    def datasetSubmitButton(implicit webDriver: WebDriver): WebElement = eventually {
-      find(cssSelector("button[type='submit']")) getOrElse fail("Dataset form submit button not found")
+    def clickOnDatasetSubmitButton(implicit webDriver: WebDriver): Unit = eventually {
+      val submitDatasetBtn =
+        find(cssSelector("button[type='submit']")) getOrElse fail(
+          "Dataset form submit button not found"
+        )
+
+      new Actions(webDriver)
+        .moveToElement(submitDatasetBtn)
+        .click()
+        .build()
+        .perform();
     }
 
     def fileUploadField(implicit webDriver: WebDriver): WebElement = eventually {

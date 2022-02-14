@@ -1,0 +1,15 @@
+# The chartpress command has to be run where the chartpress.yaml file is located.
+# However if this is located in helm-chart/certificates then the whole helm chart
+# repo is downloaded in that folder when the chart is published, and the whole helm
+# chart repository is then part of the certificates helm chart. This makes the 
+# helm chart ~270MB and then it cannot be published on github pages due to the large size.
+
+charts:
+  - name: ../helm-chart/certificates
+    resetTag: latest
+    imagePrefix: renku/
+    repo:
+      git: SwissDataScienceCenter/helm-charts
+      published: https://swissdatasciencecenter.github.io/helm-charts
+    paths:
+      - ../helm-chart/certificates

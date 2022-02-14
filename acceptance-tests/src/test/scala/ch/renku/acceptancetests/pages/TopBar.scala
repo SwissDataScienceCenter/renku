@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Swiss Data Science Center (SDSC)
+ * Copyright 2022 Swiss Data Science Center (SDSC)
  * A partnership between École Polytechnique Fédérale de Lausanne (EPFL) and
  * Eidgenössische Technische Hochschule Zürich (ETHZ).
  *
@@ -18,6 +18,7 @@
 
 package ch.renku.acceptancetests.pages
 
+import org.openqa.selenium.interactions.Actions
 import org.openqa.selenium.{WebDriver, WebElement}
 import org.scalatestplus.selenium.WebBrowser.{cssSelector, find}
 
@@ -42,9 +43,21 @@ trait TopBar {
       find(cssSelector("#navbar-project-new")) getOrElse fail("Project option not found")
     }
 
-    def topRightDropDown(implicit webDriver: WebDriver): WebElement = eventually {
-      find(cssSelector("#profile-dropdown"))
-        .getOrElse(fail("Top Right dropdown not found"))
+    def clickOnTopRightDropDown(implicit webDriver: WebDriver): Unit = eventually {
+      val profileButton =
+        find(cssSelector("#profile-dropdown"))
+          .getOrElse(fail("Top Right dropdown not found"))
+
+      new Actions(webDriver)
+        .moveToElement(profileButton)
+        .click()
+        .build()
+        .perform();
+    }
+
+    def mainNavToggler(implicit webDriver: WebDriver): WebElement = eventually {
+      find(cssSelector("nav.renku-container > button.navbar-toggler"))
+        .getOrElse(fail("Top Right toggler button not found"))
     }
 
     def logoutLink(implicit webDriver: WebDriver): WebElement = eventually {

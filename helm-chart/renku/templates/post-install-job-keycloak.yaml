@@ -4,9 +4,9 @@ kind: Job
 metadata:
   name: "{{ .Release.Name }}-post-install-keycloak"
   labels:
-    heritage: {{ .Release.Service | quote }}
-    release: {{ .Release.Name | quote }}
-    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+    heritage: {{ .Release.Service }}
+    release: {{ .Release.Name }}
+    chart: {{ template "renku.chart" . }}
   annotations:
     "helm.sh/hook": post-install,post-upgrade
     "helm.sh/hook-weight": "20"
@@ -16,11 +16,13 @@ spec:
     metadata:
       name: "{{.Release.Name}}-post-install-keycloak"
       labels:
-        heritage: {{.Release.Service | quote }}
-        release: {{.Release.Name | quote }}
-        chart: "{{.Chart.Name}}-{{.Chart.Version}}"
+        heritage: {{ .Release.Service }}
+        release: {{ .Release.Name }}
+        chart: {{ template "renku.chart" . }}
     spec:
       restartPolicy: Never
+      initContainers:
+        {{- include "certificates.initContainer" . | nindent 8 }}
       containers:
         - name: init-keycloak
           image: "{{ .Values.keycloak.initRealm.image.repository }}:{{ .Values.keycloak.initRealm.image.tag }}"
@@ -35,9 +37,10 @@ spec:
           ]
 
           volumeMounts:
-          - name: realm-data
-            mountPath: /app/data
-            readOnly: true
+            - name: realm-data
+              mountPath: /app/data
+              readOnly: true
+            {{- include "certificates.volumeMounts.system" . | nindent 12 }}
 
           env:
             ## NOTE: This template string will be replaced during further refactoring
@@ -55,9 +58,11 @@ spec:
                   key: KEYCLOAK_PASSWORD
             - name: PYTHONUNBUFFERED
               value: "0"
+            {{- include "certificates.env.python" . | nindent 12 }}
 
       volumes:
         - name: realm-data
           secret:
             secretName: {{ template "renku.fullname" . }}
+        {{- include "certificates.volumes" . | nindent 8 -}}
 {{- end }}

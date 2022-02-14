@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Swiss Data Science Center (SDSC)
+ * Copyright 2022 Swiss Data Science Center (SDSC)
  * A partnership between École Polytechnique Fédérale de Lausanne (EPFL) and
  * Eidgenössische Technische Hochschule Zürich (ETHZ).
  *
@@ -26,16 +26,14 @@ import org.scalatestplus.selenium.WebBrowser.{cssSelector, find}
 
 object JupyterLabPage {
 
-  def apply()(implicit projectPage: ProjectPage): JupyterLabPage =
-    new JupyterLabPage(projectPage.projectSlug, projectPage.namespace)
+  def apply(): JupyterLabPage =
+    new JupyterLabPage()
 
-  def apply(projectId: ProjectIdentifier): JupyterLabPage =
-    new JupyterLabPage(projectId.slug, projectId.namespace)
 }
 
-class JupyterLabPage(projectSlug: String, namespace: String)
+class JupyterLabPage()
     extends RenkuPage(
-      path = s"/jupyterhub/user/$namespace/$projectSlug",
+      path = s"/sessions/",
       title = "JupyterLab"
     ) {
 

@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Swiss Data Science Center (SDSC)
+ * Copyright 2022 Swiss Data Science Center (SDSC)
  * A partnership between École Polytechnique Fédérale de Lausanne (EPFL) and
  * Eidgenössische Technische Hochschule Zürich (ETHZ).
  *
@@ -24,7 +24,7 @@ import java.lang.System.getProperty
 
 case class AnonEnvConfig(projectId: ProjectIdentifier, isAvailable: Boolean = false)
 
-/** Configuration for the anonymous environment
+/** Configuration for the anonymous sessions
   */
 trait AnonEnv extends AcceptanceSpecData {
   self: RenkuApi =>
