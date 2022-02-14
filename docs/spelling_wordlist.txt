@@ -60,6 +60,7 @@ entrypoint
 executables
 extraEnv
 extraEnvFrom
+falsy
 filesystem
 FilterFlights
 findable
@@ -194,6 +195,7 @@ Tensorflow
 timestamp
 tinkerpop
 toolchain
+truthy
 tutorialLink
 txt
 typesystem
