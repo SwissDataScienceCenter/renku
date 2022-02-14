@@ -20,6 +20,7 @@ package ch.renku.acceptancetests.pages
 
 import ch.renku.acceptancetests.model.projects.{ProjectDetails, Template, Visibility}
 import ch.renku.acceptancetests.tooling.DocsScreenshots
+import org.openqa.selenium.interactions.Actions
 import org.openqa.selenium.{WebDriver, WebElement}
 import org.scalatestplus.selenium.WebBrowser.{cssSelector, find, findAll}
 
@@ -53,6 +54,11 @@ case object NewProjectPage
     docsScreenshots.takeScreenshot()
 
     scrollDown
+    // Move the mouse off the field to prevent the tooltip from blocking the button
+    new Actions(webDriver)
+      .moveByOffset(20, 20)
+      .build()
+      .perform();
 
     createButton.click() sleep (10 seconds)
   }
