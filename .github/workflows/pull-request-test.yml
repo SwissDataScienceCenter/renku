@@ -82,7 +82,7 @@ jobs:
           RENKU_ANONYMOUS_SESSIONS: true
           RENKU_RELEASE: ci-renku-${{ github.event.number }}
           RENKU_VALUES_FILE: "${{ github.workspace }}/values.yaml"
-          RENKU_VALUES: ${{ secrets.TEST_SECRET_WES_TF }}
+          RENKU_VALUES: ${{ secrets.CI_RENKU_VALUES }}
           RENKUBOT_KUBECONFIG: ${{ secrets.RENKUBOT_DEV_KUBECONFIG }}
           TEST_ARTIFACTS_PATH: "tests-artifacts-${{ github.sha }}"
           renku: "@${{ github.head_ref }}"
@@ -124,7 +124,7 @@ jobs:
           renku-release: ci-renku-${{ github.event.number }}
           gitlab-token: ${{ secrets.DEV_GITLAB_TOKEN }}
           persist: "${{ needs.check-deploy.outputs.persist }}"
-          ci-renku-values: ${{ secrets.TEST_SECRET_WES_TF }}
+          ci-renku-values: ${{ secrets.CI_RENKU_VALUES }}
           test-timeout-mins: "80"
   cleanup:
     if: github.event.action == 'closed'
