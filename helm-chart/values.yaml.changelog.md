@@ -24,8 +24,6 @@ Please follow this convention when adding a new row
   * rename *graph.sentry.url* to *graph.sentry.dsn* and *graph.sentry.environmentName* to *graph.sentry.environment*
   * add *notebooks.sentry.enabled*
   * rename *notebooks.sentry.env* to *notebooks.sentry.environment*
-  * rename *graph.sentry.url* to *graph.sentry.dsn*
-  * rename *graph.sentry.environmentName* to *graph.sentry.environment*
 
 ## Upgrading to Renku 0.11.0
 * NEW/EDIT *postgresql.persistence.existingClaim* might need to be modified in the course of upgrading your PostgreSQL version. See [these instructions](https://github.com/SwissDataScienceCenter/renku/tree/master/helm-chart/utils/postgres_migrations/version_upgrades/README.md)
