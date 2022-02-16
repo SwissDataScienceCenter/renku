@@ -32,6 +32,7 @@ import scala.language.implicitConversions
 abstract class Page[Url <: BaseUrl](val path: String, val title: String)
     extends ScalatestMatchers
     with WebElementOps
+    with Scripts
     with Eventually
     with AcceptanceSpecPatience {
 

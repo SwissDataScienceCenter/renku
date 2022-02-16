@@ -49,9 +49,11 @@ class FreeTextDatasetSearchSpec
     `search for dataset with phrase`(commonWord, orderBy = Title)
 
     Then("the expected datasets should be shown")
-    val expectedDatasets  = List(dataset1Name, dataset2Name).sorted.map(_.toString).reverse
-    val foundDatasetLinks = DatasetsPage.searchResultLinks.map(_.getText)
-    foundDatasetLinks.filter(expectedDatasets.contains) shouldBe expectedDatasets
+    val expectedDatasets = List(dataset1Name, dataset2Name).sorted.map(_.toString).reverse
+    `try few times before giving up` { _ =>
+      val foundDatasetLinks = DatasetsPage.searchResultLinks.map(_.getText)
+      foundDatasetLinks.filter(expectedDatasets.contains) shouldBe expectedDatasets
+    }
 
     `log out of Renku`
   }
