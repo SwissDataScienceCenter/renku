@@ -12,7 +12,6 @@ kubernetes = "*"
 [dev-packages]
 docker = ">=2.4.2"
 httpwatcher = "*"
-ipython = ">=6.2.0"
 plantweb = ">=1.0"
 pyenchant = ">=1.6.11"
 pytest = ">=3.2.1"
