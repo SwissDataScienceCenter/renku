@@ -4,7 +4,7 @@
 ------
 
 Minor release to align Sentry configurations across the components.
-It includes a few minor bugfixes.
+It includes a few minor bug-fixes.
 
 
 0.12.0
