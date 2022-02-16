@@ -1,5 +1,12 @@
 .. _changelog:
 
+0.12.1
+------
+
+Minor release to align Sentry configurations across the components.
+It includes a few minor bugfixes.
+
+
 0.12.0
 ------
 
