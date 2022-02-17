@@ -6,6 +6,25 @@ Please follow this convention when adding a new row
 * `<type: NEW|EDIT|DELETE> - *<resource name>*: <details>`
 
 ----
+## Upgrading to Renku 0.12.1
+* NEW/EDIT - sentry values across the repositories were changed to follow this pattern:
+  ```
+  sentry:
+    enabled: <bool>
+    dsn: <string>
+    environment: <string>
+    sampleRate: <number>   # available only for some repos
+  ```
+  Specifically:
+  * rename *ui.sentry.url* and *uiserver.sentry.url* to *ui.sentry.dsn* and *uiserver.sentry.dsn*
+  * rename *ui.sentry.namespace* and *uiserver.sentry.namespace* to *ui.sentry.environment* and *uiserver.sentry.environment*
+  * add *ui.sentry.sampleRate* and *uiserver.sentry.sampleRate*
+  * add *core.sentry.enabled* and *core.sentry.sampleRate*
+  * add *gateway.sentry.enabled*
+  * rename *graph.sentry.url* to *graph.sentry.dsn* and *graph.sentry.environmentName* to *graph.sentry.environment*
+  * add *notebooks.sentry.enabled*
+  * rename *notebooks.sentry.env* to *notebooks.sentry.environment*
+
 ## Upgrading to Renku 0.11.0
 * NEW/EDIT *postgresql.persistence.existingClaim* might need to be modified in the course of upgrading your PostgreSQL version. See [these instructions](https://github.com/SwissDataScienceCenter/renku/tree/master/helm-chart/utils/postgres_migrations/version_upgrades/README.md)
 * NEW/EDIT/DELETE *gitlab.image.tag* might have to be adjusted as we do a GitLab major version bump in with this release. See [these instructions](https://github.com/SwissDataScienceCenter/renku/tree/master/helm-chart#upgrading-to-0110)
