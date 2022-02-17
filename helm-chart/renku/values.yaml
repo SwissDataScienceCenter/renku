@@ -100,8 +100,10 @@ global:
     ## Not that the host is the same as fullnameOverride only in sentinel mode.
     ## In other cases the redis service is usually called <fullnameOverride>-headless.
     host: renku-redis
-    ## Set to true if redis host/port point to a redis sentinel.
-    isSentinel: true
+    sentinel:
+      ## Set to true if redis host/port point to a redis sentinel.
+      enabled: true
+      masterSet: mymaster
     ## The label added to client pods so that they can access redis.
     ## Needed only if the network policy from the redis helm chart that adds this 
     ## restriction is enabled.
