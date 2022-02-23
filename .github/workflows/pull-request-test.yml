@@ -83,7 +83,7 @@ jobs:
           RENKU_RELEASE: ci-renku-${{ github.event.number }}
           RENKU_VALUES_FILE: "${{ github.workspace }}/values.yaml"
           RENKU_VALUES: ${{ secrets.CI_RENKU_VALUES }}
-          RENKUBOT_KUBECONFIG: ${{ secrets.RENKUBOT_DEV_KUBECONFIG }}
+          RENKUBOT_KUBECONFIG: ${{ secrets.RENKUBOT_DEV_KUBECONFIG_TEST_WES }}
           TEST_ARTIFACTS_PATH: "tests-artifacts-${{ github.sha }}"
           renku: "@${{ github.head_ref }}"
           renku_core: "${{ needs.check-deploy.outputs.renku-core }}"
@@ -120,7 +120,7 @@ jobs:
     steps:
       - uses: SwissDataScienceCenter/renku-actions/test-renku@v0.5.0
         with:
-          renkubot-kubeconfig: ${{ secrets.RENKUBOT_DEV_KUBECONFIG }}
+          renkubot-kubeconfig: ${{ secrets.RENKUBOT_DEV_KUBECONFIG_TEST_WES }}
           renku-release: ci-renku-${{ github.event.number }}
           gitlab-token: ${{ secrets.DEV_GITLAB_TOKEN }}
           persist: "${{ needs.check-deploy.outputs.persist }}"
@@ -135,6 +135,6 @@ jobs:
         env:
           HELM_RELEASE_REGEX: "^ci-renku-${{ github.event.number }}$"
           GITLAB_TOKEN: ${{ secrets.DEV_GITLAB_TOKEN }}
-          RENKUBOT_KUBECONFIG: ${{ secrets.RENKUBOT_DEV_KUBECONFIG }}
+          RENKUBOT_KUBECONFIG: ${{ secrets.RENKUBOT_DEV_KUBECONFIG_TEST_WES }}
           MAX_AGE_SECONDS: 0
           DELETE_NAMESPACE: "true"
