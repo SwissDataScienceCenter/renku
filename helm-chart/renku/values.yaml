@@ -83,11 +83,10 @@ global:
     # Specify which renku component should use which DB index
     dbIndex:
       gateway: "0"
-      # coreService: "1"
-      # uiServer: "2"
+      coreService: "1"
+      uiServer: "2"
 
-    # Note: these two entries MUST match the ones in redis.auth if redis is
-    # installed through this chart.
+    # Note: these two entries MUST match the ones in the top level redis section.
     existingSecret: redis-secret
     existingSecretPasswordKey: redis-password
 
@@ -96,14 +95,20 @@ global:
     ## but not the redis cluster deployment itself.
     ## If you're deploying redis through this chart and you want to deviate from
     ## the defaults, you'll have to match whatever you set here in the non-global
-    ## redis section which defines the actual redis cluster.
-    ## The hostname will fall-back to RELEASE-NAME-redis if left empty and the port
-    ## will be set to the respective defaults depending on the isSentinel setting.
-    # host: RELEASE-NAME-redis
-    # port: 6379/26379
-
-    # Set to true if redis host/port point to a redis sentinel.
-    isSentinel: true
+    ## redis section below which defines the actual redis cluster.
+    port: 26379
+    ## Not that the host is the same as fullnameOverride only in sentinel mode.
+    ## In other cases the redis service is usually called <fullnameOverride>-headless.
+    host: renku-redis
+    sentinel:
+      ## Set to true if redis host/port point to a redis sentinel.
+      enabled: true
+      masterSet: mymaster
+    ## The label added to client pods so that they can access redis.
+    ## Needed only if the network policy from the redis helm chart that adds this 
+    ## restriction is enabled.
+    clientLabel: 
+      renku-redis-client: "true"
 
   ## Set to true if using https
   useHTTPS: false
@@ -304,8 +309,10 @@ postgresql:
     slaveReplicas: 1
 
 redis:
-  # Configuration that is unknown to the redis chart but picked up
-  # by the renku chart.
+  ###########################################################################
+  ### Configuration that is unknown to the redis chart but picked up      ###
+  ### by the renku chart.                                                 ###
+  ###########################################################################
 
   # If set to true, a HA redis will be included in the Renku release.
   install: true
@@ -315,9 +322,14 @@ redis:
   # The actual password, ignored if createSecret is false.
   password: # openssl rand -hex 32
 
-  # Configuration that is passed on to the redis chart, for details and
-  # further config options check out
-  # https://github.com/bitnami/charts/tree/master/bitnami/redis
+  ###########################################################################
+  ### Configuration that is passed on to the redis chart, for details and ###
+  ### further config options check out                                    ###
+  ### https://github.com/bitnami/charts/tree/master/bitnami/redis         ###
+  ###########################################################################
+
+  fullnameOverride: renku-redis
+  redisPort: 6379
 
   ## config for newer redis versions, here for later reference
   # replicas:
@@ -365,6 +377,7 @@ redis:
         cpu: 200m
         memory: 256Mi
   sentinel:
+    port: 26379
     enabled: true
     resources:
       requests:
