@@ -81,9 +81,9 @@ spec:
         pathType: Prefix
         backend:
           service:
-            name: {{ $gatewayFullname }}
+            name: {{ include "traefik.fullname" . }}
             port:
-              number: {{ $gatewayServicePort }}
+              number: 80
       - path: /entities
         pathType: Prefix
         backend:
