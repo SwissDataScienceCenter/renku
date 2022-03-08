@@ -10,6 +10,7 @@
 {{- $uiserverFullname := include "uiserver.fullname" . -}}
 {{- $uiserverServicePort := .Values.uiserver.service.port -}}
 {{- $gatewayFullname := include "gateway.fullname" . -}}
+{{- $traefikFullname := include "traefik.fullname" . -}}
 {{- $gatewayServicePort := .Values.gateway.service.port -}}
 {{- $graphEnabled := .Values.graph.enabled -}}
 {{- $webhookServiceFullname := include "webhookService.fullname" . -}}
@@ -81,7 +82,7 @@ spec:
         pathType: Prefix
         backend:
           service:
-            name: {{ include "traefik.fullname" . }}
+            name: {{ $traefikFullname }}
             port:
               number: 80
       - path: /entities
