@@ -1,5 +1,10 @@
 .. _changelog:
 
+0.12.2
+------
+
+Minor release to fix various bugs across the components.
+
 0.12.1
 ------
 
