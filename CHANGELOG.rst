@@ -3,7 +3,9 @@
 0.12.2
 ------
 
-Minor release to fix various bugs across the components.
+Minor release fixing various bugs in `renku-python` `renku-core` and `graph` services.
+The main fixes are addressing issues in migration and workflow functionality of renku CLI 
+and security and stability bugs in `renku-graph`.
 
 0.12.1
 ------
