@@ -1,5 +1,22 @@
 .. _changelog:
 
+0.12.2
+------
+
+Minor release fixing various bugs in `renku-python` `renku-core` and `graph` services.
+The main fixes are addressing issues in migration and workflow functionality of renku CLI 
+and security and stability bugs in `renku-graph`.
+
+Please note that the `renku-core` metrics should be disabled in this release. Recent changes
+made to Redis are incompatible with the `renku-core` metrics and cause the whole Renku deployment
+to not function properly. The `renku-core` metrics will be fixed in a subsequent release.
+
+More info can be found on release notes of specific components:
+
+* `renku-python 1.1.0 <https://github.com/SwissDataScienceCenter/renku-python/releases/tag/v1.1.0>`_
+
+* `renku-graph 2.2.4 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/2.2.4>`_
+
 0.12.1
 ------
 
