@@ -9,9 +9,13 @@ and security and stability bugs in `renku-graph`.
 
 More info can be found on release notes of specific components:
 
+* `renku-python 1.1.1 <https://github.com/SwissDataScienceCenter/renku-python/releases/tag/v1.1.1>`_
+
 * `renku-python 1.1.0 <https://github.com/SwissDataScienceCenter/renku-python/releases/tag/v1.1.0>`_
 
 * `renku-graph 2.2.4 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/2.2.4>`_
+
+* `renku-graph 2.2.3 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/2.2.3>`_
 
 0.12.1
 ------
