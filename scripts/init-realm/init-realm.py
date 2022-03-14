@@ -28,30 +28,49 @@ from keycloak.exceptions import KeycloakConnectionError, KeycloakGetError
 
 
 # Helper functions which are called by the script.
+from typing import Dict, Tuple, List
 
 
-def _check_existing(existing_object, new_object, case, idKey):
+def _check_existing(existing_object: Dict, new_object: Dict, case, id_key) -> Tuple[List[str], List[str]]:
     """
-    Compare the new object to the existing one, warn
-    about mismatches.
+    Compare the new object to the existing one, warn about mismatches.
     """
+
+    def sorted_list(data: List) -> List:
+        return sorted(data, key=lambda e: json.dumps(e, sort_keys=True))
+
+    added = []
+    changed = []
+
     for key in new_object.keys():
         if key not in existing_object:
-            warning = "Found missing key '{}' at {} '{}'!".format(
-                key, case, new_object[idKey]
-            )
+            added.append(key)
+            warning = f"Found missing key '{key}' at {case} '{new_object[id_key]}'!"
             warnings.warn(warning)
 
         elif new_object[key] != existing_object[key]:
-            warning = "Found mismatch for key '{}' at {} '{}'!".format(
-                key, case, new_object[idKey]
-            )
+            # If element is a list then sort and compare again
+            if isinstance(new_object[key], list):
+                if sorted_list(new_object[key]) == sorted_list(existing_object[key]):
+                    continue
+
+            changed.append(key)
+            warning = f"Found mismatch for key '{key}' at {case} '{new_object[id_key]}'!"
             warnings.warn(warning)
-            warnings.warn("To be created: \n{}".format(json.dumps(new_object[key])))
-            warnings.warn("Existing: \n{}".format(json.dumps(existing_object[key])))
+            warnings.warn(f"To be created: \n{json.dumps(new_object[key])}")
+            warnings.warn(f"Existing: \n{json.dumps(existing_object[key])}")
+
+    return added, changed
 
 
-def _check_and_create_client(keycloak_admin, new_client):
+def _fix_json_values(data: Dict) -> Dict:
+    """
+    Fix quoted booleans in the JSON document from the Keycloak API.
+    """
+    return json.loads(json.dumps(data).replace('"true"', "true").replace('"false"', "false"))
+
+
+def _check_and_create_client(keycloak_admin, new_client, apply_changes: bool):
     """
     Check if a client exists. Create it if not. Alert if
     it exists but with different details than what is provided.
@@ -59,59 +78,56 @@ def _check_and_create_client(keycloak_admin, new_client):
 
     sys.stdout.write("Checking if {} client exists...".format(new_client["clientId"]))
     realm_clients = keycloak_admin.get_clients()
-    clientIds = [c["clientId"] for c in realm_clients]
-    if new_client["clientId"] in clientIds:
+    client_ids = [c["clientId"] for c in realm_clients]
+    if new_client["clientId"] in client_ids:
         sys.stdout.write("found\n")
-        realm_client = realm_clients[clientIds.index(new_client["clientId"])]
+        realm_client = realm_clients[client_ids.index(new_client["clientId"])]
 
         # We have to separately query the secret as it is not part of
-        # the original respone
+        # the original response
         secret = keycloak_admin.get_client_secrets(realm_client["id"])
         # public clients don't have secrets so default to None
         realm_client["secret"] = secret.get("value", None)
 
         # We have to remove the auto-generated IDs of the protocol mapper(s)
         # before comparing to the to-be-created client.
-        # Also, we have to fix quoted booleans in the JSON document from
-        # the Keycloak API.
         if "protocolMappers" in realm_client:
             for mapper in realm_client["protocolMappers"]:
                 del mapper["id"]
-                mapper["config"] = json.loads(
-                    json.dumps(mapper["config"])
-                    .replace('"true"', "true")
-                    .replace('"false"', "false")
-                )
+                mapper["config"] = _fix_json_values(mapper["config"])
 
-        _check_existing(realm_client, new_client, "client", "clientId")
+        if "attributes" in realm_client:
+            realm_client["attributes"] = _fix_json_values(realm_client["attributes"])
 
-        # If we're dealing with the gateway client which is missing the
-        # necessary protocol mapper to add the client-id to the audience
-        # claim, we add it specifically.
-        mappers_client_ids = ["gateway"]
-        if realm_client["clientId"] in mappers_client_ids:
-            mappers_missing = (
-                "protocolMappers" not in realm_client
-                and "protocolMappers" in new_client
-            )
-            audience_mapper_missing = "audience for gateway" not in [
-                mapper["name"] for mapper in realm_client.get("protocolMappers", [])
-            ]
-            if mappers_missing or audience_mapper_missing:
-                sys.stdout.write(
-                    "found, but without the necessary protocol mapper. Adding it now..."
-                )
-                realm_client["protocolMappers"] = new_client[
-                    "protocolMappers"
-                ] + realm_client.get("protocolMappers", [])
+        added, changed = _check_existing(realm_client, new_client, "client", "clientId")
 
-                # We use DELETE followed by POST since PUT does not add the
-                # provided protocolMappers to the client and PATCH is not
-                # supported by the API.
-                keycloak_admin.delete_client(realm_client["id"])
-                keycloak_admin.create_client(realm_client)
+        if not apply_changes or (not added and not changed):
+            return
 
-                sys.stdout.write("done\n")
+        client_id = realm_client['clientId']
+        sys.stdout.write(f"Updating client '{client_id}'...\n")
+
+        for key in added:
+            sys.stdout.write(f"Creating new key '{key}'\n")
+            realm_client[key] = new_client[key]
+
+        for key in changed:
+            sys.stdout.write(f"Updating key '{key}'\n")
+
+            if isinstance(realm_client[key], dict):
+                realm_client[key].update(new_client[key])
+            elif isinstance(realm_client[key], list):
+                for value in new_client[key]:
+                    if value not in realm_client[key]:
+                        realm_client[key].append(value)
+            else:
+                realm_client[key] = new_client[key]
+
+        sys.stdout.write(f"Recreating modified client '{client_id}'...")
+
+        keycloak_admin.update_client(realm_client["id"], payload=realm_client)
+
+        sys.stdout.write("done\n")
 
     else:
         sys.stdout.write("not found\n")
@@ -143,9 +159,7 @@ def _check_and_create_user(keycloak_admin, new_user):
         sys.stdout.write("Creating user {} ...".format(new_user["username"]))
         keycloak_admin.create_user(payload=new_user)
         new_user_id = keycloak_admin.get_user_id(new_user["username"])
-        keycloak_admin.set_user_password(
-            new_user_id, new_user_password, temporary=False
-        )
+        keycloak_admin.set_user_password(new_user_id, new_user_password, temporary=False)
         sys.stdout.write("done\n")
 
 
@@ -161,8 +175,7 @@ parser.add_argument(
 parser.add_argument("--admin-password", help="Keycloak admin password")
 parser.add_argument(
     "--realm",
-    help="Name of the Keycloak realm to create or configure. "
-    + 'The default is "Renku".',
+    help='Name of the Keycloak realm to create or configure. The default is "Renku".',
     default="Renku",
 )
 parser.add_argument(
@@ -175,10 +188,15 @@ parser.add_argument(
     help="""Path to a json file containing the clients to be created""",
     default=None,
 )
+parser.add_argument(
+    "--apply-changes",
+    help="""Copy changes from configured clients to existing KeyCloak clients""",
+    action="store_true",
+)
 args = parser.parse_args()
 
 
-# Check if the file containting the user information is ok.
+# Check if the file containing the user information is ok.
 if args.users_file:
     try:
         with open(args.users_file, "r") as f:
@@ -192,7 +210,7 @@ if args.users_file:
 else:
     new_users = []
 
-# Check if the file containting the client information is ok.
+# Check if the file containing the client information is ok.
 if args.clients_file:
     try:
         with open(args.clients_file, "r") as f:
@@ -201,9 +219,7 @@ if args.clients_file:
         sys.stderr.write("No clients-file found at {}.".format(args.clients_file))
         exit(1)
     except json.JSONDecodeError:
-        sys.stderr.write(
-            "Could not parse clients-file at {}.".format(args.clients_file)
-        )
+        sys.stderr.write("Could not parse clients-file at {}.".format(args.clients_file))
         exit(1)
 else:
     new_clients = []
@@ -217,9 +233,9 @@ if not keycloak_admin_password:
         prompt="Password for user '{}' (will not be stored):".format(args.admin_user)
     )
 
-# Acquire a admin access token for the kecyloak API. On timeout
+# Acquire a admin access token for the keycloak API. On timeout
 # or 503 we follow the kubernetes philosophy of just retrying until
-# the service is eventuelly up. After 5 minutes we give up and leave
+# the service is eventually up. After 5 minutes we give up and leave
 # it to K8s to restart the job.
 n_attempts = 0
 success = False
@@ -251,9 +267,7 @@ else:
 
 # Now that we obviously have all we need, let's create the
 # realm, clients and users, skipping what already exists.
-sys.stdout.write(
-    "Creating {} realm, skipping if it already exists...".format(args.realm)
-)
+sys.stdout.write("Creating {} realm, skipping if it already exists...".format(args.realm))
 keycloak_admin.create_realm(
     payload={
         "realm": args.realm,
@@ -275,7 +289,7 @@ keycloak_admin.realm_name = args.realm
 
 
 for new_client in new_clients:
-    _check_and_create_client(keycloak_admin, new_client)
+    _check_and_create_client(keycloak_admin, new_client, args.apply_changes)
 
 for new_user in new_users:
     _check_and_create_user(keycloak_admin, new_user)
