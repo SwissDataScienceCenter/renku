@@ -33,7 +33,8 @@ spec:
             "--admin-password=$(KEYCLOAK_ADMIN_PASSWORD)",
             "--keycloak-url=$(KEYCLOAK_URL)",
             "--users-file=/app/data/users",
-            "--clients-file=/app/data/clients"
+            "--clients-file=/app/data/clients",
+            "--apply-changes"
           ]
 
           volumeMounts:
