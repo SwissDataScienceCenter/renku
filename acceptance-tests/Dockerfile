@@ -39,3 +39,5 @@ RUN python3 -m pip install --upgrade 'pip==21.3.1' && \
 ENV DOCKER="1"
 COPY . /tests
 ENTRYPOINT ["/tests/docker-run-tests.sh"]
+
+
