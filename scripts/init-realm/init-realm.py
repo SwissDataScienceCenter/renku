@@ -28,23 +28,22 @@ from keycloak.exceptions import KeycloakConnectionError, KeycloakGetError
 
 
 # Helper functions which are called by the script.
-from typing import Dict, Tuple, List
+from typing import Dict, List
 
 
-def _check_existing(existing_object: Dict, new_object: Dict, case, id_key) -> Tuple[List[str], List[str]]:
+def _check_existing(existing_object: Dict, new_object: Dict, case, id_key) -> bool:
     """
-    Compare the new object to the existing one, warn about mismatches.
+    Compare the new object to the existing one, warn about mismatches. Return True if there are mismatches.
     """
 
     def sorted_list(data: List) -> List:
         return sorted(data, key=lambda e: json.dumps(e, sort_keys=True))
 
-    added = []
-    changed = []
+    changed: bool = False
 
     for key in new_object.keys():
         if key not in existing_object:
-            added.append(key)
+            changed = True
             warning = f"Found missing key '{key}' at {case} '{new_object[id_key]}'!"
             warnings.warn(warning)
 
@@ -54,13 +53,13 @@ def _check_existing(existing_object: Dict, new_object: Dict, case, id_key) -> Tu
                 if sorted_list(new_object[key]) == sorted_list(existing_object[key]):
                     continue
 
-            changed.append(key)
+            changed = True
             warning = f"Found mismatch for key '{key}' at {case} '{new_object[id_key]}'!"
             warnings.warn(warning)
             warnings.warn(f"To be created: \n{json.dumps(new_object[key])}")
             warnings.warn(f"Existing: \n{json.dumps(existing_object[key])}")
 
-    return added, changed
+    return changed
 
 
 def _fix_json_values(data: Dict) -> Dict:
@@ -99,33 +98,15 @@ def _check_and_create_client(keycloak_admin, new_client, apply_changes: bool):
         if "attributes" in realm_client:
             realm_client["attributes"] = _fix_json_values(realm_client["attributes"])
 
-        added, changed = _check_existing(realm_client, new_client, "client", "clientId")
+        changed = _check_existing(realm_client, new_client, "client", "clientId")
 
-        if not apply_changes or (not added and not changed):
+        if not apply_changes or not changed:
             return
 
-        client_id = realm_client['clientId']
-        sys.stdout.write(f"Updating client '{client_id}'...\n")
+        sys.stdout.write(f"Recreating modified client '{realm_client['clientId']}'...")
 
-        for key in added:
-            sys.stdout.write(f"Creating new key '{key}'\n")
-            realm_client[key] = new_client[key]
-
-        for key in changed:
-            sys.stdout.write(f"Updating key '{key}'\n")
-
-            if isinstance(realm_client[key], dict):
-                realm_client[key].update(new_client[key])
-            elif isinstance(realm_client[key], list):
-                for value in new_client[key]:
-                    if value not in realm_client[key]:
-                        realm_client[key].append(value)
-            else:
-                realm_client[key] = new_client[key]
-
-        sys.stdout.write(f"Recreating modified client '{client_id}'...")
-
-        keycloak_admin.update_client(realm_client["id"], payload=realm_client)
+        keycloak_admin.delete_client(realm_client["id"])
+        keycloak_admin.create_client(new_client)
 
         sys.stdout.write("done\n")
 
