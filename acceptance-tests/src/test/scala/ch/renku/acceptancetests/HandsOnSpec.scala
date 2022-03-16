@@ -85,3 +85,7 @@ class HandsOnSpec
     Then("the correct notebook content is there")
   }
 }
+
+
+// Comment for testing
+// Another comment for testing
