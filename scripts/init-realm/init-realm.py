@@ -69,7 +69,7 @@ def _fix_json_values(data: Dict) -> Dict:
     return json.loads(json.dumps(data).replace('"true"', "true").replace('"false"', "false"))
 
 
-def _check_and_create_client(keycloak_admin, new_client, apply_changes: bool):
+def _check_and_create_client(keycloak_admin, new_client, force: bool):
     """
     Check if a client exists. Create it if not. Alert if
     it exists but with different details than what is provided.
@@ -100,7 +100,7 @@ def _check_and_create_client(keycloak_admin, new_client, apply_changes: bool):
 
         changed = _check_existing(realm_client, new_client, "client", "clientId")
 
-        if not apply_changes or not changed:
+        if not force or not changed:
             return
 
         sys.stdout.write(f"Recreating modified client '{realm_client['clientId']}'...")
@@ -170,8 +170,9 @@ parser.add_argument(
     default=None,
 )
 parser.add_argument(
-    "--apply-changes",
-    help="""Copy changes from configured clients to existing KeyCloak clients""",
+    "--force",
+    help="If existing clients do not exactly match the provided configuration, recreate them using the provided "
+    "configuration.",
     action="store_true",
 )
 args = parser.parse_args()
@@ -270,7 +271,7 @@ keycloak_admin.realm_name = args.realm
 
 
 for new_client in new_clients:
-    _check_and_create_client(keycloak_admin, new_client, args.apply_changes)
+    _check_and_create_client(keycloak_admin, new_client, args.force)
 
 for new_user in new_users:
     _check_and_create_user(keycloak_admin, new_user)
