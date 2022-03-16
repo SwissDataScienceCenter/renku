@@ -42,8 +42,8 @@ jobs:
           CHART_NAME: renku
           GIT_USER: renku-bot
           GIT_EMAIL: renku@datascience.ch
-          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
-          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+          DOCKER_USERNAME: ${{ secrets.RENKU_DOCKER_USERNAME }}
+          DOCKER_PASSWORD: ${{ secrets.RENKU_DOCKER_PASSWORD }}
           GITHUB_TOKEN: ${{ secrets.RENKUBOT_GITHUB_TOKEN }}
       - uses: 8398a7/action-slack@v3
         with:
