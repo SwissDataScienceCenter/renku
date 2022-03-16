@@ -33,22 +33,20 @@ import scala.language.implicitConversions
 
 object Generators {
 
-  def nonEmptyStrings(maxLength: Int = 10, charsGenerator: Gen[Char] = alphaChar): Gen[String] = {
-    require(maxLength > 0)
-
-    val lengths =
-      if (maxLength == 1) choose(1, maxLength)
-      else frequency(1 -> choose(1, maxLength), 9 -> choose(2, maxLength))
+  def nonEmptyStrings(minLength: Int = 3, maxLength: Int = 10, charsGenerator: Gen[Char] = alphaChar): Gen[String] = {
+    require(minLength > 0, "minLength of generated string cannot be < 1")
+    require(maxLength > 0, "maxLength of generated string cannot be < 1")
+    require(minLength <= maxLength, s"Cannot generate string with minLength $minLength > maxLength $maxLength")
 
     for {
-      length <- lengths
+      length <- choose(minLength, maxLength)
       chars  <- listOfN(length, charsGenerator)
     } yield chars.mkString("")
   }
 
   def sentenceContaining(phrase: String): Gen[String] = for {
-    prefix <- nonEmptyStrings()
-    suffix <- nonEmptyStrings()
+    prefix <- nonEmptyStrings(minLength = 1)
+    suffix <- nonEmptyStrings(minLength = 1)
   } yield s"$prefix $phrase $suffix"
 
   def paragraph(minWords: Int Refined Positive = 2,
@@ -58,7 +56,7 @@ object Generators {
     (
       for {
         words     <- Gen.choose(minWords.value, maxWords.value)
-        paragraph <- listOfN(words, nonEmptyStrings())
+        paragraph <- listOfN(words, nonEmptyStrings(minLength = 1))
       } yield paragraph.mkString(" ")
     ) map Refined.unsafeApply
   }
@@ -67,7 +65,7 @@ object Generators {
     require(minWords <= maxWords)
     for {
       words     <- Gen.choose(minWords, maxWords)
-      paragraph <- listOfN(words, nonEmptyStrings())
+      paragraph <- listOfN(words, nonEmptyStrings(minLength = 1))
     } yield prefix + paragraph.mkString(" ")
   }
 
