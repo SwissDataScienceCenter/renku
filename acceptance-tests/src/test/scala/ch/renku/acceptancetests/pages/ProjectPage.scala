@@ -331,7 +331,7 @@ class ProjectPage(val projectSlug: String, val namespace: String)
     }
 
     def maybeButtonHideBranch(implicit webDriver: WebDriver): Option[WebElement] = eventually {
-      findAll(cssSelector("div.mb-3 > button")).find(_.text.startsWith("Hide branch"))
+      findAll(cssSelector("div.mb-3 > button")).find(_.text.startsWith("Hide advanced settings"))
     }
 
     private def maybeImageReadyBadge(implicit webDriver: WebDriver): Option[WebBrowser.Element] =
