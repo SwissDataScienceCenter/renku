@@ -12,7 +12,7 @@ Once you have a triplestore set up, find your project in your Renku's GitLab and
       GIT_LFS_SKIP_SMUDGE: 1
       
     image:
-      name: travissdsc/pythonbase:0.0.1
+      name: travissdsc/pythonbase:0.0.1  # an image based on renku/renku-python which sets user to root
       entrypoint: [""]
     
     job:
@@ -30,12 +30,17 @@ Once you have a triplestore set up, find your project in your Renku's GitLab and
         
         
         
-There are few steps above: 
+The above script will do the following: 
 
     - Installing dependencies
 
-    - Configuring git for the migration of the schema. It might be safer to do a migration manually in order to ensure that the data in the triplestore is using the same schema for all projects.
+    - Configure git for the migration of the schema. It might be safer to do a migration manually in order to ensure that the data in the triplestore is using the same schema for all projects.
 
-    - Exporting the triples and writing them to a file. 
+    - Export the triples and writing them to a file. 
 
-    - Sending the triples to a JENA instance. 
+    - Send the triples to a JENA instance. In this case the instance is `jenatest.dev.renku.ch` and the JENA dataset is `omni-batch-harmony-ds`. 
+    
+Modify the values
+*****************
+- Supply the latest versions of the above packages and the URL of your triplestore/dataset. 
+- Set the JENA_ADMIN_PASSWORD variable in GitLab by going to the project page, click on `Settings` -> `CI/CD` -> `Variables` -> `Add Variable`. Be sure to select `Mask variable` so the value doesn't show up in the job logs. 
