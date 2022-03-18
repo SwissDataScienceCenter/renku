@@ -12,7 +12,7 @@ Minor release coming with:
 
 More info can be found on release notes of specific components:
 
-* `renku-ui 1.1.1 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/2.1.0>`_
+* `renku-ui 2.1.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/2.1.0>`_
 
 * `renku-gateway 0.13.1 <https://github.com/SwissDataScienceCenter/renku-gateway/releases/tag/0.13.1>`_
 
