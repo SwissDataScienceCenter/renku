@@ -1,5 +1,27 @@
 .. _changelog:
 
+0.12.3
+------
+
+Minor release coming with:
+* several new features on renku-ui,
+* new /knowledge-graph/entities (cross-entity search) API,
+* fixes around Cross-Origin Resource Sharing,
+* better messaging and reporting on renku-notebooks
+* fixes for various bugs in `renku-notebooks`, `renku-ui`, `renku-gateway` and `graph` services.
+
+More info can be found on release notes of specific components:
+
+* `renku-ui 1.1.1 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/2.1.0>`_
+
+* `renku-gateway 0.13.1 <https://github.com/SwissDataScienceCenter/renku-gateway/releases/tag/0.13.1>`_
+
+* `renku-graph 2.4.1 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/2.4.1>`_
+
+* `renku-graph 2.4.0 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/2.4.0>`_
+
+* `renku-graph 2.3.0 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/2.3.0>`_
+
 0.12.2
 ------
 
