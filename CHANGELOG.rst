@@ -4,6 +4,7 @@
 ------
 
 Minor release coming with:
+
 * several new features on renku-ui,
 * new /knowledge-graph/entities (cross-entity search) API,
 * fixes around Cross-Origin Resource Sharing,
