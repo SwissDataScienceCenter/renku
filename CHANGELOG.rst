@@ -22,6 +22,8 @@ More info can be found on release notes of specific components:
 
 * `renku-graph 2.3.0 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/2.3.0>`_
 
+* `renku-notebooks 1.5.0 <https://github.com/SwissDataScienceCenter/renku-notebooks/releases/tag/1.5.0>`_
+
 0.12.2
 ------
 
