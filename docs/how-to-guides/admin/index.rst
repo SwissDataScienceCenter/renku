@@ -13,3 +13,5 @@ Guides for developers and administrators
     running_renku_on_minikube
     privacycookie
     troubleshooting
+    send-metadata-to-an-external-triplestore
+

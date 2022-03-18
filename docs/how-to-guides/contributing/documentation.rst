@@ -10,6 +10,12 @@ are highly appreciated!
 Building the docs
 -----------------
 
+If you haven't already, be sure you have the subumodules synced:
+
+.. code-block:: console
+
+    $ git submodule update --init --recursive --remote
+
 When inside the ``docs`` directory execute the following two steps to build the
 docs:
 

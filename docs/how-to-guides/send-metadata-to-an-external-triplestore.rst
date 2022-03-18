@@ -1,4 +1,8 @@
-How-to: Create a GitLab pipeline to send Renku metadata to an external triplestore 
+.. _admin_external_triplestore:
+
+Create a GitLab pipeline to send Renku metadata to an external triplestore
+==================================================================================
+
 
 Some users are interested in being able to write their own queries for the metadata in the triplestore. As `Renku<>`’s triplestore contains private data, an alternative solution is to simply export the data to an external triplestore. One way to accomplish this is to use a GitLab pipeline. The following GitLab pipeline configuration can be copied to any project in Renku and used to export triples to a JENA instance.
 
