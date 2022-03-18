@@ -9,7 +9,7 @@ Minor release coming with:
 * new ``/knowledge-graph/entities`` (cross-entity search) API,
 * fixes around Cross-Origin Resource Sharing,
 * better messaging and reporting on renku-notebooks
-* fixes for various bugs in `renku-notebooks`, `renku-ui`, `renku-gateway` and `graph` services.
+* fixes for various bugs in renku-notebooks, renku-ui, renku-gateway and renku-graph services.
 
 More info can be found on release notes of specific components:
 
