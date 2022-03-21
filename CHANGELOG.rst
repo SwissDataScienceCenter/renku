@@ -1,5 +1,11 @@
 .. _changelog:
 
+0.12.4
+------
+
+Minor release bumping the renku project templates version to ``0.3.1``.
+
+
 0.12.3
 ------
 
