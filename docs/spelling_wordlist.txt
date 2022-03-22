@@ -195,6 +195,7 @@ Tensorflow
 timestamp
 tinkerpop
 toolchain
+triplestore
 truthy
 tutorialLink
 txt
