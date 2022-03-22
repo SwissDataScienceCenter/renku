@@ -10,7 +10,7 @@ are highly appreciated!
 Building the docs
 -----------------
 
-If you haven't already, be sure you have the subumodules synced:
+If you haven't already, be sure you have the submodules synced:
 
 .. code-block:: console
 
