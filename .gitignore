@@ -266,3 +266,6 @@ tags
 .history
 
 # End of https://www.gitignore.io/api/vim,macos,linux,emacs,scala,python,visualstudiocode,helm
+
+# Ignore scala metals .bsp folder
+.bsp/
