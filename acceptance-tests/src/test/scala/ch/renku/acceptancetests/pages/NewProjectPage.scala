@@ -79,7 +79,8 @@ case object NewProjectPage
   }
 
   private def visibilityRadioInput(visibility: Visibility)(implicit webDriver: WebDriver): WebElement = eventually {
-    find(cssSelector(s"input[name='visibility'][value='${visibility.value}']")) getOrElse fail("Visibility option not found")
+    find(cssSelector(s"input[name='visibility'][value='${visibility.value}']"))
+      .getOrElse(fail("Visibility option not found"))
   }
 
   private def templateCard(template: Template)(implicit webDriver: WebDriver): WebElement = eventually {
