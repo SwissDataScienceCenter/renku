@@ -9,7 +9,7 @@ Includes minor updates to component versions:
 
 - `renku-notebooks 1.5.1 <https://github.com/SwissDataScienceCenter/renku-notebooks/releases/tag/1.5.1>`_
 - `renku-python 1.1.2 <https://github.com/SwissDataScienceCenter/renku-python/releases/tag/v1.1.2>`_
-
+- `renku-ui 2.1.1 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/2.1.1>`_
 
 0.12.3
 ------
