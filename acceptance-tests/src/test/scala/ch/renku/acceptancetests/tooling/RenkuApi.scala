@@ -27,7 +27,7 @@ trait RenkuApi extends RestClient {
   self: AcceptanceSpecData =>
 
   lazy val apiCliVersion: CliVersion = {
-    val url = renkuBaseUrl / "api" / "renku" / "version"
+    val url = renkuBaseUrl / "api" / "renku" / "apiversion"
     GET(url)
       .send(whenReceived(status = Ok) >=> bodyToJson)
       .extract(jsonRoot.`result`.`latest_version`.string.getOption)
