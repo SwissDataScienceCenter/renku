@@ -19,3 +19,4 @@ aimed at active users of Renku and target specific use-cases or common issues.
    troubleshooting
    admin/index
    contributing/index
+
