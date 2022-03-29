@@ -18,8 +18,9 @@
 
 package ch.renku.acceptancetests.workflows
 
-import ch.renku.acceptancetests.model.projects.ProjectIdentifier
+import ch.renku.acceptancetests.model.projects.ProjectDetails
 import ch.renku.acceptancetests.pages._
+import ch.renku.acceptancetests.tooling.TestLogger.logger
 import ch.renku.acceptancetests.tooling.{AcceptanceSpec, AnonEnvConfig}
 
 import scala.concurrent.duration._
@@ -50,9 +51,6 @@ trait Environments {
   def `stop session`(implicit projectPage: ProjectPage): Unit =
     stopSessionOnProjectPage(projectPage)
 
-  def `stop session`(projectId: ProjectIdentifier): Unit =
-    stopSessionOnProjectPage(ProjectPage(projectId))
-
   private def stopSessionOnProjectPage(projectPage: ProjectPage): Unit = {
     When("the user switches back to the Renku tab")
     verify browserSwitchedTo projectPage
@@ -66,17 +64,18 @@ trait Environments {
     verify userCanSee projectPage.Sessions.newLink
   }
 
-  def `launch anonymous session`(anonEnvConfig: AnonEnvConfig): Option[JupyterLabPage] = {
-    val projectId   = anonEnvConfig.projectId
-    val projectPage = ProjectPage(projectId)
+  def `launch anonymous session`(
+      projectPage:          ProjectPage,
+      projectDetails:       ProjectDetails
+  )(implicit anonEnvConfig: AnonEnvConfig): Option[JupyterLabPage] = {
     go to projectPage
     When("user is logged out")
-    And(s"goes to $projectId")
+    And(s"goes to ${projectDetails.title}")
     And("clicks on the sessions tab to launch an anonymous notebook")
     click on projectPage.Sessions.tab
     if (anonEnvConfig.isAvailable) {
       And("anonymous sessions are supported")
-      Some(`anonymous session supported`(projectPage, projectId))
+      Some(`anonymous session supported`(projectPage))
     } else {
       And("anonymous sessions are not supported")
       `anonymous session unsupported`(projectPage)
@@ -84,27 +83,32 @@ trait Environments {
     }
   }
 
-  def `launch unprivileged session`(implicit anonEnvConfig: AnonEnvConfig): JupyterLabPage = {
-    val projectId = anonEnvConfig.projectId
-    implicit val projectPage: ProjectPage = ProjectPage(projectId)
-    go to projectPage
-    When(s"user goes to $projectId")
-    And("clicks on the Sessions tab to launch an unprivileged session")
-    click on projectPage.Sessions.tab
+  def `launch unprivileged session`(implicit anonEnvConfig: AnonEnvConfig): Option[ProjectPage] =
+    if (!`project exists in GitLab`(anonEnvConfig.projectId)) {
+      logger.warn(s"Project ${anonEnvConfig.projectId} does not exist in the deployment. Skipping this spec")
+      None
+    } else {
+      implicit val projectPage: ProjectPage = ProjectPage(anonEnvConfig.projectId)
 
-    // We sleep a little to complete anonymous "login"
-    sleep(5 seconds)
-    `click new & wait for image to build`
-    `start session and wait until it is ready`
+      When(s"user goes to ${anonEnvConfig.projectId}")
+      go to projectPage
 
-    projectPage.Sessions.Running.connectToJupyterLab
+      And("clicks on the Sessions tab to launch an unprivileged session")
+      click on projectPage.Sessions.tab
 
-    Then("a JupyterLab page is opened on a new tab")
-    val jupyterLabPage = JupyterLabPage()
-    // TODO This does not work for some reason
-    // verify browserSwitchedTo jupyterLabPage sleep (5 seconds)
-    jupyterLabPage
-  }
+      // We sleep a little to complete anonymous "login"
+      sleep(5 seconds)
+      `click new & wait for image to build`
+      `start session and wait until it is ready`
+
+      projectPage.Sessions.Running.connectToJupyterLab
+
+      Then("a JupyterLab page is opened on a new tab")
+      val jupyterLabPage = JupyterLabPage()
+      // TODO This does not work for some reason
+      // verify browserSwitchedTo jupyterLabPage sleep (5 seconds)
+      Some(projectPage)
+    }
 
   private def `anonymous session unsupported`(projectPage: ProjectPage): Option[JupyterLabPage] = {
     Then("they should see a message")
@@ -112,8 +116,7 @@ trait Environments {
     None
   }
 
-  private def `anonymous session supported`(pp: ProjectPage, projectId: ProjectIdentifier): JupyterLabPage = {
-    implicit val projectPage: ProjectPage = pp
+  private def `anonymous session supported`(implicit projectPage: ProjectPage): JupyterLabPage = {
     sleep(5 seconds)
     `click new & wait for image to build`
     `start session and wait until it is ready`
@@ -138,7 +141,7 @@ trait Environments {
     projectPage.Sessions.verifyImageReady sleep (2 seconds)
     try `try to click the session button`
     catch {
-      case e: org.openqa.selenium.ElementClickInterceptedException => `try to click the session button`
+      case _: org.openqa.selenium.ElementClickInterceptedException => `try to click the session button`
     }
   }
 
