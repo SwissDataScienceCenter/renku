@@ -19,7 +19,7 @@ Step-by-step Instructions
 
 There are many public datasets that are hosted by AWS or other cloud providers on
 S3-compatible object storage. One such dataset is the `Genome in a Bottle (GIAB) <https://registry.opendata.aws/giab/>`_ 
-dataset hosted on AWS. If you wish to use the GIAB data in a Renku session follow these steps:
+dataset hosted on AWS. We will use the GIAB dataset to demonstrate how to bring data in S3 to a Renku interactive session:
 
 1. Navigate to the ``Sessions`` tab in your Renku project.
 2. Click the green ``New Session`` button on the right side of the page.
