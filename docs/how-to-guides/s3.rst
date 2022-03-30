@@ -37,7 +37,7 @@ Limitations
 There are a few limitations of this feature that users should be aware of. Please note that as we 
 further develop this feature some of these limitations will be relaxed or fully lifted.
 
-* **Accessing data in mounted buckets is 3x to 10x slower than accessing data on disk.** 
+* **Accessing data in mounted buckets is potentially much slower than accessing data on disk.** 
   All content that is available in the bucket is fetched over the internet every time you need to 
   access it. Therefore, using this feature will be slower compared to when data is downloaded to disk. 
   However, the benefit is that mounting a bucket does not require any additional disk space. 
