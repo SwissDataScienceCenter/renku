@@ -21,3 +21,4 @@ are covered on the pages that follow:
   session-customizing
   upgrading-renku
   session-running-locally
+  s3
