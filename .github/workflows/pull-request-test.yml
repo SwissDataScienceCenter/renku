@@ -8,14 +8,11 @@ on:
       - closed
       - edited
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
 jobs:
-  cleanup-previous-runs:
-    runs-on: ubuntu-latest
-    if: github.event.action != 'closed'
-    steps:
-      - uses: rokroskar/workflow-run-cleanup-action@v0.3.3
-        env:
-          GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
   test-docs:
     if: github.event.action != 'closed'
     runs-on: ubuntu-latest
@@ -65,7 +62,7 @@ jobs:
           pr_ref: ${{ github.event.number }}
   deploy-pr:
     if: github.event.action != 'closed'
-    needs: [cleanup-previous-runs, check-deploy]
+    needs: [check-deploy]
     runs-on: ubuntu-latest
     environment:
       name: ci-renku-${{ github.event.number }}
