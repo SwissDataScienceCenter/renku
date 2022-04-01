@@ -52,14 +52,14 @@ succinctly identify it and guarantee that the data will be findable and
 accessible for a longer period of time (usually at least 20 years).
 
 The DOI for the
-dataset we want to import is `https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/WTZS4K <https://www.doi.org/https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/WTZS4K>`_.
+dataset we want to import is https://www.doi.org/10.7910/DVN/WTZS4K
 
 Execute the following line and when prompted if you really want to download the
 data, answer yes.
 
 .. code-block:: console
 
-    $ renku dataset import --name flight-data https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/WTZS4K
+    $ renku dataset import --name flight-data https://www.doi.org/10.7910/DVN/WTZS4K
 
     Output:
     CHECKSUM    NAME                       SIZE (MB)  TYPE
