@@ -1,5 +1,14 @@
 .. _changelog:
 
+0.12.6
+------
+
+Bugfix release fixing an issue where image availability was incorrectly reported if a pinned image 
+was used for interactive sessions. 
+
+- `renku-notebooks 1.6.0 <https://github.com/SwissDataScienceCenter/renku-notebooks/releases/tag/1.6.0>`_
+- `renku-ui 2.1.2 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/2.1.2>`_
+
 0.12.5
 ------
 
