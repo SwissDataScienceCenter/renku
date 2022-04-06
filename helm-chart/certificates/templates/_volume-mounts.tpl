@@ -11,13 +11,6 @@
   readOnly: true
 {{- end -}}
 
-{{- define "certificates.volumeMounts.openjdk15" -}}
-- name: etc-ssl-certs
-  mountPath: /opt/openjdk-15/lib/security/cacerts
-  subPath: java/cacerts
-  readOnly: true
-{{- end -}}
-
 {{- define "certificates.volumeMounts.javaCertsGeneral" -}}
 - name: etc-ssl-certs
   mountPath: /etc/ssl/certs/java/cacerts
