@@ -1,5 +1,13 @@
 .. _changelog:
 
+0.12.7
+------
+
+Bugfix release fixing an issue where cloning user repositories was failing during session
+startup.
+
+- `renku-notebooks 1.6.1 <https://github.com/SwissDataScienceCenter/renku-notebooks/releases/tag/1.6.1>`_
+
 0.12.6
 ------
 
