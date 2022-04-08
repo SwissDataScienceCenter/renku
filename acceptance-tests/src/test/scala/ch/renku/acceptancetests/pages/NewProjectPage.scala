@@ -67,7 +67,7 @@ case object NewProjectPage
   }
 
   private def descriptionField(implicit webDriver: WebDriver): WebElement = eventually {
-    find(cssSelector("input#description")) getOrElse fail("Description field not found")
+    find(cssSelector("textarea#description")) getOrElse fail("Description field not found")
   }
 
   private def visibilityField(implicit webDriver: WebDriver): WebElement = eventually {
