@@ -1,5 +1,14 @@
 .. _changelog:
 
+0.12.8
+------
+
+Bugfix release that re-introduces a part of the Renku config that creates auto-saves when sessions crash.
+This is required only for sessions launched prior to 0.12.6 which still may exist in some deployments.
+This part of the config will be fully retired in a later subsequent release.
+
+- `renku-notebooks 1.6.2 <https://github.com/SwissDataScienceCenter/renku-notebooks/releases/tag/1.6.2>`_
+
 0.12.7
 ------
 
