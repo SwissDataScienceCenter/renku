@@ -71,8 +71,8 @@ Pre-deployment steps
    Stand-alone GitLab <configurations/standalone-gitlab>
    Stand-alone Keycloak <configurations/standalone-keycloak>
 
-2. Create and configure Renku PVs and PVCs
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+2. (Optional) Create and configure Renku PVs and PVCs
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 All of Renku information is stored in three volumes needed by Jena, Postgresql and GitLab (if not stand-alone).
 To this end, persistent volumes and persistent volume claims need to be created. You can leave k8s to dynamically provision these volumes but we advise to create them beforehand and make regular backups.
@@ -192,7 +192,7 @@ If the Helm deployment ran successfully according to the check list above, you m
 You simply need to:
 
   * create a user for testing (with no admin rights) and optionally have an S3 bucket credentials for saving screenshots in case a test fails.
-  * fill in the credentials (notably email and password) in the `test section in the values file <https://github.com/SwissDataScienceCenter/renku/blob/master/helm-chart/renku/values.yaml#L595-L620>`_ and update the deployment
+  * fill in the credentials (notably email and password) in the test section in the values file and update the deployment with ``helm``.
 
   .. code-block:: console
 
@@ -211,8 +211,8 @@ You simply need to:
        --log-file renku-tests.log \
        --timeout 80m
 
-5. Post deployment configurations
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Post deployment configurations
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 After RenkuLab has been deployed you can make some post deployment configurations.
 
@@ -221,13 +221,13 @@ GitLab deployed as part of Renku
 
 If your RenkuLab deployment includes GitLab you need to follow some additional steps to configure an admin user on GitLab.
 
-#. turn off automatic redirection to GitLab by redeploying with the value ``gitlab.oauth.autoSignIn: false``
-#. log in as the root user using the password from ``gitlab.password``
-#. modify any users you want to modify (e.g. to make them admin)
-#. turn the ``autoSignIn`` setting back on
+#. Turn off automatic redirection to GitLab by setting the value ``gitlab.oauth.autoSignIn=false`` and redeploy with ``helm``.
+#. Log in as the root user using the password from ``gitlab.password``.
+#. Modify any users you want to modify (e.g. to make them admin).
+#. Turn the ``autoSignIn`` setting back on and redeploy.
 
-Independent GitLab as identity provider
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+External GitLab as identity provider
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 If the RenkuLab deployment is relying on an existing GitLab instance, this instance could be configured as an identity provider for RenkuLab's keycloak. This way all of the users from the existing GitLab instance can log into RenkuLab with their existing login information.
 
