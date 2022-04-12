@@ -6,28 +6,47 @@ Deploying the Renku platform
 This guide will help you deploying and customizing your own Renku instance in a cluster.
 
 Cluster requirements
------------------------
+--------------------
 
 To deploy Renku in a cluster, you need to have the following prerequisites:
 
 - a `Kubernetes  <https://kubernetes.io/>`_ cluster
+- `Helm <https://helm.sh/docs/>`_
+- :ref:`a DNS domain <dns>` that resolves to the IP of your cluster load-balancer
+- :ref:`TLS certificates (or a cert-manager LetsEncrypt) <certificates>`
+- :ref:`NGINX (or other) ingress <nginx>` capable of interpreting standard
+  Kubernetes Ingress objects
+- A GitLab instance
 
-.. toctree::
-   :maxdepth: 1
+You may choose to either deploy GitLab as a part of the Reknu deployment or link
+to an existing GitLab instance. If you are deploying GitLab as a part of Renku,
+you need to configure data storage and be prepared to manage the CI runners etc.
 
-   Helm <prerequisites/helm>
-   a DNS domain <prerequisites/dns>
-   and its certificate (or a cert-manager LetsEncrypt) <prerequisites/certificates>
-   NGINX (or other) ingress <prerequisites/nginx>
-   a GitLab-runner VM for the docker image builder with sufficient storage <prerequisites/gitlabrunner>
+Some parts of these requirements are beyond the scope of this documentation -
+for example, load-balancer setup is highly cluster-dependent. If you have a
+configuration that works on a public cloud provider, please consider
+contributing to these docs! 🙏
 
-Optionally, you can choose to manage your own instances of the following:
+Pre-flight check
+~~~~~~~~~~~~~~~~
 
-   - using an existing `GitLab instance <https://about.gitlab.com/install/>`_
-   - using an existing Keycloak instance
+If you have your cluster configured with a DNS, a TLS certificate, and an nginx ingress running,
+you should be able to do
 
-Officially supported versions
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.. code-block::
+
+   $ curl https://<hostname>
+   default backend - 404
+
+This response basically means that:
+
+* a DNS server can resolve your hostname to the load-balancer IP
+* TLS termination was successful
+* the request made it to the ingress (but there are no applications serving the request, which is fine)
+
+
+Officially supported Kubernetes versions
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 The following component versions have been tested in production.
 
@@ -37,6 +56,7 @@ Renku version         Kubernetes     Helm
 0.6.x                 1.14, 1.15     2
 0.7.x                 1.16, 1.17     3
 0.8.x                 1.19, 1.20     3
+0.12.x                1.20, 1.21     3
 ===================   ============   ============
 
 Pre-deployment steps
@@ -77,38 +97,44 @@ This step is very important as it will define the values that helm will use to i
 Basic configuration
 ^^^^^^^^^^^^^^^^^^^^
 
-The basic Helm configuration file is in the Renku repository: `Renku values file <https://github.com/SwissDataScienceCenter/renku/blob/master/helm-chart/renku/values.yaml>`_
+The full values file in all its glory can be found as a part of the `Renku helm
+chart
+<https://github.com/SwissDataScienceCenter/renku/blob/master/helm-chart/renku/values.yaml>`_.
+We tried to document in-line all the important pieces that someone might want to
+configure, but there are `a lot` of options and many you probably won't care about immediately.
 
-You can use the `make-values.sh <https://github.com/SwissDataScienceCenter/renku/blob/master/helm-chart/example-configurations/make-values.sh>`_ script to generate automatically a minimal Renku values file. You need to provide your DNS and (optionally) your Gitlab URL, application ID and secret.
-This script needs bash >=4.0 and openssl installed and the `minimal-values.tmpl <https://github.com/SwissDataScienceCenter/renku/blob/master/helm-chart/example-configurations/minimal-values.tmpl>`_ file
+To generate a basic values file, you can use a script we have prepared. You need to have Python3 and ``wget`` installed.
 
-For MacOS:
-.. code-block:: bash
+.. code-block::
 
-  $ brew install bash
-  $ brew install openssl
+   $ mkdir renku-values
+   $ cd renku-values
+   $ wget https://raw.githubusercontent.com/SwissDataScienceCenter/renku/master/scripts/generate-values/generate-values.sh
+   $ sh generate-values.sh
 
-.. code-block:: bash
+By default, this will create a python virtual environment and run the script; if
+you prefer to avoid any installation, you can pass the ``--docker`` flag to the
+``generate-values.sh`` script and it will execute in a docker container.
 
-  $ ./make-values.sh -d renku.mydomain.ch -o renku-values.yaml
-
-
-After preparing your values and before deploying Renku please make sure to check the following in the values file:
+After preparing your values and before deploying Renku please make sure to check
+the following in the values file:
 
   - the URLs and DNS names are correct
   - all the necessary secrets are configured
   - the ingress configuration is correct
   - add/verify, if necessary, the persistent volume claims
+  - if deploying GitLab with Renku, complete the GitLab configuration (storage for LFS and registry)
 
 Further configuration
 ^^^^^^^^^^^^^^^^^^^^^^
 
 You might want to modify some default values, here are some examples:
 
-   * Logged-out users can be given the permission to launch interactive sessions from public notebooks. This feature is turned off by default. For details on how to enable this feature, see the dedicated section below.
-   * A custom privacy notice and cookie banner can be configured (as of Renku 0.6.8). See the dedicated section below.
-   * Resources requests and limits can be adjusted for the diverse RenkuLab components
-   * For deployments that include GitLab you can configure an S3 backend for `lfs objects <https://docs.gitlab.com/ce/administration/lfs/index.html>`_ and `registry <https://docs.gitlab.com/ee/administration/packages/container_registry.html>`_, this configuration can be added in the ``gitlab`` section
+   * Logged-out users can be given the permission to launch interactive sessions
+     from public notebooks. This feature is turned off by default. For details
+     on how to enable this feature, see the dedicated section below.
+   * A custom privacy notice and cookie banner can be configured (as of Renku
+     0.6.8). See the dedicated section below.
    * It is possible to dedicate some nodes for running interactive user sessions.
 
    .. toctree::
@@ -120,20 +146,6 @@ You might want to modify some default values, here are some examples:
 
 Deploying RenkuLab
 -------------------
-
-1. (Optional) Certificates
-~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-If you chose to create a certificate manually instead of using LetsEncrypt or similar, you can create the corresponding TLS secret with the following command:
-
-.. code-block:: bash
-
-   $ kubectl -n renku create secret tls renku-mydomain-ch-tls --cert=certificate.crt --key=certificate.key
-
-Note that ``renku-mydomain-ch-tls`` should correspond to the `ingress TLS value in Renku values file <https://github.com/SwissDataScienceCenter/renku/blob/master/helm-chart/example-configurations/minimal-values.tmpl#L12>`_
-
-2. Deploy RenkuLab
-~~~~~~~~~~~~~~~~~~~~
 
 Once all the pieces are in place, you can deploy Renku with the following commands:
 
@@ -150,8 +162,8 @@ If deploying for the first time, GitLab and Keycloak take around 15 minutes to g
 
 Once all the pods are correctly running or completed, a `GitLab Runner <prerequisites/gitlabrunner>`_ can be configured.
 
-3. Verifying RenkuLab deployment
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Verifying RenkuLab deployment
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Check list:
 
@@ -173,8 +185,8 @@ If some Renku pods are not starting or present some errors please check the trou
 
    Troubleshooting a RenkuLab deployment <troubleshooting>
 
-4. Acceptance tests (optional)
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Acceptance tests (optional)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 If the Helm deployment ran successfully according to the check list above, you might want to run Renku's acceptance tests.
 You simply need to:

@@ -1,11 +1,10 @@
 FROM python:3.9-slim
 
+COPY requirements.txt /code/
+
+RUN pip install --no-cache -r /code/requirements.txt
+
+COPY generate-values.py base-renku-values.yaml.template /code/
+
 WORKDIR /work
-COPY requirements.txt /work/
-
-RUN cd /work && \
-    pip install --no-cache -r requirements.txt
-
-COPY generate-values.py /work/
-
-ENTRYPOINT ["/work/generate-values.py"]
+ENTRYPOINT ["/code/generate-values.py", "--template", "/code/base-renku-values.yaml.template"]

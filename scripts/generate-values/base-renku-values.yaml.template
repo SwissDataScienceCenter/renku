@@ -7,7 +7,6 @@ global:
     clientSecret: <use `openssl rand -hex 32`>
     gitlabClientSecret: <use `openssl rand -hex 32`>
   gitlab:
-    clientSecret: null
     urlPrefix: /
   keycloak:
     password:
@@ -26,6 +25,24 @@ gateway:
   secretKey: <use `openssl rand -hex 32`>
 gitlab:
   enabled: false
+  sharedRunnersRegistrationToken: <use `openssl rand -hex 32`>
+  lfsObjects:
+    enabled: false
+    connection: {{}}
+  registry:
+    enabled: false
+    storage: {{}}
+    ingress:
+      annotations:
+        cert-manager.io/cluster-issuer: letsencrypt-production
+        kubernetes.io/ingress.class: nginx
+        nginx.ingress.kubernetes.io/proxy-body-size: '0'
+      hosts:
+      - {gitlab_registry}
+      tls:
+      - hosts:
+        - {gitlab_registry}
+        secretName: registry-tls
 graph:
   enabled: true
   gitlab:

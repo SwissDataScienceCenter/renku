@@ -37,21 +37,27 @@ def recurse_dict_secrets(d, path=""):
 
 
 def main():
-    """Run dev deploy."""
+    """Render a basic Renku values file."""
+
+    print("----------------------------")
+    print("| Configuring Renku values |")
+    print("----------------------------")
 
     argparser = argparse.ArgumentParser(description=__doc__)
 
-    argparser.add_argument("--values-file", help="Input values file")
     argparser.add_argument(
         "--namespace", help="Namespace for the deployment"
     )
+    argparser.add_argument("--gitlab", help="Deploy GitLab as a part of Renku",
+        action=argparse.BooleanOptionalAction, default=False
+    )
+
     argparser.add_argument(
-        "--gitlab-url", help="Gitlab URL", default="https://dev.renku.ch/gitlab"
+        "--gitlab-url", help="Gitlab URL", default="https://gitlab.example.com"
     )
     argparser.add_argument(
         "--gitlab-registry",
-        help="Gitlab Image Registry URL",
-        default="registry.dev.renku.ch",
+        help="Gitlab Image Registry URL"
     )
     argparser.add_argument("--gitlab-client-id", help="Gitlab client ID")
     argparser.add_argument(
@@ -66,73 +72,85 @@ def main():
     )
     args = argparser.parse_args()
 
-    namespace = args.namespace or prompt("Namespace: ")
+    namespace = args.namespace or prompt("Namespace: ", default="renku")
 
-    if args.values_file:
-        with open(args.values_file) as f:
-            values = yaml.load(f.read())
-    else:
-        values = {}
-
-    # merge values with the template
-    with open(args.template) as f:
-        t = f.read().format(namespace=namespace, renku_domain=args.renku_domain, gitlab_registry=args.gitlab_registry)
-        template = yaml.load(t)
-
-    values = merge_values(values, template)
-
-    # import ipdb; ipdb.set_trace()
+    # we must have a renku domain
+    renku_domain = args.renku_domain or prompt("Renku domain: ", default="renku.example.com")
 
     # check if gitlab is being deployed - if not make sure we have the client configuration
-    if not values.get("gitlab", {}).get("enabled", False):
-        gateway_config = values.get("gateway", {})
+    if not args.gitlab:
         gitlab_url = (
-            args.gitlab_url or gateway_config.get("gitlabUrl") or prompt("GitLab URL: ")
+            args.gitlab_url or prompt("GitLab URL: ")
         )
         gitlab_client_id = (
-            args.gitlab_client_id
-            or gateway_config.get("gitlabClientId")
-            or prompt("GitLab client id: ")
+            args.gitlab_client_id or prompt("GitLab client id: ")
         )
         gitlab_client_secret = (
-            args.gitlab_client_secret
-            or gateway_config.get("gitlabClientSecret")
-            or prompt("GitLab client secret: ")
+            args.gitlab_client_secret or prompt("GitLab client secret: ")
+        )
+        gitlab_registry = (
+            args.gitlab_registry or prompt("Gitlab registry hostname: ", default=f"registry.{renku_domain}")
         )
 
-        if not (gitlab_url and gitlab_client_id and gitlab_client_secret):
+        if not (gitlab_url and gitlab_client_id and gitlab_client_secret and gitlab_registry):
             raise RuntimeError(
                 "If not deploying own GitLab, you must specify the GitLab URL, client id and client secret."
             )
+    else:
+        gitlab_url = f"https://{renku_domain}/gitlab"
+        gitlab_registry = f"registry.{renku_domain}"
 
-        # set the gitlab client id everywhere
-        values["gateway"]["gitlabClientId"] = gitlab_client_id
-
-        # set the gitlab client secret everywhere
-        values["gateway"]["gitlabClientSecret"] = gitlab_client_secret
+    # read in the template and set the values
+    with open(args.template) as f:
+        t = f.read().format(namespace=namespace, renku_domain=renku_domain, gitlab_registry=gitlab_registry)
+        values = yaml.load(t)
 
     # if a key is set to '<use `openssl rand -hex 32`>' automatically generate the secret
     values = recurse_dict_secrets(values)
-
-    #
-    # value mappings
-    #
 
     # set the gitlab URL everywhere
     values["ui"]["gitlabUrl"] = gitlab_url
     values["notebooks"]["gitlab"]["url"] = gitlab_url
     values["graph"]["gitlab"]["url"] = gitlab_url
     values["gateway"]["gitlabUrl"] = gitlab_url
-    values["notebooks"]["gitlab"]["registry"]["host"] = args.gitlab_registry
+    values["notebooks"]["gitlab"]["registry"]["host"] = gitlab_registry
+
+    if args.gitlab:
+        values["gitlab"]["enabled"] = True
+        values["global"]["gitlab"]["urlPrefix"] = "/gitlab"
+    else:
+        # set the gitlab client id everywhere
+        values["gateway"]["gitlabClientId"] = gitlab_client_id
+
+        # set the gitlab client secret everywhere
+        values["gateway"]["gitlabClientSecret"] = gitlab_client_secret
+
+        values["gitlab"] = {"enabled": False}
+
+    warning = """
+# This is an automatically generated values file to deploy Renku.
+# Please scrutinize it carefully before trying to deploy.
+"""
+
+    if args.gitlab:
+        warning += """
+# GitLab values are incomplete; git-LFS and the registry storage are not configured.
+# See the main Renku values file for reference and an example.
+"""
 
     if args.output:
         with open(args.output, "w") as f:
+            f.write(warning)
             yaml.dump(values, f)
         return 0
 
+    print("")
+    print("--------------------------")
+    print("| Auto-generated values: |")
+    print("--------------------------")
+
+    print(warning)
     print("{}".format(yaml.dump(values, sys.stdout)))
-
-
 
 if __name__ == "__main__":
     main()
