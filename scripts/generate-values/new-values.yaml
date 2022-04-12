@@ -1,0 +1,94 @@
+global:
+  anonymousSessions:
+    enabled: true
+  gateway:
+    cliClientSecret: 397bc9b6349b5f98d9ab3daebe6b957710f9fc97a14cfc5d4011119a03bdf1f3
+    clientSecret: d2a10a09a84799d5cf4c406f2a336862b0a5341b9bdcc5a41ef385afdd5da528
+    gitlabClientSecret: d7fd585605ace3ec6d6dd86c43325ab0885e6aa8a0f2683899a7f8f78544fd93
+  gitlab:
+    clientSecret:
+    urlPrefix: /
+  keycloak:
+    password:
+      value: f8f46c16d1af2973a2ac1aa7c2cc8cf3df36f9e184cdeb4e962d08fb1c6e204f
+    postgresPassword:
+      value: 888e5ad71ffd6d6ed8ac3200d33619f315e8a8695342530cde6eee698a1586eb
+  renku:
+    domain: None
+  uiserver:
+    clientSecret: 2a6fba8e144191bd78ca65fb159808a3646957636ba4fd1ad7aadb9e1a8d5c9f
+  useHTTPS: true
+gateway:
+  gitlabClientId: '1234'
+  gitlabClientSecret: abcd
+  gitlabUrl: https://dev.renku.ch/gitlab
+  secretKey: 4b9abcb6ce079efffb69a9559338fd8f7f5cfb305f600cc4aa5901f1bcd65f68
+gitlab:
+  enabled: false
+graph:
+  enabled: true
+  gitlab:
+    url: https://dev.renku.ch/gitlab
+  jena:
+    users:
+      admin:
+        password: NTg1ZWI1M2U4MTRhN2EyNAo=
+      renku:
+        password: YmQ0YjA1MGZhNDBiZTAxZAo=
+  tokenRepository:
+    tokenEncryption:
+      secret: MzM4ZjZlOTgwZjMyZjM2OAo=
+  webhookService:
+    hookToken:
+      secret: ZWZmNzBiZDllOWIzNDdhMgo=
+ingress:
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-production
+    kubernetes.io/ingress.class: nginx
+    nginx.ingress.kubernetes.io/proxy-body-size: "0"
+    nginx.ingress.kubernetes.io/proxy-request-buffering: "off"
+  enabled: true
+  hosts:
+  - None
+  tls:
+  - hosts:
+    - None
+    secretName: rok-renku-ch-tls
+notebooks:
+  amalthea:
+    deployCrd: true
+  gitlab:
+    registry:
+      host: registry.dev.renku.ch
+    url: https://dev.renku.ch/gitlab
+  oidc:
+    allowUnverifiedEmail: true
+    authUrl: https://None/auth/realms/Renku/protocol/openid-connect/auth
+    clientId: renku-jupyterserver
+    clientSecret: 07682665a6cd30b6067f7d51d4fac3aacfa0f1444ae13a4d6651082fa3575337
+    tokenUrl: https://None/auth/realms/Renku/protocol/openid-connect/token
+  sessionIngress:
+    host: None
+    tlsSecret: rok-renku-ch-tls
+  userSessionPersistentVolumes:
+    enabled: false
+postgresql:
+  persistence:
+    enabled: true
+  postgresqlPassword: 1354abb39678d44c3dd20fa71beb209361cb5b4033f6fa691e866139fc9d4366
+redis:
+  password: 79007b67f03c56a453ae8e4cbdf1105eb65e1696ad76d2adf2ba479983dad8da
+ui:
+  baseUrl: https://None
+  gatewayUrl: https://None/api
+  gitlabUrl: https://dev.renku.ch/gitlab
+  ingress:
+    enabled: false
+  uiserverUrl: https://None/ui-server
+  welcomePage:
+    text: |
+      ## Welcome to Renku!
+      Renku is software for collaborative data science.
+      With Renku you can share code and data, discuss problems and solutions, and coordinate data-science projects.
+      ## Template
+      I am templateable, so deployment specific information can be put here!

@@ -1,0 +1,95 @@
+---
+global:
+  anonymousSessions:
+    enabled: true
+  gateway:
+    cliClientSecret: <use `openssl rand -hex 32`>
+    clientSecret: <use `openssl rand -hex 32`>
+    gitlabClientSecret: <use `openssl rand -hex 32`>
+  gitlab:
+    clientSecret: null
+    urlPrefix: /
+  keycloak:
+    password:
+      value: <use `openssl rand -hex 32`>
+    postgresPassword:
+      value: <use `openssl rand -hex 32`>
+  renku:
+    domain: {renku_domain}
+  uiserver:
+    clientSecret: <use `openssl rand -hex 32`>
+  useHTTPS: true
+gateway:
+  gitlabClientId: null
+  gitlabClientSecret: null
+  gitlabUrl: null
+  secretKey: <use `openssl rand -hex 32`>
+gitlab:
+  enabled: false
+graph:
+  enabled: true
+  gitlab:
+    url: null
+  jena:
+    users:
+      admin:
+        password: <use `openssl rand -hex 8 | base64`>
+      renku:
+        password: <use `openssl rand -hex 8 | base64`>
+  tokenRepository:
+    tokenEncryption:
+      secret: <use `openssl rand -hex 8 | base64`>
+  webhookService:
+    hookToken:
+      secret: <use `openssl rand -hex 8 | base64`>
+ingress:
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-production
+    kubernetes.io/ingress.class: nginx
+    nginx.ingress.kubernetes.io/proxy-body-size: "0"
+    nginx.ingress.kubernetes.io/proxy-request-buffering: "off"
+  enabled: true
+  hosts:
+    - {renku_domain}
+  tls:
+    - hosts:
+        - {renku_domain}
+      secretName: {namespace}-renku-ch-tls
+notebooks:
+  amalthea:
+    deployCrd: true
+  gitlab:
+    registry:
+      host: {gitlab_registry}
+    url: null
+  oidc:
+    allowUnverifiedEmail: true
+    authUrl: https://{renku_domain}/auth/realms/Renku/protocol/openid-connect/auth
+    clientId: renku-jupyterserver
+    clientSecret: <use `openssl rand -hex 32`>
+    tokenUrl: https://{renku_domain}/auth/realms/Renku/protocol/openid-connect/token
+  sessionIngress:
+    host: {renku_domain}
+    tlsSecret: {namespace}-renku-ch-tls
+  userSessionPersistentVolumes:
+    enabled: false
+postgresql:
+  persistence:
+    enabled: true
+  postgresqlPassword: <use `openssl rand -hex 32`>
+redis:
+  password: <use `openssl rand -hex 32`>
+ui:
+  baseUrl: https://{renku_domain}
+  gatewayUrl: https://{renku_domain}/api
+  gitlabUrl: null
+  ingress:
+    enabled: false
+  uiserverUrl: https://{renku_domain}/ui-server
+  welcomePage:
+    text: |
+      ## Welcome to Renku!
+      Renku is software for collaborative data science.
+      With Renku you can share code and data, discuss problems and solutions, and coordinate data-science projects.
+      ## Template
+      I am templateable, so deployment specific information can be put here!
