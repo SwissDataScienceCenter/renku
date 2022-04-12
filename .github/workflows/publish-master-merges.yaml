@@ -66,3 +66,18 @@ jobs:
             "${{ env.publish_version }}: PR #${{
             github.event.pull_request.number }} ${{
             github.event.pull_request.title }}"
+  push-generate-values-image:
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - uses: Azure/docker-login@v1
+        with:
+          username: ${{ secrets.RENKU_DOCKER_USERNAME }}
+          password: ${{ secrets.RENKU_DOCKER_PASSWORD }}
+      - name: build and push generate values image
+        run: |
+          cd scripts/generate-values
+          docker build -t renku/generate-values .
+          docker push renku/generate-values
