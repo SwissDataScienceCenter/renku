@@ -17,6 +17,7 @@ while [[ $# -gt 0 ]]; do
 done
 
 RENKU_REPO="https://github.com/SwissDataScienceCenter/renku"
+REPO_PATH="/blob/master/scripts/generate-values/"
 SCRIPT="generate-values.py"
 TEMPLATE_FILE="base-renku-values.yaml.template"
 
@@ -29,12 +30,12 @@ fi
 # fetch the files we need
 if [ ! -f "$SCRIPT" ]
 then
-wget ${RENKU_REPO}/blob/master/scripts/generate-values/${SCRIPT}
+wget ${RENKU_REPO}${REPO_PATH}${SCRIPT}
 fi
 
 if [ ! -f "$TEMPLATE_FILE" ]
 then
-wget ${RENKU_REPO}/blob/master/scripts/generate-values/${TEMPLATE_FILE}
+wget ${RENKU_REPO}${REPO_PATH}${TEMPLATE_FILE}
 fi
 
 if [ ! -d ".venv-renku-values" ]
