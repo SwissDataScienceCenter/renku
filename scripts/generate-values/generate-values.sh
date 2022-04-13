@@ -17,7 +17,7 @@ while [[ $# -gt 0 ]]; do
 done
 
 RENKU_REPO="https://github.com/SwissDataScienceCenter/renku"
-REPO_PATH="/blob/master/scripts/generate-values/"
+REPO_PATH="/blob/000-admin-deploy-docs/scripts/generate-values/"
 SCRIPT="generate-values.py"
 TEMPLATE_FILE="base-renku-values.yaml.template"
 
