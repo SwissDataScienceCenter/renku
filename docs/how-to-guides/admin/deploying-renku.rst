@@ -18,6 +18,13 @@ To deploy Renku in a cluster, you need to have the following prerequisites:
   Kubernetes Ingress objects
 - A GitLab instance
 
+.. toctree::
+   :hidden:
+
+   prerequisites/dns
+   prerequisites/certificates
+   prerequisites/nginx
+
 You may choose to either deploy GitLab as a part of the Reknu deployment or link
 to an existing GitLab instance. If you are deploying GitLab as a part of Renku,
 you need to configure data storage and be prepared to manage the CI runners etc.
@@ -74,22 +81,21 @@ Pre-deployment steps
 2. (Optional) Create and configure Renku PVs and PVCs
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-All of Renku information is stored in three volumes needed by Jena, Postgresql and GitLab (if not stand-alone).
-To this end, persistent volumes and persistent volume claims need to be created. You can leave k8s to dynamically provision these volumes but we advise to create them beforehand and make regular backups.
-You can use the following manifest files as examples and apply them through `kubectl`.
+All of Renku information is stored in three volumes needed by Jena, Postgresql
+and GitLab (if not stand-alone). You can leave k8s to dynamically provision
+these volumes but we advise to create them beforehand and make regular backups.
+You can use the following manifest files as examples.
 
    - `Renku PV yaml file <https://github.com/SwissDataScienceCenter/renku-admin-docs/blob/master/renku-pv.yaml>`_
    - `Renku PVC yaml file <https://github.com/SwissDataScienceCenter/renku-admin-docs/blob/master/renku-pvc.yaml>`_
 
-   .. code-block:: console
+.. note::
+   These examples are specific to our use of OpenStack and the details of
+   the storage classes and the volume provider will be different depending on the
+   specifics of your cluster.
 
-     $ kubectl create -f renku-pv.yaml
-     $ kubectl create ns renku
-     $ kubectl -n renku create -f renku-pvc.yaml
 
-Ensure that PVs are added correctly and have the appropriate storage class.
-
-3. Create a renku-values.yaml file
+1. Create a renku-values.yaml file
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 This step is very important as it will define the values that helm will use to install your Renku instance.
@@ -124,6 +130,10 @@ the following in the values file:
   - the ingress configuration is correct
   - add/verify, if necessary, the persistent volume claims
   - if deploying GitLab with Renku, complete the GitLab configuration (storage for LFS and registry)
+
+.. note::
+   If you created persistent volumes in the step above, make sure to add their
+   references to the appropriate components under `storage.existingClaim`.
 
 Further configuration
 ^^^^^^^^^^^^^^^^^^^^^^
@@ -161,6 +171,11 @@ During deployment you can check the Renku pods being started.
 If deploying for the first time, GitLab and Keycloak take around 15 minutes to get started. It is normal to see other pods of components that depend on these to be in a `CrashLoopBackOff` state.
 
 Once all the pods are correctly running or completed, a `GitLab Runner <prerequisites/gitlabrunner>`_ can be configured.
+
+.. toctree::
+   :hidden:
+
+   prerequisites/gitlabrunner
 
 Verifying RenkuLab deployment
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
