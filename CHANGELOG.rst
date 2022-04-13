@@ -1,5 +1,24 @@
 .. _changelog:
 
+0.12.9
+------
+
+A release containing new features and bug fixes for CLI, UI and Graph. The main changes are:
+
+- CLI: SHACL validation fixes and improvements
+- UI: improvements around starting new sessions
+- UI: improvements in communication with renku-core
+- graph: migration mechanism of the data in the Triples Store
+- graph: the Cross-entity search to allow multiple values on `type`, `visibility` and `creator` parameters
+
+More info can be found in release notes of Renku components:
+
+- `renku-python 1.2.1 <https://github.com/SwissDataScienceCenter/renku-python/releases/tag/v1.2.1>`_
+- `renku-python 1.2.2 <https://github.com/SwissDataScienceCenter/renku-python/releases/tag/v1.2.2>`_
+- `renku-ui 2.2.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/2.2.0>`_
+- `renku-graph 2.5.0 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/2.5.0>`_
+- `renku-graph 2.5.1 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/2.5.1>`_
+
 0.12.8
 ------
 
@@ -20,8 +39,8 @@ startup.
 0.12.6
 ------
 
-Bugfix release fixing an issue where image availability was incorrectly reported if a pinned image 
-was used for interactive sessions. 
+Bugfix release fixing an issue where image availability was incorrectly reported if a pinned image
+was used for interactive sessions.
 
 - `renku-notebooks 1.6.0 <https://github.com/SwissDataScienceCenter/renku-notebooks/releases/tag/1.6.0>`_
 - `renku-ui 2.1.2 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/2.1.2>`_
