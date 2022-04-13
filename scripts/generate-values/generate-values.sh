@@ -23,6 +23,8 @@ TEMPLATE_FILE="base-renku-values.yaml.template"
 if [ $DOCKER -ne 0 ]
 then
 docker run --rm -ti -v ${PWD}:/work renku/generate-values $POSITIONAL_ARGS
+exit 0
+fi
 
 # fetch the files we need
 if [ ! -f "$SCRIPT" ]
@@ -46,6 +48,6 @@ deactivate
 fi
 
 source .venv-renku-values/bin/activate
-python3 $SCRIPT "$POSITIONAL_ARGS"
+python3 $SCRIPT $POSITIONAL_ARGS
 
 deactivate
