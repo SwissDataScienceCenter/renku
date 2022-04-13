@@ -51,10 +51,7 @@ def main():
     argparser.add_argument("--gitlab", help="Deploy GitLab as a part of Renku",
         action=argparse.BooleanOptionalAction, default=False
     )
-
-    argparser.add_argument(
-        "--gitlab-url", help="Gitlab URL", default="https://gitlab.example.com"
-    )
+    argparser.add_argument("--gitlab-url", help="Gitlab URL")
     argparser.add_argument(
         "--gitlab-registry",
         help="Gitlab Image Registry URL"

@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+set -e
 
 DOCKER=0
 while [[ $# -gt 0 ]]; do
@@ -41,16 +42,16 @@ fi
 if [ ! -d ".venv-renku-values" ]
 then
 echo "virtual environment not found, creating one..."
-pip install virtualenv
+python3 -m pip install virtualenv
 virtualenv .venv-renku-values
-source .venv-renku-values/bin/activate
+. .venv-renku-values/bin/activate
 pip install -r requirements.txt
 deactivate
 fi
 
 echo $POSITIONAL_ARGS
 
-source .venv-renku-values/bin/activate
+. .venv-renku-values/bin/activate
 python3 $SCRIPT $@
 
 deactivate
