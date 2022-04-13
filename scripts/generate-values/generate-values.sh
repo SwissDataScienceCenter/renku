@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-POSITIONAL_ARGS=()
-
 DOCKER=0
 while [[ $# -gt 0 ]]; do
   case $1 in
@@ -9,11 +7,8 @@ while [[ $# -gt 0 ]]; do
       DOCKER=1
       shift
       ;;
-    *)
-      POSITIONAL_ARGS+=("$1") # save positional arg
-      shift
-      ;;
   esac
+  break 1
 done
 
 RENKU_REPO="https://raw.githubusercontent.com/SwissDataScienceCenter/renku"
@@ -23,7 +18,7 @@ TEMPLATE_FILE="base-renku-values.yaml.template"
 
 if [ $DOCKER -ne 0 ]
 then
-docker run --rm -ti -v ${PWD}:/work renku/generate-values $POSITIONAL_ARGS
+docker run --rm -ti -v ${PWD}:/work renku/generate-values $@
 exit 0
 fi
 
@@ -53,7 +48,9 @@ pip install -r requirements.txt
 deactivate
 fi
 
+echo $POSITIONAL_ARGS
+
 source .venv-renku-values/bin/activate
-python3 $SCRIPT $POSITIONAL_ARGS
+python3 $SCRIPT $@
 
 deactivate

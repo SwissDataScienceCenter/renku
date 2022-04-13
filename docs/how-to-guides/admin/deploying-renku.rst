@@ -116,7 +116,7 @@ To generate a basic values file, you can use a script we have prepared. You need
    $ mkdir renku-values
    $ cd renku-values
    $ wget https://raw.githubusercontent.com/SwissDataScienceCenter/renku/master/scripts/generate-values/generate-values.sh
-   $ sh generate-values.sh
+   $ sh generate-values.sh -o renku-values.yaml
 
 By default, this will create a python virtual environment and run the script; if
 you prefer to avoid any installation, you can pass the ``--docker`` flag to the
