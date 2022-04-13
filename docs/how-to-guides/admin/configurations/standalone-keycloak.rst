@@ -13,20 +13,20 @@ with Renku you need to:
   keycloak configuration.
   <https://github.com/SwissDataScienceCenter/renku/blob/master/helm-chart/renku/templates/_keycloak-clients-users.tpl>`_
   You will need to replace the templated renku domain values in the JSON. If you are deploying against an external
-  GitLab, ommit the GitLab client.
+  GitLab, omit the GitLab client.
 
 The secrets between the clients defined in Keycloak must match the client
 secrets in the values file. The mapping between Keycloak clients and Renku
 values is as follows:
 
-===================   =====================================
-Keycloak client       Renku values file
-===================   =====================================
-renku                 ``.global.gateway.clientSecret``
-renku-cli             ``.global.gateway.cliClientSecret``
-renku-ui              ``.global.uiserver.clientSecret``
-renku-jupyterserver   ``.notebooks.oidc.clientSecret``
-===================   =====================================
+=======================   =====================================
+Keycloak client           Renku values file
+=======================   =====================================
+``renku``                 ``.global.gateway.clientSecret``
+``renku-cli``             ``.global.gateway.cliClientSecret``
+``renku-ui``              ``.global.uiserver.clientSecret``
+``renku-jupyterserver``   ``.notebooks.oidc.clientSecret``
+=======================   =====================================
 
 Note that the ``renku-jupyterserver`` client ID can be configured in the values
 file via ``.notebooks.oidc.clientId``.

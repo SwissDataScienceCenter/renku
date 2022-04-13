@@ -25,7 +25,7 @@ To deploy Renku in a cluster, you need to have the following prerequisites:
    prerequisites/certificates
    prerequisites/nginx
 
-You may choose to either deploy GitLab as a part of the Reknu deployment or link
+You may choose to either deploy GitLab as a part of the Renku deployment or link
 to an existing GitLab instance. If you are deploying GitLab as a part of Renku,
 you need to configure data storage and be prepared to manage the CI runners etc.
 
@@ -37,7 +37,7 @@ contributing to these docs! 🙏
 Pre-flight check
 ~~~~~~~~~~~~~~~~
 
-If you have your cluster configured with a DNS, a TLS certificate, and an nginx ingress running,
+If you have your cluster configured with a DNS, a TLS certificate, and an Nginx ingress running,
 you should be able to do
 
 .. code-block::
