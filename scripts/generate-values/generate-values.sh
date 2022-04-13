@@ -16,8 +16,8 @@ while [[ $# -gt 0 ]]; do
   esac
 done
 
-RENKU_REPO="https://github.com/SwissDataScienceCenter/renku"
-REPO_PATH="/blob/000-admin-deploy-docs/scripts/generate-values/"
+RENKU_REPO="https://raw.githubusercontent.com/SwissDataScienceCenter/renku"
+REPO_PATH="/000-admin-deploy-docs/scripts/generate-values/"
 SCRIPT="generate-values.py"
 TEMPLATE_FILE="base-renku-values.yaml.template"
 
