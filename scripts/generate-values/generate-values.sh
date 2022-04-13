@@ -38,6 +38,11 @@ then
 wget ${RENKU_REPO}${REPO_PATH}${TEMPLATE_FILE}
 fi
 
+if [ ! -f "requirements.txt" ]
+then
+wget ${RENKU_REPO}${REPO_PATH}requirements.txt
+fi
+
 if [ ! -d ".venv-renku-values" ]
 then
 echo "virtual environment not found, creating one..."
