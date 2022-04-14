@@ -7,7 +7,7 @@ A release containing new features and bug fixes for CLI, UI and Graph. The main 
 
 - CLI: SHACL validation fixes and improvements
 - UI: improvements around starting new sessions
-- UI: improvements in communication with renku-core
+- UI: fixes for projects where the default branch is not called `master`.
 - graph: migration mechanism of the data in the Triples Store
 - graph: the Cross-entity search to allow multiple values on `type`, `visibility` and `creator` parameters
 
