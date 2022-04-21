@@ -46,7 +46,7 @@ global:
     gitlabClientSecret:
   uiserver:
     ## The client secret for the renku-ui client application registered in keycloak.
-    clientSecret:  # use `uuidgen -r`
+    clientSecret: # use `uuidgen -r`
   renku:
     ## Domain name for the deployed instance of renku
     domain: example.local
@@ -105,9 +105,9 @@ global:
       enabled: true
       masterSet: mymaster
     ## The label added to client pods so that they can access redis.
-    ## Needed only if the network policy from the redis helm chart that adds this 
+    ## Needed only if the network policy from the redis helm chart that adds this
     ## restriction is enabled.
-    clientLabel: 
+    clientLabel:
       renku-redis-client: "true"
 
   ## Set to true if using https
@@ -120,13 +120,14 @@ global:
   ## if you would like to use a custom CA. The key for the secret
   ## should have the .crt extension otherwise it is ignored. The
   ## keys across all secrets are mounted as files in one location so
-  ## the keys across all secrets have to be unique. In addition to the 
+  ## the keys across all secrets have to be unique. In addition to the
   ## changes here modifications need to be made in the keycloak section below
   certificates:
     image:
       repository: renku/certificates
-      tag: '0.0.1'
-    customCAs: []
+      tag: "0.0.1"
+    customCAs:
+      []
       # - secret:
 
 ## Ingress configuration
@@ -545,7 +546,7 @@ ui:
     custom: true
     repositories:
       - url: https://github.com/SwissDataScienceCenter/renku-project-template
-        ref: 0.3.0
+        ref: 0.3.1
         name: Renku
       - url: https://github.com/SwissDataScienceCenter/contributed-project-templates
         ref: 0.4.0
@@ -738,6 +739,11 @@ tests:
 
 ## Configuration for the Gateway service
 gateway:
+  ## Optional list of allowed sources for Cross-Origin Resource Sharing.
+  ## https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS
+  allowOrigin:
+  # - http://example.com
+  # - https://foo.example.com
   ingress:
     enabled: false
   ## Uncomment this if you are using a GitLab version
@@ -787,23 +793,27 @@ core:
 
 ## Configuration for renku-ui-server
 uiserver:
-  serverData: {}
+  serverData:
+    {}
     ## server data to correctly build the path and the routes
     # url: https://url.uiserver.fake
     # port: 8080
     # prefix: /ui-server
-  gateway: {}
+  gateway:
+    {}
     ## details to contact the gateway to redirect after the keycloak authentication is finished
     # url: https://url.gateway.fake
     # loginSuffix: /auth/login
     # logoutSuffix: /auth/logout
-  authentication: {}
+  authentication:
+    {}
     ## keycloak configration data for the Renku realm
     # url: https://url.keycloak.fake/auth/realms/Renku
     # id: renku
     # secret: 1234abcd # do not provide any value here to use the global gateway client secret
     # expirationTolerance: 10
-  sentry: {}
+  sentry:
+    {}
     ## Configuration for Sentry
     # enabled: false
     # url: '' # Sentry target URL

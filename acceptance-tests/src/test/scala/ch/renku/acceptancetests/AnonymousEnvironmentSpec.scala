@@ -21,10 +21,17 @@ package ch.renku.acceptancetests
 import ch.renku.acceptancetests.tooling.{AcceptanceSpec, AnonEnv}
 import ch.renku.acceptancetests.workflows._
 
-class AnonymousEnvironmentSpec extends AcceptanceSpec with AnonEnv with Login {
+class AnonymousEnvironmentSpec extends AcceptanceSpec with Project with AnonEnv with Login {
 
   Scenario("User can launch session") {
-    `launch anonymous session`(anonEnvConfig)
-      .map(_ => `stop session`(anonEnvConfig.projectId))
+
+    `log in to Renku`
+
+    `create, continue or open a project`
+
+    `log out of Renku`
+
+    `launch anonymous session`(projectPage, projectDetails)
+      .map(_ => `stop session`(projectPage))
   }
 }

@@ -35,15 +35,15 @@ jobs:
       - id: set-version
         run: |
           echo "publish_version=${{ steps.bump-semver.outputs.new_version }}.$(echo ${{ github.sha }} | cut -c 1-7)" >> $GITHUB_ENV
-      - uses: SwissDataScienceCenter/renku-actions/publish-chart@v0.5.0
+      - uses: SwissDataScienceCenter/renku-actions/publish-chart@v0.5.2
         env:
           CHART_DIR: helm-chart/
           CHART_TAG: "--tag ${{env.publish_version}}"
           CHART_NAME: renku
           GIT_USER: renku-bot
           GIT_EMAIL: renku@datascience.ch
-          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
-          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+          DOCKER_USERNAME: ${{ secrets.RENKU_DOCKER_USERNAME }}
+          DOCKER_PASSWORD: ${{ secrets.RENKU_DOCKER_PASSWORD }}
           GITHUB_TOKEN: ${{ secrets.RENKUBOT_GITHUB_TOKEN }}
       - uses: 8398a7/action-slack@v3
         with:

@@ -25,8 +25,7 @@ class UnprivilegedEnvironmentSpec extends AcceptanceSpec with AnonEnv with Login
 
   Scenario("User can launch unprivileged session") {
     `log in to Renku`
-    `launch unprivileged session`
-    `stop session`(anonEnvConfig.projectId)
+    `launch unprivileged session`.foreach(projectPage => `stop session`(projectPage))
     `log out of Renku`
   }
 }

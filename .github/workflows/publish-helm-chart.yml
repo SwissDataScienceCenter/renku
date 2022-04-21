@@ -15,14 +15,14 @@ jobs:
       - name: Set version
         id: vars
         run: echo ::set-output name=tag::${GITHUB_REF#refs/*/}
-      - uses: SwissDataScienceCenter/renku-actions/publish-chart@v0.5.0
+      - uses: SwissDataScienceCenter/renku-actions/publish-chart@v0.5.2
         env:
           CHART_DIR: helm-chart/
           CHART_NAME: renku
           GIT_USER: chart-bot
           GIT_EMAIL: chart-bot@example.com
-          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
-          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+          DOCKER_USERNAME: ${{ secrets.RENKU_DOCKER_USERNAME }}
+          DOCKER_PASSWORD: ${{ secrets.RENKU_DOCKER_PASSWORD }}
           GITHUB_TOKEN: ${{ secrets.RENKUBOT_GITHUB_TOKEN }}
       - uses: 8398a7/action-slack@v3
         with:

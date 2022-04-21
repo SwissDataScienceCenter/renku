@@ -1,5 +1,114 @@
 .. _changelog:
 
+0.12.9
+------
+
+A release containing new features and bug fixes for CLI, UI and Graph. The main changes are:
+
+- CLI: SHACL validation fixes and improvements
+- UI: improvements around starting new sessions
+- UI: fixes for projects where the default branch is not called `master`.
+- graph: migration mechanism of the data in the Triples Store
+- graph: the Cross-entity search to allow multiple values on `type`, `visibility` and `creator` parameters
+
+More info can be found in release notes of Renku components:
+
+- `renku-python 1.2.1 <https://github.com/SwissDataScienceCenter/renku-python/releases/tag/v1.2.1>`_
+- `renku-python 1.2.2 <https://github.com/SwissDataScienceCenter/renku-python/releases/tag/v1.2.2>`_
+- `renku-ui 2.2.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/2.2.0>`_
+- `renku-graph 2.5.0 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/2.5.0>`_
+- `renku-graph 2.5.1 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/2.5.1>`_
+
+0.12.8
+------
+
+Bugfix release that re-introduces a part of the Renku config that creates auto-saves when sessions crash.
+This is required only for sessions launched prior to 0.12.6 which still may exist in some deployments.
+This part of the config will be fully retired in a later subsequent release.
+
+- `renku-notebooks 1.6.2 <https://github.com/SwissDataScienceCenter/renku-notebooks/releases/tag/1.6.2>`_
+
+0.12.7
+------
+
+Bugfix release fixing an issue where cloning user repositories was failing during session
+startup.
+
+- `renku-notebooks 1.6.1 <https://github.com/SwissDataScienceCenter/renku-notebooks/releases/tag/1.6.1>`_
+
+0.12.6
+------
+
+Bugfix release fixing an issue where image availability was incorrectly reported if a pinned image
+was used for interactive sessions.
+
+- `renku-notebooks 1.6.0 <https://github.com/SwissDataScienceCenter/renku-notebooks/releases/tag/1.6.0>`_
+- `renku-ui 2.1.2 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/2.1.2>`_
+
+0.12.5
+------
+
+Minor release with a bugfix for the core service.
+
+- `renku-python 1.1.3 <https://github.com/SwissDataScienceCenter/renku-python/releases/tag/v1.1.3>`_
+
+0.12.4
+------
+
+Minor release bumping the renku project templates version to ``0.3.1``.
+
+Includes minor updates to component versions:
+
+- `renku-notebooks 1.5.1 <https://github.com/SwissDataScienceCenter/renku-notebooks/releases/tag/1.5.1>`_
+- `renku-python 1.1.2 <https://github.com/SwissDataScienceCenter/renku-python/releases/tag/v1.1.2>`_
+- `renku-ui 2.1.1 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/2.1.1>`_
+
+0.12.3
+------
+
+Minor release coming with:
+
+* several new features on renku-ui,
+* new ``/knowledge-graph/entities`` (cross-entity search) API,
+* fixes around Cross-Origin Resource Sharing,
+* better messaging and reporting on renku-notebooks
+* fixes for various bugs in renku-notebooks, renku-ui, renku-gateway and renku-graph services.
+
+More info can be found on release notes of specific components:
+
+* `renku-ui 2.1.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/2.1.0>`_
+
+* `renku-gateway 0.13.1 <https://github.com/SwissDataScienceCenter/renku-gateway/releases/tag/0.13.1>`_
+
+* `renku-graph 2.4.1 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/2.4.1>`_
+
+* `renku-graph 2.4.0 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/2.4.0>`_
+
+* `renku-graph 2.3.0 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/2.3.0>`_
+
+* `renku-notebooks 1.5.0 <https://github.com/SwissDataScienceCenter/renku-notebooks/releases/tag/1.5.0>`_
+
+0.12.2
+------
+
+Minor release fixing various bugs in `renku-python` `renku-core` and `graph` services.
+The main fixes are addressing issues in migration and workflow functionality of renku CLI
+and security and stability bugs in `renku-graph`.
+
+Please note that the `renku-core` metrics should be disabled in this release. Recent changes
+made to Redis are incompatible with the `renku-core` metrics and cause the whole Renku deployment
+to not function properly. The `renku-core` metrics will be fixed in a subsequent release.
+
+More info can be found on release notes of specific components:
+
+* `renku-python 1.1.1 <https://github.com/SwissDataScienceCenter/renku-python/releases/tag/v1.1.1>`_
+
+* `renku-python 1.1.0 <https://github.com/SwissDataScienceCenter/renku-python/releases/tag/v1.1.0>`_
+
+* `renku-graph 2.2.4 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/2.2.4>`_
+
+* `renku-graph 2.2.3 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/2.2.3>`_
+
 0.12.1
 ------
 
@@ -10,32 +119,32 @@ It includes a few minor bug-fixes.
 0.12.0
 ------
 
-This is an important upgrade that enables v1.0 of `renku-python` (renku CLI) to work with the 
-renku web interface, renkulab. The upgrade requires regenerating the metadata in the knowledge 
-graph, which means that for a period of time, searching and accessing datasets and lineage 
-information will be limited and incomplete. The metadata regeneration is done automatically 
-and doesn't require any action from you. 
+This is an important upgrade that enables v1.0 of `renku-python` (renku CLI) to work with the
+renku web interface, renkulab. The upgrade requires regenerating the metadata in the knowledge
+graph, which means that for a period of time, searching and accessing datasets and lineage
+information will be limited and incomplete. The metadata regeneration is done automatically
+and doesn't require any action from you.
 
 Updating projects
 ~~~~~~~~~~~~~~~~~
 
-You might be prompted to update your project to the new version of Renku. As a general rule, 
-this update should take less than 30 seconds, and we will provide an estimate of the time 
-required. The update will migrate the metadata for your project and, for most projects, 
-update the base image and the version of the Renku CLI used in interactive sessions. For 
-large projects with thousands of commits or many renku workflows, we recommend doing the 
-migration manually. Please don’t hesitate to `reach out <https://renku.discourse.group>`_ 
-or `open an issue <https://github.com/SwissDataScienceCenter/renku/issues>`_ if you 
-encounter problems or are unsure how to proceed. 
+You might be prompted to update your project to the new version of Renku. As a general rule,
+this update should take less than 30 seconds, and we will provide an estimate of the time
+required. The update will migrate the metadata for your project and, for most projects,
+update the base image and the version of the Renku CLI used in interactive sessions. For
+large projects with thousands of commits or many renku workflows, we recommend doing the
+migration manually. Please don’t hesitate to `reach out <https://renku.discourse.group>`_
+or `open an issue <https://github.com/SwissDataScienceCenter/renku/issues>`_ if you
+encounter problems or are unsure how to proceed.
 
-Most importantly, from this point on, new projects created on renkulab will use renku 
-CLI ``>= v1.0``. We therefore strongly urge all users to have a look at the myriad of 
-excellent new features that this major release enables by checking out the 
-`renku-python release notes <https://github.com/SwissDataScienceCenter/renku-python/blob/1.0.0-release-notes/renku-release-notes-1.0.0.md>`_. 
-This release completely changes the storage and generation of the knowledge graph metadata, 
-with vastly improved performance and functionality. We have gone to great lengths to 
-ensure a smooth transition for older projects and for continuity in the CLI, but 
-please report issues on `discourse <https://renku.discourse.group>`_ or 
+Most importantly, from this point on, new projects created on renkulab will use renku
+CLI ``>= v1.0``. We therefore strongly urge all users to have a look at the myriad of
+excellent new features that this major release enables by checking out the
+`renku-python release notes <https://github.com/SwissDataScienceCenter/renku-python/blob/1.0.0-release-notes/renku-release-notes-1.0.0.md>`_.
+This release completely changes the storage and generation of the knowledge graph metadata,
+with vastly improved performance and functionality. We have gone to great lengths to
+ensure a smooth transition for older projects and for continuity in the CLI, but
+please report issues on `discourse <https://renku.discourse.group>`_ or
 `GitHub <https://github.com/SwissDataScienceCenter/renku/issues>`_.
 
 We hope you like the new features - if you have further questions suggestions for improvements, let us know!
