@@ -19,7 +19,6 @@ global:
     clientSecret: <use `openssl rand -hex 32`>
   useHTTPS: true
 gateway:
-  gitlabClientId: null
   gitlabClientSecret: null
   gitlabUrl: null
   secretKey: <use `openssl rand -hex 32`>
@@ -32,6 +31,7 @@ gitlab:
   registry:
     enabled: false
     storage: {{}}
+    externalUrl: https://registry.{renku_domain}
     ingress:
       annotations:
         cert-manager.io/cluster-issuer: letsencrypt-production

@@ -115,6 +115,8 @@ def main():
     if args.gitlab:
         values["gitlab"]["enabled"] = True
         values["global"]["gitlab"]["urlPrefix"] = "/gitlab"
+        values["global"]["gitlab"]["clientSecret"] = values["global"]["gateway"]["gitlabClientSecret"]
+        values["gateway"]["gitlabClientSecret"] = values["global"]["gateway"]["gitlabClientSecret"]
     else:
         # set the gitlab client id everywhere
         values["gateway"]["gitlabClientId"] = gitlab_client_id
