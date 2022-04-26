@@ -29,7 +29,7 @@ You may choose to either deploy GitLab as a part of the Renku deployment or link
 to an existing GitLab instance. If you are deploying GitLab as a part of Renku,
 you need to configure data storage and be prepared to manage the CI runners etc.
 We encourage production deployments to *not* use the GitLab chart bundled with
-Renku, but instead either aquire GitLab as a service or deploy it using the
+Renku, but instead either acquire GitLab as a service or deploy it using the
 `official GitLab cloud-native kubernetes chart
 <https://docs.gitlab.com/charts/>`_.
 
