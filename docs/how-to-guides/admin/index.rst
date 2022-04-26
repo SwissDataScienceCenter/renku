@@ -8,7 +8,6 @@ Guides for developers and administrators
 
     deploying-renku
     anonymous-sessions
-    external-gitlab
     running_renku_on_minikube
     privacycookie
     troubleshooting

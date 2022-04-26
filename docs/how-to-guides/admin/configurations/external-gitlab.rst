@@ -1,12 +1,17 @@
-.. _standalone-gitlab:
+.. _external-gitlab:
 
-Stand-alone GitLab
-==================
+External GitLab
+===============
 
-GitLab should be configured with an image registry.
-Create two Applications in GitLab:
+To use an external GitLab as a backend for a Renku deployment you must register
+the Renku application in GitLab. If you are not an admin user, this is done under
+your personal user preferences. It is possible that the GitLab instance you are
+using prevents users from registering external applications - in this case you
+must contact your GitLab server administrator for assistance.
 
-- Renku.
+
+Renku GitLab application details
+--------------------------------
 
 Name: renku
 

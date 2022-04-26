@@ -1,6 +1,6 @@
-.. _standalone-keycloak:
+.. _external-keycloak:
 
-Stand-alone Keycloak: Renku configuration
+External Keycloak: Renku configuration
 =========================================
 
 If you have your own Keycloak instance that you want to use for authentication
@@ -22,10 +22,11 @@ values is as follows:
 =======================   =====================================
 Keycloak client           Renku values file
 =======================   =====================================
-``renku``                 ``.global.gateway.clientSecret``
-``renku-cli``             ``.global.gateway.cliClientSecret``
-``renku-ui``              ``.global.uiserver.clientSecret``
-``renku-jupyterserver``   ``.notebooks.oidc.clientSecret``
+``renku``                 ``global.gateway.clientSecret``
+``renku-cli``             ``global.gateway.cliClientSecret``
+``renku-ui``              ``global.uiserver.clientSecret``
+``renku-jupyterserver``   ``notebooks.oidc.clientSecret``
+``gitlab``                ``global.gitlab.clientSecret``
 =======================   =====================================
 
 Note that the ``renku-jupyterserver`` client ID can be configured in the values

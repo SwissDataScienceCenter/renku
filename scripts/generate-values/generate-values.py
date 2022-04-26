@@ -99,31 +99,23 @@ def main():
 
     # read in the template and set the values
     with open(args.template) as f:
-        t = f.read().format(namespace=namespace, renku_domain=renku_domain, gitlab_registry=gitlab_registry)
+        t = f.read().format(
+            namespace=namespace,
+            renku_domain=renku_domain,
+            gitlab_registry=gitlab_registry,
+            gitlab_url=gitlab_url
+        )
         values = yaml.load(t)
 
     # if a key is set to '<use `openssl rand -hex 32`>' automatically generate the secret
     values = recurse_dict_secrets(values)
 
-    # set the gitlab URL everywhere
-    values["ui"]["gitlabUrl"] = gitlab_url
-    values["notebooks"]["gitlab"]["url"] = gitlab_url
-    values["graph"]["gitlab"]["url"] = gitlab_url
-    values["gateway"]["gitlabUrl"] = gitlab_url
-    values["notebooks"]["gitlab"]["registry"]["host"] = gitlab_registry
-
     if args.gitlab:
         values["gitlab"]["enabled"] = True
         values["global"]["gitlab"]["urlPrefix"] = "/gitlab"
-        values["global"]["gitlab"]["clientSecret"] = values["global"]["gateway"]["gitlabClientSecret"]
-        values["gateway"]["gitlabClientSecret"] = values["global"]["gateway"]["gitlabClientSecret"]
     else:
-        # set the gitlab client id everywhere
-        values["gateway"]["gitlabClientId"] = gitlab_client_id
-
-        # set the gitlab client secret everywhere
-        values["gateway"]["gitlabClientSecret"] = gitlab_client_secret
-
+        values["global"]["gateway"]["gitlabClientId"] = gitlab_client_id
+        values["global"]["gateway"]["gitlabClientSecret"] = gitlab_client_secret
         values["gitlab"] = {"enabled": False}
 
     warning = """

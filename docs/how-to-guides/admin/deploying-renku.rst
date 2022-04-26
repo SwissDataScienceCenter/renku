@@ -28,6 +28,10 @@ To deploy Renku in a cluster, you need to have the following prerequisites:
 You may choose to either deploy GitLab as a part of the Renku deployment or link
 to an existing GitLab instance. If you are deploying GitLab as a part of Renku,
 you need to configure data storage and be prepared to manage the CI runners etc.
+We encourage production deployments to *not* use the GitLab chart bundled with
+Renku, but instead either aquire GitLab as a service or deploy it using the
+`official GitLab cloud-native kubernetes chart
+<https://docs.gitlab.com/charts/>`_.
 
 Some parts of these requirements are beyond the scope of this documentation -
 for example, load-balancer setup is highly cluster-dependent. If you have a
@@ -69,20 +73,20 @@ Renku version         Kubernetes     Helm
 Pre-deployment steps
 -----------------------
 
-1. (Optional) Stand-alone configurations
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+1. (Optional) Using external GitLab and/or Keycloak
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. toctree::
    :maxdepth: 1
 
-   Stand-alone GitLab <configurations/standalone-gitlab>
-   Stand-alone Keycloak <configurations/standalone-keycloak>
+   GitLab <configurations/external-gitlab>
+   Keycloak <configurations/external-keycloak>
 
-2. (Optional) Create and configure Renku PVs and PVCs
+1. (Optional) Create and configure Renku PVs and PVCs
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 All of Renku information is stored in three volumes needed by Jena, Postgresql
-and GitLab (if not stand-alone). You can leave k8s to dynamically provision
+and GitLab (if not external). You can leave k8s to dynamically provision
 these volumes but we advise to create them beforehand and make regular backups.
 You can use the following manifest files as examples.
 
@@ -122,6 +126,11 @@ By default, this will create a python virtual environment and run the script; if
 you prefer to avoid any installation, you can pass the ``--docker`` flag to the
 ``generate-values.sh`` script and it will execute in a docker container.
 
+.. note::
+   By default the `generate-values` script assumes that an external GitLab will be used, i.e. it will
+   create values that *will not* deploy GitLab as part of a Renku deployment. If you wish to deploy
+   GitLab *with* Renku, add a ``--gitlab`` flag when calling the ``generate-values.sh`` script.
+
 After preparing your values and before deploying Renku please make sure to check
 the following in the values file:
 
@@ -129,7 +138,6 @@ the following in the values file:
   - all the necessary secrets are configured
   - the ingress configuration is correct
   - add/verify, if necessary, the persistent volume claims
-  - if deploying GitLab with Renku, complete the GitLab configuration (storage for LFS and registry)
 
 .. note::
    If you created persistent volumes in the step above, make sure to add their
