@@ -1,0 +1,28 @@
+flowchart TD
+    ns[Notebook service]
+    core[Core service]
+    kg[Knowledge Graph]
+    session[Interactive session]
+
+    UI & CLI --> |API| Gateway
+
+    subgraph Backends
+    ns
+    core
+    kg
+    GitLab
+    Jena
+    end
+
+    Gateway --> |proxy API| Backends
+    Gateway & GitLab & session --> |OIDC| Keycloak
+
+    ns --> |create/destroy| session
+    UI --> session
+
+    core --> |clone/push| GitLab
+
+    kg --> |clone| GitLab
+    kg --> |query/push| Jena
+
+    click ns "../services/notebooks-service.html"
