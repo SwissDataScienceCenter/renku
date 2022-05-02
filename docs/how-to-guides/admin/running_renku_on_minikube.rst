@@ -30,7 +30,6 @@ You will need the following tools installed on your machine:
    :maxdepth: 1
 
    git <https://git-scm.com/>
-   python 3.6+ <python_setup>
    pipenv <https://github.com/pypa/pipenv>
    docker <https://www.docker.com/>
    kind <https://kind.sigs.k8s.io/>
@@ -61,7 +60,7 @@ all the necessary python dependencies:
 
 Start kind
 ^^^^^^^^^^
-Next we start kind. We make it so that ports 8080 and 8443 on the 
+Next we start kind. We make it so that ports 8080 and 8443 on the
 host machine are forward respectively to port 80 and 443 to the cluster.
 This will allow you to access renku.
 
@@ -141,7 +140,7 @@ the ``gitlab.com`` client application and recreate your Renku deployment
 be the same as the port number you connected on your host machine to the kind cluster.
 If you use a different port number in the command when you create your kind cluster then
 make sure you use that port number here as well. Using a common port on the host side
-like ``80`` is not recommended because it can cause issues with the routing between 
+like ``80`` is not recommended because it can cause issues with the routing between
 Renku, the host and the kind cluster.
 
 Set up the gitlab client application
