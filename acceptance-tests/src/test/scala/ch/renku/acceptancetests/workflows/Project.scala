@@ -57,9 +57,10 @@ trait Project extends RemoveProject with BeforeAndAfterAll {
     else `create a new project`
 
   private def `open a project`: Unit = {
-
-    When("user click on the Projects in the Top Bar")
-    click on projectPage.TopBar.projects sleep (2 seconds)
+    `try few times before giving up` { _ =>
+      go to ProjectsPage sleep (2 seconds)
+      verify browserAt ProjectsPage
+    }
 
     And("they click on the 'Your Projects' tab")
     click on ProjectsPage.YourProjects.tab
