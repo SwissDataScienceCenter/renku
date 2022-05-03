@@ -4,7 +4,12 @@ flowchart TD
     kg[Knowledge Graph]
     session[Interactive session]
 
-    UI & CLI --> |API| Gateway
+    Clients --> |API| Gateway
+
+    subgraph Clients
+    UI
+    CLI
+    end
 
     subgraph Backends
     ns
@@ -15,14 +20,19 @@ flowchart TD
     end
 
     Gateway --> |proxy API| Backends
-    Gateway & GitLab & session --> |OIDC| Keycloak
+    GitLab --> |OIDC| Keycloak
 
+    Gateway & session --> |OAuth| Keycloak
+
+
+    Clients --> |connect| session
+
+    ns --> |verify access| GitLab
     ns --> |create/destroy| session
-    UI --> session
 
     core --> |clone/push| GitLab
 
-    kg --> |clone| GitLab
     kg --> |query/push| Jena
+    kg --> |clone/member sync| GitLab
 
     click ns "../services/notebooks-service.html"
