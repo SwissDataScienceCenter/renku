@@ -56,7 +56,7 @@ trait TopBar {
     }
 
     def mainNavToggler(implicit webDriver: WebDriver): WebElement = eventually {
-      find(cssSelector("nav.renku-container > button.navbar-toggler"))
+      find(cssSelector("button.navbar-toggler"))
         .getOrElse(fail("Top Right toggler button not found"))
     }
 
