@@ -1,5 +1,13 @@
 .. _changelog:
 
+0.12.10
+-------
+
+A minor release with bug-fixes to the core service and renku-python CLI.
+
+- `renku-python 1.2.3 <https://github.com/SwissDataScienceCenter/renku-python/releases/tag/v1.2.3>`_
+- `renku-python 1.2.4 <https://github.com/SwissDataScienceCenter/renku-python/releases/tag/v1.2.4>`_
+
 0.12.9
 ------
 
