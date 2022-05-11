@@ -11,4 +11,3 @@ Renku Services
    notebooks-service
    api-gateway
    graph-services
-   core-service
