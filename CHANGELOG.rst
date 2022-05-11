@@ -3,7 +3,7 @@
 0.12.10
 -------
 
-A minor release with bug-fixes to the core service and renku-python CLI.
+A minor release adding some features and non-critical bug-fixes to the core service and renku-python CLI.
 
 - `renku-python 1.2.3 <https://github.com/SwissDataScienceCenter/renku-python/releases/tag/v1.2.3>`_
 - `renku-python 1.2.4 <https://github.com/SwissDataScienceCenter/renku-python/releases/tag/v1.2.4>`_
@@ -141,7 +141,7 @@ this update should take less than 30 seconds, and we will provide an estimate of
 required. The update will migrate the metadata for your project and, for most projects,
 update the base image and the version of the Renku CLI used in interactive sessions. For
 large projects with thousands of commits or many renku workflows, we recommend doing the
-migration manually. Please don’t hesitate to `reach out <https://renku.discourse.group>`_
+migration manually. Please don't hesitate to `reach out <https://renku.discourse.group>`_
 or `open an issue <https://github.com/SwissDataScienceCenter/renku/issues>`_ if you
 encounter problems or are unsure how to proceed.
 
