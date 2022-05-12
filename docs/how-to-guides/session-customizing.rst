@@ -50,7 +50,7 @@ page.
 
 To do that, you can go into the project `Settings` section and click on the
 `Sessions` tab. The interface shows the available project settings. Mind that you
-can only select values valid to the specific RenkuLab platform. You can still use
+can only select values valid to the specific RenkuLab instance. You can still use
 the CLI to set any custom value, but that may not work as expected.
 
 .. image:: ../../_static/images/project-session-settings.png
@@ -59,7 +59,7 @@ the CLI to set any custom value, but that may not work as expected.
   :alt: Project session settings
 
 If no default value is defined for a resource at the project level, the session
-will likely use the default for the RenkuLab platform. Picking a specific value
+will likely use the default for the RenkuLab instance. Picking a specific value
 is helpful if you know the project requires more resources than the standard.
 Mind that users can always manually select different values when starting a
 session if they want to, even if you set a default.
@@ -70,8 +70,10 @@ preserved even if you move the project to another RenkuLab instance.
 .. note::
 
   Sometimes you may want to add a non-default value, typically to select a custom
-  default environment. Manually modifying the ``renku.ini`` file is *not*
-  recommended. You can use the `renku config command`_ from a session, for example:
+  default environment. You can use the `renku config command`_ from a session,
+  for example:
+
+  .. code-block:: bash
 
     renku config set interactive.default_url "/tree"
 
@@ -86,9 +88,9 @@ Jupyter interface ``/tree``, or when you need support for a different interface,
 like R studio ``/rstudio`` or  ``/streamlit`` (not included in the standard Python template).
 
 The resources should be set when you know the lower values may not be enough for the project
-requirements. The storage is particularly important since the session may not start without
-sufficient disk space. You should consider *not* fetching LFS data automatically if those
-may fill up the disk space. 
+requirements. The storage is particularly important since the session may not be able to
+start without sufficient disk space. You should consider *not* fetching LFS data
+automatically if those may fill up the disk space. 
 
 The ``image`` is useful when you settle on a Docker image and you don't need to change it
 anymore. The benefit is particularly evident when building a new image takes a lot of time

@@ -117,8 +117,8 @@ intended audience.
 The ``.renku`` directory includes a ``renku.ini`` file which contains
 project-level configuration for renku, stored using the
 `INI format <https://en.wikipedia.org/wiki/INI_file>`_. It can be used
-to :ref:`store project setting <renku_project_config>` as the threshold for
-LFS files, or session specific settings (see next section).
+to :ref:`store project setting <renku_project_config>` such as the threshold
+for LFS files, or session specific settings (see next section).
 
 Sessions
 ^^^^^^^^
