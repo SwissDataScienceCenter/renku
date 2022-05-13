@@ -57,6 +57,12 @@ Running the script
 To run the script, you can set up a python virtualenv with the required packages
 or use our docker image.
 
+The script supports a number of different options: two specific options worth
+noting are the `--gitlab` option and `--output <filename>` option. The former
+is used when the renku deployment includes its own gitlab instance; the
+`--output` option is useful for separating the resulting secrets file from the
+program output.
+
 Using python
 ^^^^^^^^^^^^
 
@@ -76,12 +82,24 @@ Call the script:
 
    $ ./generate-values.py
 
+Note that issues have been observed using the virtualenv approach in a quite
+vanilla ubuntu context - the Docker approach could be preferable in this context.
+
 Using Docker
 ^^^^^^^^^^^^
+
+To run it from a Docker container after you have built the container with `docker build`:
 
 .. code-block::
 
    $ docker run --rm -ti -v ${PWD}:/work renku/generate-values
+
+To run it from a Docker container if renku contains its own gitlab and the resulting
+output should be written to a file called `renku-secrets.yaml`.
+
+.. code-block::
+
+   $ docker run --rm -ti -v ${PWD}:/work renku/generate-values --gitlab --output renku-secrets.yaml
 
 Wrapping up
 -----------
