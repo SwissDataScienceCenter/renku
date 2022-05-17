@@ -6,10 +6,6 @@
 ## Shared values/secrets
 global:
   gitlab:
-    ## Secret of the gitlab client app in keycloak. Only needed if gitlab is deployed as part of Renku
-    ## and thus relies on keycloak for authentication. To change this value after deploying, first
-    ## generate a new secret using the Keycloak admin console then paste the generated secret here and redeploy.
-    clientSecret: # use `uuidgen -r`
     ## Name of the postgres database to be used by Gitlab
     postgresDatabase: gitlabhq_production
     ## Postgres user for the gitlab database
@@ -20,6 +16,8 @@ global:
       overwriteOnHelmUpgrade: false
     ## URL prefix for gitlab
     # urlPrefix: /
+    ## Secret for the gitlab keycloak client
+    clientSecret: # use `openssl rand -hex 32`
 
   keycloak:
     ## Name of the postgres database to be used by Keycloak
@@ -546,10 +544,10 @@ ui:
     custom: true
     repositories:
       - url: https://github.com/SwissDataScienceCenter/renku-project-template
-        ref: 0.3.1
+        ref: 0.3.3
         name: Renku
       - url: https://github.com/SwissDataScienceCenter/contributed-project-templates
-        ref: 0.4.0
+        ref: 0.4.1
         name: Community
 
   ## Configuration for a canary version of the UI
