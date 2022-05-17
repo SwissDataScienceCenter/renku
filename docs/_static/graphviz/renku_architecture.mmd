@@ -16,7 +16,6 @@ flowchart TD
     core
     kg
     GitLab
-    Jena
     end
 
     Gateway --> |proxy API| Backends
@@ -32,7 +31,6 @@ flowchart TD
 
     core --> |clone/push| GitLab
 
-    kg --> |query/push| Jena
     kg --> |clone/member sync| GitLab
 
     click ns "../services/notebooks-service.html"
