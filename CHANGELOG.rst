@@ -4,7 +4,7 @@
 -------
 
 A minor release adding some features and bug-fixes to the renku components. The main changes are:
-- graph: a new lineage endpoint to replace current graphQL endpoint
+- graph: a new lineage resource to replace current GraphQL endpoint
 - graph: various fixes related to both corrupted data in Triples Store as well as issues in the Provisioning flow preventing users from finding their data in the Knowledge Graph
 - graph: other stability improvements
 
