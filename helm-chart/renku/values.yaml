@@ -6,10 +6,6 @@
 ## Shared values/secrets
 global:
   gitlab:
-    ## Secret of the gitlab client app in keycloak. Only needed if gitlab is deployed as part of Renku
-    ## and thus relies on keycloak for authentication. To change this value after deploying, first
-    ## generate a new secret using the Keycloak admin console then paste the generated secret here and redeploy.
-    clientSecret: # use `uuidgen -r`
     ## Name of the postgres database to be used by Gitlab
     postgresDatabase: gitlabhq_production
     ## Postgres user for the gitlab database
@@ -20,6 +16,8 @@ global:
       overwriteOnHelmUpgrade: false
     ## URL prefix for gitlab
     # urlPrefix: /
+    ## Secret for the gitlab keycloak client
+    clientSecret: # use `openssl rand -hex 32`
 
   keycloak:
     ## Name of the postgres database to be used by Keycloak
@@ -126,8 +124,7 @@ global:
     image:
       repository: renku/certificates
       tag: "0.0.1"
-    customCAs:
-      []
+    customCAs: []
       # - secret:
 
 ## Ingress configuration
@@ -546,10 +543,10 @@ ui:
     custom: true
     repositories:
       - url: https://github.com/SwissDataScienceCenter/renku-project-template
-        ref: 0.3.1
+        ref: 0.3.3
         name: Renku
       - url: https://github.com/SwissDataScienceCenter/contributed-project-templates
-        ref: 0.4.0
+        ref: 0.4.1
         name: Community
 
   ## Configuration for a canary version of the UI
@@ -793,27 +790,23 @@ core:
 
 ## Configuration for renku-ui-server
 uiserver:
-  serverData:
-    {}
+  serverData: {}
     ## server data to correctly build the path and the routes
     # url: https://url.uiserver.fake
     # port: 8080
     # prefix: /ui-server
-  gateway:
-    {}
+  gateway: {}
     ## details to contact the gateway to redirect after the keycloak authentication is finished
     # url: https://url.gateway.fake
     # loginSuffix: /auth/login
     # logoutSuffix: /auth/logout
-  authentication:
-    {}
+  authentication: {}
     ## keycloak configration data for the Renku realm
     # url: https://url.keycloak.fake/auth/realms/Renku
     # id: renku
     # secret: 1234abcd # do not provide any value here to use the global gateway client secret
     # expirationTolerance: 10
-  sentry:
-    {}
+  sentry: {}
     ## Configuration for Sentry
     # enabled: false
     # url: '' # Sentry target URL
@@ -823,3 +816,9 @@ uiserver:
 ## Configuration for the Swagger-UI available at <renku-domain>/swagger
 swagger:
   enabled: true
+
+## The image used in startup scripts to initialize different postgress databases
+initDb:
+  image:
+    repository: renku/init-db
+    tag: "latest"

@@ -105,7 +105,7 @@ exclude_patterns += [
 exclude_patterns += [
     str(p) for p in Path("renku-python").rglob("*.rst") if p not in {
         Path("renku-python/docs/reference/commands.rst"),
-        Path("renku-python/docs/api.rst")
+        Path("renku-python/docs/reference/api.rst")
     }
 ]
 
