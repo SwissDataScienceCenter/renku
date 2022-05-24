@@ -37,7 +37,7 @@ dependencies:
   repository: "https://codecentric.github.io/helm-charts"
   condition: keycloak.enabled
 - name: certificates
-  version: 0.0.1
+  version: 0.0.2
   repository: "https://swissdatasciencecenter.github.io/helm-charts/"
 - name: redis
   version: 10.7.11
