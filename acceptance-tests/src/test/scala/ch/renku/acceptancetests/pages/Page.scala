@@ -37,8 +37,6 @@ abstract class Page[Url <: BaseUrl](val path: String, val title: String)
     with Eventually
     with AcceptanceSpecPatience {
 
-  require(path.trim.nonEmpty, s"$getClass cannot have empty path")
-  require(path startsWith "/", s"$getClass path has to start with '/'")
   require(title.trim.nonEmpty, s"$getClass cannot have empty title")
 
   def pageReadyElement(implicit webDriver: WebDriver): Option[WebElement]
