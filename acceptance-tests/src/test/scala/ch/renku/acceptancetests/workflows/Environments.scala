@@ -22,6 +22,7 @@ import ch.renku.acceptancetests.model.projects.ProjectDetails
 import ch.renku.acceptancetests.pages._
 import ch.renku.acceptancetests.tooling.TestLogger.logger
 import ch.renku.acceptancetests.tooling.{AcceptanceSpec, AnonEnvConfig}
+import org.openqa.selenium.ElementClickInterceptedException
 
 import scala.concurrent.duration._
 
@@ -101,19 +102,17 @@ trait Environments {
       `click new & wait for image to build`
       `start session and wait until it is ready`
 
-      projectPage.Sessions.Running.connectToJupyterLab
+      val jupyterLabPage = projectPage.Sessions.Running.connectToJupyterLab
 
       Then("a JupyterLab page is opened on a new tab")
-      val jupyterLabPage = JupyterLabPage()
-      // TODO This does not work for some reason
-      // verify browserSwitchedTo jupyterLabPage sleep (5 seconds)
+      verify browserSwitchedTo jupyterLabPage sleep (5 seconds)
+
       Some(projectPage)
     }
 
-  private def `anonymous session unsupported`(projectPage: ProjectPage): Option[JupyterLabPage] = {
+  private def `anonymous session unsupported`(projectPage: ProjectPage): Unit = {
     Then("they should see a message")
-    projectPage.Sessions.anonymousUnsupported
-    None
+    projectPage.Sessions.anonymousSessionsUnsupportedInfo.isDisplayed shouldBe true
   }
 
   private def `anonymous session supported`(implicit projectPage: ProjectPage): JupyterLabPage = {
@@ -121,12 +120,11 @@ trait Environments {
     `click new & wait for image to build`
     `start session and wait until it is ready`
 
-    projectPage.Sessions.Running.connectToAnonymousJupyterLab
+    val jupyterLabPage = projectPage.Sessions.Running.connectToAnonymousJupyterLab
 
     Then("a JupyterLab page is opened on a new tab")
-    val jupyterLabPage = JupyterLabPage()
-    // TODO This does not work for some reason
-    // verify browserSwitchedTo jupyterLabPage sleep (5 seconds)
+    verify browserSwitchedTo jupyterLabPage sleep (5 seconds)
+
     jupyterLabPage
   }
 
@@ -137,13 +135,14 @@ trait Environments {
     projectPage.Sessions.verifyImageReady sleep (2 seconds)
   }
 
-  private def `start session and wait until it is ready`(implicit projectPage: ProjectPage): Unit = {
-    projectPage.Sessions.verifyImageReady sleep (2 seconds)
-    try `try to click the session button`
-    catch {
-      case _: org.openqa.selenium.ElementClickInterceptedException => `try to click the session button`
+  private def `start session and wait until it is ready`(implicit projectPage: ProjectPage): Unit =
+    `try few times before giving up` { _ =>
+      projectPage.Sessions.verifyImageReady sleep (2 seconds)
+      try `try to click the session button`
+      catch {
+        case _: ElementClickInterceptedException => `try to click the session button`
+      }
     }
-  }
 
   private def `try to click the session button`(implicit projectPage: ProjectPage): Unit =
     projectPage.Sessions.maybeStartSessionButton match {

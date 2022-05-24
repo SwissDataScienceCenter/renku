@@ -51,7 +51,7 @@ trait GitLabApi extends RestClient {
       .withAuthorizationToken(authorizationToken)
       .send(whenReceived(status = Ok) >=> bodyToJson)
       .extract(jsonRoot.id.int.getOption)
-      .getOrElse(fail(s"Cannot find '${projectId.asProjectPath}' project in GitLab"))
+      .getOrElse(fail(s"Cannot find '$projectId' project in GitLab"))
 
   def `project exists in GitLab`(projectId: ProjectIdentifier): Boolean =
     GET(gitLabAPIUrl / "projects" / projectId.asProjectPath)

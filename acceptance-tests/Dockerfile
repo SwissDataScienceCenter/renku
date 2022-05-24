@@ -14,7 +14,7 @@ RUN apt-get update && \
 # This 'mkdir' is just to make the openjdk-11-jdk installation to pass
 RUN mkdir -p /usr/share/man/man1 && \
     apt-get update && \
-    apt-get install -y openjdk-11-jdk
+    apt-get install -y openjdk-17-jdk
 
 # Install sbt
 RUN echo "deb https://repo.scala-sbt.org/scalasbt/debian all main" | tee /etc/apt/sources.list.d/sbt.list && \
