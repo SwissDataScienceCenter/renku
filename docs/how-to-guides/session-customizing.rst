@@ -210,7 +210,7 @@ with::
 .. warning::
 
   You need to install ``jupyter`` and ``jupyterhub`` into the image to be able to
-  start notebook servers on RenkuLab.io.
+  start notebook servers on renkulab.io.
 
 You can commit these changes and push to the repo. Then, follow the rest of the
 steps in :ref:`docker_dev`.

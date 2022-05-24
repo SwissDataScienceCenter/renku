@@ -114,7 +114,7 @@ If there is already a remote::
   $ git remote add renku git@renkulab.io:<namespace>/<project-name>.git
   $ git push renku master
 
-View your project on RenkuLab.io
+View your project on renkulab.io
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 If everything went smoothly, you should be able to view your project at
@@ -133,7 +133,7 @@ of your logged-in Renku home page and the **Projects** tab from the top of the
 page.
 
 
-Utilize RenkuLab.io features
+Utilize renkulab.io features
 """"""""""""""""""""""""""""
 
 At this point you can also continue development as usual by starting up a JupyterLab

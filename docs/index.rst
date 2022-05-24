@@ -6,7 +6,7 @@
 .. Add :numbered: to toctree options in order to have numbered items.
 
 Renku Documentation
-===============================
+===================
 
 
 .. toctree::
