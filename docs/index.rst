@@ -1,11 +1,11 @@
-.. RENKU Documentation master file, created by
+.. Renku Documentation master file, created by
    sphinx-quickstart on Tue Aug 22 10:42:25 2017.
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
 .. Add :numbered: to toctree options in order to have numbered items.
 
-The Renku Project Documentation
+Renku Documentation
 ===============================
 
 

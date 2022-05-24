@@ -11,7 +11,7 @@ be faced with the following questions:
 * How can I easily share my analysis with others?
 * How are others applying this algorithm?
 
-The **Renku Project** provides easy access to tools that make answering these
+**Renku** provides easy access to tools that make answering these
 questions possible with minimal setup and expertise. **Renku** can be used to
 improve reproducibility, increase productivity through reusability and enable
 collaboration.
@@ -56,6 +56,6 @@ more quickly move ideas forward. Projects can be discussed through interactive
 notebooks, and templates with complex runtimes can be reused to efficiently
 bootstrap new experiments.
 
-To lean more about the hosted part of the platform, read about :ref:`Renkulab
+To lean more about the hosted part of the platform, read about :ref:`RenkuLab
 <renkulab>`. To explore the possibilities of the lower-level tools, head to the
 :ref:`renku` documentation.

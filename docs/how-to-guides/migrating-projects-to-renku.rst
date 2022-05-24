@@ -5,7 +5,7 @@ Import Existing Project
 
 So, at this point you have gone through :ref:`first_steps` and learned how Renku
 can help your data analysis be more reproducible and collaborative. The following
-guide will help you migrate your existing projects into the Renku platform.
+guide will help you migrate your existing projects into Renku.
 
 .. _practical_renku_usage:
 
@@ -91,7 +91,7 @@ committed in the top level of your directory.
 
 Now your project is ready to be sent to the web platform!
 
-Push your project to renkulab
+Push your project to RenkuLab
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Before you can push your project to Renku you need to create a GitLab repository
@@ -114,7 +114,7 @@ If there is already a remote::
   $ git remote add renku git@renkulab.io:<namespace>/<project-name>.git
   $ git push renku master
 
-View your project on renkulab.io
+View your project on RenkuLab.io
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 If everything went smoothly, you should be able to view your project at
@@ -133,7 +133,7 @@ of your logged-in Renku home page and the **Projects** tab from the top of the
 page.
 
 
-Utilize renkulab.io features
+Utilize RenkuLab.io features
 """"""""""""""""""""""""""""
 
 At this point you can also continue development as usual by starting up a JupyterLab

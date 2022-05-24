@@ -165,7 +165,7 @@ for more information on this and other commands.
     `git-lfs <https://git-lfs.github.com/>`_
     to save large files, and these files may not be fetched when a new
     environment is started. We try to retrieve them automatically when needed
-    for a renku command, but that may not always work.
+    for a Renku command, but that may not always work.
 
     If you check the ``data/flight-data/2019-01-flights.csv.zip`` file you
     will see only a few lines of metadata starting with
@@ -193,7 +193,7 @@ for more information on this and other commands.
 
    Do *not* make any edits to the code before the ``renku run``
    command is finished. In order to keep track of the outputs of
-   your script, renku will automatically add the changes to
+   your script, Renku will automatically add the changes to
    ``git``. If you want to modify your project while a ``renku`` command
    is executing, you should create a new branch.
 
