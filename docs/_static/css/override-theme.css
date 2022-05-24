@@ -1,3 +1,7 @@
 .wy-nav-content {
-max-width: 950px;
+    max-width: 950px;
+}
+
+#starting-a-new-session .wy-table-responsive table td {
+    white-space: break-spaces;
 }
