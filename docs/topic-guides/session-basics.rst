@@ -44,7 +44,7 @@ What's in my Session?
 * Any dependencies you specified via conda (``environment.yml``), using
   language-specific dependency-management facilities (``requirements.txt``,
   ``install.R``, etc.) or installed in the ``Dockerfile``. An exception to
-  this is if :ref:`project sets a specific image <renku_ini>`.
+  this is if project has :ref:`a pinned Docker image <pin_docker_image>`.
 
 * The renku command-line interface renku-python_.
 
@@ -84,10 +84,10 @@ configuration options.
 |                              | especially useful if your latest commit's build failed (see below) or you have unsaved    |
 |                              | work that was automatically recovered.                                                    |
 +------------------------------+-------------------------------------------------------------------------------------------+
-| Default Image                | This provides information about the Docker image used by the Session.                     |
+| Docker Image                 | This provides information about the Docker image used by the Session.                     |
 |                              | When it fails, you can try to rebuild it, or you can check the GitLab job logs.           |
-|                              | An image can also be pinned so that new commits will not require a new image              |
-|                              | each time.                                                                                |
+|                              | An :ref:`image can also be pinned <pin_docker_image>` so that new commits will not        |
+|                              | require a new image each time.                                                            |
 +------------------------------+-------------------------------------------------------------------------------------------+
 | Default environment          | Default is ``/lab``, it loads the JupyterLab interface. If you are working with ``R``,    |
 |                              | you may want to use ``/rstudio`` for RStudio. Mind that the corresponding packages need   |
@@ -113,9 +113,9 @@ configuration options.
 What if the Docker image is not available?
 ------------------------------------------
 
-Sessions are backed by Docker images. When launching a new
-session, a container is created from the image that matches the
-selected ``branch`` and ``commit``.
+Sessions are backed by Docker images. When launching a new session, a container is created
+from the image that matches the selected ``branch`` and ``commit``, or
+:ref:`the pinned image <pin_docker_image>` if the project's settings specify any.
 
 A GitLab's CI/CD pipeline automatically builds a new image using the project's
 ``Dockerfile`` when any of the following happens:
@@ -124,10 +124,10 @@ A GitLab's CI/CD pipeline automatically builds a new image using the project's
   * Forking a project (in which the new build happens for the fork).
   * Pushing changes to the project.
 
-The pipeline is defined in the project's :ref:`.gitlab-ci.yml file <gitlab_ci_yml>`. If the
-project :ref:`references a specific image <renku_ini>` to use for all environments, the UI
-will not check for the image availability - that is usually provided by the project's
-maintainer and it doesn't change at every new commit.
+The pipeline is defined in the project's :ref:`.gitlab-ci.yml file <gitlab_ci_yml>`.
+If the project's settings include a pinned image, there is no need to run the `image_build`
+job. The image needs to be accessible anyway to the user. This may not be the case if it is
+set private.
 
 It may take a long time to build an image for various reasons, but if you've just created the
 project on RenkuLab from one of the templates, it generally takes less than a minute or two.
@@ -189,10 +189,19 @@ The Docker image is not available
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 RenkuLab uses its internal instance of GitLab to build and store an image in the
-registry each time you create a project, push changes, or use the RenkuLab UI to fork
-a project. Thus, if you manage to get into a state that skips any of these steps,
-the image might be unavailable. It's a workaround, but the easiest way to get out
-of this state is to manually trigger a build by adding a new trivial commit through
-the GitLab instance, like editing the ``README.md`` file.
+registry each time you create a project, push changes, or use the RenkuLab UI to
+fork a project. Thus, the image might be unavailable if you manage to get into
+a state that skips any of these steps.
+
+On forked projects, images for old commits are typically unavailable. It may
+be a problem when working on non-default branches too. When RenkuLab detects the
+image is missing, it will guide you to fix the problem (given you have enough
+permissions to run pipelines for the project).
+This works well for the latest commit in any branch, but it may be trickier for
+older commits.
+
+As a workaround, the easiest way to trigger a new image build would be adding a
+new trivial commit through the GitLab instance, like editing the ``README.md``
+file.
 
 .. _renku-python: https://renku-python.readthedocs.org

@@ -35,3 +35,9 @@ charts:
         paths:
           - scripts/init-realm
           - scripts/init-realm/init-realm.py
+      init-db:
+        contextPath: scripts/init-db
+        dockerfilePath: scripts/init-db/Dockerfile
+        valuesPath: initDb.image
+        paths:
+          - scripts/init-db

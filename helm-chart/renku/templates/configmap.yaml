@@ -15,9 +15,6 @@ data:
     set -ex
     env
 
-    apt-get update -y
-    apt-get install -y curl jq
-
     GITLAB_SERVICE_URL="http://{{ template "gitlab.fullname" . }}{{ .Values.global.gitlab.urlPrefix }}"
     GITLAB_URL="{{ .Values.ui.gitlabUrl }}"
 
