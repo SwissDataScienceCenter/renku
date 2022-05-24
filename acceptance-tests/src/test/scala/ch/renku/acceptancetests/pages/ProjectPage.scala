@@ -306,7 +306,7 @@ class ProjectPage(val projectSlug: String, val namespace: String)
         .getOrElse(fail("New session link not found"))
     }(waitUpTo(1 minute), implicitly[Retrying[WebBrowser.Element]], implicitly[source.Position])
 
-    def anonymousUnsupported(implicit webDriver: WebDriver): WebElement = eventually {
+    def anonymousSessionsUnsupportedInfo(implicit webDriver: WebDriver): WebElement = eventually {
       findAll(cssSelector("div > div > div > div > p"))
         .find(
           _.text == "This Renkulab deployment doesn't allow unauthenticated users to start sessions."
@@ -361,10 +361,10 @@ class ProjectPage(val projectSlug: String, val namespace: String)
           .getOrElse(fail("Sessions -> Running: title not found"))
       }
 
-      def connectToJupyterLab(implicit webDriver: WebDriver, spec: AcceptanceSpec): Unit =
+      def connectToJupyterLab(implicit webDriver: WebDriver, spec: AcceptanceSpec): JupyterLabPage =
         connectToJupyterLab(s"a.dropdown-item[href*='/sessions/']", s"div.sessionsButton > button")
 
-      def connectToAnonymousJupyterLab(implicit webDriver: WebDriver, spec: AcceptanceSpec): Unit =
+      def connectToAnonymousJupyterLab(implicit webDriver: WebDriver, spec: AcceptanceSpec): JupyterLabPage =
         connectToJupyterLab(s"a.dropdown-item[href*='/sessions/']", s"div.sessionsButton > button")
 
       def connectButton(buttonSelector: String)(implicit webDriver: WebDriver): WebElement = eventually {
@@ -378,12 +378,13 @@ class ProjectPage(val projectSlug: String, val namespace: String)
       private def connectToJupyterLab(
           buttonSelector:   String,
           buttonDropdown:   String
-      )(implicit webDriver: WebDriver, spec: AcceptanceSpec): Unit = eventually {
+      )(implicit webDriver: WebDriver, spec: AcceptanceSpec): JupyterLabPage = eventually {
         import spec.{And, Then}
-        And("tries to connect to JupyterLab " + buttonSelector)
+        And("tries to connect to JupyterLab")
         sleep(2 seconds)
+
         // check the dropdown availability even when provided to prevent occasional failures
-        if (!buttonDropdown.isEmpty() && (findAll(cssSelector(buttonDropdown)) toList).size > 0) {
+        if (buttonDropdown.nonEmpty && (findAll(cssSelector(buttonDropdown)) toList).nonEmpty) {
           connectButton(buttonDropdown).click()
           sleep(2 seconds)
         }
@@ -393,16 +394,18 @@ class ProjectPage(val projectSlug: String, val namespace: String)
         // Check if we are connected to JupyterLab
         val tabs = webDriver.getWindowHandles.asScala.toArray
         webDriver.switchTo() window tabs(1)
-        if (webDriver.getCurrentUrl contains "spawn-pending") {
+        if (webDriver.findTabWithUrlContaining("spawn-pending").nonEmpty) {
           And("JupyterLab is not up yet")
           Then("close the window and try again later")
           // The server isn't up yet. Close the window and try again
           webDriver.close()
-          webDriver.switchTo() window tabs(0)
+          webDriver.switchToTab(0)
           fail("Could not connect to JupyterLab")
-        } else {
-          webDriver.switchTo() window tabs(0)
-        }
+        } else
+          webDriver.findTabWithUrlContaining("/lab") match {
+            case Some(_) => JupyterLabPage()
+            case None    => fail("Cannot find JupyterLab tab")
+          }
       }
 
       def sessionDropdownMenu(implicit webDriver: WebDriver): WebElement = eventually {
