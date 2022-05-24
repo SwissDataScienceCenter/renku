@@ -31,7 +31,6 @@ class AnonymousEnvironmentSpec extends AcceptanceSpec with Project with AnonEnv 
 
     `log out of Renku`
 
-    `launch anonymous session`(projectPage, projectDetails)
-      .map(_ => `stop session`(projectPage))
+    `launch anonymous session`(projectPage, projectDetails).map(_ => `stop session`(projectPage))
   }
 }

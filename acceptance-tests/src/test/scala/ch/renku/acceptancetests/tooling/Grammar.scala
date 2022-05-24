@@ -28,10 +28,9 @@ import org.scalatestplus.selenium
 import org.scalatestplus.selenium.WebBrowser
 
 import scala.concurrent.duration._
-import scala.jdk.CollectionConverters._
 import scala.language.implicitConversions
 
-trait Grammar extends WebElementOps with Scripts with Eventually {
+trait Grammar extends WebElementOps with WebDriverOps with Scripts with Eventually {
   self: WebBrowser with AcceptanceSpec =>
 
   implicit def toSeleniumPage[Url <: BaseUrl](page: Page[Url])(implicit baseUrl: Url): selenium.Page =
@@ -60,17 +59,7 @@ trait Grammar extends WebElementOps with Scripts with Eventually {
       }
 
     def browserSwitchedTo[Url <: BaseUrl](page: Page[Url])(implicit baseUrl: Url): Unit = eventually {
-      if (webDriver.getWindowHandles.asScala exists forTabWith(page)) ()
-      else
-        throw new Exception(
-          s"Cannot find window with URL starting with ${page.url} and title ${page.title}, " +
-            s"instead I am at $currentUrl and title $pageTitle."
-        )
-    }
-
-    private def forTabWith[Url <: BaseUrl](page: Page[Url])(handle: String)(implicit baseUrl: Url): Boolean = {
-      webDriver.switchTo() window handle
-      (currentUrl startsWith page.url) && (pageTitle == page.title)
+      webDriver.switchToTab(page)
     }
 
     def userCanSee(element: => WebElement): Unit = eventually {
