@@ -135,13 +135,14 @@ trait Environments {
     projectPage.Sessions.verifyImageReady sleep (2 seconds)
   }
 
-  private def `start session and wait until it is ready`(implicit projectPage: ProjectPage): Unit = {
-    projectPage.Sessions.verifyImageReady sleep (2 seconds)
-    try `try to click the session button`
-    catch {
-      case _: ElementClickInterceptedException => `try to click the session button`
+  private def `start session and wait until it is ready`(implicit projectPage: ProjectPage): Unit =
+    `try few times before giving up` { _ =>
+      projectPage.Sessions.verifyImageReady sleep (2 seconds)
+      try `try to click the session button`
+      catch {
+        case _: ElementClickInterceptedException => `try to click the session button`
+      }
     }
-  }
 
   private def `try to click the session button`(implicit projectPage: ProjectPage): Unit =
     projectPage.Sessions.maybeStartSessionButton match {
