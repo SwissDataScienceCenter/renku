@@ -18,17 +18,14 @@
 
 package ch.renku.acceptancetests.pages
 
-import ch.renku.acceptancetests.model.projects.ProjectIdentifier
 import org.openqa.selenium.Keys.RETURN
 import org.openqa.selenium.interactions.Actions
 import org.openqa.selenium.{WebDriver, WebElement}
 import org.scalatestplus.selenium.WebBrowser.{cssSelector, find}
 
 object JupyterLabPage {
-
-  def apply(): JupyterLabPage =
-    new JupyterLabPage()
-
+  private lazy val page = new JupyterLabPage()
+  def apply(): JupyterLabPage = page
 }
 
 class JupyterLabPage()
