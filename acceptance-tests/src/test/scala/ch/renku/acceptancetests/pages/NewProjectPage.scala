@@ -44,8 +44,7 @@ case object NewProjectPage
     descriptionField.clear() sleep (1 second)
     descriptionField.enterValue(project.description)
 
-    visibilityField.click() sleep (1 second)
-    visibilityOption(project.visibility).click() sleep (1 second)
+    visibilityRadioInput(project.visibility).click() sleep (1 second)
 
     scrollDown
 
@@ -68,7 +67,7 @@ case object NewProjectPage
   }
 
   private def descriptionField(implicit webDriver: WebDriver): WebElement = eventually {
-    find(cssSelector("input#description")) getOrElse fail("Description field not found")
+    find(cssSelector("textarea#description")) getOrElse fail("Description field not found")
   }
 
   private def visibilityField(implicit webDriver: WebDriver): WebElement = eventually {
@@ -77,6 +76,11 @@ case object NewProjectPage
 
   private def visibilityOption(visibility: Visibility)(implicit webDriver: WebDriver): WebElement = eventually {
     find(cssSelector(s"option[value='${visibility.value}']")) getOrElse fail("Visibility option not found")
+  }
+
+  private def visibilityRadioInput(visibility: Visibility)(implicit webDriver: WebDriver): WebElement = eventually {
+    find(cssSelector(s"input[name='visibility'][value='${visibility.value}']"))
+      .getOrElse(fail("Visibility option not found"))
   }
 
   private def templateCard(template: Template)(implicit webDriver: WebDriver): WebElement = eventually {
