@@ -102,7 +102,9 @@ trait Environments {
       `click new & wait for image to build`
       `start session and wait until it is ready`
 
-      val jupyterLabPage = projectPage.Sessions.Running.connectToJupyterLab
+      val jupyterLabPage = `try few times before giving up` { _ =>
+        projectPage.Sessions.Running.connectToJupyterLab
+      }
 
       Then("a JupyterLab page is opened on a new tab")
       verify browserSwitchedTo jupyterLabPage sleep (5 seconds)
@@ -120,7 +122,7 @@ trait Environments {
     `click new & wait for image to build`
     `start session and wait until it is ready`
 
-    val jupyterLabPage = projectPage.Sessions.Running.connectToAnonymousJupyterLab
+    val jupyterLabPage = projectPage.Sessions.Running.connectToJupyterLab
 
     Then("a JupyterLab page is opened on a new tab")
     verify browserSwitchedTo jupyterLabPage sleep (5 seconds)

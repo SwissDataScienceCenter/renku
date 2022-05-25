@@ -361,34 +361,18 @@ class ProjectPage(val projectSlug: String, val namespace: String)
           .getOrElse(fail("Sessions -> Running: title not found"))
       }
 
-      def connectToJupyterLab(implicit webDriver: WebDriver, spec: AcceptanceSpec): JupyterLabPage =
-        connectToJupyterLab(s"a.dropdown-item[href*='/sessions/']", s"div.sessionsButton > button")
-
-      def connectToAnonymousJupyterLab(implicit webDriver: WebDriver, spec: AcceptanceSpec): JupyterLabPage =
-        connectToJupyterLab(s"a.dropdown-item[href*='/sessions/']", s"div.sessionsButton > button")
-
-      def connectButton(buttonSelector: String)(implicit webDriver: WebDriver): WebElement = eventually {
-        find(
-          cssSelector(buttonSelector)
-        ) getOrElse fail(
-          "First row session Connect button not found"
-        )
-      }
-
-      private def connectToJupyterLab(
-          buttonSelector:   String,
-          buttonDropdown:   String
-      )(implicit webDriver: WebDriver, spec: AcceptanceSpec): JupyterLabPage = eventually {
+      def connectToJupyterLab(implicit webDriver: WebDriver, spec: AcceptanceSpec): JupyterLabPage = eventually {
         import spec.{And, Then}
         And("tries to connect to JupyterLab")
         sleep(2 seconds)
 
         // check the dropdown availability even when provided to prevent occasional failures
-        if (buttonDropdown.nonEmpty && (findAll(cssSelector(buttonDropdown)) toList).nonEmpty) {
+        val buttonDropdown = "div.sessionsButton > button"
+        if (findAll(cssSelector(buttonDropdown)).nonEmpty) {
           connectButton(buttonDropdown).click()
           sleep(2 seconds)
         }
-        connectButton(buttonSelector).click()
+        connectButton("a.dropdown-item[href*='/sessions/']").click()
         sleep(2 seconds)
 
         // Check if we are connected to JupyterLab
@@ -406,6 +390,10 @@ class ProjectPage(val projectSlug: String, val namespace: String)
             case Some(_) => JupyterLabPage()
             case None    => fail("Cannot find JupyterLab tab")
           }
+      }
+
+      private def connectButton(buttonSelector: String)(implicit webDriver: WebDriver): WebElement = eventually {
+        find(cssSelector(buttonSelector)) getOrElse fail("First row session Connect button not found")
       }
 
       def sessionDropdownMenu(implicit webDriver: WebDriver): WebElement = eventually {
