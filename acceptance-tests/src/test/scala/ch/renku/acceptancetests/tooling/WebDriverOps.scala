@@ -39,14 +39,23 @@ trait WebDriverOps {
     }
 
     def switchToTab[Url <: BaseUrl](page: Page[Url])(implicit baseUrl: Url): WebDriver =
-      findTab { driver =>
-        (driver.getCurrentUrl startsWith page.url) && (driver.getTitle == page.title)
-      }.getOrElse(
-        fail(
-          s"Cannot find window with URL starting with ${page.url} and title ${page.title}, " +
-            s"instead I am at ${webDriver.getCurrentUrl} and title ${webDriver.getTitle}."
+      findTab(byUrlAndTitleOf(page))
+        .getOrElse(
+          fail(
+            s"Cannot find window with URL starting with ${page.url} and title ${page.title}, " +
+              s"instead I am at ${webDriver.getCurrentUrl} and title ${webDriver.getTitle}."
+          )
         )
-      )
+
+    def closeTab[Url <: BaseUrl](page: Page[Url])(implicit baseUrl: Url): Unit =
+      findTab(byUrlAndTitleOf(page))
+        .map(_.close())
+        .getOrElse(
+          fail(
+            s"Cannot find window with URL starting with ${page.url} and title ${page.title}, " +
+              s"instead I am at ${webDriver.getCurrentUrl} and title ${webDriver.getTitle}."
+          )
+        )
 
     private def findTab(predicate: WebDriver => Boolean) = findAllTabs
       .foldLeft(Option.empty[WebDriver]) {
@@ -55,6 +64,9 @@ trait WebDriverOps {
           val driver = webDriver.switchTo() window tabName
           Some(driver).filter(predicate)
       }
+
+    private def byUrlAndTitleOf[Url <: BaseUrl](page: Page[Url])(implicit baseUrl: Url): WebDriver => Boolean =
+      driver => (driver.getCurrentUrl startsWith page.url) && (driver.getTitle == page.title)
 
     private def findAllTabs = webDriver.getWindowHandles.asScala.toArray
   }
