@@ -110,6 +110,15 @@ trait Grammar extends WebElementOps with WebDriverOps with Scripts with Eventual
             s"but gets stuck on $currentUrl for ${(checkInterval * attempt).toSeconds}s"
         }
     }
+
+    @scala.annotation.tailrec
+    def whenUserCanSee(findElement: WebDriver => Option[WebElement], attempt: Int = 1): Unit =
+      if (attempt <= 30 && findElement(webDriver).fold(ifEmpty = false)(_.isDisplayed)) {
+        sleep(1 second)
+        webDriver.navigate().refresh()
+        sleep(2 seconds)
+        whenUserCanSee(findElement, attempt + 1)
+      } else ()
   }
 
   def unless(test: Boolean)(testFun: => Any): Unit =

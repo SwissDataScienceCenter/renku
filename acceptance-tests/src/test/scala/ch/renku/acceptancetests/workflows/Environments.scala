@@ -41,12 +41,47 @@ trait Environments {
     `start session and wait until it is ready`
     docsScreenshots.takeScreenshot()
 
-    projectPage.Sessions.Running.connectToJupyterLab
+    `connect to JupyterLab`
 
     Then("a JupyterLab page is opened on a new tab")
     val jupyterLabPage = JupyterLabPage()
     verify browserSwitchedTo jupyterLabPage sleep (5 seconds)
     jupyterLabPage
+  }
+
+  private def `connect to JupyterLab`(implicit projectPage: ProjectPage): JupyterLabPage = eventually {
+    And("the user tries to connect to JupyterLab")
+    sleep(2 seconds)
+
+    if (projectPage.Sessions.Running.maybeOpenButton.fold(ifEmpty = true)(btn => !btn.isDisplayed))
+      pause whenUserCanSee { driver =>
+        val maybeGetLogs = projectPage.Sessions.Running.maybeOpenButton(driver)
+        if (maybeGetLogs.fold(false)(_.isDisplayed)) And("the 'Get logs' button is displayed")
+        maybeGetLogs
+      }
+
+    `try few times before giving up` { _ =>
+      And("clicks on the 'Open' button")
+      click on projectPage.Sessions.Running.openButtonMenu
+      sleep(2 seconds)
+
+      And("selects the 'Open in new tab' option")
+      click on projectPage.Sessions.Running.openInNewTabMenuItem
+      sleep(2 seconds)
+    }
+
+    if (webDriver.findTabWithUrlContaining("spawn-pending").nonEmpty) {
+      And("JupyterLab is not up yet")
+      Then("close the window and try again later")
+      // The server isn't up yet. Close the window and try again
+      webDriver.close()
+      webDriver.switchToTab(0)
+      fail("Could not connect to JupyterLab")
+    } else
+      webDriver.findTabWithUrlContaining("/lab") match {
+        case Some(_) => JupyterLabPage()
+        case None    => fail("Cannot find JupyterLab tab")
+      }
   }
 
   def `stop session`(implicit projectPage: ProjectPage): Unit =
@@ -96,15 +131,16 @@ trait Environments {
 
       And("clicks on the Sessions tab to launch an unprivileged session")
       click on projectPage.Sessions.tab
-
-      // We sleep a little to complete anonymous "login"
       sleep(5 seconds)
-      `click new & wait for image to build`
-      `start session and wait until it is ready`
 
-      val jupyterLabPage = `try few times before giving up` { _ =>
-        projectPage.Sessions.Running.connectToJupyterLab
+      if (projectPage.Sessions.Running.maybeOpenButton.exists(_.isDisplayed))
+        And("the session is already started")
+      else {
+        `click new & wait for image to build`
+        `start session and wait until it is ready`
       }
+
+      val jupyterLabPage = `connect to JupyterLab`
 
       Then("a JupyterLab page is opened on a new tab")
       verify browserSwitchedTo jupyterLabPage sleep (5 seconds)
@@ -121,8 +157,7 @@ trait Environments {
     sleep(5 seconds)
     `click new & wait for image to build`
     `start session and wait until it is ready`
-
-    val jupyterLabPage = projectPage.Sessions.Running.connectToJupyterLab
+    val jupyterLabPage = `connect to JupyterLab`
 
     Then("a JupyterLab page is opened on a new tab")
     verify browserSwitchedTo jupyterLabPage sleep (5 seconds)
@@ -150,22 +185,24 @@ trait Environments {
     projectPage.Sessions.maybeStartSessionButton match {
       case None =>
         projectPage.Sessions.connectToJupyterLabLink.isDisplayed shouldBe true
-      case Some(startEnvButton) =>
+      case Some(startSessionButton) =>
         And("the user clicks on the Start session button")
-        click on startEnvButton sleep (5 seconds)
+        click on startSessionButton sleep (5 seconds)
 
         `try few times before giving up` { _ =>
           Then("they should be redirected to the Sessions -> Running tab")
           verify userCanSee projectPage.Sessions.Running.title
         }
 
-        `try few times before giving up` { _ =>
-          When("the session is ready")
-          projectPage.Sessions.Running.verifySessionReady
-        }
+        `try few times before giving up` { driver =>
+          pause whenUserCanSee { drv =>
+            val maybeBadge = projectPage.Sessions.Running.maybeSessionNotReadyBadge(drv)
+            if (maybeBadge.fold(ifEmpty = false)(_.isDisplayed)) When("the session is not ready the user waits")
+            maybeBadge
+          }
 
-        And("the user clicks on the Connect button in the table")
-        // Sleep a little while after clicking to give the server a chance to come up
-        click on projectPage.Sessions.Running.title sleep (30 seconds)
+          When("the session is ready")
+          verify userCanSee projectPage.Sessions.Running.sessionReadyBadge(driver)
+        }
     }
 }
