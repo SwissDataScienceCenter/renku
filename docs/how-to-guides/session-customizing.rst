@@ -152,7 +152,7 @@ Dockerfile development
 ----------------------
 
 Before we get into modifying Dockerfiles, if you want to know how to update
-the base version of your renkulab image, see `Upgrading Renku <upgrading_renku>`_.
+the base version of your RenkuLab image, see `Upgrading Renku <upgrading_renku>`_.
 
 If you're going to make simple modifications to the ``Dockerfile`` (i.e. changing
 the base Docker image version number), you can use the following steps to update
@@ -203,7 +203,7 @@ Using your new Docker image
 Passing CI/CD is great, but in order to use the new image you need to
 start a new session.
 
-To do this, go back to the Renku platform, and from the project's landing page,
+To do this, go back to Renku, and from the project's landing page,
 first check in the **Files** tab that your changes to the ``Dockerfile`` are
 present. If not, you can force-refresh the page. Then, go to the **Session** tab.
 If you have any running sessions, those will keep running the

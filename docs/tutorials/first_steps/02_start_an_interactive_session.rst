@@ -3,7 +3,7 @@
 Start a session
 --------------------------------
 
-One of the main collaborative features of the Renku platform are hosted
+One of the main collaborative features of Renku are hosted
 sessions. These sessions are fully-featured Jupyter notebook
 servers running either JupyterLab, RStudio, VSCode or a fully-featured Linux
 desktop using VNC. We will use JupyterLab and RStudio for this tutorial.
