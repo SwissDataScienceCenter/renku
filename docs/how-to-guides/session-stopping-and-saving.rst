@@ -5,7 +5,7 @@ Stopping and Saving
 
 If you know you're not going to be actively working on your project, it's good
 manners to :ref:`save your work<saving>` and stop the session, so that
-you can release the resources you were consuming. You can do this from the Environments
+you can release the resources you were consuming. You can do this from the Sessions
 tab on the RenkuLab UI.
 
 Sometimes an environment will get stuck pending launch (e.g. because you requested

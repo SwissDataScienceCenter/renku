@@ -22,15 +22,15 @@ Sessions.
 Local installation with the script manager ``pipx``
 ---------------------------------------------------
 
-Install and execute Renku in an isolated environment using ``pipx``.
+Install and execute renku in an isolated environment using ``pipx``.
 It will guarantee that there are no version conflicts with dependencies
 you are using for your work and research.
 
 .. note::
 
-  This is the method of installation in the renku docker images,
+  This is the method of installation in the Renku docker images,
   i.e. the default environment you use when you launch a JupyterLab session
-  via the renku browser interface.
+  via the Renku browser interface.
 
 `Install pipx <https://github.com/pipxproject/pipx#install-pipx>`_
 and make sure that the ``$PATH`` is correctly configured.
@@ -103,7 +103,7 @@ environment.
 Bleeding-edge
 ^^^^^^^^^^^^^
 
-To install the latest bleeding-edge version of Renku and keep it from
+To install the latest bleeding-edge version of renku and keep it from
 polluting your application environment, an easy solution is to place it inside
 an  isolated ``conda`` environment. If you don't have ``conda`` already, you
 should `install miniconda <https://conda.io/miniconda.html>`__. Once you have
