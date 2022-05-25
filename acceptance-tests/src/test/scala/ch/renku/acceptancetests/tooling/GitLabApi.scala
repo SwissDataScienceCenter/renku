@@ -33,6 +33,23 @@ trait GitLabApi extends RestClient {
     userCredentials.maybeGitLabAccessToken getOrElse oauthAccessToken
 
   private lazy val oauthAccessToken: OAuthAccessToken =
+    fetchOAuthTokenRequest
+      .send(whenReceived(status = Ok) >=> bodyToJson)
+      .extract(jsonRoot.`access_token`.string.getOption)
+      .map(OAuthAccessToken.apply)
+      .getOrElse(fail("OAuth Access Token couldn't be obtained"))
+
+  def `check user has credentials`: Boolean =
+    fetchOAuthTokenRequest
+      .send(mapResponse {
+        _.status match {
+          case Ok         => true
+          case BadRequest => false
+          case _          => fail(s"Cannot determine if user '${userCredentials.username}' has credentials in GitLab")
+        }
+      })
+
+  private def fetchOAuthTokenRequest =
     POST(gitLabBaseUrl / "oauth" / "token")
       .withEntity(
         UrlForm(
@@ -41,10 +58,6 @@ trait GitLabApi extends RestClient {
           "password"   -> userCredentials.password
         )
       )
-      .send(whenReceived(status = Ok) >=> bodyToJson)
-      .extract(jsonRoot.`access_token`.string.getOption)
-      .map(OAuthAccessToken.apply)
-      .getOrElse(fail("OAuth Access Token couldn't be obtained"))
 
   def `get GitLab project id`(projectId: ProjectIdentifier): Int =
     GET(gitLabAPIUrl / "projects" / projectId.asProjectPath)
