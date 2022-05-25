@@ -22,7 +22,6 @@ import ch.renku.acceptancetests.model.CliVersion
 import ch.renku.acceptancetests.model.projects.ProjectDetails._
 import ch.renku.acceptancetests.model.projects.{ProjectDetails, ProjectIdentifier}
 import ch.renku.acceptancetests.model.users.UserCredentials
-import ch.renku.acceptancetests.tooling.AcceptanceSpec
 import org.openqa.selenium.{WebDriver, WebElement}
 import org.scalactic.source
 import org.scalatest.enablers.Retrying
@@ -30,7 +29,6 @@ import org.scalatestplus.selenium.WebBrowser
 import org.scalatestplus.selenium.WebBrowser.{cssSelector, find, findAll}
 
 import scala.concurrent.duration._
-import scala.jdk.CollectionConverters._
 
 object ProjectPage {
 
@@ -361,51 +359,24 @@ class ProjectPage(val projectSlug: String, val namespace: String)
           .getOrElse(fail("Sessions -> Running: title not found"))
       }
 
-      def connectToJupyterLab(implicit webDriver: WebDriver, spec: AcceptanceSpec): JupyterLabPage =
-        connectToJupyterLab(s"a.dropdown-item[href*='/sessions/']", s"div.sessionsButton > button")
-
-      def connectToAnonymousJupyterLab(implicit webDriver: WebDriver, spec: AcceptanceSpec): JupyterLabPage =
-        connectToJupyterLab(s"a.dropdown-item[href*='/sessions/']", s"div.sessionsButton > button")
-
-      def connectButton(buttonSelector: String)(implicit webDriver: WebDriver): WebElement = eventually {
-        find(
-          cssSelector(buttonSelector)
-        ) getOrElse fail(
-          "First row session Connect button not found"
-        )
+      def maybeOpenButton(implicit webDriver: WebDriver): Option[WebElement] = eventually {
+        find(cssSelector("a[href*='sessions/show']"))
+          .find(_.text.trim == "Open")
       }
 
-      private def connectToJupyterLab(
-          buttonSelector:   String,
-          buttonDropdown:   String
-      )(implicit webDriver: WebDriver, spec: AcceptanceSpec): JupyterLabPage = eventually {
-        import spec.{And, Then}
-        And("tries to connect to JupyterLab")
-        sleep(2 seconds)
+      def maybeGetLogsButton(implicit webDriver: WebDriver): Option[WebElement] = eventually {
+        find(cssSelector("button.text-nowrap.btn.btn-secondary"))
+          .find(_.text.trim == "Get logs")
+      }
 
-        // check the dropdown availability even when provided to prevent occasional failures
-        if (buttonDropdown.nonEmpty && (findAll(cssSelector(buttonDropdown)) toList).nonEmpty) {
-          connectButton(buttonDropdown).click()
-          sleep(2 seconds)
-        }
-        connectButton(buttonSelector).click()
-        sleep(2 seconds)
+      def openButtonMenu(implicit webDriver: WebDriver): WebElement = eventually {
+        find(cssSelector("div.sessionsButton > button"))
+          .getOrElse(fail("Menu on the 'Open' button not found"))
+      }
 
-        // Check if we are connected to JupyterLab
-        val tabs = webDriver.getWindowHandles.asScala.toArray
-        webDriver.switchTo() window tabs(1)
-        if (webDriver.findTabWithUrlContaining("spawn-pending").nonEmpty) {
-          And("JupyterLab is not up yet")
-          Then("close the window and try again later")
-          // The server isn't up yet. Close the window and try again
-          webDriver.close()
-          webDriver.switchToTab(0)
-          fail("Could not connect to JupyterLab")
-        } else
-          webDriver.findTabWithUrlContaining("/lab") match {
-            case Some(_) => JupyterLabPage()
-            case None    => fail("Cannot find JupyterLab tab")
-          }
+      def openInNewTabMenuItem(implicit webDriver: WebDriver): WebElement = eventually {
+        find(cssSelector("a.dropdown-item[href*='/sessions/']"))
+          .getOrElse(fail("'Open in new Tab' menu option not found"))
       }
 
       def sessionDropdownMenu(implicit webDriver: WebDriver): WebElement = eventually {
@@ -420,9 +391,13 @@ class ProjectPage(val projectSlug: String, val namespace: String)
           .parent
       }
 
-      def verifySessionReady(implicit webDriver: WebDriver): Unit = eventually {
+      def sessionReadyBadge(implicit webDriver: WebDriver): WebElement = eventually {
         find(cssSelector(".text-nowrap.p-1.badge.bg-success"))
-          .getOrElse(fail("Session is not ready"))
+          .getOrElse(fail("Session ready badge cannot be found"))
+      }
+
+      def maybeSessionNotReadyBadge(implicit webDriver: WebDriver): Option[WebElement] = eventually {
+        find(cssSelector(".text-nowrap.p-1.badge.bg-warning"))
       }
     }
   }

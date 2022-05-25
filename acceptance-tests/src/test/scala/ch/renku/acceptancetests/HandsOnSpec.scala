@@ -20,6 +20,7 @@ package ch.renku.acceptancetests
 
 import ch.renku.acceptancetests.tooling.{AcceptanceSpec, KnowledgeGraphApi}
 import ch.renku.acceptancetests.workflows._
+import org.openqa.selenium.ElementNotInteractableException
 
 import scala.concurrent.duration._
 
@@ -62,11 +63,11 @@ class HandsOnSpec
     `try to logout 🤷`
   }
 
-  private def `try to logout 🤷` : Boolean =
-    return try { `log out of Renku`; return true }
+  private def `try to logout 🤷` =
+    try `log out of Renku`
     catch {
-      case e: org.openqa.selenium.ElementNotInteractableException => false
-      case _: Throwable                                           => false
+      case _: ElementNotInteractableException => false
+      case _: Throwable                       => false
     }
 
   private def `verify analysis was run`: Unit = {
