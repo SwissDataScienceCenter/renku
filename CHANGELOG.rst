@@ -12,7 +12,7 @@ A minor release adding some features and bug-fixes to the renku components. The 
 - UI: polish and speedup the logic to start new sessions 
 - UI: correct bugs affecting the project's dataset page
 - renku-python: add Plan and project status support in Renku Python API
-- renku-python: add a custom git mergetool for merging renku metadata
+- renku-python: add a custom git merge tool for merging renku metadata
 
 More info can be found in release notes of Renku components:
 
