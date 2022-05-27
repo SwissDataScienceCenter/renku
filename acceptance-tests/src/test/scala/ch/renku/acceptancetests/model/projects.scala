@@ -62,7 +62,9 @@ object projects {
     case object Internal extends Visibility(value = "internal")
   }
 
-  case class Template(name: String)
+  case class Template(name: String) {
+    override lazy val toString: String = name
+  }
 
   final case class ProjectUrl(value: String) {
     override lazy val toString: String = value

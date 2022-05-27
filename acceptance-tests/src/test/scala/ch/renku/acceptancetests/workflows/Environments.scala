@@ -22,8 +22,6 @@ import ch.renku.acceptancetests.model.projects.ProjectDetails
 import ch.renku.acceptancetests.pages._
 import ch.renku.acceptancetests.tooling.TestLogger.logger
 import ch.renku.acceptancetests.tooling.{AcceptanceSpec, AnonEnvConfig}
-import org.openqa.selenium.WebDriver
-import org.openqa.selenium.interactions.Actions
 
 import scala.concurrent.duration._
 
@@ -168,19 +166,19 @@ trait Environments {
   private def `click new & wait for image to build`(implicit projectPage: ProjectPage): Unit = {
     And("then they click on the New link")
     click on projectPage.Sessions.newLink sleep (2 seconds)
-    And("once the image is built")
-    `verify image ready` sleep (5 seconds)
-  }
 
-  private def `verify image ready`(implicit projectPage: ProjectPage, webDriver: WebDriver): Unit = eventually {
-    sleep(1 second)
-    projectPage.Sessions.maybeButtonHideBranch getOrElse {
-      click on projectPage.Sessions.buttonShowBranch
+    reload whenUserCannotSee { _ =>
+      projectPage.Sessions.maybeButtonHideBranch getOrElse {
+        click on projectPage.Sessions.buttonShowBranch
+      }
       sleep(5 seconds)
-    }
 
-    `try few times before giving up` { _ =>
-      reload whenUserCannotSee (projectPage.Sessions.imageReadyBadge(_))
+      And("wait for the image to build")
+      `try again if failed` { _ =>
+        val badge = projectPage.Sessions.imageReadyBadge
+        sleep(10 seconds)
+        badge
+      }
     }
   }
 

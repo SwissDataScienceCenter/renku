@@ -72,7 +72,7 @@ trait Grammar extends WebElementOps with WebDriverOps with Scripts with Eventual
     @scala.annotation.tailrec
     def whenUserCannotSee(findElement: WebDriver => WebElement, attempt: Int = 1): Unit =
       if (
-        attempt <= 10 &&
+        attempt <= 20 &&
         Either
           .catchOnly[TestFailedException](!findElement(webDriver).isDisplayed)
           .fold(_ => true, identity)
@@ -90,8 +90,9 @@ trait Grammar extends WebElementOps with WebDriverOps with Scripts with Eventual
       case Right(successValue)         => successValue
       case Left(error) if attempt > 10 => throw error
       case Left(_) =>
-        sleep(5 seconds)
+        sleep(3 seconds)
         reloadPage()
+        sleep(2 seconds)
         `try few times before giving up`(section, attempt + 1)
     }
 
