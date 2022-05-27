@@ -57,7 +57,7 @@ case object NewProjectPage
     new Actions(webDriver)
       .moveByOffset(20, 20)
       .build()
-      .perform();
+      .perform()
 
     createButton.click() sleep (10 seconds)
   }

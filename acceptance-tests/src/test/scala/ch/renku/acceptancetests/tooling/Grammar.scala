@@ -77,8 +77,9 @@ trait Grammar extends WebElementOps with WebDriverOps with Scripts with Eventual
           .catchOnly[TestFailedException](!findElement(webDriver).isDisplayed)
           .fold(_ => true, identity)
       ) {
-        sleep(5 seconds)
+        sleep(3 seconds)
         webDriver.navigate().refresh()
+        sleep(2 seconds)
         whenUserCannotSee(findElement, attempt + 1)
       } else
         findElement(webDriver).isDisplayed
@@ -92,6 +93,15 @@ trait Grammar extends WebElementOps with WebDriverOps with Scripts with Eventual
         sleep(5 seconds)
         reloadPage()
         `try few times before giving up`(section, attempt + 1)
+    }
+
+  def `try again if failed`[V](section: WebDriver => V, attempt: Int = 1)(implicit webDriver: WebDriver): V =
+    Either.catchOnly[RuntimeException](section(webDriver)) match {
+      case Right(successValue)         => successValue
+      case Left(error) if attempt > 10 => throw error
+      case Left(_) =>
+        sleep(2 seconds)
+        `try again if failed`(section, attempt + 1)
     }
 
   object pause {
