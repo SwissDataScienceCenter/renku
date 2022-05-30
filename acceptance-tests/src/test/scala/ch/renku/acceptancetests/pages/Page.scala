@@ -79,5 +79,11 @@ object Page {
   }
 }
 
-abstract class RenkuPage(path: String, title: String) extends Page[RenkuBaseUrl](path, title) with RenkuPageCommons
+object RenkuPage {
+  val RenkuPageTitle = "Reproducible Data Science | Open Research | Renku"
+}
+
+abstract class RenkuPage(path: String, title: String = RenkuPage.RenkuPageTitle)
+    extends Page[RenkuBaseUrl](path, title)
+    with RenkuPageCommons
 abstract class GitLabPage(path: String, title: String) extends Page[GitLabBaseUrl](path, title)

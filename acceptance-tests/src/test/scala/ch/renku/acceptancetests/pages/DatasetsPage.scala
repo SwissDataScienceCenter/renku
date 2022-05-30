@@ -23,12 +23,7 @@ import org.scalatestplus.selenium.WebBrowser.{cssSelector, find, findAll}
 import scala.annotation.tailrec
 import scala.concurrent.duration._
 
-object DatasetsPage
-    extends RenkuPage(
-      path = s"/datasets",
-      title = "Renku"
-    )
-    with TopBar {
+object DatasetsPage extends RenkuPage(path = s"/datasets") with TopBar {
 
   def searchBox(implicit webDriver: WebDriver): WebElement = eventually {
     find(cssSelector("#searchQuery")) getOrElse fail("Datasets -> search query field cannot be found")

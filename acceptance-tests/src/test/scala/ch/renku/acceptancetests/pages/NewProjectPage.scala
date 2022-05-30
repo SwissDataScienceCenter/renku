@@ -22,12 +22,7 @@ import ch.renku.acceptancetests.model.projects.{Template, Visibility}
 import org.openqa.selenium.{WebDriver, WebElement}
 import org.scalatestplus.selenium.WebBrowser.{cssSelector, find, findAll}
 
-case object NewProjectPage
-    extends RenkuPage(
-      path = "/projects/new",
-      title = "Renku"
-    )
-    with TopBar {
+case object NewProjectPage extends RenkuPage(path = "/projects/new") with TopBar {
 
   override def pageReadyElement(implicit webDriver: WebDriver): Option[WebElement] = Some(createButton)
 

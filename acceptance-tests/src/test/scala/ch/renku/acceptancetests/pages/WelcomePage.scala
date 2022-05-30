@@ -21,12 +21,7 @@ package ch.renku.acceptancetests.pages
 import org.openqa.selenium.{WebDriver, WebElement}
 import org.scalatestplus.selenium.WebBrowser.{cssSelector, find}
 
-case object WelcomePage
-    extends RenkuPage(
-      path = "/",
-      title = "Renku"
-    )
-    with TopBar {
+case object WelcomePage extends RenkuPage(path = "/") with TopBar {
 
   override def pageReadyElement(implicit webDriver: WebDriver): Option[WebElement] = Some(yourProjectsSection)
 
