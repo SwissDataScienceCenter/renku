@@ -312,8 +312,10 @@ class ProjectPage(val projectSlug: String, val namespace: String)
         .getOrElse(fail("Unsupported session notification not found"))
     }
 
-    def maybeStartSessionButton(implicit webDriver: WebDriver): Option[WebElement] = eventually {
-      findAll(cssSelector("button.btn.btn-primary")).find(_.text == "Start session")
+    def startSessionButton(implicit webDriver: WebDriver): WebElement = eventually {
+      findAll(cssSelector("button.btn.btn-primary"))
+        .find(_.text == "Start session")
+        .getOrElse(fail("'Start session' button not found"))
     }
 
     def connectToJupyterLabLink(implicit webDriver: WebDriver): WebElement = eventually {
@@ -324,7 +326,7 @@ class ProjectPage(val projectSlug: String, val namespace: String)
 
     def buttonShowBranch(implicit webDriver: WebDriver): WebElement = eventually {
       findAll(cssSelector("div.mb-3 > button"))
-        .find(_.text.startsWith("Do you want to select the branch"))
+        .find(_.text.startsWith("Do you want to select the branch, commit, or image?"))
         .getOrElse(fail("Expanding selection to branch, commit, image not found"))
     }
 
@@ -332,21 +334,9 @@ class ProjectPage(val projectSlug: String, val namespace: String)
       findAll(cssSelector("div.mb-3 > button")).find(_.text.startsWith("Hide advanced settings"))
     }
 
-    private def maybeImageReadyBadge(implicit webDriver: WebDriver): Option[WebBrowser.Element] =
+    def imageReadyBadge(implicit webDriver: WebDriver): WebElement =
       find(cssSelector(".badge.bg-success"))
-
-    def verifyImageReady(implicit webDriver: WebDriver): Unit = eventually {
-      sleep(1 second)
-      maybeButtonHideBranch getOrElse {
-        buttonShowBranch.click()
-        sleep(5 seconds)
-      }
-      maybeImageReadyBadge getOrElse {
-        sleep(10 seconds)
-        webDriver.navigate.refresh()
-        fail("Image not ready")
-      }
-    }(waitUpTo(5 minutes, interval = 5 seconds), implicitly[Retrying[WebBrowser.Element]], implicitly[source.Position])
+        .getOrElse(fail("Image ready badge cannot be found"))
 
     object Running {
 

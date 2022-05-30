@@ -21,6 +21,7 @@ package ch.renku.acceptancetests.workflows
 import ch.renku.acceptancetests.model.projects.{ProjectDetails, Template, Visibility}
 import ch.renku.acceptancetests.pages._
 import ch.renku.acceptancetests.tooling.AcceptanceSpec
+import org.openqa.selenium.interactions.Actions
 import org.scalatest.BeforeAndAfterAll
 
 import java.lang.System.getProperty
@@ -99,7 +100,7 @@ trait Project extends RemoveProject with BeforeAndAfterAll {
 
     `try few times before giving up` { _ =>
       When("user fills in and submits the new project details form")
-      NewProjectPage submitFormWith projectDetails
+      `fill in new project form and submit`
     }
 
     pause asLongAsBrowserAt NewProjectPage
@@ -128,6 +129,40 @@ trait Project extends RemoveProject with BeforeAndAfterAll {
     verify that projectPage.Files.Info.title is projectDetails.readmeTitle
     And("the readme content")
     verify that projectPage.Files.Info.content contains "This is a Renku project"
+  }
+
+  private def `fill in new project form and submit`: Unit = eventually {
+    When(s"enters '${projectDetails.title}' as the title")
+    NewProjectPage.titleField.clear() sleep (5 seconds)
+    NewProjectPage.titleField.enterValue(projectDetails.title)
+
+    When("enters the description")
+    NewProjectPage.descriptionField.clear() sleep (1 second)
+    NewProjectPage.descriptionField.enterValue(projectDetails.description)
+
+    When(s"selects the visibility '${projectDetails.visibility}'")
+    NewProjectPage.visibilityRadioInput(projectDetails.visibility).click() sleep (1 second)
+
+    scrollDown
+
+    `try again if failed` { _ =>
+      When(s"selects the '${projectDetails.template}' template")
+      NewProjectPage.templateCard(projectDetails.template).click() sleep (5 seconds)
+    }
+
+    docsScreenshots.takeScreenshot()
+
+    scrollDown
+    // Move the mouse off the field to prevent the tooltip from blocking the button
+    new Actions(webDriver)
+      .moveByOffset(20, 20)
+      .build()
+      .perform()
+
+    `try again if failed` { _ =>
+      And("clicks the 'Create' button")
+      NewProjectPage.createButton.click() sleep (10 seconds)
+    }
   }
 
   private lazy val maybeExtantProject: Option[ProjectDetails] =

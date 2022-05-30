@@ -22,7 +22,6 @@ import ch.renku.acceptancetests.model.projects.ProjectDetails
 import ch.renku.acceptancetests.pages._
 import ch.renku.acceptancetests.tooling.TestLogger.logger
 import ch.renku.acceptancetests.tooling.{AcceptanceSpec, AnonEnvConfig}
-import org.openqa.selenium.ElementClickInterceptedException
 
 import scala.concurrent.duration._
 
@@ -73,7 +72,6 @@ trait Environments {
     if (webDriver.findTabWithUrlContaining("spawn-pending").nonEmpty) {
       And("JupyterLab is not up yet")
       Then("close the window and try again later")
-      // The server isn't up yet. Close the window and try again
       webDriver.close()
       webDriver.switchToTab(0)
       fail("Could not connect to JupyterLab")
@@ -168,41 +166,47 @@ trait Environments {
   private def `click new & wait for image to build`(implicit projectPage: ProjectPage): Unit = {
     And("then they click on the New link")
     click on projectPage.Sessions.newLink sleep (2 seconds)
-    And("once the image is built")
-    projectPage.Sessions.verifyImageReady sleep (2 seconds)
-  }
 
-  private def `start session and wait until it is ready`(implicit projectPage: ProjectPage): Unit =
-    `try few times before giving up` { _ =>
-      projectPage.Sessions.verifyImageReady sleep (2 seconds)
-      try `try to click the session button`
-      catch {
-        case _: ElementClickInterceptedException => `try to click the session button`
+    reload whenUserCannotSee { _ =>
+      projectPage.Sessions.maybeButtonHideBranch getOrElse {
+        click on projectPage.Sessions.buttonShowBranch
+      }
+      sleep(5 seconds)
+
+      And("wait for the image to build")
+      `try again if failed` { _ =>
+        val badge = projectPage.Sessions.imageReadyBadge
+        sleep(10 seconds)
+        badge
       }
     }
+  }
 
-  private def `try to click the session button`(implicit projectPage: ProjectPage): Unit =
-    projectPage.Sessions.maybeStartSessionButton match {
-      case None =>
-        projectPage.Sessions.connectToJupyterLabLink.isDisplayed shouldBe true
-      case Some(startSessionButton) =>
-        And("the user clicks on the Start session button")
-        click on startSessionButton sleep (5 seconds)
+  private def `start session and wait until it is ready`(implicit projectPage: ProjectPage): Unit = {
+    reload whenUserCannotSee (projectPage.Sessions.startSessionButton(_))
 
-        `try few times before giving up` { _ =>
-          Then("they should be redirected to the Sessions -> Running tab")
-          verify userCanSee projectPage.Sessions.Running.title
-        }
-
-        `try few times before giving up` { driver =>
-          pause whenUserCanSee { drv =>
-            val maybeBadge = projectPage.Sessions.Running.maybeSessionNotReadyBadge(drv)
-            if (maybeBadge.fold(ifEmpty = false)(_.isDisplayed)) When("the session is not ready the user waits")
-            maybeBadge
-          }
-
-          When("the session is ready")
-          verify userCanSee projectPage.Sessions.Running.sessionReadyBadge(driver)
-        }
+    And("the user clicks on the Start session button")
+    // it looks like the first click may simply move the page to the button
+    // and only the second attempt does the job
+    `try again if failed` { _ =>
+      click on projectPage.Sessions.startSessionButton
     }
+    sleep(5 seconds)
+
+    `try few times before giving up` { _ =>
+      Then("they should be redirected to the Sessions -> Running tab")
+      verify userCanSee projectPage.Sessions.Running.title
+    }
+
+    `try few times before giving up` { driver =>
+      pause whenUserCanSee { drv =>
+        val maybeBadge = projectPage.Sessions.Running.maybeSessionNotReadyBadge(drv)
+        if (maybeBadge.fold(ifEmpty = false)(_.isDisplayed)) When("the session is not ready the user waits")
+        maybeBadge
+      }
+
+      When("the session is ready")
+      verify userCanSee projectPage.Sessions.Running.sessionReadyBadge(driver)
+    }
+  }
 }
