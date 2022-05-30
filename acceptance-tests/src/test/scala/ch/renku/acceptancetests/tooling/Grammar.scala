@@ -88,7 +88,7 @@ trait Grammar extends WebElementOps with WebDriverOps with Scripts with Eventual
   def `try few times before giving up`[V](section: WebDriver => V, attempt: Int = 1)(implicit webDriver: WebDriver): V =
     Either.catchOnly[RuntimeException](section(webDriver)) match {
       case Right(successValue)         => successValue
-      case Left(error) if attempt > 10 => throw error
+      case Left(error) if attempt > 20 => throw error
       case Left(_) =>
         sleep(3 seconds)
         reloadPage()

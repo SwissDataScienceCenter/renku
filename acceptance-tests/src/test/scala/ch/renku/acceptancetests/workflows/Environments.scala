@@ -34,7 +34,7 @@ trait Environments {
     click on projectPage.Sessions.tab
     docsScreenshots.takeScreenshot()
 
-    `click new & wait for image to build`
+    `click New Session & wait for image to build`
     docsScreenshots.takeScreenshot()
 
     `start session and wait until it is ready`
@@ -134,7 +134,7 @@ trait Environments {
       if (projectPage.Sessions.Running.maybeOpenButton.exists(_.isDisplayed))
         And("the session is already started")
       else {
-        `click new & wait for image to build`
+        `click New Session & wait for image to build`
         `start session and wait until it is ready`
       }
 
@@ -153,7 +153,7 @@ trait Environments {
 
   private def `anonymous session supported`(implicit projectPage: ProjectPage): JupyterLabPage = {
     sleep(5 seconds)
-    `click new & wait for image to build`
+    `click New Session & wait for image to build`
     `start session and wait until it is ready`
     val jupyterLabPage = `connect to JupyterLab`
 
@@ -163,15 +163,12 @@ trait Environments {
     jupyterLabPage
   }
 
-  private def `click new & wait for image to build`(implicit projectPage: ProjectPage): Unit = {
-    And("then they click on the New link")
-    click on projectPage.Sessions.newLink sleep (2 seconds)
+  private def `click New Session & wait for image to build`(implicit projectPage: ProjectPage): Unit = {
+    And("then they click on the 'New Session' link")
+    click on projectPage.Sessions.newLink sleep (10 seconds)
 
     reload whenUserCannotSee { _ =>
-      projectPage.Sessions.maybeButtonHideBranch getOrElse {
-        click on projectPage.Sessions.buttonShowBranch
-      }
-      sleep(5 seconds)
+      `wait if a session is in an uncertain state`
 
       And("wait for the image to build")
       `try again if failed` { _ =>
@@ -181,6 +178,18 @@ trait Environments {
       }
     }
   }
+
+  private def `wait if a session is in an uncertain state`(implicit projectPage: ProjectPage) =
+    `try few times before giving up` { _ =>
+      if (projectPage.Sessions.maybeButtonHideBranch.isDefined) ()
+      else {
+        click on projectPage.Sessions.buttonShowBranch sleep (5 seconds)
+        if (pageSource contains "A session for this commit is starting or terminating") {
+          And("wait for the Session to start or terminate")
+          sleep(20 seconds)
+        }
+      }
+    }
 
   private def `start session and wait until it is ready`(implicit projectPage: ProjectPage): Unit = {
     reload whenUserCannotSee (projectPage.Sessions.startSessionButton(_))
@@ -201,7 +210,10 @@ trait Environments {
     `try few times before giving up` { driver =>
       pause whenUserCanSee { drv =>
         val maybeBadge = projectPage.Sessions.Running.maybeSessionNotReadyBadge(drv)
-        if (maybeBadge.fold(ifEmpty = false)(_.isDisplayed)) When("the session is not ready the user waits")
+        if (maybeBadge.fold(ifEmpty = false)(_.isDisplayed)) {
+          When("the session is not ready the user waits")
+          sleep(5 seconds)
+        }
         maybeBadge
       }
 
