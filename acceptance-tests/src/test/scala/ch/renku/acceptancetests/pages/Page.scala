@@ -79,5 +79,5 @@ object Page {
   }
 }
 
-abstract class RenkuPage(path: String, title: String) extends Page[RenkuBaseUrl](path, title)
+abstract class RenkuPage(path: String, title: String) extends Page[RenkuBaseUrl](path, title) with RenkuPageCommons
 abstract class GitLabPage(path: String, title: String) extends Page[GitLabBaseUrl](path, title)

@@ -16,35 +16,15 @@
  * limitations under the License.
  */
 
-package ch.renku.acceptancetests.tooling
+package ch.renku.acceptancetests.pages
 
-import org.openqa.selenium.WebElement
+import org.openqa.selenium.{WebDriver, WebElement}
+import org.scalatestplus.selenium.WebBrowser.{cssSelector, find}
 
-import java.lang.Thread.sleep
+trait RenkuPageCommons {
+  self: RenkuPage =>
 
-trait WebElementOps {
-
-  implicit class WebElementOps(element: WebElement) {
-
-    def enterValue(value: String): Unit = {
-      typeInValue(value)
-      sleep(1000)
-      if (element.getAttribute("value") != value) {
-        element.clear()
-        sleep(500)
-        typeInValue(value)
-        sleep(1000)
-      }
-    }
-
-    private def typeInValue(value: String): Unit = value foreach { char =>
-      element.sendKeys(char.toString)
-      sleep(100)
-    }
-  }
-
-  implicit class OptionalWebElementOps(maybeElement: Option[WebElement]) {
-
-    def isDisplayed: Boolean = maybeElement.exists(_.isDisplayed)
+  def maybeBouncer(implicit webDriver: WebDriver): Option[WebElement] = eventually {
+    find(cssSelector("div.bouncer"))
   }
 }
