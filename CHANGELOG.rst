@@ -3,17 +3,20 @@
 0.12.11
 -------
 
-A minor release adding some features and bug-fixes to the renku components. The main changes are:
+A minor release adding some features and bug-fixes to the renku components.
+
+The main changes are:
 
 - graph: a new lineage resource to replace current GraphQL endpoint
 - graph: cross-entity search resource to allow filtering on since and until
 - graph: various fixes related to both corrupted data in Triples Store as well as issues in the Provisioning flow preventing users from finding their data in the Knowledge Graph
 - graph: other stability improvements
 - UI: UX improvements around project and dataset creation
-- UI: polish and speedup the logic to start new sessions 
+- UI: polish and speedup the logic to start new sessions
 - UI: correct bugs affecting the project's dataset page
 - renku-python: add Plan and project status support in Renku Python API
 - renku-python: add a custom git merge tool for merging renku metadata
+- renku-notebooks: switch git proxy sidecar to golang.
 
 More info can be found in release notes of Renku components:
 
@@ -21,6 +24,13 @@ More info can be found in release notes of Renku components:
 - `renku-graph 2.7.0 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/2.7.0>`_
 - `renku-ui 2.3.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/2.3.0>`_
 - `renku-python 1.3.0 <https://github.com/SwissDataScienceCenter/renku-python/releases/tag/v1.3.0>`_
+
+Upgrading from 0.12.10
+~~~~~~~~~~~~~~~~~~~~~~
+
+This release does contain potentially breaking changes in renku-notebooks where we previously
+deprecated `securityContext.enabled`, but are now setting `securityContext` directly. Simply
+delete `securityContext` and `securityContext.enabled` from your `values.yaml` to resolve this.
 
 0.12.10
 -------
