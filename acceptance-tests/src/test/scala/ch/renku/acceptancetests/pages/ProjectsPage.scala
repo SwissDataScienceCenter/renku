@@ -25,12 +25,7 @@ import org.openqa.selenium.{WebDriver, WebElement}
 import org.scalatestplus.selenium.WebBrowser
 import org.scalatestplus.selenium.WebBrowser.{cssSelector, find, findAll}
 
-case object ProjectsPage
-    extends RenkuPage(
-      path = "/projects",
-      title = "Renku"
-    )
-    with TopBar {
+case object ProjectsPage extends RenkuPage(path = "/projects") with TopBar {
 
   override def pageReadyElement(implicit webDriver: WebDriver): Option[WebElement] = Some(YourProjects.tab)
 

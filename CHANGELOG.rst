@@ -15,6 +15,7 @@ The main changes are:
 - UI: UX improvements around project and dataset creation
 - UI: polish and speedup the logic to start new sessions
 - UI: correct bugs affecting the project's dataset page
+- UI: improvements to non-logged-in user experience
 - renku-python: add Plan and project status support in Renku Python API
 - renku-python: add a custom git merge tool for merging renku metadata
 - renku-notebooks: switch git proxy sidecar to golang.

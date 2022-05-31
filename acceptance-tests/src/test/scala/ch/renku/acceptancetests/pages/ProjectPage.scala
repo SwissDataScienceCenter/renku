@@ -41,8 +41,7 @@ object ProjectPage {
 
 class ProjectPage(val projectSlug: String, val namespace: String)
     extends RenkuPage(
-      path = s"/projects/$namespace/$projectSlug",
-      title = "Renku"
+      path = s"/projects/$namespace/$projectSlug"
     )
     with TopBar {
 
