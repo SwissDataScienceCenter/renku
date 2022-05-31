@@ -3,7 +3,12 @@
 0.12.11
 -------
 
-A minor release adding some features and bug-fixes to the renku components. The main changes are:
+A minor release adding some features and bug-fixes to the renku components. 
+This release does contain potentially breaking changes in renku-notebooks where we previously 
+deprecated `securityContext.enabled`, but are now setting `securityContext` directly. Simply
+delete `securityContext` and `securityContext.enabled` from your `values.yaml` to resolve this.
+
+The main changes are:
 
 - graph: a new lineage resource to replace current GraphQL endpoint
 - graph: cross-entity search resource to allow filtering on since and until
@@ -14,6 +19,7 @@ A minor release adding some features and bug-fixes to the renku components. The 
 - UI: correct bugs affecting the project's dataset page
 - renku-python: add Plan and project status support in Renku Python API
 - renku-python: add a custom git merge tool for merging renku metadata
+- renku-notebooks: switch git proxy sidecar to golang.
 
 More info can be found in release notes of Renku components:
 
