@@ -10,6 +10,7 @@ The main changes are:
 - graph: a new lineage resource to replace current GraphQL endpoint
 - graph: cross-entity search resource to allow filtering on since and until
 - graph: various fixes related to both corrupted data in Triples Store as well as issues in the Provisioning flow preventing users from finding their data in the Knowledge Graph
+- graph: an improvement to the internal processes to detect a lost project re-provisioning event
 - graph: other stability improvements
 - UI: UX improvements around project and dataset creation
 - UI: polish and speedup the logic to start new sessions
@@ -22,6 +23,7 @@ More info can be found in release notes of Renku components:
 
 - `renku-graph 2.6.0 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/2.6.0>`_
 - `renku-graph 2.7.0 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/2.7.0>`_
+- `renku-graph 2.8.0 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/2.8.0>`_
 - `renku-ui 2.3.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/2.3.0>`_
 - `renku-python 1.3.0 <https://github.com/SwissDataScienceCenter/renku-python/releases/tag/v1.3.0>`_
 
