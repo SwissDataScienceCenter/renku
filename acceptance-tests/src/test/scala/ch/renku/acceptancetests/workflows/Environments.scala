@@ -181,14 +181,19 @@ trait Environments {
 
   private def `wait if a session is in an uncertain state`(implicit projectPage: ProjectPage) =
     `try few times before giving up` { _ =>
-      if (projectPage.Sessions.maybeButtonHideBranch.isDefined) ()
-      else {
-        click on projectPage.Sessions.buttonShowBranch sleep (5 seconds)
-        if (pageSource contains "A session for this commit is starting or terminating") {
+      if (projectPage.Sessions.maybeButtonHideBranch.isDisplayed) ()
+      else if (projectPage.maybeBouncer.isDisplayed) {
+        do {
+          And("wait for the Bouncer to go")
+          sleep(20 seconds)
+        } while (projectPage.maybeBouncer.isDisplayed)
+      } else if (pageSource contains "A session for this commit is starting or terminating") {
+        do {
           And("wait for the Session to start or terminate")
           sleep(20 seconds)
-        }
-      }
+        } while (pageSource contains "A session for this commit is starting or terminating")
+      } else
+        click on projectPage.Sessions.buttonShowBranch sleep (5 seconds)
     }
 
   private def `start session and wait until it is ready`(implicit projectPage: ProjectPage): Unit = {
@@ -203,7 +208,7 @@ trait Environments {
     sleep(5 seconds)
 
     `try few times before giving up` { _ =>
-      Then("they should be redirected to the Sessions -> Running tab")
+      Then("they should be redirected to the Sessions tab")
       verify userCanSee projectPage.Sessions.Running.title
     }
 
