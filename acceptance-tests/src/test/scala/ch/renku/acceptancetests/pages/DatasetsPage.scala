@@ -58,10 +58,6 @@ object DatasetsPage
     findAll(cssSelector(".rk-search-result-card > a > div > div.title")).toList
   }
 
-  def maybeBouncer(implicit webDriver: WebDriver): Option[WebElement] = eventually {
-    findAll(cssSelector(".bouncer")).toList.headOption
-  }
-
   override def pageReadyElement(implicit webDriver: WebDriver): Option[WebElement] = {
     waitIfBouncing
     Some(searchResultLinks.headOption getOrElse searchBox)
