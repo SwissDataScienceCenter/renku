@@ -1,5 +1,12 @@
 .. _changelog:
 
+0.12.12
+-------
+
+A minor bugfix release fixing data problems in the Triples Store.
+
+- `renku-graph 2.8.1 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/2.8.1>`_
+
 0.12.11
 -------
 
