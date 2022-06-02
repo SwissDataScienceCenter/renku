@@ -64,7 +64,7 @@ instead they would share instead a project initiation link to the template,
 where students fill in their own metadata. In this case, student's fully own
 the repository and there is no link from the template repository to the
 instantiated one (except for its metadata). See
-https://renku.readthedocs.io/en/latest/user/templates.html for more details.
+https://renku.readthedocs.io/en/latest/reference/templates.html for more details.
 
 Hands on demos
 ^^^^^^^^^^^^^^
