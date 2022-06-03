@@ -29,11 +29,10 @@ trait DatasetsSearch {
   self: AcceptanceSpec =>
 
   def `search for dataset with phrase`(phrase: String, orderBy: DatasetSearchOrdering = ProjectsCount): Unit = {
-    When("the user click the Datasets link on the top bar")
-    click on DatasetsPage.TopBar.datasets
-    sleep(1 second)
-    Then("they should see the Datasets search page")
-    verify browserAt DatasetsPage
+    `try few times before giving up` { _ =>
+      go to DatasetsPage sleep (2 seconds)
+      verify browserAt DatasetsPage
+    }
 
     When(s"the user types in the '$phrase' in the search field")
     DatasetsPage.searchBox enterValue phrase

@@ -137,4 +137,4 @@ entire pipeline, potentially avoiding expensive calculations in complex
 settings. In addition, recorded workflows can be executed independently using
 **renku workflow execute**. For understanding the basic functionality, head to
 `renkulab.io <https://renkulab.io>`_ and follow :ref:`first_steps`. See also
-the Renkulab :ref:`knowledge graph<knowledge-graph>` documentation.
+the RenkuLab :ref:`knowledge graph<knowledge-graph>` documentation.

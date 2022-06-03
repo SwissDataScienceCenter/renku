@@ -3,7 +3,7 @@
 Upgrading your Renku project
 ============================
 
-The Renku Project is in constant flux! This means that often there are changes
+Renku is in constant flux! This means that often there are changes
 to RenkuLab (e.g. the web platform (UI) and the knowledge graph (KG)), and the
 ``renku`` command-line interface (CLI). These docs will explain how to benefit from
 changes to the ``renku CLI`` when you're using a session on RenkuLab.

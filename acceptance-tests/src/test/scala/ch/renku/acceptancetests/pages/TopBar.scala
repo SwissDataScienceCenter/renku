@@ -39,6 +39,22 @@ trait TopBar {
       find(cssSelector("#plus-dropdown")) getOrElse fail("Top Right '+' not found")
     }
 
+    def `click on GitLab dropdown`(implicit webDriver: WebDriver): Unit = eventually {
+      val button =
+        find(cssSelector("#gitLabDropdownToggle"))
+          .getOrElse(fail("Top 'GitLab' button not found"))
+
+      new Actions(webDriver)
+        .moveToElement(button)
+        .click()
+        .build()
+        .perform();
+    }
+
+    def gitLabMenuItem(implicit webDriver: WebDriver): WebElement = eventually {
+      find(cssSelector(s"a[href*='/gitlab']")) getOrElse fail("GitLab menu item not found")
+    }
+
     def projectOption(implicit webDriver: WebDriver): WebElement = eventually {
       find(cssSelector("#navbar-project-new")) getOrElse fail("Project option not found")
     }
@@ -56,7 +72,7 @@ trait TopBar {
     }
 
     def mainNavToggler(implicit webDriver: WebDriver): WebElement = eventually {
-      find(cssSelector("nav.renku-container > button.navbar-toggler"))
+      find(cssSelector("button.navbar-toggler"))
         .getOrElse(fail("Top Right toggler button not found"))
     }
 
