@@ -26,7 +26,7 @@ import ch.renku.acceptancetests.workflows.LoginType._
 import scala.annotation.tailrec
 import scala.concurrent.duration._
 
-trait Login {
+trait Login extends GitLabCredentials {
   self: AcceptanceSpec =>
 
   private var maybeLoginType: Option[LoginType] = None
@@ -53,6 +53,10 @@ trait Login {
 
     Then("they should get into the Welcome page")
     verify browserAt WelcomePage
+
+    `verify user has GitLab credentials`
+
+    verify browserSwitchedTo WelcomePage
   }
 
   def `log out of Renku`: Unit = {

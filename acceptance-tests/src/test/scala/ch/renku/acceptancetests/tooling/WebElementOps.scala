@@ -42,4 +42,9 @@ trait WebElementOps {
       sleep(100)
     }
   }
+
+  implicit class OptionalWebElementOps(maybeElement: Option[WebElement]) {
+
+    def isDisplayed: Boolean = maybeElement.exists(_.isDisplayed)
+  }
 }

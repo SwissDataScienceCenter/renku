@@ -17,8 +17,8 @@
 
 .. _renku:
 
-RENKU (連句)
-============
+Renku
+=====
 
 .. image:: https://readthedocs.org/projects/renku/badge/
     :target: http://renku.readthedocs.io/en/latest/
@@ -32,7 +32,7 @@ RENKU (連句)
     :target: https://gitter.im/SwissDataScienceCenter/renku
     :alt: Gitter
 
-**The Renku Project** is a platform that bundles together various tools for
+**Renku** is a platform that bundles together various tools for
 reproducible and collaborative data analysis projects. It is aimed at
 independent researchers and data scientists as well as labs, collaborations, and
 courses and workshops. Renku can be used by anyone who deals with data, whether
@@ -59,7 +59,7 @@ their work in a systematic and safe manner.
 Getting Started
 ---------------
 
-The Renku platform consists of `RenkuLab
+Renku consists of `RenkuLab
 <https://renku.readthedocs.io/en/latest/introduction/what-is-renku.html#renkulab>`_,
 a web-based application and `Renku Client
 <https://renku.readthedocs.io/en/latest/introduction/what-is-renku.html#renku-client>`_, a
@@ -103,8 +103,8 @@ There are several channels you can use to communicate with us; we monitor all of
 them, so your messages will always get to us, but communication will be slightly
 more streamlined if you pick a channel that most suits your purpose and needs.
 
-* `discourse <https://renku.discourse.group>`_: questions concerning renkulab or
-  renku CLI usage, release notes
+* `discourse <https://renku.discourse.group>`_: questions concerning Renkulab or
+  Renku CLI usage, release notes
 
 * `github <https://github.com/SwissDataScienceCenter/renku>`_ & `renku
   (CLI) <https://github.com/SwissDataScienceCenter/renku-python>`_: create
@@ -120,7 +120,7 @@ a team split between EPFL and ETHZ.
 Project structure
 -----------------
 
-The Renku project consists of several sub-repositories:
+Renku consists of several sub-repositories:
 
 - `renku-gateway <https://github.com/SwissDataScienceCenter/renku-gateway>`_:
   a simple API gateway

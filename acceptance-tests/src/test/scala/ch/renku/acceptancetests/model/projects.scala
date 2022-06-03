@@ -31,7 +31,8 @@ import java.time.format.DateTimeFormatter
 object projects {
 
   final case class ProjectIdentifier(namespace: String, slug: String) {
-    def asProjectPath(implicit userCredentials: UserCredentials): String = s"$namespace/$slug"
+    lazy val asProjectPath:     String = s"$namespace/$slug"
+    override lazy val toString: String = s"$namespace/$slug"
   }
 
   final case class ProjectDetails(
@@ -61,7 +62,9 @@ object projects {
     case object Internal extends Visibility(value = "internal")
   }
 
-  case class Template(name: String)
+  case class Template(name: String) {
+    override lazy val toString: String = name
+  }
 
   final case class ProjectUrl(value: String) {
     override lazy val toString: String = value

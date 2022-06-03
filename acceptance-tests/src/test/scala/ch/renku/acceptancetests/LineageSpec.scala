@@ -51,7 +51,6 @@ class LineageSpec
     `verify the kg api returned the correct lineage data`(scriptPath, outputFilePath)
 
     `log out of Renku`
-
   }
 
   private def `setup a workflow` = {
@@ -93,7 +92,7 @@ class LineageSpec
   }
 
   private def `view the lineage of the outputFile`(outputFilePath: String): Unit = {
-    Then("The user can see the lineage")
+    Then("the user can see the lineage")
 
     click on projectPage.Files.tab
 

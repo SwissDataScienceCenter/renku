@@ -102,7 +102,7 @@ Ways to do data science in Renku
 
     An important part of using renku within RStudio is accessing the Terminal (1). This
     is where you can access renku commands and make sure you have tracked changes 
-    using git. The Git tab in the Environment panel (2) also gives you the option of a
+    using git. The Git tab in the Sessions panel (2) also gives you the option of a
     graphical user interface (GUI) to git.
 
     .. image:: ../../_static/images/rstudio-git-ui.png
