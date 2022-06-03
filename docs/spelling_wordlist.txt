@@ -133,6 +133,7 @@ parametrization
 parametrize
 parametrized
 pipenv
+pipx
 PNG
 Postgresql
 powerline
