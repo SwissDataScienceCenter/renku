@@ -22,7 +22,7 @@ Start a Renku session
    .. note::
 
        Note: Renku may inform you that the container image for the current commit
-       does not yet exist on your machine, and renku will offer to build it for you. Say yes!
+       does not yet exist on your machine, and Renku will offer to build it for you. Say yes!
 
 #. **Open the session in your browser.**
    When the session starts, it will print out a url where the session is running.
