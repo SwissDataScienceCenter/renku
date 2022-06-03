@@ -14,7 +14,7 @@ Follow the steps below to learn how to use Renku to:
    :glob:
    :titlesonly:
 
-   first_steps/01_create_project
+   own_machine/01_create_project
    own_machine/02_install_renku
    own_machine/03_install_docker
    own_machine/04_clone_renku_project
