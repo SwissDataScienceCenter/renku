@@ -30,7 +30,7 @@ dependencies:
   condition: graph.enabled
 - name: postgresql
   version: 9.1.1
-  repository: "https://charts.bitnami.com/bitnami"
+  repository: "https://raw.githubusercontent.com/bitnami/charts/eb5f9a9513d987b519f0ecd732e7031241c50328/bitnami"
   condition: postgresql.enabled
 - name: keycloak
   version: 16.0.4
@@ -41,5 +41,5 @@ dependencies:
   repository: "https://swissdatasciencecenter.github.io/helm-charts/"
 - name: redis
   version: 10.7.11
-  repository: "https://charts.bitnami.com/bitnami"
+  repository: "https://raw.githubusercontent.com/bitnami/charts/eb5f9a9513d987b519f0ecd732e7031241c50328/bitnami"
   condition: redis.install
