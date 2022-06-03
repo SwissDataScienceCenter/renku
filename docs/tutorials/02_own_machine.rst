@@ -50,20 +50,26 @@ Set Up Renku on your own Machine
 Install Renku
 ^^^^^^^^^^^^^
 
-[Install pipx](https://github.com/pipxproject/pipx#install-pipx) and make sure that the `$PATH` is correctly configured.
+Install and execute renku in an isolated environment using ``pipx``.
+It will guarantee that there are no version conflicts with dependencies
+you are using for your work and research.
 
-.. code-block:: shell-session
+`Install pipx <https://github.com/pipxproject/pipx#install-pipx>`_
+and make sure that the ``$PATH`` is correctly configured.
+
+::
 
     $ python3 -m pip install --user pipx
     $ pipx ensurepath
 
-Install renku
+Once ``pipx`` is installed use following command to install ``renku``.
 
-.. code-block:: shell-session
+::
 
     $ pipx install renku
     $ which renku
     ~/.local/bin/renku
+
 
 
 Install Docker
@@ -71,7 +77,8 @@ Install Docker
 
 Renku uses Docker to manage your project's computational environment.
 
-Install Docker from their website https://www.docker.com/products/docker-desktop/
+Install Docker from their website: https://www.docker.com/products/docker-desktop/
+
 
 Clone your Renku project
 ------------------------
@@ -91,11 +98,11 @@ If you do not have an existing SSH key pair, generate a new one.
 
 1. Open a terminal on the machine where you'd like to run your Renku project.
 
-2. Type `ssh-keygen -t` followed by the key type and an optional comment.
+2. Type ``ssh-keygen -t`` followed by the key type and an optional comment.
 This comment is included in the .pub file that's created.
 You may want to use an email address for the comment.
 
-For example, for ED25519:
+For example, to create an ED25519 key:
 
 .. code-block:: shell-session
 
@@ -107,7 +114,7 @@ Add your SSH key to RenkuLab
 
 1. Copy the contents of your public key file. You can do this manually or use a script.
 For example, to copy an ED25519 key to the clipboard
-(Replace id_ed25519.pub with your filename. For example, use id_rsa.pub for RSA).
+(Replace ``id_ed25519.pub`` with your filename. For example, use ``id_rsa.pub`` for RSA).
 
 .. tabbed:: macOS
 
@@ -118,7 +125,7 @@ For example, to copy an ED25519 key to the clipboard
 
 .. tabbed:: Linux
 
-    This requires the xclip package
+    This requires the ``xclip`` package
 
     .. code-block:: console
 
