@@ -1,7 +1,7 @@
 .. _start_renku_session:
 
 Start a Renku session
----------------------
+=====================
 
 #. **Navigate into your renku project directory:**
 

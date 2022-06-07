@@ -19,5 +19,6 @@ Follow the steps below to learn how to use Renku to:
    own_machine/03_install_docker
    own_machine/04_clone_renku_project
    own_machine/05_start_renku_session
+   own_machine/06_customize_env
 
 .. _renkulab.io: https://renkulab.io
