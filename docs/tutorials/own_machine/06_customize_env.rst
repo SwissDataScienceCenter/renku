@@ -13,7 +13,7 @@ Add packages to your environment
     If you're working in Python, this is the ``requirements.txt`` file.
     If you're working in R, it's ``install.R``.
     Alternatively, for both R and Python, you may use Anaconda's ``environment.yml``.
-    All three of these options work natively with Renku.
+    All three of these options work with Renku.
 
     .. tabbed:: Python
 
