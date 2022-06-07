@@ -34,7 +34,7 @@ Add packages to your environment
 
         Note that the base R `install.packages` function can only install the latest version of a package on CRAN.
         To install a specific version, use `devtools::install_version`.
-        If the package's not on CRAN and exists as a github repo, you can use install_github insteead
+        If the package's not on CRAN and exists as a github repo, you can use `install_github` instead.
         These two scenarios are shown in the example below.
 
         .. code-block:: console
