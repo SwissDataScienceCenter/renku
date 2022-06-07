@@ -30,7 +30,7 @@ Add packages to your environment
 
         .. code-block:: console
 
-            install.packages(c("pandas", "numpy"))
+            install.packages(c("dplyr", "ggplot2"))
 
         Note that the base R ``install.packages`` function can only install the latest version of a package on CRAN.
         To install a specific version, use ``devtools::install_version``.
@@ -39,7 +39,7 @@ Add packages to your environment
 
         .. code-block:: console
 
-            devtools::install_version("numpy",
+            devtools::install_version("ggplot2",
                           version = "1.22.0",
                           repos = "http://cran.us.r-project.org",
                           upgrade="always")
