@@ -10,12 +10,12 @@ Add packages to your environment
 #.  **Add packaged to your project dependencies**
 
     To add packages to your environment, add the packages to the dependencies file.
-    If you're working in Python, this is the `requirements.txt` file.
-    If you're working in R, it's `install.R`.
+    If you're working in Python, this is the ``requirements.txt`` file.
+    If you're working in R, it's ``install.R``.
 
     .. tabbed:: Python
 
-        Add your project's dependencies to `requirements.txt`, simply list the package names.
+        Add your project's dependencies to ``requirements.txt``, simply list the package names.
         Optionally, you may specify specific package versions, as shown in the two examples below.
 
         .. code-block:: console
@@ -25,16 +25,16 @@ Add packages to your environment
 
     .. tabbed:: R
 
-        To specify your project dependencies in `install.R`, write the R package install commands.
-        This `install.R` script will be sourced and run to create your requested environment.
+        To specify your project dependencies in ``install.R``, write the R package install commands.
+        This ``install.R`` script will be sourced and run to create your requested environment.
 
         .. code-block:: console
 
             install.packages(c("pandas", "numpy"))
 
-        Note that the base R `install.packages` function can only install the latest version of a package on CRAN.
-        To install a specific version, use `devtools::install_version`.
-        If the package's not on CRAN and exists as a github repo, you can use `install_github` instead.
+        Note that the base R ``install.packages`` function can only install the latest version of a package on CRAN.
+        To install a specific version, use ``devtools::install_version``.
+        If the package's not on CRAN and exists as a github repo, you can use ``install_github`` instead.
         These two scenarios are shown in the example below.
 
         .. code-block:: console
@@ -60,8 +60,8 @@ Add packages to your environment
     In the new Docker image, your added dependencies will be added!
 
 
-Customize your Docker file
+Customize your Dockerfile
 --------------------------
 
-If you'd like to further customize your Renku project environment by modifying the Dockerfile,
+If you'd like to further customize your Renku project environment, for example by modifying the Dockerfile,
 take a look at :ref:`customizing`.
