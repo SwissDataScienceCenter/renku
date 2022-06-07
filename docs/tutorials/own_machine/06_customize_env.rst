@@ -12,11 +12,13 @@ Add packages to your environment
     To add packages to your environment, add the packages to the dependencies file.
     If you're working in Python, this is the ``requirements.txt`` file.
     If you're working in R, it's ``install.R``.
+    Alternatively, for both R and Python, you may use Anaconda's ``environment.yml``.
+    All three of these options work natively with Renku.
 
     .. tabbed:: Python
 
-        Add your project's dependencies to ``requirements.txt``, simply list the package names.
-        Optionally, you may specify specific package versions, as shown in the two examples below.
+        To add your project's dependencies to ``requirements.txt``, simply list the package names.
+        Optionally, you may specify specific package versions, as shown in the example below.
 
         .. code-block:: console
 
@@ -44,6 +46,19 @@ Add packages to your environment
                           repos = "http://cran.us.r-project.org",
                           upgrade="always")
             devtools::install_github("thomasp85/patchwork")
+
+    .. tabbed:: Anaconda
+
+        To add your project's dependencies to ``environment.yml``, specify an environment name and then a list of dependencies.
+
+        .. code-block:: console
+
+            name: stats
+            dependencies:
+              - numpy
+              - pandas
+
+        For more details, see `Anaconda's documentation <https://docs.conda.io/projects/conda/en/latest/user-guide/tasks/manage-environments.html#create-env-file-manually>`.
 
 #.  **Commit your changes**
 
