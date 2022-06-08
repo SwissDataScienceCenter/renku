@@ -19,6 +19,7 @@
 package ch.renku.acceptancetests.pages
 
 import ch.renku.acceptancetests.model.users.UserCredentials
+import ch.renku.acceptancetests.pages.CliLoginPage.{eventually, fail}
 import ch.renku.acceptancetests.pages.WelcomePage.fail
 import org.openqa.selenium.{JavascriptExecutor, WebDriver, WebElement}
 import org.scalatestplus.selenium.WebBrowser._
@@ -188,17 +189,86 @@ object RegisterNewUserPage
   }
 }
 
-object CliTokenLoginPage
+object CliLoginPage
     extends RenkuPage(
-      path = "/api/auth/login/next",
-      title = "Renku - login"
+      path = "/auth/realms/Renku/login-actions/authenticate",
+      title = "Sign in to Renku"
     ) {
 
-  override def pageReadyElement(implicit webDriver: WebDriver): Option[WebElement] = Some(cliToken)
+  override def pageReadyElement(implicit webDriver: WebDriver): Option[WebElement] = Some(logInButton)
 
-  def cliToken(implicit webDriver: WebDriver): WebElement = eventually {
-    find(tagName("code")) getOrElse fail(
-      s"CLI token with tag <code> not found on page ${webDriver.getTitle}"
+  def logInWith(userCredentials: UserCredentials)(implicit webDriver: WebDriver): Unit = eventually {
+    usernameField.clear() sleep (1 second)
+    usernameField.enterValue(userCredentials.email)
+
+    passwordField.clear() sleep (1 second)
+    passwordField.enterValue(userCredentials.password)
+
+    logInButton.click()
+  }
+
+  private def usernameField(implicit webDriver: WebDriver): WebElement = eventually {
+    find(cssSelector("input#username")) getOrElse fail("Username field not found")
+  }
+
+  private def passwordField(implicit webDriver: WebDriver): WebElement = eventually {
+    find(cssSelector("input#password")) getOrElse fail("Password field not found")
+  }
+
+  def oidcButton(implicit webDriver: WebDriver): WebElement = eventually {
+    find(cssSelector("a.zocial.oidc")) getOrElse fail("OpenIDConnector Button not found")
+  }
+
+  private def registerLink(implicit webDriver: WebDriver): WebElement = eventually {
+    find(cssSelector("#kc-registration > span > a")) getOrElse fail("Register link not found")
+  }
+
+  def openRegistrationForm(implicit webDriver: WebDriver): Unit = {
+    registerLink.click() sleep (5 seconds)
+
+    if (currentUrl contains "/auth/realms/Renku/protocol/openid-connect/auth") {
+      // button didn't work, try again
+      registerLink.click() sleep (5 seconds)
+    }
+  }
+
+  def loginSucceeded(implicit webDriver: WebDriver): Boolean = eventually {
+    find(cssSelector("span#input-error")) match {
+      // If we find the alert, login failed!
+      case Some(_) => false
+      case None    => true
+    }
+  }
+
+  def logInButton(implicit webDriver: WebDriver): WebElement = eventually {
+    find(cssSelector("#kc-login")) getOrElse fail("Log In button not found")
+  }
+}
+
+object OAuthDeviceGrantAccessPage
+    extends RenkuPage(
+      path = "/auth/realms/Renku/login-actions/required-action",
+      title = "Sign in to Renku"
+    ) {
+
+  override def pageReadyElement(implicit webDriver: WebDriver): Option[WebElement] = Some(yesButton)
+
+  def yesButton(implicit webDriver: WebDriver): WebElement = eventually {
+    find(cssSelector("#kc-login")) getOrElse fail("Yes button not found")
+  }
+}
+
+object DeviceLoginSuccessfulPage
+    extends RenkuPage(
+      path = "/auth/realms/Renku/device/status",
+      title = "Sign in to Renku"
+    ) {
+
+  override def pageReadyElement(implicit webDriver: WebDriver): Option[WebElement] = Some(accessGrantedText)
+
+  def accessGrantedText(implicit webDriver: WebDriver): WebElement = eventually {
+    find(cssSelector("h1")).find(element => element.text == "Device Login Successful") getOrElse fail(
+      "Device Login Successful message not found"
     )
   }
 }

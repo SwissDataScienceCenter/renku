@@ -52,18 +52,18 @@ class CliLoginSpec extends AcceptanceSpec with CLIConfiguration with Login with 
     //assert(token.trim.isEmpty, "Token is not empty: $token")
   }
 
-  Scenario("User can log in from CLI in a Renku project") {
-    `setup renku CLI`
-
-    `log in to Renku`
-
-    `create, continue or open a project`
-
-    val projectUrl = `find project Http URL in the Settings Page`
-    implicit val projectDirectory: Path = `clone and migrate a project`(projectUrl)
-
-    `log in to Renku from CLI project`
-  }
+//  Scenario("User can log in from CLI in a Renku project") {
+//    `setup renku CLI`
+//
+//    `log in to Renku`
+//
+//    `create, continue or open a project`
+//
+//    val projectUrl = `find project Http URL in the Settings Page`
+//    implicit val projectDirectory: Path = `clone and migrate a project`(projectUrl)
+//
+//    `log in to Renku from CLI project`
+//  }
 
   private def `read renku token`: String = {
     implicit val workFolder: Path = rootWorkDirectory

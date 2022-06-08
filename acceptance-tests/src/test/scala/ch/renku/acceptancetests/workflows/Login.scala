@@ -97,24 +97,36 @@ trait Login extends GitLabCredentials {
       argument:         String = ""
   ): Unit = {
     When("User logs in to Renku from CLI")
-    val detachedCommand = console %>&> c"renku login $argument $renkuBaseUrl"
+    console %>&> c"renku login $argument $renkuBaseUrl"
 
-    Then("CLI prompts for token")
+    Then("A browser window opens to sign in to user's account")
 
     `try few times before giving up` { _ =>
       sleep(2 seconds)
-      verify browserSwitchedTo LoginPage
+      verify browserSwitchedTo CliLoginPage
     }
+
+    And("after users log in to Renku")
 
     maybeLoginType = Some {
       if (userCredentials.useProvider) `log in to Renku using provider`
       else `log in to Renku directly`
     }
 
-    Then("they should get into a CLI Token Page")
-    verify browserAt CliTokenLoginPage
+    Then("they should get into an OAuth grant access page")
+    `try few times before giving up` { _ =>
+      sleep(2 seconds)
+      verify browserAt OAuthDeviceGrantAccessPage
+    }
 
-    detachedCommand write CliTokenLoginPage.cliToken.getText
+    When("user clicks on the Yes button to grant access to renku-cli")
+    click on OAuthDeviceGrantAccessPage.yesButton
+
+    Then("they should get into the Device Login Successful Page")
+    `try few times before giving up` { _ =>
+      sleep(2 seconds)
+      verify browserAt DeviceLoginSuccessfulPage
+    }
   }
 
   private def `log in to Renku using provider`: LoginType = {

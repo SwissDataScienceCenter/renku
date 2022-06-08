@@ -72,7 +72,7 @@ spec:
         value: '{{ .Values.tests.resultsS3.secretKey }}'
       {{ end }}
       - name: BROWSER
-        value: '{{ .Values.tests.parameters.browser }}'
+        value: 'google-chrome:google-chrome-stable:chrome:chromium:chromium-browser'
     volumeMounts:
       - mountPath: /dev/shm
         name: dshm

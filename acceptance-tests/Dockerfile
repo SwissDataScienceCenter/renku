@@ -38,4 +38,13 @@ RUN python3 -m pip install --upgrade 'pip==21.3.1' && \
 
 ENV DOCKER="1"
 COPY . /tests
+
+#RUN addgroup -gid 1000 shuhitsu && \
+#    useradd -m -u 1000 -g shuhitsu shuhitsu && \
+#    chown shuhitsu:shuhitsu /tests
+#
+## shuhitsu (執筆): The "secretary" of the renga, as it were, who is responsible for
+## writing down renga verses and for the proceedings of the renga.
+#USER shuhitsu
+
 ENTRYPOINT ["/tests/docker-run-tests.sh"]
