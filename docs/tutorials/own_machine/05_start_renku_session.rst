@@ -10,38 +10,46 @@ Start a Renku session
        $ cd <project_name>
 
 
-#. **Start a renku session:**
+#.  **Start a renku session:**
 
-   .. code-block:: shell-session
+    .. code-block:: shell-session
 
        $ renku session start
        ID          STATUS    URL
        ----------  --------  ------------------------------------------------------------
        f1693c198e  running   http://0.0.0.0:56674/?token=910ca732ef574049a22d41d0f1109f56
 
-   .. note::
+    .. note::
 
        Note: Renku may inform you that the container image for the current commit
        does not yet exist on your machine, and Renku will offer to build it for you. Say yes!
 
-#. **Open the session in your browser.**
-   When the session starts, it will print out a url where the session is running.
-   Copy this url into your browser to access your Renku project running inside it's containerized environment.
+    .. note::
 
-   If you need to find this url again later, you can find all running Renku sessions by running `renku session list`.
+        **Building too many images?**
+        By default, Renku builds a new image everytime you start from a new commit.
+        If you would prefer to reuse an image already built for your project (not build a new image every time),
+        you can :ref:`pin a specific Docker image <pin_docker_image>` that every session will use.
 
-   .. code-block:: shell-session
 
-       $ renku session list
-       ID          STATUS    URL
-       ----------  --------  ------------------------------------------------------------
-       f1693c198e  running   http://0.0.0.0:56674/?token=910ca732ef574049a22d41d0f1109f56
+#.  **Open the session in your browser.**
+    When the session starts, it will print out a url where the session is running.
+    Copy this url into your browser to access your Renku project running inside it's containerized environment.
 
-   You can also use the session ID to call `renku session open <ID>`, which opens your browser window for you.
+    If you need to find this url again later, you can find all running Renku sessions by running `renku session list`.
 
-   .. code-block:: shell-session
+    .. code-block:: shell-session
 
-       $ renku session open <session_id>
+        $ renku session list
+        ID          STATUS    URL
+        ----------  --------  ------------------------------------------------------------
+        f1693c198e  running   http://0.0.0.0:56674/?token=910ca732ef574049a22d41d0f1109f56
+
+    You can also use the session ID to call `renku session open <ID>`, which opens your browser window for you.
+
+    .. code-block:: shell-session
+
+        $ renku session open <session_id>
 
 .. note::
 

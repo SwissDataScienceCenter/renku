@@ -1,7 +1,7 @@
 .. _own_machine:
 
-Running Renku on Your Own Machine
-=================================
+Run Renku on Your Own Machine
+=============================
 
 Would you like to use Renku on your own machine, rather than on RenkuLab.io? Then this tutorial is for you!
 

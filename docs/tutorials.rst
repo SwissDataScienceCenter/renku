@@ -4,7 +4,11 @@ Tutorials
 ---------
 
 The following tutorials are available for getting acquainted with Renku. We recommend
-you start with the :ref:`first_steps`! Reach out to us on the `Renku Forum <https://renku.discourse.group/>`_
+you start with :ref:`first_steps`!
+
+After that, if you'd prefer to work on a Renku project on your own machine rather than via a browser on RenkuLab, take a look at :ref:`own_machine`.
+
+Want more? Reach out to us on the `Renku Forum <https://renku.discourse.group/>`_
 to request more topics.
 
 .. toctree::
@@ -13,5 +17,3 @@ to request more topics.
    :includehidden:
 
    tutorials/*
-
-More topics to come!
