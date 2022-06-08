@@ -6,7 +6,7 @@ Clone your Renku project
 In order to save your work back to RenkuLab from your own machine,
 you'll need to create an SSH key and save that key in your Renku GitLab account.
 
-If you already have an SSH key in your RenkuLab GitLab profile, then skip down to :ref:`Clone your Renku Project <_clone_renku_project_instructions>`.
+If you already have an SSH key in your RenkuLab GitLab profile, then skip down to :ref:`Clone your Renku Project`.
 Otherwise, follow along to set up a key.
 
 Enable remote access to your Renku Project via an SSH Key
@@ -77,7 +77,6 @@ Add your SSH key to RenkuLab GitLab
 
 #. Click "Add key".
 
-.. _clone_renku_project_instructions:
 
 Clone your Renku Project
 ------------------------
