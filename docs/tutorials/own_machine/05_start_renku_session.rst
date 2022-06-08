@@ -27,7 +27,7 @@ Start a Renku session
     .. note::
 
         **Building too many images?**
-        By default, Renku builds a new image everytime you start from a new commit.
+        By default, Renku builds a new image every time you start from a new commit.
         If you would prefer to reuse an image already built for your project (not build a new image every time),
         you can :ref:`pin a specific Docker image <pin_docker_image>` that every session will use.
 
