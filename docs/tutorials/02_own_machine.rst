@@ -3,7 +3,8 @@
 Run Renku on Your Own Machine
 =============================
 
-Would you like to use Renku on your own machine, rather than on RenkuLab.io? Then this tutorial is for you!
+Would you like to use Renku on your own machine, rather than on the RenkuLab online platform?
+Then this tutorial is for you!
 
 This tutorial will guide you through setting up your Renku project on whatever machine you'd like to run it.
 
