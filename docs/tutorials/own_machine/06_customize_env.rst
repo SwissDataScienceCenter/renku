@@ -58,7 +58,7 @@ Add packages to your environment
               - numpy
               - pandas
 
-        For more details, see `Anaconda's documentation <https://docs.conda.io/projects/conda/en/latest/user-guide/tasks/manage-environments.html#create-env-file-manually>`.
+        For more details, see `Anaconda's documentation <https://docs.conda.io/projects/conda/en/latest/user-guide/tasks/manage-environments.html#create-env-file-manually>`_.
 
 #.  **Commit your changes**
 
