@@ -42,7 +42,7 @@ Add packages to your environment
         .. code-block:: console
 
             devtools::install_version("ggplot2",
-                          version = "1.22.0",
+                          version = "3.3.6",
                           repos = "http://cran.us.r-project.org",
                           upgrade="always")
             devtools::install_github("thomasp85/patchwork")
