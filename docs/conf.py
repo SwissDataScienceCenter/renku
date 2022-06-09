@@ -42,7 +42,7 @@ extensions = [
     "sphinx.ext.todo",
     "sphinx.ext.viewcode",
     "sphinxcontrib.spelling",
-    'sphinxcontrib.mermaid',
+    "sphinxcontrib.mermaid",
     "sphinx_rtd_theme",
     "sphinx_copybutton",
     "sphinx_panels",
