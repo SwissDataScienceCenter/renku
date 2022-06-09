@@ -306,7 +306,7 @@ class ProjectPage(val projectSlug: String, val namespace: String)
     def anonymousSessionsUnsupportedInfo(implicit webDriver: WebDriver): WebElement = eventually {
       findAll(cssSelector("div > div > div > div > p"))
         .find(
-          _.text == "This Renkulab deployment doesn't allow unauthenticated users to start sessions."
+          _.text == "This Renkulab deployment does not allow unauthenticated users to start sessions."
         )
         .getOrElse(fail("Unsupported session notification not found"))
     }
