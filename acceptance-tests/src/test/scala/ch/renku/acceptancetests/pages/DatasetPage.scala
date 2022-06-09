@@ -34,8 +34,7 @@ object DatasetPage {
 
 class DatasetPage(datasetName: DatasetName, projectPage: ProjectPage)
     extends RenkuPage(
-      path = s"${projectPage.path}/datasets/${datasetName.asPath}",
-      title = "Renku"
+      path = s"${projectPage.path}/datasets/${datasetName.asPath}"
     )
     with TopBar {
 
@@ -67,7 +66,7 @@ class DatasetPage(datasetName: DatasetName, projectPage: ProjectPage)
   object ModificationForm {
 
     def formTitle(implicit webDriver: WebDriver): WebElement = eventually {
-      find(cssSelector("h3.uk-heading-divider")) getOrElse fail("Form title not found")
+      find(cssSelector("#form-header")) getOrElse fail("Form title not found")
     }
 
     def datasetTitleField(implicit webDriver: WebDriver): WebElement = eventually {

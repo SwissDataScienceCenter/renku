@@ -21,11 +21,16 @@ package ch.renku.acceptancetests
 import ch.renku.acceptancetests.tooling.{AcceptanceSpec, AnonEnv}
 import ch.renku.acceptancetests.workflows._
 
-class UnprivilegedEnvironmentSpec extends AcceptanceSpec with AnonEnv with Login {
+class AnonymouSessionSpec extends AcceptanceSpec with Project with AnonEnv with Login {
 
-  Scenario("User can launch unprivileged session") {
+  Scenario("User can launch session") {
+
     `log in to Renku`
-    `launch unprivileged session`.foreach(projectPage => `stop session`(projectPage))
+
+    `create, continue or open a project`
+
     `log out of Renku`
+
+    `launch anonymous session`(projectPage, projectDetails).map(_ => `stop session`(projectPage))
   }
 }

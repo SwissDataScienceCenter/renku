@@ -116,17 +116,20 @@ intended audience.
 
 The ``.renku`` directory includes a ``renku.ini`` file which contains
 project-level configuration for renku, stored using the
-`INI format <https://en.wikipedia.org/wiki/INI_file>`_. Currently, it
-can be used to specify defaults values for launching sessions.
+`INI format <https://en.wikipedia.org/wiki/INI_file>`_. It can be used
+to :ref:`store project setting <renku_project_config>` such as the threshold
+for LFS files, or session specific settings (see next section).
 
-**Sessions**
+Sessions
+^^^^^^^^
 
 If your project has specific resources requirements to run, or if it should
 default to RStudio or anything other than JupyterLab, then you will want to
 provide a configuration for the sessions.
 
-Although the file may be modified manually, it is recommended to use the
-``renku config set interactive.<property> <value>`` command.
+You can modify the project setting both on the RenkuLab platform or using
+the command line as described
+:ref:`on the Renku project configurations page <renku_project_config>`.
 
 Here is the list of properties that can be customized in a standard Renkulab
 deployment:
@@ -158,29 +161,76 @@ deployment:
       [renku "interactive"]
       default_url = /rstudio
 
-    If you ran this command locally, you will need to push back to the renkulab
-    server, e.g.,
-
-    .. code-block:: console
-
-      > git push
-
-    before this change is available (`renku config` automatically creates a
-    commit).
-
-    You can now start a new environment against the latest commit and you will
-    have RStudio as the default web interface.
+    After running this command locally or in a session, you need to ``git push``,
+    wait for a new Docker image to be available, and
+    :ref:`start a new session <session_start_new>` to  have RStudio as the default
+    web interface.
+    This is necessary since the config command creates a new commit.
 
 .. note::
 
-    Using the same approach as above for RStudio, it is possible to switch the
-    interface from JupyterLab to the classic Jupyter Notebook by using `/tree`
-    as the ``default_url`` instead of `/lab`.
+  Using the same approach as above for RStudio, it is possible to switch the
+  interface from JupyterLab to the classic Jupyter Notebook by using `/tree`
+  as the ``default_url`` instead of `/lab`.
 
-    .. code-block:: console
+  .. code-block:: console
 
-      > renku config set interactive.default_url "/tree"
+    > renku config set interactive.default_url "/tree"
 
+.. _pin_docker_image:
+
+Pin a Docker image
+""""""""""""""""""
+
+Every new commit triggers a Docker image creation once pushed back to RenkuLab.
+This process uses the GitLab CI/CD pipelines as described above on the
+`.gitlab-ci.yml` file section. The creation process may be time-consuming,
+especially for images having many dependencies.
+
+Unless you modify the Dockerfile or add dependencies, building a new image
+may not be necessary. It is possible to pin a Docker image to skip this step
+and even remove the ``image_build`` job from the `.gitlab-ci.yml` file.
+Beware that this is risky since users won't be able to include further changes
+to the Docker file or adding dependencies. Still, it's very
+useful in many situations, especially when you expect many users to fork your
+project in a short time span (all forks trigger the creation of a new Docker
+image).
+A typical case would be a presentation or a lecture where you plan to set up a
+project ready to be forked and used.
+
+Through :ref:`the Renku project configurations <renku_project_config>`, you can
+pin any image coming from a local or remote
+`Docker registry v2 <https://hub.docker.com/_/registry>`_. The easiest way would
+be using an image built on RenkuLab. Once you settle on one, either in the
+project you are setting up or in another one you keep pristine, you can start a
+session to verify all works as expected. When the session is running, you can
+check the image URL on the sessions list by clicking on the green icon.
+
+.. image:: ../../_static/images/templates-pinned-image.png
+  :width: 85%
+  :align: center
+  :alt: Get the Dockeri mage URL
+
+Copy the link, and paste it in the `Docker image` field in the advanced setting
+section of the project sessions settings, or using 
+``renku config set interactive.image <URL_to_image>``.
+
+.. note::
+
+  The user experience for launching a new session won't change much when there
+  is a pinned image. However, the impact of a missing image will be broader
+  since it may impact multiple commits and forked projects. You should ensure
+  your image works properly.
+
+  You can verify it by launching a new session. After expanding the advanced
+  settings, you should see a blue label next to `Docker image` saying ``pinned``.
+  Mind that a red label means the image is not accessible. Click on `more info`
+  to verify the URL is the correct one.
+
+  .. image:: ../../_static/images/session-pinned-image.png
+    :width: 85%
+    :align: center
+    :alt: Session with pinned image.
 
 
 What can I touch? What should I not touch?

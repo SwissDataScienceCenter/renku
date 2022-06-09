@@ -32,12 +32,11 @@ import scala.language.implicitConversions
 abstract class Page[Url <: BaseUrl](val path: String, val title: String)
     extends ScalatestMatchers
     with WebElementOps
+    with WebDriverOps
     with Scripts
     with Eventually
     with AcceptanceSpecPatience {
 
-  require(path.trim.nonEmpty, s"$getClass cannot have empty path")
-  require(path startsWith "/", s"$getClass path has to start with '/'")
   require(title.trim.nonEmpty, s"$getClass cannot have empty title")
 
   def pageReadyElement(implicit webDriver: WebDriver): Option[WebElement]
@@ -68,6 +67,8 @@ abstract class Page[Url <: BaseUrl](val path: String, val title: String)
     timeout = scaled(Span(AcceptanceSpecPatience.WAIT_SCALE * duration.toSeconds, Seconds)),
     interval = scaled(Span(interval.toSeconds, Seconds))
   )
+
+  override lazy val toString: String = s"title: $title - path: $path"
 }
 
 object Page {
@@ -78,5 +79,11 @@ object Page {
   }
 }
 
-abstract class RenkuPage(path: String, title: String) extends Page[RenkuBaseUrl](path, title)
+object RenkuPage {
+  val RenkuPageTitle = "Reproducible Data Science | Open Research | Renku"
+}
+
+abstract class RenkuPage(path: String, title: String = RenkuPage.RenkuPageTitle)
+    extends Page[RenkuBaseUrl](path, title)
+    with RenkuPageCommons
 abstract class GitLabPage(path: String, title: String) extends Page[GitLabBaseUrl](path, title)

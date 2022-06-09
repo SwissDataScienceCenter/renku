@@ -16,22 +16,15 @@
  * limitations under the License.
  */
 
-package ch.renku.acceptancetests
+package ch.renku.acceptancetests.pages
 
-import ch.renku.acceptancetests.tooling.{AcceptanceSpec, AnonEnv}
-import ch.renku.acceptancetests.workflows._
+import org.openqa.selenium.{WebDriver, WebElement}
+import org.scalatestplus.selenium.WebBrowser.{cssSelector, find}
 
-class AnonymousEnvironmentSpec extends AcceptanceSpec with Project with AnonEnv with Login {
+trait RenkuPageCommons {
+  self: RenkuPage =>
 
-  Scenario("User can launch session") {
-
-    `log in to Renku`
-
-    `create, continue or open a project`
-
-    `log out of Renku`
-
-    `launch anonymous session`(projectPage, projectDetails)
-      .map(_ => `stop session`(projectPage))
+  def maybeBouncer(implicit webDriver: WebDriver): Option[WebElement] = eventually {
+    find(cssSelector("div.bouncer"))
   }
 }

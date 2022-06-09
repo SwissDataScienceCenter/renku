@@ -41,10 +41,12 @@ trait Datasets {
     val newDatasetPage = DatasetPage(newDatasetName)
 
     Given("the user is on the Datasets tab")
-    click on projectPage.Datasets.tab sleep (1 second)
+    click on projectPage.Datasets.tab sleep (10 second)
 
     When("the user clicks on the Add Dataset button")
-    click on projectPage.Datasets.addADatasetButton sleep (1 second)
+    `try few times before giving up` { _ =>
+      click on projectPage.Datasets.addADatasetButton sleep (1 second)
+    }
     verify that newDatasetPage.ModificationForm.formTitle contains "Add Dataset"
 
     And(s"the user add the title '$datasetName' to the new dataset")

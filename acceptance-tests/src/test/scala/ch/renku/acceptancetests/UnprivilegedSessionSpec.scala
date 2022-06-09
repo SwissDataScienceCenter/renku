@@ -16,18 +16,16 @@
  * limitations under the License.
  */
 
-package ch.renku.acceptancetests.pages
+package ch.renku.acceptancetests
 
-import org.openqa.selenium.{WebDriver, WebElement}
-import org.scalatestplus.selenium.WebBrowser.{cssSelector, find}
+import ch.renku.acceptancetests.tooling.{AcceptanceSpec, AnonEnv}
+import ch.renku.acceptancetests.workflows._
 
-case object WelcomePage extends RenkuPage(path = "/") with TopBar {
+class UnprivilegedSessionSpec extends AcceptanceSpec with AnonEnv with Login {
 
-  override def pageReadyElement(implicit webDriver: WebDriver): Option[WebElement] = Some(yourProjectsSection)
-
-  private def yourProjectsSection(implicit webDriver: WebDriver): WebElement = eventually {
-    find(cssSelector(".order-2.col-md-6.order-md-1")) getOrElse fail(
-      s"Your Projects section not found on page ${webDriver.getTitle}"
-    )
+  Scenario("User can launch unprivileged session") {
+    `log in to Renku`
+    `launch unprivileged session` foreach (`stop session`(_))
+    `log out of Renku`
   }
 }

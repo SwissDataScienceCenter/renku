@@ -3,7 +3,7 @@
 About Renku
 ===========
 
-**The Renku Project** provides a platform and tools for reproducible and
+**Renku** is a platform and tools for reproducible and
 collaborative data analysis. It is aimed at independent researchers and data
 scientists as well as labs, collaborations, and courses and workshops. Renku can
 be used by anyone who deals with data, whether they are a researcher, data

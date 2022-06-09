@@ -20,7 +20,7 @@ and into the working copy of the repository. This is fine if the data is
 reasonably small (~GB size) but as it becomes larger, the default behavior
 can start to pose problems.
 
-Imagine a renku project with 100GB of data in LFS. If a few collaborators all
+Imagine a Renku project with 100GB of data in LFS. If a few collaborators all
 decide to work on the project at the same time and launch the JupyterLab
 environment to iterate over some changes, each might attempt to download 100GB
 of data to each of their JupterLab sessions. Not only will this take  a long
@@ -33,9 +33,9 @@ Data in JupyterLab sessions
 Due to the resource concerns, we therefore do not pull data into user
 JupyterLab sessions by default. As a result, you do need to be aware of dealing
 with data stored in LFS if you want to use it efficiently in your work with
-renku.
+Renku.
 
-Uploading Data to a Renkulab session to create a Dataset with the CLI
+Uploading Data to a RenkuLab session to create a Dataset with the CLI
 ---------------------------------------------------------------------
 
 You can use the ``renku dataset`` CLI command to create a dataset with data
@@ -51,7 +51,7 @@ and ``file3.csv``, you can run the following command to create a dataset from th
 
     $ renku dataset add --create my-new-dataset file1.csv file2.csv file3.csv
 
-Beside creating a renku dataset, the command will automatically track the 
+Beside creating a Renku dataset, the command will automatically track the 
 files with LFS and commit them. In addition, you can use shell-like wildcards 
 (e.g. *, **, ?) when specifying paths to be added instead of explicitly naming every file.
 
@@ -68,11 +68,11 @@ changed by running:
 where ``<size>`` is a file size formatted like ``10b``, ``100kb``, ``0.5mb`` or
 ``10gb``.
 
-Additionally, paths can be excluded from LFS storage by renku commands by
+Additionally, paths can be excluded from LFS storage by Renku commands by
 editing the ``.renkulfsignore`` file in the project root folder. This file
 follows ``.gitignore`` `convention <https://git-scm.com/docs/gitignore#_pattern_format>`_
 Files matching a pattern in ``.renkulfsignore`` will never be added to git LFS
-by a renku command like ``renku run`` or ``renku dataset add``.
+by a Renku command like ``renku run`` or ``renku dataset add``.
 
 Useful git LFS commands
 -----------------------

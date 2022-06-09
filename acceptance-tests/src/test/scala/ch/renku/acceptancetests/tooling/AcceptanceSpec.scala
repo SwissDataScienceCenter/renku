@@ -25,7 +25,6 @@ import org.scalatest._
 import org.scalatest.featurespec.AnyFeatureSpec
 import org.scalatest.matchers.should
 import org.scalatestplus.selenium.WebBrowser
-// import org.openqa.selenium
 
 trait AcceptanceSpec
     extends AnyFeatureSpec
@@ -44,7 +43,6 @@ trait AcceptanceSpec
   protected implicit val browser: AcceptanceSpec = this
 
   implicit lazy val webDriver: WebDriver = startWebDriver
-  // webDriver.manage().window().setSize(new selenium.Dimension(1920, 1600))
 
   protected implicit val docsScreenshots: DocsScreenshots = DocsScreenshots(this, webDriver)
 
