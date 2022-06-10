@@ -1,5 +1,27 @@
 .. _changelog:
 
+0.12.13
+-------
+
+This is a minor release featuring improvements to Renku core, graph and UI? components.
+
+Improvements
+~~~~~~~~~~~~~
+
+* **Renku CLI**:
+* **User sessions**:
+* **Datasets**:
+
+Bug fixes
+~~~~~~~~~~
+
+Individual components
+~~~~~~~~~~~~~~~~~~~~~~
+
+Upgrading from 0.12.12
+~~~~~~~~~~~~~~~~~~~~~~
+
+
 0.12.12
 -------
 
