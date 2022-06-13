@@ -8,7 +8,8 @@ This is a minor release featuring improvements to Renku core, graph and UI? comp
 Improvements
 ~~~~~~~~~~~~~
 
-* **Renku CLI**:
+* **Renku Python API**: add Activity support in Renku Python API
+* **Renku CLI**: add support to start remote sessions from the CLI
 * **User sessions**:
 * **Datasets**:
 
