@@ -3,7 +3,7 @@
 0.12.13
 -------
 
-This is a minor release featuring improvements and bugfixes to Renku core, graph and UI components.
+This is a minor release featuring improvements and bug-fixes to Renku core, graph and UI components.
 
 Improvements
 ~~~~~~~~~~~~~
