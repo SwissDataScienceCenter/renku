@@ -10,7 +10,7 @@ Improvements
 
 * **Renku Python API**: add Activity support in Renku Python API
 * **Renku CLI**: add support to start remote sessions from the CLI
-* **User sessions**:
+* **User sessions**: provide better feedback when a session cannot be scheduled due to lack of resources or when initializing a session fails
 * **Datasets**:
 
 Bug fixes
@@ -18,6 +18,9 @@ Bug fixes
 
 Individual components
 ~~~~~~~~~~~~~~~~~~~~~~
+
+- `amalthea 0.4.0 <https://github.com/SwissDataScienceCenter/amalthea/releases/tag/0.4.0>`_
+- `renku-notebooks 1.8.0 <https://github.com/SwissDataScienceCenter/renku-notebooks/releases/tag/1.8.0>`_
 
 Upgrading from 0.12.12
 ~~~~~~~~~~~~~~~~~~~~~~
