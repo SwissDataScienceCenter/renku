@@ -31,6 +31,6 @@ flowchart TD
 
     core --> |clone/push| GitLab
 
-    kg --> |clone/member sync| GitLab
+    kg <--> |clone/member sync/webhook| GitLab
 
     click ns "../services/notebooks-service.html"
