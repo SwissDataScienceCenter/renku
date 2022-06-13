@@ -11,11 +11,13 @@ Improvements
 * **Renku Python API**: add Activity support in Renku Python API
 * **Renku CLI**: add support to start remote sessions from the CLI
 * **User sessions**: provide better feedback when a session cannot be scheduled due to lack of resources or when initializing a session fails
+* **Knowledge Graph**: add support for Persons with ORCID-ID
 
 Bug fixes
 ~~~~~~~~~~
 
 * **Renku UI**: prevent errors when working on datasets with images
+* **Knowledge Graph**: fixes of broken data in the Triples Store
 
 Individual components
 ~~~~~~~~~~~~~~~~~~~~~~
@@ -23,6 +25,7 @@ Individual components
 - `amalthea 0.4.0 <https://github.com/SwissDataScienceCenter/amalthea/releases/tag/0.4.0>`_
 - `renku-notebooks 1.8.0 <https://github.com/SwissDataScienceCenter/renku-notebooks/releases/tag/1.8.0>`_
 - `renku-ui 2.4.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/2.4.0>`_
+- `renku-graph 2.9.0 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/2.9.0>`_
 
 Upgrading from 0.12.12
 ~~~~~~~~~~~~~~~~~~~~~~
