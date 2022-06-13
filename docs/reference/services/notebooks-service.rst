@@ -19,12 +19,10 @@ The notebooks are provided by the Jupyter Server. A new "named" server is
 spawned for every unique request. A notebook server launch is initiated by
 posting a request to the ``<PLATFORM_URL>/api/notebooks/servers`` URL.
 The request needs to contain information about the project, commit, Docker image
-and resources that are required by the specific server. 
+and resources that are required by the specific server.
 In addition, if two or more users collaborating on a project
-use the same URL with the same data passed in the request, 
+use the same URL with the same data passed in the request,
 each will receive their own notebook server.
-
-https://dev.renku.ch/
 
 By default, a Renku project will include a ``.gitlab-ci.yml`` file that
 contains an ``image_build`` stage which creates an image for every push (see the
