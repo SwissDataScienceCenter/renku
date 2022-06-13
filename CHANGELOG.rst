@@ -3,7 +3,7 @@
 0.12.13
 -------
 
-This is a minor release featuring improvements to Renku core, graph and UI? components.
+This is a minor release featuring improvements and bugfixes to Renku core, graph and UI components.
 
 Improvements
 ~~~~~~~~~~~~~
@@ -11,16 +11,18 @@ Improvements
 * **Renku Python API**: add Activity support in Renku Python API
 * **Renku CLI**: add support to start remote sessions from the CLI
 * **User sessions**: provide better feedback when a session cannot be scheduled due to lack of resources or when initializing a session fails
-* **Datasets**:
 
 Bug fixes
 ~~~~~~~~~~
+
+* **Renku UI**: prevent errors when working on datasets with images
 
 Individual components
 ~~~~~~~~~~~~~~~~~~~~~~
 
 - `amalthea 0.4.0 <https://github.com/SwissDataScienceCenter/amalthea/releases/tag/0.4.0>`_
 - `renku-notebooks 1.8.0 <https://github.com/SwissDataScienceCenter/renku-notebooks/releases/tag/1.8.0>`_
+- `renku-ui 2.4.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/2.4.0>`_
 
 Upgrading from 0.12.12
 ~~~~~~~~~~~~~~~~~~~~~~
