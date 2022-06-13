@@ -6,7 +6,7 @@ dependencies:
 - name: renku-ui
   alias: ui
   repository: "https://swissdatasciencecenter.github.io/helm-charts/"
-  version: 2.3.1
+  version: 2.4.0
 - name: renku-ui-server
   alias: uiserver
   repository: "https://swissdatasciencecenter.github.io/helm-charts/"
