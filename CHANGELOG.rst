@@ -3,15 +3,15 @@
 0.12.13
 -------
 
-This is a minor release featuring improvements and bug-fixes to Renku core, graph and UI components.
+This is a minor release featuring improvements and bug-fixes to Renku CLI, core, graph and UI components.
 
 Improvements
 ~~~~~~~~~~~~~
 
-* **Renku Python API**: add Activity support in Renku Python API
+* **Renku Python API**: add `Activity <https://github.com/SwissDataScienceCenter/renku-rfc/blob/main/design/006-renku-api-activities-plans/006-renku-api-activities-plans.md#using-plans-and-activities-through-renkuapi>`__ support in Renku Python API
 * **Renku CLI**: add support to start remote sessions from the CLI
 * **User sessions**: provide better feedback when a session cannot be scheduled due to lack of resources or when initializing a session fails
-* **Knowledge Graph**: add support for Persons with ORCID-ID
+* **Knowledge Graph**: add support for Person with ORCID-ID
 
 Bug fixes
 ~~~~~~~~~~
@@ -24,12 +24,9 @@ Individual components
 
 - `amalthea 0.4.0 <https://github.com/SwissDataScienceCenter/amalthea/releases/tag/0.4.0>`_
 - `renku-notebooks 1.8.0 <https://github.com/SwissDataScienceCenter/renku-notebooks/releases/tag/1.8.0>`_
+- `renku-python 1.4.0 <https://github.com/SwissDataScienceCenter/renku-python/releases/tag/v1.4.0>`_
 - `renku-ui 2.4.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/2.4.0>`_
 - `renku-graph 2.9.0 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/2.9.0>`_
-
-Upgrading from 0.12.12
-~~~~~~~~~~~~~~~~~~~~~~
-
 
 0.12.12
 -------
