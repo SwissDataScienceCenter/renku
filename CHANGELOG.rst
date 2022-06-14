@@ -11,7 +11,7 @@ Improvements
 * **Renku Python API**: add `Activity <https://github.com/SwissDataScienceCenter/renku-rfc/blob/main/design/006-renku-api-activities-plans/006-renku-api-activities-plans.md#using-plans-and-activities-through-renkuapi>`__ support in Renku Python API
 * **Renku CLI**: add support to start remote sessions from the CLI
 * **User sessions**: provide better feedback when a session cannot be scheduled due to lack of resources or when initializing a session fails
-* **Knowledge Graph**: add support for Person with ORCID-ID
+* **Knowledge Graph**: add support for identification with ORCID
 
 Bug fixes
 ~~~~~~~~~~
