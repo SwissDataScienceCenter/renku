@@ -81,10 +81,10 @@ Add your SSH key to RenkuLab GitLab
 Clone your Renku Project
 ------------------------
 
-#. Back on renkulab.io_, on your Renku project's page, click “View in GitLab”.
-#. Click “Clone”, and then where it says “Clone with SSH”, copy the url.
+#. Back on renkulab.io_, on your Renku project's page, click “Settings”.
+#. Under "Clone commands" copy the renku clone command.
 #. On your machine’s terminal, navigate to where you want your project to be located.
-#. Run ``git clone <the clone url you copied>``
+#. Paste and run the clone command you copied.
 
 
 .. _renkulab.io: https://renkulab.io
