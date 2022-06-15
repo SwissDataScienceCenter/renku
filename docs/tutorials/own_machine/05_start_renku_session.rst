@@ -79,3 +79,31 @@ Start a Renku session
 
         $ docker exec -it <ID> /bin/bash
         base ▶ ~ ▶ work ❯ project_name ▶ master ▶ $ ▶
+
+#.  **Stop the session.**
+    When you're done with your session, run
+
+    .. code-block:: shell-session
+
+        $ renku session stop <session_id>
+
+    to shut down the session.
+
+
+#.  **Clean up unused Docker objects.**
+    As you run renku sessions, the docker images used in each session will accumulate on your machine.
+    We suggest you occasionally prune docker containers you don't need anymore so they don't take up space on your machine.
+
+    For example, you can use the following commands to remove all docker images created more than 24 hours ago:
+
+    .. code-block:: shell-session
+
+        $ docker image prune -a --filter "until=24h"
+
+    and all stopped docker containers older than 24 hours:
+
+    .. code-block:: shell-session
+
+        $ docker container prune --filter "until=24h"
+
+    Take a look at the `Docker documentation <https://docs.docker.com/config/pruning/>`_ if you'd like to learn more.
