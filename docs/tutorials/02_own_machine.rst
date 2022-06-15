@@ -8,6 +8,11 @@ Then this tutorial is for you!
 
 This tutorial will guide you through setting up your Renku project on whatever machine you'd like to run it.
 
+.. note::
+
+    Note about Windows: We don’t officially support Windows.
+    If you would like to try to use renku on Windows, we recommend using WSL.
+    However, but we do not promise that all Renku functionality will work.
 
 Follow the steps below to learn how to use Renku to:
 
