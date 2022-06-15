@@ -1,5 +1,21 @@
 .. _changelog:
 
+0.12.14
+-------
+
+This is a minor release that fixes a bug in the renku notebook service that caused 
+existing sessions launched by older renku versions to not be recognized.
+
+Bug fixes
+~~~~~~~~~~
+
+* **User sessions**: successfully list and manage sessions launched by older renku versions
+
+Individual components
+~~~~~~~~~~~~~~~~~~~~~~
+
+- `renku-notebooks 1.8.1 <https://github.com/SwissDataScienceCenter/renku-notebooks/releases/tag/1.8.1>`_
+
 0.12.13
 -------
 
