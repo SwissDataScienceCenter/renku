@@ -84,9 +84,9 @@ Choose which situation you're working in:
                 $ cat ~/.ssh/id_ed25519.pub | clip
 
 
-    #. Go to https://renkulab.io/gitlab/-/profile/keys_.
+    #. Go to https://renkulab.io/gitlab/-/profile/keys .
 
-       (You can get here by going to https://renkulab.io/gitlab_, then in the top right corner, select your avatar > Preferences > SSH Keys)
+       (You can get here by going to https://renkulab.io/gitlab , then in the top right corner, select your avatar > Preferences > SSH Keys)
 
     #. In the "Key" box, paste the contents of your public key.
        If you manually copied the key, make sure you copy the entire key,

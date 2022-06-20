@@ -26,7 +26,7 @@ First, navigate into your renku project directory:
 
    $ cd <project_name>
 
-Then, start a session using :meth:`renku session <renku.ui.cli.session>`:
+Then, start a session using :meth:`renku session start <renku.ui.cli.session>`:
 
 .. code-block:: shell-session
 
@@ -53,7 +53,7 @@ Open the session in your browser
 When the session starts, it will print out a url where the session is running.
 Copy this url into your browser to access your Renku project running inside it's containerized environment.
 
-If you need to find this url again later, you can find all running Renku sessions by running `renku session list`.
+If you need to find this url again later, you can find all running Renku sessions by running :meth:`renku session list <renku.ui.cli.session>`.
 
 .. code-block:: shell-session
 
@@ -62,7 +62,7 @@ If you need to find this url again later, you can find all running Renku session
     ----------  --------  ------------------------------------------------------------
     f1693c198e  running   http://0.0.0.0:56674/?token=910ca732ef574049a22d41d0f1109f56
 
-You can also use the session ID to call `renku session open <ID>`, which opens your browser window for you.
+You can also use the session ID to call :meth:`renku session open ID <renku.ui.cli.session>`, which opens your browser window for you.
 
 .. code-block:: shell-session
 
@@ -100,7 +100,7 @@ You can also use the session ID to call `renku session open <ID>`, which opens y
 Stop the session
 ----------------
 
-When you're done with your session, run
+When you're done with your session, use :meth:`renku session stop ID <renku.ui.cli.session>`.
 
 .. code-block:: shell-session
 

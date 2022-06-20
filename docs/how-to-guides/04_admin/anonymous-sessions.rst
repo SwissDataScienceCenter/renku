@@ -1,7 +1,7 @@
 .. _admin_anonymous-sessions:
 
-Enabling notebooks for anonymous users
---------------------------------------
+Enable notebooks for anonymous users
+------------------------------------
 
 Interactive sessions launched from public notebooks can be made available to
 logged-out users. However, this feature is deactivated by default. In order
