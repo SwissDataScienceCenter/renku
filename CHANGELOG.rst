@@ -1,5 +1,46 @@
 .. _changelog:
 
+0.12.15
+-------
+
+This release mostly aims to fix the data in the Knowledge Graph. It will start the re-provisioning process
+which is about wiping out all the data and generating it again.
+
+Bug fixes
+~~~~~~~~~~
+
+* **Knowledge Graph**: fix for the problems where datasets were not present in the Knowledge Graph
+* **Knowledge Graph**: fix for the Lineage REST endpoint to match the API specification
+
+Features
+~~~~~~~~~~
+
+* **Knowledge Graph**: a new process to speed up provisioning Knowledge Graph with basic project info
+* **Knowledge Graph**: the Cross-Entity search to allow filtering on the creator in a case-insensitive way
+
+Individual components
+~~~~~~~~~~~~~~~~~~~~~~
+
+- `renku-graph 2.11.1 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/2.11.1>`_
+- `renku-graph 2.11.0 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/2.11.0>`_
+- `renku-graph 2.10.0 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/2.10.0>`_
+
+0.12.14
+-------
+
+This is a minor release that fixes a bug in the renku notebook service that caused 
+existing sessions launched by older renku versions to not be recognized.
+
+Bug fixes
+~~~~~~~~~~
+
+* **User sessions**: successfully list and manage sessions launched by older renku versions
+
+Individual components
+~~~~~~~~~~~~~~~~~~~~~~
+
+- `renku-notebooks 1.8.1 <https://github.com/SwissDataScienceCenter/renku-notebooks/releases/tag/1.8.1>`_
+
 0.12.13
 -------
 

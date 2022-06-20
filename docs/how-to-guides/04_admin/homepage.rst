@@ -1,7 +1,7 @@
 .. _admin_homepage:
 
-Configuring the RenkuLab Homepage
----------------------------------
+Configure the RenkuLab Homepage
+-------------------------------
 
 Homepage
 ~~~~~~~~

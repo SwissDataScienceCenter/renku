@@ -7,6 +7,8 @@ Topic guides
    :maxdepth: 2
 
    session-basics
+   customizing-sessions
+   docker
    data
    knowledge-graph
    provenance
