@@ -6,7 +6,7 @@ Clone a Renku project
 In order to save your work back to RenkuLab from your own machine, you need to authenticate with RenkuLab.
 
 If you're working with Renku on a machine with a browser, like your laptop,
-then Renku provides a shortcut for authenticating wth RenkuLab.
+then Renku provides a shortcut for authenticating with RenkuLab.
 
 If you're working on a remote machine that you connected to via SSH, then you'll need to set up an SSH key.
 
