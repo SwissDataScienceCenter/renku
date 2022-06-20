@@ -212,7 +212,7 @@ check the image URL on the sessions list by clicking on the green icon.
   :alt: Get the Dockeri mage URL
 
 Copy the link, and paste it in the `Docker image` field in the advanced setting
-section of the project sessions settings, or using 
+section of the project sessions settings, or using
 ``renku config set interactive.image <URL_to_image>``.
 
 .. note::
@@ -313,6 +313,10 @@ create their own templates to speed up the bootstrap phase of a new project.
 The easiest way to create your own templates is to clone our
 `Renku template repository <https://github.com/SwissDataScienceCenter/renku-project-template>`_
 and modify it as you need.
+
+You can validate that everything is ok with your custom template repository
+by running ``renku template validate`` in the repository root, which will
+point out any potential issues with the templates.
 
 
 .. _manifest-yaml:
