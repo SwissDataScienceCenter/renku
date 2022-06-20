@@ -3,18 +3,28 @@
 Run a Renku Session on your Own Machine
 =======================================
 
-.. note::
-    **Have you cloned your project?**
-    To work on your project on your own machine, you'll need to have cloned your project.
-    If you haven't done that yet, check out :ref:`clone_renku_project`.
-
+Prerequisites
+-------------
 
 .. note::
-    **Do you have Docker?**
-    To run a Renku session, you need to have `Docker installed <https://docs.docker.com/get-docker/>`_.
 
-    On Linux systems, Docker requires root privileges. If you do not have root access to the host, you might
-    consider `rootless Docker <https://docs.docker.com/engine/security/rootless/>`_.
+     **Note about Windows:** Renku does not officially support Windows.
+     If you would like to try to use Renku on Windows, we recommend using WSL.
+     However, we do not promise that all Renku functionality will work.
+
+Have you cloned your project?
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+To work on your project on your own machine, you'll need to have cloned your project.
+If you haven't done that yet, check out :ref:`clone_renku_project`.
+
+Do you have Docker?
+~~~~~~~~~~~~~~~~~~~
+
+To run a Renku session, you need to have `Docker installed <https://docs.docker.com/get-docker/>`_.
+
+On Linux systems, Docker requires root privileges. If you do not have root access to the host, you might
+consider `rootless Docker <https://docs.docker.com/engine/security/rootless/>`_.
 
 
 Start a renku session
