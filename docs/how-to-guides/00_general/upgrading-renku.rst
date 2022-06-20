@@ -1,6 +1,6 @@
 .. upgrading_renku:
 
-Upgrading your Renku project
+Upgrade your Renku project
 ============================
 
 Renku is in constant flux! This means that often there are changes

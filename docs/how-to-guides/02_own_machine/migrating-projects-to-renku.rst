@@ -1,7 +1,7 @@
 .. _migrating_projects_to_renku:
 
-Import Existing Project
-=======================
+Convert an Existing Project to a Renku project
+==============================================
 
 So, at this point you have gone through :ref:`first_steps` and learned how Renku
 can help your data analysis be more reproducible and collaborative. The following
