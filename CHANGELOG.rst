@@ -1,5 +1,21 @@
 .. _changelog:
 
+0.12.16
+-------
+
+This release fixes bugs in the user session service.
+
+Bug fixes
+~~~~~~~~~~
+
+* **User sessions**: include information about s3 bucket functionality in the server_options endpoint
+* **User sessions**: improve the parsing of messages from k8s that explain why a session is unschedulable
+
+Individual components
+~~~~~~~~~~~~~~~~~~~~~~
+
+- `renku-notebooks 1.8.2 <https://github.com/SwissDataScienceCenter/renku-notebooks/releases/tag/1.8.2>`_
+
 0.12.15
 -------
 
