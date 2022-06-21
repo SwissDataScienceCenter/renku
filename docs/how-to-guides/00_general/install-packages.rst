@@ -79,7 +79,7 @@ Install the packages you listed in the dependency file by running the following 
 
     .. code-block:: console
 
-        $ conda env update --prefix ./env --file environment.yml  --prune
+        $ conda env update --file environment.yml  --prune
 
 
 Save your changes

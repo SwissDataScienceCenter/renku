@@ -20,7 +20,7 @@ The launch is enabled by the content in the following files in your project:
 * ``.gitlab-ci.yml``: controls the docker build of the image based on the project's
   ``Dockerfile``.
 
-* ``requirements.txt`` or ``install.R``: language-specific files controlling the
+* ``requirements.txt``, ``install.R``, or ``environment.yml``: language-specific files controlling the
   libraries. See :ref:`install_packages` for how to add packages to your environment.
 
 * ``.renku/renku.ini``: renku project configurations containing a
