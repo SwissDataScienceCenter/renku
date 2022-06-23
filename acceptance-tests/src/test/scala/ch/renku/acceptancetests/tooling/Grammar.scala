@@ -47,8 +47,8 @@ trait Grammar extends WebElementOps with WebDriverOps with Scripts with Eventual
     def that(element: => WebElement): WebElement = element
 
     def browserAt[Url <: BaseUrl](page: Page[Url])(implicit baseUrl: Url): Unit = eventually {
-      currentUrl.toLowerCase should startWith(page.url.toLowerCase)
-      pageTitle            shouldBe page.title
+      currentUrl.toLowerCase               should startWith(page.url.toLowerCase)
+      page.titleRegex.matches(pageTitle) shouldBe true
       verifyElementsAreDisplayed(page)
     }
 
