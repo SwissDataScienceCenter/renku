@@ -14,7 +14,7 @@ Bug fixes
 ~~~~~~~~~~
 
 * **User sessions**: fix a situation where the session start gets stuck in an endless progress spinner
-* **User sessions**:
+* **User sessions**: fix handling of S3 buckets that are not hosted on AWS
 
 Individual components
 ~~~~~~~~~~~~~~~~~~~~~~
