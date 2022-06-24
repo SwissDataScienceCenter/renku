@@ -1,5 +1,90 @@
 .. _changelog:
 
+0.12.16
+-------
+
+This release fixes bugs in the user session service.
+
+Bug fixes
+~~~~~~~~~~
+
+* **User sessions**: include information about s3 bucket functionality in the server_options endpoint
+* **User sessions**: improve the parsing of messages from k8s that explain why a session is unschedulable
+
+Individual components
+~~~~~~~~~~~~~~~~~~~~~~
+
+- `renku-notebooks 1.8.2 <https://github.com/SwissDataScienceCenter/renku-notebooks/releases/tag/1.8.2>`_
+
+0.12.15
+-------
+
+This release mostly aims to fix the data in the Knowledge Graph. It will start the re-provisioning process
+which is about wiping out all the data and generating it again.
+
+Bug fixes
+~~~~~~~~~~
+
+* **Knowledge Graph**: fix for the problems where datasets were not present in the Knowledge Graph
+* **Knowledge Graph**: fix for the Lineage REST endpoint to match the API specification
+
+Features
+~~~~~~~~~~
+
+* **Knowledge Graph**: a new process to speed up provisioning Knowledge Graph with basic project info
+* **Knowledge Graph**: the Cross-Entity search to allow filtering on the creator in a case-insensitive way
+
+Individual components
+~~~~~~~~~~~~~~~~~~~~~~
+
+- `renku-graph 2.11.1 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/2.11.1>`_
+- `renku-graph 2.11.0 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/2.11.0>`_
+- `renku-graph 2.10.0 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/2.10.0>`_
+
+0.12.14
+-------
+
+This is a minor release that fixes a bug in the renku notebook service that caused 
+existing sessions launched by older renku versions to not be recognized.
+
+Bug fixes
+~~~~~~~~~~
+
+* **User sessions**: successfully list and manage sessions launched by older renku versions
+
+Individual components
+~~~~~~~~~~~~~~~~~~~~~~
+
+- `renku-notebooks 1.8.1 <https://github.com/SwissDataScienceCenter/renku-notebooks/releases/tag/1.8.1>`_
+
+0.12.13
+-------
+
+This is a minor release featuring improvements and bug-fixes to Renku CLI, core, graph and UI components.
+
+Improvements
+~~~~~~~~~~~~~
+
+* **Renku Python API**: add `Activity <https://github.com/SwissDataScienceCenter/renku-rfc/blob/main/design/006-renku-api-activities-plans/006-renku-api-activities-plans.md#using-plans-and-activities-through-renkuapi>`__ support in Renku Python API
+* **Renku CLI**: add support to start remote sessions from the CLI
+* **User sessions**: provide better feedback when a session cannot be scheduled due to lack of resources or when initializing a session fails
+* **Knowledge Graph**: add support for identification with `ORCID <https://orcid.org/>`__
+
+Bug fixes
+~~~~~~~~~~
+
+* **Renku UI**: prevent errors when working on datasets with images
+* **Knowledge Graph**: fixes of broken data in the Triples Store
+
+Individual components
+~~~~~~~~~~~~~~~~~~~~~~
+
+- `amalthea 0.4.0 <https://github.com/SwissDataScienceCenter/amalthea/releases/tag/0.4.0>`_
+- `renku-notebooks 1.8.0 <https://github.com/SwissDataScienceCenter/renku-notebooks/releases/tag/1.8.0>`_
+- `renku-python 1.4.0 <https://github.com/SwissDataScienceCenter/renku-python/releases/tag/v1.4.0>`_
+- `renku-ui 2.4.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/2.4.0>`_
+- `renku-graph 2.9.0 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/2.9.0>`_
+
 0.12.12
 -------
 

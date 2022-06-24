@@ -1,5 +1,6 @@
 acyclic
 admin
+adhoc
 Amalthea
 analytics
 app
@@ -207,6 +208,8 @@ unicode
 unlink
 Unlink
 unmapped
+unpushed
+unschedulable
 untracked
 untracked
 url
