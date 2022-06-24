@@ -1,5 +1,27 @@
 .. _changelog:
 
+0.12.17
+-------
+
+This release introduces improvements and fixes bugs related to user sessions.
+
+Features
+~~~~~~~~~~
+
+
+Bug fixes
+~~~~~~~~~~
+
+* **User sessions**:
+* **User sessions**:
+
+Individual components
+~~~~~~~~~~~~~~~~~~~~~~
+
+- `renku-notebooks 1.8.3 <https://github.com/SwissDataScienceCenter/renku-notebooks/releases/tag/1.8.3>`_
+- `renku-notebooks 2.4.1 <https://github.com/SwissDataScienceCenter/renku-notebooks/releases/tag/2.4.1>`_
+
+
 0.12.16
 -------
 
@@ -44,7 +66,7 @@ Individual components
 0.12.14
 -------
 
-This is a minor release that fixes a bug in the renku notebook service that caused 
+This is a minor release that fixes a bug in the renku notebook service that caused
 existing sessions launched by older renku versions to not be recognized.
 
 Bug fixes
