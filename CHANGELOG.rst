@@ -19,7 +19,7 @@ Individual components
 ~~~~~~~~~~~~~~~~~~~~~~
 
 - `renku-notebooks 1.8.3 <https://github.com/SwissDataScienceCenter/renku-notebooks/releases/tag/1.8.3>`_
-- `renku-notebooks 2.4.1 <https://github.com/SwissDataScienceCenter/renku-notebooks/releases/tag/2.4.1>`_
+- `renku-ui 2.4.1 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/2.4.1>`_
 
 
 0.12.16
