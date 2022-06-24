@@ -8,11 +8,12 @@ This release introduces improvements and fixes bugs related to user sessions.
 Features
 ~~~~~~~~~~
 
+* **User sessions**: allow specifying files in auto start links
 
 Bug fixes
 ~~~~~~~~~~
 
-* **User sessions**:
+* **User sessions**: fix a situation where the session start gets stuck in an endless progress spinner
 * **User sessions**:
 
 Individual components
