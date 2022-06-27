@@ -31,6 +31,13 @@ Choose which situation you're working in:
     This will open RenkuLab in a browser window, where you can enter your credentials.
     Then, the local Renku CLI receives and stores a secure token that will be used for future authentications.
 
+    **Clone your Renku Project**
+
+    #. Back on renkulab.io_, on your Renku project's page, click “Settings”.
+    #. Under "Clone commands" copy the :meth:`renku clone <renku.ui.cli.clone>` command.
+    #. On your machine’s terminal, navigate to where you want your project to be located.
+    #. Paste and run the clone command you copied.
+
 .. tabbed:: Authenticate via SSH Key
 
     To authenticate with RenkuLab from a remote machine,
@@ -102,13 +109,12 @@ Choose which situation you're working in:
     #. Click "Add key".
 
 
-Clone your Renku Project
-------------------------
+    **Clone your Renku Project**
 
-#. Back on renkulab.io_, on your Renku project's page, click “Settings”.
-#. Under "Clone commands" copy the :meth:`renku clone <renku.ui.cli.clone>` command.
-#. On your machine’s terminal, navigate to where you want your project to be located.
-#. Paste and run the clone command you copied.
+    #. Back on renkulab.io_, on your Renku project's page, click “Settings”.
+    #. Under "Clone commands" and "Repository URL" copy the **SSH** url.
+    #. On your machine’s terminal, navigate to where you want your project to be located.
+    #. Run ``git clone <url>``.
 
 
 .. _renkulab.io: https://renkulab.io
