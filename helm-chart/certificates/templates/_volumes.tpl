@@ -6,7 +6,7 @@
 {{- if $customCAsEnabled }}
 - name: custom-ca-certs
   projected:
-    defaultMode: 0440
+    defaultMode: 0444
     sources:
     {{- range $customCA := .Values.global.certificates.customCAs }}
       - secret:
