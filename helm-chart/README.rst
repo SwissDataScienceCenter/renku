@@ -62,6 +62,11 @@ Most information related to upgrading from one chart version to another is cover
 in the `values changelog file <https://github.com/SwissDataScienceCenter/renku/blob/master/helm-chart/values.yaml.changelog.md>`_.
 For upgrades that require some steps other than modifying the values files to be executed, we add some instructions here.
 
+Upgrading to 0.12.0
+*******************
+
+We bump the GitLab version from ``14.4`` to ``15.0``. In order to make this update, please follow the GitLab `upgrade paths<https://docs.gitlab.com/ee/update/#upgrade-paths>`_ documentation.
+
 Upgrading to 0.11.0
 *******************
 We bump the PostgreSQL version from ``11`` to ``12.8`` and the GitLab major version from ``13`` to ``14``.
