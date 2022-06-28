@@ -34,7 +34,8 @@ Define clients and users for Keycloak
     "publicClient": true,
     "attributes": {
       "access.token.lifespan": "86400",
-      "oauth2.device.authorization.grant.enabled": true
+      "oauth2.device.authorization.grant.enabled": true,
+      "oauth2.device.polling.interval": "5"
     },
     "redirectUris": [
         "{{ template "http" . }}://{{ .Values.global.renku.domain }}/*"
