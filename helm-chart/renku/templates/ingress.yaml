@@ -81,16 +81,16 @@ spec:
         pathType: Prefix
         backend:
           service:
-            name: {{ $gatewayFullname }}
+            name: renku-traefik
             port:
-              number: {{ $gatewayServicePort }}
+              number: 80
       - path: /entities
         pathType: Prefix
         backend:
           service:
-            name: {{ $gatewayFullname }}
+            name: renku-traefik
             port:
-              number: {{ $gatewayServicePort }}
+              number: 80
       - path: /
         pathType: Prefix
         backend:
