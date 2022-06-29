@@ -21,8 +21,6 @@ oauth:
 lfsObjects:
   enabled: false
   bucketName: lfs-objects
-  directUpload: false
-  backgroundUpload: true
   proxyDownload: false
   # connection: |-
   #   {

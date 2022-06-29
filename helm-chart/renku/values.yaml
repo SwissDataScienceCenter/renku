@@ -437,8 +437,6 @@ gitlab:
   # enabled: false
   ## Bucket name
   # bucketName: lfs-objects
-  # directUpload: false
-  # backgroundUpload: true
   # proxyDownload: false
   # connection: |-
   #   {
