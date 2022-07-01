@@ -9,8 +9,6 @@
 {{- $uiServicePort := .Values.ui.service.port -}}
 {{- $uiserverFullname := include "uiserver.fullname" . -}}
 {{- $uiserverServicePort := .Values.uiserver.service.port -}}
-{{- $gatewayFullname := include "gateway.fullname" . -}}
-{{- $gatewayServicePort := .Values.gateway.service.port -}}
 {{- $graphEnabled := .Values.graph.enabled -}}
 {{- $webhookServiceFullname := include "webhookService.fullname" . -}}
 {{- $knowledgeGraphFullname := include "knowledgeGraph.fullname" . -}}
@@ -74,9 +72,9 @@ spec:
         pathType: Prefix
         backend:
           service:
-            name: {{ $gatewayFullname }}
+            name: renku-traefik
             port:
-              number: {{ $gatewayServicePort }}
+              number: 80
       - path: /api
         pathType: Prefix
         backend:

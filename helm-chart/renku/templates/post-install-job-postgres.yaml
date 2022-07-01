@@ -15,6 +15,7 @@ spec:
     metadata:
       name: "{{.Release.Name}}-post-install-postgres"
       labels:
+        app: post-install-postgres
         heritage: {{ .Release.Service }}
         release: {{ .Release.Name }}
         chart: {{ template "renku.chart" . }}
