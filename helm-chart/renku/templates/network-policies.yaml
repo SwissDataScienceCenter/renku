@@ -27,7 +27,7 @@ spec:
         {{- if .Values.gitlab.enabled }}
         - podSelector:
             matchLabels:
-              app.kubernetes.io/name: gitlab
+              app: gitlab
           namespaceSelector:
             matchLabels:
               kubernetes.io/metadata.name: {{ .Release.Namespace }}
