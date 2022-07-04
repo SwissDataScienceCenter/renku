@@ -10,6 +10,7 @@ Features
 
 * **Login**:
 * **User sessions**:
+* **Knowledge Graph**: support for project path changes in GitLab
 
 --TO FILL--
 
@@ -17,6 +18,7 @@ Bug fixes
 ~~~~~~~~~~
 
 * **User sessions**:
+* **Knowledge Graph**: fixes improving services stability and data correctness
 
 --TO FILL--
 
@@ -24,8 +26,7 @@ Individual components
 ~~~~~~~~~~~~~~~~~~~~~~
 
 - `renku-notebooks 1.8.3 <https://github.com/SwissDataScienceCenter/renku-notebooks/releases/tag/1.8.3>`_
-
---TO FILL--
+- `renku-graph 2.12.9 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/2.12.0>`_
 
 Upgrading from 0.12.17
 ~~~~~~~~~~~~~~~~~~~~~~
