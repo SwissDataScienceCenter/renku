@@ -11,6 +11,11 @@ Features
 * **Login**:
 * **User sessions**:
 * **Knowledge Graph**: support for project path changes in GitLab
+* **Renku CLI**: add a command to revert workflows
+* **Renku CLI**: allow exporting datasets to a local directory
+* **Renku CLI**: add support for listing dataset files for a specific dataset version
+* **Renku Core Service**: allow partial updates on dataset and project edit
+* **Renku Core Service**: support chunked file uploads
 
 --TO FILL--
 
@@ -19,6 +24,7 @@ Bug fixes
 
 * **User sessions**:
 * **Knowledge Graph**: fixes improving services stability and data correctness
+* **Renku Core Service**: fix project id generation from the project's namespace
 
 --TO FILL--
 
@@ -27,6 +33,8 @@ Individual components
 
 - `renku-notebooks 1.8.3 <https://github.com/SwissDataScienceCenter/renku-notebooks/releases/tag/1.8.3>`_
 - `renku-graph 2.12.9 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/2.12.0>`_
+- `renku-python 1.5.0 <https://github.com/SwissDataScienceCenter/renku-python/releases/tag/v1.5.0>`_
+
 
 Upgrading from 0.12.17
 ~~~~~~~~~~~~~~~~~~~~~~
