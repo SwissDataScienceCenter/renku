@@ -10,18 +10,21 @@ Features
 
 * **Login**:
 * **User sessions**:
+
 --TO FILL--
 
 Bug fixes
 ~~~~~~~~~~
 
 * **User sessions**:
+
 --TO FILL--
 
 Individual components
 ~~~~~~~~~~~~~~~~~~~~~~
 
 - `renku-notebooks 1.8.3 <https://github.com/SwissDataScienceCenter/renku-notebooks/releases/tag/1.8.3>`_
+
 --TO FILL--
 
 Upgrading from 0.12.17
