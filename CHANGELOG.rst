@@ -16,6 +16,9 @@ Features
 * **Renku CLI**: add support for listing dataset files for a specific dataset version
 * **Renku Core Service**: allow partial updates on dataset and project edit
 * **Renku Core Service**: support chunked file uploads
+* **User sessions**: support for injecting environment variables through the API
+* **User sessions**: support for storing detailed metrics in S3 buckets
+* **Authentication**: improvements in the organization and setup of internal components
 
 --TO FILL--
 
@@ -36,10 +39,18 @@ Individual components
 - `renku-notebooks 1.8.3 <https://github.com/SwissDataScienceCenter/renku-notebooks/releases/tag/1.8.3>`_
 - `renku-python 1.5.0 <https://github.com/SwissDataScienceCenter/renku-python/releases/tag/v1.5.0>`_
 - `renku-ui 2.5.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/2.5.0>`_
+- `renku-notebooks 1.9.0 <https://github.com/SwissDataScienceCenter/renku-notebooks/releases/tag/1.9.0>`_
+- `amalthea 0.5.0 <https://github.com/SwissDataScienceCenter/amalthea/releases/tag/0.5.0>`_
+- `renku-gateway 0.14.0 <https://github.com/SwissDataScienceCenter/renku-gateway/releases/tag/0.14.0>`_
 
 
 Upgrading from 0.12.17
 ~~~~~~~~~~~~~~~~~~~~~~
+
+If using self-signed CA certificates additional values are required when upgrading to ``0.13.0`` so that the 
+Traefik Helm chart in ``renku-gateway`` can trust these certificates. The values that will need to be added are ``gateway.traefik.additionalArguments``
+and ``gateway.traefik.volumes``. Refer to the `values file <https://github.com/SwissDataScienceCenter/renku-gateway/blob/0.14.0/helm-chart/renku-gateway/values.yaml>`_ 
+in the ``renku-gateway`` repo for more details.
 
 --TO FILL--
 
