@@ -8,9 +8,9 @@ TBC
 Features
 ~~~~~~~~~~
 
-* **Login**:
-* **User sessions**:
+* **Dataset**: improve upload performance and robustness
 * **Knowledge Graph**: support for project path changes in GitLab
+* **Login**:
 * **Renku CLI**: add a command to revert workflows
 * **Renku CLI**: allow exporting datasets to a local directory
 * **Renku CLI**: add support for listing dataset files for a specific dataset version
@@ -22,18 +22,20 @@ Features
 Bug fixes
 ~~~~~~~~~~
 
-* **User sessions**:
+* **Dataset**: fix intermittent bug in importing datasets
 * **Knowledge Graph**: fixes improving services stability and data correctness
 * **Renku Core Service**: fix project id generation from the project's namespace
+* **User sessions**: fix bug that could lead to endless spinner when autosave information exists
 
 --TO FILL--
 
 Individual components
 ~~~~~~~~~~~~~~~~~~~~~~
 
-- `renku-notebooks 1.8.3 <https://github.com/SwissDataScienceCenter/renku-notebooks/releases/tag/1.8.3>`_
 - `renku-graph 2.12.9 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/2.12.0>`_
+- `renku-notebooks 1.8.3 <https://github.com/SwissDataScienceCenter/renku-notebooks/releases/tag/1.8.3>`_
 - `renku-python 1.5.0 <https://github.com/SwissDataScienceCenter/renku-python/releases/tag/v1.5.0>`_
+- `renku-ui 2.5.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/2.5.0>`_
 
 
 Upgrading from 0.12.17
