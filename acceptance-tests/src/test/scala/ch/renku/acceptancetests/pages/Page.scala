@@ -28,6 +28,7 @@ import org.scalatestplus.selenium.WebBrowser
 
 import scala.concurrent.duration._
 import scala.language.implicitConversions
+import scala.util.matching.Regex
 
 abstract class Page[Url <: BaseUrl](val path: String, val title: String)
     extends ScalatestMatchers
@@ -69,6 +70,8 @@ abstract class Page[Url <: BaseUrl](val path: String, val title: String)
   )
 
   override lazy val toString: String = s"title: $title - path: $path"
+
+  lazy val titleRegex: Regex = title.r;
 }
 
 object Page {
@@ -80,7 +83,7 @@ object Page {
 }
 
 object RenkuPage {
-  val RenkuPageTitle = "Reproducible Data Science | Open Research | Renku"
+  val RenkuPageTitle = raw"Reproducible Data Science \| Open Research \| Renku"
 }
 
 abstract class RenkuPage(path: String, title: String = RenkuPage.RenkuPageTitle)
