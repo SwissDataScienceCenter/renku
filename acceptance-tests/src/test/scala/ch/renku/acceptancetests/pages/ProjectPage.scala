@@ -41,7 +41,8 @@ object ProjectPage {
 
 class ProjectPage(val projectSlug: String, val namespace: String)
     extends RenkuPage(
-      path = s"/projects/$namespace/$projectSlug"
+      path = s"/projects/$namespace/$projectSlug",
+      title = raw"(.*)(• Project •)(.*)"
     )
     with TopBar {
 

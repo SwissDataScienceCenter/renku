@@ -66,7 +66,7 @@ trait WebDriverOps {
       }
 
     private def byUrlAndTitleOf[Url <: BaseUrl](page: Page[Url])(implicit baseUrl: Url): WebDriver => Boolean =
-      driver => (driver.getCurrentUrl startsWith page.url) && (driver.getTitle == page.title)
+      driver => (driver.getCurrentUrl startsWith page.url) && (page.titleRegex.matches(driver.getTitle))
 
     private def findAllTabs = webDriver.getWindowHandles.asScala.toArray
   }
