@@ -4,7 +4,7 @@ Add data to your project
 ------------------------
 
 In the JupyterLab interface or RStudio files panel, we can see that a few files already exist.
-Let's start by adding data using the `Renku CLI <https://renku-python.readthedocs.io/en/latest/commands.html>`__.
+Let's start by adding data using the `Renku CLI <https://renku-python.readthedocs.io/en/latest/reference/commands.html>`__.
 
 .. tabbed:: JupyterLab
 
@@ -64,17 +64,19 @@ data, answer yes.
     Output:
     CHECKSUM    NAME                       SIZE (MB)  TYPE
     ----------  -----------------------  -----------  ---------------
-                2019-01-flights.csv.zip       7.9301  application/zip
-    Do you wish to download this version? [y/N]: y
-    Info: Adding these files to Git LFS:
-          data/2019-01_us_fli_1.0/2019-01-flights.csv.zip
-    OK
+                2019-01-flights.csv.zip         7.56  application/zip
+    Warning: Do you wish to download this version? [y/N]: y
+    Info: Adding these files to Git LFS:                                                                                                     
+            data/flight-data/2019-01-flights.csv.zip
+    To disable this message in the future, run:
+            renku config set show_lfs_message False
+    OK 
 
 Let us take a moment to understand what happened there. Opening the terminal
 puts you inside the project directory with ``git`` already configured.
 
 Then we imported a dataset  using the  `Renku CLI <http
-://renku-python.readthedocs.io/>`__, Here, we can see the method of
+://renku-python.readthedocs.io/>`__. Here, we can see the method of
 referencing a dataset in a data repository by DOI. By doing so,
 we capture a reference to the source of the data in the metadata of the
 project.
@@ -101,25 +103,21 @@ repository:
     $ git log
 
     Output similar to:
-    commit ef542b5ec5a44fdbb16afc3de413308a7daff32f
-    Author: John Doe <john.doe@example.com>
-    Date:   Mon Apr 29 11:58:34 2019 +0000
-
-        renku dataset import --name flight-data https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/WTZS4K
-
     commit 3809ce796933bd554ec65df0737b6ecf00b069e1
     Author: John Doe <john.doe@example.com>
-    Date:   Mon Apr 29 11:58:33 2019 +0000
+    Date:   Mon Apr 29 11:58:33 2022 +0000
 
-        renku dataset: committing 1 newly added files
+        renku dataset import --name flight-data https://www.doi.org/10.7910/DVN/WTZS4K
+    
+        renku-transaction: 2ff1f09bd9424270ac27f80f759b5388
 
     commit 3f74a2dfdf5e27c1dc124f6455931089023253b8 (origin/master, origin/HEAD)
     Author: John Doe <john.doe@example.com>
     Date:   Mon Apr 29 11:53:41 2019 +0000
 
-        service: renku init -n "Flights tutorial"
-          -s "https://github.com/SwissDataScienceCenter/renku-project-template"
-          -r "0.1.12" -t "python-minimal" -p "description"="My first Renku project"
+        dev.renku.ch: init Flights tutorial
+    
+        renku-transaction: 2fa7df0457764d2aa1612ce719edaff8
 
 .. code-block:: console
 
@@ -127,7 +125,7 @@ repository:
 
     Output similar to:
     On branch master
-    Your branch is ahead of 'origin/master' by 2 commits.
+    Your branch is ahead of 'origin/master' by 1 commit.
       (use "git push" to publish your local commits)
 
     nothing to commit, working directory clean
