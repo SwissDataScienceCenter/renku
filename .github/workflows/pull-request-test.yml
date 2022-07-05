@@ -1,12 +1,14 @@
 name: Deploy and Test PR
 on:
-  pull_request:
-    types:
-      - opened
-      - synchronize
-      - reopened
-      - closed
-      - edited
+  push: ### Temp: remove before merging
+    branches: ["refactor_pr_test_action"]
+  # pull_request:
+  #   types:
+  #     - opened
+  #     - synchronize
+  #     - reopened
+  #     - closed
+  #     - edited
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
@@ -56,28 +58,28 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - id: deploy-comment
-        uses: SwissDataScienceCenter/renku-actions/check-pr-description@v1.0.0
+        uses: SwissDataScienceCenter/renku-actions/check-pr-description@refactor_tests_action
         with:
           string: /deploy
-          pr_ref: ${{ github.event.number }}
+          pr_ref: ${{ github.event.pull_request.number }}
   deploy-pr:
     if: github.event.action != 'closed'
     needs: [check-deploy]
     runs-on: ubuntu-latest
     environment:
-      name: ci-renku-${{ github.event.number }}
+      name: ci-renku-${{ github.event.pull_request.number }}
     steps:
       - uses: actions/checkout@v2
       - name: renku build and deploy
         if: needs.check-deploy.outputs.pr-contains-string == 'true'
-        uses: SwissDataScienceCenter/renku-actions/deploy-renku@v1.0.0
+        uses: SwissDataScienceCenter/renku-actions/deploy-renku@refactor_tests_action
         env:
           DOCKER_PASSWORD: ${{ secrets.RENKU_DOCKER_PASSWORD }}
           DOCKER_USERNAME: ${{ secrets.RENKU_DOCKER_USERNAME }}
           GITLAB_TOKEN: ${{ secrets.DEV_GITLAB_TOKEN }}
           KUBECONFIG: "${{ github.workspace }}/renkubot-kube.config"
           RENKU_ANONYMOUS_SESSIONS: true
-          RENKU_RELEASE: ci-renku-${{ github.event.number }}
+          RENKU_RELEASE: ci-renku-${{ github.event.pull_request.number }}
           RENKU_VALUES_FILE: "${{ github.workspace }}/values.yaml"
           RENKU_VALUES: ${{ secrets.CI_RENKU_VALUES }}
           RENKUBOT_KUBECONFIG: ${{ secrets.RENKUBOT_DEV_KUBECONFIG }}
@@ -104,7 +106,7 @@ jobs:
           token: ${{ secrets.RENKUBOT_GITHUB_TOKEN }}
           issue-number: ${{ github.event.pull_request.number }}
           body: |
-            You can access the deployment of this PR at https://ci-renku-${{ github.event.number }}.dev.renku.ch
+            You can access the deployment of this PR at https://ci-renku-${{ github.event.pull_request.number }}.dev.renku.ch
 
   test-pr:
     runs-on: ubuntu-20.04
@@ -113,10 +115,10 @@ jobs:
       needs.check-deploy.outputs.test-enabled == 'true' }}
     needs: [check-deploy, deploy-pr]
     steps:
-      - uses: SwissDataScienceCenter/renku-actions/test-renku@v1.0.0
+      - uses: SwissDataScienceCenter/renku-actions/test-renku@refactor_tests_action
         with:
           kubeconfig: ${{ secrets.RENKUBOT_DEV_KUBECONFIG }}
-          renku-release: ci-renku-${{ github.event.number }}
+          renku-release: ci-renku-${{ github.event.pull_request.number }}
           gitlab-token: ${{ secrets.DEV_GITLAB_TOKEN }}
           persist: "${{ needs.check-deploy.outputs.persist }}"
           s3-results-access-key: ${{ secrets.ACCEPTANCE_TESTS_BUCKET_ACCESS_KEY }}
@@ -127,9 +129,9 @@ jobs:
     runs-on: ubuntu-20.04
     steps:
       - name: renku teardown
-        uses: SwissDataScienceCenter/renku-actions/cleanup-renku-ci-deployments@v1.0.0
+        uses: SwissDataScienceCenter/renku-actions/cleanup-renku-ci-deployments@refactor_tests_action
         env:
-          HELM_RELEASE_REGEX: "^ci-renku-${{ github.event.number }}$"
+          HELM_RELEASE_REGEX: "^ci-renku-${{ github.event.pull_request.number }}$"
           GITLAB_TOKEN: ${{ secrets.DEV_GITLAB_TOKEN }}
           RENKUBOT_KUBECONFIG: ${{ secrets.RENKUBOT_DEV_KUBECONFIG }}
           MAX_AGE_SECONDS: 0
