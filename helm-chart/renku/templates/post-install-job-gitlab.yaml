@@ -16,6 +16,7 @@ spec:
     metadata:
       name: "{{.Release.Name}}-post-install-gitlab"
       labels:
+        app: post-install-gitlab
         heritage: {{ .Release.Service }}
         release: {{ .Release.Name }}
         chart: {{ template "renku.chart" . }}

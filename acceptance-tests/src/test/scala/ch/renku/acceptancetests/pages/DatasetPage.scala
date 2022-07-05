@@ -34,7 +34,8 @@ object DatasetPage {
 
 class DatasetPage(datasetName: DatasetName, projectPage: ProjectPage)
     extends RenkuPage(
-      path = s"${projectPage.path}/datasets/${datasetName.asPath}"
+      path = s"${projectPage.path}/datasets/${datasetName.asPath}",
+      title = raw"(.*)(• Project •)(.*)"
     )
     with TopBar {
 
