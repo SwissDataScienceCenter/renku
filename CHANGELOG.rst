@@ -36,7 +36,7 @@ Individual components
 - `renku-notebooks 1.9.0 <https://github.com/SwissDataScienceCenter/renku-notebooks/releases/tag/1.9.0>`_
 - `amalthea 0.5.0 <https://github.com/SwissDataScienceCenter/amalthea/releases/tag/0.5.0>`_
 - `renku-gateway 0.14.0 <https://github.com/SwissDataScienceCenter/renku-gateway/releases/tag/0.14.0>`_
-- `renku-graph 2.12.9 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/2.12.0>`_
+- `renku-graph 2.12.0 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/2.12.0>`_
 
 
 Upgrading from 0.12.17
