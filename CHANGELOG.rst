@@ -47,8 +47,6 @@ Traefik Helm chart in ``renku-gateway`` can trust these certificates. The values
 and ``gateway.traefik.volumes``. Refer to the `values file <https://github.com/SwissDataScienceCenter/renku-gateway/blob/0.14.0/helm-chart/renku-gateway/values.yaml>`_
 in the ``renku-gateway`` repo for more details.
 
---TO FILL--
-
 0.12.17
 -------
 
