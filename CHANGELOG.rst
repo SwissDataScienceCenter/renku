@@ -1,5 +1,17 @@
 .. _changelog:
 
+0.14.1
+------
+
+This release updates a minor GitLab version to ``14.10.5``.
+
+Upgrading from 0.14.1
+~~~~~~~~~~~~~~~~~~~~~~
+
+BREAKING CHANGES!
+We advise admins to make a backup of their GitLab and PostgreSQL volumes before going through this upgrade.
+
+
 0.14.0
 ------
 
