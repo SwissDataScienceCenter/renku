@@ -3,14 +3,13 @@
 0.13.0
 -------
 
-TBC
+This release introduces important CLI features as well as improvements around dataset upload, user sessions support and knowledge graph.
+There are also chart gateway-related updates, we advice admins to please look at the ``Upgrading`` section.
 
 Features
 ~~~~~~~~~~
 
 * **Dataset**: improve upload performance and robustness
-* **Knowledge Graph**: support for project path changes in GitLab
-* **Login**:
 * **Renku CLI**: add a command to revert workflows
 * **Renku CLI**: allow exporting datasets to a local directory
 * **Renku CLI**: add support for listing dataset files for a specific dataset version
@@ -19,8 +18,7 @@ Features
 * **User sessions**: support for injecting environment variables through the API
 * **User sessions**: support for storing detailed metrics in S3 buckets
 * **Authentication**: improvements in the organization and setup of internal components
-
---TO FILL--
+* **Knowledge Graph**: support for project path changes in GitLab
 
 Bug fixes
 ~~~~~~~~~~
@@ -30,26 +28,23 @@ Bug fixes
 * **Renku Core Service**: fix project id generation from the project's namespace
 * **User sessions**: fix bug that could lead to endless spinner when autosave information exists
 
---TO FILL--
-
 Individual components
 ~~~~~~~~~~~~~~~~~~~~~~
 
-- `renku-graph 2.12.9 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/2.12.0>`_
-- `renku-notebooks 1.8.3 <https://github.com/SwissDataScienceCenter/renku-notebooks/releases/tag/1.8.3>`_
-- `renku-python 1.5.0 <https://github.com/SwissDataScienceCenter/renku-python/releases/tag/v1.5.0>`_
 - `renku-ui 2.5.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/2.5.0>`_
+- `renku-python 1.5.0 <https://github.com/SwissDataScienceCenter/renku-python/releases/tag/v1.5.0>`_
 - `renku-notebooks 1.9.0 <https://github.com/SwissDataScienceCenter/renku-notebooks/releases/tag/1.9.0>`_
 - `amalthea 0.5.0 <https://github.com/SwissDataScienceCenter/amalthea/releases/tag/0.5.0>`_
 - `renku-gateway 0.14.0 <https://github.com/SwissDataScienceCenter/renku-gateway/releases/tag/0.14.0>`_
+- `renku-graph 2.12.9 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/2.12.0>`_
 
 
 Upgrading from 0.12.17
 ~~~~~~~~~~~~~~~~~~~~~~
 
-If using self-signed CA certificates additional values are required when upgrading to ``0.13.0`` so that the 
+If using self-signed CA certificates additional values are required when upgrading to ``0.13.0`` so that the
 Traefik Helm chart in ``renku-gateway`` can trust these certificates. The values that will need to be added are ``gateway.traefik.additionalArguments``
-and ``gateway.traefik.volumes``. Refer to the `values file <https://github.com/SwissDataScienceCenter/renku-gateway/blob/0.14.0/helm-chart/renku-gateway/values.yaml>`_ 
+and ``gateway.traefik.volumes``. Refer to the `values file <https://github.com/SwissDataScienceCenter/renku-gateway/blob/0.14.0/helm-chart/renku-gateway/values.yaml>`_
 in the ``renku-gateway`` repo for more details.
 
 --TO FILL--
