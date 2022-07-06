@@ -45,8 +45,11 @@ the changes or committing them to the repository.
         $ renku save -m "My own changes"
 
 
-The ``filter_flights.\*`` script takes two input
-parameters: 1. a file to process as an input 2. a path for storing the output.
+The ``filter_flights.\*`` script takes two input parameters:
+
+1. a file to process as an input
+2. a path for storing the output.
+
 So to run it, we would normally execute the following:
 
 .. tabbed:: Python
@@ -112,7 +115,7 @@ Workflows created in this way don't just try past executions, but also define
 workflow templates (Called ``Plans`` in Renku) that can be executed with
 arbitrary parameters on different workflow backends and exported to other
 workflow languages.
-See the `renku command line docs <https://renku-python.readthedocs.io/en/latest/commands.html>`_
+See the `renku command line docs <https://renku.readthedocs.io/en/latest/renku-python/docs/reference/commands.html>`_
 for more information on this and other commands.
 
 
