@@ -401,7 +401,7 @@ gitlab:
     # Check out the gitlab docs on upgrading versions before changing the image tag.
     # https://docs.gitlab.com/ee/update/#upgrade-paths
     # in particular major versions https://docs.gitlab.com/ce/update/#upgrading-to-a-new-major-version
-    tag: 14.9.5-ce.0
+    tag: 14.10.5-ce.0
 
   ## automatically log in to gitlab
   oauth:
