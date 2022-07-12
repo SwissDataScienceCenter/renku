@@ -27,6 +27,7 @@ spec:
               value: >
                 [
                   {"url": "/api/renku/spec.json", "name": "core service"},
+                  {"url": "/api/knowledge-graph/spec.json", "name": "knowledge graph"},
                   {"url": "/api/notebooks/spec.json", "name": "notebooks service"}
                 ]
             - name: OAUTH2_REDIRECT_URL
