@@ -61,7 +61,7 @@ Then, start a session using :meth:`renku session start <renku.ui.cli.session>`:
 Open the session in your browser
 --------------------------------
 When the session starts, it will print out a url where the session is running.
-Copy this url into your browser to access your Renku project running inside it's containerized environment.
+Copy this url into your browser to access your Renku project running inside its containerized environment.
 
 If you need to find this url again later, you can find all running Renku sessions by running :meth:`renku session list <renku.ui.cli.session>`.
 

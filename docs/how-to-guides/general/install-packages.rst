@@ -5,7 +5,7 @@ Add Packages to your Renku Project Environment
 
 The process for adding packages to your Renku project is a little different depending on which language you are using-
 for example Python or R.
-Alternatively, for both R and Python, you may use Anaconda's environment management system.
+Alternatively, for both R and Python, you may use conda's environment management system.
 All three of these options work with Renku.
 
 Select the tab below for the documentation relevant to you.
@@ -50,7 +50,7 @@ Select the tab below for the documentation relevant to you.
 
     Note that the base R ``install.packages`` function can only install the latest version of a package on CRAN.
     To install a specific version, use ``devtools::install_version``.
-    If the package's not on CRAN and exists as a github repo, you can use ``install_github`` instead.
+    If the package is not on CRAN and exists as a github repo, you can use ``install_github`` instead.
     These two scenarios are shown in the example below.
 
     .. code-block:: console
@@ -69,7 +69,7 @@ Select the tab below for the documentation relevant to you.
 
         $ R -f install.R
 
-.. tabbed:: Anaconda
+.. tabbed:: conda
 
     **Add packages to your project dependencies**
 
@@ -85,7 +85,7 @@ Select the tab below for the documentation relevant to you.
           - numpy
           - pandas
 
-    For more details, see `Anaconda's documentation <https://docs.conda.io/projects/conda/en/latest/user-guide/tasks/manage-environments.html#create-env-file-manually>`_.
+    For more details, see `conda's documentation <https://docs.conda.io/projects/conda/en/latest/user-guide/tasks/manage-environments.html#create-env-file-manually>`_.
 
     **Install the packages**
 

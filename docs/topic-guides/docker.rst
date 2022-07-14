@@ -3,7 +3,7 @@
 Docker and Renku
 ================
 
-Renku uses Docker containerize environments.
+Renku uses Docker containerized environments.
 This is how Renku ensures that when you share a Renku project, your project environment is exactly the same.
 Read on to learn more about Docker, how Docker is used in Renku, and how you can customize your Renku Docker image!
 
