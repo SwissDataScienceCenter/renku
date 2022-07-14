@@ -3,7 +3,7 @@ on:
   repository_dispatch:
     types: [HelmRelease/renku.renku]
 jobs:
-  run-tests-staging:
+  run-tests-dev:
     if: ${{ github.event.client_payload.metadata.summary == 'renku-dev' &&
       github.event.client_payload.message == 'Helm test succeeded' }}
     runs-on: ubuntu-20.04
