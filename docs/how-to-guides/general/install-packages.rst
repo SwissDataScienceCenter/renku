@@ -3,16 +3,20 @@
 Add Packages to your Renku Project Environment
 ==============================================
 
-Add packages to your project dependencies
------------------------------------------
-
-To add packages to your environment, add the packages to the dependencies file.
-If you're working in Python, this is the ``requirements.txt`` file.
-If you're working in R, it's ``install.R``.
-Alternatively, for both R and Python, you may use Anaconda's ``environment.yml``.
+The process for adding packages to your Renku project is a little different depending on which language you are using-
+for example Python or R.
+Alternatively, for both R and Python, you may use Anaconda's environment management system.
 All three of these options work with Renku.
 
+Select the tab below for the documentation relevant to you.
+
+
 .. tabbed:: Python
+
+    **Add packages to your project dependencies**
+
+    To add packages to your environment, add the packages to the dependencies file.
+    When you're working in Python, this is the ``requirements.txt`` file.
 
     To add your project's dependencies to ``requirements.txt``, simply list the package names.
     Optionally, you may specify specific package versions, as shown in the example below.
@@ -22,7 +26,20 @@ All three of these options work with Renku.
         pandas
         numpy==1.22.0
 
+    **Install the packages**
+
+    Install the packages you listed in the dependency file by running the following command in the terminal:
+
+    .. code-block:: console
+
+        $ pip install -r requirements.txt
+
 .. tabbed:: R
+
+    **Add packages to your project dependencies**
+
+    To add packages to your environment, add the packages to the dependencies file.
+    When you're working in R, it's ``install.R``.
 
     To specify your project dependencies in ``install.R``, write the R package install commands.
     This ``install.R`` script will be sourced and run to create your requested environment.
@@ -44,7 +61,20 @@ All three of these options work with Renku.
                       upgrade="always")
         devtools::install_github("thomasp85/patchwork")
 
+    **Install the packages**
+
+    Install the packages you listed in the dependency file by running the following command in the terminal:
+
+    .. code-block:: console
+
+        $ R -f install.R
+
 .. tabbed:: Anaconda
+
+    **Add packages to your project dependencies**
+
+    To add packages to your environment, add the packages to the dependencies file.
+    When you're using conda, it's ``environment.yml``.
 
     To add your project's dependencies to ``environment.yml``, specify an environment name and then a list of dependencies.
 
@@ -57,35 +87,19 @@ All three of these options work with Renku.
 
     For more details, see `Anaconda's documentation <https://docs.conda.io/projects/conda/en/latest/user-guide/tasks/manage-environments.html#create-env-file-manually>`_.
 
+    **Install the packages**
 
-Install the packages
---------------------
-
-Install the packages you listed in the dependency file by running the following command in the terminal:
-
-.. tabbed:: Python
-
-    .. code-block:: console
-
-        $ pip install -r requirements.txt
-
-.. tabbed:: R
-
-    .. code-block:: console
-
-        $ R -f install.R
-
-.. tabbed:: Anaconda
+    Install the packages you listed in the dependency file by running the following command in the terminal:
 
     .. code-block:: console
 
         $ conda env update --file environment.yml  --prune
 
-
 Save your changes
 -----------------
 
-After you've modified your project's dependencies, save your changes.
+After you've modified your project's dependencies, make sure to save your changes so that the packages will
+automatically be installed the next time you start a Renku session.
 
 .. code-block:: shell-session
 
