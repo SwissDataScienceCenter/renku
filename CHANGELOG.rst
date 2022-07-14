@@ -1,5 +1,75 @@
 .. _changelog:
 
+0.14.1
+------
+
+This release updates a minor GitLab version to ``14.10.5``.
+
+Upgrading from 0.14.1
+~~~~~~~~~~~~~~~~~~~~~~
+
+BREAKING CHANGES!
+We advise admins to make a backup of their GitLab and PostgreSQL volumes before going through this upgrade.
+
+
+0.14.0
+------
+
+This release updates a minor GitLab version to ``14.9.5``.
+
+Upgrading from 0.13.0
+~~~~~~~~~~~~~~~~~~~~~~
+
+BREAKING CHANGES!
+We advise admins to make a backup of their GitLab and PostgreSQL volumes before going through this upgrade.
+
+0.13.0
+-------
+
+This release introduces important CLI features as well as improvements around dataset upload, user sessions support and knowledge graph.
+There are also chart gateway-related updates, we advice admins to please look at the ``Upgrading`` section.
+
+Features
+~~~~~~~~~~
+
+* **Dataset**: improve upload performance and robustness
+* **Renku CLI**: add a command to revert workflows
+* **Renku CLI**: allow exporting datasets to a local directory
+* **Renku CLI**: add support for listing dataset files for a specific dataset version
+* **Renku Core Service**: allow partial updates on dataset and project edit
+* **Renku Core Service**: support chunked file uploads
+* **User sessions**: support for injecting environment variables through the API
+* **User sessions**: support for storing detailed metrics in S3 buckets
+* **Authentication**: improvements in the organization and setup of internal components
+* **Knowledge Graph**: support for project path changes in GitLab
+
+Bug fixes
+~~~~~~~~~~
+
+* **Dataset**: fix intermittent bug in importing datasets
+* **Knowledge Graph**: fixes improving services stability and data correctness
+* **Renku Core Service**: fix project id generation from the project's namespace
+* **User sessions**: fix bug that could lead to endless spinner when autosave information exists
+
+Individual components
+~~~~~~~~~~~~~~~~~~~~~~
+
+- `renku-ui 2.5.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/2.5.0>`_
+- `renku-python 1.5.0 <https://github.com/SwissDataScienceCenter/renku-python/releases/tag/v1.5.0>`_
+- `renku-notebooks 1.9.0 <https://github.com/SwissDataScienceCenter/renku-notebooks/releases/tag/1.9.0>`_
+- `amalthea 0.5.0 <https://github.com/SwissDataScienceCenter/amalthea/releases/tag/0.5.0>`_
+- `renku-gateway 0.14.0 <https://github.com/SwissDataScienceCenter/renku-gateway/releases/tag/0.14.0>`_
+- `renku-graph 2.12.0 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/2.12.0>`_
+
+
+Upgrading from 0.12.17
+~~~~~~~~~~~~~~~~~~~~~~
+
+If using self-signed CA certificates additional values are required when upgrading to ``0.13.0`` so that the
+Traefik Helm chart in ``renku-gateway`` can trust these certificates. The values that will need to be added are ``gateway.traefik.additionalArguments``
+and ``gateway.traefik.volumes``. Refer to the `values file <https://github.com/SwissDataScienceCenter/renku-gateway/blob/0.14.0/helm-chart/renku-gateway/values.yaml>`_
+in the ``renku-gateway`` repo for more details.
+
 0.12.17
 -------
 
@@ -876,7 +946,7 @@ Bug Fixes
 Features
 ~~~~~~~~
 
-* **Renku CLI**: support moving files between datasets with ``renku mv`` (`CLI documentation <https://renku-python.readthedocs.io/en/latest/commands.html#module-renku.cli.move>`__).
+* **Renku CLI**: support moving files between datasets with ``renku mv`` (`CLI documentation <https://renku.readthedocs.io/en/latest/renku-python/docs/reference/commands.html#module-renku.cli.move>`__).
 * **Renku CLI**: ability to update local project from its template and to update the Dockerfile to install the current version of renku-python using renku migrate.
 
 * **Projects**: ability to generate project-creation links, embedding metadata to automatically pre-fill input fields. For more details on how to use this feature please read our `documentation <https://renku.readthedocs.io/en/latest/user/templates.html#create-shareable-project-creation-links-with-pre-filled-fields>`__.
@@ -1546,7 +1616,7 @@ New features
 
 ⭐️ Datasets allow uploading file hierarchies in zip format
 
-⭐️ CLI: Datasets metadata is editable. Please see the `Dataset documentation <https://renku-python.readthedocs.io/en/latest/commands.html#module-renku.cli.dataset>`__ for details.
+⭐️ CLI: Datasets metadata is editable. Please see the `Dataset documentation <https://renku.readthedocs.io/en/latest/renku-python/docs/reference/commands.html#module-renku.cli.dataset>`__ for details.
 
 ⭐️ CLI: enable importing renku datasets
 
