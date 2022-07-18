@@ -4,13 +4,13 @@ Clone a Renku project
 =====================
 
 In order to save your work back to RenkuLab from your own machine, you'll need to authenticate with RenkuLab.
-You can do this easily by the ``renku login`` command.
+You can do this easily using the ``renku login`` command.
 
 However, if you find yourself needing to authenticate via an SSH Key, you can find those instructions below as well.
 
 .. tabbed:: Authenticate via renku login
 
-    To authenticate with Renku on a local machine where you have access to a browser, you can use :meth:`renku login <renku.ui.cli.login>`.
+    To authenticate with Renku via a browser, you can use :meth:`renku login <renku.ui.cli.login>`.
 
     Provide the url of the RenkuLab instance where your project is located in the following command:
 
@@ -22,9 +22,10 @@ However, if you find yourself needing to authenticate via an SSH Key, you can fi
 
     .. code-block:: console
 
-        $ renku login renkulab.io
+        $ renku login --git renkulab.io
 
-    This will open RenkuLab in a browser window, where you can enter your credentials.
+    This will open RenkuLab in a browser window, if possible, where you can enter your credentials.
+    If it is not possible to open a browser (e.g. because you are logged in to a remote server) you can copy/paste the URL it displays to complete the login. 
     Then, the local Renku CLI receives and stores a secure token that will be used for future authentications.
 
     **Clone your Renku Project**
