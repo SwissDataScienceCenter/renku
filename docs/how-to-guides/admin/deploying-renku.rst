@@ -1,7 +1,7 @@
 .. _deploying-renku:
 
-Deploying Renku
-===============
+Deploy Renku
+============
 
 This guide will help you deploying and customizing your own Renku instance in a cluster.
 

@@ -8,14 +8,12 @@ aimed at active users of Renku and target specific use-cases or common issues.
 
 
 .. toctree::
+   :glob:
    :maxdepth: 2
+   :includehidden:
 
-
-   sessions
-   cli-installation
-   migrating-projects-to-renku
-   collaboration
-   git-tips
-   troubleshooting
-   admin/index
+   general/index
+   renkulab/index
+   own_machine/index
    contributing/index
+   admin/index
