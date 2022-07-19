@@ -22,7 +22,7 @@ However, if you find yourself needing to authenticate via an SSH Key, you can fi
 
     .. code-block:: console
 
-        $ renku login --git renkulab.io
+        $ renku login renkulab.io
 
     This will open RenkuLab in a browser window, if possible, where you can enter your credentials.
     If it is not possible to open a browser (e.g. because you are logged in to a remote server) you can copy/paste the URL it displays to complete the login. 
