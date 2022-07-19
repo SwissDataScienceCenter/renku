@@ -1,7 +1,7 @@
 .. _migrating_projects_to_renku:
 
-Import Existing Project
-=======================
+Convert an Existing Project to a Renku project
+==============================================
 
 So, at this point you have gone through :ref:`first_steps` and learned how Renku
 can help your data analysis be more reproducible and collaborative. The following
@@ -121,7 +121,7 @@ If everything went smoothly, you should be able to view your project at
 https://renkulab.io/gitlab/<namespace>/<project-name>. When you push code to this
 repo, the CI/CD pipeline will run according to settings in the ``.gitlab-ci.yml``
 file, rebuilding your docker image as specified by the ``Dockerfile`` in the repo.
-If your build fails, see :ref:`sessions`.
+If your build fails, see :ref:`session_basics`.
 
 .. warning::
 

@@ -1,7 +1,7 @@
 .. _admin-documentation:
 
-Guides for developers and administrators
-========================================
+Guides for Administrators
+=========================
 
 .. toctree::
     :maxdepth: 1
