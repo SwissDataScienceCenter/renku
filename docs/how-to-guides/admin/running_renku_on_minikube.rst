@@ -1,7 +1,7 @@
 .. _running_on_kind:
 
-Running the platform
-====================
+Run the platform
+================
 
 
 This page describes how to deploy the Renku platform on

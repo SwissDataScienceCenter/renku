@@ -1,7 +1,7 @@
 .. _admin_privacycookie:
 
-Configuring privacy page and cookie banner
-------------------------------------------
+Configure privacy page and cookie banner
+----------------------------------------
 
 Privacy page
 ~~~~~~~~~~~~
