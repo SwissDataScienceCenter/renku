@@ -1,13 +1,13 @@
 .. _collaborating:
 
-Collaborating on Renku
-======================
+Collaborate on RenkuLab
+=======================
 
 Beyond building and maintaining your own data science workflows, there are many
 ways to use Renku to share your project with collaborators.
 
-Finding & accessing public projects
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Find & access public projects
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 To find and access projects on Renku that you might want to
 interact with, you can click the **Projects** link in the menu bar followed by
