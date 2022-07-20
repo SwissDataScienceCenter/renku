@@ -1,7 +1,7 @@
 .. _stopping_and_saving:
 
-Stopping and Saving
-===================
+Stop and Save Sessions
+======================
 
 If you know you're not going to be actively working on your project, it's good
 manners to :ref:`save your work<saving>` and stop the session, so that
