@@ -15,6 +15,7 @@ spec:
     metadata:
       name: "{{.Release.Name}}-post-install-postgres"
       labels:
+        app: post-install-postgres
         heritage: {{ .Release.Service }}
         release: {{ .Release.Name }}
         chart: {{ template "renku.chart" . }}
@@ -22,7 +23,12 @@ spec:
       restartPolicy: Never
       containers:
         - name: init-databases
-          image: "{{ .Values.postgresql.image.repository }}:{{ .Values.postgresql.image.tag }}"
+          image: "{{ .Values.initDb.image.repository }}:{{ .Values.initDb.image.tag }}"
+          securityContext:
+            runAsUser: 1000
+            runAsGroup: 1000
+            allowPrivilegeEscalation: false
+            runAsNonRoot: true
           command: ["/bin/bash", "/scripts/init-postgres.sh"]
           volumeMounts:
             - name: scripts

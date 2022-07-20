@@ -28,10 +28,9 @@ import org.scalatestplus.selenium
 import org.scalatestplus.selenium.WebBrowser
 
 import scala.concurrent.duration._
-import scala.jdk.CollectionConverters._
 import scala.language.implicitConversions
 
-trait Grammar extends WebElementOps with Scripts with Eventually {
+trait Grammar extends WebElementOps with WebDriverOps with Scripts with Eventually {
   self: WebBrowser with AcceptanceSpec =>
 
   implicit def toSeleniumPage[Url <: BaseUrl](page: Page[Url])(implicit baseUrl: Url): selenium.Page =
@@ -48,8 +47,8 @@ trait Grammar extends WebElementOps with Scripts with Eventually {
     def that(element: => WebElement): WebElement = element
 
     def browserAt[Url <: BaseUrl](page: Page[Url])(implicit baseUrl: Url): Unit = eventually {
-      currentUrl.toLowerCase should startWith(page.url.toLowerCase)
-      pageTitle            shouldBe page.title
+      currentUrl.toLowerCase               should startWith(page.url.toLowerCase)
+      page.titleRegex.matches(pageTitle) shouldBe true
       verifyElementsAreDisplayed(page)
     }
 
@@ -60,17 +59,7 @@ trait Grammar extends WebElementOps with Scripts with Eventually {
       }
 
     def browserSwitchedTo[Url <: BaseUrl](page: Page[Url])(implicit baseUrl: Url): Unit = eventually {
-      if (webDriver.getWindowHandles.asScala exists forTabWith(page)) ()
-      else
-        throw new Exception(
-          s"Cannot find window with URL starting with ${page.url} and title ${page.title}, " +
-            s"instead I am at $currentUrl and title $pageTitle."
-        )
-    }
-
-    private def forTabWith[Url <: BaseUrl](page: Page[Url])(handle: String)(implicit baseUrl: Url): Boolean = {
-      webDriver.switchTo() window handle
-      (currentUrl startsWith page.url) && (pageTitle == page.title)
+      webDriver.switchToTab(page)
     }
 
     def userCanSee(element: => WebElement): Unit = eventually {
@@ -83,13 +72,14 @@ trait Grammar extends WebElementOps with Scripts with Eventually {
     @scala.annotation.tailrec
     def whenUserCannotSee(findElement: WebDriver => WebElement, attempt: Int = 1): Unit =
       if (
-        attempt <= 10 &&
+        attempt <= 20 &&
         Either
           .catchOnly[TestFailedException](!findElement(webDriver).isDisplayed)
           .fold(_ => true, identity)
       ) {
-        sleep(5 seconds)
+        sleep(3 seconds)
         webDriver.navigate().refresh()
+        sleep(2 seconds)
         whenUserCannotSee(findElement, attempt + 1)
       } else
         findElement(webDriver).isDisplayed
@@ -98,11 +88,21 @@ trait Grammar extends WebElementOps with Scripts with Eventually {
   def `try few times before giving up`[V](section: WebDriver => V, attempt: Int = 1)(implicit webDriver: WebDriver): V =
     Either.catchOnly[RuntimeException](section(webDriver)) match {
       case Right(successValue)         => successValue
+      case Left(error) if attempt > 20 => throw error
+      case Left(_) =>
+        sleep(3 seconds)
+        reloadPage()
+        sleep(2 seconds)
+        `try few times before giving up`(section, attempt + 1)
+    }
+
+  def `try again if failed`[V](section: WebDriver => V, attempt: Int = 1)(implicit webDriver: WebDriver): V =
+    Either.catchOnly[RuntimeException](section(webDriver)) match {
+      case Right(successValue)         => successValue
       case Left(error) if attempt > 10 => throw error
       case Left(_) =>
-        sleep(5 seconds)
-        reloadPage()
-        `try few times before giving up`(section, attempt + 1)
+        sleep(2 seconds)
+        `try again if failed`(section, attempt + 1)
     }
 
   object pause {
@@ -121,6 +121,15 @@ trait Grammar extends WebElementOps with Scripts with Eventually {
             s"but gets stuck on $currentUrl for ${(checkInterval * attempt).toSeconds}s"
         }
     }
+
+    @scala.annotation.tailrec
+    def whenUserCanSee(findElement: WebDriver => Option[WebElement], attempt: Int = 1): Unit =
+      if (attempt <= 30 && findElement(webDriver).fold(ifEmpty = false)(_.isDisplayed)) {
+        sleep(1 second)
+        webDriver.navigate().refresh()
+        sleep(2 seconds)
+        whenUserCanSee(findElement, attempt + 1)
+      } else ()
   }
 
   def unless(test: Boolean)(testFun: => Any): Unit =

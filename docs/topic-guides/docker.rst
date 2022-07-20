@@ -1,88 +1,11 @@
-.. _customizing:
+.. _docker:
 
-Customizing sessions
-====================
+Docker and Renku
+================
 
-Very soon, you will want to make changes to the default configuration of your
-interactive sessions. The default environments we provide are pretty bare-bones.
-If you want to have easy access to your preferred packages, some simple steps
-at the start of your project will get you on the way quickly.
-
-
-Important files
----------------
-
-The launch is enabled by the content in the following files in your project:
-
-* ``Dockerfile``: defines the type of session and other software
-  installed in the environment, including the ``renku`` command-line installation.
-
-* ``.gitlab-ci.yml``: controls the docker build of the image based on the project's
-  ``Dockerfile``.
-
-* ``requirements.txt`` or ``install.R``: language-specific files controlling the
-  libraries.
-
-* ``.renku/renku.ini``: renku project configurations containing a
-  ``[renku "interactive"]`` section.
-
-The most basic modifications are installations of additional packages. This can be
-done automatically for Python and R projects if you add the packages you want
-to ``requirements.txt`` and ``install.R`` respectively.
-
-
-Renku project configurations
-----------------------------
-
-When starting a new Session, most of the options can be manually
-changed by the user. Depending on the specific RenkuLab deployment, you can select
-more RAM, a higher CPU quota, etc.
-
-Your project may even include a package with an advanced UI (like
-`Streamlit <https://renku.discourse.group/t/how-to-deploy-streamlit-in-renku/169>`_)
-and you probably want to choose it as default.
-
-It's possible to set a default value for all these options using the project
-configurations stored in the ``.renku/renku.ini`` file.
-Once you do that, each time a user tries to start a new environment, those options will
-be pre-selected.
-
-.. note::
-
-  Manually modifying the ``renku.ini`` file is not recommended.
-  You can use the
-  `renku config command <https://renku-python.readthedocs.io/en/latest/commands.html#module-renku.cli.config>`_
-  from a session, for example:
-
-    renku config set interactive.default_url "/tree"
-
-  We are working on adding a user-friendly solution to set default options on
-  the project's settings page.
-
-**What are the specific options?**
-
-You can find a comprehensive list of options :ref:`on this page <renku_ini>`. Most commonly,
-you may want to change the ``default_url`` or set a specific ``image``.
-
-The first case is useful when you prefer to show a different default UI, like the standard
-Jupyter interface ``/tree``, or when you need support for a different interface,
-like R studio ``/rstudio`` or  ``/streamlit`` (not included in the standard Python template).
-
-The ``image`` is useful when you settle on a Docker image and you don't need to change it
-anymore. The benefit is particularly evident when building a new image takes a lot of time
-(e.g. you added big packages) or when you expect the project to be used by a lot of people
-over a short period of time (e.g. you use it in a presentation or a lecture).
-
-Even if it's common to start the environment with the default values, keep in mind that users
-can still change most pre-selected settings before starting a new environment (apart from the
-image).
-
-.. note::
-
-  Mind that not all the RenkuLab deployments have the same set of options or allow to choose
-  the same values. If no GPUs are available, setting the default number to ``1`` can't work.
-  Should this be the case, a warning will show before starting a new environment.
-
+Renku uses Docker containerized environments.
+This is how Renku ensures that when you share a Renku project, your project environment is exactly the same.
+Read on to learn more about Docker, how Docker is used in Renku, and how you can customize your Renku Docker image!
 
 Dockerfile structure
 --------------------
@@ -120,11 +43,11 @@ You can add to this ``Dockerfile`` in any way you'd like.
 .. _docker_dev:
 
 
-Dockerfile development
-----------------------
+Customize your Dockerfile
+-------------------------
 
 Before we get into modifying Dockerfiles, if you want to know how to update
-the base version of your renkulab image, see `Upgrading Renku <upgrading_renku>`_.
+the base version of your RenkuLab image, see `Upgrading Renku <upgrading_renku>`_.
 
 If you're going to make simple modifications to the ``Dockerfile`` (i.e. changing
 the base Docker image version number), you can use the following steps to update
@@ -173,14 +96,38 @@ Using your new Docker image
 ---------------------------
 
 Passing CI/CD is great, but in order to use the new image you need to
-(re)start your session.
+start a new session.
 
-To do this, go back to the Renku platform, and from the project's landing page,
+To do this, go back to Renku, and from the project's landing page,
 first check in the **Files** tab that your changes to the ``Dockerfile`` are
-present. If not, you can force-refresh the page. Then, go to the **Notebook
-servers** tab. If you have any running notebooks, those will keep running the image which was built with
-the older version(s) of the ``Dockerfile``. You can **Start new server** and
-**Launch server** to start a notebook with the latest image.
+present. If not, you can force-refresh the page. Then, go to the **Session** tab.
+If you have any running sessions, those will keep running the
+image built with the older version(s) of the ``Dockerfile``.
+You can click on **New session** and **Start session** to start a new one that
+includes the latest image.
+
+.. _session_start_new:
+
+.. note::
+
+  By default, the **New session** page detects any running session and you may
+  see the message `A session is already running.`, suggesting you open that
+  one instead.
+
+  .. image:: ../../_static/images/session-already-running.png
+    :width: 85%
+    :align: center
+    :alt: A session is already running
+
+  In this case, you can click on `Back to sessions list` and stop any running
+  ones, or expand the `Advanced settings` section to select the commit.
+
+  Be sure the list of commits has been refreshed and then select the latest
+  one, which should appear as the first in the list.
+  Beware that RenkuLab has an aggressive autosave system to prevent
+  losing any unsaved work. Selecting the latest commit may show a warning if
+  any unsaved work has been detected. If your latest commit already includes
+  all the changes, you can safely ignore it.
 
 If the server launches, test it to make sure that the extra functionality you
 added in the ``Dockerfile`` is present in the container. If it is not, you can
@@ -228,9 +175,3 @@ If you can't work with the template ``Dockerfile`` provided, you can pull one of
 these base ``Dockerfile`` s and add the ``renku``, ``git``, and ``jupyter``
 parts to another base image that you might have.
 
-
-Getting Help
-------------
-
-If you are stuck with a specific modification you'd like to make, do reach out to the
-`Renku community forum <https://renku.discourse.group>`_!

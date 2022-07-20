@@ -85,6 +85,7 @@ programming languages.
 
     $ renku status
     Outdated outputs(2):
+    (use `renku workflow visualize [<file>...]` to see the full lineage)
     (use `renku update --all` to generate the file from its latest inputs)
 
         data/output/flights-count.txt: src/filter_flights.py
@@ -105,8 +106,13 @@ data/output/flights-count.txt``.
 
     $ renku update --all
 
+    [workflow ] start
     ...
-    INFO:cwltool:[workflow ] completed success
+    There were 4951 flights to Austin, TX in Jan 2019.
+
+    [job step_1] completed success
+    [step step_1] completed success
+    [workflow ] completed success
     Moving outputs  [                                    ]  2/2
 
 **Wasn't that easy!?**

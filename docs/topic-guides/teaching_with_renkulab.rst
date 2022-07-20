@@ -64,7 +64,7 @@ instead they would share instead a project initiation link to the template,
 where students fill in their own metadata. In this case, student's fully own
 the repository and there is no link from the template repository to the
 instantiated one (except for its metadata). See
-https://renku.readthedocs.io/en/latest/user/templates.html for more details.
+https://renku.readthedocs.io/en/latest/reference/templates.html for more details.
 
 Hands on demos
 ^^^^^^^^^^^^^^
@@ -82,6 +82,13 @@ In each project there is a one-click start button, as shown above. You can copy
 the link of that button (it ends in ``/namespace/project-name/sessions/new?autostart=1``)
 and share it with your audience. Here, there is no need to log in to Renku
 if the project is public and is thus similar to Binder, if you are familiar with that.
+
+Classroom automation
+^^^^^^^^^^^^^^^^^^^^
+
+Classroom management operations, such as inviting students to groups, sending feedback
+through issues or cloning student repositories can be automated thanks to the Gitlab API.
+Visit our `advanced teaching automation repository <https://renkulab.io/gitlab/learn-renku/teaching-on-renku/advanced-teaching-automation>`_ for more information.
 
 Tips to optimize your teachings
 -------------------------------

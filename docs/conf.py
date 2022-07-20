@@ -42,6 +42,7 @@ extensions = [
     "sphinx.ext.todo",
     "sphinx.ext.viewcode",
     "sphinxcontrib.spelling",
+    "sphinxcontrib.mermaid",
     "sphinx_rtd_theme",
     "sphinx_copybutton",
     "sphinx_panels",
@@ -65,14 +66,14 @@ master_doc = "index"
 
 # General information about the project.
 project = "Renku"
-copyright = "2017-2021, Swiss Data Science Center"
+copyright = "2017-2022, Swiss Data Science Center"
 author = (
     "Mohammad Alisafaee, Andreas Bleuler, Eric Bouillet, \n"
-    "Lorenzo Cavazzi, Christine Choirat, Jakub Chrobasik, Alessandro Degano, \n"
-    "Pamela Delgado, Julien Eberle, Virginia Friedrich, \n"
-    "Fotis Georgatos, Ralf Grubenmann, Emma Jablonski, \n"
-    "Jiri Kuncar, David Kunzmann, Travis Lee, Izabela Moise, Tasko Olevski, Samuel Picek, \n"
-    "Chandrasekhar Ramakrishnan, Rok Roškar, Sofiane Sarni, \n"
+    "Lorenzo Cavazzi, Christine Choirat, Jakub Chrobasik, Andrea Cordoba, Alessandro Degano, \n"
+    "Pamela Delgado, Julien Eberle, Virginia Friedrich, Viktor Gal, \n"
+    "Fotis Georgatos, Ralf Grubenmann, Emma Jablonski, Wesley Johnson, Laura Kinkead, \n"
+    "Jiri Kuncar, David Kunzmann, Gavin Lee, Travis Lee, Cyril Matthey-Doret, Izabela Moise, Sean Murphy, Tasko Olevski, Samuel Picek, \n"
+    "Chandrasekhar Ramakrishnan, Rok Roškar, Sofiane Sarni, Tao Sun, \n"
     "Sandra Savchenko De Jong, Johann-Michael Thiebaut, Olivier Verscheure"
 )
 

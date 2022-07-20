@@ -1,15 +1,15 @@
 .. _collaborating:
 
-Collaborating on Renku
-======================
+Collaborate on RenkuLab
+=======================
 
 Beyond building and maintaining your own data science workflows, there are many
 ways to use Renku to share your project with collaborators.
 
-Finding & accessing public projects
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Find & access public projects
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-To find and access projects on the Renku platform that you might want to
+To find and access projects on Renku that you might want to
 interact with, you can click the **Projects** link in the menu bar followed by
 the **Search** tab. Without entering any search terms, you will see a list of
 all projects that you have access to. You can click on a project name to be
@@ -17,7 +17,7 @@ taken to the project's landing page.
 
 By default, the files in projects created by other people are "read only" to you.
 This means you can see an overview, create and read issues, and browse the filesystem
-in both text and :ref:`provenance` modes. The project's **Environments** tab
+in both text and :ref:`provenance` modes. The project's **Sessions** tab
 will inform you that you do not have permissions to launch a notebook or make
 modifications to the code or datasets.
 
@@ -38,7 +38,7 @@ Fork a project and take it in your own direction
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Forking someone else's project on Renku is just like forking any version-controlled
-project. The Renku platform provides you a fork button on the project's home page
+project. Renku provides you a fork button on the project's home page
 that creates a fork of the project (with the same name) under your own namespace,
 where you have permissions to launch notebooks and make settings modifications.
 
@@ -64,7 +64,7 @@ interface to add them in ``Settings > Members``, with at either Developer or
 Maintainer privileges.
 
 Adding them here will make this project appear in their **Your Projects** list
-on the Renku platform, where the **Environments** tab for the project will allow
+on Renku, where the **Sessions** tab for the project will allow
 them to launch a session to work on the project as usual.
 
 .. warning::

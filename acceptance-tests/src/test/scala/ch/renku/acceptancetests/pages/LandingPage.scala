@@ -21,11 +21,7 @@ package ch.renku.acceptancetests.pages
 import org.openqa.selenium.{WebDriver, WebElement}
 import org.scalatestplus.selenium.WebBrowser._
 
-case object LandingPage
-    extends RenkuPage(
-      path = "/",
-      title = "Renku"
-    ) {
+case object LandingPage extends RenkuPage(path = "/") {
 
   override def pageReadyElement(implicit webDriver: WebDriver): Option[WebElement] = Some(loginButton)
 

@@ -34,18 +34,52 @@ trait Environments {
     click on projectPage.Sessions.tab
     docsScreenshots.takeScreenshot()
 
-    `click new & wait for image to build`
+    `click New Session & wait for image to build`
     docsScreenshots.takeScreenshot()
 
     `start session and wait until it is ready`
     docsScreenshots.takeScreenshot()
 
-    projectPage.Sessions.Running.connectToJupyterLab
+    `connect to JupyterLab`
 
     Then("a JupyterLab page is opened on a new tab")
     val jupyterLabPage = JupyterLabPage()
     verify browserSwitchedTo jupyterLabPage sleep (5 seconds)
     jupyterLabPage
+  }
+
+  private def `connect to JupyterLab`(implicit projectPage: ProjectPage): JupyterLabPage = eventually {
+    And("the user tries to connect to JupyterLab")
+    sleep(2 seconds)
+
+    if (projectPage.Sessions.Running.maybeOpenButton.fold(ifEmpty = true)(btn => !btn.isDisplayed))
+      pause whenUserCanSee { driver =>
+        val maybeGetLogs = projectPage.Sessions.Running.maybeOpenButton(driver)
+        if (maybeGetLogs.fold(false)(_.isDisplayed)) And("the 'Get logs' button is displayed")
+        maybeGetLogs
+      }
+
+    `try few times before giving up` { _ =>
+      And("clicks on the 'Open' button")
+      click on projectPage.Sessions.Running.openButtonMenu
+      sleep(2 seconds)
+
+      And("selects the 'Open in new tab' option")
+      click on projectPage.Sessions.Running.openInNewTabMenuItem
+      sleep(2 seconds)
+    }
+
+    if (webDriver.findTabWithUrlContaining("spawn-pending").nonEmpty) {
+      And("JupyterLab is not up yet")
+      Then("close the window and try again later")
+      webDriver.close()
+      webDriver.switchToTab(0)
+      fail("Could not connect to JupyterLab")
+    } else
+      webDriver.findTabWithUrlContaining("/lab") match {
+        case Some(_) => JupyterLabPage()
+        case None    => fail("Cannot find JupyterLab tab")
+      }
   }
 
   def `stop session`(implicit projectPage: ProjectPage): Unit =
@@ -95,76 +129,101 @@ trait Environments {
 
       And("clicks on the Sessions tab to launch an unprivileged session")
       click on projectPage.Sessions.tab
-
-      // We sleep a little to complete anonymous "login"
       sleep(5 seconds)
-      `click new & wait for image to build`
-      `start session and wait until it is ready`
 
-      projectPage.Sessions.Running.connectToJupyterLab
+      if (projectPage.Sessions.Running.maybeOpenButton.exists(_.isDisplayed))
+        And("the session is already started")
+      else {
+        `click New Session & wait for image to build`
+        `start session and wait until it is ready`
+      }
+
+      val jupyterLabPage = `connect to JupyterLab`
 
       Then("a JupyterLab page is opened on a new tab")
-      val jupyterLabPage = JupyterLabPage()
-      // TODO This does not work for some reason
-      // verify browserSwitchedTo jupyterLabPage sleep (5 seconds)
+      verify browserSwitchedTo jupyterLabPage sleep (5 seconds)
+
       Some(projectPage)
     }
 
-  private def `anonymous session unsupported`(projectPage: ProjectPage): Option[JupyterLabPage] = {
+  private def `anonymous session unsupported`(projectPage: ProjectPage): Unit = {
     Then("they should see a message")
-    projectPage.Sessions.anonymousUnsupported
-    None
+    projectPage.Sessions.anonymousSessionsUnsupportedInfo.isDisplayed shouldBe true
   }
 
   private def `anonymous session supported`(implicit projectPage: ProjectPage): JupyterLabPage = {
     sleep(5 seconds)
-    `click new & wait for image to build`
+    `click New Session & wait for image to build`
     `start session and wait until it is ready`
-
-    projectPage.Sessions.Running.connectToAnonymousJupyterLab
+    val jupyterLabPage = `connect to JupyterLab`
 
     Then("a JupyterLab page is opened on a new tab")
-    val jupyterLabPage = JupyterLabPage()
-    // TODO This does not work for some reason
-    // verify browserSwitchedTo jupyterLabPage sleep (5 seconds)
+    verify browserSwitchedTo jupyterLabPage sleep (5 seconds)
+
     jupyterLabPage
   }
 
-  private def `click new & wait for image to build`(implicit projectPage: ProjectPage): Unit = {
-    And("then they click on the New link")
-    click on projectPage.Sessions.newLink sleep (2 seconds)
-    And("once the image is built")
-    projectPage.Sessions.verifyImageReady sleep (2 seconds)
+  private def `click New Session & wait for image to build`(implicit projectPage: ProjectPage): Unit = {
+    And("then they click on the 'New Session' link")
+    click on projectPage.Sessions.newLink sleep (10 seconds)
+
+    reload whenUserCannotSee { _ =>
+      `wait if a session is in an uncertain state`
+
+      And("wait for the image to build")
+      `try again if failed` { _ =>
+        val badge = projectPage.Sessions.imageReadyBadge
+        sleep(10 seconds)
+        badge
+      }
+    }
   }
+
+  private def `wait if a session is in an uncertain state`(implicit projectPage: ProjectPage) =
+    `try few times before giving up` { _ =>
+      if (projectPage.Sessions.maybeButtonHideBranch.isDisplayed) ()
+      else if (projectPage.maybeBouncer.isDisplayed) {
+        do {
+          And("wait for the Bouncer to go")
+          sleep(20 seconds)
+        } while (projectPage.maybeBouncer.isDisplayed)
+      } else if (pageSource contains "A session for this commit is starting or terminating") {
+        do {
+          And("wait for the Session to start or terminate")
+          sleep(20 seconds)
+        } while (pageSource contains "A session for this commit is starting or terminating")
+      } else
+        click on projectPage.Sessions.buttonShowBranch sleep (5 seconds)
+    }
 
   private def `start session and wait until it is ready`(implicit projectPage: ProjectPage): Unit = {
-    projectPage.Sessions.verifyImageReady sleep (2 seconds)
-    try `try to click the session button`
-    catch {
-      case _: org.openqa.selenium.ElementClickInterceptedException => `try to click the session button`
+    reload whenUserCannotSee (projectPage.Sessions.startSessionButton(_))
+
+    And("the user clicks on the Start session button")
+    // it looks like the first click may simply move the page to the button
+    // and only the second attempt does the job
+    `try again if failed` { _ =>
+      click on projectPage.Sessions.startSessionButton
+    }
+    sleep(5 seconds)
+
+    `try few times before giving up` { _ =>
+      Then("they should be redirected to the Sessions tab")
+      verify userCanSee projectPage.Sessions.Running.title
+    }
+
+    `try few times before giving up` { driver =>
+      pause whenUserCanSee { drv =>
+        val maybeBadge = projectPage.Sessions.Running.maybeSessionNotReadyBadge(drv)
+        if (maybeBadge.fold(ifEmpty = false)(_.isDisplayed)) {
+          When("the session is not ready the user waits")
+          sleep(5 seconds)
+        }
+        maybeBadge
+      }
+
+      When("the session is ready")
+      verify userCanSee projectPage.Sessions.Running.sessionReadyBadge(driver)
     }
   }
-
-  private def `try to click the session button`(implicit projectPage: ProjectPage): Unit =
-    projectPage.Sessions.maybeStartSessionButton match {
-      case None =>
-        projectPage.Sessions.connectToJupyterLabLink.isDisplayed shouldBe true
-      case Some(startEnvButton) =>
-        And("the user clicks on the Start session button")
-        click on startEnvButton sleep (5 seconds)
-
-        `try few times before giving up` { _ =>
-          Then("they should be redirected to the Sessions -> Running tab")
-          verify userCanSee projectPage.Sessions.Running.title
-        }
-
-        `try few times before giving up` { _ =>
-          When("the session is ready")
-          projectPage.Sessions.Running.verifySessionReady
-        }
-
-        And("the user clicks on the Connect button in the table")
-        // Sleep a little while after clicking to give the server a chance to come up
-        click on projectPage.Sessions.Running.title sleep (30 seconds)
-    }
 }

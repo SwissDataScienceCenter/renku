@@ -23,12 +23,7 @@ import org.scalatestplus.selenium.WebBrowser.{cssSelector, find, findAll}
 import scala.annotation.tailrec
 import scala.concurrent.duration._
 
-object DatasetsPage
-    extends RenkuPage(
-      path = s"/datasets",
-      title = "Renku"
-    )
-    with TopBar {
+object DatasetsPage extends RenkuPage(path = s"/datasets") with TopBar {
 
   def searchBox(implicit webDriver: WebDriver): WebElement = eventually {
     find(cssSelector("#searchQuery")) getOrElse fail("Datasets -> search query field cannot be found")
@@ -56,10 +51,6 @@ object DatasetsPage
 
   def searchResultLinks(implicit webDriver: WebDriver): List[WebElement] = eventually {
     findAll(cssSelector(".rk-search-result-card > a > div > div.title")).toList
-  }
-
-  def maybeBouncer(implicit webDriver: WebDriver): Option[WebElement] = eventually {
-    findAll(cssSelector(".bouncer")).toList.headOption
   }
 
   override def pageReadyElement(implicit webDriver: WebDriver): Option[WebElement] = {

@@ -45,8 +45,11 @@ the changes or committing them to the repository.
         $ renku save -m "My own changes"
 
 
-The ``filter_flights.\*`` script takes two input
-parameters: 1. a file to process as an input 2. a path for storing the output.
+The ``filter_flights.\*`` script takes two input parameters:
+
+1. a file to process as an input
+2. a path for storing the output.
+
 So to run it, we would normally execute the following:
 
 .. tabbed:: Python
@@ -112,7 +115,7 @@ Workflows created in this way don't just try past executions, but also define
 workflow templates (Called ``Plans`` in Renku) that can be executed with
 arbitrary parameters on different workflow backends and exported to other
 workflow languages.
-See the `renku command line docs <https://renku-python.readthedocs.io/en/latest/commands.html>`_
+See the `renku command line docs <https://renku.readthedocs.io/en/latest/renku-python/docs/reference/commands.html>`_
 for more information on this and other commands.
 
 
@@ -165,7 +168,7 @@ for more information on this and other commands.
     `git-lfs <https://git-lfs.github.com/>`_
     to save large files, and these files may not be fetched when a new
     environment is started. We try to retrieve them automatically when needed
-    for a renku command, but that may not always work.
+    for a Renku command, but that may not always work.
 
     If you check the ``data/flight-data/2019-01-flights.csv.zip`` file you
     will see only a few lines of metadata starting with
@@ -193,7 +196,7 @@ for more information on this and other commands.
 
    Do *not* make any edits to the code before the ``renku run``
    command is finished. In order to keep track of the outputs of
-   your script, renku will automatically add the changes to
+   your script, Renku will automatically add the changes to
    ``git``. If you want to modify your project while a ``renku`` command
    is executing, you should create a new branch.
 

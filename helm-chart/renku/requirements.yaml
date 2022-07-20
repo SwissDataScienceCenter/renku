@@ -2,23 +2,23 @@ dependencies:
 - name: renku-core
   alias: core
   repository: "https://swissdatasciencecenter.github.io/helm-charts/"
-  version: 1.2.4
+  version: 1.5.0
 - name: renku-ui
   alias: ui
   repository: "https://swissdatasciencecenter.github.io/helm-charts/"
-  version: 2.2.0
+  version: 2.5.0
 - name: renku-ui-server
   alias: uiserver
   repository: "https://swissdatasciencecenter.github.io/helm-charts/"
-  version: 2.2.0
+  version: 2.5.0
 - name: renku-notebooks
   alias: notebooks
   repository: "https://swissdatasciencecenter.github.io/helm-charts/"
-  version: 1.6.2
+  version: 1.9.0
 - name: renku-gateway
   alias: gateway
   repository: "https://swissdatasciencecenter.github.io/helm-charts/"
-  version: 0.13.1
+  version: 0.14.0
 - name: gitlab
   repository: "https://swissdatasciencecenter.github.io/helm-charts/"
   version: 0.6.0
@@ -26,20 +26,20 @@ dependencies:
 - name: renku-graph
   alias: graph
   repository: "https://swissdatasciencecenter.github.io/helm-charts/"
-  version: 2.5.1
+  version: 2.13.0
   condition: graph.enabled
 - name: postgresql
   version: 9.1.1
-  repository: "https://charts.bitnami.com/bitnami"
+  repository: "https://raw.githubusercontent.com/bitnami/charts/eb5f9a9513d987b519f0ecd732e7031241c50328/bitnami"
   condition: postgresql.enabled
 - name: keycloak
   version: 16.0.4
   repository: "https://codecentric.github.io/helm-charts"
   condition: keycloak.enabled
 - name: certificates
-  version: 0.0.1
+  version: 0.0.3
   repository: "https://swissdatasciencecenter.github.io/helm-charts/"
 - name: redis
   version: 10.7.11
-  repository: "https://charts.bitnami.com/bitnami"
+  repository: "https://raw.githubusercontent.com/bitnami/charts/eb5f9a9513d987b519f0ecd732e7031241c50328/bitnami"
   condition: redis.install

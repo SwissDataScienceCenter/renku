@@ -1,5 +1,6 @@
 acyclic
 admin
+adhoc
 Amalthea
 analytics
 app
@@ -73,6 +74,7 @@ gitkeep
 gitlab
 GitLab
 gitlabClientSecret
+golang
 GraphQL
 hostname
 https
@@ -132,6 +134,7 @@ parametrization
 parametrize
 parametrized
 pipenv
+pipx
 PNG
 Postgresql
 powerline
@@ -161,6 +164,8 @@ Reusability
 righthand
 roadmap
 Roadmap
+rsa
+RSA
 rstudio
 RStudio
 runnable
@@ -195,6 +200,7 @@ Tensorflow
 timestamp
 tinkerpop
 toolchain
+Traefik
 truthy
 tutorialLink
 txt
@@ -206,6 +212,8 @@ unicode
 unlink
 Unlink
 unmapped
+unpushed
+unschedulable
 untracked
 untracked
 url

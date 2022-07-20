@@ -1,36 +1,26 @@
 .. _cli_installation:
 
-Command-line Interface Installation
-===================================
+Install the Renku Command-line Interface
+========================================
 
 The Python-based command-line interface (CLI) and the Python API that we call
-``renku`` is available for use via RenkuLab sessions and you can
+``renku`` is available for use via RenkuLab sessions, and you can
 also install it on your local machine. Most available CLI commands are
-documented in our :download:`cheatsheet <../renku-python/docs/_static/cheatsheet/cheatsheet.pdf>`.
-
-Using the CLI on RenkuLab
--------------------------
-
-The ``renku`` command-line interface is already installed if you start a
-Session from RenkuLab with a project you created on RenkuLab or
-initialized via ``renku init`` in a local repository.
-
-See :ref:`renku_cli_upgrade` for upgrading to the latest version of the CLI for
-Sessions.
+documented in our :download:`cheatsheet <../../renku-python/docs/_static/cheatsheet/cheatsheet.pdf>`.
 
 
 Local installation with the script manager ``pipx``
 ---------------------------------------------------
 
-Install and execute Renku in an isolated environment using ``pipx``.
+Install and execute renku in an isolated environment using ``pipx``.
 It will guarantee that there are no version conflicts with dependencies
 you are using for your work and research.
 
 .. note::
 
-  This is the method of installation in the renku docker images,
+  This is the method of installation in the Renku docker images,
   i.e. the default environment you use when you launch a JupyterLab session
-  via the renku browser interface.
+  via the Renku browser interface.
 
 `Install pipx <https://github.com/pipxproject/pipx#install-pipx>`_
 and make sure that the ``$PATH`` is correctly configured.
@@ -103,7 +93,7 @@ environment.
 Bleeding-edge
 ^^^^^^^^^^^^^
 
-To install the latest bleeding-edge version of Renku and keep it from
+To install the latest bleeding-edge version of renku and keep it from
 polluting your application environment, an easy solution is to place it inside
 an  isolated ``conda`` environment. If you don't have ``conda`` already, you
 should `install miniconda <https://conda.io/miniconda.html>`__. Once you have
@@ -156,3 +146,32 @@ section, you can install `renku v0.3.0` with
     You may get a ``ValueError: unknown locale: UTF-8`` - see `here
     <https://docs.pipenv.org/diagnose/#valueerror-unknown-locale-utf-8>`_ for
     instructions on how to fix it.
+
+
+.. _cli-troubleshooting:
+
+CLI installation problems
+-------------------------
+
+``psutil`` failure during renku CLI execution or installation
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Using ``pip`` or ``pipx`` can result in a failure of the ``psutil`` dependency
+to install correctly. For example:
+
+.. code-block:: shell
+
+  pipx install renku
+  ...
+  /root/.local/pipx/venvs/renku/include/site/python3.7/psutil" failed with error code 1 in /tmp/pip-install-c7z7y8vs/psutil/
+  '/root/.local/pipx/venvs/renku/bin/python -m pip install renku -q' failed
+
+This can be solved in \*nix systems by installing the ``musl`` library. For
+example, on Ubuntu:
+
+.. code-block:: shell
+
+  # install the musl library and headers
+  apt-get install musl-dev
+  # link the library
+  ln -s /usr/lib/x86_64-linux-musl/libc.so /lib/libc.musl-x86_64.so.1

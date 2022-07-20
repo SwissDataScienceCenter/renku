@@ -12,7 +12,7 @@ of the **Renku** platform.
 
 
 
-The Renku platform consists of several off-the-shelf components from the
+Renku consists of several off-the-shelf components from the
 software engineering and data science software stacks, as well as customized or
 newly developed services. The services communicate among each other through
 REST APIs. The deployment is orchestrated on Kubernetes through the use of
@@ -45,7 +45,7 @@ are either built or extended by us.
 
 .. _fig-component-architecture:
 
-.. graphviz:: /_static/graphviz/renku_architecture.dot
+.. mermaid:: /_static/graphviz/renku_architecture.mmd
 
 
 .. _renku: https://github.com/SwissDataScienceCenter/renku

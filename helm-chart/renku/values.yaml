@@ -123,9 +123,8 @@ global:
   certificates:
     image:
       repository: renku/certificates
-      tag: "0.0.1"
-    customCAs:
-      []
+      tag: "0.0.2"
+    customCAs: []
       # - secret:
 
 ## Ingress configuration
@@ -399,10 +398,10 @@ gitlab:
   image:
     #   pullPolicy: IfNotPresent
     repository: gitlab/gitlab-ce
-    # Check out the gitlab docs on upgrading versions - in particular major
-    # versions - before changing the image tag.
-    #  https://docs.gitlab.com/ce/update/#upgrading-to-a-new-major-version
-    tag: 14.4.4-ce.0
+    # Check out the gitlab docs on upgrading versions before changing the image tag.
+    # https://docs.gitlab.com/ee/update/#upgrade-paths
+    # in particular major versions https://docs.gitlab.com/ce/update/#upgrading-to-a-new-major-version
+    tag: 14.10.5-ce.0
 
   ## automatically log in to gitlab
   oauth:
@@ -791,27 +790,23 @@ core:
 
 ## Configuration for renku-ui-server
 uiserver:
-  serverData:
-    {}
+  serverData: {}
     ## server data to correctly build the path and the routes
     # url: https://url.uiserver.fake
     # port: 8080
     # prefix: /ui-server
-  gateway:
-    {}
+  gateway: {}
     ## details to contact the gateway to redirect after the keycloak authentication is finished
     # url: https://url.gateway.fake
     # loginSuffix: /auth/login
     # logoutSuffix: /auth/logout
-  authentication:
-    {}
+  authentication: {}
     ## keycloak configration data for the Renku realm
     # url: https://url.keycloak.fake/auth/realms/Renku
     # id: renku
     # secret: 1234abcd # do not provide any value here to use the global gateway client secret
     # expirationTolerance: 10
-  sentry:
-    {}
+  sentry: {}
     ## Configuration for Sentry
     # enabled: false
     # url: '' # Sentry target URL
@@ -821,3 +816,9 @@ uiserver:
 ## Configuration for the Swagger-UI available at <renku-domain>/swagger
 swagger:
   enabled: true
+
+## The image used in startup scripts to initialize different postgress databases
+initDb:
+  image:
+    repository: renku/init-db
+    tag: "latest"
