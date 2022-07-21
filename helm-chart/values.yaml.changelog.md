@@ -6,6 +6,13 @@ Please follow this convention when adding a new row
 * `<type: NEW|EDIT|DELETE> - *<resource name>*: <details>`
 
 ----
+## Upgrading to Renku 0.14.x
+* EDIT - the ui and ui-server charts were unified, requiring `uiserver` values to be
+moved to `ui.server`
+
+Specifically:
+* rename *uiserver.[property]* to *ui.server.[property]*
+
 ## Upgrading to Renku 0.12.1
 * NEW/EDIT - sentry values across the repositories were changed to follow this pattern:
   ```

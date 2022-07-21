@@ -630,6 +630,31 @@ ui:
   #     - projectPath: renku-tutorials/e-rum-2020
   #     - projectPath: covid-19/covid-19-forecast
 
+  ## Configuration for renku-ui-server
+  server:
+    serverData: {}
+      ## server data to correctly build the path and the routes
+      # url: https://url.uiserver.fake
+      # port: 8080
+      # prefix: /ui-server
+    gateway: {}
+      ## details to contact the gateway to redirect after the keycloak authentication is finished
+      # url: https://url.gateway.fake
+      # loginSuffix: /auth/login
+      # logoutSuffix: /auth/logout
+    authentication: {}
+      ## keycloak configration data for the Renku realm
+      # url: https://url.keycloak.fake/auth/realms/Renku
+      # id: renku
+      # secret: 1234abcd # do not provide any value here to use the global gateway client secret
+      # expirationTolerance: 10
+    sentry: {}
+      ## Configuration for Sentry
+      # enabled: false
+      # url: '' # Sentry target URL
+      # namespace: '' # namespace used to log errors
+      # sampleRate: 0 # sampling rate for tracing -- values must be between 0 and 1
+
 # ## Configuration for the notebooks service
 notebooks:
   ## serverDefaults specifies defaults used when server options parameters
@@ -787,31 +812,6 @@ core:
 
   ## Default clone depth
   # projectCloneDepth: 1
-
-## Configuration for renku-ui-server
-uiserver:
-  serverData: {}
-    ## server data to correctly build the path and the routes
-    # url: https://url.uiserver.fake
-    # port: 8080
-    # prefix: /ui-server
-  gateway: {}
-    ## details to contact the gateway to redirect after the keycloak authentication is finished
-    # url: https://url.gateway.fake
-    # loginSuffix: /auth/login
-    # logoutSuffix: /auth/logout
-  authentication: {}
-    ## keycloak configration data for the Renku realm
-    # url: https://url.keycloak.fake/auth/realms/Renku
-    # id: renku
-    # secret: 1234abcd # do not provide any value here to use the global gateway client secret
-    # expirationTolerance: 10
-  sentry: {}
-    ## Configuration for Sentry
-    # enabled: false
-    # url: '' # Sentry target URL
-    # namespace: '' # namespace used to log errors
-    # sampleRate: 0 # sampling rate for tracing -- values must be between 0 and 1
 
 ## Configuration for the Swagger-UI available at <renku-domain>/swagger
 swagger:
