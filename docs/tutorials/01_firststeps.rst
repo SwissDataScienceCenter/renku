@@ -1,7 +1,7 @@
 .. _first_steps:
 
-First Steps Tutorial
-====================
+Get Started on RenkuLab
+=======================
 
 This tutorial will help you get started working on the Renkulab platform. We will
 use Renku to realize a very small data science project: counting the

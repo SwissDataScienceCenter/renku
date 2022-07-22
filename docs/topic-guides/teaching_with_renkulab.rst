@@ -83,6 +83,13 @@ the link of that button (it ends in ``/namespace/project-name/sessions/new?autos
 and share it with your audience. Here, there is no need to log in to Renku
 if the project is public and is thus similar to Binder, if you are familiar with that.
 
+Classroom automation
+^^^^^^^^^^^^^^^^^^^^
+
+Classroom management operations, such as inviting students to groups, sending feedback
+through issues or cloning student repositories can be automated thanks to the Gitlab API.
+Visit our `advanced teaching automation repository <https://renkulab.io/gitlab/learn-renku/teaching-on-renku/advanced-teaching-automation>`_ for more information.
+
 Tips to optimize your teachings
 -------------------------------
 

@@ -1,7 +1,7 @@
 .. _admin_troubleshooting:
 
-Troubleshooting a Renku deployment
-=========================================
+Troubleshoot a Renku deployment
+===============================
 
 Gateway in a CrashLoopBackOff state
 ------------------------------------

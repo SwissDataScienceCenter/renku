@@ -1,7 +1,7 @@
 .. _s3:
 
-Mounting S3 Buckets in Renku Sessions
-=====================================
+Mount S3 Buckets in Renku Sessions
+==================================
 
 Renku has an optional feature that allows users to mount and access data in
 any S3-compatible object storage. This feature is enabled at `renkulab.io <http://renkulab.io>`_ 

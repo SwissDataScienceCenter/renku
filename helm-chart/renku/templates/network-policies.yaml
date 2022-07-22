@@ -59,3 +59,9 @@ spec:
       ports:
         - protocol: TCP
           port: 5432
+    - from:
+        - podSelector: {}
+          namespaceSelector: {}
+      ports:
+        - protocol: TCP
+          port: 9187

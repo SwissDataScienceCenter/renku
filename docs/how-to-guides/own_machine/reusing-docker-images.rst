@@ -1,50 +1,10 @@
-.. _local_sessions:
+.. _reuse_docker_images:
 
-Running RenkuLab Interactive Sessions on Your Own Machine
-=========================================================
+Use the Docker Images built on RenkuLab
+=======================================
 
-Each Renku project contains configuration files (``Dockerfile``,
-``requirements.txt`` etc.) for building reproducible session images. We build
-these automatically when you push your project to the server and store them in
-the image registry connected to the Renku instance that you are using. The
-custom-built images are used whenever you launch an interactive session on
-RenkuLab.
-
-You can of course also use these same images to run your code in the correct
-environment anywhere that `Docker <https://www.docker.com>`_ is available.
-
-.. note::
-
-    All of the instructions below assume that you have cloned your project
-    locally and that you have `Docker installed
-    <https://docs.docker.com/get-docker/>`_. On Linux systems, Docker requires
-    root privileges - if you do not have root access to the host, you might
-    consider `rootless Docker
-    <https://docs.docker.com/engine/security/rootless/>`_.
-
-
-Building your own image
------------------------
-
-If you are working on a project that has not yet been pushed to the server, or
-you just prefer to build the image locally, you can certainly do so with Docker.
-To build the image, run this command from the root directory of your project:
-
-.. code-block:: console
-
-    $ docker build -t <imageName>:<tag> .
-
-The ``imageName`` and ``tag`` can be anything you want, but you might want to
-try to use something you will remember. To see which images you have in your
-local Docker registry, run
-
-.. code-block:: console
-
-    $ docker images
-
-
-Using the images built on RenkuLab
-----------------------------------
+Identify the name of the image you want to use
+----------------------------------------------
 
 The easiest way to spin up your runtime environment locally is by pulling the
 image that has already been built.

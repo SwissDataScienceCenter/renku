@@ -16,7 +16,6 @@ and a R setup (Basic R Project). In many cases, you can use these templates
 as-is (see the :ref:`directory_structure` below). If you prefer another
 language, you require a different IDE, or the base templates don't meet your
 needs for any other reason, you can create new ones!
-Check out :ref:`sessions`.
 
 Note that you can create projects that are specifically intended to be templates
 that others can use by adding to the base Renku template. If you're familiar
@@ -78,7 +77,7 @@ that every time you make a commit, your project's docker image is rebuilt. In
 most cases, this build should be successful. If, however, you are making
 modifications to the ``Dockerfile``, you should pay attention to the CI/CD tab
 in GitLab to check for failing builds. Take a look
-at :ref:`sessions`.
+at :ref:`customizing`.
 
 ``Dockerfile``
 """"""""""""""
@@ -93,7 +92,7 @@ The lines following ``FROM`` define the installation of your own software
 dependencies; they are the instructions for conda/pip installations of the
 libraries in your ``requirements.txt`` file. If there's nothing special
 about the libraries you're installing, you wont have to make changes to this
-file. Else, check out :ref:`sessions`.
+file. Else, check out :ref:`install_packages`.
 
 ``.dockerignore``
 """""""""""""""""
@@ -260,7 +259,7 @@ You want a different version of python than the one provided, you want to
 install software that requires additional non-python/R dependencies, or you
 want to make other changes, and you're comfortable editing Dockerfiles. In
 addition to the files above, you might modify the following.
-Consult :ref:`sessions`.
+Consult :ref:`customizing`.
 
 * ``Dockerfile``
 * ``.dockerignore``
