@@ -6,7 +6,7 @@ Please follow this convention when adding a new row
 * `<type: NEW|EDIT|DELETE> - *<resource name>*: <details>`
 
 ----
-## Upgrading to Renku 0.13.1
+## Upgrading to Renku 0.15.0
 * EDIT - the ui and ui-server charts were unified, requiring that the values be merged.
 
 The new structure looks like
