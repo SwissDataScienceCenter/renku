@@ -134,6 +134,7 @@ parametrization
 parametrize
 parametrized
 pipenv
+pipx
 PNG
 Postgresql
 powerline
@@ -163,6 +164,8 @@ Reusability
 righthand
 roadmap
 Roadmap
+rsa
+RSA
 rstudio
 RStudio
 runnable
@@ -197,6 +200,7 @@ Tensorflow
 timestamp
 tinkerpop
 toolchain
+Traefik
 truthy
 tutorialLink
 txt

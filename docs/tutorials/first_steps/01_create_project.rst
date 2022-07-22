@@ -18,11 +18,14 @@ and clicking on the **New Project** (2) button.
     :align: center
     :alt: Head to new project page
 
-Enter **Flights Tutorial** as your project title (1); if you wish, change
-the visibility (or leave it *public*) (2); select an appropriate Renku
-template (in this tutorial, either Python, Julia or R) (3); fill in an optional description
-(4) and any other parameters appearing after selecting the template.
-Click on the **Create project** button (5).
+On the project creation page:
+
+* Enter **Flights Tutorial** as your project title (1).
+* Fill in an optional description (2).
+* If you wish, change the visibility (or leave it *public*) (3).
+* Select an appropriate Renku template (in this tutorial, either Python, R or Julia) (4).
+* Fill in any required parameters appearing after selecting the template.
+* Click on the **Create project** button (5).
 
 .. image:: ../../_static/images/ui_02_new-project.png
     :width: 100%

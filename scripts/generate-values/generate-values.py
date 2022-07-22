@@ -141,7 +141,7 @@ def main():
     print("--------------------------")
 
     print(warning)
-    print("{}".format(yaml.dump(values, sys.stdout)))
+    yaml.dump(values, sys.stdout)
 
 if __name__ == "__main__":
     main()

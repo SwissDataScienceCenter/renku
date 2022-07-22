@@ -398,10 +398,10 @@ gitlab:
   image:
     #   pullPolicy: IfNotPresent
     repository: gitlab/gitlab-ce
-    # Check out the gitlab docs on upgrading versions - in particular major
-    # versions - before changing the image tag.
-    #  https://docs.gitlab.com/ce/update/#upgrading-to-a-new-major-version
-    tag: 14.4.4-ce.0
+    # Check out the gitlab docs on upgrading versions before changing the image tag.
+    # https://docs.gitlab.com/ee/update/#upgrade-paths
+    # in particular major versions https://docs.gitlab.com/ce/update/#upgrading-to-a-new-major-version
+    tag: 14.10.5-ce.0
 
   ## automatically log in to gitlab
   oauth:

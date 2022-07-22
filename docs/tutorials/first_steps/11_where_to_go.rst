@@ -3,9 +3,9 @@
 Where to go from here?
 ----------------------
 
-* Create your own project on renkulab.io!
+* Create your own project on `renkulab.io <https://renkulab.io>`__
 * Explore the documentation_
-* Read more about the `Renku CLI <http://renku-python.readthedocs.io/>`__
+* Read more about the `Renku CLI <https://renku-python.readthedocs.io/>`__
 * Join us on `Gitter <https://gitter.im/SwissDataScienceCenter/renku>`_, `GitHub <https://github.com/SwissDataScienceCenter/renku>`_, or `Discourse <https://renku.discourse.group>`_
 
 .. _renkulab.io: https://renkulab.io
