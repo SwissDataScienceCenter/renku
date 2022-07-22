@@ -88,3 +88,16 @@ postgresql:
   postgresqlPassword: <use `openssl rand -hex 32`>
 redis:
   password: <use `openssl rand -hex 32`>
+ui:
+  baseUrl: https://{renku_domain}
+  gatewayUrl: https://{renku_domain}/api
+  client:
+    uiserverUrl: https://{renku_domain}/ui-server
+    welcomePage:
+      text: |
+        ## Welcome to Renku!
+        Renku is software for collaborative data science.
+        With Renku you can share code and data, discuss problems and solutions, and coordinate data-science projects.
+        ## Template
+        I am templateable, so deployment specific information can be put here by
+        changing ui.client.welcomePèage.text in the values file.
