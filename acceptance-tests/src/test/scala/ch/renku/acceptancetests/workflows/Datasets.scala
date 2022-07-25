@@ -132,7 +132,9 @@ trait Datasets {
     `navigate to the dataset`(datasetPage)
 
     When("the user clicks on the modify button")
-    click on datasetPage.modifyButton sleep (1 second)
+    `try few times before giving up` { _ =>
+      click on datasetPage.modifyButton sleep (1 second)
+    }
     verify userCanSee datasetPage.ModificationForm.formTitle
 
     And(s"the user modifies the dataset by ${by.name}")
