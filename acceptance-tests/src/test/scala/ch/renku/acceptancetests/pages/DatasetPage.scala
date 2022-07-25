@@ -42,7 +42,7 @@ class DatasetPage(datasetName: DatasetName, projectPage: ProjectPage)
   override def pageReadyElement(implicit webDriver: WebDriver): Option[WebElement] = Some(datasetTitle)
 
   def datasetTitle(implicit webDriver: WebDriver): WebElement = eventually {
-    find(cssSelector(".col-md-8 > h3")) getOrElse fail("Dataset -> Dataset title not found")
+    find(cssSelector("h3[data-cy='dataset-title']")) getOrElse fail("Dataset -> Dataset title not found")
   }
 
   def datasetNotInKgWarning(implicit webDriver: WebDriver): List[WebBrowser.Element] = eventually {

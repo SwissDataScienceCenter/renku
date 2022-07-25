@@ -313,7 +313,7 @@ class ProjectPage(val projectSlug: String, val namespace: String)
     }
 
     def startSessionButton(implicit webDriver: WebDriver): WebElement = eventually {
-      findAll(cssSelector("button.btn.btn-primary"))
+      findAll(cssSelector("button.btn"))
         .find(_.text == "Start session")
         .getOrElse(fail("'Start session' button not found"))
     }
@@ -429,7 +429,7 @@ class ProjectPage(val projectSlug: String, val namespace: String)
   }
 
   def forkButton(implicit webDriver: WebDriver): WebElement = eventually {
-    findAll(cssSelector(s"button")).find(_.text == "fork") getOrElse fail("Fork button not found")
+    find(cssSelector("#fork-project")) getOrElse fail("Fork button not found")
   }
 
   object ForkDialog {
@@ -449,7 +449,8 @@ class ProjectPage(val projectSlug: String, val namespace: String)
     }
 
     def forkButton(implicit webDriver: WebDriver): WebElement = eventually {
-      find(cssSelector("div.modal-footer > button.btn.btn-primary")) getOrElse fail("Fork button not found")
+      findAll(cssSelector("div.modal-footer > button.btn"))
+        .find(_.text.trim == "Fork Project") getOrElse fail("Fork button not found")
     }
   }
 
