@@ -3,8 +3,9 @@
 0.15.0
 ------
 
-| This release features improvements and bug fixes to Renku CLI, UI, and User Sessions.
-| ⚠️ Please mind that Renku UI contains changes requiring intervention from an administrator (see below for further details).
+This release features improvements and bug fixes to Renku CLI, UI, and User Sessions.
+
+⚠️ Please mind that Renku UI contains changes requiring intervention from an administrator (see below for further details).
 
 Features
 ~~~~~~~~~
@@ -40,7 +41,8 @@ Upgrading from 0.14.1
 
 BREAKING CHANGES!
 Mind the changes to the structure of the values file for `ui` and `uiserver`.
-More details available in [the values changelog file](helm-chart/values.yaml.changelog.md)
+
+More details available in `the values changelog file <helm-chart/values.yaml.changelog.md>`_.
 
 
 0.14.1
