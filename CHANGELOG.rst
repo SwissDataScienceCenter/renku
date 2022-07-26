@@ -11,7 +11,6 @@ Features
 ~~~~~~~~~
 
 * **Knowledge Graph**: expose OpenAPI documentation for the lineage endpoint 📃
-* **User sessions**: update base image Dockerfile 🐋
 * **Renku CLI**: improve UX around renku login when errors occur 👤
 * **Renku CLI**: use existing remote image when starting sessions 💽
 * **Renku CLI**: add an option to skip metadata update when executing workflows 🏃
