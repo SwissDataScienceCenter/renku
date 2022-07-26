@@ -23,7 +23,7 @@ Bug fixes
 ~~~~~~~~~~
 
 * **User sessions**: prevent logging unnecessary errors when starting new sessions ✏️
-* **Renku CLI**: fix mergetool issues 🧰
+* **Renku CLI**: fix merge-tool issues 🧰
 * **Renku CLI**: prevent deleting plans still in use and using already deleted plans 🗑
 
 Individual components
