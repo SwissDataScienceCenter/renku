@@ -1,5 +1,49 @@
 .. _changelog:
 
+0.15.0
+------
+
+This release features improvements and bug fixes to Renku CLI, UI, and User Sessions.
+
+⚠️ Please mind that Renku UI contains changes requiring intervention from an administrator (see below for further details).
+
+Features
+~~~~~~~~~
+
+* **Knowledge Graph**: expose OpenAPI documentation for the lineage endpoint 📃
+* **Renku CLI**: improve UX around renku login when errors occur 👤
+* **Renku CLI**: use existing remote image when starting sessions 💽
+* **Renku CLI**: add an option to skip metadata update when executing workflows 🏃
+* **Renku UI**: add support for Mermaid format in Markdown files 🧜‍♀️
+* **Renku UI**: update layout, font, and colors 🎨
+* **Renku UI**: add social links 🔌
+
+Bug fixes
+~~~~~~~~~~
+
+* **User sessions**: prevent logging unnecessary errors when starting new sessions ✏️
+* **Renku CLI**: fix merge-tool issues 🧰
+* **Renku CLI**: prevent deleting plans still in use and using already deleted plans 🗑
+
+Individual components
+~~~~~~~~~~~~~~~~~~~~~~
+
+- `renku-ui 2.6.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/2.6.0>`_
+- `renku-python 1.6.0 <https://github.com/SwissDataScienceCenter/renku-python/releases/tag/v1.6.0>`_
+- `renku-notebooks 1.9.1 <https://github.com/SwissDataScienceCenter/renku-notebooks/releases/tag/1.9.1>`_
+- `amalthea 0.5.1 <https://github.com/SwissDataScienceCenter/amalthea/releases/tag/0.5.1>`_
+- `renku-graph 2.13.1 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/2.13.1>`_
+
+
+Upgrading from 0.14.1
+~~~~~~~~~~~~~~~~~~~~~~
+
+BREAKING CHANGES!
+Mind the changes to the structure of the values file for `ui` and `uiserver`.
+
+More details available in `the values changelog file <helm-chart/values.yaml.changelog.md>`_.
+
+
 0.14.1
 ------
 
