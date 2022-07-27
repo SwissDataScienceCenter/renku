@@ -1,0 +1,25 @@
+# this file should be used as and when necessary to build the renku gitlab helm
+# chart. As renku moves to use of the standard gitlab cloud native chart, this
+# will become redundnat but for now it is still in use.
+#
+# To use this, you will need to remove the chartpress.yaml for building renku and
+# replace it with this file (it seems chartpress cannot work with a file other than
+# one called chartpress.yaml).
+#
+# To build and push a release candidate chart do this:
+# 
+# chartpress --publish --tag x.y.z-rc.Q
+#
+# To publish a chart which is not a release candidate do this, making sure that
+# your appropriate merges/commits are made before doing this:
+# 
+# chartpress --publish --tag x.y.z
+#
+
+charts:
+  - name: helm-chart/gitlab
+    imagePrefix: renku/
+    repo:
+      git: SwissDataScienceCenter/helm-charts
+      published: https://swissdatasciencecenter.github.io/helm-charts
+
