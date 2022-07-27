@@ -6,9 +6,9 @@
 {{- $gitlabFullname := include "gitlab.fullname" . -}}
 {{- $gitlabServicePort := 80 -}}
 {{- $uiFullname := include "ui.fullname" . -}}
-{{- $uiServicePort := .Values.ui.service.port -}}
+{{- $uiServicePort := .Values.ui.client.service.port -}}
 {{- $uiserverFullname := include "uiserver.fullname" . -}}
-{{- $uiserverServicePort := .Values.uiserver.service.port -}}
+{{- $uiserverServicePort := .Values.ui.server.service.port -}}
 {{- $graphEnabled := .Values.graph.enabled -}}
 {{- $webhookServiceFullname := include "webhookService.fullname" . -}}
 {{- $knowledgeGraphFullname := include "knowledgeGraph.fullname" . -}}
