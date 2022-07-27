@@ -6,6 +6,23 @@ Please follow this convention when adding a new row
 * `<type: NEW|EDIT|DELETE> - *<resource name>*: <details>`
 
 ----
+## Upgrading to Renku 0.15.0
+* EDIT - the ui and ui-server charts were unified, requiring that the values be merged.
+
+The new structure looks like
+  ```
+  ui:
+    baseUrl: <string>
+    gatewayUrl: <string>
+    gitlabUrl: <string>
+    ingress: <object>
+    client: <object>  # the remaining old ui values
+    server: <object>  # the old uiserver values
+  ```
+  Specifically, for property not in [baseUrl, gatewayUrl, gitlabUrl, ingress]:
+  * rename *ui.[property]* to *ui.client.[property]*
+  * rename *uiserver.[property]* to *ui.server.[property]*
+
 ## Upgrading to Renku 0.12.1
 * NEW/EDIT - sentry values across the repositories were changed to follow this pattern:
   ```
