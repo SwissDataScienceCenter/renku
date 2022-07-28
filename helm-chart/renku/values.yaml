@@ -538,97 +538,123 @@ gitlab:
 
 ## Configuration for the UI service
 ui:
-  ## Configuration for Renku templates
-  templates:
-    custom: true
-    repositories:
-      - url: https://github.com/SwissDataScienceCenter/renku-project-template
-        ref: 0.3.3
-        name: Renku
-      - url: https://github.com/SwissDataScienceCenter/contributed-project-templates
-        ref: 0.4.1
-        name: Community
+  client:
+    ## Configuration for Renku templates
+    templates:
+      custom: true
+      repositories:
+        - url: https://github.com/SwissDataScienceCenter/renku-project-template
+          ref: 0.3.3
+          name: Renku
+        - url: https://github.com/SwissDataScienceCenter/contributed-project-templates
+          ref: 0.4.1
+          name: Community
 
-  ## Configuration for a canary version of the UI
-  # canary:
-  #   enabled: true
-  #   image:
-  #     repository: renku/renku-ui
-  #     tag: "1.0.0-beta5"
-  ## Configuration for the welcome page text
-  #  welcomePage:
-  #    text: "## Some markdown text here!"
-  ## UI image
-  # image:
-  #   pullPolicy: Always
-  #   repository: renku/renku-ui
-  #   tag: latest
+    ## Configuration for a canary version of the UI
+    # canary:
+    #   enabled: true
+    #   image:
+    #     repository: renku/renku-ui
+    #     tag: "1.0.0-beta5"
+    ## Configuration for the welcome page text
+    #  welcomePage:
+    #    text: "## Some markdown text here!"
+    ## UI image
+    # image:
+    #   pullPolicy: Always
+    #   repository: renku/renku-ui
+    #   tag: latest
 
-  ## Pod affinity for UI deployment
-  # affinity: {}
-  ## Node selector for UI deployment
-  # nodeSelector: {}
-  ## Pod tolerations for UI deployment
-  # tolerations: []
+    ## Pod affinity for UI deployment
+    # affinity: {}
+    ## Node selector for UI deployment
+    # nodeSelector: {}
+    ## Pod tolerations for UI deployment
+    # tolerations: []
 
-  ## Replica count
-  # replicaCount: 1
+    ## Replica count
+    # replicaCount: 1
 
-  ## Service configuration for UI
-  ## Modify service.type according to your setup
-  # service:
-  #   port: 80
-  #   type: ClusterIP
+    ## Service configuration for UI
+    ## Modify service.type according to your setup
+    # service:
+    #   port: 80
+    #   type: ClusterIP
 
-  ## Privacy settings allow to configure the content of a Privacy Page through a configMap
-  ## and to show a banner to comply with privacy related laws
-  # privacy:
-  #   enabled: true
-  #   page:
-  #     enabled: true
-  #     configMapName: privacy-page
-  #     configMapKey: privacy_statement
-  #   banner:
-  #     content: |
-  #       This website requires cookies in order to ensure basic functionality. Further details
-  #       in our <u><a class="text-white" href="/privacy">Privacy Policy</a></u>.
-  #     layout:
-  #       disableStyles: true
-  #       containerClasses: fixed-bottom p-3 bg-dark
-  #       contentClasses: text-white small
-  #       buttonClasses: btn btn-sm btn-light mr-2
-  #       buttonWrapperClasses: mt-2
-  ## Configuration for Sentry
-  # sentry:
-  #   enabled: false
-  #   url: ''
-  #   namespace: ''
-  #   sampleRate: 0 # sampling rate for tracing -- values must be between 0 and 1
+    ## Privacy settings allow to configure the content of a Privacy Page through a configMap
+    ## and to show a banner to comply with privacy related laws
+    # privacy:
+    #   enabled: true
+    #   page:
+    #     enabled: true
+    #     configMapName: privacy-page
+    #     configMapKey: privacy_statement
+    #   banner:
+    #     content: |
+    #       This website requires cookies in order to ensure basic functionality. Further details
+    #       in our <u><a class="text-white" href="/privacy">Privacy Policy</a></u>.
+    #     layout:
+    #       disableStyles: true
+    #       containerClasses: fixed-bottom p-3 bg-dark
+    #       contentClasses: text-white small
+    #       buttonClasses: btn btn-sm btn-light mr-2
+    #       buttonWrapperClasses: mt-2
+    ## Configuration for Sentry
+    # sentry:
+    #   enabled: false
+    #   url: ''
+    #   namespace: ''
+    #   sampleRate: 0 # sampling rate for tracing -- values must be between 0 and 1
 
-  ## Configuration for statuspage.io integration
-  # statuspage:
-  ## Provide the id for the statuspage, which is the subdomain of statuspage.io
-  ## used in the API queries. This can be found from the /api path.
-  ## E.g., under https://renkulab.statuspage.io/api you see that summary
-  ## is available under https://5bcn9bqff4qt.statuspage.io/api/v2/summary.json, so
-  # id: 5bcn9bqff4qt
+    ## Configuration for statuspage.io integration
+    # statuspage:
+    ## Provide the id for the statuspage, which is the subdomain of statuspage.io
+    ## used in the API queries. This can be found from the /api path.
+    ## E.g., under https://renkulab.statuspage.io/api you see that summary
+    ## is available under https://5bcn9bqff4qt.statuspage.io/api/v2/summary.json, so
+    # id: 5bcn9bqff4qt
 
-  ## Home settings allow configuration of the home page shown on RenkuLab when the user
-  ## is not logged in.
-  # homepage:
-  #   custom:
-  #     enabled: true
-  #     main:
-  #       # Custom homepage content as single string markdown
-  #       contentMd: |
-  #         ## RenkuLab @ Yoyodyne
-  #         Welcome to the **Yoyodyne** RenkuLab instance!
-  #       backgroundImage:
-  #         url: https://eoimages.gsfc.nasa.gov/images/imagerecords/79000/79803/earth_night_rotate_lrg.jpg
-  #   tutorialLink: https://renku.readthedocs.io/en/latest/tutorials/01_firststeps.html
-  #   projects:
-  #     - projectPath: renku-tutorials/e-rum-2020
-  #     - projectPath: covid-19/covid-19-forecast
+    ## Home settings allow configuration of the home page shown on RenkuLab when the user
+    ## is not logged in.
+    # homepage:
+    #   custom:
+    #     enabled: true
+    #     main:
+    #       # Custom homepage content as single string markdown
+    #       contentMd: |
+    #         ## RenkuLab @ Yoyodyne
+    #         Welcome to the **Yoyodyne** RenkuLab instance!
+    #       backgroundImage:
+    #         url: https://eoimages.gsfc.nasa.gov/images/imagerecords/79000/79803/earth_night_rotate_lrg.jpg
+    #   tutorialLink: https://renku.readthedocs.io/en/latest/tutorials/01_firststeps.html
+    #   projects:
+    #     - projectPath: renku-tutorials/e-rum-2020
+    #     - projectPath: covid-19/covid-19-forecast
+
+  ## Configuration for renku-ui-server
+  server:
+    serverData: {}
+      ## server data to correctly build the path and the routes
+      # url: https://url.uiserver.fake
+      # port: 8080
+      # prefix: /ui-server
+    gateway: {}
+      ## details to contact the gateway to redirect after the keycloak authentication is finished
+      # url: https://url.gateway.fake
+      # loginSuffix: /auth/login
+      # logoutSuffix: /auth/logout
+    authentication: {}
+      ## keycloak configration data for the Renku realm
+      # url: https://url.keycloak.fake/auth/realms/Renku
+      # id: renku
+      # secret: 1234abcd # do not provide any value here to use the global gateway client secret
+      # expirationTolerance: 10
+    sentry: {}
+      ## Configuration for Sentry
+      # enabled: false
+      # url: '' # Sentry target URL
+      # namespace: '' # namespace used to log errors
+      # sampleRate: 0 # sampling rate for tracing -- values must be between 0 and 1
 
 # ## Configuration for the notebooks service
 notebooks:
@@ -787,31 +813,6 @@ core:
 
   ## Default clone depth
   # projectCloneDepth: 1
-
-## Configuration for renku-ui-server
-uiserver:
-  serverData: {}
-    ## server data to correctly build the path and the routes
-    # url: https://url.uiserver.fake
-    # port: 8080
-    # prefix: /ui-server
-  gateway: {}
-    ## details to contact the gateway to redirect after the keycloak authentication is finished
-    # url: https://url.gateway.fake
-    # loginSuffix: /auth/login
-    # logoutSuffix: /auth/logout
-  authentication: {}
-    ## keycloak configration data for the Renku realm
-    # url: https://url.keycloak.fake/auth/realms/Renku
-    # id: renku
-    # secret: 1234abcd # do not provide any value here to use the global gateway client secret
-    # expirationTolerance: 10
-  sentry: {}
-    ## Configuration for Sentry
-    # enabled: false
-    # url: '' # Sentry target URL
-    # namespace: '' # namespace used to log errors
-    # sampleRate: 0 # sampling rate for tracing -- values must be between 0 and 1
 
 ## Configuration for the Swagger-UI available at <renku-domain>/swagger
 swagger:
