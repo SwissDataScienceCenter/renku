@@ -38,3 +38,15 @@ jobs:
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
         if: always()
+  rollout-renku-deployments:
+    runs-on: ubuntu-20.04
+    needs:
+      - "publish-chart"
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - name: Rollout renku version
+        uses: SwissDataScienceCenter/renku-actions/rollout-renku-version@v1.1.0
+        env:
+          GITHUB_TOKEN: ${{ secrets.RENKUBOT_GITHUB_TOKEN }}
