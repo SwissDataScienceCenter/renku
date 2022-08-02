@@ -106,7 +106,7 @@ jobs:
           body: |
             You can access the deployment of this PR at https://ci-renku-${{ github.event.number }}.dev.renku.ch
 
-  test-pr:
+  test-pr-foo:
     runs-on: ubuntu-20.04
     if: ${{ github.event.action != 'closed' &&
       needs.check-deploy.outputs.pr-contains-string == 'true' &&
