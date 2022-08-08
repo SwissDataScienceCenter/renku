@@ -50,7 +50,7 @@ object DatasetsPage extends RenkuPage(path = s"/datasets") with TopBar {
     }
 
   def searchResultLinks(implicit webDriver: WebDriver): List[WebElement] = eventually {
-    findAll(cssSelector(".rk-search-result-card > a > div > div.title")).toList
+    findAll(cssSelector(".card-title")).toList
   }
 
   override def pageReadyElement(implicit webDriver: WebDriver): Option[WebElement] = {

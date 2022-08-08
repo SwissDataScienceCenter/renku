@@ -26,7 +26,7 @@ case object WelcomePage extends RenkuPage(path = "/") with TopBar {
   override def pageReadyElement(implicit webDriver: WebDriver): Option[WebElement] = Some(yourProjectsSection)
 
   private def yourProjectsSection(implicit webDriver: WebDriver): WebElement = eventually {
-    find(cssSelector(".order-2.col-md-6.order-md-1")) getOrElse fail(
+    find(cssSelector(".landing-projects-section")) getOrElse fail(
       s"Your Projects section not found on page ${webDriver.getTitle}"
     )
   }
