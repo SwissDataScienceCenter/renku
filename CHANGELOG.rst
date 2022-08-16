@@ -22,7 +22,7 @@ Bug fixes
 * **Amalthea**: fixed an issue where some metrics were published more than once
 * **Amalthea**: set sensible values for Prometheus histogram metric buckets
 * **Sessions**: avoid flashing "Failed" status when starting a new session
-* **Renku UI**: show the correct dialog when starting a session with autosaves
+* **Renku UI**: show the correct dialog when starting a session from an autosave
 
 Misc
 ~~~~~~~~~~
