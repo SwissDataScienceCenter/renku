@@ -3,7 +3,7 @@
 0.16.0
 ------
 
-This release brings improvements and bug fixes to Renku Graph.
+This release brings improvements and bug fixes to Renku Graph, Amalthea and Sessions.
 
 ⚠️ Please mind that Renku Graph contains changes requiring intervention from an administrator (see below for further details).
 
@@ -19,7 +19,7 @@ Bug fixes
 
 * **Knowledge Graph**: triples store provisioning to support Command Parameters without position
 * **Amalthea**: fixed an issue where some metrics were published more than once
-* **Amalthea**: set sensible values for prometheus histogram metric buckets
+* **Amalthea**: set sensible values for Prometheus histogram metric buckets
 * **Sessions**: avoid flashing "Failed" status when starting a new session
 
 Misc
