@@ -1,5 +1,47 @@
 .. _changelog:
 
+0.16.0
+------
+
+This release brings improvements and bug fixes to Renku Graph.
+
+⚠️ Please mind that Renku Graph contains changes requiring intervention from an administrator (see below for further details).
+
+Features
+~~~~~~~~~
+
+* **Knowledge Graph**: new GET /knowledge-graph/ontology providing documentation for ontology used in KG
+* **Knowledge Graph**: GET /projects/:namespace/:name to support Accept: application/ld+json
+
+Bug fixes
+~~~~~~~~~~
+
+* **Knowledge Graph**: triples store provisioning to support Command Parameters without position
+
+Misc
+~~~~~~~~~~
+
+* **Knowledge Graph**: Jena upgraded to 4.5.0
+
+Individual components
+~~~~~~~~~~~~~~~~~~~~~~
+
+- `renku-graph 2.16.0 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/2.16.0>`_
+- `renku-graph 2.15.0 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/2.15.0>`_
+- `renku-graph 2.14.0 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/2.14.0>`_
+
+
+Upgrading from 0.15.0
+~~~~~~~~~~~~~~~~~~~~~~
+
+BREAKING CHANGES!
+Renku Graph upgrades Jena to 4.5.0 as well as introduces a new Helm chart for Jena. This change requires manual removal of the old Jena StatefulSet. The removal command is:
+
+``kubectl delete statefulset renku-jena-master -n renku``
+
+The change also makes the ``graph.jena.dataset`` property from the ``values.yaml`` obsolete so it can be removed as described in `the values changelog file <helm-chart/values.yaml.changelog.md>`_.
+
+
 0.15.0
 ------
 
