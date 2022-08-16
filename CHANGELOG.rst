@@ -13,6 +13,7 @@ Features
 * **Knowledge Graph**: new ``GET /knowledge-graph/ontology`` providing documentation for ontology used in KG
 * **Knowledge Graph**: ``GET /projects/:namespace/:name`` to honor ``Accept: application/ld+json`` header
 * **Sessions**: standardized error responses from the API
+* **Renku UI**: update forms style and layout
 
 Bug fixes
 ~~~~~~~~~~
@@ -21,6 +22,7 @@ Bug fixes
 * **Amalthea**: fixed an issue where some metrics were published more than once
 * **Amalthea**: set sensible values for Prometheus histogram metric buckets
 * **Sessions**: avoid flashing "Failed" status when starting a new session
+* **Renku UI**: show the correct dialog when starting a session with autosaves
 
 Misc
 ~~~~~~~~~~
@@ -34,6 +36,7 @@ Individual components
 - `renku-graph 2.15.0 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/2.15.0>`_
 - `renku-graph 2.14.0 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/2.14.0>`_
 - `renku-notebooks 1.10.0 <https://github.com/SwissDataScienceCenter/renku-notebooks/releases/tag/1.10.0>`_
+- `renku-ui 2.7.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/2.7.0>`_
 - `amalthea 0.5.2 <https://github.com/SwissDataScienceCenter/amalthea/releases/tag/0.5.2>`_
 
 
