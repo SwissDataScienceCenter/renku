@@ -10,8 +10,8 @@ This release brings improvements and bug fixes to Renku Graph.
 Features
 ~~~~~~~~~
 
-* **Knowledge Graph**: new GET /knowledge-graph/ontology providing documentation for ontology used in KG
-* **Knowledge Graph**: GET /projects/:namespace/:name to support Accept: application/ld+json
+* **Knowledge Graph**: new ``GET /knowledge-graph/ontology`` providing documentation for ontology used in KG
+* **Knowledge Graph**: ``GET /projects/:namespace/:name`` to honor ``Accept: application/ld+json`` header
 * **Sessions**: standardized error responses from the API
 
 Bug fixes
