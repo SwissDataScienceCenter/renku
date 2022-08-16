@@ -43,7 +43,7 @@ Upgrading from 0.15.0
 BREAKING CHANGES!
 Renku Graph upgrades Jena to 4.5.0 as well as introduces a new Helm chart for Jena. This change requires manual removal of the old Jena StatefulSet. The removal command is:
 
-``kubectl delete statefulset renku-jena-master -n renku``
+``kubectl delete statefulset <helm-release-name>-jena-master -n <k8s_namespace>``
 
 The change also makes the ``graph.jena.dataset`` property from the ``values.yaml`` obsolete so it can be removed as described in `the values changelog file <helm-chart/values.yaml.changelog.md>`_.
 
