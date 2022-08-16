@@ -3,7 +3,7 @@
 0.16.0
 ------
 
-This release brings improvements and bug fixes to Renku Graph, Amalthea and Sessions.
+This release brings improvements and bug fixes to Renku Graph, Amalthea, Sessions and Renku UI.
 
 ⚠️ Please mind that Renku Graph contains changes requiring intervention from an administrator (see below for further details).
 
