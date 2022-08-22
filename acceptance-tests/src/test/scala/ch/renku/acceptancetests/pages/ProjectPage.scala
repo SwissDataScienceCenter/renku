@@ -96,7 +96,7 @@ class ProjectPage(val projectSlug: String, val namespace: String)
     }
 
     def projectDescription(implicit webDriver: WebDriver): WebElement = eventually {
-      find(cssSelector(".rk-project-description")) getOrElse fail("Overview -> Project Description not found")
+      find(cssSelector("[data-cy='entity-description']")) getOrElse fail("Overview -> Project Description not found")
     }
 
     def overviewGeneralButton(implicit webDriver: WebDriver): WebElement = eventually {
@@ -342,7 +342,7 @@ class ProjectPage(val projectSlug: String, val namespace: String)
     object Running {
 
       def title(implicit webDriver: WebDriver): WebElement = eventually {
-        find(cssSelector("div.row div.col h3"))
+        find(cssSelector(".sessions-title"))
           .map { element =>
             element.text shouldBe "Sessions"
             element
