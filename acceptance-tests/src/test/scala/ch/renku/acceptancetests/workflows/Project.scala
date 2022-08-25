@@ -22,20 +22,36 @@ import ch.renku.acceptancetests.model.projects.{ProjectDetails, Template, Visibi
 import ch.renku.acceptancetests.pages._
 import ch.renku.acceptancetests.tooling.AcceptanceSpec
 import org.openqa.selenium.interactions.Actions
+import org.openqa.selenium.StaleElementReferenceException;
 import org.scalatest.BeforeAndAfterAll
 
 import java.lang.System.getProperty
 import scala.concurrent.duration._
+import scala.util.Try
 
-trait PrivateProject extends Project with BeforeAndAfterAll {
+trait ExtantProject {
+  def maybeExtantProject(projectVisibility: Visibility): Option[ProjectDetails] =
+    (Option(getProperty("extant")) orElse sys.env.get("RENKU_TEST_EXTANT_PROJECT"))
+      .map(_.trim)
+      .map { readMeTitle =>
+        ProjectDetails(readMeTitle,
+                       projectVisibility,
+                       description = "unused",
+                       template = Template("Not used"),
+                       readmeTitle = readMeTitle
+        )
+      }
+}
+
+trait PrivateProject extends Project with BeforeAndAfterAll with ExtantProject {
   self: AcceptanceSpec =>
 
   protected override lazy val projectVisibility: Visibility = Visibility.Private
   protected implicit override lazy val projectDetails: ProjectDetails =
-    ProjectDetails.generate().copy(visibility = projectVisibility)
+    maybeExtantProject(projectVisibility).getOrElse(ProjectDetails.generate().copy(visibility = projectVisibility))
 }
 
-trait Project extends RemoveProject with BeforeAndAfterAll {
+trait Project extends RemoveProject with BeforeAndAfterAll with ExtantProject {
   self: AcceptanceSpec =>
 
   protected lazy val projectVisibility: Visibility = Visibility.Public
@@ -43,12 +59,12 @@ trait Project extends RemoveProject with BeforeAndAfterAll {
   protected implicit lazy val projectDetails: ProjectDetails =
     Option
       .when(docsScreenshots.captureScreenshots)(docsScreenshots.projectDetails)
-      .orElse(maybeExtantProject)
+      .orElse(maybeExtantProject(projectVisibility))
       .getOrElse(ProjectDetails.generate())
 
   protected implicit lazy val projectPage: ProjectPage = ProjectPage.createFrom(projectDetails)
 
-  def `create, continue or open a project`: Unit = maybeExtantProject match {
+  def `create, continue or open a project`: Unit = maybeExtantProject(projectVisibility) match {
     case Some(_) => `open a project`
     case _       => `create or continue with a project`
   }
@@ -109,14 +125,20 @@ trait Project extends RemoveProject with BeforeAndAfterAll {
     val projectPage = ProjectPage createFrom projectDetails
     verify browserAt projectPage
 
-    When("the user navigates to the Overview -> Description tab")
-    click on projectPage.Overview.tab
-    click on projectPage.Overview.overviewGeneralButton
+    `try few times before giving up` { _ =>
+      When("the user navigates to the Overview -> Description tab")
+      click on projectPage.Overview.tab
+      click on projectPage.Overview.overviewGeneralButton
+    }
+
     Then("they should see project's README.md content")
     verify that projectPage.Overview.Description.title is "README.md"
 
-    When("the user navigates to the Files tab")
-    click on projectPage.Files.tab
+    `try few times before giving up` { _ =>
+      When("the user navigates to the Files tab")
+      click on projectPage.Files.tab
+    }
+
     And("they click on the README.md file in the File View")
     click on (projectPage.Files.FileView file "README.md") sleep (2 seconds)
     Then("they should see the file header")
@@ -165,20 +187,8 @@ trait Project extends RemoveProject with BeforeAndAfterAll {
     }
   }
 
-  private lazy val maybeExtantProject: Option[ProjectDetails] =
-    (Option(getProperty("extant")) orElse sys.env.get("RENKU_TEST_EXTANT_PROJECT"))
-      .map(_.trim)
-      .map { readMeTitle =>
-        ProjectDetails(readMeTitle,
-                       projectVisibility,
-                       description = "unused",
-                       template = Template("Not used"),
-                       readmeTitle = readMeTitle
-        )
-      }
-
   protected override def afterAll(): Unit = {
-    maybeExtantProject match {
+    maybeExtantProject(projectVisibility) match {
       case Some(_) => ()
       case _       => `remove project in GitLab`(projectDetails.asProjectIdentifier)
     }

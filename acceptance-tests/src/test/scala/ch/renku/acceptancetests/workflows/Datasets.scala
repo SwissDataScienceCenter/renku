@@ -40,12 +40,14 @@ trait Datasets {
     val newDatasetName = datasets.DatasetName("new")
     val newDatasetPage = DatasetPage(newDatasetName)
 
-    Given("the user is on the Datasets tab")
-    click on projectPage.Datasets.tab sleep (10 second)
-
-    When("the user clicks on the Add Dataset button")
     `try few times before giving up` { _ =>
-      click on projectPage.Datasets.addADatasetButton sleep (1 second)
+      Given("the user is on the Datasets tab")
+      click on projectPage.Datasets.tab sleep (10 second)
+    }
+
+    `try few times before giving up` { _ =>
+      When("the user clicks on the Add Dataset button")
+      click on projectPage.Datasets.addADatasetButton sleep (5 seconds)
     }
     verify that newDatasetPage.ModificationForm.formTitle contains "Add Dataset"
 
@@ -77,8 +79,10 @@ trait Datasets {
     val newDatasetName = datasets.DatasetName("new")
     val newDatasetPage = DatasetPage(newDatasetName)
 
-    Given("the user is on the Datasets tab")
-    click on projectPage.Datasets.tab sleep (1 second)
+    `try few times before giving up` { _ =>
+      Given("the user is on the Datasets tab")
+      click on projectPage.Datasets.tab sleep (1 second)
+    }
 
     When("the user clicks on the Add Dataset button")
     `try few times before giving up` { _ =>
@@ -117,8 +121,10 @@ trait Datasets {
 
   def `navigate to the dataset`(datasetPage: DatasetPage): Unit = {
 
-    Given("the user is on the Datasets tab")
-    click on projectPage.Datasets.tab sleep (5 seconds)
+    `try few times before giving up` { _ =>
+      Given("the user is on the Datasets tab")
+      click on projectPage.Datasets.tab sleep (5 seconds)
+    }
 
     When(s"the user clicks on the dataset name")
     click on projectPage.Datasets.DatasetsList.link(to = datasetPage) sleep (1 second)
@@ -133,7 +139,7 @@ trait Datasets {
 
     When("the user clicks on the modify button")
     `try few times before giving up` { _ =>
-      click on datasetPage.modifyButton sleep (1 second)
+      click on datasetPage.modifyButton sleep (3 seconds)
     }
     verify userCanSee datasetPage.ModificationForm.formTitle
 

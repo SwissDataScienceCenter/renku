@@ -30,8 +30,7 @@ object JupyterLabPage {
 
 class JupyterLabPage()
     extends RenkuPage(
-      path = s"/sessions/",
-      title = "JupyterLab"
+      path = s"/sessions/"
     ) {
 
   override def pageReadyElement(implicit webDriver: WebDriver): Option[WebElement] = Some(terminalIcon)

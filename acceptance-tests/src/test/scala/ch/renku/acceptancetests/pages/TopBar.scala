@@ -39,6 +39,10 @@ trait TopBar {
       find(cssSelector("#plus-dropdown")) getOrElse fail("Top Right '+' not found")
     }
 
+    def sessions(implicit webDriver: WebDriver): WebElement = eventually {
+      find(cssSelector("a[href='/sessions']")) getOrElse fail("Top Right 'Sessions' link not found")
+    }
+
     def `click on GitLab dropdown`(implicit webDriver: WebDriver): Unit = eventually {
       val button =
         find(cssSelector("#gitLabDropdownToggle"))
