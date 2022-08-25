@@ -23,6 +23,8 @@ import ch.renku.acceptancetests.pages._
 import ch.renku.acceptancetests.tooling.TestLogger.logger
 import ch.renku.acceptancetests.tooling.{AcceptanceSpec, AnonEnvConfig}
 
+import org.scalatestplus.selenium.WebBrowser.{cssSelector, find, findAll}
+
 import scala.concurrent.duration._
 
 trait Environments {
@@ -30,72 +32,67 @@ trait Environments {
 
   def `launch a session`(implicit projectPage: ProjectPage): JupyterLabPage = {
 
-    When("user clicks on the sessions tab")
-    click on projectPage.Sessions.tab
+    When("user clicks on the start sessions")
+    click on projectPage.Sessions.sessionStartMore
+    docsScreenshots.takeScreenshot()
+    click on projectPage.Sessions.sessionStartWithOptions
     docsScreenshots.takeScreenshot()
 
-    `click New Session & wait for image to build`
+    `wait for image to build`
     docsScreenshots.takeScreenshot()
 
     `start session and wait until it is ready`
     docsScreenshots.takeScreenshot()
 
-    `connect to JupyterLab`
-
-    Then("a JupyterLab page is opened on a new tab")
-    val jupyterLabPage = JupyterLabPage()
-    verify browserSwitchedTo jupyterLabPage sleep (5 seconds)
+    val jupyterLabPage = `connect to JupyterLab`
+    Then("a JupyterLab session is opened")
     jupyterLabPage
   }
 
-  private def `connect to JupyterLab`(implicit projectPage: ProjectPage): JupyterLabPage = eventually {
-    And("the user tries to connect to JupyterLab")
-    sleep(2 seconds)
+  private def `connect to JupyterLab`(implicit projectPage: ProjectPage): JupyterLabPage =
+    eventually {
+      And("the user tries to start a JupyterLab session")
+      sleep(2 seconds)
 
-    if (projectPage.Sessions.Running.maybeOpenButton.fold(ifEmpty = true)(btn => !btn.isDisplayed))
-      pause whenUserCanSee { driver =>
-        val maybeGetLogs = projectPage.Sessions.Running.maybeOpenButton(driver)
-        if (maybeGetLogs.fold(false)(_.isDisplayed)) And("the 'Get logs' button is displayed")
-        maybeGetLogs
+      if (projectPage.Sessions.Running.maybeOpenButton.fold(ifEmpty = true)(btn => !btn.isDisplayed))
+        pause whenUserCanSee { driver =>
+          val maybeGetLogs = projectPage.Sessions.Running.maybeOpenButton(driver)
+          if (maybeGetLogs.fold(false)(_.isDisplayed)) And("the 'Get logs' button is displayed")
+          maybeGetLogs
+        }
+
+      `try few times before giving up` { _ =>
+        And("clicks on the 'Open' button")
+        click on (projectPage.Sessions.Running.maybeOpenButton.getOrElse(fail("Open button not found")))
+        sleep(2 seconds)
       }
 
-    `try few times before giving up` { _ =>
-      And("clicks on the 'Open' button")
-      click on projectPage.Sessions.Running.openButtonMenu
-      sleep(2 seconds)
-
-      And("selects the 'Open in new tab' option")
-      click on projectPage.Sessions.Running.openInNewTabMenuItem
-      sleep(2 seconds)
+      And("switches to the iframe")
+      `try few times before giving up` { _ =>
+        projectPage.Sessions.Running.maybeJupyterLabIframe match {
+          case Some(iframe) =>
+            And("finds iframe")
+            webDriver.switchTo().frame(iframe)
+            JupyterLabPage()
+          case None =>
+            And("does not find iframe")
+            fail("Cannot find JupyterLab iframe")
+        }
+      }
     }
-
-    if (webDriver.findTabWithUrlContaining("spawn-pending").nonEmpty) {
-      And("JupyterLab is not up yet")
-      Then("close the window and try again later")
-      webDriver.close()
-      webDriver.switchToTab(0)
-      fail("Could not connect to JupyterLab")
-    } else
-      webDriver.findTabWithUrlContaining("/lab") match {
-        case Some(_) => JupyterLabPage()
-        case None    => fail("Cannot find JupyterLab tab")
-      }
-  }
 
   def `stop session`(implicit projectPage: ProjectPage): Unit =
     stopSessionOnProjectPage(projectPage)
 
   private def stopSessionOnProjectPage(projectPage: ProjectPage): Unit = {
-    When("the user switches back to the Renku tab")
-    verify browserSwitchedTo projectPage
-    And("the sessions tab")
-    click on projectPage.Sessions.tab sleep (10 seconds)
-    And("they turn off the session they started before")
-    click on projectPage.Sessions.Running.sessionDropdownMenu sleep (2 seconds)
-    And("click on stop button")
+    When("the user switches back to the Renku frame")
+    webDriver.switchTo().defaultContent();
+    And("opens the sessions menu")
+    click on projectPage.Sessions.Running.sessionDropdownMenu sleep (1 second)
+    And("clicks on stop button")
     click on projectPage.Sessions.Running.stopButton sleep (10 seconds)
-    Then("the session gets stopped and they can see the New Session link")
-    verify userCanSee projectPage.Sessions.newLink
+    // Then("the session gets stopped and they can see the New Session link")
+    // verify userCanSee projectPage.Sessions.newLink
   }
 
   def `launch anonymous session`(
@@ -106,7 +103,8 @@ trait Environments {
     When("user is logged out")
     And(s"goes to ${projectDetails.title}")
     And("clicks on the sessions tab to launch an anonymous notebook")
-    click on projectPage.Sessions.tab
+    click on projectPage.Sessions.sessionStartMore
+    click on projectPage.Sessions.sessionStartWithOptions
     if (anonEnvConfig.isAvailable) {
       And("anonymous sessions are supported")
       Some(`anonymous session supported`(projectPage))
@@ -128,21 +126,19 @@ trait Environments {
       go to projectPage
 
       And("clicks on the Sessions tab to launch an unprivileged session")
-      click on projectPage.Sessions.tab
+      click on projectPage.Sessions.sessionStartMore
+      click on projectPage.Sessions.sessionStartWithOptions
       sleep(5 seconds)
 
       if (projectPage.Sessions.Running.maybeOpenButton.exists(_.isDisplayed))
         And("the session is already started")
       else {
-        `click New Session & wait for image to build`
+        `wait for image to build`
         `start session and wait until it is ready`
       }
 
       val jupyterLabPage = `connect to JupyterLab`
-
-      Then("a JupyterLab page is opened on a new tab")
-      verify browserSwitchedTo jupyterLabPage sleep (5 seconds)
-
+      Then("a JupyterLab session is opened")
       Some(projectPage)
     }
 
@@ -153,20 +149,14 @@ trait Environments {
 
   private def `anonymous session supported`(implicit projectPage: ProjectPage): JupyterLabPage = {
     sleep(5 seconds)
-    `click New Session & wait for image to build`
+    `wait for image to build`
     `start session and wait until it is ready`
     val jupyterLabPage = `connect to JupyterLab`
-
-    Then("a JupyterLab page is opened on a new tab")
-    verify browserSwitchedTo jupyterLabPage sleep (5 seconds)
-
+    Then("a JupyterLab session is opened")
     jupyterLabPage
   }
 
-  private def `click New Session & wait for image to build`(implicit projectPage: ProjectPage): Unit = {
-    And("then they click on the 'New Session' link")
-    click on projectPage.Sessions.newLink sleep (10 seconds)
-
+  private def `wait for image to build`(implicit projectPage: ProjectPage): Unit =
     reload whenUserCannotSee { _ =>
       `wait if a session is in an uncertain state`
 
@@ -177,12 +167,10 @@ trait Environments {
         badge
       }
     }
-  }
 
   private def `wait if a session is in an uncertain state`(implicit projectPage: ProjectPage) =
     `try few times before giving up` { _ =>
-      if (projectPage.Sessions.maybeButtonHideBranch.isDisplayed) ()
-      else if (projectPage.maybeBouncer.isDisplayed) {
+      if (projectPage.maybeBouncer.isDisplayed) {
         do {
           And("wait for the Bouncer to go")
           sleep(20 seconds)
@@ -192,8 +180,7 @@ trait Environments {
           And("wait for the Session to start or terminate")
           sleep(20 seconds)
         } while (pageSource contains "A session for this commit is starting or terminating")
-      } else
-        click on projectPage.Sessions.buttonShowBranch sleep (5 seconds)
+      }
     }
 
   private def `start session and wait until it is ready`(implicit projectPage: ProjectPage): Unit = {

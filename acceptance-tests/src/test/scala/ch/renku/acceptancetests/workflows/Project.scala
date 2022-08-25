@@ -27,15 +27,29 @@ import org.scalatest.BeforeAndAfterAll
 import java.lang.System.getProperty
 import scala.concurrent.duration._
 
-trait PrivateProject extends Project with BeforeAndAfterAll {
+trait ExtantProject {
+  def maybeExtantProject(projectVisibility: Visibility): Option[ProjectDetails] =
+    (Option(getProperty("extant")) orElse sys.env.get("RENKU_TEST_EXTANT_PROJECT"))
+      .map(_.trim)
+      .map { readMeTitle =>
+        ProjectDetails(readMeTitle,
+                       projectVisibility,
+                       description = "unused",
+                       template = Template("Not used"),
+                       readmeTitle = readMeTitle
+        )
+      }
+}
+
+trait PrivateProject extends Project with BeforeAndAfterAll with ExtantProject {
   self: AcceptanceSpec =>
 
   protected override lazy val projectVisibility: Visibility = Visibility.Private
   protected implicit override lazy val projectDetails: ProjectDetails =
-    ProjectDetails.generate().copy(visibility = projectVisibility)
+    maybeExtantProject(projectVisibility).getOrElse(ProjectDetails.generate().copy(visibility = projectVisibility))
 }
 
-trait Project extends RemoveProject with BeforeAndAfterAll {
+trait Project extends RemoveProject with BeforeAndAfterAll with ExtantProject {
   self: AcceptanceSpec =>
 
   protected lazy val projectVisibility: Visibility = Visibility.Public
@@ -43,12 +57,12 @@ trait Project extends RemoveProject with BeforeAndAfterAll {
   protected implicit lazy val projectDetails: ProjectDetails =
     Option
       .when(docsScreenshots.captureScreenshots)(docsScreenshots.projectDetails)
-      .orElse(maybeExtantProject)
+      .orElse(maybeExtantProject(projectVisibility))
       .getOrElse(ProjectDetails.generate())
 
   protected implicit lazy val projectPage: ProjectPage = ProjectPage.createFrom(projectDetails)
 
-  def `create, continue or open a project`: Unit = maybeExtantProject match {
+  def `create, continue or open a project`: Unit = maybeExtantProject(projectVisibility) match {
     case Some(_) => `open a project`
     case _       => `create or continue with a project`
   }
@@ -165,20 +179,8 @@ trait Project extends RemoveProject with BeforeAndAfterAll {
     }
   }
 
-  private lazy val maybeExtantProject: Option[ProjectDetails] =
-    (Option(getProperty("extant")) orElse sys.env.get("RENKU_TEST_EXTANT_PROJECT"))
-      .map(_.trim)
-      .map { readMeTitle =>
-        ProjectDetails(readMeTitle,
-                       projectVisibility,
-                       description = "unused",
-                       template = Template("Not used"),
-                       readmeTitle = readMeTitle
-        )
-      }
-
   protected override def afterAll(): Unit = {
-    maybeExtantProject match {
+    maybeExtantProject(projectVisibility) match {
       case Some(_) => ()
       case _       => `remove project in GitLab`(projectDetails.asProjectIdentifier)
     }

@@ -22,6 +22,7 @@ import ch.renku.acceptancetests.model.CliVersion
 import ch.renku.acceptancetests.model.projects.ProjectDetails._
 import ch.renku.acceptancetests.model.projects.{ProjectDetails, ProjectIdentifier}
 import ch.renku.acceptancetests.model.users.UserCredentials
+
 import org.openqa.selenium.{WebDriver, WebElement}
 import org.scalactic.source
 import org.scalatest.enablers.Retrying
@@ -298,6 +299,16 @@ class ProjectPage(val projectSlug: String, val namespace: String)
       find(cssSelector(s"a[href='$path/sessions']")) getOrElse fail("Sessions tab not found")
     }
 
+    def sessionStartMore(implicit webDriver: WebDriver): WebElement = eventually {
+      find(cssSelector(s"button[data-cy='more-menu']")) getOrElse fail("Sessions more options not found")
+    }
+
+    def sessionStartWithOptions(implicit webDriver: WebDriver): WebElement = eventually {
+      find(cssSelector(s"button[role='menuitem'] > a.text-decoration-none")) getOrElse fail(
+        "Sessions start with options not found"
+      )
+    }
+
     def newLink(implicit webDriver: WebDriver): WebElement = eventually {
       findAll(cssSelector(s"div.d-flex > div > a[href='$path/sessions/new']"))
         .find(_.text == "New session")
@@ -322,16 +333,6 @@ class ProjectPage(val projectSlug: String, val namespace: String)
       findAll(cssSelector("a[href*='/sessions/']"))
         .find(_.text.endsWith("Open in new tab"))
         .getOrElse(fail("Connect to session button not found"))
-    }
-
-    def buttonShowBranch(implicit webDriver: WebDriver): WebElement = eventually {
-      findAll(cssSelector("div.mb-3 > button"))
-        .find(_.text.startsWith("Do you want to select the branch, commit, or image?"))
-        .getOrElse(fail("Expanding selection to branch, commit, image not found"))
-    }
-
-    def maybeButtonHideBranch(implicit webDriver: WebDriver): Option[WebElement] = eventually {
-      findAll(cssSelector("div.mb-3 > button")).find(_.text.startsWith("Hide advanced settings"))
     }
 
     def imageReadyBadge(implicit webDriver: WebDriver): WebElement =
@@ -388,6 +389,10 @@ class ProjectPage(val projectSlug: String, val namespace: String)
 
       def maybeSessionNotReadyBadge(implicit webDriver: WebDriver): Option[WebElement] = eventually {
         find(cssSelector(".text-nowrap.p-1.badge.bg-warning"))
+      }
+
+      def maybeJupyterLabIframe(implicit webDriver: WebDriver): Option[WebElement] = eventually {
+        find(cssSelector("iframe"))
       }
     }
   }
