@@ -289,7 +289,7 @@ class ProjectPage(val projectSlug: String, val namespace: String)
         eventually {
           find(cssSelector(s"a[href='${to.path}/'] > div > div.title"))
             .getOrElse(fail(s"Dataset '${to.path}' not found"))
-        }(waitUpTo(60 seconds), implicitly[Retrying[WebBrowser.Element]], implicitly[source.Position])
+        }(waitUpTo(10 seconds), implicitly[Retrying[WebBrowser.Element]], implicitly[source.Position])
     }
   }
 

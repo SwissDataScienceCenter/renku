@@ -118,7 +118,7 @@ trait Datasets {
   def `navigate to the dataset`(datasetPage: DatasetPage): Unit = {
 
     Given("the user is on the Datasets tab")
-    click on projectPage.Datasets.tab sleep (10 seconds)
+    click on projectPage.Datasets.tab sleep (5 seconds)
 
     When(s"the user clicks on the dataset name")
     click on projectPage.Datasets.DatasetsList.link(to = datasetPage) sleep (1 second)
