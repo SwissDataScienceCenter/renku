@@ -134,14 +134,11 @@ trait Project extends RemoveProject with BeforeAndAfterAll with ExtantProject {
     Then("they should see project's README.md content")
     verify that projectPage.Overview.Description.title is "README.md"
 
-    When("the user navigates to the Files tab")
-    Try {
+    `try few times before giving up` { _ =>
+      When("the user navigates to the Files tab")
       click on projectPage.Files.tab
-    } fold (ex =>
-      ex match {
-        case _: StaleElementReferenceException => click on projectPage.Files.tab
-        case other => throw other
-      }, identity)
+    }
+
     And("they click on the README.md file in the File View")
     click on (projectPage.Files.FileView file "README.md") sleep (2 seconds)
     Then("they should see the file header")
