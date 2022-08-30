@@ -36,8 +36,10 @@ trait JupyterNotebook extends Datasets with Project with KnowledgeGraphApi {
   }
 
   def `verify the project is up to date`: Unit = {
-    When("the user goes to the project overview")
-    click on projectPage.Overview.tab
+    `try few times before giving up` { _ =>
+      When("the user goes to the project overview")
+      click on projectPage.Overview.tab
+    }
 
     And("goes to the status tab")
     click on projectPage.Overview.statusLink
