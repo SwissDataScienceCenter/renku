@@ -22,10 +22,12 @@ import ch.renku.acceptancetests.model.projects.{ProjectDetails, Template, Visibi
 import ch.renku.acceptancetests.pages._
 import ch.renku.acceptancetests.tooling.AcceptanceSpec
 import org.openqa.selenium.interactions.Actions
+import org.openqa.selenium.StaleElementReferenceException;
 import org.scalatest.BeforeAndAfterAll
 
 import java.lang.System.getProperty
 import scala.concurrent.duration._
+import scala.util.Try
 
 trait ExtantProject {
   def maybeExtantProject(projectVisibility: Visibility): Option[ProjectDetails] =
@@ -130,7 +132,13 @@ trait Project extends RemoveProject with BeforeAndAfterAll with ExtantProject {
     verify that projectPage.Overview.Description.title is "README.md"
 
     When("the user navigates to the Files tab")
-    click on projectPage.Files.tab
+    Try {
+      click on projectPage.Files.tab
+    } fold (ex =>
+      ex match {
+        case _: StaleElementReferenceException => click on projectPage.Files.tab
+        case other => throw other
+      }, identity)
     And("they click on the README.md file in the File View")
     click on (projectPage.Files.FileView file "README.md") sleep (2 seconds)
     Then("they should see the file header")
