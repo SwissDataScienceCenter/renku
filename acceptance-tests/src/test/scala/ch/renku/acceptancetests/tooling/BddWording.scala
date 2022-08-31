@@ -29,7 +29,7 @@ trait BddWording extends AnyFeatureSpecLike {
 
   override def Scenario(test: String, testTags: Tag*)(testFun: => Any)(implicit pos: source.Position): Unit = {
     logger.info(test)
-    super.Scenario(s"$test - done", testTags: _*)(testFun)
+    super.Scenario(s"$test - ☑ success", testTags: _*)(testFun)
   }
 
   def Given(string: String): Unit = logger.info(s"Given $string")
