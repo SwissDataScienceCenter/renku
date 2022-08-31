@@ -41,7 +41,8 @@ abstract class Page[Url <: BaseUrl](val path: String, val title: String)
   require(title.trim.nonEmpty, s"$getClass cannot have empty title")
 
   def pageReadyElement(implicit webDriver: WebDriver): Option[WebElement]
-  def url(implicit baseUrl:                Url): String = s"$baseUrl$path"
+
+  def url(implicit baseUrl: Url): String = s"$baseUrl$path"
 
   protected implicit def toWebElement(element: WebBrowser.Element): WebElement =
     element.underlying

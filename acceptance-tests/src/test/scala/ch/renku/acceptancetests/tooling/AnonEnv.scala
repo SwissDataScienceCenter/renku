@@ -31,7 +31,7 @@ trait AnonEnv extends AcceptanceSpecData {
   protected implicit lazy val anonEnvConfig: AnonEnvConfig =
     AnonEnvConfig(anonProjectIdentifier, isAnonEnvAvailable)
 
-  protected lazy val anonProjectIdentifier: ProjectIdentifier = {
+  protected lazy val anonProjectIdentifier: ProjectIdentifier =
     Option(getProperty("anon")) orElse sys.env.get("RENKU_TEST_ANON_PROJECT") match {
       case Some(s) =>
         val projectIdComponents = s.split("/").map(_.trim).toList
@@ -45,14 +45,12 @@ trait AnonEnv extends AcceptanceSpecData {
         }
       case None => defaultProjectIdentifier
     }
-  }
 
   private val defaultProjectIdentifier = ProjectIdentifier("andi", "public-test-project")
 
-  protected lazy val isAnonEnvAvailable: Boolean = {
+  protected lazy val isAnonEnvAvailable: Boolean =
     Option(getProperty("anonAvail")) orElse sys.env.get("RENKU_TEST_ANON_AVAILABLE") match {
       case Some(s) => s.toLowerCase == "true"
       case None    => renkuBaseUrl.value.value contains "dev.renku.ch"
     }
-  }
 }

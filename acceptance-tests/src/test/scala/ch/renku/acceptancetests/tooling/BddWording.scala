@@ -33,7 +33,7 @@ trait BddWording extends AnyFeatureSpecLike {
   }
 
   def Given(string: String): Unit = logger.info(s"Given $string")
-  def When(string:  String): Unit = logger.info(s"When $string")
-  def Then(string:  String): Unit = logger.info(s"Then $string")
-  def And(string:   String): Unit = logger.info(s"And $string")
+  def When(string: String):  Unit = logger.info(s"When $string")
+  def Then(string: String):  Unit = logger.info(s"Then $string")
+  def And(string: String):   Unit = logger.info(s"And $string")
 }
