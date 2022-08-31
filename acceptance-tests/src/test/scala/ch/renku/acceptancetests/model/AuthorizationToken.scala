@@ -22,19 +22,20 @@ import org.http4s.AuthScheme.Bearer
 import org.http4s.Credentials.Token
 import org.http4s.Header
 import org.http4s.headers.Authorization
+import org.typelevel.ci._
 
 sealed trait AuthorizationToken extends Product with Serializable {
   val value: String
-  def asHeader: Header
+  def asHeader: Header.ToRaw
 }
 
 object AuthorizationToken {
 
   final case class OAuthAccessToken(value: String) extends AuthorizationToken {
-    override lazy val asHeader: Header = Authorization(Token(Bearer, value))
+    override lazy val asHeader: Header.ToRaw = Authorization(Token(Bearer, value))
   }
 
   final case class PersonalAccessToken(value: String) extends AuthorizationToken {
-    override def asHeader: Header = Header("PRIVATE-TOKEN", value)
+    override def asHeader: Header.ToRaw = Header.Raw(ci"PRIVATE-TOKEN", value)
   }
 }

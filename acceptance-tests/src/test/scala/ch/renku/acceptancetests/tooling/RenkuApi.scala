@@ -24,7 +24,7 @@ import org.http4s.Status._
 import org.scalatest.Assertions.fail
 
 trait RenkuApi extends RestClient {
-  self: AcceptanceSpecData =>
+  self: AcceptanceSpecData with IOSpec =>
 
   lazy val apiCliVersion: CliVersion = {
     val url = renkuBaseUrl / "api" / "renku" / "apiversion"

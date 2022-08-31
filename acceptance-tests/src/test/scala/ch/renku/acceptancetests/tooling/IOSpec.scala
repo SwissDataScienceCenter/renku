@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 Swiss Data Science Center (SDSC)
+ * Copyright 2022 Swiss Data Science Center (SDSC)
  * A partnership between École Polytechnique Fédérale de Lausanne (EPFL) and
  * Eidgenössische Technische Hochschule Zürich (ETHZ).
  *
@@ -16,6 +16,13 @@
  * limitations under the License.
  */
 
-addSbtPlugin("org.scalameta" % "sbt-scalafmt" % "2.4.6")
+package ch.renku.acceptancetests.tooling
 
-addSbtPlugin("de.heikoseeberger" % "sbt-header" % "5.7.0")
+import cats.effect.unsafe.IORuntime
+import org.scalatest.Suite
+
+trait IOSpec {
+  self: Suite =>
+
+  implicit val ioRuntime: IORuntime = cats.effect.unsafe.implicits.global
+}
