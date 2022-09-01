@@ -26,8 +26,10 @@ trait Settings {
 
   def `set project tags`: Unit = {
 
-    When("the user navigates to the Settings tab")
-    click on projectPage.Settings.tab
+    `try few times before giving up` { _ =>
+      When("the user navigates to the Settings tab")
+      click on projectPage.Settings.tab
+    }
 
     And("they add some tags")
     val tags = "automated-test"
@@ -55,8 +57,10 @@ trait Settings {
 
   def `find project Http URL in the Settings Page`: ProjectUrl = {
 
-    When("the user navigates to the Settings tab")
-    click on projectPage.Settings.tab
+    `try few times before giving up` { _ =>
+      When("the user navigates to the Settings tab")
+      click on projectPage.Settings.tab
+    }
 
     Then("the user can find the project Http Url")
     ProjectUrl(projectPage.Settings.projectHttpUrl.getText)
