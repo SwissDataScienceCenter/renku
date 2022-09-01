@@ -23,7 +23,7 @@ import ch.renku.acceptancetests.tooling.UrlEncoder._
 import eu.timepit.refined.api.Refined
 import eu.timepit.refined.string.Url
 
-final case class RenkuBaseUrl(value: String Refined Url) extends BaseUrl with UrlOps[RenkuBaseUrl]
+final case class RenkuBaseUrl(value: String Refined Url)  extends BaseUrl with UrlOps[RenkuBaseUrl]
 final case class GitLabBaseUrl(value: String Refined Url) extends BaseUrl with UrlOps[GitLabBaseUrl]
 final case class GitLabApiUrl(baseUrl: GitLabBaseUrl) extends BaseUrl with UrlOps[GitLabApiUrl] {
   override val value: String Refined Url = Refined.unsafeApply(s"$baseUrl/api/v4")

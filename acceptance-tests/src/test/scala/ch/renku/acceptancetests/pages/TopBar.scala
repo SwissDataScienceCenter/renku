@@ -48,7 +48,7 @@ trait TopBar {
         .moveToElement(button)
         .click()
         .build()
-        .perform();
+        .perform()
     }
 
     def gitLabMenuItem(implicit webDriver: WebDriver): WebElement = eventually {

@@ -18,22 +18,11 @@
 
 package ch.renku.acceptancetests.tooling
 
-import org.scalactic.source
-import org.scalatest.Tag
-import org.scalatest.featurespec.AnyFeatureSpecLike
+import cats.effect.unsafe.IORuntime
+import org.scalatest.Suite
 
-trait BddWording extends AnyFeatureSpecLike {
-  self: AcceptanceSpec =>
+trait IOSpec {
+  self: Suite =>
 
-  import TestLogger.logger
-
-  override def Scenario(test: String, testTags: Tag*)(testFun: => Any)(implicit pos: source.Position): Unit = {
-    logger.info(test)
-    super.Scenario(s"$test - ☑ success", testTags: _*)(testFun)
-  }
-
-  def Given(string: String): Unit = logger.info(s"Given $string")
-  def When(string: String):  Unit = logger.info(s"When $string")
-  def Then(string: String):  Unit = logger.info(s"Then $string")
-  def And(string: String):   Unit = logger.info(s"And $string")
+  implicit val ioRuntime: IORuntime = cats.effect.unsafe.implicits.global
 }

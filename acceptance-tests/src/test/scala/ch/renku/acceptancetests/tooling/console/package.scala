@@ -18,6 +18,7 @@
 
 package ch.renku.acceptancetests.tooling
 
+import cats.effect.unsafe.IORuntime
 import ch.renku.acceptancetests.model.users.UserCredentials
 
 import java.nio.file.Files.createDirectory
@@ -29,12 +30,12 @@ package object console {
 
   /** Execute a command, throws an exception if the command fails
     */
-  def %>(command: Command)(implicit workPath: Path, userCredentials: UserCredentials): Unit =
+  def %>(command: Command)(implicit workPath: Path, userCredentials: UserCredentials, ioRuntime: IORuntime): Unit =
     new CommandExecutor(command).execute
 
   /** Execute a command and return a String either stdout or stderr and does not throw an exception
     */
-  def %%>(command: Command)(implicit workPath: Path, userCredentials: UserCredentials): String =
+  def %%>(command: Command)(implicit workPath: Path, userCredentials: UserCredentials, ioRuntime: IORuntime): String =
     new CommandExecutor(command).safeExecute
 
   val rootWorkDirectory: Path = Paths.get("target")
@@ -55,8 +56,7 @@ package object console {
   }
 
   implicit class PathOps(path: Path) {
-    def /(otherPath: Path) = Paths.get(path.toString, otherPath.toString)
-
-    def /(otherPath: String) = Paths.get(path.toString, otherPath)
+    def /(otherPath: Path):   Path = Paths.get(path.toString, otherPath.toString)
+    def /(otherPath: String): Path = Paths.get(path.toString, otherPath)
   }
 }

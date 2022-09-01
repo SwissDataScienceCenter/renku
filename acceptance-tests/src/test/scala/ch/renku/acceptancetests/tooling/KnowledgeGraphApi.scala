@@ -30,7 +30,7 @@ import scala.annotation.tailrec
 import scala.concurrent.duration._
 
 trait KnowledgeGraphApi extends RestClient {
-  self: AcceptanceSpecData with GitLabApi with Grammar =>
+  self: AcceptanceSpecData with GitLabApi with Grammar with IOSpec =>
 
   def `wait for KG to process events`(projectId: ProjectIdentifier): Unit = {
     sleep(1 second)
@@ -79,5 +79,4 @@ trait KnowledgeGraphApi extends RestClient {
       .send(whenReceived(status = Ok) >=> bodyToJson)
       .extract(jsonRoot.total.int.getOption)
       .getOrElse(fail(s"Cannot find processing status for '${projectId.slug}'"))
-
 }

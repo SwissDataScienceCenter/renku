@@ -27,7 +27,7 @@ import org.http4s.UrlForm
 import org.scalatest.Assertions.fail
 
 trait GitLabApi extends RestClient {
-  self: AcceptanceSpecData =>
+  self: AcceptanceSpecData with IOSpec =>
 
   lazy val authorizationToken: AuthorizationToken =
     userCredentials.maybeGitLabAccessToken getOrElse oauthAccessToken

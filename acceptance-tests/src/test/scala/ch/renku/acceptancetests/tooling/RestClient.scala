@@ -20,7 +20,7 @@ package ch.renku.acceptancetests.tooling
 
 import cats.Applicative
 import cats.effect.IO._
-import cats.effect.{ContextShift, IO}
+import cats.effect.{IO, Temporal}
 import cats.syntax.all._
 import ch.renku.acceptancetests.model.{AuthorizationToken, BaseUrl}
 import ch.renku.acceptancetests.tooling.TestLogger._
@@ -28,25 +28,23 @@ import io.circe.Json
 import io.circe.optics.JsonPath
 import io.circe.optics.JsonPath.root
 import org.http4s._
+import org.http4s.blaze.client.BlazeClientBuilder
 import org.http4s.blaze.pipeline.Command
 import org.http4s.circe._
-import org.http4s.client.blaze.BlazeClientBuilder
 import org.http4s.client.dsl.Http4sClientDsl
 import org.http4s.client.{Client, ConnectionFailure}
 import org.scalatest.Assertions.fail
 
 import java.net.ConnectException
-import scala.concurrent.ExecutionContext.Implicits._
 import scala.concurrent.duration._
 import scala.util.control.NonFatal
 
 trait RestClient extends Http4sClientDsl[IO] {
+  self: IOSpec =>
 
   val jsonRoot: JsonPath = root
 
-  private implicit lazy val contextShift: ContextShift[IO] = IO.contextShift(global)
-
-  private lazy val clientBuilder = BlazeClientBuilder[IO](global)
+  private lazy val clientBuilder = BlazeClientBuilder[IO]
 
   def GET(baseUrl: BaseUrl): Request[IO] = Request[IO](
     Method.GET,
@@ -66,7 +64,7 @@ trait RestClient extends Http4sClientDsl[IO] {
   implicit class RequestOps(request: Request[IO]) {
 
     def withAuthorizationToken(authorizationToken: AuthorizationToken): Request[IO] =
-      request.withHeaders(Headers of authorizationToken.asHeader)
+      request.withHeaders(Headers(authorizationToken.asHeader))
 
     def send[A](processResponse: Response[IO] => IO[A]): A =
       clientBuilder.resource.use(sendRequest(processResponse)).unsafeRunSync()
@@ -85,7 +83,7 @@ trait RestClient extends Http4sClientDsl[IO] {
         case e @ (_: ConnectionFailure | _: ConnectException | _: Command.EOF.type | _: InvalidBodyException) =>
           for {
             _      <- logger.warn(s"Connectivity problem to ${request.method} ${request.uri}. Retrying...", e).pure[IO]
-            _      <- IO.timer(global) sleep (1 second)
+            _      <- Temporal[IO].sleep(1 second)
             result <- sendRequest(processResponse)(client)
           } yield result
         case other => fail(s"${request.method} ${request.uri} ${other.getMessage}")

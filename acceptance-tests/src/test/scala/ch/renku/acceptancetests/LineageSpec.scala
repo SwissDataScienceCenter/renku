@@ -32,6 +32,7 @@ class LineageSpec
     with Project
     with CLIConfiguration
     with KnowledgeGraphApi {
+
   Scenario("User can see lineage") {
 
     `log in to Renku`
@@ -63,7 +64,7 @@ class LineageSpec
     val scriptPath     = "src/script.py"
     val outputFilePath = "data/output.txt"
 
-    console.%>(c"git clone ${projectUrl add authorizationToken}")(tempFolder, userCredentials)
+    console.%>(c"git clone ${projectUrl add authorizationToken}")(tempFolder, userCredentials, ioRuntime)
     console %> c"renku migrate"
 
     console %> c"mkdir src"

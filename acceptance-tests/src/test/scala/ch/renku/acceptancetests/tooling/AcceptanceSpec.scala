@@ -38,7 +38,8 @@ trait AcceptanceSpec
     with RenkuApi
     with ScreenCapturingSpec
     with AcceptanceSpecData
-    with AcceptanceSpecPatience {
+    with AcceptanceSpecPatience
+    with IOSpec {
 
   protected implicit val browser: AcceptanceSpec = this
 

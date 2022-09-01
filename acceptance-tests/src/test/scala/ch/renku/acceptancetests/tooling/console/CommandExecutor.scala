@@ -19,6 +19,7 @@
 package ch.renku.acceptancetests.tooling.console
 
 import cats.effect.IO
+import cats.effect.unsafe.IORuntime
 import cats.implicits._
 import ch.renku.acceptancetests.model.users.UserCredentials
 import ch.renku.acceptancetests.tooling.TestLogger.logger
@@ -31,7 +32,7 @@ import java.util.concurrent.ConcurrentLinkedQueue
 import scala.jdk.CollectionConverters._
 import scala.sys.process._
 
-private class CommandExecutor(command: Command) {
+private class CommandExecutor(command: Command)(implicit ioRuntime: IORuntime) {
 
   def execute(implicit workPath: Path, userCredentials: UserCredentials): String = {
 
