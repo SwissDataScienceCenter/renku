@@ -8,11 +8,6 @@ This release brings improvements and bug fixes to Renku Graph, Renku CLI, Amalth
 Features
 ~~~~~~~~~
 
-* **Knowledge Graph**: new ``GET /knowledge-graph/ontology`` providing documentation for ontology used in KG
-
-Bug fixes
-~~~~~~~~~~
-
 * **Knowledge Graph**: cross-Entity Search resource to filter by namespaces (#1075)
 * **Knowledge Graph**: dataset Details resource to indicate if Dataset was imported from a tag (#1074)
 * **Knowledge Graph**: a new Project Dataset's Tags API (#1071)
@@ -20,6 +15,9 @@ Bug fixes
 * **Knowledge Graph**: details about namespaces added to the Cross-Entity Search response (#1070)
 * **Knowledge Graph**: info about creator's affiliation added to the Project Details response (#1069)
 * **Knowledge Graph**: a new User's Projects resource (#1066)
+
+Bug fixes
+~~~~~~~~~~
 
 Misc
 ~~~~~~~~~~
