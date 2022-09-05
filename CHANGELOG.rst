@@ -8,16 +8,20 @@ This release brings improvements and bug fixes to Renku Graph, Renku CLI, Amalth
 Features
 ~~~~~~~~~
 
-* **Knowledge Graph**: Cross-Entity Search resource to filter by namespaces (#1075)
-* **Knowledge Graph**: Dataset Details resource to indicate if Dataset was imported from a tag (#1074)
+* **Knowledge Graph**: new ``GET /knowledge-graph/ontology`` providing documentation for ontology used in KG
+* **Renku CLI**: Changed dataset logic to put all files into a dataset's data directory. Allow customizing a dataset's data directory
+
+Bug fixes
+~~~~~~~~~~
+
+* **Knowledge Graph**: cross-Entity Search resource to filter by namespaces (#1075)
+* **Knowledge Graph**: dataset Details resource to indicate if Dataset was imported from a tag (#1074)
 * **Knowledge Graph**: a new Project Dataset's Tags API (#1071)
 * **Knowledge Graph**: link to Dataset's Tags on the Dataset Details and Project's Datasets endpoints (#1072)
 * **Knowledge Graph**: details about namespaces added to the Cross-Entity Search response (#1070)
 * **Knowledge Graph**: info about creator's affiliation added to the Project Details response (#1069)
 * **Knowledge Graph**: a new User's Projects resource (#1066)
-
-Bug fixes
-~~~~~~~~~~
+* **Renku CLI**: Show SSH password prompt when using an SSh key with a password
 
 Misc
 ~~~~~~~~~~
