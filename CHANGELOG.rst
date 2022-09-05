@@ -21,7 +21,7 @@ Bug fixes
 * **Knowledge Graph**: details about namespaces added to the Cross-Entity Search response (#1070)
 * **Knowledge Graph**: info about creator's affiliation added to the Project Details response (#1069)
 * **Knowledge Graph**: a new User's Projects resource (#1066)
-* **Renku CLI**: Show SSH password prompt when using an SSh key with a password
+* **Renku CLI**: Show SSH password prompt when using an SSH key with a password
 
 Misc
 ~~~~~~~~~~
