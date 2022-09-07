@@ -33,7 +33,7 @@ Misc
 Individual components
 ~~~~~~~~~~~~~~~~~~~~~~
 
-- `renku-graph 2.17.1 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/2.17.1>`_
+- `renku-graph 2.17.1 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/2.18.0>`_
 - `renku-graph 2.17.0 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/2.17.0>`_
 
 
