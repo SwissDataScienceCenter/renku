@@ -26,12 +26,13 @@ import scala.concurrent.duration._
 trait Collaboration {
   self: AcceptanceSpec with Project =>
 
-  def `navigate to the merge requests tab`: Unit = {
-    When("the user navigates to the Collaboration tab")
-    click on projectPage.Collaboration.tab sleep (1 second)
-    And("they navigate to the Merge Requests sub tab")
-    click on projectPage.Collaboration.MergeRequests.tab sleep (1 second)
-  }
+  def `navigate to the merge requests tab`: Unit =
+    `try few times before giving up` { _ =>
+      When("the user navigates to the Collaboration tab")
+      click on projectPage.Collaboration.tab sleep (1 second)
+      And("they navigate to the Merge Requests sub tab")
+      click on projectPage.Collaboration.MergeRequests.tab sleep (1 second)
+    }
 
   def `verify that the GitLab MR iFrame is visible`: Unit = {
     Then("they should see the GitLab MR page in an iFrame")
@@ -43,12 +44,13 @@ trait Collaboration {
     verify userCanSee projectPage.Collaboration.MergeRequests.gitLabMrLink
   }
 
-  def `navigate to the issues tab`: Unit = {
-    When("the user navigates to the Collaboration tab")
-    click on projectPage.Collaboration.tab sleep (1 second)
-    And("they navigate to the Issues sub tab")
-    click on projectPage.Collaboration.Issues.tab sleep (1 second)
-  }
+  def `navigate to the issues tab`: Unit =
+    `try few times before giving up` { _ =>
+      When("the user navigates to the Collaboration tab")
+      click on projectPage.Collaboration.tab sleep (1 second)
+      And("they navigate to the Issues sub tab")
+      click on projectPage.Collaboration.Issues.tab sleep (1 second)
+    }
 
   def `verify that the GitLab issues iFrame is visible`: Unit = {
     Then("they should see the GitLab issues page in an iFrame")

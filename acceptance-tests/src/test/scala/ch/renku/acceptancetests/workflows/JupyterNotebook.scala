@@ -36,8 +36,10 @@ trait JupyterNotebook extends Datasets with Project with KnowledgeGraphApi {
   }
 
   def `verify the project is up to date`: Unit = {
-    When("the user goes to the project overview")
-    click on projectPage.Overview.tab
+    `try few times before giving up` { _ =>
+      When("the user goes to the project overview")
+      click on projectPage.Overview.tab
+    }
 
     And("goes to the status tab")
     click on projectPage.Overview.statusLink
@@ -56,8 +58,10 @@ trait JupyterNotebook extends Datasets with Project with KnowledgeGraphApi {
   def `verify user can work with Jupyter notebook`: Unit = {
     val jupyterLabPage = `launch a session`
 
-    When("the user clicks on the Terminal icon")
-    click on jupyterLabPage.terminalIcon sleep (2 seconds)
+    `try few times before giving up` { _ =>
+      When("the user clicks on the Terminal icon")
+      click on jupyterLabPage.terminalIcon sleep (2 seconds)
+    }
 
     val datasetName = DatasetName.generate
     And("the user creates a dataset")
