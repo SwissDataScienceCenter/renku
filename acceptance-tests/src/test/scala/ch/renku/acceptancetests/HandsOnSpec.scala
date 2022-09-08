@@ -53,7 +53,11 @@ class HandsOnSpec
 
     `verify dataset was created`(flightsDatasetName)
 
+    `navigate to project info`
+
     `verify user can work with Jupyter notebook`
+
+    `navigate to project info`
 
     `verify analysis was run`
 

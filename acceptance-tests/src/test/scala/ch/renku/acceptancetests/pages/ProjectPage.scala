@@ -284,6 +284,11 @@ class ProjectPage(val projectSlug: String, val namespace: String)
         .getOrElse(fail("Add a Dataset button not found"))
     }
 
+    def goBackButton(implicit webDriver: WebDriver): WebElement = eventually {
+      find(cssSelector("[data-cy='go-back-button']"))
+        .getOrElse(fail("Dataset go back button not found"))
+    }
+
     object DatasetsList {
       def link(to: DatasetPage)(implicit webDriver: WebDriver): WebElement =
         eventually {
@@ -376,10 +381,19 @@ class ProjectPage(val projectSlug: String, val namespace: String)
           .getOrElse(fail("Session dropdown button not found"))
       }
 
+      def stopSessionModal(implicit webDriver: WebDriver): WebElement = eventually {
+        find(cssSelector("#stop-session-button"))
+          .getOrElse(fail("Session stop button not found in the navbar"))
+      }
+
       def stopButton(implicit webDriver: WebDriver): WebElement = eventually {
-        find(cssSelector("button.dropdown-item svg[data-icon='stop-circle']"))
-          .getOrElse(fail("Session stop button not found in the dropdown"))
-          .parent
+        find(cssSelector("[data-cy='stop-session-modal-button']"))
+          .getOrElse(fail("Session stop button not found in the modal"))
+      }
+
+      def goBackButton(implicit webDriver: WebDriver): WebElement = eventually {
+        find(cssSelector("[data-cy='go-back-button']"))
+          .getOrElse(fail("Session go back button not found"))
       }
 
       def sessionReadyBadge(implicit webDriver: WebDriver): WebElement = eventually {
