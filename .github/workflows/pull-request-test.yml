@@ -121,7 +121,7 @@ jobs:
           persist: "${{ needs.check-deploy.outputs.persist }}"
           s3-results-access-key: ${{ secrets.ACCEPTANCE_TESTS_BUCKET_ACCESS_KEY }}
           s3-results-secret-key: ${{ secrets.ACCEPTANCE_TESTS_BUCKET_SECRET_KEY }}
-          test-timeout-mins: "80"
+          test-timeout-mins: "120"
   cleanup:
     if: github.event.action == 'closed'
     runs-on: ubuntu-20.04

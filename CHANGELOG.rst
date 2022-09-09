@@ -1,5 +1,48 @@
 .. _changelog:
 
+0.17.0
+------
+
+This release brings improvements and bug fixes to Renku Graph, Renku CLI, Amalthea, Sessions and Renku UI.
+
+Features
+~~~~~~~~~
+
+* **Knowledge Graph**: New ``GET /knowledge-graph/ontology`` providing documentation for ontology used in KG
+* **Knowledge Graph**: Cross-Entity Search resource to filter by namespaces (#1075)
+* **Knowledge Graph**: Dataset Details resource to indicate if Dataset was imported from a tag (#1074)
+* **Knowledge Graph**: A new Project Dataset's Tags API (#1071)
+* **Knowledge Graph**: Link to Dataset's Tags on the Dataset Details and Project's Datasets endpoints (#1072)
+* **Knowledge Graph**: Details about namespaces added to the Cross-Entity Search response (#1070)
+* **Knowledge Graph**: Info about creator's affiliation added to the Project Details response (#1069)
+* **Knowledge Graph**: A new User's Projects resource (#1066)
+* **Renku CLI**: Changed dataset logic to put all files into a dataset's data directory. Allow customizing a dataset's data directory
+* **UI** improve session start flow (`#1990 <https://github.com/SwissDataScienceCenter/renku-ui/issues/1990>`_, `#2003 <https://github.com/SwissDataScienceCenter/renku-ui/issues/2003>`_)
+
+Bug fixes
+~~~~~~~~~~
+
+* **Knowledge Graph**: A process to retry all the events failed due to CLI version mismatch
+* **Renku CLI**: Show SSH password prompt when using an SSH key with a password
+* **UI** fix file tree display when changing to original project from fork (`#1907 <https://github.com/SwissDataScienceCenter/renku-ui/issues/1907>`_, `#2015 <https://github.com/SwissDataScienceCenter/renku-ui/issues/2015>`_)
+* **UI** prevent repeated queries to projects API (`#2017 <https://github.com/SwissDataScienceCenter/renku-ui/issues/2017>`_)
+* **UI** render star project button for anon users (`#2014 <https://github.com/SwissDataScienceCenter/renku-ui/issues/2014>`_)
+* **UI** restore back button navigation on projects for anon users (`#2017 <https://github.com/SwissDataScienceCenter/renku-ui/issues/2017>`_)
+
+Misc
+~~~~~~~~~~
+
+* **Knowledge Graph**: Renku CLI upgraded to 1.7.1
+* **Knowledge Graph**: Jena upgraded to 4.6.0
+
+Individual components
+~~~~~~~~~~~~~~~~~~~~~~
+
+- `renku-graph 2.18.0 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/2.18.0>`_
+- `renku-graph 2.17.0 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/2.17.0>`_
+- `renku-ui 2.8.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/2.8.0>`_
+
+
 0.16.0
 ------
 
