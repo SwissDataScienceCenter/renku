@@ -87,12 +87,16 @@ trait Environments {
   private def stopSessionOnProjectPage(projectPage: ProjectPage): Unit = {
     When("the user switches back to the Renku frame")
     webDriver.switchTo().defaultContent();
-    And("opens the sessions menu")
-    click on projectPage.Sessions.Running.sessionDropdownMenu sleep (1 second)
+    // And("opens the sessions menu")
+    // click on projectPage.Sessions.Running.sessionDropdownMenu sleep (1 second)
+    And("clicks on stop button to open modal")
+    click on projectPage.Sessions.Running.stopSessionModal sleep (5 seconds)
     And("clicks on stop button")
     click on projectPage.Sessions.Running.stopButton sleep (10 seconds)
     // Then("the session gets stopped and they can see the New Session link")
     // verify userCanSee projectPage.Sessions.newLink
+    When("the user switches back to the Renku project")
+    click on projectPage.Sessions.Running.goBackButton sleep (10 seconds)
   }
 
   def `launch anonymous session`(

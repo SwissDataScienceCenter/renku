@@ -42,7 +42,7 @@ class DatasetPage(datasetName: DatasetName, projectPage: ProjectPage)
   override def pageReadyElement(implicit webDriver: WebDriver): Option[WebElement] = Some(datasetTitle)
 
   def datasetTitle(implicit webDriver: WebDriver): WebElement = eventually {
-    find(cssSelector("h3[data-cy='dataset-title']")) getOrElse fail("Dataset -> Dataset title not found")
+    find(cssSelector("div[data-cy='dataset-title']")) getOrElse fail("Dataset -> Dataset title not found")
   }
 
   def datasetNotInKgWarning(implicit webDriver: WebDriver): List[WebBrowser.Element] = eventually {
@@ -54,7 +54,7 @@ class DatasetPage(datasetName: DatasetName, projectPage: ProjectPage)
   }
 
   def modifyButton(implicit webDriver: WebDriver): WebElement = eventually {
-    find(cssSelector("a[href='modify']")) getOrElse fail("Dataset -> Modify button not found")
+    find(cssSelector("a[data-cy='edit-dataset-button']")) getOrElse fail("Dataset -> Modify button not found")
   }
 
   object ProjectsList {
