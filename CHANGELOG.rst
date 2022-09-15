@@ -1,5 +1,11 @@
 .. _changelog:
 
+0.17.1
+------
+
+Fixes a bug in the UI with anonymous sessions that was caught after tagging 0.17.0,
+but before deploying that version.
+
 0.17.0
 ------
 
