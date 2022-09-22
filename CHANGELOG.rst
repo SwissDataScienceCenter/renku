@@ -1,5 +1,41 @@
 .. _changelog:
 
+0.18.0
+------
+
+This release brings improvements and bug fixes to Renku UI.
+
+Features
+~~~~~~~~
+
+* **UI** reduce unnecessary 'project locked' notifications (`#1982 <https://github.com/SwissDataScienceCenter/renku-ui/issues/1982>`_, `#2025 <https://github.com/SwissDataScienceCenter/renku-ui/issues/2025>`_)
+* **UI** expose project metadata as JSON-LD (`#1867 <https://github.com/SwissDataScienceCenter/renku-ui/issues/1867>`_, `#2022 <https://github.com/SwissDataScienceCenter/renku-ui/issues/2022>`_)
+
+Bug fixes
+~~~~~~~~~~
+[fill out or delete before release]
+
+Misc
+~~~~
+[fill out or delete before release]
+
+
+Individual components
+~~~~~~~~~~~~~~~~~~~~~~
+
+- `renku-ui 2.9.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/2.9.0>`_
+
+Upgrading from 0.17.x
+~~~~~~~~~~~~~~~~~~~~~~
+
+BREAKING CHANGES!
+The renku-ui helm chart was restructured:
+* the field ``ui.baseUrl`` was moved to ``ui.client.url``
+* the field ``ui.gatewayUrl`` was moved to ``ui.gateway.url``
+
+Consult `the values changelog file <helm-chart/values.yaml.changelog.md>`_ for details.
+
+
 0.17.2
 ------
 
