@@ -1,5 +1,15 @@
 .. _changelog:
 
+0.17.2
+------
+
+Fixes a bug in the Graph preventing the provisioning process to hang for projects using template in a certain state.
+
+Features
+~~~~~~~~
+
+* **Knowledge Graph**: ``visibility`` property added to the response of the Dataset Details API (`#1085 <https://github.com/SwissDataScienceCenter/renku-graph/issues/1085>`_)
+
 0.17.1
 ------
 
