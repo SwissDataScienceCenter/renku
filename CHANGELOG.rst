@@ -6,6 +6,12 @@
 Fixes a bug in the UI with anonymous sessions that was caught after tagging 0.17.0,
 but before deploying that version.
 
+Features
+~~~~~~~~
+
+* **UI** New styling of project and datasets (`#1984 <https://github.com/SwissDataScienceCenter/renku-ui/issues/1984>`_, `#2001 <https://github.com/SwissDataScienceCenter/renku-ui/issues/2001>`_, `#1964 <https://github.com/SwissDataScienceCenter/renku-ui/issues/1964>`_, `#1978 <https://github.com/SwissDataScienceCenter/renku-ui/issues/1978>`_, `#2005 <https://github.com/SwissDataScienceCenter/renku-ui/issues/2005>`_)
+* **UI** New full-screen session view  (`#1988 <https://github.com/SwissDataScienceCenter/renku-ui/issues/1988>`_, `#2009 <https://github.com/SwissDataScienceCenter/renku-ui/issues/2009>`_)
+
 0.17.0
 ------
 
