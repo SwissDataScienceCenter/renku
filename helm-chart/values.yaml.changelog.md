@@ -6,6 +6,25 @@ Please follow this convention when adding a new row
 * `<type: NEW|EDIT|DELETE> - *<resource name>*: <details>`
 
 ----
+## Upgrading to Renku 0.18.0
+* EDIT - the ui chart was simplified and given a more regular structure.
+
+Old
+  ```
+  ui:
+    baseUrl: <string>
+    gatewayUrl: <string>
+  ```
+New
+  ```
+  ui:
+    client:
+      url: [old baseUrl]
+      [... other client properties]
+    gateway:
+      url: <string>
+  ```
+
 ## Upgrading to Renku 0.16.0
 * DELETE - renku graph's Jena does not need the *dataset* property anymore so *global.graph.jena.dataset* property can be removed.
 
