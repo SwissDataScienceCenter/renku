@@ -1,23 +1,15 @@
 .. _changelog:
 
-0.18.0 (pre-release)
---------------------
+0.18.0
+------
 
-This release brings improvements and bug fixes to Renku UI.
+This release brings improvements and bug fixes to renku-ui and renku-notebooks.
 
 Features
 ~~~~~~~~
 
 * **UI** reduce unnecessary 'project locked' notifications (`#1982 <https://github.com/SwissDataScienceCenter/renku-ui/issues/1982>`_, `#2025 <https://github.com/SwissDataScienceCenter/renku-ui/issues/2025>`_)
 * **UI** expose project metadata as JSON-LD (`#1867 <https://github.com/SwissDataScienceCenter/renku-ui/issues/1867>`_, `#2022 <https://github.com/SwissDataScienceCenter/renku-ui/issues/2022>`_)
-
-Bug fixes
-~~~~~~~~~~
-[fill out or delete before release]
-
-Misc
-~~~~
-[fill out or delete before release]
 
 
 Individual components
@@ -57,6 +49,24 @@ Features
 
 * **UI** New styling of project and datasets (`#1984 <https://github.com/SwissDataScienceCenter/renku-ui/issues/1984>`_, `#2001 <https://github.com/SwissDataScienceCenter/renku-ui/issues/2001>`_, `#1964 <https://github.com/SwissDataScienceCenter/renku-ui/issues/1964>`_, `#1978 <https://github.com/SwissDataScienceCenter/renku-ui/issues/1978>`_, `#2005 <https://github.com/SwissDataScienceCenter/renku-ui/issues/2005>`_)
 * **UI** New full-screen session view  (`#1988 <https://github.com/SwissDataScienceCenter/renku-ui/issues/1988>`_, `#2009 <https://github.com/SwissDataScienceCenter/renku-ui/issues/2009>`_)
+
+Bug fixes
+~~~~~~~~~~
+* **Sessions** allow usernames starting with numbers/symbols (`#1213 <https://github.com/SwissDataScienceCenter/renku-notebooks/pull/1213>`_)
+
+Individual components
+~~~~~~~~~~~~~~~~~~~~~~
+
+- `renku-ui 2.8.1 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/2.8.1>`_
+- `renku-notebooks 1.11.0 <https://github.com/SwissDataScienceCenter/renku-notebooks/releases/tag/1.11.0>`_
+
+Upgrading from 0.16.x
+~~~~~~~~~~~~~~~~~~~~~~
+
+The way anonymous sessions are handled has changed, and this means that an anonymous session
+that was *started before the upgrade* will no longer be accessible afterwards. You may want
+to notify users in advance and check that the number of running anonymous sessions is small
+before performing the upgrade.
 
 0.17.0
 ------
