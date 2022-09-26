@@ -27,6 +27,14 @@ The renku-ui helm chart was restructured:
 
 Consult `the values changelog file <helm-chart/values.yaml.changelog.md>`_ for details.
 
+Upgrading from 0.16.x
+~~~~~~~~~~~~~~~~~~~~~~
+
+The way anonymous sessions are handled has changed, and this means that an anonymous session
+that was *started before the upgrade* will no longer be accessible afterwards. You may want
+to notify users in advance and check that the number of running anonymous sessions is small
+before performing the upgrade.
+
 
 0.17.2
 ------
