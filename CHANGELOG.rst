@@ -1,5 +1,15 @@
 .. _changelog:
 
+0.18.1
+------
+
+This release comes with the first step towards a new data organisation inside the Renku Knowledge Graph. Although completely transparent for the users at this point, the change brings substantial additions to the internal processes within the Knowledge Graph.
+
+Features
+~~~~~~~~
+
+* **Knowledge Graph**: new parallel processes to provision data to Named Graphs datasets in the Triples Store.
+
 0.18.0
 ------
 
