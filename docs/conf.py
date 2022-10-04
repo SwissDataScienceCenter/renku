@@ -103,15 +103,20 @@ exclude_patterns += [
     str(p) for p in glob.glob("renku-python/*") if p not in {"renku-python/docs"}
 ]
 
+allowed_set = {
+    Path("renku-python/docs/reference/commands.rst"),
+    Path("renku-python/docs/reference/api.rst"),
+    Path("renku-python/docs/plugins.rst"),
+    Path("renku-python/docs/reference/plugins.rst"),
+    Path("renku-python/docs/how-to-guides/implementing_a_provider.rst"),
+    Path("renku-python/docs/how-to-guides/hpc.rst"),
+}
+
+# add all models
+allowed_set |= set(Path("renku-python").rglob("docs/reference/models/*.rst"))
+
 exclude_patterns += [
-    str(p) for p in Path("renku-python").rglob("*.rst") if p not in {
-        Path("renku-python/docs/reference/commands.rst"),
-        Path("renku-python/docs/reference/api.rst"),
-        Path("renku-python/docs/plugins.rst"),
-        Path("renku-python/docs/reference/plugins.rst"),
-        Path("renku-python/docs/how-to-guides/implementing_a_provider.rst"),
-        Path("renku-python/docs/how-to-guides/hpc.rst"),
-    }
+    str(p) for p in Path("renku-python").rglob("*.rst") if p not in allowed_set
 ]
 
 # The name of the Pygments (syntax highlighting) style to use.

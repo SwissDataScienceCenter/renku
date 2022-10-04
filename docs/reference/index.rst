@@ -11,6 +11,7 @@ Reference
     Renku CLI Plugins <../renku-python/docs/plugins>
     Renku CLI commands <../renku-python/docs/reference/commands>
     Renku Python API <../renku-python/docs/reference/api>
+    Renku Python Models <../renku-python/docs/reference/models/index>
 
 .. toctree::
     :hidden:
