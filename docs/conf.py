@@ -108,6 +108,9 @@ exclude_patterns += [
         Path("renku-python/docs/reference/commands.rst"),
         Path("renku-python/docs/reference/api.rst"),
         Path("renku-python/docs/plugins.rst"),
+        Path("renku-python/docs/reference/plugins.rst"),
+        Path("renku-python/docs/how-to-guides/implementing_a_provider.rst"),
+        Path("renku-python/docs/how-to-guides/hpc.rst"),
     }
 ]
 
