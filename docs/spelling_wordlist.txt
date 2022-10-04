@@ -1,9 +1,10 @@
 acyclic
-admin
 adhoc
+admin
 Amalthea
 analytics
 app
+Args
 argv
 attrs
 auditability
@@ -88,6 +89,7 @@ interoperability
 io
 ipynb
 iteratively
+IWorkflowProvider
 ize
 izing
 Janusgraph
@@ -117,6 +119,7 @@ migrationscheck
 minikube
 minimalistic
 mistyped
+mls
 mydomain
 namespace
 namespaces
@@ -159,6 +162,7 @@ repo
 reproducibility
 Reproducibility
 reproducibly
+reticulate
 reusability
 Reusability
 righthand
@@ -172,11 +176,13 @@ runnable
 runtime
 runtimes
 scala
+Slurm
 SPARQL
 spawner
 SQLAlchemy
 statefulset
 statuspage
+str
 subclass
 Subclass
 subclasses
