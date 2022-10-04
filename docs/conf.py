@@ -41,7 +41,7 @@ extensions = [
     "sphinx.ext.ifconfig",
     "sphinx.ext.todo",
     "sphinx.ext.viewcode",
-    "sphinxcontrib.spelling",
+    # "sphinxcontrib.spelling",
     "sphinxcontrib.mermaid",
     "sphinx_rtd_theme",
     "sphinx_copybutton",
@@ -106,7 +106,8 @@ exclude_patterns += [
 exclude_patterns += [
     str(p) for p in Path("renku-python").rglob("*.rst") if p not in {
         Path("renku-python/docs/reference/commands.rst"),
-        Path("renku-python/docs/reference/api.rst")
+        Path("renku-python/docs/reference/api.rst"),
+        Path("renku-python/docs/plugins.rst"),
     }
 ]
 
