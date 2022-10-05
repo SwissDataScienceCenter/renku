@@ -32,7 +32,12 @@ sys.path.append(abspath(join(dirname(__file__), "renku-python/docs/_ext")))
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
 extensions = [
+    "cheatsheet",
     "plantweb.directive",
+    "sphinx_click",
+    "sphinx_copybutton",
+    "sphinx_panels",
+    "sphinx_rtd_theme",
     "sphinx.ext.autodoc",
     "sphinx.ext.coverage",
     "sphinx.ext.doctest",
@@ -42,12 +47,8 @@ extensions = [
     "sphinx.ext.napoleon",
     "sphinx.ext.todo",
     "sphinx.ext.viewcode",
-    # "sphinxcontrib.spelling",
     "sphinxcontrib.mermaid",
-    "sphinx_rtd_theme",
-    "sphinx_copybutton",
-    "sphinx_panels",
-    "cheatsheet",
+    # "sphinxcontrib.spelling",
 ]
 
 # Plantweb configuration
