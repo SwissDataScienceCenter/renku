@@ -39,6 +39,7 @@ extensions = [
     "sphinx.ext.githubpages",
     "sphinx.ext.graphviz",
     "sphinx.ext.ifconfig",
+    "sphinx.ext.napoleon",
     "sphinx.ext.todo",
     "sphinx.ext.viewcode",
     # "sphinxcontrib.spelling",
@@ -254,8 +255,44 @@ suppress_warnings = ["app.add_directive"]
 copybutton_prompt_text = r">>> |\.\.\. |\$ |In \[\d*\]: | {2,5}\.\.\.: | {5,8}: "
 copybutton_prompt_is_regexp = True
 
-# configure mocking for renku-python
+# Autodoc configuraton.
 autoclass_content = "both"
-autodoc_mock_imports = ["persistent", "ZODB"]
+autodoc_mock_imports = ["persistent", "ZODB", "calamus"]
 autodoc_typehints = "none"
 autodoc_typehints_description_target = "documented"
+
+# Napoleon (Google style) settings
+napoleon_google_docstring = True
+napoleon_numpy_docstring = False
+
+# sphinx type references only work for types that documentation is generated for
+# Suppress warnings for these types that are referenced but not documented themselves.
+nitpick_ignore = [
+    ("py:class", "CommandResult"),
+    ("py:class", "CommunicationCallback"),
+    ("py:class", "datetime"),
+    ("py:class", "DiGraph"),
+    ("py:class", "DynamicProxy"),
+    ("py:class", "IActivityGateway"),
+    ("py:class", "IClientDispatcher"),
+    ("py:class", "IDatabaseDispatcher"),
+    ("py:class", "IDatasetGateway"),
+    ("py:class", "IPlanGateway"),
+    ("py:class", "LocalClient"),
+    ("py:class", "NoValueType"),
+    ("py:class", "OID_TYPE"),
+    ("py:class", "Path"),
+    ("py:class", "Persistent"),
+    ("py:class", "optional"),
+    ("py:class", '"LocalClient"'),
+    ("py:class", '"ValueResolver"'),
+    ("py:exc", "errors.ParameterError"),
+]
+
+nitpick_ignore_regex = [
+    ("py:class", r"calamus.*"),
+    ("py:class", r"docker.*"),
+    ("py:class", r"marshmallow.*"),
+    ("py:class", r"persistent.*"),
+    ("py:class", r"yaml.*"),
+]
