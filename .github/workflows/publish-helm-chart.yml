@@ -15,7 +15,7 @@ jobs:
       - name: Set version
         id: vars
         run: echo ::set-output name=tag::${GITHUB_REF#refs/*/}
-      - uses: SwissDataScienceCenter/renku-actions/publish-chart@v1.1.0
+      - uses: SwissDataScienceCenter/renku-actions/publish-chart@v1.2.0
         env:
           CHART_DIR: helm-chart/
           CHART_NAME: renku
@@ -47,6 +47,6 @@ jobs:
         with:
           fetch-depth: 0
       - name: Rollout renku version
-        uses: SwissDataScienceCenter/renku-actions/rollout-renku-version@v1.1.0
+        uses: SwissDataScienceCenter/renku-actions/rollout-renku-version@v1.2.0
         env:
           GITHUB_TOKEN: ${{ secrets.RENKUBOT_GITHUB_TOKEN }}
