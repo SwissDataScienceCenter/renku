@@ -9,9 +9,7 @@ Reference
     Services <services/index>
     Templates <templates>
     Renku CLI Plugins <../renku-python/docs/plugins>
-    Renku CLI commands <../renku-python/docs/reference/commands>
-    Renku Python API <../renku-python/docs/reference/api>
-    Renku Python Models <../renku-python/docs/reference/models/index>
+    Renku CLI Reference <../renku-python/docs/reference/index>
 
 .. toctree::
     :hidden:

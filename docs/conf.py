@@ -113,7 +113,7 @@ allowed_set = {
 }
 
 # add all models
-allowed_set |= set(Path("renku-python").rglob("docs/reference/models/*.rst"))
+allowed_set |= set(Path("renku-python").rglob("docs/reference/**/*.rst"))
 
 exclude_patterns += [
     str(p) for p in Path("renku-python").rglob("*.rst") if p not in allowed_set
