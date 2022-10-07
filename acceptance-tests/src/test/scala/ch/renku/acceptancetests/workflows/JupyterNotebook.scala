@@ -60,7 +60,7 @@ trait JupyterNotebook extends Datasets with Project with KnowledgeGraphApi {
 
     `try few times before giving up` { _ =>
       When("the user clicks on the Terminal icon")
-      click on jupyterLabPage.terminalIcon sleep (2 seconds)
+      click on jupyterLabPage.terminalIcon sleep (10 seconds)
     }
 
     val datasetName = DatasetName.generate
