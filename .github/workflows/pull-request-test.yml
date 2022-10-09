@@ -34,7 +34,7 @@ jobs:
         run: |
           cd docs
           sphinx-build -nNW -b spelling -d _build/doctrees . _build/spelling
-          sphinx-build -qnNW . _build/html
+          sphinx-build -nNW . _build/html
       - name: Upload docs
         uses: actions/upload-artifact@v2
         if: success()
