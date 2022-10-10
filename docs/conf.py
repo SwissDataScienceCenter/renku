@@ -48,7 +48,7 @@ extensions = [
     "sphinx.ext.todo",
     "sphinx.ext.viewcode",
     "sphinxcontrib.mermaid",
-    # "sphinxcontrib.spelling",
+    "sphinxcontrib.spelling",
 ]
 
 # Plantweb configuration
@@ -101,9 +101,7 @@ language = "en"
 exclude_patterns = ["_build/*", "**/.github", "**/.eggs", ".venv/*", "README.md"]
 
 # append renku-python except for its docs
-exclude_patterns += [
-    str(p) for p in glob.glob("renku-python/*") if p not in {"renku-python/docs"}
-]
+exclude_patterns += [str(p) for p in glob.glob("renku-python/*") if p not in {"renku-python/docs"}]
 
 allowed_set = {
     Path("renku-python/docs/reference/commands.rst"),
@@ -117,9 +115,7 @@ allowed_set = {
 # add all models
 allowed_set |= set(Path("renku-python").rglob("docs/reference/**/*.rst"))
 
-exclude_patterns += [
-    str(p) for p in Path("renku-python").rglob("*.rst") if p not in allowed_set
-]
+exclude_patterns += [str(p) for p in Path("renku-python").rglob("*.rst") if p not in allowed_set]
 
 # The name of the Pygments (syntax highlighting) style to use.
 # pygments_style = 'sphinx'
@@ -142,16 +138,16 @@ html_theme = "renku"
 # documentation.
 #
 html_theme_options = {
-    'logo_only': True,
-    'display_version': True,
-    'prev_next_buttons_location': 'bottom',
-    'style_external_links': False,
+    "logo_only": True,
+    "display_version": True,
+    "prev_next_buttons_location": "bottom",
+    "style_external_links": False,
     # Toc options
-    'collapse_navigation': True,
-    'sticky_navigation': True,
-    'navigation_depth': 4,
-    'includehidden': True,
-    'titles_only': False
+    "collapse_navigation": True,
+    "sticky_navigation": True,
+    "navigation_depth": 4,
+    "includehidden": True,
+    "titles_only": False,
 }
 
 # Add any paths that contain custom static files (such as style sheets) here,
@@ -161,9 +157,7 @@ html_static_path = ["_static"]
 
 # These paths are either relative to html_static_path
 # or fully qualified paths (eg. https://...)
-html_css_files = [
-  "css/override-theme.css"
-]
+html_css_files = ["css/override-theme.css"]
 
 # Custom sidebar templates, must be a dictionary that maps document names
 # to template names.
@@ -292,14 +286,14 @@ nitpick_ignore = [
 ]
 
 nitpick_ignore_regex = [
-    ("py:class", r"calamus.*"),
-    ("py:class", r"docker.*"),
-    ("py:class", r"marshmallow.*"),
-    ("py:class", r"persistent.*"),
-    ("py:class", r"yaml.*"),
-    ("py:class", r"abc.*"),
-    ("py:class", r"collections.*"),
-    ("py:class", r"enum.*"),
-    ("py:class", r"pathlib.*"),
-    ("py:class", r"contextlib.*"),
+    (r"py:.*", r"calamus.*"),
+    (r"py:.*", r"docker.*"),
+    (r"py:.*", r"marshmallow.*"),
+    (r"py:.*", r"persistent.*"),
+    (r"py:.*", r"yaml.*"),
+    (r"py:.*", r"abc.*"),
+    (r"py:.*", r"collections.*"),
+    (r"py:.*", r"enum.*"),
+    (r"py:.*", r"pathlib.*"),
+    (r"py:.*", r"contextlib.*"),
 ]
