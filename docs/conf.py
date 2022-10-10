@@ -93,7 +93,7 @@ version = os.environ.get("READTHEDOCS_VERSION", "latest")
 #
 # This is also used if you do content translation via gettext catalogs.
 # Usually you set "language" from the command line for these cases.
-language = None
+language = "en"
 
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
@@ -287,6 +287,7 @@ nitpick_ignore = [
     ("py:class", "optional"),
     ("py:class", '"LocalClient"'),
     ("py:class", '"ValueResolver"'),
+    ("py:class", "IStorageFactory"),
     ("py:exc", "errors.ParameterError"),
 ]
 
@@ -296,4 +297,9 @@ nitpick_ignore_regex = [
     ("py:class", r"marshmallow.*"),
     ("py:class", r"persistent.*"),
     ("py:class", r"yaml.*"),
+    ("py:class", r"abc.*"),
+    ("py:class", r"collections.*"),
+    ("py:class", r"enum.*"),
+    ("py:class", r"pathlib.*"),
+    ("py:class", r"contextlib.*"),
 ]
