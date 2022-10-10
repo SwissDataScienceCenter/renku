@@ -32,21 +32,23 @@ sys.path.append(abspath(join(dirname(__file__), "renku-python/docs/_ext")))
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
 extensions = [
+    "cheatsheet",
     "plantweb.directive",
+    "sphinx_click",
+    "sphinx_copybutton",
+    "sphinx_panels",
+    "sphinx_rtd_theme",
     "sphinx.ext.autodoc",
     "sphinx.ext.coverage",
     "sphinx.ext.doctest",
     "sphinx.ext.githubpages",
     "sphinx.ext.graphviz",
     "sphinx.ext.ifconfig",
+    "sphinx.ext.napoleon",
     "sphinx.ext.todo",
     "sphinx.ext.viewcode",
-    "sphinxcontrib.spelling",
     "sphinxcontrib.mermaid",
-    "sphinx_rtd_theme",
-    "sphinx_copybutton",
-    "sphinx_panels",
-    "cheatsheet",
+    "sphinxcontrib.spelling",
 ]
 
 # Plantweb configuration
@@ -91,7 +93,7 @@ version = os.environ.get("READTHEDOCS_VERSION", "latest")
 #
 # This is also used if you do content translation via gettext catalogs.
 # Usually you set "language" from the command line for these cases.
-language = None
+language = "en"
 
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
@@ -99,16 +101,21 @@ language = None
 exclude_patterns = ["_build/*", "**/.github", "**/.eggs", ".venv/*", "README.md"]
 
 # append renku-python except for its docs
-exclude_patterns += [
-    str(p) for p in glob.glob("renku-python/*") if p not in {"renku-python/docs"}
-]
+exclude_patterns += [str(p) for p in glob.glob("renku-python/*") if p not in {"renku-python/docs"}]
 
-exclude_patterns += [
-    str(p) for p in Path("renku-python").rglob("*.rst") if p not in {
-        Path("renku-python/docs/reference/commands.rst"),
-        Path("renku-python/docs/reference/api.rst")
-    }
-]
+allowed_set = {
+    Path("renku-python/docs/reference/commands.rst"),
+    Path("renku-python/docs/reference/api.rst"),
+    Path("renku-python/docs/plugins.rst"),
+    Path("renku-python/docs/reference/plugins.rst"),
+    Path("renku-python/docs/how-to-guides/implementing_a_provider.rst"),
+    Path("renku-python/docs/how-to-guides/hpc.rst"),
+}
+
+# add all models
+allowed_set |= set(Path("renku-python").rglob("docs/reference/**/*.rst"))
+
+exclude_patterns += [str(p) for p in Path("renku-python").rglob("*.rst") if p not in allowed_set]
 
 # The name of the Pygments (syntax highlighting) style to use.
 # pygments_style = 'sphinx'
@@ -131,16 +138,16 @@ html_theme = "renku"
 # documentation.
 #
 html_theme_options = {
-    'logo_only': True,
-    'display_version': True,
-    'prev_next_buttons_location': 'bottom',
-    'style_external_links': False,
+    "logo_only": True,
+    "display_version": True,
+    "prev_next_buttons_location": "bottom",
+    "style_external_links": False,
     # Toc options
-    'collapse_navigation': True,
-    'sticky_navigation': True,
-    'navigation_depth': 4,
-    'includehidden': True,
-    'titles_only': False
+    "collapse_navigation": True,
+    "sticky_navigation": True,
+    "navigation_depth": 4,
+    "includehidden": True,
+    "titles_only": False,
 }
 
 # Add any paths that contain custom static files (such as style sheets) here,
@@ -150,9 +157,7 @@ html_static_path = ["_static"]
 
 # These paths are either relative to html_static_path
 # or fully qualified paths (eg. https://...)
-html_css_files = [
-  "css/override-theme.css"
-]
+html_css_files = ["css/override-theme.css"]
 
 # Custom sidebar templates, must be a dictionary that maps document names
 # to template names.
@@ -245,8 +250,50 @@ suppress_warnings = ["app.add_directive"]
 copybutton_prompt_text = r">>> |\.\.\. |\$ |In \[\d*\]: | {2,5}\.\.\.: | {5,8}: "
 copybutton_prompt_is_regexp = True
 
-# configure mocking for renku-python
+# Autodoc configuraton.
 autoclass_content = "both"
-autodoc_mock_imports = ["persistent", "ZODB"]
+autodoc_mock_imports = ["persistent", "ZODB", "calamus"]
 autodoc_typehints = "none"
 autodoc_typehints_description_target = "documented"
+
+# Napoleon (Google style) settings
+napoleon_google_docstring = True
+napoleon_numpy_docstring = False
+
+# sphinx type references only work for types that documentation is generated for
+# Suppress warnings for these types that are referenced but not documented themselves.
+nitpick_ignore = [
+    ("py:class", "CommandResult"),
+    ("py:class", "CommunicationCallback"),
+    ("py:class", "datetime"),
+    ("py:class", "DiGraph"),
+    ("py:class", "DynamicProxy"),
+    ("py:class", "IActivityGateway"),
+    ("py:class", "IClientDispatcher"),
+    ("py:class", "IDatabaseDispatcher"),
+    ("py:class", "IDatasetGateway"),
+    ("py:class", "IPlanGateway"),
+    ("py:class", "LocalClient"),
+    ("py:class", "NoValueType"),
+    ("py:class", "OID_TYPE"),
+    ("py:class", "Path"),
+    ("py:class", "Persistent"),
+    ("py:class", "optional"),
+    ("py:class", '"LocalClient"'),
+    ("py:class", '"ValueResolver"'),
+    ("py:class", "IStorageFactory"),
+    ("py:exc", "errors.ParameterError"),
+]
+
+nitpick_ignore_regex = [
+    (r"py:.*", r"calamus.*"),
+    (r"py:.*", r"docker.*"),
+    (r"py:.*", r"marshmallow.*"),
+    (r"py:.*", r"persistent.*"),
+    (r"py:.*", r"yaml.*"),
+    (r"py:.*", r"abc.*"),
+    (r"py:.*", r"collections.*"),
+    (r"py:.*", r"enum.*"),
+    (r"py:.*", r"pathlib.*"),
+    (r"py:.*", r"contextlib.*"),
+]
