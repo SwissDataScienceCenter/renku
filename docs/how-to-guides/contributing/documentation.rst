@@ -7,7 +7,7 @@ You have come across some missing or outdated information in the Renku docs? Why
 not submit a pull request to fix it. Contributions to the Renku documentation
 are highly appreciated!
 
-If you are a VSCode user, note that you can use either a local dev-container or
+If you are a VSCode user, note that you can use either a local dev container or
 a GitHub Codespace to get an environment with all the dependencies taken care of for you.
 
 Building the docs
