@@ -13,7 +13,7 @@ Features
 
 Bug fixes
 ~~~~~~~~~~
-* **Knowledge Graph**: Jena upgraded to 4.6.1 to address an issue causing Jena to become irresponsive.
+* **Knowledge Graph**: Jena upgraded to 4.6.1 to address an issue that in certain circumstance makes Jena unresponsive.
 
 
 0.18.0
