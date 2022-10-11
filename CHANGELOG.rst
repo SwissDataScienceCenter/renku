@@ -14,7 +14,13 @@ Features
 Bug fixes
 ~~~~~~~~~~
 * **Knowledge Graph**: Jena upgraded to 4.6.1 to address an issue that in certain circumstance makes Jena unresponsive.
+* **Sessions**: various bug fixes and improvements
 
+Individual components
+~~~~~~~~~~~~~~~~~~~~~~
+
+- `renku-graph 2.21.1 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/2.21.1>`_
+- `renku-notebooks 1.11.1 <https://github.com/SwissDataScienceCenter/renku-notebooks/releases/tag/1.11.1>`_
 
 0.18.0
 ------
