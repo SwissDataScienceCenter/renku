@@ -18,7 +18,7 @@ plantweb==1.1.0
 prompt-toolkit==1.0.15
 ptyprocess==0.6.0
 pyenchant==3.*
-pygments==2.7.4
+pygments==2.13.0
 pyparsing==2.2.0
 pytz==2018.5
 PyYAML==5.4
