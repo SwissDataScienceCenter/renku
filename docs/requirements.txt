@@ -15,7 +15,7 @@ parso==0.3.0
 pexpect==4.6.0; sys_platform != 'win32'
 pickleshare==0.7.4
 plantweb==1.1.0
-prompt-toolkit==1.0.15
+prompt-toolkit==3.0.31
 ptyprocess==0.6.0
 pyenchant==3.*
 pygments==2.7.4
