@@ -21,14 +21,12 @@ Components release whenever they want, the schedule is up to them. They are
 responsible for updating the changelog in the auto-PR in the renku repository,
 in a section above the one for the most recent release.
 The auto-PR is only merged with an updated changelog/release notes.
-Ideally, components would release when there are meaningful changes or so
-there's a release at least every 3 weeks.
 
 If two components need to bee coordinated for a release (e.g. new version
 of Graph needs new version of RP), they should combine their auto-PRs and
 merge them in a single go. Generally, components should strive to keep
 dependencies between them to a minimum and coordinated component releases
-should not usually be needed(by using APi versioning, feature flags etc.).
+should not usually be   using API versioning, feature flags etc.).
 
 If a merged auto-PR that has not yet been included in a Renku release turns
 out to be faulty, it has to be reverted in the renku repository so it's not
@@ -41,23 +39,23 @@ that would catch it, within reason.
 Process [YAT]
 ~~~~~~~~~~~~~
 
-* Make a Pull Request in renku repository with updates relevant -and adapted- to USERS and ADMINS in the CHANGELOG.md file. Ask ORDES for review when necessary.
+* Make a Pull Request in renku repository with updates relevant -and adapted- to USERS and ADMINS in the CHANGELOG.md file. Ask the product manager for review when necessary.
 
 * Rollout updates
 
-    * For non-breaking changes: create two pull requests in terraform-renku repository with the changes, one for limited and one for renkulab. Important: add the scheduled maintenance label to help avoiding it being merged before time.
+    * For non-breaking changes: create one PR per deployment in terraform-renku repository with the changes. Important: add the scheduled maintenance label to help avoiding it being merged before time. Limited should be rolled out before Renkulab, as a canary release (see below).
 
     * For breaking changes: create more than one PR to upgrade at different times depending on the case.
 
 * Plan a maintenance, create it in statuspage for all Renku deployments managed by us. Coordinate with external Renku deployments admins (UniFR, SV).
 
-    * Limited should be rolled out at least 5 days before the Renkulab rollout, to give a change to find bugs early.
+    * Limited should be rolled out at ~1 week before the Renkulab rollout, to give a change to find bugs early. E.g. Limited on Wednesday and Renkulab on Monday.
 
 * Make the tag in renku repository, follow process of chart publishing and deployment on staging.
 
 * Merge terraform-renku PR, monitor Flux upgrading renku everywhere.
 
-* If relevant, notify users on discourse, twitter using visual tools and short sentences. Coordinate with ORDES.
+* If relevant, notify users on discourse, twitter using visual tools and short sentences. Coordinate with the product manager.
 
 Hot/bug fix release
 -------------------
