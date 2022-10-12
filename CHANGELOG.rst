@@ -3,12 +3,24 @@
 0.18.1
 ------
 
-This release comes with the first step towards a new data organization inside the Renku Knowledge Graph. Although completely transparent for the users at this point, the change brings substantial additions to the internal processes within the Knowledge Graph.
+This release comes with the first step towards a new data organization inside the Renku Knowledge Graph. Although completely transparent for the users at this point, the change brings substantial additions to the internal processes within the Knowledge Graph as well as adds a migration which copies all the data in the old format to the new one. For the time being, data in both the new and the old format will be kept in sync, however the API will still use the data in the old format.
 
 Features
 ~~~~~~~~
 
 * **Knowledge Graph**: new parallel processes to provision data to Named Graphs datasets in the Triples Store.
+* **Knowledge Graph**: a new Triples Store migration that creates transformed version of all the data in the new Named Graphs dataset.
+
+Bug fixes
+~~~~~~~~~~
+* **Knowledge Graph**: Jena upgraded to 4.6.1 to address an issue that in certain circumstance makes Jena unresponsive.
+* **Sessions**: various bug fixes and improvements
+
+Individual components
+~~~~~~~~~~~~~~~~~~~~~~
+
+- `renku-graph 2.21.1 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/2.21.1>`_
+- `renku-notebooks 1.11.1 <https://github.com/SwissDataScienceCenter/renku-notebooks/releases/tag/1.11.1>`_
 
 0.18.0
 ------
