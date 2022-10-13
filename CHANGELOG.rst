@@ -1,5 +1,29 @@
 .. _changelog:
 
+0.18.2
+------
+
+This release includes fixes and improvements for the renku gateway service that deals with authentication.
+It also includes improvements to the renku documentation about CLI plugins.
+
+Features
+~~~~~~~~
+
+* **Documentation**: add CLI plugins section
+
+Bug fixes
+~~~~~~~~~~
+
+* **Gateway**: re-initialize keycloak server-side client if needed
+* **Gateway**: remove anonymous user ID creation because it is handled by the ui-server
+* **Tests**: Modify acceptance test wait duration for locating a terminal in a session
+
+Individual components
+~~~~~~~~~~~~~~~~~~~~~~
+
+- `renku-gateway 0.15.0 <https://github.com/SwissDataScienceCenter/renku-gateway/releases/tag/0.15.0>`_
+
+
 0.18.1
 ------
 
