@@ -12,4 +12,5 @@ Topic guides
    data
    knowledge-graph
    provenance
+   workflows
    teaching_with_renkulab
