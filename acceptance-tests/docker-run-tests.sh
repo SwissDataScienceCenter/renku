@@ -26,8 +26,12 @@ if [ ! -z $RENKU_TEST_S3_HOST ]; then
   MIRROR_JOB_ID=$(echo $!)
 fi
 
+# formatting check needs to be run in a git repository
+git init  2> /dev/null 1> /dev/null
+git add .
+
 echo "Target: " $TARGET
-sbt -Dsbt.color=always -Dsbt.supershell=false -Dsbt.global.base=/tests/.sbt/global -Dsbt.boot.directory=/tests/.sbt/boot/ -Dsbt.coursier.home=/tests/.sbt/coursier/ scalafmtAll "$TARGET"
+sbt -Dsbt.color=always -Dsbt.supershell=false -Dsbt.global.base=/tests/.sbt/global -Dsbt.boot.directory=/tests/.sbt/boot/ -Dsbt.coursier.home=/tests/.sbt/coursier/ scalafmtCheckAll "$TARGET"
 TESTS_RC=$?
 echo "Tests completed with exit code $TESTS_RC"
 
