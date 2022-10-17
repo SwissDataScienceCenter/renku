@@ -1,3 +1,4 @@
 [submodule "docs/renku-python"]
 	path = docs/renku-python
 	url = https://github.com/swissdatasciencecenter/renku-python
+        branch = master

@@ -1,10 +1,19 @@
 .. _changelog:
 
+<next-release>
+--------------
+
+Bug fixes
+~~~~~~~~~
+
+* **Renku Core Service**, **Renku CLI**: Fixes Dockerfile Renku version when force setting a template to update an old project
+* **Renku CLI**: Allow passing in multiple custom metadata entries for Project and Dataset entities
+
 0.18.2
 ------
 
-This release includes fixes and improvements for the renku gateway service that deals with authentication.
-It also includes improvements to the renku documentation about CLI plugins.
+This release includes fixes and improvements for the renku gateway service that deals with authentication
+It also includes improvements to the renku documentation about CLI plugins
 
 Features
 ~~~~~~~~
@@ -32,12 +41,12 @@ This release comes with the first step towards a new data organization inside th
 Features
 ~~~~~~~~
 
-* **Knowledge Graph**: new parallel processes to provision data to Named Graphs datasets in the Triples Store.
-* **Knowledge Graph**: a new Triples Store migration that creates transformed version of all the data in the new Named Graphs dataset.
+* **Knowledge Graph**: new parallel processes to provision data to Named Graphs datasets in the Triples Store
+* **Knowledge Graph**: a new Triples Store migration that creates transformed version of all the data in the new Named Graphs dataset
 
 Bug fixes
 ~~~~~~~~~~
-* **Knowledge Graph**: Jena upgraded to 4.6.1 to address an issue that in certain circumstance makes Jena unresponsive.
+* **Knowledge Graph**: Jena upgraded to 4.6.1 to address an issue that in certain circumstance makes Jena unresponsive
 * **Sessions**: various bug fixes and improvements
 
 Individual components
