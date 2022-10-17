@@ -42,42 +42,43 @@ trait Environments {
     `start session and wait until it is ready`
     docsScreenshots.takeScreenshot()
 
-    val jupyterLabPage = `connect to JupyterLab`
-    Then("a JupyterLab session is opened")
-    jupyterLabPage
+    `connect to JupyterLab`
   }
 
-  private def `connect to JupyterLab`(implicit projectPage: ProjectPage): JupyterLabPage =
-    eventually {
-      And("the user tries to start a JupyterLab session")
-      sleep(2 seconds)
+  private def `connect to JupyterLab`(implicit projectPage: ProjectPage): JupyterLabPage = eventually {
+    And("the user tries to start a JupyterLab session")
+    sleep(2 seconds)
 
-      if (projectPage.Sessions.Running.maybeOpenButton.fold(ifEmpty = true)(btn => !btn.isDisplayed))
-        pause whenUserCanSee { driver =>
-          val maybeGetLogs = projectPage.Sessions.Running.maybeOpenButton(driver)
-          if (maybeGetLogs.fold(false)(_.isDisplayed)) And("the 'Get logs' button is displayed")
-          maybeGetLogs
-        }
-
-      `try few times before giving up` { _ =>
-        And("clicks on the 'Open' button")
-        click on (projectPage.Sessions.Running.maybeOpenButton.getOrElse(fail("Open button not found")))
-        sleep(2 seconds)
+    if (projectPage.Sessions.Running.maybeOpenButton.fold(ifEmpty = true)(btn => !btn.isDisplayed))
+      pause whenUserCanSee { driver =>
+        val maybeGetLogs = projectPage.Sessions.Running.maybeOpenButton(driver)
+        if (maybeGetLogs.fold(false)(_.isDisplayed)) And("the 'Get logs' button is displayed")
+        maybeGetLogs
       }
 
-      And("switches to the iframe")
-      `try few times before giving up` { _ =>
-        projectPage.Sessions.Running.maybeJupyterLabIframe match {
-          case Some(iframe) =>
-            And("finds iframe")
-            webDriver.switchTo().frame(iframe)
-            JupyterLabPage()
-          case None =>
-            And("does not find iframe")
-            fail("Cannot find JupyterLab iframe")
-        }
+    `try few times before giving up` { _ =>
+      And("clicks on the 'Open' button")
+      click on projectPage.Sessions.Running.maybeOpenButton.getOrElse(fail("Open button not found"))
+      sleep(15 seconds)
+    }
+
+    And("switches to the iframe")
+    `try few times before giving up` { _ =>
+      projectPage.Sessions.Running.maybeJupyterLabIframe match {
+        case Some(iframe) =>
+          And("finds iframe")
+          webDriver.switchTo().frame(iframe)
+          sleep(5 seconds)
+
+          Then("a JupyterLab session is opened")
+          JupyterLabPage(projectPage)
+        case None =>
+          And("does not find iframe")
+          sleep(5 seconds)
+          fail("Cannot find JupyterLab iframe")
       }
     }
+  }
 
   def `stop session`(implicit projectPage: ProjectPage): Unit =
     stopSessionOnProjectPage(projectPage)
