@@ -21,6 +21,7 @@ Bug fixes
 Individual components
 ~~~~~~~~~~~~~~~~~~~~~~
 
+- `renku-core 1.8.0 <https://github.com/SwissDataScienceCenter/renku-python/releases/tag/v1.8.0>`_
 - `renku-ui 2.10.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/2.10.0>`_
 - `renku-notebooks 1.12.0 <https://github.com/SwissDataScienceCenter/renku-notebooks/releases/tag/1.12.0>`_
 - `amalthea 0.6.0 <https://github.com/SwissDataScienceCenter/amalthea/releases/tag/0.6.0>`_
