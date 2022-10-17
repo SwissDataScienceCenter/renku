@@ -23,8 +23,6 @@ import ch.renku.acceptancetests.pages._
 import ch.renku.acceptancetests.tooling.TestLogger.logger
 import ch.renku.acceptancetests.tooling.{AcceptanceSpec, AnonEnvConfig}
 
-import org.scalatestplus.selenium.WebBrowser.{cssSelector, find, findAll}
-
 import scala.concurrent.duration._
 
 trait Environments {
@@ -141,7 +139,7 @@ trait Environments {
         `start session and wait until it is ready`
       }
 
-      val jupyterLabPage = `connect to JupyterLab`
+      `connect to JupyterLab`
       Then("a JupyterLab session is opened")
       Some(projectPage)
     }
