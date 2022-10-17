@@ -8,5 +8,5 @@ sphinx-panels
 sphinx-rtd-theme==1.0.0
 renku-sphinx-theme==0.2.1
 sphinxcontrib-spelling==7.*
-sphinxcontrib-websupport==1.1.0
+sphinxcontrib-websupport==1.2.4
 ./docs/renku-python
