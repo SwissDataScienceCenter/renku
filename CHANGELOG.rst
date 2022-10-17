@@ -6,10 +6,10 @@ This release brings improvements and bug fixes to Renku UI.
 
 Features
 ~~~~~~~~
-**UI**: Save session button (`#1957 <https://github.com/SwissDataScienceCenter/renku-ui/issues/1957>`_, `#1985 <https://github.com/SwissDataScienceCenter/renku-ui/issues/1985>`_, `#2040 <https://github.com/SwissDataScienceCenter/renku-ui/issues/2040>`_)
-**UI**: Add environment variables when starting a session (`#2058 <https://github.com/SwissDataScienceCenter/renku-ui/issues/2058>`_, `#2066 <https://github.com/SwissDataScienceCenter/renku-ui/issues/2066>`_)
-**UI**: Add progress indicator when starting a session (`#1879 <https://github.com/SwissDataScienceCenter/renku-ui/issues/1879>`_, `#2054 <https://github.com/SwissDataScienceCenter/renku-ui/issues/2054>`_)
-**Sessions**: Detailed session start status breakdown (`#1289 <https://github.com/SwissDataScienceCenter/renku-notebooks/issues/1289>`_)
+* **UI**: Save session button (`#1957 <https://github.com/SwissDataScienceCenter/renku-ui/issues/1957>`_, `#1985 <https://github.com/SwissDataScienceCenter/renku-ui/issues/1985>`_, `#2040 <https://github.com/SwissDataScienceCenter/renku-ui/issues/2040>`_)
+* **UI**: Add environment variables when starting a session (`#2058 <https://github.com/SwissDataScienceCenter/renku-ui/issues/2058>`_, `#2066 <https://github.com/SwissDataScienceCenter/renku-ui/issues/2066>`_)
+* **UI**: Add progress indicator when starting a session (`#1879 <https://github.com/SwissDataScienceCenter/renku-ui/issues/1879>`_, `#2054 <https://github.com/SwissDataScienceCenter/renku-ui/issues/2054>`_)
+* **Sessions**: Detailed session start status breakdown (`#1289 <https://github.com/SwissDataScienceCenter/renku-notebooks/issues/1289>`_)
 
 Bug fixes
 ~~~~~~~~~
