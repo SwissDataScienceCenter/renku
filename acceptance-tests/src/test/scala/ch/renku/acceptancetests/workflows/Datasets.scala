@@ -129,11 +129,12 @@ trait Datasets {
 
     `try few times before giving up` { _ =>
       Given("the user is on the Datasets tab")
-      click on projectPage.Datasets.tab sleep (5 seconds)
+      click on projectPage.Datasets.tab sleep (10 seconds)
+      verify userCanSee projectPage.Datasets.tab
     }
 
     When(s"the user clicks on the dataset name")
-    click on projectPage.Datasets.DatasetsList.link(to = datasetPage) sleep (1 second)
+    click on projectPage.Datasets.DatasetsList.link(to = datasetPage) sleep (5 second)
 
     Then(s"the user should see the dataset details")
     verify browserAt datasetPage

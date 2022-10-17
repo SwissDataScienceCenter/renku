@@ -16,6 +16,7 @@ Bug fixes
 
 * **Renku Core Service**, **Renku CLI**: Fixes Dockerfile Renku version when force setting a template to update an old project
 * **Renku CLI**: Allow passing in multiple custom metadata entries for Project and Dataset entities
+* **Knowledge Graph**: fixes improving stability
 * **UI**: Restore notebook rendering (`#2052 <https://github.com/SwissDataScienceCenter/renku-ui/issues/2052>`_)
 
 Individual components
@@ -25,7 +26,7 @@ Individual components
 - `renku-ui 2.10.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/2.10.0>`_
 - `renku-notebooks 1.12.0 <https://github.com/SwissDataScienceCenter/renku-notebooks/releases/tag/1.12.0>`_
 - `amalthea 0.6.0 <https://github.com/SwissDataScienceCenter/amalthea/releases/tag/0.6.0>`_
-
+- `renku-graph 2.21.2 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/2.21.2>`_
 
 0.18.2
 ------
