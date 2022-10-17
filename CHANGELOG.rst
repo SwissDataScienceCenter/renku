@@ -8,6 +8,7 @@ Bug fixes
 
 * **Renku Core Service**, **Renku CLI**: Fixes Dockerfile Renku version when force setting a template to update an old project
 * **Renku CLI**: Allow passing in multiple custom metadata entries for Project and Dataset entities
+* **Knowledge Graph**: fixes improving stability
 
 0.18.2
 ------
