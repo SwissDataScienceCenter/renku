@@ -1,7 +1,7 @@
 .. _changelog:
 
-<next-release>
---------------
+0.18.3
+------
 This release brings improvements and bug fixes to Renku UI.
 
 Features
