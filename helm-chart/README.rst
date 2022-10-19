@@ -208,3 +208,4 @@ and the `keycloak docs <https://www.keycloak.org/docs/latest/upgrading/>`_.
   will unfortunately not work. Instead, recover the postgres volume from your backup, remove both secrets mentioned
   above and the keycloak StatefulSet, make sure ``global.keycloak.postgresPassword.value`` and ``global.keycloak.password.value``
   set also in your original values file. Then perform an *upgrade* to the previously deployed Renku chart version.
+
