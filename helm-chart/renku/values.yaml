@@ -127,6 +127,10 @@ global:
     customCAs: []
       # - secret:
 
+  ## Set to true to enable debug mode
+  ## Individual components can handle debug mode as makes sense for them
+  debug: false
+
 ## Ingress configuration
 ## See: https://kubernetes.io/docs/concepts/services-networking/ingress/
 ingress:
