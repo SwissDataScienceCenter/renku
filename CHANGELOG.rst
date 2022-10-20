@@ -1,5 +1,21 @@
 .. _changelog:
 
+0.18.4
+-------
+
+This release fixes a bug in sessions.
+
+Bug fixes
+~~~~~~~~~~
+
+* **UI**: prevent occasionally flashing a loader when working with sessions
+
+Individual components
+~~~~~~~~~~~~~~~~~~~~~~
+
+- `renku-ui 2.10.1 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/2.10.1>`_
+
+
 0.18.3
 ------
 This release brings improvements and bug fixes to Renku UI.
