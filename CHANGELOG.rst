@@ -1,5 +1,18 @@
 .. _changelog:
 
+Next release version (update when a release is ready)
+-----------------------------------------------------
+
+Bug fixes
+~~~~~~~~~~
+
+* **Project templates**: fix broken nbconvert package needed by jupyter notebooks and server
+
+Individual components
+~~~~~~~~~~~~~~~~~~~~~~
+
+- `renku-project-template 0.3.5 <https://github.com/SwissDataScienceCenter/renku-project-template/releases/tag/0.3.5>`_
+
 0.18.4
 -------
 
