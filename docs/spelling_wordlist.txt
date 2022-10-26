@@ -126,6 +126,7 @@ Keycloak
 ku
 kubernetes
 kus
+kwargs
 ld
 lefthand
 lfs
@@ -176,6 +177,7 @@ preprocessing
 programmatically
 py
 pyshacl
+RClone
 rclone
 rdf
 rdflib

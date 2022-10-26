@@ -24,21 +24,17 @@ import org.openqa.selenium.{WebDriver, WebElement}
 import org.scalatestplus.selenium.WebBrowser.{cssSelector, find}
 
 object JupyterLabPage {
-  private lazy val page = new JupyterLabPage()
-  def apply(): JupyterLabPage = page
+  def apply(projectPage: ProjectPage): JupyterLabPage = new JupyterLabPage(projectPage)
 }
 
-class JupyterLabPage()
-    extends RenkuPage(
-      path = s"/sessions/"
-    ) {
+class JupyterLabPage(projectPage: ProjectPage)
+    extends RenkuPage(path = s"${projectPage.path}/sessions/show", title = projectPage.title) {
 
   override def pageReadyElement(implicit webDriver: WebDriver): Option[WebElement] = Some(terminalIcon)
 
   def terminalIcon(implicit webDriver: WebDriver): WebElement = eventually {
-    find(cssSelector("div.jp-LauncherCard [data-icon='ui-components:terminal']")) getOrElse fail(
-      "Terminal icon not found"
-    )
+    find(cssSelector("div.jp-LauncherCard[title='Start a new terminal session']"))
+      .getOrElse(fail("Terminal icon not found"))
   }
 
   object terminal {
