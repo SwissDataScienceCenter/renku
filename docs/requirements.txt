@@ -1,4 +1,4 @@
-plantweb==1.1.0
+plantweb==1.2.1
 sphinx>=4.1
 sphinxcontrib-mermaid==0.7.1
 sphinxcontrib-napoleon==0.7
