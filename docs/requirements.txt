@@ -6,7 +6,7 @@ sphinx-click==4.3.0
 sphinx-copybutton==0.5.0
 sphinx-panels
 sphinx-rtd-theme==1.0.0
-renku-sphinx-theme==0.2.1
+renku-sphinx-theme==0.2.2
 sphinxcontrib-spelling==7.*
 sphinxcontrib-websupport==1.2.4
 ./docs/renku-python
