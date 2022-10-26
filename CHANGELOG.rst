@@ -1,5 +1,20 @@
 .. _changelog:
 
+0.18.5
+------
+
+This release fixes a bug in the core-service.
+
+Bug fixes
+~~~~~~~~~~
+
+* **Renku Core Service**: fix temporary working directory in service getting accidentally removed by other threads
+
+Individual components
+~~~~~~~~~~~~~~~~~~~~~~
+
+- `renku-python 1.8.1 <https://github.com/SwissDataScienceCenter/renku-python/releases/tag/v1.8.1>`_
+
 0.18.4
 -------
 
