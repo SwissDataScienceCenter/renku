@@ -9,11 +9,13 @@ Bug fixes
 ~~~~~~~~~~
 
 * **Renku Core Service**: fix temporary working directory in service getting accidentally removed by other threads
+* **Project templates**: fix broken nbconvert package needed by jupyter notebooks and server
 
 Individual components
 ~~~~~~~~~~~~~~~~~~~~~~
 
 - `renku-python 1.8.1 <https://github.com/SwissDataScienceCenter/renku-python/releases/tag/v1.8.1>`_
+- `renku-project-template 0.3.5 <https://github.com/SwissDataScienceCenter/renku-project-template/releases/tag/0.3.5>`_
 
 0.18.4
 -------
