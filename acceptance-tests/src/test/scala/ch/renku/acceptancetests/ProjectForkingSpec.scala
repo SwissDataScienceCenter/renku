@@ -23,6 +23,8 @@ import ch.renku.acceptancetests.pages.ProjectPage
 import ch.renku.acceptancetests.tooling.AcceptanceSpec
 import ch.renku.acceptancetests.workflows._
 
+import scala.concurrent.duration._
+
 class ProjectForkingSpec extends AcceptanceSpec with Login with Project {
 
   Scenario("User can fork a project") {
@@ -41,7 +43,7 @@ class ProjectForkingSpec extends AcceptanceSpec with Login with Project {
     go to projectPage
 
     When("user clicks on the fork button")
-    click on projectPage.forkButton
+    click on projectPage.forkButton sleep (5 seconds)
 
     val forkedProjectDetails = ProjectDetails.generate()
 

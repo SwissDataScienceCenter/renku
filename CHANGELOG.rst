@@ -1,13 +1,48 @@
 .. _changelog:
 
-<next-release>
---------------
+0.18.4
+-------
+
+This release fixes a bug in sessions.
+
+Bug fixes
+~~~~~~~~~~
+
+* **UI**: prevent occasionally flashing a loader when working with sessions
+
+Individual components
+~~~~~~~~~~~~~~~~~~~~~~
+
+- `renku-ui 2.10.1 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/2.10.1>`_
+
+
+0.18.3
+------
+This release brings improvements and bug fixes to Renku UI.
+
+Features
+~~~~~~~~
+* **UI**: Save session button (`#1957 <https://github.com/SwissDataScienceCenter/renku-ui/issues/1957>`_, `#1985 <https://github.com/SwissDataScienceCenter/renku-ui/issues/1985>`_, `#2040 <https://github.com/SwissDataScienceCenter/renku-ui/issues/2040>`_)
+* **UI**: Add environment variables when starting a session (`#2058 <https://github.com/SwissDataScienceCenter/renku-ui/issues/2058>`_, `#2066 <https://github.com/SwissDataScienceCenter/renku-ui/issues/2066>`_)
+* **UI**: Add progress indicator when starting a session (`#1879 <https://github.com/SwissDataScienceCenter/renku-ui/issues/1879>`_, `#2054 <https://github.com/SwissDataScienceCenter/renku-ui/issues/2054>`_)
+* **Sessions**: Detailed session start status breakdown (`#1289 <https://github.com/SwissDataScienceCenter/renku-notebooks/issues/1289>`_)
 
 Bug fixes
 ~~~~~~~~~
 
 * **Renku Core Service**, **Renku CLI**: Fixes Dockerfile Renku version when force setting a template to update an old project
 * **Renku CLI**: Allow passing in multiple custom metadata entries for Project and Dataset entities
+* **Knowledge Graph**: fixes improving stability
+* **UI**: Restore notebook rendering (`#2052 <https://github.com/SwissDataScienceCenter/renku-ui/issues/2052>`_)
+
+Individual components
+~~~~~~~~~~~~~~~~~~~~~~
+
+- `renku-core 1.8.0 <https://github.com/SwissDataScienceCenter/renku-python/releases/tag/v1.8.0>`_
+- `renku-ui 2.10.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/2.10.0>`_
+- `renku-notebooks 1.12.0 <https://github.com/SwissDataScienceCenter/renku-notebooks/releases/tag/1.12.0>`_
+- `amalthea 0.6.0 <https://github.com/SwissDataScienceCenter/amalthea/releases/tag/0.6.0>`_
+- `renku-graph 2.21.2 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/2.21.2>`_
 
 0.18.2
 ------
@@ -63,8 +98,8 @@ This release brings improvements and bug fixes to renku-ui and renku-notebooks.
 Features
 ~~~~~~~~
 
-* **UI** reduce unnecessary 'project locked' notifications (`#1982 <https://github.com/SwissDataScienceCenter/renku-ui/issues/1982>`_, `#2025 <https://github.com/SwissDataScienceCenter/renku-ui/issues/2025>`_)
-* **UI** expose project metadata as JSON-LD (`#1867 <https://github.com/SwissDataScienceCenter/renku-ui/issues/1867>`_, `#2022 <https://github.com/SwissDataScienceCenter/renku-ui/issues/2022>`_)
+* **UI**: reduce unnecessary 'project locked' notifications (`#1982 <https://github.com/SwissDataScienceCenter/renku-ui/issues/1982>`_, `#2025 <https://github.com/SwissDataScienceCenter/renku-ui/issues/2025>`_)
+* **UI**: expose project metadata as JSON-LD (`#1867 <https://github.com/SwissDataScienceCenter/renku-ui/issues/1867>`_, `#2022 <https://github.com/SwissDataScienceCenter/renku-ui/issues/2022>`_)
 
 
 Individual components
