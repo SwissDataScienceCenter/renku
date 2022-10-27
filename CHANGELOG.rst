@@ -3,13 +3,14 @@
 0.18.5
 ------
 
-This release fixes a bug in the core-service.
+This release fixes a bug in the core-service and includes improvements for the renku gateway service
 
 Bug fixes
 ~~~~~~~~~~
 
 * **Renku Core Service**: fix temporary working directory in service getting accidentally removed by other threads
 * **Project templates**: fix broken nbconvert package needed by jupyter notebooks and server
+* **Gateway**: enable ``/gitlab`` path even when external GitLab is configured, and forward traffic to external GitLab
 
 Individual components
 ~~~~~~~~~~~~~~~~~~~~~~
