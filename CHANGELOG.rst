@@ -17,6 +17,7 @@ Individual components
 
 - `renku-python 1.8.1 <https://github.com/SwissDataScienceCenter/renku-python/releases/tag/v1.8.1>`_
 - `renku-project-template 0.3.5 <https://github.com/SwissDataScienceCenter/renku-project-template/releases/tag/0.3.5>`_
+- `renku-gateway 0.16.0 <https://github.com/SwissDataScienceCenter/renku-gateway/releases/tag/0.16.0>`_
 
 0.18.4
 -------
