@@ -26,6 +26,7 @@ blog
 BMP
 bugfix
 Calamus
+Champak
 chartpress
 Chartpress
 checksum
@@ -201,6 +202,8 @@ Reusability
 righthand
 roadmap
 Roadmap
+rollout
+Rollout
 rsa
 RSA
 rstudio
@@ -248,6 +251,8 @@ symlinks
 templated
 Tensorboard
 Tensorflow
+terraform
+th
 timestamp
 tinkerpop
 toolchain
