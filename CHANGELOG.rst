@@ -1,5 +1,28 @@
 .. _changelog:
 
+0.18.5
+------
+
+This release fixes a bug in the core-service and includes improvements for the renku gateway service
+
+Features
+~~~~~~~~
+
+* **Gateway**: enable ``/gitlab`` path even when external GitLab is configured, and forward traffic to external GitLab
+
+Bug fixes
+~~~~~~~~~~
+
+* **Renku Core Service**: fix temporary working directory in service getting accidentally removed by other threads
+* **Project templates**: fix broken ``nbconvert`` package needed by jupyter notebooks and server
+
+Individual components
+~~~~~~~~~~~~~~~~~~~~~~
+
+- `renku-python 1.8.1 <https://github.com/SwissDataScienceCenter/renku-python/releases/tag/v1.8.1>`_
+- `renku-project-template 0.3.5 <https://github.com/SwissDataScienceCenter/renku-project-template/releases/tag/0.3.5>`_
+- `renku-gateway 0.16.0 <https://github.com/SwissDataScienceCenter/renku-gateway/releases/tag/0.16.0>`_
+
 0.18.4
 -------
 

@@ -148,6 +148,7 @@ mv
 mydomain
 namespace
 namespaces
+nbconvert
 Nginx
 nodejs
 nt
