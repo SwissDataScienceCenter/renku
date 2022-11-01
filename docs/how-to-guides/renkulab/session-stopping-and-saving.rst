@@ -1,6 +1,6 @@
 .. _stopping_and_saving:
 
-Stop and Save Sessions
+Stop and Save Session
 ======================
 
 If you know you're not going to be actively working on your project, it's good
