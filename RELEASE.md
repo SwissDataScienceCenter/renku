@@ -1,4 +1,4 @@
-# Releases
+# Release
 
 There are three types of Renku releases: Sprint release, Hot/bug fix release and Quick release.
 
