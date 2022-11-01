@@ -2,6 +2,8 @@
 # Created by https://www.gitignore.io/api/sbt,scala,intellij+all
 # Edit at https://www.gitignore.io/?templates=sbt,scala,intellij+all
 
+.direnv/
+
 # Metals
 .bloop
 .metals
