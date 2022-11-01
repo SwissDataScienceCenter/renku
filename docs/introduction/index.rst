@@ -1,6 +1,6 @@
 .. _renku_introduction:
 
-About Renku
+About Renkus
 ===========
 
 **Renku** is a platform and tools for reproducible and
