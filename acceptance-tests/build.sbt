@@ -43,7 +43,7 @@ libraryDependencies += "org.http4s"             %% "http4s-circe"        % http4
 libraryDependencies += "org.scalacheck"         %% "scalacheck"          % "1.16.0"      % Test
 libraryDependencies += "org.scalatest"          %% "scalatest"           % "3.2.12"      % Test
 libraryDependencies += "org.scalatestplus"      %% "selenium-3-141"      % "3.2.10.0"    % Test
-libraryDependencies += "org.seleniumhq.selenium" % "selenium-java"       % "4.4.0"       % Test
+libraryDependencies += "org.seleniumhq.selenium" % "selenium-java"       % "4.5.3"       % Test
 libraryDependencies += "org.slf4j"               % "slf4j-log4j12"       % "2.0.0"       % Test
 libraryDependencies += "org.typelevel"          %% "cats-effect"         % "3.3.14"      % Test
 
