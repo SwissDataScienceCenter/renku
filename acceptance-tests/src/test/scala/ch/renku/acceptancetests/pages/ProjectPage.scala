@@ -278,7 +278,7 @@ class ProjectPage(val projectSlug: String, val namespace: String)
         .getOrElse(fail("Datasets title not found"))
     }
 
-    def addADatasetButton(implicit webDriver: WebDriver): WebElement = eventually {
+    def addDatasetButton(implicit webDriver: WebDriver): WebElement = eventually {
       findAll(cssSelector("a"))
         .find(element => element.text.contains("Add Dataset") || element.text.contains("Add a Dataset"))
         .getOrElse(fail("Add a Dataset button not found"))
@@ -290,10 +290,9 @@ class ProjectPage(val projectSlug: String, val namespace: String)
     }
 
     object DatasetsList {
-      def link(to: DatasetPage)(implicit webDriver: WebDriver): WebElement = eventually {
+      def maybeLink(to: DatasetPage)(implicit webDriver: WebDriver): Option[WebElement] = eventually {
         find(cssSelector(s"a[href='${to.path}/'] .card-title"))
-          .getOrElse(fail(s"Dataset '${to.path}' not found"))
-      }(waitUpTo(10 seconds), implicitly[Retrying[WebBrowser.Element]], implicitly[source.Position])
+      }
     }
   }
 
