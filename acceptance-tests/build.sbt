@@ -28,7 +28,7 @@ enablePlugins(AutomateHeaderPlugin)
 publish / skip := true
 publishTo := Some(Resolver.file("Unused transient repository", file("target/unusedrepo")))
 
-val circeVersion  = "0.14.1"
+val circeVersion  = "0.14.3"
 val http4sVersion = "0.23.12"
 
 libraryDependencies += "ch.qos.logback"          % "logback-classic"     % "1.4.0"
