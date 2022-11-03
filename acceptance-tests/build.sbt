@@ -28,10 +28,10 @@ enablePlugins(AutomateHeaderPlugin)
 publish / skip := true
 publishTo := Some(Resolver.file("Unused transient repository", file("target/unusedrepo")))
 
-val circeVersion  = "0.14.1"
+val circeVersion  = "0.14.3"
 val http4sVersion = "0.23.16"
 
-libraryDependencies += "ch.qos.logback"          % "logback-classic"     % "1.4.0"
+libraryDependencies += "ch.qos.logback"          % "logback-classic"     % "1.4.4"
 libraryDependencies += "com.github.pureconfig"  %% "pureconfig"          % "0.17.1"      % Test
 libraryDependencies += "eu.timepit"             %% "refined"             % "0.10.1"      % Test
 libraryDependencies += "io.circe"               %% "circe-core"          % circeVersion  % Test
