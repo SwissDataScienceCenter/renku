@@ -19,7 +19,7 @@
 organization := "ch.renku"
 name := "renku-acceptance-tests"
 version := "0.1.0"
-scalaVersion := "2.13.8"
+scalaVersion := "2.13.10"
 
 Test / parallelExecution := false
 
@@ -28,10 +28,10 @@ enablePlugins(AutomateHeaderPlugin)
 publish / skip := true
 publishTo := Some(Resolver.file("Unused transient repository", file("target/unusedrepo")))
 
-val circeVersion  = "0.14.1"
-val http4sVersion = "0.23.12"
+val circeVersion  = "0.14.3"
+val http4sVersion = "0.23.16"
 
-libraryDependencies += "ch.qos.logback"          % "logback-classic"     % "1.4.0"
+libraryDependencies += "ch.qos.logback"          % "logback-classic"     % "1.4.4"
 libraryDependencies += "com.github.pureconfig"  %% "pureconfig"          % "0.17.1"      % Test
 libraryDependencies += "eu.timepit"             %% "refined"             % "0.10.1"      % Test
 libraryDependencies += "io.circe"               %% "circe-core"          % circeVersion  % Test
@@ -40,7 +40,7 @@ libraryDependencies += "io.circe"               %% "circe-parser"        % circe
 libraryDependencies += "io.circe"               %% "circe-optics"        % circeVersion  % Test
 libraryDependencies += "org.http4s"             %% "http4s-blaze-client" % http4sVersion % Test
 libraryDependencies += "org.http4s"             %% "http4s-circe"        % http4sVersion % Test
-libraryDependencies += "org.scalacheck"         %% "scalacheck"          % "1.16.0"      % Test
+libraryDependencies += "org.scalacheck"         %% "scalacheck"          % "1.17.0"      % Test
 libraryDependencies += "org.scalatest"          %% "scalatest"           % "3.2.14"      % Test
 libraryDependencies += "org.scalatestplus"      %% "selenium-3-141"      % "3.2.10.0"    % Test
 libraryDependencies += "org.seleniumhq.selenium" % "selenium-java"       % "4.4.0"       % Test
