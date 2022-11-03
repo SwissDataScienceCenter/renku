@@ -29,7 +29,7 @@ publish / skip := true
 publishTo := Some(Resolver.file("Unused transient repository", file("target/unusedrepo")))
 
 val circeVersion  = "0.14.3"
-val http4sVersion = "0.23.12"
+val http4sVersion = "0.23.16"
 
 libraryDependencies += "ch.qos.logback"          % "logback-classic"     % "1.4.4"
 libraryDependencies += "com.github.pureconfig"  %% "pureconfig"          % "0.17.1"      % Test
