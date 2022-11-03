@@ -28,7 +28,7 @@ object GitLabUserProfilePage extends GitLabPage(path = "/-/profile", title = "Ed
     find(cssSelector(s"input#js-status-message-field"))
 
   def passwordsMenuItem(implicit webDriver: WebDriver): WebElement =
-    find(cssSelector(s"a[href='/gitlab/-/profile/password/edit']"))
+    find(cssSelector(s"a[href='/-/profile/password/edit']"))
       .getOrElse(fail("Menu 'Passwords' not found"))
 
   object Password {

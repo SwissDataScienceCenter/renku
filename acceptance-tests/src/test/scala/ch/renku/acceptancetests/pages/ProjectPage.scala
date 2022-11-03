@@ -51,7 +51,7 @@ class ProjectPage(val projectSlug: String, val namespace: String)
 
   def viewInGitLab(implicit webDriver: WebDriver): WebElement = eventually {
     find(
-      cssSelector(s"a[href*='/gitlab/$namespace/$projectSlug']")
+      cssSelector(s"a[href*='/$namespace/$projectSlug']")
     ) getOrElse fail("View in GitLab button not found")
   }
 
@@ -124,7 +124,7 @@ class ProjectPage(val projectSlug: String, val namespace: String)
       }
 
       def gitLabMrLink(implicit webDriver: WebDriver): WebElement = eventually {
-        find(cssSelector(s"a[href*='/gitlab/$namespace/$projectSlug/-/merge_requests']"))
+        find(cssSelector(s"a[href*='/$namespace/$projectSlug/-/merge_requests']"))
           .getOrElse(fail("GitLab MR link not found"))
       }
 
@@ -153,7 +153,7 @@ class ProjectPage(val projectSlug: String, val namespace: String)
       }
 
       def gitLabIssuesLink(implicit webDriver: WebDriver): WebElement = eventually {
-        find(cssSelector(s"a[href*='/gitlab/$namespace/$projectSlug/-/issues']"))
+        find(cssSelector(s"a[href*='/$namespace/$projectSlug/-/issues']"))
           .getOrElse(fail("GitLab issue link not found"))
       }
 

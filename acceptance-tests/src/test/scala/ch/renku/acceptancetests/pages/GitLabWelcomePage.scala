@@ -36,10 +36,10 @@ object GitLabWelcomePage extends GitLabPage(path = "", title = "Projects · Dash
       .perform();
 
   private def userSettingsDropDown(implicit userCredentials: UserCredentials, webDriver: WebDriver) =
-    find(cssSelector(s"a[href='/gitlab/${userCredentials.username}']"))
+    find(cssSelector(s"a[href='/${userCredentials.username}']"))
       .getOrElse(fail("Top right 'User Settings' button not found"))
 
   def editProfileMenuOption(implicit webDriver: WebDriver) =
-    find(cssSelector(s"a[href='/gitlab/-/profile']"))
+    find(cssSelector(s"a[href='/-/profile']"))
       .getOrElse(fail("'Edit profile' menu option not found"))
 }
