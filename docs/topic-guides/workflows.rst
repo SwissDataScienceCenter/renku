@@ -11,7 +11,7 @@ run them with varying inputs and on different execution backends.
 
 There are many uses for this. You could define and test a pipeline locally
 and then execute it on an HPC cluster on a big dataset once you're happy.
-Or you could run your workflow offer a range of different parameters to see
+Or you could run your workflow over a range of different parameters to see
 how the results differ. Or you create a workflow that runs daily with a
 CRON job.
 
