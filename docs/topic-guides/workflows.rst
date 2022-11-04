@@ -21,13 +21,13 @@ having to re-type and memorize the commands used in each step.
 Working with Workflows
 ----------------------
 
-Tracking execution of a command with :meth:`renku run <renku.ui.cli.run>`:
+To track your code execution as a Renku workflow, simply prepend :meth:`renku run <renku.ui.cli.run>` in front of your command. You may also identify the workflow step's inputs and outputs via the ``-i`` and ``-o`` flags, as shown here:
 
 .. code-block:: console
 
-    $ renku run --name run-analysis -- python run_analysis.py -i inputs -o outputs
+    $ renku run --name run-analysis -- python run_analysis.py -i input_file.csv -o output_file.csv
 
-creates a workflow step called `run-analysis`. You can inspect the workflow
+This command creates a workflow step called `run-analysis`. You can inspect the workflow
 with :meth:`renku workflow show <renku.ui.cli.workflow>`:
 
 .. code-block:: console
@@ -36,19 +36,19 @@ with :meth:`renku workflow show <renku.ui.cli.workflow>`:
     Id: /plans/76d73efb94964e9aac3635176ea57a36
     Name: run-analysis
     Creators: John Doe <example@renku.ch>
-    Command: python run_analysis.py -i inputs -o outputs
+    Command: python run_analysis.py -i input_file.csv -o output_file.csv
     Success Codes:
     Inputs:
             - input-1:
                     Default Value: run_analysis.py
                     Position: 1
             - i-2:
-                    Default Value: inputs
+                    Default Value: input_file.csv
                     Position: 2
                     Prefix: -i
     Outputs:
             - o-3:
-                    Default Value: outputs
+                    Default Value: output_file.csv
                     Position: 3
                     Prefix: -o
 
@@ -56,23 +56,23 @@ You can execute it with :meth:`renku workflow execute <renku.ui.cli.workflow>`:
 
 .. code-block:: console
 
-    $ renku workflow execute run-analysis --set i-2=other_inputs
+    $ renku workflow execute run-analysis --set i-2=other_input_file.csv
 
-which would run it on the file `other_inputs` instead of the original `inputs`
+which would run it on the file ``other_input_file.csv`` instead of the original ``input_file.csv``
 file.
-You could also specify an execution backend with `--provider`, e.g. `toil` for
-execution in an HPC cluster (You need to install `renku` with the `toil` extra
+You could also specify an execution backend with ``--provider``, e.g. ``toil`` for
+execution in an HPC cluster (You need to install ``renku`` with the ``toil`` extra
 for this to be available).
 
-To create a workflow `my-workflow` out of multiple steps use :meth:`renku workflow compose <renku.ui.cli.workflow>`:
+To create a workflow ``my-workflow`` out of multiple steps use :meth:`renku workflow compose <renku.ui.cli.workflow>`:
 
 .. code-block:: console
 
     $ renku workflow compose --link-all my-workflow run-analysis process-output
 
-if you had two steps named `run-analysis` and `process-output`. `--link-all`
+if you had two steps named ``run-analysis`` and ``process-output``. ``--link-all``
 tells Renku to automatically infer dependencies between steps for you. The newly
-created `my-workflow` can also be executed with :meth:`renku workflow execute <renku.ui.cli.workflow>`.
+created ``my-workflow`` can also be executed with :meth:`renku workflow execute <renku.ui.cli.workflow>`.
 
 Inspecting Workflows
 --------------------
