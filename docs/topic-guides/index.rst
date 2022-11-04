@@ -11,6 +11,5 @@ Topic guides
    docker
    data
    knowledge-graph
-   provenance
    workflows
    teaching_with_renkulab
