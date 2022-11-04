@@ -139,6 +139,10 @@ which would run it on the file ``other_input_file.csv`` instead of the original
 ``--provider``, e.g. ``toil`` for execution in an HPC cluster (You need to
 install ``renku`` with the ``toil`` extra for this to be available).
 
+
+Composing workflows
+-------------------
+
 To create a workflow ``my-workflow`` out of multiple steps use :meth:`renku workflow compose <renku.ui.cli.workflow>`:
 
 .. code-block:: console
