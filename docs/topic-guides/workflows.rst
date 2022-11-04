@@ -153,30 +153,23 @@ created ``my-workflow`` can also be executed with :meth:`renku workflow execute 
 Inspecting Workflows
 --------------------
 
-You can see workflows in a project in a Renku deployment such as `renkulab.io <https://renkulab.io>`_
-by going to a project and opening the `Workflows` tab:
+You can see workflows on RenkuLab by going to a project and opening the
+`Workflows` tab:
 
 .. image:: ../_static/images/ui_workflows_list.png
     :align: center
     :alt: Workflows list
 
-There you can see, filter and navigate all workflows and steps used in this
-project.
-Selecting a workflow or step shows you its details and allows you to navigate
-between steps.
-
-Selecting a workflow will show you the steps it contains, the parameters of
-steps it exposes directly, and the dependencies between steps.
+There you can view, filter and navigate all workflows and steps used in the
+project. Selecting a workflow or step shows you its details (parameters,
+dependent steps etc.) and allows you to navigate between steps.
 
 .. image:: ../_static/images/ui_workflows_composite_details.png
     :align: center
     :alt: Workflow details
 
-If you click on a step, either on the workflow browser or in the workflow
-detail page, or if you click on the link icon of a mapping or a link, you
-can see the command used in it, its inputs, outputs and parameters, as well
-as other related metadata, such as when it was last executed, how long
-executions of it take on average and more:
+The step detail page shows the command used, the inputs and outputs, the
+parameters, and other related metadata:
 
 .. image:: ../_static/images/ui_workflows_details.png
     :align: center
