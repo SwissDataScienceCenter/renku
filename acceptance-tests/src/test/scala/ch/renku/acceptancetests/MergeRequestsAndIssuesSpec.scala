@@ -39,7 +39,7 @@ class MergeRequestsAndIssuesSpec
 
     `navigate to the issues tab`
 
-    // Availability of the iFrame depends on the specifc deployment
+    // Availability of the iFrame depends on the specific deployment
     Try(`verify that the GitLab issues iFrame is visible`).recover(_ =>
       `verify that the GitLab issues iFrame cannot be shown`
     )

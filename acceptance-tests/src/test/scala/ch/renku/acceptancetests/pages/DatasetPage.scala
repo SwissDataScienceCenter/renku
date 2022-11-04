@@ -32,7 +32,7 @@ object DatasetPage {
   def apply(datasetName: DatasetName)(implicit projectPage: ProjectPage) = new DatasetPage(datasetName, projectPage)
 }
 
-class DatasetPage(datasetName: DatasetName, projectPage: ProjectPage)
+class DatasetPage(val datasetName: DatasetName, projectPage: ProjectPage)
     extends RenkuPage(
       path = s"${projectPage.path}/datasets/${datasetName.asPath}",
       title = raw"(.*)(• Project •)(.*)"
