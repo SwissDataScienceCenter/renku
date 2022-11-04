@@ -30,16 +30,14 @@ import scala.util.Try
 trait Datasets {
   self: AcceptanceSpec with Project with KnowledgeGraphApi =>
 
-  def `verify dataset was created`(datasetName: DatasetName): Unit =
-    `try few times before giving up` { _ =>
-      `navigate to the dataset`(DatasetPage(datasetName))
-    }
+  def `verify dataset was created`(datasetName: DatasetName): Unit = `try few times before giving up` { _ =>
+    `navigate to the dataset`(DatasetPage(datasetName))
+  }
 
-  def `navigate to project info`: Unit =
-    `try few times before giving up` { _ =>
-      Given("the user is on the Datasets card")
-      click on projectPage.Datasets.goBackButton sleep (10 second)
-    }
+  def `navigate to project info`: Unit = `try few times before giving up` { _ =>
+    Given("the user is on the Datasets card")
+    click on projectPage.Datasets.goBackButton sleep (10 second)
+  }
 
   def `create a dataset`(datasetName: DatasetName): DatasetPage = {
     import Modification._
@@ -53,7 +51,7 @@ trait Datasets {
 
     `try few times before giving up` { _ =>
       When("the user clicks on the Add Dataset button")
-      click on projectPage.Datasets.addADatasetButton sleep (5 seconds)
+      click on projectPage.Datasets.addDatasetButton sleep (5 seconds)
     }
     verify that newDatasetPage.ModificationForm.formTitle contains "Add Dataset"
 
@@ -92,7 +90,7 @@ trait Datasets {
 
     When("the user clicks on the Add Dataset button")
     `try few times before giving up` { _ =>
-      click on projectPage.Datasets.addADatasetButton sleep (1 second)
+      click on projectPage.Datasets.addDatasetButton sleep (1 second)
     }
     verify that newDatasetPage.ModificationForm.formTitle contains "Add Dataset"
 
@@ -129,12 +127,16 @@ trait Datasets {
 
     `try few times before giving up` { _ =>
       Given("the user is on the Datasets tab")
-      click on projectPage.Datasets.tab sleep (10 seconds)
-      verify userCanSee projectPage.Datasets.tab
+      click on projectPage.Datasets.tab sleep (5 seconds)
+      verify userCanSee projectPage.Datasets.addDatasetButton
     }
 
     When(s"the user clicks on the dataset name")
-    click on projectPage.Datasets.DatasetsList.link(to = datasetPage) sleep (5 second)
+    click on projectPage.Datasets.DatasetsList
+      .maybeLink(to = datasetPage)
+      .getOrElse(logAndFail(s"Cannot find '${datasetPage.datasetName}' Dataset among project datasets"))
+
+    sleep(5 second)
 
     Then(s"the user should see the dataset details")
     verify browserAt datasetPage
@@ -173,7 +175,7 @@ trait Datasets {
     }
 
     val newTitle = by.newValue
-    Then("the dataset new title should contain " + newTitle)
+    Then(s"the dataset new title should contain '$newTitle'")
     verify that datasetPage.datasetTitle contains newTitle
 
     datasetPage

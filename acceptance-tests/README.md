@@ -31,7 +31,7 @@ To run through docker-compose, the tests parameters need to be provided as envir
 ```
 docker-compose run \
 -e RENKU_TEST_URL=https://kuba.dev.renku.ch \
--e GITLAB_TEST_URL=https://kuba.dev.renku.ch/gitlab \
+-e GITLAB_TEST_URL=https://gitlab.kuba.dev.renku.ch \
 -e RENKU_TEST_FULL_NAME="<full user name>" \
 -e RENKU_TEST_EMAIL=<email> \
 -e RENKU_TEST_USERNAME=<username> \
@@ -43,7 +43,7 @@ By default, all tests are run. You can provide an argument to run a specific tes
 ```
 docker-compose run \
 -e RENKU_TEST_URL=https://kuba.dev.renku.ch \
--e GITLAB_TEST_URL=https://kuba.dev.renku.ch/gitlab \
+-e GITLAB_TEST_URL=https://gitlab.kuba.dev.renku.ch \
 -e RENKU_TEST_FULL_NAME="<full user name>" \
 -e RENKU_TEST_EMAIL=<email> \
 -e RENKU_TEST_USERNAME=<username> \
@@ -121,10 +121,10 @@ order is command-line argument, environment variable and the defaults file.
 To create a `tests-defaults.conf` file, copy the `tests-defaults.conf.template` file and fill in the values.
 
 | Argument          | Environment                    | Purpose                                                                                                                                                                                                                                                |
-| ----------------- | ------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| ----------------- | ------------------------------ |--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | env               | RENKU_TEST_URL                 | URL to a Renku server, e.g., https://dev.renku.ch                                                                                                                                                                                                      |
 | cliVersion        | RENKU_CLI_VERSION              | the version of Renku CLI the tests should use; read from the renku API if not specified                                                                                                                                                                |
-| gitLabUrl         | GITLAB_TEST_URL                | URL to a GitLab server, e.g., https://dev.renku.ch/gitlab; defaulted to env/gitlab if not specified                                                                                                                                                    |
+| gitLabUrl         | GITLAB_TEST_URL                | URL to a GitLab server, e.g., https://gitlab.dev.renku.ch; defaulted to env/gitlab if not specified                                                                                                                                                    |
 | email             | RENKU_TEST_EMAIL               | user's email e.g. `jakub.chrobasik@epfl.ch`                                                                                                                                                                                                            |
 | username          | RENKU_TEST_USERNAME            | user's username e.g. `jakub.chrobasik1`                                                                                                                                                                                                                |
 | fullname          | RENKU_TEST_FULL_NAME           | user's full name e.g. `Jakub Józef Chrobasik`                                                                                                                                                                                                          |
