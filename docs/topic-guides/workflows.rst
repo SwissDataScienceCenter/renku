@@ -156,21 +156,36 @@ Inspecting Workflows
 You can see workflows in a project in a Renku deployment such as `renkulab.io <https://renkulab.io>`_
 by going to a project and opening the `Workflows` tab:
 
-.. Insert picture!
+.. image:: ../_static/images/ui_workflows_list.png
+    :align: center
+    :alt: Workflows list
 
 There you can see, filter and navigate all workflows and steps used in this
 project.
-
 Selecting a workflow or step shows you its details and allows you to navigate
 between steps.
 
-If you click on a step, you can see the command used in it, it's inputs,
-outputs and parameters as well as other related metadata, such as when it was
-last executed, how long executions of it take on average and more:
+Selecting a workflow will show you the steps it contains, the parameters of
+steps it exposes directly, and the dependencies between steps.
 
-.. Insert picture!
+.. image:: ../_static/images/ui_workflows_composite_details.png
+    :align: center
+    :alt: Workflow details
 
-Selecting a workflow will instead show you the steps it contains, parameters of
-steps that it exposes directly as well as the dependencies between steps.
+If you click on a step, either on the workflow browser or in the workflow
+detail page, or if you click on the link icon of a mapping or a link, you
+can see the command used in it, its inputs, outputs and parameters, as well
+as other related metadata, such as when it was last executed, how long
+executions of it take on average and more:
 
-.. Insert picture!
+.. image:: ../_static/images/ui_workflows_details.png
+    :align: center
+    :alt: Workflow step details
+
+When an input or an output is available in the project's latest commit, you will
+notice a link icon that will bring you to the file browser to get a preview or
+download the content.
+
+.. image:: ../_static/images/ui_workflows_file_links.png
+    :align: center
+    :alt: Workflow step details
