@@ -18,11 +18,10 @@
 
 package ch.renku.acceptancetests.pages
 
-import ch.renku.acceptancetests.model.CliVersion
+import ch.renku.acceptancetests.model.{CliVersion, GitLabBaseUrl}
 import ch.renku.acceptancetests.model.projects.ProjectDetails._
 import ch.renku.acceptancetests.model.projects.{ProjectDetails, ProjectIdentifier}
 import ch.renku.acceptancetests.model.users.UserCredentials
-
 import org.openqa.selenium.{WebDriver, WebElement}
 import org.scalactic.source
 import org.scalatest.enablers.Retrying
@@ -49,10 +48,9 @@ class ProjectPage(val projectSlug: String, val namespace: String)
 
   override def pageReadyElement(implicit webDriver: WebDriver): Option[WebElement] = Some(Overview.tab)
 
-  def viewInGitLab(implicit webDriver: WebDriver): WebElement = eventually {
-    find(
-      cssSelector(s"a[href*='/gitlab/$namespace/$projectSlug']")
-    ) getOrElse fail("View in GitLab button not found")
+  def viewInGitLab(implicit gitLabBaseUrl: GitLabBaseUrl, webDriver: WebDriver): WebElement = eventually {
+    find(cssSelector(s"a[href='$gitLabBaseUrl/$namespace/$projectSlug']"))
+      .getOrElse(fail("View in GitLab button not found"))
   }
 
   def projectTitle(implicit webDriver: WebDriver): Option[String] = {
@@ -123,8 +121,8 @@ class ProjectPage(val projectSlug: String, val namespace: String)
         find(cssSelector(s"a[href='$path/collaboration/mergerequests']")) getOrElse fail("Merge Requests tab not found")
       }
 
-      def gitLabMrLink(implicit webDriver: WebDriver): WebElement = eventually {
-        find(cssSelector(s"a[href*='/gitlab/$namespace/$projectSlug/-/merge_requests']"))
+      def gitLabMrLink(implicit gitLabBaseUrl: GitLabBaseUrl, webDriver: WebDriver): WebElement = eventually {
+        find(cssSelector(s"a[href='$gitLabBaseUrl/$namespace/$projectSlug/-/merge_requests']"))
           .getOrElse(fail("GitLab MR link not found"))
       }
 
@@ -144,6 +142,11 @@ class ProjectPage(val projectSlug: String, val namespace: String)
           "Create Merge Request button not found"
         )
       }
+
+      def openInTabButton(implicit webDriver: WebDriver): WebElement = eventually {
+        find(cssSelector(s"a[href*='/$namespace/$projectSlug/-/merge_requests']"))
+          .getOrElse(fail("GitLab issue link not found"))
+      }
     }
 
     object Issues {
@@ -152,8 +155,13 @@ class ProjectPage(val projectSlug: String, val namespace: String)
         find(cssSelector(s"a[href='$path/collaboration/issues']")) getOrElse fail("Issues tab not found")
       }
 
-      def gitLabIssuesLink(implicit webDriver: WebDriver): WebElement = eventually {
-        find(cssSelector(s"a[href*='/gitlab/$namespace/$projectSlug/-/issues']"))
+      def openInTabButton(implicit webDriver: WebDriver): WebElement = eventually {
+        find(cssSelector(s"a[href*='/$namespace/$projectSlug/-/issues']"))
+          .getOrElse(fail("GitLab issue link not found"))
+      }
+
+      def gitLabIssuesLink(implicit gitLabBaseUrl: GitLabBaseUrl, webDriver: WebDriver): WebElement = eventually {
+        find(cssSelector(s"a[href='$gitLabBaseUrl/$namespace/$projectSlug/-/issues']"))
           .getOrElse(fail("GitLab issue link not found"))
       }
 
