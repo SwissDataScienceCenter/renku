@@ -1,5 +1,21 @@
 .. _changelog:
 
+
+0.18.6
+------
+
+This release brings changes to the way data is organized in the Triples Store. It's internal and does not affect Knowledge Graph API.
+
+Features
+~~~~~~~~
+
+* **Knowledge Graph**: both the provisioning processes and the API to work against the Named Graphs dataset in the Triples Store
+
+Individual components
+~~~~~~~~~~~~~~~~~~~~~~
+
+- `renku-graph 2.22.0 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/2.22.0>`_
+
 0.18.5
 ------
 
