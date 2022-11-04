@@ -2,17 +2,19 @@
 
 0.19.0
 ------
-This release adds support for showing workflows in the UI.
+This release adds support for showing workflows in the UI. It also brings changes to the way data is organized in the Triples Store.
 
 Features
 ~~~~~~~~
 
 * **Renku core service**: add ``/workflow_plans.list`` and ``/workflow_plans.show`` for listing and showing workflows in a project.
+* **Knowledge Graph**: both the provisioning processes and the API to work against the Named Graphs dataset in the Triples Store
 
 Individual components
 ~~~~~~~~~~~~~~~~~~~~~~
 
 - `renku-python 1.9.0 <https://github.com/SwissDataScienceCenter/renku-python/releases/tag/v1.9.0>`_
+- `renku-graph 2.22.0 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/2.22.0>`_
 
 0.18.5
 ------
