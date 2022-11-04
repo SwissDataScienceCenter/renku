@@ -1,7 +1,7 @@
 .. _changelog:
 
 
-0.18.6
+0.19.0
 ------
 
 This release brings changes to the way data is organized in the Triples Store. It's internal and does not affect Knowledge Graph API.
