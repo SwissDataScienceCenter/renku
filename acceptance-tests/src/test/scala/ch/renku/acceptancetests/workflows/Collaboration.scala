@@ -29,9 +29,11 @@ trait Collaboration {
   def `navigate to the merge requests tab`: Unit =
     `try few times before giving up` { _ =>
       When("the user navigates to the Collaboration tab")
-      click on projectPage.Collaboration.tab sleep (1 second)
+      click on projectPage.Collaboration.tab sleep (3 seconds)
       And("they navigate to the Merge Requests sub tab")
-      click on projectPage.Collaboration.MergeRequests.tab sleep (1 second)
+      click on projectPage.Collaboration.MergeRequests.tab sleep (3 seconds)
+
+      verify userCanSee projectPage.Collaboration.MergeRequests.openInTabButton
     }
 
   def `verify that the GitLab MR iFrame is visible`: Unit = {
@@ -47,9 +49,11 @@ trait Collaboration {
   def `navigate to the issues tab`: Unit =
     `try few times before giving up` { _ =>
       When("the user navigates to the Collaboration tab")
-      click on projectPage.Collaboration.tab sleep (1 second)
+      click on projectPage.Collaboration.tab sleep (3 seconds)
       And("they navigate to the Issues sub tab")
-      click on projectPage.Collaboration.Issues.tab sleep (1 second)
+      click on projectPage.Collaboration.Issues.tab sleep (3 seconds)
+
+      verify userCanSee projectPage.Collaboration.Issues.openInTabButton
     }
 
   def `verify that the GitLab issues iFrame is visible`: Unit = {

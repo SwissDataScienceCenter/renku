@@ -18,9 +18,7 @@
 
 package ch.renku.acceptancetests
 
-import ch.renku.acceptancetests.generators.Generators.Implicits._
-import ch.renku.acceptancetests.generators.Generators.paragraph
-import ch.renku.acceptancetests.model.datasets.{DatasetName, DatasetTitle, FileUrl}
+import ch.renku.acceptancetests.model.datasets.{DatasetName, FileUrl}
 import ch.renku.acceptancetests.tooling.{AcceptanceSpec, KnowledgeGraphApi}
 import ch.renku.acceptancetests.workflows._
 
@@ -33,7 +31,7 @@ class DatasetUploadSpec extends AcceptanceSpec with Login with Project with Data
     `create, continue or open a project`
 
     When("the user wants to create a new dataset for the project")
-    val originalDatasetPage = `create a dataset with uploaded file`(
+    `create a dataset with uploaded file`(
       DatasetName.generate,
       FileUrl("https://raw.githubusercontent.com/SwissDataScienceCenter/renku/master/CHANGELOG.rst")
     )

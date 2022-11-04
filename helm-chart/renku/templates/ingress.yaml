@@ -59,15 +59,19 @@ spec:
             port:
               name: {{ $keycloakServicePort }}
       {{- end }}
-      {{- if $gitlabEnabled }}
       - path: /gitlab
         pathType: Prefix
         backend:
           service:
+            {{- if $gitlabEnabled }}
             name: {{ $gitlabFullname }}
             port:
               number: {{ $gitlabServicePort }}
-      {{- end }}
+            {{ else }}
+            name: renku-traefik
+            port:
+              number: 80
+            {{- end }}
       - path: /repos
         pathType: Prefix
         backend:
