@@ -17,6 +17,8 @@
  */
 
 package ch.renku.acceptancetests.pages
+
+import ch.renku.acceptancetests.model.GitLabBaseUrl
 import ch.renku.acceptancetests.model.users.UserCredentials
 import org.openqa.selenium.interactions.Actions
 import org.openqa.selenium.{WebDriver, WebElement}
@@ -28,18 +30,24 @@ object GitLabWelcomePage extends GitLabPage(path = "", title = "Projects · Dash
 
   def menuDropDown(implicit webDriver: WebDriver) = find(cssSelector(s"a[href='#']"))
 
-  def `click on the User Settings dropdown`(implicit userCredentials: UserCredentials, webDriver: WebDriver): Unit =
-    new Actions(webDriver)
-      .moveToElement(userSettingsDropDown)
-      .click()
-      .build()
-      .perform();
+  def `click on the User Settings dropdown`(implicit
+      userCredentials: UserCredentials,
+      gitLabBaseUrl:   GitLabBaseUrl,
+      webDriver:       WebDriver
+  ): Unit = new Actions(webDriver)
+    .moveToElement(userSettingsDropDown)
+    .click()
+    .build()
+    .perform();
 
-  private def userSettingsDropDown(implicit userCredentials: UserCredentials, webDriver: WebDriver) =
-    find(cssSelector(s"a[href='/gitlab/${userCredentials.username}']"))
-      .getOrElse(fail("Top right 'User Settings' button not found"))
+  private def userSettingsDropDown(implicit
+      userCredentials: UserCredentials,
+      gitLabBaseUrl:   GitLabBaseUrl,
+      webDriver:       WebDriver
+  ) = find(cssSelector(s"a[href='$gitLabBaseUrl/${userCredentials.username}']"))
+    .getOrElse(fail("Top right 'User Settings' button not found"))
 
-  def editProfileMenuOption(implicit webDriver: WebDriver) =
-    find(cssSelector(s"a[href='/gitlab/-/profile']"))
+  def editProfileMenuOption(implicit gitLabBaseUrl: GitLabBaseUrl, webDriver: WebDriver) =
+    find(cssSelector(s"a[href='$gitLabBaseUrl/-/profile']"))
       .getOrElse(fail("'Edit profile' menu option not found"))
 }

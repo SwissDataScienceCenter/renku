@@ -18,6 +18,7 @@
 
 package ch.renku.acceptancetests.pages
 
+import ch.renku.acceptancetests.model.GitLabBaseUrl
 import org.openqa.selenium.interactions.Actions
 import org.openqa.selenium.{WebDriver, WebElement}
 import org.scalatestplus.selenium.WebBrowser.{cssSelector, find}
@@ -55,8 +56,8 @@ trait TopBar {
         .perform()
     }
 
-    def gitLabMenuItem(implicit webDriver: WebDriver): WebElement = eventually {
-      find(cssSelector(s"a[href*='/gitlab']")) getOrElse fail("GitLab menu item not found")
+    def gitLabMenuItem(implicit gitLabBaseUrl: GitLabBaseUrl, webDriver: WebDriver): WebElement = eventually {
+      find(cssSelector(s"a[href='$gitLabBaseUrl']")) getOrElse fail("GitLab menu item not found")
     }
 
     def projectOption(implicit webDriver: WebDriver): WebElement = eventually {
@@ -77,7 +78,7 @@ trait TopBar {
 
     def mainNavToggler(implicit webDriver: WebDriver): WebElement = eventually {
       find(cssSelector("button.navbar-toggler"))
-        .getOrElse(fail("Top Right toggler button not found"))
+        .getOrElse(fail("Top Right toggle button not found"))
     }
 
     def logoutLink(implicit webDriver: WebDriver): WebElement = eventually {
