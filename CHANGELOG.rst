@@ -1,5 +1,19 @@
 .. _changelog:
 
+0.19.0
+------
+This release adds support for showing workflows in the UI.
+
+Features
+~~~~~~~~
+
+* **Renku core service**: add ``/workflow_plans.list`` and ``/workflow_plans.show`` for listing and showing workflows in a project.
+
+Individual components
+~~~~~~~~~~~~~~~~~~~~~~
+
+- `renku-python 1.9.0 <https://github.com/SwissDataScienceCenter/renku-python/releases/tag/v1.9.0>`_
+
 0.18.5
 ------
 
