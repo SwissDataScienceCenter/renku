@@ -43,6 +43,11 @@ trait Grammar extends WebElementOps with WebDriverOps with Scripts with Eventual
     def apply(duration: Duration): Unit = Page SleepThread duration
   }
 
+  def logAndFail(message: String): Nothing = {
+    logger.error(message)
+    fail(message)
+  }
+
   object verify {
 
     def that(element: => WebElement): WebElement = element
