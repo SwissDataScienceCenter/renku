@@ -6,6 +6,7 @@ metadata:
   annotations:
     "helm.sh/hook": test
 spec:
+  nodeName: worker-dev.renku-core-services-aaa-3 
   volumes:
   - name: dshm
     emptyDir:
