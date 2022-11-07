@@ -4,6 +4,7 @@ import { getIframe } from "./commands/general"
 import { renkuLogin, register } from "./commands/login"
 import { createProject, deleteProject } from "./commands/projects"
 import { startSession, stopSessionFromIframe } from "./commands/sessions"
+import "cypress-localstorage-commands";
 
 export const registerCustomCommands = () => {
   Cypress.Commands.add("getIframe", getIframe)

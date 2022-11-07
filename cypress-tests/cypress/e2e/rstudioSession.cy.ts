@@ -11,6 +11,10 @@ const projectName = `test-project-${uuidv4()}`
 
 describe('Basic rstudio functionality', () => {
   before(() => {
+    // Save all cookies across tests
+    Cypress.Cookies.defaults({
+      preserve: (_) => true
+    })
     registerCustomCommands()
     // Register with the CI deployment
     cy.register(email, password, firstName, lastName)
@@ -32,36 +36,27 @@ describe('Basic rstudio functionality', () => {
     cy.url().should("be.oneOf", [Cypress.config("baseUrl"), Cypress.config("baseUrl") + "/"])
     cy.request("ui-server/api/user").its("status").should("eq", 200)
   })
-  beforeEach(() => {
-    Cypress.Cookies.preserveOnce(
-      'session_id',
-      '_oauth2_proxy',
-      "csrf-token",
-      "rs-csrf-token",
-      "user-id",
-      "user-list-id",
-      "port-token",
-      "persist-auth",
-      "ui-server-session",
-      "session",
-      "visitor_id",
-      "_xsrf",
-      "AUTH_SESSION_ID",
-      "AUTH_SESSION_ID_LEGACY",
-      "KC_RESTART",
-      "KEYCLOAK_IDENTITY",
-      "KEYCLOAK_IDENTITY_LEGACY",
-      "KEYCLOAK_SESSION",
-      "KEYCLOAK_SESSION_LEGACY",
-    )
+  afterEach(() => {
+    // Prevents the ui from automatically refreshing the page, it does this when the local storage is wiped
+    // and the local storage is wiped by default after an "it" section ends in cypress
+    cy.saveLocalStorage()
   })
-  it('Creates project and launches a session', { defaultCommandTimeout: 30000}, () => {
+  beforeEach(() => {
+    // Prevents the ui from automatically refreshing the page, it does this when the local storage is wiped
+    // and the local storage is wiped by default after an "it" section ends in cypress
+    cy.restoreLocalStorage()
+  })
+  it('Creates project', { defaultCommandTimeout: 30000}, () => {
     const templateName = "Basic R"
     cy.visit("/")
     cy.get('[data-cy="username-home"]').should("include.text", username)
     cy.createProject(projectName, templateName, username)
+  })
+  it('Launches a session', { defaultCommandTimeout: 30000}, () => {
     cy.startSession(username, projectName)
     cy.get('.time-caption', {timeout: 300000}).should("contain.text", "Running")
+  })
+  it ('Opens the session in an iframe', () => {
     cy.contains("Open").click()
     cy.get('div.details-progress-box', {timeout: 300000}).should("not.exist")
     cy.getIframe("iframe#session-iframe").within(() => {
