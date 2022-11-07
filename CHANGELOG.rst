@@ -10,11 +10,20 @@ Features
 ~~~~~~~~
 
 * **Knowledge Graph**: both the provisioning processes and the API to work against the Named Graphs dataset in the Triples Store
+* **UI**: initial support for workflows in the UI
+* **UI/sessions**: add refresh button to sessions
+
+Bug fixes
+~~~~~~~~~~
+
+* **UI/project**: correctly fill values in new project form links `#2026 <https://github.com/SwissDataScienceCenter/renku-ui/issues/2026>`_
+* **UI/sessions**: handle corrupted autosave information and improve warnings
 
 Individual components
 ~~~~~~~~~~~~~~~~~~~~~~
 
 - `renku-graph 2.22.0 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/2.22.0>`_
+- `renku-ui 2.11.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/2.11.0>`_
 
 0.18.5
 ------
