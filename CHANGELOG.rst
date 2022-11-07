@@ -10,10 +10,16 @@ Features
 * **Renku core service**: add ``/workflow_plans.list`` and ``/workflow_plans.show`` for listing and showing workflows in a project.
 * **Knowledge Graph**: both the provisioning processes and the API to work against the Named Graphs dataset in the Triples Store
 
+Bug fixes
+~~~~~~~~~
+
+* **Renku core service**: fix intermittent issue with project cache concurrency
+* **Renku core service**: fix import of private datasets with some cloud-native github instances
+
 Individual components
 ~~~~~~~~~~~~~~~~~~~~~~
 
-- `renku-python 1.9.0 <https://github.com/SwissDataScienceCenter/renku-python/releases/tag/v1.9.0>`_
+- `renku-python 1.9.1 <https://github.com/SwissDataScienceCenter/renku-python/releases/tag/v1.9.1>`_
 - `renku-graph 2.22.0 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/2.22.0>`_
 
 0.18.5
