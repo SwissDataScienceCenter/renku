@@ -1,5 +1,5 @@
 import { rstudioTestFuncs } from "@renku/notebooks-cypress-tests";
-import {v4 as uuidv4} from 'uuid';
+import { v4 as uuidv4 } from 'uuid';
 import { registerCustomCommands } from "../support";
 
 const email = Cypress.env("TEST_EMAIL")
@@ -24,13 +24,13 @@ describe('Basic rstudio functionality', () => {
         // Still on registration page, it means registration failed, so simply try to log in.
         // Usually occurs because test user already exists on the CI deployment.
         cy.contains('Back to Login').click()
-        cy.renkuLogin([{username: email, password}])
+        cy.renkuLogin([{ username: email, password }])
       }
     })
     // Login with the main dev deployment after registering on the CI deployment (if required)
     cy.url().then((url) => {
       if (url.includes("auth/realms/Renku/protocol/openid-connect/auth")) {
-        cy.renkuLogin([{username: email, password}])
+        cy.renkuLogin([{ username: email, password }])
       }
     })
     cy.url().should("be.oneOf", [Cypress.config("baseUrl"), Cypress.config("baseUrl") + "/"])
@@ -46,19 +46,24 @@ describe('Basic rstudio functionality', () => {
     // and the local storage is wiped by default after an "it" section ends in cypress
     cy.restoreLocalStorage()
   })
-  it('Creates project', { defaultCommandTimeout: 30000}, () => {
+  it('Creates a project', { defaultCommandTimeout: 30000 }, () => {
     const templateName = "Basic R"
     cy.visit("/")
     cy.get('[data-cy="username-home"]').should("include.text", username)
     cy.createProject(projectName, templateName, username)
   })
-  it('Launches a session', { defaultCommandTimeout: 30000}, () => {
-    cy.startSession(username, projectName)
-    cy.get('.time-caption', {timeout: 300000}).should("contain.text", "Running")
+  it('Waits for the image to build', { defaultCommandTimeout: 300000 }, () => {
+    cy.waitForImageToBuild(username, projectName)
   })
-  it ('Opens the session in an iframe', () => {
+  it('Launches a session', () => {
+    cy.startSession(username, projectName)
+  })
+  it('Waits for the session to fully start', { defaultCommandTimeout: 300000 }, () => {
+    cy.get('.time-caption').should("contain.text", "Running")
+  })
+  it('Opens the session in an iframe', () => {
     cy.contains("Open").click()
-    cy.get('div.details-progress-box', {timeout: 300000}).should("not.exist")
+    cy.get('div.details-progress-box', { timeout: 300000 }).should("not.exist")
     cy.getIframe("iframe#session-iframe").within(() => {
       rstudioTestFuncs.findExpectedElements()
     })

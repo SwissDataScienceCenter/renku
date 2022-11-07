@@ -1,7 +1,7 @@
-export const renkuLogin = (credentials: {username: string, password: string}[]) => {
-  for (const {username, password} of credentials) {
+export const renkuLogin = (credentials: { username: string, password: string }[]) => {
+  for (const { username, password } of credentials) {
     cy.get("#username").type(username)
-    cy.get("#password").type(password, {log: false})
+    cy.get("#password").type(password, { log: false })
     cy.get('#kc-login').click().should("not.exist")
   }
   cy.url().then((url) => {
@@ -18,7 +18,7 @@ export const register = (email: string, password: string, firstName?: string, la
   cy.get('input[name="firstName"]').should("be.visible").click().clear().type(firstName ? firstName : "Renku Cypress")
   cy.get('input[name="lastName"]').should("be.visible").click().clear().type(lastName ? lastName : "Test")
   cy.get('input[name="email"]').should("be.visible").click().clear().type(email)
-  cy.get('input[name="password"]').should("be.visible").click().clear().type(password, {log: false})
-  cy.get('input[name="password-confirm"]').should("be.visible").click().clear().type(password, {log: false})
+  cy.get('input[name="password"]').should("be.visible").click().clear().type(password, { log: false })
+  cy.get('input[name="password-confirm"]').should("be.visible").click().clear().type(password, { log: false })
   cy.get('input[type="submit"]').should("be.visible").should("be.enabled").click()
 }

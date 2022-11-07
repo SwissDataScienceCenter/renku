@@ -8,7 +8,7 @@ export const createProject = (name: string, templateName?: string, namespace?: s
     cy.contains(templateName).should("be.visible").click()
   }
   cy.get('[data-cy="create-project-button"]').should("be.visible").click()
-  cy.url({timeout: 30000}).should("contain", name)
+  cy.url().should("contain", name)
 }
 
 export const deleteProject = (namespace: string, name: string) => {
