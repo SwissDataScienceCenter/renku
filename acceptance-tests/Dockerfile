@@ -36,6 +36,14 @@ RUN python3 -m pip install --upgrade 'pip==21.3.1' && \
       'pandas==1.3.0' \
       'seaborn==0.11.1'
 
-ENV DOCKER="1"
 COPY . /tests
+
+RUN addgroup -gid 1001 attests && \
+    useradd -m -u 1001 -g attests attests && \
+    chmod 777 -R /tests && \
+    chown -R attests:attests /tests
+
+USER attests
+
+ENV DOCKER="1"
 ENTRYPOINT ["/tests/docker-run-tests.sh"]
