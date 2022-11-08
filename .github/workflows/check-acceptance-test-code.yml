@@ -1,4 +1,4 @@
-name: Check format for acceptance tests
+name: Check acceptance tests dependencies and code
 
 on:
   [pull_request]
@@ -11,4 +11,4 @@ jobs:
       - name: run scalafmt
         run: |
           cd acceptance-tests
-          sbt scalafmtCheckAll
+          sbt 'Test / compile'
