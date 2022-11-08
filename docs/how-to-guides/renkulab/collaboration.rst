@@ -15,11 +15,10 @@ the **Search** tab. Without entering any search terms, you will see a list of
 all projects that you have access to. You can click on a project name to be
 taken to the project's landing page.
 
-By default, the files in projects created by other people are "read only" to you.
-This means you can see an overview, create and read issues, and browse the filesystem
-in both text and :ref:`provenance` modes. The project's **Sessions** tab
-will inform you that you do not have permissions to launch a notebook or make
-modifications to the code or datasets.
+By default, the files in projects created by other people are "read only" to
+you. This means you can see an overview, create and read issues, and browse the
+filesystem. The project's **Sessions** tab will inform you that you do not have
+permissions to launch a notebook or make modifications to the code or datasets.
 
 If you would like to interact with the notebooks (run, edit, upload data, continue
 your own analyses, etc.), you can `fork the project <forks_for_collaboration_>`_,

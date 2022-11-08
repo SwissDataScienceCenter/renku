@@ -92,7 +92,7 @@ Knowledge Graph for easy retrieval and search.
 Provenance of results
 ~~~~~~~~~~~~~~~~~~~~~
 
-Capturing the :ref:`provenance of results <provenance>` is critical for understanding
+Capturing the :ref:`provenance of results <workflows>` is critical for understanding
 what input data were used, what code was run, and what results were produced.
 
 The ``renku`` client gives researchers and analysts a simple tool to

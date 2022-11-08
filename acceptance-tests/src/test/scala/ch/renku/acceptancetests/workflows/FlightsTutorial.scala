@@ -100,7 +100,7 @@ trait FlightsTutorial extends Matchers with CLIConfiguration {
     console %> c"git commit -m 'Fixed filter to use AUS, not DFW.'"
 
     And("and updates the results")
-    console %> c"renku update --all"
+    console %> c"renku update -p toil --all"
     And("pushes all the commits to the remote")
     console %> c"git push"
 
