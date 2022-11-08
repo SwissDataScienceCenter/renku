@@ -1,14 +1,14 @@
-name: Check format for acceptance tests
+name: Check acceptance tests dependencies and code
 
 on:
   [pull_request]
 jobs:
   formatting-check:
-    name: Scala formatting check
+    name: Scala dependencies and code check
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - name: run scalafmt
+      - name: run test compile
         run: |
           cd acceptance-tests
-          sbt scalafmtCheckAll
+          sbt 'Test / compile'

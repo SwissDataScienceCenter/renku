@@ -1,20 +1,35 @@
 .. _changelog:
 
-
 0.19.0
 ------
-
-This release brings changes to the way data is organized in the Triples Store. It's internal and does not affect Knowledge Graph API.
+This release adds support for showing workflows in the UI. It also brings changes to the way data is organized in the Triples Store.
 
 Features
 ~~~~~~~~
 
+* **Renku core service**: add ``/workflow_plans.list`` and ``/workflow_plans.show`` for listing and showing workflows in a project.
 * **Knowledge Graph**: both the provisioning processes and the API to work against the Named Graphs dataset in the Triples Store
+* **UI**: initial support for workflows in the UI
+* **UI/sessions**: add refresh button to sessions
+
+Bug fixes
+~~~~~~~~~~
+
+* **UI/project**: correctly fill values in new project form links `#2026 <https://github.com/SwissDataScienceCenter/renku-ui/issues/2026>`_
+* **UI/sessions**: handle corrupted autosave information and improve warnings
+
+Bug fixes
+~~~~~~~~~
+
+* **Renku core service**: fix intermittent issue with project cache concurrency
+* **Renku core service**: fix import of private datasets with some cloud-native github instances
 
 Individual components
 ~~~~~~~~~~~~~~~~~~~~~~
 
+- `renku-python 1.9.1 <https://github.com/SwissDataScienceCenter/renku-python/releases/tag/v1.9.1>`_
 - `renku-graph 2.22.0 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/2.22.0>`_
+- `renku-ui 2.11.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/2.11.0>`_
 
 0.18.5
 ------

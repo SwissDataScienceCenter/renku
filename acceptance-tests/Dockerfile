@@ -1,4 +1,4 @@
-FROM python:3.7-slim
+FROM python:3.8-slim
 
 RUN apt-get update && \
     apt-get install -y \
@@ -25,7 +25,18 @@ RUN echo "deb https://repo.scala-sbt.org/scalasbt/debian all main" | tee /etc/ap
     wget --quiet https://dl.min.io/client/mc/release/linux-amd64/mc -O /usr/local/bin/mc && \
     chmod 0755 /usr/local/bin/mc
 
-RUN python3 -m pip install --upgrade 'pip==21.3.1' && \
+COPY . /tests
+
+RUN addgroup -gid 1001 attests && \
+    useradd -ms /bin/bash -u 1001 -g attests attests && \
+    chmod 777 -R /tests && \
+    chown -R attests:attests /tests
+
+USER attests
+
+ENV PATH=/home/attests/.local/bin:/home/attests/.local/lib/python3.8/site-packages:$PATH
+
+RUN python3 -m pip install --upgrade 'pip==22.3.1' && \
     python3 -m pip install \
       'papermill==2.1.3' \
       'requests>=2.20.0' \
@@ -34,8 +45,8 @@ RUN python3 -m pip install --upgrade 'pip==21.3.1' && \
       'jupyterlab-git==0.20.0' \
       'pipx>=0.15.0.0' \
       'pandas==1.3.0' \
-      'seaborn==0.11.1'
+      'seaborn==0.11.1' \
+      'toil==5.7.1'
 
 ENV DOCKER="1"
-COPY . /tests
 ENTRYPOINT ["/tests/docker-run-tests.sh"]
