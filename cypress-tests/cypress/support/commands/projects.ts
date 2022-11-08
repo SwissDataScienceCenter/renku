@@ -9,6 +9,8 @@ export const createProject = (name: string, templateName?: string, namespace?: s
   }
   cy.get('[data-cy="create-project-button"]').should("be.visible").click()
   cy.url().should("contain", name)
+  cy.get('[data-cy="header-project"]').should("be.visible")
+  cy.get("ul.nav-pills-underline").should("be.visible")
 }
 
 export const deleteProject = (namespace: string, name: string) => {

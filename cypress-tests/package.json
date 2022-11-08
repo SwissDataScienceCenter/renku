@@ -11,9 +11,7 @@
     "@renku/notebooks-cypress-tests": "^0.0.9",
     "cypress": "^10.11.0",
     "cypress-localstorage-commands": "^2.2.1",
+    "typescript": "^4.8.4",
     "uuid": "^9.0.0"
-  },
-  "devDependencies": {
-    "typescript": "^4.8.4"
   }
 }

@@ -20,9 +20,32 @@ Limitations:
 - The tests expect to use the one set of provided credentials to log in
   to up to 2 different Renku deployments. In the case where the Gitlab used by
   Renku is part of another deployment the tests will try to log in twice.
+- Using `https` if possible is reccomended in the `BASE_URL` environment
+  variable. Completing the registration and logging in fails if the `http`
+  is used on the standard dev and/or CI Renku deployments.
+- Using the electron browser from cypress will not work because rstudio does not load at
+  all in the electron browser.
+- The tests need slight adjustments to the setup to work in Firefox so 
+  just to start it is reccomended to use the Chrome browser to test. For some
+  reason the tests in Firefox are refusing to ignore failed requests even though
+  the Cypress setup that makes this possible has been done and should be in effect.
+
+## Requirements
+
+- Node LTS or later.
+- On Linux you will need additional libraries see [here](https://docs.cypress.io/guides/getting-started/installing-cypress#Linux-Prerequisites).
+- You can also swap the regular `Dockerfile` in `.devcontainer/devcontainer.json` with `Dockerfile.cypress`
+  and launch a dev container. In the dev container you have to run the tests headless but you will
+  have access to a Chrome browser.
+
+## To install
+
+```
+npm install
+```
 
 ## To run
 
 ```
-TEST_USERNAME=username TEST_EMAIL=some@email.com TEST_PASSWORD=XXXXX TEST_FIRST_NAME=fname TEST_LAST_NAME=lname BASE_URL=http://dev.renku.ch npx cypress open
+TEST_USERNAME=my.username TEST_EMAIL=my.username@email.com TEST_PASSWORD=XXXXX TEST_FIRST_NAME=fname TEST_LAST_NAME=lname BASE_URL=https://dev.renku.ch npx cypress open
 ```

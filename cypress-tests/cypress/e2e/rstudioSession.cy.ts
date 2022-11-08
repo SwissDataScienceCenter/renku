@@ -33,7 +33,17 @@ describe('Basic rstudio functionality', () => {
         cy.renkuLogin([{ username: email, password }])
       }
     })
-    cy.url().should("be.oneOf", [Cypress.config("baseUrl"), Cypress.config("baseUrl") + "/"])
+    const httpBaseUrl = Cypress.config("baseUrl").replace(/^https:\/\//, "http://")
+    const httpsBaseUrl = Cypress.config("baseUrl").replace(/^http:\/\//, "https://")
+    cy.url().should(
+      "be.oneOf",
+      [
+        httpBaseUrl,
+        httpsBaseUrl,
+        httpBaseUrl + "/",
+        httpsBaseUrl + "/",
+      ]
+    )
     cy.request("ui-server/api/user").its("status").should("eq", 200)
   })
   afterEach(() => {
