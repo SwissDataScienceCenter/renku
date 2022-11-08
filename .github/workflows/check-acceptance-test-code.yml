@@ -8,7 +8,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - name: run scalafmt
+      - name: run test compile
         run: |
           cd acceptance-tests
           sbt 'Test / compile'
