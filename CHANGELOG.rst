@@ -2,27 +2,29 @@
 
 0.19.0
 ------
-This release adds support for showing workflows in the UI. It also brings changes to the way data is organized in the Triples Store.
+This release adds support
+`for showing workflows in the UI <https://renku.readthedocs.io/en/latest/topic-guides/workflows.html>`_.
+You can visualize workflows in project pages by clicking on the new `Workflows` tab.
+Support for editing workflows and searching them through multiple projects will come in a feature release.
+
+This also brings changes to the way data is organized in the Triples Store and bug-fixes to improve
+the core service stability.
 
 Features
 ~~~~~~~~
 
-* **Renku core service**: add ``/workflow_plans.list`` and ``/workflow_plans.show`` for listing and showing workflows in a project.
-* **Knowledge Graph**: both the provisioning processes and the API to work against the Named Graphs dataset in the Triples Store
-* **UI**: initial support for workflows in the UI
-* **UI/sessions**: add refresh button to sessions
+* **UI**: browse and visualize workflows in projects 🔀 (`#2038 <https://github.com/SwissDataScienceCenter/renku-ui/issues/2038>`_)
+* **UI**: add refresh button to update live sessions ↪️
+* **Renku core service**: add ``/workflow_plans.list`` and ``/workflow_plans.show`` for listing and showing workflows in a project 🔀
+* **Knowledge Graph**: use Named Graphs dataset in the Triples Store for provisioning processes and APIs 💾
 
 Bug fixes
 ~~~~~~~~~~
 
-* **UI/project**: correctly fill values in new project form links `#2026 <https://github.com/SwissDataScienceCenter/renku-ui/issues/2026>`_
-* **UI/sessions**: handle corrupted autosave information and improve warnings
-
-Bug fixes
-~~~~~~~~~
-
-* **Renku core service**: fix intermittent issue with project cache concurrency
-* **Renku core service**: fix import of private datasets with some cloud-native github instances
+* **UI**: fill values correctly in new project form links 🔗 (`#2026 <https://github.com/SwissDataScienceCenter/renku-ui/issues/2026>`_)
+* **UI**: handle corrupted autosave information and improve warnings when starting a session ⚠️
+* **Renku core service**: fix intermittent issue with project cache concurrency 🏃
+* **Renku core service**: fix import of private datasets with some cloud-native github instances ⤵️
 
 Individual components
 ~~~~~~~~~~~~~~~~~~~~~~
