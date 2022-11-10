@@ -74,6 +74,17 @@ global:
       ## specify which dataset should be used in Jena
       dataset:
 
+  ## If you want to use an external PostgreSQL instance not deployed by Renku,
+  ## specify the hostname/IP address, admin username, password and maintenance database
+  ## of your external PostgreSQL instance and set externalPostgresql.enabled to true.
+  ## postgresql.enabled must also be set to false to use an external PostgreSQL instance.
+  externalPostgresql:
+    enabled: false
+  #   host:
+  #   username: postgres
+  #   password: 
+  #   maintenanceDatabase: postgres
+
   # Connection details for a globally used redis instance for the
   # entire platform. For specifying an actual instance as part of
   # this chart, check out the non-global "redis" section.
@@ -274,6 +285,11 @@ keycloak:
 # For production deployments check out
 # https://github.com/bitnami/charts/blob/master/bitnami/postgresql/values-production.yaml
 postgresql:
+
+  # If set to false, the connection values for an external PostgreSQL 
+  # instance must be set under global.externalPostgreSQL.
+  enabled: true
+
   ## We use the defaults here. Note that these basic configs could also be set as
   ## global values such that sub-charts can access them too.
   postgresqlDatabase: postgres

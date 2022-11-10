@@ -46,7 +46,11 @@ http
 Define subcharts full names
 */}}
 {{- define "postgresql.fullname" -}}
+{{- if .Values.global.externalPostgresql.enabled -}}
+{{- .Values.global.externalPostgresql.host -}}
+{{- else -}}
 {{- printf "%s-%s" .Release.Name "postgresql" | replace "+" "_" | trunc 63 | trimSuffix "-" -}}
+{{- end -}}
 {{- end -}}
 
 {{- define "keycloak.fullname" -}}
