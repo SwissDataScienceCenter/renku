@@ -1,5 +1,21 @@
 .. _changelog:
 
+0.19.1
+------
+Version 0.19.1 is a minor bugfix release to the UI. In certain situations, the session *save* and *refresh* buttons would
+report that they were not supported, when in fact they would have worked. This problem has been fixed.
+
+Bug fixes
+~~~~~~~~~~
+
+* **UI**: improve robustness of sessions save 💾 and refresh 🔄 buttons (`#2100 <https://github.com/SwissDataScienceCenter/renku-ui/issues/2100>`_)
+
+
+Individual components
+~~~~~~~~~~~~~~~~~~~~~~
+
+- `renku-ui 2.11.1 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/2.11.1>`_
+
 0.19.0
 ------
 This release adds support
