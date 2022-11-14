@@ -414,6 +414,11 @@ class ProjectPage(val projectSlug: String, val namespace: String)
       def maybeJupyterLabIframe(implicit webDriver: WebDriver): Option[WebElement] = eventually {
         find(cssSelector("#session-iframe"))
       }
+
+      def goBackButtonFullscreen(implicit webDriver: WebDriver): WebElement = eventually {
+        find(cssSelector(".fullscreen-back-button"))
+          .getOrElse(fail("Fullscreen Session go back button not found"))
+      }
     }
   }
 
