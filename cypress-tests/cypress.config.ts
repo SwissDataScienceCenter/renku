@@ -1,4 +1,5 @@
-import { defineConfig } from 'cypress'
+import { defineConfig } from "cypress"
+import { TIMEOUTS } from "./config"
 
 export default defineConfig({
   e2e: {
@@ -12,6 +13,6 @@ export default defineConfig({
     TEST_LAST_NAME: process.env.TEST_LAST_NAME,
     TEST_USERNAME: process.env.TEST_USERNAME,
   },
-  defaultCommandTimeout: 10000,
+  defaultCommandTimeout: TIMEOUTS.standard,
   chromeWebSecurity: false,
 })

@@ -3,6 +3,7 @@
     "cypress/**/*.ts",
     "index.ts",
     "cypress.config.ts",
+    "config.ts",
   ],
   "module": "commonjs",
   "compilerOptions": {

@@ -12,7 +12,7 @@ The tests currently only do the following:
 
 Limitations:
 - The tests expect to have to register first. If the registration fails
-  then the tests will try to login wiht the provided credentials. After
+  then the tests will try to login with the provided credentials. After
   this the tests will check if the login succceeded or if an additional
   login is required (as is the case of CI deployments). These are the only
   login scenarios that are supported. The tests cannot handle logging in 
@@ -25,10 +25,7 @@ Limitations:
   is used on the standard dev and/or CI Renku deployments.
 - Using the electron browser from cypress will not work because rstudio does not load at
   all in the electron browser.
-- The tests need slight adjustments to the setup to work in Firefox so 
-  just to start it is reccomended to use the Chrome browser to test. For some
-  reason the tests in Firefox are refusing to ignore failed requests even though
-  the Cypress setup that makes this possible has been done and should be in effect.
+- Tests currently do not run on Firefox.
 
 ## Requirements
 
