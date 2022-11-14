@@ -1,5 +1,20 @@
 .. _changelog:
 
+0.19.2
+------
+This minor bugfix release comes with internal changes to the Knowledge Graph and a small fix for the Lineage API.
+
+Bug fixes
+~~~~~~~~~~
+
+* **Knowledge Graph**: Lineage API to read data from the new dataset in the Triples Store
+
+
+Individual components
+~~~~~~~~~~~~~~~~~~~~~~
+
+- `renku-graph 2.22.1 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/2.22.1>`_
+
 0.19.1
 ------
 Version 0.19.1 is a minor bugfix release to the UI. In certain situations, the session *save* and *refresh* buttons would
