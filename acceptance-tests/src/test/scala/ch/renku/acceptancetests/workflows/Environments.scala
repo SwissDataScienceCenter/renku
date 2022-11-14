@@ -198,9 +198,9 @@ trait Environments {
     }
     sleep(5 seconds)
 
-    `try few times before giving up` { _ =>
-      Then("they should be redirected to the Sessions tab")
-      verify userCanSee projectPage.Sessions.Running.title
+    `try again if failed` { _ =>
+      And("the user clicks on the goBackButton session button")
+      click on projectPage.Sessions.Running.goBackButtonFullscreen
     }
 
     `try few times before giving up` { driver =>
