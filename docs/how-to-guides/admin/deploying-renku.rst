@@ -244,10 +244,13 @@ GitLab deployed as part of Renku
 
 If your RenkuLab deployment includes GitLab you need to follow some additional steps to configure an admin user on GitLab.
 
-#. Turn off automatic redirection to GitLab by setting the value ``gitlab.oauth.autoSignIn=false`` and redeploy with ``helm``.
-#. Log in as the root user using the password from ``gitlab.password``.
-#. Modify any users you want to modify (e.g. to make them admin).
-#. Turn the ``autoSignIn`` setting back on and redeploy.
+To grant a GitLab user the GitLab admin role without having access to the GitLab Web UI, the following steps can be taken in the GitLab container console.
+
+#. Run ``gitlab-rails console -e production`` (this might take a while).
+#. Find the user you would like to grant the admin role, for example by running ``user = User.find_by(email: 'renku@renkulab.io')`` or ``user = User.find_by(username: 'renku')``.
+#. Grant the user the administrator role by running ``user.admin = true``.
+#. Save the user's profile by running ``user.save!``.
+#. Leave the console by running ``exit``.
 
 External GitLab as identity provider
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
