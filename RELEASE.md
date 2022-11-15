@@ -49,7 +49,12 @@ for the rollout.
 * Limited should be rolled out ~1 week before the Renkulab rollout, to give a chance to find bugs early. E.g. Limited on Wednesday and Renkulab on Monday.
 * Make the tag in the `renku` repository, monitor the automatic process of chart publishing and deployment on staging.
 * Merge terraform-renku PR, monitor Flux upgrading Renku everywhere.
-* Contact the Product team before rolling out on Renkulab (ideally one day in advance), so that they can highlight prominent changes on Discourse, Twitter, and other channels.
+* After the Limited and RenkuLab deployments are completed, notify the Product team that the deployments are live, so they can post the release Highlights.
+
+### Share Release Highlights [Product team]
+* On Wednesday with the Limited release, share release highlights with SDSC (Slack).
+* On Monday with the RenkuLab release, highlight prominent changes on Discourse, Twitter, and other channels.
+
 
 ## Hot/bug fix release
 
