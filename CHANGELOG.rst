@@ -2,18 +2,22 @@
 
 0.19.2
 ------
-This minor bugfix release comes with internal changes to the Knowledge Graph and a small fix for the Lineage API.
+This minor bugfix release comes with internal changes to the Knowledge Graph and a other bug fixes.
 
 Bug fixes
 ~~~~~~~~~~
 
 * **Knowledge Graph**: Lineage API to read data from the new dataset in the Triples Store
+* **Knowledge Graph**: migration fixing creation dates on Plans in the Triples Store
+* **Renku core service**: a bug causing Plan creation date to be after Activity start date
 
 
 Individual components
 ~~~~~~~~~~~~~~~~~~~~~~
 
 - `renku-graph 2.22.1 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/2.22.1>`_
+- `renku-graph 2.22.2 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/2.22.2>`_
+- `renku-python 1.9.2 <https://github.com/SwissDataScienceCenter/renku-python/releases/tag/v1.9.2>`_
 
 0.19.1
 ------
