@@ -35,7 +35,11 @@ dependencies:
 - name: certificates
   version: 0.0.3
   repository: "https://swissdatasciencecenter.github.io/helm-charts/"
+# - name: redis
+#   version: 10.7.11
+#   repository: "https://raw.githubusercontent.com/bitnami/charts/eb5f9a9513d987b519f0ecd732e7031241c50328/bitnami"
+#   condition: redis.install
 - name: redis
-  version: 10.7.11
-  repository: "https://raw.githubusercontent.com/bitnami/charts/eb5f9a9513d987b519f0ecd732e7031241c50328/bitnami"
+  version: 17.3.10 # release data: 14/11/2022
+  repository: "https://charts.bitnami.com/bitnami" 
   condition: redis.install

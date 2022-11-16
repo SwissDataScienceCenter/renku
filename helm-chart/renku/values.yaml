@@ -358,7 +358,8 @@ redis:
       requests:
         cpu: 200m
         memory: 256Mi
-  slave:
+  # slave:
+  replica:
     # Fixed redis bug prevents us from using this before
     # we bump the redis chart version
     # spreadConstraints:
@@ -368,6 +369,7 @@ redis:
     #     labelSelector:
     #       matchLabels:
     #         app: redis
+    replicaCount: 2
     persistence:
       enabled: false
     resources:
@@ -383,6 +385,9 @@ redis:
         memory: 64Mi
     downAfterMilliseconds: 1000
     failoverTimeout: 2000
+  # add support for ptometheus scraping
+  metrics:
+    enabled: true
   networkPolicy:
     enabled: true
     allowExternal: false
