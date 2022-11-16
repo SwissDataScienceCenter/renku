@@ -7,9 +7,9 @@ This minor bugfix release comes with internal changes to the Knowledge Graph and
 Bug fixes
 ~~~~~~~~~~
 
-* **Knowledge Graph**: Lineage API to read data from the new dataset in the Triples Store
-* **Knowledge Graph**: migration fixing creation dates on Plans in the Triples Store
-* **Renku core service**: a bug causing Plan creation date to be after Activity start date
+* **Knowledge Graph**: read lineage data from the new dataset in the Triples Store
+* **Renku core service**: prevent Plans creation dates from preceding their corresponding Activities
+* **Knowledge Graph**: fix wrong Plans creation dates through migration
 
 
 Individual components
