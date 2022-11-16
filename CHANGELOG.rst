@@ -2,7 +2,7 @@
 
 0.19.2
 ------
-This minor bugfix release comes with internal changes to the Knowledge Graph and a bug fix on the core service.
+This minor bugfix release comes with internal changes to the Knowledge Graph and fixes a glitch on the core service.
 
 Bug fixes
 ~~~~~~~~~~
