@@ -335,13 +335,12 @@ redis:
   auth:
     enabled: true
     sentinel: false
-    password: "pass1234"
-    # existingSecret: redis-secret
-    # existingSecretPasswordKey: redis-password
+    existingSecret: redis-secret
+    existingSecretPasswordKey: redis-password
 
-  # usePassword: true
-  # existingSecret: redis-secret
-  # existingSecretPasswordKey: redis-password
+  usePassword: true
+  existingSecret: redis-secret
+  existingSecretPasswordKey: redis-password
 
   master:
     # Fixed redis bug prevents us from using this before
