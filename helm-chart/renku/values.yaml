@@ -334,7 +334,7 @@ redis:
   #   replicaCount: 2
   auth:
     enabled: true
-    sentinel: false
+    sentinel: true
     existingSecret: redis-secret
     existingSecretPasswordKey: redis-password
 
