@@ -335,8 +335,9 @@ redis:
   auth:
     enabled: true
     sentinel: false
-    existingSecret: redis-secret
-    existingSecretPasswordKey: redis-password
+    password: "pass1234"
+    # existingSecret: redis-secret
+    # existingSecretPasswordKey: redis-password
 
   # usePassword: true
   # existingSecret: redis-secret
