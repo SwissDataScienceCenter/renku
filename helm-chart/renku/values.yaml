@@ -352,6 +352,7 @@ redis:
     #     labelSelector:
     #       matchLabels:
     #         app: redis
+    count: 1
     persistence:
       enabled: false
     resources:
