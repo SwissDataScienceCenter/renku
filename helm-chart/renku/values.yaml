@@ -320,6 +320,10 @@ redis:
   # The actual password, ignored if createSecret is false.
   password: # openssl rand -hex 32
 
+  usePassword: true
+  existingSecret: redis-secret
+  existingSecretPasswordKey: redis-password
+
   ###########################################################################
   ### Configuration that is passed on to the redis chart, for details and ###
   ### further config options check out                                    ###
@@ -338,28 +342,27 @@ redis:
     existingSecret: redis-secret
     existingSecretPasswordKey: redis-password
 
-  usePassword: true
-  existingSecret: redis-secret
-  existingSecretPasswordKey: redis-password
+  # master:
+  #   # Fixed redis bug prevents us from using this before
+  #   # we bump the redis chart version
+  #   # spreadConstraints:
+  #   #   - maxSkew: 1
+  #   #     topologyKey: node
+  #   #     whenUnsatisfiable: DoNotSchedule
+  #   #     labelSelector:
+  #   #       matchLabels:
+  #   #         app: redis
+  #   persistence:
+  #     enabled: false
+  #   resources:
+  #     requests:
+  #       cpu: 200m
+  #       memory: 256Mi
 
-  master:
-    # Fixed redis bug prevents us from using this before
-    # we bump the redis chart version
-    # spreadConstraints:
-    #   - maxSkew: 1
-    #     topologyKey: node
-    #     whenUnsatisfiable: DoNotSchedule
-    #     labelSelector:
-    #       matchLabels:
-    #         app: redis
-    count: 1
-    persistence:
-      enabled: false
-    resources:
-      requests:
-        cpu: 200m
-        memory: 256Mi
+  # these are call replicas now and there are no keys called
+  # slave
   # slave:
+
   replica:
     # Fixed redis bug prevents us from using this before
     # we bump the redis chart version
@@ -377,6 +380,7 @@ redis:
       requests:
         cpu: 200m
         memory: 256Mi
+
   sentinel:
     port: 26379
     enabled: true
