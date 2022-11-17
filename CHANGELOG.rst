@@ -10,14 +10,16 @@ Bug fixes
 * **Knowledge Graph**: read lineage data from the new dataset in the Triples Store
 * **Renku core service**: prevent Plans creation dates from preceding their corresponding Activities
 * **Knowledge Graph**: fix wrong Plans creation dates through migration
-
+* **Knowledge Graph**: use renku-python 1.9.3 with fixed regex matching git URL
 
 Individual components
 ~~~~~~~~~~~~~~~~~~~~~~
 
 - `renku-graph 2.22.1 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/2.22.1>`_
 - `renku-graph 2.22.2 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/2.22.2>`_
+- `renku-graph 2.22.3 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/2.22.3>`_
 - `renku-python 1.9.2 <https://github.com/SwissDataScienceCenter/renku-python/releases/tag/v1.9.2>`_
+- `renku-python 1.9.3 <https://github.com/SwissDataScienceCenter/renku-python/releases/tag/v1.9.3>`_
 
 0.19.1
 ------
