@@ -102,7 +102,8 @@ trait Environments {
       projectPage:          ProjectPage,
       projectDetails:       ProjectDetails
   )(implicit anonEnvConfig: AnonEnvConfig): Option[JupyterLabPage] = {
-    go to projectPage
+    go to projectPage sleep (5 seconds)
+    verify browserAt projectPage
     When("user is logged out")
     And(s"goes to ${projectDetails.title}")
     And("clicks on the sessions tab to launch an anonymous notebook")
