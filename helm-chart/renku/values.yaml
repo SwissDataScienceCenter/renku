@@ -379,7 +379,7 @@ redis:
         memory: 256Mi
   sentinel:
     port: 26379
-    enabled: true
+    enabled: false
     resources:
       requests:
         cpu: 200m
