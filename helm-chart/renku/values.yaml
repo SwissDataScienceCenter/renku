@@ -370,7 +370,7 @@ redis:
     #     labelSelector:
     #       matchLabels:
     #         app: redis
-    replicaCount: 2
+    replicaCount: 3
     persistence:
       enabled: false
     resources:
