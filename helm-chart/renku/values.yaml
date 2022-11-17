@@ -332,15 +332,15 @@ redis:
   ## config for newer redis versions, here for later reference
   # replicas:
   #   replicaCount: 2
-  # auth:
-  #   enabled: true
-  #   sentinel: true
-  #   existingSecret: redis-secret
-  #   existingSecretPasswordKey: redis-password
+  auth:
+    enabled: true
+    sentinel: false
+    existingSecret: redis-secret
+    existingSecretPasswordKey: redis-password
 
-  usePassword: true
-  existingSecret: redis-secret
-  existingSecretPasswordKey: redis-password
+  # usePassword: true
+  # existingSecret: redis-secret
+  # existingSecretPasswordKey: redis-password
 
   master:
     # Fixed redis bug prevents us from using this before
