@@ -40,7 +40,7 @@ object CliVersion {
     ifNone = new IllegalArgumentException(s"Invalid $version Renku CLI version")
   )
 
-  final class ReleasedVersion private (val value: String) extends CliVersion
+  final case class ReleasedVersion(value: String) extends CliVersion
   object ReleasedVersion {
     private val validator = raw"\d+\.\d+\.\d+(\.post\d+)?(\.dev\d+)?"
 
@@ -48,7 +48,7 @@ object CliVersion {
       Option.when(value.trim matches validator)(new ReleasedVersion(value.trim))
   }
 
-  final class NonReleasedVersion private (val value: String) extends CliVersion {
+  final case class NonReleasedVersion(value: String) extends CliVersion {
     import scala.util.matching.Regex
 
     private lazy val extractionRegex: Regex = NonReleasedVersion.validator.r
