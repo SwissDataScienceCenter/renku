@@ -26,7 +26,7 @@ jobs:
           helm repo add renku https://swissdatasciencecenter.github.io/helm-charts/
           helm repo update
           LATEST_VERSION=$(helm search repo renku --devel -o json | jq -r '.[] | select(.name == "renku/renku") | .version' | cut -d'.' -f1-3)
-          echo "::set-output name=latest_version::$LATEST_VERSION"
+          echo "latest_version=${LATEST_VERSION}" >> $GITHUB_OUTPUT
       - uses: actions-ecosystem/action-bump-semver@v1
         id: bump-semver
         with:

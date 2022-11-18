@@ -122,6 +122,43 @@ jobs:
           s3-results-access-key: ${{ secrets.ACCEPTANCE_TESTS_BUCKET_ACCESS_KEY }}
           s3-results-secret-key: ${{ secrets.ACCEPTANCE_TESTS_BUCKET_SECRET_KEY }}
           test-timeout-mins: "120"
+  
+  test-pr-cypress:
+    runs-on: ubuntu-20.04
+    if: ${{ github.event.action != 'closed' &&
+      needs.check-deploy.outputs.pr-contains-string == 'true' &&
+      needs.check-deploy.outputs.test-enabled == 'true' }}
+    needs: [check-deploy, deploy-pr]
+    steps:
+      - uses: actions/checkout@v2
+      - uses: cypress-io/github-action@v4
+        id: cypress
+        env:
+          TEST_EMAIL: renku@datascience.ch
+          TEST_PASSWORD: ${{ secrets.RENKU_BOT_DEV_PASSWORD }}
+          TEST_FIRST_NAME: Renku
+          TEST_LAST_NAME: Bot
+          TEST_USERNAME: renku-test
+          BASE_URL: https://ci-renku-${{ github.event.number }}.dev.renku.ch
+        with:
+          browser: chrome
+          working-directory: cypress-tests
+      # NOTE: cypress screenshots will be generated only if the test failed
+      # thus we store screenshots only on failures
+      - uses: actions/upload-artifact@v3
+        if: failure()
+        with:
+          name: cypress-screenshots
+          path: cypress-tests/cypress/screenshots
+          retention-days: 7
+      # Cypress test video is always captured, so this action uses "always()" condition
+      - uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          name: cypress-videos
+          path: cypress-tests/cypress/videos
+          retention-days: 3
+
   cleanup:
     if: github.event.action == 'closed'
     runs-on: ubuntu-20.04
