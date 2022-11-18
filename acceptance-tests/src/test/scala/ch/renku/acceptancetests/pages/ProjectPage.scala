@@ -266,7 +266,7 @@ class ProjectPage(val projectSlug: String, val namespace: String)
       }
 
       def cells(implicit webDriver: WebDriver): Iterator[WebBrowser.Element] = eventually {
-        findAll(cssSelector("div.card-body > div.notebook-render div div"))
+        findAll(cssSelector("div.card-body > div.ipynb-renderer-root div.cell div"))
       }
 
       def cellWithText(text: String)(implicit webDriver: WebDriver): WebElement = eventually {
