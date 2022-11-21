@@ -306,7 +306,7 @@ postgresql:
     password: repl_password # generate a random password `openssl rand -hex 32`
     slaveReplicas: 1
 
-renku-redis:
+redis:
   ###########################################################################
   ### Configuration that is unknown to the redis chart but picked up      ###
   ### by the renku chart.                                                 ###

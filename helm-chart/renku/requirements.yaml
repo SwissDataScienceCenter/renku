@@ -17,7 +17,7 @@ dependencies:
   version: 0.16.0
 - name: gitlab
   repository: "https://swissdatasciencecenter.github.io/helm-charts/"
-  version: 0.6.0
+  version: 0.6.1-rc.2
   condition: gitlab.enabled
 - name: renku-graph
   alias: graph
@@ -39,7 +39,7 @@ dependencies:
 #   version: 10.7.11
 #   repository: "https://raw.githubusercontent.com/bitnami/charts/eb5f9a9513d987b519f0ecd732e7031241c50328/bitnami"
 #   condition: redis.install
-- name: renku-redis
+- name: redis
   version: 17.3.10 # release data: 14/11/2022
   repository: "https://charts.bitnami.com/bitnami" 
   condition: redis.install
