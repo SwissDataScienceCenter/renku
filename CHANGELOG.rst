@@ -1,5 +1,27 @@
 .. _changelog:
 
+0.20.0
+------
+
+This release improves the UX on the UI.
+
+Features
+~~~~~~~~
+
+* **UI**: improve UX around sessions 💻 (unified start flow, better logs, error handling)
+* **UI**: adopt latest layout on login and logout pages 🎨
+  
+Bug fixes
+~~~~~~~~~~
+
+* **UI**: prevent resetting name field when forking a project 🍴
+
+Individual components
+~~~~~~~~~~~~~~~~~~~~~~
+
+- `renku-ui 2.12.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/2.12.0>`_
+
+
 0.19.2
 ------
 This minor bugfix release comes with internal changes to the Knowledge Graph and fixes a glitch on the core service.
