@@ -20,7 +20,6 @@ spec:
       labels:
         app: {{ template "gitlab.name" . }}
         release: {{ .Release.Name }}
-        # {{ include "call-nested" (list . "redis" "redis.fullname") }}-client: "true"
       annotations:
         checksum/config: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
     spec:
