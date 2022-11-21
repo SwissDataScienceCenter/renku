@@ -1,43 +1,43 @@
 charts:
   ## gitlab and renku chart versions are not evolving together. Uncomment
   ## this only when explicitly building the gitlab chart and set the appropriate tag.
-  # - name: gitlab
-  #   imagePrefix: renku/
-  #   repo:
-  #     git: SwissDataScienceCenter/helm-charts
-  #     published: https://swissdatasciencecenter.github.io/helm-charts
-  #   paths:
-  #     - ./gitlab
-
-  - name: helm-chart/renku
-    resetTag: latest
+  - name: helm-chart/gitlab
     imagePrefix: renku/
     repo:
       git: SwissDataScienceCenter/helm-charts
       published: https://swissdatasciencecenter.github.io/helm-charts
     paths:
       - helm-chart
-      - acceptance-tests
-      - scripts/init-realm
-    images:
-      tests:
-        buildArgs:
-          BUILDKIT_INLINE_CACHE: "1"
-        contextPath: acceptance-tests
-        dockerfilePath: acceptance-tests/Dockerfile
-        valuesPath: tests.image
-        paths:
-          - acceptance-tests
-      init-realm:
-        contextPath: scripts/init-realm
-        dockerfilePath: scripts/init-realm/Dockerfile
-        valuesPath: keycloak.initRealm.image
-        paths:
-          - scripts/init-realm
-          - scripts/init-realm/init-realm.py
-      init-db:
-        contextPath: scripts/init-db
-        dockerfilePath: scripts/init-db/Dockerfile
-        valuesPath: initDb.image
-        paths:
-          - scripts/init-db
+
+  # - name: helm-chart/renku
+  #   resetTag: latest
+  #   imagePrefix: renku/
+  #   repo:
+  #     git: SwissDataScienceCenter/helm-charts
+  #     published: https://swissdatasciencecenter.github.io/helm-charts
+  #   paths:
+  #     - helm-chart
+  #     - acceptance-tests
+  #     - scripts/init-realm
+  #   images:
+  #     tests:
+  #       buildArgs:
+  #         BUILDKIT_INLINE_CACHE: "1"
+  #       contextPath: acceptance-tests
+  #       dockerfilePath: acceptance-tests/Dockerfile
+  #       valuesPath: tests.image
+  #       paths:
+  #         - acceptance-tests
+  #     init-realm:
+  #       contextPath: scripts/init-realm
+  #       dockerfilePath: scripts/init-realm/Dockerfile
+  #       valuesPath: keycloak.initRealm.image
+  #       paths:
+  #         - scripts/init-realm
+  #         - scripts/init-realm/init-realm.py
+  #     init-db:
+  #       contextPath: scripts/init-db
+  #       dockerfilePath: scripts/init-db/Dockerfile
+  #       valuesPath: initDb.image
+  #       paths:
+  #         - scripts/init-db

@@ -102,22 +102,22 @@ tolerations: []
 
 affinity: {}
 
-redis:
+# redis:
 
-  nameOverride: gl-redis
+#   nameOverride: gl-redis
 
-  cluster:
-    enabled: false
+#   cluster:
+#     enabled: false
 
-  usePassword: false
+#   usePassword: false
 
-  master:
-    persistence:
-      enabled: false
+#   master:
+#     persistence:
+#       enabled: false
 
-  networkPolicy:
-    enabled: true
-    allowExternal: false
+#   networkPolicy:
+#     enabled: true
+#     allowExternal: false
 
 # Enable json logs for all services
 logging:
