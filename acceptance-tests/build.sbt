@@ -30,7 +30,7 @@ publishTo := Some(Resolver.file("Unused transient repository", file("target/unus
 
 val circeVersion = "0.14.3"
 
-libraryDependencies += "ch.qos.logback"          % "logback-classic"     % "1.4.4"
+libraryDependencies += "ch.qos.logback"          % "logback-classic"     % "1.4.5"
 libraryDependencies += "com.github.pureconfig"  %% "pureconfig"          % "0.17.2"     % Test
 libraryDependencies += "eu.timepit"             %% "refined"             % "0.10.1"     % Test
 libraryDependencies += "io.circe"               %% "circe-core"          % circeVersion % Test
