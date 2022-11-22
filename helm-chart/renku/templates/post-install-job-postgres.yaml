@@ -58,10 +58,19 @@ spec:
           - name: PGUSER
             value: {{ .Values.global.database.username }}
           - name: PGPASSWORD
+            {{- if .Values.global.database.embedded }}
             valueFrom:
               secretKeyRef:
                 name: {{ template "postgresql.fullname" . }}
                 key: postgresql-password
+            {{- else if .Values.global.database.password }}
+            value: {{ .Values.global.database.password }}
+            {{- else if .Values.global.database.existingSecret }}
+            valueFrom:
+              secretKeyRef:
+                name: {{ .Values.global.database.existingSecret }}
+                key: postgresql-password
+            {{- end}}
       volumes:
         - name: scripts
           configMap:

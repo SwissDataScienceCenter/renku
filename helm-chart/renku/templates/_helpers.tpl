@@ -92,26 +92,30 @@ Define subcharts full names
 {{/*
 Define embedded database values
 */}}
-{{- if .Values.global.database.embedded -}}
-
-{{- define "postgresql.fullname" -}}
-{{- printf "%s-%s" .Release.Name "postgresql" | replace "+" "_" | trunc 63 | trimSuffix "-" -}}
-{{- end -}}
-
 {{- define "postgresql.postgresqlUsername" -}}
+{{- if .Values.global.database.embedded -}}
 {{- .Values.global.database.username -}}
 {{- end -}}
+{{- end -}}
 
-{{- if .Values.global.database.password -}}
+{{- define "postgresql.postgresqlDatabase" -}}
+{{- if .Values.global.database.embedded -}}
+{{- .Values.global.database.maintenanceDatabase -}}
+{{- end -}}
+{{- end -}}
+
 {{- define "postgresql.postgresqlPassword" -}}
+{{- if .Values.global.database.embedded -}}
+{{- if .Values.global.database.password -}}
 {{- .Values.global.database.password -}}
 {{- end -}}
 {{- end -}}
+{{- end -}}
 
-{{- if .Values.global.database.existingSecret -}}
 {{- define "postgresql.existingSecret" -}}
+{{- if .Values.global.database.embedded -}}
+{{- if .Values.global.database.existingSecret -}}
 {{- .Values.global.database.password -}}
 {{- end -}}
 {{- end -}}
-
 {{- end -}}
