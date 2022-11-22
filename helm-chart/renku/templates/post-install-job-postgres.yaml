@@ -53,24 +53,15 @@ spec:
           env:
           - name: PGHOST
             value: {{ template "postgresql.fullname" . }}
-          {{- if .Values.postgresql.enabled }}
           - name: PGDATABASE
-            value: {{ .Values.postgresql.postgresqlDatabase }}
+            value: {{ .Values.global.database.maintenanceDatabase }}
           - name: PGUSER
-            value: {{ .Values.postgresql.postgresqlUsername }}
+            value: {{ .Values.global.database.username }}
           - name: PGPASSWORD
             valueFrom:
               secretKeyRef:
                 name: {{ template "postgresql.fullname" . }}
                 key: postgresql-password
-          {{- else}}
-          - name: PGDATABASE
-            value: {{ .Values.global.externalPostgresql.maintenanceDatabase }}
-          - name: PGUSER
-            value: {{ .Values.global.externalPostgresql.username }}
-          - name: PGPASSWORD
-            value: {{ .Values.global.externalPostgresql.password }}
-          {{- end}}
       volumes:
         - name: scripts
           configMap:

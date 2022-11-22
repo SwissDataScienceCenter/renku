@@ -1,4 +1,4 @@
-{{- if .Values.postgresql.enabled }}
+{{- if .Values.global.database.embedded }}
 ---
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy

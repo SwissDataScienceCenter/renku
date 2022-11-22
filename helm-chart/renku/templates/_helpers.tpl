@@ -46,10 +46,10 @@ http
 Define subcharts full names
 */}}
 {{- define "postgresql.fullname" -}}
-{{- if .Values.global.externalPostgresql.enabled -}}
-{{- .Values.global.externalPostgresql.host -}}
-{{- else -}}
+{{- if .Values.global.database.embedded -}}
 {{- printf "%s-%s" .Release.Name "postgresql" | replace "+" "_" | trunc 63 | trimSuffix "-" -}}
+{{- else -}}
+{{- .Values.global.database.host -}}
 {{- end -}}
 {{- end -}}
 
@@ -87,4 +87,31 @@ Define subcharts full names
 
 {{- define "core.fullname" -}}
 {{- printf "%s-%s" .Release.Name "core" | replace "+" "_" | trunc 63 | trimSuffix "-" -}}
+{{- end -}}
+
+{{/*
+Define embedded database values
+*/}}
+{{- if .Values.global.database.embedded -}}
+
+{{- define "postgresql.fullname" -}}
+{{- printf "%s-%s" .Release.Name "postgresql" | replace "+" "_" | trunc 63 | trimSuffix "-" -}}
+{{- end -}}
+
+{{- define "postgresql.postgresqlUsername" -}}
+{{- .Values.global.database.username -}}
+{{- end -}}
+
+{{- if .Values.global.database.password -}}
+{{- define "postgresql.postgresqlPassword" -}}
+{{- .Values.global.database.password -}}
+{{- end -}}
+{{- end -}}
+
+{{- if .Values.global.database.existingSecret -}}
+{{- define "postgresql.existingSecret" -}}
+{{- .Values.global.database.password -}}
+{{- end -}}
+{{- end -}}
+
 {{- end -}}
