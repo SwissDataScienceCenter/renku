@@ -70,6 +70,7 @@ describe("Basic rstudio functionality", () => {
     cy.startSession(username, projectName)
   })
   it("Waits for the session to fully start", { defaultCommandTimeout: 300000 }, () => {
+    cy.get(`.fullscreen-back-button`).should("be.visible").click()
     cy.get(".time-caption").should("contain.text", "Running")
   })
   it("Opens the session in an iframe", () => {
