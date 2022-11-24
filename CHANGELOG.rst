@@ -18,6 +18,8 @@ Bug fixes
 * **Knowledge Graph**: read lineage data from the new dataset in the Triples Store 🏬
 * **Knowledge Graph**: fix wrong Plans creation dates through migration 🕓
 * **Knowledge Graph**: use renku-python 1.9.3 with significantly improved graph export performance 🏃
+* **Knowledge Graph**: use Project Access Tokens for accessing GitLab API
+* **Knowledge Graph**: return info about Composite Plans from the Cross-Entity Search API
 * **Renku core service**: prevent Plans creation dates from preceding their corresponding Activities 🕓
 
 Individual components
@@ -27,6 +29,7 @@ Individual components
 - `renku-graph 2.22.1 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/2.22.1>`_
 - `renku-graph 2.22.2 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/2.22.2>`_
 - `renku-graph 2.22.3 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/2.22.3>`_
+- `renku-graph 2.23.0 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/2.23.0>`_
 - `renku-python 1.9.3 <https://github.com/SwissDataScienceCenter/renku-python/releases/tag/v1.9.3>`_
 
 0.19.1
