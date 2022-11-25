@@ -26,6 +26,7 @@ blog
 BMP
 bugfix
 Calamus
+Champak
 chartpress
 Chartpress
 checksum
@@ -35,6 +36,8 @@ CI
 circumventable
 cli
 CLI
+Codespace
+Codespaces
 conda
 config
 contentMd
@@ -60,6 +63,7 @@ Deserialize
 deserialized
 Deserialized
 deserializing
+dev
 discoverable
 Dockerfile
 dockerfiles
@@ -106,6 +110,7 @@ init
 interoperability
 io
 ipynb
+IStorage
 iteratively
 ize
 izing
@@ -147,6 +152,7 @@ mv
 mydomain
 namespace
 namespaces
+nbconvert
 Nginx
 nodejs
 nt
@@ -176,8 +182,8 @@ preprocessing
 programmatically
 py
 pyshacl
-RClone
 rclone
+RClone
 rdf
 rdflib
 readme
@@ -200,6 +206,8 @@ Reusability
 righthand
 roadmap
 Roadmap
+rollout
+Rollout
 rsa
 RSA
 rstudio
@@ -247,6 +255,8 @@ symlinks
 templated
 Tensorboard
 Tensorflow
+terraform
+th
 timestamp
 tinkerpop
 toolchain
@@ -290,6 +300,3 @@ yaml
 yml
 Zenodo
 連句
-Codespace
-Codespaces
-dev

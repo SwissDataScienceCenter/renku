@@ -1,5 +1,109 @@
 .. _changelog:
 
+0.20.0
+------
+
+This release includes improvements to the UX on the UI, internal changes to the Knowledge Graph, and a bugfix on the core service.
+
+Features
+~~~~~~~~
+
+* **UI**: improve UX around sessions 💻 (unified start flow, better logs, error handling)
+* **UI**: adopt the latest layout on login and logout pages 🎨
+  
+Bug fixes
+~~~~~~~~~~
+
+* **UI**: prevent resetting the name field when forking a project 🍴
+* **Knowledge Graph**: read lineage data from the new dataset in the Triples Store 🏬
+* **Knowledge Graph**: fix wrong Plans creation dates through migration 🕓
+* **Knowledge Graph**: use renku-python 1.9.3 with significantly improved graph export performance 🏃
+* **Knowledge Graph**: use Project Access Tokens for accessing GitLab API
+* **Knowledge Graph**: return info about Composite Plans from the Cross-Entity Search API
+* **Renku core service**: prevent Plans creation dates from preceding their corresponding Activities 🕓
+
+Individual components
+~~~~~~~~~~~~~~~~~~~~~~
+
+- `renku-ui 2.12.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/2.12.0>`_
+- `renku-graph 2.22.1 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/2.22.1>`_
+- `renku-graph 2.22.2 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/2.22.2>`_
+- `renku-graph 2.22.3 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/2.22.3>`_
+- `renku-graph 2.23.0 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/2.23.0>`_
+- `renku-python 1.9.3 <https://github.com/SwissDataScienceCenter/renku-python/releases/tag/v1.9.3>`_
+
+0.19.1
+------
+Version 0.19.1 is a minor bugfix release to the UI. In certain situations, the session *save* and *refresh* buttons would
+report that they were not supported, when in fact they would have worked. This problem has been fixed.
+
+Bug fixes
+~~~~~~~~~~
+
+* **UI**: improve robustness of sessions save 💾 and refresh 🔄 buttons (`#2100 <https://github.com/SwissDataScienceCenter/renku-ui/issues/2100>`_)
+
+
+Individual components
+~~~~~~~~~~~~~~~~~~~~~~
+
+- `renku-ui 2.11.1 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/2.11.1>`_
+
+0.19.0
+------
+This release adds support
+`for showing workflows in the UI <https://renku.readthedocs.io/en/latest/topic-guides/workflows.html>`_.
+You can visualize workflows in project pages by clicking on the new `Workflows` tab.
+Support for editing workflows and searching them through multiple projects will come in a feature release.
+
+This also brings changes to the way data is organized in the Triples Store and bug-fixes to improve
+the core service stability.
+
+Features
+~~~~~~~~
+
+* **UI**: browse and visualize workflows in projects 🔀 (`#2038 <https://github.com/SwissDataScienceCenter/renku-ui/issues/2038>`_)
+* **UI**: add refresh button to update live sessions ↪️
+* **Renku core service**: add ``/workflow_plans.list`` and ``/workflow_plans.show`` for listing and showing workflows in a project 🔀
+* **Knowledge Graph**: use Named Graphs dataset in the Triples Store for provisioning processes and APIs 💾
+
+Bug fixes
+~~~~~~~~~~
+
+* **UI**: fill values correctly in new project form links 🔗 (`#2026 <https://github.com/SwissDataScienceCenter/renku-ui/issues/2026>`_)
+* **UI**: handle corrupted autosave information and improve warnings when starting a session ⚠️
+* **Renku core service**: fix intermittent issue with project cache concurrency 🏃
+* **Renku core service**: fix import of private datasets with some cloud-native github instances ⤵️
+
+Individual components
+~~~~~~~~~~~~~~~~~~~~~~
+
+- `renku-python 1.9.1 <https://github.com/SwissDataScienceCenter/renku-python/releases/tag/v1.9.1>`_
+- `renku-graph 2.22.0 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/2.22.0>`_
+- `renku-ui 2.11.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/2.11.0>`_
+
+0.18.5
+------
+
+This release fixes a bug in the core-service and includes improvements for the renku gateway service
+
+Features
+~~~~~~~~
+
+* **Gateway**: enable ``/gitlab`` path even when external GitLab is configured, and forward traffic to external GitLab
+
+Bug fixes
+~~~~~~~~~~
+
+* **Renku Core Service**: fix temporary working directory in service getting accidentally removed by other threads
+* **Project templates**: fix broken ``nbconvert`` package needed by jupyter notebooks and server
+
+Individual components
+~~~~~~~~~~~~~~~~~~~~~~
+
+- `renku-python 1.8.1 <https://github.com/SwissDataScienceCenter/renku-python/releases/tag/v1.8.1>`_
+- `renku-project-template 0.3.5 <https://github.com/SwissDataScienceCenter/renku-project-template/releases/tag/0.3.5>`_
+- `renku-gateway 0.16.0 <https://github.com/SwissDataScienceCenter/renku-gateway/releases/tag/0.16.0>`_
+
 0.18.4
 -------
 
