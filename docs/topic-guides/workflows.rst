@@ -171,7 +171,7 @@ outputs are simply listed, as in the example below:
 
 .. code-block:: yaml
 
-    name: Flights Proccessing Pipeline
+    name: Flights Processing Pipeline
     steps:
         filter:
             command: python src/filter_flights.py data/flight-data/2019-01-flights.csv.zip data/output/flights-filtered.csv
@@ -204,7 +204,7 @@ reference those names in the ``command`` using ``$``.
 
 .. code-block:: yaml
 
-    name: Flights Proccessing Pipeline
+    name: Flights Processing Pipeline
     steps:
         filter:
             command: python $filter-py $raw-flights $filtered-flights
@@ -226,7 +226,7 @@ workflow.
 
 .. code-block:: yaml
 
-    name: Flights Proccessing Pipeline
+    name: Flights Processing Pipeline
     steps:
         filter:
             command: python $filter-py $raw-flights $filtered-flights
@@ -286,7 +286,7 @@ You may provide further details in your workflow definition, such as a
 
 .. code-block:: yaml
 
-    name: Flights Proccessing Pipeline
+    name: Flights Processing Pipeline
     description: The workflow in the Renku Tutorial
     keywords:
         - tutorial

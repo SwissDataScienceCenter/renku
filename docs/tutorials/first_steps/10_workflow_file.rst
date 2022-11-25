@@ -22,7 +22,7 @@ We'll start by creating the simplest version of the Renku workflow file:
 
 .. code-block:: yaml
 
-    name: Flights Proccessing Pipeline
+    name: Flights Processing Pipeline
     steps:
         filter:
             command: python src/filter_flights.py data/flight-data/2019-01-flights.csv.zip data/output/flights-filtered.csv
@@ -55,7 +55,7 @@ we'll assign each input and output a name (such as ``raw-flights``) and a
 
 .. code-block:: yaml
 
-    name: Flights Proccessing Pipeline
+    name: Flights Processing Pipeline
     steps:
         filter:
             command: python $filter-py $raw-flights $filtered-flights
@@ -77,7 +77,7 @@ workflow.
 
 .. code-block:: yaml
 
-    name: Flights Proccessing Pipeline
+    name: Flights Processing Pipeline
     steps:
         filter:
             command: python $filter-py $raw-flights $filtered-flights
@@ -137,7 +137,7 @@ You can also provide further details in your workflow definition, such as a
 
 .. code-block:: yaml
 
-    name: Flights Proccessing Pipeline
+    name: Flights Processing Pipeline
     description: The workflow in the Renku Tutorial
     keywords:
         - tutorial
