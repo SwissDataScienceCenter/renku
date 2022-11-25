@@ -39,7 +39,7 @@ trait WebElementOps {
 
     private def typeInValue(value: String): Unit = value foreach { char =>
       element.sendKeys(char.toString)
-      sleep(100)
+      sleep(50)
     }
   }
 

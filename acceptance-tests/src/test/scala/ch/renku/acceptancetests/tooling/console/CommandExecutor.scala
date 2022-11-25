@@ -25,7 +25,7 @@ import ch.renku.acceptancetests.model.users.UserCredentials
 import ch.renku.acceptancetests.tooling.TestLogger.logger
 import ch.renku.acceptancetests.tooling.console.Command.UserInput
 
-import java.io.{File, InputStream}
+import java.io._
 import java.nio.file.Path
 import java.util
 import java.util.concurrent.ConcurrentLinkedQueue
@@ -60,7 +60,7 @@ private class CommandExecutor(command: Command)(implicit ioRuntime: IORuntime) {
   ): Unit =
     command.userInputs.foldLeft(buildProcess) { (process, userInput) =>
       process #< userInput.asStream
-    } lazyLines ProcessLogger(logLine _) foreach logLine
+    } lazyLines ProcessLogger(logLine _, logLine _) foreach logLine
 
   private def buildProcess(implicit workPath: Path) =
     command.maybeFileName.foldLeft(Process(command.toString.stripMargin, workPath.toFile)) { (process, fileName) =>
@@ -80,7 +80,7 @@ private class CommandExecutor(command: Command)(implicit ioRuntime: IORuntime) {
   private def consoleException(implicit output: util.Collection[String]): PartialFunction[Throwable, IO[String]] = {
     case _ =>
       ConsoleException {
-        s"$command failed with:\n${output.asString}"
+        s"$command failed with:\n${output.asScala.mkString("\n")}"
       }.raiseError[IO, String]
   }
 

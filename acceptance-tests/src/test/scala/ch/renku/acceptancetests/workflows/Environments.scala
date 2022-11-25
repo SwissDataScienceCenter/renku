@@ -102,7 +102,8 @@ trait Environments {
       projectPage:          ProjectPage,
       projectDetails:       ProjectDetails
   )(implicit anonEnvConfig: AnonEnvConfig): Option[JupyterLabPage] = {
-    go to projectPage
+    go to projectPage sleep (5 seconds)
+    verify browserAt projectPage
     When("user is logged out")
     And(s"goes to ${projectDetails.title}")
     And("clicks on the sessions tab to launch an anonymous notebook")
@@ -197,9 +198,9 @@ trait Environments {
     }
     sleep(5 seconds)
 
-    `try few times before giving up` { _ =>
-      Then("they should be redirected to the Sessions tab")
-      verify userCanSee projectPage.Sessions.Running.title
+    `try again if failed` { _ =>
+      And("the user clicks on the goBackButton session button")
+      click on projectPage.Sessions.Running.goBackButtonFullscreen
     }
 
     `try few times before giving up` { driver =>

@@ -1,0 +1,17 @@
+{
+  "name": "cypress-tests",
+  "version": "0.0.1",
+  "description": "Cypress tests for Renku",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Swiss Data Science Center",
+  "dependencies": {
+    "@renku/notebooks-cypress-tests": "^0.0.10",
+    "cypress": "^11.0.1",
+    "cypress-localstorage-commands": "^2.2.1",
+    "typescript": "^4.8.4",
+    "uuid": "^9.0.0"
+  }
+}

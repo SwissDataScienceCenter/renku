@@ -36,6 +36,8 @@ CI
 circumventable
 cli
 CLI
+Codespace
+Codespaces
 conda
 config
 contentMd
@@ -61,6 +63,7 @@ Deserialize
 deserialized
 Deserialized
 deserializing
+dev
 discoverable
 Dockerfile
 dockerfiles
@@ -107,6 +110,7 @@ init
 interoperability
 io
 ipynb
+IStorage
 iteratively
 ize
 izing
@@ -178,8 +182,8 @@ preprocessing
 programmatically
 py
 pyshacl
-RClone
 rclone
+RClone
 rdf
 rdflib
 readme
@@ -296,6 +300,3 @@ yaml
 yml
 Zenodo
 連句
-Codespace
-Codespaces
-dev

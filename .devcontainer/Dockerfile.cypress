@@ -1,0 +1,9 @@
+FROM cypress/included:10.11.0
+
+RUN apt-get update -y \
+    && apt-get install -y python3 python3-pip libenchant-2-2 graphviz \
+    && adduser vscode
+
+COPY requirements.txt /tmp/pip-tmp/
+RUN pip3 --disable-pip-version-check --no-cache-dir install -r /tmp/pip-tmp/requirements.txt \
+    && rm -rf /tmp/pip-tmp
