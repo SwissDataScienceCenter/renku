@@ -231,10 +231,3 @@ Upgrading Renku with the newly modified Helm values
 #. If you have a value set at ``global.gitlab.urlPrefix`` change it from ``/gitlab`` to ``/``
 #. Set ``gitlab.enabled`` to ``false``.
 #. Re-install the Renku Helm chart with the newly modified values.
-
-Troubleshooting
-^^^^^^^^^^^^^^^
-
-It is possible there will be some issues post-upgrade.
-
-If you can sign in normally to GitLab using a Keycloak account, but Renku still shows the ``RenkuLab is down`` message, try deploying a Renku instance with a newly generated values file to a different namespace and see if the issue persists. If the new Renku instance is able to launch correctly, there is probably an issue with your Renku configuration, in particular the connection to GitLab.
