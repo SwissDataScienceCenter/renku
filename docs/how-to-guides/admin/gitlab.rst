@@ -73,9 +73,9 @@ this GitLab instance could be configured as an identity provider for Renku's Key
 This way the Renku login screen will show the option to "Login via GitLab" 
 and existing GitLab users can use Renku without creating a separate Renku account.
 
-#. Login to the admin console of Renku's Keycloak, usually found at \https://<renku-domain>/auth, using the username and password stored in the Kubernetes secret called  ``keycloak-password-secret``. Ensure you ``base64`` decode these values before using them to login. If you use an external Keycloak with Renku, login to the external Keycloak instead.
+#. Login to the admin console of Renku's Keycloak, usually found at ``https://<renku-domain>/auth``, using the username and password stored in the Kubernetes secret called  ``keycloak-password-secret``. Ensure you ``base64`` decode these values before using them to login. If you use an external Keycloak with Renku, login to the external Keycloak instead.
 #. Add an ``Identity Provider`` of type ``OpenID Connect v1.0``.
-#. Set ``Alias`` to <renku-domain>, ``Authorization URL`` to \https://<gitlab-domain>/oauth/authorize, ``Token URL`` to \https://<gitlab-domain>/oauth/token and ``Client ID`` and ``Client Secret`` to the respective values copied from the Renku GitLab application details.
+#. Set ``Alias`` to ``<renku-domain>``, ``Authorization URL`` to ``https://<gitlab-domain>/oauth/authorize``, ``Token URL`` to ``https://<gitlab-domain>/oauth/token`` and ``Client ID`` and ``Client Secret`` to the respective values copied from the Renku GitLab application details.
 #. Click ``Save``. The new Identity Provider should appear and any user from the stand-alone GitLab instance should be able to login.
 
 GitLab deployed as part of Renku
