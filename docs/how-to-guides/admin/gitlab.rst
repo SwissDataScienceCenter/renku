@@ -26,11 +26,11 @@ Renku needs to authenticate users with the Gitlab instance it is using.
 Depending on whether you have admin access to the external GitLab instance, 
 the following options are available to you:
 
-  * If you *do not* have admin access to GitLab you can:
+  * If you *do not* have admin access to GitLab, choose one of the following options:
      * Use GitLab as an identity provider for Renku
      * Have separate Renku and GitLab identities
    
-  * If you *do* have admin access to GitLab you can:
+  * If you *do* have admin access to GitLab, choose one of the following options:
      * Use GitLab as an identity provider for Renku
      * Use Renku's Keycloak as an identity provider for GitLab
      * Have separate Renku and GitLab identities
