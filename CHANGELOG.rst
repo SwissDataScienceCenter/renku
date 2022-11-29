@@ -19,7 +19,7 @@ Bug fixes
 * **Gateway**: remove trailing slash from redirect links ✏️
 * **Knowledge Graph**: read lineage data from the new dataset in the Triples Store 🏬
 * **Knowledge Graph**: fix wrong Plans creation dates through migration 🕓
-* **Knowledge Graph**: use renku-python 1.9.3 with significantly improved graph export performance 🏃
+* **Knowledge Graph**: use renku-python 1.10.0 with significantly improved graph export performance 🏃
 * **Knowledge Graph**: use Project Access Tokens for accessing GitLab API
 * **Knowledge Graph**: return info about Composite Plans from the Cross-Entity Search API
 * **Renku CLI**: list composite plans
@@ -35,6 +35,7 @@ Individual components
 - `renku-graph 2.22.2 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/2.22.2>`_
 - `renku-graph 2.22.3 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/2.22.3>`_
 - `renku-graph 2.23.0 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/2.23.0>`_
+- `renku-graph 2.24.0 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/2.24.0>`_
 - `renku-python 1.9.3 <https://github.com/SwissDataScienceCenter/renku-python/releases/tag/v1.9.3>`_
 - `renku-python 1.10.0 <https://github.com/SwissDataScienceCenter/renku-python/releases/tag/v1.10.0>`_
 - `renku-ui 2.12.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/2.12.0>`_
