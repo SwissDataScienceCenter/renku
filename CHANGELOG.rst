@@ -9,11 +9,12 @@ Features
 ~~~~~~~~
 
 * **UI**: improve UX around sessions 💻 (unified start flow, better logs, error handling)
-* **UI**: adopt the latest layout on login and logout pages 🎨
-
+* **UI & Gateway**: adopt the latest layout on login and logout pages 🎨
+  
 Bug fixes
 ~~~~~~~~~~
 
+* **Gateway**: remove trailing slash from redirect links ✏️
 * **Knowledge Graph**: read lineage data from the new dataset in the Triples Store 🏬
 * **Knowledge Graph**: fix wrong Plans creation dates through migration 🕓
 * **Knowledge Graph**: use renku-python 1.9.3 with significantly improved graph export performance 🏃
@@ -26,6 +27,7 @@ Bug fixes
 Individual components
 ~~~~~~~~~~~~~~~~~~~~~~
 
+- `renku-gateway 0.17.0 <https://github.com/SwissDataScienceCenter/renku-gateway/releases/tag/0.17.0>`_
 - `renku-graph 2.22.1 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/2.22.1>`_
 - `renku-graph 2.22.2 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/2.22.2>`_
 - `renku-graph 2.22.3 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/2.22.3>`_
