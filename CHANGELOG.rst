@@ -12,6 +12,7 @@ Features
 * **Renku CLI**: inform users about push in renku save command
 * **UI**: improve UX around sessions 💻 (unified start flow, better logs, error handling)
 * **UI & Gateway**: adopt the latest layout on login and logout pages 🎨
+* **Sessions**: add jupyter server caching and separate namespace support 
 
 Bug fixes
 ~~~~~~~~~~
@@ -26,6 +27,7 @@ Bug fixes
 * **Renku core service**: prevent Plans creation dates from preceding their corresponding Activities 🕓
 * **UI**: prevent resetting the name field when forking a project 🍴
 * **UI**: fix issues with downloading session logs 📃
+* **Sessions**: properly accept getting session logs without a limit 📃
 
 Individual components
 ~~~~~~~~~~~~~~~~~~~~~~
@@ -40,6 +42,7 @@ Individual components
 - `renku-python 1.10.0 <https://github.com/SwissDataScienceCenter/renku-python/releases/tag/v1.10.0>`_
 - `renku-ui 2.12.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/2.12.0>`_
 - `renku-ui 2.13.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/2.13.0>`_
+- `renku-notebooks 1.13.0 <https://github.com/SwissDataScienceCenter/renku-notebooks/releases/tag/1.13.0>`_
 
 
 0.19.1
