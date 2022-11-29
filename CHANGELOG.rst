@@ -3,16 +3,17 @@
 0.20.0
 ------
 
-This release includes improvements to the UX on the UI, internal changes to the Knowledge Graph, and a bugfix on the core service.
+This release includes improvements to the UX on the UI, internal changes to the Knowledge Graph, a bugfix on the core service
+and support for running sessions in a separte namespace.
 
 Features
 ~~~~~~~~
 
-* **Sessions**: support for running sessions in a separate namespace 
 * **Renku core service**: add workflow export endpoint
 * **Renku CLI**: inform users about push in renku save command
 * **UI**: improve UX around sessions 💻 (unified start flow, better logs, error handling)
 * **UI & Gateway**: adopt the latest layout on login and logout pages 🎨
+* **Sessions**: support for running sessions in a separate namespace 
 * **Sessions**: caching jupyter servers
 
 Bug fixes
