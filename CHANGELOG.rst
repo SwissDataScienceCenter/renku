@@ -8,33 +8,35 @@ This release includes improvements to the UX on the UI, internal changes to the 
 Features
 ~~~~~~~~
 
+* **Renku CLI**: inform users about push in renku save command
+* **Renku core service**: add workflow export endpoint
 * **UI**: improve UX around sessions 💻 (unified start flow, better logs, error handling)
 * **UI**: adopt the latest layout on login and logout pages 🎨
-* **Renku core service**: add workflow export endpoint
-* **Renku CLI**: inform users about push in renku save command
-  
+
 Bug fixes
 ~~~~~~~~~~
 
-* **UI**: prevent resetting the name field when forking a project 🍴
 * **Knowledge Graph**: read lineage data from the new dataset in the Triples Store 🏬
 * **Knowledge Graph**: fix wrong Plans creation dates through migration 🕓
 * **Knowledge Graph**: use renku-python 1.9.3 with significantly improved graph export performance 🏃
 * **Knowledge Graph**: use Project Access Tokens for accessing GitLab API
 * **Knowledge Graph**: return info about Composite Plans from the Cross-Entity Search API
-* **Renku core service**: prevent Plans creation dates from preceding their corresponding Activities 🕓
 * **Renku CLI**: list composite plans
+* **Renku core service**: prevent Plans creation dates from preceding their corresponding Activities 🕓
+* **UI**: prevent resetting the name field when forking a project 🍴
+* **UI**: fix issues with downloading session logs 📃
 
 Individual components
 ~~~~~~~~~~~~~~~~~~~~~~
 
-- `renku-ui 2.12.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/2.12.0>`_
 - `renku-graph 2.22.1 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/2.22.1>`_
 - `renku-graph 2.22.2 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/2.22.2>`_
 - `renku-graph 2.22.3 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/2.22.3>`_
 - `renku-graph 2.23.0 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/2.23.0>`_
 - `renku-python 1.9.3 <https://github.com/SwissDataScienceCenter/renku-python/releases/tag/v1.9.3>`_
 - `renku-python 1.10.0 <https://github.com/SwissDataScienceCenter/renku-python/releases/tag/v1.10.0>`_
+- `renku-ui 2.12.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/2.12.0>`_
+- `renku-ui 2.13.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/2.13.0>`_
 
 0.19.1
 ------
