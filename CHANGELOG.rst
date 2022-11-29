@@ -4,7 +4,7 @@
 ------
 
 This release includes improvements to the UX on the UI, internal changes to the Knowledge Graph, a bugfix on the core service
-and support for running sessions in a separte namespace.
+and support for running sessions in a separate namespace.
 
 Features
 ~~~~~~~~
