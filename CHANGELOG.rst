@@ -3,33 +3,48 @@
 0.20.0
 ------
 
-This release includes improvements to the UX on the UI, internal changes to the Knowledge Graph, a bugfix on the core service
-and support for running sessions in a separate namespace.
+Renku ``0.20.0`` tidies up the RenkuLab session start sequence, as well as an assortment of improvements and big fixes. 
 
-Features
-~~~~~~~~
+User-Facing Changes
+~~~~~~~~~~~~~~~~~~~
 
-* **Renku core service**: add workflow export endpoint
-* **Renku CLI**: inform users about push in renku save command
-* **UI**: improve UX around sessions 💻 (unified start flow, better logs, error handling)
-* **UI & Gateway**: adopt the latest layout on login and logout pages 🎨
-* **Sessions**: support for running sessions in a separate namespace 
-* **Sessions**: caching jupyter servers
+**🌟 New Features**
 
-Bug fixes
-~~~~~~~~~~
+* *None this release*
 
-* **Gateway**: remove trailing slash from redirect links ✏️
-* **Knowledge Graph**: read lineage data from the new dataset in the Triples Store 🏬
-* **Knowledge Graph**: fix wrong Plans creation dates through migration 🕓
-* **Knowledge Graph**: use renku-python 1.10.0 with significantly improved graph export performance 🏃
-* **Knowledge Graph**: use Project Access Tokens for accessing GitLab API
-* **Knowledge Graph**: return info about Composite Plans from the Cross-Entity Search API
-* **Renku CLI**: list composite plans
-* **Renku core service**: prevent Plans creation dates from preceding their corresponding Activities 🕓
-* **UI**: prevent resetting the name field when forking a project 🍴
-* **UI**: fix issues with downloading session logs 📃
-* **Sessions**: properly accept getting session logs without a limit 📃
+**✨ Improvements**
+
+* 🚀 **UI**: We tidied up the session launch sequence to have a unified appearance, regardless of where on RenkuLab you start your session from. Sessions also have better logs and error handling.
+* 🎨 **UI**: The RenkuLab login and logout pages have been updated with the latest styling.
+* 💬 **Renku CLI**: When you run ``renku save`` in a clean but unpushed repository, ``renku`` now informs you that it has pushed changes to the remote, rather than just saying that there were no changes to save.  
+
+**🐞Bug Fixes**
+
+* 🍴 **UI**: Fixed the Project name field getting reset when forking a project. 
+* 📃 **UI**: Fixed issues with downloading session logs.
+* 💔 **Renku CLI**: Fixed an issue where ``renku workflow compose`` would break ``renku workflow list``.
+
+
+Internal Changes
+~~~~~~~~~~~~~~~~
+
+**Improvements**
+
+* **Renku core service**: Extended the workflow API, adding an ``export`` endpoint that returns the workflow defintion.
+* **Sessions**: Added support for running sessions in a separate namespace
+* **Sessions**: Added caching for Jupyter servers
+* **Knowledge Graph**: Read lineage data from the new dataset in the Triples Store
+* **Knowledge Graph**: Added info about Composite Plans to the Cross-Entity Search API
+
+
+**Bug fixes**
+
+* **Gateway**: Removed trailing slash from redirect links
+* **Knowledge Graph**: Fixed wrong Plans creation dates through migration
+* **Knowledge Graph**: Adopted renku-python 1.10.0 with significantly improved graph export performance
+* **Knowledge Graph**: Switched to using Project Access Tokens for accessing GitLab API
+* **Renku core service**: Fixed Plans creation dates from preceding their corresponding Activities
+* **Sessions**: Fixed properly accept getting session logs without a limit
 
 Individual components
 ~~~~~~~~~~~~~~~~~~~~~~
