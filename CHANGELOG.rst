@@ -3,7 +3,7 @@
 0.20.0
 ------
 
-Renku ``0.20.0`` tidies up the RenkuLab session start sequence, as well as an assortment of improvements and big fixes. 
+Renku ``0.20.0`` tidies up the RenkuLab session start sequence, as well as an assortment of improvements and bug fixes. 
 
 User-Facing Changes
 ~~~~~~~~~~~~~~~~~~~
