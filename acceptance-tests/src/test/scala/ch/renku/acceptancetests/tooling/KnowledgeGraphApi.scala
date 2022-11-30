@@ -18,11 +18,12 @@
 
 package ch.renku.acceptancetests.tooling
 
+import cats.effect.IO
 import cats.syntax.all._
 import ch.renku.acceptancetests.model.projects.ProjectIdentifier
-import io.circe.JsonObject
 import io.circe.literal.JsonStringContext
-import org.http4s.Status.Ok
+import io.circe.{Json, JsonObject}
+import org.http4s.Status.{NotFound, Ok}
 import org.http4s.circe._
 import org.scalatest.Assertions.fail
 
@@ -70,13 +71,31 @@ trait KnowledgeGraphApi extends RestClient {
 
   private def findProgress(projectId: ProjectIdentifier, gitLabProjectId: Int): Double =
     GET(renkuBaseUrl / "api" / "projects" / gitLabProjectId.toString / "graph" / "status")
-      .send(whenReceived(status = Ok) >=> bodyToJson)
-      .extract(jsonRoot.progress.double.getOption)
-      .getOrElse(fail(s"Cannot find processing status for '${projectId.slug}'"))
+      .send {
+        mapResponse { response =>
+          response.status match {
+            case Ok       => response.as[Json].map(jsonRoot.progress.double.getOption)
+            case NotFound => 0d.some.pure[IO]
+            case _ =>
+              IO.raiseError[Option[Double]](new Exception(s"Cannot find processing status for '${projectId.slug}'"))
+          }
+        }
+      }
+      .map(_.getOrElse(0d))
+      .unsafeRunSync()
 
   private def findTotalDone(projectId: ProjectIdentifier, gitLabProjectId: Int): Int =
     GET(renkuBaseUrl / "api" / "projects" / gitLabProjectId.toString / "graph" / "status")
-      .send(whenReceived(status = Ok) >=> bodyToJson)
-      .extract(jsonRoot.total.int.getOption)
-      .getOrElse(fail(s"Cannot find processing status for '${projectId.slug}'"))
+      .send {
+        mapResponse { response =>
+          response.status match {
+            case Ok       => response.as[Json].map(jsonRoot.total.int.getOption)
+            case NotFound => 0.some.pure[IO]
+            case _ =>
+              IO.raiseError[Option[Int]](new Exception(s"Cannot find processing status for '${projectId.slug}'"))
+          }
+        }
+      }
+      .map(_.getOrElse(0))
+      .unsafeRunSync()
 }
