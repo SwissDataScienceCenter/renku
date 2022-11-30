@@ -35,13 +35,13 @@ Internal Changes
 * **Sessions**: Added caching for Jupyter servers
 * **Knowledge Graph**: Read lineage data from the new dataset in the Triples Store
 * **Knowledge Graph**: Added info about Composite Plans to the Cross-Entity Search API
+* **Knowledge Graph**: Adopted ``renku-python 1.10.0`` with significantly improved graph export performance
 
 
 **Bug fixes**
 
 * **Gateway**: Removed trailing slash from redirect links
 * **Knowledge Graph**: Fixed wrong Plans creation dates through migration
-* **Knowledge Graph**: Adopted renku-python 1.10.0 with significantly improved graph export performance
 * **Knowledge Graph**: Switched to using Project Access Tokens for accessing GitLab API
 * **Renku core service**: Fixed Plans creation dates from preceding their corresponding Activities
 * **Sessions**: Fixed properly accept getting session logs without a limit
