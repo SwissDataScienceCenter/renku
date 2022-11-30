@@ -8,10 +8,6 @@ Renku ``0.20.0`` tidies up the RenkuLab session start sequence, as well as an as
 User-Facing Changes
 ~~~~~~~~~~~~~~~~~~~
 
-**🌟 New Features**
-
-* *None this release*
-
 **✨ Improvements**
 
 * 🚀 **UI**: We tidied up the session launch sequence to have a unified appearance, regardless of where on RenkuLab you start your session from. Sessions also have better logs and error handling.
@@ -20,23 +16,21 @@ User-Facing Changes
 
 **🐞Bug Fixes**
 
+* 💔 **Renku CLI**: Fixed an issue where ``renku workflow compose`` would break ``renku workflow list``.
 * 🍴 **UI**: Fixed the Project name field getting reset when forking a project. 
 * 📃 **UI**: Fixed issues with downloading session logs.
-* 💔 **Renku CLI**: Fixed an issue where ``renku workflow compose`` would break ``renku workflow list``.
-
 
 Internal Changes
 ~~~~~~~~~~~~~~~~
 
 **Improvements**
 
-* **Renku core service**: Extended the workflow API, adding an ``export`` endpoint that returns the workflow defintion.
-* **Sessions**: Added support for running sessions in a separate namespace
-* **Sessions**: Added caching for Jupyter servers
 * **Knowledge Graph**: Read lineage data from the new dataset in the Triples Store
 * **Knowledge Graph**: Added info about Composite Plans to the Cross-Entity Search API
 * **Knowledge Graph**: Adopted ``renku-python 1.10.0`` with significantly improved graph export performance
-
+* **Renku core service**: Extended the workflow API, adding an ``export`` endpoint that returns the workflow definition.
+* **Sessions**: Added support for running sessions in a separate namespace
+* **Sessions**: Added caching for Jupyter servers
 
 **Bug fixes**
 
