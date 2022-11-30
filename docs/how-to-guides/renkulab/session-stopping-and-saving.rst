@@ -103,7 +103,7 @@ The next time you start a new session from the same branch/commit
 combination, you will be notified and the autosaved data will be automatically
 loaded in your session. Please note that nothing will be pushed automatically
 to the `master` branch, therefore you won't see any changes in your project's files
-in Renku, nor will the :ref:`provenance <provenance>` be updated.
+in Renku.
 
 Local branches you created but never pushed to the origin will not be saved.
 

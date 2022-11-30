@@ -30,7 +30,7 @@ metadata:
     heritage: {{ .Release.Service }}
   annotations:
     nginx.ingress.kubernetes.io/configuration-snippet: |
-        more_set_headers "Content-Security-Policy: frame-ancestors 'self' {{ .Values.ui.baseUrl }}";      
+        more_set_headers "Content-Security-Policy: frame-ancestors 'self' https://*.{{ .Values.global.renku.domain }} https://{{ .Values.global.renku.domain }}";
 {{- range $key, $value := .Values.ingress.annotations }}
     {{ $key }}: {{ $value | quote }}
 {{- end }}
@@ -59,15 +59,19 @@ spec:
             port:
               name: {{ $keycloakServicePort }}
       {{- end }}
-      {{- if $gitlabEnabled }}
       - path: /gitlab
         pathType: Prefix
         backend:
           service:
+            {{- if $gitlabEnabled }}
             name: {{ $gitlabFullname }}
             port:
               number: {{ $gitlabServicePort }}
-      {{- end }}
+            {{ else }}
+            name: renku-traefik
+            port:
+              number: 80
+            {{- end }}
       - path: /repos
         pathType: Prefix
         backend:

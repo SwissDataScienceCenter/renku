@@ -23,8 +23,6 @@ import ch.renku.acceptancetests.pages._
 import ch.renku.acceptancetests.tooling.TestLogger.logger
 import ch.renku.acceptancetests.tooling.{AcceptanceSpec, AnonEnvConfig}
 
-import org.scalatestplus.selenium.WebBrowser.{cssSelector, find, findAll}
-
 import scala.concurrent.duration._
 
 trait Environments {
@@ -44,42 +42,43 @@ trait Environments {
     `start session and wait until it is ready`
     docsScreenshots.takeScreenshot()
 
-    val jupyterLabPage = `connect to JupyterLab`
-    Then("a JupyterLab session is opened")
-    jupyterLabPage
+    `connect to JupyterLab`
   }
 
-  private def `connect to JupyterLab`(implicit projectPage: ProjectPage): JupyterLabPage =
-    eventually {
-      And("the user tries to start a JupyterLab session")
-      sleep(2 seconds)
+  private def `connect to JupyterLab`(implicit projectPage: ProjectPage): JupyterLabPage = eventually {
+    And("the user tries to start a JupyterLab session")
+    sleep(2 seconds)
 
-      if (projectPage.Sessions.Running.maybeOpenButton.fold(ifEmpty = true)(btn => !btn.isDisplayed))
-        pause whenUserCanSee { driver =>
-          val maybeGetLogs = projectPage.Sessions.Running.maybeOpenButton(driver)
-          if (maybeGetLogs.fold(false)(_.isDisplayed)) And("the 'Get logs' button is displayed")
-          maybeGetLogs
-        }
-
-      `try few times before giving up` { _ =>
-        And("clicks on the 'Open' button")
-        click on (projectPage.Sessions.Running.maybeOpenButton.getOrElse(fail("Open button not found")))
-        sleep(2 seconds)
+    if (projectPage.Sessions.Running.maybeOpenButton.fold(ifEmpty = true)(btn => !btn.isDisplayed))
+      pause whenUserCanSee { driver =>
+        val maybeGetLogs = projectPage.Sessions.Running.maybeOpenButton(driver)
+        if (maybeGetLogs.fold(false)(_.isDisplayed)) And("the 'Get logs' button is displayed")
+        maybeGetLogs
       }
 
-      And("switches to the iframe")
-      `try few times before giving up` { _ =>
-        projectPage.Sessions.Running.maybeJupyterLabIframe match {
-          case Some(iframe) =>
-            And("finds iframe")
-            webDriver.switchTo().frame(iframe)
-            JupyterLabPage()
-          case None =>
-            And("does not find iframe")
-            fail("Cannot find JupyterLab iframe")
-        }
+    `try few times before giving up` { _ =>
+      And("clicks on the 'Open' button")
+      click on projectPage.Sessions.Running.maybeOpenButton.getOrElse(fail("Open button not found"))
+      sleep(15 seconds)
+    }
+
+    And("switches to the iframe")
+    `try few times before giving up` { _ =>
+      projectPage.Sessions.Running.maybeJupyterLabIframe match {
+        case Some(iframe) =>
+          And("finds iframe")
+          webDriver.switchTo().frame(iframe)
+          sleep(5 seconds)
+
+          Then("a JupyterLab session is opened")
+          JupyterLabPage(projectPage)
+        case None =>
+          And("does not find iframe")
+          sleep(5 seconds)
+          fail("Cannot find JupyterLab iframe")
       }
     }
+  }
 
   def `stop session`(implicit projectPage: ProjectPage): Unit =
     stopSessionOnProjectPage(projectPage)
@@ -103,7 +102,8 @@ trait Environments {
       projectPage:          ProjectPage,
       projectDetails:       ProjectDetails
   )(implicit anonEnvConfig: AnonEnvConfig): Option[JupyterLabPage] = {
-    go to projectPage
+    go to projectPage sleep (5 seconds)
+    verify browserAt projectPage
     When("user is logged out")
     And(s"goes to ${projectDetails.title}")
     And("clicks on the sessions tab to launch an anonymous notebook")
@@ -141,7 +141,7 @@ trait Environments {
         `start session and wait until it is ready`
       }
 
-      val jupyterLabPage = `connect to JupyterLab`
+      `connect to JupyterLab`
       Then("a JupyterLab session is opened")
       Some(projectPage)
     }
@@ -198,9 +198,9 @@ trait Environments {
     }
     sleep(5 seconds)
 
-    `try few times before giving up` { _ =>
-      Then("they should be redirected to the Sessions tab")
-      verify userCanSee projectPage.Sessions.Running.title
+    `try again if failed` { _ =>
+      And("the user clicks on the goBackButton session button")
+      click on projectPage.Sessions.Running.goBackButtonFullscreen
     }
 
     `try few times before giving up` { driver =>

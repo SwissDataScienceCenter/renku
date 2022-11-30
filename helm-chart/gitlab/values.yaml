@@ -4,7 +4,7 @@
 
 image:
   repository: gitlab/gitlab-ce
-  tag: 12.9.5-ce.0
+  tag: 14.10.5-ce.0
   pullPolicy: IfNotPresent
 
 ssh:
@@ -101,23 +101,6 @@ nodeSelector: {}
 tolerations: []
 
 affinity: {}
-
-redis:
-
-  nameOverride: gl-redis
-
-  cluster:
-    enabled: false
-
-  usePassword: false
-
-  master:
-    persistence:
-      enabled: false
-
-  networkPolicy:
-    enabled: true
-    allowExternal: false
 
 # Enable json logs for all services
 logging:
