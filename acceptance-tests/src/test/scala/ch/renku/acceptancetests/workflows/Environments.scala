@@ -85,7 +85,7 @@ trait Environments {
 
   private def stopSessionOnProjectPage(projectPage: ProjectPage): Unit = {
     When("the user switches back to the Renku frame")
-    webDriver.switchTo().defaultContent();
+    webDriver.switchTo().defaultContent()
     // And("opens the sessions menu")
     // click on projectPage.Sessions.Running.sessionDropdownMenu sleep (1 second)
     And("clicks on stop button to open modal")
