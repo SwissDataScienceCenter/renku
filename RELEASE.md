@@ -42,6 +42,8 @@ As soon as the release PR is merged, the product team tag a release and inform Y
 for the rollout.
 
 
+
+
 ### Deploy [YAT]
 
 * Roll out the release: create one PR per deployment in the `terraform-renku` repository to update the version and make any needed configuration changes. Important: if needed, add the `scheduled maintenance` label to help avoiding it being merged too early. Limited should be rolled out before Renkulab, as a canary release (see below).
