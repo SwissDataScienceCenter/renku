@@ -408,12 +408,13 @@ returns a success code of 0. If the command is expected to return a success code
 other an 0, specify the acceptable codes in a `success_codes` key:
 
 .. code-block:: console
+
     name: command-with-alternative-success-codes
     steps:
       head:
         command: head -n 10 data/collection/models.csv data/collection/colors.csv > intermediate
         success_codes: [0, 127]
-        # ...
+        ...
 
 Viewing Workflows in RenkuLab
 -----------------------------
