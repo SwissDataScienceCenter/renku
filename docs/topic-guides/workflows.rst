@@ -154,6 +154,8 @@ tells Renku to automatically infer dependencies between steps for you. The newly
 created ``my-workflow`` can also be executed with :meth:`renku workflow execute <renku.ui.cli.workflow>`.
 
 
+.. _workflow-definition-file-topic-guide:
+
 The Renku Worfklow File
 -----------------------
 
@@ -324,6 +326,7 @@ you can execute just one step of the workflow by referencing that step's name:
 
 ..         # runs every step between 'filter' and 'count', including 'filter' and 'count' themselves
 ..         $ renku run workflow.yml filter:count
+
 
 Workflow Step Execution Order
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
