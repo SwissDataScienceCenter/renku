@@ -413,7 +413,7 @@ other an 0, specify the acceptable codes in a `success_codes` key:
       head:
         command: head -n 10 data/collection/models.csv data/collection/colors.csv > intermediate
         success_codes: [0, 127]
-        ...
+        # ...
 
 Viewing Workflows in RenkuLab
 -----------------------------
