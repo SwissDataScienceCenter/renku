@@ -1,4 +1,4 @@
-¡.. _create_workflow:
+.. _create_workflow:
 
 Build a reproducible workflow
 -----------------------------

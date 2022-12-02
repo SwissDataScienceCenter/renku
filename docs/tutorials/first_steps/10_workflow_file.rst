@@ -50,7 +50,7 @@ Using Templating in a Workflow File
 
 Renku provides a templating feature so that you never have to type the same path
 twice. In the ``command``, we can replace the paths to the inputs with the
-``$input``` template, and likewise for the ``$outputs`.
+``$input``` template, and likewise for the ``$outputs``.
 
 .. code-block:: yaml
 
