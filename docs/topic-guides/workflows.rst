@@ -156,7 +156,7 @@ created ``my-workflow`` can also be executed with :meth:`renku workflow execute 
 
 .. _workflow-definition-file-topic-guide:
 
-The Renku Worfklow File
+The Renku Workflow File
 -----------------------
 
 If your workflow has many steps, you might find it more convenient to create a
@@ -366,7 +366,7 @@ Description and Keywords
 ^^^^^^^^^^^^^^^^^^^^^^^^
 
 You may provide further details in your workflow definition, such as a
-`description` of each paramteter, and `keywords` that describe your workflow.
+`description` of each parameter, and `keywords` that describe your workflow.
 
 .. code-block:: yaml
 

@@ -253,6 +253,7 @@ supertypes
 symlink
 symlinks
 templated
+templating
 Tensorboard
 Tensorflow
 terraform
