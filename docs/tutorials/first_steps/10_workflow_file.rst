@@ -1,4 +1,4 @@
-¡.. workflow_file:
+¡.. _workflow_file:
 
 Define your Workflow in a Workflow File
 ---------------------------------------
