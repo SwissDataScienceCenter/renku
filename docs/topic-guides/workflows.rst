@@ -128,30 +128,7 @@ Once the workflow is recorded, you can execute it again :meth:`renku workflow ex
 
     $ renku workflow execute run-analysis
 
-Similarly, you can re-execute the workflow with modified parameters, for example:
-
-.. code-block:: console
-
-    $ renku workflow execute run-analysis --set i-2=other_input_file.csv
-
-which would run it on the file ``other_input_file.csv`` instead of the original
-``input_file.csv`` file. You could also specify an execution backend with
-``--provider``, e.g. ``toil`` for execution in an HPC cluster (You need to
-install ``renku`` with the ``toil`` extra for this to be available).
-
-
-Composing workflows on the command line
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-To create a workflow ``my-workflow`` out of multiple steps use :meth:`renku workflow compose <renku.ui.cli.workflow>`:
-
-.. code-block:: console
-
-    $ renku workflow compose --link-all my-workflow run-analysis process-output
-
-If you had two steps named ``run-analysis`` and ``process-output``. ``--link-all``
-tells Renku to automatically infer dependencies between steps for you. The newly
-created ``my-workflow`` can also be executed with :meth:`renku workflow execute <renku.ui.cli.workflow>`.
+For more information about working with workflows using the Renku CLI, see :meth:`renku workflow <renku.ui.cli.workflow>`.
 
 
 .. _workflow-definition-file-topic-guide:
