@@ -103,7 +103,7 @@ final.txt``, Renku will check for updates in workflow steps A and B, since they
 are related.
 
 
-To make this linkage betwen workflow steps explicit, you may `compose` workflow
+To make this linkage between workflow steps explicit, you may `compose` workflow
 steps in order to create a named multiple-step workflow. To create a
 workflow ``my-workflow`` out of multiple steps that were created by ``renku
 run``, use :meth:`renku workflow compose <renku.ui.cli.workflow>`:
