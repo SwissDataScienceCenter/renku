@@ -9,10 +9,15 @@ processing flow, making it easier to execute portions of the pipeline at a time.
 A workflow file also makes your code easier for your collaborators to
 understand!
 
+Adding a Workflow File to your Project
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
 To create a workflow definition file in your project, create a file called
-``workflow.yml``. (This is just to get started - you may have more than one
-workflow file in your project, and they can be named however you like (not just
-``workflow.yml``).
+``workflow.yml``. 
+
+You may have more than one workflow file in your project! Workflow files may be
+named however you like, as long as they end with the `.yml` or `yaml` file
+extension.
 
 There are a few options for how you may define your workflow.
 
@@ -31,7 +36,7 @@ outputs are simply listed, as in the example below:
         outputs:
           - data/output/flights-filtered.csv
 
-.. note:: Note that the script being run is always listed in the ``inputs`` section.
+.. note:: Note that the script being run is always listed in the ``inputs`` section (here, ``src/filter_flights.py``).
 
 This workflow file defines the workflow's name and a sequence of steps. This
 file only includes one step, which is named ``filter``. Within the ``filter``
@@ -39,7 +44,7 @@ step, list the ``command`` to run, and then we tell Renku which parts of this
 command are ``inputs`` and ``outputs`` by copying those paths into the relevant
 sections.
 
-To run this workflow file, run:
+To run this workflow file, run it with :meth:`renku run <renku.ui.cli.run>`:
 
 .. code-block:: console
 
@@ -147,7 +152,8 @@ workflow.
 Executing a Workflow File
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Running ``renku run workflow.yml`` will execute all steps in the workflow file.
+Running :meth:`renku run workflow.yml <renku.ui.cli.run>` will execute all steps
+in the workflow file.
 
 Renku also helps you run only portions of your workflow at a time. For example,
 you can execute just one step of the workflow by referencing that step's name:
@@ -183,7 +189,7 @@ Workflow Step Execution Order
 When you execute a workflow file, Renku builds an execution graph. This means
 that Renku determines how the steps in the workflow are related. For example,
 Renku notices that the output of step ``filter`` (``flights-filtered.csv``) is
-the input to step ``count``, and therefore step ``filter`` `must`` be executed
+the input to step ``count``, and therefore step ``filter`` `must` be executed
 before step ``count``. On the other hand, if there are no dependencies between
 steps, they may be run in any order. For this reason, unrelated workflow steps
 may be executed in a different order than which they are written in the workflow
@@ -207,12 +213,26 @@ Implicit Input and Output Files
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 If your script consumes or generates an input or output that is not explicitly
-passed in the command, you may still list the file in the workflow file step so
-that is tracked by Renku. When doing so, also add the `implicit: true` key;
+passed in the command, you may still list the file in the workflow file so that
+it is tracked by Renku. When doing so, also add the ``implicit: true`` key;
 otherwise, Renku will warn that the file is not used in the command string.
 
-Description and Keywords
-^^^^^^^^^^^^^^^^^^^^^^^^
+.. code-block:: yaml
+
+    name: script-with-implicit-input
+    steps:
+      filter:
+        command: python $my_script
+        inputs:
+          - my_script:
+              path: my_script.py
+          - hidden_input:
+              path: data/an_input.txt
+              implicit: true
+
+
+Descriptions and Keywords
+^^^^^^^^^^^^^^^^^^^^^^^^^
 
 You may provide further details in your workflow definition, such as a
 `description` of each parameter, and `keywords` that describe your workflow.
@@ -259,7 +279,7 @@ By default, Renku considers a workflow step to have successfully executed if it
 returns a success code of 0. If the command is expected to return a success code
 other an 0, specify the acceptable codes in a `success_codes` key:
 
-.. code-block:: console
+.. code-block:: yaml
 
     name: command-with-alternative-success-codes
     steps:
@@ -267,3 +287,44 @@ other an 0, specify the acceptable codes in a `success_codes` key:
         command: head -n 10 data/collection/models.csv data/collection/colors.csv > intermediate
         success_codes: [0, 127]
         ...
+
+Viewing a Workflow Visually
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+After executing a workflow, you can view a visal diagram of how any file created
+by that workflow was created.
+
+To view this diagram, run :meth:`renku workflow visualize <renku.ui.cli.workflow>` 
+and pass the path to the file you would like to inspect:
+
+.. code-block:: console
+
+    $ renku workflow visualize data/output/flights-count.csv 
+                                        ┌─────────────────────────────────────────┐                    ┌─────────────────────┐                    ┌────────────────────────────────────────┐
+                                        │workflows/workflow-flights-tutorial-3.yml│                    │src/filter_flights.py│                    │data/flight-data/2019-01-flights.csv.zip│
+                                        └─────────────────────────────────────────┘                    └─────────────────────┘                    └────────────────────────────────────────┘
+                                                            *             *******                                    ***                                       ***
+                                                            *                    ************                           ****                              *****
+                                                            *                                **************                 ****                      ****
+                                                            *                                              *************  ╔═══════════════════════════════╗
+                                                            *                                                           **║python src/filter_flights.py...║
+                                                            *                                                             ╚═══════════════════════════════╝
+                                                            *                                                                              *
+                                                            *                                                                              *
+                                                            *                                                                              *
+    ┌────────────────────┐                                    *                                                             ┌────────────────────────────────┐
+    │src/count_flights.py│                                    *                                                             │data/output/flights-filtered.csv│
+    └────────────────────┘                                    ***                                                           └────────────────────────────────┘
+                        *********                              *****                                                           *****
+                                ************                       *****                                              ********
+                                            *************               ****                                 *********
+                                                            *************  ╔══════════════════════════════╗*****
+                                                                         **║python src/count_flights.py...║
+                                                                           ╚══════════════════════════════╝
+                                                                                        *
+                                                                                        *
+                                                                                        *
+                                                                            ┌─────────────────────────────┐
+                                                                            │data/output/flights-count.csv│
+                                                                            └─────────────────────────────┘
+
