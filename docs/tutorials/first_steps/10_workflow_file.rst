@@ -54,15 +54,15 @@ twice. In the ``command``, we can replace the paths to the inputs with the
 
 .. code-block:: yaml
 
-    name: Flights Processing Pipeline
+    name: flights-processing-pipeline
     steps:
-    filter:
-      command: python $inputs $outputs
-      inputs:
-        - src/filter_flights.py
-        - data/flight-data/2019-01-flights.csv.zip
-      outputs:
-        - data/output/flights-filtered.csv
+      filter:
+        command: python $inputs $outputs
+        inputs:
+          - src/filter_flights.py
+          - data/flight-data/2019-01-flights.csv.zip
+        outputs:
+          - data/output/flights-filtered.csv
 
 
 A Multi-Step Workflow File
@@ -73,29 +73,29 @@ workflow.
 
 .. code-block:: yaml
 
-    name: Flights Processing Pipeline
+    name: flights-processing-pipeline
     steps:
-    filter:
-      command: python $inputs $outputs
+      filter:
+        command: python $inputs $outputs
         inputs:
-        - src/filter_flights.py
-        - data/flight-data/2019-01-flights.csv.zip
+          - src/filter_flights.py
+          - data/flight-data/2019-01-flights.csv.zip
         outputs:
-        - data/output/flights-filtered.csv
-
+          - data/output/flights-filtered.csv
+  
       count:
         command: python $inputs $outputs
         inputs:
-        - src/count_flights.py
-        - data/output/flights-filtered.csv
+          - src/count_flights.py
+          - data/output/flights-filtered.csv
         outputs:
-        - data/output/flights-count.csv
+          - data/output/flights-count.csv
 
 
 Executing a workflow file
 ^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Running `renku run workflow.yml` will execute all steps in the workflow file.
+Running ``renku run workflow.yml`` will execute all steps in the workflow file.
 
 Renku also helps you run only portions of your workflow at a time. For example,
 you can execute just one step of the workflow by referencing that step's name:
@@ -104,7 +104,11 @@ you can execute just one step of the workflow by referencing that step's name:
 
         $ renku run workflow.yml filter
 
-        # you may specify more than one step
+
+You may specify more than one step to run:
+
+.. code-block:: console
+
         $ renku run workflow.yml filter count
 
 
@@ -123,4 +127,8 @@ you can execute just one step of the workflow by referencing that step's name:
 ..         $ renku run workflow.yml filter:count
 
 
-For much more information about writing and executing workflow files, see :ref:`workflow-definition-file-topic-guide`.
+Want to learn more?
+^^^^^^^^^^^^^^^^^^^
+
+For much more information about writing and executing workflow files, see
+:ref:`workflow-definition-file-topic-guide`.

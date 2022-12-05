@@ -73,7 +73,7 @@ When you want students to access interactive sessions quickly without necessaril
 saving outputs, it is possible to share a 'one-click' start link to a project
 that you have prepared earlier.
 
-.. figure:: ../_static/images/one-click-start.png
+.. figure:: ../../_static/images/one-click-start.png
         :width: 85%
         :align: center
         :alt: One-click start button

@@ -6,10 +6,7 @@ Topic guides
 .. toctree::
    :maxdepth: 2
 
-   session-basics
-   customizing-sessions
-   docker
-   data
-   knowledge-graph
-   workflows
-   teaching_with_renkulab
+   Sessions <sessions/index>
+   Data <data/index>   
+   Workflows <workflows/index>
+   Miscellaneous <miscellaneous/index>

@@ -10,7 +10,7 @@ provide search functionality. See the :ref:`workflows` section for a high-level
 description. A simple Knowledge Graph in the current Renku web user interface
 looks something like this:
 
-.. image:: ../_static/images/kg_example.png
+.. image:: ../../_static/images/kg_example.png
 
 Generation
 ----------
@@ -31,16 +31,16 @@ The Knowledge Graph is activated by default on all new Public or Internal projec
 On projects that were in place before this feature was released, the user is prompted to
 enable the integration via a pop-up button:
 
-.. image:: ../_static/images/kg_activation.png
+.. image:: ../../_static/images/kg_activation.png
 
 For Private projects, there is an option to opt-out of the Knowledge Graph, if you do not want
 your metadata to be able to be queried without access.
 
-.. image:: ../_static/images/kg_opt_out.png
+.. image:: ../../_static/images/kg_opt_out.png
 
 You can then turn on Knowledge Graph integration at a later time if you wish.
 
-.. image:: ../_static/images/kg_turn_on.png
+.. image:: ../../_static/images/kg_turn_on.png
 
 File Lineage Display
 --------------------
@@ -48,12 +48,12 @@ File Lineage Display
 To see the current provenance information of any file in your project, select the
 file in your file browser and click either the ``Lineage View`` drop down
 
-.. image:: ../_static/images/kg_lineage_view1.png
+.. image:: ../../_static/images/kg_lineage_view1.png
     :width: 400px
 
 or the graph icon on the right-hand side of the file preview pane:
 
-.. image:: ../_static/images/kg_lineage_view2.png
+.. image:: ../../_static/images/kg_lineage_view2.png
     :width: 250px
 
 Private Projects
