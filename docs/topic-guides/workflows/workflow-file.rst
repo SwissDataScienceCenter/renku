@@ -22,7 +22,7 @@ extension.
 
 .. note:: **Do you already have a workflow you created on the Renku CLI that you'd like to convert to a Workflow File?**
     You can export it! ``renku workflow export <workflow-name> --format renku --output workflow.yml``
-    (Tip: Find your worklow's name using ``renku workflow ls``)
+    (Tip: Find your workflow's name using ``renku workflow ls``)
 
 
 Defining a Basic Workflow File
@@ -175,7 +175,7 @@ outputs, too, including the workflow file itself.
 
 .. note:: **Do you have output files you don't want to be committed, such as log files?**
     You have 2 options: (1) Do not list these outputs in the workflow definition
-    file, and Renku will ignore them. Or, (2) inlcude the file in the workflow
+    file, and Renku will ignore them. Or, (2) include the file in the workflow
     file, but use the ``persist: false`` flag to tell Renku not to commit the
     file.
 
@@ -323,7 +323,7 @@ other an 0, specify the acceptable codes in a `success_codes` key:
 Viewing a Workflow Visually
 ---------------------------
 
-After executing a workflow, you can view a visal diagram of how any file created
+After executing a workflow, you can view a visual diagram of how any file created
 by that workflow was created.
 
 To view this diagram, run :meth:`renku workflow visualize <renku.ui.cli.workflow>` 
