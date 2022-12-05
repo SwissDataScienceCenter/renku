@@ -213,14 +213,14 @@ You may specify more than one step to run:
 Workflow Step Execution Order
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-When you execute a workflow file, Renku builds an execution graph. This means
-that Renku determines how the steps in the workflow are related. For example,
-Renku notices that the output of step ``filter`` (``flights-filtered.csv``) is
-the input to step ``count``, and therefore step ``filter`` `must` be executed
-before step ``count``. On the other hand, if there are no dependencies between
-steps, they may be run in any order. For this reason, unrelated workflow steps
-may be executed in a different order than which they are written in the workflow
-file.
+Workflow steps `may`` be executed in a different order than which they are
+written in the workflow file; however, this only happens if the steps are
+unrelated. When you execute a workflow file, Renku determines how the steps in
+the workflow are related (builds an execution graph). For example, Renku notices
+that the output of step ``filter`` (``flights-filtered.csv``) is the input to
+step ``count``, and therefore step ``filter`` `must` be executed before step
+``count``. But if there are no dependencies between steps, they may be run in
+any order.
 
 
 The ``--dry-run`` and ``--no-commit`` flags
