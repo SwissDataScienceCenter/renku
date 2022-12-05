@@ -1,7 +1,7 @@
 .. _workflow-definition-file-topic-guide:
 
 The Renku Workflow File
------------------------
+=======================
 
 If your data processing workflow has many steps, you might find it convenient to
 create a workflow definition file. A workflow file help organize your data
@@ -9,8 +9,9 @@ processing flow, making it easier to execute portions of the pipeline at a time.
 A workflow file also makes your code easier for your collaborators to
 understand!
 
+
 Adding a Workflow File to your Project
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+--------------------------------------
 
 To create a workflow definition file in your project, create a file called
 ``workflow.yml``. 
@@ -18,6 +19,14 @@ To create a workflow definition file in your project, create a file called
 You may have more than one workflow file in your project! Workflow files may be
 named however you like, as long as they end with the `.yml` or `yaml` file
 extension.
+
+.. note:: **Do you already have a workflow you created on the Renku CLI that you'd like to convert to a Workflow File?**
+    You can export it! ``renku workflow export <workflow-name> --format renku --output workflow.yml``
+    (Tip: Find your worklow's name using ``renku workflow ls``)
+
+
+Defining a Basic Workflow File
+------------------------------
 
 There are a few options for how you may define your workflow.
 
@@ -52,14 +61,16 @@ To run this workflow file, run it with :meth:`renku run <renku.ui.cli.run>`:
 
 
 Using Templating in a Workflow File
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-----------------------------------
 
 Renku provides a templating feature so that you never have to type the same path
 twice. There are a few different ways to use templating in your workflow file,
 and they can be mixed and matched depending on what works best for your command.
 
+
 Templating by Group
-^^^^^^^^^^^^^^^^^^^
+~~~~~~~~~~~~~~~~~~~
+
 In the example above, all of the inputs go together into the same place in the
 command, followed by the output. So, rather than listing each input, output, and
 parameter in the command individually, you can use the ``$inputs``,
@@ -87,7 +98,7 @@ in which they are specified in the ``inputs`` section.
 
 
 Templating by Argument Name
-^^^^^^^^^^^^^^^^^^^^^^^^^^^
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 If the ordering of arguments in your command is more complex, you can reference
 each argument individually by name. To do so, assign each input and output a
@@ -117,9 +128,9 @@ the ``command`` using ``$``.
 
 
 A Multi-Step Workflow File
-~~~~~~~~~~~~~~~~~~~~~~~~~~
+--------------------------
 
-Below, you can see what the a workflow file looks like for the two-step
+Below, you can see what the a workflow file looks like for a two-step
 workflow.
 
 .. code-block:: yaml
@@ -150,10 +161,26 @@ workflow.
 
 
 Executing a Workflow File
-~~~~~~~~~~~~~~~~~~~~~~~~~
+-------------------------
 
 Running :meth:`renku run workflow.yml <renku.ui.cli.run>` will execute all steps
-in the workflow file.
+in the workflow file. Executing the workflow will commit all workflow inputs and
+outputs, too, including the workflow file itself.
+
+.. code-block:: console
+
+    $ renku run workflow.yml
+    Executing step 'workflows/workflow-topic-guide-last.yml::filter': 'python src/filter_flights.py data/flight-data/2019-01-flights.csv.zip data/output/flights-filtered.csv' ...
+    Executing step 'workflows/workflow-topic-guide-last.yml::count': 'python src/count_flights.py data/output/flights-filtered.csv data/output/flights-count.csv' ...
+
+.. note:: **Do you have output files you don't want to be committed, such as log files?**
+    You have 2 options: (1) Do not list these outputs in the workflow definition
+    file, and Renku will ignore them. Or, (2) inlcude the file in the workflow
+    file, but use the ``persist: false`` flag to tell Renku not to commit the
+    file.
+
+Executing a Portion of a Workflow
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Renku also helps you run only portions of your workflow at a time. For example,
 you can execute just one step of the workflow by referencing that step's name:
@@ -184,7 +211,7 @@ You may specify more than one step to run:
 
 
 Workflow Step Execution Order
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 When you execute a workflow file, Renku builds an execution graph. This means
 that Renku determines how the steps in the workflow are related. For example,
@@ -195,8 +222,10 @@ steps, they may be run in any order. For this reason, unrelated workflow steps
 may be executed in a different order than which they are written in the workflow
 file.
 
+
 The ``--dry-run`` and ``--no-commit`` flags
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
 By passing the ``--dry-run`` flag to the ``renku run`` command, you can instruct
 Renku to only print the order of execution of the steps without actually running
 any of them. 
@@ -207,10 +236,11 @@ this case.
 
 
 Adding more Information to a Workflow File
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+------------------------------------------
+
 
 Implicit Input and Output Files
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 If your script consumes or generates an input or output that is not explicitly
 passed in the command, you may still list the file in the workflow file so that
@@ -232,7 +262,7 @@ otherwise, Renku will warn that the file is not used in the command string.
 
 
 Descriptions and Keywords
-^^^^^^^^^^^^^^^^^^^^^^^^^
+~~~~~~~~~~~~~~~~~~~~~~~~~
 
 You may provide further details in your workflow definition, such as a
 `description` of each parameter, and `keywords` that describe your workflow.
@@ -272,8 +302,9 @@ You may provide further details in your workflow definition, such as a
               description: Number of flights to the destination of interest
               path: data/output/flights-count.csv
 
+
 Alternative Success Codes
-^^^^^^^^^^^^^^^^^^^^^^^^^
+~~~~~~~~~~~~~~~~~~~~~~~~~
 
 By default, Renku considers a workflow step to have successfully executed if it
 returns a success code of 0. If the command is expected to return a success code
@@ -288,8 +319,9 @@ other an 0, specify the acceptable codes in a `success_codes` key:
         success_codes: [0, 127]
         ...
 
+
 Viewing a Workflow Visually
-~~~~~~~~~~~~~~~~~~~~~~~~~~~
+---------------------------
 
 After executing a workflow, you can view a visal diagram of how any file created
 by that workflow was created.
