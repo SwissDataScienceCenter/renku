@@ -1,6 +1,6 @@
 .. _topic-guides:
 
-Topic guides
+Topic Guides
 ============
 
 .. toctree::
