@@ -77,8 +77,8 @@ here".
           - 10
 
 
-The inputs are filled in to the command in the order in which they are specified
-in the ``inputs`` section.
+The inputs are filled in to the command at the ``$inputs`` template in the order
+in which they are specified in the ``inputs`` section.
 
 
 Templating by Argument Name
@@ -156,9 +156,11 @@ you can execute just one step of the workflow by referencing that step's name:
 
         $ renku run workflow.yml filter
 
-        # you may specify more than one step
-        $ renku run workflow.yml filter count
+You may specify more than one step to run:
 
+.. code-block:: console
+
+        $ renku run workflow.yml filter count
 
 .. If we had a longer workflow, perhaps with 10 or more steps, we could specify a
 .. subset of steps to run.
