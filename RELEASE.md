@@ -91,3 +91,6 @@ A non-urgent release is requested to be made in between sprints by any of the te
 
 * Plan a maintenance, create it in statuspage for all Renku deployments managed by us. Coordinate with externally managed Renku deployments (UniFR, SV).
 * Merge Pull Request in terraform-renku repository.
+
+
+
