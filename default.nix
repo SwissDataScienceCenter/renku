@@ -1,4 +1,4 @@
-{ system ? builtins.currentSystem, version ? null }:
+{ system ? builtins.currentSystem }:
 let
   pkgs = import <nixpkgs> { inherit system; };
   mach-nix = import (builtins.fetchGit {
