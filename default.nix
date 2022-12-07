@@ -40,6 +40,10 @@ let
 in with pkgs;
   mkShell {
     name = "renku-dev-env";
+    shellHook =
+    ''
+      git submodule update --init --force docs/renku-python
+    '';
     buildInputs =
     [
       python-packages
