@@ -42,14 +42,16 @@ in with pkgs;
     name = "renku-dev-env";
     shellHook =
     ''
+      git submodule sync
       git submodule update --init --force docs/renku-python
     '';
     buildInputs =
     [
-      python-packages
       git
       git-lfs
+      graphviz
       kubernetes-helm
       myhunspell
+      python-packages
     ];
   }
