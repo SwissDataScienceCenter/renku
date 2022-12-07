@@ -37,16 +37,7 @@ USER attests
 ENV PATH=/home/attests/.local/bin:/home/attests/.local/lib/python3.8/site-packages:$PATH
 
 RUN python3 -m pip install --upgrade 'pip==22.3.1' && \
-    python3 -m pip install \
-      'papermill==2.1.3' \
-      'requests>=2.20.0' \
-      'jupyterhub==1.1.0' \
-      'nbresuse==0.3.3' \
-      'jupyterlab-git==0.20.0' \
-      'pipx>=0.15.0.0' \
-      'pandas==1.3.0' \
-      'seaborn==0.11.1' \
-      'toil==5.7.1'
+    python3 -m pip install -r /tests/requirements.txt
 
 ENV DOCKER="1"
 ENTRYPOINT ["/tests/docker-run-tests.sh"]
