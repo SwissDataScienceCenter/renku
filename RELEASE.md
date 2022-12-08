@@ -44,7 +44,7 @@ for the rollout.
 
 ### Deploy [YAT]
 
-* Roll out the release: create one PR per deployment in the `terraform-renku` repository to update the version and make any needed configuration changes. Important: if needed, add the `scheduled maintenance` label to help avoiding it being merged too early. Limited should be rolled out before Renkulab, as a canary release (see below).
+* Roll out the release: one PR per deployment is automatically created in the `terraform-renku` repository to update the version. Make any needed configuration changes to the PR. Approve and merge the PR to deploy. Important: if needed, add the `scheduled maintenance` label to help avoiding it being merged too early. Limited should be rolled out before Renkulab, as a canary release (see below).
 * Plan a maintenance, create it in statuspage for all Renku deployments managed by us. Coordinate with external Renku deployments admins (UniFR, SV).
 * Limited should be rolled out ~1 week before the Renkulab rollout, to give a chance to find bugs early. E.g. Limited on Wednesday and Renkulab on Monday.
 * Make the tag in the `renku` repository, monitor the automatic process of chart publishing and deployment on staging.
@@ -67,7 +67,7 @@ Announce as soon as it is needed.
 
 * Create a Pull Request in the `renku` repository and update the `CHANGELOG.rst` file.
   Ask the Product team for a review on the PR in Renku repository and tag the new release. 
-* Create a Pull Request in the `terraform-renku` repository to update the version and make any needed configuration changes. 
+* A Pull Request in the `terraform-renku` repository is automatically created to update the version. Make any needed configuration changes to this PR.
 * Approve and merge release Pull Request, tag new release.
 
 ### Process [YAT]
