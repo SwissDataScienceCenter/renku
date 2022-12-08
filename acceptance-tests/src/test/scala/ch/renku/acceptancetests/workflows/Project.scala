@@ -119,7 +119,7 @@ trait Project extends RemoveProject with BeforeAndAfterAll with ExtantProject {
       `fill in new project form and submit`
     }
 
-    pause asLongAsBrowserAt NewProjectPage
+    pause asLongAsBrowserAt NewProjectPage sleep (1 second)
     Then(s"the project '${projectDetails.title}' gets created and the Project page gets displayed")
 
     val projectPage = ProjectPage createFrom projectDetails

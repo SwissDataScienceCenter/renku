@@ -74,11 +74,11 @@ class HandsOnSpec
       case _: Throwable                       => false
     }
 
-  private def `verify analysis was run`: Unit = {
+  private def `verify analysis was run`: Unit = `try few times before giving up` { _ =>
     When("the user navigates to the Files tab")
     click on projectPage.Files.tab
     And("they click on the notebooks folder in the File View")
-    click on (projectPage.Files.FileView folder "notebooks") sleep (2 seconds)
+    click on (projectPage.Files.FileView folder "notebooks") sleep (5 seconds)
     And("they click on the 01-CountFlights.ran.ipynb file in the File View")
     click on (projectPage.Files.FileView file "notebooks/01-CountFlights.ran.ipynb") sleep (2 seconds)
     Then("they should see a file header with the notebook filename")
