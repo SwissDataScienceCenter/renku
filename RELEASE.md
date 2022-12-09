@@ -16,7 +16,11 @@ information.
 they want, the schedule is up to them. They are responsible for updating the
 `CHANGELOG.rst` file in the auto-PR in the Renku repository.
 Please create a new section above the last release if no one has already done it.
-The auto-PRs **must** be merged with an updated changelog/release notes.
+The auto-PRs **must** be merged with an updated changelog/release notes. If upgrading 
+a service will knowingly result in an extended outage (e.g. because of a DB migration)
+this *must* be clearly noted and highlighted in the release notes. Use emojis freely. 
+Make sure YAT is aware of any expected complications and plan to be involved in 
+the rollout process. 
 
 🧑‍🤝‍🧑 If two components need to coordinate for a release (e.g. new version
 of Graph needs new version of RP), they should combine their auto-PRs and
@@ -37,15 +41,14 @@ prevent this from happening again.
 
 🛳️ The product team updates the `CHANGELOG.rst` file when needed to make it more
 user friendly and potentially highlight relevant features or disrupting changes.
-This process can start on Tuesday after 12:00.
-As soon as the release PR is merged, the product team tag a release and inform YAT
-for the rollout.
+This process can start on Tuesday after 12:00. As soon as the release PR is merged, 
+the product team tag a release and inform YAT for the rollout.
 
 
 ### Deploy [YAT]
 
+* Before _any_ rollout is done, consider whether any of the upgrades will result in a longer-than-normal outage. If yes, create appropriate maintenance windows marking specific components as affected. Coordinate maintenance windows with external Renku deployments admins (UniFR, SV).
 * Roll out the release: one PR per deployment is automatically created in the `terraform-renku` repository to update the version. Make any needed configuration changes to the PR. Approve and merge the PR to deploy. Important: if needed, add the `scheduled maintenance` label to help avoiding it being merged too early. Limited should be rolled out before Renkulab, as a canary release (see below).
-* Plan a maintenance, create it in statuspage for all Renku deployments managed by us. Coordinate with external Renku deployments admins (UniFR, SV).
 * Limited should be rolled out ~1 week before the Renkulab rollout, to give a chance to find bugs early. E.g. Limited on Wednesday and Renkulab on Monday.
 * Make the tag in the `renku` repository, monitor the automatic process of chart publishing and deployment on staging.
 * Merge terraform-renku PR, monitor Flux upgrading Renku everywhere.
