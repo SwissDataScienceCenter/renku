@@ -4,14 +4,23 @@
   "description": "Cypress tests for Renku",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "e2e": "cypress open --e2e --browser=chrome",
+    "e2e:run": "cypress run --e2e --browser=chrome",
+    "e2e:headless": "cypress run --e2e --browser=chrome --headless",
+    "lint": "eslint . --ext .ts"
   },
   "author": "Swiss Data Science Center",
   "dependencies": {
     "@renku/notebooks-cypress-tests": "^0.0.10",
-    "cypress": "^11.0.1",
+    "cypress": "^11.2.0",
     "cypress-localstorage-commands": "^2.2.1",
     "typescript": "^4.8.4",
     "uuid": "^9.0.0"
+  },
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^5.45.0",
+    "@typescript-eslint/parser": "^5.45.0",
+    "eslint": "^8.28.0",
+    "eslint-plugin-cypress": "^2.12.1"
   }
 }

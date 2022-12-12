@@ -15,7 +15,7 @@ Limitations:
   then the tests will try to login with the provided credentials. After
   this the tests will check if the login succceeded or if an additional
   login is required (as is the case of CI deployments). These are the only
-  login scenarios that are supported. The tests cannot handle logging in 
+  login scenarios that are supported. The tests cannot handle logging in
   through any but the Renku login screens.
 - The tests expect to use the one set of provided credentials to log in
   to up to 2 different Renku deployments. In the case where the Gitlab used by
@@ -42,6 +42,10 @@ npm install
 ```
 
 ## To run
+
+The tests use environment variables to get certain information.
+You can set these as shell enviornment variables before running, or
+you can copy the `cypress.env.template.json` file to `cypress.env.json` and set the variables there.
 
 ```
 TEST_USERNAME=my.username TEST_EMAIL=my.username@email.com TEST_PASSWORD=XXXXX TEST_FIRST_NAME=fname TEST_LAST_NAME=lname BASE_URL=https://dev.renku.ch npx cypress open
