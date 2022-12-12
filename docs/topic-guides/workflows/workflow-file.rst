@@ -89,12 +89,13 @@ here".
         outputs:
           - data/output/flights-filtered.csv
         parameters:
-          - n
+          - -n
           - 10
 
 
 The inputs are filled in to the command at the ``$inputs`` template in the order
-in which they are specified in the ``inputs`` section.
+in which they are specified in the ``inputs`` section. The same goes for
+``$outputs`` and ``$parameters``.
 
 
 Templating by Argument Name
@@ -123,6 +124,11 @@ the ``command`` using ``$``.
           - n:
             prefix: -n
             value: 10
+
+.. note:: Renku uses basic YAML syntax for workflow definition files.
+    Users should not use advanced YAML syntax like anchors, aliases, schema,
+    etc. since the behavior is undefined. Moreover, in future we will implement
+    a customized YAML parser that won't allow these features.
 
 .. note:: If your command uses the ``$`` character, you can escape it by doing ``$$``.
 
@@ -170,8 +176,8 @@ outputs, too, including the workflow file itself.
 .. code-block:: console
 
     $ renku run workflow.yml
-    Executing step 'workflows/workflow-topic-guide-last.yml::filter': 'python src/filter_flights.py data/flight-data/2019-01-flights.csv.zip data/output/flights-filtered.csv' ...
-    Executing step 'workflows/workflow-topic-guide-last.yml::count': 'python src/count_flights.py data/output/flights-filtered.csv data/output/flights-count.csv' ...
+    Executing step 'flights-processing-pipeline::filter': 'python src/filter_flights.py data/flight-data/2019-01-flights.csv.zip data/output/flights-filtered.csv' ...
+    Executing step 'flights-processing-pipeline::count': 'python src/count_flights.py data/output/flights-filtered.csv data/output/flights-count.csv' ...
 
 .. note:: **Do you have output files you don't want to be committed, such as log files?**
     You have 2 options: (1) Do not list these outputs in the workflow definition
@@ -213,14 +219,10 @@ You may specify more than one step to run:
 Workflow Step Execution Order
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Workflow steps `may`` be executed in a different order than which they are
-written in the workflow file; however, this only happens if the steps are
-unrelated. When you execute a workflow file, Renku determines how the steps in
-the workflow are related (builds an execution graph). For example, Renku notices
-that the output of step ``filter`` (``flights-filtered.csv``) is the input to
-step ``count``, and therefore step ``filter`` `must` be executed before step
-``count``. But if there are no dependencies between steps, they may be run in
-any order.
+When you execute a workflow file, Renku builds an execution graph to determine
+how the steps in the workflow are related. Renku then executes steps in that
+order. This means that the order of steps in the workflow file has no effect on
+the execution order.
 
 
 The ``--dry-run`` and ``--no-commit`` flags

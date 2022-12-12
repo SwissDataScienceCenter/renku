@@ -4,7 +4,7 @@ Tracking Workflows Interactively
 ================================
 
 Renku provides a simple set of commands for recording your data processing steps
-as you run them and stitching them together into workflows. 
+as you run them. You can also stitch these steps together into workflows.
 
 Tracking a Workflow Step with ``renku run``
 -------------------------------------------
@@ -17,12 +17,12 @@ later.
 
     $ renku run --name run-analysis python run_analysis.py input_file.csv output_file.csv
 
-You may also identify the workflow step's inputs and outputs via the ``-i`` and
-``-o`` flags, as shown here:
+If you need to distinguish renku arguments from those of your script, use ``--``
+to mark when the renku arguments end and the script command start.
 
 .. code-block:: console
 
-    $ renku run --name run-analysis -- python run_analysis.py -i input_file.csv -o output_file.csv
+    $ renku run --name run-analysis -- python run_analysis.py input_file.csv output_file.csv
 
 This command creates a workflow step called `run-analysis`.
 

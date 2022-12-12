@@ -4,8 +4,8 @@ Define your Workflow in a Workflow File
 ---------------------------------------
 
 The ``renku run`` command is great for tracking the use of a small number of
-scripts. However, if you are building a processing pipeline that involves many
-steps, we recommend to encode your workflow in a workflow file.
+scripts or commands. However, if you are building a processing pipeline that
+involves many steps, we recommend to encode your workflow in a workflow file.
 
 
 Introducing the Renku Workflow File
@@ -49,8 +49,8 @@ Using Templating in a Workflow File
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Renku provides a templating feature so that you never have to type the same path
-twice. In the ``command``, we can replace the paths to the inputs with the
-``$input``` template, and likewise for the ``$outputs``.
+twice. In the ``command`` field, we can replace the paths to the inputs with the
+``$inputs`` template, and likewise for the ``$outputs``.
 
 .. code-block:: yaml
 

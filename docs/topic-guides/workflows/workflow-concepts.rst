@@ -14,11 +14,11 @@ data``, ``code``, and ``results``:
         rankdir="LR"
         nodesep=0.01
         node [fontname="Raleway"]
-        _results [color="white", label="", image="../_static/icons/scatter_plot.svg"]
+        _results [color="white", label="", image="../../_static/icons/scatter_plot.svg"]
         results [color="white"]
-        _code [color="white", label="", image="../_static/icons/electronics.svg"]
+        _code [color="white", label="", image="../../_static/icons/electronics.svg"]
         code [color="white"]
-        data [color="white", label="", image="../_static/icons/data_sheet.svg"]
+        data [color="white", label="", image="../../_static/icons/data_sheet.svg"]
         "input data" [color="white"]
 
 
