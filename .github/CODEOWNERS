@@ -1,4 +1,4 @@
-*           @SwissDataScienceCenter/renku-maintainers
-/docs/      @SwissDataScienceCenter/documentation-reviewers
-*.rst       @SwissDataScienceCenter/documentation-reviewers
+*           @SwissDataScienceCenter/renku-devs
 /helm-chart/    @SwissDataScienceCenter/kartografen
+/helm-chart/renku/requirements.yaml     @YAT
+/CHANGELOG.rst  @SwissDataScienceCenter/renku-product-management
