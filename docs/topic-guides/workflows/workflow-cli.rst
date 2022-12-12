@@ -17,8 +17,8 @@ later.
 
     $ renku run --name run-analysis python run_analysis.py input_file.csv output_file.csv
 
-If you need to distinguish renku arguments from those of your script, use ``--``
-to mark when the renku arguments end and the script command start.
+If you need to distinguish ``renku`` arguments from your script's arguments, use
+``--`` to mark where the Renku arguments end and the script command starts.
 
 .. code-block:: console
 
