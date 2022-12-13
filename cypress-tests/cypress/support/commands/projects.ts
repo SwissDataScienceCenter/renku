@@ -1,3 +1,4 @@
+import { TIMEOUTS } from "../../../config";
 
 type ProjectIdentifier = {
   name: string
@@ -22,7 +23,7 @@ function createProject(newProjectProps: NewProjectProps) {
 
   cy.get(`[data-cy="create-project-button"]`).should("be.visible").click();
   cy.url().should("contain", name);
-  cy.get(`[data-cy="header-project"]`).should("be.visible");
+  cy.get(`[data-cy="header-project"]`, { timeout: TIMEOUTS.long }).should("be.visible");
   cy.get("ul.nav-pills-underline").should("be.visible");
 }
 
