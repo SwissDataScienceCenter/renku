@@ -1,5 +1,30 @@
 .. _changelog:
 
+0.21.0
+------
+
+Renku ``0.21.0`` brings the ability to handle expiring Gitlab tokens in user sessions and various bug fixes. 
+
+Internal Changes
+~~~~~~~~~~~~~~~~
+
+**Improvements**
+
+* **Gateway**: Add endpoint for refreshing expiring Gitlab tokens
+* **Sessions**: Check LFS size and available disk space before cloning
+
+**Bug fixes**
+
+* **Sessions**: Handle expiring Gitlab tokens
+* **Gateway**: Do not remove Redis clients on logout
+* **Gateway**: Address security vulnerabilities
+
+Individual components
+~~~~~~~~~~~~~~~~~~~~~~
+
+- `renku-gateway 0.18.0 <https://github.com/SwissDataScienceCenter/renku-gateway/releases/tag/0.18.0>`_
+- `renku-notebooks 1.14.0 <https://github.com/SwissDataScienceCenter/renku-notebooks/releases/tag/1.14.0>`_
+
 0.20.0
 ------
 

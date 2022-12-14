@@ -37,3 +37,11 @@ changes for spelling mistakes by running:
 
     (.venv) /workspace/renku/docs $ sphinx-build -nNW -b spelling -d _build/doctrees ./ _build/spelling
     (.venv) /workspace/renku/docs $ sphinx-build -nNW . _build/html
+
+
+Using Nix
+---------
+
+We provide a ``nix`` configuration that provides all the required libraries for developing the
+renku helm charts and the documentation. To use, simply run ``nix-shell`` and your shell will
+be configured with everything you need.
