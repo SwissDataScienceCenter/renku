@@ -18,16 +18,21 @@ export function searchForProject(props: SearchForProjectProps) {
   cy.contains(`${props.namespace}/${props.name}`).should("be.visible");
 }
 
+function dataCy(value: string) {
+  return cy.get(`[data-cy=${value}]`);
+}
+
 export default function registerGeneralCommands() {
   Cypress.Commands.add("getIframe", getIframe);
   Cypress.Commands.add("searchForProject", searchForProject);
+  Cypress.Commands.add("dataCy", dataCy);
 }
 
 declare global {
   // eslint-disable-next-line @typescript-eslint/no-namespace
   namespace Cypress {
     interface Chainable {
-      // general
+      dataCy(value: string);
       getIframe(selector: string): Chainable<unknown>;
       searchForProject(props: SearchForProjectProps);
     }
