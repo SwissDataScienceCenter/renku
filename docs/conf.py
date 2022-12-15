@@ -33,7 +33,8 @@ sys.path.append(abspath(join(dirname(__file__), "renku-python/docs/_ext")))
 # ones.
 extensions = [
     "cheatsheet",
-    "plantweb.directive",
+    #"plantweb.directive",
+    'sphinxcontrib.plantuml',
     "sphinx_click",
     "sphinx_copybutton",
     "sphinx_panels",
@@ -51,8 +52,10 @@ extensions = [
     "sphinxcontrib.spelling",
 ]
 
+plantuml = "java -jar " + abspath(join(dirname(__file__), "_static/uml/plantuml.jar"))
+plantuml_output_format = "svg"
 # Plantweb configuration
-plantweb_defaults = {"format": "png"}
+plantweb_defaults = {"format": "svg"}
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ["_templates"]

@@ -43,10 +43,122 @@ The figure below shows an overview of the components
 and their interactions. Blue components are off-the-shelf, yellow components
 are either built or extended by us.
 
-.. _fig-component-architecture:
+System Context
+--------------
 
-.. mermaid:: /_static/graphviz/renku_architecture.mmd
+.. uml::
 
+    @startuml
+    !include <C4/C4_Context>
+
+    skinparam linetype ortho
+
+    Person(logged_in, "Logged-In user")
+    Person(anonymous, "Anonymous User")
+    Person(cli, "Renku CLI")
+    System(renku, "Renku", $link="../reference/services/services-architecture.html#container-diagram")
+    System(gitlab, "Gitlab")
+    System(keycloak, "Keycloak")
+    System(k8s, "Kubernetes")
+    System(postgres, "PostgreSQL")
+    System(redis, "Redis")
+    System(jena, "Jena")
+
+    Rel(logged_in, renku, "Uses", "HTTPS")
+    Rel(anonymous, renku, "Uses", "HTTPS")
+    Rel(renku, keycloak, "Auth", "HTTPS")
+    BiRel(renku, gitlab, "pull/push/events", "Git+SSH")
+    Rel(renku, k8s, "starts sessions", "K8s API")
+    Rel(renku, postgres, "read/write")
+    Rel(renku, redis, "read/write")
+    Rel(renku, jena, "store triples")
+    @enduml
+
+Container Diagram
+-----------------
+
+.. uml::
+
+    @startuml
+    !include <C4/C4_Container.puml>
+
+    skinparam linetype ortho
+
+    Person(logged_in, "Logged-In user")
+    Person(anonymous, "Anonymous User")
+    Person(cli, "Renku CLI")
+    System_Boundary(renku, "Renku") {
+        Container(ui, "UI", "React", "The homepage")
+        Container(ui_server, "UI-Server", "Node", "Backend for Frontend")
+        Container(gateway, "Gateway", "Traefik", "API Gateway")
+        Container(core_service, "core-service", "Python", "Backend service for project interaction", $link="../reference/services/services-architecture.html#core-service")
+        Container(renku_graph, "renku-graph", "Scala", "Backend service for project interaction")
+        Container(renku_notebooks, "renku-notebooks", "Python", "Interactive session scheduler")
+        Container(amalthea, "Amalthea", "Python", "K8s Operator for scheduling sessions")
+    }
+    System(gitlab, "Gitlab")
+    System(keycloak, "Keycloak")
+    System(k8s, "Kubernetes")
+    System(postgres, "PostgreSQL")
+    System(redis, "Redis")
+    System(jena, "Jena")
+
+    Rel_D(logged_in, ui, "Uses", "HTTPS")
+    Rel_D(anonymous, ui, "Uses", "HTTPS")
+    Rel(ui, gateway, "Uses", "HTTPS")
+    Rel(gateway, ui_server, "Uses", "HTTPS")
+    Rel(gateway, keycloak, "Gets tokens from", "HTTPS")
+    Rel(ui_server, gateway, "forwards requests", "HTTPS")
+    Rel(gateway, core_service, "forwards requests", "HTTPS")
+    Rel_D(core_service, gitlab, "pushes to repository", "Git+SSH")
+    Rel(core_service, redis, "cache projects")
+    Rel(gateway, renku_notebooks, "forwards requests", "HTTPS")
+    Rel(renku_notebooks, amalthea, "schedules sessions", "Custom Resource")
+    Rel(amalthea, k8s, "starts sessions", "K8s API")
+    Rel(gateway, renku_graph, "forward requests", "HTTPS")
+    Rel_D(cli, gitlab, "pull/push", "Git+SSH")
+    Rel_D(cli, renku_notebooks, "manage sessions", "HTTPS")
+    Rel(gateway, redis, "get tokens for requests")
+    Rel_D(gitlab, postgres, "store/retrieve metadata")
+    Rel_D(renku_graph, postgres, "keep gitlab eventlog")
+    Rel_D(renku_graph, jena, "store/search triples")
+    Rel_D(keycloak, postgres, "store settings/auth")
+    @enduml
+
+Component Diagrams
+------------------
+
+Core Service
+~~~~~~~~~~~~
+
+.. uml::
+
+    @startuml
+    !include <C4/C4_Dynamic.puml>
+
+    skinparam linetype ortho
+
+    Component_Ext(browser, "Browser")
+
+    Component_Ext(ingress, "Ingress")
+
+    Container_Boundary(gateway, "API Gateway") {
+        Component(gateway_traefik, "Traefik")
+        Component(gateway_auth, "Gateway Auth")
+    }
+
+    Container_Boundary(core_service_boundary, "core-service") {
+        Component(traefik, "Traefik")
+        Component(core_service, "core-service", "Python")
+    }
+
+    Rel_R(browser, ingress, "")
+    Rel_R(ingress, gateway_traefik, "")
+    Rel(gateway_traefik, traefik, "")
+    BiRel(traefik, gateway_auth, "Exchange JWT")
+    Rel(traefik, core_service, "")
+    Lay_R(gateway_traefik, gateway_auth)
+    @enduml
 
 .. _renku: https://github.com/SwissDataScienceCenter/renku
 .. _renku-python: https://github.com/SwissDataScienceCenter/renku-python
