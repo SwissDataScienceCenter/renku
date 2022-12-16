@@ -5,6 +5,19 @@
 
 Renku ``0.21.0`` brings the ability to handle expiring Gitlab tokens in user sessions and various bug fixes. 
 
+User-Facing Changes
+~~~~~~~~~~~~~~~~~~~
+
+**✨ Improvements**
+
+* 🎨 **UI**: Improve layout on different pages: project creation, starting sessions, file browser.
+
+**🐞 Bug Fixes**
+
+* 📃 **UI**: Update broken links local projects, to documentation, and add more links to useful resources.
+* 🚀 **UI**: Fix glitches with autosaves and improve layout of session pages.
+* 🔦 **UI**: Prevent flashing inputs when forking a project.
+
 Internal Changes
 ~~~~~~~~~~~~~~~~
 
@@ -12,6 +25,7 @@ Internal Changes
 
 * **Gateway**: Add endpoint for refreshing expiring Gitlab tokens
 * **Sessions**: Check LFS size and available disk space before cloning
+* **UI**: Receive notifications when sessions change
 
 **Bug fixes**
 
@@ -24,6 +38,7 @@ Individual components
 
 - `renku-gateway 0.18.0 <https://github.com/SwissDataScienceCenter/renku-gateway/releases/tag/0.18.0>`_
 - `renku-notebooks 1.14.0 <https://github.com/SwissDataScienceCenter/renku-notebooks/releases/tag/1.14.0>`_
+- `renku-ui 2.14.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/2.14.0>`_
 
 0.20.0
 ------
@@ -39,7 +54,7 @@ User-Facing Changes
 * 🎨 **UI**: The RenkuLab login and logout pages have been updated with the latest styling.
 * 💬 **Renku CLI**: When you run ``renku save`` in a clean but unpushed repository, ``renku`` now informs you that it has pushed changes to the remote, rather than just saying that there were no changes to save.  
 
-**🐞Bug Fixes**
+**🐞 Bug Fixes**
 
 * 💔 **Renku CLI**: Fixed an issue where ``renku workflow compose`` would break ``renku workflow list``.
 * 🍴 **UI**: Fixed the Project name field getting reset when forking a project. 
