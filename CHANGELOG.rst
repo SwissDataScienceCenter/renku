@@ -14,7 +14,7 @@ Internal Changes
 * **Sessions**: Check LFS size and available disk space before cloning
 * **Knowledge Graph**: Improve access tokens management
 * **Knowledge Graph**: Add migration importing Composite Plans into the Triples Store
-* **Knowledge Graph**: Prevent from data corruption caused by duplicate Project creation dates
+* **Knowledge Graph**: Fix to prevent data corruption which could previously occur due to duplicate Project creation dates
 
 **Bug fixes**
 
