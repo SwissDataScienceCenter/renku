@@ -1,5 +1,33 @@
 .. _changelog:
 
+0.21.1
+------
+
+Renku ``0.21.1`` brings various bug fixes for the Knowledge-Graph services.
+
+Internal Changes
+~~~~~~~~~~~~~~~~
+
+**Improvements**
+
+* **Knowledge Graph**: Improve access tokens management
+* **Knowledge Graph**: Add migration importing Composite Plans into the Triples Store
+* **Knowledge Graph**: Prevent from data corruption caused by duplicate Project creation dates
+
+**Bug fixes**
+
+* **Knowledge Graph**: Fix vulnerabilities in Graph Services' docker images
+* **Knowledge Graph**: Handle cases when Plan Invalidation Time is wrong
+* **Knowledge Graph**: Made Cross-Entity Search API to sort in a case-insensitive way
+* **Knowledge Graph**: Treat query phrase given to the Cross-Entity Search API as a String
+* **Knowledge Graph**: Return all inactive Projects from the User's-Projects API
+
+Individual components
+~~~~~~~~~~~~~~~~~~~~~~
+
+- `renku-graph 2.25.0 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/2.25.0>`_
+
+
 0.21.0
 ------
 
