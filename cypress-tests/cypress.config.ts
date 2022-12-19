@@ -1,10 +1,9 @@
-import { defineConfig } from "cypress"
-import { TIMEOUTS } from "./config"
+import { defineConfig } from "cypress";
+import { TIMEOUTS } from "./config";
 
 export default defineConfig({
   e2e: {
-    baseUrl: process.env.BASE_URL,
-    supportFile: "cypress/support/index.ts",
+    baseUrl: process.env.BASE_URL || "https://dev.renku.ch"
   },
   env: {
     TEST_EMAIL: process.env.TEST_EMAIL,
@@ -15,4 +14,4 @@ export default defineConfig({
   },
   defaultCommandTimeout: TIMEOUTS.standard,
   chromeWebSecurity: false,
-})
+});
