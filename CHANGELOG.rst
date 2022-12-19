@@ -12,8 +12,8 @@ Internal Changes
 
 * **Gateway**: Add endpoint for refreshing expiring Gitlab tokens
 * **Sessions**: Check LFS size and available disk space before cloning
-* **Knowledge Graph**: Improve access tokens management
-* **Knowledge Graph**: Add migration importing Composite Plans into the Triples Store
+* **Knowledge Graph**: Improve functionality to refresh access tokens before expiration
+* **Knowledge Graph**: Enhance migration functionality to add missing CompositePlans when missing
 * **Knowledge Graph**: Fix to prevent data corruption which could previously occur due to duplicate Project creation dates
 
 **Bug fixes**
@@ -21,10 +21,10 @@ Internal Changes
 * **Sessions**: Handle expiring Gitlab tokens
 * **Gateway**: Do not remove Redis clients on logout
 * **Gateway**: Address security vulnerabilities
-* **Knowledge Graph**: Fix vulnerabilities in Graph Services' docker images
+* **Knowledge Graph**: Switched to the latest Alpine linux to address docker image vulnerabilities identified by snyk
 * **Knowledge Graph**: Handle cases when Plan Invalidation Time is wrong
-* **Knowledge Graph**: Made Cross-Entity Search API to sort in a case-insensitive way
-* **Knowledge Graph**: Treat query phrase given to the Cross-Entity Search API as a String
+* **Knowledge Graph**: Modified Cross Entity search API to perform case-insensitive sorting
+* **Knowledge Graph**: Escape Lucene keywords from Cross-Entity Search `query` parameter
 * **Knowledge Graph**: Return all inactive Projects from the User's-Projects API
 
 Individual components
