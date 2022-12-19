@@ -5,20 +5,42 @@
 
 Renku ``0.21.0`` brings the ability to handle expiring Gitlab tokens in user sessions and various bug fixes. 
 
+User-Facing Changes
+~~~~~~~~~~~~~~~~~~~
+
+**✨ Improvements**
+
+* 🎨 **UI**: Improve the layout of the project creation, session start, and file browser pages.
+
+**🐞 Bug Fixes**
+
+* 📃 **UI**: Update broken links to local projects and documentation, and add more links to useful resources
+  (`#2199 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2199>`_,
+  `#2207 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2207>`_,
+  `#2209 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2209>`_).
+* 🚀 **UI**: Fix glitches with autosave and improve layout of session pages
+  (`7fbda29 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2199/commits/7fbda299f6e2a956abc541565e3680160f09609d>`_,
+  `#2211 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2211>`_).
+* 🔦 **UI**: Prevent flashing inputs when forking a project
+  (`#2157 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2157>`_).
+
 Internal Changes
 ~~~~~~~~~~~~~~~~
 
 **Improvements**
 
-* **Gateway**: Add endpoint for refreshing expiring Gitlab tokens
+* **Gateway**: Add endpoint for refreshing expiring GitLab tokens
 * **Sessions**: Check LFS size and available disk space before cloning
 * **Knowledge Graph**: Improve functionality to refresh access tokens before expiration
 * **Knowledge Graph**: Enhance migration functionality to restore missing CompositePlans 
 * **Knowledge Graph**: Fix to prevent data corruption which could previously occur due to duplicate Project creation dates
+* **UI**: Receive notifications through WebSocket when session state changes
+  (`#2145 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2145>`_,
+  `#2189 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2189>`_).
 
 **Bug fixes**
 
-* **Sessions**: Handle expiring Gitlab tokens
+* **Sessions**: Handle expiring GitLab tokens
 * **Gateway**: Do not remove Redis clients on logout
 * **Gateway**: Address security vulnerabilities
 * **Knowledge Graph**: Switched to the latest Alpine Linux to address docker image vulnerabilities identified by Snyk
@@ -33,7 +55,7 @@ Individual components
 - `renku-gateway 0.18.0 <https://github.com/SwissDataScienceCenter/renku-gateway/releases/tag/0.18.0>`_
 - `renku-notebooks 1.14.0 <https://github.com/SwissDataScienceCenter/renku-notebooks/releases/tag/1.14.0>`_
 - `renku-graph 2.25.0 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/2.25.0>`_
-
+- `renku-ui 2.14.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/2.14.0>`_
 
 0.20.0
 ------
@@ -49,7 +71,7 @@ User-Facing Changes
 * 🎨 **UI**: The RenkuLab login and logout pages have been updated with the latest styling.
 * 💬 **Renku CLI**: When you run ``renku save`` in a clean but unpushed repository, ``renku`` now informs you that it has pushed changes to the remote, rather than just saying that there were no changes to save.  
 
-**🐞Bug Fixes**
+**🐞 Bug Fixes**
 
 * 💔 **Renku CLI**: Fixed an issue where ``renku workflow compose`` would break ``renku workflow list``.
 * 🍴 **UI**: Fixed the Project name field getting reset when forking a project. 
