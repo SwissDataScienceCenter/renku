@@ -14,7 +14,7 @@ User-Facing Changes
 
 **🐞 Bug Fixes**
 
-* 📃 **UI**: Update broken links local projects, to documentation, and add more links to useful resources.
+* 📃 **UI**: Update broken links to local projects and documentation, and add more links to useful resources.
 * 🚀 **UI**: Fix glitches with autosave and improve layout of session pages.
 * 🔦 **UI**: Prevent flashing inputs when forking a project.
 
