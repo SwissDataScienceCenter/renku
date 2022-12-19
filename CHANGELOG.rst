@@ -10,7 +10,7 @@ User-Facing Changes
 
 **✨ Improvements**
 
-* 🎨 **UI**: Improve layout on different pages: project creation, starting sessions, file browser.
+* 🎨 **UI**: Improve the layout of the project creation, session start, and file browser pages.
 
 **🐞 Bug Fixes**
 
