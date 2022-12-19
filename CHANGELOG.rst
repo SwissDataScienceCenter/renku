@@ -14,22 +14,30 @@ User-Facing Changes
 
 **🐞 Bug Fixes**
 
-* 📃 **UI**: Update broken links to local projects and documentation, and add more links to useful resources.
-* 🚀 **UI**: Fix glitches with autosave and improve layout of session pages.
-* 🔦 **UI**: Prevent flashing inputs when forking a project.
+* 📃 **UI**: Update broken links to local projects and documentation, and add more links to useful resources
+  (`#2199 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2199>`_,
+  `#2207 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2207>`_,
+  `#2209 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2209>`_).
+* 🚀 **UI**: Fix glitches with autosave and improve layout of session pages
+  (`7fbda29 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2199/commits/7fbda299f6e2a956abc541565e3680160f09609d>`_,
+  `#2211 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2211>`_).
+* 🔦 **UI**: Prevent flashing inputs when forking a project
+  (`#2157 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2157>`_).
 
 Internal Changes
 ~~~~~~~~~~~~~~~~
 
 **Improvements**
 
-* **Gateway**: Add endpoint for refreshing expiring Gitlab tokens
+* **Gateway**: Add endpoint for refreshing expiring GitLab tokens
 * **Sessions**: Check LFS size and available disk space before cloning
-* **UI**: Receive notifications when sessions change
+* **UI**: Receive notifications through WebSocket when session state changes
+  (`#2145 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2145>`_,
+  `#2189 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2189>`_).
 
 **Bug fixes**
 
-* **Sessions**: Handle expiring Gitlab tokens
+* **Sessions**: Handle expiring GitLab tokens
 * **Gateway**: Do not remove Redis clients on logout
 * **Gateway**: Address security vulnerabilities
 
