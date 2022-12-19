@@ -21,7 +21,7 @@ Internal Changes
 * **Sessions**: Handle expiring Gitlab tokens
 * **Gateway**: Do not remove Redis clients on logout
 * **Gateway**: Address security vulnerabilities
-* **Knowledge Graph**: Switched to the latest Alpine linux to address docker image vulnerabilities identified by snyk
+* **Knowledge Graph**: Switched to the latest Alpine Linux to address docker image vulnerabilities identified by Snyk
 * **Knowledge Graph**: Handle cases when Plan Invalidation Time is wrong
 * **Knowledge Graph**: Modified Cross Entity search API to perform case-insensitive sorting
 * **Knowledge Graph**: Escape Lucene keywords from Cross-Entity Search `query` parameter
