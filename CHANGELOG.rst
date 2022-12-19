@@ -13,7 +13,7 @@ Internal Changes
 * **Gateway**: Add endpoint for refreshing expiring Gitlab tokens
 * **Sessions**: Check LFS size and available disk space before cloning
 * **Knowledge Graph**: Improve functionality to refresh access tokens before expiration
-* **Knowledge Graph**: Enhance migration functionality to add missing CompositePlans when missing
+* **Knowledge Graph**: Enhance migration functionality to restore missing CompositePlans 
 * **Knowledge Graph**: Fix to prevent data corruption which could previously occur due to duplicate Project creation dates
 
 **Bug fixes**
@@ -23,9 +23,9 @@ Internal Changes
 * **Gateway**: Address security vulnerabilities
 * **Knowledge Graph**: Switched to the latest Alpine Linux to address docker image vulnerabilities identified by Snyk
 * **Knowledge Graph**: Handle cases when Plan Invalidation Time is wrong
-* **Knowledge Graph**: Modified Cross Entity search API to perform case-insensitive sorting
+* **Knowledge Graph**: Make the Cross Entity search API results sorting case-insensitive
 * **Knowledge Graph**: Escape Lucene keywords from Cross-Entity Search `query` parameter
-* **Knowledge Graph**: Return all inactive Projects from the User's-Projects API
+* **Knowledge Graph**: Return all inactive Projects from the User's-Projects API (previously only returned 20)
 
 Individual components
 ~~~~~~~~~~~~~~~~~~~~~~
