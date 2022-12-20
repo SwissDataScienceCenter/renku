@@ -142,7 +142,7 @@ trait Datasets {
     verify browserAt datasetPage
   }
 
-  def `modify the dataset`(datasetPage: DatasetPage, by: Modification, and: Modification*): DatasetPage = {
+  def `modify the dataset`(datasetPage: DatasetPage, by: Modification, and: Modification*): Unit = {
     Given(s"the user is on the page of the dataset")
     `navigate to the dataset`(datasetPage)
 
@@ -177,8 +177,6 @@ trait Datasets {
     val newTitle = by.newValue
     Then(s"the dataset new title should contain '$newTitle'")
     verify that datasetPage.datasetTitle contains newTitle
-
-    datasetPage
   }
 
   case class Modification private (name: String, field: DatasetPage => WebElement, newValue: String) {

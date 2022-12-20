@@ -73,7 +73,7 @@ trait TopBar {
         .moveToElement(profileButton)
         .click()
         .build()
-        .perform();
+        .perform()
     }
 
     def mainNavToggler(implicit webDriver: WebDriver): WebElement = eventually {

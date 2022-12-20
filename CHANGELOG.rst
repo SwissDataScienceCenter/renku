@@ -31,6 +31,9 @@ Internal Changes
 
 * **Gateway**: Add endpoint for refreshing expiring GitLab tokens
 * **Sessions**: Check LFS size and available disk space before cloning
+* **Knowledge Graph**: Improve functionality to refresh access tokens before expiration
+* **Knowledge Graph**: Enhance migration functionality to restore missing CompositePlans 
+* **Knowledge Graph**: Fix to prevent data corruption which could previously occur due to duplicate Project creation dates
 * **UI**: Receive notifications through WebSocket when session state changes
   (`#2145 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2145>`_,
   `#2189 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2189>`_).
@@ -40,12 +43,18 @@ Internal Changes
 * **Sessions**: Handle expiring GitLab tokens
 * **Gateway**: Do not remove Redis clients on logout
 * **Gateway**: Address security vulnerabilities
+* **Knowledge Graph**: Switched to the latest Alpine Linux to address docker image vulnerabilities identified by Snyk
+* **Knowledge Graph**: Handle cases when Plan Invalidation Time is wrong
+* **Knowledge Graph**: Make the Cross Entity search API results sorting case-insensitive
+* **Knowledge Graph**: Escape Lucene keywords from Cross-Entity Search `query` parameter
+* **Knowledge Graph**: Return all inactive Projects from the User's-Projects API (previously only returned 20)
 
 Individual components
 ~~~~~~~~~~~~~~~~~~~~~~
 
 - `renku-gateway 0.18.0 <https://github.com/SwissDataScienceCenter/renku-gateway/releases/tag/0.18.0>`_
 - `renku-notebooks 1.14.0 <https://github.com/SwissDataScienceCenter/renku-notebooks/releases/tag/1.14.0>`_
+- `renku-graph 2.25.0 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/2.25.0>`_
 - `renku-ui 2.14.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/2.14.0>`_
 
 0.20.0
