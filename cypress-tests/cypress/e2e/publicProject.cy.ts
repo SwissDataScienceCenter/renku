@@ -64,6 +64,8 @@ describe("Basic public project functionality", () => {
     //cy.contains("Knowledge Graph integration is active").should("be.visible");
   });
 
+  // Temporarily removed until issues in the UI that cause flakiness with this
+  // part of the tests are resolved.
   // it("Can can view files", () => {
   //   cy.contains("Files").click();
   //   cy.get("div#tree-content").contains(".renku").click();
