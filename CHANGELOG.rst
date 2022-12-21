@@ -3,7 +3,7 @@
 0.21.0
 ------
 
-Renku ``0.21.0`` brings the ability to handle expiring Gitlab tokens in user sessions and various bug fixes. 
+Renku ``0.21.0`` brings tidings of tweaks and bug fixes to make your Renku experience a little bit smoother.
 
 User-Facing Changes
 ~~~~~~~~~~~~~~~~~~~
@@ -30,17 +30,16 @@ Internal Changes
 **Improvements**
 
 * **Gateway**: Add endpoint for refreshing expiring GitLab tokens
-* **Sessions**: Check LFS size and available disk space before cloning
 * **Knowledge Graph**: Improve functionality to refresh access tokens before expiration
 * **Knowledge Graph**: Enhance migration functionality to restore missing CompositePlans 
 * **Knowledge Graph**: Fix to prevent data corruption which could previously occur due to duplicate Project creation dates
+* **Sessions**: Check LFS size and available disk space before cloning
 * **UI**: Receive notifications through WebSocket when session state changes
   (`#2145 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2145>`_,
   `#2189 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2189>`_).
 
 **Bug fixes**
 
-* **Sessions**: Handle expiring GitLab tokens
 * **Gateway**: Do not remove Redis clients on logout
 * **Gateway**: Address security vulnerabilities
 * **Knowledge Graph**: Switched to the latest Alpine Linux to address docker image vulnerabilities identified by Snyk
@@ -48,6 +47,7 @@ Internal Changes
 * **Knowledge Graph**: Make the Cross Entity search API results sorting case-insensitive
 * **Knowledge Graph**: Escape Lucene keywords from Cross-Entity Search `query` parameter
 * **Knowledge Graph**: Return all inactive Projects from the User's-Projects API (previously only returned 20)
+* **Sessions**: Handle expiring GitLab tokens
 
 Individual components
 ~~~~~~~~~~~~~~~~~~~~~~
