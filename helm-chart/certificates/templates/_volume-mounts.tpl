@@ -17,3 +17,10 @@
   subPath: java/cacerts
   readOnly: true
 {{- end -}}
+
+{{- define "certificates.volumeMounts.openjdk17" -}}
+- name: etc-ssl-certs
+  mountPath: /opt/java/openjdk/lib/security/cacerts
+  subPath: java/cacerts
+  readOnly: true
+{{- end -}}
