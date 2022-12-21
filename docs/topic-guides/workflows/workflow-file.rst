@@ -14,7 +14,7 @@ Adding a Workflow File to your Project
 --------------------------------------
 
 To create a workflow definition file in your project, create a file called
-``workflow.yml``. 
+``workflow.yml``.
 
 You may have more than one workflow file in your project! Workflow files may be
 named however you like, as long as they end with the `.yml` or `yaml` file
@@ -35,17 +35,17 @@ outputs are simply listed, as in the example below:
 
 .. code-block:: yaml
 
-    name: flights-processing-pipeline
+    name: data-pipeline
     steps:
       filter:
-        command: python src/filter_flights.py data/flight-data/2019-01-flights.csv.zip data/output/flights-filtered.csv
+        command: python src/filter.py data/flight-data/flights.csv data/output/filtered.csv
         inputs:
-          - src/filter_flights.py
-          - data/flight-data/2019-01-flights.csv.zip
+          - src/filter.py
+          - data/flight-data/flights.csv
         outputs:
-          - data/output/flights-filtered.csv
+          - data/output/filtered.csv
 
-.. note:: Note that the script being run is always listed in the ``inputs`` section (here, ``src/filter_flights.py``).
+.. note:: Note that the script being run is always listed in the ``inputs`` section (here, ``src/filter.py``).
 
 This workflow file defines the workflow's name and a sequence of steps. This
 file only includes one step, which is named ``filter``. Within the ``filter``
@@ -79,15 +79,15 @@ here".
 
 .. code-block:: yaml
 
-    name: flights-processing-pipeline
+    name: data-pipeline
     steps:
       filter:
         command: python $parameters $inputs $outputs
         inputs:
-          - src/filter_flights.py
-          - data/flight-data/2019-01-flights.csv.zip
+          - src/filter.py
+          - data/flight-data/flights.csv
         outputs:
-          - data/output/flights-filtered.csv
+          - data/output/filtered.csv
         parameters:
           - -n
           - 10
@@ -103,23 +103,23 @@ Templating by Argument Name
 
 If the ordering of arguments in your command is more complex, you can reference
 each argument individually by name. To do so, assign each input and output a
-name (such as ``raw-flights``) and a ``path``. Then, we reference those names in
+name (such as ``raw``) and a ``path``. Then, we reference those names in
 the ``command`` using ``$``.
 
 .. code-block:: yaml
 
-    name: flights-processing-pipeline
+    name: data-pipeline
     steps:
       filter:
-        command: python $n $filter-py $raw-flights $filtered-flights
+        command: python $n $filter-py $raw $filtered
         inputs:
           - filter-py:
-              path: src/filter_flights.py
-          - raw-flights:
-              path: data/flight-data/2019-01-flights.csv.zip
+              path: src/filter.py
+          - raw:
+              path: data/flight-data/flights.csv
         outputs:
-          - filtered-flights:
-              path: data/output/flights-filtered.csv
+          - filtered:
+              path: data/output/filtered.csv
         parameters:
           - n:
             prefix: -n
@@ -141,29 +141,29 @@ workflow.
 
 .. code-block:: yaml
 
-    name: flights-processing-pipeline
+    name: data-pipeline
     steps:
       filter:
-        command: python $filter-py $raw-flights $filtered-flights
+        command: python $filter-py $raw $filtered
         inputs:
           - filter-py:
-              path: src/filter_flights.py
-          - raw-flights:
-              path: data/flight-data/2019-01-flights.csv.zip
+              path: src/filter.py
+          - raw:
+              path: data/flight-data/flights.csv
         outputs:
-          - filtered-flights:
-              path: data/output/flights-filtered.csv
+          - filtered:
+              path: data/output/filtered.csv
 
       count:
-        command: python $count-py $filtered-flights $flight_count
+        command: python $count-py $filtered $counts
         inputs:
           - count-py:
-              path: src/count_flights.py
-          - filtered-flights:
-              path: data/output/flights-filtered.csv
+              path: src/count.py
+          - filtered:
+              path: data/output/filtered.csv
         outputs:
-          - flight_count:
-              path: data/output/flights-count.csv
+          - counts:
+              path: data/output/counts.csv
 
 
 Executing a Workflow File
@@ -176,8 +176,8 @@ outputs, too, including the workflow file itself.
 .. code-block:: console
 
     $ renku run workflow.yml
-    Executing step 'flights-processing-pipeline::filter': 'python src/filter_flights.py data/flight-data/2019-01-flights.csv.zip data/output/flights-filtered.csv' ...
-    Executing step 'flights-processing-pipeline::count': 'python src/count_flights.py data/output/flights-filtered.csv data/output/flights-count.csv' ...
+    Executing step 'data-pipeline::filter': 'python src/filter.py data/flight-data/flights.csv data/output/filtered.csv' ...
+    Executing step 'data-pipeline::count': 'python src/count.py data/output/filtered.csv data/output/counts.csv' ...
 
 .. note:: **Do you have output files you don't want to be committed, such as log files?**
     You have 2 options: (1) Do not list these outputs in the workflow definition
@@ -201,28 +201,14 @@ You may specify more than one step to run:
 
         $ renku run workflow.yml filter count
 
-.. If we had a longer workflow, perhaps with 10 or more steps, we could specify a
-.. subset of steps to run.
-
-.. .. code-block:: console
-
-..         # runs the step 'filter' and every step after it.
-..         $ renku run workflow.yml filter:
-
-..         # runs every step before 'count', and the 'count' step
-..         $ renku run workflow.yml :count
-
-..         # runs every step between 'filter' and 'count', including 'filter' and 'count' themselves
-..         $ renku run workflow.yml filter:count
-
 
 Workflow Step Execution Order
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 When you execute a workflow file, Renku builds an execution graph to determine
-how the steps in the workflow are related. Renku then executes steps in that
-order. This means that the order of steps in the workflow file has no effect on
-the execution order.
+how the steps in the workflow are related. Renku then executes the steps in that
+order. This means that only the data dependencies between steps determine the
+execution order, not the order of steps in the workflow file.
 
 
 The ``--dry-run`` and ``--no-commit`` flags
@@ -230,11 +216,11 @@ The ``--dry-run`` and ``--no-commit`` flags
 
 By passing the ``--dry-run`` flag to the ``renku run`` command, you can instruct
 Renku to only print the order of execution of the steps without actually running
-any of them. 
+any of them.
 
 The ``--no-commit`` flags causes Renku to run the workflow file but it won't
 create a commit after the execution. Renku also won't create any metadata in
-this case.
+this case. This is a great option to use when developing or verifying a workflow!
 
 
 Adding more Information to a Workflow File
@@ -254,12 +240,12 @@ otherwise, Renku will warn that the file is not used in the command string.
     name: script-with-implicit-input
     steps:
       filter:
-        command: python $my_script
+        command: python $my-script
         inputs:
-          - my_script:
-              path: my_script.py
-          - hidden_input:
-              path: data/an_input.txt
+          - my-script:
+              path: my-script.py
+          - hidden-input:
+              path: data/an-input.txt
               implicit: true
 
 
@@ -271,38 +257,38 @@ You may provide further details in your workflow definition, such as a
 
 .. code-block:: yaml
 
-    name: flights-processing-pipeline
+    name: data-pipeline
     description: The workflow in the Renku Tutorial
     keywords:
       - tutorial
     steps:
       filter:
-        command: python $filter-py $raw-flights $filtered-flights
+        command: python $filter-py $raw $filtered
         description: Filter the raw flights data to only flights to the destination of interest
         inputs:
           - filter-py:
-              path: src/filter_flights.py
-          - raw-flights:
+              path: src/filter.py
+          - raw:
               description: The raw flights data
-              path: data/flight-data/2019-01-flights.csv.zip
+              path: data/flight-data/flights.csv
         outputs:
-          - filtered-flights:
+          - filtered:
               description: Flights to the destination of interest
-              path: data/output/flights-filtered.csv
+              path: data/output/filtered.csv
 
       count:
-        command: python $count-py $filtered-flights $flight_count
+        command: python $count-py $filtered $counts
         description: Count the number of flights
         inputs:
           - count-py:
-              path: src/count_flights.py
-          - filtered-flights:
+              path: src/count.py
+          - filtered:
               description: Flights to the destination of interest
-              path: data/output/flights-filtered.csv
+              path: data/output/filtered.csv
         outputs:
-          - flight_count:
+          - counts:
               description: Number of flights to the destination of interest
-              path: data/output/flights-count.csv
+              path: data/output/counts.csv
 
 
 Alternative Success Codes
@@ -328,37 +314,36 @@ Viewing a Workflow Visually
 After executing a workflow, you can view a visual diagram of how any file created
 by that workflow was created.
 
-To view this diagram, run :meth:`renku workflow visualize <renku.ui.cli.workflow>` 
+To view this diagram, run :meth:`renku workflow visualize <renku.ui.cli.workflow>`
 and pass the path to the file you would like to inspect:
 
 .. code-block:: console
 
-    $ renku workflow visualize data/output/flights-count.csv 
-                                        ┌─────────────────────────────────────────┐                    ┌─────────────────────┐                    ┌────────────────────────────────────────┐
-                                        │workflows/workflow-flights-tutorial-3.yml│                    │src/filter_flights.py│                    │data/flight-data/2019-01-flights.csv.zip│
-                                        └─────────────────────────────────────────┘                    └─────────────────────┘                    └────────────────────────────────────────┘
+    $ renku workflow visualize data/output/counts.csv
+                                        ┌─────────────────────────────────────────┐                    ┌─────────────┐                    ┌────────────────────────────┐
+                                        │workflows/workflow-flights-tutorial-3.yml│                    │src/filter.py│                    │data/flight-data/flights.csv│
+                                        └─────────────────────────────────────────┘                    └─────────────┘                    └────────────────────────────┘
                                                             *             *******                                    ***                                       ***
                                                             *                    ************                           ****                              *****
                                                             *                                **************                 ****                      ****
-                                                            *                                              *************  ╔═══════════════════════════════╗
-                                                            *                                                           **║python src/filter_flights.py...║
-                                                            *                                                             ╚═══════════════════════════════╝
+                                                            *                                              *************  ╔═══════════════════════╗
+                                                            *                                                           **║python src/filter.py...║
+                                                            *                                                             ╚═══════════════════════╝
                                                             *                                                                              *
                                                             *                                                                              *
                                                             *                                                                              *
-    ┌────────────────────┐                                    *                                                             ┌────────────────────────────────┐
-    │src/count_flights.py│                                    *                                                             │data/output/flights-filtered.csv│
-    └────────────────────┘                                    ***                                                           └────────────────────────────────┘
+        ┌────────────┐                                      *                                                             ┌────────────────────────┐
+        │src/count.py│                                      *                                                             │data/output/filtered.csv│
+        └────────────┘                                      ***                                                           └────────────────────────┘
                         *********                              *****                                                           *****
                                 ************                       *****                                              ********
                                             *************               ****                                 *********
-                                                            *************  ╔══════════════════════════════╗*****
-                                                                         **║python src/count_flights.py...║
-                                                                           ╚══════════════════════════════╝
+                                                            *************  ╔══════════════════════╗  *****
+                                                                         **║python src/count.py...║
+                                                                           ╚══════════════════════╝
                                                                                         *
                                                                                         *
                                                                                         *
-                                                                            ┌─────────────────────────────┐
-                                                                            │data/output/flights-count.csv│
-                                                                            └─────────────────────────────┘
-
+                                                                            ┌──────────────────────┐
+                                                                            │data/output/counts.csv│
+                                                                            └──────────────────────┘
