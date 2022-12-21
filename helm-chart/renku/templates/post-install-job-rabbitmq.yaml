@@ -1,0 +1,55 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: "{{ .Release.Name }}-post-install-rabbitmq"
+  labels:
+    heritage: {{ .Release.Service }}
+    release: {{ .Release.Name }}
+    chart: {{ template "renku.chart" . }}
+  annotations:
+    "helm.sh/hook": post-install,post-upgrade
+    "helm.sh/hook-weight": "10"
+    "helm.sh/hook-delete-policy": "before-hook-creation"
+spec:
+  template:
+    metadata:
+      name: "{{.Release.Name}}-post-install-rabbitmq"
+      labels:
+        app: post-install-rabbitmq
+        heritage: {{ .Release.Service }}
+        release: {{ .Release.Name }}
+        chart: {{ template "renku.chart" . }}
+        {{- if .Values.global.rabbitmq.external.disabled }}
+        {{ .Release.Name }}-rabbitmq-client: "true"
+        {{- end }}
+    spec:
+      restartPolicy: Never
+      initContainers:
+        {{- include "certificates.initContainer" . | nindent 8 }}
+      containers:
+        - name: init-rabbitmq
+          image: "{{ .Values.initRabbitmq.image.repository }}:{{ .Values.initRabbitmq.image.tag }}"
+          securityContext:
+            runAsUser: 1000
+            runAsGroup: 1000
+            allowPrivilegeEscalation: false
+            runAsNonRoot: true
+          volumeMounts:
+            {{- include "certificates.volumeMounts.system" . | nindent 12 }}
+            - name: config
+              mountPath: "/config"
+              readOnly: true
+          env:
+            - name: RABBITMQ_URL
+              {{- if .Values.global.rabbitmq.external.disabled }}
+              value: http://{{ .Release.Name }}-rabbitmq:15672
+              {{- else }}
+              value: {{ .Values.global.rabbitmq.external.managementUrl }}
+              {{- end }}
+            - name: RABBITMQ_VHOST
+              value: {{ .Values.global.rabbitmq.vhost }}
+      volumes:
+        {{- include "certificates.volumes" . | nindent 8 }}
+        - name: config
+          secret:
+            secretName: "{{ .Release.Name }}-rabbitmq-admin"

@@ -5,6 +5,16 @@
 ## Global variables
 ## Shared values/secrets
 global:
+  configuration:
+    ## A YAML string to be used as the configuration.
+    define: ""
+    merge:
+      ## If defined all keys in every secret are parsed with YAML
+      ## and then merged into the either overriden or default configuraion.
+      ## Use only one key per secret to control the order of merging.
+      ## JSON merge patch (RFC 7386) is used to merge the additional secrets.
+      additionalSecretNames: []
+
   gitlab:
     ## Name of the postgres database to be used by Gitlab
     postgresDatabase: gitlabhq_production
@@ -126,6 +136,23 @@ global:
       tag: "0.0.2"
     customCAs: []
       # - secret:
+  
+  ## Values for the RabbitMQ setup.
+  rabbitmq:
+    ## The external section is relevant only if an external RabbitMQ will be used
+    ## with Renku. The RabbitMQ management plugin needs to be enabled so that the
+    ## proper vhost, users and permissions are setup.
+    external:
+      disabled: true
+      managementUrl:
+      admin:
+        username: admin
+        password:
+    vhost: renku
+    users:
+      core:
+        username: core
+        password:
 
 ## Ingress configuration
 ## See: https://kubernetes.io/docs/concepts/services-networking/ingress/
@@ -823,3 +850,19 @@ initDb:
   image:
     repository: renku/init-db
     tag: "latest"
+
+initRabbitmq:
+  image:
+    repository: renku/init-rabbitmq
+    tag: "latest"
+
+## Values for the built-in RabbitMQ helm chart. If an external RabbitMQ is to be
+## used then set the global.rabbitmq.external.disabled flag to false.
+rabbitmq:
+  networkPolicy:
+    enabled: true
+    allowExternal: false
+  auth:
+    username: renku
+    password:
+    erlangCookie:

@@ -41,3 +41,9 @@ charts:
         valuesPath: initDb.image
         paths:
           - scripts/init-db
+      init-rabbitmq:
+        contextPath: scripts/init-rabbitmq
+        dockerfilePath: scripts/init-rabbitmq/Dockerfile
+        valuesPath: initRabbitmq.image
+        paths:
+          - scripts/init-rabbitmq
