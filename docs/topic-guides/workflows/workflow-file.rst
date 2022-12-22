@@ -38,10 +38,10 @@ outputs are simply listed, as in the example below:
     name: data-pipeline
     steps:
       filter:
-        command: python src/filter.py data/flight-data/flights.csv data/output/filtered.csv
+        command: python src/filter.py data/input/flights.csv data/output/filtered.csv
         inputs:
           - src/filter.py
-          - data/flight-data/flights.csv
+          - data/input/flights.csv
         outputs:
           - data/output/filtered.csv
 
@@ -85,7 +85,7 @@ here".
         command: python $parameters $inputs $outputs
         inputs:
           - src/filter.py
-          - data/flight-data/flights.csv
+          - data/input/flights.csv
         outputs:
           - data/output/filtered.csv
         parameters:
@@ -116,7 +116,7 @@ the ``command`` using ``$``.
           - filter-py:
               path: src/filter.py
           - raw:
-              path: data/flight-data/flights.csv
+              path: data/input/flights.csv
         outputs:
           - filtered:
               path: data/output/filtered.csv
@@ -149,7 +149,7 @@ workflow.
           - filter-py:
               path: src/filter.py
           - raw:
-              path: data/flight-data/flights.csv
+              path: data/input/flights.csv
         outputs:
           - filtered:
               path: data/output/filtered.csv
@@ -176,7 +176,7 @@ outputs, too, including the workflow file itself.
 .. code-block:: console
 
     $ renku run workflow.yml
-    Executing step 'data-pipeline::filter': 'python src/filter.py data/flight-data/flights.csv data/output/filtered.csv' ...
+    Executing step 'data-pipeline::filter': 'python src/filter.py data/input/flights.csv data/output/filtered.csv' ...
     Executing step 'data-pipeline::count': 'python src/count.py data/output/filtered.csv data/output/counts.csv' ...
 
 .. note:: **Do you have output files you don't want to be committed, such as log files?**
@@ -270,7 +270,7 @@ You may provide further details in your workflow definition, such as a
               path: src/filter.py
           - raw:
               description: The raw flights data
-              path: data/flight-data/flights.csv
+              path: data/input/flights.csv
         outputs:
           - filtered:
               description: Flights to the destination of interest
@@ -320,12 +320,12 @@ and pass the path to the file you would like to inspect:
 .. code-block:: console
 
     $ renku workflow visualize data/output/counts.csv
-                                        ┌─────────────────────────────────────────┐                    ┌─────────────┐                    ┌────────────────────────────┐
-                                        │workflows/workflow-flights-tutorial-3.yml│                    │src/filter.py│                    │data/flight-data/flights.csv│
-                                        └─────────────────────────────────────────┘                    └─────────────┘                    └────────────────────────────┘
-                                                            *             *******                                    ***                                       ***
-                                                            *                    ************                           ****                              *****
-                                                            *                                **************                 ****                      ****
+                                        ┌─────────────────────────────────────────┐                    ┌─────────────┐                    ┌──────────────────────┐
+                                        │workflows/workflow-flights-tutorial-3.yml│                    │src/filter.py│                    │data/input/flights.csv│
+                                        └─────────────────────────────────────────┘                    └─────────────┘                    └──────────────────────┘
+                                                            *             *******                                    ***                             ***
+                                                            *                    ************                           ****                    *****
+                                                            *                                **************                 ****           ****
                                                             *                                              *************  ╔═══════════════════════╗
                                                             *                                                           **║python src/filter.py...║
                                                             *                                                             ╚═══════════════════════╝
