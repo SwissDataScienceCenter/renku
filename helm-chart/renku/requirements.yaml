@@ -42,4 +42,4 @@ dependencies:
 - name: rabbitmq
   version: 11.2.2
   repository: https://charts.bitnami.com/bitnami
-  condition: global.rabbitmq.external.disabled
+  condition: global.rabbitmq.enabled

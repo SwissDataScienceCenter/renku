@@ -19,7 +19,7 @@ spec:
         heritage: {{ .Release.Service }}
         release: {{ .Release.Name }}
         chart: {{ template "renku.chart" . }}
-        {{- if .Values.global.rabbitmq.external.disabled }}
+        {{- if .Values.global.rabbitmq.enabled }}
         {{ .Release.Name }}-rabbitmq-client: "true"
         {{- end }}
     spec:
@@ -41,7 +41,7 @@ spec:
               readOnly: true
           env:
             - name: RABBITMQ_URL
-              {{- if .Values.global.rabbitmq.external.disabled }}
+              {{- if .Values.global.rabbitmq.enabled }}
               value: http://{{ .Release.Name }}-rabbitmq:15672
               {{- else }}
               value: {{ .Values.global.rabbitmq.external.managementUrl }}

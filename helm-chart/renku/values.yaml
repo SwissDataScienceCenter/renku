@@ -139,11 +139,14 @@ global:
   
   ## Values for the RabbitMQ setup.
   rabbitmq:
+    ## Whether to install RabbitMQ as part of the Renku helm chart.
+    ## If set to false, then an external RabbitMQ instance needs to be available
+    ## and the external section below should be filled out.
+    enabled: true
     ## The external section is relevant only if an external RabbitMQ will be used
     ## with Renku. The RabbitMQ management plugin needs to be enabled so that the
     ## proper vhost, users and permissions are setup.
     external:
-      disabled: true
       managementUrl:
       admin:
         username: admin
@@ -857,7 +860,7 @@ initRabbitmq:
     tag: "latest"
 
 ## Values for the built-in RabbitMQ helm chart. If an external RabbitMQ is to be
-## used then set the global.rabbitmq.external.disabled flag to false.
+## used then set the global.rabbitmq.enabled flag to false.
 rabbitmq:
   networkPolicy:
     enabled: true
