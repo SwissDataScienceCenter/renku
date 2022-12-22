@@ -273,6 +273,7 @@ nitpick_ignore = [
     ("py:class", "IDatabaseDispatcher"),
     ("py:class", "IDatasetGateway"),
     ("py:class", "IPlanGateway"),
+    ("py:class", "itertools.count"),
     ("py:class", "LocalClient"),
     ("py:class", "NoValueType"),
     ("py:class", "OID_TYPE"),
@@ -286,6 +287,7 @@ nitpick_ignore = [
 ]
 
 nitpick_ignore_regex = [
+    ("py:class", r"bashlex.*"),
     (r"py:.*", r"calamus.*"),
     (r"py:.*", r"docker.*"),
     (r"py:.*", r"marshmallow.*"),

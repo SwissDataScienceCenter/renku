@@ -14,11 +14,11 @@ data``, ``code``, and ``results``:
         rankdir="LR"
         nodesep=0.01
         node [fontname="Raleway"]
-        _results [color="white", label="", image="../_static/icons/scatter_plot.svg"]
+        _results [color="white", label="", image="../../_static/icons/scatter_plot.svg"]
         results [color="white"]
-        _code [color="white", label="", image="../_static/icons/electronics.svg"]
+        _code [color="white", label="", image="../../_static/icons/electronics.svg"]
         code [color="white"]
-        data [color="white", label="", image="../_static/icons/data_sheet.svg"]
+        data [color="white", label="", image="../../_static/icons/data_sheet.svg"]
         "input data" [color="white"]
 
 
@@ -37,9 +37,9 @@ this:
     digraph foo {
         rankdir="LR"
         edge [fontname="Raleway"]
-        data [color="white", label="", image="../_static/icons/data_sheet.svg"]
-        code [color="white", label="", image="../_static/icons/electronics.svg"]
-        results [color="white", label="", image="../_static/icons/scatter_plot.svg"]
+        data [color="white", label="", image="../../_static/icons/data_sheet.svg"]
+        code [color="white", label="", image="../../_static/icons/electronics.svg"]
+        results [color="white", label="", image="../../_static/icons/scatter_plot.svg"]
         data->code [label="used by"]
         code->results [label="generated"]
     }
@@ -53,12 +53,12 @@ Naturally, a ``result`` may also be used as ``input data`` to a subsequent step:
     digraph foo {
         edge [fontname="Raleway"]
         rankdir="LR"
-        data [color="white", label="", image="../_static/icons/data_sheet.svg"]
-        data2 [color="white", label="", image="../_static/icons/data_sheet2.svg"]
-        code [color="white", label="", image="../_static/icons/electronics.svg"]
-        code2 [color="white", label="", image="../_static/icons/electronics2.svg"]
-        results [color="white", label="", image="../_static/icons/scatter_plot.svg"]
-        results2 [color="white", label="", image="../_static/icons/scatter_plot2.svg"]
+        data [color="white", label="", image="../../_static/icons/data_sheet.svg"]
+        data2 [color="white", label="", image="../../_static/icons/data_sheet2.svg"]
+        code [color="white", label="", image="../../_static/icons/electronics.svg"]
+        code2 [color="white", label="", image="../../_static/icons/electronics2.svg"]
+        results [color="white", label="", image="../../_static/icons/scatter_plot.svg"]
+        results2 [color="white", label="", image="../../_static/icons/scatter_plot2.svg"]
         data->code
         code->results
         results->code2
