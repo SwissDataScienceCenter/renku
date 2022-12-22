@@ -158,6 +158,18 @@ Docker avoids this problem.
 
 ## Running in console
 
+To simply run all tests run:
+
+```bash
+sbt test
+```
+
+To run a specific test (e.g. the `UnprivilegedSessionSpec` test) run:
+
+```bash
+sbt 'testOnly *UnprivilegedSessionSpec*'
+```
+
 For development, it can be nice to try things out on the console. For this, get started by running the
 following:
 

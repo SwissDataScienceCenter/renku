@@ -16,11 +16,12 @@ information.
 they want, the schedule is up to them. They are responsible for updating the
 `CHANGELOG.rst` file in the auto-PR in the Renku repository.
 Please create a new section above the last release if no one has already done it.
-The auto-PRs **must** be merged with an updated changelog/release notes. If upgrading 
+The auto-PRs **must** be merged with an updated changelog/release notes. If upgrading
 a service will knowingly result in an extended outage (e.g. because of a DB migration)
-this *must* be clearly noted and highlighted in the release notes. Use emojis freely. 
-Make sure YAT is aware of any expected complications and plan to be involved in 
-the rollout process. 
+this *must* be clearly noted and highlighted in the release notes. Use emojis freely.
+Make sure YAT is aware of any expected complications and plan to be involved in
+the rollout process. YAT and the product team have to approve those PRs before they
+can be merged, so changes and the changelog are double-checked.
 
 🧑‍🤝‍🧑 If two components need to coordinate for a release (e.g. new version
 of Graph needs new version of RP), they should combine their auto-PRs and
@@ -41,7 +42,7 @@ prevent this from happening again.
 
 🛳️ The product team updates the `CHANGELOG.rst` file when needed to make it more
 user friendly and potentially highlight relevant features or disrupting changes.
-This process can start on Tuesday after 12:00. As soon as the release PR is merged, 
+This process can start on Tuesday after 12:00. As soon as the release PR is merged,
 the product team tag a release and inform YAT for the rollout.
 
 
@@ -69,7 +70,7 @@ In some cases the fix might be deployed in place before a proper release is made
 Announce as soon as it is needed.
 
 * Create a Pull Request in the `renku` repository and update the `CHANGELOG.rst` file.
-  Ask the Product team for a review on the PR in Renku repository and tag the new release. 
+  Ask the Product team for a review on the PR in Renku repository and tag the new release.
 * A Pull Request in the `terraform-renku` repository is automatically created to update the version. Make any needed configuration changes to this PR.
 * Approve and merge release Pull Request, tag new release.
 
@@ -88,7 +89,7 @@ A non-urgent release is requested to be made in between sprints by any of the te
 * Announce half a day in advance.
 * Create a Pull Request in the `renku` repository with updates relevant -and adapted- to USERS and ADMINS in the `CHANGELOG.rst` file.
 * Ask the Product team for a review on the PR in Renku repository and tag the new release.
-* Create a Pull Request in the `terraform-renku` repository to update the version and make any needed configuration changes.  
+* Create a Pull Request in the `terraform-renku` repository to update the version and make any needed configuration changes.
 
 ### Process [YAT]
 

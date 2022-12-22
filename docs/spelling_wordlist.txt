@@ -136,6 +136,7 @@ lefthand
 lfs
 LocalClient
 localhost
+Lucene
 Matlab
 mem
 mergetool
@@ -177,6 +178,7 @@ Postgresql
 powerline
 pre
 prepend
+prepended
 preprocessed
 preprocessing
 programmatically
@@ -221,6 +223,7 @@ serializer
 sha
 sha
 Slurm
+Snyk
 SPARQL
 spawner
 SQLAlchemy
