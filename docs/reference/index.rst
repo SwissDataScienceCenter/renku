@@ -6,10 +6,10 @@ Reference
 .. toctree::
     :maxdepth: 2
 
+    Renku CLI Reference <../renku-python/docs/reference/index>
     Services <services/index>
     Templates <templates>
     Renku CLI Plugins <../renku-python/docs/plugins>
-    Renku CLI Reference <../renku-python/docs/reference/index>
 
 .. toctree::
     :hidden:

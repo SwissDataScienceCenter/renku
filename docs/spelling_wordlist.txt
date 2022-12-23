@@ -256,6 +256,7 @@ supertypes
 symlink
 symlinks
 templated
+templating
 Tensorboard
 Tensorflow
 terraform
@@ -270,6 +271,7 @@ txt
 typesystem
 Ubuntu
 ui
+Unescape
 unhandled
 unicode
 unlink

@@ -9,11 +9,14 @@ Create a workflow step
 Now we will use ``renku`` to create a reproducible, reusable "workflow". A
 workflow consists of a series of steps, each of which may consume some input
 files, execute code, and produce output files. The outputs of one step are
-frequently the inputs of another --- this creates a dependency between the code
+frequently the inputs of another --- this creates a connection between the code
 execution and results. When workflows become more complex, the bookkeeping can
 be tedious. That is where Renku comes in --- it is designed to keep
 track of these dependencies for you. We will illustrate some of these concepts
 with a simple example (see also the :ref:`workflows` in the documentation).
+
+Start with a clean project
+~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 First, let us make sure the project repository is clean. Run:
 
@@ -42,8 +45,10 @@ the changes or committing them to the repository.
 
     .. code-block:: console
 
-        $ renku save -m "My own changes"
+        $ renku save -m "My changes"
 
+Run and record a workflow step
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 The ``filter_flights.\*`` script takes two input parameters:
 
@@ -109,9 +114,12 @@ change: we prepend ``renku run`` to relevant command:
 
 Go ahead and run this command: it will create the preprocessed data file,
 including the specification of *how* this file was created, and commit all the
-changes to the repository. The ``--name`` option allows you to name the
-workflow that's created by ``renku run`` to make it easier to reuse it later.
-Workflows created in this way don't just try past executions, but also define
+changes to the repository. 
+
+The ``--name`` option allows you to name the workflow that's created by 
+``renku run`` to make it easier to reuse it later.
+
+Workflows created in this way don't just track past executions, but also define
 workflow templates (Called ``Plans`` in Renku) that can be executed with
 arbitrary parameters on different workflow backends and exported to other
 workflow languages.
@@ -121,8 +129,7 @@ for more information on this and other commands.
 
 .. note::
 
-    Did you accidentally run the plain Python, Julia or R command first?
-    You would get an error like this
+    Did you get an error like this?
 
     .. code-block:: console
 
@@ -133,6 +140,8 @@ for more information on this and other commands.
         (use "git add <file>..." to include in what will be committed)
                 data/output/
 
+    This may be because you accidentally ran the plain Python/Julia/R command first.
+    
     Remove the untracked files and this time execute `only` the renku command
 
     .. code-block:: console
@@ -235,7 +244,7 @@ We also provide the script versions to be run with the ``renku run`` command.
 
     For the next step you must download the script from `here
     <https://renkulab.io/projects/renku-tutorials/renku-tutorial-flights-material/files/blob/src/count_flights.py>`_,
-    and then drop it into the ``src`` directory as with the `filter_flights.py` script.
+    and then drop it into the ``src`` directory as with the ``filter_flights.py`` script.
 
 .. tabbed:: Julia
 
