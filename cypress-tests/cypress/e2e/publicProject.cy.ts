@@ -125,49 +125,38 @@ describe("Basic public project functionality", () => {
     const cloneSubUrl = projectUrl.substring("/projects".length);
     cy.contains("renku clone").should("contain.text", cloneSubUrl);
 
-    // TODO: Check that session settings work
-
-    // function robustNavigateToProjectPage(page: string) {
-    //   cy.getProjectPageLink(projectIdentifier, page).first().then(($el) => {
-    //     // This page is unstable and we sometimes need to requery
-    //     Cypress.dom.isDetached($el) ?
-    //       cy.getProjectPageLink(projectIdentifier, page) :
-    //       $el;
-    //   }).first().click();
-    // }
-
-    // function robustGet(selector: string) {
-    //   return cy.get(selector).first().then(($el) => {
-    //     // This page is unstable and we sometimes need to requery
-    //     Cypress.dom.isDetached($el) ?
-    //       cy.get(selector) :
-    //       $el;
-    //   });
-    // }
+    function robustNavigateToProjectPage(page: string) {
+      cy.getProjectPageLink(projectIdentifier, page).first().then(($el) => {
+        // This page is unstable and we sometimes need to requery
+        Cypress.dom.isDetached($el) ?
+          cy.getProjectPageLink(projectIdentifier, page) :
+          $el;
+      }).first().click();
+    }
 
     // The settings page is reflowed a lot, causing DOM elements to be invalidated.
     // For that reason we visit the settings page rather than navigating to it.
-    // const navigateToSettingsSessions = () => {
-    //   cy.intercept("/ui-server/api/renku/*/config.show?git_url=*").as("configShow");
-    //   cy.visitProjectPageLink(projectIdentifier, "/settings/sessions");
-    //   cy.wait("@configShow", { timeout: TIMEOUTS.long });
-    // };
+    const navigateToSettingsSessions = () => {
+      cy.intercept("/ui-server/api/renku/*/config.show?git_url=*").as("configShow");
+      cy.visitProjectPageLink(projectIdentifier, "/settings/sessions");
+      cy.wait("@configShow", { timeout: TIMEOUTS.long });
+    };
 
     // Make sure the renku.ini is in a pristine state
-    // robustNavigateToProjectPage("/files");
-    // cy.get("div#tree-content").contains(".renku").click();
-    // cy.get("div#tree-content").contains("renku.ini").click();
-    // cy.get("code").should("be.visible");
-    // cy.get("code").contains("cpu_request = 1").should("not.exist");
+    robustNavigateToProjectPage("/files");
+    cy.get("div#tree-content").contains(".renku").click();
+    cy.get("div#tree-content").contains("renku.ini").click();
+    cy.get("pre.hljs").should("be.visible");
+    cy.get("pre.hljs").contains("cpu_request = 1").should("not.exist");
 
-    // navigateToSettingsSessions();
-    // cy.intercept("/ui-server/api/renku/*/config.set").as("configSet");
-    // robustGet("div.form-rk-green").contains("button", "1").click();
-    // cy.wait("@configSet");
-    // cy.visitProjectPageLink(projectIdentifier, "/files/blob/.renku/renku.ini");
-    // robustGet("code").contains("cpu_request = 1").should("exist");
+    navigateToSettingsSessions();
+    cy.intercept("/ui-server/api/renku/*/config.set").as("configSet");
+    cy.get("div.form-rk-green").contains("button", "0.1").click();
+    cy.wait("@configSet");
+    cy.visitProjectPageLink(projectIdentifier, "/files/blob/.renku/renku.ini");
+    cy.get("pre.hljs").contains("cpu_request = 0.1").should("exist");
 
-    // cy.visitProjectPageLink(projectIdentifier, "/settings/sessions");
-    // robustGet("#cpu_request_reset").should("be.visible").click();
+    cy.visitProjectPageLink(projectIdentifier, "/settings/sessions");
+    cy.get("#cpu_request_reset").should("be.visible").click();
   });
 });
