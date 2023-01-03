@@ -14,8 +14,9 @@ export type SearchForProjectProps = {
   namespace: string
 }
 export function searchForProject(props: SearchForProjectProps) {
-  cy.get("input[placeholder='Search or jump to...']").type(props.name).type("{enter}");
-  cy.contains(`${props.namespace}/${props.name}`).should("be.visible");
+  cy.visit("/search");
+  cy.get("input[placeholder='Search...']").type(props.name).type("{enter}");
+  cy.get("[data-cy='list-card-title']").contains(props.name);
 }
 
 function dataCy(value: string) {
