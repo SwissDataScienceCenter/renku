@@ -40,7 +40,8 @@ function createProject(newProjectProps: NewProjectProps) {
   if (newProjectProps.templateName)
     cy.contains(newProjectProps.templateName).should("be.visible").click();
 
-  cy.dataCy("create-project-button").should("be.visible").click();
+  // The button may take some time before it is clickable
+  cy.get("[data-cy=create-project-button]", { timeout: TIMEOUTS.vlong }).should("be.enabled").click();
   cy.url({ timeout: TIMEOUTS.vlong }).should("contain", newProjectProps.name);
   cy.get(`[data-cy="header-project"]`, { timeout: TIMEOUTS.vlong }).should("be.visible");
   cy.get("ul.nav-pills-underline").should("be.visible");
