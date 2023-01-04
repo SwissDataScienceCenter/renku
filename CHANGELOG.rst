@@ -1,5 +1,36 @@
 .. _changelog:
 
+0.22.0
+------
+
+Renku ``0.22.0`` updates the core-service and CLI components to version 2.0, adding support for workflow files
+and requiring users to migrate their project metadata through the UI to version 10.
+It also phases out support for projects on metadata version 8, meaning those projects must be migrated to have
+full functionality in the UI.
+
+User-Facing Changes
+~~~~~~~~~~~~~~~~~~~
+
+**✨ Improvements**
+
+* 🎨 **Renku CLI**: Add support for writing workflow files which can be executed directly, greatly improving the UX
+  around workflows
+  (`#3176 <https://github.com/SwissDataScienceCenter/renku-python/pull/3176>`_)
+
+* 🎨 **Renku CLI**: Made `toil` the default workflow backend instead of `cwl`
+  (`#3220 <https://github.com/SwissDataScienceCenter/renku-python/issues/3220>`_)
+
+**🐞 Bug Fixes**
+
+* **Renku core service**: Fix issue with project templates being cached and users being unable to create projects
+  based on the newest version of a template
+  (`#3243 <https://github.com/SwissDataScienceCenter/renku-python/issues/3243>`_)
+
+Individual components
+~~~~~~~~~~~~~~~~~~~~~~
+
+- `renku-python 2.0.0 <https://github.com/SwissDataScienceCenter/renku-python/releases/tag/v2.0.0>`_
+
 0.21.0
 ------
 
@@ -31,7 +62,7 @@ Internal Changes
 
 * **Gateway**: Add endpoint for refreshing expiring GitLab tokens
 * **Knowledge Graph**: Improve functionality to refresh access tokens before expiration
-* **Knowledge Graph**: Enhance migration functionality to restore missing CompositePlans 
+* **Knowledge Graph**: Enhance migration functionality to restore missing CompositePlans
 * **Knowledge Graph**: Fix to prevent data corruption which could previously occur due to duplicate Project creation dates
 * **Sessions**: Check LFS size and available disk space before cloning
 * **UI**: Receive notifications through WebSocket when session state changes
@@ -60,7 +91,7 @@ Individual components
 0.20.0
 ------
 
-Renku ``0.20.0`` tidies up the RenkuLab session start sequence, as well as an assortment of improvements and bug fixes. 
+Renku ``0.20.0`` tidies up the RenkuLab session start sequence, as well as an assortment of improvements and bug fixes.
 
 User-Facing Changes
 ~~~~~~~~~~~~~~~~~~~
@@ -69,12 +100,12 @@ User-Facing Changes
 
 * 🚀 **UI**: We tidied up the session launch sequence to have a unified appearance, regardless of where on RenkuLab you start your session from. Sessions also have better logs and error handling.
 * 🎨 **UI**: The RenkuLab login and logout pages have been updated with the latest styling.
-* 💬 **Renku CLI**: When you run ``renku save`` in a clean but unpushed repository, ``renku`` now informs you that it has pushed changes to the remote, rather than just saying that there were no changes to save.  
+* 💬 **Renku CLI**: When you run ``renku save`` in a clean but unpushed repository, ``renku`` now informs you that it has pushed changes to the remote, rather than just saying that there were no changes to save.
 
 **🐞 Bug Fixes**
 
 * 💔 **Renku CLI**: Fixed an issue where ``renku workflow compose`` would break ``renku workflow list``.
-* 🍴 **UI**: Fixed the Project name field getting reset when forking a project. 
+* 🍴 **UI**: Fixed the Project name field getting reset when forking a project.
 * 📃 **UI**: Fixed issues with downloading session logs.
 
 Internal Changes
