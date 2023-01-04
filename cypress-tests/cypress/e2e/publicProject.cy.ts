@@ -107,11 +107,11 @@ describe("Basic public project functionality", () => {
     cy.wait("@listDatasets", { timeout: TIMEOUTS.vlong });
     cy.contains("#modified").should("be.visible");
 
-    // // Check that we can see the dataset
+    // Check that we can see the dataset
     cy.getProjectPageLink(projectIdentifier, "/datasets").click();
     cy.contains(datasetTitle).should("be.visible").click();
 
-    // // Delete the dataset
+    // Delete the dataset
     cy.dataCy("delete-dataset-button").click();
     cy.contains("Are you sure you want to delete dataset").should("be.visible");
     cy.get(".modal").contains("Delete dataset").click();
@@ -147,16 +147,21 @@ describe("Basic public project functionality", () => {
     cy.get("div#tree-content").contains(".renku").click();
     cy.get("div#tree-content").contains("renku.ini").click();
     cy.get("pre.hljs").should("be.visible");
-    cy.get("pre.hljs").contains("cpu_request = 1").should("not.exist");
+    cy.get("pre.hljs").contains("cpu_request").should("not.exist");
 
     navigateToSettingsSessions();
     cy.intercept("/ui-server/api/renku/*/config.set").as("configSet");
-    cy.get("div.form-rk-green").contains("button", "0.1").click();
+    cy.get("div.form-rk-green div.row").contains("button", "0.1").click();
     cy.wait("@configSet");
+    cy.get("div.form-rk-green div.success-feedback").contains("Updated.").should("exist");
     cy.visitProjectPageLink(projectIdentifier, "/files/blob/.renku/renku.ini");
     cy.get("pre.hljs").contains("cpu_request = 0.1").should("exist");
 
     cy.visitProjectPageLink(projectIdentifier, "/settings/sessions");
     cy.get("#cpu_request_reset").should("be.visible").click();
+    cy.wait("@configSet");
+    cy.get("div.form-rk-green div.success-feedback").contains("Updated.").should("exist");
+    cy.visitProjectPageLink(projectIdentifier, "/files/blob/.renku/renku.ini");
+    cy.get("pre.hljs").contains("cpu_request").should("not.exist");
   });
 });
