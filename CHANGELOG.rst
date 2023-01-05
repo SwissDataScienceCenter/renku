@@ -7,6 +7,9 @@ Renku ``0.22.0`` introduces the Renku Workflow File, a friendlier way to encode 
 on Renku. This yaml-based file is easy to write and execution is as easy as `renku run workflow.yml`. Add a workflow
 to your Renku project with our docs [here](https://renku.readthedocs.io/en/latest/topic-guides/workflows/workflow-file.html)!
 
+Plus, after a few months away, Project and Dataset images are back! Upload an image to your project or dataset via the
+Settings menu to add some pop to your Renku project.
+
 **Backwards-Compatibility Note**
 
 This release also marks the update of the core-service and CLI components to version 2.0, which makes significant updates
@@ -20,24 +23,45 @@ User-Facing Changes
 
 * 📝 **Renku CLI**: Introduce the Renku Workflow File, a yaml-based file for defining Renku workflows
   (`docs <https://renku.readthedocs.io/en/latest/topic-guides/workflows/workflow-file.html>`_)
-  (`#3176 <https://github.com/SwissDataScienceCenter/renku-python/pull/3176>`_)
+  (`#3176 <https://github.com/SwissDataScienceCenter/renku-python/pull/3176>`_).
 
 **✨ Improvements**
 
 * ⚙️  **Renku CLI**: Made `toil` the default workflow backend instead of `cwl`
-  (`#3220 <https://github.com/SwissDataScienceCenter/renku-python/issues/3220>`_)
+  (`#3220 <https://github.com/SwissDataScienceCenter/renku-python/issues/3220>`_).
+* 🔲 **UI**: Improve styling of buttons with menu and group buttons
+  (`#2243 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2243>`_).
+* 🖼️ **UI**: Show projects and datasets avatars again
+  (`#2231 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2231>`_).
+
 
 **🐞 Bug Fixes**
 
 * **Renku core service**: Fix issue with project templates being cached and users being unable to create projects
   based on the newest version of a template
-  (`#3243 <https://github.com/SwissDataScienceCenter/renku-python/issues/3243>`_)
+  (`#3243 <https://github.com/SwissDataScienceCenter/renku-python/issues/3243>`_).
+* **UI**: Restore per-language source highlighting in the file preview
+  (`#2233 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2233>`_)
+  (`#2265 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2265>`_).
+* **UI**: Limit the available namespaces in which new projects may be created
+  to one ones owned by the user to prevent failures.
+  (`#2187 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2187>`_).
 
-Individual components
-~~~~~~~~~~~~~~~~~~~~~~
 
-- `renku-python 2.0.1 <https://github.com/SwissDataScienceCenter/renku-python/releases/tag/v2.0.1>`_
-- `renku-python 2.0.0 <https://github.com/SwissDataScienceCenter/renku-python/releases/tag/v2.0.0>`_
+Internal Changes
+~~~~~~~~~~~~~~~~
+
+**Improvements**
+
+* **UI**: Reduce unnecessary components re-rendering.
+
+
+ Individual components
+ ~~~~~~~~~~~~~~~~~~~~~~
+
+ - `renku-python 2.0.1 <https://github.com/SwissDataScienceCenter/renku-python/releases/tag/v2.0.1>`_
+ - `renku-python 2.0.0 <https://github.com/SwissDataScienceCenter/renku-python/releases/tag/v2.0.0>`_
+ - `renku-ui 2.15.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/2.15.0>`_
 
 0.21.0
 ------
