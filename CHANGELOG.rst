@@ -4,7 +4,7 @@
 0.22.0
 ------
 
-Renku ``0.22.0`` improves the Renku experience when working on RenkuLab.
+Renku ``0.22.0`` brings back project and dataset images.
 
 User-Facing Changes
 ~~~~~~~~~~~~~~~~~~~
@@ -13,16 +13,17 @@ User-Facing Changes
 
 * 🔲 **UI**: Improve styling of buttons with menu and group buttons
   (`#2243 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2243>`_).
-* 👤 **UI**: Limit the available namespaces for new projects to owned-only to prevent failures
-  (`#2187 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2187>`_).
+* 🖼️ **UI**: Show projects and datasets avatars again
+  (`#2231 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2231>`_).
 
 **🐞 Bug Fixes**
 
-* ✒️ **UI**: Restore per-language source highlighting in the file preview
+* **UI**: Restore per-language source highlighting in the file preview
   (`#2233 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2233>`_,
   `#2265 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2265>`_).
-* 🖼️ **UI**: Show projects and datasets avatars again
-  (`#2231 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2231>`_).
+* **UI**: Limit the available namespaces in which new projects may be created
+  to one ones owned by the user to prevent failures.
+  (`#2187 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2187>`_).
 
 Internal Changes
 ~~~~~~~~~~~~~~~~
