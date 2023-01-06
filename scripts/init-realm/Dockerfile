@@ -1,4 +1,4 @@
-FROM python:3.9-alpine
+FROM python:3.12.0a1-alpine
 
 COPY requirements.txt init-realm.py /app/
 WORKDIR /app
