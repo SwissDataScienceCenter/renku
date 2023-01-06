@@ -1,6 +1,33 @@
 .. _changelog:
 
 
+0.23.0
+------
+
+Renku ``0.23.0`` brings new features to the Knowledge Graph APIs.
+
+User-Facing Changes
+~~~~~~~~~~~~~~~~~~~
+
+**✨ Improvements**
+
+* **Knowledge Graph**: Cross-Entity Search and Project Details APIs return info about project images.
+* **Knowledge Graph**: Project Status API returns more detailed information about project processing status. This is a breaking change as value of one of the properties in the response payload is different now. For more details see `the docs <https://github.com/SwissDataScienceCenter/renku-graph/tree/2.26.0/webhook-service#get-projectsideventsstatus>`_)
+
+Internal Changes
+~~~~~~~~~~~~~~~~
+
+**Improvements**
+
+* **Knowledge Graph**: Event Log’s Events API accepts a new `project-id` query parameter.
+* **Knowledge Graph**: The triggering conditions for the Re-provisioning process are modified to provide more control on how and when the process is started.
+
+Individual components
+~~~~~~~~~~~~~~~~~~~~~~
+
+- `renku-graph 2.26.0 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/2.26.0>`_
+
+
 0.22.0
 ------
 
