@@ -58,6 +58,7 @@ Internal Changes
 **Improvements**
 
 * **UI**: Reduce unnecessary components re-rendering.
+* **Gitlab**: Modify embedded `renku-gitlab` `helm` chart to use internal `redis`
 
 Individual components
 ~~~~~~~~~~~~~~~~~~~~~~
