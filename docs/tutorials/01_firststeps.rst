@@ -22,5 +22,6 @@ Follow the steps below to learn how to use Renku to:
    first_steps/07_building_scripts
    first_steps/08_create_workflow
    first_steps/09_update_workflow
-   first_steps/10_sharing_is_caring
-   first_steps/11_where_to_go
+   first_steps/10_workflow_file
+   first_steps/11_sharing_is_caring
+   first_steps/12_where_to_go
