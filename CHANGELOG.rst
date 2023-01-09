@@ -56,8 +56,8 @@ Internal Changes
 * **UI**: Reduce unnecessary components re-rendering.
 
 
- Individual components
- ~~~~~~~~~~~~~~~~~~~~~~
+Individual components
+~~~~~~~~~~~~~~~~~~~~~~
 
  - `renku-python 2.0.1 <https://github.com/SwissDataScienceCenter/renku-python/releases/tag/v2.0.1>`_
  - `renku-python 2.0.0 <https://github.com/SwissDataScienceCenter/renku-python/releases/tag/v2.0.0>`_
