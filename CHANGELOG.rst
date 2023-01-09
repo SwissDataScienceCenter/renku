@@ -14,7 +14,7 @@ User-Facing Changes
   (`#2243 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2243>`_).
 * 🖼️ **UI**: Show projects and datasets avatars again
   (`#2231 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2231>`_).
-* 📊 **UI**: update realtime the project's indexing status
+* 📊 **UI**: update real-time the project's indexing status
   (`#2255 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2255>`_).
 
 **🐞 Bug Fixes**
