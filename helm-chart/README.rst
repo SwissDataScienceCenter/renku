@@ -65,12 +65,12 @@ For upgrades that require some steps other than modifying the values files to be
 Upgrading to 0.22.0
 *******************
 This version changes the embedded `renku-gitlab` helm chart from `0.6.0` to
-`0.7.0`. This removes the dependency on an external `redis` in the `renku-gitlab`
-`helm` chart and makes `redis` upgradable in the main `renku` `helm` chart. It does
-mean that the embedded `renku-gitlab` `helm` chart now uses `redis` which is run
-within the `gitlab` omnibus container and this is not recommended for production
-scenarios. `renku` currently recommends the use of an external `gitlab` in
-production scenarios.
+`0.7.0`. This removes the `redis` subchart from the `renku-gitlab` chart and
+configures `gitlab` by default to use `redis` which runs in the `gitlab`
+omnibus container. It is, however, possible to use an external `redis` if
+required. The driver for this is to enable `redis` to be upgraded in the main
+`renku` helm chart. `renku` currently recommends the use of an external
+`gitlab` in production scenarios.
 
 This will be the last update to the embedded `renku-gitlab` helm chart.
 
