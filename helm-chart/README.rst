@@ -78,12 +78,11 @@ This change does not involve any changes to the main ``renku`` ``values.yaml``.
 
 As this change results in the termination of the external ``redis`` used by the
 ``renku-gitlab`` ``helm`` chart, the following process is recommended:
-- ensure that there are no runner jobs running - you may need to find a time
-  when this is the case
+
+- ensure that there are no runner jobs running - you may need to find a time when this is the case
 - scale the ``renku-gitlab`` ``Deployment`` to 0
 - perform the upgrade
-- when the upgrade is complete, check the status of ``redis`` within ``gitlab``; it
-  should be active and using a modern version of ``redis``.
+- when the upgrade is complete, check the status of ``redis`` within ``gitlab``; it should be active and using a modern version of ``redis``.
 
 Upgrading to 0.11.0
 *******************
