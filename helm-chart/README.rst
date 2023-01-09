@@ -64,26 +64,26 @@ For upgrades that require some steps other than modifying the values files to be
 
 Upgrading to 0.22.0
 *******************
-This version changes the embedded `renku-gitlab` helm chart from `0.6.0` to
-`0.7.0`. This removes the `redis` subchart from the `renku-gitlab` chart and
-configures `gitlab` by default to use `redis` which runs in the `gitlab`
-omnibus container. It is, however, possible to use an external `redis` if
-required. The driver for this is to enable `redis` to be upgraded in the main
-`renku` helm chart. `renku` currently recommends the use of an external
-`gitlab` in production scenarios.
+This version changes the embedded ``renku-gitlab`` helm chart from ``0.6.0`` to
+``0.7.0``. This removes the ``redis`` subchart from the ``renku-gitlab`` chart and
+configures ``gitlab`` by default to use ``redis`` which runs in the ``gitlab``
+omnibus container. It is, however, possible to use an external ``redis`` if
+required. The driver for this is to enable ``redis`` to be upgraded in the main
+``renku`` helm chart. ``renku`` currently recommends the use of an external
+``gitlab`` in production scenarios.
 
-This will be the last update to the embedded `renku-gitlab` helm chart.
+This will be the last update to the embedded ``renku-gitlab`` helm chart.
 
-This change does not involve any changes to the main `renku` `values.yaml`.
+This change does not involve any changes to the main ``renku`` ``values.yaml``.
 
-As this change results in the termination of the external `redis` used by the
-`renku-gitlab` `helm` chart, the following process is recommended:
+As this change results in the termination of the external ``redis`` used by the
+``renku-gitlab`` ``helm`` chart, the following process is recommended:
 - ensure that there are no runner jobs running - you may need to find a time
   when this is the case
-- scale the `renku-gitlab` `Deployment` to 0
+- scale the ``renku-gitlab`` ``Deployment`` to 0
 - perform the upgrade
-- when the upgrade is complete, check the status of `redis` within `gitlab`; it
-  should be active and using a modern version of `redis`.
+- when the upgrade is complete, check the status of ``redis`` within ``gitlab``; it
+  should be active and using a modern version of ``redis``.
 
 Upgrading to 0.11.0
 *******************
