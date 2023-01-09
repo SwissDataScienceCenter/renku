@@ -1,37 +1,9 @@
 .. _changelog:
 
-
-0.23.0
-------
-
-Renku ``0.23.0`` brings new features to the Knowledge Graph APIs.
-
-User-Facing Changes
-~~~~~~~~~~~~~~~~~~~
-
-**✨ Improvements**
-
-* **Knowledge Graph**: Cross-Entity Search and Project Details APIs return info about project images.
-* **Knowledge Graph**: Project Status API returns more detailed information about project processing status. This is a breaking change as value of one of the properties in the response payload is different now. For more details see `the docs <https://github.com/SwissDataScienceCenter/renku-graph/tree/2.26.0/webhook-service#get-projectsideventsstatus>`_)
-
-Internal Changes
-~~~~~~~~~~~~~~~~
-
-**Improvements**
-
-* **Knowledge Graph**: Event Log’s Events API accepts a new `project-id` query parameter.
-* **Knowledge Graph**: The triggering conditions for the Re-provisioning process are modified to provide more control on how and when the process is started.
-
-Individual components
-~~~~~~~~~~~~~~~~~~~~~~
-
-- `renku-graph 2.26.0 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/2.26.0>`_
-
-
 0.22.0
 ------
 
-Renku ``0.22.0`` brings back project and dataset images.
+Renku ``0.22.0`` brings back project and dataset images, and adds new features to the Knowledge Graph APIs.
 
 User-Facing Changes
 ~~~~~~~~~~~~~~~~~~~
@@ -42,6 +14,8 @@ User-Facing Changes
   (`#2243 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2243>`_).
 * 🖼️ **UI**: Show projects and datasets avatars again
   (`#2231 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2231>`_).
+* 📊 **UI**: update realtime the project's indexing status
+  (`#2255 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2255>`_).
 
 **🐞 Bug Fixes**
 
@@ -57,13 +31,22 @@ Internal Changes
 
 **Improvements**
 
+* **Gitlab**: Modify embedded `renku-gitlab` `helm` chart to use internal `redis`.
+* **Knowledge Graph**: List project images on responses from Cross-entity search and Project details APIs.
+* **Knowledge Graph**: Return more accurate processing details from the Project status API. The payload was updated
+  and `contains breaking changes <https://github.com/SwissDataScienceCenter/renku-graph/tree/2.26.0/webhook-service#get-projectsideventsstatus>`_).
+* **Knowledge Graph**: Accept `project-id` query parameter on the Event log API.
+* **Knowledge Graph**: Allow for greater control on the re-provisioning triggering conditions.
 * **UI**: Reduce unnecessary components re-rendering.
-* **Gitlab**: Modify embedded `renku-gitlab` `helm` chart to use internal `redis`
+* **UI**: Refresh the documentation for developers and external contributors
+  (`#2275 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2275>`_).
 
 Individual components
 ~~~~~~~~~~~~~~~~~~~~~~
 
+- `renku-graph 2.26.0 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/2.26.0>`_
 - `renku-ui 2.15.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/2.15.0>`_
+- `renku-ui 2.16.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/2.15.0>`_
 
 
 0.21.0
