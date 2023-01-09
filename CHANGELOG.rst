@@ -22,7 +22,7 @@ User-Facing Changes
 **🌟 New Features**
 
 * 📝 **Renku CLI**: Introduce the Renku Workflow File, a yaml-based file for defining Renku workflows
-  (`docs <https://renku.readthedocs.io/en/latest/topic-guides/workflows/workflow-file.html>`_)
+  (`documentation <https://renku.readthedocs.io/en/latest/topic-guides/workflows/workflow-file.html>`_)
   (`#3176 <https://github.com/SwissDataScienceCenter/renku-python/pull/3176>`_).
 
 **✨ Improvements**
