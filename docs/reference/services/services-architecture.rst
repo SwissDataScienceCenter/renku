@@ -54,18 +54,18 @@ System Context
     skinparam linetype ortho
 
     Person(logged_in, "Logged-In user")
-    Person(anonymous, "Anonymous User")
     Person(cli, "Renku CLI")
     System(renku, "Renku", $link="../reference/services/services-architecture.html#container-diagram")
     System(gitlab, "Gitlab")
     System(keycloak, "Keycloak")
     System(k8s, "Kubernetes")
-    System(postgres, "PostgreSQL")
-    System(redis, "Redis")
-    System(jena, "Jena")
+    SystemDb(postgres, "PostgreSQL")
+    SystemDb(redis, "Redis")
+    SystemDb(jena, "Jena")
+    SystemDb(s3, "S3")
+    SystemDb(azure_blob, "Azure Blob Storage")
 
     Rel(logged_in, renku, "Uses", "HTTPS")
-    Rel(anonymous, renku, "Uses", "HTTPS")
     Rel(cli, renku, "Uses", "HTTPS/Git+SSH")
     Rel(renku, keycloak, "Auth", "HTTPS")
     BiRel(renku, gitlab, "pull/push/events", "Git+SSH")
@@ -73,6 +73,8 @@ System Context
     Rel(renku, postgres, "read/write")
     Rel(renku, redis, "read/write")
     Rel(renku, jena, "store triples")
+    Rel(renku, s3, "Use as storage")
+    Rel(renku, azure_blob, "Use as storage")
     @enduml
 
 Container Diagram
@@ -85,8 +87,9 @@ Container Diagram
 
     skinparam linetype ortho
 
+    AddElementTag("kubernetes", $shape=EightSidedShape(), $bgColor="CornflowerBlue", $fontColor="white", $legendText="micro service (eight sided)")
+
     Person(logged_in, "Logged-In user")
-    Person(anonymous, "Anonymous User")
     Person(cli, "Renku CLI")
     System_Boundary(renku, "Renku") {
         Container(ui, "UI", "React", "The homepage")
@@ -95,17 +98,17 @@ Container Diagram
         Container(core_service, "core-service", "Python", "Backend service for project interaction", $link="../reference/services/services-architecture.html#core-service")
         Container(renku_graph, "renku-graph", "Scala", "Backend service for project interaction")
         Container(renku_notebooks, "renku-notebooks", "Python", "Interactive session scheduler")
-        Container(amalthea, "Amalthea", "Python", "K8s Operator for scheduling sessions")
+        Container(amalthea, "Amalthea", "Python", "K8s Operator for scheduling sessions", $tags="kubernetes")
+        Container(session, "User Session")
     }
     System(gitlab, "Gitlab")
     System(keycloak, "Keycloak")
-    System(k8s, "Kubernetes")
-    System(postgres, "PostgreSQL")
-    System(redis, "Redis")
-    System(jena, "Jena")
+    System(k8s, "Kubernetes", $tags="kubernetes")
+    SystemDb(postgres, "PostgreSQL")
+    SystemDb(redis, "Redis")
+    SystemDb(jena, "Jena")
 
     Rel_D(logged_in, ui, "Uses", "HTTPS")
-    Rel_D(anonymous, ui, "Uses", "HTTPS")
     Rel(ui, ui_server, "Uses", "HTTPS")
     Rel(ui_server, gateway, "Uses", "HTTPS")
     Rel(gateway, keycloak, "Gets tokens from", "HTTPS")
@@ -113,16 +116,30 @@ Container Diagram
     Rel_D(core_service, gitlab, "pushes to repository", "Git+SSH")
     Rel(core_service, redis, "cache projects")
     Rel(gateway, renku_notebooks, "forwards requests", "HTTPS")
-    Rel(renku_notebooks, amalthea, "schedules sessions", "Custom Resource")
-    Rel(amalthea, k8s, "starts sessions", "K8s API")
+    Rel(renku_notebooks, k8s, "creates session resources", "Custom Resource")
+    Rel(k8s, amalthea, "watches for session resources", "Custom Resource")
+    Rel(k8s, session, "Starts sessions")
+    Rel(session, keycloak, "Authenticates users")
+    Rel(session, gitlab, "Injects gitlab credentials")
+    Rel(amalthea, k8s, "schedules sessions", "K8s API")
     Rel(gateway, renku_graph, "forward requests", "HTTPS")
     Rel_D(cli, gitlab, "pull/push", "Git+SSH")
+    Rel_D(cli, gateway, "Authenticate users")
     Rel_D(cli, renku_notebooks, "manage sessions", "HTTPS")
     Rel(gateway, redis, "get tokens for requests")
     Rel_D(gitlab, postgres, "store/retrieve metadata")
     Rel_D(renku_graph, postgres, "keep gitlab eventlog")
     Rel_D(renku_graph, jena, "store/search triples")
     Rel_D(keycloak, postgres, "store settings/auth")
+
+    Lay_D(logged_in, renku)
+    Lay_D(cli, renku)
+    Lay_D(renku, gitlab)
+    Lay_D(renku, keycloak)
+    Lay_D(renku, k8s)
+    Lay_D(renku, postgres)
+    Lay_D(renku, redis)
+    Lay_D(renku, jena)
     @enduml
 
 Component Diagrams
