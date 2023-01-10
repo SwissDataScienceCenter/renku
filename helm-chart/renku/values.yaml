@@ -327,25 +327,14 @@ redis:
   ###########################################################################
 
   fullnameOverride: renku-redis
-  redisPort: 6379
 
-  ## config for newer redis versions, here for later reference
-  # replicas:
-  #   replicaCount: 2
-  # auth:
-  #   enabled: true
-  #   sentinel: true
-  #   existingSecret: redis-secret
-  #   existingSecretPasswordKey: redis-password
-
-  usePassword: true
-  existingSecret: redis-secret
-  existingSecretPasswordKey: redis-password
+  auth:
+    enabled: true
+    existingSecret: redis-secret
+    existingSecretPasswordKey: redis-password
 
   master:
-    # Fixed redis bug prevents us from using this before
-    # we bump the redis chart version
-    # spreadConstraints:
+    # topologySpreadConstraints:
     #   - maxSkew: 1
     #     topologyKey: node
     #     whenUnsatisfiable: DoNotSchedule
@@ -358,10 +347,9 @@ redis:
       requests:
         cpu: 200m
         memory: 256Mi
-  slave:
-    # Fixed redis bug prevents us from using this before
-    # we bump the redis chart version
-    # spreadConstraints:
+  replica:
+    replicaCount: 2
+    # topologySpreadConstraints:
     #   - maxSkew: 1
     #     topologyKey: node
     #     whenUnsatisfiable: DoNotSchedule
@@ -375,7 +363,8 @@ redis:
         cpu: 200m
         memory: 256Mi
   sentinel:
-    port: 26379
+    service:
+      sentinel: 26379
     enabled: true
     resources:
       requests:
