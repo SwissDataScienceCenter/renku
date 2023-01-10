@@ -1,10 +1,9 @@
 .. _changelog:
 
-
 0.22.0
 ------
 
-Renku ``0.22.0`` brings back project and dataset images.
+Renku ``0.22.0`` brings back project and dataset images, and adds new features to the Knowledge Graph APIs.
 
 User-Facing Changes
 ~~~~~~~~~~~~~~~~~~~
@@ -15,6 +14,8 @@ User-Facing Changes
   (`#2243 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2243>`_).
 * 🖼️ **UI**: Show projects and datasets avatars again
   (`#2231 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2231>`_).
+* 📊 **UI**: update real-time the project's indexing status
+  (`#2255 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2255>`_).
 
 **🐞 Bug Fixes**
 
@@ -30,13 +31,22 @@ Internal Changes
 
 **Improvements**
 
+* **Gitlab**: Modify embedded `renku-gitlab` `helm` chart to use internal `redis`.
+* **Knowledge Graph**: List project images on responses from Cross-entity search and Project details APIs.
+* **Knowledge Graph**: Return more accurate processing details from the Project status API. The payload was updated
+  and `contains breaking changes <https://github.com/SwissDataScienceCenter/renku-graph/tree/2.26.0/webhook-service#get-projectsideventsstatus>`_).
+* **Knowledge Graph**: Accept `project-id` query parameter on the Event log API.
+* **Knowledge Graph**: Allow for greater control on the re-provisioning triggering conditions.
 * **UI**: Reduce unnecessary components re-rendering.
-* **Gitlab**: Modify embedded `renku-gitlab` `helm` chart to use internal `redis`
+* **UI**: Refresh the documentation for developers and external contributors
+  (`#2275 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2275>`_).
 
 Individual components
 ~~~~~~~~~~~~~~~~~~~~~~
 
+- `renku-graph 2.26.0 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/2.26.0>`_
 - `renku-ui 2.15.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/2.15.0>`_
+- `renku-ui 2.16.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/2.15.0>`_
 
 
 0.21.0
