@@ -1,29 +1,110 @@
 .. _changelog:
 
-0.21.0
+0.22.0
 ------
 
-Renku ``0.21.0`` brings the ability to handle expiring Gitlab tokens in user sessions and various bug fixes. 
+Renku ``0.22.0`` brings back project and dataset images, and adds new features to the Knowledge Graph APIs.
+
+User-Facing Changes
+~~~~~~~~~~~~~~~~~~~
+
+**✨ Improvements**
+
+* 🔲 **UI**: Improve styling of buttons with menu and group buttons
+  (`#2243 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2243>`_).
+* 🖼️ **UI**: Show projects and datasets avatars again
+  (`#2231 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2231>`_).
+* 📊 **UI**: update real-time the project's indexing status
+  (`#2255 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2255>`_).
+
+**🐞 Bug Fixes**
+
+* **UI**: Restore per-language source highlighting in the file preview
+  (`#2233 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2233>`_,
+  `#2265 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2265>`_).
+* **UI**: Limit the available namespaces in which new projects may be created
+  to one ones owned by the user to prevent failures.
+  (`#2187 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2187>`_).
 
 Internal Changes
 ~~~~~~~~~~~~~~~~
 
 **Improvements**
 
-* **Gateway**: Add endpoint for refreshing expiring Gitlab tokens
+* **Gitlab**: Modify embedded `renku-gitlab` `helm` chart to use internal `redis`.
+* **Knowledge Graph**: List project images on responses from Cross-entity search and Project details APIs.
+* **Knowledge Graph**: Return more accurate processing details from the Project status API. The payload was updated
+  and `contains breaking changes <https://github.com/SwissDataScienceCenter/renku-graph/tree/2.26.0/webhook-service#get-projectsideventsstatus>`_).
+* **Knowledge Graph**: Accept `project-id` query parameter on the Event log API.
+* **Knowledge Graph**: Allow for greater control on the re-provisioning triggering conditions.
+* **UI**: Reduce unnecessary components re-rendering.
+* **UI**: Refresh the documentation for developers and external contributors
+  (`#2275 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2275>`_).
+
+Individual components
+~~~~~~~~~~~~~~~~~~~~~~
+
+- `renku-graph 2.26.0 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/2.26.0>`_
+- `renku-ui 2.15.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/2.15.0>`_
+- `renku-ui 2.16.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/2.15.0>`_
+
+
+0.21.0
+------
+
+Renku ``0.21.0`` brings tidings of tweaks and bug fixes to make your Renku experience a little bit smoother.
+
+User-Facing Changes
+~~~~~~~~~~~~~~~~~~~
+
+**✨ Improvements**
+
+* 🎨 **UI**: Improve the layout of the project creation, session start, and file browser pages.
+
+**🐞 Bug Fixes**
+
+* 📃 **UI**: Update broken links to local projects and documentation, and add more links to useful resources
+  (`#2199 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2199>`_,
+  `#2207 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2207>`_,
+  `#2209 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2209>`_).
+* 🚀 **UI**: Fix glitches with autosave and improve layout of session pages
+  (`7fbda29 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2199/commits/7fbda299f6e2a956abc541565e3680160f09609d>`_,
+  `#2211 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2211>`_).
+* 🔦 **UI**: Prevent flashing inputs when forking a project
+  (`#2157 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2157>`_).
+
+Internal Changes
+~~~~~~~~~~~~~~~~
+
+**Improvements**
+
+* **Gateway**: Add endpoint for refreshing expiring GitLab tokens
+* **Knowledge Graph**: Improve functionality to refresh access tokens before expiration
+* **Knowledge Graph**: Enhance migration functionality to restore missing CompositePlans 
+* **Knowledge Graph**: Fix to prevent data corruption which could previously occur due to duplicate Project creation dates
 * **Sessions**: Check LFS size and available disk space before cloning
+* **UI**: Receive notifications through WebSocket when session state changes
+  (`#2145 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2145>`_,
+  `#2189 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2189>`_).
 
 **Bug fixes**
 
-* **Sessions**: Handle expiring Gitlab tokens
 * **Gateway**: Do not remove Redis clients on logout
 * **Gateway**: Address security vulnerabilities
+* **Knowledge Graph**: Switched to the latest Alpine Linux to address docker image vulnerabilities identified by Snyk
+* **Knowledge Graph**: Handle cases when Plan Invalidation Time is wrong
+* **Knowledge Graph**: Make the Cross Entity search API results sorting case-insensitive
+* **Knowledge Graph**: Escape Lucene keywords from Cross-Entity Search `query` parameter
+* **Knowledge Graph**: Return all inactive Projects from the User's-Projects API (previously only returned 20)
+* **Sessions**: Handle expiring GitLab tokens
 
 Individual components
 ~~~~~~~~~~~~~~~~~~~~~~
 
 - `renku-gateway 0.18.0 <https://github.com/SwissDataScienceCenter/renku-gateway/releases/tag/0.18.0>`_
 - `renku-notebooks 1.14.0 <https://github.com/SwissDataScienceCenter/renku-notebooks/releases/tag/1.14.0>`_
+- `renku-graph 2.25.0 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/2.25.0>`_
+- `renku-ui 2.14.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/2.14.0>`_
 
 0.20.0
 ------
@@ -39,7 +120,7 @@ User-Facing Changes
 * 🎨 **UI**: The RenkuLab login and logout pages have been updated with the latest styling.
 * 💬 **Renku CLI**: When you run ``renku save`` in a clean but unpushed repository, ``renku`` now informs you that it has pushed changes to the remote, rather than just saying that there were no changes to save.  
 
-**🐞Bug Fixes**
+**🐞 Bug Fixes**
 
 * 💔 **Renku CLI**: Fixed an issue where ``renku workflow compose`` would break ``renku workflow list``.
 * 🍴 **UI**: Fixed the Project name field getting reset when forking a project. 

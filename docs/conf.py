@@ -33,8 +33,7 @@ sys.path.append(abspath(join(dirname(__file__), "renku-python/docs/_ext")))
 # ones.
 extensions = [
     "cheatsheet",
-    #"plantweb.directive",
-    'sphinxcontrib.plantuml',
+    "plantweb.directive",
     "sphinx_click",
     "sphinx_copybutton",
     "sphinx_panels",
@@ -52,8 +51,6 @@ extensions = [
     "sphinxcontrib.spelling",
 ]
 
-plantuml = "java -jar " + abspath(join(dirname(__file__), "_static/uml/plantuml.jar"))
-plantuml_output_format = "svg"
 # Plantweb configuration
 plantweb_defaults = {"format": "svg"}
 
@@ -276,6 +273,7 @@ nitpick_ignore = [
     ("py:class", "IDatabaseDispatcher"),
     ("py:class", "IDatasetGateway"),
     ("py:class", "IPlanGateway"),
+    ("py:class", "itertools.count"),
     ("py:class", "LocalClient"),
     ("py:class", "NoValueType"),
     ("py:class", "OID_TYPE"),
@@ -289,6 +287,7 @@ nitpick_ignore = [
 ]
 
 nitpick_ignore_regex = [
+    ("py:class", r"bashlex.*"),
     (r"py:.*", r"calamus.*"),
     (r"py:.*", r"docker.*"),
     (r"py:.*", r"marshmallow.*"),
@@ -300,3 +299,23 @@ nitpick_ignore_regex = [
     (r"py:.*", r"pathlib.*"),
     (r"py:.*", r"contextlib.*"),
 ]
+
+
+# monkeypatch graphviz to create graphics alongside the relevant source document
+import sphinx.ext.graphviz
+from pathlib import Path
+
+_old_render = sphinx.ext.graphviz.render_dot
+
+def _render_dot(self, code, options, format,prefix = 'graphviz', filename = None):
+    old_image_dir = self.builder.imagedir
+    old_image_path = self.builder.imgpath
+    try:
+        self.builder.imagedir = str(Path(options.get('docname', 'index')).parent)
+        self.builder.imgpath = "."
+        return _old_render(self, code, options, format, prefix, filename)
+    finally:
+        self.builder.imagedir = old_image_dir
+        self.builder.imgpath = old_image_path
+
+sphinx.ext.graphviz.render_dot = _render_dot

@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 Swiss Data Science Center (SDSC)
+ * Copyright 2023 Swiss Data Science Center (SDSC)
  * A partnership between École Polytechnique Fédérale de Lausanne (EPFL) and
  * Eidgenössische Technische Hochschule Zürich (ETHZ).
  *
@@ -23,9 +23,10 @@ import cats.effect.IO
 import cats.syntax.all._
 import ch.renku.acceptancetests.model.projects.ProjectIdentifier
 import io.circe.literal.JsonStringContext
-import io.circe.{Json, JsonObject}
+import io.circe.JsonObject
 import org.http4s.Status.{NotFound, Ok}
 import org.http4s.circe._
+import org.http4s.circe.CirceEntityCodec._
 import org.scalatest.Assertions.fail
 
 import scala.annotation.tailrec
@@ -74,25 +75,21 @@ trait KnowledgeGraphApi extends RestClient {
     GET(renkuBaseUrl / "api" / "projects" / gitLabProjectId.toString / "graph" / "status")
       .send { response =>
         response.status match {
-          case Ok       => response.as[Json].map(jsonRoot.progress.double.getOption)
-          case NotFound => 0d.some.pure[IO]
+          case Ok       => response.as[GraphStatus].map(_.progressPercentage)
+          case NotFound => 0d.pure[IO]
           case other =>
-            logger.warn(s"Finding processing status for '$projectId' returned $other")
-            0d.some.pure[IO]
+            IO(logger.warn(s"Finding processing status for '$projectId' returned $other")).as(0d)
         }
       }
-      .getOrElse(0d)
 
   private def findTotalDone(projectId: ProjectIdentifier, gitLabProjectId: Int): Int =
     GET(renkuBaseUrl / "api" / "projects" / gitLabProjectId.toString / "graph" / "status")
       .send { response =>
         response.status match {
-          case Ok       => response.as[Json].map(jsonRoot.total.int.getOption)
-          case NotFound => 0.some.pure[IO]
+          case Ok       => response.as[GraphStatus].map(_.total)
+          case NotFound => 0.pure[IO]
           case other =>
-            logger.warn(s"Finding processing status for '$projectId' returned $other")
-            0.some.pure[IO]
+            IO(logger.warn(s"Finding processing status for '$projectId' returned $other")).as(0)
         }
       }
-      .getOrElse(0)
 }

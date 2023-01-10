@@ -66,6 +66,7 @@ System Context
 
     Rel(logged_in, renku, "Uses", "HTTPS")
     Rel(anonymous, renku, "Uses", "HTTPS")
+    Rel(cli, renku, "Uses", "HTTPS/Git+SSH")
     Rel(renku, keycloak, "Auth", "HTTPS")
     BiRel(renku, gitlab, "pull/push/events", "Git+SSH")
     Rel(renku, k8s, "starts sessions", "K8s API")
@@ -105,10 +106,9 @@ Container Diagram
 
     Rel_D(logged_in, ui, "Uses", "HTTPS")
     Rel_D(anonymous, ui, "Uses", "HTTPS")
-    Rel(ui, gateway, "Uses", "HTTPS")
-    Rel(gateway, ui_server, "Uses", "HTTPS")
+    Rel(ui, ui_server, "Uses", "HTTPS")
+    Rel(ui_server, gateway, "Uses", "HTTPS")
     Rel(gateway, keycloak, "Gets tokens from", "HTTPS")
-    Rel(ui_server, gateway, "forwards requests", "HTTPS")
     Rel(gateway, core_service, "forwards requests", "HTTPS")
     Rel_D(core_service, gitlab, "pushes to repository", "Git+SSH")
     Rel(core_service, redis, "cache projects")
