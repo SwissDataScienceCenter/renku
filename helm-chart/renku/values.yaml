@@ -276,35 +276,40 @@ keycloak:
 postgresql:
   ## We use the defaults here. Note that these basic configs could also be set as
   ## global values such that sub-charts can access them too.
-  postgresqlDatabase: postgres
-  postgresqlUsername: postgres
 
-  ## The admin password should be set explicitly, otherwise a random string will be
-  ## created. Alternatively an existing secret can be provided. Note that postgres
-  ## DOES NOT tolerate a change of the admin password when upgrading.
-  # postgresqlPassword:
+  auth:
+    username: postgres
+    database: postgres
 
-  ## Use an existing secret instead of creating a new one. It must have a
-  ## postgresql-password key containing the password for the posgres user.
-  # existingSecret:
+    ## The admin password should be set explicitly, otherwise a random string will be
+    ## created. Alternatively an existing secret can be provided. Note that postgres
+    ## DOES NOT tolerate a change of the admin password when upgrading.
+    # postgresqlPassword:
+
+    ## Use an existing secret instead of creating a new one. It must have a
+    ## postgresql-password key containing the password for the postgres user.
+    # existingSecret:
+
+    # Consider replication. These are the defaults for the basic settings.
+    # replicationUsername: repl_user
+    # replicationPassword: repl_password # generate a random password `openssl rand -hex 32`
 
   image:
     repository: bitnami/postgresql
-    tag: 12.8.0
+    tag: 15.1.0-debian-11-r19
 
-  persistence:
-    ## We use the defaults here, but they will probably be modified for most deployments.
-    enabled: true
-    size: 8Gi
-    ## Provide an existing PersistentVolumeClaim to be reused.
-    # existingClaim:
+  primary:
+    persistence:
+      ## We use the defaults here, but they will probably be modified for most deployments.
+      enabled: true
+      size: 8Gi
+      ## Provide an existing PersistentVolumeClaim to be reused.
+      # existingClaim:
 
-  # Consider replication. These are the defaults for the basic settings.
-  replication:
-    enabled: false
-    user: repl_user
-    password: repl_password # generate a random password `openssl rand -hex 32`
-    slaveReplicas: 1
+    # Consider replication. These are the defaults for the basic settings.
+    readReplicas:
+      enabled: false
+      replicaCount: 1
 
 redis:
   ###########################################################################

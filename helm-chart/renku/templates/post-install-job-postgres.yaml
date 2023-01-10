@@ -52,16 +52,16 @@ spec:
               readOnly: true
           env:
           - name: PGDATABASE
-            value: {{ .Values.postgresql.postgresqlDatabase }}
+            value: {{ .Values.postgresql.auth.database }}
           - name: PGUSER
-            value: {{ .Values.postgresql.postgresqlUsername }}
+            value: {{ .Values.postgresql.auth.username }}
           - name: PGHOST
             value: {{ template "postgresql.fullname" . }}
           - name: PGPASSWORD
             valueFrom:
               secretKeyRef:
                 name: {{ template "postgresql.fullname" . }}
-                key: postgresql-password
+                key: postgres-password
       volumes:
         - name: scripts
           configMap:
