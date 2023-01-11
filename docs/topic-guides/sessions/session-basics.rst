@@ -67,22 +67,56 @@ your own! Please refer to the :ref:`templating <templates>` documentation.
 
 
 Starting a new Session
---------------------------------------
+-----------------------
 
-When starting a new session, you will be asked to configure it.
-The default configuration should work well for most situations. If, however,
-you encountered problems with an environment (for example, a crash), you might
-want to increase some processing power or memory. Here's the rundown of the
-configuration options.
+You can start a session from RenkuLab in 3 different ways:
+* Click on the project quick start button. That's available as a play icon on the
+  project cards, both on the landing and search pages. Or on the top right of the
+  project header on project pages.
+  This action will automatically identify the most recent contribution on the
+  default branch and start a new session there. Should anything be wrong
+  (E.G. missing Docker images, running CI jobs, etc.), you will be redirected
+  to the :ref:`"Start with options" <_start_with_options_anchor>` page.
+  If a session is already running, you will see a "Connect" button instead of the
+  "Start" button.
+* Click on the "Start with options" link in
+  the "Start/Connect" dropdown menu available on the top right of the project
+  page header. Or on the "New session" button on the project sessions tab.
+  This action will bring you to a
+  lengthy :ref:`"Start Session" <_start_with_options_anchor>` page with many
+  more   options to personalize your session before starting.
+* Use an :ref:`"Autostart Session" <_create_autostart_links_anchor>` link.
+  The user experience is very similar to the quick start button. You can easily
+  :ref:`generate and distribute links <_create_autostart_links_anchor>` starting
+  on the latest version of any branch or even embed specific references and
+  environmental variables to tailor the session to specific needs.
+
+
+.. _start_with_options_anchor:
+
+Start with options
+~~~~~~~~~~~~~~~~~~
+
+When starting a new session through the "Start with options" button from the
+project page header or the "New session" button on the project sessions tab,
+you will get a complete overview of the session you will start.
+One of the typical use cases for using the extended options is picking a
+non-default branch.
+
+For most of the other options, the default should work well. If you encounter problems
+with an environment (E.G. not enough space or crashing when starting), consider adding
+processing power, memory, or disk space.
+
+Here's the rundown of the configuration options.
 
 +------------------------------+-------------------------------------------------------------------------------------------+
 | Option                       | Description                                                                               |
 +==============================+===========================================================================================+
-| Branch                       | Default is ``master``. You can switch if you are working on another branch                |
+| Branch                       | Default is ``master`` or ``main``. You can switch if you are working on another branch    |
 +------------------------------+-------------------------------------------------------------------------------------------+
-| Commit                       | Default is the latest, but you can launch the environment from an earlier commit. This is |
-|                              | especially useful if your latest commit's build failed (see below) or you have unsaved    |
-|                              | work that was automatically recovered.                                                    |
+| Commit                       | Default is the running session (if any) or autosave commit (if any) or latest.            |
+|                              | You can pick a different one, and that's especially useful if your latest commit's build  |
+|                              | failed (see below) or you have unsaved                                                    | 
 +------------------------------+-------------------------------------------------------------------------------------------+
 | Docker Image                 | This provides information about the Docker image used by the Session.                     |
 |                              | When it fails, you can try to rebuild it, or you can check the GitLab job logs.           |
@@ -109,6 +143,12 @@ configuration options.
 |                              | lot of data. Refer to :ref:`Data in Renku <data>` for further information                 |
 +------------------------------+-------------------------------------------------------------------------------------------+
 
+.. _create_autostart_links_anchor:
+
+Create autostart links
+~~~~~~~~~~~~~~~~~~~~~~
+
+TO-DO
 
 What if the Docker image is not available?
 ------------------------------------------
