@@ -10,7 +10,7 @@ const projectTestConfig = {
   projectName: `test-project-${uuidv4()}`
 };
 
-// Modify the config -- useful for debugging
+// ? Modify the config -- useful for debugging
 // projectTestConfig.shouldCreateProject = false;
 // projectTestConfig.projectName = "test-project-273a3030-7967-4467-8358-85d43c990201";
 
@@ -40,7 +40,13 @@ describe("Basic public project functionality", () => {
   });
 
   beforeEach(() => {
+    // load project and wait for the relevant resources to be loaded
+    cy.intercept("/ui-server/api/user").as("getUser");
+    cy.intercept("/ui-server/api/renku/*/datasets.list*").as("loadDatasets");
     cy.visitProject(projectIdentifier);
+    cy.wait("@getUser");
+    cy.wait("@loadDatasets", { timeout: TIMEOUTS.long }); // ? Well know slowest API. Wait for all instead?
+    cy.wait(1000); // ? This is bad practice, we should look for "something" to wait for
   });
 
   it("Can search for project", () => {
@@ -75,11 +81,19 @@ describe("Basic public project functionality", () => {
   });
 
   it("Can can work with datasets", () => {
+    let migrationInvokedTimes = 0;
+    cy.intercept("/ui-server/api/renku/cache.migrations_check*", req => {
+      migrationInvokedTimes++;
+    }).as("checkMigrations");
     const datasetName = `test-dataset-${uuidv4()}`;
     const datasetTitle = datasetName.replace("-", " ");
+    const migrations = migrationInvokedTimes;
     cy.getProjectPageLink(projectIdentifier, "/datasets").click();
-    if (projectTestConfig.shouldCreateProject)
+    // Wait for migrations when necessary -- this helps when manually debugging issues
+    if (migrationInvokedTimes > migrations)
+      cy.wait("@checkMigrations");
     // A project we just created should have no datasets
+    if (projectTestConfig.shouldCreateProject)
       cy.contains("No datasets found for this project.", { timeout: TIMEOUTS.vlong }).should("be.visible");
 
     // Create a dataset
@@ -88,7 +102,7 @@ describe("Basic public project functionality", () => {
     cy.dataCy("input-title").type(datasetTitle);
     cy.dataCy("input-keywords").type("test{enter}automated test{enter}");
     cy.get(".ck.ck-content").type("This is a test dataset");
-    cy.intercept("/ui-server/api/renku/9/datasets.list?git_url=*").as("listDatasets");
+    cy.intercept("/ui-server/api/renku/*/datasets.list?git_url=*").as("listDatasets");
     cy.dataCy("submit-button").click();
     cy.contains("Creating Dataset").should("be.visible");
     cy.wait("@listDatasets", { timeout: TIMEOUTS.vlong });
@@ -109,6 +123,7 @@ describe("Basic public project functionality", () => {
 
     // Check that we can see the dataset
     cy.getProjectPageLink(projectIdentifier, "/datasets").click();
+    cy.get(".renku-markdown").contains("This is a test dataset").should("exist");
     cy.contains(datasetTitle).should("be.visible").click();
 
     // Delete the dataset
@@ -118,10 +133,9 @@ describe("Basic public project functionality", () => {
   });
 
   it("Can view and modify settings", () => {
-
-    cy.visitProjectPageLink(projectIdentifier, "/settings");
+    cy.dataCy("project-navbar").contains("Settings").click();
     const projectUrl = projectUrlFromIdentifier(projectIdentifier);
-    // The clone url does not inclue "/projects" in it
+    // The clone url does not include "/projects" in it
     const cloneSubUrl = projectUrl.substring("/projects".length);
     cy.contains("renku clone").should("contain.text", cloneSubUrl);
 
@@ -134,12 +148,20 @@ describe("Basic public project functionality", () => {
       }).first().click();
     }
 
-    // The settings page is reflowed a lot, causing DOM elements to be invalidated.
-    // For that reason we visit the settings page rather than navigating to it.
+    cy.intercept("/ui-server/api/renku/*/config.set").as("configSet");
+
+    // The settings page refreshed when stale, causing DOM elements to be invalidated.
+    // For that reason we wait for the API only when it was invoked
+    let configInvokedTimes = 0;
+    cy.intercept("/ui-server/api/renku/*/config.show?git_url=*", req => {
+      configInvokedTimes++;
+    }).as("configShow");
     const navigateToSettingsSessions = () => {
-      cy.intercept("/ui-server/api/renku/*/config.show?git_url=*").as("configShow");
-      cy.visitProjectPageLink(projectIdentifier, "/settings/sessions");
-      cy.wait("@configShow", { timeout: TIMEOUTS.long });
+      const invoked = configInvokedTimes;
+      robustNavigateToProjectPage("/settings");
+      robustNavigateToProjectPage("/settings/sessions");
+      if (invoked > configInvokedTimes)
+        cy.wait("@configShow", { timeout: TIMEOUTS.standard });
     };
 
     // Make sure the renku.ini is in a pristine state
@@ -150,18 +172,23 @@ describe("Basic public project functionality", () => {
     cy.get("pre.hljs").contains("cpu_request").should("not.exist");
 
     navigateToSettingsSessions();
-    cy.intercept("/ui-server/api/renku/*/config.set").as("configSet");
-    cy.get("div.form-rk-green div.row").contains("button", "0.1").click();
+    cy.get("div.form-rk-green div.row").contains("button", "0.5").click();
     cy.wait("@configSet");
     cy.get("div.form-rk-green div.success-feedback").contains("Updated.").should("exist");
-    cy.visitProjectPageLink(projectIdentifier, "/files/blob/.renku/renku.ini");
-    cy.get("pre.hljs").contains("cpu_request = 0.1").should("exist");
 
-    cy.visitProjectPageLink(projectIdentifier, "/settings/sessions");
+    robustNavigateToProjectPage("/files");
+    cy.get("div#tree-content").contains("renku.ini").click();
+    cy.get(".hljs.language-ini").contains("[interactive]").should("be.visible");
+    cy.get("pre.hljs").contains("cpu_request = 0.5").should("exist");
+
+    navigateToSettingsSessions();
     cy.get("#cpu_request_reset").should("be.visible").click();
     cy.wait("@configSet");
     cy.get("div.form-rk-green div.success-feedback").contains("Updated.").should("exist");
-    cy.visitProjectPageLink(projectIdentifier, "/files/blob/.renku/renku.ini");
+
+    robustNavigateToProjectPage("/files");
+    cy.get("div#tree-content").contains("renku.ini").click();
+    cy.get(".hljs.language-ini").contains("[interactive]").should("be.visible");
     cy.get("pre.hljs").contains("cpu_request").should("not.exist");
   });
 });
