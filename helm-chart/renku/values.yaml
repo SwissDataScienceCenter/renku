@@ -421,7 +421,6 @@ redis:
   sysctl:
     enabled: false
 
-
 ## Gitlab configuration
 gitlab:
   ## Spawn a gitlab instance
