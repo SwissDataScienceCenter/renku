@@ -89,8 +89,8 @@ Container Diagram
 
     AddElementTag("kubernetes", $shape=EightSidedShape(), $bgColor="CornflowerBlue", $fontColor="white", $legendText="micro service (eight sided)")
 
-    Person(logged_in, "Logged-In user")
     Person(cli, "Renku CLI")
+    Person(logged_in, "Logged-In user")
     System_Boundary(renku, "Renku") {
         Container(ui, "UI", "React", "The homepage")
         Container(ui_server, "UI-Server", "Node", "Backend for Frontend")
