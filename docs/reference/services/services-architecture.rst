@@ -137,9 +137,12 @@ Container Diagram
     Lay_D(renku, gitlab)
     Lay_D(renku, keycloak)
     Lay_D(renku, k8s)
-    Lay_D(renku, postgres)
-    Lay_D(renku, redis)
-    Lay_D(renku, jena)
+    Lay_D(gitlab, postgres)
+    Lay_D(gitlab, redis)
+    Lay_D(gitlab, jena)
+    Lay_D(keycloak, postgres)
+    Lay_D(keycloak, redis)
+    Lay_D(keycloak, jena)
     @enduml
 
 Component Diagrams
