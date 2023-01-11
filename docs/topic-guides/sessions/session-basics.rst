@@ -70,6 +70,7 @@ Starting a new Session
 -----------------------
 
 You can start a session from RenkuLab in 3 different ways:
+
 * Click on the project quick start button. That's available as a play icon on the
   project cards, both on the landing and search pages. Or on the top right of the
   project header on project pages.
@@ -79,12 +80,14 @@ You can start a session from RenkuLab in 3 different ways:
   to the :ref:`"Start with options" <_start_with_options_anchor>` page.
   If a session is already running, you will see a "Connect" button instead of the
   "Start" button.
+
 * Click on the "Start with options" link in
   the "Start/Connect" dropdown menu available on the top right of the project
   page header. Or on the "New session" button on the project sessions tab.
   This action will bring you to a
   lengthy :ref:`"Start Session" <_start_with_options_anchor>` page with many
   more   options to personalize your session before starting.
+
 * Use an :ref:`"Autostart Session" <_create_autostart_links_anchor>` link.
   The user experience is very similar to the quick start button. You can easily
   :ref:`generate and distribute links <_create_autostart_links_anchor>` starting
