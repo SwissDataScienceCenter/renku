@@ -326,43 +326,72 @@ redis:
   ### https://github.com/bitnami/charts/tree/master/bitnami/redis         ###
   ###########################################################################
 
+  # the values below were taken from the default values for the chart
+  # and adapted to our context. The following contains a mix of specific
+  # customisations plus some higher level defaults which have been
+  # retained here so someone can get some overview of what this values
+  # file can do. 
+
   fullnameOverride: renku-redis
 
+  # default values in this section
+  image:
+    registry: docker.io
+    repository: bitnami/redis
+    tag: 7.0.7-debian-11-r7
+    pullPolicy: IfNotPresent
+
+  # replication is the default; standalone is also an option but this results in
+  # no read only replicas
+  architecture: replication
   auth:
     enabled: true
+    # renku-gateway requires sentinel authentication to be enabled
+    sentinel: true
     existingSecret: redis-secret
     existingSecretPasswordKey: redis-password
+  
+    # this is a default but is kept here to highlight the fact that AOF is not used
+    # in this install. Note that having this enabled without a persistent volume 
+    # is quite useless as it meant that keys get written to a file (and hence slower writes)
+    # but that file is deleted when the pod is deleted.
+    commonConfiguration: |-
+      # Disable AOF https://redis.io/topics/persistence#append-only-file
+      appendonly no
+      # Disable RDB persistence.
+      save ""
 
-  master:
-    # topologySpreadConstraints:
-    #   - maxSkew: 1
-    #     topologyKey: node
-    #     whenUnsatisfiable: DoNotSchedule
-    #     labelSelector:
-    #       matchLabels:
-    #         app: redis
-    persistence:
-      enabled: false
-    resources:
-      requests:
-        cpu: 200m
-        memory: 256Mi
+  # when using sentinel the master block is completely ignored
+  # master:
+
   replica:
-    replicaCount: 2
-    # topologySpreadConstraints:
-    #   - maxSkew: 1
-    #     topologyKey: node
-    #     whenUnsatisfiable: DoNotSchedule
-    #     labelSelector:
-    #       matchLabels:
-    #         app: redis
-    persistence:
-      enabled: false
+    # this controls the amount of redis+sentinel pods which get created
+    # it does relate to sentinel.quorum - if the latter is larger than this,
+    # then clearly things are misconfigured
+    replicaCount: 3
     resources:
-      requests:
-        cpu: 200m
+      limits: 
+        cpu: 250m
         memory: 256Mi
+      requests: 
+        cpu: 250m
+        memory: 256Mi
+    updateStrategy:
+      type: RollingUpdate
+    persistence:
+      # pvc will not get created
+      enabled: false
+    autoscaling:
+      enabled: false
+
+  # when sentinel is enabled, a sentinel container is placed in each
+  # pod and this does checking to ensure that the system always has a
+  # master
   sentinel:
+    enabled: true
+    # this determines how many nodes must agree before a master
+    # reelection is required
+    quorum: 2
     service:
       sentinel: 26379
     enabled: true
@@ -372,9 +401,26 @@ redis:
         memory: 64Mi
     downAfterMilliseconds: 1000
     failoverTimeout: 2000
+
+  # network policies are supported by the chart
   networkPolicy:
     enabled: true
+    # this adds a specific ingress rule which allows pods to connect to
+    # this redis instance if they have the label redis-client: true
     allowExternal: false
+
+  metrics:
+    # when this is enabled, a metrics container is inserted into each pod
+    enabled: true
+    # defaults - included here to be explicit
+    podAnnotations:
+      prometheus.io/scrape: "true"
+      prometheus.io/port: "9121"
+  
+  # default - making explicit
+  sysctl:
+    enabled: false
+
 
 ## Gitlab configuration
 gitlab:
