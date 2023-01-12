@@ -50,31 +50,32 @@ System Context
 
     @startuml
     !include <C4/C4_Context>
+    !define DEVICONS https://raw.githubusercontent.com/tupadr3/plantuml-icon-font-sprites/master/devicons2
+    !include DEVICONS/bash.puml
+    !include DEVICONS/kubernetes.puml
+    !include DEVICONS/gitlab.puml
 
+    HIDE_STEREOTYPE()
+
+    skinparam defaultFontName Calcutta
     skinparam linetype ortho
 
     Person(logged_in, "Logged-In user")
-    Person(cli, "Renku CLI")
-    System(renku, "Renku", $link="../reference/services/services-architecture.html#container-diagram")
-    System(gitlab, "Gitlab")
-    System(keycloak, "Keycloak")
-    System(k8s, "Kubernetes")
-    SystemDb(postgres, "PostgreSQL")
-    SystemDb(redis, "Redis")
-    SystemDb(jena, "Jena")
+    Person(cli, "Renku CLI", $sprite="bash")
+    System(renku, "", $link="../reference/services/services-architecture.html#container-diagram", $sprite="img:https://renku.readthedocs.io/en/add-architecture-diagram/_static/icons/renku_logo.png{scale=0.1}")
+    System(gitlab, "Gitlab", $sprite="gitlab")
+    System(keycloak, "Keycloak", $sprite="img:https://renku.readthedocs.io/en/add-architecture-diagram/_static/icons/keycloak_logofinal_1color.png{scale=0.2}")
+    System(k8s, "Kubernetes", $sprite="kubernetes")
     SystemDb(s3, "S3")
-    SystemDb(azure_blob, "Azure Blob Storage")
+    SystemDb(azure_blob, "Azure Blob")
 
-    Rel(logged_in, renku, "Uses", "HTTPS")
-    Rel(cli, renku, "Uses", "HTTPS/Git+SSH")
-    Rel(renku, keycloak, "Auth", "HTTPS")
-    BiRel(renku, gitlab, "pull/push/events", "Git+SSH")
-    Rel(renku, k8s, "starts sessions", "K8s API")
-    Rel(renku, postgres, "read/write")
-    Rel(renku, redis, "read/write")
-    Rel(renku, jena, "store triples")
-    Rel(renku, s3, "Use as storage")
-    Rel(renku, azure_blob, "Use as storage")
+    Rel(logged_in, renku, "Uses")
+    Rel(cli, renku, "Uses")
+    Rel(renku, keycloak, "Auth")
+    BiRel(renku, gitlab, "pull/push/events")
+    Rel(renku, k8s, "sessions")
+    Rel(renku, s3, "Storage")
+    Rel(renku, azure_blob, "Storage")
     @enduml
 
 Container Diagram
@@ -86,6 +87,9 @@ Container Diagram
     !include <C4/C4_Container.puml>
 
     skinparam linetype ortho
+    skinparam defaultFontName Calcutta
+
+    HIDE_STEREOTYPE()
 
     AddElementTag("kubernetes", $shape=EightSidedShape(), $bgColor="CornflowerBlue", $fontColor="white", $legendText="micro service (eight sided)")
 
@@ -93,7 +97,7 @@ Container Diagram
     Person(logged_in, "Logged-In user")
     System_Boundary(renku, "Renku") {
         Container(ui, "UI", "React", "The homepage")
-        Container(ui_server, "UI-Server", "Node", "Backend for Frontend")
+        Container(ui_server, "UI-Server", "ExpressJs", "Backend for Frontend")
         Container(gateway, "Gateway", "Traefik", "API Gateway")
         Boundary(services, "Backend Services") {
             Container(core_service, "core-service", "Python", "Backend service for project interaction", $link="../reference/services/services-architecture.html#core-service")
@@ -132,6 +136,7 @@ Container Diagram
     Rel_D(keycloak, postgres, "store settings/auth")
 
     Lay_L(cli, logged_in)
+    Lay_R(k8s, renku)
     Lay_D(logged_in, renku)
     Lay_D(cli, renku)
     Lay_D(renku, gitlab)
@@ -146,6 +151,55 @@ Container Diagram
     Lay_D(keycloak, jena)
     @enduml
 
+UI
+~~
+
+- Web Frontend
+- Using Nodejs, Typescript and React
+
+UI-Server
+~~~~~~~~~
+
+- Backend-for-frontend Server for the UI
+- Using Nodejs, Typescript and ExpressJs
+
+Gateway
+~~~~~~~
+
+- API gateway for backend services
+- Handles/injects access tokens and credentials
+- Based on Traefik with a Flask application as forward-auth middleware
+
+Core-Service
+~~~~~~~~~~~~
+
+- API for interacting with metadata stored in user repositories (Project, Datasets, Workflows)
+- Built with Python as a Flask app
+- uses python-rq for long-running background jobs
+- caches project repositories for fast access
+
+Renku-Graph
+~~~~~~~~~~~
+
+- Knowledge graph metadata store for storing metadata for all renku projects
+- Built with Scala and backed by Jena and Elasticsearch
+- Used for queries across projects and datasets
+
+Renku-Notebooks
+~~~~~~~~~~~~~~~
+
+- API for scheduling user sessions
+- Built with Python as a Flask app
+- Provides information on existing sessions
+- Creates K8s custom resources to schedule new sessions
+
+Amalthea
+~~~~~~~~
+
+- Custom K8s operator for running user sessions
+- Built with python and the kopf library
+- Watches for custom resources created by renku-notebooks and creates K8s objects for user sessions
+
 Component Diagrams
 ------------------
 
@@ -158,6 +212,9 @@ Core Service
     !include <C4/C4_Dynamic.puml>
 
     skinparam linetype ortho
+    skinparam defaultFontName Calcutta
+
+    HIDE_STEREOTYPE()
 
     Component_Ext(browser, "Browser")
 
