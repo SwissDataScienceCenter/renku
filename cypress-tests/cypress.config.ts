@@ -14,6 +14,6 @@ export default defineConfig({
   },
   defaultCommandTimeout: TIMEOUTS.standard,
   chromeWebSecurity: false,
-  viewportWidth: 1024,
+  viewportWidth: 1025,
   viewportHeight: 768
 });
