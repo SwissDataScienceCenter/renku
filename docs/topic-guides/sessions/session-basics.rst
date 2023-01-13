@@ -187,7 +187,7 @@ and environment variables. Mind that setting any of the previous will affect the
   autostart link. Mind that storing secrets or sensitive values in the URL is not a good idea.
 
 Programmatically compute autostart links
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Generating autostart links from the RenkuLab interface is the simplest option. You can follow
 these guidelines to set the query parameters correctly if you need to create links
 programmatically or manually.
