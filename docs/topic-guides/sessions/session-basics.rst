@@ -151,7 +151,59 @@ Here's the rundown of the configuration options.
 Create autostart links
 ~~~~~~~~~~~~~~~~~~~~~~
 
-TO-DO
+Autostart links simplify starting a session and landing there without requiring any further
+clicking on the UI. Unless you change options, the autostart link will pick the default branch
+on the target project; if any session is already running, the user lands there. Otherwise, a
+session is started either from the previously unsaved work (if any) or the latest commit.
+
+You can :ref:`customize this behavior <customize_autostart_behavior>` to match specific needs.
+
+To create an autostart link from a RenkuLab deployment, you can open a project, go to
+the :ref:`"Start session with options" <start_with_options_anchor>` page, and click on the
+dropdown menu on the `Start session` button on the bottom right.
+
+A modal will open where you can change some default values and copy the URL as text or markdown.
+
+.. image:: ../../_static/images/ui_session_autostart_link.png
+    :align: center
+    :alt: Workflows list
+
+Depending on your selection on the start page, you can include a specific branch, a commit,
+and environment variables. Mind that setting any of the previous will affect the starting flow.
+
+* Set a branch: the default sequence is followed, but the target branch will be used instead
+  of the project default. This is useful when working on different branches to prevent accidentally
+  starting sessions on the default branch.
+
+* Set a commit: in this case, the session is started from the target commit. Running sessions
+  on other commits are ignored, and any unsaved work previously done on different commits is
+  deleted. This is useful for sharing a specific version of an application with third parties
+  (E.G. when publishing results on a paper, sharing a working application, etc.). Mind that
+  contributing to the project might be tricky when starting from a specific commit since it
+  might not point to the HEAD of any branch.
+
+* Set environment variables: if you frequently need to set environment variables for your
+  sessions, this might spare you time; you can embed those variables and their values in an
+  autostart link. Mind that storing secrets or sensitive values in the URL is not a good idea.
+
+Programmatically compute autostart links
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Generating autostart links from the RenkuLab interface is the simplest option. You can follow
+these guidelines to set the query parameters correctly if you need to create links
+programmatically or manually.
+
+The default autostart URL has the following
+structure: https://renkulab.io/projects/<namespace>/<project>/sessions/new?autostart=1
+
+You can add the following:
+
+* branch: `&branch=<branch-name>`
+
+* commit: `&commit=<full-commit-sha>`. Mind that the commit will only work if you also specify
+  a branch.
+
+* environment variables: for each variable `&env[<variable-name>]=<variable-value>`
+
 
 What if the Docker image is not available?
 ------------------------------------------
