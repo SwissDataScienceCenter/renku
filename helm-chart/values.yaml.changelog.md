@@ -15,6 +15,7 @@ Old
   postgresql:
     postgresqlDatabase: <string>
     postgresqlUsername: <string>
+    postgresqlPassword: <string>
     existingSecret: <string>
     persistence:
       enabled: <bool>
