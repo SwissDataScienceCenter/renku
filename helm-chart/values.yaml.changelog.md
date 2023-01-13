@@ -16,15 +16,15 @@ Old
     postgresqlDatabase: <string>
     postgresqlUsername: <string>
     existingSecret: <string>
-  persistence:
-    enabled: <bool>
-    size: <string>
-    existingClaim: <string>
-  replication:
-    enabled: <bool>
-    user: <string>
-    password: <string>
-    slaveReplicas: <int>
+    persistence:
+      enabled: <bool>
+      size: <string>
+      existingClaim: <string>
+    replication:
+      enabled: <bool>
+      user: <string>
+      password: <string>
+      slaveReplicas: <int>
   ```
 New
   ```
