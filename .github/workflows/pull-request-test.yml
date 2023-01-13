@@ -133,7 +133,11 @@ jobs:
     needs: [check-deploy, deploy-pr]
     steps:
       - uses: actions/checkout@v2
+      - name: Wait for PR deployment to be ready
+        run: sleep 60s
+        shell: bash
       - uses: cypress-io/github-action@v4
+        name: Run Cypress acceptance tests
         id: cypress
         env:
           TEST_EMAIL: renku@datascience.ch
@@ -150,14 +154,14 @@ jobs:
       - uses: actions/upload-artifact@v3
         if: failure()
         with:
-          name: cypress-screenshots
+          name: Cypress acceptance tests - screenshots
           path: cypress-tests/cypress/screenshots
           retention-days: 7
       # Cypress test video is always captured, so this action uses "always()" condition
       - uses: actions/upload-artifact@v3
         if: always()
         with:
-          name: cypress-videos
+          name: Cypress acceptance tests - videos
           path: cypress-tests/cypress/videos
           retention-days: 3
 
