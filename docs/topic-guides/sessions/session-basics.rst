@@ -156,7 +156,8 @@ clicking on the UI. Unless you change options, the autostart link will pick the 
 on the target project; if any session is already running, the user lands there. Otherwise, a
 session is started either from the previously unsaved work (if any) or the latest commit.
 
-You can :ref:`customize this behavior <customize_autostart_behavior>` to match specific needs.
+You can :ref:`customize this behavior <customize_autostart_behavior_anchor>` to match specific
+needs.
 
 To create an autostart link from a RenkuLab deployment, you can open a project, go to
 the :ref:`"Start session with options" <start_with_options_anchor>` page, and click on the
@@ -167,6 +168,8 @@ A modal will open where you can change some default values and copy the URL as t
 .. image:: ../../_static/images/ui_session_autostart_link.png
     :align: center
     :alt: Workflows list
+
+.. _customize_autostart_behavior_anchor:
 
 Depending on your selection on the start page, you can include a specific branch, a commit,
 and environment variables. Mind that setting any of the previous will affect the starting flow.
