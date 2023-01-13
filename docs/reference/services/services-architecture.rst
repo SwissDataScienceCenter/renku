@@ -49,6 +49,12 @@ System Context
 .. uml::
 
     @startuml
+    listfonts
+    @enduml
+
+.. uml::
+
+    @startuml
     !include <C4/C4_Context>
     !define DEVICONS https://raw.githubusercontent.com/tupadr3/plantuml-icon-font-sprites/master/devicons2
     !include DEVICONS/bash.puml
@@ -57,7 +63,7 @@ System Context
 
     HIDE_STEREOTYPE()
 
-    skinparam defaultFontName Calcutta
+    skinparam defaultFontName "Calcutta","DejaVu Sans Condensed","SansSerif"
     skinparam linetype ortho
 
     Person(logged_in, "Logged-In user")
@@ -85,25 +91,25 @@ Container Diagram
 
     @startuml
     !include <C4/C4_Container.puml>
+    !define DEVICONS https://raw.githubusercontent.com/tupadr3/plantuml-icon-font-sprites/master/devicons2
+    !include DEVICONS/bash.puml
 
     skinparam linetype ortho
-    skinparam defaultFontName Calcutta
+    skinparam defaultFontName "Calcutta","DejaVu Sans Condensed","SansSerif"
 
     HIDE_STEREOTYPE()
 
     AddElementTag("kubernetes", $shape=EightSidedShape(), $bgColor="CornflowerBlue", $fontColor="white", $legendText="micro service (eight sided)")
 
-    Person(cli, "Renku CLI")
+    Person(cli, "Renku CLI", $sprite="bash")
     Person(logged_in, "Logged-In user")
     System_Boundary(renku, "Renku") {
         Container(ui, "UI", "React", "The homepage")
         Container(ui_server, "UI-Server", "ExpressJs", "Backend for Frontend")
         Container(gateway, "Gateway", "Traefik", "API Gateway")
-        Boundary(services, "Backend Services") {
-            Container(core_service, "core-service", "Python", "Backend service for project interaction", $link="../reference/services/services-architecture.html#core-service")
-            Container(renku_graph, "renku-graph", "Scala", "Backend service for project interaction")
-            Container(renku_notebooks, "renku-notebooks", "Python", "Interactive session scheduler")
-        }
+        Container(core_service, "core-service", "Python", "Backend service for project interaction", $link="../reference/services/services-architecture.html#core-service")
+        Container(renku_graph, "renku-graph", "Scala", "Backend service for project interaction")
+        Container(renku_notebooks, "renku-notebooks", "Python", "Interactive session scheduler")
         Container(amalthea, "Amalthea", "Python", "K8s Operator for scheduling sessions", $tags="kubernetes")
         Container(session, "User Session")
     }
@@ -114,35 +120,36 @@ Container Diagram
     SystemDb(redis, "Redis")
     SystemDb(jena, "Jena")
 
-    Rel_D(logged_in, ui, "Uses", "HTTPS")
-    Rel(ui, ui_server, "Uses", "HTTPS")
-    Rel(ui_server, gateway, "Uses", "HTTPS")
-    Rel(gateway, keycloak, "Gets tokens from", "HTTPS")
-    Rel(gateway, services, "forwards requests", "HTTPS")
-    Rel_D(core_service, gitlab, "pushes to repository", "Git+SSH")
+    Rel(logged_in, ui, "Uses")
+    Rel(ui, ui_server, "Uses")
+    Rel(ui_server, gateway, "Uses")
+    Rel(gateway, keycloak, "Gets tokens from")
+    Rel(gateway, core_service, "forwards requests")
+    Rel(gateway, renku_graph, "forwards requests")
+    Rel(gateway, renku_notebooks, "forwards requests")
+    Rel(core_service, gitlab, "pushes to repository", "Git+SSH")
     Rel(core_service, redis, "cache projects")
-    Rel(k8s, amalthea, "watches for session resources", "Custom Resource")
+    Rel(k8s, amalthea, "watches for session resources", "CRD")
     Rel(k8s, session, "Starts sessions")
     Rel(session, keycloak, "Authenticates users")
     Rel(session, gitlab, "Injects gitlab credentials")
     Rel(amalthea, k8s, "schedules sessions", "K8s API")
-    Rel_D(cli, gitlab, "pull/push", "Git+SSH")
-    Rel_D(cli, gateway, "Authenticate users")
-    Rel_D(cli, renku_notebooks, "manage sessions", "HTTPS")
+    Rel(cli, gitlab, "pull/push", "Git+SSH")
+    Rel(cli, gateway, "Authenticate users")
+    Rel(cli, renku_notebooks, "manage sessions")
     Rel(gateway, redis, "get tokens for requests")
-    Rel_D(gitlab, postgres, "store/retrieve metadata")
-    Rel_D(renku_graph, postgres, "keep gitlab eventlog")
-    Rel_D(renku_graph, jena, "store/search triples")
-    Rel_D(keycloak, postgres, "store settings/auth")
+    Rel(gitlab, postgres, "store/retrieve metadata")
+    Rel(renku_graph, postgres, "keep gitlab eventlog")
+    Rel(renku_graph, jena, "store/search triples")
+    Rel(keycloak, postgres, "store settings/auth")
 
-    Lay_L(cli, logged_in)
     Lay_R(k8s, renku)
+    Lay_D(ui, k8s)
+    Lay_R(amalthea, ui)
     Lay_D(logged_in, renku)
     Lay_D(cli, renku)
     Lay_D(renku, gitlab)
     Lay_D(renku, keycloak)
-    Lay_D(services, gitlab)
-    Lay_D(services, keycloak)
     Lay_D(gitlab, postgres)
     Lay_D(gitlab, redis)
     Lay_D(gitlab, jena)
@@ -212,7 +219,7 @@ Core Service
     !include <C4/C4_Dynamic.puml>
 
     skinparam linetype ortho
-    skinparam defaultFontName Calcutta
+    skinparam defaultFontName "Calcutta","DejaVu Sans Condensed","SansSerif"
 
     HIDE_STEREOTYPE()
 
