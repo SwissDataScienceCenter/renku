@@ -53,18 +53,18 @@ describe("Basic public project functionality", () => {
 
   beforeEach(() => {
     // load project and wait for the relevant resources to be loaded
-    cy.intercept("/ui-server/api/user").as("localGetUser");
-    cy.intercept("/ui-server/api/graphql").as("localGetProjects");
-    cy.intercept("/ui-server/api/renku/*/datasets.list*").as("localLoadDatasets");
+    cy.intercept("/ui-server/api/user").as("getUser");
+    cy.intercept("/ui-server/api/graphql").as("getProjects");
+    cy.intercept("/ui-server/api/renku/*/datasets.list*").as("getDatasets");
     let versionInvoked = false;
-    cy.intercept("/ui-server/api/renku/renku/version", req => { versionInvoked = true; }).as("localGetVersion");
+    cy.intercept("/ui-server/api/renku/renku/version", req => { versionInvoked = true; }).as("getVersion");
     cy.visitProject(projectIdentifier);
     // ? This is a non-exhaustive list of APIs, we might want to wait for more before interacting with the project.
-    cy.wait("@localGetUser", { timeout: TIMEOUTS.long });
-    cy.wait("@localGetProjects", { timeout: TIMEOUTS.long });
+    cy.wait("@getUser", { timeout: TIMEOUTS.long });
+    cy.wait("@getProjects", { timeout: TIMEOUTS.long });
     if (versionInvoked)
-      cy.wait("@localGetVersion", { timeout: TIMEOUTS.long });
-    cy.wait("@localLoadDatasets", { timeout: TIMEOUTS.long });
+      cy.wait("@getVersion", { timeout: TIMEOUTS.long });
+    cy.wait("@getDatasets", { timeout: TIMEOUTS.long });
     // ? This is bad practice (we should wait for something) but it helps stabilizying the tests.
     cy.wait(1000);
   });
@@ -122,7 +122,6 @@ describe("Basic public project functionality", () => {
     // Create a dataset
     cy.get("#plus-dropdown").should("exist").click();
     cy.get("#navbar-dataset-new").should("exist").click();
-    // cy.getProjectPageLink(projectIdentifier, "/datasets/new").last().should("exist").click();
     cy.dataCy("input-title").type(datasetTitle);
     cy.dataCy("input-keywords").type("test{enter}automated test{enter}");
     cy.get("div.ck.ck-editor__main div.ck.ck-content").should("exist").type("This is a test dataset");
