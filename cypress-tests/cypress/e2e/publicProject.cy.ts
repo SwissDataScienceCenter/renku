@@ -52,8 +52,8 @@ describe("Basic public project functionality", () => {
   it("Can search for project", () => {
     // assess the project has been indexed properly -- this might take time if it was recently created
     cy.dataCy("project-overview-nav").contains("Status").should("be.visible").click();
-    cy.dataCy("project-overview-content").contains("Knowledge Graph integration is active")
-      .should("be.visible", { timeout: TIMEOUTS.long });
+    cy.dataCy("project-overview-content").contains("Knowledge Graph integration is active", { timeout: TIMEOUTS.long })
+      .should("be.visible");
     cy.searchForProject(projectIdentifier);
 
     // logout and search for the project and log back in
@@ -70,7 +70,8 @@ describe("Basic public project functionality", () => {
     cy.contains("Status").click();
     cy.contains("This project is using the latest version of renku").should("be.visible");
     cy.contains("This project is using the latest version of the template").should("be.visible");
-    cy.contains("Knowledge Graph integration is active").should("be.visible");
+    cy.contains("Knowledge Graph integration is active", { timeout: TIMEOUTS.long })
+      .should("be.visible");
   });
 
   it("Can can view files", () => {
