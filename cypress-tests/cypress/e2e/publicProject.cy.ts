@@ -73,7 +73,7 @@ describe("Basic public project functionality", () => {
     // assess the project has been indexed properly -- this might take time if it was recently created
     cy.dataCy("project-overview-nav").contains("Status").should("be.visible").click();
     cy.dataCy("project-overview-content")
-      .contains("Knowledge Graph integration is active", { timeout: TIMEOUTS.long }).should("be.visible");
+      .contains("Knowledge Graph integration is active", { timeout: TIMEOUTS.vlong }).should("be.visible");
     cy.searchForProject(projectIdentifier);
 
     // logout and search for the project and log back in
