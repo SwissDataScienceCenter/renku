@@ -35,7 +35,7 @@ describe("Basic rstudio functionality", () => {
     cy.startSession(projectInfo);
 
     // Opens the session in an iframe
-    cy.contains("Open").click();
+    cy.contains("Connect").click();
     cy.get("div.details-progress-box", { timeout: TIMEOUTS.vlong }).should("not.exist");
     cy.getIframe("iframe#session-iframe").within(() => {
       rstudioTestFuncs.findExpectedElements();
