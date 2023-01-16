@@ -28,10 +28,10 @@ dependencies:
   version: 9.1.1
   repository: "https://raw.githubusercontent.com/bitnami/charts/eb5f9a9513d987b519f0ecd732e7031241c50328/bitnami"
   condition: postgresql.enabled
-- name: keycloak
-  version: 16.0.4
+- name: keycloakx
+  version: 2.1.0
   repository: "https://codecentric.github.io/helm-charts"
-  condition: keycloak.enabled
+  condition: keycloakx.enabled
 - name: certificates
   version: 0.0.4
   repository: "https://swissdatasciencecenter.github.io/helm-charts/"
