@@ -3,23 +3,26 @@
 0.22.0
 ------
 
-Renku ``0.22.0`` introduces a brand new cross-entity search page to simplify
-discovering new resources. As a consequence, Projects and Datasets pages are
-phased out.
+Renku ``0.22.0`` introduces a simplified and more powerful search, now
+powered by the Renku Knowledge Graph. Use the single integrated search bar
+to discover projects and datasets across Renku.
 
-It also brings back project and dataset avatars, adding a basic image editor
-to simplify uploading new images.
+Plus, after a few months away, Project and Dataset images are back! Upload an
+image to your project or dataset (via the Settings menu) to add some pop to your
+Renku project. You'll notice this change comes with a more compact look to
+Project and Dataset page headers, too.
 
-You can find additional UI and Knowledge Graph features, as well as bug-fixes,
-on the following list.
+Read on for more detail on UI and Knowledge Graph improvements and bug-fixes
+included in this release.
 
 User-Facing Changes
 ~~~~~~~~~~~~~~~~~~~
 
 **✨ Improvements**
 
-* 🔎 **UI**: Introduce a new cross-entity search page. Projects and Datasets
-  pages are phased out
+* 🔎 **UI**: Introduce a new cross-entity search page for searching Projects and
+  Datasets simultaneously. This search page replaces the separate Projects and
+  Datasets pages
   (`#1894 <https://github.com/SwissDataScienceCenter/renku-ui/pull/1894>`_).
 * 🔲 **UI**: Improve styling of buttons with menu and group buttons
   (`#2243 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2243>`_,
