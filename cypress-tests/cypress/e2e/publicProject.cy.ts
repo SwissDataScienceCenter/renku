@@ -48,23 +48,10 @@ describe("Basic public project functionality", () => {
   after(() => {
     if (projectTestConfig.shouldCreateProject)
       cy.deleteProject(projectIdentifier);
-
   });
 
   beforeEach(() => {
-    // load project and wait for the relevant resources to be loaded
-    cy.intercept("/ui-server/api/user").as("getUser");
-    cy.intercept("/ui-server/api/graphql").as("getProjects");
-    cy.intercept("/ui-server/api/renku/*/datasets.list*").as("getDatasets");
-    let versionInvoked = false;
-    cy.intercept("/ui-server/api/renku/renku/version", req => { versionInvoked = true; }).as("getVersion");
-    cy.visitProject(projectIdentifier);
-    // ? This is a non-exhaustive list of APIs, we might want to wait for more before interacting with the project.
-    cy.wait("@getUser", { timeout: TIMEOUTS.long });
-    cy.wait("@getProjects", { timeout: TIMEOUTS.long });
-    if (versionInvoked)
-      cy.wait("@getVersion", { timeout: TIMEOUTS.long });
-    cy.wait("@getDatasets", { timeout: TIMEOUTS.long });
+    cy.visitAndLoadProject(projectIdentifier);
     // ? This is bad practice (we should wait for something) but it helps stabilizying the tests.
     cy.wait(1000);
   });
@@ -95,7 +82,7 @@ describe("Basic public project functionality", () => {
   });
 
   it("Can can view files", () => {
-    cy.contains("Files").click();
+    cy.contains("Files").should("exist").click();
     cy.get("div#tree-content").contains(".renku").should("exist").click();
     cy.get("div#tree-content").contains("metadata").should("exist").click();
     cy.getProjectPageLink(projectIdentifier, "/files/blob/.renku/metadata/project").click();

@@ -57,6 +57,20 @@ function getProjectPageLink(identifier: ProjectIdentifier, subpage: string) {
   return cy.get(selector);
 }
 
+function visitAndLoadProject(identifier: ProjectIdentifier) {
+  // load project and wait for the relevant resources to be loaded
+  cy.intercept("/ui-server/api/user").as("getUser");
+  cy.intercept("/ui-server/api/graphql").as("getProjects");
+  cy.intercept("/ui-server/api/renku/*/datasets.list*").as("getDatasets");
+  let versionInvoked = false;
+  cy.intercept("/ui-server/api/renku/renku/version", req => { versionInvoked = true; }).as("getVersion");
+  cy.visitProject(identifier);
+  cy.wait("@getUser", { timeout: TIMEOUTS.long });
+  cy.wait("@getProjects", { timeout: TIMEOUTS.long });
+  if (versionInvoked)
+    cy.wait("@getVersion", { timeout: TIMEOUTS.long });
+  cy.wait("@getDatasets", { timeout: TIMEOUTS.long });
+}
 
 function visitProject(identifier: ProjectIdentifier) {
   const id = fullProjectIdentifier(identifier);
@@ -75,6 +89,7 @@ export default function registerProjectCommands() {
   Cypress.Commands.add("getProjectPageLink", getProjectPageLink);
   Cypress.Commands.add("visitProject", visitProject);
   Cypress.Commands.add("visitProjectPageLink", visitProjectPageLink);
+  Cypress.Commands.add("visitAndLoadProject", visitAndLoadProject);
 }
 
 export { fullProjectIdentifier, projectPageLinkSelector, projectUrlFromIdentifier };
@@ -89,6 +104,7 @@ declare global {
       getProjectPageLink(identifier: ProjectIdentifier, subpage: string);
       visitProject(identifier: ProjectIdentifier);
       visitProjectPageLink(identifier: ProjectIdentifier, subpage: string);
+      visitAndLoadProject(identifier: ProjectIdentifier);
     }
   }
 }
