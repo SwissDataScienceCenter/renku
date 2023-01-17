@@ -186,7 +186,7 @@ keycloakx:
       value: "true"
     - name: JAVA_OPTS_APPEND
       value: >-
-        -Djgroups.dns.query={{ include "keycloak.fullname" . }}-headless
+        -Djgroups.dns.query={{ include "keycloakx.fullname" . }}-headless
 
   command:
   - "/opt/keycloak/bin/kc.sh"
