@@ -53,7 +53,7 @@ Define subcharts full names
 {{- end -}}
 {{- end -}}
 
-{{- define "keycloakx.fullname" -}}
+{{- define "keycloak.fullname" -}}
 {{- printf "%s-%s" .Release.Name "keycloakx" | replace "+" "_" | trunc 20 | trimSuffix "-" -}}
 {{- end -}}
 
