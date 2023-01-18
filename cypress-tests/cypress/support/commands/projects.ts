@@ -54,14 +54,14 @@ function deleteProject(identifier: ProjectIdentifier) {
 
 function forkProject(identifier: ProjectIdentifier, newName: string) {
   // open the Fork project modal
-  let getProjectsCount = 0, getProjectsWaitedCount = 0;
-  cy.intercept("/ui-server/api/graphql", req => { getProjectsCount++; }).as("getProjects");
+  let projectsInvoked = false;
+  cy.intercept("/ui-server/api/graphql", req => { projectsInvoked = true; }).as("getProjects");
   cy.dataCy("project-overview-content").get("#fork-project").should("be.visible").click();
-  while (getProjectsWaitedCount < getProjectsCount) {
+  if (projectsInvoked)
     cy.wait("@getProjects", { timeout: TIMEOUTS.long });
-    getProjectsWaitedCount++;
-    cy.wait(200);
-  }
+  cy.get(".modal-content").contains("Fork project").should("be.visible");
+  cy.get("#slug").should("be.visible", { timeout: TIMEOUTS.long }).should("contain.value", identifier.name);
+
   cy.get(".modal-content").contains("Fork project").should("be.visible");
   cy.get("#slug").should("be.visible").should("contain.value", identifier.name);
 
