@@ -11,6 +11,12 @@ const projects = {
   v8: "renku-project-v8",
 }
 
+// ? to simplify debugging, you can change `shouldFork` to false to use the projects directly instead of forking.
+// projects.shouldFork = false;
+// projects.namespace = youtnamesoace;
+// projects.v7 = another-project-v7;
+// projects.v8 = another-project-v8;
+
 describe("Basic public project functionality", () => {
   before(() => {
     // Save all cookies across tests
