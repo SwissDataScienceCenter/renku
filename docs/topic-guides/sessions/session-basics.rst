@@ -120,9 +120,10 @@ Here's the rundown of the configuration options.
 | Branch                       | This is the default branch (typically ``master`` or ``main``). You can switch if you      |
 |                              | are working on another branch.                                                            |
 +------------------------------+-------------------------------------------------------------------------------------------+
-| Commit                       | Default is the running session (if any) or autosave commit (if any) or latest.            |
-|                              | Selecting a different commit can be useful to see the state of the project at a specific  | 
-|                              | point in time, to avoid a commit in which the image does not build, or to ignore          | 
+| Commit                       | Typically the most recent commit, but could be different if there is a running session or |
+|                              | uncommitted work from a recent session.                                                   |
+|                              | Selecting a different commit can be useful to see the state of the project at a specific  |
+|                              | point in time, to avoid a commit in which the image does not build, or to ignore          |
 |                              | autosaved work.                                                                           |
 +------------------------------+-------------------------------------------------------------------------------------------+
 | Docker Image                 | This provides information about the Docker image used by the Session.                     |
