@@ -3,7 +3,7 @@
 0.23.0
 ------
 
-Renku ``0.23.0`` brings number of bugfixes, KG APIs performance improvements as well as support for CLI 1.11.1.
+Renku ``0.23.0`` brings number of bug fixes, KG APIs performance improvements as well as support for CLI 1.11.1.
 
 **🐞 Bug Fixes**
 
