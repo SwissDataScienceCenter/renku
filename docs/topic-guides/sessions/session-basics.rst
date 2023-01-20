@@ -86,12 +86,12 @@ You can start a session from RenkuLab in 3 different ways:
   page header. Or on the "New session" button on the project sessions tab.
   This action will bring you to a
   lengthy :ref:`"Start Session" <start_with_options_anchor>` page with many
-  more   options to personalize your session before starting.
+  more options to configure your session before starting.
 
 * Use an :ref:`"Autostart Session" <create_autostart_links_anchor>` link.
   The user experience is very similar to the quick start button. You can easily
-  :ref:`generate and distribute links <create_autostart_links_anchor>` starting
-  on the latest version of any branch or even embed specific references and
+  :ref:`generate and share links <create_autostart_links_anchor>` that start
+  on the latest version of any branch or specify references and
   environmental variables to tailor the session to specific needs.
 
 
@@ -102,7 +102,7 @@ Start with options
 
 When starting a new session through the "Start with options" button from the
 project page header or the "New session" button on the project sessions tab,
-you will get a complete overview of the session you will start.
+you will be able to completely control the parameters for the session that will start.
 One of the typical use cases for using the extended options is picking a
 non-default branch.
 
