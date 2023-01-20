@@ -103,23 +103,27 @@ Start with options
 When starting a new session through the "Start with options" button from the
 project page header or the "New session" button on the project sessions tab,
 you will be able to completely control the parameters for the session that will start.
-One of the typical use cases for using the extended options is picking a
-non-default branch.
+In general, the default values should work well. But there are situations where using
+the extended options are indispensable. Examples include:
 
-For most of the other options, the default should work well. If you encounter problems
-with an environment (E.G. not enough space or crashing when starting), consider adding
-processing power, memory, or disk space.
+* Picking a non-default branch.
+
+* Increasing resource limits (processing power, memory, or disk space) if you know it
+  is necessary or if the session crashes when starting or complains that there is not
+  enough space.
 
 Here's the rundown of the configuration options.
 
 +------------------------------+-------------------------------------------------------------------------------------------+
 | Option                       | Description                                                                               |
 +==============================+===========================================================================================+
-| Branch                       | Default is ``master`` or ``main``. You can switch if you are working on another branch    |
+| Branch                       | This is the default branch (typically ``master`` or ``main``). You can switch if you      |
+|                              | are working on another branch.                                                            |
 +------------------------------+-------------------------------------------------------------------------------------------+
 | Commit                       | Default is the running session (if any) or autosave commit (if any) or latest.            |
-|                              | You can pick a different one, and that's especially useful if your latest commit's build  |
-|                              | failed (see below) or you have unsaved                                                    | 
+|                              | Selecting a different commit can be useful to see the state of the project at a specific  | 
+|                              | point in time, to avoid a commit in which the image does not build, or to ignore          | 
+|                              | autosaved work.                                                                           |
 +------------------------------+-------------------------------------------------------------------------------------------+
 | Docker Image                 | This provides information about the Docker image used by the Session.                     |
 |                              | When it fails, you can try to rebuild it, or you can check the GitLab job logs.           |
@@ -151,17 +155,20 @@ Here's the rundown of the configuration options.
 Create autostart links
 ~~~~~~~~~~~~~~~~~~~~~~
 
-Autostart links simplify starting a session and landing there without requiring any further
-clicking on the UI. Unless you change options, the autostart link will pick the default branch
-on the target project; if any session is already running, the user lands there. Otherwise, a
-session is started either from the previously unsaved work (if any) or the latest commit.
+Autostart links are a good way to give others access to sessions, since they bring the
+visitor directly into a session without having to search for projects or provide any
+information.  The standard behavior is for the autostart link to use the default branch
+on the target project; if any session is already running, the user is taken there there.
+Otherwise, a session is started either from the previously unsaved work (if any) or the
+latest commit.
 
 You can :ref:`customize this behavior <customize_autostart_behavior_anchor>` to match specific
 needs.
 
 To create an autostart link from a RenkuLab deployment, you can open a project, go to
 the :ref:`"Start session with options" <start_with_options_anchor>` page, and click on the
-dropdown menu on the `Start session` button on the bottom right.
+dropdown menu on the `Start session` button on the bottom right, and select the `Create link`
+option.
 
 A modal will open where you can change some default values and copy the URL as text or markdown.
 
@@ -171,8 +178,8 @@ A modal will open where you can change some default values and copy the URL as t
 
 .. _customize_autostart_behavior_anchor:
 
-Depending on your selection on the start page, you can include a specific branch, a commit,
-and environment variables. Mind that setting any of the previous will affect the starting flow.
+Autostart links can be configured to refer to a specific branch and/or commit, and can
+specify environment variables. Mind that the configuration can affect the starting flow.
 
 * Set a branch: the default sequence is followed, but the target branch will be used instead
   of the project default. This is useful when working on different branches to prevent accidentally
