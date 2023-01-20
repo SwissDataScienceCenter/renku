@@ -1,5 +1,28 @@
 .. _changelog:
 
+0.23.0
+------
+
+Renku ``0.23.0`` brings number of bugfixes, KG APIs performance improvements as well as support for CLI 1.11.1.
+
+**🐞 Bug Fixes**
+
+* **Knowledge Graph**: Performance improvements for Cross-Entities Search and Project Details APIs.
+* **Knowledge Graph**: Partial support for Workflow File metadata.
+
+Internal Changes
+~~~~~~~~~~~~~~~~
+
+**Improvements**
+
+* **Knowledge Graph**: New provisioning process managing data to be used in the future for further performance improvements of the search APIs.
+
+Individual components
+~~~~~~~~~~~~~~~~~~~~~~
+
+- `renku-graph 2.27.0 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/2.27.0>`_
+
+
 0.22.0
 ------
 
