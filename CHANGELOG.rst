@@ -1,5 +1,50 @@
 .. _changelog:
 
+0.23.0
+------
+
+Read on for more detail on UI and Knowledge Graph improvements and bug-fixes included in this release.
+
+User-Facing Changes
+~~~~~~~~~~~~~~~~~~~
+
+**🌟 New Features**
+
+* 📝 **Renku CLI**: Introduce the Renku Workflow File, a yaml-based file for defining Renku workflows
+  (`documentation <https://renku.readthedocs.io/en/latest/topic-guides/workflows/workflow-file.html>`_)
+  (`#3176 <https://github.com/SwissDataScienceCenter/renku-python/pull/3176>`_)
+* **Renku CLI**: Support for azure blob storage
+  (`#3257 <https://github.com/SwissDataScienceCenter/renku-python/issues/3257>`__)
+
+**✨ Improvements**
+
+* ⚙️  **Renku CLI**: Made ``toil`` the default workflow backend instead of ``cwl``
+  (`#3220 <https://github.com/SwissDataScienceCenter/renku-python/issues/3220>`_)
+
+**🐞 Bug Fixes**
+
+* **Renku core service**: Fix issue with project templates being cached and users being unable to create projects based
+  on the newest version of a template
+  (`#3243 <https://github.com/SwissDataScienceCenter/renku-python/issues/3243>`_)
+* **Renku CLI**: Check for image in registry before pulling and improve error messages
+  (`#3265 <https://github.com/SwissDataScienceCenter/renku-python/issues/3265>`__)
+* **Renku CLI**: Failure when re-/executing a subset of workflow file steps
+  (`#3263 <https://github.com/SwissDataScienceCenter/renku-python/issues/3263>`__)
+
+Internal Changes
+~~~~~~~~~~~~~~~~
+
+**Improvements**
+
+* **Renku CLI**: Switch to poetry 1.3
+  (`#3087 <https://github.com/SwissDataScienceCenter/renku-python/pull/3087>`_)
+
+Individual components
+~~~~~~~~~~~~~~~~~~~~~~
+
+- `renku-python 2.0.0 <https://github.com/SwissDataScienceCenter/renku-python/releases/tag/v2.1.0>`_
+
+
 0.22.0
 ------
 
