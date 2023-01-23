@@ -52,7 +52,8 @@ describe("Basic public project functionality", () => {
 
   beforeEach(() => {
     cy.visitAndLoadProject(projectIdentifier);
-    // ? This is bad practice (we should wait for something) but it helps stabilizying the tests.
+    // ? This is bad practice (we should wait for something) but it helps stabilize the tests.
+    // eslint-disable-next-line cypress/no-unnecessary-waiting
     cy.wait(1000);
   });
 
