@@ -13,10 +13,10 @@ describe("Basic rstudio functionality", () => {
     });
   });
 
-  afterEach(() => {
+  after(() => {
     cy.logout();
   });
-  beforeEach(() => {
+  before(() => {
     cy.robustLogin();
   });
 
@@ -35,8 +35,6 @@ describe("Basic rstudio functionality", () => {
     cy.startSession(projectInfo);
 
     // Opens the session in an iframe
-    cy.contains("Connect").click();
-    cy.get("div.details-progress-box", { timeout: TIMEOUTS.vlong }).should("not.exist");
     cy.getIframe("iframe#session-iframe").within(() => {
       rstudioTestFuncs.findExpectedElements();
     });
@@ -62,9 +60,10 @@ describe("Basic rstudio functionality", () => {
     cy.getIframe("iframe#session-iframe").within(() => {
       rstudioTestFuncs.findExpectedElements();
     });
-    // Deletes the project
-    cy.deleteProject(projectInfo);
+
     // Stops the session
     cy.stopSessionFromIframe();
+    // Deletes the project
+    cy.deleteProject(projectInfo);
   });
 });
