@@ -1,4 +1,4 @@
 papermill==2.4.0
 toil==5.7.1
-ipykernel==6.19.2
-pandas==1.5.2
+ipykernel==6.20.2
+pandas==1.5.3

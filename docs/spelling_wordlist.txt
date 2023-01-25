@@ -15,6 +15,7 @@ auth
 autocomplete
 autosave
 autosaved
+autostart
 backend
 backends
 backgroundImage

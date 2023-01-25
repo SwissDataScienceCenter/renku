@@ -67,22 +67,64 @@ your own! Please refer to the :ref:`templating <templates>` documentation.
 
 
 Starting a new Session
---------------------------------------
+-----------------------
 
-When starting a new session, you will be asked to configure it.
-The default configuration should work well for most situations. If, however,
-you encountered problems with an environment (for example, a crash), you might
-want to increase some processing power or memory. Here's the rundown of the
-configuration options.
+You can start a session from RenkuLab in 3 different ways:
+
+* Click on the project quick start button. That's available as a play icon on the
+  project cards, both on the landing and search pages. Or on the top right of the
+  project header on project pages.
+  This action will automatically identify the most recent contribution on the
+  default branch and start a new session there. Should anything be wrong
+  (E.G. missing Docker images, running CI jobs, etc.), you will be redirected
+  to the :ref:`"Start with options" <start_with_options_anchor>` page.
+  If a session is already running, you will see a "Connect" button instead of the
+  "Start" button.
+
+* Click on the "Start with options" link in
+  the "Start/Connect" dropdown menu available on the top right of the project
+  page header. Or on the "New session" button on the project sessions tab.
+  This action will bring you to a
+  lengthy :ref:`"Start Session" <start_with_options_anchor>` page with many
+  more options to configure your session before starting.
+
+* Use an :ref:`"Autostart Session" <create_autostart_links_anchor>` link.
+  The user experience is very similar to the quick start button. You can easily
+  :ref:`generate and share links <create_autostart_links_anchor>` that start
+  on the latest version of any branch or specify references and
+  environmental variables to tailor the session to specific needs.
+
+
+.. _start_with_options_anchor:
+
+Start with options
+~~~~~~~~~~~~~~~~~~
+
+When starting a new session through the "Start with options" button from the
+project page header or the "New session" button on the project sessions tab,
+you will be able to completely control the parameters for the session that will start.
+In general, the default values should work well. But there are situations where using
+the extended options are indispensable. Examples include:
+
+* Picking a non-default branch.
+
+* Increasing resource limits (processing power, memory, or disk space) if you know it
+  is necessary or if the session crashes when starting or complains that there is not
+  enough space.
+
+Here's the rundown of the configuration options.
 
 +------------------------------+-------------------------------------------------------------------------------------------+
 | Option                       | Description                                                                               |
 +==============================+===========================================================================================+
-| Branch                       | Default is ``master``. You can switch if you are working on another branch                |
+| Branch                       | This is the default branch (typically ``master`` or ``main``). You can switch if you      |
+|                              | are working on another branch.                                                            |
 +------------------------------+-------------------------------------------------------------------------------------------+
-| Commit                       | Default is the latest, but you can launch the environment from an earlier commit. This is |
-|                              | especially useful if your latest commit's build failed (see below) or you have unsaved    |
-|                              | work that was automatically recovered.                                                    |
+| Commit                       | Typically the most recent commit, but could be different if there is a running session or |
+|                              | uncommitted work from a recent session.                                                   |
+|                              | Selecting a different commit can be useful to see the state of the project at a specific  |
+|                              | point in time, to avoid a commit in which the image does not build, or to ignore          |
+|                              | autosaved work.                                                                           |
 +------------------------------+-------------------------------------------------------------------------------------------+
 | Docker Image                 | This provides information about the Docker image used by the Session.                     |
 |                              | When it fails, you can try to rebuild it, or you can check the GitLab job logs.           |
@@ -108,6 +150,70 @@ configuration options.
 |                              | convenient, but it may considerably slow down the start time if the project contains a    |
 |                              | lot of data. Refer to :ref:`Data in Renku <data>` for further information                 |
 +------------------------------+-------------------------------------------------------------------------------------------+
+
+.. _create_autostart_links_anchor:
+
+Create autostart links
+~~~~~~~~~~~~~~~~~~~~~~
+
+Autostart links are a good way to give others access to sessions, since they bring the
+visitor directly into a session without having to search for projects or provide any
+information.  The standard behavior is for the autostart link to use the default branch
+on the target project; if any session is already running, the user is taken there there.
+Otherwise, a session is started either from the previously unsaved work (if any) or the
+latest commit.
+
+You can :ref:`customize this behavior <customize_autostart_behavior_anchor>` to match specific
+needs.
+
+To create an autostart link from a RenkuLab deployment, you can open a project, go to
+the :ref:`"Start session with options" <start_with_options_anchor>` page, and click on the
+dropdown menu on the `Start session` button on the bottom right, and select the `Create link`
+option.
+
+A modal will open where you can change some default values and copy the URL as text or markdown.
+
+.. image:: ../../_static/images/ui_session_autostart_link.png
+    :align: center
+    :alt: Workflows list
+
+.. _customize_autostart_behavior_anchor:
+
+Autostart links can be configured to refer to a specific branch and/or commit, and can
+specify environment variables. Mind that the configuration can affect the starting flow.
+
+* Set a branch: the default sequence is followed, but the target branch will be used instead
+  of the project default. This is useful when working on different branches to prevent accidentally
+  starting sessions on the default branch.
+
+* Set a commit: in this case, the session is started from the target commit. Running sessions
+  on other commits are ignored, and any unsaved work previously done on different commits is
+  deleted. This is useful for sharing a specific version of an application with third parties
+  (E.G. when publishing results on a paper, sharing a working application, etc.). Mind that
+  contributing to the project might be tricky when starting from a specific commit since it
+  might not point to the HEAD of any branch.
+
+* Set environment variables: if you frequently need to set environment variables for your
+  sessions, this might spare you time; you can embed those variables and their values in an
+  autostart link. Mind that storing secrets or sensitive values in the URL is not a good idea.
+
+Programmatically compute autostart links
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Generating autostart links from the RenkuLab interface is the simplest option. You can follow
+these guidelines to set the query parameters correctly if you need to create links
+programmatically or manually.
+
+The default autostart URL has the following
+structure: https://renkulab.io/projects/<namespace>/<project>/sessions/new?autostart=1
+
+You can add the following:
+
+* branch: `&branch=<branch-name>`
+
+* commit: `&commit=<full-commit-sha>`. Mind that the commit will only work if you also specify
+  a branch.
+
+* environment variables: for each variable `&env[<variable-name>]=<variable-value>`
 
 
 What if the Docker image is not available?
