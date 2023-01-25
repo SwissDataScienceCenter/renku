@@ -94,8 +94,9 @@ function robustLogin(props?: RobustLoginProps) {
 }
 
 function logout() {
-  cy.get("#profile-dropdown").click();
-  cy.get("#logout-link").click();
+//  cy.visit("/");
+  cy.get("#profile-dropdown").should("be.visible").click();
+  cy.get("#logout-link").should("be.visible").click();
 }
 
 export default function registerLoginCommands() {
