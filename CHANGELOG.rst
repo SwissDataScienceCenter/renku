@@ -5,7 +5,7 @@
 
 **✨ Improvements**
 
-* 🔌 **UI**: Change text on the quickstart session button from "start" to
+* 🔌 **UI**: Change text on the quick-start session button from "start" to
   "connect" when a session is running
   (`#2268 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2268>`_).
 
