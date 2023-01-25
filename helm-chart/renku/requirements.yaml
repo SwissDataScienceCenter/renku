@@ -36,5 +36,5 @@ dependencies:
   version: 0.0.3
   repository: "https://swissdatasciencecenter.github.io/helm-charts/"
 - name: redis
-  chart: https://charts.bitnami.com/bitnami/redis-17.4.2.tgz # this installs redis v7.0.7
+  chart: https://charts.bitnami.com/bitnami/redis-17.4.3.tgz # this installs redis v7.0.7
   condition: redis.install
