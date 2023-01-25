@@ -156,7 +156,7 @@ Internal Changes
 
 * **Gateway**: Add endpoint for refreshing expiring GitLab tokens
 * **Knowledge Graph**: Improve functionality to refresh access tokens before expiration
-* **Knowledge Graph**: Enhance migration functionality to restore missing CompositePlans 
+* **Knowledge Graph**: Enhance migration functionality to restore missing CompositePlans
 * **Knowledge Graph**: Fix to prevent data corruption which could previously occur due to duplicate Project creation dates
 * **Sessions**: Check LFS size and available disk space before cloning
 * **UI**: Receive notifications through WebSocket when session state changes
@@ -185,7 +185,7 @@ Individual components
 0.20.0
 ------
 
-Renku ``0.20.0`` tidies up the RenkuLab session start sequence, as well as an assortment of improvements and bug fixes. 
+Renku ``0.20.0`` tidies up the RenkuLab session start sequence, as well as an assortment of improvements and bug fixes.
 
 User-Facing Changes
 ~~~~~~~~~~~~~~~~~~~
@@ -194,12 +194,12 @@ User-Facing Changes
 
 * 🚀 **UI**: We tidied up the session launch sequence to have a unified appearance, regardless of where on RenkuLab you start your session from. Sessions also have better logs and error handling.
 * 🎨 **UI**: The RenkuLab login and logout pages have been updated with the latest styling.
-* 💬 **Renku CLI**: When you run ``renku save`` in a clean but unpushed repository, ``renku`` now informs you that it has pushed changes to the remote, rather than just saying that there were no changes to save.  
+* 💬 **Renku CLI**: When you run ``renku save`` in a clean but unpushed repository, ``renku`` now informs you that it has pushed changes to the remote, rather than just saying that there were no changes to save.
 
 **🐞 Bug Fixes**
 
 * 💔 **Renku CLI**: Fixed an issue where ``renku workflow compose`` would break ``renku workflow list``.
-* 🍴 **UI**: Fixed the Project name field getting reset when forking a project. 
+* 🍴 **UI**: Fixed the Project name field getting reset when forking a project.
 * 📃 **UI**: Fixed issues with downloading session logs.
 
 Internal Changes
