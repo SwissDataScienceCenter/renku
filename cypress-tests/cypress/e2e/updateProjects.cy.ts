@@ -13,9 +13,9 @@ const projects = {
 
 // ? to simplify debugging, you can change `shouldFork` to false to use the projects directly instead of forking.
 // projects.shouldFork = false;
-// projects.namespace = youtnamesoace;
-// projects.v7 = another-project-v7;
-// projects.v8 = another-project-v8;
+// projects.namespace = "yourNamespace";
+// projects.v7 = "anotherProjectV7";
+// projects.v8 = "anotherProjectV8";
 
 describe("Basic public project functionality", () => {
   before(() => {
@@ -78,7 +78,7 @@ describe("Basic public project functionality", () => {
     ).as("getCommits");
     cy.getProjectPageLink(targetProject, "overview/commits").should("exist").click();
     if (!commitFetched)
-      cy.dataCy("project-overview-content").get(".card-header button").should("exist").click();
+      cy.dataCy("refresh-commits").should("exist").click();
     cy.wait("@getCommits", { timeout: TIMEOUTS.long });
     cy.dataCy("project-overview-content").get(".card-body ul li.commit-object").should("have.length", 1)
 
@@ -101,7 +101,7 @@ describe("Basic public project functionality", () => {
     commitFetched = false;
     cy.getProjectPageLink(targetProject, "overview/commits").should("exist").click();
     if (!commitFetched)
-      cy.dataCy("project-overview-content").get(".card-header button").should("exist").click();
+      cy.dataCy("refresh-commits").should("exist").click();
     cy.wait("@getCommits", { timeout: TIMEOUTS.long });
     cy.dataCy("project-overview-content").get(".card-body ul li.commit-object")
       .should("have.length.greaterThan", 1)
