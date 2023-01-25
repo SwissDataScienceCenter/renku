@@ -334,12 +334,8 @@ redis:
 
   fullnameOverride: renku-redis
 
-  # default values in this section
-  image:
-    registry: docker.io
-    repository: bitnami/redis
-    tag: 7.0.7-debian-11-r7
-    pullPolicy: IfNotPresent
+  # the image version used is the default specified in the helm chart
+  # image:
 
   # replication is the default; standalone is also an option but this results in
   # no read only replicas
