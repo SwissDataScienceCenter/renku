@@ -3,9 +3,13 @@
 0.23.0
 ------
 
+
+User-Facing Changes
+~~~~~~~~~~~~~~~~~~~
+
 **✨ Improvements**
 
-* 🔌 **UI**: Change text on the quick-start session button from "start" to
+* 🔌 **UI**: Change text on the session quick-start button from "start" to
   "connect" when a session is running
   (`#2268 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2268>`_).
 
@@ -14,6 +18,9 @@
 * **UI**: Restrict visibility options to be compatible with namespace and
   parent project in fork dialog
   (`#2299 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2299>`_).
+
+Internal Changes
+~~~~~~~~~~~~~~~~
 
 0.22.0
 ------
