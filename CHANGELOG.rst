@@ -49,6 +49,12 @@ Individual components
 Internal Changes
 ~~~~~~~~~~~~~~~~
 
+Individual components
+~~~~~~~~~~~~~~~~~~~~~~
+
+- `renku-ui 3.1.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.1.0>`_
+
+
 0.22.0
 ------
 
