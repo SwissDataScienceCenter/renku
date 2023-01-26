@@ -390,7 +390,6 @@ redis:
     quorum: 2
     service:
       sentinel: 26379
-    enabled: true
     resources:
       requests:
         cpu: 200m
