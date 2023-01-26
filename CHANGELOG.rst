@@ -3,12 +3,33 @@
 0.23.0
 ------
 
-Renku ``0.23.0`` brings number of bug fixes, KG APIs performance improvements as well as support for CLI 1.11.1.
+Renku ``0.23.0`` introduces the Renku Workflow File, a friendlier way to encode and run your data analysis pipelines
+on Renku. This yaml-based file is easy to write and execution is as easy as `renku run workflow.yml`. Add a workflow
+to your Renku project with our docs [here](https://renku.readthedocs.io/en/stable/topic-guides/workflows/workflow-file.html)!
+
+
+User-Facing Changes
+~~~~~~~~~~~~~~~~~~~
+
+**🌟 New Features**
+
+ * 📝 **Renku CLI**: Add support for writing workflow files which can be executed directly, greatly improving the UX
+   around workflows
+   (`#3176 <https://github.com/SwissDataScienceCenter/renku-python/pull/3176>`_)
+ * **Knowledge Graph**: Partial support for Workflow File metadata.
+
+**✨ Improvements**
+
+ * ⚙️ **Renku CLI**: Made `toil` the default workflow backend instead of `cwl`
+   (`#3220 <https://github.com/SwissDataScienceCenter/renku-python/issues/3220>`_)
+ * 💨 **Knowledge Graph**: Performance improvements for Cross-Entities Search and Project Details APIs.
 
 **🐞 Bug Fixes**
 
-* **Knowledge Graph**: Performance improvements for Cross-Entities Search and Project Details APIs.
-* **Knowledge Graph**: Partial support for Workflow File metadata.
+ * **Renku CLI**: Fixed ``toil`` dependency not being installed correctly.
+ * **Renku core service**: Fix issue with project templates being cached and users being unable to create projects
+   based on the newest version of a template
+   (`#3243 <https://github.com/SwissDataScienceCenter/renku-python/issues/3243>`_)
 
 Internal Changes
 ~~~~~~~~~~~~~~~~
@@ -21,7 +42,9 @@ Individual components
 ~~~~~~~~~~~~~~~~~~~~~~
 
 - `renku-graph 2.27.0 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/2.27.0>`_
-
+- `renku-python 1.11.0 <https://github.com/SwissDataScienceCenter/renku-python/releases/tag/v1.11.0>`_
+- `renku-python 1.11.1 <https://github.com/SwissDataScienceCenter/renku-python/releases/tag/v1.11.1>`_
+- `renku-python 1.11.2 <https://github.com/SwissDataScienceCenter/renku-python/releases/tag/v1.11.2>`_
 
 0.22.0
 ------
