@@ -46,6 +46,9 @@ Individual components
 - `renku-python 1.11.1 <https://github.com/SwissDataScienceCenter/renku-python/releases/tag/v1.11.1>`_
 - `renku-python 1.11.2 <https://github.com/SwissDataScienceCenter/renku-python/releases/tag/v1.11.2>`_
 
+Internal Changes
+~~~~~~~~~~~~~~~~
+
 0.22.0
 ------
 
