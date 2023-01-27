@@ -13,7 +13,7 @@ User-Facing Changes
 
 **🌟 New Features**
 
- * 📝 **Renku CLI**: Add support for writing workflow files which can be executed directly, greatly improving the UX
+ * 📝 **Renku CLI**: Add support for workflow files which can be executed directly, greatly improving the UX
    around workflows
    (`#3176 <https://github.com/SwissDataScienceCenter/renku-python/pull/3176>`_)
 
