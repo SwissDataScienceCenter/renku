@@ -16,7 +16,6 @@ User-Facing Changes
  * 📝 **Renku CLI**: Add support for writing workflow files which can be executed directly, greatly improving the UX
    around workflows
    (`#3176 <https://github.com/SwissDataScienceCenter/renku-python/pull/3176>`_)
- * **Knowledge Graph**: Partial support for Workflow File metadata.
 
 **✨ Improvements**
 
