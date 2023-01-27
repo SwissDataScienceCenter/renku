@@ -35,6 +35,7 @@ Internal Changes
 
 **Improvements**
 
+* **Infrastructure Components**: ``redis`` has been upgraded from version ``6.0.5`` to ``7.0.7``
 * **Knowledge Graph**: New provisioning process managing data to be used in the future for further performance improvements of the search APIs.
 
 Individual components
