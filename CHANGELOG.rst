@@ -1,5 +1,18 @@
 .. _changelog:
 
+0.23.0
+------
+
+User-Facing Changes
+~~~~~~~~~~~~~~~~~~~
+
+Internal Changes
+~~~~~~~~~~~~~~~~
+
+**Improvements**
+
+* **Infrastructure Components**: ``redis`` has been upgraded from version ``6.0.5`` to ``7.0.7``
+
 0.22.0
 ------
 
