@@ -4,7 +4,7 @@
 ------
 
 Renku ``0.23.0`` introduces the Renku Workflow File, a friendlier way to encode and run your data analysis pipelines
-on Renku. This yaml-based file is easy to write and execution is as easy as `renku run workflow.yml`. Add a workflow
+on Renku. You can write out your workflow in this easy-to-use YAML file, and execute it with `renku run workflow.yml`. Add a workflow
 to your Renku project with our docs [here](https://renku.readthedocs.io/en/stable/topic-guides/workflows/workflow-file.html)!
 
 
