@@ -326,66 +326,95 @@ redis:
   ### https://github.com/bitnami/charts/tree/master/bitnami/redis         ###
   ###########################################################################
 
+  # the values below were taken from the default values for the chart
+  # and adapted to our context. The following contains a mix of specific
+  # customisations plus some higher level defaults which have been
+  # retained here so someone can get some overview of what this values
+  # file can do. 
+
   fullnameOverride: renku-redis
-  redisPort: 6379
 
-  ## config for newer redis versions, here for later reference
-  # replicas:
-  #   replicaCount: 2
-  # auth:
-  #   enabled: true
-  #   sentinel: true
-  #   existingSecret: redis-secret
-  #   existingSecretPasswordKey: redis-password
+  # the image version used is the default specified in the helm chart
+  # image:
 
-  usePassword: true
-  existingSecret: redis-secret
-  existingSecretPasswordKey: redis-password
-
-  master:
-    # Fixed redis bug prevents us from using this before
-    # we bump the redis chart version
-    # spreadConstraints:
-    #   - maxSkew: 1
-    #     topologyKey: node
-    #     whenUnsatisfiable: DoNotSchedule
-    #     labelSelector:
-    #       matchLabels:
-    #         app: redis
-    persistence:
-      enabled: false
-    resources:
-      requests:
-        cpu: 200m
-        memory: 256Mi
-  slave:
-    # Fixed redis bug prevents us from using this before
-    # we bump the redis chart version
-    # spreadConstraints:
-    #   - maxSkew: 1
-    #     topologyKey: node
-    #     whenUnsatisfiable: DoNotSchedule
-    #     labelSelector:
-    #       matchLabels:
-    #         app: redis
-    persistence:
-      enabled: false
-    resources:
-      requests:
-        cpu: 200m
-        memory: 256Mi
-  sentinel:
-    port: 26379
+  # replication is the default; standalone is also an option but this results in
+  # no read only replicas
+  architecture: replication
+  auth:
     enabled: true
+    # renku-gateway requires sentinel authentication to be enabled
+    sentinel: true
+    existingSecret: redis-secret
+    existingSecretPasswordKey: redis-password
+  
+    # this is a default but is kept here to highlight the fact that AOF is not used
+    # in this install. Note that having this enabled without a persistent volume 
+    # is quite useless as it meant that keys get written to a file (and hence slower writes)
+    # but that file is deleted when the pod is deleted.
+    commonConfiguration: |-
+      # Disable AOF https://redis.io/topics/persistence#append-only-file
+      appendonly no
+      # Disable RDB persistence.
+      save ""
+
+  # when using sentinel the master block is completely ignored
+  # master:
+
+  replica:
+    # this controls the amount of redis+sentinel pods which get created
+    # it does relate to sentinel.quorum - if the latter is larger than this,
+    # then clearly things are misconfigured
+    replicaCount: 3
+    resources:
+      limits: 
+        cpu: 250m
+        memory: 256Mi
+      requests: 
+        cpu: 250m
+        memory: 256Mi
+    updateStrategy:
+      type: RollingUpdate
+    persistence:
+      # pvc will not get created
+      enabled: false
+    autoscaling:
+      enabled: false
+
+  # when sentinel is enabled, a sentinel container is placed in each
+  # pod and this does checking to ensure that the system always has a
+  # master
+  sentinel:
+    enabled: true
+    # this determines how many nodes must agree before a master
+    # reelection is required
+    quorum: 2
+    service:
+      sentinel: 26379
     resources:
       requests:
         cpu: 200m
         memory: 64Mi
     downAfterMilliseconds: 1000
     failoverTimeout: 2000
+
+  # network policies are supported by the chart
   networkPolicy:
     enabled: true
+    # this adds a specific ingress rule which allows pods to connect to
+    # this redis instance if they have the label redis-client: true
     allowExternal: false
+
+  metrics:
+    # when this is enabled, a metrics container is inserted into each pod
+    enabled: true
+    # defaults - included here to be explicit
+    podAnnotations:
+      prometheus.io/scrape: "true"
+      prometheus.io/port: "9121"
+  
+  # default - making explicit
+  sysctl:
+    enabled: false
 
 ## Gitlab configuration
 gitlab:
@@ -544,7 +573,7 @@ ui:
       custom: true
       repositories:
         - url: https://github.com/SwissDataScienceCenter/renku-project-template
-          ref: 0.3.5
+          ref: 0.4.1
           name: Renku
         - url: https://github.com/SwissDataScienceCenter/contributed-project-templates
           ref: 0.4.1
