@@ -56,60 +56,61 @@ describe("Basic public project functionality", () => {
       cy.deleteProject(targetProject);
   });
 
-  it("Can update an old but still supported project", () => {
-    // fork the project
-    const tempName = `test-project-update-v8-${uuidv4().substring(24)}`;
-    if (projects.shouldFork) {
-      const forkedProject = { namespace: projects.namespace, name: projects.v8 };
-      cy.visitAndLoadProject(forkedProject);
-      cy.forkProject(forkedProject, tempName);
-    }
+  // ? Temporary removing this test since renku core 1.11.x supports only v9
+  // it("Can update an old but still supported project", () => {
+  //   // fork the project
+  //   const tempName = `test-project-update-v8-${uuidv4().substring(24)}`;
+  //   if (projects.shouldFork) {
+  //     const forkedProject = { namespace: projects.namespace, name: projects.v8 };
+  //     cy.visitAndLoadProject(forkedProject);
+  //     cy.forkProject(forkedProject, tempName);
+  //   }
 
-    // get to the commits page and check there is only 1 commit
-    const targetProject = projects.shouldFork ?
-      { namespace: username, name: tempName } :
-      { namespace: projects.namespace, name: projects.v8 };
-    if (!projects.shouldFork)
-      cy.visitAndLoadProject(targetProject);
-    let commitFetched = false;
-    cy.intercept(
-      "/ui-server/api/projects/*/repository/commits?ref_name=master&per_page=100&page=1",
-      req => { commitFetched = true; }
-    ).as("getCommits");
-    cy.getProjectPageLink(targetProject, "overview/commits").should("exist").click();
-    if (!commitFetched)
-      cy.dataCy("refresh-commits").should("exist").click();
-    cy.wait("@getCommits", { timeout: TIMEOUTS.long });
-    cy.dataCy("project-overview-content").get(".card-body ul li.commit-object").should("have.length", 1)
+  //   // get to the commits page and check there is only 1 commit
+  //   const targetProject = projects.shouldFork ?
+  //     { namespace: username, name: tempName } :
+  //     { namespace: projects.namespace, name: projects.v8 };
+  //   if (!projects.shouldFork)
+  //     cy.visitAndLoadProject(targetProject);
+  //   let commitFetched = false;
+  //   cy.intercept(
+  //     "/ui-server/api/projects/*/repository/commits?ref_name=master&per_page=100&page=1",
+  //     req => { commitFetched = true; }
+  //   ).as("getCommits");
+  //   cy.getProjectPageLink(targetProject, "overview/commits").should("exist").click();
+  //   if (!commitFetched)
+  //     cy.dataCy("refresh-commits").should("exist").click();
+  //   cy.wait("@getCommits", { timeout: TIMEOUTS.long });
+  //   cy.dataCy("project-overview-content").get(".card-body ul li.commit-object").should("have.length", 1)
 
-    // verify project can be updated
-    cy.getProjectPageLink(targetProject, "overview/status").should("exist").click();
-    cy.dataCy("project-overview-content").contains("Project Renku Version").should("exist");
-    cy.dataCy("project-overview-content").contains("(v8)").should("exist");
-    cy.dataCy("project-overview-content")
-      .contains("it is using an older version of renku").should("exist");
+  //   // verify project can be updated
+  //   cy.getProjectPageLink(targetProject, "overview/status").should("exist").click();
+  //   cy.dataCy("project-overview-content").contains("Project Renku Version").should("exist");
+  //   cy.dataCy("project-overview-content").contains("(v8)").should("exist");
+  //   cy.dataCy("project-overview-content")
+  //     .contains("it is using an older version of renku").should("exist");
 
-    // update the project
-    cy.dataCy("project-overview-content").get(".alert.alert-warning button.btn-warning")
-      .contains("Update").should("exist").click();
-    // ? Temporarily disabled untile we fix this: https://github.com/SwissDataScienceCenter/renku-ui/issues/2315
-    // cy.dataCy("project-overview-content").contains("Updating...", { timeout: TIMEOUTS.long }).should("exist");
-    cy.dataCy("project-overview-content")
-      .contains("project is using the latest version of renku", { timeout: TIMEOUTS.vlong }).should("exist");
+  //   // update the project
+  //   cy.dataCy("project-overview-content").get(".alert.alert-warning button.btn-warning")
+  //     .contains("Update").should("exist").click();
+  //   // ? Temporarily disabled untile we fix this: https://github.com/SwissDataScienceCenter/renku-ui/issues/2315
+  //   // cy.dataCy("project-overview-content").contains("Updating...", { timeout: TIMEOUTS.long }).should("exist");
+  //   cy.dataCy("project-overview-content")
+  //     .contains("project is using the latest version of renku", { timeout: TIMEOUTS.vlong }).should("exist");
 
-    // verify the commits were added
-    commitFetched = false;
-    cy.getProjectPageLink(targetProject, "overview/commits").should("exist").click();
-    if (!commitFetched)
-      cy.dataCy("refresh-commits").should("exist").click();
-    cy.wait("@getCommits", { timeout: TIMEOUTS.long });
-    cy.dataCy("project-overview-content").get(".card-body ul li.commit-object")
-      .should("have.length.greaterThan", 1)
-    cy.dataCy("project-overview-content").get(".card-body ul li.commit-object")
-      .contains("renku migrate:").should("exist");
+  //   // verify the commits were added
+  //   commitFetched = false;
+  //   cy.getProjectPageLink(targetProject, "overview/commits").should("exist").click();
+  //   if (!commitFetched)
+  //     cy.dataCy("refresh-commits").should("exist").click();
+  //   cy.wait("@getCommits", { timeout: TIMEOUTS.long });
+  //   cy.dataCy("project-overview-content").get(".card-body ul li.commit-object")
+  //     .should("have.length.greaterThan", 1)
+  //   cy.dataCy("project-overview-content").get(".card-body ul li.commit-object")
+  //     .contains("renku migrate:").should("exist");
 
-    // delete the project
-    if (projects.shouldFork)
-      cy.deleteProject(targetProject);
-  });
+  //   // delete the project
+  //   if (projects.shouldFork)
+  //     cy.deleteProject(targetProject);
+  // });
 });
