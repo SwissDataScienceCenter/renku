@@ -57,8 +57,8 @@ trait Environments {
       }
 
     `try few times before giving up` { _ =>
-      And("clicks on the 'Open' button")
-      click on projectPage.Sessions.Running.maybeOpenButton.getOrElse(fail("Open button not found"))
+      And("clicks on the 'Connect' button")
+      click on projectPage.Sessions.Running.maybeOpenButton.getOrElse(fail("Connect button not found"))
       sleep(15 seconds)
     }
 
