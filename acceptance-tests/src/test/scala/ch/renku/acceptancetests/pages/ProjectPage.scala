@@ -363,7 +363,6 @@ class ProjectPage(val projectSlug: String, val namespace: String)
 
       def maybeOpenButton(implicit webDriver: WebDriver): Option[WebElement] = eventually {
         find(cssSelector("a[href*='sessions/show']"))
-          .find(_.text.trim == "Connect")
       }
 
       def maybeGetLogsButton(implicit webDriver: WebDriver): Option[WebElement] = eventually {
