@@ -356,6 +356,7 @@ redis:
       appendonly no
       # Disable RDB persistence.
       save ""
+  
 
   # when using sentinel the master block is completely ignored
   # master:
@@ -396,6 +397,8 @@ redis:
         memory: 64Mi
     downAfterMilliseconds: 1000
     failoverTimeout: 2000
+    # the default is 220 which causes redis to take ~4 minutes to fully start
+    getMasterTimeout: 5
 
   # network policies are supported by the chart
   networkPolicy:
