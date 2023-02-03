@@ -88,34 +88,3 @@ Define subcharts full names
 {{- define "core.fullname" -}}
 {{- printf "%s-%s" .Release.Name "core" | replace "+" "_" | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
-
-# {{/*
-# Define embedded database values
-# */}}
-# {{- define "postgresql.postgresqlUsername" -}}
-# {{- if .Values.global.database.embedded -}}
-# {{- .Values.global.database.username -}}
-# {{- end -}}
-# {{- end -}}
-
-# {{- define "postgresql.postgresqlDatabase" -}}
-# {{- if .Values.global.database.embedded -}}
-# {{- .Values.global.database.maintenanceDatabase -}}
-# {{- end -}}
-# {{- end -}}
-
-# {{- define "postgresql.postgresqlPassword" -}}
-# {{- if .Values.global.database.embedded -}}
-# {{- if .Values.global.database.password -}}
-# {{- .Values.global.database.password -}}
-# {{- end -}}
-# {{- end -}}
-# {{- end -}}
-
-# {{- define "postgresql.existingSecret" -}}
-# {{- if .Values.global.database.embedded -}}
-# {{- if .Values.global.database.existingSecret -}}
-# {{- .Values.global.database.password -}}
-# {{- end -}}
-# {{- end -}}
-# {{- end -}}

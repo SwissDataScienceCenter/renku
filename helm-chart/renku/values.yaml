@@ -298,16 +298,15 @@ postgresql:
   # global.externalServices.postgresql.enabled should be true, and postgresql.enabled should be false.
   # By default, Renku-bundled Postgres is enabled.
   enabled: true
-  # host:
 
   ## We use the defaults here.
-  maintenanceDatabase: postgres
-  username: postgres
+  postgresqlDatabase: postgres
+  postgresqlUsername: postgres
 
   ## The admin password should be set explicitly, otherwise a random string will be created.
   ## Alternatively an existing secret can be provided. Note that postgres
   ## DOES NOT tolerate a change of the admin password when upgrading.
-  # password:
+  # postgresqlPassword:
 
   ## Use an existing secret instead of creating a new one. It must have a
   ## postgresql-password key containing the password for the posgres user.

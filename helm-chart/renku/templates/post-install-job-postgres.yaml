@@ -57,13 +57,13 @@ spec:
             {{- if .Values.global.externalServices.postgresql.enabled }}
             value: {{ .Values.global.externalServices.postgresql.maintenanceDatabase }}
             {{- else -}}
-            value: {{ .Values.postgresql.maintenanceDatabase }}
+            value: {{ .Values.postgresql.postgresqlDatabase }}
             {{- end }}
           - name: PGUSER
             {{ if .Values.global.externalServices.postgresql.enabled }}
             value: {{ .Values.global.externalServices.postgresql.username }}
             {{- else -}}
-            value: {{ .Values.postgresql.username }}
+            value: {{ .Values.postgresql.postgresqlUsername }}
             {{- end }}
           - name: PGPASSWORD
             {{- if not .Values.global.externalServices.postgresql.enabled }}
