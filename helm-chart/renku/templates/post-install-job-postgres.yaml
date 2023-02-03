@@ -43,7 +43,7 @@ spec:
             - name: gitlab-postgres
               mountPath: /gitlab-postgres
               readOnly: true
-            {{- end}}
+            {{- end }}
             - name: graph-db-postgres
               mountPath: /graph-db-postgres
               readOnly: true
@@ -54,23 +54,31 @@ spec:
           - name: PGHOST
             value: {{ template "postgresql.fullname" . }}
           - name: PGDATABASE
-            value: {{ .Values.global.database.maintenanceDatabase }}
+            {{- if .Values.global.externalServices.postgresql.enabled }}
+            value: {{ .Values.global.externalServices.postgresql.maintenanceDatabase }}
+            {{- else -}}
+            value: {{ .Values.postgresql.maintenanceDatabase }}
+            {{- end }}
           - name: PGUSER
-            value: {{ .Values.global.database.username }}
+            {{ if .Values.global.externalServices.postgresql.enabled }}
+            value: {{ .Values.global.externalServices.postgresql.username }}
+            {{- else -}}
+            value: {{ .Values.postgresql.username }}
+            {{- end }}
           - name: PGPASSWORD
-            {{- if .Values.global.database.embedded }}
+            {{- if not .Values.global.externalServices.postgresql.enabled }}
             valueFrom:
               secretKeyRef:
                 name: {{ template "postgresql.fullname" . }}
                 key: postgresql-password
-            {{- else if .Values.global.database.password }}
-            value: {{ .Values.global.database.password }}
-            {{- else if .Values.global.database.existingSecret }}
+            {{- else if .Values.global.externalServices.postgresql.password }}
+            value: {{ .Values.global.externalServices.postgresql.password }}
+            {{- else if .Values.global.externalServices.postgresql.existingSecret }}
             valueFrom:
               secretKeyRef:
-                name: {{ .Values.global.database.existingSecret }}
+                name: {{ .Values.global.externalServices.postgresql.existingSecret }}
                 key: postgresql-password
-            {{- end}}
+            {{- end }}
       volumes:
         - name: scripts
           configMap:
@@ -85,7 +93,7 @@ spec:
         - name: gitlab-postgres
           secret:
             secretName: {{ template "renku.fullname" . }}-gitlab-postgres
-        {{- end}}
+        {{- end }}
         - name: graph-db-postgres
           secret:
             secretName: {{ template "renku.fullname" . }}-graph-db-postgres

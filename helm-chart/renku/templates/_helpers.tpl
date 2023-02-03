@@ -46,10 +46,10 @@ http
 Define subcharts full names
 */}}
 {{- define "postgresql.fullname" -}}
-{{- if .Values.global.database.embedded -}}
+{{- if not .Values.global.externalServices.postgresql.enabled -}}
 {{- printf "%s-%s" .Release.Name "postgresql" | replace "+" "_" | trunc 63 | trimSuffix "-" -}}
 {{- else -}}
-{{- .Values.global.database.host -}}
+{{- .Values.global.externalServices.postgresql.host -}}
 {{- end -}}
 {{- end -}}
 
@@ -89,33 +89,33 @@ Define subcharts full names
 {{- printf "%s-%s" .Release.Name "core" | replace "+" "_" | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 
-{{/*
-Define embedded database values
-*/}}
-{{- define "postgresql.postgresqlUsername" -}}
-{{- if .Values.global.database.embedded -}}
-{{- .Values.global.database.username -}}
-{{- end -}}
-{{- end -}}
+# {{/*
+# Define embedded database values
+# */}}
+# {{- define "postgresql.postgresqlUsername" -}}
+# {{- if .Values.global.database.embedded -}}
+# {{- .Values.global.database.username -}}
+# {{- end -}}
+# {{- end -}}
 
-{{- define "postgresql.postgresqlDatabase" -}}
-{{- if .Values.global.database.embedded -}}
-{{- .Values.global.database.maintenanceDatabase -}}
-{{- end -}}
-{{- end -}}
+# {{- define "postgresql.postgresqlDatabase" -}}
+# {{- if .Values.global.database.embedded -}}
+# {{- .Values.global.database.maintenanceDatabase -}}
+# {{- end -}}
+# {{- end -}}
 
-{{- define "postgresql.postgresqlPassword" -}}
-{{- if .Values.global.database.embedded -}}
-{{- if .Values.global.database.password -}}
-{{- .Values.global.database.password -}}
-{{- end -}}
-{{- end -}}
-{{- end -}}
+# {{- define "postgresql.postgresqlPassword" -}}
+# {{- if .Values.global.database.embedded -}}
+# {{- if .Values.global.database.password -}}
+# {{- .Values.global.database.password -}}
+# {{- end -}}
+# {{- end -}}
+# {{- end -}}
 
-{{- define "postgresql.existingSecret" -}}
-{{- if .Values.global.database.embedded -}}
-{{- if .Values.global.database.existingSecret -}}
-{{- .Values.global.database.password -}}
-{{- end -}}
-{{- end -}}
-{{- end -}}
+# {{- define "postgresql.existingSecret" -}}
+# {{- if .Values.global.database.embedded -}}
+# {{- if .Values.global.database.existingSecret -}}
+# {{- .Values.global.database.password -}}
+# {{- end -}}
+# {{- end -}}
+# {{- end -}}
