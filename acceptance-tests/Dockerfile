@@ -11,7 +11,7 @@ RUN apt-get update && \
     wget \
     curl
 
-# This 'mkdir' is just to make the openjdk-11-jdk installation to pass
+# This 'mkdir' is just to make the openjdk installation to pass
 RUN mkdir -p /usr/share/man/man1 && \
     apt-get update && \
     apt-get install -y openjdk-17-jdk
@@ -36,7 +36,7 @@ USER attests
 
 ENV PATH=/home/attests/.local/bin:/home/attests/.local/lib/python3.8/site-packages:$PATH
 
-RUN python3 -m pip install --upgrade 'pip==22.3.1' && \
+RUN python3 -m pip install --upgrade 'pip==23.0' && \
     python3 -m pip install -r /tests/requirements.txt
 
 ENV DOCKER="1"

@@ -62,6 +62,44 @@ Most information related to upgrading from one chart version to another is cover
 in the `values changelog file <https://github.com/SwissDataScienceCenter/renku/blob/master/helm-chart/values.yaml.changelog.md>`_.
 For upgrades that require some steps other than modifying the values files to be executed, we add some instructions here.
 
+Upgrading to 0.23.0
+*******************
+This version contains an upgrade to the ``redis`` bitnami helm chart dependency
+from version ``10.7.11`` to ``17.4.2``. This upgrades ``redis`` from version
+``6.0.5`` to ``7.0.7``.
+
+As this change involves a major version upgrade to ``redis``, the old ``redis``
+deployment is removed and fully replaced by the new ``redis`` deployment. This
+may involve loss of transient data (browser session information which is stored
+in ``redis``). Running user renku sessions will not be affected, but users may
+have to log in again if working within a browser.
+
+Changes are required to the ``renku`` ``values.yaml`` as the new ``redis`` helm
+chart is structured a little differently. Please see the
+``values.yaml.changelog.md`` for more details.
+
+Upgrading to 0.22.0
+*******************
+This version changes the embedded ``renku-gitlab`` helm chart from ``0.6.0`` to
+``0.7.0``. This removes the ``redis`` subchart from the ``renku-gitlab`` chart and
+configures ``gitlab`` by default to use ``redis`` which runs in the ``gitlab``
+omnibus container. It is, however, possible to use an external ``redis`` if
+required. The driver for this is to enable ``redis`` to be upgraded in the main
+``renku`` helm chart. ``renku`` currently recommends the use of an external
+``gitlab`` in production scenarios.
+
+This will be the last update to the embedded ``renku-gitlab`` helm chart.
+
+This change does not involve any changes to the main ``renku`` ``values.yaml``.
+
+As this change results in the termination of the external ``redis`` used by the
+``renku-gitlab`` ``helm`` chart, the following process is recommended:
+
+- ensure that there are no runner jobs running - you may need to find a time when this is the case
+- scale the ``renku-gitlab`` ``Deployment`` to 0
+- perform the upgrade
+- when the upgrade is complete, check the status of ``redis`` within ``gitlab``; it should be active and using a modern version of ``redis``.
+
 Upgrading to 0.11.0
 *******************
 We bump the PostgreSQL version from ``11`` to ``12.8`` and the GitLab major version from ``13`` to ``14``.

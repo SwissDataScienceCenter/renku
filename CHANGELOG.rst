@@ -1,5 +1,130 @@
 .. _changelog:
 
+0.23.0
+------
+
+Renku ``0.23.0`` introduces the Renku Workflow File, a friendlier way to encode and run your data analysis pipelines
+on Renku. You can write out your workflow in this easy-to-use YAML file, and execute it with `renku run workflow.yml`. Add a workflow
+to your Renku project with our docs `here <https://renku.readthedocs.io/en/stable/topic-guides/workflows/workflow-file.html>`_!
+
+User-Facing Changes
+~~~~~~~~~~~~~~~~~~~
+
+**🌟 New Features**
+
+* 📝 **Renku CLI**: Add support for workflow files which can be executed directly, greatly improving the UX
+  around workflows
+  (`#3176 <https://github.com/SwissDataScienceCenter/renku-python/pull/3176>`_).
+
+**✨ Improvements**
+
+* ⚙️ **Renku CLI**: Made `toil` the default workflow backend instead of `cwl`
+  (`#3220 <https://github.com/SwissDataScienceCenter/renku-python/issues/3220>`_).
+* 💨 **Knowledge Graph**: Performance improvements for Cross-Entities Search and Project Details APIs.
+* 🔌 **UI**: Change text on the quick-start session button from "start" to
+  "connect" when a session is running
+  (`#2268 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2268>`_).
+
+**🐞 Bug Fixes**
+
+* **Renku CLI**: Fixed ``toil`` dependency not being installed correctly.
+* **Renku core service**: Fix issue with project templates being cached and users being unable to create projects
+  based on the newest version of a template
+  (`#3243 <https://github.com/SwissDataScienceCenter/renku-python/issues/3243>`_).
+* **UI**: Restrict visibility options to be compatible with namespace and
+  parent project in fork dialog
+  (`#2299 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2299>`_).
+
+Internal Changes
+~~~~~~~~~~~~~~~~
+
+**Improvements**
+
+* **Infrastructure Components**: ``redis`` has been upgraded from version ``6.0.5`` to ``7.0.7``
+* **Knowledge Graph**: New provisioning process managing data to be used in the future for further performance improvements of the search APIs.
+
+Individual components
+~~~~~~~~~~~~~~~~~~~~~~
+
+- `renku-graph 2.27.0 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/2.27.0>`_
+- `renku-python 1.11.0 <https://github.com/SwissDataScienceCenter/renku-python/releases/tag/v1.11.0>`_
+- `renku-python 1.11.1 <https://github.com/SwissDataScienceCenter/renku-python/releases/tag/v1.11.1>`_
+- `renku-python 1.11.2 <https://github.com/SwissDataScienceCenter/renku-python/releases/tag/v1.11.2>`_
+- `renku-ui 3.1.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.1.0>`_
+
+0.22.0
+------
+
+Renku ``0.22.0`` introduces a simplified and more powerful search, now
+powered by the Renku Knowledge Graph. Use the single integrated search bar
+to discover projects and datasets across Renku.
+
+Plus, after a few months away, Project and Dataset images are back! Upload an
+image to your project or dataset (via the Settings menu) to add some pop to your
+Renku project. You'll notice this change comes with a more compact look to
+Project and Dataset page headers, too.
+
+Read on for more detail on UI and Knowledge Graph improvements and bug-fixes
+included in this release.
+
+User-Facing Changes
+~~~~~~~~~~~~~~~~~~~
+
+**✨ Improvements**
+
+* 🔎 **UI**: Introduce a new cross-entity search page for searching Projects and
+  Datasets simultaneously. This search page replaces the separate Projects and
+  Datasets pages
+  (`#1894 <https://github.com/SwissDataScienceCenter/renku-ui/pull/1894>`_).
+* 🔲 **UI**: Improve styling of buttons with menu and group buttons
+  (`#2243 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2243>`_,
+  `#2284 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2284>`_).
+* 🖼️ **UI**: Restore projects and datasets avatars, and add a simple image
+  editor.
+  (`#2231 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2231>`_,
+  `#2246 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2246>`_).
+* 📊 **UI**: Update real-time the project's indexing status
+  (`#2255 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2255>`_).
+* 📑 **UI**: Update documentation links and target the stable release
+  (`#2276 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2276>`_).
+
+**🐞 Bug Fixes**
+
+* **UI**: Restore per-language source highlighting in the file preview
+  (`#2233 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2233>`_,
+  `#2265 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2265>`_).
+* **UI**: Limit the available namespaces in which new projects may be created
+  to the ones owned by the user to prevent failures
+  (`#2187 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2187>`_).
+* **UI**: Prevent interface from freezing when interacting with broken sessions
+  (`#2269 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2269>`_).
+* **UI**: Remove idle time when moving to step two on the starting session page.
+  (`#2282 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2282>`_).
+
+Internal Changes
+~~~~~~~~~~~~~~~~
+
+**Improvements**
+
+* **Gitlab**: Modify embedded `renku-gitlab` `helm` chart to use internal `redis`.
+* **Knowledge Graph**: List project images on responses from Cross-entity search and Project details APIs.
+* **Knowledge Graph**: Return more accurate processing details from the Project status API. The payload was updated
+  and `contains breaking changes <https://github.com/SwissDataScienceCenter/renku-graph/tree/2.26.0/webhook-service#get-projectsideventsstatus>`_).
+* **Knowledge Graph**: Accept `project-id` query parameter on the Event log API.
+* **Knowledge Graph**: Allow for greater control on the re-provisioning triggering conditions.
+* **UI**: Reduce unnecessary components re-rendering.
+* **UI**: Refresh the documentation for developers and external contributors
+  (`#2275 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2275>`_).
+
+Individual components
+~~~~~~~~~~~~~~~~~~~~~~
+
+- `renku-graph 2.26.0 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/2.26.0>`_
+- `renku-ui 2.15.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/2.15.0>`_
+- `renku-ui 2.16.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/2.15.0>`_
+- `renku-ui 3.0.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.0.0>`_
+
+
 0.21.0
 ------
 

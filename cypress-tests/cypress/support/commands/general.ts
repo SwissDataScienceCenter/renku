@@ -14,12 +14,16 @@ export type SearchForProjectProps = {
   namespace: string
 }
 export function searchForProject(props: SearchForProjectProps) {
-  cy.get("input[placeholder='Search or jump to...']").type(props.name).type("{enter}");
-  cy.contains(`${props.namespace}/${props.name}`).should("be.visible");
+  cy.visit("/search");
+  cy.get("input[placeholder='Search...']").should("be.visible").type(props.name).type("{enter}");
+  cy.get("[data-cy='list-card-title']").contains(props.name).should("be.visible");
 }
 
-function dataCy(value: string) {
-  return cy.get(`[data-cy=${value}]`);
+function dataCy(value: string, exist: true) {
+  if (exist)
+    return cy.get(`[data-cy=${value}]`).should("exist");
+  else
+    return cy.get(`[data-cy=${value}]`)
 }
 
 export default function registerGeneralCommands() {
@@ -32,7 +36,7 @@ declare global {
   // eslint-disable-next-line @typescript-eslint/no-namespace
   namespace Cypress {
     interface Chainable {
-      dataCy(value: string);
+      dataCy(value: string, exist?: boolean);
       getIframe(selector: string): Chainable<unknown>;
       searchForProject(props: SearchForProjectProps);
     }
