@@ -28,7 +28,7 @@ export const stopSessionFromIframe = () => {
   cy.get(`[data-cy="stop-session-button"]`).should("be.visible").click();
   cy.get("div.modal-session").should("be.visible").should("not.be.empty");
   cy.get(`[data-cy="stop-session-modal-button"]`).should("be.visible").click();
-  cy.contains("Stopping session...", { timeout: TIMEOUTS.long }).should("be.visible");
+  cy.contains("Stopping...", { timeout: TIMEOUTS.long }).should("be.visible");
 };
 
 export default function registerSessionCommands() {
