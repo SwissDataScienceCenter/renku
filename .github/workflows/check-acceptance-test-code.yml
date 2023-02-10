@@ -1,13 +1,14 @@
 name: Check acceptance tests dependencies and code
 
 on:
-  [pull_request]
+  pull_request:
+  merge_group:
 jobs:
   formatting-check:
     name: Scala dependencies and code check
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: run test compile
         run: |
           cd acceptance-tests

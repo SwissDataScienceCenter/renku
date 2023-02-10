@@ -28,7 +28,7 @@ enablePlugins(AutomateHeaderPlugin)
 publish / skip := true
 publishTo := Some(Resolver.file("Unused transient repository", file("target/unusedrepo")))
 
-val circeVersion = "0.14.3"
+val circeVersion = "0.14.4"
 
 libraryDependencies += "ch.qos.logback"          % "logback-classic"     % "1.4.5"
 libraryDependencies += "com.github.pureconfig"  %% "pureconfig"          % "0.17.2"     % Test
@@ -44,7 +44,7 @@ libraryDependencies += "org.scalatest"          %% "scalatest"           % "3.2.
 libraryDependencies += "org.scalatestplus"      %% "selenium-3-141"      % "3.2.10.0"   % Test
 libraryDependencies += "org.seleniumhq.selenium" % "selenium-java"       % "4.7.1"      % Test
 libraryDependencies += "org.slf4j"               % "slf4j-log4j12"       % "2.0.6"      % Test
-libraryDependencies += "org.typelevel"          %% "cats-effect"         % "3.4.5"      % Test
+libraryDependencies += "org.typelevel"          %% "cats-effect"         % "3.4.6"      % Test
 
 scalacOptions += "-feature"
 scalacOptions += "-unchecked"
