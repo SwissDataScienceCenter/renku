@@ -1,0 +1,15 @@
+name: Add Issues to project
+on:
+  issues:
+    types:
+      - opened
+jobs:
+  add_to_project:
+    name: Add issue to project
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/add-to-project@main
+        with:
+          project-url: https://github.com/orgs/SwissDataScienceCenter/projects/51
+          github-token: ${{ secrets.RENKUBOT_GITHUB_TOKEN  }}
+          labeled: status/triage
