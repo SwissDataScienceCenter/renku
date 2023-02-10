@@ -1,7 +1,8 @@
 name: Check acceptance tests dependencies and code
 
 on:
-  [pull_request]
+  pull_request:
+  merge_group:
 jobs:
   formatting-check:
     name: Scala dependencies and code check

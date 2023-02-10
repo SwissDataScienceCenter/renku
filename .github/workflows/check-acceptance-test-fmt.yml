@@ -1,7 +1,8 @@
 name: Check format for acceptance tests
 
 on:
-  [pull_request]
+  pull_request:
+  merge_group:
 jobs:
   formatting-check:
     name: Scala formatting check
