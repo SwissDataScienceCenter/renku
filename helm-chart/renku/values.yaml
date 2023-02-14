@@ -295,7 +295,7 @@ keycloak:
 # https://github.com/bitnami/charts/blob/master/bitnami/postgresql/values-production.yaml
 postgresql:
   # If an external Postgres database is defined in global.externalServices.postgresql,
-  # global.externalServices.postgresql.enabled should be true, and postgresql.enabled should be false.
+  # postgresql.enabled should be false, and global.externalServices.postgresql.enabled should be true.
   # By default, Renku-bundled Postgres is enabled.
   enabled: true
 
