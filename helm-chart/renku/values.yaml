@@ -85,7 +85,7 @@ global:
       maintenanceDatabase: postgres
       username: postgres
 
-      ## The admin password should be set explicitly, otherwise a random string will be created.
+      ## The admin password should be set explicitly.
       ## Alternatively an existing secret can be provided. Note that postgres
       ## DOES NOT tolerate a change of the admin password when upgrading.
       # password:
