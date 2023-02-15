@@ -22,10 +22,8 @@ import TestLogger._
 import cats.effect.IO
 import cats.syntax.all._
 import ch.renku.acceptancetests.model.projects.ProjectIdentifier
-import io.circe.literal.JsonStringContext
 import io.circe.JsonObject
 import org.http4s.Status.{NotFound, Ok}
-import org.http4s.circe._
 import org.http4s.circe.CirceEntityCodec._
 import org.scalatest.Assertions.fail
 
@@ -42,18 +40,10 @@ trait KnowledgeGraphApi extends RestClient {
   }
 
   def findLineage(projectPath: String, filePath: String): JsonObject = {
-    val query = s"""
-                   |{ 
-                   |  lineage(projectPath: "$projectPath", filePath: "$filePath") {
-                   |    nodes { id location label type } 
-                   |    edges { source target } 
-                   |  } 
-                   |}
-                   |""".stripMargin
-
-    val body = json"""{ "query": $query }"""
-    POST(renkuBaseUrl / "api" / "kg" / "graphql")
-      .withEntity(body)
+    val toSegments: String => List[String] = _.split('/').toList
+    val uri =
+      toSegments(projectPath).foldLeft(renkuBaseUrl / "knowledge-graph" / "projects")(_ / _) / "files" / filePath / "lineage"
+    GET(uri)
       .send(whenReceived(status = Ok) >=> bodyToJson)
       .extract(jsonRoot.data.lineage.obj.getOption)
       .getOrElse(fail(s"Cannot find lineage data for project $projectPath file $filePath"))
