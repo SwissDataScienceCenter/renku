@@ -42,7 +42,8 @@ trait KnowledgeGraphApi extends RestClient {
   def findLineage(projectPath: String, filePath: String): JsonObject = {
     val toSegments: String => List[String] = _.split('/').toList
     val uri =
-      toSegments(projectPath).foldLeft(renkuBaseUrl / "knowledge-graph" / "projects")(_ / _) / "files" / filePath / "lineage"
+      toSegments(projectPath)
+        .foldLeft(renkuBaseUrl / "knowledge-graph" / "projects")(_ / _) / "files" / filePath / "lineage"
     GET(uri)
       .send(whenReceived(status = Ok) >=> bodyToJson)
       .extract(jsonRoot.data.lineage.obj.getOption)
