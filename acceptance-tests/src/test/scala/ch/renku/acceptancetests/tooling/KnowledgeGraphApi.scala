@@ -46,7 +46,7 @@ trait KnowledgeGraphApi extends RestClient {
         .foldLeft(renkuBaseUrl / "knowledge-graph" / "projects")(_ / _) / "files" / filePath / "lineage"
     GET(uri)
       .send(whenReceived(status = Ok) >=> bodyToJson)
-      .extract(jsonRoot.data.lineage.obj.getOption)
+      .extract(jsonRoot.obj.getOption)
       .getOrElse(fail(s"Cannot find lineage data for project $projectPath file $filePath"))
   }
 
