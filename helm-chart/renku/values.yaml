@@ -124,8 +124,7 @@ global:
     image:
       repository: renku/certificates
       tag: "0.0.2"
-    customCAs:
-      []
+    customCAs: []
       # - secret:
 
 ## Ingress configuration
@@ -277,6 +276,7 @@ keycloak:
 postgresql:
   ## We use the defaults here. Note that these basic configs could also be set as
   ## global values such that sub-charts can access them too.
+  postgresqlDatabase: postgres
   postgresqlUsername: postgres
 
   ## The admin password should be set explicitly, otherwise a random string will be
@@ -330,7 +330,7 @@ redis:
   # and adapted to our context. The following contains a mix of specific
   # customisations plus some higher level defaults which have been
   # retained here so someone can get some overview of what this values
-  # file can do.
+  # file can do. 
 
   fullnameOverride: renku-redis
 
@@ -346,9 +346,9 @@ redis:
     sentinel: true
     existingSecret: redis-secret
     existingSecretPasswordKey: redis-password
-
+  
     # this is a default but is kept here to highlight the fact that AOF is not used
-    # in this install. Note that having this enabled without a persistent volume
+    # in this install. Note that having this enabled without a persistent volume 
     # is quite useless as it meant that keys get written to a file (and hence slower writes)
     # but that file is deleted when the pod is deleted.
     commonConfiguration: |-
@@ -366,10 +366,10 @@ redis:
     # then clearly things are misconfigured
     replicaCount: 3
     resources:
-      limits:
+      limits: 
         cpu: 250m
         memory: 256Mi
-      requests:
+      requests: 
         cpu: 250m
         memory: 256Mi
     updateStrategy:
@@ -411,7 +411,7 @@ redis:
     podAnnotations:
       prometheus.io/scrape: "true"
       prometheus.io/port: "9121"
-
+  
   # default - making explicit
   sysctl:
     enabled: false
@@ -662,27 +662,23 @@ ui:
 
   ## Configuration for renku-ui-server
   server:
-    serverData:
-      {}
+    serverData: {}
       ## server data to correctly build the path and the routes
       # url: https://url.uiserver.fake
       # port: 8080
       # prefix: /ui-server
-    gateway:
-      {}
+    gateway: {}
       ## details to contact the gateway to redirect after the keycloak authentication is finished
       # url: https://url.gateway.fake
       # loginSuffix: /auth/login
       # logoutSuffix: /auth/logout
-    authentication:
-      {}
+    authentication: {}
       ## keycloak configration data for the Renku realm
       # url: https://url.keycloak.fake/auth/realms/Renku
       # id: renku
       # secret: 1234abcd # do not provide any value here to use the global gateway client secret
       # expirationTolerance: 10
-    sentry:
-      {}
+    sentry: {}
       ## Configuration for Sentry
       # enabled: false
       # url: '' # Sentry target URL
