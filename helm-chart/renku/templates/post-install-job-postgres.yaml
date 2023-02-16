@@ -51,8 +51,6 @@ spec:
               mountPath: /graph-token-postgres
               readOnly: true
           env:
-          - name: PGDATABASE
-            value: {{ .Values.postgresql.postgresqlDatabase }}
           - name: PGUSER
             value: {{ .Values.postgresql.postgresqlUsername }}
           - name: PGHOST

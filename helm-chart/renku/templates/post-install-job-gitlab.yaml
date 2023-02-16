@@ -36,8 +36,6 @@ spec:
               mountPath: /scripts
               readOnly: true
           env:
-          - name: PGDATABASE
-            value: {{ .Values.global.gitlab.postgresDatabase }}
           - name: PGUSER
             value: {{ .Values.global.gitlab.postgresUser }}
           - name: PGHOST
