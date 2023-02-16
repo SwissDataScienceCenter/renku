@@ -189,13 +189,13 @@ keycloakx:
         -Djgroups.dns.query={{ include "keycloak.fullname" . }}-headless
 
   command:
-  - "/opt/keycloak/bin/kc.sh"
-  - "start"
-  - "--http-enabled=true"
-  - "--http-port=8080"
-  - "--hostname-strict=false"
-  - "--hostname-strict-https=false"
-  - "--auto-build"
+    - "/opt/keycloak/bin/kc.sh"
+    - "start"
+    - "--http-enabled=true"
+    - "--http-port=8080"
+    - "--hostname-strict=false"
+    - "--hostname-strict-https=false"
+    - "--auto-build"
 
   # The following environment variables are provided to keycloak
   # as extraEnvFrom secrets.
@@ -252,7 +252,7 @@ keycloakx:
   initRealm:
     image:
       repository: renku/init-realm
-      tag: '0.21.1-10.2ee520b'
+      tag: '0.23.1-5.5b17747.n045.h3cb67ea5'
 
   ## Skip Keycloak testing when running Helm test
   test:
@@ -804,7 +804,7 @@ tests:
   enabled: false
   image:
     repository: renku/tests
-    tag: '0.21.1-10.2ee520b'
+    tag: '0.23.1-5.5b17747.n045.h3cb67ea5'
   resources:
     requests:
       memory: "3G"
@@ -895,4 +895,4 @@ swagger:
 initDb:
   image:
     repository: renku/init-db
-    tag: '0.21.1-10.2ee520b'
+    tag: '0.23.1-5.5b17747.n045.h3cb67ea5'
