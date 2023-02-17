@@ -82,7 +82,6 @@ global:
       # host:
 
       ## We use the defaults here.
-      maintenanceDatabase: postgres
       username: postgres
 
       ## The admin password should be set explicitly.

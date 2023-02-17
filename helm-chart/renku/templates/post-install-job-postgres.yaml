@@ -53,12 +53,6 @@ spec:
           env:
           - name: PGHOST
             value: {{ template "postgresql.fullname" . }}
-          - name: PGDATABASE
-            {{- if .Values.global.externalServices.postgresql.enabled }}
-            value: {{ .Values.global.externalServices.postgresql.maintenanceDatabase }}
-            {{- else -}}
-            value: {{ .Values.postgresql.postgresqlDatabase }}
-            {{- end }}
           - name: PGUSER
             {{ if .Values.global.externalServices.postgresql.enabled }}
             value: {{ .Values.global.externalServices.postgresql.username }}
