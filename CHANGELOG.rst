@@ -1,5 +1,47 @@
 .. _changelog:
 
+0.24.0
+------
+
+Renku ``0.24.0`` introduces a new landing page for logged-in users. This makes resuming
+your previous work easier: you can connect to your already-running sessions, start a new
+one on a recently visited project, or access your datasets. All from a single page.
+
+User-Facing Changes
+~~~~~~~~~~~~~~~~~~~
+
+**🌟 New Features**
+
+* 📑 **UI**: Add a new dashboard for logged-in users, showing running sessions, last
+  accessed projects, and own datasets
+  (`#2332 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2332>`_).
+
+**✨ Improvements**
+
+* 📜 **UI**: Show commit messages on the dropdown when starting a session
+  (`#2362 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2362>`_).
+* 🔗 **UI**: Make searches sharable by storing parameters in the URL
+  (`#2351 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2351>`_).
+* 📸 **UI**: Customize avatars when creating a project
+  (`#2331 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2331>`_).
+
+**🐞 Bug Fixes**
+
+* **UI**: Fix markdown problems with underscores in links and math formulas
+  (`#2374 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2374>`_).
+* **UI**: Restore session autostart when connecting from the notebook preview page
+  (`#2344 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2344>`_).
+* **UI**: Improve dataset pages
+  (`#2318 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2318>`_,
+  `#2357 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2357>`_).
+* **UI**: Sort commits by date to prevent random order
+  (`#2347 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2347>`_).
+
+Individual components
+~~~~~~~~~~~~~~~~~~~~~~
+
+- `renku-ui 3.2.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.2.0>`_
+
 0.23.0
 ------
 
