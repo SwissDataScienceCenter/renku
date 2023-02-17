@@ -100,6 +100,6 @@ fail "External PostgreSQL and Renku-bundled PostgreSQL cannot both be enabled. P
 fail "External PostgreSQL and Renku-bundled PostgreSQL cannot both be disabled. Please enable either global.externalServices.postgresql.enabled or postgresql.enabled"
 {{- end -}}
 
-{{- if .Values.global.externalServices.postgresql.enabled and not empty .Values.global.externalServices.postgresql.password and not empty .Values.global.externalServices.postgresql.existingSecret -}}
+{{- if .Values.global.externalServices.postgresql.enabled and .Values.global.externalServices.postgresql.password and .Values.global.externalServices.postgresql.existingSecret -}}
 fail "External PostgreSQL password and existing Secret fields cannot both be populated."
 {{- end -}}
