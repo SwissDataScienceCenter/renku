@@ -20,7 +20,7 @@ User-Facing Changes
 
 * 📜 **UI**: Show commit messages on the dropdown when starting a session
   (`#2362 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2362>`_).
-* 🔗 **UI**: Make searches sharable by storing parameters in the URL
+* 🔗 **UI**: Make searches shareable by storing parameters in the URL
   (`#2351 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2351>`_).
 * 📸 **UI**: Customize avatars when creating a project
   (`#2331 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2331>`_).
