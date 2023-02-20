@@ -1,5 +1,49 @@
 .. _changelog:
 
+0.24.0
+------
+
+Renku ``0.24.0`` introduces a new landing page that puts your most used projects, sessions,
+and datasets at your fingertips. Quickly pick up where you left off: connect to your
+already-running sessions, start a new session on a recently visited project, or access your
+datasets- all from a single page!
+
+User-Facing Changes
+~~~~~~~~~~~~~~~~~~~
+
+**🌟 New Features**
+
+* 📑 **UI**: Add a new dashboard for logged-in users, showing running sessions, last
+  accessed projects, and own datasets
+  (`#2332 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2332>`_).
+
+**✨ Improvements**
+
+* 📜 **UI**: Show commit messages in the commit selection dropdown when
+  starting a session from a specific commit
+  (`#2362 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2362>`_).
+* 🔗 **UI**: Make searches shareable by storing parameters in the URL
+  (`#2351 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2351>`_).
+* 📸 **UI**: Customize avatars when creating a project
+  (`#2331 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2331>`_).
+
+**🐞 Bug Fixes**
+
+* **UI**: Fix markdown problems with underscores in links and math formulas
+  (`#2374 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2374>`_).
+* **UI**: Restore session autostart when connecting from the notebook preview page
+  (`#2344 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2344>`_).
+* **UI**: Improve dataset pages
+  (`#2318 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2318>`_,
+  `#2357 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2357>`_).
+* **UI**: Sort commits by date to prevent random order
+  (`#2347 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2347>`_).
+
+Individual components
+~~~~~~~~~~~~~~~~~~~~~~
+
+- `renku-ui 3.2.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.2.0>`_
+
 0.23.0
 ------
 
@@ -156,7 +200,7 @@ Internal Changes
 
 * **Gateway**: Add endpoint for refreshing expiring GitLab tokens
 * **Knowledge Graph**: Improve functionality to refresh access tokens before expiration
-* **Knowledge Graph**: Enhance migration functionality to restore missing CompositePlans 
+* **Knowledge Graph**: Enhance migration functionality to restore missing CompositePlans
 * **Knowledge Graph**: Fix to prevent data corruption which could previously occur due to duplicate Project creation dates
 * **Sessions**: Check LFS size and available disk space before cloning
 * **UI**: Receive notifications through WebSocket when session state changes
@@ -185,7 +229,7 @@ Individual components
 0.20.0
 ------
 
-Renku ``0.20.0`` tidies up the RenkuLab session start sequence, as well as an assortment of improvements and bug fixes. 
+Renku ``0.20.0`` tidies up the RenkuLab session start sequence, as well as an assortment of improvements and bug fixes.
 
 User-Facing Changes
 ~~~~~~~~~~~~~~~~~~~
@@ -194,12 +238,12 @@ User-Facing Changes
 
 * 🚀 **UI**: We tidied up the session launch sequence to have a unified appearance, regardless of where on RenkuLab you start your session from. Sessions also have better logs and error handling.
 * 🎨 **UI**: The RenkuLab login and logout pages have been updated with the latest styling.
-* 💬 **Renku CLI**: When you run ``renku save`` in a clean but unpushed repository, ``renku`` now informs you that it has pushed changes to the remote, rather than just saying that there were no changes to save.  
+* 💬 **Renku CLI**: When you run ``renku save`` in a clean but unpushed repository, ``renku`` now informs you that it has pushed changes to the remote, rather than just saying that there were no changes to save.
 
 **🐞 Bug Fixes**
 
 * 💔 **Renku CLI**: Fixed an issue where ``renku workflow compose`` would break ``renku workflow list``.
-* 🍴 **UI**: Fixed the Project name field getting reset when forking a project. 
+* 🍴 **UI**: Fixed the Project name field getting reset when forking a project.
 * 📃 **UI**: Fixed issues with downloading session logs.
 
 Internal Changes

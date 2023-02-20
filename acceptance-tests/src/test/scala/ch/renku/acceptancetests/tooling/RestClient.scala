@@ -77,7 +77,7 @@ trait RestClient extends Http4sClientDsl[IO] {
         )
 
     private def retryOnConnectionProblem[A](client: Client[IO], request: Request[IO])(
-        processResponse:                            Response[IO] => IO[A]
+        processResponse: Response[IO] => IO[A]
     ): PartialFunction[Throwable, IO[A]] = { case NonFatal(cause) =>
       cause match {
         case e @ (_: ConnectionFailure | _: ConnectException | _: Command.EOF.type | _: InvalidBodyException) =>
