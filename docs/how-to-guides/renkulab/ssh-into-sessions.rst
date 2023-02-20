@@ -135,7 +135,7 @@ Launch an SSH-enabled Session
         session on RenkuLab. But first, it adds your local SSH keys to the
         ``allowed_keys`` in the project and pushes those changes to RenkuLab. If
         this is your first time using the SSH feature on RenkuLab, this command
-        creates an SSH keypair for you. Once the session is started, it creates
+        creates an SSH key pair for you. Once the session is started, it creates
         an SSH connection entry in your local SSH config for that session id.
         This SSH config entry can be used with your SSH client or tools like
         VSCode.
@@ -164,7 +164,7 @@ To exit the SSH shell, simply type ``exit``.
     <renku.ui.cli.session>` .
     
     In the example above, the session id is ``user-myproject-02a9e407``, so the
-    commmand to open the SSH session is: ``renku session open --ssh
+    command to open the SSH session is: ``renku session open --ssh
     user-myproject-02a9e407``.
     
     If you need to find your session id again, use
