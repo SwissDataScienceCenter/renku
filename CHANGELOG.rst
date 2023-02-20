@@ -20,7 +20,7 @@ User-Facing Changes
 **✨ Improvements**
 
 * 📜 **UI**: Show commit messages in the commit selection dropdown when
-starting a session from a specific commit
+  starting a session from a specific commit
   (`#2362 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2362>`_).
 * 🔗 **UI**: Make searches shareable by storing parameters in the URL
   (`#2351 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2351>`_).
