@@ -91,6 +91,16 @@ This section will guide you through setting up these prerequisites.
     
         $ renku clone https://renkulab.io/gitlab/user/my-project.git
 
+.. note::
+
+    **Do you want to use password-protected ssh keys for your RenkuLab
+    sessions?** By default, the first time you launch an SSH session, Renku will
+    create a password-less key pair for use in authenticating with RenkuLab
+    sessions. If you would prefer to have a password, you can do so by running
+    (before launching a session) ``renku session ssh-setup -k
+    <path_to_keypair>`` and providing a path to a password protected key of your
+    choice. If you've already launched a session and would like to switch to a
+    different keypair, also include the ``--force`` option.
 
 Launch an SSH-enabled Session
 -----------------------------
