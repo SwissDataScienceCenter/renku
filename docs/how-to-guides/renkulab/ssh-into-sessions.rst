@@ -76,9 +76,8 @@ This section will guide you through setting up these prerequisites.
         <Enter version number above 1x>
 
 #.  To use the SSH feature, you need to have OpenSSH installed on your system.
-
-    .. warning::
-        <How to check is OpenSSH is installed?!>
+    To check whether `ssh`` is installed, run `ssh -V`. If you get a response
+    like `OpenSSH_8.6p1, LibreSSL 3.3.6`, then you are good to go!
 
 #.  Install the Renku CLI version >= <X>.
 
@@ -96,6 +95,7 @@ This section will guide you through setting up these prerequisites.
 
     .. code-block:: console
     
+        $ renku login renkulab.io  # this step is required if your project is private or internal
         $ renku clone https://renkulab.io/gitlab/user/my-project.git
 
 .. note::
@@ -105,9 +105,9 @@ This section will guide you through setting up these prerequisites.
     create a password-less key pair for use in authenticating with RenkuLab
     sessions. If you would prefer to have a password, you can do so by running
     (before launching a session) ``renku session ssh-setup -k
-    <path_to_keypair>`` and providing a path to a password protected key of your
-    choice. If you've already launched a session and would like to switch to a
-    different key pair, also include the ``--force`` option.
+    <path_to_keypair>`` and providing a path to a password protected private key
+    of your choice. If you've already launched a session and would like to
+    switch to a different key pair, also include the ``--force`` option.
 
 Launch an SSH-enabled Session
 -----------------------------
@@ -176,15 +176,13 @@ To exit the SSH shell, simply type ``exit``.
 
 .. note::
 
-    **How do I find my Session ID?** The ``id`` of the session is
-    printed when the session is started by :meth:`renku session start
-    <renku.ui.cli.session>` .
+    **How do I find my Session ID?** The ``id`` of the session is printed when
+    the session is started by :meth:`renku session start
+    <renku.ui.cli.session>`. In the example above, the session id is
+    ``user-myproject-02a9e407``, so the command to open the SSH session is:
+    ``renku session open --ssh user-myproject-02a9e407``.
     
-    In the example above, the session id is ``user-myproject-02a9e407``, so the
-    command to open the SSH session is: ``renku session open --ssh
-    user-myproject-02a9e407``.
-    
-    If you need to find your session id again, use
+    If you need to find your Session ID again, use
     :meth:`renku session ls <renku.ui.cli.session>`.
 
 .. note::
