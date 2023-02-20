@@ -39,18 +39,25 @@ template, go to the project "Overview" tab and open the "Status" section. Find
 the "Template Version" section, and click "Update".
 
 .. warning::
+
     <screenshot of the Status page with a Template Version box that's asking to be updated>
 
+Alternatively, you can manually enable SSH for your project by :ref:`upgrading your
+base image <renku_base_image_upgrade>` to at least version 0.14.0. Then, run
+``renku config set ssh_supported true`` to let Renku know that your project supports
+SSH connections.
+
 .. note::
+
     **Are you using a custom project template?** If you've updated your project
     template but your project still doesn't support SSH, ask the template
     maintainer to enable SSH in the template and perform the update again.
 
 .. note::
-    **Note for template maintainers:** For your template to support SSH, you need
-    to add a ``ssh_supported: true`` entry for each template in the ``manifest.yaml``
-    and update all the Dockerfile to use at least version ``0.14.0`` of the Renku
-    base images, which is the version that comes with an SSH server installed.
+
+    **Note for template maintainers:** See the documentation on the Template
+    :ref:`manifest-yaml` for details on how to enable SSH support in your
+    template, specifically the details on the ``ssh_supported`` flag.
 
 
 Set up your local system for SSH access
@@ -100,7 +107,7 @@ This section will guide you through setting up these prerequisites.
     (before launching a session) ``renku session ssh-setup -k
     <path_to_keypair>`` and providing a path to a password protected key of your
     choice. If you've already launched a session and would like to switch to a
-    different keypair, also include the ``--force`` option.
+    different key pair, also include the ``--force`` option.
 
 Launch an SSH-enabled Session
 -----------------------------
@@ -134,21 +141,21 @@ Launch an SSH-enabled Session
 
     .. code-block:: console
 
-        $ renku session start -p renkulab --ssh
-        [...]
-        SSH connection successfully configured, use 'ssh renkulab.io-myproject-02a9e407' to connect.
-        Session user-myproject-02a9e407 successfully started
+        $ renku session start -p renkulab --ssh Your system is not set up for
+        SSH connections to Renku. Would you like to set it up? [y/N]: y [...]
+        Session user-myproject-02a9e407 successfully started, use 'renku session
+        open --ssh user-myproject-02a9e407' or 'ssh
+        renkulab.io-myproject-02a9e407' to connect to it
     
     .. note::
 
         **Curious what's happening under the hood?** This command starts a new
         session on RenkuLab. But first, it adds your local SSH keys to the
         ``allowed_keys`` in the project and pushes those changes to RenkuLab. If
-        this is your first time using the SSH feature on RenkuLab, this command
-        creates an SSH key pair for you. Once the session is started, it creates
-        an SSH connection entry in your local SSH config for that session id.
-        This SSH config entry can be used with your SSH client or tools like
-        VSCode.
+        this is your first time using the SSH feature on RenkuLab, Renku creates
+        an SSH key pair for you. Once the session is started, Renku creates an
+        SSH connection entry in your local SSH config for that session id. This
+        SSH config entry can be used with your SSH client or tools like VSCode.
 
 
 Open an SSH Session via a Shell
@@ -225,3 +232,25 @@ in the RenkuLab session via the VSCode terminal!
 
 For more details on the VSCode SSH extension see
 `the official documentation <https://code.visualstudio.com/docs/remote/ssh>`_.
+
+FAQ
+---
+
+My environment in an SSH session isn't the same as when I'm in a session on RenkuLab - What's going on?
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+If you've made changes to your session environment via your Dockerfile, you may
+need to change how these changes take effect in order to be consistent between
+SSH and Jupyter terminals.
+
+Since SSH opens a new terminal when connecting, any customization done in the
+Dockerfile, such as adding to the ``$PATH`` environment variable, won't be picked
+up, as those changes only apply to the Jupyter terminal.
+
+To make the Jupyter and SSH terminal consistent, your Dockerfile should apply
+such changes to ``/home/jovyan/.bash_profile`` (or similar, depending on your
+image), where they get picked up when any new shell is opened.
+
+For example, if you would like to modify your ``$PATH``, instead of encoding in
+your Dockerfile ``RUN export $PATH=...``, use ``RUN echo 'export $PATH=...' >>
+~/.bash_profile`` instead.
