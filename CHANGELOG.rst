@@ -3,9 +3,10 @@
 0.24.0
 ------
 
-Renku ``0.24.0`` introduces a new landing page for logged-in users. This makes resuming
-your previous work easier: you can connect to your already-running sessions, start a new
-one on a recently visited project, or access your datasets. All from a single page.
+Renku ``0.24.0`` introduces a new landing page that puts your most used projects, sessions,
+and datasets at your fingertips. Quickly pick up where you left off: connect to your
+already-running sessions, start a new session on a recently visited project, or access your
+datasets- all from a single page!
 
 User-Facing Changes
 ~~~~~~~~~~~~~~~~~~~
@@ -18,7 +19,8 @@ User-Facing Changes
 
 **✨ Improvements**
 
-* 📜 **UI**: Show commit messages on the dropdown when starting a session
+* 📜 **UI**: Show commit messages in the commit selection dropdown when
+starting a session from a specific commit
   (`#2362 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2362>`_).
 * 🔗 **UI**: Make searches shareable by storing parameters in the URL
   (`#2351 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2351>`_).
