@@ -44,12 +44,12 @@ case object ProjectsPage extends RenkuPage(path = "/projects") with TopBar {
     }
 
     def linkTo(
-        project:          ProjectDetails
+        project: ProjectDetails
     )(implicit webDriver: WebDriver, userCredentials: UserCredentials): WebElement =
       maybeLinkTo(project) getOrElse fail(s"'${project.title}' not found")
 
     def maybeLinkTo(
-        project:          ProjectDetails
+        project: ProjectDetails
     )(implicit webDriver: WebDriver, userCredentials: UserCredentials): Option[WebElement] = eventually {
       find(cssSelector(s"a[href='/projects/${userCredentials.userNamespace}/${project.title.toPathSegment}']"))
     }
