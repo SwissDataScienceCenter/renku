@@ -192,8 +192,14 @@ VSCode:
 #.  Install the `Remote - SSH Extension <https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-ssh>`_
     in VSCode if you don't have it already.
 
-#.  In VSCode, open the "Remote Explorer" in the left bar and pick the SSH
-    connection for the session, e.g. ``renkulab.io-myproject-02a9e407``.
+#.  In VSCode, open the "Remote Explorer" in the left bar and make sure "SSH
+    Targets" is selected. Find the SSH connection for the session, e.g.
+    ``renkulab.io-myproject-02a9e407``, and click the "Connect to Host" button.
+
+    .. image:: ../../_static/images/ssh_from_vscode.png
+        :width: 85%
+        :align: center
+        :alt: Opening a RenkuLab SSH Session in VSCode.
 
 #.  Open the "Explorer" in the left bar, and select "Open Folder". Enter
     ``/home/jovyan/work``.
@@ -201,9 +207,11 @@ VSCode:
 You can now browse and edit your Renku Project files in VSCode, and run commands
 in the RenkuLab session via the VSCode terminal!
 
- .. warning::
+.. image:: ../../_static/images/ssh_session_in_vscode.png
+    :width: 85%
+    :align: center
+    :alt: A RenkuLab SSH Session open in VSCode.
 
-    <screenshot of selecting session ID in VSCode>
 
 For more details on the VSCode SSH extension see
 `the official documentation <https://code.visualstudio.com/docs/remote/ssh>`_.
