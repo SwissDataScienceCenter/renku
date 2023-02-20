@@ -68,7 +68,7 @@ private class CommandExecutor(command: Command)(implicit ioRuntime: IORuntime) {
     }
 
   private def logLine(
-      line:          String
+      line: String
   )(implicit output: util.Collection[String], userCredentials: UserCredentials): Unit = line.trim match {
     case "" => ()
     case line =>

@@ -19,7 +19,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - uses: actions/setup-python@v1
+      - uses: actions/setup-python@v4
         with:
           python-version: 3.9
       - name: install dependencies
@@ -37,7 +37,7 @@ jobs:
           sphinx-build -nNW -b spelling -d _build/doctrees . _build/spelling
           sphinx-build -qnNW . _build/html
       - name: Upload docs
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         if: success()
         with:
           name: docs
