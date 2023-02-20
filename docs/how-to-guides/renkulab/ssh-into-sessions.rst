@@ -192,6 +192,7 @@ To exit the SSH shell, simply type ``exit``.
     command is printed upon starting an ssh session.
 
         .. code-block:: console
+            :emphasize-lines: 3
 
             $ renku session start -p renkulab --ssh
             [...]
