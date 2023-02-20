@@ -99,8 +99,8 @@ trait Environments {
   }
 
   def `launch anonymous session`(
-      projectPage:          ProjectPage,
-      projectDetails:       ProjectDetails
+      projectPage:    ProjectPage,
+      projectDetails: ProjectDetails
   )(implicit anonEnvConfig: AnonEnvConfig): Option[JupyterLabPage] = {
     go to projectPage sleep (5 seconds)
     verify browserAt projectPage
