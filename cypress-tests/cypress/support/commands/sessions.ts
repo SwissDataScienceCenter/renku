@@ -6,12 +6,11 @@ import type { ProjectIdentifier } from "./projects";
 function startSession(identifier: ProjectIdentifier) {
   const id = fullProjectIdentifier(identifier);
   cy.visit(`/projects/${id.namespace}/${id.name}/sessions/new`);
-  cy.get(".btn-rk-green", { timeout: TIMEOUTS.long }).should("be.visible").should("be.enabled").click();
+  cy.get(".btn-rk-green", { timeout: TIMEOUTS.long })
+    .contains("Start session").should("be.visible").should("be.enabled").click();
 
-  // Waits for the session to fully start
-  cy.get(`.fullscreen-back-button`).should("be.visible").click();
-  cy.get(".time-caption", { timeout: TIMEOUTS.vlong }).should("contain.text", "Running");
-
+  cy.contains("Connecting with your session", { timeout: TIMEOUTS.long }).should("be.visible");
+  cy.contains("Connecting with your session", { timeout: TIMEOUTS.vlong }).should("not.exist");
 }
 
 function waitForImageToBuild(identifier: ProjectIdentifier) {
@@ -29,6 +28,7 @@ export const stopSessionFromIframe = () => {
   cy.get(`[data-cy="stop-session-button"]`).should("be.visible").click();
   cy.get("div.modal-session").should("be.visible").should("not.be.empty");
   cy.get(`[data-cy="stop-session-modal-button"]`).should("be.visible").click();
+  cy.contains("Stopping...", { timeout: TIMEOUTS.long }).should("be.visible");
 };
 
 export default function registerSessionCommands() {

@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 Swiss Data Science Center (SDSC)
+ * Copyright 2023 Swiss Data Science Center (SDSC)
  * A partnership between École Polytechnique Fédérale de Lausanne (EPFL) and
  * Eidgenössische Technische Hochschule Zürich (ETHZ).
  *
@@ -44,12 +44,12 @@ case object ProjectsPage extends RenkuPage(path = "/projects") with TopBar {
     }
 
     def linkTo(
-        project:          ProjectDetails
+        project: ProjectDetails
     )(implicit webDriver: WebDriver, userCredentials: UserCredentials): WebElement =
       maybeLinkTo(project) getOrElse fail(s"'${project.title}' not found")
 
     def maybeLinkTo(
-        project:          ProjectDetails
+        project: ProjectDetails
     )(implicit webDriver: WebDriver, userCredentials: UserCredentials): Option[WebElement] = eventually {
       find(cssSelector(s"a[href='/projects/${userCredentials.userNamespace}/${project.title.toPathSegment}']"))
     }

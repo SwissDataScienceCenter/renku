@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 Swiss Data Science Center (SDSC)
+ * Copyright 2023 Swiss Data Science Center (SDSC)
  * A partnership between École Polytechnique Fédérale de Lausanne (EPFL) and
  * Eidgenössische Technische Hochschule Zürich (ETHZ).
  *
@@ -57,8 +57,8 @@ trait Environments {
       }
 
     `try few times before giving up` { _ =>
-      And("clicks on the 'Open' button")
-      click on projectPage.Sessions.Running.maybeOpenButton.getOrElse(fail("Open button not found"))
+      And("clicks on the 'Connect' button")
+      click on projectPage.Sessions.Running.maybeOpenButton.getOrElse(fail("Connect button not found"))
       sleep(15 seconds)
     }
 
@@ -99,8 +99,8 @@ trait Environments {
   }
 
   def `launch anonymous session`(
-      projectPage:          ProjectPage,
-      projectDetails:       ProjectDetails
+      projectPage:    ProjectPage,
+      projectDetails: ProjectDetails
   )(implicit anonEnvConfig: AnonEnvConfig): Option[JupyterLabPage] = {
     go to projectPage sleep (5 seconds)
     verify browserAt projectPage

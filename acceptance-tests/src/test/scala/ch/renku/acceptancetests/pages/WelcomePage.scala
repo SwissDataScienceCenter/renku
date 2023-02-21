@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 Swiss Data Science Center (SDSC)
+ * Copyright 2023 Swiss Data Science Center (SDSC)
  * A partnership between École Polytechnique Fédérale de Lausanne (EPFL) and
  * Eidgenössische Technische Hochschule Zürich (ETHZ).
  *
@@ -23,11 +23,11 @@ import org.scalatestplus.selenium.WebBrowser.{cssSelector, find}
 
 case object WelcomePage extends RenkuPage(path = "/") with TopBar {
 
-  override def pageReadyElement(implicit webDriver: WebDriver): Option[WebElement] = Some(yourProjectsSection)
+  override def pageReadyElement(implicit webDriver: WebDriver): Option[WebElement] = Some(dashboardSection)
 
-  private def yourProjectsSection(implicit webDriver: WebDriver): WebElement = eventually {
-    find(cssSelector(".landing-projects-section")) getOrElse fail(
-      s"Your Projects section not found on page ${webDriver.getTitle}"
+  private def dashboardSection(implicit webDriver: WebDriver): WebElement = eventually {
+    find(cssSelector("[data-cy='dashboard-title']")) getOrElse fail(
+      s"Dashboard not found on page ${webDriver.getTitle}"
     )
   }
 }

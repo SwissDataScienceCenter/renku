@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 Swiss Data Science Center (SDSC)
+ * Copyright 2023 Swiss Data Science Center (SDSC)
  * A partnership between École Polytechnique Fédérale de Lausanne (EPFL) and
  * Eidgenössische Technische Hochschule Zürich (ETHZ).
  *
@@ -31,7 +31,7 @@ trait FlightsTutorial extends Matchers with CLIConfiguration {
   self: AcceptanceSpec =>
 
   def `follow the flights tutorial`(
-      projectUrl:             ProjectUrl
+      projectUrl: ProjectUrl
   )(implicit userCredentials: UserCredentials): DatasetName = {
 
     implicit val projectFolder: Path = createTempFolder
@@ -50,15 +50,6 @@ trait FlightsTutorial extends Matchers with CLIConfiguration {
     And("imports a dataset from the dataverse")
     console %> c"renku dataset import --name flight-data https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/WTZS4K"
       .userInput("y")
-
-    And("adds some Python packages to the requirements.txt")
-    console %> (c"echo pandas==1.3.0" >> "requirements.txt")
-    console %> (c"echo seaborn==0.11.1" >> "requirements.txt")
-
-    And("installs the packages")
-    console %> c"pip install -r requirements.txt"
-    console %> c"git add requirements.txt"
-    console %> c"git commit -m 'Installed pandas and seaborn'"
 
     And("downloads the tutorial step 1 notebook")
     console %> c"wget -O $projectFolder/notebooks/00-FilterFlights.ipynb https://renkulab.io/gitlab/renku-tutorial/renku-tutorial-flights/raw/master/.tutorial/meta/templates/00-FilterFlights-doi.ipynb"

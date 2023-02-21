@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 Swiss Data Science Center (SDSC)
+ * Copyright 2023 Swiss Data Science Center (SDSC)
  * A partnership between École Polytechnique Fédérale de Lausanne (EPFL) and
  * Eidgenössische Technische Hochschule Zürich (ETHZ).
  *
@@ -181,10 +181,8 @@ trait Project extends RemoveProject with BeforeAndAfterAll with ExtantProject {
       .build()
       .perform()
 
-    `try again if failed` { _ =>
-      And("clicks the 'Create' button")
-      NewProjectPage.createButton.click() sleep (10 seconds)
-    }
+    And("clicks the 'Create' button")
+    NewProjectPage.createButton.click() sleep (10 seconds)
   }
 
   protected override def afterAll(): Unit = {

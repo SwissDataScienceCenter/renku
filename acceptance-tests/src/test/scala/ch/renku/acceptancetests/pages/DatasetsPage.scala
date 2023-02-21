@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 Swiss Data Science Center (SDSC)
+ * Copyright 2023 Swiss Data Science Center (SDSC)
  * A partnership between École Polytechnique Fédérale de Lausanne (EPFL) and
  * Eidgenössische Technische Hochschule Zürich (ETHZ).
  *
@@ -34,7 +34,7 @@ object DatasetsPage extends RenkuPage(path = s"/datasets") with TopBar {
   }
 
   def orderByDropdownMenu(
-      currentOrdering:  DatasetSearchOrdering = DatasetSearchOrdering.ProjectsCount
+      currentOrdering: DatasetSearchOrdering = DatasetSearchOrdering.ProjectsCount
   )(implicit webDriver: WebDriver): WebElement =
     eventually {
       findAll(cssSelector("button.dropdown-toggle")).find(elem => elem.getText == currentOrdering.value) getOrElse fail(

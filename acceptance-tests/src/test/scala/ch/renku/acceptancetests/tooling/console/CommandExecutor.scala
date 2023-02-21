@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 Swiss Data Science Center (SDSC)
+ * Copyright 2023 Swiss Data Science Center (SDSC)
  * A partnership between École Polytechnique Fédérale de Lausanne (EPFL) and
  * Eidgenössische Technische Hochschule Zürich (ETHZ).
  *
@@ -68,7 +68,7 @@ private class CommandExecutor(command: Command)(implicit ioRuntime: IORuntime) {
     }
 
   private def logLine(
-      line:          String
+      line: String
   )(implicit output: util.Collection[String], userCredentials: UserCredentials): Unit = line.trim match {
     case "" => ()
     case line =>

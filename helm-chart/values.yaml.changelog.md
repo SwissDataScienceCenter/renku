@@ -6,6 +6,137 @@ Please follow this convention when adding a new row
 * `<type: NEW|EDIT|DELETE> - *<resource name>*: <details>`
 
 ----
+## Upgrading to Renku 0.23.0
+* EDIT - the `redis` chart was upgraded from `10.7.11` to `17.4.2`; the values
+in the newer `redis` chart differ from those in the older chart. As the `renku`
+`values.yaml` passes some values to the dependent `redis` chart, some values
+need to be changed.
+
+In summary, the main differences are that the newer `redis` chart no longer has
+notions of masters and slaves; nodes are simply replicas. The default
+deployment is one in which Redis Sentinel is enabled and 3 replicas are
+deployed. There are also changes to where secrets are located in the helm
+chart.
+
+For reference to the `redis` `values.yaml`, for version `17.4.2` of the bitnami
+`redis` helm chart see:
+
+https://github.com/bitnami/charts/blob/0274e44ae4460f91a3e25c20e12be11bc8874c95/bitnami/redis/values.yaml
+
+Also, see the default `renku` `values.yaml` file for more comments relating to
+the impact of these settings.
+
+Old
+  ```
+redis:
+  # If set to true, a HA redis will be included in the Renku release.
+  install: true
+  # If set to true, we'll create a k8s secret to be used as existingSecret
+  # for password auth.
+  createSecret: true
+  # The actual password, ignored if createSecret is false.
+  password: # openssl rand -hex 32
+
+  fullnameOverride: renku-redis
+  redisPort: 6379
+
+  usePassword: true
+  existingSecret: redis-secret
+  existingSecretPasswordKey: redis-password
+
+  master:
+    persistence:
+      enabled: false
+    resources:
+      requests:
+        cpu: 200m
+        memory: 256Mi
+  slave:
+    persistence:
+      enabled: false
+    resources:
+      requests:
+        cpu: 200m
+        memory: 256Mi
+  sentinel:
+    port: 26379
+    enabled: true
+    resources:
+      requests:
+        cpu: 200m
+        memory: 64Mi
+    downAfterMilliseconds: 1000
+    failoverTimeout: 2000
+  networkPolicy:
+    enabled: true
+    allowExternal: false
+  ```
+New
+  ```
+redis:
+  ###########################################################################
+  ### Configuration that is unknown to the redis chart but picked up      ###
+  ### by the renku chart.                                                 ###
+  ###########################################################################
+
+  # If set to true, a HA redis will be included in the Renku release.
+  install: true
+  # If set to true, we'll create a k8s secret to be used as existingSecret
+  # for password auth.
+  createSecret: true
+  # The actual password, ignored if createSecret is false.
+  password: # openssl rand -hex 32
+
+  fullnameOverride: renku-redis
+
+  architecture: replication
+  auth:
+    enabled: true
+    sentinel: true
+    existingSecret: redis-secret
+    existingSecretPasswordKey: redis-password
+  
+    commonConfiguration: |-
+      appendonly no
+      save ""
+
+  replica:
+    replicaCount: 3
+    resources:
+      limits: 
+        cpu: 250m
+        memory: 256Mi
+      requests: 
+        cpu: 250m
+        memory: 256Mi
+    updateStrategy:
+      type: RollingUpdate
+    persistence:
+      enabled: false
+    autoscaling:
+      enabled: false
+
+  sentinel:
+    enabled: true
+    quorum: 2
+    service:
+      sentinel: 26379
+    resources:
+      requests:
+        cpu: 200m
+        memory: 64Mi
+    downAfterMilliseconds: 1000
+    failoverTimeout: 2000
+
+  networkPolicy:
+    enabled: true
+    allowExternal: false
+
+  metrics:
+    enabled: true
+  ```
+
+
 ## Upgrading to Renku 0.18.0
 * EDIT - the ui chart was simplified and given a more regular structure.
 

@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 Swiss Data Science Center (SDSC)
+ * Copyright 2023 Swiss Data Science Center (SDSC)
  * A partnership between École Polytechnique Fédérale de Lausanne (EPFL) and
  * Eidgenössische Technische Hochschule Zürich (ETHZ).
  *
@@ -106,96 +106,6 @@ class ProjectPage(val projectSlug: String, val namespace: String)
 
       def title(implicit webDriver: WebDriver): WebElement = eventually {
         find(cssSelector("div.row div.card-header")) getOrElse fail("Overview -> Description title")
-      }
-    }
-  }
-
-  object Collaboration {
-    def tab(implicit webDriver: WebDriver): WebElement = eventually {
-      find(cssSelector(s"a[href='$path/collaboration/issues']")) getOrElse fail("Collaboration tab not found")
-    }
-
-    object MergeRequests {
-
-      def tab(implicit webDriver: WebDriver): WebElement = eventually {
-        find(cssSelector(s"a[href='$path/collaboration/mergerequests']")) getOrElse fail("Merge Requests tab not found")
-      }
-
-      def gitLabMrLink(implicit gitLabBaseUrl: GitLabBaseUrl, webDriver: WebDriver): WebElement = eventually {
-        find(cssSelector(s"a[href='$gitLabBaseUrl/$namespace/$projectSlug/-/merge_requests']"))
-          .getOrElse(fail("GitLab MR link not found"))
-      }
-
-      def collaborationIframe(implicit webDriver: WebDriver): WebElement = eventually {
-        find(cssSelector("#collaboration-iframe"))
-          .getOrElse(fail("MR iFrame not found"))
-      }
-
-      def futureMergeRequestBanner(implicit webDriver: WebDriver): WebElement = eventually {
-        findAll(cssSelector("div.alert-warning > p"))
-          .find(_.text == " Do you want to create a merge request for branch test-branch?")
-          .getOrElse(fail("No future merge requests banner found"))
-      }
-
-      def createMergeRequestButton(implicit webDriver: WebDriver): WebElement = eventually {
-        findAll(cssSelector(".btn.btn-success")).find(_.text == "Create Merge Request") getOrElse fail(
-          "Create Merge Request button not found"
-        )
-      }
-
-      def openInTabButton(implicit webDriver: WebDriver): WebElement = eventually {
-        find(cssSelector(s"a[href*='/$namespace/$projectSlug/-/merge_requests']"))
-          .getOrElse(fail("GitLab issue link not found"))
-      }
-    }
-
-    object Issues {
-
-      def tab(implicit webDriver: WebDriver): WebElement = eventually {
-        find(cssSelector(s"a[href='$path/collaboration/issues']")) getOrElse fail("Issues tab not found")
-      }
-
-      def openInTabButton(implicit webDriver: WebDriver): WebElement = eventually {
-        find(cssSelector(s"a[href*='/$namespace/$projectSlug/-/issues']"))
-          .getOrElse(fail("GitLab issue link not found"))
-      }
-
-      def gitLabIssuesLink(implicit gitLabBaseUrl: GitLabBaseUrl, webDriver: WebDriver): WebElement = eventually {
-        find(cssSelector(s"a[href='$gitLabBaseUrl/$namespace/$projectSlug/-/issues']"))
-          .getOrElse(fail("GitLab issue link not found"))
-      }
-
-      def collaborationIframe(implicit webDriver: WebDriver): WebElement = eventually {
-        find(cssSelector("#collaboration-iframe"))
-          .getOrElse(fail("Issues iFrame not found"))
-      }
-
-      def unavailableCollaborationIframe(implicit webDriver: WebDriver): WebElement = eventually {
-        findAll(cssSelector("div > div.my-4"))
-          .find(_.text.startsWith("This Gitlab instance cannot be embedded"))
-          .getOrElse(fail("Message iFrame cannot be embedded - not found"))
-      }
-
-      object NewIssue {
-        def titleField(implicit webDriver: WebDriver): WebElement = eventually {
-          find(cssSelector("input#title")) getOrElse fail("Title field not found")
-        }
-
-        def markdownSwitch(implicit webDriver: WebDriver): WebElement = eventually {
-          find(cssSelector("#CKEditorSwitch")) getOrElse
-            fail("Markdown switch not found")
-        }
-
-        def descriptionField(implicit webDriver: WebDriver): WebElement = eventually {
-          find(cssSelector("textarea#descriptiontext-area")) getOrElse fail("Description field not found")
-        }
-
-        def createIssueButton(implicit webDriver: WebDriver): WebElement = eventually {
-          findAll(cssSelector("button[type='submit']")).find(_.text.contains("Create Issue")) getOrElse fail(
-            "Create Issue button not found"
-          )
-        }
-
       }
     }
   }
@@ -363,7 +273,7 @@ class ProjectPage(val projectSlug: String, val namespace: String)
 
       def maybeOpenButton(implicit webDriver: WebDriver): Option[WebElement] = eventually {
         find(cssSelector("a[href*='sessions/show']"))
-          .find(_.text.trim == "Open")
+          .find(_.text.trim == "Connect")
       }
 
       def maybeGetLogsButton(implicit webDriver: WebDriver): Option[WebElement] = eventually {

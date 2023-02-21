@@ -2,27 +2,27 @@ dependencies:
 - name: renku-core
   alias: core
   repository: "https://swissdatasciencecenter.github.io/helm-charts/"
-  version: 1.10.0
+  version: 1.11.2
 - name: renku-ui
   alias: ui
   repository: "https://swissdatasciencecenter.github.io/helm-charts/"
-  version: 2.13.0
+  version: 3.2.0
 - name: renku-notebooks
   alias: notebooks
   repository: "https://swissdatasciencecenter.github.io/helm-charts/"
-  version: 1.13.0
+  version: 1.14.0
 - name: renku-gateway
   alias: gateway
   repository: "https://swissdatasciencecenter.github.io/helm-charts/"
-  version: 0.17.0
+  version: 0.18.0
 - name: gitlab
   repository: "https://swissdatasciencecenter.github.io/helm-charts/"
-  version: 0.6.0
+  version: 0.7.0
   condition: gitlab.enabled
 - name: renku-graph
   alias: graph
   repository: "https://swissdatasciencecenter.github.io/helm-charts/"
-  version: 2.24.1
+  version: 2.27.0
   condition: graph.enabled
 - name: postgresql
   version: 9.1.1
@@ -36,6 +36,8 @@ dependencies:
   version: 0.0.3
   repository: "https://swissdatasciencecenter.github.io/helm-charts/"
 - name: redis
-  version: 10.7.11
-  repository: "https://raw.githubusercontent.com/bitnami/charts/eb5f9a9513d987b519f0ecd732e7031241c50328/bitnami"
+  # bitnami claims that this will always contain a full set of charts - let us pray...
+  # this index was 19MB as of the date of this commit and contained redis 17.4.2
+  repository: "https://raw.githubusercontent.com/bitnami/charts/archive-full-index/bitnami"
+  version: 17.4.2
   condition: redis.install

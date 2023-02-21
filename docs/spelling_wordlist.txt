@@ -15,6 +15,7 @@ auth
 autocomplete
 autosave
 autosaved
+autostart
 backend
 backends
 backgroundImage
@@ -136,6 +137,7 @@ lefthand
 lfs
 LocalClient
 localhost
+Lucene
 Matlab
 mem
 mergetool
@@ -177,6 +179,7 @@ Postgresql
 powerline
 pre
 prepend
+prepended
 preprocessed
 preprocessing
 programmatically
@@ -221,6 +224,7 @@ serializer
 sha
 sha
 Slurm
+Snyk
 SPARQL
 spawner
 SQLAlchemy
@@ -253,6 +257,7 @@ supertypes
 symlink
 symlinks
 templated
+templating
 Tensorboard
 Tensorflow
 terraform
@@ -267,6 +272,7 @@ txt
 typesystem
 Ubuntu
 ui
+Unescape
 unhandled
 unicode
 unlink
