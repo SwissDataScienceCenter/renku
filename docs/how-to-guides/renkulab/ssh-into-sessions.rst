@@ -6,8 +6,8 @@ SSH into RenkuLab Sessions
 Would you prefer to work in a RenkuLab session from your local environment? Do
 you prefer to edit code in your own IDE, rather than in a browser?
 
-You can use the SSH feature of RenkuLab sessions to connect directly to the
-remote session environment and work on it from your local machine. You can even
+You can easily connect to the
+remote session environment directly using SSH and work on it from your local machine. You can even
 open the session with your favorite tools, such as VSCode.
 
 Check if SSH is enabled in your project
@@ -76,7 +76,7 @@ This section will guide you through setting up these prerequisites.
         <Enter version number above 1x>
 
 #.  To use the SSH feature, you need to have OpenSSH installed on your system.
-    To check whether `ssh`` is installed, run `ssh -V`. If you get a response
+    To check whether ``ssh`` is installed, run ``ssh -V``. If you get a response
     like `OpenSSH_8.6p1, LibreSSL 3.3.6`, then you are good to go!
 
 #.  Install the Renku CLI version >= <X>.
