@@ -13,7 +13,6 @@ global:
     ## Postgres password for the gitlab database
     postgresPassword:
       value:
-      overwriteOnHelmUpgrade: false
     ## URL prefix for gitlab
     # urlPrefix: /
     ## Secret for the gitlab keycloak client
@@ -27,12 +26,10 @@ global:
     ## Postgres password for the Keycloak database
     postgresPassword:
       value:
-      overwriteOnHelmUpgrade: false
     ## Admin username/password for Keycloak
     user: admin
     password:
       value:
-      overwriteOnHelmUpgrade: false
   gateway:
     ## The client secret for the renku client application registered in keycloak.
     clientSecret: # use `uuidgen -r`
@@ -60,7 +57,6 @@ global:
       ## Postgres password to be used to access the Event Log db
       postgresPassword:
         value:
-        overwriteOnHelmUpgrade: false
       existingSecret: '{{ template "renku.fullname" . }}-db-postgres'
     tokenRepository:
       ## Name of the postgres user to be used to access the db storing access tokens
@@ -68,7 +64,6 @@ global:
       ## Postgres password to be used to access the db storing access tokens
       postgresPassword:
         value:
-        overwriteOnHelmUpgrade: false
       existingSecret: '{{ template "renku.fullname" . }}-token-postgres'
     jena:
       ## specify which dataset should be used in Jena
