@@ -1,7 +1,7 @@
 .. _ssh_into_sessions:
 
-SSH into RenkuLab Sessions
-==========================
+Connect to RenkuLab Sessions with SSH & Local IDE
+=================================================
 
 Would you prefer to work in a RenkuLab session from your local environment? Do
 you prefer to edit code in your own IDE, rather than in a browser?
@@ -66,7 +66,7 @@ Set up your local system for SSH access
 Connecting to RenkuLab sessions via SSH requires 3 prerequisites to be setup on
 your local machine (where you want to SSH from):
 
-* OpenSSH is installed
+* OpenSSH is installed with version >= 7.6
 * the Renku CLI is installed, with version >= <X>
 * your Renku project is cloned
 
@@ -75,9 +75,10 @@ This section will guide you through setting up these prerequisites.
     .. warning::
         <Enter version number above 1x>
 
-#.  To use the SSH feature, you need to have OpenSSH installed on your system.
-    To check whether ``ssh`` is installed, run ``ssh -V``. If you get a response
-    like `OpenSSH_8.6p1, LibreSSL 3.3.6`, then you are good to go!
+#.  To check whether ``ssh`` is installed, run ``ssh -V``. If you get a response
+    like `OpenSSH_8.6p1, LibreSSL 3.3.6`, and the version number for OpenSSH is
+    >= 7.6, then you are good to go!
+
 
 #.  Install the Renku CLI version >= <X>.
 
@@ -235,8 +236,8 @@ For more details on the VSCode SSH extension see
 FAQ
 ---
 
-My environment in an SSH session isn't the same as when I'm in a session on RenkuLab - What's going on?
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+My shell environment in an SSH session isn't the same as when I'm in a session on RenkuLab - What's going on?
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 If you've made changes to your session environment via your Dockerfile, you may
 need to change how these changes take effect in order to be consistent between
