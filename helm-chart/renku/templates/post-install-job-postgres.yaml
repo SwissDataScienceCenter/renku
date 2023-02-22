@@ -43,7 +43,7 @@ spec:
             - name: gitlab-postgres
               mountPath: /gitlab-postgres
               readOnly: true
-            {{- end}}
+            {{- end }}
             - name: graph-db-postgres
               mountPath: /graph-db-postgres
               readOnly: true
@@ -51,17 +51,28 @@ spec:
               mountPath: /graph-token-postgres
               readOnly: true
           env:
-          - name: PGDATABASE
-            value: {{ .Values.postgresql.postgresqlDatabase }}
-          - name: PGUSER
-            value: {{ .Values.postgresql.postgresqlUsername }}
           - name: PGHOST
             value: {{ template "postgresql.fullname" . }}
+          - name: PGUSER
+            {{ if .Values.global.externalServices.postgresql.enabled }}
+            value: {{ .Values.global.externalServices.postgresql.username }}
+            {{- else -}}
+            value: {{ .Values.postgresql.postgresqlUsername }}
+            {{- end }}
           - name: PGPASSWORD
+            {{- if not .Values.global.externalServices.postgresql.enabled }}
             valueFrom:
               secretKeyRef:
                 name: {{ template "postgresql.fullname" . }}
                 key: postgresql-password
+            {{- else if .Values.global.externalServices.postgresql.password }}
+            value: {{ .Values.global.externalServices.postgresql.password }}
+            {{- else if .Values.global.externalServices.postgresql.existingSecret }}
+            valueFrom:
+              secretKeyRef:
+                name: {{ .Values.global.externalServices.postgresql.existingSecret }}
+                key: postgresql-password
+            {{- end }}
       volumes:
         - name: scripts
           configMap:
@@ -76,7 +87,7 @@ spec:
         - name: gitlab-postgres
           secret:
             secretName: {{ template "renku.fullname" . }}-gitlab-postgres
-        {{- end}}
+        {{- end }}
         - name: graph-db-postgres
           secret:
             secretName: {{ template "renku.fullname" . }}-graph-db-postgres

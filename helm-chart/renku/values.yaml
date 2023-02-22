@@ -13,7 +13,6 @@ global:
     ## Postgres password for the gitlab database
     postgresPassword:
       value:
-      overwriteOnHelmUpgrade: false
     ## URL prefix for gitlab
     # urlPrefix: /
     ## Secret for the gitlab keycloak client
@@ -27,12 +26,10 @@ global:
     ## Postgres password for the Keycloak database
     postgresPassword:
       value:
-      overwriteOnHelmUpgrade: false
     ## Admin username/password for Keycloak
     user: admin
     password:
       value:
-      overwriteOnHelmUpgrade: false
   gateway:
     ## The client secret for the renku client application registered in keycloak.
     clientSecret: # use `uuidgen -r`
@@ -60,7 +57,6 @@ global:
       ## Postgres password to be used to access the Event Log db
       postgresPassword:
         value:
-        overwriteOnHelmUpgrade: false
       existingSecret: '{{ template "renku.fullname" . }}-db-postgres'
     tokenRepository:
       ## Name of the postgres user to be used to access the db storing access tokens
@@ -68,11 +64,29 @@ global:
       ## Postgres password to be used to access the db storing access tokens
       postgresPassword:
         value:
-        overwriteOnHelmUpgrade: false
       existingSecret: '{{ template "renku.fullname" . }}-token-postgres'
     jena:
       ## specify which dataset should be used in Jena
       dataset:
+  externalServices:
+    # If an external Postgres database is defined in global.externalServices.postgresql,
+    # global.externalServices.postgresql.enabled should be true, and postgresql.enabled should be false.
+    # By default, Renku-bundled Postgres is enabled.
+    postgresql:
+      enabled: false
+      # host:
+
+      ## We use the defaults here.
+      username: postgres
+
+      ## The admin password should be set explicitly.
+      ## Alternatively an existing secret can be provided. Note that postgres
+      ## DOES NOT tolerate a change of the admin password when upgrading.
+      # password:
+
+      ## Use an existing secret instead of creating a new one. It must have a
+      ## postgresql-password key containing the password for the posgres user.
+      # existingSecret:
 
   # Connection details for a globally used redis instance for the
   # entire platform. For specifying an actual instance as part of
@@ -274,13 +288,17 @@ keycloak:
 # For production deployments check out
 # https://github.com/bitnami/charts/blob/master/bitnami/postgresql/values-production.yaml
 postgresql:
-  ## We use the defaults here. Note that these basic configs could also be set as
-  ## global values such that sub-charts can access them too.
+  # If an external Postgres database is defined in global.externalServices.postgresql,
+  # postgresql.enabled should be false, and global.externalServices.postgresql.enabled should be true.
+  # By default, Renku-bundled Postgres is enabled.
+  enabled: true
+
+  ## We use the defaults here.
   postgresqlDatabase: postgres
   postgresqlUsername: postgres
 
-  ## The admin password should be set explicitly, otherwise a random string will be
-  ## created. Alternatively an existing secret can be provided. Note that postgres
+  ## The admin password should be set explicitly, otherwise a random string will be created.
+  ## Alternatively an existing secret can be provided. Note that postgres
   ## DOES NOT tolerate a change of the admin password when upgrading.
   # postgresqlPassword:
 
