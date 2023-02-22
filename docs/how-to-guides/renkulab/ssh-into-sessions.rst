@@ -81,8 +81,8 @@ This section will guide you through setting up these prerequisites.
 
 #.  Install the Renku CLI version >= <X>.
 
-    If you do not already have the CLI installed, see :ref:`cli_installation`. 
-   
+    If you do not already have the CLI installed, see :ref:`cli_installation`.
+
     To check the version of your Renku CLI, run ``renku --version``. If the
     version is less than <X>, run ``pip install --upgrade renku>=<X>``.
 
@@ -91,10 +91,10 @@ This section will guide you through setting up these prerequisites.
 
 #.  Clone your Renku Project. You can find the :meth:`renku clone <renku.ui.cli.clone>`
     command under your project's Settings tab. Or, form it yourself in the style
-    of the following URL: 
+    of the following URL:
 
     .. code-block:: console
-    
+
         $ renku login renkulab.io  # this step is required if your project is private or internal
         $ renku clone https://renkulab.io/gitlab/user/my-project.git
 
@@ -116,11 +116,11 @@ Launch an SSH-enabled Session
     a session in:
 
     .. code-block:: console
-    
+
         $ cd my-project
 
 
-#.  Log in to RenkuLab with :meth:`renku login <renku.ui.cli.login>`: 
+#.  Log in to RenkuLab with :meth:`renku login <renku.ui.cli.login>`:
 
     .. code-block:: console
 
@@ -140,13 +140,16 @@ Launch an SSH-enabled Session
     remotely on RenkuLab:
 
     .. code-block:: console
+        :emphasize-lines: 5-7
 
-        $ renku session start -p renkulab --ssh Your system is not set up for
-        SSH connections to Renku. Would you like to set it up? [y/N]: y [...]
+        $ renku session start -p renkulab --ssh
+        Your system is not set up for SSH connections to Renku.
+        Would you like to set it up? [y/N]: y
+        [...]
         Session user-myproject-02a9e407 successfully started, use 'renku session
         open --ssh user-myproject-02a9e407' or 'ssh
-        renkulab.io-myproject-02a9e407' to connect to it
-    
+        user-myproject-02a9e407' to connect to it
+
     .. note::
 
         **Curious what's happening under the hood?** This command starts a new
@@ -181,7 +184,7 @@ To exit the SSH shell, simply type ``exit``.
     <renku.ui.cli.session>`. In the example above, the session id is
     ``user-myproject-02a9e407``, so the command to open the SSH session is:
     ``renku session open --ssh user-myproject-02a9e407``.
-    
+
     If you need to find your Session ID again, use
     :meth:`renku session ls <renku.ui.cli.session>`.
 
