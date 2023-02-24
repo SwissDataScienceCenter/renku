@@ -375,7 +375,6 @@ redis:
       # Disable RDB persistence.
       save ""
   
-
   # when using sentinel the master block is completely ignored
   # master:
 
