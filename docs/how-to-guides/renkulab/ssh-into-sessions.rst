@@ -14,12 +14,20 @@ Check if SSH is enabled in your project
 ---------------------------------------
 
 You can check if your project supports SSH by clicking the drop down next to the
-Session Start button and seeing if the SSH option is visible and enabled. If you
-see the SSH-enabled icon in the screenshot below, your project is SSH-enabled,
+Session Start button and seeing if the SSH option is visible and enabled.
+
+.. image:: ../../_static/images/ui_ssh_dropdown.png
+    :width: 85%
+    :align: center
+    :alt: Dropdown menu with SSH entry.
+
+If you see the SSH-enabled icon in the screenshot below, your project is SSH-enabled,
 and you can skip down to the next section!
 
-.. warning::
-    <screenshot of the Session Start drop down menu with SSH enabled>
+.. image:: ../../_static/images/ui_ssh_modal.png
+    :width: 85%
+    :align: center
+    :alt: SSH modal for an up-to-date project.
 
 .. note::
     **Don't see an SSH option in the Session Start menu?** If you are working on
@@ -30,17 +38,22 @@ and you can skip down to the next section!
 Enabling SSH for your project
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-.. warning::
-    <screenshot of the Session Start drop down menu with SSH NOT enabled>
-
 If the SSH dialogue says that SSH is not enabled for this project, this likely
-means that your project is using an old project template. To update your project
-template, go to the project "Overview" tab and open the "Status" section. Find
-the "Template Version" section, and click "Update".
+means that your project is using an old project template.
 
-.. warning::
+.. image:: ../../_static/images/ui_ssh_activate.png
+    :width: 85%
+    :align: center
+    :alt: SSH modal for a project with no support.
 
-    <screenshot of the Status page with a Template Version box that's asking to be updated>
+To update your project template, click on "Overview Status" to open the project
+status page. Find the "Template Version" section, and click "Update".
+
+.. image:: ../../_static/images/ui_ssh_update_template.png
+    :width: 85%
+    :align: center
+    :alt: Project status page showing a new template available.
+
 
 Alternatively, you can manually enable SSH for your project by :ref:`upgrading your
 base image <renku_base_image_upgrade>` to at least version 0.14.0. Then, run
