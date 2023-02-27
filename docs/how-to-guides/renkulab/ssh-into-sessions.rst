@@ -14,12 +14,20 @@ Check if SSH is enabled in your project
 ---------------------------------------
 
 You can check if your project supports SSH by clicking the drop down next to the
-Session Start button and seeing if the SSH option is visible and enabled. If you
-see the SSH-enabled icon in the screenshot below, your project is SSH-enabled,
+Session Start button and seeing if the SSH option is visible and enabled.
+
+.. image:: ../../_static/images/ui_ssh_dropdown.png
+    :width: 85%
+    :align: center
+    :alt: Dropdown menu with SSH entry.
+
+If you see the SSH-enabled icon in the screenshot below, your project is SSH-enabled,
 and you can skip down to the next section!
 
-.. warning::
-    <screenshot of the Session Start drop down menu with SSH enabled>
+.. image:: ../../_static/images/ui_ssh_modal.png
+    :width: 85%
+    :align: center
+    :alt: SSH modal for an up-to-date project.
 
 .. note::
     **Don't see an SSH option in the Session Start menu?** If you are working on
@@ -30,17 +38,22 @@ and you can skip down to the next section!
 Enabling SSH for your project
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-.. warning::
-    <screenshot of the Session Start drop down menu with SSH NOT enabled>
-
 If the SSH dialogue says that SSH is not enabled for this project, this likely
-means that your project is using an old project template. To update your project
-template, go to the project "Overview" tab and open the "Status" section. Find
-the "Template Version" section, and click "Update".
+means that your project is using an old project template.
 
-.. warning::
+.. image:: ../../_static/images/ui_ssh_activate.png
+    :width: 85%
+    :align: center
+    :alt: SSH modal for a project with no support.
 
-    <screenshot of the Status page with a Template Version box that's asking to be updated>
+To update your project template, click on "Overview Status" to open the project
+status page. Find the "Template Version" section, and click "Update".
+
+.. image:: ../../_static/images/ui_ssh_update_template.png
+    :width: 85%
+    :align: center
+    :alt: Project status page showing a new template available.
+
 
 Alternatively, you can manually enable SSH for your project by :ref:`upgrading your
 base image <renku_base_image_upgrade>` to at least version 0.14.0. Then, run
@@ -82,8 +95,8 @@ This section will guide you through setting up these prerequisites.
 
 #.  Install the Renku CLI version >= <X>.
 
-    If you do not already have the CLI installed, see :ref:`cli_installation`. 
-   
+    If you do not already have the CLI installed, see :ref:`cli_installation`.
+
     To check the version of your Renku CLI, run ``renku --version``. If the
     version is less than <X>, run ``pip install --upgrade renku>=<X>``.
 
@@ -92,10 +105,10 @@ This section will guide you through setting up these prerequisites.
 
 #.  Clone your Renku Project. You can find the :meth:`renku clone <renku.ui.cli.clone>`
     command under your project's Settings tab. Or, form it yourself in the style
-    of the following URL: 
+    of the following URL:
 
     .. code-block:: console
-    
+
         $ renku login renkulab.io  # this step is required if your project is private or internal
         $ renku clone https://renkulab.io/gitlab/user/my-project.git
 
@@ -117,11 +130,11 @@ Launch an SSH-enabled Session
     a session in:
 
     .. code-block:: console
-    
+
         $ cd my-project
 
 
-#.  Log in to RenkuLab with :meth:`renku login <renku.ui.cli.login>`: 
+#.  Log in to RenkuLab with :meth:`renku login <renku.ui.cli.login>`:
 
     .. code-block:: console
 
@@ -141,13 +154,16 @@ Launch an SSH-enabled Session
     remotely on RenkuLab:
 
     .. code-block:: console
+        :emphasize-lines: 5-7
 
-        $ renku session start -p renkulab --ssh Your system is not set up for
-        SSH connections to Renku. Would you like to set it up? [y/N]: y [...]
+        $ renku session start -p renkulab --ssh
+        Your system is not set up for SSH connections to Renku.
+        Would you like to set it up? [y/N]: y
+        [...]
         Session user-myproject-02a9e407 successfully started, use 'renku session
         open --ssh user-myproject-02a9e407' or 'ssh
-        renkulab.io-myproject-02a9e407' to connect to it
-    
+        user-myproject-02a9e407' to connect to it
+
     .. note::
 
         **Curious what's happening under the hood?** This command starts a new
@@ -182,7 +198,7 @@ To exit the SSH shell, simply type ``exit``.
     <renku.ui.cli.session>`. In the example above, the session id is
     ``user-myproject-02a9e407``, so the command to open the SSH session is:
     ``renku session open --ssh user-myproject-02a9e407``.
-    
+
     If you need to find your Session ID again, use
     :meth:`renku session ls <renku.ui.cli.session>`.
 
