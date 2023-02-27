@@ -16,6 +16,10 @@ User-Facing Changes
 * 📑 **UI**: Add a new dashboard for logged-in users, showing running sessions, last
   accessed projects, and own datasets
   (`#2332 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2332>`_).
+* **Sessions**: Experimental Azure Blob storage support 
+  (`#1374 <https://github.com/SwissDataScienceCenter/renku-notebooks/pull/1374>`_).
+* **Sessions**: SSH access via jump host 
+  (`#1389 <https://github.com/SwissDataScienceCenter/renku-notebooks/pull/1389>`_).
 
 **✨ Improvements**
 
@@ -26,6 +30,8 @@ User-Facing Changes
   (`#2351 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2351>`_).
 * 📸 **UI**: Customize avatars when creating a project
   (`#2331 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2331>`_).
+* **Sessions**: Fail when injecting env vars that already exist in session 
+  (`#1396 <https://github.com/SwissDataScienceCenter/renku-notebooks/issues/1396>`_)
 
 **🐞 Bug Fixes**
 
@@ -40,12 +46,20 @@ User-Facing Changes
   (`#2347 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2347>`_).
 * **Gateway**: Use offline access tokens for automated access from within sessions.
   (`#632 <https://github.com/SwissDataScienceCenter/renku-gateway/pull/632>`_).
+* **Sessions**: Propagate environment variables for R-Studio sessions
+  (`#1339 <https://github.com/SwissDataScienceCenter/renku-notebooks/pull/1339>`_).
+* **Sessions**: Show if ssh is enabled in /version of notebook service
+  (`#1407 <https://github.com/SwissDataScienceCenter/renku-notebooks/pull/1407>`_).
+* **Sessions**: Cloning the correct SHA for anonymous user sessions
+  (`#1406 <https://github.com/SwissDataScienceCenter/renku-notebooks/pull/1406>`_).
 
 Individual components
 ~~~~~~~~~~~~~~~~~~~~~~
 
 - `renku-ui 3.2.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.2.0>`_
-- `renku-gateway 0.18.1  <https://github.com/SwissDataScienceCenter/renku-gateway/releases/tag/0.18.1>`_
+- `renku-gateway 0.18.1 <https://github.com/SwissDataScienceCenter/renku-gateway/releases/tag/0.18.1>`_
+- `renku-notebooks 0.15.0 <https://github.com/SwissDataScienceCenter/renku-notebooks/releases/tag/0.15.0>`_
+- `amalthea 0.6.1 <https://github.com/SwissDataScienceCenter/amalthea/releases/tag/0.6.1>`_
 
 0.23.0
 ------
