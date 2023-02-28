@@ -27,13 +27,16 @@ User-Facing Changes
 
 **🌟 New Features**
 
-* 📑 **UI**: Add a new dashboard for logged-in users, showing running sessions, last
-  accessed projects, and own datasets
-  (`#2332 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2332>`_).
 * ⚙️ **Renku CLI**: Connecting to Renkulab sessions via SSH
   (`#3318 <https://github.com/SwissDataScienceCenter/renku-python/pull/3318>`_).
 * 📃 **Renku CLI**: Support for Azure Blob Storage backed datasets.
   (`#3257 <https://github.com/SwissDataScienceCenter/renku-python/pull/3257>`_).
+* 🧑‍💻 **UI**: Add a new dashboard for logged-in users, showing running sessions, last
+  accessed projects, and own datasets
+  (`#2332 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2332>`_).
+* 📑 **UI**: Show instructions on how to connect to RenkuLab sessions via SSH from the
+  Session Start menu
+  (`#2376 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2376>`_).
 
 **✨ Improvements**
 
@@ -49,6 +52,8 @@ User-Facing Changes
 
 **🐞 Bug Fixes**
 
+* **Gateway**: Use offline access tokens for automated access from within sessions.
+  (`#632 <https://github.com/SwissDataScienceCenter/renku-gateway/pull/632>`_).
 * **UI**: Fix markdown problems with underscores in links and math formulas
   (`#2374 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2374>`_).
 * **UI**: Restore session autostart when connecting from the notebook preview page
@@ -58,8 +63,6 @@ User-Facing Changes
   `#2357 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2357>`_).
 * **UI**: Sort commits by date to prevent random order
   (`#2347 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2347>`_).
-* **Gateway**: Use offline access tokens for automated access from within sessions.
-  (`#632 <https://github.com/SwissDataScienceCenter/renku-gateway/pull/632>`_).
 * **Sessions**: Propagate environment variables for R-Studio sessions
   (`#1339 <https://github.com/SwissDataScienceCenter/renku-notebooks/pull/1339>`_).
 
@@ -94,7 +97,6 @@ Internal Changes
 Individual components
 ~~~~~~~~~~~~~~~~~~~~~~
 
-- `renku-ui 3.2.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.2.0>`_
 - `renku-gateway 0.18.1 <https://github.com/SwissDataScienceCenter/renku-gateway/releases/tag/0.18.1>`_
 - `renku-notebooks 1.15.0 <https://github.com/SwissDataScienceCenter/renku-notebooks/releases/tag/1.15.0>`_
 - `amalthea 0.6.1 <https://github.com/SwissDataScienceCenter/amalthea/releases/tag/0.6.1>`_
@@ -104,7 +106,8 @@ Individual components
 - `renku-python 2.1.0 <https://github.com/SwissDataScienceCenter/renku-python/releases/tag/v2.1.0>`_
 - `renku-python 2.2.0 <https://github.com/SwissDataScienceCenter/renku-python/releases/tag/v2.2.0>`_
 - `renku-python 2.3.0 <https://github.com/SwissDataScienceCenter/renku-python/releases/tag/v2.3.0>`_
-
+- `renku-ui 3.2.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.2.0>`_
+- `renku-ui 3.3.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.3.0>`_
 
 0.23.0
 ------
