@@ -14,15 +14,16 @@ Check if SSH is enabled in your project
 ---------------------------------------
 
 You can check if your project supports SSH by clicking the drop down next to the
-Session Start button and seeing if the SSH option is visible and enabled.
+Session Start button and seeing if the "Connect with SSH" option is available,
+and the dialogue says your project supports SSH.
 
 .. image:: ../../_static/images/ui_ssh_dropdown.png
     :width: 85%
     :align: center
     :alt: Dropdown menu with SSH entry.
 
-If you see the SSH-enabled icon in the screenshot below, your project is SSH-enabled,
-and you can skip down to the next section!
+If you see "Your project supports SSH" as in the screenshot below, your project
+is SSH-enabled, and you can skip down to the next section!
 
 .. image:: ../../_static/images/ui_ssh_modal.png
     :width: 85%
@@ -187,7 +188,7 @@ environment.
     $ renku session open --ssh <session-id>
     venv ▶ ~ ▶ $
 
-(If prompted to accept host keys, confirm with ``yes``).
+If prompted to accept host keys, confirm with ``yes``.
 
 To exit the SSH shell, simply type ``exit``.
 
@@ -247,7 +248,7 @@ in the RenkuLab session via the VSCode terminal!
 
 
 For more details on the VSCode SSH extension see
-`the official documentation <https://code.visualstudio.com/docs/remote/ssh>`_.
+`the official VSCode documentation <https://code.visualstudio.com/docs/remote/ssh>`_.
 
 FAQ
 ---
