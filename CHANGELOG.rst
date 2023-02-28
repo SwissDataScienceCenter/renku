@@ -44,6 +44,8 @@ User-Facing Changes
   (`#2351 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2351>`_).
 * 📸 **UI**: Customize avatars when creating a project
   (`#2331 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2331>`_).
+* **Sessions**: Fail when injecting env vars that already exist in session 
+  (`#1396 <https://github.com/SwissDataScienceCenter/renku-notebooks/issues/1396>`_)
 
 **🐞 Bug Fixes**
 
@@ -58,6 +60,25 @@ User-Facing Changes
   (`#2347 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2347>`_).
 * **Gateway**: Use offline access tokens for automated access from within sessions.
   (`#632 <https://github.com/SwissDataScienceCenter/renku-gateway/pull/632>`_).
+* **Sessions**: Propagate environment variables for R-Studio sessions
+  (`#1339 <https://github.com/SwissDataScienceCenter/renku-notebooks/pull/1339>`_).
+
+Internal Changes
+~~~~~~~~~~~~~~~~
+
+**Improvements**
+
+* **Sessions**: Show if ssh is enabled in /version of notebook service
+  (`#1407 <https://github.com/SwissDataScienceCenter/renku-notebooks/pull/1407>`_).
+* **Sessions**: Introduce experimental Azure Blob storage support 
+  (`#1374 <https://github.com/SwissDataScienceCenter/renku-notebooks/pull/1374>`_).
+* **Sessions**: Enable SSH access via jump host 
+  (`#1389 <https://github.com/SwissDataScienceCenter/renku-notebooks/pull/1389>`_).
+
+**Bug Fixes**
+
+* **Sessions**: Cloning the correct SHA for anonymous user sessions
+  (`#1406 <https://github.com/SwissDataScienceCenter/renku-notebooks/pull/1406>`_).
 
 Internal Changes
 ~~~~~~~~~~~~~~~~
@@ -75,6 +96,8 @@ Individual components
 
 - `renku-ui 3.2.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.2.0>`_
 - `renku-gateway 0.18.1 <https://github.com/SwissDataScienceCenter/renku-gateway/releases/tag/0.18.1>`_
+- `renku-notebooks 1.15.0 <https://github.com/SwissDataScienceCenter/renku-notebooks/releases/tag/1.15.0>`_
+- `amalthea 0.6.1 <https://github.com/SwissDataScienceCenter/amalthea/releases/tag/0.6.1>`_
 - `renku-graph 2.28.0 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/2.28.0>`_
 - `renku-python 2.0.0 <https://github.com/SwissDataScienceCenter/renku-python/releases/tag/v2.0.0>`_
 - `renku-python 2.0.1 <https://github.com/SwissDataScienceCenter/renku-python/releases/tag/v2.0.1>`_
