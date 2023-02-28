@@ -38,11 +38,14 @@ User-Facing Changes
   `#2357 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2357>`_).
 * **UI**: Sort commits by date to prevent random order
   (`#2347 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2347>`_).
+* **Gateway**: Use offline access tokens for automated access from within sessions.
+  (`#632 <https://github.com/SwissDataScienceCenter/renku-gateway/pull/632>`_).
 
 Individual components
 ~~~~~~~~~~~~~~~~~~~~~~
 
 - `renku-ui 3.2.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.2.0>`_
+- `renku-gateway 0.18.1  <https://github.com/SwissDataScienceCenter/renku-gateway/releases/tag/0.18.1>`_
 
 0.23.0
 ------

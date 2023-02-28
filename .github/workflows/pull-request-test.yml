@@ -137,7 +137,7 @@ jobs:
       - name: Wait for PR deployment to be ready
         run: sleep 60s
         shell: bash
-      - uses: cypress-io/github-action@v4
+      - uses: cypress-io/github-action@v5
         name: Run Cypress acceptance tests
         id: cypress
         env:
