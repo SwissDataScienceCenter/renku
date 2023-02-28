@@ -80,29 +80,22 @@ Set up your local system for SSH access
 Connecting to RenkuLab sessions via SSH requires 3 prerequisites to be setup on
 your local machine (where you want to SSH from):
 
-* OpenSSH is installed with version >= 7.6
-* the Renku CLI is installed, with version >= <X>
+* OpenSSH is installed with version >= ``7.6``
+* the Renku CLI is installed, with version >= ``2.3.0``
 * your Renku project is cloned
 
 This section will guide you through setting up these prerequisites.
-
-    .. warning::
-        <Enter version number above 1x>
 
 #.  To check whether ``ssh`` is installed, run ``ssh -V``. If you get a response
     like `OpenSSH_8.6p1, LibreSSL 3.3.6`, and the version number for OpenSSH is
     >= 7.6, then you are good to go!
 
-
-#.  Install the Renku CLI version >= <X>.
+#.  Install the Renku CLI version >= ``2.3.0``.
 
     If you do not already have the CLI installed, see :ref:`cli_installation`.
 
     To check the version of your Renku CLI, run ``renku --version``. If the
-    version is less than <X>, run ``pip install --upgrade renku>=<X>``.
-
-    .. warning::
-        <Enter version number above 3x>
+    version is less than ``2.3.0``, run ``pip install --upgrade renku>=2.3.0``.
 
 #.  Clone your Renku Project. You can find the :meth:`renku clone <renku.ui.cli.clone>`
     command under your project's Settings tab. Or, form it yourself in the style
