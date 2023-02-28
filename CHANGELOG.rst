@@ -3,10 +3,24 @@
 0.24.0
 ------
 
-Renku ``0.24.0`` introduces a new landing page that puts your most used projects, sessions,
-and datasets at your fingertips. Quickly pick up where you left off: connect to your
-already-running sessions, start a new session on a recently visited project, or access your
-datasets- all from a single page!
+Renku ``0.24.0`` introduces a new features: SSH-access to RenkuLab sessions and
+a new Dashboard!
+
+Would you like to work on your Renku project from the comfort of your own local
+computer? Use the Renku CLI to start an SSH session on RenkuLab, and open that
+session in your local terminal or even your IDE, such as VSCode. Check out the
+"Connect with SSH" option in the Session Start menu to get started, or see our
+`docs <https://renku.readthedocs.io/en/stable/how-to-guides/renkulab/ssh-into-sessions.html>`_.
+*Note that SSH functionality must be enabled by your administrator and may not be
+available on all RenkuLab deployments.*
+
+And, your RenkuLab Dashboard now has a snazzy new look that puts your most used
+projects, sessions, and datasets at your fingertips. Quickly pick up where you
+left off: connect to your already-running sessions, start a new session on a
+recently visited project, or access your datasets- all from a single page!
+
+Read on for a full breakdown of all improvements and bugfixes included in this
+release.
 
 User-Facing Changes
 ~~~~~~~~~~~~~~~~~~~
