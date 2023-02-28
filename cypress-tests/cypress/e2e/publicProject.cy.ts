@@ -52,9 +52,6 @@ describe("Basic public project functionality", () => {
 
   beforeEach(() => {
     cy.visitAndLoadProject(projectIdentifier);
-    // ? This is bad practice (we should wait for something) but it helps stabilize the tests.
-    // eslint-disable-next-line cypress/no-unnecessary-waiting
-    cy.wait(1000);
   });
 
   it("Can search for project", () => {
@@ -163,7 +160,7 @@ describe("Basic public project functionality", () => {
       robustNavigateToProjectPage("/settings/sessions");
       cy.get("h3").contains("Session settings").should("exist");
       if (invoked > configInvocations)
-        cy.wait("@configShow", { timeout: TIMEOUTS.standard });
+        cy.wait("@configShow", { timeout: TIMEOUTS.long });
     };
 
     // Make sure the renku.ini is in a pristine state
