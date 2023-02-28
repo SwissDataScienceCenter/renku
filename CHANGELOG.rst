@@ -62,6 +62,16 @@ Internal Changes
 * **Sessions**: Cloning the correct SHA for anonymous user sessions
   (`#1406 <https://github.com/SwissDataScienceCenter/renku-notebooks/pull/1406>`_).
 
+Internal Changes
+~~~~~~~~~~~~~~~~
+
+**Improvements**
+
+* **Knowledge Graph** Add support for the new Renku Metadata Schema v10.
+* **Knowledge Graph** Enable the Cross-Entity Search API to allow multiple sort parameters.
+* **Knowledge Graph** Remove deprecated GraphQL API
+* **Knowledge Graph**: Upgrade Jena to 4.7.0
+
 Individual components
 ~~~~~~~~~~~~~~~~~~~~~~
 
@@ -69,6 +79,7 @@ Individual components
 - `renku-gateway 0.18.1 <https://github.com/SwissDataScienceCenter/renku-gateway/releases/tag/0.18.1>`_
 - `renku-notebooks 1.15.0 <https://github.com/SwissDataScienceCenter/renku-notebooks/releases/tag/1.15.0>`_
 - `amalthea 0.6.1 <https://github.com/SwissDataScienceCenter/amalthea/releases/tag/0.6.1>`_
+- `renku-graph 2.28.0 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/2.28.0>`_
 
 0.23.0
 ------
