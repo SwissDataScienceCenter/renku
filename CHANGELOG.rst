@@ -16,10 +16,6 @@ User-Facing Changes
 * 📑 **UI**: Add a new dashboard for logged-in users, showing running sessions, last
   accessed projects, and own datasets
   (`#2332 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2332>`_).
-* **Sessions**: Introduce experimental Azure Blob storage support 
-  (`#1374 <https://github.com/SwissDataScienceCenter/renku-notebooks/pull/1374>`_).
-* **Sessions**: Enable SSH access via jump host 
-  (`#1389 <https://github.com/SwissDataScienceCenter/renku-notebooks/pull/1389>`_).
 
 **✨ Improvements**
 
@@ -56,6 +52,10 @@ Internal Changes
 
 * **Sessions**: Show if ssh is enabled in /version of notebook service
   (`#1407 <https://github.com/SwissDataScienceCenter/renku-notebooks/pull/1407>`_).
+* **Sessions**: Introduce experimental Azure Blob storage support 
+  (`#1374 <https://github.com/SwissDataScienceCenter/renku-notebooks/pull/1374>`_).
+* **Sessions**: Enable SSH access via jump host 
+  (`#1389 <https://github.com/SwissDataScienceCenter/renku-notebooks/pull/1389>`_).
 
 **Bug Fixes**
 
