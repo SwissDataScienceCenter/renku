@@ -9,4 +9,3 @@ renku-sphinx-theme==0.2.2
 sphinxcontrib-spelling==7.*
 sphinxcontrib-websupport==1.2.4
 ./docs/renku-python
-
