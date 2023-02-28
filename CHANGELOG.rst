@@ -16,6 +16,10 @@ User-Facing Changes
 * 📑 **UI**: Add a new dashboard for logged-in users, showing running sessions, last
   accessed projects, and own datasets
   (`#2332 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2332>`_).
+* ⚙️ **Renku CLI**: Connecting to Renkulab sessions via SSH
+  (`#3318 <https://github.com/SwissDataScienceCenter/renku-python/pull/3318>`_).
+* 📃 **Renku CLI**: Support for Azure Blob Storage backed datasets.
+  (`#3257 <https://github.com/SwissDataScienceCenter/renku-python/pull/3257>`_).
 
 **✨ Improvements**
 
@@ -50,6 +54,7 @@ Internal Changes
 * **Knowledge Graph** Enable the Cross-Entity Search API to allow multiple sort parameters.
 * **Knowledge Graph** Remove deprecated GraphQL API
 * **Knowledge Graph**: Upgrade Jena to 4.7.0
+* **Core Service**: Metadata v10 support
 
 Individual components
 ~~~~~~~~~~~~~~~~~~~~~~
@@ -57,6 +62,12 @@ Individual components
 - `renku-ui 3.2.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.2.0>`_
 - `renku-gateway 0.18.1 <https://github.com/SwissDataScienceCenter/renku-gateway/releases/tag/0.18.1>`_
 - `renku-graph 2.28.0 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/2.28.0>`_
+- `renku-python 2.0.0 <https://github.com/SwissDataScienceCenter/renku-python/releases/tag/v2.0.0>`_
+- `renku-python 2.0.1 <https://github.com/SwissDataScienceCenter/renku-python/releases/tag/v2.0.1>`_
+- `renku-python 2.1.0 <https://github.com/SwissDataScienceCenter/renku-python/releases/tag/v2.1.0>`_
+- `renku-python 2.2.0 <https://github.com/SwissDataScienceCenter/renku-python/releases/tag/v2.2.0>`_
+- `renku-python 2.3.0 <https://github.com/SwissDataScienceCenter/renku-python/releases/tag/v2.3.0>`_
+
 
 0.23.0
 ------
