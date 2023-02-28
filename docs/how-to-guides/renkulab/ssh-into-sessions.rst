@@ -15,7 +15,7 @@ Check if SSH is enabled in your project
 
 You can check if your project supports SSH by clicking the drop down next to the
 Session Start button and seeing if the "Connect with SSH" option is available,
-and the dialogue says your project supports SSH.
+and the dialog says your project supports SSH.
 
 .. image:: ../../_static/images/ui_ssh_dropdown.png
     :width: 85%
@@ -39,7 +39,7 @@ is SSH-enabled, and you can skip down to the next section!
 Enabling SSH for your project
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-If the SSH dialogue says that SSH is not enabled for this project, this likely
+If the SSH dialog says that SSH is not enabled for this project, this likely
 means that your project is using an old project template.
 
 .. image:: ../../_static/images/ui_ssh_activate.png
