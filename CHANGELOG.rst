@@ -3,8 +3,8 @@
 0.24.0
 ------
 
-Renku ``0.24.0`` introduces a new features: SSH-access to RenkuLab sessions and
-a new Dashboard!
+Renku ``0.24.0`` introduces two new features: SSH-access to RenkuLab sessions
+and a new RenkuLab Dashboard!
 
 Would you like to work on your Renku project from the comfort of your own local
 computer? Use the Renku CLI to start an SSH session on RenkuLab, and open that
