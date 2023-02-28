@@ -48,7 +48,7 @@ Internal Changes
 
 * **Knowledge Graph** Add support for the new Renku Metadata Schema v10.
 * **Knowledge Graph** Enable the Cross-Entity Search API to allow multiple sort parameters.
-* **Knowledge Graph** Remove deprecated Graphql API
+* **Knowledge Graph** Remove deprecated GraphQL API
 * **Knowledge Graph**: Upgrade Jena to 4.7.0
 
 Individual components
