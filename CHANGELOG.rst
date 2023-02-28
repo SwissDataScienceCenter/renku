@@ -41,11 +41,22 @@ User-Facing Changes
 * **Gateway**: Use offline access tokens for automated access from within sessions.
   (`#632 <https://github.com/SwissDataScienceCenter/renku-gateway/pull/632>`_).
 
+Internal Changes
+~~~~~~~~~~~~~~~~
+
+**Improvements**
+
+* **Knowledge Graph** Add support for the new Renku Metadata Schema v10.
+* **Knowledge Graph** Enable the Cross-Entity Search API to allow multiple sort parameters.
+* **Knowledge Graph** Remove deprecated GraphQL API
+* **Knowledge Graph**: Upgrade Jena to 4.7.0
+
 Individual components
 ~~~~~~~~~~~~~~~~~~~~~~
 
 - `renku-ui 3.2.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.2.0>`_
-- `renku-gateway 0.18.1  <https://github.com/SwissDataScienceCenter/renku-gateway/releases/tag/0.18.1>`_
+- `renku-gateway 0.18.1 <https://github.com/SwissDataScienceCenter/renku-gateway/releases/tag/0.18.1>`_
+- `renku-graph 2.28.0 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/2.28.0>`_
 
 0.23.0
 ------
