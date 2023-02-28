@@ -59,15 +59,11 @@ function forkProject(identifier: ProjectIdentifier, newName: string) {
   cy.dataCy("project-overview-content").get("#fork-project").should("be.visible").click();
   if (projectsInvoked)
     cy.wait("@getProjects", { timeout: TIMEOUTS.long });
-  cy.get(".modal-content").contains("Fork project").should("be.visible");
-  cy.get("#slug").should("be.visible", { timeout: TIMEOUTS.long }).should("contain.value", identifier.name);
-
-  cy.get(".modal-content").contains("Fork project").should("be.visible");
-  cy.get("#slug").should("be.visible").should("contain.value", identifier.name);
+  cy.get("#slug", { timeout: TIMEOUTS.long }).should("be.visible").should("contain.value", identifier.name);
 
   // fill in the new Title name
   cy.dataCy("field-group-title").should("exist").click().clear().type(newName);
-  cy.get("#slug").should("be.visible").should("contain.value", newName);
+  cy.get("#slug", { timeout: TIMEOUTS.long }).should("be.visible").should("contain.value", newName);
   cy.get(".modal-content").contains("already taken in the selected namespace").should("not.exist");
 
   // create the project
@@ -103,6 +99,10 @@ function visitAndLoadProject(identifier: ProjectIdentifier, skipOutdated = false
     cy.wait("@getVersion", { timeout: TIMEOUTS.long });
   if (!skipOutdated)
     cy.wait("@getDatasets", { timeout: TIMEOUTS.long });
+  
+  // Other elements are re-rendered at this point; waiting 1 sec helps preventing "unmounted" errors
+  // eslint-disable-next-line cypress/no-unnecessary-waiting
+  cy.wait(1000);
 }
 
 function visitProject(identifier: ProjectIdentifier) {

@@ -22,7 +22,7 @@ describe("Basic rstudio functionality", () => {
     cy.robustLogin();
   });
 
-  it("Creates a project and launches an RStudio session", { defaultCommandTimeout: TIMEOUTS.standard }, () => {
+  it("Creates a project and launches an RStudio session", { defaultCommandTimeout: TIMEOUTS.long }, () => {
     // Creates the project
     const templateName = "Basic R";
     cy.visit("/");

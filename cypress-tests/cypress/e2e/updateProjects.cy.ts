@@ -17,7 +17,7 @@ const projects = {
 // projects.v7 = "anotherProjectV7";
 // projects.v8 = "anotherProjectV8";
 
-describe("Basic public project functionality", () => {
+describe("Fork and update old projects", () => {
   before(() => {
     // Save all cookies across tests
     Cypress.Cookies.defaults({
