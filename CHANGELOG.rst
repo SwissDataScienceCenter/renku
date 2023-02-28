@@ -26,9 +26,6 @@ User-Facing Changes
   (`#2351 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2351>`_).
 * 📸 **UI**: Customize avatars when creating a project
   (`#2331 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2331>`_).
-* **Knowledge Graph** Support for the new Renku Metadata Schema v10.
-* **Knowledge Graph** The Cross-Entity Search API to allow multiple sort parameters.
-* **Knowledge Graph** Removed deprecated Graphql API
 
 **🐞 Bug Fixes**
 
@@ -43,7 +40,16 @@ User-Facing Changes
   (`#2347 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2347>`_).
 * **Gateway**: Use offline access tokens for automated access from within sessions.
   (`#632 <https://github.com/SwissDataScienceCenter/renku-gateway/pull/632>`_).
-* **Knowledge Graph**: Jena upgraded to 4.7.0
+
+Internal Changes
+~~~~~~~~~~~~~~~~
+
+**Improvements**
+
+* **Knowledge Graph** Add support for the new Renku Metadata Schema v10.
+* **Knowledge Graph** Enable the Cross-Entity Search API to allow multiple sort parameters.
+* **Knowledge Graph** Remove deprecated Graphql API
+* **Knowledge Graph**: Upgrade Jena to 4.7.0
 
 Individual components
 ~~~~~~~~~~~~~~~~~~~~~~
