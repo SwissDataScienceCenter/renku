@@ -155,8 +155,8 @@ Launch an SSH-enabled Session
         Would you like to set it up? [y/N]: y
         [...]
         Session user-myproject-02a9e407 successfully started, use 'renku session
-        open --ssh user-myproject-02a9e407' or 'ssh
-        user-myproject-02a9e407' to connect to it
+        open --ssh user-myproject-02a9e407' or 'ssh user-myproject-02a9e407' to
+        connect to it
 
     .. note::
 
@@ -198,8 +198,10 @@ To exit the SSH shell, simply type ``exit``.
 
 .. note::
 
-    **Can I use the normal ** ``ssh`` **command?** Yes! If you prefer, you can
-    use the ``ssh`` command directly rather than the ``renku session open`` command. You can again use the session `ìd``, for example ``ssh user-myproject-02a9e407``.
+    **Can I use the normal** ``ssh`` **command?** Yes! If you prefer, you can
+    use the ``ssh`` command directly rather than the ``renku session open``
+    command. You can again use the session ``id``, for example ``ssh
+    user-myproject-02a9e407``.
 
 
 Open an SSH Session in VSCode
