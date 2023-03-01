@@ -3,6 +3,8 @@ import { v4 as uuidv4 } from "uuid";
 import { TIMEOUTS } from "../../config";
 
 const username = Cypress.env("TEST_USERNAME");
+const firstname = Cypress.env("TEST_FIRST_NAME");
+const lastname = Cypress.env("TEST_LAST_NAME");
 const projectName = `test-project-${uuidv4()}`;
 
 describe("Basic rstudio functionality", () => {
@@ -20,11 +22,11 @@ describe("Basic rstudio functionality", () => {
     cy.robustLogin();
   });
 
-  it("Creates a project and launches an RStudio session", { defaultCommandTimeout: TIMEOUTS.standard }, () => {
+  it("Creates a project and launches an RStudio session", { defaultCommandTimeout: TIMEOUTS.long }, () => {
     // Creates the project
     const templateName = "Basic R";
     cy.visit("/");
-    cy.get(`[data-cy=username-home]`).should("include.text", username);
+    cy.get(`[data-cy=dashboard-title]`).should("include.text", `Renku Dashboard - ${firstname} ${lastname}`);
     const projectInfo = { name: projectName, namespace: username, templateName };
     cy.createProject(projectInfo);
 

@@ -1,5 +1,113 @@
 .. _changelog:
 
+0.24.0
+------
+
+Renku ``0.24.0`` introduces two new features: SSH-access to RenkuLab sessions
+and a new RenkuLab Dashboard!
+
+Would you like to work on your Renku project from the comfort of your own local
+computer? Use the Renku CLI to start an SSH session on RenkuLab, and open that
+session in your local terminal or even your IDE, such as VSCode. Check out the
+"Connect with SSH" option in the Session Start menu to get started, or see our
+`docs <https://renku.readthedocs.io/en/stable/how-to-guides/renkulab/ssh-into-sessions.html>`__.
+*Note that SSH functionality must be enabled by your administrator and may not be
+available on all RenkuLab deployments.*
+
+And, your RenkuLab Dashboard now has a snazzy new look that puts your most used
+projects, sessions, and datasets at your fingertips. Quickly pick up where you
+left off: connect to your already-running sessions, start a new session on a
+recently visited project, or access your datasets- all from a single page!
+
+Read on for a full breakdown of all improvements and bug fixes included in this
+release.
+
+User-Facing Changes
+~~~~~~~~~~~~~~~~~~~
+
+**🌟 New Features**
+
+* ⌨️ **Renku CLI**: Enable connecting to RenkuLab sessions via SSH
+  (`#3318 <https://github.com/SwissDataScienceCenter/renku-python/pull/3318>`_).
+* 📑 **UI**: Show instructions on how to connect to RenkuLab sessions via SSH from the
+  Session Start menu
+  (`#2376 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2376>`_).
+* 🧑‍💻 **UI**: Add a new dashboard for logged-in users, showing running sessions, last
+  accessed projects, and own datasets
+  (`#2332 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2332>`_).
+
+
+**✨ Improvements**
+
+* 📜 **UI**: Show commit messages in the commit selection dropdown when
+  starting a session from a specific commit
+  (`#2362 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2362>`_).
+* 🔗 **UI**: Make searches shareable by storing parameters in the URL
+  (`#2351 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2351>`_).
+* 📸 **UI**: Customize avatars when creating a project
+  (`#2331 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2331>`_).
+* **Sessions**: Fail when injecting env vars that already exist in session 
+  (`#1396 <https://github.com/SwissDataScienceCenter/renku-notebooks/issues/1396>`_)
+
+**🐞 Bug Fixes**
+
+* **Gateway**: Use offline access tokens for automated access from within sessions.
+  (`#632 <https://github.com/SwissDataScienceCenter/renku-gateway/pull/632>`_).
+* **UI**: Fix markdown problems with underscores in links and math formulas
+  (`#2374 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2374>`_).
+* **UI**: Restore session autostart when connecting from the notebook preview page
+  (`#2344 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2344>`_).
+* **UI**: Improve dataset pages
+  (`#2318 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2318>`_,
+  `#2357 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2357>`_).
+* **UI**: Sort commits by date to prevent random order
+  (`#2347 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2347>`_).
+* **Sessions**: Propagate environment variables for R-Studio sessions
+  (`#1339 <https://github.com/SwissDataScienceCenter/renku-notebooks/pull/1339>`_).
+
+Internal Changes
+~~~~~~~~~~~~~~~~
+
+**Improvements**
+
+* **Sessions**: Show if ssh is enabled in /version of notebook service
+  (`#1407 <https://github.com/SwissDataScienceCenter/renku-notebooks/pull/1407>`_).
+* **Sessions**: Introduce experimental Azure Blob storage support 
+  (`#1374 <https://github.com/SwissDataScienceCenter/renku-notebooks/pull/1374>`_).
+* **Sessions**: Enable SSH access via jump host 
+  (`#1389 <https://github.com/SwissDataScienceCenter/renku-notebooks/pull/1389>`_).
+
+**Bug Fixes**
+
+* **Sessions**: Cloning the correct SHA for anonymous user sessions
+  (`#1406 <https://github.com/SwissDataScienceCenter/renku-notebooks/pull/1406>`_).
+
+Internal Changes
+~~~~~~~~~~~~~~~~
+
+**Improvements**
+
+* **Knowledge Graph** Add support for the new Renku Metadata Schema v10.
+* **Knowledge Graph** Enable the Cross-Entity Search API to allow multiple sort parameters.
+* **Knowledge Graph** Remove deprecated GraphQL API
+* **Knowledge Graph**: Upgrade Jena to 4.7.0
+* **Core Service**: Metadata v10 support
+
+Individual components
+~~~~~~~~~~~~~~~~~~~~~~
+
+- `renku-gateway 0.18.1 <https://github.com/SwissDataScienceCenter/renku-gateway/releases/tag/0.18.1>`_
+- `renku-notebooks 1.15.0 <https://github.com/SwissDataScienceCenter/renku-notebooks/releases/tag/1.15.0>`_
+- `amalthea 0.6.1 <https://github.com/SwissDataScienceCenter/amalthea/releases/tag/0.6.1>`_
+- `renku-graph 2.28.0 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/2.28.0>`_
+- `renku-python 2.0.0 <https://github.com/SwissDataScienceCenter/renku-python/releases/tag/v2.0.0>`_
+- `renku-python 2.0.1 <https://github.com/SwissDataScienceCenter/renku-python/releases/tag/v2.0.1>`_
+- `renku-python 2.1.0 <https://github.com/SwissDataScienceCenter/renku-python/releases/tag/v2.1.0>`_
+- `renku-python 2.2.0 <https://github.com/SwissDataScienceCenter/renku-python/releases/tag/v2.2.0>`_
+- `renku-python 2.3.0 <https://github.com/SwissDataScienceCenter/renku-python/releases/tag/v2.3.0>`_
+- `renku-ui 3.2.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.2.0>`_
+- `renku-ui 3.3.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.3.0>`_
+
 0.23.0
 ------
 
@@ -156,7 +264,7 @@ Internal Changes
 
 * **Gateway**: Add endpoint for refreshing expiring GitLab tokens
 * **Knowledge Graph**: Improve functionality to refresh access tokens before expiration
-* **Knowledge Graph**: Enhance migration functionality to restore missing CompositePlans 
+* **Knowledge Graph**: Enhance migration functionality to restore missing CompositePlans
 * **Knowledge Graph**: Fix to prevent data corruption which could previously occur due to duplicate Project creation dates
 * **Sessions**: Check LFS size and available disk space before cloning
 * **UI**: Receive notifications through WebSocket when session state changes
@@ -185,7 +293,7 @@ Individual components
 0.20.0
 ------
 
-Renku ``0.20.0`` tidies up the RenkuLab session start sequence, as well as an assortment of improvements and bug fixes. 
+Renku ``0.20.0`` tidies up the RenkuLab session start sequence, as well as an assortment of improvements and bug fixes.
 
 User-Facing Changes
 ~~~~~~~~~~~~~~~~~~~
@@ -194,12 +302,12 @@ User-Facing Changes
 
 * 🚀 **UI**: We tidied up the session launch sequence to have a unified appearance, regardless of where on RenkuLab you start your session from. Sessions also have better logs and error handling.
 * 🎨 **UI**: The RenkuLab login and logout pages have been updated with the latest styling.
-* 💬 **Renku CLI**: When you run ``renku save`` in a clean but unpushed repository, ``renku`` now informs you that it has pushed changes to the remote, rather than just saying that there were no changes to save.  
+* 💬 **Renku CLI**: When you run ``renku save`` in a clean but unpushed repository, ``renku`` now informs you that it has pushed changes to the remote, rather than just saying that there were no changes to save.
 
 **🐞 Bug Fixes**
 
 * 💔 **Renku CLI**: Fixed an issue where ``renku workflow compose`` would break ``renku workflow list``.
-* 🍴 **UI**: Fixed the Project name field getting reset when forking a project. 
+* 🍴 **UI**: Fixed the Project name field getting reset when forking a project.
 * 📃 **UI**: Fixed issues with downloading session logs.
 
 Internal Changes

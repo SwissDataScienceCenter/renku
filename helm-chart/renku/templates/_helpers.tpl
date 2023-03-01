@@ -46,7 +46,11 @@ http
 Define subcharts full names
 */}}
 {{- define "postgresql.fullname" -}}
+{{- if not .Values.global.externalServices.postgresql.enabled -}}
 {{- printf "%s-%s" .Release.Name "postgresql" | replace "+" "_" | trunc 63 | trimSuffix "-" -}}
+{{- else -}}
+{{- .Values.global.externalServices.postgresql.host -}}
+{{- end -}}
 {{- end -}}
 
 {{- define "keycloak.fullname" -}}
@@ -83,4 +87,19 @@ Define subcharts full names
 
 {{- define "core.fullname" -}}
 {{- printf "%s-%s" .Release.Name "core" | replace "+" "_" | trunc 63 | trimSuffix "-" -}}
+{{- end -}}
+
+{{/*
+Catch configuration errors
+*/}}
+{{- if .Values.global.externalServices.postgresql.enabled and .Values.postgresql.enabled -}}
+fail "External PostgreSQL and Renku-bundled PostgreSQL cannot both be enabled. Please disable either global.externalServices.postgresql.enabled or postgresql.enabled"
+{{- end -}}
+
+{{- if not .Values.global.externalServices.postgresql.enabled and not .Values.postgresql.enabled -}}
+fail "External PostgreSQL and Renku-bundled PostgreSQL cannot both be disabled. Please enable either global.externalServices.postgresql.enabled or postgresql.enabled"
+{{- end -}}
+
+{{- if .Values.global.externalServices.postgresql.enabled and .Values.global.externalServices.postgresql.password and .Values.global.externalServices.postgresql.existingSecret -}}
+fail "External PostgreSQL password and existing Secret fields cannot both be populated."
 {{- end -}}

@@ -19,7 +19,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - uses: actions/setup-python@v1
+      - uses: actions/setup-python@v4
         with:
           python-version: 3.9
       - name: install dependencies
@@ -37,7 +37,7 @@ jobs:
           sphinx-build -nNW -b spelling -d _build/doctrees . _build/spelling
           sphinx-build -qnNW . _build/html
       - name: Upload docs
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         if: success()
         with:
           name: docs
@@ -101,7 +101,7 @@ jobs:
       - name: Create comment pre deploy
         if: "steps.findcomment.outputs.comment-id == 0 &&
           needs.check-deploy.outputs.pr-contains-string == 'true'"
-        uses: peter-evans/create-or-update-comment@v1
+        uses: peter-evans/create-or-update-comment@v2
         with:
           token: ${{ secrets.RENKUBOT_GITHUB_TOKEN }}
           issue-number: ${{ github.event.pull_request.number }}
@@ -137,7 +137,7 @@ jobs:
       - name: Wait for PR deployment to be ready
         run: sleep 60s
         shell: bash
-      - uses: cypress-io/github-action@v4
+      - uses: cypress-io/github-action@v5
         name: Run Cypress acceptance tests
         id: cypress
         env:

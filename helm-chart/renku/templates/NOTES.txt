@@ -13,3 +13,16 @@ kubectl get secrets -n {{ .Release.Namespace }} {{ template "renku.fullname" . }
 You may need to customize privacy values for your RenkuLab deployment (E.G. the Privacy page).
 Please refer to the following documentation: https://renku.readthedocs.io/en/latest/admin/index.html#additional-configurations
 {{ end }}
+
+{{ if .Values.global.externalServices.postgresql.enabled -}}
+You have configured RenkuLab to connect to an external PostgreSQL instance.
+The databases and users RenkuLab requires have automatically been created on the external PostgreSQL instance.
+
+CAUTION WHEN CHANGING POSTGRESQL PASSWORDS:
+
+RenkuLab will not modify the user passwords on your PostgreSQL instance if you edit the PostgreSQL password Helm value for a RenkuLab service
+(e.g. global.graph.tokenRepository.postgresPassword.value), and will overwrite the Kubernetes secret value which stored the previous password.
+
+If you change the PostgreSQL password Helm value for a RenkuLab service WITHOUT also updating the password on the PostgreSQL instance, 
+RenkuLab will not be able to connect to the database, and will fail to run.
+{{ end }}
