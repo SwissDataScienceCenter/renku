@@ -10,7 +10,7 @@ Would you like to work on your Renku project from the comfort of your own local
 computer? Use the Renku CLI to start an SSH session on RenkuLab, and open that
 session in your local terminal or even your IDE, such as VSCode. Check out the
 "Connect with SSH" option in the Session Start menu to get started, or see our
-`docs <https://renku.readthedocs.io/en/stable/how-to-guides/renkulab/ssh-into-sessions.html>`_.
+`docs <https://renku.readthedocs.io/en/stable/how-to-guides/renkulab/ssh-into-sessions.html>`__.
 *Note that SSH functionality must be enabled by your administrator and may not be
 available on all RenkuLab deployments.*
 
