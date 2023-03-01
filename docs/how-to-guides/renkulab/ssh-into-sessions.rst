@@ -80,17 +80,17 @@ Set up your local system for SSH access
 Connecting to RenkuLab sessions via SSH requires 3 prerequisites to be setup on
 your local machine (where you want to SSH from):
 
-* OpenSSH is installed with version >= ``7.6``
-* the Renku CLI is installed, with version >= ``2.3.0``
+* OpenSSH ``>= 7.6`` is installed
+* the Renku CLI ``>= 2.3.0`` is installed
 * your Renku project is cloned
 
 This section will guide you through setting up these prerequisites.
 
 #.  To check whether ``ssh`` is installed, run ``ssh -V``. If you get a response
     like `OpenSSH_8.6p1, LibreSSL 3.3.6`, and the version number for OpenSSH is
-    >= 7.6, then you are good to go!
+    ``>= 7.6``, then you are good to go!
 
-#.  Install the Renku CLI version >= ``2.3.0``.
+#.  Install the Renku CLI version ``>= 2.3.0``.
 
     If you do not already have the CLI installed, see :ref:`cli_installation`.
 
@@ -150,7 +150,7 @@ Launch an SSH-enabled Session
     .. code-block:: console
         :emphasize-lines: 5-7
 
-        $ renku session start -p renkulab --ssh
+        $ renku session start --ssh -p renkulab
         Your system is not set up for SSH connections to Renku.
         Would you like to set it up? [y/N]: y
         [...]
@@ -198,16 +198,8 @@ To exit the SSH shell, simply type ``exit``.
 
 .. note::
 
-    **Can I use normal the** ``ssh`` **command?** Yes! If you prefer, you can
-    use the ``ssh`` command directly rather than the Renku CLI. The ``ssh``
-    command is printed upon starting an ssh session.
-
-        .. code-block:: console
-            :emphasize-lines: 3
-
-            $ renku session start -p renkulab --ssh
-            [...]
-            SSH connection successfully configured, use 'ssh renkulab.io-myproject-02a9e407' to connect.
+    **Can I use the normal ** ``ssh`` **command?** Yes! If you prefer, you can
+    use the ``ssh`` command directly rather than the ``renku session open`` command. You can again use the session `ìd``, for example ``ssh user-myproject-02a9e407``.
 
 
 Open an SSH Session in VSCode
@@ -221,7 +213,7 @@ VSCode:
 
 #.  In VSCode, open the "Remote Explorer" in the left bar and make sure "SSH
     Targets" is selected. Find the SSH connection for the session, e.g.
-    ``renkulab.io-myproject-02a9e407``, and click the "Connect to Host" button.
+    ``user-myproject-02a9e407``, and click the "Connect to Host" button.
 
     .. image:: ../../_static/images/ssh_from_vscode.png
         :width: 85%
