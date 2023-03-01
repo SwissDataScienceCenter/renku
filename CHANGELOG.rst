@@ -19,7 +19,7 @@ projects, sessions, and datasets at your fingertips. Quickly pick up where you
 left off: connect to your already-running sessions, start a new session on a
 recently visited project, or access your datasets- all from a single page!
 
-Read on for a full breakdown of all improvements and bugfixes included in this
+Read on for a full breakdown of all improvements and bug fixes included in this
 release.
 
 User-Facing Changes
@@ -27,16 +27,15 @@ User-Facing Changes
 
 **🌟 New Features**
 
-* ⚙️ **Renku CLI**: Connecting to Renkulab sessions via SSH
+* ⌨️ **Renku CLI**: Enable connecting to RenkuLab sessions via SSH
   (`#3318 <https://github.com/SwissDataScienceCenter/renku-python/pull/3318>`_).
-* 📃 **Renku CLI**: Support for Azure Blob Storage backed datasets.
-  (`#3257 <https://github.com/SwissDataScienceCenter/renku-python/pull/3257>`_).
-* 🧑‍💻 **UI**: Add a new dashboard for logged-in users, showing running sessions, last
-  accessed projects, and own datasets
-  (`#2332 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2332>`_).
 * 📑 **UI**: Show instructions on how to connect to RenkuLab sessions via SSH from the
   Session Start menu
   (`#2376 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2376>`_).
+* 🧑‍💻 **UI**: Add a new dashboard for logged-in users, showing running sessions, last
+  accessed projects, and own datasets
+  (`#2332 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2332>`_).
+
 
 **✨ Improvements**
 
