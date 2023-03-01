@@ -1,6 +1,6 @@
 plantweb==1.2.1
 sphinx>=4.1
-sphinxcontrib-mermaid==0.8
+sphinxcontrib-mermaid==0.8.1
 sphinxcontrib-napoleon==0.7
 sphinx-click==4.4.0
 sphinx-copybutton==0.5.1
