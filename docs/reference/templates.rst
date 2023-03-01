@@ -334,6 +334,11 @@ repository. Each of them requires an entry with the following parameters:
 * ``name``: a short user-friendly name.
 * ``description``: a brief description of your template. This will be
   presented to the user when choosing between templates.
+* ``ssh_supported``: ``true`` or ``false``, indicating whether the template supports
+  SSH connections. To support SSH, the Dockerfile has to use one of the Renku base
+  images with version 0.14.0 or higher, or have a functioning SSH server running
+  inside the image listening on port 2022 and reading client keys from
+  ``$HOME/.ssh/authorized_keys``.
 * ``variables``: we support the
   `Jinja template engine <https://palletsprojects.com/p/jinja/>`_ in both
   file content and filenames. You can therefore ask users for specific values
