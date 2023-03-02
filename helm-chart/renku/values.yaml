@@ -348,7 +348,7 @@ redis:
   # and adapted to our context. The following contains a mix of specific
   # customisations plus some higher level defaults which have been
   # retained here so someone can get some overview of what this values
-  # file can do. 
+  # file can do.
 
   fullnameOverride: renku-redis
 
@@ -364,9 +364,9 @@ redis:
     sentinel: true
     existingSecret: redis-secret
     existingSecretPasswordKey: redis-password
-  
+
     # this is a default but is kept here to highlight the fact that AOF is not used
-    # in this install. Note that having this enabled without a persistent volume 
+    # in this install. Note that having this enabled without a persistent volume
     # is quite useless as it meant that keys get written to a file (and hence slower writes)
     # but that file is deleted when the pod is deleted.
     commonConfiguration: |-
@@ -384,10 +384,10 @@ redis:
     # then clearly things are misconfigured
     replicaCount: 3
     resources:
-      limits: 
+      limits:
         cpu: 250m
         memory: 256Mi
-      requests: 
+      requests:
         cpu: 250m
         memory: 256Mi
     updateStrategy:
@@ -431,7 +431,7 @@ redis:
     podAnnotations:
       prometheus.io/scrape: "true"
       prometheus.io/port: "9121"
-  
+
   # default - making explicit
   sysctl:
     enabled: false
@@ -593,7 +593,7 @@ ui:
       custom: true
       repositories:
         - url: https://github.com/SwissDataScienceCenter/renku-project-template
-          ref: 0.4.1
+          ref: 0.5.0
           name: Renku
         - url: https://github.com/SwissDataScienceCenter/contributed-project-templates
           ref: 0.4.1
