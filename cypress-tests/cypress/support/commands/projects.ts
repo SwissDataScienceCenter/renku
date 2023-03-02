@@ -94,12 +94,11 @@ function visitAndLoadProject(identifier: ProjectIdentifier, skipOutdated = false
   cy.intercept("/ui-server/api/renku/renku/version", req => { versionInvoked = true; }).as("getVersion");
   cy.visitProject(identifier);
   cy.wait("@getUser", { timeout: TIMEOUTS.long });
-  cy.wait("@getProjects", { timeout: TIMEOUTS.long });
   if (versionInvoked)
     cy.wait("@getVersion", { timeout: TIMEOUTS.long });
   if (!skipOutdated)
     cy.wait("@getDatasets", { timeout: TIMEOUTS.long });
-  
+
   // Other elements are re-rendered at this point; waiting 1 sec helps preventing "unmounted" errors
   // eslint-disable-next-line cypress/no-unnecessary-waiting
   cy.wait(1000);
