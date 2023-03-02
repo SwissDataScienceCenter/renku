@@ -775,6 +775,17 @@ notebooks:
       nginx.ingress.kubernetes.io/proxy-body-size: "0",
       nginx.ingress.kubernetes.io/proxy-buffer-size: 8k,
       nginx.ingress.kubernetes.io/proxy-request-buffering: "off"}
+  # support SSHing into sessions
+  ssh:
+    enabled: false
+    replicaCount: 2
+    service:
+      # Note: You need to set this up properly so it handles TCP connections from outside the cluster
+      # E.g. with HAProxy you could open up port 32023 and set it like
+      # type: NodePort
+      # port: 32023
+      type: ClusterIP
+      port: 22
 
 tests:
   enabled: false
