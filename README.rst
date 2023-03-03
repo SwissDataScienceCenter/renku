@@ -1,7 +1,7 @@
 ..
     Copyright 2017-2021 - Swiss Data Science Center (SDSC)
     A partnership between École Polytechnique Fédérale de Lausanne (EPFL) and
-    Eidgenössische Technische Hochschule Zürich (ETHZ).
+    Eidgenössische Techische Hochschule Zürich (ETHZ).
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
