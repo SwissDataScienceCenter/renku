@@ -32,7 +32,7 @@ val circeVersion = "0.14.4"
 
 libraryDependencies += "ch.qos.logback"          % "logback-classic"     % "1.4.5"
 libraryDependencies += "com.github.pureconfig"  %% "pureconfig"          % "0.17.2"     % Test
-libraryDependencies += "eu.timepit"             %% "refined"             % "0.10.1"     % Test
+libraryDependencies += "eu.timepit"             %% "refined"             % "0.10.2"     % Test
 libraryDependencies += "io.circe"               %% "circe-core"          % circeVersion % Test
 libraryDependencies += "io.circe"               %% "circe-literal"       % circeVersion % Test
 libraryDependencies += "io.circe"               %% "circe-parser"        % circeVersion % Test
