@@ -88,7 +88,6 @@ function getProjectPageLink(identifier: ProjectIdentifier, subpage: string) {
 function visitAndLoadProject(identifier: ProjectIdentifier, skipOutdated = false) {
   // load project and wait for the relevant resources to be loaded
   cy.intercept("/ui-server/api/user").as("getUser");
-  cy.intercept("/ui-server/api/graphql").as("getProjects");
   cy.intercept("/ui-server/api/renku/*/datasets.list*").as("getDatasets");
   let versionInvoked = false;
   cy.intercept("/ui-server/api/renku/renku/version", req => { versionInvoked = true; }).as("getVersion");
