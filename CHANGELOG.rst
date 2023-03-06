@@ -1,5 +1,24 @@
 .. _changelog:
 
+0.24.1
+------
+
+Renku ``0.24.1`` introduces bug fixes.
+
+User-Facing Changes
+~~~~~~~~~~~~~~~~~~~
+
+**🐞 Bug Fixes**
+
+* **Sessions**: Sessions crashing when automated token refresh runs in background 
+  (`#1416 <https://github.com/SwissDataScienceCenter/renku-notebooks/pull/1416>`_).
+
+Individual components
+~~~~~~~~~~~~~~~~~~~~~~
+
+- `renku-notebooks 1.15.1 <https://github.com/SwissDataScienceCenter/renku-notebooks/releases/tag/1.15.1>`_
+
+
 0.24.0
 ------
 
