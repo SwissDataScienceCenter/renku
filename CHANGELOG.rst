@@ -12,11 +12,19 @@ User-Facing Changes
 
 * **Sessions**: Sessions crashing when automated token refresh runs in background 
   (`#1416 <https://github.com/SwissDataScienceCenter/renku-notebooks/pull/1416>`_).
+  
+Internal Changes
+~~~~~~~~~~~~~~~~
+
+**Bug Fixes**
+
+* **Knowledge Graph**: Fixes and improvements to the schema v10 migration
 
 Individual components
 ~~~~~~~~~~~~~~~~~~~~~~
 
 - `renku-notebooks 1.15.1 <https://github.com/SwissDataScienceCenter/renku-notebooks/releases/tag/1.15.1>`_
+- `renku-graph 2.28.1 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/2.28.1>`_
 
 
 0.24.0
