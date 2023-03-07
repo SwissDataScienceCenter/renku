@@ -134,9 +134,6 @@ jobs:
     needs: [check-deploy, deploy-pr]
     steps:
       - uses: actions/checkout@v3
-      - name: Wait for PR deployment to be ready
-        run: sleep 60s
-        shell: bash
       - uses: cypress-io/github-action@v5
         name: Run Cypress acceptance tests
         id: cypress
