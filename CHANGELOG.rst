@@ -30,6 +30,7 @@ Individual components
 - `renku-notebooks 1.15.1 <https://github.com/SwissDataScienceCenter/renku-notebooks/releases/tag/1.15.1>`_
 - `renku-graph 2.28.1 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/2.28.1>`_
 - `renku-graph 2.28.2 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/2.28.2>`_
+- `renku-graph 2.28.3 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/2.28.3>`_
 - `renku-python 2.3.1 <https://github.com/SwissDataScienceCenter/renku-python/releases/tag/v2.3.1>`_
 
 
