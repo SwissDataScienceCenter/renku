@@ -10,9 +10,13 @@ User-Facing Changes
 
 **🐞 Bug Fixes**
 
-* **Sessions**: Sessions crashing when automated token refresh runs in background 
+* **Sessions**: Sessions crashing when automated token refresh runs in background
   (`#1416 <https://github.com/SwissDataScienceCenter/renku-notebooks/pull/1416>`_).
-  
+* **Core Service**: Correctly update Dockerfile on migration
+  (`#3351 <https://github.com/SwissDataScienceCenter/renku-python/issues/3351>`__).
+* **Renku CLI**: Fix git credentials helper setup in ``renku login``
+  (`#3348 <https://github.com/SwissDataScienceCenter/renku-python/issues/3348>`__).
+
 Internal Changes
 ~~~~~~~~~~~~~~~~
 
@@ -26,6 +30,7 @@ Individual components
 - `renku-notebooks 1.15.1 <https://github.com/SwissDataScienceCenter/renku-notebooks/releases/tag/1.15.1>`_
 - `renku-graph 2.28.1 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/2.28.1>`_
 - `renku-graph 2.28.2 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/2.28.2>`_
+- `renku-python 2.3.1 <https://github.com/SwissDataScienceCenter/renku-python/releases/tag/v2.3.1>`_
 
 
 0.24.0
@@ -74,7 +79,7 @@ User-Facing Changes
   (`#2351 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2351>`_).
 * 📸 **UI**: Customize avatars when creating a project
   (`#2331 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2331>`_).
-* **Sessions**: Fail when injecting env vars that already exist in session 
+* **Sessions**: Fail when injecting env vars that already exist in session
   (`#1396 <https://github.com/SwissDataScienceCenter/renku-notebooks/issues/1396>`_)
 
 **🐞 Bug Fixes**
@@ -100,9 +105,9 @@ Internal Changes
 
 * **Sessions**: Show if ssh is enabled in /version of notebook service
   (`#1407 <https://github.com/SwissDataScienceCenter/renku-notebooks/pull/1407>`_).
-* **Sessions**: Introduce experimental Azure Blob storage support 
+* **Sessions**: Introduce experimental Azure Blob storage support
   (`#1374 <https://github.com/SwissDataScienceCenter/renku-notebooks/pull/1374>`_).
-* **Sessions**: Enable SSH access via jump host 
+* **Sessions**: Enable SSH access via jump host
   (`#1389 <https://github.com/SwissDataScienceCenter/renku-notebooks/pull/1389>`_).
 
 **Bug Fixes**
