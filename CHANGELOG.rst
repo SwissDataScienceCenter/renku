@@ -1,5 +1,16 @@
 .. _changelog:
 
+0.24.2
+------
+
+Renku ``0.24.2`` introduces bug fixes.
+
+Individual components
+~~~~~~~~~~~~~~~~~~~~~~
+
+- `renku-graph 2.28.4 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/2.28.4>`_
+- `renku-python 2.3.2 <https://github.com/SwissDataScienceCenter/renku-python/releases/tag/v2.3.2>`_
+
 0.24.1
 ------
 
