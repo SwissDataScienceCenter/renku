@@ -5,6 +5,14 @@
 
 Renku ``0.24.2`` introduces bug fixes.
 
+User-Facing Changes
+~~~~~~~~~~~~~~~~~~~
+
+**🐞 Bug Fixes**
+
+* **Core Service**: Fix a crash when migrating to v10 metadata
+  (`#3359 <https://github.com/SwissDataScienceCenter/renku-python/pull/3359>`__).
+
 Individual components
 ~~~~~~~~~~~~~~~~~~~~~~
 
