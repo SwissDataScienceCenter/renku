@@ -43,7 +43,10 @@ trait AcceptanceSpec
 
   protected implicit val browser: AcceptanceSpec = this
 
-  implicit lazy val webDriver: WebDriver = startWebDriver
+  implicit lazy val webDriver: WebDriver = {
+    System.setProperty("webdriver.http.factory", "jdk-http-client")
+    startWebDriver
+  }
 
   protected implicit val docsScreenshots: DocsScreenshots = DocsScreenshots(this, webDriver)
 
