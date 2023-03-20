@@ -1,0 +1,18 @@
+charts:
+  - name: ../helm-chart/load-tests
+    resetTag: latest
+    imagePrefix: load-tests/
+    repo:
+      git: SwissDataScienceCenter/helm-charts
+      published: https://swissdatasciencecenter.github.io/helm-charts
+    paths:
+      - ../helm-chart/load-tests
+    images:
+      load-tests:
+        buildArgs:
+          BUILDKIT_INLINE_CACHE: "1"
+        contextPath: ./
+        dockerfilePath: ./Dockerfile
+        valuesPath: image
+        paths:
+          - ./
