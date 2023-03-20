@@ -8,15 +8,27 @@ Renku ``0.24.2`` introduces bug fixes.
 User-Facing Changes
 ~~~~~~~~~~~~~~~~~~~
 
+**Improvements**
+* **Knowledge Graph**: A new Delete Project API
+
 **🐞 Bug Fixes**
 
 * **Core Service**: Fix a crash when migrating to v10 metadata
   (`#3359 <https://github.com/SwissDataScienceCenter/renku-python/pull/3359>`__).
+* **Knowledge Graph**: The Inactive Projects page to list all projects where logged user is a member
+
+Internal Changes
+~~~~~~~~~~~~~~~~
+
+**Improvements**
+
+* **Knowledge Graph**: A new functionality to capture Project viewing events
 
 Individual components
 ~~~~~~~~~~~~~~~~~~~~~~
 
 - `renku-graph 2.28.4 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/2.28.4>`_
+- `renku-graph 2.29.0 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/2.29.0>`_
 - `renku-python 2.3.2 <https://github.com/SwissDataScienceCenter/renku-python/releases/tag/v2.3.2>`_
 
 0.24.1
