@@ -3,7 +3,7 @@
 0.24.2
 ------
 
-Renku ``0.24.2`` introduces bug fixes.
+Renku ``0.24.2`` introduces bug fixes. We squashed a bug where you may have had trouble finding your projects in other namespaces. Now, all projects show up in the Knowledge Graph activation page so you can add them to your dashboard.
 
 User-Facing Changes
 ~~~~~~~~~~~~~~~~~~~
@@ -15,7 +15,7 @@ User-Facing Changes
 
 * **Core Service**: Fix a crash when migrating to v10 metadata
   (`#3359 <https://github.com/SwissDataScienceCenter/renku-python/pull/3359>`__).
-* **Knowledge Graph**: The Inactive Projects page to list all projects where logged user is a member
+* **Knowledge Graph**: Expand the Knowledge Graph Project Activation page to list all projects where the user is a member, not only owned projects.
 
 Internal Changes
 ~~~~~~~~~~~~~~~~
