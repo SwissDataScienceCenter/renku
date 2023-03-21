@@ -16,6 +16,8 @@ User-Facing Changes
 * **Core Service**: Fix a crash when migrating to v10 metadata
   (`#3359 <https://github.com/SwissDataScienceCenter/renku-python/pull/3359>`__).
 * **Knowledge Graph**: Expand the Knowledge Graph Project Activation page to list all projects where the user is a member, not only owned projects.
+* **Sessions**: Fixed bug where sessions from one project would appear under another project
+  (`#1423 <https://github.com/SwissDataScienceCenter/renku-notebooks/pull/1423>`_).
 
 Internal Changes
 ~~~~~~~~~~~~~~~~
@@ -30,6 +32,7 @@ Individual components
 - `renku-graph 2.28.4 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/2.28.4>`_
 - `renku-graph 2.29.0 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/2.29.0>`_
 - `renku-python 2.3.2 <https://github.com/SwissDataScienceCenter/renku-python/releases/tag/v2.3.2>`_
+- `renku-notebooks 1.15.2 <https://github.com/SwissDataScienceCenter/renku-notebooks/releases/tag/1.15.2>`_
 
 0.24.1
 ------
