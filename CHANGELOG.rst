@@ -28,6 +28,8 @@ User-Facing Changes
   (`#3359 <https://github.com/SwissDataScienceCenter/renku-python/pull/3359>`__).
 * **Knowledge Graph**: Expand the Knowledge Graph Project Activation page to list all
   projects where the user is a member, not only owned projects.
+* **Sessions**: Fix bug where sessions from one project would appear under another project
+  (`#1423 <https://github.com/SwissDataScienceCenter/renku-notebooks/pull/1423>`_).
 * **UI**: Prevent listing projects twice on the dashboard
   (`#2408 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2408>`_).
 * **UI**: Start sessions with base images when pinned images are missing
@@ -45,6 +47,7 @@ Individual components
 
 - `renku-graph 2.28.4 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/2.28.4>`_
 - `renku-graph 2.29.0 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/2.29.0>`_
+- `renku-notebooks 1.15.2 <https://github.com/SwissDataScienceCenter/renku-notebooks/releases/tag/1.15.2>`_
 - `renku-python 2.3.2 <https://github.com/SwissDataScienceCenter/renku-python/releases/tag/v2.3.2>`_
 - `renku-ui 3.4.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.4.0>`_
 
