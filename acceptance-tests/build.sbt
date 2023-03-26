@@ -32,7 +32,7 @@ val circeVersion = "0.14.5"
 
 libraryDependencies += "ch.qos.logback"          % "logback-classic"          % "1.4.6"
 libraryDependencies += "com.github.pureconfig"  %% "pureconfig"               % "0.17.2"     % Test
-libraryDependencies += "eu.timepit"             %% "refined"                  % "0.10.2"     % Test
+libraryDependencies += "eu.timepit"             %% "refined"                  % "0.10.3"     % Test
 libraryDependencies += "io.circe"               %% "circe-core"               % circeVersion % Test
 libraryDependencies += "io.circe"               %% "circe-literal"            % circeVersion % Test
 libraryDependencies += "io.circe"               %% "circe-parser"             % circeVersion % Test
@@ -42,7 +42,7 @@ libraryDependencies += "org.http4s"             %% "http4s-circe"             % 
 libraryDependencies += "org.scalacheck"         %% "scalacheck"               % "1.17.0"     % Test
 libraryDependencies += "org.scalatest"          %% "scalatest"                % "3.2.15"     % Test
 libraryDependencies += "org.scalatestplus"      %% "selenium-3-141"           % "3.2.10.0"   % Test
-libraryDependencies += "org.seleniumhq.selenium" % "selenium-http-jdk-client" % "4.8.1"      % Test
+libraryDependencies += "org.seleniumhq.selenium" % "selenium-http-jdk-client" % "4.8.2"      % Test
 libraryDependencies += "org.seleniumhq.selenium" % "selenium-java"            % "4.7.1"      % Test
 libraryDependencies += "org.slf4j"               % "slf4j-log4j12"            % "2.0.7"      % Test
 libraryDependencies += "org.typelevel"          %% "cats-effect"              % "3.4.8"      % Test
