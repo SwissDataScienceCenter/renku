@@ -1,7 +1,7 @@
 {{- if .Values.ingress.enabled -}}
-{{- $keycloakEnabled := .Values.keycloakx.enabled -}}
+{{- $keycloakEnabled := .Values.keycloak.enabled -}}
 {{- $keycloakFullname := include "keycloak.fullname" . -}}
-{{- $keycloakServicePort := .Values.keycloakx.ingress.servicePort -}}
+{{- $keycloakServicePort := .Values.keycloak.ingress.servicePort -}}
 {{- $gitlabEnabled := .Values.gitlab.enabled -}}
 {{- $gitlabFullname := include "gitlab.fullname" . -}}
 {{- $gitlabServicePort := 80 -}}
