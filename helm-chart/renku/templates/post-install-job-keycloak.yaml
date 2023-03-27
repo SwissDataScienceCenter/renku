@@ -1,4 +1,4 @@
-{{- if .Values.keycloak.enabled }}
+{{- if .Values.keycloakx.enabled }}
 apiVersion: batch/v1
 kind: Job
 metadata:
@@ -25,7 +25,7 @@ spec:
         {{- include "certificates.initContainer" . | nindent 8 }}
       containers:
         - name: init-keycloak
-          image: "{{ .Values.keycloak.initRealm.image.repository }}:{{ .Values.keycloak.initRealm.image.tag }}"
+          image: "{{ .Values.keycloakx.initRealm.image.repository }}:{{ .Values.keycloakx.initRealm.image.tag }}"
           securityContext:
             runAsUser: 1000
             runAsGroup: 1000
@@ -56,12 +56,12 @@ spec:
               valueFrom:
                 secretKeyRef:
                   name: keycloak-password-secret
-                  key: KEYCLOAK_USER
+                  key: KEYCLOAK_ADMIN
             - name: KEYCLOAK_ADMIN_PASSWORD
               valueFrom:
                 secretKeyRef:
                   name: keycloak-password-secret
-                  key: KEYCLOAK_PASSWORD
+                  key: KEYCLOAK_ADMIN_PASSWORD
             - name: PYTHONUNBUFFERED
               value: "0"
             {{- include "certificates.env.python" . | nindent 12 }}

@@ -54,7 +54,7 @@ Define subcharts full names
 {{- end -}}
 
 {{- define "keycloak.fullname" -}}
-{{- printf "%s-%s" .Release.Name "keycloak" | replace "+" "_" | trunc 20 | trimSuffix "-" -}}
+{{- printf "%s-%s" .Release.Name "keycloakx" | replace "+" "_" | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 
 {{- define "gitlab.fullname" -}}
@@ -102,4 +102,48 @@ fail "External PostgreSQL and Renku-bundled PostgreSQL cannot both be disabled. 
 
 {{- if .Values.global.externalServices.postgresql.enabled and .Values.global.externalServices.postgresql.password and .Values.global.externalServices.postgresql.existingSecret -}}
 fail "External PostgreSQL password and existing Secret fields cannot both be populated."
+{{- end -}}
+
+{{- define "keycloak.admin-secret" -}}
+{{- $secretAdmin := lookup "v1" "Secret" .Release.Namespace "keycloak-password-secret" -}}
+{{- if $secretAdmin -}}
+{{- if $secretAdmin.data.KEYCLOAK_ADMIN -}}
+# Post-keycloakx
+KEYCLOAK_ADMIN: {{ $secretAdmin.data.KEYCLOAK_ADMIN | quote }}
+KEYCLOAK_ADMIN_PASSWORD: {{ $secretAdmin.data.KEYCLOAK_ADMIN_PASSWORD | quote }}
+{{- else -}}
+# Pre-keycloakx
+KEYCLOAK_ADMIN: {{ $secretAdmin.data.KEYCLOAK_USER | quote }}
+KEYCLOAK_ADMIN_PASSWORD: {{ $secretAdmin.data.KEYCLOAK_PASSWORD | quote }}
+{{- end -}}
+# No pre-existing secret
+{{- else -}}
+KEYCLOAK_ADMIN: {{ .Values.global.keycloak.user | b64enc }}
+KEYCLOAK_ADMIN_PASSWORD: {{ default (randAlphaNum 64) .Values.global.keycloak.password.value | b64enc }}
+{{- end -}}
+{{- end -}}
+
+{{- define "keycloak.postgres-secret" -}}
+{{- $secretPostgres := lookup "v1" "Secret" .Release.Namespace "renku-keycloak-postgres" -}}
+{{- if $secretPostgres -}}
+{{- if $secretPostgres.data.KC_DB_URL_HOST -}}
+# Post-keycloakx
+KC_DB_URL_HOST: {{ $secretPostgres.data.KC_DB_URL_HOST | quote }}
+KC_DB_URL_DATABASE: {{ $secretPostgres.data.KC_DB_URL_DATABASE | quote }}
+KC_DB_USERNAME: {{ $secretPostgres.data.KC_DB_USERNAME | quote }}
+KC_DB_PASSWORD: {{ $secretPostgres.data.KC_DB_PASSWORD | quote }}
+{{- else -}}
+# Pre-keycloakx
+KC_DB_URL_HOST: {{ $secretPostgres.data.DB_ADDR | quote }}
+KC_DB_URL_DATABASE: {{ $secretPostgres.data.DB_DATABASE | quote }}
+KC_DB_USERNAME: {{ $secretPostgres.data.DB_USER | quote }}
+KC_DB_PASSWORD: {{ $secretPostgres.data.DB_PASSWORD | quote }}
+{{- end -}}
+# No pre-existing secret
+{{- else -}}
+KC_DB_URL_HOST: {{ (include "postgresql.fullname" .) | b64enc | quote }}
+KC_DB_URL_DATABASE: {{ .Values.global.keycloak.postgresDatabase | b64enc | quote }}
+KC_DB_USERNAME: {{ .Values.global.keycloak.postgresUser | b64enc | quote }}
+KC_DB_PASSWORD: {{ default (randAlphaNum 64) .Values.global.keycloak.postgresPassword.value | b64enc | quote }}
+{{- end -}}
 {{- end -}}

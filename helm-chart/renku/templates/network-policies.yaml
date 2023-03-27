@@ -17,10 +17,10 @@ spec:
     - Ingress
   ingress:
     - from:
-        {{- if .Values.keycloak.enabled }}
+        {{- if .Values.keycloakx.enabled }}
         - podSelector:
             matchLabels:
-              app.kubernetes.io/name: keycloak
+              app.kubernetes.io/name: keycloakx
           namespaceSelector:
             matchLabels:
               kubernetes.io/metadata.name: {{ .Release.Namespace }}
