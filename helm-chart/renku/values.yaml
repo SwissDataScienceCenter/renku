@@ -168,7 +168,7 @@ ingress:
   #      - example.local
 
 ## Keycloak configuration
-keycloakx:
+keycloak:
   ## Spawn a keycloak instance
   enabled: true
 
@@ -176,26 +176,13 @@ keycloakx:
     # Disable PostgreSQL dependency
     enabled: false
 
-
   extraEnv: |
-    - name: KC_DB
+    - name: DB_VENDOR
       value: postgres
-    - name: KC_DB_PORT
+    - name: DB_PORT
       value: "5432"
     - name:  PROXY_ADDRESS_FORWARDING
       value: "true"
-    - name: JAVA_OPTS_APPEND
-      value: >-
-        -Djgroups.dns.query={{ include "keycloak.fullname" . }}-headless
-
-  command:
-    - "/opt/keycloak/bin/kc.sh"
-    - "start"
-    - "--http-enabled=true"
-    - "--http-port=8080"
-    - "--hostname-strict=false"
-    - "--hostname-strict-https=false"
-    - "--auto-build"
 
   # The following environment variables are provided to keycloak
   # as extraEnvFrom secrets.
@@ -217,7 +204,7 @@ keycloakx:
 
   extraVolumeMounts: |
     - name: theme
-      mountPath: /opt/keycloak/themes/renku-theme
+      mountPath: /opt/jboss/keycloak/themes/renku-theme
     - name: etc-ssl-certs
       mountPath: /etc/pki/ca-trust/extracted
       readOnly: true
@@ -252,7 +239,7 @@ keycloakx:
   initRealm:
     image:
       repository: renku/init-realm
-      tag: '0.23.1-5.5b17747.n045.h3cb67ea5'
+      tag: "latest"
 
   ## Skip Keycloak testing when running Helm test
   test:
@@ -804,7 +791,7 @@ tests:
   enabled: false
   image:
     repository: renku/tests
-    tag: '0.23.1-5.5b17747.n045.h3cb67ea5'
+    tag: "latest"
   resources:
     requests:
       memory: "3G"
@@ -895,4 +882,4 @@ swagger:
 initDb:
   image:
     repository: renku/init-db
-    tag: '0.23.1-5.5b17747.n045.h3cb67ea5'
+    tag: "latest"
