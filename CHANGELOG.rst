@@ -3,7 +3,15 @@
 0.24.3
 ------
 
-``0.24.3`` brings some bug fixes for the Knowledge Graph backend processes. They address problems causing particular flows to terminate prematurely, as well as improve the quality of logging within the Activation API.
+
+``0.24.3`` resolves a bug in the Knowledge Graph backend processes. 
+
+Internal Changes
+~~~~~~~~~~~~~~~~
+
+**Bug Fixes**
+
+- **KG**: Resolve problems causing particular flows to terminate prematurely, as well as improve the quality of logging within the Activation API.
 
 Individual components
 ~~~~~~~~~~~~~~~~~~~~~~
