@@ -1,5 +1,16 @@
 .. _changelog:
 
+0.24.3
+------
+
+``0.24.3`` brings some bug fixes for the Knowledge Graph backend processes. They address problems causing particular flows to terminate prematurely, as well as improve the quality of logging within the Activation API.
+
+Individual components
+~~~~~~~~~~~~~~~~~~~~~~
+
+- `renku-graph 2.30.0 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/2.30.0>`_
+
+
 0.24.2
 ------
 
