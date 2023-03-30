@@ -1,23 +1,39 @@
 .. _changelog:
 
+
 0.24.3
 ------
 
+Renku ``0.24.3`` resolves bugs in the UI and in the Knowledge Graph backend processes.
 
-``0.24.3`` resolves a bug in the Knowledge Graph backend processes. 
+User-Facing Changes
+~~~~~~~~~~~~~~~~~~~
+
+**🐞 Bug Fixes**
+
+* 🔗 **UI**: Resolve issue where the Connect button on the Dashboard lead to a broken link
+  (`#2444 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2444>`_).
 
 Internal Changes
 ~~~~~~~~~~~~~~~~
 
+**Improvements**
+
+* **UI**: Retrieve project metadata from KG on project access
+  (`#2414 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2414>`_).
+
 **Bug Fixes**
 
-- **KG**: Resolve problems causing particular flows to terminate prematurely, as well as improve the quality of logging within the Activation API.
+* **KG**: Resolve problems causing particular flows to terminate prematurely,
+  as well as improve the quality of logging within the Activation API.
+
 
 Individual components
 ~~~~~~~~~~~~~~~~~~~~~~
 
 - `renku-graph 2.30.0 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/2.30.0>`_
 - `renku-graph 2.30.1 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/2.30.1>`_
+- `renku-ui 3.4.1 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.4.1>`_
 
 
 0.24.2
