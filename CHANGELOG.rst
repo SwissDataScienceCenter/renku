@@ -9,6 +9,7 @@ Individual components
 ~~~~~~~~~~~~~~~~~~~~~~
 
 - `renku-graph 2.30.0 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/2.30.0>`_
+- `renku-graph 2.30.1 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/2.30.1>`_
 
 
 0.24.2
