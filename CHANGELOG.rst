@@ -11,7 +11,7 @@ User-Facing Changes
 
 **🐞 Bug Fixes**
 
-* 🔗 **UI**: Resolve issue where the Connect button on the Dashboard lead to a broken link
+* 🔗 **UI**: Resolve an issue where the Connect button on the Dashboard leads to a broken link
   (`#2444 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2444>`_).
 
 Internal Changes
@@ -19,7 +19,7 @@ Internal Changes
 
 **Improvements**
 
-* **UI**: Retrieve project metadata from KG on project access
+* **UI**: Retrieve project metadata from the KG on project access
   (`#2414 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2414>`_).
 
 **Bug Fixes**
