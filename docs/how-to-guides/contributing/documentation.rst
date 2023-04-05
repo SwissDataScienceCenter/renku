@@ -26,6 +26,15 @@ To build the documentation locally, we recommend using ``virtualenv``:
 After building the docs you can access them by opening
 ``_build/html/index.html`` in a browser.
 
+You can also work with live-reload in the browser to rebuild documentation on changes:
+
+.. code-block:: console
+
+    (.venv) /workspace/renku $ pip install sphinx-autobuild
+    (.venv) /workspace/renku $ sphinx-autobuild docs docs/_build/html   
+
+After that you can connect to your localhost to access the documentation live.
+
 Running documentation tests
 ---------------------------
 
