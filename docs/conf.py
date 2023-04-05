@@ -48,7 +48,7 @@ extensions = [
     "sphinx.ext.todo",
     "sphinx.ext.viewcode",
     "sphinxcontrib.mermaid",
-    "sphinxcontrib.spelling",
+    # "sphinxcontrib.spelling",
 ]
 
 # Plantweb configuration

@@ -16,7 +16,7 @@ User-Facing Changes
 
 **🐞 Bug Fixes**
 
-- 🐸 **Team**: changelog item with emoji, alphabetized by team name
+- **Team**: changelog item, alphabetized by team name
 
 Internal Changes
 ~~~~~~~~~~~~~~~~
