@@ -1,5 +1,27 @@
 .. _changelog:
 
+0.24.4
+------
+
+Renku ``0.24.4`` resolves bugs in the Knowledge Graph backend processes.
+
+Internal Changes
+~~~~~~~~~~~~~~~~
+
+**Improvements**
+
+* **KG**: Collect info about users who showed interest in projects and datasets.
+
+**Bug Fixes**
+
+* **KG**: Resolve problems causing flows accessing GitLab API to go into deadlock.
+
+
+Individual components
+~~~~~~~~~~~~~~~~~~~~~~
+
+- `renku-graph 2.31.0 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/2.31.0>`_
+
 
 0.24.3
 ------
