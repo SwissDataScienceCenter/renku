@@ -213,6 +213,11 @@ Internal Changes
 
 **Improvements**
 
+* **Core Service**: Metadata v10 support
+* **Knowledge Graph** Add support for the new Renku Metadata Schema v10.
+* **Knowledge Graph** Enable the Cross-Entity Search API to allow multiple sort parameters.
+* **Knowledge Graph** Remove deprecated GraphQL API
+* **Knowledge Graph**: Upgrade Jena to 4.7.0
 * **Sessions**: Show if ssh is enabled in /version of notebook service
   (`#1407 <https://github.com/SwissDataScienceCenter/renku-notebooks/pull/1407>`_).
 * **Sessions**: Introduce experimental Azure Blob storage support
@@ -225,16 +230,6 @@ Internal Changes
 * **Sessions**: Cloning the correct SHA for anonymous user sessions
   (`#1406 <https://github.com/SwissDataScienceCenter/renku-notebooks/pull/1406>`_).
 
-Internal Changes
-~~~~~~~~~~~~~~~~
-
-**Improvements**
-
-* **Core Service**: Metadata v10 support
-* **Knowledge Graph**: Add support for the new Renku Metadata Schema v10.
-* **Knowledge Graph**: Enable the Cross-Entity Search API to allow multiple sort parameters.
-* **Knowledge Graph**: Remove deprecated GraphQL API
-* **Knowledge Graph**: Upgrade Jena to 4.7.0
 
 Individual components
 ~~~~~~~~~~~~~~~~~~~~~~
