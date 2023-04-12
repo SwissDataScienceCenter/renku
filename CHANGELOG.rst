@@ -23,6 +23,7 @@ Individual components
 ~~~~~~~~~~~~~~~~~~~~~~
 
 - `renku-gateway 0.19.0 <https://github.com/SwissDataScienceCenter/renku-gateway/releases/tag/0.19.0>`_
+- `renkulab-docker 0.16.0 <https://github.com/SwissDataScienceCenter/renkulab-docker/releases/tag/0.16.0>`_
 
 
 0.24.4
