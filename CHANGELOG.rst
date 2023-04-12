@@ -1,5 +1,25 @@
 .. _changelog:
 
+0.25.0
+------
+
+Renku ``0.25.0`` introduces changes in internal components and the Helm chart. Namely the Gateway is using a 
+reverse proxy based on the Echo library in Go instead of Traefik. Please refer to the `release notes <https://github.com/SwissDataScienceCenter/renku-gateway/releases/tag/0.19.0>`_
+of the Gateway component for more details.
+
+Internal Changes
+~~~~~~~~~~~~~~~~
+
+**Improvements**
+
+- **Gateway**: replace the Traefik reverse proxy with a custom solution
+
+Individual components
+~~~~~~~~~~~~~~~~~~~~~~
+
+- `renku-gateway 0.19.0 <https://github.com/SwissDataScienceCenter/renku-gateway/releases/tag/0.19.0>`_
+
+
 0.24.4
 ------
 
