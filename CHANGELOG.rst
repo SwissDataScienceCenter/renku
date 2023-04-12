@@ -3,16 +3,21 @@
 0.25.0
 ------
 
-Renku ``0.25.0`` introduces changes in internal components and the Helm chart. Namely the Gateway is using a 
-reverse proxy based on the Echo library in Go instead of Traefik. Please refer to the `release notes <https://github.com/SwissDataScienceCenter/renku-gateway/releases/tag/0.19.0>`_
-of the Gateway component for more details.
+Renku ``0.25.0`` introduces an update to the base images and templates, as well as changes in internal components and the Helm chart. 
+
+User-facing Changes
+~~~~~~~~~~~~~~~~~~~
+
+**Improvements**
+
+- New base images correct a ``PATH`` misconfiguration that occurs when connecting to a session with SSH. If using sessions through SSH, please update your project!
 
 Internal Changes
 ~~~~~~~~~~~~~~~~
 
 **Improvements**
 
-- **Gateway**: replace the Traefik reverse proxy with a custom solution
+- **Gateway**: replace the Traefik reverse proxy with a custom solution based on the Echo library in Go. 
 
 Individual components
 ~~~~~~~~~~~~~~~~~~~~~~
