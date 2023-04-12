@@ -1,5 +1,39 @@
 .. _changelog:
 
+0.24.5
+------
+
+Renku ``0.24.5`` resolves bugs and adds minor features in the core-service and CLI.
+
+User-Facing Changes
+~~~~~~~~~~~~~~~~~~~
+
+**🌟 New Features**
+
+- 🚢 **Renku CLI**: Allow force building and setting local port on docker session provider.
+
+**✨ Improvements**
+
+- ☝ **Renku CLI**: Removed nagging about new Renku CLI versions when running commands.
+- 🪣 **Renku CLI**: Added support for storing dataset S3 credentials per bucket.
+
+**🐞 Bug Fixes**
+
+- 🛠 **Renku Core Service**, **Renku CLI**: Fixed an issue with v10 metadata migration regarding datasets.
+- 🍎 **Renku CLI**: Fixed compatibility with Python 3.11 on MacOS.
+
+Internal Changes
+~~~~~~~~~~~~~~~~
+
+**Improvements**
+
+- 📜 **Renku Core Service**, **Renku CLI**: Added code contracts in key places to ensure metadata consistency.
+
+Individual components
+~~~~~~~~~~~~~~~~~~~~~~
+
+- `renku-python 2.4.0 <https://github.com/SwissDataScienceCenter/renku-python/releases/tag/v2.4.0>`_
+
 0.24.4
 ------
 
