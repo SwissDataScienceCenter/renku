@@ -22,8 +22,7 @@ export function searchForProject(props: SearchForProjectProps) {
 function dataCy(value: string, exist: true) {
   if (exist)
     return cy.get(`[data-cy=${value}]`).should("exist");
-  else
-    return cy.get(`[data-cy=${value}]`)
+  return cy.get(`[data-cy=${value}]`);
 }
 
 export default function registerGeneralCommands() {

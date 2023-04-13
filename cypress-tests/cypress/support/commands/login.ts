@@ -16,13 +16,14 @@ const register = (email: string, password: string, firstName?: string, lastName?
   cy.visit("/login");
 
   // ? wait to be assess whether tokens were refreshed automatically or we really need to register
-  cy.wait(10000) // eslint-disable-line cypress/no-unnecessary-waiting
+  cy.wait(10000); // eslint-disable-line cypress/no-unnecessary-waiting
   cy.request({ failOnStatusCode: false, url: "ui-server/api/user" }).then((resp) => {
     if (resp.status === 200)
       return;
 
     cy.get("div#kc-registration").find("a").should("be.visible").click();
-    cy.get(`input[name="firstName"]`).should("be.visible").click().clear().type(firstName ? firstName : "Renku Cypress");
+    cy.get(`input[name="firstName"]`).should("be.visible").click().clear()
+      .type(firstName ? firstName : "Renku Cypress");
     cy.get(`input[name="lastName"]`).should("be.visible").click().clear().type(lastName ? lastName : "Test");
     cy.get(`input[name="email"]`).should("be.visible").click().clear().type(email);
     cy.get(`input[name="password"]`).should("be.visible").click().clear().type(password, { log: false });
