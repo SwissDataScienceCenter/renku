@@ -49,7 +49,11 @@ function createProject(newProjectProps: NewProjectProps) {
 
 function deleteProject(identifier: ProjectIdentifier) {
   const id = fullProjectIdentifier(identifier);
-  cy.request("DELETE", { failOnStatusCode: false, url: `/ui-server/api/projects/${id.namespace}%2F${id.name}` });
+  cy.request({
+    failOnStatusCode: false,
+    method: "DELETE",
+    url: `/ui-server/api/projects/${id.namespace}%2F${id.name}`
+  });
 }
 
 function forkProject(identifier: ProjectIdentifier, newName: string) {
