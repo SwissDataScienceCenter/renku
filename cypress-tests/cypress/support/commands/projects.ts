@@ -80,8 +80,6 @@ function forkProject(identifier: ProjectIdentifier, newName: string) {
   cy.intercept("ui-server/api/renku/cache.migrations_check*").as("getMigrationsCheck");
   cy.wait("@getMigrationsCheck", { timeout: TIMEOUTS.long });
 
-  // ? wait a moment to prevent not finding the content
-  cy.wait(2000); // eslint-disable-line cypress/no-unnecessary-waiting
   cy.dataCy("header-project").contains(newName).should("be.visible");
   cy.dataCy("header-project").contains("forked from").should("be.visible");
   cy.dataCy("header-project").contains(identifier.namespace + "/" + identifier.name).should("be.visible");
