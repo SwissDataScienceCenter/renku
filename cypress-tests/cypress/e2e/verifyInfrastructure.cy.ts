@@ -7,10 +7,11 @@
  * @param delaySeconds - delay between attempts
  * @returns response body from the request or `null`
  */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function retryRequest(url: string, service: string, limit = 10, delaySeconds = 30, retries = 1): Cypress.Response<any> {
   if (retries > limit) {
     const minutes = Math.floor(limit * delaySeconds / 60);
-    throw new Error(`Backend service "${service}" not available within ${minutes} minutes at URL ${url}.`)
+    throw new Error(`Backend service "${service}" not available within ${minutes} minutes at URL ${url}.`);
   }
 
   cy.request({
@@ -19,7 +20,7 @@ function retryRequest(url: string, service: string, limit = 10, delaySeconds = 3
   }).then(resp => {
     if (resp.status < 400 && !resp.body.error)
       return resp.body;
-    
+
     cy.wait(delaySeconds * 1000).then(() => retryRequest(url, service, limit, delaySeconds, retries + 1));
   });
   return null;
