@@ -44,7 +44,7 @@ describe("Basic public project functionality", () => {
   it("Start a new session on the project and interact with the terminal.", () => {
     // Start a session with options
     let serversInvoked = false;
-    cy.intercept("/ui-server/api/notebooks/servers*",  req => { serversInvoked = true; }).as("getServers");
+    cy.intercept("/ui-server/api/notebooks/servers*", req => { serversInvoked = true; }).as("getServers");
     cy.dataCy("project-overview-content")
       .contains("your new Renku project", { timeout: TIMEOUTS.long }).should("exist");
     cy.getProjectPageLink(projectIdentifier, "sessions").should("exist").click();
