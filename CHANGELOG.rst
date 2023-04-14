@@ -1,5 +1,22 @@
 .. _changelog:
 
+0.25.1
+------
+
+Renku ``0.25.1`` introduces a small bug fix in the Gateway internal components. 
+
+Internal Changes
+~~~~~~~~~~~~~~~~
+
+**Bug Fixes**
+
+- **Gateway**: correct path for reaching Gitlab from the CLI, it should be ``/repos`` instead of ``/api/repos``.
+
+Individual components
+~~~~~~~~~~~~~~~~~~~~~~
+
+- `renku-gateway 0.19.1 <https://github.com/SwissDataScienceCenter/renku-gateway/releases/tag/0.19.1>`_
+
 0.25.0
 ------
 
