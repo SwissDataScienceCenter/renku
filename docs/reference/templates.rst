@@ -329,8 +329,10 @@ contains all the specifications needed by the ``renku init`` function to
 create a new project. You can specify multiple templates in the same
 repository. Each of them requires an entry with the following parameters:
 
-* ``id`` (instead of ``folder`` which is deprecated): the target directory inside the repository
-  where the template files are stored. You must use a different id/directory for each template.
+* ``id``: the target directory inside the repository where the template files are stored.
+  You must use a different id/directory for each template. Note that this field was called
+  ``folder`` previously which is deprecated now. You can still use ``folder`` but
+  when validating your templates, you'll get a warning to replace it with ``id``.
 * ``name``: a short user-friendly name.
 * ``description``: a brief description of your template. This will be
   presented to the user when choosing between templates.
@@ -389,8 +391,8 @@ repository. Each of them requires an entry with the following parameters:
   ``false``. Also see ``immutable_template_files``.
 * ``immutable_template_files``: A list of file paths inside the template
   (relative to the project root) that should not be changed by users.
-  Users changing any of these files will
-  get a warning when trying to commit those changes. Template files not in
+  Users changing any of these files will get a warning when trying to commit those
+  changes if Renku CLI pre-commit hook is installed in a project. Template files not in
   this list won't get updated on template update if they were modified by a
   user. If a user does change one of these files, automated template update
   is no longer supported on that project, to prevent broken/inconsistent
@@ -482,7 +484,7 @@ Renaming templates
 
 If you are the owner of a template repository, you can change the name of the
 templates. To do this, edit the ``manifest.yaml`` file and put the new name
-in the ``id`` (``folder``) field of the template you want to rename. You then
+in the ``id`` (used instead of ``folder`` that is deprecated) field of the template you want to rename. You then
 need to add the old name to the ``aliases`` field so that projects created
 from the old name can be updated to use newer template versions. In addition,
 template's directory must be renamed to match the new ``id``.
