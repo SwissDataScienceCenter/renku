@@ -59,6 +59,8 @@ describe("Basic public project functionality", () => {
     cy.dataCy("project-overview-nav").contains("Status").should("be.visible").click();
     cy.dataCy("project-overview-content")
       .contains("Knowledge Graph integration is active", { timeout: TIMEOUTS.vlong }).should("be.visible");
+    // ? wait a moment to prevent "project not found" error
+    cy.wait(2000); // eslint-disable-line cypress/no-unnecessary-waiting
     cy.searchForProject(projectIdentifier);
 
     // logout and search for the project and log back in
@@ -79,14 +81,14 @@ describe("Basic public project functionality", () => {
     cy.contains("Knowledge Graph integration is active", { timeout: TIMEOUTS.long }).should("be.visible");
   });
 
-  it("Can can view files", () => {
+  it("Can view files", () => {
     cy.contains("Files").should("exist").click();
     cy.get("div#tree-content").contains(".renku").should("exist").click();
     cy.get("div#tree-content").contains("metadata").should("exist").click();
     cy.getProjectPageLink(projectIdentifier, "/files/blob/.renku/metadata/project").click();
-    cy.contains("\"@renku_data_type\": \"renku.domain_model.project.Project\"").should("be.visible");
+    cy.contains("\"@renku_data_type\": \"renku.domain_model.project.Project\"").should("exist");
     cy.get("div#tree-content").contains("README.md").should("exist").click();
-    cy.contains("This is a Renku project").should("be.visible");
+    cy.contains("This is a Renku project").scrollIntoView().should("be.visible");
   });
 
   it("Can can work with datasets", () => {

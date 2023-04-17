@@ -10,7 +10,7 @@ const projects = {
   v7: "renku-project-v7",
   v8: "renku-project-v8",
   v9: "renku-project-v9"
-}
+};
 
 // ? to simplify debugging, you can change `shouldFork` to false to use the projects directly instead of forking.
 // projects.shouldFork = false;
@@ -79,11 +79,11 @@ describe("Fork and update old projects", () => {
     ).as("getCommits");
     cy.getProjectPageLink(targetProject, "overview/commits").should("exist").click();
     if (!commitFetched) {
-      cy.wait(1000) // eslint-disable-line cypress/no-unnecessary-waiting
+      cy.wait(1000); // eslint-disable-line cypress/no-unnecessary-waiting
       cy.dataCy("refresh-commits").should("exist").click();
     }
     cy.wait("@getCommits", { timeout: TIMEOUTS.long });
-    cy.dataCy("project-overview-content").get(".card-body ul li.commit-object").should("have.length", 1)
+    cy.dataCy("project-overview-content").get(".card-body ul li.commit-object").should("have.length", 1);
 
     // verify project can be updated
     cy.getProjectPageLink(targetProject, "overview/status").should("exist").click();
@@ -104,12 +104,12 @@ describe("Fork and update old projects", () => {
     commitFetched = false;
     cy.getProjectPageLink(targetProject, "overview/commits").should("exist").click();
     if (!commitFetched) {
-      cy.wait(1000) // eslint-disable-line cypress/no-unnecessary-waiting
+      cy.wait(1000); // eslint-disable-line cypress/no-unnecessary-waiting
       cy.dataCy("refresh-commits").should("exist").click();
     }
     cy.wait("@getCommits", { timeout: TIMEOUTS.long });
     cy.dataCy("project-overview-content").get(".card-body ul li.commit-object")
-      .should("have.length.greaterThan", 1)
+      .should("have.length.greaterThan", 1);
     cy.dataCy("project-overview-content").get(".card-body ul li.commit-object")
       .contains("migrate to latest version").should("exist");
 

@@ -1,0 +1,68 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: {{ include "load-tests.fullname" . }}
+  labels:
+    {{- include "load-tests.labels" . | nindent 4 }}
+spec:
+  schedule: {{ .Values.schedule }}
+  concurrencyPolicy: Replace
+  jobTemplate:
+    spec:
+      template:
+        metadata:
+          {{- with .Values.podAnnotations }}
+          annotations:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          labels:
+            {{- include "load-tests.selectorLabels" . | nindent 12 }}
+        spec:
+          restartPolicy: Never
+          {{- with .Values.imagePullSecrets }}
+          imagePullSecrets:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          serviceAccountName: {{ include "load-tests.serviceAccountName" . }}
+          securityContext:
+            {{- toYaml .Values.podSecurityContext | nindent 12 }}
+          containers:
+            - name: {{ .Chart.Name }}
+              securityContext:
+                {{- toYaml .Values.securityContext | nindent 16 }}
+              image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+              imagePullPolicy: {{ .Values.image.pullPolicy }}
+              resources:
+                {{- toYaml .Values.resources | nindent 16 }}
+              env:
+                {{- if gt (len .Values.extraEnvVars) 0 }}
+                {{- toYaml .Values.extraEnvVars | nindent 16 }}
+                {{- end }}
+                {{- if .Values.credentials.secret.mount }}
+                - name: CREDENTIALS_FILE
+                  value: "/credentials/{{ .Values.credentials.secret.secretKey }}"
+                {{- end }}
+              {{- if .Values.credentials.secret.mount }}
+              volumeMounts:
+                - name: credentials         
+                  mountPath: "/credentials"
+                  readOnly: true
+              {{- end }}
+          {{- with .Values.nodeSelector }}
+          nodeSelector:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .Values.affinity }}
+          affinity:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .Values.tolerations }}
+          tolerations:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- if .Values.credentials.secret.mount }}
+          volumes:
+            - name: credentials         
+              secret:
+                secretName: {{ .Values.credentials.secret.secretName | quote }}
+          {{- end }}
