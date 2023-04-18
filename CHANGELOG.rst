@@ -10,7 +10,7 @@ User-Facing Changes
 
 **✨ Improvements**
 
-- 🧾 **UI**: Use dropdowns for session options with many elements
+- 🧾 **UI**: Use drop-downs for session options with many elements
   (`#2461 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2461>`_).
 
 **🐞 Bug Fixes**
