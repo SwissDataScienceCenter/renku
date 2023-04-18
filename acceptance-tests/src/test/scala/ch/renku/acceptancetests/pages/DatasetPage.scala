@@ -90,9 +90,11 @@ class DatasetPage(val datasetName: DatasetName, projectPage: ProjectPage)
 
       new Actions(webDriver)
         .moveToElement(submitDatasetBtn)
-        .click()
+        // Move the mouse down the field to prevent the tooltip from blocking the button
+        .scrollByAmount(0, 20)
         .build()
         .perform();
+      submitDatasetBtn.click();
     }
 
     def fileUploadField(implicit webDriver: WebDriver): WebElement = eventually {

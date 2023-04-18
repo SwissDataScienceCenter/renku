@@ -1,5 +1,48 @@
 .. _changelog:
 
+0.25.1
+------
+
+Renku ``0.25.1`` introduces a small bug fix in the Gateway internal components. 
+
+Internal Changes
+~~~~~~~~~~~~~~~~
+
+**Bug Fixes**
+
+- **Gateway**: correct path for reaching Gitlab from the CLI, it should be ``/repos`` instead of ``/api/repos``.
+
+Individual components
+~~~~~~~~~~~~~~~~~~~~~~
+
+- `renku-gateway 0.19.1 <https://github.com/SwissDataScienceCenter/renku-gateway/releases/tag/0.19.1>`_
+
+0.25.0
+------
+
+Renku ``0.25.0`` introduces an update to the base images and templates, as well as changes in internal components and the Helm chart. 
+
+User-facing Changes
+~~~~~~~~~~~~~~~~~~~
+
+**Improvements**
+
+- New base images correct a ``PATH`` misconfiguration that occurs when connecting to a session with SSH. If using sessions through SSH, please update your project!
+
+Internal Changes
+~~~~~~~~~~~~~~~~
+
+**Improvements**
+
+- **Gateway**: replace the Traefik reverse proxy with a custom solution based on the Echo library in Go. 
+
+Individual components
+~~~~~~~~~~~~~~~~~~~~~~
+
+- `renku-gateway 0.19.0 <https://github.com/SwissDataScienceCenter/renku-gateway/releases/tag/0.19.0>`_
+- `renkulab-docker 0.16.0 <https://github.com/SwissDataScienceCenter/renkulab-docker/releases/tag/0.16.0>`_
+
+
 0.24.4
 ------
 
