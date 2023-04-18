@@ -1,5 +1,45 @@
 .. _changelog:
 
+0.25.2
+------
+
+Renku ``0.25.2`` introduces a few bug fixes and improvements in the UI.
+
+User-Facing Changes
+~~~~~~~~~~~~~~~~~~~
+
+**✨ Improvements**
+
+- 🧾 **UI**: Use drop-downs for session options with many elements
+  (`#2461 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2461>`_).
+
+**🐞 Bug Fixes**
+
+- **UI**: Prevent dropping valid pinned images when starting new sessions
+  (`#2466 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2466>`_).
+- **UI**: Ignore deleted projects on the dashboard
+  (`#2465 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2465>`_).
+- **UI**: Fix fork suggestion when trying to start sessions on non-owned projects
+  (`#2465 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2465>`_).
+- **UI**: Remove conspicuous commas in the add dataset screen
+  (`#2472 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2472>`_).
+
+Internal Changes
+~~~~~~~~~~~~~~~~
+
+**Bug Fixes**
+
+- **UI**: Do not query workflows on outdated projects
+  (`#2460 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2460>`_).
+- **UI**: Fix broken warning component on sessions pages
+  (`#2474 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2474>`_).
+
+Individual components
+~~~~~~~~~~~~~~~~~~~~~~
+
+- `renku-ui 3.4.2 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.4.2>`_
+
+
 0.25.1
 ------
 
