@@ -1,5 +1,24 @@
 .. _changelog:
 
+0.25.3
+------
+
+Renku ``0.25.3`` introduces a bug fix in the Helm chart for the gateway.
+
+Internal Changes
+~~~~~~~~~~~~~~~~
+
+**Bug Fixes**
+
+- **Gateway**: **chart:** properly template horizontal pod auto-scaler for reverse proxy
+  (`#643 <https://github.com/SwissDataScienceCenter/renku-gateway/issues/643>`_).
+
+Individual components
+~~~~~~~~~~~~~~~~~~~~~~
+
+- `renku-gateway 0.19.2 <https://github.com/SwissDataScienceCenter/renku-gateway/releases/tag/0.19.2>`_
+
+
 0.25.2
 ------
 
