@@ -1,4 +1,4 @@
-.. _cli_installation:
+  .. _cli_installation:
 
 Install the Renku Command-line Interface
 ========================================

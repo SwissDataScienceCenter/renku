@@ -205,7 +205,7 @@ To exit the SSH shell, simply type ``exit``.
 
 
 Open an SSH Session in VSCode
-------------------------------
+-----------------------------
 
 After starting an SSH session, follow these steps to open your session in
 VSCode:
@@ -236,6 +236,62 @@ in the RenkuLab session via the VSCode terminal!
 
 For more details on the VSCode SSH extension see
 `the official VSCode documentation <https://code.visualstudio.com/docs/remote/ssh>`_.
+
+Set up VSCode Extensions on a Remote SSH Host
+---------------------------------------------
+
+When connecting to a remote SSH host in VSCode, some of its extensions might
+not work out of the box. For example, the Python development assistant or
+spell checker won't work. This is because the extensions are installed on your
+local machine, but not on the remote host. You need to install them on the
+remote host every time you connect to a session.
+
+To install extensions that are already installed in you VS Code on the remote
+host, click on the "Extensions" icon in the Primary Sidebar (or press
+``Ctrl+Shift+X`` or ``Cmd+Shift+X``). In the "Extensions" panel, you can see
+the list of all the extensions installed on your local machine or on the SSH
+host in two separate lists. When expanding the local section, you can see
+extensions that aren't in the remote host are grayed out. Note that there are
+some local-only extensions that cannot be installed remotely.
+
+To install an extension on the remote host, expand click on the "Install in
+SSH: <host-name>" button next to the extension name. This will open a new
+window where you need to click on the "Install in SSH: <host-name>" button to
+finish the installation.
+
+You can also install all extensions at once by clicking on the "Install Local
+Extensions in SSH <host-name>" button (with a cloud icon) at the right of the
+"SSH: <host-name>" title bar in the "Extensions" panel. This will show a list
+of all available local extensions to select which one to install.
+
+.. image:: ../../_static/images/ssh_vscode_extension_install_all.png
+    :width: 85%
+    :align: center
+    :alt: Install all extensions in SSH session.
+
+
+"Always installed" extensions
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+You need to re-install all extensions every time you connect to a session since
+user setting changes are not persisted. To avoid doing that, you have the
+possibility to select a list of extensions that will be installed automatically
+every time you connect to a session.
+
+To do so, open the VS Code settings and search for the "Remote.SSH: Default
+Extensions" setting (or go to "Extensions" > "Remote - SSH" > "Default
+Extensions"). This is a list of extension IDs that will be installed automatically
+on each SSH host. Click on the "Add Item" button on the bottom of it and enter
+the extension ID you want to add to the list. You can find the extension ID in
+the "Extensions" panel, in "Local - Installed" title bar by right-clicking on
+an extension and selecting "Copy Extension ID" in the context menu. Note that
+you need to only install extensions that are grayed out.
+
+.. image:: ../../_static/images/ssh_vscode_extension_always_install.png
+    :width: 85%
+    :align: center
+    :alt: Always install extensions in SSH session.
+
 
 FAQ
 ---
