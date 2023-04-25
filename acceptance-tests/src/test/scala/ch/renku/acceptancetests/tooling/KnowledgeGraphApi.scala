@@ -36,7 +36,7 @@ trait KnowledgeGraphApi extends RestClient {
   def `wait for KG to process events`(projectId: ProjectIdentifier): Unit = {
     sleep(1 second)
     val gitLabProjectId = `get GitLab project id`(projectId)
-    checkStatusAndWait(projectId, gitLabProjectId)
+    checkStatusAndWait(projectId, gitLabProjectId, 1)
   }
 
   def findLineage(projectPath: String, filePath: String): JsonObject = {
@@ -51,15 +51,15 @@ trait KnowledgeGraphApi extends RestClient {
   }
 
   @tailrec
-  private def checkStatusAndWait(projectId: ProjectIdentifier, gitLabProjectId: Int, attempt: Int = 1): Unit =
+  private def checkStatusAndWait(projectId: ProjectIdentifier, gitLabProjectId: Int, attempt: Int): Unit =
     if (attempt == 60 * 5) // 5 minutes
       fail(s"Events for '$projectId' project not processed after 5 minutes")
     else if (findTotalDone(projectId, gitLabProjectId) == 0) {
       sleep(1 second)
-      checkStatusAndWait(projectId, gitLabProjectId)
-    } else if (findProgress(projectId, gitLabProjectId) != 100d) {
+      checkStatusAndWait(projectId, gitLabProjectId, attempt + 1)
+    } else if (findProgress(projectId, gitLabProjectId, token) != 100d) {
       sleep(1 second)
-      checkStatusAndWait(projectId, gitLabProjectId)
+      checkStatusAndWait(projectId, gitLabProjectId, attempt + 1)
     }
 
   private def findProgress(projectId: ProjectIdentifier, gitLabProjectId: Int): Double =
