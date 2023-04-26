@@ -17,6 +17,9 @@ Renku helm chart version: <0.25.0>
     2. Ensure the KG integration is active
     3. Ensure a session can be successfully started on the project
     4. Ensure said sesssion can be accessed
+    5. Ensure the Renku CLI is there
+    6. Modify one of the environment files (e.g. `requirements.txt`) and run `renku save`
+    7. Shut down the session, launch a new one from the new commit and make sure the package you added is there
   </details>
 
 - [ ] Delete an existing project (UI)
@@ -65,12 +68,11 @@ Renku helm chart version: <0.25.0>
 
     1. Start a renku session
     2. Navigate to https://zenodo.org/
-    3. Pick a random dataset and import it in your session with `renku dataset import <doi-from-zenodo>`
+    3. Pick a random dataset and import it in your session with `renku dataset import <zenodo-url>`
     4. Run `git push`
     5. Ensure the dataset was downloaded successfully
     6. Are large files checked in LFS?
     6. Navigate to the "Datasets" section of the project on the website, can you see the dataset you imported?
-    7. Is the 
   </details>
 
 ## Sessions
@@ -117,5 +119,6 @@ Renku helm chart version: <0.25.0>
     4. Ensure the image built
     5. Start a session
     6. Ensure the session can be accessed
-    7. Repeat for all templates
+    7. Ensure the renku CLI is installed and working
+    8. Repeat for all templates
   </details>
