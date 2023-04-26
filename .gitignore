@@ -269,3 +269,5 @@ tags
 
 # Ignore scala metals .bsp folder
 .bsp/
+
+.direnv/
