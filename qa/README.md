@@ -75,29 +75,6 @@ Renku helm chart version: <0.25.0>
     6. Navigate to the "Datasets" section of the project on the website, can you see the dataset you imported?
   </details>
 
-## Sessions
-
-- [ ] Autosaves
-  <details>
-    <summary>Details</summary>
-    
-    1. Start a Renku session in the UI
-    2. Add some files and commit them but do not push them
-    3. Add some files and do not commit them at all
-    4. Add some large data files - use `head -c 1G </dev/urandom >myfile` will generate a file of random binary data that is 1GB
-    5. Close the session
-    6. Ensure the session shut down
-    7. When you go to start a new session again the UI should tell you that there is an autosave
-    8. Check the autosave branch in Gitlab the large file should be in LFS
-    9. Launch a session
-    10. When the session starts the unsaved data from steps 2, 3 and 4 should be all there in the same state (i.e. some files should
-      be committed and unpushed and some files should be uncommited)
-    11. Ensure that the large 1GB file is not in LFS (the autosaves added it to LFS not the user so when we recover we should
-      put things exactly as they were before).
-    12. If the autosave was successfully recovered ensure that the autosave branch is not there in Gitlab and that the 
-      UI does not report an autosave branch when you go to start a new session
-  </details>
-
 ## Workflows
 
 - [ ] Create a workflow file in a session
