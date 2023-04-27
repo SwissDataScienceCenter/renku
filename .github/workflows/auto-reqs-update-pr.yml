@@ -8,7 +8,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: close existing PRs
-        id: close_prs
         run: |
           renku_repo="https://api.github.com/repos/SwissDataScienceCenter/renku"
           # find the repo that made the PR
@@ -18,8 +17,17 @@ jobs:
           # find other PRs from that repo
           other_prs=$(curl -s ${renku_repo}/pulls | jq ".[] | select((.head.ref | test(\"auto-update/${pr_repo}\")) and (.head.ref != \"${GITHUB_REF:11}\")) | .number")
           for pr in $other_prs ; do curl -s -H "Authorization: token $GITHUB_TOKEN" -X PATCH -d '{"state": "closed"}' ${renku_repo}/pulls/${pr} ; done
+        env:
+          GITHUB_TOKEN: ${{ secrets.RENKUBOT_GITHUB_TOKEN }}
+      - name: set PR body
+        id: set_pr_body
+        run: |
+          regex='renku-[a-z]+'
+          [[ ${GITHUB_REF} =~ $regex ]]
+          pr_repo=$BASH_REMATCH
 
           pr_body="This is an automated pull request.\n\n/deploy"
+
           # get current cli version for core PRs and set PR body for tests to pass
           if [ pr_repo == "renku-core" ]; then
             regex='renku-core-([[:digit:]]+\.[[:digit:]]+\.[[:digit:]]+)'
@@ -29,12 +37,10 @@ jobs:
             pr_body="$pr_body extra-values=global.renku.cli_version=$current_version_maybe_rc"
           fi
           echo "pr_body=$pr_body" >> "$GITHUB_OUTPUT"
-        env:
-          GITHUB_TOKEN: ${{ secrets.RENKUBOT_GITHUB_TOKEN }}
       - name: pull-request-action
         uses: vsoch/pull-request-action@master
         env:
           GITHUB_TOKEN: ${{ secrets.RENKUBOT_GITHUB_TOKEN }}
           BRANCH_PREFIX: "auto-update/"
           PULL_REQUEST_BRANCH: "master"
-          PULL_REQUEST_BODY: ${{needs.close_prs.outputs.pr_body}}
+          PULL_REQUEST_BODY: ${{needs.set_pr_body.outputs.pr_body}}
