@@ -25,6 +25,7 @@ import ch.renku.acceptancetests.model.projects.ProjectIdentifier
 import io.circe.JsonObject
 import org.http4s.Status.{NotFound, Ok}
 import org.http4s.circe.CirceEntityCodec._
+import org.openqa.selenium.WebDriver
 import org.scalatest.Assertions.fail
 
 import scala.annotation.tailrec
@@ -33,10 +34,10 @@ import scala.concurrent.duration._
 trait KnowledgeGraphApi extends RestClient {
   self: AcceptanceSpecData with GitLabApi with Grammar with IOSpec =>
 
-  def `wait for KG to process events`(projectId: ProjectIdentifier): Unit = {
+  def `wait for KG to process events`(projectId: ProjectIdentifier, browser: WebDriver): Unit = {
     sleep(1 second)
     val gitLabProjectId = `get GitLab project id`(projectId)
-    checkStatusAndWait(projectId, gitLabProjectId)
+    checkStatusAndWait(projectId, gitLabProjectId, browser, 1)
   }
 
   def findLineage(projectPath: String, filePath: String): JsonObject = {
@@ -51,36 +52,37 @@ trait KnowledgeGraphApi extends RestClient {
   }
 
   @tailrec
-  private def checkStatusAndWait(projectId: ProjectIdentifier, gitLabProjectId: Int, attempt: Int = 1): Unit =
-    if (attempt == 60 * 5) // 5 minutes
+  private def checkStatusAndWait(
+      projectId:       ProjectIdentifier,
+      gitLabProjectId: Int,
+      browser:         WebDriver,
+      attempt:         Int
+  ): Unit =
+    if (attempt >= 60 * 5)
       fail(s"Events for '$projectId' project not processed after 5 minutes")
-    else if (findTotalDone(projectId, gitLabProjectId) == 0) {
+    else if (findTotalDone(projectId, gitLabProjectId, browser) == 0) {
       sleep(1 second)
-      checkStatusAndWait(projectId, gitLabProjectId)
-    } else if (findProgress(projectId, gitLabProjectId) != 100d) {
+      checkStatusAndWait(projectId, gitLabProjectId, browser, attempt + 1)
+    } else if (findProgress(projectId, gitLabProjectId, browser) < 100d) {
       sleep(1 second)
-      checkStatusAndWait(projectId, gitLabProjectId)
+      checkStatusAndWait(projectId, gitLabProjectId, browser, attempt + 1)
     }
 
-  private def findProgress(projectId: ProjectIdentifier, gitLabProjectId: Int): Double =
-    GET(renkuBaseUrl / "api" / "projects" / gitLabProjectId.toString / "graph" / "status")
-      .send { response =>
-        response.status match {
-          case Ok       => response.as[GraphStatus].map(_.progressPercentage)
-          case NotFound => 0d.pure[IO]
-          case other =>
-            IO(logger.warn(s"Finding processing status for '$projectId' returned $other")).as(0d)
-        }
-      }
+  private def findProgress(projectId: ProjectIdentifier, gitLabProjectId: Int, browser: WebDriver): Double =
+    findStatus(projectId, gitLabProjectId, browser).map(_.progressPercentage).getOrElse(0d)
 
-  private def findTotalDone(projectId: ProjectIdentifier, gitLabProjectId: Int): Int =
+  private def findTotalDone(projectId: ProjectIdentifier, gitLabProjectId: Int, browser: WebDriver): Int =
+    findStatus(projectId, gitLabProjectId, browser).map(_.total).getOrElse(0)
+
+  private def findStatus(projectId: ProjectIdentifier, gitLabProjectId: Int, browser: WebDriver): Option[GraphStatus] =
     GET(renkuBaseUrl / "api" / "projects" / gitLabProjectId.toString / "graph" / "status")
+      .addCookiesFrom(browser)
       .send { response =>
         response.status match {
-          case Ok       => response.as[GraphStatus].map(_.total)
-          case NotFound => 0.pure[IO]
+          case Ok       => response.as[GraphStatus].map(_.some)
+          case NotFound => None.pure[IO]
           case other =>
-            IO(logger.warn(s"Finding processing status for '$projectId' returned $other")).as(0)
+            IO(logger.warn(s"Finding processing status for '$projectId' returned $other")).as(None)
         }
       }
 }
