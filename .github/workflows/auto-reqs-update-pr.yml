@@ -29,7 +29,7 @@ jobs:
           pr_body="This is an automated pull request.\n\n/deploy"
 
           # get current cli version for core PRs and set PR body for tests to pass
-          if [ pr_repo == "renku-core" ]; then
+          if [ "$pr_repo" == "renku-core" ]; then
             regex='renku-core-([[:digit:]]+\.[[:digit:]]+\.[[:digit:]]+)'
             [[ ${GITHUB_REF} =~ $regex ]]
             core_version=${BASH_REMATCH[1]}
