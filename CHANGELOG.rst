@@ -10,9 +10,9 @@ Internal Changes
 
 **Bug Fixes**
 
-- **KG**: issue with synchronizing users that are authorized to see project data in the Triples Store
-- **KG**: the Delete Project API to work when there is no data for the project in the Triples Store
-- **KG**: the Lineage API to work in cases of implicit parameters, inputs and outputs
+- **KG**: resolve issues with synchronization of project user access authorization data
+- **KG**: ensure that the Delete Project API works when there is no data for the project in the Triples Store
+- **KG**: ensure that the Lineage API works in cases of implicit parameters, inputs and outputs
 
 Individual components
 ~~~~~~~~~~~~~~~~~~~~~~
