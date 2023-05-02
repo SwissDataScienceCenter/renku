@@ -19,10 +19,28 @@ jobs:
           for pr in $other_prs ; do curl -s -H "Authorization: token $GITHUB_TOKEN" -X PATCH -d '{"state": "closed"}' ${renku_repo}/pulls/${pr} ; done
         env:
           GITHUB_TOKEN: ${{ secrets.RENKUBOT_GITHUB_TOKEN }}
+      - name: set PR body
+        id: set_pr_body
+        run: |
+          regex='renku-[a-z]+'
+          [[ ${GITHUB_REF} =~ $regex ]]
+          pr_repo=$BASH_REMATCH
+
+          pr_body="This is an automated pull request.\n\n/deploy"
+
+          # get current cli version for core PRs and set PR body for tests to pass
+          if [ "$pr_repo" == "renku-core" ]; then
+            regex='renku-core-([[:digit:]]+\.[[:digit:]]+\.[[:digit:]]+)'
+            [[ ${GITHUB_REF} =~ $regex ]]
+            core_version=${BASH_REMATCH[1]}
+            current_version_maybe_rc=$(curl -s https://pypi.org/pypi/renku/json | jq -r ".releases | keys_unsorted | map(select( . | startswith(\"$core_version\"))) | sort_by(. | split(\"[.]|rc\";\"\") | map(tonumber))[-1]")
+            pr_body="$pr_body extra-values=global.renku.cli_version=$current_version_maybe_rc"
+          fi
+          echo "pr_body=$pr_body" >> "$GITHUB_OUTPUT"
       - name: pull-request-action
         uses: vsoch/pull-request-action@master
         env:
           GITHUB_TOKEN: ${{ secrets.RENKUBOT_GITHUB_TOKEN }}
           BRANCH_PREFIX: "auto-update/"
           PULL_REQUEST_BRANCH: "master"
-          PULL_REQUEST_BODY: "This is an automated pull request.\n\n/deploy"
+          PULL_REQUEST_BODY: ${{needs.set_pr_body.outputs.pr_body}}
