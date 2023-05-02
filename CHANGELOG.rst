@@ -1,5 +1,8 @@
 .. _changelog:
 
+0.25.4
+------
+
 Renku ``0.25.4`` introduces several UI big-fixes.
 
 User-Facing Changes
