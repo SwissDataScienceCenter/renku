@@ -14,7 +14,7 @@ User-Facing Changes
 - **UI**: Prevent infinite spinning wheel when accessing projects by numeric ID
   without the required user's permissions
   (`#2476 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2476>`_).
-- **UI**: Open the target notebook when accessing a session from the file preview
+- **UI**: Fix an issue where a notebook would not automatically open in a session for anonymous users
   as an anonymous user
   (`#2479 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2479>`_).
 - **UI**: Prevent content layout shift when selecting a template
