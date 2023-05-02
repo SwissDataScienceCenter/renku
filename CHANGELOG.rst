@@ -3,7 +3,7 @@
 0.25.4
 ------
 
-Renku ``0.25.4`` introduces several KG and UI big-fixes.
+Renku ``0.25.4`` introduces several KG and UI bug-fixes.
 
 User-Facing Changes
 ~~~~~~~~~~~~~~~~~~~
