@@ -1,5 +1,24 @@
 .. _changelog:
 
+0.25.4
+------
+
+Renku ``0.25.4`` brings bug fixes for KG.
+
+Internal Changes
+~~~~~~~~~~~~~~~~
+
+**Bug Fixes**
+
+- **KG**: issue with synchronizing users that are authorized to see project data in the Triples Store
+- **KG**: the Delete Project API to work when there is no data for the project in the Triples Store
+- **KG**: the Lineage API to work in cases of implicit parameters, inputs and outputs
+
+Individual components
+~~~~~~~~~~~~~~~~~~~~~~
+
+- `renku-graph 2.32.0 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/2.32.0>`_
+
 0.25.3
 ------
 
