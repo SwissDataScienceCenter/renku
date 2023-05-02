@@ -3,7 +3,7 @@
 0.25.4
 ------
 
-Renku ``0.25.4`` introduces several UI big-fixes.
+Renku ``0.25.4`` introduces several KG and UI big-fixes.
 
 User-Facing Changes
 ~~~~~~~~~~~~~~~~~~~
@@ -30,12 +30,16 @@ Internal Changes
 
 **Bug Fixes**
 
+- **KG**: Resolve issues with synchronization of project user access authorization data.
+- **KG**: Ensure that the Delete Project API works when there is no data for the project in the Triples Store.
+- **KG**: Ensure that the Lineage API works in cases of implicit parameters, inputs and outputs.
 - **UI**: Correct handling of notebook search parameter with autostart
   (`#2469 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2469>`_).
 
 Individual components
 ~~~~~~~~~~~~~~~~~~~~~~
 
+- `renku-graph 2.32.0 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/2.32.0>`_
 - `renku-ui 3.4.3 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.4.3>`_
 
 
