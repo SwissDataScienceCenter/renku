@@ -108,7 +108,7 @@ class ProjectPage(val projectSlug: String, val namespace: String)
     }
 
     def projectHttpUrl(implicit webDriver: WebDriver): WebElement = eventually {
-      findAll(cssSelector(".dropdown-menu code"))
+      findAll(cssSelector(s".dropdown-menu code"))
         .find(e => e.text.matches("^http.+.git$")) getOrElse fail("Project http url not found")
     }
 
@@ -371,11 +371,6 @@ class ProjectPage(val projectSlug: String, val namespace: String)
         "Update button not found"
       )
     }
-
-    // def projectHttpUrl(implicit webDriver: WebDriver): WebElement = eventually {
-    //   findAll(cssSelector("table.table.table-sm td"))
-    //     .find(e => e.text.matches("^http.+.git$")) getOrElse fail("Project http url not found")
-    // }
   }
 
   def forkButton(implicit webDriver: WebDriver): WebElement = eventually {
