@@ -103,7 +103,8 @@ class ProjectPage(val projectSlug: String, val namespace: String)
     }
 
     def cloneButton(implicit webDriver: WebDriver): WebElement = eventually {
-      findAll(cssSelector(s"buton.btn.btn-outline-rk-green")).find(button => button.text == "Clone")
+      findAll(cssSelector(s"buton.btn.btn-outline-rk-green"))
+        .find(button => button.text == "Clone")
         .getOrElse(fail("Overview -> Clone button not found"))
     }
 
