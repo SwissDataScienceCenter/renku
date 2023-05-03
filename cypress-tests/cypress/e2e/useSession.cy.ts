@@ -9,8 +9,8 @@ const projectTestConfig = {
 };
 
 // ? Modify the config -- useful for debugging
-projectTestConfig.shouldCreateProject = false;
-projectTestConfig.projectName = "test-session-2023-05-03";
+// projectTestConfig.shouldCreateProject = false;
+// projectTestConfig.projectName = "test-session-4f79daad6d4e";
 
 const projectIdentifier = { name: projectTestConfig.projectName, namespace: username };
 
