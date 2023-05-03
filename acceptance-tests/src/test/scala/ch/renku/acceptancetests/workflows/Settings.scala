@@ -65,6 +65,6 @@ trait Settings {
 
     Then("the user can find the project Http Url")
     click on projectPage.Overview.cloneButton
-    ProjectUrl(projectPage.Settings.projectHttpUrl.getText)
+    ProjectUrl(projectPage.Overview.projectHttpUrl.getText)
   }
 }
