@@ -3,38 +3,70 @@ import { v4 as uuidv4 } from "uuid";
 import { TIMEOUTS } from "../../config";
 
 const username = Cypress.env("TEST_USERNAME");
-const firstname = Cypress.env("TEST_FIRST_NAME");
-const lastname = Cypress.env("TEST_LAST_NAME");
-const projectName = `test-project-${uuidv4()}`;
+
+const projectTestConfig = {
+  shouldCreateProject: true,
+  projectName: `test-session-${uuidv4().substring(24)}`
+};
+
+// ? Modify the config -- useful for debugging
+projectTestConfig.shouldCreateProject = false;
+projectTestConfig.projectName = "test-session-2023-05-03-RStudio";
+
+const projectIdentifier = { name: projectTestConfig.projectName, namespace: username };
 
 describe("Basic rstudio functionality", () => {
   before(() => {
     // Save all cookies across tests
     Cypress.Cookies.defaults({
-      preserve: (_) => true
+      preserve: (_) => true,
     });
+    // Register with the CI deployment
+    cy.robustLogin();
+
+    // Create a project
+    if (projectTestConfig.shouldCreateProject) {
+      cy.visit("/");
+      cy.createProject({ templateName: "Basic R", ...projectIdentifier });
+    }
   });
 
   after(() => {
-    cy.logout();
+    if (projectTestConfig.shouldCreateProject)
+      cy.deleteProject(projectIdentifier);
   });
-  before(() => {
-    cy.robustLogin();
+
+  beforeEach(() => {
+    cy.visitAndLoadProject(projectIdentifier);
+
+    // Close all existing running sessions
+    cy.contains("Sessions").should("exist").click();
+    cy.intercept("/ui-server/api/notebooks/servers*").as("getSessions");
+    cy.wait("@getSessions").then(({ response }) => {
+      const servers = response?.body?.servers ?? {};
+      for (const key of Object.keys(servers)) {
+        const name = servers[key].name;
+        const connectButton = cy
+          .get(`[data-cy=open-session][href$=${name}]`)
+          .should("exist");
+        connectButton.siblings("[data-cy=more-menu]").click();
+        connectButton
+          .siblings(".dropdown-menu")
+          .find("button")
+          .contains("Stop")
+          .click();
+      }
+    });
+    cy.contains("No currently running sessions.", { timeout: TIMEOUTS.long });
+    cy.dataCy("go-back-button").click();
   });
 
   it("Creates a project and launches an RStudio session", { defaultCommandTimeout: TIMEOUTS.long }, () => {
-    // Creates the project
-    const templateName = "Basic R";
-    cy.visit("/");
-    cy.get(`[data-cy=dashboard-title]`).should("include.text", `Renku Dashboard - ${firstname} ${lastname}`);
-    const projectInfo = { name: projectName, namespace: username, templateName };
-    cy.createProject(projectInfo);
-
     // Waits for the image to build
-    cy.waitForImageToBuild(projectInfo);
+    cy.waitForImageToBuild(projectIdentifier);
 
     // Launches a session
-    cy.startSession(projectInfo);
+    cy.startSession(projectIdentifier);
 
     // Opens the session in an iframe
     cy.getIframe("iframe#session-iframe").within(() => {
@@ -65,7 +97,5 @@ describe("Basic rstudio functionality", () => {
 
     // Stops the session
     cy.stopSessionFromIframe();
-    // Deletes the project
-    cy.deleteProject(projectInfo);
   });
 });

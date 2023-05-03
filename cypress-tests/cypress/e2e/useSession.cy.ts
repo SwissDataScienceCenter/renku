@@ -1,7 +1,5 @@
 import { v4 as uuidv4 } from "uuid";
-
 import { TIMEOUTS } from "../../config";
-
 
 const username = Cypress.env("TEST_USERNAME");
 
@@ -11,8 +9,8 @@ const projectTestConfig = {
 };
 
 // ? Modify the config -- useful for debugging
-// projectTestConfig.shouldCreateProject = false;
-// projectTestConfig.projectName = "test-session-4f79daad6d4e";
+projectTestConfig.shouldCreateProject = false;
+projectTestConfig.projectName = "test-session-2023-05-03";
 
 const projectIdentifier = { name: projectTestConfig.projectName, namespace: username };
 
