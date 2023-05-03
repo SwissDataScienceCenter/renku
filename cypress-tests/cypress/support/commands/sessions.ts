@@ -19,6 +19,29 @@ function waitForImageToBuild(identifier: ProjectIdentifier) {
   cy.get(".btn-rk-green", { timeout: TIMEOUTS.vlong }).should("be.visible").should("be.enabled");
 }
 
+const stopAllSessionsForProject = (identifier: ProjectIdentifier)=> {
+  const id = fullProjectIdentifier(identifier);
+  cy.visit(`/projects/${id.namespace}/${id.name}/sessions`);
+  cy.intercept("/ui-server/api/notebooks/servers*").as("getSessions");
+    cy.wait("@getSessions").then(({ response }) => {
+      const servers = response?.body?.servers ?? {};
+      for (const key of Object.keys(servers)) {
+        const name = servers[key].name;
+        const connectButton = cy
+          .get(`[data-cy=open-session][href$=${name}]`)
+          .should("exist");
+        connectButton.siblings("[data-cy=more-menu]").click();
+        connectButton
+          .siblings(".dropdown-menu")
+          .find("button")
+          .contains("Stop")
+          .click();
+      }
+    });
+    cy.contains("No currently running sessions.", { timeout: TIMEOUTS.long });
+    cy.dataCy("go-back-button").click();
+}
+
 export const stopSessionFromIframe = () => {
   cy.intercept({ method: "DELETE", url: /.*\/api\/notebooks\/servers\/.*/, times: 1 }, (req) => {
     req.continue((res) => {
@@ -35,6 +58,7 @@ export default function registerSessionCommands() {
   Cypress.Commands.add("startSession", startSession);
   Cypress.Commands.add("waitForImageToBuild", waitForImageToBuild);
   Cypress.Commands.add("stopSessionFromIframe", stopSessionFromIframe);
+  Cypress.Commands.add("stopAllSessionsForProject", stopAllSessionsForProject);
 }
 
 
@@ -45,6 +69,7 @@ declare global {
       startSession(identifier: ProjectIdentifier);
       waitForImageToBuild(identifier: ProjectIdentifier);
       stopSessionFromIframe();
+      stopAllSessionsForProject: typeof stopAllSessionsForProject;
     }
   }
 }

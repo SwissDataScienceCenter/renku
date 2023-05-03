@@ -37,27 +37,7 @@ describe("Basic public project functionality", () => {
 
   beforeEach(() => {
     cy.visitAndLoadProject(projectIdentifier);
-
-    // Close all existing running sessions
-    cy.contains("Sessions").should("exist").click();
-    cy.intercept("/ui-server/api/notebooks/servers*").as("getSessions");
-    cy.wait("@getSessions").then(({ response }) => {
-      const servers = response?.body?.servers ?? {};
-      for (const key of Object.keys(servers)) {
-        const name = servers[key].name;
-        const connectButton = cy
-          .get(`[data-cy=open-session][href$=${name}]`)
-          .should("exist");
-        connectButton.siblings("[data-cy=more-menu]").click();
-        connectButton
-          .siblings(".dropdown-menu")
-          .find("button")
-          .contains("Stop")
-          .click();
-      }
-    });
-    cy.contains("No currently running sessions.", { timeout: TIMEOUTS.long });
-    cy.dataCy("go-back-button").click();
+    cy.stopAllSessionsForProject(projectIdentifier);
   });
 
   it("Start a new session on the project and interact with the terminal.", () => {
