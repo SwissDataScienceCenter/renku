@@ -102,6 +102,16 @@ class ProjectPage(val projectSlug: String, val namespace: String)
         .getOrElse(fail("Overview -> General button not found"))
     }
 
+    def cloneButton(implicit webDriver: WebDriver): WebElement = eventually {
+      findAll(cssSelector(s"buton.btn.btn-outline-rk-green")).find(button => button.text == "Clone")
+        .getOrElse(fail("Overview -> Clone button not found"))
+    }
+
+    def projectHttpUrl(implicit webDriver: WebDriver): WebElement = eventually {
+      findAll(cssSelector(".dropdown-menu code"))
+        .find(e => e.text.matches("^http.+.git$")) getOrElse fail("Project http url not found")
+    }
+
     object Description {
 
       def title(implicit webDriver: WebDriver): WebElement = eventually {
@@ -362,10 +372,10 @@ class ProjectPage(val projectSlug: String, val namespace: String)
       )
     }
 
-    def projectHttpUrl(implicit webDriver: WebDriver): WebElement = eventually {
-      findAll(cssSelector("table.table.table-sm td"))
-        .find(e => e.text.matches("^http.+.git$")) getOrElse fail("Project http url not found")
-    }
+    // def projectHttpUrl(implicit webDriver: WebDriver): WebElement = eventually {
+    //   findAll(cssSelector("table.table.table-sm td"))
+    //     .find(e => e.text.matches("^http.+.git$")) getOrElse fail("Project http url not found")
+    // }
   }
 
   def forkButton(implicit webDriver: WebDriver): WebElement = eventually {

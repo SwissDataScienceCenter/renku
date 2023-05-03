@@ -181,7 +181,6 @@ describe("Basic public project functionality", () => {
 
   it("Can view and modify sessions settings", () => {
     cy.dataCy("project-navbar").contains("Settings").should("exist").click();
-    
     cy.intercept("/ui-server/api/renku/*/config.set").as("configSet");
     // ? The settings page refreshes when stale. We should wait for that only when it's invoked.
     let configInvocations = 0;
