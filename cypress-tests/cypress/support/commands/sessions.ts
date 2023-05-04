@@ -21,26 +21,27 @@ function waitForImageToBuild(identifier: ProjectIdentifier) {
 
 const stopAllSessionsForProject = (identifier: ProjectIdentifier)=> {
   const id = fullProjectIdentifier(identifier);
-  cy.visit(`/projects/${id.namespace}/${id.name}/sessions`);
   cy.intercept("/ui-server/api/notebooks/servers*").as("getSessions");
-    cy.wait("@getSessions").then(({ response }) => {
-      const servers = response?.body?.servers ?? {};
-      for (const key of Object.keys(servers)) {
-        const name = servers[key].name;
-        const connectButton = cy
-          .get(`[data-cy=open-session][href$=${name}]`)
-          .should("exist");
-        connectButton.siblings("[data-cy=more-menu]").click();
-        connectButton
-          .siblings(".dropdown-menu")
-          .find("button")
-          .contains("Stop")
-          .click();
-      }
-    });
-    cy.contains("No currently running sessions.", { timeout: TIMEOUTS.long });
-    cy.dataCy("go-back-button").click();
-}
+  cy.visit(`/projects/${id.namespace}/${id.name}/sessions`);
+  cy.wait("@getSessions").then(({ response }) => {
+    const servers = response?.body?.servers ?? {};
+    for (const key of Object.keys(servers)) {
+      const name = servers[key].name;
+      // eslint-disable-next-line cypress/no-assigning-return-values
+      const connectButton = cy
+        .get(`[data-cy=open-session][href$=${name}]`)
+        .should("exist");
+      connectButton.siblings("[data-cy=more-menu]").click();
+      connectButton
+        .siblings(".dropdown-menu")
+        .find("button")
+        .contains("Stop")
+        .click();
+    }
+  });
+  cy.contains("No currently running sessions.", { timeout: TIMEOUTS.long });
+  cy.dataCy("go-back-button").click();
+};
 
 export const stopSessionFromIframe = () => {
   cy.intercept({ method: "DELETE", url: /.*\/api\/notebooks\/servers\/.*/, times: 1 }, (req) => {
