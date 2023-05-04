@@ -6,7 +6,7 @@ const username = Cypress.env("TEST_USERNAME");
 
 const projectTestConfig = {
   shouldCreateProject: true,
-  projectName: `test-session-${uuidv4().substring(24)}`
+  projectName: `test-session-${uuidv4().substring(24)}-rstudio`
 };
 
 // ? Modify the config -- useful for debugging
