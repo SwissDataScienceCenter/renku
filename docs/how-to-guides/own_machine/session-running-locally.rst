@@ -91,7 +91,7 @@ You can also use the session ID to call :meth:`renku session open ID <renku.ui.c
     container directly and use the shell.
 
 
-    First, find your renku session's container ID by listing your running sessions:
+    First, find your renku session's ID by listing your running sessions:
 
     .. code-block:: shell-session
 
@@ -104,9 +104,9 @@ You can also use the session ID to call :meth:`renku session open ID <renku.ui.c
         SSH enabled: no
 
 
-    Note the value ``5432be53d7`` in the ID field.
+    Note the value ``5432be53d7``, which is the Session ID.
 
-    Then, open a shell in a running container by providing the Container ID:
+    Then, open a shell in a running container by providing the Session ID:
 
     .. code-block:: console
 
