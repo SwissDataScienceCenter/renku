@@ -55,7 +55,7 @@ trait Settings {
     }
   }
 
-  def `find project Http URL in the Settings Page`: ProjectUrl = {
+  def `find project Http URL in the Overview Page`: ProjectUrl = {
 
     `try few times before giving up` { _ =>
       When("the user navigates to the Overview -> Description tab")

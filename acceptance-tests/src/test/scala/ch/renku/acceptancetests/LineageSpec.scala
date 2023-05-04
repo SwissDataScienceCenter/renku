@@ -58,7 +58,7 @@ class LineageSpec
   private def `setup a workflow` = {
     When("the user sets up a workflow")
 
-    val projectUrl = `find project Http URL in the Settings Page`
+    val projectUrl = `find project Http URL in the Overview Page`
     val tempFolder = createTempFolder
     implicit val workFolder: Path = tempFolder / projectPage.projectSlug
 
