@@ -3,6 +3,9 @@ dependencies:
   alias: core
   repository: "https://swissdatasciencecenter.github.io/helm-charts/"
   version: 2.3.2
+  import-values:
+  - child: versions
+    parent: global.core.versions
 - name: renku-ui
   alias: ui
   repository: "https://swissdatasciencecenter.github.io/helm-charts/"

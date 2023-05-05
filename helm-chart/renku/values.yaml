@@ -39,6 +39,8 @@ global:
     gitlabClientId: renku-ui
     ## The client secret for authentication against gitlab
     gitlabClientSecret:
+  core:
+    versions:
   uiserver:
     ## The client secret for the renku-ui client application registered in keycloak.
     clientSecret: # use `uuidgen -r`
