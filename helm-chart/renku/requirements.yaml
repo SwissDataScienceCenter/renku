@@ -1,8 +1,8 @@
 dependencies:
 - name: renku-core
   alias: core
-  repository: "https://swissdatasciencecenter.github.io/helm-charts/"
-  version: 2.3.2
+  repository: "file:///home/zenon/DEV/ETH/renku-python/helm-chart/renku-core"
+  version: 2.4.0
   import-values:
   - child: versions
     parent: global.core.versions
@@ -16,7 +16,7 @@ dependencies:
   version: 1.15.2
 - name: renku-gateway
   alias: gateway
-  repository: "https://swissdatasciencecenter.github.io/helm-charts/"
+  repository: "https://swissdatasciencecenter.github.io/helm-charts/" #"file:///home/zenon/DEV/ETH/renku-gateway/helm-chart/renku-gateway"
   version: 0.19.2
 - name: gitlab
   repository: "https://swissdatasciencecenter.github.io/helm-charts/"
