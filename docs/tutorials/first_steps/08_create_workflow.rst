@@ -133,7 +133,7 @@ Workflows created in this way don't just track past executions, but also define
 workflow templates (Called ``Plans`` in Renku) that can be executed with
 arbitrary parameters on different workflow backends and exported to other
 workflow languages.
-See the `renku command line docs <https://renku.readthedocs.io/en/latest/renku-python/docs/reference/commands.html>`_
+See the `renku command line docs <https://renku-python.readthedocs.io/en/stable/reference/commands/index.html>`_
 for more information on this and other commands.
 
 

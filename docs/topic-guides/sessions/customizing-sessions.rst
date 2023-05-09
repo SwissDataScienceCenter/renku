@@ -115,4 +115,4 @@ Getting Help
 If you are stuck with a specific modification you'd like to make, do reach out to the
 `Renku community forum <https://renku.discourse.group>`_!
 
-.. _`renku config command`: https://renku.readthedocs.io/en/latest/renku-python/docs/reference/commands.html#module-renku.ui.cli.config
+.. _`renku config command`: https://renku-python.readthedocs.io/en/stable/reference/commands/config.html

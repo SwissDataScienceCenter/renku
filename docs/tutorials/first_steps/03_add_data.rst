@@ -4,7 +4,7 @@ Add data to your project
 ------------------------
 
 In the JupyterLab interface or RStudio files panel, we can see that a few files already exist.
-Let's start by adding data using the `Renku CLI <https://renku.readthedocs.io/en/latest/renku-python/docs/reference/commands.html>`__.
+Let's start by adding data using the `Renku CLI <https://renku-python.readthedocs.io/en/stable/reference/commands/index.html>`__.
 
 .. tab-set::
 
