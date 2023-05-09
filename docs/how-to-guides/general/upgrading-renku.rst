@@ -7,7 +7,7 @@ Renku is in constant flux! This means that often there are changes
 to RenkuLab (e.g. the web platform (UI) and the knowledge graph (KG)), and the
 ``renku`` command-line interface (CLI). These docs will explain how to benefit from
 changes to the ``renku CLI`` when you're using a session on RenkuLab.
-You can find the changes `in the renku-python docs <https://renku.readthedocs.io/en/latest/renku-python/docs/changes.html>`_.
+You can find the changes `in the renku-python docs <https://renku-python.readthedocs.io/en/latest/changes.html>`_.
 
 If you're instead looking for a list of new features available in RenkuLab, they
 are announced in the :ref:`release_notes`. When we update components of the
