@@ -1,4 +1,4 @@
-.. upgrading_renku:
+.. _upgrading_renku:
 
 Upgrade your Renku project
 ============================
