@@ -1,5 +1,30 @@
 .. _changelog:
 
+0.25.5
+------
+
+Renku ``0.25.5`` comes with a few KG bug-fixes.
+
+User-Facing Changes
+~~~~~~~~~~~~~~~~~~~
+
+**🐞 Bug Fixes**
+
+- **KG**: Prevent presenting misleading information about Knowledge Graph integration status on projects where the user is not one of the members.
+
+Internal Changes
+~~~~~~~~~~~~~~~~
+
+**Bug Fixes**
+
+- **KG**: Resolve token decryption issues preventing Knowledge Graph integration activation.
+
+Individual components
+~~~~~~~~~~~~~~~~~~~~~~
+
+- `renku-graph 2.33.0 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/2.33.0>`_
+
+
 0.25.4
 ------
 
