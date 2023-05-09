@@ -1,5 +1,172 @@
 .. _changelog:
 
+0.25.4
+------
+
+Renku ``0.25.4`` introduces several KG and UI bug-fixes.
+
+User-Facing Changes
+~~~~~~~~~~~~~~~~~~~
+
+**🐞 Bug Fixes**
+
+- **UI**: Prevent flashing a spinning wheel when loading workflows
+  (`#2493 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2493>`_).
+- **UI**: Restore the flag to show inactive workflows
+  (`#2502 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2502>`_).
+- **UI**: Prevent infinite spinning wheel when accessing projects by numeric ID
+  without the required user's permissions
+  (`#2476 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2476>`_).
+- **UI**: Fix an issue where a notebook would not automatically open in a session for anonymous users
+  as an anonymous user
+  (`#2479 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2479>`_).
+- **UI**: Prevent content layout shift when selecting a template
+  (`#2482 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2482>`_).
+- **UI**: Update broken documentation link
+  (`#2497 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2497>`_).
+
+Internal Changes
+~~~~~~~~~~~~~~~~
+
+**Bug Fixes**
+
+- **KG**: Resolve issues with synchronization of project user access authorization data.
+- **KG**: Ensure that the Delete Project API works when there is no data for the project in the Triples Store.
+- **KG**: Ensure that the Lineage API works in cases of implicit parameters, inputs and outputs.
+- **UI**: Correct handling of notebook search parameter with autostart
+  (`#2469 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2469>`_).
+
+Individual components
+~~~~~~~~~~~~~~~~~~~~~~
+
+- `renku-graph 2.32.0 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/2.32.0>`_
+- `renku-ui 3.4.3 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.4.3>`_
+
+
+0.25.3
+------
+
+Renku ``0.25.3`` introduces a bug fix in the Helm chart for the gateway.
+
+Internal Changes
+~~~~~~~~~~~~~~~~
+
+**Bug Fixes**
+
+- **Gateway**: **chart:** properly template horizontal pod auto-scaler for reverse proxy
+  (`#643 <https://github.com/SwissDataScienceCenter/renku-gateway/issues/643>`_).
+
+Individual components
+~~~~~~~~~~~~~~~~~~~~~~
+
+- `renku-gateway 0.19.2 <https://github.com/SwissDataScienceCenter/renku-gateway/releases/tag/0.19.2>`_
+
+
+0.25.2
+------
+
+Renku ``0.25.2`` introduces a few bug fixes and improvements in the UI.
+
+User-Facing Changes
+~~~~~~~~~~~~~~~~~~~
+
+**✨ Improvements**
+
+- 🧾 **UI**: Use drop-downs for session options with many elements
+  (`#2461 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2461>`_).
+
+**🐞 Bug Fixes**
+
+- **UI**: Prevent dropping valid pinned images when starting new sessions
+  (`#2466 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2466>`_).
+- **UI**: Ignore deleted projects on the dashboard
+  (`#2465 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2465>`_).
+- **UI**: Fix fork suggestion when trying to start sessions on non-owned projects
+  (`#2465 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2465>`_).
+- **UI**: Remove conspicuous commas in the add dataset screen
+  (`#2472 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2472>`_).
+
+Internal Changes
+~~~~~~~~~~~~~~~~
+
+**Bug Fixes**
+
+- **UI**: Do not query workflows on outdated projects
+  (`#2460 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2460>`_).
+- **UI**: Fix broken warning component on sessions pages
+  (`#2474 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2474>`_).
+
+Individual components
+~~~~~~~~~~~~~~~~~~~~~~
+
+- `renku-ui 3.4.2 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.4.2>`_
+
+
+0.25.1
+------
+
+Renku ``0.25.1`` introduces a small bug fix in the Gateway internal components. 
+
+Internal Changes
+~~~~~~~~~~~~~~~~
+
+**Bug Fixes**
+
+- **Gateway**: correct path for reaching Gitlab from the CLI, it should be ``/repos`` instead of ``/api/repos``.
+
+Individual components
+~~~~~~~~~~~~~~~~~~~~~~
+
+- `renku-gateway 0.19.1 <https://github.com/SwissDataScienceCenter/renku-gateway/releases/tag/0.19.1>`_
+
+0.25.0
+------
+
+Renku ``0.25.0`` introduces an update to the base images and templates, as well as changes in internal components and the Helm chart. 
+
+User-facing Changes
+~~~~~~~~~~~~~~~~~~~
+
+**Improvements**
+
+- New base images correct a ``PATH`` misconfiguration that occurs when connecting to a session with SSH. If using sessions through SSH, please update your project!
+
+Internal Changes
+~~~~~~~~~~~~~~~~
+
+**Improvements**
+
+- **Gateway**: replace the Traefik reverse proxy with a custom solution based on the Echo library in Go. 
+
+Individual components
+~~~~~~~~~~~~~~~~~~~~~~
+
+- `renku-gateway 0.19.0 <https://github.com/SwissDataScienceCenter/renku-gateway/releases/tag/0.19.0>`_
+- `renkulab-docker 0.16.0 <https://github.com/SwissDataScienceCenter/renkulab-docker/releases/tag/0.16.0>`_
+
+
+0.24.4
+------
+
+Renku ``0.24.4`` resolves bugs in the Knowledge Graph backend processes.
+
+Internal Changes
+~~~~~~~~~~~~~~~~
+
+**Improvements**
+
+* **KG**: Collect info about users who showed interest in projects and datasets.
+
+**Bug Fixes**
+
+* **KG**: Resolve problems causing flows accessing GitLab API to go into deadlock.
+
+
+Individual components
+~~~~~~~~~~~~~~~~~~~~~~
+
+- `renku-graph 2.31.0 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/2.31.0>`_
+
 
 0.24.3
 ------
@@ -191,6 +358,11 @@ Internal Changes
 
 **Improvements**
 
+* **Core Service**: Metadata v10 support
+* **Knowledge Graph** Add support for the new Renku Metadata Schema v10.
+* **Knowledge Graph** Enable the Cross-Entity Search API to allow multiple sort parameters.
+* **Knowledge Graph** Remove deprecated GraphQL API
+* **Knowledge Graph**: Upgrade Jena to 4.7.0
 * **Sessions**: Show if ssh is enabled in /version of notebook service
   (`#1407 <https://github.com/SwissDataScienceCenter/renku-notebooks/pull/1407>`_).
 * **Sessions**: Introduce experimental Azure Blob storage support
@@ -203,16 +375,6 @@ Internal Changes
 * **Sessions**: Cloning the correct SHA for anonymous user sessions
   (`#1406 <https://github.com/SwissDataScienceCenter/renku-notebooks/pull/1406>`_).
 
-Internal Changes
-~~~~~~~~~~~~~~~~
-
-**Improvements**
-
-* **Core Service**: Metadata v10 support
-* **Knowledge Graph**: Add support for the new Renku Metadata Schema v10.
-* **Knowledge Graph**: Enable the Cross-Entity Search API to allow multiple sort parameters.
-* **Knowledge Graph**: Remove deprecated GraphQL API
-* **Knowledge Graph**: Upgrade Jena to 4.7.0
 
 Individual components
 ~~~~~~~~~~~~~~~~~~~~~~

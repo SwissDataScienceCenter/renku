@@ -16,6 +16,7 @@ information.
 they want, the schedule is up to them. They are responsible for updating the
 `CHANGELOG.rst` file in the auto-PR in the Renku repository.
 Please create a new section above the last release if no one has already done it.
+Please follow the `CHANGELOG-template.rst` for formatting and ordering the changelog.
 The auto-PRs **must** be merged with an updated changelog/release notes. If upgrading
 a service will knowingly result in an extended outage (e.g. because of a DB migration)
 this *must* be clearly noted and highlighted in the release notes. Use emojis freely.

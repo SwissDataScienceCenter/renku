@@ -1,7 +1,5 @@
 import { v4 as uuidv4 } from "uuid";
-
 import { TIMEOUTS } from "../../config";
-
 
 const username = Cypress.env("TEST_USERNAME");
 
@@ -39,12 +37,13 @@ describe("Basic public project functionality", () => {
 
   beforeEach(() => {
     cy.visitAndLoadProject(projectIdentifier);
+    cy.stopAllSessionsForProject(projectIdentifier);
   });
 
   it("Start a new session on the project and interact with the terminal.", () => {
     // Start a session with options
     let serversInvoked = false;
-    cy.intercept("/ui-server/api/notebooks/servers*",  req => { serversInvoked = true; }).as("getServers");
+    cy.intercept("/ui-server/api/notebooks/servers*", req => { serversInvoked = true; }).as("getServers");
     cy.dataCy("project-overview-content")
       .contains("your new Renku project", { timeout: TIMEOUTS.long }).should("exist");
     cy.getProjectPageLink(projectIdentifier, "sessions").should("exist").click();
