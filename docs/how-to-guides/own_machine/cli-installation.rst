@@ -101,7 +101,7 @@ it installed, you can run
 
 .. code-block:: console
 
-  conda create -y -n renku python=3.6
+  conda create -y -n renku python=3.9
   $(conda env list | grep '^renku\s' | awk '{print $2}')/bin/pip install -e git+https://github.com/SwissDataScienceCenter/renku-python.git#egg=renku
   mkdir -p ~/.renku/bin
   ln -s "$(conda env list | grep '^renku\s' | awk '{print $2}')/bin/renku" ~/.renku/bin/renku

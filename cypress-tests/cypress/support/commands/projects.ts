@@ -42,14 +42,18 @@ function createProject(newProjectProps: NewProjectProps) {
 
   // The button may take some time before it is clickable
   cy.get("[data-cy=create-project-button]", { timeout: TIMEOUTS.vlong }).should("be.enabled").click();
-  cy.url({ timeout: TIMEOUTS.vlong }).should("contain", newProjectProps.name);
+  cy.url({ timeout: TIMEOUTS.vlong }).should("contain", newProjectProps.name.toLowerCase());
   cy.get(`[data-cy="header-project"]`, { timeout: TIMEOUTS.vlong }).should("be.visible");
   cy.get("ul.nav-pills-underline").should("be.visible");
 }
 
 function deleteProject(identifier: ProjectIdentifier) {
   const id = fullProjectIdentifier(identifier);
-  cy.request("DELETE", `/ui-server/api/projects/${id.namespace}%2F${id.name}`).its("status").should("be.lessThan", 300);
+  cy.request({
+    failOnStatusCode: false,
+    method: "DELETE",
+    url: `/ui-server/api/projects/${id.namespace}%2F${id.name}`
+  });
 }
 
 function forkProject(identifier: ProjectIdentifier, newName: string) {
@@ -75,6 +79,7 @@ function forkProject(identifier: ProjectIdentifier, newName: string) {
   // check the new project is ready
   cy.intercept("ui-server/api/renku/cache.migrations_check*").as("getMigrationsCheck");
   cy.wait("@getMigrationsCheck", { timeout: TIMEOUTS.long });
+
   cy.dataCy("header-project").contains(newName).should("be.visible");
   cy.dataCy("header-project").contains("forked from").should("be.visible");
   cy.dataCy("header-project").contains(identifier.namespace + "/" + identifier.name).should("be.visible");

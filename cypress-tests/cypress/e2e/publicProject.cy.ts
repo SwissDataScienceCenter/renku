@@ -59,6 +59,8 @@ describe("Basic public project functionality", () => {
     cy.dataCy("project-overview-nav").contains("Status").should("be.visible").click();
     cy.dataCy("project-overview-content")
       .contains("Knowledge Graph integration is active", { timeout: TIMEOUTS.vlong }).should("be.visible");
+    // ? wait a moment to prevent "project not found" error
+    cy.wait(2000); // eslint-disable-line cypress/no-unnecessary-waiting
     cy.searchForProject(projectIdentifier);
 
     // logout and search for the project and log back in
