@@ -33,7 +33,7 @@ class LineageSpec
     with CLIConfiguration
     with KnowledgeGraphApi {
 
-  Scenario("User can see lineage") {
+  scenario("User can see lineage") {
 
     `log in to Renku`
 
