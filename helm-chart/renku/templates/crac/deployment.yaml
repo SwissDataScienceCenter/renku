@@ -1,0 +1,96 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ template "renku.fullname" . }}-crac
+  labels:
+    app: {{ template "renku.fullname" . }}-crac
+    chart: {{ template "renku.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  {{- if not .Values.crac.autoscaling.enabled }}
+  replicas: {{ .Values.crac.replicaCount }}
+  {{- end }}
+  strategy: 
+    {{- toYaml .Values.crac.updateStrategy | nindent 4 }}
+  selector:
+    matchLabels:
+      app: {{ template "renku.name" . }}-crac
+      release: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app: {{ template "renku.name" . }}-crac
+        release: {{ .Release.Name }}
+      {{- with .Values.crac.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+    spec:
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      automountServiceAccountToken: {{ .Values.global.debug }}
+      initContainers:
+        {{- include "certificates.initContainer" . | nindent 8 }}
+      containers:
+        - name: crac
+          image: "{{ .Values.crac.image.repository }}:{{ .Values.crac.image.tag }}"
+          imagePullPolicy: {{ .Values.crac.image.pullPolicy }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          ports:
+            - name: http
+              containerPort: 8000
+              protocol: TCP
+          env:
+            - name: DB_HOST
+              value: {{ template "postgresql.fullname" . }}
+            - name: DB_USER
+              value: {{ .Values.global.db.common.username }}
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.global.db.common.passwordSecretName }}
+                  key: password
+            - name: KEYCLOAK_URL
+              value: {{ (printf "%s://%s/auth/" (include "gateway.protocol" .) .Values.global.renku.domain) | quote}}
+            - name: KEYCLOAK_TOKEN_SIGNATURE_ALGS
+              value: "RS256"
+          volumeMounts:
+            {{- include "certificates.volumeMounts.system" . | nindent 12 }}
+          livenessProbe:
+            httpGet:
+              path: /api/data/version
+              port: http
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            failureThreshold: 6
+          readinessProbe:
+            httpGet:
+              path: /api/data/version
+              port: http
+            initialDelaySeconds: 10
+            periodSeconds: 2
+            failureThreshold: 2
+          startupProbe:
+            httpGet:
+              path: /api/data/version
+              port: http
+            periodSeconds: 5
+            failureThreshold: 60
+          resources:
+            {{ toYaml .Values.crac.resources | nindent 12 }}
+    {{- with .Values.crac.nodeSelector }}
+      nodeSelector:
+        {{ toYaml . | nindent 8 }}
+    {{- end }}
+    {{- with .Values.crac.affinity }}
+      affinity:
+        {{ toYaml . | nindent 8 }}
+    {{- end }}
+    {{- with .Values.crac.tolerations }}
+      tolerations:
+        {{ toYaml . | nindent 8 }}
+    {{- end }}
+      volumes:
+        {{- include "certificates.volumes" . | nindent 8 }}

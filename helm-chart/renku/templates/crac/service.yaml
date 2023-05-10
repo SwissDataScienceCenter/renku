@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ template "renku.name" . }}-crac
+  labels:
+    app: {{ template "renku.name" . }}-crac
+    chart: {{ template "renku.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  type: {{ .Values.crac.service.type }}
+  ports:
+    - port: {{ .Values.crac.service.port }}
+      targetPort: http
+      protocol: TCP
+      name: http
+  selector:
+    app: {{ template "renku.name" . }}-crac
+    release: {{ .Release.Name }}

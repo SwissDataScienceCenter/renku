@@ -1,0 +1,39 @@
+{{- if .Values.crac.autoscaling.enabled }}
+{{- if semverCompare ">=1.23.0-0" .Capabilities.KubeVersion.GitVersion -}}
+apiVersion: autoscaling/v2
+{{- else -}}
+apiVersion: autoscaling/v2beta2
+{{- end }}
+kind: HorizontalPodAutoscaler
+metadata:
+  name: {{ template "renku.fullname" . }}-crac
+  labels:
+    app: {{ template "renku.name" . }}-crac
+    chart: {{ template "renku.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: {{ template "renku.fullname" . }}-crac
+  minReplicas: {{ .Values.crac.autoscaling.minReplicas }}
+  maxReplicas: {{ .Values.crac.autoscaling.maxReplicas }}
+  metrics:
+    {{- if .Values.crac.autoscaling.targetCPUUtilizationPercentage }}
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: {{ .Values.crac.autoscaling.targetCPUUtilizationPercentage }}
+    {{- end }}
+    {{- if .Values.crac.autoscaling.targetMemoryUtilizationPercentage }}
+    - type: Resource
+      resource:
+        name: memory
+        target:
+          type: Utilization
+          averageUtilization: {{ .Values.crac.autoscaling.targetMemoryUtilizationPercentage }}
+    {{- end }}
+{{- end }}
