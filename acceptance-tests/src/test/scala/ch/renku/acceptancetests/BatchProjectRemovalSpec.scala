@@ -22,8 +22,9 @@ import ch.renku.acceptancetests.tooling.{AcceptanceSpec, KnowledgeGraphApi}
 import ch.renku.acceptancetests.workflows._
 
 import java.lang.System.getProperty
-import java.time.{Duration => JDuration, Instant}
+import java.time.{Instant, Duration => JDuration}
 import Ordering.Implicits._
+import scala.util.matching.Regex
 
 /** Delete old projects.
   *
@@ -55,7 +56,7 @@ class BatchProjectRemovalSpec extends AcceptanceSpec with Login with RemoveProje
       Given(s"project $path found")
 
       val days = JDuration.ofDays(7)
-      if ((batchRemoveConfig.pattern.r matches path) && (created < Instant.now().minus(days))) {
+      if (batchRemoveConfig.patterns.exists(_ matches path) && (created < Instant.now().minus(days))) {
         And(s"the project matches the removal pattern and it's older than ${days.toDays} days")
         Then("the project is removed")
         `DELETE /knowledge-graph/projects/:path`(fullPath)
@@ -65,7 +66,7 @@ class BatchProjectRemovalSpec extends AcceptanceSpec with Login with RemoveProje
       }
     }
 
-  private case class BatchRemoveConfig(batchRemove: Boolean, pattern: String)
+  private case class BatchRemoveConfig(batchRemove: Boolean, patterns: List[Regex])
 
   private lazy val batchRemoveConfig: BatchRemoveConfig = {
 
@@ -75,10 +76,16 @@ class BatchProjectRemovalSpec extends AcceptanceSpec with Login with RemoveProje
         .flatMap(_.toBooleanOption)
         .getOrElse(true)
 
-    val projectNamePattern = Option(getProperty("remPattern"))
-      .orElse(sys.env.get("RENKU_TEST_REMOVE_PATTERN"))
-      .getOrElse("test-(\\d{4})-(\\d+)-(\\d+)-(\\d+)-(\\d+)-(\\d+).*")
+    val defaultPatterns = List(
+      "test-(\\d{4})-(\\d+)-(\\d+)-(\\d+)-(\\d+)-(\\d+).*",
+      "test-session-.*"
+    )
 
-    BatchRemoveConfig(batchRemove, projectNamePattern)
+    val projectNamePatterns = Option(getProperty("remPattern"))
+      .orElse(sys.env.get("RENKU_TEST_REMOVE_PATTERN"))
+      .map(List(_))
+      .getOrElse(defaultPatterns)
+
+    BatchRemoveConfig(batchRemove, projectNamePatterns.map(_.r))
   }
 }
