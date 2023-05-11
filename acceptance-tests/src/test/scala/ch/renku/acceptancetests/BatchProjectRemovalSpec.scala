@@ -22,7 +22,7 @@ import ch.renku.acceptancetests.tooling.{AcceptanceSpec, KnowledgeGraphApi}
 import ch.renku.acceptancetests.workflows._
 
 import java.lang.System.getProperty
-import java.time.{Instant, Duration => JDuration}
+import java.time.{Duration => JDuration, Instant}
 import Ordering.Implicits._
 
 /** Delete old projects.
