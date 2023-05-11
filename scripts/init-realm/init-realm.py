@@ -273,5 +273,21 @@ keycloak_admin.realm_name = args.realm
 for new_client in new_clients:
     _check_and_create_client(keycloak_admin, new_client, args.force)
 
+# Create renku-admin realm role
+realm_role_payload = {
+    "name": "renku-admin",
+    "composite": True,
+    "composites": {
+        "client": {
+        "realm-management": [
+            "query-users",
+            "view-users"
+        ]
+        }
+    },
+    "clientRole": False,
+}
+keycloak_admin.create_realm_role(realm_role_payload, skip_exists=True)
+
 for new_user in new_users:
     _check_and_create_user(keycloak_admin, new_user)

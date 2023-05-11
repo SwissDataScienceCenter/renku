@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: {{ template "renku.fullname" . }}-crac
   labels:
-    app: {{ template "renku.fullname" . }}-crac
+    app: renku-crac
     chart: {{ template "renku.chart" . }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
@@ -15,12 +15,12 @@ spec:
     {{- toYaml .Values.crac.updateStrategy | nindent 4 }}
   selector:
     matchLabels:
-      app: {{ template "renku.name" . }}-crac
+      app: renku-crac
       release: {{ .Release.Name }}
   template:
     metadata:
       labels:
-        app: {{ template "renku.name" . }}-crac
+        app: renku-crac
         release: {{ .Release.Name }}
       {{- with .Values.crac.podAnnotations }}
       annotations:
