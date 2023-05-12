@@ -18,108 +18,74 @@
 
 package ch.renku.acceptancetests
 
-import ch.renku.acceptancetests.model.projects._
-import ch.renku.acceptancetests.pages._
-import ch.renku.acceptancetests.tooling.AcceptanceSpec
+import ch.renku.acceptancetests.tooling.{AcceptanceSpec, KnowledgeGraphApi}
 import ch.renku.acceptancetests.workflows._
 
 import java.lang.System.getProperty
-import scala.concurrent.duration._
+import java.time.{Instant, Duration => JDuration}
+import Ordering.Implicits._
 import scala.util.matching.Regex
 
-/** Delete many projects.
+/** Delete old projects.
   *
   * During testing, test projects can accumulate and they are tedious to clean up. This spec
   * will delete all projects that match a pattern and can be used to batch delete projects
   * from failed test runs, for example.
   *
-  * It needs to be explicitly activated to avoid accidentally destroying projects.
+  * By default, it removes projects matching the test project pattern name and are older than a week.
   */
-class BatchProjectRemovalSpec extends AcceptanceSpec with Login with RemoveProject {
+class BatchProjectRemovalSpec extends AcceptanceSpec with Login with RemoveProject with KnowledgeGraphApi {
 
   scenario("User can delete many projects project") {
 
-    batchRemoveConfig match {
-      case Some(config) =>
-        if (config.batchRemove) `login and remove projects`(config)
-        else {
-          Given("specifically asked to not remove projects")
-          Then("do not remove anything")
-        }
-      case None =>
-        Given("not asked to remove projects")
-        Then("do not remove anything")
-    }
+    if (batchRemoveConfig.batchRemove) `login and remove projects`
+    else Given("specifically asked to not remove projects")
   }
 
-  def `login and remove projects`(config: BatchRemoveConfig): Unit = {
+  def `login and remove projects`: Unit = {
+
     `log in to Renku`
 
-    Given("projects to remove")
-    removeProjects(config)
+    `find and remove projects`
 
     `log out of Renku`
   }
 
-  private def removeProjects(config: BatchRemoveConfig): Unit = {
-    When("user goes to the projects page")
-    go to ProjectsPage sleep (5 seconds)
-    verify browserAt ProjectsPage
-    // Wait for the page to load
-    val pattern: Regex = config.pattern.r
-    val projectLinks = ProjectsPage.YourProjects.projectLinks
-    And("lists projects to remove")
-    val toRemoveLinks = projectLinks.filter { elt =>
-      val href = elt getAttribute "href"
-      val last = (href split "/") last;
-      pattern matches last
+  private def `find and remove projects`: Unit =
+    `get user's projects from GitLab` foreach { case ProjectInfo(_, path, fullPath, created) =>
+      Given(s"project $path found")
+
+      val days = JDuration.ofDays(7)
+      if (batchRemoveConfig.patterns.exists(_ matches path) && (created < Instant.now().minus(days))) {
+        And(s"the project matches the removal pattern and it's older than ${days.toDays} days")
+        Then("the project is removed")
+        `DELETE /knowledge-graph/projects/:path`(fullPath)
+      } else {
+        And(s"the project doesn't match the removal pattern or it's not older than ${days.toDays} days")
+        Then("project is left untouched")
+      }
     }
-    val removeIds = toRemoveLinks map (elt => {
-      val projectUrlComps = elt getAttribute "href" split "/"
-      ProjectIdentifier(
-        namespace = projectUrlComps(projectUrlComps.size - 2),
-        slug = projectUrlComps last
-      )
-    })
-    removeIds foreach removeProject
-    go to ProjectsPage sleep (5 seconds)
-  }
 
-  private def removeProject(projectId: ProjectIdentifier): Unit = {
-    // Go to the project page to get the title
-    val projectPage = ProjectPage(projectId)
-    go to projectPage sleep (5 seconds)
-    projectPage.projectTitle match {
-      case Some(s) =>
-        And(s"found project $s to remove")
-        Then("remove project")
-        `remove project in GitLab`(projectId)
-      case None =>
-        And(s"could not get the title for $projectId")
-        Then("do not remove")
-    }
-  }
+  private case class BatchRemoveConfig(batchRemove: Boolean, patterns: List[Regex])
 
-  private case class BatchRemoveConfig(
-      batchRemove: Boolean = false,
-      pattern:     String = "test-(\\d{4})-(\\d{2})-(\\d{2})-(\\d{2})-(\\d{2})-(\\d{2})"
-  )
+  private lazy val batchRemoveConfig: BatchRemoveConfig = {
 
-  private lazy val batchRemoveConfig: Option[BatchRemoveConfig] = {
+    val batchRemove =
+      Option(getProperty("batchRem"))
+        .orElse(sys.env.get("RENKU_TEST_BATCH_REMOVE"))
+        .flatMap(_.toBooleanOption)
+        .getOrElse(true)
 
-    val batchRemove = Option(getProperty("batchRem")) orElse sys.env.get("RENKU_TEST_BATCH_REMOVE") match {
-      case Some(s) => Some(s.toBoolean)
-      case None    => None
-    }
-    val projectNamePattern = Option(getProperty("remPattern")) orElse sys.env.get("RENKU_TEST_REMOVE_PATTERN")
+    val defaultPatterns = List(
+      "test-(\\d{4})-(\\d+)-(\\d+)-(\\d+)-(\\d+)-(\\d+).*",
+      "test-session-.*"
+    )
 
-    batchRemove match {
-      case Some(b) =>
-        projectNamePattern match {
-          case Some(p) => Some(BatchRemoveConfig(b, p))
-          case None    => Some(BatchRemoveConfig(b))
-        }
-      case None => None
-    }
+    val projectNamePatterns = Option(getProperty("remPattern"))
+      .orElse(sys.env.get("RENKU_TEST_REMOVE_PATTERN"))
+      .map(List(_))
+      .getOrElse(defaultPatterns)
+
+    BatchRemoveConfig(batchRemove, projectNamePatterns.map(_.r))
   }
 }

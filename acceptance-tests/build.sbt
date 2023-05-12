@@ -31,7 +31,7 @@ publishTo := Some(Resolver.file("Unused transient repository", file("target/unus
 val circeVersion = "0.14.5"
 
 libraryDependencies += "ch.qos.logback"          % "logback-classic"          % "1.4.7"
-libraryDependencies += "com.github.pureconfig"  %% "pureconfig"               % "0.17.3"     % Test
+libraryDependencies += "com.github.pureconfig"  %% "pureconfig"               % "0.17.4"     % Test
 libraryDependencies += "eu.timepit"             %% "refined"                  % "0.10.3"     % Test
 libraryDependencies += "io.circe"               %% "circe-core"               % circeVersion % Test
 libraryDependencies += "io.circe"               %% "circe-literal"            % circeVersion % Test
@@ -45,7 +45,7 @@ libraryDependencies += "org.scalatestplus"      %% "selenium-3-141"           % 
 libraryDependencies += "org.seleniumhq.selenium" % "selenium-http-jdk-client" % "4.9.1"      % Test
 libraryDependencies += "org.seleniumhq.selenium" % "selenium-java"            % "4.7.1"      % Test
 libraryDependencies += "org.slf4j"               % "slf4j-log4j12"            % "2.0.7"      % Test
-libraryDependencies += "org.typelevel"          %% "cats-effect"              % "3.4.10"      % Test
+libraryDependencies += "org.typelevel"          %% "cats-effect"              % "3.4.11"      % Test
 
 scalacOptions += "-feature"
 scalacOptions += "-unchecked"
