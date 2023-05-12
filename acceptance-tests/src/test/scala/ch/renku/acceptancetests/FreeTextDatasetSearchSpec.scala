@@ -34,7 +34,7 @@ class FreeTextDatasetSearchSpec
     with DatasetsSearch
     with KnowledgeGraphApi {
 
-  Scenario("User can search for datasets") {
+  scenario("User can search for datasets") {
 
     `log in to Renku`
 
