@@ -1,8 +1,19 @@
-# QA Checklist
 
-Name: <Name>
+Use this template to create a new QA checklist. To get started navigate to https://github.com/SwissDataScienceCenter/renku/wiki
+and create a new page named "QA Checklist YYYYMMDD <renku.version.number>". For a real case this would be something like
+"QA Checklist 20230515 0.25.0".
 
-Date: <yyyy-mm-dd>
+Paste the remainder of this document into the wiki page and fill it out as you are going through the tests.
+
+If possible use Github handles for the names of the testers.
+
+When the QA is complete update the release notes from https://github.com/SwissDataScienceCenter/renku/releases with a link
+to the wiki page that contains these notes.
+
+**QA checklist content starts below, exclude everything above this point including this line.**
+
+
+Name(s): <Name>
 
 Renku helm chart version: <0.25.0>
 
@@ -52,14 +63,13 @@ Renku helm chart version: <0.25.0>
     <summary>Details</summary>
 
     1. Create a new Renku project in the website
-    2. Download a dataset from https://zenodo.org/
-    3. Upload the data and create the dataset from the UI
-    4. Ensure that the download completed
-    5. Ensure that large files are in Git LFS
-    6. After uploading the dataset try to clone the git project locally (does this take a really long time)
-    7. Launch a session in the project
-    8. Is the dataset available?
-    9. Run `renku dataset ls` can you see the dataset you uploaded?
+    2. Go to from https://zenodo.org/ and pick any dataset
+    3. In your new Renku project navigate to the Datasets tab
+    4. Create a new Renku dataset from the Zeonodo dataset you selected earlier
+    5. Ensure the dataset was created successfully
+    6. Launch a session in the project
+    7. Is the dataset available?
+    8. Run `renku dataset ls` can you see the dataset you uploaded?
   </details>
 
 - [ ] Create a dataset with the CLI from a running session
@@ -86,11 +96,12 @@ Renku helm chart version: <0.25.0>
   
 ## Templates
 
-- [ ] Create a project and start a session
+- [ ] Create a project and start a session in all Renku templates
   <details>
     <summary>Details</summary>
     
-    1. Pick a template
+    1. Pick a template (one of Python, R, Bioconductor or Julia). Skip any templates
+      you have already used in other tests.
     2. Create a project
     3. Wait for the image to build
     4. Ensure the image built
