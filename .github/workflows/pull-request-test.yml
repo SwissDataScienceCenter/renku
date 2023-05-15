@@ -28,7 +28,7 @@ jobs:
           git submodule sync
           git submodule update --init --force docs/renku-python
           pip install --upgrade pip
-          pip install "poetry-dynamic-versioning>=0.21.5"
+          pip install "poetry-dynamic-versioning>=0.21.5" "poetry-core<1.6.0"
           pip install -r docs/requirements.txt
       - name: test the docs build
         env:
