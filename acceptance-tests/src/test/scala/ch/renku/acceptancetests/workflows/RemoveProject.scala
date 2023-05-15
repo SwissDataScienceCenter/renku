@@ -27,7 +27,7 @@ trait RemoveProject extends BrowserNavigation {
   self: AcceptanceSpec with GitLabApi =>
 
   def `remove project in GitLab`(implicit projectId: ProjectIdentifier): Unit = {
-    When(s"the '${projectId.slug}' project is removed")
+    And(s"the '${projectId.slug}' project is removed")
     `delete project in GitLab`(projectId)
     sleep(1 second)
   }
