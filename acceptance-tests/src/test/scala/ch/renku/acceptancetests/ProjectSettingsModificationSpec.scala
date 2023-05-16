@@ -23,7 +23,7 @@ import ch.renku.acceptancetests.workflows._
 
 class ProjectSettingsModificationSpec extends AcceptanceSpec with Login with Project with Settings {
 
-  Scenario("User can set project tags and description") {
+  scenario("User can set project tags and description") {
 
     `log in to Renku`
 

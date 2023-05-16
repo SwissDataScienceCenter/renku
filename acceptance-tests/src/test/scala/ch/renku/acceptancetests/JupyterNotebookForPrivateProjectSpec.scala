@@ -23,7 +23,7 @@ import ch.renku.acceptancetests.workflows._
 
 class JupyterNotebookForPrivateProjectSpec extends AcceptanceSpec with Login with PrivateProject with JupyterNotebook {
 
-  Scenario("User can launch Jupyter notebook when the project is private") {
+  scenario("User can launch Jupyter notebook when the project is private") {
 
     `log in to Renku`
 
