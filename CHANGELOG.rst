@@ -3,14 +3,14 @@
 0.25.6
 ------
 
-Renku ``0.24.5`` resolves bugs and adds minor features in the core-service and CLI.
+Renku ``0.25.6`` resolves bugs and adds minor features in the core-service and CLI.
 
 User-Facing Changes
 ~~~~~~~~~~~~~~~~~~~
 
 **🌟 New Features**
 
-- 🚢 **Renku CLI**: Allow force building and setting local port on docker session provider.
+- 🚢 **Renku CLI**: Allow force-building local images and setting local port on docker session provider.
 
 **✨ Improvements**
 
