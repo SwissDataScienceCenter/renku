@@ -1,5 +1,42 @@
 .. _changelog:
 
+0.25.6
+------
+
+Renku ``0.24.5`` resolves bugs and adds minor features in the core-service and CLI.
+
+User-Facing Changes
+~~~~~~~~~~~~~~~~~~~
+
+**🌟 New Features**
+
+- 🚢 **Renku CLI**: Allow force building and setting local port on docker session provider.
+
+**✨ Improvements**
+
+- ☝ **Renku CLI**: Removed nagging about new Renku CLI versions when running commands.
+- 🪣 **Renku CLI**: Added support for storing dataset S3 credentials per bucket.
+
+**🐞 Bug Fixes**
+
+- 🛠 **Renku Core Service**, **Renku CLI**: Fixed an issue with v10 metadata migration regarding datasets.
+- 🍎 **Renku CLI**: Fixed compatibility with Python 3.11 on MacOS.
+- 🍎 **Renku CLI**: Fixed properly exporting triples for deleted datasets.
+- 🛠 **Renku Core Service**, **Renku CLI**: Improved handling of Dockerfile changes when updating project template.
+
+Internal Changes
+~~~~~~~~~~~~~~~~
+
+**Improvements**
+
+- 📜 **Renku Core Service**, **Renku CLI**: Added code contracts in key places to ensure metadata consistency.
+
+Individual components
+~~~~~~~~~~~~~~~~~~~~~~
+
+- `renku-python 2.4.0 <https://github.com/SwissDataScienceCenter/renku-python/releases/tag/v2.4.0>`_
+- `renku-python 2.4.1 <https://github.com/SwissDataScienceCenter/renku-python/releases/tag/v2.4.1>`_
+
 0.25.5
 ------
 
@@ -130,7 +167,7 @@ Individual components
 0.25.1
 ------
 
-Renku ``0.25.1`` introduces a small bug fix in the Gateway internal components. 
+Renku ``0.25.1`` introduces a small bug fix in the Gateway internal components.
 
 Internal Changes
 ~~~~~~~~~~~~~~~~
@@ -147,7 +184,7 @@ Individual components
 0.25.0
 ------
 
-Renku ``0.25.0`` introduces an update to the base images and templates, as well as changes in internal components and the Helm chart. 
+Renku ``0.25.0`` introduces an update to the base images and templates, as well as changes in internal components and the Helm chart.
 
 User-facing Changes
 ~~~~~~~~~~~~~~~~~~~
@@ -161,7 +198,7 @@ Internal Changes
 
 **Improvements**
 
-- **Gateway**: replace the Traefik reverse proxy with a custom solution based on the Echo library in Go. 
+- **Gateway**: replace the Traefik reverse proxy with a custom solution based on the Echo library in Go.
 
 Individual components
 ~~~~~~~~~~~~~~~~~~~~~~
