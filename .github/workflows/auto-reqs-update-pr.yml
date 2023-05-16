@@ -9,6 +9,7 @@ jobs:
     steps:
       - name: close existing PRs
         run: |
+          echo "$GITHUB_REF"
           renku_repo="https://api.github.com/repos/SwissDataScienceCenter/renku"
           # find the repo that made the PR
           regex='renku-[a-z]+'
@@ -36,11 +37,12 @@ jobs:
             current_version_maybe_rc=$(curl -s https://pypi.org/pypi/renku/json | jq -r ".releases | keys_unsorted | map(select( . | startswith(\"$core_version\"))) | sort_by(. | split(\"[.]|rc\";\"\") | map(tonumber))[-1]")
             pr_body="$pr_body extra-values=global.renku.cli_version=$current_version_maybe_rc"
           fi
-          echo "pr_body=$pr_body" >> "$GITHUB_OUTPUT"
+          echo "$pr_body"
+          echo "pr_body=${pr_body}" >> "$GITHUB_OUTPUT"
       - name: pull-request-action
         uses: vsoch/pull-request-action@master
         env:
           GITHUB_TOKEN: ${{ secrets.RENKUBOT_GITHUB_TOKEN }}
           BRANCH_PREFIX: "auto-update/"
           PULL_REQUEST_BRANCH: "master"
-          PULL_REQUEST_BODY: ${{needs.set_pr_body.outputs.pr_body}}
+          PULL_REQUEST_BODY: ${{steps.set_pr_body.outputs.pr_body}}
