@@ -1,9 +1,9 @@
 .. _changelog:
 
-0.25.6
+0.25.7
 ------
 
-Renku ``0.25.6`` resolves bugs and adds minor features in the core-service and CLI.
+Renku ``0.25.7`` resolves bugs and adds minor features in the core-service, CLI and renku-graph.
 
 User-Facing Changes
 ~~~~~~~~~~~~~~~~~~~
@@ -11,11 +11,13 @@ User-Facing Changes
 **🌟 New Features**
 
 - 🚢 **Renku CLI**: Allow force-building local images and setting local port on docker session provider.
+- **KG**: A new Recently Viewed Entities API giving information about entities the user viewed.
 
 **✨ Improvements**
 
 - ☝ **Renku CLI**: Removed nagging about new Renku CLI versions when running commands.
 - 🪣 **Renku CLI**: Added support for storing dataset S3 credentials per bucket.
+- **KG**: Improved quality of search results returned by the Cross-Entity Search API.
 
 **🐞 Bug Fixes**
 
@@ -36,6 +38,7 @@ Individual components
 
 - `renku-python 2.4.0 <https://github.com/SwissDataScienceCenter/renku-python/releases/tag/v2.4.0>`_
 - `renku-python 2.4.1 <https://github.com/SwissDataScienceCenter/renku-python/releases/tag/v2.4.1>`_
+- `renku-graph 2.34.0 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/2.34.0>`_
 
 0.25.5
 ------
