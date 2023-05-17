@@ -27,7 +27,7 @@ import scala.concurrent.duration._
 
 class ProjectForkingSpec extends AcceptanceSpec with Login with Project {
 
-  Scenario("User can fork a project") {
+  scenario("User can fork a project") {
 
     `log in to Renku`
 

@@ -23,7 +23,7 @@ import ch.renku.acceptancetests.workflows._
 
 class UnprivilegedSessionSpec extends AcceptanceSpec with AnonEnv with Login {
 
-  Scenario("User can launch unprivileged session") {
+  scenario("User can launch unprivileged session") {
     `log in to Renku`
     `launch unprivileged session` foreach (`stop session`(_))
     `log out of Renku`

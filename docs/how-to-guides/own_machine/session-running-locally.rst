@@ -63,20 +63,23 @@ Open the session in your browser
 When the session starts, it will print out a url where the session is running.
 Copy this url into your browser to access your Renku project running inside its containerized environment.
 
-If you need to find this url again later, you can find all running Renku sessions by running :meth:`renku session list <renku.ui.cli.session>`.
+If you need to find this url again later, you can find all running Renku sessions by running :meth:`renku session ls <renku.ui.cli.session>`.
 
 .. code-block:: shell-session
 
-    $ renku session list
-    ID          STATUS    URL
-    ----------  --------  ------------------------------------------------------------
-    f1693c198e  running   http://0.0.0.0:56674/?token=910ca732ef574049a22d41d0f1109f56
+    $ renku session ls
+    Session 5432be53d7 (running, docker)
+    Started: 2023-04-28T11:46:07.099128
+    Url: http://0.0.0.0:32768/?token=8553ccc0b71344748d2373ee672b3674
+    Commit: b050ad40f36d997f709917523b50dc83a33604a5
+    Branch: master
+    SSH enabled: no
 
 You can also use the session ID to call :meth:`renku session open ID <renku.ui.cli.session>`, which opens your browser window for you.
 
 .. code-block:: shell-session
 
-    $ renku session open <session_id>
+    $ renku session open 5432be53d7
 
 .. note::
 
@@ -88,23 +91,26 @@ You can also use the session ID to call :meth:`renku session open ID <renku.ui.c
     container directly and use the shell.
 
 
-    First, find your renku session's container ID by listing your running sessions:
+    First, find your renku session's ID by listing your running sessions:
 
     .. code-block:: shell-session
 
-       $ renku session list
-       ID          STATUS    URL
-       ----------  --------  ------------------------------------------------------------
-       f1693c198e  running   http://0.0.0.0:56674/?token=910ca732ef574049a22d41d0f1109f56
+       $ renku session ls
+        Session 5432be53d7 (running, docker)
+        Started: 2023-04-28T11:46:07.099128
+        Url: http://0.0.0.0:32768/?token=8553ccc0b71344748d2373ee672b3674
+        Commit: b050ad40f36d997f709917523b50dc83a33604a5
+        Branch: master
+        SSH enabled: no
 
 
-    Note the value in the ID field.
+    Note the value ``5432be53d7``, which is the Session ID.
 
-    Then, open a shell in a running container by providing the Container ID:
+    Then, open a shell in a running container by providing the Session ID:
 
     .. code-block:: console
 
-        $ docker exec -it <ID> /bin/bash
+        $ docker exec -it 5432be53d7 /bin/bash
         base ▶ ~ ▶ work ❯ project_name ▶ master ▶ $ ▶
 
 Stop the session

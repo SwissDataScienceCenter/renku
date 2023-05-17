@@ -22,6 +22,7 @@ import cats.syntax.all._
 import ch.renku.acceptancetests.tooling.UrlEncoder._
 import eu.timepit.refined.api.Refined
 import eu.timepit.refined.string.Url
+import org.http4s.Uri.Path.SegmentEncoder
 
 final case class RenkuBaseUrl(value: String Refined Url)  extends BaseUrl with UrlOps[RenkuBaseUrl]
 final case class GitLabBaseUrl(value: String Refined Url) extends BaseUrl with UrlOps[GitLabBaseUrl]
@@ -74,21 +75,24 @@ trait UrlOps[T <: BaseUrl] {
 
   def /(part: String): UrlNoQueryParam = UrlNoQueryParam.unsafe(s"$value/${urlEncode(part)}")
 
+  def /[T](part: T)(implicit enc: SegmentEncoder[T]): UrlNoQueryParam =
+    UrlNoQueryParam.unsafe(s"$value/${enc.toSegment(part).encoded}")
+
   def /(maybePart: Option[String]): UrlNoQueryParam = maybePart match {
     case Some(value) => UrlNoQueryParam.unsafe(s"$value/${urlEncode(value)}")
     case _           => UrlNoQueryParam(value)
   }
 
-  def param(key: String, value: Any): UrlWithQueryParam =
+  def param(k: String, v: Any): UrlWithQueryParam =
     UrlWithQueryParam.unsafe(
-      if (value.toString contains s"$key=")
+      if ((value.toString contains s"?$k=") || (value.toString contains s"&$k="))
         value.toString
-          .replaceAll(s"(\\?$key=[\\w\\d%\\+]*)", s"?$key=${urlEncode(value.toString)}")
-          .replaceAll(s"(&$key=[\\w\\d%\\+]*)", s"&$key=${urlEncode(value.toString)}")
-      else if (value.toString contains "?")
-        s"$value&$key=${urlEncode(value.toString)}"
+          .replaceAll(s"(\\?$k=[\\w\\d%\\+]*)", s"?$k=${urlEncode(v.toString)}")
+          .replaceAll(s"(&$k=[\\w\\d%\\+]*)", s"&$k=${urlEncode(v.toString)}")
+      else if (v.toString contains "?")
+        s"$value&$k=${urlEncode(v.toString)}"
       else
-        s"$value?$key=${urlEncode(value.toString)}"
+        s"$value?$k=${urlEncode(v.toString)}"
     )
 }
 
@@ -107,13 +111,13 @@ final case class UrlWithQueryParam(value: String Refined Url) extends BaseUrl wi
       case Some(value) => add(key, value)
     }
 
-  private def add(key: String, value: Any) = UrlWithQueryParam.unsafe {
-    if (value.toString contains s"$key=")
+  private def add(k: String, v: Any) = UrlWithQueryParam.unsafe {
+    if ((value.toString contains s"?$k=") || (value.toString contains s"&$k="))
       value.toString
-        .replaceAll(s"(\\?$key=[\\w\\d%\\+]*)", s"?$key=${urlEncode(value.toString)}")
-        .replaceAll(s"(&$key=[\\w\\d%\\+]*)", s"&$key=${urlEncode(value.toString)}")
+        .replaceAll(s"(\\?$k=[\\w\\d%\\+]*)", s"?$k=${urlEncode(v.toString)}")
+        .replaceAll(s"(&$k=[\\w\\d%\\+]*)", s"&$k=${urlEncode(v.toString)}")
     else
-      s"$value  &$key=${urlEncode(value.toString)}"
+      s"$value&$k=${urlEncode(v.toString)}"
   }
 }
 object UrlWithQueryParam {

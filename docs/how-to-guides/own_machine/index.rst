@@ -9,6 +9,7 @@ Renku on your Own Machine
     cli-installation
     clone-renku-project
     session-running-locally
+    session-running-remotely
     migrating-projects-to-renku
     reusing-docker-images
 

@@ -24,7 +24,7 @@ import ch.renku.acceptancetests.workflows._
 
 class DatasetUploadSpec extends AcceptanceSpec with Login with Project with Datasets with KnowledgeGraphApi {
 
-  Scenario("From the UI the user can create a dataset with an uploaded file") {
+  scenario("From the UI the user can create a dataset with an uploaded file") {
 
     `log in to Renku`
 

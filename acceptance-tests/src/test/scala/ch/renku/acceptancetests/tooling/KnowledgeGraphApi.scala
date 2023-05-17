@@ -23,7 +23,7 @@ import cats.effect.IO
 import cats.syntax.all._
 import ch.renku.acceptancetests.model.projects.ProjectIdentifier
 import io.circe.JsonObject
-import org.http4s.Status.{NotFound, Ok}
+import org.http4s.Status.{Accepted, NotFound, Ok}
 import org.http4s.circe.CirceEntityCodec._
 import org.openqa.selenium.WebDriver
 import org.scalatest.Assertions.fail
@@ -49,6 +49,14 @@ trait KnowledgeGraphApi extends RestClient {
       .send(whenReceived(status = Ok) >=> bodyToJson)
       .extract(jsonRoot.obj.getOption)
       .getOrElse(fail(s"Cannot find lineage data for project $projectPath file $filePath"))
+  }
+
+  def `DELETE /knowledge-graph/projects/:path`(projectPath: String): Unit = {
+    val toSegments: String => List[String] = _.split('/').toList
+    val uri = toSegments(projectPath).foldLeft(renkuBaseUrl / "knowledge-graph" / "projects")(_ / _)
+    DELETE(uri)
+      .withAuthorizationToken(authorizationToken)
+      .send(expect(status = Accepted, otherwiseLog = s"Deletion of '$projectPath' project failed"))
   }
 
   @tailrec
