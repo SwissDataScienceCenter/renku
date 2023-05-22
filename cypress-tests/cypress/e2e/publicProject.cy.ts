@@ -76,7 +76,8 @@ describe("Basic public project functionality", () => {
     if (projectTestConfig.shouldCreateProject)
       cy.contains("Welcome to your new Renku project", { timeout: TIMEOUTS.vlong }).should("be.visible");
     cy.contains("Status").should("be.visible").click();
-    cy.contains("This project is using the latest version of renku").should("be.visible");
+    // ! TODO: temporarily disabled until the new project status section is ready
+    // cy.contains("This project is using the latest version of renku").should("be.visible");
     cy.contains("This project is using the latest version of the template").should("be.visible");
     cy.contains("Knowledge Graph integration is active", { timeout: TIMEOUTS.long }).should("be.visible");
   });
