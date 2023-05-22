@@ -22,9 +22,15 @@ import cats.syntax.all._
 import ch.renku.acceptancetests.model.AuthorizationToken
 import ch.renku.acceptancetests.model.AuthorizationToken.OAuthAccessToken
 import ch.renku.acceptancetests.model.projects.ProjectIdentifier
+import io.circe.Decoder._
+import io.circe.{Decoder, Json}
 import org.http4s.Status._
+import org.http4s.Uri.Path.SegmentEncoder._
 import org.http4s.UrlForm
 import org.scalatest.Assertions.fail
+
+import java.time.Instant
+import scala.annotation.tailrec
 
 trait GitLabApi extends RestClient {
   self: AcceptanceSpecData with IOSpec =>
@@ -58,6 +64,50 @@ trait GitLabApi extends RestClient {
           "password"   -> userCredentials.password
         )
       )
+
+  def fetchUserId =
+    GET(gitLabAPIUrl / "user")
+      .withAuthorizationToken(authorizationToken)
+      .send(whenReceived(status = Ok) >=> bodyToJson)
+      .extract(jsonRoot.id.int.getOption)
+      .getOrElse(fail(s"Cannot find user id"))
+
+  case class ProjectInfo(id: Int, path: String, fullPath: String, created: Instant)
+
+  def `get user's projects from GitLab`: List[ProjectInfo] =
+    fetchAllUserProjects(fetchUserId, page = 1, List.empty[ProjectInfo])
+
+  @tailrec
+  private def fetchAllUserProjects(userId: Int, page: Int, results: List[ProjectInfo]): List[ProjectInfo] =
+    fetchPageOfUserProjects(userId, page) match {
+      case Nil  => results
+      case list => fetchAllUserProjects(userId, page + 1, results ::: list)
+    }
+
+  private def fetchPageOfUserProjects(userId: Int, page: Int): List[ProjectInfo] = {
+
+    implicit val singleRowDecoder: Decoder[ProjectInfo] = cur =>
+      (cur.downField("id").as[Int],
+       cur.downField("path").as[String],
+       cur.downField("path_with_namespace").as[String],
+       cur.downField("created_at").as[Instant]
+      ).mapN(ProjectInfo.apply)
+
+    val decoder: Json => List[ProjectInfo] =
+      _.as[List[ProjectInfo]].fold(_ => List.empty, identity)
+
+    val url = (gitLabAPIUrl / "users" / userId / "projects")
+      .param("per_page", "100")
+      .and("order_by", "created_at")
+      .and("sort", "desc")
+      .and("page", page)
+    GET(
+      url
+    )
+      .withAuthorizationToken(authorizationToken)
+      .send(whenReceived(status = Ok) >=> bodyToJson)
+      .extract(decoder)
+  }
 
   def `get GitLab project id`(projectId: ProjectIdentifier): Int =
     GET(gitLabAPIUrl / "projects" / projectId.asProjectPath)

@@ -37,7 +37,7 @@ class HandsOnSpec
     with Datasets
     with KnowledgeGraphApi {
 
-  Scenario("User can do hands-on tutorial") {
+  scenario("User can do hands-on tutorial") {
 
     `log in to Renku`
 

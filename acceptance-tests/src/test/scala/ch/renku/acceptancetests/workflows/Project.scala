@@ -22,12 +22,10 @@ import ch.renku.acceptancetests.model.projects.{ProjectDetails, Template, Visibi
 import ch.renku.acceptancetests.pages._
 import ch.renku.acceptancetests.tooling.AcceptanceSpec
 import org.openqa.selenium.interactions.Actions
-import org.openqa.selenium.StaleElementReferenceException;
-import org.scalatest.BeforeAndAfterAll
+import org.scalatest.Outcome
 
 import java.lang.System.getProperty
 import scala.concurrent.duration._
-import scala.util.Try
 
 trait ExtantProject {
   def maybeExtantProject(projectVisibility: Visibility): Option[ProjectDetails] =
@@ -43,7 +41,7 @@ trait ExtantProject {
       }
 }
 
-trait PrivateProject extends Project with BeforeAndAfterAll with ExtantProject {
+trait PrivateProject extends Project with ExtantProject {
   self: AcceptanceSpec =>
 
   protected override lazy val projectVisibility: Visibility = Visibility.Private
@@ -51,7 +49,7 @@ trait PrivateProject extends Project with BeforeAndAfterAll with ExtantProject {
     maybeExtantProject(projectVisibility).getOrElse(ProjectDetails.generate().copy(visibility = projectVisibility))
 }
 
-trait Project extends RemoveProject with BeforeAndAfterAll with ExtantProject {
+trait Project extends RemoveProject with ExtantProject {
   self: AcceptanceSpec =>
 
   protected lazy val projectVisibility: Visibility = Visibility.Public
@@ -185,12 +183,16 @@ trait Project extends RemoveProject with BeforeAndAfterAll with ExtantProject {
     NewProjectPage.createButton.click() sleep (10 seconds)
   }
 
-  protected override def afterAll(): Unit = {
-    maybeExtantProject(projectVisibility) match {
-      case Some(_) => ()
-      case _       => `remove project in GitLab`(projectDetails.asProjectIdentifier)
+  protected override type FixtureParam = Unit
+
+  override def withFixture(test: OneArgTest): Outcome = {
+
+    val outcome = withFixture(test.toNoArgTest((): FixtureParam))
+
+    if (outcome.isSucceeded && maybeExtantProject(projectVisibility).isEmpty) {
+      `remove project in GitLab`(projectDetails.asProjectIdentifier)
     }
 
-    super.afterAll()
+    outcome
   }
 }

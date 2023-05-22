@@ -1,7 +1,5 @@
 import { v4 as uuidv4 } from "uuid";
-
 import { TIMEOUTS } from "../../config";
-
 
 const username = Cypress.env("TEST_USERNAME");
 
@@ -39,6 +37,7 @@ describe("Basic public project functionality", () => {
 
   beforeEach(() => {
     cy.visitAndLoadProject(projectIdentifier);
+    cy.stopAllSessionsForProject(projectIdentifier);
   });
 
   it("Start a new session on the project and interact with the terminal.", () => {
