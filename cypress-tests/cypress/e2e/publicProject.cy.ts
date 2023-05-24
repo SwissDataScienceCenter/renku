@@ -105,9 +105,10 @@ describe("Basic public project functionality", () => {
     cy.get("button").contains("Clone").should("be.visible").click();
 
     cy.contains("Status").should("be.visible").click();
-    cy.contains("This project is using the latest version of renku").should(
-      "be.visible"
-    );
+    // ! TODO: temporarily disabled until the new project status section is ready
+    // cy.contains("This project is using the latest version of renku").should(
+    //   "be.visible"
+    // );
     cy.contains(
       "This project is using the latest version of the template"
     ).should("be.visible");
