@@ -1,9 +1,9 @@
 .. _changelog:
 
-0.25.7
+0.26.0
 ------
 
-Renku ``0.25.7`` resolves bugs and adds minor features in the core-service, CLI and renku-graph.
+Renku ``0.26.0`` resolves bugs and adds minor features in the core-service, CLI and renku-graph.
 
 User-Facing Changes
 ~~~~~~~~~~~~~~~~~~~
