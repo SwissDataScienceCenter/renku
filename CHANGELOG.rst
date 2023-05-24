@@ -3,6 +3,7 @@
 0.26.0
 ------
 
+Test.
 Renku ``0.26.0`` resolves bugs and adds minor features in the core-service, CLI and renku-graph.
 
 User-Facing Changes
