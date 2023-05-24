@@ -1,4 +1,4 @@
-.. _local_sessions:
+.. _remote_sessions:
 
 Run a Renku Session on a Remote Machine
 =======================================
