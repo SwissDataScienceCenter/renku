@@ -23,7 +23,7 @@ import ch.renku.acceptancetests.workflows._
 
 class AnonymouSessionSpec extends AcceptanceSpec with Project with AnonEnv with Login {
 
-  Scenario("User can launch session") {
+  scenario("User can launch session") {
 
     `log in to Renku`
 

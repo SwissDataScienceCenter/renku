@@ -33,7 +33,7 @@ class LineageSpec
     with CLIConfiguration
     with KnowledgeGraphApi {
 
-  Scenario("User can see lineage") {
+  scenario("User can see lineage") {
 
     `log in to Renku`
 
@@ -46,7 +46,7 @@ class LineageSpec
     val (scriptPath, outputFilePath) = `setup a workflow`
 
     When("all the events are processed by the knowledge-graph")
-    `wait for KG to process events`(projectDetails.asProjectIdentifier)
+    `wait for KG to process events`(projectDetails.asProjectIdentifier, webDriver)
 
     `view the lineage of the outputFile`(outputFilePath)
 

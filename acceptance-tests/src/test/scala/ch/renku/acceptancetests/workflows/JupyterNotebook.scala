@@ -68,7 +68,7 @@ trait JupyterNotebook extends Datasets with Project with KnowledgeGraphApi {
     `stop session`
 
     When("all the events are processed by the knowledge-graph")
-    `wait for KG to process events`(projectDetails.asProjectIdentifier)
+    `wait for KG to process events`(projectDetails.asProjectIdentifier, webDriver)
 
     Then("the user can see the created dataset")
     `verify dataset was created`(datasetName)
