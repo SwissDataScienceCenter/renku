@@ -246,7 +246,7 @@ spell checker won't work. This is because the extensions are installed on your
 local machine, but not on the remote host. You need to install them on the
 remote host every time you connect to a session.
 
-To install extensions that are already installed in you VS Code on the remote
+To install extensions that are already installed in your VS Code on the remote
 host, click on the "Extensions" icon in the Primary Sidebar (or press
 ``Ctrl+Shift+X`` or ``Cmd+Shift+X``). In the "Extensions" panel, you can see
 the list of all the extensions installed on your local machine or on the SSH
