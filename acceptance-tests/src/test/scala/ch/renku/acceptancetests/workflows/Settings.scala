@@ -55,14 +55,16 @@ trait Settings {
     }
   }
 
-  def `find project Http URL in the Settings Page`: ProjectUrl = {
+  def `find project Http URL in the Overview Page`: ProjectUrl = {
 
     `try few times before giving up` { _ =>
-      When("the user navigates to the Settings tab")
-      click on projectPage.Settings.tab
+      When("the user navigates to the Overview -> Description tab")
+      click on projectPage.Overview.tab
+      click on projectPage.Overview.overviewGeneralButton
     }
 
     Then("the user can find the project Http Url")
-    ProjectUrl(projectPage.Settings.projectHttpUrl.getText)
+    click on projectPage.Overview.cloneButton
+    ProjectUrl(projectPage.Overview.projectHttpUrl.getText)
   }
 }
