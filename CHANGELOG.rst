@@ -33,12 +33,17 @@ Internal Changes
 
 - 📜 **Renku Core Service**, **Renku CLI**: Added code contracts in key places to ensure metadata consistency.
 
+**Bug Fixes**
+
+- **KG**: Prevent KG services to fail on startup when longer than 16 chars secrets configured.
+
 Individual components
 ~~~~~~~~~~~~~~~~~~~~~~
 
 - `renku-python 2.4.0 <https://github.com/SwissDataScienceCenter/renku-python/releases/tag/v2.4.0>`_
 - `renku-python 2.4.1 <https://github.com/SwissDataScienceCenter/renku-python/releases/tag/v2.4.1>`_
 - `renku-graph 2.34.0 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/2.34.0>`_
+- `renku-graph 2.34.1 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/2.34.1>`_
 
 0.25.5
 ------
