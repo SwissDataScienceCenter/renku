@@ -45,7 +45,7 @@ class HandsOnSpec
 
     `create, continue or open a project`
 
-    val projectUrl         = `find project Http URL in the Settings Page`
+    val projectUrl         = `find project Http URL in the Overview Page`
     val flightsDatasetName = `follow the flights tutorial`(projectUrl)
 
     When("all the events are processed by the knowledge-graph")

@@ -3,7 +3,7 @@
 0.26.0
 ------
 
-Renku ``0.26.0`` resolves bugs and adds minor features in the core-service, CLI and renku-graph.
+Renku ``0.26.0`` resolves bugs and adds minor features in the core-service, CLI, renku-graph, and the UI.
 
 User-Facing Changes
 ~~~~~~~~~~~~~~~~~~~
@@ -12,6 +12,8 @@ User-Facing Changes
 
 - 🚢 **Renku CLI**: Allow force-building local images and setting local port on docker session provider.
 - **KG**: A new Recently Viewed Entities API giving information about entities the user viewed.
+- 🔁 **UI**: Add a clone button to the project overview
+  (`#2495 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2495>`_).
 
 **✨ Improvements**
 
@@ -44,6 +46,12 @@ Individual components
 - `renku-python 2.4.1 <https://github.com/SwissDataScienceCenter/renku-python/releases/tag/v2.4.1>`_
 - `renku-graph 2.34.0 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/2.34.0>`_
 - `renku-graph 2.34.1 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/2.34.1>`_
+- `renku-ui 3.5.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.5.0>`_
+
+0.25.6
+------
+
+Renku ``0.25.6`` fixes a bug in the Renku release process and does not bring any functional changes.
 
 0.25.5
 ------
