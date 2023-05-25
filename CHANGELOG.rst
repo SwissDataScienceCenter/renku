@@ -3,7 +3,7 @@
 0.26.0
 ------
 
-Renku ``0.26.0`` resolves bugs and adds minor features in the core-service, CLI, renku-graph, and the UI.
+Renku ``0.26.0`` resolves bugs and adds minor features in the core-service, CLI, interactive sessions, renku-graph, and the UI.
 
 User-Facing Changes
 ~~~~~~~~~~~~~~~~~~~
@@ -27,6 +27,7 @@ User-Facing Changes
 - 🍎 **Renku CLI**: Fixed compatibility with Python 3.11 on MacOS.
 - 🍎 **Renku CLI**: Fixed properly exporting triples for deleted datasets.
 - 🛠 **Renku Core Service**, **Renku CLI**: Improved handling of Dockerfile changes when updating project template.
+- 🛠 **Renku Notebooks**: do not fail session launch if Git submodules couldn't be pulled.
 
 Internal Changes
 ~~~~~~~~~~~~~~~~
@@ -47,6 +48,7 @@ Individual components
 - `renku-graph 2.34.0 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/2.34.0>`_
 - `renku-graph 2.34.1 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/2.34.1>`_
 - `renku-ui 3.5.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.5.0>`_
+- `renku-notebooks 1.15.3 <https://github.com/SwissDataScienceCenter/renku-notebooks/releases/tag/1.15.3>`_
 
 0.25.6
 ------
