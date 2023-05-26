@@ -3,46 +3,22 @@
 0.27.0
 ------
 
-Renku ``0.27.0`` upgrades the Keycloak version that is shipped with the project.
+Renku ``0.27.0`` resolves bugs and adds minor features in renku-core, renku-graph, and the UI.
 
-NOTE: make sure to check `helm-chart/README.rst` and `helm-chart/values.yaml.changelog.md` for instructions on how to
-upgrade to this version of Renku.
+The project status and the indexing progresses are now available in the project settings tab.
 
 Internal Changes
 ~~~~~~~~~~~~~~~~
 
 **Improvements**
 
-- **Infrastructure**: (BREAKING CHANGE) Use a new Keycloak Helm chart (codecentric/keycloakx) and upgrade Keycloak to 20.0.3. This requires modifying your current values file to work with the new Keycloak Helm chart, see (`the helm chart values changelog <https://github.com/SwissDataScienceCenter/renku/blob/master/helm-chart/values.yaml.changelog.md>`_) for instructions.
+- **Gateway**: add new /api/kg/webhooks path
+  (`#639 <https://github.com/SwissDataScienceCenter/renku-gateway/issues/639>`_).
 
 Individual components
 ~~~~~~~~~~~~~~~~~~~~~~
 
-- `renku-gateway 0.20.1 <https://github.com/SwissDataScienceCenter/renku-gateway/releases/tag/0.20.1>`_
-
-0.26.2
-------
-
-Renku ``0.26.2`` resolves bugs and adds minor features in renku-graph.
-
-User-Facing Changes
-~~~~~~~~~~~~~~~~~~~
-
-**✨ Improvements**
-
-- **KG**: Improved performance when searching for Projects.
-
-Internal Changes
-~~~~~~~~~~~~~~~~
-
-**Bug Fixes**
-
-- **KG**: Excessive Project Access Tokens creation when calling Project Status API for non-activated projects.
-
-Individual components
-~~~~~~~~~~~~~~~~~~~~~~
-
-- `renku-graph 2.35.0 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/2.35.0>`_
+- `renku-gateway 0.20.0 <https://github.com/SwissDataScienceCenter/renku-gateway/releases/tag/0.20.0>`_
 
 0.26.1
 ------
