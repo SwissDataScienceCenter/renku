@@ -12,7 +12,7 @@ Internal Changes
 
 **Improvements**
 
-- **Gateway**: add new /api/kg/webhooks path
+- **Gateway**: add new path to knowledge-graph webhooks
   (`#639 <https://github.com/SwissDataScienceCenter/renku-gateway/issues/639>`_).
 
 Individual components
