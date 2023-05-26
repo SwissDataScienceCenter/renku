@@ -1,5 +1,25 @@
 .. _changelog:
 
+0.27.0
+------
+
+Renku ``0.27.0`` resolves bugs and adds minor features in renku-core, renku-graph, and the UI.
+
+The project status and the indexing progresses are now available in the project settings tab.
+
+Internal Changes
+~~~~~~~~~~~~~~~~
+
+**Improvements**
+
+- **Gateway**: add new /api/kg/webhooks path
+  (`#639 <https://github.com/SwissDataScienceCenter/renku-gateway/issues/639>`_).
+
+Individual components
+~~~~~~~~~~~~~~~~~~~~~~
+
+- `renku-gateway 0.20.0 <https://github.com/SwissDataScienceCenter/renku-gateway/releases/tag/0.20.0>`_
+
 0.26.1
 ------
 
