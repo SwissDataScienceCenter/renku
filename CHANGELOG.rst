@@ -1,5 +1,15 @@
 .. _changelog:
 
+0.26.1
+------
+
+Renku ``0.26.1`` comes with a fix for KG services failing on startup when longer than 16 chars secrets are configured.
+
+Individual components
+~~~~~~~~~~~~~~~~~~~~~~
+
+- `renku-graph 2.34.2 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/2.34.2>`_
+
 0.26.0
 ------
 
