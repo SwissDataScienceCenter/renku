@@ -24,7 +24,7 @@ import ch.renku.acceptancetests.model.AuthorizationToken.{OAuthAccessToken, Pers
 import ch.renku.acceptancetests.model.projects.ProjectDetails._
 import ch.renku.acceptancetests.model.users.UserCredentials
 
-import java.net.URL
+import java.net.URI
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import scala.util.Random
@@ -76,7 +76,7 @@ object projects {
     implicit class ProjectUrlOps(projectUrl: ProjectUrl)(implicit userCredentials: UserCredentials) {
 
       def add(authorizationToken: AuthorizationToken): String = {
-        val protocol = new URL(projectUrl.value).getProtocol
+        val protocol = URI.create(projectUrl.value).toURL.getProtocol
         projectUrl.value
           .replace(
             s"$protocol://",
