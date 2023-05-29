@@ -24,7 +24,7 @@ import json
 import time
 
 from keycloak import KeycloakAdmin
-from keycloak.exceptions import KeycloakConnectionError, KeycloakGetError
+from keycloak.exceptions import KeycloakConnectionError, KeycloakGetError, KeycloakPostError
 
 
 # Helper functions which are called by the script.
@@ -232,7 +232,7 @@ while not success and n_attempts < 31:
             verify=True,
         )
         success = True
-    except (KeycloakConnectionError, KeycloakGetError):
+    except (KeycloakConnectionError, KeycloakGetError, KeycloakPostError):
         sys.stdout.write("Keycloak not responding, retrying in 10 seconds...\n")
         n_attempts += 1
         time.sleep(10)
