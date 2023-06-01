@@ -74,11 +74,47 @@ describe("Basic public project functionality", () => {
     cy.contains("README.md").should("be.visible");
     cy.contains("This is a Renku project").should("be.visible");
     if (projectTestConfig.shouldCreateProject)
-      cy.contains("Welcome to your new Renku project", { timeout: TIMEOUTS.vlong }).should("be.visible");
+      cy.contains("Welcome to your new Renku project", {
+        timeout: TIMEOUTS.vlong,
+      }).should("be.visible");
+
+    // Check the clone URLs
+    const projectUrl = projectUrlFromIdentifier(projectIdentifier);
+    // The clone url does not include "/projects" in it
+    const cloneSubUrl = projectUrl.substring("/projects".length);
+    cy.get("button").contains("Clone").should("be.visible").click();
+    cy.contains("Clone with Renku")
+      .should("be.visible")
+      .next()
+      .get("code")
+      .contains("renku clone")
+      .should("be.visible")
+      .and("contain.text", cloneSubUrl);
+    cy.contains("Repository SSH URL")
+      .should("be.visible")
+      .next()
+      .get("code")
+      .should("be.visible")
+      .and("contain.text", cloneSubUrl);
+    cy.contains("Repository HTTPS URL")
+      .should("be.visible")
+      .next()
+      .get("code")
+      .contains("https")
+      .and("contain.text", cloneSubUrl);
+    cy.get("button").contains("Clone").should("be.visible").click();
+
     cy.contains("Status").should("be.visible").click();
-    cy.contains("This project is using the latest version of renku").should("be.visible");
-    cy.contains("This project is using the latest version of the template").should("be.visible");
-    cy.contains("Knowledge Graph integration is active", { timeout: TIMEOUTS.long }).should("be.visible");
+    // ! TODO: temporarily disabled until the new project status section is ready
+    // cy.contains("This project is using the latest version of renku").should(
+    //   "be.visible"
+    // );
+    cy.contains(
+      "This project is using the latest version of the template"
+    ).should("be.visible");
+    cy.contains("Knowledge Graph integration is active", {
+      timeout: TIMEOUTS.long,
+    }).should("be.visible");
   });
 
   it("Can view files", () => {
@@ -146,10 +182,6 @@ describe("Basic public project functionality", () => {
 
   it("Can view and modify sessions settings", () => {
     cy.dataCy("project-navbar").contains("Settings").should("exist").click();
-    const projectUrl = projectUrlFromIdentifier(projectIdentifier);
-    // The clone url does not include "/projects" in it
-    const cloneSubUrl = projectUrl.substring("/projects".length);
-    cy.contains("renku clone").should("exist").should("contain.text", cloneSubUrl);
     cy.intercept("/ui-server/api/renku/*/config.set").as("configSet");
     // ? The settings page refreshes when stale. We should wait for that only when it's invoked.
     let configInvocations = 0;
