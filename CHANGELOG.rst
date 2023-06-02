@@ -7,9 +7,6 @@ Renku ``0.27.0`` resolves bugs and adds minor features in renku-core, renku-grap
 
 The project status and the indexing progresses are now available in the project settings tab.
 
-Internal Changes
-~~~~~~~~~~~~~~~~
-
 **Improvements**
 
 - **Gateway**: add new path to knowledge-graph webhooks
@@ -19,6 +16,30 @@ Individual components
 ~~~~~~~~~~~~~~~~~~~~~~
 
 - `renku-gateway 0.20.0 <https://github.com/SwissDataScienceCenter/renku-gateway/releases/tag/0.20.0>`_
+
+0.26.2
+------
+
+Renku ``0.26.2`` resolves bugs and adds minor features in renku-graph.
+
+User-Facing Changes
+~~~~~~~~~~~~~~~~~~~
+
+**✨ Improvements**
+
+- **KG**: Improved performance when searching for Projects.
+
+Internal Changes
+~~~~~~~~~~~~~~~~
+
+**Bug Fixes**
+
+- **KG**: Excessive Project Access Tokens creation when calling Project Status API for non-activated projects.
+
+Individual components
+~~~~~~~~~~~~~~~~~~~~~~
+
+- `renku-graph 2.35.0 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/2.35.0>`_
 
 0.26.1
 ------
