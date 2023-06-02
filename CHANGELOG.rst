@@ -17,7 +17,7 @@ Internal Changes
 
 **Bug Fixes**
 
-- **KG**: Extensive Project Access Tokens creation when calling Project Status API for non-activated projects.
+- **KG**: Excessive Project Access Tokens creation when calling Project Status API for non-activated projects.
 
 Individual components
 ~~~~~~~~~~~~~~~~~~~~~~
