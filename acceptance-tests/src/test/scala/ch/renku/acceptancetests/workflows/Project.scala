@@ -152,6 +152,7 @@ trait Project extends RemoveProject with ExtantProject {
   }
 
   private def `fill in new project form and submit`: Unit = eventually {
+
     When(s"enters '${projectDetails.title}' as the title")
     NewProjectPage.titleField.clear() sleep (5 seconds)
     NewProjectPage.titleField.enterValue(projectDetails.title)
@@ -163,7 +164,7 @@ trait Project extends RemoveProject with ExtantProject {
     When(s"selects the visibility '${projectDetails.visibility}'")
     NewProjectPage.visibilityRadioInput(projectDetails.visibility).click() sleep (1 second)
 
-    scrollDown
+    scrollDown sleep (1 second)
 
     `try again if failed` { _ =>
       When(s"selects the '${projectDetails.template}' template")
@@ -172,7 +173,7 @@ trait Project extends RemoveProject with ExtantProject {
 
     docsScreenshots.takeScreenshot()
 
-    scrollDown
+    scrollDown sleep (1 second)
     // Move the mouse off the field to prevent the tooltip from blocking the button
     new Actions(webDriver)
       .moveByOffset(20, 20)
