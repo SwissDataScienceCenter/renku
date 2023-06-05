@@ -18,6 +18,7 @@
 
 package ch.renku.acceptancetests.tooling
 
+import TestLogger._
 import cats.syntax.all._
 import ch.renku.acceptancetests.model.BaseUrl
 import ch.renku.acceptancetests.pages.Page
@@ -26,7 +27,6 @@ import org.scalatest.concurrent.Eventually
 import org.scalatest.exceptions.TestFailedException
 import org.scalatestplus.selenium
 import org.scalatestplus.selenium.WebBrowser
-import TestLogger._
 
 import scala.concurrent.duration._
 import scala.language.implicitConversions
@@ -91,7 +91,10 @@ trait Grammar extends WebElementOps with WebDriverOps with Scripts with Eventual
         findElement(webDriver).isDisplayed
   }
 
-  def `try few times before giving up`[V](section: WebDriver => V, attempt: Int = 1)(implicit webDriver: WebDriver): V =
+  @scala.annotation.tailrec
+  final def `try few times with page reload`[V](section: WebDriver => V, attempt: Int = 1)(implicit
+      webDriver: WebDriver
+  ): V =
     Either.catchOnly[RuntimeException](section(webDriver)) match {
       case Right(successValue) => successValue
       case Left(error) if attempt > 20 =>
@@ -101,16 +104,19 @@ trait Grammar extends WebElementOps with WebDriverOps with Scripts with Eventual
         sleep(3 seconds)
         reloadPage()
         sleep(2 seconds)
-        `try few times before giving up`(section, attempt + 1)
+        `try few times with page reload`(section, attempt + 1)
     }
 
-  def `try again if failed`[V](section: WebDriver => V, attempt: Int = 1)(implicit webDriver: WebDriver): V =
+  @scala.annotation.tailrec
+  final def `try few times without page reload`[V](section: WebDriver => V, attempt: Int = 1)(implicit
+      webDriver: WebDriver
+  ): V =
     Either.catchOnly[RuntimeException](section(webDriver)) match {
       case Right(successValue)         => successValue
       case Left(error) if attempt > 10 => throw error
       case Left(_) =>
         sleep(2 seconds)
-        `try again if failed`(section, attempt + 1)
+        `try few times without page reload`(section, attempt + 1)
     }
 
   object pause {
