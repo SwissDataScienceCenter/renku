@@ -21,6 +21,7 @@ package ch.renku.acceptancetests.workflows
 import ch.renku.acceptancetests.model.projects.{ProjectDetails, Template, Visibility}
 import ch.renku.acceptancetests.pages._
 import ch.renku.acceptancetests.tooling.AcceptanceSpec
+import ch.renku.acceptancetests.tooling.TestLogger.logger
 import org.openqa.selenium.interactions.Actions
 import org.scalatest.Outcome
 
@@ -100,6 +101,7 @@ trait Project extends RemoveProject with ExtantProject {
   }
 
   private def `create a new project`: Unit = {
+
     if (DashboardPage.TopBar.mainNavToggler.isDisplayed)
       click on DashboardPage.TopBar.mainNavToggler
 
@@ -179,9 +181,16 @@ trait Project extends RemoveProject with ExtantProject {
       .moveByOffset(20, 20)
       .build()
       .perform()
+    scrollDown sleep (1 second)
 
     And("clicks the 'Create' button")
+    NewProjectPage.createButton.isEnabled shouldBe true
     NewProjectPage.createButton.click() sleep (10 seconds)
+
+    if ((currentUrl startsWith NewProjectPage.url) && !NewProjectPage.creatingProjectInfoDisplayed) {
+      logger.warn("Project Create button click seemed not to work. Retrying")
+      `fill in new project form and submit`
+    }
   }
 
   protected override type FixtureParam = Unit
