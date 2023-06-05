@@ -18,7 +18,7 @@
 
 package ch.renku.acceptancetests.pages
 
-import ch.renku.acceptancetests.model.{CliVersion, GitLabBaseUrl}
+import ch.renku.acceptancetests.model.GitLabBaseUrl
 import ch.renku.acceptancetests.model.projects.ProjectDetails._
 import ch.renku.acceptancetests.model.projects.{ProjectDetails, ProjectIdentifier}
 import ch.renku.acceptancetests.model.users.UserCredentials
@@ -70,27 +70,6 @@ class ProjectPage(val projectSlug: String, val namespace: String)
 
     def tab(implicit webDriver: WebDriver): WebElement = eventually {
       find(cssSelector(s"a[href='$path']")) getOrElse fail("Overview tab not found")
-    }
-
-    def statusLink(implicit webDriver: WebDriver): WebElement = eventually {
-      find(cssSelector(s"a[href='$path/overview/status']")) getOrElse fail("Overview -> Status link not found")
-    }
-
-    def currentProjectVersion(implicit webDriver: WebDriver): WebElement = eventually {
-      find(cssSelector(s"span#project_version")) getOrElse fail(
-        s"Overview -> Project Version not found"
-      )
-    }
-    def currentProjectVersion(is: CliVersion)(implicit webDriver: WebDriver): WebElement = eventually {
-      find(cssSelector(s"span#project_version")).find(element => element.text == is.value) getOrElse fail(
-        s"Overview -> Project Version with version ${is.value} not found"
-      )
-    }
-
-    def updateButton(implicit webDriver: WebDriver): WebElement = eventually {
-      findAll(cssSelector(s"button.btn.btn-info")).find(button => button.text == "Update") getOrElse fail(
-        "Overview -> Update button not found"
-      )
     }
 
     def projectDescription(implicit webDriver: WebDriver): WebElement = eventually {
@@ -350,6 +329,28 @@ class ProjectPage(val projectSlug: String, val namespace: String)
     }
 
     object General {
+
+      // Status Panel
+      def projectUpToDate(implicit webDriver: WebDriver): WebElement = eventually {
+        find(cssSelector("[data-cy='project-version-section-open']")) getOrElse fail("Settings -> Project up to date")
+      }
+
+      def projectRenkuVersion(implicit webDriver: WebDriver): WebElement = eventually {
+        find(cssSelector("a[href*='https://github.com/SwissDataScienceCenter/renku-python/releases/tag/']"))
+          .getOrElse(fail("Settings -> Renku Version not found"))
+      }
+
+      def projectRenkuVersionOk(implicit webDriver: WebDriver): WebElement = eventually {
+        find(cssSelector("[data-cy='project-settings-migration-status'] svg.fa-check-circle"))
+          .getOrElse(fail("Settings -> Renku Version not up to date"))
+      }
+
+      def updateVersionButton(implicit webDriver: WebDriver): WebElement = eventually {
+        findAll(cssSelector("button.btn")).toList
+          .find(_.text == "Update version")
+          .getOrElse(fail("'Update version' button not found"))
+      }
+      // /Status Panel
 
       def addProjectTags(tags: String)(implicit webDriver: WebDriver): Unit = eventually {
         projectTags enterValue tags
