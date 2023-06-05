@@ -189,6 +189,7 @@ trait Project extends RemoveProject with ExtantProject {
 
     if ((currentUrl startsWith NewProjectPage.url) && !NewProjectPage.creatingProjectInfoDisplayed) {
       logger.warn("Project Create button click seemed not to work. Retrying")
+      reloadPage()
       `fill in new project form and submit`
     }
   }
