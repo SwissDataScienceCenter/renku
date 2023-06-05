@@ -33,18 +33,18 @@ trait Settings {
 
     And("they add some tags")
     val tags = "automated-test"
-    projectPage.Settings addProjectTags tags
+    projectPage.Settings.General addProjectTags tags
 
     `try few times with page reload` { _ =>
       Then("the tags should be added")
-      verify that projectPage.Settings.projectTags hasValue tags
+      verify that projectPage.Settings.General.projectTags hasValue tags
     }
   }
 
   def `set project description`: Unit = {
     When("the user set the Project Description")
     val gitlabDescription = "GitLab description"
-    projectPage.Settings updateProjectDescription gitlabDescription
+    projectPage.Settings.General updateProjectDescription gitlabDescription
 
     `try few times with page reload` { _ =>
       And("they navigate to the Overview tab")
