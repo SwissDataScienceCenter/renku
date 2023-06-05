@@ -194,18 +194,22 @@ describe("Basic public project functionality", () => {
   it("Can view and modify sessions settings", () => {
     cy.dataCy("project-navbar").contains("Settings").should("exist").click();
     cy.intercept("/ui-server/api/renku/*/config.set").as("configSet");
-    // ? The settings page refreshes when stale. We should wait for that only when it's invoked.
-    let configInvocations = 0;
-    cy.intercept("/ui-server/api/renku/*/config.show?git_url=*", req => { configInvocations++; }).as("getConfig");
+    cy.intercept("/ui-server/api/renku/*/config.show?git_url=*").as(
+      "getConfig"
+    );
 
-    const navigateToSettingsSessions = () => {
-      const invoked = configInvocations;
+    const navigateToSettingsSessions = ({
+      waitForApis,
+    }: { waitForApis?: boolean } = {}) => {
       robustNavigateToProjectPage("/settings");
       cy.get(".form-rk-green form").contains("Project Tags").should("exist");
       robustNavigateToProjectPage("/settings/sessions");
       cy.get("h3").contains("Session settings").should("exist");
-      if (invoked > configInvocations)
-        cy.wait("@configShow", { timeout: TIMEOUTS.long });
+      cy.intercept("/ui-server/api/data/resource_pools").as("getResourcePools");
+      if (waitForApis) {
+        cy.wait("@getResourcePools");
+        cy.wait("@getConfig", { timeout: TIMEOUTS.long });
+      }
     };
 
     // Make sure the renku.ini is in a pristine state
@@ -213,26 +217,36 @@ describe("Basic public project functionality", () => {
     cy.get("div#tree-content").contains(".renku").should("exist").click();
     cy.get("div#tree-content").contains("renku.ini").should("exist").click();
     cy.get("pre.hljs").should("be.visible");
-    cy.get("pre.hljs").contains("cpu_request").should("not.exist");
+    cy.get("pre.hljs").contains("session_class").should("not.exist");
 
-    navigateToSettingsSessions();
-    cy.get("div.form-rk-green div.row").contains("button", "0.5").should("exist").click();
+    // Change session class
+    navigateToSettingsSessions({ waitForApis: true });
+    cy.contains("label", "Session class")
+      .parent()
+      .find("div.rounded.border")
+      .should("exist")
+      .click();
+    cy.contains("div", "large").click();
+    cy.contains(".badge", "Saving");
     cy.wait("@configSet");
-    cy.get("div.form-rk-green div.success-feedback").contains("Updated.").should("be.visible");
+    cy.contains(".badge", "Saved");
 
     robustNavigateToProjectPage("/files");
     cy.get("div#tree-content").contains("renku.ini").should("exist").click();
     cy.get(".hljs.language-ini").contains("[interactive]").should("be.visible");
-    cy.get("pre.hljs").contains("cpu_request = 0.5").should("exist");
+    cy.get("pre.hljs").contains("session_class = 2").should("exist");
 
     navigateToSettingsSessions();
-    cy.get("#cpu_request_reset").should("be.visible").click();
+    cy.get("#project-settings-sessions-session-class-reset")
+      .should("be.visible")
+      .click();
+    cy.contains(".badge", "Saving");
     cy.wait("@configSet");
-    cy.get("div.form-rk-green div.success-feedback").contains("Updated.").should("exist");
+    cy.contains(".badge", "Saved");
 
     robustNavigateToProjectPage("/files");
     cy.get("div#tree-content").contains("renku.ini").should("exist").click();
     cy.get(".hljs.language-ini").contains("[interactive]").should("be.visible");
-    cy.get("pre.hljs").contains("cpu_request").should("not.exist");
+    cy.get("pre.hljs").contains("session_class").should("not.exist");
   });
 });
