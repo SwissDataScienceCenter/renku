@@ -66,12 +66,12 @@ data:
       echo
     done
 
-  {{- if .Values.keycloak.enabled }}
+  {{- if .Values.keycloakx.enabled }}
   init-keycloak-db.sh: |-
     #!/bin/bash
     set -x
 
-    KEYCLOAK_POSTGRES_PASSWORD=$(cat /keycloak-postgres/DB_PASSWORD)
+    KEYCLOAK_POSTGRES_PASSWORD=$(cat /keycloak-postgres/KC_DB_PASSWORD)
 
     psql -v ON_ERROR_STOP=1 <<-EOSQL
         create database "{{ .Values.global.keycloak.postgresDatabase }}";
