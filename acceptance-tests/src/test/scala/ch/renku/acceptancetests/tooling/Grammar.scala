@@ -131,8 +131,7 @@ trait Grammar extends WebElementOps with WebDriverOps with Scripts with Eventual
         asLongAsBrowserAt(page, attempt + 1)
       } else if (attempt > maxAttempts && (currentUrl startsWith page.url))
         fail {
-          s"Expected to be redirected from ${page.url} page " +
-            s"but gets stuck on $currentUrl for ${(checkInterval * attempt).toSeconds}s"
+          s"Expected to be redirected from ${page.url} page but got stuck on it for ${(checkInterval * attempt).toSeconds}s"
         }
     }
 
