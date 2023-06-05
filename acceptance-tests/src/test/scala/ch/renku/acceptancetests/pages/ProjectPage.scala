@@ -349,28 +349,31 @@ class ProjectPage(val projectSlug: String, val namespace: String)
       find(cssSelector(s"a[href='$path/settings']")) getOrElse fail("Settings tab not found")
     }
 
-    def addProjectTags(tags: String)(implicit webDriver: WebDriver): Unit = eventually {
-      projectTags enterValue tags
-      updateButton.click() sleep (5 seconds)
-    }
+    object General {
 
-    def projectTags(implicit webDriver: WebDriver): WebElement = eventually {
-      find(cssSelector("input#projectTags")) getOrElse fail("Project Tags field not found")
-    }
+      def addProjectTags(tags: String)(implicit webDriver: WebDriver): Unit = eventually {
+        projectTags enterValue tags
+        updateButton.click() sleep (5 seconds)
+      }
 
-    def updateProjectDescription(description: String)(implicit webDriver: WebDriver): Unit = eventually {
-      projectDescription enterValue description
-      updateButton.click() sleep (5 seconds)
-    }
+      def projectTags(implicit webDriver: WebDriver): WebElement = eventually {
+        find(cssSelector("input#projectTags")) getOrElse fail("Project Tags field not found")
+      }
 
-    def projectDescription(implicit webDriver: WebDriver): WebElement = eventually {
-      find(cssSelector("input#projectDescription")) getOrElse fail("Project Description field not found")
-    }
+      def updateProjectDescription(description: String)(implicit webDriver: WebDriver): Unit = eventually {
+        projectDescription enterValue description
+        updateButton.click() sleep (5 seconds)
+      }
 
-    def updateButton(implicit webDriver: WebDriver): WebElement = eventually {
-      find(cssSelector(".updateProjectSettings")) getOrElse fail(
-        "Update button not found"
-      )
+      def projectDescription(implicit webDriver: WebDriver): WebElement = eventually {
+        find(cssSelector("input#projectDescription")) getOrElse fail("Project Description field not found")
+      }
+
+      def updateButton(implicit webDriver: WebDriver): WebElement = eventually {
+        find(cssSelector(".updateProjectSettings")) getOrElse fail(
+          "Update button not found"
+        )
+      }
     }
   }
 
