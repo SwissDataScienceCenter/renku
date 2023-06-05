@@ -26,7 +26,7 @@ trait Settings {
 
   def `set project tags`: Unit = {
 
-    `try few times before giving up` { _ =>
+    `try few times with page reload` { _ =>
       When("the user navigates to the Settings tab")
       click on projectPage.Settings.tab
     }
@@ -35,7 +35,7 @@ trait Settings {
     val tags = "automated-test"
     projectPage.Settings addProjectTags tags
 
-    `try few times before giving up` { _ =>
+    `try few times with page reload` { _ =>
       Then("the tags should be added")
       verify that projectPage.Settings.projectTags hasValue tags
     }
@@ -46,7 +46,7 @@ trait Settings {
     val gitlabDescription = "GitLab description"
     projectPage.Settings updateProjectDescription gitlabDescription
 
-    `try few times before giving up` { _ =>
+    `try few times with page reload` { _ =>
       And("they navigate to the Overview tab")
       click on projectPage.Overview.tab
 
@@ -57,7 +57,7 @@ trait Settings {
 
   def `find project Http URL in the Overview Page`: ProjectUrl = {
 
-    `try few times before giving up` { _ =>
+    `try few times with page reload` { _ =>
       When("the user navigates to the Overview -> Description tab")
       click on projectPage.Overview.tab
       click on projectPage.Overview.overviewGeneralButton
