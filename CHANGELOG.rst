@@ -1,5 +1,39 @@
 .. _changelog:
 
+0.26.2
+------
+
+Renku ``0.26.2`` resolves bugs and adds minor features in renku-graph.
+
+User-Facing Changes
+~~~~~~~~~~~~~~~~~~~
+
+**✨ Improvements**
+
+- **KG**: Improved performance when searching for Projects.
+
+Internal Changes
+~~~~~~~~~~~~~~~~
+
+**Bug Fixes**
+
+- **KG**: Excessive Project Access Tokens creation when calling Project Status API for non-activated projects.
+
+Individual components
+~~~~~~~~~~~~~~~~~~~~~~
+
+- `renku-graph 2.35.0 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/2.35.0>`_
+
+0.26.1
+------
+
+Renku ``0.26.1`` comes with a fix for KG services failing on startup when longer than 16 chars secrets are configured.
+
+Individual components
+~~~~~~~~~~~~~~~~~~~~~~
+
+- `renku-graph 2.34.2 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/2.34.2>`_
+
 0.26.0
 ------
 
