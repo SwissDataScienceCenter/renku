@@ -68,8 +68,8 @@ data:
       echo
     done
 
-  # DO NOT USE set -x you will leak the password in the logs
   {{- if .Values.keycloakx.enabled }}
+  # DO NOT USE set -x you will leak the password in the logs
   init-keycloak-db.sh: |-
     #!/bin/bash
 

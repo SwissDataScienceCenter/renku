@@ -59,7 +59,7 @@ spec:
               kubernetes.io/metadata.name: {{ .Release.Namespace }}
         - podSelector:
             matchLabels:
-              app: renku-crac
+              app: renku-crc
           namespaceSelector:
             matchLabels:
               kubernetes.io/metadata.name: {{ .Release.Namespace }}

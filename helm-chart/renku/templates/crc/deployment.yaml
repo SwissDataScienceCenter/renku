@@ -1,28 +1,28 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ template "renku.fullname" . }}-crac
+  name: {{ template "renku.fullname" . }}-crc
   labels:
-    app: renku-crac
+    app: renku-crc
     chart: {{ template "renku.chart" . }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
 spec:
-  {{- if not .Values.crac.autoscaling.enabled }}
-  replicas: {{ .Values.crac.replicaCount }}
+  {{- if not .Values.crc.autoscaling.enabled }}
+  replicas: {{ .Values.crc.replicaCount }}
   {{- end }}
   strategy: 
-    {{- toYaml .Values.crac.updateStrategy | nindent 4 }}
+    {{- toYaml .Values.crc.updateStrategy | nindent 4 }}
   selector:
     matchLabels:
-      app: renku-crac
+      app: renku-crc
       release: {{ .Release.Name }}
   template:
     metadata:
       labels:
-        app: renku-crac
+        app: renku-crc
         release: {{ .Release.Name }}
-      {{- with .Values.crac.podAnnotations }}
+      {{- with .Values.crc.podAnnotations }}
       annotations:
         {{- toYaml . | nindent 8 }}
       {{- end }}
@@ -33,9 +33,9 @@ spec:
       initContainers:
         {{- include "certificates.initContainer" . | nindent 8 }}
       containers:
-        - name: crac
-          image: "{{ .Values.crac.image.repository }}:{{ .Values.crac.image.tag }}"
-          imagePullPolicy: {{ .Values.crac.image.pullPolicy }}
+        - name: crc
+          image: "{{ .Values.crc.image.repository }}:{{ .Values.crc.image.tag }}"
+          imagePullPolicy: {{ .Values.crc.image.pullPolicy }}
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
           ports:
@@ -57,14 +57,14 @@ spec:
             - name: KEYCLOAK_TOKEN_SIGNATURE_ALGS
               value: "RS256"
             - name: SERVER_DEFAULTS
-              value: /etc/renku-crac/server_options/server_defaults.json
+              value: /etc/renku-crc/server_options/server_defaults.json
             - name: SERVER_OPTIONS
-              value: /etc/renku-crac/server_options/server_options.json
+              value: /etc/renku-crc/server_options/server_options.json
             - name: K8S_NAMESPACE
               value: {{ .Release.Namespace | quote }}
           volumeMounts:
             - name: server-options
-              mountPath: /etc/renku-crac/server_options
+              mountPath: /etc/renku-crc/server_options
             {{- include "certificates.volumeMounts.system" . | nindent 12 }}
           livenessProbe:
             httpGet:
@@ -87,16 +87,16 @@ spec:
             periodSeconds: 5
             failureThreshold: 60
           resources:
-            {{ toYaml .Values.crac.resources | nindent 12 }}
-    {{- with .Values.crac.nodeSelector }}
+            {{ toYaml .Values.crc.resources | nindent 12 }}
+    {{- with .Values.crc.nodeSelector }}
       nodeSelector:
         {{ toYaml . | nindent 8 }}
     {{- end }}
-    {{- with .Values.crac.affinity }}
+    {{- with .Values.crc.affinity }}
       affinity:
         {{ toYaml . | nindent 8 }}
     {{- end }}
-    {{- with .Values.crac.tolerations }}
+    {{- with .Values.crc.tolerations }}
       tolerations:
         {{ toYaml . | nindent 8 }}
     {{- end }}
@@ -105,4 +105,4 @@ spec:
           configMap:
             name: {{ template "renku.fullname" . }}-server-options
         {{- include "certificates.volumes" . | nindent 8 }}
-      serviceAccountName: {{ template "renku.fullname" . }}-crac
+      serviceAccountName: {{ template "renku.fullname" . }}-crc
