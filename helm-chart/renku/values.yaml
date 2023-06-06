@@ -153,6 +153,9 @@ global:
       ## The contents of the 'password' key is used.
       ## The secret is not re-generated or modified in any way if it already exists.
       passwordSecretName: renku-db-common-password
+    
+  crac:
+    serviceName: renku-crac
 
 ## Ingress configuration
 ## See: https://kubernetes.io/docs/concepts/services-networking/ingress/
