@@ -1,5 +1,25 @@
 .. _changelog:
 
+0.28.0
+------
+
+Renku ``0.28.0`` resolves bugs and adds minor imporvements in renku-core.
+
+**✨ Improvements**
+
+- 🍎 **Renku Core Service**: `cache.check_migrations` endpoint now also returns errors if there were any.
+- 🍎 **Renku Core Service**: `cache.check_migrations` endpoint now returns information about potential issues in the project.
+
+**🐞 Bug Fixes**
+
+- 🛠 **Renku Core Service**: Fix working on different branches of a project.
+
+Individual components
+~~~~~~~~~~~~~~~~~~~~~~
+
+- `renku-python 2.5.0 <https://github.com/SwissDataScienceCenter/renku-python/releases/tag/v2.5.0>`_
+
+
 0.27.0
 ------
 
