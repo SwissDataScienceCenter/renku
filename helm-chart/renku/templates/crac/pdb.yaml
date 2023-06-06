@@ -1,10 +1,10 @@
-{{- if or (gt (int .Values.crac.replicaCount) 1) (and .Values.crac.autoscaling.enabled (gt (int .Values.crac.autoscaling.minReplicas) 1)) }}
+{{- if or (gt (int .Values.crc.replicaCount) 1) (and .Values.crc.autoscaling.enabled (gt (int .Values.crc.autoscaling.minReplicas) 1)) }}
 apiVersion: policy/v1
 kind: PodDisruptionBudget
 metadata:
-  name: {{ template "renku.fullname" . }}-crac
+  name: {{ template "renku.fullname" . }}-crc
   labels:
-    app: renku-crac
+    app: renku-crc
     chart: {{ template "renku.chart" . }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
@@ -12,6 +12,6 @@ spec:
   maxUnavailable: 50%
   selector:
     matchLabels:
-      app: renku-crac
+      app: renku-crc
       release: {{ .Release.Name }}
 {{- end }}
