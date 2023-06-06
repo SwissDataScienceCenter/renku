@@ -49,9 +49,6 @@ global:
     ## the UI) If not set explicitly the version will be picked up
     ## from the respective renku (sub)chart.
     version: 0.4.0
-    ## CLI Version to be used for project creation. if not set, the
-    ## same version as core-svc is used.
-    # cli_version: 2.4.0
   ## Note that the graph will not turned on by default until renku 0.4.0
   graph:
     dbEventLog:
@@ -141,7 +138,8 @@ global:
     image:
       repository: renku/certificates
       tag: "0.0.2"
-    customCAs: []
+    customCAs:
+      []
       # - secret:
   
   ## Database credentials for postgres
@@ -184,7 +182,7 @@ ingress:
   #      - example.local
 
 ## Keycloak configuration
-keycloak:
+keycloakx:
   ## Spawn a keycloak instance
   enabled: true
 
@@ -193,12 +191,24 @@ keycloak:
     enabled: false
 
   extraEnv: |
-    - name: DB_VENDOR
+    - name: KC_DB
       value: postgres
-    - name: DB_PORT
+    - name: KC_DB_PORT
       value: "5432"
     - name:  PROXY_ADDRESS_FORWARDING
       value: "true"
+    - name: JAVA_OPTS_APPEND
+      value: >-
+        -Djgroups.dns.query={{ include "keycloak.fullname" . }}-headless
+
+  command:
+    - "/opt/keycloak/bin/kc.sh"
+    - "start"
+    - "--http-enabled=true"
+    - "--http-port=8080"
+    - "--hostname-strict=false"
+    - "--hostname-strict-https=false"
+    - "--auto-build"
 
   # The following environment variables are provided to keycloak
   # as extraEnvFrom secrets.
@@ -220,7 +230,7 @@ keycloak:
 
   extraVolumeMounts: |
     - name: theme
-      mountPath: /opt/jboss/keycloak/themes/renku-theme
+      mountPath: /opt/keycloak/themes/renku-theme
     - name: etc-ssl-certs
       mountPath: /etc/pki/ca-trust/extracted
       readOnly: true
@@ -698,23 +708,27 @@ ui:
 
   ## Configuration for renku-ui-server
   server:
-    serverData: {}
+    serverData:
+      {}
       ## server data to correctly build the path and the routes
       # url: https://url.uiserver.fake
       # port: 8080
       # prefix: /ui-server
-    gateway: {}
+    gateway:
+      {}
       ## details to contact the gateway to redirect after the keycloak authentication is finished
       # url: https://url.gateway.fake
       # loginSuffix: /auth/login
       # logoutSuffix: /auth/logout
-    authentication: {}
+    authentication:
+      {}
       ## keycloak configration data for the Renku realm
       # url: https://url.keycloak.fake/auth/realms/Renku
       # id: renku
       # secret: 1234abcd # do not provide any value here to use the global gateway client secret
       # expirationTolerance: 10
-    sentry: {}
+    sentry:
+      {}
       ## Configuration for Sentry
       # enabled: false
       # url: '' # Sentry target URL

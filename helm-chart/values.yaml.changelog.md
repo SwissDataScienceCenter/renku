@@ -6,6 +6,36 @@ Please follow this convention when adding a new row
 * `<type: NEW|EDIT|DELETE> - *<resource name>*: <details>`
 
 ----
+## Upgrading to Renku 0.26.0
+* EDIT - The keycloak chart has been replaced with keycloakx, if any values are specified under `keycloak`, now they
+need to be under `keycloakx`.
+NOTE: the values under `global.keycloak` remain unchanged.
+
+Old
+  ```
+  keycloak:
+    enabled: true
+    resources:
+      limits:
+        cpu: 1000m
+        memory: 1Gi
+      requests:
+        cpu: 1000m
+        memory: 1Gi
+  ```
+New
+  ```
+  keycloakx:
+    enabled: true
+    resources:
+      limits:
+        cpu: 1000m
+        memory: 1Gi
+      requests:
+        cpu: 1000m
+        memory: 1Gi
+  ```
+
 ## Upgrading to Renku 0.23.0
 * EDIT - the `redis` chart was upgraded from `10.7.11` to `17.4.2`; the values
 in the newer `redis` chart differ from those in the older chart. As the `renku`

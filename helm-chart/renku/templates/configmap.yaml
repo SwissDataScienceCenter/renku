@@ -68,12 +68,12 @@ data:
       echo
     done
 
+  {{- if .Values.keycloakx.enabled }}
   # DO NOT USE set -x you will leak the password in the logs
-  {{- if .Values.keycloak.enabled }}
   init-keycloak-db.sh: |-
     #!/bin/bash
 
-    KEYCLOAK_POSTGRES_PASSWORD=$(cat /keycloak-postgres/DB_PASSWORD)
+    KEYCLOAK_POSTGRES_PASSWORD=$(cat /keycloak-postgres/KC_DB_PASSWORD)
 
     psql -v ON_ERROR_STOP=1 <<-EOSQL
         create database "{{ .Values.global.keycloak.postgresDatabase }}";
