@@ -1,9 +1,9 @@
 .. _changelog:
 
-0.27.0
+0.27.x
 ------
 
-Renku ``0.27.0`` resolves bugs and adds minor features in renku-core, renku-graph, and the UI.
+Renku ``0.27.x`` resolves bugs and adds minor features in renku-core, renku-graph, and the UI.
 
 The project status and the indexing progresses are now available in the project settings tab.
 
@@ -19,6 +19,18 @@ Individual components
 ~~~~~~~~~~~~~~~~~~~~~~
 
 - `renku-gateway 0.20.0 <https://github.com/SwissDataScienceCenter/renku-gateway/releases/tag/0.20.0>`_
+
+0.27.0
+------
+
+Renku ``0.27.0`` upgrades the Keycloak version that is shipped with the project.
+
+Internal Changes
+~~~~~~~~~~~~~~~~
+
+**Improvements**
+
+- **Infrastructure**: (BREAKING CHANGE) Use a new Keycloak Helm chart (codecentric/keycloakx) and upgrade Keycloak to 20.0.3. This requires modifying your current values file to work with the new Keycloak Helm chart, see (`the helm chart values changelog <https://github.com/SwissDataScienceCenter/renku/blob/master/helm-chart/values.yaml.changelog.md>`_) for instructions.
 
 0.26.2
 ------

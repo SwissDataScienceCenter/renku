@@ -145,7 +145,7 @@ Define clients and users for Keycloak
 
 {{- define "renku.keycloak.users" -}}
 [
-  {{- if .Values.keycloak.createDemoUser -}}
+  {{- if .Values.keycloakx.createDemoUser -}}
   {
     "username": "demo@datascience.ch",
     "password": "{{ randAlphaNum 32 }}",
