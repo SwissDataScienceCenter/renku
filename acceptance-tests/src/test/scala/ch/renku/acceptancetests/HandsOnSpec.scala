@@ -74,7 +74,7 @@ class HandsOnSpec
       case _: Throwable                       => false
     }
 
-  private def `verify analysis was run`: Unit = `try few times before giving up` { _ =>
+  private def `verify analysis was run`: Unit = `try few times with page reload` { _ =>
     When("the user navigates to the Files tab")
     click on projectPage.Files.tab
     And("they click on the notebooks folder in the File View")

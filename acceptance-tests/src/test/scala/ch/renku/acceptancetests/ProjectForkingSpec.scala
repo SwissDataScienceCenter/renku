@@ -55,7 +55,7 @@ class ProjectForkingSpec extends AcceptanceSpec with Login with Project {
     Then("the project gets forked and the project page gets displayed")
     val forkedProjectPage = ProjectPage.createFrom(forkedProjectDetails)
 
-    `try few times before giving up` { _ =>
+    `try few times with page reload` { _ =>
       verify browserAt forkedProjectPage
     }
 

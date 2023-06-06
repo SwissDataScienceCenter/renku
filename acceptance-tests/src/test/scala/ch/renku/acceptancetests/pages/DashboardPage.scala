@@ -21,13 +21,17 @@ package ch.renku.acceptancetests.pages
 import org.openqa.selenium.{WebDriver, WebElement}
 import org.scalatestplus.selenium.WebBrowser.{cssSelector, find}
 
-case object WelcomePage extends RenkuPage(path = "/") with TopBar {
+case object DashboardPage extends RenkuPage(path = "/") with TopBar {
 
   override def pageReadyElement(implicit webDriver: WebDriver): Option[WebElement] = Some(dashboardSection)
 
   private def dashboardSection(implicit webDriver: WebDriver): WebElement = eventually {
-    find(cssSelector("[data-cy='dashboard-title']")) getOrElse fail(
-      s"Dashboard not found on page ${webDriver.getTitle}"
-    )
+    dashboardTitleElement getOrElse fail(s"Dashboard not found on page ${webDriver.getTitle}")
   }
+
+  private def dashboardTitleElement(implicit webDriver: WebDriver): Option[WebElement] =
+    find(cssSelector("[data-cy='dashboard-title']"))
+
+  def dashboardTitle(implicit webDriver: WebDriver): Option[String] =
+    dashboardTitleElement.map(_.getText)
 }

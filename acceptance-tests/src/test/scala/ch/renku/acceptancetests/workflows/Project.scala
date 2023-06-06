@@ -21,6 +21,7 @@ package ch.renku.acceptancetests.workflows
 import ch.renku.acceptancetests.model.projects.{ProjectDetails, Template, Visibility}
 import ch.renku.acceptancetests.pages._
 import ch.renku.acceptancetests.tooling.AcceptanceSpec
+import ch.renku.acceptancetests.tooling.TestLogger.logger
 import org.openqa.selenium.interactions.Actions
 import org.scalatest.Outcome
 
@@ -72,7 +73,7 @@ trait Project extends RemoveProject with ExtantProject {
     else `create a new project`
 
   private def `open a project`: Unit = {
-    `try few times before giving up` { _ =>
+    `try few times with page reload` { _ =>
       go to ProjectsPage sleep (2 seconds)
       verify browserAt ProjectsPage
     }
@@ -93,26 +94,27 @@ trait Project extends RemoveProject with ExtantProject {
     When("they click on the link")
     click on projectLink sleep (1 second)
 
-    `try few times before giving up` { _ =>
+    `try few times with page reload` { _ =>
       Then(s"they should see the '${projectDetails.title}' project page")
       verify browserAt projectPage
     }
   }
 
   private def `create a new project`: Unit = {
-    if (WelcomePage.TopBar.mainNavToggler.isDisplayed)
-      click on WelcomePage.TopBar.mainNavToggler
+
+    if (DashboardPage.TopBar.mainNavToggler.isDisplayed)
+      click on DashboardPage.TopBar.mainNavToggler
 
     When("user clicks on the 'New Project' menu item")
-    click on WelcomePage.TopBar.plusDropdown
-    click on WelcomePage.TopBar.projectOption sleep (5 seconds)
+    click on DashboardPage.TopBar.plusDropdown
+    click on DashboardPage.TopBar.projectOption sleep (5 seconds)
 
-    `try few times before giving up` { _ =>
+    `try few times with page reload` { _ =>
       Then("the New Project page gets displayed")
       verify browserAt NewProjectPage
     }
 
-    `try few times before giving up` { _ =>
+    `try few times with page reload` { _ =>
       When("user fills in and submits the new project details form")
       `fill in new project form and submit`
     }
@@ -123,7 +125,7 @@ trait Project extends RemoveProject with ExtantProject {
     val projectPage = ProjectPage createFrom projectDetails
     verify browserAt projectPage
 
-    `try few times before giving up` { _ =>
+    `try few times with page reload` { _ =>
       When("the user navigates to the Overview -> Description tab")
       click on projectPage.Overview.tab
       click on projectPage.Overview.overviewGeneralButton
@@ -132,7 +134,7 @@ trait Project extends RemoveProject with ExtantProject {
     Then("they should see project's README.md content")
     verify that projectPage.Overview.Description.title is "README.md"
 
-    `try few times before giving up` { _ =>
+    `try few times with page reload` { _ =>
       When("the user navigates to the Files tab")
       click on projectPage.Files.tab
     }
@@ -152,6 +154,7 @@ trait Project extends RemoveProject with ExtantProject {
   }
 
   private def `fill in new project form and submit`: Unit = eventually {
+
     When(s"enters '${projectDetails.title}' as the title")
     NewProjectPage.titleField.clear() sleep (5 seconds)
     NewProjectPage.titleField.enterValue(projectDetails.title)
@@ -163,24 +166,32 @@ trait Project extends RemoveProject with ExtantProject {
     When(s"selects the visibility '${projectDetails.visibility}'")
     NewProjectPage.visibilityRadioInput(projectDetails.visibility).click() sleep (1 second)
 
-    scrollDown
+    scrollDown sleep (1 second)
 
-    `try again if failed` { _ =>
+    `try few times without page reload` { _ =>
       When(s"selects the '${projectDetails.template}' template")
       NewProjectPage.templateCard(projectDetails.template).click() sleep (5 seconds)
     }
 
     docsScreenshots.takeScreenshot()
 
-    scrollDown
+    scrollDown sleep (1 second)
     // Move the mouse off the field to prevent the tooltip from blocking the button
     new Actions(webDriver)
       .moveByOffset(20, 20)
       .build()
       .perform()
+    scrollDown sleep (1 second)
 
     And("clicks the 'Create' button")
+    NewProjectPage.createButton.isEnabled shouldBe true
     NewProjectPage.createButton.click() sleep (10 seconds)
+
+    if ((currentUrl startsWith NewProjectPage.url) && !NewProjectPage.creatingProjectInfoDisplayed) {
+      logger.warn("Project Create button click seemed not to work. Retrying")
+      reloadPage()
+      `fill in new project form and submit`
+    }
   }
 
   protected override type FixtureParam = Unit
