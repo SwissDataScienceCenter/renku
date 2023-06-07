@@ -7,11 +7,27 @@ Renku ``0.27.0`` resolves bugs and adds minor features in renku-core, renku-grap
 
 The project status and the indexing progresses are now available in the project settings tab.
 
+User-Facing Changes
+~~~~~~~~~~~~~~~~~~~
+
+**✨ Improvements**
+
+- 👩‍💻️ **UI**: Reworked the project status page and moved it to settings (`#2315 <https://github.com/SwissDataScienceCenter/renku-ui/issues/2315>`_).
+- 🗑️ **UI**: Add a delete project button on the settings tab (`#2416 <https://github.com/SwissDataScienceCenter/renku-ui/issues/2416>`_).
+
+**🐞 Bug Fixes**
+
+- 🖼️ **UI**: Made text not selectable in entity cards (`#2546 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2546>`_)
+- 📎️ **UI**: Fixed the "add dataset to project" feature (`#2549 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2549>`_)
+- 🔗️ **UI**: Fixed clicking on a file name on the dataset view wrongly leading to lineage and not contents (`#1270 <https://github.com/SwissDataScienceCenter/renku-ui/issues/1270>`_)
+- 🔗️ **UI**: Fixed getting a 404 page when switching from lineage view to contents (`#2571 <https://github.com/SwissDataScienceCenter/renku-ui/issues/2571>`_)
+
 Internal Changes
 ~~~~~~~~~~~~~~~~
 
-**Improvements**
+**✨ Improvements***
 
+- **Core**: TODO
 - **Gateway**: add new path to knowledge-graph webhooks
   (`#639 <https://github.com/SwissDataScienceCenter/renku-gateway/issues/639>`_).
 
@@ -19,6 +35,8 @@ Individual components
 ~~~~~~~~~~~~~~~~~~~~~~
 
 - `renku-gateway 0.20.0 <https://github.com/SwissDataScienceCenter/renku-gateway/releases/tag/0.20.0>`_
+- `renku-python 2.5.0 <https://github.com/SwissDataScienceCenter/renku-python/releases/tag/v2.5.0>`_
+- `renku-ui 3.6.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.6.0>`_
 
 0.26.1
 ------
