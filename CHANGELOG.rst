@@ -24,7 +24,7 @@ User-Facing Changes
 **🐞 Bug Fixes**
 
 - 📎️ **CLI**: Fixed dataset update with external files (`#3379 <https://github.com/SwissDataScienceCenter/renku-python/issues/3379>`_).
-- 🛠️ **CLI**: Fixed special paths in workflow files and bump toil/cwltool (`#3489 <https://github.com/SwissDataScienceCenter/renku-python/issues/3489>`_).
+- 🛠️ **CLI**: Fixed special paths in workflow files and bump ``toil/cwltool`` (`#3489 <https://github.com/SwissDataScienceCenter/renku-python/issues/3489>`_).
 - 🖼️ **UI**: Made text not selectable in entity cards (`#2546 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2546>`_).
 - 📎️ **UI**: Fixed the "add dataset to project" feature (`#2549 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2549>`_).
 - 🔗️ **UI**: Fixed clicking on a file name on the dataset view wrongly leading to lineage and not contents (`#1270 <https://github.com/SwissDataScienceCenter/renku-ui/issues/1270>`_).
@@ -40,7 +40,7 @@ Internal Changes
 
 **🐞 Bug Fixes**
 
-- 🛠️ **Core**: Fixed working on branches in the core-svc (`#3472 <https://github.com/SwissDataScienceCenter/renku-python/issues/3472>`_).
+- 🛠️ **Core**: Fixed working on branches in the ``core-svc`` (`#3472 <https://github.com/SwissDataScienceCenter/renku-python/issues/3472>`_).
 - 🛠️ **Core:**: Return proper errors on migrations check (`#3334 <https://github.com/SwissDataScienceCenter/renku-python/issues/3334>`_).
 
 Individual components
