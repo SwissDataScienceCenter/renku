@@ -18,7 +18,7 @@ User-Facing Changes
 
 **✨ Improvements**
 
-- 👩‍💻️ **UI**: Reworked the project status page and moved it to settings (`#2315 <https://github.com/SwissDataScienceCenter/renku-ui/issues/2315>`_).
+- 👩‍💻️ **UI**: Major rework and simplification of project status page (moved to Settings -> General) (`#2315 <https://github.com/SwissDataScienceCenter/renku-ui/issues/2315>`_).
 - 🗑️ **UI**: Add a delete project button on the settings tab (`#2416 <https://github.com/SwissDataScienceCenter/renku-ui/issues/2416>`_).
 
 **🐞 Bug Fixes**
