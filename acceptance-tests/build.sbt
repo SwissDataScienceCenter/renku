@@ -19,7 +19,7 @@
 organization := "ch.renku"
 name := "renku-acceptance-tests"
 version := "0.1.0"
-scalaVersion := "2.13.10"
+scalaVersion := "2.13.11"
 
 Test / parallelExecution := false
 
