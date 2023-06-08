@@ -3,7 +3,7 @@
 0.28.0
 ------
 
-Renku ``0.28.0`` resolves bugs and adds minor imporvements in renku-core.
+Renku ``0.28.0`` resolves bugs and adds minor improvements in renku-core.
 
 **✨ Improvements**
 
