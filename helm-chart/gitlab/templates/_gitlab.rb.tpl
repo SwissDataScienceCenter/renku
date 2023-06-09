@@ -52,6 +52,9 @@ gitlab_rails['omniauth_providers'] = [
           user_response_structure: {
             attributes: { email:'email', first_name:'given_name', last_name:'family_name', name:'name', nickname:'preferred_username' }, # if the nickname attribute of a user is called 'username'
             id_path: 'sub'
+          },
+          authorize_params: {
+            scope: "openid profile email"
           }
         },
         label: 'Renku Login'

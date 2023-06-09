@@ -25,6 +25,9 @@ Individual components
 
 Renku ``0.27.0`` upgrades the Keycloak version that is shipped with the project.
 
+NOTE: make sure to check `helm-chart/README.rst` and `helm-chart/values.yaml.changelog.md` for instructions on how to
+upgrade to this version of Renku.
+
 Internal Changes
 ~~~~~~~~~~~~~~~~
 
