@@ -42,11 +42,12 @@ Internal Changes
 
 - 🛠️ **Core**: Fixed working on branches in the ``core-svc`` (`#3472 <https://github.com/SwissDataScienceCenter/renku-python/issues/3472>`_).
 - 🛠️ **Core:**: Return proper errors on migrations check (`#3334 <https://github.com/SwissDataScienceCenter/renku-python/issues/3334>`_).
+- 🛠️ **Gateway**: Fixed logout with new Keycloak version (`#655 <https://github.com/SwissDataScienceCenter/renku-gateway/issues/655>`_).
 
 Individual components
 ~~~~~~~~~~~~~~~~~~~~~~
 
-- `renku-gateway 0.20.0 <https://github.com/SwissDataScienceCenter/renku-gateway/releases/tag/0.20.0>`_
+- `renku-gateway 0.20.1 <https://github.com/SwissDataScienceCenter/renku-gateway/releases/tag/0.20.1>`_
 - `renku-python 2.5.0 <https://github.com/SwissDataScienceCenter/renku-python/releases/tag/v2.5.0>`_
 - `renku-ui 3.6.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.6.0>`_
 
