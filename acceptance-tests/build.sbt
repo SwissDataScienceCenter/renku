@@ -19,7 +19,7 @@
 organization := "ch.renku"
 name := "renku-acceptance-tests"
 version := "0.1.0"
-scalaVersion := "2.13.10"
+scalaVersion := "2.13.11"
 
 Test / parallelExecution := false
 
@@ -42,7 +42,7 @@ libraryDependencies += "org.http4s"             %% "http4s-circe"             % 
 libraryDependencies += "org.scalacheck"         %% "scalacheck"               % "1.17.0"     % Test
 libraryDependencies += "org.scalatest"          %% "scalatest"                % "3.2.16"     % Test
 libraryDependencies += "org.scalatestplus"      %% "selenium-3-141"           % "3.2.10.0"   % Test
-libraryDependencies += "org.seleniumhq.selenium" % "selenium-http-jdk-client" % "4.9.1"      % Test
+libraryDependencies += "org.seleniumhq.selenium" % "selenium-http-jdk-client" % "4.10.0"      % Test
 libraryDependencies += "org.seleniumhq.selenium" % "selenium-java"            % "4.7.1"      % Test
 libraryDependencies += "org.slf4j"               % "slf4j-log4j12"            % "2.0.7"      % Test
 libraryDependencies += "org.typelevel"          %% "cats-effect"              % "3.5.0"      % Test
