@@ -15,6 +15,11 @@ Internal Changes
 
 - **Infrastructure**: (BREAKING CHANGE) Use a new Keycloak Helm chart (codecentric/keycloakx) and upgrade Keycloak to 20.0.3. This requires modifying your current values file to work with the new Keycloak Helm chart, see (`the helm chart values changelog <https://github.com/SwissDataScienceCenter/renku/blob/master/helm-chart/values.yaml.changelog.md>`_) for instructions.
 
+Individual components
+~~~~~~~~~~~~~~~~~~~~~~
+
+- `renku-gateway 0.20.1 <https://github.com/SwissDataScienceCenter/renku-gateway/releases/tag/0.20.1>`_
+
 0.26.2
 ------
 
