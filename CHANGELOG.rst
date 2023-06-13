@@ -15,6 +15,8 @@ User-Facing Changes
 - 🐳️ **CLI**: Pass docker run args to session start (`#3487 <https://github.com/SwissDataScienceCenter/renku-python/issues/3487>`_).
 - 👩‍💻️ **CLI**: Shell completion for sessions (`#3450 <https://github.com/SwissDataScienceCenter/renku-python/issues/3450>`_).
 - 📎️ **CLI**: Export dataset keywords (`#3454 <https://github.com/SwissDataScienceCenter/renku-python/issues/3454>`_).
+- **KG**: Dataset Details API response enhanced with info about project specific dataset identifier (`#1546 <https://github.com/SwissDataScienceCenter/renku-graph/issues/1546>`_).
+- **KG**: ``slug`` as a copy of ``name`` on responses from all Dataset APIs (`#1544 <https://github.com/SwissDataScienceCenter/renku-graph/issues/1544>`_).
 
 **✨ Improvements**
 
@@ -50,6 +52,7 @@ Individual components
 - `renku-gateway 0.20.1 <https://github.com/SwissDataScienceCenter/renku-gateway/releases/tag/0.20.1>`_
 - `renku-python 2.5.0 <https://github.com/SwissDataScienceCenter/renku-python/releases/tag/v2.5.0>`_
 - `renku-ui 3.6.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.6.0>`_
+- `renku-graph 2.36.0 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/2.36.0>`_
 
 0.27.0
 ------
