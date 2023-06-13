@@ -62,6 +62,28 @@ Most information related to upgrading from one chart version to another is cover
 in the `values changelog file <https://github.com/SwissDataScienceCenter/renku/blob/master/helm-chart/values.yaml.changelog.md>`_.
 For upgrades that require some steps other than modifying the values files to be executed, we add some instructions here.
 
+Upgrading to 0.27.0
+*******************
+This version contains an upgrade to the ``keycloak`` Helm chart dependency from version ``15.0.2`` to ``20.0.1``.
+
+If Gitlab is managed independently from the Renku Helm chart a change in its configuration is necessary:
+the file `gitlab.rb`, in the section where OAuth is configured between Keycloak and Gitlab, needs to be updated to
+include the following line:
+```rail
+gitlab_rails['omniauth_providers'] = [
+    {
+    [...]
+    'args' => {
+        [...]
+          authorize_params: {
+            scope: "openid profile email"
+          }
+        },
+    [...]
+      }
+    ]
+```
+
 Upgrading to 0.23.0
 *******************
 This version contains an upgrade to the ``redis`` bitnami helm chart dependency

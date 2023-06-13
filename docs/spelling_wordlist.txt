@@ -37,6 +37,7 @@ CI
 circumventable
 cli
 CLI
+codecentric
 Codespace
 Codespaces
 conda
@@ -127,6 +128,7 @@ jupyterlab
 JupyterLab
 kb
 keycloak
+keycloakx
 Keycloak
 ku
 kubernetes
@@ -295,6 +297,7 @@ versioned
 versioning
 Versioning
 vertices
+viewmodel
 vm
 webhook
 webhooks
