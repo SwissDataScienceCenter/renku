@@ -49,7 +49,4 @@ case object NewProjectPage extends RenkuPage(path = "/projects/new") with TopBar
   def createButton(implicit webDriver: WebDriver): WebElement = eventually {
     find(cssSelector("#create-new-project")) getOrElse fail("Create button not found")
   }
-
-  def creatingProjectInfoDisplayed(implicit webDriver: WebDriver): Boolean =
-    webDriver.getPageSource contains "Creating Project..."
 }
