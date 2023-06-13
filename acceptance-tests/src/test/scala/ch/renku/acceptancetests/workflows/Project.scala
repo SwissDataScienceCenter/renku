@@ -117,6 +117,7 @@ trait Project extends RemoveProject with ExtantProject {
     `try few times with page reload` { _ =>
       When("user fills in and submits the new project details form")
       `fill in new project form and submit`
+      `wait for Project creation`()
     }
 
     pause asLongAsBrowserAt NewProjectPage sleep (1 second)
@@ -186,9 +187,19 @@ trait Project extends RemoveProject with ExtantProject {
     And("clicks the 'Create' button")
     NewProjectPage.createButton.isEnabled shouldBe true
     NewProjectPage.createButton.click() sleep (10 seconds)
+  }
 
-    if ((currentUrl startsWith NewProjectPage.url) && !NewProjectPage.creatingProjectInfoDisplayed) {
-      logger.warn("Project Create button click seemed not to work. Retrying")
+  private def `wait for Project creation`(attempt: Int = 1): Unit = {
+    val sleepTime = 1 second
+
+    if (currentUrl.startsWith(NewProjectPage.url) && (attempt < 120)) {
+      logger.info("Waiting for Project to be created")
+      sleep(1 second)
+      `wait for Project creation`(attempt + 1)
+    } else if (!currentUrl.startsWith(NewProjectPage.url)) {
+      logger.info("Project created")
+    } else {
+      logger.warn(s"Project Create button click seemed not to work after ${sleepTime * attempt}. Retrying")
       reloadPage()
       `fill in new project form and submit`
     }
