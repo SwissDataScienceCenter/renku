@@ -27,13 +27,14 @@ import io.circe.{Decoder, Json}
 import org.http4s.Status._
 import org.http4s.Uri.Path.SegmentEncoder._
 import org.http4s.UrlForm
-import org.scalatest.Assertions.fail
 
+import java.lang.Thread.sleep
 import java.time.Instant
 import scala.annotation.tailrec
+import scala.concurrent.duration._
 
 trait GitLabApi extends RestClient {
-  self: AcceptanceSpecData with IOSpec =>
+  self: AcceptanceSpecData with BddWording with IOSpec =>
 
   lazy val authorizationToken: AuthorizationToken =
     userCredentials.maybeGitLabAccessToken getOrElse oauthAccessToken
@@ -127,6 +128,13 @@ trait GitLabApi extends RestClient {
           case other        => fail(s"Finding '${projectId.slug}' project in GitLab failed with $other status")
         }
       })
+
+  def `wait for project creation`(projectId: ProjectIdentifier): Unit =
+    if (!`project exists in GitLab`(projectId)) {
+      And("waits for Project creation in GitLab")
+      sleep((1 second).toMillis)
+      `wait for project creation`(projectId)
+    }
 
   def `delete project in GitLab`(projectId: ProjectIdentifier): Unit =
     DELETE(gitLabAPIUrl / "projects" / projectId.asProjectPath)
