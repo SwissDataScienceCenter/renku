@@ -17,11 +17,11 @@ User-Facing Changes
 - 📎️ **CLI**: Export dataset keywords (`#3454 <https://github.com/SwissDataScienceCenter/renku-python/issues/3454>`_).
 - **KG**: Dataset Details API response enhanced with info about project specific dataset identifier (`#1546 <https://github.com/SwissDataScienceCenter/renku-graph/issues/1546>`_).
 - **KG**: ``slug`` as a copy of ``name`` on responses from all Dataset APIs (`#1544 <https://github.com/SwissDataScienceCenter/renku-graph/issues/1544>`_).
+- 🗑️ **UI**: Add a delete project button on the settings tab (`#2416 <https://github.com/SwissDataScienceCenter/renku-ui/issues/2416>`_).
 
 **✨ Improvements**
 
 - 👩‍💻️ **UI**: Major rework and simplification of project status page (moved to Settings -> General) (`#2315 <https://github.com/SwissDataScienceCenter/renku-ui/issues/2315>`_).
-- 🗑️ **UI**: Add a delete project button on the settings tab (`#2416 <https://github.com/SwissDataScienceCenter/renku-ui/issues/2416>`_).
 
 **🐞 Bug Fixes**
 
@@ -43,13 +43,11 @@ Internal Changes
 **🐞 Bug Fixes**
 
 - 🛠️ **Core**: Fixed working on branches in the ``core-svc`` (`#3472 <https://github.com/SwissDataScienceCenter/renku-python/issues/3472>`_).
-- 🛠️ **Core:**: Return proper errors on migrations check (`#3334 <https://github.com/SwissDataScienceCenter/renku-python/issues/3334>`_).
-- 🛠️ **Gateway**: Fixed logout with new Keycloak version (`#655 <https://github.com/SwissDataScienceCenter/renku-gateway/issues/655>`_).
+- 🛠️ **Core**: Return proper errors on migrations check (`#3334 <https://github.com/SwissDataScienceCenter/renku-python/issues/3334>`_).
 
 Individual components
 ~~~~~~~~~~~~~~~~~~~~~~
 
-- `renku-gateway 0.20.1 <https://github.com/SwissDataScienceCenter/renku-gateway/releases/tag/0.20.1>`_
 - `renku-python 2.5.0 <https://github.com/SwissDataScienceCenter/renku-python/releases/tag/v2.5.0>`_
 - `renku-ui 3.6.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.6.0>`_
 - `renku-graph 2.36.0 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/2.36.0>`_
