@@ -26,18 +26,23 @@ import io.circe.JsonObject
 import org.http4s.Status.{Accepted, NotFound, Ok}
 import org.http4s.circe.CirceEntityCodec._
 import org.openqa.selenium.WebDriver
-import org.scalatest.Assertions.fail
 
 import scala.annotation.tailrec
 import scala.concurrent.duration._
 
 trait KnowledgeGraphApi extends RestClient {
-  self: AcceptanceSpecData with GitLabApi with Grammar with IOSpec =>
+  self: AcceptanceSpecData with GitLabApi with Grammar with BddWording with IOSpec =>
 
   def `wait for KG to process events`(projectId: ProjectIdentifier, browser: WebDriver): Unit = {
     sleep(1 second)
     val gitLabProjectId = `get GitLab project id`(projectId)
     checkStatusAndWait(projectId, gitLabProjectId, browser, 1)
+  }
+
+  def `wait for project activation`(projectId: ProjectIdentifier)(implicit browser: WebDriver): Unit = {
+    sleep(1 second)
+    val gitLabProjectId = `get GitLab project id`(projectId)
+    checkActivatedAndWait(projectId, gitLabProjectId, browser, 1)
   }
 
   def findLineage(projectPath: String, filePath: String): JsonObject = {
@@ -75,6 +80,25 @@ trait KnowledgeGraphApi extends RestClient {
       sleep(1 second)
       checkStatusAndWait(projectId, gitLabProjectId, browser, attempt + 1)
     }
+
+  @tailrec
+  private def checkActivatedAndWait(
+      projectId:       ProjectIdentifier,
+      gitLabProjectId: Int,
+      browser:         WebDriver,
+      attempt:         Int
+  ): Unit = {
+    And("waits for Project Activation")
+    if (attempt >= 60 * 5)
+      fail(s"Activation status of '$projectId' project couldn't be determined after 5 minutes")
+    else if (!checkActivated(projectId, gitLabProjectId, browser)) {
+      sleep(1 second)
+      checkActivatedAndWait(projectId, gitLabProjectId, browser, attempt + 1)
+    }
+  }
+
+  private def checkActivated(projectId: ProjectIdentifier, gitLabProjectId: Int, browser: WebDriver): Boolean =
+    findStatus(projectId, gitLabProjectId, browser).exists(_.activated)
 
   private def findProgress(projectId: ProjectIdentifier, gitLabProjectId: Int, browser: WebDriver): Double =
     findStatus(projectId, gitLabProjectId, browser).map(_.progressPercentage).getOrElse(0d)
