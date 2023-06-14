@@ -20,8 +20,7 @@ package ch.renku.acceptancetests.workflows
 
 import ch.renku.acceptancetests.model.projects.{ProjectDetails, Template, Visibility}
 import ch.renku.acceptancetests.pages._
-import ch.renku.acceptancetests.tooling.AcceptanceSpec
-import ch.renku.acceptancetests.tooling.TestLogger.logger
+import ch.renku.acceptancetests.tooling.{AcceptanceSpec, KnowledgeGraphApi}
 import org.openqa.selenium.interactions.Actions
 import org.scalatest.Outcome
 
@@ -42,7 +41,7 @@ trait ExtantProject {
       }
 }
 
-trait PrivateProject extends Project with ExtantProject {
+trait PrivateProject extends Project with ExtantProject with KnowledgeGraphApi {
   self: AcceptanceSpec =>
 
   protected override lazy val projectVisibility: Visibility = Visibility.Private
@@ -50,7 +49,7 @@ trait PrivateProject extends Project with ExtantProject {
     maybeExtantProject(projectVisibility).getOrElse(ProjectDetails.generate().copy(visibility = projectVisibility))
 }
 
-trait Project extends RemoveProject with ExtantProject {
+trait Project extends RemoveProject with ExtantProject with KnowledgeGraphApi {
   self: AcceptanceSpec =>
 
   protected lazy val projectVisibility: Visibility = Visibility.Public
@@ -117,13 +116,15 @@ trait Project extends RemoveProject with ExtantProject {
     `try few times with page reload` { _ =>
       When("user fills in and submits the new project details form")
       `fill in new project form and submit`
-      `wait for Project creation`()
     }
+
+    val projectPage = ProjectPage createFrom projectDetails
+
+    `wait for project activation`(projectPage.asProjectIdentifier)
 
     pause asLongAsBrowserAt NewProjectPage sleep (1 second)
     Then(s"the project '${projectDetails.title}' gets created and the Project page gets displayed")
 
-    val projectPage = ProjectPage createFrom projectDetails
     verify browserAt projectPage
 
     `try few times with page reload` { _ =>
@@ -171,7 +172,7 @@ trait Project extends RemoveProject with ExtantProject {
 
     `try few times without page reload` { _ =>
       When(s"selects the '${projectDetails.template}' template")
-      NewProjectPage.templateCard(projectDetails.template).click() sleep (5 seconds)
+      NewProjectPage.templateCard(projectDetails.template).click() sleep (10 seconds)
     }
 
     docsScreenshots.takeScreenshot()
@@ -186,23 +187,7 @@ trait Project extends RemoveProject with ExtantProject {
 
     And("clicks the 'Create' button")
     NewProjectPage.createButton.isEnabled shouldBe true
-    NewProjectPage.createButton.click() sleep (10 seconds)
-  }
-
-  private def `wait for Project creation`(attempt: Int = 1): Unit = {
-    val sleepTime = 1 second
-
-    if (currentUrl.startsWith(NewProjectPage.url) && (attempt < 120)) {
-      logger.info("Waiting for Project to be created")
-      sleep(1 second)
-      `wait for Project creation`(attempt + 1)
-    } else if (!currentUrl.startsWith(NewProjectPage.url)) {
-      logger.info("Project created")
-    } else {
-      logger.warn(s"Project Create button click seemed not to work after ${sleepTime * attempt}. Retrying")
-      reloadPage()
-      `fill in new project form and submit`
-    }
+    NewProjectPage.createButton.click() sleep (2 seconds)
   }
 
   protected override type FixtureParam = Unit
