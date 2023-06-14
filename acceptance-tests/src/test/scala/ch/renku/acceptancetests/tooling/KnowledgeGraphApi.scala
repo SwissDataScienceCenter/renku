@@ -41,6 +41,7 @@ trait KnowledgeGraphApi extends RestClient {
 
   def `wait for project activation`(projectId: ProjectIdentifier)(implicit browser: WebDriver): Unit = {
     sleep(1 second)
+    `wait for project creation`(projectId)
     val gitLabProjectId = `get GitLab project id`(projectId)
     checkActivatedAndWait(projectId, gitLabProjectId, browser, 1)
   }
