@@ -21,7 +21,7 @@ package ch.renku.acceptancetests.tooling
 import GraphStatus._
 import io.circe.Decoder
 
-final case class GraphStatus(activated: Boolean, progress: Progress, details: Details) {
+final case class GraphStatus(activated: Boolean, progress: Progress, maybeDetails: Option[Details]) {
   val progressPercentage: Double = progress.percentage.toDouble
   val total:              Int    = progress.total
 }

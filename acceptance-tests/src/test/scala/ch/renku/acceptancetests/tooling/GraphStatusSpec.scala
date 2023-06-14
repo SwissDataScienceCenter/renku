@@ -45,7 +45,28 @@ class GraphStatusSpec extends AnyFlatSpec with should.Matchers {
       GraphStatus(
         activated = true,
         GraphStatus.Progress(1, 4, 0.25f),
-        GraphStatus.Details("in-progress", "Thing is in progress.")
+        Some(GraphStatus.Details("in-progress", "Thing is in progress."))
+      )
+    )
+  }
+
+  it should "decode status response without details" in {
+    val detailedStatus =
+      json"""
+            { "activated": true,
+              "progress": {
+                "done": 1,
+                "total": 4,
+                "percentage": 0.25
+              }
+            }
+          """
+
+    Decoder[GraphStatus].decodeJson(detailedStatus) shouldBe Right(
+      GraphStatus(
+        activated = true,
+        GraphStatus.Progress(1, 4, 0.25f),
+        maybeDetails = None
       )
     )
   }
