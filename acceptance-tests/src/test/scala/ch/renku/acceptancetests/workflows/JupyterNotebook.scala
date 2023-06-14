@@ -48,7 +48,7 @@ trait JupyterNotebook extends Datasets with Project with KnowledgeGraphApi {
 
     verify userCanSee projectPage.Settings.General.projectRenkuVersion
     val currentVersion = projectPage.Settings.General.projectRenkuVersion.getText
-    if (currentVersion != cliVersion.value) {
+    if (!cliVersion.value.startsWith(currentVersion)) {
       And("the user updates the project")
       click on projectPage.Settings.General.updateVersionButton
 
