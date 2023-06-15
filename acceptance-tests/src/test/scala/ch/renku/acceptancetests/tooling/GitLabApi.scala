@@ -129,12 +129,17 @@ trait GitLabApi extends RestClient {
         }
       })
 
-  def `wait for project creation`(projectId: ProjectIdentifier): Unit =
-    if (!`project exists in GitLab`(projectId)) {
+  def `wait for project creation`(projectId: ProjectIdentifier, attempt: Int = 1): Unit = {
+    val waitTime = 1 second
+
+    if (!`project exists in GitLab`(projectId) && attempt < 120) {
       And("waits for Project creation in GitLab")
-      sleep((1 second).toMillis)
+      sleep(waitTime.toMillis)
       `wait for project creation`(projectId)
+    } else if (!`project exists in GitLab`(projectId)) {
+      fail(s"project did not get created in GitLab after ${(waitTime * attempt).toSeconds} seconds")
     }
+  }
 
   def `delete project in GitLab`(projectId: ProjectIdentifier): Unit =
     DELETE(gitLabAPIUrl / "projects" / projectId.asProjectPath)
