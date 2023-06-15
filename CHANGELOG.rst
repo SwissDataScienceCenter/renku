@@ -3,9 +3,7 @@
 0.27.0
 ------
 
-Renku ``0.27.0`` resolves bugs and adds minor features in renku-core, renku-graph, and the UI.
-
-The project status and the indexing progresses are now available in the project settings tab.
+Renku ``0.28.0`` simplifies the project status update by making it available in the project settings tab and improves the information in the UI regarding the indexing processes. Thus, it enables new features for the command line interface related to sessions and exporting dataset keywords. Thus, it adds minor features in renku-core, renku-graph and the UI; and resolves some bugs.
 
 User-Facing Changes
 ~~~~~~~~~~~~~~~~~~~
