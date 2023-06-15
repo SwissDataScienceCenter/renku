@@ -3,7 +3,10 @@
 0.28.0
 ------
 
-Renku ``0.28.0`` simplifies the project status update by making it available in the project settings tab and improves the information in the UI regarding the indexing processes. Thus, it enables new features for the command line interface related to sessions and exporting dataset keywords. Thus, it adds minor features in renku-core, renku-graph and the UI; and resolves some bugs.
+Renku ``0.28.0`` simplifies the project status update by making it available in the project settings tab and improves the information in the UI regarding the indexing processes. Thus, it enables new features for the command line interface related to sessions and exporting dataset keywords. 
+
+Read on for a full breakdown of all new features, improvements and bug fixes included in this release.
+
 
 User-Facing Changes
 ~~~~~~~~~~~~~~~~~~~
@@ -15,7 +18,7 @@ User-Facing Changes
 - 📎️ **CLI**: Export dataset keywords (`#3454 <https://github.com/SwissDataScienceCenter/renku-python/issues/3454>`_).
 - **KG**: Dataset Details API response enhanced with info about project specific dataset identifier (`#1546 <https://github.com/SwissDataScienceCenter/renku-graph/issues/1546>`_).
 - **KG**: ``slug`` as a copy of ``name`` on responses from all Dataset APIs (`#1544 <https://github.com/SwissDataScienceCenter/renku-graph/issues/1544>`_).
-- 🗑️ **UI**: Add a delete project button on the settings tab (`#2416 <https://github.com/SwissDataScienceCenter/renku-ui/issues/2416>`_).
+- 🗑️ **UI**: Added a delete project button on the settings tab (`#2416 <https://github.com/SwissDataScienceCenter/renku-ui/issues/2416>`_).
 
 **✨ Improvements**
 
@@ -35,7 +38,7 @@ Internal Changes
 
 **✨ Improvements**
 
-- 🛠️ **Gateway**: add new path to knowledge-graph webhooks
+- 🛠️ **Gateway**: Added new path to knowledge-graph webhooks
   (`#639 <https://github.com/SwissDataScienceCenter/renku-gateway/issues/639>`_).
 
 **🐞 Bug Fixes**
