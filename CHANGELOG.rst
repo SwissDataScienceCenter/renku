@@ -1,5 +1,58 @@
 .. _changelog:
 
+0.28.0
+------
+
+Renku ``0.28.0`` simplifies the project status update by making it available in the project settings tab and improves the information in the UI regarding the indexing processes. Thus, it enables new features for the command line interface related to sessions and exporting dataset keywords. 
+
+Read on for a full breakdown of all new features, improvements and bug fixes included in this release.
+
+
+User-Facing Changes
+~~~~~~~~~~~~~~~~~~~
+
+**🌟 New Features**
+
+- 🐳️ **CLI**: Pass docker run args to session start (`#3487 <https://github.com/SwissDataScienceCenter/renku-python/issues/3487>`_).
+- 👩‍💻️ **CLI**: Shell completion for sessions (`#3450 <https://github.com/SwissDataScienceCenter/renku-python/issues/3450>`_).
+- 📎️ **CLI**: Export dataset keywords (`#3454 <https://github.com/SwissDataScienceCenter/renku-python/issues/3454>`_).
+- **KG**: Dataset Details API response enhanced with info about project specific dataset identifier (`#1546 <https://github.com/SwissDataScienceCenter/renku-graph/issues/1546>`_).
+- **KG**: ``slug`` as a copy of ``name`` on responses from all Dataset APIs (`#1544 <https://github.com/SwissDataScienceCenter/renku-graph/issues/1544>`_).
+- 🗑️ **UI**: Added a delete project button on the settings tab (`#2416 <https://github.com/SwissDataScienceCenter/renku-ui/issues/2416>`_).
+
+**✨ Improvements**
+
+- 👩‍💻️ **UI**: Major rework and simplification of project status page (moved to Settings -> General) (`#2315 <https://github.com/SwissDataScienceCenter/renku-ui/issues/2315>`_).
+
+**🐞 Bug Fixes**
+
+- 📎️ **CLI**: Fixed dataset update with external files (`#3379 <https://github.com/SwissDataScienceCenter/renku-python/issues/3379>`_).
+- 🛠️ **CLI**: Fixed special paths in workflow files and bump ``toil/cwltool`` (`#3489 <https://github.com/SwissDataScienceCenter/renku-python/issues/3489>`_).
+- 🖼️ **UI**: Made text not selectable in entity cards (`#2546 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2546>`_).
+- 📎️ **UI**: Fixed the "add dataset to project" feature (`#2549 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2549>`_).
+- 🔗️ **UI**: Fixed clicking on a file name on the dataset view wrongly leading to lineage and not contents (`#1270 <https://github.com/SwissDataScienceCenter/renku-ui/issues/1270>`_).
+- 🔗️ **UI**: Fixed getting a 404 page when switching from lineage view to contents (`#2571 <https://github.com/SwissDataScienceCenter/renku-ui/issues/2571>`_).
+
+Internal Changes
+~~~~~~~~~~~~~~~~
+
+**✨ Improvements**
+
+- 🛠️ **Gateway**: Added new path to knowledge-graph webhooks
+  (`#639 <https://github.com/SwissDataScienceCenter/renku-gateway/issues/639>`_).
+
+**🐞 Bug Fixes**
+
+- 🛠️ **Core**: Fixed working on branches in the ``core-svc`` (`#3472 <https://github.com/SwissDataScienceCenter/renku-python/issues/3472>`_).
+- 🛠️ **Core**: Return proper errors on migrations check (`#3334 <https://github.com/SwissDataScienceCenter/renku-python/issues/3334>`_).
+
+Individual components
+~~~~~~~~~~~~~~~~~~~~~~
+
+- `renku-python 2.5.0 <https://github.com/SwissDataScienceCenter/renku-python/releases/tag/v2.5.0>`_
+- `renku-ui 3.6.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.6.0>`_
+- `renku-graph 2.36.0 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/2.36.0>`_
+
 0.27.0
 ------
 

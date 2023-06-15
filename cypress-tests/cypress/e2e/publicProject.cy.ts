@@ -56,11 +56,17 @@ describe("Basic public project functionality", () => {
 
   it("Can search for project", () => {
     // assess the project has been indexed properly -- this might take time if it was recently created
-    cy.dataCy("project-overview-nav").contains("Status").should("be.visible").click();
-    cy.dataCy("project-overview-content")
-      .contains("Knowledge Graph integration is active", { timeout: TIMEOUTS.vlong }).should("be.visible");
-    // ? wait a moment to prevent "project not found" error
-    cy.wait(2000); // eslint-disable-line cypress/no-unnecessary-waiting
+    cy.dataCy("project-navbar", true)
+      .contains("a.nav-link", "Settings")
+      .should("exist")
+      .click();
+    cy.dataCy("project-settings-knowledge-graph")
+      .contains("Knowledge Graph metadata", { timeout: TIMEOUTS.vlong })
+      .should("exist");
+    cy.dataCy("kg-status-section-open").should("exist").click();
+    cy.dataCy("project-settings-knowledge-graph")
+      .contains("Everything processed", { timeout: TIMEOUTS.vlong })
+      .should("exist");
     cy.searchForProject(projectIdentifier);
 
     // logout and search for the project and log back in
@@ -70,13 +76,14 @@ describe("Basic public project functionality", () => {
     cy.robustLogin();
   });
 
-  it("Can can see overview content", () => {
+  it("Can can see overview content and check the clone URLs", () => {
     cy.contains("README.md").should("be.visible");
     cy.contains("This is a Renku project").should("be.visible");
-    if (projectTestConfig.shouldCreateProject)
+    if (projectTestConfig.shouldCreateProject) {
       cy.contains("Welcome to your new Renku project", {
         timeout: TIMEOUTS.vlong,
       }).should("be.visible");
+    }
 
     // Check the clone URLs
     const projectUrl = projectUrlFromIdentifier(projectIdentifier);
@@ -103,18 +110,22 @@ describe("Basic public project functionality", () => {
       .contains("https")
       .and("contain.text", cloneSubUrl);
     cy.get("button").contains("Clone").should("be.visible").click();
+  });
 
-    cy.contains("Status").should("be.visible").click();
-    // ! TODO: temporarily disabled until the new project status section is ready
-    // cy.contains("This project is using the latest version of renku").should(
-    //   "be.visible"
-    // );
-    cy.contains(
-      "This project is using the latest version of the template"
-    ).should("be.visible");
-    cy.contains("Knowledge Graph integration is active", {
-      timeout: TIMEOUTS.long,
-    }).should("be.visible");
+  it("Verify project version is up to date", () => {
+    cy.contains("Status").should("not.exist");
+    cy.dataCy("project-status-icon-element").should("not.exist");
+    cy.dataCy("project-navbar", true)
+      .contains("a.nav-link", "Settings")
+      .should("exist")
+      .click();
+    cy.dataCy("project-version-section-open").should("exist").click();
+    cy.dataCy("project-settings-migration-status")
+      .contains("This project uses the latest")
+      .should("exist");
+    cy.dataCy("project-settings-knowledge-graph")
+      .contains("Knowledge Graph metadata")
+      .should("exist");
   });
 
   it("Can view files", () => {
