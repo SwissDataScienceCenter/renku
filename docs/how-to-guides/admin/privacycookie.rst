@@ -60,7 +60,7 @@ page, suited for showing general information about Renku.
 
 This feature can be enabled and configured by editing the values found in
 ``ui.client.dashboardMessage``. Set ``ui.client.dashboardMessage.enabled``
-to ``true`` to enable have the message displayed on the dashboard page.
+to ``true`` to have the message displayed on the dashboard page.
 
 The content and appearance of the message are configured by editing the other
 values in ``ui.client.dashboardMessage``:
@@ -72,7 +72,7 @@ values in ``ui.client.dashboardMessage``:
 3. ``styles``: this configures the appearance of the card used to display the
    dashboard message. Allowed values are: "plain", "success", "info", "warning"
    and "danger".
-4. ``dissmissible``: when set to true, users can dismiss the message and hide it
+4. ``dismissible``: when set to true, users can dismiss the message and hide it
    until the tab is closed or refreshed.
 
 An example configuration can be found in
