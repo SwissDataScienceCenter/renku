@@ -1,7 +1,7 @@
 .. _admin_privacycookie:
 
-Configure privacy page and cookie banner
-----------------------------------------
+Configure the user interface
+----------------------------
 
 Privacy page
 ~~~~~~~~~~~~
@@ -51,3 +51,29 @@ All the adjustments should be provided as values in ``ui.privacy.banner`` as fol
 You can refer to the current
 `values.yaml in the renku-ui repository <https://github.com/SwissDataScienceCenter/renku-ui/blob/master/helm-chart/renku-ui/values.yaml>`_
 to check the default values and to find an example of how to apply different settings.
+
+Dashboard Message
+~~~~~~~~~~~~~~~~~
+
+The UI can display a configurable message for logged in users on their dashboard
+page, suited for showing general information about Renku.
+
+This feature can be enabled and configured by editing the values found in
+``ui.client.dashboardMessage``. Set ``ui.client.dashboardMessage.enabled``
+to ``true`` to enable have the message displayed on the dashboard page.
+
+The content and appearance of the message are configured by editing the other
+values in ``ui.client.dashboardMessage``:
+
+1. ``text``: this is the main message displayed on the dashboard page. It supports
+   `Markdown syntax <https://en.wikipedia.org/wiki/Markdown>`_.
+2. ``additionalText``: this is the additional message which users can read by clicking
+   "Read more" just below the main message.
+3. ``styles``: this configures the appearance of the card used to display the
+   dashboard message. Allowed values are: "plain", "success", "info", "warning"
+   and "danger".
+4. ``dissmissible``: when set to true, users can dismiss the message and hide it
+   until the tab is closed or refreshed.
+
+An example configuration can be found in
+`values.yaml in the renku-ui repository <https://github.com/SwissDataScienceCenter/renku-ui/blob/master/helm-chart/renku-ui/values.yaml>`_.
