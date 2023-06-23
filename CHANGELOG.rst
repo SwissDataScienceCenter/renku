@@ -3,14 +3,14 @@
 0.28.1
 ------
 
-Renku ``0.28.1`` introduces a Postgres DB for triples-generator.
+Renku ``0.28.1`` introduces a PostgreSQL DB for triples-generator.
 
 Internal Changes
 ~~~~~~~~~~~~~~~~
 
 **✨ Improvements**
 
-- 🛠️ **KG**: Added new Postgres DB to triples-generator.
+- 🛠️ **KG**: Added a new PostgreSQL DB to triples-generator.
 
 
 0.28.0
