@@ -6,6 +6,9 @@ Please follow this convention when adding a new row
 * `<type: NEW|EDIT|DELETE> - *<resource name>*: <details>`
 
 ----
+## Upgrading to Renku 0.28.1
+* NEW - *global.graph.triplesGenerator.postgresPassword.value* Generate through `openssl rand -hex 32`.
+
 ## Upgrading to Renku 0.27.0
 * EDIT - The keycloak chart has been replaced with keycloakx, if any values are specified under `keycloak`, now they
 need to be under `keycloakx`.
