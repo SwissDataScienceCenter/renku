@@ -50,7 +50,7 @@ class FreeTextDatasetSearchSpec
 
     Then("the expected datasets should be shown")
     val expectedDatasets = List(dataset1Name, dataset2Name).sorted.map(_.toString).reverse
-    `try few times before giving up` { _ =>
+    `try few times with page reload` { _ =>
       val foundDatasetLinks = DatasetsPage.searchResultLinks.map(_.getText)
       foundDatasetLinks.filter(expectedDatasets.contains) shouldBe expectedDatasets
     }

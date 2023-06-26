@@ -28,7 +28,7 @@ describe("Fork and update old projects", () => {
     cy.robustLogin();
   });
 
-  it("Cannot update a very old and unsupported project", () => {
+  it("Update a very old project - version and then template", () => {
     // fork the project
     const tempName = `test-project-update-v8-${uuidv4().substring(24)}`;
     if (projects.shouldFork) {
@@ -44,20 +44,59 @@ describe("Fork and update old projects", () => {
       { namespace: projects.namespace, name: projects.v8 };
     if (!projects.shouldFork)
       cy.visitAndLoadProject(targetProject, true);
-    cy.getProjectPageLink(targetProject, "overview/status").should("exist").click();
+    cy.dataCy("project-navbar", true)
+      .contains("a.nav-link", "Settings")
+      .should("exist")
+      .click();
 
-    // verify project cannot be updated
-    cy.dataCy("project-overview-content").contains("Project Renku Version").should("exist");
-    cy.dataCy("project-overview-content").contains("(v8)").should("exist");
-    cy.dataCy("project-overview-content")
-      .contains("This project is not compatible with the RenkuLab UI").should("exist");
+    // verify project requires update
+    cy.dataCy("project-status-icon-element").should("exist");
+    cy.dataCy("project-settings-migration-status")
+      .contains("Project update required")
+      .should("exist");
+    cy.dataCy("project-version-section-open").should("exist").click();
+    cy.dataCy("project-settings-migration-status")
+      .contains("still on version 8 while the latest version is")
+      .should("exist");
+    cy.dataCy("project-settings-migration-status")
+      .get("#button-update-projectMigrationStatus")
+      .should("exist")
+      .click();
+    cy.dataCy("project-settings-migration-status")
+      .contains("button", "Updating")
+      .should("exist");
+    cy.dataCy("project-settings-migration-status")
+      .contains("Refreshing project data")
+      .should("exist");
+    cy.dataCy("project-settings-migration-status")
+      .contains("This project uses the latest")
+      .should("exist");
+    cy.dataCy("project-status-icon-element").should("not.exist");
+
+    // update template
+    cy.dataCy("project-settings-migration-status")
+      .contains("There is a new version of the template")
+      .should("exist");
+    cy.dataCy("project-settings-migration-status")
+      .get("#button-update-projectMigrationStatus")
+      .should("exist")
+      .click();
+    cy.dataCy("project-settings-migration-status")
+      .contains("button", "Updating")
+      .should("exist");
+    cy.dataCy("project-settings-migration-status")
+      .contains("Refreshing project data")
+      .should("exist");
+    cy.dataCy("project-settings-migration-status")
+      .contains("Project up to date")
+      .should("exist");
 
     // delete the project
     if (projects.shouldFork)
       cy.deleteProject(targetProject);
   });
 
-  it("Can update an old but still supported project", () => {
+  it("Update an outdated project - verify commits have been added", () => {
     // fork the project
     const tempName = `test-project-update-v9-${uuidv4().substring(24)}`;
     if (projects.shouldFork) {
@@ -85,23 +124,42 @@ describe("Fork and update old projects", () => {
     cy.wait("@getCommits", { timeout: TIMEOUTS.long });
     cy.dataCy("project-overview-content").get(".card-body ul li.commit-object").should("have.length", 1);
 
-    // verify project can be updated
-    cy.getProjectPageLink(targetProject, "overview/status").should("exist").click();
-    cy.dataCy("project-overview-content").contains("Project Renku Version").should("exist");
-    cy.dataCy("project-overview-content").contains("(v9)").should("exist");
-    cy.dataCy("project-overview-content")
-      .contains("it is using an older version of renku").should("exist");
+    // go to project settings and verify it requires an upodate
+    cy.dataCy("project-navbar", true)
+      .contains("a.nav-link", "Settings")
+      .should("exist")
+      .click();
+    cy.dataCy("project-status-icon-element").should("exist");
+    cy.dataCy("project-settings-migration-status")
+      .contains("Project update required")
+      .should("exist");
+    cy.dataCy("project-version-section-open").should("exist").click();
+    cy.dataCy("project-settings-migration-status")
+      .contains("still on version 9 while the latest version is")
+      .should("exist");
 
-    // update the project
-    cy.dataCy("project-overview-content").get(".alert.alert-warning button.btn-warning")
-      .contains("Update").should("exist").click();
-    // ? Temporarily disabled until we fix this: https://github.com/SwissDataScienceCenter/renku-ui/issues/2315
-    // cy.dataCy("project-overview-content").contains("Updating...", { timeout: TIMEOUTS.long }).should("exist");
-    cy.dataCy("project-overview-content")
-      .contains("project is using the latest version of renku", { timeout: TIMEOUTS.vlong }).should("exist");
+    // update project
+    cy.dataCy("project-settings-migration-status")
+      .get("#button-update-projectMigrationStatus")
+      .should("exist")
+      .click();
+    cy.dataCy("project-settings-migration-status")
+      .contains("button", "Updating")
+      .should("exist");
+    cy.dataCy("project-settings-migration-status")
+      .contains("Refreshing project data")
+      .should("exist");
+    cy.dataCy("project-settings-migration-status")
+      .contains("This project uses the latest")
+      .should("exist");
+    cy.dataCy("project-status-icon-element").should("not.exist");
 
     // verify the commits were added
     commitFetched = false;
+    cy.dataCy("project-navbar", true)
+      .contains("a.nav-link", "Overview")
+      .should("exist")
+      .click();
     cy.getProjectPageLink(targetProject, "overview/commits").should("exist").click();
     if (!commitFetched) {
       cy.wait(1000); // eslint-disable-line cypress/no-unnecessary-waiting

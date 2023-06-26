@@ -18,6 +18,7 @@
 
 package ch.renku.acceptancetests.workflows
 
+import ch.renku.acceptancetests.pages
 import ch.renku.acceptancetests.pages.LoginPage.oidcButton
 import ch.renku.acceptancetests.pages._
 import ch.renku.acceptancetests.tooling.AcceptanceSpec
@@ -35,36 +36,36 @@ trait Login extends GitLabCredentials {
 
     Given("user is not logged in")
 
-    `try few times before giving up` { _ =>
+    `try few times with page reload` { _ =>
       go to LandingPage sleep (2 seconds)
       verify browserAt LandingPage
+
+      When("user clicks on the Login button")
+      // Wait for the page to update
+      sleep(2 seconds)
+      click on LandingPage.loginButton
+      Then("they should get into the Login Page")
+
+      maybeLoginType = Some {
+        if (userCredentials.useProvider) `log in to Renku using provider`
+        else `log in to Renku directly`
+      }
+
+      Then("they should get into the Dashboard page")
+      verify browserAt pages.DashboardPage
     }
-
-    When("user clicks on the Login button")
-    // Wait for the page to update
-    sleep(2 seconds)
-    click on LandingPage.loginButton
-    Then("they should get into the Login Page")
-
-    maybeLoginType = Some {
-      if (userCredentials.useProvider) `log in to Renku using provider`
-      else `log in to Renku directly`
-    }
-
-    Then("they should get into the Welcome page")
-    verify browserAt WelcomePage
 
     `verify user has GitLab credentials`
 
-    verify browserSwitchedTo WelcomePage
+    verify browserSwitchedTo DashboardPage
   }
 
   def `log out of Renku`: Unit = {
     sleep(3 seconds)
     When("user clicks the Profile button")
-    WelcomePage.TopBar.clickOnTopRightDropDown sleep (2 seconds)
+    DashboardPage.TopBar.clickOnTopRightDropDown sleep (2 seconds)
     When("user clicks the Log out link")
-    click on WelcomePage.TopBar.logoutLink sleep (3 seconds)
+    click on DashboardPage.TopBar.logoutLink sleep (3 seconds)
 
     unless(maybeLoginType contains LoginWithProvider) {
       Then("they should get back into the Landing page")
