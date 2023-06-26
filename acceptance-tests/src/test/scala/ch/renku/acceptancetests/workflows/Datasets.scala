@@ -30,11 +30,11 @@ import scala.util.Try
 trait Datasets {
   self: AcceptanceSpec with Project with KnowledgeGraphApi =>
 
-  def `verify dataset was created`(datasetName: DatasetName): Unit = `try few times before giving up` { _ =>
+  def `verify dataset was created`(datasetName: DatasetName): Unit = `try few times with page reload` { _ =>
     `navigate to the dataset`(DatasetPage(datasetName))
   }
 
-  def `navigate to project info`: Unit = `try few times before giving up` { _ =>
+  def `navigate to project info`: Unit = `try few times with page reload` { _ =>
     Given("the user is on the Datasets card")
     click on projectPage.Datasets.goBackButton sleep (10 second)
   }
@@ -44,12 +44,12 @@ trait Datasets {
     val newDatasetName = datasets.DatasetName("new")
     val newDatasetPage = DatasetPage(newDatasetName)
 
-    `try few times before giving up` { _ =>
+    `try few times with page reload` { _ =>
       Given("the user is on the Datasets tab")
       click on projectPage.Datasets.tab sleep (10 second)
     }
 
-    `try few times before giving up` { _ =>
+    `try few times with page reload` { _ =>
       When("the user clicks on the Add Dataset button")
       click on projectPage.Datasets.addDatasetButton sleep (5 seconds)
     }
@@ -69,7 +69,7 @@ trait Datasets {
     val datasetPage = DatasetPage(datasetName)
     reloadPage() sleep (2 seconds)
 
-    `try few times before giving up` { _ =>
+    `try few times with page reload` { _ =>
       verify browserAt datasetPage
       verify that datasetPage.datasetTitle contains datasetName.value
       if (datasetPage.datasetNotInKgWarning.nonEmpty) fail("The dataset is not in the KG")
@@ -83,13 +83,13 @@ trait Datasets {
     val newDatasetName = datasets.DatasetName("new")
     val newDatasetPage = DatasetPage(newDatasetName)
 
-    `try few times before giving up` { _ =>
+    `try few times with page reload` { _ =>
       Given("the user is on the Datasets tab")
       click on projectPage.Datasets.tab sleep (1 second)
     }
 
     When("the user clicks on the Add Dataset button")
-    `try few times before giving up` { _ =>
+    `try few times with page reload` { _ =>
       click on projectPage.Datasets.addDatasetButton sleep (1 second)
     }
     verify that newDatasetPage.ModificationForm.formTitle contains "Add Dataset"
@@ -114,7 +114,7 @@ trait Datasets {
     Then("the user should see its newly created dataset without the KG warning message")
     reloadPage() sleep (2 seconds)
 
-    `try few times before giving up` { _ =>
+    `try few times with page reload` { _ =>
       verify browserAt datasetPage
       verify that datasetPage.datasetTitle contains datasetName.value
       if (datasetPage.datasetNotInKgWarning.nonEmpty) fail("The dataset is not in the KG")
@@ -125,7 +125,7 @@ trait Datasets {
 
   def `navigate to the dataset`(datasetPage: DatasetPage): Unit = {
 
-    `try few times before giving up` { _ =>
+    `try few times with page reload` { _ =>
       Given("the user is on the Datasets tab")
       click on projectPage.Datasets.tab sleep (5 seconds)
       verify userCanSee projectPage.Datasets.addDatasetButton
@@ -147,7 +147,7 @@ trait Datasets {
     `navigate to the dataset`(datasetPage)
 
     When("the user clicks on the modify button")
-    `try few times before giving up` { _ =>
+    `try few times with page reload` { _ =>
       click on datasetPage.modifyButton sleep (3 seconds)
     }
     verify userCanSee datasetPage.ModificationForm.formTitle
@@ -170,7 +170,7 @@ trait Datasets {
     And("the user should see its newly created dataset without the KG warning message")
     reloadPage() sleep (2 seconds)
 
-    `try few times before giving up` { _ =>
+    `try few times with page reload` { _ =>
       if (datasetPage.datasetNotInKgWarning.nonEmpty) fail("The dataset is not in the KG")
     }
 

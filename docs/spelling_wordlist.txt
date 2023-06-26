@@ -27,6 +27,7 @@ blog
 BMP
 bugfix
 Calamus
+cgroup
 Champak
 chartpress
 Chartpress
@@ -144,6 +145,7 @@ Matlab
 mem
 mergetool
 metadata
+metavar
 microservices
 middleware
 migrationscheck
@@ -225,6 +227,7 @@ serializer
 serializer
 sha
 sha
+shm
 Slurm
 Snyk
 SPARQL
@@ -256,6 +259,7 @@ substring
 sudo
 supertype
 supertypes
+swappiness
 symlink
 symlinks
 templated
@@ -269,6 +273,7 @@ tinkerpop
 toolchain
 Traefik
 truthy
+TTY
 tutorialLink
 txt
 typesystem
@@ -283,6 +288,7 @@ unlinking
 unmapped
 unmerged
 Unmount
+unmount
 unpushed
 unschedulable
 untracked
