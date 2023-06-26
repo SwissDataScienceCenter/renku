@@ -18,7 +18,7 @@
 
 package ch.renku.acceptancetests.workflows
 
-import ch.renku.acceptancetests.pages.{GitLabUserProfilePage, GitLabWelcomePage, WelcomePage}
+import ch.renku.acceptancetests.pages.{GitLabUserProfilePage, GitLabWelcomePage, DashboardPage}
 import ch.renku.acceptancetests.tooling.AcceptanceSpec
 
 import scala.concurrent.duration._
@@ -35,12 +35,12 @@ trait GitLabCredentials {
     }
 
   private def `add user credentials` = {
-    verify browserSwitchedTo WelcomePage
+    verify browserSwitchedTo DashboardPage
 
     When("user clicks the GitLab button")
-    WelcomePage.TopBar.`click on GitLab dropdown`
+    DashboardPage.TopBar.`click on GitLab dropdown`
     And("the GitLab option")
-    click on WelcomePage.TopBar.gitLabMenuItem
+    click on DashboardPage.TopBar.gitLabMenuItem
     sleep(1 second)
 
     Then("the user should be on the 'GitLab Welcome' page")

@@ -36,23 +36,27 @@ trait JupyterNotebook extends Datasets with Project with KnowledgeGraphApi {
   }
 
   def `verify the project is up to date`: Unit = {
-    `try few times before giving up` { _ =>
-      When("the user goes to the project overview")
-      click on projectPage.Overview.tab
+    `try few times with page reload` { _ =>
+      When("the user goes to the project Settings")
+      click on projectPage.Settings.tab
     }
 
-    And("goes to the status tab")
-    click on projectPage.Overview.statusLink
+    sleep(10 seconds)
 
-    verify userCanSee projectPage.Overview.currentProjectVersion
-    val currentVersion = projectPage.Overview.currentProjectVersion.getText
-    if (currentVersion != cliVersion.value) {
+    And("unfolds the 'Project up to date' section")
+    click on projectPage.Settings.General.projectUpToDate
+
+    verify userCanSee projectPage.Settings.General.projectRenkuVersion
+    val currentVersion = projectPage.Settings.General.projectRenkuVersion.getText
+    if (!cliVersion.value.startsWith(currentVersion)) {
       And("the user updates the project")
-      click on projectPage.Overview.updateButton
-    } else ()
+      click on projectPage.Settings.General.updateVersionButton
 
-    Then("Project is up to date")
-    verify userCanSee projectPage.Overview.currentProjectVersion(is = cliVersion)
+      sleep(10 seconds)
+
+      Then("Project is up to date")
+      verify userCanSee projectPage.Settings.General.projectRenkuVersionOk
+    }
   }
 
   def `verify user can work with Jupyter notebook`: Unit = {
