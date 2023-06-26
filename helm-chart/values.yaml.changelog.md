@@ -6,7 +6,7 @@ Please follow this convention when adding a new row
 * `<type: NEW|EDIT|DELETE> - *<resource name>*: <details>`
 
 ----
-## Upgrading to Renku 0.28.1
+## Upgrading to Renku 0.28.2
 * NEW - *global.graph.triplesGenerator.postgresPassword.value* Generate through `openssl rand -hex 32`.
 
 ## Upgrading to Renku 0.27.0
