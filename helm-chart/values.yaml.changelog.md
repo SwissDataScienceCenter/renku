@@ -7,7 +7,7 @@ Please follow this convention when adding a new row
 
 ----
 ## Upgrading to Renku 0.28.2
-* NEW - *global.graph.triplesGenerator.postgresPassword.value* Generate through `openssl rand -hex 32`.
+* NEW - *global.graph.triplesGenerator.postgresPassword.value* should be specified. If it is not specified, a password will be generated automatically when the database is initialized. It is strongly recommended, however, to specify it here such that the password is explicitly managed and can be restored in disaster scenarios. Generate through `openssl rand -hex 32`.
 
 ## Upgrading to Renku 0.27.0
 * EDIT - The keycloak chart has been replaced with keycloakx, if any values are specified under `keycloak`, now they
