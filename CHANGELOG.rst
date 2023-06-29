@@ -3,7 +3,31 @@
 0.29.0
 ------
 
-Renku ``0.29.0`` introduces new UI features and a PostgreSQL DB for triples-generator.
+Renku ``0.29.0`` introduces a few features for the KG services as well as some bugfixes.
+
+User-Facing Changes
+~~~~~~~~~~~~~~~~~~~
+
+**🌟 New Features**
+
+- **KG**: ``updatedAt`` renamed to ``dateModified`` on the Project Details API (`#1582 <https://github.com/SwissDataScienceCenter/renku-graph/issues/1582>`_).
+
+
+**✨ Improvements**
+
+- **KG**: Improved performance of the Project Status API (`#1554 <https://github.com/SwissDataScienceCenter/renku-graph/issues/1554>`_).
+
+Internal Changes
+~~~~~~~~~~~~~~~~
+
+**✨ Improvements**
+
+- **KG**: A new process to synchronize various project properties between GitLab and Triples Store (`#1569 <https://github.com/SwissDataScienceCenter/renku-graph/issues/1569>`_).
+
+Individual components
+~~~~~~~~~~~~~~~~~~~~~~
+
+- `renku-graph 2.37.0 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/2.37.0>`_
 
 User-Facing Changes
 ~~~~~~~~~~~~~~~~~~~
