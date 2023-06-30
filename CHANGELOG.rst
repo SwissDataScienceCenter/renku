@@ -1,5 +1,23 @@
 .. _changelog:
 
+0.28.1
+------
+
+Renku ``0.28.1`` resolves a minor bug that occurs when launching sessions when git submodules are used.
+
+Internal Changes
+~~~~~~~~~~~~~~~~
+
+**Bug Fixes**
+
+- 🛠 **Renku Notebooks**: do not fail session launch if Git submodules couldn't be pulled.
+
+
+Individual components
+~~~~~~~~~~~~~~~~~~~~~~
+
+- `renku-notebooks 1.15.3 <https://github.com/SwissDataScienceCenter/renku-notebooks/releases/tag/1.15.3>`_
+
 0.28.0
 ------
 
