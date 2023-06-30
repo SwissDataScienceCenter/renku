@@ -1,7 +1,7 @@
 .. _admin_privacycookie:
 
-Configure the user interface
-----------------------------
+User interface configuration options
+------------------------------------
 
 Privacy page
 ~~~~~~~~~~~~
