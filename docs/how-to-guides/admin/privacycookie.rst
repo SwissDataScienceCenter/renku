@@ -69,7 +69,7 @@ values in ``ui.client.dashboardMessage``:
    `Markdown syntax <https://en.wikipedia.org/wiki/Markdown>`_.
 2. ``additionalText``: the additional message which users can read by clicking
    "Read more" button right below the main message.
-3. ``styles``: the appearance of the card used to display the
+3. ``style``: the appearance of the card used to display the
    dashboard message. Allowed values are: "plain", "success", "info", "warning"
    and "danger".
 4. ``dismissible``: if it is set to ``true``, users can dismiss the message and hide it
