@@ -6,7 +6,7 @@ Please follow this convention when adding a new row
 * `<type: NEW|EDIT|DELETE> - *<resource name>*: <details>`
 
 ----
-## Upgrading to Renku 0.28.2
+## Upgrading to Renku 0.29.0
 * NEW - *global.graph.triplesGenerator.postgresPassword.value* should be specified. If it is not specified, a password will be generated automatically when the database is initialized. It is strongly recommended, however, to specify it here such that the password is explicitly managed and can be restored in disaster scenarios. Generate through `openssl rand -hex 32`.
 
 ## Upgrading to Renku 0.27.0
