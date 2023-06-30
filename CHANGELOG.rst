@@ -1,5 +1,11 @@
 .. _changelog:
 
+0.29.0
+------
+
+Renku ``0.29.0`` introduces a PostgreSQL DB for triples-generator.
+
+
 0.28.1
 ------
 
@@ -17,6 +23,7 @@ Individual components
 ~~~~~~~~~~~~~~~~~~~~~~
 
 - `renku-notebooks 1.15.3 <https://github.com/SwissDataScienceCenter/renku-notebooks/releases/tag/1.15.3>`_
+
 
 0.28.0
 ------
