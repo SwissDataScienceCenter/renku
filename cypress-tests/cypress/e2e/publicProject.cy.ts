@@ -161,7 +161,7 @@ describe("Basic public project functionality", () => {
     cy.get("div.ck.ck-editor__main div.ck.ck-content").should("exist").type("This is a test dataset");
     cy.intercept("/ui-server/api/renku/*/datasets.list?git_url=*").as("listDatasets");
     cy.dataCy("submit-button").click();
-    cy.contains("Creating Dataset").should("be.visible");
+    cy.get(".progress-box").should("be.visible");
     cy.wait("@listDatasets", { timeout: TIMEOUTS.vlong });
 
     // Check that the content is as expected
