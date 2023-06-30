@@ -3,7 +3,8 @@
 0.29.0
 ------
 
-Renku ``0.29.0`` introduces a few features for the KG services as well as some bugfixes.
+Renku ``0.29.0`` introduces new features as well as bug fixes for the KG services.
+
 
 User-Facing Changes
 ~~~~~~~~~~~~~~~~~~~
