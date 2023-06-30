@@ -65,6 +65,13 @@ global:
       postgresPassword:
         value:
       existingSecret: '{{ template "renku.fullname" . }}-token-postgres'
+    triplesGenerator:
+      ## Name of the postgres user to be used to access the tg db
+      postgresUser: triplesgenerator
+      ## Postgres password to be used to access the db storing access tokens
+      postgresPassword:
+        value:
+      existingSecret: '{{ template "renku.fullname" . }}-tg-postgres'
     jena:
       ## specify which dataset should be used in Jena
       dataset:

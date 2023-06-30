@@ -47,6 +47,9 @@ spec:
             - name: graph-db-postgres
               mountPath: /graph-db-postgres
               readOnly: true
+            - name: graph-tg-postgres
+              mountPath: /graph-tg-postgres
+              readOnly: true
             - name: graph-token-postgres
               mountPath: /graph-token-postgres
               readOnly: true
@@ -94,6 +97,9 @@ spec:
         - name: graph-db-postgres
           secret:
             secretName: {{ template "renku.fullname" . }}-graph-db-postgres
+        - name: graph-tg-postgres
+          secret:
+            secretName: {{ template "renku.fullname" . }}-graph-tg-postgres
         - name: graph-token-postgres
           secret:
             secretName: {{ template "renku.fullname" . }}-graph-token-postgres
