@@ -208,7 +208,7 @@ check the image URL on the sessions list by clicking on the green icon.
 .. image:: ../../_static/images/templates-pinned-image.png
   :width: 85%
   :align: center
-  :alt: Get the Dockeri mage URL
+  :alt: Get the Docker image URL
 
 Copy the link, and paste it in the `Docker image` field in the advanced setting
 section of the project sessions settings, or using
@@ -329,11 +329,21 @@ contains all the specifications needed by the ``renku init`` function to
 create a new project. You can specify multiple templates in the same
 repository. Each of them requires an entry with the following parameters:
 
-* ``folder``: the target folder inside the repository where the template files
-  are stored. Please use a different folder for each template.
+* ``id``: the target directory inside the repository where the template files are stored.
+  You must use a different id/directory for each template. Note that this field was called
+  ``folder`` previously which is deprecated now. You can still use ``folder`` but
+  when validating your templates, you'll get a warning to replace it with ``id``.
 * ``name``: a short user-friendly name.
 * ``description``: a brief description of your template. This will be
   presented to the user when choosing between templates.
+* ``ssh_supported``: ``true`` or ``false``, indicating whether the template supports
+  SSH connections. To support SSH, the Dockerfile has to use one of the Renku base
+  images with version 0.14.0 or higher, or have a functioning SSH server running
+  inside the image listening on port 2022 and reading client keys from
+  ``$HOME/.ssh/authorized_keys``.
+* ``aliases``: A list of ID aliases for the template. This is useful if you want to
+  rename a template or move it to a different directory.
+  See :ref:`renaming templates <rename-templates>` for more information.
 * ``variables``: we support the
   `Jinja template engine <https://palletsprojects.com/p/jinja/>`_ in both
   file content and filenames. You can therefore ask users for specific values
@@ -374,14 +384,15 @@ repository. Each of them requires an entry with the following parameters:
   ``number`` accepts numeric inputs like integers and floats.
   ``enum`` is a special type that restricts the accepted values to those
   set in the ``enum:`` list of values.
-* ``allow_template_update``: When set to ``true``, indicates that this
-  template supports being updated. When the template gets updated, projects
+* ``allow_template_update``: This field is deprecated and will be ignored.
+  It was used to indicates that the template supports being updated. All
+  templates are updatable now. When the template gets updated, projects
   created from it will get updated with the new template files. Defaults to
   ``false``. Also see ``immutable_template_files``.
 * ``immutable_template_files``: A list of file paths inside the template
-  (relative to the project root) that should not be changed by users for
-  ``allow_template_update`` to work. Users changing any of these files will
-  get a warning when trying to commit those changes. Template files not in
+  (relative to the project root) that should not be changed by users.
+  Users changing any of these files will get a warning when trying to commit those
+  changes if Renku CLI pre-commit hook is installed in a project. Template files not in
   this list won't get updated on template update if they were modified by a
   user. If a user does change one of these files, automated template update
   is no longer supported on that project, to prevent broken/inconsistent
@@ -464,6 +475,38 @@ If you are working in a dedicated RenkuLab deployment and your local
 community needs the templates, you should contact the administrators to
 include your repository in the RenkuLab template source through the
 `renku-values file <https://renku.readthedocs.io/en/latest/admin/index.html#create-a-renku-values-yaml-file>`_.
+
+
+.. _rename-templates:
+
+Renaming templates
+^^^^^^^^^^^^^^^^^^
+
+If you are the owner of a template repository, you can change the name of the
+templates. To do this, edit the ``manifest.yaml`` file and put the new name
+in the ``id`` (used instead of ``folder`` that is deprecated) field of the template you want to rename. You then
+need to add the old name to the ``aliases`` field so that projects created
+from the old name can be updated to use newer template versions. In addition,
+template's directory must be renamed to match the new ``id``.
+
+The following example shows contents of ``manifest.yaml`` files to rename the
+``basic`` template to ``advanced``:
+
+  .. code-block:: yaml
+
+      - id: basic
+        name: Basic Template
+        description: Basic template for Renku projects
+
+``manifest.yaml`` after renaming:
+
+  .. code-block:: yaml
+
+      - id: advanced
+        name: Advanced Template
+        description: Advanced template for Renku projects
+        aliases:
+          - basic
 
 
 Create shareable project-creation links with pre-filled fields

@@ -32,12 +32,15 @@ import org.http4s.blaze.client.BlazeClientBuilder
 import org.http4s.blaze.pipeline.Command
 import org.http4s.circe._
 import org.http4s.client.dsl.Http4sClientDsl
+import org.http4s.client.middleware.Logger
 import org.http4s.client.{Client, ConnectionFailure}
+import org.openqa.selenium.WebDriver
 import org.scalatest.Assertions.fail
 
 import java.net.ConnectException
 import scala.concurrent.duration._
 import scala.util.control.NonFatal
+import scala.jdk.CollectionConverters._
 
 trait RestClient extends Http4sClientDsl[IO] {
   self: IOSpec =>
@@ -63,8 +66,15 @@ trait RestClient extends Http4sClientDsl[IO] {
 
   implicit class RequestOps(request: Request[IO]) {
 
+    def addCookiesFrom(webDriver: WebDriver) =
+      webDriver
+        .manage()
+        .getCookies
+        .asScala
+        .foldLeft(request)((r, c) => r.addCookie(c.getName, c.getValue))
+
     def withAuthorizationToken(authorizationToken: AuthorizationToken): Request[IO] =
-      request.withHeaders(Headers(authorizationToken.asHeader))
+      request.putHeaders(Headers(authorizationToken.asHeader))
 
     def send[A](processResponse: Response[IO] => IO[A]): A =
       clientBuilder.resource.use(sendRequest(processResponse)).unsafeRunSync()
@@ -77,7 +87,7 @@ trait RestClient extends Http4sClientDsl[IO] {
         )
 
     private def retryOnConnectionProblem[A](client: Client[IO], request: Request[IO])(
-        processResponse:                            Response[IO] => IO[A]
+        processResponse: Response[IO] => IO[A]
     ): PartialFunction[Throwable, IO[A]] = { case NonFatal(cause) =>
       cause match {
         case e @ (_: ConnectionFailure | _: ConnectException | _: Command.EOF.type | _: InvalidBodyException) =>

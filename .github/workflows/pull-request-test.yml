@@ -7,6 +7,7 @@ on:
       - reopened
       - closed
       - edited
+  merge_group:
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
@@ -17,8 +18,8 @@ jobs:
     if: github.event.action != 'closed'
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-python@v1
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v4
         with:
           python-version: 3.9
       - name: install dependencies
@@ -36,7 +37,7 @@ jobs:
           sphinx-build -nNW -b spelling -d _build/doctrees . _build/spelling
           sphinx-build -qnNW . _build/html
       - name: Upload docs
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         if: success()
         with:
           name: docs
@@ -55,7 +56,7 @@ jobs:
       extra-values: ${{ steps.deploy-comment.outputs.extra-values}}
       persist: ${{ steps.deploy-comment.outputs.persist }}
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - id: deploy-comment
         uses: SwissDataScienceCenter/renku-actions/check-pr-description@v1.4.2
         with:
@@ -68,7 +69,7 @@ jobs:
     environment:
       name: ci-renku-${{ github.event.number }}
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: renku build and deploy
         if: needs.check-deploy.outputs.pr-contains-string == 'true'
         uses: SwissDataScienceCenter/renku-actions/deploy-renku@v1.4.2
@@ -92,7 +93,7 @@ jobs:
           extra_values: "${{ needs.check-deploy.outputs.extra-values }}"
       - name: Check existing renkubot comment
         if: needs.check-deploy.outputs.pr-contains-string == 'true'
-        uses: peter-evans/find-comment@v1
+        uses: peter-evans/find-comment@v2
         id: findcomment
         with:
           issue-number: ${{ github.event.pull_request.number }}
@@ -100,7 +101,7 @@ jobs:
       - name: Create comment pre deploy
         if: "steps.findcomment.outputs.comment-id == 0 &&
           needs.check-deploy.outputs.pr-contains-string == 'true'"
-        uses: peter-evans/create-or-update-comment@v1
+        uses: peter-evans/create-or-update-comment@v3
         with:
           token: ${{ secrets.RENKUBOT_GITHUB_TOKEN }}
           issue-number: ${{ github.event.pull_request.number }}
@@ -132,8 +133,9 @@ jobs:
       needs.check-deploy.outputs.test-cypress-enabled == 'true') }}
     needs: [check-deploy, deploy-pr]
     steps:
-      - uses: actions/checkout@v2
-      - uses: cypress-io/github-action@v4
+      - uses: actions/checkout@v3
+      - uses: cypress-io/github-action@v5
+        name: Run Cypress acceptance tests
         id: cypress
         env:
           TEST_EMAIL: renku@datascience.ch
@@ -150,14 +152,14 @@ jobs:
       - uses: actions/upload-artifact@v3
         if: failure()
         with:
-          name: cypress-screenshots
+          name: Cypress acceptance tests - screenshots
           path: cypress-tests/cypress/screenshots
           retention-days: 7
       # Cypress test video is always captured, so this action uses "always()" condition
       - uses: actions/upload-artifact@v3
         if: always()
         with:
-          name: cypress-videos
+          name: Cypress acceptance tests - videos
           path: cypress-tests/cypress/videos
           retention-days: 3
 

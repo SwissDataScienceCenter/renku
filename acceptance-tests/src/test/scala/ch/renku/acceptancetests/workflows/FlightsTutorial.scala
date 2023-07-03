@@ -31,7 +31,7 @@ trait FlightsTutorial extends Matchers with CLIConfiguration {
   self: AcceptanceSpec =>
 
   def `follow the flights tutorial`(
-      projectUrl:             ProjectUrl
+      projectUrl: ProjectUrl
   )(implicit userCredentials: UserCredentials): DatasetName = {
 
     implicit val projectFolder: Path = createTempFolder

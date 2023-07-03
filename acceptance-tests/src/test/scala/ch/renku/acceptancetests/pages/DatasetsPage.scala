@@ -34,7 +34,7 @@ object DatasetsPage extends RenkuPage(path = s"/datasets") with TopBar {
   }
 
   def orderByDropdownMenu(
-      currentOrdering:  DatasetSearchOrdering = DatasetSearchOrdering.ProjectsCount
+      currentOrdering: DatasetSearchOrdering = DatasetSearchOrdering.ProjectsCount
   )(implicit webDriver: WebDriver): WebElement =
     eventually {
       findAll(cssSelector("button.dropdown-toggle")).find(elem => elem.getText == currentOrdering.value) getOrElse fail(

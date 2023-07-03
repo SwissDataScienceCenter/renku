@@ -22,12 +22,12 @@ import ch.renku.acceptancetests.workflows.Environments
 import org.openqa.selenium.WebDriver
 import org.openqa.selenium.chrome.{ChromeDriver, ChromeDriverService, ChromeOptions}
 import org.scalatest._
-import org.scalatest.featurespec.AnyFeatureSpec
+import org.scalatest.featurespec.FixtureAnyFeatureSpec
 import org.scalatest.matchers.should
 import org.scalatestplus.selenium.WebBrowser
 
 trait AcceptanceSpec
-    extends AnyFeatureSpec
+    extends FixtureAnyFeatureSpec
     with BddWording
     with BeforeAndAfterAll
     with should.Matchers
@@ -43,7 +43,10 @@ trait AcceptanceSpec
 
   protected implicit val browser: AcceptanceSpec = this
 
-  implicit lazy val webDriver: WebDriver = startWebDriver
+  implicit lazy val webDriver: WebDriver = {
+    System.setProperty("webdriver.http.factory", "jdk-http-client")
+    startWebDriver
+  }
 
   protected implicit val docsScreenshots: DocsScreenshots = DocsScreenshots(this, webDriver)
 
@@ -64,4 +67,9 @@ trait AcceptanceSpec
           new ChromeOptions().addArguments("window-size=1920,1600")
         )
     }
+
+  protected override type FixtureParam = Unit
+
+  override def withFixture(test: OneArgTest): Outcome =
+    withFixture(test.toNoArgTest((): FixtureParam))
 }

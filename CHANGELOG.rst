@@ -1,21 +1,508 @@
 .. _changelog:
 
-0.22.0
+0.25.5
 ------
 
-Renku ``0.22.0`` brings back project and dataset images, and adds new features to the Knowledge Graph APIs.
+Renku ``0.25.5`` comes with a few KG bug-fixes.
+
+User-Facing Changes
+~~~~~~~~~~~~~~~~~~~
+
+**🐞 Bug Fixes**
+
+- **KG**: Prevent presenting misleading information about Knowledge Graph integration status on projects where the user is not one of the members.
+
+Internal Changes
+~~~~~~~~~~~~~~~~
+
+**Bug Fixes**
+
+- **KG**: Resolve token decryption issues preventing Knowledge Graph integration activation.
+
+Individual components
+~~~~~~~~~~~~~~~~~~~~~~
+
+- `renku-graph 2.33.0 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/2.33.0>`_
+
+
+0.25.4
+------
+
+Renku ``0.25.4`` introduces several KG and UI bug-fixes.
+
+User-Facing Changes
+~~~~~~~~~~~~~~~~~~~
+
+**🐞 Bug Fixes**
+
+- **UI**: Prevent flashing a spinning wheel when loading workflows
+  (`#2493 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2493>`_).
+- **UI**: Restore the flag to show inactive workflows
+  (`#2502 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2502>`_).
+- **UI**: Prevent infinite spinning wheel when accessing projects by numeric ID
+  without the required user's permissions
+  (`#2476 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2476>`_).
+- **UI**: Fix an issue where a notebook would not automatically open in a session for anonymous users
+  as an anonymous user
+  (`#2479 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2479>`_).
+- **UI**: Prevent content layout shift when selecting a template
+  (`#2482 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2482>`_).
+- **UI**: Update broken documentation link
+  (`#2497 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2497>`_).
+
+Internal Changes
+~~~~~~~~~~~~~~~~
+
+**Bug Fixes**
+
+- **KG**: Resolve issues with synchronization of project user access authorization data.
+- **KG**: Ensure that the Delete Project API works when there is no data for the project in the Triples Store.
+- **KG**: Ensure that the Lineage API works in cases of implicit parameters, inputs and outputs.
+- **UI**: Correct handling of notebook search parameter with autostart
+  (`#2469 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2469>`_).
+
+Individual components
+~~~~~~~~~~~~~~~~~~~~~~
+
+- `renku-graph 2.32.0 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/2.32.0>`_
+- `renku-ui 3.4.3 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.4.3>`_
+
+
+0.25.3
+------
+
+Renku ``0.25.3`` introduces a bug fix in the Helm chart for the gateway.
+
+Internal Changes
+~~~~~~~~~~~~~~~~
+
+**Bug Fixes**
+
+- **Gateway**: **chart:** properly template horizontal pod auto-scaler for reverse proxy
+  (`#643 <https://github.com/SwissDataScienceCenter/renku-gateway/issues/643>`_).
+
+Individual components
+~~~~~~~~~~~~~~~~~~~~~~
+
+- `renku-gateway 0.19.2 <https://github.com/SwissDataScienceCenter/renku-gateway/releases/tag/0.19.2>`_
+
+
+0.25.2
+------
+
+Renku ``0.25.2`` introduces a few bug fixes and improvements in the UI.
 
 User-Facing Changes
 ~~~~~~~~~~~~~~~~~~~
 
 **✨ Improvements**
 
+- 🧾 **UI**: Use drop-downs for session options with many elements
+  (`#2461 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2461>`_).
+
+**🐞 Bug Fixes**
+
+- **UI**: Prevent dropping valid pinned images when starting new sessions
+  (`#2466 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2466>`_).
+- **UI**: Ignore deleted projects on the dashboard
+  (`#2465 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2465>`_).
+- **UI**: Fix fork suggestion when trying to start sessions on non-owned projects
+  (`#2465 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2465>`_).
+- **UI**: Remove conspicuous commas in the add dataset screen
+  (`#2472 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2472>`_).
+
+Internal Changes
+~~~~~~~~~~~~~~~~
+
+**Bug Fixes**
+
+- **UI**: Do not query workflows on outdated projects
+  (`#2460 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2460>`_).
+- **UI**: Fix broken warning component on sessions pages
+  (`#2474 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2474>`_).
+
+Individual components
+~~~~~~~~~~~~~~~~~~~~~~
+
+- `renku-ui 3.4.2 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.4.2>`_
+
+
+0.25.1
+------
+
+Renku ``0.25.1`` introduces a small bug fix in the Gateway internal components. 
+
+Internal Changes
+~~~~~~~~~~~~~~~~
+
+**Bug Fixes**
+
+- **Gateway**: correct path for reaching Gitlab from the CLI, it should be ``/repos`` instead of ``/api/repos``.
+
+Individual components
+~~~~~~~~~~~~~~~~~~~~~~
+
+- `renku-gateway 0.19.1 <https://github.com/SwissDataScienceCenter/renku-gateway/releases/tag/0.19.1>`_
+
+0.25.0
+------
+
+Renku ``0.25.0`` introduces an update to the base images and templates, as well as changes in internal components and the Helm chart. 
+
+User-facing Changes
+~~~~~~~~~~~~~~~~~~~
+
+**Improvements**
+
+- New base images correct a ``PATH`` misconfiguration that occurs when connecting to a session with SSH. If using sessions through SSH, please update your project!
+
+Internal Changes
+~~~~~~~~~~~~~~~~
+
+**Improvements**
+
+- **Gateway**: replace the Traefik reverse proxy with a custom solution based on the Echo library in Go. 
+
+Individual components
+~~~~~~~~~~~~~~~~~~~~~~
+
+- `renku-gateway 0.19.0 <https://github.com/SwissDataScienceCenter/renku-gateway/releases/tag/0.19.0>`_
+- `renkulab-docker 0.16.0 <https://github.com/SwissDataScienceCenter/renkulab-docker/releases/tag/0.16.0>`_
+
+
+0.24.4
+------
+
+Renku ``0.24.4`` resolves bugs in the Knowledge Graph backend processes.
+
+Internal Changes
+~~~~~~~~~~~~~~~~
+
+**Improvements**
+
+* **KG**: Collect info about users who showed interest in projects and datasets.
+
+**Bug Fixes**
+
+* **KG**: Resolve problems causing flows accessing GitLab API to go into deadlock.
+
+
+Individual components
+~~~~~~~~~~~~~~~~~~~~~~
+
+- `renku-graph 2.31.0 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/2.31.0>`_
+
+
+0.24.3
+------
+
+Renku ``0.24.3`` resolves bugs in the UI and in the Knowledge Graph backend processes.
+
+User-Facing Changes
+~~~~~~~~~~~~~~~~~~~
+
+**🐞 Bug Fixes**
+
+* 🔗 **UI**: Resolve an issue where the Connect button on the Dashboard leads to a broken link
+  (`#2444 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2444>`_).
+
+Internal Changes
+~~~~~~~~~~~~~~~~
+
+**Improvements**
+
+* **UI**: Retrieve project metadata from the KG on project access
+  (`#2414 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2414>`_).
+
+**Bug Fixes**
+
+* **KG**: Resolve problems causing particular flows to terminate prematurely,
+  as well as improve the quality of logging within the Activation API.
+
+
+Individual components
+~~~~~~~~~~~~~~~~~~~~~~
+
+- `renku-graph 2.30.0 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/2.30.0>`_
+- `renku-graph 2.30.1 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/2.30.1>`_
+- `renku-ui 3.4.1 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.4.1>`_
+
+
+0.24.2
+------
+
+Renku ``0.24.2`` introduces bug fixes. We squashed a bug where you may have had trouble
+finding your projects in other namespaces. Now, all projects show up in the Knowledge Graph
+activation page so you can add them to your dashboard.
+
+User-Facing Changes
+~~~~~~~~~~~~~~~~~~~
+
+**✨ Improvements**
+
+* ❌ **Knowledge Graph**: Add a new API to delete projects.
+* 🔘 **UI**: Provide the same options on the session dropdown buttons across the
+  dashboard and the project page.
+  (`#2393 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2393>`_).
+* 📖 **UI**: Make the browser column and file content column sticky when scrolling
+  long files on the file viewer.
+  (`#2412 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2412>`_).
+* 🧾 **UI**: Improve the feedback for sessions ending in an error state.
+  (`#2411 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2411>`_).
+
+**🐞 Bug Fixes**
+
+* **Core Service**: Fix a crash when migrating to v10 metadata
+  (`#3359 <https://github.com/SwissDataScienceCenter/renku-python/pull/3359>`__).
+* **Knowledge Graph**: Expand the Knowledge Graph Project Activation page to list all
+  projects where the user is a member, not only owned projects.
+* **Sessions**: Fixed bug where sessions from one project would appear under another project
+  (`#1423 <https://github.com/SwissDataScienceCenter/renku-notebooks/pull/1423>`_).
+* **UI**: Prevent listing projects twice on the dashboard
+  (`#2408 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2408>`_).
+* **UI**: Start sessions with base images when pinned images are missing
+  (`#2410 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2410>`_).
+
+Internal Changes
+~~~~~~~~~~~~~~~~
+
+**Improvements**
+
+* **Knowledge Graph**: A new functionality to capture Project viewing events
+
+Individual components
+~~~~~~~~~~~~~~~~~~~~~~
+
+- `renku-graph 2.28.4 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/2.28.4>`_
+- `renku-graph 2.29.0 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/2.29.0>`_
+- `renku-notebooks 1.15.2 <https://github.com/SwissDataScienceCenter/renku-notebooks/releases/tag/1.15.2>`_
+- `renku-python 2.3.2 <https://github.com/SwissDataScienceCenter/renku-python/releases/tag/v2.3.2>`_
+- `renku-ui 3.4.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.4.0>`_
+
+0.24.1
+------
+
+Renku ``0.24.1`` introduces bug fixes.
+
+User-Facing Changes
+~~~~~~~~~~~~~~~~~~~
+
+**🐞 Bug Fixes**
+
+* **Core Service**: Correctly update Dockerfile on migration
+  (`#3351 <https://github.com/SwissDataScienceCenter/renku-python/issues/3351>`__).
+* **Renku CLI**: Fix git credentials helper setup in ``renku login``
+  (`#3348 <https://github.com/SwissDataScienceCenter/renku-python/issues/3348>`__).
+* **Sessions**: Sessions crashing when automated token refresh runs in background
+  (`#1416 <https://github.com/SwissDataScienceCenter/renku-notebooks/pull/1416>`_).
+
+Internal Changes
+~~~~~~~~~~~~~~~~
+
+**Bug Fixes**
+
+* **Knowledge Graph**: Fixes and improvements to the schema v10 migration
+
+Individual components
+~~~~~~~~~~~~~~~~~~~~~~
+
+- `renku-graph 2.28.1 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/2.28.1>`_
+- `renku-graph 2.28.2 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/2.28.2>`_
+- `renku-graph 2.28.3 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/2.28.3>`_
+- `renku-notebooks 1.15.1 <https://github.com/SwissDataScienceCenter/renku-notebooks/releases/tag/1.15.1>`_
+- `renku-python 2.3.1 <https://github.com/SwissDataScienceCenter/renku-python/releases/tag/v2.3.1>`_
+
+
+0.24.0
+------
+
+Renku ``0.24.0`` introduces two new features: SSH-access to RenkuLab sessions
+and a new RenkuLab Dashboard!
+
+Would you like to work on your Renku project from the comfort of your own local
+computer? Use the Renku CLI to start an SSH session on RenkuLab, and open that
+session in your local terminal or even your IDE, such as VSCode. Check out the
+"Connect with SSH" option in the Session Start menu to get started, or see our
+`docs <https://renku.readthedocs.io/en/stable/how-to-guides/renkulab/ssh-into-sessions.html>`__.
+*Note that SSH functionality must be enabled by your administrator and may not be
+available on all RenkuLab deployments.*
+
+And, your RenkuLab Dashboard now has a snazzy new look that puts your most used
+projects, sessions, and datasets at your fingertips. Quickly pick up where you
+left off: connect to your already-running sessions, start a new session on a
+recently visited project, or access your datasets- all from a single page!
+
+Read on for a full breakdown of all improvements and bug fixes included in this
+release.
+
+User-Facing Changes
+~~~~~~~~~~~~~~~~~~~
+
+**🌟 New Features**
+
+* ⌨️ **Renku CLI**: Enable connecting to RenkuLab sessions via SSH
+  (`#3318 <https://github.com/SwissDataScienceCenter/renku-python/pull/3318>`_).
+* 📑 **UI**: Show instructions on how to connect to RenkuLab sessions via SSH from the
+  Session Start menu
+  (`#2376 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2376>`_).
+* 🧑‍💻 **UI**: Add a new dashboard for logged-in users, showing running sessions, last
+  accessed projects, and own datasets
+  (`#2332 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2332>`_).
+
+
+**✨ Improvements**
+
+* **Sessions**: Fail when injecting env vars that already exist in session
+  (`#1396 <https://github.com/SwissDataScienceCenter/renku-notebooks/issues/1396>`_)
+* 📜 **UI**: Show commit messages in the commit selection dropdown when
+  starting a session from a specific commit
+  (`#2362 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2362>`_).
+* 🔗 **UI**: Make searches shareable by storing parameters in the URL
+  (`#2351 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2351>`_).
+* 📸 **UI**: Customize avatars when creating a project
+  (`#2331 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2331>`_).
+
+**🐞 Bug Fixes**
+
+* **Gateway**: Use offline access tokens for automated access from within sessions.
+  (`#632 <https://github.com/SwissDataScienceCenter/renku-gateway/pull/632>`_).
+* **Sessions**: Propagate environment variables for R-Studio sessions
+  (`#1339 <https://github.com/SwissDataScienceCenter/renku-notebooks/pull/1339>`_).
+* **UI**: Fix markdown problems with underscores in links and math formulas
+  (`#2374 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2374>`_).
+* **UI**: Restore session autostart when connecting from the notebook preview page
+  (`#2344 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2344>`_).
+* **UI**: Improve dataset pages
+  (`#2318 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2318>`_,
+  `#2357 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2357>`_).
+* **UI**: Sort commits by date to prevent random order
+  (`#2347 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2347>`_).
+
+Internal Changes
+~~~~~~~~~~~~~~~~
+
+**Improvements**
+
+* **Core Service**: Metadata v10 support
+* **Knowledge Graph** Add support for the new Renku Metadata Schema v10.
+* **Knowledge Graph** Enable the Cross-Entity Search API to allow multiple sort parameters.
+* **Knowledge Graph** Remove deprecated GraphQL API
+* **Knowledge Graph**: Upgrade Jena to 4.7.0
+* **Sessions**: Show if ssh is enabled in /version of notebook service
+  (`#1407 <https://github.com/SwissDataScienceCenter/renku-notebooks/pull/1407>`_).
+* **Sessions**: Introduce experimental Azure Blob storage support
+  (`#1374 <https://github.com/SwissDataScienceCenter/renku-notebooks/pull/1374>`_).
+* **Sessions**: Enable SSH access via jump host
+  (`#1389 <https://github.com/SwissDataScienceCenter/renku-notebooks/pull/1389>`_).
+
+**Bug Fixes**
+
+* **Sessions**: Cloning the correct SHA for anonymous user sessions
+  (`#1406 <https://github.com/SwissDataScienceCenter/renku-notebooks/pull/1406>`_).
+
+
+Individual components
+~~~~~~~~~~~~~~~~~~~~~~
+
+- `amalthea 0.6.1 <https://github.com/SwissDataScienceCenter/amalthea/releases/tag/0.6.1>`_
+- `renku-gateway 0.18.1 <https://github.com/SwissDataScienceCenter/renku-gateway/releases/tag/0.18.1>`_
+- `renku-graph 2.28.0 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/2.28.0>`_
+- `renku-notebooks 1.15.0 <https://github.com/SwissDataScienceCenter/renku-notebooks/releases/tag/1.15.0>`_
+- `renku-python 2.0.0 <https://github.com/SwissDataScienceCenter/renku-python/releases/tag/v2.0.0>`_
+- `renku-python 2.0.1 <https://github.com/SwissDataScienceCenter/renku-python/releases/tag/v2.0.1>`_
+- `renku-python 2.1.0 <https://github.com/SwissDataScienceCenter/renku-python/releases/tag/v2.1.0>`_
+- `renku-python 2.2.0 <https://github.com/SwissDataScienceCenter/renku-python/releases/tag/v2.2.0>`_
+- `renku-python 2.3.0 <https://github.com/SwissDataScienceCenter/renku-python/releases/tag/v2.3.0>`_
+- `renku-ui 3.2.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.2.0>`_
+- `renku-ui 3.3.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.3.0>`_
+
+0.23.0
+------
+
+Renku ``0.23.0`` introduces the Renku Workflow File, a friendlier way to encode and run your data analysis pipelines
+on Renku. You can write out your workflow in this easy-to-use YAML file, and execute it with `renku run workflow.yml`. Add a workflow
+to your Renku project with our docs `here <https://renku.readthedocs.io/en/stable/topic-guides/workflows/workflow-file.html>`_!
+
+User-Facing Changes
+~~~~~~~~~~~~~~~~~~~
+
+**🌟 New Features**
+
+* 📝 **Renku CLI**: Add support for workflow files which can be executed directly, greatly improving the UX
+  around workflows
+  (`#3176 <https://github.com/SwissDataScienceCenter/renku-python/pull/3176>`_).
+
+**✨ Improvements**
+
+* ⚙️ **Renku CLI**: Made `toil` the default workflow backend instead of `cwl`
+  (`#3220 <https://github.com/SwissDataScienceCenter/renku-python/issues/3220>`_).
+* 💨 **Knowledge Graph**: Performance improvements for Cross-Entities Search and Project Details APIs.
+* 🔌 **UI**: Change text on the quick-start session button from "start" to
+  "connect" when a session is running
+  (`#2268 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2268>`_).
+
+**🐞 Bug Fixes**
+
+* **Renku CLI**: Fixed ``toil`` dependency not being installed correctly.
+* **Renku core service**: Fix issue with project templates being cached and users being unable to create projects
+  based on the newest version of a template
+  (`#3243 <https://github.com/SwissDataScienceCenter/renku-python/issues/3243>`_).
+* **UI**: Restrict visibility options to be compatible with namespace and
+  parent project in fork dialog
+  (`#2299 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2299>`_).
+
+Internal Changes
+~~~~~~~~~~~~~~~~
+
+**Improvements**
+
+* **Infrastructure Components**: ``redis`` has been upgraded from version ``6.0.5`` to ``7.0.7``
+* **Knowledge Graph**: New provisioning process managing data to be used in the future for further performance improvements of the search APIs.
+
+Individual components
+~~~~~~~~~~~~~~~~~~~~~~
+
+- `renku-graph 2.27.0 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/2.27.0>`_
+- `renku-python 1.11.0 <https://github.com/SwissDataScienceCenter/renku-python/releases/tag/v1.11.0>`_
+- `renku-python 1.11.1 <https://github.com/SwissDataScienceCenter/renku-python/releases/tag/v1.11.1>`_
+- `renku-python 1.11.2 <https://github.com/SwissDataScienceCenter/renku-python/releases/tag/v1.11.2>`_
+- `renku-ui 3.1.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.1.0>`_
+
+0.22.0
+------
+
+Renku ``0.22.0`` introduces a simplified and more powerful search, now
+powered by the Renku Knowledge Graph. Use the single integrated search bar
+to discover projects and datasets across Renku.
+
+Plus, after a few months away, Project and Dataset images are back! Upload an
+image to your project or dataset (via the Settings menu) to add some pop to your
+Renku project. You'll notice this change comes with a more compact look to
+Project and Dataset page headers, too.
+
+Read on for more detail on UI and Knowledge Graph improvements and bug-fixes
+included in this release.
+
+User-Facing Changes
+~~~~~~~~~~~~~~~~~~~
+
+**✨ Improvements**
+
+* 🔎 **UI**: Introduce a new cross-entity search page for searching Projects and
+  Datasets simultaneously. This search page replaces the separate Projects and
+  Datasets pages
+  (`#1894 <https://github.com/SwissDataScienceCenter/renku-ui/pull/1894>`_).
 * 🔲 **UI**: Improve styling of buttons with menu and group buttons
-  (`#2243 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2243>`_).
-* 🖼️ **UI**: Show projects and datasets avatars again
-  (`#2231 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2231>`_).
-* 📊 **UI**: update real-time the project's indexing status
+  (`#2243 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2243>`_,
+  `#2284 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2284>`_).
+* 🖼️ **UI**: Restore projects and datasets avatars, and add a simple image
+  editor.
+  (`#2231 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2231>`_,
+  `#2246 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2246>`_).
+* 📊 **UI**: Update real-time the project's indexing status
   (`#2255 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2255>`_).
+* 📑 **UI**: Update documentation links and target the stable release
+  (`#2276 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2276>`_).
 
 **🐞 Bug Fixes**
 
@@ -23,8 +510,12 @@ User-Facing Changes
   (`#2233 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2233>`_,
   `#2265 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2265>`_).
 * **UI**: Limit the available namespaces in which new projects may be created
-  to one ones owned by the user to prevent failures.
+  to the ones owned by the user to prevent failures
   (`#2187 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2187>`_).
+* **UI**: Prevent interface from freezing when interacting with broken sessions
+  (`#2269 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2269>`_).
+* **UI**: Remove idle time when moving to step two on the starting session page.
+  (`#2282 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2282>`_).
 
 Internal Changes
 ~~~~~~~~~~~~~~~~
@@ -47,6 +538,7 @@ Individual components
 - `renku-graph 2.26.0 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/2.26.0>`_
 - `renku-ui 2.15.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/2.15.0>`_
 - `renku-ui 2.16.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/2.15.0>`_
+- `renku-ui 3.0.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.0.0>`_
 
 
 0.21.0
@@ -80,7 +572,7 @@ Internal Changes
 
 * **Gateway**: Add endpoint for refreshing expiring GitLab tokens
 * **Knowledge Graph**: Improve functionality to refresh access tokens before expiration
-* **Knowledge Graph**: Enhance migration functionality to restore missing CompositePlans 
+* **Knowledge Graph**: Enhance migration functionality to restore missing CompositePlans
 * **Knowledge Graph**: Fix to prevent data corruption which could previously occur due to duplicate Project creation dates
 * **Sessions**: Check LFS size and available disk space before cloning
 * **UI**: Receive notifications through WebSocket when session state changes
@@ -109,7 +601,7 @@ Individual components
 0.20.0
 ------
 
-Renku ``0.20.0`` tidies up the RenkuLab session start sequence, as well as an assortment of improvements and bug fixes. 
+Renku ``0.20.0`` tidies up the RenkuLab session start sequence, as well as an assortment of improvements and bug fixes.
 
 User-Facing Changes
 ~~~~~~~~~~~~~~~~~~~
@@ -118,12 +610,12 @@ User-Facing Changes
 
 * 🚀 **UI**: We tidied up the session launch sequence to have a unified appearance, regardless of where on RenkuLab you start your session from. Sessions also have better logs and error handling.
 * 🎨 **UI**: The RenkuLab login and logout pages have been updated with the latest styling.
-* 💬 **Renku CLI**: When you run ``renku save`` in a clean but unpushed repository, ``renku`` now informs you that it has pushed changes to the remote, rather than just saying that there were no changes to save.  
+* 💬 **Renku CLI**: When you run ``renku save`` in a clean but unpushed repository, ``renku`` now informs you that it has pushed changes to the remote, rather than just saying that there were no changes to save.
 
 **🐞 Bug Fixes**
 
 * 💔 **Renku CLI**: Fixed an issue where ``renku workflow compose`` would break ``renku workflow list``.
-* 🍴 **UI**: Fixed the Project name field getting reset when forking a project. 
+* 🍴 **UI**: Fixed the Project name field getting reset when forking a project.
 * 📃 **UI**: Fixed issues with downloading session logs.
 
 Internal Changes

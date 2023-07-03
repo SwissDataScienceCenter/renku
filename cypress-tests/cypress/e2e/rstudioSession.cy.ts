@@ -3,40 +3,52 @@ import { v4 as uuidv4 } from "uuid";
 import { TIMEOUTS } from "../../config";
 
 const username = Cypress.env("TEST_USERNAME");
-const projectName = `test-project-${uuidv4()}`;
+
+const projectTestConfig = {
+  shouldCreateProject: true,
+  projectName: `test-session-${uuidv4().substring(24)}-rstudio`
+};
+
+// ? Modify the config -- useful for debugging
+// projectTestConfig.shouldCreateProject = false;
+// projectTestConfig.projectName = "test-session-4f79daad6d4e";
+
+const projectIdentifier = { name: projectTestConfig.projectName, namespace: username };
 
 describe("Basic rstudio functionality", () => {
   before(() => {
     // Save all cookies across tests
     Cypress.Cookies.defaults({
-      preserve: (_) => true
+      preserve: (_) => true,
     });
-  });
-
-  afterEach(() => {
-    cy.logout();
-  });
-  beforeEach(() => {
+    // Register with the CI deployment
     cy.robustLogin();
+
+    // Create a project
+    if (projectTestConfig.shouldCreateProject) {
+      cy.visit("/");
+      cy.createProject({ templateName: "Basic R", ...projectIdentifier });
+    }
   });
 
-  it("Creates a project and launches an RStudio session", { defaultCommandTimeout: TIMEOUTS.standard }, () => {
-    // Creates the project
-    const templateName = "Basic R";
-    cy.visit("/");
-    cy.get(`[data-cy=username-home]`).should("include.text", username);
-    const projectInfo = { name: projectName, namespace: username, templateName };
-    cy.createProject(projectInfo);
+  after(() => {
+    if (projectTestConfig.shouldCreateProject)
+      cy.deleteProject(projectIdentifier);
+  });
 
+  beforeEach(() => {
+    cy.visitAndLoadProject(projectIdentifier);
+    cy.stopAllSessionsForProject(projectIdentifier);
+  });
+
+  it("Creates a project and launches an RStudio session", { defaultCommandTimeout: TIMEOUTS.long }, () => {
     // Waits for the image to build
-    cy.waitForImageToBuild(projectInfo);
+    cy.waitForImageToBuild(projectIdentifier);
 
     // Launches a session
-    cy.startSession(projectInfo);
+    cy.startSession(projectIdentifier);
 
     // Opens the session in an iframe
-    cy.contains("Open").click();
-    cy.get("div.details-progress-box", { timeout: TIMEOUTS.vlong }).should("not.exist");
     cy.getIframe("iframe#session-iframe").within(() => {
       rstudioTestFuncs.findExpectedElements();
     });
@@ -62,8 +74,7 @@ describe("Basic rstudio functionality", () => {
     cy.getIframe("iframe#session-iframe").within(() => {
       rstudioTestFuncs.findExpectedElements();
     });
-    // Deletes the project
-    cy.deleteProject(projectInfo);
+
     // Stops the session
     cy.stopSessionFromIframe();
   });

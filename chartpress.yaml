@@ -33,7 +33,8 @@ charts:
         dockerfilePath: scripts/init-realm/Dockerfile
         valuesPath: keycloak.initRealm.image
         paths:
-          - scripts/init-realm
+          - scripts/init-realm/Dockerfile
+          - scripts/init-realm/requirements.txt
           - scripts/init-realm/init-realm.py
       init-db:
         contextPath: scripts/init-db

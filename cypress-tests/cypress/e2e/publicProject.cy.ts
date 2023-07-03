@@ -10,12 +10,24 @@ const projectTestConfig = {
   projectName: `test-project-${uuidv4()}`
 };
 
-// Modify the config -- useful for debugging
+// ? Modify the config -- useful for debugging
 // projectTestConfig.shouldCreateProject = false;
-// projectTestConfig.projectName = "test-project-273a3030-7967-4467-8358-85d43c990201";
+// projectTestConfig.projectName = "test-project-a6b94968-d1a8-435b-96f7-6a93ec5617fc";
 
 const projectIdentifier = { name: projectTestConfig.projectName, namespace: username };
 
+/**
+ * Helper function to re-try clicking on a project page link when it detatches from the DOM
+ * @param page - target project sub-page
+ */
+function robustNavigateToProjectPage(page: string) {
+  // Requery when the element is detatched
+  cy.getProjectPageLink(projectIdentifier, page).first().then(($el) =>
+    Cypress.dom.isDetached($el) ?
+      cy.getProjectPageLink(projectIdentifier, page) :
+      $el
+  ).first().click();
+}
 
 describe("Basic public project functionality", () => {
   before(() => {
@@ -36,20 +48,24 @@ describe("Basic public project functionality", () => {
   after(() => {
     if (projectTestConfig.shouldCreateProject)
       cy.deleteProject(projectIdentifier);
-
   });
 
   beforeEach(() => {
-    cy.visitProject(projectIdentifier);
+    cy.visitAndLoadProject(projectIdentifier);
   });
 
   it("Can search for project", () => {
-    cy.visit("/");
+    // assess the project has been indexed properly -- this might take time if it was recently created
+    cy.dataCy("project-overview-nav").contains("Status").should("be.visible").click();
+    cy.dataCy("project-overview-content")
+      .contains("Knowledge Graph integration is active", { timeout: TIMEOUTS.vlong }).should("be.visible");
+    // ? wait a moment to prevent "project not found" error
+    cy.wait(2000); // eslint-disable-line cypress/no-unnecessary-waiting
     cy.searchForProject(projectIdentifier);
 
     // logout and search for the project and log back in
     cy.logout();
-    cy.get("#nav-hamburger").click();
+    cy.get("#nav-hamburger").should("be.visible").click();
     cy.searchForProject(projectIdentifier);
     cy.robustLogin();
   });
@@ -57,38 +73,46 @@ describe("Basic public project functionality", () => {
   it("Can can see overview content", () => {
     cy.contains("README.md").should("be.visible");
     cy.contains("This is a Renku project").should("be.visible");
-    cy.contains("Welcome to your new Renku project", { timeout: TIMEOUTS.vlong }).should("be.visible");
-    cy.contains("Status").click();
+    if (projectTestConfig.shouldCreateProject)
+      cy.contains("Welcome to your new Renku project", { timeout: TIMEOUTS.vlong }).should("be.visible");
+    cy.contains("Status").should("be.visible").click();
     cy.contains("This project is using the latest version of renku").should("be.visible");
     cy.contains("This project is using the latest version of the template").should("be.visible");
-    //cy.contains("Knowledge Graph integration is active").should("be.visible");
+    cy.contains("Knowledge Graph integration is active", { timeout: TIMEOUTS.long }).should("be.visible");
   });
 
-  it("Can can view files", () => {
-    cy.contains("Files").click();
-    cy.get("div#tree-content").contains(".renku").click();
-    cy.get("div#tree-content").contains("metadata").click();
+  it("Can view files", () => {
+    cy.contains("Files").should("exist").click();
+    cy.get("div#tree-content").contains(".renku").should("exist").click();
+    cy.get("div#tree-content").contains("metadata").should("exist").click();
     cy.getProjectPageLink(projectIdentifier, "/files/blob/.renku/metadata/project").click();
-    cy.contains("\"@renku_data_type\": \"renku.domain_model.project.Project\"").should("be.visible");
-    cy.get("div#tree-content").contains("README.md").click();
-    cy.contains("This is a Renku project").should("be.visible");
+    cy.contains("\"@renku_data_type\": \"renku.domain_model.project.Project\"").should("exist");
+    cy.get("div#tree-content").contains("README.md").should("exist").click();
+    cy.contains("This is a Renku project").scrollIntoView().should("be.visible");
   });
 
   it("Can can work with datasets", () => {
+    let migrationsInvoked = false;
+    cy.intercept("/ui-server/api/renku/cache.migrations_check*", req => {
+      migrationsInvoked = true;
+    }).as("checkMigrations");
     const datasetName = `test-dataset-${uuidv4()}`;
     const datasetTitle = datasetName.replace("-", " ");
     cy.getProjectPageLink(projectIdentifier, "/datasets").click();
-    if (projectTestConfig.shouldCreateProject)
+    // wait for migrations check to terminate
+    if (migrationsInvoked)
+      cy.wait("@checkMigrations");
     // A project we just created should have no datasets
+    if (projectTestConfig.shouldCreateProject)
       cy.contains("No datasets found for this project.", { timeout: TIMEOUTS.vlong }).should("be.visible");
 
     // Create a dataset
-    cy.get("a#plus-dropdown").click();
-    cy.getProjectPageLink(projectIdentifier, "/datasets/new").last().click();
+    cy.get("#plus-dropdown").should("exist").click();
+    cy.get("#navbar-dataset-new").should("exist").click();
     cy.dataCy("input-title").type(datasetTitle);
     cy.dataCy("input-keywords").type("test{enter}automated test{enter}");
-    cy.get(".ck.ck-content").type("This is a test dataset");
-    cy.intercept("/ui-server/api/renku/9/datasets.list?git_url=*").as("listDatasets");
+    cy.get("div.ck.ck-editor__main div.ck.ck-content").should("exist").type("This is a test dataset");
+    cy.intercept("/ui-server/api/renku/*/datasets.list?git_url=*").as("listDatasets");
     cy.dataCy("submit-button").click();
     cy.contains("Creating Dataset").should("be.visible");
     cy.wait("@listDatasets", { timeout: TIMEOUTS.vlong });
@@ -109,59 +133,63 @@ describe("Basic public project functionality", () => {
 
     // Check that we can see the dataset
     cy.getProjectPageLink(projectIdentifier, "/datasets").click();
+    cy.dataCy("entity-description").contains("This is a test dataset").should("exist");
     cy.contains(datasetTitle).should("be.visible").click();
 
     // Delete the dataset
     cy.dataCy("delete-dataset-button").click();
     cy.contains("Are you sure you want to delete dataset").should("be.visible");
     cy.get(".modal").contains("Delete dataset").click();
+    cy.get(".modal").contains("Deleting dataset...").should("be.visible");
   });
 
-  it("Can view and modify settings", () => {
 
-    cy.visitProjectPageLink(projectIdentifier, "/settings");
+  it("Can view and modify sessions settings", () => {
+    cy.dataCy("project-navbar").contains("Settings").should("exist").click();
     const projectUrl = projectUrlFromIdentifier(projectIdentifier);
-    // The clone url does not inclue "/projects" in it
+    // The clone url does not include "/projects" in it
     const cloneSubUrl = projectUrl.substring("/projects".length);
-    cy.contains("renku clone").should("contain.text", cloneSubUrl);
+    cy.contains("renku clone").should("exist").should("contain.text", cloneSubUrl);
+    cy.intercept("/ui-server/api/renku/*/config.set").as("configSet");
+    // ? The settings page refreshes when stale. We should wait for that only when it's invoked.
+    let configInvocations = 0;
+    cy.intercept("/ui-server/api/renku/*/config.show?git_url=*", req => { configInvocations++; }).as("getConfig");
 
-    function robustNavigateToProjectPage(page: string) {
-      cy.getProjectPageLink(projectIdentifier, page).first().then(($el) => {
-        // This page is unstable and we sometimes need to requery
-        Cypress.dom.isDetached($el) ?
-          cy.getProjectPageLink(projectIdentifier, page) :
-          $el;
-      }).first().click();
-    }
-
-    // The settings page is reflowed a lot, causing DOM elements to be invalidated.
-    // For that reason we visit the settings page rather than navigating to it.
     const navigateToSettingsSessions = () => {
-      cy.intercept("/ui-server/api/renku/*/config.show?git_url=*").as("configShow");
-      cy.visitProjectPageLink(projectIdentifier, "/settings/sessions");
-      cy.wait("@configShow", { timeout: TIMEOUTS.long });
+      const invoked = configInvocations;
+      robustNavigateToProjectPage("/settings");
+      cy.get(".form-rk-green form").contains("Project Tags").should("exist");
+      robustNavigateToProjectPage("/settings/sessions");
+      cy.get("h3").contains("Session settings").should("exist");
+      if (invoked > configInvocations)
+        cy.wait("@configShow", { timeout: TIMEOUTS.long });
     };
 
     // Make sure the renku.ini is in a pristine state
     robustNavigateToProjectPage("/files");
-    cy.get("div#tree-content").contains(".renku").click();
-    cy.get("div#tree-content").contains("renku.ini").click();
+    cy.get("div#tree-content").contains(".renku").should("exist").click();
+    cy.get("div#tree-content").contains("renku.ini").should("exist").click();
     cy.get("pre.hljs").should("be.visible");
     cy.get("pre.hljs").contains("cpu_request").should("not.exist");
 
     navigateToSettingsSessions();
-    cy.intercept("/ui-server/api/renku/*/config.set").as("configSet");
-    cy.get("div.form-rk-green div.row").contains("button", "0.1").click();
+    cy.get("div.form-rk-green div.row").contains("button", "0.5").should("exist").click();
     cy.wait("@configSet");
-    cy.get("div.form-rk-green div.success-feedback").contains("Updated.").should("exist");
-    cy.visitProjectPageLink(projectIdentifier, "/files/blob/.renku/renku.ini");
-    cy.get("pre.hljs").contains("cpu_request = 0.1").should("exist");
+    cy.get("div.form-rk-green div.success-feedback").contains("Updated.").should("be.visible");
 
-    cy.visitProjectPageLink(projectIdentifier, "/settings/sessions");
+    robustNavigateToProjectPage("/files");
+    cy.get("div#tree-content").contains("renku.ini").should("exist").click();
+    cy.get(".hljs.language-ini").contains("[interactive]").should("be.visible");
+    cy.get("pre.hljs").contains("cpu_request = 0.5").should("exist");
+
+    navigateToSettingsSessions();
     cy.get("#cpu_request_reset").should("be.visible").click();
     cy.wait("@configSet");
     cy.get("div.form-rk-green div.success-feedback").contains("Updated.").should("exist");
-    cy.visitProjectPageLink(projectIdentifier, "/files/blob/.renku/renku.ini");
+
+    robustNavigateToProjectPage("/files");
+    cy.get("div#tree-content").contains("renku.ini").should("exist").click();
+    cy.get(".hljs.language-ini").contains("[interactive]").should("be.visible");
     cy.get("pre.hljs").contains("cpu_request").should("not.exist");
   });
 });

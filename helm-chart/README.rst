@@ -1,9 +1,9 @@
 Helm Charts for Deploying RENKU on Kubernetes
 =============================================
 
-Helm 2.9.1 or later (including Helm 3) is necessary as we use
-the :code:`before-hook-creation` hook deletion policy. See also:
-`before-hook-creation delete policy <https://github.com/kubernetes/helm/commit/1d4883bf3c85ea43ed071dff4e02cc47bb66f44f>`_.
+Helm 3.1.0 or later is necessary as we use
+the :code:`lookup` function. See also:
+`Helm lookup function <https://helm.sh/docs/chart_template_guide/functions_and_pipelines/#using-the-lookup-function>`_.
 
 
 Deploying from a Helm repository
@@ -61,6 +61,22 @@ Upgrading
 Most information related to upgrading from one chart version to another is covered
 in the `values changelog file <https://github.com/SwissDataScienceCenter/renku/blob/master/helm-chart/values.yaml.changelog.md>`_.
 For upgrades that require some steps other than modifying the values files to be executed, we add some instructions here.
+
+Upgrading to 0.23.0
+*******************
+This version contains an upgrade to the ``redis`` bitnami helm chart dependency
+from version ``10.7.11`` to ``17.4.2``. This upgrades ``redis`` from version
+``6.0.5`` to ``7.0.7``.
+
+As this change involves a major version upgrade to ``redis``, the old ``redis``
+deployment is removed and fully replaced by the new ``redis`` deployment. This
+may involve loss of transient data (browser session information which is stored
+in ``redis``). Running user renku sessions will not be affected, but users may
+have to log in again if working within a browser.
+
+Changes are required to the ``renku`` ``values.yaml`` as the new ``redis`` helm
+chart is structured a little differently. Please see the
+``values.yaml.changelog.md`` for more details.
 
 Upgrading to 0.22.0
 *******************

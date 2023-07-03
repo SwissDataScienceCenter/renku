@@ -1,0 +1,77 @@
+# Default values for load-tests.
+
+image:
+  repository: renku/load-tests
+  pullPolicy: IfNotPresent
+  # Overrides the image tag whose default is the chart appVersion.
+  tag: "0.0.1"
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+serviceAccount:
+  # Specifies whether a service account should be created
+  create: true
+  # Annotations to add to the service account
+  annotations: {}
+  # The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name: ""
+
+podAnnotations: {}
+
+podSecurityContext: {}
+  # fsGroup: 2000
+
+securityContext:
+  runAsUser: 1000
+  runAsGroup: 1000
+  runAsNonRoot: true
+  allowPrivilegeEscalation: false
+
+resources: {}
+  # We usually recommend not to specify default resources and to leave this as a conscious
+  # choice for the user. This also increases chances charts run on environments with little
+  # resources, such as Minikube. If you do want to specify resources, uncomment the following
+  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+  # limits:
+  #   cpu: 100m
+  #   memory: 128Mi
+  # requests:
+  #   cpu: 100m
+  #   memory: 128Mi
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
+
+schedule: "0 3 * * *"
+
+extraEnvVars: []
+  ## Any K6 config environment variable can be specified here, for example:
+  # - name: "K6_PROMETHEUS_RW_SERVER_URL"
+  #   value: "http://prometheus-server"
+  ## In addition to K6 config environment variables, additional environment variables can be set.
+  ## These variables can override defaults in the configuration of the load tests. Here are variables can be used for this purpose:
+  # - name: "BASE_URL"  # the url of the Renku deployment
+  #   value: "https://dev.renku.ch"
+  # - name: "GIT_URL"  # the url of the Gitlab deployment Renku is using
+  #   value: "https://gitlab.dev.renku.ch"
+  # - name: "REGISTRY_DOMAIN"  # the domain for Gitlab's docker image registry
+  #   value: "repository.dev.renku.ch"
+  # - name: "CREDENTIALS_FILE"  # used to log into Renku and run the tests
+  #   value: "/credentials.json"
+  # - name: "OLD_RENKU_TEMPLATE_REF"  # the version of the old Renku template used to test migrations
+  #   value: "0.4.0"
+  # - name: "CONCURRENT_USERS"  # number of concurrent virtual users for the load tests - higher values mean higher load
+  #   value: "3"
+
+credentials:
+  secret:
+    # Mount the credentials from a k8s secret
+    mount: false
+    secretName: "credentials-secret-name"
+    secretKey: "credentials.json"
