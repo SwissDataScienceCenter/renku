@@ -429,8 +429,7 @@ If you installed the renku command-line interface locally, you can specify a
 template repository as an argument to the ``renku init`` command. If you do
 this, we recommend that you **also** specify a tag (or a commit) when creating
 a new project from a custom repository to ensure that the action is reproducible.
-You can find further details in
-`renku init docs <https://renku-python.readthedocs.io/en/stable/reference/commands/template.html#set-a-template>`_.
+You can find further details in :ref:`renku init docs<cli-template>`.
 
 If you are using a RenkuLab instance, you can use a custom template repository by
 changing the `Template source` to ``Custom`` on the project creation page. There,
