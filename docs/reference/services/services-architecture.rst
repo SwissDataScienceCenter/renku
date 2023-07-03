@@ -50,10 +50,10 @@ System Context
 
     @startuml
     !include <C4/C4_Context>
-    !define DEVICONS https://raw.githubusercontent.com/tupadr3/plantuml-icon-font-sprites/master/devicons2
-    !include DEVICONS/bash.puml
-    !include DEVICONS/kubernetes.puml
-    !include DEVICONS/gitlab.puml
+    !define DEVICONS https://raw.githubusercontent.com/tupadr3/plantuml-icon-font-sprites/v2.4.0
+    !include DEVICONS/devicons2/bash.puml
+    !include DEVICONS/devicons2/kubernetes.puml
+    !include DEVICONS/devicons2/gitlab.puml
 
     HIDE_STEREOTYPE()
 
@@ -78,6 +78,7 @@ System Context
     Rel(renku, azure_blob, "Storage")
     @enduml
 
+
 Container Diagram
 -----------------
 
@@ -85,8 +86,8 @@ Container Diagram
 
     @startuml
     !include <C4/C4_Container.puml>
-    !define DEVICONS https://raw.githubusercontent.com/tupadr3/plantuml-icon-font-sprites/master/devicons2
-    !include DEVICONS/bash.puml
+    !define DEVICONS https://raw.githubusercontent.com/tupadr3/plantuml-icon-font-sprites/v2.4.0
+    !include DEVICONS/devicons2/bash.puml
 
     skinparam linetype ortho
     skinparam defaultFontName "Calcutta","DejaVu Sans Condensed","SansSerif"
