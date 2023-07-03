@@ -49,12 +49,6 @@ System Context
 .. uml::
 
     @startuml
-    listfonts
-    @enduml
-
-.. uml::
-
-    @startuml
     !include <C4/C4_Context>
     !define DEVICONS https://raw.githubusercontent.com/tupadr3/plantuml-icon-font-sprites/master/devicons2
     !include DEVICONS/bash.puml
@@ -68,7 +62,7 @@ System Context
 
     Person(logged_in, "Logged-In user")
     Person(cli, "Renku CLI", $sprite="bash")
-    System(renku, "", $link="../reference/services/services-architecture.html#container-diagram", $sprite="img:https://renku.readthedocs.io/en/add-architecture-diagram/_static/icons/renku_logo.png{scale=0.1}")
+    System(renku, "", $link="../reference/services/services-architecture.html#container-diagram", $sprite="img:https://renku.readthedocs.io/en/add-architecture-diagram/_static/icons/renku_logo.png{scale=0.2}")
     System(gitlab, "Gitlab", $sprite="gitlab")
     System(keycloak, "Keycloak", $sprite="img:https://renku.readthedocs.io/en/add-architecture-diagram/_static/icons/keycloak_logofinal_1color.png{scale=0.2}")
     System(k8s, "Kubernetes", $sprite="kubernetes")
@@ -106,12 +100,13 @@ Container Diagram
     System_Boundary(renku, "Renku") {
         Container(ui, "UI", "React", "The homepage")
         Container(ui_server, "UI-Server", "ExpressJs", "Backend for Frontend")
-        Container(gateway, "Gateway", "Traefik", "API Gateway")
+        Container(gateway, "Gateway", "Go", "API Gateway")
         Container(core_service, "core-service", "Python", "Backend service for project interaction", $link="../reference/services/services-architecture.html#core-service")
         Container(renku_graph, "renku-graph", "Scala", "Backend service for project interaction")
         Container(renku_notebooks, "renku-notebooks", "Python", "Interactive session scheduler")
         Container(amalthea, "Amalthea", "Python", "K8s Operator for scheduling sessions", $tags="kubernetes")
         Container(session, "User Session")
+        Container(renku_crc, "CRC Service", "Python", "Manages compute resource access")
     }
     System(gitlab, "Gitlab")
     System(keycloak, "Keycloak")
@@ -120,42 +115,40 @@ Container Diagram
     SystemDb(redis, "Redis")
     SystemDb(jena, "Jena")
 
-    Rel(logged_in, ui, "Uses")
-    Rel(ui, ui_server, "Uses")
-    Rel(ui_server, gateway, "Uses")
-    Rel(gateway, keycloak, "Gets tokens from")
-    Rel(gateway, core_service, "forwards requests")
-    Rel(gateway, renku_graph, "forwards requests")
-    Rel(gateway, renku_notebooks, "forwards requests")
-    Rel(core_service, gitlab, "pushes to repository", "Git+SSH")
-    Rel(core_service, redis, "cache projects")
-    Rel(k8s, amalthea, "watches for session resources", "CRD")
-    Rel(k8s, session, "Starts sessions")
-    Rel(session, keycloak, "Authenticates users")
-    Rel(session, gitlab, "Injects gitlab credentials")
-    Rel(amalthea, k8s, "schedules sessions", "K8s API")
-    Rel(cli, gitlab, "pull/push", "Git+SSH")
-    Rel(cli, gateway, "Authenticate users")
-    Rel(cli, renku_notebooks, "manage sessions")
-    Rel(gateway, redis, "get tokens for requests")
-    Rel(gitlab, postgres, "store/retrieve metadata")
-    Rel(renku_graph, postgres, "keep gitlab eventlog")
-    Rel(renku_graph, jena, "store/search triples")
-    Rel(keycloak, postgres, "store settings/auth")
+    Rel(logged_in, ui, "")
+    Rel(logged_in, session, "")
+    Rel(ui, ui_server, "")
+    Rel(ui_server, gateway, "")
+    Rel(gateway, keycloak, "")
+    Rel(gateway, core_service, "")
+    Rel(gateway, renku_graph, "")
+    Rel(gateway, renku_notebooks, "")
+    Rel(gateway, renku_crc, "")
+    Rel(renku_notebooks, renku_crc, "")
+    Rel(core_service, gitlab, "", "")
+    Rel(core_service, redis, "")
+    Rel(k8s, amalthea, "", "")
+    Rel(k8s, session, "")
+    Rel(session, keycloak, "")
+    Rel(session, gitlab, "")
+    Rel(amalthea, k8s, "", "")
+    Rel(cli, gitlab, "", "")
+    Rel(cli, gateway, "")
+    Rel(cli, renku_notebooks, "")
+    Rel(cli, renku_graph, "")
+    Rel(renku_notebooks, amalthea, "")
+    Rel(gateway, redis, "")
+    Rel(gitlab, postgres, "")
+    Rel(renku_graph, postgres, "")
+    Rel(renku_graph, jena, "")
+    Rel(renku_graph, gitlab, "")
+    Rel(keycloak, postgres, "")
 
-    Lay_R(k8s, renku)
-    Lay_D(ui, k8s)
-    Lay_R(amalthea, ui)
-    Lay_D(logged_in, renku)
     Lay_D(cli, renku)
-    Lay_D(renku, gitlab)
-    Lay_D(renku, keycloak)
-    Lay_D(gitlab, postgres)
-    Lay_D(gitlab, redis)
-    Lay_D(gitlab, jena)
-    Lay_D(keycloak, postgres)
-    Lay_D(keycloak, redis)
-    Lay_D(keycloak, jena)
+    Lay_D(redis, k8s)
+    Lay_R(redis, renku)
+    Lay_R(k8s, renku)
+
     @enduml
 
 UI
@@ -207,43 +200,12 @@ Amalthea
 - Built with python and the kopf library
 - Watches for custom resources created by renku-notebooks and creates K8s objects for user sessions
 
-Component Diagrams
-------------------
 
-Core Service
-~~~~~~~~~~~~
+CRC Service
+~~~~~~~~~~~
 
-.. uml::
-
-    @startuml
-    !include <C4/C4_Dynamic.puml>
-
-    skinparam linetype ortho
-    skinparam defaultFontName "Calcutta","DejaVu Sans Condensed","SansSerif"
-
-    HIDE_STEREOTYPE()
-
-    Component_Ext(browser, "Browser")
-
-    Component_Ext(ingress, "Ingress")
-
-    Container_Boundary(gateway, "API Gateway") {
-        Component(gateway_traefik, "Traefik")
-        Component(gateway_auth, "Gateway Auth")
-    }
-
-    Container_Boundary(core_service_boundary, "core-service") {
-        Component(traefik, "Traefik")
-        Component(core_service, "core-service", "Python")
-    }
-
-    Rel_R(browser, ingress, "")
-    Rel_R(ingress, gateway_traefik, "")
-    Rel(gateway_traefik, traefik, "")
-    BiRel(traefik, gateway_auth, "Exchange JWT")
-    Rel(traefik, core_service, "")
-    Lay_R(gateway_traefik, gateway_auth)
-    @enduml
+- Manages resource pools
+- Determines which user has acces to which compute resources
 
 .. _renku: https://github.com/SwissDataScienceCenter/renku
 .. _renku-python: https://github.com/SwissDataScienceCenter/renku-python
