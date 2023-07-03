@@ -99,13 +99,13 @@ Container Diagram
     Person(cli, "Renku CLI", $sprite="bash")
     Person(logged_in, "Logged-In user")
     System_Boundary(renku, "Renku") {
-        Container(ui, "UI", "React", "The homepage")
-        Container(ui_server, "UI-Server", "ExpressJs", "Backend for Frontend")
+        Container(ui, "UI", "React", "Web Frontend")
+        Container(ui_server, "UI-Server", "ExpressJs", "Backend for Frontend service")
         Container(gateway, "Gateway", "Go", "API Gateway")
         Container(core_service, "core-service", "Python", "Backend service for project interaction", $link="../reference/services/services-architecture.html#core-service")
-        Container(renku_graph, "renku-graph", "Scala", "Backend service for project interaction")
-        Container(renku_notebooks, "renku-notebooks", "Python", "Interactive session scheduler")
-        Container(amalthea, "Amalthea", "Python", "K8s Operator for scheduling sessions", $tags="kubernetes")
+        Container(renku_graph, "renku-graph", "Scala", "Backend service for Knowledge Graph data")
+        Container(renku_notebooks, "renku-notebooks", "Python", "Interactive session management service")
+        Container(amalthea, "Amalthea", "Python", "K8s Operator for scheduling session CRDs", $tags="kubernetes")
         Container(session, "User Session")
         Container(renku_crc, "CRC Service", "Python", "Manages compute resource access")
     }
