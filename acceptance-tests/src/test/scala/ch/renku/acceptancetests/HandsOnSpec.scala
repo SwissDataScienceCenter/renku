@@ -45,7 +45,7 @@ class HandsOnSpec
 
     `create, continue or open a project`
 
-    val projectUrl         = `find project Http URL in the Settings Page`
+    val projectUrl         = `find project Http URL in the Overview Page`
     val flightsDatasetName = `follow the flights tutorial`(projectUrl)
 
     When("all the events are processed by the knowledge-graph")
@@ -74,7 +74,7 @@ class HandsOnSpec
       case _: Throwable                       => false
     }
 
-  private def `verify analysis was run`: Unit = `try few times before giving up` { _ =>
+  private def `verify analysis was run`: Unit = `try few times with page reload` { _ =>
     When("the user navigates to the Files tab")
     click on projectPage.Files.tab
     And("they click on the notebooks folder in the File View")

@@ -29,7 +29,7 @@ trait DatasetsSearch {
   self: AcceptanceSpec =>
 
   def `search for dataset with phrase`(phrase: String, orderBy: DatasetSearchOrdering = ProjectsCount): Unit = {
-    `try few times before giving up` { _ =>
+    `try few times with page reload` { _ =>
       go to DatasetsPage sleep (2 seconds)
       verify browserAt DatasetsPage
     }

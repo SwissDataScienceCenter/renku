@@ -298,6 +298,7 @@ nitpick_ignore_regex = [
     (r"py:.*", r"enum.*"),
     (r"py:.*", r"pathlib.*"),
     (r"py:.*", r"contextlib.*"),
+    (r"py:.*", r"string.*"),
 ]
 
 

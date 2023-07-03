@@ -56,14 +56,14 @@ trait Environments {
         maybeGetLogs
       }
 
-    `try few times before giving up` { _ =>
+    `try few times with page reload` { _ =>
       And("clicks on the 'Connect' button")
       click on projectPage.Sessions.Running.maybeOpenButton.getOrElse(fail("Connect button not found"))
       sleep(15 seconds)
     }
 
     And("switches to the iframe")
-    `try few times before giving up` { _ =>
+    `try few times with page reload` { _ =>
       projectPage.Sessions.Running.maybeJupyterLabIframe match {
         case Some(iframe) =>
           And("finds iframe")
@@ -165,7 +165,7 @@ trait Environments {
       `wait if a session is in an uncertain state`
 
       And("wait for the image to build")
-      `try again if failed` { _ =>
+      `try few times without page reload` { _ =>
         val badge = projectPage.Sessions.imageReadyBadge
         sleep(10 seconds)
         badge
@@ -173,7 +173,7 @@ trait Environments {
     }
 
   private def `wait if a session is in an uncertain state`(implicit projectPage: ProjectPage) =
-    `try few times before giving up` { _ =>
+    `try few times with page reload` { _ =>
       if (projectPage.maybeBouncer.isDisplayed) {
         do {
           And("wait for the Bouncer to go")
@@ -193,17 +193,17 @@ trait Environments {
     And("the user clicks on the Start session button")
     // it looks like the first click may simply move the page to the button
     // and only the second attempt does the job
-    `try again if failed` { _ =>
+    `try few times without page reload` { _ =>
       click on projectPage.Sessions.startSessionButton
     }
     sleep(5 seconds)
 
-    `try again if failed` { _ =>
+    `try few times without page reload` { _ =>
       And("the user clicks on the goBackButton session button")
       click on projectPage.Sessions.Running.goBackButtonFullscreen
     }
 
-    `try few times before giving up` { driver =>
+    `try few times with page reload` { driver =>
       pause whenUserCanSee { drv =>
         val maybeBadge = projectPage.Sessions.Running.maybeSessionNotReadyBadge(drv)
         if (maybeBadge.fold(ifEmpty = false)(_.isDisplayed)) {

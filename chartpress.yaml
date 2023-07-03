@@ -1,7 +1,7 @@
 charts:
   ## gitlab and renku chart versions are not evolving together. Uncomment
   ## this only when explicitly building the gitlab chart and set the appropriate tag.
-  # - name: gitlab
+  # - name: helm-chart/gitlab
   #   imagePrefix: renku/
   #   repo:
   #     git: SwissDataScienceCenter/helm-charts
@@ -31,7 +31,7 @@ charts:
       init-realm:
         contextPath: scripts/init-realm
         dockerfilePath: scripts/init-realm/Dockerfile
-        valuesPath: keycloak.initRealm.image
+        valuesPath: keycloakx.initRealm.image
         paths:
           - scripts/init-realm/Dockerfile
           - scripts/init-realm/requirements.txt

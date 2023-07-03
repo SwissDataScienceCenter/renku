@@ -27,6 +27,7 @@ blog
 BMP
 bugfix
 Calamus
+cgroup
 Champak
 chartpress
 Chartpress
@@ -37,6 +38,7 @@ CI
 circumventable
 cli
 CLI
+codecentric
 Codespace
 Codespaces
 conda
@@ -127,6 +129,7 @@ jupyterlab
 JupyterLab
 kb
 keycloak
+keycloakx
 Keycloak
 ku
 kubernetes
@@ -142,6 +145,7 @@ Matlab
 mem
 mergetool
 metadata
+metavar
 microservices
 middleware
 migrationscheck
@@ -223,6 +227,7 @@ serializer
 serializer
 sha
 sha
+shm
 Slurm
 Snyk
 SPARQL
@@ -254,6 +259,7 @@ substring
 sudo
 supertype
 supertypes
+swappiness
 symlink
 symlinks
 templated
@@ -267,6 +273,7 @@ tinkerpop
 toolchain
 Traefik
 truthy
+TTY
 tutorialLink
 txt
 typesystem
@@ -281,6 +288,7 @@ unlinking
 unmapped
 unmerged
 Unmount
+unmount
 unpushed
 unschedulable
 untracked
@@ -295,6 +303,7 @@ versioned
 versioning
 Versioning
 vertices
+viewmodel
 vm
 webhook
 webhooks

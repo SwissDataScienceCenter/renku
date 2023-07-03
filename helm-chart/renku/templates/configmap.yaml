@@ -66,12 +66,12 @@ data:
       echo
     done
 
-  {{- if .Values.keycloak.enabled }}
+  {{- if .Values.keycloakx.enabled }}
   init-keycloak-db.sh: |-
     #!/bin/bash
     set -x
 
-    KEYCLOAK_POSTGRES_PASSWORD=$(cat /keycloak-postgres/DB_PASSWORD)
+    KEYCLOAK_POSTGRES_PASSWORD=$(cat /keycloak-postgres/KC_DB_PASSWORD)
 
     psql -v ON_ERROR_STOP=1 <<-EOSQL
         create database "{{ .Values.global.keycloak.postgresDatabase }}";
@@ -125,6 +125,25 @@ data:
         revoke all on schema "public" from "public";
         grant all privileges on database "$DB_EVENT_LOG_DB_NAME" to "{{ .Values.global.graph.dbEventLog.postgresUser }}";
         grant all privileges on schema "public" to "{{ .Values.global.graph.dbEventLog.postgresUser }}";
+      EOSQL
+
+  init-triplesGenerator-db.sh: |-
+      #!/bin/bash
+      set -x
+
+      DB_TG_LOG_POSTGRES_PASSWORD=$(cat /graph-tg-postgres/graph-triplesGenerator-postgresPassword)
+      DB_TG_LOG_DB_NAME=triples_generator
+
+      psql -v ON_ERROR_STOP=1 <<-EOSQL
+        create database "$DB_TG_LOG_DB_NAME";
+        create user "{{ .Values.global.graph.triplesGenerator.postgresUser }}" password '$DB_TG_LOG_POSTGRES_PASSWORD';
+      EOSQL
+
+      psql postgres -v ON_ERROR_STOP=1 --dbname "$DB_TG_LOG_DB_NAME" <<-EOSQL
+        create extension if not exists "pg_trgm";
+        revoke all on schema "public" from "public";
+        grant all privileges on database "$DB_TG_LOG_DB_NAME" to "{{ .Values.global.graph.triplesGenerator.postgresUser }}";
+        grant all privileges on schema "public" to "{{ .Values.global.graph.triplesGenerator.postgresUser }}";
       EOSQL
 
   init-tokenRepository-db.sh: |-

@@ -92,11 +92,11 @@ object ProviderLoginPage
   override def pageReadyElement(implicit webDriver: WebDriver): Option[WebElement] = Some(logInButton)
 
   def logInWith(userCredentials: UserCredentials)(implicit webDriver: WebDriver): Unit = eventually {
-    usernameField.clear() sleep (1 second)
-    usernameField.enterValue(userCredentials.email)
+    usernameField.clear() sleep (500 millis)
+    usernameField enterValue userCredentials.email
 
-    passwordField.clear() sleep (1 second)
-    passwordField.enterValue(userCredentials.password)
+    passwordField.clear() sleep (500 millis)
+    passwordField enterValue userCredentials.password
 
     logInButton.click()
   }

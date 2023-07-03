@@ -56,11 +56,17 @@ describe("Basic public project functionality", () => {
 
   it("Can search for project", () => {
     // assess the project has been indexed properly -- this might take time if it was recently created
-    cy.dataCy("project-overview-nav").contains("Status").should("be.visible").click();
-    cy.dataCy("project-overview-content")
-      .contains("Knowledge Graph integration is active", { timeout: TIMEOUTS.vlong }).should("be.visible");
-    // ? wait a moment to prevent "project not found" error
-    cy.wait(2000); // eslint-disable-line cypress/no-unnecessary-waiting
+    cy.dataCy("project-navbar", true)
+      .contains("a.nav-link", "Settings")
+      .should("exist")
+      .click();
+    cy.dataCy("project-settings-knowledge-graph")
+      .contains("Knowledge Graph metadata", { timeout: TIMEOUTS.vlong })
+      .should("exist");
+    cy.dataCy("kg-status-section-open").should("exist").click();
+    cy.dataCy("project-settings-knowledge-graph")
+      .contains("Everything processed", { timeout: TIMEOUTS.vlong })
+      .should("exist");
     cy.searchForProject(projectIdentifier);
 
     // logout and search for the project and log back in
@@ -70,15 +76,56 @@ describe("Basic public project functionality", () => {
     cy.robustLogin();
   });
 
-  it("Can can see overview content", () => {
+  it("Can can see overview content and check the clone URLs", () => {
     cy.contains("README.md").should("be.visible");
     cy.contains("This is a Renku project").should("be.visible");
-    if (projectTestConfig.shouldCreateProject)
-      cy.contains("Welcome to your new Renku project", { timeout: TIMEOUTS.vlong }).should("be.visible");
-    cy.contains("Status").should("be.visible").click();
-    cy.contains("This project is using the latest version of renku").should("be.visible");
-    cy.contains("This project is using the latest version of the template").should("be.visible");
-    cy.contains("Knowledge Graph integration is active", { timeout: TIMEOUTS.long }).should("be.visible");
+    if (projectTestConfig.shouldCreateProject) {
+      cy.contains("Welcome to your new Renku project", {
+        timeout: TIMEOUTS.vlong,
+      }).should("be.visible");
+    }
+
+    // Check the clone URLs
+    const projectUrl = projectUrlFromIdentifier(projectIdentifier);
+    // The clone url does not include "/projects" in it
+    const cloneSubUrl = projectUrl.substring("/projects".length);
+    cy.get("button").contains("Clone").should("be.visible").click();
+    cy.contains("Clone with Renku")
+      .should("be.visible")
+      .next()
+      .get("code")
+      .contains("renku clone")
+      .should("be.visible")
+      .and("contain.text", cloneSubUrl);
+    cy.contains("Repository SSH URL")
+      .should("be.visible")
+      .next()
+      .get("code")
+      .should("be.visible")
+      .and("contain.text", cloneSubUrl);
+    cy.contains("Repository HTTPS URL")
+      .should("be.visible")
+      .next()
+      .get("code")
+      .contains("https")
+      .and("contain.text", cloneSubUrl);
+    cy.get("button").contains("Clone").should("be.visible").click();
+  });
+
+  it("Verify project version is up to date", () => {
+    cy.contains("Status").should("not.exist");
+    cy.dataCy("project-status-icon-element").should("not.exist");
+    cy.dataCy("project-navbar", true)
+      .contains("a.nav-link", "Settings")
+      .should("exist")
+      .click();
+    cy.dataCy("project-version-section-open").should("exist").click();
+    cy.dataCy("project-settings-migration-status")
+      .contains("This project uses the latest")
+      .should("exist");
+    cy.dataCy("project-settings-knowledge-graph")
+      .contains("Knowledge Graph metadata")
+      .should("exist");
   });
 
   it("Can view files", () => {
@@ -114,7 +161,7 @@ describe("Basic public project functionality", () => {
     cy.get("div.ck.ck-editor__main div.ck.ck-content").should("exist").type("This is a test dataset");
     cy.intercept("/ui-server/api/renku/*/datasets.list?git_url=*").as("listDatasets");
     cy.dataCy("submit-button").click();
-    cy.contains("Creating Dataset").should("be.visible");
+    cy.get(".progress-box").should("be.visible");
     cy.wait("@listDatasets", { timeout: TIMEOUTS.vlong });
 
     // Check that the content is as expected
@@ -146,10 +193,6 @@ describe("Basic public project functionality", () => {
 
   it("Can view and modify sessions settings", () => {
     cy.dataCy("project-navbar").contains("Settings").should("exist").click();
-    const projectUrl = projectUrlFromIdentifier(projectIdentifier);
-    // The clone url does not include "/projects" in it
-    const cloneSubUrl = projectUrl.substring("/projects".length);
-    cy.contains("renku clone").should("exist").should("contain.text", cloneSubUrl);
     cy.intercept("/ui-server/api/renku/*/config.set").as("configSet");
     // ? The settings page refreshes when stale. We should wait for that only when it's invoked.
     let configInvocations = 0;
