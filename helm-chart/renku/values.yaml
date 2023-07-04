@@ -11,6 +11,8 @@ global:
     ## Postgres user for the gitlab database
     postgresUser: gitlab
     ## Postgres password for the gitlab database
+    ## NOTE: The helm chart cannot update this password in Postgres once it has been created for the first time either by
+    ## setting this value or by randomly generating it because it was omitted below.
     postgresPassword:
       value:
     ## URL prefix for gitlab
@@ -55,6 +57,8 @@ global:
       ## Name of the postgres user to be used to access the Event Log db
       postgresUser: eventlog
       ## Postgres password to be used to access the Event Log db
+      ## NOTE: The helm chart cannot update this password in Postgres once it has been created for the first  time either by
+      ## setting this value or by randomly generating it because it was omitted below.
       postgresPassword:
         value:
       existingSecret: '{{ template "renku.fullname" . }}-db-postgres'
@@ -62,6 +66,8 @@ global:
       ## Name of the postgres user to be used to access the db storing access tokens
       postgresUser: tokenstorage
       ## Postgres password to be used to access the db storing access tokens
+      ## NOTE: The helm chart cannot update this password in Postgres once it has been created for the first time either by
+      ## setting this value or by randomly generating it because it was omitted below.
       postgresPassword:
         value:
       existingSecret: '{{ template "renku.fullname" . }}-token-postgres'
@@ -69,6 +75,8 @@ global:
       ## Name of the postgres user to be used to access the tg db
       postgresUser: triplesgenerator
       ## Postgres password to be used to access the db storing access tokens
+      ## NOTE: The helm chart cannot update this password in Postgres once it has been created for the first time either by
+      ## setting this value or by randomly generating it because it was omitted below.
       postgresPassword:
         value:
       existingSecret: '{{ template "renku.fullname" . }}-tg-postgres'

@@ -137,14 +137,15 @@ data:
       DB_TG_LOG_DB_NAME=triples_generator
 
       psql -v ON_ERROR_STOP=1 <<-EOSQL
-        create database "$DB_TG_LOG_DB_NAME";
         create user "{{ .Values.global.graph.triplesGenerator.postgresUser }}" password '$DB_TG_LOG_POSTGRES_PASSWORD';
+        create database "$DB_TG_LOG_DB_NAME" WITH OWNER "{{ .Values.global.graph.triplesGenerator.postgresUser }}";
       EOSQL
 
       psql postgres -v ON_ERROR_STOP=1 --dbname "$DB_TG_LOG_DB_NAME" <<-EOSQL
         create extension if not exists "pg_trgm";
         revoke all on schema "public" from "public";
         grant all privileges on database "$DB_TG_LOG_DB_NAME" to "{{ .Values.global.graph.triplesGenerator.postgresUser }}";
+        grant all privileges on database "$DB_TG_LOG_DB_NAME" to "postgres";
         grant all privileges on schema "public" to "{{ .Values.global.graph.triplesGenerator.postgresUser }}";
       EOSQL
 
