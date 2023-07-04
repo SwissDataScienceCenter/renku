@@ -26,6 +26,13 @@ User-Facing Changes
 - **UI**: Prevent crashes when handling markdown files
   (`#2597 <https://github.com/SwissDataScienceCenter/renku-ui/issues/2597>`_).
 
+Internal Changes
+~~~~~~~~~~~~~~~~
+
+**Bug Fixes**
+
+- **Infrastructure**: properly generate PostgreSQL secrets on upgrade (`#3137 <https://github.com/SwissDataScienceCenter/renku/issues/3137>`_).
+
 Individual components
 ~~~~~~~~~~~~~~~~~~~~~~
 
