@@ -135,8 +135,8 @@ data:
       DB_TG_LOG_DB_NAME=triples_generator
 
       psql -v ON_ERROR_STOP=1 <<-EOSQL
-        create database "$DB_TG_LOG_DB_NAME";
         create user "{{ .Values.global.graph.triplesGenerator.postgresUser }}" password '$DB_TG_LOG_POSTGRES_PASSWORD';
+        create database "$DB_TG_LOG_DB_NAME" WITH OWNER "{{ .Values.global.graph.triplesGenerator.postgresUser }}";
       EOSQL
 
       psql postgres -v ON_ERROR_STOP=1 --dbname "$DB_TG_LOG_DB_NAME" <<-EOSQL
