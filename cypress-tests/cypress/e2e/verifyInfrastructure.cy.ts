@@ -29,7 +29,7 @@ function retryRequest(url: string, service: string, limit = 10, delaySeconds = 3
 describe("Verify the infrastructure is ready", () => {
   it("Can interact with the backend components", () => {
     retryRequest("api/templates/licenses", "GitLab");
-    retryRequest("api/renku/version", "Core");
+    retryRequest("api/renku/versions", "Core");
     retryRequest("api/notebooks/version", "Notebooks");
     retryRequest("api/kg/spec.json", "Graph");
     retryRequest("api/auth/login", "Gateway");
