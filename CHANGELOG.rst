@@ -1,5 +1,55 @@
 .. _changelog:
 
+0.29.0
+------
+
+Renku ``0.29.0`` introduces new UI features and a PostgreSQL DB for triples-generator.
+
+User-Facing Changes
+~~~~~~~~~~~~~~~~~~~
+
+**🌟 New Features**
+
+- 📝 **UI**: Add a customizable message to the dashboard page
+  (`#2592 <https://github.com/SwissDataScienceCenter/renku-ui/issues/2592>`_).
+
+**🐞 Bug Fixes**
+
+- **UI**: Restore deleting datasets
+  (`#2607 <https://github.com/SwissDataScienceCenter/renku-ui/issues/2607>`_).
+- **UI**: Improve showing the error details for sessions
+  (`#2611 <https://github.com/SwissDataScienceCenter/renku-ui/issues/2611>`_).
+- **UI**: Fix sessions not showing on dashboard
+  (`#2608 <https://github.com/SwissDataScienceCenter/renku-ui/issues/2608>`_).
+- **UI**: Allow up to 100 namespaces and sort them
+  (`#2606 <https://github.com/SwissDataScienceCenter/renku-ui/issues/2606>`_).
+- **UI**: Prevent crashes when handling markdown files
+  (`#2597 <https://github.com/SwissDataScienceCenter/renku-ui/issues/2597>`_).
+
+Individual components
+~~~~~~~~~~~~~~~~~~~~~~
+
+- `renku-ui 3.7.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.7.0>`_
+
+0.28.1
+------
+
+Renku ``0.28.1`` resolves a minor bug that occurs when launching sessions when git submodules are used.
+
+Internal Changes
+~~~~~~~~~~~~~~~~
+
+**Bug Fixes**
+
+- 🛠 **Renku Notebooks**: do not fail session launch if Git submodules couldn't be pulled.
+
+
+Individual components
+~~~~~~~~~~~~~~~~~~~~~~
+
+- `renku-notebooks 1.15.3 <https://github.com/SwissDataScienceCenter/renku-notebooks/releases/tag/1.15.3>`_
+
+
 0.28.0
 ------
 
