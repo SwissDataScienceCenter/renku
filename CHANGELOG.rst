@@ -5,6 +5,14 @@
 
 Renku ``0.29.0`` introduces a PostgreSQL DB for triples-generator.
 
+Internal Changes
+~~~~~~~~~~~~~~~~
+
+**Bug Fixes**
+
+- **Infrastructure**: properly generate postgres secrets on upgrade (`#3137 <https://github.com/SwissDataScienceCenter/renku/issues/3137>`_).
+
+
 
 0.28.1
 ------
