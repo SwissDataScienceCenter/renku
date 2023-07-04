@@ -161,7 +161,7 @@ UI
 UI-Server
 ~~~~~~~~~
 
-- Backend-for-frontend Server for the UI
+- Backend-for-Frontend Server for the UI
 - Using Nodejs, Typescript and ExpressJs
 
 Gateway
@@ -176,7 +176,7 @@ Core-Service
 
 - API for interacting with metadata stored in user repositories (Project, Datasets, Workflows)
 - Built with Python as a Flask app
-- uses python-rq for long-running background jobs
+- uses `python-rq` for long-running background jobs
 - caches project repositories for fast access
 
 Renku-Graph
@@ -198,7 +198,7 @@ Amalthea
 ~~~~~~~~
 
 - Custom K8s operator for running user sessions
-- Built with python and the kopf library
+- Built with python and the `kopf` library
 - Watches for custom resources created by renku-notebooks and creates K8s objects for user sessions
 
 
@@ -206,7 +206,7 @@ CRC Service
 ~~~~~~~~~~~
 
 - Manages resource pools
-- Determines which user has acces to which compute resources
+- Determines which user has access to which compute resources
 
 .. _renku: https://github.com/SwissDataScienceCenter/renku
 .. _renku-python: https://github.com/SwissDataScienceCenter/renku-python
