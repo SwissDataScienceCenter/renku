@@ -932,7 +932,7 @@ initDb:
 crc:
   image: 
     repository: renku/renku-crc
-    tag: main
+    tag: "0.0.1"
     pullPolicy: IfNotPresent
   service:
     type: ClusterIP
