@@ -176,13 +176,14 @@ data:
     DB_NAME=renku
 
     psql -v ON_ERROR_STOP=1 <<-EOSQL
-      create database "$DB_NAME";
       create user "{{ .Values.global.db.common.username }}" password '$PASSWORD';
+      create database "$DB_NAME" WITH OWNER "{{ .Values.global.db.common.username }}";
     EOSQL
 
     psql postgres -v ON_ERROR_STOP=1 --dbname "$DB_NAME" <<-EOSQL
       create extension if not exists "pg_trgm";
       revoke all on schema "public" from "public";
       grant all privileges on database "$DB_NAME" to "{{ .Values.global.db.common.username }}";
+      grant all privileges on database "$DB_NAME" to "postgres";
       grant all privileges on schema "public" to "{{ .Values.global.db.common.username }}";
     EOSQL
