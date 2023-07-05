@@ -1,5 +1,34 @@
 .. _changelog:
 
+0.30.0
+------
+
+Renku ``0.30.0`` adds the ability for the core service to horizontally scale and for the gateway to provide sticky sessions
+for the core service.
+
+Internal Changes
+~~~~~~~~~~~~~~~~
+
+**🌟 New Features**
+
+- **Gateway**: add sentry to reverse-proxy
+  (`#654 <https://github.com/SwissDataScienceCenter/renku-gateway/issues/654>`__)
+- **Gateway**: core-service sticky sessions
+  (`#646 <https://github.com/SwissDataScienceCenter/renku-gateway/issues/646>`__)
+- **Renku Core Service**: horizontal scaling 
+  (`#3178 <https://github.com/SwissDataScienceCenter/renku-python/issues/3178>`_).
+
+**🐞 Bug Fixes**
+
+- **Renku Core Service**: fixes importing private datasets in deployments with external gitlab 
+  (`#3523 <https://github.com/SwissDataScienceCenter/renku-python/issues/3523>`_).
+
+Individual components
+~~~~~~~~~~~~~~~~~~~~~~
+
+- `renku-gateway 0.21.0 <https://github.com/SwissDataScienceCenter/renku-gateway/releases/tag/0.21.0>`_
+- `renku-python 2.6.0 <https://github.com/SwissDataScienceCenter/renku-python/releases/tag/v2.6.0>`_
+
 0.29.0
 ------
 
