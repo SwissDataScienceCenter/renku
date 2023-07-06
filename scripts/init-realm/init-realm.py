@@ -267,7 +267,7 @@ keycloak_admin.create_realm(
 sys.stdout.write("done\n")
 
 # Switching to the newly created realm
-keycloak_admin.realm_name = args.realm
+keycloak_admin.connection.realm_name = args.realm
 
 
 for new_client in new_clients:
