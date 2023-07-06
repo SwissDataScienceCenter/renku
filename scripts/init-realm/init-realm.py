@@ -224,7 +224,7 @@ success = False
 
 while not success and n_attempts < 31:
     try:
-        sys.stdout.write("Getting an admin access token for Keycloak...")
+        sys.stdout.write("Getting an admin access token for Keycloak...\n")
         keycloak_admin = KeycloakAdmin(
             server_url=args.keycloak_url,
             username=args.admin_user,
@@ -232,8 +232,12 @@ while not success and n_attempts < 31:
             verify=True,
         )
         success = True
-    except (KeycloakConnectionError, KeycloakGetError, KeycloakPostError):
-        sys.stdout.write("Keycloak not responding, retrying in 10 seconds...\n")
+    except (KeycloakConnectionError, KeycloakGetError, KeycloakPostError) as error:
+        msg = "Keycloak not responding"
+        if error.response_code is not None:
+            msg += f" (status code: {error.response_code})"
+        msg += ", retrying in 10 seconds...\n"
+        sys.stdout.write(msg)
         n_attempts += 1
         time.sleep(10)
 if success:
