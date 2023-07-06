@@ -12,8 +12,13 @@ User-Facing Changes
 
 **🌟 New Features**
 
-- **UI**: Surface backend error message on dataset list page
+- 🔭 **UI**: Surface backend error message on dataset list page
   (`#2629 <https://github.com/SwissDataScienceCenter/renku-ui/issues/2629>`_).
+
+**🐞 Bug Fixes**
+
+- **UI**: Do not query for datasets if no backend is available for the project version
+  (`#2636 <https://github.com/SwissDataScienceCenter/renku-ui/issues/2636>`_).
 
 Internal Changes
 ~~~~~~~~~~~~~~~~
@@ -42,6 +47,7 @@ Individual components
 - `renku-gateway 0.21.0 <https://github.com/SwissDataScienceCenter/renku-gateway/releases/tag/0.21.0>`_
 - `renku-python 2.6.0 <https://github.com/SwissDataScienceCenter/renku-python/releases/tag/v2.6.0>`_
 - `renku-ui 3.8.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.8.0>`_
+- `renku-ui 3.8.1 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.8.1>`_
 
 
 0.29.0
