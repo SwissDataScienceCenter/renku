@@ -4,30 +4,45 @@
 ------
 
 Renku ``0.30.0`` adds the ability for the core service to horizontally scale and for the gateway to provide sticky sessions
-for the core service.
+for the core service. In addition, improvements and bugfixes are also included on the UI, as well as required changes for 
+enabling sticky sessions for the core service.
+
+User-Facing Changes
+~~~~~~~~~~~~~~~~~~~
+
+**🌟 New Features**
+
+- **UI**: Surface backend error message on dataset list page
+  (`#2629 <https://github.com/SwissDataScienceCenter/renku-ui/issues/2629>`_).
 
 Internal Changes
 ~~~~~~~~~~~~~~~~
 
 **🌟 New Features**
 
-- **Gateway**: add sentry to reverse-proxy
+- **Gateway**: Add sentry to reverse-proxy
   (`#654 <https://github.com/SwissDataScienceCenter/renku-gateway/issues/654>`__)
-- **Gateway**: core-service sticky sessions
+- **Gateway**: Core-service sticky sessions
   (`#646 <https://github.com/SwissDataScienceCenter/renku-gateway/issues/646>`__)
-- **Renku Core Service**: horizontal scaling 
+- **Renku Core Service**: Horizontal scaling 
   (`#3178 <https://github.com/SwissDataScienceCenter/renku-python/issues/3178>`_).
+- **UI**: Handle responses from the new core versions endpoint
+  (`#2134 <https://github.com/SwissDataScienceCenter/renku-ui/issues/2134>`_).
 
 **🐞 Bug Fixes**
 
-- **Renku Core Service**: fixes importing private datasets in deployments with external gitlab 
+- **Renku Core Service**: Fixes importing private datasets in deployments with external gitlab 
   (`#3523 <https://github.com/SwissDataScienceCenter/renku-python/issues/3523>`_).
+- **UI**: Prevent API failures for projects on older metadata versions
+  (`#2627 <https://github.com/SwissDataScienceCenter/renku-ui/issues/2627>`_).
 
 Individual components
 ~~~~~~~~~~~~~~~~~~~~~~
 
 - `renku-gateway 0.21.0 <https://github.com/SwissDataScienceCenter/renku-gateway/releases/tag/0.21.0>`_
 - `renku-python 2.6.0 <https://github.com/SwissDataScienceCenter/renku-python/releases/tag/v2.6.0>`_
+- `renku-ui 3.8.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.8.0>`_
+
 
 0.29.0
 ------
