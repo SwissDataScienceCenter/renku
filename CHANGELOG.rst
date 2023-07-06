@@ -14,12 +14,60 @@ Internal Changes
 - **Infrastructure**: add the compute resource control service 
 - **Renku Notebooks**: use the compute resource control (CRC) service
 
-
 Individual components
 ~~~~~~~~~~~~~~~~~~~~~~
 
 - `renku-data-services 0.0.1 <https://github.com/SwissDataScienceCenter/renku-data-services/releases/tag/v0.0.1>`_
 - `renku-notebooks 1.16.0 <https://github.com/SwissDataScienceCenter/renku-notebooks/releases/tag/1.16.0>`_
+
+0.30.0
+------
+
+Renku ``0.30.0`` adds the ability for the core service to horizontally scale and for the gateway to provide sticky sessions
+for the core service. In addition, improvements and bug fixes are also included on the UI, as well as required changes for 
+enabling sticky sessions for the core service.
+
+User-Facing Changes
+~~~~~~~~~~~~~~~~~~~
+
+**🌟 New Features**
+
+- 🔭 **UI**: Surface backend error message on dataset list page
+  (`#2629 <https://github.com/SwissDataScienceCenter/renku-ui/issues/2629>`_).
+
+**🐞 Bug Fixes**
+
+- **UI**: Do not query for datasets if no backend is available for the project version
+  (`#2636 <https://github.com/SwissDataScienceCenter/renku-ui/issues/2636>`_).
+
+Internal Changes
+~~~~~~~~~~~~~~~~
+
+**🌟 New Features**
+
+- **Gateway**: Add sentry to reverse-proxy
+  (`#654 <https://github.com/SwissDataScienceCenter/renku-gateway/issues/654>`__)
+- **Gateway**: Core-service sticky sessions
+  (`#646 <https://github.com/SwissDataScienceCenter/renku-gateway/issues/646>`__)
+- **Renku Core Service**: Horizontal scaling 
+  (`#3178 <https://github.com/SwissDataScienceCenter/renku-python/issues/3178>`_).
+- **UI**: Handle responses from the new core versions endpoint
+  (`#2134 <https://github.com/SwissDataScienceCenter/renku-ui/issues/2134>`_).
+
+**🐞 Bug Fixes**
+
+- **Renku Core Service**: Fixes importing private datasets in deployments with external gitlab 
+  (`#3523 <https://github.com/SwissDataScienceCenter/renku-python/issues/3523>`_).
+- **UI**: Prevent API failures for projects on older metadata versions
+  (`#2627 <https://github.com/SwissDataScienceCenter/renku-ui/issues/2627>`_).
+
+Individual components
+~~~~~~~~~~~~~~~~~~~~~~
+
+- `renku-gateway 0.21.0 <https://github.com/SwissDataScienceCenter/renku-gateway/releases/tag/0.21.0>`_
+- `renku-python 2.6.0 <https://github.com/SwissDataScienceCenter/renku-python/releases/tag/v2.6.0>`_
+- `renku-ui 3.8.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.8.0>`_
+- `renku-ui 3.8.1 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.8.1>`_
 
 
 0.29.0
