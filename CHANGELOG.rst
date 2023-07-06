@@ -4,7 +4,7 @@
 ------
 
 Renku ``0.30.0`` adds the ability for the core service to horizontally scale and for the gateway to provide sticky sessions
-for the core service. In addition, improvements and bugfixes are also included on the UI, as well as required changes for 
+for the core service. In addition, improvements and bug fixes are also included on the UI, as well as required changes for 
 enabling sticky sessions for the core service.
 
 User-Facing Changes
