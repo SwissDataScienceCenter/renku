@@ -1,5 +1,27 @@
 .. _changelog:
 
+0.31.0
+------
+
+Renku ``0.31.0`` introduces the compute resource control (CRC) service and supporting or related changes in 
+other components.
+
+Internal Changes
+~~~~~~~~~~~~~~~~
+
+**🌟 New Features**
+
+- **Infrastructure**: add the compute resource control service 
+- **Renku Notebooks**: use the compute resource control (CRC) service
+
+
+Individual components
+~~~~~~~~~~~~~~~~~~~~~~
+
+- `renku-data-services 0.0.1 <https://github.com/SwissDataScienceCenter/renku-data-services/releases/tag/v0.0.1>`_
+- `renku-notebooks 1.16.0 <https://github.com/SwissDataScienceCenter/renku-notebooks/releases/tag/1.16.0>`_
+
+
 0.29.0
 ------
 
