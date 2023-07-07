@@ -1,19 +1,27 @@
 import { exec } from "child_process";
 
 const runMatrix = {
-  "publicProject": "publicProject.cy.ts",
-  "updateProject": "updateProjects.cy.ts",
-  "useSession": "useSession.cy.ts",
-  "rStudio": "rstudioSession.cy.ts",
+  "0": "publicProject.cy.ts",
+  "1": "updateProjects.cy.ts",
+  "2": "useSession.cy.ts",
+  "3": "rstudioSession.cy.ts",
 };
+
+function getEnvNumber(varName: string): number {
+  if (!process.env[varName] === undefined || isNaN(Number(process.env[varName])))
+    throw Error(`FATAL ERROR: ${varName} is not known.`);
+
+  return Number(process.env[varName]);
+}
 
 (async () => {
   try {
     const e2eFolder = process.env["E2E_FOLDER"] ? process.env["E2E_FOLDER"].toString() : "";
-    const runnerName = process.env["RUNNER_NAME"] ? process.env["RUNNER_NAME"].toString() : "";
-    const specName = e2eFolder + runMatrix[runnerName];
+    const runnerNumber = getEnvNumber("RUNNER_NUMBER");
+    const specName = e2eFolder + runMatrix["" + runnerNumber];
+
     const command = `npm run e2e:ci ${specName}`;
-    console.log(`Running  ${runnerName}. Command: ${command}`);
+    console.log(`Running  ${runnerNumber}. Command: ${command}`);
 
     // run and pipe output
     const execCommand = exec(command);
