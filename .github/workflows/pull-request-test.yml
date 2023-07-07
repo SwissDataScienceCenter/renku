@@ -127,7 +127,7 @@ jobs:
           s3-results-secret-key: ${{ secrets.ACCEPTANCE_TESTS_BUCKET_SECRET_KEY }}
           test-timeout-mins: "120"
 
-  test-pr-cypress:
+  test-pr-cypress-preparation:
     if: ${{ github.event.action != 'closed' &&
       needs.check-deploy.outputs.pr-contains-string == 'true' &&
       (needs.check-deploy.outputs.test-enabled == 'true' ||
@@ -137,8 +137,8 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - uses: cypress-io/github-action@v5
-        name: Run Cypress acceptance tests
-        id: cypress
+        name: Verify infrastructure for Cypress acceptance tests
+        id: cypress-prepare
         env:
           TEST_EMAIL: renku@datascience.ch
           TEST_PASSWORD: ${{ secrets.RENKU_BOT_DEV_PASSWORD }}
@@ -149,6 +149,38 @@ jobs:
         with:
           browser: chrome
           working-directory: cypress-tests
+          spec: cypress/e2e/verifyInfrastructure.cy.ts
+      - uses: actions/upload-artifact@v3
+        if: failure()
+        with:
+          name: Cypress acceptance tests - logs
+          path: cypress-tests/cypress/logs
+          retention-days: 7
+
+  test-pr-cypress-parallel:
+    needs: [test-pr-cypress]
+    runs-on: ubuntu-22.04
+    strategy:
+      fail-fast: false
+      matrix:
+        containers: [0, 1, 2, 3]
+    steps:
+      - uses: actions/checkout@v3
+      - uses: cypress-io/github-action@v5
+        name: Run Cypress acceptance tests in parallel
+        id: cypress
+        env:
+          TEST_EMAIL: renku@datascience.ch
+          TEST_PASSWORD: ${{ secrets.RENKU_BOT_DEV_PASSWORD }}
+          TEST_FIRST_NAME: Renku
+          TEST_LAST_NAME: Bot
+          TEST_USERNAME: renku-test
+          BASE_URL: https://ci-renku-${{ github.event.number }}.dev.renku.ch
+          RUNNER_NUMBER: ${{ matrix.containers }}
+        with:
+          browser: chrome
+          working-directory: cypress-tests
+          command: ts-node cypress/scripts/github-parallel-run.ts
       - uses: actions/upload-artifact@v3
         if: failure()
         with:
