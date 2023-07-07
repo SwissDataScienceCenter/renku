@@ -7,17 +7,10 @@ const runMatrix = {
   "r-studio": "rstudioSession.cy.ts",
 };
 
-function getEnvValue(varName: string): string {
-  if (!process.env[varName])
-    throw Error(`FATAL ERROR: ${varName} is not known.`);
-
-  return process.env[varName];
-}
-
 (async () => {
   try {
-    const e2eFolder = process.env["E2E_FOLDER"] ? process.env["E2E_FOLDER"] : "";
-    const runnerName = getEnvValue("RUNNER_NAME");
+    const e2eFolder = process.env["E2E_FOLDER"] ? process.env["E2E_FOLDER"].toString() : "";
+    const runnerName = process.env["RUNNER_NAME"].toString();
     const specName = runMatrix[runnerName];
     const command = `npm run e2e:ci ${e2eFolder}${specName}`;
     console.log(`Running  ${runnerName}. Command: ${command}`);
