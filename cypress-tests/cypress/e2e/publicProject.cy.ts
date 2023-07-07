@@ -41,7 +41,7 @@ describe("Basic public project functionality", () => {
     // Create a project
     if (projectTestConfig.shouldCreateProject) {
       cy.visit("/");
-      cy.createProject({ templateName: "Basic Python", ...projectIdentifier });
+      cy.createProject({ templateName: "Python", ...projectIdentifier });
     }
   });
 
