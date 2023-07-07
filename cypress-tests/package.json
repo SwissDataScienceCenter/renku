@@ -7,6 +7,7 @@
     "e2e": "cypress open --e2e --browser=chrome",
     "e2e:run": "cypress run --e2e --browser=chrome",
     "e2e:headless": "cypress run --e2e --browser=chrome --headless",
+    "e2e:ci": "cypress run --e2e --browser=chrome --headless --spec",
     "lint": "eslint . --ext .ts",
     "parallel-run": "ts-node cypress/scripts/github-parallel-run.ts"
   },

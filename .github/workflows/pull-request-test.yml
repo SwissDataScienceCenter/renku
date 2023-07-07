@@ -163,14 +163,9 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        containers: [0, 1, 2, 3]
+        containers: ["public-project", "update-project", "use-session", "r-studio"]
     steps:
       - uses: actions/checkout@v3
-      # - uses: actions/setup-node@v3
-      #   with:
-      #     node-version: 18
-      #     cache: "npm"
-      #     cache-dependency-path: cypress-tests/package-lock.json
       - uses: cypress-io/github-action@v5
         name: Run Cypress acceptance tests in parallel
         id: cypress
@@ -181,7 +176,8 @@ jobs:
           TEST_LAST_NAME: Bot
           TEST_USERNAME: renku-test
           BASE_URL: https://ci-renku-${{ github.event.number }}.dev.renku.ch
-          RUNNER_NUMBER: ${{ matrix.containers }}
+          RUNNER_NAME: ${{ matrix.containers }}
+          E2E_FOLDER: "cypress/e2e/"
         with:
           browser: chrome
           working-directory: cypress-tests
