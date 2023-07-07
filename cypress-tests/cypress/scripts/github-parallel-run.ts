@@ -1,18 +1,18 @@
 import { exec } from "child_process";
 
 const runMatrix = {
-  "public-project": "publicProject.cy.ts",
-  "update-project": "updateProjects.cy.ts",
-  "use-session": "useSession.cy.ts",
-  "r-studio": "rstudioSession.cy.ts",
+  "publicProject": "publicProject.cy.ts",
+  "updateProject": "updateProjects.cy.ts",
+  "useSession": "useSession.cy.ts",
+  "rStudio": "rstudioSession.cy.ts",
 };
 
 (async () => {
   try {
     const e2eFolder = process.env["E2E_FOLDER"] ? process.env["E2E_FOLDER"].toString() : "";
-    const runnerName = process.env["RUNNER_NAME"].toString();
-    const specName = runMatrix[runnerName];
-    const command = `npm run e2e:ci ${e2eFolder}${specName}`;
+    const runnerName = process.env["RUNNER_NAME"] ? process.env["RUNNER_NAME"].toString() : "";
+    const specName = e2eFolder + runMatrix[runnerName];
+    const command = `npm run e2e:ci ${specName}`;
     console.log(`Running  ${runnerName}. Command: ${command}`);
 
     // run and pipe output
