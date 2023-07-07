@@ -163,7 +163,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        containers: ["public-project", "update-project", "use-session", "r-studio"]
+        specs: ["publicProject", "updateProject", "useSession", "rStudio"]
     steps:
       - uses: actions/checkout@v3
       - uses: cypress-io/github-action@v5
@@ -176,8 +176,8 @@ jobs:
           TEST_LAST_NAME: Bot
           TEST_USERNAME: renku-test
           BASE_URL: https://ci-renku-${{ github.event.number }}.dev.renku.ch
-          RUNNER_NAME: ${{ matrix.containers }}
           E2E_FOLDER: "cypress/e2e/"
+          RUNNER_NAME: ${{ matrix.specs }}
         with:
           browser: chrome
           working-directory: cypress-tests
