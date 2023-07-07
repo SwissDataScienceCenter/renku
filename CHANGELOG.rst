@@ -6,6 +6,19 @@
 Renku ``0.31.0`` introduces the compute resource control (CRC) service and supporting or related changes in 
 other components.
 
+User-Facing Changes
+~~~~~~~~~~~~~~~~~~~
+
+**🌟 New Features**
+
+- **UI**: Update session start options and project settings to use compute resource pools
+  (`#2484 <https://github.com/SwissDataScienceCenter/renku-ui/issues/2484>`_).
+
+**🐞 Bug Fixes**
+
+- **UI**: Support common R file extensions
+  (`#2638 <https://github.com/SwissDataScienceCenter/renku-ui/issues/2638>`_).
+
 Internal Changes
 ~~~~~~~~~~~~~~~~
 
@@ -19,6 +32,7 @@ Individual components
 
 - `renku-data-services 0.0.1 <https://github.com/SwissDataScienceCenter/renku-data-services/releases/tag/v0.0.1>`_
 - `renku-notebooks 1.16.0 <https://github.com/SwissDataScienceCenter/renku-notebooks/releases/tag/1.16.0>`_
+- `renku-ui 3.9.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.9.0>`_
 
 
 0.30.1
