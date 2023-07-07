@@ -170,7 +170,7 @@ jobs:
         with:
           node-version: 18
           cache: "npm"
-          working-directory: cypress-tests
+          cache-dependency-path: cypress-tests/package-lock.json
       - uses: cypress-io/github-action@v5
         name: Run Cypress acceptance tests in parallel
         id: cypress
@@ -185,7 +185,7 @@ jobs:
         with:
           browser: chrome
           working-directory: cypress-tests
-          command: ts-node cypress/scripts/github-parallel-run.ts
+          command: npm run parallel-run
       - uses: actions/upload-artifact@v3
         if: failure()
         with:
