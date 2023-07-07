@@ -170,6 +170,7 @@ jobs:
         with:
           node-version: 18
           cache: "npm"
+          working-directory: cypress-tests
       - uses: cypress-io/github-action@v5
         name: Run Cypress acceptance tests in parallel
         id: cypress
