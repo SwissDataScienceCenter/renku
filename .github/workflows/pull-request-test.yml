@@ -42,8 +42,9 @@ jobs:
         with:
           name: docs
           path: docs/_build/html/
+
   check-deploy:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     outputs:
       pr-contains-string: ${{ steps.deploy-comment.outputs.pr-contains-string }}
       renku-core: ${{ steps.deploy-comment.outputs.renku-core}}
@@ -62,10 +63,11 @@ jobs:
         with:
           string: /deploy
           pr_ref: ${{ github.event.number }}
+
   deploy-pr:
     if: github.event.action != 'closed'
     needs: [check-deploy]
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     environment:
       name: ci-renku-${{ github.event.number }}
     steps:
@@ -109,11 +111,11 @@ jobs:
             You can access the deployment of this PR at https://ci-renku-${{ github.event.number }}.dev.renku.ch
 
   test-pr:
-    runs-on: ubuntu-20.04
     if: ${{ github.event.action != 'closed' &&
       needs.check-deploy.outputs.pr-contains-string == 'true' &&
       needs.check-deploy.outputs.test-enabled == 'true' }}
     needs: [check-deploy, deploy-pr]
+    runs-on: ubuntu-22.04
     steps:
       - uses: SwissDataScienceCenter/renku-actions/test-renku@v1.4.6
         with:
@@ -126,12 +128,12 @@ jobs:
           test-timeout-mins: "120"
 
   test-pr-cypress:
-    runs-on: ubuntu-20.04
     if: ${{ github.event.action != 'closed' &&
       needs.check-deploy.outputs.pr-contains-string == 'true' &&
       (needs.check-deploy.outputs.test-enabled == 'true' ||
       needs.check-deploy.outputs.test-cypress-enabled == 'true') }}
     needs: [check-deploy, deploy-pr]
+    runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v3
       - uses: cypress-io/github-action@v5
@@ -147,17 +149,20 @@ jobs:
         with:
           browser: chrome
           working-directory: cypress-tests
-      # NOTE: cypress screenshots will be generated only if the test failed
-      # thus we store screenshots only on failures
+      - uses: actions/upload-artifact@v3
+        if: failure()
+        with:
+          name: Cypress acceptance tests - logs
+          path: cypress-tests/cypress/logs
+          retention-days: 7
       - uses: actions/upload-artifact@v3
         if: failure()
         with:
           name: Cypress acceptance tests - screenshots
           path: cypress-tests/cypress/screenshots
           retention-days: 7
-      # Cypress test video is always captured, so this action uses "always()" condition
       - uses: actions/upload-artifact@v3
-        if: always()
+        if: failure()
         with:
           name: Cypress acceptance tests - videos
           path: cypress-tests/cypress/videos
@@ -165,7 +170,7 @@ jobs:
 
   cleanup:
     if: github.event.action == 'closed'
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     steps:
       - name: renku teardown
         uses: SwissDataScienceCenter/renku-actions/cleanup-renku-ci-deployments@v1.4.6
