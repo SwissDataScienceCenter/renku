@@ -20,6 +20,26 @@ Individual components
 - `renku-data-services 0.0.1 <https://github.com/SwissDataScienceCenter/renku-data-services/releases/tag/v0.0.1>`_
 - `renku-notebooks 1.16.0 <https://github.com/SwissDataScienceCenter/renku-notebooks/releases/tag/1.16.0>`_
 
+
+0.30.1
+------
+
+Renku ``0.30.1`` is a small bugfix release that addresses a problem with the gateway Helm chart.
+
+Internal Changes
+~~~~~~~~~~~~~~~~
+
+**🐞 Bug Fixes**
+
+- **Gateway**: Remove duplicate environment variables in reverse proxy container
+  (`#660 <https://github.com/SwissDataScienceCenter/renku-gateway/issues/660>`_).
+
+Individual components
+~~~~~~~~~~~~~~~~~~~~~~
+
+- `renku-gateway 0.21.1 <https://github.com/SwissDataScienceCenter/renku-gateway/releases/tag/0.21.1>`_
+
+
 0.30.0
 ------
 
