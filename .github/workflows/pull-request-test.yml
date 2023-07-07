@@ -166,11 +166,11 @@ jobs:
         containers: [0, 1, 2, 3]
     steps:
       - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
-        with:
-          node-version: 18
-          cache: "npm"
-          cache-dependency-path: cypress-tests/package-lock.json
+      # - uses: actions/setup-node@v3
+      #   with:
+      #     node-version: 18
+      #     cache: "npm"
+      #     cache-dependency-path: cypress-tests/package-lock.json
       - uses: cypress-io/github-action@v5
         name: Run Cypress acceptance tests in parallel
         id: cypress
