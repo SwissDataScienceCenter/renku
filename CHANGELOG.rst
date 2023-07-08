@@ -3,7 +3,9 @@
 0.31.0
 ------
 
-Renku ``0.31.0`` introduces the compute resource control (CRC) service. This feature enables Renku administrators to manage the users' access to specific computing resources. The service exposes an HTTP API for the administrators to interact with. In this way, Renku administrators can create, update or delete resource pools, and can add or remove users to resource pools. Thus, this release includes new features in Renku individual components related to the compute resource service, and supports common R file extensions.
+Renku ``0.31.0`` introduces the compute resource control (CRC) service, enabling Renku administrators to manage access to specific computing resources. The service exposes an HTTP API for the administrators to interact with. In this way, Renku administrators can create, update or delete resource pools, and can add to or remove users from resource pools. 
+
+Apart from the changes needed to support compute resource access features, support has also been added for common R file extensions.
 
 User-Facing Changes
 ~~~~~~~~~~~~~~~~~~~
