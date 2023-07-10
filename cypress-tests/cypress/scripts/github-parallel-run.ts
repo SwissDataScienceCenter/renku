@@ -2,6 +2,10 @@ import { exec } from "child_process";
 import * as core from "@actions/core";
 
 function getFileName(): string {
+  const name = process.argv[2];
+  core.info(`Name from argument: ${name}`);
+  core.info(`Name from env: ${process.env["E2E_TEST"]}`);
+
   const e2eSuffix = process.env["E2E_SUFFIX"] ? process.env["E2E_SUFFIX"] : "";
   const e2eTest = process.env["E2E_TEST"] ? process.env["E2E_TEST"] : "";
   const e2eTestName = e2eSuffix + e2eTest;
