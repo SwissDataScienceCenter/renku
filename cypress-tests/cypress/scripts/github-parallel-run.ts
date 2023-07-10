@@ -6,17 +6,18 @@ function getFileName(): string {
   core.info(`Name from argument: ${name}`);
   core.info(`Name from env: ${process.env["E2E_TEST"]}`);
 
-  const e2eSuffix = process.env["E2E_SUFFIX"] ? process.env["E2E_SUFFIX"] : "";
   const e2eTest = process.env["E2E_TEST"];
-  const e2eTestName = e2eSuffix + e2eTest;
+  if (!e2eTest) core.setFailed(`FATAL ERROR: test name is empty.`);
 
-  core.info(`testing: env "${e2eTestName}"`);
+  const e2eSuffix = process.env["E2E_SUFFIX"] ? process.env["E2E_SUFFIX"] : "";
+  const e2eTestName = e2eTest + e2eSuffix;
+
+  // TODO: remove me - from here
+  core.info(`testing: full name "${e2eTestName}"`);
   core.info(`testing: env direct "${process.env["E2E_TEST"]}"`);
-  core.info(`testing: env with conditional "${process.env["E2E_TEST"]} ? ${process.env["E2E_TEST"]} : ''"`);
   core.info(`testing: argument "${name}"`);
   core.info(`testing: argument direct "${process.argv[2]}"`);
-
-  if (!e2eTestName) core.setFailed(`FATAL ERROR: test name is empty.`);
+  // TODO: remove me - to here
 
   const e2eFolder = process.env["E2E_FOLDER"]
     ? process.env["E2E_FOLDER"].endsWith("/")
