@@ -17,6 +17,7 @@ const projectIdentifier = { name: projectTestConfig.projectName, namespace: user
 
 describe("Basic rstudio functionality", () => {
   before(() => {
+    Cypress.Cookies.debug(true);
     // Save all cookies across tests
     Cypress.Cookies.defaults({
       preserve: (_) => true,
