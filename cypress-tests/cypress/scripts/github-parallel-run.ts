@@ -1,42 +1,41 @@
 import { exec } from "child_process";
+import * as core from "@actions/core";
 
-const runMatrix = {
-  "0": "publicProject.cy.ts",
-  "1": "updateProjects.cy.ts",
-  "2": "useSession.cy.ts",
-  "3": "rstudioSession.cy.ts",
-};
+function getFileName(): string {
+  const e2eSuffix = process.env["E2E_SUFFIX"] ? process.env["E2E_SUFFIX"] : "";
+  const e2eTest = process.env["E2E_TEST"] ? process.env["E2E_TEST"] : "";
+  const e2eTestName = e2eSuffix + e2eTest;
 
-function getEnvNumber(varName: string): number {
-  if (!process.env[varName] === undefined || isNaN(Number(process.env[varName])))
-    throw Error(`FATAL ERROR: ${varName} is not known.`);
+  if (!e2eTestName) core.setFailed(`FATAL ERROR: test name is empty.`);
 
-  return Number(process.env[varName]);
+  const e2eFolder = process.env["E2E_FOLDER"]
+    ? process.env["E2E_FOLDER"].endsWith("/")
+      ? process.env["E2E_FOLDER"]
+      : process.env["E2E_FOLDER"] + "/"
+    : "";
+  const e2eFullName = e2eFolder + e2eTestName;
+  core.debug(`running test: ${e2eFullName}`);
+  return e2eFullName;
 }
 
 (async () => {
   try {
-    const e2eFolder = process.env["E2E_FOLDER"] ? process.env["E2E_FOLDER"].toString() : "";
-    const runnerNumber = getEnvNumber("RUNNER_NUMBER");
-    const specName = e2eFolder + runMatrix["" + runnerNumber];
-
+    const specName = getFileName();
+    core.info(`Working on "${specName}"`);
     const command = `npm run e2e:ci ${specName}`;
-    console.log(`Running  ${runnerNumber}. Command: ${command}`);
+    core.info(`Running the following command: ${command}`);
 
     // run and pipe output
     const execCommand = exec(command);
-
-    if (execCommand.stdout)
-      execCommand.stdout.pipe(process.stdout);
-
-    if (execCommand.stderr)
-      execCommand.stderr.pipe(process.stderr);
+    if (execCommand.stdout) execCommand.stdout.pipe(process.stdout);
+    if (execCommand.stderr) execCommand.stderr.pipe(process.stderr);
 
     execCommand.on("exit", (code) => {
       process.exit(code || 0);
     });
-  } catch (err) {
-    console.error(err);
+  }
+  catch (err) {
+    core.setFailed(`UNEXPECTED ERROR: ${err}`);
     process.exit(1);
   }
 })();
