@@ -101,8 +101,8 @@ jobs:
           issue-number: ${{ github.event.pull_request.number }}
           comment-author: "RenkuBot"
       - name: Create comment pre deploy
-        if: "steps.findcomment.outputs.comment-id == 0 &&
-          needs.check-deploy.outputs.pr-contains-string == 'true'"
+        if: ${{ steps.findcomment.outputs.comment-id == 0 &&
+          needs.check-deploy.outputs.pr-contains-string == 'true' }}
         uses: peter-evans/create-or-update-comment@v3
         with:
           token: ${{ secrets.RENKUBOT_GITHUB_TOKEN }}
@@ -163,7 +163,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        containers: [0, 1, 2, 3]
+        tests: ["publicProject", "updateProjects", "useSession", "rstudioSession"]
     steps:
       - uses: actions/checkout@v3
       - uses: cypress-io/github-action@v5
@@ -177,7 +177,8 @@ jobs:
           TEST_USERNAME: renku-test
           BASE_URL: https://ci-renku-${{ github.event.number }}.dev.renku.ch
           E2E_FOLDER: "cypress/e2e/"
-          RUNNER_NUMBER: ${{ matrix.containers }}
+          E2E_SUFFIX: ".cy.ts"
+          E2E_TEST: ${{ matrix.tests }}
         with:
           browser: chrome
           working-directory: cypress-tests
