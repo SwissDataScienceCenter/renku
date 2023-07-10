@@ -53,6 +53,9 @@ spec:
             - name: graph-token-postgres
               mountPath: /graph-token-postgres
               readOnly: true
+            - name: db-common-password
+              mountPath: /db-common-password
+              readOnly: true
           env:
           - name: PGHOST
             value: {{ template "postgresql.fullname" . }}
@@ -100,3 +103,6 @@ spec:
         - name: graph-token-postgres
           secret:
             secretName: {{ template "renku.fullname" . }}-graph-token-postgres
+        - name: db-common-password
+          secret:
+            secretName: {{ .Values.global.db.common.passwordSecretName }}
