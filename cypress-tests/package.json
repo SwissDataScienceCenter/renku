@@ -9,7 +9,7 @@
     "e2e:headless": "cypress run --e2e --browser=chrome --headless",
     "e2e:ci": "cypress run --e2e --browser=chrome --headless --spec",
     "lint": "eslint . --ext .ts",
-    "parallel-run": "ts-node cypress/scripts/github-parallel-run.ts "
+    "parallel-run": "ts-node cypress/scripts/github-parallel-run.ts"
   },
   "author": "Swiss Data Science Center",
   "dependencies": {
