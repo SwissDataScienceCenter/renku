@@ -1,7 +1,7 @@
 {
   "name": "cypress-tests",
-  "version": "0.0.1",
-  "description": "Cypress tests for Renku",
+  "version": "0.1.0",
+  "description": "Cypress acceptance tests for Renku",
   "main": "index.js",
   "scripts": {
     "e2e": "cypress open --e2e --browser=chrome",
