@@ -163,7 +163,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        tests: ["publicProject", "updateProjects", "useSession", "rstudioSession"]
+        tests: [publicProject, updateProjects, useSession, rstudioSession]
     steps:
       - uses: actions/checkout@v3
       - uses: cypress-io/github-action@v5
@@ -182,7 +182,7 @@ jobs:
         with:
           browser: chrome
           working-directory: cypress-tests
-          command: npm run parallel-run
+          command: echo $E2E_FOLDER && echo $E2E_SUFFIX && echo $E2E_TEST && npm run parallel-run
       - uses: actions/upload-artifact@v3
         if: failure()
         with:

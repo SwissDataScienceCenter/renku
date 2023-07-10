@@ -14,7 +14,7 @@ function getFileName(): string {
       : process.env["E2E_FOLDER"] + "/"
     : "";
   const e2eFullName = e2eFolder + e2eTestName;
-  core.debug(`running test: ${e2eFullName}`);
+  core.debug(`Target test: ${e2eFullName}`);
   return e2eFullName;
 }
 
@@ -31,6 +31,7 @@ function getFileName(): string {
     if (execCommand.stderr) execCommand.stderr.pipe(process.stderr);
 
     execCommand.on("exit", (code) => {
+      core.info(`Command  with exit code ${code}.`);
       process.exit(code || 0);
     });
   }
