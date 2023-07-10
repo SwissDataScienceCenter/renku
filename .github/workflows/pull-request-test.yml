@@ -156,8 +156,9 @@ jobs:
           TEST_USERNAME: renku-test
         with:
           browser: chrome
-          working-directory: cypress-tests
+          install: true
           spec: ${{ env.E2E_FOLDER }}verifyInfrastructure${{ env.E2E_SUFFIX }}
+          working-directory: cypress-tests
       - uses: cypress-io/github-action@v5
         name: Run Cypress acceptance tests in parallel
         id: cypress-acceptance-tests
@@ -173,14 +174,9 @@ jobs:
           E2E_TEST: ${{ matrix.tests }}
         with:
           browser: chrome
-          working-directory: cypress-tests
           command: npm run parallel-run
-      - uses: actions/upload-artifact@v3
-        if: failure()
-        with:
-          name: Cypress acceptance tests - logs
-          path: cypress-tests/cypress/logs
-          retention-days: 7
+          install: false
+          working-directory: cypress-tests
       - uses: actions/upload-artifact@v3
         if: failure()
         with:
