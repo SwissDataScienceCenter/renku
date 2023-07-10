@@ -20,6 +20,7 @@ const projects = {
 
 describe("Fork and update old projects", () => {
   before(() => {
+    Cypress.Cookies.debug(true);
     // Save all cookies across tests
     Cypress.Cookies.defaults({
       preserve: (_) => true,

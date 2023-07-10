@@ -30,6 +30,7 @@ function robustNavigateToProjectPage(page: string) {
 }
 
 describe("Basic public project functionality", () => {
+  Cypress.Cookies.debug(true);
   before(() => {
     // Save all cookies across tests
     Cypress.Cookies.defaults({
