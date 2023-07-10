@@ -127,57 +127,49 @@ jobs:
           s3-results-secret-key: ${{ secrets.ACCEPTANCE_TESTS_BUCKET_SECRET_KEY }}
           test-timeout-mins: "120"
 
-  test-pr-cypress-preparation:
+  test-pr-cypress:
     if: ${{ github.event.action != 'closed' &&
       needs.check-deploy.outputs.pr-contains-string == 'true' &&
       (needs.check-deploy.outputs.test-enabled == 'true' ||
       needs.check-deploy.outputs.test-cypress-enabled == 'true') }}
     needs: [check-deploy, deploy-pr]
     runs-on: ubuntu-22.04
-    steps:
-      - uses: actions/checkout@v3
-      - uses: cypress-io/github-action@v5
-        name: Verify infrastructure for Cypress acceptance tests
-        id: cypress-prepare
-        env:
-          TEST_EMAIL: renku@datascience.ch
-          TEST_PASSWORD: ${{ secrets.RENKU_BOT_DEV_PASSWORD }}
-          TEST_FIRST_NAME: Renku
-          TEST_LAST_NAME: Bot
-          TEST_USERNAME: renku-test
-          BASE_URL: https://ci-renku-${{ github.event.number }}.dev.renku.ch
-        with:
-          browser: chrome
-          working-directory: cypress-tests
-          spec: cypress/e2e/verifyInfrastructure.cy.ts
-      - uses: actions/upload-artifact@v3
-        if: failure()
-        with:
-          name: Cypress acceptance tests - logs
-          path: cypress-tests/cypress/logs
-          retention-days: 7
 
-  test-pr-cypress-parallel:
-    needs: [test-pr-cypress-preparation]
-    runs-on: ubuntu-22.04
     strategy:
       fail-fast: false
       matrix:
         tests: [publicProject, updateProjects, useSession, rstudioSession]
+
     steps:
       - uses: actions/checkout@v3
       - uses: cypress-io/github-action@v5
-        name: Run Cypress acceptance tests in parallel
-        id: cypress
+        name: Verify infrastructure for Cypress acceptance tests
+        id: cypress-tests-preparation
         env:
-          TEST_EMAIL: renku@datascience.ch
-          TEST_PASSWORD: ${{ secrets.RENKU_BOT_DEV_PASSWORD }}
-          TEST_FIRST_NAME: Renku
-          TEST_LAST_NAME: Bot
-          TEST_USERNAME: renku-test
           BASE_URL: https://ci-renku-${{ github.event.number }}.dev.renku.ch
           E2E_FOLDER: "cypress/e2e/"
           E2E_SUFFIX: ".cy.ts"
+          TEST_EMAIL: renku@datascience.ch
+          TEST_FIRST_NAME: Renku
+          TEST_LAST_NAME: Bot
+          TEST_PASSWORD: ${{ secrets.RENKU_BOT_DEV_PASSWORD }}
+          TEST_USERNAME: renku-test
+        with:
+          browser: chrome
+          working-directory: cypress-tests
+          spec: ${{ env.E2E_FOLDER }}verifyInfrastructure${{ env.E2E_SUFFIX }}
+      - uses: cypress-io/github-action@v5
+        name: Run Cypress acceptance tests in parallel
+        id: cypress-acceptance-tests
+        env:
+          BASE_URL: https://ci-renku-${{ github.event.number }}.dev.renku.ch
+          E2E_FOLDER: "cypress/e2e/"
+          E2E_SUFFIX: ".cy.ts"
+          TEST_EMAIL: renku@datascience.ch
+          TEST_FIRST_NAME: Renku
+          TEST_LAST_NAME: Bot
+          TEST_PASSWORD: ${{ secrets.RENKU_BOT_DEV_PASSWORD }}
+          TEST_USERNAME: renku-test
           E2E_TEST: ${{ matrix.tests }}
         with:
           browser: chrome
