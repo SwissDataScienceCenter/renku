@@ -27,7 +27,7 @@ describe("Basic rstudio functionality", () => {
     // Create a project
     if (projectTestConfig.shouldCreateProject) {
       cy.visit("/");
-      cy.createProject({ templateName: "Basic R", ...projectIdentifier });
+      cy.createProject({ templateName: "R (", ...projectIdentifier });
     }
   });
 
