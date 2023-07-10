@@ -182,7 +182,7 @@ jobs:
         with:
           browser: chrome
           working-directory: cypress-tests
-          command: npm run parallel-run ${{ matrix.tests }}
+          command: npm run parallel-run
       - uses: actions/upload-artifact@v3
         if: failure()
         with:
