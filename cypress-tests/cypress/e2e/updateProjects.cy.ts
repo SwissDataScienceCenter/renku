@@ -19,14 +19,11 @@ const projects = {
 // projects.v9 = "anotherProjectV9";
 
 describe("Fork and update old projects", () => {
-  before(() => {
-    Cypress.Cookies.debug(true);
-    // Save all cookies across tests
-    Cypress.Cookies.defaults({
-      preserve: (_) => true,
+  beforeEach(() => {
+    // Use a session to preserve login data
+    cy.session("login-updateProjects", () => {
+      cy.robustLogin();
     });
-    // Register and login.
-    cy.robustLogin();
   });
 
   it("Update a very old project - version and then template", () => {

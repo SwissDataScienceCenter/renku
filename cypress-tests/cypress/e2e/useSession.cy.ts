@@ -16,13 +16,10 @@ const projectIdentifier = { name: projectTestConfig.projectName, namespace: user
 
 describe("Basic public project functionality", () => {
   before(() => {
-    Cypress.Cookies.debug(true);
-    // Save all cookies across tests
-    Cypress.Cookies.defaults({
-      preserve: (_) => true,
+    // Use a session to preserve login data
+    cy.session("login-useSession", () => {
+      cy.robustLogin();
     });
-    // Register with the CI deployment
-    cy.robustLogin();
 
     // Create a project
     if (projectTestConfig.shouldCreateProject) {
@@ -37,6 +34,10 @@ describe("Basic public project functionality", () => {
   });
 
   beforeEach(() => {
+    // Restore the session
+    cy.session("login-useSession", () => {
+      cy.robustLogin();
+    });
     cy.visitAndLoadProject(projectIdentifier);
     cy.stopAllSessionsForProject(projectIdentifier);
   });
