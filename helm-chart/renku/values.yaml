@@ -158,6 +158,19 @@ global:
     customCAs:
       []
       # - secret:
+  
+  ## Database credentials for postgres
+  db:
+    ## Used by the renku-data-services and potentially other backend services
+    common:
+      username: renku
+      ## If the secret name below does not exist it will be automatically and randomly generated.
+      ## The contents of the 'password' key is used.
+      ## The secret is not re-generated or modified in any way if it already exists.
+      passwordSecretName: renku-db-common-password
+    
+  crc:
+    serviceName: renku-crc
 
 ## Ingress configuration
 ## See: https://kubernetes.io/docs/concepts/services-networking/ingress/
@@ -917,3 +930,33 @@ initDb:
   image:
     repository: renku/init-db
     tag: "latest"
+
+crc:
+  image: 
+    repository: renku/renku-crc
+    tag: "0.0.1"
+    pullPolicy: IfNotPresent
+  service:
+    type: ClusterIP
+    port: 80
+  replicaCount: 2
+  podAnnotations: {}
+  resources: {}
+  autoscaling:
+    enabled: false
+    minReplicas: 2
+    maxReplicas: 5
+    targetMemoryUtilizationPercentage: 75
+    targetCPUUtilizationPercentage: 75
+  updateStrategy: {}
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
+
+podSecurityContext: {}
+
+securityContext:
+  runAsUser: 1000
+  runAsGroup: 1000
+  runAsNonRoot: true
+  allowPrivilegeEscalation: false
