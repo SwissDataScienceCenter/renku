@@ -121,36 +121,6 @@ Individual components
 - `renku-ui 3.8.1 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.8.1>`_
 
 
-0.29.0
-------
-
-Renku ``0.29.0`` introduces new features as well as bug fixes for the KG services. 
-
-User-Facing Changes
-~~~~~~~~~~~~~~~~~~~
-
-**🌟 New Features**
-
-- **KG**: ``updatedAt`` renamed to ``dateModified`` on the Project Details API (`#1582 <https://github.com/SwissDataScienceCenter/renku-graph/issues/1582>`_).
-
-
-**✨ Improvements**
-
-- **KG**: Improved performance of the Project Status API (`#1554 <https://github.com/SwissDataScienceCenter/renku-graph/issues/1554>`_).
-
-Internal Changes
-~~~~~~~~~~~~~~~~
-
-**✨ Improvements**
-
-- **KG**: A new process to synchronize various project properties between GitLab and Triples Store (`#1569 <https://github.com/SwissDataScienceCenter/renku-graph/issues/1569>`_).
-- **KG**: A PostgreSQL DB is added for the triples-generator. [values changelog](https://github.com/SwissDataScienceCenter/renku/blob/master/helm-chart/values.yaml.changelog.md#upgrading-to-renku-0290).
-
-Individual components
-~~~~~~~~~~~~~~~~~~~~~~
-
-- `renku-graph 2.37.0 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/2.37.0>`_
-
 User-Facing Changes
 ~~~~~~~~~~~~~~~~~~~
 
