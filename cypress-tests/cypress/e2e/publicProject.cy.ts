@@ -41,7 +41,7 @@ describe("Basic public project functionality", () => {
     // Create a project
     if (projectTestConfig.shouldCreateProject) {
       cy.visit("/");
-      cy.createProject({ templateName: "Basic Python", ...projectIdentifier });
+      cy.createProject({ templateName: "Python", ...projectIdentifier });
     }
   });
 
@@ -194,18 +194,21 @@ describe("Basic public project functionality", () => {
   it("Can view and modify sessions settings", () => {
     cy.dataCy("project-navbar").contains("Settings").should("exist").click();
     cy.intercept("/ui-server/api/renku/*/config.set").as("configSet");
-    // ? The settings page refreshes when stale. We should wait for that only when it's invoked.
-    let configInvocations = 0;
-    cy.intercept("/ui-server/api/renku/*/config.show?git_url=*", req => { configInvocations++; }).as("getConfig");
+    cy.intercept("/ui-server/api/renku/*/config.show?git_url=*").as(
+      "getConfig"
+    );
 
-    const navigateToSettingsSessions = () => {
-      const invoked = configInvocations;
+    const navigateToSettingsSessions = ({
+      waitForApis,
+    }: { waitForApis?: boolean } = {}) => {
       robustNavigateToProjectPage("/settings");
       cy.get(".form-rk-green form").contains("Project Tags").should("exist");
       robustNavigateToProjectPage("/settings/sessions");
       cy.get("h3").contains("Session settings").should("exist");
-      if (invoked > configInvocations)
-        cy.wait("@configShow", { timeout: TIMEOUTS.long });
+      cy.intercept("/ui-server/api/data/resource_pools").as("getResourcePools");
+      if (waitForApis) {
+        cy.wait("@getConfig", { timeout: TIMEOUTS.long });
+      }
     };
 
     // Make sure the renku.ini is in a pristine state
@@ -215,20 +218,31 @@ describe("Basic public project functionality", () => {
     cy.get("pre.hljs").should("be.visible");
     cy.get("pre.hljs").contains("cpu_request").should("not.exist");
 
-    navigateToSettingsSessions();
-    cy.get("div.form-rk-green div.row").contains("button", "0.5").should("exist").click();
+    // Add a compute requirement for sessions
+    navigateToSettingsSessions({ waitForApis: true });
+    cy.contains("label", "Number of CPUs")
+      .parent()
+      .find("input.form-control")
+      .should("exist")
+      .click()
+      .type("1.5")
+      .blur();
+    cy.contains(".badge", "Saving");
     cy.wait("@configSet");
-    cy.get("div.form-rk-green div.success-feedback").contains("Updated.").should("be.visible");
+    cy.contains(".badge", "Saved");
 
     robustNavigateToProjectPage("/files");
     cy.get("div#tree-content").contains("renku.ini").should("exist").click();
     cy.get(".hljs.language-ini").contains("[interactive]").should("be.visible");
-    cy.get("pre.hljs").contains("cpu_request = 0.5").should("exist");
+    cy.get("pre.hljs").contains("cpu_request = 1.5").should("exist");
 
     navigateToSettingsSessions();
-    cy.get("#cpu_request_reset").should("be.visible").click();
+    cy.get("#project-settings-sessions-interactive-cpu-request-reset")
+      .should("be.visible")
+      .click();
+    cy.contains(".badge", "Saving");
     cy.wait("@configSet");
-    cy.get("div.form-rk-green div.success-feedback").contains("Updated.").should("exist");
+    cy.contains(".badge", "Saved");
 
     robustNavigateToProjectPage("/files");
     cy.get("div#tree-content").contains("renku.ini").should("exist").click();

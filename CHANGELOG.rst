@@ -1,5 +1,126 @@
 .. _changelog:
 
+0.31.0
+------
+
+Renku ``0.31.0`` introduces the compute resource control (CRC) service, enabling Renku administrators to manage access to 
+specific computing resources. The service exposes an HTTP API for the administrators to interact with. In this way, 
+Renku administrators can create, update or delete resource pools, and can add to or remove users from resource pools. 
+Please note that a user interface for the CRC has not been added yet but it will be added in a future release. Currently,
+the only way for administrators to interact with the CRC service is through the swagger page which can be found at the path
+``/swagger/?urls.primaryName=crc%20service`` appended to the base URL of a Renku deployment. A Renku administrator is any user who
+has the `renku-admin` realm role. Assigning users to this role can be performed by the Keycloak administrator via the Keycloak UI
+or API.
+
+The CRC service also brings changes to the user interface for launching sessions, specifically when it comes to selecting 
+compute resources for a specific session. With this version we have grouped different pre-set configurations of memory, CPU, 
+RAM and GPU in resource classes. Resource classes are further grouped in resource pools and users are asked to select the resource
+pool and class they wish to use when they launch a session rather than separately specify memory, CPU, RAM and GPU requirements. 
+The selection for the amount of disk storage required is also changed but now has more freedom than before. Users can now select disk
+storage with a slider that only has a maximum limit and no pre-set steps. For projects where the users have specified resource requests
+in the project settings the UI will provide hints as to which resource classes are suitable based on the settings. When the quick launch
+button is used to start a session the closest equal or greater resource class based on the project settings will be automatically selected.
+
+Apart from the changes needed to support compute resource access features, support has also been added for common R file extensions.
+
+User-Facing Changes
+~~~~~~~~~~~~~~~~~~~
+
+**🌟 New Features**
+
+- 🧑‍💻 **UI**: Update session start options and project settings to use compute resource pools
+  (`#2484 <https://github.com/SwissDataScienceCenter/renku-ui/issues/2484>`_).
+
+**🐞 Bug Fixes**
+
+- 〽️ **UI**: Support common R file extensions
+  (`#2638 <https://github.com/SwissDataScienceCenter/renku-ui/issues/2638>`_).
+
+Internal Changes
+~~~~~~~~~~~~~~~~
+
+**🌟 New Features**
+
+- **Infrastructure**: Add the compute resource control service.
+- **Renku Notebooks**: Use the compute resource control (CRC) service.
+
+Individual components
+~~~~~~~~~~~~~~~~~~~~~~
+
+- `renku-data-services 0.0.1 <https://github.com/SwissDataScienceCenter/renku-data-services/releases/tag/v0.0.1>`_
+- `renku-notebooks 1.16.0 <https://github.com/SwissDataScienceCenter/renku-notebooks/releases/tag/1.16.0>`_
+- `renku-ui 3.9.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.9.0>`_
+
+
+0.30.1
+------
+
+Renku ``0.30.1`` is a small bugfix release that addresses a problem with the gateway Helm chart.
+
+Internal Changes
+~~~~~~~~~~~~~~~~
+
+**🐞 Bug Fixes**
+
+- **Gateway**: Remove duplicate environment variables in reverse proxy container
+  (`#660 <https://github.com/SwissDataScienceCenter/renku-gateway/issues/660>`_).
+
+Individual components
+~~~~~~~~~~~~~~~~~~~~~~
+
+- `renku-gateway 0.21.1 <https://github.com/SwissDataScienceCenter/renku-gateway/releases/tag/0.21.1>`_
+
+
+0.30.0
+------
+
+Renku ``0.30.0`` adds the ability for the core service to horizontally scale and for the gateway to provide sticky sessions
+for the core service. In addition, improvements and bug fixes are also included on the UI, as well as required changes for 
+enabling sticky sessions for the core service.
+
+User-Facing Changes
+~~~~~~~~~~~~~~~~~~~
+
+**🌟 New Features**
+
+- 🔭 **UI**: Surface backend error message on dataset list page
+  (`#2629 <https://github.com/SwissDataScienceCenter/renku-ui/issues/2629>`_).
+
+**🐞 Bug Fixes**
+
+- **UI**: Do not query for datasets if no backend is available for the project version
+  (`#2636 <https://github.com/SwissDataScienceCenter/renku-ui/issues/2636>`_).
+
+Internal Changes
+~~~~~~~~~~~~~~~~
+
+**🌟 New Features**
+
+- **Gateway**: Add sentry to reverse-proxy
+  (`#654 <https://github.com/SwissDataScienceCenter/renku-gateway/issues/654>`__)
+- **Gateway**: Core-service sticky sessions
+  (`#646 <https://github.com/SwissDataScienceCenter/renku-gateway/issues/646>`__)
+- **Renku Core Service**: Horizontal scaling 
+  (`#3178 <https://github.com/SwissDataScienceCenter/renku-python/issues/3178>`_).
+- **UI**: Handle responses from the new core versions endpoint
+  (`#2134 <https://github.com/SwissDataScienceCenter/renku-ui/issues/2134>`_).
+
+**🐞 Bug Fixes**
+
+- **Renku Core Service**: Fixes importing private datasets in deployments with external gitlab 
+  (`#3523 <https://github.com/SwissDataScienceCenter/renku-python/issues/3523>`_).
+- **UI**: Prevent API failures for projects on older metadata versions
+  (`#2627 <https://github.com/SwissDataScienceCenter/renku-ui/issues/2627>`_).
+
+Individual components
+~~~~~~~~~~~~~~~~~~~~~~
+
+- `renku-gateway 0.21.0 <https://github.com/SwissDataScienceCenter/renku-gateway/releases/tag/0.21.0>`_
+- `renku-python 2.6.0 <https://github.com/SwissDataScienceCenter/renku-python/releases/tag/v2.6.0>`_
+- `renku-ui 3.8.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.8.0>`_
+- `renku-ui 3.8.1 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.8.1>`_
+
+
 0.29.0
 ------
 

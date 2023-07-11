@@ -29,9 +29,9 @@ function retryRequest(url: string, service: string, limit = 10, delaySeconds = 3
 describe("Verify the infrastructure is ready", () => {
   it("Can interact with the backend components", () => {
     retryRequest("api/templates/licenses", "GitLab");
-    retryRequest("api/renku/version", "Core");
+    retryRequest("api/renku/versions", "Core");
     retryRequest("api/notebooks/version", "Notebooks");
-    retryRequest("api/kg/spec.json", "Graph");
+    retryRequest("api/kg/entities", "Graph");
     retryRequest("api/auth/login", "Gateway");
     retryRequest("ui-server/api/allows-iframe/https%3A%2F%2Fgoogle.com", "UI server");
     retryRequest("config.json", "UI client");
