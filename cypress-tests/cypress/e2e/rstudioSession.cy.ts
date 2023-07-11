@@ -17,13 +17,10 @@ const projectIdentifier = { name: projectTestConfig.projectName, namespace: user
 
 describe("Basic rstudio functionality", () => {
   before(() => {
-    Cypress.Cookies.debug(true);
-    // Save all cookies across tests
-    Cypress.Cookies.defaults({
-      preserve: (_) => true,
+    // Use a session to preserve login data
+    cy.session("login-rstudioSession", () => {
+      cy.robustLogin();
     });
-    // Register with the CI deployment
-    cy.robustLogin();
 
     // Create a project
     if (projectTestConfig.shouldCreateProject) {
@@ -38,6 +35,10 @@ describe("Basic rstudio functionality", () => {
   });
 
   beforeEach(() => {
+    // Restore the session
+    cy.session("login-rstudioSession", () => {
+      cy.robustLogin();
+    });
     cy.visitAndLoadProject(projectIdentifier);
     cy.stopAllSessionsForProject(projectIdentifier);
   });

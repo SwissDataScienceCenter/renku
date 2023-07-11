@@ -7,7 +7,7 @@ const username = Cypress.env("TEST_USERNAME");
 
 const projectTestConfig = {
   shouldCreateProject: true,
-  projectName: `test-project-${uuidv4()}`
+  projectName: `cypress-publicProject-${uuidv4().substring(16)}`
 };
 
 // ? Modify the config -- useful for debugging
@@ -30,16 +30,13 @@ function robustNavigateToProjectPage(page: string) {
 }
 
 describe("Basic public project functionality", () => {
-  Cypress.Cookies.debug(true);
   before(() => {
-    // Save all cookies across tests
-    Cypress.Cookies.defaults({
-      preserve: (_) => true,
+    // Use a session to preserve login data
+    cy.session("login-publicProject", () => {
+      cy.robustLogin();
     });
-    // Register with the CI deployment
-    cy.robustLogin();
 
-    // Create a project
+    // Create a project for private projects
     if (projectTestConfig.shouldCreateProject) {
       cy.visit("/");
       cy.createProject({ templateName: "Python", ...projectIdentifier });
@@ -52,6 +49,10 @@ describe("Basic public project functionality", () => {
   });
 
   beforeEach(() => {
+    // Restore the session
+    cy.session("login-publicProject", () => {
+      cy.robustLogin();
+    });
     cy.visitAndLoadProject(projectIdentifier);
   });
 
@@ -59,7 +60,7 @@ describe("Basic public project functionality", () => {
     // assess the project has been indexed properly -- this might take time if it was recently created
     cy.dataCy("project-navbar", true)
       .contains("a.nav-link", "Settings")
-      .should("exist")
+      .should("be.visible")
       .click();
     cy.dataCy("project-settings-knowledge-graph")
       .contains("Knowledge Graph metadata", { timeout: TIMEOUTS.vlong })
