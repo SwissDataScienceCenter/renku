@@ -6,6 +6,7 @@ import {
   generatorProjectName,
   projectUrlFromIdentifier,
 } from "../support/commands/projects";
+import { validateLogin } from "../support/commands/general";
 
 const username = Cypress.env("TEST_USERNAME");
 
@@ -43,9 +44,13 @@ function robustNavigateToProjectPage(page: string) {
 describe("Basic public project functionality", () => {
   before(() => {
     // Use a session to preserve login data
-    cy.session("login-publicProject", () => {
-      cy.robustLogin();
-    });
+    cy.session(
+      "login-publicProject",
+      () => {
+        cy.robustLogin();
+      },
+      validateLogin
+    );
 
     // Create a project for private projects
     if (projectTestConfig.shouldCreateProject) {
@@ -56,9 +61,13 @@ describe("Basic public project functionality", () => {
 
   beforeEach(() => {
     // Restore the session
-    cy.session("login-publicProject", () => {
-      cy.robustLogin();
-    });
+    cy.session(
+      "login-publicProject",
+      () => {
+        cy.robustLogin();
+      },
+      validateLogin
+    );
     cy.visitAndLoadProject(projectIdentifier);
   });
 
