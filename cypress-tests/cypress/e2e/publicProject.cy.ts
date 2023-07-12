@@ -174,7 +174,7 @@ describe("Basic public project functionality", () => {
     cy.dataCy("edit-dataset-button").last().click();
     cy.dataCy("input-keywords").type("modified{enter}");
     cy.dataCy("submit-button").click();
-    cy.contains("Editing dataset").should("be.visible");
+    cy.contains("Modifying dataset").should("be.visible");
     cy.wait("@listDatasets", { timeout: TIMEOUTS.vlong });
     cy.contains("#modified").should("be.visible");
 
@@ -206,9 +206,9 @@ describe("Basic public project functionality", () => {
       robustNavigateToProjectPage("/settings/sessions");
       cy.get("h3").contains("Session settings").should("exist");
       cy.intercept("/ui-server/api/data/resource_pools").as("getResourcePools");
-      if (waitForApis) {
+      if (waitForApis)
         cy.wait("@getConfig", { timeout: TIMEOUTS.long });
-      }
+
     };
 
     // Make sure the renku.ini is in a pristine state
