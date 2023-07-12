@@ -1,12 +1,13 @@
-import { v4 as uuidv4 } from "uuid";
 import { TIMEOUTS } from "../../config";
+import { generatorProjectName } from "../support/commands/projects";
 
 const username = Cypress.env("TEST_USERNAME");
 
 const projectTestConfig = {
   shouldCreateProject: true,
-  projectName: `test-session-${uuidv4().substring(24)}`
+  projectName: generatorProjectName("useSession")
 };
+
 
 // ? Modify the config -- useful for debugging
 // projectTestConfig.shouldCreateProject = false;
