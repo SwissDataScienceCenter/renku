@@ -17,8 +17,15 @@ const projects = {
 // projects.v9 = "anotherProjectV9";
 
 describe("Fork and update old projects", () => {
-  beforeEach(() => {
+  before(() => {
     // Use a session to preserve login data
+    cy.session("login-updateProjects", () => {
+      cy.robustLogin();
+    });
+  });
+
+  beforeEach(() => {
+    // Restore the session
     cy.session("login-updateProjects", () => {
       cy.robustLogin();
     });

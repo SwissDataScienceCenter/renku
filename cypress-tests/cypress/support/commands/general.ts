@@ -16,7 +16,7 @@ export function searchForProject(props: ProjectIdentifier, shouldExist = true) {
   if (shouldExist)
     cy.get("[data-cy='list-card-title']").contains(props.name).should("be.visible");
   else
-    cy.get("[data-cy='list-card-title']").contains(props.name).should("not.exist");
+    cy.get(props.name).should("not.exist");
 }
 
 function dataCy(value: string, exist: true) {
