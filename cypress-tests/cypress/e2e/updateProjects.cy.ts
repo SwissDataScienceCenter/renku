@@ -1,5 +1,6 @@
 import { TIMEOUTS } from "../../config";
 import { generatorProjectName } from "../support/commands/projects";
+import { validateLogin } from "../support/commands/general";
 
 const username = Cypress.env("TEST_USERNAME");
 
@@ -19,16 +20,24 @@ const projects = {
 describe("Fork and update old projects", () => {
   before(() => {
     // Use a session to preserve login data
-    cy.session("login-updateProjects", () => {
-      cy.robustLogin();
-    });
+    cy.session(
+      "login-updateProjects",
+      () => {
+        cy.robustLogin();
+      },
+      validateLogin
+    );
   });
 
   beforeEach(() => {
     // Restore the session
-    cy.session("login-updateProjects", () => {
-      cy.robustLogin();
-    });
+    cy.session(
+      "login-updateProjects",
+      () => {
+        cy.robustLogin();
+      },
+      validateLogin
+    );
   });
 
   it("Update a very old project - version and template", () => {

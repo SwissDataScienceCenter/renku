@@ -1,6 +1,14 @@
 import { TIMEOUTS } from "../../../config";
 import { ProjectIdentifier } from "./projects";
 
+export const validateLogin = {
+  validate() {
+    // Protected URLs should return a 40x http code if user is unauthorized,
+    // and by default this will cause cy.visit() to fail
+    cy.request("/ui-server/api/user");
+  }
+};
+
 export const getIframe = (selector: string) => {
   // https://github.com/cypress-io/cypress-example-recipes/blob/master/examples/blogs__iframes/cypress/support/e2e.js
   cy.log("getIframeBody");

@@ -1,5 +1,6 @@
 import { TIMEOUTS } from "../../config";
 import { generatorProjectName } from "../support/commands/projects";
+import { validateLogin } from "../support/commands/general";
 
 const username = Cypress.env("TEST_USERNAME");
 
@@ -20,9 +21,13 @@ const projectIdentifier = {
 describe("Basic public project functionality", () => {
   before(() => {
     // Use a session to preserve login data
-    cy.session("login-useSession", () => {
-      cy.robustLogin();
-    });
+    cy.session(
+      "login-useSession",
+      () => {
+        cy.robustLogin();
+      },
+      validateLogin
+    );
 
     // Create a project
     if (projectTestConfig.shouldCreateProject) {
@@ -38,9 +43,13 @@ describe("Basic public project functionality", () => {
 
   beforeEach(() => {
     // Restore the session
-    cy.session("login-useSession", () => {
-      cy.robustLogin();
-    });
+    cy.session(
+      "login-useSession",
+      () => {
+        cy.robustLogin();
+      },
+      validateLogin
+    );
     cy.visitAndLoadProject(projectIdentifier);
     cy.stopAllSessionsForProject(projectIdentifier);
   });
