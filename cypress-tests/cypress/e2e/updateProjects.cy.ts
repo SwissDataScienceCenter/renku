@@ -1,5 +1,5 @@
-import { v4 as uuidv4 } from "uuid";
 import { TIMEOUTS } from "../../config";
+import { generatorProjectName } from "../support/commands/projects";
 
 
 const username = Cypress.env("TEST_USERNAME");
@@ -7,7 +7,6 @@ const username = Cypress.env("TEST_USERNAME");
 const projects = {
   shouldFork: true,
   namespace: "renku-ui-tests",
-  v7: "renku-project-v7",
   v8: "renku-project-v8",
   v9: "renku-project-v9"
 };
@@ -26,9 +25,9 @@ describe("Fork and update old projects", () => {
     });
   });
 
-  it("Update a very old project - version and then template", () => {
+  it("Update a very old project - version and template", () => {
     // fork the project
-    const tempName = `test-project-update-v8-${uuidv4().substring(24)}`;
+    const tempName = generatorProjectName("projectUpdateV8");
     if (projects.shouldFork) {
       const forkedProject = { namespace: projects.namespace, name: projects.v8 };
       cy.visitAndLoadProject(forkedProject, true);
@@ -96,7 +95,7 @@ describe("Fork and update old projects", () => {
 
   it("Update an outdated project - verify commits have been added", () => {
     // fork the project
-    const tempName = `test-project-update-v9-${uuidv4().substring(24)}`;
+    const tempName = generatorProjectName("projectUpdateV9");
     if (projects.shouldFork) {
       const forkedProject = { namespace: projects.namespace, name: projects.v9 };
       cy.visitAndLoadProject(forkedProject);

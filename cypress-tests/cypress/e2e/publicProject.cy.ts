@@ -1,20 +1,23 @@
 import { v4 as uuidv4 } from "uuid";
-import { TIMEOUTS } from "../../config";
 
-import { projectUrlFromIdentifier } from "../support/commands/projects";
+import { TIMEOUTS } from "../../config";
+import { ProjectIdentifier, generatorProjectName, projectUrlFromIdentifier } from "../support/commands/projects";
 
 const username = Cypress.env("TEST_USERNAME");
 
 const projectTestConfig = {
   shouldCreateProject: true,
-  projectName: `cypress-publicProject-${uuidv4().substring(16)}`
+  projectName: generatorProjectName("publicProject")
 };
 
-// ? Modify the config -- useful for debugging
+// ? Uncomment to debug using an existing project
 // projectTestConfig.shouldCreateProject = false;
-// projectTestConfig.projectName = "test-project-a6b94968-d1a8-435b-96f7-6a93ec5617fc";
+// projectTestConfig.projectName = "cypress-publicproject-4ed4fb12c5e6";
 
-const projectIdentifier = { name: projectTestConfig.projectName, namespace: username };
+const projectIdentifier: ProjectIdentifier = {
+  name: projectTestConfig.projectName,
+  namespace: username
+};
 
 /**
  * Helper function to re-try clicking on a project page link when it detatches from the DOM
@@ -41,11 +44,6 @@ describe("Basic public project functionality", () => {
       cy.visit("/");
       cy.createProject({ templateName: "Python", ...projectIdentifier });
     }
-  });
-
-  after(() => {
-    if (projectTestConfig.shouldCreateProject)
-      cy.deleteProject(projectIdentifier);
   });
 
   beforeEach(() => {
@@ -90,7 +88,7 @@ describe("Basic public project functionality", () => {
     // Check the clone URLs
     const projectUrl = projectUrlFromIdentifier(projectIdentifier);
     // The clone url does not include "/projects" in it
-    const cloneSubUrl = projectUrl.substring("/projects".length);
+    const cloneSubUrl = projectUrl.substring("/projects".length).toLowerCase();
     cy.get("button").contains("Clone").should("be.visible").click();
     cy.contains("Clone with Renku")
       .should("be.visible")
@@ -145,7 +143,7 @@ describe("Basic public project functionality", () => {
     cy.intercept("/ui-server/api/renku/cache.migrations_check*", req => {
       migrationsInvoked = true;
     }).as("checkMigrations");
-    const datasetName = `test-dataset-${uuidv4()}`;
+    const datasetName = `cypress-dataset-${uuidv4().substring(24)}`;
     const datasetTitle = datasetName.replace("-", " ");
     cy.getProjectPageLink(projectIdentifier, "/datasets").click();
     // wait for migrations check to terminate
@@ -208,9 +206,8 @@ describe("Basic public project functionality", () => {
       robustNavigateToProjectPage("/settings/sessions");
       cy.get("h3").contains("Session settings").should("exist");
       cy.intercept("/ui-server/api/data/resource_pools").as("getResourcePools");
-      if (waitForApis) {
+      if (waitForApis)
         cy.wait("@getConfig", { timeout: TIMEOUTS.long });
-      }
     };
 
     // Make sure the renku.ini is in a pristine state
@@ -251,4 +248,39 @@ describe("Basic public project functionality", () => {
     cy.get(".hljs.language-ini").contains("[interactive]").should("be.visible");
     cy.get("pre.hljs").contains("cpu_request").should("not.exist");
   });
+
+  it("Can delete the project from the UI", () => {
+    const slug = projectIdentifier.namespace + "/" + projectIdentifier.name;
+    cy.intercept("DELETE", `/ui-server/api/kg/projects/${slug}`).as("deleteProject");
+
+    // Delete the project
+    cy.dataCy("project-navbar", true)
+      .contains("a.nav-link", "Settings")
+      .should("exist")
+      .click();
+    cy.dataCy("project-settings-general-delete-project")
+      .should("be.visible")
+      .find("button")
+      .contains("Delete project")
+      .should("be.visible")
+      .click();
+    cy.contains("Are you absolutely sure?");
+    cy.get("input[name=project-settings-general-delete-confirm-box]")
+      .type(slug);
+    cy.get("button")
+      .contains("Yes, delete this project")
+      .should("be.visible")
+      .should("be.enabled")
+      .click();
+    cy.wait("@deleteProject");
+
+    cy.url().should("not.contain", `/projects/${slug}`);
+    cy.get(".Toastify")
+      .contains(`Project ${slug} deleted`)
+      .should("be.visible");
+
+    // Check that the project is not listed anymore on the search page
+    cy.searchForProject(projectIdentifier, false);
+  });
+
 });

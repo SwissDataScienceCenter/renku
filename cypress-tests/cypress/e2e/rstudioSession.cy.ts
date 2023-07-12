@@ -1,19 +1,23 @@
 import { rstudioTestFuncs } from "@renku/notebooks-cypress-tests";
-import { v4 as uuidv4 } from "uuid";
+
 import { TIMEOUTS } from "../../config";
+import { ProjectIdentifier, generatorProjectName } from "../support/commands/projects";
 
 const username = Cypress.env("TEST_USERNAME");
 
 const projectTestConfig = {
   shouldCreateProject: true,
-  projectName: `test-session-${uuidv4().substring(24)}-rstudio`
+  projectName: generatorProjectName("rstudioSession")
 };
 
-// ? Modify the config -- useful for debugging
+// ? Uncomment to debug using an existing project
 // projectTestConfig.shouldCreateProject = false;
-// projectTestConfig.projectName = "test-session-4f79daad6d4e";
+// projectTestConfig.projectName = "cypress-publicproject-4ed4fb12c5e6";
 
-const projectIdentifier = { name: projectTestConfig.projectName, namespace: username };
+const projectIdentifier: ProjectIdentifier = {
+  name: projectTestConfig.projectName,
+  namespace: username
+};
 
 describe("Basic rstudio functionality", () => {
   before(() => {
