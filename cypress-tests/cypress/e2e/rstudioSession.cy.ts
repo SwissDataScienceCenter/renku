@@ -1,13 +1,16 @@
 import { rstudioTestFuncs } from "@renku/notebooks-cypress-tests";
 
 import { TIMEOUTS } from "../../config";
-import { ProjectIdentifier, generatorProjectName } from "../support/commands/projects";
+import {
+  ProjectIdentifier,
+  generatorProjectName,
+} from "../support/commands/projects";
 
 const username = Cypress.env("TEST_USERNAME");
 
 const projectTestConfig = {
   shouldCreateProject: true,
-  projectName: generatorProjectName("rstudioSession")
+  projectName: generatorProjectName("rstudioSession"),
 };
 
 // ? Uncomment to debug using an existing project
@@ -16,7 +19,7 @@ const projectTestConfig = {
 
 const projectIdentifier: ProjectIdentifier = {
   name: projectTestConfig.projectName,
-  namespace: username
+  namespace: username,
 };
 
 describe("Basic rstudio functionality", () => {
@@ -47,41 +50,45 @@ describe("Basic rstudio functionality", () => {
     cy.stopAllSessionsForProject(projectIdentifier);
   });
 
-  it("Creates a project and launches an RStudio session", { defaultCommandTimeout: TIMEOUTS.long }, () => {
-    // Waits for the image to build
-    cy.waitForImageToBuild(projectIdentifier);
+  it(
+    "Creates a project and launches an RStudio session",
+    { defaultCommandTimeout: TIMEOUTS.long },
+    () => {
+      // Waits for the image to build
+      cy.waitForImageToBuild(projectIdentifier);
 
-    // Launches a session
-    cy.startSession(projectIdentifier);
+      // Launches a session
+      cy.startSession(projectIdentifier);
 
-    // Opens the session in an iframe
-    cy.getIframe("iframe#session-iframe").within(() => {
-      rstudioTestFuncs.findExpectedElements();
-    });
+      // Opens the session in an iframe
+      cy.getIframe("iframe#session-iframe").within(() => {
+        rstudioTestFuncs.findExpectedElements();
+      });
 
-    // Launches a terminal in the session iframe
-    cy.getIframe("iframe#session-iframe").within(() => {
-      rstudioTestFuncs.launchTerminal();
-    });
-    // Runs terminal command to create a file
-    cy.getIframe("iframe#session-iframe").within(() => {
-      rstudioTestFuncs.makeFileWithTerminal("new-file.txt")();
-    });
-    // Removes the file
-    cy.getIframe("iframe#session-iframe").within(() => {
-      rstudioTestFuncs.removeFileWithTerminal("new-file.txt")();
-    });
+      // Launches a terminal in the session iframe
+      cy.getIframe("iframe#session-iframe").within(() => {
+        rstudioTestFuncs.launchTerminal();
+      });
+      // Runs terminal command to create a file
+      cy.getIframe("iframe#session-iframe").within(() => {
+        rstudioTestFuncs.makeFileWithTerminal("new-file.txt")();
+      });
+      // Removes the file
+      cy.getIframe("iframe#session-iframe").within(() => {
+        rstudioTestFuncs.removeFileWithTerminal("new-file.txt")();
+      });
 
-    // Closes the terminal
-    cy.getIframe("iframe#session-iframe").within(() => {
-      rstudioTestFuncs.closeTerminal();
-    });
-    // Finds expected start page elements again
-    cy.getIframe("iframe#session-iframe").within(() => {
-      rstudioTestFuncs.findExpectedElements();
-    });
+      // Closes the terminal
+      cy.getIframe("iframe#session-iframe").within(() => {
+        rstudioTestFuncs.closeTerminal();
+      });
+      // Finds expected start page elements again
+      cy.getIframe("iframe#session-iframe").within(() => {
+        rstudioTestFuncs.findExpectedElements();
+      });
 
-    // Stops the session
-    cy.stopSessionFromIframe();
-  });
+      // Stops the session
+      cy.stopSessionFromIframe();
+    }
+  );
 });
