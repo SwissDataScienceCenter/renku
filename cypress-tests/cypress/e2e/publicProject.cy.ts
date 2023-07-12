@@ -1,13 +1,17 @@
 import { v4 as uuidv4 } from "uuid";
 
 import { TIMEOUTS } from "../../config";
-import { ProjectIdentifier, generatorProjectName, projectUrlFromIdentifier } from "../support/commands/projects";
+import {
+  ProjectIdentifier,
+  generatorProjectName,
+  projectUrlFromIdentifier,
+} from "../support/commands/projects";
 
 const username = Cypress.env("TEST_USERNAME");
 
 const projectTestConfig = {
   shouldCreateProject: true,
-  projectName: generatorProjectName("publicProject")
+  projectName: generatorProjectName("publicProject"),
 };
 
 // ? Uncomment to debug using an existing project
@@ -16,7 +20,7 @@ const projectTestConfig = {
 
 const projectIdentifier: ProjectIdentifier = {
   name: projectTestConfig.projectName,
-  namespace: username
+  namespace: username,
 };
 
 /**
@@ -25,11 +29,15 @@ const projectIdentifier: ProjectIdentifier = {
  */
 function robustNavigateToProjectPage(page: string) {
   // Requery when the element is detatched
-  cy.getProjectPageLink(projectIdentifier, page).first().then(($el) =>
-    Cypress.dom.isDetached($el) ?
-      cy.getProjectPageLink(projectIdentifier, page) :
-      $el
-  ).first().click();
+  cy.getProjectPageLink(projectIdentifier, page)
+    .first()
+    .then(($el) =>
+      Cypress.dom.isDetached($el)
+        ? cy.getProjectPageLink(projectIdentifier, page)
+        : $el
+    )
+    .first()
+    .click();
 }
 
 describe("Basic public project functionality", () => {
@@ -132,34 +140,47 @@ describe("Basic public project functionality", () => {
     cy.contains("Files").should("exist").click();
     cy.get("div#tree-content").contains(".renku").should("exist").click();
     cy.get("div#tree-content").contains("metadata").should("exist").click();
-    cy.getProjectPageLink(projectIdentifier, "/files/blob/.renku/metadata/project").click();
-    cy.contains("\"@renku_data_type\": \"renku.domain_model.project.Project\"").should("exist");
+    cy.getProjectPageLink(
+      projectIdentifier,
+      "/files/blob/.renku/metadata/project"
+    ).click();
+    cy.contains(
+      '"@renku_data_type": "renku.domain_model.project.Project"'
+    ).should("exist");
     cy.get("div#tree-content").contains("README.md").should("exist").click();
-    cy.contains("This is a Renku project").scrollIntoView().should("be.visible");
+    cy.contains("This is a Renku project")
+      .scrollIntoView()
+      .should("be.visible");
   });
 
   it("Can can work with datasets", () => {
     let migrationsInvoked = false;
-    cy.intercept("/ui-server/api/renku/cache.migrations_check*", req => {
+    cy.intercept("/ui-server/api/renku/cache.migrations_check*", (req) => {
       migrationsInvoked = true;
     }).as("checkMigrations");
     const datasetName = `cypress-dataset-${uuidv4().substring(24)}`;
     const datasetTitle = datasetName.replace("-", " ");
     cy.getProjectPageLink(projectIdentifier, "/datasets").click();
     // wait for migrations check to terminate
-    if (migrationsInvoked)
-      cy.wait("@checkMigrations");
+    if (migrationsInvoked) cy.wait("@checkMigrations");
     // A project we just created should have no datasets
-    if (projectTestConfig.shouldCreateProject)
-      cy.contains("No datasets found for this project.", { timeout: TIMEOUTS.vlong }).should("be.visible");
+    if (projectTestConfig.shouldCreateProject) {
+      cy.contains("No datasets found for this project.", {
+        timeout: TIMEOUTS.vlong,
+      }).should("be.visible");
+    }
 
     // Create a dataset
     cy.get("#plus-dropdown").should("exist").click();
     cy.get("#navbar-dataset-new").should("exist").click();
     cy.dataCy("input-title").type(datasetTitle);
     cy.dataCy("input-keywords").type("test{enter}automated test{enter}");
-    cy.get("div.ck.ck-editor__main div.ck.ck-content").should("exist").type("This is a test dataset");
-    cy.intercept("/ui-server/api/renku/*/datasets.list?git_url=*").as("listDatasets");
+    cy.get("div.ck.ck-editor__main div.ck.ck-content")
+      .should("exist")
+      .type("This is a test dataset");
+    cy.intercept("/ui-server/api/renku/*/datasets.list?git_url=*").as(
+      "listDatasets"
+    );
     cy.dataCy("submit-button").click();
     cy.get(".progress-box").should("be.visible");
     cy.wait("@listDatasets", { timeout: TIMEOUTS.vlong });
@@ -180,7 +201,9 @@ describe("Basic public project functionality", () => {
 
     // Check that we can see the dataset
     cy.getProjectPageLink(projectIdentifier, "/datasets").click();
-    cy.dataCy("entity-description").contains("This is a test dataset").should("exist");
+    cy.dataCy("entity-description")
+      .contains("This is a test dataset")
+      .should("exist");
     cy.contains(datasetTitle).should("be.visible").click();
 
     // Delete the dataset
@@ -189,7 +212,6 @@ describe("Basic public project functionality", () => {
     cy.get(".modal").contains("Delete dataset").click();
     cy.get(".modal").contains("Deleting dataset...").should("be.visible");
   });
-
 
   it("Can view and modify sessions settings", () => {
     cy.dataCy("project-navbar").contains("Settings").should("exist").click();
@@ -206,8 +228,7 @@ describe("Basic public project functionality", () => {
       robustNavigateToProjectPage("/settings/sessions");
       cy.get("h3").contains("Session settings").should("exist");
       cy.intercept("/ui-server/api/data/resource_pools").as("getResourcePools");
-      if (waitForApis)
-        cy.wait("@getConfig", { timeout: TIMEOUTS.long });
+      if (waitForApis) cy.wait("@getConfig", { timeout: TIMEOUTS.long });
     };
 
     // Make sure the renku.ini is in a pristine state
@@ -251,7 +272,9 @@ describe("Basic public project functionality", () => {
 
   it("Can delete the project from the UI", () => {
     const slug = projectIdentifier.namespace + "/" + projectIdentifier.name;
-    cy.intercept("DELETE", `/ui-server/api/kg/projects/${slug}`).as("deleteProject");
+    cy.intercept("DELETE", `/ui-server/api/kg/projects/${slug}`).as(
+      "deleteProject"
+    );
 
     // Delete the project
     cy.dataCy("project-navbar", true)
@@ -265,8 +288,9 @@ describe("Basic public project functionality", () => {
       .should("be.visible")
       .click();
     cy.contains("Are you absolutely sure?");
-    cy.get("input[name=project-settings-general-delete-confirm-box]")
-      .type(slug);
+    cy.get("input[name=project-settings-general-delete-confirm-box]").type(
+      slug
+    );
     cy.get("button")
       .contains("Yes, delete this project")
       .should("be.visible")
@@ -282,5 +306,4 @@ describe("Basic public project functionality", () => {
     // Check that the project is not listed anymore on the search page
     cy.searchForProject(projectIdentifier, false);
   });
-
 });
