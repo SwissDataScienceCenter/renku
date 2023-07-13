@@ -3,9 +3,10 @@ import os
 from dataclasses import dataclass, field
 
 from queries import DatabaseInit, gitlab_oauth_cleanup
-from utils import gitlab_is_online, get_db_connection
+from utils import get_db_connection, gitlab_is_online
 
 logging.basicConfig(level=logging.INFO)
+
 
 @dataclass
 class Config:
@@ -41,6 +42,7 @@ class Config:
             renku_url=os.environ["RENKU_URL"],
         )
 
+
 def main():
     config = Config.from_env()
     # Wait for services to come online
@@ -51,7 +53,7 @@ def main():
         port=config.db_port,
     )
     postgres_db_connection.set_session(autocommit=True)
-    
+
     # Run queries
     logging.info("Creating the gitlab postgres database...")
     db_init = DatabaseInit(
@@ -74,11 +76,13 @@ def main():
     gitlab_db_connection.set_session(autocommit=True)
     db_init.set_connection(gitlab_db_connection)
     db_init.set_extensions_and_roles()
-    gitlab_callback_uris = " ".join([
-        f"{config.renku_url}/login/redirect/gitlab",
-        f"{config.renku_url}/api/auth/gitlab/token",
-    ])
-    # NOTE: Querying for the base url switches the request to port 443 and the service does not 
+    gitlab_callback_uris = " ".join(
+        [
+            f"{config.renku_url}/login/redirect/gitlab",
+            f"{config.renku_url}/api/auth/gitlab/token",
+        ]
+    )
+    # NOTE: Querying for the base url switches the request to port 443 and the service does not
     # expose port 443.
     gitlab_is_online(config.gitlab_url + "/help")
     with gitlab_db_connection.cursor() as curs:
@@ -95,6 +99,7 @@ def main():
                 "client_secret": config.gitlab_oauth_client_secret,
             },
         )
-    
+
+
 if __name__ == "__main__":
     main()

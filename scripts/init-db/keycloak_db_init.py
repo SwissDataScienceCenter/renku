@@ -7,6 +7,7 @@ from utils import get_db_connection
 
 logging.basicConfig(level=logging.INFO)
 
+
 @dataclass
 class Config:
     db_host: str
@@ -29,6 +30,7 @@ class Config:
             keycloak_db_password=os.environ["KEYCLOAK_DB_PASSWORD"],
         )
 
+
 def main():
     config = Config.from_env()
     postgres_db_connection = get_db_connection(
@@ -41,11 +43,11 @@ def main():
     logging.info("Creating the keycloak postgres database...")
     db_init = DatabaseInit(
         config.keycloak_db_username,
-        config.keycloak_db_name, 
+        config.keycloak_db_name,
         config.keycloak_db_password,
         postgres_db_connection,
         [],
-        config.db_admin_username
+        config.db_admin_username,
     )
     db_init.create_database()
     keycloak_db_connection = get_db_connection(
@@ -59,6 +61,7 @@ def main():
     keycloak_db_connection.set_session(autocommit=True)
     db_init.set_connection(keycloak_db_connection)
     db_init.set_extensions_and_roles()
+
 
 if __name__ == "__main__":
     main()

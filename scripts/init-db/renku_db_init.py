@@ -1,12 +1,12 @@
 import logging
 import os
 from dataclasses import dataclass, field
-from typing import Optional
 
 from queries import DatabaseInit
-from utils import get_db_connection, get_k8s_secret
+from utils import get_db_connection
 
 logging.basicConfig(level=logging.INFO)
+
 
 @dataclass
 class Config:
@@ -48,6 +48,7 @@ class Config:
             renku_db_name=os.environ["RENKU_DB_NAME"],
         )
 
+
 def main():
     config = Config.from_env()
     logging.info("Waiting for postgres connection...")
@@ -62,11 +63,11 @@ def main():
     logging.info("Creating the knowledge graph triples generator postgres database...")
     db_init = DatabaseInit(
         config.tg_db_username,
-        config.tg_db_name, 
+        config.tg_db_name,
         config.tg_db_password,
         postgres_db_connection,
         ["pg_trgm"],
-        config.db_admin_username
+        config.db_admin_username,
     )
     db_init.create_database()
     tg_conn = get_db_connection(
@@ -84,11 +85,11 @@ def main():
     logging.info("Creating the knowledge graph token repository postgres database...")
     db_init = DatabaseInit(
         config.tokenrepo_db_username,
-        config.tokenrepo_db_name, 
+        config.tokenrepo_db_name,
         config.tokenrepo_db_password,
         postgres_db_connection,
         ["pg_trgm"],
-        config.db_admin_username
+        config.db_admin_username,
     )
     db_init.create_database()
     tokenrepo_conn = get_db_connection(
@@ -102,15 +103,15 @@ def main():
     tokenrepo_conn.set_session(autocommit=True)
     db_init.set_connection(tokenrepo_conn)
     db_init.set_extensions_and_roles()
- 
+
     logging.info("Creating the knowledge grpah eventlog postgres database...")
     db_init = DatabaseInit(
         config.eventlog_db_username,
-        config.eventlog_db_name, 
+        config.eventlog_db_name,
         config.eventlog_db_password,
         postgres_db_connection,
         ["pg_trgm"],
-        config.db_admin_username
+        config.db_admin_username,
     )
     db_init.create_database()
     eventlog_conn = get_db_connection(
@@ -124,15 +125,15 @@ def main():
     eventlog_conn.set_session(autocommit=True)
     db_init.set_connection(eventlog_conn)
     db_init.set_extensions_and_roles()
-    
+
     logging.info("Creating the renku postgres database...")
     db_init = DatabaseInit(
         config.renku_db_username,
-        config.renku_db_name, 
+        config.renku_db_name,
         config.renku_db_password,
         postgres_db_connection,
         ["pg_trgm"],
-        config.db_admin_username
+        config.db_admin_username,
     )
     db_init.create_database()
     renku_conn = get_db_connection(
@@ -146,6 +147,7 @@ def main():
     renku_conn.set_session(autocommit=True)
     db_init.set_connection(renku_conn)
     db_init.set_extensions_and_roles()
+
 
 if __name__ == "__main__":
     main()
