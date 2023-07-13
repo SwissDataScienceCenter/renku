@@ -4,15 +4,33 @@ from typing import Any, List
 
 from psycopg2 import sql
 
-gitlab_oauth_cleanup = sql.SQL(
-    "DELETE FROM oauth_applications WHERE uid={client_id}; "
-    "INSERT INTO oauth_applications (name, uid, scopes, redirect_uri, secret, trusted) "
-    "VALUES ('renku-ui', {client_id}, 'api read_user read_repository read_registry openid', {redirect_uris}, {client_secret}, 'true')"
-).format(
-    client_id=sql.Placeholder("client_id"),
-    redirect_uris=sql.Placeholder("redirect_uris"),
-    client_secret=sql.Placeholder("client_secret"),
-)
+
+@dataclass
+class GitlabOauthDatabaseCleanup:
+    client_id: str
+    client_secret: str = field(repr=False)
+    redirect_uris: List[str]
+    connection: Any
+
+    def run(self):
+        with self.connection.cursor() as curs:
+            query = sql.SQL(
+                "DELETE FROM oauth_applications WHERE uid={client_id}; "
+                "INSERT INTO oauth_applications (name, uid, scopes, redirect_uri, secret, trusted) "
+                "VALUES ('renku-ui', {client_id}, 'api read_user read_repository read_registry openid', {redirect_uris}, {client_secret}, 'true')"
+            ).format(
+                client_id=sql.Placeholder("client_id"),
+                redirect_uris=sql.Placeholder("redirect_uris"),
+                client_secret=sql.Placeholder("client_secret"),
+            )
+            curs.execute(
+                query,
+                {
+                    "client_id": self.client_id,
+                    "client_secret": self.client_secret,
+                    "redirect_uris": " ".join(self.redirect_uris),
+                },
+            )
 
 
 @dataclass

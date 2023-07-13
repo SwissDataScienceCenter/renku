@@ -2,7 +2,7 @@ import logging
 import os
 from dataclasses import dataclass, field
 
-from queries import DatabaseInit, gitlab_oauth_cleanup
+from queries import DatabaseInit, GitlabOauthDatabaseCleanup
 from utils import get_db_connection, gitlab_is_online
 
 logging.basicConfig(level=logging.INFO)
@@ -13,14 +13,14 @@ class Config:
     db_host: str
     db_admin_username: str
     db_admin_password: str = field(repr=False)
-    gitlab_oauth_client_secret: str = field(repr=False)
     gitlab_db_username: str
     gitlab_db_name: str
     gitlab_db_password: str = field(repr=False)
     gitlab_url: str
     renku_url: str
-    db_port: int = 5432
+    gitlab_oauth_client_secret: str = field(repr=False)
     gitlab_oauth_client_id: str = "renku-ui"
+    db_port: int = 5432
 
     def __post_init__(self):
         self.renku_url = self.renku_url.rstrip("/")
@@ -76,29 +76,18 @@ def main():
     gitlab_db_connection.set_session(autocommit=True)
     db_init.set_connection(gitlab_db_connection)
     db_init.set_extensions_and_roles()
-    gitlab_callback_uris = " ".join(
-        [
-            f"{config.renku_url}/login/redirect/gitlab",
-            f"{config.renku_url}/api/auth/gitlab/token",
-        ]
-    )
     # NOTE: Querying for the base url switches the request to port 443 and the service does not
     # expose port 443.
     gitlab_is_online(config.gitlab_url + "/help")
-    with gitlab_db_connection.cursor() as curs:
-        logging.info(f"Cleaning up client id {config.gitlab_oauth_client_id} in gitlab oauth applications...")
-        logging.info(
-            f"Setting up client id {config.gitlab_oauth_client_id} and "
-            f"callback uris {gitlab_callback_uris} in gitlab oauth applications..."
-        )
-        curs.execute(
-            gitlab_oauth_cleanup,
-            {
-                "client_id": config.gitlab_oauth_client_id,
-                "redirect_uris": gitlab_callback_uris,
-                "client_secret": config.gitlab_oauth_client_secret,
-            },
-        )
+    GitlabOauthDatabaseCleanup(
+        config.gitlab_oauth_client_id,
+        config.gitlab_oauth_client_secret,
+        [
+            f"{config.renku_url}/login/redirect/gitlab",
+            f"{config.renku_url}/api/auth/gitlab/token",
+        ],
+        gitlab_db_connection,
+    ).run()
 
 
 if __name__ == "__main__":
