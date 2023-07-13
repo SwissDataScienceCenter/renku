@@ -1,0 +1,90 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: "{{ .Release.Name }}-init-postgres-renku-rev{{ .Release.Revision }}-{{ randAlphaNum 5 | lower }}"
+  labels:
+    app: postgres-setup
+    heritage: {{ .Release.Service }}
+    release: {{ .Release.Name }}
+    chart: {{ template "renku.chart" . }}
+spec:
+  template:
+    metadata:
+      name: {{ .Release.Name }}-init-postgres-renku
+      labels:
+        app: postgres-setup
+        heritage: {{ .Release.Service }}
+        release: {{ .Release.Name }}
+        chart: {{ template "renku.chart" . }}
+    spec:
+      restartPolicy: Never
+      containers:
+        - name: initialize-postgres-renku
+          image: "{{ .Values.initDb.image.repository }}:{{ .Values.initDb.image.tag }}"
+          args: [ "renku_db_init.py" ]
+          securityContext:
+            runAsUser: 1000
+            runAsGroup: 1000
+            allowPrivilegeEscalation: false
+            runAsNonRoot: true
+          env:
+            - name: DB_HOST
+              value: {{ template "postgresql.fullname" . }}
+            - name: DB_ADMIN_USERNAME
+              {{ if .Values.global.externalServices.postgresql.enabled }}
+              value: {{ .Values.global.externalServices.postgresql.username }}
+              {{- else -}}
+              value: {{ .Values.postgresql.postgresqlUsername }}
+              {{- end }}
+            {{- if not .Values.global.externalServices.postgresql.enabled }}
+            - name: DB_ADMIN_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: "{{ template "postgresql.fullname" . }}"
+                  key: postgresql-password
+            {{- else if .Values.global.externalServices.postgresql.password }}
+            - name: DB_ADMIN_PASSWORD
+              value: {{ .Values.global.externalServices.postgresql.password }}
+            {{- else if .Values.global.externalServices.postgresql.existingSecret }}
+            - name: DB_ADMIN_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.global.externalServices.postgresql.existingSecret }}
+                  key: postgresql-password
+            {{- end }}
+            - name: EVENTLOG_DB_USERNAME
+              value: {{ .Values.global.graph.dbEventLog.postgresUser | quote }}
+            - name: EVENTLOG_DB_NAME
+              value: event_log
+            - name: EVENTLOG_DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "renku.fullname" . }}-graph-db-postgres
+                  key: graph-dbEventLog-postgresPassword
+            - name: TG_DB_USERNAME
+              value: {{ .Values.global.graph.triplesGenerator.postgresUser | quote }}
+            - name: TG_DB_NAME
+              value: triples_generator
+            - name: TG_DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "renku.fullname" . }}-graph-tg-postgres
+                  key: graph-triplesGenerator-postgresPassword
+            - name: TOKENREPO_DB_USERNAME
+              value: {{ .Values.global.graph.tokenRepository.postgresUser | quote }}
+            - name: TOKENREPO_DB_NAME
+              value: projects_tokens
+            - name: TOKENREPO_DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "renku.fullname" . }}-graph-token-postgres
+                  key: graph-tokenRepository-postgresPassword
+            - name: RENKU_DB_USERNAME
+              value: {{ .Values.global.db.common.username | quote }}
+            - name: RENKU_DB_NAME
+              value: renku
+            - name: RENKU_DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.global.db.common.passwordSecretName }}
+                  key: password
