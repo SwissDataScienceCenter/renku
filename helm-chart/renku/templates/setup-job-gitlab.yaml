@@ -61,7 +61,7 @@ spec:
                   name: {{ template "renku.fullname" . }}
                   key: gateway-gitlab-client-secret
             - name: GITLAB_OAUTH_CLIENT_ID
-              value: renku-ui
+              value: {{ .Values.global.gateway.gitlabClientId | quote }}
             - name: GITLAB_DB_USERNAME
               value: {{ .Values.global.gitlab.postgresUser | quote }}
             - name: GITLAB_DB_NAME
