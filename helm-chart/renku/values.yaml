@@ -178,6 +178,8 @@ ingress:
   ## Enables the creation of an ingress
   enabled: false
 
+  className: "" # nginx
+
   ## Annotations for the created ingress
   annotations:
     ## The ingress class
