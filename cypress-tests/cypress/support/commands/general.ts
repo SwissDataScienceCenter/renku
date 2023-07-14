@@ -3,8 +3,7 @@ import { ProjectIdentifier } from "./projects";
 
 export const validateLogin = {
   validate() {
-    // Protected URLs should return a 40x http code if user is unauthorized,
-    // and by default this will cause cy.visit() to fail
+    // This returns 401 when not properly logged in
     cy.request("/ui-server/api/user");
   }
 };
