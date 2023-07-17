@@ -49,7 +49,7 @@ class FreeTextDatasetSearchSpec
     `search for dataset with phrase`(commonWord, orderBy = Title)
 
     Then("the expected datasets should be shown")
-    val expectedDatasets = List(dataset1Name, dataset2Name).sorted.map(_.toString).reverse
+    val expectedDatasets = List(dataset1Name, dataset2Name).sorted.map(_.toString).map(_.replace(" ", "-"))
     `try few times with page reload` { _ =>
       val foundDatasetLinks = DatasetsPage.searchResultLinks.map(_.getText)
       foundDatasetLinks.filter(expectedDatasets.contains) shouldBe expectedDatasets
