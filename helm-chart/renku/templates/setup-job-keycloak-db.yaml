@@ -1,0 +1,65 @@
+{{- if .Values.keycloakx.enabled }}
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: "{{ .Release.Name }}-init-postgres-keycloak-rev{{ .Release.Revision }}-{{ randAlphaNum 5 | lower }}"
+  labels:
+    app: postgres-setup
+    heritage: {{ .Release.Service }}
+    release: {{ .Release.Name }}
+    chart: {{ template "renku.chart" . }}
+spec:
+  template:
+    metadata:
+      name: {{ .Release.Name }}-init-postgres-keycloak
+      labels:
+        app: postgres-setup
+        heritage: {{ .Release.Service }}
+        release: {{ .Release.Name }}
+        chart: {{ template "renku.chart" . }}
+    spec:
+      restartPolicy: Never
+      containers:
+        - name: initialize-postgres-keycloak
+          image: "{{ .Values.initDb.image.repository }}:{{ .Values.initDb.image.tag }}"
+          args: [ "keycloak_db_init.py" ]
+          securityContext:
+            runAsUser: 1000
+            runAsGroup: 1000
+            allowPrivilegeEscalation: false
+            runAsNonRoot: true
+          env:
+            - name: DB_HOST
+              value: {{ template "postgresql.fullname" . }}
+            - name: DB_ADMIN_USERNAME
+              {{ if .Values.global.externalServices.postgresql.enabled }}
+              value: {{ .Values.global.externalServices.postgresql.username }}
+              {{- else -}}
+              value: {{ .Values.postgresql.postgresqlUsername }}
+              {{- end }}
+            {{- if not .Values.global.externalServices.postgresql.enabled }}
+            - name: DB_ADMIN_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: "{{ template "postgresql.fullname" . }}"
+                  key: postgresql-password
+            {{- else if .Values.global.externalServices.postgresql.password }}
+            - name: DB_ADMIN_PASSWORD
+              value: {{ .Values.global.externalServices.postgresql.password }}
+            {{- else if .Values.global.externalServices.postgresql.existingSecret }}
+            - name: DB_ADMIN_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.global.externalServices.postgresql.existingSecret }}
+                  key: postgresql-password
+            {{- end }}
+            - name: KEYCLOAK_DB_USERNAME
+              value: {{ .Values.global.keycloak.postgresUser | quote }}
+            - name: KEYCLOAK_DB_NAME
+              value: {{ .Values.global.keycloak.postgresDatabase | quote }}
+            - name: KEYCLOAK_DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: renku-keycloak-postgres
+                  key: KC_DB_PASSWORD
+{{- end }}
