@@ -52,7 +52,7 @@ User-Facing Changes
 
 - 〽️ **UI**: Support common R file extensions
   (`#2638 <https://github.com/SwissDataScienceCenter/renku-ui/issues/2638>`_).
-- **Renku Core Service**: Isolates core-service cache per instance, improves cache cleanup.
+- 🛠 **Renku Core Service**: Isolates core-service cache per instance, improves cache cleanup.
   (`#3555 <https://github.com/SwissDataScienceCenter/renku-python/pull/3555>`_).
 
 Internal Changes
