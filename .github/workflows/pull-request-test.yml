@@ -172,11 +172,10 @@ jobs:
           TEST_LAST_NAME: Bot
           TEST_PASSWORD: ${{ secrets.RENKU_BOT_DEV_PASSWORD }}
           TEST_USERNAME: renku-test
-          E2E_TEST: ${{ matrix.tests }}
         with:
           browser: chrome
-          command: npm run parallel-run
           install: false
+          spec: ${{ env.E2E_FOLDER }}${{ matrix.tests }}${{ env.E2E_SUFFIX }}
           working-directory: cypress-tests
       - uses: actions/upload-artifact@v3
         if: failure()
