@@ -104,6 +104,7 @@ GraphQL
 graphviz
 hexsha
 hostname
+hotfix
 https
 hyperkit
 hypervisor
