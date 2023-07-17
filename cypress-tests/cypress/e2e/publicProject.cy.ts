@@ -52,7 +52,7 @@ describe("Basic public project functionality", () => {
       validateLogin
     );
 
-    // Create a project for private projects
+    // Create a project for the local spec
     if (projectTestConfig.shouldCreateProject) {
       cy.visit("/");
       cy.createProject({ templateName: "Python", ...projectIdentifier });
