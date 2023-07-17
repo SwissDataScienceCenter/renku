@@ -34,7 +34,7 @@ Create chart name and version as used by the chart label.
 {{/*
 Define http scheme
 */}}
-{{- define "http" -}}
+{{- define "renku.http" -}}
 {{- if .Values.global.useHTTPS -}}
 https
 {{- else -}}
@@ -71,10 +71,6 @@ Define subcharts full names
 
 {{- define "notebooks.fullname" -}}
 {{- printf "%s-%s" .Release.Name "notebooks" | replace "+" "_" | trunc 63 | trimSuffix "-" -}}
-{{- end -}}
-
-{{- define "gateway.fullname" -}}
-{{- printf "%s-%s" .Release.Name "gateway" | replace "+" "_" | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 
 {{- define "webhookService.fullname" -}}
@@ -145,5 +141,21 @@ KC_DB_URL_HOST: {{ (include "postgresql.fullname" .) | b64enc | quote }}
 KC_DB_URL_DATABASE: {{ .Values.global.keycloak.postgresDatabase | b64enc | quote }}
 KC_DB_USERNAME: {{ .Values.global.keycloak.postgresUser | b64enc | quote }}
 KC_DB_PASSWORD: {{ default (randAlphaNum 64) .Values.global.keycloak.postgresPassword.value | b64enc | quote }}
+{{- end -}}
+{{- end -}}
+
+{{- define "renku.gitlabUrl" -}}
+{{ .Values.graph.gitlab.url | default (printf "%s://%s/gitlab" (include "renku.http" .) .Values.global.renku.domain) | quote }}
+{{- end -}}
+
+{{- define "renku.baseUrl" -}}
+{{ printf "%s://%s" (include "gateway.protocol" .) .Values.global.renku.domain }}
+{{- end -}}
+
+{{- define "renku.keycloakUrl" -}}
+{{- if .Values.keycloakx.enabled -}} 
+{{- printf "%s://%s/auth" (include "gateway.protocol" .) .Values.global.renku.domain -}}
+{{- else -}}
+{{- .Values.global.keycloak.url -}}
 {{- end -}}
 {{- end -}}

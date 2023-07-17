@@ -14,10 +14,6 @@ dependencies:
   alias: notebooks
   repository: "https://swissdatasciencecenter.github.io/helm-charts/"
   version: 1.16.0
-- name: renku-gateway
-  alias: gateway
-  repository: "https://swissdatasciencecenter.github.io/helm-charts/"
-  version: 0.21.1
 - name: gitlab
   repository: "https://swissdatasciencecenter.github.io/helm-charts/"
   version: 0.8.0

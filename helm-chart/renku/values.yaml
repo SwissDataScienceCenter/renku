@@ -32,6 +32,8 @@ global:
     user: admin
     password:
       value:
+    ## Fill in the keycloak url below if you are not using the renku-bundled keycloak instance
+    url: 
   gateway:
     ## The client secret for the renku client application registered in keycloak.
     clientSecret: # use `uuidgen -r`
@@ -874,11 +876,92 @@ gateway:
   allowOrigin:
   # - http://example.com
   # - https://foo.example.com
-  ingress:
+  
+  replicaCount: 1
+
+  ## Set to true to enable the developement mode. This has negative security
+  ## implications and should never be done in a production setting.
+  development: false
+
+  ## To protect the backend services from an excessive amount of API calls
+  ## issued by one client, one can enforce rate limits here. The limits apply
+  ## based on the IP address of the client.
+  rateLimits:
+    ## General rate limit, applies to all calls combined.
+    general:
+      enabled: false
+      ## average rate units are requests per second
+      average: 20
+      burst: 100
+
+  ## For production deployment, you will need to define the secret key.
+  ## This is a random string, used for cryptographic operations on cookies and sensitive information.
+  ## Use `openssl rand -hex 32`.
+  secretKey:
+
+  image:
+    ## Define the image for the auth middleware
+    auth:
+      name: renku/renku-gateway
+      repository: renku/renku-gateway
+      tag: "0.21.1"
+      pullPolicy: IfNotPresent
+
+  service:
+    type: ClusterIP
+    port: 80
+
+  resources:
+    {}
+    # We usually recommend not to specify default resources and to leave this as a conscious
+    # choice for the user. This also increases chances charts run on environments with little
+    # resources, such as Minikube. If you do want to specify resources, uncomment the following
+    # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+    # limits:
+    #  cpu: 100m
+    #  memory: 128Mi
+    # requests:
+    #  cpu: 100m
+    #  memory: 128Mi
+
+  # GitLab has introduced a new logout behavior in 12.7.0
+  # which was initially broken and fixed in 12.9.0.
+  # Set this to 'true' for versions < 12.7.0, leave it to
+  # 'false' for versions >= 12.9.0.
+  oldGitLabLogout: false
+
+  # For deployments with an external GitLab instance, we don't want to terminate
+  # a GitLab session when users log out from Renku. By default, we assume that a
+  # dedicated GitLab instance is deployed, so, logging out from Renku should
+  # trigger a logout from GitLab.
+  logoutGitLabUponRenkuLogout: true
+
+  # sentry configuration
+  sentry:
     enabled: false
-  ## Uncomment this if you are using a GitLab version
-  ## prior to 12.7.0.
-  # oldGitLabLogout: true
+    dsn:
+    environment:
+    sampleRate: 0.1
+
+  reverseProxy:
+    image:
+      name: renku/renku-revproxy
+      repository: renku/renku-revproxy
+      tag: "0.21.1"
+      pullPolicy: IfNotPresent
+    metrics:
+      enabled: true
+      port: 8765
+    replicaCount: 2
+    podAnnotations: {}
+    resources: {}
+    autoscaling:
+      enabled: false
+      minReplicas: 2
+      maxReplicas: 5
+      targetMemoryUtilizationPercentage: 75
+      targetCPUUtilizationPercentage: 75
+    updateStrategy: {}
 
 ## Configuration for renku-graph
 graph:

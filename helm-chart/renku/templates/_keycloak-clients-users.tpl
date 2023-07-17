@@ -6,13 +6,13 @@ Define clients and users for Keycloak
 [
   {
     "clientId": "renku",
-    "baseUrl": "{{ template "http" . }}://{{ .Values.global.renku.domain }}",
+    "baseUrl": "{{ template "renku.http" . }}://{{ .Values.global.renku.domain }}",
     "secret": "{{ required "Fill in .Values.global.gateway.clientSecret with `uuidgen -r`" .Values.global.gateway.clientSecret }}",
     "redirectUris": [
-        "{{ template "http" . }}://{{ .Values.global.renku.domain }}/*"
+        "{{ template "renku.http" . }}://{{ .Values.global.renku.domain }}/*"
     ],
     "webOrigins": [
-        "{{ template "http" . }}://{{ .Values.global.renku.domain }}/*"
+        "{{ template "renku.http" . }}://{{ .Values.global.renku.domain }}/*"
     ],
     "protocolMappers": [{
       "name": "renku audience for renku",
@@ -29,7 +29,7 @@ Define clients and users for Keycloak
   },
   {
     "clientId": "renku-cli",
-    "baseUrl": "{{ template "http" . }}://{{ .Values.global.renku.domain }}",
+    "baseUrl": "{{ template "renku.http" . }}://{{ .Values.global.renku.domain }}",
     "secret": "{{ required "Fill in .Values.global.gateway.cliClientSecret with `uuidgen -r`" .Values.global.gateway.cliClientSecret }}",
     "publicClient": true,
     "attributes": {
@@ -38,10 +38,10 @@ Define clients and users for Keycloak
       "oauth2.device.polling.interval": "5"
     },
     "redirectUris": [
-        "{{ template "http" . }}://{{ .Values.global.renku.domain }}/*"
+        "{{ template "renku.http" . }}://{{ .Values.global.renku.domain }}/*"
     ],
     "webOrigins": [
-        "{{ template "http" . }}://{{ .Values.global.renku.domain }}/*"
+        "{{ template "renku.http" . }}://{{ .Values.global.renku.domain }}/*"
     ],
     "protocolMappers": [{
       "name": "renku audience for renku cli",
@@ -58,13 +58,13 @@ Define clients and users for Keycloak
   },
   {
     "clientId": "renku-ui",
-    "baseUrl": "{{ template "http" . }}://{{ .Values.global.renku.domain }}",
+    "baseUrl": "{{ template "renku.http" . }}://{{ .Values.global.renku.domain }}",
     "secret": "{{ required "Fill in .Values.global.uiserver.clientSecret with `uuidgen -r`" .Values.global.uiserver.clientSecret }}",
     "redirectUris": [
-        "{{ template "http" . }}://{{ .Values.global.renku.domain }}/*"
+        "{{ template "renku.http" . }}://{{ .Values.global.renku.domain }}/*"
     ],
     "webOrigins": [
-        "{{ template "http" . }}://{{ .Values.global.renku.domain }}/*"
+        "{{ template "renku.http" . }}://{{ .Values.global.renku.domain }}/*"
     ],
     "protocolMappers": [{
       "name": "renku audience for renku ui server",
@@ -81,13 +81,13 @@ Define clients and users for Keycloak
   },
   {
     "clientId": "{{ .Values.notebooks.oidc.clientId }}",
-    "baseUrl": "{{ template "http" . }}://{{ .Values.global.renku.domain }}",
+    "baseUrl": "{{ template "renku.http" . }}://{{ .Values.global.renku.domain }}",
     "secret": "{{ required "Fill in .Values.notebooks.oidc.clientSecret with `uuidgen -r`" .Values.notebooks.oidc.clientSecret }}",
     "redirectUris": [
-        "{{ template "http" . }}://{{ .Values.global.renku.domain }}/*"
+        "{{ template "renku.http" . }}://{{ .Values.global.renku.domain }}/*"
     ],
     "webOrigins": [
-        "{{ template "http" . }}://{{ .Values.global.renku.domain }}/*"
+        "{{ template "renku.http" . }}://{{ .Values.global.renku.domain }}/*"
     ],
     "protocolMappers": [{
       "name": "renku audience for renku",
@@ -105,12 +105,12 @@ Define clients and users for Keycloak
   {
     "clientId": "swagger",
     "publicClient": true,
-    "baseUrl": "{{ template "http" . }}://{{ .Values.global.renku.domain }}",
+    "baseUrl": "{{ template "renku.http" . }}://{{ .Values.global.renku.domain }}",
     "redirectUris": [
-        "{{ template "http" . }}://{{ .Values.global.renku.domain }}/*"
+        "{{ template "renku.http" . }}://{{ .Values.global.renku.domain }}/*"
     ],
     "webOrigins": [
-        "{{ template "http" . }}://{{ .Values.global.renku.domain }}/*"
+        "{{ template "renku.http" . }}://{{ .Values.global.renku.domain }}/*"
     ],
     "attributes": {
         "pkce.code.challenge.method": "S256"
@@ -132,10 +132,10 @@ Define clients and users for Keycloak
   {{- if .Values.gitlab.enabled -}}
   ,{
     "clientId": "gitlab",
-    "baseUrl": "{{ template "http" . }}://{{ .Values.global.renku.domain }}/gitlab",
+    "baseUrl": "{{ template "renku.http" . }}://{{ .Values.global.renku.domain }}/gitlab",
     "secret": "{{ required "Fill in .Values.global.gitlab.clientSecret with `uuidgen -r`" .Values.global.gitlab.clientSecret }}",
     "redirectUris": [
-      "{{ template "http" . }}://{{ .Values.global.renku.domain }}/gitlab/users/auth/oauth2_generic/callback"
+      "{{ template "renku.http" . }}://{{ .Values.global.renku.domain }}/gitlab/users/auth/oauth2_generic/callback"
     ],
     "webOrigins": []
   }
