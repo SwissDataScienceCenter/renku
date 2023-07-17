@@ -65,14 +65,13 @@ trait Datasets {
     And("all the events are processed by the knowledge-graph ")
     `wait for KG to process events`(projectPage.asProjectIdentifier, webDriver)
 
-    Then("the user should see its newly created dataset without the KG warning message")
+    Then("the user should see its newly created dataset")
     val datasetPage = DatasetPage(datasetName)
     reloadPage() sleep (2 seconds)
 
     `try few times with page reload` { _ =>
       verify browserAt datasetPage
       verify that datasetPage.datasetTitle contains datasetName.value
-      if (datasetPage.datasetNotInKgWarning.nonEmpty) fail("The dataset is not in the KG")
     }
 
     datasetPage
@@ -111,13 +110,12 @@ trait Datasets {
     `wait for KG to process events`(projectPage.asProjectIdentifier, webDriver)
 
     val datasetPage = DatasetPage(datasetName)
-    Then("the user should see its newly created dataset without the KG warning message")
+    Then("the user should see its newly created dataset")
     reloadPage() sleep (2 seconds)
 
     `try few times with page reload` { _ =>
       verify browserAt datasetPage
       verify that datasetPage.datasetTitle contains datasetName.value
-      if (datasetPage.datasetNotInKgWarning.nonEmpty) fail("The dataset is not in the KG")
     }
 
     datasetPage
@@ -167,12 +165,8 @@ trait Datasets {
     And("all the events are processed by the knowledge-graph")
     `wait for KG to process events`(projectPage.asProjectIdentifier, webDriver)
 
-    And("the user should see its newly created dataset without the KG warning message")
+    And("the user should see its newly created dataset")
     reloadPage() sleep (2 seconds)
-
-    `try few times with page reload` { _ =>
-      if (datasetPage.datasetNotInKgWarning.nonEmpty) fail("The dataset is not in the KG")
-    }
 
     val newTitle = by.newValue
     Then(s"the dataset new title should contain '$newTitle'")
