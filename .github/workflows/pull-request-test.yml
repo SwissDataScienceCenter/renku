@@ -144,24 +144,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - uses: cypress-io/github-action@v5
-        name: Verify infrastructure for Cypress acceptance tests
-        id: cypress-tests-preparation
-        env:
-          BASE_URL: https://ci-renku-${{ github.event.number }}.dev.renku.ch
-          E2E_FOLDER: "cypress/e2e/"
-          E2E_SUFFIX: ".cy.ts"
-          TEST_EMAIL: renku@datascience.ch
-          TEST_FIRST_NAME: Renku
-          TEST_LAST_NAME: Bot
-          TEST_PASSWORD: ${{ secrets.RENKU_BOT_DEV_PASSWORD }}
-          TEST_USERNAME: renku-test
-        with:
-          browser: chrome
-          install: true
-          spec: ${{ env.E2E_FOLDER }}verifyInfrastructure${{ env.E2E_SUFFIX }}
-          working-directory: cypress-tests
-      - uses: cypress-io/github-action@v5
-        name: Run Cypress acceptance tests in parallel
+        name: Run Cypress acceptance tests
         id: cypress-acceptance-tests
         env:
           BASE_URL: https://ci-renku-${{ github.event.number }}.dev.renku.ch
@@ -174,8 +157,9 @@ jobs:
           TEST_USERNAME: renku-test
         with:
           browser: chrome
-          install: false
-          spec: ${{ env.E2E_FOLDER }}${{ matrix.tests }}${{ env.E2E_SUFFIX }}
+          spec: |
+            ${{ env.E2E_FOLDER }}verifyInfrastructure${{ env.E2E_SUFFIX }}
+            ${{ env.E2E_FOLDER }}${{ matrix.tests }}${{ env.E2E_SUFFIX }}
           working-directory: cypress-tests
       - uses: actions/upload-artifact@v3
         if: failure()
