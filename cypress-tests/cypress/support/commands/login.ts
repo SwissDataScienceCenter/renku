@@ -16,7 +16,7 @@ const register = (email: string, password: string, firstName?: string, lastName?
   cy.visit("/login");
 
   // ? wait to be assess whether tokens were refreshed automatically or we really need to register
-  cy.wait(10000); // eslint-disable-line cypress/no-unnecessary-waiting
+  cy.wait(1000); // eslint-disable-line cypress/no-unnecessary-waiting
   cy.request({ failOnStatusCode: false, url: "ui-server/api/user" }).then((resp) => {
     if (resp.status === 200)
       return;
