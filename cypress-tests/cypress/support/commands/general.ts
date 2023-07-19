@@ -1,4 +1,12 @@
 import { TIMEOUTS } from "../../../config";
+import { ProjectIdentifier } from "./projects";
+
+export const validateLogin = {
+  validate() {
+    // This returns 401 when not properly logged in
+    cy.request("/ui-server/api/user");
+  }
+};
 
 export const getIframe = (selector: string) => {
   // https://github.com/cypress-io/cypress-example-recipes/blob/master/examples/blogs__iframes/cypress/support/e2e.js
@@ -9,14 +17,13 @@ export const getIframe = (selector: string) => {
     .its("0.contentDocument").then(cy.wrap);
 };
 
-export type SearchForProjectProps = {
-  name: string,
-  namespace: string
-}
-export function searchForProject(props: SearchForProjectProps) {
+export function searchForProject(props: ProjectIdentifier, shouldExist = true) {
   cy.visit("/search");
   cy.get("input[placeholder='Search...']").should("be.visible").type(props.name).type("{enter}");
-  cy.get("[data-cy='list-card-title']").contains(props.name).should("be.visible");
+  if (shouldExist)
+    cy.get("[data-cy='list-card-title']").contains(props.name).should("be.visible");
+  else
+    cy.get(props.name).should("not.exist");
 }
 
 function dataCy(value: string, exist: true) {
@@ -37,7 +44,7 @@ declare global {
     interface Chainable {
       dataCy(value: string, exist?: boolean);
       getIframe(selector: string): Chainable<unknown>;
-      searchForProject(props: SearchForProjectProps);
+      searchForProject(props: ProjectIdentifier, shouldExist?: boolean);
     }
   }
 }

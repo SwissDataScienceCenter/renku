@@ -1,3 +1,5 @@
+import { v4 as uuidv4 } from "uuid";
+
 import { TIMEOUTS } from "../../../config";
 
 // Helper functions
@@ -7,11 +9,17 @@ type ProjectIdentifier = {
   namespace?: string,
 }
 
+export function generatorProjectName(name: string): string {
+  if (!name)
+    throw new Error("Project name cannot be empty");
+  return `cypress-${name.toLowerCase()}-${uuidv4().substring(24)}`;
+}
+
 function fullProjectIdentifier(identifier: ProjectIdentifier): Required<ProjectIdentifier> {
   return { namespace: Cypress.env("TEST_USERNAME"), ...identifier };
 }
 
-function projectUrlFromIdentifier(id: Required<ProjectIdentifier>) {
+function projectUrlFromIdentifier(id: ProjectIdentifier) {
   return `/projects/${id.namespace}/${id.name}`;
 }
 
@@ -95,7 +103,7 @@ function visitAndLoadProject(identifier: ProjectIdentifier, skipOutdated = false
   cy.intercept("/ui-server/api/user").as("getUser");
   cy.intercept("/ui-server/api/renku/*/datasets.list*").as("getDatasets");
   let versionInvoked = false;
-  cy.intercept("/ui-server/api/renku/renku/version", req => { versionInvoked = true; }).as("getVersion");
+  cy.intercept("/ui-server/api/renku/versions", req => { versionInvoked = true; }).as("getVersion");
   cy.visitProject(identifier);
   cy.wait("@getUser", { timeout: TIMEOUTS.long });
   if (versionInvoked)
