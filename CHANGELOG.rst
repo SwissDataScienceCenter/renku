@@ -3,19 +3,19 @@
 0.32.0
 ------
 
-Renku ``0.32.0`` introduces new features as well as bug fixes for the KG services. 
+Renku ``0.32.0`` introduces improvements and new features in the KG services, thus enhancing KG overall performance. 
 
 User-Facing Changes
 ~~~~~~~~~~~~~~~~~~~
 
 **🌟 New Features**
 
-- **KG**: ``updatedAt`` renamed to ``dateModified`` on the Project Details API (`#1582 <https://github.com/SwissDataScienceCenter/renku-graph/issues/1582>`_).
+- 🔁 **KG**: ``updatedAt`` renamed to ``dateModified`` on the Project Details API (`#1582 <https://github.com/SwissDataScienceCenter/renku-graph/issues/1582>`_).
 
 
 **✨ Improvements**
 
-- **KG**: Improved performance of the Project Status API (`#1554 <https://github.com/SwissDataScienceCenter/renku-graph/issues/1554>`_).
+- 📖 **KG**: Improved performance of the Project Status API (`#1554 <https://github.com/SwissDataScienceCenter/renku-graph/issues/1554>`_).
 
 Internal Changes
 ~~~~~~~~~~~~~~~~
