@@ -1,15 +1,14 @@
-import { v4 as uuidv4 } from "uuid";
 import { TIMEOUTS } from "../../config";
-
+import { generatorProjectName } from "../support/commands/projects";
+import { validateLogin } from "../support/commands/general";
 
 const username = Cypress.env("TEST_USERNAME");
 
 const projects = {
   shouldFork: true,
   namespace: "renku-ui-tests",
-  v7: "renku-project-v7",
   v8: "renku-project-v8",
-  v9: "renku-project-v9"
+  v9: "renku-project-v9",
 };
 
 // ? to simplify debugging, you can change `shouldFork` to false to use the projects directly instead of forking.
@@ -20,159 +19,201 @@ const projects = {
 
 describe("Fork and update old projects", () => {
   before(() => {
-    // Save all cookies across tests
-    Cypress.Cookies.defaults({
-      preserve: (_) => true,
-    });
-    // Register and login.
-    cy.robustLogin();
+    // Use a session to preserve login data
+    cy.session(
+      "login-updateProjects",
+      () => {
+        cy.robustLogin();
+      },
+      validateLogin
+    );
   });
 
-  it("Update a very old project - version and then template", () => {
+  beforeEach(() => {
+    // Restore the session
+    cy.session(
+      "login-updateProjects",
+      () => {
+        cy.robustLogin();
+      },
+      validateLogin
+    );
+  });
+
+  it("Update a very old project - version and template", () => {
     // fork the project
-    const tempName = `test-project-update-v8-${uuidv4().substring(24)}`;
+    const tempName = generatorProjectName("projectUpdateV8");
     if (projects.shouldFork) {
-      const forkedProject = { namespace: projects.namespace, name: projects.v8 };
+      const forkedProject = {
+        namespace: projects.namespace,
+        name: projects.v8,
+      };
       cy.visitAndLoadProject(forkedProject, true);
-      cy.dataCy("header-project").contains("Error obtaining datasets").should("be.visible");
+      cy.dataCy("header-project")
+        .contains("Error obtaining datasets")
+        .should("be.visible");
       cy.forkProject(forkedProject, tempName);
     }
 
     // get to the status page
-    const targetProject = projects.shouldFork ?
-      { namespace: username, name: tempName } :
-      { namespace: projects.namespace, name: projects.v8 };
-    if (!projects.shouldFork)
-      cy.visitAndLoadProject(targetProject, true);
+    const targetProject = projects.shouldFork
+      ? { namespace: username, name: tempName }
+      : { namespace: projects.namespace, name: projects.v8 };
+    if (!projects.shouldFork) cy.visitAndLoadProject(targetProject, true);
     cy.dataCy("project-navbar", true)
       .contains("a.nav-link", "Settings")
-      .should("exist")
-      .click();
+      .as("project-settings-link")
+      .should("be.visible");
+    cy.get("@project-settings-link").should("be.visible").click();
 
     // verify project requires update
-    cy.dataCy("project-status-icon-element").should("exist");
+    cy.dataCy("project-status-icon-element").should("be.visible");
     cy.dataCy("project-settings-migration-status")
       .contains("Project update required")
-      .should("exist");
-    cy.dataCy("project-version-section-open").should("exist").click();
+      .should("be.visible");
+    cy.dataCy("project-version-section-open").should("be.visible").click();
     cy.dataCy("project-settings-migration-status")
       .contains("still on version 8 while the latest version is")
-      .should("exist");
+      .should("be.visible");
     cy.dataCy("project-settings-migration-status")
       .get("#button-update-projectMigrationStatus")
-      .should("exist")
-      .click();
+      .as("button-trigger-migration")
+      .should("be.visible");
+    cy.get("@button-trigger-migration").should("be.visible").click();
     cy.dataCy("project-settings-migration-status")
       .contains("button", "Updating")
-      .should("exist");
+      .should("be.visible");
     cy.dataCy("project-settings-migration-status")
       .contains("Refreshing project data")
-      .should("exist");
+      .should("be.visible");
     cy.dataCy("project-settings-migration-status")
       .contains("This project uses the latest")
-      .should("exist");
+      .should("be.visible");
     cy.dataCy("project-status-icon-element").should("not.exist");
 
     // update template
     cy.dataCy("project-settings-migration-status")
       .contains("There is a new version of the template")
-      .should("exist");
+      .should("be.visible");
     cy.dataCy("project-settings-migration-status")
       .get("#button-update-projectMigrationStatus")
-      .should("exist")
-      .click();
+      .as("button-update-template")
+      .should("be.visible");
+    cy.get("@button-update-template").should("be.visible").click();
     cy.dataCy("project-settings-migration-status")
       .contains("button", "Updating")
-      .should("exist");
+      .should("be.visible");
     cy.dataCy("project-settings-migration-status")
       .contains("Refreshing project data")
-      .should("exist");
+      .should("be.visible");
     cy.dataCy("project-settings-migration-status")
       .contains("Project up to date")
-      .should("exist");
+      .should("be.visible");
 
     // delete the project
-    if (projects.shouldFork)
-      cy.deleteProject(targetProject);
+    if (projects.shouldFork) cy.deleteProject(targetProject);
   });
 
   it("Update an outdated project - verify commits have been added", () => {
     // fork the project
-    const tempName = `test-project-update-v9-${uuidv4().substring(24)}`;
+    const tempName = generatorProjectName("projectUpdateV9");
     if (projects.shouldFork) {
-      const forkedProject = { namespace: projects.namespace, name: projects.v9 };
+      const forkedProject = {
+        namespace: projects.namespace,
+        name: projects.v9,
+      };
       cy.visitAndLoadProject(forkedProject);
       cy.forkProject(forkedProject, tempName);
     }
 
     // get to the commits page and check there is only 1 commit
-    const targetProject = projects.shouldFork ?
-      { namespace: username, name: tempName } :
-      { namespace: projects.namespace, name: projects.v9 };
-    if (!projects.shouldFork)
-      cy.visitAndLoadProject(targetProject);
+    const targetProject = projects.shouldFork
+      ? { namespace: username, name: tempName }
+      : { namespace: projects.namespace, name: projects.v9 };
+    if (!projects.shouldFork) cy.visitAndLoadProject(targetProject);
     let commitFetched = false;
     cy.intercept(
       "/ui-server/api/projects/*/repository/commits?ref_name=master&per_page=100&page=1",
-      req => { commitFetched = true; }
+      (req) => {
+        commitFetched = true;
+      }
     ).as("getCommits");
-    cy.getProjectPageLink(targetProject, "overview/commits").should("exist").click();
+    cy.getProjectPageLink(targetProject, "overview/commits")
+      .should("be.visible")
+      .click();
     if (!commitFetched) {
       cy.wait(1000); // eslint-disable-line cypress/no-unnecessary-waiting
-      cy.dataCy("refresh-commits").should("exist").click();
+      cy.dataCy("refresh-commits")
+        .as("refresh-commits-button-1")
+        .should("be.visible");
+      cy.get("@refresh-commits-button-1").should("be.visible").click();
+      cy.wait(1000); // eslint-disable-line cypress/no-unnecessary-waiting
     }
     cy.wait("@getCommits", { timeout: TIMEOUTS.long });
-    cy.dataCy("project-overview-content").get(".card-body ul li.commit-object").should("have.length", 1);
+    cy.dataCy("project-overview-content")
+      .get(".card-body ul li.commit-object")
+      .should("have.length", 1);
 
     // go to project settings and verify it requires an upodate
-    cy.dataCy("project-navbar", true)
+    cy.dataCy("project-navbar")
       .contains("a.nav-link", "Settings")
-      .should("exist")
-      .click();
-    cy.dataCy("project-status-icon-element").should("exist");
+      .as("project-settings-link")
+      .should("be.visible");
+    cy.get("@project-settings-link").should("be.visible").click();
+    cy.dataCy("project-status-icon-element").should("be.visible");
     cy.dataCy("project-settings-migration-status")
       .contains("Project update required")
-      .should("exist");
-    cy.dataCy("project-version-section-open").should("exist").click();
+      .should("be.visible");
+    cy.dataCy("project-version-section-open").should("be.visible").click();
     cy.dataCy("project-settings-migration-status")
       .contains("still on version 9 while the latest version is")
-      .should("exist");
+      .should("be.visible");
 
     // update project
     cy.dataCy("project-settings-migration-status")
       .get("#button-update-projectMigrationStatus")
-      .should("exist")
-      .click();
+      .as("button-trigger-migration")
+      .should("be.visible");
+    cy.get("@button-trigger-migration").should("be.visible").click();
     cy.dataCy("project-settings-migration-status")
       .contains("button", "Updating")
-      .should("exist");
+      .should("be.visible");
     cy.dataCy("project-settings-migration-status")
       .contains("Refreshing project data")
-      .should("exist");
+      .should("be.visible");
     cy.dataCy("project-settings-migration-status")
       .contains("This project uses the latest")
-      .should("exist");
+      .should("be.visible");
     cy.dataCy("project-status-icon-element").should("not.exist");
 
     // verify the commits were added
     commitFetched = false;
     cy.dataCy("project-navbar", true)
       .contains("a.nav-link", "Overview")
-      .should("exist")
+      .as("project-overview-link")
+      .should("be.visible");
+    cy.get("@project-overview-link").should("be.visible").click();
+    cy.getProjectPageLink(targetProject, "overview/commits")
+      .should("be.visible")
       .click();
-    cy.getProjectPageLink(targetProject, "overview/commits").should("exist").click();
     if (!commitFetched) {
       cy.wait(1000); // eslint-disable-line cypress/no-unnecessary-waiting
-      cy.dataCy("refresh-commits").should("exist").click();
+      cy.dataCy("refresh-commits")
+        .as("refresh-commits-button-2")
+        .should("be.visible");
+      cy.get("@refresh-commits-button-2").should("be.visible").click();
+      cy.wait(1000); // eslint-disable-line cypress/no-unnecessary-waiting
     }
     cy.wait("@getCommits", { timeout: TIMEOUTS.long });
-    cy.dataCy("project-overview-content").get(".card-body ul li.commit-object")
+    cy.dataCy("project-overview-content")
+      .get(".card-body ul li.commit-object")
       .should("have.length.greaterThan", 1);
-    cy.dataCy("project-overview-content").get(".card-body ul li.commit-object")
-      .contains("migrate to latest version").should("exist");
+    cy.dataCy("project-overview-content")
+      .get(".card-body ul li.commit-object")
+      .contains("migrate to latest version")
+      .should("be.visible");
 
     // delete the project
-    if (projects.shouldFork)
-      cy.deleteProject(targetProject);
+    if (projects.shouldFork) cy.deleteProject(targetProject);
   });
 });
