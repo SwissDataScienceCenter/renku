@@ -72,6 +72,7 @@ function registerAndVerify(props: RegisterAndVerifyProps) {
     httpBaseUrl + "/",
     httpsBaseUrl + "/",
   ]);
+  cy.visit("/").contains("Renku Dashboard").should("be.visible");
   cy.request("ui-server/api/user").its("status").should("eq", 200);
 }
 
