@@ -3,7 +3,7 @@
 0.32.0
 ------
 
-Renku ``0.32.0`` introduces improvements and new features in the KG services, thus enhancing KG overall performance. 
+Renku ``0.32.0`` introduces improvements in the KG services, thus enhancing KG overall performance. 
 
 User-Facing Changes
 ~~~~~~~~~~~~~~~~~~~
