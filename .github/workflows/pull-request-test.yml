@@ -142,37 +142,11 @@ jobs:
         tests: [publicProject, updateProjects, useSession, rstudioSession]
 
     steps:
-      - uses: actions/checkout@v3
-      - uses: cypress-io/github-action@v5
-        name: Run Cypress acceptance tests
-        id: cypress-acceptance-tests
-        env:
-          BASE_URL: https://ci-renku-${{ github.event.number }}.dev.renku.ch
-          E2E_FOLDER: "cypress/e2e/"
-          E2E_SUFFIX: ".cy.ts"
-          TEST_EMAIL: renku@datascience.ch
-          TEST_FIRST_NAME: Renku
-          TEST_LAST_NAME: Bot
-          TEST_PASSWORD: ${{ secrets.RENKU_BOT_DEV_PASSWORD }}
-          TEST_USERNAME: renku-test
+      - uses: SwissDataScienceCenter/renku-actions/test-renku-cypress@v1.5.0
         with:
-          browser: chrome
-          spec: |
-            ${{ env.E2E_FOLDER }}verifyInfrastructure${{ env.E2E_SUFFIX }}
-            ${{ env.E2E_FOLDER }}${{ matrix.tests }}${{ env.E2E_SUFFIX }}
-          working-directory: cypress-tests
-      - uses: actions/upload-artifact@v3
-        if: failure()
-        with:
-          name: Cypress acceptance tests - screenshots
-          path: cypress-tests/cypress/screenshots
-          retention-days: 7
-      - uses: actions/upload-artifact@v3
-        if: failure()
-        with:
-          name: Cypress acceptance tests - videos
-          path: cypress-tests/cypress/videos
-          retention-days: 3
+          e2e-target: ${{ matrix.tests }}
+          renku-release: ci-renku-${{ github.event.number }}
+          test-user-password: ${{ secrets.RENKU_BOT_DEV_PASSWORD }}
 
   cleanup:
     if: github.event.action == 'closed'
