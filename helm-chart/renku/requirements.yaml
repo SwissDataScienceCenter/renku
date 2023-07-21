@@ -1,35 +1,34 @@
 dependencies:
-- name: gitlab
-  repository: "https://swissdatasciencecenter.github.io/helm-charts/"
-  version: 0.8.0
-  condition: gitlab.enabled
-- name: postgresql
-  version: 9.1.1
-  repository: "https://raw.githubusercontent.com/bitnami/charts/eb5f9a9513d987b519f0ecd732e7031241c50328/bitnami"
-  condition: postgresql.enabled
-- name: keycloakx
-  version: 2.1.0
-  repository: "https://codecentric.github.io/helm-charts"
-  condition: keycloakx.enabled
-- name: redis
-  # bitnami claims that this will always contain a full set of charts - let us pray...
-  # this index was 19MB as of the date of this commit and contained redis 17.4.2
-  repository: "https://raw.githubusercontent.com/bitnami/charts/archive-full-index/bitnami"
-  version: 17.4.2
-  condition: redis.install
-- name: renku-jena
-  version: "0.0.23"
-  repository: "https://swissdatasciencecenter.github.io/helm-charts/"
-  alias: jena
-- name: amalthea
-  repository: "https://swissdatasciencecenter.github.io/helm-charts/"
-  version: "0.11.0"
-- name: dlf-chart
-  repository: "https://swissdatasciencecenter.github.io/datashim/"
-  version: "0.3.9-renku-2"
-  condition: notebooks.cloudstorage.s3.installDatashim
-- name: csi-rclone
-  repository: "https://swissdatasciencecenter.github.io/helm-charts/"
-  version: "0.1.7"
-  condition: global.csi-rclone.install
-  
+  - name: gitlab
+    repository: "https://swissdatasciencecenter.github.io/helm-charts/"
+    version: 0.8.0
+    condition: gitlab.enabled
+  - name: postgresql
+    version: "14.2.4"
+    repository: "oci://registry-1.docker.io/bitnamicharts"
+    condition: postgresql.enabled
+  - name: keycloakx
+    version: 2.1.0
+    repository: "https://codecentric.github.io/helm-charts"
+    condition: keycloakx.enabled
+  - name: redis
+    # bitnami claims that this will always contain a full set of charts - let us pray...
+    # this index was 19MB as of the date of this commit and contained redis 17.4.2
+    repository: "https://raw.githubusercontent.com/bitnami/charts/archive-full-index/bitnami"
+    version: 17.4.2
+    condition: redis.install
+  - name: renku-jena
+    version: "0.0.23"
+    repository: "https://swissdatasciencecenter.github.io/helm-charts/"
+    alias: jena
+  - name: amalthea
+    repository: "https://swissdatasciencecenter.github.io/helm-charts/"
+    version: "0.11.0"
+  - name: dlf-chart
+    repository: "https://swissdatasciencecenter.github.io/datashim/"
+    version: "0.3.9-renku-2"
+    condition: notebooks.cloudstorage.s3.installDatashim
+  - name: csi-rclone
+    repository: "https://swissdatasciencecenter.github.io/helm-charts/"
+    version: "0.1.7"
+    condition: global.csi-rclone.install
