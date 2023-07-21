@@ -6,6 +6,47 @@ Please follow this convention when adding a new row
 * `<type: NEW|EDIT|DELETE> - *<resource name>*: <details>`
 
 ----
+## Upgrading to Renku 0.33.0
+* NEW/EDIT - *postgresql.persistence.existingClaim*: Renku `0.33.0` upgrades the postgres chart dependency, which requires modification of the postgres data volume of existing deployments. See [these instructions](https://github.com/SwissDataScienceCenter/renku/tree/master/helm-chart/utils/postgres_migrations/version_upgrades/README.md)
+* EDIT - *postgresql*: The upgrade of the postgres chart dependency requires some restructuring of the postgres subchart values to match those of bitnami/postgresql chart version 12.6.8, namely:
+
+Old
+  ```
+  postgresql:
+    postgresqlDatabase: <string>
+    postgresqlUsername: <string>
+    postgresqlPassword: <string>
+    existingSecret: <string>
+    persistence:
+      enabled: <bool>
+      size: <string>
+      existingClaim: <string>
+    replication:
+      enabled: <bool>
+      user: <string>
+      password: <string>
+      slaveReplicas: <int>
+  ```
+New
+  ```
+  postgresql:
+    auth:
+      username: <string>
+      database: <string>
+      postgresqlPassword: <string>
+      existingSecret: <string>
+      replicationUsername: <string>
+      replicationPassword: <string>
+    primary:
+      persistence:
+        enabled: <bool>
+        size: <string>
+        existingClaim: <string>
+      readReplicas:
+        enabled: <bool>
+        replicaCount: <int>
+  ```
+
 ## Upgrading to Renku 0.29.0
 * NEW - *global.graph.triplesGenerator.postgresPassword.value* should be specified. If it is not specified, a password will be generated automatically when the database is initialized. It is strongly recommended, however, to specify it here such that the password is explicitly managed and can be restored in disaster scenarios. Generate through `openssl rand -hex 32`.
 
