@@ -66,6 +66,18 @@ class ProjectPage(val projectSlug: String, val namespace: String)
     }
   }
 
+  def startButtonVisible(implicit webDriver: WebDriver): Boolean = eventually {
+    find(cssSelector("a.start-session-button > svg.fa-play")).fold(false)(_.isEnabled)
+  }
+
+  def connectButton(implicit webDriver: WebDriver): WebElement = eventually {
+    find(cssSelector("button.start-session-button")) getOrElse fail("'Connect' button not found")
+  }
+
+  def connectButtonVisible(implicit webDriver: WebDriver): Boolean = eventually {
+    find(cssSelector("button.start-session-button > div > img[src='/connect.svg']")).fold(false)(_.isEnabled)
+  }
+
   object Overview {
 
     def tab(implicit webDriver: WebDriver): WebElement = eventually {
@@ -215,9 +227,8 @@ class ProjectPage(val projectSlug: String, val namespace: String)
     }
 
     def sessionStartWithOptions(implicit webDriver: WebDriver): WebElement = eventually {
-      find(cssSelector(s"button[role='menuitem'] > a.text-decoration-none")) getOrElse fail(
-        "Sessions start with options not found"
-      )
+      find(cssSelector(s"button[role='menuitem'] > a.text-decoration-none")) getOrElse
+        fail("Sessions start with options not found")
     }
 
     def newLink(implicit webDriver: WebDriver): WebElement = eventually {
