@@ -34,14 +34,14 @@ spec:
               {{ if .Values.global.externalServices.postgresql.enabled }}
               value: {{ .Values.global.externalServices.postgresql.username }}
               {{- else -}}
-              value: {{ .Values.postgresql.postgresqlUsername }}
+              value: {{ .Values.postgresql.auth.username }}
               {{- end }}
             {{- if not .Values.global.externalServices.postgresql.enabled }}
             - name: DB_ADMIN_PASSWORD
               valueFrom:
                 secretKeyRef:
                   name: "{{ template "postgresql.fullname" . }}"
-                  key: postgresql-password
+                  key: postgres-password
             {{- else if .Values.global.externalServices.postgresql.password }}
             - name: DB_ADMIN_PASSWORD
               value: {{ .Values.global.externalServices.postgresql.password }}
@@ -50,7 +50,7 @@ spec:
               valueFrom:
                 secretKeyRef:
                   name: {{ .Values.global.externalServices.postgresql.existingSecret }}
-                  key: postgresql-password
+                  key: postgres-password
             {{- end }}
             - name: EVENTLOG_DB_USERNAME
               value: {{ .Values.global.graph.dbEventLog.postgresUser | quote }}

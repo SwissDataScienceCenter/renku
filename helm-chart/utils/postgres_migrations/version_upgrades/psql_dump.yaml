@@ -27,7 +27,7 @@ spec:
           valueFrom:
             secretKeyRef:
               name: renku-postgresql ## EDIT(optional) - most likely <renku-release-name>-postgresql
-              key: postgresql-password
+              key: postgres-password
       ports:
         - containerPort: 5432
       volumeMounts:
@@ -81,7 +81,7 @@ spec:
               valueFrom:
                 secretKeyRef:
                   name: renku-postgresql ## EDIT(optional) - most likely <renku-release-name>-postgresql
-                  key: postgresql-password
+                  key: postgres-password
           volumeMounts:
             - mountPath: /psql-dump-data/
               name: pg-vol-tmp
