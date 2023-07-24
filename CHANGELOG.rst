@@ -166,6 +166,10 @@ Individual components
 - `renku-ui 3.8.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.8.0>`_
 - `renku-ui 3.8.1 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.8.1>`_
 
+0.29.0
+------
+
+Renku ``0.29.0`` introduces new UI features and a PostgreSQL DB for triples-generator.
 
 User-Facing Changes
 ~~~~~~~~~~~~~~~~~~~
