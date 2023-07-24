@@ -188,6 +188,8 @@ trait Project extends RemoveProject with ExtantProject with KnowledgeGraphApi {
     And("clicks the 'Create' button")
     NewProjectPage.createButton.isEnabled shouldBe true
     NewProjectPage.createButton.click() sleep (2 seconds)
+
+    `wait for project creation`(projectDetails.asProjectIdentifier)
   }
 
   protected override type FixtureParam = Unit

@@ -1,5 +1,30 @@
 .. _changelog:
 
+0.32.0
+------
+
+Renku ``0.32.0`` introduces improvements in the KG services, enhancing KG overall performance. 
+
+User-Facing Changes
+~~~~~~~~~~~~~~~~~~~
+
+**✨ Improvements**
+
+- 🔁 **KG**: ``updatedAt`` renamed to ``dateModified`` on the Project Details API (`#1582 <https://github.com/SwissDataScienceCenter/renku-graph/issues/1582>`_).
+- 📖 **KG**: Improved performance of the Project Status API (`#1554 <https://github.com/SwissDataScienceCenter/renku-graph/issues/1554>`_).
+
+Internal Changes
+~~~~~~~~~~~~~~~~
+
+** Improvements**
+
+- **KG**: A new process to synchronize various project properties between GitLab and Triples Store (`#1569 <https://github.com/SwissDataScienceCenter/renku-graph/issues/1569>`_).
+
+Individual components
+~~~~~~~~~~~~~~~~~~~~~~
+
+- `renku-graph 2.37.0 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/2.37.0>`_
+
 
 0.31.0
 ------
@@ -140,7 +165,6 @@ Individual components
 - `renku-ui 3.8.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.8.0>`_
 - `renku-ui 3.8.1 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.8.1>`_
 
-
 0.29.0
 ------
 
@@ -169,6 +193,10 @@ User-Facing Changes
 
 Internal Changes
 ~~~~~~~~~~~~~~~~
+
+**✨ Improvements**
+
+- **KG**: A PostgreSQL DB is added for the triples-generator (`values changelog <https://github.com/SwissDataScienceCenter/renku/blob/master/helm-chart/values.yaml.changelog.md#upgrading-to-renku-0290>`_).
 
 **Bug Fixes**
 
