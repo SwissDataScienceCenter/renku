@@ -195,6 +195,10 @@ User-Facing Changes
 Internal Changes
 ~~~~~~~~~~~~~~~~
 
+**✨ Improvements**
+
+- **KG**: A PostgreSQL DB is added for the triples-generator (`values changelog <https://github.com/SwissDataScienceCenter/renku/blob/master/helm-chart/values.yaml.changelog.md#upgrading-to-renku-0290>`_).
+
 **Bug Fixes**
 
 - **Infrastructure**: properly generate PostgreSQL secrets on upgrade (`#3137 <https://github.com/SwissDataScienceCenter/renku/issues/3137>`_).
