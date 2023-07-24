@@ -19,7 +19,6 @@ Internal Changes
 ** Improvements**
 
 - **KG**: A new process to synchronize various project properties between GitLab and Triples Store (`#1569 <https://github.com/SwissDataScienceCenter/renku-graph/issues/1569>`_).
-- **KG**: A PostgreSQL DB is added for the triples-generator (`values changelog <https://github.com/SwissDataScienceCenter/renku/blob/master/helm-chart/values.yaml.changelog.md#upgrading-to-renku-0290>`_).
 
 Individual components
 ~~~~~~~~~~~~~~~~~~~~~~
