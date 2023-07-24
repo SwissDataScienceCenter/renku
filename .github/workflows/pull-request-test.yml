@@ -145,6 +145,7 @@ jobs:
       - uses: SwissDataScienceCenter/renku-actions/test-renku-cypress@v1.5.0
         with:
           e2e-target: ${{ matrix.tests }}
+          renku-reference: ${{ github.ref }}
           renku-release: ci-renku-${{ github.event.number }}
           test-user-password: ${{ secrets.RENKU_BOT_DEV_PASSWORD }}
 
