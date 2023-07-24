@@ -59,7 +59,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - id: deploy-comment
-        uses: SwissDataScienceCenter/renku-actions/check-pr-description@v1.4.6
+        uses: SwissDataScienceCenter/renku-actions/check-pr-description@v1.5.0
         with:
           string: /deploy
           pr_ref: ${{ github.event.number }}
@@ -74,7 +74,7 @@ jobs:
       - uses: actions/checkout@v3
       - name: renku build and deploy
         if: needs.check-deploy.outputs.pr-contains-string == 'true'
-        uses: SwissDataScienceCenter/renku-actions/deploy-renku@v1.4.6
+        uses: SwissDataScienceCenter/renku-actions/deploy-renku@v1.5.0
         env:
           DOCKER_PASSWORD: ${{ secrets.RENKU_DOCKER_PASSWORD }}
           DOCKER_USERNAME: ${{ secrets.RENKU_DOCKER_USERNAME }}
@@ -117,7 +117,7 @@ jobs:
     needs: [check-deploy, deploy-pr]
     runs-on: ubuntu-22.04
     steps:
-      - uses: SwissDataScienceCenter/renku-actions/test-renku@v1.4.6
+      - uses: SwissDataScienceCenter/renku-actions/test-renku@v1.5.0
         with:
           kubeconfig: ${{ secrets.RENKUBOT_DEV_KUBECONFIG }}
           renku-release: ci-renku-${{ github.event.number }}
@@ -142,44 +142,18 @@ jobs:
         tests: [publicProject, updateProjects, useSession, rstudioSession]
 
     steps:
-      - uses: actions/checkout@v3
-      - uses: cypress-io/github-action@v5
-        name: Run Cypress acceptance tests
-        id: cypress-acceptance-tests
-        env:
-          BASE_URL: https://ci-renku-${{ github.event.number }}.dev.renku.ch
-          E2E_FOLDER: "cypress/e2e/"
-          E2E_SUFFIX: ".cy.ts"
-          TEST_EMAIL: renku@datascience.ch
-          TEST_FIRST_NAME: Renku
-          TEST_LAST_NAME: Bot
-          TEST_PASSWORD: ${{ secrets.RENKU_BOT_DEV_PASSWORD }}
-          TEST_USERNAME: renku-test
+      - uses: SwissDataScienceCenter/renku-actions/test-renku-cypress@v1.5.0
         with:
-          browser: chrome
-          spec: |
-            ${{ env.E2E_FOLDER }}verifyInfrastructure${{ env.E2E_SUFFIX }}
-            ${{ env.E2E_FOLDER }}${{ matrix.tests }}${{ env.E2E_SUFFIX }}
-          working-directory: cypress-tests
-      - uses: actions/upload-artifact@v3
-        if: failure()
-        with:
-          name: Cypress acceptance tests - screenshots
-          path: cypress-tests/cypress/screenshots
-          retention-days: 7
-      - uses: actions/upload-artifact@v3
-        if: failure()
-        with:
-          name: Cypress acceptance tests - videos
-          path: cypress-tests/cypress/videos
-          retention-days: 3
+          e2e-target: ${{ matrix.tests }}
+          renku-release: ci-renku-${{ github.event.number }}
+          test-user-password: ${{ secrets.RENKU_BOT_DEV_PASSWORD }}
 
   cleanup:
     if: github.event.action == 'closed'
     runs-on: ubuntu-22.04
     steps:
       - name: renku teardown
-        uses: SwissDataScienceCenter/renku-actions/cleanup-renku-ci-deployments@v1.4.6
+        uses: SwissDataScienceCenter/renku-actions/cleanup-renku-ci-deployments@v1.5.0
         env:
           HELM_RELEASE_REGEX: "^ci-renku-${{ github.event.number }}$"
           GITLAB_TOKEN: ${{ secrets.DEV_GITLAB_TOKEN }}
