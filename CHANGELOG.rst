@@ -3,21 +3,25 @@
 0.33.0
 ------
 
-Renku ``0.33.0`` introduces improvements and new features in the KG services. 
+Renku ``0.33.0`` introduces improvements related to the Cross-Entity Search and a new feature for changing visibility through API in the KG services. 
+
 
 User-Facing Changes
 ~~~~~~~~~~~~~~~~~~~
+
+**🌟 New Features**
+
+- 🫣 **KG**: A new Project Update API for changing Project visibility (`#1611 <https://github.com/SwissDataScienceCenter/renku-graph/issues/1611>`_).
 
 **✨ Improvements**
 
 - 🔎 **KG**: The Cross-Entity Search returns a new ``dateModified`` property for Project and Dataset entities (`#1612 <https://github.com/SwissDataScienceCenter/renku-graph/issues/1612>`_) and (`#1595 <https://github.com/SwissDataScienceCenter/renku-graph/issues/1595>`_).
 - 〽️ **KG**: Improved performance of the Cross-Entity Search while searching for datasets (`#1591 <https://github.com/SwissDataScienceCenter/renku-graph/issues/1591>`_).
-- 🫣 **KG**: A new Project Update API for changing Project visibility (`#1611 <https://github.com/SwissDataScienceCenter/renku-graph/issues/1611>`_).
 
 Internal Changes
 ~~~~~~~~~~~~~~~~
 
-** Bug Fixes**
+**Bug Fixes**
 
 - **KG**: Fixed the problem of concurrent writes to the Triples Store causing data integrity violations (`#1577 <https://github.com/SwissDataScienceCenter/renku-graph/issues/1577>`_).
 
