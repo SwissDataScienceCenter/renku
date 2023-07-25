@@ -18,9 +18,10 @@ To make changes to the state, it is necessary to use a valid authentication
 token. There are two steps to this:
 
 - first, you need to ensure that your user has the `renku-admin` role. This can
-  be done by searching for your user and choosing the `Role mapping` tab; if
-  the `renku-admin` role is already mapped to your user, there is nothing to do
-  but if not you need to click `Assign role` and add this role to your user.
+  be done by searching for your user in Keycloak and choosing the `Role
+  mapping` tab; if the `renku-admin` role is already mapped to your user, there
+  is nothing to do but if not you need to click `Assign role` and add this role
+  to your user.
 
 - when this has been done, you can authorize the Swagger UI; this can be done
   by clicking on the `Authorize` icon at the top of the page. This provides a
