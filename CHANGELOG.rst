@@ -3,7 +3,7 @@
 0.33.0
 ------
 
-Renku ``0.33.0`` introduces improvemenets and bugfixes in the UI.
+Renku ``0.33.0`` introduces improvements and bug fixes in the UI.
 
 User-Facing Changes
 ~~~~~~~~~~~~~~~~~~~
