@@ -1,5 +1,48 @@
 .. _changelog:
 
+0.33.0
+------
+
+Renku ``0.33.0`` introduces improvemenets and bugfixes in the UI.
+
+User-Facing Changes
+~~~~~~~~~~~~~~~~~~~
+
+**✨ Improvements**
+
+- 🔙 **UI**: Add a global error page for fatal errors, giving users a way to resume working
+  (`#2604 <https://github.com/SwissDataScienceCenter/renku-ui/issues/2604>`_).
+- 📄 **UI**: Support previewing additional common R file extensions
+  (`#2639 <https://github.com/SwissDataScienceCenter/renku-ui/issues/2639>`_).
+
+**🐞 Bug Fixes**
+
+- **UI**: Prevent showing endless loader when migration errors occur
+  (`#2650 <https://github.com/SwissDataScienceCenter/renku-ui/issues/2650>`_).
+- **UI**: Do not expand folders by default in dataset view when containing too many elements
+  (`#2628 <https://github.com/SwissDataScienceCenter/renku-ui/issues/2628>`_).
+- **UI**: Render Rstudio components correctly -- sometimes columns were collapsed
+  (`#2660 <https://github.com/SwissDataScienceCenter/renku-ui/issues/2660>`_).
+- **UI**: Prevent losing work when editing datasets
+  (`#2628 <https://github.com/SwissDataScienceCenter/renku-ui/issues/2628>`_).
+
+Internal Changes
+~~~~~~~~~~~~~~~~
+
+**Improvements**
+
+- **Team**: changelog item, alphabetized by team name
+
+**Bug Fixes**
+
+- **Team**: changelog item, alphabetized by team name
+
+Individual components
+~~~~~~~~~~~~~~~~~~~~~~
+
+- component links, alphabetized by team name
+
+
 0.32.0
 ------
 
