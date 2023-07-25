@@ -224,7 +224,7 @@ success = False
 
 while not success and n_attempts < 31:
     try:
-        sys.stdout.write("Getting an admin access token for Keycloak...")
+        sys.stdout.write("Getting an admin access token for Keycloak...\n")
         keycloak_admin = KeycloakAdmin(
             server_url=args.keycloak_url,
             username=args.admin_user,
@@ -232,8 +232,12 @@ while not success and n_attempts < 31:
             verify=True,
         )
         success = True
-    except (KeycloakConnectionError, KeycloakGetError, KeycloakPostError):
-        sys.stdout.write("Keycloak not responding, retrying in 10 seconds...\n")
+    except (KeycloakConnectionError, KeycloakGetError, KeycloakPostError) as error:
+        msg = "Keycloak not responding"
+        if error.response_code is not None:
+            msg += f" (status code: {error.response_code})"
+        msg += ", retrying in 10 seconds...\n"
+        sys.stdout.write(msg)
         n_attempts += 1
         time.sleep(10)
 if success:
@@ -267,11 +271,29 @@ keycloak_admin.create_realm(
 sys.stdout.write("done\n")
 
 # Switching to the newly created realm
-keycloak_admin.realm_name = args.realm
+keycloak_admin.connection.realm_name = args.realm
 
 
 for new_client in new_clients:
     _check_and_create_client(keycloak_admin, new_client, args.force)
+
+# Create renku-admin realm role
+sys.stdout.write("Creating renku-admin realm role, skipping if it already exists...")
+realm_role_payload = {
+    "name": "renku-admin",
+    "composite": True,
+    "composites": {
+        "client": {
+            "realm-management": [
+                "query-users",
+                "view-users"
+            ],
+        },
+    },
+    "clientRole": False,
+}
+keycloak_admin.create_realm_role(realm_role_payload, skip_exists=True)
+sys.stdout.write("done\n")
 
 for new_user in new_users:
     _check_and_create_user(keycloak_admin, new_user)

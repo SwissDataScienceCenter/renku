@@ -1,19 +1,22 @@
 {
   "name": "cypress-tests",
-  "version": "0.0.1",
-  "description": "Cypress tests for Renku",
+  "version": "0.1.0",
+  "description": "Cypress acceptance tests for Renku",
   "main": "index.js",
   "scripts": {
     "e2e": "cypress open --e2e --browser=chrome",
     "e2e:run": "cypress run --e2e --browser=chrome",
     "e2e:headless": "cypress run --e2e --browser=chrome --headless",
-    "lint": "eslint . --ext .ts"
+    "e2e:ci": "cypress run --e2e --browser=chrome --headless --spec",
+    "lint": "eslint . --ext .ts",
+    "parallel-run": "ts-node cypress/scripts/github-parallel-run.ts"
   },
   "author": "Swiss Data Science Center",
   "dependencies": {
+    "@actions/core": "^1.10.0",
     "@renku/notebooks-cypress-tests": "^0.0.10",
-    "cypress": "^11.2.0",
-    "cypress-localstorage-commands": "^2.2.1",
+    "cypress": "^12.17.1",
+    "cypress-localstorage-commands": "^2.2.3",
     "typescript": "^4.8.4",
     "uuid": "^9.0.0"
   },

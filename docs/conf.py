@@ -52,7 +52,7 @@ extensions = [
 ]
 
 # Plantweb configuration
-plantweb_defaults = {"format": "png"}
+plantweb_defaults = {"format": "svg"}
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ["_templates"]

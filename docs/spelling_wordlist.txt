@@ -29,6 +29,7 @@ bugfix
 Calamus
 cgroup
 Champak
+changelog
 chartpress
 Chartpress
 checksum
@@ -85,6 +86,7 @@ filesystem
 FilterFlights
 findable
 Fortran
+Frontend
 gapped
 git-lfs
 githooks
@@ -102,6 +104,7 @@ GraphQL
 graphviz
 hexsha
 hostname
+hotfix
 https
 hyperkit
 hypervisor

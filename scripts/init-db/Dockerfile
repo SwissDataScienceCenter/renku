@@ -1,4 +1,9 @@
-FROM alpine:3.15
+FROM python:3.11-slim-bullseye
 
-RUN apk add --no-cache curl jq postgresql-client bash
+RUN apt-get update && apt-get install -y \
+    tini && \
+    rm -rf /var/lib/apt/lists/*
+COPY . .
+RUN pip3 install -r requirements.txt 
 USER 1000:1000
+ENTRYPOINT [ "tini", "-g", "--", "python" ]
