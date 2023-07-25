@@ -10,9 +10,9 @@ User-Facing Changes
 
 **✨ Improvements**
 
-- **KG**: The Cross-Entity Search returns a new ``dateModified`` property for Project and Dataset entities (`#1612 <https://github.com/SwissDataScienceCenter/renku-graph/issues/1612>`_) and (`#1595 <https://github.com/SwissDataScienceCenter/renku-graph/issues/1595>`_).
-- **KG**: Improved performance of the Cross-Entity Search while searching for datasets (`#1591 <https://github.com/SwissDataScienceCenter/renku-graph/issues/1591>`_).
-- **KG**: A new Project Update API for changing Project visibility (`#1611 <https://github.com/SwissDataScienceCenter/renku-graph/issues/1611>`_).
+- 🔎 **KG**: The Cross-Entity Search returns a new ``dateModified`` property for Project and Dataset entities (`#1612 <https://github.com/SwissDataScienceCenter/renku-graph/issues/1612>`_) and (`#1595 <https://github.com/SwissDataScienceCenter/renku-graph/issues/1595>`_).
+- 〽️ **KG**: Improved performance of the Cross-Entity Search while searching for datasets (`#1591 <https://github.com/SwissDataScienceCenter/renku-graph/issues/1591>`_).
+- 🫣 **KG**: A new Project Update API for changing Project visibility (`#1611 <https://github.com/SwissDataScienceCenter/renku-graph/issues/1611>`_).
 
 Internal Changes
 ~~~~~~~~~~~~~~~~
