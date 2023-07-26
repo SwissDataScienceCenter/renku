@@ -26,21 +26,10 @@ User-Facing Changes
 - **UI**: Prevent losing work when editing datasets
   (`#2628 <https://github.com/SwissDataScienceCenter/renku-ui/issues/2628>`_).
 
-Internal Changes
-~~~~~~~~~~~~~~~~
-
-**Improvements**
-
-- **Team**: changelog item, alphabetized by team name
-
-**Bug Fixes**
-
-- **Team**: changelog item, alphabetized by team name
-
 Individual components
 ~~~~~~~~~~~~~~~~~~~~~~
 
-- component links, alphabetized by team name
+- `renku-ui 3.10.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.10.0>`_
 
 
 0.32.0
