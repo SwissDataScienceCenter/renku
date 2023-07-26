@@ -3,14 +3,16 @@
 0.33.0
 ------
 
-Renku ``0.33.0`` introduces improvements and bug fixes in the UI related to error handling and behavior, as well as R files.
+Renku ``0.33.0`` introduces improvements and bug fixes in the UI related to
+error handling and overall behavior; improved handling of common R file
+extensions is also added.
 
 User-Facing Changes
 ~~~~~~~~~~~~~~~~~~~
 
 **✨ Improvements**
 
-- 🔙 **UI**: Add a global error page for fatal errors, giving users a way to resume working
+- 🔙 **UI**: Add a global error page for fatal errors preventing blank pages
   (`#2604 <https://github.com/SwissDataScienceCenter/renku-ui/issues/2604>`_).
 - 📄 **UI**: Support previewing additional common R file extensions
   (`#2639 <https://github.com/SwissDataScienceCenter/renku-ui/issues/2639>`_).
@@ -19,7 +21,8 @@ User-Facing Changes
 
 - **UI**: Prevent showing endless loader when migration errors occur
   (`#2650 <https://github.com/SwissDataScienceCenter/renku-ui/issues/2650>`_).
-- **UI**: Do not expand folders by default in dataset view when containing too many elements
+- **UI**: Do not expand folders by default in dataset view when dataset contains
+  large number of elements
   (`#2628 <https://github.com/SwissDataScienceCenter/renku-ui/issues/2628>`_).
 - **UI**: Render Rstudio components correctly -- sometimes columns were collapsed
   (`#2660 <https://github.com/SwissDataScienceCenter/renku-ui/issues/2660>`_).
