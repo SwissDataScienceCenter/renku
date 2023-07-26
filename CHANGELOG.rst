@@ -3,7 +3,7 @@
 0.33.0
 ------
 
-Renku ``0.33.0`` introduces improvements and bug fixes in the UI.
+Renku ``0.33.0`` introduces improvements and bug fixes in the UI related to error handling and behavior, as well as R files.
 
 User-Facing Changes
 ~~~~~~~~~~~~~~~~~~~
