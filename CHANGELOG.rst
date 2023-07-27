@@ -8,7 +8,7 @@ Renku ``0.33.0`` introduces improvements and bug fixes in the UI and KG.
 The UI benefits from better error handling and overall behavior; improved
 handling of common R file extensions is also added.
 KG boasts performance improvements on the Cross-Entity Search and allows
-changing visibility through a dedicated API.
+changing project visibility through a dedicated API.
 
 User-Facing Changes
 ~~~~~~~~~~~~~~~~~~~
