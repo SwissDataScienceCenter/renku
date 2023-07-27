@@ -204,7 +204,7 @@ describe("Basic public project functionality", () => {
     cy.dataCy("edit-dataset-button").last().click();
     cy.dataCy("input-keywords").type("modified{enter}");
     cy.dataCy("submit-button").click();
-    cy.contains("Editing dataset").should("be.visible");
+    cy.contains("Modifying dataset").should("be.visible");
     cy.wait("@listDatasets", { timeout: TIMEOUTS.vlong });
     cy.contains("#modified").should("be.visible");
 

@@ -3,32 +3,62 @@
 0.33.0
 ------
 
-Renku ``0.33.0`` introduces improvements related to the Cross-Entity Search and a new feature for changing visibility through API in the KG services. 
+Renku ``0.33.0`` introduces improvements and bug fixes in the UI and KG.
 
+The UI benefits from better error handling and overall behavior; improved
+handling of common R file extensions is also added.
+KG boasts performance improvements on the Cross-Entity Search and allows
+changing project visibility through a dedicated API.
 
 User-Facing Changes
 ~~~~~~~~~~~~~~~~~~~
 
 **🌟 New Features**
 
-- 🫣 **KG**: A new Project Update API for changing Project visibility (`#1611 <https://github.com/SwissDataScienceCenter/renku-graph/issues/1611>`_).
+- 🫣 **KG**: Add a new Project Update API for changing Project visibility
+  (`#1611 <https://github.com/SwissDataScienceCenter/renku-graph/issues/1611>`_).
 
 **✨ Improvements**
 
-- 🔎 **KG**: The Cross-Entity Search returns a new ``dateModified`` property for Project and Dataset entities (`#1612 <https://github.com/SwissDataScienceCenter/renku-graph/issues/1612>`_) and (`#1595 <https://github.com/SwissDataScienceCenter/renku-graph/issues/1595>`_).
-- 〽️ **KG**: Improved performance of the Cross-Entity Search while searching for datasets (`#1591 <https://github.com/SwissDataScienceCenter/renku-graph/issues/1591>`_).
+- 🔎 **KG**: The Cross-Entity Search returns a new ``dateModified`` property for
+  Project and Dataset entities
+  (`#1612 <https://github.com/SwissDataScienceCenter/renku-graph/issues/1612>`_) and
+  (`#1595 <https://github.com/SwissDataScienceCenter/renku-graph/issues/1595>`_).
+- 〽️ **KG**: Improved performance of the Cross-Entity Search while searching for
+  datasets
+  (`#1591 <https://github.com/SwissDataScienceCenter/renku-graph/issues/1591>`_).
+- 🔙 **UI**: Add a global error page for fatal errors preventing blank pages
+  (`#2604 <https://github.com/SwissDataScienceCenter/renku-ui/issues/2604>`_).
+- 📄 **UI**: Support previewing additional common R file extensions
+  (`#2639 <https://github.com/SwissDataScienceCenter/renku-ui/issues/2639>`_).
+
+**🐞 Bug Fixes**
+
+- **UI**: Prevent showing endless loader when migration errors occur
+  (`#2650 <https://github.com/SwissDataScienceCenter/renku-ui/issues/2650>`_).
+- **UI**: Do not expand folders by default in dataset view when dataset contains
+  large number of elements
+  (`#2628 <https://github.com/SwissDataScienceCenter/renku-ui/issues/2628>`_).
+- **UI**: Render Rstudio components correctly -- sometimes columns were collapsed
+  (`#2660 <https://github.com/SwissDataScienceCenter/renku-ui/issues/2660>`_).
+- **UI**: Prevent losing work when editing datasets
+  (`#2628 <https://github.com/SwissDataScienceCenter/renku-ui/issues/2628>`_).
 
 Internal Changes
 ~~~~~~~~~~~~~~~~
 
 **Bug Fixes**
 
-- **KG**: Fixed the problem of concurrent writes to the Triples Store causing data integrity violations (`#1577 <https://github.com/SwissDataScienceCenter/renku-graph/issues/1577>`_).
+- **KG**: Fixed the problem of concurrent writes to the Triples Store causing data
+  integrity violations
+  (`#1577 <https://github.com/SwissDataScienceCenter/renku-graph/issues/1577>`_).
+
 
 Individual components
 ~~~~~~~~~~~~~~~~~~~~~~
 
-- `renku-graph 2.38.0 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/2.38.0>`
+- `renku-graph 2.38.0 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/2.38.0>`_
+- `renku-ui 3.10.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.10.0>`_
 
 0.32.0
 ------
