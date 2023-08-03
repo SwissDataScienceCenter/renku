@@ -78,7 +78,7 @@ describe("Basic public project functionality", () => {
       .should("be.visible")
       .click();
     cy.dataCy("project-settings-knowledge-graph")
-      .contains("Knowledge Graph metadata", { timeout: TIMEOUTS.vlong })
+      .contains("Metadata processing", { timeout: TIMEOUTS.vlong })
       .should("exist");
     cy.dataCy("kg-status-section-open").should("exist").click();
     cy.dataCy("project-settings-knowledge-graph")
@@ -141,7 +141,7 @@ describe("Basic public project functionality", () => {
       .contains("This project uses the latest")
       .should("exist");
     cy.dataCy("project-settings-knowledge-graph")
-      .contains("Knowledge Graph metadata")
+      .contains("Metadata processing")
       .should("exist");
   });
 
