@@ -23,29 +23,31 @@ import org.scalatestplus.selenium.WebBrowser.{cssSelector, find, findAll}
 import scala.annotation.tailrec
 import scala.concurrent.duration._
 
-object DatasetsPage extends RenkuPage(path = s"/datasets") with TopBar {
+object DatasetsPage extends RenkuPage(path = s"/search?type=dataset") with TopBar {
 
   def searchBox(implicit webDriver: WebDriver): WebElement = eventually {
-    find(cssSelector("#searchQuery")) getOrElse fail("Datasets -> search query field cannot be found")
+    find(cssSelector("input[type=search]")) getOrElse fail("Search -> search query field cannot be found")
   }
 
   def searchButton(implicit webDriver: WebDriver): WebElement = eventually {
-    find(cssSelector("#searchButton")) getOrElse fail("Datasets -> search button cannot be found")
+    find(cssSelector("#addon-wrapping")) getOrElse fail("Search -> search button cannot be found")
   }
 
-  def orderByDropdownMenu(
-      currentOrdering: DatasetSearchOrdering = DatasetSearchOrdering.ProjectsCount
+  def sortByDropdownMenu(
+      currentOrdering: DatasetSearchOrdering = DatasetSearchOrdering.BestMatch
   )(implicit webDriver: WebDriver): WebElement =
     eventually {
-      findAll(cssSelector("button.dropdown-toggle")).find(elem => elem.getText == currentOrdering.value) getOrElse fail(
-        s"Datasets -> current ordering ${currentOrdering.value} button not found"
+      find(cssSelector("select.sorting-input")) getOrElse fail(
+        s"Search -> sort ordering button not found"
       )
     }
 
-  def orderByDropdownItem(datasetOrdering: DatasetSearchOrdering)(implicit webDriver: WebDriver): WebElement =
+  def sortByDropdownItem(datasetOrdering: DatasetSearchOrdering)(implicit webDriver: WebDriver): WebElement =
     eventually {
-      findAll(cssSelector("button.dropdown-item")).find(elem => elem.getText == datasetOrdering.value) getOrElse fail(
-        s"Datasets -> order by ${datasetOrdering.value} button not found"
+      findAll(cssSelector("select.sorting-input > option")).find(elem =>
+        elem.getText == datasetOrdering.value
+      ) getOrElse fail(
+        s"Search -> sort by ${datasetOrdering.value} button not found"
       )
     }
 
@@ -70,13 +72,13 @@ object DatasetsPage extends RenkuPage(path = s"/datasets") with TopBar {
   }
   object DatasetSearchOrdering {
     case object Title extends DatasetSearchOrdering {
-      val value = "Title"
+      val value = "Title: A to Z"
     }
     case object Date extends DatasetSearchOrdering {
-      val value = "Date"
+      val value = "Recently modified"
     }
-    case object ProjectsCount extends DatasetSearchOrdering {
-      val value = "Projects count"
+    case object BestMatch extends DatasetSearchOrdering {
+      val value = "Best match"
     }
   }
 }
