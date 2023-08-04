@@ -60,7 +60,6 @@ User-Facing Changes
 Internal Changes
 ~~~~~~~~~~~~~~~~
 
-<<<<<<< HEAD
 **🌟 New Features**
 
 - **Renku Notebooks**: Use a new version of Amalthea which adds fields for hibernating sessions in the CRD.
