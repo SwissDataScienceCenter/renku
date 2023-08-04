@@ -1,0 +1,244 @@
+gateway:
+  gitlabUrl: https://gitlab.dev.renku.ch
+  logoutGitLabUponRenkuLogout: false
+  redis:
+    master:
+      resources:
+        requests:
+          cpu: 20m
+          memory: 20Mi
+  resources:
+    requests:
+      cpu: 20m
+      memory: 64Mi
+gitlab:
+  enabled: false
+global:
+  anonymousSessions:
+    enabled: true
+  gateway:
+  gitlab:
+    urlPrefix: /
+  renku:
+    domain: <replace>.dev.renku.ch
+  uiserver:
+  useHTTPS: true
+graph:
+  enabled: true
+  gitlab:
+    url: https://gitlab.dev.renku.ch
+  graphService:
+    services:
+      renku:
+        url: https://dev.renku.ch
+  jena:
+    persistence:
+      enabled: false
+    resources:
+      requests:
+        cpu: 100m
+        memory: 1.5Gi
+  tokenRepository:
+    resources:
+      requests:
+        cpu: 50m
+        memory: 250Mi
+      limits: null
+  triplesGenerator:
+    jvmXmx: 512m
+    resources:
+      requests:
+        cpu: 500m
+        memory: 600Mi
+      limits: null
+  webhookService:
+    resources:
+      requests:
+        cpu: 50m
+        memory: 256Mi
+      limits: null
+  knowledgeGraph:
+    resources:
+      requests:
+        cpu: 10m
+      limits: null
+  eventLog:
+    resources:
+      requests:
+        cpu: 200m
+      limits: null
+  commitEventService:
+    resources:
+      requests:
+        cpu: 20m
+      limits: null
+ingress:
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-production
+  enabled: true
+  hosts:
+    - <replace>.dev.renku.ch
+  tls:
+    - hosts:
+        - <replace>.dev.renku.ch
+      secretName: <replace>-ch-tls
+keycloakx:
+  resources:
+    requests:
+      cpu: 100m
+      memory: 600Mi
+notebooks:
+  amalthea:
+    deployCrd: false
+    resourceUsageCheck:
+      enabled: false
+    resources:
+      requests:
+        cpu: 20m
+        memory: 100Mi
+      limits: null
+  sessionTolerations:
+    - key: renku.io/dedicated
+      operator: Equal
+      value: user
+      effect: NoSchedule
+  sessionAffinity:
+    nodeAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        nodeSelectorTerms:
+          - matchExpressions:
+              - key: renku.io/node-purpose
+                operator: In
+                values:
+                  - user
+  gitlab:
+    registry:
+      host: registry.dev.renku.ch
+    url: https://gitlab.dev.renku.ch
+  image:
+    imagePullPolicy: Always
+  oidc:
+    tokenUrl: https://<replace>.dev.renku.ch/auth/realms/Renku/protocol/openid-connect/token
+    authUrl: https://<replace>.dev.renku.ch/auth/realms/Renku/protocol/openid-connect/auth
+    allowUnverifiedEmail: true
+  sessionIngress:
+    host: <replace>.dev.renku.ch
+    tlsSecret: <replace>-ch-tls
+  resources:
+    requests:
+      cpu: 50m
+      memory: 150Mi
+  serverOptions:
+    defaultUrl:
+      displayName: Default Environment
+      type: enum
+      default: /lab
+      options:
+        - /lab
+        - /rstudio
+    cpu_request:
+      displayName: Number of CPUs
+      type: enum
+      default: 0.1
+      options:
+        - 0.1
+        - 0.5
+    mem_request:
+      displayName: Amount of Memory
+      type: enum
+      default: 1G
+      options:
+        - 1G
+        - 2G
+    disk_request:
+      displayName: Amount of Storage
+      type: enum
+      default: 1G
+      options:
+        - 1G
+        - 2G
+        - 4G
+  serverDefaults:
+    defaultUrl: /lab
+    cpu_request: 0.1
+    mem_request: 1G
+    disk_request: 1G
+    gpu_request: 0
+    lfs_auto_fetch: false
+  userSessionPersistentVolumes:
+    enabled: false
+    storageClass: csi-cinder-sc-delete
+postgresql:
+  metrics:
+    enabled: true
+  persistence:
+    enabled: false
+  postgresqlPassword: postgres
+  replication:
+    enabled: false
+  resources:
+    requests:
+      cpu: 100m
+      memory: 100Mi
+redis:
+  master:
+    resources:
+      requests:
+        cpu: 50m
+        memory: 50Mi
+  slave:
+    resources:
+      requests:
+        cpu: 50m
+        memory: 50Mi
+  sentinel:
+    resources:
+      requests:
+        cpu: 50m
+        memory: 50Mi
+tests:
+  enabled: true
+  ## User account for running `helm test`
+  parameters:
+    fullname: Renku Bot
+    email: renku@datascience.ch
+    anonAvailable: "true"
+    anonProject: andi/public-test-project
+    register: "true"
+  resultsS3:
+    enabled: true
+    host: os.zhdk.cloud.switch.ch
+    bucket: dev-acceptance-tests-results
+ui:
+  gateway:
+    url: https://<replace>.dev.renku.ch/api
+  gitlabUrl: https://gitlab.dev.renku.ch
+  client:
+    url: https://<replace>.dev.renku.ch
+    welcomePage:
+      text: |
+        ## Welcome to Renku!
+        Renku is software for collaborative data science.
+        With Renku you can share code and data, discuss problems and solutions, and coordinate data-science projects.
+        ## Template
+        I am templateable, so deployment specific information can be put here!
+  server:
+    resources:
+      requests:
+        cpu: 25m
+        memory: 75Mi
+core:
+  resources:
+    requests:
+      cpu: 100m
+      memory: 500Mi
+  ingress:
+    annotations:
+      cert-manager.io/cluster-issuer: letsencrypt-production
+    enabled: true
+    hosts:
+      - <replace>.dev.renku.ch
+    tls:
+      - hosts:
+          - <replace>.dev.renku.ch
+        secretName: <replace>-ch-tls
