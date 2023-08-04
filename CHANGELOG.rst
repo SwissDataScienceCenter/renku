@@ -1,13 +1,15 @@
 .. _changelog:
 
-0.3x.0
+0.35.0
 ------
-Renku ``0.3x.0`` upgrades the PostgreSQL version that is shipped with the project.
+Renku ``0.35.0`` upgrades the PostgreSQL version that is shipped with the project.
 
 NOTE: make sure to check `helm-chart/values.yaml.changelog.md` for instructions on how to
 upgrade to this version of Renku.
 
-=======
+Internal Changes
+~~~~~~~~~~~~~~~~
+
 **Improvements**
 
 - **Infrastructure**: (BREAKING CHANGE) Upgrade the version of PostgreSQL to 15.3.0. This requires modifying your current values file to work with the new PostgreSQL Helm chart, see (`the helm chart values changelog <https://github.com/SwissDataScienceCenter/renku/blob/master/helm-chart/values.yaml.changelog.md>`_) for instructions.
@@ -93,16 +95,10 @@ User-Facing Changes
 - **UI**: Prevent losing work when editing datasets
   (`#2628 <https://github.com/SwissDataScienceCenter/renku-ui/issues/2628>`_).
 
-
 Internal Changes
 ~~~~~~~~~~~~~~~~
 
-<<<<<<< HEAD
 **New Features**
-=======
-<<<<<<< HEAD
-**🌟 New Features**
->>>>>>> b3f749d2 (chore(postgres): Upgrade Postgres to version 15.3.0)
 
 - **Renku Notebooks**: Use a new version of Amalthea which adds fields for hibernating sessions in the CRD.
 
@@ -124,7 +120,7 @@ Individual components
 0.32.0
 ------
 
-Renku ``0.32.0`` introduces improvements in the KG services, enhancing KG overall performance.
+Renku ``0.32.0`` introduces improvements in the KG services, enhancing KG overall performance. 
 
 User-Facing Changes
 ~~~~~~~~~~~~~~~~~~~

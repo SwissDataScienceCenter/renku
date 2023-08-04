@@ -16,12 +16,10 @@ gitlab:
 global:
   anonymousSessions:
     enabled: true
-  gateway:
   gitlab:
     urlPrefix: /
   renku:
     domain: <replace>.dev.renku.ch
-  uiserver:
   useHTTPS: true
 graph:
   enabled: true
@@ -169,11 +167,9 @@ notebooks:
     enabled: false
     storageClass: csi-cinder-sc-delete
 postgresql:
-  metrics:
-    enabled: true
-  persistence:
-    enabled: false
-  postgresqlPassword: postgres
+  primary:
+    persistence:
+      enabled: false
   replication:
     enabled: false
   resources:
