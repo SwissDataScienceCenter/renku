@@ -31,8 +31,8 @@ New
   ```
   postgresql:
     auth:
-      username: <string>
       database: <string>
+      username: <string>
       postgresqlPassword: <string>
       existingSecret: <string>
       replicationUsername: <string>
