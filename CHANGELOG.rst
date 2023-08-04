@@ -47,6 +47,10 @@ User-Facing Changes
 Internal Changes
 ~~~~~~~~~~~~~~~~
 
+**🌟 New Features**
+
+- **Renku Notebooks**: Use a new version of Amalthea which adds fields for hibernating sessions in the CRD.
+
 **Bug Fixes**
 
 - **KG**: Fixed the problem of concurrent writes to the Triples Store causing data
@@ -59,6 +63,8 @@ Individual components
 
 - `renku-graph 2.38.0 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/2.38.0>`_
 - `renku-ui 3.10.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.10.0>`_
+- `renku-notebooks 1.17.0 <https://github.com/SwissDataScienceCenter/renku-notebooks/releases/tag/1.17.0>`_
+- `amalthea 0.8.0 <https://github.com/SwissDataScienceCenter/amalthea/releases/tag/0.8.0>`_
 
 0.32.0
 ------
