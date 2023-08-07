@@ -436,7 +436,7 @@ Internal Changes
 
 **Bug Fixes**
 
-- **KG**: Fix  services failing on startup when longer than 16 chars secrets configured.
+- **KG**: Fix KG services failing on startup when longer than 16 chars secrets configured.
 
 Individual components
 ~~~~~~~~~~~~~~~~~~~~~~
