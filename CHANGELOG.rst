@@ -76,15 +76,15 @@ User-Facing Changes
 
 **✨ Improvements**
 
-- 🔁 ****: ``updatedAt`` renamed to ``dateModified`` on the Project Details API (`#1582 <https://github.com/SwissDataScienceCenter/renku-graph/issues/1582>`_).
-- 📖 ****: Improved performance of the Project Status API (`#1554 <https://github.com/SwissDataScienceCenter/renku-graph/issues/1554>`_).
+- 🔁 **KG**: ``updatedAt`` renamed to ``dateModified`` on the Project Details API (`#1582 <https://github.com/SwissDataScienceCenter/renku-graph/issues/1582>`_).
+- 📖 **KG**: Improved performance of the Project Status API (`#1554 <https://github.com/SwissDataScienceCenter/renku-graph/issues/1554>`_).
 
 Internal Changes
 ~~~~~~~~~~~~~~~~
 
 ** Improvements**
 
-- ****: A new process to synchronize various project properties between GitLab and Triples Store (`#1569 <https://github.com/SwissDataScienceCenter/renku-graph/issues/1569>`_).
+- **KG**: A new process to synchronize various project properties between GitLab and Triples Store (`#1569 <https://github.com/SwissDataScienceCenter/renku-graph/issues/1569>`_).
 
 Individual components
 ~~~~~~~~~~~~~~~~~~~~~~
@@ -262,7 +262,7 @@ Internal Changes
 
 **✨ Improvements**
 
-- ****: A PostgreSQL DB is added for the triples-generator (`values changelog <https://github.com/SwissDataScienceCenter/renku/blob/master/helm-chart/values.yaml.changelog.md#upgrading-to-renku-0290>`_).
+- **KG**: A PostgreSQL DB is added for the triples-generator (`values changelog <https://github.com/SwissDataScienceCenter/renku/blob/master/helm-chart/values.yaml.changelog.md#upgrading-to-renku-0290>`_).
 
 **Bug Fixes**
 
@@ -308,8 +308,8 @@ User-Facing Changes
 - 🐳️ **CLI**: Pass docker run args to session start (`#3487 <https://github.com/SwissDataScienceCenter/renku-python/issues/3487>`_).
 - 👩‍💻️ **CLI**: Shell completion for sessions (`#3450 <https://github.com/SwissDataScienceCenter/renku-python/issues/3450>`_).
 - 📎️ **CLI**: Export dataset keywords (`#3454 <https://github.com/SwissDataScienceCenter/renku-python/issues/3454>`_).
-- ****: Dataset Details API response enhanced with info about project specific dataset identifier (`#1546 <https://github.com/SwissDataScienceCenter/renku-graph/issues/1546>`_).
-- ****: ``slug`` as a copy of ``name`` on responses from all Dataset APIs (`#1544 <https://github.com/SwissDataScienceCenter/renku-graph/issues/1544>`_).
+- **KG**: Dataset Details API response enhanced with info about project specific dataset identifier (`#1546 <https://github.com/SwissDataScienceCenter/renku-graph/issues/1546>`_).
+- **KG**: ``slug`` as a copy of ``name`` on responses from all Dataset APIs (`#1544 <https://github.com/SwissDataScienceCenter/renku-graph/issues/1544>`_).
 - 🗑️ **UI**: Added a delete project button on the settings tab (`#2416 <https://github.com/SwissDataScienceCenter/renku-ui/issues/2416>`_).
 
 **✨ Improvements**
@@ -375,14 +375,14 @@ User-Facing Changes
 
 **✨ Improvements**
 
-- ****: Improved performance when searching for Projects.
+- **KG**: Improved performance when searching for Projects.
 
 Internal Changes
 ~~~~~~~~~~~~~~~~
 
 **Bug Fixes**
 
-- ****: Excessive Project Access Tokens creation when calling Project Status API for non-activated projects.
+- **KG**: Excessive Project Access Tokens creation when calling Project Status API for non-activated projects.
 
 Individual components
 ~~~~~~~~~~~~~~~~~~~~~~
@@ -392,7 +392,7 @@ Individual components
 0.26.1
 ------
 
-Renku ``0.26.1`` comes with a fix for  services failing on startup when longer than 16 chars secrets are configured.
+Renku ``0.26.1`` comes with a fix for KG services failing on startup when longer than 16 chars secrets are configured.
 
 Individual components
 ~~~~~~~~~~~~~~~~~~~~~~
@@ -410,7 +410,7 @@ User-Facing Changes
 **🌟 New Features**
 
 - 🚢 **Renku CLI**: Allow force-building local images and setting local port on docker session provider.
-- ****: A new Recently Viewed Entities API giving information about entities the user viewed.
+- **KG**: A new Recently Viewed Entities API giving information about entities the user viewed.
 - 🔁 **UI**: Add a clone button to the project overview
   (`#2495 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2495>`_).
 
@@ -418,7 +418,7 @@ User-Facing Changes
 
 - ☝ **Renku CLI**: Removed nagging about new Renku CLI versions when running commands.
 - 🪣 **Renku CLI**: Added support for storing dataset S3 credentials per bucket.
-- ****: Improved quality of search results returned by the Cross-Entity Search API.
+- **KG**: Improved quality of search results returned by the Cross-Entity Search API.
 
 **🐞 Bug Fixes**
 
@@ -436,7 +436,7 @@ Internal Changes
 
 **Bug Fixes**
 
-- ****: Fix  services failing on startup when longer than 16 chars secrets configured.
+- **KG**: Fix  services failing on startup when longer than 16 chars secrets configured.
 
 Individual components
 ~~~~~~~~~~~~~~~~~~~~~~
@@ -455,21 +455,21 @@ Renku ``0.25.6`` fixes a bug in the Renku release process and does not bring any
 0.25.5
 ------
 
-Renku ``0.25.5`` comes with a few  bug-fixes.
+Renku ``0.25.5`` comes with a few KG bug-fixes.
 
 User-Facing Changes
 ~~~~~~~~~~~~~~~~~~~
 
 **🐞 Bug Fixes**
 
-- ****: Prevent presenting misleading information about Knowledge Graph integration status on projects where the user is not one of the members.
+- **KG**: Prevent presenting misleading information about Knowledge Graph integration status on projects where the user is not one of the members.
 
 Internal Changes
 ~~~~~~~~~~~~~~~~
 
 **Bug Fixes**
 
-- ****: Resolve token decryption issues preventing Knowledge Graph integration activation.
+- **KG**: Resolve token decryption issues preventing Knowledge Graph integration activation.
 
 Individual components
 ~~~~~~~~~~~~~~~~~~~~~~
@@ -480,7 +480,7 @@ Individual components
 0.25.4
 ------
 
-Renku ``0.25.4`` introduces several  and UI bug-fixes.
+Renku ``0.25.4`` introduces several KG and UI bug-fixes.
 
 User-Facing Changes
 ~~~~~~~~~~~~~~~~~~~
@@ -507,9 +507,9 @@ Internal Changes
 
 **Bug Fixes**
 
-- ****: Resolve issues with synchronization of project user access authorization data.
-- ****: Ensure that the Delete Project API works when there is no data for the project in the Triples Store.
-- ****: Ensure that the Lineage API works in cases of implicit parameters, inputs and outputs.
+- **KG**: Resolve issues with synchronization of project user access authorization data.
+- **KG**: Ensure that the Delete Project API works when there is no data for the project in the Triples Store.
+- **KG**: Ensure that the Lineage API works in cases of implicit parameters, inputs and outputs.
 - **UI**: Correct handling of notebook search parameter with autostart
   (`#2469 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2469>`_).
 
@@ -632,11 +632,11 @@ Internal Changes
 
 **Improvements**
 
-* ****: Collect info about users who showed interest in projects and datasets.
+* **KG**: Collect info about users who showed interest in projects and datasets.
 
 **Bug Fixes**
 
-* ****: Resolve problems causing flows accessing GitLab API to go into deadlock.
+* **KG**: Resolve problems causing flows accessing GitLab API to go into deadlock.
 
 
 Individual components
@@ -663,12 +663,12 @@ Internal Changes
 
 **Improvements**
 
-* **UI**: Retrieve project metadata from the  on project access
+* **UI**: Retrieve project metadata from the KG on project access
   (`#2414 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2414>`_).
 
 **Bug Fixes**
 
-* ****: Resolve problems causing particular flows to terminate prematurely,
+* **KG**: Resolve problems causing particular flows to terminate prematurely,
   as well as improve the quality of logging within the Activation API.
 
 
@@ -745,7 +745,7 @@ User-Facing Changes
   (`#3351 <https://github.com/SwissDataScienceCenter/renku-python/issues/3351>`__).
 * **Renku CLI**: Fix git credentials helper setup in ``renku login``
   (`#3348 <https://github.com/SwissDataScienceCenter/renku-python/issues/3348>`__).
-* **Sessions**: Sessions crashing when automated token refresh runs in bacround
+* **Sessions**: Sessions crashing when automated token refresh runs in background
   (`#1416 <https://github.com/SwissDataScienceCenter/renku-notebooks/pull/1416>`_).
 
 Internal Changes
