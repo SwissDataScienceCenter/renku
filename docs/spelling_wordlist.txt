@@ -29,6 +29,7 @@ bugfix
 Calamus
 cgroup
 Champak
+changelog
 chartpress
 Chartpress
 checksum

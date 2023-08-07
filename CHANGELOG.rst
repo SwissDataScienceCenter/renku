@@ -1,5 +1,96 @@
 .. _changelog:
 
+0.33.0
+------
+
+Renku ``0.33.0`` introduces improvements and bug fixes in the UI and KG.
+
+The UI benefits from better error handling and overall behavior; improved
+handling of common R file extensions is also added.
+KG boasts performance improvements on the Cross-Entity Search and allows
+changing project visibility through a dedicated API.
+
+User-Facing Changes
+~~~~~~~~~~~~~~~~~~~
+
+**🌟 New Features**
+
+- 🫣 **KG**: Add a new Project Update API for changing Project visibility
+  (`#1611 <https://github.com/SwissDataScienceCenter/renku-graph/issues/1611>`_).
+
+**✨ Improvements**
+
+- 🔎 **KG**: The Cross-Entity Search returns a new ``dateModified`` property for
+  Project and Dataset entities
+  (`#1612 <https://github.com/SwissDataScienceCenter/renku-graph/issues/1612>`_) and
+  (`#1595 <https://github.com/SwissDataScienceCenter/renku-graph/issues/1595>`_).
+- 〽️ **KG**: Improved performance of the Cross-Entity Search while searching for
+  datasets
+  (`#1591 <https://github.com/SwissDataScienceCenter/renku-graph/issues/1591>`_).
+- 🔙 **UI**: Add a global error page for fatal errors preventing blank pages
+  (`#2604 <https://github.com/SwissDataScienceCenter/renku-ui/issues/2604>`_).
+- 📄 **UI**: Support previewing additional common R file extensions
+  (`#2639 <https://github.com/SwissDataScienceCenter/renku-ui/issues/2639>`_).
+
+**🐞 Bug Fixes**
+
+- **UI**: Prevent showing endless loader when migration errors occur
+  (`#2650 <https://github.com/SwissDataScienceCenter/renku-ui/issues/2650>`_).
+- **UI**: Do not expand folders by default in dataset view when dataset contains
+  large number of elements
+  (`#2628 <https://github.com/SwissDataScienceCenter/renku-ui/issues/2628>`_).
+- **UI**: Render Rstudio components correctly -- sometimes columns were collapsed
+  (`#2660 <https://github.com/SwissDataScienceCenter/renku-ui/issues/2660>`_).
+- **UI**: Prevent losing work when editing datasets
+  (`#2628 <https://github.com/SwissDataScienceCenter/renku-ui/issues/2628>`_).
+
+Internal Changes
+~~~~~~~~~~~~~~~~
+
+**🌟 New Features**
+
+- **Renku Notebooks**: Use a new version of Amalthea which adds fields for hibernating sessions in the CRD.
+
+**Bug Fixes**
+
+- **KG**: Fixed the problem of concurrent writes to the Triples Store causing data
+  integrity violations
+  (`#1577 <https://github.com/SwissDataScienceCenter/renku-graph/issues/1577>`_).
+
+
+Individual components
+~~~~~~~~~~~~~~~~~~~~~~
+
+- `renku-graph 2.38.0 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/2.38.0>`_
+- `renku-ui 3.10.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.10.0>`_
+- `renku-notebooks 1.17.0 <https://github.com/SwissDataScienceCenter/renku-notebooks/releases/tag/1.17.0>`_
+- `amalthea 0.8.0 <https://github.com/SwissDataScienceCenter/amalthea/releases/tag/0.8.0>`_
+
+0.32.0
+------
+
+Renku ``0.32.0`` introduces improvements in the KG services, enhancing KG overall performance. 
+
+User-Facing Changes
+~~~~~~~~~~~~~~~~~~~
+
+**✨ Improvements**
+
+- 🔁 **KG**: ``updatedAt`` renamed to ``dateModified`` on the Project Details API (`#1582 <https://github.com/SwissDataScienceCenter/renku-graph/issues/1582>`_).
+- 📖 **KG**: Improved performance of the Project Status API (`#1554 <https://github.com/SwissDataScienceCenter/renku-graph/issues/1554>`_).
+
+Internal Changes
+~~~~~~~~~~~~~~~~
+
+** Improvements**
+
+- **KG**: A new process to synchronize various project properties between GitLab and Triples Store (`#1569 <https://github.com/SwissDataScienceCenter/renku-graph/issues/1569>`_).
+
+Individual components
+~~~~~~~~~~~~~~~~~~~~~~
+
+- `renku-graph 2.37.0 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/2.37.0>`_
+
 
 0.31.0
 ------
@@ -140,7 +231,6 @@ Individual components
 - `renku-ui 3.8.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.8.0>`_
 - `renku-ui 3.8.1 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.8.1>`_
 
-
 0.29.0
 ------
 
@@ -169,6 +259,10 @@ User-Facing Changes
 
 Internal Changes
 ~~~~~~~~~~~~~~~~
+
+**✨ Improvements**
+
+- **KG**: A PostgreSQL DB is added for the triples-generator (`values changelog <https://github.com/SwissDataScienceCenter/renku/blob/master/helm-chart/values.yaml.changelog.md#upgrading-to-renku-0290>`_).
 
 **Bug Fixes**
 

@@ -62,7 +62,11 @@ trait Environments {
       sleep(15 seconds)
     }
 
-    And("switches to the iframe")
+    `switch to the session iframe`
+  }
+
+  def `switch to the session iframe`(implicit projectPage: ProjectPage): JupyterLabPage = {
+    And("switches to the session iframe")
     `try few times with page reload` { _ =>
       projectPage.Sessions.Running.maybeJupyterLabIframe match {
         case Some(iframe) =>
@@ -127,21 +131,30 @@ trait Environments {
       implicit val projectPage: ProjectPage = ProjectPage(anonEnvConfig.projectId)
 
       When(s"user goes to ${anonEnvConfig.projectId}")
-      go to projectPage
+      go to projectPage sleep (2 seconds)
+      verify browserAt projectPage
 
-      And("clicks on the Sessions tab to launch an unprivileged session")
-      click on projectPage.Sessions.sessionStartMore
-      click on projectPage.Sessions.sessionStartWithOptions
-      sleep(5 seconds)
+      if (projectPage.connectButtonVisible) {
+        When("A session is already running")
+        And("clicks on the 'Start' button")
+        click on projectPage.connectButton sleep (15 seconds)
+        `switch to the session iframe`
+      } else if (projectPage.startButtonVisible) {
+        And("clicks on the Sessions tab to launch an unprivileged session")
+        click on projectPage.Sessions.sessionStartMore
+        click on projectPage.Sessions.sessionStartWithOptions
+        sleep(5 seconds)
 
-      if (projectPage.Sessions.Running.maybeOpenButton.exists(_.isDisplayed))
-        And("the session is already started")
-      else {
-        `wait for image to build`
-        `start session and wait until it is ready`
-      }
+        if (projectPage.Sessions.Running.maybeOpenButton.exists(_.isDisplayed))
+          And("the session is already started")
+        else {
+          `wait for image to build`
+          `start session and wait until it is ready`
+        }
 
-      `connect to JupyterLab`
+        `connect to JupyterLab`
+      } else fail("Neither 'Start' nor 'Connect' button is visible")
+
       Then("a JupyterLab session is opened")
       Some(projectPage)
     }
