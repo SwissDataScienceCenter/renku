@@ -53,7 +53,7 @@ Internal Changes
 
 **Bug Fixes**
 
-- ****: Fixed the problem of concurrent writes to the Triples Store causing data
+- **Knowledge Graph**: Fixed the problem of concurrent writes to the Triples Store causing data
   integrity violations
   (`#1577 <https://github.com/SwissDataScienceCenter/renku-graph/issues/1577>`_).
 
