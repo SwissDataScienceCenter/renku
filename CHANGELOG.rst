@@ -5,8 +5,8 @@
 
 Renku ``0.33.0`` introduces improvements and bug fixes in the UI and Knowledge Graph.
 
-The UI benefits from better error handling and overall behavior. Thus, improved
-handling of common R file extensions is added. Regarding the Knowledge Graph, the 
+The UI benefits from better error handling and overall behavior, including improved
+handling of common R file extensions. Regarding the Knowledge Graph, the 
 Cross-Entity Search improves significantly its performance and project visibility
 can be changed through a dedicated API.
 
