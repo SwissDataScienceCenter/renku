@@ -16,19 +16,22 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import sys
 import argparse
-import warnings
 import getpass
 import json
+import sys
 import time
+import warnings
+from typing import Dict, List
 
 from keycloak import KeycloakAdmin
-from keycloak.exceptions import KeycloakConnectionError, KeycloakGetError, KeycloakPostError
+from keycloak.exceptions import (
+    KeycloakConnectionError,
+    KeycloakGetError,
+    KeycloakPostError,
+)
 
-
-# Helper functions which are called by the script.
-from typing import Dict, List
+from .utils import DemoUserConfig, OIDCClientsConfig, OIDCGitlabClient
 
 
 def _check_existing(existing_object: Dict, new_object: Dict, case, id_key) -> bool:
@@ -160,52 +163,12 @@ parser.add_argument(
     default="Renku",
 )
 parser.add_argument(
-    "--users-file",
-    help="""Path to a json file containing the users to be created""",
-    default=None,
-)
-parser.add_argument(
-    "--clients-file",
-    help="""Path to a json file containing the clients to be created""",
-    default=None,
-)
-parser.add_argument(
     "--force",
     help="If existing clients do not exactly match the provided configuration, recreate them using the provided "
     "configuration.",
     action="store_true",
 )
 args = parser.parse_args()
-
-
-# Check if the file containing the user information is ok.
-if args.users_file:
-    try:
-        with open(args.users_file, "r") as f:
-            new_users = json.load(f)
-    except FileNotFoundError:
-        sys.stderr.write("No users-file found at {}.".format(args.users_file))
-        exit(1)
-    except json.JSONDecodeError:
-        sys.stderr.write("Could not parse users-file at {}.".format(args.users_file))
-        exit(1)
-else:
-    new_users = []
-
-# Check if the file containing the client information is ok.
-if args.clients_file:
-    try:
-        with open(args.clients_file, "r") as f:
-            new_clients = json.load(f)
-    except FileNotFoundError:
-        sys.stderr.write("No clients-file found at {}.".format(args.clients_file))
-        exit(1)
-    except json.JSONDecodeError:
-        sys.stderr.write("Could not parse clients-file at {}.".format(args.clients_file))
-        exit(1)
-else:
-    new_clients = []
-
 
 # Check if we have an admin password for keycloak, prompt
 # the user if not.
@@ -274,8 +237,12 @@ sys.stdout.write("done\n")
 keycloak_admin.connection.realm_name = args.realm
 
 
-for new_client in new_clients:
+for new_client in OIDCClientsConfig.from_env().to_list():
     _check_and_create_client(keycloak_admin, new_client, args.force)
+
+gitlab_oidc_client = OIDCGitlabClient.from_env().to_dict()
+if gitlab_oidc_client is not None:
+    _check_and_create_client(keycloak_admin, gitlab_oidc_client, args.force)
 
 # Create renku-admin realm role
 sys.stdout.write("Creating renku-admin realm role, skipping if it already exists...")
@@ -284,10 +251,7 @@ realm_role_payload = {
     "composite": True,
     "composites": {
         "client": {
-            "realm-management": [
-                "query-users",
-                "view-users"
-            ],
+            "realm-management": ["query-users", "view-users"],
         },
     },
     "clientRole": False,
@@ -295,5 +259,8 @@ realm_role_payload = {
 keycloak_admin.create_realm_role(realm_role_payload, skip_exists=True)
 sys.stdout.write("done\n")
 
-for new_user in new_users:
-    _check_and_create_user(keycloak_admin, new_user)
+demo_user = DemoUserConfig.from_env().to_dict()
+if demo_user is not None:   
+    sys.stdout.write("Creating Keycloak demo user...")
+    _check_and_create_user(keycloak_admin, demo_user)
+    sys.stdout.write("done\n")
