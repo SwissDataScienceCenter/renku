@@ -6,11 +6,12 @@ Please follow this convention when adding a new row
 * `<type: NEW|EDIT|DELETE> - *<resource name>*: <details>`
 
 ----
-## Upgrading to Renku 0.30.0
+## Upgrading to Renku 0.34.0
 * NEW - *ingress.className* is now available to select a specific IngressClass to
   be used for the ingress. While often supporting both, current ingress
   controllers uses this value over the deprecated kubernetes.io/ingress.class
-  annotation.
+  annotation. Existing instances of Renku do not need to be changed unless their
+  administrators wish to take advantage of the IngressClass.
 
 For more information about the move to IngressClass see this [Kubernetes blog
 entry](https://kubernetes.io/blog/2020/04/02/improvements-to-the-ingress-api-in-kubernetes-1.18/).
