@@ -1,5 +1,21 @@
 .. _changelog:
 
+0.34.0
+------
+
+Internal Changes
+~~~~~~~~~~~~~~~~
+
+**🌟 New Features**
+
+- **Infrastructure**: add support for ingress class name
+
+**✨ Improvements**
+
+- **Documentation**: refactor certificate management part to show how to make use of
+  cert-manager and manually created certificates in both development and production
+  contexts.
+
 0.33.0
 ------
 
