@@ -2,9 +2,9 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ template "renku.fullname" . }}-auth
+  name: {{ template "renku.fullname" . }}-gateway-auth
   labels:
-    app: {{ template "renku.name" . }}-auth
+    app: {{ template "renku.name" . }}-gateway-auth
     chart: {{ template "renku.chart" . }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
@@ -16,7 +16,7 @@ spec:
       protocol: TCP
       name: http
   selector:
-    app: {{ template "renku.name" . }}-auth
+    app: {{ template "renku.name" . }}-gateway-auth
     release: {{ .Release.Name }}
 ---
 apiVersion: v1
@@ -24,7 +24,7 @@ kind: Service
 metadata:
   name: renku-traefik
   labels:
-    app: {{ template "renku.name" . }}-revproxy
+    app: {{ template "renku.name" . }}-gateway-revproxy
     chart: {{ template "renku.chart" . }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
@@ -36,5 +36,5 @@ spec:
       protocol: TCP
       name: http
   selector:
-    app: {{ template "renku.name" . }}-revproxy
+    app: {{ template "renku.name" . }}-gateway-revproxy
     release: {{ .Release.Name }}

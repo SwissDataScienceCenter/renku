@@ -43,8 +43,8 @@ class OIDCClient:
     Renku user with Keycloak."""
 
     id: str
-    secret: Optional[str] = field(default=None, repr=False)
     base_url: str
+    secret: Optional[str] = field(default=None, repr=False)
     attributes: Dict[str, Any] = field(default_factory=lambda: {})
     public_client: bool = False
 
@@ -87,7 +87,7 @@ class OIDCClient:
     def from_env(cls, prefix: str = "RENKU_KC_CLIENT_") -> "OIDCClient":
         return cls(
             id=os.environ[f"{prefix}ID"],
-            secret=os.environ[f"{prefix}SECRET"],
+            secret=os.environ.get(f"{prefix}SECRET"),
             base_url=os.environ.get(f"{prefix}BASE_URL", os.environ["RENKU_BASE_URL"]),
             attributes=json.loads(os.environ.get(f"{prefix}ATTRIBUTES", "{}")),
             public_client=os.environ.get(f"{prefix}PUBLIC", "false").lower() == "true",
@@ -103,7 +103,7 @@ class OIDCGitlabClient:
     renku_base_url: Optional[str] = None
 
     def __post_init__(self):
-        if self.internal_gitlab_enabled and not (self.gitlab_secret or self.renku_base_url):
+        if self.internal_gitlab_enabled and not (self.oidc_client_secret or self.renku_base_url):
             raise ValueError(
                 "The internal Gitlab is enabled, but the Renku base URL and/or the Keycloak OIDC client secret are not defined."
             )
@@ -113,7 +113,7 @@ class OIDCGitlabClient:
     def from_env(cls, prefix: str = "INTERNAL_GITLAB_") -> "OIDCGitlabClient":
         return cls(
             internal_gitlab_enabled=os.environ.get(f"{prefix}ENABLED", "false").lower() == "true",
-            gitlab_secret=os.environ.get(f"{prefix}OIDC_CLIENT_SECRET"),
+            oidc_client_secret=os.environ.get(f"{prefix}OIDC_CLIENT_SECRET"),
             renku_base_url=os.environ.get(f"RENKU_BASE_URL"),
         )
 

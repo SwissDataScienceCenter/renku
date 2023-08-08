@@ -145,7 +145,7 @@ KC_DB_PASSWORD: {{ default (randAlphaNum 64) .Values.global.keycloak.postgresPas
 {{- end -}}
 
 {{- define "renku.gitlabUrl" -}}
-{{ .Values.graph.gitlab.url | default (printf "%s://%s/gitlab" (include "renku.http" .) .Values.global.renku.domain) | quote }}
+{{ .Values.graph.gitlab.url | default (printf "%s://%s/gitlab" (include "renku.http" .) .Values.global.renku.domain) }}
 {{- end -}}
 
 {{- define "renku.baseUrl" -}}

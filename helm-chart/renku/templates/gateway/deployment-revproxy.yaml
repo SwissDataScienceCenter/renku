@@ -1,9 +1,9 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ template "renku.fullname" . }}-revproxy
+  name: {{ template "renku.fullname" . }}-gateway-revproxy
   labels:
-    app: {{ template "renku.name" . }}-revproxy
+    app: {{ template "renku.name" . }}-gateway-revproxy
     chart: {{ template "renku.chart" . }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
@@ -15,19 +15,19 @@ spec:
     {{- toYaml .Values.gateway.reverseProxy.updateStrategy | nindent 4 }}
   selector:
     matchLabels:
-      app: {{ template "renku.name" . }}-revproxy
+      app: {{ template "renku.name" . }}-gateway-revproxy
       release: {{ .Release.Name }}
   template:
     metadata:
       labels:
-        app: {{ template "renku.name" . }}-revproxy
+        app: {{ template "renku.name" . }}-gateway-revproxy
         release: {{ .Release.Name }}
       {{- with .Values.gateway.reverseProxy.podAnnotations }}
       annotations:
         {{- toYaml . | nindent 8 }}
       {{- end }}
     spec:
-      serviceAccountName: "{{ template "renku.fullname" . }}-revproxy"
+      serviceAccountName: "{{ template "renku.fullname" . }}-gateway-revproxy"
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       initContainers:
