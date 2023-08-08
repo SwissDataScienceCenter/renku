@@ -100,6 +100,7 @@ class OIDCGitlabClient:
 
     internal_gitlab_enabled: bool = False
     oidc_client_secret: Optional[str] = field(default=None, repr=False)
+    oidc_client_id: str = "gitlab"
     renku_base_url: Optional[str] = None
 
     def __post_init__(self):
@@ -114,6 +115,7 @@ class OIDCGitlabClient:
         return cls(
             internal_gitlab_enabled=os.environ.get(f"{prefix}ENABLED", "false").lower() == "true",
             oidc_client_secret=os.environ.get(f"{prefix}OIDC_CLIENT_SECRET"),
+            oidc_client_id=os.environ.get(f"{prefix}OIDC_CLIENT_ID", "gitlab"),
             renku_base_url=os.environ.get(f"RENKU_BASE_URL"),
         )
 
@@ -121,7 +123,7 @@ class OIDCGitlabClient:
         if not self.internal_gitlab_enabled:
             return None
         return {
-            "clientId": "gitlab",
+            "clientId": self.oidc_client_id,
             "baseUrl": f"{self.renku_base_url}/gitlab",
             "secret": self.oidc_client_secret,
             "redirectUris": [

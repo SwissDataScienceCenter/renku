@@ -74,6 +74,8 @@ spec:
                 secretKeyRef:
                   name: {{ cat (include "renku.fullname" .) "-gateway-revproxy" | nospace }} 
                   key: gitlabClientSecret
+            - name: INTERNAL_GITLAB_OIDC_CLIENT_ID
+              value: "gitlab"
             {{- end }}
             - name: RENKU_KC_CLIENT_ID
               value: renku

@@ -48,7 +48,7 @@ def _check_existing(existing_object: Dict, new_object: Dict, case, id_key) -> bo
         if key not in existing_object:
             changed = True
             warning = f"Found missing key '{key}' at {case} '{new_object[id_key]}'!"
-            logging.warn(warning)
+            logging.warning(warning)
 
         elif new_object[key] != existing_object[key]:
             # If element is a list then sort and compare again
@@ -58,9 +58,7 @@ def _check_existing(existing_object: Dict, new_object: Dict, case, id_key) -> bo
 
             changed = True
             warning = f"Found mismatch for key '{key}' at {case} '{new_object[id_key]}'!"
-            logging.warn(warning)
-            logging.warn(f"To be created: \n{json.dumps(new_object[key])}")
-            logging.warn(f"Existing: \n{json.dumps(existing_object[key])}")
+            logging.warning(warning)
 
     return changed
 

@@ -46,7 +46,11 @@ spec:
             - name: REVPROXY_RENKU_BASE_URL
               value: {{ include "renku.baseUrl" . | quote }}
             - name: REVPROXY_EXTERNAL_GITLAB_URL
+              {{- if .Values.gitlab.enabled }}
+              value: ""
+              {{- else }}
               value: {{ .Values.graph.gitlab.url | default "" | quote }}
+              {{- end }}
             - name: REVPROXY_ALLOW_ORIGIN
               value: {{ join "," .Values.gateway.allowOrigin | quote }}
             - name: REVPROXY_NAMESPACE
