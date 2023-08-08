@@ -3,28 +3,28 @@
 0.33.0
 ------
 
-Renku ``0.33.0`` introduces improvements and bug fixes in the UI and KG.
+Renku ``0.33.0`` introduces improvements and bug fixes in the UI and Knowledge Graph.
 
-The UI benefits from better error handling and overall behavior; improved
-handling of common R file extensions is also added.
-KG boasts performance improvements on the Cross-Entity Search and allows
-changing project visibility through a dedicated API.
+The UI benefits from better error handling and overall behavior, including improved
+handling of common R file extensions. Regarding the Knowledge Graph, the 
+Cross-Entity Search improves significantly its performance and project visibility
+can be changed through a dedicated API.
 
 User-Facing Changes
 ~~~~~~~~~~~~~~~~~~~
 
 **🌟 New Features**
 
-- 🫣 **KG**: Add a new Project Update API for changing Project visibility
+- 🫣 **Knowledge Graph**: Add a new Project Update API for changing Project visibility
   (`#1611 <https://github.com/SwissDataScienceCenter/renku-graph/issues/1611>`_).
 
 **✨ Improvements**
 
-- 🔎 **KG**: The Cross-Entity Search returns a new ``dateModified`` property for
+- 🔎 **Knowledge Graph**: The Cross-Entity Search returns a new ``dateModified`` property for
   Project and Dataset entities
   (`#1612 <https://github.com/SwissDataScienceCenter/renku-graph/issues/1612>`_) and
   (`#1595 <https://github.com/SwissDataScienceCenter/renku-graph/issues/1595>`_).
-- 〽️ **KG**: Improved performance of the Cross-Entity Search while searching for
+- 〽️ **Knowledge Graph**: Improved performance of the Cross-Entity Search while searching for
   datasets
   (`#1591 <https://github.com/SwissDataScienceCenter/renku-graph/issues/1591>`_).
 - 🔙 **UI**: Add a global error page for fatal errors preventing blank pages
@@ -47,13 +47,13 @@ User-Facing Changes
 Internal Changes
 ~~~~~~~~~~~~~~~~
 
-**🌟 New Features**
+**New Features**
 
 - **Renku Notebooks**: Use a new version of Amalthea which adds fields for hibernating sessions in the CRD.
 
 **Bug Fixes**
 
-- **KG**: Fixed the problem of concurrent writes to the Triples Store causing data
+- **Knowledge Graph**: Fixed the problem of concurrent writes to the Triples Store causing data
   integrity violations
   (`#1577 <https://github.com/SwissDataScienceCenter/renku-graph/issues/1577>`_).
 
