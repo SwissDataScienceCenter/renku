@@ -3,18 +3,39 @@
 0.34.0
 ------
 
+Renku ``0.34.0`` comes with improvements and bug fixes in the Knowledge Graph and the Infrastructure.
+
+User-Facing Changes
+~~~~~~~~~~~~~~~~~~~
+
+**✨ Improvements**
+
+- 🔎 **Knowledge Graph**: All the APIs return a new Project `slug` property. 
+  The `path` property although still available will be removed in the future.
+  (`#1641 <https://github.com/SwissDataScienceCenter/renku-graph/issues/1641>`_).
+
 Internal Changes
 ~~~~~~~~~~~~~~~~
 
-**🌟 New Features**
+**New Features**
 
 - **Infrastructure**: add support for ingress class name
 
-**✨ Improvements**
+**Improvements**
 
 - **Documentation**: refactor certificate management part to show how to make use of
   cert-manager and manually created certificates in both development and production
   contexts.
+
+**Bug Fixes**
+
+- **Knowledge Graph**: Fix for an infinite retry loop while sending certain types of internal events.
+  (`#1650 <https://github.com/SwissDataScienceCenter/renku-graph/issues/1650>`_).
+
+Individual components
+~~~~~~~~~~~~~~~~~~~~~~
+
+- `renku-graph 2.39.0 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/2.39.0>`_
 
 0.33.0
 ------
