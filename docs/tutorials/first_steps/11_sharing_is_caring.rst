@@ -11,15 +11,20 @@ A view of Issues and Merge Requests
 
 Let us start by going back to the Renku web interface on renkulab.io_ or
 whichever instance you are using for this tutorial. Make sure you are logged
-in, so you can see your projects list by clicking on ``Projects`` in the top
+in, so you can see your projects list by clicking on ``Dashboard`` in the top
 navigation bar.
 
-Click on your ``Flights-tutorial`` project to open it and then go to the 
-**Collaboration** tab (1). Here we provide quick access into the GitLab Issues
-and Merge Requests view. You can view and create new Issues and Merge Requests
-directly from this view. It is probably empty
-at the moment, so let us start a new discussion by clicking on the
-**New Issue** button (2).
+Click on your ``Flights-tutorial`` project to open it and then locate and click on the **GitLab** button (1).
+This button serves as a convenient shortcut to access the GitLab **Issues** (2) and **Merge Requests** view.
+This action will take you to the GitLab page, allowing you to both observe existing Issues and Merge Requests
+and initiate new ones. Since the current state might show no content, you can begin a fresh discussion
+by clicking the **New Issue** button (3).
+
+.. image:: ../../_static/images/ui_05_gitlab-issue.png
+    :width: 85%
+    :align: center
+    :alt: Gitlab access to Issues and Merge Requests
+
 
 .. image:: ../../_static/images/ui_05_new-issue.png
     :width: 85%
@@ -40,8 +45,8 @@ The issues can be viewed directly in this window.
     :width: 85%
     :align: center
     :alt: Issues in Gitlab view
-    
-Once the issue has been resolved, it can be closed in the same way (1).    
+
+Once the issue has been resolved, it can be closed in the same way (1).
 
 .. image:: ../../_static/images/ui_06_issues-close.png
     :width: 85%
