@@ -17,11 +17,11 @@ User-Facing Changes
 Internal Changes
 ~~~~~~~~~~~~~~~~
 
-** New Features**
+**New Features**
 
 - **Infrastructure**: add support for ingress class name
 
-** Improvements**
+**Improvements**
 
 - **Documentation**: refactor certificate management part to show how to make use of
   cert-manager and manually created certificates in both development and production
