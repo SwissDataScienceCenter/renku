@@ -5,27 +5,74 @@ Certificates
 
 To enable HTTPS on the Renku website you need valid certificates for the ingress.
 
-This can be achieved by either deploying a certificate issuer like LetsEncrypt or creating certificates manually and inserting them as Kubernetes secrets.
+Certificates can be obtained in different ways:
 
-LetsEncrypt
-------------------
+#. Use a certificate issuer like LetsEncrypt
+#. Use a certificate bought from a certificate authority like SwissSign
+#. Use self-signed certificates
 
-If you have installed Helm you can deploy `LetsEncrypt <https://letsencrypt.org/>`_.
+Options one and three can be automated through the use of `cert-manager <https://cert-manager.io>`_
 
-The following are steps to install LetsEncrypt using Helm.
-To run the following commands you can use the `cert-manager-values.yaml <https://github.com/SwissDataScienceCenter/renku-admin-docs/blob/master/helm-installs/cert-manager-values.yaml>`_ and `cert-manager-issuer.yaml <https://github.com/SwissDataScienceCenter/renku-admin-docs/blob/master/manifests/cert-manager-issuer.yaml>`_ files.
-Make sure to edit the cert-manager-issuer.yaml file and fill in the correct `email` field.
+This document assumes that the default ``renku-tls`` secret name is used to configure the ingress.
+
+
+cert-manager
+------------
+
+If using Helm, you can deploy cert-manager using the following:
 
 .. code-block:: console
 
-   $ helm install cert-manager jetstack/cert-manager -f helm-installs/cert-manager-values.yaml --namespace kube-system
-   $ kubectl apply -f manifests/cert-manager-issuer.yaml
+  $ helm repo add jetstack https://charts.jetstack.io
+  $ helm repo update
+  $ helm install \
+  cert-manager jetstack/cert-manager \
+               --namespace cert-manager \
+               --create-namespace \
+               --version v1.12.0 \
+               --set installCRDs=true
 
-Now you can check that certificates can be issued automatically using a test deployment.
-For more information, please check `LetsEncrypt cert-manager Helm documentation <https://hub.helm.sh/charts/jetstack/cert-manager>`_
+More details on the deployment can be found in the `dedicated section <https://cert-manager.io/docs/installation/helm/>`_ of the project installation documentation.
+
 
 Generate manually
---------------------
+-----------------
+
+For development purposes, self-signed certificates can be used to properly test that all
+components are communicating securely together.
+
+Follow the `cert-manager guide <https://cert-manager.io/docs/configuration/selfsigned/>`_ to create a self-signed certificate issuer.
+
+You can then use it for your deployment by setting annotations such as the following in your
+configuration values:
+
+.. code-block:: yaml
+
+  ingress:
+    enabled: true
+    annotations:
+      cert-manager.io/cluster-issuer: null
+      cert-manager.io/issuer: my-ca-issuer
+      cert-manager.io/common-name: my-selfsigned-ca
+
+  certificates:
+    customCAs:
+      - secret: renku-tls
+
+For more details about the annotations, please check the ``values.yaml`` files.
+
+
+LetsEncrypt
+-----------
+
+You can find the configuration to use Let's Encrypt with the NGINX ingress in the `dedicated chapter <https://cert-manager.io/docs/tutorials/acme/nginx-ingress/#step-6---configure-a-lets-encrypt-issuer>`_ of the cert-manager documentation.
+
+If you create a cluster issuer named ``letsencrypt-production``, you can then use the default
+values and just enable the ingress.
+
+
+Certificate from authority
+--------------------------
 
 You can also use an SSL certificate issued by another certificate authority.
 Add the mentioned certificate as a secret to the ``renku`` namespace.
@@ -35,3 +82,12 @@ Add the mentioned certificate as a secret to the ``renku`` namespace.
   $ kubectl -n renku create secret tls renku-tls --cert=certificate.crt --key=certificate.key
 
 If GitLab is deployed as part of Renku you also need a certificate for the registry, this can be included in the ``.crt`` file.
+
+In this case, you can disable the use of cert-manager with the following:
+
+.. code-block:: yaml
+
+  ingress:
+    enabled: true
+    annotations:
+      cert-manager.io/cluster-issuer: null
