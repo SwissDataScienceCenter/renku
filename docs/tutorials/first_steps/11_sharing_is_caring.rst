@@ -14,10 +14,11 @@ whichever instance you are using for this tutorial. Make sure you are logged
 in, so you can see your projects list by clicking on ``Dashboard`` in the top
 navigation bar.
 
-Click on your ``Flights-tutorial`` project to open it and then locate and click on the **GitLab** button (1).
-This button serves as a convenient shortcut to access the GitLab **Issues** (2) and **Merge Requests** view.
-This action will take you to the GitLab page, allowing you to both observe existing Issues and Merge Requests
-and initiate new ones. 
+Click on your ``Flights-tutorial`` project to open it. Look for the GitLab drop-down button (1). 
+This button provides a quick way to access GitLab features. 
+One of these options is "Issues" (2). 
+Click on this option to view the existing Issues related to your project.
+
 
 .. image:: ../../_static/images/ui_05_gitlab-issue.png
     :width: 85%
@@ -25,7 +26,9 @@ and initiate new ones.
     :alt: Gitlab access to Issues and Merge Requests
 
 
-Since the current state might show no content, you can begin a fresh discussion
+While on the GitLab page, you can also create new Issues 
+or Merge Requests. This allows you to contribute to the project by suggesting enhancements, 
+reporting bugs, or proposing code changes. Since the current state might show no content, you can begin a fresh discussion
 by clicking the **New Issue** button (3).
 
 .. image:: ../../_static/images/ui_05_new-issue.png
