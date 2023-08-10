@@ -17,14 +17,16 @@ navigation bar.
 Click on your ``Flights-tutorial`` project to open it and then locate and click on the **GitLab** button (1).
 This button serves as a convenient shortcut to access the GitLab **Issues** (2) and **Merge Requests** view.
 This action will take you to the GitLab page, allowing you to both observe existing Issues and Merge Requests
-and initiate new ones. Since the current state might show no content, you can begin a fresh discussion
-by clicking the **New Issue** button (3).
+and initiate new ones. 
 
 .. image:: ../../_static/images/ui_05_gitlab-issue.png
     :width: 85%
     :align: center
     :alt: Gitlab access to Issues and Merge Requests
 
+
+Since the current state might show no content, you can begin a fresh discussion
+by clicking the **New Issue** button (3).
 
 .. image:: ../../_static/images/ui_05_new-issue.png
     :width: 85%
