@@ -20,11 +20,12 @@ package ch.renku.acceptancetests
 
 import ch.renku.acceptancetests.model.datasets.DatasetName
 import ch.renku.acceptancetests.pages.DatasetPage
-import ch.renku.acceptancetests.tooling.console._
 import ch.renku.acceptancetests.tooling._
+import ch.renku.acceptancetests.tooling.console._
 import ch.renku.acceptancetests.workflows._
 
 import java.nio.file.Path
+import scala.concurrent.duration._
 
 class ImportZenodoWithCliSpec
     extends AcceptanceSpec
@@ -66,6 +67,8 @@ class ImportZenodoWithCliSpec
 
     And("pushes all the commits to the remote")
     console %> c"git push"
+
+    sleep(10 seconds)
 
     When("all the events are processed by the knowledge-graph")
     `wait for KG to process events`(projectDetails.asProjectIdentifier, webDriver)
