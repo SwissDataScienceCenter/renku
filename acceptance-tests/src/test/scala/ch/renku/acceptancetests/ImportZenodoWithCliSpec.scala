@@ -64,6 +64,9 @@ class ImportZenodoWithCliSpec
     console %> c"renku dataset import 10.5281/zenodo.7822477"
       .userInput("y")
 
+    And("pushes all the commits to the remote")
+    console %> c"git push"
+
     When("all the events are processed by the knowledge-graph")
     `wait for KG to process events`(projectDetails.asProjectIdentifier, webDriver)
 
