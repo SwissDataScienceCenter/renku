@@ -5,6 +5,21 @@
 
 Renku ``0.33.1`` introduces bug fixes and addition of a warning field when listing servers in the Notebook service.
 The minor change in the Notebook service API are fully backwards compatible.
+It also brings some improvements and bug fixes in the Knowledge Graph.
+
+User-Facing Changes
+~~~~~~~~~~~~~~~~~~~
+
+**✨ Improvements**
+
+- 🔎 **Knowledge Graph**: all the APIs return a new Project `slug` property. 
+  The `path` property although still available will be removed in the future.
+  (`#1641 <https://github.com/SwissDataScienceCenter/renku-graph/issues/1641>`_).
+
+**🐞 Bug Fixes**
+
+- **Knowledge Graph**: Cross-Entity Search cannot find projects by creator.
+  (`#1656 <https://github.com/SwissDataScienceCenter/renku-graph/issues/1656>`_).
 
 Internal Changes
 ~~~~~~~~~~~~~~~~
@@ -23,10 +38,15 @@ Internal Changes
   (`#1568 <https://github.com/SwissDataScienceCenter/renku-notebooks/issues/1568>`__)
   (`8f34b09 <https://github.com/SwissDataScienceCenter/renku-notebooks/commit/8f34b09ab73913bfbba4acbe28b00c53ad576367>`__)
 
+- **Knowledge Graph**: fix for an infinite retry loop while sending certain types of internal events.
+  (`#1650 <https://github.com/SwissDataScienceCenter/renku-graph/issues/1650>`_).
+
 Individual components
 ~~~~~~~~~~~~~~~~~~~~~~
 
 - `renku-notebooks 1.18.0 <https://github.com/SwissDataScienceCenter/renku-notebooks/releases/tag/1.18.0>`_
+- `renku-graph 2.39.0 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/2.39.0>`_
+- `renku-graph 2.39.1 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/2.39.1>`_
 
 0.33.0
 ------
