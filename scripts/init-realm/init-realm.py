@@ -16,20 +16,23 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import sys
 import argparse
-import warnings
 import getpass
 import json
 import time
-
-from keycloak import KeycloakAdmin
-from keycloak.exceptions import KeycloakConnectionError, KeycloakGetError, KeycloakPostError
-
-
-# Helper functions which are called by the script.
+import logging
 from typing import Dict, List
 
+from keycloak import KeycloakAdmin
+from keycloak.exceptions import (
+    KeycloakConnectionError,
+    KeycloakGetError,
+    KeycloakPostError,
+)
+
+from utils import DemoUserConfig, OIDCClientsConfig, OIDCGitlabClient
+
+logging.basicConfig(level=logging.INFO)
 
 def _check_existing(existing_object: Dict, new_object: Dict, case, id_key) -> bool:
     """
@@ -45,7 +48,7 @@ def _check_existing(existing_object: Dict, new_object: Dict, case, id_key) -> bo
         if key not in existing_object:
             changed = True
             warning = f"Found missing key '{key}' at {case} '{new_object[id_key]}'!"
-            warnings.warn(warning)
+            logging.warning(warning)
 
         elif new_object[key] != existing_object[key]:
             # If element is a list then sort and compare again
@@ -55,9 +58,7 @@ def _check_existing(existing_object: Dict, new_object: Dict, case, id_key) -> bo
 
             changed = True
             warning = f"Found mismatch for key '{key}' at {case} '{new_object[id_key]}'!"
-            warnings.warn(warning)
-            warnings.warn(f"To be created: \n{json.dumps(new_object[key])}")
-            warnings.warn(f"Existing: \n{json.dumps(existing_object[key])}")
+            logging.warning(warning)
 
     return changed
 
@@ -75,11 +76,11 @@ def _check_and_create_client(keycloak_admin, new_client, force: bool):
     it exists but with different details than what is provided.
     """
 
-    sys.stdout.write("Checking if {} client exists...".format(new_client["clientId"]))
+    logging.info("Checking if {} client exists...".format(new_client["clientId"]))
     realm_clients = keycloak_admin.get_clients()
     client_ids = [c["clientId"] for c in realm_clients]
     if new_client["clientId"] in client_ids:
-        sys.stdout.write("found\n")
+        logging.info("found")
         realm_client = realm_clients[client_ids.index(new_client["clientId"])]
 
         # We have to separately query the secret as it is not part of
@@ -103,18 +104,18 @@ def _check_and_create_client(keycloak_admin, new_client, force: bool):
         if not force or not changed:
             return
 
-        sys.stdout.write(f"Recreating modified client '{realm_client['clientId']}'...")
+        logging.info(f"Recreating modified client '{realm_client['clientId']}'...")
 
         keycloak_admin.delete_client(realm_client["id"])
         keycloak_admin.create_client(new_client)
 
-        sys.stdout.write("done\n")
+        logging.info("done")
 
     else:
-        sys.stdout.write("not found\n")
-        sys.stdout.write("Creating {} client...".format(new_client["clientId"]))
+        logging.info("not found")
+        logging.info("Creating {} client...".format(new_client["clientId"]))
         keycloak_admin.create_client(new_client)
-        sys.stdout.write("done\n")
+        logging.info("done")
 
 
 def _check_and_create_user(keycloak_admin, new_user):
@@ -123,25 +124,25 @@ def _check_and_create_user(keycloak_admin, new_user):
     it exists but with different details than what is provided.
     """
 
-    sys.stdout.write("Checking if {} user exists...".format(new_user["username"]))
+    logging.info("Checking if {} user exists...".format(new_user["username"]))
     realm_users = keycloak_admin.get_users(query={})
     usernames = [u["username"] for u in realm_users]
 
     if new_user["username"] in usernames:
         del new_user["password"]
-        sys.stdout.write("found\n")
+        logging.info("found")
         realm_user = realm_users[usernames.index(new_user["username"])]
         _check_existing(realm_user, new_user, "user", "username")
 
     else:
         new_user_password = new_user["password"]
         del new_user["password"]
-        sys.stdout.write("not found\n")
-        sys.stdout.write("Creating user {} ...".format(new_user["username"]))
+        logging.info("not found")
+        logging.info("Creating user {} ...".format(new_user["username"]))
         keycloak_admin.create_user(payload=new_user)
         new_user_id = keycloak_admin.get_user_id(new_user["username"])
         keycloak_admin.set_user_password(new_user_id, new_user_password, temporary=False)
-        sys.stdout.write("done\n")
+        logging.info("done")
 
 
 # The actual script
@@ -160,52 +161,12 @@ parser.add_argument(
     default="Renku",
 )
 parser.add_argument(
-    "--users-file",
-    help="""Path to a json file containing the users to be created""",
-    default=None,
-)
-parser.add_argument(
-    "--clients-file",
-    help="""Path to a json file containing the clients to be created""",
-    default=None,
-)
-parser.add_argument(
     "--force",
     help="If existing clients do not exactly match the provided configuration, recreate them using the provided "
     "configuration.",
     action="store_true",
 )
 args = parser.parse_args()
-
-
-# Check if the file containing the user information is ok.
-if args.users_file:
-    try:
-        with open(args.users_file, "r") as f:
-            new_users = json.load(f)
-    except FileNotFoundError:
-        sys.stderr.write("No users-file found at {}.".format(args.users_file))
-        exit(1)
-    except json.JSONDecodeError:
-        sys.stderr.write("Could not parse users-file at {}.".format(args.users_file))
-        exit(1)
-else:
-    new_users = []
-
-# Check if the file containing the client information is ok.
-if args.clients_file:
-    try:
-        with open(args.clients_file, "r") as f:
-            new_clients = json.load(f)
-    except FileNotFoundError:
-        sys.stderr.write("No clients-file found at {}.".format(args.clients_file))
-        exit(1)
-    except json.JSONDecodeError:
-        sys.stderr.write("Could not parse clients-file at {}.".format(args.clients_file))
-        exit(1)
-else:
-    new_clients = []
-
 
 # Check if we have an admin password for keycloak, prompt
 # the user if not.
@@ -224,9 +185,12 @@ success = False
 
 while not success and n_attempts < 31:
     try:
-        sys.stdout.write("Getting an admin access token for Keycloak...\n")
+        logging.info("Getting an admin access token for Keycloak...")
+        # NOTE: The keycloak python library does not follow redirect fully so passing in
+        # "http://dev.renku.ch/auth" without the trailing "/" will fail with a 405 whereas
+        # "http://dev.renku.ch/auth/" will work without a problem.
         keycloak_admin = KeycloakAdmin(
-            server_url=args.keycloak_url,
+            server_url=args.keycloak_url if args.keycloak_url.endswith("/") else args.keycloak_url + "/",
             username=args.admin_user,
             password=keycloak_admin_password,
             verify=True,
@@ -236,16 +200,16 @@ while not success and n_attempts < 31:
         msg = "Keycloak not responding"
         if error.response_code is not None:
             msg += f" (status code: {error.response_code})"
-        msg += ", retrying in 10 seconds...\n"
-        sys.stdout.write(msg)
+        msg += ", retrying in 10 seconds..."
+        logging.info(msg)
         n_attempts += 1
         time.sleep(10)
 if success:
-    sys.stdout.write("done\n")
+    logging.info("done")
 else:
-    sys.stderr.write(
+    logging.info(
         "Could not get a token. Is Keycloak \
-        running under {}?\n".format(
+        running under {}?".format(
             args.keycloak_url
         )
     )
@@ -253,7 +217,7 @@ else:
 
 # Now that we obviously have all we need, let's create the
 # realm, clients and users, skipping what already exists.
-sys.stdout.write("Creating {} realm, skipping if it already exists...".format(args.realm))
+logging.info("Creating {} realm, skipping if it already exists...".format(args.realm))
 keycloak_admin.create_realm(
     payload={
         "realm": args.realm,
@@ -268,32 +232,36 @@ keycloak_admin.create_realm(
     },
     skip_exists=True,
 )
-sys.stdout.write("done\n")
+logging.info("done")
 
 # Switching to the newly created realm
 keycloak_admin.connection.realm_name = args.realm
 
 
-for new_client in new_clients:
+for new_client in OIDCClientsConfig.from_env().to_list():
     _check_and_create_client(keycloak_admin, new_client, args.force)
 
+gitlab_oidc_client = OIDCGitlabClient.from_env().to_dict()
+if gitlab_oidc_client is not None:
+    _check_and_create_client(keycloak_admin, gitlab_oidc_client, args.force)
+
 # Create renku-admin realm role
-sys.stdout.write("Creating renku-admin realm role, skipping if it already exists...")
+logging.info("Creating renku-admin realm role, skipping if it already exists...")
 realm_role_payload = {
     "name": "renku-admin",
     "composite": True,
     "composites": {
         "client": {
-            "realm-management": [
-                "query-users",
-                "view-users"
-            ],
+            "realm-management": ["query-users", "view-users"],
         },
     },
     "clientRole": False,
 }
 keycloak_admin.create_realm_role(realm_role_payload, skip_exists=True)
-sys.stdout.write("done\n")
+logging.info("done")
 
-for new_user in new_users:
-    _check_and_create_user(keycloak_admin, new_user)
+demo_user = DemoUserConfig.from_env().to_dict()
+if demo_user is not None:   
+    logging.info("Creating Keycloak demo user...")
+    _check_and_create_user(keycloak_admin, demo_user)
+    logging.info("done")

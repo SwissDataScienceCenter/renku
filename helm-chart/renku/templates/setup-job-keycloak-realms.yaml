@@ -36,21 +36,17 @@ spec:
             "--admin-user=$(KEYCLOAK_ADMIN_USER)",
             "--admin-password=$(KEYCLOAK_ADMIN_PASSWORD)",
             "--keycloak-url=$(KEYCLOAK_URL)",
-            "--users-file=/app/data/users",
-            "--clients-file=/app/data/clients",
             "--force"
           ]
 
           volumeMounts:
-            - name: realm-data
-              mountPath: /app/data
-              readOnly: true
             {{- include "certificates.volumeMounts.system" . | nindent 12 }}
 
           env:
-            ## NOTE: This template string will be replaced during further refactoring
             - name: KEYCLOAK_URL
-              value: {{ (printf "%s://%s/auth/" (include "gateway.protocol" .) .Values.global.renku.domain) | quote}}
+              value: {{ include "renku.keycloakUrl" . | quote }}
+            - name: RENKU_BASE_URL
+              value: {{ include "renku.baseUrl" . | quote }}
             - name: KEYCLOAK_ADMIN_USER
               valueFrom:
                 secretKeyRef:
@@ -61,13 +57,74 @@ spec:
                 secretKeyRef:
                   name: keycloak-password-secret
                   key: KEYCLOAK_ADMIN_PASSWORD
+            - name: CREATE_DEMO_USER
+              value: {{ .Values.keycloakx.createDemoUser | toString | lower | quote }}
+            {{- if .Values.keycloakx.createDemoUser }}
+            - name: DEMO_USER_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ cat (include "renku.fullname" .) "-kc-demo-user" | nospace }} 
+                  key: keycloakDemoUserPassword
+            {{- end }}
+            - name: INTERNAL_GITLAB_ENABLED
+              value: {{ .Values.gitlab.enabled | toString | lower | quote }}
+            {{- if .Values.gitlab.enabled  }}
+            - name: INTERNAL_GITLAB_OIDC_CLIENT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: {{ cat (include "renku.fullname" .) "-gateway-revproxy" | nospace }} 
+                  key: gitlabClientInKeycloakSecret
+            - name: INTERNAL_GITLAB_OIDC_CLIENT_ID
+              value: "gitlab"
+            {{- end }}
+            - name: RENKU_KC_CLIENT_ID
+              value: renku
+            - name: RENKU_KC_CLIENT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: {{ cat (include "renku.fullname" .) "-gateway-revproxy" | nospace }} 
+                  key: oidcClientSecret
+            - name: RENKU_KC_CLIENT_PUBLIC
+              value: "false"
+            - name: CLI_KC_CLIENT_ID
+              value: renku-cli
+            - name: CLI_KC_CLIENT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: {{ cat (include "renku.fullname" .) "-gateway-revproxy" | nospace }}
+                  key: cliClientSecret
+            - name: CLI_KC_CLIENT_PUBLIC
+              value: "true"
+            - name: CLI_KC_CLIENT_ATTRIBUTES
+              value: '{"access.token.lifespan": "86400", "oauth2.device.authorization.grant.enabled": true, "oauth2.device.polling.interval": "5"}'
+            - name: UI_KC_CLIENT_ID
+              value: "renku-ui"
+            - name: UI_KC_CLIENT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: {{ cat (include "renku.fullname" .) "-gateway-revproxy" | nospace }}
+                  key: uiserverClientSecret
+            - name: UI_KC_CLIENT_PUBLIC
+              value: "false"
+            - name: NOTEBOOKS_KC_CLIENT_ID
+              value: {{ .Values.notebooks.oidc.clientId | default "renku-jupyterserver" | quote }}
+            - name: NOTEBOOKS_KC_CLIENT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: {{ cat (include "renku.fullname" .) "-gateway-revproxy" | nospace }}
+                  key: notebooksClientSecret
+            - name: NOTEBOOKS_KC_CLIENT_PUBLIC
+              value: "false"
+            - name: SWAGGER_KC_CLIENT_ID
+              value: swagger
+            - name: SWAGGER_KC_CLIENT_PUBLIC
+              value: "true"
+            - name: SWAGGER_KC_CLIENT_ATTRIBUTES
+              value: '{"pkce.code.challenge.method": "S256"}'
             - name: PYTHONUNBUFFERED
               value: "0"
             {{- include "certificates.env.python" . | nindent 12 }}
 
       volumes:
-        - name: realm-data
-          secret:
-            secretName: {{ template "renku.fullname" . }}
         {{- include "certificates.volumes" . | nindent 8 -}}
 {{- end }}

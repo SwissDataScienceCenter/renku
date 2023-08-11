@@ -1,0 +1,125 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ template "renku.fullname" . }}-gateway-revproxy
+  labels:
+    app: {{ template "renku.name" . }}-gateway-revproxy
+    chart: {{ template "renku.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  {{- if not .Values.gateway.reverseProxy.autoscaling.enabled }}
+  replicas: {{ .Values.gateway.reverseProxy.replicaCount }}
+  {{- end }}
+  strategy:
+    {{- toYaml .Values.gateway.reverseProxy.updateStrategy | nindent 4 }}
+  selector:
+    matchLabels:
+      app: {{ template "renku.name" . }}-gateway-revproxy
+      release: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app: {{ template "renku.name" . }}-gateway-revproxy
+        release: {{ .Release.Name }}
+      {{- with .Values.gateway.reverseProxy.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+    spec:
+      serviceAccountName: "{{ template "renku.fullname" . }}-gateway-revproxy"
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      initContainers:
+        {{- include "certificates.initContainer" . | nindent 8 }}
+      containers:
+        - name: revproxy
+          image: "{{ .Values.gateway.reverseProxy.image.repository }}:{{ .Values.gateway.reverseProxy.image.tag }}"
+          imagePullPolicy: {{ .Values.gateway.reverseProxy.image.pullPolicy }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          ports:
+            - name: http
+              containerPort: 8080
+              protocol: TCP
+          env:
+            - name: REVPROXY_RENKU_BASE_URL
+              value: {{ include "renku.baseUrl" . | quote }}
+            - name: REVPROXY_EXTERNAL_GITLAB_URL
+              {{- if .Values.gitlab.enabled }}
+              value: ""
+              {{- else }}
+              value: {{ .Values.graph.gitlab.url | default "" | quote }}
+              {{- end }}
+            - name: REVPROXY_ALLOW_ORIGIN
+              value: {{ join "," .Values.gateway.allowOrigin | quote }}
+            - name: REVPROXY_NAMESPACE
+              value: {{ .Release.Namespace }}
+            - name: REVPROXY_RENKU_SERVICES_WEBHOOK
+              value: {{ printf "http://%s-webhook-service" .Release.Name | quote }}
+            - name: REVPROXY_RENKU_SERVICES_KG
+              value: {{ printf "http://%s-knowledge-graph" .Release.Name | quote }}
+            - name: REVPROXY_RENKU_SERVICES_NOTEBOOKS
+              value: {{ printf "http://%s-notebooks" .Release.Name | quote }}
+            - name: REVPROXY_RENKU_SERVICES_CORE_SERVICE_PATHS
+              value: {{ template "gateway.core.paths" . }}
+            - name: REVPROXY_RENKU_SERVICES_CORE_SERVICE_NAMES
+              value: {{ template "gateway.core.serviceNames" . }}
+            - name: REVPROXY_RENKU_SERVICES_AUTH
+              value: {{ printf "http://%s-gateway-auth" .Release.Name }}
+            - name: REVPROXY_RENKU_SERVICES_CRC
+              value: {{ printf "http://%s" .Values.global.crc.serviceName | quote }}
+            - name: REVPROXY_PORT
+              value: "8080"
+            - name: REVPROXY_METRICS_ENABLED
+              value: {{ .Values.gateway.reverseProxy.metrics.enabled | quote }}
+            - name: REVPROXY_METRICS_PORT
+              value: {{ .Values.gateway.reverseProxy.metrics.port | quote }}
+            - name: REVPROXY_RATE_LIMITS_ENABLED
+              value: {{ .Values.gateway.rateLimits.general.enabled | quote }}
+            - name: REVPROXY_RATE_LIMITS_AVERAGE
+              value: {{ .Values.gateway.rateLimits.general.average | quote }}
+            - name: REVPROXY_RATE_LIMITS_BURST
+              value: {{ .Values.gateway.rateLimits.general.burst | quote }}
+            - name: REVPROXY_SENTRY_ENABLED
+              value: {{ .Values.gateway.sentry.enabled | quote }}
+            - name: REVPROXY_SENTRY_DSN
+              value: {{ .Values.gateway.sentry.dsn }}
+            - name: REVPROXY_SENTRY_ENVIRONMENT
+              value: {{ .Values.gateway.sentry.environment }}
+            - name: REVPROXY_SENTRY_SAMPLE_RATE
+              value: {{ .Values.gateway.sentry.sampleRate | quote }}
+            - name: REVPROXY_DEBUG
+              value: {{ .Values.gateway.debug | default "false" | quote }}
+          volumeMounts:
+            {{- include "certificates.volumeMounts.system" . | nindent 12 }}
+          livenessProbe:
+            httpGet:
+              path: /revproxy/health
+              port: http
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            failureThreshold: 6
+          readinessProbe:
+            httpGet:
+              path: /revproxy/health
+              port: http
+            initialDelaySeconds: 10
+            periodSeconds: 2
+            failureThreshold: 2
+          resources:
+            {{ toYaml .Values.gateway.reverseProxy.resources | nindent 12 }}
+    {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{ toYaml . | nindent 8 }}
+    {{- end }}
+    {{- with .Values.affinity }}
+      affinity:
+        {{ toYaml . | nindent 8 }}
+    {{- end }}
+    {{- with .Values.tolerations }}
+      tolerations:
+        {{ toYaml . | nindent 8 }}
+    {{- end }}
+      volumes:
+        {{- include "certificates.volumes" . | nindent 8 }}
