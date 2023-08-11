@@ -37,6 +37,35 @@ Individual components
 
 - `renku-graph 2.39.0 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/2.39.0>`_
 
+0.33.1
+------
+
+Renku ``0.33.1`` introduces bug fixes and addition of a warning field when listing servers in the Notebook service.
+The minor change in the Notebook service API are fully backwards compatible.
+
+Internal Changes
+~~~~~~~~~~~~~~~~
+
+- **Renku Notebooks:** add session warnings to jupyter server API responses
+  (`#1482 <https://github.com/SwissDataScienceCenter/renku-notebooks/issues/1482>`__)
+  (`b463980 <https://github.com/SwissDataScienceCenter/renku-notebooks/commit/b46398032e6361ef1b69fb4909d2ed87afc583eb>`__)
+
+**Bug Fixes**
+
+- **Renku Notebooks:** parse old server options in request to start sessions
+  (`#1570 <https://github.com/SwissDataScienceCenter/renku-notebooks/issues/1570>`__)
+  (`8b3e5c0 <https://github.com/SwissDataScienceCenter/renku-notebooks/commit/8b3e5c091507446080fd468d84c4bd4b8d134b60>`__)
+
+- **Renku Notebooks:** properly recover LFS files from autosave branches
+  (`#1568 <https://github.com/SwissDataScienceCenter/renku-notebooks/issues/1568>`__)
+  (`8f34b09 <https://github.com/SwissDataScienceCenter/renku-notebooks/commit/8f34b09ab73913bfbba4acbe28b00c53ad576367>`__)
+
+Individual components
+~~~~~~~~~~~~~~~~~~~~~~
+
+- `renku-notebooks 1.18.0 <https://github.com/SwissDataScienceCenter/renku-notebooks/releases/tag/1.18.0>`_
+
+
 0.33.0
 ------
 
