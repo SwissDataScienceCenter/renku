@@ -10,8 +10,8 @@ the Renku web interface.
 On renkulab.io_ you can create an account or sign in with your GitHub
 identity by clicking on the corresponding button.
 
-Once logged in, create a new project by going to the **Projects** (1) page
-and clicking on the **New Project** (2) button.
+Once logged in, create a new project by going to the **Dashboard** (1) page
+and clicking on the **Create a new project** (2) button.
 
 .. image:: ../../_static/images/ui_01_create-project.png
     :width: 100%
