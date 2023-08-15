@@ -6,32 +6,36 @@ Add data to your project
 In the JupyterLab interface or RStudio files panel, we can see that a few files already exist.
 Let's start by adding data using the `Renku CLI <https://renku.readthedocs.io/en/latest/renku-python/docs/reference/commands.html>`__.
 
-.. tabbed:: JupyterLab
+.. tab-set::
 
-    For JupyterLab, start a terminal by clicking the **Terminal** icon (1)
-    on the bottom right of the **Launcher** page.
+    .. tab-item:: JupyterLab
+        :sync: jupyter
 
-    .. image:: ../../_static/images/jupyterlab-open-terminal.png
-        :width: 85%
-        :align: center
-        :alt: Open terminal in JupyterLab
+        For JupyterLab, start a terminal by clicking the **Terminal** icon (1)
+        on the bottom right of the **Launcher** page.
 
-    If your JupyterLab interface does not have the launcher tab open, you can
-    find it in the top bar menu in *File* > *New Launcher*.
+        .. image:: ../../_static/images/jupyterlab-open-terminal.png
+            :width: 85%
+            :align: center
+            :alt: Open terminal in JupyterLab
 
-    .. note::
+        If your JupyterLab interface does not have the launcher tab open, you can
+        find it in the top bar menu in *File* > *New Launcher*.
 
-      To paste commands to the JupyterLab console, use ``Cmd+V`` on MacOS or
-      ``Ctrl+Shift+V`` on Linux.
+        .. note::
 
-.. tabbed:: RStudio
+            To paste commands to the JupyterLab console, use ``Cmd+V`` on MacOS or
+            ``Ctrl+Shift+V`` on Linux.
 
-    For RStudio, click the Terminal tab, which is next to the Console tab.
+    .. tab-item:: RStudio
+        :sync: rstudio
 
-    .. image:: ../../_static/images/rstudio-open-terminal.png
-        :width: 85%
-        :align: center
-        :alt: Open terminal in RStudio
+        For RStudio, click the Terminal tab, which is next to the Console tab.
+
+        .. image:: ../../_static/images/rstudio-open-terminal.png
+            :width: 85%
+            :align: center
+            :alt: Open terminal in RStudio
 
 
 When you start the terminal, you will already be inside your project
@@ -66,11 +70,11 @@ data, answer yes.
     ----------  -----------------------  -----------  ---------------
                 2019-01-flights.csv.zip         7.56  application/zip
     Warning: Do you wish to download this version? [y/N]: y
-    Info: Adding these files to Git LFS:                                                                                                     
+    Info: Adding these files to Git LFS:
             data/flight-data/2019-01-flights.csv.zip
     To disable this message in the future, run:
             renku config set show_lfs_message False
-    OK 
+    OK
 
 Let us take a moment to understand what happened there. Opening the terminal
 puts you inside the project directory with ``git`` already configured.
@@ -108,7 +112,7 @@ repository:
     Date:   Mon Apr 29 11:58:33 2022 +0000
 
         renku dataset import --name flight-data https://www.doi.org/10.7910/DVN/WTZS4K
-    
+
         renku-transaction: 2ff1f09bd9424270ac27f80f759b5388
 
     commit 3f74a2dfdf5e27c1dc124f6455931089023253b8 (origin/master, origin/HEAD)
@@ -116,7 +120,7 @@ repository:
     Date:   Mon Apr 29 11:53:41 2019 +0000
 
         dev.renku.ch: init Flights tutorial
-    
+
         renku-transaction: 2fa7df0457764d2aa1612ce719edaff8
 
 .. code-block:: console
@@ -175,44 +179,47 @@ Then create a folder called ``flight-data`` in the ``data`` folder.
 Navigate to the ``flight-data`` folder and click on the upload button as shown
 in the two examples below. Select the ``zip`` folder corresponding to our dataset and upload it.
 
+.. tab-set::
 
-.. tabbed:: JupyterLab
+    .. tab-item:: JupyterLab
+        :sync: jupyter
 
-    .. image:: ../../_static/images/jupyterlab-upload-data.png
-        :width: 85%
-        :align: center
-        :alt: Upload data in JupyterLab
-
-
-    Note that in JupyterLab, ``zip`` folders are not automatically unzipped
-    once they are uploaded. You should then see
-
-    .. image:: ../../_static/images/jupyterlab-data-uploaded.png
-        :width: 85%
-        :align: center
-        :alt: Uploaded data in JupyterLab
-
-.. tabbed:: RStudio
-
-    .. image:: ../../_static/images/rstudio-upload-data.png
-        :width: 85%
-        :align: center
-        :alt: Upload data in RStudio
+        .. image:: ../../_static/images/jupyterlab-upload-data.png
+            :width: 85%
+            :align: center
+            :alt: Upload data in JupyterLab
 
 
-    Note that in RStudio, ``zip`` folders are automatically unzipped once
-    they are uploaded. You should then see
+        Note that in JupyterLab, ``zip`` folders are not automatically unzipped
+        once they are uploaded. You should then see
 
-    .. image:: ../../_static/images/rstudio-data-uploaded.png
-        :width: 85%
-        :align: center
-        :alt: Uploaded data in RStudio
+        .. image:: ../../_static/images/jupyterlab-data-uploaded.png
+            :width: 85%
+            :align: center
+            :alt: Uploaded data in JupyterLab
+
+    .. tab-item:: RStudio
+        :sync: rstudio
+
+        .. image:: ../../_static/images/rstudio-upload-data.png
+            :width: 85%
+            :align: center
+            :alt: Upload data in RStudio
 
 
-    For the rest of this tutorial, we continue with the assumption that
-    you have uploaded the data using the dataset import from the remote
-    repository as indicated in the previous section. That is, the ``csv`` file
-    will still be zipped in the proceeding sections.
+        Note that in RStudio, ``zip`` folders are automatically unzipped once
+        they are uploaded. You should then see
+
+        .. image:: ../../_static/images/rstudio-data-uploaded.png
+            :width: 85%
+            :align: center
+            :alt: Uploaded data in RStudio
+
+
+For the rest of this tutorial, we continue with the assumption that
+you have uploaded the data using the dataset import from the remote
+repository as indicated in the previous section. That is, the ``csv`` file
+will still be zipped in the proceeding sections.
 
 
 After we upload the file, we need to add the file to the Renku dataset. Navigate

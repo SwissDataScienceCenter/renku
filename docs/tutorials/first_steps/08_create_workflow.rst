@@ -57,66 +57,76 @@ The ``filter_flights.\*`` script takes two input parameters:
 
 So to run it, we would normally execute the following:
 
-.. tabbed:: Python
+.. tab-set::
 
-    .. code-block:: console
+    .. tab-item:: Python
+        :sync: python
 
-        # Here for comparison -- do not run these lines
-        $ # mkdir -p data/output
-        $ # python src/filter_flights.py data/flight-data/2019-01-flights.csv.zip data/output/flights-filtered.csv
+        .. code-block:: console
 
-.. tabbed:: Julia
+            # Here for comparison -- do not run these lines
+            $ # mkdir -p data/output
+            $ # python src/filter_flights.py data/flight-data/2019-01-flights.csv.zip data/output/flights-filtered.csv
 
-    .. code-block:: console
+    .. tab-item:: Julia
+        :sync: julia
 
-        # Here for comparison -- do not run these lines
-        $ # julia src/FilterFlights.jl data/flight-data/2019-01-flights.csv.zip data/output/flights-filtered.csv
+        .. code-block:: console
 
-.. tabbed:: R
+            # Here for comparison -- do not run these lines
+            $ # julia src/FilterFlights.jl data/flight-data/2019-01-flights.csv.zip data/output/flights-filtered.csv
 
-    .. code-block:: console
+    .. tab-item:: R
+        :sync: R
 
-        # Here for comparison -- do not run these lines
-        $ # Rscript src/RunFilterFlights.R data/flight-data/2019-01-flights.csv.zip data/output/flights-filtered.csv
+        .. code-block:: console
+
+            # Here for comparison -- do not run these lines
+            $ # Rscript src/RunFilterFlights.R data/flight-data/2019-01-flights.csv.zip data/output/flights-filtered.csv
 
 
 For renku to capture information about the execution, we need to make a small
 change: we prepend ``renku run`` to relevant command:
 
-.. tabbed:: Python
+.. tab-set::
 
-    .. code-block:: console
+    .. tab-item:: Python
+        :sync: python
 
-        # Create the output directory
-        $ mkdir -p data/output
-        $ renku run --name filter-flights -- python src/filter_flights.py data/flight-data/2019-01-flights.csv.zip data/output/flights-filtered.csv
+        .. code-block:: console
 
-        Info: Adding these files to Git LFS:
-            data/output/flights-filtered.csv
+            # Create the output directory
+            $ mkdir -p data/output
+            $ renku run --name filter-flights -- python src/filter_flights.py data/flight-data/2019-01-flights.csv.zip data/output/flights-filtered.csv
 
-.. tabbed:: Julia
+            Info: Adding these files to Git LFS:
+                data/output/flights-filtered.csv
 
-    .. code-block:: console
+    .. tab-item:: Julia
+        :sync: julia
 
-        $ renku run --name filter-flights -- julia src/FilterFlights.jl data/flight-data/2019-01-flights.csv.zip data/output/flights-filtered.csv
+        .. code-block:: console
 
-        Info: Adding these files to Git LFS:
-            data/output/flights-filtered.csv
+            $ renku run --name filter-flights -- julia src/FilterFlights.jl data/flight-data/2019-01-flights.csv.zip data/output/flights-filtered.csv
 
-.. tabbed:: R
+            Info: Adding these files to Git LFS:
+                data/output/flights-filtered.csv
 
-    .. code-block:: console
+    .. tab-item:: R
+        :sync: R
 
-        $ renku run --name filter-flights -- Rscript src/RunFilterFlights.R data/flight-data/2019-01-flights.csv.zip data/output/flights-filtered.csv
+        .. code-block:: console
 
-        Info: Adding these files to Git LFS:
-            data/output/flights-filtered.csv
+            $ renku run --name filter-flights -- Rscript src/RunFilterFlights.R data/flight-data/2019-01-flights.csv.zip data/output/flights-filtered.csv
+
+            Info: Adding these files to Git LFS:
+                data/output/flights-filtered.csv
 
 Go ahead and run this command: it will create the preprocessed data file,
 including the specification of *how* this file was created, and commit all the
-changes to the repository. 
+changes to the repository.
 
-The ``--name`` option allows you to name the workflow that's created by 
+The ``--name`` option allows you to name the workflow that's created by
 ``renku run`` to make it easier to reuse it later.
 
 Workflows created in this way don't just track past executions, but also define
@@ -141,7 +151,7 @@ for more information on this and other commands.
                 data/output/
 
     This may be because you accidentally ran the plain Python/Julia/R command first.
-    
+
     Remove the untracked files and this time execute `only` the renku command
 
     .. code-block:: console
@@ -240,23 +250,28 @@ The respective interactive versions can be found below and you can copy them
 to your project as before if you wish to play with the data interactively.
 We also provide the script versions to be run with the ``renku run`` command.
 
-.. tabbed:: Python
+.. tab-set::
 
-    For the next step you must download the script from `here
-    <https://renkulab.io/projects/renku-tutorials/renku-tutorial-flights-material/files/blob/src/count_flights.py>`_,
-    and then drop it into the ``src`` directory as with the ``filter_flights.py`` script.
+    .. tab-item:: Python
+        :sync: python
 
-.. tabbed:: Julia
+        For the next step you must download the script from `here
+        <https://renkulab.io/projects/renku-tutorials/renku-tutorial-flights-material/files/blob/src/count_flights.py>`_,
+        and then drop it into the ``src`` directory as with the ``filter_flights.py`` script.
 
-    `Download Julia script
-    <https://renkulab.io/projects/renku-tutorial/flights-tutorial-julia/files/blob/.tutorial/meta/templates/CountFlights.jl>`_
-    and drop it in the ``src`` directory.
+    .. tab-item:: Julia
+        :sync: julia
 
-.. tabbed:: R
+        `Download Julia script
+        <https://renkulab.io/projects/renku-tutorial/flights-tutorial-julia/files/blob/.tutorial/meta/templates/CountFlights.jl>`_
+        and drop it in the ``src`` directory.
 
-    `Download R script
-    <https://renkulab.io/projects/renku-tutorial/flights-tutorial-r/files/blob/.tutorial/meta/templates/CountFlights.R>`_,
-    and drop it in the ``src`` directory.
+    .. tab-item:: R
+        :sync: R
+
+        `Download R script
+        <https://renkulab.io/projects/renku-tutorial/flights-tutorial-r/files/blob/.tutorial/meta/templates/CountFlights.R>`_,
+        and drop it in the ``src`` directory.
 
 
 After uploading the script to your project, make sure you save your work:
@@ -298,29 +313,34 @@ committing them.
 
 We can now use ``renku run`` to generate the second step of our workflow:
 
-.. tabbed:: Python
+.. tab-set::
 
-    .. code-block:: console
+    .. tab-item:: Python
+        :sync: python
 
-        $ renku run --name count-flights -- python src/count_flights.py data/output/flights-filtered.csv data/output/flights-count.txt
+        .. code-block:: console
 
-        There were 23078 flights to Austin, TX in Jan 2019.
-        $ renku save
+            $ renku run --name count-flights -- python src/count_flights.py data/output/flights-filtered.csv data/output/flights-count.txt
 
-.. tabbed:: Julia
+            There were 23078 flights to Austin, TX in Jan 2019.
+            $ renku save
 
-    .. code-block:: console
+    .. tab-item:: Julia
+        :sync: julia
 
-        $ renku run --name count-flights -- julia src/CountFlights.jl data/output/flights-filtered.csv data/output/flights-count.txt
+        .. code-block:: console
 
-        There were 23078 flights to Austin, TX in Jan 2019.
-        $ renku save
+            $ renku run --name count-flights -- julia src/CountFlights.jl data/output/flights-filtered.csv data/output/flights-count.txt
 
-.. tabbed:: R
+            There were 23078 flights to Austin, TX in Jan 2019.
+            $ renku save
 
-    .. code-block:: console
+    .. tab-item:: R
+        :sync: R
 
-        $ renku run --name count-flights -- Rscript src/CountFlights.R data/output/flights-filtered.csv data/output/flights-count.txt
+        .. code-block:: console
 
-        There were 23078 flights to Austin, TX in Jan 2019.
-        $ renku save
+            $ renku run --name count-flights -- Rscript src/CountFlights.R data/output/flights-filtered.csv data/output/flights-count.txt
+
+            There were 23078 flights to Austin, TX in Jan 2019.
+            $ renku save

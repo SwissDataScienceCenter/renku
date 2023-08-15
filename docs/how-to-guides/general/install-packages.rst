@@ -11,89 +11,91 @@ All three of these options work with Renku.
 Select the tab below for the documentation relevant to you.
 
 
-.. tabbed:: Python
+.. tab-set::
 
-    **Add packages to your project dependencies**
+    .. tab-item:: Python
 
-    To add packages to your environment, add the packages to the dependencies file.
-    When you're working in Python, this is the ``requirements.txt`` file.
+        **Add packages to your project dependencies**
 
-    To add your project's dependencies to ``requirements.txt``, simply list the package names.
-    Optionally, you may specify specific package versions, as shown in the example below.
+        To add packages to your environment, add the packages to the dependencies file.
+        When you're working in Python, this is the ``requirements.txt`` file.
 
-    .. code-block:: console
+        To add your project's dependencies to ``requirements.txt``, simply list the package names.
+        Optionally, you may specify specific package versions, as shown in the example below.
 
-        pandas
-        numpy==1.22.0
+        .. code-block:: console
 
-    **Install the packages**
+            pandas
+            numpy==1.22.0
 
-    Install the packages you listed in the dependency file by running the following command in the terminal:
+        **Install the packages**
 
-    .. code-block:: console
+        Install the packages you listed in the dependency file by running the following command in the terminal:
 
-        $ pip install -r requirements.txt
+        .. code-block:: console
 
-.. tabbed:: R
+            $ pip install -r requirements.txt
 
-    **Add packages to your project dependencies**
+    .. tab-item:: R
 
-    To add packages to your environment, add the packages to the dependencies file.
-    When you're working in R, it's ``install.R``.
+        **Add packages to your project dependencies**
 
-    To specify your project dependencies in ``install.R``, write the R package install commands.
-    This ``install.R`` script will be sourced and run to create your requested environment.
+        To add packages to your environment, add the packages to the dependencies file.
+        When you're working in R, it's ``install.R``.
 
-    .. code-block:: console
+        To specify your project dependencies in ``install.R``, write the R package install commands.
+        This ``install.R`` script will be sourced and run to create your requested environment.
 
-        install.packages(c("dplyr", "ggplot2"))
+        .. code-block:: console
 
-    Note that the base R ``install.packages`` function can only install the latest version of a package on CRAN.
-    To install a specific version, use ``devtools::install_version``.
-    If the package is not on CRAN and exists as a github repo, you can use ``install_github`` instead.
-    These two scenarios are shown in the example below.
+            install.packages(c("dplyr", "ggplot2"))
 
-    .. code-block:: console
+        Note that the base R ``install.packages`` function can only install the latest version of a package on CRAN.
+        To install a specific version, use ``devtools::install_version``.
+        If the package is not on CRAN and exists as a github repo, you can use ``install_github`` instead.
+        These two scenarios are shown in the example below.
 
-        devtools::install_version("ggplot2",
-                      version = "3.3.6",
-                      repos = "http://cran.us.r-project.org",
-                      upgrade="always")
-        devtools::install_github("thomasp85/patchwork")
+        .. code-block:: console
 
-    **Install the packages**
+            devtools::install_version("ggplot2",
+                        version = "3.3.6",
+                        repos = "http://cran.us.r-project.org",
+                        upgrade="always")
+            devtools::install_github("thomasp85/patchwork")
 
-    Install the packages you listed in the dependency file by running the following command in the terminal:
+        **Install the packages**
 
-    .. code-block:: console
+        Install the packages you listed in the dependency file by running the following command in the terminal:
 
-        $ R -f install.R
+        .. code-block:: console
 
-.. tabbed:: conda
+            $ R -f install.R
 
-    **Add packages to your project dependencies**
+    .. tab-item:: conda
 
-    To add packages to your environment, add the packages to the dependencies file.
-    When you're using conda, it's ``environment.yml``.
+        **Add packages to your project dependencies**
 
-    To add your project's dependencies to ``environment.yml``, specify an environment name and then a list of dependencies.
+        To add packages to your environment, add the packages to the dependencies file.
+        When you're using conda, it's ``environment.yml``.
 
-    .. code-block:: console
+        To add your project's dependencies to ``environment.yml``, specify an environment name and then a list of dependencies.
 
-        name: stats
-        dependencies:
-          - numpy
-          - pandas
+        .. code-block:: console
 
-    For more details, see `conda's documentation <https://docs.conda.io/projects/conda/en/latest/user-guide/tasks/manage-environments.html#create-env-file-manually>`_.
+            name: stats
+            dependencies:
+            - numpy
+            - pandas
 
-    **Install the packages**
+        For more details, see `conda's documentation <https://docs.conda.io/projects/conda/en/latest/user-guide/tasks/manage-environments.html#create-env-file-manually>`_.
 
-    Install the packages you listed in the dependency file by running the following command in the terminal:
+        **Install the packages**
 
-    .. code-block:: console
+        Install the packages you listed in the dependency file by running the following command in the terminal:
 
-        $ conda env update --file environment.yml  --prune
+        .. code-block:: console
+
+            $ conda env update --file environment.yml  --prune
 
 Save your changes
 -----------------
