@@ -26,7 +26,7 @@
 			]
 		}
 	},
-	"postCreateCommand": "git submodule update --init && pip3 install --user -r docs/requirements.txt",
+	"postCreateCommand": "git config --global --add safe.directory /workspaces/renku && git submodule update --init && pip3 install --user -r docs/requirements.txt",
 	"remoteUser": "vscode",
 	"features": {
 		"ghcr.io/devcontainers/features/kubectl-helm-minikube:1": {},

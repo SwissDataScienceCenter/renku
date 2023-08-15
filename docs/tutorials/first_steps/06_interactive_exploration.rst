@@ -7,28 +7,30 @@ At this point in a data-science project, you would normally start by looking at
 the data, trying to understand its structure, and see how to go about answering
 our question: *how many flights had Austin, TX as their destination.*
 
-In this tutorial, we will jump-start the process by using some notebooks and scripts 
+In this tutorial, we will jump-start the process by using some notebooks and scripts
 that have already been prepared.
 
-.. tabbed:: Python
+.. tab-set::
 
-    Go to `the first example Python notebook 
-    <https://renkulab.io/projects/renku-tutorials/renku-tutorial-flights-material/files/blob/notebooks/FilterFlights.ipynb>`_
-    and download the file to your computer. Go to the ``notebooks`` directory in your
-    running interactive session and drag and drop the downloaded notebook there. 
+    .. tab-item:: Python
 
-.. tabbed:: Julia 
+        Go to `the first example Python notebook
+        <https://renkulab.io/projects/renku-tutorials/renku-tutorial-flights-material/files/blob/notebooks/FilterFlights.ipynb>`_
+        and download the file to your computer. Go to the ``notebooks`` directory in your
+        running interactive session and drag and drop the downloaded notebook there.
 
-    Go to `the first example Julia notebook 
-    <https://renkulab.io/projects/renku-tutorial/flights-tutorial-julia/files/blob/.tutorial/meta/templates/FilterFlights.ipynb>`_
-    and download the file to your computer. Go to the ``notebooks`` directory in your
-    running interactive session and drag and drop the downloaded notebook there. 
+    .. tab-item:: Julia
 
-.. tabbed:: R
+        Go to `the first example Julia notebook
+        <https://renkulab.io/projects/renku-tutorial/flights-tutorial-julia/files/blob/.tutorial/meta/templates/FilterFlights.ipynb>`_
+        and download the file to your computer. Go to the ``notebooks`` directory in your
+        running interactive session and drag and drop the downloaded notebook there.
 
-    Go to `this example script <https://renkulab.io/projects/renku-tutorial/flights-tutorial-r/files/blob/.tutorial/meta/templates/FilterFlights.R>`_ 
-    download the file to your computer. Make the ``src`` directory in your
-    running interactive session and upload the script there.
+    .. tab-item:: R
+
+        Go to `this example script <https://renkulab.io/projects/renku-tutorial/flights-tutorial-r/files/blob/.tutorial/meta/templates/FilterFlights.R>`_
+        download the file to your computer. Make the ``src`` directory in your
+        running interactive session and upload the script there.
 
 
 Note: some browsers might change the file extension to ``.txt`` - make sure
