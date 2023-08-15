@@ -69,7 +69,7 @@ master_doc = "index"
 # General information about the project.
 project = "Renku"
 copyright = "2017-2023, Swiss Data Science Center"
-
+author = { "The Renku team and other contributors (see individual repositories)" }
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
 # built documents.
