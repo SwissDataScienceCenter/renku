@@ -1,5 +1,23 @@
 .. _changelog:
 
+0.34.1
+------
+
+Renku ``0.34.1`` fixes Project names in the UI and the Knowledge Graph API.
+
+User-Facing Changes
+~~~~~~~~~~~~~~~~~~~
+
+**🐞 Bug Fixes**
+
+- **Knowledge Graph**: The Knowledge Graph APIs return wrong names, especially for Projects that are forks.
+  (`#1662 <https://github.com/SwissDataScienceCenter/renku-graph/issues/1662>`_).
+
+Individual components
+~~~~~~~~~~~~~~~~~~~~~~
+
+- `renku-graph 2.39.2 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/2.39.2>`_
+
 0.34.0
 ------
 
