@@ -36,7 +36,6 @@ extensions = [
     "plantweb.directive",
     "sphinx_click",
     "sphinx_copybutton",
-    "sphinx_panels",
     "sphinx_rtd_theme",
     "sphinx.ext.autodoc",
     "sphinx.ext.coverage",
@@ -49,6 +48,7 @@ extensions = [
     "sphinx.ext.viewcode",
     "sphinxcontrib.mermaid",
     "sphinxcontrib.spelling",
+    "sphinx_design",
 ]
 
 # Plantweb configuration

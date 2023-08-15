@@ -1,5 +1,138 @@
 .. _changelog:
 
+0.34.0
+------
+
+Renku ``0.34.0`` comes with improvements in the Infrastructure.
+
+Internal Changes
+~~~~~~~~~~~~~~~~
+
+**New Features**
+
+- **Infrastructure**: add support for ingress class name
+
+**Improvements**
+
+- **Documentation**: refactor certificate management part to show how to make use of
+  cert-manager and manually created certificates in both development and production
+  contexts.
+
+
+0.33.1
+------
+
+Renku ``0.33.1`` introduces bug fixes and addition of a warning field when listing servers in the Notebook service.
+The minor change in the Notebook service API are fully backwards compatible.
+It also brings some improvements and bug fixes in the Knowledge Graph.
+
+User-Facing Changes
+~~~~~~~~~~~~~~~~~~~
+
+**✨ Improvements**
+
+- 🔎 **Knowledge Graph**: all the APIs return a new Project `slug` property. 
+  The `path` property although still available will be removed in the future.
+  (`#1641 <https://github.com/SwissDataScienceCenter/renku-graph/issues/1641>`_).
+
+**🐞 Bug Fixes**
+
+- **Knowledge Graph**: Cross-Entity Search cannot find projects by creator.
+  (`#1656 <https://github.com/SwissDataScienceCenter/renku-graph/issues/1656>`_).
+
+Internal Changes
+~~~~~~~~~~~~~~~~
+
+- **Renku Notebooks:** add session warnings to jupyter server API responses
+  (`#1482 <https://github.com/SwissDataScienceCenter/renku-notebooks/issues/1482>`__)
+  (`b463980 <https://github.com/SwissDataScienceCenter/renku-notebooks/commit/b46398032e6361ef1b69fb4909d2ed87afc583eb>`__)
+
+**Bug Fixes**
+
+- **Renku Notebooks:** parse old server options in request to start sessions
+  (`#1570 <https://github.com/SwissDataScienceCenter/renku-notebooks/issues/1570>`__)
+  (`8b3e5c0 <https://github.com/SwissDataScienceCenter/renku-notebooks/commit/8b3e5c091507446080fd468d84c4bd4b8d134b60>`__)
+
+- **Renku Notebooks:** properly recover LFS files from autosave branches
+  (`#1568 <https://github.com/SwissDataScienceCenter/renku-notebooks/issues/1568>`__)
+  (`8f34b09 <https://github.com/SwissDataScienceCenter/renku-notebooks/commit/8f34b09ab73913bfbba4acbe28b00c53ad576367>`__)
+
+- **Knowledge Graph**: fix for an infinite retry loop while sending certain types of internal events.
+  (`#1650 <https://github.com/SwissDataScienceCenter/renku-graph/issues/1650>`_).
+
+Individual components
+~~~~~~~~~~~~~~~~~~~~~~
+
+- `renku-notebooks 1.18.0 <https://github.com/SwissDataScienceCenter/renku-notebooks/releases/tag/1.18.0>`_
+- `renku-graph 2.39.0 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/2.39.0>`_
+- `renku-graph 2.39.1 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/2.39.1>`_
+
+0.33.0
+------
+
+Renku ``0.33.0`` introduces improvements and bug fixes in the UI and Knowledge Graph.
+
+The UI benefits from better error handling and overall behavior, including improved
+handling of common R file extensions. Regarding the Knowledge Graph, the 
+Cross-Entity Search improves significantly its performance and project visibility
+can be changed through a dedicated API.
+
+User-Facing Changes
+~~~~~~~~~~~~~~~~~~~
+
+**🌟 New Features**
+
+- 🫣 **Knowledge Graph**: Add a new Project Update API for changing Project visibility
+  (`#1611 <https://github.com/SwissDataScienceCenter/renku-graph/issues/1611>`_).
+
+**✨ Improvements**
+
+- 🔎 **Knowledge Graph**: The Cross-Entity Search returns a new ``dateModified`` property for
+  Project and Dataset entities
+  (`#1612 <https://github.com/SwissDataScienceCenter/renku-graph/issues/1612>`_) and
+  (`#1595 <https://github.com/SwissDataScienceCenter/renku-graph/issues/1595>`_).
+- 〽️ **Knowledge Graph**: Improved performance of the Cross-Entity Search while searching for
+  datasets
+  (`#1591 <https://github.com/SwissDataScienceCenter/renku-graph/issues/1591>`_).
+- 🔙 **UI**: Add a global error page for fatal errors preventing blank pages
+  (`#2604 <https://github.com/SwissDataScienceCenter/renku-ui/issues/2604>`_).
+- 📄 **UI**: Support previewing additional common R file extensions
+  (`#2639 <https://github.com/SwissDataScienceCenter/renku-ui/issues/2639>`_).
+
+**🐞 Bug Fixes**
+
+- **UI**: Prevent showing endless loader when migration errors occur
+  (`#2650 <https://github.com/SwissDataScienceCenter/renku-ui/issues/2650>`_).
+- **UI**: Do not expand folders by default in dataset view when dataset contains
+  large number of elements
+  (`#2628 <https://github.com/SwissDataScienceCenter/renku-ui/issues/2628>`_).
+- **UI**: Render Rstudio components correctly -- sometimes columns were collapsed
+  (`#2660 <https://github.com/SwissDataScienceCenter/renku-ui/issues/2660>`_).
+- **UI**: Prevent losing work when editing datasets
+  (`#2628 <https://github.com/SwissDataScienceCenter/renku-ui/issues/2628>`_).
+
+Internal Changes
+~~~~~~~~~~~~~~~~
+
+**New Features**
+
+- **Renku Notebooks**: Use a new version of Amalthea which adds fields for hibernating sessions in the CRD.
+
+**Bug Fixes**
+
+- **Knowledge Graph**: Fixed the problem of concurrent writes to the Triples Store causing data
+  integrity violations
+  (`#1577 <https://github.com/SwissDataScienceCenter/renku-graph/issues/1577>`_).
+
+
+Individual components
+~~~~~~~~~~~~~~~~~~~~~~
+
+- `renku-graph 2.38.0 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/2.38.0>`_
+- `renku-ui 3.10.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.10.0>`_
+- `renku-notebooks 1.17.0 <https://github.com/SwissDataScienceCenter/renku-notebooks/releases/tag/1.17.0>`_
+- `amalthea 0.8.0 <https://github.com/SwissDataScienceCenter/amalthea/releases/tag/0.8.0>`_
+
 0.32.0
 ------
 
