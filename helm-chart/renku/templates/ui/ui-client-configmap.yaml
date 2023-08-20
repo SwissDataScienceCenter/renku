@@ -1,0 +1,27 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ template "ui.fullname" . }}-privacy-sample
+  labels:
+    app: ui
+    chart: {{ template "renku.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+data:
+  privacy_statement: |
+    # Privacy statement
+    The content of this page is only a template.
+    ## Information
+    If you are reading this message, the Privacy page content has not been updated for this RenkuLab deployment.
+    The following content is intended to be read by a RenkuLab admin.
+    ## Configure the Privacy Page
+    You should customize the privacy statement by cloning the sample ConfigMap ``*-sample-privacy`` and adjust the
+    content. Any markdown formatted text works. Feel free to change the ConfigMap key and to pick any name,
+    be sure to properly configure the values ``ui.privacy.page`` before upgrading your RenkuLab deployment.
+    If the mapping is enabled but no text is provided (empty content, wrong ``privacy.page`` values, missing
+    ConfigMap, etc.), the links in the navigation bars will be hidden and users manually accessing the privacy page
+    will get a warning.
+    Consider changing the cookie banner content as well when the privacy page is not available.
+    ## Apply the changes
+    If you edit the ConfigMap content and you don't upgrade the deployment from helm, keep in mind that the
+    ui pod needs to be manually re-deployed in order to apply the changes to the privacy page.

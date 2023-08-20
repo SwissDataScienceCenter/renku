@@ -149,12 +149,12 @@ KC_DB_PASSWORD: {{ default (randAlphaNum 64) .Values.global.keycloak.postgresPas
 {{- end -}}
 
 {{- define "renku.baseUrl" -}}
-{{ printf "%s://%s" (include "gateway.protocol" .) .Values.global.renku.domain }}
+{{ printf "%s://%s" (include "renku.http" .) .Values.global.renku.domain }}
 {{- end -}}
 
 {{- define "renku.keycloakUrl" -}}
 {{- if .Values.keycloakx.enabled -}} 
-{{- printf "%s://%s/auth" (include "gateway.protocol" .) .Values.global.renku.domain -}}
+{{- printf "%s://%s/auth" (include "renku.http" .) .Values.global.renku.domain -}}
 {{- else -}}
 {{- .Values.global.keycloak.url -}}
 {{- end -}}

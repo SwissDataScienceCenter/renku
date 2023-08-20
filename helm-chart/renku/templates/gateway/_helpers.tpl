@@ -1,15 +1,4 @@
 {{/*
-Define URL protocol.
-*/}}
-{{- define "gateway.protocol" -}}
-{{- if .Values.global.useHTTPS -}}
-https
-{{- else -}}
-http
-{{- end -}}
-{{- end -}}
-
-{{/*
 Template core service paths as a comma separated list
 */}}
 {{- define "gateway.core.paths" -}}
