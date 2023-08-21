@@ -20,7 +20,7 @@ package ch.renku.acceptancetests.workflows
 
 import ch.renku.acceptancetests.pages.DatasetsPage
 import ch.renku.acceptancetests.pages.DatasetsPage.DatasetSearchOrdering
-import ch.renku.acceptancetests.pages.DatasetsPage.DatasetSearchOrdering.ProjectsCount
+import ch.renku.acceptancetests.pages.DatasetsPage.DatasetSearchOrdering.BestMatch
 import ch.renku.acceptancetests.tooling.AcceptanceSpec
 
 import scala.concurrent.duration._
@@ -28,7 +28,7 @@ import scala.concurrent.duration._
 trait DatasetsSearch {
   self: AcceptanceSpec =>
 
-  def `search for dataset with phrase`(phrase: String, orderBy: DatasetSearchOrdering = ProjectsCount): Unit = {
+  def `search for dataset with phrase`(phrase: String, orderBy: DatasetSearchOrdering = BestMatch): Unit = {
     `try few times with page reload` { _ =>
       go to DatasetsPage sleep (2 seconds)
       verify browserAt DatasetsPage
@@ -36,10 +36,10 @@ trait DatasetsSearch {
 
     When(s"the user types in the '$phrase' in the search field")
     DatasetsPage.searchBox enterValue phrase
-    And("opens the order by dropdown menu")
-    click on DatasetsPage.orderByDropdownMenu() sleep (1 second)
-    And(s"changes the ordering to ${orderBy.value}")
-    click on DatasetsPage.orderByDropdownItem(orderBy) sleep (1 second)
+    And("opens the sort by dropdown menu")
+    click on DatasetsPage.sortByDropdownMenu() sleep (1 second)
+    And(s"changes the sorting to ${orderBy.value}")
+    click on DatasetsPage.sortByDropdownItem(orderBy) sleep (1 second)
     And("clicks the search button")
     click on DatasetsPage.searchButton sleep (1 second)
 

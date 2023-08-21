@@ -16,26 +16,28 @@ every two minutes, around the clock, during the entire month of January 2019.
 Go back and take a look at the filtering script: it contains
 an error! In the code block
 
-.. tabbed:: Python
+.. tab-set::
 
-    .. code-block:: console
+    .. tab-item:: Python
 
-        # Select only flights to Austin (AUS)
-        df = df[df['DEST'] == 'DFW']
+        .. code-block:: console
 
-.. tabbed:: Julia
+            # Select only flights to Austin (AUS)
+            df = df[df['DEST'] == 'DFW']
 
-    .. code-block:: console
+    .. tab-item:: Julia
 
-        # Filter to flights to Austin, TX
-        df = full_df[full_df.DEST .== "DFW", :]
+        .. code-block:: console
 
-.. tabbed:: R
+            # Filter to flights to Austin, TX
+            df = full_df[full_df.DEST .== "DFW", :]
 
-    .. code-block:: console
+    .. tab-item:: R
 
-        # Select only flights to Austin (AUS)
-        data %>% filter(DEST == "DFW")
+        .. code-block:: console
+
+            # Select only flights to Austin (AUS)
+            data %>% filter(DEST == "DFW")
 
 
 we want to select flights to Austin-Bergstrom (AUS), but mistakenly select

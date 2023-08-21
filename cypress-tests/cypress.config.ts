@@ -12,6 +12,10 @@ export default defineConfig({
     TEST_LAST_NAME: process.env.TEST_LAST_NAME,
     TEST_USERNAME: process.env.TEST_USERNAME,
   },
+  retries: {
+    runMode: 2,
+    openMode: null
+  },
   defaultCommandTimeout: TIMEOUTS.standard,
   chromeWebSecurity: false,
   viewportWidth: 1024,

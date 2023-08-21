@@ -178,10 +178,12 @@ ingress:
   ## Enables the creation of an ingress
   enabled: false
 
+  className: "" # nginx
+
   ## Annotations for the created ingress
   annotations:
     ## The ingress class
-    cert-manager.io/cluster-issuer: letsencrypt-production # TO DO: should be changed because not everyone is using cert-manager
+    cert-manager.io/cluster-issuer: letsencrypt-production # Use null as value if not using cert-manager to remove this entry
     kubernetes.io/ingress.class: nginx
     nginx.ingress.kubernetes.io/proxy-body-size: "0" # Adjust to a reasonable value for production to avoid DOS attacks.
     nginx.ingress.kubernetes.io/proxy-request-buffering: "off" # Needed if GitLab is behind this ingress

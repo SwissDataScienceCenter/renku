@@ -12,3 +12,4 @@ Guides for Administrators
     running_renku_on_minikube
     privacycookie
     troubleshooting
+    crc
