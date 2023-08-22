@@ -935,8 +935,8 @@ initDb:
 
 crc:
   image: 
-    repository: renku/renku-crc
-    tag: "0.0.1"
+    repository: registry.dev.renku.ch/tasko.olevski/renku-images/renku-crac
+    tag: fix-patch-1
     pullPolicy: IfNotPresent
   service:
     type: ClusterIP
