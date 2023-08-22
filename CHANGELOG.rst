@@ -1,5 +1,30 @@
 .. _changelog:
 
+0.34.2
+------
+
+Renku ``0.34.2`` fixes several bugs in the Gateway.
+
+Internal Changes
+~~~~~~~~~~~~~~~~
+
+**🐞 Bug Fixes**
+
+-  **Gateway:** properly use Redis sentinel client
+   (`#668 <https://github.com/SwissDataScienceCenter/renku-gateway/issues/668>`__)
+   (`5ab4447 <https://github.com/SwissDataScienceCenter/renku-gateway/commit/5ab44475c9f7a516ddb8865c8f70db9bdb0ba5ec>`__)
+-  **Gateway:** properly redirect from /gitlab urls
+   (`#669 <https://github.com/SwissDataScienceCenter/renku-gateway/issues/669>`__)
+   (`2fac96f <https://github.com/SwissDataScienceCenter/renku-gateway/commit/2fac96f5c6141f4e57ae5cc77877670156bceae5>`__)
+-  **Gateway:** return 404 if the core service metadata does not exist instead of redirecting to latest
+   (`#667 <https://github.com/SwissDataScienceCenter/renku-gateway/issues/667>`__)
+   (`2753d07 <https://github.com/SwissDataScienceCenter/renku-gateway/commit/2753d0773e26cb1c74e4be4dd44fe5e77f428657>`__)
+
+Individual components
+~~~~~~~~~~~~~~~~~~~~~~
+
+- `renku-gateway 0.21.2 <https://github.com/SwissDataScienceCenter/renku-gateway/releases/tag/0.21.2>`_
+
 0.34.1
 ------
 
