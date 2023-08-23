@@ -1,5 +1,30 @@
 .. _changelog:
 
+0.34.2
+------
+
+Renku ``0.34.2`` fixes several bugs in the core-service.
+
+Internal Changes
+~~~~~~~~~~~~~~~~
+
+**Bug Fixes**
+
+- **Core Service:** fix issue with cache.migrations_check timing out.
+  (`#3597 <https://github.com/SwissDataScienceCenter/renku-python/issues/3597>`__)
+  (`20b5589 <https://github.com/SwissDataScienceCenter/renku-python/commit/20b5589ea2639b4ff017fc390a9b685842c9685d>`__)
+- **Core Service:** fix dataset image IDs for datasets imported from Zenodo
+  (`#3596 <https://github.com/SwissDataScienceCenter/renku-python/issues/3596>`__)
+  (`f624b2b <https://github.com/SwissDataScienceCenter/renku-python/commit/f624b2bf261d97b07c88243f674f544613753e28>`__)
+- **Core Service:** fix issue on workflows UI with badly formatted IDs
+  (`#3594 <https://github.com/SwissDataScienceCenter/renku-python/issues/3594>`__)
+  (`c418c17 <https://github.com/SwissDataScienceCenter/renku-python/commit/c418c178d03a5caac126d14cc089064ee13f2747>`__)
+
+Individual components
+~~~~~~~~~~~~~~~~~~~~~
+
+- `renku-core 2.6.1 <https://github.com/SwissDataScienceCenter/renku-python/releases/tag/v2.6.2>`_
+
 0.34.1
 ------
 
