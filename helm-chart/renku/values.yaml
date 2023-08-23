@@ -169,8 +169,8 @@ global:
       ## The secret is not re-generated or modified in any way if it already exists.
       passwordSecretName: renku-db-common-password
     
-  crc:
-    serviceName: renku-crc
+  dataService:
+    serviceName: renku-data-service
 
 ## Ingress configuration
 ## See: https://kubernetes.io/docs/concepts/services-networking/ingress/
@@ -933,9 +933,9 @@ initDb:
     repository: renku/init-db
     tag: "latest"
 
-crc:
+dataService:
   image: 
-    repository: renku/renku-crc
+    repository: renku/renku-data-service
     tag: "0.0.1"
     pullPolicy: IfNotPresent
   service:
