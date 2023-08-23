@@ -8,7 +8,7 @@ Renku ``0.34.2`` fixes several bugs in the Gateway.
 Internal Changes
 ~~~~~~~~~~~~~~~~
 
-**🐞 Bug Fixes**
+**Bug Fixes**
 
 -  **Gateway:** properly use Redis sentinel client
    (`#668 <https://github.com/SwissDataScienceCenter/renku-gateway/issues/668>`__)
