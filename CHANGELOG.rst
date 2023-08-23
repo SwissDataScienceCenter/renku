@@ -16,7 +16,8 @@ Internal Changes
 -  **Gateway:** properly redirect from /gitlab urls
    (`#669 <https://github.com/SwissDataScienceCenter/renku-gateway/issues/669>`__)
    (`2fac96f <https://github.com/SwissDataScienceCenter/renku-gateway/commit/2fac96f5c6141f4e57ae5cc77877670156bceae5>`__)
--  **Gateway:** return 404 if the core service metadata does not exist instead of redirecting to latest
+-  **Gateway:** return 404 if the core service metadata version does not exist instead of redirecting 
+   to the endpoint that is using the latest metadata version
    (`#667 <https://github.com/SwissDataScienceCenter/renku-gateway/issues/667>`__)
    (`2753d07 <https://github.com/SwissDataScienceCenter/renku-gateway/commit/2753d0773e26cb1c74e4be4dd44fe5e77f428657>`__)
 
