@@ -3,8 +3,7 @@
 0.35.0
 ------
 
-Renku ``0.35.0`` introduces new UI features and bug fixes as well as bug fixes
-in the renku-core service.
+Renku 0.35.0 introduces new features in the UI and bug fixes in various components.
 
 User-Facing Changes
 ~~~~~~~~~~~~~~~~~~~
