@@ -130,6 +130,7 @@ trait Datasets {
 
     `try few times with page reload` { _ =>
       When("the user clicks on the dataset name")
+      sleep(5 seconds)
       click on projectPage.Datasets.DatasetsList
         .maybeLink(to = datasetPage)
         .getOrElse(logAndFail(s"Cannot find '${datasetPage.datasetName}' Dataset among project datasets; waiting"))
