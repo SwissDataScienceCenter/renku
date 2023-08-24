@@ -225,9 +225,7 @@ describe("Basic public project functionality", () => {
   it("Can view and modify sessions settings", () => {
     cy.dataCy("project-navbar").contains("Settings").should("exist").click();
     cy.intercept("/ui-server/api/renku/*/config.set").as("configSet");
-    cy.intercept("/ui-server/api/renku/*/config.show?git_url=*").as(
-      "getConfig"
-    );
+    cy.intercept("/ui-server/api/renku/*/config.show?git_url=*").as("getConfig");
 
     const navigateToSettingsSessions = ({
       waitForApis,
