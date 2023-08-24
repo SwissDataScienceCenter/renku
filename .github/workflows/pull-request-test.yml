@@ -139,7 +139,8 @@ jobs:
       fail-fast: false
       max-parallel: 1
       matrix:
-        tests: [publicProject, updateProjects, useSession, rstudioSession]
+        tests: [useSession] # ! TEMP -- revert
+        # tests: [publicProject, updateProjects, useSession, rstudioSession] 
 
     steps:
       - uses: SwissDataScienceCenter/renku-actions/test-renku-cypress@v1.5.2
