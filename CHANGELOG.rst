@@ -72,7 +72,7 @@ Internal Changes
 Individual components
 ~~~~~~~~~~~~~~~~~~~~~~
 
-- `renku-core 2.6.1 <https://github.com/SwissDataScienceCenter/renku-python/releases/tag/v2.6.2>`_
+- `renku-python 2.6.2 <https://github.com/SwissDataScienceCenter/renku-python/releases/tag/v2.6.2>`_
 - `renku-gateway 0.21.2 <https://github.com/SwissDataScienceCenter/renku-gateway/releases/tag/0.21.2>`_
 - `renku-ui 3.11.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.11.0>`_
 
