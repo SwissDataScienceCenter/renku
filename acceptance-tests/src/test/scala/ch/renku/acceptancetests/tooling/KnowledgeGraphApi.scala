@@ -79,6 +79,14 @@ trait KnowledgeGraphApi extends RestClient {
     } else if (findProgress(projectId, gitLabProjectId, browser) < 100d) {
       sleep(1 second)
       checkStatusAndWait(projectId, gitLabProjectId, browser, attempt + 1)
+    } else if (findProgress(projectId, gitLabProjectId, browser) == 100d) {
+      val maybeDetails = findStatus(projectId, gitLabProjectId, browser).flatMap(_.maybeDetails)
+      maybeDetails match {
+        case Some(status) if status.status == "failure" =>
+          val stackTrace = status.maybeStackTrace.map(s => s"; stackTrace:\n${s.replace("; ", "; \n")}").getOrElse("")
+          fail(s"Project $projectId ($gitLabProjectId) failed with '${status.message}'$stackTrace")
+        case _ => ()
+      }
     }
 
   @tailrec

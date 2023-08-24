@@ -45,7 +45,7 @@ class GraphStatusSpec extends AnyFlatSpec with should.Matchers {
       GraphStatus(
         activated = true,
         GraphStatus.Progress(1, 4, 0.25f),
-        Some(GraphStatus.Details("in-progress", "Thing is in progress."))
+        Some(GraphStatus.Details("in-progress", "Thing is in progress.", maybeStackTrace = None))
       )
     )
   }
