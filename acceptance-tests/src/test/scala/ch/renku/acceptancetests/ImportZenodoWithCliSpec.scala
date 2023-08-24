@@ -73,6 +73,8 @@ class ImportZenodoWithCliSpec
     When("all the events are processed by the knowledge-graph")
     `wait for KG to process events`(projectDetails.asProjectIdentifier, webDriver)
 
+    sleep(5 seconds)
+
     val dsPage = DatasetPage(DatasetName("biodiversity_and_healthy"))
     `navigate to the dataset`(dsPage)
 
