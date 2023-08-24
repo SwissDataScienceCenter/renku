@@ -44,6 +44,8 @@ Internal Changes
 
 - **UI**: Restore maintenance page
   (`#2715 <https://github.com/SwissDataScienceCenter/renku-ui/issues/2715>`_).
+- **KG**: New graph for storing auth data
+  (`#1661 <https://github.com/SwissDataScienceCenter/renku-graph/issues/1661>`_).
 
 **Bug Fixes**
 
@@ -75,6 +77,7 @@ Individual components
 - `renku-python 2.6.2 <https://github.com/SwissDataScienceCenter/renku-python/releases/tag/v2.6.2>`_
 - `renku-gateway 0.21.2 <https://github.com/SwissDataScienceCenter/renku-gateway/releases/tag/0.21.2>`_
 - `renku-ui 3.11.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.11.0>`_
+- `renku-graph 2.40.0 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/2.40.0>`_
 
 0.34.1
 ------
