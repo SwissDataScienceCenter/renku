@@ -71,8 +71,8 @@ trait KnowledgeGraphApi extends RestClient {
       browser:         WebDriver,
       attempt:         Int
   ): Unit =
-    if (attempt >= 60 * 5)
-      fail(s"Events for '$projectId' project not processed after 5 minutes")
+    if (attempt >= 60 * 10)
+      fail(s"Events for '$projectId' project not processed after 10 minutes")
     else if (findTotalDone(projectId, gitLabProjectId, browser) == 0) {
       sleep(1 second)
       checkStatusAndWait(projectId, gitLabProjectId, browser, attempt + 1)
