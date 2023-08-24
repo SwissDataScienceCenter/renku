@@ -8,10 +8,14 @@ const projectTestConfig = {
   shouldCreateProject: true,
   projectName: generatorProjectName("useSession"),
 };
+const workflow = {
+  name: "dummyworkflow8",
+  output: "o8.txt"
+};
 
 // ? Modify the config -- useful for debugging
 // projectTestConfig.shouldCreateProject = false;
-// projectTestConfig.projectName = "test-session-4f79daad6d4e";
+// projectTestConfig.projectName = "cypress-publicproject-eecb9dd1c738";
 
 const projectIdentifier = {
   name: projectTestConfig.projectName,
@@ -60,9 +64,11 @@ describe("Basic public project functionality", () => {
     cy.intercept("/ui-server/api/notebooks/servers*", (req) => {
       serversInvoked = true;
     }).as("getServers");
-    cy.dataCy("project-overview-content")
-      .contains("your new Renku project", { timeout: TIMEOUTS.long })
-      .should("exist");
+    if (projectTestConfig.shouldCreateProject) {
+      cy.dataCy("project-overview-content")
+        .contains("your new Renku project", { timeout: TIMEOUTS.long })
+        .should("exist");
+    }
     cy.getProjectPageLink(projectIdentifier, "sessions")
       .should("exist")
       .click();
@@ -109,17 +115,40 @@ describe("Basic public project functionality", () => {
 
     // run a simple workflow in the iframe
     cy.getIframe("iframe#session-iframe").within(() => {
+      // open the terminal and check the repo is not ahead
       cy.get(".jp-Launcher-content", { timeout: TIMEOUTS.long }).should(
-        "exist"
+        "be.visible"
       );
-      cy.get(".jp-Launcher-section").should("exist");
+      cy.get(".jp-Launcher-section").should("be.visible");
       cy.get('.jp-LauncherCard[title="Start a new terminal session"]')
+        .should("be.visible")
+        .click();
+
+      // run a dummy workflow
+      cy.get(".xterm-helper-textarea")
+        .click()
+        .type(`renku run --name ${workflow.name} echo "123" > ${workflow.output}{enter}`);
+      cy.get("#filebrowser").should("be.visible").contains(workflow.output).should("be.visible");
+      cy.get("#jp-git-sessions")
+        .get(`button[title="Push committed changes (ahead by 1 commits)"]`)
+        .should("not.exist");
+
+      // push the changes
+      cy.get(`[data-id="jp-git-sessions"]`).should("be.visible").click();
+      cy.get("#jp-git-sessions").contains(projectTestConfig.projectName).should("be.visible");
+      cy.get("#jp-git-sessions")
+        .get(`button[title="Push committed changes (ahead by 1 commits)"]`)
         .should("exist")
         .click();
-      // TODO: use the terminal to execute a simple workflow
-      // ? /SwissDataScienceCenter/notebooks-cypress-tests/blob/main/cypress/support/commands/jupyterlab.ts
+      cy.get("#jp-git-sessions")
+        .get(`button[title="Push committed changes"]`, { timeout: TIMEOUTS.long })
+        .should("exist");
+      cy.get("#jp-git-sessions")
+        .get(`button[title="Push committed changes (ahead by 1 commits)"]`)
+        .should("not.exist");
     });
 
+    // stop the session
     cy.dataCy("stop-session-button").should("exist").click();
     cy.dataCy("stop-session-modal-button").should("exist").click();
     cy.dataCy("stopping-btn").should("exist");
@@ -127,5 +156,13 @@ describe("Basic public project functionality", () => {
       .should("exist")
       .contains("No currently running sessions")
       .should("exist");
+
+    // check the workflows tab
+    cy.dataCy("go-back-button").click();
+    cy.dataCy("project-navbar", true)
+      .contains("a.nav-link", "Workflows")
+      .should("exist")
+      .click();
+    // TODO
   });
 });
