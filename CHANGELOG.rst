@@ -48,8 +48,6 @@ Internal Changes
 
 **Bug Fixes**
 
-- **UI**: Use a common project URL when invoking renku-core APIs
-  (`#2722 <https://github.com/SwissDataScienceCenter/renku-ui/issues/2722>`_).
 - **Core Service**: Fix issue with cache.migrations_check timing out.
   (`#3597 <https://github.com/SwissDataScienceCenter/renku-python/issues/3597>`__)
   (`20b5589 <https://github.com/SwissDataScienceCenter/renku-python/commit/20b5589ea2639b4ff017fc390a9b685842c9685d>`__)
@@ -59,13 +57,25 @@ Internal Changes
 - **Core Service**: Fix issue on workflows UI with badly formatted IDs
   (`#3594 <https://github.com/SwissDataScienceCenter/renku-python/issues/3594>`__)
   (`c418c17 <https://github.com/SwissDataScienceCenter/renku-python/commit/c418c178d03a5caac126d14cc089064ee13f2747>`__)
+- **Gateway:** properly use Redis sentinel client
+  (`#668 <https://github.com/SwissDataScienceCenter/renku-gateway/issues/668>`__)
+  (`5ab4447 <https://github.com/SwissDataScienceCenter/renku-gateway/commit/5ab44475c9f7a516ddb8865c8f70db9bdb0ba5ec>`__)
+- **Gateway:** properly redirect from /gitlab urls
+  (`#669 <https://github.com/SwissDataScienceCenter/renku-gateway/issues/669>`__)
+  (`2fac96f <https://github.com/SwissDataScienceCenter/renku-gateway/commit/2fac96f5c6141f4e57ae5cc77877670156bceae5>`__)
+- **Gateway:** return 404 if the core service metadata version does not exist instead of redirecting 
+  to the endpoint that is using the latest metadata version
+  (`#667 <https://github.com/SwissDataScienceCenter/renku-gateway/issues/667>`__)
+  (`2753d07 <https://github.com/SwissDataScienceCenter/renku-gateway/commit/2753d0773e26cb1c74e4be4dd44fe5e77f428657>`__
+- **UI**: Use a common project URL when invoking renku-core APIs
+  (`#2722 <https://github.com/SwissDataScienceCenter/renku-ui/issues/2722>`_).
 
 Individual components
 ~~~~~~~~~~~~~~~~~~~~~~
 
-- `renku-ui 3.11.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.11.0>`_
 - `renku-core 2.6.1 <https://github.com/SwissDataScienceCenter/renku-python/releases/tag/v2.6.2>`_
-
+- `renku-gateway 0.21.2 <https://github.com/SwissDataScienceCenter/renku-gateway/releases/tag/0.21.2>`_
+- `renku-ui 3.11.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.11.0>`_
 
 0.34.1
 ------
