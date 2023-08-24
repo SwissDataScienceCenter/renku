@@ -17,6 +17,9 @@ global:
       value:
     ## URL prefix for gitlab
     # urlPrefix: /
+    ## Full URL for gitlab
+    ## NOTE: Many services have this setting internally, they should switch to using the global setting instead
+    # url:
     ## Secret for the gitlab keycloak client
     clientSecret: # use `openssl rand -hex 32`
 
@@ -934,6 +937,7 @@ initDb:
     tag: "latest"
 
 dataService:
+  gitlabUrl:
   image: 
     repository: renku/renku-data-service
     tag: "0.0.1"
