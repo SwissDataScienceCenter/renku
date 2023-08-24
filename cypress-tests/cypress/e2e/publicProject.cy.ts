@@ -71,18 +71,18 @@ describe("Basic public project functionality", () => {
     cy.visitAndLoadProject(projectIdentifier);
   });
 
-  it("Can search for project", () => {
+  it.only("Can search for project", () => {
     // assess the project has been indexed properly -- this might take time if it was recently created
     cy.dataCy("project-navbar", true)
       .contains("a.nav-link", "Settings")
       .should("be.visible")
       .click();
     cy.dataCy("project-settings-knowledge-graph")
-      .contains("Knowledge Graph metadata", { timeout: TIMEOUTS.vlong })
+      .contains("Project indexing", { timeout: TIMEOUTS.vlong })
       .should("exist");
     cy.dataCy("kg-status-section-open").should("exist").click();
     cy.dataCy("project-settings-knowledge-graph")
-      .contains("Everything processed", { timeout: TIMEOUTS.vlong })
+      .contains("Everything indexed", { timeout: TIMEOUTS.vlong })
       .should("exist");
     cy.searchForProject(projectIdentifier);
 
@@ -93,7 +93,7 @@ describe("Basic public project functionality", () => {
     cy.robustLogin();
   });
 
-  it("Can can see overview content and check the clone URLs", () => {
+  it("Can see overview content and check the clone URLs", () => {
     cy.contains("README.md").should("be.visible");
     cy.contains("This is a Renku project").should("be.visible");
     if (projectTestConfig.shouldCreateProject) {
@@ -141,7 +141,7 @@ describe("Basic public project functionality", () => {
       .contains("This project uses the latest")
       .should("exist");
     cy.dataCy("project-settings-knowledge-graph")
-      .contains("Knowledge Graph metadata")
+      .contains("Project indexing")
       .should("exist");
   });
 
@@ -162,7 +162,7 @@ describe("Basic public project functionality", () => {
       .should("be.visible");
   });
 
-  it("Can can work with datasets", () => {
+  it("Can work with datasets", () => {
     let migrationsInvoked = false;
     cy.intercept("/ui-server/api/renku/cache.migrations_check*", (req) => {
       migrationsInvoked = true;
