@@ -45,10 +45,6 @@ class DatasetPage(val datasetName: DatasetName, projectPage: ProjectPage)
     find(cssSelector("div[data-cy='dataset-title']")) getOrElse fail("Dataset -> Dataset title not found")
   }
 
-  def datasetNotInKgWarning(implicit webDriver: WebDriver): List[WebBrowser.Element] = eventually {
-    findAll(cssSelector(".not-in-kg-warning")) toList
-  }
-
   def datasetFiles(implicit webDriver: WebDriver): WebElement = eventually {
     find(cssSelector(".pl-3 > .order-third > a")) getOrElse fail("Dataset -> Dataset file not found")
   }
