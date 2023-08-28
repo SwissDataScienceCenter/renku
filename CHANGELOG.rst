@@ -10,7 +10,7 @@ Internal Changes
 
 **Bug Fixes**
 
-- **Compute resource control**: Properly handle quotas internally
+- **Compute resource control**: Fix erroneous validation errors with quotas
   (`#22 <https://github.com/SwissDataScienceCenter/renku-data-services/pull/22>`__)
 
 Individual components
