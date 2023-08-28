@@ -1,5 +1,23 @@
 .. _changelog:
 
+0.35.1
+------
+
+Renku 0.35.1 introduces a bug fix in the compute resource control (CRC) service.
+
+Internal Changes
+~~~~~~~~~~~~~~~~
+
+**Bug Fixes**
+
+- **Compute resource control**: Properly handle quotas internally
+  (`#22 <https://github.com/SwissDataScienceCenter/renku-data-services/pull/22>`__)
+
+Individual components
+~~~~~~~~~~~~~~~~~~~~~~
+
+- `renku-data-services v0.0.2 <https://github.com/SwissDataScienceCenter/renku-data-services/releases/tag/v0.0.2>`_
+
 0.35.0
 ------
 
