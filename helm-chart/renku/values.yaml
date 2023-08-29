@@ -15,8 +15,11 @@ global:
     ## setting this value or by randomly generating it because it was omitted below.
     postgresPassword:
       value:
-    ## URL prefix for gitlab
+    ## URL prefix for gitlab 
+    ## TODO: remove this once we fully moved to external gitlab.
     # urlPrefix: /
+    ## URL for gitlab deployment
+    url:
     ## Secret for the gitlab keycloak client
     clientSecret: # use `openssl rand -hex 32`
 
