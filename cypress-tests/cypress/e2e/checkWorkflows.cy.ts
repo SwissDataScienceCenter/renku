@@ -30,7 +30,7 @@ describe("Workflows pages", () => {
     );
   });
 
- it("Check workflows", () => {
+  it("Check workflows", () => {
     cy.visitAndLoadProject(project);
 
     // Go the the workflows page and check the details of a workflow
@@ -50,7 +50,8 @@ describe("Workflows pages", () => {
       .should("be.visible")
       .click();
 
-    cy.dataCy("workflow-details").should("be.visible")
+    cy.dataCy("workflow-details")
+      .should("be.visible")
       .contains("This is defintely a useless workflow.")
       .should("be.visible");
     cy.dataCy("workflow-details").contains("keyword1,").should("be.visible");
@@ -59,7 +60,10 @@ describe("Workflows pages", () => {
       .should("be.visible");
 
     // Play with the workflow browser and check composite workflows link other workflows
-    cy.dataCy("workflows-browser").should("be.visible").children().should("have.length", 9);
+    cy.dataCy("workflows-browser")
+      .should("be.visible")
+      .children()
+      .should("have.length", 9);
     cy.dataCy("workflows-browser")
       .get(".rk-tree-item--children")
       .should("not.exist");
