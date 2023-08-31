@@ -30,7 +30,7 @@ describe("Workflows pages", () => {
     );
   });
 
-  it.only("Check workflows", () => {
+ it("Check workflows", () => {
     cy.visitAndLoadProject(project);
 
     // Go the the workflows page and check the details of a workflow
@@ -45,15 +45,12 @@ describe("Workflows pages", () => {
     cy.dataCy("workflows-browser")
       .should("be.visible")
       .children()
-      .should("have.length", 9);
-    cy.dataCy("workflows-browser")
-      .children()
+      .should("have.length", 9)
       .contains("useless-workflow-with-kw")
       .should("be.visible")
       .click();
 
-    cy.dataCy("workflow-details").should("be.visible");
-    cy.dataCy("workflow-details")
+    cy.dataCy("workflow-details").should("be.visible")
       .contains("This is defintely a useless workflow.")
       .should("be.visible");
     cy.dataCy("workflow-details").contains("keyword1,").should("be.visible");
@@ -62,8 +59,7 @@ describe("Workflows pages", () => {
       .should("be.visible");
 
     // Play with the workflow browser and check composite workflows link other workflows
-    cy.dataCy("workflows-browser").should("be.visible");
-    cy.dataCy("workflows-browser").children().should("have.length", 9);
+    cy.dataCy("workflows-browser").should("be.visible").children().should("have.length", 9);
     cy.dataCy("workflows-browser")
       .get(".rk-tree-item--children")
       .should("not.exist");
@@ -77,27 +73,22 @@ describe("Workflows pages", () => {
       .get(".rk-tree-item--children")
       .should("be.visible");
 
-    cy.dataCy("workflow-details")
-      .contains("Workflow (Composite)")
-      .should("be.visible");
-    cy.dataCy("workflow-details")
-      .contains("div h5", "composite1")
-      .should("be.visible")
-      .click();
+    cy.dataCy("workflow-details").within(() => {
+      cy.root().contains("Workflow (Composite)").should("be.visible");
+      cy.root().contains("div h5", "composite1").should("be.visible").click();
+    });
 
-    cy.dataCy("workflow-details")
-      .contains("renku workflow execute composite1")
-      .should("be.visible");
-    cy.dataCy("workflow-details")
-      .contains("Workflow (Composite)")
-      .should("be.visible");
-    cy.dataCy("workflow-details")
-      .contains("step1_input-1")
-      .should("be.visible");
-    cy.dataCy("workflow-details")
-      .contains("div h5", "so-many-steps")
-      .should("be.visible")
-      .click();
+    cy.dataCy("workflow-details").within(() => {
+      cy.root()
+        .contains("renku workflow execute composite1")
+        .should("be.visible");
+      cy.root().contains("Workflow (Composite)").should("be.visible");
+      cy.root().contains("step1_input-1").should("be.visible");
+      cy.root()
+        .contains("div h5", "so-many-steps")
+        .should("be.visible")
+        .click();
+    });
 
     cy.dataCy("workflow-details")
       .contains("div", "input-2")
