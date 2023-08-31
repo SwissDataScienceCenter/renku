@@ -59,7 +59,7 @@ class BatchProjectRemovalSpec extends AcceptanceSpec with Login with RemoveProje
       if (batchRemoveConfig.patterns.exists(_ matches path) && (created < Instant.now().minus(days))) {
         And(s"the project matches the removal pattern and it's older than ${days.toDays} days")
         Then("the project is removed")
-        `DELETE /knowledge-graph/projects/:path`(fullPath)
+        `DELETE /knowledge-graph/projects/:slug`(fullPath)
       } else {
         And(s"the project doesn't match the removal pattern or it's not older than ${days.toDays} days")
         Then("project is left untouched")

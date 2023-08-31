@@ -18,13 +18,17 @@
 
 package ch.renku.acceptancetests.tooling
 
+import KnowledgeGraphModel._
 import TestLogger._
 import cats.effect.IO
 import cats.syntax.all._
 import ch.renku.acceptancetests.model.projects.ProjectIdentifier
-import io.circe.JsonObject
+import io.circe._
+import io.circe.syntax._
+import org.http4s.MediaType._
 import org.http4s.Status.{Accepted, NotFound, Ok}
 import org.http4s.circe.CirceEntityCodec._
+import org.http4s.headers.`Content-Type`
 import org.openqa.selenium.WebDriver
 
 import scala.annotation.tailrec
@@ -56,12 +60,30 @@ trait KnowledgeGraphApi extends RestClient {
       .getOrElse(fail(s"Cannot find lineage data for project $projectPath file $filePath"))
   }
 
-  def `DELETE /knowledge-graph/projects/:path`(projectPath: String): Unit = {
+  def `GET /knowledge-graph/projects/:slug`(slug: String): KGProjectDetails = {
     val toSegments: String => List[String] = _.split('/').toList
-    val uri = toSegments(projectPath).foldLeft(renkuBaseUrl / "knowledge-graph" / "projects")(_ / _)
+    val uri = toSegments(slug).foldLeft(renkuBaseUrl / "knowledge-graph" / "projects")(_ / _)
+    GET(uri)
+      .withAuthorizationToken(authorizationToken)
+      .putHeaders(`Content-Type`(application.json))
+      .send(whenReceived(status = Ok) >=> decodePayload[KGProjectDetails])
+  }
+
+  def `PATCH /knowledge-graph/projects/:slug`(slug: String, updates: ProjectUpdates): Unit = {
+    val toSegments: String => List[String] = _.split('/').toList
+    val uri = toSegments(slug).foldLeft(renkuBaseUrl / "knowledge-graph" / "projects")(_ / _)
+    PATCH(uri)
+      .withEntity(updates.asJson)
+      .withAuthorizationToken(authorizationToken)
+      .send(expect(status = Accepted, otherwiseLog = s"Updating '$slug' project failed"))
+  }
+
+  def `DELETE /knowledge-graph/projects/:slug`(slug: String): Unit = {
+    val toSegments: String => List[String] = _.split('/').toList
+    val uri = toSegments(slug).foldLeft(renkuBaseUrl / "knowledge-graph" / "projects")(_ / _)
     DELETE(uri)
       .withAuthorizationToken(authorizationToken)
-      .send(expect(status = Accepted, otherwiseLog = s"Deletion of '$projectPath' project failed"))
+      .send(expect(status = Accepted, otherwiseLog = s"Deletion of '$slug' project failed"))
   }
 
   @tailrec

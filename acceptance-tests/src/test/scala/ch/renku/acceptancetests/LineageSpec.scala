@@ -116,7 +116,7 @@ class LineageSpec
   private def `verify the kg api returned the correct lineage data`(scriptPath: String, outputFilePath: String) = {
     And("The KG API returns the lineage")
 
-    val results = findLineage(projectDetails.asProjectPath, outputFilePath).toMap
+    val results = findLineage(projectDetails.asProjectSlug, outputFilePath).toMap
     val edges =
       results("edges").as[List[Json]].fold(_ => throw new Exception("Edges not found in Lineage response"), identity)
     val nodes =

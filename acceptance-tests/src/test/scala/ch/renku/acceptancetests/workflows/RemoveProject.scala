@@ -27,8 +27,8 @@ trait RemoveProject extends BrowserNavigation {
   self: AcceptanceSpec with KnowledgeGraphApi =>
 
   def `remove project in GitLab`(implicit projectId: ProjectIdentifier): Unit = {
-    And(s"the '${projectId.slug}' project is removed")
-    `DELETE /knowledge-graph/projects/:path`(projectId.slug)
+    And(s"the '${projectId.asProjectSlug}' project is removed")
+    `DELETE /knowledge-graph/projects/:slug`(projectId.asProjectSlug)
     sleep(1 second)
   }
 }
