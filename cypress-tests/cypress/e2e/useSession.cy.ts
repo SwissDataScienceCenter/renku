@@ -9,13 +9,13 @@ const projectTestConfig = {
   projectName: generatorProjectName("useSession"),
 };
 const workflow = {
-  name: "dummyworkflow8",
-  output: "o8.txt"
+  name: "dummyworkflow",
+  output: "o.txt" // ? Keep the name short or it won't show up entirely in the file browser
 };
 
 // ? Modify the config -- useful for debugging
 // projectTestConfig.shouldCreateProject = false;
-// projectTestConfig.projectName = "cypress-publicproject-eecb9dd1c738";
+// projectTestConfig.projectName = "cypress-usesession-2f2b5f2c2ee8";
 
 const projectIdentifier = {
   name: projectTestConfig.projectName,
@@ -113,9 +113,9 @@ describe("Basic public project functionality", () => {
       .contains("Starting Session")
       .should("exist");
 
-    // run a simple workflow in the iframe
+    // Run a simple workflow in the iframe
     cy.getIframe("iframe#session-iframe").within(() => {
-      // open the terminal and check the repo is not ahead
+      // Open the terminal and check the repo is not ahead
       cy.get(".jp-Launcher-content", { timeout: TIMEOUTS.long }).should(
         "be.visible"
       );
@@ -124,7 +124,7 @@ describe("Basic public project functionality", () => {
         .should("be.visible")
         .click();
 
-      // run a dummy workflow
+      // Run a dummy workflow
       cy.get(".xterm-helper-textarea")
         .click()
         .type(`renku run --name ${workflow.name} echo "123" > ${workflow.output}{enter}`);
@@ -133,7 +133,12 @@ describe("Basic public project functionality", () => {
         .get(`button[title="Push committed changes (ahead by 1 commits)"]`)
         .should("not.exist");
 
-      // push the changes
+      // Push the changes
+      // ? Switch to using the Save session button as soon as it works again.
+      // ? Reference: https://github.com/SwissDataScienceCenter/renku-notebooks/issues/1575
+      // // cy.dataCy("save-session-button").should("be.visible").click();
+      // // cy.get(".modal-session").contains("1 commit will be pushed").should("be.visible");
+      // // cy.dataCy("save-session-modal-button").should("be.visible").click();
       cy.get(`[data-id="jp-git-sessions"]`).should("be.visible").click();
       cy.get("#jp-git-sessions").contains(projectTestConfig.projectName).should("be.visible");
       cy.get("#jp-git-sessions")
@@ -148,7 +153,7 @@ describe("Basic public project functionality", () => {
         .should("not.exist");
     });
 
-    // stop the session
+    // Stop the session
     cy.dataCy("stop-session-button").should("exist").click();
     cy.dataCy("stop-session-modal-button").should("exist").click();
     cy.dataCy("stopping-btn").should("exist");
@@ -157,12 +162,24 @@ describe("Basic public project functionality", () => {
       .contains("No currently running sessions")
       .should("exist");
 
-    // check the workflows tab
+    // Go the the workflows page and check the new workflow appears
     cy.dataCy("go-back-button").click();
-    cy.dataCy("project-navbar", true)
+    cy.dataCy("project-navbar")
       .contains("a.nav-link", "Workflows")
-      .should("exist")
+      .should("be.visible")
       .click();
-    // TODO
+
+    cy.dataCy("workflows-browser")
+      .should("be.visible")
+      .children()
+      .should("have.length", 1)
+      .contains(workflow.name)
+      .should("be.visible")
+      .click();
+
+    cy.dataCy("workflow-details")
+      .should("be.visible")
+      .contains(`echo 123 > ${workflow.output}`)
+      .should("be.visible");
   });
 });
