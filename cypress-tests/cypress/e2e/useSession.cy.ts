@@ -10,8 +10,8 @@ const projectTestConfig = {
 };
 
 // ? Modify the config -- useful for debugging
-// projectTestConfig.shouldCreateProject = false;
-// projectTestConfig.projectName = "test-session-4f79daad6d4e";
+projectTestConfig.shouldCreateProject = false;
+projectTestConfig.projectName = "test-session-4f79daad6d4e";
 
 const projectIdentifier = {
   name: projectTestConfig.projectName,
@@ -67,9 +67,13 @@ describe("Basic public project functionality", () => {
       .should("exist")
       .click();
     if (serversInvoked) cy.wait("@getServers");
+    cy.wait(1_000, { log: false }); // eslint-disable-line cypress/no-unnecessary-waiting
+    cy.get("button.startButton")
+      .dataCy("more-menu")
+      .should("be.visible")
+      .click();
     cy.getProjectPageLink(projectIdentifier, "sessions/new")
-      .should("exist")
-      .first()
+      .should("be.visible")
       .click();
 
     // Wait for the image to be ready and start a session
@@ -79,15 +83,14 @@ describe("Basic public project functionality", () => {
     cy.get(".renku-container .badge.bg-success", { timeout: TIMEOUTS.vlong })
       .contains("available")
       .should("exist");
-    cy.get(".renku-container button.btn-rk-green", { timeout: TIMEOUTS.long })
-      .contains("Start session")
+    cy.get(".renku-container button.btn-secondary", { timeout: TIMEOUTS.long })
+      .contains("Start Session")
       .should("exist")
       .click();
     cy.get(".progress-box .progress-title").should("exist"); //.contains("Step 2 of 2");
-    cy.get(".fullscreen-header")
-      .should("exist")
+    cy.get("button")
       .contains(projectTestConfig.projectName)
-      .should("exist");
+      .should("be.visible");
     cy.get(".progress-box .progress-title")
       .contains("Starting Session")
       .should("exist");
@@ -96,13 +99,8 @@ describe("Basic public project functionality", () => {
     );
 
     // Verify the "Connect" button works as well
-    cy.get(".fullscreen-header")
-      .should("exist")
-      .get(".fullscreen-back-button")
-      .contains("Back")
-      .should("exist")
-      .click();
-    cy.dataCy("open-session").should("exist").click();
+    cy.get(".fullscreen-back-button").contains("Back").should("exist").click();
+    cy.dataCy("open-session").first().should("be.visible").click();
     cy.get(".progress-box .progress-title")
       .contains("Starting Session")
       .should("exist");
@@ -119,6 +117,13 @@ describe("Basic public project functionality", () => {
       // TODO: use the terminal to execute a simple workflow
       // ? /SwissDataScienceCenter/notebooks-cypress-tests/blob/main/cypress/support/commands/jupyterlab.ts
     });
+
+    cy.dataCy("pause-session-button").should("be.visible").click();
+    cy.dataCy("pause-session-modal-button").should("be.visible").click();
+
+    cy.get('[data-cy="session-container"]', { timeout: TIMEOUTS.long })
+      .should("be.visible")
+      .contains("Paused");
 
     cy.dataCy("stop-session-button").should("exist").click();
     cy.dataCy("stop-session-modal-button").should("exist").click();
