@@ -66,7 +66,7 @@ trait GitLabApi extends RestClient {
         )
       )
 
-  def fetchUserId =
+  def fetchUserId: Int =
     GET(gitLabAPIUrl / "user")
       .withAuthorizationToken(authorizationToken)
       .send(whenReceived(status = Ok) >=> bodyToJson)
