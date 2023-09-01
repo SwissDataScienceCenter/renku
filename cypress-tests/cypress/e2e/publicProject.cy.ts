@@ -77,6 +77,7 @@ describe("Basic public project functionality", () => {
       .contains("a.nav-link", "Settings")
       .should("be.visible")
       .click();
+    
     cy.dataCy("project-settings-knowledge-graph")
       .contains("Project indexing", { timeout: TIMEOUTS.vlong })
       .should("exist");
