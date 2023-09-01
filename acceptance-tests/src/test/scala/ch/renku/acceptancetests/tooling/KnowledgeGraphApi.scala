@@ -137,7 +137,7 @@ trait KnowledgeGraphApi extends RestClient {
     findStatus(projectId, gitLabProjectId, browser).map(_.total).getOrElse(0)
 
   private def findStatus(projectId: ProjectIdentifier, gitLabProjectId: Int, browser: WebDriver): Option[GraphStatus] =
-    GET(renkuBaseUrl / "api" / "projects" / gitLabProjectId.toString / "graph" / "status")
+    GET(renkuBaseUrl / "api" / "projects" / gitLabProjectId / "graph" / "status")
       .addCookiesFrom(browser)
       .send { response =>
         response.status match {

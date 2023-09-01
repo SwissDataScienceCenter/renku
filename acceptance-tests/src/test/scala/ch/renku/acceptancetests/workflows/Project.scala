@@ -87,7 +87,7 @@ trait Project extends RemoveProject with ExtantProject with KnowledgeGraphApi {
     And("they click the Search button")
     click on ProjectsPage.YourProjects.searchButton sleep (1 second)
 
-    Then(s"the '${projectDetails.title}' project should be listed")
+    Then(s"the '${projectDetails.title}'(${projectDetails.asProjectSlug}) project should be listed")
     val projectLink = ProjectsPage.YourProjects.linkTo(projectDetails)
 
     When("they click on the link")
@@ -123,7 +123,7 @@ trait Project extends RemoveProject with ExtantProject with KnowledgeGraphApi {
     `wait for project activation`(projectPage.asProjectIdentifier)
 
     pause asLongAsBrowserAt NewProjectPage sleep (1 second)
-    Then(s"the project '${projectDetails.title}' gets created and the Project page gets displayed")
+    Then(s"the project '${projectDetails.title}'(${projectDetails.asProjectSlug}) gets created and the Project page gets displayed")
 
     verify browserAt projectPage
 

@@ -53,10 +53,8 @@ object projects {
         path = title.toPathSegment
       )
 
-    def asProjectSlug(implicit userCredentials: UserCredentials): String = {
-      val identifier = asProjectIdentifier
-      s"${identifier.namespace}/${identifier.path}"
-    }
+    def asProjectSlug(implicit userCredentials: UserCredentials): String =
+      asProjectIdentifier.asProjectSlug
   }
 
   sealed abstract class Visibility(val value: String)
