@@ -143,67 +143,6 @@ describe("Basic public project functionality", () => {
       .should("be.visible");
   });
 
-  // ! TODO: move this to a separate test
-  it("Can work with datasets", () => {
-    let migrationsInvoked = false;
-    cy.intercept("/ui-server/api/renku/cache.migrations_check*", (req) => {
-      migrationsInvoked = true;
-    }).as("checkMigrations");
-    const datasetName = `cypress-dataset-${uuidv4().substring(24)}`;
-    const datasetTitle = datasetName.replace("-", " ");
-    cy.getProjectSection("Datasets").click();
-    // wait for migrations check to terminate
-    if (migrationsInvoked) cy.wait("@checkMigrations");
-    // A project we just created should have no datasets
-    if (projectTestConfig.shouldCreateProject) {
-      cy.contains("No datasets found for this project.", {
-        timeout: TIMEOUTS.vlong,
-      }).should("be.visible");
-    }
-
-    // Create a dataset
-    cy.get("#plus-dropdown").should("exist").click();
-    cy.get("#navbar-dataset-new").should("exist").click();
-    cy.dataCy("input-title").type(datasetTitle);
-    cy.dataCy("input-keywords").type("test{enter}automated test{enter}");
-    cy.get("div.ck.ck-editor__main div.ck.ck-content")
-      .should("exist")
-      .type("This is a test dataset");
-    cy.intercept("/ui-server/api/renku/*/datasets.list?git_url=*").as(
-      "listDatasets"
-    );
-    cy.dataCy("submit-button").click();
-    cy.get(".progress-box").should("be.visible");
-    cy.wait("@listDatasets", { timeout: TIMEOUTS.vlong });
-
-    // Check that the content is as expected
-    cy.contains(datasetTitle).should("be.visible");
-    cy.contains("#test").should("be.visible");
-    cy.contains("#automated test").should("be.visible");
-    cy.contains("This is a test dataset").should("be.visible");
-
-    // Modify the dataset
-    cy.dataCy("edit-dataset-button").last().click();
-    cy.dataCy("input-keywords").type("modified{enter}");
-    cy.dataCy("submit-button").click();
-    cy.contains("Modifying dataset").should("be.visible");
-    cy.wait("@listDatasets", { timeout: TIMEOUTS.vlong });
-    cy.contains("#modified").should("be.visible");
-
-    // Check that we can see the dataset
-    cy.getProjectSection("Datasets").click();
-    cy.dataCy("entity-description")
-      .contains("This is a test dataset")
-      .should("exist");
-    cy.contains(datasetTitle).should("be.visible").click();
-
-    // Delete the dataset
-    cy.dataCy("delete-dataset-button").click();
-    cy.contains("Are you sure you want to delete dataset").should("be.visible");
-    cy.get(".modal").contains("Delete dataset").click();
-    cy.get(".modal").contains("Deleting dataset...").should("be.visible");
-  });
-
   it("Can view and modify sessions settings", () => {
     cy.intercept("/ui-server/api/renku/*/config.set").as("configSet");
     cy.intercept("/ui-server/api/renku/*/config.show?git_url=*").as(

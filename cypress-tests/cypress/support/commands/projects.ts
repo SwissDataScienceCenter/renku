@@ -4,7 +4,7 @@ import { TIMEOUTS } from "../../../config";
 
 // Helper functions
 
-type ProjectIdentifier = {
+export type ProjectIdentifier = {
   name: string
   namespace?: string,
 }
@@ -15,15 +15,15 @@ export function generatorProjectName(name: string): string {
   return `cypress-${name.toLowerCase()}-${uuidv4().substring(24)}`;
 }
 
-function fullProjectIdentifier(identifier: ProjectIdentifier): Required<ProjectIdentifier> {
+export function fullProjectIdentifier(identifier: ProjectIdentifier): Required<ProjectIdentifier> {
   return { namespace: Cypress.env("TEST_USERNAME"), ...identifier };
 }
 
-function projectUrlFromIdentifier(id: ProjectIdentifier) {
+export function projectUrlFromIdentifier(id: ProjectIdentifier) {
   return `/projects/${id.namespace}/${id.name}`;
 }
 
-function projectPageLinkSelector(identifier: ProjectIdentifier, subpage: string) {
+export function projectPageLinkSelector(identifier: ProjectIdentifier, subpage: string) {
   const subpageUrl = projectSubpageUrl(identifier, subpage);
   return `a[href='${subpageUrl}']`;
 }
@@ -39,6 +39,14 @@ function projectSubpageUrl(identifier: ProjectIdentifier, subpage: string) {
   return `${projectUrl}${subPath}`;
 }
 
+function searchForProject(props: ProjectIdentifier, shouldExist = true) {
+  cy.visit("/search");
+  cy.get("input[placeholder='Search...']").should("be.visible").type(props.name).type("{enter}");
+  if (shouldExist)
+    cy.get("[data-cy='list-card-title']").contains(props.name).should("be.visible");
+  else
+    cy.get(props.name).should("not.exist");
+}
 
 interface NewProjectProps extends ProjectIdentifier {
   templateName?: string;
@@ -183,16 +191,14 @@ export default function registerProjectCommands() {
   Cypress.Commands.add("createProject", createProject);
   Cypress.Commands.add("deleteProject", deleteProject);
   Cypress.Commands.add("deleteProjectFromAPI", deleteProjectFromAPI);
-  Cypress.Commands.add("getProjectPageLink", getProjectPageLink);
   Cypress.Commands.add("forkProject", forkProject);
+  Cypress.Commands.add("getProjectPageLink", getProjectPageLink);
+  Cypress.Commands.add("getProjectSection", getProjectSection);
+  Cypress.Commands.add("searchForProject", searchForProject);
   Cypress.Commands.add("visitProject", visitProject);
   Cypress.Commands.add("visitProjectPageLink", visitProjectPageLink);
   Cypress.Commands.add("visitAndLoadProject", visitAndLoadProject);
-  Cypress.Commands.add("getProjectSection", getProjectSection);
 }
-
-export { fullProjectIdentifier, projectPageLinkSelector, projectUrlFromIdentifier };
-export type { ProjectIdentifier };
 
 declare global {
   // eslint-disable-next-line @typescript-eslint/no-namespace
@@ -204,6 +210,7 @@ declare global {
       forkProject(identifier: ProjectIdentifier, newName: string);
       getProjectPageLink(identifier: ProjectIdentifier, subpage: string);
       getProjectSection(section: ProjectSection);
+      searchForProject(props: ProjectIdentifier, shouldExist?: boolean);
       visitProject(identifier: ProjectIdentifier);
       visitProjectPageLink(identifier: ProjectIdentifier, subpage: string);
       visitAndLoadProject(identifier: ProjectIdentifier, skipOutdated?: boolean);
