@@ -28,6 +28,11 @@ function projectPageLinkSelector(identifier: ProjectIdentifier, subpage: string)
   return `a[href='${subpageUrl}']`;
 }
 
+function getProjectPageLink(identifier: ProjectIdentifier, subpage: string) {
+  const selector = projectPageLinkSelector(identifier, subpage);
+  return cy.get(selector).should("exist");
+}
+
 function projectSubpageUrl(identifier: ProjectIdentifier, subpage: string) {
   const projectUrl = projectUrlFromIdentifier(fullProjectIdentifier(identifier));
   const subPath = subpage.startsWith("/") ? subpage : `/${subpage}`;
@@ -59,13 +64,54 @@ function createProject(newProjectProps: NewProjectProps) {
   cy.get("ul.nav-pills-underline").should("be.visible");
 }
 
-function deleteProject(identifier: ProjectIdentifier) {
+function deleteProjectFromAPI(identifier: ProjectIdentifier) {
   const id = fullProjectIdentifier(identifier);
   cy.request({
     failOnStatusCode: false,
     method: "DELETE",
     url: `/ui-server/api/projects/${id.namespace}%2F${id.name}`
   });
+}
+
+function deleteProject(identifier: ProjectIdentifier, navigateToProject = false) {
+  if (navigateToProject)
+    cy.visitAndLoadProject(identifier);
+
+  const id = fullProjectIdentifier(identifier);
+  cy.request({
+    failOnStatusCode: false,
+    method: "DELETE",
+    url: `/ui-server/api/projects/${id.namespace}%2F${id.name}`
+  });
+
+  const slug = identifier.namespace + "/" + identifier.name;
+  cy.intercept("DELETE", `/ui-server/api/kg/projects/${slug}`).as(
+    "deleteProject"
+  );
+
+  // Delete the project
+  cy.getProjectSection("Settings").click();
+  cy.dataCy("project-settings-general-delete-project")
+    .should("be.visible")
+    .find("button")
+    .contains("Delete project")
+    .should("be.visible")
+    .click();
+  cy.contains("Are you absolutely sure?");
+  cy.get("input[name=project-settings-general-delete-confirm-box]").type(
+    slug
+  );
+  cy.get("button")
+    .contains("Yes, delete this project")
+    .should("be.visible")
+    .should("be.enabled")
+    .click();
+  cy.wait("@deleteProject");
+
+  cy.url().should("not.contain", `/projects/${slug}`);
+  cy.get(".Toastify")
+    .contains(`Project ${slug} deleted`)
+    .should("be.visible");
 }
 
 function forkProject(identifier: ProjectIdentifier, newName: string) {
@@ -97,11 +143,6 @@ function forkProject(identifier: ProjectIdentifier, newName: string) {
   cy.dataCy("header-project").contains(identifier.namespace + "/" + identifier.name).should("be.visible");
 }
 
-function getProjectPageLink(identifier: ProjectIdentifier, subpage: string) {
-  const selector = projectPageLinkSelector(identifier, subpage);
-  return cy.get(selector).should("exist");
-}
-
 function visitAndLoadProject(identifier: ProjectIdentifier, skipOutdated = false) {
   // load project and wait for the relevant resources to be loaded
   cy.intercept("/ui-server/api/user").as("getUser");
@@ -131,14 +172,23 @@ function visitProjectPageLink(identifier: ProjectIdentifier, subpage: string) {
   return cy.visit(url);
 }
 
+type ProjectSection = "Overview" | "Files" | "Datasets"| "Workflows" | "Sessions" | "Settings";
+function getProjectSection(section: ProjectSection) {
+  return cy.dataCy("project-navbar", true)
+    .contains("a.nav-link", section)
+    .should("be.visible");
+}
+
 export default function registerProjectCommands() {
   Cypress.Commands.add("createProject", createProject);
   Cypress.Commands.add("deleteProject", deleteProject);
+  Cypress.Commands.add("deleteProjectFromAPI", deleteProjectFromAPI);
   Cypress.Commands.add("getProjectPageLink", getProjectPageLink);
   Cypress.Commands.add("forkProject", forkProject);
   Cypress.Commands.add("visitProject", visitProject);
   Cypress.Commands.add("visitProjectPageLink", visitProjectPageLink);
   Cypress.Commands.add("visitAndLoadProject", visitAndLoadProject);
+  Cypress.Commands.add("getProjectSection", getProjectSection);
 }
 
 export { fullProjectIdentifier, projectPageLinkSelector, projectUrlFromIdentifier };
@@ -149,9 +199,11 @@ declare global {
   namespace Cypress {
     interface Chainable {
       createProject(newProjectProps: NewProjectProps);
-      deleteProject(identifier: ProjectIdentifier);
+      deleteProject(identifier: ProjectIdentifier, loadProject?: boolean);
+      deleteProjectFromAPI(identifier: ProjectIdentifier);
       forkProject(identifier: ProjectIdentifier, newName: string);
       getProjectPageLink(identifier: ProjectIdentifier, subpage: string);
+      getProjectSection(section: ProjectSection);
       visitProject(identifier: ProjectIdentifier);
       visitProjectPageLink(identifier: ProjectIdentifier, subpage: string);
       visitAndLoadProject(identifier: ProjectIdentifier, skipOutdated?: boolean);

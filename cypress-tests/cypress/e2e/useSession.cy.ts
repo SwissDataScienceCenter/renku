@@ -42,7 +42,7 @@ describe("Basic public project functionality", () => {
 
   after(() => {
     if (projectTestConfig.shouldCreateProject)
-      cy.deleteProject(projectIdentifier);
+      cy.deleteProjectFromAPI(projectIdentifier);
   });
 
   beforeEach(() => {
@@ -69,12 +69,10 @@ describe("Basic public project functionality", () => {
         .contains("your new Renku project", { timeout: TIMEOUTS.long })
         .should("exist");
     }
-    cy.getProjectPageLink(projectIdentifier, "sessions")
-      .should("exist")
-      .click();
+    cy.getProjectSection("Sessions").click();
     if (serversInvoked) cy.wait("@getServers");
     cy.getProjectPageLink(projectIdentifier, "sessions/new")
-      .should("exist")
+      .should("be.visible")
       .first()
       .click();
 
@@ -164,10 +162,7 @@ describe("Basic public project functionality", () => {
 
     // Go the the workflows page and check the new workflow appears
     cy.dataCy("go-back-button").click();
-    cy.dataCy("project-navbar")
-      .contains("a.nav-link", "Workflows")
-      .should("be.visible")
-      .click();
+    cy.getProjectSection("Workflows").click();
 
     cy.dataCy("workflows-browser")
       .should("be.visible")

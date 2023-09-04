@@ -60,11 +60,7 @@ describe("Fork and update old projects", () => {
       ? { namespace: username, name: tempName }
       : { namespace: projects.namespace, name: projects.v8 };
     if (!projects.shouldFork) cy.visitAndLoadProject(targetProject, true);
-    cy.dataCy("project-navbar", true)
-      .contains("a.nav-link", "Settings")
-      .as("project-settings-link")
-      .should("be.visible");
-    cy.get("@project-settings-link").should("be.visible").click();
+    cy.getProjectSection("Settings").click();
 
     // verify project requires update
     cy.dataCy("project-status-icon-element").should("be.visible");
@@ -111,7 +107,7 @@ describe("Fork and update old projects", () => {
       .should("be.visible");
 
     // delete the project
-    if (projects.shouldFork) cy.deleteProject(targetProject);
+    if (projects.shouldFork) cy.deleteProjectFromAPI(targetProject);
   });
 
   it("Update an outdated project - verify commits have been added", () => {
@@ -138,9 +134,7 @@ describe("Fork and update old projects", () => {
         commitFetched = true;
       }
     ).as("getCommits");
-    cy.getProjectPageLink(targetProject, "overview/commits")
-      .should("be.visible")
-      .click();
+    cy.dataCy("project-overview-nav").contains("a", "Commits").should("exist").click();
     if (!commitFetched) {
       cy.wait(1000); // eslint-disable-line cypress/no-unnecessary-waiting
       cy.dataCy("refresh-commits")
@@ -155,11 +149,7 @@ describe("Fork and update old projects", () => {
       .should("have.length", 1);
 
     // go to project settings and verify it requires an upodate
-    cy.dataCy("project-navbar")
-      .contains("a.nav-link", "Settings")
-      .as("project-settings-link")
-      .should("be.visible");
-    cy.get("@project-settings-link").should("be.visible").click();
+    cy.getProjectSection("Settings").click();
     cy.dataCy("project-status-icon-element").should("be.visible");
     cy.dataCy("project-settings-migration-status")
       .contains("Project update required")
@@ -188,14 +178,8 @@ describe("Fork and update old projects", () => {
 
     // verify the commits were added
     commitFetched = false;
-    cy.dataCy("project-navbar", true)
-      .contains("a.nav-link", "Overview")
-      .as("project-overview-link")
-      .should("be.visible");
-    cy.get("@project-overview-link").should("be.visible").click();
-    cy.getProjectPageLink(targetProject, "overview/commits")
-      .should("be.visible")
-      .click();
+    cy.getProjectSection("Overview").click();
+    cy.dataCy("project-overview-nav").contains("a", "Commits").should("exist").click();
     if (!commitFetched) {
       cy.wait(1000); // eslint-disable-line cypress/no-unnecessary-waiting
       cy.dataCy("refresh-commits")
@@ -214,6 +198,6 @@ describe("Fork and update old projects", () => {
       .should("be.visible");
 
     // delete the project
-    if (projects.shouldFork) cy.deleteProject(targetProject);
+    if (projects.shouldFork) cy.deleteProjectFromAPI(targetProject);
   });
 });

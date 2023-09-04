@@ -34,11 +34,7 @@ describe("Workflows pages", () => {
     cy.visitAndLoadProject(project);
 
     // Go the the workflows page and check the details of a workflow
-    cy.dataCy("project-navbar")
-      .contains("a.nav-link", "Workflows")
-      .should("be.visible")
-      .click();
-
+    cy.getProjectSection("Workflows").click();
     cy.get("[data-cy=workflows-page]", { timeout: TIMEOUTS.long }).should(
       "be.visible"
     );

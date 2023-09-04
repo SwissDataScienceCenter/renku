@@ -53,10 +53,7 @@ describe("Basic public project functionality", () => {
 
   it("Can search for project only when logged in", () => {
     // Assess the project has been indexed properly
-    cy.dataCy("project-navbar", true)
-      .contains("a.nav-link", "Settings")
-      .should("be.visible")
-      .click();
+    cy.getProjectSection("Settings").click();
     cy.dataCy("project-settings-knowledge-graph")
       .contains("Project indexing", { timeout: TIMEOUTS.vlong })
       .should("exist");
@@ -76,10 +73,7 @@ describe("Basic public project functionality", () => {
 
   it("Can always search for project after changing the visibility", () => {
     // Change visibility to public
-    cy.dataCy("project-navbar", true)
-      .contains("a.nav-link", "Settings")
-      .should("be.visible")
-      .click();
+    cy.getProjectSection("Settings").click();
     cy.dataCy("project-settings-knowledge-graph")
       .contains("Project indexing", { timeout: TIMEOUTS.vlong })
       .should("exist");
@@ -120,36 +114,7 @@ describe("Basic public project functionality", () => {
   it("Deleting the project removes it from the search page", () => {
     // Delete the project
     cy.visitAndLoadProject(projectIdentifier);
-
-    const slug = projectIdentifier.namespace + "/" + projectIdentifier.name;
-    cy.intercept("DELETE", `/ui-server/api/kg/projects/${slug}`).as(
-      "deleteProject"
-    );
-    cy.dataCy("project-navbar", true)
-      .contains("a.nav-link", "Settings")
-      .should("exist")
-      .click();
-    cy.dataCy("project-settings-general-delete-project")
-      .should("be.visible")
-      .find("button")
-      .contains("Delete project")
-      .should("be.visible")
-      .click();
-    cy.contains("Are you absolutely sure?");
-    cy.get("input[name=project-settings-general-delete-confirm-box]").type(
-      slug
-    );
-    cy.get("button")
-      .contains("Yes, delete this project")
-      .should("be.visible")
-      .should("be.enabled")
-      .click();
-    cy.wait("@deleteProject");
-
-    cy.url().should("not.contain", `/projects/${slug}`);
-    cy.get(".Toastify")
-      .contains(`Project ${slug} deleted`)
-      .should("be.visible");
+    cy.deleteProject(projectIdentifier);
 
     // Check that the project is not listed anymore on the search page
     cy.searchForProject(projectIdentifier, false);
