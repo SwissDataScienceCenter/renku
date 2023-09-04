@@ -3,14 +3,14 @@
 0.36.0
 ------
 
-Renku 0.36.0 introduces features and bug fixes to the Knowledge Graph.
+Renku ``0.36.0`` introduces features and bug fixes to the Knowledge Graph.
 
 User-Facing Changes
 ~~~~~~~~~~~~~~~~~~~
 
 **🌟 New Features**
 
-- **KG**: Project Update API can update description, keywords and image
+- 🖼️ **Knowledge Graph**: Project Update API can update description, keywords and image
   (`#1631 <https://github.com/SwissDataScienceCenter/renku-graph/issues/1631>`_).
 
 Internal Changes
@@ -18,7 +18,7 @@ Internal Changes
 
 **Bug Fixes**
 
-- **KG** API calls not to remove project access tokens
+- **Knowledge Graph** API calls not to remove project access tokens
   (`#1675 <https://github.com/SwissDataScienceCenter/renku-graph/pull/1675>`_)
 
 Individual components
@@ -29,7 +29,7 @@ Individual components
 0.35.1
 ------
 
-Renku 0.35.1 introduces bug fixes in the compute resource control (CRC) service
+Renku ``0.35.1`` introduces bug fixes in the compute resource control (CRC) service
 and the gateway.
 
 Internal Changes
@@ -51,7 +51,7 @@ Individual components
 0.35.0
 ------
 
-Renku 0.35.0 introduces new features in the UI and bug fixes in various components.
+Renku ``0.35.0`` introduces new features in the UI and bug fixes in various components.
 
 User-Facing Changes
 ~~~~~~~~~~~~~~~~~~~
