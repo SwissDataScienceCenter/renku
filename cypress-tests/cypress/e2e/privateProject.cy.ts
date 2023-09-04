@@ -95,7 +95,7 @@ describe("Basic public project functionality", () => {
     // ? We need to wait before other checks take place.
     // ? This is a workaround until we use the new Project update endpoint.
     // ? Reference: https://github.com/SwissDataScienceCenter/renku-ui/issues/2778
-    cy.wait(10000); // eslint-disable-line cypress/no-unnecessary-waiting
+    cy.wait(TIMEOUTS.standard); // eslint-disable-line cypress/no-unnecessary-waiting
 
     // Check all is up-to-date and ready.
     cy.get(".modal button.btn-close").should("be.visible").click();
