@@ -1,5 +1,31 @@
 .. _changelog:
 
+0.36.0
+------
+
+Renku 0.36.0 introduces features and bug fixes to the Knowledge Graph.
+
+User-Facing Changes
+~~~~~~~~~~~~~~~~~~~
+
+**🌟 New Features**
+
+- **KG**: Project Update API can update description, keywords and image
+  (`#1631 <https://github.com/SwissDataScienceCenter/renku-graph/issues/1631>`_).
+
+Internal Changes
+~~~~~~~~~~~~~~~~
+
+**Bug Fixes**
+
+- **KG** API calls not to remove project access tokens
+  (`#1675 <https://github.com/SwissDataScienceCenter/renku-graph/pull/1675>`_)
+
+Individual components
+~~~~~~~~~~~~~~~~~~~~~~
+
+- `renku-graph 2.41.0 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/2.41.0>`_
+
 0.35.1
 ------
 
