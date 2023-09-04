@@ -29,7 +29,8 @@ Individual components
 0.35.1
 ------
 
-Renku 0.35.1 introduces a bug fix in the compute resource control (CRC) service.
+Renku 0.35.1 introduces bug fixes in the compute resource control (CRC) service
+and the gateway.
 
 Internal Changes
 ~~~~~~~~~~~~~~~~
@@ -38,11 +39,14 @@ Internal Changes
 
 - **Compute resource control**: Fix erroneous validation errors with quotas
   (`#22 <https://github.com/SwissDataScienceCenter/renku-data-services/pull/22>`__)
+- **Gateway**: Sticky sessions null de-reference causing crashes
+  (`#673 <https://github.com/SwissDataScienceCenter/renku-gateway/issues/673>`__)
 
 Individual components
 ~~~~~~~~~~~~~~~~~~~~~~
 
 - `renku-data-services v0.0.2 <https://github.com/SwissDataScienceCenter/renku-data-services/releases/tag/v0.0.2>`_
+- `renku-gateway 0.21.3 <https://github.com/SwissDataScienceCenter/renku-gateway/releases/tag/0.21.3>`_
 
 0.35.0
 ------
