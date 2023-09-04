@@ -18,7 +18,7 @@ Internal Changes
 
 **Bug Fixes**
 
-- **Knowledge Graph** API calls not to remove project access tokens
+- **Knowledge Graph**: API calls not to remove project access tokens
   (`#1675 <https://github.com/SwissDataScienceCenter/renku-graph/pull/1675>`_)
 
 Individual components
