@@ -20,6 +20,7 @@ package ch.renku.acceptancetests.workflows
 
 import ch.renku.acceptancetests.model.projects.{ProjectDetails, Template, Visibility}
 import ch.renku.acceptancetests.pages._
+import ch.renku.acceptancetests.tooling.TestLogger.logger
 import ch.renku.acceptancetests.tooling.{AcceptanceSpec, KnowledgeGraphApi}
 import org.openqa.selenium.interactions.Actions
 import org.scalatest.Outcome
@@ -120,7 +121,12 @@ trait Project extends RemoveProject with ExtantProject with KnowledgeGraphApi {
 
     val projectPage = ProjectPage createFrom projectDetails
 
-    `wait for project activation`(projectPage.asProjectIdentifier)
+    `wait for project activation`(projectPage.asProjectIdentifier) match {
+      case Left(err) =>
+        logger.error(s"$err - retrying the creation process")
+        `create a new project`
+      case _ => ()
+    }
 
     pause asLongAsBrowserAt NewProjectPage sleep (1 second)
     Then(

@@ -31,6 +31,7 @@ import org.http4s.circe.CirceEntityCodec._
 import org.http4s.headers.`Content-Type`
 import org.openqa.selenium.WebDriver
 
+import java.time.Instant
 import scala.annotation.tailrec
 import scala.concurrent.duration._
 
@@ -43,10 +44,10 @@ trait KnowledgeGraphApi extends RestClient {
     checkStatusAndWait(projectId, gitLabProjectId, browser, 1)
   }
 
-  def `wait for project activation`(projectId: ProjectIdentifier)(implicit browser: WebDriver): Unit = {
+  def `wait for project activation`(projectId: ProjectIdentifier)(implicit browser: WebDriver): Either[String, Unit] = {
     sleep(1 second)
     val gitLabProjectId = `get GitLab project id`(projectId)
-    checkActivatedAndWait(projectId, gitLabProjectId, browser, 1)
+    checkActivatedAndWait(projectId, gitLabProjectId, browser, attempt = 1)
   }
 
   def findLineage(projectPath: String, filePath: String): JsonObject = {
@@ -116,15 +117,18 @@ trait KnowledgeGraphApi extends RestClient {
       projectId:       ProjectIdentifier,
       gitLabProjectId: Int,
       browser:         WebDriver,
-      attempt:         Int
-  ): Unit = {
-    And("waits for Project Activation")
-    if (attempt >= 60 * 5)
-      fail(s"Activation status of '$projectId' project couldn't be determined after 5 minutes")
-    else if (!checkActivated(projectId, gitLabProjectId, browser)) {
+      attempt:         Int,
+      startTime:       Instant = Instant.now()
+  ): Either[String, Unit] = {
+    And(s"waits for Project Activation - attempt $attempt")
+    if (attempt >= 60 * 2) {
+      val duration = Duration(Instant.now().toEpochMilli - startTime.toEpochMilli, MILLISECONDS).toSeconds
+      s"Activation status of '$projectId' project couldn't be determined after $duration s".asLeft[Unit]
+    } else if (!checkActivated(projectId, gitLabProjectId, browser)) {
       sleep(1 second)
-      checkActivatedAndWait(projectId, gitLabProjectId, browser, attempt + 1)
-    }
+      checkActivatedAndWait(projectId, gitLabProjectId, browser, attempt + 1, startTime)
+    } else
+      ().asRight[String]
   }
 
   private def checkActivated(projectId: ProjectIdentifier, gitLabProjectId: Int, browser: WebDriver): Boolean =
