@@ -123,7 +123,9 @@ trait Project extends RemoveProject with ExtantProject with KnowledgeGraphApi {
     `wait for project activation`(projectPage.asProjectIdentifier)
 
     pause asLongAsBrowserAt NewProjectPage sleep (1 second)
-    Then(s"the project '${projectDetails.title}'(${projectDetails.asProjectSlug}) gets created and the Project page gets displayed")
+    Then(
+      s"the project '${projectDetails.title}'(${projectDetails.asProjectSlug}) gets created and the Project page gets displayed"
+    )
 
     verify browserAt projectPage
 
