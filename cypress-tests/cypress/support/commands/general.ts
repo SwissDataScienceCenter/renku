@@ -16,7 +16,7 @@ export const getIframe = (selector: string) => {
     .its("0.contentDocument").then(cy.wrap);
 };
 
-function dataCy(value: string, exist: true) {
+function getDataCy(value: string, exist: true) {
   if (exist)
     return cy.get(`[data-cy=${value}]`).should("exist");
   return cy.get(`[data-cy=${value}]`);
@@ -24,14 +24,14 @@ function dataCy(value: string, exist: true) {
 
 export default function registerGeneralCommands() {
   Cypress.Commands.add("getIframe", getIframe);
-  Cypress.Commands.add("dataCy", dataCy);
+  Cypress.Commands.add("getDataCy", getDataCy);
 }
 
 declare global {
   // eslint-disable-next-line @typescript-eslint/no-namespace
   namespace Cypress {
     interface Chainable {
-      dataCy(value: string, exist?: boolean);
+      getDataCy(value: string, exist?: boolean);
       getIframe(selector: string): Chainable<unknown>;
     }
   }

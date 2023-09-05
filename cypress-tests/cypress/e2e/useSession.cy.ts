@@ -65,7 +65,7 @@ describe("Basic public project functionality", () => {
       serversInvoked = true;
     }).as("getServers");
     if (projectTestConfig.shouldCreateProject) {
-      cy.dataCy("project-overview-content")
+      cy.getDataCy("project-overview-content")
         .contains("your new Renku project", { timeout: TIMEOUTS.long })
         .should("exist");
     }
@@ -106,7 +106,7 @@ describe("Basic public project functionality", () => {
       .contains("Back")
       .should("exist")
       .click();
-    cy.dataCy("open-session").should("exist").click();
+    cy.getDataCy("open-session").should("exist").click();
     cy.get(".progress-box .progress-title")
       .contains("Starting Session")
       .should("exist");
@@ -139,9 +139,9 @@ describe("Basic public project functionality", () => {
       // Push the changes
       // ? Switch to using the Save session button as soon as it works again.
       // ? Reference: https://github.com/SwissDataScienceCenter/renku-notebooks/issues/1575
-      // // cy.dataCy("save-session-button").should("be.visible").click();
+      // // cy.getDataCy("save-session-button").should("be.visible").click();
       // // cy.get(".modal-session").contains("1 commit will be pushed").should("be.visible");
-      // // cy.dataCy("save-session-modal-button").should("be.visible").click();
+      // // cy.getDataCy("save-session-modal-button").should("be.visible").click();
       cy.get(`[data-id="jp-git-sessions"]`).should("be.visible").click();
       cy.get("#jp-git-sessions")
         .contains(projectTestConfig.projectName)
@@ -161,19 +161,19 @@ describe("Basic public project functionality", () => {
     });
 
     // Stop the session
-    cy.dataCy("stop-session-button").should("exist").click();
-    cy.dataCy("stop-session-modal-button").should("exist").click();
-    cy.dataCy("stopping-btn").should("exist");
+    cy.getDataCy("stop-session-button").should("exist").click();
+    cy.getDataCy("stop-session-modal-button").should("exist").click();
+    cy.getDataCy("stopping-btn").should("exist");
     cy.get(".renku-container", { timeout: TIMEOUTS.long })
       .should("exist")
       .contains("No currently running sessions")
       .should("exist");
 
     // Go the the workflows page and check the new workflow appears
-    cy.dataCy("go-back-button").click();
+    cy.getDataCy("go-back-button").click();
     cy.getProjectSection("Workflows").click();
 
-    cy.dataCy("workflows-browser")
+    cy.getDataCy("workflows-browser")
       .should("be.visible")
       .children()
       .should("have.length", 1)
@@ -181,7 +181,7 @@ describe("Basic public project functionality", () => {
       .should("be.visible")
       .click();
 
-    cy.dataCy("workflow-details")
+    cy.getDataCy("workflow-details")
       .should("be.visible")
       .contains(`echo 123 > ${workflow.output}`)
       .should("be.visible");

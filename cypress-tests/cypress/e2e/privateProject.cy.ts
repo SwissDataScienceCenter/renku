@@ -58,14 +58,16 @@ describe("Basic public project functionality", () => {
   it("Can search for project only when logged in", () => {
     // Assess the project has been indexed properly
     cy.getProjectSection("Settings").click();
-    cy.dataCy("project-settings-knowledge-graph")
+    cy.getDataCy("project-settings-knowledge-graph")
       .contains("Project indexing", { timeout: TIMEOUTS.vlong })
       .should("exist");
-    cy.dataCy("kg-status-section-open").should("exist").click();
-    cy.dataCy("project-settings-knowledge-graph")
+    cy.getDataCy("kg-status-section-open").should("exist").click();
+    cy.getDataCy("project-settings-knowledge-graph")
       .contains("Everything indexed", { timeout: TIMEOUTS.vlong })
       .should("exist");
-    cy.dataCy("visibility-private").should("be.visible").should("be.checked");
+    cy.getDataCy("visibility-private")
+      .should("be.visible")
+      .should("be.checked");
     cy.searchForProject(projectIdentifier, true);
 
     // logout and search for the project and log back in
@@ -78,15 +80,17 @@ describe("Basic public project functionality", () => {
   it("Can always search for project after changing the visibility", () => {
     // Change visibility to public
     cy.getProjectSection("Settings").click();
-    cy.dataCy("project-settings-knowledge-graph")
+    cy.getDataCy("project-settings-knowledge-graph")
       .contains("Project indexing", { timeout: TIMEOUTS.vlong })
       .should("exist");
-    cy.dataCy("visibility-private").should("be.visible").should("be.checked");
-    cy.dataCy("visibility-public").should("be.visible").check();
+    cy.getDataCy("visibility-private")
+      .should("be.visible")
+      .should("be.checked");
+    cy.getDataCy("visibility-public").should("be.visible").check();
     cy.get(".modal")
       .contains("Change visibility to Public")
       .should("be.visible");
-    cy.dataCy("update-visibility-btn").should("be.visible").click();
+    cy.getDataCy("update-visibility-btn").should("be.visible").click();
     cy.get(".modal .alert-success", { timeout: TIMEOUTS.long })
       .contains("The visibility of the project has been modified")
       .should("be.visible");
@@ -97,14 +101,14 @@ describe("Basic public project functionality", () => {
 
     // Check all is up-to-date and ready.
     cy.get(".modal button.btn-close").should("be.visible").click();
-    cy.dataCy("kg-status-section-open").should("exist").click();
-    cy.dataCy("project-settings-knowledge-graph")
+    cy.getDataCy("kg-status-section-open").should("exist").click();
+    cy.getDataCy("project-settings-knowledge-graph")
       .contains("Everything indexed", { timeout: TIMEOUTS.vlong })
       .should("exist");
-    cy.dataCy("visibility-private")
+    cy.getDataCy("visibility-private")
       .should("be.visible")
       .should("not.be.checked");
-    cy.dataCy("visibility-public").should("be.visible").should("be.checked");
+    cy.getDataCy("visibility-public").should("be.visible").should("be.checked");
 
     // Search the project as both logged in and logged out.
     cy.searchForProject(projectIdentifier, true);

@@ -55,11 +55,11 @@ describe("Basic public project functionality", () => {
   it.only("Can search for project", () => {
     // Assess the project has been indexed properly.This might take time for new projects.
     cy.getProjectSection("Settings").click();
-    cy.dataCy("project-settings-knowledge-graph")
+    cy.getDataCy("project-settings-knowledge-graph")
       .contains("Project indexing", { timeout: TIMEOUTS.vlong })
       .should("exist");
-    cy.dataCy("kg-status-section-open").should("exist").click();
-    cy.dataCy("project-settings-knowledge-graph")
+    cy.getDataCy("kg-status-section-open").should("exist").click();
+    cy.getDataCy("project-settings-knowledge-graph")
       .contains("Everything indexed", { timeout: TIMEOUTS.vlong })
       .should("exist");
     cy.searchForProject(projectIdentifier);
@@ -110,15 +110,15 @@ describe("Basic public project functionality", () => {
 
   it("Verify project version is up to date", () => {
     cy.contains("Status").should("not.exist");
-    cy.dataCy("project-status-icon-element").should("not.exist");
+    cy.getDataCy("project-status-icon-element").should("not.exist");
     cy.getProjectSection("Settings").click();
-    cy.dataCy("project-version-section-open").should("exist").click();
+    cy.getDataCy("project-version-section-open").should("exist").click();
     if (projectTestConfig.shouldCreateProject) {
-      cy.dataCy("project-settings-migration-status")
+      cy.getDataCy("project-settings-migration-status")
         .contains("This project uses the latest")
         .should("exist");
     }
-    cy.dataCy("project-settings-knowledge-graph")
+    cy.getDataCy("project-settings-knowledge-graph")
       .contains("Project indexing")
       .should("exist");
   });
@@ -155,7 +155,7 @@ describe("Basic public project functionality", () => {
 
     // Add a compute requirement for sessions
     cy.getProjectSection("Settings").click();
-    cy.dataCy("settings-navbar")
+    cy.getDataCy("settings-navbar")
       .contains("a", "Sessions")
       .should("exist")
       .click();
@@ -177,7 +177,7 @@ describe("Basic public project functionality", () => {
     cy.get("pre.hljs").contains("cpu_request = 1.5").should("exist");
 
     cy.getProjectSection("Settings").click();
-    cy.dataCy("settings-navbar")
+    cy.getDataCy("settings-navbar")
       .contains("a", "Sessions")
       .should("exist")
       .click();

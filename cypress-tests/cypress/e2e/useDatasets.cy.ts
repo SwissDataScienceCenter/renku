@@ -85,26 +85,29 @@ describe("Basic datasets functionality", () => {
     // Create a dataset
     cy.get("#plus-dropdown").should("exist").click();
     cy.get("#navbar-dataset-new").should("exist").click();
-    cy.dataCy("input-title").type(generatedDatasetName.name);
+    cy.getDataCy("input-title").type(generatedDatasetName.name);
 
-    cy.dataCy("input-keywords").type(
+    cy.getDataCy("input-keywords").type(
       keywords.reduce((text, value) => `${text}${value}{enter}`, "")
     );
     cy.get("div.ck.ck-editor__main div.ck.ck-content")
       .should("exist")
       .type(description);
     listDatasetsInvoked = false;
-    cy.dataCy("submit-button").click();
+    cy.getDataCy("submit-button").click();
     cy.get(".progress-box").should("be.visible");
     if (listDatasetsInvoked)
       cy.wait("@listDatasets", { timeout: TIMEOUTS.long });
 
     // Check that the content is correct
-    cy.dataCy("dataset-title")
+    cy.getDataCy("dataset-title")
       .contains(generatedDatasetName.name)
       .should("be.visible");
-    for (const keyword of keywords)
-      cy.dataCy("entity-tag-list").contains(`#${keyword}`).should("be.visible");
+    for (const keyword of keywords) {
+      cy.getDataCy("entity-tag-list")
+        .contains(`#${keyword}`)
+        .should("be.visible");
+    }
     cy.contains(description).get(".renku-markdown").should("be.visible");
   });
 
@@ -113,30 +116,33 @@ describe("Basic datasets functionality", () => {
     cy.getProjectSection("Datasets").click();
     if (listDatasetsInvoked)
       cy.wait("@listDatasets", { timeout: TIMEOUTS.long });
-    cy.dataCy("list-card-title")
+    cy.getDataCy("list-card-title")
       .contains(generatedDatasetName.name)
       .should("be.visible")
       .click();
-    cy.dataCy("edit-dataset-button").last().click();
+    cy.getDataCy("edit-dataset-button").last().click();
     const newKeyword = "additioanl keyword";
-    cy.dataCy("input-keywords").type(`${newKeyword}{enter}`);
+    cy.getDataCy("input-keywords").type(`${newKeyword}{enter}`);
     listDatasetsInvoked = false;
-    cy.dataCy("submit-button").click();
+    cy.getDataCy("submit-button").click();
     cy.contains("Modifying dataset").should("be.visible");
     if (listDatasetsInvoked)
       cy.wait("@listDatasets", { timeout: TIMEOUTS.long });
     keywords.push(newKeyword);
-    for (const keyword of keywords)
-      cy.dataCy("entity-tag-list").contains(`#${keyword}`).should("be.visible");
+    for (const keyword of keywords) {
+      cy.getDataCy("entity-tag-list")
+        .contains(`#${keyword}`)
+        .should("be.visible");
+    }
 
     // Search for the dataset after the project has been indexed
-    cy.dataCy("go-back-button").should("be.visible").click();
+    cy.getDataCy("go-back-button").should("be.visible").click();
     cy.getProjectSection("Settings").click();
-    cy.dataCy("project-settings-knowledge-graph")
+    cy.getDataCy("project-settings-knowledge-graph")
       .contains("Project indexing", { timeout: TIMEOUTS.vlong })
       .should("exist");
-    cy.dataCy("kg-status-section-open").should("exist").click();
-    cy.dataCy("project-settings-knowledge-graph")
+    cy.getDataCy("kg-status-section-open").should("exist").click();
+    cy.getDataCy("project-settings-knowledge-graph")
       .contains("Everything indexed", { timeout: TIMEOUTS.vlong })
       .should("exist");
     cy.searchForDataset(generatedDatasetName.slug);
@@ -146,12 +152,12 @@ describe("Basic datasets functionality", () => {
     cy.getProjectSection("Datasets").click();
     if (listDatasetsInvoked)
       cy.wait("@listDatasets", { timeout: TIMEOUTS.long });
-    cy.dataCy("list-card-title")
+    cy.getDataCy("list-card-title")
       .contains(generatedDatasetName.name)
       .should("be.visible")
       .click();
 
-    cy.dataCy("delete-dataset-button").click();
+    cy.getDataCy("delete-dataset-button").click();
     cy.contains("Are you sure you want to delete dataset").should("be.visible");
     cy.get(".modal").contains("Delete dataset").click();
     cy.get(".modal").contains("Deleting dataset...").should("be.visible");
@@ -163,11 +169,11 @@ describe("Basic datasets functionality", () => {
       }).should("be.visible");
     }
     cy.getProjectSection("Settings").click();
-    cy.dataCy("project-settings-knowledge-graph")
+    cy.getDataCy("project-settings-knowledge-graph")
       .contains("Project indexing", { timeout: TIMEOUTS.vlong })
       .should("exist");
-    cy.dataCy("kg-status-section-open").should("exist").click();
-    cy.dataCy("project-settings-knowledge-graph")
+    cy.getDataCy("kg-status-section-open").should("exist").click();
+    cy.getDataCy("project-settings-knowledge-graph")
       .contains("Everything indexed", { timeout: TIMEOUTS.vlong })
       .should("exist");
     cy.searchForDataset(generatedDatasetName.slug, false);
