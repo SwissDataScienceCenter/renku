@@ -15,7 +15,7 @@ const projectTestConfig = {
 
 // ? Uncomment to debug using an existing project
 // projectTestConfig.shouldCreateProject = false;
-// projectTestConfig.projectName = "cypress-usedatasets-33fd81422d8f";
+// projectTestConfig.projectName = "cypress-usedatasets-a572ce0e177d";
 
 const projectIdentifier: ProjectIdentifier = {
   name: projectTestConfig.projectName,
@@ -142,6 +142,11 @@ describe("Basic datasets functionality", () => {
     cy.get(".modal").contains("Deleting dataset...").should("be.visible");
 
     // Check the dataset is gone after the project has been indexed
+    if (projectTestConfig.shouldCreateProject) {
+      cy.contains("No datasets found for this project.", {
+        timeout: TIMEOUTS.vlong,
+      }).should("be.visible");
+    }
     cy.getProjectSection("Settings").click();
     cy.dataCy("project-settings-knowledge-graph")
       .contains("Project indexing", { timeout: TIMEOUTS.vlong })
