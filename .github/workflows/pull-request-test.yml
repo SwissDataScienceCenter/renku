@@ -139,7 +139,14 @@ jobs:
       fail-fast: false
       max-parallel: 1
       matrix:
-        tests: [publicProject, updateProjects, useSession, checkWorkflows, rstudioSession] 
+        tests: [
+          publicProject,
+          privateProject,
+          updateProjects,
+          useSession,
+          checkWorkflows,
+          rstudioSession
+        ]
 
     steps:
       - uses: SwissDataScienceCenter/renku-actions/test-renku-cypress@v1.5.2
