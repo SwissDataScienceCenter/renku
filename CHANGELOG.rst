@@ -3,9 +3,8 @@
 0.36.0
 ------
 
-Renku 0.36.0 introduces an updated landing page layout to help new users explore
-the platform for the first time.
-It comes with a few bug fixes for the UI.
+Renku ``0.36.0`` introduces an updated landing page layout to help new users explore
+the platform for the first time. Thus, it implements a few bug fixes for the UI and Knowledge Graph.
 
 User-Facing Changes
 ~~~~~~~~~~~~~~~~~~~
@@ -33,6 +32,7 @@ Individual components
 ~~~~~~~~~~~~~~~~~~~~~~
 
 - `renku-ui 3.12.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.12.0>`_
+- `renku-graph 2.41.0 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/2.41.0>`_
 
 
 0.35.1
