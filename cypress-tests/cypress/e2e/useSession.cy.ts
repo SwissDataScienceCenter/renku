@@ -8,6 +8,10 @@ const projectTestConfig = {
   shouldCreateProject: true,
   projectName: generatorProjectName("useSession"),
 };
+const workflow = {
+  name: "dummyworkflow",
+  output: "o.txt" // ? Keep the name short or it won't show up entirely in the file browser
+};
 
 // ? Modify the config -- useful for debugging
 projectTestConfig.shouldCreateProject = false;
@@ -60,9 +64,11 @@ describe("Basic public project functionality", () => {
     cy.intercept("/ui-server/api/notebooks/servers*", (req) => {
       serversInvoked = true;
     }).as("getServers");
-    cy.dataCy("project-overview-content")
-      .contains("your new Renku project", { timeout: TIMEOUTS.long })
-      .should("exist");
+    if (projectTestConfig.shouldCreateProject) {
+      cy.dataCy("project-overview-content")
+        .contains("your new Renku project", { timeout: TIMEOUTS.long })
+        .should("exist");
+    }
     cy.getProjectPageLink(projectIdentifier, "sessions")
       .should("exist")
       .click();
@@ -105,19 +111,47 @@ describe("Basic public project functionality", () => {
       .contains("Starting Session")
       .should("exist");
 
-    // run a simple workflow in the iframe
+    // Run a simple workflow in the iframe
     cy.getIframe("iframe#session-iframe").within(() => {
+      // Open the terminal and check the repo is not ahead
       cy.get(".jp-Launcher-content", { timeout: TIMEOUTS.long }).should(
-        "exist"
+        "be.visible"
       );
-      cy.get(".jp-Launcher-section").should("exist");
+      cy.get(".jp-Launcher-section").should("be.visible");
       cy.get('.jp-LauncherCard[title="Start a new terminal session"]')
+        .should("be.visible")
+        .click();
+
+      // Run a dummy workflow
+      cy.get(".xterm-helper-textarea")
+        .click()
+        .type(`renku run --name ${workflow.name} echo "123" > ${workflow.output}{enter}`);
+      cy.get("#filebrowser").should("be.visible").contains(workflow.output).should("be.visible");
+      cy.get("#jp-git-sessions")
+        .get(`button[title="Push committed changes (ahead by 1 commits)"]`)
+        .should("not.exist");
+
+      // Push the changes
+      // ? Switch to using the Save session button as soon as it works again.
+      // ? Reference: https://github.com/SwissDataScienceCenter/renku-notebooks/issues/1575
+      // // cy.dataCy("save-session-button").should("be.visible").click();
+      // // cy.get(".modal-session").contains("1 commit will be pushed").should("be.visible");
+      // // cy.dataCy("save-session-modal-button").should("be.visible").click();
+      cy.get(`[data-id="jp-git-sessions"]`).should("be.visible").click();
+      cy.get("#jp-git-sessions").contains(projectTestConfig.projectName).should("be.visible");
+      cy.get("#jp-git-sessions")
+        .get(`button[title="Push committed changes (ahead by 1 commits)"]`)
         .should("exist")
         .click();
-      // TODO: use the terminal to execute a simple workflow
-      // ? /SwissDataScienceCenter/notebooks-cypress-tests/blob/main/cypress/support/commands/jupyterlab.ts
+      cy.get("#jp-git-sessions")
+        .get(`button[title="Push committed changes"]`, { timeout: TIMEOUTS.long })
+        .should("exist");
+      cy.get("#jp-git-sessions")
+        .get(`button[title="Push committed changes (ahead by 1 commits)"]`)
+        .should("not.exist");
     });
 
+    // Pause the session
     cy.dataCy("pause-session-button").should("be.visible").click();
     cy.dataCy("pause-session-modal-button").should("be.visible").click();
 
@@ -125,6 +159,7 @@ describe("Basic public project functionality", () => {
       .should("be.visible")
       .contains("Paused");
 
+    // Stop the session
     cy.dataCy("stop-session-button").should("exist").click();
     cy.dataCy("stop-session-modal-button").should("exist").click();
     cy.dataCy("stopping-btn").should("exist");
@@ -132,5 +167,25 @@ describe("Basic public project functionality", () => {
       .should("exist")
       .contains("No currently running sessions")
       .should("exist");
+
+    // Go the the workflows page and check the new workflow appears
+    cy.dataCy("go-back-button").click();
+    cy.dataCy("project-navbar")
+      .contains("a.nav-link", "Workflows")
+      .should("be.visible")
+      .click();
+
+    cy.dataCy("workflows-browser")
+      .should("be.visible")
+      .children()
+      .should("have.length", 1)
+      .contains(workflow.name)
+      .should("be.visible")
+      .click();
+
+    cy.dataCy("workflow-details")
+      .should("be.visible")
+      .contains(`echo 123 > ${workflow.output}`)
+      .should("be.visible");
   });
 });
