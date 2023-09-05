@@ -1,5 +1,3 @@
-import { v4 as uuidv4 } from "uuid";
-
 import { TIMEOUTS } from "../../config";
 import {
   ProjectIdentifier,
@@ -23,7 +21,6 @@ const projectIdentifier: ProjectIdentifier = {
   name: projectTestConfig.projectName,
   namespace: username,
 };
-
 
 describe("Basic public project functionality", () => {
   before(() => {
@@ -158,7 +155,10 @@ describe("Basic public project functionality", () => {
 
     // Add a compute requirement for sessions
     cy.getProjectSection("Settings").click();
-    cy.dataCy("settings-navbar").contains("a", "Sessions").should("exist").click();
+    cy.dataCy("settings-navbar")
+      .contains("a", "Sessions")
+      .should("exist")
+      .click();
     cy.wait("@getConfig", { timeout: TIMEOUTS.long });
     cy.contains("label", "Number of CPUs")
       .parent()
@@ -177,7 +177,10 @@ describe("Basic public project functionality", () => {
     cy.get("pre.hljs").contains("cpu_request = 1.5").should("exist");
 
     cy.getProjectSection("Settings").click();
-    cy.dataCy("settings-navbar").contains("a", "Sessions").should("exist").click();
+    cy.dataCy("settings-navbar")
+      .contains("a", "Sessions")
+      .should("exist")
+      .click();
     cy.get("#project-settings-sessions-interactive-cpu-request-reset")
       .should("be.visible")
       .click();

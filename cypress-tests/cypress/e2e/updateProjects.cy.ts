@@ -134,7 +134,10 @@ describe("Fork and update old projects", () => {
         commitFetched = true;
       }
     ).as("getCommits");
-    cy.dataCy("project-overview-nav").contains("a", "Commits").should("exist").click();
+    cy.dataCy("project-overview-nav")
+      .contains("a", "Commits")
+      .should("exist")
+      .click();
     if (!commitFetched) {
       cy.wait(1000); // eslint-disable-line cypress/no-unnecessary-waiting
       cy.dataCy("refresh-commits")
@@ -179,7 +182,10 @@ describe("Fork and update old projects", () => {
     // verify the commits were added
     commitFetched = false;
     cy.getProjectSection("Overview").click();
-    cy.dataCy("project-overview-nav").contains("a", "Commits").should("exist").click();
+    cy.dataCy("project-overview-nav")
+      .contains("a", "Commits")
+      .should("exist")
+      .click();
     if (!commitFetched) {
       cy.wait(1000); // eslint-disable-line cypress/no-unnecessary-waiting
       cy.dataCy("refresh-commits")

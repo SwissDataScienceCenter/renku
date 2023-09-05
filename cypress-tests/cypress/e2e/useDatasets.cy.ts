@@ -73,7 +73,8 @@ describe("Basic datasets functionality", () => {
 
   it("Create a dataset", () => {
     cy.getProjectSection("Datasets").click();
-    if (listDatasetsInvoked) cy.wait("@listDatasets", { timeout: TIMEOUTS.long });
+    if (listDatasetsInvoked)
+      cy.wait("@listDatasets", { timeout: TIMEOUTS.long });
 
     // A new project should not contain datasets
     if (projectTestConfig.shouldCreateProject) {
@@ -86,17 +87,22 @@ describe("Basic datasets functionality", () => {
     cy.get("#navbar-dataset-new").should("exist").click();
     cy.dataCy("input-title").type(generatedDatasetName.name);
 
-    cy.dataCy("input-keywords").type(keywords.reduce((text, value) => `${text}${value}{enter}`, ""));
+    cy.dataCy("input-keywords").type(
+      keywords.reduce((text, value) => `${text}${value}{enter}`, "")
+    );
     cy.get("div.ck.ck-editor__main div.ck.ck-content")
       .should("exist")
       .type(description);
     listDatasetsInvoked = false;
     cy.dataCy("submit-button").click();
     cy.get(".progress-box").should("be.visible");
-    if (listDatasetsInvoked) cy.wait("@listDatasets", { timeout: TIMEOUTS.long });
+    if (listDatasetsInvoked)
+      cy.wait("@listDatasets", { timeout: TIMEOUTS.long });
 
     // Check that the content is correct
-    cy.dataCy("dataset-title").contains(generatedDatasetName.name).should("be.visible");
+    cy.dataCy("dataset-title")
+      .contains(generatedDatasetName.name)
+      .should("be.visible");
     for (const keyword of keywords)
       cy.dataCy("entity-tag-list").contains(`#${keyword}`).should("be.visible");
     cy.contains(description).get(".renku-markdown").should("be.visible");
@@ -105,15 +111,20 @@ describe("Basic datasets functionality", () => {
   it("Modify the dataset and search for it", () => {
     // Add a keyword and check it is visible
     cy.getProjectSection("Datasets").click();
-    if (listDatasetsInvoked) cy.wait("@listDatasets", { timeout: TIMEOUTS.long });
-    cy.dataCy("list-card-title").contains(generatedDatasetName.name).should("be.visible").click();
+    if (listDatasetsInvoked)
+      cy.wait("@listDatasets", { timeout: TIMEOUTS.long });
+    cy.dataCy("list-card-title")
+      .contains(generatedDatasetName.name)
+      .should("be.visible")
+      .click();
     cy.dataCy("edit-dataset-button").last().click();
     const newKeyword = "additioanl keyword";
     cy.dataCy("input-keywords").type(`${newKeyword}{enter}`);
     listDatasetsInvoked = false;
     cy.dataCy("submit-button").click();
     cy.contains("Modifying dataset").should("be.visible");
-    if (listDatasetsInvoked) cy.wait("@listDatasets", { timeout: TIMEOUTS.long });
+    if (listDatasetsInvoked)
+      cy.wait("@listDatasets", { timeout: TIMEOUTS.long });
     keywords.push(newKeyword);
     for (const keyword of keywords)
       cy.dataCy("entity-tag-list").contains(`#${keyword}`).should("be.visible");
@@ -133,8 +144,12 @@ describe("Basic datasets functionality", () => {
 
   it("Delete the dataset and verify it is not searchable anaymore", () => {
     cy.getProjectSection("Datasets").click();
-    if (listDatasetsInvoked) cy.wait("@listDatasets", { timeout: TIMEOUTS.long });
-    cy.dataCy("list-card-title").contains(generatedDatasetName.name).should("be.visible").click();
+    if (listDatasetsInvoked)
+      cy.wait("@listDatasets", { timeout: TIMEOUTS.long });
+    cy.dataCy("list-card-title")
+      .contains(generatedDatasetName.name)
+      .should("be.visible")
+      .click();
 
     cy.dataCy("delete-dataset-button").click();
     cy.contains("Are you sure you want to delete dataset").should("be.visible");

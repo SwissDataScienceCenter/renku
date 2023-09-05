@@ -1,7 +1,7 @@
 import { TIMEOUTS } from "../../config";
 import {
   ProjectIdentifier,
-  generatorProjectName
+  generatorProjectName,
 } from "../support/commands/projects";
 import { validateLogin } from "../support/commands/general";
 
@@ -35,7 +35,11 @@ describe("Basic public project functionality", () => {
     // Create a project for the local spec
     if (projectTestConfig.shouldCreateProject) {
       cy.visit("/");
-      cy.createProject({ templateName: "Python", ...projectIdentifier, visibility: "private" });
+      cy.createProject({
+        templateName: "Python",
+        ...projectIdentifier,
+        visibility: "private",
+      });
     }
   });
 
@@ -108,7 +112,6 @@ describe("Basic public project functionality", () => {
     cy.get("#nav-hamburger").should("be.visible").click();
     cy.searchForProject(projectIdentifier, false);
     cy.robustLogin();
-
   });
 
   it("Deleting the project removes it from the search page", () => {

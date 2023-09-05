@@ -10,7 +10,7 @@ const projectTestConfig = {
 };
 const workflow = {
   name: "dummyworkflow",
-  output: "o.txt" // ? Keep the name short or it won't show up entirely in the file browser
+  output: "o.txt", // ? Keep the name short or it won't show up entirely in the file browser
 };
 
 // ? Modify the config -- useful for debugging
@@ -125,8 +125,13 @@ describe("Basic public project functionality", () => {
       // Run a dummy workflow
       cy.get(".xterm-helper-textarea")
         .click()
-        .type(`renku run --name ${workflow.name} echo "123" > ${workflow.output}{enter}`);
-      cy.get("#filebrowser").should("be.visible").contains(workflow.output).should("be.visible");
+        .type(
+          `renku run --name ${workflow.name} echo "123" > ${workflow.output}{enter}`
+        );
+      cy.get("#filebrowser")
+        .should("be.visible")
+        .contains(workflow.output)
+        .should("be.visible");
       cy.get("#jp-git-sessions")
         .get(`button[title="Push committed changes (ahead by 1 commits)"]`)
         .should("not.exist");
@@ -138,13 +143,17 @@ describe("Basic public project functionality", () => {
       // // cy.get(".modal-session").contains("1 commit will be pushed").should("be.visible");
       // // cy.dataCy("save-session-modal-button").should("be.visible").click();
       cy.get(`[data-id="jp-git-sessions"]`).should("be.visible").click();
-      cy.get("#jp-git-sessions").contains(projectTestConfig.projectName).should("be.visible");
+      cy.get("#jp-git-sessions")
+        .contains(projectTestConfig.projectName)
+        .should("be.visible");
       cy.get("#jp-git-sessions")
         .get(`button[title="Push committed changes (ahead by 1 commits)"]`)
         .should("exist")
         .click();
       cy.get("#jp-git-sessions")
-        .get(`button[title="Push committed changes"]`, { timeout: TIMEOUTS.long })
+        .get(`button[title="Push committed changes"]`, {
+          timeout: TIMEOUTS.long,
+        })
         .should("exist");
       cy.get("#jp-git-sessions")
         .get(`button[title="Push committed changes (ahead by 1 commits)"]`)
