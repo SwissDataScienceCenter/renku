@@ -21,46 +21,8 @@ package ch.renku.acceptancetests.workflows
 import ch.renku.acceptancetests.model.projects.ProjectUrl
 import ch.renku.acceptancetests.tooling.AcceptanceSpec
 
-import scala.concurrent.duration._
-
 trait Settings {
   self: AcceptanceSpec with Project =>
-
-  def `set project tags`: Unit = {
-
-    `try few times with page reload` { _ =>
-      When("the user navigates to the Settings tab")
-      click on projectPage.Settings.tab
-      sleep(5 seconds)
-    }
-
-    `try few times with page reload` { _ =>
-      And("they add some tags")
-      val tags = "automated-test"
-      projectPage.Settings.General addProjectTags tags
-
-      Then("the tags should be added")
-      verify that projectPage.Settings.General.projectTags hasValue tags
-    }
-  }
-
-  def `set project description`: Unit = {
-
-    val gitlabDescription = "GitLab description"
-    `try few times with page reload` { _ =>
-      When("the user set the Project Description")
-      projectPage.Settings.General updateProjectDescription gitlabDescription
-    }
-
-    And("they navigate to the Overview tab")
-    click on projectPage.Overview.tab
-    sleep(5 seconds)
-
-    `try few times with page reload` { _ =>
-      Then("they should see the updated project description")
-      verify that projectPage.Overview.projectDescription contains gitlabDescription
-    }
-  }
 
   def `find project Http URL in the Overview Page`: ProjectUrl = {
 
