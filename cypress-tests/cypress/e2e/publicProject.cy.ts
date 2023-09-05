@@ -52,7 +52,7 @@ describe("Basic public project functionality", () => {
     cy.visitAndLoadProject(projectIdentifier);
   });
 
-  it.only("Can search for project", () => {
+  it("Can search for project", () => {
     // Assess the project has been indexed properly.This might take time for new projects.
     cy.getProjectSection("Settings").click();
     cy.getDataCy("project-settings-knowledge-graph")
