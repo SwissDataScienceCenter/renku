@@ -3,9 +3,8 @@
 0.36.0
 ------
 
-Renku 0.36.0 introduces an updated landing page layout to help new users explore
-the platform for the first time.
-It comes with a few bug fixes for the UI and Knowledge Graph.
+Renku ``0.36.0`` introduces an updated landing page layout to help new users explore
+the platform for the first time. Thus, it implements a few bug fixes for the UI and Knowledge Graph.
 
 User-Facing Changes
 ~~~~~~~~~~~~~~~~~~~
