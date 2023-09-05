@@ -18,7 +18,7 @@ jobs:
     if: github.event.action != 'closed'
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - uses: actions/setup-python@v4
         with:
           python-version: 3.9
@@ -57,7 +57,7 @@ jobs:
       extra-values: ${{ steps.deploy-comment.outputs.extra-values}}
       persist: ${{ steps.deploy-comment.outputs.persist }}
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - id: deploy-comment
         uses: SwissDataScienceCenter/renku-actions/check-pr-description@v1.5.2
         with:
@@ -71,7 +71,7 @@ jobs:
     environment:
       name: ci-renku-${{ github.event.number }}
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: renku build and deploy
         if: needs.check-deploy.outputs.pr-contains-string == 'true'
         uses: SwissDataScienceCenter/renku-actions/deploy-renku@v1.5.2
@@ -139,7 +139,14 @@ jobs:
       fail-fast: false
       max-parallel: 1
       matrix:
-        tests: [publicProject, updateProjects, useSession, checkWorkflows, rstudioSession] 
+        tests: [
+          publicProject,
+          privateProject,
+          updateProjects,
+          useSession,
+          checkWorkflows,
+          rstudioSession
+        ]
 
     steps:
       - uses: SwissDataScienceCenter/renku-actions/test-renku-cypress@v1.5.2
