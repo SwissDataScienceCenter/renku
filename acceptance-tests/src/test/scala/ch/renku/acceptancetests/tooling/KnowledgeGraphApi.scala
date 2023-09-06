@@ -127,8 +127,7 @@ trait KnowledgeGraphApi extends RestClient {
     } else if (!checkActivated(projectId, gitLabProjectId, browser)) {
       sleep(1 second)
       checkActivatedAndWait(projectId, gitLabProjectId, browser, attempt + 1, startTime)
-    } else
-      ().asRight[String]
+    } else ().asRight[String]
   }
 
   private def checkActivated(projectId: ProjectIdentifier, gitLabProjectId: Int, browser: WebDriver): Boolean =
