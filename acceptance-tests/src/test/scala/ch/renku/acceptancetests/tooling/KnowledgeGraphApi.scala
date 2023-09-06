@@ -18,15 +18,20 @@
 
 package ch.renku.acceptancetests.tooling
 
+import KnowledgeGraphModel._
 import TestLogger._
 import cats.effect.IO
 import cats.syntax.all._
 import ch.renku.acceptancetests.model.projects.ProjectIdentifier
-import io.circe.JsonObject
+import io.circe._
+import io.circe.syntax._
+import org.http4s.MediaType._
 import org.http4s.Status.{Accepted, NotFound, Ok}
 import org.http4s.circe.CirceEntityCodec._
+import org.http4s.headers.`Content-Type`
 import org.openqa.selenium.WebDriver
 
+import java.time.Instant
 import scala.annotation.tailrec
 import scala.concurrent.duration._
 
@@ -39,10 +44,10 @@ trait KnowledgeGraphApi extends RestClient {
     checkStatusAndWait(projectId, gitLabProjectId, browser, 1)
   }
 
-  def `wait for project activation`(projectId: ProjectIdentifier)(implicit browser: WebDriver): Unit = {
+  def `wait for project activation`(projectId: ProjectIdentifier)(implicit browser: WebDriver): Either[String, Unit] = {
     sleep(1 second)
     val gitLabProjectId = `get GitLab project id`(projectId)
-    checkActivatedAndWait(projectId, gitLabProjectId, browser, 1)
+    checkActivatedAndWait(projectId, gitLabProjectId, browser, attempt = 1)
   }
 
   def findLineage(projectPath: String, filePath: String): JsonObject = {
@@ -56,12 +61,30 @@ trait KnowledgeGraphApi extends RestClient {
       .getOrElse(fail(s"Cannot find lineage data for project $projectPath file $filePath"))
   }
 
-  def `DELETE /knowledge-graph/projects/:path`(projectPath: String): Unit = {
+  def `GET /knowledge-graph/projects/:slug`(slug: String): KGProjectDetails = {
     val toSegments: String => List[String] = _.split('/').toList
-    val uri = toSegments(projectPath).foldLeft(renkuBaseUrl / "knowledge-graph" / "projects")(_ / _)
+    val uri = toSegments(slug).foldLeft(renkuBaseUrl / "knowledge-graph" / "projects")(_ / _)
+    GET(uri)
+      .withAuthorizationToken(authorizationToken)
+      .putHeaders(`Content-Type`(application.json))
+      .send(whenReceived(status = Ok) >=> decodePayload[KGProjectDetails])
+  }
+
+  def `PATCH /knowledge-graph/projects/:slug`(slug: String, updates: ProjectUpdates): Unit = {
+    val toSegments: String => List[String] = _.split('/').toList
+    val uri = toSegments(slug).foldLeft(renkuBaseUrl / "knowledge-graph" / "projects")(_ / _)
+    PATCH(uri)
+      .withEntity(updates.asJson)
+      .withAuthorizationToken(authorizationToken)
+      .send(expect(status = Accepted, otherwiseLog = s"Updating '$slug' project failed"))
+  }
+
+  def `DELETE /knowledge-graph/projects/:slug`(slug: String): Unit = {
+    val toSegments: String => List[String] = _.split('/').toList
+    val uri = toSegments(slug).foldLeft(renkuBaseUrl / "knowledge-graph" / "projects")(_ / _)
     DELETE(uri)
       .withAuthorizationToken(authorizationToken)
-      .send(expect(status = Accepted, otherwiseLog = s"Deletion of '$projectPath' project failed"))
+      .send(expect(status = Accepted, otherwiseLog = s"Deletion of '$slug' project failed"))
   }
 
   @tailrec
@@ -94,15 +117,18 @@ trait KnowledgeGraphApi extends RestClient {
       projectId:       ProjectIdentifier,
       gitLabProjectId: Int,
       browser:         WebDriver,
-      attempt:         Int
-  ): Unit = {
-    And("waits for Project Activation")
-    if (attempt >= 60 * 5)
-      fail(s"Activation status of '$projectId' project couldn't be determined after 5 minutes")
-    else if (!checkActivated(projectId, gitLabProjectId, browser)) {
+      attempt:         Int,
+      startTime:       Instant = Instant.now()
+  ): Either[String, Unit] = {
+    And(s"waits for Project Activation - attempt $attempt")
+    if (attempt >= 60 * 2) {
+      val duration = Duration(Instant.now().toEpochMilli - startTime.toEpochMilli, MILLISECONDS).toSeconds
+      s"Activation status of '$projectId' project couldn't be determined after $duration s".asLeft[Unit]
+    } else if (!checkActivated(projectId, gitLabProjectId, browser)) {
       sleep(1 second)
-      checkActivatedAndWait(projectId, gitLabProjectId, browser, attempt + 1)
-    }
+      checkActivatedAndWait(projectId, gitLabProjectId, browser, attempt + 1, startTime)
+    } else
+      ().asRight[String]
   }
 
   private def checkActivated(projectId: ProjectIdentifier, gitLabProjectId: Int, browser: WebDriver): Boolean =
@@ -115,7 +141,7 @@ trait KnowledgeGraphApi extends RestClient {
     findStatus(projectId, gitLabProjectId, browser).map(_.total).getOrElse(0)
 
   private def findStatus(projectId: ProjectIdentifier, gitLabProjectId: Int, browser: WebDriver): Option[GraphStatus] =
-    GET(renkuBaseUrl / "api" / "projects" / gitLabProjectId.toString / "graph" / "status")
+    GET(renkuBaseUrl / "api" / "projects" / gitLabProjectId / "graph" / "status")
       .addCookiesFrom(browser)
       .send { response =>
         response.status match {
