@@ -1,9 +1,49 @@
 .. _changelog:
 
+0.36.0
+------
+
+Renku ``0.36.0`` introduces an updated landing page layout to help new users explore
+the platform for the first time. Thus, it implements a few bug fixes for the UI and Knowledge Graph.
+
+User-Facing Changes
+~~~~~~~~~~~~~~~~~~~
+
+**🌟 New Features**
+
+- 🖼️ **Knowledge Graph**: Project Update API can update description, keywords and image
+  (`#1631 <https://github.com/SwissDataScienceCenter/renku-graph/issues/1631>`_).
+
+**✨ Improvements**
+
+- 📐 **UI**: Update the landing page for non-logged users to simplify discovering
+  the platform
+  (`#2741 <https://github.com/SwissDataScienceCenter/renku-ui/issues/2741>`_).
+
+**🐞 Bug Fixes**
+
+- **UI**: Fix the Renku version on the footer
+  (`#2776 <https://github.com/SwissDataScienceCenter/renku-ui/issues/2776>`_).
+
+Internal Changes
+~~~~~~~~~~~~~~~~
+
+**Bug Fixes**
+
+- **UI**: Prevent using different repository URLs for the same project
+  (`#2766 <https://github.com/SwissDataScienceCenter/renku-ui/issues/2766>`_).
+
+Individual components
+~~~~~~~~~~~~~~~~~~~~~~
+
+- `renku-ui 3.12.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.12.0>`_
+- `renku-graph 2.41.0 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/2.41.0>`_
+
+
 0.35.1
 ------
 
-Renku 0.35.1 introduces bug fixes in the compute resource control (CRC) service
+Renku ``0.35.1`` introduces bug fixes in the compute resource control (CRC) service
 and the gateway.
 
 Internal Changes
@@ -22,10 +62,11 @@ Individual components
 - `renku-data-services v0.0.2 <https://github.com/SwissDataScienceCenter/renku-data-services/releases/tag/v0.0.2>`_
 - `renku-gateway 0.21.3 <https://github.com/SwissDataScienceCenter/renku-gateway/releases/tag/0.21.3>`_
 
+
 0.35.0
 ------
 
-Renku 0.35.0 introduces new features in the UI and bug fixes in various components.
+Renku ``0.35.0`` introduces new features in the UI and bug fixes in various components.
 
 User-Facing Changes
 ~~~~~~~~~~~~~~~~~~~
@@ -64,10 +105,10 @@ Internal Changes
 
 **Improvements**
 
-- **UI**: Restore maintenance page
-  (`#2715 <https://github.com/SwissDataScienceCenter/renku-ui/issues/2715>`_).
 - **KG**: New graph for storing auth data
   (`#1661 <https://github.com/SwissDataScienceCenter/renku-graph/issues/1661>`_).
+- **UI**: Restore maintenance page
+  (`#2715 <https://github.com/SwissDataScienceCenter/renku-ui/issues/2715>`_).
 
 **Bug Fixes**
 
@@ -96,10 +137,10 @@ Internal Changes
 Individual components
 ~~~~~~~~~~~~~~~~~~~~~~
 
-- `renku-python 2.6.2 <https://github.com/SwissDataScienceCenter/renku-python/releases/tag/v2.6.2>`_
 - `renku-gateway 0.21.2 <https://github.com/SwissDataScienceCenter/renku-gateway/releases/tag/0.21.2>`_
-- `renku-ui 3.11.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.11.0>`_
 - `renku-graph 2.40.0 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/2.40.0>`_
+- `renku-python 2.6.2 <https://github.com/SwissDataScienceCenter/renku-python/releases/tag/v2.6.2>`_
+- `renku-ui 3.11.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.11.0>`_
 
 0.34.1
 ------
