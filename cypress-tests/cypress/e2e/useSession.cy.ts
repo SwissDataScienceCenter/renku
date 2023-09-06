@@ -14,8 +14,8 @@ const workflow = {
 };
 
 // ? Modify the config -- useful for debugging
-projectTestConfig.shouldCreateProject = false;
-projectTestConfig.projectName = "test-session-00001";
+// projectTestConfig.shouldCreateProject = false;
+// projectTestConfig.projectName = "cypress-usesession-2f2b5f2c2ee8";
 
 const projectIdentifier = {
   name: projectTestConfig.projectName,
