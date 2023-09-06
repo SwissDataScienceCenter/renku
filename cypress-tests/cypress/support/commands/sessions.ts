@@ -34,9 +34,22 @@ const stopAllSessionsForProject = (identifier: ProjectIdentifier) => {
   cy.wait("@getSessions").then(({ response }) => {
     const servers = response?.body?.servers ?? {};
     for (const key of Object.keys(servers)) {
+      // if (servers[key].annotation)
+      console.warn({ id });
+      console.warn({ servers });
+
+      if (
+        servers[key].annotations["renku.io/namespace"] !== id.namespace ||
+        servers[key].annotations["renku.io/projectName"] !== id.name
+      ) {
+        console.warn("Skipping", key);
+        continue;
+      }
+
       const name = servers[key].name;
       // eslint-disable-next-line cypress/no-assigning-return-values
       const connectButton = cy
+        .dataCy("session-container")
         .get(`[data-cy=open-session][href$=${name}]`)
         .first()
         .should("exist");

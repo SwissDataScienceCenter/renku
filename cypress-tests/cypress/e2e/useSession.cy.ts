@@ -10,12 +10,12 @@ const projectTestConfig = {
 };
 const workflow = {
   name: "dummyworkflow",
-  output: "o.txt" // ? Keep the name short or it won't show up entirely in the file browser
+  output: "o.txt", // ? Keep the name short or it won't show up entirely in the file browser
 };
 
 // ? Modify the config -- useful for debugging
 projectTestConfig.shouldCreateProject = false;
-projectTestConfig.projectName = "test-session-4f79daad6d4e";
+projectTestConfig.projectName = "test-session-00001";
 
 const projectIdentifier = {
   name: projectTestConfig.projectName,
@@ -73,7 +73,8 @@ describe("Basic public project functionality", () => {
       .should("exist")
       .click();
     if (serversInvoked) cy.wait("@getServers");
-    cy.wait(1_000, { log: false }); // eslint-disable-line cypress/no-unnecessary-waiting
+    cy.wait("@getDatasets");
+    cy.wait(5_000, { log: false }); // eslint-disable-line cypress/no-unnecessary-waiting
     cy.get("button.startButton")
       .dataCy("more-menu")
       .should("be.visible")
@@ -125,8 +126,13 @@ describe("Basic public project functionality", () => {
       // Run a dummy workflow
       cy.get(".xterm-helper-textarea")
         .click()
-        .type(`renku run --name ${workflow.name} echo "123" > ${workflow.output}{enter}`);
-      cy.get("#filebrowser").should("be.visible").contains(workflow.output).should("be.visible");
+        .type(
+          `renku run --name ${workflow.name} echo "123" > ${workflow.output}{enter}`
+        );
+      cy.get("#filebrowser")
+        .should("be.visible")
+        .contains(workflow.output)
+        .should("be.visible");
       cy.get("#jp-git-sessions")
         .get(`button[title="Push committed changes (ahead by 1 commits)"]`)
         .should("not.exist");
@@ -138,13 +144,17 @@ describe("Basic public project functionality", () => {
       // // cy.get(".modal-session").contains("1 commit will be pushed").should("be.visible");
       // // cy.dataCy("save-session-modal-button").should("be.visible").click();
       cy.get(`[data-id="jp-git-sessions"]`).should("be.visible").click();
-      cy.get("#jp-git-sessions").contains(projectTestConfig.projectName).should("be.visible");
+      cy.get("#jp-git-sessions")
+        .contains(projectTestConfig.projectName)
+        .should("be.visible");
       cy.get("#jp-git-sessions")
         .get(`button[title="Push committed changes (ahead by 1 commits)"]`)
         .should("exist")
         .click();
       cy.get("#jp-git-sessions")
-        .get(`button[title="Push committed changes"]`, { timeout: TIMEOUTS.long })
+        .get(`button[title="Push committed changes"]`, {
+          timeout: TIMEOUTS.long,
+        })
         .should("exist");
       cy.get("#jp-git-sessions")
         .get(`button[title="Push committed changes (ahead by 1 commits)"]`)
@@ -160,8 +170,9 @@ describe("Basic public project functionality", () => {
       .contains("Paused");
 
     // Stop the session
-    cy.dataCy("stop-session-button").should("exist").click();
-    cy.dataCy("stop-session-modal-button").should("exist").click();
+    cy.dataCy("more-menu").first().should("be.visible").click();
+    cy.dataCy("delete-session-button").first().should("be.visible").click();
+    cy.dataCy("delete-session-modal-button").should("exist").click();
     cy.dataCy("stopping-btn").should("exist");
     cy.get(".renku-container", { timeout: TIMEOUTS.long })
       .should("exist")
@@ -169,7 +180,6 @@ describe("Basic public project functionality", () => {
       .should("exist");
 
     // Go the the workflows page and check the new workflow appears
-    cy.dataCy("go-back-button").click();
     cy.dataCy("project-navbar")
       .contains("a.nav-link", "Workflows")
       .should("be.visible")
