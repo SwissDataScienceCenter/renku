@@ -1,5 +1,147 @@
 .. _changelog:
 
+0.36.0
+------
+
+Renku ``0.36.0`` introduces an updated landing page layout to help new users explore
+the platform for the first time. Thus, it implements a few bug fixes for the UI and Knowledge Graph.
+
+User-Facing Changes
+~~~~~~~~~~~~~~~~~~~
+
+**🌟 New Features**
+
+- 🖼️ **Knowledge Graph**: Project Update API can update description, keywords and image
+  (`#1631 <https://github.com/SwissDataScienceCenter/renku-graph/issues/1631>`_).
+
+**✨ Improvements**
+
+- 📐 **UI**: Update the landing page for non-logged users to simplify discovering
+  the platform
+  (`#2741 <https://github.com/SwissDataScienceCenter/renku-ui/issues/2741>`_).
+
+**🐞 Bug Fixes**
+
+- **UI**: Fix the Renku version on the footer
+  (`#2776 <https://github.com/SwissDataScienceCenter/renku-ui/issues/2776>`_).
+
+Internal Changes
+~~~~~~~~~~~~~~~~
+
+**Bug Fixes**
+
+- **UI**: Prevent using different repository URLs for the same project
+  (`#2766 <https://github.com/SwissDataScienceCenter/renku-ui/issues/2766>`_).
+
+Individual components
+~~~~~~~~~~~~~~~~~~~~~~
+
+- `renku-ui 3.12.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.12.0>`_
+- `renku-graph 2.41.0 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/2.41.0>`_
+
+
+0.35.1
+------
+
+Renku ``0.35.1`` introduces bug fixes in the compute resource control (CRC) service
+and the gateway.
+
+Internal Changes
+~~~~~~~~~~~~~~~~
+
+**Bug Fixes**
+
+- **Compute resource control**: Fix erroneous validation errors with quotas
+  (`#22 <https://github.com/SwissDataScienceCenter/renku-data-services/pull/22>`__)
+- **Gateway**: Sticky sessions null de-reference causing crashes
+  (`#673 <https://github.com/SwissDataScienceCenter/renku-gateway/issues/673>`__)
+
+Individual components
+~~~~~~~~~~~~~~~~~~~~~~
+
+- `renku-data-services v0.0.2 <https://github.com/SwissDataScienceCenter/renku-data-services/releases/tag/v0.0.2>`_
+- `renku-gateway 0.21.3 <https://github.com/SwissDataScienceCenter/renku-gateway/releases/tag/0.21.3>`_
+
+
+0.35.0
+------
+
+Renku ``0.35.0`` introduces new features in the UI and bug fixes in various components.
+
+User-Facing Changes
+~~~~~~~~~~~~~~~~~~~
+
+**🌟 New Features**
+
+- 🫥 **UI**: Add a new section in the project settings to change visibility
+  (`#2648 <https://github.com/SwissDataScienceCenter/renku-ui/issues/2648>`_).
+- 🔢 **UI**: Show the Renku version on the footer and add a new page to list
+  the backend components versions.
+  (`#2703 <https://github.com/SwissDataScienceCenter/renku-ui/issues/2703>`_).
+
+**✨ Improvements**
+
+- 🫥 **UI**: Use the description from the project metadata in the project pages.
+  This means the description set at project creation won't go lost.
+  (`#2631 <https://github.com/SwissDataScienceCenter/renku-ui/issues/2631>`_).
+- ❓ **UI**: Use a more generic and user-friendly concept instead of "Knowledge Graph"
+  when referring to the project metadata processing
+  (`#2709 <https://github.com/SwissDataScienceCenter/renku-ui/issues/2709>`_).
+
+**🐞 Bug Fixes**
+
+- **UI**: Allow navigating back during and after the login without ending in a
+  corrupted state
+  (`#2711 <https://github.com/SwissDataScienceCenter/renku-ui/issues/2711>`_).
+- **UI**: Sort project datasets by the user-friendly title instead of the hidden name
+  (`#2702 <https://github.com/SwissDataScienceCenter/renku-ui/issues/2702>`_).
+- **UI**: Update the loader spinner to fix DOM nesting errors
+  (`#2750 <https://github.com/SwissDataScienceCenter/renku-ui/issues/2750>`_).
+- **UI**: Prevent fake warnings from memory constraints when starting sessions
+  (`#2757 <https://github.com/SwissDataScienceCenter/renku-ui/issues/2757>`_).
+
+Internal Changes
+~~~~~~~~~~~~~~~~
+
+**Improvements**
+
+- **KG**: New graph for storing auth data
+  (`#1661 <https://github.com/SwissDataScienceCenter/renku-graph/issues/1661>`_).
+- **UI**: Restore maintenance page
+  (`#2715 <https://github.com/SwissDataScienceCenter/renku-ui/issues/2715>`_).
+
+**Bug Fixes**
+
+- **Core Service**: Fix issue with cache.migrations_check timing out.
+  (`#3597 <https://github.com/SwissDataScienceCenter/renku-python/issues/3597>`__)
+  (`20b5589 <https://github.com/SwissDataScienceCenter/renku-python/commit/20b5589ea2639b4ff017fc390a9b685842c9685d>`__)
+- **Core Service**: Fix dataset image IDs for datasets imported from Zenodo
+  (`#3596 <https://github.com/SwissDataScienceCenter/renku-python/issues/3596>`__)
+  (`f624b2b <https://github.com/SwissDataScienceCenter/renku-python/commit/f624b2bf261d97b07c88243f674f544613753e28>`__)
+- **Core Service**: Fix issue on workflows UI with badly formatted IDs
+  (`#3594 <https://github.com/SwissDataScienceCenter/renku-python/issues/3594>`__)
+  (`c418c17 <https://github.com/SwissDataScienceCenter/renku-python/commit/c418c178d03a5caac126d14cc089064ee13f2747>`__)
+- **Gateway:** properly use Redis sentinel client
+  (`#668 <https://github.com/SwissDataScienceCenter/renku-gateway/issues/668>`__)
+  (`5ab4447 <https://github.com/SwissDataScienceCenter/renku-gateway/commit/5ab44475c9f7a516ddb8865c8f70db9bdb0ba5ec>`__)
+- **Gateway:** properly redirect from /gitlab urls
+  (`#669 <https://github.com/SwissDataScienceCenter/renku-gateway/issues/669>`__)
+  (`2fac96f <https://github.com/SwissDataScienceCenter/renku-gateway/commit/2fac96f5c6141f4e57ae5cc77877670156bceae5>`__)
+- **Gateway:** return 404 if the core service metadata version does not exist instead of redirecting 
+  to the endpoint that is using the latest metadata version
+  (`#667 <https://github.com/SwissDataScienceCenter/renku-gateway/issues/667>`__)
+  (`2753d07 <https://github.com/SwissDataScienceCenter/renku-gateway/commit/2753d0773e26cb1c74e4be4dd44fe5e77f428657>`__
+- **UI**: Use a common project URL when invoking renku-core APIs
+  (`#2722 <https://github.com/SwissDataScienceCenter/renku-ui/issues/2722>`_).
+
+Individual components
+~~~~~~~~~~~~~~~~~~~~~~
+
+- `renku-gateway 0.21.2 <https://github.com/SwissDataScienceCenter/renku-gateway/releases/tag/0.21.2>`_
+- `renku-graph 2.40.0 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/2.40.0>`_
+- `renku-python 2.6.2 <https://github.com/SwissDataScienceCenter/renku-python/releases/tag/v2.6.2>`_
+- `renku-ui 3.11.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.11.0>`_
+
 0.34.1
 ------
 

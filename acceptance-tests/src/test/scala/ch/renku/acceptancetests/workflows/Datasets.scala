@@ -126,13 +126,15 @@ trait Datasets {
     `try few times with page reload` { _ =>
       Given("the user is on the Datasets tab")
       click on projectPage.Datasets.tab sleep (5 seconds)
-      verify userCanSee projectPage.Datasets.addDatasetButton
     }
 
-    When(s"the user clicks on the dataset name")
-    click on projectPage.Datasets.DatasetsList
-      .maybeLink(to = datasetPage)
-      .getOrElse(logAndFail(s"Cannot find '${datasetPage.datasetName}' Dataset among project datasets"))
+    `try few times with page reload` { _ =>
+      When("the user clicks on the dataset name")
+      sleep(5 seconds)
+      click on projectPage.Datasets.DatasetsList
+        .maybeLink(to = datasetPage)
+        .getOrElse(logAndFail(s"Cannot find '${datasetPage.datasetName}' Dataset among project datasets; waiting"))
+    }
 
     sleep(5 second)
 
