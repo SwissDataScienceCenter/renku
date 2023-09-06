@@ -24,37 +24,6 @@ import ch.renku.acceptancetests.tooling.AcceptanceSpec
 trait Settings {
   self: AcceptanceSpec with Project =>
 
-  def `set project tags`: Unit = {
-
-    `try few times with page reload` { _ =>
-      When("the user navigates to the Settings tab")
-      click on projectPage.Settings.tab
-    }
-
-    And("they add some tags")
-    val tags = "automated-test"
-    projectPage.Settings.General addProjectTags tags
-
-    `try few times with page reload` { _ =>
-      Then("the tags should be added")
-      verify that projectPage.Settings.General.projectTags hasValue tags
-    }
-  }
-
-  def `set project description`: Unit = {
-    When("the user set the Project Description")
-    val gitlabDescription = "GitLab description"
-    projectPage.Settings.General updateProjectDescription gitlabDescription
-
-    `try few times with page reload` { _ =>
-      And("they navigate to the Overview tab")
-      click on projectPage.Overview.tab
-
-      Then("they should see the updated project description")
-      verify that projectPage.Overview.projectDescription contains gitlabDescription
-    }
-  }
-
   def `find project Http URL in the Overview Page`: ProjectUrl = {
 
     `try few times with page reload` { _ =>

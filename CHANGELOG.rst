@@ -3,12 +3,16 @@
 0.36.0
 ------
 
-Renku 0.36.0 introduces an updated landing page layout to help new users explore
-the platform for the first time.
-It comes with a few bug fixes for the UI.
+Renku ``0.36.0`` introduces an updated landing page layout to help new users explore
+the platform for the first time. Thus, it implements a few bug fixes for the UI and Knowledge Graph.
 
 User-Facing Changes
 ~~~~~~~~~~~~~~~~~~~
+
+**🌟 New Features**
+
+- 🖼️ **Knowledge Graph**: Project Update API can update description, keywords and image
+  (`#1631 <https://github.com/SwissDataScienceCenter/renku-graph/issues/1631>`_).
 
 **✨ Improvements**
 
@@ -33,12 +37,13 @@ Individual components
 ~~~~~~~~~~~~~~~~~~~~~~
 
 - `renku-ui 3.12.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.12.0>`_
+- `renku-graph 2.41.0 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/2.41.0>`_
 
 
 0.35.1
 ------
 
-Renku 0.35.1 introduces bug fixes in the compute resource control (CRC) service
+Renku ``0.35.1`` introduces bug fixes in the compute resource control (CRC) service
 and the gateway.
 
 Internal Changes
@@ -61,7 +66,7 @@ Individual components
 0.35.0
 ------
 
-Renku 0.35.0 introduces new features in the UI and bug fixes in various components.
+Renku ``0.35.0`` introduces new features in the UI and bug fixes in various components.
 
 User-Facing Changes
 ~~~~~~~~~~~~~~~~~~~
