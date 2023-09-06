@@ -121,9 +121,9 @@ trait KnowledgeGraphApi extends RestClient {
       startTime:       Instant = Instant.now()
   ): Either[String, Unit] = {
     And(s"waits for Project Activation - attempt $attempt")
-    if (attempt >= 60 * 2) {
+    if (attempt >= 60) {
       val duration = Duration(Instant.now().toEpochMilli - startTime.toEpochMilli, MILLISECONDS).toSeconds
-      s"Activation status of '$projectId' project couldn't be determined after $duration s".asLeft[Unit]
+      s"Activation status of '$projectId' project couldn't be determined after ${duration}s".asLeft[Unit]
     } else if (!checkActivated(projectId, gitLabProjectId, browser)) {
       sleep(1 second)
       checkActivatedAndWait(projectId, gitLabProjectId, browser, attempt + 1, startTime)
