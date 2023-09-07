@@ -36,7 +36,7 @@ object ProjectPage {
     new ProjectPage(projectDetails.title.toPathSegment, userCredentials.userNamespace)
 
   def apply(projectId: ProjectIdentifier): ProjectPage =
-    new ProjectPage(projectId.slug, projectId.namespace)
+    new ProjectPage(projectId.path, projectId.namespace)
 }
 
 class ProjectPage(val projectSlug: String, val namespace: String)

@@ -66,7 +66,7 @@ trait GitLabApi extends RestClient {
         )
       )
 
-  def fetchUserId =
+  def fetchUserId: Int =
     GET(gitLabAPIUrl / "user")
       .withAuthorizationToken(authorizationToken)
       .send(whenReceived(status = Ok) >=> bodyToJson)
@@ -111,21 +111,21 @@ trait GitLabApi extends RestClient {
   }
 
   def `get GitLab project id`(projectId: ProjectIdentifier): Int =
-    GET(gitLabAPIUrl / "projects" / projectId.asProjectPath)
+    GET(gitLabAPIUrl / "projects" / projectId.asProjectSlug)
       .withAuthorizationToken(authorizationToken)
       .send(whenReceived(status = Ok) >=> bodyToJson)
       .extract(jsonRoot.id.int.getOption)
       .getOrElse(fail(s"Cannot find '$projectId' project in GitLab"))
 
   def `project exists in GitLab`(projectId: ProjectIdentifier): Boolean =
-    GET(gitLabAPIUrl / "projects" / projectId.asProjectPath)
+    GET(gitLabAPIUrl / "projects" / projectId.asProjectSlug)
       .withAuthorizationToken(authorizationToken)
       .send(mapResponse {
         _.status match {
           case Ok           => true
           case NotFound     => false
           case Unauthorized => false
-          case other        => fail(s"Finding '${projectId.slug}' project in GitLab failed with $other status")
+          case other        => fail(s"Finding '${projectId.path}' project in GitLab failed with $other status")
         }
       })
 
@@ -142,7 +142,7 @@ trait GitLabApi extends RestClient {
   }
 
   def `delete project in GitLab`(projectId: ProjectIdentifier): Unit =
-    DELETE(gitLabAPIUrl / "projects" / projectId.asProjectPath)
+    DELETE(gitLabAPIUrl / "projects" / projectId.asProjectSlug)
       .withAuthorizationToken(authorizationToken)
-      .send(expect(status = Accepted, otherwiseLog = s"Deletion of '${projectId.slug}' project in GitLab failed"))
+      .send(expect(status = Accepted, otherwiseLog = s"Deletion of '${projectId.path}' project in GitLab failed"))
 }

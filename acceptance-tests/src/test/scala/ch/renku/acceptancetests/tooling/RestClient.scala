@@ -24,23 +24,23 @@ import cats.effect.{IO, Temporal}
 import cats.syntax.all._
 import ch.renku.acceptancetests.model.{AuthorizationToken, BaseUrl}
 import ch.renku.acceptancetests.tooling.TestLogger._
-import io.circe.Json
 import io.circe.optics.JsonPath
 import io.circe.optics.JsonPath.root
+import io.circe.{Decoder, Json}
 import org.http4s._
 import org.http4s.blaze.client.BlazeClientBuilder
 import org.http4s.blaze.pipeline.Command
+import org.http4s.circe.CirceEntityCodec._
 import org.http4s.circe._
 import org.http4s.client.dsl.Http4sClientDsl
-import org.http4s.client.middleware.Logger
 import org.http4s.client.{Client, ConnectionFailure}
 import org.openqa.selenium.WebDriver
 import org.scalatest.Assertions.fail
 
 import java.net.ConnectException
 import scala.concurrent.duration._
-import scala.util.control.NonFatal
 import scala.jdk.CollectionConverters._
+import scala.util.control.NonFatal
 
 trait RestClient extends Http4sClientDsl[IO] {
   self: IOSpec =>
@@ -59,6 +59,11 @@ trait RestClient extends Http4sClientDsl[IO] {
     Uri.fromString(baseUrl.toString).fold(error => fail(error.getMessage()), identity)
   )
 
+  def PATCH(baseUrl: BaseUrl): Request[IO] = Request[IO](
+    Method.PATCH,
+    Uri.fromString(baseUrl.toString).fold(error => fail(error.getMessage()), identity)
+  )
+
   def DELETE(baseUrl: BaseUrl): Request[IO] = Request[IO](
     Method.DELETE,
     uri = Uri.fromString(baseUrl.toString).fold(error => fail(error.getMessage()), identity)
@@ -66,7 +71,7 @@ trait RestClient extends Http4sClientDsl[IO] {
 
   implicit class RequestOps(request: Request[IO]) {
 
-    def addCookiesFrom(webDriver: WebDriver) =
+    def addCookiesFrom(webDriver: WebDriver): Request[IO] =
       webDriver
         .manage()
         .getCookies
@@ -108,6 +113,8 @@ trait RestClient extends Http4sClientDsl[IO] {
   }
 
   def bodyToJson: Response[IO] => IO[Json] = _.as[Json]
+
+  def decodePayload[A](implicit decoder: Decoder[A]): Response[IO] => IO[A] = _.as[A]
 
   def expect(status: Status, otherwiseLog: String): Response[IO] => IO[Unit] = { response =>
     Applicative[IO].whenA(response.status != status) {
