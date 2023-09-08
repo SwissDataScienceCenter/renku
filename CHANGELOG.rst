@@ -5,7 +5,7 @@
 ------
 
 Renku ``0.35.2`` introduces a UI bug-fix to prevent overloading backend components
-in specific cases.
+when using pre-filled template links. 
 
 Internal Changes
 ~~~~~~~~~~~~~~~~
