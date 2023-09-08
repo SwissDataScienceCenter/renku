@@ -20,7 +20,7 @@ package ch.renku.acceptancetests
 
 import ch.renku.acceptancetests.tooling.console._
 import ch.renku.acceptancetests.tooling.{AcceptanceSpec, KnowledgeGraphApi, console}
-import ch.renku.acceptancetests.workflows.{CLIConfiguration, Login, Project, Settings}
+import ch.renku.acceptancetests.workflows._
 import io.circe.{Json, JsonObject}
 
 import java.nio.file.Path

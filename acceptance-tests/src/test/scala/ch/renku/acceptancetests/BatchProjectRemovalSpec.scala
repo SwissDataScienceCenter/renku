@@ -78,7 +78,8 @@ class BatchProjectRemovalSpec extends AcceptanceSpec with Login with RemoveProje
 
     val defaultPatterns = List(
       "test-(\\d{4})-(\\d+)-(\\d+)-(\\d+)-(\\d+)-(\\d+).*",
-      "test-session-.*"
+      "test-session-.*",
+      "cypress-.*"
     )
 
     val projectNamePatterns = Option(getProperty("remPattern"))
