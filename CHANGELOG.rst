@@ -1,5 +1,26 @@
 .. _changelog:
 
+
+0.35.2
+------
+
+Renku ``0.35.2`` introduces a UI bug-fix to prevent overloading backend components
+in specific cases.
+
+Internal Changes
+~~~~~~~~~~~~~~~~
+
+**Bug Fixes**
+
+- **UI**: Handle embedded template variables in project creation links
+  (`#2789 <https://github.com/SwissDataScienceCenter/renku-ui/issues/2789>`_).
+
+Individual components
+~~~~~~~~~~~~~~~~~~~~~~
+
+- `renku-ui 3.11.1 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.11.1>`_
+
+
 0.35.1
 ------
 
