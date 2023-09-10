@@ -7,7 +7,15 @@ import { renkuLogin } from "./utils/oauth.js";
 import { getRandomInt } from "./utils/general.js";
 import { getCommitShasFromProjectName, deleteProjectByName } from "./utils/git.js";
 import { createProject } from "./utils/core.js";
-import { startServer, waitForServerState, getServer, stopServer, waitForImageToBuild } from "./utils/servers.js";
+import {
+  startServer,
+  waitForServerState,
+  getServer,
+  hibernateServer,
+  resumeServer,
+  stopServer,
+  waitForImageToBuild
+} from "./utils/servers.js";
 import { credentials, baseUrl, gitUrl, registryDomain, concurentUsers } from "./config.js";
 
 export const options = {
@@ -24,6 +32,7 @@ export const options = {
 
 // k6 custom metrics
 const sessionStartupDuration = new Trend("session_startup_duration", true);
+const sessionHibernationDuration = new Trend("session_hibernation_duration", true);
 
 // Test code
 export default function test() {
@@ -73,6 +82,26 @@ export default function test() {
         expect(res).to.have.validJsonBody();
         sleep(1)
       }
+    });
+    describe("should hibernate the server", () => {
+      const res = hibernateServer(baseUrl, server.name);
+      expect(res.status, 'response status').to.equal(204);
+    });
+    describe("should wait for server to hibernate", () => {
+      const res = waitForServerState(baseUrl, server.name, "hibernated")
+      expect(res.stateAchieved, ".stateAchieved in response").to.be.true;
+      expect(res.lastResponse.status, "last state check response status code").to.equal(200);
+      sessionHibernationDuration.add(res.durationSeconds * 1000)
+    });
+    describe("should resume the server", () => {
+      const res = resumeServer(baseUrl, server.name);
+      expect(res.status, 'response status').to.equal(204);
+    });
+    describe("should wait for server to become ready", () => {
+      const res = waitForServerState(baseUrl, server.name, "running")
+      expect(res.stateAchieved, ".stateAchieved in response").to.be.true;
+      expect(res.lastResponse.status, "last state check response status code").to.equal(200);
+      sessionStartupDuration.add(res.durationSeconds * 1000)
     });
     describe("should stop the server", () => {
       const res = stopServer(baseUrl, server.name);
