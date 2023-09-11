@@ -1,5 +1,25 @@
 .. _changelog:
 
+0.36.2
+------
+
+Renku ``0.36.2`` is a bug-fix release that fixes a bug with running ``renku save`` from JupyterServer
+session sidecars.
+
+
+User-Facing Changes
+~~~~~~~~~~~~~~~~~~~
+
+**🐞 Bug Fixes**
+
+- **Renku Notebooks**: Fix a problem that prevented users from saving data via the UI in a session
+  (`#1620 <https://github.com/SwissDataScienceCenter/renku-notebooks/issues/1620>`_).
+
+Individual components
+~~~~~~~~~~~~~~~~~~~~~~
+
+- `renku-notebooks 1.18.1 <https://github.com/SwissDataScienceCenter/renku-notebooks/releases/tag/1.18.1>`_
+
 0.36.1
 ------
 
