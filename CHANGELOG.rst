@@ -10,9 +10,9 @@ session sidecars.
 User-Facing Changes
 ~~~~~~~~~~~~~~~~~~~
 
-**Bug Fixes**
+**🐞 Bug Fixes**
 
-- **Renku notebooks**: Fix a problem that prevented users from saving data via the UI in a session
+- **Renku Notebooks**: Fix a problem that prevented users from saving data via the UI in a session
   (`#1620 <https://github.com/SwissDataScienceCenter/renku-notebooks/issues/1620>`_).
 
 Individual components
