@@ -79,6 +79,7 @@ export function waitForServerState(baseUrl, serverName, state, secondsTimeout = 
       callback(res)
     }
     if ((Date.now() - start) / 1000 > secondsTimeout) {
+      console.log(`Waiting for server ${serverName} to reach state ${state} timed out with response: ${res.body} and status ${res.status}`);
       break;
     }
   } while (
@@ -97,6 +98,7 @@ export function waitForImageToBuild(baseUrl, registryDomain, namespace, name, co
     res = http.get(`${baseUrl}/ui-server/api/notebooks/images?image_url=${encodeURIComponent(imageName)}`)
     notebooksGetImagesHttpReqDuration.add(res.timings.duration)
     if ((Date.now() - start) / 1000 > secondsTimeout) {
+      console.log(`Waiting for image ${imageName} to become ready timed out with response: ${res.body} and status ${res.status}`)
       break;
     }
   } while (
