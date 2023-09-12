@@ -97,7 +97,7 @@ export default function test() {
       const res = resumeServer(baseUrl, server.name);
       expect(res.status, 'response status').to.equal(204);
     });
-    describe("should wait for server to become ready", () => {
+    describe("should wait for server to become ready after resuming", () => {
       const res = waitForServerState(baseUrl, server.name, "running")
       expect(res.stateAchieved, ".stateAchieved in response").to.be.true;
       expect(res.lastResponse.status, "last state check response status code").to.equal(200);
