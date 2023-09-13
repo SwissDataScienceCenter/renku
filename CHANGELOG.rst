@@ -1,14 +1,65 @@
 .. _changelog:
 
-0.36.0
+0.36.2
 ------
 
-Renku 0.36.0 introduces an updated landing page layout to help new users explore
-the platform for the first time.
-It comes with a few bug fixes for the UI.
+Renku ``0.36.2`` is a bug-fix release that fixes a bug with running ``renku save`` from JupyterServer
+session sidecars.
+
 
 User-Facing Changes
 ~~~~~~~~~~~~~~~~~~~
+
+**🐞 Bug Fixes**
+
+- **Renku Notebooks**: Fix a problem that prevented users from saving data via the UI in a session
+  (`#1620 <https://github.com/SwissDataScienceCenter/renku-notebooks/issues/1620>`_).
+
+Individual components
+~~~~~~~~~~~~~~~~~~~~~~
+
+- `renku-notebooks 1.18.1 <https://github.com/SwissDataScienceCenter/renku-notebooks/releases/tag/1.18.1>`_
+
+0.36.1
+------
+
+Renku ``0.36.1`` is a bug-fix release that includes the fixes from ``0.35.2``.
+
+It also includes a few changes behind the scenes on how the UI interacts with backend components.
+
+Internal Changes
+~~~~~~~~~~~~~~~~
+
+**Improvements**
+
+- **UI**: Take advantage of Core Service API versions
+  (`#2764 <https://github.com/SwissDataScienceCenter/renku-ui/issues/2764>`_).
+
+**Bug Fixes**
+
+- **UI**: Fix bootstrap icons
+  (`#2772 <https://github.com/SwissDataScienceCenter/renku-ui/issues/2772>`_).
+
+Individual components
+~~~~~~~~~~~~~~~~~~~~~~
+
+- `renku-ui 3.12.1 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.12.1>`_
+
+
+
+0.36.0
+------
+
+Renku ``0.36.0`` introduces an updated landing page layout to help new users explore
+the platform for the first time. Thus, it implements a few bug fixes for the UI and Knowledge Graph.
+
+User-Facing Changes
+~~~~~~~~~~~~~~~~~~~
+
+**🌟 New Features**
+
+- 🖼️ **Knowledge Graph**: Project Update API can update description, keywords and image
+  (`#1631 <https://github.com/SwissDataScienceCenter/renku-graph/issues/1631>`_).
 
 **✨ Improvements**
 
@@ -33,12 +84,33 @@ Individual components
 ~~~~~~~~~~~~~~~~~~~~~~
 
 - `renku-ui 3.12.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.12.0>`_
+- `renku-graph 2.41.0 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/2.41.0>`_
+
+
+0.35.2
+------
+
+Renku ``0.35.2`` introduces a UI bug-fix to prevent overloading backend components
+when using pre-filled template links. 
+
+Internal Changes
+~~~~~~~~~~~~~~~~
+
+**Bug Fixes**
+
+- **UI**: Handle embedded template variables in project creation links
+  (`#2789 <https://github.com/SwissDataScienceCenter/renku-ui/issues/2789>`_).
+
+Individual components
+~~~~~~~~~~~~~~~~~~~~~~
+
+- `renku-ui 3.11.1 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.11.1>`_
 
 
 0.35.1
 ------
 
-Renku 0.35.1 introduces bug fixes in the compute resource control (CRC) service
+Renku ``0.35.1`` introduces bug fixes in the compute resource control (CRC) service
 and the gateway.
 
 Internal Changes
@@ -61,7 +133,7 @@ Individual components
 0.35.0
 ------
 
-Renku 0.35.0 introduces new features in the UI and bug fixes in various components.
+Renku ``0.35.0`` introduces new features in the UI and bug fixes in various components.
 
 User-Facing Changes
 ~~~~~~~~~~~~~~~~~~~
