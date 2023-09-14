@@ -120,7 +120,7 @@ function robustLogin(props?: RobustLoginProps) {
   cy.request({ failOnStatusCode: false, url: "ui-server/api/user" }).then(
     (resp) => {
       // we are already logged in
-      if (resp.status === 200) return;
+      if (resp.status >= 200 && resp.status < 400) return;
 
       const localProps = {
         email: Cypress.env("TEST_EMAIL"),

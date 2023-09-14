@@ -97,7 +97,7 @@ describe("Basic rstudio functionality", () => {
       });
 
       // Stops the session
-      cy.stopSessionFromIframe();
+      cy.stopSession();
     }
   );
 });

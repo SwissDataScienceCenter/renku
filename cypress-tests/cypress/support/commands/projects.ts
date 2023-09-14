@@ -107,7 +107,7 @@ function deleteProjectFromAPI(identifier: ProjectIdentifier) {
   cy.request({
     failOnStatusCode: false,
     method: "DELETE",
-    url: `/ui-server/api/projects/${id.namespace}%2F${id.name}`,
+    url: `/ui-server/api/kg/projects/${id.namespace}/${id.name}`,
   });
 }
 

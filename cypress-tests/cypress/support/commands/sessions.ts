@@ -51,25 +51,40 @@ const stopAllSessionsForProject = (identifier: ProjectIdentifier) => {
   cy.getDataCy("go-back-button").click();
 };
 
-export const stopSessionFromIframe = () => {
-  cy.intercept(
-    { method: "DELETE", url: /.*\/api\/notebooks\/servers\/.*/, times: 1 },
-    (req) => {
-      req.continue((res) => {
-        expect(res.statusCode).to.eq(204);
-      });
-    }
-  );
-  cy.get(`[data-cy="stop-session-button"]`).should("be.visible").click();
-  cy.get("div.modal-session").should("be.visible").should("not.be.empty");
-  cy.get(`[data-cy="stop-session-modal-button"]`).should("be.visible").click();
-  cy.contains("Stopping...", { timeout: TIMEOUTS.long }).should("be.visible");
+export const stopSession = () => {
+  // Stop the session
+  cy.getDataCy("stop-session-button").should("exist").click();
+  cy.getDataCy("stop-session-modal-button").should("exist").click();
+  cy.get(".renku-container", { timeout: TIMEOUTS.long })
+    .contains("No currently running sessions.", { timeout: TIMEOUTS.long });
 };
 
+function quickstartSession() {
+  cy.get(".start-session-button").should("not.be.disabled").click();
+  cy.get(".progress-box .progress-title").should("exist");
+  cy.get(".progress-box .progress-title")
+    .contains("Starting Session")
+    .should("exist");
+  cy.get(".progress-box .progress-title", { timeout: TIMEOUTS.vlong }).should(
+    "not.exist"
+  );
+  cy.getIframe("iframe#session-iframe").within(() => {
+    cy.get(".jp-Launcher-content", { timeout: TIMEOUTS.long }).should(
+      "be.visible"
+    );
+    cy.get(".jp-Launcher-section").should("be.visible");
+    cy.get('.jp-LauncherCard[title="Start a new terminal session"]').should(
+      "be.visible"
+    );
+  });
+}
+
+
 export default function registerSessionCommands() {
+  Cypress.Commands.add("quickstartSession", quickstartSession);
   Cypress.Commands.add("startSession", startSession);
   Cypress.Commands.add("waitForImageToBuild", waitForImageToBuild);
-  Cypress.Commands.add("stopSessionFromIframe", stopSessionFromIframe);
+  Cypress.Commands.add("stopSession", stopSession);
   Cypress.Commands.add("stopAllSessionsForProject", stopAllSessionsForProject);
 }
 
@@ -79,7 +94,8 @@ declare global {
     interface Chainable {
       startSession(identifier: ProjectIdentifier);
       waitForImageToBuild(identifier: ProjectIdentifier);
-      stopSessionFromIframe();
+      stopSession();
+      quickstartSession();
       stopAllSessionsForProject: typeof stopAllSessionsForProject;
     }
   }
