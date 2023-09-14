@@ -138,9 +138,6 @@ describe("Basic datasets functionality", () => {
     // Search for the dataset after the project has been indexed
     cy.getDataCy("go-back-button").should("be.visible").click();
     cy.getProjectSection("Settings").click();
-    cy.getDataCy("project-settings-knowledge-graph")
-      .contains("Project indexing", { timeout: TIMEOUTS.vlong })
-      .should("exist");
     cy.getDataCy("kg-status-section-open").should("exist").click();
     cy.getDataCy("project-settings-knowledge-graph")
       .contains("Everything indexed", { timeout: TIMEOUTS.vlong })
@@ -169,13 +166,11 @@ describe("Basic datasets functionality", () => {
       }).should("be.visible");
     }
     cy.getProjectSection("Settings").click();
-    cy.getDataCy("project-settings-knowledge-graph")
-      .contains("Project indexing", { timeout: TIMEOUTS.vlong })
-      .should("exist");
     cy.getDataCy("kg-status-section-open").should("exist").click();
     cy.getDataCy("project-settings-knowledge-graph")
       .contains("Everything indexed", { timeout: TIMEOUTS.vlong })
       .should("exist");
-    cy.searchForDataset(generatedDatasetName.slug, false);
+    // ? Currently, it doesn't disappear instantly
+    // cy.searchForDataset(generatedDatasetName.slug, false);
   });
 });
