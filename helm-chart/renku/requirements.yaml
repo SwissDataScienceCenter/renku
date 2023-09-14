@@ -29,3 +29,7 @@ dependencies:
   repository: "https://raw.githubusercontent.com/bitnami/charts/archive-full-index/bitnami"
   version: 17.4.2
   condition: redis.install
+- name: renku-jena
+  version: "0.0.21"
+  repository: "https://swissdatasciencecenter.github.io/helm-charts/"
+  alias: jena

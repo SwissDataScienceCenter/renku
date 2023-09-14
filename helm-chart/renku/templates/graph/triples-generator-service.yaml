@@ -1,0 +1,23 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ template "renku.graph.triplesGenerator.fullname" . }}
+  labels:
+    app: {{ template "renku.graph.triplesGenerator.name" . }}
+    chart: {{ template "renku.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+  annotations:
+    prometheus.io/scrape: 'true'
+    prometheus.io/path: '/metrics'
+    prometheus.io/port: '9002'
+spec:
+  type: {{ .Values.graph.triplesGenerator.service.type }}
+  ports:
+    - port: {{ .Values.graph.triplesGenerator.service.port }}
+      targetPort: http-triples-gn
+      protocol: TCP
+      name: http
+  selector:
+    app: {{ template "renku.graph.triplesGenerator.name" . }}
+    release: {{ .Release.Name }}

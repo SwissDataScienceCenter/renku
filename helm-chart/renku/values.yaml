@@ -989,34 +989,183 @@ gateway:
       targetCPUUtilizationPercentage: 75
     updateStrategy: {}
 
-## Configuration for renku-graph
+jena:
+  image:
+    repository: renku/renku-jena
+    pullPolicy: IfNotPresent
+  users:
+    admin:
+      ## Admin user password
+      ## Generate one using: `openssl rand -hex 16`
+      password:
+    renku:
+      ## Dataset user password
+      ## Generate one using: `openssl rand -hex 16`
+      password:
+  persistence:
+    accessModes:
+      - ReadWriteOnce
+    size: 10Gi
+  additionalEnvironmentVariables:
+    - name: JVM_ARGS
+      value: -Xmx2G -Xms2G
+  resources:
+    requests:
+      cpu: 1000m
+      memory: 3Gi
+  additionalVolumeMounts:
+    - name: shiro
+      mountPath: /fuseki/shiro.ini
+      subPath: shiro.ini
+      readOnly: true
+  additionalVolumes:
+    - name: shiro
+      configMap:
+        name: shiro-ini
+        defaultMode: 0555
+  additionalInitContainerScript: "find /fuseki -name tdb.lock -type f -delete && find /fuseki/configuration -name *.ttl -type f -empty -delete && echo clean-up done"
+  test:
+    enabled: false
+
 graph:
-  ## Enable/disable the graph - enabled by default since renku 0.4.0
-  enabled: true
-  ## Configuration for Apache Jena
-  # jena:
-  #   users:
-  #     ## Set the admin password
-  #     admin:
-  #       password: 1234
-  #     ## Password for graph service queries
-  #     renku:
-  #       password: 5678
+  webhookService:
+    image:
+      repository: renku/webhook-service
+      tag: 'latest'
+      pullPolicy: IfNotPresent
+    service:
+      type: ClusterIP
+      port: 80
+    resources:
+      requests:
+        cpu: 500m
+        memory: 256Mi
+    jvmXmx: 128M
+    gitlab:
+      rateLimit: 100/sec
+    hookToken:
+      ## A secret for signing request header tokens to be sent by GitLab with the Push Events
+      ## Generated using: `openssl rand -hex 8|base64`
+      secret:
 
-  gitlab:
-    url:
+  tokenRepository:
+    image:
+      repository: renku/token-repository
+      tag: 'latest'
+      pullPolicy: IfNotPresent
+    service:
+      type: ClusterIP
+      port: 9003
+    resources:
+      requests:
+        cpu: 500m
+        memory: 256Mi
+    jvmXmx: 128M
+    gitlab:
+      rateLimit: 50/sec
+    projectTokenTTL: '365 days'
+    # name of the Project Access Tokens to be created on behalf of the user in GitLab; defaults to .Release.Name
+    projectTokenName:
+    projectTokenDuePeriod: '184 days'
+    connectionPool: 2
+    tokenEncryption:
+      ## A secret for signing access tokens stored in the database
+      ## Generated using: `openssl rand -hex 8|base64`
+      secret:
 
-  # tokenRepository:
-  #   ## A secret for signing access tokens stored in the database
-  #   ## Generated using: `openssl rand -hex 8|base64`
-  #   tokenEncryption:
-  #     secret: 1234
+  triplesGenerator:
+    replicas: 1
+    image:
+      repository: renku/triples-generator
+      tag: 'latest'
+      pullPolicy: IfNotPresent
+    service:
+      type: ClusterIP
+      port: 9002
+    resources:
+      requests:
+        memory: 2048Mi
+        cpu: "1"
+    jvmXmx: 1g
+    gitlab:
+      rateLimit: 30/sec
+    ## a demanded number of concurrent triples generation processes
+    generationProcessesNumber: 2
+    transformationProcessesNumber: 2
+    connectionPool: 10
+    # set this to a pip-installable renku-python version which will be installed on startup
+    renkuPythonDevVersion:
 
-  # webhookService:
-  #   hookToken:
-  #     ## A secret for signing request header tokens to be sent by GitLab with the Push Events
-  #     ## Generated using: `openssl rand -hex 8|base64`
-  #     secret: 1234
+  knowledgeGraph:
+    replicas: 1
+    image:
+      repository: renku/knowledge-graph
+      tag: 'latest'
+      pullPolicy: IfNotPresent
+    service:
+      type: ClusterIP
+      port: 80
+    resources:
+      requests:
+        memory: 512Mi
+    gitlab:
+      rateLimit: 100/sec
+    jvmXmx: 256M
+    services:
+      renku:
+        ## Renku knowledge-graph resources path e.g. `knowledge-graph` would assume
+        ## Renku resource are available at: https://{global.renku.domain}/knowledge-graph
+        resourcesPath: "/knowledge-graph"
+
+  eventLog:
+    image:
+      repository: renku/event-log
+      tag: 'latest'
+      pullPolicy: IfNotPresent
+    service:
+      type: ClusterIP
+      port: 9005
+    resources:
+      requests:
+        memory: 512Mi
+    jvmXmx: 256M
+    gitlab:
+      rateLimit: 10/sec
+    connectionPool: 10
+
+  commitEventService:
+    image:
+      repository: renku/commit-event-service
+      tag: 'latest'
+      pullPolicy: IfNotPresent
+    service:
+      type: ClusterIP
+      port: 9006
+    resources:
+      requests:
+        memory: 384Mi
+    jvmXmx: 128M
+    gitlab:
+      rateLimit: 10/sec
+
+  sentry:
+    enabled: false
+    dsn: '' # Sentry dsn
+    sentryDsnRenkuPython: '' # Sentry dsn for renku CLI
+    environment: '' # Environment name e.g. renkulabio
+
+  persistence:
+    enabled: true
+
+    ## A manually managed Persistent Volume and Claim
+    ## Requires persistence.enabled: true
+    ## If defined, PVC must be created manually before volume will be bound
+    # existingClaim:
+
+    # storageClass: "-"
+    accessMode: ReadWriteOnce
+    size: 2Gi
+
 
 ## Configuration for renku-core service
 core:
@@ -1069,3 +1218,9 @@ securityContext:
   runAsGroup: 1000
   runAsNonRoot: true
   allowPrivilegeEscalation: false
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}

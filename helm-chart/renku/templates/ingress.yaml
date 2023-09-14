@@ -15,7 +15,7 @@
 {{- $renkuFullname := include "renku.fullname" . -}}
 {{- if $graphEnabled }}
 {{- $jenaFullname := include "jena.fullname" . -}}
-{{- $jenaServicePort := .Values.graph.jena.service.port -}}
+{{- $jenaServicePort := .Values.jena.service.port -}}
 {{- end }}
 {{- $swaggerEnabled := .Values.swagger.enabled -}}
 ---

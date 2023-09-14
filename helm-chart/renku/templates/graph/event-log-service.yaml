@@ -1,0 +1,23 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ template "renku.graph.eventLog.fullname" . }}
+  labels:
+    app: {{ template "renku.graph.eventLog.name" . }}
+    chart: {{ template "renku.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+  annotations:
+    prometheus.io/scrape: 'true'
+    prometheus.io/path: '/metrics'
+    prometheus.io/port: '9005'
+spec:
+  type: {{ .Values.graph.eventLog.service.type }}
+  ports:
+    - port: {{ .Values.graph.eventLog.service.port }}
+      targetPort: http-event-log
+      protocol: TCP
+      name: http
+  selector:
+    app: {{ template "renku.graph.eventLog.name" . }}
+    release: {{ .Release.Name }}

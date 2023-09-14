@@ -74,5 +74,5 @@ spec:
             - name: GITLAB_URL
               value: "http://{{ template "gitlab.fullname" . }}{{ .Values.global.gitlab.urlPrefix }}"
             - name: RENKU_URL
-              value: "{{ template "http" . }}://{{ .Values.global.renku.domain }}"
+              value: "{{ template "renku.http" . }}://{{ .Values.global.renku.domain }}"
 {{- end }}
