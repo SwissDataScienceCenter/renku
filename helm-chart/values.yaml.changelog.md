@@ -5,7 +5,33 @@ For changes that require manual steps other than changing values, please check o
 Please follow this convention when adding a new row
 * `<type: NEW|EDIT|DELETE> - *<resource name>*: <details>`
 
-----
+## Upgrading to Renku 0.XX.0
+
+This is a big change to the Renku Helm chart. We have now combined all Renku components to be present
+in a single Helm chart. This will allow us to gradually simplify the complicated and repetitive nature of
+our `values.yaml` file. So now all Renku components have their templates in the `https://github.com/SwissDataScienceCenter/renku`
+repository rather than having many separate helm charts for each component. This change does not
+mean that the `requirements.yaml` file is not empty, but it does mean that it contains true third-party dependencies like
+Redis, Postgres, Keycloak, Jena, Amalthea and Datashim (used to mount S3 buckets in sessions).
+
+Furthermore, this change combines all relevant Renku configuration in a single `values.yaml` file with
+all defaults for Renku components now located in a single file. Prior to this if someone had issues with
+for example the `gateway` component they would have to go to the `gateway` helm chart to understand what
+configuration is possible from its `values.yaml` file.
+
+* EDIT - `graph.jena.*` moved to `jena.*`
+* EDIT - `notebooks.amalthea.*` moved to `amalthea.*`
+* EDIT - `notebooks.dlf-chart.*` moved to `dlf-chart.*`
+
+In addition going forward we will follow a much stricter versioning scheme that will distinguish changes to 
+the Renku Helm chart as opposed to changes to the application. Notably:
+- Patch changes (i.e. `0.50.1` -> `0.50.2`) indicate that there are NO changes in the Helm chart and that
+only application images have changed.
+- Minor version changes (i.e. `0.50.2` -> `0.51.0`) indicate that there are changes in the Helm chart AND potentially
+changes in the application images.
+- Major version changes (i.e. `0.50.0` -> `1.0.0`) will be reserved for large sweeping changes or milestones. These will most probably
+include Helm chart and application changes as well. 
+
 ## Upgrading to Renku 0.34.0
 * NEW - *ingress.className* is now available to select a specific IngressClass to
   be used for the ingress. While often supporting both, current ingress
@@ -26,7 +52,6 @@ To make use of it:
       kubernetes.io/ingress.class: null
   ```
 
-----
 ## Upgrading to Renku 0.29.0
 * NEW - *global.graph.triplesGenerator.postgresPassword.value* should be specified. If it is not specified, a password will be generated automatically when the database is initialized. It is strongly recommended, however, to specify it here such that the password is explicitly managed and can be restored in disaster scenarios. Generate through `openssl rand -hex 32`.
 
