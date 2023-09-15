@@ -16,7 +16,7 @@ User-Facing Changes
   (`#2788 <https://github.com/SwissDataScienceCenter/renku-ui/issues/2788>`_).
 - **UI**: restore adding files to datasets on an outdated but supported metadata version
   (`#2788 <https://github.com/SwissDataScienceCenter/renku-ui/issues/2788>`_).
-- **UI**: do not error on dataset thumbnails point ot an external URL
+- **UI**: do not error on dataset thumbnails pointing to an external URL
   (`#2791 <https://github.com/SwissDataScienceCenter/renku-ui/issues/2791>`_).
 - **UI**: prevent failures when unzipping files with a large number of elements on dataset
   creation
