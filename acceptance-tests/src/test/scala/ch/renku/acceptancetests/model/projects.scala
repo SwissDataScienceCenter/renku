@@ -18,11 +18,15 @@
 
 package ch.renku.acceptancetests.model
 
+import cats.syntax.all._
 import ch.renku.acceptancetests.generators.Generators.Implicits._
 import ch.renku.acceptancetests.generators.Generators._
 import ch.renku.acceptancetests.model.AuthorizationToken.{OAuthAccessToken, PersonalAccessToken}
 import ch.renku.acceptancetests.model.projects.ProjectDetails._
 import ch.renku.acceptancetests.model.users.UserCredentials
+import io.circe.DecodingFailure.Reason
+import io.circe.syntax._
+import io.circe.{Decoder, DecodingFailure, Encoder}
 
 import java.net.URI
 import java.time.LocalDateTime
@@ -31,9 +35,9 @@ import scala.util.Random
 
 object projects {
 
-  final case class ProjectIdentifier(namespace: String, slug: String) {
-    lazy val asProjectPath:     String = s"$namespace/$slug"
-    override lazy val toString: String = s"$namespace/$slug"
+  final case class ProjectIdentifier(namespace: String, path: String) {
+    lazy val asProjectSlug:     String = s"$namespace/$path"
+    override lazy val toString: String = s"$namespace/$path"
   }
 
   final case class ProjectDetails(
@@ -46,13 +50,11 @@ object projects {
     def asProjectIdentifier(implicit userCredentials: UserCredentials): ProjectIdentifier =
       ProjectIdentifier(
         namespace = userCredentials.userNamespace,
-        slug = title.toPathSegment
+        path = title.toPathSegment
       )
 
-    def asProjectPath(implicit userCredentials: UserCredentials): String = {
-      val identifier = asProjectIdentifier
-      s"${identifier.namespace}/${identifier.slug}"
-    }
+    def asProjectSlug(implicit userCredentials: UserCredentials): String =
+      asProjectIdentifier.asProjectSlug
   }
 
   sealed abstract class Visibility(val value: String)
@@ -61,6 +63,19 @@ object projects {
     case object Public   extends Visibility(value = "public")
     case object Private  extends Visibility(value = "private")
     case object Internal extends Visibility(value = "internal")
+
+    val all: Set[Visibility] = Set(Public, Internal, Private)
+
+    implicit val jsonEncoder: Encoder[Visibility] = Encoder.instance(_.value.asJson)
+    implicit val jsonDecoder: Decoder[Visibility] = Decoder.instance { cur =>
+      cur.as[String].flatMap { v =>
+        all
+          .find(_.value == v)
+          .fold(
+            ifEmpty = DecodingFailure(Reason.CustomReason(s"'$v' is not a valid Visibility"), cur).asLeft[Visibility]
+          )(_.asRight)
+      }
+    }
   }
 
   case class Template(name: String) {

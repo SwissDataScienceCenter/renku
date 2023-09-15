@@ -16,7 +16,7 @@ There are a few ways of initiating a session. The one-click **Start** button
 (1) uses all the default settings to initiate a session.
 
 This would be sufficient for this tutorial, however you may also click on
-**New session** (2) to customize the settings with which to start a session. 
+**Start with options** (2) to customize the settings with which to start a session.
 For example, you can select the computational requirements and commit to launch
 from.
 
@@ -24,6 +24,7 @@ from.
     :width: 100%
     :align: center
     :alt: Head to sessions page
+
 
 
 The Docker image takes some time to build, it's possible that the
@@ -57,12 +58,10 @@ Wait until its color has turned to green and the status from
     :align: center
     :alt: Ready to start
 
-You can now connect to your session by clicking on the **Open** button (1),
-which will open the session in the same browser tab, or you can **Open in new tab**
-(2) which will open the session in a new tab. You can have both of these open
-at the time time too, so you do not need to worry about choosing between the two.
+You can now connect to your session by clicking the **Connect** button (1) from the Dashboard
+or from the project view, which will open the session in the same browser tab.
 
-.. image:: ../../_static/images/ui_03_start-session-open.png
+.. image:: ../../_static/images/ui_03_start-session-connect.gif
     :width: 100%
     :align: center
     :alt: Connect to environment

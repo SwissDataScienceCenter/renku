@@ -8,110 +8,106 @@ You can do this easily using the ``renku login`` command.
 
 However, if you find yourself needing to authenticate via an SSH Key, you can find those instructions below as well.
 
-.. tabbed:: Authenticate via renku login
+.. tab-set::
 
-    To authenticate with Renku via a browser, you can use :meth:`renku login <renku.ui.cli.login>`.
+    .. tab-item:: Authenticate via renku login
 
-    Provide the url of the RenkuLab instance where your project is located in the following command:
+        To authenticate with Renku via a browser, you can use :meth:`renku login <renku.ui.cli.login>`.
 
-    .. code-block:: console
+        Provide the url of the RenkuLab instance where your project is located in the following command:
 
-        $ renku login <url of your renkulab instance>
+        .. code-block:: console
 
-    For example, if your project is on https://renkulab.io , enter:
+            $ renku login <url of your renkulab instance>
 
-    .. code-block:: console
+        For example, if your project is on https://renkulab.io , enter:
 
-        $ renku login renkulab.io
+        .. code-block:: console
 
-    This will open RenkuLab in a browser window, if possible, where you can enter your credentials.
-    If it is not possible to open a browser (e.g. because you are logged in to a remote server) you can copy/paste the URL it displays to complete the login. 
-    Then, the local Renku CLI receives and stores a secure token that will be used for future authentications.
+            $ renku login renkulab.io
 
-    **Clone your Renku Project**
+        This will open RenkuLab in a browser window, if possible, where you can enter your credentials.
+        If it is not possible to open a browser (e.g. because you are logged in to a remote server) you can copy/paste the URL it displays to complete the login.
+        Then, the local Renku CLI receives and stores a secure token that will be used for future authentications.
 
-    #. Back on renkulab.io_, on your Renku project's page, click “Settings”.
-    #. Under "Clone commands" copy the :meth:`renku clone <renku.ui.cli.clone>` command.
-    #. On your machine’s terminal, navigate to where you want your project to be located.
-    #. Paste and run the clone command you copied.
+        **Clone your Renku Project**
 
-.. tabbed:: Authenticate via SSH Key
+        #. Back on renkulab.io_, on your Renku project's page, click “Settings”.
+        #. Under "Clone commands" copy the :meth:`renku clone <renku.ui.cli.clone>` command.
+        #. On your machine’s terminal, navigate to where you want your project to be located.
+        #. Paste and run the clone command you copied.
 
-    To authenticate with RenkuLab from a remote machine,
-    you'll need to create an SSH key and save that key in your Renku GitLab account.
+    .. tab-item:: Authenticate via SSH Key
 
-    If you already have an SSH key in your RenkuLab GitLab profile, then skip down to "Clone your Renku Project" below.
-    Otherwise, follow along to set up a key.
+        To authenticate with RenkuLab from a remote machine,
+        you'll need to create an SSH key and save that key in your Renku GitLab account.
 
-    **Create an SSH Key**
+        If you already have an SSH key in your RenkuLab GitLab profile, then skip down to "Clone your Renku Project" below.
+        Otherwise, follow along to set up a key.
 
-    If you do not have an existing SSH key pair, generate a new one.
+        **Create an SSH Key**
 
-    #. Open a terminal on the machine where you'd like to run your Renku project.
+        If you do not have an existing SSH key pair, generate a new one.
 
-    #. Create an ssh key:
+        #. Open a terminal on the machine where you'd like to run your Renku project.
 
-       .. code-block:: shell-session
+        #. Create an ssh key:
 
-         $ ssh-keygen -t ed25519 -C "<comment>"
+        .. code-block:: shell-session
 
-       For the comment, you may specify an email address.
+            $ ssh-keygen -t ed25519 -C "<comment>"
 
-
-    **Add your SSH key to RenkuLab GitLab**
-
-    #. Copy the contents of your public key file.
-
-       You can do this manually or use a script.
-       For example, to copy an ED25519 key to the clipboard
-       (Replace ``id_ed25519.pub`` with your filename. For example, use ``id_rsa.pub`` for RSA).
-
-        .. tabbed:: macOS
-
-            .. code-block:: console
-
-                $ tr -d '\n' < ~/.ssh/id_ed25519.pub | pbcopy
+        For the comment, you may specify an email address.
 
 
-        .. tabbed:: Linux
+        **Add your SSH key to RenkuLab GitLab**
 
-            Note: This requires the ``xclip`` package
+        1. Copy the contents of your public key file.
 
-            .. code-block:: console
+        You can do this manually or use a script.
+        For example, to copy an ED25519 key to the clipboard
+        (Replace ``id_ed25519.pub`` with your filename. For example, use ``id_rsa.pub`` for RSA).
 
-                $ xclip -sel clip < ~/.ssh/id_ed25519.pub
+            .. tab-set::
 
-        .. tabbed:: Git Bash on Windows
+                .. tab-item:: macOS
 
-            .. code-block:: console
+                    .. code-block:: console
 
-                $ cat ~/.ssh/id_ed25519.pub | clip
-
-
-    #. Go to https://renkulab.io/gitlab/-/profile/keys .
-
-       (You can get here by going to https://renkulab.io/gitlab , then in the top right corner, select your avatar > Preferences > SSH Keys)
-
-    #. In the "Key" box, paste the contents of your public key.
-       If you manually copied the key, make sure you copy the entire key,
-       which starts with ``ssh-ed25519`` or ``ssh-rsa``, and may end with a comment.
+                        $ tr -d '\n' < ~/.ssh/id_ed25519.pub | pbcopy
 
 
-    #. In the "Title" box, type a description, like "Work Laptop" or "Home Workstation".
+                .. tab-item:: Linux
+
+                    Note: This requires the ``xclip`` package
+
+                    .. code-block:: console
+
+                        $ xclip -sel clip < ~/.ssh/id_ed25519.pub
+
+                .. tab-item:: Git Bash on Windows
+
+                    .. code-block:: console
+
+                        $ cat ~/.ssh/id_ed25519.pub | clip
+
+        2. Go to https://renkulab.io/gitlab/-/profile/keys. (You can get here by going to https://renkulab.io/gitlab, then in the top right corner, select your avatar ``> Preferences > SSH Keys``)
+
+        3. In the "Key" box, paste the contents of your public key. If you manually copied the key, make sure you copy the entire key, which starts with ``ssh-ed25519`` or ``ssh-rsa``, and may end with a comment.
+
+        4. In the "Title" box, type a description, like "Work Laptop" or "Home Workstation".
+
+        5. `Optional:` In the "Expires at" box, select an expiration date.
+
+        6. Click "Add key".
 
 
-    #. `Optional:` In the "Expires at" box, select an expiration date.
+        **Clone your Renku Project**
 
-
-    #. Click "Add key".
-
-
-    **Clone your Renku Project**
-
-    #. Back on renkulab.io_, on your Renku project's page, click “Settings”.
-    #. Under "Clone commands" and "Repository URL" copy the **SSH** url.
-    #. On your machine’s terminal, navigate to where you want your project to be located.
-    #. Run ``git clone <url>``.
+        #. Back on renkulab.io_, on your Renku project's page, click “Settings”.
+        #. Under "Clone commands" and "Repository URL" copy the **SSH** url.
+        #. On your machine’s terminal, navigate to where you want your project to be located.
+        #. Run ``git clone <url>``.
 
 
 .. _renkulab.io: https://renkulab.io

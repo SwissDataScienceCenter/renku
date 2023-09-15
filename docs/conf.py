@@ -36,7 +36,6 @@ extensions = [
     "plantweb.directive",
     "sphinx_click",
     "sphinx_copybutton",
-    "sphinx_panels",
     "sphinx_rtd_theme",
     "sphinx.ext.autodoc",
     "sphinx.ext.coverage",
@@ -49,6 +48,7 @@ extensions = [
     "sphinx.ext.viewcode",
     "sphinxcontrib.mermaid",
     "sphinxcontrib.spelling",
+    "sphinx_design",
 ]
 
 # Plantweb configuration
@@ -68,17 +68,8 @@ master_doc = "index"
 
 # General information about the project.
 project = "Renku"
-copyright = "2017-2022, Swiss Data Science Center"
-author = (
-    "Mohammad Alisafaee, Andreas Bleuler, Eric Bouillet, \n"
-    "Lorenzo Cavazzi, Christine Choirat, Jakub Chrobasik, Andrea Cordoba, Alessandro Degano, \n"
-    "Pamela Delgado, Julien Eberle, Virginia Friedrich, Viktor Gal, \n"
-    "Fotis Georgatos, Ralf Grubenmann, Emma Jablonski, Wesley Johnson, Laura Kinkead, \n"
-    "Jiri Kuncar, David Kunzmann, Gavin Lee, Travis Lee, Cyril Matthey-Doret, Izabela Moise, Sean Murphy, Tasko Olevski, Samuel Picek, \n"
-    "Chandrasekhar Ramakrishnan, Rok Roškar, Sofiane Sarni, Tao Sun, \n"
-    "Sandra Savchenko De Jong, Johann-Michael Thiebaut, Olivier Verscheure"
-)
-
+copyright = "2017-2023, Swiss Data Science Center"
+author = ( "The Renku team and other contributors (see individual repositories)" )
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
 # built documents.

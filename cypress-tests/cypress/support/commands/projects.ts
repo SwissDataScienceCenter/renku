@@ -37,6 +37,7 @@ function projectSubpageUrl(identifier: ProjectIdentifier, subpage: string) {
 
 interface NewProjectProps extends ProjectIdentifier {
   templateName?: string;
+  visibility?: "public" | "private" | "internal";
 }
 
 function createProject(newProjectProps: NewProjectProps) {
@@ -47,6 +48,9 @@ function createProject(newProjectProps: NewProjectProps) {
 
   if (newProjectProps.templateName)
     cy.contains(newProjectProps.templateName).should("be.visible").click();
+
+  if (newProjectProps.visibility)
+    cy.dataCy(`visibility-${newProjectProps.visibility}`).should("be.visible").click();
 
   // The button may take some time before it is clickable
   cy.get("[data-cy=create-project-button]", { timeout: TIMEOUTS.vlong }).should("be.enabled").click();
