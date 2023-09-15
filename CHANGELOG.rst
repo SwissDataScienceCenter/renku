@@ -1,11 +1,38 @@
 .. _changelog:
 
+0.36.3
+------
+
+Renku ``0.36.3`` is a bug-fix release that solves a few issues with creating new
+projects and datasets.
+
+User-Facing Changes
+~~~~~~~~~~~~~~~~~~~
+
+**🐞 Bug Fixes**
+
+- **UI**: fix render loops in creating new projects; they were occasionally creating
+  problems based on the specific fields filled in by the user.
+  (`#2788 <https://github.com/SwissDataScienceCenter/renku-ui/issues/2788>`_).
+- **UI**: restore adding files to datasets on an outdated but supported metadata version
+  (`#2788 <https://github.com/SwissDataScienceCenter/renku-ui/issues/2788>`_).
+- **UI**: do not error on dataset thumbnails pointing to an external URL
+  (`#2791 <https://github.com/SwissDataScienceCenter/renku-ui/issues/2791>`_).
+- **UI**: prevent failures when unzipping files with a large number of elements on dataset
+  creation
+  (`#2786 <https://github.com/SwissDataScienceCenter/renku-ui/issues/2786>`_).
+
+Individual components
+~~~~~~~~~~~~~~~~~~~~~~
+
+- `renku-ui 3.12.21 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.12.2>`_
+
+
 0.36.2
 ------
 
 Renku ``0.36.2`` is a bug-fix release that fixes a bug with running ``renku save`` from JupyterServer
 session sidecars.
-
 
 User-Facing Changes
 ~~~~~~~~~~~~~~~~~~~
@@ -19,6 +46,7 @@ Individual components
 ~~~~~~~~~~~~~~~~~~~~~~
 
 - `renku-notebooks 1.18.1 <https://github.com/SwissDataScienceCenter/renku-notebooks/releases/tag/1.18.1>`_
+
 
 0.36.1
 ------
@@ -44,7 +72,6 @@ Individual components
 ~~~~~~~~~~~~~~~~~~~~~~
 
 - `renku-ui 3.12.1 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.12.1>`_
-
 
 
 0.36.0
