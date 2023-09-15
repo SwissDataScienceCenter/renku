@@ -52,13 +52,13 @@ spec:
               value: |
                 {{- include "ui-server.keepCookies" . | nindent 16 }}
             - name: GATEWAY_URL
-              value: {{ printf "%s://%s/api" (include "renku.baseUrl" .) | quote }}
+              value: {{ printf "%s:/api" (include "renku.baseUrl" .) | quote }}
             - name: GATEWAY_LOGIN_PATH
               value: {{ .Values.gateway.loginSuffix | default (printf "/auth/login") | quote }}
             - name: GATEWAY_LOGOUT_PATH
               value: {{ .Values.gateway.logoutSuffix | default (printf "/auth/logout") | quote }}
             - name: AUTH_SERVER_URL
-              value: {{ printf "%s://%s/auth/realms/Renku" (include "renku.baseUrl" .) | quote }}
+              value: {{ printf "%s/auth/realms/Renku" (include "renku.baseUrl" .) | quote }}
             - name: AUTH_CLIENT_ID
               value: {{ .Values.ui.server.authentication.id | default (printf "renku-ui") | quote }}
             - name: AUTH_CLIENT_SECRET

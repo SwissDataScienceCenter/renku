@@ -33,11 +33,6 @@ spec:
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
           env:
-            - name: RENKU_CLIENT_CERTIFICATE
-              valueFrom:
-                secretKeyRef:
-                  name: client-certificate-secret
-                  key: client-certificate
             - name: TOKEN_ENCRYPTION_SECRET
               valueFrom:
                 secretKeyRef:
@@ -62,11 +57,11 @@ spec:
             - name: TOKEN_REPOSITORY_POSTGRES_PASSWORD
               valueFrom:
                 secretKeyRef:
-{{- if .Values.global.graph.tokenRepository.existingSecret }}
+                  {{- if .Values.global.graph.tokenRepository.existingSecret }}
                   name: {{ tpl .Values.global.graph.tokenRepository.existingSecret . }}
-{{- else }}
-                  name: {{ template "renku.graph.tokenRepository.fullname" . }}-postgres
-{{- end }}
+                  {{- else }}
+                  name: {{ template "renku.fullname" . }}-graph-token-postgres
+                  {{- end }}
                   key: graph-tokenRepository-postgresPassword
             - name: TOKEN_REPOSITORY_POSTGRES_CONNECTION_POOL
               value: "{{ .Values.graph.tokenRepository.connectionPool }}"

@@ -33,11 +33,6 @@ spec:
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
           env:
-            - name: RENKU_CLIENT_CERTIFICATE
-              valueFrom:
-                secretKeyRef:
-                  name: client-certificate-secret
-                  key: client-certificate
             - name: HOOK_TOKEN_SECRET
               valueFrom:
                 secretKeyRef:

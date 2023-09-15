@@ -33,11 +33,6 @@ spec:
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
           env:
-            - name: RENKU_CLIENT_CERTIFICATE
-              valueFrom:
-                secretKeyRef:
-                  name: client-certificate-secret
-                  key: client-certificate
             - name: EVENT_LOG_BASE_URL
               value: "http://{{ template "renku.graph.eventLog.fullname" . }}:{{ .Values.graph.eventLog.service.port }}"
             - name: TOKEN_REPOSITORY_BASE_URL

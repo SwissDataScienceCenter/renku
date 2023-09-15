@@ -33,11 +33,6 @@ spec:
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
           env:
-            - name: RENKU_CLIENT_CERTIFICATE
-              valueFrom:
-                secretKeyRef:
-                  name: client-certificate-secret
-                  key: client-certificate
             - name: RENKU_URL
               value: https://{{ .Values.global.renku.domain }}
             - name: RENKU_API_URL
@@ -67,6 +62,8 @@ spec:
             - name: SENTRY_ENVIRONMENT
               value: {{ .Values.graph.sentry.environment }}
               {{- end }}
+            - name: WEBHOOK_SERVICE_BASE_URL
+              value: "http://{{ template "renku.graph.webhookService.fullname" . }}:{{ .Values.graph.webhookService.service.port }}"
             - name: JAVA_OPTS
               value: -Xmx{{ .Values.graph.knowledgeGraph.jvmXmx }} -XX:+UseG1GC
           ports:

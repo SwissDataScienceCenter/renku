@@ -33,11 +33,6 @@ spec:
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
           env:
-            - name: RENKU_CLIENT_CERTIFICATE
-              valueFrom:
-                secretKeyRef:
-                  name: client-certificate-secret
-                  key: client-certificate
             - name: RENKU_DOMAIN
               value: {{ .Values.global.renku.domain }}
             - name: RENKU_URL
@@ -73,11 +68,11 @@ spec:
             - name: TRIPLES_GENERATOR_POSTGRES_PASSWORD
               valueFrom:
                 secretKeyRef:
-{{- if .Values.global.graph.triplesGenerator.existingSecret }}
+                  {{- if .Values.global.graph.triplesGenerator.existingSecret }}
                   name: {{ tpl .Values.global.graph.triplesGenerator.existingSecret . }}
-{{- else }}
-                  name: {{ template "renku.graph.triplesGenerator.fullname" . }}-postgres
-{{- end }}
+                  {{- else }}
+                  name: {{ template "renku.fullname" . }}-graph-tg-postgres
+                  {{- end }}
                   key: graph-triplesGenerator-postgresPassword
             - name: TRIPLES_GENERATOR_POSTGRES_CONNECTION_POOL
               value: "{{ .Values.graph.triplesGenerator.connectionPool }}"

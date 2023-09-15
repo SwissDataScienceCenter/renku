@@ -142,7 +142,7 @@ KC_DB_PASSWORD: {{ default (randAlphaNum 64) .Values.global.keycloak.postgresPas
 
 {{- define "renku.keycloakUrl" -}}
 {{- if .Values.keycloakx.enabled -}} 
-{{- printf "%s://%s/auth" (include "renku.http" .) .Values.global.renku.domain -}}
+{{- printf "%s://%s/auth/" (include "renku.http" .) .Values.global.renku.domain -}}
 {{- else -}}
 {{- .Values.global.keycloak.url -}}
 {{- end -}}

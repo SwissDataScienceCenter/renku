@@ -44,7 +44,25 @@ global:
     ## The client secret for authentication against gitlab
     gitlabClientSecret:
   core:
-    versions: {}
+    versions:
+      latest:
+        name: v10
+        prefix: "10"
+        nameOverride: ""
+        fullnameOverride: ""
+        image:
+          repository: renku/renku-core
+          tag: "v2.7.0"
+          pullPolicy: IfNotPresent
+      v9:
+        name: v9
+        prefix: "9"
+        nameOverride: ""
+        fullnameOverride: ""
+        image:
+          repository: renku/renku-core
+          tag: "v1.11.4"
+          pullPolicy: IfNotPresent
   uiserver:
     ## The client secret for the renku-ui client application registered in keycloak.
     clientSecret: # use `uuidgen -r`
@@ -65,7 +83,7 @@ global:
       ## setting this value or by randomly generating it because it was omitted below.
       postgresPassword:
         value:
-      existingSecret: '{{ template "renku.fullname" . }}-db-postgres'
+      existingSecret:
     tokenRepository:
       ## Name of the postgres user to be used to access the db storing access tokens
       postgresUser: tokenstorage
@@ -74,7 +92,7 @@ global:
       ## setting this value or by randomly generating it because it was omitted below.
       postgresPassword:
         value:
-      existingSecret: '{{ template "renku.fullname" . }}-token-postgres'
+      existingSecret:
     triplesGenerator:
       ## Name of the postgres user to be used to access the tg db
       postgresUser: triplesgenerator
@@ -83,7 +101,7 @@ global:
       ## setting this value or by randomly generating it because it was omitted below.
       postgresPassword:
         value:
-      existingSecret: '{{ template "renku.fullname" . }}-tg-postgres'
+      existingSecret:
     jena:
       ## specify which dataset should be used in Jena
       dataset:
@@ -286,7 +304,7 @@ keycloakx:
   initRealm:
     image:
       repository: renku/init-realm
-      tag: "latest"
+      tag: "0.36.3"
 
   ## Skip Keycloak testing when running Helm test
   test:
@@ -662,7 +680,7 @@ ui:
     image:
       pullPolicy: IfNotPresent
       repository: renku/renku-ui
-      tag: latest
+      tag: 3.12.2
 
     ## Pod affinity for UI deployment
     # affinity: {}
@@ -868,7 +886,7 @@ notebooks:
 
   image:
     repository: renku/renku-notebooks
-    tag: "latest"
+    tag: "1.18.1"
     pullPolicy: IfNotPresent
 
     ## Optionally specify an array of imagePullSecrets.
@@ -998,17 +1016,17 @@ notebooks:
   gitRpcServer:
     image:
       name: renku/git-rpc-server
-      tag: "latest"
+      tag: "1.18.1"
 
   gitHttpsProxy:
     image:
       name: renku/git-https-proxy
-      tag: "latest"
+      tag: "1.18.1"
 
   gitClone:
     image:
       name: renku/git-clone
-      tag: "latest"
+      tag: "1.18.1"
 
   service:
     type: ClusterIP
@@ -1061,13 +1079,13 @@ notebooks:
     sessionTypes: ["registered"]
     image:
       repository: renku/renku-notebooks-tests
-      tag: "latest"
+      tag: "1.18.1"
       pullPolicy: IfNotPresent
 
   k8sWatcher:
     image:
       repository: renku/k8s-watcher
-      tag: latest
+      tag: 1.18.1
       pullPolicy: IfNotPresent
     resources: {}
     replicaCount: 1
@@ -1081,7 +1099,7 @@ notebooks:
     enabled: false
     image:
       repository: renku/renku-notebooks-ssh
-      tag: "latest"
+      tag: "1.18.1"
       pullPolicy: IfNotPresent
     resources: {}
     replicaCount: 1
@@ -1117,7 +1135,7 @@ tests:
   enabled: false
   image:
     repository: renku/tests
-    tag: "latest"
+    tag: "0.36.3"
   resources:
     requests:
       memory: "3G"
@@ -1181,7 +1199,7 @@ gateway:
     auth:
       name: renku/renku-gateway
       repository: renku/renku-gateway
-      tag: "0.21.1"
+      tag: "0.21.3"
       pullPolicy: IfNotPresent
 
   service:
@@ -1282,7 +1300,7 @@ graph:
   webhookService:
     image:
       repository: renku/webhook-service
-      tag: 'latest'
+      tag: '2.41.0'
       pullPolicy: IfNotPresent
     service:
       type: ClusterIP
@@ -1302,7 +1320,7 @@ graph:
   tokenRepository:
     image:
       repository: renku/token-repository
-      tag: 'latest'
+      tag: '2.41.0'
       pullPolicy: IfNotPresent
     service:
       type: ClusterIP
@@ -1328,7 +1346,7 @@ graph:
     replicas: 1
     image:
       repository: renku/triples-generator
-      tag: 'latest'
+      tag: '2.41.0'
       pullPolicy: IfNotPresent
     service:
       type: ClusterIP
@@ -1351,7 +1369,7 @@ graph:
     replicas: 1
     image:
       repository: renku/knowledge-graph
-      tag: 'latest'
+      tag: '2.41.0'
       pullPolicy: IfNotPresent
     service:
       type: ClusterIP
@@ -1371,7 +1389,7 @@ graph:
   eventLog:
     image:
       repository: renku/event-log
-      tag: 'latest'
+      tag: '2.41.0'
       pullPolicy: IfNotPresent
     service:
       type: ClusterIP
@@ -1387,7 +1405,7 @@ graph:
   commitEventService:
     image:
       repository: renku/commit-event-service
-      tag: 'latest'
+      tag: '2.41.0'
       pullPolicy: IfNotPresent
     service:
       type: ClusterIP
@@ -1438,7 +1456,7 @@ swagger:
 initDb:
   image:
     repository: renku/init-db
-    tag: "latest"
+    tag: "0.36.3"
 
 crc:
   image: 

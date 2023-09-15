@@ -11,9 +11,6 @@ dependencies:
   version: 2.1.0
   repository: "https://codecentric.github.io/helm-charts"
   condition: keycloakx.enabled
-- name: certificates
-  version: 0.0.4
-  repository: "https://swissdatasciencecenter.github.io/helm-charts/"
 - name: redis
   # bitnami claims that this will always contain a full set of charts - let us pray...
   # this index was 19MB as of the date of this commit and contained redis 17.4.2

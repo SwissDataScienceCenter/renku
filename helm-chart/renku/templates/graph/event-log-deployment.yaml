@@ -32,11 +32,6 @@ spec:
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
           env:
-            - name: RENKU_CLIENT_CERTIFICATE
-              valueFrom:
-                secretKeyRef:
-                  name: client-certificate-secret
-                  key: client-certificate
             - name: EVENT_LOG_POSTGRES_HOST
               value: "{{ template "postgresql.fullname" . }}"
             - name: EVENT_LOG_POSTGRES_PORT
@@ -46,11 +41,11 @@ spec:
             - name: EVENT_LOG_POSTGRES_PASSWORD
               valueFrom:
                 secretKeyRef:
-{{- if .Values.global.graph.dbEventLog.existingSecret }}
+                  {{- if .Values.global.graph.dbEventLog.existingSecret }}
                   name: {{ tpl .Values.global.graph.dbEventLog.existingSecret . }}
-{{- else }}
-                  name: {{ template "renku.graph.eventLog.fullname" . }}
-{{- end }}
+                  {{- else }}
+                  name: {{ template "renku.fullname" . }}-graph-db-postgres
+                  {{- end }}
                   key: graph-dbEventLog-postgresPassword
             - name: EVENT_LOG_POSTGRES_CONNECTION_POOL
               value: "{{ .Values.graph.eventLog.connectionPool }}"
