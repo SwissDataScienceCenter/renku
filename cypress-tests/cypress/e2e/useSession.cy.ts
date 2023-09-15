@@ -142,10 +142,16 @@ describe("Basic public project functionality", () => {
 
     // Save the changes
     cy.getDataCy("save-session-button").should("be.visible").click();
-    cy.get(".modal-session").contains("1 commit will be pushed").should("be.visible");
+    cy.get(".modal-session")
+      .contains("1 commit will be pushed")
+      .should("be.visible");
     cy.getDataCy("save-session-modal-button").should("be.visible").click();
-    cy.get(".modal").contains("Saving Session", { timeout: TIMEOUTS.long }).should("be.visible");
-    cy.get(".modal").contains("There are no changes", { timeout: TIMEOUTS.long }).should("be.visible");
+    cy.get(".modal")
+      .contains("Saving Session", { timeout: TIMEOUTS.long })
+      .should("be.visible");
+    cy.get(".modal")
+      .contains("There are no changes", { timeout: TIMEOUTS.long })
+      .should("be.visible");
     cy.get(".modal .btn-close").should("be.visible").click();
 
     // Stop the session
@@ -175,7 +181,10 @@ describe("Basic public project functionality", () => {
 
     // Go the file page and check the lineage exists
     cy.getProjectSection("Files").click();
-    cy.get("div.tree-container").contains("button", "Lineage").should("be.visible").click();
+    cy.get("div.tree-container")
+      .contains("button", "Lineage")
+      .should("be.visible")
+      .click();
     cy.get("#tree-content").contains(workflow.output).should("exist").click();
     cy.get(".graphContainer").contains(workflow.output).should("exist");
   });
@@ -212,7 +221,9 @@ describe("Basic public project functionality", () => {
       .should("be.visible")
       .first()
       .click();
-    cy.get(".alert-info").contains("You have limited permissions for this project").should("be.visible");
+    cy.get(".alert-info")
+      .contains("You have limited permissions for this project")
+      .should("be.visible");
 
     // Quickstart a session and check it spins up
     cy.getDataCy("go-back-button").click();

@@ -55,8 +55,10 @@ export const stopSession = () => {
   // Stop the session
   cy.getDataCy("stop-session-button").should("exist").click();
   cy.getDataCy("stop-session-modal-button").should("exist").click();
-  cy.get(".renku-container", { timeout: TIMEOUTS.long })
-    .contains("No currently running sessions.", { timeout: TIMEOUTS.long });
+  cy.get(".renku-container", { timeout: TIMEOUTS.long }).contains(
+    "No currently running sessions.",
+    { timeout: TIMEOUTS.long }
+  );
 };
 
 function quickstartSession() {
@@ -78,7 +80,6 @@ function quickstartSession() {
     );
   });
 }
-
 
 export default function registerSessionCommands() {
   Cypress.Commands.add("quickstartSession", quickstartSession);
