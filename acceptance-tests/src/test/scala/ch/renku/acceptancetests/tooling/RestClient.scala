@@ -20,6 +20,7 @@ package ch.renku.acceptancetests.tooling
 
 import cats.Applicative
 import cats.effect.IO._
+import cats.effect.unsafe.IORuntime
 import cats.effect.{IO, Temporal}
 import cats.syntax.all._
 import ch.renku.acceptancetests.model.{AuthorizationToken, BaseUrl}
@@ -43,7 +44,8 @@ import scala.jdk.CollectionConverters._
 import scala.util.control.NonFatal
 
 trait RestClient extends Http4sClientDsl[IO] {
-  self: IOSpec =>
+
+  implicit val ioRuntime: IORuntime
 
   val jsonRoot: JsonPath = root
 
@@ -82,7 +84,10 @@ trait RestClient extends Http4sClientDsl[IO] {
       request.putHeaders(Headers(authorizationToken.asHeader))
 
     def send[A](processResponse: Response[IO] => IO[A]): A =
-      clientBuilder.resource.use(sendRequest(processResponse)).unsafeRunSync()
+      sendIO(processResponse).unsafeRunSync()
+
+    def sendIO[A](processResponse: Response[IO] => IO[A]): IO[A] =
+      clientBuilder.resource.use(sendRequest(processResponse))
 
     private def sendRequest[A](processResponse: Response[IO] => IO[A])(client: Client[IO]): IO[A] =
       client
@@ -118,13 +123,17 @@ trait RestClient extends Http4sClientDsl[IO] {
 
   def expect(status: Status, otherwiseLog: String): Response[IO] => IO[Unit] = { response =>
     Applicative[IO].whenA(response.status != status) {
-      new Exception(
-        s"returned ${response.status} which is not expected $status. $otherwiseLog"
-      ).raiseError
+      response.as[Json] >>= { body =>
+        new Exception(
+          s"returned ${response.status} which is not expected $status. $otherwiseLog\n${body.spaces2}"
+        ).raiseError
+      }
     }
   }
 
   def mapResponse[A](f: PartialFunction[Response[IO], A]): Response[IO] => IO[A] = response => f(response).pure[IO]
+
+  def mapResponseIO[A](f: PartialFunction[Response[IO], IO[A]]): Response[IO] => IO[A] = f
 
   implicit class JsonOps(json: Json) {
     def extract[V](extractor: Json => V): V = extractor(json)

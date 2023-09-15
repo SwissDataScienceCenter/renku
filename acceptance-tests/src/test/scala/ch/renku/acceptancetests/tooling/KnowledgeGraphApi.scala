@@ -19,24 +19,28 @@
 package ch.renku.acceptancetests.tooling
 
 import KnowledgeGraphModel._
-import TestLogger._
+import TestLogger.logger
 import cats.effect.IO
+import cats.effect.unsafe.IORuntime
 import cats.syntax.all._
+import ch.renku.acceptancetests.model.projects
 import ch.renku.acceptancetests.model.projects.ProjectIdentifier
 import io.circe._
-import io.circe.syntax._
 import org.http4s.MediaType._
-import org.http4s.Status.{Accepted, NotFound, Ok}
+import org.http4s.Status.{Accepted, Created, NotFound, Ok}
 import org.http4s.circe.CirceEntityCodec._
 import org.http4s.headers.`Content-Type`
 import org.openqa.selenium.WebDriver
+import org.scalatest.matchers.should
 
 import java.time.Instant
 import scala.annotation.tailrec
 import scala.concurrent.duration._
 
 trait KnowledgeGraphApi extends RestClient {
-  self: AcceptanceSpecData with GitLabApi with Grammar with BddWording with IOSpec =>
+  self: AcceptanceSpecData with GitLabApi with Grammar with should.Matchers =>
+
+  implicit val ioRuntime: IORuntime
 
   def `wait for KG to process events`(projectId: ProjectIdentifier, browser: WebDriver): Unit = {
     sleep(1 second)
@@ -50,38 +54,62 @@ trait KnowledgeGraphApi extends RestClient {
     checkActivatedAndWait(projectId, gitLabProjectId, browser, attempt = 1)
   }
 
-  def findLineage(projectPath: String, filePath: String): JsonObject = {
+  def findLineage(slug: projects.Slug, filePath: String): JsonObject = {
     val toSegments: String => List[String] = _.split('/').toList
     val uri =
-      toSegments(projectPath)
+      toSegments(slug.value)
         .foldLeft(renkuBaseUrl / "knowledge-graph" / "projects")(_ / _) / "files" / filePath / "lineage"
     GET(uri)
       .send(whenReceived(status = Ok) >=> bodyToJson)
       .extract(jsonRoot.obj.getOption)
-      .getOrElse(fail(s"Cannot find lineage data for project $projectPath file $filePath"))
+      .getOrElse(fail(s"Cannot find lineage data for project $slug file $filePath"))
   }
 
-  def `GET /knowledge-graph/projects/:slug`(slug: String): KGProjectDetails = {
+  def `POST /knowledge-graph/projects`(project: NewProject): projects.Slug =
+    NewProject.MultipartEncoder
+      .encode(project)
+      .flatMap(payload =>
+        POST(renkuBaseUrl / "knowledge-graph" / "projects")
+          .withEntity(payload)
+          .putHeaders(payload.headers)
+          .withAuthorizationToken(authorizationToken)
+          .sendIO(whenReceived(status = Created) >=> decodePayload(_.downField("slug").as[String].map(projects.Slug)))
+      )
+      .unsafeRunSync()
+
+  def `PATCH /knowledge-graph/projects/:slug`(slug: projects.Slug, updates: ProjectUpdates): Unit = {
     val toSegments: String => List[String] = _.split('/').toList
-    val uri = toSegments(slug).foldLeft(renkuBaseUrl / "knowledge-graph" / "projects")(_ / _)
+    val uri = toSegments(slug.value).foldLeft(renkuBaseUrl / "knowledge-graph" / "projects")(_ / _)
+    ProjectUpdates.MultipartEncoder
+      .encode(updates)
+      .flatMap(payload =>
+        PATCH(uri)
+          .withEntity(payload)
+          .putHeaders(payload.headers)
+          .withAuthorizationToken(authorizationToken)
+          .sendIO(expect(status = Accepted, otherwiseLog = s"Updating '$slug' project failed"))
+      )
+      .unsafeRunSync()
+  }
+
+  def `GET /knowledge-graph/projects/:slug`(slug: projects.Slug): Option[KGProjectDetails] = {
+    val toSegments: String => List[String] = _.split('/').toList
+    val uri = toSegments(slug.value).foldLeft(renkuBaseUrl / "knowledge-graph" / "projects")(_ / _)
     GET(uri)
-      .withAuthorizationToken(authorizationToken)
       .putHeaders(`Content-Type`(application.json))
-      .send(whenReceived(status = Ok) >=> decodePayload[KGProjectDetails])
-  }
-
-  def `PATCH /knowledge-graph/projects/:slug`(slug: String, updates: ProjectUpdates): Unit = {
-    val toSegments: String => List[String] = _.split('/').toList
-    val uri = toSegments(slug).foldLeft(renkuBaseUrl / "knowledge-graph" / "projects")(_ / _)
-    PATCH(uri)
-      .withEntity(updates.asJson)
       .withAuthorizationToken(authorizationToken)
-      .send(expect(status = Accepted, otherwiseLog = s"Updating '$slug' project failed"))
-  }
+      .sendIO(mapResponseIO { response =>
+        response.status match {
+          case Ok       => response.as[KGProjectDetails].map(_.some)
+          case NotFound => Option.empty[KGProjectDetails].pure[IO]
+          case status   => fail(s"finding project details in the KG returned $status")
+        }
+      })
+  }.unsafeRunSync()
 
-  def `DELETE /knowledge-graph/projects/:slug`(slug: String): Unit = {
+  def `DELETE /knowledge-graph/projects/:slug`(slug: projects.Slug): Unit = {
     val toSegments: String => List[String] = _.split('/').toList
-    val uri = toSegments(slug).foldLeft(renkuBaseUrl / "knowledge-graph" / "projects")(_ / _)
+    val uri = toSegments(slug.value).foldLeft(renkuBaseUrl / "knowledge-graph" / "projects")(_ / _)
     DELETE(uri)
       .withAuthorizationToken(authorizationToken)
       .send(expect(status = Accepted, otherwiseLog = s"Deletion of '$slug' project failed"))
@@ -120,7 +148,7 @@ trait KnowledgeGraphApi extends RestClient {
       attempt:         Int,
       startTime:       Instant = Instant.now()
   ): Either[String, Unit] = {
-    And(s"waits for Project Activation - attempt $attempt")
+    logger.info(s"waits for Project Activation - attempt $attempt")
     if (attempt >= 60) {
       val duration = Duration(Instant.now().toEpochMilli - startTime.toEpochMilli, MILLISECONDS).toSeconds
       s"Activation status of '$projectId' project couldn't be determined after ${duration}s".asLeft[Unit]

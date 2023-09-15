@@ -93,9 +93,9 @@ object Generators {
       lines <- Gen.listOfN(size, nonEmptyStrings())
     } yield lines
 
-  def listOf[T](generator: Gen[T], maxElements: Int Refined Positive = 5): Gen[List[T]] =
+  def listOf[T](generator: Gen[T], min: Int = 0, max: Int = 5): Gen[List[T]] =
     for {
-      size <- choose(0, maxElements.value)
+      size <- choose(min, max)
       list <- Gen.listOfN(size, generator)
     } yield list
 
@@ -184,7 +184,10 @@ object Generators {
 
     implicit class GenOps[T](generator: Gen[T]) {
 
-      def generateOne: T = generator.sample getOrElse generateOne
+      def generateOne: T = generateExample(generator)
+
+      def generateList(min: Int = 0, max: Int = 5): List[T] =
+        generateExample(listOf(generator, min, max))
 
       def generateDifferentThan(value: T): T = {
         val generated = generator.sample.getOrElse(generateDifferentThan(value))
@@ -192,6 +195,17 @@ object Generators {
         else generated
       }
 
+      protected def generateExample[O](generator: Gen[O]): O = {
+        @annotation.tailrec
+        def loop(tries: Int): O =
+          generator.sample match {
+            case Some(o)               => o
+            case None if tries >= 5000 => sys.error(s"Failed to generate example value after $tries tries")
+            case None                  => loop(tries + 1)
+          }
+
+        loop(0)
+      }
     }
 
     implicit def asArbitrary[T](implicit generator: Gen[T]): Arbitrary[T] = Arbitrary(generator)
