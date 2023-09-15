@@ -10,11 +10,11 @@
 {{- $uiserverFullname := include "uiserver.fullname" . -}}
 {{- $uiserverServicePort := .Values.ui.server.service.port -}}
 {{- $graphEnabled := .Values.graph.enabled -}}
-{{- $webhookServiceFullname := include "webhookService.fullname" . -}}
-{{- $knowledgeGraphFullname := include "knowledgeGraph.fullname" . -}}
+{{- $webhookServiceFullname := include "renku.graph.webhookService.fullname" . -}}
+{{- $knowledgeGraphFullname := include "renku.graph.knowledgeGraph.fullname" . -}}
 {{- $renkuFullname := include "renku.fullname" . -}}
 {{- if $graphEnabled }}
-{{- $jenaFullname := include "jena.fullname" . -}}
+{{- $jenaFullname := include "renku-jena.fullname" . -}}
 {{- $jenaServicePort := .Values.jena.service.port -}}
 {{- end }}
 {{- $swaggerEnabled := .Values.swagger.enabled -}}

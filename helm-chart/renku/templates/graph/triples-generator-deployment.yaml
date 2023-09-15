@@ -65,7 +65,7 @@ spec:
                   name: {{ template "renku.graph.jena.fullname" . }}
                   key: jena-users-renku-password
             - name: TRIPLES_GENERATOR_POSTGRES_HOST
-              value: "{{ template "renku.graph.postgresql.fullname" . }}"
+              value: "{{ template "postgresql.fullname" . }}"
             - name: TRIPLES_GENERATOR_POSTGRES_PORT
               value: "5432"
             - name: TRIPLES_GENERATOR_POSTGRES_USER
