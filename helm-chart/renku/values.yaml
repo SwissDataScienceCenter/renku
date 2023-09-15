@@ -780,87 +780,338 @@ ui:
     webSocket:
       enabled: true
 
-# ## Configuration for the notebooks service
+amalthea:
+  scope:
+    clusterWide: false
+  deployCrd: true
+  ## If enabling S3 mounts uncomment the section below
+  # extraChildResources:
+  #   - name: datasets
+  #     group: com.ie.ibm.hpsys
+
+## Used only if S3 Mounts are enabled
+dlf-chart:
+  csi-sidecars-rbac:
+    enabled: true
+  csi-nfs-chart:
+    enabled: false
+  csi-s3-chart:
+    mounter: "goofys"
+    enabled: true
+  csi-h3-chart:
+    enabled: false
+  dataset-operator-chart:
+    enabled: true
+
 notebooks:
-  ## serverDefaults specifies defaults used when server options parameters
-  ## are not specified in the post request to renku notebooks to start a session.
-  # serverDefaults:
-  #   defaultUrl: /lab
-  #   cpu_request: 0.5
-  #   mem_request: 1G
-  #   disk_request: 1G
-  #   gpu_request: 0
-  #   lfs_auto_fetch: false
-  ## serverOptions allow for modifications to the notebook pod resource requests and the UI rendering
-  # serverOptions:
-  #   defaultUrl:
-  #     order: 1
-  #     displayName: Default Environment
-  #     type: enum
-  #     default: /lab
-  #     options: [/lab]
-  #   cpu_request:
-  #     order: 2
-  #     displayName: Number of CPUs
-  #     type: enum
-  #     default: 0.5
-  #     options: [0.5, 1.0]
-  #   mem_request:
-  #     order: 3
-  #     displayName: Amount of Memory
-  #     type: enum
-  #     default: 1G
-  #     options: [1G, 2G]
-  #   disk_request:
-  #     order: 4
-  #     displayName: Amount of disk space requested
-  #     type: enum
-  #     default: "1G"
-  #     options: ["1G", "10G"]
-  #   gpu_request:
-  #     order: 5
-  #     displayName: Number of GPUs
-  #     type: enum # use "type: int" instead to get a slider
-  #     default: 0
-  #     options: [0, 0] # use "range: [x, y]" when type is int
-  #   lfs_auto_fetch:
-  #     order: 6
-  #     displayName: Automatically fetch LFS data
-  #     type: boolean
-  #     default: false
-  ## Enable the use of persistent volumes for user sessions below. The storage class
-  ## can be omited in which case the default is used. However, we strongly recommend that you use a storage class
-  ## with a `Delete` reclaim policy because otherwise the persistent volumes will keep accumulating
-  ## regardless of how the user sessions are shut down and will require manual intervention to clean them up.
-  # userSessionPersistentVolumes:
-  #   enabled: false
-  #   storageClass:
-  ## image registry host
-  # imageRegistry:
+  cloudstorage:
+    ## If enabled this will allow mounting of buckets into user sessions
+    ## from any S3-compatible storage provider.
+    s3:
+      enabled: false
+      installDatashim: false
+      readOnly: true
+    ## Azure blob storage mounting support is experimental. The CSI
+    ## storage driver for mounting azure blob storage has to be already installed
+    ## in the cluster if enabled.
+    azureBlob:
+      enabled: false
+      readOnly: true
+
+  # configuration for user session persistent volumes
+  userSessionPersistentVolumes:
+    enabled: true
+    # storageClass: leave undefined to use default, otherwise specify required class
+    ## Prevents from applying size limits if emptyDirs are used for user sessions.
+    ## This may be desirable because going over the limit for an emptyDir results in
+    ## immediate eviction of the user session. EmptyDirs are used when the enabled flag
+    ## above is set to false.
+    useEmptyDirSizeLimit: false
+
+  gitlab:
+    ## specify the GitLab instance URL
+    url:
+    registry:
+      ## Set the default image registry
+      host:
+
+  ## For sending exceptions to Sentry, specify the DSN to use
+  sentry:
+    enabled: false
+    dsn:
+    environment:
+    ## Sample rate is used for performance monitoring in sentry
+    sampleRate: 0.2
+
+  sessionSentry:
+    gitClone:
+      enabled: false
+      dsn:
+      environment:
+      ## Sample rate is used for performance monitoring in sentry
+      sampleRate: 0.2
+    sidecar:
+      enabled: false
+      dsn:
+      environment:
+      ## Sample rate is used for performance monitoring in sentry
+      sampleRate: 0.2
+
+  replicaCount: 2
+
+  ## Configure autoscaling
+  autoscaling:
+    enabled: false
+    minReplicas: 2
+    maxReplicas: 5
+    targetCPUUtilizationPercentage: 50
+
+  image:
+    repository: renku/renku-notebooks
+    tag: "latest"
+    pullPolicy: IfNotPresent
+
+    ## Optionally specify an array of imagePullSecrets.
+    ## Secrets must be manually created in the namespace.
+    ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/
+    ##
+    # pullSecrets:
+    #   - myRegistrKeySecretName
+
+  # turns on flask debug mode
+  debug: true
+
+  # oidc settings
   oidc:
     clientId: renku-jupyterserver
-    clientSecret: # use `uuidgen -r`
-    token_url:
-    auth_url:
-  session_ingress:
+    clientSecret:
+    tokenUrl:
+    authUrl:
+    allowUnverifiedEmail: false
+
+  sessionIngress:
     host:
-    tls_secret:
-    annotations: |
-      {kubernetes.io/ingress.class: nginx,
-      nginx.ingress.kubernetes.io/proxy-body-size: "0",
-      nginx.ingress.kubernetes.io/proxy-buffer-size: 8k,
-      nginx.ingress.kubernetes.io/proxy-request-buffering: "off"}
-  # support SSHing into sessions
+    tlsSecret:
+    annotations:
+      kubernetes.io/ingress.class: nginx
+      nginx.ingress.kubernetes.io/proxy-body-size: "0"
+      nginx.ingress.kubernetes.io/proxy-buffer-size: 8k
+      nginx.ingress.kubernetes.io/proxy-request-buffering: "off"
+
+  ## Use a specific namespace to launch sessions in
+  ## If left null then sessions will be launched in the same namespace
+  ## as where the chart is installed.
+  sessionsNamespace:
+
+  sessionAutosave:
+    ## Any file higher than the minimum will be added to LFS
+    minimumLFSFileSizeBytes: 1000000
+    ## How long should k8s wait for an autosave branch to be created before
+    ## fully and forcefully removing a user session
+    terminationGracePeriodSeconds: 600
+    ## The warning for session termination shows up this many seconds before the
+    ## session is terminated due to idleness.
+    terminationWarningDurationSeconds: 3600
+
+  ## Setup node selector, tolerations and node affinities for user sessions that are launched
+  ## by the notebook service. These can be used so that user sessions are only scheduled on
+  ## dedicated nodes rather than on all nodes in a cluster. A strict setup where session pods
+  ## are scheduled only on dedicated nodes and nothing else is scheduled on said nodes would involve:
+  ## (i) taints on the nodes to prevent other non-session workloads from getting scheduled there,
+  ## (ii) tolerations below to make sure the user session pods can get schedulded on the dedicated nodes,
+  ## (iii) node affinity below to make sure the user sessions do not get scheduled on other nodes.
+  sessionNodeSelector: {}
+  sessionTolerations: []
+  sessionAffinity: {}
+
+  ## Default server options - these will be provided to the user in the UI
+  ## Note that requests are also limits, i.e. a user's jupyter kernel
+  ## that exceeds the requested memory limit will be terminated/restarted.
+  serverOptions:
+    defaultUrl:
+      order: 1
+      displayName: Default Environment
+      type: enum
+      default: /lab
+      ## add /rstudio to the list for R projects
+      options: [/lab]
+    cpu_request:
+      order: 2
+      displayName: Number of CPUs
+      type: enum
+      default: 0.5
+      options: [0.5, 1.0]
+    mem_request:
+      order: 3
+      displayName: Amount of Memory
+      type: enum
+      default: 1G
+      options: [1G, 2G]
+    disk_request:
+      order: 4
+      displayName: Amount of Storage
+      type: enum
+      default: "1G"
+      options: ["1G", "10G"]
+      ## set allow_any_value to true to not enforce value checks
+      ## arbitrary PV sizes
+      # allow_any_value: true
+      # value_range:
+      #   type: bytes
+      #   min: "1G"
+      #   max: "100G"
+    gpu_request:
+      order: 5
+      displayName: Number of GPUs
+      type: enum
+      default: 0
+      options: [0]
+    lfs_auto_fetch:
+      order: 6
+      displayName: Automatically fetch LFS data
+      type: boolean
+      default: false
+
+  ## Default server option values used to launch a session when
+  ## such values are not provided explicitly in the post request.
+  ## It is mandatory to provide all of these to deploy the helm chart.
+  ## The defaults below do not have to be equal to the default values
+  ## specified in the server options for the UI above but they have to be
+  ## within the available choices or valid ranges.
+  serverDefaults:
+    defaultUrl: /lab
+    cpu_request: 0.5
+    mem_request: 1G
+    disk_request: 1G
+    gpu_request: 0
+    lfs_auto_fetch: false
+
+  ## How to enforce CPU limits for sessions, options are "lax", "off" or "strict"
+  ## - "strict" = CPU limit equals cpu request
+  ## - "lax" = CPU limit equals 3x cpu request
+  ## - "off" = no CPU limits at all
+  enforceCPULimits: "off"
+
+  ## Default image used when the requested image for a user session cannot be found.
+  defaultSessionImage: "renku/renkulab-py:3.9-0.18.0"
+
+  gitRpcServer:
+    image:
+      name: renku/git-rpc-server
+      tag: "latest"
+
+  gitHttpsProxy:
+    image:
+      name: renku/git-https-proxy
+      tag: "latest"
+
+  gitClone:
+    image:
+      name: renku/git-clone
+      tag: "latest"
+
+  service:
+    type: ClusterIP
+    port: 80
+
+  rbac:
+    serviceAccountName: default
+    create: true
+
+  ingress:
+    enabled: false
+    annotations: {}
+      # kubernetes.io/ingress.class: nginx
+      # kubernetes.io/tls-acme: "true"
+    path: /
+    hosts:
+      - chart-example.local
+    tls: []
+    #  - secretName: chart-example-tls
+    #    hosts:
+    #      - chart-example.local
+
+  resources: {}
+    # We usually recommend not to specify default resources and to leave this as a conscious
+    # choice for the user. This also increases chances charts run on environments with little
+    # resources, such as Minikube. If you do want to specify resources, uncomment the following
+    # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+    # limits:
+    #  cpu: 100m
+    #  memory: 128Mi
+    # requests:
+    #  cpu: 100m
+    #  memory: 128Mi
+
+  culling:
+    # How long before an idle session is removed from the cluster.
+    # Setting a value of zero below makes it so that a session is never culled.
+    idleThresholdSeconds:
+      anonymous: 43200 # 12 hours
+      registered: 86400 # 24 hours
+    maxAgeSecondsThreshold:
+      anonymous: 0 # do not cull sessions solely based on age (use activity)
+      registered: 0 # do not cull sessions solely based on age (use activity)
+
+  tests:
+    enabled: false
+    oidc_issuer:
+    gitlab_token:
+    ## Specify the session types to be used in the tests, allowed values are 'registered' and/or 'anonymous'
+    sessionTypes: ["registered"]
+    image:
+      repository: renku/renku-notebooks-tests
+      tag: "latest"
+      pullPolicy: IfNotPresent
+
+  k8sWatcher:
+    image:
+      repository: renku/k8s-watcher
+      tag: latest
+      pullPolicy: IfNotPresent
+    resources: {}
+    replicaCount: 1
+    autoscaling:
+      enabled: false
+      targetCPUUtilizationPercentage: 50
+      minReplicas: 2
+      maxReplicas: 5
+
   ssh:
     enabled: false
-    replicaCount: 2
+    image:
+      repository: renku/renku-notebooks-ssh
+      tag: "latest"
+      pullPolicy: IfNotPresent
+    resources: {}
+    replicaCount: 1
     service:
-      # Note: You need to set this up properly so it handles TCP connections from outside the cluster
-      # E.g. with HAProxy you could open up port 32023 and set it like
-      # type: NodePort
-      # port: 32023
       type: ClusterIP
       port: 22
+    autoscaling:
+      enabled: false
+      targetCPUUtilizationPercentage: 50
+      minReplicas: 1
+      maxReplicas: 3
+    ## If defined the keys in the secret will be mounted as SSH host keys.
+    ## This is useful to make sure that the host can be properly recognized
+    ## when connecting to a session. If left unset then the host keys are
+    ## likely to change causing ssh connections to fail and require removing the
+    ## old keys from ~/.ssh/known_hosts. Therefore it is reccomended that this is
+    ## set for production. The required keys are:
+    ## - ssh_host_dsa_key
+    ## - ssh_host_dsa_key.pub
+    ## - ssh_host_rsa_key
+    ## - ssh_host_rsa_key.pub
+    ## - ssh_host_ecdsa_key
+    ## - ssh_host_ecdsa_key.pub
+    ## - ssh_host_ed25519_key
+    ## - ssh_host_ed25519_key.pub
+    hostKeySecret:
+
+  ## Used for testing - should be set to false for production
+  dummyStores: false
+
 
 tests:
   enabled: false

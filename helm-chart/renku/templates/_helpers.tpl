@@ -69,18 +69,6 @@ Define subcharts full names
 {{- printf "%s-%s" .Release.Name "uiserver" | replace "+" "_" | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 
-{{- define "notebooks.fullname" -}}
-{{- printf "%s-%s" .Release.Name "notebooks" | replace "+" "_" | trunc 63 | trimSuffix "-" -}}
-{{- end -}}
-
-{{- define "webhookService.fullname" -}}
-{{- printf "%s-%s" .Release.Name "webhook-service" | replace "+" "_" | trunc 63 | trimSuffix "-" -}}
-{{- end -}}
-
-{{- define "knowledgeGraph.fullname" -}}
-{{- printf "%s-%s" .Release.Name "knowledge-graph" | replace "+" "_" | trunc 63 | trimSuffix "-" -}}
-{{- end -}}
-
 {{- define "core.fullname" -}}
 {{- printf "%s-%s" .Release.Name "core" | replace "+" "_" | trunc 63 | trimSuffix "-" -}}
 {{- end -}}

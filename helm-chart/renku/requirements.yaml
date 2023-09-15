@@ -1,17 +1,8 @@
 dependencies:
-- name: renku-notebooks
-  alias: notebooks
-  repository: "https://swissdatasciencecenter.github.io/helm-charts/"
-  version: 1.17.0
 - name: gitlab
   repository: "https://swissdatasciencecenter.github.io/helm-charts/"
   version: 0.8.0
   condition: gitlab.enabled
-- name: renku-graph
-  alias: graph
-  repository: "https://swissdatasciencecenter.github.io/helm-charts/"
-  version: 2.39.0
-  condition: graph.enabled
 - name: postgresql
   version: 9.1.1
   repository: "https://raw.githubusercontent.com/bitnami/charts/eb5f9a9513d987b519f0ecd732e7031241c50328/bitnami"
@@ -33,3 +24,10 @@ dependencies:
   version: "0.0.21"
   repository: "https://swissdatasciencecenter.github.io/helm-charts/"
   alias: jena
+- name: amalthea
+  repository: "https://swissdatasciencecenter.github.io/helm-charts/"
+  version: "0.8.0"
+- name: dlf-chart
+  repository: "https://swissdatasciencecenter.github.io/datashim/"
+  version: "0.3.0-renku-1"
+  condition: notebooks.cloudstorage.s3.installDatashim
