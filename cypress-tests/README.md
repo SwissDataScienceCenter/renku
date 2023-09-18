@@ -18,6 +18,18 @@ recent version of Node.js installed. Then follow these steps:
 - Run the tests with `npm run e2e`. If you prefer not to use the GUI, you can run the
   tests in headless mode with `npm run e2e:headless`.
 
+Here is a list of the environment variable that you should set in the
+`cypress.env.json` file:
+
+| VARIABLE        | USE                                                   |
+|-----------------|-------------------------------------------------------|
+| BASE_URL        | Full URL of the target environment.                   |
+| TEST_EMAIL      | The email used to register on Keycloak.               |
+| TEST_PASSWORD   | Password.                                             |
+| TEST_FIRST_NAME | First name.                                           |
+| TEST_LAST_NAME  | Last name.                                            |
+| TEST_USERNAME   | Username. Usually, it's the email without the domain. |
+
 > Tip: you might prefer not to save you password in plain text in the `cypress.env.json`
   file. In that case, you can use the `TEST_PASSWORD` variable to the command line when
   running the tests. For example `TEST_PASSWORD=mySecretPassword npm run e2e`.`

@@ -10,7 +10,7 @@ const username = Cypress.env("TEST_USERNAME");
 
 const projectTestConfig = {
   shouldCreateProject: true,
-  projectName: generatorProjectName("useDatasets"),
+  projectName: generatorProjectName("testDatasets"),
 };
 
 // ? Uncomment to debug using an existing project
