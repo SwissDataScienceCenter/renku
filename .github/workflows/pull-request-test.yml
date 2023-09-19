@@ -53,9 +53,7 @@ jobs:
       renku-notebooks: ${{ steps.deploy-comment.outputs.renku-notebooks}}
       renku-ui: ${{ steps.deploy-comment.outputs.renku-ui}}
       test-enabled: ${{ steps.deploy-comment.outputs.test-enabled}}
-      test-cypress-enabled: ${{ steps.deploy-comment.outputs.test-cypress-enabled}}
       extra-values: ${{ steps.deploy-comment.outputs.extra-values}}
-      persist: ${{ steps.deploy-comment.outputs.persist }}
     steps:
       - uses: actions/checkout@v4
       - id: deploy-comment
@@ -111,9 +109,7 @@ jobs:
             You can access the deployment of this PR at https://ci-renku-${{ github.event.number }}.dev.renku.ch
 
   test-pr:
-    if: ${{ github.event.action != 'closed' &&
-      needs.check-deploy.outputs.pr-contains-string == 'true' &&
-      needs.check-deploy.outputs.test-enabled == 'true' }}
+    if: github.event.action != 'closed' && needs.check-deploy.outputs.pr-contains-string == 'true' && needs.check-deploy.outputs.test-enabled == 'true'
     needs: [check-deploy, deploy-pr]
     runs-on: ubuntu-22.04
     steps:
@@ -122,16 +118,12 @@ jobs:
           kubeconfig: ${{ secrets.RENKUBOT_DEV_KUBECONFIG }}
           renku-release: ci-renku-${{ github.event.number }}
           gitlab-token: ${{ secrets.DEV_GITLAB_TOKEN }}
-          persist: "${{ needs.check-deploy.outputs.persist }}"
           s3-results-access-key: ${{ secrets.ACCEPTANCE_TESTS_BUCKET_ACCESS_KEY }}
           s3-results-secret-key: ${{ secrets.ACCEPTANCE_TESTS_BUCKET_SECRET_KEY }}
           test-timeout-mins: "120"
 
   test-pr-cypress:
-    if: ${{ github.event.action != 'closed' &&
-      needs.check-deploy.outputs.pr-contains-string == 'true' &&
-      (needs.check-deploy.outputs.test-enabled == 'true' ||
-      needs.check-deploy.outputs.test-cypress-enabled == 'true') }}
+    if: github.event.action != 'closed' && needs.check-deploy.outputs.pr-contains-string == 'true' && needs.check-deploy.outputs.test-enabled == 'true'
     needs: [check-deploy, deploy-pr]
     runs-on: ubuntu-22.04
 

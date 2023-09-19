@@ -13,7 +13,6 @@ jobs:
           kubeconfig: ${{ secrets.RENKUBOT_DEV_KUBECONFIG }}
           renku-release: renku
           gitlab-token: ${{ secrets.DEV_GITLAB_TOKEN }}
-          persist: true
           s3-results-access-key: ${{ secrets.ACCEPTANCE_TESTS_BUCKET_ACCESS_KEY }}
           s3-results-secret-key: ${{ secrets.ACCEPTANCE_TESTS_BUCKET_SECRET_KEY }}
           test-timeout-mins: "80"
