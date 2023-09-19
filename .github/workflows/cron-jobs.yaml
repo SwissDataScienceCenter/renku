@@ -1,0 +1,32 @@
+name: Cron jobs
+
+on:
+  schedule:
+    # Every day at 1am
+    - cron: '0 1 * * *'
+  workflow_dispatch:
+
+jobs:
+  remove-old-artifacts:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Remove old artifacts
+        uses: c-hive/gha-remove-artifacts@v1
+        with:
+          age: '1 week'
+          # Optional inputs
+          skip-tags: true
+          skip-recent: 10
+        
+  remove-CI-deployments:
+    runs-on: ubuntu-22.04
+    steps:
+      - name: renku teardown
+        uses: SwissDataScienceCenter/renku-actions/cleanup-renku-ci-deployments@v1.5.2
+        env:
+          GITLAB_TOKEN: ${{ secrets.DEV_GITLAB_TOKEN }}
+          RENKUBOT_KUBECONFIG: ${{ secrets.RENKUBOT_DEV_KUBECONFIG }}
+          MAX_AGE_SECONDS: 604800
+          DELETE_NAMESPACE: "false"
