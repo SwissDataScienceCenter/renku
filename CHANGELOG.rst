@@ -1,5 +1,33 @@
 .. _changelog:
 
+0.37.0
+------
+
+Renku ``0.37.0`` allows users to pause sessions and later resume them exactly where they left off.
+
+User-Facing Changes
+~~~~~~~~~~~~~~~~~~~
+
+**🌟 New Features**
+
+- 🖼️ **Renku Notebooks**: Support for pausing (i.e. hibernating) and resuming sessions
+  (`#1518 <https://github.com/SwissDataScienceCenter/renku-notebooks/pull/1518>`_).
+
+Internal Changes
+~~~~~~~~~~~~~~~~
+
+**New Features**
+
+- **Renku Notebooks**: Use a new version of Amalthea which adds fields for culling
+  hibernating sessions in the CRD.
+
+Individual components
+~~~~~~~~~~~~~~~~~~~~~~
+
+- `renku-notebooks 1.19.0 <https://github.com/SwissDataScienceCenter/renku-notebooks/releases/tag/1.19.0>`_
+- `amalthea 0.9.1 <https://github.com/SwissDataScienceCenter/amalthea/releases/tag/0.9.1>`_
+
+
 0.36.3
 ------
 
