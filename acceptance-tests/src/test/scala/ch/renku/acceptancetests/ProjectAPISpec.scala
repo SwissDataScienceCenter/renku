@@ -44,7 +44,7 @@ class ProjectAPISpec extends AcceptanceSpec with Login with Project with Knowled
       ProjectUpdates(newDescription = newDesc.some, newKeywords = newKeywords.some, newVisibility = newVisibility.some)
     `PATCH /knowledge-graph/projects/:slug`(projectDetails.asProjectSlug, updates)
 
-    sleep(5 seconds)
+    sleep(10 seconds)
 
     Then("the API should return the updated values")
     `GET /knowledge-graph/projects/:slug`(projectDetails.asProjectSlug) shouldBe
