@@ -59,7 +59,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - id: deploy-comment
-        uses: SwissDataScienceCenter/renku-actions/check-pr-description@v1.5.2
+        uses: SwissDataScienceCenter/renku-actions/check-pr-description@v.1.6.0
         with:
           string: /deploy
           pr_ref: ${{ github.event.number }}
@@ -74,7 +74,7 @@ jobs:
       - uses: actions/checkout@v4
       - name: renku build and deploy
         if: needs.check-deploy.outputs.pr-contains-string == 'true'
-        uses: SwissDataScienceCenter/renku-actions/deploy-renku@v1.5.2
+        uses: SwissDataScienceCenter/renku-actions/deploy-renku@v.1.6.0
         env:
           DOCKER_PASSWORD: ${{ secrets.RENKU_DOCKER_PASSWORD }}
           DOCKER_USERNAME: ${{ secrets.RENKU_DOCKER_USERNAME }}
@@ -117,7 +117,7 @@ jobs:
     needs: [check-deploy, deploy-pr]
     runs-on: ubuntu-22.04
     steps:
-      - uses: SwissDataScienceCenter/renku-actions/test-renku@v1.5.2
+      - uses: SwissDataScienceCenter/renku-actions/test-renku@v.1.6.0
         with:
           kubeconfig: ${{ secrets.RENKUBOT_DEV_KUBECONFIG }}
           renku-release: ci-renku-${{ github.event.number }}
@@ -150,7 +150,7 @@ jobs:
         ]
 
     steps:
-      - uses: SwissDataScienceCenter/renku-actions/test-renku-cypress@v1.5.2
+      - uses: SwissDataScienceCenter/renku-actions/test-renku-cypress@v.1.6.0
         with:
           e2e-target: ${{ matrix.tests }}
           renku-reference: ${{ github.ref }}
@@ -162,7 +162,7 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
       - name: renku teardown
-        uses: SwissDataScienceCenter/renku-actions/cleanup-renku-ci-deployments@v1.5.2
+        uses: SwissDataScienceCenter/renku-actions/cleanup-renku-ci-deployments@v.1.6.0
         env:
           HELM_RELEASE_REGEX: "^ci-renku-${{ github.event.number }}$"
           GITLAB_TOKEN: ${{ secrets.DEV_GITLAB_TOKEN }}
