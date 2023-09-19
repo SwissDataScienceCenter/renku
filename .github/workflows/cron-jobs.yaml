@@ -1,4 +1,4 @@
-name: Remove old artifacts
+name: Cron jobs
 
 on:
   schedule:
