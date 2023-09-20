@@ -29,10 +29,10 @@ final case class TestsDefaults(env:               Option[String],
 )
 
 object TestsDefaults {
-  import java.nio.file.Paths
-
   import pureconfig.ConfigSource
   import pureconfig.generic.auto._
+
+  import java.nio.file.Paths
 
   private val defaultConfigFileName = "./tests-defaults.conf"
 

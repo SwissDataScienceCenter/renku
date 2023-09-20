@@ -43,7 +43,7 @@ describe("Basic rstudio functionality", () => {
 
   after(() => {
     if (projectTestConfig.shouldCreateProject)
-      cy.deleteProject(projectIdentifier);
+      cy.deleteProjectFromAPI(projectIdentifier);
   });
 
   beforeEach(() => {
@@ -97,7 +97,7 @@ describe("Basic rstudio functionality", () => {
       });
 
       // Stops the session
-      cy.stopSessionFromIframe();
+      cy.stopSession();
     }
   );
 });
