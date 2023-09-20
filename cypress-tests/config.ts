@@ -1,6 +1,8 @@
 // Timeouts for cypesss in miliseconds
 export const TIMEOUTS = {
-  standard: 20000,
-  long: 60000,
-  vlong: 300000,
+  minimal: 1_000,
+  short: 5_000,
+  standard: 20_000,
+  long: 60_000,
+  vlong: 180_000,
 };
