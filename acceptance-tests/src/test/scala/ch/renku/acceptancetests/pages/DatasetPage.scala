@@ -24,7 +24,7 @@ import org.openqa.selenium.{WebDriver, WebElement}
 import org.scalactic.source
 import org.scalatest.enablers.Retrying
 import org.scalatestplus.selenium.WebBrowser
-import org.scalatestplus.selenium.WebBrowser.{cssSelector, find, findAll}
+import org.scalatestplus.selenium.WebBrowser.{cssSelector, find}
 
 import scala.concurrent.duration._
 
