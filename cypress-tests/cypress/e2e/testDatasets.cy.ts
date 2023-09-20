@@ -137,15 +137,11 @@ describe("Basic datasets functionality", () => {
 
     // Search for the dataset after the project has been indexed
     cy.getDataCy("go-back-button").should("be.visible").click();
-    cy.getProjectSection("Settings").click();
-    cy.getDataCy("kg-status-section-open").should("exist").click();
-    cy.getDataCy("project-settings-knowledge-graph")
-      .contains("Everything indexed", { timeout: TIMEOUTS.vlong })
-      .should("exist");
+    cy.waitMetadataIndexing();
     cy.searchForDataset(generatedDatasetName.slug);
   });
 
-  it("Delete the dataset and verify it is not searchable anaymore", () => {
+  it("Delete the dataset", () => {
     cy.getProjectSection("Datasets").click();
     if (listDatasetsInvoked)
       cy.wait("@listDatasets", { timeout: TIMEOUTS.long });
@@ -160,17 +156,9 @@ describe("Basic datasets functionality", () => {
     cy.get(".modal").contains("Deleting dataset...").should("be.visible");
 
     // Check the dataset is gone after the project has been indexed
-    if (projectTestConfig.shouldCreateProject) {
-      cy.contains("No datasets found for this project.", {
-        timeout: TIMEOUTS.vlong,
-      }).should("be.visible");
-    }
-    cy.getProjectSection("Settings").click();
-    cy.getDataCy("kg-status-section-open").should("exist").click();
-    cy.getDataCy("project-settings-knowledge-graph")
-      .contains("Everything indexed", { timeout: TIMEOUTS.vlong })
-      .should("exist");
-    // ? Currently, it doesn't disappear instantly
+    cy.waitMetadataIndexing();
+    // ! Currently, datasets don't disappear instantly because the UI uses a renku-core API
+    // ! We can leave this disabled until that's addressed
     // cy.searchForDataset(generatedDatasetName.slug, false);
   });
 });

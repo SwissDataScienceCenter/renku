@@ -24,7 +24,11 @@ export function generatorDatasetName(name: string): DatasetNames {
 function searchForDataset(name: string, shouldExist = true) {
   cy.visit("/search");
   cy.getDataCy("list-card").should("be.visible");
-  cy.getDataCy("type-entity-dataset").should("be.visible").check();
+  cy.getDataCy("type-entity-dataset").should("exist").and("not.be.checked");
+  cy.getDataCy("type-entity-dataset")
+    .scrollIntoView()
+    .should("be.visible")
+    .check();
   cy.get("input[placeholder='Search...']")
     .should("be.visible")
     .type(name)
