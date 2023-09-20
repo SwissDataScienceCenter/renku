@@ -47,6 +47,9 @@ function projectSubpageUrl(identifier: ProjectIdentifier, subpage: string) {
 
 function searchForProject(props: ProjectIdentifier, shouldExist = true) {
   cy.visit("/search");
+  cy.get("input[placeholder='Search...']").should("be.visible");
+  // ? Temporary workaround to prevent a components refresh from breaking the tests
+  cy.wait(1000); // eslint-disable-line cypress/no-unnecessary-waiting
   cy.get("input[placeholder='Search...']")
     .should("be.visible")
     .type(props.name)

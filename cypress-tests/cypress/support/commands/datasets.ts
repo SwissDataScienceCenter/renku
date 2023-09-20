@@ -24,6 +24,9 @@ export function generatorDatasetName(name: string): DatasetNames {
 function searchForDataset(name: string, shouldExist = true) {
   cy.visit("/search");
   cy.getDataCy("list-card").should("be.visible");
+  cy.getDataCy("type-entity-dataset").should("be.visible").and("not.be.checked");
+  // ? Temporary workaround to prevent a components refresh from breaking the tests
+  cy.wait(1000); // eslint-disable-line cypress/no-unnecessary-waiting
   cy.getDataCy("type-entity-dataset").should("be.visible").check();
   cy.get("input[placeholder='Search...']")
     .should("be.visible")
