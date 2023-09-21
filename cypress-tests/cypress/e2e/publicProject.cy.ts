@@ -54,14 +54,7 @@ describe("Basic public project functionality", () => {
 
   it("Can search for project", () => {
     // Assess the project has been indexed properly.This might take time for new projects.
-    cy.getProjectSection("Settings").click();
-    cy.getDataCy("project-settings-knowledge-graph")
-      .contains("Project indexing", { timeout: TIMEOUTS.vlong })
-      .should("exist");
-    cy.getDataCy("kg-status-section-open").should("exist").click();
-    cy.getDataCy("project-settings-knowledge-graph")
-      .contains("Everything indexed", { timeout: TIMEOUTS.vlong })
-      .should("exist");
+    cy.waitMetadataIndexing();
     cy.searchForProject(projectIdentifier);
 
     // logout and search for the project and log back in

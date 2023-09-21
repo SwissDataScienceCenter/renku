@@ -47,6 +47,7 @@ function projectSubpageUrl(identifier: ProjectIdentifier, subpage: string) {
 
 function searchForProject(props: ProjectIdentifier, shouldExist = true) {
   cy.visit("/search");
+  cy.get("input[placeholder='Search...']").should("exist").scrollIntoView();
   cy.get("input[placeholder='Search...']")
     .should("be.visible")
     .type(props.name)
@@ -54,6 +55,8 @@ function searchForProject(props: ProjectIdentifier, shouldExist = true) {
   if (shouldExist) {
     cy.get("[data-cy='list-card-title']")
       .contains(props.name)
+      .should("exist")
+      .scrollIntoView()
       .should("be.visible");
   }
   else {
@@ -246,6 +249,20 @@ function getProjectSection(section: ProjectSection) {
     .should("be.visible");
 }
 
+function waitMetadataIndexing(justTriggered = true, goToSettings = true) {
+  cy.log(`function "waitMetadataIndexing": wait for KG to process everything.`);
+  if (justTriggered) {
+    // ? Wait 5s since KG indexing might not start immediately after the event triggering the indexing process.
+    // ? The impact on the final run time should be zero since the whole indexing process takes longer than 5s anyway.
+    cy.wait(TIMEOUTS.short); // eslint-disable-line cypress/no-unnecessary-waiting
+  }
+  if (goToSettings) cy.getProjectSection("Settings").click();
+  cy.getDataCy("kg-status-section-open").should("exist").click();
+  cy.getDataCy("project-settings-knowledge-graph")
+    .contains("Everything indexed", { timeout: TIMEOUTS.vlong })
+    .should("exist");
+}
+
 export default function registerProjectCommands() {
   Cypress.Commands.add("createProject", createProject);
   Cypress.Commands.add("deleteProject", deleteProject);
@@ -257,6 +274,7 @@ export default function registerProjectCommands() {
   Cypress.Commands.add("visitProject", visitProject);
   Cypress.Commands.add("visitProjectPageLink", visitProjectPageLink);
   Cypress.Commands.add("visitAndLoadProject", visitAndLoadProject);
+  Cypress.Commands.add("waitMetadataIndexing", waitMetadataIndexing);
 }
 
 declare global {
@@ -276,6 +294,7 @@ declare global {
         identifier: ProjectIdentifier,
         skipOutdated?: boolean
       );
+      waitMetadataIndexing(justTriggered?: boolean, goToSettings?: boolean);
     }
   }
 }

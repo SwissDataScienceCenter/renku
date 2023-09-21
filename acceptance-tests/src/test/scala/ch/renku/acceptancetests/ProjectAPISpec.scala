@@ -26,8 +26,6 @@ import ch.renku.acceptancetests.workflows.{Login, Project}
 import org.scalacheck.Gen
 import tooling.KnowledgeGraphModel._
 
-import scala.concurrent.duration._
-
 class ProjectAPISpec extends AcceptanceSpec with Login with Project with KnowledgeGraphApi {
 
   scenario("User can update project using the API") {
@@ -43,8 +41,6 @@ class ProjectAPISpec extends AcceptanceSpec with Login with Project with Knowled
     val updates =
       ProjectUpdates(newDescription = newDesc.some, newKeywords = newKeywords.some, newVisibility = newVisibility.some)
     `PATCH /knowledge-graph/projects/:slug`(projectDetails.asProjectSlug, updates)
-
-    sleep(1 second)
 
     Then("the API should return the updated values")
     `GET /knowledge-graph/projects/:slug`(projectDetails.asProjectSlug) shouldBe

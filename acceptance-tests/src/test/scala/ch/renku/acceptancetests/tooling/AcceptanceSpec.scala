@@ -18,7 +18,6 @@
 
 package ch.renku.acceptancetests.tooling
 
-import ch.renku.acceptancetests.workflows.Environments
 import org.openqa.selenium.WebDriver
 import org.openqa.selenium.chrome.{ChromeDriver, ChromeDriverService, ChromeOptions}
 import org.scalatest._
@@ -32,7 +31,6 @@ trait AcceptanceSpec
     with BeforeAndAfterAll
     with should.Matchers
     with WebBrowser
-    with Environments
     with Grammar
     with GitLabApi
     with RenkuApi

@@ -57,14 +57,7 @@ describe("Basic public project functionality", () => {
 
   it("Can search for project only when logged in", () => {
     // Assess the project has been indexed properly
-    cy.getProjectSection("Settings").click();
-    cy.getDataCy("project-settings-knowledge-graph")
-      .contains("Project indexing", { timeout: TIMEOUTS.vlong })
-      .should("exist");
-    cy.getDataCy("kg-status-section-open").should("exist").click();
-    cy.getDataCy("project-settings-knowledge-graph")
-      .contains("Everything indexed", { timeout: TIMEOUTS.vlong })
-      .should("exist");
+    cy.waitMetadataIndexing();
     cy.getDataCy("visibility-private")
       .should("be.visible")
       .should("be.checked");
@@ -79,10 +72,7 @@ describe("Basic public project functionality", () => {
 
   it("Can always search for project after changing the visibility", () => {
     // Change visibility to public
-    cy.getProjectSection("Settings").click();
-    cy.getDataCy("project-settings-knowledge-graph")
-      .contains("Project indexing", { timeout: TIMEOUTS.vlong })
-      .should("exist");
+    cy.waitMetadataIndexing();
     cy.getDataCy("visibility-private")
       .should("be.visible")
       .should("be.checked");
@@ -97,14 +87,11 @@ describe("Basic public project functionality", () => {
     // ? We need to wait before other checks take place.
     // ? This is a workaround until we use the new Project update endpoint.
     // ? Reference: https://github.com/SwissDataScienceCenter/renku-ui/issues/2778
-    cy.wait(TIMEOUTS.standard * 0.5); // eslint-disable-line cypress/no-unnecessary-waiting
+    cy.wait(TIMEOUTS.short); // eslint-disable-line cypress/no-unnecessary-waiting
 
     // Check all is up-to-date and ready.
     cy.get(".modal button.btn-close").should("be.visible").click();
-    cy.getDataCy("kg-status-section-open").should("exist").click();
-    cy.getDataCy("project-settings-knowledge-graph")
-      .contains("Everything indexed", { timeout: TIMEOUTS.vlong })
-      .should("exist");
+    cy.waitMetadataIndexing();
     cy.getDataCy("visibility-private")
       .should("be.visible")
       .should("not.be.checked");
