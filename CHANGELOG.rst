@@ -20,6 +20,8 @@ Internal Changes
 
 - **Renku Notebooks**: Use a new version of Amalthea which adds fields for culling
   hibernating sessions in the CRD.
+- **Renku Notebooks**: ``notebook.culling.idleThresholdSeconds`` in the values file was renamed to
+  ``notebook.culling.idleSecondsThreshold``.
 
 Individual components
 ~~~~~~~~~~~~~~~~~~~~~~
