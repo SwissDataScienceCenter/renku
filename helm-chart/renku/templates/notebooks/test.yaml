@@ -44,9 +44,11 @@ spec:
         - name: SESSION_TYPE
           value: {{ . | quote }}
         - name: NB_SESSIONS__CULLING__REGISTERED__IDLE_SECONDS
-          value: {{ $.Values.notebooks.culling.idleThresholdSeconds.registered | quote }}
+          value: {{ $.Values.notebooks.culling.idleSecondsThreshold.registered | quote }}
         - name: NB_SESSIONS__CULLING__ANONYMOUS__IDLE_SECONDS
-          value: {{ $.Values.notebooks.culling.idleThresholdSeconds.anonymous | quote }}
+          value: {{ $.Values.notebooks.culling.idleSecondsThreshold.anonymous | quote }}
+        - name: NB_SESSIONS__CULLING__REGISTERED__HIBERNATED_SECONDS			
+          value: {{ $.Values.notebooks.culling.hibernatedSecondsThreshold.registered | quote }}
         - name: NB_SESSIONS__CULLING__REGISTERED__MAX_AGE_SECONDS
           value: {{ $.Values.notebooks.culling.maxAgeSecondsThreshold.registered | quote }}
         - name: NB_SESSIONS__CULLING__ANONYMOUS__MAX_AGE_SECONDS
@@ -91,12 +93,8 @@ spec:
           value: {{ $.Values.notebooks.cloudstorage.azureBlob.enabled | quote }}
         - name: NB_CLOUD_STORAGE__AZURE_BLOB__READ_ONLY
           value: {{ $.Values.notebooks.cloudstorage.azureBlob.readOnly | quote }}
-        - name: NB_SESSIONS__TERMINATION_GRACE_PERIOD_SECONDS
-          value: {{ $.Values.notebooks.sessionAutosave.terminationGracePeriodSeconds | quote }}
         - name: NB_SESSIONS__TERMINATION_WARNING_DURATION_SECONDS
           value: {{ $.Values.notebooks.sessionAutosave.terminationWarningDurationSeconds | quote }}
-        - name: NB_SESSIONS__AUTOSAVE_MINIMUM_LFS_FILE_SIZE_BYTES
-          value: {{ $.Values.notebooks.sessionAutosave.minimumLFSFileSizeBytes | quote }}
         - name: NB_VERSION
           value: {{ $.Values.notebooks.image.tag | quote }}
         - name: NB_SESSIONS__GIT_PROXY__RENKU_CLIENT_ID

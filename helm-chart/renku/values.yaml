@@ -733,26 +733,37 @@ ui:
 
     ## Home settings allow configuration of the home page shown on RenkuLab when the user
     ## is not logged in.
-    # homepage:
-    #   custom:
-    #     enabled: true
-    #     main:
-    #       # Custom homepage content as single string markdown
-    #       contentMd: |
-    #         ## RenkuLab @ Yoyodyne
-    #         Welcome to the **Yoyodyne** RenkuLab instance!
-    #       backgroundImage:
-    #         url: https://eoimages.gsfc.nasa.gov/images/imagerecords/79000/79803/earth_night_rotate_lrg.jpg
-    #   tutorialLink: https://renku.readthedocs.io/en/latest/tutorials/01_firststeps.html
-    #   projects:
-    #     - projectPath: renku-tutorials/e-rum-2020
-    #     - projectPath: covid-19/covid-19-forecast
+    homepage:
+      custom:
+        # If you want to enable a custom content on the homepage, you can enable it and provide content here
+        enabled: false
+        main:
+          contentMd: |
+            # Welcome to RenkuLab
+          backgroundImage:
+            url: ""
+      # The default is to show the tutorial from the docs, but can also link to an
+      # internal project
+      tutorialLink: https://renku.readthedocs.io/en/stable/tutorials/01_firststeps.html
+      # Projects to highlight on the homepage
+      projects: []
+
+    coreApiVersionConfig:
+      ## Configuration to specify which version of the core-service API should be used
+      # "/" indicates that the latest version should be used
+      # A version number "2.0" can be used to specify one explicitly
+      # The coreApiVersion specifies the default version to use
+      coreApiVersion: "/"
+      # With overrides, the version for a specific metadata version can be changed
+      # overrides:
+      #   9: "/"
+      #   10: "/"
 
   ## Configuration for renku-ui-server
   server:
     image:
       repository: renku/renku-ui-server
-      tag: "3.10.0"
+      tag: "3.12.2"
       pullPolicy: IfNotPresent
     keepCookies: []
     autoscaling:
@@ -886,7 +897,7 @@ notebooks:
 
   image:
     repository: renku/renku-notebooks
-    tag: "1.18.1"
+    tag: "1.19.0"
     pullPolicy: IfNotPresent
 
     ## Optionally specify an array of imagePullSecrets.
@@ -1016,17 +1027,17 @@ notebooks:
   gitRpcServer:
     image:
       name: renku/git-rpc-server
-      tag: "1.18.1"
+      tag: "1.19.0"
 
   gitHttpsProxy:
     image:
       name: renku/git-https-proxy
-      tag: "1.18.1"
+      tag: "1.19.0"
 
   gitClone:
     image:
       name: renku/git-clone
-      tag: "1.18.1"
+      tag: "1.19.0"
 
   service:
     type: ClusterIP
@@ -1064,9 +1075,14 @@ notebooks:
   culling:
     # How long before an idle session is removed from the cluster.
     # Setting a value of zero below makes it so that a session is never culled.
-    idleThresholdSeconds:
+    idleSecondsThreshold:
       anonymous: 43200 # 12 hours
       registered: 86400 # 24 hours
+    # How long before a hibernated session is removed from the cluster. A value
+    # of zero means don't delete. Anonymous users don't have hibernated
+    # sessions, so that can't be configured.
+    hibernatedSecondsThreshold:
+      registered: 259200 # 72 hours
     maxAgeSecondsThreshold:
       anonymous: 0 # do not cull sessions solely based on age (use activity)
       registered: 0 # do not cull sessions solely based on age (use activity)
@@ -1079,13 +1095,13 @@ notebooks:
     sessionTypes: ["registered"]
     image:
       repository: renku/renku-notebooks-tests
-      tag: "1.18.1"
+      tag: "1.19.0"
       pullPolicy: IfNotPresent
 
   k8sWatcher:
     image:
       repository: renku/k8s-watcher
-      tag: 1.18.1
+      tag: 1.19.0
       pullPolicy: IfNotPresent
     resources: {}
     replicaCount: 1
@@ -1099,7 +1115,7 @@ notebooks:
     enabled: false
     image:
       repository: renku/renku-notebooks-ssh
-      tag: "1.18.1"
+      tag: "1.19.0"
       pullPolicy: IfNotPresent
     resources: {}
     replicaCount: 1
@@ -1242,7 +1258,7 @@ gateway:
     image:
       name: renku/renku-revproxy
       repository: renku/renku-revproxy
-      tag: "0.21.1"
+      tag: "0.21.3"
       pullPolicy: IfNotPresent
     metrics:
       enabled: true

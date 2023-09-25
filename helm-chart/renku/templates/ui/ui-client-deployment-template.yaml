@@ -16,6 +16,11 @@ spec:
       release: {{ .Release.Name }}
   template:
     metadata:
+      annotations:
+        # Force a restart of the pod on every helm chart upgrade, rollback and install, because we need to make sure we
+        # have the latest chart version in the environment variables derived from a configmap, and environment variables
+        # from configmaps do not update automatically.
+        reloader: {{ randAlphaNum 16 | quote }}
       labels:
         app: ui
         release: {{ .Release.Name }}
@@ -47,9 +52,9 @@ spec:
             - name: BASE_URL
               value: {{ (include "renku.baseUrl" .) | quote }}
             - name: GATEWAY_URL
-              value: {{ printf "%s://%s/api" (include "renku.baseUrl" .) | quote }}
+              value: {{ printf "%s/api" (include "renku.baseUrl" .) | quote }}
             - name: UISERVER_URL
-              value: {{ printf "%s://%s/ui-server" (include "renku.baseUrl" .) | quote }}
+              value: {{ printf "%s/ui-server" (include "renku.baseUrl" .) | quote }}
             - name: DASHBOARD_MESSAGE
               value: {{ toJson .Values.ui.client.dashboardMessage | quote }}
             {{- if .Values.ui.client.statuspage }}
@@ -98,6 +103,8 @@ spec:
                   key: chart_version
             - name: HOMEPAGE
               value: {{ toJson .Values.ui.client.homepage | quote }}
+            - name: CORE_API_VERSION_CONFIG			
+              value: {{ toJson .Values.ui.client.coreApiVersionConfig | quote }}
           livenessProbe:
             httpGet:
               path: /
