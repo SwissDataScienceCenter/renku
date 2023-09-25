@@ -20,7 +20,6 @@ package ch.renku.acceptancetests
 
 import ch.renku.acceptancetests.tooling.{AcceptanceSpec, KnowledgeGraphApi}
 import ch.renku.acceptancetests.workflows._
-import org.openqa.selenium.ElementNotInteractableException
 
 import scala.concurrent.duration._
 
@@ -28,11 +27,9 @@ import scala.concurrent.duration._
   */
 class HandsOnSpec
     extends AcceptanceSpec
-    with Environments
     with Login
     with Project
     with Settings
-    with JupyterNotebook
     with FlightsTutorial
     with Datasets
     with KnowledgeGraphApi {
@@ -55,24 +52,10 @@ class HandsOnSpec
 
     `navigate to project info`
 
-    `verify user can work with Jupyter notebook`
-
-    `navigate to project info`
-
     `verify analysis was run`
 
-    // This should prevent menu flickering due to UI not completely loaded
-    sleep(5 seconds)
-
-    `try to logout 🤷`
+    `log out of Renku`
   }
-
-  private def `try to logout 🤷` =
-    try `log out of Renku`
-    catch {
-      case _: ElementNotInteractableException => false
-      case _: Throwable                       => false
-    }
 
   private def `verify analysis was run`: Unit = `try few times with page reload` { _ =>
     When("the user navigates to the Files tab")

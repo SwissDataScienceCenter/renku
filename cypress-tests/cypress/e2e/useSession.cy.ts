@@ -15,11 +15,16 @@ const workflow = {
 
 // ? Modify the config -- useful for debugging
 // projectTestConfig.shouldCreateProject = false;
-// projectTestConfig.projectName = "cypress-usesession-2f2b5f2c2ee8";
+// projectTestConfig.projectName = "cypress-usesession-a8c6823e40ff";
 
 const projectIdentifier = {
   name: projectTestConfig.projectName,
   namespace: username,
+};
+
+const projectWithoutPermissions = {
+  namespace: "renku-ui-tests",
+  name: "stable-project",
 };
 
 describe("Basic public project functionality", () => {
@@ -42,7 +47,7 @@ describe("Basic public project functionality", () => {
 
   after(() => {
     if (projectTestConfig.shouldCreateProject)
-      cy.deleteProject(projectIdentifier);
+      cy.deleteProjectFromAPI(projectIdentifier);
   });
 
   beforeEach(() => {
@@ -54,29 +59,28 @@ describe("Basic public project functionality", () => {
       },
       validateLogin
     );
-    cy.visitAndLoadProject(projectIdentifier);
-    cy.stopAllSessionsForProject(projectIdentifier);
   });
 
   it("Start a new session on the project and interact with the terminal.", () => {
+    cy.visitAndLoadProject(projectIdentifier);
+    cy.stopAllSessionsForProject(projectIdentifier);
+
     // Start a session with options
     let serversInvoked = false;
     cy.intercept("/ui-server/api/notebooks/servers*", (req) => {
       serversInvoked = true;
     }).as("getServers");
     if (projectTestConfig.shouldCreateProject) {
-      cy.dataCy("project-overview-content")
+      cy.getDataCy("project-overview-content")
         .contains("your new Renku project", { timeout: TIMEOUTS.long })
         .should("exist");
     }
-    cy.getProjectPageLink(projectIdentifier, "sessions")
-      .should("exist")
-      .click();
+    cy.getProjectSection("Sessions").click();
     if (serversInvoked) cy.wait("@getServers");
     cy.wait("@getDatasets");
     cy.wait(5_000, { log: false }); // eslint-disable-line cypress/no-unnecessary-waiting
     cy.get("button.startButton")
-      .dataCy("more-menu")
+      .getDataCy("more-menu")
       .should("be.visible")
       .click();
     cy.getProjectPageLink(projectIdentifier, "sessions/new")
@@ -106,11 +110,14 @@ describe("Basic public project functionality", () => {
     );
 
     // Verify the "Connect" button works as well
-    cy.get(".fullscreen-back-button").contains("Back").should("exist").click();
-    cy.dataCy("open-session").first().should("be.visible").click();
+    cy.get(".fullscreen-back-button")
+      .contains("Back")
+      .should("be.visible")
+      .click();
+    cy.getDataCy("open-session").first().should("be.visible").click();
     cy.get(".progress-box .progress-title")
       .contains("Starting Session")
-      .should("exist");
+      .should("be.visible");
 
     // Run a simple workflow in the iframe
     cy.getIframe("iframe#session-iframe").within(() => {
@@ -133,69 +140,125 @@ describe("Basic public project functionality", () => {
         .should("be.visible")
         .contains(workflow.output)
         .should("be.visible");
-      cy.get("#jp-git-sessions")
-        .get(`button[title="Push committed changes (ahead by 1 commits)"]`)
-        .should("not.exist");
-
-      // Push the changes
-      // ? Switch to using the Save session button as soon as it works again.
-      // ? Reference: https://github.com/SwissDataScienceCenter/renku-notebooks/issues/1575
-      // // cy.dataCy("save-session-button").should("be.visible").click();
-      // // cy.get(".modal-session").contains("1 commit will be pushed").should("be.visible");
-      // // cy.dataCy("save-session-modal-button").should("be.visible").click();
-      cy.get(`[data-id="jp-git-sessions"]`).should("be.visible").click();
-      cy.get("#jp-git-sessions")
-        .contains(projectTestConfig.projectName)
-        .should("be.visible");
-      cy.get("#jp-git-sessions")
-        .get(`button[title="Push committed changes (ahead by 1 commits)"]`)
-        .should("exist")
-        .click();
-      cy.get("#jp-git-sessions")
-        .get(`button[title="Push committed changes"]`, {
-          timeout: TIMEOUTS.long,
-        })
-        .should("exist");
-      cy.get("#jp-git-sessions")
-        .get(`button[title="Push committed changes (ahead by 1 commits)"]`)
-        .should("not.exist");
     });
 
+    // Save the changes
+    cy.getDataCy("save-session-button").should("be.visible").click();
+    cy.get(".modal").contains("1 commit will be pushed").should("be.visible");
+    cy.getDataCy("save-session-modal-button").should("be.visible").click();
+    cy.get(".modal")
+      .contains("Saving Session", { timeout: TIMEOUTS.long })
+      .should("be.visible");
+    cy.get(".modal")
+      .contains("There are no changes", { timeout: TIMEOUTS.long })
+      .should("be.visible");
+    cy.get(".modal .btn-close").should("be.visible").click();
+
     // Pause the session
-    cy.dataCy("pause-session-button").should("be.visible").click();
-    cy.dataCy("pause-session-modal-button").should("be.visible").click();
+    cy.getDataCy("pause-session-button").should("be.visible").click();
+    cy.getDataCy("pause-session-modal-button").should("be.visible").click();
 
     cy.get('[data-cy="session-container"]', { timeout: TIMEOUTS.long })
       .should("be.visible")
       .contains("Paused");
 
-    // Stop the session
-    cy.dataCy("more-menu").first().should("be.visible").click();
-    cy.dataCy("delete-session-button").first().should("be.visible").click();
-    cy.dataCy("delete-session-modal-button").should("exist").click();
-    cy.dataCy("stopping-btn").should("exist");
+    // Stop the session and check the project has been indexed
+    cy.getDataCy("more-menu").first().should("be.visible").click();
+    cy.getDataCy("delete-session-button").first().should("be.visible").click();
+    cy.getDataCy("delete-session-modal-button").should("be.visible").click();
+    cy.getDataCy("stopping-btn").should("be.visible");
     cy.get(".renku-container", { timeout: TIMEOUTS.long })
-      .should("exist")
       .contains("No currently running sessions")
-      .should("exist");
+      .should("be.visible");
 
-    // Go the the workflows page and check the new workflow appears
-    cy.dataCy("project-navbar")
-      .contains("a.nav-link", "Workflows")
-      .should("be.visible")
-      .click();
-
-    cy.dataCy("workflows-browser")
+    // Go the workflows page and check the new workflow appears
+    cy.getProjectSection("Workflows").click();
+    cy.getDataCy("workflows-browser")
       .should("be.visible")
       .children()
       .should("have.length", 1)
       .contains(workflow.name)
       .should("be.visible")
       .click();
-
-    cy.dataCy("workflow-details")
+    cy.getDataCy("workflow-details")
       .should("be.visible")
       .contains(`echo 123 > ${workflow.output}`)
+      .should("be.visible");
+
+    // Go the file page and check the lineage exists
+    cy.getProjectSection("Files").click();
+    cy.get("div.tree-container")
+      .contains("button", "Lineage")
+      .should("be.visible")
+      .click();
+    cy.get("#tree-content").contains(workflow.output).should("exist").click();
+    cy.get(".graphContainer").contains(workflow.output).should("exist");
+  });
+
+  it("Start a new session as anonymous user.", () => {
+    // Log out and go to the project again
+    cy.visit("/");
+    cy.logout();
+    cy.visitAndLoadProject(projectIdentifier);
+
+    // Check we show the appropriate message
+    cy.getProjectSection("Sessions").click();
+    cy.getDataCy("header-project")
+      .find('button.startButton[data-cy="more-menu"]')
+      .should("be.visible")
+      .click();
+    cy.getProjectPageLink(projectIdentifier, "sessions/new")
+      .should("be.visible")
+      .click();
+    cy.get(".alert-info").contains("As an anonymous user").should("be.visible");
+
+    // Quickstart a session and check it spins up
+    cy.getDataCy("go-back-button").click();
+    cy.quickstartSession();
+
+    // Stop the session
+    cy.getDataCy("delete-session-button").should("be.visible").click();
+    cy.getDataCy("delete-session-modal-button").should("be.visible").click();
+    cy.get(".renku-container", { timeout: TIMEOUTS.long })
+      .contains("No currently running sessions.", { timeout: TIMEOUTS.long })
+      .should("be.visible");
+  });
+
+  it("Start a new session on a project without permissions.", () => {
+    // Log out and go to the project again
+    cy.visitAndLoadProject(projectWithoutPermissions);
+
+    // Check we show the appropriate message
+    cy.getProjectSection("Sessions").click();
+    cy.getDataCy("header-project")
+      .find('button.startButton[data-cy="more-menu"]')
+      .should("be.visible")
+      .click();
+    cy.getProjectPageLink(projectWithoutPermissions, "sessions/new")
+      .should("be.visible")
+      .click();
+    cy.get(".alert-info")
+      .contains("You have limited permissions for this project")
+      .should("be.visible");
+
+    // Quickstart a session and check it spins up
+    cy.getDataCy("go-back-button").click();
+    cy.quickstartSession();
+
+    // Pause the session
+    cy.getDataCy("pause-session-button").should("be.visible").click();
+    cy.getDataCy("pause-session-modal-button").should("be.visible").click();
+    cy.get('[data-cy="session-container"]', { timeout: TIMEOUTS.long })
+      .should("be.visible")
+      .contains("Paused");
+
+    // Stop the session and check the project has been indexed
+    cy.getDataCy("more-menu").first().should("be.visible").click();
+    cy.getDataCy("delete-session-button").first().should("be.visible").click();
+    cy.getDataCy("delete-session-modal-button").should("be.visible").click();
+    cy.getDataCy("stopping-btn").should("be.visible");
+    cy.get(".renku-container", { timeout: TIMEOUTS.long })
+      .contains("No currently running sessions")
       .should("be.visible");
   });
 });

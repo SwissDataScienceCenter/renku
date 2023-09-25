@@ -1,108 +1,58 @@
-# Cypress Tests for Renku
+# Cypress tests for Renku
 
-This repository aims to fill in gaps in current tests with Cypress.
+This section includes a set of acceptance tests for RenkuLab. The tests are
+written using [Cypress](https://www.cypress.io), run in Chrome, and the main target
+is the web interface of RenkuLab.
 
-# Test suites
+## Running the tests
 
-We currently have the following test suites
+You need a fully working RenkuLab deployment to run the tests against. You will also
+need a user account for the deployment.
 
-## R-Studio sessions
+If you wish to run the tests locally, you will need to clone the repository and have a
+recent version of Node.js installed. Then follow these steps:
 
-- Register a user / login
-- Create a R project
-- Launch a session
-- Open the session in the iframe view and test basic functionality
-- Stop the session
-- Delete the created project
+- Create a `cypress.env.json` file with the necessary user credentials. You can use the
+  `cypress.env.template.json` file as a template.
+- Install the dependencies with `npm install`.
+- Run the tests with `npm run e2e`. If you prefer not to use the GUI, you can run the
+  tests in headless mode with `npm run e2e:headless`.
 
-## Public Project
+Here is a list of the environment variable that you should set in the
+`cypress.env.json` file:
 
-- Register a user / login
-- Create a Python project
-- Search for the project
-- Check the content in the Overview tab
-- Check the content in the Files tab
-- Create and modify a dataset
-- View the project settings
+| VARIABLE        | USE                                                   |
+|-----------------|-------------------------------------------------------|
+| BASE_URL        | Full URL of the target environment.                   |
+| TEST_EMAIL      | The email used to register on Keycloak.               |
+| TEST_PASSWORD   | Password.                                             |
+| TEST_FIRST_NAME | First name.                                           |
+| TEST_LAST_NAME  | Last name.                                            |
+| TEST_USERNAME   | Username. Usually, it's the email without the domain. |
 
+> Tip: you might prefer not to save you password in plain text in the `cypress.env.json`
+  file. In that case, you can use the `TEST_PASSWORD` variable to the command line when
+  running the tests. For example `TEST_PASSWORD=mySecretPassword npm run e2e`.`
 
-# Limitations
+## Integration with CI pipeline
 
-- The tests expect to have to register first. If the registration fails
-  then the tests will try to login with the provided credentials. After
-  this the tests will check if the login succceeded or if an additional
-  login is required (as is the case of CI deployments). These are the only
-  login scenarios that are supported. The tests cannot handle logging in
-  through any but the Renku login screens.
-- The tests expect to use the one set of provided credentials to log in
-  to up to 2 different Renku deployments. In the case where the Gitlab used by
-  Renku is part of another deployment the tests will try to log in twice.
-- Using `https` if possible is reccomended in the `BASE_URL` environment
-  variable. Completing the registration and logging in fails if the `http`
-  is used on the standard dev and/or CI Renku deployments.
-- Using the electron browser from cypress will not work because rstudio does not load at
-  all in the electron browser.
-- Tests currently do not run on Firefox.
+The primary purpose of the tests is to spot regressions early on new pull requests.
+Most Renku repositories have a CI pipeline that runs the tests automatically for every
+commit. That requires deploying a full RenkuLab instance using the
+`/deploy #persist` command. The tests are run automatically in headless mode unless
+the flag `#notest` is included.
 
-# Requirements
+You can read more details in the documentation in the
+[renku-actions repository](https://github.com/SwissDataScienceCenter/renku-actions/tree/master/test-renku-cypress).
 
-- Node LTS or later.
-- On Linux you will need additional libraries see [here](https://docs.cypress.io/guides/getting-started/installing-cypress#Linux-Prerequisites).
-- You can also swap the regular `Dockerfile` in `.devcontainer/devcontainer.json` with `Dockerfile.cypress`
-  and launch a dev container. In the dev container you have to run the tests headless but you will
-  have access to a Chrome browser.
+Mind that including the `#persist` flag is currently necessary since the deployment
+is deleted automatically after running a separate set of acceptance tests; the Cypress
+tests generally run much quicker but they are not guaranteed to finish on time.
+Re-running single tests would also fail when the deployment is deleted.
 
-# To install
+## Limitations
 
-```
-npm install
-```
-
-# To run
-
-The tests use environment variables to get certain information.
-You can set these as shell enviornment variables before running, or
-you can copy the `cypress.env.template.json` file to `cypress.env.json` and set the variables there.
-
-**Run with environment variables set in cypress.env.json**
-```
-npm run e2e
-```
-**Run passing in environment variables**
-```
-TEST_USERNAME=my.username TEST_EMAIL=my.username@email.com TEST_PASSWORD=XXXXX TEST_FIRST_NAME=fname TEST_LAST_NAME=lname BASE_URL=https://dev.renku.ch npm run e2e
-```
-
-# Integration with CI pipeline
-
-In repos that have integrated the actions for running the cypress tests
-(currently `renku` and `renku-ui`), it is possible to run these tests
-in the CI pipline with the deploy command.
-
-In the `renku` repo, the cypress-tests are run when a PR is deployed.
-
-E.g.,
-
-```
-/deploy
-```
-
-In other repos, it is necessary to explicitly request that the
-cypress tests are run by adding the `#cypress` token (the deployment)
-also needs to be persisted:
-
-```
-/deploy #persist #cypress
-```
-
-Finally, it is possible to run the cypress acceptance tests without
-the selenium acceptance tests:
-
-```
-/deploy #persist #notest #cypress
-```
-
-To incorporate the cypress tests into the CI pipleines of other
-projects, see the documentation in the [renku-actions repo](https://github.com/SwissDataScienceCenter/renku-actions/tree/master/test-renku-cypress).
-
-The action in the [renku-ui repo](https://github.com/SwissDataScienceCenter/renku-ui/blob/master/.github/workflows/acceptance-tests.yml#L109) could also be helpful to look at.
+- Using the electron browser from Cypress will not work because a few features in
+  RenkuLab do not work with that (E.G: RStudio does not load at all).
+- Tests currently do not run on Firefox. Please use [Chrome](https://www.google.com/chrome)
+  or [Chromium](https://www.chromium.org) instead. 

@@ -44,42 +44,59 @@ const stopAllSessionsForProject = (identifier: ProjectIdentifier) => {
       const name = servers[key].name;
       // eslint-disable-next-line cypress/no-assigning-return-values
       const connectButton = cy
-        .dataCy("session-container")
-        .get(`[data-cy=open-session][href$=${name}]`)
+        .getDataCy("session-container")
+        .find(`[data-cy=open-session][href$=${name}]`)
         .first()
-        .should("exist");
+        .should("be.visible");
       connectButton.siblings("[data-cy=more-menu]").click();
       connectButton
         .siblings(".dropdown-menu")
         .find("button")
         .contains("Delete session")
+        .should("be.visible")
         .click();
-      cy.dataCy("delete-session-modal-button").should("be.visible").click();
+      cy.getDataCy("delete-session-modal-button").should("be.visible").click();
     }
   });
   cy.contains("No currently running sessions.", { timeout: TIMEOUTS.long });
-  cy.get(".nav-link").contains("Overview").click();
+  cy.getProjectSection("Overview").click();;
 };
 
-export const stopSessionFromIframe = () => {
-  cy.intercept(
-    { method: "DELETE", url: /.*\/api\/notebooks\/servers\/.*/, times: 1 },
-    (req) => {
-      req.continue((res) => {
-        expect(res.statusCode).to.eq(204);
-      });
-    }
+// export const stopSession = () => {
+//   // Stop the session
+//   cy.getDataCy("stop-session-button").should("be.visible").click();
+//   cy.getDataCy("stop-session-modal-button").should("be.visible").click();
+//   cy.get(".renku-container", { timeout: TIMEOUTS.long }).contains(
+//     "No currently running sessions.",
+//     { timeout: TIMEOUTS.long }
+//   ).should("be.visible");
+// };
+
+function quickstartSession() {
+  cy.get(".start-session-button").should("not.be.disabled").click();
+  cy.get(".progress-box .progress-title").should("exist");
+  cy.get(".progress-box .progress-title")
+    .contains("Starting Session")
+    .should("exist");
+  cy.get(".progress-box .progress-title", { timeout: TIMEOUTS.vlong }).should(
+    "not.exist"
   );
-  cy.get(`[data-cy="stop-session-button"]`).should("be.visible").click();
-  cy.get("div.modal-session").should("be.visible").should("not.be.empty");
-  cy.get(`[data-cy="stop-session-modal-button"]`).should("be.visible").click();
-  cy.contains("Stopping...", { timeout: TIMEOUTS.long }).should("be.visible");
-};
+  cy.getIframe("iframe#session-iframe").within(() => {
+    cy.get(".jp-Launcher-content", { timeout: TIMEOUTS.long }).should(
+      "be.visible"
+    );
+    cy.get(".jp-Launcher-section").should("be.visible");
+    cy.get('.jp-LauncherCard[title="Start a new terminal session"]').should(
+      "be.visible"
+    );
+  });
+}
 
 export default function registerSessionCommands() {
+  Cypress.Commands.add("quickstartSession", quickstartSession);
   Cypress.Commands.add("startSession", startSession);
   Cypress.Commands.add("waitForImageToBuild", waitForImageToBuild);
-  Cypress.Commands.add("stopSessionFromIframe", stopSessionFromIframe);
+  // Cypress.Commands.add("stopSession", stopSession);
   Cypress.Commands.add("stopAllSessionsForProject", stopAllSessionsForProject);
 }
 
@@ -89,7 +106,8 @@ declare global {
     interface Chainable {
       startSession(identifier: ProjectIdentifier);
       waitForImageToBuild(identifier: ProjectIdentifier);
-      stopSessionFromIframe();
+      // stopSession();
+      quickstartSession();
       stopAllSessionsForProject: typeof stopAllSessionsForProject;
     }
   }
