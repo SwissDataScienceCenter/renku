@@ -154,16 +154,10 @@ describe("Basic public project functionality", () => {
       .should("be.visible");
     cy.get(".modal .btn-close").should("be.visible").click();
 
-    // Stop the session
+    // Stop the session and check the project has been indexed
     cy.stopSession();
-
-    // Be sure the project have been indexed
     cy.getDataCy("go-back-button").click();
-    cy.getProjectSection("Settings").click();
-    cy.getDataCy("kg-status-section-open").should("exist").click();
-    cy.getDataCy("project-settings-knowledge-graph")
-      .contains("Everything indexed", { timeout: TIMEOUTS.vlong })
-      .should("exist");
+    cy.waitMetadataIndexing();
 
     // Go the workflows page and check the new workflow appears
     cy.getProjectSection("Workflows").click();

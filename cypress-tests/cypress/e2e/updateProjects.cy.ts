@@ -139,12 +139,12 @@ describe("Fork and update old projects", () => {
       .should("exist")
       .click();
     if (!commitFetched) {
-      cy.wait(1000); // eslint-disable-line cypress/no-unnecessary-waiting
+      cy.wait(TIMEOUTS.minimal); // eslint-disable-line cypress/no-unnecessary-waiting
       cy.getDataCy("refresh-commits")
         .as("refresh-commits-button-1")
         .should("be.visible");
       cy.get("@refresh-commits-button-1").should("be.visible").click();
-      cy.wait(1000); // eslint-disable-line cypress/no-unnecessary-waiting
+      cy.wait(TIMEOUTS.minimal); // eslint-disable-line cypress/no-unnecessary-waiting
     }
     cy.wait("@getCommits", { timeout: TIMEOUTS.long });
     cy.getDataCy("project-overview-content")
@@ -187,12 +187,12 @@ describe("Fork and update old projects", () => {
       .should("exist")
       .click();
     if (!commitFetched) {
-      cy.wait(1000); // eslint-disable-line cypress/no-unnecessary-waiting
+      cy.wait(TIMEOUTS.minimal); // eslint-disable-line cypress/no-unnecessary-waiting
       cy.getDataCy("refresh-commits")
         .as("refresh-commits-button-2")
         .should("be.visible");
       cy.get("@refresh-commits-button-2").should("be.visible").click();
-      cy.wait(1000); // eslint-disable-line cypress/no-unnecessary-waiting
+      cy.wait(TIMEOUTS.minimal); // eslint-disable-line cypress/no-unnecessary-waiting
     }
     cy.wait("@getCommits", { timeout: TIMEOUTS.long });
     cy.getDataCy("project-overview-content")
