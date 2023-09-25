@@ -6,6 +6,12 @@ Please follow this convention when adding a new row
 * `<type: NEW|EDIT|DELETE> - *<resource name>*: <details>`
 
 ----
+## Upgrading to Renku 0.37.0
+* EDIT - `notebook.culling.idleThresholdSeconds` in the notebook's values files was renamed to
+  `notebook.culling.idleSecondsThreshold`. This needs to be acted upon once the corresponding
+  [PR](https://github.com/SwissDataScienceCenter/renku/pull/3253) in Renku repository is merged.
+  
+----
 ## Upgrading to Renku 0.34.0
 * NEW - *ingress.className* is now available to select a specific IngressClass to
   be used for the ingress. While often supporting both, current ingress
