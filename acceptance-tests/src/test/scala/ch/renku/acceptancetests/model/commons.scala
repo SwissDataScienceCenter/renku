@@ -75,7 +75,7 @@ trait UrlOps[T <: BaseUrl] {
 
   def /(part: String): UrlNoQueryParam = UrlNoQueryParam.unsafe(s"$value/${urlEncode(part)}")
 
-  def /[T](part: T)(implicit enc: SegmentEncoder[T]): UrlNoQueryParam =
+  def /[P](part: P)(implicit enc: SegmentEncoder[P]): UrlNoQueryParam =
     UrlNoQueryParam.unsafe(s"$value/${enc.toSegment(part).encoded}")
 
   def /(maybePart: Option[String]): UrlNoQueryParam = maybePart match {

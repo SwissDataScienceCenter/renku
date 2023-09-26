@@ -19,9 +19,9 @@
 package ch.renku.acceptancetests.tooling
 
 import io.circe.Decoder
+import io.circe.literal._
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should
-import io.circe.literal._
 
 class GraphStatusSpec extends AnyFlatSpec with should.Matchers {
 
