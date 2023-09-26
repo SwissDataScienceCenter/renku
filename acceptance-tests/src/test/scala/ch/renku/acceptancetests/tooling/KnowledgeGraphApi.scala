@@ -24,7 +24,6 @@ import cats.effect.IO
 import cats.effect.unsafe.IORuntime
 import cats.syntax.all._
 import ch.renku.acceptancetests.model.projects
-import ch.renku.acceptancetests.model.projects.ProjectIdentifier
 import io.circe._
 import org.http4s.MediaType._
 import org.http4s.Status.{Accepted, Created, NotFound, Ok}
@@ -42,16 +41,16 @@ trait KnowledgeGraphApi extends RestClient {
 
   implicit val ioRuntime: IORuntime
 
-  def `wait for KG to process events`(projectId: ProjectIdentifier, browser: WebDriver): Unit = {
+  def `wait for KG to process events`(projectSlug: projects.Slug, browser: WebDriver): Unit = {
     sleep(1 second)
-    val gitLabProjectId = `get GitLab project id`(projectId)
-    checkStatusAndWait(projectId, gitLabProjectId, browser, 1)
+    val gitLabProjectId = `get GitLab project id`(projectSlug)
+    checkStatusAndWait(projectSlug, gitLabProjectId, browser, 1)
   }
 
-  def `wait for project activation`(projectId: ProjectIdentifier)(implicit browser: WebDriver): Either[String, Unit] = {
+  def `wait for project activation`(projectSlug: projects.Slug)(implicit browser: WebDriver): Either[String, Unit] = {
     sleep(1 second)
-    val gitLabProjectId = `get GitLab project id`(projectId)
-    checkActivatedAndWait(projectId, gitLabProjectId, browser, attempt = 1)
+    val gitLabProjectId = `get GitLab project id`(projectSlug)
+    checkActivatedAndWait(projectSlug, gitLabProjectId, browser, attempt = 1)
   }
 
   def findLineage(slug: projects.Slug, filePath: String): JsonObject = {
@@ -117,32 +116,32 @@ trait KnowledgeGraphApi extends RestClient {
 
   @tailrec
   private def checkStatusAndWait(
-      projectId:       ProjectIdentifier,
+      projectSlug:     projects.Slug,
       gitLabProjectId: Int,
       browser:         WebDriver,
       attempt:         Int
   ): Unit =
     if (attempt >= 60 * 10)
-      fail(s"Events for '$projectId' project not processed after 10 minutes")
-    else if (findTotalDone(projectId, gitLabProjectId, browser) == 0) {
+      fail(s"Events for '$projectSlug' project not processed after 10 minutes")
+    else if (findTotalDone(projectSlug, gitLabProjectId, browser) == 0) {
       sleep(1 second)
-      checkStatusAndWait(projectId, gitLabProjectId, browser, attempt + 1)
-    } else if (findProgress(projectId, gitLabProjectId, browser) < 100d) {
+      checkStatusAndWait(projectSlug, gitLabProjectId, browser, attempt + 1)
+    } else if (findProgress(projectSlug, gitLabProjectId, browser) < 100d) {
       sleep(1 second)
-      checkStatusAndWait(projectId, gitLabProjectId, browser, attempt + 1)
-    } else if (findProgress(projectId, gitLabProjectId, browser) == 100d) {
-      val maybeDetails = findStatus(projectId, gitLabProjectId, browser).flatMap(_.maybeDetails)
+      checkStatusAndWait(projectSlug, gitLabProjectId, browser, attempt + 1)
+    } else if (findProgress(projectSlug, gitLabProjectId, browser) == 100d) {
+      val maybeDetails = findStatus(projectSlug, gitLabProjectId, browser).flatMap(_.maybeDetails)
       maybeDetails match {
         case Some(status) if status.status == "failure" =>
           val stackTrace = status.maybeStackTrace.map(s => s"; stackTrace:\n${s.replace("; ", "; \n")}").getOrElse("")
-          fail(s"Project $projectId ($gitLabProjectId) failed with '${status.message}'$stackTrace")
+          fail(s"Project $projectSlug ($gitLabProjectId) failed with '${status.message}'$stackTrace")
         case _ => ()
       }
     }
 
   @tailrec
   private def checkActivatedAndWait(
-      projectId:       ProjectIdentifier,
+      projectSlug:     projects.Slug,
       gitLabProjectId: Int,
       browser:         WebDriver,
       attempt:         Int,
@@ -151,23 +150,23 @@ trait KnowledgeGraphApi extends RestClient {
     logger.info(s"waits for Project Activation - attempt $attempt")
     if (attempt >= 60) {
       val duration = Duration(Instant.now().toEpochMilli - startTime.toEpochMilli, MILLISECONDS).toSeconds
-      s"Activation status of '$projectId' project couldn't be determined after ${duration}s".asLeft[Unit]
-    } else if (!checkActivated(projectId, gitLabProjectId, browser)) {
+      s"Activation status of '$projectSlug' project couldn't be determined after ${duration}s".asLeft[Unit]
+    } else if (!checkActivated(projectSlug, gitLabProjectId, browser)) {
       sleep(1 second)
-      checkActivatedAndWait(projectId, gitLabProjectId, browser, attempt + 1, startTime)
+      checkActivatedAndWait(projectSlug, gitLabProjectId, browser, attempt + 1, startTime)
     } else ().asRight[String]
   }
 
-  private def checkActivated(projectId: ProjectIdentifier, gitLabProjectId: Int, browser: WebDriver): Boolean =
-    findStatus(projectId, gitLabProjectId, browser).exists(_.activated)
+  private def checkActivated(projectSlug: projects.Slug, gitLabProjectId: Int, browser: WebDriver): Boolean =
+    findStatus(projectSlug, gitLabProjectId, browser).exists(_.activated)
 
-  private def findProgress(projectId: ProjectIdentifier, gitLabProjectId: Int, browser: WebDriver): Double =
-    findStatus(projectId, gitLabProjectId, browser).map(_.progressPercentage).getOrElse(0d)
+  private def findProgress(projectSlug: projects.Slug, gitLabProjectId: Int, browser: WebDriver): Double =
+    findStatus(projectSlug, gitLabProjectId, browser).map(_.progressPercentage).getOrElse(0d)
 
-  private def findTotalDone(projectId: ProjectIdentifier, gitLabProjectId: Int, browser: WebDriver): Int =
-    findStatus(projectId, gitLabProjectId, browser).map(_.total).getOrElse(0)
+  private def findTotalDone(projectSlug: projects.Slug, gitLabProjectId: Int, browser: WebDriver): Int =
+    findStatus(projectSlug, gitLabProjectId, browser).map(_.total).getOrElse(0)
 
-  private def findStatus(projectId: ProjectIdentifier, gitLabProjectId: Int, browser: WebDriver): Option[GraphStatus] =
+  private def findStatus(projectSlug: projects.Slug, gitLabProjectId: Int, browser: WebDriver): Option[GraphStatus] =
     GET(renkuBaseUrl / "api" / "projects" / gitLabProjectId / "graph" / "status")
       .addCookiesFrom(browser)
       .send { response =>
@@ -175,7 +174,7 @@ trait KnowledgeGraphApi extends RestClient {
           case Ok       => response.as[GraphStatus].map(_.some)
           case NotFound => None.pure[IO]
           case other =>
-            IO(logger.warn(s"Finding processing status for '$projectId' returned $other")).as(None)
+            IO(logger.warn(s"Finding processing status for '$projectSlug' returned $other")).as(None)
         }
       }
 }

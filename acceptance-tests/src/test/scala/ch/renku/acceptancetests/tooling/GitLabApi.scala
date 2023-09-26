@@ -113,12 +113,12 @@ trait GitLabApi extends RestClient {
       .extract(decoder)
   }
 
-  def `get GitLab project id`(projectId: ProjectIdentifier): Int =
-    GET(gitLabAPIUrl / "projects" / projectId.asProjectSlug.value)
+  def `get GitLab project id`(projectSlug: projects.Slug): Int =
+    GET(gitLabAPIUrl / "projects" / projectSlug.value)
       .withAuthorizationToken(authorizationToken)
       .send(whenReceived(status = Ok) >=> bodyToJson)
       .extract(jsonRoot.id.int.getOption)
-      .getOrElse(fail(s"Cannot find '$projectId' project in GitLab"))
+      .getOrElse(fail(s"Cannot find '$projectSlug' project in GitLab"))
 
   def `project exists in GitLab`(projectId: ProjectIdentifier): Boolean =
     GET(gitLabAPIUrl / "projects" / projectId.asProjectSlug.value)
