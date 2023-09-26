@@ -67,7 +67,7 @@ class ProjectAPISpec extends AcceptanceSpec with Login with KnowledgeGraphApi wi
     newImage.map(_.toName).toList shouldBe afterUpdate.images.map(_.toName)
 
     When("the user removes the project")
-    `DELETE /knowledge-graph/projects/:slug`(slug) sleep (2 seconds)
+    `DELETE /knowledge-graph/projects/:slug`(slug) sleep (5 seconds)
 
     Then("the API should not be able to find the project any more")
     `GET /knowledge-graph/projects/:slug`(slug) shouldBe None
