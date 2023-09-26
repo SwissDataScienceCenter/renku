@@ -29,11 +29,9 @@ import scala.concurrent.duration._
 
 class ImportZenodoWithCliSpec
     extends AcceptanceSpec
-    with Environments
     with Login
     with Project
     with Settings
-    with JupyterNotebook
     with CLIConfiguration
     with Datasets
     with KnowledgeGraphApi {
