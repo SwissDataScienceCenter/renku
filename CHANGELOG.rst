@@ -1,5 +1,38 @@
 .. _changelog:
 
+0.37.0
+------
+
+Renku ``0.37.0`` introduces new Project Creation and updated Project Update API.
+
+User-Facing Changes
+~~~~~~~~~~~~~~~~~~~
+
+**🌟 New Features**
+
+- 🖼️ **Knowledge Graph**: New Project Create API to create a project in GitLab and Knowledge Graph
+  (`#1635 <https://github.com/SwissDataScienceCenter/renku-graph/issues/1635>`_).
+
+**🐞 Bug Fixes**
+
+- **Knowledge Graph**: The Project Update API to work for non-public projects
+  (`#1695 <https://github.com/SwissDataScienceCenter/renku-graph/pull/1695>`_).
+
+Internal Changes
+~~~~~~~~~~~~~~~~
+
+**Bug Fixes**
+
+- **Knowledge Graph**: Various issues preventing Grafana dashboards not working.
+  (`#1717 <https://github.com/SwissDataScienceCenter/renku-graph/pull/1717>`_)
+  (`#1719 <https://github.com/SwissDataScienceCenter/renku-graph/pull/1719>`_).
+
+Individual components
+~~~~~~~~~~~~~~~~~~~~~~
+
+- `renku-graph 2.42.0 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/2.42.0>`_
+
+
 0.36.3
 ------
 
