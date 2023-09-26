@@ -3,7 +3,7 @@
 0.37.0
 ------
 
-Renku ``0.37.0`` introduces new Project Creation and updated Project Update API.
+Renku ``0.37.0`` improves the Knowledge Graph API, with a new Project Creation functionality and a Project Update enhancement.
 
 User-Facing Changes
 ~~~~~~~~~~~~~~~~~~~
