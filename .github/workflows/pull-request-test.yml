@@ -72,7 +72,7 @@ jobs:
       - uses: actions/checkout@v4
       - name: renku build and deploy
         if: needs.check-deploy.outputs.pr-contains-string == 'true'
-        uses: SwissDataScienceCenter/renku-actions/deploy-renku@v1.6.0
+        uses: SwissDataScienceCenter/renku-actions/deploy-renku@feat-combined-helm-charts
         env:
           DOCKER_PASSWORD: ${{ secrets.RENKU_DOCKER_PASSWORD }}
           DOCKER_USERNAME: ${{ secrets.RENKU_DOCKER_USERNAME }}
