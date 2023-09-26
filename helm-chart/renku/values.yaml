@@ -1213,7 +1213,6 @@ gateway:
   image:
     ## Define the image for the auth middleware
     auth:
-      name: renku/renku-gateway
       repository: renku/renku-gateway
       tag: "0.21.3"
       pullPolicy: IfNotPresent
@@ -1256,7 +1255,6 @@ gateway:
 
   reverseProxy:
     image:
-      name: renku/renku-revproxy
       repository: renku/renku-revproxy
       tag: "0.21.3"
       pullPolicy: IfNotPresent
