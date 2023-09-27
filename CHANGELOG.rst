@@ -10,12 +10,13 @@ User-Facing Changes
 
 **🌟 New Features**
 
-- 🖼️ **Knowledge Graph**: New Project Create API to create a project in GitLab and Knowledge Graph
+- 🖼️ **Knowledge Graph**: New `Project Create API <https://renkulab.io/swagger/?urls.primaryName=knowledge%20graph#/default/post_projects>`_ 
+  to create a project in GitLab and Knowledge Graph
   (`#1635 <https://github.com/SwissDataScienceCenter/renku-graph/issues/1635>`_).
 
 **🐞 Bug Fixes**
 
-- **Knowledge Graph**: The Project Update API to work for non-public projects
+- **Knowledge Graph**: The `Project Update API <https://renkulab.io/swagger/?urls.primaryName=knowledge%20graph#/default/patch_projects__namespace___projectName_>`_ to work for non-public projects
   (`#1695 <https://github.com/SwissDataScienceCenter/renku-graph/pull/1695>`_).
 
 Internal Changes
