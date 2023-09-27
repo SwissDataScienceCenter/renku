@@ -735,7 +735,7 @@ ui:
       custom: true
       repositories:
         - url: https://github.com/SwissDataScienceCenter/renku-project-template
-          ref: 0.1.15
+          ref: 0.7.1
           name: Renku
 
     # This defines the threshold for automatically showing a preview when browsing projects' files.
