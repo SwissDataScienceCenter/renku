@@ -5,8 +5,8 @@ import type { ProjectIdentifier } from "./projects";
 function startSession(identifier: ProjectIdentifier) {
   const id = fullProjectIdentifier(identifier);
   cy.visit(`/projects/${id.namespace}/${id.name}/sessions/new`);
-  cy.get(".btn-rk-green", { timeout: TIMEOUTS.long })
-    .contains("Start session")
+  cy.get(".renku-container button.btn-secondary", { timeout: TIMEOUTS.vlong })
+    .contains("Start Session")
     .should("be.visible")
     .should("be.enabled")
     .click();
@@ -22,44 +22,69 @@ function startSession(identifier: ProjectIdentifier) {
 function waitForImageToBuild(identifier: ProjectIdentifier) {
   const id = fullProjectIdentifier(identifier);
   cy.visit(`/projects/${id.namespace}/${id.name}/sessions/new`);
-  cy.get(".btn-rk-green", { timeout: TIMEOUTS.vlong })
+  cy.get(".renku-container button.btn-secondary", { timeout: TIMEOUTS.vlong })
+    .contains("Start Session")
     .should("be.visible")
     .should("be.enabled");
 }
 
-const stopAllSessionsForProject = (identifier: ProjectIdentifier) => {
+function stopAllSessionsForProject(identifier: ProjectIdentifier, loadPage = true) {
   const id = fullProjectIdentifier(identifier);
   cy.intercept("/ui-server/api/notebooks/servers*").as("getSessions");
-  cy.visit(`/projects/${id.namespace}/${id.name}/sessions`);
+  if (loadPage)
+    cy.visitAndLoadProject(identifier);
+  cy.getProjectSection("Sessions").click();
   cy.wait("@getSessions").then(({ response }) => {
     const servers = response?.body?.servers ?? {};
     for (const key of Object.keys(servers)) {
+      // Skip any unrelated sessions
+      if (
+        servers[key].annotations["renku.io/namespace"] !== id.namespace ||
+        servers[key].annotations["renku.io/projectName"] !== id.name
+      )
+        continue;
+
       const name = servers[key].name;
       // eslint-disable-next-line cypress/no-assigning-return-values
       const connectButton = cy
-        .get(`[data-cy=open-session][href$=${name}]`)
-        .should("exist");
+        .getDataCy("session-container")
+        .find(`[data-cy=open-session][href$=${name}]`)
+        .first()
+        .should("be.visible");
       connectButton.siblings("[data-cy=more-menu]").click();
       connectButton
         .siblings(".dropdown-menu")
         .find("button")
-        .contains("Stop")
+        .contains("Delete session")
+        .should("be.visible")
         .click();
+      cy.getDataCy("delete-session-modal-button").should("be.visible").click();
     }
   });
   cy.contains("No currently running sessions.", { timeout: TIMEOUTS.long });
-  cy.getDataCy("go-back-button").click();
-};
+}
 
-export const stopSession = () => {
-  // Stop the session
-  cy.getDataCy("stop-session-button").should("exist").click();
-  cy.getDataCy("stop-session-modal-button").should("exist").click();
-  cy.get(".renku-container", { timeout: TIMEOUTS.long }).contains(
-    "No currently running sessions.",
-    { timeout: TIMEOUTS.long }
-  );
-};
+function deleteSession(fromSessionPage = false) {
+  if (!fromSessionPage)
+    cy.getDataCy("more-menu").first().should("be.visible").click();
+  cy.getDataCy("delete-session-button").first().should("be.visible").click();
+  cy.getDataCy("delete-session-modal-button").should("be.visible").click();
+  cy.getDataCy("stopping-btn").should("be.visible");
+  cy.get(".renku-container", { timeout: TIMEOUTS.long })
+    .contains("No currently running sessions")
+    .should("be.visible");
+}
+
+function pauseSession(fromSessionPage = true) {
+  if (!fromSessionPage)
+    cy.getDataCy("more-menu").first().should("be.visible").click();
+  cy.getDataCy("pause-session-button").should("be.visible").click();
+  cy.getDataCy("pause-session-modal-button").should("be.visible").click();
+  cy.get(`[data-cy="session-container"]`, { timeout: TIMEOUTS.long })
+    .should("be.visible")
+    .contains("Paused");
+}
+
 
 function quickstartSession() {
   cy.get(".start-session-button").should("not.be.disabled").click();
@@ -85,7 +110,8 @@ export default function registerSessionCommands() {
   Cypress.Commands.add("quickstartSession", quickstartSession);
   Cypress.Commands.add("startSession", startSession);
   Cypress.Commands.add("waitForImageToBuild", waitForImageToBuild);
-  Cypress.Commands.add("stopSession", stopSession);
+  Cypress.Commands.add("deleteSession", deleteSession);
+  Cypress.Commands.add("pauseSession", pauseSession);
   Cypress.Commands.add("stopAllSessionsForProject", stopAllSessionsForProject);
 }
 
@@ -95,9 +121,10 @@ declare global {
     interface Chainable {
       startSession(identifier: ProjectIdentifier);
       waitForImageToBuild(identifier: ProjectIdentifier);
-      stopSession();
+      deleteSession(fromSessionPage?: boolean);
+      pauseSession(fromSessionPage?: boolean);
       quickstartSession();
-      stopAllSessionsForProject: typeof stopAllSessionsForProject;
+      stopAllSessionsForProject(identifier: ProjectIdentifier, loadPage?: boolean);
     }
   }
 }
