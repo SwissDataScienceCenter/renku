@@ -33,7 +33,7 @@ global:
     password:
       value:
     ## Fill in the keycloak url below if you are not using the renku-bundled keycloak instance
-    url: 
+    url:
   gateway:
     ## The client secret for the renku client application registered in keycloak.
     clientSecret: # use `uuidgen -r`
@@ -175,10 +175,8 @@ global:
     image:
       repository: renku/certificates
       tag: "0.0.2"
-    customCAs:
-      []
+    customCAs: []
       # - secret:
-  
   ## Database credentials for postgres
   db:
     ## Used by the renku-data-services and potentially other backend services
@@ -188,7 +186,7 @@ global:
       ## The contents of the 'password' key is used.
       ## The secret is not re-generated or modified in any way if it already exists.
       passwordSecretName: renku-db-common-password
-    
+
   crc:
     serviceName: renku-crc
 
@@ -303,8 +301,8 @@ keycloakx:
   ## keycloak admin username/password is supplied.
   initRealm:
     image:
-      repository: renku/init-realm
-      tag: "0.36.3"
+      repository: registry.dev.renku.ch/tasko.olevski/renku-images/init-realm
+      tag: "0.36.4-8.21cbfb5"
 
   ## Skip Keycloak testing when running Helm test
   test:
@@ -676,8 +674,7 @@ ui:
     ingress:
       enabled: false
 
-    resources:
-      {}
+    resources: {}
       # We usually recommend not to specify default resources and to leave this as a conscious
       # choice for the user. This also increases chances charts run on environments with little
       # resources, such as Minikube. If you do want to specify resources, uncomment the following
@@ -845,8 +842,7 @@ ui:
 
     ingress:
       enabled: false
-      annotations:
-        {}
+      annotations: {}
         # kubernetes.io/ingress.class: nginx
         # kubernetes.io/tls-acme: "true"
       hosts:
@@ -1278,7 +1274,6 @@ gateway:
   allowOrigin:
   # - http://example.com
   # - https://foo.example.com
-  
   replicaCount: 1
 
   ## Set to true to enable the developement mode. This has negative security
@@ -1312,8 +1307,7 @@ gateway:
     type: ClusterIP
     port: 80
 
-  resources:
-    {}
+  resources: {}
     # We usually recommend not to specify default resources and to leave this as a conscious
     # choice for the user. This also increases chances charts run on environments with little
     # resources, such as Minikube. If you do want to specify resources, uncomment the following
@@ -1560,11 +1554,11 @@ swagger:
 ## The image used in startup scripts to initialize different postgress databases
 initDb:
   image:
-    repository: renku/init-db
-    tag: "0.36.3"
+    repository: registry.dev.renku.ch/tasko.olevski/renku-images/init-db
+    tag: "0.36.4-8.21cbfb5"
 
 crc:
-  image: 
+  image:
     repository: renku/renku-crc
     tag: "0.0.2"
     pullPolicy: IfNotPresent
