@@ -653,86 +653,132 @@ gitlab:
 ## Configuration for the UI service
 ui:
   client:
-    ## Configuration for Renku templates
-    templates:
-      custom: true
-      repositories:
-        - url: https://github.com/SwissDataScienceCenter/renku-project-template
-          ref: 0.7.1
-          name: Renku
-        - url: https://github.com/SwissDataScienceCenter/contributed-project-templates
-          ref: 0.6.0
-          name: Community
+    ## The URL for the client
+    url:
+    replicaCount: 1
+
+    image:
+      repository: renku/renku-ui
+      tag: "3.12.2"
+      pullPolicy: IfNotPresent
+
+      ## Optionally specify an array of imagePullSecrets.
+      ## Secrets must be manually created in the namespace.
+      ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/
+      ##
+      # pullSecrets:
+      #   - myRegistrKeySecretName
+
+    service:
+      type: ClusterIP
+      port: 80
 
     ingress:
       enabled: false
 
-    ## Configuration for a canary version of the UI
-    canary:
+    resources:
+      {}
+      # We usually recommend not to specify default resources and to leave this as a conscious
+      # choice for the user. This also increases chances charts run on environments with little
+      # resources, such as Minikube. If you do want to specify resources, uncomment the following
+      # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+      # limits:
+      #  cpu: 100m
+      #  memory: 128Mi
+      # requests:
+      #  cpu: 100m
+      #  memory: 128Mi
+
+    nodeSelector: {}
+
+    tolerations: []
+
+    affinity: {}
+
+    podSecurityContext: {}
+
+    securityContext:
+      runAsUser: 101
+      runAsNonRoot: true
+      allowPrivilegeEscalation: false
+
+    # This defines the message displayed on the home page of logged in users.
+    dashboardMessage:
       enabled: false
-    #   image:
-    #     repository: renku/renku-ui
-    #     tag: "1.0.0-beta5"
-    ## Configuration for the welcome page text
-    #  welcomePage:
-    #    text: "## Some markdown text here!"
-    ## UI image
-    image:
-      pullPolicy: IfNotPresent
-      repository: renku/renku-ui
-      tag: 3.12.2
+      # This is the main message and is rendered as Markdown content.
+      text: |
+        # Welcome to Renku! 🐸
 
-    ## Pod affinity for UI deployment
-    # affinity: {}
-    ## Node selector for UI deployment
-    # nodeSelector: {}
-    ## Pod tolerations for UI deployment
-    # tolerations: []
+        ✨This is an example welcome message.✨
+      # This message is displayed when the user click "Read more"
+      # and is rendered as Markdown content.
+      # Set this to the empty string "" to disable the "Read more" button.
+      additionalText: |
+        ℹ️ Renku documentation: https://renku.readthedocs.io/en/stable/
+      # Style of the message card. Allowed values are:
+      # - "plain" -> simple white background card, no icon
+      # - "success" -> green background, green checkmark icon
+      # - "info" -> blue background, "i" in circle icon
+      # - "warning" -> yellow background, triangle exclamation mark icon
+      # - "danger" -> red background, triangle exclamation mark icon
+      style: info
+      # When this is set to true, users can dismiss the message and hide
+      # it form the dashboard page until the tab is refreshed.
+      dismissible: true
 
-    ## Replica count
-    # replicaCount: 1
+    templates:
+      custom: true
+      repositories:
+        - url: https://github.com/SwissDataScienceCenter/renku-project-template
+          ref: 0.1.15
+          name: Renku
 
-    ## Service configuration for UI
-    ## Modify service.type according to your setup
-    service:
-      port: 80
-      type: ClusterIP
+    # This defines the threshold for automatically showing a preview when browsing projects' files.
+    # Above the soft limit, the user receives a warning. Above the hard limit, no preview is available.
+    previewSizeThreshold:
+      soft: 1048576 # 1MB
+      hard: 10485760 # 10MB
 
-    ## Privacy settings allow to configure the content of a Privacy Page through a configMap
-    ## and to show a banner to comply with privacy related laws
-    # privacy:
-    #   enabled: true
-    #   page:
-    #     enabled: true
-    #     configMapName: privacy-page
-    #     configMapKey: privacy_statement
-    #   banner:
-    #     content: |
-    #       This website requires cookies in order to ensure basic functionality. Further details
-    #       in our <u><a class="text-white" href="/privacy">Privacy Policy</a></u>.
-    #     layout:
-    #       disableStyles: true
-    #       containerClasses: fixed-bottom p-3 bg-dark
-    #       contentClasses: text-white small
-    #       buttonClasses: btn btn-sm btn-light mr-2
-    #       buttonWrapperClasses: mt-2
-    ## Configuration for Sentry
+    # This defines the threshold for displaying a message when a user is trying to upload a large file
+    # so that they know it's not necessary to wait for this. There is only hard limit for now.
+    uploadSizeThreshold:
+      soft: 104857600 # 100MB
+
+    # Any string here, other than 'false', will enable the maintenance page and be added on it as an info.
+    # Setting 'true' will display a standard message embedded in maintenace page.
+    maintenance: false
+
     sentry:
       enabled: false
-      # url: ''
-      # namespace: ''
-      # sampleRate: 0 # sampling rate for tracing -- values must be between 0 and 1
+      dsn: ""
+      environment: ""
+      sampleRate: 0 # number between 0 and 1. (e.g., to send 20% of transactions, set 0.2.)
 
-    ## Configuration for statuspage.io integration
-    # statuspage:
-    ## Provide the id for the statuspage, which is the subdomain of statuspage.io
-    ## used in the API queries. This can be found from the /api path.
-    ## E.g., under https://renkulab.statuspage.io/api you see that summary
-    ## is available under https://5bcn9bqff4qt.statuspage.io/api/v2/summary.json, so
-    # id: 5bcn9bqff4qt
+    # If you want to enable the privacy page, please create also a configMap and set its name in the
+    # privacy.page.configMapName value. As a reference, you can use the sample configMap generated when
+    # enabling the feature.
+    privacy:
+      enabled: false
+      page:
+        enabled: false
+        #configMapName: privacy-page
+        #configMapKey: privacy_statement
+      banner:
+        content: |
+          This website requires cookies in order to ensure basic functionality. By clicking
+          or navigating the site, you consent to the use of cookies in accordance with
+          our <u><a class="text-white" href="/privacy">Privacy Policy</a></u>.
+        layout:
+          cookieName: RenkuLabPrivacy
+          disableStyles: true
+          containerClasses: fixed-bottom p-3 bg-dark
+          contentClasses: text-white small
+          buttonClasses: btn btn-sm btn-light me-2
+          buttonWrapperClasses: mt-2
+    ## If you maintain a statuspage.io page for the status of your RenkuLab instance, put the id for it here.
+    statuspage:
+      id: ""
 
-    ## Home settings allow configuration of the home page shown on RenkuLab when the user
-    ## is not logged in.
     homepage:
       custom:
         # If you want to enable a custom content on the homepage, you can enable it and provide content here
@@ -747,7 +793,6 @@ ui:
       tutorialLink: https://renku.readthedocs.io/en/stable/tutorials/01_firststeps.html
       # Projects to highlight on the homepage
       projects: []
-
     coreApiVersionConfig:
       ## Configuration to specify which version of the core-service API should be used
       # "/" indicates that the latest version should be used
@@ -758,56 +803,102 @@ ui:
       # overrides:
       #   9: "/"
       #   10: "/"
+    canary:
+      enabled: false
+      image:
+        repository: renku/renku-ui
+        tag: "0.11.16"
 
-  ## Configuration for renku-ui-server
   server:
+    ## The URL for the server service; the URL used by the client is the server.url + /ui-server endpoint.
+    url:
+    replicaCount: 1
+    keepCookies: []
+
     image:
       repository: renku/renku-ui-server
       tag: "3.12.2"
       pullPolicy: IfNotPresent
-    keepCookies: []
+
+    imagePullSecrets: []
+    nameOverride: ""
+    fullnameOverride: ""
+
+    serviceAccount:
+      # Specifies whether a service account should be created
+      create: true
+      # The name of the service account to use.
+      # If not set and create is true, a name is generated using the fullname template
+      name: ""
+
+    podSecurityContext: {}
+
+    securityContext:
+      runAsUser: 1000
+      runAsGroup: 1000
+      runAsNonRoot: true
+      allowPrivilegeEscalation: false
+
+    service:
+      type: ClusterIP
+      port: 80
+
+    ingress:
+      enabled: false
+      annotations:
+        {}
+        # kubernetes.io/ingress.class: nginx
+        # kubernetes.io/tls-acme: "true"
+      hosts:
+        - host: chart-example.local
+          paths: []
+
+      tls: []
+      #  - secretName: chart-example-tls
+      #    hosts:
+      #      - chart-example.local
+
+    ## Configure autoscaling
+    # configure autoscale only where needed
     autoscaling:
       enabled: false
       # minReplicas: 2
       # maxReplicas: 5
       # cpuUtilization: 70
-    service:
-      type: ClusterIP
-      port: 80
-    serverData:
-      {}
-      ## server data to correctly build the path and the routes
-      # url: https://url.uiserver.fake
-      # port: 8080
-      # prefix: /ui-server
-    gateway:
-      {}
-      ## details to contact the gateway to redirect after the keycloak authentication is finished
-      # url: https://url.gateway.fake
-      # loginSuffix: /auth/login
-      # logoutSuffix: /auth/logout
+
+    resources:
+      requests:
+        cpu: 100m
+        memory: 128Mi
+
+    nodeSelector: {}
+
+    tolerations: []
+
+    affinity: {}
+
+    sentry:
+      enabled: false
+      dsn: ""
+      environment: ""
+      sampleRate: 0
+      debugMode: false
+
     authentication:
-      {}
-      ## keycloak configration data for the Renku realm
-      # url: https://url.keycloak.fake/auth/realms/Renku
-      # id: renku
+      url:
+      id: renku-ui
       # secret: 1234abcd # do not provide any value here to use the global gateway client secret
-      # expirationTolerance: 10
+      expirationTolerance: 10 # in seconds
+
+    webSocket:
+      enabled: true
+
     prometheus:
       enabled: true
       annotations:
         prometheus.io/path: "/metrics"
         prometheus.io/port: "8080"
         prometheus.io/scrape: "true"
-    sentry:
-      {}
-      ## Configuration for Sentry
-      # enabled: false
-      # url: '' # Sentry target URL
-      # namespace: '' # namespace used to log errors
-      # sampleRate: 0 # sampling rate for tracing -- values must be between 0 and 1
-    webSocket:
-      enabled: true
 
 amalthea:
   scope:
