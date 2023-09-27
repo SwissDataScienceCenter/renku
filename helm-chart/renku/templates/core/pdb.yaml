@@ -1,4 +1,4 @@
-{{- range $version := .Values.versions }}
+{{- range $version := .Values.global.core.versions }}
 ---
 apiVersion: policy/v1
 kind: PodDisruptionBudget

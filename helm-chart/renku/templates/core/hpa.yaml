@@ -1,4 +1,4 @@
-{{- range $version := .Values.versions }}
+{{- range $version := .Values.global.core.versions }}
 ---
 {{- if $.Capabilities.APIVersions.Has "autoscaling/v2" }}
 apiVersion: autoscaling/v2
@@ -17,13 +17,13 @@ spec:
     apiVersion: apps/v1
     kind: Deployment
     name: {{ include "renku-core.fullname" $ }}-{{ $version.name }}
-  minReplicas: {{ $.Values.horizontalPodAutoscaling.minReplicas }}
-  maxReplicas: {{ $.Values.horizontalPodAutoscaling.maxReplicas }}
+  minReplicas: {{ $.Values.core.horizontalPodAutoscaling.minReplicas }}
+  maxReplicas: {{ $.Values.core.horizontalPodAutoscaling.maxReplicas }}
   metrics:
     - type: Resource
       resource:
         name: memory
         target:
           type: Utilization
-          averageUtilization: {{ $.Values.horizontalPodAutoscaling.averageMemoryUtilization }}
+          averageUtilization: {{ $.Values.core.horizontalPodAutoscaling.averageMemoryUtilization }}
 {{ end }}

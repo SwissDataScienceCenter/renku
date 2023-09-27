@@ -8,7 +8,7 @@ data:
       "name": "renku-core",
       "versions": [
         {{- $printComma := false -}}
-        {{- range $key, $version := .Values.versions }}
+        {{- range $key, $version := .Values.global.core.versions }}
         {{- if $printComma }},{{ else }} {{- $printComma = true }} {{ end }}
         {
           "version": "{{ $version.image.tag }}",

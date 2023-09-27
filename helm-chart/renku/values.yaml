@@ -34,14 +34,22 @@ global:
       value:
     ## Fill in the keycloak url below if you are not using the renku-bundled keycloak instance
     url:
+    ## Explicitly set another realm than "renku" here
+    realm:
   gateway:
-    ## The client secret for the renku client application registered in keycloak.
-    clientSecret: # use `uuidgen -r`
-    ## The client secret for the renku-cli client application registered in keycloak.
-    cliClientSecret: # use `uuidgen -r`
-    ## The client ID for authentication against gitlab
-    gitlabClientId: renku-ui
-    ## The client secret for authentication against gitlab
+    ## Client secret of the renku client application registered in keycloak.
+    ## Should be set to a proper value (i.e. by using openssl rand -hex 32) for production.
+    ## Can be set here or as .clientSecret outside of .global, the values set ouside of global (if defined) take precedence.
+    clientSecret:
+    ## Client secret of the renku-cli client application registered in keycloak.
+    ## Should be set to a proper value (i.e. by using openssl rand -hex 32) for production.
+    ## Can be set here or as .cliClientSecret outside of .global, the values set ouside of global (if defined) take precedence.
+    cliClientSecret:
+    ## Client id and client secret of the renku gateway client application which is registered in GitLab.
+    ## Can be set here or as .gitlabClientId outside of .global, the values set ouside of global (if defined) take precedence.
+    gitlabClientId: #renku
+    ## Should be set to a proper value (i.e. by using openssl rand -hex 32) for production.
+    ## Can be set here or as .gitlabClientSecret outside of .global, the values set ouside of global (if defined) take precedence.
     gitlabClientSecret:
   core:
     versions:
@@ -1048,9 +1056,9 @@ notebooks:
       order: 1
       displayName: Default Environment
       type: enum
-      default: /lab
+      default: "/lab"
       ## add /rstudio to the list for R projects
-      options: [/lab]
+      options: ["/lab"]
     cpu_request:
       order: 2
       displayName: Number of CPUs
@@ -1095,7 +1103,7 @@ notebooks:
   ## specified in the server options for the UI above but they have to be
   ## within the available choices or valid ranges.
   serverDefaults:
-    defaultUrl: /lab
+    defaultUrl: "/lab"
     cpu_request: 0.5
     mem_request: 1G
     disk_request: 1G
@@ -1537,15 +1545,53 @@ graph:
 
 ## Configuration for renku-core service
 core:
-  # increase the TTL of projects in cache due to a bug in cleanup - will be fixed in 0.12.1
-  cleanupProjectsTTL: 21600
-  cleanupFilesTTL: 21600
-  # repository:
-  ## Default cache directory
-  # cacheDirectory: /svc/cache
-
-  ## Default clone depth
-  # projectCloneDepth: 1
+  apiBasePath: /api
+  cacheDirectory: /svc/cache
+  cleanupInterval: 60 # NOTE: This needs to be a divisor of, and less than cleanupFilesTTL|cleanupProjectsTTL.
+  projectCloneDepth: 1
+  templateCloneDepth: 1
+  maximumUploadSizeBytes: "1073741824" # 1 Gigabyte, store as string to keep Helm from converting it to scientific notation
+  requestTimeout: 600
+  datasetsWorkerQueues: datasets.jobs,delayed.ctrl.DatasetsCreateCtrl,delayed.ctrl.DatasetsAddFileCtrl,delayed.ctrl.DatasetsRemoveCtrl,delayed.ctrl.DatasetsImportCtrl,delayed.ctrl.DatasetsEditCtrl,delayed.ctrl.DatasetsUnlinkCtrl
+  managementWorkerQueues: cache.cleanup.files,cache.cleanup.projects,delayed.ctrl.MigrateProjectCtrl,delayed.ctrl.SetConfigCtrl
+  cleanupFilesTTL: 1800
+  cleanupProjectsTTL: 1800
+  logLevel: INFO
+  # override to automatically pull LFS data on clone
+  gitLFSSkipSmudge: 1
+  # Concurrency settings for the main service:
+  # the default it 4 workers with 8 threads set in the Dockerfile
+  nWorkers: 4
+  nThreads: 8
+  # NOTE: Make sure token secret is greater or equal to 32 bytes.
+  jwtTokenSecret: bW9menZ3cnh6cWpkcHVuZ3F5aWJycmJn
+  imagePullSecrets: []
+  nameOverride: ""
+  fullnameOverride: ""
+  service:
+    type: ClusterIP
+    port: 80
+  metrics:
+    enabled: false
+    image:
+      repository: renku/rqmetrics
+      tag: 0.0.2
+      pullPolicy: IfNotPresent
+  resources:
+    core: {}
+    rqmetrics: {}
+    datasetsWorkers: {}
+    managementWorkers: {}
+    scheduler: {}
+  sentry:
+    enabled: false
+    dsn:
+    environment:
+    sampleRate: 0.2
+  horizontalPodAutoscaling:
+    minReplicas: 2
+    maxReplicas: 10
+    averageMemoryUtilization: 50
 
 ## Configuration for the Swagger-UI available at <renku-domain>/swagger
 swagger:
