@@ -28,11 +28,13 @@ function waitForImageToBuild(identifier: ProjectIdentifier) {
     .should("be.enabled");
 }
 
-function stopAllSessionsForProject(identifier: ProjectIdentifier, loadPage = true) {
+function stopAllSessionsForProject(
+  identifier: ProjectIdentifier,
+  loadPage = true
+) {
   const id = fullProjectIdentifier(identifier);
   cy.intercept("/ui-server/api/notebooks/servers*").as("getSessions");
-  if (loadPage)
-    cy.visitAndLoadProject(identifier);
+  if (loadPage) cy.visitAndLoadProject(identifier);
   cy.getProjectSection("Sessions").click();
   cy.wait("@getSessions").then(({ response }) => {
     const servers = response?.body?.servers ?? {};
@@ -44,18 +46,15 @@ function stopAllSessionsForProject(identifier: ProjectIdentifier, loadPage = tru
       )
         continue;
 
-      const name = servers[key].name;
-      // eslint-disable-next-line cypress/no-assigning-return-values
-      const connectButton = cy
-        .getDataCy("session-container")
-        .find(`[data-cy=open-session][href$=${name}]`)
+      // Stop any existing session
+      cy.getDataCy("session-container")
+        .find("[data-cy=more-menu]")
         .first()
-        .should("be.visible");
-      connectButton.siblings("[data-cy=more-menu]").click();
-      connectButton
-        .siblings(".dropdown-menu")
-        .find("button")
-        .contains("Delete session")
+        .should("be.visible")
+        .click();
+      cy.getDataCy("session-container")
+        .find(`[data-cy=delete-session-button]`)
+        .first()
         .should("be.visible")
         .click();
       cy.getDataCy("delete-session-modal-button").should("be.visible").click();
