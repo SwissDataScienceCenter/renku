@@ -60,7 +60,7 @@ global:
         fullnameOverride: ""
         image:
           repository: renku/renku-core
-          tag: "v2.7.0"
+          tag: "v2.6.2"
           pullPolicy: IfNotPresent
       v9:
         name: v9
