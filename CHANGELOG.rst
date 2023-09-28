@@ -3,15 +3,23 @@
 0.37.0
 ------
 
-Renku ``0.37.0`` allows users to pause sessions and later resume them exactly where they left off.
+Renku ``0.37.0`` introduces a new feature to pause sessions and later resume them exactly where you left off. All of your work in progress, including files, data, and environment changes not saved to git, are resumed right as you left them. 
+
+This feature replaces RenkuLab's branch-based auto-save mechanism. Most users do not have to do anything to transition from autosaves to persistent sessions. However, if your last session went into an autosave, you can still retrieve that work by using Start with Options and selecting your most recent autosave branch. If your project contains autosave branches that you do not need anymore, you can safely delete them. 
 
 User-Facing Changes
 ~~~~~~~~~~~~~~~~~~~
 
 **🌟 New Features**
 
-- 🖼️ **Renku Notebooks**: Support for pausing (i.e. hibernating) and resuming sessions
-  (`#1518 <https://github.com/SwissDataScienceCenter/renku-notebooks/pull/1518>`_).
+- ⏸️ **Renku Notebooks** and **UI**: Support for pausing (i.e. hibernating) and resuming sessions
+  (`#1518 <https://github.com/SwissDataScienceCenter/renku-notebooks/pull/1518>`_)
+  (`#2686 <https://github.com/SwissDataScienceCenter/renku-ui/issues/2686>`_).
+
+**🐞 Bug Fixes**
+
+- **UI**: restore adding files by URL to datasets
+  (`#2800 <https://github.com/SwissDataScienceCenter/renku-ui/issues/2800>`_).
 
 Internal Changes
 ~~~~~~~~~~~~~~~~
@@ -20,14 +28,15 @@ Internal Changes
 
 - **Renku Notebooks**: Use a new version of Amalthea which adds fields for culling
   hibernating sessions in the CRD.
-- **Renku Notebooks** - **Helm chart breaking change**:``notebooks.culling.idleThresholdSeconds`` in the values file
+- **Renku Notebooks** - **Helm chart breaking change**: ``notebooks.culling.idleThresholdSeconds`` in the values file
   was renamed to ``notebooks.culling.idleSecondsThreshold``.
 
 Individual components
 ~~~~~~~~~~~~~~~~~~~~~~
 
-- `renku-notebooks 1.19.0 <https://github.com/SwissDataScienceCenter/renku-notebooks/releases/tag/1.19.0>`_
 - `amalthea 0.9.1 <https://github.com/SwissDataScienceCenter/amalthea/releases/tag/0.9.1>`_
+- `renku-notebooks 1.19.0 <https://github.com/SwissDataScienceCenter/renku-notebooks/releases/tag/1.19.0>`_
+- `renku-ui 3.13.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.13.0>`_
 
 
 0.36.3
@@ -55,7 +64,7 @@ User-Facing Changes
 Individual components
 ~~~~~~~~~~~~~~~~~~~~~~
 
-- `renku-ui 3.12.21 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.12.2>`_
+- `renku-ui 3.12.2 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.12.2>`_
 
 
 0.36.2
