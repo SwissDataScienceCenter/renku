@@ -2,7 +2,7 @@ dependencies:
 - name: renku-core
   alias: core
   repository: "https://swissdatasciencecenter.github.io/helm-charts/"
-  version: 2.6.2
+  version: 2.7.0
   import-values:
   - child: versions
     parent: global.core.versions
