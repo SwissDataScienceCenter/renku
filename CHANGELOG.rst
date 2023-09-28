@@ -5,7 +5,7 @@
 
 Renku ``0.37.0`` introduces a new feature to pause sessions and later resume them exactly where you left off. All of your work in progress, including files, data, and environment changes not saved to git, are resumed right as you left them. 
 
-This feature replaces RenkuLab's branch-based auto-save mechanism. Most users do not have to do anything to transition from autosaves to persistent sessions. However, if your last session went into an autosave, you can still retrieve that work by using Start with Options and selecting your post recent autosave branch. If your project contains autosave branches that you do not need anymore, you can safely delete them. 
+This feature replaces RenkuLab's branch-based auto-save mechanism. Most users do not have to do anything to transition from autosaves to persistent sessions. However, if your last session went into an autosave, you can still retrieve that work by using Start with Options and selecting your most recent autosave branch. If your project contains autosave branches that you do not need anymore, you can safely delete them. 
 
 User-Facing Changes
 ~~~~~~~~~~~~~~~~~~~
