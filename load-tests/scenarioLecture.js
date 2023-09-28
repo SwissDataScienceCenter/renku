@@ -7,7 +7,7 @@ import { renkuLogin } from "./utils/oauth.js";
 import { getRandomInt } from "./utils/general.js";
 import { getCommitShasFromProjectName, deleteProjectByName } from "./utils/git.js";
 import { createProject } from "./utils/core.js";
-import { startServer, waitForServerState, getServer, stopServer, waitForImageToBuild } from "./utils/servers.js";
+import { startServer, waitForServerState, getServer, deleteServer, waitForImageToBuild } from "./utils/servers.js";
 import { credentials, baseUrl, gitUrl, registryDomain, concurentUsers } from "./config.js";
 
 export const options = {
@@ -75,7 +75,7 @@ export default function test() {
       }
     });
     describe("should stop the server", () => {
-      const res = stopServer(baseUrl, server.name);
+      const res = deleteServer(baseUrl, server.name);
       expect(res.status, 'response status').to.equal(204);
     });
     describe("should delete the project", () => {

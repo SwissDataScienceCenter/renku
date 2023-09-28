@@ -32,6 +32,11 @@ changes in the application images.
 - Major version changes (i.e. `0.50.0` -> `1.0.0`) will be reserved for large sweeping changes or milestones. These will most probably
 include Helm chart and application changes as well. 
 
+## Upgrading to Renku 0.37.0
+* EDIT - `notebooks.culling.idleThresholdSeconds` in the notebooks' values file was renamed to
+  `notebooks.culling.idleSecondsThreshold`. This needs to be acted upon once the corresponding
+  [PR](https://github.com/SwissDataScienceCenter/renku/pull/3253) in Renku repository is merged.
+
 ## Upgrading to Renku 0.34.0
 * NEW - *ingress.className* is now available to select a specific IngressClass to
   be used for the ingress. While often supporting both, current ingress
