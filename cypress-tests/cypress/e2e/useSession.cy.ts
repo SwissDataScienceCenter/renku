@@ -9,9 +9,10 @@ const projectTestConfig = {
   shouldCreateProject: true,
   projectName: generatorProjectName("useSession"),
 };
+const workflowNameSalt = uuidv4().substring(0, 4);
 const workflow = {
-  name: `dummyworkflow-${uuidv4().substring(24)}`,
-  output: `o-${uuidv4().substring(4)}.txt`, // ? Keep the name short or it won't show up entirely in the file browser
+  name: `dummyworkflow-${workflowNameSalt}`,
+  output: `o${workflowNameSalt}.txt`, // ? Keep the name short or it won't show up entirely in the file browser
 };
 
 // ? Modify the config -- useful for debugging
