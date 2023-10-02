@@ -16,25 +16,22 @@
  * limitations under the License.
  */
 
-package ch.renku.acceptancetests.tooling
+package ch.renku.acceptancetests.model
 
-import cats.effect.unsafe.IORuntime
-import cats.syntax.all._
-import ch.renku.acceptancetests.model.CliVersion
-import org.http4s.Status._
-import org.scalatest.Assertions.fail
+import ch.renku.acceptancetests.generators.Generators.Implicits._
+import ch.renku.acceptancetests.generators.Generators.httpUrls
+import org.scalacheck.Gen
 
-trait RenkuApi extends RestClient {
-  self: AcceptanceSpecData =>
+object images {
 
-  implicit val ioRuntime: IORuntime
+  final case class Name(value: String) { override lazy val toString: String = value }
 
-  lazy val apiCliVersion: CliVersion = {
-    val url = renkuBaseUrl / "api" / "renku" / "apiversion"
-    GET(url)
-      .send(whenReceived(status = Ok) >=> bodyToJson)
-      .extract(jsonRoot.`result`.`latest_version`.string.getOption)
-      .map(CliVersion.get(_).fold(error => fail(error.getMessage), identity))
-      .getOrElse(fail(s"CLI version couldn't be obtained from $url"))
+  final case class ImageUri(value: String) {
+    override lazy val toString: String = value
+    lazy val toName:            Name   = Name(value.split("/").last)
+  }
+  object ImageUri {
+    val generator:  Gen[ImageUri] = httpUrls.map(ImageUri(_))
+    def generate(): ImageUri      = generator.generateOne
   }
 }
