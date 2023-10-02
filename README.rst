@@ -1,5 +1,5 @@
 ..
-    Please see LICENCE file for Copyright and License terms.
+    Please see LICENSE file for Copyright and License terms.
 
 .. _renku:
 
