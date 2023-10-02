@@ -34,7 +34,7 @@ Create chart name and version as used by the chart label.
 {{/*
 Define http scheme
 */}}
-{{- define "http" -}}
+{{- define "renku.http" -}}
 {{- if .Values.global.useHTTPS -}}
 https
 {{- else -}}
@@ -67,22 +67,6 @@ Define subcharts full names
 
 {{- define "uiserver.fullname" -}}
 {{- printf "%s-%s" .Release.Name "uiserver" | replace "+" "_" | trunc 63 | trimSuffix "-" -}}
-{{- end -}}
-
-{{- define "notebooks.fullname" -}}
-{{- printf "%s-%s" .Release.Name "notebooks" | replace "+" "_" | trunc 63 | trimSuffix "-" -}}
-{{- end -}}
-
-{{- define "gateway.fullname" -}}
-{{- printf "%s-%s" .Release.Name "gateway" | replace "+" "_" | trunc 63 | trimSuffix "-" -}}
-{{- end -}}
-
-{{- define "webhookService.fullname" -}}
-{{- printf "%s-%s" .Release.Name "webhook-service" | replace "+" "_" | trunc 63 | trimSuffix "-" -}}
-{{- end -}}
-
-{{- define "knowledgeGraph.fullname" -}}
-{{- printf "%s-%s" .Release.Name "knowledge-graph" | replace "+" "_" | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 
 {{- define "core.fullname" -}}
@@ -146,4 +130,33 @@ KC_DB_URL_DATABASE: {{ .Values.global.keycloak.postgresDatabase | b64enc | quote
 KC_DB_USERNAME: {{ .Values.global.keycloak.postgresUser | b64enc | quote }}
 KC_DB_PASSWORD: {{ default (randAlphaNum 64) .Values.global.keycloak.postgresPassword.value | b64enc | quote }}
 {{- end -}}
+{{- end -}}
+
+{{- define "renku.gitlabUrl" -}}
+{{ .Values.graph.gitlab.url | default (printf "%s://%s/gitlab" (include "renku.http" .) .Values.global.renku.domain) }}
+{{- end -}}
+
+{{- define "renku.baseUrl" -}}
+{{ printf "%s://%s" (include "renku.http" .) .Values.global.renku.domain }}
+{{- end -}}
+
+{{- define "renku.keycloakUrl" -}}
+{{- if .Values.keycloakx.enabled -}}
+{{/* NOTE: If the url for keycloak does not end with '/' then the python keycloak client library will fail to connect */}}
+{{- printf "%s://%s/auth/" (include "renku.http" .) .Values.global.renku.domain -}}
+{{- else -}}
+{{- .Values.global.keycloak.url -}}
+{{- end -}}
+{{- end -}}
+
+{{/*
+Common labels
+*/}}
+{{- define "renku.labels" -}}
+helm.sh/chart: {{ include "renku.chart" . }}
+app.kubernetes.io/instance: {{ .Release.Name }}
+{{- if .Chart.AppVersion }}
+app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
+{{- end }}
+app.kubernetes.io/managed-by: {{ .Release.Service }}
 {{- end -}}

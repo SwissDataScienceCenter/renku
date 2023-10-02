@@ -1,0 +1,117 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ template "renku.graph.tokenRepository.fullname" . }}
+  labels:
+    app: {{ template "renku.graph.tokenRepository.name" . }}
+    chart: {{ template "renku.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: {{ template "renku.graph.tokenRepository.name" . }}
+      release: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app: {{ template "renku.graph.tokenRepository.name" . }}
+        release: {{ .Release.Name }}
+    spec:
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      automountServiceAccountToken: {{ .Values.global.debug }}
+      initContainers:
+        {{- include "certificates.initContainer" . | nindent 8 }}
+      containers:
+        - name: token-repository
+          image: "{{ .Values.graph.tokenRepository.image.repository }}:{{ .Values.graph.tokenRepository.image.tag }}"
+          imagePullPolicy: {{ .Values.graph.tokenRepository.image.pullPolicy }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          env:
+            - name: TOKEN_ENCRYPTION_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "renku.graph.tokenRepository.fullname" . }}
+                  key: tokenRepository-tokenEncryption-secret
+            - name: PROJECT_TOKEN_TTL
+              value: "{{ .Values.graph.tokenRepository.projectTokenTTL }}"
+            - name: PROJECT_TOKEN_NAME
+              {{- if .Values.graph.tokenRepository.projectTokenName }}
+              value: "{{ .Values.graph.tokenRepository.projectTokenName }}"
+              {{- else }}
+              value: "{{ .Release.Name }}"
+              {{- end }}
+            - name: PROJECT_TOKEN_DUE_PERIOD
+              value: "{{ .Values.graph.tokenRepository.projectTokenDuePeriod }}"
+            - name: TOKEN_REPOSITORY_POSTGRES_HOST
+              value: "{{ template "postgresql.fullname" . }}"
+            - name: TOKEN_REPOSITORY_POSTGRES_PORT
+              value: "5432"
+            - name: TOKEN_REPOSITORY_POSTGRES_USER
+              value: {{ .Values.global.graph.tokenRepository.postgresUser }}
+            - name: TOKEN_REPOSITORY_POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  {{- if .Values.global.graph.tokenRepository.existingSecret }}
+                  name: {{ tpl .Values.global.graph.tokenRepository.existingSecret . }}
+                  {{- else }}
+                  name: {{ template "renku.fullname" . }}-graph-token-postgres
+                  {{- end }}
+                  key: graph-tokenRepository-postgresPassword
+            - name: TOKEN_REPOSITORY_POSTGRES_CONNECTION_POOL
+              value: "{{ .Values.graph.tokenRepository.connectionPool }}"
+            - name: GITLAB_BASE_URL
+              value: {{ .Values.graph.gitlab.url }}
+            - name: GITLAB_RATE_LIMIT
+              value: {{ .Values.graph.tokenRepository.gitlab.rateLimit }}
+            - name: SENTRY_ENABLED
+              value: "{{ .Values.graph.sentry.enabled }}"
+              {{- if .Values.graph.sentry.enabled }}
+            - name: SENTRY_DSN
+              value: {{ .Values.graph.sentry.dsn }}
+            - name: SENTRY_ENVIRONMENT
+              value: {{ .Values.graph.sentry.environment }}
+              {{- end }}
+            - name: JAVA_OPTS
+              value: -Xmx{{ .Values.graph.tokenRepository.jvmXmx }} -XX:+UseG1GC
+          ports:
+            - name: http-token-repo
+              containerPort: 9003
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /ping
+              port: http-token-repo
+            periodSeconds: 10
+            successThreshold: 1
+            failureThreshold: 10
+          readinessProbe:
+            httpGet:
+              path: /ping
+              port: http-token-repo
+            periodSeconds: 10
+            successThreshold: 1
+            failureThreshold: 3
+          resources:
+            {{- toYaml .Values.graph.tokenRepository.resources | nindent 12 }}
+          volumeMounts:
+            {{- include "certificates.volumeMounts.javaCertsGeneral" . | nindent 12 }}
+      volumes:
+        {{- include "certificates.volumes" . | nindent 8 }}
+  {{- with .Values.nodeSelector }}
+nodeSelector:
+  {{ toYaml . | indent 8 }}
+  {{- end }}
+  {{- with .Values.affinity }}
+affinity:
+  {{ toYaml . | indent 8 }}
+  {{- end }}
+  {{- with .Values.tolerations }}
+tolerations:
+  {{ toYaml . | indent 8 }}
+  {{- end }}

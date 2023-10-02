@@ -1,5 +1,33 @@
 .. _changelog:
 
+0.39.0
+------
+
+Renku ``0.39.0`` moves all renku component Helm charts to one single chart that now resides in this repository.
+
+Also, with the next releases we will adopt a specific way of versioning the helm chart. Namely:
+
+- Patch changes (i.e. ``0.50.1`` -> ``0.50.2``) indicate that there are NO changes in the Helm chart and that
+  only application level bug fixes are present in the new release.
+- Minor version changes (i.e. ``0.50.2`` -> ``0.51.0``) indicate that there are NO changes in the Helm chart and that
+  only application level new features and/or application level breaking changes are present.
+- Major version changes (i.e. ``0.50.0`` -> ``1.0.0``) will be reserved for changes in the Helm chart, either when the 
+  values file changes or when the Helm templates change. 
+
+Please note that this is a breaking change to the values file and it requires three minor edits to the following fields:
+
+- ``graph.jena.*`` moved to ``jena.*``
+- ``notebooks.amalthea.*`` moved to ``amalthea.*``
+- ``notebooks.dlf-chart.*`` moved to ``dlf-chart.*``
+
+For more details please refer to the explanation in ``helm-chart/values.yaml.changelog.md``.
+
+Internal Changes
+~~~~~~~~~~~~~~~~
+
+There are now no more separate Helm charts for the core, notebooks, graph, UI and gateway components. All the Helm
+templates have been moved into the main Renku Helm chart in this repository.
+
 0.38.0
 ------
 

@@ -1,0 +1,21 @@
+{{- range $version := .Values.global.core.versions }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "renku-core.fullname" $ }}-{{ $version.name }}
+  labels:
+    app.kubernetes.io/deploymentVersion: {{ $version.name }}
+{{ include "renku-core.labels" $ | indent 4 }}
+spec:
+  type: {{ $.Values.core.service.type }}
+  ports:
+    - port: {{ $.Values.core.service.port }}
+      targetPort: http
+      protocol: TCP
+      name: http
+  selector:
+    app.kubernetes.io/name: {{ include "renku-core.name" $ }}
+    app.kubernetes.io/instance: {{ $.Release.Name }}
+    app.kubernetes.io/deploymentVersion: {{ $version.name }}
+{{ end }}
