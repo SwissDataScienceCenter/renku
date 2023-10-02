@@ -3,7 +3,8 @@
 0.38.0
 ------
 
-Renku ``0.38.0`` introduces a new version of the core service with multiple bug fixes and a few new features.
+Renku ``0.38.0`` improves the Knowledge Graph API, with a new Project Creation functionality and a Project Update enhancement.
+There is also a new version of the core service with multiple bug fixes and a few new features.
 
 User-Facing Changes
 ~~~~~~~~~~~~~~~~~~~
@@ -12,6 +13,18 @@ User-Facing Changes
 
 - **CLI**: allow disabling automated parameter detection in renku run
   (`#3548 <hhttps://github.com/SwissDataScienceCenter/renku-python/issues/3548>`_).
+
+**🌟 New Features**
+
+- 🖼️ **Knowledge Graph**: New `Project Create API <https://renkulab.io/swagger/?urls.primaryName=knowledge%20graph#/default/post_projects>`_
+  to create a project in GitLab and Knowledge Graph
+  (`#1635 <https://github.com/SwissDataScienceCenter/renku-graph/issues/1635>`_).
+
+**🐞 Bug Fixes**
+
+- **Knowledge Graph**: Improves quality of the results returned by the Cross-Entity Search API.
+- **Knowledge Graph**: The `Project Update API <https://renkulab.io/swagger/?urls.primaryName=knowledge%20graph#/default/patch_projects__namespace___projectName_>`_ to work for non-public projects
+  (`#1695 <https://github.com/SwissDataScienceCenter/renku-graph/pull/1695>`_).
 
 Internal Changes
 ~~~~~~~~~~~~~~~~
@@ -47,19 +60,24 @@ Internal Changes
 -  **Core Service:** add support for using default values in template parameters
    (`#3550 <https://github.com/SwissDataScienceCenter/renku-python/issues/3550>`__)
    (`d162392 <https://github.com/SwissDataScienceCenter/renku-python/commit/d162392b3dc20dd3433be78b08f101e7f268ed7d>`__)
-
+-  **Knowledge Graph**: Various issues preventing Grafana dashboards not working.
+   (`#1717 <https://github.com/SwissDataScienceCenter/renku-graph/pull/1717>`_)
+   (`#1719 <https://github.com/SwissDataScienceCenter/renku-graph/pull/1719>`_).
 
 Individual components
 ~~~~~~~~~~~~~~~~~~~~~~
 
+- `renku-graph 2.42.0 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/2.42.0>`_
+- `renku-graph 2.42.1 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/2.42.1>`_
 - `renku-python 2.7.0 <https://github.com/SwissDataScienceCenter/renku-python/releases/tag/2.7.0>`_
+
 
 0.37.0
 ------
 
-Renku ``0.37.0`` introduces a new feature to pause sessions and later resume them exactly where you left off. All of your work in progress, including files, data, and environment changes not saved to git, are resumed right as you left them. 
+Renku ``0.37.0`` introduces a new feature to pause sessions and later resume them exactly where you left off. All of your work in progress, including files, data, and environment changes not saved to git, are resumed right as you left them.
 
-This feature replaces RenkuLab's branch-based auto-save mechanism. Most users do not have to do anything to transition from auto-saves to persistent sessions. However, if your last session went into an auto-save, you can still retrieve that work by using Start with Options and selecting your most recent auto-save branch. If your project contains auto-save branches that you do not need anymore, you can safely delete them. 
+This feature replaces RenkuLab's branch-based auto-save mechanism. Most users do not have to do anything to transition from auto-saves to persistent sessions. However, if your last session went into an auto-save, you can still retrieve that work by using Start with Options and selecting your most recent auto-save branch. If your project contains auto-save branches that you do not need anymore, you can safely delete them.
 
 User-Facing Changes
 ~~~~~~~~~~~~~~~~~~~

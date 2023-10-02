@@ -18,6 +18,7 @@
 
 package ch.renku.acceptancetests
 
+import ch.renku.acceptancetests.model.projects
 import ch.renku.acceptancetests.tooling.TestLogger.logger
 import ch.renku.acceptancetests.tooling.{AcceptanceSpec, KnowledgeGraphApi}
 import ch.renku.acceptancetests.workflows._
@@ -61,7 +62,7 @@ class BatchProjectRemovalSpec extends AcceptanceSpec with Login with RemoveProje
       case (summary, ProjectInfo(_, path, fullPath, created)) =>
         if (batchRemoveConfig.patterns.exists(_ matches path) && (created < Instant.now().minus(gracePeriod))) {
           logger.info(s"Removing '$path' - the removal pattern matched and it's older than ${gracePeriod.toDays} days")
-          `DELETE /knowledge-graph/projects/:slug`(fullPath)
+          `DELETE /knowledge-graph/projects/:slug`(projects.Slug(fullPath))
           summary.incrementRemoved()
         } else
           summary.incrementFound()
