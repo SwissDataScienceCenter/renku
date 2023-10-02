@@ -16,7 +16,7 @@ spec:
       protocol: TCP
       name: http
   selector:
-    app: {{ template "renku.name" . }}-gateway-auth
+    app: {{ template "gateway.name" . }}-revproxy
     release: {{ .Release.Name }}
 ---
 apiVersion: v1
@@ -36,5 +36,5 @@ spec:
       protocol: TCP
       name: http
   selector:
-    app: {{ template "renku.name" . }}-gateway-revproxy
+    app: {{ template "gateway.name" . }}-revproxy
     release: {{ .Release.Name }}
