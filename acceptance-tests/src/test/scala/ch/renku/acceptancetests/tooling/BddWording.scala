@@ -18,11 +18,11 @@
 
 package ch.renku.acceptancetests.tooling
 
-import org.scalatest.Tag
+import org.scalatest.{Suite, Tag}
 import org.scalatest.featurespec.FixtureAnyFeatureSpecLike
 
 trait BddWording extends FixtureAnyFeatureSpecLike {
-  self: AcceptanceSpec =>
+  self: Suite =>
 
   import TestLogger.logger
 

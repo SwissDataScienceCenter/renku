@@ -18,15 +18,18 @@
 
 package ch.renku.acceptancetests.tooling
 
+import TestLogger.logger
+import cats.effect.unsafe.IORuntime
 import cats.syntax.all._
-import ch.renku.acceptancetests.model.AuthorizationToken
 import ch.renku.acceptancetests.model.AuthorizationToken.OAuthAccessToken
 import ch.renku.acceptancetests.model.projects.ProjectIdentifier
+import ch.renku.acceptancetests.model.{AuthorizationToken, projects}
 import io.circe.Decoder._
 import io.circe.{Decoder, Json}
 import org.http4s.Status._
 import org.http4s.Uri.Path.SegmentEncoder._
 import org.http4s.UrlForm
+import org.scalatest.matchers.should
 
 import java.lang.Thread.sleep
 import java.time.Instant
@@ -34,7 +37,9 @@ import scala.annotation.tailrec
 import scala.concurrent.duration._
 
 trait GitLabApi extends RestClient {
-  self: AcceptanceSpecData with BddWording with IOSpec =>
+  self: AcceptanceSpecData with should.Matchers =>
+
+  implicit val ioRuntime: IORuntime
 
   lazy val authorizationToken: AuthorizationToken =
     userCredentials.maybeGitLabAccessToken getOrElse oauthAccessToken
@@ -102,23 +107,21 @@ trait GitLabApi extends RestClient {
       .and("order_by", "created_at")
       .and("sort", "desc")
       .and("page", page)
-    GET(
-      url
-    )
+    GET(url)
       .withAuthorizationToken(authorizationToken)
       .send(whenReceived(status = Ok) >=> bodyToJson)
       .extract(decoder)
   }
 
-  def `get GitLab project id`(projectId: ProjectIdentifier): Int =
-    GET(gitLabAPIUrl / "projects" / projectId.asProjectSlug)
+  def `get GitLab project id`(projectSlug: projects.Slug): Int =
+    GET(gitLabAPIUrl / "projects" / projectSlug.value)
       .withAuthorizationToken(authorizationToken)
       .send(whenReceived(status = Ok) >=> bodyToJson)
       .extract(jsonRoot.id.int.getOption)
-      .getOrElse(fail(s"Cannot find '$projectId' project in GitLab"))
+      .getOrElse(fail(s"Cannot find '$projectSlug' project in GitLab"))
 
   def `project exists in GitLab`(projectId: ProjectIdentifier): Boolean =
-    GET(gitLabAPIUrl / "projects" / projectId.asProjectSlug)
+    GET(gitLabAPIUrl / "projects" / projectId.asProjectSlug.value)
       .withAuthorizationToken(authorizationToken)
       .send(mapResponse {
         _.status match {
@@ -133,7 +136,7 @@ trait GitLabApi extends RestClient {
     val waitTime = 1 second
 
     if (!`project exists in GitLab`(projectId) && attempt < 120) {
-      And("waits for Project creation in GitLab")
+      logger.info("waits for Project creation in GitLab")
       sleep(waitTime.toMillis)
       `wait for project creation`(projectId)
     } else if (!`project exists in GitLab`(projectId)) {
@@ -142,7 +145,17 @@ trait GitLabApi extends RestClient {
   }
 
   def `delete project in GitLab`(projectId: ProjectIdentifier): Unit =
-    DELETE(gitLabAPIUrl / "projects" / projectId.asProjectSlug)
+    DELETE(gitLabAPIUrl / "projects" / projectId.asProjectSlug.value)
       .withAuthorizationToken(authorizationToken)
       .send(expect(status = Accepted, otherwiseLog = s"Deletion of '${projectId.path}' project in GitLab failed"))
+
+  def `find user namespace ids`: List[projects.NamespaceId] = {
+    implicit val decoder: Decoder[projects.NamespaceId] =
+      Decoder.instance[projects.NamespaceId](_.downField("id").as[Int].map(projects.NamespaceId(_)))
+
+    GET(gitLabAPIUrl / "namespaces")
+      .withAuthorizationToken(authorizationToken)
+      .sendIO(whenReceived(status = Ok) >=> decodePayload[List[projects.NamespaceId]])
+      .unsafeRunSync()
+  }
 }

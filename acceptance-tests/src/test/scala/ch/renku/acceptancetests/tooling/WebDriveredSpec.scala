@@ -20,32 +20,31 @@ package ch.renku.acceptancetests.tooling
 
 import org.openqa.selenium.WebDriver
 import org.openqa.selenium.chrome.{ChromeDriver, ChromeDriverService, ChromeOptions}
-import org.scalatest._
-import org.scalatest.featurespec.FixtureAnyFeatureSpec
-import org.scalatest.matchers.should
-import org.scalatestplus.selenium.WebBrowser
+import org.scalatest.{BeforeAndAfterAll, Suite}
 
-trait AcceptanceSpec
-    extends FixtureAnyFeatureSpec
-    with BddWording
-    with BeforeAndAfterAll
-    with should.Matchers
-    with WebBrowser
-    with Grammar
-    with GitLabApi
-    with RenkuApi
-    with ScreenCapturingSpec
-    with AcceptanceSpecData
-    with AcceptanceSpecPatience
-    with WebDriveredSpec
-    with IOSpec {
+trait WebDriveredSpec extends BeforeAndAfterAll {
+  self: Suite =>
 
-  protected implicit val browser: AcceptanceSpec = this
+  implicit lazy val webDriver: WebDriver = {
+    System.setProperty("webdriver.http.factory", "jdk-http-client")
+    startWebDriver
+  }
 
-  protected implicit val docsScreenshots: DocsScreenshots = DocsScreenshots(this, webDriver)
+  private def startWebDriver: WebDriver =
+    sys.env.get("DOCKER") match {
+      case Some(_) =>
+        new ChromeDriver(
+          new ChromeDriverService.Builder().withWhitelistedIps("127.0.0.1").build,
+          new ChromeOptions().addArguments("no-sandbox", "headless", "disable-gpu", "window-size=1920,1600")
+        )
+      case None =>
+        new ChromeDriver(
+          new ChromeOptions().addArguments("window-size=1920,1600")
+        )
+    }
 
-  protected override type FixtureParam = Unit
-
-  override def withFixture(test: OneArgTest): Outcome =
-    withFixture(test.toNoArgTest((): FixtureParam))
+  protected override def afterAll(): Unit = {
+    webDriver.quit()
+    super.afterAll()
+  }
 }
