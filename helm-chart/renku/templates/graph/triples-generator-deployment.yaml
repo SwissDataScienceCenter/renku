@@ -1,0 +1,141 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ template "renku.graph.triplesGenerator.fullname" . }}
+  labels:
+    app: {{ template "renku.graph.triplesGenerator.name" . }}
+    chart: {{ template "renku.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  replicas: {{ .Values.graph.triplesGenerator.replicas }}
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: {{ template "renku.graph.triplesGenerator.name" . }}
+      release: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app: {{ template "renku.graph.triplesGenerator.name" . }}
+        release: {{ .Release.Name }}
+    spec:
+      securityContext:
+        {{- toYaml .Values.graph.podSecurityContext | nindent 8 }}
+      automountServiceAccountToken: {{ .Values.global.debug }}
+      initContainers:
+        {{- include "certificates.initContainer" . | nindent 8 }}
+      containers:
+        - name: triples-generator
+          image: "{{ .Values.graph.triplesGenerator.image.repository }}:{{ .Values.graph.triplesGenerator.image.tag }}"
+          imagePullPolicy: {{ .Values.graph.triplesGenerator.image.pullPolicy }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          env:
+            - name: RENKU_DOMAIN
+              value: {{ .Values.global.renku.domain }}
+            - name: RENKU_URL
+              value: https://{{ .Values.global.renku.domain }}
+            - name: TRIPLES_GENERATOR_BASE_URL
+              value: "http://{{ template "renku.graph.triplesGenerator.fullname" . }}:{{ .Values.graph.triplesGenerator.service.port }}"
+            - name: EVENT_LOG_BASE_URL
+              value: "http://{{ template "renku.graph.eventLog.fullname" . }}:{{ .Values.graph.eventLog.service.port }}"
+            - name: TOKEN_REPOSITORY_BASE_URL
+              value: "http://{{ template "renku.graph.tokenRepository.fullname" . }}:{{ .Values.graph.tokenRepository.service.port }}"
+            - name: GITLAB_BASE_URL
+              value: {{ .Values.graph.gitlab.url }}
+            - name: GITLAB_RATE_LIMIT
+              value: {{ .Values.graph.triplesGenerator.gitlab.rateLimit }}
+            - name: JENA_BASE_URL
+              value: "http://{{ template "renku.graph.jena.fullname" . }}-master:{{ .Values.jena.service.port }}"
+            - name: JENA_ADMIN_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "renku.graph.jena.fullname" . }}
+                  key: jena-users-admin-password
+            - name: JENA_RENKU_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "renku.graph.jena.fullname" . }}
+                  key: jena-users-renku-password
+            - name: TRIPLES_GENERATOR_POSTGRES_HOST
+              value: "{{ template "postgresql.fullname" . }}"
+            - name: TRIPLES_GENERATOR_POSTGRES_PORT
+              value: "5432"
+            - name: TRIPLES_GENERATOR_POSTGRES_USER
+              value: {{ .Values.global.graph.triplesGenerator.postgresUser }}
+            - name: TRIPLES_GENERATOR_POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  {{- if .Values.global.graph.triplesGenerator.existingSecret }}
+                  name: {{ tpl .Values.global.graph.triplesGenerator.existingSecret . }}
+                  {{- else }}
+                  name: {{ template "renku.fullname" . }}-graph-tg-postgres
+                  {{- end }}
+                  key: graph-triplesGenerator-postgresPassword
+            - name: TRIPLES_GENERATOR_POSTGRES_CONNECTION_POOL
+              value: "{{ .Values.graph.triplesGenerator.connectionPool }}"
+            - name: RENKU_DISABLE_VERSION_CHECK
+              value: "true"
+            - name: SENTRY_ENABLED
+              value: "{{ .Values.graph.sentry.enabled }}"
+              {{- if .Values.graph.sentry.enabled }}
+            - name: SENTRY_DSN
+              value: {{ .Values.graph.sentry.sentryDsnRenkuPython }}
+            - name: SENTRY_GRAPH_DSN
+              value: {{ .Values.graph.sentry.dsn }}
+            - name: SENTRY_ENV
+              value: {{ .Values.graph.sentry.environment }}
+              {{- end }}
+            - name: GENERATION_PROCESSES_NUMBER
+              value: "{{ .Values.graph.triplesGenerator.generationProcessesNumber }}"
+            - name: TRANSFORMATION_PROCESSES_NUMBER
+              value: "{{ .Values.graph.triplesGenerator.transformationProcessesNumber }}"
+            - name: JAVA_OPTS
+              value: -Xmx{{ .Values.graph.triplesGenerator.jvmXmx }} -XX:+UseG1GC
+            - name: RENKU_PYTHON_DEV_VERSION
+              value: "{{ .Values.graph.triplesGenerator.renkuPythonDevVersion }}"
+          ports:
+            - name: http-triples-gn
+              containerPort: 9002
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /ping
+              port: http-triples-gn
+            timeoutSeconds: 60
+            periodSeconds: 60
+            successThreshold: 1
+            failureThreshold: 10
+            {{- if .Values.graph.triplesGenerator.renkuPythonDevVersion }}
+            initialDelaySeconds: 120
+            {{- end }}
+          readinessProbe:
+            httpGet:
+              path: /ping
+              port: http-triples-gn
+            periodSeconds: 10
+            successThreshold: 1
+            failureThreshold: 3
+            {{- if .Values.graph.triplesGenerator.renkuPythonDevVersion }}
+            initialDelaySeconds: 120
+            {{- end }}
+          resources:
+            {{- toYaml .Values.graph.triplesGenerator.resources | nindent 12 }}
+          volumeMounts:
+            {{- include "certificates.volumeMounts.javaCertsGeneral" . | nindent 12 }}
+      volumes:
+        {{- include "certificates.volumes" . | nindent 8 }}
+  {{- with .Values.nodeSelector }}
+nodeSelector:
+  {{ toYaml . | indent 8 }}
+  {{- end }}
+  {{- with .Values.affinity }}
+affinity:
+  {{ toYaml . | indent 8 }}
+  {{- end }}
+  {{- with .Values.tolerations }}
+tolerations:
+  {{ toYaml . | indent 8 }}
+  {{- end }}

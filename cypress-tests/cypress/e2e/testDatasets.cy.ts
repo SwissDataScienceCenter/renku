@@ -120,6 +120,9 @@ describe("Basic datasets functionality", () => {
       .contains(generatedDatasetName.name)
       .should("be.visible")
       .click();
+    cy.getDataCy("dataset-file-title")
+      .contains("Dataset files")
+      .should("be.visible");
     cy.getDataCy("edit-dataset-button").last().click();
     const newKeyword = "additioanl keyword";
     cy.getDataCy("input-keywords").type(`${newKeyword}{enter}`);

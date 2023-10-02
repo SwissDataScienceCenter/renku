@@ -1,0 +1,67 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: {{ template "renku.notebooks.fullname" . }}-k8s-watcher
+spec:
+  podSelector:
+    matchLabels:
+      app: {{ template "renku.notebooks.name" . }}-k8s-watcher
+      release: {{ .Release.Name }}
+  policyTypes:
+    - Ingress
+  ingress:
+    - from:
+        - podSelector:
+            matchLabels:
+              app: {{ template "renku.notebooks.name" . }}
+              release: {{ .Release.Name }}
+      ports:
+        - protocol: TCP
+          port: http
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: {{ template "renku.notebooks.fullname" . }}-ssh-sessions
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/component: jupyterserver
+      app.kubernetes.io/instance: {{ .Release.Name }}
+      app.kubernetes.io/name: amalthea
+  policyTypes:
+    - Ingress
+  ingress:
+    - from:
+        - podSelector:
+            matchLabels:
+              app: {{ template "renku.notebooks.name" . }}-ssh
+      ports:
+        - port: ssh
+          protocol: TCP
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: {{ template "renku.notebooks.fullname" . }}-ssh-sessions-egress
+spec:
+  podSelector:
+    matchLabels:
+      app: {{ template "renku.notebooks.name" . }}-ssh
+  policyTypes:
+    - Egress
+  egress:
+    - to:
+        - podSelector:
+            matchLabels:
+              app.kubernetes.io/component: jupyterserver
+              app.kubernetes.io/instance: {{ .Release.Name }}
+              app.kubernetes.io/name: amalthea
+      ports:
+        - port: ssh
+          protocol: TCP
+    - ports:
+        - protocol: UDP
+          port: 53
+        - protocol: TCP
+          port: 53
