@@ -18,17 +18,21 @@
 
 package ch.renku.acceptancetests.workflows
 
+import ch.renku.acceptancetests.model.projects
 import ch.renku.acceptancetests.model.projects.ProjectIdentifier
-import ch.renku.acceptancetests.tooling.{AcceptanceSpec, GitLabApi}
+import ch.renku.acceptancetests.tooling.{AcceptanceSpec, KnowledgeGraphApi}
 
 import scala.concurrent.duration._
 
 trait RemoveProject extends BrowserNavigation {
-  self: AcceptanceSpec with GitLabApi =>
+  self: AcceptanceSpec with KnowledgeGraphApi =>
 
-  def `remove project in GitLab`(implicit projectId: ProjectIdentifier): Unit = {
-    And(s"the '${projectId.slug}' project is removed")
-    `delete project in GitLab`(projectId)
+  def `remove project in GitLab`(implicit projectId: ProjectIdentifier): Unit =
+    `remove project in GitLab`(projectId.asProjectSlug)
+
+  def `remove project in GitLab`(slug: projects.Slug): Unit = {
+    And(s"the '$slug' project is removed")
+    `DELETE /knowledge-graph/projects/:slug`(slug)
     sleep(1 second)
   }
 }

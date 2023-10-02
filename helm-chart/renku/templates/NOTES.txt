@@ -1,7 +1,7 @@
 The RENKU platform has been deployed to your cluster.
 
 If all things were set up correctly, you will soon be able to access it at:
-{{ template "http" . }}://{{ .Values.global.renku.domain }}/
+{{ template "renku.http" . }}://{{ .Values.global.renku.domain }}/
 
 {{ if .Values.keycloakx.createDemoUser -}}
 You have configured a demo user for the platform. The details (password) of this user

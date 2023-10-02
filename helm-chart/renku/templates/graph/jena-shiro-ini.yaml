@@ -1,0 +1,35 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: shiro-ini
+  labels:
+    app: {{ template "renku.graph.jena.name" . }}
+    chart: {{ template "renku.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+data:
+  shiro.ini: |-
+    [main]
+    # Development
+    ssl.enabled = false
+
+    plainMatcher=org.apache.shiro.authc.credential.SimpleCredentialsMatcher
+    iniRealm.credentialsMatcher = $plainMatcher
+
+    [users]
+    admin={{ .Values.jena.users.admin.password }}
+    renku={{ .Values.jena.users.renku.password }}
+
+    [roles]
+
+    [urls]
+    ## Control functions open to anyone
+    /$/status = anon
+    /$/ping   = anon
+
+    ## and the rest are restricted
+    /$/** = authcBasic,user[admin]
+    /renku/** = authcBasic,user[renku]
+    /projects/** = authcBasic,user[renku]
+    /migrations/** = authcBasic,user[admin]

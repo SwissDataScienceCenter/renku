@@ -34,10 +34,10 @@ object GraphStatus {
       Decoder.forProduct3("done", "total", "percentage")(Progress.apply)
   }
 
-  final case class Details(status: String, message: String)
+  final case class Details(status: String, message: String, maybeStackTrace: Option[String])
   object Details {
     implicit val jsonDecoder: Decoder[Details] =
-      Decoder.forProduct2("status", "message")(Details.apply)
+      Decoder.forProduct3("status", "message", "stacktrace")(Details.apply)
   }
 
   implicit val jsonDecoder: Decoder[GraphStatus] =

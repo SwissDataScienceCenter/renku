@@ -63,7 +63,7 @@ trait Datasets {
     pause asLongAsBrowserAt newDatasetPage
 
     And("all the events are processed by the knowledge-graph ")
-    `wait for KG to process events`(projectPage.asProjectIdentifier, webDriver)
+    `wait for KG to process events`(projectPage.asProjectIdentifier.asProjectSlug, webDriver)
 
     Then("the user should see its newly created dataset")
     val datasetPage = DatasetPage(datasetName)
@@ -107,7 +107,7 @@ trait Datasets {
     pause asLongAsBrowserAt newDatasetPage
 
     And("all the events are processed by the knowledge-graph")
-    `wait for KG to process events`(projectPage.asProjectIdentifier, webDriver)
+    `wait for KG to process events`(projectPage.asProjectIdentifier.asProjectSlug, webDriver)
 
     val datasetPage = DatasetPage(datasetName)
     Then("the user should see its newly created dataset")
@@ -126,13 +126,15 @@ trait Datasets {
     `try few times with page reload` { _ =>
       Given("the user is on the Datasets tab")
       click on projectPage.Datasets.tab sleep (5 seconds)
-      verify userCanSee projectPage.Datasets.addDatasetButton
     }
 
-    When(s"the user clicks on the dataset name")
-    click on projectPage.Datasets.DatasetsList
-      .maybeLink(to = datasetPage)
-      .getOrElse(logAndFail(s"Cannot find '${datasetPage.datasetName}' Dataset among project datasets"))
+    `try few times with page reload` { _ =>
+      When("the user clicks on the dataset name")
+      sleep(5 seconds)
+      click on projectPage.Datasets.DatasetsList
+        .maybeLink(to = datasetPage)
+        .getOrElse(logAndFail(s"Cannot find '${datasetPage.datasetName}' Dataset among project datasets; waiting"))
+    }
 
     sleep(5 second)
 
@@ -163,7 +165,7 @@ trait Datasets {
     verify browserAt datasetPage
 
     And("all the events are processed by the knowledge-graph")
-    `wait for KG to process events`(projectPage.asProjectIdentifier, webDriver)
+    `wait for KG to process events`(projectPage.asProjectIdentifier.asProjectSlug, webDriver)
 
     And("the user should see its newly created dataset")
     reloadPage() sleep (2 seconds)

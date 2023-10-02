@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "ui-server.fullname" . }}
+  labels:
+{{ include "ui-server.labels" . | indent 4 }}
+spec:
+  type: {{ .Values.ui.server.service.type }}
+  ports:
+    - port: {{ .Values.ui.server.service.port }}
+      targetPort: 8080
+      protocol: TCP
+      name: http
+  selector:
+    app.kubernetes.io/name: "uiserver"
+    app.kubernetes.io/instance: {{ .Release.Name }}

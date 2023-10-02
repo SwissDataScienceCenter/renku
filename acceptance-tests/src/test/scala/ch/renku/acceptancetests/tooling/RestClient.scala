@@ -20,30 +20,32 @@ package ch.renku.acceptancetests.tooling
 
 import cats.Applicative
 import cats.effect.IO._
+import cats.effect.unsafe.IORuntime
 import cats.effect.{IO, Temporal}
 import cats.syntax.all._
 import ch.renku.acceptancetests.model.{AuthorizationToken, BaseUrl}
 import ch.renku.acceptancetests.tooling.TestLogger._
-import io.circe.Json
 import io.circe.optics.JsonPath
 import io.circe.optics.JsonPath.root
+import io.circe.{Decoder, Json}
 import org.http4s._
 import org.http4s.blaze.client.BlazeClientBuilder
 import org.http4s.blaze.pipeline.Command
+import org.http4s.circe.CirceEntityCodec._
 import org.http4s.circe._
 import org.http4s.client.dsl.Http4sClientDsl
-import org.http4s.client.middleware.Logger
 import org.http4s.client.{Client, ConnectionFailure}
 import org.openqa.selenium.WebDriver
 import org.scalatest.Assertions.fail
 
 import java.net.ConnectException
 import scala.concurrent.duration._
-import scala.util.control.NonFatal
 import scala.jdk.CollectionConverters._
+import scala.util.control.NonFatal
 
 trait RestClient extends Http4sClientDsl[IO] {
-  self: IOSpec =>
+
+  implicit val ioRuntime: IORuntime
 
   val jsonRoot: JsonPath = root
 
@@ -59,6 +61,11 @@ trait RestClient extends Http4sClientDsl[IO] {
     Uri.fromString(baseUrl.toString).fold(error => fail(error.getMessage()), identity)
   )
 
+  def PATCH(baseUrl: BaseUrl): Request[IO] = Request[IO](
+    Method.PATCH,
+    Uri.fromString(baseUrl.toString).fold(error => fail(error.getMessage()), identity)
+  )
+
   def DELETE(baseUrl: BaseUrl): Request[IO] = Request[IO](
     Method.DELETE,
     uri = Uri.fromString(baseUrl.toString).fold(error => fail(error.getMessage()), identity)
@@ -66,7 +73,7 @@ trait RestClient extends Http4sClientDsl[IO] {
 
   implicit class RequestOps(request: Request[IO]) {
 
-    def addCookiesFrom(webDriver: WebDriver) =
+    def addCookiesFrom(webDriver: WebDriver): Request[IO] =
       webDriver
         .manage()
         .getCookies
@@ -77,7 +84,10 @@ trait RestClient extends Http4sClientDsl[IO] {
       request.putHeaders(Headers(authorizationToken.asHeader))
 
     def send[A](processResponse: Response[IO] => IO[A]): A =
-      clientBuilder.resource.use(sendRequest(processResponse)).unsafeRunSync()
+      sendIO(processResponse).unsafeRunSync()
+
+    def sendIO[A](processResponse: Response[IO] => IO[A]): IO[A] =
+      clientBuilder.resource.use(sendRequest(processResponse))
 
     private def sendRequest[A](processResponse: Response[IO] => IO[A])(client: Client[IO]): IO[A] =
       client
@@ -109,15 +119,21 @@ trait RestClient extends Http4sClientDsl[IO] {
 
   def bodyToJson: Response[IO] => IO[Json] = _.as[Json]
 
+  def decodePayload[A](implicit decoder: Decoder[A]): Response[IO] => IO[A] = _.as[A]
+
   def expect(status: Status, otherwiseLog: String): Response[IO] => IO[Unit] = { response =>
     Applicative[IO].whenA(response.status != status) {
-      new Exception(
-        s"returned ${response.status} which is not expected $status. $otherwiseLog"
-      ).raiseError
+      response.as[Json] >>= { body =>
+        new Exception(
+          s"returned ${response.status} which is not expected $status. $otherwiseLog\n${body.spaces2}"
+        ).raiseError
+      }
     }
   }
 
   def mapResponse[A](f: PartialFunction[Response[IO], A]): Response[IO] => IO[A] = response => f(response).pure[IO]
+
+  def mapResponseIO[A](f: PartialFunction[Response[IO], IO[A]]): Response[IO] => IO[A] = f
 
   implicit class JsonOps(json: Json) {
     def extract[V](extractor: Json => V): V = extractor(json)
