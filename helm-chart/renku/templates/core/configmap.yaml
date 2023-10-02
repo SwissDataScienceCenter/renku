@@ -1,0 +1,21 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "renku-core.fullname" . }}-metadata-versions
+data:
+  metadata-versions.json: |
+    {
+      "name": "renku-core",
+      "versions": [
+        {{- $printComma := false -}}
+        {{- range $key, $version := .Values.global.core.versions }}
+        {{- if $printComma }},{{ else }} {{- $printComma = true }} {{ end }}
+        {
+          "version": "{{ $version.image.tag }}",
+          "data": {
+            "metadata_version": "{{ $version.prefix }}"
+          }
+        }
+        {{- end }}
+      ]
+    }

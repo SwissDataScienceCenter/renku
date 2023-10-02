@@ -1,0 +1,144 @@
+{{ define "ui.client-deployment-template" -}}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .deploymentName }}
+  labels:
+    app: ui
+    chart: {{ template "renku.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  replicas: {{ .Values.ui.client.replicaCount }}
+  selector:
+    matchLabels:
+      app: ui
+      release: {{ .Release.Name }}
+  template:
+    metadata:
+      annotations:
+        # Force a restart of the pod on every helm chart upgrade, rollback and install, because we need to make sure we
+        # have the latest chart version in the environment variables derived from a configmap, and environment variables
+        # from configmaps do not update automatically.
+        reloader: {{ randAlphaNum 16 | quote }}
+      labels:
+        app: ui
+        release: {{ .Release.Name }}
+    spec:
+      {{- if and .Values.ui.client.privacy.enabled .Values.ui.client.privacy.page.enabled }}
+      volumes:
+        - name: privacy
+          configMap:
+            name: {{ .Values.ui.client.privacy.page.configMapName | default (printf "%s-privacy-sample" (include "renku.fullname" .)) | quote }}
+            items:
+            - key: {{ .Values.ui.client.privacy.page.configMapKey | default (printf "privacy_statement") | quote }}
+              path: statement.md
+      {{- end }}
+      automountServiceAccountToken: {{ .Values.global.debug }}
+      containers:
+        - name: {{ .Chart.Name }}
+          image: {{ .imageName }}
+          imagePullPolicy: {{ .Values.ui.client.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: 8080
+              protocol: TCP
+          {{- if and .Values.ui.client.privacy.enabled .Values.ui.client.privacy.page.enabled }}
+          volumeMounts:
+            - mountPath: /config-privacy
+              name: privacy
+          {{- end }}
+          env:
+            - name: BASE_URL
+              value: {{ (include "renku.baseUrl" .) | quote }}
+            - name: GATEWAY_URL
+              value: {{ printf "%s/api" (include "renku.baseUrl" .) | quote }}
+            - name: UISERVER_URL
+              value: {{ printf "%s/ui-server" (include "renku.baseUrl" .) | quote }}
+            - name: DASHBOARD_MESSAGE
+              value: {{ toJson .Values.ui.client.dashboardMessage | quote }}
+            {{- if .Values.ui.client.statuspage }}
+            - name: STATUSPAGE_ID
+              value: {{ .Values.ui.client.statuspage.id | quote }}
+            {{- end }}
+            {{- if .Values.ui.client.sentry.enabled }}
+            - name: SENTRY_URL
+              value: {{ .Values.ui.client.sentry.dsn | quote }}
+            - name: SENTRY_NAMESPACE
+              value: {{ .Values.ui.client.sentry.environment | default (printf "%s" .Release.Namespace) | quote }}
+            - name: SENTRY_SAMPLE_RATE
+              value: {{ .Values.ui.client.sentry.sampleRate | quote }}
+            {{- end }}
+            {{- if .Values.ui.client.maintenance }}
+            - name: MAINTENANCE
+              value: {{ .Values.ui.client.maintenance | default (printf "false") | quote }}
+            {{- end }}
+            - name: ANONYMOUS_SESSIONS
+              value: {{ .Values.global.anonymousSessions.enabled | default (printf "false") | quote }}
+            - name: PRIVACY_ENABLED
+              value: {{ .Values.ui.client.privacy.enabled | quote }}
+            {{- if .Values.ui.client.privacy.enabled }}
+            - name: PRIVACY_BANNER_CONTENT
+              value: {{ .Values.ui.client.privacy.banner.content | default (printf "") | b64enc | quote }}
+            - name: PRIVACY_BANNER_LAYOUT
+              value: {{ toJson .Values.ui.client.privacy.banner.layout | default (printf "") | quote }}
+            {{ else }}
+            - name: PRIVACY_BANNER_CONTENT
+              value: ""
+            - name: PRIVACY_BANNER_LAYOUT
+              value: "{}"
+            {{- end }}
+            - name: TEMPLATES
+              value: {{ toJson .Values.ui.client.templates | quote }}
+            - name: PREVIEW_THRESHOLD
+              value: {{ toJson .Values.ui.client.previewSizeThreshold | quote }}
+            - name: UPLOAD_THRESHOLD
+              value: {{ toJson .Values.ui.client.uploadSizeThreshold | quote }}
+            - name: UI_VERSION
+              value: {{ .Chart.Version | quote }}
+            - name: RENKU_CHART_VERSION
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ .Release.Name }}-version
+                  key: chart_version
+            - name: HOMEPAGE
+              value: {{ toJson .Values.ui.client.homepage | quote }}
+            - name: CORE_API_VERSION_CONFIG			
+              value: {{ toJson .Values.ui.client.coreApiVersionConfig | quote }}
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 8080
+            initialDelaySeconds: 10
+            periodSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 8080
+            initialDelaySeconds: 30
+            periodSeconds: 30
+          resources:
+{{ toYaml .Values.ui.client.resources | indent 12 }}
+          securityContext:
+            {{- toYaml .Values.ui.client.securityContext | nindent 12 }}
+    {{- with .Values.ui.client.nodeSelector }}
+      nodeSelector:
+{{ toYaml . | indent 8 }}
+    {{- end }}
+    {{- with .Values.ui.client.affinity }}
+      affinity:
+{{ toYaml . | indent 8 }}
+    {{- end }}
+    {{- with .Values.ui.client.tolerations }}
+      tolerations:
+{{ toYaml . | indent 8 }}
+    {{- end }}
+      securityContext:
+        {{- toYaml .Values.ui.client.podSecurityContext | nindent 8 }}
+      {{- if .Values.ui.client.image.pullSecrets }}
+      imagePullSecrets:
+      {{- range .Values.ui.client.image.pullSecrets }}
+        - name: {{ . }}
+      {{- end}}
+      {{- end }}
+{{- end }}
