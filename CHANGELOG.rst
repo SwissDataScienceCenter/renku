@@ -8,11 +8,11 @@ Renku ``0.39.0`` moves all renku component Helm charts to one single chart that 
 Also, with the next releases we will adopt a specific way of versioning the helm chart. Namely:
 
 - Patch changes (i.e. ``0.50.1`` -> ``0.50.2``) indicate that there are NO changes in the Helm chart and that
-only appplication level bug fixes are present in the new release.
+  only application level bug fixes are present in the new release.
 - Minor version changes (i.e. ``0.50.2`` -> ``0.51.0``) indicate that there are NO changes in the Helm chart and that
-only application level new features and/or application level breaking changes are present.
+  only application level new features and/or application level breaking changes are present.
 - Major version changes (i.e. ``0.50.0`` -> ``1.0.0``) will be reserved for changes in the Helm chart, either when the 
-values file changes or when the Helm templates change. 
+  values file changes or when the Helm templates change. 
 
 Please note that this is a breaking change to the values file and it requires three minor edits to the following fields:
 
