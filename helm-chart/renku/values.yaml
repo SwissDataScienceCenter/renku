@@ -203,9 +203,6 @@ global:
       ## The secret is not re-generated or modified in any way if it already exists.
       passwordSecretName: renku-db-common-password
 
-  dataService:
-    serviceName: renku-data-service
-
 ## Ingress configuration
 ## See: https://kubernetes.io/docs/concepts/services-networking/ingress/
 ingress:
@@ -1612,7 +1609,6 @@ initDb:
     tag: "0.36.4-8.21cbfb5"
 
 dataService:
-  gitlabUrl:
   image: 
     repository: renku/renku-data-service
     tag: "0.0.1"
