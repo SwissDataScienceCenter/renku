@@ -5,7 +5,7 @@ For changes that require manual steps other than changing values, please check o
 Please follow this convention when adding a new row
 * `<type: NEW|EDIT|DELETE> - *<resource name>*: <details>`
 
-## Upgrading to Renku 0.XX.0
+## Upgrading to Renku 0.39.0
 
 This is a big change to the Renku Helm chart. We have now combined all Renku components to be present
 in a single Helm chart. This will allow us to gradually simplify the complicated and repetitive nature of
@@ -26,11 +26,11 @@ configuration is possible from its `values.yaml` file.
 In addition going forward we will follow a much stricter versioning scheme that will distinguish changes to 
 the Renku Helm chart as opposed to changes to the application. Notably:
 - Patch changes (i.e. `0.50.1` -> `0.50.2`) indicate that there are NO changes in the Helm chart and that
-only application images have changed.
-- Minor version changes (i.e. `0.50.2` -> `0.51.0`) indicate that there are changes in the Helm chart AND potentially
-changes in the application images.
-- Major version changes (i.e. `0.50.0` -> `1.0.0`) will be reserved for large sweeping changes or milestones. These will most probably
-include Helm chart and application changes as well. 
+only appplication level bug fixes are present in the new release.
+- Minor version changes (i.e. `0.50.2` -> `0.51.0`) indicate that there are NO changes in the Helm chart and that
+only application level new features and/or application level breaking changes are present.
+- Major version changes (i.e. `0.50.0` -> `1.0.0`) will be reserved for changes in the Helm chart, either when the 
+values file changes or when the Helm templates change. 
 
 ## Upgrading to Renku 0.37.0
 * EDIT - `notebooks.culling.idleThresholdSeconds` in the notebooks' values file was renamed to
