@@ -46,7 +46,7 @@ class HandsOnSpec
     val flightsDatasetName = `follow the flights tutorial`(projectUrl)
 
     When("all the events are processed by the knowledge-graph")
-    `wait for KG to process events`(projectDetails.asProjectIdentifier, webDriver)
+    `wait for KG to process events`(projectDetails.asProjectIdentifier.asProjectSlug, webDriver)
 
     `verify dataset was created`(flightsDatasetName)
 

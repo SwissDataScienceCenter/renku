@@ -63,7 +63,7 @@ trait Datasets {
     pause asLongAsBrowserAt newDatasetPage
 
     And("all the events are processed by the knowledge-graph ")
-    `wait for KG to process events`(projectPage.asProjectIdentifier, webDriver)
+    `wait for KG to process events`(projectPage.asProjectIdentifier.asProjectSlug, webDriver)
 
     Then("the user should see its newly created dataset")
     val datasetPage = DatasetPage(datasetName)
@@ -107,7 +107,7 @@ trait Datasets {
     pause asLongAsBrowserAt newDatasetPage
 
     And("all the events are processed by the knowledge-graph")
-    `wait for KG to process events`(projectPage.asProjectIdentifier, webDriver)
+    `wait for KG to process events`(projectPage.asProjectIdentifier.asProjectSlug, webDriver)
 
     val datasetPage = DatasetPage(datasetName)
     Then("the user should see its newly created dataset")
@@ -165,7 +165,7 @@ trait Datasets {
     verify browserAt datasetPage
 
     And("all the events are processed by the knowledge-graph")
-    `wait for KG to process events`(projectPage.asProjectIdentifier, webDriver)
+    `wait for KG to process events`(projectPage.asProjectIdentifier.asProjectSlug, webDriver)
 
     And("the user should see its newly created dataset")
     reloadPage() sleep (2 seconds)

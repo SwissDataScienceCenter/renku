@@ -16,25 +16,28 @@
  * limitations under the License.
  */
 
-package ch.renku.acceptancetests.tooling
+package ch.renku.acceptancetests.tooling.multipart
 
-import cats.effect.unsafe.IORuntime
-import cats.syntax.all._
-import ch.renku.acceptancetests.model.CliVersion
-import org.http4s.Status._
-import org.scalatest.Assertions.fail
+import org.http4s.multipart.Part
 
-trait RenkuApi extends RestClient {
-  self: AcceptanceSpecData =>
+trait PartEncoder[F[_], A] {
+  def apply(partName: String, a: A): Part[F]
+}
 
-  implicit val ioRuntime: IORuntime
+object PartEncoder {
 
-  lazy val apiCliVersion: CliVersion = {
-    val url = renkuBaseUrl / "api" / "renku" / "apiversion"
-    GET(url)
-      .send(whenReceived(status = Ok) >=> bodyToJson)
-      .extract(jsonRoot.`result`.`latest_version`.string.getOption)
-      .map(CliVersion.get(_).fold(error => fail(error.getMessage), identity))
-      .getOrElse(fail(s"CLI version couldn't be obtained from $url"))
-  }
+  def instance[F[_], A](f: (String, A) => Part[F]): PartEncoder[F, A] =
+    (partName: String, a: A) => f(partName, a)
+}
+
+trait PartValueEncoder[A] {
+  def apply(a: A): String
+}
+
+object PartValueEncoder {
+
+  def instance[A](f: A => String): PartValueEncoder[A] = (a: A) => f(a)
+
+  implicit def stringEnc: PartValueEncoder[String] =
+    instance(identity)
 }
