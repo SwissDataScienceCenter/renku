@@ -16,7 +16,7 @@ spec:
       protocol: TCP
       name: http
   selector:
-    app: {{ template "gateway.name" . }}-revproxy
+    app: {{ template "gateway.name" . }}-auth
     release: {{ .Release.Name }}
 ---
 apiVersion: v1
