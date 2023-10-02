@@ -1,6 +1,7 @@
 import { TIMEOUTS } from "../../config";
 import { generatorProjectName } from "../support/commands/projects";
 import { validateLogin } from "../support/commands/general";
+import { v4 as uuidv4 } from "uuid";
 
 const username = Cypress.env("TEST_USERNAME");
 
@@ -9,8 +10,8 @@ const projectTestConfig = {
   projectName: generatorProjectName("useSession"),
 };
 const workflow = {
-  name: "dummyworkflow",
-  output: "o.txt", // ? Keep the name short or it won't show up entirely in the file browser
+  name: `dummyworkflow-${uuidv4().substring(24)}`,
+  output: `o-${uuidv4().substring(4)}.txt`, // ? Keep the name short or it won't show up entirely in the file browser
 };
 
 // ? Modify the config -- useful for debugging
