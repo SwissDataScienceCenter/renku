@@ -69,6 +69,8 @@ spec:
               value: {{ printf "http://%s-gateway-auth" .Release.Name }}
             - name: REVPROXY_RENKU_SERVICES_CRC
               value: {{ printf "http://%s" .Values.global.crc.serviceName | quote }}
+            - name: REVPROXY_RENKU_SERVICES_KEYCLOAK
+              value: {{ include "renku.keycloakUrl" . | quote }}
             - name: REVPROXY_PORT
               value: "8080"
             - name: REVPROXY_METRICS_ENABLED
