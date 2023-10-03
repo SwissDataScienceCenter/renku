@@ -58,7 +58,7 @@ spec:
             - name: GATEWAY_LOGOUT_PATH
               value: {{ .Values.gateway.logoutSuffix | default (printf "/auth/logout") | quote }}
             - name: AUTH_SERVER_URL
-              value: {{ printf "%s/auth/realms/Renku" (include "renku.baseUrl" .) | quote }}
+              value: {{ printf "%s/auth/realms/%s" (include "renku.baseUrl" .) (include "renku.keycloak.realm" .) | quote }}
             - name: AUTH_CLIENT_ID
               value: {{ .Values.ui.server.authentication.id | default (printf "renku-ui") | quote }}
             - name: AUTH_CLIENT_SECRET

@@ -162,5 +162,5 @@ app.kubernetes.io/managed-by: {{ .Release.Service }}
 {{- end -}}
 
 {{- define "renku.keycloak.realm" -}}
-{{ .Values.global.keycloak.realm | default "renku" }}
+{{ .Values.global.keycloak.realm | default "Renku" }}
 {{- end -}}
