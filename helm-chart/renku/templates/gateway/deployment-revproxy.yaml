@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: {{ template "renku.fullname" . }}-gateway-revproxy
   labels:
-    app: {{ template "renku.name" . }}-gateway-revproxy
+    app: {{ template "gateway.name" . }}-revproxy
     chart: {{ template "renku.chart" . }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
@@ -15,12 +15,12 @@ spec:
     {{- toYaml .Values.gateway.reverseProxy.updateStrategy | nindent 4 }}
   selector:
     matchLabels:
-      app: {{ template "renku.name" . }}-gateway-revproxy
+      app: {{ template "gateway.name" . }}-revproxy
       release: {{ .Release.Name }}
   template:
     metadata:
       labels:
-        app: {{ template "renku.name" . }}-gateway-revproxy
+        app: {{ template "gateway.name" . }}-revproxy
         release: {{ .Release.Name }}
       {{- with .Values.gateway.reverseProxy.podAnnotations }}
       annotations:
