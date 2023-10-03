@@ -27,3 +27,10 @@ Template core service names as a comma separated list
 {{- end -}}
 {{- join "," $serviceNames | quote -}}
 {{- end -}}
+
+{{/*
+Expand the name of the chart.
+*/}}
+{{- define "gateway.name" -}}
+gateway
+{{- end -}}

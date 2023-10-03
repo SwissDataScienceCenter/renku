@@ -1,9 +1,26 @@
 .. _changelog:
 
+0.39.1
+------
+
+Renku ``0.39.1`` fixes bugs in the Helm chart introduced by ``0.39.0``.
+
+
+Internal Changes
+~~~~~~~~~~~~~~~~
+
+This introduces changes in the templates and values file of the Helm chart from 0.39.0 that were causing the Helm upgrade
+operation to fail.
+
 0.39.0
 ------
 
 Renku ``0.39.0`` moves all renku component Helm charts to one single chart that now resides in this repository.
+
+After initial testing we have noticed a bug in this version of the Helm chart. If you have already deployed this version simply 
+upgrading to ``0.39.1`` will fix things. If you have not yet deployed this version then skip it and go straight to ``0.39.1``.
+The reason for the bug is that we replaced the ``spec.selector.matchLabels`` field of two important deployments in the Gateway
+because of this the two components do not upgrade and the whole Helm upgrade operation fails.
 
 Also, with the next releases we will adopt a specific way of versioning the helm chart. Namely:
 
