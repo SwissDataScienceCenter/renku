@@ -25,6 +25,7 @@ import ch.renku.acceptancetests.pages.Page
 import org.openqa.selenium.{WebDriver, WebElement}
 import org.scalatest.concurrent.Eventually
 import org.scalatest.exceptions.TestFailedException
+import org.scalatest.matchers.should
 import org.scalatestplus.selenium
 import org.scalatestplus.selenium.WebBrowser
 
@@ -32,7 +33,7 @@ import scala.concurrent.duration._
 import scala.language.implicitConversions
 
 trait Grammar extends WebElementOps with WebDriverOps with Scripts with Eventually {
-  self: WebBrowser with AcceptanceSpec =>
+  self: WebBrowser with WebDriveredSpec with should.Matchers =>
 
   implicit def toSeleniumPage[Url <: BaseUrl](page: Page[Url])(implicit baseUrl: Url): selenium.Page =
     new selenium.Page {

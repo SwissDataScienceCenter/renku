@@ -18,13 +18,16 @@
 
 package ch.renku.acceptancetests.tooling
 
+import cats.effect.unsafe.IORuntime
 import cats.syntax.all._
 import ch.renku.acceptancetests.model.CliVersion
 import org.http4s.Status._
 import org.scalatest.Assertions.fail
 
 trait RenkuApi extends RestClient {
-  self: AcceptanceSpecData with IOSpec =>
+  self: AcceptanceSpecData =>
+
+  implicit val ioRuntime: IORuntime
 
   lazy val apiCliVersion: CliVersion = {
     val url = renkuBaseUrl / "api" / "renku" / "apiversion"

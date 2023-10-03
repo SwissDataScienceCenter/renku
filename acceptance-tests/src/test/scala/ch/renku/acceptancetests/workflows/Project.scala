@@ -121,7 +121,7 @@ trait Project extends RemoveProject with ExtantProject with KnowledgeGraphApi {
 
     val projectPage = ProjectPage createFrom projectDetails
 
-    `wait for project activation`(projectPage.asProjectIdentifier) match {
+    `wait for project activation`(projectPage.asProjectIdentifier.asProjectSlug) match {
       case Left(err) =>
         logger.error(s"$err - retrying the creation process")
         `create a new project`

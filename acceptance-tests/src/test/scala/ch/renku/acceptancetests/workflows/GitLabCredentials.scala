@@ -18,7 +18,7 @@
 
 package ch.renku.acceptancetests.workflows
 
-import ch.renku.acceptancetests.pages.{GitLabUserProfilePage, GitLabWelcomePage, DashboardPage}
+import ch.renku.acceptancetests.pages.{DashboardPage, GitLabUserProfilePage, GitLabWelcomePage}
 import ch.renku.acceptancetests.tooling.AcceptanceSpec
 
 import scala.concurrent.duration._

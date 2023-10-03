@@ -1,5 +1,235 @@
 .. _changelog:
 
+0.39.1
+------
+
+Renku ``0.39.1`` fixes bugs in the Helm chart introduced by ``0.39.0``.
+
+
+Internal Changes
+~~~~~~~~~~~~~~~~
+
+This introduces changes in the templates and values file of the Helm chart from 0.39.0 that were causing the Helm upgrade
+operation to fail.
+
+0.39.0
+------
+
+Renku ``0.39.0`` moves all renku component Helm charts to one single chart that now resides in this repository.
+
+After initial testing we have noticed a bug in this version of the Helm chart. If you have already deployed this version simply 
+upgrading to ``0.39.1`` will fix things. If you have not yet deployed this version then skip it and go straight to ``0.39.1``.
+The reason for the bug is that we replaced the ``spec.selector.matchLabels`` field of two important deployments in the Gateway
+because of this the two components do not upgrade and the whole Helm upgrade operation fails.
+
+Also, with the next releases we will adopt a specific way of versioning the helm chart. Namely:
+
+- Patch changes (i.e. ``0.50.1`` -> ``0.50.2``) indicate that there are NO changes in the Helm chart and that
+  only application level bug fixes are present in the new release.
+- Minor version changes (i.e. ``0.50.2`` -> ``0.51.0``) indicate that there are NO changes in the Helm chart and that
+  only application level new features and/or application level breaking changes are present.
+- Major version changes (i.e. ``0.50.0`` -> ``1.0.0``) will be reserved for changes in the Helm chart, either when the 
+  values file changes or when the Helm templates change. 
+
+Please note that this is a breaking change to the values file and it requires three minor edits to the following fields:
+
+- ``graph.jena.*`` moved to ``jena.*``
+- ``notebooks.amalthea.*`` moved to ``amalthea.*``
+- ``notebooks.dlf-chart.*`` moved to ``dlf-chart.*``
+
+For more details please refer to the explanation in ``helm-chart/values.yaml.changelog.md``.
+
+Internal Changes
+~~~~~~~~~~~~~~~~
+
+There are now no more separate Helm charts for the core, notebooks, graph, UI and gateway components. All the Helm
+templates have been moved into the main Renku Helm chart in this repository.
+
+0.38.0
+------
+
+Renku ``0.38.0`` improves the Knowledge Graph API, with a new Project Creation functionality and a Project Update enhancement.
+There is also a new version of the core service with multiple bug fixes and a few new features.
+
+User-Facing Changes
+~~~~~~~~~~~~~~~~~~~
+
+**✨ Improvements**
+
+- **CLI**: allow disabling automated parameter detection in renku run
+  (`#3548 <hhttps://github.com/SwissDataScienceCenter/renku-python/issues/3548>`_).
+
+**🌟 New Features**
+
+- 🖼️ **Knowledge Graph**: New `Project Create API <https://renkulab.io/swagger/?urls.primaryName=knowledge%20graph#/default/post_projects>`_
+  to create a project in GitLab and Knowledge Graph
+  (`#1635 <https://github.com/SwissDataScienceCenter/renku-graph/issues/1635>`_).
+
+**🐞 Bug Fixes**
+
+- **Knowledge Graph**: Improves quality of the results returned by the Cross-Entity Search API.
+- **Knowledge Graph**: The `Project Update API <https://renkulab.io/swagger/?urls.primaryName=knowledge%20graph#/default/patch_projects__namespace___projectName_>`_ to work for non-public projects
+  (`#1695 <https://github.com/SwissDataScienceCenter/renku-graph/pull/1695>`_).
+
+Internal Changes
+~~~~~~~~~~~~~~~~
+
+**Improvements**
+
+- **Core Service**: replace/refactor internal repository cache
+  (`#3534 <hhttps://github.com/SwissDataScienceCenter/renku-python/issues/3534>`_).
+
+**Bug Fixes**
+
+-  **CLI:** do not freeze/unfreeze plan view model
+   (`#3599 <https://github.com/SwissDataScienceCenter/renku-python/issues/3599>`__)
+   (`3c48cff <https://github.com/SwissDataScienceCenter/renku-python/commit/3c48cffe116db5c246beca2003c2f282fc38b465>`__)
+-  **CLI:** simplify ssh setup and key usage
+   (`#3615 <https://github.com/SwissDataScienceCenter/renku-python/issues/3615>`__)
+   (`3fa737a <https://github.com/SwissDataScienceCenter/renku-python/commit/3fa737ab6cd6126047098957ff2e5f179e939339>`__)
+-  **Core Service:** setting a non-existing config property to null more than once results in error
+   (`#3595 <https://github.com/SwissDataScienceCenter/renku-python/issues/3595>`__)
+   (`e0ff587 <https://github.com/SwissDataScienceCenter/renku-python/commit/e0ff587f507d049eeeb873e8488ba8bb10ac1a15>`__)
+-  **Core Service:** skip fast cache migrations check for anonymous users
+   (`#3577 <https://github.com/SwissDataScienceCenter/renku-python/issues/3577>`__)
+   (`9ee3176 <https://github.com/SwissDataScienceCenter/renku-python/commit/9ee3176ce379dd80d2955e858f5e11e1fb32b464>`__)
+-  **Core Service:** normalize git url to avoid duplicate cache entries
+   (`#3606 <https://github.com/SwissDataScienceCenter/renku-python/issues/3606>`__)
+   (`19142c6 <https://github.com/SwissDataScienceCenter/renku-python/commit/19142c6f58713cb9990b71f9ed738990987c3e16>`__)
+-  **CLI:** adapt to changes in Knowledge Graph API for importing datasets
+   (`#3549 <https://github.com/SwissDataScienceCenter/renku-python/issues/3549>`__)
+   (`020434a <https://github.com/SwissDataScienceCenter/renku-python/commit/020434a7dd6449755644a2e9ca849b8821900f72>`__)
+-  **Core Service:** add branch to service cache path
+   (`#3562 <https://github.com/SwissDataScienceCenter/renku-python/issues/3562>`__)
+   (`3800a38 <https://github.com/SwissDataScienceCenter/renku-python/commit/3800a3823515763c207b1b15f348df3b0cdd9831>`__)
+-  **Core Service:** add support for using default values in template parameters
+   (`#3550 <https://github.com/SwissDataScienceCenter/renku-python/issues/3550>`__)
+   (`d162392 <https://github.com/SwissDataScienceCenter/renku-python/commit/d162392b3dc20dd3433be78b08f101e7f268ed7d>`__)
+-  **Knowledge Graph**: Various issues preventing Grafana dashboards not working.
+   (`#1717 <https://github.com/SwissDataScienceCenter/renku-graph/pull/1717>`_)
+   (`#1719 <https://github.com/SwissDataScienceCenter/renku-graph/pull/1719>`_).
+
+Individual components
+~~~~~~~~~~~~~~~~~~~~~~
+
+- `renku-graph 2.42.0 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/2.42.0>`_
+- `renku-graph 2.42.1 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/2.42.1>`_
+- `renku-python 2.7.0 <https://github.com/SwissDataScienceCenter/renku-python/releases/tag/2.7.0>`_
+
+
+0.37.0
+------
+
+Renku ``0.37.0`` introduces a new feature to pause sessions and later resume them exactly where you left off. All of your work in progress, including files, data, and environment changes not saved to git, are resumed right as you left them.
+
+This feature replaces RenkuLab's branch-based auto-save mechanism. Most users do not have to do anything to transition from auto-saves to persistent sessions. However, if your last session went into an auto-save, you can still retrieve that work by using Start with Options and selecting your most recent auto-save branch. If your project contains auto-save branches that you do not need anymore, you can safely delete them.
+
+User-Facing Changes
+~~~~~~~~~~~~~~~~~~~
+
+**🌟 New Features**
+
+- ⏸️ **Renku Notebooks** and **UI**: Support for pausing (i.e. hibernating) and resuming sessions
+  (`#1518 <https://github.com/SwissDataScienceCenter/renku-notebooks/pull/1518>`_)
+  (`#2686 <https://github.com/SwissDataScienceCenter/renku-ui/issues/2686>`_).
+
+**🐞 Bug Fixes**
+
+- **UI**: restore adding files by URL to datasets
+  (`#2800 <https://github.com/SwissDataScienceCenter/renku-ui/issues/2800>`_).
+
+Internal Changes
+~~~~~~~~~~~~~~~~
+
+**New Features**
+
+- **Renku Notebooks**: Use a new version of Amalthea which adds fields for culling
+  hibernating sessions in the CRD.
+- **Renku Notebooks** - **Helm chart breaking change**: ``notebooks.culling.idleThresholdSeconds`` in the values file
+  was renamed to ``notebooks.culling.idleSecondsThreshold``.
+
+Individual components
+~~~~~~~~~~~~~~~~~~~~~~
+
+- `amalthea 0.9.1 <https://github.com/SwissDataScienceCenter/amalthea/releases/tag/0.9.1>`_
+- `renku-notebooks 1.19.0 <https://github.com/SwissDataScienceCenter/renku-notebooks/releases/tag/1.19.0>`_
+- `renku-ui 3.13.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.13.0>`_
+
+
+0.36.3
+------
+
+Renku ``0.36.3`` is a bug-fix release that solves a few issues with creating new
+projects and datasets.
+
+User-Facing Changes
+~~~~~~~~~~~~~~~~~~~
+
+**🐞 Bug Fixes**
+
+- **UI**: fix render loops in creating new projects; they were occasionally creating
+  problems based on the specific fields filled in by the user.
+  (`#2788 <https://github.com/SwissDataScienceCenter/renku-ui/issues/2788>`_).
+- **UI**: restore adding files to datasets on an outdated but supported metadata version
+  (`#2788 <https://github.com/SwissDataScienceCenter/renku-ui/issues/2788>`_).
+- **UI**: do not error on dataset thumbnails pointing to an external URL
+  (`#2791 <https://github.com/SwissDataScienceCenter/renku-ui/issues/2791>`_).
+- **UI**: prevent failures when unzipping files with a large number of elements on dataset
+  creation
+  (`#2786 <https://github.com/SwissDataScienceCenter/renku-ui/issues/2786>`_).
+
+Individual components
+~~~~~~~~~~~~~~~~~~~~~~
+
+- `renku-ui 3.12.2 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.12.2>`_
+
+
+0.36.2
+------
+
+Renku ``0.36.2`` is a bug-fix release that fixes a bug with running ``renku save`` from JupyterServer
+session sidecars.
+
+User-Facing Changes
+~~~~~~~~~~~~~~~~~~~
+
+**🐞 Bug Fixes**
+
+- **Renku Notebooks**: Fix a problem that prevented users from saving data via the UI in a session
+  (`#1620 <https://github.com/SwissDataScienceCenter/renku-notebooks/issues/1620>`_).
+
+Individual components
+~~~~~~~~~~~~~~~~~~~~~~
+
+- `renku-notebooks 1.18.1 <https://github.com/SwissDataScienceCenter/renku-notebooks/releases/tag/1.18.1>`_
+
+
+0.36.1
+------
+
+Renku ``0.36.1`` is a bug-fix release that includes the fixes from ``0.35.2``.
+
+It also includes a few changes behind the scenes on how the UI interacts with backend components.
+
+Internal Changes
+~~~~~~~~~~~~~~~~
+
+**Improvements**
+
+- **UI**: Take advantage of Core Service API versions
+  (`#2764 <https://github.com/SwissDataScienceCenter/renku-ui/issues/2764>`_).
+
+**Bug Fixes**
+
+- **UI**: Fix bootstrap icons
+  (`#2772 <https://github.com/SwissDataScienceCenter/renku-ui/issues/2772>`_).
+
+Individual components
+~~~~~~~~~~~~~~~~~~~~~~
+
+- `renku-ui 3.12.1 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.12.1>`_
+
+
 0.36.0
 ------
 
@@ -38,6 +268,26 @@ Individual components
 
 - `renku-ui 3.12.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.12.0>`_
 - `renku-graph 2.41.0 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/2.41.0>`_
+
+
+0.35.2
+------
+
+Renku ``0.35.2`` introduces a UI bug-fix to prevent overloading backend components
+when using pre-filled template links. 
+
+Internal Changes
+~~~~~~~~~~~~~~~~
+
+**Bug Fixes**
+
+- **UI**: Handle embedded template variables in project creation links
+  (`#2789 <https://github.com/SwissDataScienceCenter/renku-ui/issues/2789>`_).
+
+Individual components
+~~~~~~~~~~~~~~~~~~~~~~
+
+- `renku-ui 3.11.1 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.11.1>`_
 
 
 0.35.1
