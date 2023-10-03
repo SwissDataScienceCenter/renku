@@ -314,8 +314,8 @@ keycloakx:
   ## keycloak admin username/password is supplied.
   initRealm:
     image:
-      repository: registry.dev.renku.ch/tasko.olevski/renku-images/init-realm
-      tag: "0.36.4-8.21cbfb5"
+      repository: renku/init-realm
+      tag: "latest"
 
   ## Skip Keycloak testing when running Helm test
   test:
@@ -1214,7 +1214,7 @@ notebooks:
   ssh:
     enabled: false
     image:
-      repository: renku/renku-notebooks-ssh
+      repository: renku/ssh-jump-host
       tag: "1.19.0"
       pullPolicy: IfNotPresent
     resources: {}
@@ -1605,8 +1605,8 @@ swagger:
 ## The image used in startup scripts to initialize different postgress databases
 initDb:
   image:
-    repository: registry.dev.renku.ch/tasko.olevski/renku-images/init-db
-    tag: "0.36.4-8.21cbfb5"
+    repository: renku/init-db
+    tag: "latest"
 
 dataService:
   image: 
