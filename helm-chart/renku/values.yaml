@@ -997,7 +997,7 @@ notebooks:
 
   image:
     repository: renku/renku-notebooks
-    tag: "1.19.0"
+    tag: "1.19.1"
     pullPolicy: IfNotPresent
 
     ## Optionally specify an array of imagePullSecrets.
@@ -1127,17 +1127,17 @@ notebooks:
   gitRpcServer:
     image:
       name: renku/git-rpc-server
-      tag: "1.19.0"
+      tag: "1.19.1"
 
   gitHttpsProxy:
     image:
       name: renku/git-https-proxy
-      tag: "1.19.0"
+      tag: "1.19.1"
 
   gitClone:
     image:
       name: renku/git-clone
-      tag: "1.19.0"
+      tag: "1.19.1"
 
   service:
     type: ClusterIP
@@ -1195,13 +1195,13 @@ notebooks:
     sessionTypes: ["registered"]
     image:
       repository: renku/renku-notebooks-tests
-      tag: "1.19.0"
+      tag: "1.19.1"
       pullPolicy: IfNotPresent
 
   k8sWatcher:
     image:
       repository: renku/k8s-watcher
-      tag: 1.19.0
+      tag: 1.19.1
       pullPolicy: IfNotPresent
     resources: {}
     replicaCount: 1
@@ -1215,7 +1215,7 @@ notebooks:
     enabled: false
     image:
       repository: renku/ssh-jump-host
-      tag: "1.19.0"
+      tag: "1.19.1"
       pullPolicy: IfNotPresent
     resources: {}
     replicaCount: 1
