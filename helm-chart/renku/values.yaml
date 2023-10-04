@@ -20,6 +20,10 @@ global:
     # urlPrefix: /
     ## URL for gitlab deployment
     url:
+    registry:
+      ## Set the default image registry
+      host:
+
     ## Secret for the gitlab keycloak client
     clientSecret: # use `openssl rand -hex 32`
 
@@ -959,13 +963,6 @@ notebooks:
     ## immediate eviction of the user session. EmptyDirs are used when the enabled flag
     ## above is set to false.
     useEmptyDirSizeLimit: false
-
-  gitlab:
-    ## specify the GitLab instance URL
-    url:
-    registry:
-      ## Set the default image registry
-      host:
 
   ## For sending exceptions to Sentry, specify the DSN to use
   sentry:

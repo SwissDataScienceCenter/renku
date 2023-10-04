@@ -45,7 +45,7 @@ spec:
             - name: TOKEN_REPOSITORY_BASE_URL
               value: "http://{{ template "renku.graph.tokenRepository.fullname" . }}:{{ .Values.graph.tokenRepository.service.port }}"
             - name: GITLAB_BASE_URL
-              value: {{ .Values.graph.gitlab.url }}
+              value: {{ include "renku.gitlabUrl" . | quote }}
             - name: GITLAB_RATE_LIMIT
               value: {{ .Values.graph.webhookService.gitlab.rateLimit }}
             - name: SELF_IP

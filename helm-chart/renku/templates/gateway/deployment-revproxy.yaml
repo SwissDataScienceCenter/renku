@@ -49,7 +49,7 @@ spec:
               {{- if .Values.gitlab.enabled }}
               value: ""
               {{- else }}
-              value: {{ .Values.graph.gitlab.url | default "" | quote }}
+              value: {{ include "renku.gitlabUrl" . | quote }}
               {{- end }}
             - name: REVPROXY_ALLOW_ORIGIN
               value: {{ join "," .Values.gateway.allowOrigin | quote }}
