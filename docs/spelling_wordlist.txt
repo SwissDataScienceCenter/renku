@@ -274,6 +274,7 @@ terraform
 th
 timestamp
 tinkerpop
+tolerations
 toolchain
 Traefik
 truthy
