@@ -1,5 +1,19 @@
 .. _changelog:
 
+0.39.3
+------
+
+Renku ``0.39.3`` fixes various bugs.
+
+
+Internal Changes
+~~~~~~~~~~~~~~~~
+
+**Bug Fixes**
+
+- **Helm chart**: fix problem with missing network policies preventing access to sessions
+- **Helm chart**: use the session specific affinity, node selector and tolerations and not the general configuration reserved for Renku services
+
 0.39.2
 ------
 
