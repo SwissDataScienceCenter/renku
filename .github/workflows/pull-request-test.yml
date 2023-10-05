@@ -58,7 +58,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - id: deploy-comment
-        uses: SwissDataScienceCenter/renku-actions/check-pr-description@support-data-service 
+        uses: SwissDataScienceCenter/renku-actions/check-pr-description@v1.8.0 
         with:
           string: /deploy
           pr_ref: ${{ github.event.number }}
@@ -73,7 +73,7 @@ jobs:
       - uses: actions/checkout@v4
       - name: renku build and deploy
         if: needs.check-deploy.outputs.pr-contains-string == 'true'
-        uses: SwissDataScienceCenter/renku-actions/deploy-renku@support-data-service 
+        uses: SwissDataScienceCenter/renku-actions/deploy-renku@v1.8.0 
         env:
           DOCKER_PASSWORD: ${{ secrets.RENKU_DOCKER_PASSWORD }}
           DOCKER_USERNAME: ${{ secrets.RENKU_DOCKER_USERNAME }}
