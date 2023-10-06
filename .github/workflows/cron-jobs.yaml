@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
       - name: renku teardown
-        uses: SwissDataScienceCenter/renku-actions/cleanup-renku-ci-deployments@v1.7.0
+        uses: SwissDataScienceCenter/renku-actions/cleanup-renku-ci-deployments@v1.8.1
         env:
           GITLAB_TOKEN: ${{ secrets.DEV_GITLAB_TOKEN }}
           RENKUBOT_KUBECONFIG: ${{ secrets.RENKUBOT_DEV_KUBECONFIG }}
