@@ -71,7 +71,7 @@ spec:
             - name: NB_GIT__URL
               value: {{ include "renku.gitlabUrl" . | quote }}
             - name: NB_GIT__REGISTRY
-              value: {{ required "An image registry must be specified." .Values.notebooks.gitlab.registry.host }}
+              value: {{ required "An image registry must be specified." .Values.global.gitlab.registry.host }}
             - name: NB_SESSIONS__GIT_RPC_SERVER__IMAGE
               value: "{{ .Values.notebooks.gitRpcServer.image.name }}:{{ .Values.notebooks.gitRpcServer.image.tag }}"
             - name: NB_SESSIONS__GIT_PROXY__IMAGE

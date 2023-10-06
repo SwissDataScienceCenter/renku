@@ -30,7 +30,7 @@ spec:
         - name: NB_GIT__URL
           value: {{ include "renku.gitlabUrl" . | quote }}
         - name: NB_GIT__REGISTRY
-          value: {{ $.Values.notebooks.gitlab.registry.host | quote }}
+          value: {{ $.Values.global.gitlab.registry.host | quote }}
         - name: GITLAB_TOKEN
           value: {{ $.Values.notebooks.tests.gitlab_token | quote }}
         - name: NOTEBOOKS_BASE_URL

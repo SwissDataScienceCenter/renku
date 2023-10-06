@@ -7,13 +7,15 @@ global:
   gitlab:
     urlPrefix: /
     clientSecret: <use `openssl rand -hex 32`>
+    registry:
+      host: {gitlab_registry}
+    url: {gitlab_url}
   renku:
     domain: {renku_domain}
   uiserver:
     clientSecret: <use `openssl rand -hex 32`>
   useHTTPS: true
 gateway:
-  gitlabUrl: {gitlab_url}
   secretKey: <use `openssl rand -hex 32`>
 gitlab:
   enabled: false
@@ -38,8 +40,6 @@ gitlab:
         - {gitlab_registry}
         secretName: registry-tls
 graph:
-  gitlab:
-    url: {gitlab_url}
   jena:
     users:
       admin:
@@ -68,10 +68,6 @@ ingress:
 notebooks:
   amalthea:
     deployCrd: true
-  gitlab:
-    registry:
-      host: {gitlab_registry}
-    url: {gitlab_url}
   oidc:
     allowUnverifiedEmail: true
     authUrl: https://{renku_domain}/auth/realms/Renku/protocol/openid-connect/auth

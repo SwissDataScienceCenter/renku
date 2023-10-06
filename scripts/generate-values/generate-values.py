@@ -45,28 +45,17 @@ def main():
 
     argparser = argparse.ArgumentParser(description=__doc__)
 
+    argparser.add_argument("--namespace", help="Namespace for the deployment")
     argparser.add_argument(
-        "--namespace", help="Namespace for the deployment"
-    )
-    argparser.add_argument("--gitlab", help="Deploy GitLab as a part of Renku",
-        action=argparse.BooleanOptionalAction, default=False
+        "--gitlab", help="Deploy GitLab as a part of Renku", action=argparse.BooleanOptionalAction, default=False
     )
     argparser.add_argument("--gitlab-url", help="Gitlab URL")
-    argparser.add_argument(
-        "--gitlab-registry",
-        help="Gitlab Image Registry URL"
-    )
+    argparser.add_argument("--gitlab-registry", help="Gitlab Image Registry URL")
     argparser.add_argument("--gitlab-client-id", help="Gitlab client ID")
-    argparser.add_argument(
-        "--gitlab-client-secret", help="Gitlab client secret"
-    )
+    argparser.add_argument("--gitlab-client-secret", help="Gitlab client secret")
     argparser.add_argument("--renku-domain", help="Renku domain")
-    argparser.add_argument(
-        "--template", help="Values template to use", default="base-renku-values.yaml.template"
-    )
-    argparser.add_argument(
-        "--output", "-o", help="Output file"
-    )
+    argparser.add_argument("--template", help="Values template to use", default="base-renku-values.yaml.template")
+    argparser.add_argument("--output", "-o", help="Output file")
     args = argparser.parse_args()
 
     namespace = args.namespace or prompt("Namespace: ", default="renku")
@@ -76,17 +65,11 @@ def main():
 
     # check if gitlab is being deployed - if not make sure we have the client configuration
     if not args.gitlab:
-        gitlab_url = (
-            args.gitlab_url or prompt("GitLab URL: ")
-        )
-        gitlab_client_id = (
-            args.gitlab_client_id or prompt("GitLab client id: ")
-        )
-        gitlab_client_secret = (
-            args.gitlab_client_secret or prompt("GitLab client secret: ")
-        )
-        gitlab_registry = (
-            args.gitlab_registry or prompt("Gitlab registry hostname: ", default=f"registry.{renku_domain}")
+        gitlab_url = args.gitlab_url or prompt("GitLab URL: ")
+        gitlab_client_id = args.gitlab_client_id or prompt("GitLab client id: ")
+        gitlab_client_secret = args.gitlab_client_secret or prompt("GitLab client secret: ")
+        gitlab_registry = args.gitlab_registry or prompt(
+            "Gitlab registry hostname: ", default=f"registry.{renku_domain}"
         )
 
         if not (gitlab_url and gitlab_client_id and gitlab_client_secret and gitlab_registry):
@@ -100,10 +83,7 @@ def main():
     # read in the template and set the values
     with open(args.template) as f:
         t = f.read().format(
-            namespace=namespace,
-            renku_domain=renku_domain,
-            gitlab_registry=gitlab_registry,
-            gitlab_url=gitlab_url
+            namespace=namespace, renku_domain=renku_domain, gitlab_registry=gitlab_registry, gitlab_url=gitlab_url
         )
         values = yaml.load(t)
 
@@ -142,6 +122,7 @@ def main():
 
     print(warning)
     yaml.dump(values, sys.stdout)
+
 
 if __name__ == "__main__":
     main()
