@@ -1,5 +1,18 @@
 .. _changelog:
 
+0.39.3
+------
+
+Renku ``0.39.3`` fixes various bugs.
+
+
+Internal Changes
+~~~~~~~~~~~~~~~~
+
+**Bug Fixes**
+
+- **Helm chart**: Publish and use a new Gitlab Omnibus Helm chart (0.8.1) that works with the combined Renku charts
+
 0.39.2
 ------
 
