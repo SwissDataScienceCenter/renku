@@ -1,5 +1,20 @@
 .. _changelog:
 
+0.39.3
+------
+
+Renku ``0.39.3`` fixes a bug in KG reducing the number of updates in the Triples Store.
+
+**🐞 Bug Fixes**
+
+- **KG**: reduces the number of update queries run against the Triples Store causing its performance degradation.
+
+Individual components
+~~~~~~~~~~~~~~~~~~~~~~
+
+- `renku-graph 2.43.0 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/2.43.0>`_
+
+
 0.39.2
 ------
 
