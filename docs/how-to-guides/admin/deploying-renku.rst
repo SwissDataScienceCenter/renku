@@ -59,45 +59,36 @@ This response basically means that:
 Officially supported Kubernetes versions
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-The following component versions have been tested in production.
+Renku versions ``0.6.x`` and older only work with Helm version 2.
 
-===================   ============   ============
-Renku version         Kubernetes     Helm
-===================   ============   ============
-0.6.x                 1.14, 1.15     2
-0.7.x                 1.16, 1.17     3
-0.8.x                 1.19, 1.20     3
-0.12.x                1.20, 1.21     3
-===================   ============   ============
+Newer versions of Renku only work with Helm version 3 and should be supported
+on the latest version of Kubernetes and 3-4 older minor versions.
 
 Pre-deployment steps
 -----------------------
 
-1. (Optional) Using external GitLab and/or Keycloak
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+1. Setting up Gitlab
+~~~~~~~~~~~~~~~~~~~~
 
 .. toctree::
    :maxdepth: 1
 
    GitLab <configurations/external-gitlab>
+
+1. (Optional) Using external Keycloak
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. toctree::
+   :maxdepth: 1
+
    Keycloak <configurations/external-keycloak>
 
 1. (Optional) Create and configure Renku PVs and PVCs
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-All of Renku information is stored in three volumes needed by Jena, Postgresql
-and GitLab (if not external). You can leave k8s to dynamically provision
-these volumes but we advise to create them beforehand and make regular backups.
-You can use the following manifest files as examples.
-
-   - `Renku PV yaml file <https://github.com/SwissDataScienceCenter/renku-admin-docs/blob/master/renku-pv.yaml>`_
-   - `Renku PVC yaml file <https://github.com/SwissDataScienceCenter/renku-admin-docs/blob/master/renku-pvc.yaml>`_
-
-.. note::
-   These examples are specific to our use of OpenStack and the details of
-   the storage classes and the volume provider will be different depending on the
-   specifics of your cluster.
-
+All of Renku information is stored in two volumes needed by Jena and Postgresql. 
+You can leave k8s to dynamically provision these volumes but we advise to create them 
+beforehand and make regular backups.
 
 1. Create a renku-values.yaml file
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -125,11 +116,6 @@ To generate a basic values file, you can use a script we have prepared. You need
 By default, this will create a python virtual environment and run the script; if
 you prefer to avoid any installation, you can pass the ``--docker`` flag to the
 ``generate-values.sh`` script and it will execute in a docker container.
-
-.. note::
-   By default the `generate-values` script assumes that an external GitLab will be used, i.e. it will
-   create values that *will not* deploy GitLab as part of a Renku deployment. If you wish to deploy
-   GitLab *with* Renku, add a ``--gitlab`` flag when calling the ``generate-values.sh`` script.
 
 After preparing your values and before deploying Renku please make sure to check
 the following in the values file:
@@ -176,7 +162,9 @@ Once all the pieces are in place, you can deploy Renku with the following comman
      --timeout 1800s
 
 During deployment you can check the Renku pods being started.
-If deploying for the first time, GitLab and Keycloak take around 15 minutes to get started. It is normal to see other pods of components that depend on these to be in a `CrashLoopBackOff` state.
+If deploying for the first time, Keycloak, Postgres and Redis can take some time to get started. 
+It is normal to see other pods of components that depend on these to be in a `CrashLoopBackOff` state 
+and restart a few times during this time.
 
 Once all the pods are correctly running or completed, a `GitLab Runner <prerequisites/gitlabrunner>`_ can be configured.
 
@@ -239,31 +227,26 @@ Post deployment configurations
 
 After RenkuLab has been deployed you can make some post deployment configurations.
 
-GitLab deployed as part of Renku
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-If your RenkuLab deployment includes GitLab you need to follow some additional steps to configure an admin user on GitLab.
-
-#. Turn off automatic redirection to GitLab by setting the value ``gitlab.oauth.autoSignIn=false`` and redeploy with ``helm``.
-#. Log in as the root user using the password from ``gitlab.password``.
-#. Modify any users you want to modify (e.g. to make them admin).
-#. Turn the ``autoSignIn`` setting back on and redeploy.
-
 External GitLab as identity provider
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-If the RenkuLab deployment is relying on an existing GitLab instance, this instance could be configured as an identity provider for RenkuLab's keycloak. This way all of the users from the existing GitLab instance can log into RenkuLab with their existing login information.
+If the RenkuLab deployment is relying on an existing GitLab instance, this instance 
+could be configured as an identity provider for RenkuLab's keycloak. This way all of the 
+users from the existing GitLab instance can log into RenkuLab with their existing login information.
 
-#. Go to \https://<renku-domain>/auth (or to your stand-alone Keycloak dashboard), login to ``Admin console`` using ``admin`` as username and the decoded password stored in ``keycloak-password-secret``.
+#. Go to \https://<renku-domain>/auth (or to your stand-alone Keycloak dashboard), login 
+  to ``Admin console`` using ``admin`` as username and the decoded password stored in ``keycloak-password-secret``.
 #. Add an ``Identity Provider`` of type ``OpenID Connect v1.0``.
-#. Set ``Alias`` to <renku-domain>, ``Authorization URL`` to \https://<gitlab-domain>/oauth/authorize, ``Token URL`` to \https://<gitlab-domain>/oauth/token and ``Client ID`` and ``Client Secret`` to the values used in step 1.
+#. Set ``Alias`` to <renku-domain>, ``Authorization URL`` to \https://<gitlab-domain>/oauth/authorize, 
+  ``Token URL`` to \https://<gitlab-domain>/oauth/token and ``Client ID`` and ``Client Secret`` to the values used in step 1.
 #. Click ``Save``. The new Identity Provider should appear and any user from the stand-alone GitLab instance should be able to login.
 
 Upgrading RenkuLab
 ------------------
 
-To upgrade RenkuLab to a newer version please check the **Upgrading from 0.x.x** section of the `release notes <https://github.com/SwissDataScienceCenter/renku/releases>`_ in case the renku-values.yaml file needs to be modified.
-Following, you can upgrade Renku via Helm.
+To upgrade RenkuLab to a newer version please check the `release notes <https://github.com/SwissDataScienceCenter/renku/releases>`_ 
+as well as the `values file changelog <https://github.com/SwissDataScienceCenter/renku/blob/master/helm-chart/values.yaml.changelog.md>`_ 
+in case the renku-values.yaml file needs to be modified. Following, you can upgrade Renku via Helm.
 
 .. code-block:: console
 
