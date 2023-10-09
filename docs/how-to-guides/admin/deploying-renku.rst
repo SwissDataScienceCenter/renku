@@ -234,11 +234,9 @@ If the RenkuLab deployment is relying on an existing GitLab instance, this insta
 could be configured as an identity provider for RenkuLab's keycloak. This way all of the 
 users from the existing GitLab instance can log into RenkuLab with their existing login information.
 
-#. Go to \https://<renku-domain>/auth (or to your stand-alone Keycloak dashboard), login 
-  to ``Admin console`` using ``admin`` as username and the decoded password stored in ``keycloak-password-secret``.
+#. Go to \https://<renku-domain>/auth (or to your stand-alone Keycloak dashboard), login to ``Admin console`` using ``admin`` as username and the decoded password stored in ``keycloak-password-secret``.
 #. Add an ``Identity Provider`` of type ``OpenID Connect v1.0``.
-#. Set ``Alias`` to <renku-domain>, ``Authorization URL`` to \https://<gitlab-domain>/oauth/authorize, 
-  ``Token URL`` to \https://<gitlab-domain>/oauth/token and ``Client ID`` and ``Client Secret`` to the values used in step 1.
+#. Set ``Alias`` to <renku-domain>, ``Authorization URL`` to \https://<gitlab-domain>/oauth/authorize, ``Token URL`` to \https://<gitlab-domain>/oauth/token and ``Client ID`` and ``Client Secret`` to the values used in step 1.
 #. Click ``Save``. The new Identity Provider should appear and any user from the stand-alone GitLab instance should be able to login.
 
 Upgrading RenkuLab
