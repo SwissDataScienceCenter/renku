@@ -1,5 +1,19 @@
 .. _changelog:
 
+0.39.2
+------
+
+Renku ``0.39.2`` fixes a bug when pausing sessions.
+
+**🐞 Bug Fixes**
+
+- **Renku Notebooks**: fix a bug in session hibernation (`#1645 <https://github.com/SwissDataScienceCenter/renku-notebooks/pull/1645>`_)
+
+Individual components
+~~~~~~~~~~~~~~~~~~~~~~
+
+- `renku-notebooks 1.19.1 <https://github.com/SwissDataScienceCenter/renku-notebooks/releases/tag/1.19.1>`_
+
 0.39.1
 ------
 
