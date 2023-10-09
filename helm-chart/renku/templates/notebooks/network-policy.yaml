@@ -22,28 +22,7 @@ spec:
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
-  name: {{ template "renku.notebooks.fullname" . }}-ssh-sessions
-spec:
-  podSelector:
-    matchLabels:
-      app.kubernetes.io/component: jupyterserver
-      app.kubernetes.io/instance: {{ .Release.Name }}
-      app.kubernetes.io/name: amalthea
-  policyTypes:
-    - Ingress
-  ingress:
-    - from:
-        - podSelector:
-            matchLabels:
-              app: {{ template "renku.notebooks.name" . }}-ssh
-      ports:
-        - port: ssh
-          protocol: TCP
----
-apiVersion: networking.k8s.io/v1
-kind: NetworkPolicy
-metadata:
-  name: {{ template "renku.notebooks.fullname" . }}-ssh-sessions-egress
+  name: {{ template "renku.notebooks.fullname" . }}-ssh-jumphost
 spec:
   podSelector:
     matchLabels:
@@ -65,3 +44,52 @@ spec:
           port: 53
         - protocol: TCP
           port: 53
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: {{ template "renku.notebooks.fullname" . }}-sessions
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/component: jupyterserver
+      app.kubernetes.io/instance: {{ .Release.Name }}
+      app.kubernetes.io/name: amalthea
+  policyTypes:
+    - Ingress
+    - Egress
+  ingress:
+    - from:
+      # Allow ssh ingress to sessions only for the ssh jump host
+        - podSelector:
+            matchLabels:
+              app: {{ template "renku.notebooks.name" . }}-ssh
+      ports:
+        - port: ssh
+          protocol: TCP
+    - from:
+      # Allow ingress to the oauth2proxy for anyone
+        - ipBlock:
+            cidr: 0.0.0.0/0
+      ports:
+        - protocol: TCP
+          port: 4180
+  egress:
+    - to:
+      # Allow DNS resolution (internal and external)
+      ports:
+      - port: 53
+        protocol: UDP
+      - port: 53
+        protocol: TCP
+    - to:
+      # Allow access to any port/protocol as long as it is directed
+      # outside of the cluster. This is done by excluding
+      # IP ranges which are reserved for private networking from
+      # the allowed range.
+      - ipBlock:
+          cidr: 0.0.0.0/0
+          except:
+          - 10.0.0.0/8
+          - 172.16.0.0/12
+          - 192.168.0.0/16
