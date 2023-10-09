@@ -1,5 +1,18 @@
 .. _changelog:
 
+0.39.3
+------
+
+Renku ``0.39.3`` fixes various bugs.
+
+
+Internal Changes
+~~~~~~~~~~~~~~~~
+
+**Bug Fixes**
+
+- **Helm chart**: use the correct default value for the Renku OAuth client in Gitlab
+
 0.39.2
 ------
 
