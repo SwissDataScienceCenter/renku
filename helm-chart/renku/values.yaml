@@ -47,7 +47,7 @@ global:
     cliClientSecret:
     ## Client id and client secret of the renku gateway client application which is registered in GitLab.
     ## Can be set here or as .gitlabClientId outside of .global, the values set ouside of global (if defined) take precedence.
-    gitlabClientId: #renku
+    gitlabClientId: renku-ui
     ## Should be set to a proper value (i.e. by using openssl rand -hex 32) for production.
     ## Can be set here or as .gitlabClientSecret outside of .global, the values set ouside of global (if defined) take precedence.
     gitlabClientSecret:

@@ -3,10 +3,15 @@
 0.39.3
 ------
 
-Renku ``0.39.3`` fixes a bug in KG reducing the number of updates in the Triples Store.
+Renku ``0.39.3`` fixes various bugs.
 
-**🐞 Bug Fixes**
 
+Internal Changes
+~~~~~~~~~~~~~~~~
+
+**Bug Fixes**
+
+- **Helm chart**: use the correct default value for the Renku OAuth client in Gitlab
 - **KG**: reduces the number of update queries run against the Triples Store causing its performance degradation.
 
 Individual components
