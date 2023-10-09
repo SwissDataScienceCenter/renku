@@ -13,6 +13,7 @@ Internal Changes
 
 - **Helm chart**: fix problem with missing network policies preventing access to sessions
 - **Helm chart**: use the session specific affinity, node selector and tolerations and not the general configuration reserved for Renku services
+- **Helm chart**: use the correct default value for the Renku OAuth client in Gitlab
 
 0.39.2
 ------
