@@ -2,7 +2,6 @@
 {{- $keycloakEnabled := .Values.keycloakx.enabled -}}
 {{- $keycloakFullname := include "keycloak.fullname" . -}}
 {{- $keycloakServicePort := .Values.keycloakx.ingress.servicePort -}}
-{{- $gitlabEnabled := .Values.gitlab.enabled -}}
 {{- $gitlabFullname := include "gitlab.fullname" . -}}
 {{- $gitlabServicePort := 80 -}}
 {{- $uiFullname := include "ui.fullname" . -}}
@@ -66,15 +65,9 @@ spec:
         pathType: Prefix
         backend:
           service:
-            {{- if $gitlabEnabled }}
-            name: {{ $gitlabFullname }}
-            port:
-              number: {{ $gitlabServicePort }}
-            {{ else }}
             name: renku-traefik
             port:
               number: 80
-            {{- end }}
       - path: /repos
         pathType: Prefix
         backend:
