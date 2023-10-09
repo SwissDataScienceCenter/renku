@@ -35,7 +35,7 @@ jobs:
       - id: set-version
         run: |
           echo "publish_version=${{ steps.bump-semver.outputs.new_version }}.$(echo ${{ github.sha }} | cut -c 1-7)" >> $GITHUB_ENV
-      - uses: SwissDataScienceCenter/renku-actions/publish-chart@v1.8.2
+      - uses: SwissDataScienceCenter/renku-actions/publish-chart@v1.8.3
         env:
           CHART_DIR: helm-chart/
           CHART_TAG: "--tag ${{env.publish_version}}"
