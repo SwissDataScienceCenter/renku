@@ -241,6 +241,8 @@ Individual components
 ------
 
 Renku ``0.40.0`` introduces UI performance improvements and fixes internal KG and Triples Store performance issues.
+Renku ``0.40.0`` brings coherent usage of Dataset `name` and `slug` across all renku APIs.
+This is a breaking change.
 
 User-Facing Changes
 ~~~~~~~~~~~~~~~~~~~
