@@ -162,7 +162,7 @@ Once all the pieces are in place, you can deploy Renku with the following comman
      --timeout 1800s
 
 During deployment you can check the Renku pods being started.
-If deploying for the first time, Keycloak, Postgres and Redis can take some time to get started. 
+If deploying for the first time, Keycloak, PostgreSQL and Redis can take some time to get started. 
 It is normal to see other pods of components that depend on these to be in a `CrashLoopBackOff` state 
 and restart a few times during this time.
 
