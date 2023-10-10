@@ -87,7 +87,7 @@ Pre-deployment steps
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 All of Renku information is stored in two volumes needed by Jena and Postgresql. 
-You can leave k8s to dynamically provision these volumes but we advise to create them 
+You can leave Kubernetes to dynamically provision these volumes but we advise to create them 
 beforehand and make regular backups.
 
 1. Create a renku-values.yaml file
