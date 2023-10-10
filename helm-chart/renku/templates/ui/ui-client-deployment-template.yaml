@@ -95,7 +95,7 @@ spec:
             - name: UPLOAD_THRESHOLD
               value: {{ toJson .Values.ui.client.uploadSizeThreshold | quote }}
             - name: UI_VERSION
-              value: {{ .Chart.Version | quote }}
+              value: {{ .Values.ui.client.image.tag | quote }}
             - name: RENKU_CHART_VERSION
               valueFrom:
                 configMapKeyRef:

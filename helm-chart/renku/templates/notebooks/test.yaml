@@ -68,17 +68,17 @@ spec:
         {{ end }}
         - name: NB_K8S__RENKU_NAMESPACE
           value: {{ $.Release.Namespace | quote }}
-        {{- with $.Values.sessionNodeSelector }}
+        {{- with $.Values.notebooks.sessionNodeSelector }}
         - name: NB_SESSIONS__NODE_SELECTOR
           value: |
             {{- toYaml . | nindent 12 }}
         {{- end }}
-        {{- with $.Values.sessionAffinity }}
+        {{- with $.Values.notebooks.sessionAffinity }}
         - name: NB_SESSIONS__AFFINITY
           value: |
             {{- toYaml . | nindent 12 }}
         {{- end }}
-        {{- with $.Values.sessionTolerations }}
+        {{- with $.Values.notebooks.sessionTolerations }}
         - name: NB_SESSIONS__TOLERATIONS
           value: |
             {{- toYaml . | nindent 12 }}

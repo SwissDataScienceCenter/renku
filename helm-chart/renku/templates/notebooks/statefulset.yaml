@@ -135,17 +135,17 @@ spec:
             - name: NB_SESSIONS__CA_CERTS__SECRETS
               value: |
                 {{- .Values.global.certificates.customCAs | toYaml | nindent 16 }}
-            {{- with .Values.sessionNodeSelector }}
+            {{- with .Values.notebooks.sessionNodeSelector }}
             - name: NB_SESSIONS__NODE_SELECTOR
               value: |
                 {{- toYaml . | nindent 16 }}
             {{- end }}
-            {{- with .Values.sessionAffinity }}
+            {{- with .Values.notebooks.sessionAffinity }}
             - name: NB_SESSIONS__AFFINITY
               value: |
                 {{- toYaml . | nindent 16 }}
             {{- end }}
-            {{- with .Values.sessionTolerations }}
+            {{- with .Values.notebooks.sessionTolerations }}
             - name: NB_SESSIONS__TOLERATIONS
               value: |
                 {{- toYaml . | nindent 16 }}

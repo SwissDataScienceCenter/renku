@@ -47,7 +47,7 @@ spec:
             - name: SERVER_URL
               value: {{ (include "renku.baseUrl" .) | quote }}
             - name: UI_SERVER_VERSION
-              value: {{ .Chart.Version | quote }}
+              value: {{ .Values.ui.server.image.tag | quote }}
             - name: SERVER_KEEP_COOKIES
               value: |
                 {{- include "ui-server.keepCookies" . | nindent 16 }}

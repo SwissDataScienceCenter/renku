@@ -47,7 +47,7 @@ global:
     cliClientSecret:
     ## Client id and client secret of the renku gateway client application which is registered in GitLab.
     ## Can be set here or as .gitlabClientId outside of .global, the values set ouside of global (if defined) take precedence.
-    gitlabClientId: #renku
+    gitlabClientId: renku-ui
     ## Should be set to a proper value (i.e. by using openssl rand -hex 32) for production.
     ## Can be set here or as .gitlabClientSecret outside of .global, the values set ouside of global (if defined) take precedence.
     gitlabClientSecret:
@@ -997,7 +997,7 @@ notebooks:
 
   image:
     repository: renku/renku-notebooks
-    tag: "1.19.0"
+    tag: "1.19.1"
     pullPolicy: IfNotPresent
 
     ## Optionally specify an array of imagePullSecrets.
@@ -1127,17 +1127,17 @@ notebooks:
   gitRpcServer:
     image:
       name: renku/git-rpc-server
-      tag: "1.19.0"
+      tag: "1.19.1"
 
   gitHttpsProxy:
     image:
       name: renku/git-https-proxy
-      tag: "1.19.0"
+      tag: "1.19.1"
 
   gitClone:
     image:
       name: renku/git-clone
-      tag: "1.19.0"
+      tag: "1.19.1"
 
   service:
     type: ClusterIP
@@ -1195,13 +1195,13 @@ notebooks:
     sessionTypes: ["registered"]
     image:
       repository: renku/renku-notebooks-tests
-      tag: "1.19.0"
+      tag: "1.19.1"
       pullPolicy: IfNotPresent
 
   k8sWatcher:
     image:
       repository: renku/k8s-watcher
-      tag: 1.19.0
+      tag: 1.19.1
       pullPolicy: IfNotPresent
     resources: {}
     replicaCount: 1
@@ -1215,7 +1215,7 @@ notebooks:
     enabled: false
     image:
       repository: renku/ssh-jump-host
-      tag: "1.19.0"
+      tag: "1.19.1"
       pullPolicy: IfNotPresent
     resources: {}
     replicaCount: 1
@@ -1412,7 +1412,7 @@ graph:
   webhookService:
     image:
       repository: renku/webhook-service
-      tag: '2.42.1'
+      tag: '2.43.0'
       pullPolicy: IfNotPresent
     service:
       type: ClusterIP
@@ -1432,7 +1432,7 @@ graph:
   tokenRepository:
     image:
       repository: renku/token-repository
-      tag: '2.42.1'
+      tag: '2.43.0'
       pullPolicy: IfNotPresent
     service:
       type: ClusterIP
@@ -1458,7 +1458,7 @@ graph:
     replicas: 1
     image:
       repository: renku/triples-generator
-      tag: '2.42.1'
+      tag: '2.43.0'
       pullPolicy: IfNotPresent
     service:
       type: ClusterIP
@@ -1481,7 +1481,7 @@ graph:
     replicas: 1
     image:
       repository: renku/knowledge-graph
-      tag: '2.42.1'
+      tag: '2.43.0'
       pullPolicy: IfNotPresent
     service:
       type: ClusterIP
@@ -1501,7 +1501,7 @@ graph:
   eventLog:
     image:
       repository: renku/event-log
-      tag: '2.42.1'
+      tag: '2.43.0'
       pullPolicy: IfNotPresent
     service:
       type: ClusterIP
@@ -1517,7 +1517,7 @@ graph:
   commitEventService:
     image:
       repository: renku/commit-event-service
-      tag: '2.42.1'
+      tag: '2.43.0'
       pullPolicy: IfNotPresent
     service:
       type: ClusterIP
