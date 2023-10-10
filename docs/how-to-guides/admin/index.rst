@@ -9,7 +9,6 @@ Guides for Administrators
     deploying-renku
     gitlab
     anonymous-sessions
-    running_renku_on_minikube
     privacycookie
     troubleshooting
     crc
