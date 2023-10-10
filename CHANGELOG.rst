@@ -1,5 +1,37 @@
 .. _changelog:
 
+0.40.0
+------
+
+Renku ``0.40.0`` fixes internal KG and Triples Store performance issues.
+
+Internal Changes
+~~~~~~~~~~~~~~~~
+
+**Bug Fixes**
+
+- **KG**: reduces the number of update queries run against the Triples Store causing its performance degradation.
+
+Individual components
+~~~~~~~~~~~~~~~~~~~~~~
+
+- `renku-graph 2.43.0 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/2.43.0>`_
+
+0.39.3
+------
+
+Renku ``0.39.3`` fixes various bugs.
+
+
+Internal Changes
+~~~~~~~~~~~~~~~~
+
+**Bug Fixes**
+
+- **Helm chart**: fix problem with missing network policies preventing access to sessions
+- **Helm chart**: use the session specific affinity, node selector and tolerations and not the general configuration reserved for Renku services
+- **Helm chart**: use the correct default value for the Renku OAuth client in Gitlab
+
 0.39.2
 ------
 
