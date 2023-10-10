@@ -3,19 +3,31 @@
 0.40.0
 ------
 
-Renku ``0.40.0`` fixes internal KG and Triples Store performance issues.
+Renku ``0.40.0`` introduces UI performance improvements and fixes internal KG and Triples Store performance issues.
+
+User-Facing Changes
+~~~~~~~~~~~~~~~~~~~
+
+**✨ Improvements**
+
+- 🚀 **UI**: Reduce the compiled bundle size to improve performance of the UI (`#2818 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2818>`_,
+  `#2827 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2827>`_, `#2832 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2832>`_)
+- 🚀 **UI**: [Dashboard] Speed up showing the warning for non-indexed projects (`#2824 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2824>`_)
+- 🛠️ **UI**: [Projects] Use the KG API to update a project's metadata for the following cases: visibility, keywords and description (`#2793 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2793>`_)
 
 Internal Changes
 ~~~~~~~~~~~~~~~~
 
-**Bug Fixes**
+**🐞 Bug Fixes**
 
-- **KG**: reduces the number of update queries run against the Triples Store causing its performance degradation.
+- 🚀 **KG**: reduces the number of update queries run against the Triples Store causing its performance degradation.
+- 🛠️ **UI**: [Datasets] Use versioned URL of `renku-core` when uploading files to a dataset ([#2831](https://github.com/SwissDataScienceCenter/renku-ui/pull/2831))
 
 Individual components
 ~~~~~~~~~~~~~~~~~~~~~~
 
 - `renku-graph 2.43.0 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/2.43.0>`_
+- `renku-ui 3.13.1 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.13.1>`_
 
 0.39.3
 ------
