@@ -21,7 +21,7 @@ Internal Changes
 **🐞 Bug Fixes**
 
 - 🚀 **KG**: reduces the number of update queries run against the Triples Store causing its performance degradation.
-- 🛠️ **UI**: [Datasets] Use versioned URL of `renku-core` when uploading files to a dataset ([#2831](https://github.com/SwissDataScienceCenter/renku-ui/pull/2831))
+- 🛠️ **UI**: [Datasets] Use versioned URL of `renku-core` when uploading files to a dataset (`#2831 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2831>`_)
 
 Individual components
 ~~~~~~~~~~~~~~~~~~~~~~
