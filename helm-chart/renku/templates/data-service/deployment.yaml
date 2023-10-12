@@ -64,6 +64,8 @@ spec:
               value: {{ .Release.Namespace | quote }}
             - name: GITLAB_URL
               value: {{ .Values.global.gitlab.url | quote}}
+            - name: SSL_CERT_FOLDER
+              value: /etc/ssl/certs/
           volumeMounts:
             - name: server-options
               mountPath: /etc/renku-data-service/server_options
