@@ -17,6 +17,9 @@ global:
       value:
     ## URL prefix for gitlab
     # urlPrefix: /
+    ## Full URL for gitlab
+    ## NOTE: Many services have this setting internally, they should switch to using the global setting instead
+    # url:
     ## Secret for the gitlab keycloak client
     clientSecret: # use `openssl rand -hex 32`
 
@@ -199,9 +202,6 @@ global:
       ## The contents of the 'password' key is used.
       ## The secret is not re-generated or modified in any way if it already exists.
       passwordSecretName: renku-db-common-password
-
-  crc:
-    serviceName: renku-crc
 
 ## Ingress configuration
 ## See: https://kubernetes.io/docs/concepts/services-networking/ingress/
@@ -1608,10 +1608,10 @@ initDb:
     repository: renku/init-db
     tag: "latest"
 
-crc:
-  image:
-    repository: renku/renku-crc
-    tag: "0.0.2"
+dataService:
+  image: 
+    repository: renku/renku-data-service
+    tag: "0.0.1"
     pullPolicy: IfNotPresent
   service:
     type: ClusterIP
