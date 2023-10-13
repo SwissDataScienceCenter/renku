@@ -25,7 +25,7 @@ spec:
       {{ if $.Values.core.metrics.enabled }}
         prometheus.io/scrape: 'true'
         prometheus.io/path: '/metrics'
-        prometheus.io/port: '8765'
+        prometheus.io/port: '8080'
       {{ end }}
       labels:
         app.kubernetes.io/name: {{ include "renku-core.name" $ }}
@@ -74,6 +74,10 @@ spec:
                   key: {{ $.Values.global.redis.existingSecretPasswordKey }}
             - name: REDIS_NAMESPACE
               value: {{ $version.name }}
+          ports:
+            - name: prometheus
+              containerPort: 8765
+              protocol: TCP
       {{ end }}
         - name: {{ $.Chart.Name }}
           image: "{{ $version.image.repository }}:{{ $version.image.tag }}"
