@@ -72,7 +72,8 @@ spec:
                 secretKeyRef:
                   name: {{ $.Values.global.redis.existingSecret }}
                   key: {{ $.Values.global.redis.existingSecretPasswordKey }}
-            # TODO: Deal with redis namespace properly in rqmetrics, then pass that on as well
+            - name: REDIS_NAMESPACE
+              value: {{ $version.name }}
       {{ end }}
         - name: {{ $.Chart.Name }}
           image: "{{ $version.image.repository }}:{{ $version.image.tag }}"
