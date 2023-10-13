@@ -1,5 +1,26 @@
 .. _changelog:
 
+
+0.41.0
+------
+
+Renku ``0.41.0`` allows the RenkuLab homepage to be configured to highlight chosen projects.
+
+Internal Changes
+~~~~~~~~~~~~~~~~~~~
+
+**🌟 New Features**
+
+- 🚀 **UI**: [Showcase] Admins can designate projects to be showcased on the home page, which will show them
+    in the showcase section of the home page. (`#2799 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2799>`_).
+
+
+This is a breaking change to the values file and it requires minor edits to the following field:
+
+- ``ui.homepage`` removed the unused ``projects`` field and added the ``showcase`` field.
+
+For more details please refer to the explanation in ``helm-chart/values.yaml.changelog.md``.
+
 0.40.0
 ------
 
