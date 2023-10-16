@@ -1580,7 +1580,7 @@ core:
     enabled: false
     image:
       repository: renku/rqmetrics
-      tag: 0.0.2
+      tag: 0.0.3
       pullPolicy: IfNotPresent
   resources:
     core: {}
