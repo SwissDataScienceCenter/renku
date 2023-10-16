@@ -25,7 +25,7 @@ spec:
       {{ if $.Values.core.metrics.enabled }}
         prometheus.io/scrape: 'true'
         prometheus.io/path: '/metrics'
-        prometheus.io/port: '8080'
+        prometheus.io/port: '8766'
       {{ end }}
       labels:
         app.kubernetes.io/name: {{ include "renku-core.name" $ }}
@@ -129,6 +129,8 @@ spec:
               value: {{ $.Values.core.sentry.sampleRate | quote }}
             - name: SENTRY_ENV
               value: {{ $.Values.core.sentry.environment }}
+            - name: METRICS_PORT
+              value: "8766"
             {{ if $.Values.nWorkers }}
             - name: RENKU_SVC_NUM_WORKERS
               value: {{ $.Values.core.nWorkers | quote }}
