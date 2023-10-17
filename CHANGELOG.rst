@@ -1,5 +1,19 @@
 .. _changelog:
 
+0.40.1
+------
+
+Renku ``0.40.1`` reverts recent changes to Lucene configuration in the Triples Store preventing users from searching by keywords.
+
+**🐞 Bug Fixes**
+
+- **KG**: Use the `StandardTokenizer` to allow searching by keywords containing underscore signs.
+
+Individual components
+~~~~~~~~~~~~~~~~~~~~~~
+
+- `renku-graph 2.43.1 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/2.43.1>`_
+
 0.40.0
 ------
 
