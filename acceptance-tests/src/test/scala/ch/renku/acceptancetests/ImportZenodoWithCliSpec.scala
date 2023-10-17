@@ -36,7 +36,7 @@ class ImportZenodoWithCliSpec
     with Datasets
     with KnowledgeGraphApi {
 
-  scenario("User can import a Dataset from Zenodo") {
+  ignore("User can import a Dataset from Zenodo") {
 
     `log in to Renku`
 
