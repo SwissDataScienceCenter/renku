@@ -140,6 +140,8 @@ spec:
               value: {{ $.Values.global.renku.cli_version | default "" | quote }}
             - name: METADATA_VERSIONS_LIST
               value: /svc/config/metadata-versions/metadata-versions.json
+            - name: RENKU_SKIP_MIN_VERSION_CHECK
+              value: "1"
             {{- include "certificates.env.python" $ | nindent 12 }}
           volumeMounts:
             - name: shared-volume
