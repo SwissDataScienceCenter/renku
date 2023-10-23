@@ -5,8 +5,10 @@
 ------
 
 Renku ``0.41.0`` allows the RenkuLab homepage to be configured to highlight chosen projects.
+In addition we are rolling out a much more comprehensive support for saving and using S3 
+cloud storage.
 
-Internal Changes
+User-Facing Changes
 ~~~~~~~~~~~~~~~~~~~
 
 **🌟 New Features**
@@ -15,11 +17,25 @@ Internal Changes
     in the showcase section of the home page. (`#2799 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2799>`_).
 
 
-This is a breaking change to the values file and it requires minor edits to the following field:
+Internal Changes
+~~~~~~~~~~~~~~~~~~~
+
+This release is a breaking change to the Helm values file and it requires minor edits to the following field:
 
 - ``ui.homepage`` removed the unused ``projects`` field and added the ``showcase`` field.
 
 For more details please refer to the explanation in ``helm-chart/values.yaml.changelog.md``.
+
+In addition to this, other notable changes include:
+
+- adding node affinities and tolerations for resource classes
+- persisting cloud storage configurations at the project level
+- validation of Rclone cloud storage configuration by the backend
+
+Individual components
+~~~~~~~~~~~~~~~~~~~~~~
+
+- `renku-data-services 0.1.1 <https://github.com/SwissDataScienceCenter/renku-data-services/releases/tag/v0.1.1>`_
 
 0.40.1
 ------
