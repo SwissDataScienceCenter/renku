@@ -62,7 +62,11 @@ spec:
             - name: AUTH_CLIENT_ID
               value: {{ .Values.ui.server.authentication.id | default (printf "renku-ui") | quote }}
             - name: AUTH_CLIENT_SECRET
-              value: {{ .Values.ui.server.authentication.secret | default (printf "%s" .Values.global.uiserver.clientSecret) | quote }}
+              # value: {{ .Values.ui.server.authentication.secret | default (printf "%s" .Values.global.uiserver.clientSecret) | quote }}
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "renku.fullname" . }}-gateway-revproxy
+                  key: "uiserverClientSecret"
             - name: AUTH_TOKEN_TOLERANCE
               value: {{ .Values.ui.server.authentication.expirationTolerance | default (printf "10") | quote }}
             {{- if .Values.ui.server.sentry.enabled }}
