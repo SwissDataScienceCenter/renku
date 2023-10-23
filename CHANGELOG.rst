@@ -39,12 +39,14 @@ In addition to this, other notable changes include:
 - persisting cloud storage configurations at the project level
 - validation of Rclone cloud storage configuration by the backend
 - update the Amalthea scheduler to work with newer versions of Kubernetes
+- ``renku-notebooks`` now get S3 cloud storage configuration from ``renku-data-services``
 - various bug fixes across many components
 
 Individual components
 ~~~~~~~~~~~~~~~~~~~~~~
 
 - `renku-data-services 0.1.1 <https://github.com/SwissDataScienceCenter/renku-data-services/releases/tag/v0.1.1>`_
+- `renku-notebooks 1.20.0 <https://github.com/SwissDataScienceCenter/renku-notebooks/releases/tag/1.20.0>`_
 - `amalthea 0.10.0 <https://github.com/SwissDataScienceCenter/amalthea/releases/tag/0.10.0>`_
 
 0.40.1
