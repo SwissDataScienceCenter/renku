@@ -8,6 +8,9 @@ Renku ``0.41.0`` allows the RenkuLab homepage to be configured to highlight chos
 In addition we are rolling out a much more comprehensive support for saving and using S3 
 cloud storage.
 
+A note to Renku administrators, this release includes breaking changes in our Helm chart values file.
+Refer to the ``Internal Changes`` section below for more details.
+
 User-Facing Changes
 ~~~~~~~~~~~~~~~~~~~
 
@@ -23,19 +26,26 @@ Internal Changes
 This release is a breaking change to the Helm values file and it requires minor edits to the following field:
 
 - ``ui.homepage`` removed the unused ``projects`` field and added the ``showcase`` field.
+- ``amalthea.scheduler.*`` deprecates all existing child fields and adds new child fields. If you are not defining these fields 
+  in your values file then you are using the default Kubernetes scheduler and this requires no action. But if you are 
+  defining a custom scheduler in your deployment's values file then this requires additional edits to your values file 
+  so that you can retain the same functionality as before.
 
-For more details please refer to the explanation in ``helm-chart/values.yaml.changelog.md``.
+For more details on the Helm chart values changes please refer to the explanation in ``helm-chart/values.yaml.changelog.md``.
 
 In addition to this, other notable changes include:
 
 - adding node affinities and tolerations for resource classes
 - persisting cloud storage configurations at the project level
 - validation of Rclone cloud storage configuration by the backend
+- update the Amalthea scheduler to work with newer versions of Kubernetes
+- various bug fixes across many components
 
 Individual components
 ~~~~~~~~~~~~~~~~~~~~~~
 
 - `renku-data-services 0.1.1 <https://github.com/SwissDataScienceCenter/renku-data-services/releases/tag/v0.1.1>`_
+- `amalthea 0.10.0 <https://github.com/SwissDataScienceCenter/amalthea/releases/tag/0.10.0>`_
 
 0.40.1
 ------
