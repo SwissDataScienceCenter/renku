@@ -8,6 +8,7 @@ Guides for Administrators
 
     deploying-renku
     gitlab
+    incidents-maintenance
     anonymous-sessions
     privacycookie
     troubleshooting
