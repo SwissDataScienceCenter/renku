@@ -30,6 +30,8 @@ This release is a breaking change to the Helm values file and it requires minor 
   in your values file then you are using the default Kubernetes scheduler and this requires no action. But if you are 
   defining a custom scheduler in your deployment's values file then this requires additional edits to your values file 
   so that you can retain the same functionality as before.
+- the ``crc`` field in the values file has been renamed to ``dataService``, all child fields remain the same 
+  functionally and by name.
 
 For more details on the Helm chart values changes please refer to the explanation in ``helm-chart/values.yaml.changelog.md``.
 

@@ -32,6 +32,7 @@ Amalthea will simply use your default Kubernetes scheduler.
 * DELETE `amalthea.scheduler.priorities` - deprecated will be ignored if provided
 * NEW `amalthea.scheduler.packing` - can be used to enable a preset scheduler that will try to pack sessions on the smallest number of nodes and favor the most used nodes 
 * NEW `amalthea.scheduler.custom` - can be used to add any custom scheduler for Amalthea, admins just have to provide the scheduler name
+* EDIT `crc` - the field has been renamed to `dataService`, all child fields and functionality remains the same
 
 ## Upgrading to Renku 0.39.0
 
