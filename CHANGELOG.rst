@@ -16,8 +16,17 @@ User-Facing Changes
 
 **🌟 New Features**
 
-- 🚀 **UI**: [Showcase] Admins can designate projects to be showcased on the home page, which will show them
-    in the showcase section of the home page. (`#2799 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2799>`_).
+- 🖼 **UI**: Admins can designate projects to be showcased on the home page, which will show them
+  in the showcase section of the home page
+  (`#2799 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2799>`_).
+
+**✨ Improvements**
+
+- 💾 **UI**: Add support for cloud storage configuration per project. There are now more options
+  to customize to support external S3 and S3 compatible storage better
+  (`#2760 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2760>`_).
+- 🌈 **UI**: Improve color contrast and other UX elements
+  (`#2846 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2846>`_).
 
 
 Internal Changes
@@ -37,12 +46,13 @@ For more details on the Helm chart values changes please refer to the explanatio
 
 In addition to this, other notable changes include:
 
-- adding node affinities and tolerations for resource classes
-- persisting cloud storage configurations at the project level
+- add node affinities and tolerations for resource classes
+- persist cloud storage configurations at the project level
 - validation of Rclone cloud storage configuration by the backend
 - update the Amalthea scheduler to work with newer versions of Kubernetes
 - ``renku-notebooks`` now get S3 cloud storage configuration from ``renku-data-services``
 - ``renku-gateway`` now provides credentials for the cloud storage potion of ``renku-data-services``
+- UI shows prominent banners during major outages
 - various bug fixes across many components
 
 Individual components
@@ -51,6 +61,7 @@ Individual components
 - `renku-data-services 0.1.1 <https://github.com/SwissDataScienceCenter/renku-data-services/releases/tag/v0.1.1>`_
 - `renku-gateway 0.22.0 <https://github.com/SwissDataScienceCenter/renku-gateway/releases/tag/0.22.0>`_
 - `renku-notebooks 1.20.0 <https://github.com/SwissDataScienceCenter/renku-notebooks/releases/tag/1.20.0>`_
+- `renku-ui 3.14.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.14.0>`_
 - `amalthea 0.10.0 <https://github.com/SwissDataScienceCenter/amalthea/releases/tag/0.10.0>`_
 
 0.40.1
