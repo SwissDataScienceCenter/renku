@@ -23,7 +23,7 @@ User-Facing Changes
 **✨ Improvements**
 
 - 💾 **UI**: Add support for cloud storage configuration per project. There are now more options
-  to customize to support external S3 and S3 compatible storages better
+  to customize to support external S3 and S3 compatible storage better
   (`#2760 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2760>`_).
 - 🌈 **UI**: Improve color contrast and other UX elements
   (`#2846 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2846>`_).
