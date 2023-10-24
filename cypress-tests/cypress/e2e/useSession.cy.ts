@@ -264,10 +264,11 @@ describe("Basic public project functionality", () => {
         .click()
         .should("not.be.checked");
 
-      cy.get("label")
-        .contains("Read-only")
-        .siblings("input")
-        .should("be.checked");
+      // NOTE: Temporarily removed this from the tests until we enable read-write
+      // cy.get("label")
+      //   .contains("Read-only")
+      //   .siblings("input")
+      //   .should("be.checked");
 
       cy.get("button[type='submit']")
         .contains("Add Storage")
