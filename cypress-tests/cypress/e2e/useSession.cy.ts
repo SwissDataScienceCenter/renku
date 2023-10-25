@@ -142,7 +142,7 @@ describe("Basic public project functionality", () => {
       .contains("Saving Session", { timeout: TIMEOUTS.long })
       .should("be.visible");
     cy.get(".modal")
-      .contains("There are no changes", { timeout: TIMEOUTS.long })
+      .contains("Your session has been saved successfully", { timeout: TIMEOUTS.long })
       .should("be.visible");
     cy.get(".modal .btn-close").should("be.visible").click();
 
