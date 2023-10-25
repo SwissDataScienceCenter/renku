@@ -1,5 +1,19 @@
 .. _changelog:
 
+0.40.2
+------
+
+Renku ``0.40.2`` fixes a bug in the Renku data services where the web server consumed a lot of database connections.
+
+**🐞 Bug Fixes**
+
+- **Data services**: Run the server with only 1 worker so that fewer database connections are consumed
+
+Individual components
+~~~~~~~~~~~~~~~~~~~~~~
+
+- `renku-data-services v0.0.3 <https://github.com/SwissDataScienceCenter/renku-data-services/releases/tag/v0.0.3>`_
+
 0.40.1
 ------
 

@@ -1611,7 +1611,7 @@ initDb:
 crc:
   image:
     repository: renku/renku-crc
-    tag: "0.0.2"
+    tag: "0.0.3"
     pullPolicy: IfNotPresent
   service:
     type: ClusterIP
