@@ -113,8 +113,8 @@ spec:
         - name: NB_SESSIONS__SSH__HOST_KEY_SECRET
           value: {{ $.Values.notebooks.ssh.hostKeySecret | quote }}
         {{- end }}
-        - name: NB_CRC_URL
-          value: {{ printf "http://%s/api/data" $.Values.global.crc.serviceName }}
+        - name: NB_DATA_SERVICE_URL
+          value: {{ printf "http://%s-data-service/api/data" .Release.Name}}
       volumeMounts:
         - name: server-options
           mountPath: /etc/renku-notebooks/server_options
