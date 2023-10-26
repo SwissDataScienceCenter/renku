@@ -1,21 +1,124 @@
 .. _changelog:
 
+0.41.0
+------
+
+Renku ``0.41.0`` allows the RenkuLab homepage to be configured to highlight chosen projects.
+In addition we are rolling out a much more comprehensive support for saving and using S3 
+cloud storage.
+
+A note to Renku administrators, this release includes breaking changes in our Helm chart values file.
+Refer to the ``Internal Changes`` section below for more details.
+
+User-Facing Changes
+~~~~~~~~~~~~~~~~~~~
+
+**🌟 New Features**
+
+- 🖼 **UI**: Admins can designate projects to be showcased on the home page, which will show them
+  in the showcase section of the home page
+  (`#2799 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2799>`_).
+
+**✨ Improvements**
+
+- 💾 **UI**: Add support for cloud storage configuration per project. There are now more options
+  to customize to support external S3 and S3 compatible storage better
+  (`#2760 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2760>`_).
+- 🌈 **UI**: Improve color contrast and other UX elements
+  (`#2846 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2846>`_).
+
+
+Internal Changes
+~~~~~~~~~~~~~~~~~~~
+
+This release is a breaking change to the Helm values file and it requires minor edits to the following field:
+
+- ``ui.homepage`` removed the unused ``projects`` field and added the ``showcase`` field.
+- ``amalthea.scheduler.*`` deprecates all existing child fields and adds new child fields. If you are not defining these fields 
+  in your values file then you are using the default Kubernetes scheduler and this requires no action. But if you are 
+  defining a custom scheduler in your deployment's values file then this requires additional edits to your values file 
+  so that you can retain the same functionality as before.
+- the ``crc`` field in the values file has been renamed to ``dataService``, all child fields remain the same 
+  functionally and by name.
+
+For more details on the Helm chart values changes please refer to the explanation in ``helm-chart/values.yaml.changelog.md``.
+
+In addition to this, other notable changes include:
+
+- add node affinities and tolerations for resource classes
+- persist cloud storage configurations at the project level
+- validation of Rclone cloud storage configuration by the backend
+- update the Amalthea scheduler to work with newer versions of Kubernetes
+- ``renku-notebooks`` now get S3 cloud storage configuration from ``renku-data-services``
+- ``renku-gateway`` now provides credentials for the cloud storage potion of ``renku-data-services``
+- UI shows prominent banners during major outages
+- various bug fixes across many components
+
+Individual components
+~~~~~~~~~~~~~~~~~~~~~~
+
+- `renku-data-services 0.1.1 <https://github.com/SwissDataScienceCenter/renku-data-services/releases/tag/v0.1.1>`_
+- `renku-gateway 0.22.0 <https://github.com/SwissDataScienceCenter/renku-gateway/releases/tag/0.22.0>`_
+- `renku-notebooks 1.20.0 <https://github.com/SwissDataScienceCenter/renku-notebooks/releases/tag/1.20.0>`_
+- `renku-ui 3.14.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.14.0>`_
+- `amalthea 0.10.0 <https://github.com/SwissDataScienceCenter/amalthea/releases/tag/0.10.0>`_
+
+0.40.2
+------
+
+Renku ``0.40.2`` fixes a bug in the Renku data services where the web server consumed a lot of database connections.
+
+**🐞 Bug Fixes**
+
+- **Data services**: Run the server with only 1 worker so that fewer database connections are consumed
+
+Individual components
+~~~~~~~~~~~~~~~~~~~~~~
+
+- `renku-data-services v0.0.3 <https://github.com/SwissDataScienceCenter/renku-data-services/releases/tag/v0.0.3>`_
+
+0.40.1
+------
+
+Renku ``0.40.1`` reverts recent changes to Lucene configuration in the Triples Store preventing users from searching by keywords.
+
+**🐞 Bug Fixes**
+
+- **KG**: Use the `StandardTokenizer` to allow searching by keywords containing underscore signs.
+
+Individual components
+~~~~~~~~~~~~~~~~~~~~~~
+
+- `renku-graph 2.43.1 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/2.43.1>`_
+
 0.40.0
 ------
 
-Renku ``0.40.0`` fixes internal KG and Triples Store performance issues.
+Renku ``0.40.0`` introduces UI performance improvements and fixes internal KG and Triples Store performance issues.
+
+User-Facing Changes
+~~~~~~~~~~~~~~~~~~~
+
+**✨ Improvements**
+
+- 🚀 **UI**: Reduce the compiled bundle size to improve performance of the UI (`#2818 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2818>`_,
+  `#2827 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2827>`_, `#2832 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2832>`_)
+- 🚀 **UI**: [Dashboard] Speed up showing the warning for non-indexed projects (`#2824 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2824>`_)
+- 🛠️ **UI**: [Projects] Use the KG API to update a project's metadata for the following cases: visibility, keywords and description (`#2793 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2793>`_)
 
 Internal Changes
 ~~~~~~~~~~~~~~~~
 
-**Bug Fixes**
+**🐞 Bug Fixes**
 
-- **KG**: reduces the number of update queries run against the Triples Store causing its performance degradation.
+- 🚀 **KG**: reduces the number of update queries run against the Triples Store causing its performance degradation.
+- 🛠️ **UI**: [Datasets] Use versioned URL of `renku-core` when uploading files to a dataset (`#2831 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2831>`_)
 
 Individual components
 ~~~~~~~~~~~~~~~~~~~~~~
 
 - `renku-graph 2.43.0 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/2.43.0>`_
+- `renku-ui 3.13.1 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.13.1>`_
 
 0.39.3
 ------

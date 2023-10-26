@@ -17,6 +17,9 @@ global:
       value:
     ## URL prefix for gitlab
     # urlPrefix: /
+    ## Full URL for gitlab
+    ## NOTE: Many services have this setting internally, they should switch to using the global setting instead
+    # url:
     ## Secret for the gitlab keycloak client
     clientSecret: # use `openssl rand -hex 32`
 
@@ -199,9 +202,6 @@ global:
       ## The contents of the 'password' key is used.
       ## The secret is not re-generated or modified in any way if it already exists.
       passwordSecretName: renku-db-common-password
-
-  crc:
-    serviceName: renku-crc
 
 ## Ingress configuration
 ## See: https://kubernetes.io/docs/concepts/services-networking/ingress/
@@ -670,7 +670,7 @@ ui:
 
     image:
       repository: renku/renku-ui
-      tag: "3.13.0"
+      tag: "3.14.0"
       pullPolicy: IfNotPresent
 
       ## Optionally specify an array of imagePullSecrets.
@@ -802,7 +802,25 @@ ui:
       # internal project
       tutorialLink: https://renku.readthedocs.io/en/stable/tutorials/01_firststeps.html
       # Projects to highlight on the homepage
-      projects: []
+      showcase:
+        # If you want to showcase certain project on the homepage, you can enable the feature and provide
+        # the project identifiers (namespace/project name)
+        enabled: false
+        title: "Renku real-world use cases: Conducted by SDSC and ETH Domain"
+        # Markdown is allowed in the description
+        description: The case studies presented here **bridge the gap** from domain to data science and provide experts from both sides with the means to examine, confirm, and extend the datasets and their analyses, without extensive investments of time and infrastructure.
+        # Projects to highlight on the homepage -- default to none
+        # projects: []
+        # To showcase projects, provide the identifier following the structure below
+        # title, description, and imageUrl can be overridden, as illustrated below, if desired.
+        projects:
+          -
+            identifier: hdbi/data-management/cccooci
+          -
+            identifier: renku-ui-tests/stable-project
+            overrideTitle: "Stable Project: A project for testing"
+            overrideDescription: "This is a project for **testing**. You may find it useful to look at."
+            overrideImageUrl: https://gitlab.renkulab.io/uploads/-/system/project/avatar/36159/graphical_abstract.png
     coreApiVersionConfig:
       ## Configuration to specify which version of the core-service API should be used
       # "/" indicates that the latest version should be used
@@ -827,7 +845,7 @@ ui:
 
     image:
       repository: renku/renku-ui-server
-      tag: "3.13.0"
+      tag: "3.14.0"
       pullPolicy: IfNotPresent
 
     imagePullSecrets: []
@@ -997,7 +1015,7 @@ notebooks:
 
   image:
     repository: renku/renku-notebooks
-    tag: "1.19.1"
+    tag: "1.20.0"
     pullPolicy: IfNotPresent
 
     ## Optionally specify an array of imagePullSecrets.
@@ -1127,17 +1145,17 @@ notebooks:
   gitRpcServer:
     image:
       name: renku/git-rpc-server
-      tag: "1.19.1"
+      tag: "1.20.0"
 
   gitHttpsProxy:
     image:
       name: renku/git-https-proxy
-      tag: "1.19.1"
+      tag: "1.20.0"
 
   gitClone:
     image:
       name: renku/git-clone
-      tag: "1.19.1"
+      tag: "1.20.0"
 
   service:
     type: ClusterIP
@@ -1195,13 +1213,13 @@ notebooks:
     sessionTypes: ["registered"]
     image:
       repository: renku/renku-notebooks-tests
-      tag: "1.19.1"
+      tag: "1.20.0"
       pullPolicy: IfNotPresent
 
   k8sWatcher:
     image:
       repository: renku/k8s-watcher
-      tag: 1.19.1
+      tag: 1.20.0
       pullPolicy: IfNotPresent
     resources: {}
     replicaCount: 1
@@ -1215,7 +1233,7 @@ notebooks:
     enabled: false
     image:
       repository: renku/ssh-jump-host
-      tag: "1.19.1"
+      tag: "1.20.0"
       pullPolicy: IfNotPresent
     resources: {}
     replicaCount: 1
@@ -1313,7 +1331,7 @@ gateway:
     ## Define the image for the auth middleware
     auth:
       repository: renku/renku-gateway
-      tag: "0.21.3"
+      tag: "0.22.0"
       pullPolicy: IfNotPresent
 
   service:
@@ -1354,7 +1372,7 @@ gateway:
   reverseProxy:
     image:
       repository: renku/renku-revproxy
-      tag: "0.21.3"
+      tag: "0.22.0"
       pullPolicy: IfNotPresent
     metrics:
       enabled: true
@@ -1412,7 +1430,7 @@ graph:
   webhookService:
     image:
       repository: renku/webhook-service
-      tag: '2.43.0'
+      tag: '2.43.1'
       pullPolicy: IfNotPresent
     service:
       type: ClusterIP
@@ -1432,7 +1450,7 @@ graph:
   tokenRepository:
     image:
       repository: renku/token-repository
-      tag: '2.43.0'
+      tag: '2.43.1'
       pullPolicy: IfNotPresent
     service:
       type: ClusterIP
@@ -1458,7 +1476,7 @@ graph:
     replicas: 1
     image:
       repository: renku/triples-generator
-      tag: '2.43.0'
+      tag: '2.43.1'
       pullPolicy: IfNotPresent
     service:
       type: ClusterIP
@@ -1481,7 +1499,7 @@ graph:
     replicas: 1
     image:
       repository: renku/knowledge-graph
-      tag: '2.43.0'
+      tag: '2.43.1'
       pullPolicy: IfNotPresent
     service:
       type: ClusterIP
@@ -1501,7 +1519,7 @@ graph:
   eventLog:
     image:
       repository: renku/event-log
-      tag: '2.43.0'
+      tag: '2.43.1'
       pullPolicy: IfNotPresent
     service:
       type: ClusterIP
@@ -1517,7 +1535,7 @@ graph:
   commitEventService:
     image:
       repository: renku/commit-event-service
-      tag: '2.43.0'
+      tag: '2.43.1'
       pullPolicy: IfNotPresent
     service:
       type: ClusterIP
@@ -1608,10 +1626,10 @@ initDb:
     repository: renku/init-db
     tag: "latest"
 
-crc:
-  image:
-    repository: renku/renku-crc
-    tag: "0.0.2"
+dataService:
+  image: 
+    repository: renku/renku-data-service
+    tag: "0.1.1"
     pullPolicy: IfNotPresent
   service:
     type: ClusterIP
