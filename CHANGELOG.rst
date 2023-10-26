@@ -54,6 +54,7 @@ In addition to this, other notable changes include:
 - UI shows prominent banners during major outages
 - various bug fixes across many components
 
+
 Individual components
 ~~~~~~~~~~~~~~~~~~~~~~
 
