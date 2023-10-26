@@ -71,6 +71,8 @@ spec:
               value: {{ include "renku.keycloakUrl" . | quote }}
             - name: REVPROXY_RENKU_SERVICES_DATA_SERVICE
               value: {{ printf "http://%s-data-service" .Release.Name | quote }}
+            - name: REVPROXY_RENKU_SERVICES_KEYCLOAK
+              value: {{ include "renku.keycloakUrl" . | quote }}
             - name: REVPROXY_PORT
               value: "8080"
             - name: REVPROXY_METRICS_ENABLED
