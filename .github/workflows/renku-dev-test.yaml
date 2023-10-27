@@ -8,7 +8,7 @@ jobs:
       github.event.client_payload.message == 'Helm test succeeded' }}
     runs-on: ubuntu-20.04
     steps:
-      - uses: SwissDataScienceCenter/renku-actions/test-renku@v1.8.2
+      - uses: SwissDataScienceCenter/renku-actions/test-renku@v1.8.5
         with:
           kubeconfig: ${{ secrets.RENKUBOT_DEV_KUBECONFIG }}
           renku-release: renku
