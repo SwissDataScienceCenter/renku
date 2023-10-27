@@ -33,6 +33,7 @@ Amalthea will simply use your default Kubernetes scheduler.
 * NEW `amalthea.scheduler.packing` - can be used to enable a preset scheduler that will try to pack sessions on the smallest number of nodes and favor the most used nodes 
 * NEW `amalthea.scheduler.custom` - can be used to add any custom scheduler for Amalthea, admins just have to provide the scheduler name
 * EDIT `crc` - the field has been renamed to `dataService`, all child fields and functionality remains the same
+* NEW `global.gitlab.url` has been added and needs to be specified, this will be the single place where the Gitlab URL will be specified in future releases we will deprecated all the other Gitlab URL fields in the values file.
 
 ## Upgrading to Renku 0.39.0
 
