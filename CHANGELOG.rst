@@ -1,17 +1,13 @@
 .. _changelog:
 
-0.42.0
-------
-
-Renku ``0.42.0`` allows RenkuLab administrators to configure compute resources to be used
-in interactive sessions.
-
 0.41.0
 ------
 
 Renku ``0.41.0`` allows the RenkuLab homepage to be configured to highlight chosen projects.
 In addition we are rolling out a much more comprehensive support for saving and using S3 
 cloud storage.
+Lastly, this release adds a new admin page which lets RenkuLab administrators configure compute resources to be used
+in interactive sessions.
 
 A note to Renku administrators, this release includes breaking changes in our Helm chart values file.
 Refer to the ``Internal Changes`` section below for more details.
@@ -24,6 +20,8 @@ User-Facing Changes
 - 🖼 **UI**: Admins can designate projects to be showcased on the home page, which will show them
   in the showcase section of the home page
   (`#2799 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2799>`_).
+- 🖼 **UI**: Admins can configure compute resources to be used in interactive session.
+  (`#2752 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2752>`_).
 
 **✨ Improvements**
 
