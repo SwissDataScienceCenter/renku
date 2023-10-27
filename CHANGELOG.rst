@@ -3,11 +3,15 @@
 0.41.0
 ------
 
-Renku ``0.41.0`` allows the RenkuLab homepage to be configured to highlight chosen projects.
-In addition we are rolling out a much more comprehensive support for saving and using S3 
-cloud storage.
+Renku ``0.41.0`` adds new functionality for configuring external storage in projects! Users can now
+configure external storage to be mounted automatically in their sessions. The settings are persisted for the project, 
+but access control is managed by the provider of the storage, not by Renku. This means that for restricted
+data sources, users must enter credentials separately. This first implementation only supports S3-compatible storage, 
+but we will add support for additional providers soon. 
 
-A note to Renku administrators, this release includes breaking changes in our Helm chart values file.
+In addition, with this release administrators can configure the RenkuLab homepage to highlight chosen projects.
+
+**A note to Renku administrators**: this release includes breaking changes in our Helm chart values file.
 Refer to the ``Internal Changes`` section below for more details.
 
 User-Facing Changes
