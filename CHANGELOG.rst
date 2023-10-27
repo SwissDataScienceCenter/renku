@@ -1,5 +1,34 @@
 .. _changelog:
 
+0.42.0
+------
+
+Renku ``0.42.0`` allows RenkuLab administrators to configure compute resources to be used
+in interactive sessions.
+
+User-Facing Changes
+~~~~~~~~~~~~~~~~~~~
+
+**🌟 New Features**
+
+- **UI**: Add a page where Renku administrators can control resource pools and resource classes
+
+**✨ Improvements**
+
+- **UI**: Show a confirmation text when saving a session
+
+Internal Changes
+~~~~~~~~~~~~~~~~~~~
+
+- ``renku-gateway`` can now proxy to Keycloak endpoints
+
+Individual components
+~~~~~~~~~~~~~~~~~~~~~~
+
+- `renku-gateway 0.23.0 <https://github.com/SwissDataScienceCenter/renku-gateway/releases/tag/0.23.0>`_
+- `renku-ui 3.15.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.15.0>`_
+
+
 0.41.0
 ------
 
@@ -8,9 +37,6 @@ configure external storage to be mounted automatically in their sessions. The se
 but access control is managed by the provider of the storage, not by Renku. This means that for restricted
 data sources, users must enter credentials separately. This first implementation only supports S3-compatible storage, 
 but we will add support for additional providers soon.
-
-This release also adds a new admin page which lets RenkuLab administrators configure compute resources to be used
-in interactive sessions.
 
 Lastly, with this release administrators can configure the RenkuLab homepage to highlight chosen projects.
 
@@ -71,9 +97,9 @@ Individual components
 
 - `renku-data-services 0.1.1 <https://github.com/SwissDataScienceCenter/renku-data-services/releases/tag/v0.1.1>`_
 - `renku-data-services 0.2.0 <https://github.com/SwissDataScienceCenter/renku-data-services/releases/tag/v0.2.0>`_
-- `renku-gateway 0.23.0 <https://github.com/SwissDataScienceCenter/renku-gateway/releases/tag/0.23.0>`_
+- `renku-gateway 0.22.0 <https://github.com/SwissDataScienceCenter/renku-gateway/releases/tag/0.22.0>`_
 - `renku-notebooks 1.20.0 <https://github.com/SwissDataScienceCenter/renku-notebooks/releases/tag/1.20.0>`_
-- `renku-ui 3.15.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.15.0>`_
+- `renku-ui 3.14.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.14.0>`_
 - `amalthea 0.10.0 <https://github.com/SwissDataScienceCenter/amalthea/releases/tag/0.10.0>`_
 
 0.40.2
