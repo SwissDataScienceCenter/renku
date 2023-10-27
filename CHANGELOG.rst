@@ -3,11 +3,15 @@
 0.41.0
 ------
 
-Renku ``0.41.0`` allows the RenkuLab homepage to be configured to highlight chosen projects.
-In addition we are rolling out a much more comprehensive support for saving and using S3 
-cloud storage.
+Renku ``0.41.0`` adds new functionality for configuring external storage in projects! Users can now
+configure external storage to be mounted automatically in their sessions. The settings are persisted for the project, 
+but access control is managed by the provider of the storage, not by Renku. This means that for restricted
+data sources, users must enter credentials separately. This first implementation only supports S3-compatible storage, 
+but we will add support for additional providers soon. 
 
-A note to Renku administrators, this release includes breaking changes in our Helm chart values file.
+In addition, with this release administrators can configure the RenkuLab homepage to highlight chosen projects.
+
+**A note to Renku administrators**: this release includes breaking changes in our Helm chart values file.
 Refer to the ``Internal Changes`` section below for more details.
 
 User-Facing Changes
@@ -53,11 +57,13 @@ In addition to this, other notable changes include:
 - ``renku-gateway`` now provides credentials for the cloud storage potion of ``renku-data-services``
 - UI shows prominent banners during major outages
 - various bug fixes across many components
+- users can be prevented from accessing the default resource pool in ``renku-data-services``
 
 Individual components
 ~~~~~~~~~~~~~~~~~~~~~~
 
 - `renku-data-services 0.1.1 <https://github.com/SwissDataScienceCenter/renku-data-services/releases/tag/v0.1.1>`_
+- `renku-data-services 0.2.0 <https://github.com/SwissDataScienceCenter/renku-data-services/releases/tag/v0.2.0>`_
 - `renku-gateway 0.22.0 <https://github.com/SwissDataScienceCenter/renku-gateway/releases/tag/0.22.0>`_
 - `renku-notebooks 1.20.0 <https://github.com/SwissDataScienceCenter/renku-notebooks/releases/tag/1.20.0>`_
 - `renku-ui 3.14.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.14.0>`_
