@@ -1,5 +1,11 @@
 .. _changelog:
 
+0.42.0
+------
+
+Renku ``0.42.0`` allows RenkuLab administrators to configure compute resources to be used
+in interactive sessions.
+
 0.41.0
 ------
 
