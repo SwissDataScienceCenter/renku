@@ -11,11 +11,13 @@ User-Facing Changes
 
 **🌟 New Features**
 
-- **UI**: Add a page where Renku administrators can control resource pools and resource classes
+- 🖼 **UI**: Admins can configure compute resources to be used in interactive session.
+  (`#2752 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2752>`_).
 
 **✨ Improvements**
 
-- **UI**: Show a confirmation text when saving a session
+- 💾 **UI**: Show a confirmation text when saving a session
+  (`#2856 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2856>`_).
 
 Internal Changes
 ~~~~~~~~~~~~~~~~~~~
@@ -51,8 +53,6 @@ User-Facing Changes
 - 🖼 **UI**: Admins can designate projects to be showcased on the home page, which will show them
   in the showcase section of the home page
   (`#2799 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2799>`_).
-- 🖼 **UI**: Admins can configure compute resources to be used in interactive session.
-  (`#2752 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2752>`_).
 
 **✨ Improvements**
 
@@ -61,8 +61,6 @@ User-Facing Changes
   (`#2760 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2760>`_).
 - 🌈 **UI**: Improve color contrast and other UX elements
   (`#2846 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2846>`_).
-- 💾 **UI**: Show a confirmation text when saving a session
-  (`#2856 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2856>`_).
 
 Internal Changes
 ~~~~~~~~~~~~~~~~~~~
@@ -87,7 +85,6 @@ In addition to this, other notable changes include:
 - update the Amalthea scheduler to work with newer versions of Kubernetes
 - ``renku-notebooks`` now get S3 cloud storage configuration from ``renku-data-services``
 - ``renku-gateway`` now provides credentials for the cloud storage potion of ``renku-data-services``
-- ``renku-gateway`` can now proxy to Keycloak endpoints
 - UI shows prominent banners during major outages
 - various bug fixes across many components
 - users can be prevented from accessing the default resource pool in ``renku-data-services``
