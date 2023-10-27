@@ -57,11 +57,13 @@ In addition to this, other notable changes include:
 - ``renku-gateway`` now provides credentials for the cloud storage potion of ``renku-data-services``
 - UI shows prominent banners during major outages
 - various bug fixes across many components
+- users can be prevented from accessing the default resource pool in ``renku-data-services``
 
 Individual components
 ~~~~~~~~~~~~~~~~~~~~~~
 
 - `renku-data-services 0.1.1 <https://github.com/SwissDataScienceCenter/renku-data-services/releases/tag/v0.1.1>`_
+- `renku-data-services 0.2.0 <https://github.com/SwissDataScienceCenter/renku-data-services/releases/tag/v0.2.0>`_
 - `renku-gateway 0.22.0 <https://github.com/SwissDataScienceCenter/renku-gateway/releases/tag/0.22.0>`_
 - `renku-notebooks 1.20.0 <https://github.com/SwissDataScienceCenter/renku-notebooks/releases/tag/1.20.0>`_
 - `renku-ui 3.14.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.14.0>`_
