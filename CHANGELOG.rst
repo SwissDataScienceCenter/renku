@@ -30,7 +30,8 @@ User-Facing Changes
   (`#2760 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2760>`_).
 - 🌈 **UI**: Improve color contrast and other UX elements
   (`#2846 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2846>`_).
-
+- 💾 **UI**: Show a confirmation text when saving a session
+  (`#2856 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2856>`_).
 
 Internal Changes
 ~~~~~~~~~~~~~~~~~~~
@@ -63,10 +64,9 @@ Individual components
 ~~~~~~~~~~~~~~~~~~~~~~
 
 - `renku-data-services 0.1.1 <https://github.com/SwissDataScienceCenter/renku-data-services/releases/tag/v0.1.1>`_
-- `renku-gateway 0.22.0 <https://github.com/SwissDataScienceCenter/renku-gateway/releases/tag/0.22.0>`_
 - `renku-gateway 0.23.0 <https://github.com/SwissDataScienceCenter/renku-gateway/releases/tag/0.23.0>`_
 - `renku-notebooks 1.20.0 <https://github.com/SwissDataScienceCenter/renku-notebooks/releases/tag/1.20.0>`_
-- `renku-ui 3.14.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.14.0>`_
+- `renku-ui 3.15.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.15.0>`_
 - `amalthea 0.10.0 <https://github.com/SwissDataScienceCenter/amalthea/releases/tag/0.10.0>`_
 
 0.40.2
