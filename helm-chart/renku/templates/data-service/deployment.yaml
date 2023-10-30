@@ -1,28 +1,28 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ template "renku.fullname" . }}-crc
+  name: {{ template "renku.fullname" . }}-data-service
   labels:
-    app: renku-crc
+    app: renku-data-service
     chart: {{ template "renku.chart" . }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
 spec:
-  {{- if not .Values.crc.autoscaling.enabled }}
-  replicas: {{ .Values.crc.replicaCount }}
+  {{- if not .Values.dataService.autoscaling.enabled }}
+  replicas: {{ .Values.dataService.replicaCount }}
   {{- end }}
   strategy: 
-    {{- toYaml .Values.crc.updateStrategy | nindent 4 }}
+    {{- toYaml .Values.dataService.updateStrategy | nindent 4 }}
   selector:
     matchLabels:
-      app: renku-crc
+      app: renku-data-service
       release: {{ .Release.Name }}
   template:
     metadata:
       labels:
-        app: renku-crc
+        app: renku-data-service
         release: {{ .Release.Name }}
-      {{- with .Values.crc.podAnnotations }}
+      {{- with .Values.dataService.podAnnotations }}
       annotations:
         {{- toYaml . | nindent 8 }}
       {{- end }}
@@ -33,9 +33,9 @@ spec:
       initContainers:
         {{- include "certificates.initContainer" . | nindent 8 }}
       containers:
-        - name: crc
-          image: "{{ .Values.crc.image.repository }}:{{ .Values.crc.image.tag }}"
-          imagePullPolicy: {{ .Values.crc.image.pullPolicy }}
+        - name: data-service
+          image: "{{ .Values.dataService.image.repository }}:{{ .Values.dataService.image.tag }}"
+          imagePullPolicy: {{ .Values.dataService.image.pullPolicy }}
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
           ports:
@@ -57,14 +57,17 @@ spec:
             - name: KEYCLOAK_TOKEN_SIGNATURE_ALGS
               value: "RS256"
             - name: SERVER_DEFAULTS
-              value: /etc/renku-crc/server_options/server_defaults.json
+              value: /etc/renku-data-service/server_options/server_defaults.json
             - name: SERVER_OPTIONS
-              value: /etc/renku-crc/server_options/server_options.json
+              value: /etc/renku-data-service/server_options/server_options.json
             - name: K8S_NAMESPACE
               value: {{ .Release.Namespace | quote }}
+            - name: GITLAB_URL
+              value: {{ .Values.global.gitlab.url | quote}}
+            {{- include "certificates.env.python" $ | nindent 12 }}
           volumeMounts:
             - name: server-options
-              mountPath: /etc/renku-crc/server_options
+              mountPath: /etc/renku-data-service/server_options
             {{- include "certificates.volumeMounts.system" . | nindent 12 }}
           livenessProbe:
             httpGet:
@@ -87,16 +90,16 @@ spec:
             periodSeconds: 5
             failureThreshold: 60
           resources:
-            {{ toYaml .Values.crc.resources | nindent 12 }}
-    {{- with .Values.crc.nodeSelector }}
+            {{ toYaml .Values.dataService.resources | nindent 12 }}
+    {{- with .Values.dataService.nodeSelector }}
       nodeSelector:
         {{ toYaml . | nindent 8 }}
     {{- end }}
-    {{- with .Values.crc.affinity }}
+    {{- with .Values.dataService.affinity }}
       affinity:
         {{ toYaml . | nindent 8 }}
     {{- end }}
-    {{- with .Values.crc.tolerations }}
+    {{- with .Values.dataService.tolerations }}
       tolerations:
         {{ toYaml . | nindent 8 }}
     {{- end }}
@@ -105,4 +108,4 @@ spec:
           configMap:
             name: {{ template "renku.fullname" . }}-server-options
         {{- include "certificates.volumes" . | nindent 8 }}
-      serviceAccountName: {{ template "renku.fullname" . }}-crc
+      serviceAccountName: {{ template "renku.fullname" . }}-data-service
