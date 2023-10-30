@@ -1,6 +1,6 @@
 .. _changelog:
 
-0.4x
+0.42.0
 
 The Keycloak theme was updated to better space components on smaller screens and fix minor visual glitches.
 
