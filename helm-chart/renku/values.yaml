@@ -670,7 +670,7 @@ ui:
 
     image:
       repository: renku/renku-ui
-      tag: "3.14.0"
+      tag: "3.15.0"
       pullPolicy: IfNotPresent
 
       ## Optionally specify an array of imagePullSecrets.
@@ -848,7 +848,7 @@ ui:
 
     image:
       repository: renku/renku-ui-server
-      tag: "3.14.0"
+      tag: "3.15.0"
       pullPolicy: IfNotPresent
 
     imagePullSecrets: []
@@ -1334,7 +1334,7 @@ gateway:
     ## Define the image for the auth middleware
     auth:
       repository: renku/renku-gateway
-      tag: "0.22.0"
+      tag: "0.23.0"
       pullPolicy: IfNotPresent
 
   service:
@@ -1375,7 +1375,7 @@ gateway:
   reverseProxy:
     image:
       repository: renku/renku-revproxy
-      tag: "0.22.0"
+      tag: "0.23.0"
       pullPolicy: IfNotPresent
     metrics:
       enabled: true
