@@ -5,7 +5,7 @@ For changes that require manual steps other than changing values, please check o
 Please follow this convention when adding a new row
 * `<type: NEW|EDIT|DELETE> - *<resource name>*: <details>`
 
-## Upgrading to Renku 0.43.0
+## Upgrading to Renku 0.42.0
 
 * DELETE `graph.gitlab.url` has been removed as graph services uses the `global.gitlab.url`.
 
