@@ -3,11 +3,12 @@
 0.42.0
 ------
 
-Renku ``0.42.0`` allows RenkuLab administrators to manage user resource pools within their RenkuLab instance. User
-resource pools are a way to manage the compute resources accessible to groups of RenkuLab users for interactive sessions.
+Renku ``0.42.0`` allows RenkuLab administrators to easily manage user resource pools via an Admin Panel built into RenkuLab. 
+User resource pools are a way to manage the compute resources accessible to groups of RenkuLab users for interactive sessions.
 From the new Admin Panel, admins can create resource pools, set their max resource quotas, customize the session classes
 available within pools, and add users to pools. Admins can access the new Admin Panel by navigating to the account icon
-in the top right in RenkuLab and selecting 'Admin Panel'.
+in the top right in RenkuLab and selecting 'Admin Panel'. To access the Admin Panel, a user must have the `renku-admin` role
+delegated to them in Keycloak.
 
 In addition, the login screen was updated to better space components on smaller screens and fix minor
 visual glitches.
