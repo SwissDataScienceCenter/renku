@@ -3,9 +3,13 @@
 0.42.0
 ------
 
-Renku ``0.42.0`` allows RenkuLab administrators to configure compute resources to be used
-in interactive sessions.
-The Keycloak theme was updated to better space components on smaller screens and fix minor
+Renku ``0.42.0`` allows RenkuLab administrators to manage user resource pools within their RenkuLab instance. User
+resource pools are a way to manage the compute resources accessible to groups of RenkuLab users for interactive sessions.
+From the new Admin Panel, admins can create resource pools, set their max resource quotas, customize the session classes
+available within pools, and add users to pools. Admins can access the new Admin Panel by navigating to the account icon
+in the top right in RenkuLab and selecting 'Admin Panel'.
+
+In addition, the login screen was updated to better space components on smaller screens and fix minor
 visual glitches.
 
 User-Facing Changes
@@ -13,7 +17,7 @@ User-Facing Changes
 
 **🌟 New Features**
 
-- 🖼 **UI**: Admins can configure compute resources to be used in interactive session.
+- 🖼 **UI**: Admins can configure compute resources available to groups of users for interactive sessions.
   (`#2752 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2752>`_).
 
 **✨ Improvements**
