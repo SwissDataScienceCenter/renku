@@ -1,25 +1,117 @@
 .. _changelog:
 
-
-0.41.0
+0.42.0
 ------
 
-Renku ``0.41.0`` allows the RenkuLab homepage to be configured to highlight chosen projects.
+Renku ``0.42.0`` allows RenkuLab administrators to configure compute resources to be used
+in interactive sessions.
 
-Internal Changes
+User-Facing Changes
 ~~~~~~~~~~~~~~~~~~~
 
 **🌟 New Features**
 
-- 🚀 **UI**: [Showcase] Admins can designate projects to be showcased on the home page, which will show them
-    in the showcase section of the home page. (`#2799 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2799>`_).
+- 🖼 **UI**: Admins can configure compute resources to be used in interactive session.
+  (`#2752 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2752>`_).
+
+**✨ Improvements**
+
+- 💾 **UI**: Show a confirmation text when saving a session
+  (`#2856 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2856>`_).
+
+Internal Changes
+~~~~~~~~~~~~~~~~~~~
+
+- ``renku-gateway`` can now proxy to Keycloak endpoints
+
+Individual components
+~~~~~~~~~~~~~~~~~~~~~~
+
+- `renku-gateway 0.23.0 <https://github.com/SwissDataScienceCenter/renku-gateway/releases/tag/0.23.0>`_
+- `renku-ui 3.15.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.15.0>`_
 
 
-This is a breaking change to the values file and it requires minor edits to the following field:
+0.41.0
+------
+
+Renku ``0.41.0`` adds new functionality for configuring external storage in projects! Users can now
+configure external storage to be mounted automatically in their sessions. The settings are persisted for the project, 
+but access control is managed by the provider of the storage, not by Renku. This means that for restricted
+data sources, users must enter credentials separately. This first implementation only supports S3-compatible storage, 
+but we will add support for additional providers soon.
+
+Lastly, with this release administrators can configure the RenkuLab homepage to highlight chosen projects.
+
+**A note to Renku administrators**: this release includes breaking changes in our Helm chart values file.
+Refer to the ``Internal Changes`` section below for more details.
+
+User-Facing Changes
+~~~~~~~~~~~~~~~~~~~
+
+**🌟 New Features**
+
+- 🖼 **UI**: Admins can designate projects to be showcased on the home page, which will show them
+  in the showcase section of the home page
+  (`#2799 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2799>`_).
+
+**✨ Improvements**
+
+- 💾 **UI**: Add support for cloud storage configuration per project. There are now more options
+  to customize to support external S3 and S3 compatible storage better
+  (`#2760 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2760>`_).
+- 🌈 **UI**: Improve color contrast and other UX elements
+  (`#2846 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2846>`_).
+
+Internal Changes
+~~~~~~~~~~~~~~~~~~~
+
+This release is a breaking change to the Helm values file and it requires minor edits to the following field:
 
 - ``ui.homepage`` removed the unused ``projects`` field and added the ``showcase`` field.
+- ``amalthea.scheduler.*`` deprecates all existing child fields and adds new child fields. If you are not defining these fields 
+  in your values file then you are using the default Kubernetes scheduler and this requires no action. But if you are 
+  defining a custom scheduler in your deployment's values file then this requires additional edits to your values file 
+  so that you can retain the same functionality as before.
+- the ``crc`` field in the values file has been renamed to ``dataService``, all child fields remain the same 
+  functionally and by name.
 
-For more details please refer to the explanation in ``helm-chart/values.yaml.changelog.md``.
+For more details on the Helm chart values changes please refer to the explanation in ``helm-chart/values.yaml.changelog.md``.
+
+In addition to this, other notable changes include:
+
+- add node affinities and tolerations for resource classes
+- persist cloud storage configurations at the project level
+- validation of Rclone cloud storage configuration by the backend
+- update the Amalthea scheduler to work with newer versions of Kubernetes
+- ``renku-notebooks`` now get S3 cloud storage configuration from ``renku-data-services``
+- ``renku-gateway`` now provides credentials for the cloud storage potion of ``renku-data-services``
+- UI shows prominent banners during major outages
+- various bug fixes across many components
+- users can be prevented from accessing the default resource pool in ``renku-data-services``
+
+Individual components
+~~~~~~~~~~~~~~~~~~~~~~
+
+- `renku-data-services 0.1.1 <https://github.com/SwissDataScienceCenter/renku-data-services/releases/tag/v0.1.1>`_
+- `renku-data-services 0.2.0 <https://github.com/SwissDataScienceCenter/renku-data-services/releases/tag/v0.2.0>`_
+- `renku-gateway 0.22.0 <https://github.com/SwissDataScienceCenter/renku-gateway/releases/tag/0.22.0>`_
+- `renku-notebooks 1.20.0 <https://github.com/SwissDataScienceCenter/renku-notebooks/releases/tag/1.20.0>`_
+- `renku-ui 3.14.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.14.0>`_
+- `amalthea 0.10.0 <https://github.com/SwissDataScienceCenter/amalthea/releases/tag/0.10.0>`_
+
+0.40.2
+------
+
+Renku ``0.40.2`` fixes a bug in the Renku data services where the web server consumed a lot of database connections.
+
+**🐞 Bug Fixes**
+
+- **Data services**: Run the server with only 1 worker so that fewer database connections are consumed
+
+Individual components
+~~~~~~~~~~~~~~~~~~~~~~
+
+- `renku-data-services v0.0.3 <https://github.com/SwissDataScienceCenter/renku-data-services/releases/tag/v0.0.3>`_
 
 0.40.1
 ------
