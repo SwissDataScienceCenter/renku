@@ -27,7 +27,9 @@ spec:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       initContainers:
         - name: migrate-datastore
-          image: "{{ .Values.authz.builtIn.image.repository }}:{{ .Values.authz.builtIn.image.tag }}"
+          # NOTE: Have to use the -debug image here because the regular one does not have a shell
+          # and the database migration will not read the db connection uri string from an env variable
+          image: "{{ .Values.authz.builtIn.image.repository }}:{{ .Values.authz.builtIn.image.tag }}-debug"
           imagePullPolicy: {{ .Values.authz.builtIn.image.pullPolicy }}
           env:
             - name: "SPICEDB_DATASTORE_CONN_URI"
@@ -35,11 +37,11 @@ spec:
                 secretKeyRef:
                   name: {{ template "renku.fullname" . }}-authz
                   key: SPICEDB_DATASTORE_CONN_URI
+          command:
+            - sh
+            - -c
           args:
-            - datastore
-            - migrate
-            - {{ .Values.authz.builtIn.image.tag }}
-            - --datastore-engine=postgres
+            - spicedb datastore migrate {{ .Values.authz.builtIn.image.tag }} --datastore-engine=postgres --datastore-conn-uri=$SPICEDB_DATASTORE_CONN_URI
       containers:
         - name: authz
           securityContext:
