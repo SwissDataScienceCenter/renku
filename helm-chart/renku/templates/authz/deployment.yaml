@@ -4,7 +4,7 @@ kind: Deployment
 metadata:
   name: {{ include "renku.fullname" . }}-authz
   labels:
-    app: {{ template "renku.fullname" . }}-authz
+    app: renku-authz
     chart: {{ template "renku.chart" . }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
@@ -14,11 +14,11 @@ spec:
   {{- end }}
   selector:
     matchLabels:
-      app: {{ template "renku.fullname" . }}-authz
+      app: renku-authz
   template:
     metadata:
       labels:
-        app: {{ template "renku.fullname" . }}-authz
+        app: renku-authz
         chart: {{ template "renku.chart" . }}
         release: {{ .Release.Name }}
         heritage: {{ .Release.Service }}
@@ -43,6 +43,7 @@ spec:
                   name: {{ template "renku.fullname" . }}-authz
                   key: SPICEDB_DATASTORE_CONN_URI
           args:
+            - serve
             - --http-enabled=true
             - --datastore-engine=postgres
             - --grpc-enabled=true

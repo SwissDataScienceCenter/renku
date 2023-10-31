@@ -6,7 +6,7 @@ kind: Ingress
 metadata:
   name: {{ template "renku.fullname" . }}-authz
   labels:
-    app: {{ template "renku.name" . }}
+    app: renku-authz
     chart: {{ template "renku.chart" . }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}

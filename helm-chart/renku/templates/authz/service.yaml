@@ -4,7 +4,7 @@ kind: Service
 metadata:
   name: {{ include "renku.fullname" . }}-authz
   labels:
-    app: {{ template "renku.fullname" . }}-authz
+    app: renku-authz
     chart: {{ template "renku.chart" . }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
@@ -20,5 +20,5 @@ spec:
       protocol: TCP
       name: grpc
   selector:
-    app: {{ template "renku.fullname" . }}-authz
+    app: renku-authz
 {{- end }}
