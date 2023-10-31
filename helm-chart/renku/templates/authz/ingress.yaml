@@ -1,0 +1,51 @@
+{{- if .Values.authz.builtIn.enabled }}
+{{- if .Values.authz.builtIn.ingress.enabled -}}
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ template "renku.fullname" . }}-authz
+  labels:
+    app: {{ template "renku.name" . }}
+    chart: {{ template "renku.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+  annotations:
+    nginx.ingress.kubernetes.io/configuration-snippet: |
+        more_set_headers "Content-Security-Policy: frame-ancestors 'self' https://*.{{ .Values.global.renku.domain }} https://{{ .Values.global.renku.domain }}";
+{{- range $key, $value := .Values.authz.builtIn.ingress.annotations }}
+    {{ $key }}: {{ $value | quote }}
+{{- end }}
+spec:
+{{- if .Values.authz.builtIn.ingress.className }}
+  ingressClassName: {{ .Values.authz.builtIn.ingress.className }}
+{{- end }}
+  tls:
+    - hosts:
+        - authz.api.{{ .Values.global.renku.domain }}
+        - authz.grpc.{{ .Values.global.renku.domain }}
+      secretName: {{ .authz.builtIn.ingress.tlsSecretName }}
+  rules:
+    - host: authz.grpc.{{ .Values.global.renku.domain }}
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ include "renku.fullname" . }}-authz
+                port:
+                  name: grpc
+    - host: authz.api.{{ .Values.global.renku.domain }}
+      http:
+        paths:
+          # NOTE: I checked the source code for SpiceDB the path is hardcoded at /
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ include "renku.fullname" . }}-authz
+                port:
+                  name: http
+{{- end }}
+{{- end }}

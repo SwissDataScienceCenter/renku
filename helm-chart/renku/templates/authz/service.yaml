@@ -1,0 +1,24 @@
+{{- if .Values.authz.builtIn.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "renku.fullname" . }}-authz
+  labels:
+    app: {{ template "renku.fullname" . }}-authz
+    chart: {{ template "renku.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  type: {{ .Values.service.type }}
+  ports:
+    - port: 8443
+      targetPort: http
+      protocol: TCP
+      name: http
+    - port: 50051
+      targetPort: grpc
+      protocol: TCP
+      name: grpc
+  selector:
+    app: {{ template "renku.fullname" . }}-authz
+{{- end }}

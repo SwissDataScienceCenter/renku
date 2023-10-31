@@ -1,0 +1,42 @@
+{{- if .Values.authz.builtIn.enabled }}
+{{- if .Values.authz.builtIn.autoscaling.enabled }}
+{{- if $.Capabilities.APIVersions.Has "autoscaling/v2" }}
+apiVersion: autoscaling/v2
+{{- else if $.Capabilities.APIVersions.Has "autoscaling/v2beta2" }}
+apiVersion: autoscaling/v2beta2
+{{- else if $.Capabilities.APIVersions.Has "autoscaling/v2beta1" }}
+apiVersion: autoscaling/v2beta1
+{{- else }}
+  {{- fail "ERROR: You must have at least autoscaling/v2beta1 to use HorizontalPodAutoscaler for the authorization service" }}
+{{- end }}
+kind: HorizontalPodAutoscaler
+metadata:
+  name: {{ include "test.fullname" . }}
+  labels:
+    {{- include "test.labels" . | nindent 4 }}
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: {{ include "test.fullname" . }}
+  minReplicas: {{ .Values.authz.builtIn.autoscaling.minReplicas }}
+  maxReplicas: {{ .Values.authz.builtIn.autoscaling.maxReplicas }}
+  metrics:
+    {{- if .Values.authz.builtIn.autoscaling.targetCPUUtilizationPercentage }}
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: {{ .Values.authz.builtIn.autoscaling.targetCPUUtilizationPercentage }}
+    {{- end }}
+    {{- if .Values.authz.builtIn.autoscaling.targetMemoryUtilizationPercentage }}
+    - type: Resource
+      resource:
+        name: memory
+        target:
+          type: Utilization
+          averageUtilization: {{ .Values.authz.builtIn.autoscaling.targetMemoryUtilizationPercentage }}
+    {{- end }}
+{{- end }}
+{{- end }}

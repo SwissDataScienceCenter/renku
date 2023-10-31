@@ -1,0 +1,89 @@
+{{- if .Values.authz.builtIn.enabled }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "renku.fullname" . }}-authz
+  abels:
+    app: {{ template "renku.fullname" . }}-authz
+    chart: {{ template "renku.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  {{- if not .Values.authz.builtIn.autoscaling.enabled }}
+  replicas: {{ .Values.authz.builtIn.replicaCount }}
+  {{- end }}
+  selector:
+    matchLabels:
+      app: {{ template "renku.fullname" . }}-authz
+  template:
+    metadata:
+      labels:
+        app: {{ template "renku.fullname" . }}-authz
+        chart: {{ template "renku.chart" . }}
+        release: {{ .Release.Name }}
+        heritage: {{ .Release.Service }}
+    spec:
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      containers:
+        - name: authz
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.authz.image.repository }}:{{ .Values.authz.image.tag }}"
+          imagePullPolicy: {{ .Values.authz.builtIn.image.pullPolicy }}
+          env:
+            - name: "SPICEDB_GRPC_PRESHARED_KEY"
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "renku.fullname" . }}-authz
+                  key: SPICEDB_GRPC_PRESHARED_KEY
+            - name: "SPICEDB_DATASTORE_CONN_URI"
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "renku.fullname" . }}-authz
+                  key: SPICEDB_DATASTORE_CONN_URI
+          args:
+            - --http-enabled=true
+            - --datastore-engine=postgres
+            - --grpc-enabled=true
+            - --telemetry-endpoint=""
+          ports:
+            - name: http
+              containerPort: 8443
+              protocol: TCP
+            - name: grpc
+              containerPort: 50051
+              protocol: TCP
+            - name: dashboard
+              containerPort: 8080
+              protocol: TCP
+            - name: metrics
+              containerPort: 9090
+              protocol: TCP
+          livenessProbe:
+            exec:
+              command:
+                - grpc_health_probe
+                - -v
+                - -addr=localhost:50051
+          readinessProbe:
+            exec:
+              command:
+                - grpc_health_probe
+                - -v
+                - -addr=localhost:50051
+          resources:
+            {{- toYaml .Values.authz.builtIn.resources | nindent 12 }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+{{- end }}

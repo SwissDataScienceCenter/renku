@@ -1651,6 +1651,39 @@ dataService:
   tolerations: []
   affinity: {}
 
+authz:
+  external:
+    enabled: false
+    url:
+    apiKeySecretName: 
+  builtIn:
+    # We strongly recommend using the external deployment option.
+    # The built-in option is just for testing and demo purposes.
+    enabled: true
+    replicaCount: 1
+    image:
+      repository: authzed/spicedb
+      pullPolicy: IfNotPresent
+      tag: "v1.26.0"
+    ingress:
+      # The authorization service will be available at authz.grpc.<renku_domain> for grpc access
+      # and authz.api.<renku_domain> for http API access.
+      enabled: true
+      # Please ensure to adjust the ingress class name and annotations if you are using a different ingress controller
+      # other than https://kubernetes.github.io/ingress-nginx.
+      className: nginx
+      annotations:
+        nginx.ingress.kubernetes.io/ssl-redirect: "true"
+        nginx.ingress.kubernetes.io/backend-protocol: "GRPC"
+      tlsSecretName: renku-authz-tls
+    resources: {}
+    autoscaling:
+      enabled: false
+      minReplicas: 1
+      maxReplicas: 10
+      targetCPUUtilizationPercentage: 80
+      # targetMemoryUtilizationPercentage: 80
+
 podSecurityContext: {}
 
 securityContext:
