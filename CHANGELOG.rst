@@ -1,5 +1,10 @@
 .. _changelog:
 
+0.43.0
+------
+
+(ShapeUp): Let users pin projects to the dashboard.
+
 0.42.0
 ------
 
