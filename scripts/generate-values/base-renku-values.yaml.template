@@ -18,12 +18,6 @@ global:
   useHTTPS: true
 gateway:
   secretKey: <use `openssl rand -hex 32`>
-jena:
-  users:
-    admin:
-      password: <use `openssl rand -hex 8 | base64`>
-    renku:
-      password: <use `openssl rand -hex 8 | base64`>
 graph:
   gitlab:
     url: {gitlab_url}
