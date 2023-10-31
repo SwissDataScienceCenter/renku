@@ -25,6 +25,21 @@ spec:
     spec:
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      initContainers:
+        - name: migrate-datastore
+          image: "{{ .Values.authz.builtIn.image.repository }}:{{ .Values.authz.builtIn.image.tag }}"
+          imagePullPolicy: {{ .Values.authz.builtIn.image.pullPolicy }}
+          env:
+            - name: "SPICEDB_DATASTORE_CONN_URI"
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "renku.fullname" . }}-authz
+                  key: SPICEDB_DATASTORE_CONN_URI
+          args:
+            - datastore
+            - migrate
+            - {{ .Values.authz.builtIn.image.tag }}
+            - --datastore-engine=postgres
       containers:
         - name: authz
           securityContext:
