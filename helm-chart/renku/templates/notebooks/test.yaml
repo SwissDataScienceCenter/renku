@@ -103,10 +103,8 @@ spec:
           value: "true"
         - name: NB_SESSIONS__GIT_PROXY__RENKU_CLIENT_SECRET
           value: {{ $.Values.global.gateway.clientSecret | default "renku-client-secret" | quote }}
-        {{ if $.Values.global.keycloak.realm }}
         - name: NB_KEYCLOAK_REALM
-          value: {{ $.Values.global.keycloak.realm | quote }}
-        {{ end }}
+          value: {{ include "renku.keycloak.realm" $ | quote }}
         - name: NB_SESSIONS__SSH__ENABLED
           value: {{ $.Values.notebooks.ssh.enabled | quote }}
         {{- if not (kindIs "invalid" $.Values.notebooks.ssh.hostKeySecret) }}

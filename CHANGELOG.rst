@@ -1,8 +1,36 @@
 .. _changelog:
 
 0.42.0
+------
 
-The Keycloak theme was updated to better space components on smaller screens and fix minor visual glitches.
+Renku ``0.42.0`` allows RenkuLab administrators to configure compute resources to be used
+in interactive sessions.
+The Keycloak theme was updated to better space components on smaller screens and fix minor
+visual glitches.
+
+User-Facing Changes
+~~~~~~~~~~~~~~~~~~~
+
+**🌟 New Features**
+
+- 🖼 **UI**: Admins can configure compute resources to be used in interactive session.
+  (`#2752 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2752>`_).
+
+**✨ Improvements**
+
+- 💾 **UI**: Show a confirmation text when saving a session
+  (`#2856 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2856>`_).
+
+Internal Changes
+~~~~~~~~~~~~~~~~~~~
+
+- ``renku-gateway`` can now proxy to Keycloak endpoints
+
+Individual components
+~~~~~~~~~~~~~~~~~~~~~~
+
+- `renku-gateway 0.23.0 <https://github.com/SwissDataScienceCenter/renku-gateway/releases/tag/0.23.0>`_
+- `renku-ui 3.15.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.15.0>`_
 
 0.41.0
 ------
@@ -11,9 +39,9 @@ Renku ``0.41.0`` adds new functionality for configuring external storage in proj
 configure external storage to be mounted automatically in their sessions. The settings are persisted for the project, 
 but access control is managed by the provider of the storage, not by Renku. This means that for restricted
 data sources, users must enter credentials separately. This first implementation only supports S3-compatible storage, 
-but we will add support for additional providers soon. 
+but we will add support for additional providers soon.
 
-In addition, with this release administrators can configure the RenkuLab homepage to highlight chosen projects.
+Lastly, with this release administrators can configure the RenkuLab homepage to highlight chosen projects.
 
 **A note to Renku administrators**: this release includes breaking changes in our Helm chart values file.
 Refer to the ``Internal Changes`` section below for more details.
@@ -34,7 +62,6 @@ User-Facing Changes
   (`#2760 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2760>`_).
 - 🌈 **UI**: Improve color contrast and other UX elements
   (`#2846 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2846>`_).
-
 
 Internal Changes
 ~~~~~~~~~~~~~~~~~~~
