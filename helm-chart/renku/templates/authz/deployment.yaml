@@ -3,7 +3,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: {{ include "renku.fullname" . }}-authz
-  abels:
+  labels:
     app: {{ template "renku.fullname" . }}-authz
     chart: {{ template "renku.chart" . }}
     release: {{ .Release.Name }}
@@ -29,7 +29,7 @@ spec:
         - name: authz
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
-          image: "{{ .Values.authz.image.repository }}:{{ .Values.authz.image.tag }}"
+          image: "{{ .Values.authz.builtIn.image.repository }}:{{ .Values.authz.builtIn.image.tag }}"
           imagePullPolicy: {{ .Values.authz.builtIn.image.pullPolicy }}
           env:
             - name: "SPICEDB_GRPC_PRESHARED_KEY"

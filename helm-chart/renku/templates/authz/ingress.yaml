@@ -24,7 +24,7 @@ spec:
     - hosts:
         - authz.api.{{ .Values.global.renku.domain }}
         - authz.grpc.{{ .Values.global.renku.domain }}
-      secretName: {{ .authz.builtIn.ingress.tlsSecretName }}
+      secretName: {{ .Values.authz.builtIn.ingress.tlsSecretName }}
   rules:
     - host: authz.grpc.{{ .Values.global.renku.domain }}
       http:
