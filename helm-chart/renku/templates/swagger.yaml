@@ -51,6 +51,7 @@ spec:
             httpGet:
               path: /swagger
               port: http
+      enableServiceLinks: false
 ---
 apiVersion: v1
 kind: Service
