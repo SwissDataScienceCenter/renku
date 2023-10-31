@@ -48,9 +48,6 @@ def main():
     argparser.add_argument(
         "--namespace", help="Namespace for the deployment"
     )
-    argparser.add_argument("--gitlab", help="Deploy GitLab as a part of Renku",
-        action=argparse.BooleanOptionalAction, default=False
-    )
     argparser.add_argument("--gitlab-url", help="Gitlab URL")
     argparser.add_argument(
         "--gitlab-registry",
@@ -74,28 +71,24 @@ def main():
     # we must have a renku domain
     renku_domain = args.renku_domain or prompt("Renku domain: ", default="renku.example.com")
 
-    # check if gitlab is being deployed - if not make sure we have the client configuration
-    if not args.gitlab:
-        gitlab_url = (
-            args.gitlab_url or prompt("GitLab URL: ")
-        )
-        gitlab_client_id = (
-            args.gitlab_client_id or prompt("GitLab client id: ")
-        )
-        gitlab_client_secret = (
-            args.gitlab_client_secret or prompt("GitLab client secret: ")
-        )
-        gitlab_registry = (
-            args.gitlab_registry or prompt("Gitlab registry hostname: ", default=f"registry.{renku_domain}")
-        )
+    # ask for information about Gitlab
+    gitlab_url = (
+        args.gitlab_url or prompt("GitLab URL: ")
+    )
+    gitlab_client_id = (
+        args.gitlab_client_id or prompt("GitLab client id: ")
+    )
+    gitlab_client_secret = (
+        args.gitlab_client_secret or prompt("GitLab client secret: ")
+    )
+    gitlab_registry = (
+        args.gitlab_registry or prompt("Gitlab registry hostname: ", default=f"registry.{renku_domain}")
+    )
 
-        if not (gitlab_url and gitlab_client_id and gitlab_client_secret and gitlab_registry):
-            raise RuntimeError(
-                "If not deploying own GitLab, you must specify the GitLab URL, client id and client secret."
-            )
-    else:
-        gitlab_url = f"https://{renku_domain}/gitlab"
-        gitlab_registry = f"registry.{renku_domain}"
+    if not (gitlab_url and gitlab_client_id and gitlab_client_secret and gitlab_registry):
+        raise RuntimeError(
+            "You must specify the GitLab URL, client id and client secret."
+        )
 
     # read in the template and set the values
     with open(args.template) as f:
@@ -110,23 +103,13 @@ def main():
     # if a key is set to '<use `openssl rand -hex 32`>' automatically generate the secret
     values = recurse_dict_secrets(values)
 
-    if args.gitlab:
-        values["gitlab"]["enabled"] = True
-        values["global"]["gitlab"]["urlPrefix"] = "/gitlab"
-    else:
-        values["global"]["gateway"]["gitlabClientId"] = gitlab_client_id
-        values["global"]["gateway"]["gitlabClientSecret"] = gitlab_client_secret
-        values["gitlab"] = {"enabled": False}
+    values["global"]["gateway"]["gitlabClientId"] = gitlab_client_id
+    values["global"]["gateway"]["gitlabClientSecret"] = gitlab_client_secret
+    values["gitlab"] = {"enabled": False}
 
     warning = """
 # This is an automatically generated values file to deploy Renku.
 # Please scrutinize it carefully before trying to deploy.
-"""
-
-    if args.gitlab:
-        warning += """
-# GitLab values are incomplete; git-LFS and the registry storage are not configured.
-# See the main Renku values file for reference and an example.
 """
 
     if args.output:

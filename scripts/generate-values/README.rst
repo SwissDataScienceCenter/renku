@@ -9,10 +9,7 @@ enters all the supporting service information where needed. These are the steps
 it takes:
 
 1. Generate random secrets
-2. Prompt the user for infromation about GitLab; options are to deploy own
-   GitLab with Renku or to deploy against an external GitLab instance. If
-   external, then the script prompts for GitLab application information (client
-   ID and secret)
+2. Prompt the user for infromation about GitLab
 3. Render the template with the user values and generate a new values file
 
 Setting up
@@ -22,16 +19,16 @@ You need:
 
 * python or docker
 * a registered hostname for Reknu or a wildcard DNS
-* a GitLab application configured if using an external GitLab
+* Renku configured as a Gitlab OAuth application
 
 This setup assumes that you have configured a hostname for your Renku instance
 or that you have access to a wildcard DNS. A full list of prerequisites for a
 fully-functioning Renku deployment can be found in the general Renku admin
 documentation.
 
-If you are going to use an external GitLab, you need to first configure a Renku
-application under your ``User Settings --> Applications``. Configure the
-callback URLs:
+You need to first configure Renku as as an OAuth client to Gitlab, you
+can do this under ``User Settings --> Applications`` in your Gitlab deployment. 
+Configure the callback URLs:
 
 .. code-block::
 
@@ -57,9 +54,8 @@ Running the script
 To run the script, you can set up a python virtualenv with the required packages
 or use our docker image.
 
-The script supports a number of different options: two specific options worth
-noting are the `--gitlab` option and `--output <filename>` option. The former
-is used to deploy Renku with its own Gitlab instance; the `--output` option is
+The script supports a number of different options: one options worth
+noting is the `--output <filename>` option. It is
 useful for separating the resulting secrets file from the program output.
 
 Using python
@@ -93,12 +89,11 @@ To run it from a Docker container after you have built the container with `docke
 
    $ docker run --rm -ti -v ${PWD}:/work renku/generate-values
 
-To run it from a Docker container if renku contains its own gitlab and the resulting
-output should be written to a file called `renku-values.yaml`.
+To run it from a Docker container with the resulting output should be written to a file called `renku-values.yaml`.
 
 .. code-block::
 
-   $ docker run --rm -ti -v ${PWD}:/work renku/generate-values --gitlab --output /work/renku-values.yaml
+   $ docker run --rm -ti -v ${PWD}:/work renku/generate-values --output /work/renku-values.yaml
 
 Wrapping up
 -----------

@@ -105,6 +105,8 @@ spec:
               value: {{ toJson .Values.ui.client.homepage | quote }}
             - name: CORE_API_VERSION_CONFIG			
               value: {{ toJson .Values.ui.client.coreApiVersionConfig | quote }}
+            - name: KEYCLOAK_REALM
+              value: {{ include "renku.keycloak.realm" . | quote }}
           livenessProbe:
             httpGet:
               path: /

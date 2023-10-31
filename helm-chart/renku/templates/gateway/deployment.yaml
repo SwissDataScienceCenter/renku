@@ -57,10 +57,8 @@ spec:
               value: {{ .Values.gateway.gitlabClientId | default .Values.global.gateway.gitlabClientId | quote }}
             - name: KEYCLOAK_URL
               value: {{ include "renku.keycloakUrl" . | quote }}
-            {{ if .Values.global.keycloak.realm }}
             - name: KEYCLOAK_REALM
-              value: {{ .Values.global.keycloak.realm | quote }}
-            {{ end }}
+              value: {{ include "renku.keycloak.realm" . | quote }}
             - name: GATEWAY_SERVICE_PREFIX
               value: "/api/"
             - name: REDIS_HOST

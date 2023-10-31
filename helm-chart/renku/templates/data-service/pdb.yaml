@@ -1,0 +1,17 @@
+{{- if or (gt (int .Values.dataService.replicaCount) 1) (and .Values.dataService.autoscaling.enabled (gt (int .Values.dataService.autoscaling.minReplicas) 1)) }}
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: {{ template "renku.fullname" . }}-data-service
+  labels:
+    app: renku-data-service
+    chart: {{ template "renku.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  maxUnavailable: 50%
+  selector:
+    matchLabels:
+      app: renku-data-service
+      release: {{ .Release.Name }}
+{{- end }}

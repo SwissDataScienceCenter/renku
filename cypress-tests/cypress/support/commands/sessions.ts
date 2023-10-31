@@ -60,7 +60,7 @@ function stopAllSessionsForProject(
       cy.getDataCy("delete-session-modal-button").should("be.visible").click();
     }
   });
-  cy.contains("No currently running sessions.", { timeout: TIMEOUTS.long });
+  cy.contains("No currently running sessions.", { timeout: TIMEOUTS.vlong });
 }
 
 function deleteSession(fromSessionPage = false) {
@@ -69,7 +69,7 @@ function deleteSession(fromSessionPage = false) {
   cy.getDataCy("delete-session-button").first().should("be.visible").click();
   cy.getDataCy("delete-session-modal-button").should("be.visible").click();
   cy.getDataCy("stopping-btn").should("be.visible");
-  cy.get(".renku-container", { timeout: TIMEOUTS.long })
+  cy.get(".renku-container", { timeout: TIMEOUTS.vlong })
     .contains("No currently running sessions")
     .should("be.visible");
 }

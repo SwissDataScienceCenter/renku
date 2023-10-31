@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ template "renku.fullname" . }}-data-service
+  labels:
+    app: renku-data-service
+    chart: {{ template "renku.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  type: {{ .Values.dataService.service.type }}
+  ports:
+    - port: {{ .Values.dataService.service.port }}
+      targetPort: http
+      protocol: TCP
+      name: http
+  selector:
+    app: {{ template "renku.name" . }}-data-service
+    release: {{ .Release.Name }}

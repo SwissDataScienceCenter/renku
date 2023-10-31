@@ -1,4 +1,6 @@
 ---
+amalthea:
+  deployCrd: true
 global:
   gateway:
     cliClientSecret: <use `openssl rand -hex 32`>
@@ -43,8 +45,12 @@ ingress:
     - hosts:
         - {renku_domain}
       secretName: {namespace}-renku-ch-tls
-amalthea:
-  deployCrd: true
+jena:
+  users:
+    admin:
+      password: <use `openssl rand -hex 8 | base64`>
+    renku:
+      password: <use `openssl rand -hex 8 | base64`>
 notebooks:
   gitlab:
     registry:
