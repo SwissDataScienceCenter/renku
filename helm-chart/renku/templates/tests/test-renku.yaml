@@ -27,10 +27,6 @@ spec:
         value: '{{ .Values.tests.parameters.fullname }}'
       - name: RENKU_TEST_PASSWORD
         value: '{{ .Values.tests.parameters.password }}'
-      {{ if .Values.global.renku.cli_version }}
-      - name: RENKU_CLI_VERSION
-        value: '2.7.0.dev13+gd3eedb5e'
-      {{ end }}
       {{ if .Values.tests.parameters.provider }}
       - name: RENKU_TEST_PROVIDER
         value: '{{ .Values.tests.parameters.provider }}'
