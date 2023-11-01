@@ -5,6 +5,10 @@ For changes that require manual steps other than changing values, please check o
 Please follow this convention when adding a new row
 * `<type: NEW|EDIT|DELETE> - *<resource name>*: <details>`
 
+## Upgrading to Renku 0.43.0
+
+* DELETE `graph.gitlab.url` has been removed as graph services uses the `global.gitlab.url`.
+
 ## Upgrading to Renku 0.41.0
 
 The UI includes a feature that allows projects to be displayed in the _Showcase_ section of the RenkuLab home page.
