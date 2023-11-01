@@ -66,7 +66,7 @@ spec:
             - name: TOKEN_REPOSITORY_POSTGRES_CONNECTION_POOL
               value: "{{ .Values.graph.tokenRepository.connectionPool }}"
             - name: GITLAB_BASE_URL
-              value: {{ .Values.graph.gitlab.url }}
+              value: {{ .Values.global.gitlab.url }}
             - name: GITLAB_RATE_LIMIT
               value: {{ .Values.graph.tokenRepository.gitlab.rateLimit }}
             - name: SENTRY_ENABLED
