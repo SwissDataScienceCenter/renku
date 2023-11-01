@@ -20,16 +20,28 @@ Internal Changes
 
 - **KG**: Java upgraded to 21.0 and Jena to 4.10.0
 
-Individual components
-~~~~~~~~~~~~~~~~~~~~~~
+Individual Components
+~~~~~~~~~~~~~~~~~~~~~
 
 - `renku-graph 2.45.0 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/2.45.0>`_
 - `renku-graph 2.44.0 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/2.44.0>`_
 
+
+0.42.1
+~~~~~~
+
+Renku ``0.42.1`` is a bugfix release to patch a bug found in the data service which prevented
+new users from being created due to a db migration problem.
+
+Individual components
+~~~~~~~~~~~~~~~~~~~~~~
+
+- `renku-data-services 0.2.1 <https://github.com/SwissDataScienceCenter/renku-data-services/releases/tag/v0.2.1>`_
+
 0.42.0
 ------
 
-Renku ``0.42.0`` allows RenkuLab administrators to easily manage user resource pools via an Admin Panel built into RenkuLab. 
+Renku ``0.42.0`` allows RenkuLab administrators to easily manage user resource pools via an Admin Panel built into RenkuLab.
 User resource pools are a way to manage the compute resources accessible to groups of RenkuLab users for interactive sessions.
 From the new Admin Panel, admins can create resource pools, set their max resource quotas, customize the session classes
 available within pools, and add users to pools. Admins can access the new Admin Panel by navigating to the account icon
@@ -57,19 +69,30 @@ Internal Changes
 
 - ``renku-gateway`` can now proxy to Keycloak endpoints
 
-Individual components
+Individual components:
 ~~~~~~~~~~~~~~~~~~~~~~
 
 - `renku-gateway 0.23.0 <https://github.com/SwissDataScienceCenter/renku-gateway/releases/tag/0.23.0>`_
 - `renku-ui 3.15.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.15.0>`_
 
+0.41.1
+------
+
+Renku ``0.41.1`` is a bugfix release to patch a bug found in the data service which prevented
+new users from being created due to a db migration problem.
+
+Individual components
+~~~~~~~~~~~~~~~~~~~~~~
+
+- `renku-data-services 0.2.1 <https://github.com/SwissDataScienceCenter/renku-data-services/releases/tag/v0.2.1>`_
+
 0.41.0
 ------
 
 Renku ``0.41.0`` adds new functionality for configuring external storage in projects! Users can now
-configure external storage to be mounted automatically in their sessions. The settings are persisted for the project, 
+configure external storage to be mounted automatically in their sessions. The settings are persisted for the project,
 but access control is managed by the provider of the storage, not by Renku. This means that for restricted
-data sources, users must enter credentials separately. This first implementation only supports S3-compatible storage, 
+data sources, users must enter credentials separately. This first implementation only supports S3-compatible storage,
 but we will add support for additional providers soon.
 
 Lastly, with this release administrators can configure the RenkuLab homepage to highlight chosen projects.
@@ -100,11 +123,11 @@ Internal Changes
 This release is a breaking change to the Helm values file and it requires minor edits to the following field:
 
 - ``ui.homepage`` removed the unused ``projects`` field and added the ``showcase`` field.
-- ``amalthea.scheduler.*`` deprecates all existing child fields and adds new child fields. If you are not defining these fields 
-  in your values file then you are using the default Kubernetes scheduler and this requires no action. But if you are 
-  defining a custom scheduler in your deployment's values file then this requires additional edits to your values file 
+- ``amalthea.scheduler.*`` deprecates all existing child fields and adds new child fields. If you are not defining these fields
+  in your values file then you are using the default Kubernetes scheduler and this requires no action. But if you are
+  defining a custom scheduler in your deployment's values file then this requires additional edits to your values file
   so that you can retain the same functionality as before.
-- the ``crc`` field in the values file has been renamed to ``dataService``, all child fields remain the same 
+- the ``crc`` field in the values file has been renamed to ``dataService``, all child fields remain the same
   functionally and by name.
 
 For more details on the Helm chart values changes please refer to the explanation in ``helm-chart/values.yaml.changelog.md``.
@@ -234,7 +257,7 @@ operation to fail.
 
 Renku ``0.39.0`` moves all renku component Helm charts to one single chart that now resides in this repository.
 
-After initial testing we have noticed a bug in this version of the Helm chart. If you have already deployed this version simply 
+After initial testing we have noticed a bug in this version of the Helm chart. If you have already deployed this version simply
 upgrading to ``0.39.1`` will fix things. If you have not yet deployed this version then skip it and go straight to ``0.39.1``.
 The reason for the bug is that we replaced the ``spec.selector.matchLabels`` field of two important deployments in the Gateway
 because of this the two components do not upgrade and the whole Helm upgrade operation fails.
@@ -245,8 +268,8 @@ Also, with the next releases we will adopt a specific way of versioning the helm
   only application level bug fixes are present in the new release.
 - Minor version changes (i.e. ``0.50.2`` -> ``0.51.0``) indicate that there are NO changes in the Helm chart and that
   only application level new features and/or application level breaking changes are present.
-- Major version changes (i.e. ``0.50.0`` -> ``1.0.0``) will be reserved for changes in the Helm chart, either when the 
-  values file changes or when the Helm templates change. 
+- Major version changes (i.e. ``0.50.0`` -> ``1.0.0``) will be reserved for changes in the Helm chart, either when the
+  values file changes or when the Helm templates change.
 
 Please note that this is a breaking change to the values file and it requires three minor edits to the following fields:
 
@@ -491,7 +514,7 @@ Individual components
 ------
 
 Renku ``0.35.2`` introduces a UI bug-fix to prevent overloading backend components
-when using pre-filled template links. 
+when using pre-filled template links.
 
 Internal Changes
 ~~~~~~~~~~~~~~~~
@@ -594,7 +617,7 @@ Internal Changes
 - **Gateway:** properly redirect from /gitlab urls
   (`#669 <https://github.com/SwissDataScienceCenter/renku-gateway/issues/669>`__)
   (`2fac96f <https://github.com/SwissDataScienceCenter/renku-gateway/commit/2fac96f5c6141f4e57ae5cc77877670156bceae5>`__)
-- **Gateway:** return 404 if the core service metadata version does not exist instead of redirecting 
+- **Gateway:** return 404 if the core service metadata version does not exist instead of redirecting
   to the endpoint that is using the latest metadata version
   (`#667 <https://github.com/SwissDataScienceCenter/renku-gateway/issues/667>`__)
   (`2753d07 <https://github.com/SwissDataScienceCenter/renku-gateway/commit/2753d0773e26cb1c74e4be4dd44fe5e77f428657>`__
@@ -658,7 +681,7 @@ User-Facing Changes
 
 **✨ Improvements**
 
-- 🔎 **Knowledge Graph**: all the APIs return a new Project `slug` property. 
+- 🔎 **Knowledge Graph**: all the APIs return a new Project `slug` property.
   The `path` property although still available will be removed in the future.
   (`#1641 <https://github.com/SwissDataScienceCenter/renku-graph/issues/1641>`_).
 
@@ -700,7 +723,7 @@ Individual components
 Renku ``0.33.0`` introduces improvements and bug fixes in the UI and Knowledge Graph.
 
 The UI benefits from better error handling and overall behavior, including improved
-handling of common R file extensions. Regarding the Knowledge Graph, the 
+handling of common R file extensions. Regarding the Knowledge Graph, the
 Cross-Entity Search improves significantly its performance and project visibility
 can be changed through a dedicated API.
 
@@ -763,7 +786,7 @@ Individual components
 0.32.0
 ------
 
-Renku ``0.32.0`` introduces improvements in the KG services, enhancing KG overall performance. 
+Renku ``0.32.0`` introduces improvements in the KG services, enhancing KG overall performance.
 
 User-Facing Changes
 ~~~~~~~~~~~~~~~~~~~
