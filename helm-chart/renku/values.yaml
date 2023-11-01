@@ -86,9 +86,9 @@ global:
     version: 0.4.0
     ## The CLI version used for newly created projects by the core service,
     ## if this is left blank then the core service will derive the CLI version
-    ## for a new project based on its own version. 
+    ## for a new project based on its own version.
     ## NOTE should only be set for CI deployments and development purposes.
-    cli_version: 
+    cli_version:
   ## Note that the graph will not turned on by default until renku 0.4.0
   graph:
     dbEventLog:
@@ -1632,9 +1632,9 @@ initDb:
     tag: "latest"
 
 dataService:
-  image: 
+  image:
     repository: renku/renku-data-service
-    tag: "0.2.0"
+    tag: "0.2.1"
     pullPolicy: IfNotPresent
   service:
     type: ClusterIP
