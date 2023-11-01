@@ -8,8 +8,8 @@ Guides for Administrators
 
     deploying-renku
     gitlab
+    incidents-maintenance
     anonymous-sessions
-    running_renku_on_minikube
     privacycookie
     troubleshooting
     crc

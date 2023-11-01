@@ -14,6 +14,7 @@ import {
   hibernateServer,
   resumeServer,
   stopServer,
+  deleteServer,
   waitForImageToBuild
 } from "./utils/servers.js";
 import { credentials, baseUrl, gitUrl, registryDomain, concurentUsers } from "./config.js";
@@ -104,7 +105,7 @@ export default function test() {
       sessionStartupDuration.add(res.durationSeconds * 1000)
     });
     describe("should stop the server", () => {
-      const res = stopServer(baseUrl, server.name);
+      const res = deleteServer(baseUrl, server.name);
       expect(res.status, 'response status').to.equal(204);
     });
     describe("should delete the project", () => {

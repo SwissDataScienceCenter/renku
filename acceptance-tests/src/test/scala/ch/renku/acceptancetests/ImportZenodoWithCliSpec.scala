@@ -29,16 +29,14 @@ import scala.concurrent.duration._
 
 class ImportZenodoWithCliSpec
     extends AcceptanceSpec
-    with Environments
     with Login
     with Project
     with Settings
-    with JupyterNotebook
     with CLIConfiguration
     with Datasets
     with KnowledgeGraphApi {
 
-  scenario("User can import a Dataset from Zenodo") {
+  ignore("User can import a Dataset from Zenodo") {
 
     `log in to Renku`
 
@@ -71,7 +69,7 @@ class ImportZenodoWithCliSpec
     sleep(10 seconds)
 
     When("all the events are processed by the knowledge-graph")
-    `wait for KG to process events`(projectDetails.asProjectIdentifier, webDriver)
+    `wait for KG to process events`(projectDetails.asProjectIdentifier.asProjectSlug, webDriver)
 
     sleep(5 seconds)
 

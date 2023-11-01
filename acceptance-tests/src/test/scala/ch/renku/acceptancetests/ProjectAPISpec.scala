@@ -21,33 +21,55 @@ package ch.renku.acceptancetests
 import cats.syntax.all._
 import ch.renku.acceptancetests.generators.Generators.Implicits._
 import ch.renku.acceptancetests.model.projects
-import ch.renku.acceptancetests.tooling.{AcceptanceSpec, KnowledgeGraphApi}
-import ch.renku.acceptancetests.workflows.{Login, Project}
+import ch.renku.acceptancetests.tooling.{AcceptanceSpec, GitLabApi, KnowledgeGraphApi}
+import ch.renku.acceptancetests.workflows.Login
 import org.scalacheck.Gen
+import org.scalatest.OptionValues
 import tooling.KnowledgeGraphModel._
 
 import scala.concurrent.duration._
 
-class ProjectAPISpec extends AcceptanceSpec with Login with Project with KnowledgeGraphApi {
+class ProjectAPISpec extends AcceptanceSpec with Login with KnowledgeGraphApi with GitLabApi with OptionValues {
 
-  scenario("User can update project using the API") {
+  scenario("User can do CRUD operations on a project using the API") {
 
     `log in to Renku`
 
-    `create, continue or open a project`
+    When("the user creates a new Project")
+    val namespaceId = `find user namespace ids`.headOption.getOrElse(fail("No namespaces found"))
+    val newProject  = NewProject.generate(namespaceId, ProjectTemplate.pythonMinimal, Image.wheelPngExample)
+    val slug        = `POST /knowledge-graph/projects`(newProject)
+
+    `wait for KG to process events`(slug, webDriver)
+
+    Then("the user should be able to get details of it")
+    val afterCreation = `GET /knowledge-graph/projects/:slug`(slug).value
+    newProject.visibility                      shouldBe afterCreation.visibility
+    newProject.maybeDescription                shouldBe afterCreation.maybeDescription
+    newProject.keywords                        shouldBe afterCreation.keywords
+    newProject.maybeImage.map(_.toName).toList shouldBe afterCreation.images.map(_.toName)
 
     When("the user updates the project")
-    val newDesc       = Some("new description")
-    val newKeywords   = Set("new keyword")
-    val newVisibility = Gen.oneOf(projects.Visibility.all).suchThat(_ != projectDetails.visibility).generateOne
-    val updates =
-      ProjectUpdates(newDescription = newDesc.some, newKeywords = newKeywords.some, newVisibility = newVisibility.some)
-    `PATCH /knowledge-graph/projects/:slug`(projectDetails.asProjectSlug, updates)
+    val newDesc       = projects.Description.generate().some
+    val newKeywords   = Set(projects.Keyword.generate())
+    val newVisibility = Gen.oneOf(projects.Visibility.all).suchThat(_ != newProject.visibility).generateOne
+    val newImage      = Image.bikeJpgExample.some
+    val updates       = ProjectUpdates(newDesc.some, newKeywords.some, newVisibility.some, newImage.some)
+    `PATCH /knowledge-graph/projects/:slug`(slug, updates)
 
-    sleep(1 second)
+    `wait for KG to process events`(slug, webDriver)
 
     Then("the API should return the updated values")
-    `GET /knowledge-graph/projects/:slug`(projectDetails.asProjectSlug) shouldBe
-      KGProjectDetails(description = newDesc, keywords = newKeywords, visibility = newVisibility)
+    val afterUpdate = `GET /knowledge-graph/projects/:slug`(slug).value
+    newVisibility                 shouldBe afterUpdate.visibility
+    newDesc                       shouldBe afterUpdate.maybeDescription
+    newKeywords                   shouldBe afterUpdate.keywords
+    newImage.map(_.toName).toList shouldBe afterUpdate.images.map(_.toName)
+
+    When("the user removes the project")
+    `DELETE /knowledge-graph/projects/:slug`(slug) sleep (5 seconds)
+
+    Then("the API should not be able to find the project any more")
+    `GET /knowledge-graph/projects/:slug`(slug) shouldBe None
   }
 }

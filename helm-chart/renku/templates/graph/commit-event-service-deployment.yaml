@@ -1,0 +1,83 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ template "renku.graph.commitEventService.fullname" . }}
+  labels:
+    app: {{ template "renku.graph.commitEventService.name" . }}
+    chart: {{ template "renku.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: {{ template "renku.graph.commitEventService.name" . }}
+      release: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app: {{ template "renku.graph.commitEventService.name" . }}
+        release: {{ .Release.Name }}
+    spec:
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      automountServiceAccountToken: {{ .Values.global.debug }}
+      initContainers:
+        {{- include "certificates.initContainer" . | nindent 8 }}
+      containers:
+        - name: commit-event-service
+          image: "{{ .Values.graph.commitEventService.image.repository }}:{{ .Values.graph.commitEventService.image.tag }}"
+          imagePullPolicy: {{ .Values.graph.commitEventService.image.pullPolicy }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          env:
+            - name: EVENT_LOG_BASE_URL
+              value: "http://{{ template "renku.graph.eventLog.fullname" . }}:{{ .Values.graph.eventLog.service.port }}"
+            - name: TOKEN_REPOSITORY_BASE_URL
+              value: "http://{{ template "renku.graph.tokenRepository.fullname" . }}:{{ .Values.graph.tokenRepository.service.port }}"
+            - name: GITLAB_BASE_URL
+              value: {{ .Values.global.gitlab.url }}
+            - name: GITLAB_RATE_LIMIT
+              value: {{ .Values.graph.commitEventService.gitlab.rateLimit }}
+            - name: SENTRY_ENABLED
+              value: "{{ .Values.graph.sentry.enabled }}"
+              {{- if .Values.graph.sentry.enabled }}
+            - name: SENTRY_DSN
+              value: {{ .Values.graph.sentry.dsn }}
+            - name: SENTRY_ENVIRONMENT
+              value: {{ .Values.graph.sentry.environment }}
+              {{- end }}
+            - name: JAVA_OPTS
+              value: -Xmx{{ .Values.graph.commitEventService.jvmXmx }} -XX:+UseG1GC
+          ports:
+            - name: http-commit-sv
+              containerPort: 9006
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /ping
+              port: http-commit-sv
+          readinessProbe:
+            httpGet:
+              path: /ping
+              port: http-commit-sv
+          resources:
+            {{- toYaml .Values.graph.commitEventService.resources | nindent 12 }}
+          volumeMounts:
+            {{- include "certificates.volumeMounts.javaCertsGeneral" . | nindent 12 }}
+      volumes:
+        {{- include "certificates.volumes" . | nindent 8 }}
+  {{- with .Values.nodeSelector }}
+nodeSelector:
+  {{ toYaml . | indent 8 }}
+  {{- end }}
+  {{- with .Values.affinity }}
+affinity:
+  {{ toYaml . | indent 8 }}
+  {{- end }}
+  {{- with .Values.tolerations }}
+tolerations:
+  {{ toYaml . | indent 8 }}
+  {{- end }}

@@ -1,0 +1,95 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: {{ template "renku.notebooks.fullname" . }}-k8s-watcher
+spec:
+  podSelector:
+    matchLabels:
+      app: {{ template "renku.notebooks.name" . }}-k8s-watcher
+      release: {{ .Release.Name }}
+  policyTypes:
+    - Ingress
+  ingress:
+    - from:
+        - podSelector:
+            matchLabels:
+              app: {{ template "renku.notebooks.name" . }}
+              release: {{ .Release.Name }}
+      ports:
+        - protocol: TCP
+          port: http
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: {{ template "renku.notebooks.fullname" . }}-ssh-jumphost
+spec:
+  podSelector:
+    matchLabels:
+      app: {{ template "renku.notebooks.name" . }}-ssh
+  policyTypes:
+    - Egress
+  egress:
+    - to:
+        - podSelector:
+            matchLabels:
+              app.kubernetes.io/component: jupyterserver
+              app.kubernetes.io/instance: {{ .Release.Name }}
+              app.kubernetes.io/name: amalthea
+      ports:
+        - port: ssh
+          protocol: TCP
+    - ports:
+        - protocol: UDP
+          port: 53
+        - protocol: TCP
+          port: 53
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: {{ template "renku.notebooks.fullname" . }}-sessions
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/component: jupyterserver
+      app.kubernetes.io/instance: {{ .Release.Name }}
+      app.kubernetes.io/name: amalthea
+  policyTypes:
+    - Ingress
+    - Egress
+  ingress:
+    - from:
+      # Allow ssh ingress to sessions only for the ssh jump host
+        - podSelector:
+            matchLabels:
+              app: {{ template "renku.notebooks.name" . }}-ssh
+      ports:
+        - port: ssh
+          protocol: TCP
+    - from:
+      # Allow ingress to the oauth2proxy for anyone
+        - ipBlock:
+            cidr: 0.0.0.0/0
+      ports:
+        - protocol: TCP
+          port: 4180
+  egress:
+    - to:
+      # Allow DNS resolution (internal and external)
+      ports:
+      - port: 53
+        protocol: UDP
+      - port: 53
+        protocol: TCP
+    - to:
+      # Allow access to any port/protocol as long as it is directed
+      # outside of the cluster. This is done by excluding
+      # IP ranges which are reserved for private networking from
+      # the allowed range.
+      - ipBlock:
+          cidr: 0.0.0.0/0
+          except:
+          - 10.0.0.0/8
+          - 172.16.0.0/12
+          - 192.168.0.0/16

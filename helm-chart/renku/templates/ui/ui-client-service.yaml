@@ -1,0 +1,41 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ template "ui.fullname" . }}
+  labels:
+    app: "ui"
+    chart: {{ template "renku.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  type: {{ .Values.ui.client.service.type }}
+  ports:
+    - port: {{ .Values.ui.client.service.port }}
+      targetPort: 8080
+      protocol: TCP
+      name: http
+  selector:
+    app: "ui"
+    release: {{ .Release.Name }}
+---
+{{- if .Values.ui.client.canary.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ template "ui.canary.fullname" . }}
+  labels:
+    app: "ui-canary"
+    chart: {{ template "renku.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  type: {{ .Values.ui.client.service.type }}
+  ports:
+    - port: {{ .Values.ui.client.service.port }}
+      targetPort: 8080
+      protocol: TCP
+      name: http
+  selector:
+    app: "ui-canary"
+    release: {{ .Release.Name }}
+{{- end }}

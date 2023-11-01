@@ -18,6 +18,8 @@
 
 package ch.renku.acceptancetests
 
+import ch.renku.acceptancetests.model.projects
+import ch.renku.acceptancetests.tooling.TestLogger.logger
 import ch.renku.acceptancetests.tooling.{AcceptanceSpec, KnowledgeGraphApi}
 import ch.renku.acceptancetests.workflows._
 
@@ -36,6 +38,8 @@ import scala.util.matching.Regex
   */
 class BatchProjectRemovalSpec extends AcceptanceSpec with Login with RemoveProject with KnowledgeGraphApi {
 
+  private val gracePeriod = JDuration.ofDays(7)
+
   scenario("User can delete many projects project") {
 
     if (batchRemoveConfig.batchRemove) `login and remove projects`
@@ -46,25 +50,33 @@ class BatchProjectRemovalSpec extends AcceptanceSpec with Login with RemoveProje
 
     `log in to Renku`
 
-    `find and remove projects`
+    val summary = `find and remove projects`
+
+    logger.info(s"Removing summary: $summary")
 
     `log out of Renku`
   }
 
-  private def `find and remove projects`: Unit =
-    `get user's projects from GitLab` foreach { case ProjectInfo(_, path, fullPath, created) =>
-      Given(s"project $path found")
-
-      val days = JDuration.ofDays(7)
-      if (batchRemoveConfig.patterns.exists(_ matches path) && (created < Instant.now().minus(days))) {
-        And(s"the project matches the removal pattern and it's older than ${days.toDays} days")
-        Then("the project is removed")
-        `DELETE /knowledge-graph/projects/:slug`(fullPath)
-      } else {
-        And(s"the project doesn't match the removal pattern or it's not older than ${days.toDays} days")
-        Then("project is left untouched")
-      }
+  private def `find and remove projects` =
+    `get user's projects from GitLab`.foldLeft(Summary.empty) {
+      case (summary, ProjectInfo(_, path, fullPath, created)) =>
+        if (batchRemoveConfig.patterns.exists(_ matches path) && (created < Instant.now().minus(gracePeriod))) {
+          logger.info(s"Removing '$path' - the removal pattern matched and it's older than ${gracePeriod.toDays} days")
+          `DELETE /knowledge-graph/projects/:slug`(projects.Slug(fullPath))
+          summary.incrementRemoved()
+        } else
+          summary.incrementFound()
     }
+
+  private case class Summary(found: Int, removed: Int) {
+    def incrementFound():   Summary = copy(found = found + 1)
+    def incrementRemoved(): Summary = incrementFound().copy(removed = removed + 1)
+
+    override lazy val toString = s"found: $found, removed: $removed"
+  }
+  private object Summary {
+    val empty: Summary = Summary(0, 0)
+  }
 
   private case class BatchRemoveConfig(batchRemove: Boolean, patterns: List[Regex])
 
@@ -78,7 +90,8 @@ class BatchProjectRemovalSpec extends AcceptanceSpec with Login with RemoveProje
 
     val defaultPatterns = List(
       "test-(\\d{4})-(\\d+)-(\\d+)-(\\d+)-(\\d+)-(\\d+).*",
-      "test-session-.*"
+      "test-session-.*",
+      "cypress-.*"
     )
 
     val projectNamePatterns = Option(getProperty("remPattern"))

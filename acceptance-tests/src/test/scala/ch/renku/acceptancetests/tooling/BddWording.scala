@@ -18,11 +18,11 @@
 
 package ch.renku.acceptancetests.tooling
 
-import org.scalatest.Tag
 import org.scalatest.featurespec.FixtureAnyFeatureSpecLike
+import org.scalatest.{Suite, Tag}
 
 trait BddWording extends FixtureAnyFeatureSpecLike {
-  self: AcceptanceSpec =>
+  self: Suite =>
 
   import TestLogger.logger
 
@@ -33,6 +33,9 @@ trait BddWording extends FixtureAnyFeatureSpecLike {
 
   def scenario(test: String, testTags: Tag*)(testFun: => Any): Unit =
     Scenario(test, testTags: _*)(_ => testFun)
+
+  def ignore(test: String, testTags: Tag*)(testFun: => Any): Unit =
+    super.ignore(test, testTags: _*)(_ => testFun)
 
   def Given(string: String): Unit = logger.info(s"Given $string")
   def When(string:  String): Unit = logger.info(s"When $string")

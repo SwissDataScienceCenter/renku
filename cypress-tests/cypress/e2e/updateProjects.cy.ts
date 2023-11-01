@@ -49,7 +49,7 @@ describe("Fork and update old projects", () => {
         name: projects.v8,
       };
       cy.visitAndLoadProject(forkedProject, true);
-      cy.dataCy("header-project")
+      cy.getDataCy("header-project")
         .contains("Error obtaining datasets")
         .should("be.visible");
       cy.forkProject(forkedProject, tempName);
@@ -60,58 +60,54 @@ describe("Fork and update old projects", () => {
       ? { namespace: username, name: tempName }
       : { namespace: projects.namespace, name: projects.v8 };
     if (!projects.shouldFork) cy.visitAndLoadProject(targetProject, true);
-    cy.dataCy("project-navbar", true)
-      .contains("a.nav-link", "Settings")
-      .as("project-settings-link")
-      .should("be.visible");
-    cy.get("@project-settings-link").should("be.visible").click();
+    cy.getProjectSection("Settings").click();
 
     // verify project requires update
-    cy.dataCy("project-status-icon-element").should("be.visible");
-    cy.dataCy("project-settings-migration-status")
+    cy.getDataCy("project-status-icon-element").should("be.visible");
+    cy.getDataCy("project-settings-migration-status")
       .contains("Project update required")
       .should("be.visible");
-    cy.dataCy("project-version-section-open").should("be.visible").click();
-    cy.dataCy("project-settings-migration-status")
+    cy.getDataCy("project-version-section-open").should("be.visible").click();
+    cy.getDataCy("project-settings-migration-status")
       .contains("still on version 8 while the latest version is")
       .should("be.visible");
-    cy.dataCy("project-settings-migration-status")
+    cy.getDataCy("project-settings-migration-status")
       .get("#button-update-projectMigrationStatus")
       .as("button-trigger-migration")
       .should("be.visible");
     cy.get("@button-trigger-migration").should("be.visible").click();
-    cy.dataCy("project-settings-migration-status")
+    cy.getDataCy("project-settings-migration-status")
       .contains("button", "Updating")
       .should("be.visible");
-    cy.dataCy("project-settings-migration-status")
+    cy.getDataCy("project-settings-migration-status")
       .contains("Refreshing project data")
       .should("be.visible");
-    cy.dataCy("project-settings-migration-status")
+    cy.getDataCy("project-settings-migration-status")
       .contains("This project uses the latest")
       .should("be.visible");
-    cy.dataCy("project-status-icon-element").should("not.exist");
+    cy.getDataCy("project-status-icon-element").should("not.exist");
 
     // update template
-    cy.dataCy("project-settings-migration-status")
+    cy.getDataCy("project-settings-migration-status")
       .contains("There is a new version of the template")
       .should("be.visible");
-    cy.dataCy("project-settings-migration-status")
+    cy.getDataCy("project-settings-migration-status")
       .get("#button-update-projectMigrationStatus")
       .as("button-update-template")
       .should("be.visible");
     cy.get("@button-update-template").should("be.visible").click();
-    cy.dataCy("project-settings-migration-status")
+    cy.getDataCy("project-settings-migration-status")
       .contains("button", "Updating")
       .should("be.visible");
-    cy.dataCy("project-settings-migration-status")
+    cy.getDataCy("project-settings-migration-status")
       .contains("Refreshing project data")
       .should("be.visible");
-    cy.dataCy("project-settings-migration-status")
+    cy.getDataCy("project-settings-migration-status")
       .contains("Project up to date")
       .should("be.visible");
 
     // delete the project
-    if (projects.shouldFork) cy.deleteProject(targetProject);
+    if (projects.shouldFork) cy.deleteProjectFromAPI(targetProject);
   });
 
   it("Update an outdated project - verify commits have been added", () => {
@@ -138,82 +134,76 @@ describe("Fork and update old projects", () => {
         commitFetched = true;
       }
     ).as("getCommits");
-    cy.getProjectPageLink(targetProject, "overview/commits")
-      .should("be.visible")
+    cy.getDataCy("project-overview-nav")
+      .contains("a", "Commits")
+      .should("exist")
       .click();
     if (!commitFetched) {
-      cy.wait(1000); // eslint-disable-line cypress/no-unnecessary-waiting
-      cy.dataCy("refresh-commits")
+      cy.wait(TIMEOUTS.minimal); // eslint-disable-line cypress/no-unnecessary-waiting
+      cy.getDataCy("refresh-commits")
         .as("refresh-commits-button-1")
         .should("be.visible");
       cy.get("@refresh-commits-button-1").should("be.visible").click();
-      cy.wait(1000); // eslint-disable-line cypress/no-unnecessary-waiting
+      cy.wait(TIMEOUTS.minimal); // eslint-disable-line cypress/no-unnecessary-waiting
     }
     cy.wait("@getCommits", { timeout: TIMEOUTS.long });
-    cy.dataCy("project-overview-content")
+    cy.getDataCy("project-overview-content")
       .get(".card-body ul li.commit-object")
       .should("have.length", 1);
 
     // go to project settings and verify it requires an upodate
-    cy.dataCy("project-navbar")
-      .contains("a.nav-link", "Settings")
-      .as("project-settings-link")
-      .should("be.visible");
-    cy.get("@project-settings-link").should("be.visible").click();
-    cy.dataCy("project-status-icon-element").should("be.visible");
-    cy.dataCy("project-settings-migration-status")
+    cy.getProjectSection("Settings").click();
+    cy.getDataCy("project-status-icon-element").should("be.visible");
+    cy.getDataCy("project-settings-migration-status")
       .contains("Project update required")
       .should("be.visible");
-    cy.dataCy("project-version-section-open").should("be.visible").click();
-    cy.dataCy("project-settings-migration-status")
+    cy.getDataCy("project-version-section-open").should("be.visible").click();
+    cy.getDataCy("project-settings-migration-status")
       .contains("still on version 9 while the latest version is")
       .should("be.visible");
 
     // update project
-    cy.dataCy("project-settings-migration-status")
+    cy.getDataCy("project-settings-migration-status")
       .get("#button-update-projectMigrationStatus")
       .as("button-trigger-migration")
       .should("be.visible");
     cy.get("@button-trigger-migration").should("be.visible").click();
-    cy.dataCy("project-settings-migration-status")
+    cy.getDataCy("project-settings-migration-status")
       .contains("button", "Updating")
       .should("be.visible");
-    cy.dataCy("project-settings-migration-status")
+    cy.getDataCy("project-settings-migration-status")
       .contains("Refreshing project data")
       .should("be.visible");
-    cy.dataCy("project-settings-migration-status")
+    cy.getDataCy("project-settings-migration-status")
       .contains("This project uses the latest")
       .should("be.visible");
-    cy.dataCy("project-status-icon-element").should("not.exist");
+    cy.getDataCy("project-status-icon-element").should("not.exist");
 
     // verify the commits were added
     commitFetched = false;
-    cy.dataCy("project-navbar", true)
-      .contains("a.nav-link", "Overview")
-      .as("project-overview-link")
-      .should("be.visible");
-    cy.get("@project-overview-link").should("be.visible").click();
-    cy.getProjectPageLink(targetProject, "overview/commits")
-      .should("be.visible")
+    cy.getProjectSection("Overview").click();
+    cy.getDataCy("project-overview-nav")
+      .contains("a", "Commits")
+      .should("exist")
       .click();
     if (!commitFetched) {
-      cy.wait(1000); // eslint-disable-line cypress/no-unnecessary-waiting
-      cy.dataCy("refresh-commits")
+      cy.wait(TIMEOUTS.minimal); // eslint-disable-line cypress/no-unnecessary-waiting
+      cy.getDataCy("refresh-commits")
         .as("refresh-commits-button-2")
         .should("be.visible");
       cy.get("@refresh-commits-button-2").should("be.visible").click();
-      cy.wait(1000); // eslint-disable-line cypress/no-unnecessary-waiting
+      cy.wait(TIMEOUTS.minimal); // eslint-disable-line cypress/no-unnecessary-waiting
     }
     cy.wait("@getCommits", { timeout: TIMEOUTS.long });
-    cy.dataCy("project-overview-content")
+    cy.getDataCy("project-overview-content")
       .get(".card-body ul li.commit-object")
       .should("have.length.greaterThan", 1);
-    cy.dataCy("project-overview-content")
+    cy.getDataCy("project-overview-content")
       .get(".card-body ul li.commit-object")
       .contains("migrate to latest version")
       .should("be.visible");
 
     // delete the project
-    if (projects.shouldFork) cy.deleteProject(targetProject);
+    if (projects.shouldFork) cy.deleteProjectFromAPI(targetProject);
   });
 });
