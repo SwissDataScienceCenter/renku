@@ -1675,6 +1675,7 @@ authz:
       annotations:
         nginx.ingress.kubernetes.io/ssl-redirect: "true"
         nginx.ingress.kubernetes.io/backend-protocol: "GRPC"
+        cert-manager.io/cluster-issuer: letsencrypt-production
       tlsSecretName: renku-authz-tls
     resources: {}
     autoscaling:

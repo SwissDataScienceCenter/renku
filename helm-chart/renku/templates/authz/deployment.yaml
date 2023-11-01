@@ -41,7 +41,7 @@ spec:
             - sh
             - -c
           args:
-            - spicedb datastore migrate {{ .Values.authz.builtIn.image.tag }} --datastore-engine=postgres --datastore-conn-uri=$SPICEDB_DATASTORE_CONN_URI
+            - spicedb datastore migrate head --datastore-engine=postgres --datastore-conn-uri=$SPICEDB_DATASTORE_CONN_URI
       containers:
         - name: authz
           securityContext:
@@ -64,16 +64,13 @@ spec:
             - --http-enabled=true
             - --datastore-engine=postgres
             - --grpc-enabled=true
-            - --telemetry-endpoint=""
+            - --telemetry-endpoint=
           ports:
             - name: http
               containerPort: 8443
               protocol: TCP
             - name: grpc
               containerPort: 50051
-              protocol: TCP
-            - name: dashboard
-              containerPort: 8080
               protocol: TCP
             - name: metrics
               containerPort: 9090
