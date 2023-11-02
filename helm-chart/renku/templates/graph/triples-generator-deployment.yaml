@@ -45,6 +45,8 @@ spec:
               value: "http://{{ template "renku.graph.tokenRepository.fullname" . }}:{{ .Values.graph.tokenRepository.service.port }}"
             - name: GITLAB_BASE_URL
               value: {{ .Values.global.gitlab.url }}
+            - name: RENKU_SKIP_MIN_VERSION_CHECK
+              value: "1"
             - name: GITLAB_RATE_LIMIT
               value: {{ .Values.graph.triplesGenerator.gitlab.rateLimit }}
             - name: JENA_BASE_URL
