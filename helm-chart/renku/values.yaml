@@ -86,9 +86,9 @@ global:
     version: 0.4.0
     ## The CLI version used for newly created projects by the core service,
     ## if this is left blank then the core service will derive the CLI version
-    ## for a new project based on its own version. 
+    ## for a new project based on its own version.
     ## NOTE should only be set for CI deployments and development purposes.
-    cli_version: 
+    cli_version:
   ## Note that the graph will not turned on by default until renku 0.4.0
   graph:
     dbEventLog:
@@ -808,7 +808,7 @@ ui:
       showcase:
         # If you want to showcase certain project on the homepage, you can enable the feature and provide
         # the project identifiers (namespace/project name)
-        enabled: false
+        enabled: true
         title: "Renku real-world use cases: Conducted by SDSC and ETH Domain"
         # Markdown is allowed in the description
         description: The case studies presented here **bridge the gap** from domain to data science and provide experts from both sides with the means to examine, confirm, and extend the datasets and their analyses, without extensive investments of time and infrastructure.
@@ -1630,7 +1630,7 @@ initDb:
     tag: "latest"
 
 dataService:
-  image: 
+  image:
     repository: renku/renku-data-service
     tag: "0.2.0"
     pullPolicy: IfNotPresent
