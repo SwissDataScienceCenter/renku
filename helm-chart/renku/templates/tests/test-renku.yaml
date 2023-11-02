@@ -51,6 +51,8 @@ spec:
       - name: RENKU_TEST_ANON_AVAILABLE
         value: '{{ .Values.tests.parameters.anonAvailable }}'
       {{ end }}
+      - name: RENKU_SKIP_MIN_VERSION_CHECK
+        value: "1"
       {{ if .Values.tests.parameters.batchRemove }}
       - name: RENKU_TEST_BATCH_REMOVE
         value: '{{ .Values.tests.parameters.batchRemove }}'
