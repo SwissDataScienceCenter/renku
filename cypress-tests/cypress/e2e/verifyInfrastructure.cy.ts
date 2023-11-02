@@ -39,7 +39,7 @@ describe("Verify the infrastructure is ready", () => {
     retryRequest("api/renku/versions", "Core basic");
     retryRequest("api/notebooks/version", "Notebooks");
     retryRequest("api/kg/entities", "Graph");
-    retryRequest("api/data/version", "CRC");
+    retryRequest("api/data/version", "Data Service");
     retryRequest("api/auth/login", "Gateway");
     retryRequest(
       "ui-server/api/allows-iframe/https%3A%2F%2Fgoogle.com",
@@ -80,9 +80,9 @@ describe("Verify the infrastructure is ready", () => {
         throw new Error("Graph backend not working as expected.");
     });
 
-    // CRC should return a list of default resopurce pools
-    const crcUrl = "/ui-server/api/data/resource_pools";
-    cy.request(crcUrl).then((resp) => {
+    // Data service should return a list of default resopurce pools
+    const dataServiceUrl = "/ui-server/api/data/resource_pools";
+    cy.request(dataServiceUrl).then((resp) => {
       if (resp.status >= 400 || !resp.body.length)
         throw new Error("GitLab not working as expected.");
     });

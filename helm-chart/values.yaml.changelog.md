@@ -5,6 +5,10 @@ For changes that require manual steps other than changing values, please check o
 Please follow this convention when adding a new row
 * `<type: NEW|EDIT|DELETE> - *<resource name>*: <details>`
 
+## Upgrading to Renku 0.43.0
+
+* DELETE `graph.gitlab.url` has been removed as graph services uses the `global.gitlab.url`.
+
 ## Upgrading to Renku 0.41.0
 
 The UI includes a feature that allows projects to be displayed in the _Showcase_ section of the RenkuLab home page.
@@ -22,6 +26,18 @@ To keep the RenkuLab homepage as before, ensure that the following field/value h
 
 Follow the _Homepage_ section of the how-to guide for admins to learn how to configure this feature if you wish to
 highlight showcase projects.
+
+The Amalthea scheduler (which is not enabled by default) has changes in the values file under `amalthea.scheduler`.
+Please note that either of the two new Amalthea schedulers remain disabled by default (just as before) and by default
+Amalthea will simply use your default Kubernetes scheduler.
+
+* DELETE `amalthea.scheduler.image` - deprecated will be ignored if provided
+* DELETE `amalthea.scheduler.enable` - deprecated will be ignored if provided
+* DELETE `amalthea.scheduler.priorities` - deprecated will be ignored if provided
+* NEW `amalthea.scheduler.packing` - can be used to enable a preset scheduler that will try to pack sessions on the smallest number of nodes and favor the most used nodes 
+* NEW `amalthea.scheduler.custom` - can be used to add any custom scheduler for Amalthea, admins just have to provide the scheduler name
+* EDIT `crc` - the field has been renamed to `dataService`, all child fields and functionality remains the same
+* NEW `global.gitlab.url` has been added and needs to be specified, this will be the single place where the Gitlab URL will be specified in future releases we will deprecated all the other Gitlab URL fields in the values file.
 
 ## Upgrading to Renku 0.39.0
 
