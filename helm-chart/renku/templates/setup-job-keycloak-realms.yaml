@@ -67,16 +67,7 @@ spec:
                   key: keycloakDemoUserPassword
             {{- end }}
             - name: INTERNAL_GITLAB_ENABLED
-              value: {{ .Values.gitlab.enabled | toString | lower | quote }}
-            {{- if .Values.gitlab.enabled  }}
-            - name: INTERNAL_GITLAB_OIDC_CLIENT_SECRET
-              valueFrom:
-                secretKeyRef:
-                  name: {{ cat (include "renku.fullname" .) "-gateway-revproxy" | nospace }} 
-                  key: gitlabClientInKeycloakSecret
-            - name: INTERNAL_GITLAB_OIDC_CLIENT_ID
-              value: "gitlab"
-            {{- end }}
+              value: "false"
             - name: RENKU_KC_CLIENT_ID
               value: renku
             - name: RENKU_KC_CLIENT_SECRET

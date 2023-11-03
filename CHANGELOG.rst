@@ -1,5 +1,17 @@
 .. _changelog:
 
+0.43.0
+------
+
+This release removes the Gitlab omnibus Helm chart that we created and used to have as a dependency
+of the Renku Helm chart. We have been discouraging anyone from using 
+this chart in production and we specified this in our documentation as well. 
+
+If you are using the internal Gitlab Helm chart then ensure to migrate to a separate
+Gitlab deployment as specified in our `documentation <https://renku.readthedocs.io/en/stable/how-to-guides/admin/gitlab.html#migrate-from-renku-bundled-omnibus-gitlab-to-cloud-native-gitlab-helm-chart>`_. 
+before installing this or any subsequent Renku version. Gitlab publishes an official Helm chart and
+that is what should be used for deploying Gitlab with Helm.
+
 0.42.0
 ------
 
