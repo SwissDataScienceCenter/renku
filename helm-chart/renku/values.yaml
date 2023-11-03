@@ -86,9 +86,9 @@ global:
     version: 0.4.0
     ## The CLI version used for newly created projects by the core service,
     ## if this is left blank then the core service will derive the CLI version
-    ## for a new project based on its own version.
+    ## for a new project based on its own version. 
     ## NOTE should only be set for CI deployments and development purposes.
-    cli_version:
+    cli_version: 
   ## Note that the graph will not turned on by default until renku 0.4.0
   graph:
     dbEventLog:
@@ -192,7 +192,7 @@ global:
       repository: renku/certificates
       tag: "0.0.2"
     customCAs: []
-    # - secret:
+      # - secret:
   ## Database credentials for postgres
   db:
     ## Used by the renku-data-services and potentially other backend services
@@ -697,7 +697,7 @@ ui:
       #  memory: 128Mi
       # requests:
       #  cpu: 100m
-    #  memory: 128Mi
+      #  memory: 128Mi
 
     nodeSelector: {}
 
@@ -878,7 +878,7 @@ ui:
       enabled: false
       annotations: {}
         # kubernetes.io/ingress.class: nginx
-      # kubernetes.io/tls-acme: "true"
+        # kubernetes.io/tls-acme: "true"
       hosts:
         - host: chart-example.local
           paths: []
@@ -1172,7 +1172,7 @@ notebooks:
     enabled: false
     annotations: {}
       # kubernetes.io/ingress.class: nginx
-    # kubernetes.io/tls-acme: "true"
+      # kubernetes.io/tls-acme: "true"
     path: /
     hosts:
       - chart-example.local
@@ -1191,7 +1191,7 @@ notebooks:
     #  memory: 128Mi
     # requests:
     #  cpu: 100m
-  #  memory: 128Mi
+    #  memory: 128Mi
 
   culling:
     # How long before an idle session is removed from the cluster.
@@ -1351,7 +1351,7 @@ gateway:
     #  memory: 128Mi
     # requests:
     #  cpu: 100m
-  #  memory: 128Mi
+    #  memory: 128Mi
 
   # GitLab has introduced a new logout behavior in 12.7.0
   # which was initially broken and fixed in 12.9.0.
@@ -1630,7 +1630,7 @@ initDb:
     tag: "latest"
 
 dataService:
-  image:
+  image: 
     repository: renku/renku-data-service
     tag: "0.2.0"
     pullPolicy: IfNotPresent
