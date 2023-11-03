@@ -86,9 +86,9 @@ global:
     version: 0.4.0
     ## The CLI version used for newly created projects by the core service,
     ## if this is left blank then the core service will derive the CLI version
-    ## for a new project based on its own version. 
+    ## for a new project based on its own version.
     ## NOTE should only be set for CI deployments and development purposes.
-    cli_version: 
+    cli_version:
   ## Note that the graph will not turned on by default until renku 0.4.0
   graph:
     dbEventLog:
@@ -191,7 +191,8 @@ global:
     image:
       repository: renku/certificates
       tag: "0.0.2"
-    customCAs: []
+    customCAs:
+      []
       # - secret:
   ## Database credentials for postgres
   db:
@@ -315,7 +316,7 @@ keycloakx:
   initRealm:
     image:
       repository: renku/init-realm
-      tag: "latest"
+      tag: "0.40.1"
 
   ## Skip Keycloak testing when running Helm test
   test:
@@ -687,7 +688,8 @@ ui:
     ingress:
       enabled: false
 
-    resources: {}
+    resources:
+      {}
       # We usually recommend not to specify default resources and to leave this as a conscious
       # choice for the user. This also increases chances charts run on environments with little
       # resources, such as Minikube. If you do want to specify resources, uncomment the following
@@ -817,10 +819,8 @@ ui:
         # To showcase projects, provide the identifier following the structure below
         # title, description, and imageUrl can be overridden, as illustrated below, if desired.
         projects:
-          -
-            identifier: hdbi/data-management/cccooci
-          -
-            identifier: renku-ui-tests/stable-project
+          - identifier: hdbi/data-management/cccooci
+          - identifier: renku-ui-tests/stable-project
             overrideTitle: "Stable Project: A project for testing"
             overrideDescription: "This is a project for **testing**. You may find it useful to look at."
             overrideImageUrl: https://gitlab.renkulab.io/uploads/-/system/project/avatar/36159/graphical_abstract.png
@@ -876,7 +876,8 @@ ui:
 
     ingress:
       enabled: false
-      annotations: {}
+      annotations:
+        {}
         # kubernetes.io/ingress.class: nginx
         # kubernetes.io/tls-acme: "true"
       hosts:
@@ -1170,7 +1171,8 @@ notebooks:
 
   ingress:
     enabled: false
-    annotations: {}
+    annotations:
+      {}
       # kubernetes.io/ingress.class: nginx
       # kubernetes.io/tls-acme: "true"
     path: /
@@ -1181,7 +1183,8 @@ notebooks:
     #    hosts:
     #      - chart-example.local
 
-  resources: {}
+  resources:
+    {}
     # We usually recommend not to specify default resources and to leave this as a conscious
     # choice for the user. This also increases chances charts run on environments with little
     # resources, such as Minikube. If you do want to specify resources, uncomment the following
@@ -1267,7 +1270,6 @@ notebooks:
   ## Used for testing - should be set to false for production
   dummyStores: false
 
-
 tests:
   enabled: false
   image:
@@ -1341,7 +1343,8 @@ gateway:
     type: ClusterIP
     port: 80
 
-  resources: {}
+  resources:
+    {}
     # We usually recommend not to specify default resources and to leave this as a conscious
     # choice for the user. This also increases chances charts run on environments with little
     # resources, such as Minikube. If you do want to specify resources, uncomment the following
@@ -1433,7 +1436,7 @@ graph:
   webhookService:
     image:
       repository: renku/webhook-service
-      tag: '2.43.1'
+      tag: "2.43.1"
       pullPolicy: IfNotPresent
     service:
       type: ClusterIP
@@ -1453,7 +1456,7 @@ graph:
   tokenRepository:
     image:
       repository: renku/token-repository
-      tag: '2.43.1'
+      tag: "2.43.1"
       pullPolicy: IfNotPresent
     service:
       type: ClusterIP
@@ -1465,10 +1468,10 @@ graph:
     jvmXmx: 128M
     gitlab:
       rateLimit: 50/sec
-    projectTokenTTL: '365 days'
+    projectTokenTTL: "365 days"
     # name of the Project Access Tokens to be created on behalf of the user in GitLab; defaults to .Release.Name
     projectTokenName:
-    projectTokenDuePeriod: '184 days'
+    projectTokenDuePeriod: "184 days"
     connectionPool: 2
     tokenEncryption:
       ## A secret for signing access tokens stored in the database
@@ -1479,7 +1482,7 @@ graph:
     replicas: 1
     image:
       repository: renku/triples-generator
-      tag: '2.43.1'
+      tag: "2.43.1"
       pullPolicy: IfNotPresent
     service:
       type: ClusterIP
@@ -1502,7 +1505,7 @@ graph:
     replicas: 1
     image:
       repository: renku/knowledge-graph
-      tag: '2.43.1'
+      tag: "2.43.1"
       pullPolicy: IfNotPresent
     service:
       type: ClusterIP
@@ -1522,7 +1525,7 @@ graph:
   eventLog:
     image:
       repository: renku/event-log
-      tag: '2.43.1'
+      tag: "2.43.1"
       pullPolicy: IfNotPresent
     service:
       type: ClusterIP
@@ -1538,7 +1541,7 @@ graph:
   commitEventService:
     image:
       repository: renku/commit-event-service
-      tag: '2.43.1'
+      tag: "2.43.1"
       pullPolicy: IfNotPresent
     service:
       type: ClusterIP
@@ -1552,9 +1555,9 @@ graph:
 
   sentry:
     enabled: false
-    dsn: '' # Sentry dsn
-    sentryDsnRenkuPython: '' # Sentry dsn for renku CLI
-    environment: '' # Environment name e.g. renkulabio
+    dsn: "" # Sentry dsn
+    sentryDsnRenkuPython: "" # Sentry dsn for renku CLI
+    environment: "" # Environment name e.g. renkulabio
 
   persistence:
     enabled: true
@@ -1567,7 +1570,6 @@ graph:
     # storageClass: "-"
     accessMode: ReadWriteOnce
     size: 2Gi
-
 
 ## Configuration for renku-core service
 core:
@@ -1627,7 +1629,7 @@ swagger:
 initDb:
   image:
     repository: renku/init-db
-    tag: "latest"
+    tag: "0.40.1"
 
 dataService:
   image: 
