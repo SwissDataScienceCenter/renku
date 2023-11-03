@@ -1,8 +1,54 @@
-Working with the CRC service
-============================
+Working with Resource pools
+===========================
 
-Currently, the CRC offers a REST API which can be interacted with via a Swagger
-Web UI. This is available at::
+The administrator role in RenkuLab
+----------------------------------
+
+To make changes to the configured resource pools and classes, your user needs to
+have the `renku-admin` role.
+To do so, first sign in to the Keycloak console and open the `Renku` realm.
+Then, search for your own user and head to the `Role mapping` tab.
+
+.. image:: ../../_static/images/admin-keycloak-role-mapping.png
+    :width: 100%
+    :align: center
+    :alt: Role mapping tab in Keycloak
+
+There you can check if `renku-admin` is listed as a role; if not, you can assign
+the role by clicking `Assign Role` and selecting `renku-admin` from the list.
+Confirm the assignment by clicking `Assign`; the `renku-admin` role should now
+be listed for your user.
+
+Once this step is done, you can sign out and in again to RenkuLab to refresh
+your user permissions.
+
+Using the admin panel in RenkuLab
+---------------------------------
+
+If your user has the `renku-admin` role, you should now have access to the admin
+panel in RenkuLab. The link to the admin panel is located under the `account`
+menu in the top-right navigation bar.
+
+.. image:: ../../_static/images/admin-panel-link.png
+    :width: 100%
+    :align: center
+    :alt: Link to the admin panel in the top-right account menu
+
+.. image:: ../../_static/images/admin-panel.png
+    :width: 100%
+    :align: center
+    :alt: Screenshot of the admin panel
+
+The admin panel lets you configure resource pools and classes to be used in
+interactive sessions. You can also assign users to private resource pools to
+give them access to specific compute resources.
+
+Working with the CRC service
+----------------------------
+
+Administrative actions on resource pools can also be performed through a
+dedicated REST API which can be interacted with via a Swagger Web UI.
+This is available at::
 
 <renku.landing.page>/swagger/?urls.primaryName=crc%20service
 
