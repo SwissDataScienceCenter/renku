@@ -30,7 +30,7 @@ panel in RenkuLab. The link to the admin panel is located under the `account`
 menu in the top-right navigation bar.
 
 .. image:: ../../_static/images/admin-panel-link.png
-    :width: 100%
+    :width: 50%
     :align: center
     :alt: Link to the admin panel in the top-right account menu
 
