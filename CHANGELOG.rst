@@ -3,8 +3,9 @@
 0.43.0
 ------
 
-Renku ``0.43.0`` brings improvements to the KG API, addresses a few bugs in the UI
+Renku ``0.43.0`` brings coherent usage of Dataset `name` and `slug` across all renku APIs, addresses a few bugs in the UI
 and in the data services API.
+This is a breaking change. It also comes with improvements to the KG API.
 
 **A note to Renku administrators**: this release includes breaking changes in our Helm chart values file.
 For more details on the Helm chart values changes please refer to the explanation in ``helm-chart/values.yaml.changelog.md``.
@@ -88,10 +89,14 @@ Renku ``0.42.1`` is a bugfix release that addresses the following bugs in a few 
 Individual components
 ~~~~~~~~~~~~~~~~~~~~~~
 
+- `renku-ui x.x.x <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/x.x.x>`_
+- `renku-python x.x.x <https://github.com/SwissDataScienceCenter/renku-python/releases/tag/x.x.x>`_
+- `renku-graph 2.44.0 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/2.44.0>`_
 - `renku-data-services 0.2.1 <https://github.com/SwissDataScienceCenter/renku-data-services/releases/tag/v0.2.1>`_
 - `renku-data-services 0.2.2 <https://github.com/SwissDataScienceCenter/renku-data-services/releases/tag/v0.2.2>`_
 - `renku-notebooks 1.20.1 <https://github.com/SwissDataScienceCenter/renku-notebooks/releases/tag/1.20.1>`_
 - `renku-notebooks 1.20.2 <https://github.com/SwissDataScienceCenter/renku-notebooks/releases/tag/1.20.2>`_
+
 
 0.42.0
 ------
