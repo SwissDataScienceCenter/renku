@@ -1,5 +1,25 @@
 .. _changelog:
 
+0.43.0
+------
+
+Renku ``0.43.0`` brings improvements to the KG API.
+
+User-Facing Changes
+~~~~~~~~~~~~~~~~~~~
+
+**✨ Improvements**
+
+- **KG**: Performance improvements to the Cross-Entity Search API.
+  (`#1666 <https://github.com/SwissDataScienceCenter/renku-graph/issues/1666>`_).
+- **KG**: A new `GET /knowledge-graph/version` API.
+  (`#1760 <https://github.com/SwissDataScienceCenter/renku-graph/pull/1760>`_).
+
+Individual components
+~~~~~~~~~~~~~~~~~~~~~~
+
+- `renku-graph 2.44.0 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/2.44.0>`_
+
 0.42.0
 ------
 
