@@ -1,0 +1,91 @@
+schema: |
+  definition user {}
+
+  definition project {
+  	relation owner: user
+  	relation admin: admin#member
+  	relation reader: user | user:* | anonymous_user:*
+  	permission read = reader + edit
+  	permission edit = delete 
+  	permission delete = owner + admin
+  }
+
+  definition admin {
+  	relation member: user
+  }
+
+  definition anonymous_user {}
+relationships: |-
+  project:public1#owner@user:project_public1_owner
+  project:public1#reader@user:*
+  project:public1#reader@anonymous_user:*
+  project:private1#owner@user:project_private1_owner
+  project:private1#reader@user:project_private1_reader
+  admin:admin#member@user:admin1
+  admin:admin#member@user:admin2
+  project:public1#admin@admin:admin#member
+  project:private1#admin@admin:admin#member
+assertions:
+  assertTrue:
+    - project:private1#read@user:project_private1_reader
+    - project:public1#read@user:project_private1_reader
+    - project:public1#read@user:random
+    - project:public1#read@user:admin1
+    - project:public1#edit@user:admin1
+    - project:public1#delete@user:admin1
+    - project:public1#read@anonymous_user:any
+    - project:private1#read@user:admin1
+    - project:private1#edit@user:admin1
+    - project:private1#delete@user:admin1
+    - project:private1#read@user:admin2
+    - project:private1#edit@user:admin2
+    - project:private1#delete@user:admin2
+  assertFalse:
+    - project:private1#read@user:random
+    - project:private1#edit@user:random
+    - project:private1#delete@user:random
+    - project:public1#edit@user:random
+    - project:public1#delete@user:random
+    - project:public1#edit@user:project_private1_reader
+    - project:public1#delete@user:project_private1_reader
+    - project:private1#edit@user:project_private1_reader
+    - project:private1#delete@user:project_private1_reader
+    - project:public1#edit@user:project_private1_owner
+    - project:public1#delete@user:project_private1_owner
+    - project:private1#read@user:project_public1_owner
+    - project:private1#edit@user:project_public1_owner
+    - project:private1#delete@user:project_public1_owner
+validation:
+  project:private1#delete:
+    - "[admin:admin#member] is <project:private1#admin>"
+    - "[user:admin1] is <admin:admin#member>"
+    - "[user:admin2] is <admin:admin#member>"
+    - "[user:project_private1_owner] is <project:private1#owner>"
+  project:private1#edit:
+    - "[admin:admin#member] is <project:private1#admin>"
+    - "[user:admin1] is <admin:admin#member>"
+    - "[user:admin2] is <admin:admin#member>"
+    - "[user:project_private1_owner] is <project:private1#owner>"
+  project:private1#read:
+    - "[admin:admin#member] is <project:private1#admin>"
+    - "[user:admin1] is <admin:admin#member>"
+    - "[user:admin2] is <admin:admin#member>"
+    - "[user:project_private1_owner] is <project:private1#owner>"
+    - "[user:project_private1_reader] is <project:private1#reader>"
+  project:public1#delete:
+    - "[admin:admin#member] is <project:public1#admin>"
+    - "[user:admin1] is <admin:admin#member>"
+    - "[user:admin2] is <admin:admin#member>"
+    - "[user:project_public1_owner] is <project:public1#owner>"
+  project:public1#edit:
+    - "[admin:admin#member] is <project:public1#admin>"
+    - "[user:admin1] is <admin:admin#member>"
+    - "[user:admin2] is <admin:admin#member>"
+    - "[user:project_public1_owner] is <project:public1#owner>"
+  project:public1#read:
+    - "[admin:admin#member] is <project:public1#admin>"
+    - "[anonymous_user:*] is <project:public1#reader>"
+    - "[user:*] is <project:public1#reader>"
+    - "[user:admin1] is <admin:admin#member>"
+    - "[user:admin2] is <admin:admin#member>"
+    - "[user:project_public1_owner] is <project:public1#owner>"
