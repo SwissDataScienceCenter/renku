@@ -43,8 +43,8 @@ The admin panel lets you configure resource pools and classes to be used in
 interactive sessions. You can also assign users to private resource pools to
 give them access to specific compute resources.
 
-Working with the CRC service
-----------------------------
+Working with the Compute Resource Control service
+-------------------------------------------------
 
 Administrative actions on resource pools can also be performed through a
 dedicated REST API which can be interacted with via a Swagger Web UI.
