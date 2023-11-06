@@ -15,6 +15,12 @@ User-Facing Changes
 - **KG**: A new `GET /knowledge-graph/version` API.
   (`#1760 <https://github.com/SwissDataScienceCenter/renku-graph/pull/1760>`_).
 
+Internal Changes
+~~~~~~~~~~~~~~~~~~~
+
+- **KG**: Java upgraded to 21.0 and Jena to 4.10.0
+
+
 Individual components
 ~~~~~~~~~~~~~~~~~~~~~~
 
