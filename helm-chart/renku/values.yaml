@@ -923,7 +923,7 @@ notebooks:
     targetCPUUtilizationPercentage: 50
   image:
     repository: renku/renku-notebooks
-    tag: "1.20.1"
+    tag: "1.20.2"
     pullPolicy: IfNotPresent
     ## Optionally specify an array of imagePullSecrets.
     ## Secrets must be manually created in the namespace.
@@ -1041,15 +1041,15 @@ notebooks:
   gitRpcServer:
     image:
       name: renku/git-rpc-server
-      tag: "1.20.1"
+      tag: "1.20.2"
   gitHttpsProxy:
     image:
       name: renku/git-https-proxy
-      tag: "1.20.1"
+      tag: "1.20.2"
   gitClone:
     image:
       name: renku/git-clone
-      tag: "1.20.1"
+      tag: "1.20.2"
   service:
     type: ClusterIP
     port: 80
@@ -1102,12 +1102,12 @@ notebooks:
     sessionTypes: ["registered"]
     image:
       repository: renku/renku-notebooks-tests
-      tag: "1.20.1"
+      tag: "1.20.2"
       pullPolicy: IfNotPresent
   k8sWatcher:
     image:
       repository: renku/k8s-watcher
-      tag: "1.20.1"
+      tag: "1.20.2"
       pullPolicy: IfNotPresent
     resources: {}
     replicaCount: 1
@@ -1120,7 +1120,7 @@ notebooks:
     enabled: false
     image:
       repository: renku/ssh-jump-host
-      tag: "1.20.1"
+      tag: "1.20.2"
       pullPolicy: IfNotPresent
     resources: {}
     replicaCount: 1
