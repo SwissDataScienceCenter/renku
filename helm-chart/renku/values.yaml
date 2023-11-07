@@ -1433,7 +1433,7 @@ graph:
   webhookService:
     image:
       repository: renku/webhook-service
-      tag: '2.44.0'
+      tag: '2.45.0'
       pullPolicy: IfNotPresent
     service:
       type: ClusterIP
@@ -1453,7 +1453,7 @@ graph:
   tokenRepository:
     image:
       repository: renku/token-repository
-      tag: '2.44.0'
+      tag: '2.45.0'
       pullPolicy: IfNotPresent
     service:
       type: ClusterIP
@@ -1479,7 +1479,7 @@ graph:
     replicas: 1
     image:
       repository: renku/triples-generator
-      tag: '2.44.0'
+      tag: '2.45.0'
       pullPolicy: IfNotPresent
     service:
       type: ClusterIP
@@ -1502,7 +1502,7 @@ graph:
     replicas: 1
     image:
       repository: renku/knowledge-graph
-      tag: '2.44.0'
+      tag: '2.45.0'
       pullPolicy: IfNotPresent
     service:
       type: ClusterIP
@@ -1522,7 +1522,7 @@ graph:
   eventLog:
     image:
       repository: renku/event-log
-      tag: '2.44.0'
+      tag: '2.45.0'
       pullPolicy: IfNotPresent
     service:
       type: ClusterIP
@@ -1538,7 +1538,7 @@ graph:
   commitEventService:
     image:
       repository: renku/commit-event-service
-      tag: '2.44.0'
+      tag: '2.45.0'
       pullPolicy: IfNotPresent
     service:
       type: ClusterIP
