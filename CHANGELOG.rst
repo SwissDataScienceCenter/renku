@@ -3,13 +3,20 @@
 0.42.1
 ------
 
-Renku ``0.42.1`` is a bugfix release to patch a bug found in the data service which prevented
-new users from being created due to a db migration problem.
+Renku ``0.42.1`` is a bugfix release that addresses the following bugs in a few services:
+
+- creating new resources in the ``data-services`` API
+- properly enforcing access controls to the default resource pool
+- accidentally removing the git repository directory from hibernated sessions
+- properly templating node affinities and tolerations from the ``data-services`` into user sessions
 
 Individual components
 ~~~~~~~~~~~~~~~~~~~~~~
 
 - `renku-data-services 0.2.1 <https://github.com/SwissDataScienceCenter/renku-data-services/releases/tag/v0.2.1>`_
+- `renku-data-services 0.2.2 <https://github.com/SwissDataScienceCenter/renku-data-services/releases/tag/v0.2.2>`_
+- `renku-notebooks 1.20.1 <https://github.com/SwissDataScienceCenter/renku-notebooks/releases/tag/1.20.1>`_
+- `renku-notebooks 1.20.2 <https://github.com/SwissDataScienceCenter/renku-notebooks/releases/tag/1.20.2>`_
 
 0.42.0
 ------
