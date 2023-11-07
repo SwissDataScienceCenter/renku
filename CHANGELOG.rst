@@ -28,7 +28,7 @@ Individual Components
 
 
 0.42.1
-~~~~~~
+------
 
 Renku ``0.42.1`` is a bugfix release to patch a bug found in the data service which prevented
 new users from being created due to a db migration problem.
