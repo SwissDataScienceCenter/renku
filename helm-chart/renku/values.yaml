@@ -250,6 +250,8 @@ keycloakx:
     - name: JAVA_OPTS_APPEND
       value: >-
         -Djgroups.dns.query={{ include "keycloak.fullname" . }}-headless
+    - name: KC_DB_POOL_MAX_SIZE
+      value: "10"
 
   command:
     - "/opt/keycloak/bin/kc.sh"
