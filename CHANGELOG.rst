@@ -86,11 +86,17 @@ Renku ``0.42.1`` is a bugfix release that addresses the following bugs in a few 
 - accidentally removing the git repository directory from hibernated sessions
 - properly templating node affinities and tolerations from the ``data-services`` into user sessions
 
+Internal Changes
+~~~~~~~~~~~~~~~~~~~
+
+- **KG**: Java upgraded to 21.0 and Jena to 4.10.0
+
 Individual components
 ~~~~~~~~~~~~~~~~~~~~~~
 
 - `renku-ui x.x.x <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/x.x.x>`_
 - `renku-python x.x.x <https://github.com/SwissDataScienceCenter/renku-python/releases/tag/x.x.x>`_
+- `renku-graph 2.45.0 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/2.45.0>`_
 - `renku-graph 2.44.0 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/2.44.0>`_
 - `renku-data-services 0.2.1 <https://github.com/SwissDataScienceCenter/renku-data-services/releases/tag/v0.2.1>`_
 - `renku-data-services 0.2.2 <https://github.com/SwissDataScienceCenter/renku-data-services/releases/tag/v0.2.2>`_
