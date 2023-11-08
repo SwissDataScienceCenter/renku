@@ -1494,7 +1494,7 @@ graph:
     ## a demanded number of concurrent triples generation processes
     generationProcessesNumber: 2
     transformationProcessesNumber: 2
-    connectionPool: 10
+    connectionPool: 5
     # set this to a pip-installable renku-python version which will be installed on startup
     renkuPythonDevVersion:
 
