@@ -1,9 +1,36 @@
 .. _changelog:
 
-0.43.0
+0.44.0
 ------
 
 (ShapeUp): Let users pin projects to the dashboard.
+Renku ``0.43.0`` brings improvements to the KG API.
+
+0.43.0
+------
+
+Renku ``0.43.0`` brings improvements to the KG API.
+
+User-Facing Changes
+~~~~~~~~~~~~~~~~~~~
+
+**✨ Improvements**
+
+- **KG**: Performance improvements to the Cross-Entity Search API.
+  (`#1666 <https://github.com/SwissDataScienceCenter/renku-graph/issues/1666>`_).
+- **KG**: A new `GET /knowledge-graph/version` API.
+  (`#1760 <https://github.com/SwissDataScienceCenter/renku-graph/pull/1760>`_).
+
+Internal Changes
+~~~~~~~~~~~~~~~~~~~
+
+- **KG**: Java upgraded to 21.0 and Jena to 4.10.0
+
+Individual components
+~~~~~~~~~~~~~~~~~~~~~~
+
+- `renku-graph 2.45.0 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/2.45.0>`_
+- `renku-graph 2.44.0 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/2.44.0>`_
 
 0.42.0
 ------

@@ -250,6 +250,8 @@ keycloakx:
     - name: JAVA_OPTS_APPEND
       value: >-
         -Djgroups.dns.query={{ include "keycloak.fullname" . }}-headless
+    - name: KC_DB_POOL_MAX_SIZE
+      value: "10"
 
   command:
     - "/opt/keycloak/bin/kc.sh"
@@ -1433,7 +1435,7 @@ graph:
   webhookService:
     image:
       repository: renku/webhook-service
-      tag: '2.43.1'
+      tag: '2.45.0'
       pullPolicy: IfNotPresent
     service:
       type: ClusterIP
@@ -1453,7 +1455,7 @@ graph:
   tokenRepository:
     image:
       repository: renku/token-repository
-      tag: '2.43.1'
+      tag: '2.45.0'
       pullPolicy: IfNotPresent
     service:
       type: ClusterIP
@@ -1479,7 +1481,7 @@ graph:
     replicas: 1
     image:
       repository: renku/triples-generator
-      tag: '2.43.1'
+      tag: '2.45.0'
       pullPolicy: IfNotPresent
     service:
       type: ClusterIP
@@ -1494,7 +1496,7 @@ graph:
     ## a demanded number of concurrent triples generation processes
     generationProcessesNumber: 2
     transformationProcessesNumber: 2
-    connectionPool: 10
+    connectionPool: 5
     # set this to a pip-installable renku-python version which will be installed on startup
     renkuPythonDevVersion:
 
@@ -1502,7 +1504,7 @@ graph:
     replicas: 1
     image:
       repository: renku/knowledge-graph
-      tag: '2.43.1'
+      tag: '2.45.0'
       pullPolicy: IfNotPresent
     service:
       type: ClusterIP
@@ -1522,7 +1524,7 @@ graph:
   eventLog:
     image:
       repository: renku/event-log
-      tag: '2.43.1'
+      tag: '2.45.0'
       pullPolicy: IfNotPresent
     service:
       type: ClusterIP
@@ -1538,7 +1540,7 @@ graph:
   commitEventService:
     image:
       repository: renku/commit-event-service
-      tag: '2.43.1'
+      tag: '2.45.0'
       pullPolicy: IfNotPresent
     service:
       type: ClusterIP

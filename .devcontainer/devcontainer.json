@@ -36,6 +36,7 @@
 		},
 		"ghcr.io/rocker-org/devcontainer-features/apt-packages:1": {
             "packages": ["libenchant-2-2", "graphviz"]
-        }
+        }, 
+		"ghcr.io/devcontainers/features/java:1": {}
 	}
 }
