@@ -212,7 +212,7 @@ ingress:
   ## Hosts for the ingress
   ## Should include at least the value from `global.renku.domain`
   hosts:
-  - example.local
+    - example.local
   ## TLS setting for the ingress
   tls: []
   #  - secretName: chart-example-tls
@@ -239,13 +239,13 @@ keycloakx:
       value: "10"
 
   command:
-  - "/opt/keycloak/bin/kc.sh"
-  - "start"
-  - "--http-enabled=true"
-  - "--http-port=8080"
-  - "--hostname-strict=false"
-  - "--hostname-strict-https=false"
-  - "--auto-build"
+    - "/opt/keycloak/bin/kc.sh"
+    - "start"
+    - "--http-enabled=true"
+    - "--http-port=8080"
+    - "--hostname-strict=false"
+    - "--hostname-strict-https=false"
+    - "--auto-build"
   # The following environment variables are provided to keycloak
   # as extraEnvFrom secrets.
 
@@ -676,12 +676,12 @@ ui:
     templates:
       custom: true
       repositories:
-      - url: https://github.com/SwissDataScienceCenter/renku-project-template
-        ref: 0.7.1
-        name: Renku
-      - url: https://github.com/SwissDataScienceCenter/contributed-project-templates
-        ref: 0.6.0
-        name: Community
+        - url: https://github.com/SwissDataScienceCenter/renku-project-template
+          ref: 0.7.1
+          name: Renku
+        - url: https://github.com/SwissDataScienceCenter/contributed-project-templates
+          ref: 0.6.0
+          name: Community
     # This defines the threshold for automatically showing a preview when browsing projects' files.
     # Above the soft limit, the user receives a warning. Above the hard limit, no preview is available.
     previewSizeThreshold:
@@ -742,7 +742,8 @@ ui:
         enabled: false
         title: "Renku real-world use cases: Conducted by SDSC and ETH Domain"
         # Markdown is allowed in the description
-        description: The case studies presented here **bridge the gap** from domain
+        description:
+          The case studies presented here **bridge the gap** from domain
           to data science and provide experts from both sides with the means to examine,
           confirm, and extend the datasets and their analyses, without extensive investments
           of time and infrastructure.
@@ -751,12 +752,13 @@ ui:
         # To showcase projects, provide the identifier following the structure below
         # title, description, and imageUrl can be overridden, as illustrated below, if desired.
         projects:
-        - identifier: hdbi/data-management/cccooci
-        - identifier: renku-ui-tests/stable-project
-          overrideTitle: "Stable Project: A project for testing"
-          overrideDescription: "This is a project for **testing**. You may find it
-            useful to look at."
-          overrideImageUrl: https://gitlab.renkulab.io/uploads/-/system/project/avatar/36159/graphical_abstract.png
+          - identifier: hdbi/data-management/cccooci
+          - identifier: renku-ui-tests/stable-project
+            overrideTitle: "Stable Project: A project for testing"
+            overrideDescription:
+              "This is a project for **testing**. You may find it
+              useful to look at."
+            overrideImageUrl: https://gitlab.renkulab.io/uploads/-/system/project/avatar/36159/graphical_abstract.png
     coreApiVersionConfig:
       ## Configuration to specify which version of the core-service API should be used
       # "/" indicates that the latest version should be used
@@ -805,8 +807,8 @@ ui:
       # kubernetes.io/ingress.class: nginx
       # kubernetes.io/tls-acme: "true"
       hosts:
-      - host: chart-example.local
-        paths: []
+        - host: chart-example.local
+          paths: []
       tls: []
       #  - secretName: chart-example-tls
       #    hosts:
@@ -1063,7 +1065,7 @@ notebooks:
     # kubernetes.io/tls-acme: "true"
     path: /
     hosts:
-    - chart-example.local
+      - chart-example.local
     tls: []
     #  - secretName: chart-example-tls
     #    hosts:
@@ -1276,26 +1278,27 @@ jena:
       password:
   persistence:
     accessModes:
-    - ReadWriteOnce
+      - ReadWriteOnce
     size: 10Gi
   additionalEnvironmentVariables:
-  - name: JVM_ARGS
-    value: -Xmx2G -Xms2G
+    - name: JVM_ARGS
+      value: -Xmx2G -Xms2G
   resources:
     requests:
       cpu: 1000m
       memory: 3Gi
   additionalVolumeMounts:
-  - name: shiro
-    mountPath: /fuseki/shiro.ini
-    subPath: shiro.ini
-    readOnly: true
+    - name: shiro
+      mountPath: /fuseki/shiro.ini
+      subPath: shiro.ini
+      readOnly: true
   additionalVolumes:
-  - name: shiro
-    configMap:
-      name: shiro-ini
-      defaultMode: 0555
-  additionalInitContainerScript: "find /fuseki -name tdb.lock -type f -delete && find
+    - name: shiro
+      configMap:
+        name: shiro-ini
+        defaultMode: 0555
+  additionalInitContainerScript:
+    "find /fuseki -name tdb.lock -type f -delete && find
     /fuseki/configuration -name *.ttl -type f -empty -delete && echo clean-up done"
   test:
     enabled: false
@@ -1303,7 +1306,7 @@ graph:
   webhookService:
     image:
       repository: renku/webhook-service
-      tag: '2.45.0'
+      tag: "2.45.0"
       pullPolicy: IfNotPresent
     service:
       type: ClusterIP
@@ -1322,7 +1325,7 @@ graph:
   tokenRepository:
     image:
       repository: renku/token-repository
-      tag: '2.45.0'
+      tag: "2.45.0"
       pullPolicy: IfNotPresent
     service:
       type: ClusterIP
@@ -1334,10 +1337,10 @@ graph:
     jvmXmx: 128M
     gitlab:
       rateLimit: 50/sec
-    projectTokenTTL: '365 days'
+    projectTokenTTL: "365 days"
     # name of the Project Access Tokens to be created on behalf of the user in GitLab; defaults to .Release.Name
     projectTokenName:
-    projectTokenDuePeriod: '184 days'
+    projectTokenDuePeriod: "184 days"
     connectionPool: 2
     tokenEncryption:
       ## A secret for signing access tokens stored in the database
@@ -1347,7 +1350,7 @@ graph:
     replicas: 1
     image:
       repository: renku/triples-generator
-      tag: '2.45.0'
+      tag: "2.45.0"
       pullPolicy: IfNotPresent
     service:
       type: ClusterIP
@@ -1369,7 +1372,7 @@ graph:
     replicas: 1
     image:
       repository: renku/knowledge-graph
-      tag: '2.45.0'
+      tag: "2.45.0"
       pullPolicy: IfNotPresent
     service:
       type: ClusterIP
@@ -1388,7 +1391,7 @@ graph:
   eventLog:
     image:
       repository: renku/event-log
-      tag: '2.45.0'
+      tag: "2.45.0"
       pullPolicy: IfNotPresent
     service:
       type: ClusterIP
@@ -1403,7 +1406,7 @@ graph:
   commitEventService:
     image:
       repository: renku/commit-event-service
-      tag: '2.45.0'
+      tag: "2.45.0"
       pullPolicy: IfNotPresent
     service:
       type: ClusterIP
@@ -1416,9 +1419,9 @@ graph:
       rateLimit: 10/sec
   sentry:
     enabled: false
-    dsn: '' # Sentry dsn
-    sentryDsnRenkuPython: '' # Sentry dsn for renku CLI
-    environment: '' # Environment name e.g. renkulabio
+    dsn: "" # Sentry dsn
+    sentryDsnRenkuPython: "" # Sentry dsn for renku CLI
+    environment: "" # Environment name e.g. renkulabio
   persistence:
     enabled: true
     ## A manually managed Persistent Volume and Claim
@@ -1507,6 +1510,8 @@ dataService:
   nodeSelector: {}
   tolerations: []
   affinity: {}
+  # This defines the maximum number of pinned projects in user preferences
+  maxPinnedProjects: 5
 podSecurityContext: {}
 securityContext:
   runAsUser: 1000
