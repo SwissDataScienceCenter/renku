@@ -1,5 +1,40 @@
 .. _changelog:
 
+0.43.1
+------
+
+Renku ``0.43.1`` is a bugfix release that addresses a few bugs in the UI.
+
+User-Facing Changes
+~~~~~~~~~~~~~~~~~~~
+
+**🐞 Bug Fixes**
+
+- 🔽 **UI**: Prevent showing wrong options on the Session dropdown menu when the project
+  namespace includes uppercase letters
+  (`#2874 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2874>`_).
+- 🔲 **UI**: Restore the switch between creating and importing a dataset, and restyle the
+  buttons
+  (`#2857 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2857>`_).
+- 🔨 **UI**: Address visual glitches on many pages
+  (`#2883 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2883>`_).
+- 🧑‍🤝‍🧑 **UI**: Prevent occasionally duplicating last visited projects on the Dashboard
+  (`#2892 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2892>`_).
+
+Internal Changes
+~~~~~~~~~~~~~~~~
+
+**Bug Fixes**
+
+- **UI**: Correctly handle Statuspage down
+  (`#2871 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2871>`_).
+
+Individual components
+~~~~~~~~~~~~~~~~~~~~~~
+
+- `renku-ui 3.15.1 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.15.1>`_
+
+
 0.43.0
 ------
 
