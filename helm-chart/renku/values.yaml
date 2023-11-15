@@ -134,10 +134,10 @@ global:
       ## Alternatively an existing secret can be provided. Note that postgres
       ## DOES NOT tolerate a change of the admin password when upgrading.
       # password:
+  ## Use an existing secret instead of creating a new one. It must have a
+  ## postgresql-password key containing the password for the posgres user.
+  # existingSecret:
 
-      ## Use an existing secret instead of creating a new one. It must have a
-      ## postgresql-password key containing the password for the posgres user.
-      # existingSecret:
   # Connection details for a globally used redis instance for the
   # entire platform. For specifying an actual instance as part of
   # this chart, check out the non-global "redis" section.
@@ -237,7 +237,6 @@ keycloakx:
         -Djgroups.dns.query={{ include "keycloak.fullname" . }}-headless
     - name: KC_DB_POOL_MAX_SIZE
       value: "10"
-
   command:
   - "/opt/keycloak/bin/kc.sh"
   - "start"
@@ -534,11 +533,6 @@ gitlab:
 
   ## Persistent Volume settings
   persistence:
-    ## A manually managed Persistent Volume and Claim
-    ## Requires persistence.enabled: true
-    ## If defined, PVC must be created manually before volume will be bound
-    # existingClaim:
-
     ## database data Persistent Volume Storage Class
     ## If defined, storageClassName: <storageClass>
     ## If set to "-", storageClassName: "", which disables dynamic provisioning
@@ -562,9 +556,14 @@ gitlab:
     #   subPath: logs
     #   mountPath: /var/log/gitlab
 
-    ## Set to false to disable the use of Persistent Volume
-    ## The databases will be lost when the pod is terminated!
-    # enabled: true
+    ## A manually managed Persistent Volume and Claim
+    ## Requires persistence.enabled: true
+    ## If defined, PVC must be created manually before volume will be bound
+    # existingClaim:
+  ## Set to false to disable the use of Persistent Volume
+  ## The databases will be lost when the pod is terminated!
+  # enabled: true
+
   ## Service configuration for Gitlab
   ## Modify service.type according to your setup
   # service:
@@ -609,9 +608,9 @@ gitlab:
   # extraConfig: |
   #     ## Fix number of unicorn workers
   #     unicorn['worker_processes'] = 7
+#     ## Fix something else
+#     ...
 
-  #     ## Fix something else
-  #     ...
 ## Configuration for the UI service
 ui:
   client:
@@ -620,7 +619,7 @@ ui:
     replicaCount: 1
     image:
       repository: renku/renku-ui
-      tag: "3.15.0"
+      tag: "3.15.1"
       pullPolicy: IfNotPresent
       ## Optionally specify an array of imagePullSecrets.
       ## Secrets must be manually created in the namespace.
@@ -779,7 +778,7 @@ ui:
     keepCookies: []
     image:
       repository: renku/renku-ui-server
-      tag: "3.15.0"
+      tag: "3.15.1"
       pullPolicy: IfNotPresent
     imagePullSecrets: []
     nameOverride: ""
@@ -1176,11 +1175,11 @@ tests:
   #  testTarget:
   resultsS3:
     enabled: false
-  #  host:
-  #  bucket:
-  #  filename:
-  #  accessKey:
-  #  secretKey:
+    #  host:
+    #  bucket:
+    #  filename:
+    #  accessKey:
+    #  secretKey:
 ## Configuration for the Gateway service
 gateway:
   ## Optional list of allowed sources for Cross-Origin Resource Sharing.
