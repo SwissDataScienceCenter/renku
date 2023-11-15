@@ -1,12 +1,19 @@
 .. _changelog:
 
-0.43.1
+0.43.0
 ------
 
-Renku ``0.43.1`` is a bugfix release that addresses a few bugs in the UI.
+Renku ``0.43.0`` brings improvements to the KG API and addresses a few bugs in the UI.
 
 User-Facing Changes
 ~~~~~~~~~~~~~~~~~~~
+
+**✨ Improvements**
+
+- **KG**: Performance improvements to the Cross-Entity Search API.
+  (`#1666 <https://github.com/SwissDataScienceCenter/renku-graph/issues/1666>`_).
+- **KG**: A new `GET /knowledge-graph/version` API.
+  (`#1760 <https://github.com/SwissDataScienceCenter/renku-graph/pull/1760>`_).
 
 **🐞 Bug Fixes**
 
@@ -22,44 +29,23 @@ User-Facing Changes
   (`#2892 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2892>`_).
 
 Internal Changes
-~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~
+
+**Improvements**
+
+- **KG**: Java upgraded to 21.0 and Jena to 4.10.0
 
 **Bug Fixes**
 
 - **UI**: Correctly handle Statuspage down
   (`#2871 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2871>`_).
 
-Individual components
-~~~~~~~~~~~~~~~~~~~~~~
-
-- `renku-ui 3.15.1 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.15.1>`_
-
-
-0.43.0
-------
-
-Renku ``0.43.0`` brings improvements to the KG API.
-
-User-Facing Changes
-~~~~~~~~~~~~~~~~~~~
-
-**✨ Improvements**
-
-- **KG**: Performance improvements to the Cross-Entity Search API.
-  (`#1666 <https://github.com/SwissDataScienceCenter/renku-graph/issues/1666>`_).
-- **KG**: A new `GET /knowledge-graph/version` API.
-  (`#1760 <https://github.com/SwissDataScienceCenter/renku-graph/pull/1760>`_).
-
-Internal Changes
-~~~~~~~~~~~~~~~~~~~
-
-- **KG**: Java upgraded to 21.0 and Jena to 4.10.0
-
 Individual Components
 ~~~~~~~~~~~~~~~~~~~~~
 
 - `renku-graph 2.45.0 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/2.45.0>`_
 - `renku-graph 2.44.0 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/2.44.0>`_
+- `renku-ui 3.15.1 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.15.1>`_
 
 
 0.42.1
