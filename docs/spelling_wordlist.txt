@@ -58,6 +58,8 @@ CWL
 datadir
 dataset
 datasets
+datashim
+Datashim
 dataverse
 Dataverse
 datetimes
