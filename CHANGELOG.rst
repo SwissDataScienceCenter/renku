@@ -12,6 +12,10 @@ User-Facing Changes
 
 - **KG**: Performance improvements to the Cross-Entity Search API.
   (`#1666 <https://github.com/SwissDataScienceCenter/renku-graph/issues/1666>`_).
+- **KG**: The Cross-Entity Search API to allow filtering by a `role`.
+  (`#1486 <https://github.com/SwissDataScienceCenter/renku-graph/issues/1486>`_).
+- **KG**: The Cross-Entity Search API to provide better matching when a `query` filter is specified.
+  (`#1783 <https://github.com/SwissDataScienceCenter/renku-graph/issues/1783>`_).
 - **KG**: A new `GET /knowledge-graph/version` API.
   (`#1760 <https://github.com/SwissDataScienceCenter/renku-graph/pull/1760>`_).
 
@@ -33,7 +37,8 @@ Internal Changes
 
 **Improvements**
 
-- **KG**: Java upgraded to 21.0 and Jena to 4.10.0
+- **KG**: KG services to work with both `Base64` encoded and ASCII secrets read from configuration.
+- **KG**: Java upgraded to 21.0 and Jena to 4.10.0.
 
 **Bug Fixes**
 
@@ -43,6 +48,7 @@ Internal Changes
 Individual Components
 ~~~~~~~~~~~~~~~~~~~~~
 
+- `renku-graph 2.46.0 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/2.46.0>`_
 - `renku-graph 2.45.0 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/2.45.0>`_
 - `renku-graph 2.44.0 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/2.44.0>`_
 - `renku-ui 3.15.1 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.15.1>`_
