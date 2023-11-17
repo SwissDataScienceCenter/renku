@@ -14,7 +14,7 @@ User-Facing Changes
   (`#1666 <https://github.com/SwissDataScienceCenter/renku-graph/issues/1666>`_).
 - **KG**: The Cross-Entity Search API to allow filtering by a ``role``.
   (`#1486 <https://github.com/SwissDataScienceCenter/renku-graph/issues/1486>`_).
-- **KG**: The Cross-Entity Search API to provide better matching when a ``query`` filter is specified.
+- **KG**: Improved search to return results where the search keyword is separated by underscores.
   (`#1783 <https://github.com/SwissDataScienceCenter/renku-graph/issues/1783>`_).
 - **KG**: A new ``GET /knowledge-graph/version`` API.
   (`#1760 <https://github.com/SwissDataScienceCenter/renku-graph/pull/1760>`_).
