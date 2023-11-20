@@ -31,6 +31,7 @@ User-Facing Changes
   (`#2883 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2883>`_).
 - 🧑‍🤝‍🧑 **UI**: Prevent occasionally duplicating last visited projects on the Dashboard
   (`#2892 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2892>`_).
+- **KG**: Prevent CLI's Dataset Import from failing when the Dataset belongs to a project with more than 20 datasets.
 
 Internal Changes
 ~~~~~~~~~~~~~~~~~~~
@@ -48,6 +49,7 @@ Internal Changes
 Individual Components
 ~~~~~~~~~~~~~~~~~~~~~
 
+- `renku-graph 2.47.0 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/2.47.0>`_
 - `renku-graph 2.46.0 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/2.46.0>`_
 - `renku-graph 2.45.0 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/2.45.0>`_
 - `renku-graph 2.44.0 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/2.44.0>`_
