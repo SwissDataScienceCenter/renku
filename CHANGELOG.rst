@@ -3,7 +3,8 @@
 0.43.0
 ------
 
-Renku ``0.43.0`` brings improvements to the KG API and addresses a few bugs in the UI.
+Renku ``0.43.0`` brings improvements to the KG API, addresses a few bugs in the UI
+and in the data services API.
 
 User-Facing Changes
 ~~~~~~~~~~~~~~~~~~~
@@ -45,6 +46,8 @@ Internal Changes
 
 - **UI**: Correctly handle Statuspage down
   (`#2871 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2871>`_).
+- **CRC**: Do not create new quotas when updating existing ones
+- **CRC**: Use one database connection pool with limited number of connections
 
 Individual Components
 ~~~~~~~~~~~~~~~~~~~~~
@@ -54,6 +57,7 @@ Individual Components
 - `renku-graph 2.45.0 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/2.45.0>`_
 - `renku-graph 2.44.0 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/2.44.0>`_
 - `renku-ui 3.15.1 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.15.1>`_
+- `renku-data-services 0.2.3 <https://github.com/SwissDataScienceCenter/renku-data-services/releases/tag/v0.2.3>`_
 
 
 0.42.1
