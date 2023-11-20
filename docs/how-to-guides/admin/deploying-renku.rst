@@ -147,6 +147,7 @@ You might want to modify some default values, here are some examples:
       Enabling notebooks for anonymous users <anonymous-sessions>
       Configure privacy notice and cookie banner <privacycookie>
       Configuring the RenkuLab Homepage <homepage>
+      Mounting cloud storage in sessions <sessions-cloud-storage>
 
 Deploying RenkuLab
 -------------------
