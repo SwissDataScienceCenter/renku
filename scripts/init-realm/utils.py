@@ -1,6 +1,7 @@
 import json
 import os
 from dataclasses import dataclass, field
+from enum import Enum
 from typing import Any, Dict, List, Optional
 
 
@@ -36,6 +37,31 @@ class DemoUserConfig:
         }
 
 
+class OAuthFlow(Enum):
+    device: str = "device"
+    authorization_code: str = "authorization_code"
+    client_credentials: str = "client_credentials"
+
+    def get_keycloak_payload(self, disable_other_flows: bool = True) -> Dict[str, Any]:
+        output = {
+            "oauth2DeviceAuthorizationGrantEnabled": False,
+            "serviceAccountsEnabled": False,
+            "standardFlowEnabled": False,
+        } if disable_other_flows else {}
+        match self:
+            case OAuthFlow.authorization_code:
+                output["standardFlowEnabled"] = True
+            case OAuthFlow.device:
+                output["oauth2DeviceAuthorizationGrantEnabled"] = True
+            case OAuthFlow.client_credentials:
+                output["serviceAccountsEnabled"] = True
+        return output
+
+    @classmethod
+    def from_env(cls, prefix: str = ""):
+        return cls(os.environ.get(f"{prefix}OAUTH_FLOW"))
+
+
 @dataclass
 class OIDCClient:
     """Stores the configuration needed to create an OIDC client application in Keycloak. These
@@ -44,6 +70,8 @@ class OIDCClient:
 
     id: str
     base_url: str
+    oauth_flow: OAuthFlow
+    disable_other_oauth_flows: bool = True
     secret: Optional[str] = field(default=None, repr=False)
     attributes: Dict[str, Any] = field(default_factory=lambda: {})
     public_client: bool = False
@@ -81,6 +109,7 @@ class OIDCClient:
         }
         if self.secret is not None:
             output["secret"] = self.secret
+        output.update(**self.oauth_flow.get_keycloak_payload(self.disable_other_oauth_flows))
         return output
 
     @classmethod
@@ -91,6 +120,10 @@ class OIDCClient:
             base_url=os.environ.get(f"{prefix}BASE_URL", os.environ["RENKU_BASE_URL"]),
             attributes=json.loads(os.environ.get(f"{prefix}ATTRIBUTES", "{}")),
             public_client=os.environ.get(f"{prefix}PUBLIC", "false").lower() == "true",
+            oauth_flow=OAuthFlow.from_env(prefix),
+            disable_other_oauth_flows=os.environ.get(
+                f"{prefix}DISABLE_OTHER_OAUTH_FLOWS", "true"
+            ).lower() == "true",
         )
 
 
@@ -140,6 +173,7 @@ class OIDCClientsConfig:
     ui: OIDCClient
     notebooks: OIDCClient
     swagger: OIDCClient
+    data_service: OIDCClient
 
     @classmethod
     def from_env(cls) -> "OIDCClientsConfig":
@@ -149,6 +183,7 @@ class OIDCClientsConfig:
             ui=OIDCClient.from_env(prefix="UI_KC_CLIENT_"),
             notebooks=OIDCClient.from_env(prefix="NOTEBOOKS_KC_CLIENT_"),
             swagger=OIDCClient.from_env(prefix="SWAGGER_KC_CLIENT_"),
+            data_service=OIDCClient.from_env(prefix="DATASERVICE_KC_CLIENT_"),
         )
 
     def to_list(self) -> List[Dict[str, Any]]:
@@ -158,4 +193,5 @@ class OIDCClientsConfig:
             self.ui.to_dict(),
             self.notebooks.to_dict(),
             self.swagger.to_dict(),
+            self.data_service.to_dict(),
         ]
