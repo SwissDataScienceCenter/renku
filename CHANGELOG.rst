@@ -24,6 +24,12 @@ User-Facing Changes
   (`#1760 <https://github.com/SwissDataScienceCenter/renku-graph/pull/1760>`_).
 - **KG**: Token service and Webhook service can now accept an AES token that is not base64 encoded.
   (`#1774 <https://github.com/SwissDataScienceCenter/renku-graph/pull/1774>`_).
+- **Core Service, CLI**: Add support for specifying project images.
+  (`#3623 <https://github.com/SwissDataScienceCenter/renku-python/issues/3623>`)
+- **CLI**: Add support for pausing/resuming sessions.
+  (`#3633 <https://github.com/SwissDataScienceCenter/renku-python/issues/3633>`)
+- **Core Service**: Add prometheus metrics.
+  (`#3640 <https://github.com/SwissDataScienceCenter/renku-python/issues/3640>`)
 
 **🐞 Bug Fixes**
 
@@ -53,6 +59,8 @@ Internal Changes
   (`#2871 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2871>`_).
 - **CRC**: Do not create new quotas when updating existing ones
 - **CRC**: Use one database connection pool with limited number of connections
+- **Core Service,CLI**: Make slug and name consistent with rest of platform.
+  (`#3620 <https://github.com/SwissDataScienceCenter/renku-python/issues/3620>`)
 
 Individual Components
 ~~~~~~~~~~~~~~~~~~~~~
@@ -64,6 +72,7 @@ Individual Components
 - `renku-graph 2.44.0 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/2.44.0>`_
 - `renku-ui 3.15.1 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.15.1>`_
 - `renku-data-services 0.2.3 <https://github.com/SwissDataScienceCenter/renku-data-services/releases/tag/v0.2.3>`_
+- `renku-python 2.8.0 <https://github.com/SwissDataScienceCenter/renku-python/tree/v2.8.0>`
 
 
 0.42.1
