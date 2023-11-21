@@ -74,6 +74,7 @@ class OIDCClient:
     disable_other_oauth_flows: bool = True
     secret: Optional[str] = field(default=None, repr=False)
     attributes: Dict[str, Any] = field(default_factory=lambda: {})
+    service_account_roles: List[str] = field(default_factory=list)
     public_client: bool = False
 
     def __post_init__(self):
@@ -82,6 +83,10 @@ class OIDCClient:
             raise ValueError(
                 f"The OIDC client configuration for client {self.id} is not valid, "
                 "the client is marked as not public but a secret is not provided."
+            )
+        if self.oauth_flow != OAuthFlow.client_credentials and len(self.service_account_roles) > 0:
+            raise ValueError(
+                f"Service account roles can only be specified for the {OAuthFlow.client_credentials.value} flow"
             )
 
     def to_dict(self) -> Dict[str, Any]:
@@ -124,6 +129,7 @@ class OIDCClient:
             disable_other_oauth_flows=os.environ.get(
                 f"{prefix}DISABLE_OTHER_OAUTH_FLOWS", "true"
             ).lower() == "true",
+            service_account_roles=json.loads(os.environ.get(f"{prefix}SERVICE_ACCOUNT_ROLES", "[]")),
         )
 
 

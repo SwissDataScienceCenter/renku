@@ -30,7 +30,7 @@ from keycloak.exceptions import (
     KeycloakPostError,
 )
 
-from utils import DemoUserConfig, OIDCClientsConfig, OIDCGitlabClient
+from utils import DemoUserConfig, OIDCClientsConfig, OIDCGitlabClient, OIDCClient, OAuthFlow
 
 logging.basicConfig(level=logging.INFO)
 
@@ -70,18 +70,18 @@ def _fix_json_values(data: Dict) -> Dict:
     return json.loads(json.dumps(data).replace('"true"', "true").replace('"false"', "false"))
 
 
-def _check_and_create_client(keycloak_admin, new_client, force: bool):
+def _check_and_create_client(keycloak_admin, new_client: OIDCClient, force: bool):
     """
     Check if a client exists. Create it if not. Alert if
     it exists but with different details than what is provided.
     """
 
-    logging.info("Checking if {} client exists...".format(new_client["clientId"]))
+    logging.info("Checking if {} client exists...".format(new_client.id))
     realm_clients = keycloak_admin.get_clients()
     client_ids = [c["clientId"] for c in realm_clients]
-    if new_client["clientId"] in client_ids:
+    if new_client.id in client_ids:
         logging.info("found")
-        realm_client = realm_clients[client_ids.index(new_client["clientId"])]
+        realm_client = realm_clients[client_ids.index(new_client.id)]
 
         # We have to separately query the secret as it is not part of
         # the original response
@@ -99,9 +99,26 @@ def _check_and_create_client(keycloak_admin, new_client, force: bool):
         if "attributes" in realm_client:
             realm_client["attributes"] = _fix_json_values(realm_client["attributes"])
 
+        roles_changed = False
+        service_account_user = None
+        existing_roles = []
+        if new_client.oauth_flow == OAuthFlow.client_credentials:
+            try:
+                service_account_user = keycloak_admin.get_client_service_account_user(new_client.id)
+            except KeycloakGetError as err:
+                if err.response_code != 404:
+                    raise
+            if isinstance(service_account_user, dict):
+                try:
+                    existing_roles = service_account_user.get("realRoles", [])
+                except KeycloakGetError as err:
+                    if err.response_code != 404:
+                        raise
+            if set(existing_roles) != set(new_client.service_account_roles):
+                roles_changed = True
         changed = _check_existing(realm_client, new_client, "client", "clientId")
 
-        if not force or not changed:
+        if not force or (not changed and not roles_changed):
             return
 
         logging.info(f"Recreating modified client '{realm_client['clientId']}'...")
@@ -109,12 +126,21 @@ def _check_and_create_client(keycloak_admin, new_client, force: bool):
         keycloak_admin.delete_client(realm_client["id"])
         keycloak_admin.create_client(new_client)
 
+        if isinstance(service_account_user) and service_account_user.get("id"):
+            logging.info(f"Reassigning service account roles {new_client.service_account_roles}")
+            keycloak_admin.assign_realm_roles(service_account_user["id"], new_client.service_account_roles)
+
         logging.info("done")
 
     else:
         logging.info("not found")
         logging.info("Creating {} client...".format(new_client["clientId"]))
         keycloak_admin.create_client(new_client)
+        if new_client.oauth_flow == OAuthFlow.client_credentials and new_client.service_account_roles:
+            service_account_user = keycloak_admin.get_client_service_account_user(new_client.id)
+            logging.info(f"Assigning service account roles {new_client.service_account_roles}")
+            keycloak_admin.assign_realm_roles(service_account_user["id"], new_client.service_account_roles)
+
         logging.info("done")
 
 
@@ -238,10 +264,10 @@ logging.info("done")
 keycloak_admin.connection.realm_name = args.realm
 
 
-for new_client in OIDCClientsConfig.from_env().to_list():
-    _check_and_create_client(keycloak_admin, new_client, args.force)
+for client in OIDCClientsConfig.from_env():
+    _check_and_create_client(keycloak_admin, client, args.force)
 
-gitlab_oidc_client = OIDCGitlabClient.from_env().to_dict()
+gitlab_oidc_client = OIDCGitlabClient.from_env()
 if gitlab_oidc_client is not None:
     _check_and_create_client(keycloak_admin, gitlab_oidc_client, args.force)
 

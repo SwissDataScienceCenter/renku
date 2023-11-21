@@ -140,6 +140,8 @@ spec:
               value: "false"
             - name: DATASERVICE_KC_CLIENT_OAUTH_FLOW
               value: "client_credentials"
+            - name: "DATASERVICE_KC_CLIENT_SERVICE_ACCOUNT_ROLES"
+              value: '["view-users", "query-users", "view-events"]'
             - name: PYTHONUNBUFFERED
               value: "0"
             {{- include "certificates.env.python" . | nindent 12 }}
