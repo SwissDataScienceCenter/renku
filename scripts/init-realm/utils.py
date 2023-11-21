@@ -111,6 +111,7 @@ class OIDCClient:
                         "user.session.note": "clientId",
                         "id.token.claim": True,
                         "access.token.claim": True,
+                        "userinfo.token.claim": True,
                         "claim.name": "clientId",
                         "jsonType.label": "String"
                     }
@@ -124,6 +125,7 @@ class OIDCClient:
                         "user.session.note": "clientHost",
                         "id.token.claim": True,
                         "access.token.claim": True,
+                        "userinfo.token.claim": True,
                         "claim.name": "clientHost",
                         "jsonType.label": "String"
                     }
@@ -137,6 +139,7 @@ class OIDCClient:
                         "user.session.note": "clientAddress",
                         "id.token.claim": True,
                         "access.token.claim": True,
+                        "userinfo.token.claim": True,
                         "claim.name": "clientAddress",
                         "jsonType.label": "String"
                     }
