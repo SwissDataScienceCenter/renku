@@ -21,6 +21,7 @@ import getpass
 import json
 import time
 import logging
+import os
 from typing import Dict, List
 
 from keycloak import KeycloakAdmin
@@ -116,7 +117,7 @@ def _check_and_create_client(keycloak_admin, new_client: OIDCClient, force: bool
                         raise
             if set(existing_roles) != set(new_client.service_account_roles):
                 roles_changed = True
-        changed = _check_existing(realm_client, new_client, "client", "clientId")
+        changed = _check_existing(realm_client, new_client.to_dict(), "client", "clientId")
 
         if not force or (not changed and not roles_changed):
             return
@@ -124,22 +125,28 @@ def _check_and_create_client(keycloak_admin, new_client: OIDCClient, force: bool
         logging.info(f"Recreating modified client '{realm_client['clientId']}'...")
 
         keycloak_admin.delete_client(realm_client["id"])
-        keycloak_admin.create_client(new_client)
+        created_client_id = keycloak_admin.create_client(new_client.to_dict())
 
-        if isinstance(service_account_user) and service_account_user.get("id"):
+        if isinstance(service_account_user, dict) and service_account_user.get("id"):
             logging.info(f"Reassigning service account roles {new_client.service_account_roles}")
-            keycloak_admin.assign_realm_roles(service_account_user["id"], new_client.service_account_roles)
+            realm_management_client_id = keycloak_admin.get_client_id("realm-management")
+            realm_management_roles = keycloak_admin.get_client_roles(realm_management_client_id)
+            matching_roles = [{"name": role["name"], "id": role["id"]} for role in realm_management_roles if role["name"] in new_client.service_account_roles ]
+            keycloak_admin.assign_client_role(service_account_user["id"], realm_management_client_id, matching_roles)
 
         logging.info("done")
 
     else:
         logging.info("not found")
-        logging.info("Creating {} client...".format(new_client["clientId"]))
-        keycloak_admin.create_client(new_client)
+        logging.info("Creating {} client...".format(new_client.id))
+        created_client_id = keycloak_admin.create_client(new_client.to_dict())
         if new_client.oauth_flow == OAuthFlow.client_credentials and new_client.service_account_roles:
-            service_account_user = keycloak_admin.get_client_service_account_user(new_client.id)
+            service_account_user = keycloak_admin.get_client_service_account_user(created_client_id)
             logging.info(f"Assigning service account roles {new_client.service_account_roles}")
-            keycloak_admin.assign_realm_roles(service_account_user["id"], new_client.service_account_roles)
+            realm_management_client_id = keycloak_admin.get_client_id("realm-management")
+            realm_management_roles = keycloak_admin.get_client_roles(realm_management_client_id)
+            matching_roles = [{"name": role["name"], "id": role["id"]} for role in realm_management_roles if role["name"] in new_client.service_account_roles ]
+            keycloak_admin.assign_client_role(service_account_user["id"], realm_management_client_id, matching_roles)
 
         logging.info("done")
 
@@ -264,11 +271,11 @@ logging.info("done")
 keycloak_admin.connection.realm_name = args.realm
 
 
-for client in OIDCClientsConfig.from_env():
+for client in OIDCClientsConfig.from_env().to_list():
     _check_and_create_client(keycloak_admin, client, args.force)
 
-gitlab_oidc_client = OIDCGitlabClient.from_env()
-if gitlab_oidc_client is not None:
+if os.environ.get("INTERNAL_GITLAB_ENABLED", "false").lower() == "true":
+    gitlab_oidc_client = OIDCGitlabClient.from_env()
     _check_and_create_client(keycloak_admin, gitlab_oidc_client, args.force)
 
 # Create renku-admin realm role
