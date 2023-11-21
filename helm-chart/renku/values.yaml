@@ -1,230 +1,415 @@
-## Default values for renku.
-## This is a YAML-formatted file.
-## Declare variables to be passed into your templates.
-
-## Global variables
-## Shared values/secrets
+affinity: {}
+amalthea:
+  deployCrd: true
+  scope:
+    clusterWide: false
+core:
+  apiBasePath: /api
+  cacheDirectory: /svc/cache
+  cleanupFilesTTL: 1800
+  cleanupInterval: 60
+  cleanupProjectsTTL: 1800
+  datasetsWorkerQueues: datasets.jobs,delayed.ctrl.DatasetsCreateCtrl,delayed.ctrl.DatasetsAddFileCtrl,delayed.ctrl.DatasetsRemoveCtrl,delayed.ctrl.DatasetsImportCtrl,delayed.ctrl.DatasetsEditCtrl,delayed.ctrl.DatasetsUnlinkCtrl
+  fullnameOverride: ""
+  gitLFSSkipSmudge: 1
+  horizontalPodAutoscaling:
+    averageMemoryUtilization: 50
+    maxReplicas: 10
+    minReplicas: 2
+  imagePullSecrets: []
+  jwtTokenSecret: bW9menZ3cnh6cWpkcHVuZ3F5aWJycmJn
+  logLevel: INFO
+  managementWorkerQueues: cache.cleanup.files,cache.cleanup.projects,delayed.ctrl.MigrateProjectCtrl,delayed.ctrl.SetConfigCtrl
+  maximumUploadSizeBytes: "1073741824"
+  metrics:
+    enabled: false
+    image:
+      pullPolicy: IfNotPresent
+      repository: renku/rqmetrics
+      tag: 0.0.2
+  nThreads: 8
+  nWorkers: 4
+  nameOverride: ""
+  projectCloneDepth: 1
+  requestTimeout: 600
+  resources:
+    core: {}
+    datasetsWorkers: {}
+    managementWorkers: {}
+    rqmetrics: {}
+    scheduler: {}
+  sentry:
+    dsn: null
+    enabled: false
+    environment: null
+    sampleRate: 0.2
+  service:
+    port: 80
+    type: ClusterIP
+  templateCloneDepth: 1
+dataService:
+  affinity: {}
+  autoscaling:
+    enabled: false
+    maxReplicas: 5
+    minReplicas: 2
+    targetCPUUtilizationPercentage: 75
+    targetMemoryUtilizationPercentage: 75
+  image:
+    pullPolicy: IfNotPresent
+    repository: renku/renku-data-service
+    tag: 0.2.3
+  nodeSelector: {}
+  podAnnotations: {}
+  replicaCount: 2
+  resources: {}
+  service:
+    port: 80
+    type: ClusterIP
+  tolerations: []
+  updateStrategy: {}
+dlf-chart:
+  csi-h3-chart:
+    enabled: false
+  csi-nfs-chart:
+    enabled: false
+  csi-s3-chart:
+    enabled: true
+    mounter: goofys
+  csi-sidecars-rbac:
+    enabled: true
+  dataset-operator-chart:
+    enabled: true
+gateway:
+  allowOrigin: null
+  development: false
+  image:
+    auth:
+      pullPolicy: IfNotPresent
+      repository: renku/renku-gateway
+      tag: 0.23.0
+  logoutGitLabUponRenkuLogout: true
+  oldGitLabLogout: false
+  rateLimits:
+    general:
+      average: 20
+      burst: 100
+      enabled: false
+  replicaCount: 1
+  resources: {}
+  reverseProxy:
+    autoscaling:
+      enabled: false
+      maxReplicas: 5
+      minReplicas: 2
+      targetCPUUtilizationPercentage: 75
+      targetMemoryUtilizationPercentage: 75
+    image:
+      pullPolicy: IfNotPresent
+      repository: renku/renku-revproxy
+      tag: 0.23.0
+    metrics:
+      enabled: true
+      port: 8765
+    podAnnotations: {}
+    replicaCount: 2
+    resources: {}
+    updateStrategy: {}
+  secretKey: null
+  sentry:
+    dsn: null
+    enabled: false
+    environment: null
+    sampleRate: 0.1
+  service:
+    port: 80
+    type: ClusterIP
+gitlab:
+  demoUserIsAdmin: false
+  enabled: true
+  image:
+    repository: gitlab/gitlab-ce
+    tag: 14.10.5-ce.0
+  oauth:
+    autoSignIn: true
+  password: gitlabadmin
+  persistence:
+    size: 30Gi
+  registry:
+    enabled: false
+  sharedRunnersRegistrationToken: null
 global:
-  gitlab:
-    ## Name of the postgres database to be used by Gitlab
-    postgresDatabase: gitlabhq_production
-    ## Postgres user for the gitlab database
-    postgresUser: gitlab
-    ## Postgres password for the gitlab database
-    ## NOTE: The helm chart cannot update this password in Postgres once it has been created for the first time either by
-    ## setting this value or by randomly generating it because it was omitted below.
-    postgresPassword:
-      value:
-    ## URL prefix for gitlab
-    # urlPrefix: /
-    ## Full URL for gitlab
-    ## NOTE: Many services have this setting internally, they should switch to using the global setting instead
-    # url:
-    ## Secret for the gitlab keycloak client
-    clientSecret: # use `openssl rand -hex 32`
-  keycloak:
-    ## Name of the postgres database to be used by Keycloak
-    postgresDatabase: keycloak
-    ## Postgres user for the Keycloak database
-    postgresUser: keycloak
-    ## Postgres password for the Keycloak database
-    postgresPassword:
-      value:
-    ## Admin username/password for Keycloak
-    user: admin
-    password:
-      value:
-    ## Fill in the keycloak url below if you are not using the renku-bundled keycloak instance
-    url:
-    ## Explicitly set another realm than "renku" here
-    realm:
-  gateway:
-    ## Client secret of the renku client application registered in keycloak.
-    ## Should be set to a proper value (i.e. by using openssl rand -hex 32) for production.
-    ## Can be set here or as .clientSecret outside of .global, the values set ouside of global (if defined) take precedence.
-    clientSecret:
-    ## Client secret of the renku-cli client application registered in keycloak.
-    ## Should be set to a proper value (i.e. by using openssl rand -hex 32) for production.
-    ## Can be set here or as .cliClientSecret outside of .global, the values set ouside of global (if defined) take precedence.
-    cliClientSecret:
-    ## Client id and client secret of the renku gateway client application which is registered in GitLab.
-    ## Can be set here or as .gitlabClientId outside of .global, the values set ouside of global (if defined) take precedence.
-    gitlabClientId: renku-ui
-    ## Should be set to a proper value (i.e. by using openssl rand -hex 32) for production.
-    ## Can be set here or as .gitlabClientSecret outside of .global, the values set ouside of global (if defined) take precedence.
-    gitlabClientSecret:
+  anonymousSessions:
+    enabled: false
+  certificates:
+    customCAs: []
+    image:
+      repository: renku/certificates
+      tag: 0.0.2
   core:
     versions:
       latest:
+        fullnameOverride: ""
+        image:
+          pullPolicy: IfNotPresent
+          repository: renku/renku-core
+          tag: v2.8.0
         name: v10
+        nameOverride: ""
         prefix: "10"
-        nameOverride: ""
-        fullnameOverride: ""
-        image:
-          repository: renku/renku-core
-          tag: "v2.7.0"
-          pullPolicy: IfNotPresent
       v9:
-        name: v9
-        prefix: "9"
-        nameOverride: ""
         fullnameOverride: ""
         image:
-          repository: renku/renku-core
-          tag: "v1.11.4"
           pullPolicy: IfNotPresent
-  uiserver:
-    ## The client secret for the renku-ui client application registered in keycloak.
-    clientSecret: # use `uuidgen -r`
-  renku:
-    ## Domain name for the deployed instance of renku
-    domain: example.local
-    ## Renku version to be used (currently for project creation in
-    ## the UI) If not set explicitly the version will be picked up
-    ## from the respective renku (sub)chart.
-    version: 0.4.0
-    ## The CLI version used for newly created projects by the core service,
-    ## if this is left blank then the core service will derive the CLI version
-    ## for a new project based on its own version.
-    ## NOTE should only be set for CI deployments and development purposes.
-    cli_version:
-  ## Note that the graph will not turned on by default until renku 0.4.0
-  graph:
-    dbEventLog:
-      ## Name of the postgres user to be used to access the Event Log db
-      postgresUser: eventlog
-      ## Postgres password to be used to access the Event Log db
-      ## NOTE: The helm chart cannot update this password in Postgres once it has been created for the first  time either by
-      ## setting this value or by randomly generating it because it was omitted below.
-      postgresPassword:
-        value:
-      existingSecret:
-    tokenRepository:
-      ## Name of the postgres user to be used to access the db storing access tokens
-      postgresUser: tokenstorage
-      ## Postgres password to be used to access the db storing access tokens
-      ## NOTE: The helm chart cannot update this password in Postgres once it has been created for the first time either by
-      ## setting this value or by randomly generating it because it was omitted below.
-      postgresPassword:
-        value:
-      existingSecret:
-    triplesGenerator:
-      ## Name of the postgres user to be used to access the tg db
-      postgresUser: triplesgenerator
-      ## Postgres password to be used to access the db storing access tokens
-      ## NOTE: The helm chart cannot update this password in Postgres once it has been created for the first time either by
-      ## setting this value or by randomly generating it because it was omitted below.
-      postgresPassword:
-        value:
-      existingSecret:
-    jena:
-      ## specify which dataset should be used in Jena
-      dataset:
+          repository: renku/renku-core
+          tag: v1.11.4
+        name: v9
+        nameOverride: ""
+        prefix: "9"
+  db:
+    common:
+      passwordSecretName: renku-db-common-password
+      username: renku
   externalServices:
-    # If an external Postgres database is defined in global.externalServices.postgresql,
-    # global.externalServices.postgresql.enabled should be true, and postgresql.enabled should be false.
-    # By default, Renku-bundled Postgres is enabled.
     postgresql:
       enabled: false
-      # host:
-
-      ## We use the defaults here.
       username: postgres
-      ## The admin password should be set explicitly.
-      ## Alternatively an existing secret can be provided. Note that postgres
-      ## DOES NOT tolerate a change of the admin password when upgrading.
-      # password:
-  ## Use an existing secret instead of creating a new one. It must have a
-  ## postgresql-password key containing the password for the posgres user.
-  # existingSecret:
-
-  # Connection details for a globally used redis instance for the
-  # entire platform. For specifying an actual instance as part of
-  # this chart, check out the non-global "redis" section.
+  gateway:
+    cliClientSecret: null
+    clientSecret: null
+    gitlabClientId: renku-ui
+    gitlabClientSecret: null
+  gitlab:
+    clientSecret: null
+    postgresDatabase: gitlabhq_production
+    postgresPassword:
+      value: null
+    postgresUser: gitlab
+  graph:
+    dbEventLog:
+      existingSecret: null
+      postgresPassword:
+        value: null
+      postgresUser: eventlog
+    jena:
+      dataset: null
+    tokenRepository:
+      existingSecret: null
+      postgresPassword:
+        value: null
+      postgresUser: tokenstorage
+    triplesGenerator:
+      existingSecret: null
+      postgresPassword:
+        value: null
+      postgresUser: triplesgenerator
+  keycloak:
+    password:
+      value: null
+    postgresDatabase: keycloak
+    postgresPassword:
+      value: null
+    postgresUser: keycloak
+    realm: null
+    url: null
+    user: admin
   redis:
-    # Specify which renku component should use which DB index
-    dbIndex:
-      gateway: "0"
-      coreService: "1"
-      uiServer: "2"
-    # Note: these two entries MUST match the ones in the top level redis section.
-    existingSecret: redis-secret
-    existingSecretPasswordKey: redis-password
-    ## Specify the redis host and port. Notice that these settings only affect
-    ## the subcharts which represent the applications which are clients to redis,
-    ## but not the redis cluster deployment itself.
-    ## If you're deploying redis through this chart and you want to deviate from
-    ## the defaults, you'll have to match whatever you set here in the non-global
-    ## redis section below which defines the actual redis cluster.
-    port: 26379
-    ## Not that the host is the same as fullnameOverride only in sentinel mode.
-    ## In other cases the redis service is usually called <fullnameOverride>-headless.
-    host: renku-redis
-    sentinel:
-      ## Set to true if redis host/port point to a redis sentinel.
-      enabled: true
-      masterSet: mymaster
-    ## The label added to client pods so that they can access redis.
-    ## Needed only if the network policy from the redis helm chart that adds this
-    ## restriction is enabled.
     clientLabel:
       renku-redis-client: "true"
-  ## Set to true if using https
+    dbIndex:
+      coreService: "1"
+      gateway: "0"
+      uiServer: "2"
+    existingSecret: redis-secret
+    existingSecretPasswordKey: redis-password
+    host: renku-redis
+    port: 26379
+    sentinel:
+      enabled: true
+      masterSet: mymaster
+  renku:
+    cli_version: null
+    domain: example.local
+    version: 0.4.0
+  uiserver:
+    clientSecret: null
   useHTTPS: false
-  anonymousSessions:
-    ## Set to true to enable anonymous sessions
-    enabled: false
-  ## Specify the name of an existing K8s secret that contains the certificate
-  ## if you would like to use a custom CA. The key for the secret
-  ## should have the .crt extension otherwise it is ignored. The
-  ## keys across all secrets are mounted as files in one location so
-  ## the keys across all secrets have to be unique. In addition to the
-  ## changes here modifications need to be made in the keycloak section below
-  certificates:
+graph:
+  commitEventService:
+    gitlab:
+      rateLimit: 10/sec
     image:
-      repository: renku/certificates
-      tag: "0.0.2"
-    customCAs: []
-    # - secret:
-  ## Database credentials for postgres
-  db:
-    ## Used by the renku-data-services and potentially other backend services
-    common:
-      username: renku
-      ## If the secret name below does not exist it will be automatically and randomly generated.
-      ## The contents of the 'password' key is used.
-      ## The secret is not re-generated or modified in any way if it already exists.
-      passwordSecretName: renku-db-common-password
-## Ingress configuration
-## See: https://kubernetes.io/docs/concepts/services-networking/ingress/
+      pullPolicy: IfNotPresent
+      repository: renku/commit-event-service
+      tag: 2.45.0
+    jvmXmx: 128M
+    resources:
+      requests:
+        memory: 384Mi
+    service:
+      port: 9006
+      type: ClusterIP
+  eventLog:
+    connectionPool: 10
+    gitlab:
+      rateLimit: 10/sec
+    image:
+      pullPolicy: IfNotPresent
+      repository: renku/event-log
+      tag: 2.45.0
+    jvmXmx: 256M
+    resources:
+      requests:
+        memory: 512Mi
+    service:
+      port: 9005
+      type: ClusterIP
+  knowledgeGraph:
+    gitlab:
+      rateLimit: 100/sec
+    image:
+      pullPolicy: IfNotPresent
+      repository: renku/knowledge-graph
+      tag: 2.45.0
+    jvmXmx: 256M
+    replicas: 1
+    resources:
+      requests:
+        memory: 512Mi
+    service:
+      port: 80
+      type: ClusterIP
+    services:
+      renku:
+        resourcesPath: /knowledge-graph
+  persistence:
+    accessMode: ReadWriteOnce
+    enabled: true
+    size: 2Gi
+  sentry:
+    dsn: ""
+    enabled: false
+    environment: ""
+    sentryDsnRenkuPython: ""
+  tokenRepository:
+    connectionPool: 2
+    gitlab:
+      rateLimit: 50/sec
+    image:
+      pullPolicy: IfNotPresent
+      repository: renku/token-repository
+      tag: 2.45.0
+    jvmXmx: 128M
+    projectTokenDuePeriod: 184 days
+    projectTokenName: null
+    projectTokenTTL: 365 days
+    resources:
+      requests:
+        cpu: 500m
+        memory: 256Mi
+    service:
+      port: 9003
+      type: ClusterIP
+    tokenEncryption:
+      secret: null
+  triplesGenerator:
+    connectionPool: 5
+    generationProcessesNumber: 2
+    gitlab:
+      rateLimit: 30/sec
+    image:
+      pullPolicy: IfNotPresent
+      repository: renku/triples-generator
+      tag: 2.45.0
+    jvmXmx: 1g
+    renkuPythonDevVersion: null
+    replicas: 1
+    resources:
+      requests:
+        cpu: "1"
+        memory: 2048Mi
+    service:
+      port: 9002
+      type: ClusterIP
+    transformationProcessesNumber: 2
+  webhookService:
+    gitlab:
+      rateLimit: 100/sec
+    hookToken:
+      secret: null
+    image:
+      pullPolicy: IfNotPresent
+      repository: renku/webhook-service
+      tag: 2.45.0
+    jvmXmx: 128M
+    resources:
+      requests:
+        cpu: 500m
+        memory: 256Mi
+    service:
+      port: 80
+      type: ClusterIP
 ingress:
-  ## Enables the creation of an ingress
-  enabled: false
-  className: "" # nginx
-  ## Annotations for the created ingress
   annotations:
-    ## The ingress class
-    cert-manager.io/cluster-issuer: letsencrypt-production # Use null as value if not using cert-manager to remove this entry
+    cert-manager.io/cluster-issuer: letsencrypt-production
     kubernetes.io/ingress.class: nginx
-    nginx.ingress.kubernetes.io/proxy-body-size: "0" # Adjust to a reasonable value for production to avoid DOS attacks.
-    nginx.ingress.kubernetes.io/proxy-request-buffering: "off" # Needed if GitLab is behind this ingress
-    nginx.ingress.kubernetes.io/proxy-buffer-size: "8k" # Default is 4k, larger size necessary for keycloak
-  ## Hosts for the ingress
-  ## Should include at least the value from `global.renku.domain`
+    nginx.ingress.kubernetes.io/proxy-body-size: "0"
+    nginx.ingress.kubernetes.io/proxy-buffer-size: 8k
+    nginx.ingress.kubernetes.io/proxy-request-buffering: "off"
+  className: ""
+  enabled: false
   hosts:
   - example.local
-  ## TLS setting for the ingress
   tls: []
-  #  - secretName: chart-example-tls
-  #    hosts:
-  #      - example.local
-## Keycloak configuration
-keycloakx:
-  ## Spawn a keycloak instance
-  enabled: true
-  postgresql:
-    # Disable PostgreSQL dependency
+initDb:
+  image:
+    repository: renku/init-db
+    tag: latest
+jena:
+  additionalEnvironmentVariables:
+  - name: JVM_ARGS
+    value: -Xmx2G -Xms2G
+  additionalInitContainerScript: find /fuseki -name tdb.lock -type f -delete && find
+    /fuseki/configuration -name *.ttl -type f -empty -delete && echo clean-up done
+  additionalVolumeMounts:
+  - mountPath: /fuseki/shiro.ini
+    name: shiro
+    readOnly: true
+    subPath: shiro.ini
+  additionalVolumes:
+  - configMap:
+      defaultMode: 365
+      name: shiro-ini
+    name: shiro
+  image:
+    pullPolicy: IfNotPresent
+    repository: renku/renku-jena
+  persistence:
+    accessModes:
+    - ReadWriteOnce
+    size: 10Gi
+  resources:
+    requests:
+      cpu: 1000m
+      memory: 3Gi
+  test:
     enabled: false
+  users:
+    admin:
+      password: null
+    renku:
+      password: null
+keycloakx:
+  command:
+  - /opt/keycloak/bin/kc.sh
+  - start
+  - --http-enabled=true
+  - --http-port=8080
+  - --hostname-strict=false
+  - --hostname-strict-https=false
+  - --auto-build
+  createDemoUser: false
+  enabled: true
   extraEnv: |
     - name: KC_DB
       value: postgres
@@ -237,68 +422,11 @@ keycloakx:
         -Djgroups.dns.query={{ include "keycloak.fullname" . }}-headless
     - name: KC_DB_POOL_MAX_SIZE
       value: "10"
-  command:
-  - "/opt/keycloak/bin/kc.sh"
-  - "start"
-  - "--http-enabled=true"
-  - "--http-port=8080"
-  - "--hostname-strict=false"
-  - "--hostname-strict-https=false"
-  - "--auto-build"
-  # The following environment variables are provided to keycloak
-  # as extraEnvFrom secrets.
-
-  # renku-keycloak-postgres
-  # - DB_ADDR: database host                            value: <RELEASE-NAME>-postgresql
-  # - DB_DATABASE: database name for keycloak           value: global.keycloak.postgresDatabase
-  # - DB_USER: database username for keycloak database  value: global.keycloak.postgresUser
-  # - DB_PASSWORD: database password for keycloak       value: global.keycloak.postgresPassword.value
-  # keycloak-password-secret
-  # - KEYCLOAK_USER: keyclaok admin username            value: global.keycloak.user
-  # - KEYCLOAK_PASSWORD: keycloak admin password        value: global.keycloak.password.value
   extraEnvFrom: |
     - secretRef:
         name: renku-keycloak-postgres
     - secretRef:
         name: keycloak-password-secret
-  extraVolumeMounts: |
-    - name: theme
-      mountPath: /opt/keycloak/themes/renku-theme
-    - name: etc-ssl-certs
-      mountPath: /etc/pki/ca-trust/extracted
-      readOnly: true
-  extraVolumes: |
-    - name: theme
-      emptyDir: {}
-    - name: etc-ssl-certs
-      emptyDir:
-        medium: "Memory"
-    {{- if .Values.global.certificates.customCAs }}
-    - name: custom-ca-certs
-      projected:
-        defaultMode: 0777
-        sources:
-        {{- range $customCA := .Values.global.certificates.customCAs }}
-          - secret:
-              name: {{ $customCA.secret }}
-        {{- end -}}
-    {{- end -}}
-  ## Create a demo user in keycloak? Note that the password for the demo
-  ## user must be queried from kubernetes (see the rendered NOTES.txt
-  ## template which is shown after a successul deployment).
-  createDemoUser: false
-  ## This section points to an image used to create
-  ## a Renku realm and initialize it with the necessary
-  ## clients during deployment. It should not be necessary
-  ## to modify these values. This step is omitted if no
-  ## keycloak admin username/password is supplied.
-  initRealm:
-    image:
-      repository: renku/init-realm
-      tag: "latest"
-  ## Skip Keycloak testing when running Helm test
-  test:
-    enabled: false
   extraInitContainers: |
     - name: theme-provider
       image: renku/keycloak-theme:4.1.2
@@ -329,99 +457,277 @@ keycloakx:
           mountPath: /usr/share/pki/ca-trust-source/anchors
           readOnly: true
     {{- end -}}
+  extraVolumeMounts: |
+    - name: theme
+      mountPath: /opt/keycloak/themes/renku-theme
+    - name: etc-ssl-certs
+      mountPath: /etc/pki/ca-trust/extracted
+      readOnly: true
+  extraVolumes: |
+    - name: theme
+      emptyDir: {}
+    - name: etc-ssl-certs
+      emptyDir:
+        medium: "Memory"
+    {{- if .Values.global.certificates.customCAs }}
+    - name: custom-ca-certs
+      projected:
+        defaultMode: 0777
+        sources:
+        {{- range $customCA := .Values.global.certificates.customCAs }}
+          - secret:
+              name: {{ $customCA.secret }}
+        {{- end -}}
+    {{- end -}}
   ingress:
     enabled: false
-# Postgresql configuration
-# The bitnami postgres chart offers a variety of configuration options, most of
-# which are not explicitly mentioned here. We predominantly list the values where we
-# deviate from the defaults or where we expect the some deployment specific values
-# to be set. For all options and their defaults see:
-# https://github.com/bitnami/charts/tree/master/bitnami/postgresql#parameters
-# For production deployments check out
-# https://github.com/bitnami/charts/blob/master/bitnami/postgresql/values-production.yaml
+  initRealm:
+    image:
+      repository: renku/init-realm
+      tag: latest
+  postgresql:
+    enabled: false
+  test:
+    enabled: false
+nodeSelector: {}
+notebooks:
+  autoscaling:
+    enabled: false
+    maxReplicas: 5
+    minReplicas: 2
+    targetCPUUtilizationPercentage: 50
+  cloudstorage:
+    azureBlob:
+      enabled: false
+      readOnly: true
+    s3:
+      enabled: false
+      installDatashim: false
+      readOnly: true
+  culling:
+    hibernatedSecondsThreshold:
+      registered: 259200
+    idleSecondsThreshold:
+      anonymous: 43200
+      registered: 86400
+    maxAgeSecondsThreshold:
+      anonymous: 0
+      registered: 0
+  debug: true
+  defaultSessionImage: renku/renkulab-py:3.9-0.18.0
+  dummyStores: false
+  enforceCPULimits: "off"
+  gitClone:
+    image:
+      name: renku/git-clone
+      tag: 1.20.2
+  gitHttpsProxy:
+    image:
+      name: renku/git-https-proxy
+      tag: 1.20.2
+  gitRpcServer:
+    image:
+      name: renku/git-rpc-server
+      tag: 1.20.2
+  gitlab:
+    registry:
+      host: null
+    url: null
+  image:
+    pullPolicy: IfNotPresent
+    repository: renku/renku-notebooks
+    tag: 1.20.2
+  ingress:
+    annotations: {}
+    enabled: false
+    hosts:
+    - chart-example.local
+    path: /
+    tls: []
+  k8sWatcher:
+    autoscaling:
+      enabled: false
+      maxReplicas: 5
+      minReplicas: 2
+      targetCPUUtilizationPercentage: 50
+    image:
+      pullPolicy: IfNotPresent
+      repository: renku/k8s-watcher
+      tag: 1.20.2
+    replicaCount: 1
+    resources: {}
+  oidc:
+    allowUnverifiedEmail: false
+    authUrl: null
+    clientId: renku-jupyterserver
+    clientSecret: null
+    tokenUrl: null
+  rbac:
+    create: true
+    serviceAccountName: default
+  replicaCount: 2
+  resources: {}
+  sentry:
+    dsn: null
+    enabled: false
+    environment: null
+    sampleRate: 0.2
+  serverDefaults:
+    cpu_request: 0.5
+    defaultUrl: /lab
+    disk_request: 1G
+    gpu_request: 0
+    lfs_auto_fetch: false
+    mem_request: 1G
+  serverOptions:
+    cpu_request:
+      default: 0.5
+      displayName: Number of CPUs
+      options:
+      - 0.5
+      - 1
+      order: 2
+      type: enum
+    defaultUrl:
+      default: /lab
+      displayName: Default Environment
+      options:
+      - /lab
+      order: 1
+      type: enum
+    disk_request:
+      default: 1G
+      displayName: Amount of Storage
+      options:
+      - 1G
+      - 10G
+      order: 4
+      type: enum
+    gpu_request:
+      default: 0
+      displayName: Number of GPUs
+      options:
+      - 0
+      order: 5
+      type: enum
+    lfs_auto_fetch:
+      default: false
+      displayName: Automatically fetch LFS data
+      order: 6
+      type: boolean
+    mem_request:
+      default: 1G
+      displayName: Amount of Memory
+      options:
+      - 1G
+      - 2G
+      order: 3
+      type: enum
+  service:
+    port: 80
+    type: ClusterIP
+  sessionAffinity: {}
+  sessionAutosave:
+    minimumLFSFileSizeBytes: 1000000
+    terminationGracePeriodSeconds: 600
+    terminationWarningDurationSeconds: 3600
+  sessionIngress:
+    annotations:
+      kubernetes.io/ingress.class: nginx
+      nginx.ingress.kubernetes.io/proxy-body-size: "0"
+      nginx.ingress.kubernetes.io/proxy-buffer-size: 8k
+      nginx.ingress.kubernetes.io/proxy-request-buffering: "off"
+    host: null
+    tlsSecret: null
+  sessionNodeSelector: {}
+  sessionSentry:
+    gitClone:
+      dsn: null
+      enabled: false
+      environment: null
+      sampleRate: 0.2
+    sidecar:
+      dsn: null
+      enabled: false
+      environment: null
+      sampleRate: 0.2
+  sessionTolerations: []
+  sessionsNamespace: null
+  ssh:
+    autoscaling:
+      enabled: false
+      maxReplicas: 3
+      minReplicas: 1
+      targetCPUUtilizationPercentage: 50
+    enabled: false
+    hostKeySecret: null
+    image:
+      pullPolicy: IfNotPresent
+      repository: renku/ssh-jump-host
+      tag: 1.20.2
+    replicaCount: 1
+    resources: {}
+    service:
+      port: 22
+      type: ClusterIP
+  tests:
+    enabled: false
+    gitlab_token: null
+    image:
+      pullPolicy: IfNotPresent
+      repository: renku/renku-notebooks-tests
+      tag: 1.20.2
+    oidc_issuer: null
+    sessionTypes:
+    - registered
+  userSessionPersistentVolumes:
+    enabled: true
+    useEmptyDirSizeLimit: false
+podSecurityContext: {}
 postgresql:
-  # If an external Postgres database is defined in global.externalServices.postgresql,
-  # postgresql.enabled should be false, and global.externalServices.postgresql.enabled should be true.
-  # By default, Renku-bundled Postgres is enabled.
   enabled: true
-  ## We use the defaults here.
-  postgresqlDatabase: postgres
-  postgresqlUsername: postgres
-  ## The admin password should be set explicitly, otherwise a random string will be created.
-  ## Alternatively an existing secret can be provided. Note that postgres
-  ## DOES NOT tolerate a change of the admin password when upgrading.
-  # postgresqlPassword:
-
-  ## Use an existing secret instead of creating a new one. It must have a
-  ## postgresql-password key containing the password for the posgres user.
-  # existingSecret:
   image:
     repository: bitnami/postgresql
     tag: 12.8.0
   persistence:
-    ## We use the defaults here, but they will probably be modified for most deployments.
     enabled: true
     size: 8Gi
-    ## Provide an existing PersistentVolumeClaim to be reused.
-    # existingClaim:
-  # Consider replication. These are the defaults for the basic settings.
+  postgresqlDatabase: postgres
+  postgresqlUsername: postgres
   replication:
     enabled: false
-    user: repl_user
-    password: repl_password # generate a random password `openssl rand -hex 32`
+    password: repl_password
     slaveReplicas: 1
+    user: repl_user
 redis:
-  # If set to true, a HA redis will be included in the Renku release.
-  install: true
-  ###########################################################################
-  ### Configuration that is unknown to the redis chart but picked up      ###
-  ### by the renku chart.                                                 ###
-  ###########################################################################
-
-  # If set to true, we'll create a k8s secret to be used as existingSecret
-  # for password auth.
-  createSecret: true
-  # The actual password, ignored if createSecret is false.
-  password: # openssl rand -hex 32
-  ###########################################################################
-  ### Configuration that is passed on to the redis chart, for details and ###
-  ### further config options check out                                    ###
-  ### https://github.com/bitnami/charts/tree/master/bitnami/redis         ###
-  ###########################################################################
-
-  # the values below were taken from the default values for the chart
-  # and adapted to our context. The following contains a mix of specific
-  # customisations plus some higher level defaults which have been
-  # retained here so someone can get some overview of what this values
-  # file can do.
-  fullnameOverride: renku-redis
-  # the image version used is the default specified in the helm chart
-  # image:
-
-  # replication is the default; standalone is also an option but this results in
-  # no read only replicas
   architecture: replication
   auth:
-    enabled: true
-    # renku-gateway requires sentinel authentication to be enabled
-    sentinel: true
-    existingSecret: redis-secret
-    existingSecretPasswordKey: redis-password
-    # this is a default but is kept here to highlight the fact that AOF is not used
-    # in this install. Note that having this enabled without a persistent volume
-    # is quite useless as it meant that keys get written to a file (and hence slower writes)
-    # but that file is deleted when the pod is deleted.
     commonConfiguration: |-
       # Disable AOF https://redis.io/topics/persistence#append-only-file
       appendonly no
       # Disable RDB persistence.
       save ""
-  # when using sentinel the master block is completely ignored
-  # master:
+    enabled: true
+    existingSecret: redis-secret
+    existingSecretPasswordKey: redis-password
+    sentinel: true
+  createSecret: true
+  fullnameOverride: renku-redis
+  install: true
+  metrics:
+    enabled: true
+    podAnnotations:
+      prometheus.io/port: "9121"
+      prometheus.io/scrape: "true"
+  networkPolicy:
+    allowExternal: false
+    enabled: true
+  password: null
   replica:
-    # this controls the amount of redis+sentinel pods which get created
-    # it does relate to sentinel.quorum - if the latter is larger than this,
-    # then clearly things are misconfigured
+    autoscaling:
+      enabled: false
+    persistence:
+      enabled: false
     replicaCount: 3
     resources:
       limits:
@@ -432,1086 +738,195 @@ redis:
         memory: 256Mi
     updateStrategy:
       type: RollingUpdate
-    persistence:
-      # pvc will not get created
-      enabled: false
-    autoscaling:
-      enabled: false
-  # when sentinel is enabled, a sentinel container is placed in each
-  # pod and this does checking to ensure that the system always has a
-  # master
   sentinel:
+    downAfterMilliseconds: 1000
     enabled: true
-    # this determines how many nodes must agree before a master
-    # reelection is required
+    failoverTimeout: 2000
+    getMasterTimeout: 5
     quorum: 2
-    service:
-      sentinel: 26379
     resources:
       requests:
         cpu: 200m
         memory: 64Mi
-    downAfterMilliseconds: 1000
-    failoverTimeout: 2000
-    # the default is 220 which causes redis to take ~4 minutes to fully start
-    getMasterTimeout: 5
-  # network policies are supported by the chart
-  networkPolicy:
-    enabled: true
-    # this adds a specific ingress rule which allows pods to connect to
-    # this redis instance if they have the label redis-client: true
-    allowExternal: false
-  metrics:
-    # when this is enabled, a metrics container is inserted into each pod
-    enabled: true
-    # defaults - included here to be explicit
-    podAnnotations:
-      prometheus.io/scrape: "true"
-      prometheus.io/port: "9121"
-  # default - making explicit
+    service:
+      sentinel: 26379
   sysctl:
     enabled: false
-## Gitlab configuration
-gitlab:
-  ## Spawn a gitlab instance
+securityContext:
+  allowPrivilegeEscalation: false
+  runAsGroup: 1000
+  runAsNonRoot: true
+  runAsUser: 1000
+swagger:
   enabled: true
-  ## Password for the `root` user
-  password: gitlabadmin
-  ## Gitlab image
+tests:
+  enabled: false
   image:
-    #   pullPolicy: IfNotPresent
-    repository: gitlab/gitlab-ce
-    # Check out the gitlab docs on upgrading versions before changing the image tag.
-    # https://docs.gitlab.com/ee/update/#upgrade-paths
-    # in particular major versions https://docs.gitlab.com/ce/update/#upgrading-to-a-new-major-version
-    tag: 14.10.5-ce.0
-  ## automatically log in to gitlab
-  oauth:
-    autoSignIn: true
-  ## Pod affinity for Gitlab deployment
-  # affinity: {}
-  ## Node selector for Gitlab deployment
-  # nodeSelector: {}
-  ## Pod tolerations for Gitlab deployment
-  # tolerations: []
-
-  ## Resource requests/limits for Gitlab
-  # resources: {}
-
-  ## Registration token for gitlab runners (initial value, can be regenerated from gitlab admin ui)
-  ## Generated using: `openssl rand -hex 32`
-  sharedRunnersRegistrationToken:
-  ## Set to true to make the user 'demo' a GitLab admin
-  demoUserIsAdmin: false
-  ## External port for git ssh protocol
-  ## This setting affects the copy-paste repo git+ssh URL
-  # sshPort: 22
-
-  ## LFS objects settings
-  ## Used to store git-lfs objects externally
-  ## Note: bucket must exist before use, GitLab won't do it
-  ## Follows: https://docs.gitlab.com/ce/workflow/lfs/lfs_administration.html#storing-lfs-objects-in-remote-object-storage
-  # lfsObjects:
-  ## Set to true to enable remote LFS objects
-  # enabled: false
-  ## Bucket name
-  # bucketName: lfs-objects
-  # directUpload: false
-  # backgroundUpload: true
-  # proxyDownload: false
-  # connection: |-
-  #   {
-  #     'provider' => 'AWS',
-  #     'region' => 'eu-central-1',
-  #     'aws_access_key_id' => '1ABCD2EFGHI34JKLM567N',
-  #     'aws_secret_access_key' => 'abcdefhijklmnopQRSTUVwxyz0123456789ABCDE',
-  #     # The below options configure an S3 compatible host instead of AWS
-  #     'host' => 'localhost',
-  #     'endpoint' => 'http://127.0.0.1:9000',
-  #     'path_style' => true
-  #   }
-
-  ## Persistent Volume settings
-  persistence:
-    ## database data Persistent Volume Storage Class
-    ## If defined, storageClassName: <storageClass>
-    ## If set to "-", storageClassName: "", which disables dynamic provisioning
-    ## If undefined (the default) or set to null, no storageClassName spec is
-    ##   set, choosing the default provisioner.  (gp2 on AWS, standard on
-    ##   GKE, AWS & OpenStack)
-    ##
-    # storageClass:
-
-    # accessMode: ReadWriteOnce
-    size: 30Gi
-    ## Mount points for the PV
-    ## Setup according to the volumes declared in the Gitlab image
-    # gitlab_data:
-    #   subPath: data
-    #   mountPath: /var/opt/gitlab
-    # gitlab_config:
-    #   subPath: config
-    #   mountPath: /etc/gitlab
-    # gitlab_logs:
-    #   subPath: logs
-    #   mountPath: /var/log/gitlab
-
-    ## A manually managed Persistent Volume and Claim
-    ## Requires persistence.enabled: true
-    ## If defined, PVC must be created manually before volume will be bound
-    # existingClaim:
-  ## Set to false to disable the use of Persistent Volume
-  ## The databases will be lost when the pod is terminated!
-  # enabled: true
-
-  ## Service configuration for Gitlab
-  ## Modify service.type according to your setup
-  # service:
-  #   port: 80
-  #   type: ClusterIP
-
-  ## Container image registry settings
-  registry:
-    ## Set to true to enable Gitlab registry
+    repository: renku/tests
+    tag: 0.36.3
+  resources:
+    requests:
+      cpu: 500m
+      ephemeral-storage: 3G
+      memory: 3G
+  resultsS3:
     enabled: false
-    ## The URL to access the registry
-    # externalUrl:
-    ## Set `exposedAs` to "NodePort" when deploying on minikube
-    ## Set `exposedAs` to "Ingress" to expose the registry on an alternate domain.
-    # exposedAs: NodePort
-    ## Storage driver configuration for the registry
-    ## See: https://docs.gitlab.com/ee/administration/container_registry.html#container-registry-storage-driver
-    # storage: |-
-    #   {
-    #     's3' => {
-    #       'accesskey' => 's3-access-key',
-    #       'secretkey' => 's3-secret-key-for-access-key',
-    #       'bucket' => 'your-s3-bucket',
-    #       'region' => 'your-s3-region'
-    #     }
-    #   }
-    ## Registry ingress, when `exposedAs` is set to "Ingress"
-    ## Uses conventional settings for ingress
-    ## Find below an example of values
-    # ingress:
-    #   annotations:
-    #     cert-manager.io/cluster-issuer: letsencrypt-production
-    #     kubernetes.io/ingress.class: nginx
-    #     nginx.ingress.kubernetes.io/proxy-body-size: '0'
-    #   hosts:
-    #   - registry.example.com
-    #   tls:
-    #   - hosts:
-    #     - registry.example.com
-    #     secretName: registry-tls
-  ## Add some extra configuration to gitlab.rb
-  # extraConfig: |
-  #     ## Fix number of unicorn workers
-  #     unicorn['worker_processes'] = 7
-#     ## Fix something else
-#     ...
-
-## Configuration for the UI service
+tolerations: []
 ui:
   client:
-    ## The URL for the client
-    url:
-    replicaCount: 1
-    image:
-      repository: renku/renku-ui
-      tag: "3.15.1"
-      pullPolicy: IfNotPresent
-      ## Optionally specify an array of imagePullSecrets.
-      ## Secrets must be manually created in the namespace.
-      ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/
-      ##
-      # pullSecrets:
-      #   - myRegistrKeySecretName
-    service:
-      type: ClusterIP
-      port: 80
-    ingress:
-      enabled: false
-    resources: {}
-    # We usually recommend not to specify default resources and to leave this as a conscious
-    # choice for the user. This also increases chances charts run on environments with little
-    # resources, such as Minikube. If you do want to specify resources, uncomment the following
-    # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
-    # limits:
-    #  cpu: 100m
-    #  memory: 128Mi
-    # requests:
-    #  cpu: 100m
-    #  memory: 128Mi
-
-    nodeSelector: {}
-    tolerations: []
     affinity: {}
-    podSecurityContext: {}
-    securityContext:
-      runAsUser: 101
-      runAsNonRoot: true
-      allowPrivilegeEscalation: false
-    # This defines the message displayed on the home page of logged in users.
-    dashboardMessage:
+    canary:
       enabled: false
-      # This is the main message and is rendered as Markdown content.
-      text: "# Welcome to Renku! \U0001F438\n\n✨This is an example welcome message.✨\n"
-      # This message is displayed when the user click "Read more"
-      # and is rendered as Markdown content.
-      # Set this to the empty string "" to disable the "Read more" button.
+      image:
+        repository: renku/renku-ui
+        tag: 0.11.16
+    coreApiVersionConfig:
+      coreApiVersion: /
+    dashboardMessage:
       additionalText: |
         ℹ️ Renku documentation: https://renku.readthedocs.io/en/stable/
-      # Style of the message card. Allowed values are:
-      # - "plain" -> simple white background card, no icon
-      # - "success" -> green background, green checkmark icon
-      # - "info" -> blue background, "i" in circle icon
-      # - "warning" -> yellow background, triangle exclamation mark icon
-      # - "danger" -> red background, triangle exclamation mark icon
-      style: info
-      # When this is set to true, users can dismiss the message and hide
-      # it form the dashboard page until the tab is refreshed.
       dismissible: true
-    templates:
-      custom: true
-      repositories:
-      - url: https://github.com/SwissDataScienceCenter/renku-project-template
-        ref: 0.7.1
-        name: Renku
-      - url: https://github.com/SwissDataScienceCenter/contributed-project-templates
-        ref: 0.6.0
-        name: Community
-    # This defines the threshold for automatically showing a preview when browsing projects' files.
-    # Above the soft limit, the user receives a warning. Above the hard limit, no preview is available.
-    previewSizeThreshold:
-      soft: 1048576 # 1MB
-      hard: 10485760 # 10MB
-    # This defines the threshold for displaying a message when a user is trying to upload a large file
-    # so that they know it's not necessary to wait for this. There is only hard limit for now.
-    uploadSizeThreshold:
-      soft: 104857600 # 100MB
-    # Any string here, other than 'false', will enable the maintenance page and be added on it as an info.
-    # Setting 'true' will display a standard message embedded in maintenace page.
-    maintenance: false
-    sentry:
       enabled: false
-      dsn: ""
-      environment: ""
-      sampleRate: 0 # number between 0 and 1. (e.g., to send 20% of transactions, set 0.2.)
-    # If you want to enable the privacy page, please create also a configMap and set its name in the
-    # privacy.page.configMapName value. As a reference, you can use the sample configMap generated when
-    # enabling the feature.
-    privacy:
-      enabled: false
-      page:
+      style: info
+      text: "# Welcome to Renku! \U0001F438\n\n✨This is an example welcome message.✨\n"
+    homepage:
+      custom:
         enabled: false
-        #configMapName: privacy-page
-        #configMapKey: privacy_statement
+        main:
+          backgroundImage:
+            url: ""
+          contentMd: |
+            # Welcome to RenkuLab
+      showcase:
+        description: The case studies presented here **bridge the gap** from domain
+          to data science and provide experts from both sides with the means to examine,
+          confirm, and extend the datasets and their analyses, without extensive investments
+          of time and infrastructure.
+        enabled: false
+        projects:
+        - identifier: hdbi/data-management/cccooci
+        - identifier: renku-ui-tests/stable-project
+          overrideDescription: This is a project for **testing**. You may find it
+            useful to look at.
+          overrideImageUrl: https://gitlab.renkulab.io/uploads/-/system/project/avatar/36159/graphical_abstract.png
+          overrideTitle: 'Stable Project: A project for testing'
+        title: 'Renku real-world use cases: Conducted by SDSC and ETH Domain'
+      tutorialLink: https://renku.readthedocs.io/en/stable/tutorials/01_firststeps.html
+    image:
+      pullPolicy: IfNotPresent
+      repository: renku/renku-ui
+      tag: 3.15.1
+    ingress:
+      enabled: false
+    maintenance: false
+    nodeSelector: {}
+    podSecurityContext: {}
+    previewSizeThreshold:
+      hard: 10485760
+      soft: 1048576
+    privacy:
       banner:
         content: |
           This website requires cookies in order to ensure basic functionality. By clicking
           or navigating the site, you consent to the use of cookies in accordance with
           our <u><a class="text-white" href="/privacy">Privacy Policy</a></u>.
         layout:
-          cookieName: RenkuLabPrivacy
-          disableStyles: true
-          containerClasses: fixed-bottom p-3 bg-dark
-          contentClasses: text-white small
           buttonClasses: btn btn-sm btn-light me-2
           buttonWrapperClasses: mt-2
-    ## If you maintain a statuspage.io page for the status of your RenkuLab instance, put the id for it here.
+          containerClasses: fixed-bottom p-3 bg-dark
+          contentClasses: text-white small
+          cookieName: RenkuLabPrivacy
+          disableStyles: true
+      enabled: false
+      page:
+        enabled: false
+    replicaCount: 1
+    resources: {}
+    securityContext:
+      allowPrivilegeEscalation: false
+      runAsNonRoot: true
+      runAsUser: 101
+    sentry:
+      dsn: ""
+      enabled: false
+      environment: ""
+      sampleRate: 0
+    service:
+      port: 80
+      type: ClusterIP
     statuspage:
       id: ""
-    homepage:
-      custom:
-        # If you want to enable a custom content on the homepage, you can enable it and provide content here
-        enabled: false
-        main:
-          contentMd: |
-            # Welcome to RenkuLab
-          backgroundImage:
-            url: ""
-      # The default is to show the tutorial from the docs, but can also link to an
-      # internal project
-      tutorialLink: https://renku.readthedocs.io/en/stable/tutorials/01_firststeps.html
-      # Projects to highlight on the homepage
-      showcase:
-        # If you want to showcase certain project on the homepage, you can enable the feature and provide
-        # the project identifiers (namespace/project name)
-        enabled: false
-        title: "Renku real-world use cases: Conducted by SDSC and ETH Domain"
-        # Markdown is allowed in the description
-        description: The case studies presented here **bridge the gap** from domain
-          to data science and provide experts from both sides with the means to examine,
-          confirm, and extend the datasets and their analyses, without extensive investments
-          of time and infrastructure.
-        # Projects to highlight on the homepage -- default to none
-        # projects: []
-        # To showcase projects, provide the identifier following the structure below
-        # title, description, and imageUrl can be overridden, as illustrated below, if desired.
-        projects:
-        - identifier: hdbi/data-management/cccooci
-        - identifier: renku-ui-tests/stable-project
-          overrideTitle: "Stable Project: A project for testing"
-          overrideDescription: "This is a project for **testing**. You may find it
-            useful to look at."
-          overrideImageUrl: https://gitlab.renkulab.io/uploads/-/system/project/avatar/36159/graphical_abstract.png
-    coreApiVersionConfig:
-      ## Configuration to specify which version of the core-service API should be used
-      # "/" indicates that the latest version should be used
-      # A version number "2.0" can be used to specify one explicitly
-      # The coreApiVersion specifies the default version to use
-      coreApiVersion: "/"
-      # With overrides, the version for a specific metadata version can be changed
-      # overrides:
-      #   9: "/"
-      #   10: "/"
-    canary:
-      enabled: false
-      image:
-        repository: renku/renku-ui
-        tag: "0.11.16"
+    templates:
+      custom: true
+      repositories:
+      - name: Renku
+        ref: 0.7.1
+        url: https://github.com/SwissDataScienceCenter/renku-project-template
+      - name: Community
+        ref: 0.6.0
+        url: https://github.com/SwissDataScienceCenter/contributed-project-templates
+    tolerations: []
+    uploadSizeThreshold:
+      soft: 104857600
+    url: null
   server:
-    ## The URL for the server service; the URL used by the client is the server.url + /ui-server endpoint.
-    url:
-    replicaCount: 1
-    keepCookies: []
-    image:
-      repository: renku/renku-ui-server
-      tag: "3.15.1"
-      pullPolicy: IfNotPresent
-    imagePullSecrets: []
-    nameOverride: ""
-    fullnameOverride: ""
-    serviceAccount:
-      # Specifies whether a service account should be created
-      create: true
-      # The name of the service account to use.
-      # If not set and create is true, a name is generated using the fullname template
-      name: ""
-    podSecurityContext: {}
-    securityContext:
-      runAsUser: 1000
-      runAsGroup: 1000
-      runAsNonRoot: true
-      allowPrivilegeEscalation: false
-    service:
-      type: ClusterIP
-      port: 80
-    ingress:
+    affinity: {}
+    authentication:
+      expirationTolerance: 10
+      id: renku-ui
+      url: null
+    autoscaling:
       enabled: false
+    fullnameOverride: ""
+    image:
+      pullPolicy: IfNotPresent
+      repository: renku/renku-ui-server
+      tag: 3.15.1
+    imagePullSecrets: []
+    ingress:
       annotations: {}
-      # kubernetes.io/ingress.class: nginx
-      # kubernetes.io/tls-acme: "true"
+      enabled: false
       hosts:
       - host: chart-example.local
         paths: []
       tls: []
-      #  - secretName: chart-example-tls
-      #    hosts:
-      #      - chart-example.local
-    ## Configure autoscaling
-    # configure autoscale only where needed
-    autoscaling:
-      enabled: false
-      # minReplicas: 2
-      # maxReplicas: 5
-      # cpuUtilization: 70
+    keepCookies: []
+    nameOverride: ""
+    nodeSelector: {}
+    podSecurityContext: {}
+    prometheus:
+      annotations:
+        prometheus.io/path: /metrics
+        prometheus.io/port: "8080"
+        prometheus.io/scrape: "true"
+      enabled: true
+    replicaCount: 1
     resources:
       requests:
         cpu: 100m
         memory: 128Mi
-    nodeSelector: {}
-    tolerations: []
-    affinity: {}
+    securityContext:
+      allowPrivilegeEscalation: false
+      runAsGroup: 1000
+      runAsNonRoot: true
+      runAsUser: 1000
     sentry:
-      enabled: false
+      debugMode: false
       dsn: ""
+      enabled: false
       environment: ""
       sampleRate: 0
-      debugMode: false
-    authentication:
-      url:
-      id: renku-ui
-      # secret: 1234abcd # do not provide any value here to use the global gateway client secret
-      expirationTolerance: 10 # in seconds
+    service:
+      port: 80
+      type: ClusterIP
+    serviceAccount:
+      create: true
+      name: ""
+    tolerations: []
+    url: null
     webSocket:
       enabled: true
-    prometheus:
-      enabled: true
-      annotations:
-        prometheus.io/path: "/metrics"
-        prometheus.io/port: "8080"
-        prometheus.io/scrape: "true"
-amalthea:
-  scope:
-    clusterWide: false
-  deployCrd: true
-  ## If enabling S3 mounts uncomment the section below
-  # extraChildResources:
-  #   - name: datasets
-  #     group: com.ie.ibm.hpsys
-## Used only if S3 Mounts are enabled
-dlf-chart:
-  csi-sidecars-rbac:
-    enabled: true
-  csi-nfs-chart:
-    enabled: false
-  csi-s3-chart:
-    mounter: "goofys"
-    enabled: true
-  csi-h3-chart:
-    enabled: false
-  dataset-operator-chart:
-    enabled: true
-notebooks:
-  cloudstorage:
-    ## If enabled this will allow mounting of buckets into user sessions
-    ## from any S3-compatible storage provider.
-    s3:
-      enabled: false
-      installDatashim: false
-      readOnly: true
-    ## Azure blob storage mounting support is experimental. The CSI
-    ## storage driver for mounting azure blob storage has to be already installed
-    ## in the cluster if enabled.
-    azureBlob:
-      enabled: false
-      readOnly: true
-  # configuration for user session persistent volumes
-  userSessionPersistentVolumes:
-    enabled: true
-    # storageClass: leave undefined to use default, otherwise specify required class
-    ## Prevents from applying size limits if emptyDirs are used for user sessions.
-    ## This may be desirable because going over the limit for an emptyDir results in
-    ## immediate eviction of the user session. EmptyDirs are used when the enabled flag
-    ## above is set to false.
-    useEmptyDirSizeLimit: false
-  gitlab:
-    ## specify the GitLab instance URL
-    url:
-    registry:
-      ## Set the default image registry
-      host:
-  ## For sending exceptions to Sentry, specify the DSN to use
-  sentry:
-    enabled: false
-    dsn:
-    environment:
-    ## Sample rate is used for performance monitoring in sentry
-    sampleRate: 0.2
-  sessionSentry:
-    gitClone:
-      enabled: false
-      dsn:
-      environment:
-      ## Sample rate is used for performance monitoring in sentry
-      sampleRate: 0.2
-    sidecar:
-      enabled: false
-      dsn:
-      environment:
-      ## Sample rate is used for performance monitoring in sentry
-      sampleRate: 0.2
-  replicaCount: 2
-  ## Configure autoscaling
-  autoscaling:
-    enabled: false
-    minReplicas: 2
-    maxReplicas: 5
-    targetCPUUtilizationPercentage: 50
-  image:
-    repository: renku/renku-notebooks
-    tag: "1.20.2"
-    pullPolicy: IfNotPresent
-    ## Optionally specify an array of imagePullSecrets.
-    ## Secrets must be manually created in the namespace.
-    ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/
-    ##
-    # pullSecrets:
-    #   - myRegistrKeySecretName
-  # turns on flask debug mode
-  debug: true
-  # oidc settings
-  oidc:
-    clientId: renku-jupyterserver
-    clientSecret:
-    tokenUrl:
-    authUrl:
-    allowUnverifiedEmail: false
-  sessionIngress:
-    host:
-    tlsSecret:
-    annotations:
-      kubernetes.io/ingress.class: nginx
-      nginx.ingress.kubernetes.io/proxy-body-size: "0"
-      nginx.ingress.kubernetes.io/proxy-buffer-size: 8k
-      nginx.ingress.kubernetes.io/proxy-request-buffering: "off"
-  ## Use a specific namespace to launch sessions in
-  ## If left null then sessions will be launched in the same namespace
-  ## as where the chart is installed.
-  sessionsNamespace:
-  sessionAutosave:
-    ## Any file higher than the minimum will be added to LFS
-    minimumLFSFileSizeBytes: 1000000
-    ## How long should k8s wait for an autosave branch to be created before
-    ## fully and forcefully removing a user session
-    terminationGracePeriodSeconds: 600
-    ## The warning for session termination shows up this many seconds before the
-    ## session is terminated due to idleness.
-    terminationWarningDurationSeconds: 3600
-  ## Setup node selector, tolerations and node affinities for user sessions that are launched
-  ## by the notebook service. These can be used so that user sessions are only scheduled on
-  ## dedicated nodes rather than on all nodes in a cluster. A strict setup where session pods
-  ## are scheduled only on dedicated nodes and nothing else is scheduled on said nodes would involve:
-  ## (i) taints on the nodes to prevent other non-session workloads from getting scheduled there,
-  ## (ii) tolerations below to make sure the user session pods can get schedulded on the dedicated nodes,
-  ## (iii) node affinity below to make sure the user sessions do not get scheduled on other nodes.
-  sessionNodeSelector: {}
-  sessionTolerations: []
-  sessionAffinity: {}
-  ## Default server options - these will be provided to the user in the UI
-  ## Note that requests are also limits, i.e. a user's jupyter kernel
-  ## that exceeds the requested memory limit will be terminated/restarted.
-  serverOptions:
-    defaultUrl:
-      order: 1
-      displayName: Default Environment
-      type: enum
-      default: "/lab"
-      ## add /rstudio to the list for R projects
-      options: ["/lab"]
-    cpu_request:
-      order: 2
-      displayName: Number of CPUs
-      type: enum
-      default: 0.5
-      options: [0.5, 1.0]
-    mem_request:
-      order: 3
-      displayName: Amount of Memory
-      type: enum
-      default: 1G
-      options: [1G, 2G]
-    disk_request:
-      order: 4
-      displayName: Amount of Storage
-      type: enum
-      default: "1G"
-      options: ["1G", "10G"]
-      ## set allow_any_value to true to not enforce value checks
-      ## arbitrary PV sizes
-      # allow_any_value: true
-      # value_range:
-      #   type: bytes
-      #   min: "1G"
-      #   max: "100G"
-    gpu_request:
-      order: 5
-      displayName: Number of GPUs
-      type: enum
-      default: 0
-      options: [0]
-    lfs_auto_fetch:
-      order: 6
-      displayName: Automatically fetch LFS data
-      type: boolean
-      default: false
-  ## Default server option values used to launch a session when
-  ## such values are not provided explicitly in the post request.
-  ## It is mandatory to provide all of these to deploy the helm chart.
-  ## The defaults below do not have to be equal to the default values
-  ## specified in the server options for the UI above but they have to be
-  ## within the available choices or valid ranges.
-  serverDefaults:
-    defaultUrl: "/lab"
-    cpu_request: 0.5
-    mem_request: 1G
-    disk_request: 1G
-    gpu_request: 0
-    lfs_auto_fetch: false
-  ## How to enforce CPU limits for sessions, options are "lax", "off" or "strict"
-  ## - "strict" = CPU limit equals cpu request
-  ## - "lax" = CPU limit equals 3x cpu request
-  ## - "off" = no CPU limits at all
-  enforceCPULimits: "off"
-  ## Default image used when the requested image for a user session cannot be found.
-  defaultSessionImage: "renku/renkulab-py:3.9-0.18.0"
-  gitRpcServer:
+versions:
+  latest:
     image:
-      name: renku/git-rpc-server
-      tag: "1.20.2"
-  gitHttpsProxy:
-    image:
-      name: renku/git-https-proxy
-      tag: "1.20.2"
-  gitClone:
-    image:
-      name: renku/git-clone
-      tag: "1.20.2"
-  service:
-    type: ClusterIP
-    port: 80
-  rbac:
-    serviceAccountName: default
-    create: true
-  ingress:
-    enabled: false
-    annotations: {}
-    # kubernetes.io/ingress.class: nginx
-    # kubernetes.io/tls-acme: "true"
-    path: /
-    hosts:
-    - chart-example.local
-    tls: []
-    #  - secretName: chart-example-tls
-    #    hosts:
-    #      - chart-example.local
-  resources: {}
-  # We usually recommend not to specify default resources and to leave this as a conscious
-  # choice for the user. This also increases chances charts run on environments with little
-  # resources, such as Minikube. If you do want to specify resources, uncomment the following
-  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
-  # limits:
-  #  cpu: 100m
-  #  memory: 128Mi
-  # requests:
-  #  cpu: 100m
-  #  memory: 128Mi
-
-  culling:
-    # How long before an idle session is removed from the cluster.
-    # Setting a value of zero below makes it so that a session is never culled.
-    idleSecondsThreshold:
-      anonymous: 43200 # 12 hours
-      registered: 86400 # 24 hours
-    # How long before a hibernated session is removed from the cluster. A value
-    # of zero means don't delete. Anonymous users don't have hibernated
-    # sessions, so that can't be configured.
-    hibernatedSecondsThreshold:
-      registered: 259200 # 72 hours
-    maxAgeSecondsThreshold:
-      anonymous: 0 # do not cull sessions solely based on age (use activity)
-      registered: 0 # do not cull sessions solely based on age (use activity)
-  tests:
-    enabled: false
-    oidc_issuer:
-    gitlab_token:
-    ## Specify the session types to be used in the tests, allowed values are 'registered' and/or 'anonymous'
-    sessionTypes: ["registered"]
-    image:
-      repository: renku/renku-notebooks-tests
-      tag: "1.20.2"
-      pullPolicy: IfNotPresent
-  k8sWatcher:
-    image:
-      repository: renku/k8s-watcher
-      tag: "1.20.2"
-      pullPolicy: IfNotPresent
-    resources: {}
-    replicaCount: 1
-    autoscaling:
-      enabled: false
-      targetCPUUtilizationPercentage: 50
-      minReplicas: 2
-      maxReplicas: 5
-  ssh:
-    enabled: false
-    image:
-      repository: renku/ssh-jump-host
-      tag: "1.20.2"
-      pullPolicy: IfNotPresent
-    resources: {}
-    replicaCount: 1
-    service:
-      type: ClusterIP
-      port: 22
-    autoscaling:
-      enabled: false
-      targetCPUUtilizationPercentage: 50
-      minReplicas: 1
-      maxReplicas: 3
-    ## If defined the keys in the secret will be mounted as SSH host keys.
-    ## This is useful to make sure that the host can be properly recognized
-    ## when connecting to a session. If left unset then the host keys are
-    ## likely to change causing ssh connections to fail and require removing the
-    ## old keys from ~/.ssh/known_hosts. Therefore it is reccomended that this is
-    ## set for production. The required keys are:
-    ## - ssh_host_dsa_key
-    ## - ssh_host_dsa_key.pub
-    ## - ssh_host_rsa_key
-    ## - ssh_host_rsa_key.pub
-    ## - ssh_host_ecdsa_key
-    ## - ssh_host_ecdsa_key.pub
-    ## - ssh_host_ed25519_key
-    ## - ssh_host_ed25519_key.pub
-    hostKeySecret:
-  ## Used for testing - should be set to false for production
-  dummyStores: false
-tests:
-  enabled: false
-  image:
-    repository: renku/tests
-    tag: "0.36.3"
-  resources:
-    requests:
-      memory: "3G"
-      cpu: "500m"
-      ephemeral-storage: "3G"
-  ## User account for running `helm test`
-  #parameters:
-  #  email: bwayne@example.com
-  #  username: bwayne
-  #  fullname: Bruce Wayne
-  #  password: IamBatman
-  #  provider:
-  #  register:
-  #  docsRun:
-  #  extantProject:
-  #  anonProject:
-  #  anonAvailable: false
-  #  batchRemove: false
-  #  removePattern:
-  #  testTarget:
-  resultsS3:
-    enabled: false
-    #  host:
-    #  bucket:
-    #  filename:
-    #  accessKey:
-    #  secretKey:
-## Configuration for the Gateway service
-gateway:
-  ## Optional list of allowed sources for Cross-Origin Resource Sharing.
-  ## https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS
-  allowOrigin:
-  # - http://example.com
-  # - https://foo.example.com
-  replicaCount: 1
-  ## Set to true to enable the developement mode. This has negative security
-  ## implications and should never be done in a production setting.
-  development: false
-  ## To protect the backend services from an excessive amount of API calls
-  ## issued by one client, one can enforce rate limits here. The limits apply
-  ## based on the IP address of the client.
-  rateLimits:
-    ## General rate limit, applies to all calls combined.
-    general:
-      enabled: false
-      ## average rate units are requests per second
-      average: 20
-      burst: 100
-  ## For production deployment, you will need to define the secret key.
-  ## This is a random string, used for cryptographic operations on cookies and sensitive information.
-  ## Use `openssl rand -hex 32`.
-  secretKey:
-  image:
-    ## Define the image for the auth middleware
-    auth:
-      repository: renku/renku-gateway
-      tag: "0.23.0"
-      pullPolicy: IfNotPresent
-  service:
-    type: ClusterIP
-    port: 80
-  resources: {}
-  # We usually recommend not to specify default resources and to leave this as a conscious
-  # choice for the user. This also increases chances charts run on environments with little
-  # resources, such as Minikube. If you do want to specify resources, uncomment the following
-  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
-  # limits:
-  #  cpu: 100m
-  #  memory: 128Mi
-  # requests:
-  #  cpu: 100m
-  #  memory: 128Mi
-
-  # GitLab has introduced a new logout behavior in 12.7.0
-  # which was initially broken and fixed in 12.9.0.
-  # Set this to 'true' for versions < 12.7.0, leave it to
-  # 'false' for versions >= 12.9.0.
-  oldGitLabLogout: false
-  # For deployments with an external GitLab instance, we don't want to terminate
-  # a GitLab session when users log out from Renku. By default, we assume that a
-  # dedicated GitLab instance is deployed, so, logging out from Renku should
-  # trigger a logout from GitLab.
-  logoutGitLabUponRenkuLogout: true
-  # sentry configuration
-  sentry:
-    enabled: false
-    dsn:
-    environment:
-    sampleRate: 0.1
-  reverseProxy:
-    image:
-      repository: renku/renku-revproxy
-      tag: "0.23.0"
-      pullPolicy: IfNotPresent
-    metrics:
-      enabled: true
-      port: 8765
-    replicaCount: 2
-    podAnnotations: {}
-    resources: {}
-    autoscaling:
-      enabled: false
-      minReplicas: 2
-      maxReplicas: 5
-      targetMemoryUtilizationPercentage: 75
-      targetCPUUtilizationPercentage: 75
-    updateStrategy: {}
-jena:
-  image:
-    repository: renku/renku-jena
-    pullPolicy: IfNotPresent
-  users:
-    admin:
-      ## Admin user password
-      ## Generate one using: `openssl rand -hex 16`
-      password:
-    renku:
-      ## Dataset user password
-      ## Generate one using: `openssl rand -hex 16`
-      password:
-  persistence:
-    accessModes:
-    - ReadWriteOnce
-    size: 10Gi
-  additionalEnvironmentVariables:
-  - name: JVM_ARGS
-    value: -Xmx2G -Xms2G
-  resources:
-    requests:
-      cpu: 1000m
-      memory: 3Gi
-  additionalVolumeMounts:
-  - name: shiro
-    mountPath: /fuseki/shiro.ini
-    subPath: shiro.ini
-    readOnly: true
-  additionalVolumes:
-  - name: shiro
-    configMap:
-      name: shiro-ini
-      defaultMode: 0555
-  additionalInitContainerScript: "find /fuseki -name tdb.lock -type f -delete && find
-    /fuseki/configuration -name *.ttl -type f -empty -delete && echo clean-up done"
-  test:
-    enabled: false
-graph:
-  webhookService:
-    image:
-      repository: renku/webhook-service
-      tag: '2.45.0'
-      pullPolicy: IfNotPresent
-    service:
-      type: ClusterIP
-      port: 80
-    resources:
-      requests:
-        cpu: 500m
-        memory: 256Mi
-    jvmXmx: 128M
-    gitlab:
-      rateLimit: 100/sec
-    hookToken:
-      ## A secret for signing request header tokens to be sent by GitLab with the Push Events
-      ## Generated using: `openssl rand -hex 8|base64`
-      secret:
-  tokenRepository:
-    image:
-      repository: renku/token-repository
-      tag: '2.45.0'
-      pullPolicy: IfNotPresent
-    service:
-      type: ClusterIP
-      port: 9003
-    resources:
-      requests:
-        cpu: 500m
-        memory: 256Mi
-    jvmXmx: 128M
-    gitlab:
-      rateLimit: 50/sec
-    projectTokenTTL: '365 days'
-    # name of the Project Access Tokens to be created on behalf of the user in GitLab; defaults to .Release.Name
-    projectTokenName:
-    projectTokenDuePeriod: '184 days'
-    connectionPool: 2
-    tokenEncryption:
-      ## A secret for signing access tokens stored in the database
-      ## Generated using: `openssl rand -hex 8|base64`
-      secret:
-  triplesGenerator:
-    replicas: 1
-    image:
-      repository: renku/triples-generator
-      tag: '2.45.0'
-      pullPolicy: IfNotPresent
-    service:
-      type: ClusterIP
-      port: 9002
-    resources:
-      requests:
-        memory: 2048Mi
-        cpu: "1"
-    jvmXmx: 1g
-    gitlab:
-      rateLimit: 30/sec
-    ## a demanded number of concurrent triples generation processes
-    generationProcessesNumber: 2
-    transformationProcessesNumber: 2
-    connectionPool: 5
-    # set this to a pip-installable renku-python version which will be installed on startup
-    renkuPythonDevVersion:
-  knowledgeGraph:
-    replicas: 1
-    image:
-      repository: renku/knowledge-graph
-      tag: '2.45.0'
-      pullPolicy: IfNotPresent
-    service:
-      type: ClusterIP
-      port: 80
-    resources:
-      requests:
-        memory: 512Mi
-    gitlab:
-      rateLimit: 100/sec
-    jvmXmx: 256M
-    services:
-      renku:
-        ## Renku knowledge-graph resources path e.g. `knowledge-graph` would assume
-        ## Renku resource are available at: https://{global.renku.domain}/knowledge-graph
-        resourcesPath: "/knowledge-graph"
-  eventLog:
-    image:
-      repository: renku/event-log
-      tag: '2.45.0'
-      pullPolicy: IfNotPresent
-    service:
-      type: ClusterIP
-      port: 9005
-    resources:
-      requests:
-        memory: 512Mi
-    jvmXmx: 256M
-    gitlab:
-      rateLimit: 10/sec
-    connectionPool: 10
-  commitEventService:
-    image:
-      repository: renku/commit-event-service
-      tag: '2.45.0'
-      pullPolicy: IfNotPresent
-    service:
-      type: ClusterIP
-      port: 9006
-    resources:
-      requests:
-        memory: 384Mi
-    jvmXmx: 128M
-    gitlab:
-      rateLimit: 10/sec
-  sentry:
-    enabled: false
-    dsn: '' # Sentry dsn
-    sentryDsnRenkuPython: '' # Sentry dsn for renku CLI
-    environment: '' # Environment name e.g. renkulabio
-  persistence:
-    enabled: true
-    ## A manually managed Persistent Volume and Claim
-    ## Requires persistence.enabled: true
-    ## If defined, PVC must be created manually before volume will be bound
-    # existingClaim:
-
-    # storageClass: "-"
-    accessMode: ReadWriteOnce
-    size: 2Gi
-## Configuration for renku-core service
-core:
-  apiBasePath: /api
-  cacheDirectory: /svc/cache
-  cleanupInterval: 60 # NOTE: This needs to be a divisor of, and less than cleanupFilesTTL|cleanupProjectsTTL.
-  projectCloneDepth: 1
-  templateCloneDepth: 1
-  maximumUploadSizeBytes: "1073741824" # 1 Gigabyte, store as string to keep Helm from converting it to scientific notation
-  requestTimeout: 600
-  datasetsWorkerQueues: datasets.jobs,delayed.ctrl.DatasetsCreateCtrl,delayed.ctrl.DatasetsAddFileCtrl,delayed.ctrl.DatasetsRemoveCtrl,delayed.ctrl.DatasetsImportCtrl,delayed.ctrl.DatasetsEditCtrl,delayed.ctrl.DatasetsUnlinkCtrl
-  managementWorkerQueues: cache.cleanup.files,cache.cleanup.projects,delayed.ctrl.MigrateProjectCtrl,delayed.ctrl.SetConfigCtrl
-  cleanupFilesTTL: 1800
-  cleanupProjectsTTL: 1800
-  logLevel: INFO
-  # override to automatically pull LFS data on clone
-  gitLFSSkipSmudge: 1
-  # Concurrency settings for the main service:
-  # the default it 4 workers with 8 threads set in the Dockerfile
-  nWorkers: 4
-  nThreads: 8
-  # NOTE: Make sure token secret is greater or equal to 32 bytes.
-  jwtTokenSecret: bW9menZ3cnh6cWpkcHVuZ3F5aWJycmJn
-  imagePullSecrets: []
-  nameOverride: ""
-  fullnameOverride: ""
-  service:
-    type: ClusterIP
-    port: 80
-  metrics:
-    enabled: false
-    image:
-      repository: renku/rqmetrics
-      tag: 0.0.2
-      pullPolicy: IfNotPresent
-  resources:
-    core: {}
-    rqmetrics: {}
-    datasetsWorkers: {}
-    managementWorkers: {}
-    scheduler: {}
-  sentry:
-    enabled: false
-    dsn:
-    environment:
-    sampleRate: 0.2
-  horizontalPodAutoscaling:
-    minReplicas: 2
-    maxReplicas: 10
-    averageMemoryUtilization: 50
-## Configuration for the Swagger-UI available at <renku-domain>/swagger
-swagger:
-  enabled: true
-## The image used in startup scripts to initialize different postgress databases
-initDb:
-  image:
-    repository: renku/init-db
-    tag: "latest"
-dataService:
-  image:
-    repository: renku/renku-data-service
-    tag: "0.2.3"
-    pullPolicy: IfNotPresent
-  service:
-    type: ClusterIP
-    port: 80
-  replicaCount: 2
-  podAnnotations: {}
-  resources: {}
-  autoscaling:
-    enabled: false
-    minReplicas: 2
-    maxReplicas: 5
-    targetMemoryUtilizationPercentage: 75
-    targetCPUUtilizationPercentage: 75
-  updateStrategy: {}
-  nodeSelector: {}
-  tolerations: []
-  affinity: {}
-podSecurityContext: {}
-securityContext:
-  runAsUser: 1000
-  runAsGroup: 1000
-  runAsNonRoot: true
-  allowPrivilegeEscalation: false
-nodeSelector: {}
-tolerations: []
-affinity: {}
+      tag: v2.8.0
