@@ -271,6 +271,26 @@ keycloak_admin.create_realm(
 )
 logging.info("done")
 
+realm = keycloak_admin.get_realm(args.realm)
+event_retention_seconds = 86400
+if not realm.get("eventsEnabled"):
+    logging.info(
+        f"Enabling user events tracking for realm with retention {event_retention_seconds}"
+    )
+    keycloak_admin.update_realm(args.realm, {"eventsEnabled": False, "eventsExpiration": event_retention_seconds})
+if not realm.get("adminEventsEnabled"):
+    logging.info(
+        f"Enabling admin events tracking for realm with retention {event_retention_seconds}"
+    )
+    keycloak_admin.update_realm(
+        args.realm,
+        {
+            "adminEventsEnabled": True,
+            "adminEventsDetailsEnabled": True,
+            "attributes": {"adminEventsExpiration": event_retention_seconds},
+        },
+    )
+
 # Switching to the newly created realm
 keycloak_admin.connection.realm_name = args.realm
 
