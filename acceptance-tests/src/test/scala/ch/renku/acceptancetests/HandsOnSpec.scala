@@ -18,10 +18,8 @@
 
 package ch.renku.acceptancetests
 
-import ch.renku.acceptancetests.tooling.{AcceptanceSpec, KnowledgeGraphApi}
+import ch.renku.acceptancetests.tooling.{AcceptanceSpec, GitLabApi, KnowledgeGraphApi}
 import ch.renku.acceptancetests.workflows._
-
-import scala.concurrent.duration._
 
 /** Run the HandsOn from the documentation.
   */
@@ -32,44 +30,31 @@ class HandsOnSpec
     with Settings
     with FlightsTutorial
     with Datasets
+    with GitLabApi
     with KnowledgeGraphApi {
 
   scenario("User can do hands-on tutorial") {
 
-    `log in to Renku`
+    `verify user has GitLab credentials`
 
     `setup renku CLI`
 
-    `create, continue or open a project`
+    val projectSlug = `create or use extant project`
 
-    val projectUrl         = `find project Http URL in the Overview Page`
-    val flightsDatasetName = `follow the flights tutorial`(projectUrl)
+    val projectUrl     = `get repo Http URL`(projectSlug)
+    val flightsDataset = `follow the flights tutorial`(projectUrl)
 
     When("all the events are processed by the knowledge-graph")
-    `wait for KG to process events`(projectDetails.asProjectIdentifier.asProjectSlug, webDriver)
+    `wait for KG to process events`(projectSlug, webDriver)
 
-    `verify dataset was created`(flightsDatasetName)
+    `GET /knowledge-graph/projects/:slug/datasets`(projectSlug) shouldBe List(flightsDataset)
 
-    `navigate to project info`
+    val res =
+      `GET /knowledge-graph/projects/:slug/files/:path/lineage`(projectSlug, "notebooks/01-CountFlights.ran.ipynb")
+    println(res)
 
-    `verify analysis was run`
+    res.isEmpty shouldBe false
 
     `log out of Renku`
-  }
-
-  private def `verify analysis was run`: Unit = `try few times with page reload` { _ =>
-    When("the user navigates to the Files tab")
-    click on projectPage.Files.tab
-    And("they click on the notebooks folder in the File View")
-    click on (projectPage.Files.FileView folder "notebooks") sleep (5 seconds)
-    And("they click on the 01-CountFlights.ran.ipynb file in the File View")
-    click on (projectPage.Files.FileView file "notebooks/01-CountFlights.ran.ipynb") sleep (2 seconds)
-    Then("they should see a file header with the notebook filename")
-    verify that projectPage.Files.Info.heading contains "notebooks/01-CountFlights.ran.ipynb"
-    And("the correct notebook content")
-    docsScreenshots.takeScreenshot(executeBefore = "window.scrollBy(0,document.body.scrollHeight)")
-    val resultCell = projectPage.Files.Notebook.cellWithText("There were 4951 flights to Austin, TX in Jan 2019.")
-    verify that resultCell contains "There were 4951 flights to Austin, TX in Jan 2019."
-    Then("the correct notebook content is there")
   }
 }

@@ -34,11 +34,6 @@ trait Datasets {
     `navigate to the dataset`(DatasetPage(datasetName))
   }
 
-  def `navigate to project info`: Unit = `try few times with page reload` { _ =>
-    Given("the user is on the Datasets card")
-    click on projectPage.Datasets.goBackButton sleep (10 second)
-  }
-
   def `create a dataset`(datasetName: DatasetName): DatasetPage = {
     import Modification._
     val newDatasetName = datasets.DatasetName("new")

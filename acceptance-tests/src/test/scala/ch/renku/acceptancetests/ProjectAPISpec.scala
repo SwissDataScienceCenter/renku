@@ -33,7 +33,7 @@ class ProjectAPISpec extends AcceptanceSpec with Login with KnowledgeGraphApi wi
 
   scenario("User can do CRUD operations on a project using the API") {
 
-    `log in to Renku`
+    `verify user has GitLab credentials`
 
     When("the user creates a new Project")
     val namespaceId = `find user namespace ids`.headOption.getOrElse(fail("No namespaces found"))

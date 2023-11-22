@@ -22,6 +22,10 @@ import ch.renku.acceptancetests.generators.Generators._
 
 object datasets {
 
+  final case class Slug(value: String) {
+    override lazy val toString: String = value
+  }
+
   final case class DatasetName(value: String) {
     override lazy val toString: String = value
     lazy val asPath:            String = value.replace(" ", "-")

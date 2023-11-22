@@ -18,8 +18,10 @@
 
 package ch.renku.acceptancetests.workflows
 
+import ch.renku.acceptancetests.model.projects
 import ch.renku.acceptancetests.model.projects.{ProjectDetails, Template, Visibility}
 import ch.renku.acceptancetests.pages._
+import ch.renku.acceptancetests.tooling.KnowledgeGraphModel.{Image, NewProject, ProjectTemplate}
 import ch.renku.acceptancetests.tooling.TestLogger.logger
 import ch.renku.acceptancetests.tooling.{AcceptanceSpec, KnowledgeGraphApi}
 import org.openqa.selenium.interactions.Actions
@@ -29,6 +31,12 @@ import java.lang.System.getProperty
 import scala.concurrent.duration._
 
 trait ExtantProject {
+
+  lazy val maybeExtantProjectSlug: Option[projects.Slug] =
+    (Option(getProperty("extant")) orElse sys.env.get("RENKU_TEST_EXTANT_PROJECT"))
+      .map(_.trim)
+      .map(projects.Slug)
+
   def maybeExtantProject(projectVisibility: Visibility): Option[ProjectDetails] =
     (Option(getProperty("extant")) orElse sys.env.get("RENKU_TEST_EXTANT_PROJECT"))
       .map(_.trim)
@@ -62,6 +70,13 @@ trait Project extends RemoveProject with ExtantProject with KnowledgeGraphApi {
       .getOrElse(ProjectDetails.generate())
 
   protected implicit lazy val projectPage: ProjectPage = ProjectPage.createFrom(projectDetails)
+
+  def `create or use extant project`: projects.Slug =
+    maybeExtantProjectSlug getOrElse {
+      val namespaceId = `find user namespace ids`.headOption.getOrElse(fail("No namespaces found"))
+      val newProject  = NewProject.generate(namespaceId, ProjectTemplate.pythonMinimal, Image.wheelPngExample)
+      `POST /knowledge-graph/projects`(newProject)
+    }
 
   def `create, continue or open a project`: Unit = maybeExtantProject(projectVisibility) match {
     case Some(_) => `open a project`

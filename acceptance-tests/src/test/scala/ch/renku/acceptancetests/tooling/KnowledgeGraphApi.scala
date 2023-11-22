@@ -23,7 +23,7 @@ import TestLogger.logger
 import cats.effect.IO
 import cats.effect.unsafe.IORuntime
 import cats.syntax.all._
-import ch.renku.acceptancetests.model.projects
+import ch.renku.acceptancetests.model.{UrlNoQueryParam, datasets, projects}
 import io.circe._
 import org.http4s.MediaType._
 import org.http4s.Status.{Accepted, Created, NotFound, Ok}
@@ -53,17 +53,6 @@ trait KnowledgeGraphApi extends RestClient {
     checkActivatedAndWait(projectSlug, gitLabProjectId, browser, attempt = 1)
   }
 
-  def findLineage(slug: projects.Slug, filePath: String): JsonObject = {
-    val toSegments: String => List[String] = _.split('/').toList
-    val uri =
-      toSegments(slug.value)
-        .foldLeft(renkuBaseUrl / "knowledge-graph" / "projects")(_ / _) / "files" / filePath / "lineage"
-    GET(uri)
-      .send(whenReceived(status = Ok) >=> bodyToJson)
-      .extract(jsonRoot.obj.getOption)
-      .getOrElse(fail(s"Cannot find lineage data for project $slug file $filePath"))
-  }
-
   def `POST /knowledge-graph/projects`(project: NewProject): projects.Slug =
     NewProject.MultipartEncoder
       .encode(project)
@@ -76,42 +65,59 @@ trait KnowledgeGraphApi extends RestClient {
       )
       .unsafeRunSync()
 
-  def `PATCH /knowledge-graph/projects/:slug`(slug: projects.Slug, updates: ProjectUpdates): Unit = {
-    val toSegments: String => List[String] = _.split('/').toList
-    val uri = toSegments(slug.value).foldLeft(renkuBaseUrl / "knowledge-graph" / "projects")(_ / _)
+  def `PATCH /knowledge-graph/projects/:slug`(slug: projects.Slug, updates: ProjectUpdates): Unit =
     ProjectUpdates.MultipartEncoder
       .encode(updates)
       .flatMap(payload =>
-        PATCH(uri)
+        PATCH(projectUri(slug))
           .withEntity(payload)
           .putHeaders(payload.headers)
           .withAuthorizationToken(authorizationToken)
           .sendIO(expect(status = Accepted, otherwiseLog = s"Updating '$slug' project failed"))
       )
       .unsafeRunSync()
-  }
 
-  def `GET /knowledge-graph/projects/:slug`(slug: projects.Slug): Option[KGProjectDetails] = {
-    val toSegments: String => List[String] = _.split('/').toList
-    val uri = toSegments(slug.value).foldLeft(renkuBaseUrl / "knowledge-graph" / "projects")(_ / _)
-    GET(uri)
+  def `GET /knowledge-graph/projects/:slug`(slug: projects.Slug): Option[KGProjectDetails] =
+    GET(projectUri(slug))
       .putHeaders(`Content-Type`(application.json))
       .withAuthorizationToken(authorizationToken)
       .sendIO(mapResponseIO { response =>
         response.status match {
           case Ok       => response.as[KGProjectDetails].map(_.some)
           case NotFound => Option.empty[KGProjectDetails].pure[IO]
-          case status   => fail(s"finding project details in the KG returned $status")
+          case status   => fail(s"finding project details in KG returned $status")
+        }
+      })
+      .unsafeRunSync()
+
+  def `GET /knowledge-graph/projects/:slug/datasets`(slug: projects.Slug): List[datasets.Slug] = {
+    implicit val dsSlugDecoder: Decoder[datasets.Slug] = _.downField("slug").as[String].map(datasets.Slug)
+    GET(projectUri(slug) / "datasets")
+      .putHeaders(`Content-Type`(application.json))
+      .withAuthorizationToken(authorizationToken)
+      .sendIO(mapResponseIO { response =>
+        response.status match {
+          case Ok       => response.as[List[datasets.Slug]]
+          case NotFound => List.empty[datasets.Slug].pure[IO]
+          case status   => fail(s"finding project datasets in KG returned $status")
         }
       })
   }.unsafeRunSync()
 
-  def `DELETE /knowledge-graph/projects/:slug`(slug: projects.Slug): Unit = {
-    val toSegments: String => List[String] = _.split('/').toList
-    val uri = toSegments(slug.value).foldLeft(renkuBaseUrl / "knowledge-graph" / "projects")(_ / _)
-    DELETE(uri)
+  def `GET /knowledge-graph/projects/:slug/files/:path/lineage`(slug: projects.Slug, filePath: String): JsonObject =
+    GET(projectUri(slug) / "files" / filePath / "lineage")
+      .send(whenReceived(status = Ok) >=> bodyToJson)
+      .extract(jsonRoot.obj.getOption)
+      .getOrElse(fail(s"Cannot find lineage data for project $slug file $filePath"))
+
+  def `DELETE /knowledge-graph/projects/:slug`(slug: projects.Slug): Unit =
+    DELETE(projectUri(slug))
       .withAuthorizationToken(authorizationToken)
       .send(expect(status = Accepted, otherwiseLog = s"Deletion of '$slug' project failed"))
+
+  private def projectUri(slug: projects.Slug): UrlNoQueryParam = {
+    val toSegments: String => List[String] = _.split('/').toList
+    toSegments(slug.value).foldLeft(renkuBaseUrl / "knowledge-graph" / "projects")(_ / _)
   }
 
   @tailrec
