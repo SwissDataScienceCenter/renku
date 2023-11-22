@@ -72,10 +72,16 @@ trait Project extends RemoveProject with ExtantProject with KnowledgeGraphApi {
   protected implicit lazy val projectPage: ProjectPage = ProjectPage.createFrom(projectDetails)
 
   def `create or use extant project`: projects.Slug =
-    maybeExtantProjectSlug getOrElse {
-      val namespaceId = `find user namespace ids`.headOption.getOrElse(fail("No namespaces found"))
-      val newProject  = NewProject.generate(namespaceId, ProjectTemplate.pythonMinimal, Image.wheelPngExample)
-      `POST /knowledge-graph/projects`(newProject)
+    maybeExtantProjectSlug match {
+      case Some(slug) =>
+        When(s"an extant project $slug is configured")
+        slug
+      case None =>
+        val namespaceId = `find user namespace ids`.headOption.getOrElse(fail("No namespaces found"))
+        val newProject  = NewProject.generate(namespaceId, ProjectTemplate.pythonMinimal, Image.wheelPngExample)
+        val slug        = `POST /knowledge-graph/projects`(newProject)
+        When(s"a $slug project is created")
+        slug
     }
 
   def `create, continue or open a project`: Unit = maybeExtantProject(projectVisibility) match {

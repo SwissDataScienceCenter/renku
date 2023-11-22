@@ -21,8 +21,9 @@ package ch.renku.acceptancetests
 import ch.renku.acceptancetests.tooling.{AcceptanceSpec, GitLabApi, KnowledgeGraphApi}
 import ch.renku.acceptancetests.workflows._
 
-/** Run the HandsOn from the documentation.
-  */
+import scala.concurrent.duration._
+
+/** Run the HandsOn from the documentation. */
 class HandsOnSpec
     extends AcceptanceSpec
     with Login
@@ -39,18 +40,20 @@ class HandsOnSpec
 
     `setup renku CLI`
 
-    val projectSlug = `create or use extant project`
-
+    val projectSlug    = `create or use extant project`
     val projectUrl     = `get repo Http URL`(projectSlug)
     val flightsDataset = `follow the flights tutorial`(projectUrl)
 
     When("all the events are processed by the knowledge-graph")
     `wait for KG to process events`(projectSlug, webDriver)
 
+    Then(s"the '$flightsDataset' dataset should exist on the project")
+    sleep(2 seconds)
     `GET /knowledge-graph/projects/:slug/datasets`(projectSlug) shouldBe List(flightsDataset)
 
-    val res =
-      `GET /knowledge-graph/projects/:slug/files/:path/lineage`(projectSlug, "notebooks/01-CountFlights.ran.ipynb")
+    val file = "notebooks/01-CountFlights.ran.ipynb"
+    And(s"lineage for the '$file' should exist as well")
+    val res = `GET /knowledge-graph/projects/:slug/files/:path/lineage`(projectSlug, file)
     println(res)
 
     res.isEmpty shouldBe false
