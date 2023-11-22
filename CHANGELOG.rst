@@ -52,6 +52,7 @@ Internal Changes
 Individual Components
 ~~~~~~~~~~~~~~~~~~~~~
 
+- `renku-graph 2.47.1 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/2.47.1>`_
 - `renku-graph 2.47.0 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/2.47.0>`_
 - `renku-graph 2.46.0 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/2.46.0>`_
 - `renku-graph 2.45.0 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/2.45.0>`_
