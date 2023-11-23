@@ -92,14 +92,17 @@ trait KnowledgeGraphApi extends RestClient {
 
   def `GET /knowledge-graph/projects/:slug/datasets`(slug: projects.Slug): List[datasets.Slug] = {
     implicit val dsSlugDecoder: Decoder[datasets.Slug] = _.downField("slug").as[String].map(datasets.Slug)
+    println(projectUri(slug) / "datasets")
     GET(projectUri(slug) / "datasets")
       .putHeaders(`Content-Type`(application.json))
       .withAuthorizationToken(authorizationToken)
       .sendIO(mapResponseIO { response =>
-        response.status match {
-          case Ok       => response.as[List[datasets.Slug]]
-          case NotFound => List.empty[datasets.Slug].pure[IO]
-          case status   => fail(s"finding project datasets in KG returned $status")
+        response.as[String].map(println).flatMap { _ =>
+          response.status match {
+            case Ok       => response.as[List[datasets.Slug]]
+            case NotFound => List.empty[datasets.Slug].pure[IO]
+            case status   => fail(s"finding project datasets in KG returned $status")
+          }
         }
       })
   }.unsafeRunSync()

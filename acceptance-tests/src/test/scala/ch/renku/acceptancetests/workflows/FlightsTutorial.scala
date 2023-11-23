@@ -39,7 +39,7 @@ trait FlightsTutorial extends Matchers with CLIConfiguration {
 
     `setup git configuration`
 
-    When("the user clones the project locally")
+    And("the user clones the project locally")
     console %> c"git clone ${projectUrl add authorizationToken} $projectFolder"
 
     And("migrates the project")
