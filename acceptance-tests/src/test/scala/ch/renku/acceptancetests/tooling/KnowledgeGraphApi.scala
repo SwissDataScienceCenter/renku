@@ -96,12 +96,10 @@ trait KnowledgeGraphApi extends RestClient {
       .putHeaders(`Content-Type`(application.json))
       .withAuthorizationToken(authorizationToken)
       .sendIO(mapResponseIO { response =>
-        response.as[Json].map(println).flatMap { _ =>
-          response.status match {
-            case Ok       => response.as[List[datasets.Slug]]
-            case NotFound => List.empty[datasets.Slug].pure[IO]
-            case status   => fail(s"finding project datasets in KG returned $status")
-          }
+        response.status match {
+          case Ok       => response.as[List[datasets.Slug]]
+          case NotFound => List.empty[datasets.Slug].pure[IO]
+          case status   => fail(s"finding project datasets in KG returned $status")
         }
       })
   }.unsafeRunSync()
