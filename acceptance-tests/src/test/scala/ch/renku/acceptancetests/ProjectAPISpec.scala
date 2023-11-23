@@ -40,7 +40,7 @@ class ProjectAPISpec extends AcceptanceSpec with Login with KnowledgeGraphApi wi
     val newProject  = NewProject.generate(namespaceId, ProjectTemplate.pythonMinimal, Image.wheelPngExample)
     val slug        = `POST /knowledge-graph/projects`(newProject)
 
-    `wait for KG to process events`(slug, webDriver)
+    `wait for KG to process events`(slug)
 
     Then("the user should be able to get details of it")
     val afterCreation = `GET /knowledge-graph/projects/:slug`(slug).value
@@ -57,7 +57,7 @@ class ProjectAPISpec extends AcceptanceSpec with Login with KnowledgeGraphApi wi
     val updates       = ProjectUpdates(newDesc.some, newKeywords.some, newVisibility.some, newImage.some)
     `PATCH /knowledge-graph/projects/:slug`(slug, updates)
 
-    `wait for KG to process events`(slug, webDriver)
+    `wait for KG to process events`(slug)
 
     Then("the API should return the updated values")
     val afterUpdate = `GET /knowledge-graph/projects/:slug`(slug).value

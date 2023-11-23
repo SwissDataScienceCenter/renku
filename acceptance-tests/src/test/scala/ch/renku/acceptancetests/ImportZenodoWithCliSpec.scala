@@ -65,7 +65,7 @@ class ImportZenodoWithCliSpec
     sleep(10 seconds)
 
     When("all the events are processed by the knowledge-graph")
-    `wait for KG to process events`(projectSlug, webDriver)
+    `wait for KG to process events`(projectSlug)
 
     sleep(5 seconds)
 

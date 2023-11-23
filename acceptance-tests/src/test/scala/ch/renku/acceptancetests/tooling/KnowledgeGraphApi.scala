@@ -29,7 +29,6 @@ import org.http4s.MediaType._
 import org.http4s.Status.{Accepted, Created, NotFound, Ok}
 import org.http4s.circe.CirceEntityCodec._
 import org.http4s.headers.`Content-Type`
-import org.openqa.selenium.WebDriver
 import org.scalatest.matchers.should
 
 import java.time.Instant
@@ -41,16 +40,16 @@ trait KnowledgeGraphApi extends RestClient {
 
   implicit val ioRuntime: IORuntime
 
-  def `wait for KG to process events`(projectSlug: projects.Slug, browser: WebDriver): Unit = {
+  def `wait for KG to process events`(projectSlug: projects.Slug): Unit = {
     sleep(1 second)
     val gitLabProjectId = `get GitLab project id`(projectSlug)
-    checkStatusAndWait(projectSlug, gitLabProjectId, browser, 1)
+    checkStatusAndWait(projectSlug, gitLabProjectId, 1)
   }
 
-  def `wait for project activation`(projectSlug: projects.Slug)(implicit browser: WebDriver): Either[String, Unit] = {
+  def `wait for project activation`(projectSlug: projects.Slug): Either[String, Unit] = {
     sleep(1 second)
     val gitLabProjectId = `get GitLab project id`(projectSlug)
-    checkActivatedAndWait(projectSlug, gitLabProjectId, browser, attempt = 1)
+    checkActivatedAndWait(projectSlug, gitLabProjectId, attempt = 1)
   }
 
   def `POST /knowledge-graph/projects`(project: NewProject): projects.Slug =
@@ -132,19 +131,18 @@ trait KnowledgeGraphApi extends RestClient {
   private def checkStatusAndWait(
       projectSlug:     projects.Slug,
       gitLabProjectId: Int,
-      browser:         WebDriver,
       attempt:         Int
   ): Unit =
     if (attempt >= 60 * 10)
       fail(s"Events for '$projectSlug' project not processed after 10 minutes")
-    else if (findTotalDone(projectSlug, gitLabProjectId, browser) == 0) {
+    else if (findTotalDone(projectSlug, gitLabProjectId) == 0) {
       sleep(1 second)
-      checkStatusAndWait(projectSlug, gitLabProjectId, browser, attempt + 1)
-    } else if (findProgress(projectSlug, gitLabProjectId, browser) < 100d) {
+      checkStatusAndWait(projectSlug, gitLabProjectId, attempt + 1)
+    } else if (findProgress(projectSlug, gitLabProjectId) < 100d) {
       sleep(1 second)
-      checkStatusAndWait(projectSlug, gitLabProjectId, browser, attempt + 1)
-    } else if (findProgress(projectSlug, gitLabProjectId, browser) == 100d) {
-      val maybeDetails = findStatus(projectSlug, gitLabProjectId, browser).flatMap(_.maybeDetails)
+      checkStatusAndWait(projectSlug, gitLabProjectId, attempt + 1)
+    } else if (findProgress(projectSlug, gitLabProjectId) == 100d) {
+      val maybeDetails = findStatus(projectSlug, gitLabProjectId).flatMap(_.maybeDetails)
       maybeDetails match {
         case Some(status) if status.status == "failure" =>
           val stackTrace = status.maybeStackTrace.map(s => s"; stackTrace:\n${s.replace("; ", "; \n")}").getOrElse("")
@@ -157,7 +155,6 @@ trait KnowledgeGraphApi extends RestClient {
   private def checkActivatedAndWait(
       projectSlug:     projects.Slug,
       gitLabProjectId: Int,
-      browser:         WebDriver,
       attempt:         Int,
       startTime:       Instant = Instant.now()
   ): Either[String, Unit] = {
@@ -165,24 +162,23 @@ trait KnowledgeGraphApi extends RestClient {
     if (attempt >= 60) {
       val duration = Duration(Instant.now().toEpochMilli - startTime.toEpochMilli, MILLISECONDS).toSeconds
       s"Activation status of '$projectSlug' project couldn't be determined after ${duration}s".asLeft[Unit]
-    } else if (!checkActivated(projectSlug, gitLabProjectId, browser)) {
+    } else if (!checkActivated(projectSlug, gitLabProjectId)) {
       sleep(1 second)
-      checkActivatedAndWait(projectSlug, gitLabProjectId, browser, attempt + 1, startTime)
+      checkActivatedAndWait(projectSlug, gitLabProjectId, attempt + 1, startTime)
     } else ().asRight[String]
   }
 
-  private def checkActivated(projectSlug: projects.Slug, gitLabProjectId: Int, browser: WebDriver): Boolean =
-    findStatus(projectSlug, gitLabProjectId, browser).exists(_.activated)
+  private def checkActivated(projectSlug: projects.Slug, gitLabProjectId: Int): Boolean =
+    findStatus(projectSlug, gitLabProjectId).exists(_.activated)
 
-  private def findProgress(projectSlug: projects.Slug, gitLabProjectId: Int, browser: WebDriver): Double =
-    findStatus(projectSlug, gitLabProjectId, browser).map(_.progressPercentage).getOrElse(0d)
+  private def findProgress(projectSlug: projects.Slug, gitLabProjectId: Int): Double =
+    findStatus(projectSlug, gitLabProjectId).map(_.progressPercentage).getOrElse(0d)
 
-  private def findTotalDone(projectSlug: projects.Slug, gitLabProjectId: Int, browser: WebDriver): Int =
-    findStatus(projectSlug, gitLabProjectId, browser).map(_.total).getOrElse(0)
+  private def findTotalDone(projectSlug: projects.Slug, gitLabProjectId: Int): Int =
+    findStatus(projectSlug, gitLabProjectId).map(_.total).getOrElse(0)
 
-  private def findStatus(projectSlug: projects.Slug, gitLabProjectId: Int, browser: WebDriver): Option[GraphStatus] =
+  private def findStatus(projectSlug: projects.Slug, gitLabProjectId: Int): Option[GraphStatus] =
     GET(renkuBaseUrl / "api" / "projects" / gitLabProjectId / "graph" / "status")
-      .addCookiesFrom(browser)
       .send { response =>
         response.status match {
           case Ok       => response.as[GraphStatus].map(_.some)

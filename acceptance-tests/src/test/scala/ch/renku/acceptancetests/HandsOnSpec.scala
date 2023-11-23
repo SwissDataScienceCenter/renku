@@ -46,7 +46,7 @@ class HandsOnSpec
     sleep(10 seconds)
 
     When("all the events are processed by the knowledge-graph")
-    `wait for KG to process events`(projectSlug, webDriver)
+    `wait for KG to process events`(projectSlug)
 
     Then(s"the '$flightsDataset' dataset should exist on the project")
     `GET /knowledge-graph/projects/:slug/datasets`(projectSlug) shouldBe List(flightsDataset)
