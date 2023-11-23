@@ -44,20 +44,17 @@ class HandsOnSpec
     val projectUrl     = `get repo Http URL`(projectSlug)
     val flightsDataset = `follow the flights tutorial`(projectUrl)
 
+    // to give time the push event is sent by GL and processed on the KG side
+    sleep(10 seconds)
+
     When("all the events are processed by the knowledge-graph")
     `wait for KG to process events`(projectSlug, webDriver)
 
     Then(s"the '$flightsDataset' dataset should exist on the project")
-    sleep(2 seconds)
     `GET /knowledge-graph/projects/:slug/datasets`(projectSlug) shouldBe List(flightsDataset)
 
     val file = "notebooks/01-CountFlights.ran.ipynb"
     And(s"lineage for the '$file' should exist as well")
-    val res = `GET /knowledge-graph/projects/:slug/files/:path/lineage`(projectSlug, file)
-    println(res)
-
-    res.isEmpty shouldBe false
-
-    `log out of Renku`
+    `GET /knowledge-graph/projects/:slug/files/:path/lineage`(projectSlug, file) shouldBe a[Some[_]]
   }
 }

@@ -53,8 +53,6 @@ class BatchProjectRemovalSpec extends AcceptanceSpec with Login with RemoveProje
     val summary = `find and remove projects`
 
     logger.info(s"Removing summary: $summary")
-
-    `log out of Renku`
   }
 
   private def `find and remove projects` =

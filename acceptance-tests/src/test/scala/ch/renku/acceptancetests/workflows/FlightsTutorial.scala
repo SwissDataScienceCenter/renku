@@ -19,7 +19,6 @@
 package ch.renku.acceptancetests.workflows
 
 import ch.renku.acceptancetests.model.datasets
-import ch.renku.acceptancetests.model.datasets.DatasetName
 import ch.renku.acceptancetests.model.projects.ProjectUrl
 import ch.renku.acceptancetests.model.users.UserCredentials
 import ch.renku.acceptancetests.tooling._

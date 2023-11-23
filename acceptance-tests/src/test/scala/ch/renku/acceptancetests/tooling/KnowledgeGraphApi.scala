@@ -92,7 +92,6 @@ trait KnowledgeGraphApi extends RestClient {
 
   def `GET /knowledge-graph/projects/:slug/datasets`(slug: projects.Slug): List[datasets.Slug] = {
     implicit val dsSlugDecoder: Decoder[datasets.Slug] = _.downField("slug").as[String].map(datasets.Slug)
-    println(projectUri(slug) / "datasets")
     GET(projectUri(slug) / "datasets")
       .putHeaders(`Content-Type`(application.json))
       .withAuthorizationToken(authorizationToken)
@@ -107,12 +106,19 @@ trait KnowledgeGraphApi extends RestClient {
       })
   }.unsafeRunSync()
 
-  def `GET /knowledge-graph/projects/:slug/files/:path/lineage`(slug: projects.Slug, filePath: String): JsonObject =
+  def `GET /knowledge-graph/projects/:slug/files/:path/lineage`(slug: projects.Slug, filePath: String): Option[Json] =
     GET(projectUri(slug) / "files" / filePath / "lineage")
       .withAuthorizationToken(authorizationToken)
-      .send(whenReceived(status = Ok) >=> bodyToJson)
-      .extract(jsonRoot.obj.getOption)
-      .getOrElse(fail(s"Cannot find lineage data for project $slug and file $filePath"))
+      .sendIO {
+        mapResponseIO { response =>
+          response.status match {
+            case Ok       => response.as[Json].map(_.some)
+            case NotFound => Option.empty[Json].pure[IO]
+            case status   => fail(s"finding lineage failed: $status")
+          }
+        }
+      }
+      .unsafeRunSync()
 
   def `DELETE /knowledge-graph/projects/:slug`(slug: projects.Slug): Unit =
     DELETE(projectUri(slug))
