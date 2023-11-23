@@ -28,9 +28,7 @@ class HandsOnSpec
     extends AcceptanceSpec
     with Login
     with Project
-    with Settings
     with FlightsTutorial
-    with Datasets
     with GitLabApi
     with KnowledgeGraphApi {
 
