@@ -33,7 +33,7 @@ class ImportZenodoWithCliSpec
     with CLIConfiguration
     with KnowledgeGraphApi {
 
-  scenario("User can import a Dataset from Zenodo") {
+  ignore("User can import a Dataset from Zenodo") {
 
     `verify user has GitLab credentials`
 

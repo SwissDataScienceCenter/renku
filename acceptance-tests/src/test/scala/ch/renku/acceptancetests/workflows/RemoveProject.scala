@@ -23,7 +23,7 @@ import ch.renku.acceptancetests.tooling.{AcceptanceSpec, KnowledgeGraphApi}
 
 import scala.concurrent.duration._
 
-trait RemoveProject extends BrowserNavigation {
+trait RemoveProject {
   self: AcceptanceSpec with KnowledgeGraphApi =>
 
   def `remove project in GitLab`(slug: projects.Slug): Unit = {
