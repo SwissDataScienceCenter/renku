@@ -97,7 +97,7 @@ trait KnowledgeGraphApi extends RestClient {
       .putHeaders(`Content-Type`(application.json))
       .withAuthorizationToken(authorizationToken)
       .sendIO(mapResponseIO { response =>
-        response.as[String].map(println).flatMap { _ =>
+        response.as[Json].map(println).flatMap { _ =>
           response.status match {
             case Ok       => response.as[List[datasets.Slug]]
             case NotFound => List.empty[datasets.Slug].pure[IO]
@@ -109,9 +109,10 @@ trait KnowledgeGraphApi extends RestClient {
 
   def `GET /knowledge-graph/projects/:slug/files/:path/lineage`(slug: projects.Slug, filePath: String): JsonObject =
     GET(projectUri(slug) / "files" / filePath / "lineage")
+      .withAuthorizationToken(authorizationToken)
       .send(whenReceived(status = Ok) >=> bodyToJson)
       .extract(jsonRoot.obj.getOption)
-      .getOrElse(fail(s"Cannot find lineage data for project $slug file $filePath"))
+      .getOrElse(fail(s"Cannot find lineage data for project $slug and file $filePath"))
 
   def `DELETE /knowledge-graph/projects/:slug`(slug: projects.Slug): Unit =
     DELETE(projectUri(slug))
