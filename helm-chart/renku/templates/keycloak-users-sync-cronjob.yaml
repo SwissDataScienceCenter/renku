@@ -2,6 +2,11 @@ apiVersion: batch/v1
 kind: CronJob
 metadata:
   name: {{ include "renku.fullname" . }}-keycloak-sync-events
+  labels:
+    app: keycloak-sync
+    heritage: {{ .Release.Service }}
+    release: {{ .Release.Name }}
+    chart: {{ template "renku.chart" . }}
 spec:
   schedule: "*/2 * * * *"
   concurrencyPolicy: Forbid
@@ -51,6 +56,11 @@ apiVersion: batch/v1
 kind: CronJob
 metadata:
   name: {{ include "renku.fullname" . }}-keycloak-sync-total
+  labels:
+    app: keycloak-sync
+    heritage: {{ .Release.Service }}
+    release: {{ .Release.Name }}
+    chart: {{ template "renku.chart" . }}
 spec:
   schedule: "0 3 * * *"
   concurrencyPolicy: Forbid
