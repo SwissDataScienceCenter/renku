@@ -35,6 +35,9 @@ trait GitLabCredentials {
     }
 
   private def `add user credentials` = {
+
+    `log in to Renku`
+
     verify browserSwitchedTo DashboardPage
 
     When("user clicks the GitLab button")
