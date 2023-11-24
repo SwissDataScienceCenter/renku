@@ -5,11 +5,10 @@ metadata:
 spec:
   schedule: "*/2 * * * *"
   concurrencyPolicy: Forbid
+  successfulJobsHistoryLimit: 1
+  failedJobsHistoryLimit: 3
   jobTemplate:
     spec:
-      successfulJobsHistoryLimit: 1
-      failedJobsHistoryLimit: 3
-      concurrencyPolicy: Forbid
       template:
         spec:
           initContainers:
@@ -43,7 +42,7 @@ spec:
                   value: "false"
                 {{- include "certificates.env.python" . | nindent 16 }}
               volumeMounts:
-                {{- include "certificates.volumeMounts.python" . | nindent 16 }}
+                {{- include "certificates.volumeMounts.system" . | nindent 16 }}
           restartPolicy: Never
           volumes:
             {{- include "certificates.volumes" . | nindent 12 }}
@@ -55,11 +54,10 @@ metadata:
 spec:
   schedule: "0 3 * * *"
   concurrencyPolicy: Forbid
+  successfulJobsHistoryLimit: 1
+  failedJobsHistoryLimit: 3
   jobTemplate:
     spec:
-      successfulJobsHistoryLimit: 1
-      failedJobsHistoryLimit: 3
-      concurrencyPolicy: Forbid
       template:
         spec:
           initContainers:
@@ -93,7 +91,7 @@ spec:
                   value: "true"
                 {{- include "certificates.env.python" . | nindent 16 }}
               volumeMounts:
-                {{- include "certificates.volumeMounts.python" . | nindent 16 }}
+                {{- include "certificates.volumeMounts.system" . | nindent 16 }}
           restartPolicy: Never
           volumes:
             {{- include "certificates.volumes" . | nindent 12 }}
