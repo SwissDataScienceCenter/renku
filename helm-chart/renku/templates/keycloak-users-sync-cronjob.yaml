@@ -15,6 +15,9 @@ spec:
   jobTemplate:
     spec:
       template:
+        metadata:
+          labels:          
+            app: keycloak-sync
         spec:
           initContainers:
             {{- include "certificates.initContainer" . | nindent 12 }}
@@ -69,6 +72,9 @@ spec:
   jobTemplate:
     spec:
       template:
+        metadata:
+          labels:          
+            app: keycloak-sync
         spec:
           initContainers:
             {{- include "certificates.initContainer" . | nindent 12 }}
