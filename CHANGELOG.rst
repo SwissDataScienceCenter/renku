@@ -17,7 +17,7 @@ User-Facing Changes
 
 **✨ Improvements**
 
-- 📑️**UI**: Correctly update progress of project indexing (`#2833 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2833>`_).
+- 📑️ **UI**: Correctly update progress of project indexing (`#2833 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2833>`_).
 
 **🐞 Bug Fixes**
 
