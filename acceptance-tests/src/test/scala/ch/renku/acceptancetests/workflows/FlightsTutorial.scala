@@ -18,7 +18,7 @@
 
 package ch.renku.acceptancetests.workflows
 
-import ch.renku.acceptancetests.model.datasets.DatasetName
+import ch.renku.acceptancetests.model.datasets
 import ch.renku.acceptancetests.model.projects.ProjectUrl
 import ch.renku.acceptancetests.model.users.UserCredentials
 import ch.renku.acceptancetests.tooling._
@@ -32,13 +32,13 @@ trait FlightsTutorial extends Matchers with CLIConfiguration {
 
   def `follow the flights tutorial`(
       projectUrl: ProjectUrl
-  )(implicit userCredentials: UserCredentials): DatasetName = {
+  )(implicit userCredentials: UserCredentials): datasets.Slug = {
 
     implicit val projectFolder: Path = createTempFolder
 
     `setup git configuration`
 
-    When("the user clones the project locally")
+    And("the user clones the project locally")
     console %> c"git clone ${projectUrl add authorizationToken} $projectFolder"
 
     And("migrates the project")
@@ -96,6 +96,6 @@ trait FlightsTutorial extends Matchers with CLIConfiguration {
     console %> c"git push"
 
     Then("the user is done with the basic workflow")
-    DatasetName("flight-data")
+    datasets.Slug("flight-data")
   }
 }

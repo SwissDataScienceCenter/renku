@@ -33,14 +33,14 @@ class ProjectAPISpec extends AcceptanceSpec with Login with KnowledgeGraphApi wi
 
   scenario("User can do CRUD operations on a project using the API") {
 
-    `log in to Renku`
+    `verify user has GitLab credentials`
 
     When("the user creates a new Project")
     val namespaceId = `find user namespace ids`.headOption.getOrElse(fail("No namespaces found"))
     val newProject  = NewProject.generate(namespaceId, ProjectTemplate.pythonMinimal, Image.wheelPngExample)
     val slug        = `POST /knowledge-graph/projects`(newProject)
 
-    `wait for KG to process events`(slug, webDriver)
+    `wait for KG to process events`(slug)
 
     Then("the user should be able to get details of it")
     val afterCreation = `GET /knowledge-graph/projects/:slug`(slug).value
@@ -57,7 +57,7 @@ class ProjectAPISpec extends AcceptanceSpec with Login with KnowledgeGraphApi wi
     val updates       = ProjectUpdates(newDesc.some, newKeywords.some, newVisibility.some, newImage.some)
     `PATCH /knowledge-graph/projects/:slug`(slug, updates)
 
-    `wait for KG to process events`(slug, webDriver)
+    `wait for KG to process events`(slug)
 
     Then("the API should return the updated values")
     val afterUpdate = `GET /knowledge-graph/projects/:slug`(slug).value
