@@ -1280,6 +1280,12 @@ jena:
   additionalEnvironmentVariables:
   - name: JVM_ARGS
     value: -Xmx2G -Xms2G
+  compacting:
+    - name: ADMIN_USER
+      value: admin
+    ## The 'Mon *-*-* 00:00:00' expression means the process will be run every Monday at 00:00:00. More details at https://github.com/eikek/calev
+    - name: COMPACTING_SCHEDULE
+      value: 'Mon *-*-* 00:00:00'
   resources:
     requests:
       cpu: 1000m
