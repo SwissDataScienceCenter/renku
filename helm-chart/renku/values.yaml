@@ -533,15 +533,6 @@ gitlab:
 
   ## Persistent Volume settings
   persistence:
-    ## database data Persistent Volume Storage Class
-    ## If defined, storageClassName: <storageClass>
-    ## If set to "-", storageClassName: "", which disables dynamic provisioning
-    ## If undefined (the default) or set to null, no storageClassName spec is
-    ##   set, choosing the default provisioner.  (gp2 on AWS, standard on
-    ##   GKE, AWS & OpenStack)
-    ##
-    # storageClass:
-
     # accessMode: ReadWriteOnce
     size: 30Gi
     ## Mount points for the PV
@@ -556,10 +547,19 @@ gitlab:
     #   subPath: logs
     #   mountPath: /var/log/gitlab
 
-    ## A manually managed Persistent Volume and Claim
-    ## Requires persistence.enabled: true
-    ## If defined, PVC must be created manually before volume will be bound
-    # existingClaim:
+    ## database data Persistent Volume Storage Class
+    ## If defined, storageClassName: <storageClass>
+    ## If set to "-", storageClassName: "", which disables dynamic provisioning
+    ## If undefined (the default) or set to null, no storageClassName spec is
+    ##   set, choosing the default provisioner.  (gp2 on AWS, standard on
+    ##   GKE, AWS & OpenStack)
+    ##
+    # storageClass:
+  ## A manually managed Persistent Volume and Claim
+  ## Requires persistence.enabled: true
+  ## If defined, PVC must be created manually before volume will be bound
+  # existingClaim:
+
   ## Set to false to disable the use of Persistent Volume
   ## The databases will be lost when the pod is terminated!
   # enabled: true
@@ -619,7 +619,7 @@ ui:
     replicaCount: 1
     image:
       repository: renku/renku-ui
-      tag: "3.15.1"
+      tag: "3.16.0"
       pullPolicy: IfNotPresent
       ## Optionally specify an array of imagePullSecrets.
       ## Secrets must be manually created in the namespace.
@@ -778,7 +778,7 @@ ui:
     keepCookies: []
     image:
       repository: renku/renku-ui-server
-      tag: "3.15.1"
+      tag: "3.16.0"
       pullPolicy: IfNotPresent
     imagePullSecrets: []
     nameOverride: ""
