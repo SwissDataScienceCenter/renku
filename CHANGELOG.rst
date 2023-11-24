@@ -4,7 +4,6 @@
 ------
 
 (ShapeUp): Let users pin projects to the dashboard.
-Renku ``0.43.0`` brings improvements to the KG API.
 
 0.43.0
 ------
