@@ -18,8 +18,6 @@
 
 package ch.renku.acceptancetests.tooling
 
-import org.openqa.selenium.WebDriver
-import org.openqa.selenium.chrome.{ChromeDriver, ChromeDriverService, ChromeOptions}
 import org.scalatest._
 import org.scalatest.featurespec.FixtureAnyFeatureSpec
 import org.scalatest.matchers.should
@@ -34,15 +32,12 @@ trait AcceptanceSpec
     with Grammar
     with GitLabApi
     with RenkuApi
-    with ScreenCapturingSpec
     with AcceptanceSpecData
     with AcceptanceSpecPatience
     with WebDriveredSpec
     with IOSpec {
 
   protected implicit val browser: AcceptanceSpec = this
-
-  protected implicit val docsScreenshots: DocsScreenshots = DocsScreenshots(this, webDriver)
 
   protected override type FixtureParam = Unit
 
