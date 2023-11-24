@@ -21,8 +21,8 @@ User-Facing Changes
 
 **🐞 Bug Fixes**
 
-- **UI**: Change icons in the navbar to use Bootstrap icons (`#2882 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2882>`_).
-- **UI**: Handle errors from the getSessions query in the Dashboard (`#2903 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2903>`_).
+- **UI**: Change icons in the Nav bar to use Bootstrap icons (`#2882 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2882>`_).
+- **UI**: Handle errors from the ``getSessions`` query in the Dashboard (`#2903 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2903>`_).
 - **UI**: Adjust dropdown menus with anchors nested in buttons (`#2907 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2907>`_).
 - **UI**: Update the workflows documentation link (`#2917 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2917>`_).
 - **UI**: Add whitespace after author name (`#2921 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2921>`_).
