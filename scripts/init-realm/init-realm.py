@@ -277,7 +277,7 @@ if not realm.get("eventsEnabled"):
     logging.info(
         f"Enabling user events tracking for realm with retention {event_retention_seconds}"
     )
-    keycloak_admin.update_realm(args.realm, {"eventsEnabled": False, "eventsExpiration": event_retention_seconds})
+    keycloak_admin.update_realm(args.realm, {"eventsEnabled": True, "eventsExpiration": event_retention_seconds})
 if not realm.get("adminEventsEnabled"):
     logging.info(
         f"Enabling admin events tracking for realm with retention {event_retention_seconds}"
