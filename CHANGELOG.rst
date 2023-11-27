@@ -13,9 +13,6 @@ User-Facing Changes
 - 📌️ **UI**: Users can now pin projects to the dashboard, up to a maximum of
   5 projects (`#2898 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2898>`_).
 
-**✨ Improvements**
-
-
 **🐞 Bug Fixes**
 
 - **UI**: Correctly update progress of project indexing (`#2833 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2833>`_).
@@ -28,14 +25,10 @@ User-Facing Changes
 Internal Changes
 ~~~~~~~~~~~~~~~~
 
-**Improvements**
+**✨ Improvements**
 
 -  **Data services**: New API endpoints to store and retrieve user
   preferences have been added to support the projects pins (`#85 <https://github.com/SwissDataScienceCenter/renku-data-services/pull/85>`_).
-
-**Bug Fixes**
-
-
 
 Individual components
 ~~~~~~~~~~~~~~~~~~~~~~
