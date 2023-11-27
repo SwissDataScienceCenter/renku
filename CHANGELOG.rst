@@ -27,11 +27,11 @@ Internal Changes
 
 **✨ Improvements**
 
--  **Data services**: New API endpoints to store and retrieve user
+- **Data services**: New API endpoints to store and retrieve user
   preferences have been added to support the projects pins (`#85 <https://github.com/SwissDataScienceCenter/renku-data-services/pull/85>`_).
 
 Individual components
-~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~
 
 - `renku-ui 3.16.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.16.0>`_
 - `renku-data-services 0.3.0 <https://github.com/SwissDataScienceCenter/renku-data-services/releases/tag/v0.3.0>`_
