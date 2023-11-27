@@ -6,6 +6,9 @@
 Renku ``0.43.0`` brings improvements to the KG API, addresses a few bugs in the UI
 and in the data services API.
 
+**A note to Renku administrators**: this release includes breaking changes in our Helm chart values file.
+For more details on the Helm chart values changes please refer to the explanation in ``helm-chart/values.yaml.changelog.md``.
+
 User-Facing Changes
 ~~~~~~~~~~~~~~~~~~~
 
@@ -13,8 +16,14 @@ User-Facing Changes
 
 - **KG**: Performance improvements to the Cross-Entity Search API.
   (`#1666 <https://github.com/SwissDataScienceCenter/renku-graph/issues/1666>`_).
-- **KG**: A new `GET /knowledge-graph/version` API.
+- **KG**: The Cross-Entity Search API to allow filtering by a ``role``.
+  (`#1486 <https://github.com/SwissDataScienceCenter/renku-graph/issues/1486>`_).
+- **KG**: Improved search to return results where the search keyword is separated by underscores.
+  (`#1783 <https://github.com/SwissDataScienceCenter/renku-graph/issues/1783>`_).
+- **KG**: A new ``GET /knowledge-graph/version`` API.
   (`#1760 <https://github.com/SwissDataScienceCenter/renku-graph/pull/1760>`_).
+- **KG**: Token service and Webhook service can now accept an AES token that is not base64 encoded.
+  (`#1774 <https://github.com/SwissDataScienceCenter/renku-graph/pull/1774>`_).
 
 **🐞 Bug Fixes**
 
@@ -28,13 +37,15 @@ User-Facing Changes
   (`#2883 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2883>`_).
 - 🧑‍🤝‍🧑 **UI**: Prevent occasionally duplicating last visited projects on the Dashboard
   (`#2892 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2892>`_).
+- **KG**: Prevent CLI's Dataset Import from failing when the Dataset belongs to a project with more than 20 datasets.
 
 Internal Changes
 ~~~~~~~~~~~~~~~~~~~
 
 **Improvements**
 
-- **KG**: Java upgraded to 21.0 and Jena to 4.10.0
+- **KG**: KG services to work with both ``Base64`` encoded and ASCII secrets read from configuration.
+- **KG**: Java upgraded to 21.0 and Jena to 4.10.0.
 
 **Bug Fixes**
 
@@ -46,6 +57,9 @@ Internal Changes
 Individual Components
 ~~~~~~~~~~~~~~~~~~~~~
 
+- `renku-graph 2.47.1 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/2.47.1>`_
+- `renku-graph 2.47.0 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/2.47.0>`_
+- `renku-graph 2.46.0 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/2.46.0>`_
 - `renku-graph 2.45.0 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/2.45.0>`_
 - `renku-graph 2.44.0 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/2.44.0>`_
 - `renku-ui 3.15.1 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.15.1>`_
