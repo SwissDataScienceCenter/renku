@@ -6,6 +6,9 @@
 Renku ``0.43.0`` brings improvements to the KG API, addresses a few bugs in the UI
 and in the data services API.
 
+**A note to Renku administrators**: this release includes breaking changes in our Helm chart values file.
+For more details on the Helm chart values changes please refer to the explanation in ``helm-chart/values.yaml.changelog.md``.
+
 User-Facing Changes
 ~~~~~~~~~~~~~~~~~~~
 
@@ -19,6 +22,8 @@ User-Facing Changes
   (`#1783 <https://github.com/SwissDataScienceCenter/renku-graph/issues/1783>`_).
 - **KG**: A new ``GET /knowledge-graph/version`` API.
   (`#1760 <https://github.com/SwissDataScienceCenter/renku-graph/pull/1760>`_).
+- **KG**: Token service and Webhook service can now accept an AES token that is not base64 encoded.
+  (`#1774 <https://github.com/SwissDataScienceCenter/renku-graph/pull/1774>`_).
 
 **🐞 Bug Fixes**
 

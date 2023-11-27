@@ -30,6 +30,10 @@ Expand the name of the chart.
 {{- "jena" -}}
 {{- end -}}
 
+{{- define "renku.graph.dbEncryptionSecret.name" -}}
+{{- printf "%s-graph-db-encryption" (include "renku.fullname" .) -}}
+{{- end -}}
+
 {{/*
 Create a default fully qualified app name.
 We truncate at 63 chars because some Kubernetes name fields are limited to this (by the DNS naming spec).
