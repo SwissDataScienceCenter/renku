@@ -36,8 +36,8 @@ spec:
             - name: TOKEN_ENCRYPTION_SECRET
               valueFrom:
                 secretKeyRef:
-                  name: {{ template "renku.graph.tokenRepository.fullname" . }}
-                  key: tokenRepository-tokenEncryption-secret
+                  name: {{ template "renku.graph.dbEncryptionSecret.name" . }}
+                  key: tokenRepository-aes-encryption-key
             - name: PROJECT_TOKEN_TTL
               value: "{{ .Values.graph.tokenRepository.projectTokenTTL }}"
             - name: PROJECT_TOKEN_NAME
