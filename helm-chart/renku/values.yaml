@@ -1309,6 +1309,7 @@ jena:
     enabled: false
 graph:
   webhookService:
+    aesEncryptionKey: # A 8, 16 or 32 bytes string used for AES encryption of the project tokens
     image:
       repository: renku/webhook-service
       tag: "2.47.1"
@@ -1323,11 +1324,8 @@ graph:
     jvmXmx: 128M
     gitlab:
       rateLimit: 100/sec
-    hookToken:
-      ## A secret for signing request header tokens to be sent by GitLab with the Push Events
-      ## Generated using: `openssl rand -hex 8|base64`
-      secret:
   tokenRepository:
+    aesEncryptionKey: # A 8, 16 or 32 bytes string used for AES encryption of the project tokens
     image:
       repository: renku/token-repository
       tag: "2.47.1"
@@ -1347,10 +1345,6 @@ graph:
     projectTokenName:
     projectTokenDuePeriod: "184 days"
     connectionPool: 2
-    tokenEncryption:
-      ## A secret for signing access tokens stored in the database
-      ## Generated using: `openssl rand -hex 8|base64`
-      secret:
   triplesGenerator:
     replicas: 1
     image:
