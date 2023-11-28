@@ -48,6 +48,16 @@ spec:
               value: {{ .Values.notebooks.sentry.environment | quote }}
             - name: NB_SENTRY__SAMPLE_RATE
               value: {{ .Values.notebooks.sentry.sampleRate | quote }}
+            - name: NB_SESSIONS__OIDC__CLIENT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: {{ cat (include "renku.fullname" .) "-gateway" | nospace }}
+                  key: notebooksClientSecret
+            - name: NB_SESSIONS__GIT_PROXY__RENKU_CLIENT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: {{ cat (include "renku.fullname" .) "-gateway" | nospace }}
+                  key: oidcClientSecret
             - name: SENTRY_RELEASE
               value: {{ .Chart.Version | quote }}
             - name: KUBERNETES_NAMESPACE
