@@ -619,7 +619,7 @@ ui:
     replicaCount: 1
     image:
       repository: renku/renku-ui
-      tag: "3.15.1"
+      tag: "3.16.0"
       pullPolicy: IfNotPresent
       ## Optionally specify an array of imagePullSecrets.
       ## Secrets must be manually created in the namespace.
@@ -780,7 +780,7 @@ ui:
     keepCookies: []
     image:
       repository: renku/renku-ui-server
-      tag: "3.15.1"
+      tag: "3.16.0"
       pullPolicy: IfNotPresent
     imagePullSecrets: []
     nameOverride: ""
@@ -1280,14 +1280,14 @@ jena:
       - ReadWriteOnce
     size: 10Gi
   additionalEnvironmentVariables:
-  - name: JVM_ARGS
-    value: -Xmx2G -Xms2G
+    - name: JVM_ARGS
+      value: -Xmx2G -Xms2G
   compacting:
     - name: ADMIN_USER
       value: admin
     ## The 'Mon *-*-* 00:00:00' expression means the process will be run every Monday at 00:00:00. More details at https://github.com/eikek/calev
     - name: COMPACTING_SCHEDULE
-      value: 'Mon *-*-* 00:00:00'
+      value: "Mon *-*-* 00:00:00"
   resources:
     requests:
       cpu: 1000m
@@ -1491,7 +1491,7 @@ initDb:
 dataService:
   image:
     repository: renku/renku-data-service
-    tag: "0.2.3"
+    tag: "0.3.0"
     pullPolicy: IfNotPresent
   service:
     type: ClusterIP
@@ -1509,6 +1509,8 @@ dataService:
   nodeSelector: {}
   tolerations: []
   affinity: {}
+  # This defines the maximum number of pinned projects in user preferences
+  maxPinnedProjects: 5
 podSecurityContext: {}
 securityContext:
   runAsUser: 1000
