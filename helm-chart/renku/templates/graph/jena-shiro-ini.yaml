@@ -1,3 +1,39 @@
+{{- $jenaAdminPwd := .Values.jena.users.admin.password | default (randAlphaNum 64) | b64enc }}
+{{- $jenaRenkuPwd := .Values.jena.users.renku.password | default (randAlphaNum 64) | b64enc }}
+
+# Check if the secret already exist. If it does then overwrite the passwords with the existing ones.
+{{- $secretName := include "renku.graph.jena.fullname" . }}
+{{- if not .Values.jena.users.admin.password -}}
+{{- $secret := (lookup "v1" "Secret" .Release.Namespace $secretName) }}
+{{- if $secret }}
+{{- $jenaAdminPwd = index $secret.data "jena-users-admin-password" }}
+{{- end -}}
+{{- end -}}
+
+{{- if not .Values.jena.users.renku.password -}}
+{{- $secret := (lookup "v1" "Secret" .Release.Namespace $secretName) }}
+{{- if $secret }}
+{{- $jenaRenkuPwd = index $secret.data "jena-users-renku-password" }}
+{{- end -}}
+{{- end -}}
+
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: {{ template "renku.graph.jena.fullname" . }}
+  labels:
+    app: {{ template "renku.graph.jena.name" . }}
+    chart: {{ template "renku.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+  annotations:
+    "helm.sh/hook": "pre-install,pre-upgrade,pre-rollback"
+type: Opaque
+data:
+  jena-users-admin-password: {{ $jenaAdminPwd}}
+  jena-users-renku-password: {{ $jenaRenkuPwd}}
+
 ---
 apiVersion: v1
 kind: ConfigMap
@@ -18,8 +54,8 @@ data:
     iniRealm.credentialsMatcher = $plainMatcher
 
     [users]
-    admin={{ .Values.jena.users.admin.password }}
-    renku={{ .Values.jena.users.renku.password }}
+    admin={{ $jenaAdminPwd | b64dec | trim }}
+    renku={{ $jenaRenkuPwd | b64dec | trim }}
 
     [roles]
 
