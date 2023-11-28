@@ -3,6 +3,15 @@
 0.65.0
 ------
 
+Internal Changes
+~~~~~~~~~~~~~~~~
+
+**Improvements**
+
+- **Jena**: Now the passwords for the admin and Renku Jena users are optional to define in the values file: if the
+  secret defining them already exists, it will be maintained, if it does not a set of random passwords will
+  be generated.
+
 
 0.64.3
 ------
