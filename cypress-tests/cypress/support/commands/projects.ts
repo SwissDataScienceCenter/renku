@@ -222,7 +222,7 @@ function visitAndLoadProject(
 
   // Other elements are re-rendered at this point; waiting 1 sec helps preventing "unmounted" errors
   // eslint-disable-next-line cypress/no-unnecessary-waiting
-  cy.wait(2_000);
+  cy.wait(1_000);
 }
 
 function visitProject(identifier: ProjectIdentifier) {
