@@ -58,8 +58,7 @@ function searchForProject(props: ProjectIdentifier, shouldExist = true) {
       .should("exist")
       .scrollIntoView()
       .should("be.visible");
-  }
-  else {
+  } else {
     cy.get(props.name).should("not.exist");
   }
 }
@@ -214,8 +213,10 @@ function visitAndLoadProject(
   cy.intercept("/ui-server/api/renku/versions", (req) => {
     versionInvoked = true;
   }).as("getVersion");
+  cy.intercept("/ui-server/api/projects/*").as("getProject");
   cy.visitProject(identifier);
   cy.wait("@getUser", { timeout: TIMEOUTS.long });
+  cy.wait("@getProject");
   if (versionInvoked) cy.wait("@getVersion", { timeout: TIMEOUTS.long });
   if (!skipOutdated) cy.wait("@getDatasets", { timeout: TIMEOUTS.long });
 
