@@ -735,9 +735,9 @@ ui:
       # internal project
       tutorialLink: https://renku.readthedocs.io/en/stable/tutorials/01_firststeps.html
       # project path with namespace to show in landing page (get started section)
-      projectPath: elisabet.capon/renku-demo-project-machine-learning
+      projectPath: ""
       # dataset slug to show in landing page (what is renku section)
-      datasetSlug: f838eb3c50c44be182f5ae5ac36babc2
+      datasetSlug: ""
       # Projects to highlight on the homepage
       showcase:
         # If you want to showcase certain project on the homepage, you can enable the feature and provide
