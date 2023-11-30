@@ -15,12 +15,11 @@ User-Facing Changes
   (`#1666 <https://github.com/SwissDataScienceCenter/renku-graph/issues/1666>`_).
 - **KG**: A new `GET /knowledge-graph/version` API.
   (`#1760 <https://github.com/SwissDataScienceCenter/renku-graph/pull/1760>`_).
-- **Core Service, CLI**: Add support for specifying project images.
+- **Core Service, CLI**: Add support for specifying a project image during 
+  project initialization.
   (`#3623 <https://github.com/SwissDataScienceCenter/renku-python/issues/3623>`)
-- **CLI**: Add support for pausing/resuming sessions.
+- **CLI**: Add support for pausing & resuming remote sessions from the cli.
   (`#3633 <https://github.com/SwissDataScienceCenter/renku-python/issues/3633>`)
-- **Core Service**: Add prometheus metrics.
-  (`#3640 <https://github.com/SwissDataScienceCenter/renku-python/issues/3640>`)
 
 **🐞 Bug Fixes**
 
@@ -50,6 +49,8 @@ Internal Changes
 - **CRC**: Use one database connection pool with limited number of connections
 - **Core Service,CLI**: Make slug and name consistent with rest of platform.
   (`#3620 <https://github.com/SwissDataScienceCenter/renku-python/issues/3620>`)
+- **Core Service**: Add prometheus metrics.
+  (`#3640 <https://github.com/SwissDataScienceCenter/renku-python/issues/3640>`)
 
 Individual Components
 ~~~~~~~~~~~~~~~~~~~~~
