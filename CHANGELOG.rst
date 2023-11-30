@@ -3,7 +3,7 @@
 0.44.0
 ------
 
-Renku ``0.44.0`` introduces pinning projects to the dashboard in RenkuLab. Additionally, it features a redesigned landing page aimed at enhancing the experience for new users, providing key information about Renku, its contributors, and guidance on getting started with the platform.
+Renku ``0.44.0`` introduces the ability to pin your favorite projects to the dashboard in RenkuLab for easy access. Additionally, it features a redesigned landing page that provides information about Renku, its key features, and the development team behind the platform, plus entry points for getting started with the platform.
 
 User-Facing Changes
 ~~~~~~~~~~~~~~~~~~~
@@ -13,8 +13,7 @@ User-Facing Changes
 - 📌️ **UI**: Users can now pin projects to the dashboard, up to a maximum of
   5 projects (`#2898 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2898>`_).
 - 🎨 **UI**: Introduce a redesigned landing page to enhance the user experience for new users exploring the platform for the first time
-    (`#2925 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2925>`_).
-
+  (`#2925 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2925>`_).
 
 
 **✨ Improvements**
