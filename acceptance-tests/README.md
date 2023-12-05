@@ -212,10 +212,3 @@ As mentioned above there's a `target/tests-execution.log` file where tests debug
 All the interesting parts are located in the `src/test/scala/ch/renku/acceptancetests` folder which can be
 perceived as a tests classes root folder. The test scenarios are suffixed with `Spec` while all the page
 objects are put into the `pages` subfolder.
-
-
-# FAQ
-
-* Q: I'm getting `Error: Could not find or load main class`
-
-  A: Please verify version of sbt in your computer using `sbt sbtVersion` but run it not from the project root.
