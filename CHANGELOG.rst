@@ -1,9 +1,48 @@
 .. _changelog:
 
+0.45.0
+------
+
+Renku ``0.45.0`` introduces improvements when working with projects and sessions
+on both the CLI and the UI.
+
+User-Facing Changes
+~~~~~~~~~~~~~~~~~~~
+
+**✨ Improvements**
+
+- **Core Service, CLI**: Add support for specifying a project image during
+  project initialization
+  (`#3623 <https://github.com/SwissDataScienceCenter/renku-python/issues/3623>`).
+- **CLI**: Add support for pausing & resuming remote sessions from the cli
+  (`#3633 <https://github.com/SwissDataScienceCenter/renku-python/issues/3633>`).
+
+Internal Changes
+~~~~~~~~~~~~~~~~
+
+**✨ Improvements**
+
+- **Core Service, CLI**: Make slug and name consistent with rest of platform
+  (`#3620 <https://github.com/SwissDataScienceCenter/renku-python/issues/3620>`).
+- **Core Service**: Add prometheus metrics
+  (`#3640 <https://github.com/SwissDataScienceCenter/renku-python/issues/3640>`).
+- **UI**: Adapt dataset APIs to the new naming convention used in the backend
+  (`#2854 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2854>`).
+
+Individual components
+~~~~~~~~~~~~~~~~~~~~~
+
+- `renku-ui 3.17.1 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.17.1>`_
+- `renku-python 2.8.0 <https://github.com/SwissDataScienceCenter/renku-python/tree/v2.8.0>`
+
+
 0.44.0
 ------
 
-Renku ``0.44.0`` introduces the ability to pin your favorite projects to the dashboard in RenkuLab for easy access. Additionally, it features a redesigned landing page that provides information about Renku, its key features, and the development team behind the platform, plus entry points for getting started with the platform.
+Renku ``0.44.0`` introduces the ability to pin your favorite projects to the dashboard
+in RenkuLab for easy access. Additionally, it features a redesigned landing page that
+provides information about Renku, its key features, and the development team behind the
+platform, plus entry points for getting started with the platform.
 
 User-Facing Changes
 ~~~~~~~~~~~~~~~~~~~
@@ -19,12 +58,6 @@ User-Facing Changes
 **✨ Improvements**
 
 - 🖼 **UI**: [Keycloak] Enhance UX for registration and authentication in the platform (`#26 <https://github.com/SwissDataScienceCenter/keycloak-theme/pull/26>`_).
-- **Core Service, CLI**: Add support for specifying a project image during 
-  project initialization.
-  (`#3623 <https://github.com/SwissDataScienceCenter/renku-python/issues/3623>`)
-- **CLI**: Add support for pausing & resuming remote sessions from the cli.
-  (`#3633 <https://github.com/SwissDataScienceCenter/renku-python/issues/3633>`)
-
 
 **🐞 Bug Fixes**
 
@@ -42,17 +75,12 @@ Internal Changes
 
 - **Data services**: New API endpoints to store and retrieve user
   preferences have been added to support the projects pins (`#85 <https://github.com/SwissDataScienceCenter/renku-data-services/pull/85>`_).
-- **Core Service,CLI**: Make slug and name consistent with rest of platform.
-  (`#3620 <https://github.com/SwissDataScienceCenter/renku-python/issues/3620>`)
-- **Core Service**: Add prometheus metrics.
-  (`#3640 <https://github.com/SwissDataScienceCenter/renku-python/issues/3640>`)
 
 Individual components
 ~~~~~~~~~~~~~~~~~~~~~
 
 - `renku-ui 3.17.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.17.0>`_
 - `renku-data-services 0.3.0 <https://github.com/SwissDataScienceCenter/renku-data-services/releases/tag/v0.3.0>`_
-- `renku-python 2.8.0 <https://github.com/SwissDataScienceCenter/renku-python/tree/v2.8.0>`
 
 0.43.0
 ------
