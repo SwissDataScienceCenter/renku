@@ -3,7 +3,7 @@
 0.44.0
 ------
 
-Renku ``0.44.0`` introduces pinning projects to the dashboard in RenkuLab.
+Renku ``0.44.0`` introduces the ability to pin your favorite projects to the dashboard in RenkuLab for easy access. Additionally, it features a redesigned landing page that provides information about Renku, its key features, and the development team behind the platform, plus entry points for getting started with the platform.
 
 User-Facing Changes
 ~~~~~~~~~~~~~~~~~~~
@@ -12,6 +12,14 @@ User-Facing Changes
 
 - 📌️ **UI**: Users can now pin projects to the dashboard, up to a maximum of
   5 projects (`#2898 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2898>`_).
+- 🎨 **UI**: Introduce a redesigned landing page to enhance the user experience for new users exploring the platform for the first time
+  (`#2925 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2925>`_).
+
+
+**✨ Improvements**
+
+- 🖼 **UI**: [Keycloak] Enhance UX for registration and authentication in the platform (`#26 <https://github.com/SwissDataScienceCenter/keycloak-theme/pull/26>`_).
+
 
 **🐞 Bug Fixes**
 
@@ -33,7 +41,7 @@ Internal Changes
 Individual components
 ~~~~~~~~~~~~~~~~~~~~~
 
-- `renku-ui 3.16.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.16.0>`_
+- `renku-ui 3.17.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.17.0>`_
 - `renku-data-services 0.3.0 <https://github.com/SwissDataScienceCenter/renku-data-services/releases/tag/v0.3.0>`_
 
 0.43.0
