@@ -13,9 +13,9 @@ User-Facing Changes
 
 - **Core Service, CLI**: Add support for specifying a project image during
   project initialization
-  (`#3623 <https://github.com/SwissDataScienceCenter/renku-python/issues/3623>`).
+  (`#3623 <https://github.com/SwissDataScienceCenter/renku-python/issues/3623>`_).
 - **CLI**: Add support for pausing & resuming remote sessions from the cli
-  (`#3633 <https://github.com/SwissDataScienceCenter/renku-python/issues/3633>`).
+  (`#3633 <https://github.com/SwissDataScienceCenter/renku-python/issues/3633>`_).
 
 Internal Changes
 ~~~~~~~~~~~~~~~~
@@ -23,17 +23,17 @@ Internal Changes
 **✨ Improvements**
 
 - **Core Service, CLI**: Make slug and name consistent with rest of platform
-  (`#3620 <https://github.com/SwissDataScienceCenter/renku-python/issues/3620>`).
+  (`#3620 <https://github.com/SwissDataScienceCenter/renku-python/issues/3620>`_).
 - **Core Service**: Add prometheus metrics
-  (`#3640 <https://github.com/SwissDataScienceCenter/renku-python/issues/3640>`).
+  (`#3640 <https://github.com/SwissDataScienceCenter/renku-python/issues/3640>`_).
 - **UI**: Adapt dataset APIs to the new naming convention used in the backend
-  (`#2854 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2854>`).
+  (`#2854 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2854>`_).
 
 Individual components
 ~~~~~~~~~~~~~~~~~~~~~
 
 - `renku-ui 3.17.1 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.17.1>`_
-- `renku-python 2.8.0 <https://github.com/SwissDataScienceCenter/renku-python/tree/v2.8.0>`
+- `renku-python 2.8.0 <https://github.com/SwissDataScienceCenter/renku-python/tree/v2.8.0>`_
 
 
 0.44.0
