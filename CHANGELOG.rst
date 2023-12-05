@@ -4,7 +4,7 @@
 ------
 
 Renku ``0.45.0`` introduces improvements when working with projects and sessions
-on both the CLI and the UI.
+on both the CLI and the UI. Additionally, it brings coherent usage of Dataset `name` and `slug` across all renku APIs.
 
 User-Facing Changes
 ~~~~~~~~~~~~~~~~~~~
@@ -16,6 +16,8 @@ User-Facing Changes
   (`#3623 <https://github.com/SwissDataScienceCenter/renku-python/issues/3623>`_).
 - **CLI**: Add support for pausing & resuming remote sessions from the cli
   (`#3633 <https://github.com/SwissDataScienceCenter/renku-python/issues/3633>`_).
+- **KG**: All APIs to return Dataset ``slug`` and ``name` and no `title` property
+  (`#1741 <https://github.com/SwissDataScienceCenter/renku-graph/pull/1741>`_).
 
 Internal Changes
 ~~~~~~~~~~~~~~~~
@@ -34,7 +36,7 @@ Individual components
 
 - `renku-ui 3.17.1 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.17.1>`_
 - `renku-python 2.8.0 <https://github.com/SwissDataScienceCenter/renku-python/tree/v2.8.0>`_
-
+- `renku-graph 2.48.0 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/2.48.0>`_
 
 0.44.0
 ------

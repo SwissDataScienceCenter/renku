@@ -65,6 +65,8 @@ spec:
                   key: graph-tokenRepository-postgresPassword
             - name: TOKEN_REPOSITORY_POSTGRES_CONNECTION_POOL
               value: "{{ .Values.graph.tokenRepository.connectionPool }}"
+            - name: EVENT_LOG_BASE_URL
+              value: "http://{{ template "renku.graph.eventLog.fullname" . }}:{{ .Values.graph.eventLog.service.port }}"
             - name: GITLAB_BASE_URL
               value: {{ .Values.global.gitlab.url }}
             - name: GITLAB_RATE_LIMIT
