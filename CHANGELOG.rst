@@ -16,7 +16,7 @@ User-Facing Changes
   (`#3623 <https://github.com/SwissDataScienceCenter/renku-python/issues/3623>`_).
 - **CLI**: Add support for pausing & resuming remote sessions from the cli
   (`#3633 <https://github.com/SwissDataScienceCenter/renku-python/issues/3633>`_).
-- **KG**: All APIs to return Dataset ``slug`` and ``name` and no `title` property
+- **KG**: All APIs to return Dataset ``slug`` and ``name`` and no ``title`` property
   (`#1741 <https://github.com/SwissDataScienceCenter/renku-graph/pull/1741>`_).
 
 Internal Changes
