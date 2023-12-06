@@ -5,10 +5,12 @@ admin
 Amalthea
 analytics
 app
+aqs
 args
 Args
 argv
 Ascii
+astroquery
 attrs
 auditability
 auth
@@ -185,6 +187,7 @@ params
 pipenv
 pipx
 PNG
+png
 Postgresql
 powerline
 pre
@@ -193,6 +196,7 @@ prepended
 preprocessed
 preprocessing
 programmatically
+prometheus
 py
 pyshacl
 rclone
@@ -311,6 +315,7 @@ versioning
 Versioning
 vertices
 viewmodel
+vis
 vm
 webhook
 webhooks
