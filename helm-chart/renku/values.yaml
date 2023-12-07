@@ -853,16 +853,25 @@ amalthea:
   scope:
     clusterWide: false
   deployCrd: true
+## Used only if S3 Mounts are enabled
+dlf-chart:
+  csi-sidecars-rbac:
+    enabled: true
+  csi-nfs-chart:
+    enabled: false
+  csi-s3-chart:
+    mounter: "goofys"
+    enabled: true
+  csi-h3-chart:
+    enabled: false
+  dataset-operator-chart:
+    enabled: true
 notebooks:
   cloudstorage:
     ## If enabled this will allow mounting of rclone cloudstorage
     enabled: false
-    ## Azure blob storage mounting support is experimental. The CSI
-    ## storage driver for mounting azure blob storage has to be already installed
-    ## in the cluster if enabled.
-    azureBlob:
-      enabled: false
-      readOnly: true
+    s3:
+      installDatashim: false
   # configuration for user session persistent volumes
   userSessionPersistentVolumes:
     enabled: true
