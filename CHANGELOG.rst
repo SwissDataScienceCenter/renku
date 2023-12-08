@@ -30,12 +30,15 @@ Internal Changes
   (`#3640 <https://github.com/SwissDataScienceCenter/renku-python/issues/3640>`_).
 - **UI**: Adapt dataset APIs to the new naming convention used in the backend
   (`#2854 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2854>`_).
+- **KG**: Clean up process removing project tokens close to their expiration date
+  (`#1812 <https://github.com/SwissDataScienceCenter/renku-graph/pull/1812>`_).
 
 Individual components
 ~~~~~~~~~~~~~~~~~~~~~
 
 - `renku-ui 3.17.1 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.17.1>`_
 - `renku-python 2.8.0 <https://github.com/SwissDataScienceCenter/renku-python/tree/v2.8.0>`_
+- `renku-graph 2.48.1 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/2.48.1>`_
 - `renku-graph 2.48.0 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/2.48.0>`_
 
 0.44.0
