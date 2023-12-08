@@ -3,8 +3,9 @@
 0.45.0
 ------
 
-Renku ``0.45.0`` introduces improvements when working with projects and sessions
-on both the CLI and the UI. Additionally, it brings coherent usage of Dataset `name` and `slug` across all renku APIs.
+Renku ``0.45.0`` adds support for pausing and resuming sessions from the CLI. You can now also specify a
+project image when initializing a project from the CLI. Additionally, this release brings coherent usage
+of Dataset `name` and `slug` across all Renku APIs.
 
 User-Facing Changes
 ~~~~~~~~~~~~~~~~~~~
@@ -16,8 +17,6 @@ User-Facing Changes
   (`#3623 <https://github.com/SwissDataScienceCenter/renku-python/issues/3623>`_).
 - **CLI**: Add support for pausing & resuming remote sessions from the cli
   (`#3633 <https://github.com/SwissDataScienceCenter/renku-python/issues/3633>`_).
-- **KG**: All APIs to return Dataset ``slug`` and ``name`` and no ``title`` property
-  (`#1741 <https://github.com/SwissDataScienceCenter/renku-graph/pull/1741>`_).
 
 Internal Changes
 ~~~~~~~~~~~~~~~~
@@ -30,6 +29,8 @@ Internal Changes
   (`#3640 <https://github.com/SwissDataScienceCenter/renku-python/issues/3640>`_).
 - **UI**: Adapt dataset APIs to the new naming convention used in the backend
   (`#2854 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2854>`_).
+- **KG**: All APIs to return Dataset ``slug`` and ``name`` and no ``title`` property
+  (`#1741 <https://github.com/SwissDataScienceCenter/renku-graph/pull/1741>`_).
 - **KG**: Clean up process removing project tokens close to their expiration date
   (`#1812 <https://github.com/SwissDataScienceCenter/renku-graph/pull/1812>`_).
 
