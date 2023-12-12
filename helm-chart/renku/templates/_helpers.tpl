@@ -133,7 +133,7 @@ KC_DB_PASSWORD: {{ default (randAlphaNum 64) .Values.global.keycloak.postgresPas
 {{- end -}}
 
 {{- define "renku.gitlabUrl" -}}
-{{ .Values.graph.gitlab.url | default (printf "%s://%s/gitlab" (include "renku.http" .) .Values.global.renku.domain) }}
+{{ .Values.global.gitlab.url | default (printf "%s://%s/gitlab" (include "renku.http" .) .Values.global.renku.domain) }}
 {{- end -}}
 
 {{- define "renku.baseUrl" -}}
@@ -159,4 +159,8 @@ app.kubernetes.io/instance: {{ .Release.Name }}
 app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
 {{- end }}
 app.kubernetes.io/managed-by: {{ .Release.Service }}
+{{- end -}}
+
+{{- define "renku.keycloak.realm" -}}
+{{ .Values.global.keycloak.realm | default "Renku" }}
 {{- end -}}

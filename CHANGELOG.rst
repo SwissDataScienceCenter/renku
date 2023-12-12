@@ -1,5 +1,321 @@
 .. _changelog:
 
+0.45.0
+------
+
+Renku ``0.45.0`` adds support for pausing and resuming sessions from the CLI. You can now also specify a
+project image when initializing a project from the CLI. Additionally, this release brings coherent usage
+of Dataset `name` and `slug` across all Renku APIs.
+
+User-Facing Changes
+~~~~~~~~~~~~~~~~~~~
+
+**✨ Improvements**
+
+- **Core Service, CLI**: Add support for specifying a project image during
+  project initialization
+  (`#3623 <https://github.com/SwissDataScienceCenter/renku-python/issues/3623>`_).
+- **CLI**: Add support for pausing & resuming remote sessions from the cli
+  (`#3633 <https://github.com/SwissDataScienceCenter/renku-python/issues/3633>`_).
+
+Internal Changes
+~~~~~~~~~~~~~~~~
+
+**✨ Improvements**
+
+- **Core Service, CLI**: Make slug and name consistent with rest of platform
+  (`#3620 <https://github.com/SwissDataScienceCenter/renku-python/issues/3620>`_).
+- **Core Service**: Add prometheus metrics
+  (`#3640 <https://github.com/SwissDataScienceCenter/renku-python/issues/3640>`_).
+- **UI**: Adapt dataset APIs to the new naming convention used in the backend
+  (`#2854 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2854>`_).
+- **KG**: All APIs to return Dataset ``slug`` and ``name`` and no ``title`` property
+  (`#1741 <https://github.com/SwissDataScienceCenter/renku-graph/pull/1741>`_).
+- **KG**: Clean up process removing project tokens close to their expiration date
+  (`#1812 <https://github.com/SwissDataScienceCenter/renku-graph/pull/1812>`_).
+
+Individual components
+~~~~~~~~~~~~~~~~~~~~~
+
+- `renku-ui 3.17.1 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.17.1>`_
+- `renku-python 2.8.0 <https://github.com/SwissDataScienceCenter/renku-python/tree/v2.8.0>`_
+- `renku-graph 2.48.1 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/2.48.1>`_
+- `renku-graph 2.48.0 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/2.48.0>`_
+
+0.44.0
+------
+
+Renku ``0.44.0`` introduces the ability to pin your favorite projects to the dashboard
+in RenkuLab for easy access. Additionally, it features a redesigned landing page that
+provides information about Renku, its key features, and the development team behind the
+platform, plus entry points for getting started with the platform.
+
+User-Facing Changes
+~~~~~~~~~~~~~~~~~~~
+
+**🌟 New Features**
+
+- 📌️ **UI**: Users can now pin projects to the dashboard, up to a maximum of
+  5 projects (`#2898 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2898>`_).
+- 🎨 **UI**: Introduce a redesigned landing page to enhance the user experience for new users exploring the platform for the first time
+  (`#2925 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2925>`_).
+
+
+**✨ Improvements**
+
+- 🖼 **UI**: [Keycloak] Enhance UX for registration and authentication in the platform (`#26 <https://github.com/SwissDataScienceCenter/keycloak-theme/pull/26>`_).
+
+**🐞 Bug Fixes**
+
+- **UI**: Correctly update progress of project indexing (`#2833 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2833>`_).
+- **UI**: Change icons in the Nav bar to use Bootstrap icons (`#2882 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2882>`_).
+- **UI**: Fixed bug that caused Dashboard to reload frequently by handling errors from the ``getSessions`` query in the Dashboard (`#2903 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2903>`_).
+- **UI**: Adjust dropdown menus with anchors nested in buttons (`#2907 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2907>`_).
+- **UI**: Update the workflows documentation link (`#2917 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2917>`_).
+- **UI**: Add whitespace after author name in session commit details (`#2921 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2921>`_).
+
+Internal Changes
+~~~~~~~~~~~~~~~~
+
+**✨ Improvements**
+
+- **Data services**: New API endpoints to store and retrieve user
+  preferences have been added to support the projects pins (`#85 <https://github.com/SwissDataScienceCenter/renku-data-services/pull/85>`_).
+
+Individual components
+~~~~~~~~~~~~~~~~~~~~~
+
+- `renku-ui 3.17.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.17.0>`_
+- `renku-data-services 0.3.0 <https://github.com/SwissDataScienceCenter/renku-data-services/releases/tag/v0.3.0>`_
+
+0.43.0
+------
+
+Renku ``0.43.0`` brings improvements to the KG API, addresses a few bugs in the UI
+and in the data services API.
+
+**A note to Renku administrators**: this release includes breaking changes in our Helm chart values file.
+For more details on the Helm chart values changes please refer to the explanation in ``helm-chart/values.yaml.changelog.md``.
+
+User-Facing Changes
+~~~~~~~~~~~~~~~~~~~
+
+**✨ Improvements**
+
+- **KG**: Performance improvements to the Cross-Entity Search API.
+  (`#1666 <https://github.com/SwissDataScienceCenter/renku-graph/issues/1666>`_).
+- **KG**: The Cross-Entity Search API to allow filtering by a ``role``.
+  (`#1486 <https://github.com/SwissDataScienceCenter/renku-graph/issues/1486>`_).
+- **KG**: Improved search to return results where the search keyword is separated by underscores.
+  (`#1783 <https://github.com/SwissDataScienceCenter/renku-graph/issues/1783>`_).
+- **KG**: A new ``GET /knowledge-graph/version`` API.
+  (`#1760 <https://github.com/SwissDataScienceCenter/renku-graph/pull/1760>`_).
+- **KG**: Token service and Webhook service can now accept an AES token that is not base64 encoded.
+  (`#1774 <https://github.com/SwissDataScienceCenter/renku-graph/pull/1774>`_).
+
+**🐞 Bug Fixes**
+
+- 🔽 **UI**: Prevent showing wrong options on the Session dropdown menu when the project
+  namespace includes uppercase letters
+  (`#2874 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2874>`_).
+- 🔲 **UI**: Restore the switch between creating and importing a dataset, and restyle the
+  buttons
+  (`#2857 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2857>`_).
+- 🔨 **UI**: Address visual glitches on many pages
+  (`#2883 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2883>`_).
+- 🧑‍🤝‍🧑 **UI**: Prevent occasionally duplicating last visited projects on the Dashboard
+  (`#2892 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2892>`_).
+- **KG**: Prevent CLI's Dataset Import from failing when the Dataset belongs to a project with more than 20 datasets.
+
+Internal Changes
+~~~~~~~~~~~~~~~~~~~
+
+**Improvements**
+
+- **KG**: KG services to work with both ``Base64`` encoded and ASCII secrets read from configuration.
+- **KG**: Java upgraded to 21.0 and Jena to 4.10.0.
+
+**Bug Fixes**
+
+- **UI**: Correctly handle Statuspage down
+  (`#2871 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2871>`_).
+- **CRC**: Do not create new quotas when updating existing ones
+- **CRC**: Use one database connection pool with limited number of connections
+
+Individual Components
+~~~~~~~~~~~~~~~~~~~~~
+
+- `renku-graph 2.47.1 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/2.47.1>`_
+- `renku-graph 2.47.0 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/2.47.0>`_
+- `renku-graph 2.46.0 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/2.46.0>`_
+- `renku-graph 2.45.0 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/2.45.0>`_
+- `renku-graph 2.44.0 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/2.44.0>`_
+- `renku-ui 3.15.1 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.15.1>`_
+- `renku-data-services 0.2.3 <https://github.com/SwissDataScienceCenter/renku-data-services/releases/tag/v0.2.3>`_
+
+
+0.42.1
+------
+
+Renku ``0.42.1`` is a bugfix release that addresses the following bugs in a few services:
+
+- creating new resources in the ``data-services`` API
+- properly enforcing access controls to the default resource pool
+- accidentally removing the git repository directory from hibernated sessions
+- properly templating node affinities and tolerations from the ``data-services`` into user sessions
+
+Individual components
+~~~~~~~~~~~~~~~~~~~~~~
+
+- `renku-data-services 0.2.1 <https://github.com/SwissDataScienceCenter/renku-data-services/releases/tag/v0.2.1>`_
+- `renku-data-services 0.2.2 <https://github.com/SwissDataScienceCenter/renku-data-services/releases/tag/v0.2.2>`_
+- `renku-notebooks 1.20.1 <https://github.com/SwissDataScienceCenter/renku-notebooks/releases/tag/1.20.1>`_
+- `renku-notebooks 1.20.2 <https://github.com/SwissDataScienceCenter/renku-notebooks/releases/tag/1.20.2>`_
+
+0.42.0
+------
+
+Renku ``0.42.0`` allows RenkuLab administrators to easily manage user resource pools via an Admin Panel built into RenkuLab.
+User resource pools are a way to manage the compute resources accessible to groups of RenkuLab users for interactive sessions.
+From the new Admin Panel, admins can create resource pools, set their max resource quotas, customize the session classes
+available within pools, and add users to pools. Admins can access the new Admin Panel by navigating to the account icon
+in the top right in RenkuLab and selecting 'Admin Panel'. To access the Admin Panel, a user must have the `renku-admin` role
+delegated to them in Keycloak.
+
+In addition, the login screen was updated to better space components on smaller screens and fix minor
+visual glitches.
+
+User-Facing Changes
+~~~~~~~~~~~~~~~~~~~
+
+**🌟 New Features**
+
+- 🖼 **UI**: Admins can configure compute resources available to groups of users for interactive sessions.
+  (`#2752 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2752>`_).
+
+**✨ Improvements**
+
+- 💾 **UI**: Show a confirmation text when saving a session
+  (`#2856 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2856>`_).
+
+Internal Changes
+~~~~~~~~~~~~~~~~~~~
+
+- ``renku-gateway`` can now proxy to Keycloak endpoints
+
+Individual components:
+~~~~~~~~~~~~~~~~~~~~~~
+
+- `renku-gateway 0.23.0 <https://github.com/SwissDataScienceCenter/renku-gateway/releases/tag/0.23.0>`_
+- `renku-ui 3.15.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.15.0>`_
+
+0.41.1
+------
+
+Renku ``0.41.1`` is a bugfix release to patch a bug found in the data service which prevented
+new users from being created due to a db migration problem.
+
+Individual components
+~~~~~~~~~~~~~~~~~~~~~~
+
+- `renku-data-services 0.2.1 <https://github.com/SwissDataScienceCenter/renku-data-services/releases/tag/v0.2.1>`_
+
+0.41.0
+------
+
+Renku ``0.41.0`` adds new functionality for configuring external storage in projects! Users can now
+configure external storage to be mounted automatically in their sessions. The settings are persisted for the project,
+but access control is managed by the provider of the storage, not by Renku. This means that for restricted
+data sources, users must enter credentials separately. This first implementation only supports S3-compatible storage,
+but we will add support for additional providers soon.
+
+Lastly, with this release administrators can configure the RenkuLab homepage to highlight chosen projects.
+
+**A note to Renku administrators**: this release includes breaking changes in our Helm chart values file.
+Refer to the ``Internal Changes`` section below for more details.
+
+User-Facing Changes
+~~~~~~~~~~~~~~~~~~~
+
+**🌟 New Features**
+
+- 🖼 **UI**: Admins can designate projects to be showcased on the home page, which will show them
+  in the showcase section of the home page
+  (`#2799 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2799>`_).
+
+**✨ Improvements**
+
+- 💾 **UI**: Add support for cloud storage configuration per project. There are now more options
+  to customize to support external S3 and S3 compatible storage better
+  (`#2760 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2760>`_).
+- 🌈 **UI**: Improve color contrast and other UX elements
+  (`#2846 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2846>`_).
+
+Internal Changes
+~~~~~~~~~~~~~~~~~~~
+
+This release is a breaking change to the Helm values file and it requires minor edits to the following field:
+
+- ``ui.homepage`` removed the unused ``projects`` field and added the ``showcase`` field.
+- ``amalthea.scheduler.*`` deprecates all existing child fields and adds new child fields. If you are not defining these fields
+  in your values file then you are using the default Kubernetes scheduler and this requires no action. But if you are
+  defining a custom scheduler in your deployment's values file then this requires additional edits to your values file
+  so that you can retain the same functionality as before.
+- the ``crc`` field in the values file has been renamed to ``dataService``, all child fields remain the same
+  functionally and by name.
+
+For more details on the Helm chart values changes please refer to the explanation in ``helm-chart/values.yaml.changelog.md``.
+
+In addition to this, other notable changes include:
+
+- add node affinities and tolerations for resource classes
+- persist cloud storage configurations at the project level
+- validation of Rclone cloud storage configuration by the backend
+- update the Amalthea scheduler to work with newer versions of Kubernetes
+- ``renku-notebooks`` now get S3 cloud storage configuration from ``renku-data-services``
+- ``renku-gateway`` now provides credentials for the cloud storage potion of ``renku-data-services``
+- UI shows prominent banners during major outages
+- various bug fixes across many components
+- users can be prevented from accessing the default resource pool in ``renku-data-services``
+
+Individual components
+~~~~~~~~~~~~~~~~~~~~~~
+
+- `renku-data-services 0.1.1 <https://github.com/SwissDataScienceCenter/renku-data-services/releases/tag/v0.1.1>`_
+- `renku-data-services 0.2.0 <https://github.com/SwissDataScienceCenter/renku-data-services/releases/tag/v0.2.0>`_
+- `renku-gateway 0.22.0 <https://github.com/SwissDataScienceCenter/renku-gateway/releases/tag/0.22.0>`_
+- `renku-notebooks 1.20.0 <https://github.com/SwissDataScienceCenter/renku-notebooks/releases/tag/1.20.0>`_
+- `renku-ui 3.14.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.14.0>`_
+- `amalthea 0.10.0 <https://github.com/SwissDataScienceCenter/amalthea/releases/tag/0.10.0>`_
+
+0.40.2
+------
+
+Renku ``0.40.2`` fixes a bug in the Renku data services where the web server consumed a lot of database connections.
+
+**🐞 Bug Fixes**
+
+- **Data services**: Run the server with only 1 worker so that fewer database connections are consumed
+
+Individual components
+~~~~~~~~~~~~~~~~~~~~~~
+
+- `renku-data-services v0.0.3 <https://github.com/SwissDataScienceCenter/renku-data-services/releases/tag/v0.0.3>`_
+
+0.40.1
+------
+
+Renku ``0.40.1`` reverts recent changes to Lucene configuration in the Triples Store preventing users from searching by keywords.
+
+**🐞 Bug Fixes**
+
+- **KG**: Use the `StandardTokenizer` to allow searching by keywords containing underscore signs.
+
+Individual components
+~~~~~~~~~~~~~~~~~~~~~~
+
+- `renku-graph 2.43.1 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/2.43.1>`_
+
 0.40.0
 ------
 
@@ -75,7 +391,7 @@ operation to fail.
 
 Renku ``0.39.0`` moves all renku component Helm charts to one single chart that now resides in this repository.
 
-After initial testing we have noticed a bug in this version of the Helm chart. If you have already deployed this version simply 
+After initial testing we have noticed a bug in this version of the Helm chart. If you have already deployed this version simply
 upgrading to ``0.39.1`` will fix things. If you have not yet deployed this version then skip it and go straight to ``0.39.1``.
 The reason for the bug is that we replaced the ``spec.selector.matchLabels`` field of two important deployments in the Gateway
 because of this the two components do not upgrade and the whole Helm upgrade operation fails.
@@ -86,8 +402,8 @@ Also, with the next releases we will adopt a specific way of versioning the helm
   only application level bug fixes are present in the new release.
 - Minor version changes (i.e. ``0.50.2`` -> ``0.51.0``) indicate that there are NO changes in the Helm chart and that
   only application level new features and/or application level breaking changes are present.
-- Major version changes (i.e. ``0.50.0`` -> ``1.0.0``) will be reserved for changes in the Helm chart, either when the 
-  values file changes or when the Helm templates change. 
+- Major version changes (i.e. ``0.50.0`` -> ``1.0.0``) will be reserved for changes in the Helm chart, either when the
+  values file changes or when the Helm templates change.
 
 Please note that this is a breaking change to the values file and it requires three minor edits to the following fields:
 
@@ -332,7 +648,7 @@ Individual components
 ------
 
 Renku ``0.35.2`` introduces a UI bug-fix to prevent overloading backend components
-when using pre-filled template links. 
+when using pre-filled template links.
 
 Internal Changes
 ~~~~~~~~~~~~~~~~
@@ -435,7 +751,7 @@ Internal Changes
 - **Gateway:** properly redirect from /gitlab urls
   (`#669 <https://github.com/SwissDataScienceCenter/renku-gateway/issues/669>`__)
   (`2fac96f <https://github.com/SwissDataScienceCenter/renku-gateway/commit/2fac96f5c6141f4e57ae5cc77877670156bceae5>`__)
-- **Gateway:** return 404 if the core service metadata version does not exist instead of redirecting 
+- **Gateway:** return 404 if the core service metadata version does not exist instead of redirecting
   to the endpoint that is using the latest metadata version
   (`#667 <https://github.com/SwissDataScienceCenter/renku-gateway/issues/667>`__)
   (`2753d07 <https://github.com/SwissDataScienceCenter/renku-gateway/commit/2753d0773e26cb1c74e4be4dd44fe5e77f428657>`__
@@ -499,7 +815,7 @@ User-Facing Changes
 
 **✨ Improvements**
 
-- 🔎 **Knowledge Graph**: all the APIs return a new Project `slug` property. 
+- 🔎 **Knowledge Graph**: all the APIs return a new Project `slug` property.
   The `path` property although still available will be removed in the future.
   (`#1641 <https://github.com/SwissDataScienceCenter/renku-graph/issues/1641>`_).
 
@@ -541,7 +857,7 @@ Individual components
 Renku ``0.33.0`` introduces improvements and bug fixes in the UI and Knowledge Graph.
 
 The UI benefits from better error handling and overall behavior, including improved
-handling of common R file extensions. Regarding the Knowledge Graph, the 
+handling of common R file extensions. Regarding the Knowledge Graph, the
 Cross-Entity Search improves significantly its performance and project visibility
 can be changed through a dedicated API.
 
@@ -604,7 +920,7 @@ Individual components
 0.32.0
 ------
 
-Renku ``0.32.0`` introduces improvements in the KG services, enhancing KG overall performance. 
+Renku ``0.32.0`` introduces improvements in the KG services, enhancing KG overall performance.
 
 User-Facing Changes
 ~~~~~~~~~~~~~~~~~~~

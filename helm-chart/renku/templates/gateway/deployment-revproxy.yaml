@@ -49,7 +49,7 @@ spec:
               {{- if .Values.gitlab.enabled }}
               value: ""
               {{- else }}
-              value: {{ .Values.graph.gitlab.url | default "" | quote }}
+              value: {{ .Values.global.gitlab.url | default "" | quote }}
               {{- end }}
             - name: REVPROXY_ALLOW_ORIGIN
               value: {{ join "," .Values.gateway.allowOrigin | quote }}
@@ -67,8 +67,10 @@ spec:
               value: {{ template "gateway.core.serviceNames" . }}
             - name: REVPROXY_RENKU_SERVICES_AUTH
               value: {{ printf "http://%s-gateway-auth" .Release.Name }}
-            - name: REVPROXY_RENKU_SERVICES_CRC
-              value: {{ printf "http://%s" .Values.global.crc.serviceName | quote }}
+            - name: REVPROXY_RENKU_SERVICES_DATA_SERVICE
+              value: {{ printf "http://%s-data-service" .Release.Name | quote }}
+            - name: REVPROXY_RENKU_SERVICES_KEYCLOAK
+              value: {{ include "renku.keycloakUrl" . | quote }}
             - name: REVPROXY_PORT
               value: "8080"
             - name: REVPROXY_METRICS_ENABLED

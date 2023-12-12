@@ -49,7 +49,7 @@ object KnowledgeGraphModel {
         cur.downField("description").as[Option[projects.Description]],
         cur.downField("keywords").as[Set[projects.Keyword]],
         cur.downField("visibility").as[projects.Visibility],
-        cur.downField("images").as[List[images.ImageUri]](decodeList(imageDecoder)),
+        cur.downField("images").as[List[images.ImageUri]](decodeList(imageDecoder))
       ).mapN(KGProjectDetails.apply)
     }
   }

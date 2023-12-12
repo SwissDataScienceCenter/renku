@@ -28,7 +28,7 @@ and make sure that the ``$PATH`` is correctly configured.
 ::
 
     $ python3 -m pip install --user pipx
-    $ pipx ensurepath
+    $ python3 -m pipx ensurepath
 
 Once ``pipx`` is installed use following command to install ``renku``.
 

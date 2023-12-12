@@ -5,6 +5,7 @@ import { sleep } from "k6";
 const notebooksGetHttpReqDuration = new Trend("http_req_duration_get_notebooks", true);
 const notebooksGetImagesHttpReqDuration = new Trend("http_req_duration_get_notebooks_images", true);
 const notebooksPostHttpReqDuration = new Trend("http_req_duration_post_notebooks", true);
+const notebooksPatchHttpReqDuration = new Trend("http_req_duration_patch_notebooks", true);
 const notebooksDeleteHttpReqDuration = new Trend("http_req_duration_delete_notebooks", true);
 
 export function stopServer(baseUrl, serverName) {
@@ -38,6 +39,34 @@ export function startServer(baseUrl, commitSha, namespace, projectName, serverOp
   return res
 }
 
+export function hibernateServer(baseUrl, serverName) {
+  const payload = {
+    state: "hibernated",
+  };
+
+  const res = http.patch(
+    `${baseUrl}/ui-server/api/notebooks/servers/${serverName}`,
+    JSON.stringify(payload),
+    { headers: { "Content-Type": "application/json" } }
+  );
+  notebooksPatchHttpReqDuration.add(res.timings.duration)
+  return res
+}
+
+export function resumeServer(baseUrl, serverName) {
+  const payload = {
+    state: "running",
+  };
+
+  const res = http.patch(
+    `${baseUrl}/ui-server/api/notebooks/servers/${serverName}`,
+    JSON.stringify(payload),
+    { headers: { "Content-Type": "application/json" } }
+  );
+  notebooksPatchHttpReqDuration.add(res.timings.duration)
+  return res
+}
+
 export function waitForServerState(baseUrl, serverName, state, secondsTimeout = 600, callback = null) {
   let resJson, res;
   const start = Date.now();
@@ -50,6 +79,7 @@ export function waitForServerState(baseUrl, serverName, state, secondsTimeout = 
       callback(res)
     }
     if ((Date.now() - start) / 1000 > secondsTimeout) {
+      console.log(`Waiting for server ${serverName} to reach state ${state} timed out with response: ${res.body} and status ${res.status}`);
       break;
     }
   } while (
@@ -68,6 +98,7 @@ export function waitForImageToBuild(baseUrl, registryDomain, namespace, name, co
     res = http.get(`${baseUrl}/ui-server/api/notebooks/images?image_url=${encodeURIComponent(imageName)}`)
     notebooksGetImagesHttpReqDuration.add(res.timings.duration)
     if ((Date.now() - start) / 1000 > secondsTimeout) {
+      console.log(`Waiting for image ${imageName} to become ready timed out with response: ${res.body} and status ${res.status}`)
       break;
     }
   } while (

@@ -54,7 +54,9 @@ object CliVersion {
 
     private lazy val extractionRegex: Regex = NonReleasedVersion.validator.r
 
-    lazy val extractionRegex(commitSha) = value
+    lazy val commitSha: String = value match {
+      case extractionRegex(groups @ _*) => groups.last
+    }
   }
 
   object NonReleasedVersion {

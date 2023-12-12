@@ -32,7 +32,7 @@ import org.scalatestplus.selenium.WebBrowser
 import scala.concurrent.duration._
 import scala.language.implicitConversions
 
-trait Grammar extends WebElementOps with WebDriverOps with Scripts with Eventually {
+trait Grammar extends WebElementOps with WebDriverOps with Eventually {
   self: WebBrowser with WebDriveredSpec with should.Matchers =>
 
   implicit def toSeleniumPage[Url <: BaseUrl](page: Page[Url])(implicit baseUrl: Url): selenium.Page =
