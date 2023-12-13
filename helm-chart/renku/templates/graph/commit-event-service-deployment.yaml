@@ -38,7 +38,7 @@ spec:
             - name: TOKEN_REPOSITORY_BASE_URL
               value: "http://{{ template "renku.graph.tokenRepository.fullname" . }}:{{ .Values.graph.tokenRepository.service.port }}"
             - name: GITLAB_BASE_URL
-              value: {{ include "renku.gitlabUrl" . | quote }}
+              value: {{ .Values.graph.gitlab.url }}
             - name: GITLAB_RATE_LIMIT
               value: {{ .Values.graph.commitEventService.gitlab.rateLimit }}
             - name: SENTRY_ENABLED

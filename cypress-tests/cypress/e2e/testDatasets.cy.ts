@@ -141,7 +141,7 @@ describe("Basic datasets functionality", () => {
     // Search for the dataset after the project has been indexed
     cy.getDataCy("go-back-button").should("be.visible").click();
     cy.waitMetadataIndexing();
-    cy.searchForDataset(generatedDatasetName.slug);
+    cy.searchForDataset(generatedDatasetName.name);
   });
 
   it("Delete the dataset", () => {

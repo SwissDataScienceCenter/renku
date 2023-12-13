@@ -36,8 +36,8 @@ spec:
             - name: HOOK_TOKEN_SECRET
               valueFrom:
                 secretKeyRef:
-                  name: {{ template "renku.graph.webhookService.fullname" . }}
-                  key: webhookService-hookToken-secret
+                  name: {{ template "renku.graph.dbEncryptionSecret.name" . }}
+                  key: webhook-aes-encryption-key
             - name: EVENT_LOG_BASE_URL
               value: "http://{{ template "renku.graph.eventLog.fullname" . }}:{{ .Values.graph.eventLog.service.port }}"
             - name: TRIPLES_GENERATOR_BASE_URL

@@ -1,4 +1,6 @@
 ---
+amalthea:
+  deployCrd: true
 global:
   gateway:
     cliClientSecret: <use `openssl rand -hex 32`>
@@ -40,12 +42,6 @@ gitlab:
         - {gitlab_registry}
         secretName: registry-tls
 graph:
-  jena:
-    users:
-      admin:
-        password: <use `openssl rand -hex 8 | base64`>
-      renku:
-        password: <use `openssl rand -hex 8 | base64`>
   tokenRepository:
     tokenEncryption:
       secret: <use `openssl rand -hex 8 | base64`>
@@ -65,9 +61,13 @@ ingress:
     - hosts:
         - {renku_domain}
       secretName: {namespace}-renku-ch-tls
+jena:
+  users:
+    admin:
+      password: <use `openssl rand -hex 8 | base64`>
+    renku:
+      password: <use `openssl rand -hex 8 | base64`>
 notebooks:
-  amalthea:
-    deployCrd: true
   oidc:
     allowUnverifiedEmail: true
     authUrl: https://{renku_domain}/auth/realms/Renku/protocol/openid-connect/auth

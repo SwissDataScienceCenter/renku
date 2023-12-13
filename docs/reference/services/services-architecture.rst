@@ -62,9 +62,9 @@ System Context
 
     Person(logged_in, "Logged-In user")
     Person(cli, "Renku CLI", $sprite="bash")
-    System(renku, "", $link="../reference/services/services-architecture.html#container-diagram", $sprite="img:https://renku.readthedocs.io/en/add-architecture-diagram/_static/icons/renku_logo.png{scale=0.2}")
+    System(renku, "", $link="../reference/services/services-architecture.html#container-diagram", $sprite="img:https://renku.readthedocs.io/en/latest/_static/icons/renku_logo.png{scale=0.2}")
     System(gitlab, "Gitlab", $sprite="gitlab")
-    System(keycloak, "Keycloak", $sprite="img:https://renku.readthedocs.io/en/add-architecture-diagram/_static/icons/keycloak_logofinal_1color.png{scale=0.2}")
+    System(keycloak, "Keycloak", $sprite="img:https://renku.readthedocs.io/en/latest/_static/icons/keycloak_logofinal_1color.png{scale=0.2}")
     System(k8s, "Kubernetes", $sprite="kubernetes")
     SystemDb(s3, "S3")
     SystemDb(azure_blob, "Azure Blob")

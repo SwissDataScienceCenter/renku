@@ -68,17 +68,17 @@ spec:
         {{ end }}
         - name: NB_K8S__RENKU_NAMESPACE
           value: {{ $.Release.Namespace | quote }}
-        {{- with $.Values.sessionNodeSelector }}
+        {{- with $.Values.notebooks.sessionNodeSelector }}
         - name: NB_SESSIONS__NODE_SELECTOR
           value: |
             {{- toYaml . | nindent 12 }}
         {{- end }}
-        {{- with $.Values.sessionAffinity }}
+        {{- with $.Values.notebooks.sessionAffinity }}
         - name: NB_SESSIONS__AFFINITY
           value: |
             {{- toYaml . | nindent 12 }}
         {{- end }}
-        {{- with $.Values.sessionTolerations }}
+        {{- with $.Values.notebooks.sessionTolerations }}
         - name: NB_SESSIONS__TOLERATIONS
           value: |
             {{- toYaml . | nindent 12 }}
@@ -103,18 +103,16 @@ spec:
           value: "true"
         - name: NB_SESSIONS__GIT_PROXY__RENKU_CLIENT_SECRET
           value: {{ $.Values.global.gateway.clientSecret | default "renku-client-secret" | quote }}
-        {{ if $.Values.global.keycloak.realm }}
         - name: NB_KEYCLOAK_REALM
-          value: {{ $.Values.global.keycloak.realm | quote }}
-        {{ end }}
+          value: {{ include "renku.keycloak.realm" $ | quote }}
         - name: NB_SESSIONS__SSH__ENABLED
           value: {{ $.Values.notebooks.ssh.enabled | quote }}
         {{- if not (kindIs "invalid" $.Values.notebooks.ssh.hostKeySecret) }}
         - name: NB_SESSIONS__SSH__HOST_KEY_SECRET
           value: {{ $.Values.notebooks.ssh.hostKeySecret | quote }}
         {{- end }}
-        - name: NB_CRC_URL
-          value: {{ printf "http://%s/api/data" $.Values.global.crc.serviceName }}
+        - name: NB_DATA_SERVICE_URL
+          value: {{ printf "http://%s-data-service/api/data" .Release.Name}}
       volumeMounts:
         - name: server-options
           mountPath: /etc/renku-notebooks/server_options
