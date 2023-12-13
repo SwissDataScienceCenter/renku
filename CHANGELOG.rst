@@ -1,5 +1,20 @@
 .. _changelog:
 
+0.45.1
+------
+This is a bugfix release that updates the helm chart to work with new 
+prometheus metrics in the renku core service, which was preventing it from 
+starting properly if metrics were enabled.
+
+Internal Changes
+----------------
+
+**🐞 Bug Fixes**
+
+- **Helm Chart**: update core-service deployment to allow service and rq 
+  metrics to run side-by-side (`#3303 
+  <https://github.com/SwissDataScienceCenter/renku/pull/3303>`_).
+
 0.45.0
 ------
 
