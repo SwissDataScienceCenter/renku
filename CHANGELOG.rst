@@ -4,7 +4,10 @@
 ------
 This is a bugfix release that updates the helm chart to work with new 
 prometheus metrics in the renku core service, which was preventing it from 
-starting properly if metrics were enabled.
+starting properly if metrics were enabled. In addition this release
+also addresses problems with expiring Gitlab access tokens when sessions
+are paused and resumed which caused resumed session to not be able to push to Gitlab
+or also it caused some sessions to not be able to resume after they have been paused.
 
 Internal Changes
 ----------------
@@ -14,6 +17,18 @@ Internal Changes
 - **Helm Chart**: update core-service deployment to allow service and rq 
   metrics to run side-by-side (`#3303 
   <https://github.com/SwissDataScienceCenter/renku/pull/3303>`_).
+- **Notebooks**: use a larger /dev/shm folder in sessions
+  (`#1723 <https://github.com/SwissDataScienceCenter/renku-notebooks/issues/1723>`_)
+- **Notebooks**: properly renew expiring Gitlab tokens when hibernated session are resumed
+  (`#1734 <https://github.com/SwissDataScienceCenter/renku-notebooks/issues/1734>`_)
+- **Gateway**: properly renew expiring Gitlab tokens for hibernating sessions
+  (`#692 <https://github.com/SwissDataScienceCenter/renku-gateway/issues/692>`_)
+
+Individual components
+~~~~~~~~~~~~~~~~~~~~~
+
+- `renku-notebooks 1.20.3 <https://github.com/SwissDataScienceCenter/renku-notebooks/releases/tag/1.20.3>`_
+- `renku-gateway 0.23.1 <https://github.com/SwissDataScienceCenter/renku-gateway/releases/0.23.1>`_
 
 0.45.0
 ------

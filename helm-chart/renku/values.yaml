@@ -928,7 +928,7 @@ notebooks:
     targetCPUUtilizationPercentage: 50
   image:
     repository: renku/renku-notebooks
-    tag: "1.20.2"
+    tag: "1.20.3"
     pullPolicy: IfNotPresent
     ## Optionally specify an array of imagePullSecrets.
     ## Secrets must be manually created in the namespace.
@@ -1215,7 +1215,7 @@ gateway:
     ## Define the image for the auth middleware
     auth:
       repository: renku/renku-gateway
-      tag: "0.23.0"
+      tag: "0.23.1"
       pullPolicy: IfNotPresent
   service:
     type: ClusterIP
