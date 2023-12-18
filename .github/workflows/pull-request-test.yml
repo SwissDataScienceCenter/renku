@@ -41,7 +41,7 @@ jobs:
           sphinx-build -nNW -b spelling -d _build/doctrees . _build/spelling
           sphinx-build -qnNW . _build/html
       - name: Upload docs
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         if: success()
         with:
           name: docs
