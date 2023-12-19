@@ -9,6 +9,34 @@ Please follow this convention when adding a new row
 
 * DELETE `graph.gitlab.url` has been removed as graph services uses the `global.gitlab.url`.
 
+The encryption keys used by the Webhook service and Token Repository have been moved around and now they do not have to
+be base64 encoded in the values file anymore. Although the Helm chart will take care of generating a new secret in the
+correct form from the old one (for existing deployment being upgraded), we suggest to also store those secrets in the
+value file.
+
+To cleanup the old secrets, please remove the following fields:
+
+* DELETE `graph.tokenRepository.tokenEncryption.secret`
+* DELETE `graph.webhookService.hookToken.secret`
+
+Then extract the content of the old secrets for the Token Repository service using `kubectl`:
+
+```shell
+kubectl -n renku get secrets renku-token-repository -o jsonpath="{.data['tokenRepository-tokenEncryption-secret']}" | base64 -d | base64 -d
+```
+And add it to the following new field in the value file:
+
+* NEW `graph.tokenRepository.aesEncryptionKey`
+
+Similarly extract the content of the old secret for the Webhook service:
+
+```shell
+kubectl -n renku get secrets renku-webhook-service -o jsonpath="{.data['webhookService-hookToken-secret']}" | base64 -d | base64 -d
+```
+And add it to the following new field in the value file:
+
+* NEW `graph.webhookService.aesEncryptionKey`
+
 ## Upgrading to Renku 0.41.0
 
 The UI includes a feature that allows projects to be displayed in the _Showcase_ section of the RenkuLab home page.

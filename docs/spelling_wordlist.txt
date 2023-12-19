@@ -5,10 +5,12 @@ admin
 Amalthea
 analytics
 app
+aqs
 args
 Args
 argv
 Ascii
+astroquery
 attrs
 auditability
 auth
@@ -58,6 +60,8 @@ CWL
 datadir
 dataset
 datasets
+datashim
+Datashim
 dataverse
 Dataverse
 datetimes
@@ -183,6 +187,7 @@ params
 pipenv
 pipx
 PNG
+png
 Postgresql
 powerline
 pre
@@ -191,6 +196,7 @@ prepended
 preprocessed
 preprocessing
 programmatically
+prometheus
 py
 pyshacl
 rclone
@@ -219,6 +225,7 @@ roadmap
 Roadmap
 rollout
 Rollout
+rq
 rsa
 RSA
 rstudio
@@ -309,6 +316,7 @@ versioning
 Versioning
 vertices
 viewmodel
+vis
 vm
 webhook
 webhooks
