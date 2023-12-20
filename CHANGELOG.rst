@@ -1,5 +1,22 @@
 .. _changelog:
 
+0.45.2
+------
+This is a bugfix release fixing the process that removes expiring Project Access Tokens. 
+
+Internal Changes
+----------------
+
+**🐞 Bug Fixes**
+
+- **KG**: The process removing expiring Project Access Tokens not to be locked on the date of rollout.
+
+Individual components
+~~~~~~~~~~~~~~~~~~~~~
+
+- `renku-graph 2.48.2 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/2.48.2>`_ 
+
+
 0.45.1
 ------
 This is a bugfix release that updates the helm chart to work with new 

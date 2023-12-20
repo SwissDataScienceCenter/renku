@@ -1304,7 +1304,7 @@ graph:
     aesEncryptionKey: # A 8, 16 or 32 bytes string used for AES encryption of the project tokens
     image:
       repository: renku/webhook-service
-      tag: "2.48.1"
+      tag: "2.48.2"
       pullPolicy: IfNotPresent
     service:
       type: ClusterIP
@@ -1320,7 +1320,7 @@ graph:
     aesEncryptionKey: # A 8, 16 or 32 bytes string used for AES encryption of the project tokens
     image:
       repository: renku/token-repository
-      tag: "2.48.1"
+      tag: "2.48.2"
       pullPolicy: IfNotPresent
     service:
       type: ClusterIP
@@ -1341,7 +1341,7 @@ graph:
     replicas: 1
     image:
       repository: renku/triples-generator
-      tag: "2.48.1"
+      tag: "2.48.2"
       pullPolicy: IfNotPresent
     service:
       type: ClusterIP
@@ -1363,7 +1363,7 @@ graph:
     replicas: 1
     image:
       repository: renku/knowledge-graph
-      tag: "2.48.1"
+      tag: "2.48.2"
       pullPolicy: IfNotPresent
     service:
       type: ClusterIP
@@ -1382,7 +1382,7 @@ graph:
   eventLog:
     image:
       repository: renku/event-log
-      tag: "2.48.1"
+      tag: "2.48.2"
       pullPolicy: IfNotPresent
     service:
       type: ClusterIP
@@ -1397,7 +1397,7 @@ graph:
   commitEventService:
     image:
       repository: renku/commit-event-service
-      tag: "2.48.1"
+      tag: "2.48.2"
       pullPolicy: IfNotPresent
     service:
       type: ClusterIP
