@@ -870,6 +870,7 @@ notebooks:
   cloudstorage:
     ## If enabled this will allow mounting of rclone cloudstorage
     enabled: false
+    storageClass: csi-rclone
     s3:
       installDatashim: false
   # configuration for user session persistent volumes
