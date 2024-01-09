@@ -37,14 +37,14 @@ jobs:
           working-directory: cypress-tests
       # NOTE: cypress screenshots will be generated only if the test failed
       # thus we store screenshots only on failures
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         if: failure()
         with:
           name: cypress-screenshots
           path: cypress-tests/cypress/screenshots
           retention-days: 7
       # Cypress test video is always captured, so this action uses "always()" condition
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: cypress-videos

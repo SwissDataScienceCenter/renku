@@ -18,7 +18,7 @@ dependencies:
   version: 17.4.2
   condition: redis.install
 - name: renku-jena
-  version: "0.0.22"
+  version: "0.0.23"
   repository: "https://swissdatasciencecenter.github.io/helm-charts/"
   alias: jena
 - name: amalthea

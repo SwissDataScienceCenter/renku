@@ -160,6 +160,8 @@ spec:
               value: {{ .Values.notebooks.enforceCPULimits | quote }}
             - name: NB_CLOUD_STORAGE__ENABLED
               value: {{ .Values.notebooks.cloudstorage.enabled | quote }}
+            - name: NB_CLOUD_STORAGE__STORAGE_CLASS
+              value: {{ .Values.notebooks.cloudstorage.storageClass }}
             - name: NB_SESSIONS__TERMINATION_WARNING_DURATION_SECONDS
               value: {{ .Values.notebooks.sessionAutosave.terminationWarningDurationSeconds | quote }}
             - name: NB_VERSION

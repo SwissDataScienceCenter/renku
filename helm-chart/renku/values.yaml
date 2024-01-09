@@ -870,6 +870,7 @@ notebooks:
   cloudstorage:
     ## If enabled this will allow mounting of rclone cloudstorage
     enabled: false
+    storageClass: csi-rclone
     s3:
       installDatashim: false
   # configuration for user session persistent volumes
@@ -916,7 +917,7 @@ notebooks:
     targetCPUUtilizationPercentage: 50
   image:
     repository: renku/renku-notebooks
-    tag: "1.20.2"
+    tag: "1.20.3"
     pullPolicy: IfNotPresent
     ## Optionally specify an array of imagePullSecrets.
     ## Secrets must be manually created in the namespace.
@@ -1203,7 +1204,7 @@ gateway:
     ## Define the image for the auth middleware
     auth:
       repository: renku/renku-gateway
-      tag: "0.23.0"
+      tag: "0.23.1"
       pullPolicy: IfNotPresent
   service:
     type: ClusterIP
@@ -1304,7 +1305,7 @@ graph:
     aesEncryptionKey: # A 8, 16 or 32 bytes string used for AES encryption of the project tokens
     image:
       repository: renku/webhook-service
-      tag: "2.48.1"
+      tag: "2.48.2"
       pullPolicy: IfNotPresent
     service:
       type: ClusterIP
@@ -1320,7 +1321,7 @@ graph:
     aesEncryptionKey: # A 8, 16 or 32 bytes string used for AES encryption of the project tokens
     image:
       repository: renku/token-repository
-      tag: "2.48.1"
+      tag: "2.48.2"
       pullPolicy: IfNotPresent
     service:
       type: ClusterIP
@@ -1341,7 +1342,7 @@ graph:
     replicas: 1
     image:
       repository: renku/triples-generator
-      tag: "2.48.1"
+      tag: "2.48.2"
       pullPolicy: IfNotPresent
     service:
       type: ClusterIP
@@ -1363,7 +1364,7 @@ graph:
     replicas: 1
     image:
       repository: renku/knowledge-graph
-      tag: "2.48.1"
+      tag: "2.48.2"
       pullPolicy: IfNotPresent
     service:
       type: ClusterIP
@@ -1382,7 +1383,7 @@ graph:
   eventLog:
     image:
       repository: renku/event-log
-      tag: "2.48.1"
+      tag: "2.48.2"
       pullPolicy: IfNotPresent
     service:
       type: ClusterIP
@@ -1397,7 +1398,7 @@ graph:
   commitEventService:
     image:
       repository: renku/commit-event-service
-      tag: "2.48.1"
+      tag: "2.48.2"
       pullPolicy: IfNotPresent
     service:
       type: ClusterIP
