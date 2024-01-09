@@ -866,11 +866,16 @@ dlf-chart:
     enabled: false
   dataset-operator-chart:
     enabled: true
+csi-rclone:
+  ## Name of the csi storage class to use for RClone/Cloudstorage. Should be unique per cluster.
+  storageClassName: csi-rclone 
 notebooks:
   cloudstorage:
     ## If enabled this will allow mounting of rclone cloudstorage
     enabled: false
+    ## should match csi-rclone.storageClassName
     storageClass: csi-rclone
+    installRCloneCSI: false
     s3:
       installDatashim: false
   # configuration for user session persistent volumes

@@ -28,3 +28,8 @@ dependencies:
   repository: "https://swissdatasciencecenter.github.io/datashim/"
   version: "0.3.9-renku-2"
   condition: notebooks.cloudstorage.s3.installDatashim
+- name: csi-rclone
+  repository: "https://swissdatasciencecenter.github.io/helm-charts/"
+  version: "0.1.0"
+  condition: notebooks.cloudstorage.installRCloneCSI
+  
