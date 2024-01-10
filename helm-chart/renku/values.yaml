@@ -869,6 +869,10 @@ dlf-chart:
 csi-rclone:
   ## Name of the csi storage class to use for RClone/Cloudstorage. Should be unique per cluster.
   storageClassName: csi-rclone 
+  csiNodepluginRclone:
+    nodeSelector: {}
+    tolerations: []
+    affinity: {}
 notebooks:
   cloudstorage:
     ## If enabled this will allow mounting of rclone cloudstorage
