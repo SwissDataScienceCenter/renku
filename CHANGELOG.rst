@@ -1,5 +1,14 @@
 .. _changelog:
 
+0.46.0
+------
+
+User-Facing Changes
+-------------------
+
+- **Core Service**: Removed support in for metadata v9 projects in the UI. Migration to v10 is now required.
+
+
 0.45.2
 ------
 This is a bugfix release fixing the process that removes expiring Project Access Tokens. 
