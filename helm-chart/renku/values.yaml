@@ -195,6 +195,10 @@ global:
       ## The contents of the 'password' key is used.
       ## The secret is not re-generated or modified in any way if it already exists.
       passwordSecretName: renku-db-common-password
+  csi-rclone:
+    # Set to true to install csi-rclone alongside renku
+    # Make sure to configure the csi-rclone section below correctly in that case.
+    install: false
 ## Ingress configuration
 ## See: https://kubernetes.io/docs/concepts/services-networking/ingress/
 ingress:
@@ -867,19 +871,21 @@ dlf-chart:
   dataset-operator-chart:
     enabled: true
 csi-rclone:
+  # This section is only relevant if you are installing csi-rclone as part of 
   ## Name of the csi storage class to use for RClone/Cloudstorage. Should be unique per cluster.
-  storageClassName: csi-rclone 
-  csiNodepluginRclone:
-    nodeSelector: {}
-    tolerations: []
-    affinity: {}
+  # storageClassName: csi-rclone 
+  # csiNodepluginRclone:
+  #   nodeSelector: {}
+  # Set tolerations if you have taints on your user session nodes. The csi has to run on every node 
+  # where it is used.
+  #   tolerations: []
+  #   affinity: {}
 notebooks:
   cloudstorage:
     ## If enabled this will allow mounting of rclone cloudstorage
     enabled: false
-    ## should match csi-rclone.storageClassName
-    storageClass: csi-rclone
-    installRCloneCSI: false
+    ## should match csi-rclone.storageClassName if you use a custom name
+    # storageClass: csi-rclone
     s3:
       installDatashim: false
   # configuration for user session persistent volumes

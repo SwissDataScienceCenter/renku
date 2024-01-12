@@ -31,5 +31,5 @@ dependencies:
 - name: csi-rclone
   repository: "https://swissdatasciencecenter.github.io/helm-charts/"
   version: "0.1.5"
-  condition: notebooks.cloudstorage.installRCloneCSI
+  condition: global.csi-rclone.install
   
