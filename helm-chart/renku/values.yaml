@@ -1499,7 +1499,7 @@ initDb:
 dataService:
   image:
     repository: renku/renku-data-service
-    tag: "0.3.0"
+    tag: "0.4.0"
     pullPolicy: IfNotPresent
   service:
     type: ClusterIP

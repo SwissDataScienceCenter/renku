@@ -1,5 +1,14 @@
 .. _changelog:
 
+0.46.0
+------
+This release introduces universal cloud storage, allowing users to mount storage from various providers such as S3 or WebDAV in sessions, based on RClone.
+
+Individual Components
+~~~~~~~~~~~~~~~~~~~~~
+
+- `renku-data-services 0.4.0 <https://github.com/SwissDataScienceCenter/renku-data-services/releases/tag/v0.4.0>`_
+
 0.45.2
 ------
 This is a bugfix release fixing the process that removes expiring Project Access Tokens. 
