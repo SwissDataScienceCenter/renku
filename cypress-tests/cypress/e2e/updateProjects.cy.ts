@@ -9,6 +9,7 @@ const projects = {
   namespace: "renku-ui-tests",
   v8: "renku-project-v8",
   v9: "renku-project-v9",
+  v10: "renku-project-v10",
 };
 
 // ? to simplify debugging, you can change `shouldFork` to false to use the projects directly instead of forking.
@@ -118,7 +119,7 @@ describe("Fork and update old projects", () => {
     if (projects.shouldFork) {
       const forkedProject = {
         namespace: projects.namespace,
-        name: projects.v9,
+        name: projects.v10,
       };
       cy.visitAndLoadProject(forkedProject);
       cy.forkProject(forkedProject, tempName);
@@ -127,7 +128,7 @@ describe("Fork and update old projects", () => {
     // get to the commits page and check there is only 1 commit
     const targetProject = projects.shouldFork
       ? { namespace: username, name: tempName }
-      : { namespace: projects.namespace, name: projects.v9 };
+      : { namespace: projects.namespace, name: projects.v10 };
     if (!projects.shouldFork) cy.visitAndLoadProject(targetProject);
     let commitFetched = false;
     cy.intercept(
