@@ -115,7 +115,7 @@ describe("Fork and update old projects", () => {
 
   it("Update an outdated project - verify commits have been added", () => {
     // fork the project
-    const tempName = generatorProjectName("projectUpdateV9");
+    const tempName = generatorProjectName("projectUpdateV10");
     if (projects.shouldFork) {
       const forkedProject = {
         namespace: projects.namespace,
@@ -154,15 +154,23 @@ describe("Fork and update old projects", () => {
       .get(".card-body ul li.commit-object")
       .should("have.length", 1);
 
-    // go to project settings and verify it requires an upodate
+    // go to project settings and verify it requires an update
     cy.getProjectSection("Settings").click();
-    cy.getDataCy("project-status-icon-element").should("be.visible");
+    // ? this section is needed for older major versions -- swap it when needed
+    // cy.getDataCy("project-status-icon-element").should("be.visible");
+    // cy.getDataCy("project-settings-migration-status")
+    //   .contains("Project update required")
+    //   .should("be.visible");
+    // cy.getDataCy("project-version-section-open").should("be.visible").click();
+    // cy.getDataCy("project-settings-migration-status")
+    //   .contains("still on version 9 while the latest version is")
+    //   .should("be.visible");
     cy.getDataCy("project-settings-migration-status")
-      .contains("Project update required")
+      .contains("Project update available")
       .should("be.visible");
     cy.getDataCy("project-version-section-open").should("be.visible").click();
     cy.getDataCy("project-settings-migration-status")
-      .contains("still on version 9 while the latest version is")
+      .contains("There is a new Renku version")
       .should("be.visible");
 
     // update project
