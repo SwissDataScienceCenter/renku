@@ -1,6 +1,6 @@
 import { TIMEOUTS } from "../../config";
-import { generatorProjectName } from "../support/commands/projects";
 import { validateLogin } from "../support/commands/general";
+import { generatorProjectName } from "../support/commands/projects";
 
 const username = Cypress.env("TEST_USERNAME");
 
@@ -60,6 +60,8 @@ describe("Fork and update old projects", () => {
       ? { namespace: username, name: tempName }
       : { namespace: projects.namespace, name: projects.v8 };
     if (!projects.shouldFork) cy.visitAndLoadProject(targetProject, true);
+    // eslint-disable-next-line cypress/no-unnecessary-waiting
+    cy.wait(2_000);
     cy.getProjectSection("Settings").click();
 
     // verify project requires update

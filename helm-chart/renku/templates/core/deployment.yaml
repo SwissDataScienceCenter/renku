@@ -25,7 +25,7 @@ spec:
       {{ if $.Values.core.metrics.enabled }}
         prometheus.io/scrape: 'true'
         prometheus.io/path: '/metrics'
-        prometheus.io/port: '8765'
+        prometheus.io/port: '8766'
       {{ end }}
       labels:
         app.kubernetes.io/name: {{ include "renku-core.name" $ }}
@@ -72,7 +72,12 @@ spec:
                 secretKeyRef:
                   name: {{ $.Values.global.redis.existingSecret }}
                   key: {{ $.Values.global.redis.existingSecretPasswordKey }}
-            # TODO: Deal with redis namespace properly in rqmetrics, then pass that on as well
+            - name: REDIS_NAMESPACE
+              value: {{ $version.name }}
+          ports:
+            - name: prometheus
+              containerPort: 8765
+              protocol: TCP
       {{ end }}
         - name: {{ $.Chart.Name }}
           image: "{{ $version.image.repository }}:{{ $version.image.tag }}"
@@ -124,6 +129,8 @@ spec:
               value: {{ $.Values.core.sentry.sampleRate | quote }}
             - name: SENTRY_ENV
               value: {{ $.Values.core.sentry.environment }}
+            - name: METRICS_PORT
+              value: "8766"
             {{ if $.Values.nWorkers }}
             - name: RENKU_SVC_NUM_WORKERS
               value: {{ $.Values.core.nWorkers | quote }}

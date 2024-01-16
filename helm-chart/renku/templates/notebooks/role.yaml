@@ -38,6 +38,15 @@ rules:
     verbs:
       - delete
   - apiGroups:
+      - apps
+    resources:
+      - statefulsets
+    verbs:
+      - get
+      - list
+      - watch
+      - patch
+  - apiGroups:
       - ""
     resources:
       - secrets

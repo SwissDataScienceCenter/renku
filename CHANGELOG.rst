@@ -1,9 +1,101 @@
 .. _changelog:
 
+0.45.2
+------
+This is a bugfix release fixing the process that removes expiring Project Access Tokens. 
+
+Internal Changes
+----------------
+
+**🐞 Bug Fixes**
+
+- **KG**: The process removing expiring Project Access Tokens not to be locked on the date of rollout.
+
+Individual components
+~~~~~~~~~~~~~~~~~~~~~
+
+- `renku-graph 2.48.2 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/2.48.2>`_ 
+
+
+0.45.1
+------
+This is a bugfix release that updates the helm chart to work with new 
+prometheus metrics in the renku core service, which was preventing it from 
+starting properly if metrics were enabled. In addition this release
+also addresses problems with expiring Gitlab access tokens when sessions
+are paused and resumed which caused resumed session to not be able to push to Gitlab
+or also it caused some sessions to not be able to resume after they have been paused.
+
+Internal Changes
+----------------
+
+**🐞 Bug Fixes**
+
+- **Helm Chart**: update core-service deployment to allow service and rq 
+  metrics to run side-by-side (`#3303 
+  <https://github.com/SwissDataScienceCenter/renku/pull/3303>`_).
+- **Notebooks**: use a larger /dev/shm folder in sessions
+  (`#1723 <https://github.com/SwissDataScienceCenter/renku-notebooks/issues/1723>`_)
+- **Notebooks**: properly renew expiring Gitlab tokens when hibernated session are resumed
+  (`#1734 <https://github.com/SwissDataScienceCenter/renku-notebooks/issues/1734>`_)
+- **Gateway**: properly renew expiring Gitlab tokens for hibernating sessions
+  (`#692 <https://github.com/SwissDataScienceCenter/renku-gateway/issues/692>`_)
+
+Individual components
+~~~~~~~~~~~~~~~~~~~~~
+
+- `renku-notebooks 1.20.3 <https://github.com/SwissDataScienceCenter/renku-notebooks/releases/tag/1.20.3>`_
+- `renku-gateway 0.23.1 <https://github.com/SwissDataScienceCenter/renku-gateway/releases/0.23.1>`_
+
+0.45.0
+------
+
+Renku ``0.45.0`` adds support for pausing and resuming sessions from the CLI. You can now also specify a
+project image when initializing a project from the CLI. Additionally, this release brings coherent usage
+of Dataset `name` and `slug` across all Renku APIs.
+
+User-Facing Changes
+~~~~~~~~~~~~~~~~~~~
+
+**✨ Improvements**
+
+- **Core Service, CLI**: Add support for specifying a project image during
+  project initialization
+  (`#3623 <https://github.com/SwissDataScienceCenter/renku-python/issues/3623>`_).
+- **CLI**: Add support for pausing & resuming remote sessions from the cli
+  (`#3633 <https://github.com/SwissDataScienceCenter/renku-python/issues/3633>`_).
+
+Internal Changes
+~~~~~~~~~~~~~~~~
+
+**✨ Improvements**
+
+- **Core Service, CLI**: Make slug and name consistent with rest of platform
+  (`#3620 <https://github.com/SwissDataScienceCenter/renku-python/issues/3620>`_).
+- **Core Service**: Add prometheus metrics
+  (`#3640 <https://github.com/SwissDataScienceCenter/renku-python/issues/3640>`_).
+- **UI**: Adapt dataset APIs to the new naming convention used in the backend
+  (`#2854 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2854>`_).
+- **KG**: All APIs to return Dataset ``slug`` and ``name`` and no ``title`` property
+  (`#1741 <https://github.com/SwissDataScienceCenter/renku-graph/pull/1741>`_).
+- **KG**: Clean up process removing project tokens close to their expiration date
+  (`#1812 <https://github.com/SwissDataScienceCenter/renku-graph/pull/1812>`_).
+
+Individual components
+~~~~~~~~~~~~~~~~~~~~~
+
+- `renku-ui 3.17.1 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.17.1>`_
+- `renku-python 2.8.0 <https://github.com/SwissDataScienceCenter/renku-python/tree/v2.8.0>`_
+- `renku-graph 2.48.1 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/2.48.1>`_
+- `renku-graph 2.48.0 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/2.48.0>`_
+
 0.44.0
 ------
 
-Renku ``0.44.0`` introduces pinning projects to the dashboard in RenkuLab.
+Renku ``0.44.0`` introduces the ability to pin your favorite projects to the dashboard
+in RenkuLab for easy access. Additionally, it features a redesigned landing page that
+provides information about Renku, its key features, and the development team behind the
+platform, plus entry points for getting started with the platform.
 
 User-Facing Changes
 ~~~~~~~~~~~~~~~~~~~
@@ -12,6 +104,13 @@ User-Facing Changes
 
 - 📌️ **UI**: Users can now pin projects to the dashboard, up to a maximum of
   5 projects (`#2898 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2898>`_).
+- 🎨 **UI**: Introduce a redesigned landing page to enhance the user experience for new users exploring the platform for the first time
+  (`#2925 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2925>`_).
+
+
+**✨ Improvements**
+
+- 🖼 **UI**: [Keycloak] Enhance UX for registration and authentication in the platform (`#26 <https://github.com/SwissDataScienceCenter/keycloak-theme/pull/26>`_).
 
 **🐞 Bug Fixes**
 
@@ -33,7 +132,7 @@ Internal Changes
 Individual components
 ~~~~~~~~~~~~~~~~~~~~~
 
-- `renku-ui 3.16.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.16.0>`_
+- `renku-ui 3.17.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.17.0>`_
 - `renku-data-services 0.3.0 <https://github.com/SwissDataScienceCenter/renku-data-services/releases/tag/v0.3.0>`_
 
 0.43.0
