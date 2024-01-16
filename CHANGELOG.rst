@@ -1,12 +1,19 @@
 .. _changelog:
 
-0.46.0
+0.45.3
 ------
 
 User-Facing Changes
 -------------------
 
 - **Core Service**: Removed support in for metadata v9 projects in the UI. Migration to v10 is now required.
+- **Core Service**: Fixed a bug where projects weren't cloned shallowly, leading go large projects not working properly on the platform.
+
+
+Individual components
+~~~~~~~~~~~~~~~~~~~~~
+
+- `renku-python 2.8.2 <https://github.com/SwissDataScienceCenter/renku-python/releases/tag/2.8.2>`_ 
 
 
 0.45.2
