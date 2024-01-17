@@ -6,7 +6,7 @@
 User-Facing Changes
 -------------------
 
-- **Core Service**: Removed support in for metadata v9 projects in the UI. Migration to v10 is now required.
+- **Core Service**: Removed support for metadata v9 projects in the UI. Migration to v10 is now required.
 - **Core Service**: Fixed a bug where projects weren't cloned shallowly, leading to large projects not working properly on the platform.
 
 Internal Changes
