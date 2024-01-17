@@ -24,7 +24,12 @@ Individual components
 
 0.45.2
 ------
-This is a bugfix release fixing the process that removes expiring Project Access Tokens. 
+
+User-Facing Changes
+-------------------
+
+- **Core Service**: Removed support for metadata v9 projects in the UI. Migration to v10 is now required.
+- **Core Service**: Fixed a bug where projects weren't cloned shallowly, leading to large projects not working properly on the platform.
 
 Internal Changes
 ----------------
@@ -32,10 +37,15 @@ Internal Changes
 **🐞 Bug Fixes**
 
 - **KG**: The process removing expiring Project Access Tokens not to be locked on the date of rollout.
+- **UI**: Use the default branch on all the core datasets API to prevent cache conflicts
+  resulting in broken or missing datasets
+  (`#2972 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2972>`_).
 
 Individual components
 ~~~~~~~~~~~~~~~~~~~~~
 
+- `renku-python 2.8.2 <https://github.com/SwissDataScienceCenter/renku-python/releases/tag/2.8.2>`_ 
+- `renku-ui 3.17.2 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.17.2>`_
 - `renku-graph 2.48.2 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/2.48.2>`_ 
 
 
