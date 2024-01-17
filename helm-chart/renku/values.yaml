@@ -62,7 +62,7 @@ global:
         fullnameOverride: ""
         image:
           repository: renku/renku-core
-          tag: "v2.8.2"
+          tag: "v2.9.0"
           pullPolicy: IfNotPresent
   uiserver:
     ## The client secret for the renku-ui client application registered in keycloak.
@@ -1273,8 +1273,7 @@ jena:
   compacting:
     - name: ADMIN_USER
       value: admin
-    - ## The 'Mon *-*-* 00:00:00' expression means the process will be run every Monday at 00:00:00. More details at https://github.com/eikek/calev
-      name: COMPACTING_SCHEDULE
+    - name: COMPACTING_SCHEDULE ## The 'Mon *-*-* 00:00:00' expression means the process will be run every Monday at 00:00:00. More details at https://github.com/eikek/calev
       value: "Mon *-*-* 00:00:00"
   resources:
     requests:
@@ -1509,4 +1508,4 @@ affinity: {}
 versions:
   latest:
     image:
-      tag: v2.8.2
+      tag: v2.9.0
