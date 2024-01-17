@@ -7,12 +7,48 @@ This release introduces universal cloud storage, allowing users to mount storage
 It also adds the ability to modify the resource class for a session that is either hibernated or 
 failing.
 
+User-Facing Changes
+~~~~~~~~~~~~~~~~~~~
+
+**🌟 New Features**
+
+- 🔌 **UI**: add support for more storage services
+  (`#2908 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2908>`_,
+  `#2915 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2915>`_).
+
+**✨ Improvements**
+
+- 🖌️ **UI**: Improve the look and feel of the home page
+  (`#2968 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2968>`_,
+  `#2937 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2937>`_,
+  `#2927 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2927>`_).
+- 🔐 **UI**: Use password fields for credentials
+  (`#2920 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2920>`_).
+
+**🐞 Bug Fixes**
+
+- **UI**: Resize the feedback badge on the session settings page
+  (`#2953 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2953>`_).
+- **UI**: Fix the environment dropdown on the Start session page
+  (`#2949 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2949>`_).
+
+Internal Changes
+~~~~~~~~~~~~~~~~
+
+**Improvements**
+
+- **UI**: Add more features to the admin page to manage resource classes
+  (`#2916 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2916>`_,
+  `#2910 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2910>`_).
+
 Individual Components
 ~~~~~~~~~~~~~~~~~~~~~
 
+- `amalthea 0.11.0 <https://github.com/SwissDataScienceCenter/amalthea/releases/tag/0.11.0>`_
 - `renku-data-services 0.4.0 <https://github.com/SwissDataScienceCenter/renku-data-services/releases/tag/v0.4.0>`_
 - `renku-notebooks 1.21.0 <https://github.com/SwissDataScienceCenter/renku-notebooks/releases/tag/1.21.0>`_
-- `amalthea 0.11.0 <https://github.com/SwissDataScienceCenter/amalthea/releases/tag/0.11.0>`_
+- `renku-ui 3.18.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.18.0>`_
+- `renku-ui 3.18.1 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.18.1>`_
 
 0.45.2
 ------
