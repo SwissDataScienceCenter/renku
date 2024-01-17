@@ -1,5 +1,27 @@
 .. _changelog:
 
+0.46.0
+------
+
+Renku ``0.46.0`` comes with some changes to the KG services.
+
+User-Facing Changes
+~~~~~~~~~~~~~~~~~~~
+
+**✨ Improvements**
+
+- **KG**: Remove the Free-Text Dataset Search API as improved functionality is offered by the Entities Search.
+  (`#1833 <https://github.com/SwissDataScienceCenter/renku-graph/pull/1833>`_).
+- **KG**: Add support for specifying ``templateRef`` and ``templateParameters`` on the Project Create API.
+  (`#1837 <https://github.com/SwissDataScienceCenter/renku-graph/pull/1837>`_).
+
+Individual components
+~~~~~~~~~~~~~~~~~~~~~
+
+- `renku-graph 2.49.1 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/2.49.1>`_
+- `renku-graph 2.49.0 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/2.49.0>`_
+
+
 0.45.2
 ------
 This is a bugfix release fixing the process that removes expiring Project Access Tokens. 
