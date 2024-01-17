@@ -245,9 +245,8 @@ keycloakx:
     - "--hostname-strict=false"
     - "--hostname-strict-https=false"
     - "--auto-build"
-  # The following environment variables are provided to keycloak
-  # as extraEnvFrom secrets.
-
+    # The following environment variables are provided to keycloak
+    # as extraEnvFrom secrets.
   # renku-keycloak-postgres
   # - DB_ADDR: database host                            value: <RELEASE-NAME>-postgresql
   # - DB_DATABASE: database name for keycloak           value: global.keycloak.postgresDatabase
@@ -533,15 +532,6 @@ gitlab:
 
   ## Persistent Volume settings
   persistence:
-    ## database data Persistent Volume Storage Class
-    ## If defined, storageClassName: <storageClass>
-    ## If set to "-", storageClassName: "", which disables dynamic provisioning
-    ## If undefined (the default) or set to null, no storageClassName spec is
-    ##   set, choosing the default provisioner.  (gp2 on AWS, standard on
-    ##   GKE, AWS & OpenStack)
-    ##
-    # storageClass:
-
     # accessMode: ReadWriteOnce
     size: 30Gi
     ## Mount points for the PV
@@ -555,11 +545,20 @@ gitlab:
     # gitlab_logs:
     #   subPath: logs
     #   mountPath: /var/log/gitlab
+  ## database data Persistent Volume Storage Class
+  ## If defined, storageClassName: <storageClass>
+  ## If set to "-", storageClassName: "", which disables dynamic provisioning
+  ## If undefined (the default) or set to null, no storageClassName spec is
+  ##   set, choosing the default provisioner.  (gp2 on AWS, standard on
+  ##   GKE, AWS & OpenStack)
+  ##
+  # storageClass:
 
-    ## A manually managed Persistent Volume and Claim
-    ## Requires persistence.enabled: true
-    ## If defined, PVC must be created manually before volume will be bound
-    # existingClaim:
+  ## A manually managed Persistent Volume and Claim
+  ## Requires persistence.enabled: true
+  ## If defined, PVC must be created manually before volume will be bound
+  # existingClaim:
+
   ## Set to false to disable the use of Persistent Volume
   ## The databases will be lost when the pod is terminated!
   # enabled: true
@@ -656,7 +655,7 @@ ui:
     dashboardMessage:
       enabled: false
       # This is the main message and is rendered as Markdown content.
-      text: "# Welcome to Renku! \U0001F438\n\n✨This is an example welcome message.✨\n"
+      text: "# Welcome to Renku! 🐸\n\n✨This is an example welcome message.✨\n"
       # This message is displayed when the user click "Read more"
       # and is rendered as Markdown content.
       # Set this to the empty string "" to disable the "Read more" button.
@@ -745,11 +744,7 @@ ui:
         enabled: false
         title: "Renku real-world use cases: Conducted by SDSC and ETH Domain"
         # Markdown is allowed in the description
-        description:
-          The case studies presented here **bridge the gap** from domain
-          to data science and provide experts from both sides with the means to examine,
-          confirm, and extend the datasets and their analyses, without extensive investments
-          of time and infrastructure.
+        description: The case studies presented here **bridge the gap** from domain to data science and provide experts from both sides with the means to examine, confirm, and extend the datasets and their analyses, without extensive investments of time and infrastructure.
         # Projects to highlight on the homepage -- default to none
         # projects: []
         # To showcase projects, provide the identifier following the structure below
@@ -758,9 +753,7 @@ ui:
           - identifier: hdbi/data-management/cccooci
           - identifier: renku-ui-tests/stable-project
             overrideTitle: "Stable Project: A project for testing"
-            overrideDescription:
-              "This is a project for **testing**. You may find it
-              useful to look at."
+            overrideDescription: "This is a project for **testing**. You may find it useful to look at."
             overrideImageUrl: https://gitlab.renkulab.io/uploads/-/system/project/avatar/36159/graphical_abstract.png
     coreApiVersionConfig:
       ## Configuration to specify which version of the core-service API should be used
@@ -1289,8 +1282,8 @@ jena:
   compacting:
     - name: ADMIN_USER
       value: admin
-    ## The 'Mon *-*-* 00:00:00' expression means the process will be run every Monday at 00:00:00. More details at https://github.com/eikek/calev
-    - name: COMPACTING_SCHEDULE
+    - ## The 'Mon *-*-* 00:00:00' expression means the process will be run every Monday at 00:00:00. More details at https://github.com/eikek/calev
+      name: COMPACTING_SCHEDULE
       value: "Mon *-*-* 00:00:00"
   resources:
     requests:
@@ -1306,9 +1299,7 @@ jena:
       configMap:
         name: shiro-ini
         defaultMode: 0555
-  additionalInitContainerScript:
-    "find /fuseki -name tdb.lock -type f -delete && find
-    /fuseki/configuration -name *.ttl -type f -empty -delete && echo clean-up done"
+  additionalInitContainerScript: "find /fuseki -name tdb.lock -type f -delete && find /fuseki/configuration -name *.ttl -type f -empty -delete && echo clean-up done"
   test:
     enabled: false
 graph:
@@ -1316,7 +1307,7 @@ graph:
     aesEncryptionKey: # A 8, 16 or 32 bytes string used for AES encryption of the project tokens
     image:
       repository: renku/webhook-service
-      tag: "2.48.2"
+      tag: '2.49.1'
       pullPolicy: IfNotPresent
     service:
       type: ClusterIP
@@ -1332,7 +1323,7 @@ graph:
     aesEncryptionKey: # A 8, 16 or 32 bytes string used for AES encryption of the project tokens
     image:
       repository: renku/token-repository
-      tag: "2.48.2"
+      tag: '2.49.1'
       pullPolicy: IfNotPresent
     service:
       type: ClusterIP
@@ -1353,7 +1344,7 @@ graph:
     replicas: 1
     image:
       repository: renku/triples-generator
-      tag: "2.48.2"
+      tag: '2.49.1'
       pullPolicy: IfNotPresent
     service:
       type: ClusterIP
@@ -1375,7 +1366,7 @@ graph:
     replicas: 1
     image:
       repository: renku/knowledge-graph
-      tag: "2.48.2"
+      tag: '2.49.1'
       pullPolicy: IfNotPresent
     service:
       type: ClusterIP
@@ -1394,7 +1385,7 @@ graph:
   eventLog:
     image:
       repository: renku/event-log
-      tag: "2.48.2"
+      tag: '2.49.1'
       pullPolicy: IfNotPresent
     service:
       type: ClusterIP
@@ -1409,7 +1400,7 @@ graph:
   commitEventService:
     image:
       repository: renku/commit-event-service
-      tag: "2.48.2"
+      tag: '2.49.1'
       pullPolicy: IfNotPresent
     service:
       type: ClusterIP
