@@ -13,7 +13,7 @@ Internal Changes
 ----------------
 
 - **UI**: Use the default branch on all the core datasets API to prevent cache conflicts
-  resulting in brroken or missing datasets
+  resulting in broken or missing datasets
   (`#2972 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2972>`_).
 
 Individual components
