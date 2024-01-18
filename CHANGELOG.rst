@@ -49,8 +49,9 @@ Internal Changes
 
 **Improvements**
 
-- **UI**: Add more features to the admin page to manage resource classes
-  (`#2916 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2916>`_,
+- **UI**: RenkuLab admins can now add tolerations and node affinities to resource classes
+  (`#2916 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2916>`_).
+- **UI**: RenkuLab admins can add multiple users to a resource pool at once via a list of emails.
   `#2910 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2910>`_).
 
 Individual Components
