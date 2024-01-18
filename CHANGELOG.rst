@@ -3,9 +3,17 @@
 0.46.0
 ------
 
-This release introduces universal cloud storage, allowing users to mount storage from various providers such as S3 or WebDAV in sessions, based on RClone.
-It also adds the ability to modify the resource class for a session that is either hibernated or 
-failing.
+This release expands Renku's cloud storage functionality in two key ways: First, mounted storages
+ are now read _and write_, so you can use mounted storage as an active workspace for your data in a RenkuLab
+ session. Second, we have expanded the cloud storage services you can integrate with RenkuLab. You can now
+ mount not only S3 buckets, but also WebDAV-based storages and Azure Blobs. 
+ 
+If you use SSH sessions via the CLI, you can use cloud storage there too! Configure cloud storage for your
+project on RenkuLab.io, and those storages will be mounted in your remote session. Support for cloud
+storage in local Renku sessions is still on our roadmap. 
+
+This release also adds the ability to change which resource class your session uses when you unpause the
+session, in case the original resource class is now full.
 
 User-Facing Changes
 ~~~~~~~~~~~~~~~~~~~
