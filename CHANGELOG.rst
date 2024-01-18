@@ -24,6 +24,10 @@ User-Facing Changes
   `#2927 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2927>`_).
 - 🔐 **UI**: Use password fields for credentials
   (`#2920 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2920>`_).
+- **CLI**: Allow mounting cloud storage in sessions launched from the CLI 
+  (`#3629 <https://github.com/SwissDataScienceCenter/renku-python/issues/3629>`__).
+- **Core Service**: return date_published in datasets.list response
+  (`#3648 <https://github.com/SwissDataScienceCenter/renku-python/issues/3648>`__). 
 
 **🐞 Bug Fixes**
 
@@ -49,6 +53,7 @@ Individual Components
 - `renku-notebooks 1.21.0 <https://github.com/SwissDataScienceCenter/renku-notebooks/releases/tag/1.21.0>`_
 - `renku-ui 3.18.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.18.0>`_
 - `renku-ui 3.18.1 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.18.1>`_
+- `renku-python 2.9.0 <https://github.com/SwissDataScienceCenter/renku-python/releases/tag/2.9.0>`_ 
 
 0.45.2
 ------
