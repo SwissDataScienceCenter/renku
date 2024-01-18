@@ -4,7 +4,7 @@
 ------
 
 This release expands Renku's cloud storage functionality in two key ways: First, mounted storages
- are now read _and write_, so you can use mounted storage as an active workspace for your data in a RenkuLab
+ are now read **and write**, so you can use mounted storage as an active workspace for your data in a RenkuLab
  session. Second, we have expanded the cloud storage services you can integrate with RenkuLab. You can now
  mount not only S3 buckets, but also WebDAV-based storages and Azure Blobs. 
  
@@ -23,6 +23,10 @@ User-Facing Changes
 - 🔌 **UI**: add support for more storage services
   (`#2908 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2908>`_,
   `#2915 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2915>`_).
+- 🖋 **Notebooks,Data Services,CSI**: Support for read and write storage mounting in sessions using a new rclone based storage driver
+  (`#1707 <https://github.com/SwissDataScienceCenter/renku-notebooks/pull/1707>`_,
+  `#92 <https://github.com/SwissDataScienceCenter/renku-data-services/pull/92>`_,
+  `#1 <https://github.com/SwissDataScienceCenter/csi-rclone/pull/1>`_).
 
 **✨ Improvements**
 
@@ -63,6 +67,7 @@ Individual Components
 - `renku-ui 3.18.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.18.0>`_
 - `renku-ui 3.18.1 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.18.1>`_
 - `renku-python 2.9.0 <https://github.com/SwissDataScienceCenter/renku-python/releases/tag/2.9.0>`_ 
+- `csi-rclone 0.1.5 <https://github.com/SwissDataScienceCenter/csi-rclone/releases/tag/v0.1.5>`_
 
 0.45.2
 ------
