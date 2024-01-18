@@ -1,0 +1,78 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ template "gateway.name" . }}
+  labels:
+    app: {{ template "gateway.name" . }}
+    chart: {{ template "renku.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+data:
+  config.yaml:
+    server:
+      port: 8080
+      host: 0.0.0.0
+      rateLimits:
+        enabled: {{ .Values.gateway.rateLimits.general.enabled }}
+        rate: {{ .Values.gateway.rateLimits.general.average }}
+        burst: {{ .Values.gateway.rateLimits.general.burst }}
+    revproxy:
+      renkuBaseUrl: {{ include "renku.baseUrl" . | quote }}
+      {{- if .Values.gitlab.enabled }}
+      externalGitlabUrl: ""
+      {{- else }}
+      externalGitlabUrl: {{ .Values.global.gitlab.url | default "" | quote }}
+      {{- end }}
+      k8sNamespace: {{ .Release.Namespace }}
+      renkuServices:
+        noteboooks: {{ printf "http://%s-notebooks" .Release.Name | quote }}
+        kg: {{ printf "http://%s-knowledge-graph" .Release.Name | quote }}
+        webhoook: {{ printf "http://%s-webhook-service" .Release.Name | quote }}
+        core:
+          serviceNames: {{ template "gateway.core.serviceNames" . }}
+          servicePaths: {{ template "gateway.core.paths" . }}
+          sticky: true 
+        crc: {{ printf "http://%s-data-service" .Release.Name | quote }}
+    login:
+      endpointsBasePath: "/api/auth" 
+      defaultAppRedirectURL: {{ include "renku.baseUrl" . | quote }}
+      tokenEncryption:
+        enabled: true
+      providers:
+        renku:
+          default: true
+          issuer: {{ printf "%s/realms/%s" (include "renku.keycloakUrl" .) (include renku.keycloak.realm .) }}
+          clientID: renku
+          scopes: []
+          callbackURI:  {{ printf "%s/api/auth/callback" (include "renku.baseUrl" .) }}
+          usePKCE: false
+        renku-cli:
+          default: false
+          issuer: {{ printf "%s/realms/%s" (include "renku.keycloakUrl" .) (include renku.keycloak.realm .) }}
+          clientID: renku-cli
+          scopes: []
+          callbackURI: {{ printf "%s/api/auth/callback" (include "renku.baseUrl" .) }}
+          usePKCE: false
+        gitlab:
+          default: true 
+          issuer: {{ pritnf "%s/oauth" (include "renku.gitlabUrl" .) }}
+          clientID: {{ .Values.gateway.gitlabClientId | default .Values.global.gateway.gitlabClientId | quote }}
+          scopes: ["openid", "api", "read_user", "read_repository"] 
+          callbackURI: {{ printf "%s/api/auth/callback" (include "renku.baseUrl" .) }}
+          usePKCE: false
+    redis:
+      type: redis 
+      addresses: 
+        - {{ printf "%s:%s" .Values.global.redis.host .Values.global.redis.port | quote }}
+      isSentinel: {{ .Values.global.redis.sentinel.enabled }}
+      masterName: {{ .Values.global.redis.sentinel.masterSet | quote }}
+      dbIndex: {{ .Values.global.redis.dbIndex.gateway }}
+    monitoring:
+      sentry:
+        enabled: {{ .Values.gateway.sentry.enabled }}
+        environment: {{ .Values.gateway.sentry.environment }}
+        sampleRate: {{ .Values.gateway.sentry.sampleRate }}
+      prometheus:
+        enabled: {{ .Values.gateway.metrics.enabled }}
+        port: {{ .Values.gateway.metrics.port }}
+---

@@ -1,4 +1,4 @@
-{{- if .Values.gateway.reverseProxy.autoscaling.enabled }}
+{{- if .Values.gateway.autoscaling.enabled }}
 {{- if semverCompare ">=1.23.0-0" .Capabilities.KubeVersion.GitVersion -}}
 apiVersion: autoscaling/v2
 {{- else -}}
@@ -6,9 +6,9 @@ apiVersion: autoscaling/v2beta2
 {{- end }}
 kind: HorizontalPodAutoscaler
 metadata:
-  name: {{ template "renku.fullname" . }}-gateway-revproxy
+  name: {{ template "renku.fullname" . }}-gateway
   labels:
-    app: {{ template "renku.name" . }}-gateway-revproxy
+    app: {{ template "renku.name" . }}-gateway
     chart: {{ template "renku.chart" . }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
@@ -16,24 +16,24 @@ spec:
   scaleTargetRef:
     apiVersion: apps/v1
     kind: Deployment
-    name: {{ template "renku.fullname" . }}-gateway-revproxy
-  minReplicas: {{ .Values.gateway.reverseProxy.autoscaling.minReplicas }}
-  maxReplicas: {{ .Values.gateway.reverseProxy.autoscaling.maxReplicas }}
+    name: {{ template "renku.fullname" . }}-gateway
+  minReplicas: {{ .Values.gateway.autoscaling.minReplicas }}
+  maxReplicas: {{ .Values.gateway.autoscaling.maxReplicas }}
   metrics:
-    {{- if .Values.gateway.reverseProxy.autoscaling.targetCPUUtilizationPercentage }}
+    {{- if .Values.gateway.autoscaling.targetCPUUtilizationPercentage }}
     - type: Resource
       resource:
         name: cpu
         target:
           type: Utilization
-          averageUtilization: {{ .Values.gateway.reverseProxy.autoscaling.targetCPUUtilizationPercentage }}
+          averageUtilization: {{ .Values.gateway.autoscaling.targetCPUUtilizationPercentage }}
     {{- end }}
-    {{- if .Values.gateway.reverseProxy.autoscaling.targetMemoryUtilizationPercentage }}
+    {{- if .Values.gateway.autoscaling.targetMemoryUtilizationPercentage }}
     - type: Resource
       resource:
         name: memory
         target:
           type: Utilization
-          averageUtilization: {{ .Values.gateway.reverseProxy.autoscaling.targetMemoryUtilizationPercentage }}
+          averageUtilization: {{ .Values.gateway.autoscaling.targetMemoryUtilizationPercentage }}
     {{- end }}
 {{- end }}

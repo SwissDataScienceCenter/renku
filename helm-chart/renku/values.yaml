@@ -1191,16 +1191,10 @@ gateway:
       ## average rate units are requests per second
       average: 20
       burst: 100
-  ## For production deployment, you will need to define the secret key.
-  ## This is a random string, used for cryptographic operations on cookies and sensitive information.
-  ## Use `openssl rand -hex 32`.
-  secretKey:
   image:
-    ## Define the image for the auth middleware
-    auth:
-      repository: renku/renku-gateway
-      tag: "0.23.1"
-      pullPolicy: IfNotPresent
+    repository: renku/renku-gateway
+    tag: "0.23.1"
+    pullPolicy: IfNotPresent
   service:
     type: ClusterIP
     port: 80
@@ -1216,40 +1210,24 @@ gateway:
   #  cpu: 100m
   #  memory: 128Mi
 
-  # GitLab has introduced a new logout behavior in 12.7.0
-  # which was initially broken and fixed in 12.9.0.
-  # Set this to 'true' for versions < 12.7.0, leave it to
-  # 'false' for versions >= 12.9.0.
-  oldGitLabLogout: false
-  # For deployments with an external GitLab instance, we don't want to terminate
-  # a GitLab session when users log out from Renku. By default, we assume that a
-  # dedicated GitLab instance is deployed, so, logging out from Renku should
-  # trigger a logout from GitLab.
-  logoutGitLabUponRenkuLogout: true
   # sentry configuration
   sentry:
     enabled: false
     dsn:
     environment:
     sampleRate: 0.1
-  reverseProxy:
-    image:
-      repository: renku/renku-revproxy
-      tag: "0.23.0"
-      pullPolicy: IfNotPresent
-    metrics:
-      enabled: true
-      port: 8765
-    replicaCount: 2
-    podAnnotations: {}
-    resources: {}
-    autoscaling:
-      enabled: false
-      minReplicas: 2
-      maxReplicas: 5
-      targetMemoryUtilizationPercentage: 75
-      targetCPUUtilizationPercentage: 75
-    updateStrategy: {}
+  metrics:
+    enabled: true
+    port: 8765
+  replicaCount: 2
+  podAnnotations: {}
+  autoscaling:
+    enabled: false
+    minReplicas: 2
+    maxReplicas: 5
+    targetMemoryUtilizationPercentage: 75
+    targetCPUUtilizationPercentage: 75
+  updateStrategy: {}
 jena:
   image:
     repository: renku/renku-jena
