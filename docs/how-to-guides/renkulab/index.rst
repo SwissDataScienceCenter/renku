@@ -8,5 +8,5 @@ RenkuLab
 
     session-stopping-and-saving
     ssh-into-sessions
-    s3
+    external-storage
     collaboration
