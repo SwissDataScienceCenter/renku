@@ -72,7 +72,7 @@ spec:
             {{ if .Values.notebooks.gitlab.url }}
               value: {{ .Values.notebooks.gitlab.url }}
             {{ else }}
-              value: {{ template "notebooks.http" . }}://{{ .Values.global.renku.domain}}{{ .Values.global.gitlab.urlPrefix }}
+              value: {{ template "renku.http" . }}://{{ .Values.global.renku.domain}}{{ .Values.global.gitlab.urlPrefix }}
             {{ end }}
             - name: NB_GIT__REGISTRY
               value: {{ required "An image registry must be specified." .Values.notebooks.gitlab.registry.host }}

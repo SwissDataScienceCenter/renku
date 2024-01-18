@@ -34,7 +34,7 @@ spec:
         {{- include "certificates.initContainer" . | nindent 8 }}
       containers:
         - name: gateway 
-          image: "{{ .Values.gateway.image.repository }}:{{ .Values.image.tag }}"
+          image: "{{ .Values.gateway.image.repository }}:{{ .Values.gateway.image.tag }}"
           imagePullPolicy: {{ .Values.gateway.image.pullPolicy }}
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
@@ -49,7 +49,7 @@ spec:
                   name: {{ .Values.global.redis.existingSecret }}
                   key: {{ .Values.global.redis.existingSecretPasswordKey }}
           volumeMounts:
-            {{- include "certificates.volumeMo- name: config-volume
+            {{- include "certificates.volumeMounts.system" . | nindent 12 }}
             - mountPath: "/etc/gateway"
               name: public-config
             - mountPath: "/etc/gateway"
