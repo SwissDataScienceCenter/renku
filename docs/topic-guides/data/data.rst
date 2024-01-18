@@ -35,6 +35,8 @@ JupyterLab sessions by default. As a result, you do need to be aware of dealing
 with data stored in LFS if you want to use it efficiently in your work with
 Renku.
 
+TODO: ADD INFO ABOUT EXTERNAL STORAGE
+
 Uploading Data to a RenkuLab session to create a Dataset with the CLI
 ---------------------------------------------------------------------
 
