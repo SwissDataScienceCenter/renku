@@ -4,6 +4,7 @@ adhoc
 admin
 Amalthea
 analytics
+api
 app
 aqs
 args
