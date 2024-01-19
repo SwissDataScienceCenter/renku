@@ -1,5 +1,23 @@
 .. _changelog:
 
+0.46.1
+------
+
+Renku ``0.46.1`` contains a bugfix for issues some users are facing when migrating projects to the newest metadata version.
+
+User-Facing Changes
+~~~~~~~~~~~~~~~~~~~
+
+**🐞 Bug Fixes**
+
+- **Core Service**: Fix migrations not working when the Dockerfile needs to be migrated as well
+  (`#3687 <https://github.com/SwissDataScienceCenter/renku-python/pull/3687>`_).
+
+Individual Components
+~~~~~~~~~~~~~~~~~~~~~
+- `renku-python 2.9.1 <https://github.com/SwissDataScienceCenter/renku-python/releases/tag/v2.9.1>`_
+
+
 0.46.0
 ------
 
