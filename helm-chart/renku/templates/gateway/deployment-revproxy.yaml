@@ -43,17 +43,67 @@ spec:
               containerPort: 8080
               protocol: TCP
           env:
-            - name: REDIS_PASSWORD
+            - name: GATEWAY_REDIS_PASSWORD
               valueFrom:
                 secretKeyRef:
                   name: {{ .Values.global.redis.existingSecret }}
                   key: {{ .Values.global.redis.existingSecretPasswordKey }}
+            - name: GATEWAY_LOGIN_PROVIDERS_RENKU_CLIENTSECRET 
+              valueFrom:
+                secretKeyRef:
+                  name: {{ cat (include "renku.fullname" .) "-gateway" | nospace }}
+                  key: oidcClientSecret
+            - name: GATEWAY_LOGIN_PROVIDERS_GITLAB_CLIENTSECRET
+              valueFrom:
+                secretKeyRef:
+                  name: {{ cat (include "renku.fullname" .) "-gateway" | nospace }}
+                  key: gitlabClientSecret
+            - name: GATEWAY_LOGIN_PROVIDERS_RENKUCLI_CLIENTSECRET
+              valueFrom:
+                secretKeyRef:
+                  name: {{ cat (include "renku.fullname" .) "-gateway" | nospace }}
+                  key: cliClientSecret
+            - name: GATEWAY_LOGIN_TOKENENCRYPTION_SECRETKEY
+              valueFrom:
+                secretKeyRef:
+                  name: {{ cat (include "renku.fullname" .) "-gateway" | nospace }}
+                  key: tokenEncryption
+            - name: GATEWAY_LOGIN_PROVIDERS_RENKU_COOKIEENCODINGKEY
+              valueFrom:
+                secretKeyRef:
+                  name: {{ cat (include "renku.fullname" .) "-gateway" | nospace }}
+                  key: cookieEncodingKey
+            - name: GATEWAY_LOGIN_PROVIDERS_RENKU_COOKIEHASHKEY
+              valueFrom:
+                secretKeyRef:
+                  name: {{ cat (include "renku.fullname" .) "-gateway" | nospace }}
+                  key: cookieHashKey
+            - name: GATEWAY_LOGIN_PROVIDERS_RENKUCLI_COOKIEENCODINGKEY
+              valueFrom:
+                secretKeyRef:
+                  name: {{ cat (include "renku.fullname" .) "-gateway" | nospace }}
+                  key: cookieEncodingKey
+            - name: GATEWAY_LOGIN_PROVIDERS_RENKUCLI_COOKIEHASHKEY
+              valueFrom:
+                secretKeyRef:
+                  name: {{ cat (include "renku.fullname" .) "-gateway" | nospace }}
+                  key: cookieHashKey
+            - name: GATEWAY_LOGIN_PROVIDERS_GITLAB_COOKIEENCODINGKEY
+              valueFrom:
+                secretKeyRef:
+                  name: {{ cat (include "renku.fullname" .) "-gateway" | nospace }}
+                  key: cookieEncodingKey
+            - name: GATEWAY_LOGIN_PROVIDERS_GITLAB_COOKIEHASHKEY
+              valueFrom:
+                secretKeyRef:
+                  name: {{ cat (include "renku.fullname" .) "-gateway" | nospace }}
+                  key: cookieHashKey
+            - name: GATEWAY_MONITORING_SENTRY_DSN
+              value: {{ .Values.gateway.sentry.dsn }}
           volumeMounts:
             {{- include "certificates.volumeMounts.system" . | nindent 12 }}
             - mountPath: "/etc/gateway"
               name: public-config
-            - mountPath: "/etc/gateway"
-              name: secret-config
           livenessProbe:
             httpGet:
               path: /health
@@ -87,7 +137,4 @@ spec:
         - name: public-config
           configMap:
             name: {{ template "gateway.name" . }} 
-        - name: secret-config
-          secret:
-            secretName: {{ printf "%s-gateway" (include "renku.fullname" .) }}
 

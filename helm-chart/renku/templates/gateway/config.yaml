@@ -25,12 +25,14 @@ data:
       {{- end }}
       k8sNamespace: {{ .Release.Namespace }}
       renkuServices:
-        noteboooks: {{ printf "http://%s-notebooks" .Release.Name | quote }}
+        notebooks: {{ printf "http://%s-notebooks" .Release.Name | quote }}
         kg: {{ printf "http://%s-knowledge-graph" .Release.Name | quote }}
-        webhoook: {{ printf "http://%s-webhook-service" .Release.Name | quote }}
+        webhook: {{ printf "http://%s-webhook-service" .Release.Name | quote }}
         core:
-          serviceNames: {{ template "gateway.core.serviceNames" . }}
-          servicePaths: {{ template "gateway.core.paths" . }}
+          serviceNames: 
+            {{- include "gateway.core.serviceNamesYaml" . | nindent 12 }}
+          servicePaths: 
+            {{- include "gateway.core.pathsYaml" . | nindent 12 }}
           sticky: true 
         dataService: {{ printf "http://%s-data-service" .Release.Name | quote }}
         keycloak: {{ include "renku.keycloakUrl" . | quote }} 
@@ -42,21 +44,21 @@ data:
       providers:
         renku:
           default: true
-          issuer: {{ printf "%s/realms/%s" (include "renku.keycloakUrl" .) (include "renku.keycloak.realm" .) }}
+          issuer: {{ printf "%s/realms/%s" (include "renku.keycloakUrl" . | trimSuffix "/") (include "renku.keycloak.realm" .) }}
           clientID: renku
           scopes: []
           callbackURI:  {{ printf "%s/api/auth/callback" (include "renku.baseUrl" .) }}
           usePKCE: false
-        renku-cli:
+        renkuCli:
           default: false
-          issuer: {{ printf "%s/realms/%s" (include "renku.keycloakUrl" .) (include "renku.keycloak.realm" .) }}
+          issuer: {{ printf "%s/realms/%s" (include "renku.keycloakUrl" . | trimSuffix "/") (include "renku.keycloak.realm" .) }}
           clientID: renku-cli
           scopes: []
           callbackURI: {{ printf "%s/api/auth/callback" (include "renku.baseUrl" .) }}
           usePKCE: false
         gitlab:
           default: true 
-          issuer: {{ printf "%s/oauth" (include "renku.gitlabUrl" .) }}
+          issuer: {{ template "renku.gitlabUrl" . }}
           clientID: {{ .Values.gateway.gitlabClientId | default .Values.global.gateway.gitlabClientId | quote }}
           scopes: ["openid", "api", "read_user", "read_repository"] 
           callbackURI: {{ printf "%s/api/auth/callback" (include "renku.baseUrl" .) }}
@@ -64,7 +66,7 @@ data:
     redis:
       type: redis 
       addresses: 
-        - {{ printf "%s:%s" .Values.global.redis.host .Values.global.redis.port | quote }}
+        - {{ printf "%s:%d" .Values.global.redis.host (.Values.global.redis.port | int) | quote }}
       isSentinel: {{ .Values.global.redis.sentinel.enabled }}
       masterName: {{ .Values.global.redis.sentinel.masterSet | quote }}
       dbIndex: {{ .Values.global.redis.dbIndex.gateway }}
