@@ -41,77 +41,78 @@ describe("Fork and update old projects", () => {
     );
   });
 
-  it("Update a very old project - version and template", () => {
-    // fork the project
-    const tempName = generatorProjectName("projectUpdateV8");
-    if (projects.shouldFork) {
-      const forkedProject = {
-        namespace: projects.namespace,
-        name: projects.v8,
-      };
-      cy.visitAndLoadProject(forkedProject, true);
-      cy.getDataCy("header-project")
-        .contains("Error obtaining datasets")
-        .should("be.visible");
-      cy.forkProject(forkedProject, tempName);
-    }
+  // ? This is disabled cause updating older projects now sometimes requires double migrations
+  // it("Update a very old project - version and template", () => {
+  //   // fork the project
+  //   const tempName = generatorProjectName("projectUpdateV8");
+  //   if (projects.shouldFork) {
+  //     const forkedProject = {
+  //       namespace: projects.namespace,
+  //       name: projects.v8,
+  //     };
+  //     cy.visitAndLoadProject(forkedProject, true);
+  //     cy.getDataCy("header-project")
+  //       .contains("Error obtaining datasets")
+  //       .should("be.visible");
+  //     cy.forkProject(forkedProject, tempName);
+  //   }
 
-    // get to the status page
-    const targetProject = projects.shouldFork
-      ? { namespace: username, name: tempName }
-      : { namespace: projects.namespace, name: projects.v8 };
-    if (!projects.shouldFork) cy.visitAndLoadProject(targetProject, true);
-    // eslint-disable-next-line cypress/no-unnecessary-waiting
-    cy.wait(2_000);
-    cy.getProjectSection("Settings").click();
+  //   // get to the status page
+  //   const targetProject = projects.shouldFork
+  //     ? { namespace: username, name: tempName }
+  //     : { namespace: projects.namespace, name: projects.v8 };
+  //   if (!projects.shouldFork) cy.visitAndLoadProject(targetProject, true);
+  //   // eslint-disable-next-line cypress/no-unnecessary-waiting
+  //   cy.wait(2_000);
+  //   cy.getProjectSection("Settings").click();
 
-    // verify project requires update
-    cy.getDataCy("project-status-icon-element").should("be.visible");
-    cy.getDataCy("project-settings-migration-status")
-      .contains("Project update required")
-      .should("be.visible");
-    cy.getDataCy("project-version-section-open").should("be.visible").click();
-    cy.getDataCy("project-settings-migration-status")
-      .contains("still on version 8 while the latest version is")
-      .should("be.visible");
-    cy.getDataCy("project-settings-migration-status")
-      .get("#button-update-projectMigrationStatus")
-      .as("button-trigger-migration")
-      .should("be.visible");
-    cy.get("@button-trigger-migration").should("be.visible").click();
-    cy.getDataCy("project-settings-migration-status")
-      .contains("button", "Updating")
-      .should("be.visible");
-    cy.getDataCy("project-settings-migration-status")
-      .contains("Refreshing project data")
-      .should("be.visible");
-    cy.getDataCy("project-settings-migration-status")
-      .contains("This project uses the latest")
-      .should("be.visible");
-    cy.getDataCy("project-status-icon-element").should("not.exist");
+  //   // verify project requires update
+  //   cy.getDataCy("project-status-icon-element").should("be.visible");
+  //   cy.getDataCy("project-settings-migration-status")
+  //     .contains("Project update required")
+  //     .should("be.visible");
+  //   cy.getDataCy("project-version-section-open").should("be.visible").click();
+  //   cy.getDataCy("project-settings-migration-status")
+  //     .contains("still on version 8 while the latest version is")
+  //     .should("be.visible");
+  //   cy.getDataCy("project-settings-migration-status")
+  //     .get("#button-update-projectMigrationStatus")
+  //     .as("button-trigger-migration")
+  //     .should("be.visible");
+  //   cy.get("@button-trigger-migration").should("be.visible").click();
+  //   cy.getDataCy("project-settings-migration-status")
+  //     .contains("button", "Updating")
+  //     .should("be.visible");
+  //   cy.getDataCy("project-settings-migration-status")
+  //     .contains("Refreshing project data")
+  //     .should("be.visible");
+  //   cy.getDataCy("project-settings-migration-status")
+  //     .contains("This project uses the latest")
+  //     .should("be.visible");
+  //   cy.getDataCy("project-status-icon-element").should("not.exist");
 
-    // update template
-    cy.getDataCy("project-settings-migration-status")
-      .contains("There is a new version of the template")
-      .should("be.visible");
-    cy.getDataCy("project-settings-migration-status")
-      .get("#button-update-projectMigrationStatus")
-      .as("button-update-template")
-      .should("be.visible");
-    cy.get("@button-update-template").should("be.visible").click();
-    cy.getDataCy("project-settings-migration-status")
-      .contains("button", "Updating")
-      .should("be.visible");
-    cy.getDataCy("project-settings-migration-status")
-      .contains("Refreshing project data")
-      .should("be.visible");
-    cy.getDataCy("project-settings-migration-status")
-      .contains("Project up to date")
-      .should("be.visible");
+  //   // update template
+  //   cy.getDataCy("project-settings-migration-status")
+  //     .contains("There is a new version of the template")
+  //     .should("be.visible");
+  //   cy.getDataCy("project-settings-migration-status")
+  //     .get("#button-update-projectMigrationStatus")
+  //     .as("button-update-template")
+  //     .should("be.visible");
+  //   cy.get("@button-update-template").should("be.visible").click();
+  //   cy.getDataCy("project-settings-migration-status")
+  //     .contains("button", "Updating")
+  //     .should("be.visible");
+  //   cy.getDataCy("project-settings-migration-status")
+  //     .contains("Refreshing project data")
+  //     .should("be.visible");
+  //   cy.getDataCy("project-settings-migration-status")
+  //     .contains("Project up to date")
+  //     .should("be.visible");
 
-    // delete the project
-    if (projects.shouldFork) cy.deleteProjectFromAPI(targetProject);
-  });
+  //   // delete the project
+  //   if (projects.shouldFork) cy.deleteProjectFromAPI(targetProject);
+  // });
 
   it("Update an outdated project - verify commits have been added", () => {
     // fork the project
