@@ -107,7 +107,7 @@ spec:
         pathType: Prefix
         backend:
           service:
-            name: {{ $uiserverFullname }}
+            name: {{ template "renku.fullname" $ }}-gateway
             port:
               number: {{ $uiserverServicePort }}
       {{- if $graphEnabled }}

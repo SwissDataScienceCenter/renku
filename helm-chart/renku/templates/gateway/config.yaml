@@ -36,6 +36,7 @@ data:
           sticky: true 
         dataService: {{ printf "http://%s-data-service" .Release.Name | quote }}
         keycloak: {{ include "renku.keycloakUrl" . | quote }} 
+        uiserver: {{ printf "http://%s" (include "ui-server.fullname" .) | quote }} 
     login:
       endpointsBasePath: "/api/auth" 
       defaultAppRedirectURL: {{ include "renku.baseUrl" . | quote }}
