@@ -8,6 +8,11 @@ Renku ``0.46.1`` contains a bugfix for issues some users are facing when migrati
 User-Facing Changes
 ~~~~~~~~~~~~~~~~~~~
 
+**✨ Improvements**
+
+- **UI**: Improve feedback when starting sessions on outdated projects
+  (`#2985 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2985>`_).
+
 **🐞 Bug Fixes**
 
 - **Core Service**: Fix migrations not working when the Dockerfile needs to be migrated as well
@@ -16,6 +21,7 @@ User-Facing Changes
 Individual Components
 ~~~~~~~~~~~~~~~~~~~~~
 - `renku-python 2.9.1 <https://github.com/SwissDataScienceCenter/renku-python/releases/tag/v2.9.1>`_
+- `renku-ui 3.17.3 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.17.3>`_
 
 
 0.46.0
