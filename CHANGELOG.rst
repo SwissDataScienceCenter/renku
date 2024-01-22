@@ -1,6 +1,6 @@
 .. _changelog:
 
-0.46.0
+0.47.0
 ------
 
 This release expands Renku's cloud storage functionality in two key ways: First, mounted storages
@@ -87,6 +87,48 @@ Individual Components
 - `renku-ui 3.18.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.18.0>`_
 - `renku-ui 3.18.1 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.18.1>`_
 - `renku-ui 3.19.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.19.0>`_
+
+
+0.46.0
+------
+
+Renku ``0.46.0`` contains a bugfix for issues some users are facing when migrating projects to the newest metadata version.
+
+User-Facing Changes
+~~~~~~~~~~~~~~~~~~~
+
+**✨ Improvements**
+
+- **UI**: Improve feedback when starting sessions on outdated projects
+  (`#2985 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2985>`_).
+- **CLI**: Allow specifying storage to mount when launching Renkulab sessions from the CLI
+  (`#3629 <https://github.com/SwissDataScienceCenter/renku-python/pull/3629>_`).
+- **KG**: Remove the Free-Text Dataset Search API as improved functionality is offered by the Entities Search.
+  (`#1833 <https://github.com/SwissDataScienceCenter/renku-graph/pull/1833>`_).
+- **KG**: Add support for specifying ``templateRef`` and ``templateParameters`` on the Project Create API.
+  (`#1837 <https://github.com/SwissDataScienceCenter/renku-graph/pull/1837>`_).
+
+**🐞 Bug Fixes**
+
+- **Core Service**: Fix migrations not working when the Dockerfile needs to be migrated as well
+  (`#3687 <https://github.com/SwissDataScienceCenter/renku-python/pull/3687>`_).
+
+Internal Changes
+----------------
+
+**✨ Improvements**
+
+- **Core Service**: Allow passing commit sha on config.show endpoint for anonymous users
+  (`#3685 <https://github.com/SwissDataScienceCenter/renku-python/pull/3685>`_).
+
+Individual Components
+~~~~~~~~~~~~~~~~~~~~~
+- `renku-python 2.9.1 <https://github.com/SwissDataScienceCenter/renku-python/releases/tag/v2.9.1>`_
+- `renku-python 2.9.0 <https://github.com/SwissDataScienceCenter/renku-python/releases/tag/v2.9.0>`_
+- `renku-ui 3.17.3 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.17.3>`_
+- `renku-graph 2.49.1 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/2.49.1>`_
+- `renku-graph 2.49.0 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/2.49.0>`_
+
 
 0.45.2
 ------
