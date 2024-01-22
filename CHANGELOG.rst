@@ -12,15 +12,26 @@ User-Facing Changes
 
 - **UI**: Improve feedback when starting sessions on outdated projects
   (`#2985 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2985>`_).
+- **CLI**: Allow specifying storage to mount when launching Renkulab sessions from the CLI
+  (`#3629 <https://github.com/SwissDataScienceCenter/renku-python/pull/3629>_`).
 
 **🐞 Bug Fixes**
 
 - **Core Service**: Fix migrations not working when the Dockerfile needs to be migrated as well
   (`#3687 <https://github.com/SwissDataScienceCenter/renku-python/pull/3687>`_).
 
+Internal Changes
+----------------
+
+**✨ Improvements**
+
+- **Core Service**: Allow passing commit sha on config.show endpoint for anonymous users
+  (`#3685 <https://github.com/SwissDataScienceCenter/renku-python/pull/3685>`_).
+
 Individual Components
 ~~~~~~~~~~~~~~~~~~~~~
 - `renku-python 2.9.1 <https://github.com/SwissDataScienceCenter/renku-python/releases/tag/v2.9.1>`_
+- `renku-python 2.9.0 <https://github.com/SwissDataScienceCenter/renku-python/releases/tag/v2.9.0>`_
 - `renku-ui 3.17.3 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.17.3>`_
 
 
