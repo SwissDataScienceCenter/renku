@@ -47,14 +47,14 @@ data:
           default: true
           issuer: {{ printf "%s/realms/%s" (include "renku.keycloakUrl" . | trimSuffix "/") (include "renku.keycloak.realm" .) }}
           clientID: renku
-          scopes: []
+          scopes: ["profile", "email", "openid", "offline_access"]
           callbackURI:  {{ printf "%s/api/auth/callback" (include "renku.baseUrl" .) }}
           usePKCE: false
         renkuCli:
           default: false
           issuer: {{ printf "%s/realms/%s" (include "renku.keycloakUrl" . | trimSuffix "/") (include "renku.keycloak.realm" .) }}
           clientID: renku-cli
-          scopes: []
+          scopes: ["profile", "email", "openid", "offline_access"]
           callbackURI: {{ printf "%s/api/auth/callback" (include "renku.baseUrl" .) }}
           usePKCE: false
         gitlab:
