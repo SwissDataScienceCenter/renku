@@ -30,10 +30,6 @@ User-Facing Changes
 
 **✨ Improvements**
 
-- **CLI**: Allow mounting cloud storage in sessions launched from the CLI 
-  (`#3629 <https://github.com/SwissDataScienceCenter/renku-python/issues/3629>`__).
-- **Core Service**: return date_published in datasets.list response
-  (`#3648 <https://github.com/SwissDataScienceCenter/renku-python/issues/3648>`__).
 - 🖌️ **UI**: Improve the look and feel of the home page
   (`#2968 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2968>`_,
   `#2937 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2937>`_,
@@ -83,7 +79,6 @@ Individual Components
 - `renku-graph 2.49.0 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/2.49.1>`_
 - `renku-graph 2.49.1 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/2.49.0>`_
 - `renku-notebooks 1.21.0 <https://github.com/SwissDataScienceCenter/renku-notebooks/releases/tag/1.21.0>`_
-- `renku-python 2.9.0 <https://github.com/SwissDataScienceCenter/renku-python/releases/tag/2.9.0>`_
 - `renku-ui 3.18.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.18.0>`_
 - `renku-ui 3.18.1 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.18.1>`_
 - `renku-ui 3.19.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.19.0>`_
