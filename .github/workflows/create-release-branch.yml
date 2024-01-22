@@ -21,21 +21,23 @@ jobs:
           fetch-depth: 0
           token: "${{ secrets.RENKUBOT_GITHUB_TOKEN }}"
           ref: '${{ github.event.inputs.target_branch}}'
+      - name: Setup Git
+        run: |
+          git config --global --add user.name "Renku Bot"
+          git config --global --add user.email "renku@datascience.ch"
+          git config push.autoSetupRemote true
       - name: Create Branch
         run: git checkout -b "release-${{ github.event.inputs.version }}"
       - name: Update changelog
         id: changelog
         shell: bash
         run: |
-          VERSION_LENGTH=$(echo -n "${{ github.event.inputs.version }}"|wc -m)
+          VERSION_LENGTH=$(echo -n "${{ github.event.inputs.version }}" | wc -m)
           DELIMITER=$(printf "%.0s-" $(seq $VERSION_LENGTH))
           sed -i -E "s/^(.*.. _changelog:)/\1\n\n${{ github.event.inputs.version }}\n$DELIMITER\n\n/" CHANGELOG.rst
           head -n 10 CHANGELOG.rst
-      - name: commit changes
+      - name: Commit changes
         run: |
-          git config --global --add user.name "Renku Bot"
-          git config --global --add user.email "renku@datascience.ch"
-          git config push.autoSetupRemote true
           git add CHANGELOG.rst
           git commit -m "chore: create release ${{ github.event.inputs.version }}"
           git push
