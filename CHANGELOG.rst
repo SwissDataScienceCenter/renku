@@ -1,10 +1,109 @@
 .. _changelog:
 
+0.46.0
+------
+
+Renku ``0.46.0`` contains a bugfix for issues some users are facing when migrating projects to the newest metadata version.
+
+User-Facing Changes
+~~~~~~~~~~~~~~~~~~~
+
+**✨ Improvements**
+
+- **UI**: Improve feedback when starting sessions on outdated projects
+  (`#2985 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2985>`_).
+- **CLI**: Allow specifying storage to mount when launching Renkulab sessions from the CLI
+  (`#3629 <https://github.com/SwissDataScienceCenter/renku-python/pull/3629>_`).
+- **KG**: Remove the Free-Text Dataset Search API as improved functionality is offered by the Entities Search.
+  (`#1833 <https://github.com/SwissDataScienceCenter/renku-graph/pull/1833>`_).
+- **KG**: Add support for specifying ``templateRef`` and ``templateParameters`` on the Project Create API.
+  (`#1837 <https://github.com/SwissDataScienceCenter/renku-graph/pull/1837>`_).
+
+**🐞 Bug Fixes**
+
+- **Core Service**: Fix migrations not working when the Dockerfile needs to be migrated as well
+  (`#3687 <https://github.com/SwissDataScienceCenter/renku-python/pull/3687>`_).
+
+Internal Changes
+----------------
+
+**✨ Improvements**
+
+- **Core Service**: Allow passing commit sha on config.show endpoint for anonymous users
+  (`#3685 <https://github.com/SwissDataScienceCenter/renku-python/pull/3685>`_).
+
+Individual Components
+~~~~~~~~~~~~~~~~~~~~~
+- `renku-python 2.9.1 <https://github.com/SwissDataScienceCenter/renku-python/releases/tag/v2.9.1>`_
+- `renku-python 2.9.0 <https://github.com/SwissDataScienceCenter/renku-python/releases/tag/v2.9.0>`_
+- `renku-ui 3.17.3 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.17.3>`_
+- `renku-graph 2.49.1 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/2.49.1>`_
+- `renku-graph 2.49.0 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/2.49.0>`_
+
+
+0.45.2
+------
+
+User-Facing Changes
+-------------------
+
+- **Core Service**: Removed support for metadata v9 projects in the UI. Migration to v10 is now required.
+- **Core Service**: Fixed a bug where projects weren't cloned shallowly, leading to large projects not working properly on the platform.
+
+Internal Changes
+----------------
+
+**🐞 Bug Fixes**
+
+- **KG**: The process removing expiring Project Access Tokens not to be locked on the date of rollout.
+- **UI**: Use the default branch on all the core datasets API to prevent cache conflicts
+  resulting in broken or missing datasets
+  (`#2972 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2972>`_).
+
+Individual components
+~~~~~~~~~~~~~~~~~~~~~
+
+- `renku-python 2.8.2 <https://github.com/SwissDataScienceCenter/renku-python/releases/tag/2.8.2>`_ 
+- `renku-ui 3.17.2 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.17.2>`_
+- `renku-graph 2.48.2 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/2.48.2>`_ 
+
+
+0.45.1
+------
+This is a bugfix release that updates the helm chart to work with new 
+prometheus metrics in the renku core service, which was preventing it from 
+starting properly if metrics were enabled. In addition this release
+also addresses problems with expiring Gitlab access tokens when sessions
+are paused and resumed which caused resumed session to not be able to push to Gitlab
+or also it caused some sessions to not be able to resume after they have been paused.
+
+Internal Changes
+----------------
+
+**🐞 Bug Fixes**
+
+- **Helm Chart**: update core-service deployment to allow service and rq 
+  metrics to run side-by-side (`#3303 
+  <https://github.com/SwissDataScienceCenter/renku/pull/3303>`_).
+- **Notebooks**: use a larger /dev/shm folder in sessions
+  (`#1723 <https://github.com/SwissDataScienceCenter/renku-notebooks/issues/1723>`_)
+- **Notebooks**: properly renew expiring Gitlab tokens when hibernated session are resumed
+  (`#1734 <https://github.com/SwissDataScienceCenter/renku-notebooks/issues/1734>`_)
+- **Gateway**: properly renew expiring Gitlab tokens for hibernating sessions
+  (`#692 <https://github.com/SwissDataScienceCenter/renku-gateway/issues/692>`_)
+
+Individual components
+~~~~~~~~~~~~~~~~~~~~~
+
+- `renku-notebooks 1.20.3 <https://github.com/SwissDataScienceCenter/renku-notebooks/releases/tag/1.20.3>`_
+- `renku-gateway 0.23.1 <https://github.com/SwissDataScienceCenter/renku-gateway/releases/0.23.1>`_
+
 0.45.0
 ------
 
-Renku ``0.45.0`` introduces improvements when working with projects and sessions
-on both the CLI and the UI. Additionally, it brings coherent usage of Dataset `name` and `slug` across all renku APIs.
+Renku ``0.45.0`` adds support for pausing and resuming sessions from the CLI. You can now also specify a
+project image when initializing a project from the CLI. Additionally, this release brings coherent usage
+of Dataset `name` and `slug` across all Renku APIs.
 
 User-Facing Changes
 ~~~~~~~~~~~~~~~~~~~
@@ -16,8 +115,6 @@ User-Facing Changes
   (`#3623 <https://github.com/SwissDataScienceCenter/renku-python/issues/3623>`_).
 - **CLI**: Add support for pausing & resuming remote sessions from the cli
   (`#3633 <https://github.com/SwissDataScienceCenter/renku-python/issues/3633>`_).
-- **KG**: All APIs to return Dataset ``slug`` and ``name`` and no ``title`` property
-  (`#1741 <https://github.com/SwissDataScienceCenter/renku-graph/pull/1741>`_).
 
 Internal Changes
 ~~~~~~~~~~~~~~~~
@@ -30,12 +127,17 @@ Internal Changes
   (`#3640 <https://github.com/SwissDataScienceCenter/renku-python/issues/3640>`_).
 - **UI**: Adapt dataset APIs to the new naming convention used in the backend
   (`#2854 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2854>`_).
+- **KG**: All APIs to return Dataset ``slug`` and ``name`` and no ``title`` property
+  (`#1741 <https://github.com/SwissDataScienceCenter/renku-graph/pull/1741>`_).
+- **KG**: Clean up process removing project tokens close to their expiration date
+  (`#1812 <https://github.com/SwissDataScienceCenter/renku-graph/pull/1812>`_).
 
 Individual components
 ~~~~~~~~~~~~~~~~~~~~~
 
 - `renku-ui 3.17.1 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.17.1>`_
 - `renku-python 2.8.0 <https://github.com/SwissDataScienceCenter/renku-python/tree/v2.8.0>`_
+- `renku-graph 2.48.1 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/2.48.1>`_
 - `renku-graph 2.48.0 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/2.48.0>`_
 
 0.44.0

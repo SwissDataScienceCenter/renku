@@ -43,6 +43,8 @@ spec:
               containerPort: 8000
               protocol: TCP
           env:
+            - name: VERSION
+              value: {{ .Values.dataService.image.tag | quote }}
             - name: DB_HOST
               value: {{ template "postgresql.fullname" . }}
             - name: DB_USER
