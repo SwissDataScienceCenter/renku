@@ -57,10 +57,6 @@ Internal Changes
 
 **Improvements**
 
-- **KG**: Remove the Free-Text Dataset Search API as improved functionality is offered by the Entities Search
-  (`#1833 <https://github.com/SwissDataScienceCenter/renku-graph/pull/1833>`_).
-- **KG**: Add support for specifying ``templateRef`` and ``templateParameters`` on the Project Create API
-  (`#1837 <https://github.com/SwissDataScienceCenter/renku-graph/pull/1837>`_).
 - **UI**: RenkuLab admins can now add tolerations and node affinities to resource classes
   (`#2916 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2916>`_).
 - **UI**: RenkuLab admins can add multiple users to a resource pool at once via a list of emails
@@ -76,8 +72,6 @@ Individual Components
 - `amalthea 0.11.0 <https://github.com/SwissDataScienceCenter/amalthea/releases/tag/0.11.0>`_
 - `csi-rclone 0.1.5 <https://github.com/SwissDataScienceCenter/csi-rclone/releases/tag/v0.1.5>`_
 - `renku-data-services 0.4.0 <https://github.com/SwissDataScienceCenter/renku-data-services/releases/tag/v0.4.0>`_
-- `renku-graph 2.49.0 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/2.49.1>`_
-- `renku-graph 2.49.1 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/2.49.0>`_
 - `renku-notebooks 1.21.0 <https://github.com/SwissDataScienceCenter/renku-notebooks/releases/tag/1.21.0>`_
 - `renku-ui 3.18.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.18.0>`_
 - `renku-ui 3.18.1 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.18.1>`_
