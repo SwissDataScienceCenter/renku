@@ -186,7 +186,7 @@ In contrast, if you pause and resume your session, you will not need to enter th
     :alt: Starting a new session with cloud storage
 
 
-You will be able to access your mounted cloud storages in the `external_storage` folder within 
+You will be able to access your mounted cloud storages in the "external_storage/" folder within 
 your session.
 
   .. image:: ../../_static/images/cloud_storage_12.png
