@@ -91,7 +91,7 @@ User-Facing Changes
 - **UI**: Improve feedback when starting sessions on outdated projects
   (`#2985 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2985>`_).
 - **CLI**: Allow specifying storage to mount when launching Renkulab sessions from the CLI
-  (`#3629 <https://github.com/SwissDataScienceCenter/renku-python/pull/3629>_`).
+  (`#3629 <https://github.com/SwissDataScienceCenter/renku-python/pull/3629>`_).
 - **KG**: Remove the Free-Text Dataset Search API as improved functionality is offered by the Entities Search.
   (`#1833 <https://github.com/SwissDataScienceCenter/renku-graph/pull/1833>`_).
 - **KG**: Add support for specifying ``templateRef`` and ``templateParameters`` on the Project Create API.
