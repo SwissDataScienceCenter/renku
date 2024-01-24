@@ -4,9 +4,9 @@
 ------
 
 This release expands Renku's cloud storage functionality in two key ways: First, mounted storages
- are now read **and write**, so you can use mounted storage as an active workspace for your data in a RenkuLab
- session. Second, we have expanded the cloud storage services you can integrate with RenkuLab. You can now
- mount not only S3 buckets, but also WebDAV-based storages and Azure Blobs. 
+are now read **and write**, so you can use mounted storage as an active workspace for your data in a RenkuLab
+session. Second, we have expanded the cloud storage services you can integrate with RenkuLab. You can now
+mount not only S3 buckets, but also WebDAV-based storages and Azure Blobs. 
  
 If you use SSH sessions via the CLI, you can use cloud storage there too! Configure cloud storage for your
 project on RenkuLab.io, and those storages will be mounted in your remote session. Support for cloud
@@ -60,11 +60,11 @@ Internal Changes
 - **UI**: RenkuLab admins can now add tolerations and node affinities to resource classes
   (`#2916 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2916>`_).
 - **UI**: RenkuLab admins can add multiple users to a resource pool at once via a list of emails
-  `#2910 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2910>`_).
+  (`#2910 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2910>`_).
 - **UI**: Use the renku-core API for session options
-  `#2947 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2947>`_).
+  (`#2947 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2947>`_).
 - **UI**: Specify a branch every time a renku-core API is invoked
-  `#2977 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2977>`_).
+  (`#2977 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2977>`_).
 
 Individual Components
 ~~~~~~~~~~~~~~~~~~~~~
