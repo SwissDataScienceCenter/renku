@@ -1,5 +1,83 @@
 .. _changelog:
 
+0.47.0
+------
+
+This release expands Renku's cloud storage functionality in two key ways: First, mounted storages
+ are now read **and write**, so you can use mounted storage as an active workspace for your data in a RenkuLab
+ session. Second, we have expanded the cloud storage services you can integrate with RenkuLab. You can now
+ mount not only S3 buckets, but also WebDAV-based storages and Azure Blobs. 
+ 
+If you use SSH sessions via the CLI, you can use cloud storage there too! Configure cloud storage for your
+project on RenkuLab.io, and those storages will be mounted in your remote session. Support for cloud
+storage in local Renku sessions is still on our roadmap. 
+
+This release also adds the ability to change which resource class your session uses when you unpause the
+session, in case the original resource class is now full.
+
+User-Facing Changes
+~~~~~~~~~~~~~~~~~~~
+
+**🌟 New Features**
+
+- 🖋 **Notebooks,Data Services,CSI**: Support for read and write storage mounting in sessions using a new rclone based storage driver
+  (`#1707 <https://github.com/SwissDataScienceCenter/renku-notebooks/pull/1707>`_,
+  `#92 <https://github.com/SwissDataScienceCenter/renku-data-services/pull/92>`_,
+  `#1 <https://github.com/SwissDataScienceCenter/csi-rclone/pull/1>`_).
+- 🔌 **UI**: add support for more storage services
+  (`#2908 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2908>`_,
+  `#2915 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2915>`_).
+
+**✨ Improvements**
+
+- 🖌️ **UI**: Improve the look and feel of the home page
+  (`#2968 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2968>`_,
+  `#2937 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2937>`_,
+  `#2927 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2927>`_).
+- 🔐 **UI**: Use password fields for credentials
+  (`#2920 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2920>`_).
+- 🔧 **UI**: Allow users to modify non running sessions
+  (`#2942 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2942>`_).
+- 🛑 **UI**: Improve feedback when starting sessions on outdated projects
+  (`#2985 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2985>`_).
+- 🖌️ **UI**: Update the Renku logo and Renku browser icons
+  (`#2848 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2848>`_).
+
+**🐞 Bug Fixes**
+
+- **UI**: Resize the feedback badge on the session settings page
+  (`#2953 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2953>`_).
+- **UI**: Fix the environment dropdown on the Start session page
+  (`#2949 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2949>`_).
+- **UI**: Improve string validation when trying to upload a dataset file by URL
+  (`#2834 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2834>`_).
+
+Internal Changes
+~~~~~~~~~~~~~~~~
+
+**Improvements**
+
+- **UI**: RenkuLab admins can now add tolerations and node affinities to resource classes
+  (`#2916 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2916>`_).
+- **UI**: RenkuLab admins can add multiple users to a resource pool at once via a list of emails
+  `#2910 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2910>`_).
+- **UI**: Use the renku-core API for session options
+  `#2947 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2947>`_).
+- **UI**: Specify a branch every time a renku-core API is invoked
+  `#2977 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2977>`_).
+
+Individual Components
+~~~~~~~~~~~~~~~~~~~~~
+
+- `amalthea 0.11.0 <https://github.com/SwissDataScienceCenter/amalthea/releases/tag/0.11.0>`_
+- `csi-rclone 0.1.5 <https://github.com/SwissDataScienceCenter/csi-rclone/releases/tag/v0.1.5>`_
+- `renku-data-services 0.4.0 <https://github.com/SwissDataScienceCenter/renku-data-services/releases/tag/v0.4.0>`_
+- `renku-notebooks 1.21.0 <https://github.com/SwissDataScienceCenter/renku-notebooks/releases/tag/1.21.0>`_
+- `renku-ui 3.18.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.18.0>`_
+- `renku-ui 3.18.1 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.18.1>`_
+- `renku-ui 3.19.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.19.0>`_
+
+
 0.46.0
 ------
 
