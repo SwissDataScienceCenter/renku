@@ -98,6 +98,82 @@ hosted on AWS and show how to attach it to a Renku interactive session:
 - You can now start a new session and access the bucket at the mount point.
 
 
+Azure Blob example
+~~~~~~~~~~~~~~~~~~
+
+Here is an example of attaching an Azure Blob storage to your project.
+We host some data files in the folder ‘test-data’
+hosted on Azure and show how to attach it to a Renku interactive session:
+
+- Navigate to the Settings - Cloud storage session in your project.
+- Click on the "Add Cloud Storage" button and select "azureblob" for the "Storage Type".
+Click on the "Next" button at the bottom.
+
+  .. image:: ../../_static/images/cloud_storage_5.png
+    :align: center
+    :alt: Azure blob storage selection
+
+- Fill in the form by filling the Source path to mount (keep it blank to mount the
+default root, or specify the folder) and the Account Name. Fill in the Shared Key. 
+Click on the "Next" button.
+
+  .. image:: ../../_static/images/cloud_storage_6.png
+    :align: center
+    :alt: Azure blob options configuration
+
+- On the last page, pick any name for the storage (e.g. ``blob_storage``), then mark
+  this as Read-only. You can change the Mount point too; that determines the
+  virtual folder where this is mounted in the running sessions.
+  Click on the "Add storage" button.
+
+  .. image:: ../../_static/images/cloud_storage_7.png
+    :align: center
+    :alt: Azure blob final steps
+
+- You can now start a new session and access this bucket at the mount point.
+
+
+
+WebDAV example
+~~~~~~~~~~~~~~
+
+
+In some cases, you may need to access your cloud storage using a token. In this
+example, we show you how to proceed in such cases for WebDAV storage technology.
+
+We select data file which is 
+hosted on Polybox (ETHZ storage system based on WebDAV) and show how to attach it to 
+a Renku interactive session:
+
+- Navigate to the Settings - Cloud storage session in your Renku project.
+- Click on the "Add Cloud Storage" button and select "webdav" for the "Storage Type". 
+Click on the "Next" button at the bottom.
+
+  .. image:: ../../_static/images/cloud_storage_8.png
+    :align: center
+    :alt: WebDAV storage selection
+
+
+- Fill in the form by filling the Source path to mount (keep it blank to mount the default
+root, or specify the folder), and the URL to specify the host to connect to. Fill in the 
+Username and the Token (or password). Click on the "Next" button.
+
+  .. image:: ../../_static/images/cloud_storage_9.png
+    :align: center
+    :alt: WebDAV options configuration
+
+- On the last page, pick any name for the storage (e.g: `webdab_storage``), then mark
+  this as Read-only. You can change the Mount point too; that determines the
+  virtual folder where this is mounted in the running sessions.
+  Click on the "Add storage" button.
+
+  .. image:: ../../_static/images/cloud_storage_10.png
+    :align: center
+    :alt: WebDAV final steps
+
+- You can now start a new session and access this bucket at the mount point.
+
+
 Current limitations
 -------------------
 
