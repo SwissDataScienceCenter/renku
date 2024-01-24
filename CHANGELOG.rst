@@ -103,7 +103,7 @@ User-Facing Changes
   (`#3687 <https://github.com/SwissDataScienceCenter/renku-python/pull/3687>`_).
 
 Internal Changes
-----------------
+~~~~~~~~~~~~~~~~
 
 **✨ Improvements**
 
@@ -123,13 +123,13 @@ Individual Components
 ------
 
 User-Facing Changes
--------------------
+~~~~~~~~~~~~~~~~~~~
 
 - **Core Service**: Removed support for metadata v9 projects in the UI. Migration to v10 is now required.
 - **Core Service**: Fixed a bug where projects weren't cloned shallowly, leading to large projects not working properly on the platform.
 
 Internal Changes
-----------------
+~~~~~~~~~~~~~~~~
 
 **🐞 Bug Fixes**
 
@@ -156,7 +156,7 @@ are paused and resumed which caused resumed session to not be able to push to Gi
 or also it caused some sessions to not be able to resume after they have been paused.
 
 Internal Changes
-----------------
+~~~~~~~~~~~~~~~~
 
 **🐞 Bug Fixes**
 
