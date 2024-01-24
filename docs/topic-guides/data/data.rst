@@ -43,7 +43,8 @@ your external cloud storage data directly through your cloud storage provider.
 When working with cloud storage, you can still decide whether you mount or pull
 your data into your session.
 
-The instructions to set up your cloud storage are in :ref:`mount_external_storage`.
+The instructions to set up your cloud storage for a Renku project are in 
+:ref:`mount_external_storage`.
 
 Data in JupyterLab sessions
 ---------------------------
