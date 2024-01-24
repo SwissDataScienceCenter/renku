@@ -174,6 +174,26 @@ Username and the Token (or password). Click on the "Next" button.
 - You can now start a new session and access this bucket at the mount point.
 
 
+Accessing your data example
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+You can add as many cloud storage resources as you need in your Renku project. Every time you
+start your session from scratch, you will need to fill in the credentials.
+In contrast, if you pause and resume your session, you will not need to enter them.
+
+  .. image:: ../../_static/images/cloud_storage_11.png
+    :align: center
+    :alt: Starting a new session with cloud storage
+
+
+You will be able to access your mounted clould storages in the external_storage folder within 
+your session.
+
+  .. image:: ../../_static/images/cloud_storage_12.png
+    :align: center
+    :alt: Access to the mounted storage
+
+
 Current limitations
 -------------------
 
