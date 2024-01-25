@@ -147,7 +147,7 @@ In some cases, you may need to access your cloud storage using a token. In this
 example, we show you how to proceed in such cases for WebDAV storage technology.
 
 We select data file which is 
-hosted on Polybox (ETHZ storage system based on WebDAV) and show how to attach it to 
+hosted on Poly box (ETHZ storage system based on WebDAV) and show how to attach it to 
 a Renku interactive session:
 
 - Navigate to the Settings - Cloud storage session in your Renku project.
@@ -201,7 +201,7 @@ Current limitations
 -------------------
 
 .. note::
-  
+
   RenkuLab doesn't support storing credentials. If you need to
   provide credentials to access storage, you will be asked those again
   when starting a new session. The storage can be optionally disabled for
