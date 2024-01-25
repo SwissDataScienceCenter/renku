@@ -14,7 +14,7 @@ as it becomes needed, saving you time and resources.
 
 However, git LFS is not efficient when working with large amount of data.
 Hence, git LFS should be avoided, especially for big files, since such system usually
-introduces problems during the lifecycle of a project. A better alternative is to either store
+introduces problems during the life cycle of a project. A better alternative is to either store
 the files locally outside the Renku project folder in a local filesystem, or even better 
 to provision an external cloud storage, such as s3 or blob storage. 
 

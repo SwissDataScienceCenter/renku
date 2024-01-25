@@ -72,7 +72,7 @@ hosted on AWS and show how to attach it to a Renku interactive session:
 
 - Navigate to the Settings - Cloud storage session in one of your Renku projects.
 
-- Click on the "Add Cloud Storage" button and select "S3" for the "Storage Type",
+- Click on the "Add Cloud Storage" button and select ``S3`` for the "Storage Type",
   then pick "AWS" on the provider list. Click on the "Next" button at the bottom.
 
   .. image:: ../../_static/images/cloud_storage_2.png
@@ -111,7 +111,7 @@ hosted on Azure and show how to attach it to a Renku interactive session:
 
 - Navigate to the Settings - Cloud storage session in your project.
 
-- Click on the "Add Cloud Storage" button and select "azureblob" for the
+- Click on the "Add Cloud Storage" button and select ``azureblob`` for the
   "Storage Type". Click on the "Next" button at the bottom.
 
   .. image:: ../../_static/images/cloud_storage_5.png
@@ -151,7 +151,7 @@ hosted on Poly box (ETHZ storage system based on WebDAV) and show how to attach 
 a Renku interactive session:
 
 - Navigate to the Settings - Cloud storage session in your Renku project.
-- Click on the "Add Cloud Storage" button and select "webdav" for 
+- Click on the "Add Cloud Storage" button and select ``webdav`` for 
   the "Storage Type".  Click on the "Next" button at the bottom.
 
   .. image:: ../../_static/images/cloud_storage_8.png
