@@ -129,7 +129,6 @@ jobs:
           test-timeout-mins: "120"
 
   test-pr-cypress:
-    if: github.event.action != 'closed' && needs.check-deploy.outputs.pr-contains-string == 'true' && needs.check-deploy.outputs.test-enabled == 'true'
     needs: [check-deploy, deploy-pr]
     runs-on: ubuntu-22.04
 
@@ -149,6 +148,7 @@ jobs:
 
     steps:
       - uses: SwissDataScienceCenter/renku-actions/test-renku-cypress@gateway-refactoring-changes
+        if: github.event.action != 'closed' && needs.check-deploy.outputs.pr-contains-string == 'true' && needs.check-deploy.outputs.test-enabled == 'true'
         with:
           e2e-target: ${{ matrix.tests }}
           renku-reference: ${{ github.ref }}
