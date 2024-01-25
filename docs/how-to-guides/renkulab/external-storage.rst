@@ -185,6 +185,7 @@ Accessing your data example
 You can add as many cloud storage resources as you need in your Renku project. 
 Every time you start your session from scratch, you will need to fill in the credentials.
 In contrast, if you pause and resume your session, you will not need to enter them.
+
   .. image:: ../../_static/images/cloud_storage_11.png
     :align: center
     :alt: Starting a new session with cloud storage
@@ -198,7 +199,9 @@ You will be able to access your mounted cloud storages in the "external_storage/
 
 Current limitations
 -------------------
+
 .. note::
+  
   RenkuLab doesn't support storing credentials. If you need to
   provide credentials to access storage, you will be asked those again
   when starting a new session. The storage can be optionally disabled for
