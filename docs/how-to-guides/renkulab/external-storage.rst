@@ -71,12 +71,14 @@ We pick the public dataset
 hosted on AWS and show how to attach it to a Renku interactive session:
 
 - Navigate to the Settings - Cloud storage session in one of your Renku projects.
+
 - Click on the "Add Cloud Storage" button and select "S3" for the "Storage Type",
   then pick "AWS" on the provider list. Click on the "Next" button at the bottom.
 
   .. image:: ../../_static/images/cloud_storage_2.png
     :align: center
     :alt: Storage type and provider selection
+
 
 - Fill in the form by using ``giab`` as the Source path, and
   ``http://s3.amazonaws.com`` as the Endpoint. We don't need any credentials, and
@@ -86,6 +88,7 @@ hosted on AWS and show how to attach it to a Renku interactive session:
     :align: center
     :alt: GIAB bucket options configuration
 
+
 - On the last page, pick any name for the storage (E.G: ``Giab``), than mark
   this as Read-only. You can change the Mount point too; that determines the
   virtual folder where this is mounted in the running sessions.
@@ -94,6 +97,7 @@ hosted on AWS and show how to attach it to a Renku interactive session:
   .. image:: ../../_static/images/cloud_storage_4.png
     :align: center
     :alt: GIAB bucket final steps
+
 
 - You can now start a new session and access the bucket at the mount point.
 
@@ -106,22 +110,23 @@ We host some data files in the folder ‘test-data’
 hosted on Azure and show how to attach it to a Renku interactive session:
 
 - Navigate to the Settings - Cloud storage session in your project.
-- Click on the "Add Cloud Storage" button and select "azureblob" for the "Storage Type".
-Click on the "Next" button at the bottom.
+
+- Click on the "Add Cloud Storage" button and select "azureblob" for the
+  "Storage Type". Click on the "Next" button at the bottom.
 
   .. image:: ../../_static/images/cloud_storage_5.png
     :align: center
     :alt: Azure blob storage selection
 
-- Fill in the form by filling the Source path to mount (keep it blank to mount the
-default root, or specify the folder) and the Account Name. Fill in the Shared Key. 
-Click on the "Next" button.
+- Fill in the form by filling the Source path to mount (keep it blank to 
+  mount the default root, or specify the folder) and the Account Name. Fill
+  in the Shared Key.  Click on the "Next" button.
 
   .. image:: ../../_static/images/cloud_storage_6.png
     :align: center
     :alt: Azure blob options configuration
 
-- On the last page, pick any name for the storage (e.g. ``blob_storage``), then mark
+- On the last page, pick any name for the storage (e.g: `blob_storage``), then mark
   this as Read-only. You can change the Mount point too; that determines the
   virtual folder where this is mounted in the running sessions.
   Click on the "Add storage" button.
@@ -130,7 +135,7 @@ Click on the "Next" button.
     :align: center
     :alt: Azure blob final steps
 
-- You can now start a new session and access this bucket at the mount point.
+-  You can now start a new session and access this bucket at the mount point.
 
 
 
@@ -146,17 +151,17 @@ hosted on Polybox (ETHZ storage system based on WebDAV) and show how to attach i
 a Renku interactive session:
 
 - Navigate to the Settings - Cloud storage session in your Renku project.
-- Click on the "Add Cloud Storage" button and select "webdav" for the "Storage Type". 
-Click on the "Next" button at the bottom.
+- Click on the "Add Cloud Storage" button and select "webdav" for 
+  the "Storage Type".  Click on the "Next" button at the bottom.
 
   .. image:: ../../_static/images/cloud_storage_8.png
     :align: center
     :alt: WebDAV storage selection
 
 
-- Fill in the form by filling the Source path to mount (keep it blank to mount the default
-root, or specify the folder), and the URL to specify the host to connect to. Fill in the 
-Username and the Token (or password). Click on the "Next" button.
+- Fill in the form by filling the Source path to mount (keep it blank to mount the 
+  default root, or specify the folder), and the URL to specify the host to connect to.
+  Fill in the Username and the Token (or password). Click on the "Next" button.
 
   .. image:: ../../_static/images/cloud_storage_9.png
     :align: center
@@ -177,27 +182,24 @@ Username and the Token (or password). Click on the "Next" button.
 Accessing your data example
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-You can add as many cloud storage resources as you need in your Renku project. Every time you
-start your session from scratch, you will need to fill in the credentials.
+You can add as many cloud storage resources as you need in your Renku project. 
+Every time you start your session from scratch, you will need to fill in the credentials.
 In contrast, if you pause and resume your session, you will not need to enter them.
-
   .. image:: ../../_static/images/cloud_storage_11.png
     :align: center
     :alt: Starting a new session with cloud storage
 
 
-You will be able to access your mounted cloud storages in the "external_storage/" folder within 
-your session.
+You will be able to access your mounted cloud storages in the "external_storage/" folder within your session.
 
   .. image:: ../../_static/images/cloud_storage_12.png
     :align: center
     :alt: Access to the mounted storage
 
-
 Current limitations
 -------------------
-
-Mind that RenkuLab doesn't support storing credentials. If you need to
-provide credentials to access storage, you will be asked those again
-when starting a new session. The storage can be optionally disabled for
-that session.
+.. note::
+  RenkuLab doesn't support storing credentials. If you need to
+  provide credentials to access storage, you will be asked those again
+  when starting a new session. The storage can be optionally disabled for
+  that session.
