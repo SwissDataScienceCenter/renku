@@ -8,5 +8,4 @@ RenkuLab
 
     session-stopping-and-saving
     ssh-into-sessions
-    external-storage
     collaboration
