@@ -108,7 +108,7 @@ jobs:
       - name: Create comment pre deploy
         if: ${{ steps.findcomment.outputs.comment-id == 0 &&
           needs.check-deploy.outputs.pr-contains-string == 'true' }}
-        uses: peter-evans/create-or-update-comment@v3
+        uses: peter-evans/create-or-update-comment@v4
         with:
           token: ${{ secrets.RENKUBOT_GITHUB_TOKEN }}
           issue-number: ${{ github.event.pull_request.number }}
