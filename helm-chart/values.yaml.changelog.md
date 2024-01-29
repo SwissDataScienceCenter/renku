@@ -5,6 +5,18 @@ For changes that require manual steps other than changing values, please check o
 Please follow this convention when adding a new row
 * `<type: NEW|EDIT|DELETE> - *<resource name>*: <details>`
 
+## Upgrading to Renku 0.48.0
+
+The handling of privacy policy and terms of service content has been slightly changed to make
+it more flexible.
+
+* DELETE `ui.privacy.enabled` has been removed to make the privacy policy and cookie banner configurable independently.
+* NEW `ui.privacy.banner.enabled` allows turning on the cookie banner (defaults to false).
+* DELETE `ui.client.privacy.page.configMapKey` which has been renamed to `ui.client.privacy.page.configMapPolicyKey`.
+* NEW `ui.client.privacy.page.configMapPolicyKey` the key in the ConfigMap where the content for the privacy policy is located.
+* NEW `ui.client.privacy.page.configMapTermsKey` the key in the ConfigMap where the content for the terms of use is located.
+
+
 ## Upgrading to Renku 0.43.0
 
 * DELETE `graph.gitlab.url` has been removed as graph services uses the `global.gitlab.url`.
