@@ -968,28 +968,28 @@ notebooks:
   ## Note that requests are also limits, i.e. a user's jupyter kernel
   ## that exceeds the requested memory limit will be terminated/restarted.
   serverOptions:
-    defaultUrl:
+    default_url:
       order: 1
-      displayName: Default Environment
+      display_name: Default Environment
       type: enum
       default: "/lab"
       ## add /rstudio to the list for R projects
       options: ["/lab"]
     cpu_request:
       order: 2
-      displayName: Number of CPUs
+      display_name: Number of CPUs
       type: enum
       default: 0.5
       options: [0.5, 1.0]
     mem_request:
       order: 3
-      displayName: Amount of Memory
+      display_name: Amount of Memory
       type: enum
       default: 1G
       options: [1G, 2G]
     disk_request:
       order: 4
-      displayName: Amount of Storage
+      display_name: Amount of Storage
       type: enum
       default: "1G"
       options: ["1G", "10G"]
@@ -1002,13 +1002,13 @@ notebooks:
       #   max: "100G"
     gpu_request:
       order: 5
-      displayName: Number of GPUs
+      display_name: Number of GPUs
       type: enum
       default: 0
       options: [0]
     lfs_auto_fetch:
       order: 6
-      displayName: Automatically fetch LFS data
+      display_name: Automatically fetch LFS data
       type: boolean
       default: false
   ## Default server option values used to launch a session when
@@ -1018,7 +1018,7 @@ notebooks:
   ## specified in the server options for the UI above but they have to be
   ## within the available choices or valid ranges.
   serverDefaults:
-    defaultUrl: "/lab"
+    default_url: "/lab"
     cpu_request: 0.5
     mem_request: 1G
     disk_request: 1G
