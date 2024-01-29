@@ -696,12 +696,13 @@ ui:
     # privacy.page.configMapName value. As a reference, you can use the sample configMap generated when
     # enabling the feature.
     privacy:
-      enabled: false
       page:
         enabled: false
         #configMapName: privacy-page
-        #configMapKey: privacy_statement
+        #configMapPolicyKey: privacy_statement
+        #configMapTermsKey: terms
       banner:
+        enabled: false
         content: |
           This website requires cookies in order to ensure basic functionality. By clicking
           or navigating the site, you consent to the use of cookies in accordance with
