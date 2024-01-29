@@ -13,7 +13,7 @@ mentioned below or install the csi-rclone chart manually and set the correct sto
 notebooks service.
 
 * NEW `noteboks.cloudstorage.enabled` - set to `true` to enable mounting cloud storage in sessions.
-* DELETE `notebooks.cloudstorage.s3.enabed` - superseeded by previous porperty.
+* DELETE `notebooks.cloudstorage.s3.enabed` - superseeded by previous property.
 * NEW `notebooks.cloudstorage.storageClass` - the storage class for the CSI Rclone chart, needed for new cloudstorage 
   to work. The default `csi-rclone` should be fine unless already in use.
 * NEW `global.csi-rclone.install` - if `true` installs the csi-rclone chart alongside Renku. The chart is needed for 
