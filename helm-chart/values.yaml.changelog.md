@@ -5,6 +5,26 @@ For changes that require manual steps other than changing values, please check o
 Please follow this convention when adding a new row
 * `<type: NEW|EDIT|DELETE> - *<resource name>*: <details>`
 
+## Upgrading to Renku 0.47.0
+
+We completely overhauled how mounting cloud storage in sessions works, relying on a new CSI driver based on RClone 
+which has to be installed in the cluster for things to work. Either install it as part of Renku using the flag 
+mentioned below or install the csi-rclone chart manually and set the correct storage class in the values for the 
+notebooks service.
+
+* NEW `noteboks.cloudstorage.enabled` - set to `true` to enable mounting cloud storage in sessions.
+* DELETE `notebooks.cloudstorage.s3.enabed` - superseeded by previous porperty.
+* NEW `notebooks.cloudstorage.storageClass` - the storage class for the CSI Rclone chart, needed for new cloudstorage 
+  to work. The default `csi-rclone` should be fine unless already in use.
+* NEW `global.csi-rclone.install` - if `true` installs the csi-rclone chart alongside Renku. The chart is needed for 
+  cloud storage in sessions to work.
+* NEW `csi-rclone.storageClassName` - the storage class name the CSI drivers uses, should match what is configured in 
+  the `storageClass` property mentioned above.
+* NEW `csi-rclone.csiNodePlugin.tolerations` - Tolerations for the node plugin part of the CSI driver. Need to be set 
+  in a way that allows it to be scheduled on user session nodes. By default this would mean `key=renku.io/dedicated`, 
+  `operator=Equal`, `value=user` and `effect=NoSchedule`
+
+
 ## Upgrading to Renku 0.43.0
 
 * DELETE `graph.gitlab.url` has been removed as graph services uses the `global.gitlab.url`.
