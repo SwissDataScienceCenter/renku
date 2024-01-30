@@ -38,6 +38,7 @@ data:
         keycloak: {{ include "renku.keycloakUrl" . | quote }} 
         uiserver: {{ printf "http://%s" (include "ui-server.fullname" .) | quote }} 
     login:
+      renkuBaseUrl: {{ include "renku.baseUrl" . | quote }}
       endpointsBasePath: "/api/auth" 
       defaultAppRedirectURL: {{ include "renku.baseUrl" . | quote }}
       tokenEncryption:
