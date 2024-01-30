@@ -22,13 +22,6 @@ Create a values file using ``renku/values.yaml`` as a template. Then run:
 See the `helm chart registry <https://swissdatasciencecenter.github.io/helm-charts/>`_ for
 available versions.
 
-
-Testing locally
----------------
-Checkout our `developer docs <https://renku.readthedocs.io/en/latest/developer/setup.html>`_
-for a detailed description of how to deploy a local version using minikube.
-
-
 Building images
 ---------------
 

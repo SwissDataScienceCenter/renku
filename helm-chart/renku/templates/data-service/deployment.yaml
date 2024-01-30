@@ -1,0 +1,115 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ template "renku.fullname" . }}-data-service
+  labels:
+    app: renku-data-service
+    chart: {{ template "renku.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  {{- if not .Values.dataService.autoscaling.enabled }}
+  replicas: {{ .Values.dataService.replicaCount }}
+  {{- end }}
+  strategy: 
+    {{- toYaml .Values.dataService.updateStrategy | nindent 4 }}
+  selector:
+    matchLabels:
+      app: renku-data-service
+      release: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app: renku-data-service
+        release: {{ .Release.Name }}
+      {{- with .Values.dataService.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+    spec:
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      automountServiceAccountToken: {{ .Values.global.debug }}
+      initContainers:
+        {{- include "certificates.initContainer" . | nindent 8 }}
+      containers:
+        - name: data-service
+          image: "{{ .Values.dataService.image.repository }}:{{ .Values.dataService.image.tag }}"
+          imagePullPolicy: {{ .Values.dataService.image.pullPolicy }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          ports:
+            - name: http
+              containerPort: 8000
+              protocol: TCP
+          env:
+            - name: VERSION
+              value: {{ .Values.dataService.image.tag | quote }}
+            - name: DB_HOST
+              value: {{ template "postgresql.fullname" . }}
+            - name: DB_USER
+              value: {{ .Values.global.db.common.username }}
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.global.db.common.passwordSecretName }}
+                  key: password
+            - name: KEYCLOAK_URL
+              value: {{ (printf "%s://%s/auth/" (include "renku.http" .) .Values.global.renku.domain) | quote }}
+            - name: KEYCLOAK_TOKEN_SIGNATURE_ALGS
+              value: "RS256"
+            - name: SERVER_DEFAULTS
+              value: /etc/renku-data-service/server_options/server_defaults.json
+            - name: SERVER_OPTIONS
+              value: /etc/renku-data-service/server_options/server_options.json
+            - name: K8S_NAMESPACE
+              value: {{ .Release.Namespace | quote }}
+            - name: GITLAB_URL
+              value: {{ .Values.global.gitlab.url | quote }}
+            - name: MAX_PINNED_PROJECTS
+              value: {{ .Values.dataService.maxPinnedProjects | quote }}
+            {{- include "certificates.env.python" $ | nindent 12 }}
+          volumeMounts:
+            - name: server-options
+              mountPath: /etc/renku-data-service/server_options
+            {{- include "certificates.volumeMounts.system" . | nindent 12 }}
+          livenessProbe:
+            httpGet:
+              path: /api/data/version
+              port: http
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            failureThreshold: 6
+          readinessProbe:
+            httpGet:
+              path: /api/data/version
+              port: http
+            initialDelaySeconds: 10
+            periodSeconds: 2
+            failureThreshold: 2
+          startupProbe:
+            httpGet:
+              path: /api/data/version
+              port: http
+            periodSeconds: 5
+            failureThreshold: 60
+          resources:
+            {{ toYaml .Values.dataService.resources | nindent 12 }}
+    {{- with .Values.dataService.nodeSelector }}
+      nodeSelector:
+        {{ toYaml . | nindent 8 }}
+    {{- end }}
+    {{- with .Values.dataService.affinity }}
+      affinity:
+        {{ toYaml . | nindent 8 }}
+    {{- end }}
+    {{- with .Values.dataService.tolerations }}
+      tolerations:
+        {{ toYaml . | nindent 8 }}
+    {{- end }}
+      volumes:
+        - name: server-options
+          configMap:
+            name: {{ template "renku.fullname" . }}-server-options
+        {{- include "certificates.volumes" . | nindent 8 }}
+      serviceAccountName: {{ template "renku.fullname" . }}-data-service

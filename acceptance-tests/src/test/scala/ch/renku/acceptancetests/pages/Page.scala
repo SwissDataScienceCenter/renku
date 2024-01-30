@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 Swiss Data Science Center (SDSC)
+ * Copyright 2024 Swiss Data Science Center (SDSC)
  * A partnership between École Polytechnique Fédérale de Lausanne (EPFL) and
  * Eidgenössische Technische Hochschule Zürich (ETHZ).
  *
@@ -34,7 +34,6 @@ abstract class Page[Url <: BaseUrl](val path: String, val title: String)
     extends ScalatestMatchers
     with WebElementOps
     with WebDriverOps
-    with Scripts
     with Eventually
     with AcceptanceSpecPatience {
 
@@ -87,7 +86,6 @@ object RenkuPage {
   val RenkuPageTitle = raw"Reproducible Data Science \| Open Research \| Renku"
 }
 
-abstract class RenkuPage(path: String, title: String = RenkuPage.RenkuPageTitle)
-    extends Page[RenkuBaseUrl](path, title)
-    with RenkuPageCommons
+abstract class RenkuPage(path: String, title: String = RenkuPage.RenkuPageTitle) extends Page[RenkuBaseUrl](path, title)
+
 abstract class GitLabPage(path: String, title: String) extends Page[GitLabBaseUrl](path, title)

@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 Swiss Data Science Center (SDSC)
+ * Copyright 2024 Swiss Data Science Center (SDSC)
  * A partnership between École Polytechnique Fédérale de Lausanne (EPFL) and
  * Eidgenössische Technische Hochschule Zürich (ETHZ).
  *
@@ -56,7 +56,7 @@ trait CLIConfiguration {
   def `setup git configuration`(implicit userCredentials: UserCredentials): Unit = {
     implicit val workFolder: Path = rootWorkDirectory
 
-    When("the user has configured its git username and email")
+    And("the user has configured its git username and email")
     val configuredUsername = console %%> c"git config --global user.name"
     if (configuredUsername.trim.isEmpty) console %> c"git config --global user.name '${userCredentials.fullName}'"
 

@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 Swiss Data Science Center (SDSC)
+ * Copyright 2024 Swiss Data Science Center (SDSC)
  * A partnership between École Polytechnique Fédérale de Lausanne (EPFL) and
  * Eidgenössische Technische Hochschule Zürich (ETHZ).
  *
@@ -54,7 +54,9 @@ object CliVersion {
 
     private lazy val extractionRegex: Regex = NonReleasedVersion.validator.r
 
-    lazy val extractionRegex(commitSha) = value
+    lazy val commitSha: String = value match {
+      case extractionRegex(groups @ _*) => groups.last
+    }
   }
 
   object NonReleasedVersion {
@@ -75,7 +77,7 @@ trait UrlOps[T <: BaseUrl] {
 
   def /(part: String): UrlNoQueryParam = UrlNoQueryParam.unsafe(s"$value/${urlEncode(part)}")
 
-  def /[T](part: T)(implicit enc: SegmentEncoder[T]): UrlNoQueryParam =
+  def /[P](part: P)(implicit enc: SegmentEncoder[P]): UrlNoQueryParam =
     UrlNoQueryParam.unsafe(s"$value/${enc.toSegment(part).encoded}")
 
   def /(maybePart: Option[String]): UrlNoQueryParam = maybePart match {

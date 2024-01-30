@@ -1,4 +1,4 @@
-const renkuLogin = (credentials: { username: string, password: string }[]) => {
+const renkuLogin = (credentials: { username: string; password: string }[]) => {
   for (const { username, password } of credentials) {
     cy.get("#username").type(username);
     cy.get("#password").type(password, { log: false });
@@ -6,38 +6,71 @@ const renkuLogin = (credentials: { username: string, password: string }[]) => {
   }
   cy.url().then((url) => {
     const parsedUrl = new URL(url);
-    if (parsedUrl.pathname.includes("gitlab") || parsedUrl.host.includes("gitlab"))
-      cy.get(".doorkeeper-authorize >>>> .btn-danger").should("be.visible").should("be.enabled").click();
-
+    if (
+      parsedUrl.pathname.includes("gitlab") ||
+      parsedUrl.host.includes("gitlab")
+    ) {
+      cy.get(".doorkeeper-authorize >>>> .btn-danger")
+        .should("be.visible")
+        .should("be.enabled")
+        .click();
+    }
   });
 };
 
-const register = (email: string, password: string, firstName?: string, lastName?: string) => {
-  cy.visit("/login");
-
-  // ? wait to be assess whether tokens were refreshed automatically or we really need to register
-  cy.wait(1000); // eslint-disable-line cypress/no-unnecessary-waiting
-  cy.request({ failOnStatusCode: false, url: "ui-server/api/user" }).then((resp) => {
-    if (resp.status === 200)
-      return;
-
-    cy.get("div#kc-registration").find("a").should("be.visible").click();
-    cy.get(`input[name="firstName"]`).should("be.visible").click().clear()
-      .type(firstName ? firstName : "Renku Cypress");
-    cy.get(`input[name="lastName"]`).should("be.visible").click().clear().type(lastName ? lastName : "Test");
-    cy.get(`input[name="email"]`).should("be.visible").click().clear().type(email);
-    cy.get(`input[name="password"]`).should("be.visible").click().clear().type(password, { log: false });
-    cy.get(`input[name="password-confirm"]`).should("be.visible").click().clear().type(password, { log: false });
-    cy.get(`input[type="submit"]`).should("be.visible").should("be.enabled").click();
-  });
-};
-
-
-type RegisterAndVerifyProps = {
+const register = (
   email: string,
   password: string,
   firstName?: string,
   lastName?: string
+) => {
+  cy.visit("/login");
+
+  // ? wait to be assess whether tokens were refreshed automatically or we really need to register
+  cy.wait(1000); // eslint-disable-line cypress/no-unnecessary-waiting
+  cy.request({ failOnStatusCode: false, url: "ui-server/api/user" }).then(
+    (resp) => {
+      if (resp.status === 200) return;
+
+      cy.get("div#kc-registration").find("a").should("be.visible").click();
+      cy.get(`input[name="firstName"]`)
+        .should("be.visible")
+        .click()
+        .clear()
+        .type(firstName ? firstName : "Renku Cypress");
+      cy.get(`input[name="lastName"]`)
+        .should("be.visible")
+        .click()
+        .clear()
+        .type(lastName ? lastName : "Test");
+      cy.get(`input[name="email"]`)
+        .should("be.visible")
+        .click()
+        .clear()
+        .type(email);
+      cy.get(`input[name="password"]`)
+        .should("be.visible")
+        .click()
+        .clear()
+        .type(password, { log: false });
+      cy.get(`input[name="password-confirm"]`)
+        .should("be.visible")
+        .click()
+        .clear()
+        .type(password, { log: false });
+      cy.get(`input[type="submit"]`)
+        .should("be.visible")
+        .should("be.enabled")
+        .click();
+    }
+  );
+};
+
+type RegisterAndVerifyProps = {
+  email: string;
+  password: string;
+  firstName?: string;
+  lastName?: string;
 };
 
 function registerAndVerify(props: RegisterAndVerifyProps) {
@@ -76,34 +109,34 @@ function registerAndVerify(props: RegisterAndVerifyProps) {
 }
 
 type RobustLoginProps = {
-  email: string,
-  password: string,
-  firstName?: string,
-  lastName?: string
+  email: string;
+  password: string;
+  firstName?: string;
+  lastName?: string;
 };
 
 function robustLogin(props?: RobustLoginProps) {
-
   // Check if we are already logged in
-  cy.request({ failOnStatusCode: false, url: "ui-server/api/user" }).then((resp) => {
-    // we are already logged in
-    if (resp.status === 200) return;
+  cy.request({ failOnStatusCode: false, url: "ui-server/api/user" }).then(
+    (resp) => {
+      // we are already logged in
+      if (resp.status >= 200 && resp.status < 400) return;
 
-    const localProps = {
-      email: Cypress.env("TEST_EMAIL"),
-      password: Cypress.env("TEST_PASSWORD"),
-      firstName: Cypress.env("TEST_FIRST_NAME"),
-      lastName: Cypress.env("TEST_LAST_NAME"),
-      // any passed-in props should overwrite, so spread props last
-      ...props,
-    };
+      const localProps = {
+        email: Cypress.env("TEST_EMAIL"),
+        password: Cypress.env("TEST_PASSWORD"),
+        firstName: Cypress.env("TEST_FIRST_NAME"),
+        lastName: Cypress.env("TEST_LAST_NAME"),
+        // any passed-in props should overwrite, so spread props last
+        ...props,
+      };
 
-    return registerAndVerify(localProps);
-  });
+      return registerAndVerify(localProps);
+    }
+  );
 }
 
 function logout() {
-//  cy.visit("/");
   cy.get("#profile-dropdown").should("be.visible").click();
   cy.get("#logout-link").should("be.visible").click();
 }

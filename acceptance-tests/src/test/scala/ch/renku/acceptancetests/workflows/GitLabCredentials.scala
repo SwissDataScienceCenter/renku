@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 Swiss Data Science Center (SDSC)
+ * Copyright 2024 Swiss Data Science Center (SDSC)
  * A partnership between École Polytechnique Fédérale de Lausanne (EPFL) and
  * Eidgenössische Technische Hochschule Zürich (ETHZ).
  *
@@ -18,7 +18,7 @@
 
 package ch.renku.acceptancetests.workflows
 
-import ch.renku.acceptancetests.pages.{GitLabUserProfilePage, GitLabWelcomePage, DashboardPage}
+import ch.renku.acceptancetests.pages.{DashboardPage, GitLabUserProfilePage, GitLabWelcomePage}
 import ch.renku.acceptancetests.tooling.AcceptanceSpec
 
 import scala.concurrent.duration._
@@ -35,6 +35,9 @@ trait GitLabCredentials {
     }
 
   private def `add user credentials` = {
+
+    `log in to Renku`
+
     verify browserSwitchedTo DashboardPage
 
     When("user clicks the GitLab button")

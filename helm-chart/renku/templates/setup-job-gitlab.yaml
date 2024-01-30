@@ -58,10 +58,10 @@ spec:
             - name: GITLAB_OAUTH_CLIENT_SECRET
               valueFrom:
                 secretKeyRef:
-                  name: {{ template "renku.fullname" . }}
-                  key: gateway-gitlab-client-secret
+                  name: {{ cat (include "renku.fullname" .) "-gateway-revproxy" | nospace }} 
+                  key: gitlabClientSecret
             - name: GITLAB_OAUTH_CLIENT_ID
-              value: {{ .Values.global.gateway.gitlabClientId | quote }}
+              value: {{ .Values.gateway.gitlabClientId | default .Values.global.gateway.gitlabClientId | quote }}
             - name: GITLAB_DB_USERNAME
               value: {{ .Values.global.gitlab.postgresUser | quote }}
             - name: GITLAB_DB_NAME
@@ -74,5 +74,5 @@ spec:
             - name: GITLAB_URL
               value: "http://{{ template "gitlab.fullname" . }}{{ .Values.global.gitlab.urlPrefix }}"
             - name: RENKU_URL
-              value: "{{ template "http" . }}://{{ .Values.global.renku.domain }}"
+              value: "{{ template "renku.http" . }}://{{ .Values.global.renku.domain }}"
 {{- end }}

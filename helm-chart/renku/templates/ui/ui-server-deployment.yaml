@@ -1,0 +1,130 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "ui-server.fullname" . }}
+  labels:
+    {{- include "ui-server.labels" . | nindent 4 }}
+  {{- if .Values.ui.server.prometheus.enabled }}
+  annotations:
+    {{- .Values.ui.server.prometheus.annotations | toYaml | nindent 4 }}
+  {{- end }}
+spec:
+  {{- if not .Values.ui.server.autoscaling.enabled }}
+  replicas: {{ .Values.ui.server.replicaCount }}
+  {{- end }}
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: "uiserver"
+      app.kubernetes.io/instance: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: "uiserver"
+        app.kubernetes.io/instance: {{ .Release.Name }}
+        # The label below enables the gateway to connect to redis
+        {{ .Values.global.redis.clientLabel | toYaml | nindent 8 }}
+    spec:
+    {{- with .Values.ui.server.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+      securityContext:
+        {{- toYaml .Values.ui.server.podSecurityContext | nindent 8 }}
+      automountServiceAccountToken: {{ .Values.global.debug }}
+      initContainers:
+        {{- include "certificates.initContainer" . | nindent 8 }}
+      containers:
+        - name: {{ .Chart.Name }}
+          securityContext:
+            {{- toYaml .Values.ui.server.securityContext | nindent 12 }}
+          image: "{{ .Values.ui.server.image.repository }}:{{ .Values.ui.server.image.tag }}"
+          imagePullPolicy: {{ .Values.ui.server.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: 8080
+              protocol: TCP
+          env:
+            - name: SERVER_URL
+              value: {{ (include "renku.baseUrl" .) | quote }}
+            - name: UI_SERVER_VERSION
+              value: {{ .Values.ui.server.image.tag | quote }}
+            - name: SERVER_KEEP_COOKIES
+              value: |
+                {{- include "ui-server.keepCookies" . | nindent 16 }}
+            - name: GATEWAY_URL
+              value: {{ printf "%s:/api" (include "renku.baseUrl" .) | quote }}
+            - name: GATEWAY_LOGIN_PATH
+              value: {{ .Values.gateway.loginSuffix | default (printf "/auth/login") | quote }}
+            - name: GATEWAY_LOGOUT_PATH
+              value: {{ .Values.gateway.logoutSuffix | default (printf "/auth/logout") | quote }}
+            - name: AUTH_SERVER_URL
+              value: {{ printf "%s/auth/realms/%s" (include "renku.baseUrl" .) (include "renku.keycloak.realm" .) | quote }}
+            - name: AUTH_CLIENT_ID
+              value: {{ .Values.ui.server.authentication.id | default (printf "renku-ui") | quote }}
+            - name: AUTH_CLIENT_SECRET
+              value: {{ .Values.ui.server.authentication.secret | default (printf "%s" .Values.global.uiserver.clientSecret) | quote }}
+            - name: AUTH_TOKEN_TOLERANCE
+              value: {{ .Values.ui.server.authentication.expirationTolerance | default (printf "10") | quote }}
+            {{- if .Values.ui.server.sentry.enabled }}
+            - name: SENTRY_ENABLED
+              value: {{ .Values.ui.server.sentry.enabled | quote }}
+            - name: SENTRY_URL
+              value: {{ .Values.ui.server.sentry.dsn | quote }}
+            - name: SENTRY_NAMESPACE
+              value: {{ .Values.ui.server.sentry.environment | default (printf "%s" .Release.Namespace) | quote }}
+            - name: SENTRY_TRACE_RATE
+              value: {{ .Values.ui.server.sentry.sampleRate | quote }}
+            - name: SENTRY_DEBUG
+              value: {{ .Values.ui.server.sentry.debugMode | quote }}
+            {{- end }}
+            - name: WEBSOCKET_ENABLED
+              value: {{ .Values.ui.server.webSocket.enabled | quote }}
+            - name: REDIS_HOST
+              value: {{ .Values.global.redis.host | quote }}
+            - name: REDIS_IS_SENTINEL
+              value: {{ .Values.global.redis.sentinel.enabled | quote }}
+            - name: REDIS_MASTER_SET
+              value: {{ .Values.global.redis.sentinel.masterSet | quote }}
+            - name: REDIS_DATABASE
+              value: {{ .Values.global.redis.dbIndex.uiServer | quote }}
+            - name: REDIS_PORT
+              value: {{ .Values.global.redis.port | quote }}
+            - name: REDIS_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.global.redis.existingSecret }}
+                  key: {{ .Values.global.redis.existingSecretPasswordKey }}
+            - name: PROMETHEUS_ENABLED
+              value: {{ .Values.ui.server.prometheus.enabled | quote }}
+          livenessProbe:
+            httpGet:
+              path: /liveness
+              port: http
+          readinessProbe:
+            httpGet:
+              path: /readiness
+              port: http
+          startupProbe:
+            httpGet:
+              path: /startup
+              port: http
+            failureThreshold: 10
+            periodSeconds: 5
+          resources:
+            {{- toYaml .Values.ui.server.resources | nindent 12 }}
+          volumeMounts:
+            {{- include "certificates.volumeMounts.system" . | nindent 12 }}
+      {{- with .Values.ui.server.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+    {{- with .Values.ui.server.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+    {{- with .Values.ui.server.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+      volumes:
+        {{- include "certificates.volumes" . | nindent 8 }}

@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 Swiss Data Science Center (SDSC)
+ * Copyright 2024 Swiss Data Science Center (SDSC)
  * A partnership between École Polytechnique Fédérale de Lausanne (EPFL) and
  * Eidgenössische Technische Hochschule Zürich (ETHZ).
  *
@@ -18,103 +18,173 @@
 
 package ch.renku.acceptancetests.tooling
 
-import TestLogger._
+import KnowledgeGraphModel._
+import TestLogger.logger
 import cats.effect.IO
+import cats.effect.unsafe.IORuntime
 import cats.syntax.all._
-import ch.renku.acceptancetests.model.projects.ProjectIdentifier
-import io.circe.JsonObject
-import org.http4s.Status.{Accepted, NotFound, Ok}
+import ch.renku.acceptancetests.model.{UrlNoQueryParam, datasets, projects}
+import io.circe._
+import org.http4s.MediaType._
+import org.http4s.Status.{Accepted, Created, NotFound, Ok}
 import org.http4s.circe.CirceEntityCodec._
-import org.openqa.selenium.WebDriver
+import org.http4s.headers.`Content-Type`
+import org.scalatest.matchers.should
 
+import java.time.Instant
 import scala.annotation.tailrec
 import scala.concurrent.duration._
 
 trait KnowledgeGraphApi extends RestClient {
-  self: AcceptanceSpecData with GitLabApi with Grammar with BddWording with IOSpec =>
+  self: AcceptanceSpecData with GitLabApi with Grammar with should.Matchers =>
 
-  def `wait for KG to process events`(projectId: ProjectIdentifier, browser: WebDriver): Unit = {
+  implicit val ioRuntime: IORuntime
+
+  def `wait for KG to process events`(projectSlug: projects.Slug): Unit = {
     sleep(1 second)
-    val gitLabProjectId = `get GitLab project id`(projectId)
-    checkStatusAndWait(projectId, gitLabProjectId, browser, 1)
+    val gitLabProjectId = `get GitLab project id`(projectSlug)
+    checkStatusAndWait(projectSlug, gitLabProjectId, 1)
   }
 
-  def `wait for project activation`(projectId: ProjectIdentifier)(implicit browser: WebDriver): Unit = {
+  def `wait for project activation`(projectSlug: projects.Slug): Either[String, Unit] = {
     sleep(1 second)
-    val gitLabProjectId = `get GitLab project id`(projectId)
-    checkActivatedAndWait(projectId, gitLabProjectId, browser, 1)
+    val gitLabProjectId = `get GitLab project id`(projectSlug)
+    checkActivatedAndWait(projectSlug, gitLabProjectId, attempt = 1)
   }
 
-  def findLineage(projectPath: String, filePath: String): JsonObject = {
-    val toSegments: String => List[String] = _.split('/').toList
-    val uri =
-      toSegments(projectPath)
-        .foldLeft(renkuBaseUrl / "knowledge-graph" / "projects")(_ / _) / "files" / filePath / "lineage"
-    GET(uri)
-      .send(whenReceived(status = Ok) >=> bodyToJson)
-      .extract(jsonRoot.obj.getOption)
-      .getOrElse(fail(s"Cannot find lineage data for project $projectPath file $filePath"))
-  }
+  def `POST /knowledge-graph/projects`(project: NewProject): projects.Slug =
+    NewProject.MultipartEncoder
+      .encode(project)
+      .flatMap(payload =>
+        POST(renkuBaseUrl / "knowledge-graph" / "projects")
+          .withEntity(payload)
+          .putHeaders(payload.headers)
+          .withAuthorizationToken(authorizationToken)
+          .sendIO(whenReceived(status = Created) >=> decodePayload(_.downField("slug").as[String].map(projects.Slug)))
+      )
+      .unsafeRunSync()
 
-  def `DELETE /knowledge-graph/projects/:path`(projectPath: String): Unit = {
-    val toSegments: String => List[String] = _.split('/').toList
-    val uri = toSegments(projectPath).foldLeft(renkuBaseUrl / "knowledge-graph" / "projects")(_ / _)
-    DELETE(uri)
+  def `PATCH /knowledge-graph/projects/:slug`(slug: projects.Slug, updates: ProjectUpdates): Unit =
+    ProjectUpdates.MultipartEncoder
+      .encode(updates)
+      .flatMap(payload =>
+        PATCH(projectUri(slug))
+          .withEntity(payload)
+          .putHeaders(payload.headers)
+          .withAuthorizationToken(authorizationToken)
+          .sendIO(expect(status = Accepted, otherwiseLog = s"Updating '$slug' project failed"))
+      )
+      .unsafeRunSync()
+
+  def `GET /knowledge-graph/projects/:slug`(slug: projects.Slug): Option[KGProjectDetails] =
+    GET(projectUri(slug))
+      .putHeaders(`Content-Type`(application.json))
       .withAuthorizationToken(authorizationToken)
-      .send(expect(status = Accepted, otherwiseLog = s"Deletion of '$projectPath' project failed"))
+      .sendIO(mapResponseIO { response =>
+        response.status match {
+          case Ok       => response.as[KGProjectDetails].map(_.some)
+          case NotFound => Option.empty[KGProjectDetails].pure[IO]
+          case status   => fail(s"finding project details in KG returned $status")
+        }
+      })
+      .unsafeRunSync()
+
+  def `GET /knowledge-graph/projects/:slug/datasets`(slug: projects.Slug): List[datasets.Slug] = {
+    implicit val dsSlugDecoder: Decoder[datasets.Slug] = _.downField("slug").as[String].map(datasets.Slug)
+    GET(projectUri(slug) / "datasets")
+      .putHeaders(`Content-Type`(application.json))
+      .withAuthorizationToken(authorizationToken)
+      .sendIO(mapResponseIO { response =>
+        response.status match {
+          case Ok       => response.as[List[datasets.Slug]]
+          case NotFound => List.empty[datasets.Slug].pure[IO]
+          case status   => fail(s"finding project datasets in KG returned $status")
+        }
+      })
+  }.unsafeRunSync()
+
+  def `GET /knowledge-graph/projects/:slug/files/:path/lineage`(slug: projects.Slug, filePath: String): Option[Json] =
+    GET(projectUri(slug) / "files" / filePath / "lineage")
+      .withAuthorizationToken(authorizationToken)
+      .sendIO {
+        mapResponseIO { response =>
+          response.status match {
+            case Ok       => response.as[Json].map(_.some)
+            case NotFound => Option.empty[Json].pure[IO]
+            case status   => fail(s"finding lineage failed: $status")
+          }
+        }
+      }
+      .unsafeRunSync()
+
+  def `DELETE /knowledge-graph/projects/:slug`(slug: projects.Slug): Unit =
+    DELETE(projectUri(slug))
+      .withAuthorizationToken(authorizationToken)
+      .send(expect(status = Accepted, otherwiseLog = s"Deletion of '$slug' project failed"))
+
+  private def projectUri(slug: projects.Slug): UrlNoQueryParam = {
+    val toSegments: String => List[String] = _.split('/').toList
+    toSegments(slug.value).foldLeft(renkuBaseUrl / "knowledge-graph" / "projects")(_ / _)
   }
 
   @tailrec
   private def checkStatusAndWait(
-      projectId:       ProjectIdentifier,
+      projectSlug:     projects.Slug,
       gitLabProjectId: Int,
-      browser:         WebDriver,
       attempt:         Int
   ): Unit =
-    if (attempt >= 60 * 5)
-      fail(s"Events for '$projectId' project not processed after 5 minutes")
-    else if (findTotalDone(projectId, gitLabProjectId, browser) == 0) {
+    if (attempt >= 60 * 10)
+      fail(s"Events for '$projectSlug' project not processed after 10 minutes")
+    else if (findTotalDone(projectSlug, gitLabProjectId) == 0) {
       sleep(1 second)
-      checkStatusAndWait(projectId, gitLabProjectId, browser, attempt + 1)
-    } else if (findProgress(projectId, gitLabProjectId, browser) < 100d) {
+      checkStatusAndWait(projectSlug, gitLabProjectId, attempt + 1)
+    } else if (findProgress(projectSlug, gitLabProjectId) < 100d) {
       sleep(1 second)
-      checkStatusAndWait(projectId, gitLabProjectId, browser, attempt + 1)
+      checkStatusAndWait(projectSlug, gitLabProjectId, attempt + 1)
+    } else if (findProgress(projectSlug, gitLabProjectId) == 100d) {
+      val maybeDetails = findStatus(projectSlug, gitLabProjectId).flatMap(_.maybeDetails)
+      maybeDetails match {
+        case Some(status) if status.status == "failure" =>
+          val stackTrace = status.maybeStackTrace.map(s => s"; stackTrace:\n${s.replace("; ", "; \n")}").getOrElse("")
+          fail(s"Project $projectSlug ($gitLabProjectId) failed with '${status.message}'$stackTrace")
+        case _ => ()
+      }
     }
 
   @tailrec
   private def checkActivatedAndWait(
-      projectId:       ProjectIdentifier,
+      projectSlug:     projects.Slug,
       gitLabProjectId: Int,
-      browser:         WebDriver,
-      attempt:         Int
-  ): Unit = {
-    And("waits for Project Activation")
-    if (attempt >= 60 * 5)
-      fail(s"Activation status of '$projectId' project couldn't be determined after 5 minutes")
-    else if (!checkActivated(projectId, gitLabProjectId, browser)) {
+      attempt:         Int,
+      startTime:       Instant = Instant.now()
+  ): Either[String, Unit] = {
+    logger.info(s"waits for Project Activation - attempt $attempt")
+    if (attempt >= 60) {
+      val duration = Duration(Instant.now().toEpochMilli - startTime.toEpochMilli, MILLISECONDS).toSeconds
+      s"Activation status of '$projectSlug' project couldn't be determined after ${duration}s".asLeft[Unit]
+    } else if (!checkActivated(projectSlug, gitLabProjectId)) {
       sleep(1 second)
-      checkActivatedAndWait(projectId, gitLabProjectId, browser, attempt + 1)
-    }
+      checkActivatedAndWait(projectSlug, gitLabProjectId, attempt + 1, startTime)
+    } else ().asRight[String]
   }
 
-  private def checkActivated(projectId: ProjectIdentifier, gitLabProjectId: Int, browser: WebDriver): Boolean =
-    findStatus(projectId, gitLabProjectId, browser).exists(_.activated)
+  private def checkActivated(projectSlug: projects.Slug, gitLabProjectId: Int): Boolean =
+    findStatus(projectSlug, gitLabProjectId).exists(_.activated)
 
-  private def findProgress(projectId: ProjectIdentifier, gitLabProjectId: Int, browser: WebDriver): Double =
-    findStatus(projectId, gitLabProjectId, browser).map(_.progressPercentage).getOrElse(0d)
+  private def findProgress(projectSlug: projects.Slug, gitLabProjectId: Int): Double =
+    findStatus(projectSlug, gitLabProjectId).map(_.progressPercentage).getOrElse(0d)
 
-  private def findTotalDone(projectId: ProjectIdentifier, gitLabProjectId: Int, browser: WebDriver): Int =
-    findStatus(projectId, gitLabProjectId, browser).map(_.total).getOrElse(0)
+  private def findTotalDone(projectSlug: projects.Slug, gitLabProjectId: Int): Int =
+    findStatus(projectSlug, gitLabProjectId).map(_.total).getOrElse(0)
 
-  private def findStatus(projectId: ProjectIdentifier, gitLabProjectId: Int, browser: WebDriver): Option[GraphStatus] =
-    GET(renkuBaseUrl / "api" / "projects" / gitLabProjectId.toString / "graph" / "status")
-      .addCookiesFrom(browser)
+  private def findStatus(projectSlug: projects.Slug, gitLabProjectId: Int): Option[GraphStatus] =
+    GET(renkuBaseUrl / "api" / "projects" / gitLabProjectId / "graph" / "status")
       .send { response =>
         response.status match {
           case Ok       => response.as[GraphStatus].map(_.some)
           case NotFound => None.pure[IO]
           case other =>
-            IO(logger.warn(s"Finding processing status for '$projectId' returned $other")).as(None)
+            IO(logger.warn(s"Finding processing status for '$projectSlug' returned $other")).as(None)
         }
       }
 }

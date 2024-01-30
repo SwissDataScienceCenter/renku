@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 Swiss Data Science Center (SDSC)
+ * Copyright 2024 Swiss Data Science Center (SDSC)
  * A partnership between École Polytechnique Fédérale de Lausanne (EPFL) and
  * Eidgenössische Technische Hochschule Zürich (ETHZ).
  *
@@ -34,10 +34,10 @@ object GraphStatus {
       Decoder.forProduct3("done", "total", "percentage")(Progress.apply)
   }
 
-  final case class Details(status: String, message: String)
+  final case class Details(status: String, message: String, maybeStackTrace: Option[String])
   object Details {
     implicit val jsonDecoder: Decoder[Details] =
-      Decoder.forProduct2("status", "message")(Details.apply)
+      Decoder.forProduct3("status", "message", "stacktrace")(Details.apply)
   }
 
   implicit val jsonDecoder: Decoder[GraphStatus] =

@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 Swiss Data Science Center (SDSC)
+ * Copyright 2024 Swiss Data Science Center (SDSC)
  * A partnership between École Polytechnique Fédérale de Lausanne (EPFL) and
  * Eidgenössische Technische Hochschule Zürich (ETHZ).
  *
@@ -18,75 +18,41 @@
 
 package ch.renku.acceptancetests
 
-import ch.renku.acceptancetests.tooling.{AcceptanceSpec, KnowledgeGraphApi}
+import ch.renku.acceptancetests.tooling.{AcceptanceSpec, GitLabApi, KnowledgeGraphApi}
 import ch.renku.acceptancetests.workflows._
-import org.openqa.selenium.ElementNotInteractableException
 
 import scala.concurrent.duration._
 
-/** Run the HandsOn from the documentation.
-  */
+/** Run the HandsOn from the documentation. */
 class HandsOnSpec
     extends AcceptanceSpec
-    with Environments
     with Login
     with Project
-    with Settings
-    with JupyterNotebook
     with FlightsTutorial
-    with Datasets
+    with GitLabApi
     with KnowledgeGraphApi {
 
   scenario("User can do hands-on tutorial") {
 
-    `log in to Renku`
+    `verify user has GitLab credentials`
 
     `setup renku CLI`
 
-    `create, continue or open a project`
+    val projectSlug    = `create or use extant project`
+    val projectUrl     = `get repo Http URL`(projectSlug)
+    val flightsDataset = `follow the flights tutorial`(projectUrl)
 
-    val projectUrl         = `find project Http URL in the Overview Page`
-    val flightsDatasetName = `follow the flights tutorial`(projectUrl)
+    // to give time the push event is sent by GL and processed on the KG side
+    sleep(10 seconds)
 
     When("all the events are processed by the knowledge-graph")
-    `wait for KG to process events`(projectDetails.asProjectIdentifier, webDriver)
+    `wait for KG to process events`(projectSlug)
 
-    `verify dataset was created`(flightsDatasetName)
+    Then(s"the '$flightsDataset' dataset should exist on the project")
+    `GET /knowledge-graph/projects/:slug/datasets`(projectSlug) shouldBe List(flightsDataset)
 
-    `navigate to project info`
-
-    `verify user can work with Jupyter notebook`
-
-    `navigate to project info`
-
-    `verify analysis was run`
-
-    // This should prevent menu flickering due to UI not completely loaded
-    sleep(5 seconds)
-
-    `try to logout 🤷`
-  }
-
-  private def `try to logout 🤷` =
-    try `log out of Renku`
-    catch {
-      case _: ElementNotInteractableException => false
-      case _: Throwable                       => false
-    }
-
-  private def `verify analysis was run`: Unit = `try few times with page reload` { _ =>
-    When("the user navigates to the Files tab")
-    click on projectPage.Files.tab
-    And("they click on the notebooks folder in the File View")
-    click on (projectPage.Files.FileView folder "notebooks") sleep (5 seconds)
-    And("they click on the 01-CountFlights.ran.ipynb file in the File View")
-    click on (projectPage.Files.FileView file "notebooks/01-CountFlights.ran.ipynb") sleep (2 seconds)
-    Then("they should see a file header with the notebook filename")
-    verify that projectPage.Files.Info.heading contains "notebooks/01-CountFlights.ran.ipynb"
-    And("the correct notebook content")
-    docsScreenshots.takeScreenshot(executeBefore = "window.scrollBy(0,document.body.scrollHeight)")
-    val resultCell = projectPage.Files.Notebook.cellWithText("There were 4951 flights to Austin, TX in Jan 2019.")
-    verify that resultCell contains "There were 4951 flights to Austin, TX in Jan 2019."
-    Then("the correct notebook content is there")
+    val file = "notebooks/01-CountFlights.ran.ipynb"
+    And(s"lineage for the '$file' should exist as well")
+    `GET /knowledge-graph/projects/:slug/files/:path/lineage`(projectSlug, file) shouldBe a[Some[_]]
   }
 }
