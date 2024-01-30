@@ -16,7 +16,7 @@ However, git LFS is not efficient when working with large amount of data.
 Hence, git LFS should be avoided, especially for big files, since such system usually
 introduces problems during the life cycle of a project. A better alternative is to either store
 the files locally outside the Renku project folder in a local filesystem, or even better 
-to provision :ref:`external-storage`, such as s3 or blob storage. 
+to provision :ref:`external_storage`, such as S3 or Azure Blob storage. 
 
 Using git LFS responsibly
 -------------------------
@@ -42,7 +42,7 @@ your external cloud storage data directly through your cloud storage provider.
 
 
 The instructions to set up your cloud storage for a Renku project are in 
-:ref:`mount_external_storage`.
+:ref:`external_storage`.
 
 Data in JupyterLab sessions
 ---------------------------
