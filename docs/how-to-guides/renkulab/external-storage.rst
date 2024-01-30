@@ -1,4 +1,4 @@
-.. _mount_external_storage:
+.. _external_storage:
 
 External Storage in Renku Sessions
 ==================================
@@ -8,9 +8,9 @@ S3, Azure Blob, WebDAV, etc. in interactive sessions. Access to external
 storage can be configured via project settings. 
 
 In the sections below we describe how to add and manage storage configuration to your projects
-and highlight some current limitations. 
+and highlight some current limitations:
 
-.. contents:: Outline
+.. contents::
   :local: 
 
 .. note::

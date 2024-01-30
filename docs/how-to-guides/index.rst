@@ -17,4 +17,3 @@ aimed at active users of Renku and target specific use-cases or common issues.
    own_machine/index
    contributing/index
    admin/index
-   external_storage/index
