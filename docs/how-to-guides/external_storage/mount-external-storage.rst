@@ -1,46 +1,37 @@
 .. _mount_external_storage:
 
-Mount External Storage in Renku Sessions
-========================================
+External Storage in Renku Sessions
+==================================
 
-Renku supports mounting and accessing data from external storage services like
-S3, Azure Blob, WebDAV, etc. The solution is based on
-`Rclone <https://rclone.org/>`_; therefore, we support _most_ of the storage
-services that Rclone supports, except for anything requiring the OAuth flow.
-The experience is optimized for the most commonly used services, such
-as S3 and WebDAV.
+Renku supports accessing data from external storage services like
+S3, Azure Blob, WebDAV, etc. in interactive sessions. Access to external 
+storage can be configured via project settings. 
 
-We support both Read-only and Read/Write access modes.
-Please note that explicitly marking an attached storage as Read-only is
-**strongly** encouraged every time you don't have writing permissions. This
-prevents unexpected error messages when trying to access the storage.
+In the sections below we describe how to add and manage storage configuration to your projects
+and highlight some current limitations. 
 
-Performances vary based on the specific storage service, the access mode,
-and the available bandwidth. In general, reading a lot of data might be slow
-and impact the performance. Consider caching data locally when this becomes
-a problem for running your algorithms.
+.. contents:: Outline
+  :local: 
 
 .. note::
 
-  Mind that this feature is optional; it is enabled at
+  Note that this feature is optional; it is enabled at
   `renkulab.io <http://renkulab.io>`_  but other Renku deployments might not
   support it. Contact your administrator for more details.
 
 .. warning::
 
-  RenkuLab doesn't support storing credentials. If you need to
-  provide credentials to access storage, you will be asked those again
-  when starting a new session. The storage can be optionally disabled for
-  that session. If you pause and resume your session, you do not need to enter them.
+  We support both Read-only and Read/Write access modes.
+  Please note that explicitly marking an attached storage as Read-only is
+  **strongly** encouraged every time you don't have write permissions. This
+  prevents unexpected error messages when trying to access the storage.
 
+Adding external storage to a project
+------------------------------------
 
-How to add an external storage
-------------------------------
-
-Currently, we support setting up storage per project.
-You can do that from the project Settings tab by accessing the Cloud Storage
-section.
-From there, you can click on the ``Add Cloud Storage`` button and follow the
+Currently, we support configuring external storage access per project.
+Under the project's  ``Settings`` tab, you can find the ``Cloud Storage``
+section. From there, you can click on the ``Add Cloud Storage`` button and follow the
 instructions to go through the guided procedure.
 
 .. image:: ../../_static/images/cloud_storage_1.png
@@ -51,12 +42,11 @@ Advanced Mode
 ~~~~~~~~~~~~~
 
 If you are familiar with `Rclone <https://rclone.org/>`_, you can switch to
-the Advanced mode on the top of the modal and copy/paste from any Rclone
-configuration file.
+the "Advanced mode" and copy/paste from any Rclone configuration file.
 
-Mind that we require a few additional information that cannot be inferred from
+Mind that we require some additional information that cannot be inferred from
 the configuration file, such as the storage name, the access mode, and the mount
-point for the sessions.
+point for the sessions. 
 
 Step-by-step mode
 ~~~~~~~~~~~~~~~~~
@@ -66,9 +56,18 @@ external storage to use in your sessions.
 
 Depending on the storage service, the list of options might be long, especially
 when clicking the "Show full list" switch. Most of the time, the basic options
-are sufficient to set up the storage. For more information, please refer to either
+are sufficient. For more information, please refer to either
 the `Rclone documentation <https://rclone.org/docs/>`_ or the documentation from
 the storage provider you are using.
+
+Specific storage providers
+--------------------------
+
+The backend supports a variety of storage providers. It is based on `Rclone <https://rclone.org/>`_ 
+and we therefore support `most` of the storage services that Rclone supports, except for 
+anything requiring the OAuth flow. The experience is optimized for the most commonly used services, such
+as S3 and WebDAV. Please let us know if you require access to another service that is not covered by 
+the currently-available options!
 
 S3
 ~~
@@ -78,19 +77,19 @@ We pick the public dataset
 `Genome in a Bottle (GIAB) <https://registry.opendata.aws/giab/>`_ 
 hosted on AWS and show how to attach it to a Renku interactive session:
 
-- Navigate to the ``Settings - Cloud storage`` in one of your Renku projects.
+- Navigate to the "Settings: Cloud storage" in one of your Renku projects.
 
-- Click on the ``Add Cloud Storage`` button and select ``S3`` for the ``Storage Type``,
-  then pick "AWS" on the provider list. Click on the ``Next`` button at the bottom.
+- Click on the "Add Cloud Storage" button and select ``S3`` for the "Storage Type",
+  then pick ``AWS`` on the provider list. Click on the "Next" button at the bottom.
 
   .. image:: ../../_static/images/cloud_storage_2.png
     :align: center
     :alt: Storage type and provider selection
 
 
-- Fill in the form by using ``giab`` as the ``Source path``, and
+- Fill in the form by using ``giab`` as the "Source path", and
   ``http://s3.amazonaws.com`` as the Endpoint. We don't need any credentials, and
-  the region is optional. Click on the ``Next`` button.
+  the region is optional. Click on the "Next" button.
 
   .. image:: ../../_static/images/cloud_storage_3.png
     :align: center
@@ -98,23 +97,24 @@ hosted on AWS and show how to attach it to a Renku interactive session:
 
 
 - On the last page, pick any name for the storage (e.g. ``Giab``), than mark
-  this as Read-only. You can change the Mount point too; that determines the
-  virtual folder where this is mounted in the running sessions.
-  Click on the ``Add storage`` button.
+  this as Read-only. You can change the "Mount point" too; that determines the
+  virtual folder where this is mounted in the running sessions. 
+  Click on the "Add storage" button.
 
   .. image:: ../../_static/images/cloud_storage_4.png
     :align: center
     :alt: GIAB bucket final steps
 
+.. note::
+  The "mount point" is relative to the root of the project path in the session.
 
-- You can now start a new session and access the storage at the mount point.
+You can now start a new session and access the ``giab`` bucket at the ``external_storage/giab`` path in your project.
 
 
 Azure Blob
 ~~~~~~~~~~
 
-You can opt to add Azure Blob storage to your project.
-We host some data files in the folder ‘test-data’
+You can opt to add Azure Blob storage to your project. We host some data files in the folder ``test-data``
 hosted on Azure and show how to attach it to a Renku interactive session:
 
 - Navigate to the ``Settings - Cloud storage`` in your project.
@@ -154,21 +154,20 @@ mounting WebDAV resources in interactive sessions.
       We strongly encourage you to generate a token for accessing your private 
       WebDAV shares to avoid sharing your account password.
 
-Here we show an example of adding an `ETH Polybox <https://polybox.ethz.ch>_` drive to
+Here we show an example of adding an `ETH Polybox <https://polybox.ethz.ch>`_ drive to
 the session, but the procedure will be similar for any storage accessible via WebDAV. 
 
-- Navigate to the ``Settings - Cloud storage`` in your Renku project.
-- Click on the ``Add Cloud Storage``  button and select ``webdav`` for 
+- Navigate to ``Settings - Cloud storage`` in your Renku project.
+- Click on the "Add Cloud Storage"  button and select ``webdav`` for 
   the "Storage Type".  Click on the "Next" button at the bottom.
 
   .. image:: ../../_static/images/cloud_storage_8.png
     :align: center
     :alt: WebDAV storage selection
 
-
 - Fill in the form by filling the ``Source path`` to mount (keep it blank to mount the 
   default root, or specify the folder), and the URL to specify the host to connect to.
-  Fill in the ``Username`` and the ``Token (or password)``. Click on the ``Next`` button.
+  Fill in the ``Username`` and the ``Token (or password)``. Click on the "Next" button.
 
   .. image:: ../../_static/images/cloud_storage_9.png
     :align: center
@@ -177,7 +176,7 @@ the session, but the procedure will be similar for any storage accessible via We
 - On the last page, pick any name for the storage (e.g: ``webdab_storage``), then mark
   this as Read-only. You can change the ``Mount point`` too; that determines the
   virtual folder where this is mounted in the running sessions.
-  Click on the ``Add storage``  button.
+  Click on the "Add storage"  button.
 
   .. image:: ../../_static/images/cloud_storage_10.png
     :align: center
@@ -189,3 +188,19 @@ the session, but the procedure will be similar for any storage accessible via We
   .. image:: ../../_static/images/cloud_storage_11.png
     :align: center
     :alt: Access to the mounted storage
+
+Credentials
+-----------
+
+For the time being, you cannot persist storage credentials in RenkuLab. If you need to
+provide credentials to access storage, you will be asked to provide them
+when starting a new session. The storage can be optionally disabled when launching a 
+session, if you do not wish to use it or if you do not have the required credentials. 
+If you pause and resume your session, you do not need to enter credentials again.
+
+Performance
+-----------
+
+Performance varies based on the specific storage service, the access mode,
+and the available bandwidth. Consider caching data locally if large amounts of 
+data need to be read or written repeatedly. 
