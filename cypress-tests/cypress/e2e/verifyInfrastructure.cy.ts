@@ -12,7 +12,8 @@ function retryRequest(
   limit = 10,
   delaySeconds = 30,
   retries = 1
-): Cypress.Response<any> { // eslint-disable-line @typescript-eslint/no-explicit-any
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+): Cypress.Response<any> {
   if (retries > limit) {
     const minutes = Math.floor((limit * delaySeconds) / 60);
     throw new Error(
@@ -42,7 +43,7 @@ describe("Verify the infrastructure is ready", () => {
     retryRequest("api/data/version", "Data Service");
     retryRequest("api/auth/login", "Gateway");
     retryRequest(
-      "ui-server/api/allows-iframe/https%3A%2F%2Fgoogle.com",
+      `ui-server/api/allows-iframe/${encodeURIComponent("https://google.com")}`,
       "UI server"
     );
     retryRequest("config.json", "UI client");
@@ -56,9 +57,11 @@ describe("Verify the infrastructure is ready", () => {
     });
 
     // Core should read the config file of a Renku project
-    const coreUrl =
-      "/ui-server/api/renku/config.show" +
-      "?git_url=https%3A%2F%2Fgitlab.dev.renku.ch%2Frenku-ui-tests%2Frenku-project-v10";
+    const gitUrl =
+      "https://gitlab.dev.renku.ch/renku-ui-tests/renku-project-v10";
+    const coreUrl = `/ui-server/api/renku/config.show?git_url=${encodeURIComponent(
+      gitUrl
+    )}`;
     cy.request(coreUrl).then((resp) => {
       if (resp.status >= 400 || !("result" in resp.body))
         throw new Error("Core backend not working as expected.");
@@ -72,9 +75,8 @@ describe("Verify the infrastructure is ready", () => {
     });
 
     // Graph should return an empty list of entities for a weird search
-    const graphUrl =
-      "/ui-server/api/kg/entities" +
-      "?query=nonExistingLongWordThatShouldReturnEmpty";
+    const query = "nonExistingLongWordThatShouldReturnEmpty".toLowerCase();
+    const graphUrl = `/ui-server/api/kg/entities?query=${query}`;
     cy.request(graphUrl).then((resp) => {
       if (resp.status >= 400 || resp.body.length !== 0)
         throw new Error("Graph backend not working as expected.");

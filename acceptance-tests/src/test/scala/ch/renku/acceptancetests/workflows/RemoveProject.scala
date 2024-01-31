@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 Swiss Data Science Center (SDSC)
+ * Copyright 2024 Swiss Data Science Center (SDSC)
  * A partnership between École Polytechnique Fédérale de Lausanne (EPFL) and
  * Eidgenössische Technische Hochschule Zürich (ETHZ).
  *
@@ -19,16 +19,12 @@
 package ch.renku.acceptancetests.workflows
 
 import ch.renku.acceptancetests.model.projects
-import ch.renku.acceptancetests.model.projects.ProjectIdentifier
 import ch.renku.acceptancetests.tooling.{AcceptanceSpec, KnowledgeGraphApi}
 
 import scala.concurrent.duration._
 
-trait RemoveProject extends BrowserNavigation {
+trait RemoveProject {
   self: AcceptanceSpec with KnowledgeGraphApi =>
-
-  def `remove project in GitLab`(implicit projectId: ProjectIdentifier): Unit =
-    `remove project in GitLab`(projectId.asProjectSlug)
 
   def `remove project in GitLab`(slug: projects.Slug): Unit = {
     And(s"the '$slug' project is removed")

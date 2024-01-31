@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 Swiss Data Science Center (SDSC)
+ * Copyright 2024 Swiss Data Science Center (SDSC)
  * A partnership between École Polytechnique Fédérale de Lausanne (EPFL) and
  * Eidgenössische Technische Hochschule Zürich (ETHZ).
  *
@@ -34,7 +34,7 @@ trait WebDriveredSpec extends BeforeAndAfterAll {
     sys.env.get("DOCKER") match {
       case Some(_) =>
         new ChromeDriver(
-          new ChromeDriverService.Builder().withWhitelistedIps("127.0.0.1").build,
+          new ChromeDriverService.Builder().withAllowedListIps("127.0.0.1").build,
           new ChromeOptions().addArguments("no-sandbox", "headless", "disable-gpu", "window-size=1920,1600")
         )
       case None =>

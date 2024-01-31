@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 Swiss Data Science Center (SDSC)
+ * Copyright 2024 Swiss Data Science Center (SDSC)
  * A partnership between École Polytechnique Fédérale de Lausanne (EPFL) and
  * Eidgenössische Technische Hochschule Zürich (ETHZ).
  *
@@ -18,8 +18,7 @@
 
 package ch.renku.acceptancetests
 
-import ch.renku.acceptancetests.model.datasets.DatasetName
-import ch.renku.acceptancetests.pages.DatasetPage
+import ch.renku.acceptancetests.model.datasets
 import ch.renku.acceptancetests.tooling._
 import ch.renku.acceptancetests.tooling.console._
 import ch.renku.acceptancetests.workflows._
@@ -31,20 +30,17 @@ class ImportZenodoWithCliSpec
     extends AcceptanceSpec
     with Login
     with Project
-    with Settings
     with CLIConfiguration
-    with Datasets
     with KnowledgeGraphApi {
 
   ignore("User can import a Dataset from Zenodo") {
 
-    `log in to Renku`
+    `verify user has GitLab credentials`
 
     `setup renku CLI`
 
-    `create, continue or open a project`
-
-    val projectUrl = `find project Http URL in the Overview Page`
+    val projectSlug = `create or use extant project`
+    val projectUrl  = `get repo Http URL`(projectSlug)
 
     implicit val projectFolder: Path = createTempFolder
 
@@ -69,15 +65,12 @@ class ImportZenodoWithCliSpec
     sleep(10 seconds)
 
     When("all the events are processed by the knowledge-graph")
-    `wait for KG to process events`(projectDetails.asProjectIdentifier.asProjectSlug, webDriver)
+    `wait for KG to process events`(projectSlug)
 
     sleep(5 seconds)
 
-    val dsPage = DatasetPage(DatasetName("biodiversity_and_healthy"))
-    `navigate to the dataset`(dsPage)
-
-    dsPage.datasetTitle.getText should include("Strava Metro")
-
-    `log out of Renku`
+    val dsSlug = datasets.Slug("biodiversity_and_healthy")
+    Then(s"the '$dsSlug' dataset should exist on the project")
+    `GET /knowledge-graph/projects/:slug/datasets`(projectSlug) shouldBe List(dsSlug)
   }
 }
