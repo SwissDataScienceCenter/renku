@@ -122,7 +122,7 @@ spec:
         pathType: Prefix
         backend:
           service:
-            name: {{ $knowledgeGraphFullname }}
+            name: {{ template "renku.fullname" $ }}-gateway
             port:
               number: 80
       {{- end }}
