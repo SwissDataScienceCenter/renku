@@ -175,7 +175,7 @@ the session, but the procedure will be similar for any storage accessible via We
 
 - Fill in the form by providing the ``Source path`` to mount (keep it blank to mount the 
   default root, or specify the folder), and the URL to specify the host to connect to
-  (``https://polybox.ethz.ch/remote.php/webdav/`` for ETH Polybox).
+  (``https://polybox.ethz.ch/remote.php/webdav/`` for `ETH Polybox <https://polybox.ethz.ch>`_).
   Fill in the ``Username`` and the ``Token (or password)``. Click on the "Next" button.
 
   .. image:: ../../_static/images/cloud_storage_9.png
