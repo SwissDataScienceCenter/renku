@@ -12,10 +12,10 @@ large files on the server and allows you to work with your repository without
 actually having a local copy of the data. You can pull the data from the server
 as it becomes needed, saving you time and resources.
 
-However, git LFS is not efficient when working with large amount of data.
-Hence, git LFS should be avoided, especially for big files, since such system usually
-introduces problems during the life cycle of a project. A better alternative is to either store
-the files locally outside the Renku project folder in a local filesystem, or even better 
+However, git LFS is not efficient when working with a large amount of data.
+Hence, we heavily recommend Renku users (especially when dealing with large amount of data)
+to either store data files locally outside the Renku project folder in a 
+local filesystem, or even better 
 to provision :ref:`external_storage`, such as S3 or Azure Blob storage. 
 
 Using git LFS responsibly

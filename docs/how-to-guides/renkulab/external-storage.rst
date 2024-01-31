@@ -41,16 +41,6 @@ instructions to go through the guided procedure.
   :align: center
   :alt: Cloud Storage section in the project settings
 
-Advanced Mode
-~~~~~~~~~~~~~
-
-If you are familiar with `Rclone <https://rclone.org/>`_, you can switch to
-the "Advanced mode" and copy/paste from any Rclone configuration file.
-
-Mind that we require some additional information that cannot be inferred from
-the configuration file, such as the storage name, the access mode, and the mount
-point for the sessions. 
-
 Step-by-step mode
 ~~~~~~~~~~~~~~~~~
 
@@ -63,14 +53,26 @@ are sufficient. For more information, please refer to either
 the `Rclone documentation <https://rclone.org/docs/>`_ or the documentation from
 the storage provider you are using.
 
+
+Advanced Mode
+~~~~~~~~~~~~~
+
+If you are familiar with `Rclone <https://rclone.org/>`_, you can switch to
+the "Advanced mode" and copy/paste from any Rclone configuration file.
+
+Mind that we require some additional information that cannot be inferred from
+the configuration file, such as the storage name, the access mode, and the mount
+point for the sessions. 
+
+
 Specific storage providers
 --------------------------
 
 The backend supports a variety of storage providers. It is based on `Rclone <https://rclone.org/>`_ 
 and we therefore support `most` of the storage services that Rclone supports, except for 
-anything requiring the OAuth flow. The experience is optimized for the most commonly used services, such
-as S3 and WebDAV. Please let us know if you require access to another service that is not covered by 
-the currently-available options!
+anything requiring the OAuth flow or virtual rclone providers. The experience is optimized for the
+most commonly used services, such as S3 and WebDAV. Please let us know if you require access to another
+service that is not covered by the currently-available options!
 
 S3
 ~~
@@ -80,36 +82,36 @@ We pick the public dataset
 `Genome in a Bottle (GIAB) <https://registry.opendata.aws/giab/>`_ 
 hosted on AWS and show how to attach it to a Renku interactive session:
 
-- Navigate to the "Settings: Cloud storage" in one of your Renku projects.
+- Navigate to the ``Settings: Cloud storage`` in one of your Renku projects.
 
-- Click on the "Add Cloud Storage" button and select ``S3`` for the "Storage Type",
-  then pick ``AWS`` on the provider list. Click on the "Next" button at the bottom.
+- Click on the ``Add Cloud Storage`` button and select ``S3`` for the ``Storage Type``,
+  then pick ``AWS`` on the provider list. Click on the ``Next`` button at the bottom.
 
   .. image:: ../../_static/images/cloud_storage_2.png
     :align: center
     :alt: Storage type and provider selection
 
 
-- Fill in the form by using ``giab`` as the "Source path", and
-  ``http://s3.amazonaws.com`` as the Endpoint. We don't need any credentials, and
-  the region is optional. Click on the "Next" button.
+- Fill in the form by using ``giab`` as the ``Source path``, and
+  ``http://s3.amazonaws.com`` as the endpoint. We don't need any credentials, and
+  the region is optional. Click on the ``"Next`` button.
 
   .. image:: ../../_static/images/cloud_storage_3.png
     :align: center
     :alt: GIAB bucket options configuration
 
 
-- On the last page, pick any name for the storage (e.g. ``Giab``), than mark
-  this as Read-only. You can change the "Mount point" too; that determines the
+- On the last page, pick any name for the storage (e.g. ``Giab``), then mark
+  this as Read-only. You can change the ``Mount point`` too; that determines the
   virtual folder where this is mounted in the running sessions. 
-  Click on the "Add storage" button.
+  Click on the ``Add storage`` button.
 
   .. image:: ../../_static/images/cloud_storage_4.png
     :align: center
     :alt: GIAB bucket final steps
 
 .. note::
-  The "mount point" is relative to the root of the project path in the session.
+  The ``mount point`` is relative to the root of the project path in the session.
 
 You can now start a new session and access the ``giab`` bucket at the ``external_storage/giab`` path in your project.
 
@@ -117,7 +119,7 @@ You can now start a new session and access the ``giab`` bucket at the ``external
 Azure Blob
 ~~~~~~~~~~
 
-You can opt to add Azure Blob storage to your project. We host some data files in the folder ``test-data``
+For this example, we host some data files in the folder ``test-data``
 hosted on Azure and show how to attach it to a Renku interactive session:
 
 - Navigate to the ``Settings - Cloud storage`` in your project.
@@ -137,8 +139,8 @@ hosted on Azure and show how to attach it to a Renku interactive session:
     :align: center
     :alt: Azure blob options configuration
 
-- On the last page, pick any name for the storage (e.g: `blob_storage``), then mark
-  this as Read-only. You can change the ``Mount point`` too; that determines the
+- On the last page, pick any name for the storage (e.g: `blob_storage``).
+  You can change the ``Mount point`` too; that determines the
   virtual folder where this is mounted in the running sessions.
   Click on the ``Add storage``  button.
 
@@ -171,16 +173,17 @@ the session, but the procedure will be similar for any storage accessible via We
     :align: center
     :alt: WebDAV storage selection
 
-- Fill in the form by filling the ``Source path`` to mount (keep it blank to mount the 
-  default root, or specify the folder), and the URL to specify the host to connect to.
+- Fill in the form by providing the ``Source path`` to mount (keep it blank to mount the 
+  default root, or specify the folder), and the URL to specify the host to connect to
+  (``https://polybox.ethz.ch/remote.php/webdav/`` for ETH Polybox).
   Fill in the ``Username`` and the ``Token (or password)``. Click on the "Next" button.
 
   .. image:: ../../_static/images/cloud_storage_9.png
     :align: center
     :alt: WebDAV options configuration
 
-- On the last page, pick any name for the storage (e.g: ``webdab_storage``), then mark
-  this as Read-only. You can change the ``Mount point`` too; that determines the
+- On the last page, pick any name for the storage (e.g: ``webdab_storage``).
+  You can change the ``Mount point`` too; that determines the
   virtual folder where this is mounted in the running sessions.
   Click on the "Add storage"  button.
 
