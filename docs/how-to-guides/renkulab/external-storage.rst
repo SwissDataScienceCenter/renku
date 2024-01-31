@@ -147,12 +147,15 @@ hosted on Azure and show how to attach it to a Renku interactive session:
 
 WebDAV
 ~~~~~~
+
 Many storage services, offer access via the WebDAV protocol. Renku supports
 mounting WebDAV resources in interactive sessions. 
 
-  .. warning:
-      We strongly encourage you to generate a token for accessing your private 
-      WebDAV shares to avoid sharing your account password.
+.. warning::
+  We strongly encourage you to generate a token for accessing your private 
+  OwnCloud/Nextcloud WebDAV shares to avoid sharing your account password. To create the token, go to
+  "Settings: Security" in your cloud storage application and generate a new 
+  "Application passcode" at the bottom of the page. 
 
 Here we show an example of adding an `ETH Polybox <https://polybox.ethz.ch>`_ drive to
 the session, but the procedure will be similar for any storage accessible via WebDAV. 
