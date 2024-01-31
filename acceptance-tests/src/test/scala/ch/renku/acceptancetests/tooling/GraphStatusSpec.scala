@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 Swiss Data Science Center (SDSC)
+ * Copyright 2024 Swiss Data Science Center (SDSC)
  * A partnership between École Polytechnique Fédérale de Lausanne (EPFL) and
  * Eidgenössische Technische Hochschule Zürich (ETHZ).
  *
@@ -19,9 +19,9 @@
 package ch.renku.acceptancetests.tooling
 
 import io.circe.Decoder
+import io.circe.literal._
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should
-import io.circe.literal._
 
 class GraphStatusSpec extends AnyFlatSpec with should.Matchers {
 

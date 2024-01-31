@@ -1,0 +1,102 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ template "renku.graph.knowledgeGraph.fullname" . }}
+  labels:
+    app: {{ template "renku.graph.knowledgeGraph.name" . }}
+    chart: {{ template "renku.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  replicas: {{ .Values.graph.knowledgeGraph.replicas }}
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: {{ template "renku.graph.knowledgeGraph.name" . }}
+      release: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app: {{ template "renku.graph.knowledgeGraph.name" . }}
+        release: {{ .Release.Name }}
+    spec:
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      automountServiceAccountToken: {{ .Values.global.debug }}
+      initContainers:
+        {{- include "certificates.initContainer" . | nindent 8 }}
+      containers:
+        - name: knowledge-graph
+          image: "{{ .Values.graph.knowledgeGraph.image.repository }}:{{ .Values.graph.knowledgeGraph.image.tag }}"
+          imagePullPolicy: {{ .Values.graph.knowledgeGraph.image.pullPolicy }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          env:
+            - name: RENKU_URL
+              value: https://{{ .Values.global.renku.domain }}
+            - name: RENKU_API_URL
+              value: https://{{ .Values.global.renku.domain }}{{ .Values.graph.knowledgeGraph.services.renku.resourcesPath }}
+            - name: JENA_BASE_URL
+              value: "http://{{ template "renku.graph.jena.fullname" . }}-master:{{ .Values.jena.service.port }}"
+            - name: JENA_RENKU_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "renku.graph.jena.fullname" . }}
+                  key: jena-users-renku-password
+            - name: WEBHOOK_SERVICE_BASE_URL
+              value: "http://{{ template "renku.graph.webhookService.fullname" . }}:{{ .Values.graph.webhookService.service.port }}"
+            - name: TRIPLES_GENERATOR_BASE_URL
+              value: "http://{{ template "renku.graph.triplesGenerator.fullname" . }}:{{ .Values.graph.triplesGenerator.service.port }}"
+            - name: TOKEN_REPOSITORY_BASE_URL
+              value: "http://{{ template "renku.graph.tokenRepository.fullname" . }}:{{ .Values.graph.tokenRepository.service.port }}"
+            - name: EVENT_LOG_BASE_URL
+              value: "http://{{ template "renku.graph.eventLog.fullname" . }}:{{ .Values.graph.eventLog.service.port }}"
+            - name: RENKU_CORE_LATEST_URL			
+              value: {{ include "renku.graph.core.latestUrl" . | quote }}		
+            - name: RENKU_CORE_SERVICE_URLS			
+              value: {{ include "renku.graph.core.urls" . | quote }}
+            - name: GITLAB_BASE_URL
+              value: {{ .Values.global.gitlab.url }}
+            - name: GITLAB_RATE_LIMIT
+              value: {{ .Values.graph.knowledgeGraph.gitlab.rateLimit }}
+            - name: SENTRY_ENABLED
+              value: "{{ .Values.graph.sentry.enabled }}"
+              {{- if .Values.graph.sentry.enabled }}
+            - name: SENTRY_DSN
+              value: {{ .Values.graph.sentry.dsn }}
+            - name: SENTRY_ENVIRONMENT
+              value: {{ .Values.graph.sentry.environment }}
+              {{- end }}
+            - name: JAVA_OPTS
+              value: -Xmx{{ .Values.graph.knowledgeGraph.jvmXmx }} -XX:+UseG1GC
+          ports:
+            - name: http-kg
+              containerPort: 9004
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /ping
+              port: http-kg
+          readinessProbe:
+            httpGet:
+              path: /ping
+              port: http-kg
+          resources:
+            {{- toYaml .Values.graph.knowledgeGraph.resources | nindent 12 }}
+          volumeMounts:
+            {{- include "certificates.volumeMounts.javaCertsGeneral" . | nindent 12 }}
+      volumes:
+        {{- include "certificates.volumes" . | nindent 8 }}
+  {{- with .Values.nodeSelector }}
+nodeSelector:
+  {{ toYaml . | indent 8 }}
+  {{- end }}
+  {{- with .Values.affinity }}
+affinity:
+  {{ toYaml . | indent 8 }}
+  {{- end }}
+  {{- with .Values.tolerations }}
+tolerations:
+  {{ toYaml . | indent 8 }}
+  {{- end }}

@@ -1,0 +1,296 @@
+{{- range $version := .Values.global.core.versions }}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "renku-core.fullname" $ }}-{{ $version.name }}
+  labels:
+    app.kubernetes.io/deploymentVersion: {{ $version.name }}
+{{ include "renku-core.labels" $ | indent 4 }}
+spec:
+  replicas: {{ $.Values.core.replicaCount }}
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 0
+      maxSurge: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: {{ include "renku-core.name" $ }}
+      app.kubernetes.io/instance: {{ $.Release.Name }}
+      app.kubernetes.io/deploymentVersion: {{ $version.name }}
+  template:
+    metadata:
+      annotations:
+      {{ if $.Values.core.metrics.enabled }}
+        prometheus.io/scrape: 'true'
+        prometheus.io/path: '/metrics'
+        prometheus.io/port: '8766'
+      {{ end }}
+      labels:
+        app.kubernetes.io/name: {{ include "renku-core.name" $ }}
+        app.kubernetes.io/instance: {{ $.Release.Name }}
+        app.kubernetes.io/deploymentVersion: {{ $version.name }}
+        {{ $.Values.global.redis.clientLabel | toYaml | nindent 8 }}
+    spec:
+    {{- with $.Values.core.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+      volumes:
+        - name: shared-volume
+          emptyDir: {}
+        - name: metadata-versions
+          configMap:
+            name: {{ include "renku-core.fullname" $ }}-metadata-versions
+        {{- include "certificates.volumes" $ | nindent 8 }}
+      initContainers:
+        {{- include "certificates.initContainer" $ | nindent 8 }}
+      securityContext:
+        {{- toYaml $.Values.podSecurityContext | nindent 8 }}
+      automountServiceAccountToken: {{ $.Values.global.debug }}
+      containers:
+      {{ if $.Values.core.metrics.enabled }}
+        - name: {{ $.Chart.Name}}-rqmetrics
+          image: "{{ $.Values.core.metrics.image.repository }}:{{ $.Values.core.metrics.image.tag }}"
+          imagePullPolicy: {{ $.Values.core.metrics.image.pullPolicy }}
+          securityContext:
+            {{- toYaml $.Values.securityContext | nindent 12 }}
+          env:
+            - name: RQ_REDIS_HOST
+              value: {{ $.Values.global.redis.host | quote }}
+            - name: RQ_REDIS_PORT
+              value: {{ $.Values.global.redis.port | quote }}
+            - name: RQ_REDIS_DB
+              value: {{ $.Values.global.redis.dbIndex.coreService | quote }}
+            - name: RQ_REDIS_IS_SENTINEL
+              value: {{ $.Values.global.redis.sentinel.enabled | quote }}
+            - name: RQ_REDIS_MASTER_SET
+              value: {{ $.Values.global.redis.sentinel.masterSet | quote }}
+            - name: RQ_REDIS_PASS
+              valueFrom:
+                secretKeyRef:
+                  name: {{ $.Values.global.redis.existingSecret }}
+                  key: {{ $.Values.global.redis.existingSecretPasswordKey }}
+            - name: REDIS_NAMESPACE
+              value: {{ $version.name }}
+          ports:
+            - name: prometheus
+              containerPort: 8765
+              protocol: TCP
+      {{ end }}
+        - name: {{ $.Chart.Name }}
+          image: "{{ $version.image.repository }}:{{ $version.image.tag }}"
+          imagePullPolicy: {{ $version.image.pullPolicy }}
+          securityContext:
+            {{- toYaml $.Values.securityContext | nindent 12 }}
+          args: ["service", "api"]
+          env:
+            - name: REDIS_HOST
+              value: {{ $.Values.global.redis.host | quote }}
+            - name: REDIS_PORT
+              value: {{ $.Values.global.redis.port | quote }}
+            - name: REDIS_DATABASE
+              value: {{ $.Values.global.redis.dbIndex.coreService | quote }}
+            - name: REDIS_IS_SENTINEL
+              value: {{ $.Values.global.redis.sentinel.enabled | quote }}
+            - name: REDIS_MASTER_SET
+              value: {{ $.Values.global.redis.sentinel.masterSet | quote }}
+            - name: REDIS_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ $.Values.global.redis.existingSecret }}
+                  key: {{ $.Values.global.redis.existingSecretPasswordKey }}
+            - name: REDIS_NAMESPACE
+              value: {{ $version.name }}
+            - name: CACHE_DIR
+              value: {{ $.Values.core.cacheDirectory }}
+            - name: PROJECT_CLONE_DEPTH_DEFAULT
+              value: {{ $.Values.core.projectCloneDepth | quote }}
+            - name: TEMPLATE_CLONE_DEPTH_DEFAULT
+              value: {{ $.Values.core.templateCloneDepth | quote }}
+            - name: MAX_CONTENT_LENGTH
+              value: {{ $.Values.core.maximumUploadSizeBytes | quote }}
+            - name: REQUEST_TIMEOUT
+              value: {{ $.Values.core.requestTimeout | quote }}
+            - name: CORE_SERVICE_PREFIX
+              value: /renku
+            - name: CORE_SERVICE_API_BASE_PATH
+              value: {{ $.Values.core.apiBasePath }}
+            - name: RENKU_SVC_SWAGGER_URL
+              value: /renku/openapi.json
+            - name: SERVICE_LOG_LEVEL
+              value: {{ $.Values.core.logLevel }}
+            - name: SENTRY_ENABLED
+              value: {{ $.Values.core.sentry.enabled | quote }}
+            - name: SENTRY_DSN
+              value: {{ $.Values.core.sentry.dsn }}
+            - name: SENTRY_SAMPLE_RATE
+              value: {{ $.Values.core.sentry.sampleRate | quote }}
+            - name: SENTRY_ENV
+              value: {{ $.Values.core.sentry.environment }}
+            - name: METRICS_PORT
+              value: "8766"
+            {{ if $.Values.nWorkers }}
+            - name: RENKU_SVC_NUM_WORKERS
+              value: {{ $.Values.core.nWorkers | quote }}
+            {{ end }}
+            {{ if $.Values.core.nThreads }}
+            - name: RENKU_SVC_NUM_THREADS
+              value: {{ $.Values.core.nThreads | quote }}
+            {{ end }}
+            - name: GIT_LFS_SKIP_SMUDGE
+              value: {{ $.Values.core.gitLFSSkipSmudge | quote }}
+            - name: RENKU_DOMAIN
+              value: {{ $.Values.global.renku.domain }}
+            - name: RENKU_PROJECT_DEFAULT_CLI_VERSION
+              value: {{ $.Values.global.renku.cli_version | default "" | quote }}
+            - name: METADATA_VERSIONS_LIST
+              value: /svc/config/metadata-versions/metadata-versions.json
+            {{- include "certificates.env.python" $ | nindent 12 }}
+          volumeMounts:
+            - name: shared-volume
+              mountPath: {{ $.Values.core.cacheDirectory }}
+            - name: metadata-versions
+              mountPath: /svc/config/metadata-versions
+            {{- include "certificates.volumeMounts.system" $ | nindent 12 }}
+          ports:
+            - name: http
+              containerPort: 8080
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: http
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: http
+          resources:
+            {{- toYaml $.Values.core.resources.core | nindent 12 }}
+        - name: {{ $.Chart.Name }}-datasets-workers
+          image: "{{ $version.image.repository }}:{{ $version.image.tag }}"
+          imagePullPolicy: {{ $version.image.pullPolicy }}
+          securityContext:
+            {{- toYaml $.Values.securityContext | nindent 12 }}
+          args: ["service", "worker"]
+          env:
+            - name: REDIS_HOST
+              value: {{ $.Values.global.redis.host | quote }}
+            - name: REDIS_PORT
+              value: {{ $.Values.global.redis.port | quote }}
+            - name: REDIS_DATABASE
+              value: {{ $.Values.global.redis.dbIndex.coreService | quote }}
+            - name: REDIS_IS_SENTINEL
+              value: {{ $.Values.global.redis.sentinel.enabled | quote }}
+            - name: REDIS_MASTER_SET
+              value: {{ $.Values.global.redis.sentinel.masterSet | quote }}
+            - name: REDIS_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ $.Values.global.redis.existingSecret }}
+                  key: {{ $.Values.global.redis.existingSecretPasswordKey }}
+            - name: REDIS_NAMESPACE
+              value: {{ $version.name }}
+            - name: RENKU_JWT_TOKEN_SECRET
+              value: {{ $.Values.core.jwtTokenSecret }}
+            - name: CACHE_DIR
+              value: {{ $.Values.core.cacheDirectory }}
+            - name: RENKU_SVC_CLEANUP_INTERVAL
+              value: {{ $.Values.core.cleanupInterval | quote }}
+            - name: RENKU_SVC_WORKER_QUEUES
+              value: {{ $.Values.core.datasetsWorkerQueues}}
+            - name: RENKU_SVC_CLEANUP_TTL_FILES
+              value: {{ $.Values.core.cleanupFilesTTL | quote }}
+            - name: RENKU_SVC_CLEANUP_TTL_PROJECTS
+              value: {{ $.Values.core.cleanupProjectsTTL | quote }}
+            - name: DEPLOYMENT_LOG_LEVEL
+              value: {{ $.Values.core.logLevel }}
+            - name: SENTRY_ENABLED
+              value: {{ $.Values.core.sentry.enabled | quote }}
+            - name: SENTRY_DSN
+              value: {{ $.Values.core.sentry.dsn }}
+            - name: SENTRY_SAMPLE_RATE
+              value: {{ $.Values.core.sentry.sampleRate | quote }}
+            - name: SENTRY_ENV
+              value: {{ $.Values.core.sentry.environment }}
+            - name: GIT_LFS_SKIP_SMUDGE
+              value: {{ $.Values.core.gitLFSSkipSmudge | quote }}
+            - name: RENKU_DOMAIN
+              value: {{ $.Values.global.renku.domain }}
+            {{- include "certificates.env.python" $ | nindent 12 }}
+          volumeMounts:
+            - name: shared-volume
+              mountPath: {{ $.Values.core.cacheDirectory }}
+            {{- include "certificates.volumeMounts.system" $ | nindent 12 }}
+          resources:
+            {{- toYaml $.Values.core.resources.datasetsWorkers | nindent 12 }}
+
+        - name: {{ $.Chart.Name }}-management-workers
+          image: "{{ $version.image.repository }}:{{ $version.image.tag }}"
+          imagePullPolicy: {{ $version.image.pullPolicy }}
+          securityContext:
+            {{- toYaml $.Values.securityContext | nindent 12 }}
+          args: ["service", "worker"]
+          env:
+            - name: REDIS_HOST
+              value: {{ $.Values.global.redis.host | quote }}
+            - name: REDIS_PORT
+              value: {{ $.Values.global.redis.port | quote }}
+            - name: REDIS_DATABASE
+              value: {{ $.Values.global.redis.dbIndex.coreService | quote }}
+            - name: REDIS_IS_SENTINEL
+              value: {{ $.Values.global.redis.sentinel.enabled | quote }}
+            - name: REDIS_MASTER_SET
+              value: {{ $.Values.global.redis.sentinel.masterSet | quote }}
+            - name: REDIS_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ $.Values.global.redis.existingSecret }}
+                  key: {{ $.Values.global.redis.existingSecretPasswordKey }}
+            - name: REDIS_NAMESPACE
+              value: {{ $version.name }}
+            - name: CACHE_DIR
+              value: {{ $.Values.core.cacheDirectory }}
+            - name: RENKU_SVC_CLEANUP_INTERVAL
+              value: {{ $.Values.core.cleanupInterval | quote }}
+            - name: RENKU_SVC_WORKER_QUEUES
+              value: {{ $.Values.core.managementWorkerQueues }}
+            - name: RENKU_SVC_CLEANUP_TTL_FILES
+              value: {{ $.Values.core.cleanupFilesTTL | quote }}
+            - name: RENKU_SVC_CLEANUP_TTL_PROJECTS
+              value: {{ $.Values.core.cleanupProjectsTTL | quote }}
+            - name: DEPLOYMENT_LOG_LEVEL
+              value: {{ $.Values.core.logLevel }}
+            - name: SENTRY_ENABLED
+              value: {{ $.Values.core.sentry.enabled | quote }}
+            - name: SENTRY_DSN
+              value: {{ $.Values.core.sentry.dsn }}
+            - name: SENTRY_SAMPLE_RATE
+              value: {{ $.Values.core.sentry.sampleRate | quote }}
+            - name: SENTRY_ENV
+              value: {{ $.Values.core.sentry.environment }}
+            - name: GIT_LFS_SKIP_SMUDGE
+              value: {{ $.Values.core.gitLFSSkipSmudge | quote }}
+            - name: RENKU_DOMAIN
+              value: {{ $.Values.global.renku.domain }}
+            {{- include "certificates.env.python" $ | nindent 12 }}
+          volumeMounts:
+            - name: shared-volume
+              mountPath: {{ $.Values.core.cacheDirectory }}
+            {{- include "certificates.volumeMounts.system" $ | nindent 12 }}
+          resources:
+            {{- toYaml $.Values.core.resources.scheduler | nindent 12 }}
+      {{- with $.Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+    {{- with $.Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+    {{- with $.Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+{{ end }}

@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 Swiss Data Science Center (SDSC)
+ * Copyright 2024 Swiss Data Science Center (SDSC)
  * A partnership between École Polytechnique Fédérale de Lausanne (EPFL) and
  * Eidgenössische Technische Hochschule Zürich (ETHZ).
  *
@@ -19,7 +19,7 @@
 organization := "ch.renku"
 name := "renku-acceptance-tests"
 version := "0.1.0"
-scalaVersion := "2.13.11"
+scalaVersion := "2.13.12"
 
 Test / parallelExecution := false
 
@@ -30,22 +30,23 @@ publishTo := Some(Resolver.file("Unused transient repository", file("target/unus
 
 val circeVersion = "0.14.6"
 
-libraryDependencies += "ch.qos.logback"          % "logback-classic"          % "1.4.11"
-libraryDependencies += "com.github.pureconfig"  %% "pureconfig"               % "0.17.4"     % Test
-libraryDependencies += "eu.timepit"             %% "refined"                  % "0.11.0"     % Test
-libraryDependencies += "io.circe"               %% "circe-core"               % circeVersion % Test
-libraryDependencies += "io.circe"               %% "circe-literal"            % circeVersion % Test
-libraryDependencies += "io.circe"               %% "circe-parser"             % circeVersion % Test
-libraryDependencies += "io.circe"               %% "circe-optics"             % "0.14.1"     % Test
-libraryDependencies += "org.http4s"             %% "http4s-blaze-client"      % "0.23.15"    % Test
-libraryDependencies += "org.http4s"             %% "http4s-circe"             % "0.23.23"    % Test
-libraryDependencies += "org.scalacheck"         %% "scalacheck"               % "1.17.0"     % Test
-libraryDependencies += "org.scalatest"          %% "scalatest"                % "3.2.16"     % Test
-libraryDependencies += "org.scalatestplus"      %% "selenium-4-1"             % "3.2.12.1"   % Test
-libraryDependencies += "org.seleniumhq.selenium" % "selenium-http-jdk-client" % "4.12.1"     % Test
-libraryDependencies += "org.seleniumhq.selenium" % "selenium-java"            % "4.7.1"      % Test
-libraryDependencies += "org.slf4j"               % "slf4j-log4j12"            % "2.0.9"      % Test
-libraryDependencies += "org.typelevel"          %% "cats-effect"              % "3.5.1"      % Test
+libraryDependencies += "ch.qos.logback"          % "logback-classic"               % "1.4.14"
+libraryDependencies += "com.github.pureconfig"  %% "pureconfig"                    % "0.17.5"     % Test
+libraryDependencies += "eu.timepit"             %% "refined"                       % "0.11.1"     % Test
+libraryDependencies += "io.circe"               %% "circe-core"                    % circeVersion % Test
+libraryDependencies += "io.circe"               %% "circe-literal"                 % circeVersion % Test
+libraryDependencies += "io.circe"               %% "circe-parser"                  % circeVersion % Test
+libraryDependencies += "io.circe"               %% "circe-optics"                  % "0.15.0"     % Test
+libraryDependencies += "org.http4s"             %% "http4s-blaze-client"           % "0.23.16"    % Test
+libraryDependencies += "org.http4s"             %% "http4s-circe"                  % "0.23.25"    % Test
+libraryDependencies += "org.scalacheck"         %% "scalacheck"                    % "1.17.0"     % Test
+libraryDependencies += "org.scalatest"          %% "scalatest"                     % "3.2.17"     % Test
+libraryDependencies += "org.scalatestplus"      %% "selenium-4-1"                  % "3.2.12.1"   % Test
+libraryDependencies += "org.seleniumhq.selenium" % "selenium-http-jdk-client"      % "4.13.0"     % Test
+libraryDependencies += "org.seleniumhq.selenium" % "selenium-java"                 % "4.17.0"     % Test
+libraryDependencies += "org.slf4j"               % "slf4j-log4j12"                 % "2.0.11"     % Test
+libraryDependencies += "org.typelevel"          %% "cats-effect"                   % "3.5.3"      % Test
+libraryDependencies += "org.typelevel"          %% "cats-effect-testing-scalatest" % "1.5.0"      % Test
 
 scalacOptions += "-feature"
 scalacOptions += "-unchecked"

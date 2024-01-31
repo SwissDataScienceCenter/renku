@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 Swiss Data Science Center (SDSC)
+ * Copyright 2024 Swiss Data Science Center (SDSC)
  * A partnership between École Polytechnique Fédérale de Lausanne (EPFL) and
  * Eidgenössische Technische Hochschule Zürich (ETHZ).
  *
@@ -18,6 +18,8 @@
 
 package ch.renku.acceptancetests
 
+import ch.renku.acceptancetests.model.projects
+import ch.renku.acceptancetests.tooling.TestLogger.logger
 import ch.renku.acceptancetests.tooling.{AcceptanceSpec, KnowledgeGraphApi}
 import ch.renku.acceptancetests.workflows._
 
@@ -36,55 +38,63 @@ import scala.util.matching.Regex
   */
 class BatchProjectRemovalSpec extends AcceptanceSpec with Login with RemoveProject with KnowledgeGraphApi {
 
-  scenario("User can delete many projects project") {
+  private val gracePeriod = JDuration.ofDays(7)
 
-    if (batchRemoveConfig.batchRemove) `login and remove projects`
+  scenario("Delete old user's test projects") {
+
+    if (batchRemoveConfig.batchRemove) `remove projects`
     else Given("specifically asked to not remove projects")
   }
 
-  def `login and remove projects`: Unit = {
+  private def `remove projects`: Unit = {
 
-    `log in to Renku`
+    `verify user has GitLab credentials`
 
-    `find and remove projects`
+    val summary = `find and remove projects`
 
-    `log out of Renku`
+    logger.info(s"Removing summary: $summary")
   }
 
-  private def `find and remove projects`: Unit =
-    `get user's projects from GitLab` foreach { case ProjectInfo(_, path, fullPath, created) =>
-      Given(s"project $path found")
-
-      val days = JDuration.ofDays(7)
-      if (batchRemoveConfig.patterns.exists(_ matches path) && (created < Instant.now().minus(days))) {
-        And(s"the project matches the removal pattern and it's older than ${days.toDays} days")
-        Then("the project is removed")
-        `DELETE /knowledge-graph/projects/:path`(fullPath)
-      } else {
-        And(s"the project doesn't match the removal pattern or it's not older than ${days.toDays} days")
-        Then("project is left untouched")
-      }
+  private def `find and remove projects` =
+    `get user's projects from GitLab`.foldLeft(Summary.empty) {
+      case (summary, ProjectInfo(_, path, fullPath, created)) =>
+        if (batchRemoveConfig.patterns.exists(_ matches path) && (created < Instant.now().minus(gracePeriod))) {
+          logger.info(s"Removing '$path' - the removal pattern matches and it's older than ${gracePeriod.toDays} days")
+          `DELETE /knowledge-graph/projects/:slug`(projects.Slug(fullPath))
+          summary.incrementRemoved()
+        } else
+          summary.incrementFound()
     }
+
+  private case class Summary(found: Int, removed: Int) {
+    def incrementFound():   Summary = copy(found = found + 1)
+    def incrementRemoved(): Summary = incrementFound().copy(removed = removed + 1)
+
+    override lazy val toString = s"found: $found, removed: $removed"
+  }
+  private object Summary {
+    val empty: Summary = Summary(0, 0)
+  }
 
   private case class BatchRemoveConfig(batchRemove: Boolean, patterns: List[Regex])
 
   private lazy val batchRemoveConfig: BatchRemoveConfig = {
 
     val batchRemove =
-      Option(getProperty("batchRem"))
-        .orElse(sys.env.get("RENKU_TEST_BATCH_REMOVE"))
+      (Option(getProperty("batchRem")) orElse sys.env.get("RENKU_TEST_BATCH_REMOVE"))
         .flatMap(_.toBooleanOption)
         .getOrElse(true)
 
     val defaultPatterns = List(
       "test-(\\d{4})-(\\d+)-(\\d+)-(\\d+)-(\\d+)-(\\d+).*",
-      "test-session-.*"
+      "test-session-.*",
+      "cypress-.*"
     )
 
-    val projectNamePatterns = Option(getProperty("remPattern"))
-      .orElse(sys.env.get("RENKU_TEST_REMOVE_PATTERN"))
-      .map(List(_))
-      .getOrElse(defaultPatterns)
+    val projectNamePatterns =
+      (Option(getProperty("remPattern")) orElse sys.env.get("RENKU_TEST_REMOVE_PATTERN"))
+        .map(List(_))
+        .getOrElse(defaultPatterns)
 
     BatchRemoveConfig(batchRemove, projectNamePatterns.map(_.r))
   }

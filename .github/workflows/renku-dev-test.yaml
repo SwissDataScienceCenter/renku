@@ -8,12 +8,11 @@ jobs:
       github.event.client_payload.message == 'Helm test succeeded' }}
     runs-on: ubuntu-20.04
     steps:
-      - uses: SwissDataScienceCenter/renku-actions/test-renku@v1.5.2
+      - uses: SwissDataScienceCenter/renku-actions/test-renku@v1.9.1
         with:
           kubeconfig: ${{ secrets.RENKUBOT_DEV_KUBECONFIG }}
           renku-release: renku
           gitlab-token: ${{ secrets.DEV_GITLAB_TOKEN }}
-          persist: true
           s3-results-access-key: ${{ secrets.ACCEPTANCE_TESTS_BUCKET_ACCESS_KEY }}
           s3-results-secret-key: ${{ secrets.ACCEPTANCE_TESTS_BUCKET_SECRET_KEY }}
           test-timeout-mins: "80"
@@ -38,14 +37,14 @@ jobs:
           working-directory: cypress-tests
       # NOTE: cypress screenshots will be generated only if the test failed
       # thus we store screenshots only on failures
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         if: failure()
         with:
           name: cypress-screenshots
           path: cypress-tests/cypress/screenshots
           retention-days: 7
       # Cypress test video is always captured, so this action uses "always()" condition
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: cypress-videos

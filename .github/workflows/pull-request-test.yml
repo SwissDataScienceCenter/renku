@@ -19,7 +19,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-python@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: "temurin"
+          java-version: "17"
+      - uses: actions/setup-python@v5
         with:
           python-version: 3.9
       - name: install dependencies
@@ -37,7 +41,7 @@ jobs:
           sphinx-build -nNW -b spelling -d _build/doctrees . _build/spelling
           sphinx-build -qnNW . _build/html
       - name: Upload docs
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         if: success()
         with:
           name: docs
@@ -52,14 +56,13 @@ jobs:
       renku-graph: ${{ steps.deploy-comment.outputs.renku-graph}}
       renku-notebooks: ${{ steps.deploy-comment.outputs.renku-notebooks}}
       renku-ui: ${{ steps.deploy-comment.outputs.renku-ui}}
+      renku-data-services: ${{ steps.deploy-comment.outputs.renku-data-services}}
       test-enabled: ${{ steps.deploy-comment.outputs.test-enabled}}
-      test-cypress-enabled: ${{ steps.deploy-comment.outputs.test-cypress-enabled}}
       extra-values: ${{ steps.deploy-comment.outputs.extra-values}}
-      persist: ${{ steps.deploy-comment.outputs.persist }}
     steps:
       - uses: actions/checkout@v4
       - id: deploy-comment
-        uses: SwissDataScienceCenter/renku-actions/check-pr-description@v1.5.2
+        uses: SwissDataScienceCenter/renku-actions/check-pr-description@v1.9.1
         with:
           string: /deploy
           pr_ref: ${{ github.event.number }}
@@ -70,11 +73,12 @@ jobs:
     runs-on: ubuntu-22.04
     environment:
       name: ci-renku-${{ github.event.number }}
+      url: https://ci-renku-${{ github.event.number }}.dev.renku.ch
     steps:
       - uses: actions/checkout@v4
       - name: renku build and deploy
         if: needs.check-deploy.outputs.pr-contains-string == 'true'
-        uses: SwissDataScienceCenter/renku-actions/deploy-renku@v1.5.2
+        uses: SwissDataScienceCenter/renku-actions/deploy-renku@v1.9.1
         env:
           DOCKER_PASSWORD: ${{ secrets.RENKU_DOCKER_PASSWORD }}
           DOCKER_USERNAME: ${{ secrets.RENKU_DOCKER_USERNAME }}
@@ -83,7 +87,7 @@ jobs:
           RENKU_ANONYMOUS_SESSIONS: true
           RENKU_RELEASE: ci-renku-${{ github.event.number }}
           RENKU_VALUES_FILE: "${{ github.workspace }}/values.yaml"
-          RENKU_VALUES: ${{ secrets.CI_RENKU_VALUES }}
+          RENKU_VALUES: ${{ secrets.COMBINED_CHARTS_CI_RENKU_VALUES }}
           RENKUBOT_KUBECONFIG: ${{ secrets.RENKUBOT_DEV_KUBECONFIG }}
           TEST_ARTIFACTS_PATH: "tests-artifacts-${{ github.sha }}"
           renku: "@${{ github.head_ref }}"
@@ -92,6 +96,7 @@ jobs:
           renku_graph: "${{ needs.check-deploy.outputs.renku-graph }}"
           renku_notebooks: "${{ needs.check-deploy.outputs.renku-notebooks }}"
           renku_ui: "${{ needs.check-deploy.outputs.renku-ui }}"
+          renku_data_services: "${{ needs.check-deploy.outputs.renku-data-services }}"
           extra_values: "${{ needs.check-deploy.outputs.extra-values }}"
       - name: Check existing renkubot comment
         if: needs.check-deploy.outputs.pr-contains-string == 'true'
@@ -111,27 +116,20 @@ jobs:
             You can access the deployment of this PR at https://ci-renku-${{ github.event.number }}.dev.renku.ch
 
   test-pr:
-    if: ${{ github.event.action != 'closed' &&
-      needs.check-deploy.outputs.pr-contains-string == 'true' &&
-      needs.check-deploy.outputs.test-enabled == 'true' }}
+    if: github.event.action != 'closed' && needs.check-deploy.outputs.pr-contains-string == 'true' && needs.check-deploy.outputs.test-enabled == 'true'
     needs: [check-deploy, deploy-pr]
     runs-on: ubuntu-22.04
     steps:
-      - uses: SwissDataScienceCenter/renku-actions/test-renku@v1.5.2
+      - uses: SwissDataScienceCenter/renku-actions/test-renku@v1.9.1
         with:
           kubeconfig: ${{ secrets.RENKUBOT_DEV_KUBECONFIG }}
           renku-release: ci-renku-${{ github.event.number }}
           gitlab-token: ${{ secrets.DEV_GITLAB_TOKEN }}
-          persist: "${{ needs.check-deploy.outputs.persist }}"
           s3-results-access-key: ${{ secrets.ACCEPTANCE_TESTS_BUCKET_ACCESS_KEY }}
           s3-results-secret-key: ${{ secrets.ACCEPTANCE_TESTS_BUCKET_SECRET_KEY }}
           test-timeout-mins: "120"
 
   test-pr-cypress:
-    if: ${{ github.event.action != 'closed' &&
-      needs.check-deploy.outputs.pr-contains-string == 'true' &&
-      (needs.check-deploy.outputs.test-enabled == 'true' ||
-      needs.check-deploy.outputs.test-cypress-enabled == 'true') }}
     needs: [check-deploy, deploy-pr]
     runs-on: ubuntu-22.04
 
@@ -139,17 +137,20 @@ jobs:
       fail-fast: false
       max-parallel: 1
       matrix:
-        tests: [
-          publicProject,
-          privateProject,
-          updateProjects,
-          useSession,
-          checkWorkflows,
-          rstudioSession
-        ]
+        tests:
+          [
+            publicProject,
+            privateProject,
+            updateProjects,
+            testDatasets,
+            useSession,
+            checkWorkflows,
+            rstudioSession,
+          ]
 
     steps:
-      - uses: SwissDataScienceCenter/renku-actions/test-renku-cypress@v1.5.2
+      - uses: SwissDataScienceCenter/renku-actions/test-renku-cypress@v1.9.1
+        if: github.event.action != 'closed' && needs.check-deploy.outputs.pr-contains-string == 'true' && needs.check-deploy.outputs.test-enabled == 'true'
         with:
           e2e-target: ${{ matrix.tests }}
           renku-reference: ${{ github.ref }}
@@ -161,7 +162,7 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
       - name: renku teardown
-        uses: SwissDataScienceCenter/renku-actions/cleanup-renku-ci-deployments@v1.5.2
+        uses: SwissDataScienceCenter/renku-actions/cleanup-renku-ci-deployments@v1.9.1
         env:
           HELM_RELEASE_REGEX: "^ci-renku-${{ github.event.number }}$"
           GITLAB_TOKEN: ${{ secrets.DEV_GITLAB_TOKEN }}

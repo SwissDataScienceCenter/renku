@@ -1,32 +1,8 @@
 dependencies:
-- name: renku-core
-  alias: core
-  repository: "https://swissdatasciencecenter.github.io/helm-charts/"
-  version: 2.6.2
-  import-values:
-  - child: versions
-    parent: global.core.versions
-- name: renku-ui
-  alias: ui
-  repository: "https://swissdatasciencecenter.github.io/helm-charts/"
-  version: 3.11.0
-- name: renku-notebooks
-  alias: notebooks
-  repository: "https://swissdatasciencecenter.github.io/helm-charts/"
-  version: 1.18.0
-- name: renku-gateway
-  alias: gateway
-  repository: "https://swissdatasciencecenter.github.io/helm-charts/"
-  version: 0.21.3
 - name: gitlab
   repository: "https://swissdatasciencecenter.github.io/helm-charts/"
   version: 0.8.0
   condition: gitlab.enabled
-- name: renku-graph
-  alias: graph
-  repository: "https://swissdatasciencecenter.github.io/helm-charts/"
-  version: 2.40.0
-  condition: graph.enabled
 - name: postgresql
   version: 9.1.1
   repository: "https://raw.githubusercontent.com/bitnami/charts/eb5f9a9513d987b519f0ecd732e7031241c50328/bitnami"
@@ -35,12 +11,25 @@ dependencies:
   version: 2.1.0
   repository: "https://codecentric.github.io/helm-charts"
   condition: keycloakx.enabled
-- name: certificates
-  version: 0.0.4
-  repository: "https://swissdatasciencecenter.github.io/helm-charts/"
 - name: redis
   # bitnami claims that this will always contain a full set of charts - let us pray...
   # this index was 19MB as of the date of this commit and contained redis 17.4.2
   repository: "https://raw.githubusercontent.com/bitnami/charts/archive-full-index/bitnami"
   version: 17.4.2
   condition: redis.install
+- name: renku-jena
+  version: "0.0.23"
+  repository: "https://swissdatasciencecenter.github.io/helm-charts/"
+  alias: jena
+- name: amalthea
+  repository: "https://swissdatasciencecenter.github.io/helm-charts/"
+  version: "0.11.0"
+- name: dlf-chart
+  repository: "https://swissdatasciencecenter.github.io/datashim/"
+  version: "0.3.9-renku-2"
+  condition: notebooks.cloudstorage.s3.installDatashim
+- name: csi-rclone
+  repository: "https://swissdatasciencecenter.github.io/helm-charts/"
+  version: "0.1.5"
+  condition: global.csi-rclone.install
+  

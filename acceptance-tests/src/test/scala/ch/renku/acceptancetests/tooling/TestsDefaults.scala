@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 Swiss Data Science Center (SDSC)
+ * Copyright 2024 Swiss Data Science Center (SDSC)
  * A partnership between École Polytechnique Fédérale de Lausanne (EPFL) and
  * Eidgenössische Technische Hochschule Zürich (ETHZ).
  *
@@ -29,10 +29,10 @@ final case class TestsDefaults(env:               Option[String],
 )
 
 object TestsDefaults {
-  import java.nio.file.Paths
-
   import pureconfig.ConfigSource
   import pureconfig.generic.auto._
+
+  import java.nio.file.Paths
 
   private val defaultConfigFileName = "./tests-defaults.conf"
 

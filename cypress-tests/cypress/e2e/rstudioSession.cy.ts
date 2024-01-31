@@ -43,7 +43,7 @@ describe("Basic rstudio functionality", () => {
 
   after(() => {
     if (projectTestConfig.shouldCreateProject)
-      cy.deleteProject(projectIdentifier);
+      cy.deleteProjectFromAPI(projectIdentifier);
   });
 
   beforeEach(() => {
@@ -55,7 +55,6 @@ describe("Basic rstudio functionality", () => {
       },
       validateLogin
     );
-    cy.visitAndLoadProject(projectIdentifier);
     cy.stopAllSessionsForProject(projectIdentifier);
   });
 
@@ -63,10 +62,7 @@ describe("Basic rstudio functionality", () => {
     "Creates a project and launches an RStudio session",
     { defaultCommandTimeout: TIMEOUTS.long },
     () => {
-      // Waits for the image to build
-      cy.waitForImageToBuild(projectIdentifier);
-
-      // Launches a session
+      // Waits for the image to build and launches a session
       cy.startSession(projectIdentifier);
 
       // Opens the session in an iframe
@@ -97,7 +93,8 @@ describe("Basic rstudio functionality", () => {
       });
 
       // Stops the session
-      cy.stopSessionFromIframe();
+      cy.pauseSession();
+      cy.deleteSession();
     }
   );
 });
