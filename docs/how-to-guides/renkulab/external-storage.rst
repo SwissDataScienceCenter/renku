@@ -24,7 +24,10 @@ and highlight some current limitations:
   We support both Read-only and Read/Write access modes.
   Please note that explicitly marking an attached storage as Read-only is
   **strongly** encouraged every time you don't have write permissions. This
-  prevents unexpected error messages when trying to access the storage.
+  prevents unexpected error messages when trying to access the storage. Furthermore,
+  please be aware that allowing write access to your data could result in data loss, data corruption or
+  data being overwritten. Consult the documentation of your cloud storage provider to learn how to
+  setup access controls and data versioning if you want to protect your data.
 
 Adding external storage to a project
 ------------------------------------
@@ -155,7 +158,7 @@ mounting WebDAV resources in interactive sessions.
   We strongly encourage you to generate a token for accessing your private 
   OwnCloud/Nextcloud WebDAV shares to avoid sharing your account password. To create the token, go to
   "Settings: Security" in your cloud storage application and generate a new 
-  "Application passcode" at the bottom of the page. 
+  "Application pass-code" at the bottom of the page. 
 
 Here we show an example of adding an `ETH Polybox <https://polybox.ethz.ch>`_ drive to
 the session, but the procedure will be similar for any storage accessible via WebDAV. 
