@@ -41,6 +41,8 @@ instructions to go through the guided procedure.
   :align: center
   :alt: Cloud Storage section in the project settings
 
+|
+
 Step-by-step mode
 ~~~~~~~~~~~~~~~~~
 
@@ -91,6 +93,7 @@ hosted on AWS and show how to attach it to a Renku interactive session:
     :align: center
     :alt: Storage type and provider selection
 
+|
 
 - Fill in the form by using ``giab`` as the ``Source path``, and
   ``http://s3.amazonaws.com`` as the endpoint. We don't need any credentials, and
@@ -100,6 +103,7 @@ hosted on AWS and show how to attach it to a Renku interactive session:
     :align: center
     :alt: GIAB bucket options configuration
 
+|
 
 - On the last page, pick any name for the storage (e.g. ``Giab``), then mark
   this as Read-only. You can change the ``Mount point`` too; that determines the
@@ -109,6 +113,8 @@ hosted on AWS and show how to attach it to a Renku interactive session:
   .. image:: ../../_static/images/cloud_storage_4.png
     :align: center
     :alt: GIAB bucket final steps
+
+|
 
 .. note::
   The ``mount point`` is relative to the root of the project path in the session.
@@ -131,6 +137,8 @@ hosted on Azure and show how to attach it to a Renku interactive session:
     :align: center
     :alt: Azure blob storage selection
 
+|
+
 - Fill in the form by filling the ``Source path`` to mount (keep it blank to 
   mount the default root, or specify the folder) and the Account Name. Fill
   in the ``Shared Key``.  Click on the ``Next`` button.
@@ -138,6 +146,8 @@ hosted on Azure and show how to attach it to a Renku interactive session:
   .. image:: ../../_static/images/cloud_storage_6.png
     :align: center
     :alt: Azure blob options configuration
+
+|
 
 - On the last page, pick any name for the storage (e.g: `blob_storage``).
   You can change the ``Mount point`` too; that determines the
@@ -147,6 +157,8 @@ hosted on Azure and show how to attach it to a Renku interactive session:
   .. image:: ../../_static/images/cloud_storage_7.png
     :align: center
     :alt: Azure blob final steps
+
+|
 
 -  When you start your session, the blob storage will be available at the specified mount point. 
 
@@ -173,6 +185,8 @@ the session, but the procedure will be similar for any storage accessible via We
     :align: center
     :alt: WebDAV storage selection
 
+|
+
 - Fill in the form by providing the ``Source path`` to mount (keep it blank to mount the 
   default root, or specify the folder), and the URL to specify the host to connect to
   (``https://polybox.ethz.ch/remote.php/webdav/`` for `ETH Polybox <https://polybox.ethz.ch>`_).
@@ -181,6 +195,8 @@ the session, but the procedure will be similar for any storage accessible via We
   .. image:: ../../_static/images/cloud_storage_9.png
     :align: center
     :alt: WebDAV options configuration
+
+|
 
 - On the last page, pick any name for the storage (e.g: ``webdab_storage``).
   You can change the ``Mount point`` too; that determines the
@@ -191,12 +207,16 @@ the session, but the procedure will be similar for any storage accessible via We
     :align: center
     :alt: WebDAV final steps
 
+|
+
 - You will be able to access the cloud storage at the specified 
   mount point within your session.
 
   .. image:: ../../_static/images/cloud_storage_11.png
     :align: center
     :alt: Access to the mounted storage
+
+|
 
 Credentials
 -----------
