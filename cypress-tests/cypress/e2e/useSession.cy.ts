@@ -241,37 +241,48 @@ describe("Basic public project functionality", () => {
         return;
       }
 
-      cy.getDataCy("settings-container")
+      cy.getDataCy("cloud-storage-section")
         .find("button")
         .contains("Add Cloud Storage")
         .should("be.visible")
         .click();
-
-      cy.get(".modal").contains("Add Cloud Storage").should("be.visible");
-
-      cy.get("label").contains("Name").click();
-      cy.get(":focused").type("data_s3");
-
-      cy.get(".modal")
-        .contains("For AWS S3 buckets, supported URLs are of the form")
+      cy.getDataCy("cloud-storage-edit-header")
+        .contains("Add Cloud Storage")
         .should("be.visible");
-      cy.get("label").contains("Endpoint URL").click();
-      cy.get(":focused").type("s3://giab");
 
-      cy.get("label")
-        .contains("Requires credentials")
-        .siblings("input")
-        .click()
-        .should("not.be.checked");
+      cy.getDataCy("cloud-storage-edit-schema")
+        .contains("s3")
+        .should("be.visible")
+        .click();
+      cy.getDataCy("cloud-storage-edit-providers")
+        .contains("AWS")
+        .should("be.visible")
+        .click();
+      cy.getDataCy("cloud-storage-edit-next-button").should("be.visible").click();
 
-      // NOTE: Temporarily removed this from the tests until we enable read-write
-      // cy.get("label")
-      //   .contains("Read-only")
-      //   .siblings("input")
-      //   .should("be.checked");
+      cy.getDataCy("cloud-storage-edit-options").should("be.visible");
+      cy.get("#sourcePath").should("have.value", "").type("giab");
+      cy.get("#endpoint")
+        .should("have.value", "")
+        .type("http://s3.amazonaws.com");
+      cy.getDataCy("cloud-storage-edit-next-button").should("be.visible").click();
 
-      cy.get("button[type='submit']")
-        .contains("Add Storage")
+      cy.getDataCy("cloud-storage-edit-mount").should("be.visible");
+      cy.get("#name").should("have.value", "").type("data_s3");
+      cy.get("#mountPoint")
+        .should("have.value", "external_storage/data_s3")
+        .type("{selectAll}data_s3");
+      cy.get("#readOnly").should("not.be.checked").check();
+
+      cy.getDataCy("cloud-storage-edit-update-button")
+        .should("be.visible")
+        .contains("Add")
+        .click();
+
+      cy.getDataCy("cloud-storage-edit-body").contains(
+        "storage data_s3 has been succesfully added"
+      );
+      cy.getDataCy("cloud-storage-edit-close-button")
         .should("be.visible")
         .click();
     });
@@ -289,6 +300,8 @@ describe("Basic public project functionality", () => {
     cy.get(".renku-container .badge.bg-success", { timeout: TIMEOUTS.vlong })
       .contains("available")
       .should("exist");
+    cy.getDataCy("cloud-storage-item").contains("data_s3").should("exist");
+    cy.get("#cloud-storage-data_s3-active").should("be.checked");
     cy.get(".renku-container button.btn-secondary", { timeout: TIMEOUTS.long })
       .contains("Start Session")
       .should("exist")

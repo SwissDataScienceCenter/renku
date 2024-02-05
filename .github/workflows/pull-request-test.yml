@@ -21,8 +21,8 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-java@v4
         with:
-          distribution: 'temurin'
-          java-version: '17'
+          distribution: "temurin"
+          java-version: "17"
       - uses: actions/setup-python@v5
         with:
           python-version: 3.9
@@ -73,6 +73,7 @@ jobs:
     runs-on: ubuntu-22.04
     environment:
       name: ci-renku-${{ github.event.number }}
+      url: https://ci-renku-${{ github.event.number }}.dev.renku.ch
     steps:
       - uses: actions/checkout@v4
       - name: renku build and deploy
@@ -129,7 +130,6 @@ jobs:
           test-timeout-mins: "120"
 
   test-pr-cypress:
-    if: github.event.action != 'closed' && needs.check-deploy.outputs.pr-contains-string == 'true' && needs.check-deploy.outputs.test-enabled == 'true'
     needs: [check-deploy, deploy-pr]
     runs-on: ubuntu-22.04
 
@@ -137,18 +137,20 @@ jobs:
       fail-fast: false
       max-parallel: 1
       matrix:
-        tests: [
-          publicProject,
-          privateProject,
-          updateProjects,
-          testDatasets,
-          useSession,
-          checkWorkflows,
-          rstudioSession
-        ]
+        tests:
+          [
+            publicProject,
+            privateProject,
+            updateProjects,
+            testDatasets,
+            useSession,
+            checkWorkflows,
+            rstudioSession,
+          ]
 
     steps:
       - uses: SwissDataScienceCenter/renku-actions/test-renku-cypress@v1.9.1
+        if: github.event.action != 'closed' && needs.check-deploy.outputs.pr-contains-string == 'true' && needs.check-deploy.outputs.test-enabled == 'true'
         with:
           e2e-target: ${{ matrix.tests }}
           renku-reference: ${{ github.ref }}
