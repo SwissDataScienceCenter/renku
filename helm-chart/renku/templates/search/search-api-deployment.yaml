@@ -1,0 +1,69 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ template "renku.search.searchApi.fullname" . }}
+  labels:
+    app: {{ template "renku.search.searchApi.name" . }}
+    chart: {{ template "renku.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  replicas: {{ .Values.search.searchApi.replicas }}
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: {{ template "renku.search.searchApi.name" . }}
+      release: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app: {{ template "renku.search.searchApi.name" . }}
+        release: {{ .Release.Name }}
+    spec:
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      automountServiceAccountToken: {{ .Values.global.debug }}
+      containers:
+        - name: search-api
+          image: "{{ .Values.search.searchApi.image.repository }}:{{ .Values.search.searchApi.image.tag }}"
+          imagePullPolicy: {{ .Values.search.searchApi.image.pullPolicy }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          env:
+            - name: RS_SOLR_URL
+              value: http://{{ .Values.global.solr.fullname }}:{{ .Values.global.solr.port }}/solr
+            - name: RS_SOLR_CORE
+              value: renku-search
+            - name: RS_SOLR_DEFAULT_COMMIT_WITHIN
+              value: 500ms
+            - name: RS_SOLR_LOG_MESSAGE_BODIES
+              value: false
+            - name: JAVA_OPTS
+              value: -Xmx{{ .Values.search.searchApi.jvmXmx }} -XX:+UseG1GC
+          ports:
+            - name: http-search-api
+              containerPort: 8080
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /ping
+              port: http-search-api
+          readinessProbe:
+            httpGet:
+              path: /ping
+              port: http-search-api
+          resources:
+            {{- toYaml .Values.search.searchApi.resources | nindent 12 }}
+  {{- with .Values.nodeSelector }}
+nodeSelector:
+  {{ toYaml . | indent 8 }}
+  {{- end }}
+  {{- with .Values.affinity }}
+affinity:
+  {{ toYaml . | indent 8 }}
+  {{- end }}
+  {{- with .Values.tolerations }}
+tolerations:
+  {{ toYaml . | indent 8 }}
+  {{- end }}

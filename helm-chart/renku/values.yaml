@@ -129,6 +129,11 @@ global:
   ## postgresql-password key containing the password for the posgres user.
   # existingSecret:
 
+  # Globally available solr (TBD)
+  solr:
+    host: renku-solr
+    port: 8983
+
   # Connection details for a globally used redis instance for the
   # entire platform. For specifying an actual instance as part of
   # this chart, check out the non-global "redis" section.
@@ -1296,6 +1301,32 @@ jena:
   additionalInitContainerScript: "find /fuseki -name tdb.lock -type f -delete && find /fuseki/configuration -name *.ttl -type f -empty -delete && echo clean-up done"
   test:
     enabled: false
+search:
+  searchApi:
+    replicas: 1
+    image:
+      repository: renku/search-apu
+      tag: "0.0.1"
+      pullPolicy: IfNotPresent
+    service:
+      type: ClusterIp
+      port: 80
+    resources:
+      requests:
+        memory: 256Mi
+    jvmXmx: 256M
+  searchProvision:
+    replicas: 1
+    image:
+      repository: renku/search-provision
+      tag: "0.0.1"
+      pullPolicy: IfNotPresent
+    service:
+      type: ClusterIp
+    resources:
+      requests:
+        memory: 256Mi
+    jvmXmx: 256M
 graph:
   webhookService:
     aesEncryptionKey: # A 8, 16 or 32 bytes string used for AES encryption of the project tokens
