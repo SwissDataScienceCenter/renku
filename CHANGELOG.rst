@@ -4,6 +4,11 @@
 ------
 
 
+0.47.1
+------
+
+This release only includes changes to the documentation and updates to the acceptance tests.
+It doesn't bring any new features or bug fixes.
 
 0.47.0
 ------
