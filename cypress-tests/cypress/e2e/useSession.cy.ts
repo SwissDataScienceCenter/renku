@@ -233,74 +233,87 @@ describe("Basic public project functionality", () => {
         return;
       }
 
-      cy.stopAllSessionsForProject(projectIdentifier);
-      cy.intercept("/ui-server/api/data/storage*").as("getProjectCloudStorage");
+      cy.getDataCy("cloud-storage-section")
+        .find("button")
+        .contains("Add Cloud Storage")
+        .should("be.visible")
+        .click();
+      cy.getDataCy("cloud-storage-edit-header")
+        .contains("Add Cloud Storage")
+        .should("be.visible");
 
-      cy.getProjectSection("Settings").click();
-      cy.getDataCy("settings-navbar")
-        .contains("a.nav-link", "Cloud Storage")
+      cy.getDataCy("cloud-storage-edit-schema")
+        .contains("s3")
+        .should("be.visible")
+        .click();
+      cy.getDataCy("cloud-storage-edit-providers")
+        .contains("AWS")
+        .should("be.visible")
+        .click();
+      cy.getDataCy("cloud-storage-edit-next-button").should("be.visible").click();
+
+      cy.getDataCy("cloud-storage-edit-options").should("be.visible");
+      cy.get("#sourcePath").should("have.value", "").type("giab");
+      cy.get("#endpoint")
+        .should("have.value", "")
+        .type("http://s3.amazonaws.com");
+      cy.getDataCy("cloud-storage-edit-next-button").should("be.visible").click();
+
+      cy.getDataCy("cloud-storage-edit-mount").should("be.visible");
+      cy.get("#name").should("have.value", "").type("data_s3");
+      cy.get("#mountPoint")
+        .should("have.value", "external_storage/data_s3")
+        .type("{selectAll}data_s3");
+      cy.get("#readOnly").should("not.be.checked").check();
+
+      cy.getDataCy("cloud-storage-edit-update-button")
+        .should("be.visible")
+        .contains("Add")
+        .click();
+
+      cy.getDataCy("cloud-storage-edit-body").contains(
+        "storage data_s3 has been succesfully added"
+      );
+      cy.getDataCy("cloud-storage-edit-close-button")
         .should("be.visible")
         .click();
 
-      // Add a S3 storage configuration if it doesn't exist
-      cy.wait("@getProjectCloudStorage").then(({ response }) => {
-        const storages = response.body as { storage: { name: string } }[];
-        if (storages.find(({ storage }) => storage.name === "data_s3")) {
-          return;
-        }
-  
-        cy.getDataCy("cloud-storage-section")
-          .find("button")
-          .contains("Add Cloud Storage")
-          .should("be.visible")
-          .click();
-        cy.getDataCy("cloud-storage-edit-header")
-          .contains("Add Cloud Storage")
-          .should("be.visible");
-  
-        cy.getDataCy("cloud-storage-edit-schema")
-          .contains("s3")
-          .should("be.visible")
-          .click();
-        cy.getDataCy("cloud-storage-edit-providers")
-          .contains("AWS")
-          .should("be.visible")
-          .click();
-        cy.getDataCy("cloud-storage-edit-next-button")
-          .should("be.visible")
-          .click();
-  
-        cy.getDataCy("cloud-storage-edit-options").should("be.visible");
-        cy.get("#sourcePath").should("have.value", "").type("giab");
-        cy.get("#endpoint")
-          .should("have.value", "")
-          .type("http://s3.amazonaws.com");
-        cy.getDataCy("cloud-storage-edit-next-button")
-          .should("be.visible")
-          .click();
-  
-        cy.getDataCy("cloud-storage-edit-mount").should("be.visible");
-        cy.get("#name").should("have.value", "").type("data_s3");
-        cy.get("#mountPoint")
-          .should("have.value", "external_storage/data_s3")
-          .type("{selectAll}data_s3");
-        cy.get("#readOnly").should("not.be.checked").check();
-  
-        cy.getDataCy("cloud-storage-edit-update-button")
-          .should("be.visible")
-          .contains("Add")
-          .click();
-  
-        cy.getDataCy("cloud-storage-edit-body").contains(
-          "storage data_s3 has been succesfully added"
-        );
-        cy.getDataCy("cloud-storage-edit-close-button")
-          .should("be.visible")
-          .click();
-      });
-  
-      cy.getDataCy("more-menu").should("be.visible").click();
-      cy.getProjectPageLink(projectIdentifier, "sessions/new")
+    // Wait for the image to be ready and start a session
+    cy.get(".renku-container")
+      .contains("A session gives you an environment")
+      .should("exist");
+    cy.get(".renku-container .badge.bg-success", { timeout: TIMEOUTS.vlong })
+      .contains("available")
+      .should("exist");
+    cy.getDataCy("cloud-storage-item").contains("data_s3").should("exist");
+    cy.get("#cloud-storage-data_s3-active").should("be.checked");
+    cy.get(".renku-container button.btn-secondary", { timeout: TIMEOUTS.long })
+      .contains("Start Session")
+      .should("exist")
+      .click();
+    cy.get(".progress-box .progress-title").should("exist"); //.contains("Step 2 of 2");
+    cy.get("button")
+      .contains(projectTestConfig.projectName)
+      .should("be.visible");
+    cy.get(".progress-box .progress-title")
+      .contains("Starting Session")
+      .should("exist");
+    cy.get(".progress-box .progress-title", { timeout: TIMEOUTS.vlong }).should(
+      "not.exist"
+    );
+
+    // Verify that the S3 data is mounted
+    cy.getIframe("iframe#session-iframe").within(() => {
+      cy.get(".jp-DirListing-content", { timeout: TIMEOUTS.long }).should(
+        "be.visible"
+      );
+      cy.get(".jp-DirListing-item")
+        .contains("data_s3")
+        .should("be.visible")
+        .dblclick();
+
+      cy.get(".jp-DirListing-item")
+        .contains("README.s3_structure")
         .should("be.visible")
         .first()
         .click();
