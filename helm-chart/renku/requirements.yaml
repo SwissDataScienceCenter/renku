@@ -4,8 +4,8 @@ dependencies:
     version: 0.8.0
     condition: gitlab.enabled
   - name: postgresql
-    version: 9.1.1
-    repository: "https://raw.githubusercontent.com/bitnami/charts/eb5f9a9513d987b519f0ecd732e7031241c50328/bitnami"
+    version: 14.0.1
+    repository: "https://charts.bitnami.com/bitnami"
     condition: postgresql.enabled
   - name: keycloakx
     version: 2.1.0

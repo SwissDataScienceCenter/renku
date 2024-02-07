@@ -1,4 +1,15 @@
 .. _changelog:
+0.xx.0
+------
+
+Renku ``0.xx.0`` is a release that exclusively changes internal components and has no effect on the end-user.
+Upgrades the PostgreSQL Helm chart version that is shipped with the Renku Helm chart.
+
+NOTE for administrators: make sure to check `helm-chart/values.yaml.changelog.md` for instructions on how to
+upgrade to this version of Renku.
+**Improvements**
+
+- **Infrastructure**: (BREAKING CHANGE) Upgrade the version of PostgreSQL to 16.1.0. This requires modifying your current values file to work with the new PostgreSQL Helm chart, see (`the helm chart values changelog <https://github.com/SwissDataScienceCenter/renku/blob/master/helm-chart/values.yaml.changelog.md>`_) for instructions.
 
 0.48.0
 ------
