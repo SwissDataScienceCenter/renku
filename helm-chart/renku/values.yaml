@@ -62,7 +62,7 @@ global:
         fullnameOverride: ""
         image:
           repository: renku/renku-core
-          tag: "v2.9.1"
+          tag: "v2.9.2"
           pullPolicy: IfNotPresent
   uiserver:
     ## The client secret for the renku-ui client application registered in keycloak.
@@ -855,15 +855,15 @@ dlf-chart:
   dataset-operator-chart:
     enabled: true
 csi-rclone: {}
-  # This section is only relevant if you are installing csi-rclone as part of Renku
-  ## Name of the csi storage class to use for RClone/Cloudstorage. Should be unique per cluster.
-  # storageClassName: csi-rclone 
-  # csiNodepluginRclone:
-  #   nodeSelector: {}
-  # Set tolerations if you have taints on your user session nodes. The csi has to run on every node 
-  # where it is used.
-  #   tolerations: []
-  #   affinity: {}
+# This section is only relevant if you are installing csi-rclone as part of Renku
+## Name of the csi storage class to use for RClone/Cloudstorage. Should be unique per cluster.
+# storageClassName: csi-rclone 
+# csiNodepluginRclone:
+#   nodeSelector: {}
+# Set tolerations if you have taints on your user session nodes. The csi has to run on every node 
+# where it is used.
+#   tolerations: []
+#   affinity: {}
 notebooks:
   cloudstorage:
     ## If enabled this will allow mounting of rclone cloudstorage
@@ -1512,4 +1512,4 @@ affinity: {}
 versions:
   latest:
     image:
-      tag: v2.9.1
+      tag: v2.9.2
