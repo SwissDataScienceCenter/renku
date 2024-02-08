@@ -4,6 +4,7 @@ adhoc
 admin
 Amalthea
 analytics
+api
 app
 aqs
 args
@@ -249,6 +250,7 @@ statuspage
 stderr
 stdin
 stdout
+storages
 subclass
 Subclass
 subclasses
@@ -301,6 +303,7 @@ unmapped
 unmerged
 Unmount
 unmount
+unpause
 unpushed
 unschedulable
 untracked
