@@ -295,7 +295,7 @@ keycloakx:
     enabled: false
   extraInitContainers: |
     - name: theme-provider
-      image: renku/keycloak-theme:4.1.3
+      image: renku/keycloak-theme:4.1.5
       imagePullPolicy: IfNotPresent
       command:
         - sh
@@ -858,10 +858,10 @@ dlf-chart:
 csi-rclone: {}
   # This section is only relevant if you are installing csi-rclone as part of Renku
   ## Name of the csi storage class to use for RClone/Cloudstorage. Should be unique per cluster.
-  # storageClassName: csi-rclone 
+  # storageClassName: csi-rclone
   # csiNodepluginRclone:
   #   nodeSelector: {}
-  # Set tolerations if you have taints on your user session nodes. The csi has to run on every node 
+  # Set tolerations if you have taints on your user session nodes. The csi has to run on every node
   # where it is used.
   #   tolerations: []
   #   affinity: {}
