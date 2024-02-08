@@ -186,6 +186,10 @@ global:
       ## The contents of the 'password' key is used.
       ## The secret is not re-generated or modified in any way if it already exists.
       passwordSecretName: renku-db-common-password
+  csi-rclone:
+    # Set to true to install csi-rclone alongside renku
+    # Make sure to configure the csi-rclone section below correctly in that case.
+    install: false
 ## Ingress configuration
 ## See: https://kubernetes.io/docs/concepts/services-networking/ingress/
 ingress:
@@ -609,7 +613,7 @@ ui:
     replicaCount: 1
     image:
       repository: renku/renku-ui
-      tag: "3.17.3"
+      tag: "3.19.0"
       pullPolicy: IfNotPresent
       ## Optionally specify an array of imagePullSecrets.
       ## Secrets must be manually created in the namespace.
@@ -768,7 +772,7 @@ ui:
     keepCookies: []
     image:
       repository: renku/renku-ui-server
-      tag: "3.17.3"
+      tag: "3.19.0"
       pullPolicy: IfNotPresent
     imagePullSecrets: []
     nameOverride: ""
@@ -837,10 +841,6 @@ amalthea:
   scope:
     clusterWide: false
   deployCrd: true
-  ## If enabling S3 mounts uncomment the section below
-  # extraChildResources:
-  #   - name: datasets
-  #     group: com.ie.ibm.hpsys
 ## Used only if S3 Mounts are enabled
 dlf-chart:
   csi-sidecars-rbac:
@@ -854,20 +854,24 @@ dlf-chart:
     enabled: false
   dataset-operator-chart:
     enabled: true
+csi-rclone: {}
+  # This section is only relevant if you are installing csi-rclone as part of Renku
+  ## Name of the csi storage class to use for RClone/Cloudstorage. Should be unique per cluster.
+  # storageClassName: csi-rclone 
+  # csiNodepluginRclone:
+  #   nodeSelector: {}
+  # Set tolerations if you have taints on your user session nodes. The csi has to run on every node 
+  # where it is used.
+  #   tolerations: []
+  #   affinity: {}
 notebooks:
   cloudstorage:
-    ## If enabled this will allow mounting of buckets into user sessions
-    ## from any S3-compatible storage provider.
+    ## If enabled this will allow mounting of rclone cloudstorage
+    enabled: false
+    ## should match csi-rclone.storageClassName if you use a custom name
+    # storageClass: csi-rclone
     s3:
-      enabled: false
       installDatashim: false
-      readOnly: true
-    ## Azure blob storage mounting support is experimental. The CSI
-    ## storage driver for mounting azure blob storage has to be already installed
-    ## in the cluster if enabled.
-    azureBlob:
-      enabled: false
-      readOnly: true
   # configuration for user session persistent volumes
   userSessionPersistentVolumes:
     enabled: true
@@ -912,7 +916,7 @@ notebooks:
     targetCPUUtilizationPercentage: 50
   image:
     repository: renku/renku-notebooks
-    tag: "1.20.3"
+    tag: "1.21.0"
     pullPolicy: IfNotPresent
     ## Optionally specify an array of imagePullSecrets.
     ## Secrets must be manually created in the namespace.
@@ -1030,15 +1034,15 @@ notebooks:
   gitRpcServer:
     image:
       name: renku/git-rpc-server
-      tag: "1.20.2"
+      tag: "1.21.0"
   gitHttpsProxy:
     image:
       name: renku/git-https-proxy
-      tag: "1.20.2"
+      tag: "1.21.0"
   gitClone:
     image:
       name: renku/git-clone
-      tag: "1.20.2"
+      tag: "1.21.0"
   service:
     type: ClusterIP
     port: 80
@@ -1091,12 +1095,12 @@ notebooks:
     sessionTypes: ["registered"]
     image:
       repository: renku/renku-notebooks-tests
-      tag: "1.20.2"
+      tag: "1.21.0"
       pullPolicy: IfNotPresent
   k8sWatcher:
     image:
       repository: renku/k8s-watcher
-      tag: "1.20.2"
+      tag: "1.21.0"
       pullPolicy: IfNotPresent
     resources: {}
     replicaCount: 1
@@ -1109,7 +1113,7 @@ notebooks:
     enabled: false
     image:
       repository: renku/ssh-jump-host
-      tag: "1.20.2"
+      tag: "1.21.0"
       pullPolicy: IfNotPresent
     resources: {}
     replicaCount: 1
@@ -1476,7 +1480,7 @@ initDb:
 dataService:
   image:
     repository: renku/renku-data-service
-    tag: "0.3.0"
+    tag: "0.4.0"
     pullPolicy: IfNotPresent
   keycloakSync:
     image:

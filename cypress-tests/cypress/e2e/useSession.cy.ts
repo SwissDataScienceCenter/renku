@@ -224,108 +224,135 @@ describe("Basic public project functionality", () => {
   });
 
   it("Start a new session with cloud storage attached.", () => {
-    cy.stopAllSessionsForProject(projectIdentifier);
-
-    cy.intercept("/ui-server/api/data/storage*").as("getProjectCloudStorage");
-
-    cy.getProjectSection("Settings").click();
-    cy.getDataCy("settings-navbar")
-      .contains("a.nav-link", "Cloud Storage")
-      .should("be.visible")
-      .click();
-
-    // Add a S3 storage configuration if it doesn't exist
-    cy.wait("@getProjectCloudStorage").then(({ response }) => {
-      const storages = response.body as { storage: { name: string } }[];
-      if (storages.find(({ storage }) => storage.name === "data_s3")) {
+    // verify that cloud storage is supported in the deployment
+    cy.request({ url: "ui-server/api/notebooks/version" }).then((resp) => {
+      if (!resp.body.versions[0].data.cloudstorageEnabled) {
+        cy.log(
+          "Skipping the test since the deployment doesn't support Cloud Storage"
+        );
         return;
       }
 
-      cy.getDataCy("settings-container")
-        .find("button")
-        .contains("Add Cloud Storage")
+      cy.stopAllSessionsForProject(projectIdentifier);
+      cy.intercept("/ui-server/api/data/storage*").as("getProjectCloudStorage");
+
+      cy.getProjectSection("Settings").click();
+      cy.getDataCy("settings-navbar")
+        .contains("a.nav-link", "Cloud Storage")
         .should("be.visible")
         .click();
 
-      cy.get(".modal").contains("Add Cloud Storage").should("be.visible");
-
-      cy.get("label").contains("Name").click();
-      cy.get(":focused").type("data_s3");
-
-      cy.get(".modal")
-        .contains("For AWS S3 buckets, supported URLs are of the form")
+      // Add a S3 storage configuration if it doesn't exist
+      cy.wait("@getProjectCloudStorage").then(({ response }) => {
+        const storages = response.body as { storage: { name: string } }[];
+        if (storages.find(({ storage }) => storage.name === "data_s3")) {
+          return;
+        }
+  
+        cy.getDataCy("cloud-storage-section")
+          .find("button")
+          .contains("Add Cloud Storage")
+          .should("be.visible")
+          .click();
+        cy.getDataCy("cloud-storage-edit-header")
+          .contains("Add Cloud Storage")
+          .should("be.visible");
+  
+        cy.getDataCy("cloud-storage-edit-schema")
+          .contains("s3")
+          .should("be.visible")
+          .click();
+        cy.getDataCy("cloud-storage-edit-providers")
+          .contains("AWS")
+          .should("be.visible")
+          .click();
+        cy.getDataCy("cloud-storage-edit-next-button")
+          .should("be.visible")
+          .click();
+  
+        cy.getDataCy("cloud-storage-edit-options").should("be.visible");
+        cy.get("#sourcePath").should("have.value", "").type("giab");
+        cy.get("#endpoint")
+          .should("have.value", "")
+          .type("http://s3.amazonaws.com");
+        cy.getDataCy("cloud-storage-edit-next-button")
+          .should("be.visible")
+          .click();
+  
+        cy.getDataCy("cloud-storage-edit-mount").should("be.visible");
+        cy.get("#name").should("have.value", "").type("data_s3");
+        cy.get("#mountPoint")
+          .should("have.value", "external_storage/data_s3")
+          .type("{selectAll}data_s3");
+        cy.get("#readOnly").should("not.be.checked").check();
+  
+        cy.getDataCy("cloud-storage-edit-update-button")
+          .should("be.visible")
+          .contains("Add")
+          .click();
+  
+        cy.getDataCy("cloud-storage-edit-body").contains(
+          "storage data_s3 has been succesfully added"
+        );
+        cy.getDataCy("cloud-storage-edit-close-button")
+          .should("be.visible")
+          .click();
+      });
+  
+      cy.getDataCy("more-menu").should("be.visible").click();
+      cy.getProjectPageLink(projectIdentifier, "sessions/new")
+        .should("be.visible")
+        .first()
+        .click();
+  
+      // Wait for the image to be ready and start a session
+      cy.get(".renku-container")
+        .contains("A session gives you an environment")
+        .should("exist");
+      cy.get(".renku-container .badge.bg-success", { timeout: TIMEOUTS.vlong })
+        .contains("available")
+        .should("exist");
+      cy.getDataCy("cloud-storage-item").contains("data_s3").should("exist");
+      cy.get("#cloud-storage-data_s3-active").should("be.checked");
+      cy.get(".renku-container button.btn-secondary", { timeout: TIMEOUTS.long })
+        .contains("Start Session")
+        .should("exist")
+        .click();
+      cy.get(".progress-box .progress-title").should("exist"); //.contains("Step 2 of 2");
+      cy.get("button")
+        .contains(projectTestConfig.projectName)
         .should("be.visible");
-      cy.get("label").contains("Endpoint URL").click();
-      cy.get(":focused").type("s3://giab");
-
-      cy.get("label")
-        .contains("Requires credentials")
-        .siblings("input")
-        .click()
-        .should("not.be.checked");
-
-      // NOTE: Temporarily removed this from the tests until we enable read-write
-      // cy.get("label")
-      //   .contains("Read-only")
-      //   .siblings("input")
-      //   .should("be.checked");
-
-      cy.get("button[type='submit']")
-        .contains("Add Storage")
-        .should("be.visible")
-        .click();
-    });
-
-    cy.getDataCy("more-menu").should("be.visible").click();
-    cy.getProjectPageLink(projectIdentifier, "sessions/new")
-      .should("be.visible")
-      .first()
-      .click();
-
-    // Wait for the image to be ready and start a session
-    cy.get(".renku-container")
-      .contains("A session gives you an environment")
-      .should("exist");
-    cy.get(".renku-container .badge.bg-success", { timeout: TIMEOUTS.vlong })
-      .contains("available")
-      .should("exist");
-    cy.get(".renku-container button.btn-secondary", { timeout: TIMEOUTS.long })
-      .contains("Start Session")
-      .should("exist")
-      .click();
-    cy.get(".progress-box .progress-title").should("exist"); //.contains("Step 2 of 2");
-    cy.get("button")
-      .contains(projectTestConfig.projectName)
-      .should("be.visible");
-    cy.get(".progress-box .progress-title")
-      .contains("Starting Session")
-      .should("exist");
-    cy.get(".progress-box .progress-title", { timeout: TIMEOUTS.vlong }).should(
-      "not.exist"
-    );
-
-    // Verify that the S3 data is mounted
-    cy.getIframe("iframe#session-iframe").within(() => {
-      cy.get(".jp-DirListing-content", { timeout: TIMEOUTS.long }).should(
-        "be.visible"
+      cy.get(".progress-box .progress-title")
+        .contains("Starting Session")
+        .should("exist");
+      cy.get(".progress-box .progress-title", { timeout: TIMEOUTS.vlong }).should(
+        "not.exist"
       );
-      cy.get(".jp-DirListing-item")
-        .contains("data_s3")
-        .should("be.visible")
-        .dblclick();
-
-      cy.get(".jp-DirListing-item")
-        .contains("README.s3_structure")
-        .should("be.visible")
-        .dblclick();
-
-      cy.get(".jp-FileEditor", { timeout: TIMEOUTS.long }).should("be.visible");
-      cy.get(".jp-FileEditor")
-        .contains("The GIAB s3 bucket and URLs")
-        .should("be.visible");
+  
+      // Verify that the S3 data is mounted
+      cy.getIframe("iframe#session-iframe").within(() => {
+        cy.get(".jp-DirListing-content", { timeout: TIMEOUTS.long }).should(
+          "be.visible"
+        );
+        cy.get(".jp-DirListing-item")
+          .contains("data_s3")
+          .should("be.visible")
+          .dblclick();
+  
+        cy.get(".jp-DirListing-item")
+          .contains("README.s3_structure")
+          .should("be.visible")
+          .dblclick();
+  
+        cy.get(".jp-FileEditor", { timeout: TIMEOUTS.long }).should("be.visible");
+        cy.get(".jp-FileEditor")
+          .contains("The GIAB s3 bucket and URLs")
+          .should("be.visible");
+      });
+  
+      cy.pauseSession();
+      cy.deleteSession();
     });
-
-    cy.pauseSession();
-    cy.deleteSession();
   });
+  
 });
