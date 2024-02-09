@@ -613,7 +613,7 @@ ui:
     replicaCount: 1
     image:
       repository: renku/renku-ui
-      tag: "3.20.0"
+      tag: "3.20.1"
       pullPolicy: IfNotPresent
       ## Optionally specify an array of imagePullSecrets.
       ## Secrets must be manually created in the namespace.
@@ -773,7 +773,7 @@ ui:
     keepCookies: []
     image:
       repository: renku/renku-ui-server
-      tag: "3.20.0"
+      tag: "3.20.1"
       pullPolicy: IfNotPresent
     imagePullSecrets: []
     nameOverride: ""
@@ -855,7 +855,8 @@ dlf-chart:
     enabled: false
   dataset-operator-chart:
     enabled: true
-csi-rclone: {}
+csi-rclone:
+  {}
   # This section is only relevant if you are installing csi-rclone as part of Renku
   ## Name of the csi storage class to use for RClone/Cloudstorage. Should be unique per cluster.
   # storageClassName: csi-rclone
