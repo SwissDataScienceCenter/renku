@@ -138,7 +138,16 @@ jobs:
       fail-fast: false
       max-parallel: 1
       matrix:
-        tests: [checkWorkflows]
+        tests:
+          [
+            publicProject,
+            privateProject,
+            updateProjects,
+            testDatasets,
+            useSession,
+            checkWorkflows,
+            rstudioSession,
+          ]
       
     outputs:
       cypress-tests-result: ${{ steps.set-result.outputs.cypress-tests-result }}
@@ -157,13 +166,14 @@ jobs:
         run: echo "::set-output name=cypress-tests-result::${{ job.status }}"
   
   test-pr-cypress-passed:
+    if: always()
     needs: [test-pr-cypress]
     runs-on: ubuntu-22.04
     steps:
       - name: Debug - Print cypress-tests-result
         run: echo "cypress-tests-result='${{ needs.test-pr-cypress.outputs.cypress-tests-result }}'"
       - run: |
-          if [[ "${{ needs.test-pr-cypress.outputs.cypress-tests-result }}" == "success" || "${{ needs.test-pr-cypress.outputs.cypress-tests-result }}" == "skipped" ]]; then
+          if [[ "${{ needs.test-pr-cypress.outputs.cypress-tests-result }}" == "success" || "${{ needs.test-pr-cypress.outputs.cypress-tests-result }}" == "" ]]; then
             exit 0
           else
             exit 1
