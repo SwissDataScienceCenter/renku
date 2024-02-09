@@ -162,9 +162,9 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
       - name: Debug - Print CYPRESS_TESTS_RESULTS
-        run: echo "CYPRESS_TESTS_RESULTS='${{ env.CYPRESS_TESTS_RESULTS }}'"
+        run: echo "CYPRESS_TESTS_RESULTS='${{ needs.test-pr-cypress.outputs.CYPRESS_TESTS_RESULTS }}'"
       - run: |
-          if [[ "${{ env.CYPRESS_TESTS_RESULTS }}" == "success" || "${{ env.CYPRESS_TESTS_RESULTS }}" == "skipped" ]]; then
+          if [[ "${{ needs.test-pr-cypress.outputs.CYPRESS_TESTS_RESULTS }}" == "success" || "${{ needs.test-pr-cypress.outputs.CYPRESS_TESTS_RESULTS }}" == "skipped" ]]; then
             exit 0
           else
             exit 1
