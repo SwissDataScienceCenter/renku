@@ -3,22 +3,24 @@
 User interface configuration options
 ------------------------------------
 
-Privacy page
-~~~~~~~~~~~~
+Privacy page and Terms of Use
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-The UI has a privacy page with a completely configurable content, suited for showing
-any policy/terms related information, like the `Privacy Policy Statement` or the
-`Terms of Use`.
+The UI can be configured to show a `Privacy Policy` and `Terms of Use`. These are
+displayed under the `Help` section of the UI.
 
-The content is read from a ``ConfigMap``. You need to configure the values in
-``ui.privacy.page`` to enable the feature and set the reference ConfigMap name and key.
-Both ``ui.privacy.enabled`` and ``ui.privacy.page.enabled`` need to be ``true`` for
-enabling the privacy page.
+For each of these, the content is read from a ``ConfigMap``. You need to configure
+the values in ``ui.client.privacy.page`` to enable the feature and set the reference
+ConfigMap name and key. If ``ui.client.privacy.page.enabled`` is ``true``, then the privacy
+policy and terms of use will be shown in the UI, with content taken from the ConfigMap
+specified by ``ui.client.privacy.page.configMapName`` at the key
+``ui.client.privacy.page.configMapPolicyKey`` for the privacy policy and
+``ui.client.privacy.page.configMapTermsKey`` for the terms of use.
 
 .. note::
 
   If you don't set the ConfigMap name and key,
-  `a sample <https://github.com/SwissDataScienceCenter/renku-ui/blob/master/helm-chart/renku-ui/templates/configmap.yaml>`_
+  `a sample <https://github.com/SwissDataScienceCenter/renku/blob/master/helm-chart/renku/templates/ui/ui-client-configmap.yaml>`_
   will be used instead. You can start from it as a template to create your customized ConfigMap.
 
 The `Markdown syntax <https://en.wikipedia.org/wiki/Markdown>`_ is fully supported for the
@@ -33,7 +35,7 @@ for anonymous users (i.e. without an account or not currently logged in). To com
 international laws, it's strongly advised to explicitly require consent to the user for storing
 these data and using cookies.
 
-To activate this feature, please set ``ui.privacy.enabled: true``. We have already configured a
+To activate this feature, please set ``ui.privacy.banner.enabled: true``. We have already configured a
 default cookie banner to inform the users about the aforementioned requirements and points to
 point them to the privacy page for further details.
 
