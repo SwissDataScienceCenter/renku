@@ -153,10 +153,10 @@ jobs:
           test-user-password: ${{ secrets.RENKU_BOT_DEV_PASSWORD }}
       - name: Set Cypress tests global result
         id: set-result
+        if: always()
         run: echo "::set-output name=cypress-tests-result::${{ job.status }}"
   
   test-pr-cypress-passed:
-    if: always()
     needs: [test-pr-cypress]
     runs-on: ubuntu-22.04
     steps:
