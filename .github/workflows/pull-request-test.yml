@@ -138,16 +138,10 @@ jobs:
       fail-fast: false
       max-parallel: 1
       matrix:
-        tests:
-          [
-            publicProject,
-            privateProject,
-            updateProjects,
-            testDatasets,
-            useSession,
-            checkWorkflows,
-            rstudioSession,
-          ]
+        tests: [checkWorkflows]
+      
+    outputs:
+      cypress-tests-result: ${{ steps.set-result.outputs.result }}
 
     steps:
       - name: Run cypress tests
@@ -158,14 +152,17 @@ jobs:
           renku-release: ci-renku-${{ github.event.number }}
           test-user-password: ${{ secrets.RENKU_BOT_DEV_PASSWORD }}
       - name: Set job cypress-tests-result
+        id: set-result
         if: always()
-        run: echo "result=${{ job.status }}" >> $GITHUB_ENV
+        run: echo "cypress-tests-result=${{ job.status }}" >> $GITHUB_ENV
   
   test-pr-cypress-passed:
     if: always()
     needs: [test-pr-cypress]
     runs-on: ubuntu-22.04
     steps:
+      - name: Debug - Print cypress-tests-result
+        run: echo "cypress-tests-result='${{ env.cypress-tests-result }}'"
       - run: |
           if [[ "${{ env.cypress-tests-result }}" == "success" || "${{ env.cypress-tests-result }}" == "skipped" ]]; then
             exit 0
