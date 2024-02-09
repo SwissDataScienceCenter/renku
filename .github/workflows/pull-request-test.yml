@@ -130,11 +130,12 @@ jobs:
           test-timeout-mins: "120"
 
   test-pr-cypress:
+    if: github.event.action != 'closed' && needs.check-deploy.outputs.pr-contains-string == 'true' && needs.check-deploy.outputs.test-enabled == 'true'
     needs: [check-deploy, deploy-pr]
     runs-on: ubuntu-22.04
 
     strategy:
-      # fail-fast: false
+      fail-fast: false
       max-parallel: 1
       matrix:
         tests:
@@ -150,12 +151,24 @@ jobs:
 
     steps:
       - uses: SwissDataScienceCenter/renku-actions/test-renku-cypress@v1.10.0
-        if: github.event.action != 'closed' && needs.check-deploy.outputs.pr-contains-string == 'true' && needs.check-deploy.outputs.test-enabled == 'true'
         with:
           e2e-target: ${{ matrix.tests }}
           renku-reference: ${{ github.ref }}
           renku-release: ci-renku-${{ github.event.number }}
           test-user-password: ${{ secrets.RENKU_BOT_DEV_PASSWORD }}
+  
+  test-pr-cypress-passed:
+    if: always()
+    needs: [test-pr-cypress]
+    runs-on: ubuntu-22.04
+    steps:
+      - run: |
+          result="${{ needs.test-pr-cypress.build.result }}"
+          if [[ $result == "success" || $result == "skipped" ]]; then
+            exit 0
+          else
+            exit 1
+          fi
 
   cleanup:
     if: github.event.action == 'closed'
