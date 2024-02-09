@@ -141,30 +141,30 @@ jobs:
         tests: [checkWorkflows]
       
     outputs:
-      CYPRESS_TESTS_RESULTS: ${{ steps.set-result.outputs.CYPRESS_TESTS_RESULTS }}
+      cypress-tests-result: ${{ steps.set-result.outputs.cypress-tests-result }}
 
     steps:
-      - name: Run cypress tests
+      - name: Run Cypress tests one by one
         uses: SwissDataScienceCenter/renku-actions/test-renku-cypress@v1.10.0
         with:
           e2e-target: ${{ matrix.tests }}
           renku-reference: ${{ github.ref }}
           renku-release: ci-renku-${{ github.event.number }}
           test-user-password: ${{ secrets.RENKU_BOT_DEV_PASSWORD }}
-      - name: Set cypress tests result
+      - name: Set Cypress tests global result
         id: set-result
         if: always()
-        run: echo "CYPRESS_TESTS_RESULTS=${{ job.status }}" >> $GITHUB_ENV
+        run: echo "::set-output name=cypress-tests-result::${{ job.status }}"
   
   test-pr-cypress-passed:
     if: always()
     needs: [test-pr-cypress]
     runs-on: ubuntu-22.04
     steps:
-      - name: Debug - Print CYPRESS_TESTS_RESULTS
-        run: echo "CYPRESS_TESTS_RESULTS='${{ needs.test-pr-cypress.outputs.CYPRESS_TESTS_RESULTS }}'"
+      - name: Debug - Print cypress-tests-result
+        run: echo "cypress-tests-result='${{ needs.test-pr-cypress.outputs.cypress-tests-result }}'"
       - run: |
-          if [[ "${{ needs.test-pr-cypress.outputs.CYPRESS_TESTS_RESULTS }}" == "success" || "${{ needs.test-pr-cypress.outputs.CYPRESS_TESTS_RESULTS }}" == "skipped" ]]; then
+          if [[ "${{ needs.test-pr-cypress.outputs.cypress-tests-result }}" == "success" || "${{ needs.test-pr-cypress.outputs.cypress-tests-result }}" == "skipped" ]]; then
             exit 0
           else
             exit 1
