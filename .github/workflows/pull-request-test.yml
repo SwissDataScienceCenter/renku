@@ -141,7 +141,7 @@ jobs:
         tests: [checkWorkflows]
       
     outputs:
-      cypress-tests-result: ${{ steps.set-result.outputs.result }}
+      CYPRESS_TESTS_RESULTS: ${{ steps.set-result.outputs.CYPRESS_TESTS_RESULTS }}
 
     steps:
       - name: Run cypress tests
@@ -151,20 +151,20 @@ jobs:
           renku-reference: ${{ github.ref }}
           renku-release: ci-renku-${{ github.event.number }}
           test-user-password: ${{ secrets.RENKU_BOT_DEV_PASSWORD }}
-      - name: Set job cypress-tests-result
+      - name: Set cypress tests result
         id: set-result
         if: always()
-        run: echo "cypress-tests-result=${{ job.status }}" >> $GITHUB_ENV
+        run: echo "CYPRESS_TESTS_RESULTS=${{ job.status }}" >> $GITHUB_ENV
   
   test-pr-cypress-passed:
     if: always()
     needs: [test-pr-cypress]
     runs-on: ubuntu-22.04
     steps:
-      - name: Debug - Print cypress-tests-result
-        run: echo "cypress-tests-result='${{ env.cypress-tests-result }}'"
+      - name: Debug - Print CYPRESS_TESTS_RESULTS
+        run: echo "CYPRESS_TESTS_RESULTS='${{ env.CYPRESS_TESTS_RESULTS }}'"
       - run: |
-          if [[ "${{ env.cypress-tests-result }}" == "success" || "${{ env.cypress-tests-result }}" == "skipped" ]]; then
+          if [[ "${{ env.CYPRESS_TESTS_RESULTS }}" == "success" || "${{ env.CYPRESS_TESTS_RESULTS }}" == "skipped" ]]; then
             exit 0
           else
             exit 1
