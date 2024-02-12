@@ -32,7 +32,7 @@ spec:
             {{- toYaml .Values.securityContext | nindent 12 }}
           env:
             - name: RS_REDIS_URL
-              value: "redis://{{ .Values.global.redis.host }}:{{ .Values.global.redis.port }}"
+              value: "redis://{{ .Values.global.redis.host }}:{{ .Values.global.redis.port }}/{{ $.Values.global.redis.dbIndex.events }}"
             - name: RS_REDIS_QUEUE_NAME
               value: "events"
             - name: RS_SOLR_URL

@@ -143,6 +143,7 @@ global:
       gateway: "0"
       coreService: "1"
       uiServer: "2"
+      events: "3"
     # Note: these two entries MUST match the ones in the top level redis section.
     existingSecret: redis-secret
     existingSecretPasswordKey: redis-password
