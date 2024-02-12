@@ -20,6 +20,8 @@ spec:
       labels:
         app: {{ template "renku.search.searchProvision.name" . }}
         release: {{ .Release.Name }}
+        # The label below enables to connect to redis
+        {{ .Values.global.redis.clientLabel | toYaml | nindent 8 }}
     spec:
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
