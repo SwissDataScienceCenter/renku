@@ -486,6 +486,7 @@ solr:
     size: 8Gi
   zookeeper:
     enabled: false
+  coreNames: ["renku-search"]
 ## Gitlab configuration
 gitlab:
   ## Spawn a gitlab instance
