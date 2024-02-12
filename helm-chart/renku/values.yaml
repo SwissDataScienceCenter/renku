@@ -1317,15 +1317,16 @@ jena:
   additionalInitContainerScript: "find /fuseki -name tdb.lock -type f -delete && find /fuseki/configuration -name *.ttl -type f -empty -delete && echo clean-up done"
   test:
     enabled: false
+## Configuration for renku-search services
 search:
   searchApi:
     replicas: 1
     image:
-      repository: renku/search-apu
+      repository: renku/search-api
       tag: "0.0.1"
       pullPolicy: IfNotPresent
     service:
-      type: ClusterIp
+      type: ClusterIP
       port: 80
     resources:
       requests:
@@ -1338,11 +1339,12 @@ search:
       tag: "0.0.1"
       pullPolicy: IfNotPresent
     service:
-      type: ClusterIp
+      type: ClusterIP
     resources:
       requests:
         memory: 256Mi
     jvmXmx: 256M
+## Configuration for renku-graph services
 graph:
   webhookService:
     aesEncryptionKey: # A 8, 16 or 32 bytes string used for AES encryption of the project tokens
