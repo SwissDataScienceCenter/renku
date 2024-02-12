@@ -32,11 +32,11 @@ spec:
             {{- toYaml .Values.securityContext | nindent 12 }}
           env:
             - name: RS_REDIS_URL
-              value: redis://{{ .Values.global.redis.host }}:{{ .Values.global.redis.port }}
+              value: "redis://{{ .Values.global.redis.host }}:{{ .Values.global.redis.port }}"
             - name: RS_REDIS_QUEUE_NAME
               value: events
             - name: RS_SOLR_URL
-              value: http://{{ .Values.global.solr.host }}:{{ .Values.global.solr.port }}/solr
+              value: "http://{{ .Values.global.solr.host }}:{{ .Values.global.solr.port }}/solr"
             - name: RS_SOLR_CORE
               value: renku-search
             - name: RS_SOLR_DEFAULT_COMMIT_WITHIN
@@ -59,6 +59,10 @@ spec:
           #     port: http-search-provision
           resources:
             {{- toYaml .Values.search.searchProvision.resources | nindent 12 }}
+          volumeMounts:
+            {{- include "certificates.volumeMounts.javaCertsGeneral" . | nindent 12 }}
+      volumes:
+        {{- include "certificates.volumes" . | nindent 8 }}
   {{- with .Values.nodeSelector }}
 nodeSelector:
   {{ toYaml . | indent 8 }}
