@@ -8,7 +8,7 @@ metadata:
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
 spec:
-  type: {{ .Values.search.searchApi.service.type }}
+  type: {{ .Values.search.searchProvision.service.type }}
   # ports:
   #   - port: {{ .Values.search.searchApi.service.port }}
   #     targetPort: http-search-provision

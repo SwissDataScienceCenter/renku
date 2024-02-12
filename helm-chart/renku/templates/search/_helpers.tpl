@@ -15,7 +15,7 @@ Create a default fully qualified app name.
 We truncate at 63 chars because some Kubernetes name fields are limited to this (by the DNS naming spec).
 If release name contains chart name it will be used as a full name.
 */}}
-{{- define "renku.search.searchService.fullname" -}}
+{{- define "renku.search.searchApi.fullname" -}}
 {{- if .Values.fullnameOverride -}}
 {{- printf "%s-search-api" .Values.fullnameOverride | trunc 63 | trimSuffix "-" -}}
 {{- else -}}

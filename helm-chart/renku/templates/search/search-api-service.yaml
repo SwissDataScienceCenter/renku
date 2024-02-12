@@ -1,9 +1,9 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ template "renku.search.searchService.fullname" . }}
+  name: {{ template "renku.search.searchApi.fullname" . }}
   labels:
-    app: {{ template "renku.search.searchService.name" . }}
+    app: {{ template "renku.search.searchApi.name" . }}
     chart: {{ template "renku.chart" . }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
