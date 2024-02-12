@@ -28,6 +28,9 @@ User-Facing Changes
   (`#3014 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3014>`_).
 - **UI**: Hide button to add storage on deployments not supporting external storages
   (`#3001 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3001>`_).
+- **UI**: Fix landing page parallax background (`#3010 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3010>`_).
+- **UI**: Fix search bar styles (`#3019 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3019>`_).
+- **UI**: Handle ``jsonrpc`` improper redirects (`#3017 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3017>`_, `#2966 <https://github.com/SwissDataScienceCenter/renku-ui/issues/2966>`_).
 
 Internal Changes
 ~~~~~~~~~~~~~~~~
@@ -41,6 +44,7 @@ Individual Components
 ~~~~~~~~~~~~~~~~~~~~~
 
 - `renku-python 2.9.2 <https://github.com/SwissDataScienceCenter/renku-python/releases/tag/2.9.2>`_
+- `renku-ui 3.20.1 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.20.1>`_
 - `renku-ui 3.20.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.20.0>`_
 
 0.47.1
