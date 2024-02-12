@@ -126,6 +126,7 @@ spec:
             name: {{ $knowledgeGraphFullname }}
             port:
               number: 80
+      {{- end }}
       - path: /search
         pathType: Prefix
         backend:
@@ -133,7 +134,6 @@ spec:
             name: {{ $searchApiFullname }}
             port:
               number: 80
-      {{- end }}
       {{- if $swaggerEnabled }}
       - path: /swagger
         pathType: Prefix
