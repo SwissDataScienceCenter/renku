@@ -42,7 +42,7 @@ spec:
             - name: RS_SOLR_DEFAULT_COMMIT_WITHIN
               value: "500ms"
             - name: RS_SOLR_LOG_MESSAGE_BODIES
-              value: false
+              value: "false"
             - name: JAVA_OPTS
               value: "-Xmx{{ .Values.search.searchProvision.jvmXmx }} -XX:+UseG1GC"
           # ports:
