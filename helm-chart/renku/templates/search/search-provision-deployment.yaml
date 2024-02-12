@@ -45,18 +45,6 @@ spec:
               value: "false"
             - name: JAVA_OPTS
               value: "-Xmx{{ .Values.search.searchProvision.jvmXmx }} -XX:+UseG1GC"
-          # ports:
-          #   - name: http-search-provision
-          #     containerPort: 8080
-          #     protocol: TCP
-          # livenessProbe:
-          #   httpGet:
-          #     path: /ping
-          #     port: http-search-provision
-          # readinessProbe:
-          #   httpGet:
-          #     path: /ping
-          #     port: http-search-provision
           resources:
             {{- toYaml .Values.search.searchProvision.resources | nindent 12 }}
           volumeMounts:
