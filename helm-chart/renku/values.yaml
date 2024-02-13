@@ -475,6 +475,8 @@ redis:
 solr:
   enabled: false
   cloudEnabled: false
+  networkPolicy:
+    enabled: false # Awaiting instructions from: https://github.com/bitnami/charts/issues/23424
   persistence:
     enabled: true
     size: 8Gi
