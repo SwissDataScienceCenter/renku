@@ -475,6 +475,8 @@ redis:
 solr:
   enabled: false
   cloudEnabled: false
+  coreNames:
+    - renku-search
   networkPolicy:
     enabled: false # Awaiting instructions from: https://github.com/bitnami/charts/issues/23424
   persistence:
