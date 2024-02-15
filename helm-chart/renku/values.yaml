@@ -131,7 +131,6 @@ global:
 
   # Globally available solr (TBD)
   solr:
-    host: renku-solr
     port: 8983
 
   # Connection details for a globally used redis instance for the
