@@ -3,6 +3,9 @@
 0.48.0
 ------
 
+Renku ``0.48.0`` introduces the ability to add a Terms of Use and Privacy Policy to
+RenkuLab, as well as an asssortment of small improvements and bugfixes.
+
 User-Facing Changes
 ~~~~~~~~~~~~~~~~~~~
 
