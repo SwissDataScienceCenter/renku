@@ -33,13 +33,13 @@ spec:
             items:
             {{- if .Values.ui.client.privacy.page.privacyPolicyContent }}
             - key: "privacy_statement"
-            {{- else }
+            {{- else }}
             - key: "sample_privacy_statement"
             {{- end }}
               path: statement.md
             {{- if .Values.ui.client.privacy.page.termsContent }}
             - key: "terms"
-            {{- else }
+            {{- else }}
             - key: "sample_terms"
             {{- end }}
               path: terms.md
