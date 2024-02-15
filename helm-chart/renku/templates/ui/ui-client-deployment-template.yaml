@@ -29,11 +29,19 @@ spec:
       volumes:
         - name: privacy
           configMap:
-            name: {{ .Values.ui.client.privacy.page.configMapName | default (printf "%s-privacy-sample" (include "renku.fullname" .)) | quote }}
+            name: {{ printf "%s-privacy-and-terms" (include "renku.fullname" .) | quote }}
             items:
-            - key: {{ .Values.ui.client.privacy.page.configMapPolicyKey | default (printf "privacy_statement") | quote }}
+            {{- if .Values.ui.client.privacy.page.privacyPolicyContent }}
+            - key: "privacy_statement"
+            {{- else }
+            - key: "sample_privacy_statement"
+            {{- end }}
               path: statement.md
-            - key: {{ .Values.ui.client.privacy.page.configMapTermsKey | default (printf "terms") | quote }}
+            {{- if .Values.ui.client.privacy.page.termsContent }}
+            - key: "terms"
+            {{- else }
+            - key: "sample_terms"
+            {{- end }}
               path: terms.md
 
       {{- end }}

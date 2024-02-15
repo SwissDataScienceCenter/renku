@@ -692,15 +692,14 @@ ui:
       dsn: ""
       environment: ""
       sampleRate: 0 # number between 0 and 1. (e.g., to send 20% of transactions, set 0.2.)
-    # If you want to enable the privacy page, please create also a configMap and set its name in the
-    # privacy.page.configMapName value. As a reference, you can use the sample configMap generated when
-    # enabling the feature.
     privacy:
+      # If you want to enable the Privacy Policy and Terms of Service pages, you shoud add your custom content
+      # in privacyPolicyContent and termsContent. Markdown is supported.
+      # As a reference, you can use the "ui-client-configmap" configMap content in the "sample" sections.
       page:
         enabled: false
-        #configMapName: privacy-page
-        #configMapPolicyKey: privacy_statement
-        #configMapTermsKey: terms
+        #privacyPolicyContent: ""
+        #termsContent: ""
       banner:
         enabled: false
         content: |
