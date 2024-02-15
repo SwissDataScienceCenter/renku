@@ -481,6 +481,9 @@ redis:
 solr:
   enabled: false
   cloudEnabled: false
+  auth:
+    adminUsername: renku
+    adminPassword: renku
   coreNames:
     - renku-search
   networkPolicy:

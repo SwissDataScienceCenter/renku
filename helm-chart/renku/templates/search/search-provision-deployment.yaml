@@ -40,7 +40,7 @@ spec:
             - name: RS_SOLR_URL
               value: "http://{{ .Values.global.solr.host }}:{{ .Values.global.solr.port }}/solr"
             - name: RS_SOLR_CORE
-              value: "renku-search"
+              value: {{ (index .Values.global.solr.coreNames 0) }}
             - name: RS_SOLR_DEFAULT_COMMIT_WITHIN
               value: "500ms"
             - name: RS_SOLR_LOG_MESSAGE_BODIES
