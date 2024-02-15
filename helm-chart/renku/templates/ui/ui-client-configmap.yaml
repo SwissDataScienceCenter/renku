@@ -41,5 +41,5 @@ data:
     ## Apply the changes
     If you edit the ConfigMap content and you don't upgrade the deployment from helm, keep in mind that the
     ui pod needs to be manually re-deployed in order to apply the changes to the terms page.
-  privacy_statement: {{ .Values.ui.client.privacy.page.privacy_statement | default ("") }}
+  privacy_statement: {{ .Values.ui.client.privacy.page.privacy_statement | default (printf "") }}
   terms: {{ .Values.ui.client.privacy.page.terms | default ("") }}
