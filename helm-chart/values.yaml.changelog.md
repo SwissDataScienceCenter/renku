@@ -9,6 +9,7 @@ Please follow this convention when adding a new row
 
 The handling of privacy policy and terms of service content has been fine tuned.
 
+* DELETE `ui.client.privacy.page.configMapName` has been removed.
 * DELETE `ui.client.privacy.page.configMapPolicyKey` has been removed.
 * DELETE `ui.client.privacy.page.configMapTermsKey` has been removed.
 * NEW ``ui.client.privacy.page.privacyPolicyContent`` to customize the content of the Privacy Policy page (supports Markdown).
