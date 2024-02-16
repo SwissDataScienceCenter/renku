@@ -79,6 +79,10 @@ global:
     ## for a new project based on its own version.
     ## NOTE should only be set for CI deployments and development purposes.
     cli_version:
+  ## Events related values definitions
+  events:
+    streams:
+      - project.created
   ## Note that the graph will not turned on by default until renku 0.4.0
   graph:
     dbEventLog:
@@ -1330,7 +1334,7 @@ search:
     replicas: 1
     image:
       repository: renku/search-api
-      tag: "0.0.5"
+      tag: "0.0.6"
       pullPolicy: IfNotPresent
     service:
       type: ClusterIP
@@ -1343,7 +1347,7 @@ search:
     replicas: 1
     image:
       repository: renku/search-provision
-      tag: "0.0.5"
+      tag: "0.0.6"
       pullPolicy: IfNotPresent
     service:
       type: ClusterIP

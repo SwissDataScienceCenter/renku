@@ -44,7 +44,7 @@ spec:
             - name: RS_SOLR_LOG_MESSAGE_BODIES
               value: "false"
             - name: JAVA_OPTS
-              value: "-Xmx{{ .Values.search.searchApi.jvmXmx }} -XX:+UseG1GC"
+              value: "-Xmx{{ .Values.search.searchApi.jvmXmx }} -XX:+UseZGC -XX:+ZGenerational"
           ports:
             - name: http-search-api
               containerPort: 8080
