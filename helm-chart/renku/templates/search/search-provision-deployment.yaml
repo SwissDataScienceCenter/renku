@@ -44,7 +44,7 @@ spec:
                 secretKeyRef:
                   name: {{ .Values.global.redis.existingSecret }}
                   key: {{ .Values.global.redis.existingSecretPasswordKey }}
-            - name: RS_REDIS_URL
+            - name: RS_REDIS_MASTER_SET
               value: {{ .Values.global.redis.sentinel.masterSet | quote }}
             - name: RS_REDIS_QUEUE_NAME
               value: {{ first .Values.global.events.streams }}
