@@ -1,5 +1,11 @@
 .. _changelog:
 
+0.48.1
+------
+
+Renku ``0.48.1`` only changes how the Terms of Use and Privacy Policy sections
+can be customized by administrators.
+
 0.48.0
 ------
 

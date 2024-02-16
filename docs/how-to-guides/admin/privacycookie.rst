@@ -9,19 +9,20 @@ Privacy page and Terms of Use
 The UI can be configured to show a `Privacy Policy` and `Terms of Use`. These are
 displayed under the `Help` section of the UI.
 
-For each of these, the content is read from a ``ConfigMap``. You need to configure
-the values in ``ui.client.privacy.page`` to enable the feature and set the reference
-ConfigMap name and key. If ``ui.client.privacy.page.enabled`` is ``true``, then the privacy
-policy and terms of use will be shown in the UI, with content taken from the ConfigMap
-specified by ``ui.client.privacy.page.configMapName`` at the key
-``ui.client.privacy.page.configMapPolicyKey`` for the privacy policy and
-``ui.client.privacy.page.configMapTermsKey`` for the terms of use.
+For each of these, the content is read from the ``privacy-and-terms`` ConfigMap.
+You need to configure the values in ``ui.client.privacy.page`` to enable the feature.
+If ``ui.client.privacy.page.enabled`` is ``true``,  then the privacy
+policy and terms of use will be shown in the UI.
 
-.. note::
+Mind that you need to customize the content by either changing the ``privacy_statement``
+and the ``terms`` keys in the ``privacy-and-terms`` ConfigMap, or assign a valid Markdown
+text to ``ui.client.privacy.page.privacyPolicyContent`` and
+``ui.client.privacy.page.termsContent``.
 
-  If you don't set the ConfigMap name and key,
-  `a sample <https://github.com/SwissDataScienceCenter/renku/blob/master/helm-chart/renku/templates/ui/ui-client-configmap.yaml>`_
-  will be used instead. You can start from it as a template to create your customized ConfigMap.
+If you don't customize the text,
+`a sample <https://github.com/SwissDataScienceCenter/renku/blob/master/helm-chart/renku/templates/ui/ui-client-configmap.yaml>`_
+will be used instead. You can start from it as a template to create your own
+content.
 
 The `Markdown syntax <https://en.wikipedia.org/wiki/Markdown>`_ is fully supported for the
 privacy page content.
