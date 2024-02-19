@@ -79,6 +79,10 @@ global:
     ## for a new project based on its own version.
     ## NOTE should only be set for CI deployments and development purposes.
     cli_version:
+  ## Events related values definitions
+  events:
+    streams:
+      - project.created
   ## Note that the graph will not turned on by default until renku 0.4.0
   graph:
     dbEventLog:
@@ -129,6 +133,10 @@ global:
   ## postgresql-password key containing the password for the posgres user.
   # existingSecret:
 
+  # Globally available solr (TBD)
+  solr:
+    port: 8983
+
   # Connection details for a globally used redis instance for the
   # entire platform. For specifying an actual instance as part of
   # this chart, check out the non-global "redis" section.
@@ -138,6 +146,7 @@ global:
       gateway: "0"
       coreService: "1"
       uiServer: "2"
+      events: "3"
     # Note: these two entries MUST match the ones in the top level redis section.
     existingSecret: redis-secret
     existingSecretPasswordKey: redis-password
@@ -334,36 +343,43 @@ keycloakx:
 # For production deployments check out
 # https://github.com/bitnami/charts/blob/master/bitnami/postgresql/values-production.yaml
 postgresql:
-  # If an external Postgres database is defined in global.externalServices.postgresql,
-  # postgresql.enabled should be false, and global.externalServices.postgresql.enabled should be true.
-  # By default, Renku-bundled Postgres is enabled.
-  enabled: true
-  ## We use the defaults here.
-  postgresqlDatabase: postgres
-  postgresqlUsername: postgres
-  ## The admin password should be set explicitly, otherwise a random string will be created.
-  ## Alternatively an existing secret can be provided. Note that postgres
-  ## DOES NOT tolerate a change of the admin password when upgrading.
-  # postgresqlPassword:
+  ## We use the defaults here. Note that these basic configs could also be set as
+  ## global values such that sub-charts can access them too.
 
-  ## Use an existing secret instead of creating a new one. It must have a
-  ## postgresql-password key containing the password for the posgres user.
-  # existingSecret:
-  image:
-    repository: bitnami/postgresql
-    tag: 12.8.0
-  persistence:
-    ## We use the defaults here, but they will probably be modified for most deployments.
-    enabled: true
-    size: 8Gi
-    ## Provide an existing PersistentVolumeClaim to be reused.
-    # existingClaim:
-  # Consider replication. These are the defaults for the basic settings.
-  replication:
-    enabled: false
-    user: repl_user
-    password: repl_password # generate a random password `openssl rand -hex 32`
-    slaveReplicas: 1
+  auth:
+    username: postgres
+    database: postgres
+
+    ## The admin password should be set explicitly, otherwise a random string will be
+    ## created. Alternatively an existing secret can be provided. Note that postgres
+    ## DOES NOT tolerate a change of the admin password when upgrading.
+    # postgresqlPassword:
+
+    ## Use an existing secret instead of creating a new one. It must have a
+    ## postgresql-password key containing the password for the postgres user.
+    # existingSecret:
+
+    # Consider replication. These are the defaults for the basic settings.
+    # replicationUsername: repl_user
+    # replicationPassword: repl_password # generate a random password `openssl rand -hex 32`
+
+  # image:
+  # repository: bitnami/postgresql
+  # tag:
+
+  primary:
+    persistence:
+      ## We use the defaults here, but they will probably be modified for most deployments.
+      enabled: true
+      size: 8Gi
+      ## Provide an existing PersistentVolumeClaim to be reused.
+      # existingClaim:
+
+    # Consider replication. These are the defaults for the basic settings.
+    readReplicas:
+      enabled: false
+      replicaCount: 1
+
 redis:
   # If set to true, a HA redis will be included in the Renku release.
   install: true
@@ -464,6 +480,21 @@ redis:
       prometheus.io/port: "9121"
   # default - making explicit
   sysctl:
+    enabled: false
+solr:
+  enabled: false
+  cloudEnabled: false
+  auth:
+    adminUsername: renku
+    adminPassword: renku
+  coreNames:
+    - renku-search
+  networkPolicy:
+    enabled: false # Awaiting instructions from: https://github.com/bitnami/charts/issues/23424
+  persistence:
+    enabled: true
+    size: 8Gi
+  zookeeper:
     enabled: false
 ## Gitlab configuration
 gitlab:
@@ -854,7 +885,8 @@ dlf-chart:
     enabled: false
   dataset-operator-chart:
     enabled: true
-csi-rclone: {}
+csi-rclone:
+  {}
   # This section is only relevant if you are installing csi-rclone as part of Renku
   ## Name of the csi storage class to use for RClone/Cloudstorage. Should be unique per cluster.
   # storageClassName: csi-rclone
@@ -1296,6 +1328,34 @@ jena:
   additionalInitContainerScript: "find /fuseki -name tdb.lock -type f -delete && find /fuseki/configuration -name *.ttl -type f -empty -delete && echo clean-up done"
   test:
     enabled: false
+## Configuration for renku-search services
+search:
+  searchApi:
+    replicas: 1
+    image:
+      repository: renku/search-api
+      tag: "0.0.11"
+      pullPolicy: IfNotPresent
+    service:
+      type: ClusterIP
+      port: 80
+    resources:
+      requests:
+        memory: 256Mi
+    jvmXmx: 256M
+  searchProvision:
+    replicas: 1
+    image:
+      repository: renku/search-provision
+      tag: "0.0.11"
+      pullPolicy: IfNotPresent
+    service:
+      type: ClusterIP
+    resources:
+      requests:
+        memory: 256Mi
+    jvmXmx: 256M
+## Configuration for renku-graph services
 graph:
   webhookService:
     aesEncryptionKey: # A 8, 16 or 32 bytes string used for AES encryption of the project tokens

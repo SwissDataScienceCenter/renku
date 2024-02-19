@@ -12,6 +12,7 @@
 {{- $graphEnabled := .Values.graph.enabled -}}
 {{- $webhookServiceFullname := include "renku.graph.webhookService.fullname" . -}}
 {{- $knowledgeGraphFullname := include "renku.graph.knowledgeGraph.fullname" . -}}
+{{- $searchApiFullname := include "renku.search.searchApi.fullname" . -}}
 {{- $renkuFullname := include "renku.fullname" . -}}
 {{- if $graphEnabled }}
 {{- $jenaFullname := include "renku-jena.fullname" . -}}
@@ -126,6 +127,13 @@ spec:
             port:
               number: 80
       {{- end }}
+      - path: /search
+        pathType: Prefix
+        backend:
+          service:
+            name: {{ $searchApiFullname }}
+            port:
+              number: 80
       {{- if $swaggerEnabled }}
       - path: /swagger
         pathType: Prefix

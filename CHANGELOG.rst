@@ -1,4 +1,60 @@
 .. _changelog:
+0.xx.0
+------
+
+Renku ``0.xx.0`` is a release that exclusively changes internal components and has no effect on the end-user.
+Upgrades the PostgreSQL Helm chart version that is shipped with the Renku Helm chart.
+
+NOTE for administrators: make sure to check `helm-chart/values.yaml.changelog.md` for instructions on how to
+upgrade to this version of Renku.
+**Improvements**
+
+- **Infrastructure**: (BREAKING CHANGE) Upgrade the version of PostgreSQL to 16.1.0. This requires modifying your current values file to work with the new PostgreSQL Helm chart, see (`the helm chart values changelog <https://github.com/SwissDataScienceCenter/renku/blob/master/helm-chart/values.yaml.changelog.md>`_) for instructions.
+
+0.48.0
+------
+
+User-Facing Changes
+~~~~~~~~~~~~~~~~~~~
+
+**🌟 New Features**
+
+- 📜 **UI**: Show terms of use and privacy policy in the help section
+  (`#2954 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2954>`_).
+
+**✨ Improvements**
+
+- 🖌 **UI**: Improve appearance of templates on new project page
+  (`#2999 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2999>`_).
+- 🛑 **UI**: Unify appearance of project settings alerts
+  (`#3001 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3001>`_).
+
+**🐞 Bug Fixes**
+
+- **UI**: Restore logged in/out notifications
+  (`#3014 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3014>`_).
+- **UI**: Hide button to add storage on deployments not supporting external storages
+  (`#3001 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3001>`_).
+
+Internal Changes
+~~~~~~~~~~~~~~~~
+
+**Improvements**
+
+- **UI**: Add initial alpha implementation of Renku 1.0 projects
+  (`#2875 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2875>`_).
+
+Individual components
+~~~~~~~~~~~~~~~~~~~~~~
+
+- `renku-ui 3.20.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.20.0>`_
+
+
+0.49.0
+------
+
+TODO: Search & Discovery 1.0
+
 
 0.48.1
 ------
