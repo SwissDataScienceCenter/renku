@@ -484,6 +484,7 @@ redis:
 solr:
   enabled: true
   cloudEnabled: false
+  collectionReplicas: 0
   auth:
     adminUsername: renku
     adminPassword: renku
