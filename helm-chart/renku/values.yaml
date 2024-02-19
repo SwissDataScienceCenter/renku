@@ -482,7 +482,7 @@ redis:
   sysctl:
     enabled: false
 solr:
-  enabled: false
+  enabled: true
   cloudEnabled: false
   auth:
     adminUsername: renku
