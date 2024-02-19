@@ -103,7 +103,8 @@ describe("Workflows pages", () => {
       .contains("span", "m")
       .should("be.visible");
     cy.getDataCy("workflow-details")
-      .get("a#icon-link-5")
+      .contains("tr", "Default value")
+      .find("a")
       .should("be.visible")
       .click();
     cy.get("#file-card-header")
