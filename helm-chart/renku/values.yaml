@@ -485,7 +485,7 @@ solr:
   enabled: true
   cloudEnabled: false
   collectionReplicas: 0
-  replicaCount: 0
+  replicaCount: 1
   auth:
     adminUsername: renku
     adminPassword: renku
