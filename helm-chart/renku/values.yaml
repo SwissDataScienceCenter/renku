@@ -491,6 +491,7 @@ solr:
     adminPassword: renku
   coreNames:
     - renku-search
+  javaMem: "-Xmx512M"
   networkPolicy:
     enabled: false # Awaiting instructions from: https://github.com/bitnami/charts/issues/23424
   persistence:
