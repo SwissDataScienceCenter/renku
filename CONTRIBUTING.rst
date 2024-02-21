@@ -1,6 +1,8 @@
 Contributing to Renku
 =====================
 
+foo
+
 Want to contribute to Renku? Thanks! There are many ways to help, and we very much
 appreciate your efforts.
 
