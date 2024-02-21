@@ -1,51 +1,25 @@
 .. _changelog:
 
-0.48.0
+
+0.49.0
 ------
 
-This release contains a new privacy policy and terms of use in the UI and bug fixes to renku core service related to project migration.
+This release contains bug fixes to renku core service related to project migration.
 
 User-Facing Changes
 ~~~~~~~~~~~~~~~~~~~
-
-**🌟 New Features**
-
-- 📜 **UI**: Show terms of use and privacy policy in the help section
-  (`#2954 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2954>`_).
-
-**✨ Improvements**
-
-- 🖌 **UI**: Improve appearance of templates on new project page
-  (`#2999 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2999>`_).
-- 🛑 **UI**: Unify appearance of project settings alerts
-  (`#3001 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3001>`_).
 
 **🐞 Bug Fixes**
 
 - **Core Service**: Fix issue with having to run project migration twice to migrate the Dockerfile/project template.
   (`#3690 <https://github.com/SwissDataScienceCenter/renku-python/issues/3690>`__)
-  - **UI**: Restore logged in/out notifications
-  (`#3014 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3014>`_).
-- **UI**: Hide button to add storage on deployments not supporting external storages
-  (`#3001 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3001>`_).
-- **UI**: Fix landing page parallax background (`#3010 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3010>`_).
-- **UI**: Fix search bar styles (`#3019 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3019>`_).
-- **UI**: Handle ``jsonrpc`` improper redirects (`#3017 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3017>`_, `#2966 <https://github.com/SwissDataScienceCenter/renku-ui/issues/2966>`_).
 
-Internal Changes
-~~~~~~~~~~~~~~~~
-
-**Improvements**
-
-- **UI**: Add initial alpha implementation of Renku 1.0 projects
-  (`#2875 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2875>`_).
 
 Individual Components
 ~~~~~~~~~~~~~~~~~~~~~
 
 - `renku-python 2.9.2 <https://github.com/SwissDataScienceCenter/renku-python/releases/tag/2.9.2>`_
-- `renku-ui 3.20.1 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.20.1>`_
-- `renku-ui 3.20.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.20.0>`_
+
 
 0.47.1
 ------
