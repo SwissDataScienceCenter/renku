@@ -5,6 +5,8 @@ on:
     types: [opened,closed,synchronize,edited,review_requested,reopened]
     branches:
       - master
+  pull_request_review:
+    types: [submitted]
 jobs:
   check-open-prs:
     if: startsWith(github.event.pull_request.head.ref, 'release-')
