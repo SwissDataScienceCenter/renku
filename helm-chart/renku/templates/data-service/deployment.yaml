@@ -76,22 +76,20 @@ spec:
             - name: MAX_PINNED_PROJECTS
               value: {{ .Values.dataService.maxPinnedProjects | quote }}
             - name: RQ_REDIS_HOST
-              value: {{ $.Values.global.redis.host | quote }}
+              value: {{ .Values.global.redis.host | quote }}
             - name: RQ_REDIS_PORT
-              value: {{ $.Values.global.redis.port | quote }}
+              value: {{ .Values.global.redis.port | quote }}
             - name: RQ_REDIS_DB
-              value: {{ $.Values.global.redis.dbIndex.events| quote }}
+              value: {{ .Values.global.redis.dbIndex.events| quote }}
             - name: RQ_REDIS_IS_SENTINEL
-              value: {{ $.Values.global.redis.sentinel.enabled | quote }}
+              value: {{ .Values.global.redis.sentinel.enabled | quote }}
             - name: RQ_REDIS_MASTER_SET
-              value: {{ $.Values.global.redis.sentinel.masterSet | quote }}
+              value: {{ .Values.global.redis.sentinel.masterSet | quote }}
             - name: RQ_REDIS_PASS
               valueFrom:
                 secretKeyRef:
-                  name: {{ $.Values.global.redis.existingSecret }}
-                  key: {{ $.Values.global.redis.existingSecretPasswordKey }}
-            - name: REDIS_NAMESPACE
-              value: {{ $version.name }}
+                  name: {{ .Values.global.redis.existingSecret }}
+                  key: {{ .Values.global.redis.existingSecretPasswordKey }}
             {{- include "certificates.env.python" $ | nindent 12 }}
           volumeMounts:
             - name: server-options
