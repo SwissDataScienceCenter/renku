@@ -53,7 +53,7 @@ function stopAllSessionsForProject(
         .should("be.visible")
         .click();
       cy.getDataCy("session-container")
-        .find(`[data-cy=delete-session-button]`)
+        .find("[data-cy=delete-session-button]")
         .first()
         .should("be.visible")
         .click();
@@ -63,10 +63,24 @@ function stopAllSessionsForProject(
   cy.contains("No currently running sessions.", { timeout: TIMEOUTS.vlong });
 }
 
-function deleteSession(fromSessionPage = false) {
-  if (!fromSessionPage)
-    cy.getDataCy("more-menu").first().should("be.visible").click();
-  cy.getDataCy("delete-session-button").first().should("be.visible").click();
+function deleteSession(args?: { fromSessionPage?: boolean }) {
+  const fromSessionPage = args?.fromSessionPage ?? false;
+
+  if (fromSessionPage) {
+    cy.getDataCy("delete-session-button").first().should("be.visible").click();
+  } else {
+    cy.getDataCy("session-container")
+      .find("[data-cy=more-menu]")
+      .first()
+      .should("be.visible")
+      .click();
+    cy.getDataCy("session-container")
+      .find("[data-cy=delete-session-button]")
+      .first()
+      .should("be.visible")
+      .click();
+  }
+
   cy.getDataCy("delete-session-modal-button").should("be.visible").click();
   cy.getDataCy("stopping-btn").should("be.visible");
   cy.get(".renku-container", { timeout: TIMEOUTS.vlong })
@@ -74,16 +88,13 @@ function deleteSession(fromSessionPage = false) {
     .should("be.visible");
 }
 
-function pauseSession(fromSessionPage = true) {
-  if (!fromSessionPage)
-    cy.getDataCy("more-menu").first().should("be.visible").click();
-  cy.getDataCy("pause-session-button").should("be.visible").click();
+function pauseSession() {
+  cy.getDataCy("pause-session-button").first().should("be.visible").click();
   cy.getDataCy("pause-session-modal-button").should("be.visible").click();
   cy.get(`[data-cy="session-container"]`, { timeout: TIMEOUTS.long })
     .should("be.visible")
     .contains("Paused");
 }
-
 
 function quickstartSession() {
   cy.get(".start-session-button").should("not.be.disabled").click();
@@ -118,12 +129,12 @@ declare global {
   // eslint-disable-next-line @typescript-eslint/no-namespace
   namespace Cypress {
     interface Chainable {
-      startSession(identifier: ProjectIdentifier);
-      waitForImageToBuild(identifier: ProjectIdentifier);
-      deleteSession(fromSessionPage?: boolean);
-      pauseSession(fromSessionPage?: boolean);
-      quickstartSession();
-      stopAllSessionsForProject(identifier: ProjectIdentifier, loadPage?: boolean);
+      startSession: typeof startSession;
+      waitForImageToBuild: typeof waitForImageToBuild;
+      deleteSession: typeof deleteSession;
+      pauseSession: typeof pauseSession;
+      quickstartSession: typeof quickstartSession;
+      stopAllSessionsForProject: typeof stopAllSessionsForProject;
     }
   }
 }

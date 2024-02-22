@@ -16,8 +16,8 @@ const workflow = {
 };
 
 // ? Modify the config -- useful for debugging
-// projectTestConfig.shouldCreateProject = false;
-// projectTestConfig.projectName = "cypress-usesession-a8c6823e40ff";
+projectTestConfig.shouldCreateProject = false;
+projectTestConfig.projectName = "cypress-usesession-flora";
 
 const projectIdentifier = {
   name: projectTestConfig.projectName,
@@ -142,7 +142,9 @@ describe("Basic public project functionality", () => {
       .contains("Saving Session", { timeout: TIMEOUTS.long })
       .should("be.visible");
     cy.get(".modal")
-      .contains("Your session has been saved successfully", { timeout: TIMEOUTS.long })
+      .contains("Your session has been saved successfully", {
+        timeout: TIMEOUTS.long,
+      })
       .should("be.visible");
     cy.get(".modal .btn-close").should("be.visible").click();
 
@@ -197,7 +199,7 @@ describe("Basic public project functionality", () => {
     cy.quickstartSession();
 
     // Stop the session -- mind that anonymous users cannot pause sessions
-    cy.deleteSession(true);
+    cy.deleteSession({ fromSessionPage: true });
   });
 
   it("Start a new session on a project without permissions.", () => {
@@ -248,7 +250,7 @@ describe("Basic public project functionality", () => {
         if (storages.find(({ storage }) => storage.name === "data_s3")) {
           return;
         }
-  
+
         cy.getDataCy("cloud-storage-section")
           .find("button")
           .contains("Add Cloud Storage")
@@ -257,7 +259,7 @@ describe("Basic public project functionality", () => {
         cy.getDataCy("cloud-storage-edit-header")
           .contains("Add Cloud Storage")
           .should("be.visible");
-  
+
         cy.getDataCy("cloud-storage-edit-schema")
           .contains("s3")
           .should("be.visible")
@@ -269,7 +271,7 @@ describe("Basic public project functionality", () => {
         cy.getDataCy("cloud-storage-edit-next-button")
           .should("be.visible")
           .click();
-  
+
         cy.getDataCy("cloud-storage-edit-options").should("be.visible");
         cy.get("#sourcePath").should("have.value", "").type("giab");
         cy.get("#endpoint")
@@ -278,19 +280,19 @@ describe("Basic public project functionality", () => {
         cy.getDataCy("cloud-storage-edit-next-button")
           .should("be.visible")
           .click();
-  
+
         cy.getDataCy("cloud-storage-edit-mount").should("be.visible");
         cy.get("#name").should("have.value", "").type("data_s3");
         cy.get("#mountPoint")
           .should("have.value", "external_storage/data_s3")
           .type("{selectAll}data_s3");
         cy.get("#readOnly").should("not.be.checked").check();
-  
+
         cy.getDataCy("cloud-storage-edit-update-button")
           .should("be.visible")
           .contains("Add")
           .click();
-  
+
         cy.getDataCy("cloud-storage-edit-body").contains(
           "storage data_s3 has been succesfully added"
         );
@@ -298,13 +300,13 @@ describe("Basic public project functionality", () => {
           .should("be.visible")
           .click();
       });
-  
+
       cy.getDataCy("more-menu").should("be.visible").click();
       cy.getProjectPageLink(projectIdentifier, "sessions/new")
         .should("be.visible")
         .first()
         .click();
-  
+
       // Wait for the image to be ready and start a session
       cy.get(".renku-container")
         .contains("A session gives you an environment")
@@ -314,7 +316,9 @@ describe("Basic public project functionality", () => {
         .should("exist");
       cy.getDataCy("cloud-storage-item").contains("data_s3").should("exist");
       cy.get("#cloud-storage-data_s3-active").should("be.checked");
-      cy.get(".renku-container button.btn-secondary", { timeout: TIMEOUTS.long })
+      cy.get(".renku-container button.btn-secondary", {
+        timeout: TIMEOUTS.long,
+      })
         .contains("Start Session")
         .should("exist")
         .click();
@@ -325,10 +329,10 @@ describe("Basic public project functionality", () => {
       cy.get(".progress-box .progress-title")
         .contains("Starting Session")
         .should("exist");
-      cy.get(".progress-box .progress-title", { timeout: TIMEOUTS.vlong }).should(
-        "not.exist"
-      );
-  
+      cy.get(".progress-box .progress-title", {
+        timeout: TIMEOUTS.vlong,
+      }).should("not.exist");
+
       // Verify that the S3 data is mounted
       cy.getIframe("iframe#session-iframe").within(() => {
         cy.get(".jp-DirListing-content", { timeout: TIMEOUTS.long }).should(
@@ -338,21 +342,22 @@ describe("Basic public project functionality", () => {
           .contains("data_s3")
           .should("be.visible")
           .dblclick();
-  
+
         cy.get(".jp-DirListing-item")
           .contains("README.s3_structure")
           .should("be.visible")
           .dblclick();
-  
-        cy.get(".jp-FileEditor", { timeout: TIMEOUTS.long }).should("be.visible");
+
+        cy.get(".jp-FileEditor", { timeout: TIMEOUTS.long }).should(
+          "be.visible"
+        );
         cy.get(".jp-FileEditor")
           .contains("The GIAB s3 bucket and URLs")
           .should("be.visible");
       });
-  
+
       cy.pauseSession();
       cy.deleteSession();
     });
   });
-  
 });
