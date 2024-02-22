@@ -1,8 +1,6 @@
 name: Automatic requirements.yml update PR
 on:
-  push:
-    branches:
-      - 'auto-update/**'
+  workflow_dispatch
 jobs:
   auto-pull-request:
     runs-on: ubuntu-latest
