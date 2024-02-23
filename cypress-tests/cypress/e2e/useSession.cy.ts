@@ -9,11 +9,6 @@ const projectTestConfig = {
   shouldCreateProject: true,
   projectName: generatorProjectName("useSession"),
 };
-const workflowNameSalt = uuidv4().substring(0, 4);
-const workflow = {
-  name: `dummyworkflow-${workflowNameSalt}`,
-  output: `o${workflowNameSalt}.txt`, // ? Keep the name short or it won't show up entirely in the file browser
-};
 
 // ? Modify the config -- useful for debugging
 // projectTestConfig.shouldCreateProject = false;
@@ -65,6 +60,13 @@ describe("Basic public project functionality", () => {
 
   it("Start a new session on the project and interact with the terminal.", () => {
     cy.stopAllSessionsForProject(projectIdentifier);
+
+    // Define workflow object
+    const workflowNameSalt = uuidv4().substring(0, 4);
+    const workflow = {
+      name: `dummyworkflow-${workflowNameSalt}`,
+      output: `o${workflowNameSalt}.txt`, // ? Keep the name short or it won't show up entirely in the file browser
+    };
 
     // Start a session with options
     let serversInvoked = false;

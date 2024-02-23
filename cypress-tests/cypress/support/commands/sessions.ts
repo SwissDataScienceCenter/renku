@@ -74,6 +74,7 @@ function deleteSession(args?: { fromSessionPage?: boolean }) {
   if (fromSessionPage) {
     cy.getDataCy("delete-session-button").first().should("be.visible").click();
   } else {
+    cy.wait(TIMEOUTS.minimal); // eslint-disable-line cypress/no-unnecessary-waiting
     cy.getDataCy("session-container")
       .find("[data-cy=more-menu]")
       .first()
