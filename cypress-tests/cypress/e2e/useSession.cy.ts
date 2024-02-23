@@ -85,9 +85,7 @@ describe("Basic public project functionality", () => {
     cy.get(".renku-container")
       .contains("A session gives you an environment")
       .should("exist");
-    cy.get(".renku-container .badge.bg-success", { timeout: TIMEOUTS.vlong })
-      .contains("available")
-      .should("exist");
+    cy.waitForImageToBuild();
     cy.get(".renku-container button.btn-secondary", { timeout: TIMEOUTS.long })
       .contains("Start Session")
       .should("exist")
@@ -195,6 +193,7 @@ describe("Basic public project functionality", () => {
       .first()
       .click();
     cy.get(".alert-info").contains("As an anonymous user").should("be.visible");
+    cy.waitForImageToBuild();
 
     // Quickstart a session and check it spins up
     cy.getDataCy("go-back-button").click();
@@ -217,6 +216,7 @@ describe("Basic public project functionality", () => {
     cy.get(".alert-info")
       .contains("You have limited permissions for this project")
       .should("be.visible");
+    cy.waitForImageToBuild();
 
     // Quickstart a session and check it spins up
     cy.getDataCy("go-back-button").click();
@@ -313,9 +313,7 @@ describe("Basic public project functionality", () => {
       cy.get(".renku-container")
         .contains("A session gives you an environment")
         .should("exist");
-      cy.get(".renku-container .badge.bg-success", { timeout: TIMEOUTS.vlong })
-        .contains("available")
-        .should("exist");
+      cy.waitForImageToBuild();
       cy.getDataCy("cloud-storage-item").contains("data_s3").should("exist");
       cy.get("#cloud-storage-data_s3-active").should("be.checked");
       cy.get(".renku-container button.btn-secondary", {

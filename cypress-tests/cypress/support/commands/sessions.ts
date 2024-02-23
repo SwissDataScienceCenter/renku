@@ -2,15 +2,11 @@ import { TIMEOUTS } from "../../../config";
 import { fullProjectIdentifier } from "./projects";
 import type { ProjectIdentifier } from "./projects";
 
-function startSession(
-  identifier: ProjectIdentifier,
-  options?: { buildTimeout?: number }
-) {
-  const buildTimeout = options.buildTimeout ?? TIMEOUTS.vlong;
-
+function startSession(identifier: ProjectIdentifier) {
   const id = fullProjectIdentifier(identifier);
   cy.visit(`/projects/${id.namespace}/${id.name}/sessions/new`);
-  cy.get(".renku-container button.btn-secondary", { timeout: buildTimeout })
+  cy.waitForImageToBuild();
+  cy.get(".renku-container button.btn-secondary", { timeout: TIMEOUTS.long })
     .contains("Start Session")
     .should("be.visible")
     .should("be.enabled")
@@ -24,13 +20,13 @@ function startSession(
   }).should("not.exist");
 }
 
-function waitForImageToBuild(identifier: ProjectIdentifier) {
-  const id = fullProjectIdentifier(identifier);
-  cy.visit(`/projects/${id.namespace}/${id.name}/sessions/new`);
-  cy.get(".renku-container button.btn-secondary", { timeout: TIMEOUTS.vlong })
-    .contains("Start Session")
+function waitForImageToBuild() {
+  cy.get(".renku-container .badge.bg-success", { timeout: TIMEOUTS.vvlong })
+    .contains("available")
     .should("be.visible")
-    .should("be.enabled");
+    .parent()
+    .contains("Docker image")
+    .should("be.visible");
 }
 
 function stopAllSessionsForProject(

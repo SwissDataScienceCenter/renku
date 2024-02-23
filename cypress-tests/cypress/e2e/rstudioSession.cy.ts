@@ -64,7 +64,7 @@ describe("Basic rstudio functionality", () => {
     () => {
       // Waits for the image to build and launches a session
       // Note: rstudio image may take a while to build
-      cy.startSession(projectIdentifier, { buildTimeout: 360_000 });
+      cy.startSession(projectIdentifier);
 
       // Opens the session in an iframe
       cy.getIframe("iframe#session-iframe").within(() => {
