@@ -63,6 +63,7 @@ describe("Basic rstudio functionality", () => {
     { defaultCommandTimeout: TIMEOUTS.long },
     () => {
       // Waits for the image to build and launches a session
+      // Note: rstudio image may take a while to build
       cy.startSession(projectIdentifier);
 
       // Opens the session in an iframe
