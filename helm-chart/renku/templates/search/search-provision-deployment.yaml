@@ -1,0 +1,84 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ template "renku.search.searchProvision.fullname" . }}
+  labels:
+    app: {{ template "renku.search.searchProvision.name" . }}
+    chart: {{ template "renku.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  replicas: {{ .Values.search.searchProvision.replicas }}
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: {{ template "renku.search.searchProvision.name" . }}
+      release: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app: {{ template "renku.search.searchProvision.name" . }}
+        release: {{ .Release.Name }}
+        # The label below enables to connect to redis
+        {{ .Values.global.redis.clientLabel | toYaml | nindent 8 }}
+    spec:
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      automountServiceAccountToken: {{ .Values.global.debug }}
+      containers:
+        - name: search-provision
+          image: "{{ .Values.search.searchProvision.image.repository }}:{{ .Values.search.searchProvision.image.tag }}"
+          imagePullPolicy: {{ .Values.search.searchProvision.image.pullPolicy }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          env:
+            - name: RS_REDIS_HOST
+              value: {{ .Values.global.redis.host | quote }}
+            - name: RS_REDIS_PORT
+              value: {{ .Values.global.redis.port | quote }}
+            - name: RS_REDIS_SENTINEL
+              value: {{ .Values.global.redis.sentinel.enabled | quote }}
+            - name: RS_REDIS_DB
+              value: {{ .Values.global.redis.dbIndex.events | quote }}
+            - name: RS_REDIS_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.global.redis.existingSecret }}
+                  key: {{ .Values.global.redis.existingSecretPasswordKey }}
+            - name: RS_REDIS_MASTER_SET
+              value: {{ .Values.global.redis.sentinel.masterSet | quote }}
+            - name: RS_REDIS_QUEUE_NAME
+              value: {{ first .Values.global.events.streams }}
+            - name: RS_SOLR_URL
+              value: "http://{{ template "solr.fullname" . }}:{{ .Values.global.solr.port }}/solr"
+            - name: RS_SOLR_CORE
+              value: {{ first .Values.solr.coreNames }}
+            - name: RS_SOLR_USER
+              value: {{ .Values.solr.auth.adminUsername | quote }}
+            - name: RS_SOLR_PASS
+              value: {{ .Values.solr.auth.adminPassword | quote }}
+            - name: RS_SOLR_DEFAULT_COMMIT_WITHIN
+              value: "500ms"
+            - name: RS_SOLR_LOG_MESSAGE_BODIES
+              value: "false"
+            - name: JAVA_OPTS
+              value: "-Xmx{{ .Values.search.searchProvision.jvmXmx }} -XX:+UseZGC -XX:+ZGenerational"
+          resources:
+            {{- toYaml .Values.search.searchProvision.resources | nindent 12 }}
+          volumeMounts:
+            {{- include "certificates.volumeMounts.javaCertsGeneral" . | nindent 12 }}
+      volumes:
+        {{- include "certificates.volumes" . | nindent 8 }}
+  {{- with .Values.nodeSelector }}
+nodeSelector:
+  {{ toYaml . | indent 8 }}
+  {{- end }}
+  {{- with .Values.affinity }}
+affinity:
+  {{ toYaml . | indent 8 }}
+  {{- end }}
+  {{- with .Values.tolerations }}
+tolerations:
+  {{ toYaml . | indent 8 }}
+  {{- end }}

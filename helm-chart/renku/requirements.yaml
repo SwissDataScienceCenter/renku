@@ -4,8 +4,8 @@ dependencies:
   version: 0.8.0
   condition: gitlab.enabled
 - name: postgresql
-  version: 9.1.1
-  repository: "https://raw.githubusercontent.com/bitnami/charts/eb5f9a9513d987b519f0ecd732e7031241c50328/bitnami"
+  version: 14.0.1
+  repository: "https://charts.bitnami.com/bitnami"
   condition: postgresql.enabled
 - name: keycloakx
   version: 2.1.0
@@ -30,6 +30,9 @@ dependencies:
   condition: notebooks.cloudstorage.s3.installDatashim
 - name: csi-rclone
   repository: "https://swissdatasciencecenter.github.io/helm-charts/"
-  version: "0.1.5"
+  version: "0.1.6"
   condition: global.csi-rclone.install
-  
+- name: solr
+  repository: "oci://registry-1.docker.io/bitnamicharts"
+  version: "8.7.1"
+  condition: solr.enabled
