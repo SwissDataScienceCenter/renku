@@ -15,8 +15,8 @@ const projectTestConfig = {
 };
 
 // ? Uncomment to debug using an existing project
-projectTestConfig.shouldCreateProject = false;
-projectTestConfig.projectName = "cypress-rstudio-flora";
+// projectTestConfig.shouldCreateProject = false;
+// projectTestConfig.projectName = "cypress-publicproject-4ed4fb12c5e6";
 
 const projectIdentifier: ProjectIdentifier = {
   name: projectTestConfig.projectName,
