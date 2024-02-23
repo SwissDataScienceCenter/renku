@@ -5,4 +5,5 @@ export const TIMEOUTS = {
   standard: 20_000,
   long: 60_000,
   vlong: 180_000,
+  vvlong: 300_000,
 };
