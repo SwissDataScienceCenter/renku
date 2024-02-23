@@ -22,6 +22,7 @@ spec:
       labels:
         app: renku-data-service
         release: {{ .Release.Name }}
+        {{ .Values.global.redis.clientLabel | toYaml | nindent 8 }}
       {{- with .Values.dataService.podAnnotations }}
       annotations:
         {{- toYaml . | nindent 8 }}
