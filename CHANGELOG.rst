@@ -3,6 +3,20 @@
 0.49.0
 ------
 
+This release contains bug fixes to renku core service related to project migration.
+
+User-Facing Changes
+~~~~~~~~~~~~~~~~~~~
+
+**🐞 Bug Fixes**
+
+- **Core Service**: Fix issue with having to run project migration twice to migrate the Dockerfile/project template.
+
+Individual Components
+~~~~~~~~~~~~~~~~~~~~~
+
+- `renku-python 2.9.2 <https://github.com/SwissDataScienceCenter/renku-python/releases/tag/2.9.2>`_
+
 0.48.1
 ------
 
