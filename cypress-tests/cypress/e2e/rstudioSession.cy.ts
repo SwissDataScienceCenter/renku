@@ -15,8 +15,8 @@ const projectTestConfig = {
 };
 
 // ? Uncomment to debug using an existing project
-// projectTestConfig.shouldCreateProject = false;
-// projectTestConfig.projectName = "cypress-publicproject-4ed4fb12c5e6";
+projectTestConfig.shouldCreateProject = false;
+projectTestConfig.projectName = "cypress-rstudio-flora";
 
 const projectIdentifier: ProjectIdentifier = {
   name: projectTestConfig.projectName,
@@ -63,7 +63,8 @@ describe("Basic rstudio functionality", () => {
     { defaultCommandTimeout: TIMEOUTS.long },
     () => {
       // Waits for the image to build and launches a session
-      cy.startSession(projectIdentifier);
+      // Note: rstudio image may take a while to build
+      cy.startSession(projectIdentifier, { buildTimeout: 360_000 });
 
       // Opens the session in an iframe
       cy.getIframe("iframe#session-iframe").within(() => {

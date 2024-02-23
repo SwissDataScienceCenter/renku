@@ -2,10 +2,15 @@ import { TIMEOUTS } from "../../../config";
 import { fullProjectIdentifier } from "./projects";
 import type { ProjectIdentifier } from "./projects";
 
-function startSession(identifier: ProjectIdentifier) {
+function startSession(
+  identifier: ProjectIdentifier,
+  options?: { buildTimeout?: number }
+) {
+  const buildTimeout = options.buildTimeout ?? TIMEOUTS.vlong;
+
   const id = fullProjectIdentifier(identifier);
   cy.visit(`/projects/${id.namespace}/${id.name}/sessions/new`);
-  cy.get(".renku-container button.btn-secondary", { timeout: TIMEOUTS.vlong })
+  cy.get(".renku-container button.btn-secondary", { timeout: buildTimeout })
     .contains("Start Session")
     .should("be.visible")
     .should("be.enabled")
