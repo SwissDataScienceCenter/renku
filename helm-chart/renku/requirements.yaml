@@ -34,5 +34,5 @@ dependencies:
   condition: global.csi-rclone.install
 - name: solr
   repository: "oci://registry-1.docker.io/bitnamicharts"
-  version: "8.7.1"
+  version: "8.9.2"
   condition: solr.enabled
