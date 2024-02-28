@@ -3,7 +3,9 @@
 0.49.0
 ------
 
-This release contains bug fixes to renku core service related to project migration.
+This release adds initial support for Renku native projects. Please note that the Renku native
+projects feature is still being developed and it is not accessible to users only to Renku developers.
+The release also contains bug fixes to renku core service related to project migration.
 
 User-Facing Changes
 ~~~~~~~~~~~~~~~~~~~
@@ -12,10 +14,18 @@ User-Facing Changes
 
 - **Core Service**: Fix issue with having to run project migration twice to migrate the Dockerfile/project template.
 
+Internal Changes
+~~~~~~~~~~~~~~~~
+
+**New Features**
+
+- **Data services**: Initial support for Renku native projects
+
 Individual Components
 ~~~~~~~~~~~~~~~~~~~~~
 
 - `renku-python 2.9.2 <https://github.com/SwissDataScienceCenter/renku-python/releases/tag/2.9.2>`_
+- `renku-data-services 0.5.0 <https://github.com/SwissDataScienceCenter/renku-data-services/releases/tag/v0.5.0>`_
 
 0.48.1
 ------
