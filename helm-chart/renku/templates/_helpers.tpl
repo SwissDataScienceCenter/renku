@@ -164,3 +164,7 @@ app.kubernetes.io/managed-by: {{ .Release.Service }}
 {{- define "renku.keycloak.realm" -}}
 {{ .Values.global.keycloak.realm | default "Renku" }}
 {{- end -}}
+
+{{- define "renku.dataService.keycloak.clientId" -}}
+data-service
+{{- end -}}

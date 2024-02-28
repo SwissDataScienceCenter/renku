@@ -1482,6 +1482,11 @@ dataService:
     repository: renku/renku-data-service
     tag: "0.4.0"
     pullPolicy: IfNotPresent
+  keycloakSync:
+    image:
+      repository: renku/keycloak-sync
+      tag: "0.2.2"
+      pullPolicy: IfNotPresent
   service:
     type: ClusterIP
     port: 80
