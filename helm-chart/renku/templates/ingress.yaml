@@ -127,7 +127,7 @@ spec:
             port:
               number: 80
       {{- end }}
-      - path: /search
+      - path: /apiv2/search
         pathType: Prefix
         backend:
           service:
