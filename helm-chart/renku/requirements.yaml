@@ -30,6 +30,6 @@ dependencies:
   condition: notebooks.cloudstorage.s3.installDatashim
 - name: csi-rclone
   repository: "https://swissdatasciencecenter.github.io/helm-charts/"
-  version: "0.1.5"
+  version: "0.1.6"
   condition: global.csi-rclone.install
   

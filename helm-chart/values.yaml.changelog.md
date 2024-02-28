@@ -5,23 +5,46 @@ For changes that require manual steps other than changing values, please check o
 Please follow this convention when adding a new row
 * `<type: NEW|EDIT|DELETE> - *<resource name>*: <details>`
 
+## Upgrading to Renku 0.48.1
+
+The handling of privacy policy and terms of service content has been fine tuned.
+
+* DELETE `ui.client.privacy.page.configMapName` has been removed.
+* DELETE `ui.client.privacy.page.configMapPolicyKey` has been removed.
+* DELETE `ui.client.privacy.page.configMapTermsKey` has been removed.
+* NEW ``ui.client.privacy.page.privacyPolicyContent`` to customize the content of the Privacy Policy page (supports Markdown).
+* NEW ``ui.client.privacy.page.termsContent`` to customize the content of the Terms of Use page (supports Markdown).
+
+
+## Upgrading to Renku 0.48.0
+
+The handling of privacy policy and terms of service content has been slightly changed to make
+it more flexible.
+
+* DELETE `ui.privacy.enabled` has been removed to make the privacy policy and cookie banner configurable independently.
+* NEW `ui.privacy.banner.enabled` allows turning on the cookie banner (defaults to false).
+* DELETE `ui.client.privacy.page.configMapKey` which has been renamed to `ui.client.privacy.page.configMapPolicyKey`.
+* NEW `ui.client.privacy.page.configMapPolicyKey` the key in the ConfigMap where the content for the privacy policy is located.
+* NEW `ui.client.privacy.page.configMapTermsKey` the key in the ConfigMap where the content for the terms of use is located.
+
+
 ## Upgrading to Renku 0.47.0
 
-We completely overhauled how mounting cloud storage in sessions works, relying on a new CSI driver based on RClone 
-which has to be installed in the cluster for things to work. Either install it as part of Renku using the flag 
-mentioned below or install the csi-rclone chart manually and set the correct storage class in the values for the 
+We completely overhauled how mounting cloud storage in sessions works, relying on a new CSI driver based on RClone
+which has to be installed in the cluster for things to work. Either install it as part of Renku using the flag
+mentioned below or install the csi-rclone chart manually and set the correct storage class in the values for the
 notebooks service.
 
 * NEW `noteboks.cloudstorage.enabled` - set to `true` to enable mounting cloud storage in sessions.
 * DELETE `notebooks.cloudstorage.s3.enabed` - superseeded by previous property.
-* NEW `notebooks.cloudstorage.storageClass` - the storage class for the CSI Rclone chart, needed for new cloudstorage 
+* NEW `notebooks.cloudstorage.storageClass` - the storage class for the CSI Rclone chart, needed for new cloudstorage
   to work. The default `csi-rclone` should be fine unless already in use.
-* NEW `global.csi-rclone.install` - if `true` installs the csi-rclone chart alongside Renku. The chart is needed for 
+* NEW `global.csi-rclone.install` - if `true` installs the csi-rclone chart alongside Renku. The chart is needed for
   cloud storage in sessions to work.
-* NEW `csi-rclone.storageClassName` - the storage class name the CSI drivers uses, should match what is configured in 
+* NEW `csi-rclone.storageClassName` - the storage class name the CSI drivers uses, should match what is configured in
   the `storageClass` property mentioned above.
-* NEW `csi-rclone.csiNodePlugin.tolerations` - Tolerations for the node plugin part of the CSI driver. Need to be set 
-  in a way that allows it to be scheduled on user session nodes. By default this would mean `key=renku.io/dedicated`, 
+* NEW `csi-rclone.csiNodePlugin.tolerations` - Tolerations for the node plugin part of the CSI driver. Need to be set
+  in a way that allows it to be scheduled on user session nodes. By default this would mean `key=renku.io/dedicated`,
   `operator=Equal`, `value=user` and `effect=NoSchedule`
 
 
@@ -82,7 +105,7 @@ Amalthea will simply use your default Kubernetes scheduler.
 * DELETE `amalthea.scheduler.image` - deprecated will be ignored if provided
 * DELETE `amalthea.scheduler.enable` - deprecated will be ignored if provided
 * DELETE `amalthea.scheduler.priorities` - deprecated will be ignored if provided
-* NEW `amalthea.scheduler.packing` - can be used to enable a preset scheduler that will try to pack sessions on the smallest number of nodes and favor the most used nodes 
+* NEW `amalthea.scheduler.packing` - can be used to enable a preset scheduler that will try to pack sessions on the smallest number of nodes and favor the most used nodes
 * NEW `amalthea.scheduler.custom` - can be used to add any custom scheduler for Amalthea, admins just have to provide the scheduler name
 * EDIT `crc` - the field has been renamed to `dataService`, all child fields and functionality remains the same
 * NEW `global.gitlab.url` has been added and needs to be specified, this will be the single place where the Gitlab URL will be specified in future releases we will deprecated all the other Gitlab URL fields in the values file.
@@ -105,14 +128,14 @@ configuration is possible from its `values.yaml` file.
 * EDIT - `notebooks.amalthea.*` moved to `amalthea.*`
 * EDIT - `notebooks.dlf-chart.*` moved to `dlf-chart.*`
 
-In addition going forward we will follow a much stricter versioning scheme that will distinguish changes to 
+In addition going forward we will follow a much stricter versioning scheme that will distinguish changes to
 the Renku Helm chart as opposed to changes to the application. Notably:
 - Patch changes (i.e. `0.50.1` -> `0.50.2`) indicate that there are NO changes in the Helm chart and that
 only appplication level bug fixes are present in the new release.
 - Minor version changes (i.e. `0.50.2` -> `0.51.0`) indicate that there are NO changes in the Helm chart and that
 only application level new features and/or application level breaking changes are present.
-- Major version changes (i.e. `0.50.0` -> `1.0.0`) will be reserved for changes in the Helm chart, either when the 
-values file changes or when the Helm templates change. 
+- Major version changes (i.e. `0.50.0` -> `1.0.0`) will be reserved for changes in the Helm chart, either when the
+values file changes or when the Helm templates change.
 
 ## Upgrading to Renku 0.37.0
 * EDIT - `notebooks.culling.idleThresholdSeconds` in the notebooks' values file was renamed to
@@ -261,7 +284,7 @@ redis:
     sentinel: true
     existingSecret: redis-secret
     existingSecretPasswordKey: redis-password
-  
+
     commonConfiguration: |-
       appendonly no
       save ""
@@ -269,10 +292,10 @@ redis:
   replica:
     replicaCount: 3
     resources:
-      limits: 
+      limits:
         cpu: 250m
         memory: 256Mi
-      requests: 
+      requests:
         cpu: 250m
         memory: 256Mi
     updateStrategy:

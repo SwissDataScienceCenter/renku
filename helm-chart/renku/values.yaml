@@ -62,7 +62,7 @@ global:
         fullnameOverride: ""
         image:
           repository: renku/renku-core
-          tag: "v2.9.1"
+          tag: "v2.9.2"
           pullPolicy: IfNotPresent
   uiserver:
     ## The client secret for the renku-ui client application registered in keycloak.
@@ -295,7 +295,7 @@ keycloakx:
     enabled: false
   extraInitContainers: |
     - name: theme-provider
-      image: renku/keycloak-theme:4.1.3
+      image: renku/keycloak-theme:4.1.5
       imagePullPolicy: IfNotPresent
       command:
         - sh
@@ -613,7 +613,7 @@ ui:
     replicaCount: 1
     image:
       repository: renku/renku-ui
-      tag: "3.19.0"
+      tag: "3.20.1"
       pullPolicy: IfNotPresent
       ## Optionally specify an array of imagePullSecrets.
       ## Secrets must be manually created in the namespace.
@@ -692,16 +692,16 @@ ui:
       dsn: ""
       environment: ""
       sampleRate: 0 # number between 0 and 1. (e.g., to send 20% of transactions, set 0.2.)
-    # If you want to enable the privacy page, please create also a configMap and set its name in the
-    # privacy.page.configMapName value. As a reference, you can use the sample configMap generated when
-    # enabling the feature.
     privacy:
-      enabled: false
+      # If you want to enable the Privacy Policy and Terms of Service pages, you shoud add your custom content
+      # in privacyPolicyContent and termsContent. Markdown is supported.
+      # As a reference, you can use the "ui-client-configmap" configMap content in the "sample" sections.
       page:
         enabled: false
-        #configMapName: privacy-page
-        #configMapKey: privacy_statement
+        #privacyPolicyContent: ""
+        #termsContent: ""
       banner:
+        enabled: false
         content: |
           This website requires cookies in order to ensure basic functionality. By clicking
           or navigating the site, you consent to the use of cookies in accordance with
@@ -772,7 +772,7 @@ ui:
     keepCookies: []
     image:
       repository: renku/renku-ui-server
-      tag: "3.19.0"
+      tag: "3.20.1"
       pullPolicy: IfNotPresent
     imagePullSecrets: []
     nameOverride: ""
@@ -857,10 +857,10 @@ dlf-chart:
 csi-rclone: {}
   # This section is only relevant if you are installing csi-rclone as part of Renku
   ## Name of the csi storage class to use for RClone/Cloudstorage. Should be unique per cluster.
-  # storageClassName: csi-rclone 
+  # storageClassName: csi-rclone
   # csiNodepluginRclone:
   #   nodeSelector: {}
-  # Set tolerations if you have taints on your user session nodes. The csi has to run on every node 
+  # Set tolerations if you have taints on your user session nodes. The csi has to run on every node
   # where it is used.
   #   tolerations: []
   #   affinity: {}
@@ -1517,4 +1517,4 @@ affinity: {}
 versions:
   latest:
     image:
-      tag: v2.9.1
+      tag: v2.9.2
