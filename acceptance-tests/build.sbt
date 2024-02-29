@@ -19,7 +19,7 @@
 organization := "ch.renku"
 name := "renku-acceptance-tests"
 version := "0.1.0"
-scalaVersion := "2.13.12"
+scalaVersion := "2.13.13"
 
 Test / parallelExecution := false
 
@@ -31,7 +31,7 @@ publishTo := Some(Resolver.file("Unused transient repository", file("target/unus
 val circeVersion = "0.14.6"
 
 libraryDependencies += "ch.qos.logback"          % "logback-classic"               % "1.5.1"
-libraryDependencies += "com.github.pureconfig"  %% "pureconfig"                    % "0.17.5"     % Test
+libraryDependencies += "com.github.pureconfig"  %% "pureconfig"                    % "0.17.6"     % Test
 libraryDependencies += "eu.timepit"             %% "refined"                       % "0.11.1"     % Test
 libraryDependencies += "io.circe"               %% "circe-core"                    % circeVersion % Test
 libraryDependencies += "io.circe"               %% "circe-literal"                 % circeVersion % Test
@@ -43,7 +43,7 @@ libraryDependencies += "org.scalacheck"         %% "scalacheck"                 
 libraryDependencies += "org.scalatest"          %% "scalatest"                     % "3.2.18"     % Test
 libraryDependencies += "org.scalatestplus"      %% "selenium-4-1"                  % "3.2.12.1"   % Test
 libraryDependencies += "org.seleniumhq.selenium" % "selenium-http-jdk-client"      % "4.13.0"     % Test
-libraryDependencies += "org.seleniumhq.selenium" % "selenium-java"                 % "4.17.0"     % Test
+libraryDependencies += "org.seleniumhq.selenium" % "selenium-java"                 % "4.18.1"     % Test
 libraryDependencies += "org.slf4j"               % "slf4j-log4j12"                 % "2.0.11"     % Test
 libraryDependencies += "org.typelevel"          %% "cats-effect"                   % "3.5.3"      % Test
 libraryDependencies += "org.typelevel"          %% "cats-effect-testing-scalatest" % "1.5.0"      % Test
