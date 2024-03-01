@@ -12,10 +12,19 @@ User-Facing Changes
 
 - **Core Service**: Fix issue with having to run project migration twice to migrate the Dockerfile/project template.
 
+Internal Changes
+~~~~~~~~~~~~~~~~
+
+**Improvements**
+
+- **csi-rclone**: added rclone logs to regular node-plugin logs.
+  (`#11 <https://github.com/SwissDataScienceCenter/csi-rclone/pull/11>`_).
+
 Individual Components
 ~~~~~~~~~~~~~~~~~~~~~
 
 - `renku-python 2.9.2 <https://github.com/SwissDataScienceCenter/renku-python/releases/tag/2.9.2>`_
+- `csi-rclone 0.1.7 <https://github.com/SwissDataScienceCenter/csi-rclone/releases/tag/v0.1.7>`_
 
 0.48.1
 ------
