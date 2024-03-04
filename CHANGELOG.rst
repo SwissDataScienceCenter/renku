@@ -3,9 +3,11 @@
 0.49.0
 ------
 
-This release adds initial support for Renku native projects. Please note that the Renku native
-projects feature is still being developed and it is not accessible to users only to Renku developers.
-The release also contains bug fixes to renku core service related to project migration.
+The release contains bug fixes to renku core service related to project migration.
+
+This release also contains initial support for next generation 'Renku 1.0' functionality. However,
+Renku 1.0 is still in early development and is not yet accessible to users. For more information,
+see our [roadmap](https://github.com/SwissDataScienceCenter/renku-design-docs/blob/main/roadmap.md).
 
 User-Facing Changes
 ~~~~~~~~~~~~~~~~~~~
@@ -19,7 +21,7 @@ Internal Changes
 
 **New Features**
 
-- **Data services**: Initial support for Renku native projects
+- **Data services**: Initial support for Renku 1.0 projects (alpha release)
 
 Individual Components
 ~~~~~~~~~~~~~~~~~~~~~
