@@ -23,11 +23,19 @@ Internal Changes
 
 - **Data services**: Initial support for Renku 1.0 projects (alpha release)
 
+**Improvements**
+
+- **csi-rclone**: added rclone logs to regular node-plugin logs.
+  (`#11 <https://github.com/SwissDataScienceCenter/csi-rclone/pull/11>`_).
+
+
 Individual Components
 ~~~~~~~~~~~~~~~~~~~~~
 
 - `renku-python 2.9.2 <https://github.com/SwissDataScienceCenter/renku-python/releases/tag/2.9.2>`_
 - `renku-data-services 0.5.0 <https://github.com/SwissDataScienceCenter/renku-data-services/releases/tag/v0.5.0>`_
+- `csi-rclone 0.1.7 <https://github.com/SwissDataScienceCenter/csi-rclone/releases/tag/v0.1.7>`_
+
 
 0.48.1
 ------
