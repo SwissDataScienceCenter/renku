@@ -58,6 +58,13 @@ spec:
               value: {{ (printf "%s://%s/auth/" (include "renku.http" .) .Values.global.renku.domain) | quote }}
             - name: KEYCLOAK_TOKEN_SIGNATURE_ALGS
               value: "RS256"
+            - name: KEYCLOAK_CLIENT_ID
+              value: {{ include "renku.dataService.keycloak.clientId" . | quote }}
+            - name: KEYCLOAK_CLIENT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "renku.fullname" . }}
+                  key: dataServiceKeycloakClientSecret
             - name: SERVER_DEFAULTS
               value: /etc/renku-data-service/server_options/server_defaults.json
             - name: SERVER_OPTIONS
