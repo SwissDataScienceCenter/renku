@@ -48,10 +48,10 @@ spec:
                   key: {{ .Values.global.redis.existingSecretPasswordKey }}
             - name: RS_REDIS_MASTER_SET
               value: {{ .Values.global.redis.sentinel.masterSet | quote }}
-            {{ - range $k, $v := .Values.global.events.streams }}
+            {{- range $k, $v := .Values.global.events.streams }}
             - name: RS_REDIS_QUEUE_{{ $k }}
               value: {{ $v }}
-            {{ - end }}
+            {{- end }}
             - name: RS_SOLR_URL
               value: "http://{{ template "solr.fullname" . }}:{{ .Values.global.solr.port }}/solr"
             - name: RS_SOLR_CORE
