@@ -204,7 +204,6 @@ The test are built using the Page Object Pattern (e.g.
 https://www.pluralsight.com/guides/getting-started-with-page-object-pattern-for-your-selenium-tests) which in
 short is about wrapping an UI page into a class/object and using it in the test script.
 
-
 As mentioned above there's a `target/tests-execution.log` file where tests debug statements from tests execution are written.
 
 ## Project organization
