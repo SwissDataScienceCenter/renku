@@ -62,7 +62,7 @@ global:
         fullnameOverride: ""
         image:
           repository: renku/renku-core
-          tag: "v2.9.1"
+          tag: "v2.9.2"
           pullPolicy: IfNotPresent
   uiserver:
     ## The client secret for the renku-ui client application registered in keycloak.
@@ -1542,12 +1542,12 @@ initDb:
 dataService:
   image:
     repository: renku/renku-data-service
-    tag: "0.4.0"
+    tag: "0.5.0"
     pullPolicy: IfNotPresent
   keycloakSync:
     image:
       repository: renku/keycloak-sync
-      tag: "0.2.2"
+      tag: "0.5.0"
       pullPolicy: IfNotPresent
   service:
     type: ClusterIP
@@ -1579,4 +1579,4 @@ affinity: {}
 versions:
   latest:
     image:
-      tag: v2.9.1
+      tag: v2.9.2
