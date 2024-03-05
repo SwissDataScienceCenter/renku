@@ -12,7 +12,7 @@ This procedure should be followed for *any* release:
 
 * Create a release branch (e.g. `0.46.x`), if one does not already exist, with the [release action](https://github.com/SwissDataScienceCenter/renku/actions/workflows/create-release-branch.yml).
 * Create a `CHANGELOG` entry for the release and open a PR; create a deployment, this is the reference for the release.
-* Note that any PR that should go into the release needs to target the release branch _not_ `master`. 
+* Note that any PR that should go into the release needs to target the release branch _not_ `master`.
 * All release branches should be protected.
 
 Acceptance tests have to pass on all release branches before merging. 
