@@ -5,7 +5,7 @@ dependencies:
     condition: gitlab.enabled
   - name: postgresql
     version: "14.2.4"
-    repository: "oci://registry-1.docker.io/bitnamicharts"
+    repository: "https://raw.githubusercontent.com/bitnami/charts/archive-full-index/bitnami"
     condition: postgresql.enabled
   - name: keycloakx
     version: 2.1.0
