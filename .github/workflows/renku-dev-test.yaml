@@ -23,7 +23,7 @@ jobs:
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v4.1.1
-      - uses: cypress-io/github-action@v6
+      - uses: cypress-io/github-action@v5
         id: cypress
         env:
           TEST_EMAIL: renku@datascience.ch
