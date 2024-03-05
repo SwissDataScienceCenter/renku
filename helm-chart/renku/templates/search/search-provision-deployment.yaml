@@ -57,9 +57,12 @@ spec:
             - name: RS_SOLR_CORE
               value: {{ first .Values.solr.coreNames }}
             - name: RS_SOLR_USER
-              value: {{ .Values.solr.auth.adminUsername | quote }}
+              value: {{ default "admin" .Values.solr.auth.adminUsername | quote }}
             - name: RS_SOLR_PASS
-              value: {{ .Values.solr.auth.adminPassword | quote }}
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "solr.fullname" . }}
+                  key: solr-password
             - name: RS_SOLR_DEFAULT_COMMIT_WITHIN
               value: "500ms"
             - name: RS_SOLR_LOG_MESSAGE_BODIES
