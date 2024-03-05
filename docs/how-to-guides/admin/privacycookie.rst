@@ -3,11 +3,12 @@
 User interface configuration options
 ------------------------------------
 
-Privacy page and Terms of Use
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Privacy page
+~~~~~~~~~~~~
 
-The UI can be configured to show a `Privacy Policy` and `Terms of Use`. These are
-displayed under the `Help` section of the UI.
+The UI has a privacy page with a completely configurable content, suited for showing
+any policy/terms related information, like the `Privacy Policy Statement` or the
+`Terms of Use`.
 
 For each of these, the content is read from the ``privacy-and-terms`` ConfigMap.
 You need to configure the values in ``ui.client.privacy.page`` to enable the feature.
@@ -36,7 +37,7 @@ for anonymous users (i.e. without an account or not currently logged in). To com
 international laws, it's strongly advised to explicitly require consent to the user for storing
 these data and using cookies.
 
-To activate this feature, please set ``ui.privacy.banner.enabled: true``. We have already configured a
+To activate this feature, please set ``ui.privacy.enabled: true``. We have already configured a
 default cookie banner to inform the users about the aforementioned requirements and points to
 point them to the privacy page for further details.
 

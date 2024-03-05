@@ -9,6 +9,11 @@ This release also contains initial support for next generation 'Renku 1.0' funct
 Renku 1.0 is still in early development and is not yet accessible to users. For more information,
 see our [roadmap](https://github.com/SwissDataScienceCenter/renku-design-docs/blob/main/roadmap.md).
 
+**Note for administrators**: this release includes breaking changes due to upgrading PostgreSQL to 16.1.0.
+This requires modifying the values file to work with the new PostgreSQL Helm chart.
+Please check (`the helm chart values changelog <https://github.com/SwissDataScienceCenter/renku/blob/master/helm-chart/values.yaml.changelog.md>`_)
+for detailed instructions.
+
 User-Facing Changes
 ~~~~~~~~~~~~~~~~~~~
 
@@ -79,6 +84,7 @@ Internal Changes
 
 **Improvements**
 
+- **Infrastructure**: Upgrade the version of PostgreSQL to 16.1.0.
 - **UI**: Add initial alpha implementation of Renku 1.0 projects
   (`#2875 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2875>`_).
 
