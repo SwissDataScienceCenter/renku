@@ -82,7 +82,7 @@ global:
   ## Events related values definitions
   events:
     streams:
-      - project.created
+      projectCreated: "project.created"
   ## Note that the graph will not turned on by default until renku 0.4.0
   graph:
     dbEventLog:
