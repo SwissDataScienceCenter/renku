@@ -50,7 +50,6 @@ New
         replicaCount: <int>
   ```
 
-<<<<<<< HEAD
 ## Upgrading to Renku 0.48.1
 
 The handling of privacy policy and terms of service content has been fine tuned.
@@ -62,8 +61,6 @@ The handling of privacy policy and terms of service content has been fine tuned.
 * NEW ``ui.client.privacy.page.termsContent`` to customize the content of the Terms of Use page (supports Markdown).
 
 
-=======
->>>>>>> 4a49d877 (chore: update values changelog)
 ## Upgrading to Renku 0.48.0
 
 The handling of privacy policy and terms of service content has been slightly changed to make

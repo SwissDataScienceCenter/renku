@@ -9,7 +9,7 @@ can be accessed using the following one-liner (you need to have jq installed).
 kubectl get secrets -n {{ .Release.Namespace }} {{ template "renku.fullname" . }} -o json | jq -r .data.users | base64 --decode
 {{- end -}}
 
-{{ if .Values.ui.client.privacy.enabled -}}
+{{ if or .Values.ui.client.privacy.banner.enabled .Values.ui.client.privacy.page.enabled -}}
 You may need to customize privacy values for your RenkuLab deployment (E.G. the Privacy page).
 Please refer to the following documentation: https://renku.readthedocs.io/en/latest/admin/index.html#additional-configurations
 {{ end }}
