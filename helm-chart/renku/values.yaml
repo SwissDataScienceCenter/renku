@@ -486,8 +486,6 @@ solr:
   cloudEnabled: false
   collectionReplicas: 0
   replicaCount: 1
-  auth:
-    adminUsername: renku
   coreNames:
     - renku-search
   javaMem: "-Xmx512M"
