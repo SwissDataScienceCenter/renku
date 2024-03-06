@@ -9,9 +9,11 @@ Please follow this convention when adding a new row
 
 The PostgreSQL chart dependency has been upgraded, which requires modification of the postgres data volume of existing deployments. See [these instructions](https://github.com/SwissDataScienceCenter/renku/tree/master/helm-chart/utils/postgres_migrations/version_upgrades/README.md) for more details.
 
-* NEW/EDIT - *postgresql.persistence.existingClaim*: Renku `0.xx.0` upgrades the postgres chart dependency, which requires modification of the postgres data volume of existing deployments. See [these instructions](https://github.com/SwissDataScienceCenter/renku/tree/master/helm-chart/utils/postgres_migrations/version_upgrades/README.md)
+* NEW/EDIT - *postgresql.persistence.existingClaim*: Renku `0.49.0` upgrades the postgres chart dependency, which requires modification of the postgres data volume of existing deployments. See [these instructions](https://github.com/SwissDataScienceCenter/renku/tree/master/helm-chart/utils/postgres_migrations/version_upgrades/README.md)
 
 * EDIT - *postgresql*: The upgrade of the postgres chart dependency requires some restructuring of the postgres subchart values to match those of bitnami/postgresql chart version 14.0.1, namely:
+
+* EDIT - *postgresql.postgresqlPassword* -> *postgresql.auth.postgresPassword*: Note that the new key does not have `ql` anymore in it.
 
 Old
   ```
@@ -36,7 +38,7 @@ New
     auth:
       username: <string>
       database: <string>
-      postgresqlPassword: <string>
+      postgresPassword: <string>
       existingSecret: <string>
       replicationUsername: <string>
       replicationPassword: <string>
