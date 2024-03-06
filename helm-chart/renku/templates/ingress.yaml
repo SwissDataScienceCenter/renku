@@ -127,13 +127,6 @@ spec:
             port:
               number: 80
       {{- end }}
-      - path: /apiv2/search
-        pathType: Prefix
-        backend:
-          service:
-            name: {{ $searchApiFullname }}
-            port:
-              number: 80
       {{- if $swaggerEnabled }}
       - path: /swagger
         pathType: Prefix
