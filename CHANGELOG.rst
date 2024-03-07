@@ -3,6 +3,9 @@
 0.50.x
 ------
 
+This release includes several alpha features that are not yet visible to users:
+- Initial support for groups
+- Initial support for namespaces for users and groups
 
 
 0.49.0
