@@ -3,7 +3,7 @@
 0.50.x
 ------
 
-
+TODO: Add Renku 2.0 Sessions
 
 0.49.0
 ------
