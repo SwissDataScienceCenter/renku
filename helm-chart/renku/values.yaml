@@ -83,7 +83,9 @@ global:
   events:
     streams:
       projectCreated: "project.created"
+      projectUpdated: "project.updated"
       userAdded: "user.added"
+      userUpdated: "user.updated"
   ## Note that the graph will not turned on by default until renku 0.4.0
   graph:
     dbEventLog:
@@ -1335,7 +1337,7 @@ search:
     replicas: 1
     image:
       repository: renku/search-api
-      tag: "0.0.29"
+      tag: "0.0.30"
       pullPolicy: IfNotPresent
     service:
       type: ClusterIP
@@ -1348,7 +1350,7 @@ search:
     replicas: 1
     image:
       repository: renku/search-provision
-      tag: "0.0.29"
+      tag: "0.0.30"
       pullPolicy: IfNotPresent
     service:
       type: ClusterIP
