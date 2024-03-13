@@ -84,8 +84,13 @@ global:
     streams:
       projectCreated: "project.created"
       projectUpdated: "project.updated"
+      projectRemoved: "project.removed"
+      projectAuthAdded: "projectAuth.added"
+      projectAuthUpdated: "projectAuth.updated"
+      projectAuthRemoved: "projectAuth.removed"
       userAdded: "user.added"
       userUpdated: "user.updated"
+      userRemoved: "user.removed"
   ## Note that the graph will not turned on by default until renku 0.4.0
   graph:
     dbEventLog:
