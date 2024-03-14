@@ -7,7 +7,6 @@ metadata:
     heritage: {{ .Release.Service }}
     release: {{ .Release.Name }}
     chart: {{ template "renku.chart" . }}
-    {{ .Values.global.redis.clientLabel | toYaml | nindent 4 }}
 spec:
   schedule: "*/2 * * * *"
   concurrencyPolicy: Forbid
@@ -19,6 +18,7 @@ spec:
         metadata:
           labels:          
             app: keycloak-sync
+            {{ .Values.global.redis.clientLabel | toYaml | nindent 12 }}
         spec:
           initContainers:
             {{- include "certificates.initContainer" . | nindent 12 }}
@@ -92,6 +92,7 @@ spec:
         metadata:
           labels:          
             app: keycloak-sync
+            {{ .Values.global.redis.clientLabel | toYaml | nindent 12 }}
         spec:
           initContainers:
             {{- include "certificates.initContainer" . | nindent 12 }}
