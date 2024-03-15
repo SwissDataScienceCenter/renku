@@ -1207,7 +1207,7 @@ gateway:
     ## Define the image for the auth middleware
     auth:
       repository: renku/renku-gateway
-      tag: "0.23.0"
+      tag: "0.23.1"
       pullPolicy: IfNotPresent
   service:
     type: ClusterIP
@@ -1243,7 +1243,7 @@ gateway:
   reverseProxy:
     image:
       repository: renku/renku-revproxy
-      tag: "0.23.0"
+      tag: "0.23.1"
       pullPolicy: IfNotPresent
     metrics:
       enabled: true
