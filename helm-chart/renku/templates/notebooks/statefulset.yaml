@@ -215,6 +215,8 @@ spec:
       initContainers:
         {{- include "certificates.initContainer" . | nindent 8 }}
         - name: k8s-resource-schema-migrations
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
           image: "{{ .Values.notebooks.image.repository }}:{{ .Values.notebooks.image.tag }}"
           imagePullPolicy: {{ .Values.notebooks.image.pullPolicy }}
           env:
