@@ -1342,7 +1342,7 @@ search:
     replicas: 1
     image:
       repository: renku/search-api
-      tag: "22887c3d76ce"
+      tag: "0.0.33"
       pullPolicy: IfNotPresent
     service:
       type: ClusterIP
@@ -1355,7 +1355,7 @@ search:
     replicas: 1
     image:
       repository: renku/search-provision
-      tag: "22887c3d76ce"
+      tag: "0.0.33"
       pullPolicy: IfNotPresent
     service:
       type: ClusterIP
