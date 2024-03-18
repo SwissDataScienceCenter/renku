@@ -615,8 +615,6 @@ gitlab:
 ## Configuration for the UI service
 ui:
   client:
-    ## The URL for the client
-    url:
     replicaCount: 1
     image:
       repository: renku/renku-ui
