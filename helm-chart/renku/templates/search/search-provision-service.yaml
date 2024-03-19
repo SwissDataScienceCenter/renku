@@ -15,7 +15,7 @@ spec:
   type: {{ .Values.search.searchProvision.service.type }}
   ports:
     - port: {{ .Values.search.searchProvision.service.port }}
-      targetPort: http-search-prov
+      targetPort: http-searchprov
       protocol: TCP
       name: http
   selector:
