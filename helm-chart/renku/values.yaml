@@ -808,6 +808,36 @@ ui:
       # overrides:
       #   9: "/"
       #   10: "/"
+    # Configuration to display the "email us" message on the session class selector.
+    sessionClassEmailUs:
+      # Set this to "true" to enable the "Need more compute resources? Email us!" message
+      # on the session class selector.
+      enabled: false
+      # Email template which opens when the user clicks "Email us!".
+      # Blank fields will not be populated
+      email:
+        to: ""
+        subject: "Request to access more compute resources in RenkuLab"
+        # Note that "{{full_name}}" will be replaced by the user's name in the email's body.
+        body: |
+          Hello Renku team,
+
+          I would like access to more compute resources on RenkuLab. Here is some information about me and my project:
+
+          I am affiliated with an educational institution: (yes or no)
+          If yes: <enter here>
+
+          The amount of resources I need for my project is:
+          <enter here> CPU
+          <enter here> RAM
+          <enter here> GPU
+
+          Please send us the link to your project(s) on RenkuLab:
+          <enter here>
+
+          Best regards,
+
+          {{full_name}}
     canary:
       enabled: false
       image:
