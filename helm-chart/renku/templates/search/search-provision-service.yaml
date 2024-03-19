@@ -1,0 +1,23 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ template "renku.search.searchProvision.fullname" . }}
+  labels:
+    app: {{ template "renku.search.searchProvision.name" . }}
+    chart: {{ template "renku.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+  annotations:
+    prometheus.io/scrape: 'true'
+    prometheus.io/path: '/metrics'
+    prometheus.io/port: '8081'
+spec:
+  type: {{ .Values.search.searchProvision.service.type }}
+  ports:
+    - port: {{ .Values.search.searchProvision.service.port }}
+      targetPort: http-search-prov
+      protocol: TCP
+      name: http
+  selector:
+    app: {{ template "renku.search.searchProvision.name" . }}
+    release: {{ .Release.Name }}

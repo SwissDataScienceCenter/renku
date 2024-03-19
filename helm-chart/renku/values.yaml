@@ -1359,6 +1359,7 @@ search:
       pullPolicy: IfNotPresent
     service:
       type: ClusterIP
+      port: 8081
     resources:
       requests:
         memory: 256Mi
