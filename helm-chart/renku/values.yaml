@@ -79,6 +79,18 @@ global:
     ## for a new project based on its own version.
     ## NOTE should only be set for CI deployments and development purposes.
     cli_version:
+  ## Events related values definitions
+  events:
+    streams:
+      projectCreated: "project.created"
+      projectUpdated: "project.updated"
+      projectRemoved: "project.removed"
+      projectAuthAdded: "projectAuth.added"
+      projectAuthUpdated: "projectAuth.updated"
+      projectAuthRemoved: "projectAuth.removed"
+      userAdded: "user.added"
+      userUpdated: "user.updated"
+      userRemoved: "user.removed"
   ## Note that the graph will not turned on by default until renku 0.4.0
   graph:
     dbEventLog:
@@ -129,6 +141,10 @@ global:
   ## postgresql-password key containing the password for the posgres user.
   # existingSecret:
 
+  # Globally available solr (TBD)
+  solr:
+    port: 8983
+
   # Connection details for a globally used redis instance for the
   # entire platform. For specifying an actual instance as part of
   # this chart, check out the non-global "redis" section.
@@ -138,6 +154,7 @@ global:
       gateway: "0"
       coreService: "1"
       uiServer: "2"
+      events: "3"
     # Note: these two entries MUST match the ones in the top level redis section.
     existingSecret: redis-secret
     existingSecretPasswordKey: redis-password
@@ -471,6 +488,21 @@ redis:
       prometheus.io/port: "9121"
   # default - making explicit
   sysctl:
+    enabled: false
+solr:
+  enabled: true
+  cloudEnabled: false
+  collectionReplicas: 0
+  replicaCount: 1
+  coreNames:
+    - renku-search
+  javaMem: "-Xmx512M"
+  networkPolicy:
+    enabled: false # Awaiting instructions from: https://github.com/bitnami/charts/issues/23424
+  persistence:
+    enabled: true
+    size: 8Gi
+  zookeeper:
     enabled: false
 ## Gitlab configuration
 gitlab:
@@ -1302,6 +1334,34 @@ jena:
   additionalInitContainerScript: "find /fuseki -name tdb.lock -type f -delete && find /fuseki/configuration -name *.ttl -type f -empty -delete && echo clean-up done"
   test:
     enabled: false
+## Configuration for renku-search services
+search:
+  searchApi:
+    replicas: 1
+    image:
+      repository: renku/search-api
+      tag: "0.0.33"
+      pullPolicy: IfNotPresent
+    service:
+      type: ClusterIP
+      port: 80
+    resources:
+      requests:
+        memory: 256Mi
+    jvmXmx: 256M
+  searchProvision:
+    replicas: 1
+    image:
+      repository: renku/search-provision
+      tag: "0.0.33"
+      pullPolicy: IfNotPresent
+    service:
+      type: ClusterIP
+    resources:
+      requests:
+        memory: 256Mi
+    jvmXmx: 256M
+## Configuration for renku-graph services
 graph:
   webhookService:
     aesEncryptionKey: # A 8, 16 or 32 bytes string used for AES encryption of the project tokens
