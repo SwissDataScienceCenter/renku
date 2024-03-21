@@ -1488,12 +1488,12 @@ initDb:
 dataService:
   image:
     repository: renku/renku-data-service
-    tag: "0.5.1"
+    tag: "0.5.2"
     pullPolicy: IfNotPresent
   keycloakSync:
     image:
       repository: renku/keycloak-sync
-      tag: "0.5.1"
+      tag: "0.5.2"
       pullPolicy: IfNotPresent
   service:
     type: ClusterIP
