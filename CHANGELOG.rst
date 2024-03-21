@@ -17,7 +17,7 @@ Internal Changes
 
 **Improvements**
 
-- **renku-ui**: Visit the /api/data/user endpoint when a user logs 
+- **renku-ui**: Visit the /api/data/user endpoint when a user is logged in (`#3080 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3080>`_).
 
 Individual Components
 ~~~~~~~~~~~~~~~~~~~~~
