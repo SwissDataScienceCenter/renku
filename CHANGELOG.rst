@@ -1,5 +1,30 @@
 .. _changelog:
 
+0.49.1
+------
+
+This release contains minor bug fixes.
+
+User-Facing Changes
+~~~~~~~~~~~~~~~~~~~
+
+**🐞 Bug Fixes**
+
+- **Data services**: Fix the incomplete synchronization of Keycloak users which caused problems with granting user access to resource pools
+
+Internal Changes
+~~~~~~~~~~~~~~~~
+
+**Improvements**
+
+- **renku-ui**: Visit the /api/data/user endpoint when a user logs 
+
+Individual Components
+~~~~~~~~~~~~~~~~~~~~~
+
+- `renku-data-services 0.5.1 <https://github.com/SwissDataScienceCenter/renku-data-services/releases/tag/v0.5.1>`_
+- `renku-ui 3.20.2 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.20.2>`_
+
 0.49.0
 ------
 
