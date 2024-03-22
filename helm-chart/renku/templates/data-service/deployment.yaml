@@ -25,9 +25,6 @@ spec:
         {{ .Values.global.redis.clientLabel | toYaml | nindent 8 }}
       {{- with .Values.dataService.podAnnotations }}
       annotations:
-        prometheus.io/scrape: 'true'
-        prometheus.io/path: '/metrics'
-        prometheus.io/port: '8000'
         {{- toYaml . | nindent 8 }}
       {{- end }}
     spec:
