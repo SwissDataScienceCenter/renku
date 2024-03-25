@@ -7,6 +7,10 @@ metadata:
     chart: {{ template "renku.chart" . }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
+  annotations:
+    prometheus.io/scrape: 'true'
+    prometheus.io/path: '/metrics'
+    prometheus.io/port: '8000'
 spec:
   type: {{ .Values.dataService.service.type }}
   ports:
