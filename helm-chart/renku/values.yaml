@@ -615,8 +615,6 @@ gitlab:
 ## Configuration for the UI service
 ui:
   client:
-    ## The URL for the client
-    url:
     replicaCount: 1
     image:
       repository: renku/renku-ui
@@ -677,10 +675,10 @@ ui:
       custom: true
       repositories:
         - url: https://github.com/SwissDataScienceCenter/renku-project-template
-          ref: 0.7.1
+          ref: 0.7.2
           name: Renku
         - url: https://github.com/SwissDataScienceCenter/contributed-project-templates
-          ref: 0.6.0
+          ref: 0.7.0
           name: Community
     # This defines the threshold for automatically showing a preview when browsing projects' files.
     # Above the soft limit, the user receives a warning. Above the hard limit, no preview is available.
