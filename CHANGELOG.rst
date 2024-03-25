@@ -17,6 +17,8 @@ Individual Components
 ~~~~~~~~~~~~~~~~~~~~~
 
 - `renku-data-services 0.6.0 <https://github.com/SwissDataScienceCenter/renku-data-services/releases/tag/v0.6.0>`_
+- `renku-gateway 0.24.0 <https://github.com/SwissDataScienceCenter/renku-gateway/releases/0.24.0>`_
+
 
 
 0.49.0
