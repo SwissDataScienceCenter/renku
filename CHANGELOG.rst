@@ -4,7 +4,15 @@
 ------
 
 This release introduces new search functionality for Renku 2.0
+It also adds support for Renku 2 user sessions.
 
+User-Facing Changes
+~~~~~~~~~~~~~~~~~~~
+
+**🌟 New Features**
+
+- 🖋 **Notebooks**: Support for Renku 2 user sessions
+  (`#1815 <https://github.com/SwissDataScienceCenter/renku-notebooks/pull/1815>`_).
 
 Internal Changes
 ~~~~~~~~~~~~~~~~
@@ -20,7 +28,7 @@ Individual Components
 - `renku-data-services 0.6.0 <https://github.com/SwissDataScienceCenter/renku-data-services/releases/tag/v0.6.0>`_
 - `renku-gateway 0.24.0 <https://github.com/SwissDataScienceCenter/renku-gateway/releases/0.24.0>`_
 - `renku-search 0.0.37 <https://github.com/SwissDataScienceCenter/renku-search/releases/tag/v0.0.37>`_
-
+- `renku-notebooks 1.22.0 <https://github.com/SwissDataScienceCenter/renku-notebooks/releases/tag/1.22.0>`_
 
 
 0.49.0
