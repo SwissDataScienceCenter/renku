@@ -8,7 +8,7 @@ jobs:
       github.event.client_payload.message == 'Helm test succeeded' }}
     runs-on: ubuntu-20.04
     steps:
-      - uses: SwissDataScienceCenter/renku-actions/test-renku@v1.9.1
+      - uses: SwissDataScienceCenter/renku-actions/test-renku@v1.11.0
         with:
           kubeconfig: ${{ secrets.RENKUBOT_DEV_KUBECONFIG }}
           renku-release: renku
@@ -22,8 +22,8 @@ jobs:
       github.event.client_payload.message == 'Helm test succeeded' }}
     runs-on: ubuntu-20.04
     steps:
-      - uses: actions/checkout@v4
-      - uses: cypress-io/github-action@v5
+      - uses: actions/checkout@v4.1.1
+      - uses: cypress-io/github-action@v6
         id: cypress
         env:
           TEST_EMAIL: renku@datascience.ch

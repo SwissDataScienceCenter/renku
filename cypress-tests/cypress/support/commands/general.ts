@@ -19,7 +19,7 @@ export const getIframe = (selector: string) => {
     .then(cy.wrap);
 };
 
-function getDataCy(value: string, exist: true) {
+function getDataCy(value: string, exist?: boolean) {
   if (exist) return cy.get(`[data-cy=${value}]`).should("exist");
   return cy.get(`[data-cy=${value}]`);
 }
@@ -33,8 +33,8 @@ declare global {
   // eslint-disable-next-line @typescript-eslint/no-namespace
   namespace Cypress {
     interface Chainable {
-      getDataCy(value: string, exist?: boolean);
-      getIframe(selector: string): Chainable<unknown>;
+      getDataCy: typeof getDataCy;
+      getIframe: typeof getIframe;
     }
   }
 }

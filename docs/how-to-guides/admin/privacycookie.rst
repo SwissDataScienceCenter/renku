@@ -3,23 +3,26 @@
 User interface configuration options
 ------------------------------------
 
-Privacy page
-~~~~~~~~~~~~
+Privacy page and Terms of Use
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-The UI has a privacy page with a completely configurable content, suited for showing
-any policy/terms related information, like the `Privacy Policy Statement` or the
-`Terms of Use`.
+The UI can be configured to show a `Privacy Policy` and `Terms of Use`. These are
+displayed under the `Help` section of the UI.
 
-The content is read from a ``ConfigMap``. You need to configure the values in
-``ui.privacy.page`` to enable the feature and set the reference ConfigMap name and key.
-Both ``ui.privacy.enabled`` and ``ui.privacy.page.enabled`` need to be ``true`` for
-enabling the privacy page.
+For each of these, the content is read from the ``privacy-and-terms`` ConfigMap.
+You need to configure the values in ``ui.client.privacy.page`` to enable the feature.
+If ``ui.client.privacy.page.enabled`` is ``true``,  then the privacy
+policy and terms of use will be shown in the UI.
 
-.. note::
+Mind that you need to customize the content by either changing the ``privacy_statement``
+and the ``terms`` keys in the ``privacy-and-terms`` ConfigMap, or assign a valid Markdown
+text to ``ui.client.privacy.page.privacyPolicyContent`` and
+``ui.client.privacy.page.termsContent``.
 
-  If you don't set the ConfigMap name and key,
-  `a sample <https://github.com/SwissDataScienceCenter/renku-ui/blob/master/helm-chart/renku-ui/templates/configmap.yaml>`_
-  will be used instead. You can start from it as a template to create your customized ConfigMap.
+If you don't customize the text,
+`a sample <https://github.com/SwissDataScienceCenter/renku/blob/master/helm-chart/renku/templates/ui/ui-client-configmap.yaml>`_
+will be used instead. You can start from it as a template to create your own
+content.
 
 The `Markdown syntax <https://en.wikipedia.org/wiki/Markdown>`_ is fully supported for the
 privacy page content.
@@ -33,7 +36,7 @@ for anonymous users (i.e. without an account or not currently logged in). To com
 international laws, it's strongly advised to explicitly require consent to the user for storing
 these data and using cookies.
 
-To activate this feature, please set ``ui.privacy.enabled: true``. We have already configured a
+To activate this feature, please set ``ui.privacy.banner.enabled: true``. We have already configured a
 default cookie banner to inform the users about the aforementioned requirements and points to
 point them to the privacy page for further details.
 
