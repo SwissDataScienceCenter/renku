@@ -498,7 +498,17 @@ solr:
     - renku-search
   javaMem: "-Xmx512M"
   networkPolicy:
-    enabled: false # Awaiting instructions from: https://github.com/bitnami/charts/issues/23424
+    allowExternal: false
+    extraIngress:
+      - ports:
+          - port: 8983
+        from:
+          - podSelector:
+              matchLabels:
+                app: search-api
+          - podSelector:
+              matchLabels:
+                app: search-provision
   persistence:
     enabled: true
     size: 8Gi
@@ -650,7 +660,7 @@ ui:
     replicaCount: 1
     image:
       repository: renku/renku-ui
-      tag: "3.20.1"
+      tag: "3.21.0"
       pullPolicy: IfNotPresent
       ## Optionally specify an array of imagePullSecrets.
       ## Secrets must be manually created in the namespace.
@@ -809,7 +819,7 @@ ui:
     keepCookies: []
     image:
       repository: renku/renku-ui-server
-      tag: "3.20.1"
+      tag: "3.21.0"
       pullPolicy: IfNotPresent
     imagePullSecrets: []
     nameOverride: ""
@@ -954,7 +964,7 @@ notebooks:
     targetCPUUtilizationPercentage: 50
   image:
     repository: renku/renku-notebooks
-    tag: "1.21.0"
+    tag: "1.22.0"
     pullPolicy: IfNotPresent
     ## Optionally specify an array of imagePullSecrets.
     ## Secrets must be manually created in the namespace.
@@ -1072,15 +1082,15 @@ notebooks:
   gitRpcServer:
     image:
       name: renku/git-rpc-server
-      tag: "1.21.0"
+      tag: "1.22.0"
   gitHttpsProxy:
     image:
       name: renku/git-https-proxy
-      tag: "1.21.0"
+      tag: "1.22.0"
   gitClone:
     image:
       name: renku/git-clone
-      tag: "1.21.0"
+      tag: "1.22.0"
   service:
     type: ClusterIP
     port: 80
@@ -1133,12 +1143,12 @@ notebooks:
     sessionTypes: ["registered"]
     image:
       repository: renku/renku-notebooks-tests
-      tag: "1.21.0"
+      tag: "1.22.0"
       pullPolicy: IfNotPresent
   k8sWatcher:
     image:
       repository: renku/k8s-watcher
-      tag: "1.21.0"
+      tag: "1.22.0"
       pullPolicy: IfNotPresent
     resources: {}
     replicaCount: 1
@@ -1151,7 +1161,7 @@ notebooks:
     enabled: false
     image:
       repository: renku/ssh-jump-host
-      tag: "1.21.0"
+      tag: "1.22.0"
       pullPolicy: IfNotPresent
     resources: {}
     replicaCount: 1
@@ -1241,7 +1251,7 @@ gateway:
     ## Define the image for the auth middleware
     auth:
       repository: renku/renku-gateway
-      tag: "0.23.1"
+      tag: "0.24.0"
       pullPolicy: IfNotPresent
   service:
     type: ClusterIP
@@ -1277,7 +1287,7 @@ gateway:
   reverseProxy:
     image:
       repository: renku/renku-revproxy
-      tag: "0.23.0"
+      tag: "0.24.0"
       pullPolicy: IfNotPresent
     metrics:
       enabled: true
@@ -1340,7 +1350,7 @@ search:
     replicas: 1
     image:
       repository: renku/search-api
-      tag: "0.0.33"
+      tag: "0.0.37"
       pullPolicy: IfNotPresent
     service:
       type: ClusterIP
@@ -1353,10 +1363,11 @@ search:
     replicas: 1
     image:
       repository: renku/search-provision
-      tag: "0.0.33"
+      tag: "0.0.37"
       pullPolicy: IfNotPresent
     service:
       type: ClusterIP
+      port: 8081
     resources:
       requests:
         memory: 256Mi
@@ -1367,7 +1378,7 @@ graph:
     aesEncryptionKey: # A 8, 16 or 32 bytes string used for AES encryption of the project tokens
     image:
       repository: renku/webhook-service
-      tag: "2.49.1"
+      tag: "2.50.0"
       pullPolicy: IfNotPresent
     service:
       type: ClusterIP
@@ -1383,7 +1394,7 @@ graph:
     aesEncryptionKey: # A 8, 16 or 32 bytes string used for AES encryption of the project tokens
     image:
       repository: renku/token-repository
-      tag: "2.49.1"
+      tag: "2.50.0"
       pullPolicy: IfNotPresent
     service:
       type: ClusterIP
@@ -1404,7 +1415,7 @@ graph:
     replicas: 1
     image:
       repository: renku/triples-generator
-      tag: "2.49.1"
+      tag: "2.50.0"
       pullPolicy: IfNotPresent
     service:
       type: ClusterIP
@@ -1426,7 +1437,7 @@ graph:
     replicas: 1
     image:
       repository: renku/knowledge-graph
-      tag: "2.49.1"
+      tag: "2.50.0"
       pullPolicy: IfNotPresent
     service:
       type: ClusterIP
@@ -1445,7 +1456,7 @@ graph:
   eventLog:
     image:
       repository: renku/event-log
-      tag: "2.49.1"
+      tag: "2.50.0"
       pullPolicy: IfNotPresent
     service:
       type: ClusterIP
@@ -1460,7 +1471,7 @@ graph:
   commitEventService:
     image:
       repository: renku/commit-event-service
-      tag: "2.49.1"
+      tag: "2.50.0"
       pullPolicy: IfNotPresent
     service:
       type: ClusterIP
@@ -1546,12 +1557,12 @@ initDb:
 dataService:
   image:
     repository: renku/renku-data-service
-    tag: "0.5.0"
+    tag: "0.6.0"
     pullPolicy: IfNotPresent
   keycloakSync:
     image:
       repository: renku/keycloak-sync
-      tag: "0.5.0"
+      tag: "0.6.0"
       pullPolicy: IfNotPresent
   service:
     type: ClusterIP

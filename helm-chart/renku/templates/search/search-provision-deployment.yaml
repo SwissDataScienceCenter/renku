@@ -69,6 +69,10 @@ spec:
               value: "false"
             - name: JAVA_OPTS
               value: "-Xmx{{ .Values.search.searchProvision.jvmXmx }} -XX:+UseZGC -XX:+ZGenerational"
+          ports:
+            - name: http-searchprov
+              containerPort: 8081
+              protocol: TCP
           resources:
             {{- toYaml .Values.search.searchProvision.resources | nindent 12 }}
           volumeMounts:
