@@ -37,14 +37,20 @@ Internal Changes
 - **Search services**: Initial support for project and user search for Renku 2.0 (alpha release)
 - **Data services**: Initial support for Renku 2.0 session environments and session launchers (alpha release)
 
+**Improvements**
+
+- **KG**: Jena 5.0.0 upgrade
+
 Individual Components
 ~~~~~~~~~~~~~~~~~~~~~
 
 - `renku-data-services 0.6.0 <https://github.com/SwissDataScienceCenter/renku-data-services/releases/tag/v0.6.0>`_
 - `renku-gateway 0.24.0 <https://github.com/SwissDataScienceCenter/renku-gateway/releases/0.24.0>`_
+- `renku-graph 2.50.0 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/2.50.0>`_
 - `renku-notebooks 1.22.0 <https://github.com/SwissDataScienceCenter/renku-notebooks/releases/tag/1.22.0>`_
 - `renku-search 0.0.37 <https://github.com/SwissDataScienceCenter/renku-search/releases/tag/v0.0.37>`_
 - `renku-ui 3.21.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.21.0>`_
+
 
 0.49.1
 ------
