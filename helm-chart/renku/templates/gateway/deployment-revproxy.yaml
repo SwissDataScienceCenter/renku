@@ -69,6 +69,8 @@ spec:
               value: {{ printf "http://%s-gateway-auth" .Release.Name }}
             - name: REVPROXY_RENKU_SERVICES_DATA_SERVICE
               value: {{ printf "http://%s-data-service" .Release.Name | quote }}
+            - name: REVPROXY_RENKU_SERVICES_SEARCH
+              value: {{ printf "http://%s-search-api" .Release.Name | quote }}
             - name: REVPROXY_RENKU_SERVICES_KEYCLOAK
               value: {{ include "renku.keycloakUrl" . | quote }}
             - name: REVPROXY_PORT
