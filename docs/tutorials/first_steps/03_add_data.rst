@@ -79,8 +79,7 @@ data, answer yes.
 Let us take a moment to understand what happened there. Opening the terminal
 puts you inside the project directory with ``git`` already configured.
 
-Then we imported a dataset  using the  `Renku CLI <http
-://renku-python.readthedocs.io/>`__. Here, we can see the method of
+Then we imported a dataset  using the  :ref:`cli-command`. Here, we can see the method of
 referencing a dataset in a data repository by DOI. By doing so,
 we capture a reference to the source of the data in the metadata of the
 project.
