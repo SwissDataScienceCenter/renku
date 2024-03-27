@@ -5,7 +5,6 @@
 
 This release introduces new search functionality for Renku 2.0
 
-
 Internal Changes
 ~~~~~~~~~~~~~~~~
 
@@ -21,6 +20,31 @@ Individual Components
 - `renku-gateway 0.24.0 <https://github.com/SwissDataScienceCenter/renku-gateway/releases/0.24.0>`_
 - `renku-search 0.0.37 <https://github.com/SwissDataScienceCenter/renku-search/releases/tag/v0.0.37>`_
 
+
+0.49.1
+------
+
+This release contains minor bug fixes.
+
+User-Facing Changes
+~~~~~~~~~~~~~~~~~~~
+
+**🐞 Bug Fixes**
+
+- **Data services**: Fix the incomplete synchronization of Keycloak users which caused problems with granting user access to resource pools
+
+Internal Changes
+~~~~~~~~~~~~~~~~
+
+**Improvements**
+
+- **renku-ui**: Visit the /api/data/user endpoint when a user is logged in (`#3080 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3080>`_).
+
+Individual Components
+~~~~~~~~~~~~~~~~~~~~~
+
+- `renku-data-services 0.5.2 <https://github.com/SwissDataScienceCenter/renku-data-services/releases/tag/v0.5.2>`_
+- `renku-ui 3.20.2 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.20.2>`_
 
 
 0.49.0
