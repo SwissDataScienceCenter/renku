@@ -14,10 +14,7 @@ User-Facing Changes
 **🌟 New Features**
 
 - **UI**: Renku 2.0 Search page with initial support for project and user search (alpha release)
-- **Data services**: Initial support for project and user search for Renku 2.0 (alpha release)
-- **Search services**: Initial support for project and user search for Renku 2.0 (alpha release)
 - **UI**: Support for interactive sessions in Renku 2.0 projects, comprising global session environments and session launchers (alpha release)
-- **Data services**: Initial support for Renku 2.0 session environments and session launchers (alpha release)
 - **Notebooks**: Initial support for Renku 2.0 sessions, supporting mounting multiple repositories (alpha release)
 - **UI**: Add a new navigation top bar for Renku 2.0 (alpha release)
 - **UI**: Add an ad-hoc feature flag for Renku 2.0 (alpha release)
@@ -34,15 +31,13 @@ User-Facing Changes
 Internal Changes
 ~~~~~~~~~~~~~~~~
 
-**Improvements**
+**🌟 New Features**
 
-- **Team**: changelog item, alphabetized by team name
+- **Data services**: Initial support for project and user search for Renku 2.0 (alpha release)
+- **Search services**: Initial support for project and user search for Renku 2.0 (alpha release)
+- **Data services**: Initial support for Renku 2.0 session environments and session launchers (alpha release)
 
-**Bug Fixes**
-
-- **Team**: changelog item, alphabetized by team name
-
-Individual components
+Individual Components
 ~~~~~~~~~~~~~~~~~~~~~
 
 - `renku-data-services 0.6.0 <https://github.com/SwissDataScienceCenter/renku-data-services/releases/tag/v0.6.0>`_
