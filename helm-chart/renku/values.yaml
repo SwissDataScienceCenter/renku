@@ -498,7 +498,17 @@ solr:
     - renku-search
   javaMem: "-Xmx512M"
   networkPolicy:
-    enabled: false # Awaiting instructions from: https://github.com/bitnami/charts/issues/23424
+    allowExternal: false
+    extraIngress:
+      - ports:
+          - port: 8983
+        from:
+          - podSelector:
+              matchLabels:
+                app: search-api
+          - podSelector:
+              matchLabels:
+                app: search-provision
   persistence:
     enabled: true
     size: 8Gi
