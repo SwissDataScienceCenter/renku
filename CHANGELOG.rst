@@ -5,7 +5,7 @@
 
 Renku ``0.50.0`` introduces several new features related to Renku 2.0.
 
-1. This release intoduces new sew search functionality for Renku 2.0.
+1. This release introduces new sew search functionality for Renku 2.0.
 2. Support has been added for interactive sessions in Renku 2.0 projects.
 
 User-Facing Changes
@@ -29,7 +29,7 @@ User-Facing Changes
 
 **🐞 Bug Fixes**
 
-- **UI** Update react-pdf version and fix it (`#3083 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3083>`_, `#3036 <https://github.com/SwissDataScienceCenter/renku-ui/issues/3036>`_)
+- **UI** Update ``react-pdf`` version and fix it (`#3083 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3083>`_, `#3036 <https://github.com/SwissDataScienceCenter/renku-ui/issues/3036>`_)
 
 Internal Changes
 ~~~~~~~~~~~~~~~~
