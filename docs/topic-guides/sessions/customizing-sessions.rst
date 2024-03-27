@@ -41,7 +41,7 @@ Your project may even include a package with an advanced UI (like
 and you probably want to choose it as default.
 
 It's possible to set a default value for all these options, either using the
-`renku config command`_ locally or in a session, or directly on RenkuLab project
+:ref:`cli-config` locally or in a session, or directly on RenkuLab project
 page.
 
 To do that, you can go into the project `Settings` section and click on the
@@ -66,7 +66,7 @@ preserved even if you move the project to another RenkuLab instance.
 .. note::
 
   Sometimes you may want to add a non-default value, typically to select a custom
-  default environment. You can use the `renku config command`_ from a session,
+  default environment. You can use the :ref:`cli-config` from a session,
   for example:
 
   .. code-block:: bash
@@ -114,5 +114,3 @@ Getting Help
 
 If you are stuck with a specific modification you'd like to make, do reach out to the
 `Renku community forum <https://renku.discourse.group>`_!
-
-.. _`renku config command`: https://renku.readthedocs.io/en/latest/renku-python/docs/reference/commands.html#module-renku.ui.cli.config
