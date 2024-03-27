@@ -1,18 +1,42 @@
 .. _changelog:
 
-0.50.x
+0.50.0
 ------
 
-This release introduces new search functionality for Renku 2.0
+Renku ``0.50.0`` introduces several new features related to Renku 2.0.
+
+1. This release introduces new sew search functionality for Renku 2.0.
+2. Support has been added for interactive sessions in Renku 2.0 projects.
+
+User-Facing Changes
+~~~~~~~~~~~~~~~~~~~
+
+**🌟 New Features**
+
+- **UI**: Renku 2.0 Search page with initial support for project and user search (alpha release)
+- **UI**: Support for interactive sessions in Renku 2.0 projects, comprising global session environments and session launchers (alpha release)
+- **Notebooks**: Initial support for Renku 2.0 sessions, supporting mounting multiple repositories (alpha release)
+- **UI**: Add a new navigation top bar for Renku 2.0 (alpha release)
+- **UI**: Add an ad-hoc feature flag for Renku 2.0 (alpha release)
+
+**✨ Improvements**
+
+- **UI** Update the footer links section with Mastodon (`#3081 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3081>`_, `#3059 <https://github.com/SwissDataScienceCenter/renku-ui/issues/3059>`_)
+- **UI** Improve session scheduling error messages (`#3082 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3082>`_, `#3036 <https://github.com/SwissDataScienceCenter/renku-ui/issues/3036>`_)
+
+**🐞 Bug Fixes**
+
+- **UI** Update ``react-pdf`` version and fix it (`#3083 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3083>`_, `#3036 <https://github.com/SwissDataScienceCenter/renku-ui/issues/3036>`_)
 
 Internal Changes
 ~~~~~~~~~~~~~~~~
 
-**New Features**
+**🌟 New Features**
 
 - **Data services**: Initial support for project and user search for Renku 2.0 (alpha release)
 - **Data services**: Add support for sentry and prometheus
 - **Search services**: Initial support for project and user search for Renku 2.0 (alpha release)
+- **Data services**: Initial support for Renku 2.0 session environments and session launchers (alpha release)
 
 **Improvements**
 
@@ -24,8 +48,10 @@ Individual Components
 - `renku-data-services 0.6.0 <https://github.com/SwissDataScienceCenter/renku-data-services/releases/tag/v0.6.0>`_
 - `renku-data-services 0.7.0 <https://github.com/SwissDataScienceCenter/renku-data-services/releases/tag/v0.7.0>`_
 - `renku-gateway 0.24.0 <https://github.com/SwissDataScienceCenter/renku-gateway/releases/0.24.0>`_
-- `renku-search 0.0.37 <https://github.com/SwissDataScienceCenter/renku-search/releases/tag/v0.0.37>`_
 - `renku-graph 2.50.0 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/2.50.0>`_
+- `renku-notebooks 1.22.0 <https://github.com/SwissDataScienceCenter/renku-notebooks/releases/tag/1.22.0>`_
+- `renku-search 0.0.37 <https://github.com/SwissDataScienceCenter/renku-search/releases/tag/v0.0.37>`_
+- `renku-ui 3.21.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.21.0>`_
 
 
 0.49.1
