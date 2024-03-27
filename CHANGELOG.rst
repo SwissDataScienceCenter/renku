@@ -3633,7 +3633,7 @@ Bug Fixes
 Features
 ~~~~~~~~
 
-* **Renku CLI**: support moving files between datasets with ``renku mv`` (`CLI documentation <https://renku.readthedocs.io/en/latest/renku-python/docs/reference/commands.html#module-renku.cli.move>`__).
+* **Renku CLI**: support moving files between datasets with ``renku mv`` (`CLI documentation <https://renku-python.readthedocs.io/en/stable/reference/commands/move.html>`__).
 * **Renku CLI**: ability to update local project from its template and to update the Dockerfile to install the current version of renku-python using renku migrate.
 
 * **Projects**: ability to generate project-creation links, embedding metadata to automatically pre-fill input fields. For more details on how to use this feature please read our `documentation <https://renku.readthedocs.io/en/latest/user/templates.html#create-shareable-project-creation-links-with-pre-filled-fields>`__.
@@ -4303,7 +4303,7 @@ New features
 
 ⭐️ Datasets allow uploading file hierarchies in zip format
 
-⭐️ CLI: Datasets metadata is editable. Please see the `Dataset documentation <https://renku.readthedocs.io/en/latest/renku-python/docs/reference/commands.html#module-renku.cli.dataset>`__ for details.
+⭐️ CLI: Datasets metadata is editable. Please see the `Dataset documentation <https://renku.readthedocs.io/en/stable/renku-python/docs/reference/commands/dataset.html>`__ for details.
 
 ⭐️ CLI: enable importing renku datasets
 
