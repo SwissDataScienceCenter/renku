@@ -22,6 +22,7 @@ spec:
       labels:
         app: renku-data-service
         release: {{ .Release.Name }}
+        {{ .Values.global.redis.clientLabel | toYaml | nindent 8 }}
       {{- with .Values.dataService.podAnnotations }}
       annotations:
         {{- toYaml . | nindent 8 }}
@@ -58,6 +59,13 @@ spec:
               value: {{ (printf "%s://%s/auth/" (include "renku.http" .) .Values.global.renku.domain) | quote }}
             - name: KEYCLOAK_TOKEN_SIGNATURE_ALGS
               value: "RS256"
+            - name: KEYCLOAK_CLIENT_ID
+              value: {{ include "renku.dataService.keycloak.clientId" . | quote }}
+            - name: KEYCLOAK_CLIENT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "renku.fullname" . }}
+                  key: dataServiceKeycloakClientSecret
             - name: SERVER_DEFAULTS
               value: /etc/renku-data-service/server_options/server_defaults.json
             - name: SERVER_OPTIONS
@@ -68,6 +76,21 @@ spec:
               value: {{ .Values.global.gitlab.url | quote }}
             - name: MAX_PINNED_PROJECTS
               value: {{ .Values.dataService.maxPinnedProjects | quote }}
+            - name: REDIS_HOST
+              value: {{ .Values.global.redis.host | quote }}
+            - name: REDIS_PORT
+              value: {{ .Values.global.redis.port | quote }}
+            - name: REDIS_DATABASE
+              value: {{ .Values.global.redis.dbIndex.events| quote }}
+            - name: REDIS_IS_SENTINEL
+              value: {{ .Values.global.redis.sentinel.enabled | quote }}
+            - name: REDIS_MASTER_SET
+              value: {{ .Values.global.redis.sentinel.masterSet | quote }}
+            - name: REDIS_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.global.redis.existingSecret }}
+                  key: {{ .Values.global.redis.existingSecretPasswordKey }}
             {{- include "certificates.env.python" $ | nindent 12 }}
           volumeMounts:
             - name: server-options
