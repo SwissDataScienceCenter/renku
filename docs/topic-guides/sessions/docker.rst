@@ -47,7 +47,7 @@ Customize your Dockerfile
 -------------------------
 
 Before we get into modifying Dockerfiles, if you want to know how to update
-the base version of your RenkuLab image, see `Upgrading Renku <upgrading_renku>`_.
+the base version of your RenkuLab image, see :ref:`upgrading_renku`.
 
 If you're going to make simple modifications to the ``Dockerfile`` (i.e. changing
 the base Docker image version number), you can use the following steps to update
