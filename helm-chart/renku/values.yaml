@@ -1613,6 +1613,27 @@ dataService:
   affinity: {}
   # This defines the maximum number of pinned projects in user preferences
   maxPinnedProjects: 5
+secretsStorage:
+  image:
+    repository: renku/secrets-storage
+    tag: "0.1.0"
+    pullPolicy: IfNotPresent
+  service:
+    type: ClusterIP
+    port: 80
+  replicaCount: 1
+  podAnnotations: {}
+  resources: {}
+  autoscaling:
+    enabled: false
+    minReplicas: 1
+    maxReplicas: 5
+    targetMemoryUtilizationPercentage: 75
+    targetCPUUtilizationPercentage: 75
+  updateStrategy: {}
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
 podSecurityContext: {}
 securityContext:
   runAsUser: 1000
