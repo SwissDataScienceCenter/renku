@@ -9,13 +9,13 @@ jobs:
   publish-chart:
     runs-on: ubuntu-20.04
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v4.1.1
         with:
           fetch-depth: 0
       - name: Set version
         id: vars
         run: echo "tag=${GITHUB_REF#refs/*/}" >> $GITHUB_OUTPUT
-      - uses: SwissDataScienceCenter/renku-actions/publish-chart@v1.9.1
+      - uses: SwissDataScienceCenter/renku-actions/publish-chart@v1.11.0
         env:
           CHART_DIR: helm-chart/
           CHART_NAME: renku
@@ -40,16 +40,3 @@ jobs:
         if: always()
     outputs:
       chart-version: ${{ steps.vars.outputs.tag }}
-  rollout-renku-deployments:
-    runs-on: ubuntu-20.04
-    needs:
-      - "publish-chart"
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-      - name: Rollout renku version
-        uses: SwissDataScienceCenter/renku-actions/rollout-renku-version@v1.9.1
-        env:
-          CHART_VERSION: ${{ needs.publish-chart.outputs.chart-version }}
-          GITHUB_TOKEN: ${{ secrets.RENKUBOT_GITHUB_TOKEN }}

@@ -1,16 +1,142 @@
 .. _changelog:
 
+0.49.1
+------
+
+This release contains minor bug fixes.
+
+User-Facing Changes
+~~~~~~~~~~~~~~~~~~~
+
+**🐞 Bug Fixes**
+
+- **Data services**: Fix the incomplete synchronization of Keycloak users which caused problems with granting user access to resource pools
+
+Internal Changes
+~~~~~~~~~~~~~~~~
+
+**Improvements**
+
+- **renku-ui**: Visit the /api/data/user endpoint when a user is logged in (`#3080 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3080>`_).
+
+Individual Components
+~~~~~~~~~~~~~~~~~~~~~
+
+- `renku-data-services 0.5.2 <https://github.com/SwissDataScienceCenter/renku-data-services/releases/tag/v0.5.2>`_
+- `renku-ui 3.20.2 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.20.2>`_
+
+0.49.0
+------
+
+The release contains bug fixes to renku core service related to project migration.
+
+This release also contains initial support for next generation 'Renku 2.0' functionality. However,
+Renku 2.0 is still in early development and is not yet accessible to users. For more information,
+see our [roadmap](https://github.com/SwissDataScienceCenter/renku-design-docs/blob/main/roadmap.md).
+
+**Note for administrators**: this release includes breaking changes due to upgrading PostgreSQL to 16.1.0.
+This requires modifying the values file to work with the new PostgreSQL Helm chart.
+Please check (`the helm chart values changelog <https://github.com/SwissDataScienceCenter/renku/blob/master/helm-chart/values.yaml.changelog.md>`_)
+for detailed instructions.
+
+User-Facing Changes
+~~~~~~~~~~~~~~~~~~~
+
+**🐞 Bug Fixes**
+
+- **Core Service**: Fix issue with having to run project migration twice to migrate the Dockerfile/project template.
+
+Internal Changes
+~~~~~~~~~~~~~~~~
+
+**New Features**
+
+- **Data services**: Initial support for Renku 2.0 projects (alpha release)
+
+**Improvements**
+
+- **csi-rclone**: added rclone logs to regular node-plugin logs.
+  (`#11 <https://github.com/SwissDataScienceCenter/csi-rclone/pull/11>`_).
+
+
+Individual Components
+~~~~~~~~~~~~~~~~~~~~~
+
+- `renku-python 2.9.2 <https://github.com/SwissDataScienceCenter/renku-python/releases/tag/2.9.2>`_
+- `renku-data-services 0.5.0 <https://github.com/SwissDataScienceCenter/renku-data-services/releases/tag/v0.5.0>`_
+- `csi-rclone 0.1.7 <https://github.com/SwissDataScienceCenter/csi-rclone/releases/tag/v0.1.7>`_
+
+
+0.48.1
+------
+
+Renku ``0.48.1`` only changes how the Terms of Use and Privacy Policy sections
+can be customized by administrators.
+
+0.48.0
+------
+
+Renku ``0.48.0`` introduces the ability to add a Terms of Use and Privacy Policy to
+RenkuLab, as well as an assortment of small improvements and bug-fixes.
+
+User-Facing Changes
+~~~~~~~~~~~~~~~~~~~
+
+**🌟 New Features**
+
+- 📜 **UI**: Show terms of use and privacy policy in the help section
+  (`#2954 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2954>`_).
+
+**✨ Improvements**
+
+- 🖌 **UI**: Improve appearance of templates on new project page
+  (`#2999 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2999>`_).
+- 🛑 **UI**: Unify appearance of project settings alerts
+  (`#3001 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3001>`_).
+
+**🐞 Bug Fixes**
+
+- **UI**: Restore logged in/out notifications
+  (`#3014 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3014>`_).
+- **UI**: Hide button to add storage on deployments not supporting external storages
+  (`#3001 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3001>`_).
+- **UI**: Fix landing page parallax background (`#3010 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3010>`_).
+- **UI**: Fix search bar styles (`#3019 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3019>`_).
+- **UI**: Handle ``jsonrpc`` improper redirects (`#3017 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3017>`_, `#2966 <https://github.com/SwissDataScienceCenter/renku-ui/issues/2966>`_).
+
+Internal Changes
+~~~~~~~~~~~~~~~~
+
+**Improvements**
+
+- **Infrastructure**: Upgrade the version of PostgreSQL to 16.1.0.
+- **UI**: Add initial alpha implementation of Renku 2.0 projects
+  (`#2875 <https://github.com/SwissDataScienceCenter/renku-ui/pull/2875>`_).
+
+Individual components
+~~~~~~~~~~~~~~~~~~~~~~
+
+- `renku-ui 3.20.1 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.20.1>`_
+- `renku-ui 3.20.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.20.0>`_
+
+0.47.1
+------
+
+This release only includes changes to the documentation and updates to the acceptance tests.
+It doesn't bring any new features or bug fixes.
+
+
 0.47.0
 ------
 
 This release expands Renku's cloud storage functionality in two key ways: First, mounted storages
 are now read **and write**, so you can use mounted storage as an active workspace for your data in a RenkuLab
 session. Second, we have expanded the cloud storage services you can integrate with RenkuLab. You can now
-mount not only S3 buckets, but also WebDAV-based storages and Azure Blobs. 
- 
+mount not only S3 buckets, but also WebDAV-based storages and Azure Blobs.
+
 If you use SSH sessions via the CLI, you can use cloud storage there too! Configure cloud storage for your
 project on RenkuLab.io, and those storages will be mounted in your remote session. Support for cloud
-storage in local Renku sessions is still on our roadmap. 
+storage in local Renku sessions is still on our roadmap.
 
 This release also adds the ability to change which resource class your session uses when you unpause the
 session, in case the original resource class is now full.
@@ -141,15 +267,15 @@ Internal Changes
 Individual components
 ~~~~~~~~~~~~~~~~~~~~~
 
-- `renku-python 2.8.2 <https://github.com/SwissDataScienceCenter/renku-python/releases/tag/2.8.2>`_ 
+- `renku-python 2.8.2 <https://github.com/SwissDataScienceCenter/renku-python/releases/tag/2.8.2>`_
 - `renku-ui 3.17.2 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.17.2>`_
-- `renku-graph 2.48.2 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/2.48.2>`_ 
+- `renku-graph 2.48.2 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/2.48.2>`_
 
 
 0.45.1
 ------
-This is a bugfix release that updates the helm chart to work with new 
-prometheus metrics in the renku core service, which was preventing it from 
+This is a bugfix release that updates the helm chart to work with new
+prometheus metrics in the renku core service, which was preventing it from
 starting properly if metrics were enabled. In addition this release
 also addresses problems with expiring Gitlab access tokens when sessions
 are paused and resumed which caused resumed session to not be able to push to Gitlab
@@ -160,8 +286,8 @@ Internal Changes
 
 **🐞 Bug Fixes**
 
-- **Helm Chart**: update core-service deployment to allow service and rq 
-  metrics to run side-by-side (`#3303 
+- **Helm Chart**: update core-service deployment to allow service and rq
+  metrics to run side-by-side (`#3303
   <https://github.com/SwissDataScienceCenter/renku/pull/3303>`_).
 - **Notebooks**: use a larger /dev/shm folder in sessions
   (`#1723 <https://github.com/SwissDataScienceCenter/renku-notebooks/issues/1723>`_)

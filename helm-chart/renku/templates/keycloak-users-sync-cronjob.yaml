@@ -1,0 +1,113 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: {{ include "renku.fullname" . }}-keycloak-sync-events
+  labels:
+    app: keycloak-sync
+    heritage: {{ .Release.Service }}
+    release: {{ .Release.Name }}
+    chart: {{ template "renku.chart" . }}
+spec:
+  schedule: "*/2 * * * *"
+  concurrencyPolicy: Forbid
+  successfulJobsHistoryLimit: 1
+  failedJobsHistoryLimit: 3
+  jobTemplate:
+    spec:
+      template:
+        metadata:
+          labels:          
+            app: keycloak-sync
+        spec:
+          initContainers:
+            {{- include "certificates.initContainer" . | nindent 12 }}
+          containers:
+            - name: keycloak-sync
+              image: "{{ .Values.dataService.keycloakSync.image.repository }}:{{ .Values.dataService.keycloakSync.image.tag }}"
+              imagePullPolicy: IfNotPresent
+              env:
+                - name: DB_HOST
+                  value: {{ template "postgresql.fullname" . }}
+                - name: DB_USER
+                  value: {{ .Values.global.db.common.username }}
+                - name: DB_PASSWORD
+                  valueFrom:
+                    secretKeyRef:
+                      name: {{ .Values.global.db.common.passwordSecretName }}
+                      key: password
+                - name: KEYCLOAK_URL
+                  value: {{ include "renku.keycloakUrl" . | quote}}
+                - name: KEYCLOAK_REALM
+                  value: {{ include "renku.keycloak.realm" . | quote}}
+                - name: KEYCLOAK_CLIENT_ID
+                  value: {{ include "renku.dataService.keycloak.clientId" . | quote }}
+                - name: KEYCLOAK_CLIENT_SECRET
+                  valueFrom:
+                    secretKeyRef:
+                      name: {{ include "renku.fullname" . }}
+                      key: dataServiceKeycloakClientSecret
+                - name: TOTAL_USER_SYNC
+                  value: "false"
+                {{- include "certificates.env.python" . | nindent 16 }}
+              volumeMounts:
+                {{- include "certificates.volumeMounts.system" . | nindent 16 }}
+          restartPolicy: Never
+          volumes:
+            {{- include "certificates.volumes" . | nindent 12 }}
+---
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: {{ include "renku.fullname" . }}-keycloak-sync-total
+  labels:
+    app: keycloak-sync
+    heritage: {{ .Release.Service }}
+    release: {{ .Release.Name }}
+    chart: {{ template "renku.chart" . }}
+spec:
+  schedule: "0 3 * * *"
+  concurrencyPolicy: Forbid
+  successfulJobsHistoryLimit: 1
+  failedJobsHistoryLimit: 3
+  jobTemplate:
+    spec:
+      template:
+        metadata:
+          labels:          
+            app: keycloak-sync
+        spec:
+          initContainers:
+            {{- include "certificates.initContainer" . | nindent 12 }}
+          containers:
+            - name: keycloak-sync
+              image: "{{ .Values.dataService.keycloakSync.image.repository }}:{{ .Values.dataService.keycloakSync.image.tag }}"
+              imagePullPolicy: IfNotPresent
+              env:
+                - name: DB_HOST
+                  value: {{ template "postgresql.fullname" . }}
+                - name: DB_USER
+                  value: {{ .Values.global.db.common.username }}
+                - name: DB_PASSWORD
+                  valueFrom:
+                    secretKeyRef:
+                      name: {{ .Values.global.db.common.passwordSecretName }}
+                      key: password
+                - name: KEYCLOAK_URL
+                  value: {{ include "renku.keycloakUrl" . | quote}}
+                - name: KEYCLOAK_REALM
+                  value: {{ include "renku.keycloak.realm" . | quote}}
+                - name: KEYCLOAK_CLIENT_ID
+                  value: {{ include "renku.dataService.keycloak.clientId" . | quote }}
+                - name: KEYCLOAK_CLIENT_SECRET
+                  valueFrom:
+                    secretKeyRef:
+                      name: {{ include "renku.fullname" . }}
+                      key: dataServiceKeycloakClientSecret
+                - name: TOTAL_USER_SYNC
+                  value: "true"
+                {{- include "certificates.env.python" . | nindent 16 }}
+              volumeMounts:
+                {{- include "certificates.volumeMounts.system" . | nindent 16 }}
+          restartPolicy: Never
+          volumes:
+            {{- include "certificates.volumes" . | nindent 12 }}
