@@ -57,6 +57,10 @@ Define subcharts full names
 {{- printf "%s-%s" .Release.Name "keycloakx" | replace "+" "_" | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 
+{{- define "solr.fullname" -}}
+{{- printf "%s-%s" .Release.Name "solr" | replace "+" "_" | trunc 63 | trimSuffix "-" -}}
+{{- end -}}
+
 {{- define "gitlab.fullname" -}}
 {{- printf "%s-%s" .Release.Name "gitlab" | replace "+" "_" | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
