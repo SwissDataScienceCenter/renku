@@ -62,7 +62,7 @@ global:
         fullnameOverride: ""
         image:
           repository: renku/renku-core
-          tag: "v2.9.1"
+          tag: "v2.9.2"
           pullPolicy: IfNotPresent
   uiserver:
     ## The client secret for the renku-ui client application registered in keycloak.
@@ -334,36 +334,43 @@ keycloakx:
 # For production deployments check out
 # https://github.com/bitnami/charts/blob/master/bitnami/postgresql/values-production.yaml
 postgresql:
-  # If an external Postgres database is defined in global.externalServices.postgresql,
-  # postgresql.enabled should be false, and global.externalServices.postgresql.enabled should be true.
-  # By default, Renku-bundled Postgres is enabled.
-  enabled: true
-  ## We use the defaults here.
-  postgresqlDatabase: postgres
-  postgresqlUsername: postgres
-  ## The admin password should be set explicitly, otherwise a random string will be created.
-  ## Alternatively an existing secret can be provided. Note that postgres
-  ## DOES NOT tolerate a change of the admin password when upgrading.
-  # postgresqlPassword:
+  ## We use the defaults here. Note that these basic configs could also be set as
+  ## global values such that sub-charts can access them too.
 
-  ## Use an existing secret instead of creating a new one. It must have a
-  ## postgresql-password key containing the password for the posgres user.
-  # existingSecret:
-  image:
-    repository: bitnami/postgresql
-    tag: 12.8.0
-  persistence:
-    ## We use the defaults here, but they will probably be modified for most deployments.
-    enabled: true
-    size: 8Gi
-    ## Provide an existing PersistentVolumeClaim to be reused.
-    # existingClaim:
-  # Consider replication. These are the defaults for the basic settings.
-  replication:
-    enabled: false
-    user: repl_user
-    password: repl_password # generate a random password `openssl rand -hex 32`
-    slaveReplicas: 1
+  auth:
+    username: postgres
+    database: postgres
+
+    ## The admin password should be set explicitly, otherwise a random string will be
+    ## created. Alternatively an existing secret can be provided. Note that postgres
+    ## DOES NOT tolerate a change of the admin password when upgrading.
+    # postgresqlPassword:
+
+    ## Use an existing secret instead of creating a new one. It must have a
+    ## postgresql-password key containing the password for the postgres user.
+    # existingSecret:
+
+    # Consider replication. These are the defaults for the basic settings.
+    # replicationUsername: repl_user
+    # replicationPassword: repl_password # generate a random password `openssl rand -hex 32`
+
+  # image:
+  # repository: bitnami/postgresql
+  # tag:
+
+  primary:
+    persistence:
+      ## We use the defaults here, but they will probably be modified for most deployments.
+      enabled: true
+      size: 8Gi
+      ## Provide an existing PersistentVolumeClaim to be reused.
+      # existingClaim:
+
+    # Consider replication. These are the defaults for the basic settings.
+    readReplicas:
+      enabled: false
+      replicaCount: 1
+
 redis:
   # If set to true, a HA redis will be included in the Renku release.
   install: true
@@ -608,8 +615,6 @@ gitlab:
 ## Configuration for the UI service
 ui:
   client:
-    ## The URL for the client
-    url:
     replicaCount: 1
     image:
       repository: renku/renku-ui
@@ -670,10 +675,10 @@ ui:
       custom: true
       repositories:
         - url: https://github.com/SwissDataScienceCenter/renku-project-template
-          ref: 0.7.1
+          ref: 0.7.2
           name: Renku
         - url: https://github.com/SwissDataScienceCenter/contributed-project-templates
-          ref: 0.6.0
+          ref: 0.7.0
           name: Community
     # This defines the threshold for automatically showing a preview when browsing projects' files.
     # Above the soft limit, the user receives a warning. Above the hard limit, no preview is available.
@@ -854,7 +859,8 @@ dlf-chart:
     enabled: false
   dataset-operator-chart:
     enabled: true
-csi-rclone: {}
+csi-rclone:
+  {}
   # This section is only relevant if you are installing csi-rclone as part of Renku
   ## Name of the csi storage class to use for RClone/Cloudstorage. Should be unique per cluster.
   # storageClassName: csi-rclone
@@ -1480,8 +1486,13 @@ initDb:
 dataService:
   image:
     repository: renku/renku-data-service
-    tag: "0.4.0"
+    tag: "0.5.0"
     pullPolicy: IfNotPresent
+  keycloakSync:
+    image:
+      repository: renku/keycloak-sync
+      tag: "0.5.0"
+      pullPolicy: IfNotPresent
   service:
     type: ClusterIP
     port: 80
@@ -1512,4 +1523,4 @@ affinity: {}
 versions:
   latest:
     image:
-      tag: v2.9.1
+      tag: v2.9.2
