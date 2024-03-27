@@ -79,6 +79,18 @@ global:
     ## for a new project based on its own version.
     ## NOTE should only be set for CI deployments and development purposes.
     cli_version:
+  ## Events related values definitions
+  events:
+    streams:
+      projectCreated: "project.created"
+      projectUpdated: "project.updated"
+      projectRemoved: "project.removed"
+      projectAuthAdded: "projectAuth.added"
+      projectAuthUpdated: "projectAuth.updated"
+      projectAuthRemoved: "projectAuth.removed"
+      userAdded: "user.added"
+      userUpdated: "user.updated"
+      userRemoved: "user.removed"
   ## Note that the graph will not turned on by default until renku 0.4.0
   graph:
     dbEventLog:
@@ -129,6 +141,10 @@ global:
   ## postgresql-password key containing the password for the posgres user.
   # existingSecret:
 
+  # Globally available solr (TBD)
+  solr:
+    port: 8983
+
   # Connection details for a globally used redis instance for the
   # entire platform. For specifying an actual instance as part of
   # this chart, check out the non-global "redis" section.
@@ -138,6 +154,7 @@ global:
       gateway: "0"
       coreService: "1"
       uiServer: "2"
+      events: "3"
     # Note: these two entries MUST match the ones in the top level redis section.
     existingSecret: redis-secret
     existingSecretPasswordKey: redis-password
@@ -472,6 +489,31 @@ redis:
   # default - making explicit
   sysctl:
     enabled: false
+solr:
+  enabled: true
+  cloudEnabled: false
+  collectionReplicas: 0
+  replicaCount: 1
+  coreNames:
+    - renku-search
+  javaMem: "-Xmx512M"
+  networkPolicy:
+    allowExternal: false
+    extraIngress:
+      - ports:
+          - port: 8983
+        from:
+          - podSelector:
+              matchLabels:
+                app: search-api
+          - podSelector:
+              matchLabels:
+                app: search-provision
+  persistence:
+    enabled: true
+    size: 8Gi
+  zookeeper:
+    enabled: false
 ## Gitlab configuration
 gitlab:
   ## Spawn a gitlab instance
@@ -618,7 +660,7 @@ ui:
     replicaCount: 1
     image:
       repository: renku/renku-ui
-      tag: "3.20.2"
+      tag: "3.21.0"
       pullPolicy: IfNotPresent
       ## Optionally specify an array of imagePullSecrets.
       ## Secrets must be manually created in the namespace.
@@ -777,7 +819,7 @@ ui:
     keepCookies: []
     image:
       repository: renku/renku-ui-server
-      tag: "3.20.2"
+      tag: "3.21.0"
       pullPolicy: IfNotPresent
     imagePullSecrets: []
     nameOverride: ""
@@ -922,7 +964,7 @@ notebooks:
     targetCPUUtilizationPercentage: 50
   image:
     repository: renku/renku-notebooks
-    tag: "1.21.0"
+    tag: "1.22.0"
     pullPolicy: IfNotPresent
     ## Optionally specify an array of imagePullSecrets.
     ## Secrets must be manually created in the namespace.
@@ -1040,15 +1082,15 @@ notebooks:
   gitRpcServer:
     image:
       name: renku/git-rpc-server
-      tag: "1.21.0"
+      tag: "1.22.0"
   gitHttpsProxy:
     image:
       name: renku/git-https-proxy
-      tag: "1.21.0"
+      tag: "1.22.0"
   gitClone:
     image:
       name: renku/git-clone
-      tag: "1.21.0"
+      tag: "1.22.0"
   service:
     type: ClusterIP
     port: 80
@@ -1101,12 +1143,12 @@ notebooks:
     sessionTypes: ["registered"]
     image:
       repository: renku/renku-notebooks-tests
-      tag: "1.21.0"
+      tag: "1.22.0"
       pullPolicy: IfNotPresent
   k8sWatcher:
     image:
       repository: renku/k8s-watcher
-      tag: "1.21.0"
+      tag: "1.22.0"
       pullPolicy: IfNotPresent
     resources: {}
     replicaCount: 1
@@ -1119,7 +1161,7 @@ notebooks:
     enabled: false
     image:
       repository: renku/ssh-jump-host
-      tag: "1.21.0"
+      tag: "1.22.0"
       pullPolicy: IfNotPresent
     resources: {}
     replicaCount: 1
@@ -1209,7 +1251,7 @@ gateway:
     ## Define the image for the auth middleware
     auth:
       repository: renku/renku-gateway
-      tag: "0.23.1"
+      tag: "0.24.0"
       pullPolicy: IfNotPresent
   service:
     type: ClusterIP
@@ -1245,7 +1287,7 @@ gateway:
   reverseProxy:
     image:
       repository: renku/renku-revproxy
-      tag: "0.23.0"
+      tag: "0.24.0"
       pullPolicy: IfNotPresent
     metrics:
       enabled: true
@@ -1302,6 +1344,35 @@ jena:
   additionalInitContainerScript: "find /fuseki -name tdb.lock -type f -delete && find /fuseki/configuration -name *.ttl -type f -empty -delete && echo clean-up done"
   test:
     enabled: false
+## Configuration for renku-search services
+search:
+  searchApi:
+    replicas: 1
+    image:
+      repository: renku/search-api
+      tag: "0.0.37"
+      pullPolicy: IfNotPresent
+    service:
+      type: ClusterIP
+      port: 80
+    resources:
+      requests:
+        memory: 256Mi
+    jvmXmx: 256M
+  searchProvision:
+    replicas: 1
+    image:
+      repository: renku/search-provision
+      tag: "0.0.37"
+      pullPolicy: IfNotPresent
+    service:
+      type: ClusterIP
+      port: 8081
+    resources:
+      requests:
+        memory: 256Mi
+    jvmXmx: 256M
+## Configuration for renku-graph services
 graph:
   webhookService:
     aesEncryptionKey: # A 8, 16 or 32 bytes string used for AES encryption of the project tokens
@@ -1486,12 +1557,12 @@ initDb:
 dataService:
   image:
     repository: renku/renku-data-service
-    tag: "0.5.2"
+    tag: "0.6.0"
     pullPolicy: IfNotPresent
   keycloakSync:
     image:
       repository: renku/keycloak-sync
-      tag: "0.5.2"
+      tag: "0.6.0"
       pullPolicy: IfNotPresent
   service:
     type: ClusterIP
