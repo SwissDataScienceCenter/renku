@@ -122,6 +122,8 @@ spec:
               value: {{ include "renku.keycloak.realm" . | quote }}
             - name: USER_PREFERENCES_MAX_PINNED_PROJECTS
               value: {{ .Values.dataService.maxPinnedProjects | quote }}
+            - name: SESSION_CLASS_EMAIL_US
+              value: {{ toJson .Values.ui.client.sessionClassEmailUs | quote }}
           livenessProbe:
             httpGet:
               path: /
