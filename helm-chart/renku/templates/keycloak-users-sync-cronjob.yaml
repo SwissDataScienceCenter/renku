@@ -18,6 +18,7 @@ spec:
         metadata:
           labels:          
             app: keycloak-sync
+            {{ .Values.global.redis.clientLabel | toYaml | nindent 12 }}
         spec:
           initContainers:
             {{- include "certificates.initContainer" . | nindent 12 }}
@@ -48,6 +49,21 @@ spec:
                       key: dataServiceKeycloakClientSecret
                 - name: TOTAL_USER_SYNC
                   value: "false"
+                - name: REDIS_HOST
+                  value: {{ .Values.global.redis.host | quote }}
+                - name: REDIS_PORT
+                  value: {{ .Values.global.redis.port | quote }}
+                - name: REDIS_DATABASE
+                  value: {{ .Values.global.redis.dbIndex.events| quote }}
+                - name: REDIS_IS_SENTINEL
+                  value: {{ .Values.global.redis.sentinel.enabled | quote }}
+                - name: REDIS_MASTER_SET
+                  value: {{ .Values.global.redis.sentinel.masterSet | quote }}
+                - name: REDIS_PASSWORD
+                  valueFrom:
+                    secretKeyRef:
+                      name: {{ .Values.global.redis.existingSecret }}
+                      key: {{ .Values.global.redis.existingSecretPasswordKey }}
                 {{- include "certificates.env.python" . | nindent 16 }}
               volumeMounts:
                 {{- include "certificates.volumeMounts.system" . | nindent 16 }}
@@ -64,6 +80,7 @@ metadata:
     heritage: {{ .Release.Service }}
     release: {{ .Release.Name }}
     chart: {{ template "renku.chart" . }}
+    {{ .Values.global.redis.clientLabel | toYaml | nindent 4 }}
 spec:
   schedule: "0 3 * * *"
   concurrencyPolicy: Forbid
@@ -75,6 +92,7 @@ spec:
         metadata:
           labels:          
             app: keycloak-sync
+            {{ .Values.global.redis.clientLabel | toYaml | nindent 12 }}
         spec:
           initContainers:
             {{- include "certificates.initContainer" . | nindent 12 }}
@@ -105,6 +123,21 @@ spec:
                       key: dataServiceKeycloakClientSecret
                 - name: TOTAL_USER_SYNC
                   value: "true"
+                - name: REDIS_HOST
+                  value: {{ .Values.global.redis.host | quote }}
+                - name: REDIS_PORT
+                  value: {{ .Values.global.redis.port | quote }}
+                - name: REDIS_DATABASE
+                  value: {{ .Values.global.redis.dbIndex.events| quote }}
+                - name: REDIS_IS_SENTINEL
+                  value: {{ .Values.global.redis.sentinel.enabled | quote }}
+                - name: REDIS_MASTER_SET
+                  value: {{ .Values.global.redis.sentinel.masterSet | quote }}
+                - name: REDIS_PASSWORD
+                  valueFrom:
+                    secretKeyRef:
+                      name: {{ .Values.global.redis.existingSecret }}
+                      key: {{ .Values.global.redis.existingSecretPasswordKey }}
                 {{- include "certificates.env.python" . | nindent 16 }}
               volumeMounts:
                 {{- include "certificates.volumeMounts.system" . | nindent 16 }}

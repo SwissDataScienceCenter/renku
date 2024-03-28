@@ -1,11 +1,86 @@
 .. _changelog:
 
-0.50.x
+0.50.0
 ------
 
-This release includes several alpha features that are not yet visible to users:
-- Initial support for groups
-- Initial support for namespaces for users and groups
+Renku ``0.50.0`` introduces several new features related to Renku 2.0.
+
+1. This release introduces new sew search functionality for Renku 2.0.
+2. Support has been added for interactive sessions in Renku 2.0 projects.
+3. Support for groups and namespaces in Renku 2.0 projects
+
+User-Facing Changes
+~~~~~~~~~~~~~~~~~~~
+
+**🌟 New Features**
+
+- **UI**: Renku 2.0 Search page with initial support for project and user search (alpha release)
+- **UI**: Support for interactive sessions in Renku 2.0 projects, comprising global session environments and session launchers (alpha release)
+- **Notebooks**: Initial support for Renku 2.0 sessions, supporting mounting multiple repositories (alpha release)
+- **UI**: Add a new navigation top bar for Renku 2.0 (alpha release)
+- **UI**: Add an ad-hoc feature flag for Renku 2.0 (alpha release)
+
+**✨ Improvements**
+
+- **UI** Update the footer links section with Mastodon (`#3081 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3081>`_, `#3059 <https://github.com/SwissDataScienceCenter/renku-ui/issues/3059>`_)
+- **UI** Improve session scheduling error messages (`#3082 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3082>`_, `#3036 <https://github.com/SwissDataScienceCenter/renku-ui/issues/3036>`_)
+
+**🐞 Bug Fixes**
+
+- **UI** Update ``react-pdf`` version and fix it (`#3083 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3083>`_, `#3036 <https://github.com/SwissDataScienceCenter/renku-ui/issues/3036>`_)
+
+Internal Changes
+~~~~~~~~~~~~~~~~
+
+**🌟 New Features**
+
+- **Data services**: Initial support for project and user search for Renku 2.0 (alpha release)
+- **Data services**: Add support for sentry and prometheus
+- **Search services**: Initial support for project and user search for Renku 2.0 (alpha release)
+- **Data services**: Initial support for Renku 2.0 session environments and session launchers (alpha release)
+- **Data services**: Initial support for Renku 2.0 groups and namespaces (alpha release)
+
+**Improvements**
+
+- **KG**: Jena 5.0.0 upgrade
+
+Individual Components
+~~~~~~~~~~~~~~~~~~~~~
+
+- `renku-data-services 0.6.0 <https://github.com/SwissDataScienceCenter/renku-data-services/releases/tag/v0.6.0>`_
+- `renku-data-services 0.7.0 <https://github.com/SwissDataScienceCenter/renku-data-services/releases/tag/v0.7.0>`_
+- `renku-data-services 0.8.0 <https://github.com/SwissDataScienceCenter/renku-data-services/releases/tag/v0.7.0>`_
+- `renku-gateway 0.24.0 <https://github.com/SwissDataScienceCenter/renku-gateway/releases/0.24.0>`_
+- `renku-graph 2.50.0 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/2.50.0>`_
+- `renku-notebooks 1.22.0 <https://github.com/SwissDataScienceCenter/renku-notebooks/releases/tag/1.22.0>`_
+- `renku-search 0.0.37 <https://github.com/SwissDataScienceCenter/renku-search/releases/tag/v0.0.37>`_
+- `renku-ui 3.21.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.21.0>`_
+
+
+0.49.1
+------
+
+This release contains minor bug fixes.
+
+User-Facing Changes
+~~~~~~~~~~~~~~~~~~~
+
+**🐞 Bug Fixes**
+
+- **Data services**: Fix the incomplete synchronization of Keycloak users which caused problems with granting user access to resource pools
+
+Internal Changes
+~~~~~~~~~~~~~~~~
+
+**Improvements**
+
+- **renku-ui**: Visit the /api/data/user endpoint when a user is logged in (`#3080 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3080>`_).
+
+Individual Components
+~~~~~~~~~~~~~~~~~~~~~
+
+- `renku-data-services 0.5.2 <https://github.com/SwissDataScienceCenter/renku-data-services/releases/tag/v0.5.2>`_
+- `renku-ui 3.20.2 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.20.2>`_
 
 
 0.49.0
@@ -3564,7 +3639,7 @@ Bug Fixes
 Features
 ~~~~~~~~
 
-* **Renku CLI**: support moving files between datasets with ``renku mv`` (`CLI documentation <https://renku.readthedocs.io/en/latest/renku-python/docs/reference/commands.html#module-renku.cli.move>`__).
+* **Renku CLI**: support moving files between datasets with ``renku mv`` (`CLI documentation <https://renku-python.readthedocs.io/en/stable/reference/commands/move.html>`__).
 * **Renku CLI**: ability to update local project from its template and to update the Dockerfile to install the current version of renku-python using renku migrate.
 
 * **Projects**: ability to generate project-creation links, embedding metadata to automatically pre-fill input fields. For more details on how to use this feature please read our `documentation <https://renku.readthedocs.io/en/latest/user/templates.html#create-shareable-project-creation-links-with-pre-filled-fields>`__.
@@ -4234,7 +4309,7 @@ New features
 
 ⭐️ Datasets allow uploading file hierarchies in zip format
 
-⭐️ CLI: Datasets metadata is editable. Please see the `Dataset documentation <https://renku.readthedocs.io/en/latest/renku-python/docs/reference/commands.html#module-renku.cli.dataset>`__ for details.
+⭐️ CLI: Datasets metadata is editable. Please see the `Dataset documentation <https://renku.readthedocs.io/en/stable/renku-python/docs/reference/commands/dataset.html>`__ for details.
 
 ⭐️ CLI: enable importing renku datasets
 

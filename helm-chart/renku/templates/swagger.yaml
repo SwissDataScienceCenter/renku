@@ -29,7 +29,8 @@ spec:
                   {"url": "/api/renku/spec.json", "name": "core service"},
                   {"url": "/api/kg/spec.json", "name": "knowledge graph"},
                   {"url": "/api/notebooks/spec.json", "name": "notebooks service"},
-                  {"url": "/api/data/spec.json", "name": "data service"}
+                  {"url": "/api/data/spec.json", "name": "data service"},
+                  {"url": "/api/search/spec.json", "name": "search service"}
                 ]
             - name: OAUTH2_REDIRECT_URL
               value: https://{{ .Values.global.renku.domain }}/swagger/oauth2-redirect.html
