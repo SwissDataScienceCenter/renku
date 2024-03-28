@@ -91,6 +91,14 @@ spec:
                 secretKeyRef:
                   name: {{ .Values.global.redis.existingSecret }}
                   key: {{ .Values.global.redis.existingSecretPasswordKey }}
+            - name: SENTRY_ENABLED
+              value: {{ .Values.dataService.sentry.enabled | quote }}
+            - name: SENTRY_DSN
+              value: {{ .Values.dataService.sentry.dsn | quote }}
+            - name: SENTRY_ENVIRONMENT
+              value: {{ .Values.dataService.sentry.environment | quote }}
+            - name: SENTRY_SAMPLE_RATE
+              value: {{ .Values.dataService.sentry.sampleRate | quote }}
             {{- include "certificates.env.python" $ | nindent 12 }}
           volumeMounts:
             - name: server-options
