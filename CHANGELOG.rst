@@ -59,7 +59,7 @@ Individual Components
 
 - `renku-data-services 0.6.0 <https://github.com/SwissDataScienceCenter/renku-data-services/releases/tag/v0.6.0>`_
 - `renku-data-services 0.7.0 <https://github.com/SwissDataScienceCenter/renku-data-services/releases/tag/v0.7.0>`_
-- `renku-data-services 0.8.0 <https://github.com/SwissDataScienceCenter/renku-data-services/releases/tag/v0.7.0>`_
+- `renku-data-services 0.8.1 <https://github.com/SwissDataScienceCenter/renku-data-services/releases/tag/v0.7.0>`_
 - `renku-gateway 0.24.0 <https://github.com/SwissDataScienceCenter/renku-gateway/releases/0.24.0>`_
 - `renku-graph 2.50.0 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/2.50.0>`_
 - `renku-notebooks 1.22.0 <https://github.com/SwissDataScienceCenter/renku-notebooks/releases/tag/1.22.0>`_
