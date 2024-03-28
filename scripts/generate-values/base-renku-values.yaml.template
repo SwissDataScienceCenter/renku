@@ -7,15 +7,16 @@ global:
     clientSecret: <use `openssl rand -hex 32`>
     gitlabClientSecret: <use `openssl rand -hex 32`>
   gitlab:
-    urlPrefix: /
     clientSecret: <use `openssl rand -hex 32`>
+    registry:
+      host: {gitlab_registry}
+    url: {gitlab_url}
   renku:
     domain: {renku_domain}
   uiserver:
     clientSecret: <use `openssl rand -hex 32`>
   useHTTPS: true
 gateway:
-  gitlabUrl: {gitlab_url}
   secretKey: <use `openssl rand -hex 32`>
 gitlab:
   enabled: false
@@ -40,8 +41,6 @@ gitlab:
         - {gitlab_registry}
         secretName: registry-tls
 graph:
-  gitlab:
-    url: {gitlab_url}
   tokenRepository:
     tokenEncryption:
       secret: <use `openssl rand -hex 8 | base64`>
@@ -68,10 +67,6 @@ jena:
     renku:
       password: <use `openssl rand -hex 8 | base64`>
 notebooks:
-  gitlab:
-    registry:
-      host: {gitlab_registry}
-    url: {gitlab_url}
   oidc:
     allowUnverifiedEmail: true
     authUrl: https://{renku_domain}/auth/realms/Renku/protocol/openid-connect/auth

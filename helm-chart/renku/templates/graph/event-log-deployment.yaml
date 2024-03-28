@@ -52,7 +52,7 @@ spec:
             - name: EVENT_LOG_BASE_URL
               value: "http://{{ template "renku.graph.eventLog.fullname" . }}:{{ .Values.graph.eventLog.service.port }}"
             - name: GITLAB_BASE_URL
-              value: {{ .Values.global.gitlab.url }}
+              value: {{ .Values.global.gitlab.url | quote }}
             - name: GITLAB_RATE_LIMIT
               value: {{ .Values.graph.eventLog.gitlab.rateLimit }}
             - name: SENTRY_ENABLED

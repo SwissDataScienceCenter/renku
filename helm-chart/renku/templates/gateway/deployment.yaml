@@ -47,7 +47,7 @@ spec:
                   name: {{ cat (include "renku.fullname" .) "-gateway-revproxy" | nospace }}
                   key: cliClientSecret
             - name: GITLAB_URL
-              value: {{ include "renku.gitlabUrl" . | quote }}
+              value: {{ .Values.global.gitlab.url | quote }}
             - name: GITLAB_CLIENT_SECRET
               valueFrom:
                 secretKeyRef:

@@ -5,6 +5,13 @@ For changes that require manual steps other than changing values, please check o
 Please follow this convention when adding a new row
 * `<type: NEW|EDIT|DELETE> - *<resource name>*: <details>`
 
+## Upgrading to Renku 0.50.0
+
+The gitlab configuration has been unified in the `global` section of the values, which requires modifications for existing deployments.
+
+* EDIT - *notebooks.gitlab.registry.host* -> *global.gitlab.registry.host*
+* DELETE - *notebooks.gitlab` has been removed.
+
 ## Upgrading to Renku 0.49.0
 
 The PostgreSQL chart dependency has been upgraded, which requires modification of the postgres data volume of existing deployments. See [these instructions](https://github.com/SwissDataScienceCenter/renku/tree/master/helm-chart/utils/postgres_migrations/version_upgrades/README.md) for more details.

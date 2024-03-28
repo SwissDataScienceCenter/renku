@@ -15,11 +15,12 @@ global:
     ## setting this value or by randomly generating it because it was omitted below.
     postgresPassword:
       value:
-    ## URL prefix for gitlab
-    # urlPrefix: /
-    ## Full URL for gitlab
-    ## NOTE: Many services have this setting internally, they should switch to using the global setting instead
+    ## URL for gitlab deployment
     # url:
+    ## Set the default image registry
+    # registry:
+    #   host:
+
     ## Secret for the gitlab keycloak client
     clientSecret: # use `openssl rand -hex 32`
   keycloak:
@@ -929,12 +930,7 @@ notebooks:
     ## immediate eviction of the user session. EmptyDirs are used when the enabled flag
     ## above is set to false.
     useEmptyDirSizeLimit: false
-  gitlab:
-    ## specify the GitLab instance URL
-    url:
-    registry:
-      ## Set the default image registry
-      host:
+
   ## For sending exceptions to Sentry, specify the DSN to use
   sentry:
     enabled: false
