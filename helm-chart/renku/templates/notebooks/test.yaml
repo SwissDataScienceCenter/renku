@@ -28,7 +28,7 @@ spec:
         - name: NB_SESSIONS__OIDC__ALLOW_UNVERIFIED_EMAIL
           value: {{ $.Values.notebooks.oidc.allowUnverifiedEmail | quote }}
         - name: NB_GIT__URL
-          value: {{ include "renku.gitlabUrl" . | quote }}
+          value: {{ .Values.global.gitlab.url | quote }}
         - name: NB_GIT__REGISTRY
           value: {{ $.Values.global.gitlab.registry.host | quote }}
         - name: GITLAB_TOKEN

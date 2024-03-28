@@ -15,11 +15,7 @@ global:
     ## setting this value or by randomly generating it because it was omitted below.
     postgresPassword:
       value:
-    ## URL prefix for gitlab 
-    ## TODO: remove this once we fully moved to external gitlab.
-    # urlPrefix: /
     ## URL for gitlab deployment
-    ## NOTE: Many services have this setting internally, they should switch to using the global setting instead
     # url:
     ## Set the default image registry
     # registry:

@@ -69,7 +69,7 @@ spec:
               value: |
                 {{- .Values.notebooks.sessionIngress.annotations | toYaml | nindent 16 }}
             - name: NB_GIT__URL
-              value: {{ include "renku.gitlabUrl" . | quote }}
+              value: {{ .Values.global.gitlab.url | quote }}
             - name: NB_GIT__REGISTRY
               value: {{ required "An image registry must be specified." .Values.global.gitlab.registry.host }}
             - name: NB_SESSIONS__GIT_RPC_SERVER__IMAGE

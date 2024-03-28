@@ -228,6 +228,5 @@ Upgrading Renku with the newly modified Helm values
 
 #. Backup your current unedited values file
 #. Replace every GitLab URL from \https://$RENKU_URL/gitlab to \https://gitlab.$RENKU_URL. This is set in `global.gitlab.url`.
-#. If you have a value set at ``global.gitlab.urlPrefix`` change it from ``/gitlab`` to ``/``
 #. Set ``gitlab.enabled`` to ``false``.
 #. Re-install the Renku Helm chart with the newly modified values.
