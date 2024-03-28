@@ -74,6 +74,7 @@ it more flexible.
 * NEW `ui.client.privacy.page.configMapPolicyKey` the key in the ConfigMap where the content for the privacy policy is located.
 * NEW `ui.client.privacy.page.configMapTermsKey` the key in the ConfigMap where the content for the terms of use is located.
 
+
 ## Upgrading to Renku 0.47.0
 
 We completely overhauled how mounting cloud storage in sessions works, relying on a new CSI driver based on RClone

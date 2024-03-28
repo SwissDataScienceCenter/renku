@@ -48,16 +48,17 @@ configuration values:
 
 .. code-block:: yaml
 
+  global:
+    certificates:
+      customCAs:
+        - secret: renku-tls # must match the secretName field of the CA Certificate object.
+
   ingress:
     enabled: true
     annotations:
       cert-manager.io/cluster-issuer: null
       cert-manager.io/issuer: my-ca-issuer
       cert-manager.io/common-name: my-selfsigned-ca
-
-  certificates:
-    customCAs:
-      - secret: renku-tls
 
 For more details about the annotations, please check the ``values.yaml`` files.
 

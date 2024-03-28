@@ -12,6 +12,7 @@
 {{- $graphEnabled := .Values.graph.enabled -}}
 {{- $webhookServiceFullname := include "renku.graph.webhookService.fullname" . -}}
 {{- $knowledgeGraphFullname := include "renku.graph.knowledgeGraph.fullname" . -}}
+{{- $searchApiFullname := include "renku.search.searchApi.fullname" . -}}
 {{- $renkuFullname := include "renku.fullname" . -}}
 {{- if $graphEnabled }}
 {{- $jenaFullname := include "renku-jena.fullname" . -}}
