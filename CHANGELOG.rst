@@ -9,6 +9,7 @@ in early development and is not yet accessible to users. For more information, s
 
 1. This release introduces new sew search functionality for Renku 2.0.
 2. Support has been added for interactive sessions in Renku 2.0 projects.
+3. Support for groups and namespaces in Renku 2.0 projects
 
 User-Facing Changes
 ~~~~~~~~~~~~~~~~~~~
@@ -46,8 +47,8 @@ Internal Changes
 - **Data services**: Initial support for project and user search for Renku 2.0 (alpha release)
 - **Data services**: Add support for sentry and prometheus
 - **Search services**: Initial support for project and user search for Renku 2.0 (alpha release)
-- **Data services**: Initial support for Renku 2.0 session environments and session launchers (alpha
-  release)
+- **Data services**: Initial support for Renku 2.0 session environments and session launchers (alpha release)
+- **Data services**: Initial support for Renku 2.0 groups and namespaces (alpha release)
 
 **Improvements**
 
@@ -58,6 +59,7 @@ Individual Components
 
 - `renku-data-services 0.6.0 <https://github.com/SwissDataScienceCenter/renku-data-services/releases/tag/v0.6.0>`_
 - `renku-data-services 0.7.0 <https://github.com/SwissDataScienceCenter/renku-data-services/releases/tag/v0.7.0>`_
+- `renku-data-services 0.8.1 <https://github.com/SwissDataScienceCenter/renku-data-services/releases/tag/v0.7.0>`_
 - `renku-gateway 0.24.0 <https://github.com/SwissDataScienceCenter/renku-gateway/releases/0.24.0>`_
 - `renku-graph 2.50.0 <https://github.com/SwissDataScienceCenter/renku-graph/releases/tag/2.50.0>`_
 - `renku-notebooks 1.22.0 <https://github.com/SwissDataScienceCenter/renku-notebooks/releases/tag/1.22.0>`_
