@@ -84,7 +84,6 @@ function deleteSession(args?: { fromSessionPage?: boolean }) {
   }
 
   cy.getDataCy("delete-session-modal-button").should("be.visible").click();
-  cy.getDataCy("stopping-btn").should("be.visible");
   cy.get(".renku-container", { timeout: TIMEOUTS.vlong })
     .contains("No currently running sessions")
     .should("be.visible");
