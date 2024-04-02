@@ -87,7 +87,7 @@ jobs:
           RENKU_ANONYMOUS_SESSIONS: true
           RENKU_RELEASE: ci-renku-${{ github.event.number }}
           RENKU_VALUES_FILE: "${{ github.workspace }}/values.yaml"
-          RENKU_VALUES: ${{ secrets.COMBINED_CHARTS_CI_RENKU_VALUES }}
+          RENKU_VALUES: ${{ secrets.TEST_CI_SECRET_DELETE_ME }}
           RENKUBOT_KUBECONFIG: ${{ secrets.RENKUBOT_DEV_KUBECONFIG }}
           TEST_ARTIFACTS_PATH: "tests-artifacts-${{ github.sha }}"
           renku: "@${{ github.head_ref }}"
