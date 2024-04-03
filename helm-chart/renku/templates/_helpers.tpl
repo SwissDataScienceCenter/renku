@@ -57,6 +57,10 @@ Define subcharts full names
 {{- printf "%s-%s" .Release.Name "keycloakx" | replace "+" "_" | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 
+{{- define "solr.fullname" -}}
+{{- printf "%s-%s" .Release.Name "solr" | replace "+" "_" | trunc 63 | trimSuffix "-" -}}
+{{- end -}}
+
 {{- define "gitlab.fullname" -}}
 {{- printf "%s-%s" .Release.Name "gitlab" | replace "+" "_" | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
@@ -130,10 +134,6 @@ KC_DB_URL_DATABASE: {{ .Values.global.keycloak.postgresDatabase | b64enc | quote
 KC_DB_USERNAME: {{ .Values.global.keycloak.postgresUser | b64enc | quote }}
 KC_DB_PASSWORD: {{ default (randAlphaNum 64) .Values.global.keycloak.postgresPassword.value | b64enc | quote }}
 {{- end -}}
-{{- end -}}
-
-{{- define "renku.gitlabUrl" -}}
-{{ .Values.global.gitlab.url | default (printf "%s://%s/gitlab" (include "renku.http" .) .Values.global.renku.domain) }}
 {{- end -}}
 
 {{- define "renku.baseUrl" -}}
