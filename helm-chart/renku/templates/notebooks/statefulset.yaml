@@ -69,9 +69,13 @@ spec:
               value: |
                 {{- .Values.notebooks.sessionIngress.annotations | toYaml | nindent 16 }}
             - name: NB_GIT__URL
-              value: {{ .Values.global.gitlab.url | quote }}
+            {{ if .Values.notebooks.gitlab.url }}
+              value: {{ .Values.notebooks.gitlab.url }}
+            {{ else }}
+              value: {{ template "notebooks.http" . }}://{{ .Values.global.renku.domain}}{{ .Values.global.gitlab.urlPrefix }}
+            {{ end }}
             - name: NB_GIT__REGISTRY
-              value: {{ required "An image registry must be specified." .Values.global.gitlab.registry.host }}
+              value: {{ required "An image registry must be specified." .Values.notebooks.gitlab.registry.host }}
             - name: NB_SESSIONS__GIT_RPC_SERVER__IMAGE
               value: "{{ .Values.notebooks.gitRpcServer.image.name }}:{{ .Values.notebooks.gitRpcServer.image.tag }}"
             - name: NB_SESSIONS__GIT_PROXY__IMAGE
