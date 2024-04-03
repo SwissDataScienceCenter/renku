@@ -36,6 +36,7 @@ dependencies:
     repository: "oci://registry-1.docker.io/bitnamicharts"
     version: "8.9.2"
     condition: solr.enabled
+    # setting the version of bitnami-common here to avoid conflicts in sub-charts bundling different versions
   - name: common
     repository: oci://registry-1.docker.io/bitnamicharts
     tags:
