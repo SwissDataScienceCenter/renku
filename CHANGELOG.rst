@@ -1,5 +1,9 @@
 .. _changelog:
 
+0.51.x
+------
+
+
 0.50.0
 ------
 
@@ -63,7 +67,6 @@ Individual Components
 - `renku-notebooks 1.22.0 <https://github.com/SwissDataScienceCenter/renku-notebooks/releases/tag/1.22.0>`_
 - `renku-search 0.0.39 <https://github.com/SwissDataScienceCenter/renku-search/releases/tag/v0.0.39>`_
 - `renku-ui 3.21.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.21.0>`_
-
 
 0.49.1
 ------
