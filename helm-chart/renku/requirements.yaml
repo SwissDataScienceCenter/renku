@@ -18,7 +18,7 @@ dependencies:
     version: 17.4.2
     condition: redis.install
   - name: renku-jena
-    version: "0.0.23"
+    version: "0.0.25"
     repository: "https://swissdatasciencecenter.github.io/helm-charts/"
     alias: jena
   - name: amalthea
@@ -32,3 +32,13 @@ dependencies:
     repository: "https://swissdatasciencecenter.github.io/helm-charts/"
     version: "0.1.7"
     condition: global.csi-rclone.install
+  - name: solr
+    repository: "oci://registry-1.docker.io/bitnamicharts"
+    version: "8.9.2"
+    condition: solr.enabled
+    # setting the version of bitnami-common here to avoid conflicts in sub-charts bundling different versions
+  - name: common
+    repository: oci://registry-1.docker.io/bitnamicharts
+    tags:
+    - bitnami-common
+    version: 2.x.x
