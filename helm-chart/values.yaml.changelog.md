@@ -10,7 +10,15 @@ Please follow this convention when adding a new row
 The gitlab configuration has been unified in the `global` section of the values, which requires modifications for existing deployments.
 
 * EDIT - *notebooks.gitlab.registry.host* -> *global.gitlab.registry.host*
-* DELETE - *notebooks.gitlab` has been removed.
+* DELETE - *notebooks.gitlab* has been removed.
+* NEW - *solr*: [solr](https://bitnami.com/stack/solr) has been added
+  to support searching. It is run as single node mode and required by
+  new search services. The size of the persistent volume is set to 8G.
+  Details can be found in the [respective values section](https://github.com/SwissDataScienceCenter/renku/blob/85412f0821fa482bbe398c64ed97174af2800aa/helm-chart/renku/values.yaml#L492)
+* NEW - *search*: Renku introduces a new search service consisting of
+  `search-api` and `search-provision`. The first is responsible for
+  reading from solr, providing a http api to search across renku. The
+  latter is responsible for populating solr with appropriate data.
 
 ## Upgrading to Renku 0.49.0
 
