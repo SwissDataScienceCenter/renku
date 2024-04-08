@@ -8,6 +8,7 @@ in early development and is not yet accessible to users. For more information, s
 [roadmap](https://github.com/SwissDataScienceCenter/renku-design-docs/blob/main/roadmap.md).
 
 1. This release introduces *groups* to Renku 2.0.
+2. Various bug fixes and improvements
 
 User-Facing Changes
 ~~~~~~~~~~~~~~~~~~~
@@ -19,6 +20,11 @@ User-Facing Changes
 - **UI**: Projects are always in a group -- either the user's implicitly-created group, or a group
   that has been explicitly created.
 
+**🐞 Bug Fixes**
+
+- **Data service**: Allow proper removal of users from resource pools
+- **Data service**: Enable searching for all users when adding users to resource pools 
+
 Internal Changes
 ~~~~~~~~~~~~~~~~
 
@@ -26,9 +32,14 @@ Internal Changes
 
 - **Data services**: Initial support for groups
 
+  **🐞 Bug Fixes**
+
+- **Data service**: Increase timeout for synchronizing Keycloak users
+
 Individual Components
 ~~~~~~~~~~~~~~~~~~~~~
 
+- `renku-data-services 0.8.3 <https://github.com/SwissDataScienceCenter/renku-data-services/releases/tag/v0.8.3>`_
 - `renku-data-services 0.8.2 <https://github.com/SwissDataScienceCenter/renku-data-services/releases/tag/v0.8.2>`_
 - `renku-data-services 0.8.1 <https://github.com/SwissDataScienceCenter/renku-data-services/releases/tag/v0.8.1>`_
 - `renku-data-services 0.8.0 <https://github.com/SwissDataScienceCenter/renku-data-services/releases/tag/v0.8.0>`_
