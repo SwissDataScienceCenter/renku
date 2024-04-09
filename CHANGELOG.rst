@@ -5,7 +5,7 @@
 
 **✨ Improvements**
 
-- **UI** Add an "email us" button to the session class option (`#3073
+- **UI** Add an "email us" button below the session class selector to request more resources (`#3073
   <https://github.com/SwissDataScienceCenter/renku-ui/pull/3073>`_)
 
 Individual Components
