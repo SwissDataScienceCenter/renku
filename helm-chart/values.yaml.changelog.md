@@ -5,6 +5,10 @@ For changes that require manual steps other than changing values, please check o
 Please follow this convention when adding a new row
 * `<type: NEW|EDIT|DELETE> - *<resource name>*: <details>`
 
+## Upgrading to Renku 0.52.0
+
+* NEW ``ui.client.sessionClassEmailUs`` to customize the content of the Email Us button on the Session class option.
+
 ## Upgrading to Renku 0.50.0
 
 The gitlab configuration has been unified in the `global` section of the values, which requires modifications for existing deployments.
