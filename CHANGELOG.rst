@@ -1,18 +1,55 @@
 .. _changelog:
 
-0.51.x
+0.51.0
 ------
+
+Renku ``0.51.0`` introduces new features related to Renku 2.0. However, Renku 2.0 is still
+in early development and is not yet accessible to users. For more information, see our
+[roadmap](https://github.com/SwissDataScienceCenter/renku-design-docs/blob/main/roadmap.md).
+
+1. This release introduces *groups* to Renku 2.0.
+2. Various bug fixes and improvements
+
+User-Facing Changes
+~~~~~~~~~~~~~~~~~~~
+
+**🌟 New Features**
+
+- **UI**: A new entity, *groups*, has been introduced to Renku 2.0. Groups are a way to organize
+  projects in Renku 2.0.
+- **UI**: Projects are always in a group -- either the user's implicitly-created group, or a group
+  that has been explicitly created.
 
 **✨ Improvements**
 
 - **UI** Add an "email us" button below the session class selector to request more resources (`#3073
   <https://github.com/SwissDataScienceCenter/renku-ui/pull/3073>`_)
 
+**🐞 Bug Fixes**
+
+- **Data service**: Allow proper removal of users from resource pools
+- **Data service**: Enable searching for all users when adding users to resource pools 
+
+Internal Changes
+~~~~~~~~~~~~~~~~
+
+**🌟 New Features**
+
+- **Data services**: Initial support for groups
+
+  **🐞 Bug Fixes**
+
+- **Data service**: Increase timeout for synchronizing Keycloak users
+
 Individual Components
 ~~~~~~~~~~~~~~~~~~~~~
 
+- `renku-data-services 0.8.3 <https://github.com/SwissDataScienceCenter/renku-data-services/releases/tag/v0.8.3>`_
+- `renku-data-services 0.8.2 <https://github.com/SwissDataScienceCenter/renku-data-services/releases/tag/v0.8.2>`_
+- `renku-data-services 0.8.1 <https://github.com/SwissDataScienceCenter/renku-data-services/releases/tag/v0.8.1>`_
+- `renku-data-services 0.8.0 <https://github.com/SwissDataScienceCenter/renku-data-services/releases/tag/v0.8.0>`_
 - `renku-ui 3.23.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.23.0>`_
-
+- `renku-ui 3.22.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.22.0>`_
 
 0.50.0
 ------
