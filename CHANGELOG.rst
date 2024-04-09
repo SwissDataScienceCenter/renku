@@ -1,5 +1,19 @@
 .. _changelog:
 
+0.51.x
+------
+
+**✨ Improvements**
+
+- **UI** Add an "email us" button below the session class selector to request more resources (`#3073
+  <https://github.com/SwissDataScienceCenter/renku-ui/pull/3073>`_)
+
+Individual Components
+~~~~~~~~~~~~~~~~~~~~~
+
+- `renku-ui 3.23.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.23.0>`_
+
+
 0.50.0
 ------
 
