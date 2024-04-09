@@ -18,7 +18,7 @@ const projects = {
 // projects.v8 = "anotherProjectV8";
 // projects.v9 = "anotherProjectV9";
 
-const sessionId = ["updateProjects", getRandomString(8)];
+const sessionId = ["updateProjects", getRandomString()];
 
 describe("Fork and update old projects", () => {
   before(() => {

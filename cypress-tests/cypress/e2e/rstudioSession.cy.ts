@@ -23,7 +23,7 @@ const projectIdentifier: ProjectIdentifier = {
   namespace: username,
 };
 
-const sessionId = ["rstudioSession", getRandomString(8)];
+const sessionId = ["rstudioSession", getRandomString()];
 
 describe("Basic rstudio functionality", () => {
   before(() => {

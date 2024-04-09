@@ -21,7 +21,7 @@ const projectIdentifier: ProjectIdentifier = {
   namespace: username,
 };
 
-const sessionId = ["privateProject", getRandomString(8)];
+const sessionId = ["privateProject", getRandomString()];
 
 describe("Basic public project functionality", () => {
   before(() => {

@@ -7,7 +7,7 @@ const project: ProjectIdentifier = {
   name: "composite-workflows",
 };
 
-const sessionId = ["checkWorkflows", getRandomString(8)];
+const sessionId = ["checkWorkflows", getRandomString()];
 
 describe("Workflows pages", () => {
   before(() => {

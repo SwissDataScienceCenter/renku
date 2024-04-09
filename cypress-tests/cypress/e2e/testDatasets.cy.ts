@@ -23,7 +23,7 @@ const projectIdentifier: ProjectIdentifier = {
 };
 const generatedDatasetName = generatorDatasetName("Dataset");
 
-const sessionId = ["testDatasets", getRandomString(8)];
+const sessionId = ["testDatasets", getRandomString()];
 
 describe("Basic datasets functionality", () => {
   before(() => {

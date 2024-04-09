@@ -24,7 +24,7 @@ const projectWithoutPermissions = {
   name: "stable-project",
 };
 
-const sessionId = ["useSession", getRandomString(8)];
+const sessionId = ["useSession", getRandomString()];
 
 describe("Basic public project functionality", () => {
   before(() => {

@@ -24,7 +24,7 @@ function getDataCy(value: string, exist?: boolean) {
   return cy.get(`[data-cy=${value}]`);
 }
 
-export function getRandomString(length: number=6) {
+export function getRandomString(length: number=8) {
   return Math.random().toString(20).substr(2, length)
 }
 
