@@ -1,5 +1,5 @@
 import { TIMEOUTS } from "../../config";
-import { validateLogin } from "../support/commands/general";
+import { validateLogin, getRandomString } from "../support/commands/general";
 import { generatorProjectName } from "../support/commands/projects";
 
 const username = Cypress.env("TEST_USERNAME");
@@ -18,11 +18,13 @@ const projects = {
 // projects.v8 = "anotherProjectV8";
 // projects.v9 = "anotherProjectV9";
 
+const sessionId = ["updateProjects", getRandomString(8)];
+
 describe("Fork and update old projects", () => {
   before(() => {
     // Use a session to preserve login data
     cy.session(
-      "login-updateProjects",
+      sessionId,
       () => {
         cy.robustLogin();
       },
@@ -33,7 +35,7 @@ describe("Fork and update old projects", () => {
   beforeEach(() => {
     // Restore the session
     cy.session(
-      "login-updateProjects",
+      sessionId,
       () => {
         cy.robustLogin();
       },

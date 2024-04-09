@@ -5,7 +5,7 @@ import {
   ProjectIdentifier,
   generatorProjectName,
 } from "../support/commands/projects";
-import { validateLogin } from "../support/commands/general";
+import { validateLogin, getRandomString } from "../support/commands/general";
 
 const username = Cypress.env("TEST_USERNAME");
 
@@ -23,11 +23,13 @@ const projectIdentifier: ProjectIdentifier = {
   namespace: username,
 };
 
+const sessionId = ["rstudioSession", getRandomString(8)];
+
 describe("Basic rstudio functionality", () => {
   before(() => {
     // Use a session to preserve login data
     cy.session(
-      "login-rstudioSession",
+      sessionId,
       () => {
         cy.robustLogin();
       },
@@ -49,7 +51,7 @@ describe("Basic rstudio functionality", () => {
   beforeEach(() => {
     // Restore the session
     cy.session(
-      "login-rstudioSession",
+      sessionId,
       () => {
         cy.robustLogin();
       },

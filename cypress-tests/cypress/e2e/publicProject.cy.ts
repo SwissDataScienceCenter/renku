@@ -4,7 +4,7 @@ import {
   generatorProjectName,
   projectUrlFromIdentifier,
 } from "../support/commands/projects";
-import { validateLogin } from "../support/commands/general";
+import { validateLogin, getRandomString } from "../support/commands/general";
 
 const username = Cypress.env("TEST_USERNAME");
 
@@ -22,11 +22,13 @@ const projectIdentifier: ProjectIdentifier = {
   namespace: username,
 };
 
+const sessionId = ["publicProject", getRandomString(8)];
+
 describe("Basic public project functionality", () => {
   before(() => {
     // Use a session to preserve login data
     cy.session(
-      "login-publicProject",
+      sessionId,
       () => {
         cy.robustLogin();
       },
@@ -43,7 +45,7 @@ describe("Basic public project functionality", () => {
   beforeEach(() => {
     // Restore the session
     cy.session(
-      "login-publicProject",
+      sessionId,
       () => {
         cy.robustLogin();
       },
