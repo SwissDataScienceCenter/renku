@@ -53,6 +53,7 @@ jobs:
               repo,
               head: 'release-${{ github.event.inputs.version }}',
               base: '${{ github.event.inputs.target_branch }}',
+              draft: true,
               body: [
                 'Release ${{ github.event.inputs.version }}',
                 '',
