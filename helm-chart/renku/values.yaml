@@ -1580,6 +1580,11 @@ initDb:
   image:
     repository: renku/init-db
     tag: "latest"
+## The image used for general platform initialization
+platformInit:
+  image:
+    repository: renku/platform-init
+    tag: "latest"
 dataService:
   image:
     repository: renku/renku-data-service

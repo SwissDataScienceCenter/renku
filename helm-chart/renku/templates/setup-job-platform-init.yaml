@@ -1,0 +1,36 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: "{{ .Release.Name }}-init-renku-platform-rev{{ .Release.Revision }}-{{ randAlphaNum 5 | lower }}"
+  labels:
+    app: platform-init
+    heritage: {{ .Release.Service }}
+    release: {{ .Release.Name }}
+    chart: {{ template "renku.chart" . }}
+spec:
+  template:
+    metadata:
+      name: {{ .Release.Name }}-platform-init
+      labels:
+        app: platform-init
+        heritage: {{ .Release.Service }}
+        release: {{ .Release.Name }}
+        chart: {{ template "renku.chart" . }}
+    spec:
+      restartPolicy: Never
+      containers:
+        - name: initialize-platform
+          image: "{{ .Values.platformInit.image.repository }}:{{ .Values.platformInit.image.tag }}"
+          args: [ "platform-init.py" ]
+          securityContext:
+            runAsUser: 1000
+            runAsGroup: 1000
+            allowPrivilegeEscalation: false
+            runAsNonRoot: true
+          env:
+            - name: K8S_NAMESPACE
+              value: {{ .Release.namespace}}
+            - name: RENKU_FULLNAME
+              value: {{ template "renku.fullname" . }}
+            - name: PLATFORM_INIT_CONFIG
+              value: {{ .Values.global.platformConfig}}
