@@ -1,5 +1,4 @@
-{{- if .Values.authz.builtIn.enabled }}
-{{- if .Values.authz.builtIn.autoscaling.enabled }}
+{{- if .Values.authz.autoscaling.enabled }}
 {{- if .Capabilities.APIVersions.Has "autoscaling/v2" }}
 apiVersion: autoscaling/v2
 {{- else if .Capabilities.APIVersions.Has "autoscaling/v2beta2" }}
@@ -22,24 +21,23 @@ spec:
     apiVersion: apps/v1
     kind: Deployment
     name: {{ include "renku.fullname" . }}-authz
-  minReplicas: {{ .Values.authz.builtIn.autoscaling.minReplicas }}
-  maxReplicas: {{ .Values.authz.builtIn.autoscaling.maxReplicas }}
+  minReplicas: {{ .Values.authz.autoscaling.minReplicas }}
+  maxReplicas: {{ .Values.authz.autoscaling.maxReplicas }}
   metrics:
-    {{- if .Values.authz.builtIn.autoscaling.targetCPUUtilizationPercentage }}
+    {{- if .Values.authz.autoscaling.targetCPUUtilizationPercentage }}
     - type: Resource
       resource:
         name: cpu
         target:
           type: Utilization
-          averageUtilization: {{ .Values.authz.builtIn.autoscaling.targetCPUUtilizationPercentage }}
+          averageUtilization: {{ .Values.authz.autoscaling.targetCPUUtilizationPercentage }}
     {{- end }}
-    {{- if .Values.authz.builtIn.autoscaling.targetMemoryUtilizationPercentage }}
+    {{- if .Values.authz.autoscaling.targetMemoryUtilizationPercentage }}
     - type: Resource
       resource:
         name: memory
         target:
           type: Utilization
-          averageUtilization: {{ .Values.authz.builtIn.autoscaling.targetMemoryUtilizationPercentage }}
+          averageUtilization: {{ .Values.authz.autoscaling.targetMemoryUtilizationPercentage }}
     {{- end }}
-{{- end }}
 {{- end }}

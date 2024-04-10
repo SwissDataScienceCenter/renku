@@ -1,4 +1,3 @@
-{{- if .Values.authz.builtIn.enabled }}
 apiVersion: v1
 kind: Service
 metadata:
@@ -21,4 +20,3 @@ spec:
       name: grpc
   selector:
     app: renku-authz
-{{- end }}

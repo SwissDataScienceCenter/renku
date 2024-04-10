@@ -1,16 +1,15 @@
-{{- if .Values.authz.builtIn.enabled }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "renku.fullname" . }}-authz
+  name: {{ template "renku.fullname" . }}-authz
   labels:
     app: renku-authz
     chart: {{ template "renku.chart" . }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
 spec:
-  {{- if not .Values.authz.builtIn.autoscaling.enabled }}
-  replicas: {{ .Values.authz.builtIn.replicaCount }}
+  {{- if not .Values.authz.autoscaling.enabled }}
+  replicas: {{ .Values.authz.replicaCount }}
   {{- end }}
   selector:
     matchLabels:
@@ -29,8 +28,8 @@ spec:
         - name: migrate-datastore
           # NOTE: Have to use the -debug image here because the regular one does not have a shell
           # and the database migration will not read the db connection uri string from an env variable
-          image: "{{ .Values.authz.builtIn.image.repository }}:{{ .Values.authz.builtIn.image.tag }}-debug"
-          imagePullPolicy: {{ .Values.authz.builtIn.image.pullPolicy }}
+          image: "{{ .Values.authz.image.repository }}:{{ .Values.authz.image.tag }}-debug"
+          imagePullPolicy: {{ .Values.authz.image.pullPolicy }}
           env:
             - name: "SPICEDB_DATASTORE_CONN_URI"
               valueFrom:
@@ -46,8 +45,8 @@ spec:
         - name: authz
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
-          image: "{{ .Values.authz.builtIn.image.repository }}:{{ .Values.authz.builtIn.image.tag }}"
-          imagePullPolicy: {{ .Values.authz.builtIn.image.pullPolicy }}
+          image: "{{ .Values.authz.image.repository }}:{{ .Values.authz.image.tag }}"
+          imagePullPolicy: {{ .Values.authz.image.pullPolicy }}
           env:
             - name: "SPICEDB_GRPC_PRESHARED_KEY"
               valueFrom:
@@ -88,7 +87,7 @@ spec:
                 - -v
                 - -addr=localhost:50051
           resources:
-            {{- toYaml .Values.authz.builtIn.resources | nindent 12 }}
+            {{- toYaml .Values.authz.resources | nindent 12 }}
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
@@ -101,4 +100,3 @@ spec:
       tolerations:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-{{- end }}

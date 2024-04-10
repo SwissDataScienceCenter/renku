@@ -1,4 +1,3 @@
-{{- if .Values.authz.builtIn.enabled }}
 apiVersion: batch/v1
 kind: Job
 metadata:
@@ -62,4 +61,3 @@ spec:
                 secretKeyRef:
                   name: {{ template "renku.fullname" . }}-authz
                   key: SPICEDB_POSTGRES_PASSWORD
-{{- end }}
