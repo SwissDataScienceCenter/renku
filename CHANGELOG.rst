@@ -3,7 +3,7 @@
 0.52.0
 ------
 
-Renku ``0.51.0`` introduces new features related to Renku 2.0. However, Renku 2.0 is still
+Renku ``0.52.0`` introduces new features related to Renku 2.0. However, Renku 2.0 is still
 in early development and is not yet accessible to users. For more information, see our
 [roadmap](https://github.com/SwissDataScienceCenter/renku-design-docs/blob/main/roadmap.md).
 The following features are included in this release.
