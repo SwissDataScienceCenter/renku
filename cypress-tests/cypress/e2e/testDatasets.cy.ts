@@ -3,7 +3,7 @@ import {
   ProjectIdentifier,
   generatorProjectName,
 } from "../support/commands/projects";
-import { validateLogin } from "../support/commands/general";
+import { validateLogin, getRandomString } from "../support/commands/general";
 import { generatorDatasetName } from "../support/commands/datasets";
 
 const username = Cypress.env("TEST_USERNAME");
@@ -23,11 +23,13 @@ const projectIdentifier: ProjectIdentifier = {
 };
 const generatedDatasetName = generatorDatasetName("Dataset");
 
+const sessionId = ["testDatasets", getRandomString()];
+
 describe("Basic datasets functionality", () => {
   before(() => {
     // Use a session to preserve login data
     cy.session(
-      "login-publicProject",
+      sessionId,
       () => {
         cy.robustLogin();
       },
@@ -49,7 +51,7 @@ describe("Basic datasets functionality", () => {
   beforeEach(() => {
     // Restore the session
     cy.session(
-      "login-publicProject",
+      sessionId,
       () => {
         cy.robustLogin();
       },
