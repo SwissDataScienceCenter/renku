@@ -28,9 +28,9 @@ spec:
         - name: NB_SESSIONS__OIDC__ALLOW_UNVERIFIED_EMAIL
           value: {{ $.Values.notebooks.oidc.allowUnverifiedEmail | quote }}
         - name: NB_GIT__URL
-          value: {{ $.Values.notebooks.gitlab.url | quote }}
+          value: {{ .Values.global.gitlab.url | quote }}
         - name: NB_GIT__REGISTRY
-          value: {{ $.Values.notebooks.gitlab.registry.host | quote }}
+          value: {{ $.Values.global.gitlab.registry.host | quote }}
         - name: GITLAB_TOKEN
           value: {{ $.Values.notebooks.tests.gitlab_token | quote }}
         - name: NOTEBOOKS_BASE_URL
@@ -85,14 +85,10 @@ spec:
         {{- end }}
         - name: NB_SESSIONS__ENFORCE_CPU_LIMITS
           value: {{ $.Values.notebooks.enforceCPULimits | quote }}
-        - name: NB_CLOUD_STORAGE__S3__ENABLED
-          value: {{ $.Values.notebooks.cloudstorage.s3.enabled | quote }}
-        - name: NB_CLOUD_STORAGE__S3__READ_ONLY
-          value: {{ $.Values.notebooks.cloudstorage.s3.readOnly | quote }}
-        - name: NB_CLOUD_STORAGE__AZURE_BLOB__ENABLED
-          value: {{ $.Values.notebooks.cloudstorage.azureBlob.enabled | quote }}
-        - name: NB_CLOUD_STORAGE__AZURE_BLOB__READ_ONLY
-          value: {{ $.Values.notebooks.cloudstorage.azureBlob.readOnly | quote }}
+        - name: NB_CLOUD_STORAGE__ENABLED
+          value: {{ $.Values.notebooks.cloudstorage.enabled | quote }}
+        - name: NB_CLOUD_STORAGE__STORAGE_CLASS
+          value: {{ $.Values.notebooks.cloudstorage.storageClass | default "csi-rclone" | quote }}
         - name: NB_SESSIONS__TERMINATION_WARNING_DURATION_SECONDS
           value: {{ $.Values.notebooks.sessionAutosave.terminationWarningDurationSeconds | quote }}
         - name: NB_VERSION

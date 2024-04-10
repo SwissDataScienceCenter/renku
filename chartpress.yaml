@@ -19,6 +19,7 @@ charts:
       - helm-chart
       - acceptance-tests
       - scripts/init-realm
+      - scripts/init-db
     images:
       tests:
         buildArgs:

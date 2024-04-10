@@ -25,14 +25,25 @@ spec:
         app: ui
         release: {{ .Release.Name }}
     spec:
-      {{- if and .Values.ui.client.privacy.enabled .Values.ui.client.privacy.page.enabled }}
+      {{- if .Values.ui.client.privacy.page.enabled }}
       volumes:
         - name: privacy
           configMap:
-            name: {{ .Values.ui.client.privacy.page.configMapName | default (printf "%s-privacy-sample" (include "renku.fullname" .)) | quote }}
+            name: {{ printf "%s-privacy-and-terms" (include "renku.fullname" .) | quote }}
             items:
-            - key: {{ .Values.ui.client.privacy.page.configMapKey | default (printf "privacy_statement") | quote }}
+            {{- if .Values.ui.client.privacy.page.privacyPolicyContent }}
+            - key: "privacy_statement"
+            {{- else }}
+            - key: "sample_privacy_statement"
+            {{- end }}
               path: statement.md
+            {{- if .Values.ui.client.privacy.page.termsContent }}
+            - key: "terms"
+            {{- else }}
+            - key: "sample_terms"
+            {{- end }}
+              path: terms.md
+
       {{- end }}
       automountServiceAccountToken: {{ .Values.global.debug }}
       containers:
@@ -43,7 +54,7 @@ spec:
             - name: http
               containerPort: 8080
               protocol: TCP
-          {{- if and .Values.ui.client.privacy.enabled .Values.ui.client.privacy.page.enabled }}
+          {{- if .Values.ui.client.privacy.page.enabled }}
           volumeMounts:
             - mountPath: /config-privacy
               name: privacy
@@ -75,9 +86,11 @@ spec:
             {{- end }}
             - name: ANONYMOUS_SESSIONS
               value: {{ .Values.global.anonymousSessions.enabled | default (printf "false") | quote }}
-            - name: PRIVACY_ENABLED
-              value: {{ .Values.ui.client.privacy.enabled | quote }}
-            {{- if .Values.ui.client.privacy.enabled }}
+            - name: PRIVACY_BANNER_ENABLED
+              value: {{ .Values.ui.client.privacy.banner.enabled | quote }}
+            - name: TERMS_PAGES_ENABLED
+              value: {{ .Values.ui.client.privacy.page.enabled | quote }}
+            {{- if .Values.ui.client.privacy.banner.enabled }}
             - name: PRIVACY_BANNER_CONTENT
               value: {{ .Values.ui.client.privacy.banner.content | default (printf "") | b64enc | quote }}
             - name: PRIVACY_BANNER_LAYOUT
@@ -107,6 +120,10 @@ spec:
               value: {{ toJson .Values.ui.client.coreApiVersionConfig | quote }}
             - name: KEYCLOAK_REALM
               value: {{ include "renku.keycloak.realm" . | quote }}
+            - name: USER_PREFERENCES_MAX_PINNED_PROJECTS
+              value: {{ .Values.dataService.maxPinnedProjects | quote }}
+            - name: SESSION_CLASS_EMAIL_US
+              value: {{ toJson .Values.ui.client.sessionClassEmailUs | quote }}
           livenessProbe:
             httpGet:
               path: /

@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 Swiss Data Science Center (SDSC)
+ * Copyright 2024 Swiss Data Science Center (SDSC)
  * A partnership between École Polytechnique Fédérale de Lausanne (EPFL) and
  * Eidgenössische Technische Hochschule Zürich (ETHZ).
  *
@@ -17,37 +17,14 @@
  */
 
 package ch.renku.acceptancetests.model
-import ch.renku.acceptancetests.generators.Generators.Implicits._
-import ch.renku.acceptancetests.generators.Generators._
 
 object datasets {
 
+  final case class Slug(value: String) {
+    override lazy val toString: String = value
+  }
+
   final case class DatasetName(value: String) {
     override lazy val toString: String = value
-    lazy val asPath:            String = value.replace(" ", "-")
-  }
-
-  final case class FileUrl(value: String) {
-    override lazy val toString: String = value
-    lazy val asFileName:        String = value.splitAt(value.lastIndexOf("/"))._2
-  }
-
-  final case class DatasetTitle(value: String) {
-    override lazy val toString: String = value
-  }
-
-  object DatasetName {
-
-    def generate: DatasetName = DatasetName(nonEmptyStrings().generateOne.toLowerCase)
-    def generate(containing: String): DatasetName = DatasetName {
-      sentenceContaining(containing).generateOne.toLowerCase
-    }
-
-    implicit lazy val ordering: Ordering[DatasetName] =
-      (x: DatasetName, y: DatasetName) => x.value compareTo y.value
-  }
-
-  object DatasetTitle {
-    def generate: DatasetTitle = DatasetTitle(nonEmptyStrings().generateOne)
   }
 }

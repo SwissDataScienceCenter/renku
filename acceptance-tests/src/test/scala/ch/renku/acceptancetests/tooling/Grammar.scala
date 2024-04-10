@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 Swiss Data Science Center (SDSC)
+ * Copyright 2024 Swiss Data Science Center (SDSC)
  * A partnership between École Polytechnique Fédérale de Lausanne (EPFL) and
  * Eidgenössische Technische Hochschule Zürich (ETHZ).
  *
@@ -32,7 +32,7 @@ import org.scalatestplus.selenium.WebBrowser
 import scala.concurrent.duration._
 import scala.language.implicitConversions
 
-trait Grammar extends WebElementOps with WebDriverOps with Scripts with Eventually {
+trait Grammar extends WebElementOps with WebDriverOps with Eventually {
   self: WebBrowser with WebDriveredSpec with should.Matchers =>
 
   implicit def toSeleniumPage[Url <: BaseUrl](page: Page[Url])(implicit baseUrl: Url): selenium.Page =

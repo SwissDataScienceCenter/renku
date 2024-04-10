@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 Swiss Data Science Center (SDSC)
+ * Copyright 2024 Swiss Data Science Center (SDSC)
  * A partnership between École Polytechnique Fédérale de Lausanne (EPFL) and
  * Eidgenössische Technische Hochschule Zürich (ETHZ).
  *
@@ -18,11 +18,9 @@
 
 package ch.renku.acceptancetests.tooling
 
-import TestLogger.logger
 import cats.effect.unsafe.IORuntime
 import cats.syntax.all._
 import ch.renku.acceptancetests.model.AuthorizationToken.OAuthAccessToken
-import ch.renku.acceptancetests.model.projects.ProjectIdentifier
 import ch.renku.acceptancetests.model.{AuthorizationToken, projects}
 import io.circe.Decoder._
 import io.circe.{Decoder, Json}
@@ -31,10 +29,8 @@ import org.http4s.Uri.Path.SegmentEncoder._
 import org.http4s.UrlForm
 import org.scalatest.matchers.should
 
-import java.lang.Thread.sleep
 import java.time.Instant
 import scala.annotation.tailrec
-import scala.concurrent.duration._
 
 trait GitLabApi extends RestClient {
   self: AcceptanceSpecData with should.Matchers =>
@@ -52,14 +48,15 @@ trait GitLabApi extends RestClient {
       .getOrElse(fail("OAuth Access Token couldn't be obtained"))
 
   def `check user has credentials`: Boolean =
-    fetchOAuthTokenRequest
-      .send(mapResponse {
+    fetchOAuthTokenRequest.send {
+      mapResponse {
         _.status match {
           case Ok         => true
           case BadRequest => false
           case _          => fail(s"Cannot determine if user '${userCredentials.username}' has credentials in GitLab")
         }
-      })
+      }
+    }
 
   private def fetchOAuthTokenRequest =
     POST(gitLabBaseUrl / "oauth" / "token")
@@ -120,34 +117,25 @@ trait GitLabApi extends RestClient {
       .extract(jsonRoot.id.int.getOption)
       .getOrElse(fail(s"Cannot find '$projectSlug' project in GitLab"))
 
-  def `project exists in GitLab`(projectId: ProjectIdentifier): Boolean =
-    GET(gitLabAPIUrl / "projects" / projectId.asProjectSlug.value)
+  def `get repo Http URL`(projectSlug: projects.Slug): projects.ProjectUrl =
+    GET(gitLabAPIUrl / "projects" / projectSlug.value)
+      .withAuthorizationToken(authorizationToken)
+      .send(whenReceived(status = Ok) >=> bodyToJson)
+      .extract(jsonRoot.http_url_to_repo.string.getOption)
+      .map(projects.ProjectUrl(_))
+      .getOrElse(fail(s"Cannot repo Http URL for '$projectSlug' in GitLab"))
+
+  def `project exists in GitLab`(projectSlug: projects.Slug): Boolean =
+    GET(gitLabAPIUrl / "projects" / projectSlug.value)
       .withAuthorizationToken(authorizationToken)
       .send(mapResponse {
         _.status match {
           case Ok           => true
           case NotFound     => false
           case Unauthorized => false
-          case other        => fail(s"Finding '${projectId.path}' project in GitLab failed with $other status")
+          case other        => fail(s"Finding '$projectSlug' project in GitLab failed with $other status")
         }
       })
-
-  def `wait for project creation`(projectId: ProjectIdentifier, attempt: Int = 1): Unit = {
-    val waitTime = 1 second
-
-    if (!`project exists in GitLab`(projectId) && attempt < 120) {
-      logger.info("waits for Project creation in GitLab")
-      sleep(waitTime.toMillis)
-      `wait for project creation`(projectId)
-    } else if (!`project exists in GitLab`(projectId)) {
-      fail(s"project did not get created in GitLab after ${(waitTime * attempt).toSeconds} seconds")
-    }
-  }
-
-  def `delete project in GitLab`(projectId: ProjectIdentifier): Unit =
-    DELETE(gitLabAPIUrl / "projects" / projectId.asProjectSlug.value)
-      .withAuthorizationToken(authorizationToken)
-      .send(expect(status = Accepted, otherwiseLog = s"Deletion of '${projectId.path}' project in GitLab failed"))
 
   def `find user namespace ids`: List[projects.NamespaceId] = {
     implicit val decoder: Decoder[projects.NamespaceId] =

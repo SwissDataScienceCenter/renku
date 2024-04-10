@@ -69,13 +69,9 @@ spec:
               value: |
                 {{- .Values.notebooks.sessionIngress.annotations | toYaml | nindent 16 }}
             - name: NB_GIT__URL
-            {{ if .Values.notebooks.gitlab.url }}
-              value: {{ .Values.notebooks.gitlab.url }}
-            {{ else }}
-              value: {{ template "notebooks.http" . }}://{{ .Values.global.renku.domain}}{{ .Values.global.gitlab.urlPrefix }}
-            {{ end }}
+              value: {{ .Values.global.gitlab.url | quote }}
             - name: NB_GIT__REGISTRY
-              value: {{ required "An image registry must be specified." .Values.notebooks.gitlab.registry.host }}
+              value: {{ required "An image registry must be specified." .Values.global.gitlab.registry.host }}
             - name: NB_SESSIONS__GIT_RPC_SERVER__IMAGE
               value: "{{ .Values.notebooks.gitRpcServer.image.name }}:{{ .Values.notebooks.gitRpcServer.image.tag }}"
             - name: NB_SESSIONS__GIT_PROXY__IMAGE
@@ -158,14 +154,10 @@ spec:
             {{- include "certificates.env.python" . | nindent 12 }}
             - name: NB_SESSIONS__ENFORCE_CPU_LIMITS
               value: {{ .Values.notebooks.enforceCPULimits | quote }}
-            - name: NB_CLOUD_STORAGE__S3__ENABLED
-              value: {{ .Values.notebooks.cloudstorage.s3.enabled | quote }}
-            - name: NB_CLOUD_STORAGE__S3__READ_ONLY
-              value: {{ .Values.notebooks.cloudstorage.s3.readOnly | quote }}
-            - name: NB_CLOUD_STORAGE__AZURE_BLOB__ENABLED
-              value: {{ .Values.notebooks.cloudstorage.azureBlob.enabled | quote }}
-            - name: NB_CLOUD_STORAGE__AZURE_BLOB__READ_ONLY
-              value: {{ .Values.notebooks.cloudstorage.azureBlob.readOnly | quote }}
+            - name: NB_CLOUD_STORAGE__ENABLED
+              value: {{ .Values.notebooks.cloudstorage.enabled | quote }}
+            - name: NB_CLOUD_STORAGE__STORAGE_CLASS
+              value: {{ .Values.notebooks.cloudstorage.storageClass | default "csi-rclone" | quote }}
             - name: NB_SESSIONS__TERMINATION_WARNING_DURATION_SECONDS
               value: {{ .Values.notebooks.sessionAutosave.terminationWarningDurationSeconds | quote }}
             - name: NB_VERSION

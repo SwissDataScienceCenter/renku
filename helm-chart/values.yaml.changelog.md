@@ -5,6 +5,147 @@ For changes that require manual steps other than changing values, please check o
 Please follow this convention when adding a new row
 * `<type: NEW|EDIT|DELETE> - *<resource name>*: <details>`
 
+## Upgrading to Renku 0.51.0
+
+* NEW ``ui.client.sessionClassEmailUs`` to customize the content of the Email Us button on the Session class option.
+
+## Upgrading to Renku 0.50.0
+
+The gitlab configuration has been unified in the `global` section of the values, which requires modifications for existing deployments.
+
+* EDIT - *notebooks.gitlab.registry.host* -> *global.gitlab.registry.host*
+* DELETE - *notebooks.gitlab* has been removed.
+* NEW - *solr*: [solr](https://bitnami.com/stack/solr) has been added
+  to support searching. It is run as single node mode and required by
+  new search services. The size of the persistent volume is set to 8G.
+  Details can be found in the [respective values section](https://github.com/SwissDataScienceCenter/renku/blob/85412f0821fa482bbe398c64ed97174af2800aa/helm-chart/renku/values.yaml#L492)
+* NEW - *search*: Renku introduces a new search service consisting of
+  `search-api` and `search-provision`. The first is responsible for
+  reading from solr, providing a http api to search across renku. The
+  latter is responsible for populating solr with appropriate data.
+
+## Upgrading to Renku 0.49.0
+
+The PostgreSQL chart dependency has been upgraded, which requires modification of the postgres data volume of existing deployments. See [these instructions](https://github.com/SwissDataScienceCenter/renku/tree/master/helm-chart/utils/postgres_migrations/version_upgrades/README.md) for more details.
+
+* NEW/EDIT - *postgresql.persistence.existingClaim*: Renku `0.49.0` upgrades the postgres chart dependency, which requires modification of the postgres data volume of existing deployments. See [these instructions](https://github.com/SwissDataScienceCenter/renku/tree/master/helm-chart/utils/postgres_migrations/version_upgrades/README.md)
+
+* EDIT - *postgresql*: The upgrade of the postgres chart dependency requires some restructuring of the postgres subchart values to match those of bitnami/postgresql chart version 14.0.1, namely:
+
+* EDIT - *postgresql.postgresqlPassword* -> *postgresql.auth.postgresPassword*: Note that the new key does not have `ql` anymore in it.
+
+Old
+  ```
+  postgresql:
+    postgresqlDatabase: <string>
+    postgresqlUsername: <string>
+    postgresqlPassword: <string>
+    existingSecret: <string>
+    persistence:
+      enabled: <bool>
+      size: <string>
+      existingClaim: <string>
+    replication:
+      enabled: <bool>
+      user: <string>
+      password: <string>
+      slaveReplicas: <int>
+  ```
+New
+  ```
+  postgresql:
+    auth:
+      username: <string>
+      database: <string>
+      postgresPassword: <string>
+      existingSecret: <string>
+      replicationUsername: <string>
+      replicationPassword: <string>
+    primary:
+      persistence:
+        enabled: <bool>
+        size: <string>
+        existingClaim: <string>
+      readReplicas:
+        enabled: <bool>
+        replicaCount: <int>
+  ```
+
+## Upgrading to Renku 0.48.1
+
+The handling of privacy policy and terms of service content has been fine tuned.
+
+* DELETE `ui.client.privacy.page.configMapName` has been removed.
+* DELETE `ui.client.privacy.page.configMapPolicyKey` has been removed.
+* DELETE `ui.client.privacy.page.configMapTermsKey` has been removed.
+* NEW ``ui.client.privacy.page.privacyPolicyContent`` to customize the content of the Privacy Policy page (supports Markdown).
+* NEW ``ui.client.privacy.page.termsContent`` to customize the content of the Terms of Use page (supports Markdown).
+
+
+## Upgrading to Renku 0.48.0
+
+The handling of privacy policy and terms of service content has been slightly changed to make
+it more flexible.
+
+* DELETE `ui.privacy.enabled` has been removed to make the privacy policy and cookie banner configurable independently.
+* NEW `ui.privacy.banner.enabled` allows turning on the cookie banner (defaults to false).
+* DELETE `ui.client.privacy.page.configMapKey` which has been renamed to `ui.client.privacy.page.configMapPolicyKey`.
+* NEW `ui.client.privacy.page.configMapPolicyKey` the key in the ConfigMap where the content for the privacy policy is located.
+* NEW `ui.client.privacy.page.configMapTermsKey` the key in the ConfigMap where the content for the terms of use is located.
+
+
+## Upgrading to Renku 0.47.0
+
+We completely overhauled how mounting cloud storage in sessions works, relying on a new CSI driver based on RClone
+which has to be installed in the cluster for things to work. Either install it as part of Renku using the flag
+mentioned below or install the csi-rclone chart manually and set the correct storage class in the values for the
+notebooks service.
+
+* NEW `noteboks.cloudstorage.enabled` - set to `true` to enable mounting cloud storage in sessions.
+* DELETE `notebooks.cloudstorage.s3.enabed` - superseeded by previous property.
+* NEW `notebooks.cloudstorage.storageClass` - the storage class for the CSI Rclone chart, needed for new cloudstorage
+  to work. The default `csi-rclone` should be fine unless already in use.
+* NEW `global.csi-rclone.install` - if `true` installs the csi-rclone chart alongside Renku. The chart is needed for
+  cloud storage in sessions to work.
+* NEW `csi-rclone.storageClassName` - the storage class name the CSI drivers uses, should match what is configured in
+  the `storageClass` property mentioned above.
+* NEW `csi-rclone.csiNodePlugin.tolerations` - Tolerations for the node plugin part of the CSI driver. Need to be set
+  in a way that allows it to be scheduled on user session nodes. By default this would mean `key=renku.io/dedicated`,
+  `operator=Equal`, `value=user` and `effect=NoSchedule`
+
+
+## Upgrading to Renku 0.43.0
+
+* DELETE `graph.gitlab.url` has been removed as graph services uses the `global.gitlab.url`.
+
+The encryption keys used by the Webhook service and Token Repository have been moved around and now they do not have to
+be base64 encoded in the values file anymore. Although the Helm chart will take care of generating a new secret in the
+correct form from the old one (for existing deployment being upgraded), we suggest to also store those secrets in the
+value file.
+
+To cleanup the old secrets, please remove the following fields:
+
+* DELETE `graph.tokenRepository.tokenEncryption.secret`
+* DELETE `graph.webhookService.hookToken.secret`
+
+Then extract the content of the old secrets for the Token Repository service using `kubectl`:
+
+```shell
+kubectl -n renku get secrets renku-token-repository -o jsonpath="{.data['tokenRepository-tokenEncryption-secret']}" | base64 -d | base64 -d
+```
+And add it to the following new field in the value file:
+
+* NEW `graph.tokenRepository.aesEncryptionKey`
+
+Similarly extract the content of the old secret for the Webhook service:
+
+```shell
+kubectl -n renku get secrets renku-webhook-service -o jsonpath="{.data['webhookService-hookToken-secret']}" | base64 -d | base64 -d
+```
+And add it to the following new field in the value file:
+
+* NEW `graph.webhookService.aesEncryptionKey`
+
 ## Upgrading to Renku 0.41.0
 
 The UI includes a feature that allows projects to be displayed in the _Showcase_ section of the RenkuLab home page.
@@ -30,7 +171,7 @@ Amalthea will simply use your default Kubernetes scheduler.
 * DELETE `amalthea.scheduler.image` - deprecated will be ignored if provided
 * DELETE `amalthea.scheduler.enable` - deprecated will be ignored if provided
 * DELETE `amalthea.scheduler.priorities` - deprecated will be ignored if provided
-* NEW `amalthea.scheduler.packing` - can be used to enable a preset scheduler that will try to pack sessions on the smallest number of nodes and favor the most used nodes 
+* NEW `amalthea.scheduler.packing` - can be used to enable a preset scheduler that will try to pack sessions on the smallest number of nodes and favor the most used nodes
 * NEW `amalthea.scheduler.custom` - can be used to add any custom scheduler for Amalthea, admins just have to provide the scheduler name
 * EDIT `crc` - the field has been renamed to `dataService`, all child fields and functionality remains the same
 * NEW `global.gitlab.url` has been added and needs to be specified, this will be the single place where the Gitlab URL will be specified in future releases we will deprecated all the other Gitlab URL fields in the values file.
@@ -53,14 +194,14 @@ configuration is possible from its `values.yaml` file.
 * EDIT - `notebooks.amalthea.*` moved to `amalthea.*`
 * EDIT - `notebooks.dlf-chart.*` moved to `dlf-chart.*`
 
-In addition going forward we will follow a much stricter versioning scheme that will distinguish changes to 
+In addition going forward we will follow a much stricter versioning scheme that will distinguish changes to
 the Renku Helm chart as opposed to changes to the application. Notably:
 - Patch changes (i.e. `0.50.1` -> `0.50.2`) indicate that there are NO changes in the Helm chart and that
 only appplication level bug fixes are present in the new release.
 - Minor version changes (i.e. `0.50.2` -> `0.51.0`) indicate that there are NO changes in the Helm chart and that
 only application level new features and/or application level breaking changes are present.
-- Major version changes (i.e. `0.50.0` -> `1.0.0`) will be reserved for changes in the Helm chart, either when the 
-values file changes or when the Helm templates change. 
+- Major version changes (i.e. `0.50.0` -> `1.0.0`) will be reserved for changes in the Helm chart, either when the
+values file changes or when the Helm templates change.
 
 ## Upgrading to Renku 0.37.0
 * EDIT - `notebooks.culling.idleThresholdSeconds` in the notebooks' values file was renamed to
@@ -209,7 +350,7 @@ redis:
     sentinel: true
     existingSecret: redis-secret
     existingSecretPasswordKey: redis-password
-  
+
     commonConfiguration: |-
       appendonly no
       save ""
@@ -217,10 +358,10 @@ redis:
   replica:
     replicaCount: 3
     resources:
-      limits: 
+      limits:
         cpu: 250m
         memory: 256Mi
-      requests: 
+      requests:
         cpu: 250m
         memory: 256Mi
     updateStrategy:

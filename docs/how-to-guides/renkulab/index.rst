@@ -7,6 +7,6 @@ RenkuLab
     :maxdepth: 1
 
     session-stopping-and-saving
+    external-storage
     ssh-into-sessions
-    s3
     collaboration

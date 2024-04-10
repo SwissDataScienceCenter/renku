@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 Swiss Data Science Center (SDSC)
+ * Copyright 2024 Swiss Data Science Center (SDSC)
  * A partnership between École Polytechnique Fédérale de Lausanne (EPFL) and
  * Eidgenössische Technische Hochschule Zürich (ETHZ).
  *
@@ -40,28 +40,26 @@ class BatchProjectRemovalSpec extends AcceptanceSpec with Login with RemoveProje
 
   private val gracePeriod = JDuration.ofDays(7)
 
-  scenario("User can delete many projects project") {
+  scenario("Delete old user's test projects") {
 
-    if (batchRemoveConfig.batchRemove) `login and remove projects`
+    if (batchRemoveConfig.batchRemove) `remove projects`
     else Given("specifically asked to not remove projects")
   }
 
-  def `login and remove projects`: Unit = {
+  private def `remove projects`: Unit = {
 
-    `log in to Renku`
+    `verify user has GitLab credentials`
 
     val summary = `find and remove projects`
 
     logger.info(s"Removing summary: $summary")
-
-    `log out of Renku`
   }
 
   private def `find and remove projects` =
     `get user's projects from GitLab`.foldLeft(Summary.empty) {
       case (summary, ProjectInfo(_, path, fullPath, created)) =>
         if (batchRemoveConfig.patterns.exists(_ matches path) && (created < Instant.now().minus(gracePeriod))) {
-          logger.info(s"Removing '$path' - the removal pattern matched and it's older than ${gracePeriod.toDays} days")
+          logger.info(s"Removing '$path' - the removal pattern matches and it's older than ${gracePeriod.toDays} days")
           `DELETE /knowledge-graph/projects/:slug`(projects.Slug(fullPath))
           summary.incrementRemoved()
         } else
@@ -83,8 +81,7 @@ class BatchProjectRemovalSpec extends AcceptanceSpec with Login with RemoveProje
   private lazy val batchRemoveConfig: BatchRemoveConfig = {
 
     val batchRemove =
-      Option(getProperty("batchRem"))
-        .orElse(sys.env.get("RENKU_TEST_BATCH_REMOVE"))
+      (Option(getProperty("batchRem")) orElse sys.env.get("RENKU_TEST_BATCH_REMOVE"))
         .flatMap(_.toBooleanOption)
         .getOrElse(true)
 
@@ -94,10 +91,10 @@ class BatchProjectRemovalSpec extends AcceptanceSpec with Login with RemoveProje
       "cypress-.*"
     )
 
-    val projectNamePatterns = Option(getProperty("remPattern"))
-      .orElse(sys.env.get("RENKU_TEST_REMOVE_PATTERN"))
-      .map(List(_))
-      .getOrElse(defaultPatterns)
+    val projectNamePatterns =
+      (Option(getProperty("remPattern")) orElse sys.env.get("RENKU_TEST_REMOVE_PATTERN"))
+        .map(List(_))
+        .getOrElse(defaultPatterns)
 
     BatchRemoveConfig(batchRemove, projectNamePatterns.map(_.r))
   }

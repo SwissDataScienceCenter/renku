@@ -132,10 +132,7 @@ To create a `tests-defaults.conf` file, copy the `tests-defaults.conf.template` 
 | gitlabaccesstoken | RENKU_TEST_GITLAB_ACCESS_TOKEN | user's personal access token in GitLab with `api`, `read_api`, `read_repository`, `write_repository` scopes (optional - if missing credentials are used to obtain an oauth token which requires the given `username` and `password` to work on GitLab) |
 | provider          | RENKU_TEST_PROVIDER            | if non-empty, use an OpenID provider for auth                                                                                                                                                                                                          |
 | register          | RENKU_TEST_REGISTER            | if non-empty, register a new user; has precedence over provider                                                                                                                                                                                        |
-| docsrun           | RENKU_TEST_DOCS_RUN            | if non-empty, screenshot for docs during hands-on test                                                                                                                                                                                                 |
 | extant            | RENKU_TEST_EXTANT_PROJECT      | if non-empty, an existing project to use for tests                                                                                                                                                                                                     |
-| anon              | RENKU_TEST_ANON_PROJECT        | namespace/name for the project to test anonymously                                                                                                                                                                                                     |
-| anonAvail         | RENKU_TEST_ANON_AVAILABLE      | if true, anonymous environments will be tested.                                                                                                                                                                                                        |
 | batchRem          | RENKU_TEST_BATCH_REMOVE        | if true, run the BatchRemoveProjectSpec                                                                                                                                                                                                                |
 | remPattern        | RENKU_TEST_REMOVE_PATTERN      | pattern to match to decide if a project should be batch removed                                                                                                                                                                                        |
 
@@ -207,7 +204,6 @@ The test are built using the Page Object Pattern (e.g.
 https://www.pluralsight.com/guides/getting-started-with-page-object-pattern-for-your-selenium-tests) which in
 short is about wrapping an UI page into a class/object and using it in the test script.
 
-
 As mentioned above there's a `target/tests-execution.log` file where tests debug statements from tests execution are written.
 
 ## Project organization
@@ -215,31 +211,3 @@ As mentioned above there's a `target/tests-execution.log` file where tests debug
 All the interesting parts are located in the `src/test/scala/ch/renku/acceptancetests` folder which can be
 perceived as a tests classes root folder. The test scenarios are suffixed with `Spec` while all the page
 objects are put into the `pages` subfolder.
-
-
-# FAQ
-
-* Q: I'm getting `Error: Could not find or load main class`
-
-  A: Please verify version of sbt in your computer using `sbt sbtVersion` but run it not from the project root.
-
-
-* Q:  `value seconds is not a member of Int`
-
-  A:
-
-  ```
-  import scala.concurrent.duration._
-  ```
-
-* Q:
-  ```
-  type mismatch;
-   found   : String("Parent Group")
-   required: eu.timepit.refined.api.Refined[String,eu.timepit.refined.collection.NonEmpty]
-  ```
-
-  A:
-  ```
-  import eu.timepit.refined.auto._
-  ```
