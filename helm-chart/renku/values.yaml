@@ -5,6 +5,8 @@
 ## Global variables
 ## Shared values/secrets
 global:
+  platformConfig: |
+    {} 
   gitlab:
     ## Name of the postgres database to be used by Gitlab
     postgresDatabase: gitlabhq_production

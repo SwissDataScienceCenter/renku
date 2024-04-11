@@ -50,13 +50,13 @@ def init_secret_service_secret(config: Config):
     v1 = k8s_client.CoreV1Api()
 
     private_key_secret = f"{config.renku_fullname}-secret-service-private-key"
-    private_key_entry_name = "private_key"
+    private_key_entry_name = "privateKey"
     existing_private_key = _get_k8s_secret(
         config.k8s_namespace, private_key_secret, private_key_entry_name
     )
 
     public_key_secret = f"{config.renku_fullname}-secret-service-public-key"
-    public_key_entry_name = "public_key"
+    public_key_entry_name = "publicKey"
     existing_public_key = _get_k8s_secret(
         config.k8s_namespace, public_key_secret, public_key_entry_name
     )
@@ -73,7 +73,7 @@ def init_secret_service_secret(config: Config):
             config.k8s_namespace,
             k8s_client.V1Secret(
                 api_version="v1",
-                data={"private_key": b64encode(private_key_pem).decode()},
+                data={private_key_entry_name: b64encode(private_key_pem).decode()},
                 kind="Secret",
                 metadata={
                     "name": private_key_secret,
@@ -92,7 +92,7 @@ def init_secret_service_secret(config: Config):
             k8s_client.V1Secret(
                 api_version="v1",
                 data={
-                    "private_key": b64encode(
+                    private_key_entry_name: b64encode(
                         config.secret_service_private_key.encode()
                     ).decode()
                 },
@@ -119,7 +119,7 @@ def init_secret_service_secret(config: Config):
             k8s_client.V1Secret(
                 api_version="v1",
                 data={
-                    "private_key": b64encode(
+                    private_key_entry_name: b64encode(
                         config.secret_service_private_key.encode()
                     ).decode()
                 },
@@ -147,7 +147,7 @@ def init_secret_service_secret(config: Config):
             config.k8s_namespace,
             k8s_client.V1Secret(
                 api_version="v1",
-                data={"pulbic_key": b64encode(public_key_pem).decode()},
+                data={public_key_entry_name: b64encode(public_key_pem).decode()},
                 kind="Secret",
                 metadata={"name": public_key_secret, "namespace": config.k8s_namespace},
                 type="Opaque",
@@ -160,7 +160,7 @@ def init_secret_service_secret(config: Config):
             k8s_client.V1Secret(
                 api_version="v1",
                 data={
-                    "pulbic_key": b64encode(
+                    public_key_entry_name: b64encode(
                         config.secret_service_public_key.encode()
                     ).decode()
                 },
@@ -180,7 +180,7 @@ def init_secret_service_secret(config: Config):
             k8s_client.V1Secret(
                 api_version="v1",
                 data={
-                    "public_key": b64encode(
+                    public_key_entry_name: b64encode(
                         config.secret_service_public_key.encode()
                     ).decode()
                 },
@@ -193,7 +193,7 @@ def init_secret_service_secret(config: Config):
 
 def main():
     config = Config.from_env()
-    k8s_config.load_kube_config()
+    k8s_config.load_incluster_config()
     logging.info("Initializing Renku platform")
     init_secret_service_secret(config)
 

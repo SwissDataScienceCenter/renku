@@ -87,6 +87,7 @@ spec:
         - name: encryption-key
           secret:
             secretName: {{ template "renku.fullname" . }}-secrets-storage
+        {{- include "certificates.volumes" . | nindent 8 }}
     {{- with .Values.secretsStorage.nodeSelector }}
       nodeSelector:
         {{ toYaml . | nindent 8 }}
