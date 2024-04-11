@@ -7,6 +7,8 @@ metadata:
     heritage: {{ .Release.Service }}
     release: {{ .Release.Name }}
     chart: {{ template "renku.chart" . }}
+  annotations:
+    "helm.sh/hook": pre-install,pre-upgrade,pre-rollback
 spec:
   template:
     metadata:

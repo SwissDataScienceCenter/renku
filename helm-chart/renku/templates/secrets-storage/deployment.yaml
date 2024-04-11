@@ -82,6 +82,7 @@ spec:
             - mountPath: "/secrets"
               name: encryption-key
               readOnly: true
+            {{- include "certificates.volumeMounts.system" . | nindent 12 }}
       volumes:
         - name: encryption-key
           secret:
