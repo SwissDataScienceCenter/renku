@@ -11,6 +11,11 @@ spec:
   {{- if not .Values.authz.autoscaling.enabled }}
   replicas: {{ .Values.authz.replicaCount }}
   {{- end }}
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
   selector:
     matchLabels:
       app: renku-authz
