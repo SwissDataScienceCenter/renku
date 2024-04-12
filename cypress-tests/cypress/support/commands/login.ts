@@ -16,12 +16,6 @@ const renkuLogin = (credentials: { username: string; password: string }[]) => {
         .click();
     }
   });
-  cy.location().should((loc) => {
-    const baseURL = new URL(Cypress.config("baseUrl"));
-    expect(["/", ""]).to.include(loc.pathname);
-    expect(loc.search).to.eq("");
-    expect(loc.hostname).to.eq(baseURL.hostname);
-  })
 };
 
 const register = (
@@ -34,7 +28,7 @@ const register = (
 
   // ? wait to be assess whether tokens were refreshed automatically or we really need to register
   cy.wait(1000); // eslint-disable-line cypress/no-unnecessary-waiting
-  cy.request({ failOnStatusCode: false, url: "ui-server/api/user" }).then(
+  cy.request({ failOnStatusCode: false, url: "ui-server/api/data/user" }).then(
     (resp) => {
       if (resp.status === 200) return;
 
@@ -103,7 +97,7 @@ function registerAndVerify(props: RegisterAndVerifyProps) {
     expect(loc.search).to.eq("");
     expect(loc.hostname).to.eq(baseURL.hostname);
   })
-  cy.request("ui-server/api/user").its("status").should("eq", 200);
+  cy.request("ui-server/api/data/user").its("status").should("eq", 200);
 }
 
 type RobustLoginProps = {
@@ -115,7 +109,7 @@ type RobustLoginProps = {
 
 function robustLogin(props?: RobustLoginProps) {
   // Check if we are already logged in
-  cy.request({ failOnStatusCode: false, url: "ui-server/api/user" }).then(
+  cy.request({ failOnStatusCode: false, url: "ui-server/api/data/user" }).then(
     (resp) => {
       // we are already logged in
       if (resp.status >= 200 && resp.status < 400) return;

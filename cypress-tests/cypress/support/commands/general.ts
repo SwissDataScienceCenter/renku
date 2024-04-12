@@ -3,7 +3,7 @@ import { TIMEOUTS } from "../../../config";
 export const validateLogin = {
   validate() {
     // This returns 401 when not properly logged in
-    cy.request("/ui-server/api/user");
+    cy.request("/ui-server/api/data/user");
   },
 };
 
