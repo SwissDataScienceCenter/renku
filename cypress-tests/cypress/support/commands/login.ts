@@ -1,9 +1,9 @@
 const renkuLogin = (credentials: { username: string; password: string }[]) => {
-  for (const { username, password } of credentials) {
-    cy.get("#username").type(username);
-    cy.get("#password").type(password, { log: false });
+  cy.wrap(credentials, { log: false }).each((credential: {password: string, username: string}) => {
+    cy.get("#username").type(credential.username);
+    cy.get("#password").type(credential.password, { log: false });
     cy.get("#kc-login").click().should("not.exist");
-  }
+  })
   cy.url().then((url) => {
     const parsedUrl = new URL(url);
     if (
@@ -16,6 +16,12 @@ const renkuLogin = (credentials: { username: string; password: string }[]) => {
         .click();
     }
   });
+  cy.location().should((loc) => {
+    const baseURL = new URL(Cypress.config("baseUrl"));
+    expect(["/", ""]).to.include(loc.pathname);
+    expect(loc.search).to.eq("");
+    expect(loc.hostname).to.eq(baseURL.hostname);
+  })
 };
 
 const register = (
@@ -91,20 +97,12 @@ function registerAndVerify(props: RegisterAndVerifyProps) {
     if (url.includes("auth/realms/Renku/protocol/openid-connect/auth"))
       cy.renkuLogin([{ username: email, password }]);
   });
-  const httpBaseUrl = Cypress.config("baseUrl").replace(
-    /^https:\/\//,
-    "http://"
-  );
-  const httpsBaseUrl = Cypress.config("baseUrl").replace(
-    /^http:\/\//,
-    "https://"
-  );
-  cy.url().should("be.oneOf", [
-    httpBaseUrl,
-    httpsBaseUrl,
-    httpBaseUrl + "/",
-    httpsBaseUrl + "/",
-  ]);
+  cy.location().should((loc) => {
+    const baseURL = new URL(Cypress.config("baseUrl"));
+    expect(["/", ""]).to.include(loc.pathname);
+    expect(loc.search).to.eq("");
+    expect(loc.hostname).to.eq(baseURL.hostname);
+  })
   cy.request("ui-server/api/user").its("status").should("eq", 200);
 }
 
