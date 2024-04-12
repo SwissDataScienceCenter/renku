@@ -148,7 +148,7 @@ jobs:
           ]
 
     steps:
-      - uses: SwissDataScienceCenter/renku-actions/test-renku-cypress@v1.11.0
+      - uses: SwissDataScienceCenter/renku-actions/test-renku-cypress@chore-update-node-cypress-action
         if: github.event.action != 'closed' && needs.check-deploy.outputs.pr-contains-string == 'true' && needs.check-deploy.outputs.test-enabled == 'true'
         with:
           e2e-target: ${{ matrix.tests }}
