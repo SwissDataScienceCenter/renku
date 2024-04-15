@@ -1,6 +1,6 @@
 import { TIMEOUTS } from "../../config";
 import { generatorProjectName } from "../support/commands/projects";
-import { validateLogin } from "../support/commands/general";
+import { validateLogin, getRandomString } from "../support/commands/general";
 import { v4 as uuidv4 } from "uuid";
 
 const username = Cypress.env("TEST_USERNAME");
@@ -24,11 +24,13 @@ const projectWithoutPermissions = {
   name: "stable-project",
 };
 
+const sessionId = ["useSession", getRandomString()];
+
 describe("Basic public project functionality", () => {
   before(() => {
     // Use a session to preserve login data
     cy.session(
-      "login-useSession",
+      sessionId,
       () => {
         cy.robustLogin();
       },
@@ -50,7 +52,7 @@ describe("Basic public project functionality", () => {
   beforeEach(() => {
     // Restore the session
     cy.session(
-      "login-useSession",
+      sessionId,
       () => {
         cy.robustLogin();
       },
