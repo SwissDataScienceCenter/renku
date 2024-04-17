@@ -54,25 +54,37 @@ spec:
                 secretKeyRef:
                   name: {{ .Values.global.db.common.passwordSecretName }}
                   key: password
-            - name: SECRET_SERVICE_PRIVATE_KEY_PATH
-              value: /secrets/privateKey
+            - name: KEYCLOAK_URL
+              value: {{ (printf "%s://%s/auth/" (include "renku.http" .) .Values.global.renku.domain) | quote }}
+            - name: KEYCLOAK_TOKEN_SIGNATURE_ALGS
+              value: "RS256"
+            - name: KEYCLOAK_CLIENT_ID
+              value: {{ include "renku.dataService.keycloak.clientId" . | quote }}
+            - name: KEYCLOAK_CLIENT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "renku.fullname" . }}
+                  key: dataServiceKeycloakClientSecret
+            - name: SECRETS_SERVICE_PRIVATE_KEY_PATH
+              value: /secrets/privateKey/privateKey
+            {{- include "certificates.env.python" $ | nindent 12 }}
           livenessProbe:
             httpGet:
-              path: /api/secret/version
+              path: /api/secrets/version
               port: http
             initialDelaySeconds: 10
             periodSeconds: 10
             failureThreshold: 6
           readinessProbe:
             httpGet:
-              path: /api/secret/version
+              path: /api/secrets/version
               port: http
             initialDelaySeconds: 10
             periodSeconds: 2
             failureThreshold: 2
           startupProbe:
             httpGet:
-              path: /api/secret/version
+              path: /api/secrets/version
               port: http
             periodSeconds: 5
             failureThreshold: 60
@@ -80,7 +92,6 @@ spec:
             {{ toYaml .Values.secretsStorage.resources | nindent 12 }}
           volumeMounts:
             - mountPath: "/secrets/privateKey"
-              subpath: privateKey
               name: secret-service-private-key
               readOnly: true
             {{- include "certificates.volumeMounts.system" . | nindent 12 }}
@@ -88,6 +99,9 @@ spec:
         - name: secret-service-private-key
           secret:
             secretName: {{ template "renku.fullname" . }}-secret-service-private-key
+            items:
+            - key: privateKey
+              path: privateKey
         {{- include "certificates.volumes" . | nindent 8 }}
     {{- with .Values.secretsStorage.nodeSelector }}
       nodeSelector:
