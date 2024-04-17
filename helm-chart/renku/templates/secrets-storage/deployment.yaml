@@ -54,8 +54,8 @@ spec:
                 secretKeyRef:
                   name: {{ .Values.global.db.common.passwordSecretName }}
                   key: password
-            - name: SECRET_SERVICE_PUBLIC_KEY_PATH
-              value: /secrets/publicKey
+            - name: SECRET_SERVICE_PRIVATE_KEY_PATH
+              value: /secrets/privateKey
           livenessProbe:
             httpGet:
               path: /api/secret/version
