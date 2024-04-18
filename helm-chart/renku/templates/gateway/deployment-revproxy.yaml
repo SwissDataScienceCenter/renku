@@ -43,70 +43,27 @@ spec:
               containerPort: 8080
               protocol: TCP
           env:
-            - name: REVPROXY_RENKU_BASE_URL
-              value: {{ include "renku.baseUrl" . | quote }}
-            - name: REVPROXY_EXTERNAL_GITLAB_URL
-              {{- if .Values.gitlab.enabled }}
-              value: ""
-              {{- else }}
-              value: {{ .Values.global.gitlab.url | default "" | quote }}
-              {{- end }}
-            - name: REVPROXY_ALLOW_ORIGIN
-              value: {{ join "," .Values.gateway.allowOrigin | quote }}
-            - name: REVPROXY_NAMESPACE
-              value: {{ .Release.Namespace }}
-            - name: REVPROXY_RENKU_SERVICES_WEBHOOK
-              value: {{ printf "http://%s-webhook-service" .Release.Name | quote }}
-            - name: REVPROXY_RENKU_SERVICES_KG
-              value: {{ printf "http://%s-knowledge-graph" .Release.Name | quote }}
-            - name: REVPROXY_RENKU_SERVICES_NOTEBOOKS
-              value: {{ printf "http://%s-notebooks" .Release.Name | quote }}
-            - name: REVPROXY_RENKU_SERVICES_CORE_SERVICE_PATHS
-              value: {{ template "gateway.core.paths" . }}
-            - name: REVPROXY_RENKU_SERVICES_CORE_SERVICE_NAMES
-              value: {{ template "gateway.core.serviceNames" . }}
-            - name: REVPROXY_RENKU_SERVICES_AUTH
-              value: {{ printf "http://%s-gateway-auth" .Release.Name }}
-            - name: REVPROXY_RENKU_SERVICES_DATA_SERVICE
-              value: {{ printf "http://%s-data-service" .Release.Name | quote }}
-            - name: REVPROXY_RENKU_SERVICES_SEARCH
-              value: {{ printf "http://%s-search-api" .Release.Name | quote }}
-            - name: REVPROXY_RENKU_SERVICES_KEYCLOAK
-              value: {{ include "renku.keycloakUrl" . | quote }}
-            - name: REVPROXY_PORT
-              value: "8080"
-            - name: REVPROXY_METRICS_ENABLED
-              value: {{ .Values.gateway.reverseProxy.metrics.enabled | quote }}
-            - name: REVPROXY_METRICS_PORT
-              value: {{ .Values.gateway.reverseProxy.metrics.port | quote }}
-            - name: REVPROXY_RATE_LIMITS_ENABLED
-              value: {{ .Values.gateway.rateLimits.general.enabled | quote }}
-            - name: REVPROXY_RATE_LIMITS_AVERAGE
-              value: {{ .Values.gateway.rateLimits.general.average | quote }}
-            - name: REVPROXY_RATE_LIMITS_BURST
-              value: {{ .Values.gateway.rateLimits.general.burst | quote }}
-            - name: REVPROXY_SENTRY_ENABLED
-              value: {{ .Values.gateway.sentry.enabled | quote }}
-            - name: REVPROXY_SENTRY_DSN
+            - name: GATEWAY_REDIS_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.global.redis.existingSecret }}
+                  key: {{ .Values.global.redis.existingSecretPasswordKey }}
+            - name: GATEWAY_MONITORING_SENTRY_DSN
               value: {{ .Values.gateway.sentry.dsn }}
-            - name: REVPROXY_SENTRY_ENVIRONMENT
-              value: {{ .Values.gateway.sentry.environment }}
-            - name: REVPROXY_SENTRY_SAMPLE_RATE
-              value: {{ .Values.gateway.sentry.sampleRate | quote }}
-            - name: REVPROXY_DEBUG
-              value: {{ .Values.gateway.debug | default "false" | quote }}
           volumeMounts:
             {{- include "certificates.volumeMounts.system" . | nindent 12 }}
+            - mountPath: "/etc/gateway"
+              name: public-config
           livenessProbe:
             httpGet:
-              path: /revproxy/health
+              path: /health
               port: http
             initialDelaySeconds: 10
             periodSeconds: 10
             failureThreshold: 6
           readinessProbe:
             httpGet:
-              path: /revproxy/health
+              path: /health
               port: http
             initialDelaySeconds: 10
             periodSeconds: 2
@@ -127,3 +84,6 @@ spec:
     {{- end }}
       volumes:
         {{- include "certificates.volumes" . | nindent 8 }}
+        - name: public-config
+          configMap:
+            name: {{ template "renku.fullname" . }}-gateway-revproxy
