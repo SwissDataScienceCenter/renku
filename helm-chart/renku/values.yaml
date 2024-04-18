@@ -847,7 +847,8 @@ ui:
     ## The URL for the server service; the URL used by the client is the server.url + /ui-server endpoint.
     url:
     replicaCount: 1
-    keepCookies: []
+    keepCookies:
+      - "_renku_session"
     image:
       repository: renku/renku-ui-server
       tag: "3.23.0"
