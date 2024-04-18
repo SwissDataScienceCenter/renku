@@ -25,6 +25,7 @@ data:
       {{- end }}
       k8sNamespace: {{ .Release.Namespace }}
       renkuServices:
+        gatewayAuth: {{ printf "http://%s-gateway-auth" .Release.Name | quote }}
         notebooks: {{ printf "http://%s-notebooks" .Release.Name | quote }}
         kg: {{ printf "http://%s-knowledge-graph" .Release.Name | quote }}
         webhook: {{ printf "http://%s-webhook-service" .Release.Name | quote }}
@@ -36,10 +37,10 @@ data:
           sticky: true 
         dataService: {{ printf "http://%s-data-service" .Release.Name | quote }}
         keycloak: {{ include "renku.keycloakUrl" . | quote }} 
-        uiserver: {{ printf "http://%s" (include "ui-server.fullname" .) | quote }} 
+        uiserver: {{ printf "http://%s" (include "ui-server.fullname" .) | quote }}
     redis:
-      type: redis 
-      addresses: 
+      type: redis
+      addresses:
         - {{ printf "%s:%d" .Values.global.redis.host (.Values.global.redis.port | int) | quote }}
       isSentinel: {{ .Values.global.redis.sentinel.enabled }}
       masterName: {{ .Values.global.redis.sentinel.masterSet | quote }}
