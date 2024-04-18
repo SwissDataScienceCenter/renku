@@ -1,0 +1,96 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: "{{ .Release.Name }}-init-renku-platform-rev{{ .Release.Revision }}-{{ randAlphaNum 5 | lower }}"
+  labels:
+    app: platform-init
+    heritage: {{ .Release.Service }}
+    release: {{ .Release.Name }}
+    chart: {{ template "renku.chart" . }}
+  annotations:
+    "helm.sh/hook": pre-install,pre-upgrade,pre-rollback
+spec:
+  template:
+    metadata:
+      name: {{ .Release.Name }}-platform-init
+      labels:
+        app: platform-init
+        heritage: {{ .Release.Service }}
+        release: {{ .Release.Name }}
+        chart: {{ template "renku.chart" . }}
+    spec:
+      restartPolicy: Never
+      containers:
+        - name: initialize-platform
+          image: "{{ .Values.platformInit.image.repository }}:{{ .Values.platformInit.image.tag }}"
+          args: [ "platform-init.py" ]
+          securityContext:
+            runAsUser: 1000
+            runAsGroup: 1000
+            allowPrivilegeEscalation: false
+            runAsNonRoot: true
+          env:
+            - name: K8S_NAMESPACE
+              value: {{ .Release.Namespace}}
+            - name: RENKU_FULLNAME
+              value: {{ template "renku.fullname" . }}
+            - name: PLATFORM_INIT_CONFIG
+              value: {{ .Values.global.platformConfig| default (printf "{}") | quote }}
+      serviceAccountName: {{ template "renku.fullname" . }}-platform-init
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: {{ template "renku.fullname" . }}-platform-init
+  labels:
+    app: {{ template "renku.name" . }}
+    chart: {{ template "renku.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+  annotations:
+    "helm.sh/hook": pre-install,pre-upgrade,pre-rollback
+    "helm.sh/hook-weight": "-5"
+rules:
+  - apiGroups:
+      - ""
+    resources:
+      - secrets
+    verbs:
+      - get
+      - list
+      - patch
+      - create
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: {{ template "renku.fullname" . }}-platform-init
+  labels:
+    app: {{ template "renku.name" . }}
+    chart: {{ template "renku.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+  annotations:
+    "helm.sh/hook": pre-install,pre-upgrade,pre-rollback
+    "helm.sh/hook-weight": "-5"
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: {{ template "renku.fullname" . }}-platform-init
+  labels:
+    app: {{ template "renku.name" . }}
+    chart: {{ template "renku.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+  annotations:
+    "helm.sh/hook": pre-install,pre-upgrade,pre-rollback
+    "helm.sh/hook-weight": "-5"
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: {{ template "renku.fullname" . }}-platform-init
+subjects:
+  - kind: ServiceAccount
+    name: {{ template "renku.fullname" . }}-platform-init
+    namespace: {{ .Release.Namespace }}
