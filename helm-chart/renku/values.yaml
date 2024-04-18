@@ -1318,6 +1318,11 @@ gateway:
     metrics:
       enabled: true
       port: 8765
+    sentry:
+      enabled: false
+      dsn:
+      environment:
+      sampleRate: 0.1
     replicaCount: 2
     podAnnotations: {}
     resources: {}

@@ -46,11 +46,11 @@ data:
       dbIndex: {{ .Values.global.redis.dbIndex.gateway }}
     monitoring:
       sentry:
-        enabled: {{ .Values.gateway.sentry.enabled }}
-        environment: {{ .Values.gateway.sentry.environment }}
-        sampleRate: {{ .Values.gateway.sentry.sampleRate }}
+        enabled: {{ .Values.gateway.reverseProxy.sentry.enabled }}
+        environment: {{ .Values.gateway.reverseProxy.sentry.environment }}
+        sampleRate: {{ .Values.gateway.reverseProxy.sentry.sampleRate }}
       prometheus:
-        enabled: {{ .Values.gateway.metrics.enabled }}
-        port: {{ .Values.gateway.metrics.port }}
+        enabled: {{ .Values.gateway.reverseProxy.metrics.enabled }}
+        port: {{ .Values.gateway.reverseProxy.metrics.port }}
 ---
 
