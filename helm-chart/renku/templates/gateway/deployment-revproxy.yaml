@@ -22,6 +22,8 @@ spec:
       labels:
         app: {{ template "gateway.name" . }}-revproxy
         release: {{ .Release.Name }}
+        # The label below enables the gateway-revproxy to connect to redis
+        {{ .Values.global.redis.clientLabel | toYaml | nindent 8 }}
       {{- with .Values.gateway.reverseProxy.podAnnotations }}
       annotations:
         {{- toYaml . | nindent 8 }}
