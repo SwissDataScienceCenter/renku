@@ -39,6 +39,9 @@ data:
         keycloak: {{ include "renku.keycloakUrl" . | quote }} 
         search: {{ printf "http://%s-search-api" .Release.Name | quote }}
         uiserver: {{ printf "http://%s" (include "ui-server.fullname" .) | quote }}
+    oauthClients:
+      applications:
+        "gilab:com": {}
     redis:
       type: redis
       addresses:

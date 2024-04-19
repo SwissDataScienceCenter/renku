@@ -56,6 +56,8 @@ spec:
             {{- include "certificates.volumeMounts.system" . | nindent 12 }}
             - mountPath: "/etc/gateway"
               name: public-config
+            - mountPath: "/etc/gateway-secret"
+              name: secret-config
           livenessProbe:
             httpGet:
               path: /health
@@ -89,3 +91,6 @@ spec:
         - name: public-config
           configMap:
             name: {{ template "renku.fullname" . }}-gateway-revproxy
+        - name: secret-config
+          secret:
+            secretName: {{ template "renku.fullname" . }}-gateway-revproxy-config
