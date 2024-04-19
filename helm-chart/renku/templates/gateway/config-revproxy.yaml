@@ -37,6 +37,7 @@ data:
           sticky: true 
         dataService: {{ printf "http://%s-data-service" .Release.Name | quote }}
         keycloak: {{ include "renku.keycloakUrl" . | quote }} 
+        search: {{ printf "http://%s-search-api" .Release.Name | quote }}
         uiserver: {{ printf "http://%s" (include "ui-server.fullname" .) | quote }}
     redis:
       type: redis
