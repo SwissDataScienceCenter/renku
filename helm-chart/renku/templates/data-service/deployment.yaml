@@ -99,6 +99,15 @@ spec:
               value: {{ .Values.dataService.sentry.environment | quote }}
             - name: SENTRY_SAMPLE_RATE
               value: {{ .Values.dataService.sentry.sampleRate | quote }}
+            - name: AUTHZ_DB_HOST
+              value: {{ include "renku.fullname" . }}-authz
+            - name: AUTHZ_DB_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "renku.fullname" . }}-authz
+                  key: SPICEDB_GRPC_PRESHARED_KEY
+            - name: AUTHZ_DB_GRPC_PORT
+              value: "50051"
             {{- include "certificates.env.python" $ | nindent 12 }}
           volumeMounts:
             - name: server-options
