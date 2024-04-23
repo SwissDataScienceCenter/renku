@@ -63,12 +63,27 @@ spec:
                 secretKeyRef:
                   name: {{ template "renku.fullname" . }}-authz
                   key: SPICEDB_DATASTORE_CONN_URI
+            {{- include "certificates.env.python" . | nindent 12 }}
+            {{- include "certificates.env.grpc" . | nindent 12 }}
+          volumeMounts:
+            - name: internal-tls-authz-cert
+              mountPath: /etc/internal-tls-authz-cert
+              readOnly: true
           args:
             - serve
             - --http-enabled=true
             - --datastore-engine=postgres
             - --grpc-enabled=true
             - --telemetry-endpoint=
+            - --grpc-tls-cert-path=/etc/internal-tls-authz-cert/tls.crt
+            - --grpc-tls-key-path=/etc/internal-tls-authz-cert/tls.key
+            - --http-tls-cert-path=/etc/internal-tls-authz-cert/tls.crt
+            - --http-tls-key-path=/etc/internal-tls-authz-cert/tls.key
+            - --log-format=json
+            - --datastore-conn-pool-write-min-open=3
+            - --datastore-conn-pool-write-max-open=6
+            - --datastore-conn-pool-read-min-open=5
+            - --datastore-conn-pool-read-max-open=10
           ports:
             - name: http
               containerPort: 8443
@@ -105,3 +120,7 @@ spec:
       tolerations:
         {{- toYaml . | nindent 8 }}
       {{- end }}
+      volumes:
+        - name: internal-tls-authz-cert
+          secret:
+            secretName: {{ cat (include "renku.fullname" .) "-authz-cert" | nospace }}

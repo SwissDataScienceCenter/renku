@@ -109,6 +109,7 @@ spec:
             - name: AUTHZ_DB_GRPC_PORT
               value: "50051"
             {{- include "certificates.env.python" $ | nindent 12 }}
+            {{- include "certificates.env.grpc" $ | nindent 12 }}
           volumeMounts:
             - name: server-options
               mountPath: /etc/renku-data-service/server_options
