@@ -97,6 +97,9 @@ function registerAndVerify(props: RegisterAndVerifyProps) {
     expect(loc.search).to.eq("");
     expect(loc.hostname).to.eq(baseURL.hostname);
   })
+  cy.get("header").should("be.visible");
+  cy.get("footer").should("be.visible");
+  cy.wait(1000);
   cy.request("ui-server/api/data/user").its("status").should("eq", 200);
 }
 
