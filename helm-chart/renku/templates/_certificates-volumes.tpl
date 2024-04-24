@@ -8,10 +8,10 @@
     defaultMode: 0444
     sources:
       - secret:
-          name: {{ template "renku.fullname" . }}-ca
+          name: {{ include "renku.CASecretName" . }}
           items:
             - key: tls.crt
-              path: {{ include "renku.fullname" . | nospace  }}-{{ randAlpha 6 }}.crt
+              path: {{ include "renku.CASecretName" . }}-internal-communication-ca.crt
     {{- if $customCAsEnabled }}
     {{- range $customCA := .Values.global.certificates.customCAs }}
       - secret:

@@ -30,6 +30,7 @@ spec:
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       initContainers:
+        {{- include "certificates.initContainer" . | nindent 8 }}
         - name: migrate-datastore
           # NOTE: Have to use the -debug image here because the regular one does not have a shell
           # and the database migration will not read the db connection uri string from an env variable
@@ -66,6 +67,7 @@ spec:
             {{- include "certificates.env.python" . | nindent 12 }}
             {{- include "certificates.env.grpc" . | nindent 12 }}
           volumeMounts:
+            {{- include "certificates.volumeMounts.system" . | nindent 12 }}
             - name: internal-tls-authz-cert
               mountPath: /etc/internal-tls-authz-cert
               readOnly: true
@@ -99,13 +101,17 @@ spec:
               command:
                 - grpc_health_probe
                 - -v
-                - -addr=localhost:50051
+                - -addr=127.0.0.1:50051
+                - -tls
+                - -tls-server-name={{ template "renku.fullname" . }}-authz
           readinessProbe:
             exec:
               command:
                 - grpc_health_probe
                 - -v
-                - -addr=localhost:50051
+                - -addr=127.0.0.1:50051
+                - -tls
+                - -tls-server-name={{ template "renku.fullname" . }}-authz
           resources:
             {{- toYaml .Values.authz.resources | nindent 12 }}
       {{- with .Values.nodeSelector }}
@@ -121,6 +127,7 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       volumes:
+        {{- include "certificates.volumes" . | nindent 8 }}
         - name: internal-tls-authz-cert
           secret:
-            secretName: {{ cat (include "renku.fullname" .) "-authz-cert" | nospace }}
+            secretName: {{ include "renku.authz.tlsSecretName" . }}
