@@ -1119,6 +1119,10 @@ notebooks:
     image:
       name: renku/git-clone
       tag: "1.22.0"
+  secretsMount:
+    image:
+      name: renku/secrets-mount
+      tag: "1.22.0"
   service:
     type: ClusterIP
     port: 80

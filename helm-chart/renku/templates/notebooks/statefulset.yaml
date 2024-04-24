@@ -78,6 +78,8 @@ spec:
               value: "{{ .Values.notebooks.gitHttpsProxy.image.name }}:{{ .Values.notebooks.gitHttpsProxy.image.tag }}"
             - name: NB_SESSIONS__GIT_CLONE__IMAGE
               value: "{{ .Values.notebooks.gitClone.image.name }}:{{ .Values.notebooks.gitClone.image.tag }}"
+            - name: NB_SESSIONS__SECRETS_MOUNT__IMAGE
+              value: "{{ .Values.notebooks.secretsMount.image.name }}:{{ .Values.notebooks.secretsMount.image.tag }}"
             - name: NB_ANONYMOUS_SESSIONS_ENABLED
               value: {{ .Values.global.anonymousSessions.enabled | quote }}
             - name: NB_SSH_ENABLED
