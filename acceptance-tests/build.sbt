@@ -56,7 +56,7 @@ scalacOptions += "-language:postfixOps"
 
 organizationName := "Swiss Data Science Center (SDSC)"
 startYear := Some(java.time.LocalDate.now().getYear)
-licenses += ("Apache-2.0", new URL("https://www.apache.org/licenses/LICENSE-2.0.txt"))
+licenses += ("Apache-2.0", new URI("https://www.apache.org/licenses/LICENSE-2.0.txt").toURL)
 headerLicense := Some(
   HeaderLicense.Custom(
     s"""Copyright ${java.time.LocalDate.now().getYear} Swiss Data Science Center (SDSC)
