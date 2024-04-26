@@ -2,8 +2,16 @@ import { TIMEOUTS } from "../../../config";
 
 export const validateLogin = {
   validate() {
+    cy.wait(10000);
     // This returns 401 when not properly logged in
-    cy.request("/ui-server/api/data/user");
+    cy.request("ui-server/api/data/user").its("status").should("eq", 200);
+    // This is how the ui decides the user is logged in
+    cy.request("ui-server/api/user").then((response) => {
+      expect(response.status).to.eq(200);
+      expect(response.body).property("username").to.not.be.empty;
+      expect(response.body).property("username").to.not.be.null;
+      expect(response.body).property("state").to.equal("active");
+    });
   },
 };
 

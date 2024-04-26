@@ -99,8 +99,14 @@ function registerAndVerify(props: RegisterAndVerifyProps) {
   })
   cy.get("header").should("be.visible");
   cy.get("footer").should("be.visible");
-  cy.wait(1000);
+  cy.wait(10000);
   cy.request("ui-server/api/data/user").its("status").should("eq", 200);
+  cy.request("ui-server/api/user").then((response) => {
+    expect(response.status).to.eq(200);
+    expect(response.body).property("username").to.not.be.empty;
+    expect(response.body).property("username").to.not.be.null;
+    expect(response.body).property("state").to.equal("active");
+  });
 }
 
 type RobustLoginProps = {

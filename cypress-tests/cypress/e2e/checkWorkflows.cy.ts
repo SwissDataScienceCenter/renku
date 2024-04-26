@@ -10,17 +10,6 @@ const project: ProjectIdentifier = {
 const sessionId = ["checkWorkflows", getRandomString()];
 
 describe("Workflows pages", () => {
-  before(() => {
-    // Use a session to preserve login data
-    cy.session(
-      sessionId,
-      () => {
-        cy.robustLogin();
-      },
-      validateLogin
-    );
-  });
-
   beforeEach(() => {
     // Restore the session
     cy.session(

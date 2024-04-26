@@ -8,12 +8,12 @@ import { validateLogin, getRandomString } from "../support/commands/general";
 const username = Cypress.env("TEST_USERNAME");
 
 const projectTestConfig = {
-  shouldCreateProject: true,
+  projectAlreadyExists: false,
   projectName: generatorProjectName("privateProject"),
 };
 
 // ? Uncomment to debug using an existing project
-// projectTestConfig.shouldCreateProject = false;
+// projectTestConfig.projectAlreadyExists = true;
 // projectTestConfig.projectName = "cypress-privateproject-ad99f11c1482";
 
 const projectIdentifier: ProjectIdentifier = {
@@ -24,32 +24,9 @@ const projectIdentifier: ProjectIdentifier = {
 const sessionId = ["privateProject", getRandomString()];
 
 describe("Basic public project functionality", () => {
-  before(() => {
-    // Use a session to preserve login data
-    cy.session(
-      sessionId,
-      () => {
-        cy.robustLogin();
-      },
-      validateLogin
-    );
-
-    // Create a project for the local spec
-    if (projectTestConfig.shouldCreateProject) {
-      cy.visit("/");
-      cy.request("ui-server/api/data/user").its("status").should("eq", 200);
-      cy.request("ui-server/api/user").then((response) => {
-        expect(response.status).to.eq(200);
-        expect(response.body).property("username").to.not.be.empty;
-        expect(response.body).property("username").to.not.be.null;
-        expect(response.body).property("state").to.equal("active");
-      });
-      cy.createProject({
-        templateName: "Python",
-        ...projectIdentifier,
-        visibility: "private",
-      });
-    }
+  after(() => {
+    if (!projectTestConfig.projectAlreadyExists)
+      cy.deleteProjectFromAPI(projectIdentifier);
   });
 
   beforeEach(() => {
@@ -61,6 +38,7 @@ describe("Basic public project functionality", () => {
       },
       validateLogin
     );
+    cy.createProject({templateName: "Python", ...projectIdentifier, visibility: "private"});
     cy.visitAndLoadProject(projectIdentifier);
   });
 
