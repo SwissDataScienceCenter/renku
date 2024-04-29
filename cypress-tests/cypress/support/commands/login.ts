@@ -99,6 +99,9 @@ function registerAndVerify(props: RegisterAndVerifyProps) {
   })
   cy.get("header").should("be.visible");
   cy.get("footer").should("be.visible");
+  // If we send a request to the user endpoint on Gitlab too quickly after we log in then
+  // it sometimes randomly responds with 401 and sometimes with 200 (as expected). This wait period seems to
+  // allow Gitlab to "settle" after the login and properly recognize the token and respond with 200.
   cy.wait(10000);
   cy.request("ui-server/api/data/user").its("status").should("eq", 200);
   cy.request("ui-server/api/user").then((response) => {
