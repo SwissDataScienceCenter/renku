@@ -9,12 +9,12 @@ import { generatorDatasetName } from "../support/commands/datasets";
 const username = Cypress.env("TEST_USERNAME");
 
 const projectTestConfig = {
-  shouldCreateProject: true,
+  projectAlreadyExists: false,
   projectName: generatorProjectName("testDatasets"),
 };
 
 // ? Uncomment to debug using an existing project
-// projectTestConfig.shouldCreateProject = false;
+// projectTestConfig.projectAlreadyExists = true;
 // projectTestConfig.projectName = "cypress-usedatasets-a572ce0e177d";
 
 const projectIdentifier: ProjectIdentifier = {
@@ -27,21 +27,6 @@ const sessionId = ["testDatasets", getRandomString()];
 
 describe("Basic datasets functionality", () => {
   before(() => {
-    // Use a session to preserve login data
-    cy.session(
-      sessionId,
-      () => {
-        cy.robustLogin();
-      },
-      validateLogin
-    );
-
-    // Create a project for the local spec
-    if (projectTestConfig.shouldCreateProject) {
-      cy.visit("/");
-      cy.createProject({ templateName: "Python", ...projectIdentifier });
-    }
-
     // Intercept listing datasets
     cy.intercept("/ui-server/api/renku/*/datasets.list?git_url=*", (req) => {
       listDatasetsInvoked = true;
@@ -57,6 +42,7 @@ describe("Basic datasets functionality", () => {
       },
       validateLogin
     );
+    cy.createProjectIfMissing({ templateName: "Python", ...projectIdentifier });
     cy.visitAndLoadProject(projectIdentifier);
 
     // Reset dataset interceptor
@@ -64,7 +50,7 @@ describe("Basic datasets functionality", () => {
   });
 
   after(() => {
-    if (projectTestConfig.shouldCreateProject)
+    if (!projectTestConfig.projectAlreadyExists)
       cy.deleteProjectFromAPI(projectIdentifier);
   });
 
@@ -79,7 +65,7 @@ describe("Basic datasets functionality", () => {
       cy.wait("@listDatasets", { timeout: TIMEOUTS.long });
 
     // A new project should not contain datasets
-    if (projectTestConfig.shouldCreateProject) {
+    if (!projectTestConfig.projectAlreadyExists) {
       cy.contains("No datasets found for this project.", {
         timeout: TIMEOUTS.vlong,
       }).should("be.visible");
