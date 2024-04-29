@@ -42,7 +42,7 @@ describe("Basic datasets functionality", () => {
       },
       validateLogin
     );
-    cy.createProject({ templateName: "Python", ...projectIdentifier });
+    cy.createProjectIfMissing({ templateName: "Python", ...projectIdentifier });
     cy.visitAndLoadProject(projectIdentifier);
 
     // Reset dataset interceptor

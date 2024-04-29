@@ -38,7 +38,7 @@ describe("Basic public project functionality", () => {
       },
       validateLogin
     );
-    cy.createProject({templateName: "Python", ...projectIdentifier, visibility: "private"});
+    cy.createProjectIfMissing({templateName: "Python", ...projectIdentifier, visibility: "private"});
     cy.visitAndLoadProject(projectIdentifier);
   });
 

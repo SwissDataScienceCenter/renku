@@ -41,7 +41,7 @@ describe("Basic public project functionality", () => {
       },
       validateLogin
     );
-    cy.createProject({ templateName: "Python", ...projectIdentifier });
+    cy.createProjectIfMissing({ templateName: "Python", ...projectIdentifier });
   });
 
   it("Start a new session on the project and interact with the terminal.", () => {

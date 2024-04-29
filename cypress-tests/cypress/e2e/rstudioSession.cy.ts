@@ -40,7 +40,7 @@ describe("Basic rstudio functionality", () => {
       },
       validateLogin
     );
-    cy.createProject({ templateName: "R (", ...projectIdentifier });
+    cy.createProjectIfMissing({ templateName: "R (", ...projectIdentifier });
     cy.stopAllSessionsForProject(projectIdentifier);
   });
 

@@ -68,7 +68,7 @@ interface NewProjectProps extends ProjectIdentifier {
   visibility?: "public" | "private" | "internal";
 }
 
-function createProject(newProjectProps: NewProjectProps) {
+function createProjectIfMissing(newProjectProps: NewProjectProps) {
   const namespace = newProjectProps.namespace ?? Cypress.env("TEST_USERNAME");
   const slug = encodeURIComponent(`${namespace}/${newProjectProps.name}`);
   cy.request({failOnStatusCode: false, method: "GET", url: `/ui-server/api/projects/${slug}`}).then((response) => {
@@ -272,7 +272,7 @@ function waitMetadataIndexing(justTriggered = true, goToSettings = true) {
 }
 
 export default function registerProjectCommands() {
-  Cypress.Commands.add("createProject", createProject);
+  Cypress.Commands.add("createProjectIfMissing", createProjectIfMissing);
   Cypress.Commands.add("deleteProject", deleteProject);
   Cypress.Commands.add("deleteProjectFromAPI", deleteProjectFromAPI);
   Cypress.Commands.add("forkProject", forkProject);
@@ -289,7 +289,7 @@ declare global {
   // eslint-disable-next-line @typescript-eslint/no-namespace
   namespace Cypress {
     interface Chainable {
-      createProject(newProjectProps: NewProjectProps);
+      createProjectIfMissing(newProjectProps: NewProjectProps);
       deleteProject(identifier: ProjectIdentifier, loadProject?: boolean);
       deleteProjectFromAPI(identifier: ProjectIdentifier);
       forkProject(identifier: ProjectIdentifier, newName: string);
