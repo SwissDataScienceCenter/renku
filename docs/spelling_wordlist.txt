@@ -90,6 +90,7 @@ executables
 extraEnv
 extraEnvFrom
 falsy
+Fernet
 filesystem
 FilterFlights
 findable
@@ -296,6 +297,7 @@ txt
 typesystem
 Ubuntu
 ui
+unencrypted
 Unescape
 unhandled
 unicode
