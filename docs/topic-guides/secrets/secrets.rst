@@ -96,21 +96,21 @@ Technical Details
   :alt: Secrets encryption scheme
 
 Renku stores secrets in its database, doubly encrypted, ensuring that no part 
-accessible from the internet other than the session has acces to unencrypted 
+accessible from the internet other than the session has access to unencrypted 
 secrets. All secrets are encrypted at rest.
 
-Threat models we adress are:
+Threat models we address are:
 - One of our public-facing services being breached
 - A malicious actor getting a copy of our database (for instance from a backup)
 
-We explicitely do not guard against:
+We explicitly do not guard against:
 - Someone stealing your login details or login token
 - You starting a malicious session with secrets, as we can't control the code 
 that runs within a session.
 
 The Renku ``data service`` uses symmetric Fernet encryption with a key only it 
 knows to ensure all data is encrypted at rest in its database.
-For each user, a uniqe ``user key`` is generated. In addition, there is a 
+For each user, a unique ``user key`` is generated. In addition, there is a 
 dedicated ``secret storage service`` which has a ``public key`` and a ``private 
 key``, the latter of which is only known to this service. This service is not 
 accessible to the public internet.
