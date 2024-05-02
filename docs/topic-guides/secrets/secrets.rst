@@ -39,7 +39,8 @@ Click on the ``Add New Secret`` button and fill in the Name and Value fields.
 
 The name is a unique identifier for the secret, used for the file name in
 sessions. It cannot be empty and the name follows specific validation rules:
-you can include only letters, numbers, underscores (_), and dashes (-).
+you can include only letters, numbers, dots (.), underscores (_), and dashes 
+(-).
 
 Values can be any non-empty string, including special characters. The length
 cannot exceed 5'000 characters. Should you need to store a longer value,
@@ -85,3 +86,53 @@ specified path. The secrets will be stored in files with the same name.
   If you change the value of a secret after starting the session, you will
   need to restart the session to apply the changes.
 
+Technical Details
+-----------------
+
+
+.. image:: ../../_static/images/secrets_encryption_decryption.gif
+  :width: 85%
+  :align: center
+  :alt: Secrets encryption scheme
+
+Renku stores secrets in its database, doubly encrypted, ensuring that no part 
+accessible from the internet other than the session has acces to unencrypted 
+secrets. All secrets are encrypted at rest.
+
+Threat models we adress are:
+- One of our public-facing services being breached
+- A malicious actor getting a copy of our database (for instance from a backup)
+
+We explicitely do not guard against:
+- Someone stealing your login details or login token
+- You starting a malicious session with secrets, as we can't control the code 
+that runs within a session.
+
+The Renku ``data service`` uses symmetric Fernet encryption with a key only it 
+knows to ensure all data is encrypted at rest in its database.
+For each user, a uniqe ``user key`` is generated. In addition, there is a 
+dedicated ``secret storage service`` which has a ``public key`` and a ``private 
+key``, the latter of which is only known to this service. This service is not 
+accessible to the public internet.
+
+When a user stores a secret, it is first symmetrically encrypted with the 
+``user key``, using Fernet. We then generate a random ``secret key`` that is 
+encrypted using the ``public key`` and passed to the  ``secret storage 
+service``, meaning only it can decrypt the ``secret key``. The users secret is 
+then encrypted again using this ``secret key`` and stored in the database.
+At this point, the ``data service`` can't decrypt the user's secret anymore, as 
+it does not know the ``secret key``.
+
+To decrypt a secret, ``secret storage service`` gets a request from ``notebooks 
+service`` that a user would like to start a session with some secret mounted. 
+It uses its ``private key`` to get the ``secret key`` and uses this to decrypt 
+the outer layer of encryption of the secret. It then creates a Kubernetes 
+secret with the (now singly encrypted) user secret, which gets mounted in the 
+user session.
+On session start, an init container reads the mounted secrets, and uses the 
+``user key`` to undo the inner encryption. It then creates files inside the 
+session with the decrypted secret values.
+
+If your data is extra sensitive, consider putting already encrypted values into 
+Renku and manually decrypting them once inside the session, with 3rd party 
+encryption.
