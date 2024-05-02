@@ -10,12 +10,12 @@ import { validateLogin, getRandomString } from "../support/commands/general";
 const username = Cypress.env("TEST_USERNAME");
 
 const projectTestConfig = {
-  shouldCreateProject: true,
+  projectAlreadyExists: false,
   projectName: generatorProjectName("rstudioSession"),
 };
 
 // ? Uncomment to debug using an existing project
-// projectTestConfig.shouldCreateProject = false;
+// projectTestConfig.projectAlreadyExists = true;
 // projectTestConfig.projectName = "cypress-publicproject-4ed4fb12c5e6";
 
 const projectIdentifier: ProjectIdentifier = {
@@ -26,25 +26,8 @@ const projectIdentifier: ProjectIdentifier = {
 const sessionId = ["rstudioSession", getRandomString()];
 
 describe("Basic rstudio functionality", () => {
-  before(() => {
-    // Use a session to preserve login data
-    cy.session(
-      sessionId,
-      () => {
-        cy.robustLogin();
-      },
-      validateLogin
-    );
-
-    // Create a project
-    if (projectTestConfig.shouldCreateProject) {
-      cy.visit("/");
-      cy.createProject({ templateName: "R (", ...projectIdentifier });
-    }
-  });
-
   after(() => {
-    if (projectTestConfig.shouldCreateProject)
+    if (!projectTestConfig.projectAlreadyExists)
       cy.deleteProjectFromAPI(projectIdentifier);
   });
 
@@ -57,6 +40,7 @@ describe("Basic rstudio functionality", () => {
       },
       validateLogin
     );
+    cy.createProjectIfMissing({ templateName: "R (", ...projectIdentifier });
     cy.stopAllSessionsForProject(projectIdentifier);
   });
 
