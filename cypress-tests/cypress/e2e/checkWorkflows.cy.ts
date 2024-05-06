@@ -1,28 +1,19 @@
 import { TIMEOUTS } from "../../config";
 import { ProjectIdentifier } from "../support/commands/projects";
-import { validateLogin } from "../support/commands/general";
+import { validateLogin, getRandomString } from "../support/commands/general";
 
 const project: ProjectIdentifier = {
   namespace: "renku-ui-tests",
   name: "composite-workflows",
 };
 
-describe("Workflows pages", () => {
-  before(() => {
-    // Use a session to preserve login data
-    cy.session(
-      "login-updateProjects",
-      () => {
-        cy.robustLogin();
-      },
-      validateLogin
-    );
-  });
+const sessionId = ["checkWorkflows", getRandomString()];
 
+describe("Workflows pages", () => {
   beforeEach(() => {
     // Restore the session
     cy.session(
-      "login-updateProjects",
+      sessionId,
       () => {
         cy.robustLogin();
       },

@@ -1613,6 +1613,21 @@ dataService:
   affinity: {}
   # This defines the maximum number of pinned projects in user preferences
   maxPinnedProjects: 5
+
+authz:
+  replicaCount: 1
+  image:
+    repository: authzed/spicedb
+    pullPolicy: IfNotPresent
+    tag: "v1.30.0"
+  resources: {}
+  autoscaling:
+    enabled: false
+    minReplicas: 1
+    maxReplicas: 3 
+    targetCPUUtilizationPercentage: 80
+    # targetMemoryUtilizationPercentage: 80
+
 podSecurityContext: {}
 securityContext:
   runAsUser: 1000
