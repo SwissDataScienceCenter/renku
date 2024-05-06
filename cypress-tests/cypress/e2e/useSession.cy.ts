@@ -346,4 +346,57 @@ describe("Basic public project functionality", () => {
       cy.deleteSession();
     });
   });
+
+  it("Start a new session with secrets attached.", () => {
+    cy.stopAllSessionsForProject(projectIdentifier);
+
+    // Define secret name
+    const secretNameSalt = uuidv4().substring(0, 4);
+    const secretName = `test_secret_${secretNameSalt}`;
+
+    // Check the User Secrets section exists
+    let serversInvoked = false;
+    cy.intercept("/ui-server/api/notebooks/servers*", (req) => {
+      serversInvoked = true;
+    }).as("getServers");
+    cy.getProjectSection("Sessions").click();
+    if (serversInvoked) cy.wait("@getServers");
+    cy.getDataCy("more-menu").should("be.visible").click();
+    cy.getProjectPageLink(projectIdentifier, "sessions/new")
+      .should("be.visible")
+      .first()
+      .click();
+    cy.getDataCy("session-secrets")
+      .find("a")
+      .contains("User Secrets")
+      .should("be.visible")
+      .click();
+
+    // Create a new secret on the User Secrets page
+    cy.get("#new-secret-button").should("be.visible").click();
+    cy.get("#new-secret-name").clear().type(secretName);
+    cy.get("#new-secret-value").type("new_value");
+    cy.getDataCy("secrets-new-add-button").should("be.enabled").click();
+    cy.getDataCy("secrets-new-form").should("not.be.visible");
+    cy.getDataCy("secrets-list").contains(secretName).should("be.visible");
+
+    // Go back to the session page and start a session with the new secret selected
+    cy.visit(
+      `/projects/${projectIdentifier.namespace}/${projectIdentifier.name}/sessions/new`
+    );
+    cy.getDataCy("session-secrets-toggle").contains("None").click();
+    cy.getDataCy("session-secrets-checkbox").should("not.be.checked");
+    cy.getDataCy("session-secrets-checkbox-list")
+      .contains(secretName)
+      .siblings()
+      .click()
+      .should("be.checked");
+    cy.getDataCy("session-secrets-toggle").contains(secretName);
+    cy.get(".renku-container button.btn-secondary", { timeout: TIMEOUTS.long })
+      .contains("Start Session")
+      .should("exist")
+      .click();
+
+    // ! TODO: check the sessions starts properly and the secret is mounted as a file
+  });
 });
