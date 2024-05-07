@@ -184,6 +184,10 @@ spec:
               value: {{ .Values.notebooks.dummyStores | quote }}
             - name: NB_DATA_SERVICE_URL
               value: {{ printf "http://%s-data-service/api/data" .Release.Name}}
+            - name: NB_USER_SECRETS__SECRETS_STORAGE_SERVICE_URL
+              value: {{ printf "http://%s-secrets-storage" .Release.Name}}
+            - name: NB_USER_SECRETS__IMAGE
+              value: "{{ .Values.notebooks.secretsMount.image.repository}}:{{.Values.notebooks.secretsMount.image.tag}}"
           ports:
             - name: http
               containerPort: 8000
