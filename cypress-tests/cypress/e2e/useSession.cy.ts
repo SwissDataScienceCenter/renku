@@ -1,17 +1,17 @@
 import { TIMEOUTS } from "../../config";
 import { generatorProjectName } from "../support/commands/projects";
-import { validateLogin } from "../support/commands/general";
+import { validateLogin, getRandomString } from "../support/commands/general";
 import { v4 as uuidv4 } from "uuid";
 
 const username = Cypress.env("TEST_USERNAME");
 
 const projectTestConfig = {
-  shouldCreateProject: true,
+  projectAlreadyExists: false,
   projectName: generatorProjectName("useSession"),
 };
 
 // ? Modify the config -- useful for debugging
-// projectTestConfig.shouldCreateProject = false;
+// projectTestConfig.projectAlreadyExists = true;
 // projectTestConfig.projectName = "cypress-usesession-a8c6823e40ff";
 
 const projectIdentifier = {
@@ -24,38 +24,24 @@ const projectWithoutPermissions = {
   name: "stable-project",
 };
 
+const sessionId = ["useSession", getRandomString()];
+
 describe("Basic public project functionality", () => {
-  before(() => {
-    // Use a session to preserve login data
-    cy.session(
-      "login-useSession",
-      () => {
-        cy.robustLogin();
-      },
-      validateLogin
-    );
-
-    // Create a project
-    if (projectTestConfig.shouldCreateProject) {
-      cy.visit("/");
-      cy.createProject({ templateName: "Python", ...projectIdentifier });
-    }
-  });
-
   after(() => {
-    if (projectTestConfig.shouldCreateProject)
+    if (!projectTestConfig.projectAlreadyExists)
       cy.deleteProjectFromAPI(projectIdentifier);
   });
 
   beforeEach(() => {
     // Restore the session
     cy.session(
-      "login-useSession",
+      sessionId,
       () => {
         cy.robustLogin();
       },
       validateLogin
     );
+    cy.createProjectIfMissing({ templateName: "Python", ...projectIdentifier });
   });
 
   it("Start a new session on the project and interact with the terminal.", () => {
