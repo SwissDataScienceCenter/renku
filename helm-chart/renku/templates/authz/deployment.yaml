@@ -1,0 +1,107 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ template "renku.fullname" . }}-authz
+  labels:
+    app: renku-authz
+    chart: {{ template "renku.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  {{- if not .Values.authz.autoscaling.enabled }}
+  replicas: {{ .Values.authz.replicaCount }}
+  {{- end }}
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+  selector:
+    matchLabels:
+      app: renku-authz
+  template:
+    metadata:
+      labels:
+        app: renku-authz
+        chart: {{ template "renku.chart" . }}
+        release: {{ .Release.Name }}
+        heritage: {{ .Release.Service }}
+    spec:
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      initContainers:
+        - name: migrate-datastore
+          # NOTE: Have to use the -debug image here because the regular one does not have a shell
+          # and the database migration will not read the db connection uri string from an env variable
+          image: "{{ .Values.authz.image.repository }}:{{ .Values.authz.image.tag }}-debug"
+          imagePullPolicy: {{ .Values.authz.image.pullPolicy }}
+          env:
+            - name: "SPICEDB_DATASTORE_CONN_URI"
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "renku.fullname" . }}-authz
+                  key: SPICEDB_DATASTORE_CONN_URI
+          command:
+            - sh
+            - -c
+          args:
+            - spicedb datastore migrate head --datastore-engine=postgres --datastore-conn-uri=$SPICEDB_DATASTORE_CONN_URI
+      containers:
+        - name: authz
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.authz.image.repository }}:{{ .Values.authz.image.tag }}"
+          imagePullPolicy: {{ .Values.authz.image.pullPolicy }}
+          env:
+            - name: "SPICEDB_GRPC_PRESHARED_KEY"
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "renku.fullname" . }}-authz
+                  key: SPICEDB_GRPC_PRESHARED_KEY
+            - name: "SPICEDB_DATASTORE_CONN_URI"
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "renku.fullname" . }}-authz
+                  key: SPICEDB_DATASTORE_CONN_URI
+          args:
+            - serve
+            - --http-enabled=true
+            - --datastore-engine=postgres
+            - --grpc-enabled=true
+            - --telemetry-endpoint=
+          ports:
+            - name: http
+              containerPort: 8443
+              protocol: TCP
+            - name: grpc
+              containerPort: 50051
+              protocol: TCP
+            - name: metrics
+              containerPort: 9090
+              protocol: TCP
+          livenessProbe:
+            exec:
+              command:
+                - grpc_health_probe
+                - -v
+                - -addr=localhost:50051
+          readinessProbe:
+            exec:
+              command:
+                - grpc_health_probe
+                - -v
+                - -addr=localhost:50051
+          resources:
+            {{- toYaml .Values.authz.resources | nindent 12 }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
