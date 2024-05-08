@@ -353,6 +353,8 @@ describe("Basic public project functionality", () => {
     // Define secret name
     const secretNameSalt = uuidv4().substring(0, 4);
     const secretName = `test_secret_${secretNameSalt}`;
+    const secretPath = "/secrets";
+    const secretValue = "new_val";
 
     // Check the User Secrets section exists
     let serversInvoked = false;
@@ -375,7 +377,7 @@ describe("Basic public project functionality", () => {
     // Create a new secret on the User Secrets page
     cy.get("#new-secret-button").should("be.visible").click();
     cy.get("#new-secret-name").clear().type(secretName);
-    cy.get("#new-secret-value").type("new_value");
+    cy.get("#new-secret-value").type(secretValue);
     cy.getDataCy("secrets-new-add-button").should("be.enabled").click();
     cy.getDataCy("secrets-new-form").should("not.be.visible");
     cy.getDataCy("secrets-list").contains(secretName).should("be.visible");
@@ -391,12 +393,48 @@ describe("Basic public project functionality", () => {
       .siblings()
       .click()
       .should("be.checked");
+    cy.getDataCy("session-secrets-mount-path")
+      .should("be.visible")
+      .clear()
+      .type("/secrets");
     cy.getDataCy("session-secrets-toggle").contains(secretName);
     cy.get(".renku-container button.btn-secondary", { timeout: TIMEOUTS.long })
       .contains("Start Session")
       .should("exist")
       .click();
 
-    // ! TODO: check the sessions starts properly and the secret is mounted as a file
+    // Run a simple workflow in the iframe
+    cy.get(".progress-box .progress-title")
+      .contains("Starting Session")
+      .should("exist");
+    cy.get(".progress-box .progress-title", {
+      timeout: TIMEOUTS.vlong,
+    }).should("not.exist");
+
+    cy.getIframe("iframe#session-iframe").within(() => {
+      // Open the terminal and check the repo is not ahead
+      cy.get(".jp-Launcher-content", { timeout: TIMEOUTS.long }).should(
+        "be.visible"
+      );
+      cy.get(".jp-Launcher-section").should("be.visible");
+      cy.get('.jp-LauncherCard[title="Start a new terminal session"]')
+        .should("be.visible")
+        .click();
+
+      // Get the secret content and check it's correct
+      cy.get(".xterm-helper-textarea")
+        .click()
+        .type(
+          `cat ${secretPath}/${secretName} | tr -d '\n' | xargs touch {enter}`
+        );
+      // ? Checking the file browser is much easier than the terminal
+      cy.get("#filebrowser")
+        .should("be.visible")
+        .contains(secretValue)
+        .should("be.visible");
+    });
+
+    cy.pauseSession();
+    cy.deleteSession();
   });
 });
