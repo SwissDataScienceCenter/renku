@@ -111,9 +111,9 @@ that runs within a session.
 The Renku ``data service`` uses symmetric Fernet encryption with a key only it 
 knows to ensure all data is encrypted at rest in its database.
 For each user, a unique ``user key`` is generated. In addition, there is a 
-dedicated ``secret storage service`` which has a ``public key`` and a ``private 
-key``, the latter of which is only known to this service. This service is not 
-accessible to the public internet.
+dedicated ``secret storage service`` which has an RSA 2048 bit ``public key`` 
+and a ``private key``, the latter of which is only known to this service. This 
+service is not accessible to the public internet.
 
 When a user stores a secret, it is first symmetrically encrypted with the 
 ``user key``, using Fernet. We then generate a random ``secret key`` that is 
