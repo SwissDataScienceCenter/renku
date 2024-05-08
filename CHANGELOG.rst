@@ -1,8 +1,21 @@
 .. _changelog:
 
-0.52.x
+0.52.0
 ------
 
+Renku ``0.52.0`` contains a new secrets-storage service that allows users to store and use secrets in 
+sessions.
+
+
+**🌟 New Features**
+
+- **Data Services**: Added new secrets storage service for managing user session secrets, including
+  new endpoints on data-service to manage these secrets.
+
+Individual Components
+~~~~~~~~~~~~~~~~~~~~~
+
+- `renku-data-services 0.9.0 <https://github.com/SwissDataScienceCenter/renku-data-services/releases/tag/v0.9.0>`_
 
 0.51.1
 ------
