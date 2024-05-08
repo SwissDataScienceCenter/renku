@@ -9,7 +9,7 @@ metadata:
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
 spec:
-  maxUnavailable: 50%
+  minAvailable: 50%
   selector:
     matchLabels:
       app: renku-secrets-storage

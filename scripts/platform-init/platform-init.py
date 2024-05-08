@@ -1,5 +1,5 @@
 from base64 import b64decode, b64encode
-import json
+import yaml
 import logging
 from typing import cast
 from kubernetes import client as k8s_client, config as k8s_config
@@ -18,7 +18,9 @@ class Config:
 
     @classmethod
     def from_env(cls):
-        config_map = json.loads(os.environ.get("PLATFORM_INIT_CONFIG", "{}"))
+        config_map = yaml.load(
+            os.environ.get("PLATFORM_INIT_CONFIG", "{}"), Loader=yaml.Loader
+        )
         return cls(
             k8s_namespace=os.environ["K8S_NAMESPACE"],
             renku_fullname=os.environ["RENKU_FULLNAME"],

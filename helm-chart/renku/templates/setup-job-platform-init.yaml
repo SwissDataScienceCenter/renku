@@ -31,11 +31,11 @@ spec:
             runAsNonRoot: true
           env:
             - name: K8S_NAMESPACE
-              value: {{ .Release.Namespace}}
+              value: {{ .Release.Namespace }}
             - name: RENKU_FULLNAME
               value: {{ template "renku.fullname" . }}
             - name: PLATFORM_INIT_CONFIG
-              value: {{ .Values.global.platformConfig| default (printf "{}") | quote }}
+              value: {{ .Values.global.platformConfig | default (printf "{}") | quote }}
       serviceAccountName: {{ template "renku.fullname" . }}-platform-init
 ---
 apiVersion: rbac.authorization.k8s.io/v1
