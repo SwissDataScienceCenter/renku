@@ -1593,12 +1593,12 @@ platformInit:
 dataService:
   image:
     repository: renku/renku-data-service
-    tag: "0.8.3"
+    tag: "0.10.0"
     pullPolicy: IfNotPresent
   keycloakSync:
     image:
       repository: renku/keycloak-sync
-      tag: "0.8.3"
+      tag: "0.10.0"
       pullPolicy: IfNotPresent
   service:
     type: ClusterIP
