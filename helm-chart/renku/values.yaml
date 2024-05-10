@@ -5,6 +5,11 @@
 ## Global variables
 ## Shared values/secrets
 global:
+  ## YAML string that contains all application level Renku configuration options.
+  platformConfig: |
+    {} 
+  # secretServicePrivateKey: ... RSA Private Key in PEM format
+  # dataServiceEncryptionKey: 32 byte random string
   gitlab:
     ## Name of the postgres database to be used by Gitlab
     postgresDatabase: gitlabhq_production
@@ -1580,6 +1585,11 @@ initDb:
   image:
     repository: renku/init-db
     tag: "latest"
+## The image used for general platform initialization
+platformInit:
+  image:
+    repository: renku/platform-init
+    tag: "latest"
 dataService:
   image:
     repository: renku/renku-data-service
@@ -1628,6 +1638,27 @@ authz:
     targetCPUUtilizationPercentage: 80
     # targetMemoryUtilizationPercentage: 80
 
+secretsStorage:
+  image:
+    repository: renku/secrets-storage
+    tag: "0.1.0"
+    pullPolicy: IfNotPresent
+  service:
+    type: ClusterIP
+    port: 80
+  replicaCount: 1
+  podAnnotations: {}
+  resources: {}
+  autoscaling:
+    enabled: false
+    minReplicas: 1
+    maxReplicas: 5
+    targetMemoryUtilizationPercentage: 75
+    targetCPUUtilizationPercentage: 75
+  updateStrategy: {}
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
 podSecurityContext: {}
 securityContext:
   runAsUser: 1000
