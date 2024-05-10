@@ -1382,7 +1382,7 @@ search:
     replicas: 1
     image:
       repository: renku/search-api
-      tag: "0.0.41"
+      tag: "0.0.40"
       pullPolicy: IfNotPresent
     service:
       type: ClusterIP
@@ -1395,7 +1395,7 @@ search:
     replicas: 1
     image:
       repository: renku/search-provision
-      tag: "0.0.41"
+      tag: "0.0.40"
       pullPolicy: IfNotPresent
     service:
       type: ClusterIP
@@ -1630,7 +1630,7 @@ authz:
   autoscaling:
     enabled: false
     minReplicas: 1
-    maxReplicas: 3 
+    maxReplicas: 3
     targetCPUUtilizationPercentage: 80
     # targetMemoryUtilizationPercentage: 80
 
