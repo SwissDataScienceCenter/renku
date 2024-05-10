@@ -66,6 +66,10 @@ spec:
                 secretKeyRef:
                   name: {{ include "renku.fullname" . }}
                   key: dataServiceKeycloakClientSecret
+            - name: ENCRYPTION_KEY_PATH
+              value: /secrets/encryptionKey/encryptionKey
+            - name: SECRETS_SERVICE_PUBLIC_KEY_PATH
+              value: /secrets/publicKey/publicKey
             - name: SERVER_DEFAULTS
               value: /etc/renku-data-service/server_options/server_defaults.json
             - name: SERVER_OPTIONS
@@ -113,6 +117,12 @@ spec:
           volumeMounts:
             - name: server-options
               mountPath: /etc/renku-data-service/server_options
+            - mountPath: "/secrets/encryptionKey"
+              name: encryption-key
+              readOnly: true
+            - mountPath: "/secrets/publicKey"
+              name: secret-service-public-key
+              readOnly: true
             {{- include "certificates.volumeMounts.system" . | nindent 12 }}
           livenessProbe:
             httpGet:
@@ -152,5 +162,17 @@ spec:
         - name: server-options
           configMap:
             name: {{ template "renku.fullname" . }}-server-options
+        - name: encryption-key
+          secret:
+            secretName: {{ template "renku.fullname" . }}-secrets-storage
+            items:
+            - key: encryptionKey
+              path: encryptionKey
+        - name: secret-service-public-key
+          secret:
+            secretName: {{ template "renku.fullname" . }}-secret-service-public-key
+            items:
+            - key: publicKey
+              path: publicKey
         {{- include "certificates.volumes" . | nindent 8 }}
       serviceAccountName: {{ template "renku.fullname" . }}-data-service

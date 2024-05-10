@@ -19,7 +19,7 @@
 organization := "ch.renku"
 name := "renku-acceptance-tests"
 version := "0.1.0"
-scalaVersion := "2.13.13"
+scalaVersion := "2.13.14"
 
 Test / parallelExecution := false
 
@@ -38,7 +38,7 @@ libraryDependencies += "io.circe"               %% "circe-literal"              
 libraryDependencies += "io.circe"               %% "circe-parser"                  % circeVersion % Test
 libraryDependencies += "io.circe"               %% "circe-optics"                  % "0.15.0"     % Test
 libraryDependencies += "org.http4s"             %% "http4s-blaze-client"           % "0.23.16"    % Test
-libraryDependencies += "org.http4s"             %% "http4s-circe"                  % "0.23.26"    % Test
+libraryDependencies += "org.http4s"             %% "http4s-circe"                  % "0.23.27"    % Test
 libraryDependencies += "org.scalacheck"         %% "scalacheck"                    % "1.17.1"     % Test
 libraryDependencies += "org.scalatest"          %% "scalatest"                     % "3.2.18"     % Test
 libraryDependencies += "org.scalatestplus"      %% "selenium-4-1"                  % "3.2.12.1"   % Test
