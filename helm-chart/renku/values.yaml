@@ -5,6 +5,7 @@
 ## Global variables
 ## Shared values/secrets
 global:
+  ## YAML string that contains all application level Renku configuration options.
   platformConfig: |
     {} 
   # secretServicePrivateKey: ... RSA Private Key in PEM format
