@@ -7,6 +7,6 @@ Topic Guides
    :maxdepth: 2
 
    Sessions <sessions/index>
-   Data <data/index>   
+   Data <data/index>
    Workflows <workflows/index>
    Miscellaneous <miscellaneous/index>
