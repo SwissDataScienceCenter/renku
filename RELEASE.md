@@ -1,5 +1,6 @@
 # Releases
 
+
 There are two types of Renku releases: planned and unplanned.
 
 A release consists of: 
