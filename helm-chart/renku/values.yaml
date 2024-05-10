@@ -7,6 +7,8 @@
 global:
   platformConfig: |
     {} 
+  # secretServicePrivateKey: ... RSA Private Key in PEM format
+  # dataServiceEncryptionKey: 32 byte random string
   gitlab:
     ## Name of the postgres database to be used by Gitlab
     postgresDatabase: gitlabhq_production

@@ -11,6 +11,7 @@ spec:
     - Ingress
   ingress:
     - from:
+        # Only allow ingress to secrets storage from notebooks
         - podSelector:
             matchLabels:
               app: {{ template "renku.notebooks.name" . }}
