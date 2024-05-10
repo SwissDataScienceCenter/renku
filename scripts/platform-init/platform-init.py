@@ -149,7 +149,7 @@ def init_secret_and_data_service_encryption(config: Config):
     logging.info("Initializing data service encryption")
     v1 = k8s_client.CoreV1Api()
 
-    encryption_key = f"{config.renku_fullname}-secret-storage"
+    encryption_key = f"{config.renku_fullname}-secrets-storage"
     encryption_key_name = "encryptionKey"
     existing_encryption_key = _get_k8s_secret(
         config.k8s_namespace, encryption_key, encryption_key_name
@@ -191,8 +191,10 @@ def init_secret_and_data_service_encryption(config: Config):
 def main():
     config = Config.from_env()
     k8s_config.load_incluster_config()
+    logging.basicConfig(level=logging.INFO)
     logging.info("Initializing Renku platform")
     init_secret_service_secret(config)
+    init_secret_and_data_service_encryption(config)
 
 
 if __name__ == "__main__":
