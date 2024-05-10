@@ -191,6 +191,7 @@ def init_secret_and_data_service_encryption(config: Config):
 def main():
     config = Config.from_env()
     k8s_config.load_incluster_config()
+    logging.basicConfig(level=logging.INFO)
     logging.info("Initializing Renku platform")
     init_secret_service_secret(config)
     init_secret_and_data_service_encryption(config)
