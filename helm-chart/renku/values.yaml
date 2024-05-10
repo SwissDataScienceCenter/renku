@@ -1188,6 +1188,10 @@ notebooks:
       targetCPUUtilizationPercentage: 50
       minReplicas: 2
       maxReplicas: 5
+  secretsMount:
+    image:
+      repository: renku/secrets-mount
+      tag: "1.22.1"
   ssh:
     enabled: false
     image:
