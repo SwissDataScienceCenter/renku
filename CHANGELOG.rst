@@ -16,6 +16,7 @@ Individual Components
 ~~~~~~~~~~~~~~~~~~~~~
 
 - `renku-data-services 0.9.0 <https://github.com/SwissDataScienceCenter/renku-data-services/releases/tag/v0.9.0>`_
+- `renku-notebooks 1.23.0 <https://github.com/SwissDataScienceCenter/renku-notebooks/releases/tag/1.23.0>`_
 
 0.51.1
 ------
