@@ -30,6 +30,7 @@ spec:
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       initContainers:
+        {{- include "certificates.initContainer" . | nindent 8 }}
         - name: migrate-datastore
           # NOTE: Have to use the -debug image here because the regular one does not have a shell
           # and the database migration will not read the db connection uri string from an env variable
@@ -63,12 +64,28 @@ spec:
                 secretKeyRef:
                   name: {{ template "renku.fullname" . }}-authz
                   key: SPICEDB_DATASTORE_CONN_URI
+            {{- include "certificates.env.python" . | nindent 12 }}
+            {{- include "certificates.env.grpc" . | nindent 12 }}
+          volumeMounts:
+            {{- include "certificates.volumeMounts.system" . | nindent 12 }}
+            - name: internal-tls-authz-cert
+              mountPath: /etc/internal-tls-authz-cert
+              readOnly: true
           args:
             - serve
             - --http-enabled=true
             - --datastore-engine=postgres
             - --grpc-enabled=true
             - --telemetry-endpoint=
+            - --grpc-tls-cert-path=/etc/internal-tls-authz-cert/tls.crt
+            - --grpc-tls-key-path=/etc/internal-tls-authz-cert/tls.key
+            - --http-tls-cert-path=/etc/internal-tls-authz-cert/tls.crt
+            - --http-tls-key-path=/etc/internal-tls-authz-cert/tls.key
+            - --log-format=json
+            - --datastore-conn-pool-write-min-open=3
+            - --datastore-conn-pool-write-max-open=6
+            - --datastore-conn-pool-read-min-open=5
+            - --datastore-conn-pool-read-max-open=10
           ports:
             - name: http
               containerPort: 8443
@@ -84,13 +101,17 @@ spec:
               command:
                 - grpc_health_probe
                 - -v
-                - -addr=localhost:50051
+                - -addr=127.0.0.1:50051
+                - -tls
+                - -tls-server-name={{ template "renku.fullname" . }}-authz
           readinessProbe:
             exec:
               command:
                 - grpc_health_probe
                 - -v
-                - -addr=localhost:50051
+                - -addr=127.0.0.1:50051
+                - -tls
+                - -tls-server-name={{ template "renku.fullname" . }}-authz
           resources:
             {{- toYaml .Values.authz.resources | nindent 12 }}
       {{- with .Values.nodeSelector }}
@@ -105,3 +126,8 @@ spec:
       tolerations:
         {{- toYaml . | nindent 8 }}
       {{- end }}
+      volumes:
+        {{- include "certificates.volumes" . | nindent 8 }}
+        - name: internal-tls-authz-cert
+          secret:
+            secretName: {{ include "renku.authz.tlsSecretName" . }}

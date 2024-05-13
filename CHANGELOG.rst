@@ -3,19 +3,33 @@
 0.52.0
 ------
 
-Renku ``0.52.0`` contains a new secrets-storage service that allows users to store and use secrets in 
-sessions.
+Renku ``0.52.0`` introduces a new secrets-storage service that allows users to store and use secrets in sessions.
 
+This release also contains new features related to Renku 2.0. However, Renku 2.0 is still
+in early development and is not yet accessible to users. For more information, see our
+[blog](https://blog.renkulab.io/renku-2).
+
+User-Facing Changes
+~~~~~~~~~~~~~~~~~~~
 
 **🌟 New Features**
 
 - **Data Services**: Added new secrets storage service for managing user session secrets, including
   new endpoints on data-service to manage these secrets.
 
+Internal Changes
+~~~~~~~~~~~~~~~~
+
+**🌟 New Features**
+
+- **Data Services**: Updated the authorization for access to Renku 2.0 projects to work with Authzed DB,
+  a 3rd party database dedicated to saving authorization data and making authorization decisions
+
 Individual Components
 ~~~~~~~~~~~~~~~~~~~~~
 
 - `renku-data-services 0.9.0 <https://github.com/SwissDataScienceCenter/renku-data-services/releases/tag/v0.9.0>`_
+- `renku-data-services 0.10.0 <https://github.com/SwissDataScienceCenter/renku-data-services/releases/tag/v0.10.0>`_
 - `renku-notebooks 1.23.0 <https://github.com/SwissDataScienceCenter/renku-notebooks/releases/tag/1.23.0>`_
 
 0.51.1
