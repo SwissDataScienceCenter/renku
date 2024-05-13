@@ -1,0 +1,17 @@
+{{- if or (gt (int .Values.secretsStorage.replicaCount) 1) (and .Values.secretsStorage.autoscaling.enabled (gt (int .Values.secretsStorage.autoscaling.minReplicas) 1)) }}
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: {{ template "renku.fullname" . }}-secrets-storage
+  labels:
+    app: renku-secrets-storage
+    chart: {{ template "renku.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  minAvailable: 50%
+  selector:
+    matchLabels:
+      app: renku-secrets-storage
+      release: {{ .Release.Name }}
+{{- end }}

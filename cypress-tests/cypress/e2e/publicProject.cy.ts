@@ -9,12 +9,12 @@ import { validateLogin, getRandomString } from "../support/commands/general";
 const username = Cypress.env("TEST_USERNAME");
 
 const projectTestConfig = {
-  shouldCreateProject: true,
+  projectAlreadyExists: false,
   projectName: generatorProjectName("publicProject"),
 };
 
 // ? Uncomment to debug using an existing project
-// projectTestConfig.shouldCreateProject = false;
+// projectTestConfig.projectAlreadyExists = true;
 // projectTestConfig.projectName = "cypress-publicproject-8e01a2e0a8c1";
 
 const projectIdentifier: ProjectIdentifier = {
@@ -25,21 +25,9 @@ const projectIdentifier: ProjectIdentifier = {
 const sessionId = ["publicProject", getRandomString()];
 
 describe("Basic public project functionality", () => {
-  before(() => {
-    // Use a session to preserve login data
-    cy.session(
-      sessionId,
-      () => {
-        cy.robustLogin();
-      },
-      validateLogin
-    );
-
-    // Create a project for the local spec
-    if (projectTestConfig.shouldCreateProject) {
-      cy.visit("/");
-      cy.createProject({ templateName: "Python", ...projectIdentifier });
-    }
+  after(() => {
+    if (!projectTestConfig.projectAlreadyExists)
+      cy.deleteProjectFromAPI(projectIdentifier);
   });
 
   beforeEach(() => {
@@ -51,6 +39,7 @@ describe("Basic public project functionality", () => {
       },
       validateLogin
     );
+    cy.createProjectIfMissing({ templateName: "Python", ...projectIdentifier });
     cy.visitAndLoadProject(projectIdentifier);
   });
 
@@ -70,7 +59,7 @@ describe("Basic public project functionality", () => {
     cy.getProjectSection("Overview").click();
     cy.contains("README.md").should("be.visible");
     cy.contains("This is a Renku project").should("be.visible");
-    if (projectTestConfig.shouldCreateProject) {
+    if (!projectTestConfig.projectAlreadyExists) {
       cy.contains("Welcome to your new Renku project", {
         timeout: TIMEOUTS.vlong,
       }).should("be.visible");
@@ -108,7 +97,7 @@ describe("Basic public project functionality", () => {
     cy.getDataCy("project-status-icon-element").should("not.exist");
     cy.getProjectSection("Settings").click();
     cy.getDataCy("project-version-section-open").should("exist").click();
-    if (projectTestConfig.shouldCreateProject) {
+    if (!projectTestConfig.projectAlreadyExists) {
       cy.getDataCy("project-settings-migration-status")
         .contains("This project uses the latest")
         .should("exist");

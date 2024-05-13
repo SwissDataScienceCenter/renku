@@ -75,6 +75,12 @@ spec:
           namespaceSelector:
             matchLabels:
               kubernetes.io/metadata.name: {{ .Release.Namespace }}
+        - podSelector:
+            matchLabels:
+              app: renku-authz
+          namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: {{ .Release.Namespace }}
       ports:
         - protocol: TCP
           port: 5432

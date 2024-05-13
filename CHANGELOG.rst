@@ -1,9 +1,43 @@
 .. _changelog:
 
-0.52.x
+0.52.0
 ------
 
+Renku ``0.52.0`` contains a new secrets-storage service that allows users to store and use secrets in 
+sessions.
 
+
+**🌟 New Features**
+
+- **Data Services**: Added new secrets storage service for managing user session secrets, including
+  new endpoints on data-service to manage these secrets.
+
+Individual Components
+~~~~~~~~~~~~~~~~~~~~~
+
+- `renku-data-services 0.9.0 <https://github.com/SwissDataScienceCenter/renku-data-services/releases/tag/v0.9.0>`_
+- `renku-notebooks 1.23.0 <https://github.com/SwissDataScienceCenter/renku-notebooks/releases/tag/1.23.0>`_
+
+0.51.1
+------
+
+Renku ``0.51.1`` fixes a bug where sessions were not considering the case (upper or lower) of the
+project name that was being cloned when a session is started. This resulted in the working directory
+being set to one location and the project cloned in another. This bug only affected projects where
+users have manually changed their project paths to include uppercase characters or for projects that
+were not created through Renku but were imported after creation.
+
+User-Facing Changes
+~~~~~~~~~~~~~~~~~~~
+
+**🐞 Bug Fixes**
+
+- **Notebooks**: Use the case sensitive project name when cloning repositories at startup
+
+Individual Components
+~~~~~~~~~~~~~~~~~~~~~
+
+- `renku-notebooks 1.22.1 <https://github.com/SwissDataScienceCenter/renku-notebooks/releases/tag/1.22.1>`_
 
 0.51.0
 ------
