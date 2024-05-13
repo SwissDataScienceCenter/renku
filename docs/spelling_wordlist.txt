@@ -15,6 +15,7 @@ astroquery
 attrs
 auditability
 auth
+Authzed
 autocomplete
 autosave
 autosaved
@@ -66,6 +67,8 @@ Datashim
 dataverse
 Dataverse
 datetimes
+db
+DB
 deployer
 deserialize
 Deserialize

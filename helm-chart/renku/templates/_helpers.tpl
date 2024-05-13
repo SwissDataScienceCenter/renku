@@ -168,3 +168,11 @@ app.kubernetes.io/managed-by: {{ .Release.Service }}
 {{- define "renku.dataService.keycloak.clientId" -}}
 data-service
 {{- end -}}
+
+{{- define "renku.authz.tlsSecretName" -}}
+renku-authz-tls-cert
+{{- end -}}
+
+{{- define "renku.CASecretName" -}}
+renku-ca
+{{- end -}}

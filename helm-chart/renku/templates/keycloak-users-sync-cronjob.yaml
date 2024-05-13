@@ -64,7 +64,17 @@ spec:
                     secretKeyRef:
                       name: {{ .Values.global.redis.existingSecret }}
                       key: {{ .Values.global.redis.existingSecretPasswordKey }}
+                - name: AUTHZ_DB_HOST
+                  value: {{ include "renku.fullname" . }}-authz
+                - name: AUTHZ_DB_KEY
+                  valueFrom:
+                    secretKeyRef:
+                      name: {{ template "renku.fullname" . }}-authz
+                      key: SPICEDB_GRPC_PRESHARED_KEY
+                - name: AUTHZ_DB_GRPC_PORT
+                  value: "50051"
                 {{- include "certificates.env.python" . | nindent 16 }}
+                {{- include "certificates.env.grpc" . | nindent 16 }}
               volumeMounts:
                 {{- include "certificates.volumeMounts.system" . | nindent 16 }}
           restartPolicy: Never
@@ -138,7 +148,17 @@ spec:
                     secretKeyRef:
                       name: {{ .Values.global.redis.existingSecret }}
                       key: {{ .Values.global.redis.existingSecretPasswordKey }}
+                - name: AUTHZ_DB_HOST
+                  value: {{ include "renku.fullname" . }}-authz
+                - name: AUTHZ_DB_KEY
+                  valueFrom:
+                    secretKeyRef:
+                      name: {{ template "renku.fullname" . }}-authz
+                      key: SPICEDB_GRPC_PRESHARED_KEY
+                - name: AUTHZ_DB_GRPC_PORT
+                  value: "50051"
                 {{- include "certificates.env.python" . | nindent 16 }}
+                {{- include "certificates.env.grpc" . | nindent 16 }}
               volumeMounts:
                 {{- include "certificates.volumeMounts.system" . | nindent 16 }}
           restartPolicy: Never
