@@ -129,11 +129,11 @@ To decrypt a secret, ``secret storage service`` gets a request from ``notebooks
 service`` that a user would like to start a session with some secret mounted. 
 It uses its ``private key`` to get the ``secret key`` and uses this to decrypt 
 the outer layer of encryption of the secret. It then creates a Kubernetes 
-secret with the (now encrypted once) user secret, which gets mounted in the 
-user session.
-On session start, an init container reads the mounted secrets, and uses the 
+secret with the (now encrypted once) user secret, which gets mounted in an
+init container in the user session.
+On session start, that init container reads the mounted secrets, and uses the 
 ``user key`` to undo the inner encryption. It then creates files inside the 
-session with the decrypted secret values.
+user session with the decrypted secret values.
 
 Note that, although we take many precautions to decrypt secrets only when
 necessary, they are in plaintext inside a session. This means that they are
