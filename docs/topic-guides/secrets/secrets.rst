@@ -39,7 +39,7 @@ Click on the ``Add New Secret`` button and fill in the ``Name`` and
 ``Value`` fields.
 
 The name is a unique identifier for the secret, used for the file name in
-sessions. It cannot be empty and must follow validation rules:
+sessions. It cannot be empty and must follow these validation rules:
 you can include only letters, numbers, dots (.), underscores (_),
 and dashes (-).
 
@@ -98,7 +98,7 @@ Security Model
   :alt: Secrets encryption scheme
 
 Renku stores secrets in its database, doubly encrypted, ensuring that no part 
-accessible from the internet other than the session has access to unencrypted 
+accessible from the internet other than the session has access to decrypted 
 secrets. All secrets are encrypted at rest.
 
 Threat models we address are:
@@ -129,7 +129,7 @@ To decrypt a secret, ``secret storage service`` gets a request from ``notebooks
 service`` that a user would like to start a session with some secret mounted. 
 It uses its ``private key`` to get the ``secret key`` and uses this to decrypt 
 the outer layer of encryption of the secret. It then creates a Kubernetes 
-secret with the (now singly encrypted) user secret, which gets mounted in the 
+secret with the (now encrypted once) user secret, which gets mounted in the 
 user session.
 On session start, an init container reads the mounted secrets, and uses the 
 ``user key`` to undo the inner encryption. It then creates files inside the 
