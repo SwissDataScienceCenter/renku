@@ -136,7 +136,7 @@ On session start, that init container reads the mounted secrets, and uses the
 user session with the decrypted secret values.
 
 Note that, although we take many precautions to decrypt secrets only when
-necessary, they are in plaintext inside a session. This means that they are
+necessary, they are in plain text inside a session. This means that they are
 visible to whoever has access to the infrastructure where the session is running.
 If your data is extra sensitive, consider putting already encrypted values into 
 Renku and manually decrypting them once inside the session, with 3rd party 
