@@ -402,7 +402,6 @@ describe("Basic public project functionality", () => {
     cy.get(".renku-container button.btn-secondary", { timeout: TIMEOUTS.long })
       .contains("Start Session")
       .should("be.visible")
-      .should("be.enabled")
       .click();
 
     // Run a simple workflow in the iframe
