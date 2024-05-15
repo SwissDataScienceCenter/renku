@@ -16,6 +16,15 @@ User-Facing Changes
 
 - **Data Services**: Added new secrets storage service for managing user session secrets, including
   new endpoints on data-service to manage these secrets.
+- **UI**: Add a new User Secrets page to handle secrets, and adapt the session pages.
+  (`#3101 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3101>`_).
+- **UI**: Rework navigation for Renku 2.0 pages
+  (`#3095 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3095>`_).
+
+**✨ Improvements**
+
+- **UI**: Use namespace/slug to identify Renku 2.0 projects
+  (`#3103 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3103>`_).
 
 Internal Changes
 ~~~~~~~~~~~~~~~~
@@ -31,6 +40,7 @@ Individual Components
 - `renku-data-services 0.9.0 <https://github.com/SwissDataScienceCenter/renku-data-services/releases/tag/v0.9.0>`_
 - `renku-data-services 0.10.0 <https://github.com/SwissDataScienceCenter/renku-data-services/releases/tag/v0.10.0>`_
 - `renku-notebooks 1.23.0 <https://github.com/SwissDataScienceCenter/renku-notebooks/releases/tag/1.23.0>`_
+- `renku-ui 3.24.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.24.0>`_
 
 0.51.1
 ------
