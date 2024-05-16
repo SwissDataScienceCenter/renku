@@ -10,7 +10,7 @@ metadata:
   annotations:
     {{- if and .Values.authz.metrics.enabled .Values.authz.metrics.addPrometheusAnnotations }}
     prometheus.io/scrape: 'true'
-    prometheus.io/path: '/'
+    prometheus.io/path: '/metrics'
     prometheus.io/port: '9090'
     {{- end }}
 spec:
