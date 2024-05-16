@@ -1123,7 +1123,7 @@ notebooks:
   gitHttpsProxy:
     image:
       name: renku/git-https-proxy
-      tag: "1.23.0"
+      tag: "1.22.0" # hack before component is tagged
   gitClone:
     image:
       name: renku/git-clone
