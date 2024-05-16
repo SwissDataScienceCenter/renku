@@ -16,10 +16,12 @@ User-Facing Changes
 
 - **Data Services**: Added new secrets storage service for managing user session secrets, including
   new endpoints on data-service to manage these secrets.
+- **Data Services**: (TODO) Added the possibility for users to connect to external services, allowing users to clone, pull and push repositories e.g. from GitLab.com or GitHub.com.
 - **UI**: Add a new User Secrets page to handle secrets, and adapt the session pages.
   (`#3101 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3101>`_).
 - **UI**: Rework navigation for Renku 2.0 pages
   (`#3095 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3095>`_).
+- **UI**: (TODO) Updated the user interface to reflect changes to Renku 2.0 sessions.
 
 **✨ Improvements**
 
