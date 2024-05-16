@@ -8,5 +8,6 @@ Topic Guides
 
    Sessions <sessions/index>
    Data <data/index>
+   Secrets <secrets/index>
    Workflows <workflows/index>
    Miscellaneous <miscellaneous/index>
