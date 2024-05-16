@@ -7,7 +7,7 @@
 global:
   ## YAML string that contains all application level Renku configuration options.
   platformConfig: |
-    {} 
+    {}
   # secretServicePrivateKey: ... RSA Private Key in PEM format
   # dataServiceEncryptionKey: 32 byte random string
   gitlab:
@@ -97,6 +97,12 @@ global:
       userAdded: "user.added"
       userUpdated: "user.updated"
       userRemoved: "user.removed"
+      groupAdded: "group.added"
+      groupUpdated: "group.updated"
+      groupRemoved: "group.removed"
+      groupMemberAdded: "groupMember.added"
+      groupMemberUpdated: "groupMember.updated"
+      groupMemberRemoved: "groupMember.removed"
   ## Note that the graph will not turned on by default until renku 0.4.0
   graph:
     dbEventLog:
@@ -666,7 +672,7 @@ ui:
     replicaCount: 1
     image:
       repository: renku/renku-ui
-      tag: "3.23.0"
+      tag: "3.24.0"
       pullPolicy: IfNotPresent
       ## Optionally specify an array of imagePullSecrets.
       ## Secrets must be manually created in the namespace.
@@ -855,7 +861,7 @@ ui:
     keepCookies: []
     image:
       repository: renku/renku-ui-server
-      tag: "3.23.0"
+      tag: "3.24.0"
       pullPolicy: IfNotPresent
     imagePullSecrets: []
     nameOverride: ""
@@ -1385,7 +1391,7 @@ search:
     replicas: 1
     image:
       repository: renku/search-api
-      tag: "0.0.39"
+      tag: "0.0.46"
       pullPolicy: IfNotPresent
     service:
       type: ClusterIP
@@ -1398,7 +1404,7 @@ search:
     replicas: 1
     image:
       repository: renku/search-provision
-      tag: "0.0.39"
+      tag: "0.0.46"
       pullPolicy: IfNotPresent
     service:
       type: ClusterIP
@@ -1638,7 +1644,7 @@ authz:
   autoscaling:
     enabled: false
     minReplicas: 1
-    maxReplicas: 3 
+    maxReplicas: 3
     targetCPUUtilizationPercentage: 80
     # targetMemoryUtilizationPercentage: 80
 
