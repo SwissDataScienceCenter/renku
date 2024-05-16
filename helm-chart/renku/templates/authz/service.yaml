@@ -7,6 +7,12 @@ metadata:
     chart: {{ template "renku.chart" . }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
+  annotations:
+    {{- if and .Values.authz.metrics.enabled .Values.authz.metrics.addPrometheusAnnotations }}
+    prometheus.io/scrape: 'true'
+    prometheus.io/path: '/'
+    prometheus.io/port: '9090'
+    {{- end }}
 spec:
   type: ClusterIP
   ports:
@@ -18,5 +24,11 @@ spec:
       targetPort: grpc
       protocol: TCP
       name: grpc
+    {{- if .Values.authz.metrics.enabled }}
+    - port: 9090
+      targetPort: metrics
+      protocol: TCP
+      name: metrics 
+    {{- end }}
   selector:
     app: renku-authz

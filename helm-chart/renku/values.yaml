@@ -1647,6 +1647,9 @@ authz:
     maxReplicas: 3
     targetCPUUtilizationPercentage: 80
     # targetMemoryUtilizationPercentage: 80
+  metrics:
+    enabled: true
+    addPrometheusAnnotations: true
 
 secretsStorage:
   image:
