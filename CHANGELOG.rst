@@ -14,16 +14,17 @@ User-Facing Changes
 
 **🌟 New Features**
 
-- **Data Services**: Added new secrets storage service for managing user session secrets, including
+- **Data Services**: Add new secrets storage service for managing user session secrets, including
   new endpoints on data-service to manage these secrets.
-- **UI**: Add a new User Secrets page to handle secrets, and adapt the session pages.
+- **UI**: Add a new User Secrets page to manage secrets, and extend the session launch pages to
+  select secrets to include in the session.
   (`#3101 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3101>`_).
-- **UI**: Rework navigation for Renku 2.0 pages
+- **UI**: Introduce formal navigation for Renku 2.0 pages
   (`#3095 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3095>`_).
 
 **✨ Improvements**
 
-- **Search Services**: Support for groups, namespaces and project keywords.
+- **Search Services**: Add support for groups, namespaces and project keywords.
 - **UI**: Use namespace/slug to identify Renku 2.0 projects
   (`#3103 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3103>`_).
 
@@ -32,8 +33,8 @@ Internal Changes
 
 **🌟 New Features**
 
-- **Data Services**: Updated the authorization for access to Renku 2.0 projects to work with Authzed DB,
-  a 3rd party database dedicated to saving authorization data and making authorization decisions
+- **Data Services**: Update the authorization for access to Renku 2.0 projects to work with Authzed DB,
+  a 3rd party database dedicated to saving authorization data and making authorization decisions.
 - **Search Services**: Support processing v2 schema messages (alongside with v1). Making the query parser
   more lenient to not raise parsing errors.
 
