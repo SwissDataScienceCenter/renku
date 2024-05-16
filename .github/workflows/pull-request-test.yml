@@ -155,7 +155,27 @@ jobs:
           renku-reference: ${{ github.ref }}
           renku-release: ci-renku-${{ github.event.number }}
           test-user-password: ${{ secrets.RENKU_BOT_DEV_PASSWORD }}
-
+  deploy-string-no-custom-version:
+    name: Check that deploy string doesn't specify a custom component version
+    needs: [check-deploy]
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Check deploy string
+        if: ${{ 
+            needs.check-deploy.outputs.pr-contains-string == 'true' 
+            && startsWith(github.base_ref, 'release-') 
+            && (
+               needs.check-deploy.outputs.renku-core != null
+               || needs.check-deploy.outputs.renku-gateway != null
+               || needs.check-deploy.outputs.renku-graph != null
+               || needs.check-deploy.outputs.renku-notebooks != null
+               || needs.check-deploy.outputs.renku-ui != null
+               || needs.check-deploy.outputs.renku-data-services != null
+            )
+          }}
+        uses: actions/github-script@v7
+        with:
+          script: core.setFailed('Cannot merge release PR if it still has custom versions in deploy string.')
   cleanup:
     if: github.event.action == 'closed'
     runs-on: ubuntu-22.04
