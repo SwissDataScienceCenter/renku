@@ -3,7 +3,12 @@
 0.52.0
 ------
 
-Renku ``0.52.0`` introduces a new secrets-storage service that allows users to store and use secrets in sessions.
+Renku ``0.52.0`` introduces a new feature to save and use secrets in RenkuLab sessions.
+For example, save your credentials for a database or external computing resource in
+RenkuLab to access those external systems from a RenkuLab session. Save secrets via the
+new User Secrets page in the account drop down, and choose which secrets to mount in a
+session on the Start with Options page. More details on this feature can be found in the
+[documentation](https://renku.readthedocs.io/en/stable/topic-guides/secrets/secrets.html).
 
 This release also contains new features related to Renku 2.0. However, Renku 2.0 is still
 in early development and is not yet accessible to users. For more information, see our
