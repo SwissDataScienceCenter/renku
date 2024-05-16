@@ -22,6 +22,7 @@ User-Facing Changes
 - **UI**: Rework navigation for Renku 2.0 pages
   (`#3095 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3095>`_).
 - **UI**: (TODO) Updated the user interface to reflect changes to Renku 2.0 sessions.
+- **Notebooks**: (TODO) Support repositories from external services in Renku 2.0 sessions.
 
 **✨ Improvements**
 
@@ -44,9 +45,12 @@ Individual Components
 
 - `renku-data-services 0.9.0 <https://github.com/SwissDataScienceCenter/renku-data-services/releases/tag/v0.9.0>`_
 - `renku-data-services 0.10.0 <https://github.com/SwissDataScienceCenter/renku-data-services/releases/tag/v0.10.0>`_
+- renku-data-services +1
 - `renku-notebooks 1.23.0 <https://github.com/SwissDataScienceCenter/renku-notebooks/releases/tag/1.23.0>`_
+- renku-notebooks +1
 - `renku-search 0.0.46 <https://github.com/SwissDataScienceCenter/renku-search/releases/tag/v0.0.46>`_
 - `renku-ui 3.24.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.24.0>`_
+- renku-ui +1
 
 0.51.1
 ------
