@@ -66,6 +66,9 @@ spec:
         - podSelector:
             matchLabels:
               app: renku-data-service
+        - podSelector:
+            matchLabels:
+              app: renku-data-service-messages
           namespaceSelector:
             matchLabels:
               kubernetes.io/metadata.name: {{ .Release.Namespace }}
