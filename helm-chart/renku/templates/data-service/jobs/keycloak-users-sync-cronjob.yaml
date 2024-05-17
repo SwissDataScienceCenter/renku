@@ -24,8 +24,9 @@ spec:
             {{- include "certificates.initContainer" . | nindent 12 }}
           containers:
             - name: keycloak-sync
-              image: "{{ .Values.dataService.keycloakSync.image.repository }}:{{ .Values.dataService.keycloakSync.image.tag }}"
+              image: "{{ .Values.dataService.backgroundJobs.image.repository }}:{{ .Values.dataService.backgroundJobs.image.tag }}"
               imagePullPolicy: IfNotPresent
+              args: ["user_sync"]
               env:
                 - name: DB_HOST
                   value: {{ template "postgresql.fullname" . }}
@@ -108,8 +109,9 @@ spec:
             {{- include "certificates.initContainer" . | nindent 12 }}
           containers:
             - name: keycloak-sync
-              image: "{{ .Values.dataService.keycloakSync.image.repository }}:{{ .Values.dataService.keycloakSync.image.tag }}"
+              image: "{{ .Values.dataService.backgroundJobs.image.repository }}:{{ .Values.dataService.backgroundJobs.image.tag }}"
               imagePullPolicy: IfNotPresent
+              args: ["user_sync"]
               env:
                 - name: DB_HOST
                   value: {{ template "postgresql.fullname" . }}
