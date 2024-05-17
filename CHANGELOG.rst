@@ -55,7 +55,7 @@ Individual Components
 - `renku-notebooks 1.24.0 <https://github.com/SwissDataScienceCenter/renku-notebooks/releases/tag/1.24.0>`_
 - `renku-search 0.0.46 <https://github.com/SwissDataScienceCenter/renku-search/releases/tag/v0.0.46>`_
 - `renku-ui 3.24.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.24.0>`_
-- renku-ui +1
+- `renku-ui 3.25.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.25.0>`_
 
 0.51.1
 ------
