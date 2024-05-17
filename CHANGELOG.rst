@@ -3,7 +3,12 @@
 0.52.0
 ------
 
-Renku ``0.52.0`` introduces a new secrets-storage service that allows users to store and use secrets in sessions.
+Renku ``0.52.0`` introduces a new feature to save and use secrets in RenkuLab sessions.
+For example, save your credentials for a database or external computing resource in
+RenkuLab to access those external systems from a RenkuLab session. Save secrets via the
+new User Secrets page in the account drop down, and choose which secrets to mount in a
+session on the Start with Options page. More details on this feature can be found in the
+[documentation](https://renku.readthedocs.io/en/stable/topic-guides/secrets/secrets.html).
 
 This release also contains new features related to Renku 2.0. However, Renku 2.0 is still
 in early development and is not yet accessible to users. For more information, see our
@@ -16,10 +21,13 @@ User-Facing Changes
 
 - **Data Services**: Added new secrets storage service for managing user session secrets, including
   new endpoints on data-service to manage these secrets.
+- **Data Services**: Added the possibility for users to connect to external services, allowing users to clone, pull and push repositories e.g. from GitLab.com or GitHub.com.
 - **UI**: Add a new User Secrets page to handle secrets, and adapt the session pages.
   (`#3101 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3101>`_).
 - **UI**: Rework navigation for Renku 2.0 pages
   (`#3095 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3095>`_).
+- **UI**: Updated the user interface to reflect changes to Renku 2.0 sessions (`#3122 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3122>`_).
+- **Notebooks**: Support repositories from external services in Renku 2.0 sessions.
 
 **✨ Improvements**
 
@@ -42,9 +50,12 @@ Individual Components
 
 - `renku-data-services 0.9.0 <https://github.com/SwissDataScienceCenter/renku-data-services/releases/tag/v0.9.0>`_
 - `renku-data-services 0.10.0 <https://github.com/SwissDataScienceCenter/renku-data-services/releases/tag/v0.10.0>`_
+- `renku-data-services 0.11.0 <https://github.com/SwissDataScienceCenter/renku-data-services/releases/tag/v0.11.0>`_
 - `renku-notebooks 1.23.0 <https://github.com/SwissDataScienceCenter/renku-notebooks/releases/tag/1.23.0>`_
-- `renku-search 0.0.46 <https://github.com/SwissDataScienceCenter/renku-search/releases/tag/v0.0.46>`_
+- `renku-notebooks 1.24.0 <https://github.com/SwissDataScienceCenter/renku-notebooks/releases/tag/1.24.0>`_
+- `renku-search 0.1.0 <https://github.com/SwissDataScienceCenter/renku-search/releases/tag/v0.1.0>`_
 - `renku-ui 3.24.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.24.0>`_
+- `renku-ui 3.25.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.25.0>`_
 
 0.51.1
 ------

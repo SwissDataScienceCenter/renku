@@ -672,7 +672,7 @@ ui:
     replicaCount: 1
     image:
       repository: renku/renku-ui
-      tag: "3.24.0"
+      tag: "3.25.0"
       pullPolicy: IfNotPresent
       ## Optionally specify an array of imagePullSecrets.
       ## Secrets must be manually created in the namespace.
@@ -861,7 +861,7 @@ ui:
     keepCookies: []
     image:
       repository: renku/renku-ui-server
-      tag: "3.24.0"
+      tag: "3.25.0"
       pullPolicy: IfNotPresent
     imagePullSecrets: []
     nameOverride: ""
@@ -1001,7 +1001,7 @@ notebooks:
     targetCPUUtilizationPercentage: 50
   image:
     repository: renku/renku-notebooks
-    tag: "1.23.0"
+    tag: "1.24.0"
     pullPolicy: IfNotPresent
     ## Optionally specify an array of imagePullSecrets.
     ## Secrets must be manually created in the namespace.
@@ -1119,15 +1119,15 @@ notebooks:
   gitRpcServer:
     image:
       name: renku/git-rpc-server
-      tag: "1.23.0"
+      tag: "1.24.0"
   gitHttpsProxy:
     image:
       name: renku/git-https-proxy
-      tag: "1.23.0"
+      tag: "1.24.0"
   gitClone:
     image:
       name: renku/git-clone
-      tag: "1.23.0"
+      tag: "1.24.0"
   service:
     type: ClusterIP
     port: 80
@@ -1180,12 +1180,12 @@ notebooks:
     sessionTypes: ["registered"]
     image:
       repository: renku/renku-notebooks-tests
-      tag: "1.23.0"
+      tag: "1.24.0"
       pullPolicy: IfNotPresent
   k8sWatcher:
     image:
       repository: renku/k8s-watcher
-      tag: "1.23.0"
+      tag: "1.24.0"
       pullPolicy: IfNotPresent
     resources: {}
     replicaCount: 1
@@ -1197,12 +1197,12 @@ notebooks:
   secretsMount:
     image:
       repository: renku/secrets-mount
-      tag: "1.23.0"
+      tag: "1.24.0"
   ssh:
     enabled: false
     image:
       repository: renku/ssh-jump-host
-      tag: "1.23.0"
+      tag: "1.24.0"
       pullPolicy: IfNotPresent
     resources: {}
     replicaCount: 1
@@ -1391,7 +1391,7 @@ search:
     replicas: 1
     image:
       repository: renku/search-api
-      tag: "0.0.46"
+      tag: "0.1.0"
       pullPolicy: IfNotPresent
     service:
       type: ClusterIP
@@ -1404,7 +1404,7 @@ search:
     replicas: 1
     image:
       repository: renku/search-provision
-      tag: "0.0.46"
+      tag: "0.1.0"
       pullPolicy: IfNotPresent
     service:
       type: ClusterIP
@@ -1603,12 +1603,12 @@ platformInit:
 dataService:
   image:
     repository: renku/renku-data-service
-    tag: "0.10.0"
+    tag: "0.11.0"
     pullPolicy: IfNotPresent
   keycloakSync:
     image:
       repository: renku/keycloak-sync
-      tag: "0.10.0"
+      tag: "0.11.0"
       pullPolicy: IfNotPresent
   service:
     type: ClusterIP
@@ -1651,7 +1651,7 @@ authz:
 secretsStorage:
   image:
     repository: renku/secrets-storage
-    tag: "v0.10.0"
+    tag: "v0.11.0"
     pullPolicy: IfNotPresent
   service:
     type: ClusterIP
