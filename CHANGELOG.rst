@@ -26,7 +26,7 @@ User-Facing Changes
   (`#3101 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3101>`_).
 - **UI**: Rework navigation for Renku 2.0 pages
   (`#3095 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3095>`_).
-- **UI**: Updated the user interface to reflect changes to Renku 2.0 sessions.
+- **UI**: Updated the user interface to reflect changes to Renku 2.0 sessions (`#3122 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3122>`_).
 - **Notebooks**: Support repositories from external services in Renku 2.0 sessions.
 
 **✨ Improvements**
