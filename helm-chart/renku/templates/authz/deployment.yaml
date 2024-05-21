@@ -86,6 +86,10 @@ spec:
             - --datastore-conn-pool-write-max-open=6
             - --datastore-conn-pool-read-min-open=5
             - --datastore-conn-pool-read-max-open=10
+            {{- if .Values.authz.metrics.enabled }}
+            - --metrics-addr=:9090
+            - --metrics-enabled=true
+            {{- end }}
           ports:
             - name: http
               containerPort: 8443
