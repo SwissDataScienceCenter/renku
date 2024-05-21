@@ -1,4 +1,4 @@
 psycopg2-binary==2.9.6
 tenacity==8.2.2
-requests==2.31.0
+requests==2.32.0
 kubernetes==24.2.0
