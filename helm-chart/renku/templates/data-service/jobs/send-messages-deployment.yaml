@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "renku.fullname" . }}-renku-data-service-messages
+  name: {{ include "renku.fullname" . }}-data-service-messages
   labels:
     app: renku-data-service-messages
     heritage: {{ .Release.Service }}
@@ -27,7 +27,7 @@ spec:
       initContainers:
         {{- include "certificates.initContainer" . | nindent 8 }}
       containers:
-        - name: renku-data-service-messages
+        - name: data-service-messages
           image: "{{ .Values.dataService.backgroundJobs.image.repository }}:{{ .Values.dataService.backgroundJobs.image.tag }}"
           imagePullPolicy: IfNotPresent
           args: ["send_messages"]
