@@ -35,6 +35,7 @@ User-Facing Changes
 - **UI**: Use namespace/slug to identify Renku 2.0 projects
   (`#3103 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3103>`_).
 
+
 Internal Changes
 ~~~~~~~~~~~~~~~~
 
@@ -42,8 +43,13 @@ Internal Changes
 
 - **Data Services**: Updated the authorization for access to Renku 2.0 projects to work with Authzed DB,
   a 3rd party database dedicated to saving authorization data and making authorization decisions
+- **Data Services**: Updated the authorization for access to Renku 2.0 namespaces and groups with Authzed DB
 - **Search Services**: Support processing v2 schema messages (alongside with v1). Making the query parser
   more lenient to not raise parsing errors.
+
+**🐞 Bug Fixes**
+
+- **Data Services**: allow removing tolerations and affinities on resource pool via PATCH requests
 
 Individual Components
 ~~~~~~~~~~~~~~~~~~~~~
@@ -51,6 +57,7 @@ Individual Components
 - `renku-data-services 0.9.0 <https://github.com/SwissDataScienceCenter/renku-data-services/releases/tag/v0.9.0>`_
 - `renku-data-services 0.10.0 <https://github.com/SwissDataScienceCenter/renku-data-services/releases/tag/v0.10.0>`_
 - `renku-data-services 0.11.0 <https://github.com/SwissDataScienceCenter/renku-data-services/releases/tag/v0.11.0>`_
+- `renku-data-services 0.12.0 <https://github.com/SwissDataScienceCenter/renku-data-services/releases/tag/v0.12.0>`_
 - `renku-notebooks 1.23.0 <https://github.com/SwissDataScienceCenter/renku-notebooks/releases/tag/1.23.0>`_
 - `renku-notebooks 1.24.0 <https://github.com/SwissDataScienceCenter/renku-notebooks/releases/tag/1.24.0>`_
 - `renku-search 0.1.0 <https://github.com/SwissDataScienceCenter/renku-search/releases/tag/v0.1.0>`_
