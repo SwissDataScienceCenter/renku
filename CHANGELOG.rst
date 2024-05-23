@@ -24,14 +24,18 @@ User-Facing Changes
 - **Data Services**: Added the possibility for users to connect to external services, allowing users to clone, pull and push repositories e.g. from GitLab.com or GitHub.com.
 - **UI**: Add a new User Secrets page to handle secrets, and adapt the session pages.
   (`#3101 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3101>`_).
-- **UI**: Rework navigation for Renku 2.0 pages
-  (`#3095 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3095>`_).
+- **UI**: Handle custom resource pools culling times
+  (`#3113 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3113>`_).
+- **UI**: Add a new project page for Renku 2.0 projects
+  (`#3108 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3108>`_).
 - **UI**: Updated the user interface to reflect changes to Renku 2.0 sessions (`#3122 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3122>`_).
 - **Notebooks**: Support repositories from external services in Renku 2.0 sessions.
 
 **✨ Improvements**
 
 - **Search Services**: Support for groups, namespaces and project keywords.
+- **UI**: Rework navigation for Renku 2.0 pages
+  (`#3095 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3095>`_).
 - **UI**: Use namespace/slug to identify Renku 2.0 projects
   (`#3103 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3103>`_).
 
@@ -56,6 +60,7 @@ Individual Components
 - `renku-search 0.1.0 <https://github.com/SwissDataScienceCenter/renku-search/releases/tag/v0.1.0>`_
 - `renku-ui 3.24.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.24.0>`_
 - `renku-ui 3.25.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.25.0>`_
+- `renku-ui 3.26.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.26.0>`_
 
 0.51.1
 ------
