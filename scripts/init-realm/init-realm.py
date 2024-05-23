@@ -129,6 +129,7 @@ def _check_and_create_client(keycloak_admin, new_client: OIDCClient, force: bool
 
         keycloak_admin.delete_client(realm_client["id"])
         created_client_id = keycloak_admin.create_client(new_client.to_dict())
+        service_account_user = keycloak_admin.get_client_service_account_user(created_client_id)
 
         if isinstance(service_account_user, dict) and service_account_user.get("id"):
             logging.info(f"Reassigning service account roles {new_client.service_account_roles}")

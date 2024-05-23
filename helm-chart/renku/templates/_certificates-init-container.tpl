@@ -10,9 +10,7 @@
   volumeMounts:
     - name: etc-ssl-certs
       mountPath: /etc/ssl/certs/
-{{- if $customCAsEnabled }}
     - name: custom-ca-certs
       mountPath: /usr/local/share/ca-certificates
       readOnly: true
-{{- end -}}
 {{- end -}}

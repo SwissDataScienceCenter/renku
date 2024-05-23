@@ -1,0 +1,63 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: "{{ .Release.Name }}-init-postgres-authz-rev{{ .Release.Revision }}-{{ randAlphaNum 5 | lower }}"
+  labels:
+    app: postgres-setup
+    heritage: {{ .Release.Service }}
+    release: {{ .Release.Name }}
+    chart: {{ template "renku.chart" . }}
+spec:
+  template:
+    metadata:
+      name: {{ .Release.Name }}-init-postgres-authz
+      labels:
+        app: postgres-setup
+        heritage: {{ .Release.Service }}
+        release: {{ .Release.Name }}
+        chart: {{ template "renku.chart" . }}
+    spec:
+      restartPolicy: Never
+      containers:
+        - name: initialize-postgres-authz
+          image: "{{ .Values.initDb.image.repository }}:{{ .Values.initDb.image.tag }}"
+          args: [ "authz_db_init.py" ]
+          securityContext:
+            runAsUser: 1000
+            runAsGroup: 1000
+            allowPrivilegeEscalation: false
+            runAsNonRoot: true
+          env:
+            - name: DB_HOST
+              value: {{ template "postgresql.fullname" . }}
+            - name: DB_ADMIN_USERNAME
+              {{ if .Values.global.externalServices.postgresql.enabled }}
+              value: {{ .Values.global.externalServices.postgresql.username }}
+              {{- else -}}
+              value: {{ .Values.postgresql.auth.username }}
+              {{- end }}
+            {{- if not .Values.global.externalServices.postgresql.enabled }}
+            - name: DB_ADMIN_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: "{{ template "postgresql.fullname" . }}"
+                  key: postgres-password
+            {{- else if .Values.global.externalServices.postgresql.password }}
+            - name: DB_ADMIN_PASSWORD
+              value: {{ .Values.global.externalServices.postgresql.password }}
+            {{- else if .Values.global.externalServices.postgresql.existingSecret }}
+            - name: DB_ADMIN_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.global.externalServices.postgresql.existingSecret }}
+                  key: postgres-password
+            {{- end }}
+            - name: AUTHZ_DB_USERNAME
+              value: authz
+            - name: AUTHZ_DB_NAME
+              value: authz
+            - name: AUTHZ_DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "renku.fullname" . }}-authz
+                  key: SPICEDB_POSTGRES_PASSWORD
