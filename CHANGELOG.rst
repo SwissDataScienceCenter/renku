@@ -27,6 +27,8 @@ User-Facing Changes
 - **UI**: Rework navigation for Renku 2.0 pages
   (`#3095 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3095>`_).
 - **UI**: Updated the user interface to reflect changes to Renku 2.0 sessions (`#3122 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3122>`_).
+- **UI**: New appearance for Renku 2.0 project pages (`#3108 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3108>`_).
+- **UI**: Support for new authorization implementation and roles (`3.27.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.27.0>`_).
 - **Notebooks**: Support repositories from external services in Renku 2.0 sessions.
 
 **✨ Improvements**
@@ -62,6 +64,8 @@ Individual Components
 - `renku-search 0.1.0 <https://github.com/SwissDataScienceCenter/renku-search/releases/tag/v0.1.0>`_
 - `renku-ui 3.24.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.24.0>`_
 - `renku-ui 3.25.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.25.0>`_
+- `renku-ui 3.26.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.26.0>`_
+- `renku-ui 3.27.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.27.0>`_
 
 0.51.1
 ------
@@ -112,7 +116,7 @@ User-Facing Changes
 **🐞 Bug Fixes**
 
 - **Data service**: Allow proper removal of users from resource pools
-- **Data service**: Enable searching for all users when adding users to resource pools 
+- **Data service**: Enable searching for all users when adding users to resource pools
 
 Internal Changes
 ~~~~~~~~~~~~~~~~
