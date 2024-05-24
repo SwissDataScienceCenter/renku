@@ -49,7 +49,7 @@ Internal Changes
 
 **🐞 Bug Fixes**
 
-- **Data Services**: allow removing tolerations and affinities on resource pool via PATCH requests
+- **Data Services**: Allow removing tolerations and affinities on resource pools via PATCH requests
 
 Individual Components
 ~~~~~~~~~~~~~~~~~~~~~
