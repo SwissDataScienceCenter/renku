@@ -41,9 +41,8 @@ Internal Changes
 
 **🌟 New Features**
 
-- **Data Services**: Updated the authorization for access to Renku 2.0 projects to work with Authzed DB,
+- **Data Services**: Updated the authorization for access to Renku 2.0 projects and groups to work with Authzed DB,
   a 3rd party database dedicated to saving authorization data and making authorization decisions
-- **Data Services**: Updated the authorization for access to Renku 2.0 namespaces and groups with Authzed DB
 - **Search Services**: Support processing v2 schema messages (alongside with v1). Making the query parser
   more lenient to not raise parsing errors.
 
