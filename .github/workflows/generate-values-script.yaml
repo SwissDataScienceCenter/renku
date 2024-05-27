@@ -52,7 +52,7 @@ jobs:
       - uses: actions/checkout@v4.1.2
         with:
           fetch-depth: 0
-      - uses: Azure/docker-login@v1
+      - uses: Azure/docker-login@v2
         with:
           username: ${{ secrets.RENKU_DOCKER_USERNAME }}
           password: ${{ secrets.RENKU_DOCKER_PASSWORD }}
