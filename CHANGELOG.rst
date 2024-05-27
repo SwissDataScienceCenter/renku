@@ -3,7 +3,12 @@
 0.52.0
 ------
 
-Renku ``0.52.0`` introduces a new secrets-storage service that allows users to store and use secrets in sessions.
+Renku ``0.52.0`` introduces a new feature to save and use secrets in RenkuLab sessions.
+For example, save your credentials for a database or external computing resource in
+RenkuLab to access those external systems from a RenkuLab session. Save secrets via the
+new User Secrets page in the account drop down, and choose which secrets to mount in a
+session on the Start with Options page. More details on this feature can be found in the
+[documentation](https://renku.readthedocs.io/en/stable/topic-guides/secrets/secrets.html).
 
 This release also contains new features related to Renku 2.0. However, Renku 2.0 is still
 in early development and is not yet accessible to users. For more information, see our
@@ -16,6 +21,7 @@ User-Facing Changes
 
 - **Data Services**: Add new secrets storage service for managing user session secrets, including
   new endpoints on data-service to manage these secrets.
+<<<<<<< HEAD
 - **UI**: Add a new User Secrets page to manage secrets, and extend the session launch pages to
   select secrets to include in the session.
   (`#3101 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3101>`_).
@@ -25,27 +31,63 @@ User-Facing Changes
 **✨ Improvements**
 
 - **Search Services**: Add support for groups, namespaces and project keywords.
+=======
+- **Data Services**: Added the possibility for users to connect to external services, allowing users to clone, pull and push repositories e.g. from GitLab.com or GitHub.com.
+- **Notebooks**: Support repositories from external services in Renku 2.0 sessions.
+- **UI**: Add a new User Secrets page to handle secrets, and adapt the session pages.
+  (`#3101 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3101>`_).
+- **UI**: Handle custom resource pools culling times
+  (`#3113 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3113>`_).
+- **UI**: Add a new project page for Renku 2.0 projects
+  (`#3108 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3108>`_).
+- **UI**: Updated the user interface to reflect changes to Renku 2.0 sessions (`#3122 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3122>`_).
+- **UI**: New appearance for Renku 2.0 project pages (`#3108 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3108>`_).
+- **UI**: Support for new authorization implementation and roles (`3.27.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.27.0>`_).
+
+**✨ Improvements**
+
+- **Search Services**: Support for groups, namespaces and project keywords.
+- **UI**: Rework navigation for Renku 2.0 pages
+  (`#3095 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3095>`_).
+>>>>>>> release-0.52.x
 - **UI**: Use namespace/slug to identify Renku 2.0 projects
   (`#3103 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3103>`_).
+
 
 Internal Changes
 ~~~~~~~~~~~~~~~~
 
 **🌟 New Features**
 
+<<<<<<< HEAD
 - **Data Services**: Update the authorization for access to Renku 2.0 projects to work with Authzed DB,
   a 3rd party database dedicated to saving authorization data and making authorization decisions.
+=======
+- **Data Services**: Updated the authorization for access to Renku 2.0 projects and groups to work with Authzed DB,
+  a 3rd party database dedicated to saving authorization data and making authorization decisions
+>>>>>>> release-0.52.x
 - **Search Services**: Support processing v2 schema messages (alongside with v1). Making the query parser
   more lenient to not raise parsing errors.
+
+**🐞 Bug Fixes**
+
+- **Data Services**: Allow removing tolerations and affinities on resource pools via PATCH requests
 
 Individual Components
 ~~~~~~~~~~~~~~~~~~~~~
 
 - `renku-data-services 0.9.0 <https://github.com/SwissDataScienceCenter/renku-data-services/releases/tag/v0.9.0>`_
 - `renku-data-services 0.10.0 <https://github.com/SwissDataScienceCenter/renku-data-services/releases/tag/v0.10.0>`_
+- `renku-data-services 0.11.0 <https://github.com/SwissDataScienceCenter/renku-data-services/releases/tag/v0.11.0>`_
+- `renku-data-services 0.12.0 <https://github.com/SwissDataScienceCenter/renku-data-services/releases/tag/v0.12.0>`_
 - `renku-notebooks 1.23.0 <https://github.com/SwissDataScienceCenter/renku-notebooks/releases/tag/1.23.0>`_
-- `renku-search 0.0.46 <https://github.com/SwissDataScienceCenter/renku-search/releases/tag/v0.0.46>`_
+- `renku-notebooks 1.24.0 <https://github.com/SwissDataScienceCenter/renku-notebooks/releases/tag/1.24.0>`_
+- `renku-notebooks 1.25.0 <https://github.com/SwissDataScienceCenter/renku-notebooks/releases/tag/1.25.0>`_
+- `renku-search 0.1.0 <https://github.com/SwissDataScienceCenter/renku-search/releases/tag/v0.1.0>`_
 - `renku-ui 3.24.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.24.0>`_
+- `renku-ui 3.25.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.25.0>`_
+- `renku-ui 3.26.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.26.0>`_
+- `renku-ui 3.27.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.27.0>`_
 
 0.51.1
 ------
@@ -96,7 +138,7 @@ User-Facing Changes
 **🐞 Bug Fixes**
 
 - **Data service**: Allow proper removal of users from resource pools
-- **Data service**: Enable searching for all users when adding users to resource pools 
+- **Data service**: Enable searching for all users when adding users to resource pools
 
 Internal Changes
 ~~~~~~~~~~~~~~~~

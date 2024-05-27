@@ -69,6 +69,7 @@ Dataverse
 datetimes
 db
 DB
+decrypted
 deployer
 deserialize
 Deserialize
@@ -90,6 +91,7 @@ executables
 extraEnv
 extraEnvFrom
 falsy
+Fernet
 filesystem
 FilterFlights
 findable
