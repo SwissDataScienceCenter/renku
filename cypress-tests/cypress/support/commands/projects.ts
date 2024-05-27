@@ -68,40 +68,47 @@ interface NewProjectProps extends ProjectIdentifier {
   visibility?: "public" | "private" | "internal";
 }
 
-function createProject(newProjectProps: NewProjectProps) {
-  cy.visit("/projects/new");
-  cy.getDataCy("field-group-title")
-    .should("be.visible")
-    .clear()
-    .type(newProjectProps.name);
-  if (newProjectProps.namespace) {
-    cy.get("#namespace-input")
-      .should("be.visible")
-      .clear()
-      .type(newProjectProps.namespace);
-  }
+function createProjectIfMissing(newProjectProps: NewProjectProps) {
+  const namespace = newProjectProps.namespace ?? Cypress.env("TEST_USERNAME");
+  const slug = encodeURIComponent(`${namespace}/${newProjectProps.name}`);
+  cy.request({failOnStatusCode: false, method: "GET", url: `/ui-server/api/projects/${slug}`}).then((response) => {
+    if (response.status != 200) {
+      cy.visit("/projects/new");
+      cy.getDataCy("field-group-title")
+        .should("be.visible")
+        .clear()
+        .type(newProjectProps.name);
+      if (newProjectProps.namespace) {
+        cy.get("#namespace-input")
+          .should("be.visible")
+          .clear()
+          .type(newProjectProps.namespace);
+      }
 
-  if (newProjectProps.templateName)
-    cy.contains(newProjectProps.templateName).should("be.visible").click();
+      if (newProjectProps.templateName)
+        cy.contains(newProjectProps.templateName).should("be.visible").click();
 
-  if (newProjectProps.visibility) {
-    cy.getDataCy(`visibility-${newProjectProps.visibility}`)
-      .should("be.visible")
-      .click();
-  }
-
-  // The button may take some time before it is clickable
-  cy.get("[data-cy=create-project-button]", { timeout: TIMEOUTS.vlong })
-    .should("be.enabled")
-    .click();
-  cy.url({ timeout: TIMEOUTS.vlong }).should(
-    "contain",
-    newProjectProps.name.toLowerCase()
-  );
-  cy.get(`[data-cy="header-project"]`, { timeout: TIMEOUTS.vlong }).should(
-    "be.visible"
-  );
-  cy.get("ul.nav-pills-underline").should("be.visible");
+      if (newProjectProps.visibility) {
+        cy.getDataCy(`visibility-${newProjectProps.visibility}`)
+          .should("be.visible")
+          .click();
+      }
+      // The button may take some time before it is clickable
+      cy.get("[data-cy=create-project-button]", { timeout: TIMEOUTS.vlong })
+        .should("be.enabled")
+        .click();
+    } else {
+      cy.visit(`projects/${namespace}/${newProjectProps.name}`);
+    }
+    cy.url({ timeout: TIMEOUTS.vlong }).should(
+      "contain",
+      newProjectProps.name.toLowerCase()
+    );
+    cy.get(`[data-cy="header-project"]`, { timeout: TIMEOUTS.vlong }).should(
+      "be.visible"
+    );
+    cy.get("ul.nav-pills-underline").should("be.visible");
+  });
 }
 
 function deleteProjectFromAPI(identifier: ProjectIdentifier) {
@@ -265,7 +272,7 @@ function waitMetadataIndexing(justTriggered = true, goToSettings = true) {
 }
 
 export default function registerProjectCommands() {
-  Cypress.Commands.add("createProject", createProject);
+  Cypress.Commands.add("createProjectIfMissing", createProjectIfMissing);
   Cypress.Commands.add("deleteProject", deleteProject);
   Cypress.Commands.add("deleteProjectFromAPI", deleteProjectFromAPI);
   Cypress.Commands.add("forkProject", forkProject);
@@ -282,7 +289,7 @@ declare global {
   // eslint-disable-next-line @typescript-eslint/no-namespace
   namespace Cypress {
     interface Chainable {
-      createProject(newProjectProps: NewProjectProps);
+      createProjectIfMissing(newProjectProps: NewProjectProps);
       deleteProject(identifier: ProjectIdentifier, loadProject?: boolean);
       deleteProjectFromAPI(identifier: ProjectIdentifier);
       forkProject(identifier: ProjectIdentifier, newName: string);

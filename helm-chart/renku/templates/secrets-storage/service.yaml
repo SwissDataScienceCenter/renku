@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ template "renku.fullname" . }}-secrets-storage
+  labels:
+    app: renku-secrets-storage
+    chart: {{ template "renku.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  type: {{ .Values.secretsStorage.service.type }}
+  ports:
+    - port: {{ .Values.secretsStorage.service.port }}
+      targetPort: http
+      protocol: TCP
+      name: http
+  selector:
+    app: {{ template "renku.name" . }}-secrets-storage
+    release: {{ .Release.Name }}

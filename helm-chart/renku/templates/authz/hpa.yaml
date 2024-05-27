@@ -1,0 +1,43 @@
+{{- if .Values.authz.autoscaling.enabled }}
+{{- if .Capabilities.APIVersions.Has "autoscaling/v2" }}
+apiVersion: autoscaling/v2
+{{- else if .Capabilities.APIVersions.Has "autoscaling/v2beta2" }}
+apiVersion: autoscaling/v2beta2
+{{- else if .Capabilities.APIVersions.Has "autoscaling/v2beta1" }}
+apiVersion: autoscaling/v2beta1
+{{- else }}
+  {{- fail "ERROR: You must have at least autoscaling/v2beta1 to use HorizontalPodAutoscaler for the authorization service" }}
+{{- end }}
+kind: HorizontalPodAutoscaler
+metadata:
+  name: {{ include "renku.fullname" . }}-authz
+  labels:
+    app: renku-authz
+    chart: {{ template "renku.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: {{ include "renku.fullname" . }}-authz
+  minReplicas: {{ .Values.authz.autoscaling.minReplicas }}
+  maxReplicas: {{ .Values.authz.autoscaling.maxReplicas }}
+  metrics:
+    {{- if .Values.authz.autoscaling.targetCPUUtilizationPercentage }}
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: {{ .Values.authz.autoscaling.targetCPUUtilizationPercentage }}
+    {{- end }}
+    {{- if .Values.authz.autoscaling.targetMemoryUtilizationPercentage }}
+    - type: Resource
+      resource:
+        name: memory
+        target:
+          type: Utilization
+          averageUtilization: {{ .Values.authz.autoscaling.targetMemoryUtilizationPercentage }}
+    {{- end }}
+{{- end }}
