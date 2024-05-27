@@ -22,6 +22,7 @@ User-Facing Changes
 - **Data Services**: Added new secrets storage service for managing user session secrets, including
   new endpoints on data-service to manage these secrets.
 - **Data Services**: Added the possibility for users to connect to external services, allowing users to clone, pull and push repositories e.g. from GitLab.com or GitHub.com.
+- **Notebooks**: Support repositories from external services in Renku 2.0 sessions.
 - **UI**: Add a new User Secrets page to handle secrets, and adapt the session pages.
   (`#3101 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3101>`_).
 - **UI**: Handle custom resource pools culling times
@@ -29,7 +30,8 @@ User-Facing Changes
 - **UI**: Add a new project page for Renku 2.0 projects
   (`#3108 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3108>`_).
 - **UI**: Updated the user interface to reflect changes to Renku 2.0 sessions (`#3122 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3122>`_).
-- **Notebooks**: Support repositories from external services in Renku 2.0 sessions.
+- **UI**: New appearance for Renku 2.0 project pages (`#3108 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3108>`_).
+- **UI**: Support for new authorization implementation and roles (`3.27.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.27.0>`_).
 
 **✨ Improvements**
 
@@ -39,15 +41,20 @@ User-Facing Changes
 - **UI**: Use namespace/slug to identify Renku 2.0 projects
   (`#3103 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3103>`_).
 
+
 Internal Changes
 ~~~~~~~~~~~~~~~~
 
 **🌟 New Features**
 
-- **Data Services**: Updated the authorization for access to Renku 2.0 projects to work with Authzed DB,
+- **Data Services**: Updated the authorization for access to Renku 2.0 projects and groups to work with Authzed DB,
   a 3rd party database dedicated to saving authorization data and making authorization decisions
 - **Search Services**: Support processing v2 schema messages (alongside with v1). Making the query parser
   more lenient to not raise parsing errors.
+
+**🐞 Bug Fixes**
+
+- **Data Services**: Allow removing tolerations and affinities on resource pools via PATCH requests
 
 Individual Components
 ~~~~~~~~~~~~~~~~~~~~~
@@ -55,6 +62,7 @@ Individual Components
 - `renku-data-services 0.9.0 <https://github.com/SwissDataScienceCenter/renku-data-services/releases/tag/v0.9.0>`_
 - `renku-data-services 0.10.0 <https://github.com/SwissDataScienceCenter/renku-data-services/releases/tag/v0.10.0>`_
 - `renku-data-services 0.11.0 <https://github.com/SwissDataScienceCenter/renku-data-services/releases/tag/v0.11.0>`_
+- `renku-data-services 0.12.0 <https://github.com/SwissDataScienceCenter/renku-data-services/releases/tag/v0.12.0>`_
 - `renku-notebooks 1.23.0 <https://github.com/SwissDataScienceCenter/renku-notebooks/releases/tag/1.23.0>`_
 - `renku-notebooks 1.24.0 <https://github.com/SwissDataScienceCenter/renku-notebooks/releases/tag/1.24.0>`_
 - `renku-notebooks 1.25.0 <https://github.com/SwissDataScienceCenter/renku-notebooks/releases/tag/1.25.0>`_
@@ -62,6 +70,7 @@ Individual Components
 - `renku-ui 3.24.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.24.0>`_
 - `renku-ui 3.25.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.25.0>`_
 - `renku-ui 3.26.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.26.0>`_
+- `renku-ui 3.27.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.27.0>`_
 
 0.51.1
 ------
@@ -112,7 +121,7 @@ User-Facing Changes
 **🐞 Bug Fixes**
 
 - **Data service**: Allow proper removal of users from resource pools
-- **Data service**: Enable searching for all users when adding users to resource pools 
+- **Data service**: Enable searching for all users when adding users to resource pools
 
 Internal Changes
 ~~~~~~~~~~~~~~~~
