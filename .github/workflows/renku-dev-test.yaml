@@ -22,7 +22,7 @@ jobs:
       github.event.client_payload.message == 'Helm test succeeded' }}
     runs-on: ubuntu-20.04
     steps:
-      - uses: actions/checkout@v4.1.2
+      - uses: actions/checkout@v4.1.6
       - uses: cypress-io/github-action@v6
         id: cypress
         env:
