@@ -1633,6 +1633,12 @@ dataService:
   affinity: {}
   # This defines the maximum number of pinned projects in user preferences
   maxPinnedProjects: 5
+  # Trusted proxies configuration
+  # See: https://sanic.dev/en/guide/advanced/proxy-headers.md
+  trustedProxies:
+    # forwardedSecret: "my-secret"
+    # proxiesCount: 1
+    # realIpHeader: "x-real-ip"
 
 authz:
   replicaCount: 1
