@@ -10,6 +10,9 @@ new User Secrets page in the account drop down, and choose which secrets to moun
 session on the Start with Options page. More details on this feature can be found in the
 [documentation](https://renku.readthedocs.io/en/stable/topic-guides/secrets/secrets.html).
 
+Administrators can customize the culling times (the length of time before an idle session is paused
+or a paused session is deleted) for different resource pools. 
+
 This release also contains new features related to Renku 2.0. However, Renku 2.0 is still
 in early development and is not yet accessible to users. For more information, see our
 [blog](https://blog.renkulab.io/renku-2).
@@ -19,24 +22,25 @@ User-Facing Changes
 
 **🌟 New Features**
 
-- **Data Services**: Added new secrets storage service for managing user session secrets, including
+- **Data Services**: Add new secrets storage service for managing user session secrets, including
   new endpoints on data-service to manage these secrets.
-- **Data Services**: Added the possibility for users to connect to external services, allowing users to clone, pull and push repositories e.g. from GitLab.com or GitHub.com.
-- **Notebooks**: Support repositories from external services in Renku 2.0 sessions.
-- **UI**: Add a new User Secrets page to handle secrets, and adapt the session pages.
+- **Data Services**: Add the possibility for users to connect Renku 2.0 projects to external
+  services, allowing users to clone, pull and push repositories e.g. from GitLab.com or GitHub.com.
+- **Notebooks**: Add support for repositories from external services in Renku 2.0 sessions.
+- **UI**: Add a new User Secrets page to manage secrets, and extend the session launch pages to
+  select secrets to include in the session.
   (`#3101 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3101>`_).
-- **UI**: Handle custom resource pools culling times
+- **UI**: Customize culling times for resource pools
   (`#3113 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3113>`_).
-- **UI**: Add a new project page for Renku 2.0 projects
+- **UI**: Introduce a new design for Renku 2.0 project pages
   (`#3108 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3108>`_).
-- **UI**: Updated the user interface to reflect changes to Renku 2.0 sessions (`#3122 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3122>`_).
-- **UI**: New appearance for Renku 2.0 project pages (`#3108 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3108>`_).
-- **UI**: Support for new authorization implementation and roles (`3.27.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.27.0>`_).
+- **UI**: Update the user interface to reflect changes to Renku 2.0 sessions (`#3122 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3122>`_).
+- **UI**: Add support for Renku 2.0 authorization implementation and roles (`3.27.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.27.0>`_).
 
 **✨ Improvements**
 
-- **Search Services**: Support for groups, namespaces and project keywords.
-- **UI**: Rework navigation for Renku 2.0 pages
+- **Search Services**: Add support for groups, namespaces and project keywords.
+- **UI**: Introduce formal navigation for Renku 2.0 pages
   (`#3095 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3095>`_).
 - **UI**: Use namespace/slug to identify Renku 2.0 projects
   (`#3103 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3103>`_).
@@ -47,10 +51,11 @@ Internal Changes
 
 **🌟 New Features**
 
-- **Data Services**: Updated the authorization for access to Renku 2.0 projects and groups to work with Authzed DB,
-  a 3rd party database dedicated to saving authorization data and making authorization decisions
-- **Search Services**: Support processing v2 schema messages (alongside with v1). Making the query parser
-  more lenient to not raise parsing errors.
+- **Data Services**: Update the authorization for access to Renku 2.0 projects and groups to work
+  with Authzed DB, a 3rd party database dedicated to saving authorization data and making
+  authorization decisions
+- **Search Services**: Support processing v2 schema messages (alongside with v1). Make the query
+  parser more lenient to not raise parsing errors.
 
 **🐞 Bug Fixes**
 
