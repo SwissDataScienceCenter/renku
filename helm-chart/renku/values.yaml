@@ -672,7 +672,7 @@ ui:
     replicaCount: 1
     image:
       repository: renku/renku-ui
-      tag: "3.26.0"
+      tag: "3.27.0"
       pullPolicy: IfNotPresent
       ## Optionally specify an array of imagePullSecrets.
       ## Secrets must be manually created in the namespace.
@@ -861,7 +861,7 @@ ui:
     keepCookies: []
     image:
       repository: renku/renku-ui-server
-      tag: "3.26.0"
+      tag: "3.27.0"
       pullPolicy: IfNotPresent
     imagePullSecrets: []
     nameOverride: ""
@@ -1603,12 +1603,12 @@ platformInit:
 dataService:
   image:
     repository: renku/renku-data-service
-    tag: "0.11.0"
+    tag: "0.12.0"
     pullPolicy: IfNotPresent
   keycloakSync:
     image:
       repository: renku/keycloak-sync
-      tag: "0.11.0"
+      tag: "0.12.0"
       pullPolicy: IfNotPresent
   service:
     type: ClusterIP
@@ -1654,7 +1654,7 @@ authz:
 secretsStorage:
   image:
     repository: renku/secrets-storage
-    tag: "v0.11.0"
+    tag: "0.12.0"
     pullPolicy: IfNotPresent
   service:
     type: ClusterIP
