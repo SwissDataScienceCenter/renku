@@ -1404,7 +1404,7 @@ search:
     replicas: 1
     image:
       repository: renku/search-provision
-      tag: "0.1.0"
+      tag: "9127807c88ae"
       pullPolicy: IfNotPresent
     service:
       type: ClusterIP
