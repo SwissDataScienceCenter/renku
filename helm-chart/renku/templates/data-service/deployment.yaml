@@ -112,8 +112,6 @@ spec:
                   key: SPICEDB_GRPC_PRESHARED_KEY
             - name: AUTHZ_DB_GRPC_PORT
               value: "50051"
-            - name: FORWARDED_SECRET
-              value: {{ .Values.dataService.trustedProxies.forwardedSecret | default "" | quote }}
             - name: PROXIES_COUNT
               value: {{ .Values.dataService.trustedProxies.proxiesCount | default "" | quote }}
             - name: REAL_IP_HEADER
