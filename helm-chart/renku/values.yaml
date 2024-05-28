@@ -1636,8 +1636,8 @@ dataService:
   # Trusted proxies configuration
   # See: https://sanic.dev/en/guide/advanced/proxy-headers.md
   trustedProxies:
-    proxiesCount: 0
-    realIpHeader:
+    proxiesCount: 1
+    realIpHeader: x-real-ip
 
 authz:
   replicaCount: 1
