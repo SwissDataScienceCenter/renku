@@ -27,9 +27,7 @@ spec:
               image: "{{ .Values.dataService.backgroundJobs.image.repository }}:{{ .Values.dataService.backgroundJobs.image.tag }}"
               imagePullPolicy: IfNotPresent
               args:
-                - "user_namespaces_bootstrap"
-                - "keycloak_events_sync"
-                - "keycloak_admins_sync"
+                - "short_period_sync"
               env:
                 - name: DB_HOST
                   value: {{ template "postgresql.fullname" . }}
@@ -113,8 +111,7 @@ spec:
               image: "{{ .Values.dataService.backgroundJobs.image.repository }}:{{ .Values.dataService.backgroundJobs.image.tag }}"
               imagePullPolicy: IfNotPresent
               args:
-                - "keycloak_users_sync"
-                - "keycloak_admins_sync"
+                - "long_period_sync"
               env:
                 - name: DB_HOST
                   value: {{ template "postgresql.fullname" . }}
