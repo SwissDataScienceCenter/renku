@@ -1,5 +1,23 @@
 .. _changelog:
 
+0.52.1
+------
+
+Renku ``0.52.1`` fixes a bug in Renku 2.0 sessions where sessions could not start if
+the parent project listed zero repositories and one or more cloud storages to mount.
+
+User-Facing Changes
+~~~~~~~~~~~~~~~~~~~
+
+**🐞 Bug Fixes**
+
+- **Notebooks**: Do not add storage mounts patches when a session has no repository (`#1892 <https://github.com/SwissDataScienceCenter/renku-notebooks/pull/1892>`_)
+
+Individual Components
+~~~~~~~~~~~~~~~~~~~~~
+
+- `renku-notebooks 1.25.1 <https://github.com/SwissDataScienceCenter/renku-notebooks/releases/tag/1.25.1>`_
+
 0.52.0
 ------
 
