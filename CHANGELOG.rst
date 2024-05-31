@@ -3,6 +3,33 @@
 0.53.x
 ------
 
+User-Facing Changes
+~~~~~~~~~~~~~~~~~~~
+
+**🌟 New Features**
+
+- **Search Services**: Enable admin to search without restrictions.
+  Support for `namespace` search term in user query.
+
+**✨ Improvements**
+
+
+Internal Changes
+~~~~~~~~~~~~~~~~
+
+**🌟 New Features**
+
+- **Search Services**: Adds a `/version` endpoint
+
+**🐞 Bug Fixes**
+
+- **Search Services**: Improve verifying JWT tokens using public key from keycloak
+
+Individual Components
+~~~~~~~~~~~~~~~~~~~~~
+
+- `renku-search 0.2.0 <https://github.com/SwissDataScienceCenter/renku-search/releases/tag/v0.2.0>`_
+
 0.52.2
 ------
 
