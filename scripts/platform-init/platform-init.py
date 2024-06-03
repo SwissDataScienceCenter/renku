@@ -29,7 +29,7 @@ class Config:
             secret_service_private_key=config_map.get("secretServicePrivateKey"),
             encryption_key=config_map.get("dataServiceEncryptionKey"),
             previous_secret_service_private_key=config_map.get(
-                "dataServicePreviousEncryptionKey"
+                "secretServicePreviousPrivateKey"
             ),
         )
 
@@ -80,6 +80,7 @@ def init_secret_service_secret(config: Config):
 
     if existing_private_key is None and config.secret_service_private_key is None:
         # generate new secret
+        logging.info("Generating new private key")
         private_key = rsa.generate_private_key(public_exponent=65537, key_size=4096)
         private_key_pem = private_key.private_bytes(
             encoding=serialization.Encoding.PEM,
@@ -100,8 +101,13 @@ def init_secret_service_secret(config: Config):
                 type="Opaque",
             ),
         )
-    elif existing_private_key is None and config.secret_service_private_key is not None:
+    elif config.secret_service_private_key is not None:
         # create private key from config
+        logging.info("Setting private key from values")
+        if existing_private_key:
+            # delete old private key
+            logging.info("deleting old private key secret")
+            v1.delete_namespaced_secret(private_key_secret, config.k8s_namespace)
         private_key = serialization.load_pem_private_key(
             config.secret_service_private_key.encode(), password=None
         )
@@ -123,6 +129,7 @@ def init_secret_service_secret(config: Config):
         )
     else:
         # just load key to create public key from
+        logging.info("Leaving private key unchanged")
         private_key = serialization.load_pem_private_key(
             existing_private_key.encode(), password=None
         )

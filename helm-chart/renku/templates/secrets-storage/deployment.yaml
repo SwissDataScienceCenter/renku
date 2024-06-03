@@ -104,6 +104,8 @@ spec:
             items:
             - key: privateKey
               path: privateKey
+            - key: previousPrivateKey
+              path: previousPrivateKey
         {{- include "certificates.volumes" . | nindent 8 }}
     {{- with .Values.secretsStorage.nodeSelector }}
       nodeSelector:
