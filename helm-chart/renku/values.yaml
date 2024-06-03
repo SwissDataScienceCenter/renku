@@ -1603,12 +1603,12 @@ platformInit:
 dataService:
   image:
     repository: renku/renku-data-service
-    tag: "0.12.0"
+    tag: "0.13.0"
     pullPolicy: IfNotPresent
-  keycloakSync:
+  backgroundJobs:
     image:
-      repository: renku/keycloak-sync
-      tag: "0.12.0"
+      repository: renku/data-service-background-jobs
+      tag: "0.13.0"
       pullPolicy: IfNotPresent
   service:
     type: ClusterIP
@@ -1654,7 +1654,7 @@ authz:
 secretsStorage:
   image:
     repository: renku/secrets-storage
-    tag: "0.12.0"
+    tag: "0.13.0"
     pullPolicy: IfNotPresent
   service:
     type: ClusterIP
