@@ -128,10 +128,15 @@ def init_secret_service_secret(config: Config):
             ),
         )
     else:
-        # just load key to create public key from
+        # just load key to create public key from and unset previous secret if set
         logging.info("Leaving private key unchanged")
         private_key = serialization.load_pem_private_key(
             existing_private_key.encode(), password=None
+        )
+        v1.patch_namespaced_secret(
+            private_key_secret,
+            config.k8s_namespace,
+            {"data": {previous_private_key_entry_name: ""}},
         )
 
     # generate public key
