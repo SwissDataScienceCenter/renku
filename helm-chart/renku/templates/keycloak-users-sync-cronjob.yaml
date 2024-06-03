@@ -75,6 +75,8 @@ spec:
                   value: "50051"
                 {{- include "certificates.env.python" . | nindent 16 }}
                 {{- include "certificates.env.grpc" . | nindent 16 }}
+              resources:
+                {{ toYaml .Values.dataService.keycloakSync.events.resources | nindent 12 }}
               volumeMounts:
                 {{- include "certificates.volumeMounts.system" . | nindent 16 }}
           restartPolicy: Never
@@ -159,6 +161,8 @@ spec:
                   value: "50051"
                 {{- include "certificates.env.python" . | nindent 16 }}
                 {{- include "certificates.env.grpc" . | nindent 16 }}
+              resources:
+                {{ toYaml .Values.dataService.keycloakSync.total.resources | nindent 12 }}
               volumeMounts:
                 {{- include "certificates.volumeMounts.system" . | nindent 16 }}
           restartPolicy: Never

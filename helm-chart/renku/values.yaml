@@ -1606,10 +1606,14 @@ dataService:
     tag: "0.12.0"
     pullPolicy: IfNotPresent
   keycloakSync:
+    events:
+      resources: {}
     image:
       repository: renku/keycloak-sync
       tag: "0.12.0"
       pullPolicy: IfNotPresent
+    total:
+      resources: {}
   service:
     type: ClusterIP
     port: 80
