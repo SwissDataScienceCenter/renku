@@ -16,6 +16,7 @@ class Config:
     renku_fullname: str
     secret_service_private_key: str | None = field(repr=False)
     encryption_key: str | None = field(repr=False)
+    previous_secret_service_private_key: str | None = field(repr=False)
 
     @classmethod
     def from_env(cls):
@@ -27,6 +28,9 @@ class Config:
             renku_fullname=os.environ["RENKU_FULLNAME"],
             secret_service_private_key=config_map.get("secretServicePrivateKey"),
             encryption_key=config_map.get("dataServiceEncryptionKey"),
+            previous_secret_service_private_key=config_map.get(
+                "dataServicePreviousEncryptionKey"
+            ),
         )
 
 
@@ -65,6 +69,15 @@ def init_secret_service_secret(config: Config):
         config.k8s_namespace, public_key_secret, public_key_entry_name
     )
 
+    previous_private_key_entry_name = "previousPrivateKey"
+
+    secret_data = {previous_private_key_entry_name: ""}
+
+    if config.previous_secret_service_private_key is not None:
+        secret_data[previous_private_key_entry_name] = b64encode(
+            config.previous_secret_service_private_key.encode()
+        ).decode()
+
     if existing_private_key is None and config.secret_service_private_key is None:
         # generate new secret
         private_key = rsa.generate_private_key(public_exponent=65537, key_size=4096)
@@ -73,11 +86,12 @@ def init_secret_service_secret(config: Config):
             format=serialization.PrivateFormat.PKCS8,
             encryption_algorithm=serialization.NoEncryption(),
         )
+        secret_data[private_key_entry_name] = b64encode(private_key_pem).decode()
         v1.create_namespaced_secret(
             config.k8s_namespace,
             k8s_client.V1Secret(
                 api_version="v1",
-                data={private_key_entry_name: b64encode(private_key_pem).decode()},
+                data=secret_data,
                 kind="Secret",
                 metadata={
                     "name": private_key_secret,
@@ -91,15 +105,14 @@ def init_secret_service_secret(config: Config):
         private_key = serialization.load_pem_private_key(
             config.secret_service_private_key.encode(), password=None
         )
+        secret_data[private_key_entry_name] = b64encode(
+            config.secret_service_private_key.encode()
+        ).decode()
         v1.create_namespaced_secret(
             config.k8s_namespace,
             k8s_client.V1Secret(
                 api_version="v1",
-                data={
-                    private_key_entry_name: b64encode(
-                        config.secret_service_private_key.encode()
-                    ).decode()
-                },
+                data=secret_data,
                 kind="Secret",
                 metadata={
                     "name": private_key_secret,
