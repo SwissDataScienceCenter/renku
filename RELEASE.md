@@ -22,7 +22,7 @@ Acceptance tests have to pass on all release branches before merging.
 ## Planned release
 
 A release is planned at the end of a build cycle and the end of the cooldown period. 
-Depending on the features being developed, there may be more than one release per build cycle, especially if a feature requires significant infrastructure changes.
+More releases can be done if needed, in which case you should coordinate with the release manager.
 
 Since we usually include multiple features in the same release, please use feature branches to merge all the changes related to a single feature. Ideally, the commits should be squashed together when merging into the release branch, or reduced to a minimum (you can squash _some_ commits together in the feature branch before merging into the release branch).
 
@@ -35,7 +35,8 @@ Ideally, you should include all the necessary documentation and integration test
 Before merging a feature branch, please always drop a message on the `#dev-core` channel to inform the other teams about the upcoming changes. This will allow them to plan their work accordingly; even if you don't expect any conflicts, it's always better to be safe than sorry, especially toward the end of the build sprint when teams need to wrap up their work and must point their feature branches to the release branch.
 
 ```mermaid
-flowchart LR
+flowchart TD
+
     create_release[Open release branch] --> create_feature[Open feature branch]
 
     subgraph "Feature branches"
