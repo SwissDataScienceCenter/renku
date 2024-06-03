@@ -4,18 +4,28 @@ There are two types of Renku releases: planned and unplanned.
 
 A release consists of: 
 
-* Helm chart changes to reflect the new versions of individual components
-* Updates to the documentation and the integration tests (both `cypress` and `acceptance`)
-* Changes to `CHANGELOG.rst`
-* A new tag in this repository, which results in packaging and pushing out new helm charts and corresponding docker images
+* Helm chart changes to reflect the new versions of individual components.
+* Updates to the documentation and the integration tests (both `cypress` and `acceptance`).
+* Changes to `CHANGELOG.rst`.
+* A new tag in this repository, which results in packaging and pushing out new helm charts and
+  corresponding docker images.
 
 This procedure should be followed for *any* release:
 
-* Create a release branch (e.g. `0.46.x`), if one does not already exist, with the [release action](https://github.com/SwissDataScienceCenter/renku/actions/workflows/create-release-branch.yml). Mind that release branches are protected.
-* Merge new PRs into the release branch. Neither bugfixes nor features should be merged directly into `master`.
-  * Mind that the PRs pointing to a release branch cannot be merged if they break the platform, even temporarily. Be sure all tests pass by using the `/deploy` string without referencing other components or setting extra values; those should be included in the helm chart folder.
-  * There must be no PRs pointing to a release branch when releasing. If a change won't make it to that release, please point it to the following one (or `master` until it targets another release branch).
-* Be sure `CHANGELOG.rst` is up-to-date and reflects the changes in the release branch before tagging a release. This might require a final cleanup PR.
+* Create a release branch (e.g. `0.46.x`), if one does not already exist, with the
+  [release action](https://github.com/SwissDataScienceCenter/renku/actions/workflows/create-release-branch.yml).
+* Create feature branches off of the release branch for new features.
+  * A feature branch must contain all the changes needed for that feature.
+* Squash merge feature branches into the release branch. Do not merge feature branches if they break the platform,
+  even temporarily. Make sure:
+  * All tests pass with the `/deploy` action.
+  * The `/deploy` action does not reference specific component versions, these should be set in the chart.
+  * The `CHANGELOG.rst` is up to date and reflects the changes made.
+* The release manager merges the release branch into `master` when planned.
+  * If a feature branch won't make it into a planned release, point it to the next release branch.
+  * This might need a final cleanup PR to consolidate the changelog.
+* Be sure `CHANGELOG.rst` is up to date and reflects the changes in the release branch before tagging a release.
+This might require a final cleanup PR.
 
 Acceptance tests have to pass on all release branches before merging.
 
@@ -24,15 +34,19 @@ Acceptance tests have to pass on all release branches before merging.
 A release is planned at the end of a build cycle and the end of the cooldown period. 
 More releases can be done if needed, in which case you should coordinate with the release manager.
 
-Since we usually include multiple features in the same release, please use feature branches to merge all the changes related to a single feature. Ideally, the commits should be squashed together when merging into the release branch, or reduced to a minimum (you can squash _some_ commits together in the feature branch before merging into the release branch).
-
 ### Merge feature branches
 
-Depending on the specific feature, it might be necessary to include changes from multiple components. Please coordinate with the other teams to ensure that all the necessary changes are merged at the same time to avoid temporarily breaking the release branch and minimize the impact on other teams.
+Depending on the specific feature, it might be necessary to include changes from multiple components.
+Please coordinate with the other teams to ensure that all the necessary changes are merged at the same
+time to avoid temporarily breaking the release branch and minimize the impact on other teams.
 
 Ideally, you should include all the necessary documentation and integration test changes in the same PR.
 
-Before merging a feature branch, please always drop a message on the `#dev-core` channel to inform the other teams about the upcoming changes. This will allow them to plan their work accordingly; even if you don't expect any conflicts, it's always better to be safe than sorry, especially toward the end of the build sprint when teams need to wrap up their work and must point their feature branches to the release branch.
+Before merging a feature branch, please always drop a message on the `#dev-core` channel to inform the
+other teams about the upcoming changes. This will allow them to plan their work accordingly; even if you
+don't expect any conflicts, it's always better to be safe than sorry, especially toward the end of the
+build sprint when teams need to wrap up their work and must point their feature branches to the release
+branch.
 
 ```mermaid
 flowchart TD
@@ -52,7 +66,9 @@ flowchart TD
 ### Merge library updates
 
 Library updates should be merged into the release branches, _not_ `master`.
-We strongly discourage merging them just before finalizing a release, unless strictly necessary. This avoids requiring all the other teams to rebase their PRs too frequently and re-running the tests when they are already busy finalizing their work.
+We strongly discourage merging them just before finalizing a release, unless strictly necessary. This
+avoids requiring all the other teams to rebase their PRs too frequently and re-running the tests when
+they are already busy finalizing their work.
 
 ## Bugfix release
 
