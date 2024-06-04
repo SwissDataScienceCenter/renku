@@ -8,6 +8,8 @@ Please follow this convention when adding a new row
 ## Upgrading to Renku 0.52.1
 
 * EDIT ``dataService.keycloakSync`` has been renamed to ``dataService.backgroundJobs``
+* NEW ``dataService.backgroundJobs.events.resources`` to set the resources for the users short period synchronization job
+* NEW ``dataService.backgroundJobs.total.resources`` to set the resources for the users long period synchronization job
 
 ## Upgrading to Renku 0.51.0
 
