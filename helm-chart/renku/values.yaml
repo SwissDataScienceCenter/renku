@@ -1606,10 +1606,14 @@ dataService:
     tag: "0.13.0"
     pullPolicy: IfNotPresent
   backgroundJobs:
+    events:
+      resources: {}
     image:
       repository: renku/data-service-background-jobs
       tag: "0.13.0"
       pullPolicy: IfNotPresent
+    total:
+      resources: {}
   service:
     type: ClusterIP
     port: 80
