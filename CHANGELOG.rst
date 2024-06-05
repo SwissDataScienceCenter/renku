@@ -38,6 +38,7 @@ Individual Components
 ~~~~~~~~~~~~~~~~~~~~~
 
 - `renku-search 0.2.0 <https://github.com/SwissDataScienceCenter/renku-search/releases/tag/v0.2.0>`_
+- `renku-ui 3.28.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.28.0>`_
 
 0.52.1
 ------
