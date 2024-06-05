@@ -5,6 +5,12 @@ For changes that require manual steps other than changing values, please check o
 Please follow this convention when adding a new row
 * `<type: NEW|EDIT|DELETE> - *<resource name>*: <details>`
 
+## Upgrading to Renku 0.52.1
+
+* EDIT ``dataService.keycloakSync`` has been renamed to ``dataService.backgroundJobs``
+* NEW ``dataService.backgroundJobs.events.resources`` to set the resources for the users short period synchronization job
+* NEW ``dataService.backgroundJobs.total.resources`` to set the resources for the users long period synchronization job
+
 ## Upgrading to Renku 0.51.0
 
 * NEW ``ui.client.sessionClassEmailUs`` to customize the content of the Email Us button on the Session class option.

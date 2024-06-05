@@ -3,7 +3,82 @@
 0.53.x
 ------
 
+User-Facing Changes
+~~~~~~~~~~~~~~~~~~~
 
+**🌟 New Features**
+
+- **Search Services**: Enable admin to search without restrictions.
+  Support for `namespace` search term in user query.
+
+**✨ Improvements**
+
+
+Internal Changes
+~~~~~~~~~~~~~~~~
+
+**🌟 New Features**
+
+- **Search Services**: Adds a `/version` endpoint
+
+**🐞 Bug Fixes**
+
+- **Search Services**: Improve verifying JWT tokens using public key from keycloak
+
+Individual Components
+~~~~~~~~~~~~~~~~~~~~~
+
+- `renku-search 0.2.0 <https://github.com/SwissDataScienceCenter/renku-search/releases/tag/v0.2.0>`_
+
+0.52.1
+------
+
+Renku ``0.52.1`` fixes a few bugs in Renku 2.0, namely cases where:
+- sessions could not start if the parent project listed zero repositories and one or more cloud storages to mount
+- long running data migrations for user namespaces would cause the data service to keep restarting and never start
+
+This release also includes minor improvements on the backend that will not be visible to users.
+
+Breaking Changes
+~~~~~~~~~~~~~~~~
+
+This release changes the name of the background jobs that synchronize
+the data service with Keycloak and also changes the corresponding section for these jobs in the values file.
+These jobs have a more general name because they will perform data migrations for the data service in addition to
+synchronizing with Keycloak. This requires additional actions from administrators only if you are setting custom
+values for ``dataService.keycloakSync`` in the values file, but in most cases the default images set in this
+section will be used so no action will be required.
+
+
+User-Facing Changes
+~~~~~~~~~~~~~~~~~~~
+
+**🐞 Bug Fixes**
+
+- **Notebooks**: Do not add storage mounts patches when a session has no repository (`#1892 <https://github.com/SwissDataScienceCenter/renku-notebooks/pull/1892>`_)
+
+Internal Changes
+~~~~~~~~~~~~~~~~
+
+**🌟 New Features**
+
+- **Data services**: Configure trusted reverse proxies
+- **Data services**: Send message queue events in a background process
+- **Data services**: Run asynchronous code in database migrations
+- **Data services**: Support PKCE for authentication with connected services
+- **Data services**: Send group events to the message queue
+
+**🐞 Bug Fixes**
+
+- **Data service**: Do not perform data migrations for user namespaces at startup
+- **Data service**: Remove leading underscores on route names
+- **Data service**: Do not crash when a user that is already in a resource pool is added again to the same pool
+
+Individual Components
+~~~~~~~~~~~~~~~~~~~~~
+
+- `renku-notebooks 1.25.1 <https://github.com/SwissDataScienceCenter/renku-notebooks/releases/tag/1.25.1>`_
+- `renku-data-services 0.13.0 <https://github.com/SwissDataScienceCenter/renku-data-services/releases/tag/v0.13.0>`_
 
 0.52.0
 ------

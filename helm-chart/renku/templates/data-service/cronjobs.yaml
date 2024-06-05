@@ -1,9 +1,9 @@
 apiVersion: batch/v1
 kind: CronJob
 metadata:
-  name: {{ include "renku.fullname" . }}-keycloak-sync-events
+  name: {{ include "renku.fullname" . }}-data-service-background-jobs
   labels:
-    app: keycloak-sync
+    app: data-service-background-jobs
     heritage: {{ .Release.Service }}
     release: {{ .Release.Name }}
     chart: {{ template "renku.chart" . }}
@@ -17,15 +17,17 @@ spec:
       template:
         metadata:
           labels:          
-            app: keycloak-sync
+            app: data-service-background-jobs
             {{ .Values.global.redis.clientLabel | toYaml | nindent 12 }}
         spec:
           initContainers:
             {{- include "certificates.initContainer" . | nindent 12 }}
           containers:
-            - name: keycloak-sync
-              image: "{{ .Values.dataService.keycloakSync.image.repository }}:{{ .Values.dataService.keycloakSync.image.tag }}"
+            - name: data-service-background-jobs
+              image: "{{ .Values.dataService.backgroundJobs.image.repository }}:{{ .Values.dataService.backgroundJobs.image.tag }}"
               imagePullPolicy: IfNotPresent
+              args:
+                - "short_period_sync"
               env:
                 - name: DB_HOST
                   value: {{ template "postgresql.fullname" . }}
@@ -47,8 +49,6 @@ spec:
                     secretKeyRef:
                       name: {{ include "renku.fullname" . }}
                       key: dataServiceKeycloakClientSecret
-                - name: TOTAL_USER_SYNC
-                  value: "false"
                 - name: REDIS_HOST
                   value: {{ .Values.global.redis.host | quote }}
                 - name: REDIS_PORT
@@ -75,6 +75,8 @@ spec:
                   value: "50051"
                 {{- include "certificates.env.python" . | nindent 16 }}
                 {{- include "certificates.env.grpc" . | nindent 16 }}
+              resources:
+                {{ toYaml .Values.dataService.backgroundJobs.events.resources | nindent 16 }}
               volumeMounts:
                 {{- include "certificates.volumeMounts.system" . | nindent 16 }}
           restartPolicy: Never
@@ -84,9 +86,9 @@ spec:
 apiVersion: batch/v1
 kind: CronJob
 metadata:
-  name: {{ include "renku.fullname" . }}-keycloak-sync-total
+  name: {{ include "renku.fullname" . }}-data-service-total-users-sync
   labels:
-    app: keycloak-sync
+    app: data-service-total-users-sync
     heritage: {{ .Release.Service }}
     release: {{ .Release.Name }}
     chart: {{ template "renku.chart" . }}
@@ -101,15 +103,17 @@ spec:
       template:
         metadata:
           labels:          
-            app: keycloak-sync
+            app: data-service-total-users-sync
             {{ .Values.global.redis.clientLabel | toYaml | nindent 12 }}
         spec:
           initContainers:
             {{- include "certificates.initContainer" . | nindent 12 }}
           containers:
-            - name: keycloak-sync
-              image: "{{ .Values.dataService.keycloakSync.image.repository }}:{{ .Values.dataService.keycloakSync.image.tag }}"
+            - name: data-service-total-users-sync
+              image: "{{ .Values.dataService.backgroundJobs.image.repository }}:{{ .Values.dataService.backgroundJobs.image.tag }}"
               imagePullPolicy: IfNotPresent
+              args:
+                - "long_period_sync"
               env:
                 - name: DB_HOST
                   value: {{ template "postgresql.fullname" . }}
@@ -131,8 +135,6 @@ spec:
                     secretKeyRef:
                       name: {{ include "renku.fullname" . }}
                       key: dataServiceKeycloakClientSecret
-                - name: TOTAL_USER_SYNC
-                  value: "true"
                 - name: REDIS_HOST
                   value: {{ .Values.global.redis.host | quote }}
                 - name: REDIS_PORT
@@ -159,6 +161,8 @@ spec:
                   value: "50051"
                 {{- include "certificates.env.python" . | nindent 16 }}
                 {{- include "certificates.env.grpc" . | nindent 16 }}
+              resources:
+                {{ toYaml .Values.dataService.backgroundJobs.total.resources | nindent 16 }}
               volumeMounts:
                 {{- include "certificates.volumeMounts.system" . | nindent 16 }}
           restartPolicy: Never
