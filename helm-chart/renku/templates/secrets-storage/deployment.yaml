@@ -67,7 +67,7 @@ spec:
                   key: dataServiceKeycloakClientSecret
             - name: SECRETS_SERVICE_PRIVATE_KEY_PATH
               value: /secrets/privateKey/privateKey
-            - name: OLD_SECRETS_SERVICE_PRIVATE_KEY_PATH
+            - name: PREVIOUS_SECRETS_SERVICE_PRIVATE_KEY_PATH
               value: /secrets/privateKey/previousPrivateKey
             {{- include "certificates.env.python" $ | nindent 12 }}
           livenessProbe:
