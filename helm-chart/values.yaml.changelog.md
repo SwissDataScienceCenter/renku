@@ -5,6 +5,13 @@ For changes that require manual steps other than changing values, please check o
 Please follow this convention when adding a new row
 * `<type: NEW|EDIT|DELETE> - *<resource name>*: <details>`
 
+## Upgrading to Renku 0.53.0
+
+The `data-service` configuration has been updated to support trusting reverse proxies.
+
+* NEW ``dataService.trustedProxies.proxiesCount`` to set the reverse proxy count
+* NEW ``dataService.trustedProxies.realIpHeader`` to set the real IP header value
+
 ## Upgrading to Renku 0.52.1
 
 * EDIT ``dataService.keycloakSync`` has been renamed to ``dataService.backgroundJobs``
