@@ -1,5 +1,29 @@
 .. _changelog:
 
+0.52.2
+------
+
+Renku ``0.52.2`` fixes a bug in Data Service.
+
+
+Internal Changes
+~~~~~~~~~~~~~~~~
+
+**🌟 New Features**
+
+- **Data services**: Add endpoint for repository permissions for connected services.
+
+**🐞 Bug Fixes**
+
+- **Data service**: Fix typing issue preventing the service from starting when sentry is enabled.
+- **Data service**: Prevent removing all owners from Renku 2.0 resources.
+
+Individual Components
+~~~~~~~~~~~~~~~~~~~~~
+
+- `renku-data-services 0.14.0 <https://github.com/SwissDataScienceCenter/renku-data-services/releases/tag/v0.14.0>`_
+
+
 0.52.1
 ------
 
