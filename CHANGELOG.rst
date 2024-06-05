@@ -13,6 +13,9 @@ User-Facing Changes
 
 **✨ Improvements**
 
+- **UI**: Convert font-awesome icons to bootstrap icons (`#3173 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3173>`_, `#3161 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3161>`_)
+- **UI**: Improve membership maintenance UX in Renku 2.0 (`#3154 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3154>`_)
+- **UI**: Small updates to the connected services page (`#3149 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3149>`_)
 
 Internal Changes
 ~~~~~~~~~~~~~~~~
@@ -24,11 +27,18 @@ Internal Changes
 **🐞 Bug Fixes**
 
 - **Search Services**: Improve verifying JWT tokens using public key from keycloak
+- **UI**: Show project members on the project information page in Renku 2.0 (`#3143 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3143>`_)
+- **UI**: Fix project page nav in small view ports in Renku 2.0 (`#3168 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3168>`_, `#3169 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3169>`_)
+- **UI**: Update session buttons in Renku 2.0 (`#3172 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3172>`_)
+- **UI**: Update session badges on the project page of Renku 2.0 (`#3174 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3174>`_, `#3175 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3175>`_)
+- **UI**: Redirect to group page after creation in Renku 2.0 (`#3177 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3177>`_)
+- **UI**: Show a full page 404 when a group or project is not accessible in Renku 2.0 (`#3162 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3162>`_, `#3176 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3176>`__, `#3153 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3153>`_)
 
 Individual Components
 ~~~~~~~~~~~~~~~~~~~~~
 
 - `renku-search 0.2.0 <https://github.com/SwissDataScienceCenter/renku-search/releases/tag/v0.2.0>`_
+- `renku-ui 3.28.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.28.0>`_
 
 0.52.1
 ------
