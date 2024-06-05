@@ -13,7 +13,9 @@ User-Facing Changes
 
 **✨ Improvements**
 
+- **UI**: Convert font-awesome icons to bootstrap icons (`#3173 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3173>`_, `#3161 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3161>`_)
 - **UI**: Improve membership maintenance UX in Renku 2.0 (`#3154 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3154>`_)
+- **UI**: Small updates to the connected services page (`#3149 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3149>`_)
 
 Internal Changes
 ~~~~~~~~~~~~~~~~
