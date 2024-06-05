@@ -28,7 +28,7 @@ Internal Changes
 
 - **Search Services**: Improve verifying JWT tokens using public key from keycloak
 - **UI**: Show project members on the project information page in Renku 2.0 (`#3143 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3143>`_)
-- **UI**: Fix project page nav in small viewports in Renku 2.0 (`#3168 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3168>`_, `#3169 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3169>`_)
+- **UI**: Fix project page nav in small view ports in Renku 2.0 (`#3168 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3168>`_, `#3169 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3169>`_)
 - **UI**: Update session buttons in Renku 2.0 (`#3172 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3172>`_)
 - **UI**: Update session badges on the project page of Renku 2.0 (`#3174 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3174>`_, `#3175 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3175>`_)
 - **UI**: Redirect to group page after creation in Renku 2.0 (`#3177 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3177>`_)
