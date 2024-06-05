@@ -32,7 +32,7 @@ Internal Changes
 - **UI**: Update session buttons in Renku 2.0 (`#3172 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3172>`_)
 - **UI**: Update session badges on the project page of Renku 2.0 (`#3174 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3174>`_, `#3175 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3175>`_)
 - **UI**: Redirect to group page after creation in Renku 2.0 (`#3177 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3177>`_)
-- **UI**: Show a full page 404 when a group or project is not accessible in Renku 2.0 (`#3162 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3162>`_, `#3176 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3176>`_, `#3153 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3153>`_)
+- **UI**: Show a full page 404 when a group or project is not accessible in Renku 2.0 (`#3162 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3162>`_, `#3176 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3176>`__, `#3153 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3153>`_)
 
 Individual Components
 ~~~~~~~~~~~~~~~~~~~~~
