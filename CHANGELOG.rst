@@ -63,7 +63,6 @@ Individual Components
 
 - `renku-data-services 0.14.0 <https://github.com/SwissDataScienceCenter/renku-data-services/releases/tag/v0.14.0>`_
 
-
 0.52.1
 ------
 
