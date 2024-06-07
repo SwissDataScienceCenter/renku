@@ -1,6 +1,6 @@
 .. _changelog:
 
-0.53.x
+0.53.0
 ------
 
 User-Facing Changes
