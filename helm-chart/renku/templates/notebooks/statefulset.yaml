@@ -1,3 +1,9 @@
+{{- $remoteClusterConfig := list }}
+{{- if .Values.notebooks.remoteClusters }}
+{{- range $name, $value := .Values.notebooks.remoteClusters }}
+{{- $remoteClusterConfig = append $remoteClusterConfig ( dict "cluster_name" $name "namespace" $value.namespace "kube_config_path" ( printf "/remote_clusters/%s" $name ) "host" $value.host ) }}
+{{- end -}}
+{{- end -}}
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
@@ -166,6 +172,10 @@ spec:
             - name: NB_K8S__SESSIONS_NAMESPACE
               value: {{ .Values.notebooks.sessionsNamespace | quote }}
             {{ end }}
+            {{ if .Values.notebooks.remoteClusters }}
+            - name: NB_K8S__REMOTE_CLUSTERS_
+              value: {{ $remoteClusterConfig | toJson | quote }}
+            {{ end }}
             - name: NB_K8S__RENKU_NAMESPACE
               value: {{ .Release.Namespace | quote }}
             - name: NB_SESSIONS__GIT_PROXY__RENKU_CLIENT_ID
@@ -195,6 +205,11 @@ spec:
           volumeMounts:
             - name: server-options
               mountPath: /etc/renku-notebooks/server_options
+            {{- if .Values.notebooks.remoteClusters }}
+            - mountPath: "/remote_clusters/"
+              name: remote-cluster-configs
+              readOnly: true
+              {{- end -}}
             {{- include "certificates.volumeMounts.system" . | nindent 12 }}
           livenessProbe:
             httpGet:
@@ -235,6 +250,11 @@ spec:
         - name: server-options
           configMap:
             name: {{ template "renku.notebooks.fullname" . }}-options
+{{- if .Values.notebooks.remoteClusters }}
+        - name: remote-cluster-configs
+          secret: 
+            secretName: {{ template "renku.fullname" . }}-notebooks-remote-clusters
+{{- end -}}
         {{- include "certificates.volumes" . | nindent 8 }}
 
       serviceAccountName: {{ if .Values.notebooks.rbac.create }}"{{ template "renku.notebooks.fullname" . }}"{{ else }}"{{ .Values.notebooks.rbac.serviceAccountName }}"{{ end }}
