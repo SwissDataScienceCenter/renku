@@ -101,11 +101,6 @@ spec:
         - name: secret-service-private-key
           secret:
             secretName: {{ template "renku.fullname" . }}-secret-service-private-key
-            items:
-            - key: privateKey
-              path: privateKey
-            - key: previousPrivateKey
-              path: previousPrivateKey
         {{- include "certificates.volumes" . | nindent 8 }}
     {{- with .Values.secretsStorage.nodeSelector }}
       nodeSelector:

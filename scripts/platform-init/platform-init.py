@@ -71,7 +71,7 @@ def init_secret_service_secret(config: Config):
 
     previous_private_key_entry_name = "previousPrivateKey"
 
-    secret_data = {previous_private_key_entry_name: ""}
+    secret_data: dict[str, str] = {}
 
     if config.previous_secret_service_private_key is not None:
         secret_data[previous_private_key_entry_name] = b64encode(
@@ -136,7 +136,7 @@ def init_secret_service_secret(config: Config):
         v1.patch_namespaced_secret(
             private_key_secret,
             config.k8s_namespace,
-            {"data": {previous_private_key_entry_name: ""}},
+            {"data": {private_key_entry_name: existing_private_key}},
         )
 
     # generate public key
