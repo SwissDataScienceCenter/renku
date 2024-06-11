@@ -46,6 +46,8 @@ spec:
               value: "500ms"
             - name: RS_SOLR_LOG_MESSAGE_BODIES
               value: "false"
+            - name: "RS_JWT_ALLOWED_ISSUER_URL_PATTERNS"
+              value: "{{ .Values.search.searchApi.jwt.allowedIssuerUrls }}"
             - name: JAVA_OPTS
               value: "-Xmx{{ .Values.search.searchApi.jvmXmx }} -XX:+UseZGC -XX:+ZGenerational"
           ports:

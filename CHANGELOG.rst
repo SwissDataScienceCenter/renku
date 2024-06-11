@@ -3,7 +3,12 @@
 0.53.1
 ------
 
+Internal Changes
+~~~~~~~~~~~~~~~~
 
+**🐞 Bug Fixes**
+
+- **Search Services**: Fix for allowing to configure JWT issuer url whitelist in values file
 
 0.53.0
 ------

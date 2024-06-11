@@ -5,6 +5,14 @@ For changes that require manual steps other than changing values, please check o
 Please follow this convention when adding a new row
 * `<type: NEW|EDIT|DELETE> - *<resource name>*: <details>`
 
+## Upgrading to Renku 0.53.1
+
+* NEW `search.searchApi.jwt.allowedIssuerUrls` must be set to the
+  expected jwt issuer urls. A wildcard `*`can be used to match parts
+  of an url, like a sub domain. It is a list, where elements are
+  separated by a comma. Examples: `*.renkulab.io`
+  `renkulab.io,*.renku.ch`
+
 ## Upgrading to Renku 0.53.0
 
 The `data-service` configuration has been updated to support trusting reverse proxies.
