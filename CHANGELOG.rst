@@ -3,6 +3,19 @@
 0.53.1
 ------
 
+Internal Changes
+~~~~~~~~~~~~~~~~
+
+**🐞 Bug Fixes**
+
+- **Search Services**: Fix for allowing to configure JWT issuer url
+  whitelist in values file and making this setting mandatory to the
+  search-api service.
+
+Individual Components
+~~~~~~~~~~~~~~~~~~~~~
+
+- `renku-search 0.3.0 <https://github.com/SwissDataScienceCenter/renku-search/releases/tag/v0.3.0>`_
 
 
 0.53.0
