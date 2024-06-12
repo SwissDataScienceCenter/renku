@@ -9,7 +9,7 @@ Internal Changes
 **🐞 Bug Fixes**
 
 - **Search Services**: Fix for allowing to configure JWT issuer url
-  whitelist in values file and making this setting mandatory to the
+  allow list in values file and making this setting mandatory to the
   search-api service.
 
 Individual Components
