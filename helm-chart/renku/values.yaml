@@ -1400,8 +1400,6 @@ search:
       requests:
         memory: 256Mi
     jvmXmx: 256M
-    jwt:
-      allowedIssuerUrls:
   searchProvision:
     replicas: 1
     image:
