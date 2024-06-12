@@ -74,6 +74,7 @@ def init_secret_service_secret(config: Config):
     secret_data: dict[str, str] = {}
 
     if config.previous_secret_service_private_key is not None:
+        logging.info("Setting previous private key for secrets rotation")
         secret_data[previous_private_key_entry_name] = b64encode(
             config.previous_secret_service_private_key.encode()
         ).decode()

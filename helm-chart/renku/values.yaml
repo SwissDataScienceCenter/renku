@@ -7,9 +7,112 @@
 global:
   ## YAML string that contains all application level Renku configuration options.
   platformConfig: |
-  #  {}
-  # secretServicePrivateKey: ... RSA Private Key in PKCS8 PEM format (`ssh-keygen -m PKCS8 -t rsa -b 4096`)
-  # secretServicePreviousPrivateKey: ... Previous Private key in PEM format, only set this when rotating keys
+    secretServicePrivateKey: |
+      -----BEGIN PRIVATE KEY-----
+      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
+      pNx5rh1NTNcuXgOCjX6IeJ09QXmFm1k=
+      -----END PRIVATE KEY-----
+    secretServicePreviousPrivateKey: |
+      -----BEGIN PRIVATE KEY-----
+      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
+      kxEeW9aFvOgSw/isMisd/EkWXJhL7w==
+      -----END PRIVATE KEY-----
   # dataServiceEncryptionKey: 32 byte random string
   gitlab:
     ## Name of the postgres database to be used by Gitlab
