@@ -7,59 +7,8 @@
 global:
   ## YAML string that contains all application level Renku configuration options.
   platformConfig: |
-    secretServicePrivateKey: |
-      -----BEGIN PRIVATE KEY-----
-      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
-      pNx5rh1NTNcuXgOCjX6IeJ09QXmFm1k=
-      -----END PRIVATE KEY-----
+  # secretServicePrivateKey: ... RSA Private Key in PKCS8 PEM format (`ssh-keygen -m PKCS8 -t rsa -b 4096`)
+  # secretServicePreviousPrivateKey: ... Previous Private key in PEM format, only set this when rotating keys
   # dataServiceEncryptionKey: 32 byte random string
   gitlab:
     ## Name of the postgres database to be used by Gitlab
