@@ -8,9 +8,9 @@ Internal Changes
 
 **🐞 Bug Fixes**
 
-- **Search Services**: Fix for allowing to configure JWT issuer url
-  allow list in values file and making this setting mandatory to the
-  search-api service.
+- **Search Services**: Set keycloak url into the allow list of JWT
+  issuer urls. This setting is now mandatory to the search-api
+  service.
 
 Individual Components
 ~~~~~~~~~~~~~~~~~~~~~
