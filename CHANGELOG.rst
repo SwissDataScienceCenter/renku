@@ -1,5 +1,23 @@
 .. _changelog:
 
+0.53.1
+------
+
+Internal Changes
+~~~~~~~~~~~~~~~~
+
+**🐞 Bug Fixes**
+
+- **Search Services**: Set keycloak url into the allow list of JWT
+  issuer urls. This setting is now mandatory to the search-api
+  service.
+
+Individual Components
+~~~~~~~~~~~~~~~~~~~~~
+
+- `renku-search 0.3.0 <https://github.com/SwissDataScienceCenter/renku-search/releases/tag/v0.3.0>`_
+
+
 0.53.0
 ------
 
