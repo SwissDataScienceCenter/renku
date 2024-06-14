@@ -32,7 +32,7 @@ spec:
             {{- toYaml .Values.securityContext | nindent 12 }}
           env:
             - name: RS_SOLR_URL
-              value: "http://{{ template "solr.fullname" . }}:{{ .Values.global.solr.port }}/solr"
+              value: "http://{{ template "solr.fullname" . }}:{{ .Values.global.solr.port }}"
             - name: RS_SOLR_CORE
               value: {{ first .Values.solr.coreNames }}
             - name: RS_SOLR_USER

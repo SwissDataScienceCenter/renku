@@ -5,6 +5,19 @@ For changes that require manual steps other than changing values, please check o
 Please follow this convention when adding a new row
 * `<type: NEW|EDIT|DELETE> - *<resource name>*: <details>`
 
+## Upgrading to Renku 0.53.0
+
+The `data-service` configuration has been updated to support trusting reverse proxies.
+
+* NEW ``dataService.trustedProxies.proxiesCount`` to set the reverse proxy count
+* NEW ``dataService.trustedProxies.realIpHeader`` to set the real IP header value
+
+## Upgrading to Renku 0.52.1
+
+* EDIT ``dataService.keycloakSync`` has been renamed to ``dataService.backgroundJobs``
+* NEW ``dataService.backgroundJobs.events.resources`` to set the resources for the users short period synchronization job
+* NEW ``dataService.backgroundJobs.total.resources`` to set the resources for the users long period synchronization job
+
 ## Upgrading to Renku 0.51.0
 
 * NEW ``ui.client.sessionClassEmailUs`` to customize the content of the Email Us button on the Session class option.
