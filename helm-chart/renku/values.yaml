@@ -1391,7 +1391,7 @@ search:
     replicas: 1
     image:
       repository: renku/search-api
-      tag: "9afe55ac084f"
+      tag: "c6b60dd781cd"
       pullPolicy: IfNotPresent
     service:
       type: ClusterIP
@@ -1404,7 +1404,7 @@ search:
     replicas: 1
     image:
       repository: renku/search-provision
-      tag: "9afe55ac084f"
+      tag: "c6b60dd781cd"
       pullPolicy: IfNotPresent
     service:
       type: ClusterIP
