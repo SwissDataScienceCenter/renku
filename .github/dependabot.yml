@@ -1,26 +1,27 @@
 version: 2
 updates:
-  - package-ecosystem: "pip" # See documentation for possible values
-    directory: "docs/" # Location of package manifests
+  - package-ecosystem: "pip" 
+    directories: 
+      - "docs/"
+      - "scripts/init-realm"
+      - "acceptance-tests/"
     schedule:
       interval: "weekly"
     open-pull-requests-limit: 5
-  - package-ecosystem: "pip" # See documentation for possible values
-    directory: "scripts/init-realm" # Location of package manifests
-    schedule:
-      interval: "weekly"
-    open-pull-requests-limit: 2
     ignore:
       - dependency-name: "python-keycloak"
         # I would like to replace this with "version-update:semver-patch",  "version-update:semver-minor"  
         # but just want to test this first...
         update-types: ["version-update:semver-patch"] 
-  - package-ecosystem: "pip"
-    directory: "acceptance-tests/"
-    schedule:
-      interval: "weekly"
-    open-pull-requests-limit: 5
+    group:
+      python:
+        patterns:
+          - "*"
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
       interval: "weekly"
+    group:
+      gh-actions:
+        patterns:
+          - "*"
