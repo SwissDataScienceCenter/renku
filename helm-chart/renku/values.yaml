@@ -1030,6 +1030,12 @@ notebooks:
   ## If left null then sessions will be launched in the same namespace
   ## as where the chart is installed.
   sessionsNamespace:
+  ## Define remote clusters that sessions can be scheduled on
+  remoteClusters: 
+  ## cluster_name: 
+  ##   namespace: namespace_in_other_cluster
+  ##   kubeConfig: |
+  ##     kube_config_content_for_cluster
   sessionAutosave:
     ## Any file higher than the minimum will be added to LFS
     minimumLFSFileSizeBytes: 1000000
