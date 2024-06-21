@@ -137,7 +137,13 @@ def init_secret_service_secret(config: Config):
         v1.patch_namespaced_secret(
             private_key_secret,
             config.k8s_namespace,
-            {"data": {private_key_entry_name: existing_private_key}},
+            {
+                "data": {
+                    private_key_entry_name: b64encode(
+                        existing_private_key.encode()
+                    ).decode()
+                }
+            },
         )
 
     # generate public key
