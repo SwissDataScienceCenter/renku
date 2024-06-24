@@ -13,6 +13,9 @@ Please follow this convention when adding a new row
   (either `running`, `finished` or `errored`) for the overall state of the rotation. Please make sure to unset `secretServicePreviousPrivateKey` once rotation is finished
   as a matter of best practice.
 
+  NOTE: Make sure that you do not redeploy or rollback the Renku Helm chart while a key rotation is underway. Even if the 
+  deployment is broken it is best to wait for the key rotation to finish before attempting another deployment or a rollback.
+
 ## Upgrading to Renku 0.53.0
 
 The `data-service` configuration has been updated to support trusting reverse proxies.
