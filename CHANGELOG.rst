@@ -3,6 +3,18 @@
 0.54.0
 ------
 
+User-Facing Changes
+~~~~~~~~~~~~~~~~~~~
+
+**🌟 New Features**
+
+- **Search Services**: Search results return details about the creator
+  and project namespace, where before only the respective ids were
+  included.
+- **Search Services**: The search query is now accepted at
+  `/api/search/query` url path and a `/api/search/version` endpoint
+  has been added
+
 Internal Changes
 ~~~~~~~~~~~~~~~~
 
@@ -13,7 +25,8 @@ Internal Changes
 Individual Components
 ~~~~~~~~~~~~~~~~~~~~~
 
-- `renku-data-services 0.15.0 <https://github.com/SwissDataScienceCenter/renku-data-services/releases/tag/v0.15.0>`
+- `renku-search 0.4.0 <https://github.com/SwissDataScienceCenter/renku-search/releases/tag/v0.4.0>`_
+- `renku-data-services 0.15.0 <https://github.com/SwissDataScienceCenter/renku-data-services/releases/tag/v0.15.0>`__
 
 
 0.53.1
@@ -32,7 +45,6 @@ Individual Components
 ~~~~~~~~~~~~~~~~~~~~~
 
 - `renku-search 0.3.0 <https://github.com/SwissDataScienceCenter/renku-search/releases/tag/v0.3.0>`_
-
 
 0.53.0
 ------
