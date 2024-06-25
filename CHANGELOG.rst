@@ -15,10 +15,18 @@ User-Facing Changes
   `/api/search/query` url path and a `/api/search/version` endpoint
   has been added
 
+Internal Changes
+~~~~~~~~~~~~~~~~
+
+**🌟 New Features**
+
+- **Secrets**: Allow rotating the private key for secrets storage
+
 Individual Components
 ~~~~~~~~~~~~~~~~~~~~~
 
 - `renku-search 0.4.0 <https://github.com/SwissDataScienceCenter/renku-search/releases/tag/v0.4.0>`_
+- `renku-data-services 0.15.0 <https://github.com/SwissDataScienceCenter/renku-data-services/releases/tag/v0.15.0>`__
 
 
 0.53.1
