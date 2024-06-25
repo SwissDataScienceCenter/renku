@@ -7,8 +7,8 @@
 global:
   ## YAML string that contains all application level Renku configuration options.
   platformConfig: |
-    {}
-  # secretServicePrivateKey: ... RSA Private Key in PEM format
+  # secretServicePrivateKey: ... RSA Private Key in PKCS8 PEM format (`ssh-keygen -m PKCS8 -t rsa -b 4096`)
+  # secretServicePreviousPrivateKey: ... Previous Private key in PEM format, only set this when rotating keys
   # dataServiceEncryptionKey: 32 byte random string
   gitlab:
     ## Name of the postgres database to be used by Gitlab
@@ -1603,14 +1603,14 @@ platformInit:
 dataService:
   image:
     repository: renku/renku-data-service
-    tag: "0.14.1"
+    tag: "0.15.0"
     pullPolicy: IfNotPresent
   backgroundJobs:
     events:
       resources: {}
     image:
       repository: renku/data-service-background-jobs
-      tag: "0.14.1"
+      tag: "0.15.0"
       pullPolicy: IfNotPresent
     total:
       resources: {}
@@ -1663,7 +1663,7 @@ authz:
 secretsStorage:
   image:
     repository: renku/secrets-storage
-    tag: "0.14.1"
+    tag: "0.15.0"
     pullPolicy: IfNotPresent
   service:
     type: ClusterIP
