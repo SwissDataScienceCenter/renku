@@ -1292,7 +1292,7 @@ gateway:
     ## Define the image for the auth middleware
     auth:
       repository: renku/renku-gateway
-      tag: "0.24.0"
+      tag: &gateway_image_tag "0.24.0"
       pullPolicy: IfNotPresent
   service:
     type: ClusterIP
@@ -1328,7 +1328,7 @@ gateway:
   reverseProxy:
     image:
       repository: renku/renku-revproxy
-      tag: "0.24.0"
+      tag: *&gateway_image_tag
       pullPolicy: IfNotPresent
     metrics:
       enabled: true
@@ -1391,7 +1391,7 @@ search:
     replicas: 1
     image:
       repository: renku/search-api
-      tag: "0.3.0"
+      tag: &search_image_tag "0.3.0"
       pullPolicy: IfNotPresent
     service:
       type: ClusterIP
@@ -1404,7 +1404,7 @@ search:
     replicas: 1
     image:
       repository: renku/search-provision
-      tag: "0.3.0"
+      tag: *search_image_tag
       pullPolicy: IfNotPresent
     service:
       type: ClusterIP
@@ -1419,7 +1419,7 @@ graph:
     aesEncryptionKey: # A 8, 16 or 32 bytes string used for AES encryption of the project tokens
     image:
       repository: renku/webhook-service
-      tag: "2.50.0"
+      tag: &graph_image_tag "2.50.0"
       pullPolicy: IfNotPresent
     service:
       type: ClusterIP
@@ -1435,7 +1435,7 @@ graph:
     aesEncryptionKey: # A 8, 16 or 32 bytes string used for AES encryption of the project tokens
     image:
       repository: renku/token-repository
-      tag: "2.50.0"
+      tag: *graph_image_tag
       pullPolicy: IfNotPresent
     service:
       type: ClusterIP
@@ -1456,7 +1456,7 @@ graph:
     replicas: 1
     image:
       repository: renku/triples-generator
-      tag: "2.50.0"
+      tag: *graph_image_tag
       pullPolicy: IfNotPresent
     service:
       type: ClusterIP
@@ -1478,7 +1478,7 @@ graph:
     replicas: 1
     image:
       repository: renku/knowledge-graph
-      tag: "2.50.0"
+      tag: *graph_image_tag
       pullPolicy: IfNotPresent
     service:
       type: ClusterIP
@@ -1497,7 +1497,7 @@ graph:
   eventLog:
     image:
       repository: renku/event-log
-      tag: "2.50.0"
+      tag: *graph_image_tag
       pullPolicy: IfNotPresent
     service:
       type: ClusterIP
@@ -1512,7 +1512,7 @@ graph:
   commitEventService:
     image:
       repository: renku/commit-event-service
-      tag: "2.50.0"
+      tag: *graph_image_tag
       pullPolicy: IfNotPresent
     service:
       type: ClusterIP
@@ -1603,14 +1603,14 @@ platformInit:
 dataService:
   image:
     repository: renku/renku-data-service
-    tag: "0.14.1"
+    tag: &data_service_image_tag "0.14.1"
     pullPolicy: IfNotPresent
   backgroundJobs:
     events:
       resources: {}
     image:
       repository: renku/data-service-background-jobs
-      tag: "0.14.1"
+      tag: *data_service_image_tag
       pullPolicy: IfNotPresent
     total:
       resources: {}
@@ -1663,7 +1663,7 @@ authz:
 secretsStorage:
   image:
     repository: renku/secrets-storage
-    tag: "0.14.1"
+    tag: *data_service_image_tag
     pullPolicy: IfNotPresent
   service:
     type: ClusterIP
