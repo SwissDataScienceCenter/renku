@@ -1328,7 +1328,7 @@ gateway:
   reverseProxy:
     image:
       repository: renku/renku-revproxy
-      tag: *&gateway_image_tag
+      tag: *gateway_image_tag
       pullPolicy: IfNotPresent
     metrics:
       enabled: true
