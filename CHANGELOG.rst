@@ -8,7 +8,7 @@ User-Facing Changes
 
 **✨ Improvements**
 
-- Test storage credentials before adding cloud storage (`#3194 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3194>`_)
+- Test the cloud storage connection before persisting the configuration (`#3194 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3194>`_)
 - Prompt for cloud storage credentials on v2 session start (`#3203 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3203>`_)
 - Indicate repository permissions in Renku 2.0 (`#3136 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3136>`_)
 
