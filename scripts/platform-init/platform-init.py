@@ -167,7 +167,7 @@ def initialize_private_key(config: Config):
             format=serialization.PrivateFormat.PKCS8,
             encryption_algorithm=serialization.NoEncryption(),
         )
-        config.secret_service_private_key = b64encode(private_key_pem).decode()
+        config.secret_service_private_key = private_key_pem.decode()
 
     v1 = k8s_client.CoreV1Api()
 
@@ -175,7 +175,11 @@ def initialize_private_key(config: Config):
         config.k8s_namespace,
         k8s_client.V1Secret(
             api_version="v1",
-            data={PRIVATE_KEY_ENTRY_NAME: config.secret_service_private_key},
+            data={
+                PRIVATE_KEY_ENTRY_NAME: b64encode(
+                    config.secret_service_private_key.encode()
+                ).decode()
+            },
             kind="Secret",
             metadata={
                 "name": config.secret_service_private_key_secret_name,
