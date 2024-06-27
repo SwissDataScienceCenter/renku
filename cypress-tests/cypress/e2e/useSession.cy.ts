@@ -347,4 +347,96 @@ describe("Basic public project functionality", () => {
       cy.deleteSession();
     });
   });
+
+  it("Start a new session with secrets attached.", () => {
+    cy.stopAllSessionsForProject(projectIdentifier);
+
+    // Define secret name
+    const secretNameSalt = uuidv4().substring(0, 4);
+    const secretName = `test_secret_${secretNameSalt}`;
+    const secretPath = "/secrets";
+    const secretValue = "new_val";
+
+    // Check the User Secrets section exists
+    let serversInvoked = false;
+    cy.intercept("/ui-server/api/notebooks/servers*", (req) => {
+      serversInvoked = true;
+    }).as("getServers");
+    cy.getProjectSection("Sessions").click();
+    if (serversInvoked) cy.wait("@getServers");
+    cy.getDataCy("more-menu").should("be.visible").click();
+    cy.getProjectPageLink(projectIdentifier, "sessions/new")
+      .should("be.visible")
+      .first()
+      .click();
+    cy.getDataCy("session-secrets")
+      .find("a")
+      .contains("User Secrets")
+      .should("be.visible")
+      .click();
+
+    // Create a new secret on the User Secrets page
+    cy.get("#new-secret-button").should("be.visible").click();
+    cy.get("#new-secret-name").clear().type(secretName);
+    cy.get("#new-secret-value").type(secretValue);
+    cy.getDataCy("secrets-new-add-button").should("be.enabled").click();
+    cy.getDataCy("secrets-new-form").should("not.be.visible");
+    cy.getDataCy("secrets-list").contains(secretName).should("be.visible");
+
+    // Go back to the session page and start a session with the new secret selected
+    cy.visit(
+      `/projects/${projectIdentifier.namespace}/${projectIdentifier.name}/sessions/new`
+    );
+    cy.getDataCy("session-secrets-toggle").contains("None").click();
+    cy.getDataCy("session-secrets-checkbox").should("not.be.checked");
+    cy.getDataCy("session-secrets-checkbox-list")
+      .contains(secretName)
+      .siblings()
+      .click()
+      .should("be.checked");
+    cy.getDataCy("session-secrets-mount-path")
+      .should("be.visible")
+      .clear()
+      .type("/secrets");
+    cy.getDataCy("session-secrets-toggle").contains(secretName);
+    cy.waitForImageToBuild();
+    cy.get(".renku-container button.btn-secondary", { timeout: TIMEOUTS.long })
+      .contains("Start Session")
+      .should("be.visible")
+      .click();
+
+    // Run a simple workflow in the iframe
+    cy.get(".progress-box .progress-title")
+      .contains("Starting Session")
+      .should("exist");
+    cy.get(".progress-box .progress-title", {
+      timeout: TIMEOUTS.vlong,
+    }).should("not.exist");
+
+    cy.getIframe("iframe#session-iframe").within(() => {
+      // Open the terminal and check the repo is not ahead
+      cy.get(".jp-Launcher-content", { timeout: TIMEOUTS.long }).should(
+        "be.visible"
+      );
+      cy.get(".jp-Launcher-section").should("be.visible");
+      cy.get('.jp-LauncherCard[title="Start a new terminal session"]')
+        .should("be.visible")
+        .click();
+
+      // Get the secret content and check it's correct
+      cy.get(".xterm-helper-textarea")
+        .click()
+        .type(
+          `cat ${secretPath}/${secretName} | tr -d '\n' | xargs touch {enter}`
+        );
+      // ? Checking the file browser is much easier than the terminal
+      cy.get("#filebrowser")
+        .should("be.visible")
+        .contains(secretValue)
+        .should("be.visible");
+    });
+
+    cy.pauseSession();
+    cy.deleteSession();
+  });
 });
