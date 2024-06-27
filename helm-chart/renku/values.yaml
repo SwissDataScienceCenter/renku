@@ -7,8 +7,8 @@
 global:
   ## YAML string that contains all application level Renku configuration options.
   platformConfig: |
-    {}
-  # secretServicePrivateKey: ... RSA Private Key in PEM format
+  # secretServicePrivateKey: ... RSA Private Key in PKCS8 PEM format (`ssh-keygen -m PKCS8 -t rsa -b 4096`)
+  # secretServicePreviousPrivateKey: ... Previous Private key in PEM format, only set this when rotating keys
   # dataServiceEncryptionKey: 32 byte random string
   gitlab:
     ## Name of the postgres database to be used by Gitlab
@@ -672,7 +672,7 @@ ui:
     replicaCount: 1
     image:
       repository: renku/renku-ui
-      tag: "3.28.1"
+      tag: "3.29.0"
       pullPolicy: IfNotPresent
       ## Optionally specify an array of imagePullSecrets.
       ## Secrets must be manually created in the namespace.
@@ -861,7 +861,7 @@ ui:
     keepCookies: []
     image:
       repository: renku/renku-ui-server
-      tag: "3.28.1"
+      tag: "3.29.0"
       pullPolicy: IfNotPresent
     imagePullSecrets: []
     nameOverride: ""
@@ -1001,7 +1001,7 @@ notebooks:
     targetCPUUtilizationPercentage: 50
   image:
     repository: renku/renku-notebooks
-    tag: "1.25.1"
+    tag: "1.25.2"
     pullPolicy: IfNotPresent
     ## Optionally specify an array of imagePullSecrets.
     ## Secrets must be manually created in the namespace.
@@ -1119,15 +1119,15 @@ notebooks:
   gitRpcServer:
     image:
       name: renku/git-rpc-server
-      tag: "1.25.1"
+      tag: "1.25.2"
   gitHttpsProxy:
     image:
       name: renku/git-https-proxy
-      tag: "1.25.1"
+      tag: "1.25.2"
   gitClone:
     image:
       name: renku/git-clone
-      tag: "1.25.1"
+      tag: "1.25.2"
   service:
     type: ClusterIP
     port: 80
@@ -1180,12 +1180,12 @@ notebooks:
     sessionTypes: ["registered"]
     image:
       repository: renku/renku-notebooks-tests
-      tag: "1.25.1"
+      tag: "1.25.2"
       pullPolicy: IfNotPresent
   k8sWatcher:
     image:
       repository: renku/k8s-watcher
-      tag: "1.25.1"
+      tag: "1.25.2"
       pullPolicy: IfNotPresent
     resources: {}
     replicaCount: 1
@@ -1197,12 +1197,12 @@ notebooks:
   secretsMount:
     image:
       repository: renku/secrets-mount
-      tag: "1.25.1"
+      tag: "1.25.2"
   ssh:
     enabled: false
     image:
       repository: renku/ssh-jump-host
-      tag: "1.25.1"
+      tag: "1.25.2"
       pullPolicy: IfNotPresent
     resources: {}
     replicaCount: 1
@@ -1603,14 +1603,14 @@ platformInit:
 dataService:
   image:
     repository: renku/renku-data-service
-    tag: "0.14.1"
+    tag: "0.15.0"
     pullPolicy: IfNotPresent
   backgroundJobs:
     events:
       resources: {}
     image:
       repository: renku/data-service-background-jobs
-      tag: "0.14.1"
+      tag: "0.15.0"
       pullPolicy: IfNotPresent
     total:
       resources: {}
@@ -1663,7 +1663,7 @@ authz:
 secretsStorage:
   image:
     repository: renku/secrets-storage
-    tag: "0.14.1"
+    tag: "0.15.0"
     pullPolicy: IfNotPresent
   service:
     type: ClusterIP
