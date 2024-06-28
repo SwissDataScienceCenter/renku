@@ -1521,6 +1521,7 @@ graph:
       requests:
         memory: 384Mi
     jvmXmx: 128M
+    javaVersion:  javaCertsGeneral
     gitlab:
       rateLimit: 10/sec
   sentry:
