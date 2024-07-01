@@ -3,6 +3,21 @@
 0.54.1
 ------
 
+Renku ``0.54.1`` introduces a bug fix to an issue where sessions with users secrets could not be properly
+resumed after hibernation.
+
+User-Facing Changes
+~~~~~~~~~~~~~~~~~~~
+
+**🐞 Bug Fixes**
+
+- **Notebooks**: Patch the correct environment variables when a session is resumed after being hibernated
+
+Individual components
+~~~~~~~~~~~~~~~~~~~~~~
+
+- `renku-notebooks 1.25.3 <https://github.com/SwissDataScienceCenter/renku-notebooks/releases/tag/1.25.3>`_
+
 
 0.54.0
 ------
