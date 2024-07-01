@@ -3,8 +3,7 @@
 0.54.1
 ------
 
-Renku ``0.54.1`` introduces a bug fix to an issue where sessions with users secrets could not be properly
-resumed after hibernation.
+Renku ``0.54.1`` introduces a few bug fixes in the notebooks and data services components.
 
 User-Facing Changes
 ~~~~~~~~~~~~~~~~~~~
@@ -12,11 +11,13 @@ User-Facing Changes
 **🐞 Bug Fixes**
 
 - **Notebooks**: Patch the correct environment variables when a session is resumed after being hibernated
+- **Data Services**: Assign the correct project permissions to group members
 
 Individual components
 ~~~~~~~~~~~~~~~~~~~~~~
 
-- `renku-notebooks 1.25.3 <https://github.com/SwissDataScienceCenter/renku-notebooks/releases/tag/1.25.3>`_
+- `renku-data-services 0.15.1 <https://github.com/SwissDataScienceCenter/renku-data-services/releases/tag/v0.15.1>`__
+- `renku-notebooks 1.25.3 <https://github.com/SwissDataScienceCenter/renku-notebooks/releases/tag/1.25.3>`__
 
 
 0.54.0
