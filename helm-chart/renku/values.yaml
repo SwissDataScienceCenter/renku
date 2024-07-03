@@ -206,6 +206,11 @@ global:
       tag: "0.0.2"
     customCAs: []
     # - secret:
+    securityContext:
+      allowPrivilegeEscalation: false
+      runAsUser: 1000
+      runAsGroup: 1000
+      runAsNonRoot: true
   ## Database credentials for postgres
   db:
     ## Used by the renku-data-services and potentially other backend services
