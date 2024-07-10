@@ -3,7 +3,7 @@
 0.54.2
 ------
 
-Renku ``0.54.2`` fixes a but with testing the cloud storage connection for WebDAV.
+Renku ``0.54.2`` fixes a bug with testing the cloud storage connection for WebDAV.
 
 User-Facing Changes
 ~~~~~~~~~~~~~~~~~~~
