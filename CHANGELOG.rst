@@ -8,19 +8,27 @@ User-Facing Changes
 
 **🌟 New Features**
 
+- **UI**: Renku 2.0: add user pages, update group pages, update project information panel, update the search page (`#3198 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3198>`__)
 - **Search Services**: Search results return details about the creator
   and project namespace, where before only the respective ids were
-  included.
+  included
+
+Internal Changes
+~~~~~~~~~~~~~~~~
+
+**🌟 New Features**
+
 - **Search Services**: The search query is now accepted at
   `/api/search/query` url path and a `/api/search/version` endpoint
   has been added
-
+- **Data Services**: API changes required to provide user and group pages in Renku 2.0
 
 Individual Components
 ~~~~~~~~~~~~~~~~~~~~~
 
+- `renku-data-services 0.17.0 <https://github.com/SwissDataScienceCenter/renku-data-services/releases/tag/v0.17.0>`_
 - `renku-search 0.4.0 <https://github.com/SwissDataScienceCenter/renku-search/releases/tag/v0.4.0>`_
-
+- `renku-ui 3.31.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.31.0>`_
 
 0.54.1
 ------
@@ -54,7 +62,6 @@ User-Facing Changes
 - Prompt for cloud storage credentials on v2 session start (`#3203 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3203>`_)
 - Indicate repository permissions in Renku 2.0 (`#3136 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3136>`_)
 
-
 Internal Changes
 ~~~~~~~~~~~~~~~~
 
@@ -86,6 +93,7 @@ Individual Components
 ~~~~~~~~~~~~~~~~~~~~~
 
 - `renku-search 0.3.0 <https://github.com/SwissDataScienceCenter/renku-search/releases/tag/v0.3.0>`_
+
 
 0.53.0
 ------
