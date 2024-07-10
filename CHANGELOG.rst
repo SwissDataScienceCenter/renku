@@ -15,7 +15,7 @@ User-Facing Changes
 Individual components
 ~~~~~~~~~~~~~~~~~~~~~~
 
-- `renku-data-services 0.15.1 <https://github.com/SwissDataScienceCenter/renku-data-services/releases/tag/v0.16.1>`__
+- `renku-data-services 0.16.1 <https://github.com/SwissDataScienceCenter/renku-data-services/releases/tag/v0.16.1>`__
 
 0.54.1
 ------
