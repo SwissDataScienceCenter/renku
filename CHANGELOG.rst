@@ -3,7 +3,19 @@
 0.54.2
 ------
 
+Renku ``0.54.2`` fixes a but with testing the cloud storage connection for WebDAV.
 
+User-Facing Changes
+~~~~~~~~~~~~~~~~~~~
+
+**🐞 Bug Fixes**
+
+- **Data Services**: Correctly obscure rclone values when testing cloud storage connections
+
+Individual components
+~~~~~~~~~~~~~~~~~~~~~~
+
+- `renku-data-services 0.15.1 <https://github.com/SwissDataScienceCenter/renku-data-services/releases/tag/v0.16.1>`__
 
 0.54.1
 ------
