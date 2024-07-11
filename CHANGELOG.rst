@@ -10,7 +10,7 @@ User-Facing Changes
 
 **🐞 Bug Fixes**
 
-- **Data Services**: Correctly obscure rclone values when testing cloud storage connections
+- **Data Services**: Fix verifying cloud storage connection not working with WebDAV by correctly obscuring RClone values.
 
 Individual components
 ~~~~~~~~~~~~~~~~~~~~~~
