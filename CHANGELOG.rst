@@ -8,19 +8,18 @@ User-Facing Changes
 
 **🌟 New Features**
 
-- **UI**: Renku 2.0: add user pages, update group pages, update project information panel, update the search page (`#3198 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3198>`__)
-- **Search Services**: Search results return details about the creator
-  and project namespace, where before only the respective ids were
-  included
+- **UI**: Renku 2.0: add user pages, update group pages, update project information panel,
+  update the search page (`#3198 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3198>`__)
+- **Search Services**: Search results return details about the creator and project namespace,
+  where before only the respective ids were included
 
 Internal Changes
 ~~~~~~~~~~~~~~~~
 
 **🌟 New Features**
 
-- **Search Services**: The search query is now accepted at
-  `/api/search/query` url path and a `/api/search/version` endpoint
-  has been added
+- **Search Services**: The search query is now accepted at `/api/search/query` url path
+  and a `/api/search/version` endpoint has been added
 - **Data Services**: API changes required to provide user and group pages in Renku 2.0
 
 Individual Components
