@@ -18,8 +18,8 @@ Internal Changes
 
 **🌟 New Features**
 
-- **Search Services**: The search query is now accepted at `/api/search/query` url path
-  and a `/api/search/version` endpoint has been added
+- **Search Services**: The search query is now accepted at ``/api/search/query`` url path
+  and a ``/api/search/version`` endpoint has been added
 - **Data Services**: API changes required to provide user and group pages in Renku 2.0
 
 Individual Components
