@@ -1,5 +1,103 @@
 .. _changelog:
 
+0.55.0
+------
+
+User-Facing Changes
+~~~~~~~~~~~~~~~~~~~
+
+**🌟 New Features**
+
+- **UI**: Renku 2.0: Add user pages that show all projects in the namespace (`#3198 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3198>`__)
+- **UI**: Renku 2.0: Extend group pages to show all projects in the namespace (`#3198 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3198>`__)
+
+**✨ Improvements**
+
+- **UI**: Renku 2.0: Provide clickable links between projects and user/group namespace pages on the project page and in search results (`#3198 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3198>`__)
+- **Search Services**: Renku 2.0: Show creator name and project namespace in search results,
+  where before only the respective ids were included (`#3198 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3198>`__)
+
+Internal Changes
+~~~~~~~~~~~~~~~~
+
+**Improvements**
+
+- **Search Services**: The search query is now accepted at ``/api/search/query`` url path
+  and a ``/api/search/version`` endpoint has been added
+- **Data Services**: Change API to provide user and group pages in Renku 2.0
+
+Individual Components
+~~~~~~~~~~~~~~~~~~~~~
+
+- `renku-data-services 0.17.0 <https://github.com/SwissDataScienceCenter/renku-data-services/releases/tag/v0.17.0>`_
+- `renku-search 0.4.0 <https://github.com/SwissDataScienceCenter/renku-search/releases/tag/v0.4.0>`_
+- `renku-ui 3.31.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.31.0>`_
+
+0.54.1
+------
+
+Renku ``0.54.1`` introduces a few bug fixes in the notebooks and data services components.
+
+User-Facing Changes
+~~~~~~~~~~~~~~~~~~~
+
+**🐞 Bug Fixes**
+
+- **Notebooks**: Patch the correct environment variables when a session is resumed after being hibernated
+- **Data Services**: Assign the correct project permissions to group members
+
+Individual components
+~~~~~~~~~~~~~~~~~~~~~~
+
+- `renku-data-services 0.15.1 <https://github.com/SwissDataScienceCenter/renku-data-services/releases/tag/v0.15.1>`__
+- `renku-notebooks 1.25.3 <https://github.com/SwissDataScienceCenter/renku-notebooks/releases/tag/1.25.3>`__
+
+
+0.54.0
+------
+
+User-Facing Changes
+~~~~~~~~~~~~~~~~~~~
+
+**✨ Improvements**
+
+- Test the cloud storage connection before persisting the configuration (`#3194 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3194>`_)
+- Prompt for cloud storage credentials on v2 session start (`#3203 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3203>`_)
+- Indicate repository permissions in Renku 2.0 (`#3136 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3136>`_)
+
+Internal Changes
+~~~~~~~~~~~~~~~~
+
+**🌟 New Features**
+
+- **Secrets**: Allow rotating the private key for secrets storage
+
+Individual Components
+~~~~~~~~~~~~~~~~~~~~~
+
+- `renku-data-services 0.15.0 <https://github.com/SwissDataScienceCenter/renku-data-services/releases/tag/v0.15.0>`__
+- `renku-notebooks 1.25.2 <https://github.com/SwissDataScienceCenter/renku-notebooks/releases/tag/1.25.2>`_
+- `renku-ui 3.29.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.29.0>`_
+
+
+0.53.1
+------
+
+Internal Changes
+~~~~~~~~~~~~~~~~
+
+**🐞 Bug Fixes**
+
+- **Search Services**: Set keycloak url into the allow list of JWT
+  issuer urls. This setting is now mandatory to the search-api
+  service.
+
+Individual Components
+~~~~~~~~~~~~~~~~~~~~~
+
+- `renku-search 0.3.0 <https://github.com/SwissDataScienceCenter/renku-search/releases/tag/v0.3.0>`_
+
+
 0.53.0
 ------
 

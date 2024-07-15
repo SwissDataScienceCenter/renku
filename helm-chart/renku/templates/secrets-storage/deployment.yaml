@@ -24,6 +24,7 @@ spec:
         release: {{ .Release.Name }}
       {{- with .Values.secretsStorage.podAnnotations }}
       annotations:
+        checksum/privateKey: {{ .Values.global.platformConfig | sha256sum }}
         {{- toYaml . | nindent 8 }}
       {{- end }}
     spec:
@@ -67,6 +68,8 @@ spec:
                   key: dataServiceKeycloakClientSecret
             - name: SECRETS_SERVICE_PRIVATE_KEY_PATH
               value: /secrets/privateKey/privateKey
+            - name: PREVIOUS_SECRETS_SERVICE_PRIVATE_KEY_PATH
+              value: /secrets/privateKey/previousPrivateKey
             {{- include "certificates.env.python" $ | nindent 12 }}
           livenessProbe:
             httpGet:
@@ -99,9 +102,6 @@ spec:
         - name: secret-service-private-key
           secret:
             secretName: {{ template "renku.fullname" . }}-secret-service-private-key
-            items:
-            - key: privateKey
-              path: privateKey
         {{- include "certificates.volumes" . | nindent 8 }}
     {{- with .Values.secretsStorage.nodeSelector }}
       nodeSelector:

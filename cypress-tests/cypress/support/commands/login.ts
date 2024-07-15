@@ -2,7 +2,7 @@ const renkuLogin = (credentials: { username: string; password: string }[]) => {
   cy.wrap(credentials, { log: false }).each((credential: {password: string, username: string}) => {
     cy.get("#username").type(credential.username);
     cy.get("#password").type(credential.password, { log: false });
-    cy.get("#kc-login").click().should("not.exist");
+    cy.get("#kc-login").click()
   })
   cy.url().then((url) => {
     const parsedUrl = new URL(url);
@@ -10,10 +10,7 @@ const renkuLogin = (credentials: { username: string; password: string }[]) => {
       parsedUrl.pathname.includes("gitlab") ||
       parsedUrl.host.includes("gitlab")
     ) {
-      cy.get(".doorkeeper-authorize >>>> .btn-danger")
-        .should("be.visible")
-        .should("be.enabled")
-        .click();
+      cy.contains("button", "Authorize").should("be.visible").click();
     }
   });
 };

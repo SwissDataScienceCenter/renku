@@ -265,7 +265,8 @@ describe("Basic public project functionality", () => {
         cy.get("#endpoint")
           .should("have.value", "")
           .type("http://s3.amazonaws.com");
-        cy.getDataCy("cloud-storage-edit-next-button")
+        cy.getDataCy("test-cloud-storage-button").should("be.visible").click();
+        cy.getDataCy("add-cloud-storage-continue-button")
           .should("be.visible")
           .click();
 
@@ -282,7 +283,7 @@ describe("Basic public project functionality", () => {
           .click();
 
         cy.getDataCy("cloud-storage-edit-body").contains(
-          "storage data_s3 has been succesfully added"
+          "storage data_s3 has been successfully added"
         );
         cy.getDataCy("cloud-storage-edit-close-button")
           .should("be.visible")
