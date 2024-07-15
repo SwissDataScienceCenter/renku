@@ -43,6 +43,9 @@ spec:
             - name: http
               containerPort: 8000
               protocol: TCP
+          envFrom:
+            - secretRef:
+                name: {{ template "renku.notebooks.fullname" . }}
           env:
             - name: VERSION
               value: {{ .Values.dataService.image.tag | quote }}
