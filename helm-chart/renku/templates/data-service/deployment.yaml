@@ -73,10 +73,6 @@ spec:
               value: /secrets/encryptionKey/encryptionKey
             - name: SECRETS_SERVICE_PUBLIC_KEY_PATH
               value: /secrets/publicKey/publicKey
-            - name: SERVER_DEFAULTS
-              value: /etc/renku-data-service/server_options/server_defaults.json
-            - name: SERVER_OPTIONS
-              value: /etc/renku-data-service/server_options/server_options.json
             - name: K8S_NAMESPACE
               value: {{ .Release.Namespace | quote }}
             - name: GITLAB_URL
@@ -119,11 +115,16 @@ spec:
               value: {{ .Values.dataService.trustedProxies.proxiesCount | default "" | quote }}
             - name: REAL_IP_HEADER
               value: {{ .Values.dataService.trustedProxies.realIpHeader | default "" | quote }}
+            - name: KUBERNETES_NAMESPACE
+              valueFrom:
+                fieldRef:
+                  apiVersion: v1
+                  fieldPath: metadata.namespace
             {{- include "certificates.env.python" . | nindent 12 }}
             {{- include "certificates.env.grpc" . | nindent 12 }}
           volumeMounts:
             - name: server-options
-              mountPath: /etc/renku-data-service/server_options
+              mountPath: /etc/renku-notebooks/server_options
             - mountPath: "/secrets/encryptionKey"
               name: encryption-key
               readOnly: true
