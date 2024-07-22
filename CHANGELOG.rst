@@ -16,6 +16,7 @@ User-Facing Changes
 - **UI**: Renku 2.0: Provide clickable links between projects and user/group namespace pages on the project page and in search results (`#3198 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3198>`__)
 - **Search Services**: Renku 2.0: Show creator name and project namespace in search results,
   where before only the respective ids were included (`#3198 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3198>`__)
+- **UI**: Renku 2.0: Support setting a default resource class for a session launcher in Renku 2.0  (`#3196 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3196>`__)
 
 Internal Changes
 ~~~~~~~~~~~~~~~~
@@ -227,7 +228,7 @@ session on the Start with Options page. More details on this feature can be foun
 [documentation](https://renku.readthedocs.io/en/stable/topic-guides/secrets/secrets.html).
 
 Administrators can customize the culling times (the length of time before an idle session is paused
-or a paused session is deleted) for different resource pools. 
+or a paused session is deleted) for different resource pools.
 
 This release also contains new features related to Renku 2.0. However, Renku 2.0 is still
 in early development and is not yet accessible to users. For more information, see our
