@@ -3,6 +3,10 @@
 0.55.0
 ------
 
+Renku ``0.55.0`` introduces user and group pages in Renku 2.0, where you can see all projects owned
+by those people. In addition, you can now fully take advantage of RenkuLab resources in Renku 2.0 by
+setting a resource class for your session launchers.
+
 User-Facing Changes
 ~~~~~~~~~~~~~~~~~~~
 
