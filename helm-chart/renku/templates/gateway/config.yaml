@@ -48,7 +48,7 @@ data:
           default: true
           issuer: {{ printf "%s/realms/%s" (include "renku.keycloakUrl" . | trimSuffix "/") (include "renku.keycloak.realm" .) }}
           clientID: renku
-          scopes: ["profile", "email", "openid", "offline_access"]
+          scopes: ["profile", "email", "openid", "microprofile-jwt"]
           callbackURI:  {{ printf "%s/api/auth/callback" (include "renku.baseUrl" .) }}
           usePKCE: false
         renkuCli:
