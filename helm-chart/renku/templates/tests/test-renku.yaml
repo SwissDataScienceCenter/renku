@@ -18,7 +18,7 @@ spec:
       - name: RENKU_TEST_URL
         value: '{{ template "renku.http" . }}://{{ .Values.global.renku.domain }}'
       - name: GITLAB_TEST_URL
-        value: {{ .Values.gateway.gitlabUrl | default (printf "%s://%s/gitlab" (include "renku.http" .) .Values.global.renku.domain) | quote }}
+        value: {{ .Values.global.gitlab.url | quote }}
       - name: RENKU_TEST_EMAIL
         value: '{{ .Values.tests.parameters.email }}'
       - name: RENKU_TEST_USERNAME

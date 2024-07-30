@@ -86,6 +86,8 @@ spec:
                   key: oidcClientSecret
             - name: RENKU_KC_CLIENT_PUBLIC
               value: "false"
+            - name: RENKU_KC_CLIENT_OAUTH_FLOW
+              value: "authorization_code"
             - name: CLI_KC_CLIENT_ID
               value: renku-cli
             - name: CLI_KC_CLIENT_SECRET
@@ -97,6 +99,8 @@ spec:
               value: "true"
             - name: CLI_KC_CLIENT_ATTRIBUTES
               value: '{"access.token.lifespan": "86400", "oauth2.device.authorization.grant.enabled": true, "oauth2.device.polling.interval": "5"}'
+            - name: CLI_KC_CLIENT_OAUTH_FLOW
+              value: "device"
             - name: UI_KC_CLIENT_ID
               value: "renku-ui"
             - name: UI_KC_CLIENT_SECRET
@@ -106,6 +110,8 @@ spec:
                   key: uiserverClientSecret
             - name: UI_KC_CLIENT_PUBLIC
               value: "false"
+            - name: UI_KC_CLIENT_OAUTH_FLOW
+              value: "authorization_code"
             - name: NOTEBOOKS_KC_CLIENT_ID
               value: {{ .Values.notebooks.oidc.clientId | default "renku-jupyterserver" | quote }}
             - name: NOTEBOOKS_KC_CLIENT_SECRET
@@ -115,12 +121,29 @@ spec:
                   key: notebooksClientSecret
             - name: NOTEBOOKS_KC_CLIENT_PUBLIC
               value: "false"
+            - name: NOTEBOOKS_KC_CLIENT_OAUTH_FLOW
+              value: "authorization_code"
             - name: SWAGGER_KC_CLIENT_ID
               value: swagger
             - name: SWAGGER_KC_CLIENT_PUBLIC
               value: "true"
+            - name: SWAGGER_KC_CLIENT_OAUTH_FLOW
+              value: "authorization_code"
             - name: SWAGGER_KC_CLIENT_ATTRIBUTES
               value: '{"pkce.code.challenge.method": "S256"}'
+            - name: DATASERVICE_KC_CLIENT_ID
+              value: {{ include "renku.dataService.keycloak.clientId" . | quote }}
+            - name: DATASERVICE_KC_CLIENT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "renku.fullname" . }}
+                  key: dataServiceKeycloakClientSecret
+            - name: DATASERVICE_KC_CLIENT_PUBLIC
+              value: "false"
+            - name: DATASERVICE_KC_CLIENT_OAUTH_FLOW
+              value: "client_credentials"
+            - name: "DATASERVICE_KC_CLIENT_SERVICE_ACCOUNT_ROLES"
+              value: '["view-users", "query-users", "view-events", "view-realm"]'
             - name: PYTHONUNBUFFERED
               value: "0"
             {{- include "certificates.env.python" . | nindent 12 }}

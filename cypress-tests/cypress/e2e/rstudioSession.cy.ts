@@ -5,17 +5,17 @@ import {
   ProjectIdentifier,
   generatorProjectName,
 } from "../support/commands/projects";
-import { validateLogin } from "../support/commands/general";
+import { validateLogin, getRandomString } from "../support/commands/general";
 
 const username = Cypress.env("TEST_USERNAME");
 
 const projectTestConfig = {
-  shouldCreateProject: true,
+  projectAlreadyExists: false,
   projectName: generatorProjectName("rstudioSession"),
 };
 
 // ? Uncomment to debug using an existing project
-// projectTestConfig.shouldCreateProject = false;
+// projectTestConfig.projectAlreadyExists = true;
 // projectTestConfig.projectName = "cypress-publicproject-4ed4fb12c5e6";
 
 const projectIdentifier: ProjectIdentifier = {
@@ -23,38 +23,24 @@ const projectIdentifier: ProjectIdentifier = {
   namespace: username,
 };
 
+const sessionId = ["rstudioSession", getRandomString()];
+
 describe("Basic rstudio functionality", () => {
-  before(() => {
-    // Use a session to preserve login data
-    cy.session(
-      "login-rstudioSession",
-      () => {
-        cy.robustLogin();
-      },
-      validateLogin
-    );
-
-    // Create a project
-    if (projectTestConfig.shouldCreateProject) {
-      cy.visit("/");
-      cy.createProject({ templateName: "R (", ...projectIdentifier });
-    }
-  });
-
   after(() => {
-    if (projectTestConfig.shouldCreateProject)
+    if (!projectTestConfig.projectAlreadyExists)
       cy.deleteProjectFromAPI(projectIdentifier);
   });
 
   beforeEach(() => {
     // Restore the session
     cy.session(
-      "login-rstudioSession",
+      sessionId,
       () => {
         cy.robustLogin();
       },
       validateLogin
     );
+    cy.createProjectIfMissing({ templateName: "R (", ...projectIdentifier });
     cy.stopAllSessionsForProject(projectIdentifier);
   });
 
@@ -63,6 +49,7 @@ describe("Basic rstudio functionality", () => {
     { defaultCommandTimeout: TIMEOUTS.long },
     () => {
       // Waits for the image to build and launches a session
+      // Note: rstudio image may take a while to build
       cy.startSession(projectIdentifier);
 
       // Opens the session in an iframe

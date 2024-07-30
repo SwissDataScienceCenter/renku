@@ -22,6 +22,7 @@ spec:
       labels:
         app: renku-data-service
         release: {{ .Release.Name }}
+        {{ .Values.global.redis.clientLabel | toYaml | nindent 8 }}
       {{- with .Values.dataService.podAnnotations }}
       annotations:
         {{- toYaml . | nindent 8 }}
@@ -58,6 +59,17 @@ spec:
               value: {{ (printf "%s://%s/auth/" (include "renku.http" .) .Values.global.renku.domain) | quote }}
             - name: KEYCLOAK_TOKEN_SIGNATURE_ALGS
               value: "RS256"
+            - name: KEYCLOAK_CLIENT_ID
+              value: {{ include "renku.dataService.keycloak.clientId" . | quote }}
+            - name: KEYCLOAK_CLIENT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "renku.fullname" . }}
+                  key: dataServiceKeycloakClientSecret
+            - name: ENCRYPTION_KEY_PATH
+              value: /secrets/encryptionKey/encryptionKey
+            - name: SECRETS_SERVICE_PUBLIC_KEY_PATH
+              value: /secrets/publicKey/publicKey
             - name: SERVER_DEFAULTS
               value: /etc/renku-data-service/server_options/server_defaults.json
             - name: SERVER_OPTIONS
@@ -68,10 +80,53 @@ spec:
               value: {{ .Values.global.gitlab.url | quote }}
             - name: MAX_PINNED_PROJECTS
               value: {{ .Values.dataService.maxPinnedProjects | quote }}
-            {{- include "certificates.env.python" $ | nindent 12 }}
+            - name: REDIS_HOST
+              value: {{ .Values.global.redis.host | quote }}
+            - name: REDIS_PORT
+              value: {{ .Values.global.redis.port | quote }}
+            - name: REDIS_DATABASE
+              value: {{ .Values.global.redis.dbIndex.events| quote }}
+            - name: REDIS_IS_SENTINEL
+              value: {{ .Values.global.redis.sentinel.enabled | quote }}
+            - name: REDIS_MASTER_SET
+              value: {{ .Values.global.redis.sentinel.masterSet | quote }}
+            - name: REDIS_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.global.redis.existingSecret }}
+                  key: {{ .Values.global.redis.existingSecretPasswordKey }}
+            - name: SENTRY_ENABLED
+              value: {{ .Values.dataService.sentry.enabled | quote }}
+            - name: SENTRY_DSN
+              value: {{ .Values.dataService.sentry.dsn | quote }}
+            - name: SENTRY_ENVIRONMENT
+              value: {{ .Values.dataService.sentry.environment | quote }}
+            - name: SENTRY_SAMPLE_RATE
+              value: {{ .Values.dataService.sentry.sampleRate | quote }}
+            - name: AUTHZ_DB_HOST
+              value: {{ include "renku.fullname" . }}-authz
+            - name: AUTHZ_DB_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "renku.fullname" . }}-authz
+                  key: SPICEDB_GRPC_PRESHARED_KEY
+            - name: AUTHZ_DB_GRPC_PORT
+              value: "50051"
+            - name: PROXIES_COUNT
+              value: {{ .Values.dataService.trustedProxies.proxiesCount | default "" | quote }}
+            - name: REAL_IP_HEADER
+              value: {{ .Values.dataService.trustedProxies.realIpHeader | default "" | quote }}
+            {{- include "certificates.env.python" . | nindent 12 }}
+            {{- include "certificates.env.grpc" . | nindent 12 }}
           volumeMounts:
             - name: server-options
               mountPath: /etc/renku-data-service/server_options
+            - mountPath: "/secrets/encryptionKey"
+              name: encryption-key
+              readOnly: true
+            - mountPath: "/secrets/publicKey"
+              name: secret-service-public-key
+              readOnly: true
             {{- include "certificates.volumeMounts.system" . | nindent 12 }}
           livenessProbe:
             httpGet:
@@ -111,5 +166,17 @@ spec:
         - name: server-options
           configMap:
             name: {{ template "renku.fullname" . }}-server-options
+        - name: encryption-key
+          secret:
+            secretName: {{ template "renku.fullname" . }}-secrets-storage
+            items:
+            - key: encryptionKey
+              path: encryptionKey
+        - name: secret-service-public-key
+          secret:
+            secretName: {{ template "renku.fullname" . }}-secret-service-public-key
+            items:
+            - key: publicKey
+              path: publicKey
         {{- include "certificates.volumes" . | nindent 8 }}
       serviceAccountName: {{ template "renku.fullname" . }}-data-service

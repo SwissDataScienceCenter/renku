@@ -19,6 +19,8 @@ charts:
       - helm-chart
       - acceptance-tests
       - scripts/init-realm
+      - scripts/init-db
+      - scripts/platform-init
     images:
       tests:
         buildArgs:
@@ -42,3 +44,9 @@ charts:
         valuesPath: initDb.image
         paths:
           - scripts/init-db
+      platform-init:
+        contextPath: scripts/platform-init
+        dockerfilePath: scripts/platform-init/Dockerfile
+        valuesPath: platformInit.image
+        paths:
+          - scripts/platform-init

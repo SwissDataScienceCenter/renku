@@ -5,6 +5,11 @@
 ## Global variables
 ## Shared values/secrets
 global:
+  ## YAML string that contains all application level Renku configuration options.
+  platformConfig: |
+  # secretServicePrivateKey: ... RSA Private Key in PKCS8 PEM format (`ssh-keygen -m PKCS8 -t rsa -b 4096`)
+  # secretServicePreviousPrivateKey: ... Previous Private key in PEM format, only set this when rotating keys
+  # dataServiceEncryptionKey: 32 byte random string
   gitlab:
     ## Name of the postgres database to be used by Gitlab
     postgresDatabase: gitlabhq_production
@@ -15,11 +20,12 @@ global:
     ## setting this value or by randomly generating it because it was omitted below.
     postgresPassword:
       value:
-    ## URL prefix for gitlab
-    # urlPrefix: /
-    ## Full URL for gitlab
-    ## NOTE: Many services have this setting internally, they should switch to using the global setting instead
+    ## URL for gitlab deployment
     # url:
+    ## Set the default image registry
+    # registry:
+    #   host:
+
     ## Secret for the gitlab keycloak client
     clientSecret: # use `openssl rand -hex 32`
   keycloak:
@@ -62,7 +68,7 @@ global:
         fullnameOverride: ""
         image:
           repository: renku/renku-core
-          tag: "v2.9.1"
+          tag: "v2.9.2"
           pullPolicy: IfNotPresent
   uiserver:
     ## The client secret for the renku-ui client application registered in keycloak.
@@ -79,6 +85,24 @@ global:
     ## for a new project based on its own version.
     ## NOTE should only be set for CI deployments and development purposes.
     cli_version:
+  ## Events related values definitions
+  events:
+    streams:
+      projectCreated: "project.created"
+      projectUpdated: "project.updated"
+      projectRemoved: "project.removed"
+      projectAuthAdded: "projectAuth.added"
+      projectAuthUpdated: "projectAuth.updated"
+      projectAuthRemoved: "projectAuth.removed"
+      userAdded: "user.added"
+      userUpdated: "user.updated"
+      userRemoved: "user.removed"
+      groupAdded: "group.added"
+      groupUpdated: "group.updated"
+      groupRemoved: "group.removed"
+      groupMemberAdded: "groupMember.added"
+      groupMemberUpdated: "groupMember.updated"
+      groupMemberRemoved: "groupMember.removed"
   ## Note that the graph will not turned on by default until renku 0.4.0
   graph:
     dbEventLog:
@@ -129,6 +153,10 @@ global:
   ## postgresql-password key containing the password for the posgres user.
   # existingSecret:
 
+  # Globally available solr (TBD)
+  solr:
+    port: 8983
+
   # Connection details for a globally used redis instance for the
   # entire platform. For specifying an actual instance as part of
   # this chart, check out the non-global "redis" section.
@@ -138,6 +166,7 @@ global:
       gateway: "0"
       coreService: "1"
       uiServer: "2"
+      events: "3"
     # Note: these two entries MUST match the ones in the top level redis section.
     existingSecret: redis-secret
     existingSecretPasswordKey: redis-password
@@ -295,7 +324,7 @@ keycloakx:
     enabled: false
   extraInitContainers: |
     - name: theme-provider
-      image: renku/keycloak-theme:4.1.3
+      image: renku/keycloak-theme:4.1.5
       imagePullPolicy: IfNotPresent
       command:
         - sh
@@ -334,36 +363,43 @@ keycloakx:
 # For production deployments check out
 # https://github.com/bitnami/charts/blob/master/bitnami/postgresql/values-production.yaml
 postgresql:
-  # If an external Postgres database is defined in global.externalServices.postgresql,
-  # postgresql.enabled should be false, and global.externalServices.postgresql.enabled should be true.
-  # By default, Renku-bundled Postgres is enabled.
-  enabled: true
-  ## We use the defaults here.
-  postgresqlDatabase: postgres
-  postgresqlUsername: postgres
-  ## The admin password should be set explicitly, otherwise a random string will be created.
-  ## Alternatively an existing secret can be provided. Note that postgres
-  ## DOES NOT tolerate a change of the admin password when upgrading.
-  # postgresqlPassword:
+  ## We use the defaults here. Note that these basic configs could also be set as
+  ## global values such that sub-charts can access them too.
 
-  ## Use an existing secret instead of creating a new one. It must have a
-  ## postgresql-password key containing the password for the posgres user.
-  # existingSecret:
-  image:
-    repository: bitnami/postgresql
-    tag: 12.8.0
-  persistence:
-    ## We use the defaults here, but they will probably be modified for most deployments.
-    enabled: true
-    size: 8Gi
-    ## Provide an existing PersistentVolumeClaim to be reused.
-    # existingClaim:
-  # Consider replication. These are the defaults for the basic settings.
-  replication:
-    enabled: false
-    user: repl_user
-    password: repl_password # generate a random password `openssl rand -hex 32`
-    slaveReplicas: 1
+  auth:
+    username: postgres
+    database: postgres
+
+    ## The admin password should be set explicitly, otherwise a random string will be
+    ## created. Alternatively an existing secret can be provided. Note that postgres
+    ## DOES NOT tolerate a change of the admin password when upgrading.
+    # postgresqlPassword:
+
+    ## Use an existing secret instead of creating a new one. It must have a
+    ## postgresql-password key containing the password for the postgres user.
+    # existingSecret:
+
+    # Consider replication. These are the defaults for the basic settings.
+    # replicationUsername: repl_user
+    # replicationPassword: repl_password # generate a random password `openssl rand -hex 32`
+
+  # image:
+  # repository: bitnami/postgresql
+  # tag:
+
+  primary:
+    persistence:
+      ## We use the defaults here, but they will probably be modified for most deployments.
+      enabled: true
+      size: 8Gi
+      ## Provide an existing PersistentVolumeClaim to be reused.
+      # existingClaim:
+
+    # Consider replication. These are the defaults for the basic settings.
+    readReplicas:
+      enabled: false
+      replicaCount: 1
+
 redis:
   # If set to true, a HA redis will be included in the Renku release.
   install: true
@@ -464,6 +500,31 @@ redis:
       prometheus.io/port: "9121"
   # default - making explicit
   sysctl:
+    enabled: false
+solr:
+  enabled: true
+  cloudEnabled: false
+  collectionReplicas: 0
+  replicaCount: 1
+  coreNames:
+    - renku-search
+  javaMem: "-Xmx512M"
+  networkPolicy:
+    allowExternal: false
+    extraIngress:
+      - ports:
+          - port: 8983
+        from:
+          - podSelector:
+              matchLabels:
+                app: search-api
+          - podSelector:
+              matchLabels:
+                app: search-provision
+  persistence:
+    enabled: true
+    size: 8Gi
+  zookeeper:
     enabled: false
 ## Gitlab configuration
 gitlab:
@@ -608,12 +669,10 @@ gitlab:
 ## Configuration for the UI service
 ui:
   client:
-    ## The URL for the client
-    url:
     replicaCount: 1
     image:
       repository: renku/renku-ui
-      tag: "3.19.0"
+      tag: "3.29.0"
       pullPolicy: IfNotPresent
       ## Optionally specify an array of imagePullSecrets.
       ## Secrets must be manually created in the namespace.
@@ -670,10 +729,10 @@ ui:
       custom: true
       repositories:
         - url: https://github.com/SwissDataScienceCenter/renku-project-template
-          ref: 0.7.1
+          ref: 0.7.2
           name: Renku
         - url: https://github.com/SwissDataScienceCenter/contributed-project-templates
-          ref: 0.6.0
+          ref: 0.7.0
           name: Community
     # This defines the threshold for automatically showing a preview when browsing projects' files.
     # Above the soft limit, the user receives a warning. Above the hard limit, no preview is available.
@@ -692,16 +751,16 @@ ui:
       dsn: ""
       environment: ""
       sampleRate: 0 # number between 0 and 1. (e.g., to send 20% of transactions, set 0.2.)
-    # If you want to enable the privacy page, please create also a configMap and set its name in the
-    # privacy.page.configMapName value. As a reference, you can use the sample configMap generated when
-    # enabling the feature.
     privacy:
-      enabled: false
+      # If you want to enable the Privacy Policy and Terms of Service pages, you shoud add your custom content
+      # in privacyPolicyContent and termsContent. Markdown is supported.
+      # As a reference, you can use the "ui-client-configmap" configMap content in the "sample" sections.
       page:
         enabled: false
-        #configMapName: privacy-page
-        #configMapKey: privacy_statement
+        #privacyPolicyContent: ""
+        #termsContent: ""
       banner:
+        enabled: false
         content: |
           This website requires cookies in order to ensure basic functionality. By clicking
           or navigating the site, you consent to the use of cookies in accordance with
@@ -760,6 +819,36 @@ ui:
       # overrides:
       #   9: "/"
       #   10: "/"
+    # Configuration to display the "email us" message on the session class selector.
+    sessionClassEmailUs:
+      # Set this to "true" to enable the "Need more compute resources? Email us!" message
+      # on the session class selector.
+      enabled: false
+      # Email template which opens when the user clicks "Email us!".
+      # Blank fields will not be populated
+      email:
+        to: ""
+        subject: "Request to access more compute resources in RenkuLab"
+        # Note that "{{full_name}}" will be replaced by the user's name in the email's body.
+        body: |
+          Hello Renku team,
+
+          I would like access to more compute resources on RenkuLab. Here is some information about me and my project:
+
+          I am affiliated with an educational institution: (yes or no)
+          If yes: <enter here>
+
+          The amount of resources I need for my project is:
+          <enter here> CPU
+          <enter here> RAM
+          <enter here> GPU
+
+          Please send us the link to your project(s) on RenkuLab:
+          <enter here>
+
+          Best regards,
+
+          {{full_name}}
     canary:
       enabled: false
       image:
@@ -772,7 +861,7 @@ ui:
     keepCookies: []
     image:
       repository: renku/renku-ui-server
-      tag: "3.19.0"
+      tag: "3.29.0"
       pullPolicy: IfNotPresent
     imagePullSecrets: []
     nameOverride: ""
@@ -854,13 +943,14 @@ dlf-chart:
     enabled: false
   dataset-operator-chart:
     enabled: true
-csi-rclone: {}
+csi-rclone:
+  {}
   # This section is only relevant if you are installing csi-rclone as part of Renku
   ## Name of the csi storage class to use for RClone/Cloudstorage. Should be unique per cluster.
-  # storageClassName: csi-rclone 
+  # storageClassName: csi-rclone
   # csiNodepluginRclone:
   #   nodeSelector: {}
-  # Set tolerations if you have taints on your user session nodes. The csi has to run on every node 
+  # Set tolerations if you have taints on your user session nodes. The csi has to run on every node
   # where it is used.
   #   tolerations: []
   #   affinity: {}
@@ -881,12 +971,7 @@ notebooks:
     ## immediate eviction of the user session. EmptyDirs are used when the enabled flag
     ## above is set to false.
     useEmptyDirSizeLimit: false
-  gitlab:
-    ## specify the GitLab instance URL
-    url:
-    registry:
-      ## Set the default image registry
-      host:
+
   ## For sending exceptions to Sentry, specify the DSN to use
   sentry:
     enabled: false
@@ -916,7 +1001,7 @@ notebooks:
     targetCPUUtilizationPercentage: 50
   image:
     repository: renku/renku-notebooks
-    tag: "1.21.0"
+    tag: "1.25.3"
     pullPolicy: IfNotPresent
     ## Optionally specify an array of imagePullSecrets.
     ## Secrets must be manually created in the namespace.
@@ -1034,15 +1119,15 @@ notebooks:
   gitRpcServer:
     image:
       name: renku/git-rpc-server
-      tag: "1.21.0"
+      tag: "1.25.3"
   gitHttpsProxy:
     image:
       name: renku/git-https-proxy
-      tag: "1.21.0"
+      tag: "1.25.3"
   gitClone:
     image:
       name: renku/git-clone
-      tag: "1.21.0"
+      tag: "1.25.3"
   service:
     type: ClusterIP
     port: 80
@@ -1095,12 +1180,12 @@ notebooks:
     sessionTypes: ["registered"]
     image:
       repository: renku/renku-notebooks-tests
-      tag: "1.21.0"
+      tag: "1.25.3"
       pullPolicy: IfNotPresent
   k8sWatcher:
     image:
       repository: renku/k8s-watcher
-      tag: "1.21.0"
+      tag: "1.25.3"
       pullPolicy: IfNotPresent
     resources: {}
     replicaCount: 1
@@ -1109,11 +1194,15 @@ notebooks:
       targetCPUUtilizationPercentage: 50
       minReplicas: 2
       maxReplicas: 5
+  secretsMount:
+    image:
+      repository: renku/secrets-mount
+      tag: "1.25.3"
   ssh:
     enabled: false
     image:
       repository: renku/ssh-jump-host
-      tag: "1.21.0"
+      tag: "1.25.3"
       pullPolicy: IfNotPresent
     resources: {}
     replicaCount: 1
@@ -1274,12 +1363,41 @@ jena:
   additionalInitContainerScript: "find /fuseki -name tdb.lock -type f -delete && find /fuseki/configuration -name *.ttl -type f -empty -delete && echo clean-up done"
   test:
     enabled: false
+## Configuration for renku-search services
+search:
+  searchApi:
+    replicas: 1
+    image:
+      repository: renku/search-api
+      tag: "0.3.0"
+      pullPolicy: IfNotPresent
+    service:
+      type: ClusterIP
+      port: 80
+    resources:
+      requests:
+        memory: 256Mi
+    jvmXmx: 256M
+  searchProvision:
+    replicas: 1
+    image:
+      repository: renku/search-provision
+      tag: "0.3.0"
+      pullPolicy: IfNotPresent
+    service:
+      type: ClusterIP
+      port: 8081
+    resources:
+      requests:
+        memory: 256Mi
+    jvmXmx: 256M
+## Configuration for renku-graph services
 graph:
   webhookService:
     aesEncryptionKey: # A 8, 16 or 32 bytes string used for AES encryption of the project tokens
     image:
       repository: renku/webhook-service
-      tag: "2.49.1"
+      tag: "2.50.0"
       pullPolicy: IfNotPresent
     service:
       type: ClusterIP
@@ -1295,7 +1413,7 @@ graph:
     aesEncryptionKey: # A 8, 16 or 32 bytes string used for AES encryption of the project tokens
     image:
       repository: renku/token-repository
-      tag: "2.49.1"
+      tag: "2.50.0"
       pullPolicy: IfNotPresent
     service:
       type: ClusterIP
@@ -1316,7 +1434,7 @@ graph:
     replicas: 1
     image:
       repository: renku/triples-generator
-      tag: "2.49.1"
+      tag: "2.50.0"
       pullPolicy: IfNotPresent
     service:
       type: ClusterIP
@@ -1338,7 +1456,7 @@ graph:
     replicas: 1
     image:
       repository: renku/knowledge-graph
-      tag: "2.49.1"
+      tag: "2.50.0"
       pullPolicy: IfNotPresent
     service:
       type: ClusterIP
@@ -1357,7 +1475,7 @@ graph:
   eventLog:
     image:
       repository: renku/event-log
-      tag: "2.49.1"
+      tag: "2.50.0"
       pullPolicy: IfNotPresent
     service:
       type: ClusterIP
@@ -1372,7 +1490,7 @@ graph:
   commitEventService:
     image:
       repository: renku/commit-event-service
-      tag: "2.49.1"
+      tag: "2.50.0"
       pullPolicy: IfNotPresent
     service:
       type: ClusterIP
@@ -1455,14 +1573,33 @@ initDb:
   image:
     repository: renku/init-db
     tag: "latest"
+## The image used for general platform initialization
+platformInit:
+  image:
+    repository: renku/platform-init
+    tag: "latest"
 dataService:
   image:
     repository: renku/renku-data-service
-    tag: "0.4.0"
+    tag: "0.16.1"
     pullPolicy: IfNotPresent
+  backgroundJobs:
+    events:
+      resources: {}
+    image:
+      repository: renku/data-service-background-jobs
+      tag: "0.16.1"
+      pullPolicy: IfNotPresent
+    total:
+      resources: {}
   service:
     type: ClusterIP
     port: 80
+  sentry:
+    enabled: false
+    dsn:
+    environment:
+    sampleRate: 0.1
   replicaCount: 2
   podAnnotations: {}
   resources: {}
@@ -1478,6 +1615,50 @@ dataService:
   affinity: {}
   # This defines the maximum number of pinned projects in user preferences
   maxPinnedProjects: 5
+  # Trusted proxies configuration
+  # See: https://sanic.dev/en/guide/advanced/proxy-headers.md
+  trustedProxies:
+    proxiesCount: 1
+    realIpHeader: x-real-ip
+
+authz:
+  replicaCount: 1
+  image:
+    repository: authzed/spicedb
+    pullPolicy: IfNotPresent
+    tag: "v1.30.0"
+  resources: {}
+  autoscaling:
+    enabled: false
+    minReplicas: 1
+    maxReplicas: 3
+    targetCPUUtilizationPercentage: 80
+    # targetMemoryUtilizationPercentage: 80
+  metrics:
+    enabled: true
+    addPrometheusAnnotations: true
+
+secretsStorage:
+  image:
+    repository: renku/secrets-storage
+    tag: "0.16.1"
+    pullPolicy: IfNotPresent
+  service:
+    type: ClusterIP
+    port: 80
+  replicaCount: 1
+  podAnnotations: {}
+  resources: {}
+  autoscaling:
+    enabled: false
+    minReplicas: 1
+    maxReplicas: 5
+    targetMemoryUtilizationPercentage: 75
+    targetCPUUtilizationPercentage: 75
+  updateStrategy: {}
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
 podSecurityContext: {}
 securityContext:
   runAsUser: 1000
@@ -1490,4 +1671,4 @@ affinity: {}
 versions:
   latest:
     image:
-      tag: v2.9.1
+      tag: v2.9.2
