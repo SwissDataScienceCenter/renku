@@ -3,6 +3,21 @@
 0.56.0
 ------
 
+User-Facing Changes
+~~~~~~~~~~~~~~~~~~~
+
+**✨ Improvements**
+
+- Revamp design for Renku 2.0 (`#3214 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3214>`__).
+
+**🐞 Bug Fixes**
+
+- Use standard HTML input fields for secret values (`#3233 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3233>`__).
+
+Individual Components
+~~~~~~~~~~~~~~~~~~~~~
+
+- `renku-ui 3.33.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.33.0>`_
 
 0.55.0
 ------
