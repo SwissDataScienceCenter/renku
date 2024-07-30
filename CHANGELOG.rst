@@ -1,5 +1,10 @@
 .. _changelog:
 
+0.56.0
+------
+
+
+
 0.55.0
 ------
 
@@ -39,6 +44,7 @@ Individual Components
 - `renku-ui 3.30.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.30.0>`_
 - `renku-ui 3.31.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.31.0>`_
 - `renku-ui 3.32.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.32.0>`_
+
 
 0.54.2
 ------
