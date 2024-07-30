@@ -60,7 +60,7 @@ data:
           usePKCE: false
         gitlab:
           default: true 
-          issuer: {{ template "renku.gitlabUrl" . }}
+          issuer: {{ .Values.global.gitlab.url | quote }}
           clientID: {{ .Values.gateway.gitlabClientId | default .Values.global.gateway.gitlabClientId | quote }}
           scopes: ["openid", "api", "read_user", "read_repository"] 
           callbackURI: {{ printf "%s/api/auth/callback" (include "renku.baseUrl" .) }}
