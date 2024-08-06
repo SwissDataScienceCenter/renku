@@ -1,5 +1,26 @@
 .. _changelog:
 
+0.56.0
+------
+
+Renku ``0.56.0`` upgrades Amalthea to version 0.12.0 which allows it to run on Kubernetes version 1.29.
+
+Internal Changes
+~~~~~~~~~~~~~~~~
+
+**Improvements**
+
+- * **Amalthea**: Sessions can now run correctly on Kubernetes version 1.29.
+
+**🐞 Bug Fixes**
+
+- * **Amalthea**: Fix the repository for the scheduler image in the Amalthea Helm chart.
+
+Individual Components
+~~~~~~~~~~~~~~~~~~~~~
+
+- `amalthea 0.12.0 <https://github.com/SwissDataScienceCenter/amalthea/releases/tag/0.12.0>`_
+
 0.55.0
 ------
 
