@@ -3,7 +3,18 @@
 0.56.0
 ------
 
-Renku ``0.56.0`` upgrades Amalthea to version 0.12.0 which allows it to run on Kubernetes version 1.29.
+Renku ``0.56.0`` adds new features and improvements to several components.
+
+User-Facing Changes
+~~~~~~~~~~~~~~~~~~~
+
+**✨ Improvements**
+
+- Revamp design for Renku 2.0 (`#3214 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3214>`__).
+
+**🐞 Bug Fixes**
+
+- Use standard HTML input fields for secret values (`#3233 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3233>`__).
 
 Internal Changes
 ~~~~~~~~~~~~~~~~
@@ -19,7 +30,8 @@ Internal Changes
 Individual Components
 ~~~~~~~~~~~~~~~~~~~~~
 
-- `amalthea 0.12.0 <https://github.com/SwissDataScienceCenter/amalthea/releases/tag/0.12.0>`_
+- `amalthea 0.12.0 <https://github.com/SwissDataScienceCenter/amalthea/releases/tag/0.12.0
+- `renku-ui 3.33.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.33.0>`_
 
 0.55.0
 ------
