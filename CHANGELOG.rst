@@ -27,12 +27,14 @@ Internal Changes
 
 - * **Amalthea**: Fix the repository for the scheduler image in the Amalthea Helm chart.
 - * **Amalthea**: Properly load the namespace configuration when starting the operator.
+- * **Amalthea**: Fix the missing health check endpoint for the old operator.
 
 Individual Components
 ~~~~~~~~~~~~~~~~~~~~~
 
 - `amalthea 0.12.0 <https://github.com/SwissDataScienceCenter/amalthea/releases/tag/0.12.0>`_
 - `amalthea 0.12.1 <https://github.com/SwissDataScienceCenter/amalthea/releases/tag/0.12.1>`_
+- `amalthea 0.12.2 <https://github.com/SwissDataScienceCenter/amalthea/releases/tag/0.12.2>`_
 - `renku-ui 3.33.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.33.0>`_
 
 0.55.0
