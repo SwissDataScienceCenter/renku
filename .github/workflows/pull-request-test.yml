@@ -57,6 +57,7 @@ jobs:
       renku-notebooks: ${{ steps.deploy-comment.outputs.renku-notebooks}}
       renku-ui: ${{ steps.deploy-comment.outputs.renku-ui}}
       renku-data-services: ${{ steps.deploy-comment.outputs.renku-data-services}}
+      amalthea: ${{ steps.deploy-comment.outputs.amalthea}}
       test-enabled: ${{ steps.deploy-comment.outputs.test-enabled}}
       extra-values: ${{ steps.deploy-comment.outputs.extra-values}}
     steps:
@@ -97,6 +98,7 @@ jobs:
           renku_notebooks: "${{ needs.check-deploy.outputs.renku-notebooks }}"
           renku_ui: "${{ needs.check-deploy.outputs.renku-ui }}"
           renku_data_services: "${{ needs.check-deploy.outputs.renku-data-services }}"
+          amalthea: "${{ needs.check-deploy.outputs.amalthea }}"
           extra_values: "${{ needs.check-deploy.outputs.extra-values }}"
       - name: Check existing renkubot comment
         if: needs.check-deploy.outputs.pr-contains-string == 'true'

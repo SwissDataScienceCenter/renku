@@ -1,5 +1,51 @@
 .. _changelog:
 
+0.56.0
+------
+
+Renku ``0.56.0`` adds new features and improvements to several components.
+
+User-Facing Changes
+~~~~~~~~~~~~~~~~~~~
+
+**🌟 New Features**
+
+- **UI**: Update incidents and maintenance banner and summary (`#3220 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3220>`__)
+- **UI**: Add incidents and maintenance section in the admin panel (`#3220 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3220>`__)
+- **Data Services**: Add platform configuration
+
+**✨ Improvements**
+
+- Revamp design for Renku 2.0 (`#3214 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3214>`__).
+
+**🐞 Bug Fixes**
+
+- Use standard HTML input fields for secret values (`#3233 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3233>`__).
+
+Internal Changes
+~~~~~~~~~~~~~~~~
+
+**Improvements**
+
+- * **Amalthea**: Sessions can now run correctly on Kubernetes version 1.29.
+
+**🐞 Bug Fixes**
+
+- * **Amalthea**: Fix the repository for the scheduler image in the Amalthea Helm chart.
+- * **Amalthea**: Properly load the namespace configuration when starting the operator.
+- * **Amalthea**: Fix the missing health check endpoint for the old operator.
+
+Individual Components
+~~~~~~~~~~~~~~~~~~~~~
+
+- `renku-data-services 0.18.0 <https://github.com/SwissDataScienceCenter/renku-data-services/releases/tag/v0.18.0>`_
+- `renku-data-services 0.18.1 <https://github.com/SwissDataScienceCenter/renku-data-services/releases/tag/v0.18.1>`_
+- `renku-ui 3.32.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.32.0>`_
+- `renku-ui 3.33.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.33.0>`_
+- `amalthea 0.12.0 <https://github.com/SwissDataScienceCenter/amalthea/releases/tag/0.12.0>`_
+- `amalthea 0.12.1 <https://github.com/SwissDataScienceCenter/amalthea/releases/tag/0.12.1>`_
+- `amalthea 0.12.2 <https://github.com/SwissDataScienceCenter/amalthea/releases/tag/0.12.2>`_
+
 0.55.0
 ------
 
