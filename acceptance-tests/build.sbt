@@ -44,7 +44,7 @@ libraryDependencies += "org.scalatest"          %% "scalatest"                  
 libraryDependencies += "org.scalatestplus"      %% "selenium-4-1"                  % "3.2.12.1"   % Test
 libraryDependencies += "org.seleniumhq.selenium" % "selenium-http-jdk-client"      % "4.13.0"     % Test
 libraryDependencies += "org.seleniumhq.selenium" % "selenium-java"                 % "4.18.1"     % Test
-libraryDependencies += "org.slf4j"               % "slf4j-log4j12"                 % "2.0.13"     % Test
+libraryDependencies += "org.slf4j"               % "slf4j-log4j12"                 % "2.0.14"     % Test
 libraryDependencies += "org.typelevel"          %% "cats-effect"                   % "3.5.4"      % Test
 libraryDependencies += "org.typelevel"          %% "cats-effect-testing-scalatest" % "1.5.0"      % Test
 
