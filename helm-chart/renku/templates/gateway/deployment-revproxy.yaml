@@ -138,5 +138,5 @@ spec:
         {{- include "certificates.volumes" . | nindent 8 }}
         - name: public-config
           configMap:
-            name: {{ template "gateway.name" . }} 
+            name: {{ template "renku.fullname" . }}-gateway
 
