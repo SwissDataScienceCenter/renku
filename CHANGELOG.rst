@@ -1,5 +1,23 @@
 .. _changelog:
 
+0.56.1
+------
+
+Renku ``0.56.1`` fixes a bug where Amalthea would not start when the prometheus metrics or the 
+audit log export functionality is enabled.
+
+Internal Changes
+~~~~~~~~~~~~~~~~
+
+**🐞 Bug Fixes**
+
+- * **Amalthea**: Fix failing startup when prometheus metrics or audit log is enabled.
+
+Individual Components
+~~~~~~~~~~~~~~~~~~~~~
+
+- `amalthea 0.12.3 <https://github.com/SwissDataScienceCenter/amalthea/releases/tag/0.12.3>`_
+
 0.56.0
 ------
 
