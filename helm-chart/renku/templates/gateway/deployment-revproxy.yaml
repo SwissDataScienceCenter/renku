@@ -60,11 +60,6 @@ spec:
                 secretKeyRef:
                   name: {{ cat (include "renku.fullname" .) "-gateway" | nospace }}
                   key: gitlabClientSecret
-            - name: GATEWAY_LOGIN_PROVIDERS_RENKUCLI_CLIENTSECRET
-              valueFrom:
-                secretKeyRef:
-                  name: {{ cat (include "renku.fullname" .) "-gateway" | nospace }}
-                  key: cliClientSecret
             - name: GATEWAY_LOGIN_TOKENENCRYPTION_SECRETKEY
               valueFrom:
                 secretKeyRef:
@@ -76,16 +71,6 @@ spec:
                   name: {{ cat (include "renku.fullname" .) "-gateway" | nospace }}
                   key: cookieEncodingKey
             - name: GATEWAY_LOGIN_PROVIDERS_RENKU_COOKIEHASHKEY
-              valueFrom:
-                secretKeyRef:
-                  name: {{ cat (include "renku.fullname" .) "-gateway" | nospace }}
-                  key: cookieHashKey
-            - name: GATEWAY_LOGIN_PROVIDERS_RENKUCLI_COOKIEENCODINGKEY
-              valueFrom:
-                secretKeyRef:
-                  name: {{ cat (include "renku.fullname" .) "-gateway" | nospace }}
-                  key: cookieEncodingKey
-            - name: GATEWAY_LOGIN_PROVIDERS_RENKUCLI_COOKIEHASHKEY
               valueFrom:
                 secretKeyRef:
                   name: {{ cat (include "renku.fullname" .) "-gateway" | nospace }}
