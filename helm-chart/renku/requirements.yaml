@@ -24,6 +24,9 @@ dependencies:
   - name: amalthea
     repository: "https://swissdatasciencecenter.github.io/helm-charts/"
     version: "0.12.2"
+  - name: amalthea-sessions
+    repository: "https://swissdatasciencecenter.github.io/helm-charts/"
+    version: "0.0.9-new-operator-chart"
   - name: dlf-chart
     repository: "https://swissdatasciencecenter.github.io/datashim/"
     version: "0.3.9-renku-2"
