@@ -1,7 +1,125 @@
 .. _changelog:
 
+0.56.0
+------
+
+Renku ``0.56.0`` adds new features and improvements to several components.
+
+User-Facing Changes
+~~~~~~~~~~~~~~~~~~~
+
+**🌟 New Features**
+
+- **UI**: Update incidents and maintenance banner and summary (`#3220 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3220>`__)
+- **UI**: Add incidents and maintenance section in the admin panel (`#3220 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3220>`__)
+- **Data Services**: Add platform configuration
+
+**✨ Improvements**
+
+- Revamp design for Renku 2.0 (`#3214 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3214>`__).
+
+**🐞 Bug Fixes**
+
+- Use standard HTML input fields for secret values (`#3233 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3233>`__).
+
+Internal Changes
+~~~~~~~~~~~~~~~~
+
+**Improvements**
+
+- * **Amalthea**: Sessions can now run correctly on Kubernetes version 1.29.
+
+**🐞 Bug Fixes**
+
+- * **Amalthea**: Fix the repository for the scheduler image in the Amalthea Helm chart.
+- * **Amalthea**: Properly load the namespace configuration when starting the operator.
+- * **Amalthea**: Fix the missing health check endpoint for the old operator.
+
+Individual Components
+~~~~~~~~~~~~~~~~~~~~~
+
+- `renku-data-services 0.18.0 <https://github.com/SwissDataScienceCenter/renku-data-services/releases/tag/v0.18.0>`_
+- `renku-data-services 0.18.1 <https://github.com/SwissDataScienceCenter/renku-data-services/releases/tag/v0.18.1>`_
+- `renku-ui 3.32.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.32.0>`_
+- `renku-ui 3.33.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.33.0>`_
+- `amalthea 0.12.0 <https://github.com/SwissDataScienceCenter/amalthea/releases/tag/0.12.0>`_
+- `amalthea 0.12.1 <https://github.com/SwissDataScienceCenter/amalthea/releases/tag/0.12.1>`_
+- `amalthea 0.12.2 <https://github.com/SwissDataScienceCenter/amalthea/releases/tag/0.12.2>`_
+
 0.55.0
 ------
+
+Renku ``0.55.0`` introduces user and group pages in Renku 2.0, where you can see all projects owned
+by those people. In addition, you can now fully take advantage of RenkuLab resources in Renku 2.0 by
+setting a resource class for your session launchers.
+
+User-Facing Changes
+~~~~~~~~~~~~~~~~~~~
+
+**🌟 New Features**
+
+- **UI**: Renku 2.0: Add user pages that show all projects in the namespace (`#3198 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3198>`__)
+- **UI**: Renku 2.0: Extend group pages to show all projects in the namespace (`#3198 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3198>`__)
+
+**✨ Improvements**
+
+- **UI**: Renku 2.0: Provide clickable links between projects and user/group namespace pages on the project page and in search results (`#3198 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3198>`__)
+- **Search Services**: Renku 2.0: Show creator name and project namespace in search results,
+  where before only the respective ids were included (`#3198 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3198>`__)
+- **UI**: Renku 2.0: Support setting a default resource class for a session launcher in Renku 2.0  (`#3196 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3196>`__)
+
+Internal Changes
+~~~~~~~~~~~~~~~~
+
+**Improvements**
+
+- **Search Services**: The search query is now accepted at ``/api/search/query`` url path
+  and a ``/api/search/version`` endpoint has been added
+- **Data Services**: Change API to provide user and group pages in Renku 2.0
+
+Individual Components
+~~~~~~~~~~~~~~~~~~~~~
+
+- `renku-data-services 0.17.0 <https://github.com/SwissDataScienceCenter/renku-data-services/releases/tag/v0.17.0>`_
+- `renku-search 0.4.0 <https://github.com/SwissDataScienceCenter/renku-search/releases/tag/v0.4.0>`_
+- `renku-ui 3.30.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.30.0>`_
+- `renku-ui 3.31.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.31.0>`_
+
+0.54.2
+------
+
+Renku ``0.54.2`` fixes a bug with testing the cloud storage connection for WebDAV.
+
+User-Facing Changes
+~~~~~~~~~~~~~~~~~~~
+
+**🐞 Bug Fixes**
+
+- **Data Services**: Fix verifying cloud storage connection not working with WebDAV by correctly obscuring RClone values.
+
+Individual components
+~~~~~~~~~~~~~~~~~~~~~~
+
+- `renku-data-services 0.16.1 <https://github.com/SwissDataScienceCenter/renku-data-services/releases/tag/v0.16.1>`__
+
+0.54.1
+------
+
+Renku ``0.54.1`` introduces a few bug fixes in the notebooks and data services components.
+
+User-Facing Changes
+~~~~~~~~~~~~~~~~~~~
+
+**🐞 Bug Fixes**
+
+- **Notebooks**: Patch the correct environment variables when a session is resumed after being hibernated
+- **Data Services**: Assign the correct project permissions to group members
+
+Individual components
+~~~~~~~~~~~~~~~~~~~~~~
+
+- `renku-data-services 0.15.1 <https://github.com/SwissDataScienceCenter/renku-data-services/releases/tag/v0.15.1>`__
+- `renku-notebooks 1.25.3 <https://github.com/SwissDataScienceCenter/renku-notebooks/releases/tag/1.25.3>`__
 
 
 0.54.0
@@ -178,7 +296,7 @@ session on the Start with Options page. More details on this feature can be foun
 [documentation](https://renku.readthedocs.io/en/stable/topic-guides/secrets/secrets.html).
 
 Administrators can customize the culling times (the length of time before an idle session is paused
-or a paused session is deleted) for different resource pools. 
+or a paused session is deleted) for different resource pools.
 
 This release also contains new features related to Renku 2.0. However, Renku 2.0 is still
 in early development and is not yet accessible to users. For more information, see our
