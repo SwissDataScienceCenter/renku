@@ -96,6 +96,9 @@ spec:
                   key: {{ .Values.global.redis.existingSecretPasswordKey }}
             - name: PROMETHEUS_ENABLED
               value: {{ .Values.ui.server.prometheus.enabled | quote }}
+            # TODO: Remove before merging
+            - name: SERVER_LOG_LEVEL
+              value: "debug"
           livenessProbe:
             httpGet:
               path: /liveness

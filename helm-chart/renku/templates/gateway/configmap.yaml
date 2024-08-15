@@ -45,14 +45,12 @@ data:
         enabled: true
       providers:
         renku:
-          default: true
           issuer: {{ printf "%s/realms/%s" (include "renku.keycloakUrl" . | trimSuffix "/") (include "renku.keycloak.realm" .) }}
           clientID: renku
           scopes: ["profile", "email", "openid", "microprofile-jwt"]
           callbackURI:  {{ printf "%s/api/auth/callback" (include "renku.baseUrl" .) }}
           usePKCE: false
         gitlab:
-          default: true 
           issuer: {{ .Values.global.gitlab.url | quote }}
           clientID: {{ .Values.gateway.gitlabClientId | default .Values.global.gateway.gitlabClientId | quote }}
           scopes: ["openid", "api", "read_user", "read_repository"] 
