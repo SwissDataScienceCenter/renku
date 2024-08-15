@@ -37,6 +37,7 @@ data:
         dataService: {{ printf "http://%s-data-service" .Release.Name | quote }}
         keycloak: {{ include "renku.keycloakUrl" . | quote }} 
         uiserver: {{ printf "http://%s" (include "ui-server.fullname" .) | quote }} 
+        search: {{ printf "http://%s-search-api" .Release.Name | quote }}
     login:
       renkuBaseUrl: {{ include "renku.baseUrl" . | quote }}
       endpointsBasePath: "/api/auth" 
