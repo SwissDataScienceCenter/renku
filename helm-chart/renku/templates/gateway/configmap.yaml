@@ -16,6 +16,14 @@ data:
         enabled: {{ .Values.gateway.rateLimits.general.enabled }}
         rate: {{ .Values.gateway.rateLimits.general.average }}
         burst: {{ .Values.gateway.rateLimits.general.burst }}
+    sessions:
+      authorizationVerifiers:
+        - issuer: {{ printf "%s/realms/%s" (include "renku.keycloakUrl" . | trimSuffix "/") (include "renku.keycloak.realm" .) }}
+          audience: renku
+          authorizedParty: renku
+        - issuer: {{ printf "%s/realms/%s" (include "renku.keycloakUrl" . | trimSuffix "/") (include "renku.keycloak.realm" .) }}
+          audience: renku
+          authorizedParty: renku-cli
     revproxy:
       renkuBaseUrl: {{ include "renku.baseUrl" . | quote }}
       {{- if .Values.gitlab.enabled }}
