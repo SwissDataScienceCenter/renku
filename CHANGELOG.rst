@@ -16,7 +16,7 @@ Internal Changes
 
 **🐞 Bug Fixes**
 
-- **Data Services**: Fixes background job not working with authz dv in inconsistent state
+- **Data Services**: Fixes background job not working with Authzed db in inconsistent state
 - **Data Services**: Fixes query args validation for /api/data/user/secrets endpoint
 - **Data Services**: Splits error into 401 and 403 depending on the error
 
