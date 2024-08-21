@@ -3,6 +3,28 @@
 0.56.2
 ------
 
+Renku ``0.56.2`` fixes a but in renku-data-services where a background job would stop working
+if a deleted project wasn't correctly removed from the authorization database.
+
+Internal Changes
+~~~~~~~~~~~~~~~~
+
+**🌟 New Features**
+
+- **Data Services**: Adds endpoint for saving storage credentials
+
+
+**🐞 Bug Fixes**
+
+- **Data Services**: Fixes background job not working with authz dv in inconsistent state
+- **Data Services**: Fixes query args validation for /api/data/user/secrets endpoint
+- **Data Services**: Splits error into 401 and 403 depending on the error
+
+
+Individual Components
+~~~~~~~~~~~~~~~~~~~~~
+
+- `renku-data-services 0.19.0 <https://github.com/SwissDataScienceCenter/renku-data-services/releases/tag/v0.19.0>`__
 
 
 0.56.1
