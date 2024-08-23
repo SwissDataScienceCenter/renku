@@ -23,7 +23,7 @@ dependencies:
     alias: jena
   - name: amalthea
     repository: "https://swissdatasciencecenter.github.io/helm-charts/"
-    version: "0.12.2"
+    version: "0.12.3"
   - name: amalthea-sessions
     repository: "https://swissdatasciencecenter.github.io/helm-charts/"
     version: "0.0.10-new-operator-chart"
