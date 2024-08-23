@@ -58,12 +58,13 @@ jobs:
       renku-ui: ${{ steps.deploy-comment.outputs.renku-ui}}
       renku-data-services: ${{ steps.deploy-comment.outputs.renku-data-services}}
       amalthea: ${{ steps.deploy-comment.outputs.amalthea}}
+      amalthea-sessions: ${{ steps.deploy-comment.outputs.amalthea-sessions}}
       test-enabled: ${{ steps.deploy-comment.outputs.test-enabled}}
       extra-values: ${{ steps.deploy-comment.outputs.extra-values}}
     steps:
       - uses: actions/checkout@v4.1.7
       - id: deploy-comment
-        uses: SwissDataScienceCenter/renku-actions/check-pr-description@v1.11.3
+        uses: SwissDataScienceCenter/renku-actions/check-pr-description@feat-add-new-amalthea-helm-chart
         with:
           string: /deploy
           pr_ref: ${{ github.event.number }}
@@ -79,7 +80,7 @@ jobs:
       - uses: actions/checkout@v4.1.7
       - name: renku build and deploy
         if: needs.check-deploy.outputs.pr-contains-string == 'true'
-        uses: SwissDataScienceCenter/renku-actions/deploy-renku@v1.11.3
+        uses: SwissDataScienceCenter/renku-actions/deploy-renku@feat-add-new-amalthea-helm-chart
         env:
           DOCKER_PASSWORD: ${{ secrets.RENKU_DOCKER_PASSWORD }}
           DOCKER_USERNAME: ${{ secrets.RENKU_DOCKER_USERNAME }}
@@ -99,6 +100,7 @@ jobs:
           renku_ui: "${{ needs.check-deploy.outputs.renku-ui }}"
           renku_data_services: "${{ needs.check-deploy.outputs.renku-data-services }}"
           amalthea: "${{ needs.check-deploy.outputs.amalthea }}"
+          amalthea_sessions: "${{ needs.check-deploy.outputs.amalthea-sessions }}"
           extra_values: "${{ needs.check-deploy.outputs.extra-values }}"
       - name: Check existing renkubot comment
         if: needs.check-deploy.outputs.pr-contains-string == 'true'
