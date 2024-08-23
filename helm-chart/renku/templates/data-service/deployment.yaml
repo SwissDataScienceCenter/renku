@@ -120,6 +120,11 @@ spec:
                 fieldRef:
                   apiVersion: v1
                   fieldPath: metadata.namespace
+            - name: SESSIONS_NAMESPACE
+              valueFrom:
+                fieldRef:
+                  apiVersion: v1
+                  fieldPath: metadata.namespace
             {{- include "certificates.env.python" . | nindent 12 }}
             {{- include "certificates.env.grpc" . | nindent 12 }}
           volumeMounts:
