@@ -37,6 +37,7 @@ spec:
         - name: secrets-storage
           image: "{{ .Values.secretsStorage.image.repository }}:{{ .Values.secretsStorage.image.tag }}"
           imagePullPolicy: {{ .Values.secretsStorage.image.pullPolicy }}
+          entrypoint: ["tini", "-g", "--", "env/bin/python", "-m", "renku_data_services.secrets_storage_api.main", "--single-process"]
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
           ports:
