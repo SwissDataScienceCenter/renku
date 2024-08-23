@@ -3,7 +3,7 @@
 0.56.2
 ------
 
-Renku ``0.56.2`` fixes a but in renku-data-services where a background job would stop working
+Renku ``0.56.2`` fixes a bug in renku-data-services where a background job would stop working
 if a deleted project wasn't correctly removed from the authorization database.
 
 Internal Changes
