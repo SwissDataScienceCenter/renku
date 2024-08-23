@@ -233,6 +233,7 @@ describe("Basic public project functionality", () => {
         .click();
 
       // Add a S3 storage configuration if it doesn't exist
+      /* eslint-disable max-nested-callbacks */
       cy.wait("@getProjectCloudStorage").then(({ response }) => {
         const storages = response.body as { storage: { name: string } }[];
         if (storages.find(({ storage }) => storage.name === "data_s3")) {
@@ -275,7 +276,7 @@ describe("Basic public project functionality", () => {
         cy.get("#mountPoint")
           .should("have.value", "external_storage/data_s3")
           .type("{selectAll}data_s3");
-        cy.get("#readOnly").should("not.be.checked").check();
+        cy.get("#readOnly").should("be.checked").check();
 
         cy.getDataCy("cloud-storage-edit-update-button")
           .should("be.visible")
