@@ -1,5 +1,23 @@
 .. _changelog:
 
+0.56.3
+------
+
+Renku ``0.56.3`` fixes a bug in renku-data-services where strict user email validation
+was causing problems with the admin panel and listing users.
+
+Internal Changes
+~~~~~~~~~~~~~~~~
+
+**🐞 Bug Fixes**
+
+- **Data Services**: do not validate user emails because Keycloak can contain invalid emails
+
+Individual Components
+~~~~~~~~~~~~~~~~~~~~~
+
+- `renku-data-services 0.19.1 <https://github.com/SwissDataScienceCenter/renku-data-services/releases/tag/v0.19.1>`__
+
 0.56.2
 ------
 
