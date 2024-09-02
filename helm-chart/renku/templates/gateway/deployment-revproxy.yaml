@@ -26,6 +26,7 @@ spec:
         {{ .Values.global.redis.clientLabel | toYaml | nindent 8 }}
       {{- with .Values.gateway.podAnnotations }}
       annotations:
+        checksum/config: {{ include (print $.Template.BasePath "/gateway/configmap.yaml") . | sha256sum }}
         {{- toYaml . | nindent 8 }}
       {{- end }}
     spec:
