@@ -48,7 +48,7 @@ data:
         search: {{ printf "http://%s-search-api" .Release.Name | quote }}
     login:
       renkuBaseUrl: {{ include "renku.baseUrl" . | quote }}
-      endpointsBasePath: "/api/auth" 
+      loginRoutesBasePath: "/api/auth"
       defaultAppRedirectURL: {{ include "renku.baseUrl" . | quote }}
       tokenEncryption:
         enabled: true
