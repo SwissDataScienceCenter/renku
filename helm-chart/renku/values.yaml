@@ -1270,7 +1270,6 @@ gateway:
   allowOrigin:
   # - http://example.com
   # - https://foo.example.com
-  replicaCount: 1
   ## Set to true to enable the developement mode. This has negative security
   ## implications and should never be done in a production setting.
   development: false
