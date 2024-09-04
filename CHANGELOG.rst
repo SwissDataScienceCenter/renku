@@ -11,6 +11,20 @@ of Renku and also if possible deploying the upgrade when there are fewer session
 cloud storage or just fewer sessions in general. Once the upgrade is complete users will be able to 
 mount cloud storage as usual.
 
+User-Facing Changes
+~~~~~~~~~~~~~~~~~~~
+
+**✨ Improvements**
+
+- **UI**: Reflect the search query in the URL for Renku 2.0 (`#3245 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3245>`__).
+- **UI**: Add dynamic browser tab icon for session tabs (`#3249 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3249>`__).
+- **UI**: Display session details in session page in Renku 2.0 (`#3258 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3258>`__)
+- **UI**: Set default namespace when creating a new Renku 2.0 project (`#3264 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3264>`__).
+
+**🐞 Bug Fixes**
+
+- **UI**: Fix misnomers when creating a new group (`#3276 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3276>`__).
+
 Internal Changes
 ~~~~~~~~~~~~~~~~
 
@@ -23,6 +37,8 @@ Internal Changes
 **🐞 Bug Fixes**
 
 - **csi-rclone**: Do not crash on unmounting as it might block dependent resources
+- **Gateway**: The API Gateway components have been refactored and simplified (`#709 <https://github.com/SwissDataScienceCenter/renku-gateway/pull/709>`__).
+- **UI**: The UI server has been refactored following the changes in the gateway (`#3271 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3271>`__).
 
 Individual Components
 ~~~~~~~~~~~~~~~~~~~~~
@@ -30,6 +46,8 @@ Individual Components
 - `csi-rclone 0.1.8 <https://github.com/SwissDataScienceCenter/csi-rclone/releases/tag/v0.1.8>`__
 - `csi-rclone 0.2.0 <https://github.com/SwissDataScienceCenter/csi-rclone/releases/tag/v0.2.0>`__
 - `csi-rclone 0.3.0 <https://github.com/SwissDataScienceCenter/csi-rclone/releases/tag/v0.3.0>`__
+- `renku-gateway 1.0.0 <https://github.com/SwissDataScienceCenter/renku-gateway/releases/tag/1.0.0>`_
+- `renku-ui 3.34.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.34.0>`_
 
 0.56.3
 ------
