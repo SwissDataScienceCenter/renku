@@ -1584,14 +1584,14 @@ platformInit:
 dataService:
   image:
     repository: renku/renku-data-service
-    tag: "0.19.0"
+    tag: "0.19.1"
     pullPolicy: IfNotPresent
   backgroundJobs:
     events:
       resources: {}
     image:
       repository: renku/data-service-background-jobs
-      tag: "0.19.0"
+      tag: "0.19.1"
       pullPolicy: IfNotPresent
     total:
       resources: {}
@@ -1644,7 +1644,7 @@ authz:
 secretsStorage:
   image:
     repository: renku/secrets-storage
-    tag: "0.19.0"
+    tag: "0.19.1"
     pullPolicy: IfNotPresent
   service:
     type: ClusterIP

@@ -13,7 +13,6 @@ User-Facing Changes
 - **UI**: Display session details in session page in Renku 2.0 (`#3258 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3258>`__)
 - **UI**: Set default namespace when creating a new Renku 2.0 project (`#3264 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3264>`__).
 
-
 **🐞 Bug Fixes**
 
 - **UI**: Fix misnomers when creating a new group (`#3276 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3276>`__).
@@ -31,6 +30,24 @@ Individual Components
 
 - `renku-gateway 1.0.0 <https://github.com/SwissDataScienceCenter/renku-gateway/releases/tag/1.0.0>`_
 - `renku-ui 3.34.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.34.0>`_
+
+0.56.3
+------
+
+Renku ``0.56.3`` fixes a bug in renku-data-services where strict user email validation
+was causing problems with the admin panel and listing users.
+
+Internal Changes
+~~~~~~~~~~~~~~~~
+
+**🐞 Bug Fixes**
+
+- **Data Services**: do not validate user emails because Keycloak can contain invalid emails
+
+Individual Components
+~~~~~~~~~~~~~~~~~~~~~
+
+- `renku-data-services 0.19.1 <https://github.com/SwissDataScienceCenter/renku-data-services/releases/tag/v0.19.1>`__
 
 0.56.2
 ------
