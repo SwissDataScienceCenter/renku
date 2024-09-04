@@ -38,8 +38,8 @@ New
   ```
   gateway:
     image:
-      repository: renku/renku-revproxy
-      tag: "0.24.0"
+      repository: renku/renku-gateway
+      tag: "1.0.0"
       pullPolicy: IfNotPresent
     metrics:
       enabled: true
