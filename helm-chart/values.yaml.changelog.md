@@ -7,10 +7,10 @@ Please follow this convention when adding a new row
 
 ## Upgrading to Renku 0.57.0
 
-DELETE ``gateway.image.auth`` has been removed.
-DELETE ``gateway.oldGitLabLogout`` has been removed.
-DELETE ``gateway.logoutGitLabUponRenkuLogout`` has been removed.
-EDIT ``gateway.reverseProxy`` settings have been moved to ``gateway``:
+* DELETE ``gateway.image.auth`` has been removed.
+* DELETE ``gateway.oldGitLabLogout`` has been removed.
+* DELETE ``gateway.logoutGitLabUponRenkuLogout`` has been removed.
+* EDIT ``gateway.reverseProxy`` settings have been moved to ``gateway``:
 
 Old
   ```
