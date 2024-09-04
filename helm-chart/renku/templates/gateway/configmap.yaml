@@ -69,8 +69,6 @@ data:
           scopes: ["openid", "api", "read_user", "read_repository"] 
           callbackURI: {{ printf "%s/api/auth/callback" (include "renku.baseUrl" .) }}
           usePKCE: false
-      oldGitLabLogout: {{ .Values.gateway.oldGitLabLogout | default false }}
-      logoutGitLabUponRenkuLogout: {{ .Values.gateway.logoutGitLabUponRenkuLogout | default true }}
     redis:
       type: redis 
       addresses: 
