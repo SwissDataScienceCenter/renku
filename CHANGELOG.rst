@@ -9,7 +9,7 @@ User-Facing Changes
 **✨ Improvements**
 
 - **UI**: Reflect the search query in the URL for Renku 2.0 (`#3245 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3245>`__).
-- **UI**: Add dynamic favicon for session tabs (`#3249 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3249>`__).
+- **UI**: Add dynamic browser tab icon for session tabs (`#3249 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3249>`__).
 - **UI**: Display session details in session page in Renku 2.0 (`#3258 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3258>`__)
 - **UI**: Set default namespace when creating a new Renku 2.0 project (`#3264 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3264>`__).
 
