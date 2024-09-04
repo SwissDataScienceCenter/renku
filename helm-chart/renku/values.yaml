@@ -103,6 +103,7 @@ global:
       groupMemberAdded: "groupMember.added"
       groupMemberUpdated: "groupMember.updated"
       groupMemberRemoved: "groupMember.removed"
+      dataServiceAllEvents: "data_service.all_events"
   ## Note that the graph will not turned on by default until renku 0.4.0
   graph:
     dbEventLog:
