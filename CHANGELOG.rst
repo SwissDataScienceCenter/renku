@@ -37,6 +37,8 @@ Internal Changes
 - **csi-rclone**: Read credential secrets from PVC annotations
 - **csi-rclone**: Update the CSI sidecar container versions
 - **csi-rclone**: Add support for decrypting data storage secrets.
+- **Notebooks**: Add a component for liveness detection
+- **Notebooks**: Support for saving cloud storage secrets
 
 **Improvements**
 
@@ -57,6 +59,7 @@ Individual Components
 - `renku-gateway 1.0.0 <https://github.com/SwissDataScienceCenter/renku-gateway/releases/tag/1.0.0>`_
 - `renku-ui 3.34.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.34.0>`_
 - `renku-search 0.5.0 <https://github.com/SwissDataScienceCenter/renku-search/releases/tag/v0.5.0>`_
+- `renku-notebooks 1.26.0 <https://github.com/SwissDataScienceCenter/renku-notebooks/releases/tag/1.26.0>`__
 
 
 0.56.3
