@@ -3,6 +3,33 @@
 0.57.0
 ------
 
+This version of renku includes several new features, upgrades and bug fixes.
+
+NOTE to administrators: Upgrading the `csi-rclone` component will unmount all cloud storage for all
+active or hibernated sessions. Therefore, we recommend notifying your users ahead of time when you deploy this version
+of Renku and also if possible deploying the upgrade when there are fewer sessions that use
+cloud storage or just fewer sessions in general. Once the upgrade is complete users will be able to 
+mount cloud storage as usual.
+
+Internal Changes
+~~~~~~~~~~~~~~~~
+
+**🌟 New Features**
+
+- **csi-rclone**: Read credential secrets from PVC annotations
+- **csi-rclone**: Update the CSI sidecar container versions
+- **csi-rclone**: Add support for decrypting data storage secrets.
+
+**🐞 Bug Fixes**
+
+- **csi-rclone**: Do not crash on unmounting as it might block dependent resources
+
+Individual Components
+~~~~~~~~~~~~~~~~~~~~~
+
+- `csi-rclone 0.1.8 <https://github.com/SwissDataScienceCenter/csi-rclone/releases/tag/v0.1.8>`__
+- `csi-rclone 0.2.0 <https://github.com/SwissDataScienceCenter/csi-rclone/releases/tag/v0.2.0>`__
+- `csi-rclone 0.3.0 <https://github.com/SwissDataScienceCenter/csi-rclone/releases/tag/v0.3.0>`__
 
 0.56.3
 ------
