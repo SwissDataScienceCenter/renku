@@ -1,8 +1,262 @@
 .. _changelog:
 
+0.60.0
+------
+
+
+
+0.59.0
+------
+
+
+
+0.58.1
+------
+
+Renku ``0.58.1`` fixes the correct handling of self-signed certificates in all the pods running OpenJDK as well as a bug
+where some groups do not show up in search.
+
+User-Facing Changes
+~~~~~~~~~~~~~~~~~~~
+
+**🐞 Bug Fixes**
+
+- **Notebooks**: Fix a bug where some docker images were found to not exist even when they really exist.
+
+Internal Changes
+~~~~~~~~~~~~~~~~
+
+**🐞 Bug Fixes**
+
+- **Search**: Fix a bug where some groups do not show up in search
+- **Notebooks**: Forward authorization header when getting Gitlab tokens
+- **Notebooks**: Only patch the jupyter servers once when migrating labels and annotations at startup
+- **Helm chart** correctly handle self-signed certificates in all the pods running OpenJDK:
+  - `commit-event-service`
+  - `event-log`
+  - `knowledge-graph`
+  - `search-api`
+  - `search-provision`
+  - `token-repository`
+  - `triples-generator`
+  - `webhook-service`
+
+Individual Components
+~~~~~~~~~~~~~~~~~~~~~
+
+- `renku-search 0.6.2 <https://github.com/SwissDataScienceCenter/renku-search/releases/tag/v0.6.2>`_
+- `renku-notebooks 1.26.2 <https://github.com/SwissDataScienceCenter/renku-notebooks/releases/tag/1.26.2>`_
+
+0.58.0
+------
+
+Renku ``0.58.0`` fixes several issues related to Renku 2.0 search, and also squashes a bug where the
+Renku 2.0 dashboard displayed content not related to you.
+
+
+User-Facing Changes
+~~~~~~~~~~~~~~~~~~~
+
+**✨ Improvements**
+
+- **UI**: Polish Renku 2.0 pages and elements according to the latest design changes (`#3254 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3254>`__).
+
+**🐞 Bug Fixes**
+
+- **Search Services**: Resolve issues that caused items to be missing from Renku 2.0 search, including the search for members when adding members to projects and groups.
+- **UI**: Resolve an issue where the Renku 2.0 dashboard displayed projects and groups that the user was not a member of (`#3289 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3289>`__)
+- **UI**: Fix a bug where clicking on 'Show all my projects' on the Renku 2.0 dashboard redirected to a page displaying not only the user's projects but also others' projects (`#3289 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3289>`__)
+- **UI**: Prevent glitches in the new session details sections  (`#3313 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3313>`__).
+
+Internal Changes
+~~~~~~~~~~~~~~~~
+
+**Improvements**
+
+- **UI**: Update Storybook to show Renku 2.0 re-usable elements (`#3254 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3254>`__).
+- **UI**: Add and edit connected services from the admin panel (`#3329 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3329>`__).
+- **Search Services**: Allow to re-provision the index from data-services and as part of a SOLR schema migration
+- **Helm chart**: Add RBAC for K8s cache for new AmaltheaSessions custom resource
+- **Gateway**: Add extra credentials for the data service for the new AmaltheaSessions
+- **Gateway**: Remove unused Python code
+- **Data services**: Support event queue re-provisioning
+- **Data services**: Support listing projects and groups by direct membership
+
+**🐞 Bug Fixes**
+
+- **Data services**: Do not use gather() in when listing projects
+- **Data services**: Order resource classes by GPU, CPU, RAM and storage
+- **Data services**: Following redirects when sending requests to git repositories
+- **Data services**: Allow unsetting secrets for cloud storage
+- **Helm chart**: Increase the connection timeout for the Authzed database health checks
+
+Individual Components
+~~~~~~~~~~~~~~~~~~~~~
+
+- `renku-search 0.6.1 <https://github.com/SwissDataScienceCenter/renku-search/releases/tag/v0.6.0>`_
+- `renku-ui 3.36.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.36.0>`_
+- `renku-ui 3.37.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.37.0>`_
+- `renku-ui 3.37.1 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.37.1>`_
+- `renku-gateway 1.1.0 <https://github.com/SwissDataScienceCenter/renku-gateway/releases/tag/1.1.0>`_
+- `renku-data-services 0.21.0 <https://github.com/SwissDataScienceCenter/renku-data-services/releases/tag/v0.21.0>`__
+- `renku-data-services 0.22.0 <https://github.com/SwissDataScienceCenter/renku-data-services/releases/tag/v0.22.0>`__
+
+0.57.2
+------
+
+Renku ``0.57.2`` fixes several bugs in gateway and the `csi-rclone` driver.
+
+User-facing Changes
+~~~~~~~~~~~~~~~~~~~
+
+**Bug Fixes**
+
+- **UI**: show the correct repository access status
+- **Sessions**: allow paused sessions with cloud storage secrets to resume normally
+
+Internal Changes
+~~~~~~~~~~~~~~~~
+
+**Bug Fixes**
+
+- **Gateway**: Fix path rewrite middleware when the path contains escaped characters (`#726 <https://github.com/SwissDataScienceCenter/renku-gateway/pull/726>`__).
+- **csi-rclone**: Correctly use OAuth2 tokens for cloud storage to enable mounting.
+- **csi-rclone**: Remounting volumes created with older versions did not work.
+
+Individual Components
+~~~~~~~~~~~~~~~~~~~~~
+
+- `renku-gateway 1.0.4 <https://github.com/SwissDataScienceCenter/renku-gateway/releases/tag/1.0.4>`_
+- `csi-rclone 0.3.2 <https://github.com/SwissDataScienceCenter/csi-rclone/releases/tag/v0.3.2>`__
+- `csi-rclone 0.3.3 <https://github.com/SwissDataScienceCenter/csi-rclone/releases/tag/v0.3.3>`__
+
+0.57.1
+------
+
+Renku ``0.57.1`` fixes a bug in renku-ui-server where the service would be stuck in a crash loop when Sentry is enabled.
+It also fixes two bugs in Notebooks related to the access token and shared memory in the user-sessions.
+
+User-Facing Changes
+~~~~~~~~~~~~~~~~~~~
+
+**🐞 Bug Fixes**
+
+- **UI**: Access mode defaults to read-only when adding a new data source in Renku 2.0 (`#3275 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3275>`__).
+- **Notebooks**: Don't fail clone process if access token doesn't exist (`#1971 <https://github.com/SwissDataScienceCenter/renku-notebooks/pull/1971>`__).
+- **Notebooks**: Fix shared memory attached to the JupyterServer container to be half of the total requested memory (`#1984 <https://github.com/SwissDataScienceCenter/renku-notebooks/pull/1984>`__).
+
+Internal Changes
+~~~~~~~~~~~~~~~~
+
+**Bug Fixes**
+
+- **UI**: Fix the UI server being stuck in a crash loop at startup when Sentry is enabled (`#3318 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3318>`__).
+- **Gateway**: Fix getting HTTP error 500 when logging in (`#723 <https://github.com/SwissDataScienceCenter/renku-gateway/pull/723>`__).
+
+Individual Components
+~~~~~~~~~~~~~~~~~~~~~
+
+- `renku-ui 3.35.1 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.35.1>`_
+- `renku-gateway 1.0.3 <https://github.com/SwissDataScienceCenter/renku-gateway/releases/tag/1.0.3>`_
+- `renku-notebooks 1.26.1 <https://github.com/SwissDataScienceCenter/renku-notebooks/releases/tag/1.26.1>`_
+
 0.57.0
 ------
 
+Renku `0.57.0` brings a suite of new features and improvements to the Renku 2.0 beta. As a main
+highlight, you can now save and reuse the credentials for data sources. No more copy/paste on every
+session launch! We have also made small improvements to sharing, search, and sessions in Renku 2.0.
+For a full list of changes, see the list below.
+
+
+NOTE to administrators: Upgrading the `csi-rclone` component will unmount all cloud storage for all
+active or hibernated sessions. Therefore, we recommend notifying your users ahead of time when you
+deploy this version of Renku and also if possible deploying the upgrade when there are fewer
+sessions that use cloud storage or just fewer sessions in general. Once the upgrade is complete
+users will be able to mount cloud storage as usual.
+
+User-Facing Changes
+~~~~~~~~~~~~~~~~~~~
+
+**🌟 New Features**
+
+- **UI**: Support saving and managing credentials for Renku 2.0 data sources (`#3266 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3266>`__).
+
+**✨ Improvements**
+
+- **Search Services**: Enable searching by prefix of indexed words
+- **UI**: Add members to groups and projects in Renku 2.0 by username instead of email (`#3270 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3270>`__).
+- **UI**: Enable sharing search URLs by reflecting the search query in the URL for Renku 2.0 (`#3245 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3245>`__).
+- **UI**: Show the status of a session via a dynamic browser tab icon (`#3249 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3249>`__).
+- **UI**: Display session details in session page in Renku 2.0 (`#3258 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3258>`__)
+- **UI**: Set default namespace when creating a new Renku 2.0 project (`#3264 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3264>`__).
+
+**🐞 Bug Fixes**
+
+- **UI**: Fix issue in Renku 2.0 where launched sessions did not use the default storage size of the selected resource class (`#3295 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3295>`__).
+- **UI**: Fix misnomers on the group creation page (`#3276 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3276>`__).
+- **Data Services**: Fix connected services showing errors for anonymous users
+- **Data Services**: Fix 500 error being raised when modifying a session launcher
+
+Internal Changes
+~~~~~~~~~~~~~~~~
+
+**New Features**
+
+- **csi-rclone**: Read credential secrets from PVC annotations
+- **csi-rclone**: Update the CSI sidecar container versions
+- **csi-rclone**: Add support for decrypting data storage secrets.
+- **Gateway**: The API Gateway components have been refactored and simplified (`#709 <https://github.com/SwissDataScienceCenter/renku-gateway/pull/709>`__).
+- **Notebooks**: Add a component for liveness detection
+- **Notebooks**: Support for saving cloud storage secrets
+
+**Improvements**
+
+- **Search Services**: Reading all data service events from a single Redis stream. Processing from individual streams is kept.
+- **Data Services**: Do not show user emails and use usernames instead for all interactions
+- **UI**: The UI server has been refactored following the changes in the gateway (`#3271 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3271>`__).
+
+**Bug Fixes**
+
+- **csi-rclone**: Do not crash on unmounting as it might block dependent resources
+- **csi-rclone**: Use extra storage class when reading secrets from a PVC annotation
+- **Data Services**: Fix group member changes not being sent to search
+- **Data Services**: Fix Redis not being able to connect to the master node
+
+Individual Components
+~~~~~~~~~~~~~~~~~~~~~
+
+- `csi-rclone 0.1.8 <https://github.com/SwissDataScienceCenter/csi-rclone/releases/tag/v0.1.8>`__
+- `csi-rclone 0.2.0 <https://github.com/SwissDataScienceCenter/csi-rclone/releases/tag/v0.2.0>`__
+- `csi-rclone 0.3.0 <https://github.com/SwissDataScienceCenter/csi-rclone/releases/tag/v0.3.0>`__
+- `csi-rclone 0.3.1 <https://github.com/SwissDataScienceCenter/csi-rclone/releases/tag/v0.3.1>`__
+- `renku-gateway 1.0.0 <https://github.com/SwissDataScienceCenter/renku-gateway/releases/tag/1.0.0>`_
+- `renku-gateway 1.0.1 <https://github.com/SwissDataScienceCenter/renku-gateway/releases/tag/1.0.1>`_
+- `renku-gateway 1.0.2 <https://github.com/SwissDataScienceCenter/renku-gateway/releases/tag/1.0.2>`_
+- `renku-ui 3.34.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.34.0>`_
+- `renku-ui 3.35.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.35.0>`_
+- `renku-search 0.5.0 <https://github.com/SwissDataScienceCenter/renku-search/releases/tag/v0.5.0>`_
+- `renku-notebooks 1.26.0 <https://github.com/SwissDataScienceCenter/renku-notebooks/releases/tag/1.26.0>`__
+- `renku-data-services 0.20.0 <https://github.com/SwissDataScienceCenter/renku-data-services/releases/tag/v0.20.0>`__
+
+
+0.56.3
+------
+
+Renku ``0.56.3`` fixes a bug in renku-data-services where strict user email validation
+was causing problems with the admin panel and listing users.
+
+Internal Changes
+~~~~~~~~~~~~~~~~
+
+**🐞 Bug Fixes**
+
+- **Data Services**: do not validate user emails because Keycloak can contain invalid emails
+
+Individual Components
+~~~~~~~~~~~~~~~~~~~~~
+
+- `renku-data-services 0.19.1 <https://github.com/SwissDataScienceCenter/renku-data-services/releases/tag/v0.19.1>`__
 
 0.56.2
 ------
@@ -34,7 +288,7 @@ Individual Components
 0.56.1
 ------
 
-Renku ``0.56.1`` fixes a bug where Amalthea would not start when the prometheus metrics or the 
+Renku ``0.56.1`` fixes a bug where Amalthea would not start when the prometheus metrics or the
 audit log export functionality is enabled.
 
 Internal Changes

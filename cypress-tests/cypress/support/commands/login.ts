@@ -21,7 +21,7 @@ const register = (
   firstName?: string,
   lastName?: string
 ) => {
-  cy.visit("/login");
+  cy.visit("/api/auth/login");
 
   // ? wait to be assess whether tokens were refreshed automatically or we really need to register
   cy.wait(1000); // eslint-disable-line cypress/no-unnecessary-waiting
@@ -140,6 +140,8 @@ function robustLogin(props?: RobustLoginProps) {
 function logout() {
   cy.get("#profile-dropdown").should("be.visible").click();
   cy.get("#logout-link").should("be.visible").click();
+  // Make sure we fully log out
+  cy.wait(15_000);
 }
 
 export default function registerLoginCommands() {
