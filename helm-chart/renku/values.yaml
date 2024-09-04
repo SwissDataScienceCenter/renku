@@ -218,7 +218,7 @@ global:
   csi-rclone:
     # Set to true to install csi-rclone alongside renku
     # Make sure to configure the csi-rclone section below correctly in that case.
-    install: false
+    install: true
 ## Ingress configuration
 ## See: https://kubernetes.io/docs/concepts/services-networking/ingress/
 ingress:
@@ -944,10 +944,9 @@ dlf-chart:
   dataset-operator-chart:
     enabled: true
 csi-rclone:
-  {}
   # This section is only relevant if you are installing csi-rclone as part of Renku
   ## Name of the csi storage class to use for RClone/Cloudstorage. Should be unique per cluster.
-  # storageClassName: csi-rclone
+  storageClass: csi-rclone-oauth
   # csiNodepluginRclone:
   #   nodeSelector: {}
   # Set tolerations if you have taints on your user session nodes. The csi has to run on every node
@@ -957,9 +956,9 @@ csi-rclone:
 notebooks:
   cloudstorage:
     ## If enabled this will allow mounting of rclone cloudstorage
-    enabled: false
+    enabled: true
     ## should match csi-rclone.storageClassName if you use a custom name
-    # storageClass: csi-rclone
+    storageClass: csi-rclone-oauth
     s3:
       installDatashim: false
   # configuration for user session persistent volumes
