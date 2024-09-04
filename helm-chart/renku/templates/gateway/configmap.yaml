@@ -16,6 +16,10 @@ data:
         enabled: {{ .Values.gateway.rateLimits.general.enabled }}
         rate: {{ .Values.gateway.rateLimits.general.average }}
         burst: {{ .Values.gateway.rateLimits.general.burst }}
+      {{- with .Values.gateway.allowOrigin }}
+      allowOrigin:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
     sessions:
       authorizationVerifiers:
         - issuer: {{ printf "%s/realms/%s" (include "renku.keycloakUrl" . | trimSuffix "/") (include "renku.keycloak.realm" .) }}

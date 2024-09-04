@@ -1283,6 +1283,10 @@ gateway:
       ## average rate units are requests per second
       average: 20
       burst: 100
+  ## For production deployment, you will need to define the secret key.
+  ## This is a random string, used for cryptographic operations on cookies and sensitive information.
+  ## Use `openssl rand -hex 32`.
+  secretKey:
   image:
     repository: renku/renku-gateway
     tag: "1.0.0"
