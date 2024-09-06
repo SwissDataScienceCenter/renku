@@ -1307,6 +1307,16 @@ gateway:
   #  cpu: 100m
   #  memory: 128Mi
 
+  # GitLab has introduced a new logout behavior in 12.7.0
+  # which was initially broken and fixed in 12.9.0.
+  # Set this to 'true' for versions < 12.7.0, leave it to
+  # 'false' for versions >= 12.9.0.
+  oldGitLabLogout: false
+  # For deployments with an external GitLab instance, we don't want to terminate
+  # a GitLab session when users log out from Renku. By default, we assume that a
+  # dedicated GitLab instance is deployed, so, logging out from Renku should
+  # trigger a logout from GitLab.
+  logoutGitLabUponRenkuLogout: true
   # sentry configuration
   sentry:
     enabled: false
