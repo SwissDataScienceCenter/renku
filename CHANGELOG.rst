@@ -27,7 +27,7 @@ User-Facing Changes
 - **UI**: Display session details in session page in Renku 2.0 (`#3258 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3258>`__)
 - **UI**: Set default namespace when creating a new Renku 2.0 project (`#3264 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3264>`__).
 - **UI**: Start sessions using the default storage of the session class in Renku 2.0 (`#3295 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3295>`__).
-- **Data Services**: Do not show user emails and use user names/slug instead for all interactions
+- **Data Services**: Do not show user emails and use usernames instead for all interactions
 
 **🐞 Bug Fixes**
 
