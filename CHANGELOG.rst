@@ -17,6 +17,8 @@ User-Facing Changes
 **🌟 New Features**
 
 - **Search Services**: Enable searching by prefix of indexed words
+- **UI**: Support saving and managing credentials for Renku 2.0 data sources (`#3266 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3266>`__).
+- **UI**: Add members to groups and projects in Renku 2.0 by username instead of email (`#3270 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3270>`__).
 
 **✨ Improvements**
 
@@ -24,10 +26,14 @@ User-Facing Changes
 - **UI**: Add dynamic browser tab icon for session tabs (`#3249 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3249>`__).
 - **UI**: Display session details in session page in Renku 2.0 (`#3258 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3258>`__)
 - **UI**: Set default namespace when creating a new Renku 2.0 project (`#3264 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3264>`__).
+- **Data Services**: Do not show user emails and use usernames instead for all interactions
 
 **🐞 Bug Fixes**
 
 - **UI**: Fix misnomers when creating a new group (`#3276 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3276>`__).
+- **UI**: Fix issue in Renku 2.0 where launched sessions did not use the default storage size of the selected resource class (`#3295 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3295>`__).
+- **Data Services**: Fix connected services showing errors for anonymous users
+- **Data Services**: Fix 500 error being raised when modifying a session launcher
 
 Internal Changes
 ~~~~~~~~~~~~~~~~
@@ -48,6 +54,8 @@ Internal Changes
 
 - **csi-rclone**: Do not crash on unmounting as it might block dependent resources
 - **csi-rclone**: Use extra storage class when reading secrets from a PVC annotation
+- **Data Services**: Fix group member changes not being sent to search
+- **Data Services**: Fix Redis not being able to connect to the master node
 - **Gateway**: The API Gateway components have been refactored and simplified (`#709 <https://github.com/SwissDataScienceCenter/renku-gateway/pull/709>`__).
 - **UI**: The UI server has been refactored following the changes in the gateway (`#3271 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3271>`__).
 
@@ -61,8 +69,10 @@ Individual Components
 - `renku-gateway 1.0.0 <https://github.com/SwissDataScienceCenter/renku-gateway/releases/tag/1.0.0>`_
 - `renku-gateway 1.0.1 <https://github.com/SwissDataScienceCenter/renku-gateway/releases/tag/1.0.1>`_
 - `renku-ui 3.34.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.34.0>`_
+- `renku-ui 3.35.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.35.0>`_
 - `renku-search 0.5.0 <https://github.com/SwissDataScienceCenter/renku-search/releases/tag/v0.5.0>`_
 - `renku-notebooks 1.26.0 <https://github.com/SwissDataScienceCenter/renku-notebooks/releases/tag/1.26.0>`__
+- `renku-data-services 0.20.0 <https://github.com/SwissDataScienceCenter/renku-data-services/releases/tag/v0.20.0>`__
 
 
 0.56.3
