@@ -60,6 +60,8 @@ User-Facing Changes
 **🌟 New Features**
 
 - **Search Services**: Enable searching by prefix of indexed words
+- **UI**: Support saving and managing credentials for Renku 2.0 data sources (`#3266 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3266>`__).
+- **UI**: Add members to groups and projects in Renku 2.0 by username instead of email (`#3270 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3270>`__).
 
 **✨ Improvements**
 
@@ -194,6 +196,7 @@ User-Facing Changes
 - **UI**: Show the status of a session via a dynamic browser tab icon (`#3249 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3249>`__).
 - **UI**: Display session details in session page in Renku 2.0 (`#3258 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3258>`__)
 - **UI**: Set default namespace when creating a new Renku 2.0 project (`#3264 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3264>`__).
+- **Data Services**: Do not show user emails and use usernames instead for all interactions
 
 **🐞 Bug Fixes**
 
