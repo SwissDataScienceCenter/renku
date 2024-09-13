@@ -3,7 +3,10 @@
 0.57.0
 ------
 
-This version of renku includes several new features, upgrades and bug fixes.
+Starting from this release of Renku, users are able to store and reuse the credentials for their protected data sources. No more  
+copy/paste on every session launch! We have also made small tweaks and improvements to search and sessions in Renku 2.0. 
+For a full list of changes, see the list below. 
+
 
 NOTE to administrators: Upgrading the `csi-rclone` component will unmount all cloud storage for all
 active or hibernated sessions. Therefore, we recommend notifying your users ahead of time when you deploy this version
