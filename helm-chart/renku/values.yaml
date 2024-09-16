@@ -103,6 +103,7 @@ global:
       groupMemberAdded: "groupMember.added"
       groupMemberUpdated: "groupMember.updated"
       groupMemberRemoved: "groupMember.removed"
+      dataServiceAllEvents: "data_service.all_events"
   ## Note that the graph will not turned on by default until renku 0.4.0
   graph:
     dbEventLog:
@@ -672,7 +673,7 @@ ui:
     replicaCount: 1
     image:
       repository: renku/renku-ui
-      tag: "3.33.0"
+      tag: "3.35.0"
       pullPolicy: IfNotPresent
       ## Optionally specify an array of imagePullSecrets.
       ## Secrets must be manually created in the namespace.
@@ -861,7 +862,7 @@ ui:
     keepCookies: []
     image:
       repository: renku/renku-ui-server
-      tag: "3.33.0"
+      tag: "3.35.0"
       pullPolicy: IfNotPresent
     imagePullSecrets: []
     nameOverride: ""
@@ -1001,7 +1002,7 @@ notebooks:
     targetCPUUtilizationPercentage: 50
   image:
     repository: renku/renku-notebooks
-    tag: "1.25.3"
+    tag: "1.26.0"
     pullPolicy: IfNotPresent
     ## Optionally specify an array of imagePullSecrets.
     ## Secrets must be manually created in the namespace.
@@ -1270,7 +1271,6 @@ gateway:
   allowOrigin:
   # - http://example.com
   # - https://foo.example.com
-  replicaCount: 1
   ## Set to true to enable the developement mode. This has negative security
   ## implications and should never be done in a production setting.
   development: false
@@ -1289,11 +1289,9 @@ gateway:
   ## Use `openssl rand -hex 32`.
   secretKey:
   image:
-    ## Define the image for the auth middleware
-    auth:
-      repository: renku/renku-gateway
-      tag: "0.24.0"
-      pullPolicy: IfNotPresent
+    repository: renku/renku-gateway
+    tag: "1.0.2"
+    pullPolicy: IfNotPresent
   service:
     type: ClusterIP
     port: 80
@@ -1325,24 +1323,18 @@ gateway:
     dsn:
     environment:
     sampleRate: 0.1
-  reverseProxy:
-    image:
-      repository: renku/renku-revproxy
-      tag: "0.24.0"
-      pullPolicy: IfNotPresent
-    metrics:
-      enabled: true
-      port: 8765
-    replicaCount: 2
-    podAnnotations: {}
-    resources: {}
-    autoscaling:
-      enabled: false
-      minReplicas: 2
-      maxReplicas: 5
-      targetMemoryUtilizationPercentage: 75
-      targetCPUUtilizationPercentage: 75
-    updateStrategy: {}
+  metrics:
+    enabled: true
+    port: 8765
+  replicaCount: 2
+  podAnnotations: {}
+  autoscaling:
+    enabled: false
+    minReplicas: 2
+    maxReplicas: 5
+    targetMemoryUtilizationPercentage: 75
+    targetCPUUtilizationPercentage: 75
+  updateStrategy: {}
 jena:
   image:
     repository: renku/renku-jena
@@ -1391,7 +1383,7 @@ search:
     replicas: 1
     image:
       repository: renku/search-api
-      tag: "0.4.0"
+      tag: "0.5.0"
       pullPolicy: IfNotPresent
     service:
       type: ClusterIP
@@ -1404,7 +1396,7 @@ search:
     replicas: 1
     image:
       repository: renku/search-provision
-      tag: "0.4.0"
+      tag: "0.5.0"
       pullPolicy: IfNotPresent
     service:
       type: ClusterIP
@@ -1603,14 +1595,14 @@ platformInit:
 dataService:
   image:
     repository: renku/renku-data-service
-    tag: "0.19.1"
+    tag: "0.20.0"
     pullPolicy: IfNotPresent
   backgroundJobs:
     events:
       resources: {}
     image:
       repository: renku/data-service-background-jobs
-      tag: "0.19.1"
+      tag: "0.20.0"
       pullPolicy: IfNotPresent
     total:
       resources: {}
@@ -1663,7 +1655,7 @@ authz:
 secretsStorage:
   image:
     repository: renku/secrets-storage
-    tag: "0.19.1"
+    tag: "0.20.0"
     pullPolicy: IfNotPresent
   service:
     type: ClusterIP
