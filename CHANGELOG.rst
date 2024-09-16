@@ -46,6 +46,7 @@ Internal Changes
 - **csi-rclone**: Read credential secrets from PVC annotations
 - **csi-rclone**: Update the CSI sidecar container versions
 - **csi-rclone**: Add support for decrypting data storage secrets.
+- **Gateway**: The API Gateway components have been refactored and simplified (`#709 <https://github.com/SwissDataScienceCenter/renku-gateway/pull/709>`__).
 - **Notebooks**: Add a component for liveness detection
 - **Notebooks**: Support for saving cloud storage secrets
 
@@ -53,6 +54,7 @@ Internal Changes
 
 - **Search Services**: Reading all data service events from a single Redis stream. Processing from individual streams is kept.
 - **Data Services**: Do not show user emails and use usernames instead for all interactions
+- **UI**: The UI server has been refactored following the changes in the gateway (`#3271 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3271>`__).
 
 **Bug Fixes**
 
@@ -60,8 +62,6 @@ Internal Changes
 - **csi-rclone**: Use extra storage class when reading secrets from a PVC annotation
 - **Data Services**: Fix group member changes not being sent to search
 - **Data Services**: Fix Redis not being able to connect to the master node
-- **Gateway**: The API Gateway components have been refactored and simplified (`#709 <https://github.com/SwissDataScienceCenter/renku-gateway/pull/709>`__).
-- **UI**: The UI server has been refactored following the changes in the gateway (`#3271 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3271>`__).
 
 Individual Components
 ~~~~~~~~~~~~~~~~~~~~~
