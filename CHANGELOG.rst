@@ -3,7 +3,10 @@
 0.57.0
 ------
 
-This version of renku includes several new features, upgrades and bug fixes.
+Starting from this release of Renku, users are able to store and reuse the credentials for their protected data sources. No more  
+copy/paste on every session launch! We have also made small tweaks and improvements to search and sessions in Renku 2.0. 
+For a full list of changes, see the list below. 
+
 
 NOTE to administrators: Upgrading the `csi-rclone` component will unmount all cloud storage for all
 active or hibernated sessions. Therefore, we recommend notifying your users ahead of time when you deploy this version
@@ -16,7 +19,13 @@ User-Facing Changes
 
 **🌟 New Features**
 
+<<<<<<< HEAD
 - **UI**: Support saving and managing credentials for Renku 2.0 data sources (`#3266 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3266>`__).
+=======
+- **Search Services**: Enable searching by prefix of indexed words
+- **UI**: Support saving and managing credentials for Renku 2.0 data sources (`#3266 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3266>`__).
+- **UI**: Add members to groups and projects in Renku 2.0 by username instead of email (`#3270 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3270>`__).
+>>>>>>> release-0.57.0
 
 **✨ Improvements**
 
@@ -68,6 +77,7 @@ Individual Components
 - `csi-rclone 0.3.1 <https://github.com/SwissDataScienceCenter/csi-rclone/releases/tag/v0.3.1>`__
 - `renku-gateway 1.0.0 <https://github.com/SwissDataScienceCenter/renku-gateway/releases/tag/1.0.0>`_
 - `renku-gateway 1.0.1 <https://github.com/SwissDataScienceCenter/renku-gateway/releases/tag/1.0.1>`_
+- `renku-gateway 1.0.2 <https://github.com/SwissDataScienceCenter/renku-gateway/releases/tag/1.0.2>`_
 - `renku-ui 3.34.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.34.0>`_
 - `renku-ui 3.35.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.35.0>`_
 - `renku-search 0.5.0 <https://github.com/SwissDataScienceCenter/renku-search/releases/tag/v0.5.0>`_
