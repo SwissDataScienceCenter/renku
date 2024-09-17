@@ -3,7 +3,26 @@
 0.57.1
 ------
 
+Renku ``0.57.1`` fixes a bug in renku-ui-server where the service would be stuck in a crash loop when Sentry is enabled.
 
+User-Facing Changes
+~~~~~~~~~~~~~~~~~~~
+
+**🐞 Bug Fixes**
+
+- **UI**: Access mode defaults to read-only when adding a new data source in Renku 2.0 (`#3275 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3275>`__).
+
+Internal Changes
+~~~~~~~~~~~~~~~~
+
+**Bug Fixes**
+
+- **UI**: Fix the UI server being stuck in a crash loop at startup when Sentry is enabled (`#3318 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3318>`__).
+
+Individual Components
+~~~~~~~~~~~~~~~~~~~~~
+
+- `renku-ui 3.35.1 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.35.1>`_
 
 0.57.0
 ------
