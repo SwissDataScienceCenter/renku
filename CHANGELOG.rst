@@ -57,6 +57,10 @@ Renku 2.0 dashboard displayed content not related to you.
 User-Facing Changes
 ~~~~~~~~~~~~~~~~~~~
 
+**🌟 New Features**
+
+- **UI**: Support saving and managing credentials for Renku 2.0 data sources (`#3266 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3266>`__).
+
 **✨ Improvements**
 
 - **UI**: Polish Renku 2.0 pages and elements according to the latest design changes (`#3254 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3254>`__).
