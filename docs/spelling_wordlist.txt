@@ -152,6 +152,7 @@ kwargs
 ld
 lefthand
 lfs
+liveness
 LocalClient
 localhost
 Lucene
