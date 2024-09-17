@@ -149,6 +149,10 @@ KC_DB_PASSWORD: {{ default (randAlphaNum 64) .Values.global.keycloak.postgresPas
 {{- end -}}
 {{- end -}}
 
+{{- define "renku.keycloakIssuerUrl" -}}
+{{- printf "%s/realms/%s" (include "renku.keycloakUrl" . | trimSuffix "/") (include "renku.keycloak.realm" .) -}}
+{{- end -}}
+
 {{/*
 Common labels
 */}}
