@@ -11,8 +11,8 @@ const projectTestConfig = {
 };
 
 // ? Modify the config -- useful for debugging
-projectTestConfig.projectAlreadyExists = true;
-projectTestConfig.projectName = "cypress-usesession-743b82d96f16";
+// projectTestConfig.projectAlreadyExists = true;
+// projectTestConfig.projectName = "cypress-usesession-a8c6823e40ff";
 
 const projectIdentifier = {
   name: projectTestConfig.projectName,
