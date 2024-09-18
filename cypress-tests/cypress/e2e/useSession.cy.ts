@@ -11,8 +11,8 @@ const projectTestConfig = {
 };
 
 // ? Modify the config -- useful for debugging
-// projectTestConfig.projectAlreadyExists = true;
-// projectTestConfig.projectName = "cypress-usesession-a8c6823e40ff";
+projectTestConfig.projectAlreadyExists = true;
+projectTestConfig.projectName = "cypress-usesession-743b82d96f16";
 
 const projectIdentifier = {
   name: projectTestConfig.projectName,
@@ -166,9 +166,11 @@ describe("Basic public project functionality", () => {
   });
 
   it("Start a new session as anonymous user.", () => {
+    // Do not re-use the logged-in session
+    cy.session("anonymous", () => {});
+
     // Log out and go to the project again
     cy.visit("/");
-    cy.logout();
     cy.visitAndLoadProject(projectIdentifier);
 
     // Check we show the appropriate message
@@ -187,8 +189,6 @@ describe("Basic public project functionality", () => {
 
     // Stop the session -- mind that anonymous users cannot pause sessions
     cy.deleteSession({ fromSessionPage: true });
-
-    cy.robustLogin();
   });
 
   it("Start a new session on a project without permissions.", () => {
