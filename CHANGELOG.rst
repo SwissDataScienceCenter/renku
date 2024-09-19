@@ -18,11 +18,13 @@ Internal Changes
 **Bug Fixes**
 
 - **UI**: Fix the UI server being stuck in a crash loop at startup when Sentry is enabled (`#3318 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3318>`__).
+- **Gateway**: Fix getting HTTP error 500 when logging in (`#723 <https://github.com/SwissDataScienceCenter/renku-gateway/pull/723>`__).
 
 Individual Components
 ~~~~~~~~~~~~~~~~~~~~~
 
 - `renku-ui 3.35.1 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.35.1>`_
+- `renku-gateway 1.0.3 <https://github.com/SwissDataScienceCenter/renku-gateway/releases/tag/1.0.3>`_
 
 0.57.0
 ------
