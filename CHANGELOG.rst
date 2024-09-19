@@ -3,6 +3,8 @@
 0.58.0
 ------
 
+
+
 User-Facing Changes
 ~~~~~~~~~~~~~~~~~~~
 
@@ -20,11 +22,13 @@ Internal Changes
 **Improvements**
 
 - **UI**: Update Storybook to show Renku 2.0 re-usable elements (`#3254 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3254>`__).
+- **csi-rclone**: correctly use OAuth2 tokens for cloud storage to enable mounting.
 
 Individual Components
 ~~~~~~~~~~~~~~~~~~~~~
 
 - `renku-ui 3.36.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.36.0>`_
+- `csi-rclone 0.3.2 <https://github.com/SwissDataScienceCenter/csi-rclone/releases/tag/v0.3.2>`__
 
 
 0.57.1
