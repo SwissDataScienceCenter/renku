@@ -1383,7 +1383,7 @@ search:
     replicas: 1
     image:
       repository: renku/search-api
-      tag: "0.5.0"
+      tag: "0.6.0"
       pullPolicy: IfNotPresent
     service:
       type: ClusterIP
@@ -1396,7 +1396,7 @@ search:
     replicas: 1
     image:
       repository: renku/search-provision
-      tag: "0.5.0"
+      tag: "0.6.0"
       pullPolicy: IfNotPresent
     service:
       type: ClusterIP
