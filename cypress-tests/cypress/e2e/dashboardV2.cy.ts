@@ -1,7 +1,10 @@
 import { getRandomString, validateLogin } from "../support/commands/general";
 import { generatorProjectName } from "../support/commands/projects";
-import { ProjectIdentifierV2 } from "../support/commands/projectsV2";
-
+import {
+  createProjectIfMissingAPIV2,
+  deleteProjectFromAPIV2, getProjectByNamespaceAPIV2,
+  getUserNamespaceAPIV2, ProjectIdentifierV2
+} from "../support/utils/projectsV2.utils";
 const projectTestConfig = {
   projectAlreadyExists: false,
   projectName: generatorProjectName("dashboardV2"),
@@ -19,8 +22,8 @@ describe("Dashboard v2, Authenticated Users", () => {
 
   after(() => {
     if (!projectTestConfig.projectAlreadyExists && projectIdentifier.id != null){
-      cy.deleteProjectFromAPIV2(projectIdentifier);
-      cy.getProjectByNamespaceAPIV2(projectIdentifier).then((response) => {
+      deleteProjectFromAPIV2(projectIdentifier);
+      getProjectByNamespaceAPIV2(projectIdentifier).then((response) => {
         expect(response.status).to.equal(404);
       });
     }
@@ -36,10 +39,10 @@ describe("Dashboard v2, Authenticated Users", () => {
       },
       validateLogin
     );
-    cy.getUserNamespaceAPIV2().then((namespace) => {
+    getUserNamespaceAPIV2().then((namespace) => {
       if (namespace) {
         projectIdentifier.namespace = namespace;
-        cy.createProjectIfMissingAPIV2({
+        createProjectIfMissingAPIV2({
           visibility: "private",
           name: `${prefixProjectTitle} ${projectIdentifier.slug}`,
           namespace,
@@ -67,7 +70,6 @@ describe("Dashboard v2, Authenticated Users", () => {
 });
 
 describe("Dashboard v2, Non-Authenticated Users", () => {
-
   it("Cannot see projects and groups on Dashboard when logged out", () => {
     cy.visit("v2");
     cy.getDataCy("projects-container").contains("No 2.0 projects.");

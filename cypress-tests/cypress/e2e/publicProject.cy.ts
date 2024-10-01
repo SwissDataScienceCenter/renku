@@ -6,6 +6,7 @@ import {
 } from "../support/commands/projects";
 import { validateLogin, getRandomString } from "../support/commands/general";
 
+
 const username = Cypress.env("TEST_USERNAME");
 
 const projectTestConfig = {

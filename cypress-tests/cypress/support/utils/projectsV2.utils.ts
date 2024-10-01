@@ -4,13 +4,13 @@ export type ProjectIdentifierV2 = {
   id?: string;
 };
 
-interface NewProjectV2Props extends ProjectIdentifierV2 {
+export interface NewProjectV2Props extends ProjectIdentifierV2 {
   visibility?: "public" | "private";
   name: string;
 }
 
 /** Get the namespace of the logged in user from the API. */
-function getUserNamespaceAPIV2(): Cypress.Chainable<string | null> {
+export function getUserNamespaceAPIV2(): Cypress.Chainable<string | null> {
   return cy.request({ failOnStatusCode: false, method: "GET", url: `api/data/namespaces?minimum_role=owner` })
     .then((response) => {
       if (response.status === 200) {
@@ -22,12 +22,12 @@ function getUserNamespaceAPIV2(): Cypress.Chainable<string | null> {
 }
 
 /** Get a project by using only the API. */
-function getProjectByNamespaceAPIV2(newProjectProps: ProjectIdentifierV2): Cypress.Chainable<any | null> {
+export function getProjectByNamespaceAPIV2(newProjectProps: ProjectIdentifierV2): Cypress.Chainable<any | null> {
   return cy.request({ failOnStatusCode: false, method: "GET", url: `api/data/projects/${newProjectProps.namespace}/${newProjectProps.slug}` });
 }
 
 /** Create a project (if the project is missing) by using only the API. */
-function createProjectIfMissingAPIV2(newProjectProps: NewProjectV2Props) {
+export function createProjectIfMissingAPIV2(newProjectProps: NewProjectV2Props) {
   return getProjectByNamespaceAPIV2(newProjectProps)
     .then((response) => {
       if (response.status != 200) {
@@ -42,33 +42,14 @@ function createProjectIfMissingAPIV2(newProjectProps: NewProjectV2Props) {
       } else {
         return response.body;
       }
-  });
+    });
 }
 
 /** Delete a project by using only the API. */
-function deleteProjectFromAPIV2(projectIdentifier: ProjectIdentifierV2) {
+export function deleteProjectFromAPIV2(projectIdentifier: ProjectIdentifierV2) {
   return cy.request({
     failOnStatusCode: false,
     method: "DELETE",
     url: `api/data/projects/${projectIdentifier.id}`,
   });
-}
-
-export default function registerProjectV2Commands() {
-  Cypress.Commands.add("createProjectIfMissingAPIV2", createProjectIfMissingAPIV2);
-  Cypress.Commands.add("deleteProjectFromAPIV2", deleteProjectFromAPIV2);
-  Cypress.Commands.add("getUserNamespaceAPIV2", getUserNamespaceAPIV2);
-  Cypress.Commands.add("getProjectByNamespaceAPIV2", getProjectByNamespaceAPIV2);
-}
-
-declare global {
-  // eslint-disable-next-line @typescript-eslint/no-namespace
-  namespace Cypress {
-    interface Chainable {
-      createProjectIfMissingAPIV2(newProjectProps: NewProjectV2Props);
-      deleteProjectFromAPIV2(identifier: ProjectIdentifierV2);
-      getUserNamespaceAPIV2();
-      getProjectByNamespaceAPIV2(identifier: ProjectIdentifierV2);
-    }
-  }
 }
