@@ -88,22 +88,22 @@ global:
   ## Events related values definitions
   events:
     streams:
-      projectCreated: "project.created"
-      projectUpdated: "project.updated"
-      projectRemoved: "project.removed"
-      projectAuthAdded: "projectAuth.added"
-      projectAuthUpdated: "projectAuth.updated"
-      projectAuthRemoved: "projectAuth.removed"
-      userAdded: "user.added"
-      userUpdated: "user.updated"
-      userRemoved: "user.removed"
-      groupAdded: "group.added"
-      groupUpdated: "group.updated"
-      groupRemoved: "group.removed"
-      groupMemberAdded: "groupMember.added"
-      groupMemberUpdated: "groupMember.updated"
-      groupMemberRemoved: "groupMember.removed"
-      dataServiceAllEvents: "data_service.all_events"
+      PROJECT_CREATED: "project.created"
+      PROJECT_UPDATED: "project.updated"
+      PROJECT_REMOVED: "project.removed"
+      PROJECTAUTH_ADDED: "projectAuth.added"
+      PROJECTAUTH_UPDATED: "projectAuth.updated"
+      PROJECTAUTH_REMOVED: "projectAuth.removed"
+      USER_ADDED: "user.added"
+      USER_UPDATED: "user.updated"
+      USER_REMOVED: "user.removed"
+      GROUP_ADDED: "group.added"
+      GROUP_UPDATED: "group.updated"
+      GROUP_REMOVED: "group.removed"
+      GROUPMEMBER_ADDED: "groupMember.added"
+      GROUPMEMBER_UPDATED: "groupMember.updated"
+      GROUPMEMBER_REMOVED: "groupMember.removed"
+      DATASERVICE_ALLEVENTS: "data_service.all_events"
   ## Note that the graph will not turned on by default until renku 0.4.0
   graph:
     dbEventLog:
@@ -1383,7 +1383,7 @@ search:
     replicas: 1
     image:
       repository: renku/search-api
-      tag: "0.5.0"
+      tag: "0.6.1"
       pullPolicy: IfNotPresent
     service:
       type: ClusterIP
@@ -1396,7 +1396,7 @@ search:
     replicas: 1
     image:
       repository: renku/search-provision
-      tag: "0.5.0"
+      tag: "0.6.1"
       pullPolicy: IfNotPresent
     service:
       type: ClusterIP

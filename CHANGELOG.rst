@@ -3,6 +3,19 @@
 0.58.0
 ------
 
+Internal Changes
+~~~~~~~~~~~~~~~~
+
+**Improvements**
+
+- **Search Services**: Allow to re-provision the index from data-services and as part of a SOLR schema migration
+
+
+Individual Components
+~~~~~~~~~~~~~~~~~~~~~
+
+- `renku-search 0.6.1 <https://github.com/SwissDataScienceCenter/renku-search/releases/tag/v0.6.0>`_
+
 
 0.57.1
 ------
