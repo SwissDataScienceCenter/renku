@@ -3,7 +3,19 @@
 0.57.2
 ------
 
+Renku ``0.57.2`` fixes a bug in renku-gateway breaking the permissions check on repositories in Renku 2.0.
 
+Internal Changes
+~~~~~~~~~~~~~~~~
+
+**Bug Fixes**
+
+- **Gateway**: Fix path rewrite middleware when the path contains escaped characters (`#726 <https://github.com/SwissDataScienceCenter/renku-gateway/pull/726>`__).
+
+Individual Components
+~~~~~~~~~~~~~~~~~~~~~
+
+- `renku-gateway 1.0.4 <https://github.com/SwissDataScienceCenter/renku-gateway/releases/tag/1.0.4>`_
 
 0.57.1
 ------
