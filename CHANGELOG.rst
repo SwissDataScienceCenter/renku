@@ -21,6 +21,12 @@ Internal Changes
 
 - **UI**: Update Storybook to show Renku 2.0 re-usable elements (`#3254 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3254>`__).
 
+Individual Components
+~~~~~~~~~~~~~~~~~~~~~
+
+- `renku-ui 3.36.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.36.0>`_
+
+
 0.57.2
 ------
 
