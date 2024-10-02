@@ -4,6 +4,13 @@
 ------
 
 Renku ``0.57.2`` fixes several bugs in gateway and the `csi-rclone` driver.
+User-facing Changes
+~~~~~~~~~~~~~~~~~~~
+
+**Bug Fixes**
+
+- **UI**: show the correct repository access status 
+- **Sessions**: allow paused sessions with cloud storage secrets to resume normally
 
 Internal Changes
 ~~~~~~~~~~~~~~~~
