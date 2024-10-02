@@ -4,6 +4,7 @@
 ------
 
 Renku ``0.57.2`` fixes several bugs in gateway and the `csi-rclone` driver.
+
 User-facing Changes
 ~~~~~~~~~~~~~~~~~~~
 
