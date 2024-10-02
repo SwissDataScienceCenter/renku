@@ -1,5 +1,34 @@
 .. _changelog:
 
+0.57.2
+------
+
+Renku ``0.57.2`` fixes several bugs in gateway and the `csi-rclone` driver.
+
+User-facing Changes
+~~~~~~~~~~~~~~~~~~~
+
+**Bug Fixes**
+
+- **UI**: show the correct repository access status 
+- **Sessions**: allow paused sessions with cloud storage secrets to resume normally
+
+Internal Changes
+~~~~~~~~~~~~~~~~
+
+**Bug Fixes**
+
+- **Gateway**: Fix path rewrite middleware when the path contains escaped characters (`#726 <https://github.com/SwissDataScienceCenter/renku-gateway/pull/726>`__).
+- **csi-rclone**: Correctly use OAuth2 tokens for cloud storage to enable mounting.
+- **csi-rclone**: Remounting volumes created with older versions did not work.
+
+Individual Components
+~~~~~~~~~~~~~~~~~~~~~
+
+- `renku-gateway 1.0.4 <https://github.com/SwissDataScienceCenter/renku-gateway/releases/tag/1.0.4>`_
+- `csi-rclone 0.3.2 <https://github.com/SwissDataScienceCenter/csi-rclone/releases/tag/v0.3.2>`__
+- `csi-rclone 0.3.3 <https://github.com/SwissDataScienceCenter/csi-rclone/releases/tag/v0.3.3>`__
+
 0.57.1
 ------
 
