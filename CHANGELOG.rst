@@ -4,6 +4,35 @@
 ------
 
 
+0.57.1
+------
+
+Renku ``0.57.1`` fixes a bug in renku-ui-server where the service would be stuck in a crash loop when Sentry is enabled.
+It also fixes two bugs in Notebooks related to the access token and shared memory in the user-sessions.
+
+User-Facing Changes
+~~~~~~~~~~~~~~~~~~~
+
+**🐞 Bug Fixes**
+
+- **UI**: Access mode defaults to read-only when adding a new data source in Renku 2.0 (`#3275 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3275>`__).
+- **Notebooks**: Don't fail clone process if access token doesn't exist (`#1971 <https://github.com/SwissDataScienceCenter/renku-notebooks/pull/1971>`__).
+- **Notebooks**: Fix shared memory attached to the JupyterServer container to be half of the total requested memory (`#1984 <https://github.com/SwissDataScienceCenter/renku-notebooks/pull/1984>`__).
+
+Internal Changes
+~~~~~~~~~~~~~~~~
+
+**Bug Fixes**
+
+- **UI**: Fix the UI server being stuck in a crash loop at startup when Sentry is enabled (`#3318 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3318>`__).
+- **Gateway**: Fix getting HTTP error 500 when logging in (`#723 <https://github.com/SwissDataScienceCenter/renku-gateway/pull/723>`__).
+
+Individual Components
+~~~~~~~~~~~~~~~~~~~~~
+
+- `renku-ui 3.35.1 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.35.1>`_
+- `renku-gateway 1.0.3 <https://github.com/SwissDataScienceCenter/renku-gateway/releases/tag/1.0.3>`_
+- `renku-notebooks 1.26.1 <https://github.com/SwissDataScienceCenter/renku-notebooks/releases/tag/1.26.1>`_
 
 0.57.0
 ------
