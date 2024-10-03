@@ -1,0 +1,89 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ template "renku.fullname" . }}-gateway
+  labels:
+    app: {{ template "gateway.name" . }}
+    chart: {{ template "renku.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+data:
+  config.yaml: |
+    server:
+      port: 8080
+      host: 0.0.0.0
+      rateLimits:
+        enabled: {{ .Values.gateway.rateLimits.general.enabled }}
+        rate: {{ .Values.gateway.rateLimits.general.average }}
+        burst: {{ .Values.gateway.rateLimits.general.burst }}
+      {{- with .Values.gateway.allowOrigin }}
+      allowOrigin:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+    sessions:
+      authorizationVerifiers:
+        - issuer: {{ printf "%s/realms/%s" (include "renku.keycloakUrl" . | trimSuffix "/") (include "renku.keycloak.realm" .) }}
+          audience: renku
+          authorizedParty: renku
+        - issuer: {{ printf "%s/realms/%s" (include "renku.keycloakUrl" . | trimSuffix "/") (include "renku.keycloak.realm" .) }}
+          audience: renku
+          authorizedParty: renku-cli
+    revproxy:
+      renkuBaseUrl: {{ include "renku.baseUrl" . | quote }}
+      {{- if .Values.gitlab.enabled }}
+      externalGitlabUrl: ""
+      {{- else }}
+      externalGitlabUrl: {{ .Values.global.gitlab.url | default "" | quote }}
+      {{- end }}
+      k8sNamespace: {{ .Release.Namespace }}
+      renkuServices:
+        notebooks: {{ printf "http://%s-notebooks" .Release.Name | quote }}
+        kg: {{ printf "http://%s-knowledge-graph" .Release.Name | quote }}
+        webhook: {{ printf "http://%s-webhook-service" .Release.Name | quote }}
+        core:
+          serviceNames: 
+            {{- include "gateway.core.serviceNamesYaml" . | nindent 12 }}
+          servicePaths: 
+            {{- include "gateway.core.pathsYaml" . | nindent 12 }}
+          sticky: true 
+        dataService: {{ printf "http://%s-data-service" .Release.Name | quote }}
+        keycloak: {{ include "renku.keycloakUrl" . | quote }} 
+        uiserver: {{ printf "http://%s" (include "ui-server.fullname" .) | quote }} 
+        search: {{ printf "http://%s-search-api" .Release.Name | quote }}
+    login:
+      renkuBaseUrl: {{ include "renku.baseUrl" . | quote }}
+      loginRoutesBasePath: "/api/auth"
+      defaultAppRedirectURL: {{ include "renku.baseUrl" . | quote }}
+      tokenEncryption:
+        enabled: true
+      providers:
+        renku:
+          issuer: {{ printf "%s/realms/%s" (include "renku.keycloakUrl" . | trimSuffix "/") (include "renku.keycloak.realm" .) }}
+          clientID: renku
+          scopes: ["profile", "email", "openid", "microprofile-jwt"]
+          callbackURI:  {{ printf "%s/api/auth/callback" (include "renku.baseUrl" .) }}
+          usePKCE: false
+        gitlab:
+          issuer: {{ .Values.global.gitlab.url | quote }}
+          clientID: {{ .Values.gateway.gitlabClientId | default .Values.global.gateway.gitlabClientId | quote }}
+          scopes: ["openid", "api", "read_user", "read_repository"] 
+          callbackURI: {{ printf "%s/api/auth/callback" (include "renku.baseUrl" .) }}
+          usePKCE: false
+      oldGitLabLogout: {{ .Values.gateway.oldGitLabLogout | default false }}
+      logoutGitLabUponRenkuLogout: {{ .Values.gateway.logoutGitLabUponRenkuLogout | default true }}
+    redis:
+      type: redis 
+      addresses: 
+        - {{ printf "%s:%d" .Values.global.redis.host (.Values.global.redis.port | int) | quote }}
+      isSentinel: {{ .Values.global.redis.sentinel.enabled }}
+      masterName: {{ .Values.global.redis.sentinel.masterSet | quote }}
+      dbIndex: {{ .Values.global.redis.dbIndex.gateway }}
+    monitoring:
+      sentry:
+        enabled: {{ .Values.gateway.sentry.enabled }}
+        environment: {{ .Values.gateway.sentry.environment }}
+        sampleRate: {{ .Values.gateway.sentry.sampleRate }}
+      prometheus:
+        enabled: {{ .Values.gateway.metrics.enabled }}
+        port: {{ .Values.gateway.metrics.port }}
+---

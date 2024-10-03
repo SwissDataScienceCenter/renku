@@ -3,6 +3,15 @@
 Get Started on RenkuLab
 =======================
 
+.. note::
+
+     **We're building the next version of Renku!** If you're looking for a tutorial for Renku 2.0,
+     please see the Renku 2.0 documentation on our `Community Portal
+     <https://renku.notion.site/Renku-Community-Portal-2a154d7d30b24ab8a5968c60c2592d87>`_ instead.
+     This tutorial is outdated and refers to the legacy version of Renku that is no longer under
+     active development. To learn more about the big changes coming in Renku, check out our `blog
+     post <https://blog.renkulab.io/renku-2/>`_.
+
 This tutorial will help you get started working on the Renkulab platform. We will
 use Renku to realize a very small data science project: counting the
 number of flights to Austin-Bergstrom International Airport in January, 2019. In this tutorial we will provide instructions for Python, Julia (in JupyterLab) and R (in RStudio).
