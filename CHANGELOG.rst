@@ -21,7 +21,7 @@ Internal Changes
 
 - **UI**: Update Storybook to show Renku 2.0 re-usable elements (`#3254 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3254>`__).
 - **Search Services**: Allow to re-provision the index from data-services and as part of a SOLR schema migration
-
+- **Helm chart**: Add RBAC for K8s cache for new AmaltheaSessions custom resource
 
 Individual Components
 ~~~~~~~~~~~~~~~~~~~~~
