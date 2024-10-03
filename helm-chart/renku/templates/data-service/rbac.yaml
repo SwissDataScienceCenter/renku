@@ -86,4 +86,4 @@ subjects:
   - kind: ServiceAccount
     name: {{ template "renku.fullname" . }}-data-service
     namespace: {{ .Release.Namespace }}
-{{- end }}
+{{- end -}}
