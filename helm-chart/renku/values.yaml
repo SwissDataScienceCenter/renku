@@ -85,25 +85,6 @@ global:
     ## for a new project based on its own version.
     ## NOTE should only be set for CI deployments and development purposes.
     cli_version:
-  ## Events related values definitions
-  events:
-    streams:
-      projectCreated: "project.created"
-      projectUpdated: "project.updated"
-      projectRemoved: "project.removed"
-      projectAuthAdded: "projectAuth.added"
-      projectAuthUpdated: "projectAuth.updated"
-      projectAuthRemoved: "projectAuth.removed"
-      userAdded: "user.added"
-      userUpdated: "user.updated"
-      userRemoved: "user.removed"
-      groupAdded: "group.added"
-      groupUpdated: "group.updated"
-      groupRemoved: "group.removed"
-      groupMemberAdded: "groupMember.added"
-      groupMemberUpdated: "groupMember.updated"
-      groupMemberRemoved: "groupMember.removed"
-      dataServiceAllEvents: "data_service.all_events"
   ## Note that the graph will not turned on by default until renku 0.4.0
   graph:
     dbEventLog:
@@ -1290,7 +1271,7 @@ gateway:
   secretKey:
   image:
     repository: renku/renku-gateway
-    tag: "1.0.3"
+    tag: "1.1.0"
     pullPolicy: IfNotPresent
   service:
     type: ClusterIP
@@ -1383,7 +1364,7 @@ search:
     replicas: 1
     image:
       repository: renku/search-api
-      tag: "0.5.0"
+      tag: "0.6.1"
       pullPolicy: IfNotPresent
     service:
       type: ClusterIP
@@ -1396,7 +1377,7 @@ search:
     replicas: 1
     image:
       repository: renku/search-provision
-      tag: "0.5.0"
+      tag: "0.6.1"
       pullPolicy: IfNotPresent
     service:
       type: ClusterIP
