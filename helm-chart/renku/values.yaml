@@ -1574,6 +1574,8 @@ platformInit:
     repository: renku/platform-init
     tag: "latest"
 dataService:
+  rbac:
+    create: true
   image:
     repository: renku/renku-data-service
     tag: "0.21.0"
