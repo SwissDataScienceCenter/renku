@@ -3,7 +3,6 @@
 0.58.0
 ------
 
-
 User-Facing Changes
 ~~~~~~~~~~~~~~~~~~~
 
@@ -28,10 +27,6 @@ Individual Components
 ~~~~~~~~~~~~~~~~~~~~~
 
 - `renku-search 0.6.1 <https://github.com/SwissDataScienceCenter/renku-search/releases/tag/v0.6.0>`_
-
-Individual Components
-~~~~~~~~~~~~~~~~~~~~~
-
 - `renku-ui 3.36.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.36.0>`_
 
 
