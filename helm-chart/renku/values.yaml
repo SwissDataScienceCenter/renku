@@ -714,7 +714,7 @@ ui:
           ref: 0.9.0
           name: Renku
         - url: https://github.com/SwissDataScienceCenter/contributed-project-templates
-          ref: 0.9.0
+          ref: 0.10.0
           name: Community
     # This defines the threshold for automatically showing a preview when browsing projects' files.
     # Above the soft limit, the user receives a warning. Above the hard limit, no preview is available.
