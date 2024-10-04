@@ -1298,6 +1298,8 @@ gateway:
   # dedicated GitLab instance is deployed, so, logging out from Renku should
   # trigger a logout from GitLab.
   logoutGitLabUponRenkuLogout: true
+  # Turns on debug logs from the gateway
+  debug: false
   # sentry configuration
   sentry:
     enabled: false
