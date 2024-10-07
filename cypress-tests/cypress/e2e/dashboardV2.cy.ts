@@ -13,7 +13,7 @@ const projectTestConfig = {
 const prefixProjectTitle = "My Renku Project";
 const sessionId = ["dashboardV2", getRandomString()];
 
-describe("Dashboard v2, Authenticated Users", () => {
+describe("Dashboard v2 - Authenticated user", () => {
   const projectIdentifier: ProjectIdentifierV2 = {
     slug: projectTestConfig.projectName,
     id: null,
@@ -61,7 +61,7 @@ describe("Dashboard v2, Authenticated Users", () => {
     cy.getDataCy("dashboard-project-list").find("a").should("contain.text", projectIdentifier.slug);
   });
 
-  it("Can find project in the search", () => {
+  it("Can find project in the search results", () => {
     cy.visit("v2");
     cy.getDataCy("view-my-projects-btn").click();
     cy.getDataCy("search-card").should("have.length.at.least", 1);
@@ -69,7 +69,7 @@ describe("Dashboard v2, Authenticated Users", () => {
   });
 });
 
-describe("Dashboard v2, Non-Authenticated Users", () => {
+describe("Dashboard v2 - Non-Authenticated user", () => {
   it("Cannot see projects and groups on Dashboard when logged out", () => {
     cy.visit("v2");
     cy.getDataCy("projects-container").contains("No 2.0 projects.");
