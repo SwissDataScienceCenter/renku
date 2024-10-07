@@ -3,6 +3,10 @@
 0.58.0
 ------
 
+Renku ``0.58.0`` introduces the ability to reuse data connectors in multiple projects!
+When you add a data connector (previously called a data source) to your project, you now have the new option to select other data connectors on RenkuLab,
+for example those shared in your group, rather than having to re-enter the data connection details.
+
 User-Facing Changes
 ~~~~~~~~~~~~~~~~~~~
 
