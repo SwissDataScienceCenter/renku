@@ -147,6 +147,7 @@ jobs:
             useSession,
             checkWorkflows,
             rstudioSession,
+            dashboardV2,
           ]
 
     steps:
