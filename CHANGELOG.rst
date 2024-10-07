@@ -28,6 +28,13 @@ Internal Changes
 - **Helm chart**: Add RBAC for K8s cache for new AmaltheaSessions custom resource
 - **Gateway**: Add extra credentials for the data service for the new AmaltheaSessions
 - **Gateway**: Remove unused Python code
+- **Data services**: Support event queue re-provisioning
+
+**🐞 Bug Fixes**
+
+- **Data services**: Do not use gather() in when listing projects
+- **Data services**: Order resource classes by GPU, CPU, RAM and storage
+- **Data services**: Following redirects when sending requests to git repositories
 
 Individual Components
 ~~~~~~~~~~~~~~~~~~~~~
@@ -35,6 +42,7 @@ Individual Components
 - `renku-search 0.6.1 <https://github.com/SwissDataScienceCenter/renku-search/releases/tag/v0.6.0>`_
 - `renku-ui 3.36.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.36.0>`_
 - `renku-gateway 1.1.0 <https://github.com/SwissDataScienceCenter/renku-gateway/releases/tag/1.1.0>`_
+- `renku-data-services 0.21.0 <https://github.com/SwissDataScienceCenter/renku-data-services/releases/tag/v0.21.0>`__
 
 0.57.1
 ------
