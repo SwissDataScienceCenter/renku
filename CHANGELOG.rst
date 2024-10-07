@@ -25,12 +25,14 @@ Internal Changes
 - **Gateway**: Add extra credentials for the data service for the new AmaltheaSessions
 - **Gateway**: Remove unused Python code
 - **Data services**: Support event queue re-provisioning
+- **Data services**: Support listing projects and groups by direct membership
 
 **🐞 Bug Fixes**
 
 - **Data services**: Do not use gather() in when listing projects
 - **Data services**: Order resource classes by GPU, CPU, RAM and storage
 - **Data services**: Following redirects when sending requests to git repositories
+- **Data services**: Allow unsetting secrets for cloud storage
 
 Individual Components
 ~~~~~~~~~~~~~~~~~~~~~
@@ -39,6 +41,7 @@ Individual Components
 - `renku-ui 3.36.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.36.0>`_
 - `renku-gateway 1.1.0 <https://github.com/SwissDataScienceCenter/renku-gateway/releases/tag/1.1.0>`_
 - `renku-data-services 0.21.0 <https://github.com/SwissDataScienceCenter/renku-data-services/releases/tag/v0.21.0>`__
+- `renku-data-services 0.22.0 <https://github.com/SwissDataScienceCenter/renku-data-services/releases/tag/v0.22.0>`__
 
 0.57.2
 ------
