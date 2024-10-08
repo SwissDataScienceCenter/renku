@@ -3,6 +3,10 @@
 0.58.0
 ------
 
+Renku ``0.57.2`` fixes several issues related to Renku 2.0 search, and also squashes a bug where the
+Renku 2.0 dashboard displayed content not related to you.
+
+
 User-Facing Changes
 ~~~~~~~~~~~~~~~~~~~
 
@@ -12,9 +16,10 @@ User-Facing Changes
 
 **🐞 Bug Fixes**
 
+- **Search Services**: Resolve issues that caused items to be missing from Renku 2.0 search, including the in the search for adding members to projects and groups.
+- **UI**: Resolve an issue where the Renku 2.0 dashboard displayed projects and groups that the user was not a member of (`#3289 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3289>`__)
+- **UI**: Fix a bug where clicking on 'Show all my projects' on the Renku 2.0 dashboard redirected to a page displaying not only the user's projects but also others' projects (`#3289 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3289>`__)
 - **UI**: Prevent glitches in the new session details sections  (`#3313 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3313>`__).
-- **UI**: Resolved an issue where the dashboard displayed projects and groups that the user was not a member of (`#3289 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3289>`__)
-- **UI**: Fixed a bug where clicking on 'Show all my projects' redirected to a page displaying not only the user's projects but also others' projects (`#3289 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3289>`__)
 
 Internal Changes
 ~~~~~~~~~~~~~~~~
