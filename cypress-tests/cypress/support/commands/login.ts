@@ -141,7 +141,7 @@ function logout() {
   cy.get("#profile-dropdown").should("be.visible").click();
   cy.get("#logout-link").should("be.visible").click();
   // Make sure we fully log out
-  cy.wait(1_000);
+  cy.wait(5_000);
 }
 
 export default function registerLoginCommands() {
