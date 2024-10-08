@@ -108,6 +108,8 @@ spec:
                 - -addr=127.0.0.1:50051
                 - -tls
                 - -tls-server-name={{ template "renku.fullname" . }}-authz
+                - -connect-timeout
+                - "3s"
             timeoutSeconds: 3
             periodSeconds: 10
           readinessProbe:
@@ -118,6 +120,8 @@ spec:
                 - -addr=127.0.0.1:50051
                 - -tls
                 - -tls-server-name={{ template "renku.fullname" . }}-authz
+                - -connect-timeout
+                - "3s"
             timeoutSeconds: 3
             periodSeconds: 10
           resources:

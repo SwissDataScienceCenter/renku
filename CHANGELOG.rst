@@ -41,6 +41,7 @@ Internal Changes
 - **Data services**: Order resource classes by GPU, CPU, RAM and storage
 - **Data services**: Following redirects when sending requests to git repositories
 - **Data services**: Allow unsetting secrets for cloud storage
+- **Helm chart**: Increase the connection timeout for the Authzed database health checks
 
 Individual Components
 ~~~~~~~~~~~~~~~~~~~~~
