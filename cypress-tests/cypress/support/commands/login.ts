@@ -21,7 +21,7 @@ const register = (
   firstName?: string,
   lastName?: string
 ) => {
-  cy.visit("/login");
+  cy.visit("/api/auth/login");
 
   // ? wait to be assess whether tokens were refreshed automatically or we really need to register
   cy.wait(1000); // eslint-disable-line cypress/no-unnecessary-waiting
