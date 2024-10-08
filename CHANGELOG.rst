@@ -16,7 +16,7 @@ User-Facing Changes
 
 **🐞 Bug Fixes**
 
-- **Search Services**: Resolve issues that caused items to be missing from Renku 2.0 search, including in the search for adding members to projects and groups.
+- **Search Services**: Resolve issues that caused items to be missing from Renku 2.0 search, including the search for members when adding members to projects and groups.
 - **UI**: Resolve an issue where the Renku 2.0 dashboard displayed projects and groups that the user was not a member of (`#3289 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3289>`__)
 - **UI**: Fix a bug where clicking on 'Show all my projects' on the Renku 2.0 dashboard redirected to a page displaying not only the user's projects but also others' projects (`#3289 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3289>`__)
 - **UI**: Prevent glitches in the new session details sections  (`#3313 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3313>`__).
