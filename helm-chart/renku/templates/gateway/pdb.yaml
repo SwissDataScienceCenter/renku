@@ -1,10 +1,10 @@
-{{- if or (gt (int .Values.gateway.reverseProxy.replicaCount) 1) (and .Values.gateway.reverseProxy.autoscaling.enabled (gt (int .Values.gateway.reverseProxy.autoscaling.minReplicas) 1)) }}
+{{- if or (gt (int .Values.gateway.replicaCount) 1) (and .Values.gateway.autoscaling.enabled (gt (int .Values.gateway.autoscaling.minReplicas) 1)) }}
 apiVersion: policy/v1
 kind: PodDisruptionBudget
 metadata:
-  name: {{ template "renku.fullname" . }}-gateway-revproxy
+  name: {{ template "renku.fullname" . }}-gateway
   labels:
-    app: {{ template "renku.name" . }}-gateway-revproxy
+    app: {{ template "renku.name" . }}-gateway
     chart: {{ template "renku.chart" . }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
@@ -12,6 +12,7 @@ spec:
   maxUnavailable: 50%
   selector:
     matchLabels:
-      app: {{ template "renku.name" . }}-gateway-revproxy
+      app: {{ template "renku.name" . }}-gateway
       release: {{ .Release.Name }}
 {{- end }}
+

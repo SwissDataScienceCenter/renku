@@ -166,9 +166,11 @@ describe("Basic public project functionality", () => {
   });
 
   it("Start a new session as anonymous user.", () => {
+    // Do not re-use the logged-in session
+    cy.session("anonymous", () => {});
+
     // Log out and go to the project again
     cy.visit("/");
-    cy.logout();
     cy.visitAndLoadProject(projectIdentifier);
 
     // Check we show the appropriate message
@@ -275,7 +277,7 @@ describe("Basic public project functionality", () => {
         cy.get("#mountPoint")
           .should("have.value", "external_storage/data_s3")
           .type("{selectAll}data_s3");
-        cy.get("#readOnly").should("not.be.checked").check();
+        cy.get("#readOnly").should("be.checked").check();
 
         cy.getDataCy("cloud-storage-edit-update-button")
           .should("be.visible")

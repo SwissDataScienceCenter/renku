@@ -5,6 +5,55 @@ For changes that require manual steps other than changing values, please check o
 Please follow this convention when adding a new row
 * `<type: NEW|EDIT|DELETE> - *<resource name>*: <details>`
 
+## Upgrading to Renku 0.57.0
+
+* DELETE ``gateway.image.auth`` has been removed.
+* EDIT ``gateway.reverseProxy`` settings have been moved to ``gateway``:
+
+Old
+  ```
+  gateway:
+    reverseProxy:
+      image:
+        repository: renku/renku-revproxy
+        tag: "0.24.0"
+        pullPolicy: IfNotPresent
+      metrics:
+        enabled: true
+        port: 8765
+      replicaCount: 2
+      podAnnotations: {}
+      resources: {}
+      autoscaling:
+        enabled: false
+        minReplicas: 2
+        maxReplicas: 5
+        targetMemoryUtilizationPercentage: 75
+        targetCPUUtilizationPercentage: 75
+      updateStrategy: {}
+  ```
+New
+  ```
+  gateway:
+    image:
+      repository: renku/renku-gateway
+      tag: "1.0.0"
+      pullPolicy: IfNotPresent
+    metrics:
+      enabled: true
+      port: 8765
+    replicaCount: 2
+    podAnnotations: {}
+    resources: {}
+    autoscaling:
+      enabled: false
+      minReplicas: 2
+      maxReplicas: 5
+      targetMemoryUtilizationPercentage: 75
+      targetCPUUtilizationPercentage: 75
+    updateStrategy: {}
+  ```
+
 ## Upgrading to Renku 0.54.0
 
 * NEW ``global.platformConfig``: The YAML string can now contain a new key, `secretServicePreviousPrivateKey` which allows for rotating the secret-storage private key.
