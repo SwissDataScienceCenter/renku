@@ -58,7 +58,7 @@ spec:
             - name: GITLAB_OAUTH_CLIENT_SECRET
               valueFrom:
                 secretKeyRef:
-                  name: {{ cat (include "renku.fullname" .) "-gateway-revproxy" | nospace }} 
+                  name: {{ cat (include "renku.fullname" .) "-gateway" | nospace }} 
                   key: gitlabClientSecret
             - name: GITLAB_OAUTH_CLIENT_ID
               value: {{ .Values.gateway.gitlabClientId | default .Values.global.gateway.gitlabClientId | quote }}
