@@ -38,7 +38,11 @@ describe("Basic public project functionality", () => {
       },
       validateLogin
     );
-    cy.createProjectIfMissing({templateName: "Python", ...projectIdentifier, visibility: "private"});
+    cy.createProjectIfMissing({
+      templateName: "Python",
+      ...projectIdentifier,
+      visibility: "private",
+    });
     cy.visitAndLoadProject(projectIdentifier);
   });
 
@@ -50,11 +54,10 @@ describe("Basic public project functionality", () => {
       .should("be.checked");
     cy.searchForProject(projectIdentifier, true);
 
-    // logout and search for the project and log back in
-    cy.logout();
+    // Check as an anonymous user
+    cy.session(["anonymous", getRandomString()], () => {});
     cy.get("#nav-hamburger").should("be.visible").click();
     cy.searchForProject(projectIdentifier, false);
-    cy.robustLogin();
   });
 
   it("Can always search for project after changing the visibility", () => {
@@ -86,10 +89,10 @@ describe("Basic public project functionality", () => {
 
     // Search the project as both logged in and logged out.
     cy.searchForProject(projectIdentifier, true);
-    cy.logout();
+    // Check as an anonymous user
+    cy.session(["anonymous", getRandomString()], () => {});
     cy.get("#nav-hamburger").should("be.visible").click();
     cy.searchForProject(projectIdentifier, false);
-    cy.robustLogin();
   });
 
   it("Deleting the project removes it from the search page", () => {

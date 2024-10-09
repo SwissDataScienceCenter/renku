@@ -48,11 +48,10 @@ describe("Basic public project functionality", () => {
     cy.waitMetadataIndexing();
     cy.searchForProject(projectIdentifier);
 
-    // logout and search for the project and log back in
-    cy.logout();
+    // Check as an anonymous user
+    cy.session(["anonymous", getRandomString()], () => {});
     cy.get("#nav-hamburger").should("be.visible").click();
     cy.searchForProject(projectIdentifier);
-    cy.robustLogin();
   });
 
   it("Can see overview content and check the clone URLs", () => {
