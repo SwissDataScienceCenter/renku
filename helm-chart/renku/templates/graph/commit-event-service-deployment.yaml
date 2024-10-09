@@ -66,7 +66,7 @@ spec:
           resources:
             {{- toYaml .Values.graph.commitEventService.resources | nindent 12 }}
           volumeMounts:
-            {{- include "certificates.volumeMounts.javaCertsGeneral" . | nindent 12 }}
+            {{- include ( printf "certificates.volumeMounts.%s" (.Values.graph.commitEventService.javaVersion)) . | nindent 12 }}
       volumes:
         {{- include "certificates.volumes" . | nindent 8 }}
   {{- with .Values.nodeSelector }}
