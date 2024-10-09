@@ -50,6 +50,7 @@ describe("Basic public project functionality", () => {
 
     // Check as an anonymous user
     cy.session(["anonymous", getRandomString()], () => {});
+    cy.visit("/");
     cy.get("#nav-hamburger").should("be.visible").click();
     cy.searchForProject(projectIdentifier);
   });
