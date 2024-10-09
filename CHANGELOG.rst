@@ -16,7 +16,7 @@ Internal Changes
 Renku 0.61.0 introduces a new version of Amalthea that supports running sessions with Docker images
 that do not contain Jupyter server.
 
-NOTES to administrators: 
+NOTES to administrators:
 
 - This upgrade introduces a brand new CRD for sessions. All services that support
   sessions for Renku v2 will switch to this new CRD. Renku v1 sessions remain unchanged.
@@ -26,15 +26,15 @@ NOTES to administrators:
   notify users of the change and allow for enough time so that existing Renku v2 sessions can be saved and
   cleaned up, rather than asking users to save the url to their sessions. In addition to users not being able
   to see old Renku v2 sessions, they will also not be able to pause, resume or delete old Renku v2 sessions.
-  Therefore it's best if most sessions are properly saved and cleaned up before this update is rolled out. In order 
+  Therefore it's best if most sessions are properly saved and cleaned up before this update is rolled out. In order
   to support the new CRD we have also created a new operator that will manage the new `amaltheasession` resources.
 
-- The network policies for Renku have been consolidated and revamped. The most notable change here is the 
+- The network policies for Renku have been consolidated and revamped. The most notable change here is the
   removal of the egress policy that prevented egress to internal IP addresses from sessions. Now we disallow
   all ingress in the Renku release namespace by default and explicitly grant permissions to any pods that need
   to access other pods inside the Renku release namespace. Two properties relevant to this have been added to the
   Helm chart values file that allows administrators to grant access to all Renku services from a specific namespace
-  or to do the same for specific pods within the Renku namespace. These are not needed for Renku to function and the 
+  or to do the same for specific pods within the Renku namespace. These are not needed for Renku to function and the
   default network policies should be sufficient, they have been added so that administrators can allow ingress for
   other services that may not come with the Renku Helm chart such as logging or monitoring. This change will result in
   the removal of some network policies and the creation of several new policies.
@@ -185,6 +185,7 @@ Individual Components
 0.59.0
 ------
 
+<<<<<<< HEAD
 Renku ``0.59.0`` introduces the ability to reuse data connectors in multiple projects!
 When you add a data connector (previously called a data source) to your project, you now have the new option to select other data connectors on RenkuLab,
 for example those shared in your group, rather than having to re-enter the data connection details.
@@ -241,6 +242,9 @@ Individual Components
 - `renku-ui 3.39.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.39.0>`_
 - `renku-ui 3.40.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.40.0>`_
 - `renku-ui 3.40.1 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.40.1>`_
+=======
+
+>>>>>>> cd54c4f4 (chore: create release 0.60.0)
 
 0.58.1
 ------
@@ -325,7 +329,7 @@ Internal Changes
 Individual Components
 ~~~~~~~~~~~~~~~~~~~~~
 
-- `renku-search 0.6.1 <https://github.com/SwissDataScienceCenter/renku-search/releases/tag/v0.6.1>`_
+- `renku-search 0.6.1 <https://github.com/SwissDataScienceCenter/renku-search/releases/tag/v0.6.0>`_
 - `renku-ui 3.36.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.36.0>`_
 - `renku-ui 3.37.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.37.0>`_
 - `renku-ui 3.37.1 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.37.1>`_
