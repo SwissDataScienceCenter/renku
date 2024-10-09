@@ -1,9 +1,11 @@
 const renkuLogin = (credentials: { username: string; password: string }[]) => {
-  cy.wrap(credentials, { log: false }).each((credential: {password: string, username: string}) => {
-    cy.get("#username").type(credential.username);
-    cy.get("#password").type(credential.password, { log: false });
-    cy.get("#kc-login").click()
-  })
+  cy.wrap(credentials, { log: false }).each(
+    (credential: { password: string; username: string }) => {
+      cy.get("#username").type(credential.username);
+      cy.get("#password").type(credential.password, { log: false });
+      cy.get("#kc-login").click();
+    }
+  );
   cy.url().then((url) => {
     const parsedUrl = new URL(url);
     if (
@@ -93,7 +95,7 @@ function registerAndVerify(props: RegisterAndVerifyProps) {
     expect(["/", ""]).to.include(loc.pathname);
     expect(loc.search).to.eq("");
     expect(loc.hostname).to.eq(baseURL.hostname);
-  })
+  });
   cy.get("header").should("be.visible");
   cy.get("footer").should("be.visible");
   // If we send a request to the user endpoint on Gitlab too quickly after we log in then
@@ -137,15 +139,7 @@ function robustLogin(props?: RobustLoginProps) {
   );
 }
 
-function logout() {
-  cy.get("#profile-dropdown").should("be.visible").click();
-  cy.get("#logout-link").should("be.visible").click();
-  // Make sure we fully log out
-  cy.wait(15_000);
-}
-
 export default function registerLoginCommands() {
-  Cypress.Commands.add("logout", logout);
   Cypress.Commands.add("renkuLogin", renkuLogin);
   Cypress.Commands.add("register", register);
   Cypress.Commands.add("registerAndVerify", registerAndVerify);
@@ -156,7 +150,6 @@ declare global {
   // eslint-disable-next-line @typescript-eslint/no-namespace
   namespace Cypress {
     interface Chainable {
-      logout();
       renkuLogin(credentials: { username: string; password: string }[]);
       register(
         email: string,
