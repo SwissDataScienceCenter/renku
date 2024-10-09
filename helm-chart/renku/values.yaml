@@ -1101,15 +1101,15 @@ notebooks:
   gitRpcServer:
     image:
       name: renku/git-rpc-server
-      tag: "1.25.3"
+      tag: "1.26.1"
   gitHttpsProxy:
     image:
       name: renku/git-https-proxy
-      tag: "1.25.3"
+      tag: "1.26.1"
   gitClone:
     image:
       name: renku/git-clone
-      tag: "1.25.3"
+      tag: "1.26.1"
   service:
     type: ClusterIP
     port: 80
@@ -1162,12 +1162,12 @@ notebooks:
     sessionTypes: ["registered"]
     image:
       repository: renku/renku-notebooks-tests
-      tag: "1.25.3"
+      tag: "1.26.1"
       pullPolicy: IfNotPresent
   k8sWatcher:
     image:
       repository: renku/k8s-watcher
-      tag: "1.25.3"
+      tag: "1.26.1"
       pullPolicy: IfNotPresent
     resources: {}
     replicaCount: 1
@@ -1179,12 +1179,12 @@ notebooks:
   secretsMount:
     image:
       repository: renku/secrets-mount
-      tag: "1.25.3"
+      tag: "1.26.1"
   ssh:
     enabled: false
     image:
       repository: renku/ssh-jump-host
-      tag: "1.25.3"
+      tag: "1.26.1"
       pullPolicy: IfNotPresent
     resources: {}
     replicaCount: 1
