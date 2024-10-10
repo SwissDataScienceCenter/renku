@@ -5,6 +5,65 @@
 
 
 
+0.59.0
+------
+
+
+
+0.58.0
+------
+
+Renku ``0.58.0`` fixes several issues related to Renku 2.0 search, and also squashes a bug where the
+Renku 2.0 dashboard displayed content not related to you.
+
+
+User-Facing Changes
+~~~~~~~~~~~~~~~~~~~
+
+**✨ Improvements**
+
+- **UI**: Polish Renku 2.0 pages and elements according to the latest design changes (`#3254 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3254>`__).
+
+**🐞 Bug Fixes**
+
+- **Search Services**: Resolve issues that caused items to be missing from Renku 2.0 search, including the search for members when adding members to projects and groups.
+- **UI**: Resolve an issue where the Renku 2.0 dashboard displayed projects and groups that the user was not a member of (`#3289 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3289>`__)
+- **UI**: Fix a bug where clicking on 'Show all my projects' on the Renku 2.0 dashboard redirected to a page displaying not only the user's projects but also others' projects (`#3289 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3289>`__)
+- **UI**: Prevent glitches in the new session details sections  (`#3313 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3313>`__).
+
+Internal Changes
+~~~~~~~~~~~~~~~~
+
+**Improvements**
+
+- **UI**: Update Storybook to show Renku 2.0 re-usable elements (`#3254 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3254>`__).
+- **UI**: Add and edit connected services from the admin panel (`#3329 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3329>`__).
+- **Search Services**: Allow to re-provision the index from data-services and as part of a SOLR schema migration
+- **Helm chart**: Add RBAC for K8s cache for new AmaltheaSessions custom resource
+- **Gateway**: Add extra credentials for the data service for the new AmaltheaSessions
+- **Gateway**: Remove unused Python code
+- **Data services**: Support event queue re-provisioning
+- **Data services**: Support listing projects and groups by direct membership
+
+**🐞 Bug Fixes**
+
+- **Data services**: Do not use gather() in when listing projects
+- **Data services**: Order resource classes by GPU, CPU, RAM and storage
+- **Data services**: Following redirects when sending requests to git repositories
+- **Data services**: Allow unsetting secrets for cloud storage
+- **Helm chart**: Increase the connection timeout for the Authzed database health checks
+
+Individual Components
+~~~~~~~~~~~~~~~~~~~~~
+
+- `renku-search 0.6.1 <https://github.com/SwissDataScienceCenter/renku-search/releases/tag/v0.6.0>`_
+- `renku-ui 3.36.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.36.0>`_
+- `renku-ui 3.37.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.37.0>`_
+- `renku-ui 3.37.1 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.37.1>`_
+- `renku-gateway 1.1.0 <https://github.com/SwissDataScienceCenter/renku-gateway/releases/tag/1.1.0>`_
+- `renku-data-services 0.21.0 <https://github.com/SwissDataScienceCenter/renku-data-services/releases/tag/v0.21.0>`__
+- `renku-data-services 0.22.0 <https://github.com/SwissDataScienceCenter/renku-data-services/releases/tag/v0.22.0>`__
+
 0.57.2
 ------
 
@@ -15,7 +74,7 @@ User-facing Changes
 
 **Bug Fixes**
 
-- **UI**: show the correct repository access status 
+- **UI**: show the correct repository access status
 - **Sessions**: allow paused sessions with cloud storage secrets to resume normally
 
 Internal Changes
@@ -70,7 +129,7 @@ Individual Components
 Renku `0.57.0` brings a suite of new features and improvements to the Renku 2.0 beta. As a main
 highlight, you can now save and reuse the credentials for data sources. No more copy/paste on every
 session launch! We have also made small improvements to sharing, search, and sessions in Renku 2.0.
-For a full list of changes, see the list below. 
+For a full list of changes, see the list below.
 
 
 NOTE to administrators: Upgrading the `csi-rclone` component will unmount all cloud storage for all
