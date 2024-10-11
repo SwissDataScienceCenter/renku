@@ -1,11 +1,18 @@
 .. _changelog:
 
+0.59.0
+------
+
+Renku ``0.59.0`` introduces the ability to reuse data connectors in multiple projects!
+When you add a data connector (previously called a data source) to your project, you now have the new option to select other data connectors on RenkuLab,
+for example those shared in your group, rather than having to re-enter the data connection details.
+
 0.58.0
 ------
 
-Renku ``0.58.0`` introduces the ability to reuse data connectors in multiple projects!
-When you add a data connector (previously called a data source) to your project, you now have the new option to select other data connectors on RenkuLab,
-for example those shared in your group, rather than having to re-enter the data connection details.
+Renku ``0.58.0`` fixes several issues related to Renku 2.0 search, and also squashes a bug where the
+Renku 2.0 dashboard displayed content not related to you.
+
 
 User-Facing Changes
 ~~~~~~~~~~~~~~~~~~~
@@ -16,6 +23,9 @@ User-Facing Changes
 
 **🐞 Bug Fixes**
 
+- **Search Services**: Resolve issues that caused items to be missing from Renku 2.0 search, including the search for members when adding members to projects and groups.
+- **UI**: Resolve an issue where the Renku 2.0 dashboard displayed projects and groups that the user was not a member of (`#3289 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3289>`__)
+- **UI**: Fix a bug where clicking on 'Show all my projects' on the Renku 2.0 dashboard redirected to a page displaying not only the user's projects but also others' projects (`#3289 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3289>`__)
 - **UI**: Prevent glitches in the new session details sections  (`#3313 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3313>`__).
 
 Internal Changes
@@ -24,25 +34,61 @@ Internal Changes
 **Improvements**
 
 - **UI**: Update Storybook to show Renku 2.0 re-usable elements (`#3254 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3254>`__).
+- **UI**: Add and edit connected services from the admin panel (`#3329 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3329>`__).
 - **Search Services**: Allow to re-provision the index from data-services and as part of a SOLR schema migration
 - **Helm chart**: Add RBAC for K8s cache for new AmaltheaSessions custom resource
 - **Gateway**: Add extra credentials for the data service for the new AmaltheaSessions
 - **Gateway**: Remove unused Python code
 - **Data services**: Support event queue re-provisioning
+- **Data services**: Support listing projects and groups by direct membership
 
 **🐞 Bug Fixes**
 
 - **Data services**: Do not use gather() in when listing projects
 - **Data services**: Order resource classes by GPU, CPU, RAM and storage
 - **Data services**: Following redirects when sending requests to git repositories
+- **Data services**: Allow unsetting secrets for cloud storage
+- **Helm chart**: Increase the connection timeout for the Authzed database health checks
 
 Individual Components
 ~~~~~~~~~~~~~~~~~~~~~
 
 - `renku-search 0.6.1 <https://github.com/SwissDataScienceCenter/renku-search/releases/tag/v0.6.0>`_
 - `renku-ui 3.36.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.36.0>`_
+- `renku-ui 3.37.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.37.0>`_
+- `renku-ui 3.37.1 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.37.1>`_
 - `renku-gateway 1.1.0 <https://github.com/SwissDataScienceCenter/renku-gateway/releases/tag/1.1.0>`_
 - `renku-data-services 0.21.0 <https://github.com/SwissDataScienceCenter/renku-data-services/releases/tag/v0.21.0>`__
+- `renku-data-services 0.22.0 <https://github.com/SwissDataScienceCenter/renku-data-services/releases/tag/v0.22.0>`__
+
+0.57.2
+------
+
+Renku ``0.57.2`` fixes several bugs in gateway and the `csi-rclone` driver.
+
+User-facing Changes
+~~~~~~~~~~~~~~~~~~~
+
+**Bug Fixes**
+
+- **UI**: show the correct repository access status
+- **Sessions**: allow paused sessions with cloud storage secrets to resume normally
+
+Internal Changes
+~~~~~~~~~~~~~~~~
+
+**Bug Fixes**
+
+- **Gateway**: Fix path rewrite middleware when the path contains escaped characters (`#726 <https://github.com/SwissDataScienceCenter/renku-gateway/pull/726>`__).
+- **csi-rclone**: Correctly use OAuth2 tokens for cloud storage to enable mounting.
+- **csi-rclone**: Remounting volumes created with older versions did not work.
+
+Individual Components
+~~~~~~~~~~~~~~~~~~~~~
+
+- `renku-gateway 1.0.4 <https://github.com/SwissDataScienceCenter/renku-gateway/releases/tag/1.0.4>`_
+- `csi-rclone 0.3.2 <https://github.com/SwissDataScienceCenter/csi-rclone/releases/tag/v0.3.2>`__
+- `csi-rclone 0.3.3 <https://github.com/SwissDataScienceCenter/csi-rclone/releases/tag/v0.3.3>`__
 
 0.57.1
 ------
