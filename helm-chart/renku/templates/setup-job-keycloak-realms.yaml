@@ -72,7 +72,7 @@ spec:
             - name: INTERNAL_GITLAB_OIDC_CLIENT_SECRET
               valueFrom:
                 secretKeyRef:
-                  name: {{ cat (include "renku.fullname" .) "-gateway-revproxy" | nospace }} 
+                  name: {{ cat (include "renku.fullname" .) "-gateway" | nospace }} 
                   key: gitlabClientInKeycloakSecret
             - name: INTERNAL_GITLAB_OIDC_CLIENT_ID
               value: "gitlab"
@@ -82,7 +82,7 @@ spec:
             - name: RENKU_KC_CLIENT_SECRET
               valueFrom:
                 secretKeyRef:
-                  name: {{ cat (include "renku.fullname" .) "-gateway-revproxy" | nospace }} 
+                  name: {{ cat (include "renku.fullname" .) "-gateway" | nospace }} 
                   key: oidcClientSecret
             - name: RENKU_KC_CLIENT_PUBLIC
               value: "false"
@@ -93,7 +93,7 @@ spec:
             - name: CLI_KC_CLIENT_SECRET
               valueFrom:
                 secretKeyRef:
-                  name: {{ cat (include "renku.fullname" .) "-gateway-revproxy" | nospace }}
+                  name: {{ cat (include "renku.fullname" .) "-gateway" | nospace }}
                   key: cliClientSecret
             - name: CLI_KC_CLIENT_PUBLIC
               value: "true"
@@ -106,7 +106,7 @@ spec:
             - name: UI_KC_CLIENT_SECRET
               valueFrom:
                 secretKeyRef:
-                  name: {{ cat (include "renku.fullname" .) "-gateway-revproxy" | nospace }}
+                  name: {{ cat (include "renku.fullname" .) "-gateway" | nospace }}
                   key: uiserverClientSecret
             - name: UI_KC_CLIENT_PUBLIC
               value: "false"
@@ -117,7 +117,7 @@ spec:
             - name: NOTEBOOKS_KC_CLIENT_SECRET
               valueFrom:
                 secretKeyRef:
-                  name: {{ cat (include "renku.fullname" .) "-gateway-revproxy" | nospace }}
+                  name: {{ cat (include "renku.fullname" .) "-gateway" | nospace }}
                   key: notebooksClientSecret
             - name: NOTEBOOKS_KC_CLIENT_PUBLIC
               value: "false"
@@ -143,7 +143,7 @@ spec:
             - name: DATASERVICE_KC_CLIENT_OAUTH_FLOW
               value: "client_credentials"
             - name: "DATASERVICE_KC_CLIENT_SERVICE_ACCOUNT_ROLES"
-              value: '["view-users", "query-users", "view-events"]'
+              value: '["view-users", "query-users", "view-events", "view-realm"]'
             - name: PYTHONUNBUFFERED
               value: "0"
             {{- include "certificates.env.python" . | nindent 12 }}

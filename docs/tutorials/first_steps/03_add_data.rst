@@ -4,7 +4,7 @@ Add data to your project
 ------------------------
 
 In the JupyterLab interface or RStudio files panel, we can see that a few files already exist.
-Let's start by adding data using the `Renku CLI <https://renku.readthedocs.io/en/latest/renku-python/docs/reference/commands.html>`__.
+Let's start by adding data using the :ref:`Renku CLI<cli-command>`.
 
 .. tab-set::
 
@@ -79,8 +79,7 @@ data, answer yes.
 Let us take a moment to understand what happened there. Opening the terminal
 puts you inside the project directory with ``git`` already configured.
 
-Then we imported a dataset  using the  `Renku CLI <http
-://renku-python.readthedocs.io/>`__. Here, we can see the method of
+Then we imported a dataset  using the  :ref:`cli-command`. Here, we can see the method of
 referencing a dataset in a data repository by DOI. By doing so,
 we capture a reference to the source of the data in the metadata of the
 project.

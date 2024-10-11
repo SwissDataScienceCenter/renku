@@ -1,17 +1,17 @@
 import { TIMEOUTS } from "../../config";
 import { generatorProjectName } from "../support/commands/projects";
-import { validateLogin } from "../support/commands/general";
+import { validateLogin, getRandomString } from "../support/commands/general";
 import { v4 as uuidv4 } from "uuid";
 
 const username = Cypress.env("TEST_USERNAME");
 
 const projectTestConfig = {
-  shouldCreateProject: true,
+  projectAlreadyExists: false,
   projectName: generatorProjectName("useSession"),
 };
 
 // ? Modify the config -- useful for debugging
-// projectTestConfig.shouldCreateProject = false;
+// projectTestConfig.projectAlreadyExists = true;
 // projectTestConfig.projectName = "cypress-usesession-a8c6823e40ff";
 
 const projectIdentifier = {
@@ -24,38 +24,24 @@ const projectWithoutPermissions = {
   name: "stable-project",
 };
 
+const sessionId = ["useSession", getRandomString()];
+
 describe("Basic public project functionality", () => {
-  before(() => {
-    // Use a session to preserve login data
-    cy.session(
-      "login-useSession",
-      () => {
-        cy.robustLogin();
-      },
-      validateLogin
-    );
-
-    // Create a project
-    if (projectTestConfig.shouldCreateProject) {
-      cy.visit("/");
-      cy.createProject({ templateName: "Python", ...projectIdentifier });
-    }
-  });
-
   after(() => {
-    if (projectTestConfig.shouldCreateProject)
+    if (!projectTestConfig.projectAlreadyExists)
       cy.deleteProjectFromAPI(projectIdentifier);
   });
 
   beforeEach(() => {
     // Restore the session
     cy.session(
-      "login-useSession",
+      sessionId,
       () => {
         cy.robustLogin();
       },
       validateLogin
     );
+    cy.createProjectIfMissing({ templateName: "Python", ...projectIdentifier });
   });
 
   it("Start a new session on the project and interact with the terminal.", () => {
@@ -180,9 +166,11 @@ describe("Basic public project functionality", () => {
   });
 
   it("Start a new session as anonymous user.", () => {
+    // Do not re-use the logged-in session
+    cy.session("anonymous", () => {});
+
     // Log out and go to the project again
     cy.visit("/");
-    cy.logout();
     cy.visitAndLoadProject(projectIdentifier);
 
     // Check we show the appropriate message
@@ -279,7 +267,8 @@ describe("Basic public project functionality", () => {
         cy.get("#endpoint")
           .should("have.value", "")
           .type("http://s3.amazonaws.com");
-        cy.getDataCy("cloud-storage-edit-next-button")
+        cy.getDataCy("test-cloud-storage-button").should("be.visible").click();
+        cy.getDataCy("add-cloud-storage-continue-button")
           .should("be.visible")
           .click();
 
@@ -288,7 +277,7 @@ describe("Basic public project functionality", () => {
         cy.get("#mountPoint")
           .should("have.value", "external_storage/data_s3")
           .type("{selectAll}data_s3");
-        cy.get("#readOnly").should("not.be.checked").check();
+        cy.get("#readOnly").should("be.checked").check();
 
         cy.getDataCy("cloud-storage-edit-update-button")
           .should("be.visible")
@@ -296,7 +285,7 @@ describe("Basic public project functionality", () => {
           .click();
 
         cy.getDataCy("cloud-storage-edit-body").contains(
-          "storage data_s3 has been succesfully added"
+          "storage data_s3 has been successfully added"
         );
         cy.getDataCy("cloud-storage-edit-close-button")
           .should("be.visible")

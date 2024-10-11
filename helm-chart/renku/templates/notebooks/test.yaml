@@ -28,9 +28,9 @@ spec:
         - name: NB_SESSIONS__OIDC__ALLOW_UNVERIFIED_EMAIL
           value: {{ $.Values.notebooks.oidc.allowUnverifiedEmail | quote }}
         - name: NB_GIT__URL
-          value: {{ $.Values.notebooks.gitlab.url | quote }}
+          value: {{ .Values.global.gitlab.url | quote }}
         - name: NB_GIT__REGISTRY
-          value: {{ $.Values.notebooks.gitlab.registry.host | quote }}
+          value: {{ $.Values.global.gitlab.registry.host | quote }}
         - name: GITLAB_TOKEN
           value: {{ $.Values.notebooks.tests.gitlab_token | quote }}
         - name: NOTEBOOKS_BASE_URL

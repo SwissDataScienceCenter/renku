@@ -16,7 +16,7 @@ jobs:
   create-release-pr:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4.1.1
+      - uses: actions/checkout@v4.1.7
         with:
           fetch-depth: 0
           token: "${{ secrets.RENKUBOT_GITHUB_TOKEN }}"
@@ -53,6 +53,7 @@ jobs:
               repo,
               head: 'release-${{ github.event.inputs.version }}',
               base: '${{ github.event.inputs.target_branch }}',
+              draft: true,
               body: [
                 'Release ${{ github.event.inputs.version }}',
                 '',
