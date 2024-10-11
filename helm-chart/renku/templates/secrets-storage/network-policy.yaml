@@ -1,0 +1,22 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: {{ template "renku.fullname" . }}-secrets-storage
+spec:
+  podSelector:
+    matchLabels:
+      app: {{ template "renku.fullname" . }}-secrets-storage
+      release: {{ .Release.Name }}
+  policyTypes:
+    - Ingress
+  ingress:
+    - from:
+        # Only allow ingress to secrets storage from notebooks
+        - podSelector:
+            matchLabels:
+              app: {{ template "renku.notebooks.name" . }}
+              release: {{ .Release.Name }}
+      ports:
+        - protocol: TCP
+          port: http
+

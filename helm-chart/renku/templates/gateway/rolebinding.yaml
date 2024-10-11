@@ -1,7 +1,7 @@
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
-  name: {{ template "renku.fullname" . }}-gateway-revproxy
+  name: {{ template "renku.fullname" . }}-gateway
   labels:
     app: {{ template "renku.name" . }}
     chart: {{ template "renku.chart" . }}
@@ -10,8 +10,8 @@ metadata:
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: Role
-  name: {{ template "renku.fullname" . }}-gateway-revproxy
+  name: {{ template "renku.fullname" . }}-gateway
 subjects:
   - kind: ServiceAccount
-    name: {{ template "renku.fullname" . }}-gateway-revproxy
+    name: {{ template "renku.fullname" . }}-gateway
     namespace: {{ .Release.Namespace }}

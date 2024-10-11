@@ -32,7 +32,7 @@ spec:
             {{- toYaml .Values.securityContext | nindent 12 }}
           env:
             - name: RS_SOLR_URL
-              value: "http://{{ template "solr.fullname" . }}:{{ .Values.global.solr.port }}/solr"
+              value: "http://{{ template "solr.fullname" . }}:{{ .Values.global.solr.port }}"
             - name: RS_SOLR_CORE
               value: {{ first .Values.solr.coreNames }}
             - name: RS_SOLR_USER
@@ -46,6 +46,8 @@ spec:
               value: "500ms"
             - name: RS_SOLR_LOG_MESSAGE_BODIES
               value: "false"
+            - name: "RS_JWT_ALLOWED_ISSUER_URL_PATTERNS"
+              value: "{{ include "renku.keycloakUrl" . }}*/*"
             - name: JAVA_OPTS
               value: "-Xmx{{ .Values.search.searchApi.jvmXmx }} -XX:+UseZGC -XX:+ZGenerational"
           ports:

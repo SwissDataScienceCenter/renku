@@ -1,19 +1,16 @@
 const renkuLogin = (credentials: { username: string; password: string }[]) => {
-  for (const { username, password } of credentials) {
-    cy.get("#username").type(username);
-    cy.get("#password").type(password, { log: false });
-    cy.get("#kc-login").click().should("not.exist");
-  }
+  cy.wrap(credentials, { log: false }).each((credential: {password: string, username: string}) => {
+    cy.get("#username").type(credential.username);
+    cy.get("#password").type(credential.password, { log: false });
+    cy.get("#kc-login").click()
+  })
   cy.url().then((url) => {
     const parsedUrl = new URL(url);
     if (
       parsedUrl.pathname.includes("gitlab") ||
       parsedUrl.host.includes("gitlab")
     ) {
-      cy.get(".doorkeeper-authorize >>>> .btn-danger")
-        .should("be.visible")
-        .should("be.enabled")
-        .click();
+      cy.contains("button", "Authorize").should("be.visible").click();
     }
   });
 };
@@ -24,11 +21,11 @@ const register = (
   firstName?: string,
   lastName?: string
 ) => {
-  cy.visit("/login");
+  cy.visit("/api/auth/login");
 
   // ? wait to be assess whether tokens were refreshed automatically or we really need to register
   cy.wait(1000); // eslint-disable-line cypress/no-unnecessary-waiting
-  cy.request({ failOnStatusCode: false, url: "ui-server/api/user" }).then(
+  cy.request({ failOnStatusCode: false, url: "ui-server/api/data/user" }).then(
     (resp) => {
       if (resp.status === 200) return;
 
@@ -91,21 +88,25 @@ function registerAndVerify(props: RegisterAndVerifyProps) {
     if (url.includes("auth/realms/Renku/protocol/openid-connect/auth"))
       cy.renkuLogin([{ username: email, password }]);
   });
-  const httpBaseUrl = Cypress.config("baseUrl").replace(
-    /^https:\/\//,
-    "http://"
-  );
-  const httpsBaseUrl = Cypress.config("baseUrl").replace(
-    /^http:\/\//,
-    "https://"
-  );
-  cy.url().should("be.oneOf", [
-    httpBaseUrl,
-    httpsBaseUrl,
-    httpBaseUrl + "/",
-    httpsBaseUrl + "/",
-  ]);
-  cy.request("ui-server/api/user").its("status").should("eq", 200);
+  cy.location().should((loc) => {
+    const baseURL = new URL(Cypress.config("baseUrl"));
+    expect(["/", ""]).to.include(loc.pathname);
+    expect(loc.search).to.eq("");
+    expect(loc.hostname).to.eq(baseURL.hostname);
+  })
+  cy.get("header").should("be.visible");
+  cy.get("footer").should("be.visible");
+  // If we send a request to the user endpoint on Gitlab too quickly after we log in then
+  // it sometimes randomly responds with 401 and sometimes with 200 (as expected). This wait period seems to
+  // allow Gitlab to "settle" after the login and properly recognize the token and respond with 200.
+  cy.wait(10000);
+  cy.request("ui-server/api/data/user").its("status").should("eq", 200);
+  cy.request("ui-server/api/user").then((response) => {
+    expect(response.status).to.eq(200);
+    expect(response.body).property("username").to.not.be.empty;
+    expect(response.body).property("username").to.not.be.null;
+    expect(response.body).property("state").to.equal("active");
+  });
 }
 
 type RobustLoginProps = {
@@ -117,7 +118,7 @@ type RobustLoginProps = {
 
 function robustLogin(props?: RobustLoginProps) {
   // Check if we are already logged in
-  cy.request({ failOnStatusCode: false, url: "ui-server/api/user" }).then(
+  cy.request({ failOnStatusCode: false, url: "ui-server/api/data/user" }).then(
     (resp) => {
       // we are already logged in
       if (resp.status >= 200 && resp.status < 400) return;
@@ -139,6 +140,8 @@ function robustLogin(props?: RobustLoginProps) {
 function logout() {
   cy.get("#profile-dropdown").should("be.visible").click();
   cy.get("#logout-link").should("be.visible").click();
+  // Make sure we fully log out
+  cy.wait(15_000);
 }
 
 export default function registerLoginCommands() {

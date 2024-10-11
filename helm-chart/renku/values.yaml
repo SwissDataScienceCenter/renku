@@ -5,6 +5,11 @@
 ## Global variables
 ## Shared values/secrets
 global:
+  ## YAML string that contains all application level Renku configuration options.
+  platformConfig: |
+  # secretServicePrivateKey: ... RSA Private Key in PKCS8 PEM format (`ssh-keygen -m PKCS8 -t rsa -b 4096`)
+  # secretServicePreviousPrivateKey: ... Previous Private key in PEM format, only set this when rotating keys
+  # dataServiceEncryptionKey: 32 byte random string
   gitlab:
     ## Name of the postgres database to be used by Gitlab
     postgresDatabase: gitlabhq_production
@@ -80,18 +85,6 @@ global:
     ## for a new project based on its own version.
     ## NOTE should only be set for CI deployments and development purposes.
     cli_version:
-  ## Events related values definitions
-  events:
-    streams:
-      projectCreated: "project.created"
-      projectUpdated: "project.updated"
-      projectRemoved: "project.removed"
-      projectAuthAdded: "projectAuth.added"
-      projectAuthUpdated: "projectAuth.updated"
-      projectAuthRemoved: "projectAuth.removed"
-      userAdded: "user.added"
-      userUpdated: "user.updated"
-      userRemoved: "user.removed"
   ## Note that the graph will not turned on by default until renku 0.4.0
   graph:
     dbEventLog:
@@ -661,7 +654,7 @@ ui:
     replicaCount: 1
     image:
       repository: renku/renku-ui
-      tag: "3.23.0"
+      tag: "3.37.1"
       pullPolicy: IfNotPresent
       ## Optionally specify an array of imagePullSecrets.
       ## Secrets must be manually created in the namespace.
@@ -850,7 +843,7 @@ ui:
     keepCookies: []
     image:
       repository: renku/renku-ui-server
-      tag: "3.23.0"
+      tag: "3.37.1"
       pullPolicy: IfNotPresent
     imagePullSecrets: []
     nameOverride: ""
@@ -990,7 +983,7 @@ notebooks:
     targetCPUUtilizationPercentage: 50
   image:
     repository: renku/renku-notebooks
-    tag: "1.22.0"
+    tag: "1.26.1"
     pullPolicy: IfNotPresent
     ## Optionally specify an array of imagePullSecrets.
     ## Secrets must be manually created in the namespace.
@@ -1108,15 +1101,15 @@ notebooks:
   gitRpcServer:
     image:
       name: renku/git-rpc-server
-      tag: "1.22.0"
+      tag: "1.26.1"
   gitHttpsProxy:
     image:
       name: renku/git-https-proxy
-      tag: "1.22.0"
+      tag: "1.26.1"
   gitClone:
     image:
       name: renku/git-clone
-      tag: "1.22.0"
+      tag: "1.26.1"
   service:
     type: ClusterIP
     port: 80
@@ -1169,12 +1162,12 @@ notebooks:
     sessionTypes: ["registered"]
     image:
       repository: renku/renku-notebooks-tests
-      tag: "1.22.0"
+      tag: "1.26.1"
       pullPolicy: IfNotPresent
   k8sWatcher:
     image:
       repository: renku/k8s-watcher
-      tag: "1.22.0"
+      tag: "1.26.1"
       pullPolicy: IfNotPresent
     resources: {}
     replicaCount: 1
@@ -1183,11 +1176,15 @@ notebooks:
       targetCPUUtilizationPercentage: 50
       minReplicas: 2
       maxReplicas: 5
+  secretsMount:
+    image:
+      repository: renku/secrets-mount
+      tag: "1.26.1"
   ssh:
     enabled: false
     image:
       repository: renku/ssh-jump-host
-      tag: "1.22.0"
+      tag: "1.26.1"
       pullPolicy: IfNotPresent
     resources: {}
     replicaCount: 1
@@ -1255,7 +1252,6 @@ gateway:
   allowOrigin:
   # - http://example.com
   # - https://foo.example.com
-  replicaCount: 1
   ## Set to true to enable the developement mode. This has negative security
   ## implications and should never be done in a production setting.
   development: false
@@ -1274,11 +1270,9 @@ gateway:
   ## Use `openssl rand -hex 32`.
   secretKey:
   image:
-    ## Define the image for the auth middleware
-    auth:
-      repository: renku/renku-gateway
-      tag: "0.24.0"
-      pullPolicy: IfNotPresent
+    repository: renku/renku-gateway
+    tag: "1.1.0"
+    pullPolicy: IfNotPresent
   service:
     type: ClusterIP
     port: 80
@@ -1310,24 +1304,18 @@ gateway:
     dsn:
     environment:
     sampleRate: 0.1
-  reverseProxy:
-    image:
-      repository: renku/renku-revproxy
-      tag: "0.24.0"
-      pullPolicy: IfNotPresent
-    metrics:
-      enabled: true
-      port: 8765
-    replicaCount: 2
-    podAnnotations: {}
-    resources: {}
-    autoscaling:
-      enabled: false
-      minReplicas: 2
-      maxReplicas: 5
-      targetMemoryUtilizationPercentage: 75
-      targetCPUUtilizationPercentage: 75
-    updateStrategy: {}
+  metrics:
+    enabled: true
+    port: 8765
+  replicaCount: 2
+  podAnnotations: {}
+  autoscaling:
+    enabled: false
+    minReplicas: 2
+    maxReplicas: 5
+    targetMemoryUtilizationPercentage: 75
+    targetCPUUtilizationPercentage: 75
+  updateStrategy: {}
 jena:
   image:
     repository: renku/renku-jena
@@ -1376,7 +1364,7 @@ search:
     replicas: 1
     image:
       repository: renku/search-api
-      tag: "0.0.39"
+      tag: "0.6.1"
       pullPolicy: IfNotPresent
     service:
       type: ClusterIP
@@ -1389,7 +1377,7 @@ search:
     replicas: 1
     image:
       repository: renku/search-provision
-      tag: "0.0.39"
+      tag: "0.6.1"
       pullPolicy: IfNotPresent
     service:
       type: ClusterIP
@@ -1580,16 +1568,27 @@ initDb:
   image:
     repository: renku/init-db
     tag: "latest"
+## The image used for general platform initialization
+platformInit:
+  image:
+    repository: renku/platform-init
+    tag: "latest"
 dataService:
+  rbac:
+    create: true
   image:
     repository: renku/renku-data-service
-    tag: "0.8.3"
+    tag: "0.22.0"
     pullPolicy: IfNotPresent
-  keycloakSync:
+  backgroundJobs:
+    events:
+      resources: {}
     image:
-      repository: renku/keycloak-sync
-      tag: "0.8.3"
+      repository: renku/data-service-background-jobs
+      tag: "0.22.0"
       pullPolicy: IfNotPresent
+    total:
+      resources: {}
   service:
     type: ClusterIP
     port: 80
@@ -1613,6 +1612,50 @@ dataService:
   affinity: {}
   # This defines the maximum number of pinned projects in user preferences
   maxPinnedProjects: 5
+  # Trusted proxies configuration
+  # See: https://sanic.dev/en/guide/advanced/proxy-headers.md
+  trustedProxies:
+    proxiesCount: 1
+    realIpHeader: x-real-ip
+
+authz:
+  replicaCount: 1
+  image:
+    repository: authzed/spicedb
+    pullPolicy: IfNotPresent
+    tag: "v1.30.0"
+  resources: {}
+  autoscaling:
+    enabled: false
+    minReplicas: 1
+    maxReplicas: 3
+    targetCPUUtilizationPercentage: 80
+    # targetMemoryUtilizationPercentage: 80
+  metrics:
+    enabled: true
+    addPrometheusAnnotations: true
+
+secretsStorage:
+  image:
+    repository: renku/secrets-storage
+    tag: "0.22.0"
+    pullPolicy: IfNotPresent
+  service:
+    type: ClusterIP
+    port: 80
+  replicaCount: 1
+  podAnnotations: {}
+  resources: {}
+  autoscaling:
+    enabled: false
+    minReplicas: 1
+    maxReplicas: 5
+    targetMemoryUtilizationPercentage: 75
+    targetCPUUtilizationPercentage: 75
+  updateStrategy: {}
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
 podSecurityContext: {}
 securityContext:
   runAsUser: 1000

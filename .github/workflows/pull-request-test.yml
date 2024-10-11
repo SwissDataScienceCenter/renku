@@ -18,7 +18,7 @@ jobs:
     if: github.event.action != 'closed'
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4.1.2
+      - uses: actions/checkout@v4.1.7
       - uses: actions/setup-java@v4
         with:
           distribution: "temurin"
@@ -57,12 +57,13 @@ jobs:
       renku-notebooks: ${{ steps.deploy-comment.outputs.renku-notebooks}}
       renku-ui: ${{ steps.deploy-comment.outputs.renku-ui}}
       renku-data-services: ${{ steps.deploy-comment.outputs.renku-data-services}}
+      amalthea: ${{ steps.deploy-comment.outputs.amalthea}}
       test-enabled: ${{ steps.deploy-comment.outputs.test-enabled}}
       extra-values: ${{ steps.deploy-comment.outputs.extra-values}}
     steps:
-      - uses: actions/checkout@v4.1.2
+      - uses: actions/checkout@v4.1.7
       - id: deploy-comment
-        uses: SwissDataScienceCenter/renku-actions/check-pr-description@v1.11.0
+        uses: SwissDataScienceCenter/renku-actions/check-pr-description@v1.12.3
         with:
           string: /deploy
           pr_ref: ${{ github.event.number }}
@@ -75,10 +76,10 @@ jobs:
       name: ci-renku-${{ github.event.number }}
       url: https://ci-renku-${{ github.event.number }}.dev.renku.ch
     steps:
-      - uses: actions/checkout@v4.1.2
+      - uses: actions/checkout@v4.1.7
       - name: renku build and deploy
         if: needs.check-deploy.outputs.pr-contains-string == 'true'
-        uses: SwissDataScienceCenter/renku-actions/deploy-renku@v1.11.0
+        uses: SwissDataScienceCenter/renku-actions/deploy-renku@v1.12.3
         env:
           DOCKER_PASSWORD: ${{ secrets.RENKU_DOCKER_PASSWORD }}
           DOCKER_USERNAME: ${{ secrets.RENKU_DOCKER_USERNAME }}
@@ -97,6 +98,7 @@ jobs:
           renku_notebooks: "${{ needs.check-deploy.outputs.renku-notebooks }}"
           renku_ui: "${{ needs.check-deploy.outputs.renku-ui }}"
           renku_data_services: "${{ needs.check-deploy.outputs.renku-data-services }}"
+          amalthea: "${{ needs.check-deploy.outputs.amalthea }}"
           extra_values: "${{ needs.check-deploy.outputs.extra-values }}"
       - name: Check existing renkubot comment
         if: needs.check-deploy.outputs.pr-contains-string == 'true'
@@ -120,7 +122,7 @@ jobs:
     needs: [check-deploy, deploy-pr]
     runs-on: ubuntu-22.04
     steps:
-      - uses: SwissDataScienceCenter/renku-actions/test-renku@v1.11.0
+      - uses: SwissDataScienceCenter/renku-actions/test-renku@v1.12.3
         with:
           kubeconfig: ${{ secrets.RENKUBOT_DEV_KUBECONFIG }}
           renku-release: ci-renku-${{ github.event.number }}
@@ -135,7 +137,6 @@ jobs:
 
     strategy:
       fail-fast: false
-      max-parallel: 1
       matrix:
         tests:
           [
@@ -146,23 +147,44 @@ jobs:
             useSession,
             checkWorkflows,
             rstudioSession,
+            dashboardV2,
           ]
 
     steps:
-      - uses: SwissDataScienceCenter/renku-actions/test-renku-cypress@v1.11.0
+      - uses: SwissDataScienceCenter/renku-actions/test-renku-cypress@v1.12.3
         if: github.event.action != 'closed' && needs.check-deploy.outputs.pr-contains-string == 'true' && needs.check-deploy.outputs.test-enabled == 'true'
         with:
           e2e-target: ${{ matrix.tests }}
           renku-reference: ${{ github.ref }}
           renku-release: ci-renku-${{ github.event.number }}
           test-user-password: ${{ secrets.RENKU_BOT_DEV_PASSWORD }}
-
+  deploy-string-no-custom-version:
+    name: Check that deploy string doesn't specify a custom component version
+    needs: [check-deploy]
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Check deploy string
+        if: ${{ 
+            needs.check-deploy.outputs.pr-contains-string == 'true' 
+            && startsWith(github.base_ref, 'release-') 
+            && (
+               needs.check-deploy.outputs.renku-core != null
+               || needs.check-deploy.outputs.renku-gateway != null
+               || needs.check-deploy.outputs.renku-graph != null
+               || needs.check-deploy.outputs.renku-notebooks != null
+               || needs.check-deploy.outputs.renku-ui != null
+               || needs.check-deploy.outputs.renku-data-services != null
+            )
+          }}
+        uses: actions/github-script@v7
+        with:
+          script: core.setFailed('Cannot merge release PR if it still has custom versions in deploy string.')
   cleanup:
     if: github.event.action == 'closed'
     runs-on: ubuntu-22.04
     steps:
       - name: renku teardown
-        uses: SwissDataScienceCenter/renku-actions/cleanup-renku-ci-deployments@v1.11.0
+        uses: SwissDataScienceCenter/renku-actions/cleanup-renku-ci-deployments@v1.12.3
         env:
           HELM_RELEASE_REGEX: "^ci-renku-${{ github.event.number }}$"
           GITLAB_TOKEN: ${{ secrets.DEV_GITLAB_TOKEN }}

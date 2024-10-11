@@ -66,6 +66,10 @@ spec:
                 secretKeyRef:
                   name: {{ include "renku.fullname" . }}
                   key: dataServiceKeycloakClientSecret
+            - name: ENCRYPTION_KEY_PATH
+              value: /secrets/encryptionKey/encryptionKey
+            - name: SECRETS_SERVICE_PUBLIC_KEY_PATH
+              value: /secrets/publicKey/publicKey
             - name: SERVER_DEFAULTS
               value: /etc/renku-data-service/server_options/server_defaults.json
             - name: SERVER_OPTIONS
@@ -99,10 +103,30 @@ spec:
               value: {{ .Values.dataService.sentry.environment | quote }}
             - name: SENTRY_SAMPLE_RATE
               value: {{ .Values.dataService.sentry.sampleRate | quote }}
-            {{- include "certificates.env.python" $ | nindent 12 }}
+            - name: AUTHZ_DB_HOST
+              value: {{ include "renku.fullname" . }}-authz
+            - name: AUTHZ_DB_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "renku.fullname" . }}-authz
+                  key: SPICEDB_GRPC_PRESHARED_KEY
+            - name: AUTHZ_DB_GRPC_PORT
+              value: "50051"
+            - name: PROXIES_COUNT
+              value: {{ .Values.dataService.trustedProxies.proxiesCount | default "" | quote }}
+            - name: REAL_IP_HEADER
+              value: {{ .Values.dataService.trustedProxies.realIpHeader | default "" | quote }}
+            {{- include "certificates.env.python" . | nindent 12 }}
+            {{- include "certificates.env.grpc" . | nindent 12 }}
           volumeMounts:
             - name: server-options
               mountPath: /etc/renku-data-service/server_options
+            - mountPath: "/secrets/encryptionKey"
+              name: encryption-key
+              readOnly: true
+            - mountPath: "/secrets/publicKey"
+              name: secret-service-public-key
+              readOnly: true
             {{- include "certificates.volumeMounts.system" . | nindent 12 }}
           livenessProbe:
             httpGet:
@@ -142,5 +166,17 @@ spec:
         - name: server-options
           configMap:
             name: {{ template "renku.fullname" . }}-server-options
+        - name: encryption-key
+          secret:
+            secretName: {{ template "renku.fullname" . }}-secrets-storage
+            items:
+            - key: encryptionKey
+              path: encryptionKey
+        - name: secret-service-public-key
+          secret:
+            secretName: {{ template "renku.fullname" . }}-secret-service-public-key
+            items:
+            - key: publicKey
+              path: publicKey
         {{- include "certificates.volumes" . | nindent 8 }}
       serviceAccountName: {{ template "renku.fullname" . }}-data-service

@@ -1,0 +1,145 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ template "renku.fullname" . }}-authz
+  labels:
+    app: renku-authz
+    chart: {{ template "renku.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  {{- if not .Values.authz.autoscaling.enabled }}
+  replicas: {{ .Values.authz.replicaCount }}
+  {{- end }}
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+  selector:
+    matchLabels:
+      app: renku-authz
+  template:
+    metadata:
+      labels:
+        app: renku-authz
+        chart: {{ template "renku.chart" . }}
+        release: {{ .Release.Name }}
+        heritage: {{ .Release.Service }}
+    spec:
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      initContainers:
+        {{- include "certificates.initContainer" . | nindent 8 }}
+        - name: migrate-datastore
+          # NOTE: Have to use the -debug image here because the regular one does not have a shell
+          # and the database migration will not read the db connection uri string from an env variable
+          image: "{{ .Values.authz.image.repository }}:{{ .Values.authz.image.tag }}-debug"
+          imagePullPolicy: {{ .Values.authz.image.pullPolicy }}
+          env:
+            - name: "SPICEDB_DATASTORE_CONN_URI"
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "renku.fullname" . }}-authz
+                  key: SPICEDB_DATASTORE_CONN_URI
+          command:
+            - sh
+            - -c
+          args:
+            - spicedb datastore migrate head --datastore-engine=postgres --datastore-conn-uri=$SPICEDB_DATASTORE_CONN_URI
+      containers:
+        - name: authz
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.authz.image.repository }}:{{ .Values.authz.image.tag }}"
+          imagePullPolicy: {{ .Values.authz.image.pullPolicy }}
+          env:
+            - name: "SPICEDB_GRPC_PRESHARED_KEY"
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "renku.fullname" . }}-authz
+                  key: SPICEDB_GRPC_PRESHARED_KEY
+            - name: "SPICEDB_DATASTORE_CONN_URI"
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "renku.fullname" . }}-authz
+                  key: SPICEDB_DATASTORE_CONN_URI
+            {{- include "certificates.env.python" . | nindent 12 }}
+            {{- include "certificates.env.grpc" . | nindent 12 }}
+          volumeMounts:
+            {{- include "certificates.volumeMounts.system" . | nindent 12 }}
+            - name: internal-tls-authz-cert
+              mountPath: /etc/internal-tls-authz-cert
+              readOnly: true
+          args:
+            - serve
+            - --http-enabled=true
+            - --datastore-engine=postgres
+            - --grpc-enabled=true
+            - --telemetry-endpoint=
+            - --grpc-tls-cert-path=/etc/internal-tls-authz-cert/tls.crt
+            - --grpc-tls-key-path=/etc/internal-tls-authz-cert/tls.key
+            - --http-tls-cert-path=/etc/internal-tls-authz-cert/tls.crt
+            - --http-tls-key-path=/etc/internal-tls-authz-cert/tls.key
+            - --log-format=json
+            - --datastore-conn-pool-write-min-open=3
+            - --datastore-conn-pool-write-max-open=6
+            - --datastore-conn-pool-read-min-open=5
+            - --datastore-conn-pool-read-max-open=10
+            {{- if .Values.authz.metrics.enabled }}
+            - --metrics-addr=:9090
+            - --metrics-enabled=true
+            {{- end }}
+          ports:
+            - name: http
+              containerPort: 8443
+              protocol: TCP
+            - name: grpc
+              containerPort: 50051
+              protocol: TCP
+            - name: metrics
+              containerPort: 9090
+              protocol: TCP
+          livenessProbe:
+            exec:
+              command:
+                - grpc_health_probe
+                - -v
+                - -addr=127.0.0.1:50051
+                - -tls
+                - -tls-server-name={{ template "renku.fullname" . }}-authz
+                - -connect-timeout
+                - "3s"
+            timeoutSeconds: 3
+            periodSeconds: 10
+          readinessProbe:
+            exec:
+              command:
+                - grpc_health_probe
+                - -v
+                - -addr=127.0.0.1:50051
+                - -tls
+                - -tls-server-name={{ template "renku.fullname" . }}-authz
+                - -connect-timeout
+                - "3s"
+            timeoutSeconds: 3
+            periodSeconds: 10
+          resources:
+            {{- toYaml .Values.authz.resources | nindent 12 }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      volumes:
+        {{- include "certificates.volumes" . | nindent 8 }}
+        - name: internal-tls-authz-cert
+          secret:
+            secretName: {{ include "renku.authz.tlsSecretName" . }}
