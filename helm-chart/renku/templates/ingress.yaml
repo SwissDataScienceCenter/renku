@@ -72,7 +72,7 @@ spec:
             port:
               number: {{ $gitlabServicePort }}
             {{ else }}
-            name: renku-traefik
+            name: {{ template "renku.fullname" $ }}-gateway
             port:
               number: 80
             {{- end }}
@@ -80,21 +80,21 @@ spec:
         pathType: Prefix
         backend:
           service:
-            name: renku-traefik
+            name: {{ template "renku.fullname" $ }}-gateway
             port:
               number: 80
       - path: /api
         pathType: Prefix
         backend:
           service:
-            name: renku-traefik
+            name: {{ template "renku.fullname" $ }}-gateway
             port:
               number: 80
       - path: /entities
         pathType: Prefix
         backend:
           service:
-            name: renku-traefik
+            name: {{ template "renku.fullname" $ }}-gateway
             port:
               number: 80
       - path: /
@@ -108,7 +108,7 @@ spec:
         pathType: Prefix
         backend:
           service:
-            name: {{ $uiserverFullname }}
+            name: {{ template "renku.fullname" $ }}-gateway
             port:
               number: {{ $uiserverServicePort }}
       {{- if $graphEnabled }}
@@ -123,7 +123,7 @@ spec:
         pathType: Prefix
         backend:
           service:
-            name: {{ $knowledgeGraphFullname }}
+            name: {{ template "renku.fullname" $ }}-gateway
             port:
               number: 80
       {{- end }}

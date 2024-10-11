@@ -1,7 +1,7 @@
 {{/*
 Template core service paths as a comma separated list
 */}}
-{{- define "gateway.core.paths" -}}
+{{- define "gateway.core.pathsYaml" -}}
 {{- $paths := list -}}
 {{- range $i, $k := (keys .Values.global.core.versions | sortAlpha) -}}
 {{- $paths = mustAppend $paths (printf "/api/renku/%s" (get $.Values.global.core.versions $k).prefix) -}}
@@ -9,13 +9,13 @@ Template core service paths as a comma separated list
 {{- $paths = mustAppend $paths "/api/renku" -}}
 {{- end -}}
 {{- end -}}
-{{- join "," $paths | quote -}}
+{{- $paths | toYaml -}}
 {{- end -}}
 
 {{/*
 Template core service names as a comma separated list
 */}}
-{{- define "gateway.core.serviceNames" -}}
+{{- define "gateway.core.serviceNamesYaml" -}}
 {{- $serviceNames := list -}}
 {{- $coreBaseName := printf "%s-core" .Release.Name -}}
 {{- range $i, $k := (keys .Values.global.core.versions | sortAlpha) -}}
@@ -25,7 +25,7 @@ Template core service names as a comma separated list
 {{- $serviceNames = mustAppend $serviceNames $serviceName -}}
 {{- end -}}
 {{- end -}}
-{{- join "," $serviceNames | quote -}}
+{{- $serviceNames | toYaml -}}
 {{- end -}}
 
 {{/*

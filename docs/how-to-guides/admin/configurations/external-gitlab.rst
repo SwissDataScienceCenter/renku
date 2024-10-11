@@ -19,7 +19,7 @@ Callback URLs:
 
 .. code-block:: console
 
-  https://<your-renku-dns>/login/redirect/gitlab
+  https://<your-renku-dns>/api/auth/callback
   https://<your-renku-dns>/api/auth/gitlab/token
 
 Scopes:

@@ -83,7 +83,7 @@ def main():
         config.gitlab_oauth_client_id,
         config.gitlab_oauth_client_secret,
         [
-            f"{config.renku_url}/login/redirect/gitlab",
+            f"{config.renku_url}/api/auth/callback"
             f"{config.renku_url}/api/auth/gitlab/token",
         ],
         gitlab_db_connection,

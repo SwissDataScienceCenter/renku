@@ -108,6 +108,10 @@ spec:
                 - -addr=127.0.0.1:50051
                 - -tls
                 - -tls-server-name={{ template "renku.fullname" . }}-authz
+                - -connect-timeout
+                - "3s"
+            timeoutSeconds: 3
+            periodSeconds: 10
           readinessProbe:
             exec:
               command:
@@ -116,6 +120,10 @@ spec:
                 - -addr=127.0.0.1:50051
                 - -tls
                 - -tls-server-name={{ template "renku.fullname" . }}-authz
+                - -connect-timeout
+                - "3s"
+            timeoutSeconds: 3
+            periodSeconds: 10
           resources:
             {{- toYaml .Values.authz.resources | nindent 12 }}
       {{- with .Values.nodeSelector }}

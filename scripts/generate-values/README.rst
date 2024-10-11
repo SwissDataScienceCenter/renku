@@ -32,7 +32,7 @@ Configure the callback URLs:
 
 .. code-block::
 
-   https://<your-renku-dns>/login/redirect/gitlab
+   https://<your-renku-dns>/api/auth/callback
    https://<your-renku-dns>/api/auth/gitlab/token
 
 And set the scopes:
