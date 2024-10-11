@@ -4,3 +4,8 @@
 - name: SSL_CERT_FILE
   value: /etc/ssl/certs/ca-certificates.crt
 {{- end -}}
+
+{{- define "certificates.env.grpc" -}}
+- name: GRPC_DEFAULT_SSL_ROOTS_FILE_PATH
+  value: /etc/ssl/certs/ca-certificates.crt
+{{- end -}}

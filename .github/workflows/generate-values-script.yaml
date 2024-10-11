@@ -15,7 +15,7 @@ jobs:
         - os: macos-11
         - os: ubuntu-20.04
     steps:
-      - uses: actions/checkout@v4.1.1
+      - uses: actions/checkout@v4.1.7
         with:
           fetch-depth: 0
       - uses: actions/setup-python@v5
@@ -49,10 +49,10 @@ jobs:
     runs-on: ubuntu-20.04
     needs: [test-script]
     steps:
-      - uses: actions/checkout@v4.1.1
+      - uses: actions/checkout@v4.1.7
         with:
           fetch-depth: 0
-      - uses: Azure/docker-login@v1
+      - uses: Azure/docker-login@v2
         with:
           username: ${{ secrets.RENKU_DOCKER_USERNAME }}
           password: ${{ secrets.RENKU_DOCKER_PASSWORD }}
