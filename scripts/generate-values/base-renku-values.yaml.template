@@ -18,29 +18,9 @@ global:
   useHTTPS: true
 gateway:
   secretKey: <use `openssl rand -hex 32`>
-gitlab:
-  enabled: false
-  password: <use `openssl rand -hex 32`>
-  sharedRunnersRegistrationToken: <use `openssl rand -hex 32`>
-  lfsObjects:
-    enabled: false
-    connection: {{}}
-  registry:
-    enabled: false
-    externalUrl: https://registry.{renku_domain}
-    storage: {{}}
-    ingress:
-      annotations:
-        cert-manager.io/cluster-issuer: letsencrypt-production
-        kubernetes.io/ingress.class: nginx
-        nginx.ingress.kubernetes.io/proxy-body-size: '0'
-      hosts:
-      - {gitlab_registry}
-      tls:
-      - hosts:
-        - {gitlab_registry}
-        secretName: registry-tls
 graph:
+  gitlab:
+    url: {gitlab_url}
   tokenRepository:
     tokenEncryption:
       secret: <use `openssl rand -hex 8 | base64`>
@@ -60,13 +40,11 @@ ingress:
     - hosts:
         - {renku_domain}
       secretName: {namespace}-renku-ch-tls
-jena:
-  users:
-    admin:
-      password: <use `openssl rand -hex 8 | base64`>
-    renku:
-      password: <use `openssl rand -hex 8 | base64`>
 notebooks:
+  gitlab:
+    registry:
+      host: {gitlab_registry}
+    url: {gitlab_url}
   oidc:
     allowUnverifiedEmail: true
     authUrl: https://{renku_domain}/auth/realms/Renku/protocol/openid-connect/auth
