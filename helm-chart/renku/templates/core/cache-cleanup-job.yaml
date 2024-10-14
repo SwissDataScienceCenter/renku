@@ -16,6 +16,8 @@ spec:
         spec:
           containers:
           - name: {{ include "renku-core.fullname" $ }}-cache-cleanup-{{ $version.name }}
+            securityContext:
+              {{- toYaml $.Values.securityContext | nindent 14 }}
             image: renku/renku-core-cleanup:v1
             imagePullPolicy: IfNotPresent
             args:
