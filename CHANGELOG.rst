@@ -8,7 +8,7 @@ Internal Changes
 
 **Improvements**
 
-- **Gateway**: Add support for signing cookies (`#734 <https://github.com/SwissDataScienceCenter/renku-gateway/pull/734>__`).
+- **Gateway**: Add support for signing cookies (`#734 <https://github.com/SwissDataScienceCenter/renku-gateway/pull/734>`__).
 
 Individual Components
 ~~~~~~~~~~~~~~~~~~~~~
