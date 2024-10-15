@@ -3,7 +3,17 @@
 0.59.0
 ------
 
+Internal Changes
+~~~~~~~~~~~~~~~~
 
+**Improvements**
+
+- **Gateway**: Add support for signing cookies (`#734 <https://github.com/SwissDataScienceCenter/renku-gateway/pull/734>`__).
+
+Individual Components
+~~~~~~~~~~~~~~~~~~~~~
+
+- `renku-gateway 1.2.0 <https://github.com/SwissDataScienceCenter/renku-gateway/releases/tag/1.2.0>`_
 
 0.58.0
 ------
@@ -124,7 +134,7 @@ Individual Components
 Renku `0.57.0` brings a suite of new features and improvements to the Renku 2.0 beta. As a main
 highlight, you can now save and reuse the credentials for data sources. No more copy/paste on every
 session launch! We have also made small improvements to sharing, search, and sessions in Renku 2.0.
-For a full list of changes, see the list below. 
+For a full list of changes, see the list below.
 
 
 NOTE to administrators: Upgrading the `csi-rclone` component will unmount all cloud storage for all
