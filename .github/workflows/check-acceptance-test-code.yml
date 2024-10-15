@@ -3,12 +3,23 @@ name: Check acceptance tests dependencies and code
 on:
   pull_request:
   merge_group:
+
+env:
+  JAVA_OPTS: -Xms2048M -Xmx2048M -Xss6M -XX:ReservedCodeCacheSize=256M -Dfile.encoding=UTF-8
+
 jobs:
   formatting-check:
     name: Scala dependencies and code check
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4.1.7
+      - name: Setup JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+          cache: sbt
+      - uses: sbt/setup-sbt@v1
       - name: run test compile
         run: |
           cd acceptance-tests
