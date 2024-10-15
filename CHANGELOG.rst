@@ -3,7 +3,17 @@
 0.59.0
 ------
 
+Internal Changes
+~~~~~~~~~~~~~~~~
 
+**Improvements**
+
+- **Gateway**: Add support for signing cookies (`#734 <https://github.com/SwissDataScienceCenter/renku-gateway/pull/734>`__).
+
+Individual Components
+~~~~~~~~~~~~~~~~~~~~~
+
+- `renku-gateway 1.2.0 <https://github.com/SwissDataScienceCenter/renku-gateway/releases/tag/1.2.0>`_
 
 0.58.1
 ------
