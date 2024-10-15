@@ -3,6 +3,19 @@
 0.59.0
 ------
 
+User-Facing Changes
+~~~~~~~~~~~~~~~~~~~
+
+**✨ Improvements**
+
+- **UI**: Add a playful design for the 404 and application error pages (`#3248 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3248>`__).
+- **UI**: Update redirect page styles (`#3257 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3257>`__).
+- **UI**: Remove Renku 2.0 beta warning alert from dashboard (`#3357 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3357>`__).
+
+**🐞 Bug Fixes**
+
+- **UI**: Fix styles for the edit launcher environment list (`#3360 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3360>`__).
+
 Internal Changes
 ~~~~~~~~~~~~~~~~
 
@@ -14,6 +27,7 @@ Individual Components
 ~~~~~~~~~~~~~~~~~~~~~
 
 - `renku-gateway 1.2.0 <https://github.com/SwissDataScienceCenter/renku-gateway/releases/tag/1.2.0>`_
+- `renku-ui 3.38.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.38.0>`_
 
 0.58.0
 ------
