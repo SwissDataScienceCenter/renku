@@ -3,15 +3,24 @@
 0.58.1
 ------
 
+Renku ``0.58.1`` fixes the correct handling of self-signed certificates in all the pods running OpenJDK as well as a bug
+where some groups do not show up in search.
 
 Internal Changes
 ~~~~~~~~~~~~~~~~
 
-
 **🐞 Bug Fixes**
 
 - **Search**: Fix a bug where some groups do not show up in search
-
+- **Helm chart** correctly handle self-signed certificates in all the pods running OpenJSK:
+  - `commit-event-service`
+  - `event-log`
+  - `knowledge-graph`
+  - `search-api`
+  - `search-provision`
+  - `token-repository`
+  - `triples-generator`
+  - `webhook-service`
 
 Individual Components
 ~~~~~~~~~~~~~~~~~~~~~
