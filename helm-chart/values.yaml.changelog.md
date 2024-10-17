@@ -5,6 +5,10 @@ For changes that require manual steps other than changing values, please check o
 Please follow this convention when adding a new row
 * `<type: NEW|EDIT|DELETE> - *<resource name>*: <details>`
 
+## Upgrading to Renku 0.59.0
+
+* NEW ``global.certificates.securityContext`` has been added to allow customization of the `securityContext` for the containers managing custom/self-signed Certificate Authorities.
+
 ## Upgrading to Renku 0.57.0
 
 * DELETE ``gateway.image.auth`` has been removed.
