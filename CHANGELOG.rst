@@ -46,9 +46,11 @@ Internal Changes
 Individual Components
 ~~~~~~~~~~~~~~~~~~~~~
 
+- `renku-data-services 0.23.0 <https://github.com/SwissDataScienceCenter/renku-data-services/releases/tag/v0.23.0>`__
 - `renku-gateway 1.2.0 <https://github.com/SwissDataScienceCenter/renku-gateway/releases/tag/1.2.0>`_
 - `renku-notebooks 1.27.0 <https://github.com/SwissDataScienceCenter/renku-notebooks/releases/tag/1.27.0>`_
 - `renku-ui 3.38.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.38.0>`_
+- `renku-ui 3.39.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.39.0>`_
 
 0.58.1
 ------
