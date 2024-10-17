@@ -3,8 +3,6 @@
 0.58.1
 ------
 
-
-
 Renku ``0.58.1`` fixes the correct handling of self-signed certificates in all the pods running OpenJDK as well as a bug
 where some groups do not show up in search.
 
