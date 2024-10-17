@@ -26,6 +26,8 @@ spec:
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       automountServiceAccountToken: {{ .Values.global.debug }}
+      initContainers:
+        {{- include "certificates.initContainer" . | nindent 8 }}
       containers:
         - name: search-provision
           image: "{{ .Values.search.searchProvision.image.repository }}:{{ .Values.search.searchProvision.image.tag }}"
@@ -73,7 +75,7 @@ spec:
           resources:
             {{- toYaml .Values.search.searchProvision.resources | nindent 12 }}
           volumeMounts:
-            {{- include "certificates.volumeMounts.javaCertsGeneral" . | nindent 12 }}
+            {{- include "certificates.volumeMounts.openjdk17" . | nindent 12 }}
       volumes:
         {{- include "certificates.volumes" . | nindent 8 }}
   {{- with .Values.nodeSelector }}
