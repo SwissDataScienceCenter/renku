@@ -31,7 +31,7 @@ Internal Changes
 **New Features**
 
 - **Data services**: Add support for data connectors (`#407 <https://github.com/SwissDataScienceCenter/renku-data-services/pull/407>`__).
-- **Data services**: Do not synchronize blocked users which from Keycloak (`#393 <https://github.com/SwissDataScienceCenter/renku-data-services/pull/393>`__).
+- **Data services**: Do not synchronize blocked users from Keycloak (`#393 <https://github.com/SwissDataScienceCenter/renku-data-services/pull/393>`__).
 - **Notebooks**: Add support for data connectors (`#1991 <https://github.com/SwissDataScienceCenter/renku-notebooks/pull/1991>`__).
 - **Notebooks**: Cache Amalthea sessions (`#1983 <https://github.com/SwissDataScienceCenter/renku-notebooks/pull/1983>`__).
 
