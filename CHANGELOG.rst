@@ -10,6 +10,11 @@ for example those shared in your group, rather than having to re-enter the data 
 Internal Changes
 ~~~~~~~~~~~~~~~~
 
+**New Features**
+
+- **Notebooks**: Add support for data connectors (`#1991 <https://github.com/SwissDataScienceCenter/renku-notebooks/pull/1991>`__).
+- **Notebooks**: Cache amalthea sessions (`#1983 <https://github.com/SwissDataScienceCenter/renku-notebooks/pull/1983>`__).
+
 **Improvements**
 
 - **Gateway**: Add support for signing cookies (`#734 <https://github.com/SwissDataScienceCenter/renku-gateway/pull/734>`__).
@@ -18,6 +23,7 @@ Individual Components
 ~~~~~~~~~~~~~~~~~~~~~
 
 - `renku-gateway 1.2.0 <https://github.com/SwissDataScienceCenter/renku-gateway/releases/tag/1.2.0>`_
+- `renku-notebooks 1.27.0 <https://github.com/SwissDataScienceCenter/renku-notebooks/releases/tag/1.27.0>`_
 
 0.58.0
 ------
