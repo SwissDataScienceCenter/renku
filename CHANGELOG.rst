@@ -7,6 +7,19 @@ Renku ``0.59.0`` introduces the ability to reuse data connectors in multiple pro
 When you add a data connector (previously called a data source) to your project, you now have the new option to select other data connectors on RenkuLab,
 for example those shared in your group, rather than having to re-enter the data connection details.
 
+User-Facing Changes
+~~~~~~~~~~~~~~~~~~~
+
+**✨ Improvements**
+
+- **UI**: Add a playful design for the 404 and application error pages (`#3248 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3248>`__).
+- **UI**: Update redirect page styles (`#3257 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3257>`__).
+- **UI**: Remove Renku 2.0 beta warning alert from dashboard (`#3357 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3357>`__).
+
+**🐞 Bug Fixes**
+
+- **UI**: Fix styles for the edit launcher environment list (`#3360 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3360>`__).
+
 Internal Changes
 ~~~~~~~~~~~~~~~~
 
@@ -24,6 +37,44 @@ Individual Components
 
 - `renku-gateway 1.2.0 <https://github.com/SwissDataScienceCenter/renku-gateway/releases/tag/1.2.0>`_
 - `renku-notebooks 1.27.0 <https://github.com/SwissDataScienceCenter/renku-notebooks/releases/tag/1.27.0>`_
+- `renku-ui 3.38.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.38.0>`_
+
+0.58.1
+------
+
+Renku ``0.58.1`` fixes the correct handling of self-signed certificates in all the pods running OpenJDK as well as a bug
+where some groups do not show up in search.
+
+User-Facing Changes
+~~~~~~~~~~~~~~~~~~~
+
+**🐞 Bug Fixes**
+
+- **Notebooks**: Fix a bug where some docker images were found to not exist even when they really exist.
+
+Internal Changes
+~~~~~~~~~~~~~~~~
+
+**🐞 Bug Fixes**
+
+- **Search**: Fix a bug where some groups do not show up in search
+- **Notebooks**: Forward authorization header when getting Gitlab tokens
+- **Notebooks**: Only patch the jupyter servers once when migrating labels and annotations at startup
+- **Helm chart** correctly handle self-signed certificates in all the pods running OpenJDK:
+  - `commit-event-service`
+  - `event-log`
+  - `knowledge-graph`
+  - `search-api`
+  - `search-provision`
+  - `token-repository`
+  - `triples-generator`
+  - `webhook-service`
+
+Individual Components
+~~~~~~~~~~~~~~~~~~~~~
+
+- `renku-search 0.6.2 <https://github.com/SwissDataScienceCenter/renku-search/releases/tag/v0.6.2>`_
+- `renku-notebooks 1.26.2 <https://github.com/SwissDataScienceCenter/renku-notebooks/releases/tag/1.26.2>`_
 
 0.58.0
 ------
