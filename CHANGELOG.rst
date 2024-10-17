@@ -10,6 +10,10 @@ for example those shared in your group, rather than having to re-enter the data 
 User-Facing Changes
 ~~~~~~~~~~~~~~~~~~~
 
+**🌟 New Features**
+
+- **UI**: Add and re-use data connectors in Renku 2.0 projects (`#3323 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3323>`__).
+
 **✨ Improvements**
 
 - **UI**: Add a playful design for the 404 and application error pages (`#3248 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3248>`__).
@@ -19,6 +23,7 @@ User-Facing Changes
 **🐞 Bug Fixes**
 
 - **UI**: Fix styles for the edit launcher environment list (`#3360 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3360>`__).
+- **UI**: Allow opening a project from Renku 2.0 search if the namespace is missing in the result (`#3353 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3353>`__)..
 
 Internal Changes
 ~~~~~~~~~~~~~~~~
