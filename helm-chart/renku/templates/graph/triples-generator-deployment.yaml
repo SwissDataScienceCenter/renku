@@ -124,7 +124,7 @@ spec:
           resources:
             {{- toYaml .Values.graph.triplesGenerator.resources | nindent 12 }}
           volumeMounts:
-            {{- include "certificates.volumeMounts.javaCertsGeneral" . | nindent 12 }}
+            {{- include "certificates.volumeMounts.openjdk17" . | nindent 12 }}
       volumes:
         {{- include "certificates.volumes" . | nindent 8 }}
   {{- with .Values.nodeSelector }}
