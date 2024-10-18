@@ -19,6 +19,7 @@ User-Facing Changes
 - **UI**: Add a playful design for the 404 and application error pages (`#3248 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3248>`__).
 - **UI**: Update redirect page styles (`#3257 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3257>`__).
 - **UI**: Remove Renku 2.0 beta warning alert from dashboard (`#3357 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3357>`__).
+- **UI**: Fix permission checks in Renku 2.0 (TODO).
 
 **🐞 Bug Fixes**
 
