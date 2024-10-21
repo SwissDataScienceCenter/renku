@@ -33,16 +33,19 @@ Internal Changes
 
 - **Data services**: Add support for data connectors (`#407 <https://github.com/SwissDataScienceCenter/renku-data-services/pull/407>`__).
 - **Data services**: Do not synchronize blocked users from Keycloak (`#393 <https://github.com/SwissDataScienceCenter/renku-data-services/pull/393>`__).
+- **Data services**: Support getting permissions (`#454 <https://github.com/SwissDataScienceCenter/renku-data-services/pull/454>`__).
 - **Notebooks**: Add support for data connectors (`#1991 <https://github.com/SwissDataScienceCenter/renku-notebooks/pull/1991>`__).
 - **Notebooks**: Cache Amalthea sessions (`#1983 <https://github.com/SwissDataScienceCenter/renku-notebooks/pull/1983>`__).
 
 **Improvements**
 
+- **Data services**: Handle errors in background jobs nicely (`#463 <https://github.com/SwissDataScienceCenter/renku-data-services/pull/463>`__).
 - **Gateway**: Add support for signing cookies (`#734 <https://github.com/SwissDataScienceCenter/renku-gateway/pull/734>`__).
 
 **Bug Fixes**
 
 - **Data services**: Treat invalid JWT as 401 HTTP error.
+- **Data services**: Change user preferences id sequence to proper value.
 
 Individual Components
 ~~~~~~~~~~~~~~~~~~~~~
