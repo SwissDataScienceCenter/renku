@@ -10,6 +10,43 @@
 
 
 
+0.58.1
+------
+
+Renku ``0.58.1`` fixes the correct handling of self-signed certificates in all the pods running OpenJDK as well as a bug
+where some groups do not show up in search.
+
+User-Facing Changes
+~~~~~~~~~~~~~~~~~~~
+
+**🐞 Bug Fixes**
+
+- **Notebooks**: Fix a bug where some docker images were found to not exist even when they really exist.
+
+Internal Changes
+~~~~~~~~~~~~~~~~
+
+**🐞 Bug Fixes**
+
+- **Search**: Fix a bug where some groups do not show up in search
+- **Notebooks**: Forward authorization header when getting Gitlab tokens
+- **Notebooks**: Only patch the jupyter servers once when migrating labels and annotations at startup
+- **Helm chart** correctly handle self-signed certificates in all the pods running OpenJDK:
+  - `commit-event-service`
+  - `event-log`
+  - `knowledge-graph`
+  - `search-api`
+  - `search-provision`
+  - `token-repository`
+  - `triples-generator`
+  - `webhook-service`
+
+Individual Components
+~~~~~~~~~~~~~~~~~~~~~
+
+- `renku-search 0.6.2 <https://github.com/SwissDataScienceCenter/renku-search/releases/tag/v0.6.2>`_
+- `renku-notebooks 1.26.2 <https://github.com/SwissDataScienceCenter/renku-notebooks/releases/tag/1.26.2>`_
+
 0.58.0
 ------
 
