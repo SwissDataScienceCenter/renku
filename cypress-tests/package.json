@@ -14,7 +14,7 @@
   "author": "Swiss Data Science Center",
   "dependencies": {
     "@actions/core": "^1.10.0",
-    "@renku/notebooks-cypress-tests": "^0.0.10",
+    "@renku/notebooks-cypress-tests": "^0.0.13",
     "cypress": "^12.17.1",
     "cypress-localstorage-commands": "^2.2.3",
     "typescript": "^4.8.4",
