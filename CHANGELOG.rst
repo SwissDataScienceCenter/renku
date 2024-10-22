@@ -22,8 +22,10 @@ User-Facing Changes
 
 **🐞 Bug Fixes**
 
+- **UI**: Fix how permissions are checked in Renku 2.0, notably group members can perform actions according to their role in projects. (`#3351 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3351>`__).
 - **UI**: Fix styles for the edit launcher environment list (`#3360 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3360>`__).
 - **UI**: Allow opening a project from Renku 2.0 search if the namespace is missing in the result (`#3353 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3353>`__).
+- **UI**: Fix update file and download buttons in Renku 1.0 (`#3363 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3363>`__).
 
 Internal Changes
 ~~~~~~~~~~~~~~~~
@@ -32,25 +34,30 @@ Internal Changes
 
 - **Data services**: Add support for data connectors (`#407 <https://github.com/SwissDataScienceCenter/renku-data-services/pull/407>`__).
 - **Data services**: Do not synchronize blocked users from Keycloak (`#393 <https://github.com/SwissDataScienceCenter/renku-data-services/pull/393>`__).
+- **Data services**: Support getting permissions (`#454 <https://github.com/SwissDataScienceCenter/renku-data-services/pull/454>`__).
 - **Notebooks**: Add support for data connectors (`#1991 <https://github.com/SwissDataScienceCenter/renku-notebooks/pull/1991>`__).
 - **Notebooks**: Cache Amalthea sessions (`#1983 <https://github.com/SwissDataScienceCenter/renku-notebooks/pull/1983>`__).
 
 **Improvements**
 
+- **Data services**: Handle errors in background jobs nicely (`#463 <https://github.com/SwissDataScienceCenter/renku-data-services/pull/463>`__).
 - **Gateway**: Add support for signing cookies (`#734 <https://github.com/SwissDataScienceCenter/renku-gateway/pull/734>`__).
 
 **Bug Fixes**
 
 - **Data services**: Treat invalid JWT as 401 HTTP error.
+- **Data services**: Change user preferences id sequence to proper value.
 
 Individual Components
 ~~~~~~~~~~~~~~~~~~~~~
 
 - `renku-data-services 0.23.0 <https://github.com/SwissDataScienceCenter/renku-data-services/releases/tag/v0.23.0>`__
+- `renku-data-services 0.24.0 <https://github.com/SwissDataScienceCenter/renku-data-services/releases/tag/v0.24.0>`__
 - `renku-gateway 1.2.0 <https://github.com/SwissDataScienceCenter/renku-gateway/releases/tag/1.2.0>`_
 - `renku-notebooks 1.27.0 <https://github.com/SwissDataScienceCenter/renku-notebooks/releases/tag/1.27.0>`_
 - `renku-ui 3.38.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.38.0>`_
 - `renku-ui 3.39.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.39.0>`_
+- `renku-ui 3.40.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.40.0>`_
 
 0.58.1
 ------
