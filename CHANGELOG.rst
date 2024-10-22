@@ -26,7 +26,6 @@ User-Facing Changes
 - **UI**: Fix styles for the edit launcher environment list (`#3360 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3360>`__).
 - **UI**: Allow opening a project from Renku 2.0 search if the namespace is missing in the result (`#3353 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3353>`__).
 - **UI**: Fix update file and download buttons in Renku 1.0 (`#3363 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3363>`__).
-- **UI**: TODO: bugfix 3.40.1
 
 Internal Changes
 ~~~~~~~~~~~~~~~~
