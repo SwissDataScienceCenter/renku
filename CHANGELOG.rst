@@ -19,10 +19,10 @@ User-Facing Changes
 - **UI**: Add a playful design for the 404 and application error pages (`#3248 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3248>`__).
 - **UI**: Update redirect page styles (`#3257 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3257>`__).
 - **UI**: Remove Renku 2.0 beta warning alert from dashboard (`#3357 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3357>`__).
-- **UI**: Fix permission checks in Renku 2.0 (`#3351 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3351>`__).
 
 **🐞 Bug Fixes**
 
+- **UI**: Fix how permissions are checked in Renku 2.0, notably group members can perform actions according to their role in projects. (`#3351 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3351>`__).
 - **UI**: Fix styles for the edit launcher environment list (`#3360 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3360>`__).
 - **UI**: Allow opening a project from Renku 2.0 search if the namespace is missing in the result (`#3353 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3353>`__).
 - **UI**: Fix update file and download buttons in Renku 1.0 (`#3363 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3363>`__).
