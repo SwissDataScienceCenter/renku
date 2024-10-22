@@ -1,5 +1,65 @@
 .. _changelog:
 
+0.59.0
+------
+
+Renku ``0.59.0`` introduces the ability to reuse data connectors in multiple projects!
+When you add a data connector (previously called a data source) to your project, you now have the new option to select other data connectors on RenkuLab,
+for example those shared in your group, rather than having to re-enter the data connection details.
+
+User-Facing Changes
+~~~~~~~~~~~~~~~~~~~
+
+**🌟 New Features**
+
+- **UI**: Add and re-use data connectors in Renku 2.0 projects (`#3323 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3323>`__).
+
+**✨ Improvements**
+
+- **UI**: Add a playful design for the 404 and application error pages (`#3248 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3248>`__).
+- **UI**: Update redirect page styles (`#3257 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3257>`__).
+- **UI**: Remove Renku 2.0 beta warning alert from dashboard (`#3357 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3357>`__).
+
+**🐞 Bug Fixes**
+
+- **UI**: Fix how permissions are checked in Renku 2.0, notably group members can perform actions according to their role in projects. (`#3351 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3351>`__).
+- **UI**: Fix styles for the edit launcher environment list (`#3360 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3360>`__).
+- **UI**: Allow opening a project from Renku 2.0 search if the namespace is missing in the result (`#3353 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3353>`__).
+- **UI**: Fix update file and download buttons in Renku 1.0 (`#3363 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3363>`__).
+
+Internal Changes
+~~~~~~~~~~~~~~~~
+
+**New Features**
+
+- **Data services**: Add support for data connectors (`#407 <https://github.com/SwissDataScienceCenter/renku-data-services/pull/407>`__).
+- **Data services**: Do not synchronize blocked users from Keycloak (`#393 <https://github.com/SwissDataScienceCenter/renku-data-services/pull/393>`__).
+- **Data services**: Support getting permissions (`#454 <https://github.com/SwissDataScienceCenter/renku-data-services/pull/454>`__).
+- **Notebooks**: Add support for data connectors (`#1991 <https://github.com/SwissDataScienceCenter/renku-notebooks/pull/1991>`__).
+- **Notebooks**: Cache Amalthea sessions (`#1983 <https://github.com/SwissDataScienceCenter/renku-notebooks/pull/1983>`__).
+
+**Improvements**
+
+- **Data services**: Handle errors in background jobs nicely (`#463 <https://github.com/SwissDataScienceCenter/renku-data-services/pull/463>`__).
+- **Gateway**: Add support for signing cookies (`#734 <https://github.com/SwissDataScienceCenter/renku-gateway/pull/734>`__).
+
+**Bug Fixes**
+
+- **Data services**: Treat invalid JWT as 401 HTTP error.
+- **Data services**: Change user preferences id sequence to proper value.
+
+Individual Components
+~~~~~~~~~~~~~~~~~~~~~
+
+- `renku-data-services 0.23.0 <https://github.com/SwissDataScienceCenter/renku-data-services/releases/tag/v0.23.0>`__
+- `renku-data-services 0.24.0 <https://github.com/SwissDataScienceCenter/renku-data-services/releases/tag/v0.24.0>`__
+- `renku-gateway 1.2.0 <https://github.com/SwissDataScienceCenter/renku-gateway/releases/tag/1.2.0>`_
+- `renku-notebooks 1.27.0 <https://github.com/SwissDataScienceCenter/renku-notebooks/releases/tag/1.27.0>`_
+- `renku-ui 3.38.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.38.0>`_
+- `renku-ui 3.39.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.39.0>`_
+- `renku-ui 3.40.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.40.0>`_
+- `renku-ui 3.40.1 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.40.1>`_
+
 0.58.1
 ------
 
