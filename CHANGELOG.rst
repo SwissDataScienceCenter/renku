@@ -4,6 +4,10 @@
 ------
 
 
+Individual components
+~~~~~~~~~~~~~~~~~~~~~~
+
+- `amalthea 0.13.0 <https://github.com/SwissDataScienceCenter/amalthea/releases/tag/0.13.0>`_
 
 0.59.0
 ------
