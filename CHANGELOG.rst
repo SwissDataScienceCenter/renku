@@ -4,6 +4,10 @@
 ------
 
 
+Individual components
+~~~~~~~~~~~~~~~~~~~~~~
+
+- `amalthea 0.13.0 <https://github.com/SwissDataScienceCenter/amalthea/releases/tag/0.13.0>`_
 
 0.59.0
 ------
@@ -56,6 +60,10 @@ Renku 2.0 dashboard displayed content not related to you.
 
 User-Facing Changes
 ~~~~~~~~~~~~~~~~~~~
+
+**🌟 New Features**
+
+- **UI**: Support saving and managing credentials for Renku 2.0 data sources (`#3266 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3266>`__).
 
 **✨ Improvements**
 

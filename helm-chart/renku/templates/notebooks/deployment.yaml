@@ -43,6 +43,12 @@ spec:
               value: {{ .Values.amalthea.crdApiVersion }}
             - name: K8S_WATCHER_CR_PLURAL
               value: {{ .Values.amalthea.crdNames.plural }}
+            - name: K8S_WATCHER_AMALTHEA_SESSION_GROUP
+              value: amalthea.dev
+            - name: K8S_WATCHER_AMALTHEA_SESSION_VERSION
+              value: v1alpha1
+            - name: K8S_WATCHER_AMALTHEA_SESSION_PLURAL
+              value: amaltheasessions
             - name: K8S_WATCHER_NAMESPACES
               {{ if .Values.notebooks.sessionsNamespace }}
               value: {{ list .Release.Namespace .Values.notebooks.sessionsNamespace | uniq | toJson | quote }}
