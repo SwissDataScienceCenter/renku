@@ -1,5 +1,22 @@
 .. _changelog:
 
+0.59.1
+------
+
+Renku ``0.59.1`` is a bugfix release that improves stability and performance with renku notebooks when under heavy load.
+
+Internal Changes
+~~~~~~~~~~~~~~~~
+
+**Improvements**
+
+- **Notebooks**: Use gevent methods in notebooks api (`#1996 <https://github.com/SwissDataScienceCenter/renku-notebooks/pull/1996>`__).
+
+Individual Components
+~~~~~~~~~~~~~~~~~~~~~
+
+- `renku-notebooks 1.27.1 <https://github.com/SwissDataScienceCenter/renku-notebooks/releases/tag/1.27.1>`_
+
 0.59.0
 ------
 
