@@ -166,6 +166,8 @@ spec:
             - name: NB_K8S__SESSIONS_NAMESPACE
               value: {{ .Values.notebooks.sessionsNamespace | quote }}
             {{ end }}
+            - name: NB_K8S__BYPASS_CACHE_ON_FAILURE
+              value: {{ .Values.notebooks.bypassCacheOnFailure | quote }}
             - name: NB_K8S__RENKU_NAMESPACE
               value: {{ .Release.Namespace | quote }}
             - name: NB_SESSIONS__GIT_PROXY__RENKU_CLIENT_ID
