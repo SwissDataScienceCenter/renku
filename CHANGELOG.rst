@@ -3,7 +3,33 @@
 0.59.2
 ------
 
+Renku ``0.59.2`` is a bugfix release that fixes a bug in Renku 2.0 where project editors could not edit project information.
 
+User-Facing Changes
+~~~~~~~~~~~~~~~~~~~
+
+**🐞 Bug Fixes**
+
+- **Data services**: Allow project editors to send patches with the current namespace (`#483 <https://github.com/SwissDataScienceCenter/renku-data-services/pull/483>`__).
+- **Data services**: Allow project editors to send patches with the current visibility (`#484 <https://github.com/SwissDataScienceCenter/renku-data-services/pull/484>`__).
+
+Internal Changes
+~~~~~~~~~~~~~~~~
+
+**Improvements**
+
+- **Data services**: Return 409 error when creating a project with a conflicting slug (`#471 <https://github.com/SwissDataScienceCenter/renku-data-services/pull/471>`__).
+- **Data services**: Change all serial id columns to be GENERATED AS IDENTITY (`#461 <https://github.com/SwissDataScienceCenter/renku-data-services/pull/461>`__).
+- **Data services**: Include ``is_admin`` in the self ``/user`` endpoint (`#472 <https://github.com/SwissDataScienceCenter/renku-data-services/pull/472>`__).
+
+**Bug Fixes**
+
+- **Data services**: Handle spaces in ``provider_id`` for connected services (`#482 <https://github.com/SwissDataScienceCenter/renku-data-services/pull/482>`__).
+
+Individual Components
+~~~~~~~~~~~~~~~~~~~~~
+
+- `renku-data-services 0.24.2 <https://github.com/SwissDataScienceCenter/renku-data-services/releases/tag/v0.24.2>`__
 
 0.59.1
 ------
