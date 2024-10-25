@@ -11,6 +11,7 @@ User-Facing Changes
 **🐞 Bug Fixes**
 
 - **Data services**: Allow project editors to send patches with the current namespace (`#483 <https://github.com/SwissDataScienceCenter/renku-data-services/pull/483>`__).
+- **Data services**: Allow project editors to send patches with the current visibility (`#484 <https://github.com/SwissDataScienceCenter/renku-data-services/pull/484>`__).
 
 Internal Changes
 ~~~~~~~~~~~~~~~~
