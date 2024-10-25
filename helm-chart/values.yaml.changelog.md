@@ -5,6 +5,11 @@ For changes that require manual steps other than changing values, please check o
 Please follow this convention when adding a new row
 * `<type: NEW|EDIT|DELETE> - *<resource name>*: <details>`
 
+## Upgrading to Renku 0.60.0
+
+* NEW ``gateway.idleSessionTTLSeconds`` to set the session idle TTL in sexonds.
+* NEW ``gateway.maxSessionTTLSeconds`` to set the session max TTL in sexonds.
+
 ## Upgrading to Renku 0.59.1
 
 * NEW ``notebooks.bypassCacheOnFailure`` has been added. Setting this to false prevents renku-notebooks to call
