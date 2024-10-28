@@ -4,6 +4,18 @@
 ------
 
 
+User-Facing Changes
+~~~~~~~~~~~~~~~~~~~
+
+**Improvements**
+
+- **Data services**: Improved workflow for connecting with Github (`#361 <https://github.com/SwissDataScienceCenter/renku-data-services/pull/361>`__).
+
+Individual Components
+~~~~~~~~~~~~~~~~~~~~~
+
+- `renku-data-services 0.25.0 <https://github.com/SwissDataScienceCenter/renku-data-services/releases/tag/v0.25.0>`__
+
 0.59.2
 ------
 
