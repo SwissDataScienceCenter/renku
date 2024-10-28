@@ -3,6 +3,18 @@
 0.60.0
 ------
 
+Internal Changes
+~~~~~~~~~~~~~~~~
+
+**Improvements**
+
+- **Gateway**: Add support for enabling debug logs from the gateway (`#730 <https://github.com/SwissDataScienceCenter/renku-gateway/pull/730>`__).
+
+Individual Components
+~~~~~~~~~~~~~~~~~~~~~
+
+- `renku-gateway 1.3.0 <https://github.com/SwissDataScienceCenter/renku-gateway/releases/tag/1.3.0>`_
+
 
 0.59.1
 ------
