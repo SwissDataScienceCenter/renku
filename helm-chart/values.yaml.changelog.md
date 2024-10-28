@@ -7,8 +7,8 @@ Please follow this convention when adding a new row
 
 ## Upgrading to Renku 0.60.0
 
-* NEW ``gateway.idleSessionTTLSeconds`` to set the session idle TTL in sexonds.
-* NEW ``gateway.maxSessionTTLSeconds`` to set the session max TTL in sexonds.
+* NEW ``gateway.idleSessionTTLSeconds`` to set the session idle TTL in seconds.
+* NEW ``gateway.maxSessionTTLSeconds`` to set the session max TTL in seconds.
 
 ## Upgrading to Renku 0.59.1
 
