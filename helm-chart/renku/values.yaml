@@ -1266,6 +1266,15 @@ gateway:
       ## average rate units are requests per second
       average: 20
       burst: 100
+  ## How long a session will be kept alive if it is idle.
+  ## If set to 0 then there is no TTL.
+  ## If not set, defaults to 14400 (4 hours).
+  idleSessionTTLSeconds:
+  ## The maximum duration a session can be kept alive.
+  ## If set to 0 then there is no TTL.
+  ## If this value is set to a value other than 0 then it must be greater than idleSessionTTLSeconds.
+  ## If not set, defaults to 86400 (24 hours).
+  maxSessionTTLSeconds:
   ## For production deployment, you will need to define the secret key.
   ## This is a random string, used for cryptographic operations on cookies and sensitive information.
   ## Use `openssl rand -hex 32`.

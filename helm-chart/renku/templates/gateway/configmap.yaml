@@ -22,6 +22,12 @@ data:
         {{- toYaml . | nindent 8 }}
       {{- end }}
     sessions:
+      {{- if .Values.gateway.idleSessionTTLSeconds }}
+      idleSessionTTLSeconds: {{ .Values.gateway.idleSessionTTLSeconds }}
+      {{- end }}
+      {{- if .Values.gateway.maxSessionTTLSeconds }}
+      maxSessionTTLSeconds: {{ .Values.gateway.maxSessionTTLSeconds }}
+      {{- end }}
       authorizationVerifiers:
         - issuer: {{ printf "%s/realms/%s" (include "renku.keycloakUrl" . | trimSuffix "/") (include "renku.keycloak.realm" .) }}
           audience: renku
