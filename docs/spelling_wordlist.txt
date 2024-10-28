@@ -98,6 +98,7 @@ findable
 Fortran
 Frontend
 gapped
+gevent
 git-lfs
 githooks
 github
@@ -313,6 +314,7 @@ unmounting
 unpause
 unpushed
 unschedulable
+unsetting
 untracked
 untracked
 updatable
