@@ -22,25 +22,14 @@ Internal Changes
 **Improvements**
 
 - **UI**: Update the Admin page to set up Connected services (`#3332 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3332>`__).
-
-Individual Components
-~~~~~~~~~~~~~~~~~~~~~
-
-- `renku-data-services 0.25.0 <https://github.com/SwissDataScienceCenter/renku-data-services/releases/tag/v0.25.0>`__
-- `renku-ui 3.41.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.41.0>`_
-
-Internal Changes
-~~~~~~~~~~~~~~~~
-
-**Improvements**
-
 - **Gateway**: Add support for enabling debug logs from the gateway (`#730 <https://github.com/SwissDataScienceCenter/renku-gateway/pull/730>`__).
 
 Individual Components
 ~~~~~~~~~~~~~~~~~~~~~
 
+- `renku-data-services 0.25.0 <https://github.com/SwissDataScienceCenter/renku-data-services/releases/tag/v0.25.0>`_
 - `renku-gateway 1.3.0 <https://github.com/SwissDataScienceCenter/renku-gateway/releases/tag/1.3.0>`_
-
+- `renku-ui 3.41.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.41.0>`_
 
 0.59.2
 ------
