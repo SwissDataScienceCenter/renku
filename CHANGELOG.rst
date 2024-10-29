@@ -55,11 +55,16 @@ Internal Changes
 **Bug Fixes**
 
 - **Data services**: Handle spaces in ``provider_id`` for connected services (`#482 <https://github.com/SwissDataScienceCenter/renku-data-services/pull/482>`__).
+- **csi-rclone**: Do not log potentially sensitive data in error messages.
+- **csi-rclone**: Properly handle encrypted secrets with the new annotation-based storage class.
+
 
 Individual Components
 ~~~~~~~~~~~~~~~~~~~~~
 
 - `renku-data-services 0.24.2 <https://github.com/SwissDataScienceCenter/renku-data-services/releases/tag/v0.24.2>`__
+- `csi-rclone 0.3.4 <https://github.com/SwissDataScienceCenter/csi-rclone/releases/tag/v0.3.4>`__
+- `csi-rclone 0.3.5 <https://github.com/SwissDataScienceCenter/csi-rclone/releases/tag/v0.3.5>`__
 
 0.59.1
 ------
