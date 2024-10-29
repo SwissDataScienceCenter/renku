@@ -3,6 +3,32 @@
 0.60.0
 ------
 
+User-Facing Changes
+~~~~~~~~~~~~~~~~~~~
+
+**✨ Improvements**
+
+- **UI & Data services**: Improve UX for users connecting to GitHub (`#3332 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3332>`__).
+- **UI**: Update project and group membership settings (`#3374 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3374>`__).
+- **UI**: Improve UX for adding data connectors (`#3368 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3368>`__).
+
+**🐞 Bug Fixes**
+
+- **UI**: Avoid unexpected redirects when clicking on the 2.0 dashboard session buttons (`#3378 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3378>`__).
+
+Internal Changes
+~~~~~~~~~~~~~~~~
+
+**Improvements**
+
+- **UI**: Update the Admin page to set up Connected services (`#3332 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3332>`__).
+
+Individual Components
+~~~~~~~~~~~~~~~~~~~~~
+
+- `renku-data-services 0.25.0 <https://github.com/SwissDataScienceCenter/renku-data-services/releases/tag/v0.25.0>`__
+- `renku-ui 3.41.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.41.0>`_
+
 Internal Changes
 ~~~~~~~~~~~~~~~~
 
@@ -41,11 +67,16 @@ Internal Changes
 **Bug Fixes**
 
 - **Data services**: Handle spaces in ``provider_id`` for connected services (`#482 <https://github.com/SwissDataScienceCenter/renku-data-services/pull/482>`__).
+- **csi-rclone**: Do not log potentially sensitive data in error messages.
+- **csi-rclone**: Properly handle encrypted secrets with the new annotation-based storage class.
+
 
 Individual Components
 ~~~~~~~~~~~~~~~~~~~~~
 
 - `renku-data-services 0.24.2 <https://github.com/SwissDataScienceCenter/renku-data-services/releases/tag/v0.24.2>`__
+- `csi-rclone 0.3.4 <https://github.com/SwissDataScienceCenter/csi-rclone/releases/tag/v0.3.4>`__
+- `csi-rclone 0.3.5 <https://github.com/SwissDataScienceCenter/csi-rclone/releases/tag/v0.3.5>`__
 
 0.59.1
 ------
