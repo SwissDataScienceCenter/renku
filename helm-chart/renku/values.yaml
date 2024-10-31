@@ -1281,7 +1281,7 @@ gateway:
   secretKey:
   image:
     repository: renku/renku-gateway
-    tag: "1.2.0"
+    tag: "1.3.0"
     pullPolicy: IfNotPresent
   service:
     type: ClusterIP
@@ -1308,6 +1308,8 @@ gateway:
   # dedicated GitLab instance is deployed, so, logging out from Renku should
   # trigger a logout from GitLab.
   logoutGitLabUponRenkuLogout: true
+  # Turns on debug logs from the gateway
+  debug: false
   # sentry configuration
   sentry:
     enabled: false
