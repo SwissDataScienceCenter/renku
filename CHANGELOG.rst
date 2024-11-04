@@ -4,7 +4,7 @@
 ------
 
 Renku 0.60.0 squashes an issue that has been tripping up many users when connecting their GitHub
-account, as well as various UX polish and bugfixes.
+account, as well as various UX polish and bug fixes.
 
 User-Facing Changes
 ~~~~~~~~~~~~~~~~~~~
@@ -12,9 +12,9 @@ User-Facing Changes
 **✨ Improvements**
 
 - **UI**: Allow for changing the role of members of groups, and hide membership edit buttons for
-  users with insufficient permisisions on project and group settings pages (`#3374
+  users with insufficient permissions on project and group settings pages (`#3374
   <https://github.com/SwissDataScienceCenter/renku-ui/pull/3374>`__).
-- **UI**: Improve UX for data connectors side sheets and dialogs (`#3368 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3368>`__).
+- **UI**: Improve UX for data connector side sheets and modals (`#3368 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3368>`__).
 
 **🐞 Bug Fixes**
 
