@@ -3,17 +3,22 @@
 0.60.0
 ------
 
+Renku 0.60.0 squashes an issue that has been tripping up many users when connecting their GitHub
+account, as well as various UX polish and bugfixes.
+
 User-Facing Changes
 ~~~~~~~~~~~~~~~~~~~
 
 **✨ Improvements**
 
-- **UI & Data services**: Improve UX for users connecting to GitHub (`#3332 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3332>`__).
-- **UI**: Update project and group membership settings (`#3374 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3374>`__).
-- **UI**: Improve UX for adding data connectors (`#3368 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3368>`__).
+- **UI**: Allow for changing the role of members of groups, and hide membership edit buttons for
+  users with insufficient permisisions on project and group settings pages (`#3374
+  <https://github.com/SwissDataScienceCenter/renku-ui/pull/3374>`__).
+- **UI**: Improve UX for data connectors side sheets and dialogs (`#3368 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3368>`__).
 
 **🐞 Bug Fixes**
 
+- **UI & Data services**: Direct users to complete the GitHub integration by installing the Renku app in the desired namespace (`#3332 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3332>`__).
 - **UI**: Avoid unexpected redirects when clicking on the 2.0 dashboard session buttons (`#3378 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3378>`__).
 
 Internal Changes
