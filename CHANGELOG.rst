@@ -6,6 +6,12 @@
 Renku 0.60.0 squashes an issue that has been tripping up many users when connecting their GitHub
 account, as well as various UX polish and bug fixes.
 
+NOTE to administrators: Upgrading the `csi-rclone` component will unmount all cloud storage for all
+active or hibernated sessions. Therefore, we recommend notifying your users ahead of time when you
+deploy this version of Renku and also if possible deploying the upgrade when there are fewer
+sessions that use cloud storage or just fewer sessions in general. Once the upgrade is complete
+users will be able to mount cloud storage as usual.
+
 User-Facing Changes
 ~~~~~~~~~~~~~~~~~~~
 
@@ -29,12 +35,19 @@ Internal Changes
 - **UI**: Update the Admin page to set up Connected services (`#3332 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3332>`__).
 - **Gateway**: Add support for enabling debug logs from the gateway (`#730 <https://github.com/SwissDataScienceCenter/renku-gateway/pull/730>`__).
 
+**Bug Fixes**
+
+- **csi-rclone**: Do not log potentially sensitive data in error messages.
+- **csi-rclone**: Properly handle encrypted secrets with the new annotation-based storage class.
+
 Individual Components
 ~~~~~~~~~~~~~~~~~~~~~
 
 - `renku-data-services 0.25.0 <https://github.com/SwissDataScienceCenter/renku-data-services/releases/tag/v0.25.0>`_
 - `renku-gateway 1.3.0 <https://github.com/SwissDataScienceCenter/renku-gateway/releases/tag/1.3.0>`_
 - `renku-ui 3.41.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.41.0>`_
+- `csi-rclone 0.3.4 <https://github.com/SwissDataScienceCenter/csi-rclone/releases/tag/v0.3.4>`__
+- `csi-rclone 0.3.5 <https://github.com/SwissDataScienceCenter/csi-rclone/releases/tag/v0.3.5>`__
 
 0.59.2
 ------
@@ -61,16 +74,11 @@ Internal Changes
 **Bug Fixes**
 
 - **Data services**: Handle spaces in ``provider_id`` for connected services (`#482 <https://github.com/SwissDataScienceCenter/renku-data-services/pull/482>`__).
-- **csi-rclone**: Do not log potentially sensitive data in error messages.
-- **csi-rclone**: Properly handle encrypted secrets with the new annotation-based storage class.
-
 
 Individual Components
 ~~~~~~~~~~~~~~~~~~~~~
 
 - `renku-data-services 0.24.2 <https://github.com/SwissDataScienceCenter/renku-data-services/releases/tag/v0.24.2>`__
-- `csi-rclone 0.3.4 <https://github.com/SwissDataScienceCenter/csi-rclone/releases/tag/v0.3.4>`__
-- `csi-rclone 0.3.5 <https://github.com/SwissDataScienceCenter/csi-rclone/releases/tag/v0.3.5>`__
 
 0.59.1
 ------
