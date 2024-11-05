@@ -1,5 +1,54 @@
 .. _changelog:
 
+0.60.0
+------
+
+Renku 0.60.0 squashes an issue that has been tripping up many users when connecting their GitHub
+account, as well as various UX polish and bug fixes.
+
+NOTE to administrators: Upgrading the `csi-rclone` component will unmount all cloud storage for all
+active or hibernated sessions. Therefore, we recommend notifying your users ahead of time when you
+deploy this version of Renku and also if possible deploying the upgrade when there are fewer
+sessions that use cloud storage or just fewer sessions in general. Once the upgrade is complete
+users will be able to mount cloud storage as usual.
+
+User-Facing Changes
+~~~~~~~~~~~~~~~~~~~
+
+**✨ Improvements**
+
+- **UI**: Allow for changing the role of members of groups, and hide membership edit buttons for
+  users with insufficient permissions on project and group settings pages (`#3374
+  <https://github.com/SwissDataScienceCenter/renku-ui/pull/3374>`__).
+- **UI**: Improve UX for data connector side sheets and modals (`#3368 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3368>`__).
+
+**🐞 Bug Fixes**
+
+- **UI & Data services**: Direct users to complete the GitHub integration by installing the Renku app in the desired namespace (`#3332 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3332>`__).
+- **UI**: Avoid unexpected redirects when clicking on the 2.0 dashboard session buttons (`#3378 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3378>`__).
+
+Internal Changes
+~~~~~~~~~~~~~~~~
+
+**Improvements**
+
+- **UI**: Update the Admin page to set up Connected services (`#3332 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3332>`__).
+- **Gateway**: Add support for enabling debug logs from the gateway (`#730 <https://github.com/SwissDataScienceCenter/renku-gateway/pull/730>`__).
+
+**Bug Fixes**
+
+- **csi-rclone**: Do not log potentially sensitive data in error messages.
+- **csi-rclone**: Properly handle encrypted secrets with the new annotation-based storage class.
+
+Individual Components
+~~~~~~~~~~~~~~~~~~~~~
+
+- `renku-data-services 0.25.0 <https://github.com/SwissDataScienceCenter/renku-data-services/releases/tag/v0.25.0>`_
+- `renku-gateway 1.3.0 <https://github.com/SwissDataScienceCenter/renku-gateway/releases/tag/1.3.0>`_
+- `renku-ui 3.41.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.41.0>`_
+- `csi-rclone 0.3.4 <https://github.com/SwissDataScienceCenter/csi-rclone/releases/tag/v0.3.4>`__
+- `csi-rclone 0.3.5 <https://github.com/SwissDataScienceCenter/csi-rclone/releases/tag/v0.3.5>`__
+
 0.59.2
 ------
 
