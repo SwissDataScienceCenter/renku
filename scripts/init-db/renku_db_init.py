@@ -147,7 +147,7 @@ def main():
     renku_conn.set_session(autocommit=True)
     db_init.set_connection(renku_conn)
     db_init.set_extensions_and_roles()
-    create_ulid_func(config.db_admin_username, config.db_admin_password, config.renku_db_name)
+    create_ulid_func(config.db_admin_username, config.db_admin_password, config.renku_db_name, config.db_host, config.db_port)
 
 
 if __name__ == "__main__":

@@ -39,15 +39,10 @@ def gitlab_is_online(url: str) -> int:
     return res.status_code
 
 
-def create_ulid_func(username: str, password: str, db_name: str):
-    try:
-        output = check_output(
-            ["psql", "-U", username, "-d", db_name, "-f", "generate_ulid_func.sql"],
-            stderr=STDOUT,
-            env={"PGPASSWORD": password},
-        ).decode("utf-8")
-    except Exception:
-        logging.error(f"Failed to create the ulid generation function:\n{output}")
-        raise
-    else:
-        logging.info(f"Created the ulid generation function:\n{output}")
+def create_ulid_func(username: str, password: str, db_name: str, host: str, port: int):
+    output = check_output(
+        ["psql", "-U", username, "-d", db_name, "-h", host, "-p", str(port), "-f", "generate_ulid_func.sql"],
+        stderr=STDOUT,
+        env={"PGPASSWORD": password},
+    ).decode("utf-8")
+    logging.info(f"Created the ulid generation function:\n{output}")
