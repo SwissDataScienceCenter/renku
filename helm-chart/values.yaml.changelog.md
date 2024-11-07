@@ -9,6 +9,7 @@ Please follow this convention when adding a new row
 
 * NEW ``gateway.idleSessionTTLSeconds`` to set the session idle TTL in seconds.
 * NEW ``gateway.maxSessionTTLSeconds`` to set the session max TTL in seconds.
+* NEW ``gateway.debug`` to enable debug logs from the gateway.
 
 ## Upgrading to Renku 0.59.1
 
