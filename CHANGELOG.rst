@@ -3,7 +3,28 @@
 0.61.0
 ------
 
+Renku 0.61.0 introduces a new version of Amalthea that supports running sessions with Docker images
+that do not contain Jupyter server.
 
+NOTE to administrators: This upgrade introduces a brand new CRD for sessions. All services that support
+sessions for Renku v2 will switch to this new CRD. Renku v1 sessions remain unchanged. 
+Therefore any old sessions for Renku v2 will not be visible to users after this upgrade. The sessions 
+themselves will not be immediately deleted and as long as users have saved links to their old sessions they 
+should be able to access their sessions and save data. However we recommend that administrators
+notify users of the change and allow for enough time so that existing Renku v2 sessions can be saved and
+cleaned up, rather than asking users to save the url to their sessions.
+
+Internal Changes
+~~~~~~~~~~~~~~~~
+
+**Bug Fixes**
+
+- **Gateway**: pass on session cookie to data services for anonymous session authentication
+
+Individual Components
+~~~~~~~~~~~~~~~~~~~~~
+
+- `renku-gateway 1.3.1 <https://github.com/SwissDataScienceCenter/renku-gateway/releases/tag/1.3.1>`_
 
 0.60.0
 ------
