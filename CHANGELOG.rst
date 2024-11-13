@@ -14,7 +14,8 @@ should be able to access their sessions and save data. However we recommend that
 notify users of the change and allow for enough time so that existing Renku v2 sessions can be saved and
 cleaned up, rather than asking users to save the url to their sessions. In addition to users not being able
 to see old Renku v2 sessions, they will also not be able to pause, resume or delete old Renku v2 sessions.
-Therefore it best is most sessions are properly saved and cleaned up before this update is rolled out.
+Therefore it best is most sessions are properly saved and cleaned up before this update is rolled out. In order 
+to support the new CRD we have also created a new operator that will manage the new `amaltheasession` resources.
 
 User-Facing Changes
 ~~~~~~~~~~~~~~~~~~~
@@ -23,6 +24,7 @@ User-Facing Changes
 
 - **UI**: Enable the use of custom images that don’t contain Jupyter, streamlining the image-building process and allowing for the use of “off-the-shelf” images (`#3341 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3341>`__).
 - **Sessions**: Enable running session images that do not container Jupyter in them.
+- **Amalthea**: Brand new operator for sessions with images that do not have to container Jupyter
 
 Internal Changes
 ~~~~~~~~~~~~~~~~
@@ -46,6 +48,9 @@ Individual Components
 - `renku-gateway 1.3.1 <https://github.com/SwissDataScienceCenter/renku-gateway/releases/tag/1.3.1>`_
 - `renku-ui 3.42.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.42.0>`_
 - `renku-data-services 0.26.0 <https://github.com/SwissDataScienceCenter/renku-data-services/releases/tag/v0.26.0>`_
+- `amalthea 0.13.0 <https://github.com/SwissDataScienceCenter/amalthea/releases/tag/0.13.0>`_
+- `amalthea 0.14.0 <https://github.com/SwissDataScienceCenter/amalthea/releases/tag/0.14.0>`_
+- `amalthea 0.14.1 <https://github.com/SwissDataScienceCenter/amalthea/releases/tag/0.14.1>`_
 
 0.60.0
 ------
