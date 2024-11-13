@@ -3,6 +3,8 @@
 0.62.0
 ------
 
+TODO: session secrets in Renku 2.0
+
 This release removes the Gitlab omnibus Helm chart that we created and used to have as a dependency
 of the Renku Helm chart. We have been discouraging anyone from using
 this chart in production and we specified this in our documentation as well.
