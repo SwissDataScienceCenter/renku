@@ -3,7 +3,7 @@
 0.62.0
 ------
 
-
+TODO: session secrets in Renku 2.0
 
 0.61.0
 ------
