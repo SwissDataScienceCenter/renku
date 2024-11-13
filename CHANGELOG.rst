@@ -12,7 +12,9 @@ Therefore any old sessions for Renku v2 will not be visible to users after this 
 themselves will not be immediately deleted and as long as users have saved links to their old sessions they
 should be able to access their sessions and save data. However we recommend that administrators
 notify users of the change and allow for enough time so that existing Renku v2 sessions can be saved and
-cleaned up, rather than asking users to save the url to their sessions.
+cleaned up, rather than asking users to save the url to their sessions. In addition to users not being able
+to see old Renku v2 sessions, they will also not be able to pause, resume or delete old Renku v2 sessions.
+Therefore it best is most sessions are properly saved and cleaned up before this update is rolled out.
 
 User-Facing Changes
 ~~~~~~~~~~~~~~~~~~~
@@ -20,20 +22,30 @@ User-Facing Changes
 **✨ Improvements**
 
 - **UI**: Enable the use of custom images that don’t contain Jupyter, streamlining the image-building process and allowing for the use of “off-the-shelf” images (`#3341 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3341>`__).
-
+- **Sessions**: Enable running session images that do not container Jupyter in them.
 
 Internal Changes
 ~~~~~~~~~~~~~~~~
 
+**Improvements**
+
+- **Data services**: Add support for OAuth storage providers
+- **Data services**: Move notebooks code to data services
+
 **Bug Fixes**
 
-- **Gateway**: pass on session cookie to data services for anonymous session authentication
+- **Gateway**: Pass on session cookie to data services for anonymous session authentication
+- **Data services**: Correct pagination for namespaces
+- **Data services**: Add creation data and created_by for namespaces
+- **Data services**: Pin RClone version in data services image
+- **Data services**: Properly handle multi-architecture docker images when getting working directory
 
 Individual Components
 ~~~~~~~~~~~~~~~~~~~~~
 
 - `renku-gateway 1.3.1 <https://github.com/SwissDataScienceCenter/renku-gateway/releases/tag/1.3.1>`_
 - `renku-ui 3.42.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.42.0>`_
+- `renku-data-services 0.26.0 <https://github.com/SwissDataScienceCenter/renku-data-services/releases/tag/v0.26.0>`_
 
 0.60.0
 ------
