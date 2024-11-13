@@ -7,12 +7,20 @@ Renku 0.61.0 introduces a new version of Amalthea that supports running sessions
 that do not contain Jupyter server.
 
 NOTE to administrators: This upgrade introduces a brand new CRD for sessions. All services that support
-sessions for Renku v2 will switch to this new CRD. Renku v1 sessions remain unchanged. 
-Therefore any old sessions for Renku v2 will not be visible to users after this upgrade. The sessions 
-themselves will not be immediately deleted and as long as users have saved links to their old sessions they 
+sessions for Renku v2 will switch to this new CRD. Renku v1 sessions remain unchanged.
+Therefore any old sessions for Renku v2 will not be visible to users after this upgrade. The sessions
+themselves will not be immediately deleted and as long as users have saved links to their old sessions they
 should be able to access their sessions and save data. However we recommend that administrators
 notify users of the change and allow for enough time so that existing Renku v2 sessions can be saved and
 cleaned up, rather than asking users to save the url to their sessions.
+
+User-Facing Changes
+~~~~~~~~~~~~~~~~~~~
+
+**✨ Improvements**
+
+- **UI**: Enable the use of custom images that don’t contain Jupyter, streamlining the image-building process and allowing for the use of “off-the-shelf” images (`#3341 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3341>`__).
+
 
 Internal Changes
 ~~~~~~~~~~~~~~~~
@@ -25,6 +33,7 @@ Individual Components
 ~~~~~~~~~~~~~~~~~~~~~
 
 - `renku-gateway 1.3.1 <https://github.com/SwissDataScienceCenter/renku-gateway/releases/tag/1.3.1>`_
+- `renku-ui 3.42.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.42.0>`_
 
 0.60.0
 ------
