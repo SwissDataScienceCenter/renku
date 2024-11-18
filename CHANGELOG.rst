@@ -14,7 +14,7 @@ should be able to access their sessions and save data. However we recommend that
 notify users of the change and allow for enough time so that existing Renku v2 sessions can be saved and
 cleaned up, rather than asking users to save the url to their sessions. In addition to users not being able
 to see old Renku v2 sessions, they will also not be able to pause, resume or delete old Renku v2 sessions.
-Therefore it best is most sessions are properly saved and cleaned up before this update is rolled out. In order 
+Therefore it's best if most sessions are properly saved and cleaned up before this update is rolled out. In order 
 to support the new CRD we have also created a new operator that will manage the new `amaltheasession` resources.
 
 User-Facing Changes
@@ -23,8 +23,8 @@ User-Facing Changes
 **✨ Improvements**
 
 - **UI**: Enable the use of custom images that don’t contain Jupyter, streamlining the image-building process and allowing for the use of “off-the-shelf” images (`#3341 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3341>`__).
-- **Sessions**: Enable running session images that do not container Jupyter in them.
-- **Amalthea**: Brand new operator for sessions with images that do not have to container Jupyter
+- **Sessions**: Enable running session images that do not contain Jupyter in them.
+- **Amalthea**: Brand new operator for sessions with images that do not have to contain Jupyter
 
 Internal Changes
 ~~~~~~~~~~~~~~~~
@@ -38,7 +38,7 @@ Internal Changes
 
 - **Gateway**: Pass on session cookie to data services for anonymous session authentication
 - **Data services**: Correct pagination for namespaces
-- **Data services**: Add creation data and created_by for namespaces
+- **Data services**: Add creation date and created_by for namespaces
 - **Data services**: Pin RClone version in data services image
 - **Data services**: Properly handle multi-architecture docker images when getting working directory
 - **Amalthea**: Add readiness and health checks to sessions.
