@@ -42,6 +42,7 @@ Internal Changes
 - **Data services**: Pin RClone version in data services image
 - **Data services**: Properly handle multi-architecture docker images when getting working directory
 - **Amalthea**: Add readiness and health checks to sessions.
+- **Amalthea**: Do not authenticate the authentication proxy health check
 
 Individual Components
 ~~~~~~~~~~~~~~~~~~~~~
@@ -53,6 +54,7 @@ Individual Components
 - `amalthea 0.14.0 <https://github.com/SwissDataScienceCenter/amalthea/releases/tag/0.14.0>`_
 - `amalthea 0.14.1 <https://github.com/SwissDataScienceCenter/amalthea/releases/tag/0.14.1>`_
 - `amalthea 0.14.2 <https://github.com/SwissDataScienceCenter/amalthea/releases/tag/0.14.2>`_
+- `amalthea 0.14.3 <https://github.com/SwissDataScienceCenter/amalthea/releases/tag/0.14.3>`_
 
 0.60.0
 ------
