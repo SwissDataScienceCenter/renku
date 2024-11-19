@@ -3,7 +3,58 @@
 0.61.0
 ------
 
+Renku 0.61.0 introduces a new version of Amalthea that supports running sessions with Docker images
+that do not contain Jupyter server.
 
+NOTE to administrators: This upgrade introduces a brand new CRD for sessions. All services that support
+sessions for Renku v2 will switch to this new CRD. Renku v1 sessions remain unchanged.
+Therefore any old sessions for Renku v2 will not be visible to users after this upgrade. The sessions
+themselves will not be immediately deleted and as long as users have saved links to their old sessions they
+should be able to access their sessions and save data. However we recommend that administrators
+notify users of the change and allow for enough time so that existing Renku v2 sessions can be saved and
+cleaned up, rather than asking users to save the url to their sessions. In addition to users not being able
+to see old Renku v2 sessions, they will also not be able to pause, resume or delete old Renku v2 sessions.
+Therefore it's best if most sessions are properly saved and cleaned up before this update is rolled out. In order 
+to support the new CRD we have also created a new operator that will manage the new `amaltheasession` resources.
+
+User-Facing Changes
+~~~~~~~~~~~~~~~~~~~
+
+**✨ Improvements**
+
+- **UI**: Enable the use of custom images that don’t contain Jupyter, streamlining the image-building process and allowing for the use of “off-the-shelf” images (`#3341 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3341>`__).
+- **Sessions**: Enable running session images that do not contain Jupyter in them.
+- **Amalthea**: Brand new operator for sessions with images that do not have to contain Jupyter
+
+Internal Changes
+~~~~~~~~~~~~~~~~
+
+**Improvements**
+
+- **Data services**: Add support for OAuth storage providers
+- **Data services**: Move notebooks code to data services
+
+**Bug Fixes**
+
+- **Gateway**: Pass on session cookie to data services for anonymous session authentication
+- **Data services**: Correct pagination for namespaces
+- **Data services**: Add creation date and created_by for namespaces
+- **Data services**: Pin RClone version in data services image
+- **Data services**: Properly handle multi-architecture docker images when getting working directory
+- **Amalthea**: Add readiness and health checks to sessions.
+- **Amalthea**: Do not authenticate the authentication proxy health check
+
+Individual Components
+~~~~~~~~~~~~~~~~~~~~~
+
+- `renku-gateway 1.3.1 <https://github.com/SwissDataScienceCenter/renku-gateway/releases/tag/1.3.1>`_
+- `renku-ui 3.42.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.42.0>`_
+- `renku-data-services 0.26.0 <https://github.com/SwissDataScienceCenter/renku-data-services/releases/tag/v0.26.0>`_
+- `amalthea 0.13.0 <https://github.com/SwissDataScienceCenter/amalthea/releases/tag/0.13.0>`_
+- `amalthea 0.14.0 <https://github.com/SwissDataScienceCenter/amalthea/releases/tag/0.14.0>`_
+- `amalthea 0.14.1 <https://github.com/SwissDataScienceCenter/amalthea/releases/tag/0.14.1>`_
+- `amalthea 0.14.2 <https://github.com/SwissDataScienceCenter/amalthea/releases/tag/0.14.2>`_
+- `amalthea 0.14.3 <https://github.com/SwissDataScienceCenter/amalthea/releases/tag/0.14.3>`_
 
 0.60.0
 ------
@@ -79,11 +130,16 @@ Internal Changes
 **Bug Fixes**
 
 - **Data services**: Handle spaces in ``provider_id`` for connected services (`#482 <https://github.com/SwissDataScienceCenter/renku-data-services/pull/482>`__).
+- **csi-rclone**: Do not log potentially sensitive data in error messages.
+- **csi-rclone**: Properly handle encrypted secrets with the new annotation-based storage class.
+
 
 Individual Components
 ~~~~~~~~~~~~~~~~~~~~~
 
 - `renku-data-services 0.24.2 <https://github.com/SwissDataScienceCenter/renku-data-services/releases/tag/v0.24.2>`__
+- `csi-rclone 0.3.4 <https://github.com/SwissDataScienceCenter/csi-rclone/releases/tag/v0.3.4>`__
+- `csi-rclone 0.3.5 <https://github.com/SwissDataScienceCenter/csi-rclone/releases/tag/v0.3.5>`__
 
 0.59.1
 ------

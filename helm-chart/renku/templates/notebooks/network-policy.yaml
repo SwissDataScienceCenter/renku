@@ -15,6 +15,10 @@ spec:
             matchLabels:
               app: {{ template "renku.notebooks.name" . }}
               release: {{ .Release.Name }}
+        - podSelector:
+            matchLabels:
+              app: renku-data-service
+              release: {{ .Release.Name }}
       ports:
         - protocol: TCP
           port: http
