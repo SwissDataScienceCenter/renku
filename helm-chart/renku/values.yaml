@@ -224,6 +224,11 @@ ingress:
   #  - secretName: chart-example-tls
   #    hosts:
   #      - example.local
+networkPolicies:
+  ## List of podSelector terms for pods in the release namespace that should be allowed all ingress to all services
+  allowAllIngressFromPods: []
+  ## List of namespaces that should be allowed all ingress to all services
+  allowAllIngressFromNamespaces: []
 ## Keycloak configuration
 keycloakx:
   ## Spawn a keycloak instance
