@@ -208,7 +208,7 @@ metadata:
 spec:
   podSelector:
     matchLabels:
-      app: {{ template "renku.fullname" . }}-secrets-storage
+      app: renku-secrets-storage
       release: {{ .Release.Name }}
   policyTypes:
     - Ingress
@@ -681,9 +681,9 @@ spec:
         {{- toYaml .Values.networkPolicies.allowAllIngressFromPods | nindent 8 }}
 {{- end }}
 {{- if gt (.Values.networkPolicies.allowAllIngressFromNamespaces | len) 0 }}
-{{- if has .Release.Namespace .Values.networkPolicies.allowAllIngressFromNamespaces -}}
-{{- fail "ERROR: You cannot allow all ingress from the Helm release namespace" -}}
-{{- end -}}
+{{- if has .Release.Namespace .Values.networkPolicies.allowAllIngressFromNamespaces }}
+{{- fail "ERROR: You cannot allow all ingress from the Helm release namespace" }}
+{{- end }}
 ---
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
@@ -702,7 +702,8 @@ spec:
     - from:
         - namespaceSelector:
             matchExpressions:
-            - key: namespace
+            # The kubernetes.io/metadata.name label is automatically added by k8s to every namespace
+            - key: kubernetes.io/metadata.name
               operator: In
               values: 
                 {{- toYaml .Values.networkPolicies.allowAllIngressFromNamespaces | nindent 16 }}
