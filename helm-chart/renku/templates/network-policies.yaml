@@ -792,6 +792,10 @@ spec:
             matchLabels:
               app: {{ template "renku.graph.tokenRepository.name" . }}
               release: {{ .Release.Name }}
+        - podSelector:
+            matchLabels:
+              app: {{ template "renku.graph.commitEventService.name" . }}
+              release: {{ .Release.Name }}
       ports:
         - protocol: TCP
           port: http-event-log
@@ -829,6 +833,10 @@ spec:
         - podSelector:
             matchLabels:
               app: {{ template "renku.graph.knowledgeGraph.name" . }}
+              release: {{ .Release.Name }}
+        - podSelector:
+            matchLabels:
+              app: {{ template "renku.graph.commitEventService.name" . }}
               release: {{ .Release.Name }}
       ports:
         - protocol: TCP
