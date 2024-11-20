@@ -230,7 +230,7 @@ spec:
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
-  name: gateway-ingress-to-data-service
+  name: ingress-to-data-service-from-gateway
   labels:
     app: {{ template "renku.name" . }}
     chart: {{ template "renku.chart" . }}
@@ -256,7 +256,7 @@ spec:
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
-  name: gateway-ingress-to-notebooks
+  name: ingress-to-notebooks-from-gateway
   labels:
     app: {{ template "renku.name" . }}
     chart: {{ template "renku.chart" . }}
@@ -282,7 +282,7 @@ spec:
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
-  name: gateway-ingress-to-core-service
+  name: ingress-to-core-service-from-gateway
   labels:
     app: {{ template "renku.name" . }}
     chart: {{ template "renku.chart" . }}
@@ -308,7 +308,7 @@ spec:
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
-  name: graph-ingress-to-core-service
+  name: ingress-to-core-service-from-graph
   labels:
     app: {{ template "renku.name" . }}
     chart: {{ template "renku.chart" . }}
@@ -334,7 +334,7 @@ spec:
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
-  name: gateway-ingress-to-knowledge-graph
+  name: ingress-to-knowledge-graph-from-gateway
   labels:
     app: {{ template "renku.name" . }}
     chart: {{ template "renku.chart" . }}
@@ -360,7 +360,7 @@ spec:
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
-  name: gateway-ingress-to-search-service
+  name: ingress-to-search-service-from-gateway
   labels:
     app: {{ template "renku.name" . }}
     chart: {{ template "renku.chart" . }}
@@ -567,7 +567,7 @@ spec:
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
-  name: core-cleanup-job-ingress-to-core-service
+  name: ingress-to-core-service-from-core-cleanup-job
   labels:
     app: {{ template "renku.name" . }}
     chart: {{ template "renku.chart" . }}
@@ -731,7 +731,7 @@ spec:
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
-  name: graph-ingress-to-jena
+  name: ingress-to-jena-from-services
   labels:
     app: {{ template "renku.name" . }}
     chart: {{ template "renku.chart" . }}
@@ -750,6 +750,120 @@ spec:
             matchLabels:
               app: {{ template "renku.graph.knowledgeGraph.name" . }}
               release: {{ .Release.Name }}
+        - podSelector:
+            matchLabels:
+              app: {{ template "renku.graph.triplesGenerator.name" . }}
+              release: {{ .Release.Name }}
       ports:
         - protocol: TCP
           port: jena-http
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: ingress-to-event-log-from-kg-services
+  labels:
+    app: {{ template "renku.name" . }}
+    chart: {{ template "renku.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  podSelector:
+    matchLabels:
+      app: {{ template "renku.graph.eventLog.name" . }}
+      release: {{ .Release.Name }}
+  policyTypes:
+    - Ingress
+  ingress:
+    - from:
+        - podSelector:
+            matchLabels:
+              app: {{ template "renku.graph.triplesGenerator.name" . }}
+              release: {{ .Release.Name }}
+        - podSelector:
+            matchLabels:
+              app: {{ template "renku.graph.webhookService.name" . }}
+              release: {{ .Release.Name }}
+        - podSelector:
+            matchLabels:
+              app: {{ template "renku.graph.knowledgeGraph.name" . }}
+              release: {{ .Release.Name }}
+        - podSelector:
+            matchLabels:
+              app: {{ template "renku.graph.tokenRepository.name" . }}
+              release: {{ .Release.Name }}
+      ports:
+        - protocol: TCP
+          port: http-event-log
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: ingress-to-token-repository-from-kg-services
+  labels:
+    app: {{ template "renku.name" . }}
+    chart: {{ template "renku.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  podSelector:
+    matchLabels:
+      app: {{ template "renku.graph.tokenRepository.name" . }}
+      release: {{ .Release.Name }}
+  policyTypes:
+    - Ingress
+  ingress:
+    - from:
+        - podSelector:
+            matchLabels:
+              app: {{ template "renku.graph.triplesGenerator.name" . }}
+              release: {{ .Release.Name }}
+        - podSelector:
+            matchLabels:
+              app: {{ template "renku.graph.eventLog.name" . }}
+              release: {{ .Release.Name }}
+        - podSelector:
+            matchLabels:
+              app: {{ template "renku.graph.webhookService.name" . }}
+              release: {{ .Release.Name }}
+        - podSelector:
+            matchLabels:
+              app: {{ template "renku.graph.knowledgeGraph.name" . }}
+              release: {{ .Release.Name }}
+      ports:
+        - protocol: TCP
+          port: http-token-repo
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: ingress-to-triple-generator-from-kg-services
+  labels:
+    app: {{ template "renku.name" . }}
+    chart: {{ template "renku.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  podSelector:
+    matchLabels:
+      app: {{ template "renku.graph.triplesGenerator.name" . }}
+      release: {{ .Release.Name }}
+  policyTypes:
+    - Ingress
+  ingress:
+    - from:
+        - podSelector:
+            matchLabels:
+              app: {{ template "renku.graph.eventLog.name" . }}
+              release: {{ .Release.Name }}
+        - podSelector:
+            matchLabels:
+              app: {{ template "renku.graph.webhookService.name" . }}
+              release: {{ .Release.Name }}
+        - podSelector:
+            matchLabels:
+              app: {{ template "renku.graph.knowledgeGraph.name" . }}
+              release: {{ .Release.Name }}
+      ports:
+        - protocol: TCP
+          port: http-triples-gn
