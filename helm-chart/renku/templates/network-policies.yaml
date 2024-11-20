@@ -796,6 +796,12 @@ spec:
             matchLabels:
               app: {{ template "renku.graph.commitEventService.name" . }}
               release: {{ .Release.Name }}
+        - podSelector:
+            matchLabels:
+              # The event log calls itself via a k8s service so if it is not allowed in the 
+              # network policy like this then those requests fail.
+              app: {{ template "renku.graph.eventLog.name" . }}
+              release: {{ .Release.Name }}
       ports:
         - protocol: TCP
           port: http-event-log
@@ -871,6 +877,12 @@ spec:
         - podSelector:
             matchLabels:
               app: {{ template "renku.graph.knowledgeGraph.name" . }}
+              release: {{ .Release.Name }}
+        - podSelector:
+            matchLabels:
+              # The triples generator calls itself via a k8s service so if it is not allowed in the 
+              # network policy like this then those requests fail.
+              app: {{ template "renku.graph.triplesGenerator.name" . }}
               release: {{ .Release.Name }}
       ports:
         - protocol: TCP
