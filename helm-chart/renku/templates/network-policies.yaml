@@ -939,3 +939,32 @@ spec:
       ports:
         - protocol: TCP
           port: http
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  # The notebooks code in data service calls data service via a K8s service
+  # and for this to succeed the network policy has to allow it. This can be 
+  # removed when the notebooks code is completely migrated to the data service.
+  name: ingress-to-data-service-from-itself
+  labels:
+    app: {{ template "renku.name" . }}
+    chart: {{ template "renku.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  podSelector:
+    matchLabels:
+      app: renku-data-service
+      release: {{ .Release.Name }}
+  policyTypes:
+    - Ingress
+  ingress:
+    - from:
+        - podSelector:
+            matchLabels:
+              app: renku-data-service
+              release: {{ .Release.Name }}
+      ports:
+        - protocol: TCP
+          port: http
