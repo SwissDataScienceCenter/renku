@@ -532,12 +532,36 @@ spec:
         - podSelector:
             matchLabels:
               app: data-service-background-jobs
-              release: {{ .Release.Name }}
       ports:
         - protocol: TCP
           port: http
         - protocol: TCP
           port: grpc
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: core-cleanup-job-ingress-to-core-service
+  labels:
+    app: {{ template "renku.name" . }}
+    chart: {{ template "renku.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/name: {{ include "renku-core.name" . }}
+      app.kubernetes.io/instance: {{ .Release.Name }}
+  policyTypes:
+    - Ingress
+  ingress:
+    - from:
+        - podSelector:
+            matchLabels:
+              app: core-cache-cleanup
+      ports:
+        - protocol: TCP
+          port: http
 {{- if .Values.redis.install }}
 ---
 apiVersion: networking.k8s.io/v1
@@ -691,7 +715,7 @@ spec:
   podSelector:
     matchLabels:
       app.kubernetes.io/name: jena
-      release: {{ .Release.Name }}
+      app.kubernetes.io/instance: {{ .Release.Name }}
   policyTypes:
     - Ingress
   ingress:
