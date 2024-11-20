@@ -510,7 +510,7 @@ spec:
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
-  name: ingress-to-authz-from-data-service
+  name: ingress-to-authz-from-services
   labels:
     app: {{ template "renku.name" . }}
     chart: {{ template "renku.chart" . }}
@@ -528,6 +528,10 @@ spec:
         - podSelector:
             matchLabels:
               app: renku-data-service
+              release: {{ .Release.Name }}
+        - podSelector:
+            matchLabels:
+              app: data-service-background-jobs
               release: {{ .Release.Name }}
       ports:
         - protocol: TCP
