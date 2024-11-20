@@ -677,3 +677,29 @@ spec:
     - from:
         - ipBlock:
             cidr: 0.0.0.0/0
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: graph-ingress-to-jena
+  labels:
+    app: {{ template "renku.name" . }}
+    chart: {{ template "renku.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/name: jena
+      release: {{ .Release.Name }}
+  policyTypes:
+    - Ingress
+  ingress:
+    - from:
+        - podSelector:
+            matchLabels:
+              app: {{ template "renku.graph.knowledgeGraph.name" . }}
+              release: {{ .Release.Name }}
+      ports:
+        - protocol: TCP
+          port: jena-http
