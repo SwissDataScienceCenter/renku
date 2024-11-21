@@ -5,6 +5,11 @@ For changes that require manual steps other than changing values, please check o
 Please follow this convention when adding a new row
 * `<type: NEW|EDIT|DELETE> - *<resource name>*: <details>`
 
+## Upgrading to Renku 0.61.0
+
+* NEW ``networkPolicies.allowAllIngressFromPods`` specify pod selectors that will allow the selected pods to access all other services in the Renku release namespace.
+* NEW ``networkPolicies.allowAllIngressFromNamespaces`` specify a list of namespaces that should be allowed to access all other services in the Renku release namespace.
+
 ## Upgrading to Renku 0.60.0
 
 * NEW ``gateway.idleSessionTTLSeconds`` to set the session idle TTL in seconds.
