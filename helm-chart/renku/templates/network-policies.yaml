@@ -558,6 +558,9 @@ spec:
         - podSelector:
             matchLabels:
               app: data-service-background-jobs
+        - podSelector:
+            matchLabels:
+              app: data-service-total-users-sync
       ports:
         - protocol: TCP
           port: http
