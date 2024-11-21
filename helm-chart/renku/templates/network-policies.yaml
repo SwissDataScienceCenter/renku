@@ -974,3 +974,122 @@ spec:
       ports:
         - protocol: TCP
           port: http
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: deny-all-egress-from-sessions-v1
+spec:
+  egress: []
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/component: jupyterserver
+      app.kubernetes.io/instance: {{ .Release.Name }}
+      app.kubernetes.io/name: amalthea
+  policyTypes:
+  - Egress
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: deny-all-egress-from-sessions-v2
+spec:
+  egress: []
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/created-by: controller-manager
+      app.kubernetes.io/name: AmaltheaSession
+  policyTypes:
+  - Egress
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-only-egress-for-sessions-that-target-this-namespace-v1
+spec:
+  egress:
+    - to:
+      - namespaceSelector:
+          matchExpressions:
+          - key: kubernetes.io/metadata.name
+            operator: In
+            values:
+            - {{ .Release.Namespace | quote }}
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/component: jupyterserver
+      app.kubernetes.io/instance: {{ .Release.Name }}
+      app.kubernetes.io/name: amalthea
+  policyTypes:
+  - Egress
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-only-egress-for-sessions-that-target-this-namespace-v2
+spec:
+  egress:
+    - to:
+      - namespaceSelector:
+          matchExpressions:
+          - key: kubernetes.io/metadata.name
+            operator: In
+            values:
+            - {{ .Release.Namespace | quote }}
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/created-by: controller-manager
+      app.kubernetes.io/name: AmaltheaSession
+  policyTypes:
+  - Egress
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-only-egress-for-sessions-for-name-resolution-v1
+spec:
+  egress:
+    - to:
+      - namespaceSelector:
+          matchLabels:
+            kubernetes.io/metadata.name: kube-system
+        podSelector:
+          matchLabels:
+            k8s-app: kube-dns
+      ports:
+      - port: 53
+        protocol: UDP
+      - port: 53
+        protocol: TCP
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/component: jupyterserver
+      app.kubernetes.io/instance: {{ .Release.Name }}
+      app.kubernetes.io/name: amalthea
+  policyTypes:
+  - Egress
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-only-egress-for-sessions-for-name-resolution-v2
+spec:
+  egress:
+    - to:
+      - namespaceSelector:
+          matchLabels:
+            kubernetes.io/metadata.name: kube-system
+        podSelector:
+          matchLabels:
+            k8s-app: kube-dns
+      ports:
+      - port: 53
+        protocol: UDP
+      - port: 53
+        protocol: TCP
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/created-by: controller-manager
+      app.kubernetes.io/name: AmaltheaSession
+  policyTypes:
+  - Egress
