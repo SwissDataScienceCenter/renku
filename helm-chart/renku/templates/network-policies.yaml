@@ -94,13 +94,15 @@ spec:
           namespaceSelector:
             matchLabels:
               kubernetes.io/metadata.name: {{ .Release.Namespace }}
+        - podSelector:
+            matchLabels:
+              app: postgres-setup
+          namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: {{ .Release.Namespace }}
       ports:
         - protocol: TCP
           port: 5432
-    - from:
-        - podSelector: {}
-          namespaceSelector: {}
-      ports:
         - protocol: TCP
           port: 9187
 {{- end }}
