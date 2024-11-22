@@ -6,16 +6,28 @@
 Renku 0.61.0 introduces a new version of Amalthea that supports running sessions with Docker images
 that do not contain Jupyter server.
 
-NOTE to administrators: This upgrade introduces a brand new CRD for sessions. All services that support
-sessions for Renku v2 will switch to this new CRD. Renku v1 sessions remain unchanged.
-Therefore any old sessions for Renku v2 will not be visible to users after this upgrade. The sessions
-themselves will not be immediately deleted and as long as users have saved links to their old sessions they
-should be able to access their sessions and save data. However we recommend that administrators
-notify users of the change and allow for enough time so that existing Renku v2 sessions can be saved and
-cleaned up, rather than asking users to save the url to their sessions. In addition to users not being able
-to see old Renku v2 sessions, they will also not be able to pause, resume or delete old Renku v2 sessions.
-Therefore it's best if most sessions are properly saved and cleaned up before this update is rolled out. In order 
-to support the new CRD we have also created a new operator that will manage the new `amaltheasession` resources.
+NOTES to administrators: 
+
+- This upgrade introduces a brand new CRD for sessions. All services that support
+  sessions for Renku v2 will switch to this new CRD. Renku v1 sessions remain unchanged.
+  Therefore any old sessions for Renku v2 will not be visible to users after this upgrade. The sessions
+  themselves will not be immediately deleted and as long as users have saved links to their old sessions they
+  should be able to access their sessions and save data. However we recommend that administrators
+  notify users of the change and allow for enough time so that existing Renku v2 sessions can be saved and
+  cleaned up, rather than asking users to save the url to their sessions. In addition to users not being able
+  to see old Renku v2 sessions, they will also not be able to pause, resume or delete old Renku v2 sessions.
+  Therefore it's best if most sessions are properly saved and cleaned up before this update is rolled out. In order 
+  to support the new CRD we have also created a new operator that will manage the new `amaltheasession` resources.
+
+- The network policies for Renku have been consolidated and revamped. The most notable change here is the 
+  removal of the egress policy that prevented egress to internal IP addresses from sessions. Now we disallow
+  all ingress in the Renku release namespace by default and explicitly grant permissions to any pods that need
+  to access other pods inside the Renku release namespace. Two properties relevant to this have been added to the
+  Helm chart values file that allows administrators to grant access to all Renku services from a specific namespace
+  or to do the same for specific pods within the Renku namespace. These are not needed for Renku to function and the 
+  default network policies should be sufficient, they have been added so that administrators can allow ingress for
+  other services that may not come with the Renku Helm chart such as logging or monitoring. This change will result in
+  the removal of some network policies and the creation of several new policies.
 
 User-Facing Changes
 ~~~~~~~~~~~~~~~~~~~
@@ -33,6 +45,7 @@ Internal Changes
 
 - **Data services**: Add support for OAuth storage providers
 - **Data services**: Move notebooks code to data services
+- **Helm chart**: Consolidate and revamp network policies
 
 **Bug Fixes**
 

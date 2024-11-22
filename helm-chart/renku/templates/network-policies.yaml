@@ -1,3 +1,16 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: default-deny-all-ingress
+  labels:
+    app: {{ template "renku.name" . }}
+    chart: {{ template "renku.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  podSelector: {}
+  policyTypes:
+    - Ingress
 {{- if not .Values.global.externalServices.postgresql.enabled }}
 ---
 apiVersion: networking.k8s.io/v1
@@ -81,13 +94,992 @@ spec:
           namespaceSelector:
             matchLabels:
               kubernetes.io/metadata.name: {{ .Release.Namespace }}
+        - podSelector:
+            matchLabels:
+              app: postgres-setup
+          namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: {{ .Release.Namespace }}
       ports:
         - protocol: TCP
           port: 5432
-    - from:
-        - podSelector: {}
-          namespaceSelector: {}
-      ports:
         - protocol: TCP
           port: 9187
 {{- end }}
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: {{ template "renku.notebooks.fullname" . }}-k8s-watcher
+  labels:
+    app: {{ template "renku.name" . }}
+    chart: {{ template "renku.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  podSelector:
+    matchLabels:
+      app: {{ template "renku.notebooks.name" . }}-k8s-watcher
+      release: {{ .Release.Name }}
+  policyTypes:
+    - Ingress
+  ingress:
+    - from:
+      # Allow ingress to the k8s watcher from data services and notebooks
+        - podSelector:
+            matchLabels:
+              app: {{ template "renku.notebooks.name" . }}
+              release: {{ .Release.Name }}
+        - podSelector:
+            matchLabels:
+              app: renku-data-service
+              release: {{ .Release.Name }}
+      ports:
+        - protocol: TCP
+          port: http
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: {{ template "renku.notebooks.fullname" . }}-sessions
+  labels:
+    app: {{ template "renku.name" . }}
+    chart: {{ template "renku.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/component: jupyterserver
+      app.kubernetes.io/instance: {{ .Release.Name }}
+      app.kubernetes.io/name: amalthea
+  policyTypes:
+    - Ingress
+  ingress:
+    - from:
+      # Allow ssh ingress to sessions only for the ssh jump host
+        - podSelector:
+            matchLabels:
+              app: {{ template "renku.notebooks.name" . }}-ssh
+      ports:
+        - port: ssh
+          protocol: TCP
+    - from:
+      # Allow ingress to the oauth2proxy for anyone
+        - ipBlock:
+            cidr: 0.0.0.0/0
+      ports:
+        - protocol: TCP
+          port: 4180
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: {{ template "renku.notebooks.fullname" . }}-sessions-v2
+  labels:
+    app: {{ template "renku.name" . }}
+    chart: {{ template "renku.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/name: AmaltheaSession
+      app.kubernetes.io/part-of: amaltheasession-operator
+  policyTypes:
+    - Ingress
+  ingress:
+    - from:
+      # Allow ingress to the authentication proxy port on a v2 session from anywhere
+        - ipBlock:
+            cidr: 0.0.0.0/0
+      ports:
+        - protocol: TCP
+          # This port is hardcoded in Amalthea as the port for the authentication proxy
+          port: 65535
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: {{ template "renku.fullname" . }}-secrets-storage
+  labels:
+    app: {{ template "renku.name" . }}
+    chart: {{ template "renku.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  podSelector:
+    matchLabels:
+      app: renku-secrets-storage
+      release: {{ .Release.Name }}
+  policyTypes:
+    - Ingress
+  ingress:
+    - from:
+        # Only allow ingress to secrets storage from notebooks and data services
+        - podSelector:
+            matchLabels:
+              app: {{ template "renku.notebooks.name" . }}
+              release: {{ .Release.Name }}
+        - podSelector:
+            matchLabels:
+              app: renku-data-service
+              release: {{ .Release.Name }}
+      ports:
+        - protocol: TCP
+          port: http
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: ingress-to-data-service-from-gateway
+  labels:
+    app: {{ template "renku.name" . }}
+    chart: {{ template "renku.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  podSelector:
+    matchLabels:
+      app: renku-data-service
+      release: {{ .Release.Name }}
+  policyTypes:
+    - Ingress
+  ingress:
+    - from:
+        - podSelector:
+            matchLabels:
+              app: {{ template "gateway.name" . }}
+              release: {{ .Release.Name }}
+      ports:
+        - protocol: TCP
+          port: http
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: ingress-to-notebooks-from-gateway
+  labels:
+    app: {{ template "renku.name" . }}
+    chart: {{ template "renku.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  podSelector:
+    matchLabels:
+      app: {{ template "renku.notebooks.name" . }}
+      release: {{ .Release.Name }}
+  policyTypes:
+    - Ingress
+  ingress:
+    - from:
+        - podSelector:
+            matchLabels:
+              app: {{ template "gateway.name" . }}
+              release: {{ .Release.Name }}
+      ports:
+        - protocol: TCP
+          port: http
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: ingress-to-core-service-from-gateway
+  labels:
+    app: {{ template "renku.name" . }}
+    chart: {{ template "renku.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/name: {{ include "renku-core.name" . }}
+      app.kubernetes.io/instance: {{ .Release.Name }}
+  policyTypes:
+    - Ingress
+  ingress:
+    - from:
+        - podSelector:
+            matchLabels:
+              app: {{ template "gateway.name" . }}
+              release: {{ .Release.Name }}
+      ports:
+        - protocol: TCP
+          port: http
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: ingress-to-core-service-from-graph
+  labels:
+    app: {{ template "renku.name" . }}
+    chart: {{ template "renku.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/name: {{ include "renku-core.name" . }}
+      app.kubernetes.io/instance: {{ .Release.Name }}
+  policyTypes:
+    - Ingress
+  ingress:
+    - from:
+        - podSelector:
+            matchLabels:
+              app: {{ template "renku.graph.knowledgeGraph.name" . }}
+              release: {{ .Release.Name }}
+      ports:
+        - protocol: TCP
+          port: http
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: ingress-to-knowledge-graph-from-gateway
+  labels:
+    app: {{ template "renku.name" . }}
+    chart: {{ template "renku.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  podSelector:
+    matchLabels:
+      app: {{ template "renku.graph.knowledgeGraph.name" . }}
+      release: {{ .Release.Name }}
+  policyTypes:
+    - Ingress
+  ingress:
+    - from:
+        - podSelector:
+            matchLabels:
+              app: {{ template "gateway.name" . }}
+              release: {{ .Release.Name }}
+      ports:
+        - protocol: TCP
+          port: http-kg
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: ingress-to-search-service-from-gateway
+  labels:
+    app: {{ template "renku.name" . }}
+    chart: {{ template "renku.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  podSelector:
+    matchLabels:
+      app: {{ template "renku.search.searchApi.name" . }}
+      release: {{ .Release.Name }}
+  policyTypes:
+    - Ingress
+  ingress:
+    - from:
+        - podSelector:
+            matchLabels:
+              app: {{ template "gateway.name" . }}
+              release: {{ .Release.Name }}
+      ports:
+        - protocol: TCP
+          port: http-search-api
+
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: ingress-to-uiserver-from-anywhere
+  labels:
+    app: {{ template "renku.name" . }}
+    chart: {{ template "renku.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/name: "uiserver"
+      app.kubernetes.io/instance: {{ .Release.Name }}
+  policyTypes:
+    - Ingress
+  ingress:
+    - from:
+        - ipBlock:
+            cidr: 0.0.0.0/0
+      ports:
+        - protocol: TCP
+          port: http
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: ingress-to-gateway-from-anywhere
+  labels:
+    app: {{ template "renku.name" . }}
+    chart: {{ template "renku.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  podSelector:
+    matchLabels:
+      app: {{ template "gateway.name" . }}
+      release: {{ .Release.Name }}
+  policyTypes:
+    - Ingress
+  ingress:
+    - from:
+        - ipBlock:
+            cidr: 0.0.0.0/0
+      ports:
+        - protocol: TCP
+          port: http
+{{- if .Values.keycloakx.enabled }}
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: ingress-to-keycloak-from-anywhere
+  labels:
+    app: {{ template "renku.name" . }}
+    chart: {{ template "renku.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/name: keycloakx
+  policyTypes:
+    - Ingress
+  ingress:
+    - from:
+        - ipBlock:
+            cidr: 0.0.0.0/0
+      ports:
+        - protocol: TCP
+          port: http
+        - protocol: TCP
+          port: https
+{{- end }}
+{{- if .Values.swagger.enabled }}
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: ingress-to-swagger-from-anywhere
+  labels:
+    app: {{ template "renku.name" . }}
+    chart: {{ template "renku.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/name: {{ include "renku.name" . }}-swagger
+      app.kubernetes.io/instance: {{ .Release.Name }}
+  policyTypes:
+    - Ingress
+  ingress:
+    - from:
+        - ipBlock:
+            cidr: 0.0.0.0/0
+      ports:
+        - protocol: TCP
+          port: http
+{{- end }}
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: ingress-to-webhook-service-from-anywhere
+  labels:
+    app: {{ template "renku.name" . }}
+    chart: {{ template "renku.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  podSelector:
+    matchLabels:
+      app: {{ template "renku.graph.webhookService.name" . }}
+      release: {{ .Release.Name }}
+  policyTypes:
+    - Ingress
+  ingress:
+    - from:
+        - ipBlock:
+            cidr: 0.0.0.0/0
+      ports:
+        - protocol: TCP
+          port: http-webhook-sv
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: ingress-to-ui-assets-from-anywhere
+  labels:
+    app: {{ template "renku.name" . }}
+    chart: {{ template "renku.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  podSelector:
+    matchLabels:
+      app: ui
+      release: {{ .Release.Name }}
+  policyTypes:
+    - Ingress
+  ingress:
+    - from:
+        - ipBlock:
+            cidr: 0.0.0.0/0
+      ports:
+        - protocol: TCP
+          port: http
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: ingress-to-authz-from-services
+  labels:
+    app: {{ template "renku.name" . }}
+    chart: {{ template "renku.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  podSelector:
+    matchLabels:
+      app: renku-authz
+      release: {{ .Release.Name }}
+  policyTypes:
+    - Ingress
+  ingress:
+    - from:
+        - podSelector:
+            matchLabels:
+              app: renku-data-service
+              release: {{ .Release.Name }}
+        - podSelector:
+            matchLabels:
+              app: data-service-background-jobs
+        - podSelector:
+            matchLabels:
+              app: data-service-total-users-sync
+      ports:
+        - protocol: TCP
+          port: http
+        - protocol: TCP
+          port: grpc
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: ingress-to-core-service-from-core-cleanup-job
+  labels:
+    app: {{ template "renku.name" . }}
+    chart: {{ template "renku.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/name: {{ include "renku-core.name" . }}
+      app.kubernetes.io/instance: {{ .Release.Name }}
+  policyTypes:
+    - Ingress
+  ingress:
+    - from:
+        - podSelector:
+            matchLabels:
+              app: core-cache-cleanup
+      ports:
+        - protocol: TCP
+          port: http
+{{- if .Values.redis.install }}
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: ingress-to-redis-from-services
+  labels:
+    app: {{ template "renku.name" . }}
+    chart: {{ template "renku.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/name: redis
+  policyTypes:
+    - Ingress
+  ingress:
+    - from:
+        - podSelector:
+            matchLabels:
+              app: {{ template "gateway.name" . }}
+              release: {{ .Release.Name }}
+        - podSelector:
+            matchLabels:
+              app.kubernetes.io/name: "uiserver"
+              app.kubernetes.io/instance: {{ .Release.Name }}
+        - podSelector:
+            matchLabels:
+              app.kubernetes.io/name: {{ include "renku-core.name" . }}
+              app.kubernetes.io/instance: {{ .Release.Name }}
+        - podSelector:
+            matchLabels:
+              app: renku-data-service
+              release: {{ .Release.Name }}
+        - podSelector:
+            matchLabels:
+              app: {{ template "renku.search.searchApi.name" . }}
+              release: {{ .Release.Name }}
+      ports:
+        - protocol: TCP
+          port: redis
+{{- end }}
+{{- if .Values.solr.enabled }}
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: ingress-to-solr-from-services
+  labels:
+    app: {{ template "renku.name" . }}
+    chart: {{ template "renku.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/component: solr
+      app.kubernetes.io/name: solr
+  policyTypes:
+    - Ingress
+  ingress:
+    - from:
+        - podSelector:
+            matchLabels:
+              app: search-api
+        - podSelector:
+            matchLabels:
+              app: search-provision
+      ports:
+        - protocol: TCP
+          port: http
+{{- end }}
+{{- if gt (.Values.networkPolicies.allowAllIngressFromPods | len) 0 }}
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-all-ingress-from-some-pods
+  labels:
+    app: {{ template "renku.name" . }}
+    chart: {{ template "renku.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  podSelector: {}
+  policyTypes:
+    - Ingress
+  ingress:
+    - from:
+        {{- toYaml .Values.networkPolicies.allowAllIngressFromPods | nindent 8 }}
+{{- end }}
+{{- if gt (.Values.networkPolicies.allowAllIngressFromNamespaces | len) 0 }}
+{{- if has .Release.Namespace .Values.networkPolicies.allowAllIngressFromNamespaces }}
+{{- fail "ERROR: You cannot allow all ingress from the Helm release namespace" }}
+{{- end }}
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-all-ingress-from-some-namespaces
+  labels:
+    app: {{ template "renku.name" . }}
+    chart: {{ template "renku.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  podSelector: {}
+  policyTypes:
+    - Ingress
+  ingress:
+    - from:
+        - namespaceSelector:
+            matchExpressions:
+            # The kubernetes.io/metadata.name label is automatically added by k8s to every namespace
+            - key: kubernetes.io/metadata.name
+              operator: In
+              values: 
+                {{- toYaml .Values.networkPolicies.allowAllIngressFromNamespaces | nindent 16 }}
+{{- end }}
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-all-ingress-to-acme-http-solver-from-anywhere
+  labels:
+    app: {{ template "renku.name" . }}
+    chart: {{ template "renku.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  podSelector:
+    matchLabels:
+      acme.cert-manager.io/http01-solver: "true"
+  policyTypes:
+    - Ingress
+  ingress:
+    - from:
+        - ipBlock:
+            cidr: 0.0.0.0/0
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: ingress-to-jena-from-services
+  labels:
+    app: {{ template "renku.name" . }}
+    chart: {{ template "renku.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/name: jena
+      app.kubernetes.io/instance: {{ .Release.Name }}
+  policyTypes:
+    - Ingress
+  ingress:
+    - from:
+        - podSelector:
+            matchLabels:
+              app: {{ template "renku.graph.knowledgeGraph.name" . }}
+              release: {{ .Release.Name }}
+        - podSelector:
+            matchLabels:
+              app: {{ template "renku.graph.triplesGenerator.name" . }}
+              release: {{ .Release.Name }}
+      ports:
+        - protocol: TCP
+          port: jena-http
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: ingress-to-event-log-from-kg-services
+  labels:
+    app: {{ template "renku.name" . }}
+    chart: {{ template "renku.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  podSelector:
+    matchLabels:
+      app: {{ template "renku.graph.eventLog.name" . }}
+      release: {{ .Release.Name }}
+  policyTypes:
+    - Ingress
+  ingress:
+    - from:
+        - podSelector:
+            matchLabels:
+              app: {{ template "renku.graph.triplesGenerator.name" . }}
+              release: {{ .Release.Name }}
+        - podSelector:
+            matchLabels:
+              app: {{ template "renku.graph.webhookService.name" . }}
+              release: {{ .Release.Name }}
+        - podSelector:
+            matchLabels:
+              app: {{ template "renku.graph.knowledgeGraph.name" . }}
+              release: {{ .Release.Name }}
+        - podSelector:
+            matchLabels:
+              app: {{ template "renku.graph.tokenRepository.name" . }}
+              release: {{ .Release.Name }}
+        - podSelector:
+            matchLabels:
+              app: {{ template "renku.graph.commitEventService.name" . }}
+              release: {{ .Release.Name }}
+        - podSelector:
+            matchLabels:
+              # The event log calls itself via a k8s service so if it is not allowed in the 
+              # network policy like this then those requests fail.
+              app: {{ template "renku.graph.eventLog.name" . }}
+              release: {{ .Release.Name }}
+      ports:
+        - protocol: TCP
+          port: http-event-log
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: ingress-to-token-repository-from-kg-services
+  labels:
+    app: {{ template "renku.name" . }}
+    chart: {{ template "renku.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  podSelector:
+    matchLabels:
+      app: {{ template "renku.graph.tokenRepository.name" . }}
+      release: {{ .Release.Name }}
+  policyTypes:
+    - Ingress
+  ingress:
+    - from:
+        - podSelector:
+            matchLabels:
+              app: {{ template "renku.graph.triplesGenerator.name" . }}
+              release: {{ .Release.Name }}
+        - podSelector:
+            matchLabels:
+              app: {{ template "renku.graph.eventLog.name" . }}
+              release: {{ .Release.Name }}
+        - podSelector:
+            matchLabels:
+              app: {{ template "renku.graph.webhookService.name" . }}
+              release: {{ .Release.Name }}
+        - podSelector:
+            matchLabels:
+              app: {{ template "renku.graph.knowledgeGraph.name" . }}
+              release: {{ .Release.Name }}
+        - podSelector:
+            matchLabels:
+              app: {{ template "renku.graph.commitEventService.name" . }}
+              release: {{ .Release.Name }}
+      ports:
+        - protocol: TCP
+          port: http-token-repo
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: ingress-to-triple-generator-from-kg-services
+  labels:
+    app: {{ template "renku.name" . }}
+    chart: {{ template "renku.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  podSelector:
+    matchLabels:
+      app: {{ template "renku.graph.triplesGenerator.name" . }}
+      release: {{ .Release.Name }}
+  policyTypes:
+    - Ingress
+  ingress:
+    - from:
+        - podSelector:
+            matchLabels:
+              app: {{ template "renku.graph.eventLog.name" . }}
+              release: {{ .Release.Name }}
+        - podSelector:
+            matchLabels:
+              app: {{ template "renku.graph.webhookService.name" . }}
+              release: {{ .Release.Name }}
+        - podSelector:
+            matchLabels:
+              app: {{ template "renku.graph.knowledgeGraph.name" . }}
+              release: {{ .Release.Name }}
+        - podSelector:
+            matchLabels:
+              # The triples generator calls itself via a k8s service so if it is not allowed in the 
+              # network policy like this then those requests fail.
+              app: {{ template "renku.graph.triplesGenerator.name" . }}
+              release: {{ .Release.Name }}
+      ports:
+        - protocol: TCP
+          port: http-triples-gn
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: ingress-to-commit-events-from-kg-services
+  labels:
+    app: {{ template "renku.name" . }}
+    chart: {{ template "renku.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  podSelector:
+    matchLabels:
+      app: {{ template "renku.graph.commitEventService.name" . }}
+      release: {{ .Release.Name }}
+  policyTypes:
+    - Ingress
+  ingress:
+    - from:
+        - podSelector:
+            matchLabels:
+              app: {{ template "renku.graph.eventLog.name" . }}
+              release: {{ .Release.Name }}
+      ports:
+        - protocol: TCP
+          port: http-commit-sv
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: ingress-to-data-service-from-notebooks
+  labels:
+    app: {{ template "renku.name" . }}
+    chart: {{ template "renku.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  podSelector:
+    matchLabels:
+      app: renku-data-service
+      release: {{ .Release.Name }}
+  policyTypes:
+    - Ingress
+  ingress:
+    - from:
+        - podSelector:
+            matchLabels:
+              app: {{ template "renku.notebooks.name" . }}
+              release: {{ .Release.Name }}
+      ports:
+        - protocol: TCP
+          port: http
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  # The notebooks code in data service calls data service via a K8s service
+  # and for this to succeed the network policy has to allow it. This can be 
+  # removed when the notebooks code is completely migrated to the data service.
+  name: ingress-to-data-service-from-itself
+  labels:
+    app: {{ template "renku.name" . }}
+    chart: {{ template "renku.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  podSelector:
+    matchLabels:
+      app: renku-data-service
+      release: {{ .Release.Name }}
+  policyTypes:
+    - Ingress
+  ingress:
+    - from:
+        - podSelector:
+            matchLabels:
+              app: renku-data-service
+              release: {{ .Release.Name }}
+      ports:
+        - protocol: TCP
+          port: http
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  # Needed for secret mounting
+  name: ingress-to-data-service-from-v1-sessions
+  labels:
+    app: {{ template "renku.name" . }}
+    chart: {{ template "renku.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  podSelector:
+    matchLabels:
+      app: renku-data-service
+      release: {{ .Release.Name }}
+  policyTypes:
+    - Ingress
+  ingress:
+    - from:
+        - podSelector:
+            matchLabels:
+              app.kubernetes.io/component: jupyterserver
+              app.kubernetes.io/instance: {{ .Release.Name }}
+              app.kubernetes.io/name: amalthea
+      ports:
+        - protocol: TCP
+          port: http
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: egress-from-renku-v1-sessions
+spec:
+  egress:
+    - to:
+      # DNS resolution
+      - namespaceSelector:
+          matchLabels:
+            kubernetes.io/metadata.name: kube-system
+        podSelector:
+          matchLabels:
+            k8s-app: kube-dns
+      ports:
+      - port: 53
+        protocol: UDP
+      - port: 53
+        protocol: TCP
+    - to:
+      # Allow access to any port/protocol as long as it is directed
+      # outside of the cluster. This is done by excluding
+      # IP ranges which are reserved for private networking from
+      # the allowed range.
+      - ipBlock:
+          cidr: 0.0.0.0/0
+          except:
+          - 10.0.0.0/8
+          - 172.16.0.0/12
+          - 192.168.0.0/16
+    - to:
+      # Allow access to data service, needed for secret mounting
+      - podSelector:
+          matchLabels:
+            app: renku-data-service
+            release: {{ .Release.Name }}
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/component: jupyterserver
+      app.kubernetes.io/instance: {{ .Release.Name }}
+      app.kubernetes.io/name: amalthea
+  policyTypes:
+  - Egress
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: egress-from-renku-v2-sessions
+spec:
+  egress:
+    - to:
+      # DNS resolution
+      - namespaceSelector:
+          matchLabels:
+            kubernetes.io/metadata.name: kube-system
+        podSelector:
+          matchLabels:
+            k8s-app: kube-dns
+      ports:
+      - port: 53
+        protocol: UDP
+      - port: 53
+        protocol: TCP
+    - to:
+      # Allow access to any port/protocol as long as it is directed
+      # outside of the cluster. This is done by excluding
+      # IP ranges which are reserved for private networking from
+      # the allowed range.
+      - ipBlock:
+          cidr: 0.0.0.0/0
+          except:
+          - 10.0.0.0/8
+          - 172.16.0.0/12
+          - 192.168.0.0/16
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/created-by: controller-manager
+      app.kubernetes.io/name: AmaltheaSession
+  policyTypes:
+  - Egress
