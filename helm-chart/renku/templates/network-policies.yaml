@@ -978,78 +978,39 @@ spec:
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
-  name: deny-all-egress-from-sessions-v1
+  # Needed for secret mounting
+  name: ingress-to-data-service-from-v1-sessions
+  labels:
+    app: {{ template "renku.name" . }}
+    chart: {{ template "renku.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
 spec:
-  egress: []
   podSelector:
     matchLabels:
-      app.kubernetes.io/component: jupyterserver
-      app.kubernetes.io/instance: {{ .Release.Name }}
-      app.kubernetes.io/name: amalthea
+      app: renku-data-service
+      release: {{ .Release.Name }}
   policyTypes:
-  - Egress
+    - Ingress
+  ingress:
+    - from:
+        - podSelector:
+            matchLabels:
+              app.kubernetes.io/component: jupyterserver
+              app.kubernetes.io/instance: {{ .Release.Name }}
+              app.kubernetes.io/name: amalthea
+      ports:
+        - protocol: TCP
+          port: http
 ---
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
-  name: deny-all-egress-from-sessions-v2
-spec:
-  egress: []
-  podSelector:
-    matchLabels:
-      app.kubernetes.io/created-by: controller-manager
-      app.kubernetes.io/name: AmaltheaSession
-  policyTypes:
-  - Egress
----
-apiVersion: networking.k8s.io/v1
-kind: NetworkPolicy
-metadata:
-  name: allow-only-egress-for-sessions-that-target-this-namespace-v1
+  name: egress-from-renku-v1-sessions
 spec:
   egress:
     - to:
-      - namespaceSelector:
-          matchExpressions:
-          - key: kubernetes.io/metadata.name
-            operator: In
-            values:
-            - {{ .Release.Namespace | quote }}
-  podSelector:
-    matchLabels:
-      app.kubernetes.io/component: jupyterserver
-      app.kubernetes.io/instance: {{ .Release.Name }}
-      app.kubernetes.io/name: amalthea
-  policyTypes:
-  - Egress
----
-apiVersion: networking.k8s.io/v1
-kind: NetworkPolicy
-metadata:
-  name: allow-only-egress-for-sessions-that-target-this-namespace-v2
-spec:
-  egress:
-    - to:
-      - namespaceSelector:
-          matchExpressions:
-          - key: kubernetes.io/metadata.name
-            operator: In
-            values:
-            - {{ .Release.Namespace | quote }}
-  podSelector:
-    matchLabels:
-      app.kubernetes.io/created-by: controller-manager
-      app.kubernetes.io/name: AmaltheaSession
-  policyTypes:
-  - Egress
----
-apiVersion: networking.k8s.io/v1
-kind: NetworkPolicy
-metadata:
-  name: allow-only-egress-for-sessions-for-name-resolution-v1
-spec:
-  egress:
-    - to:
+      # DNS resolution
       - namespaceSelector:
           matchLabels:
             kubernetes.io/metadata.name: kube-system
@@ -1061,6 +1022,23 @@ spec:
         protocol: UDP
       - port: 53
         protocol: TCP
+    - to:
+      # Allow access to any port/protocol as long as it is directed
+      # outside of the cluster. This is done by excluding
+      # IP ranges which are reserved for private networking from
+      # the allowed range.
+      - ipBlock:
+          cidr: 0.0.0.0/0
+          except:
+          - 10.0.0.0/8
+          - 172.16.0.0/12
+          - 192.168.0.0/16
+    - to:
+      # Allow access to data service, needed for secret mounting
+      - podSelector:
+          matchLabels:
+            app: renku-data-service
+            release: {{ .Release.Name }}
   podSelector:
     matchLabels:
       app.kubernetes.io/component: jupyterserver
@@ -1072,10 +1050,11 @@ spec:
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
-  name: allow-only-egress-for-sessions-for-name-resolution-v2
+  name: egress-from-renku-v2-sessions
 spec:
   egress:
     - to:
+      # DNS resolution
       - namespaceSelector:
           matchLabels:
             kubernetes.io/metadata.name: kube-system
@@ -1087,6 +1066,17 @@ spec:
         protocol: UDP
       - port: 53
         protocol: TCP
+    - to:
+      # Allow access to any port/protocol as long as it is directed
+      # outside of the cluster. This is done by excluding
+      # IP ranges which are reserved for private networking from
+      # the allowed range.
+      - ipBlock:
+          cidr: 0.0.0.0/0
+          except:
+          - 10.0.0.0/8
+          - 172.16.0.0/12
+          - 192.168.0.0/16
   podSelector:
     matchLabels:
       app.kubernetes.io/created-by: controller-manager
