@@ -36,7 +36,6 @@ User-Facing Changes
 
 - **UI**: Enable the use of custom images that don’t contain Jupyter, streamlining the image-building process and allowing for the use of “off-the-shelf” images (`#3341 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3341>`__).
 - **Sessions**: Enable running session images that do not contain Jupyter in them.
-- **Amalthea**: Brand new operator for sessions with images that do not have to contain Jupyter
 
 Internal Changes
 ~~~~~~~~~~~~~~~~
@@ -46,6 +45,8 @@ Internal Changes
 - **Data services**: Add support for OAuth storage providers
 - **Data services**: Move notebooks code to data services
 - **Helm chart**: Consolidate and revamp network policies
+- **Data services**: Add support for project documentation
+- **Data services**: Add support for cloning projects
 
 **Bug Fixes**
 
@@ -54,8 +55,11 @@ Internal Changes
 - **Data services**: Add creation date and created_by for namespaces
 - **Data services**: Pin RClone version in data services image
 - **Data services**: Properly handle multi-architecture docker images when getting working directory
+- **Data services**: Make environment working directory and mount directory optional
 - **Amalthea**: Add readiness and health checks to sessions.
 - **Amalthea**: Do not authenticate the authentication proxy health check
+- **Amalthea**: Do not mount the Kubernetes service account in sessions
+- **Amalthea**: Do not add Kubernetes specific environment variables in sessions
 
 Individual Components
 ~~~~~~~~~~~~~~~~~~~~~
@@ -63,11 +67,13 @@ Individual Components
 - `renku-gateway 1.3.1 <https://github.com/SwissDataScienceCenter/renku-gateway/releases/tag/1.3.1>`_
 - `renku-ui 3.42.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.42.0>`_
 - `renku-data-services 0.26.0 <https://github.com/SwissDataScienceCenter/renku-data-services/releases/tag/v0.26.0>`_
+- `renku-data-services 0.27.0 <https://github.com/SwissDataScienceCenter/renku-data-services/releases/tag/v0.27.0>`_
 - `amalthea 0.13.0 <https://github.com/SwissDataScienceCenter/amalthea/releases/tag/0.13.0>`_
 - `amalthea 0.14.0 <https://github.com/SwissDataScienceCenter/amalthea/releases/tag/0.14.0>`_
 - `amalthea 0.14.1 <https://github.com/SwissDataScienceCenter/amalthea/releases/tag/0.14.1>`_
 - `amalthea 0.14.2 <https://github.com/SwissDataScienceCenter/amalthea/releases/tag/0.14.2>`_
 - `amalthea 0.14.3 <https://github.com/SwissDataScienceCenter/amalthea/releases/tag/0.14.3>`_
+- `amalthea 0.14.4 <https://github.com/SwissDataScienceCenter/amalthea/releases/tag/0.14.4>`_
 
 0.60.0
 ------
