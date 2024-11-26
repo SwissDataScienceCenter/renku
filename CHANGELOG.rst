@@ -59,6 +59,8 @@ Internal Changes
 - **Data services**: Make environment working directory and mount directory optional
 - **Amalthea**: Add readiness and health checks to sessions.
 - **Amalthea**: Do not authenticate the authentication proxy health check
+- **Amalthea**: Do not mount the Kubernetes service account in sessions
+- **Amalthea**: Do not add Kubernetes specific environment variables in sessions
 
 Individual Components
 ~~~~~~~~~~~~~~~~~~~~~
@@ -72,6 +74,7 @@ Individual Components
 - `amalthea 0.14.1 <https://github.com/SwissDataScienceCenter/amalthea/releases/tag/0.14.1>`_
 - `amalthea 0.14.2 <https://github.com/SwissDataScienceCenter/amalthea/releases/tag/0.14.2>`_
 - `amalthea 0.14.3 <https://github.com/SwissDataScienceCenter/amalthea/releases/tag/0.14.3>`_
+- `amalthea 0.14.4 <https://github.com/SwissDataScienceCenter/amalthea/releases/tag/0.14.4>`_
 
 0.60.0
 ------
