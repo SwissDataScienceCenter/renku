@@ -224,6 +224,11 @@ ingress:
   #  - secretName: chart-example-tls
   #    hosts:
   #      - example.local
+networkPolicies:
+  ## List of podSelector terms for pods in the release namespace that should be allowed all ingress to all services
+  allowAllIngressFromPods: []
+  ## List of namespaces that should be allowed all ingress to all services
+  allowAllIngressFromNamespaces: []
 ## Keycloak configuration
 keycloakx:
   ## Spawn a keycloak instance
@@ -654,7 +659,7 @@ ui:
     replicaCount: 1
     image:
       repository: renku/renku-ui
-      tag: "3.41.0"
+      tag: "3.42.0"
       pullPolicy: IfNotPresent
       ## Optionally specify an array of imagePullSecrets.
       ## Secrets must be manually created in the namespace.
@@ -843,7 +848,7 @@ ui:
     keepCookies: []
     image:
       repository: renku/renku-ui-server
-      tag: "3.41.0"
+      tag: "3.42.0"
       pullPolicy: IfNotPresent
     imagePullSecrets: []
     nameOverride: ""
@@ -1281,7 +1286,7 @@ gateway:
   secretKey:
   image:
     repository: renku/renku-gateway
-    tag: "1.3.0"
+    tag: "1.3.1"
     pullPolicy: IfNotPresent
   service:
     type: ClusterIP
@@ -1590,14 +1595,14 @@ dataService:
     create: true
   image:
     repository: renku/renku-data-service
-    tag: "0.25.0"
+    tag: "0.27.0"
     pullPolicy: IfNotPresent
   backgroundJobs:
     events:
       resources: {}
     image:
       repository: renku/data-service-background-jobs
-      tag: "0.25.0"
+      tag: "0.27.0"
       pullPolicy: IfNotPresent
     total:
       resources: {}
@@ -1650,7 +1655,7 @@ authz:
 secretsStorage:
   image:
     repository: renku/secrets-storage
-    tag: "0.25.0"
+    tag: "0.27.0"
     pullPolicy: IfNotPresent
   service:
     type: ClusterIP
