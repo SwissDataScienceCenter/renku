@@ -46,6 +46,8 @@ Internal Changes
 - **Data services**: Add support for OAuth storage providers
 - **Data services**: Move notebooks code to data services
 - **Helm chart**: Consolidate and revamp network policies
+- **Data services**: Add support for project documentation
+- **Data services**: Add support for cloning projects
 
 **Bug Fixes**
 
@@ -54,6 +56,7 @@ Internal Changes
 - **Data services**: Add creation date and created_by for namespaces
 - **Data services**: Pin RClone version in data services image
 - **Data services**: Properly handle multi-architecture docker images when getting working directory
+- **Data services**: Make environment working directory and mount directory optional
 - **Amalthea**: Add readiness and health checks to sessions.
 - **Amalthea**: Do not authenticate the authentication proxy health check
 
@@ -63,6 +66,7 @@ Individual Components
 - `renku-gateway 1.3.1 <https://github.com/SwissDataScienceCenter/renku-gateway/releases/tag/1.3.1>`_
 - `renku-ui 3.42.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.42.0>`_
 - `renku-data-services 0.26.0 <https://github.com/SwissDataScienceCenter/renku-data-services/releases/tag/v0.26.0>`_
+- `renku-data-services 0.27.0 <https://github.com/SwissDataScienceCenter/renku-data-services/releases/tag/v0.27.0>`_
 - `amalthea 0.13.0 <https://github.com/SwissDataScienceCenter/amalthea/releases/tag/0.13.0>`_
 - `amalthea 0.14.0 <https://github.com/SwissDataScienceCenter/amalthea/releases/tag/0.14.0>`_
 - `amalthea 0.14.1 <https://github.com/SwissDataScienceCenter/amalthea/releases/tag/0.14.1>`_
