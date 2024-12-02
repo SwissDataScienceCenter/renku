@@ -17,6 +17,9 @@ spec:
       release: {{ .Release.Name }}
   template:
     metadata:
+      annotations:
+        # NOTE: Without this the pod will not restart when the secret values change.
+        checksum/config: {{ include (print $.Template.BasePath "/notebooks/env-secret.yaml") . | sha256sum }}
       labels:
         app: {{ template "renku.notebooks.name" . }}-k8s-watcher
         chart: {{ template "renku.chart" . }}
