@@ -3,6 +3,34 @@
 0.61.1
 ------
 
+Renku 0.61.1 introduces a few bug fixes for the previous release.
+
+
+User-Facing Changes
+~~~~~~~~~~~~~~~~~~~
+
+**🐞 Bug Fixes**
+
+- **Sessions**: Properly launch sessions that have quotas
+
+Internal Changes
+~~~~~~~~~~~~~~~~
+
+**Bug Fixes**
+
+- **Amalthea**: Add resource requests for the authentication proxy containers
+- **Amalthea**: Add support for setting priority classes for sessions
+- **Data services**: Use the working directory to mount cloud storage if the mount path is relative
+- **Data services**: Use HTTPS in the redirect URL for the authentication proxy
+- **Data services**: Use GPU resource limits when GPUs are requested
+- **Helm chart**: Do not set the default storage class to empty string if it is not set in the values file
+- **Helm chart**: Restart the data services and notebooks pods when the mounted secret changes
+
+Individual components
+~~~~~~~~~~~~~~~~~~~~~~
+
+- `amalthea 0.14.5 <https://github.com/SwissDataScienceCenter/amalthea/releases/tag/0.14.5>`_
+- `renku-data-services 0.27.1 <https://github.com/SwissDataScienceCenter/renku-data-services/releases/tag/v0.27.1>`_
 
 
 0.61.0
