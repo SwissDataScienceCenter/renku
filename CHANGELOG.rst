@@ -5,6 +5,8 @@
 
 TODO: session secrets in Renku 2.0
 
+NOTE: Testing the user secrets migration.
+
 0.61.0
 ------
 
