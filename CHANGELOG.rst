@@ -3,7 +3,12 @@
 0.62.0
 ------
 
+Internal Changes
+~~~~~~~~~~~~~~~~
 
+**Improvements**
+
+* **Infrastructure Components**: ``redis`` has been upgraded from version ``7.0.7`` to ``7.4.1``
 
 0.61.2
 ------
