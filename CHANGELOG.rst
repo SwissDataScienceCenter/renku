@@ -11,7 +11,7 @@ User-Facing Changes
 
 **🐞 Bug Fixes**
 
-- **Sessions**: Properly launch sessions that have quotas
+- **Sessions**: Correctly launch sessions that request dedicated resources classes
 
 Internal Changes
 ~~~~~~~~~~~~~~~~
