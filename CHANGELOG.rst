@@ -19,6 +19,8 @@ Internal Changes
 
 * **Infrastructure Components**: ``redis`` has been upgraded from version ``7.0.7`` to ``7.4.1``
 
+* **Helm chart**: remove the custom-made Gitlab Omnibus Helm chart from Renku dependencies
+
 0.61.0
 ------
 
@@ -194,7 +196,6 @@ Individual Components
 0.59.0
 ------
 
-<<<<<<< HEAD
 Renku ``0.59.0`` introduces the ability to reuse data connectors in multiple projects!
 When you add a data connector (previously called a data source) to your project, you now have the new option to select other data connectors on RenkuLab,
 for example those shared in your group, rather than having to re-enter the data connection details.
@@ -251,9 +252,6 @@ Individual Components
 - `renku-ui 3.39.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.39.0>`_
 - `renku-ui 3.40.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.40.0>`_
 - `renku-ui 3.40.1 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.40.1>`_
-=======
-
->>>>>>> cd54c4f4 (chore: create release 0.60.0)
 
 0.58.1
 ------
@@ -338,7 +336,7 @@ Internal Changes
 Individual Components
 ~~~~~~~~~~~~~~~~~~~~~
 
-- `renku-search 0.6.1 <https://github.com/SwissDataScienceCenter/renku-search/releases/tag/v0.6.0>`_
+- `renku-search 0.6.1 <https://github.com/SwissDataScienceCenter/renku-search/releases/tag/v0.6.1>`_
 - `renku-ui 3.36.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.36.0>`_
 - `renku-ui 3.37.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.37.0>`_
 - `renku-ui 3.37.1 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.37.1>`_
@@ -361,10 +359,6 @@ User-facing Changes
 
 Internal Changes
 ~~~~~~~~~~~~~~~~
-
-**Features**
-
-- **Helm chart**: remove the custom-made Gitlab Omnibus Helm chart from Renku dependencies
 
 **Bug Fixes**
 
