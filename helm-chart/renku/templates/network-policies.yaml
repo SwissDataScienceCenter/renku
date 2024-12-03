@@ -1006,6 +1006,33 @@ spec:
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
+  # Needed for secret mounting
+  name: ingress-to-data-service-from-v2-sessions
+  labels:
+    app: {{ template "renku.name" . }}
+    chart: {{ template "renku.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  podSelector:
+    matchLabels:
+      app: renku-data-service
+      release: {{ .Release.Name }}
+  policyTypes:
+    - Ingress
+  ingress:
+    - from:
+        - podSelector:
+            matchLabels:
+              app.kubernetes.io/created-by: controller-manager
+              app.kubernetes.io/name: AmaltheaSession
+      ports:
+        - protocol: TCP
+          port: http
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
   name: egress-from-renku-v1-sessions
 spec:
   egress:
@@ -1077,6 +1104,12 @@ spec:
           - 10.0.0.0/8
           - 172.16.0.0/12
           - 192.168.0.0/16
+    - to:
+      # Allow access to data service, needed for secret mounting
+      - podSelector:
+          matchLabels:
+            app: renku-data-service
+            release: {{ .Release.Name }}
   podSelector:
     matchLabels:
       app.kubernetes.io/created-by: controller-manager
