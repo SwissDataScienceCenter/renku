@@ -23,8 +23,10 @@ spec:
         app: renku-data-service
         release: {{ .Release.Name }}
         {{ .Values.global.redis.clientLabel | toYaml | nindent 8 }}
-      {{- with .Values.dataService.podAnnotations }}
       annotations:
+        # NOTE: Without this the pod will not restart when the secret values change.
+        checksum/config: {{ include (print $.Template.BasePath "/notebooks/env-secret.yaml") . | sha256sum }}
+      {{- with .Values.dataService.podAnnotations }}
         {{- toYaml . | nindent 8 }}
       {{- end }}
     spec:
