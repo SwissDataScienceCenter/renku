@@ -38,20 +38,6 @@ spec:
             matchLabels:
               kubernetes.io/metadata.name: {{ .Release.Namespace }}
         {{- end }}
-        {{- if .Values.gitlab.enabled }}
-        - podSelector:
-            matchLabels:
-              app: gitlab
-          namespaceSelector:
-            matchLabels:
-              kubernetes.io/metadata.name: {{ .Release.Namespace }}
-        - podSelector:
-            matchLabels:
-              app: post-install-gitlab
-          namespaceSelector:
-            matchLabels:
-              kubernetes.io/metadata.name: {{ .Release.Namespace }}
-        {{- end }}
         - podSelector:
             matchLabels:
               app: event-log
