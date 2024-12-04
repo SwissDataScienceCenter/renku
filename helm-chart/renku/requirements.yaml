@@ -1,8 +1,4 @@
 dependencies:
-  - name: gitlab
-    repository: "https://swissdatasciencecenter.github.io/helm-charts/"
-    version: 0.8.0
-    condition: gitlab.enabled
   - name: postgresql
     version: "14.2.4"
     repository: "oci://registry-1.docker.io/bitnamicharts"
