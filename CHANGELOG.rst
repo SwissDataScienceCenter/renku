@@ -17,9 +17,20 @@ Internal Changes
 
 **Improvements**
 
-* **Infrastructure Components**: ``redis`` has been upgraded from version ``7.0.7`` to ``7.4.1``
+- **Infrastructure Components**: ``redis`` has been upgraded from version ``7.0.7`` to ``7.4.1``
+- **Helm chart**: remove the custom-made Gitlab Omnibus Helm chart from Renku dependencies
+- **Search services**: Add support for sentry
 
-* **Helm chart**: remove the custom-made Gitlab Omnibus Helm chart from Renku dependencies
+
+**Bug Fixes**
+
+- **Search services**: Don't return results without linked namespaces
+
+
+Individual Components
+~~~~~~~~~~~~~~~~~~~~~
+
+- `renku-search 0.7.0 <https://github.com/SwissDataScienceCenter/renku-search/releases/tag/v0.7.0>`_
 
 0.61.2
 ------
