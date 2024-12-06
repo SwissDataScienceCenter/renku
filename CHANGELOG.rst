@@ -1,5 +1,25 @@
 .. _changelog:
 
+0.61.2
+------
+
+Renku 0.61.2 fixes a bug that prevented users from resuming Renku V2 sessions 
+after they have been hibernated because they were idle.
+
+
+User-Facing Changes
+~~~~~~~~~~~~~~~~~~~
+
+**🐞 Bug Fixes**
+
+- **Sessions**: Correctly resume hibernated sessions.
+
+Individual components
+~~~~~~~~~~~~~~~~~~~~~~
+
+- `amalthea 0.14.7 <https://github.com/SwissDataScienceCenter/amalthea/releases/tag/0.14.7>`_
+
+
 0.61.1
 ------
 
