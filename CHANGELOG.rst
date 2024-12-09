@@ -3,7 +3,24 @@
 0.62.0
 ------
 
-TODO: session secrets in Renku 2.0
+‘Session secrets’ make it possible to connect to protected resources, such as databases or external
+compute systems, from a Renku session in a standardized and shareable manner. Collaborating with
+secrets is easy too: configure a single session secret ‘slot’ to ensure that the secret shows up
+the same way for everyone, and each person enters their own value.
+
+User-Facing Changes
+~~~~~~~~~~~~~~~~~~~
+
+**🌟 New Features**
+
+- **UI**: Configure and save session secrets in Renku 2.0 projects and use them in sessions (TODO).
+
+Internal Changes
+~~~~~~~~~~~~~~~~
+
+**New Features**
+
+- **Data services**: Support saving session secrets in Renku 2.0 projects and mounting them in sessions.
 
 This release removes the Gitlab omnibus Helm chart that we created and used to have as a dependency
 of the Renku Helm chart. We have been discouraging anyone from using
