@@ -72,9 +72,7 @@ describe("Dashboard v2 - Authenticated user", () => {
 describe("Dashboard v2 - Non-Authenticated user", () => {
   it("Cannot see projects and groups on Dashboard when logged out", () => {
     cy.visit("v2");
-    cy.getDataCy("projects-container").contains("No 2.0 projects.");
-    cy.getDataCy("view-other-projects-btn").should("be.visible");
-    cy.getDataCy("groups-container").contains("No 2.0 groups.");
-    cy.getDataCy("view-other-groups-btn").should("be.visible");
+    cy.getDataCy("user-container").should("be.visible");
+    cy.getDataCy("user-container").should("contain.text", "You are not logged in.");
   });
 });
