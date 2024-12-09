@@ -22,6 +22,8 @@ Internal Changes
 
 - **Data services**: Support saving session secrets in Renku 2.0 projects and mounting them in sessions.
 
+NOTE: Testing the user secrets migration.
+
 0.61.0
 ------
 
