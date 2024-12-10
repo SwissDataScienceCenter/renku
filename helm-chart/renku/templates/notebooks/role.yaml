@@ -79,5 +79,17 @@ rules:
       - list
       - get
       - watch
+  - apiGroups:
+      - shipwright.io
+    resources:
+      - buildruns
+    verbs:
+      - create
+      - update
+      - delete
+      - patch
+      - list
+      - get
+      - watch
 {{ end }}
 {{ end }}
