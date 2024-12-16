@@ -8,9 +8,7 @@ dependencies:
     repository: "https://codecentric.github.io/helm-charts"
     condition: keycloakx.enabled
   - name: redis
-    # bitnami claims that this will always contain a full set of charts - let us pray...
-    # this index was 19MB as of the date of this commit and contained redis 17.4.2
-    repository: "https://raw.githubusercontent.com/bitnami/charts/archive-full-index/bitnami"
+    repository: "oci://registry-1.docker.io/bitnamicharts"
     version: 20.3.0
     condition: redis.install
   - name: renku-jena
@@ -39,5 +37,5 @@ dependencies:
   - name: common
     repository: oci://registry-1.docker.io/bitnamicharts
     tags:
-    - bitnami-common
+      - bitnami-common
     version: 2.x.x
