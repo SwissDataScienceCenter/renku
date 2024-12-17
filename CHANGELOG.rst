@@ -3,10 +3,13 @@
 0.62.0
 ------
 
-Session secrets make it possible to connect to protected resources, such as databases or external
-compute systems, from a Renku session in a standardized and shareable manner. Collaborating with
-secrets is easy too: configure a single session secret slot to ensure that the secret shows up
-the same way for everyone, and each person enters their own value.
+This release introduces two new key features: session secrets and copying projects. 
+Session secrets make it possible to connect to protected resources, such as databases or
+external compute systems, from a Renku session in a standardized and shareable manner.
+Collaborating with secrets is easy too: configure a single session secret slot to ensure
+that the secret shows up the same way for everyone, and each person enters their own value.
+The copy projects feature makes it easy for course instructors to distribute course materials
+to students.
 
 This release removes the Gitlab omnibus Helm chart that we created and used to have as a dependency
 of the Renku Helm chart. We have been discouraging anyone from using
