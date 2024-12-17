@@ -82,6 +82,7 @@ Individual components
 - `amalthea 0.14.5 <https://github.com/SwissDataScienceCenter/amalthea/releases/tag/0.14.5>`_
 - `amalthea 0.14.6 <https://github.com/SwissDataScienceCenter/amalthea/releases/tag/0.14.6>`_
 - `renku-data-services 0.27.1 <https://github.com/SwissDataScienceCenter/renku-data-services/releases/tag/v0.27.1>`_
+- `renku-ui 3.43.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.43.0>`_
 
 
 0.61.0
