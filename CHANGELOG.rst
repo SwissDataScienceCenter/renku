@@ -22,7 +22,7 @@ User-Facing Changes
 
 **🌟 New Features**
 
-- **UI**: Configure and save session secrets in Renku 2.0 projects and use them in sessions (TODO).
+- **UI**: Configure and save session secrets in Renku 2.0 projects and use them in sessions (`#3413 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3413>`__).
 
 Internal Changes
 ~~~~~~~~~~~~~~~~
