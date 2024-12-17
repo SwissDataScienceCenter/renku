@@ -41,7 +41,7 @@ spec:
       initContainers:
         {{- include "certificates.initContainer" . | nindent 8 }}
       containers:
-        - name: gateway 
+        - name: gateway
           image: "{{ .Values.gateway.image.repository }}:{{ .Values.gateway.image.tag }}"
           imagePullPolicy: {{ .Values.gateway.image.pullPolicy }}
           securityContext:
@@ -56,7 +56,17 @@ spec:
                 secretKeyRef:
                   name: {{ .Values.global.redis.existingSecret }}
                   key: {{ .Values.global.redis.existingSecretPasswordKey }}
-            - name: GATEWAY_LOGIN_PROVIDERS_RENKU_CLIENTSECRET 
+            - name: GATEWAY_SESSIONS_COOKIEENCODINGKEY
+              valueFrom:
+                secretKeyRef:
+                  name: {{ cat (include "renku.fullname" .) "-gateway" | nospace }}
+                  key: cookieEncodingKey
+            - name: GATEWAY_SESSIONS_COOKIEHASHKEY
+              valueFrom:
+                secretKeyRef:
+                  name: {{ cat (include "renku.fullname" .) "-gateway" | nospace }}
+                  key: cookieHashKey
+            - name: GATEWAY_LOGIN_PROVIDERS_RENKU_CLIENTSECRET
               valueFrom:
                 secretKeyRef:
                   name: {{ cat (include "renku.fullname" .) "-gateway" | nospace }}
@@ -130,4 +140,3 @@ spec:
         - name: public-config
           configMap:
             name: {{ template "renku.fullname" . }}-gateway
-

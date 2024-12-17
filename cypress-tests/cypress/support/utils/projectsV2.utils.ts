@@ -23,7 +23,7 @@ export function getUserNamespaceAPIV2(): Cypress.Chainable<string | null> {
 
 /** Get a project by using only the API. */
 export function getProjectByNamespaceAPIV2(newProjectProps: ProjectIdentifierV2): Cypress.Chainable<any | null> {
-  return cy.request({ failOnStatusCode: false, method: "GET", url: `api/data/projects/${newProjectProps.namespace}/${newProjectProps.slug}` });
+  return cy.request({ failOnStatusCode: false, method: "GET", url: `api/data/namespaces/${newProjectProps.namespace}/projects/${newProjectProps.slug}` });
 }
 
 /** Create a project (if the project is missing) by using only the API. */

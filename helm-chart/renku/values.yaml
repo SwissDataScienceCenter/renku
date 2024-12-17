@@ -224,6 +224,11 @@ ingress:
   #  - secretName: chart-example-tls
   #    hosts:
   #      - example.local
+networkPolicies:
+  ## List of podSelector terms for pods in the release namespace that should be allowed all ingress to all services
+  allowAllIngressFromPods: []
+  ## List of namespaces that should be allowed all ingress to all services
+  allowAllIngressFromNamespaces: []
 ## Keycloak configuration
 keycloakx:
   ## Spawn a keycloak instance
@@ -508,153 +513,13 @@ solr:
     size: 8Gi
   zookeeper:
     enabled: false
-## Gitlab configuration
-gitlab:
-  ## Spawn a gitlab instance
-  enabled: true
-  ## Password for the `root` user
-  password: gitlabadmin
-  ## Gitlab image
-  image:
-    #   pullPolicy: IfNotPresent
-    repository: gitlab/gitlab-ce
-    # Check out the gitlab docs on upgrading versions before changing the image tag.
-    # https://docs.gitlab.com/ee/update/#upgrade-paths
-    # in particular major versions https://docs.gitlab.com/ce/update/#upgrading-to-a-new-major-version
-    tag: 14.10.5-ce.0
-  ## automatically log in to gitlab
-  oauth:
-    autoSignIn: true
-  ## Pod affinity for Gitlab deployment
-  # affinity: {}
-  ## Node selector for Gitlab deployment
-  # nodeSelector: {}
-  ## Pod tolerations for Gitlab deployment
-  # tolerations: []
-
-  ## Resource requests/limits for Gitlab
-  # resources: {}
-
-  ## Registration token for gitlab runners (initial value, can be regenerated from gitlab admin ui)
-  ## Generated using: `openssl rand -hex 32`
-  sharedRunnersRegistrationToken:
-  ## Set to true to make the user 'demo' a GitLab admin
-  demoUserIsAdmin: false
-  ## External port for git ssh protocol
-  ## This setting affects the copy-paste repo git+ssh URL
-  # sshPort: 22
-
-  ## LFS objects settings
-  ## Used to store git-lfs objects externally
-  ## Note: bucket must exist before use, GitLab won't do it
-  ## Follows: https://docs.gitlab.com/ce/workflow/lfs/lfs_administration.html#storing-lfs-objects-in-remote-object-storage
-  # lfsObjects:
-  ## Set to true to enable remote LFS objects
-  # enabled: false
-  ## Bucket name
-  # bucketName: lfs-objects
-  # directUpload: false
-  # backgroundUpload: true
-  # proxyDownload: false
-  # connection: |-
-  #   {
-  #     'provider' => 'AWS',
-  #     'region' => 'eu-central-1',
-  #     'aws_access_key_id' => '1ABCD2EFGHI34JKLM567N',
-  #     'aws_secret_access_key' => 'abcdefhijklmnopQRSTUVwxyz0123456789ABCDE',
-  #     # The below options configure an S3 compatible host instead of AWS
-  #     'host' => 'localhost',
-  #     'endpoint' => 'http://127.0.0.1:9000',
-  #     'path_style' => true
-  #   }
-
-  ## Persistent Volume settings
-  persistence:
-    # accessMode: ReadWriteOnce
-    size: 30Gi
-    ## Mount points for the PV
-    ## Setup according to the volumes declared in the Gitlab image
-    # gitlab_data:
-    #   subPath: data
-    #   mountPath: /var/opt/gitlab
-    # gitlab_config:
-    #   subPath: config
-    #   mountPath: /etc/gitlab
-    # gitlab_logs:
-    #   subPath: logs
-    #   mountPath: /var/log/gitlab
-  ## database data Persistent Volume Storage Class
-  ## If defined, storageClassName: <storageClass>
-  ## If set to "-", storageClassName: "", which disables dynamic provisioning
-  ## If undefined (the default) or set to null, no storageClassName spec is
-  ##   set, choosing the default provisioner.  (gp2 on AWS, standard on
-  ##   GKE, AWS & OpenStack)
-  ##
-  # storageClass:
-
-  ## A manually managed Persistent Volume and Claim
-  ## Requires persistence.enabled: true
-  ## If defined, PVC must be created manually before volume will be bound
-  # existingClaim:
-
-  ## Set to false to disable the use of Persistent Volume
-  ## The databases will be lost when the pod is terminated!
-  # enabled: true
-
-  ## Service configuration for Gitlab
-  ## Modify service.type according to your setup
-  # service:
-  #   port: 80
-  #   type: ClusterIP
-
-  ## Container image registry settings
-  registry:
-    ## Set to true to enable Gitlab registry
-    enabled: false
-    ## The URL to access the registry
-    # externalUrl:
-    ## Set `exposedAs` to "NodePort" when deploying on minikube
-    ## Set `exposedAs` to "Ingress" to expose the registry on an alternate domain.
-    # exposedAs: NodePort
-    ## Storage driver configuration for the registry
-    ## See: https://docs.gitlab.com/ee/administration/container_registry.html#container-registry-storage-driver
-    # storage: |-
-    #   {
-    #     's3' => {
-    #       'accesskey' => 's3-access-key',
-    #       'secretkey' => 's3-secret-key-for-access-key',
-    #       'bucket' => 'your-s3-bucket',
-    #       'region' => 'your-s3-region'
-    #     }
-    #   }
-    ## Registry ingress, when `exposedAs` is set to "Ingress"
-    ## Uses conventional settings for ingress
-    ## Find below an example of values
-    # ingress:
-    #   annotations:
-    #     cert-manager.io/cluster-issuer: letsencrypt-production
-    #     kubernetes.io/ingress.class: nginx
-    #     nginx.ingress.kubernetes.io/proxy-body-size: '0'
-    #   hosts:
-    #   - registry.example.com
-    #   tls:
-    #   - hosts:
-    #     - registry.example.com
-    #     secretName: registry-tls
-  ## Add some extra configuration to gitlab.rb
-  # extraConfig: |
-  #     ## Fix number of unicorn workers
-  #     unicorn['worker_processes'] = 7
-#     ## Fix something else
-#     ...
-
 ## Configuration for the UI service
 ui:
   client:
     replicaCount: 1
     image:
       repository: renku/renku-ui
-      tag: "3.37.1"
+      tag: "3.42.0"
       pullPolicy: IfNotPresent
       ## Optionally specify an array of imagePullSecrets.
       ## Secrets must be manually created in the namespace.
@@ -843,7 +708,7 @@ ui:
     keepCookies: []
     image:
       repository: renku/renku-ui-server
-      tag: "3.37.1"
+      tag: "3.42.0"
       pullPolicy: IfNotPresent
     imagePullSecrets: []
     nameOverride: ""
@@ -983,7 +848,7 @@ notebooks:
     targetCPUUtilizationPercentage: 50
   image:
     repository: renku/renku-notebooks
-    tag: "1.26.2"
+    tag: "1.27.1"
     pullPolicy: IfNotPresent
     ## Optionally specify an array of imagePullSecrets.
     ## Secrets must be manually created in the namespace.
@@ -1012,6 +877,7 @@ notebooks:
   ## If left null then sessions will be launched in the same namespace
   ## as where the chart is installed.
   sessionsNamespace:
+  bypassCacheOnFailure: false
   sessionAutosave:
     ## Any file higher than the minimum will be added to LFS
     minimumLFSFileSizeBytes: 1000000
@@ -1101,15 +967,15 @@ notebooks:
   gitRpcServer:
     image:
       name: renku/git-rpc-server
-      tag: "1.26.2"
+      tag: "1.27.1"
   gitHttpsProxy:
     image:
       name: renku/git-https-proxy
-      tag: "1.26.2"
+      tag: "1.27.1"
   gitClone:
     image:
       name: renku/git-clone
-      tag: "1.26.2"
+      tag: "1.27.1"
   service:
     type: ClusterIP
     port: 80
@@ -1162,12 +1028,12 @@ notebooks:
     sessionTypes: ["registered"]
     image:
       repository: renku/renku-notebooks-tests
-      tag: "1.26.2"
+      tag: "1.27.1"
       pullPolicy: IfNotPresent
   k8sWatcher:
     image:
       repository: renku/k8s-watcher
-      tag: "1.26.2"
+      tag: "1.27.1"
       pullPolicy: IfNotPresent
     resources: {}
     replicaCount: 1
@@ -1179,12 +1045,12 @@ notebooks:
   secretsMount:
     image:
       repository: renku/secrets-mount
-      tag: "1.26.2"
+      tag: "1.27.1"
   ssh:
     enabled: false
     image:
       repository: renku/ssh-jump-host
-      tag: "1.26.2"
+      tag: "1.27.1"
       pullPolicy: IfNotPresent
     resources: {}
     replicaCount: 1
@@ -1265,13 +1131,22 @@ gateway:
       ## average rate units are requests per second
       average: 20
       burst: 100
+  ## How long a session will be kept alive if it is idle.
+  ## If set to 0 then there is no TTL.
+  ## If not set, defaults to 14400 (4 hours).
+  idleSessionTTLSeconds:
+  ## The maximum duration a session can be kept alive.
+  ## If set to 0 then there is no TTL.
+  ## If this value is set to a value other than 0 then it must be greater than idleSessionTTLSeconds.
+  ## If not set, defaults to 86400 (24 hours).
+  maxSessionTTLSeconds:
   ## For production deployment, you will need to define the secret key.
   ## This is a random string, used for cryptographic operations on cookies and sensitive information.
   ## Use `openssl rand -hex 32`.
   secretKey:
   image:
     repository: renku/renku-gateway
-    tag: "1.1.0"
+    tag: "1.3.1"
     pullPolicy: IfNotPresent
   service:
     type: ClusterIP
@@ -1298,6 +1173,8 @@ gateway:
   # dedicated GitLab instance is deployed, so, logging out from Renku should
   # trigger a logout from GitLab.
   logoutGitLabUponRenkuLogout: true
+  # Turns on debug logs from the gateway
+  debug: false
   # sentry configuration
   sentry:
     enabled: false
@@ -1360,11 +1237,15 @@ jena:
     enabled: false
 ## Configuration for renku-search services
 search:
+  sentry:
+    enabled: false
+    dsn:
+    environment:
   searchApi:
     replicas: 1
     image:
       repository: renku/search-api
-      tag: "0.6.2"
+      tag: "0.7.0"
       pullPolicy: IfNotPresent
     service:
       type: ClusterIP
@@ -1377,7 +1258,7 @@ search:
     replicas: 1
     image:
       repository: renku/search-provision
-      tag: "0.6.2"
+      tag: "0.7.0"
       pullPolicy: IfNotPresent
     service:
       type: ClusterIP
@@ -1578,14 +1459,14 @@ dataService:
     create: true
   image:
     repository: renku/renku-data-service
-    tag: "0.22.0"
+    tag: "0.27.1"
     pullPolicy: IfNotPresent
   backgroundJobs:
     events:
       resources: {}
     image:
       repository: renku/data-service-background-jobs
-      tag: "0.22.0"
+      tag: "0.27.1"
       pullPolicy: IfNotPresent
     total:
       resources: {}
@@ -1638,7 +1519,7 @@ authz:
 secretsStorage:
   image:
     repository: renku/secrets-storage
-    tag: "0.22.0"
+    tag: "0.27.1"
     pullPolicy: IfNotPresent
   service:
     type: ClusterIP

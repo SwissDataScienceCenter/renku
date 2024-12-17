@@ -167,7 +167,7 @@ describe("Basic public project functionality", () => {
 
   it("Start a new session as anonymous user.", () => {
     // Do not re-use the logged-in session
-    cy.session("anonymous", () => {});
+    cy.session(["anonymous", getRandomString()], () => {});
 
     // Log out and go to the project again
     cy.visit("/");
@@ -189,6 +189,8 @@ describe("Basic public project functionality", () => {
 
     // Stop the session -- mind that anonymous users cannot pause sessions
     cy.deleteSession({ fromSessionPage: true });
+
+    cy.robustLogin();
   });
 
   it("Start a new session on a project without permissions.", () => {
