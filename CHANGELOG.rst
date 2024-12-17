@@ -3,9 +3,9 @@
 0.62.0
 ------
 
-‘Session secrets’ make it possible to connect to protected resources, such as databases or external
+Session secrets make it possible to connect to protected resources, such as databases or external
 compute systems, from a Renku session in a standardized and shareable manner. Collaborating with
-secrets is easy too: configure a single session secret ‘slot’ to ensure that the secret shows up
+secrets is easy too: configure a single session secret slot to ensure that the secret shows up
 the same way for everyone, and each person enters their own value.
 
 User-Facing Changes
@@ -31,9 +31,6 @@ Gitlab deployment as specified in our `documentation <https://renku.readthedocs.
 before installing this or any subsequent Renku version. Gitlab publishes an official Helm chart and
 that is what should be used for deploying Gitlab with Helm.
 
-Internal Changes
-~~~~~~~~~~~~~~~~
-
 **Improvements**
 
 - **Infrastructure Components**: ``redis`` has been upgraded from version ``7.0.7`` to ``7.4.1``
@@ -49,6 +46,7 @@ Internal Changes
 Individual Components
 ~~~~~~~~~~~~~~~~~~~~~
 
+- `renku-data-services 0.28.0 <https://github.com/SwissDataScienceCenter/renku-data-services/releases/tag/v0.28.0>`_
 - `renku-search 0.7.0 <https://github.com/SwissDataScienceCenter/renku-search/releases/tag/v0.7.0>`_
 
 
