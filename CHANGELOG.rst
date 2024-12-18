@@ -34,7 +34,7 @@ User-Facing Changes
 
 - **UI**: Simplify the creation of PolyBox and SwitchDrive data connectors (`#3396 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3396>`__).
 - **UI**: Simplify the project and group creation interactions in Renku 2.0 to a simple modal (`#3399 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3399>`__).
-- **UI**: Introduce a refreshed design for the dashboard, user, and group pages in Renku 2.0 (`#3407 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3407>`__).
+- **UI**: Introduce a refreshed design for the dashboard, user, and group pages in Renku 2.0 (`#3407 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3407>`__, `#3428 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3428>`__).
 
 Internal Changes
 ~~~~~~~~~~~~~~~~
