@@ -11,6 +11,9 @@ that the secret shows up the same way for everyone, and each person enters their
 The copy projects feature makes it easy for course instructors to distribute course materials
 to students.
 
+In addition to the above new features, we have also made it much easier to configure
+and use PolyBox and SwitchDrive data connectors. 
+
 This release removes the Gitlab omnibus Helm chart that we created and used to have as a dependency
 of the Renku Helm chart. We have been discouraging anyone from using
 this chart in production and we specified this in our documentation as well.
@@ -29,7 +32,7 @@ User-Facing Changes
 
 **Improvements**
 
-- **UI**: Add a new simpler option for creating PolyBox and SwitchDrive data connectors (`#3396 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3396>`__).
+- **UI**: Simplify the creation of PolyBox and SwitchDrive data connectors (`#3396 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3396>`__).
 - **UI**: Simplify the project and group creation interactions in Renku 2.0 to a simple modal (`#3399 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3399>`__).
 - **UI**: Introduce a refreshed design for the dashboard in Renku 2.0 (`#3407 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3407>`__).
 
