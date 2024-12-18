@@ -27,6 +27,12 @@ User-Facing Changes
 
 - **UI**: Configure and save session secrets in Renku 2.0 projects and use them in sessions (`#3413 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3413>`__).
 
+**Improvements**
+
+- **UI**: Add a new simpler option for creating PolyBox and Switchdrive data connectors (`#3396 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3396>`__).
+- **UI**: Simplify the project and group creation interactions in Renku 2.0 to a simple modal (`#3399 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3399>`__).
+- **UI**: Introduce a refreshed design for the dashboard in Renku 2.0 (`#3407 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3407>`__).
+
 Internal Changes
 ~~~~~~~~~~~~~~~~
 
