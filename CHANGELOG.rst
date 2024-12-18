@@ -3,7 +3,7 @@
 0.62.0
 ------
 
-This release introduces two new key features: session secrets and copying projects. 
+This release introduces two new key features: session secrets and copying projects.
 Session secrets make it possible to connect to protected resources, such as databases or
 external compute systems, from a Renku session in a standardized and shareable manner.
 Collaborating with secrets is easy too: configure a single session secret slot to ensure
@@ -12,7 +12,7 @@ The copy projects feature makes it easy for course instructors to distribute cou
 to students.
 
 In addition to the above new features, we have also made it much easier to configure
-and use PolyBox and SwitchDrive data connectors. 
+and use PolyBox and SwitchDrive data connectors.
 
 This release removes the Gitlab omnibus Helm chart that we created and used to have as a dependency
 of the Renku Helm chart. We have been discouraging anyone from using
@@ -34,7 +34,7 @@ User-Facing Changes
 
 - **UI**: Simplify the creation of PolyBox and SwitchDrive data connectors (`#3396 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3396>`__).
 - **UI**: Simplify the project and group creation interactions in Renku 2.0 to a simple modal (`#3399 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3399>`__).
-- **UI**: Introduce a refreshed design for the dashboard in Renku 2.0 (`#3407 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3407>`__).
+- **UI**: Introduce a refreshed design for the dashboard, user, and group pages in Renku 2.0 (`#3407 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3407>`__).
 
 Internal Changes
 ~~~~~~~~~~~~~~~~
@@ -61,11 +61,12 @@ Individual Components
 - `renku-data-services 0.28.0 <https://github.com/SwissDataScienceCenter/renku-data-services/releases/tag/v0.28.0>`_
 - `renku-search 0.7.0 <https://github.com/SwissDataScienceCenter/renku-search/releases/tag/v0.7.0>`_
 - `renku-ui 3.43.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.43.0>`_
+- `renku-ui 3.44.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.43.0>`_
 
 0.61.2
 ------
 
-Renku 0.61.2 fixes a bug that prevented users from resuming Renku V2 sessions 
+Renku 0.61.2 fixes a bug that prevented users from resuming Renku V2 sessions
 after they have been hibernated because they were idle.
 
 
