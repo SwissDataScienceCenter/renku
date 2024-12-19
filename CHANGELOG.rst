@@ -3,7 +3,20 @@
 0.62.1
 ------
 
+Renku 0.62.1 fixes a bug that prevented users to launch sessions with user secrets in Renku 1.0.
 
+
+User-Facing Changes
+~~~~~~~~~~~~~~~~~~~
+
+**🐞 Bug Fixes**
+
+- **Data services**: Correctly map user secrets in Renku 1.0 sessions to use the provided filename.
+
+Individual components
+~~~~~~~~~~~~~~~~~~~~~~
+
+- `renku-data-services 0.29.0 <https://github.com/SwissDataScienceCenter/renku-data-services/releases/tag/v0.29.0>`_
 
 0.62.0
 ------
