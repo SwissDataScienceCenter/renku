@@ -3,13 +3,11 @@
 0.62.0
 ------
 
-This release introduces two new key features: session secrets and copying projects.
+This release introduces one new key feature: session secrets.
 Session secrets make it possible to connect to protected resources, such as databases or
 external compute systems, from a Renku session in a standardized and shareable manner.
 Collaborating with secrets is easy too: configure a single session secret slot to ensure
 that the secret shows up the same way for everyone, and each person enters their own value.
-The copy projects feature makes it easy for course instructors to distribute course materials
-to students.
 
 In addition to the above new features, we have also made it much easier to configure
 and use PolyBox and SwitchDrive data connectors.
