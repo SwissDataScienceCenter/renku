@@ -3,16 +3,15 @@
 0.62.0
 ------
 
-This release introduces one new key feature: session secrets.
-Session secrets make it possible to connect to protected resources, such as databases or
+This release introduces session secrets, which make it possible to connect to protected resources, such as databases or
 external compute systems, from a Renku session in a standardized and shareable manner.
 Collaborating with secrets is easy too: configure a single session secret slot to ensure
 that the secret shows up the same way for everyone, and each person enters their own value.
 
-In addition to the above new features, we have also made it much easier to configure
+In addition, we have also made it much easier to configure
 and use PolyBox and SwitchDrive data connectors.
 
-This release removes the Gitlab omnibus Helm chart that we created and used to have as a dependency
+For administrators: This release removes the Gitlab omnibus Helm chart that we created and used to have as a dependency
 of the Renku Helm chart. We have been discouraging anyone from using
 this chart in production and we specified this in our documentation as well.
 
