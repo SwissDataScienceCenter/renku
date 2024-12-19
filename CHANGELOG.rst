@@ -1,9 +1,70 @@
 .. _changelog:
 
+0.62.0
+------
+
+This release introduces session secrets, which make it possible to connect to protected resources, such as databases or
+external compute systems, from a Renku session in a standardized and shareable manner.
+Collaborating with secrets is easy too: configure a single session secret slot to ensure
+that the secret shows up the same way for everyone, and each person enters their own value.
+
+In addition, we have also made it much easier to configure
+and use PolyBox and SwitchDrive data connectors.
+
+For administrators: This release removes the Gitlab omnibus Helm chart that we created and used to have as a dependency
+of the Renku Helm chart. We have been discouraging anyone from using
+this chart in production and we specified this in our documentation as well.
+
+If you are using the internal Gitlab Helm chart then ensure to migrate to a separate
+Gitlab deployment as specified in our `documentation <https://renku.readthedocs.io/en/stable/how-to-guides/admin/gitlab.html#migrate-from-renku-bundled-omnibus-gitlab-to-cloud-native-gitlab-helm-chart>`_.
+before installing this or any subsequent Renku version. Gitlab publishes an official Helm chart and
+that is what should be used for deploying Gitlab with Helm.
+
+User-Facing Changes
+~~~~~~~~~~~~~~~~~~~
+
+**🌟 New Features**
+
+- **UI**: Configure and save session secrets in Renku 2.0 projects and use them in sessions (`#3413 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3413>`__).
+
+**Improvements**
+
+- **UI**: Simplify the creation of PolyBox and SwitchDrive data connectors (`#3396 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3396>`__).
+- **UI**: Simplify the project and group creation interactions in Renku 2.0 to a simple modal (`#3399 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3399>`__).
+- **UI**: Introduce a refreshed design for the dashboard, user, and group pages in Renku 2.0 (`#3407 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3407>`__, `#3428 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3428>`__).
+
+Internal Changes
+~~~~~~~~~~~~~~~~
+
+**New Features**
+
+- **Data services**: Support saving session secrets in Renku 2.0 projects and mounting them in sessions.
+
+**Improvements**
+
+- **Infrastructure Components**: ``redis`` has been upgraded from version ``7.0.7`` to ``7.4.1``
+- **Helm chart**: remove the custom-made Gitlab Omnibus Helm chart from Renku dependencies
+- **Search services**: Add support for sentry
+
+
+**Bug Fixes**
+
+- **Search services**: Don't return results without linked namespaces
+
+
+Individual Components
+~~~~~~~~~~~~~~~~~~~~~
+
+- `renku-data-services 0.28.0 <https://github.com/SwissDataScienceCenter/renku-data-services/releases/tag/v0.28.0>`_
+- `renku-search 0.7.0 <https://github.com/SwissDataScienceCenter/renku-search/releases/tag/v0.7.0>`_
+- `renku-ui 3.43.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.43.0>`_
+- `renku-ui 3.44.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.44.0>`_
+- `renku-ui 3.44.1 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.44.1>`_
+
 0.61.2
 ------
 
-Renku 0.61.2 fixes a bug that prevented users from resuming Renku V2 sessions 
+Renku 0.61.2 fixes a bug that prevented users from resuming Renku V2 sessions
 after they have been hibernated because they were idle.
 
 
@@ -60,7 +121,7 @@ Individual components
 Renku 0.61.0 introduces a new version of Amalthea that supports running sessions with Docker images
 that do not contain Jupyter server.
 
-NOTES to administrators: 
+NOTES to administrators:
 
 - This upgrade introduces a brand new CRD for sessions. All services that support
   sessions for Renku v2 will switch to this new CRD. Renku v1 sessions remain unchanged.
@@ -70,15 +131,15 @@ NOTES to administrators:
   notify users of the change and allow for enough time so that existing Renku v2 sessions can be saved and
   cleaned up, rather than asking users to save the url to their sessions. In addition to users not being able
   to see old Renku v2 sessions, they will also not be able to pause, resume or delete old Renku v2 sessions.
-  Therefore it's best if most sessions are properly saved and cleaned up before this update is rolled out. In order 
+  Therefore it's best if most sessions are properly saved and cleaned up before this update is rolled out. In order
   to support the new CRD we have also created a new operator that will manage the new `amaltheasession` resources.
 
-- The network policies for Renku have been consolidated and revamped. The most notable change here is the 
+- The network policies for Renku have been consolidated and revamped. The most notable change here is the
   removal of the egress policy that prevented egress to internal IP addresses from sessions. Now we disallow
   all ingress in the Renku release namespace by default and explicitly grant permissions to any pods that need
   to access other pods inside the Renku release namespace. Two properties relevant to this have been added to the
   Helm chart values file that allows administrators to grant access to all Renku services from a specific namespace
-  or to do the same for specific pods within the Renku namespace. These are not needed for Renku to function and the 
+  or to do the same for specific pods within the Renku namespace. These are not needed for Renku to function and the
   default network policies should be sufficient, they have been added so that administrators can allow ingress for
   other services that may not come with the Renku Helm chart such as logging or monitoring. This change will result in
   the removal of some network policies and the creation of several new policies.

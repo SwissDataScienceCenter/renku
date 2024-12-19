@@ -81,19 +81,8 @@ and existing GitLab users can use Renku without creating a separate Renku accoun
 GitLab deployed as part of Renku
 --------------------------------
 
-We do *not* recommend deploying the Renku-bundled GitLab as part of a production Renku deployment, 
-and instead suggest deploying GitLab using the `official GitLab cloud-native Kubernetes chart 
-<https://docs.gitlab.com/charts/>`_. Deploying GitLab as part of Renku may be deprecated in the future.
-
-If your Renku deployment includes GitLab you need to follow some additional steps to configure an admin user on GitLab.
-
-To grant a GitLab user the GitLab admin role without having access to the GitLab Web UI, the following steps can be taken in the GitLab container console.
-
-#. Run ``gitlab-rails console -e production`` (this might take a while).
-#. Find the user you would like to grant the admin role, for example by running ``user = User.find_by(email: 'renku@renkulab.io')`` or ``user = User.find_by(username: 'renku')``.
-#. Grant the user the administrator role by running ``user.admin = true``.
-#. Save the user's profile by running ``user.save!``.
-#. Leave the console by running ``exit``.
+Deploying the GitLab Helm chart as part of the Renku Helm chart has been deprecated. If you have a Renku deployment that uses
+the Gitlab version that used to come bundled with Renku, then please follow the instructions below to migrate.
 
 Migrate from Renku-bundled Omnibus GitLab to cloud-native Gitlab Helm chart
 ---------------------------------------------------------------------------

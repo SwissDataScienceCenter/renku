@@ -1,8 +1,4 @@
 dependencies:
-  - name: gitlab
-    repository: "https://swissdatasciencecenter.github.io/helm-charts/"
-    version: 0.8.0
-    condition: gitlab.enabled
   - name: postgresql
     version: "14.2.4"
     repository: "oci://registry-1.docker.io/bitnamicharts"
@@ -12,10 +8,8 @@ dependencies:
     repository: "https://codecentric.github.io/helm-charts"
     condition: keycloakx.enabled
   - name: redis
-    # bitnami claims that this will always contain a full set of charts - let us pray...
-    # this index was 19MB as of the date of this commit and contained redis 17.4.2
-    repository: "https://raw.githubusercontent.com/bitnami/charts/archive-full-index/bitnami"
-    version: 17.4.2
+    repository: "oci://registry-1.docker.io/bitnamicharts"
+    version: 20.3.0
     condition: redis.install
   - name: renku-jena
     version: "0.0.25"
@@ -43,5 +37,5 @@ dependencies:
   - name: common
     repository: oci://registry-1.docker.io/bitnamicharts
     tags:
-    - bitnami-common
+      - bitnami-common
     version: 2.x.x
