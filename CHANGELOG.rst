@@ -11,6 +11,7 @@ Internal Changes
 **Improvements**
 
 - **Amalthea**: Add preliminary support for private session images.
+- **Gateway**: Route all notebook service traffic to data services.
 
 **Bug Fixes**
 
@@ -20,6 +21,7 @@ Individual components
 ~~~~~~~~~~~~~~~~~~~~~~
 
 - `amalthea 0.15.0 <https://github.com/SwissDataScienceCenter/amalthea/releases/tag/0.15.0>`_
+- `renku-gateway 1.4.0 <https://github.com/SwissDataScienceCenter/renku-gateway/releases/tag/1.4.0>`_
 
 0.62.0
 ------
