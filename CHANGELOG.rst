@@ -5,6 +5,13 @@
 
 Renku ``0.63.0`` introduces various bug fixes, improvements and new features.
 
+User-Facing Changes
+~~~~~~~~~~~~~~~~~~~
+
+**🐞 Bug Fixes**
+
+- **Data services**: Allow mount and work directories to be reset for session environments.
+
 Internal Changes
 ~~~~~~~~~~~~~~~~
 
@@ -12,15 +19,18 @@ Internal Changes
 
 - **Amalthea**: Add preliminary support for private session images.
 - **Gateway**: Route all notebook service traffic to data services.
+- **Data services**: Migrate preliminary support for saving storage secrets for v1 sessions from notebooks.
 
 **Bug Fixes**
 
 - **Amalthea**: Fix typo in Service template for JupyterServers.
+- **Data services**: Patching wrong environment variables when resuming v1 sessions.
 
 Individual components
 ~~~~~~~~~~~~~~~~~~~~~~
 
 - `amalthea 0.15.0 <https://github.com/SwissDataScienceCenter/amalthea/releases/tag/0.15.0>`_
+- `renku-data-services 0.30.0 <https://github.com/SwissDataScienceCenter/renku-data-services/releases/tag/v0.30.0>`_
 - `renku-gateway 1.4.0 <https://github.com/SwissDataScienceCenter/renku-gateway/releases/tag/1.4.0>`_
 
 0.62.0
