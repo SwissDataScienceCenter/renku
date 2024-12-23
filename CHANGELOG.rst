@@ -3,7 +3,23 @@
 0.63.0
 ------
 
+Renku ``0.63.0`` introduces various bug fixes, improvements and new features.
 
+Internal Changes
+~~~~~~~~~~~~~~~~
+
+**Improvements**
+
+- **Amalthea**: Add preliminary support for private session images.
+
+**Bug Fixes**
+
+- **Amalthea**: Fix typo in Service template for JupyterServers.
+
+Individual components
+~~~~~~~~~~~~~~~~~~~~~~
+
+- `amalthea 0.15.0 <https://github.com/SwissDataScienceCenter/amalthea/releases/tag/0.15.0>`_
 
 0.62.0
 ------
