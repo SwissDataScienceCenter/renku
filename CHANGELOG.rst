@@ -3,7 +3,23 @@
 0.63.0
 ------
 
+This release introduces copying projects. This feature makes it easy for course instructors to distribute course materials to students.
 
+Bullets
+
+* Introduce the ability to make a copy of a project, and to mark a project as a template intended for copying.
+
+User-Facing Changes
+~~~~~~~~~~~~~~~~~~~
+
+**🌟 New Features**
+
+- **UI**: Introduce the ability to make a copy of a project, and to mark a project as a template intended for copying. (`#3427 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3427>`__).
+
+Individual Components
+~~~~~~~~~~~~~~~~~~~~~
+
+- `renku-ui 3.45.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.45.0>`_
 
 0.62.1
 ------
