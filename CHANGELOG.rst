@@ -5,10 +5,6 @@
 
 This release introduces copying projects. This feature makes it easy for course instructors to distribute course materials to students.
 
-Bullets
-
-* Introduce the ability to make a copy of a project, and to mark a project as a template intended for copying.
-
 User-Facing Changes
 ~~~~~~~~~~~~~~~~~~~
 
