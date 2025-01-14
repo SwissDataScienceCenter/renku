@@ -6,7 +6,7 @@
 User-Facing Changes
 ~~~~~~~~~~~~~~~~~~~
 
-**Improvements**
+**🌟 New Features**
 
 - **UI**: Early access to Renku 2.0 now available for users to try out. (`#3474 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3474>`__).
 
