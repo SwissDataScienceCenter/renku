@@ -9,14 +9,37 @@ User-Facing Changes
 **🌟 New Features**
 
 - **UI**: Early access to Renku 2.0 now available for users to try out. (`#3474 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3474>`__).
+- **UI**: Configure disk storage for Renku 2.0 sessions launchers. (`#3463 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3463>`__).
+
+**✨ Improvements**
+
+- **UI**: Cleanup the project and group settings pages (`#3472 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3472>`__).
+- **UI**: Hide the edit button when the user does not have permissions (`#3462 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3462>`__).
 
 **🐞 Bug Fixes**
 
 - **UI**: Display all data connector password fields (`#3477 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3477>`__).
 
+Internal Changes
+~~~~~~~~~~~~~~~~
+
+**New Features**
+
+- **Data services**: Support saving disk storage size for session launchers.
+
+**Bug Fixes**
+
+- **Data services**: Fix patching wrong environment variables when resuming sessions.
+- **Data services**: Allow mount and work directories to be reset for session environments.
+- **Data services**: Do not call data service through the network from itself.
+- **Data services**: Make HEAD responses emtpy
+- **Data services**: Merge all apispecs correctly.
+
 Individual Components
 ~~~~~~~~~~~~~~~~~~~~~
 
+- `renku-data-services 0.30.0 <https://github.com/SwissDataScienceCenter/renku-data-services/releases/tag/v0.30.0>`_
+- `renku-data-services 0.31.0 <https://github.com/SwissDataScienceCenter/renku-data-services/releases/tag/v0.31.0>`_
 - `renku-ui 3.46.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.46.0>`_
 
 
