@@ -3,6 +3,21 @@
 0.64.0
 ------
 
+User-Facing Changes
+~~~~~~~~~~~~~~~~~~~
+
+**Improvements**
+
+- **UI**: Early access to Renku 2.0 now available for users to try out. (`#3474 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3474>`__).
+
+**🐞 Bug Fixes**
+
+- **UI**: Display all data connector password fields (`#3477 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3477>`__).
+
+Individual Components
+~~~~~~~~~~~~~~~~~~~~~
+
+- `renku-ui 3.46.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.46.0>`_
 
 
 0.63.0
