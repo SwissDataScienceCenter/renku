@@ -32,8 +32,8 @@ Internal Changes
 - **Data services**: Fix patching wrong environment variables when resuming sessions.
 - **Data services**: Allow mount and work directories to be reset for session environments.
 - **Data services**: Do not call data service through the network from itself.
-- **Data services**: Make HEAD responses emtpy
-- **Data services**: Merge all apispecs correctly.
+- **Data services**: Make HEAD responses empty
+- **Data services**: Merge all API files correctly.
 
 Individual Components
 ~~~~~~~~~~~~~~~~~~~~~
