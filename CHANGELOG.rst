@@ -19,6 +19,7 @@ User-Facing Changes
 **🐞 Bug Fixes**
 
 - **UI**: Display all data connector password fields (`#3477 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3477>`__).
+- **Data services**: Reenable S3 customizations for data connectors, which adds back the Switch S3 provider(`#606 <https://github.com/SwissDataScienceCenter/renku-data-services/pull/606>`__)
 
 Internal Changes
 ~~~~~~~~~~~~~~~~
@@ -40,6 +41,7 @@ Individual Components
 
 - `renku-data-services 0.30.0 <https://github.com/SwissDataScienceCenter/renku-data-services/releases/tag/v0.30.0>`_
 - `renku-data-services 0.31.0 <https://github.com/SwissDataScienceCenter/renku-data-services/releases/tag/v0.31.0>`_
+- `renku-data-services 0.31.1 <https://github.com/SwissDataScienceCenter/renku-data-services/releases/tag/v0.31.1>`_
 - `renku-ui 3.46.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.46.0>`_
 
 
