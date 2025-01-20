@@ -1,5 +1,8 @@
 .. _changelog:
 
+0.65.0
+------
+
 0.64.1
 ------
 
@@ -12,6 +15,7 @@ Internal Changes
 **Bug Fixes**
 
 - **CSI Rclone**: Update liveness probe image version to fix restart loops.
+
 
 0.64.0
 ------
