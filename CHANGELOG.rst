@@ -1,5 +1,75 @@
 .. _changelog:
 
+0.65.0
+------
+
+
+
+0.64.0
+------
+
+User-Facing Changes
+~~~~~~~~~~~~~~~~~~~
+
+**🌟 New Features**
+
+- **UI**: Early access to Renku 2.0 now available for users to try out. (`#3474 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3474>`__).
+- **UI**: Configure disk storage for Renku 2.0 sessions launchers. (`#3463 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3463>`__).
+
+**✨ Improvements**
+
+- **UI**: Cleanup the project and group settings pages (`#3472 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3472>`__).
+- **UI**: Hide the edit button when the user does not have permissions (`#3462 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3462>`__).
+
+**🐞 Bug Fixes**
+
+- **UI**: Display all data connector password fields (`#3477 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3477>`__).
+- **UI**: Do not set default values for data connector fields (`#3483 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3483>`__).
+- **UI**: Redirect properly when changing slug (`#3467 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3467>`__).
+- **Data services**: Re-enable S3 customizations for data connectors, which adds back the Switch S3 provider(`#606 <https://github.com/SwissDataScienceCenter/renku-data-services/pull/606>`__)
+
+Internal Changes
+~~~~~~~~~~~~~~~~
+
+**New Features**
+
+- **Data services**: Support saving disk storage size for session launchers.
+
+**Bug Fixes**
+
+- **Data services**: Fix patching wrong environment variables when resuming sessions.
+- **Data services**: Allow mount and work directories to be reset for session environments.
+- **Data services**: Do not call data service through the network from itself.
+- **Data services**: Make HEAD responses empty
+- **Data services**: Merge all API files correctly.
+
+Individual Components
+~~~~~~~~~~~~~~~~~~~~~
+
+- `renku-data-services 0.30.0 <https://github.com/SwissDataScienceCenter/renku-data-services/releases/tag/v0.30.0>`_
+- `renku-data-services 0.31.0 <https://github.com/SwissDataScienceCenter/renku-data-services/releases/tag/v0.31.0>`_
+- `renku-data-services 0.31.1 <https://github.com/SwissDataScienceCenter/renku-data-services/releases/tag/v0.31.1>`_
+- `renku-ui 3.46.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.46.0>`_
+- `renku-ui 3.46.1 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.46.1>`_
+
+
+0.63.0
+------
+
+This release introduces copying projects. This feature makes it easy for course instructors to distribute course materials to students.
+
+User-Facing Changes
+~~~~~~~~~~~~~~~~~~~
+
+**🌟 New Features**
+
+- **UI**: Introduce the ability to make a copy of a project, and to mark a project as a template intended for copying. (`#3427 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3427>`__).
+
+Individual Components
+~~~~~~~~~~~~~~~~~~~~~
+
+- `renku-ui 3.45.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.45.0>`_
+
 0.62.1
 ------
 

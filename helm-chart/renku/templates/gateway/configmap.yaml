@@ -37,11 +37,7 @@ data:
           authorizedParty: renku-cli
     revproxy:
       renkuBaseUrl: {{ include "renku.baseUrl" . | quote }}
-      {{- if .Values.gitlab.enabled }}
-      externalGitlabUrl: ""
-      {{- else }}
       externalGitlabUrl: {{ .Values.global.gitlab.url | default "" | quote }}
-      {{- end }}
       k8sNamespace: {{ .Release.Namespace }}
       renkuServices:
         notebooks: {{ printf "http://%s-notebooks" .Release.Name | quote }}
