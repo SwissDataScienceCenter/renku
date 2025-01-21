@@ -149,6 +149,10 @@ KC_DB_PASSWORD: {{ default (randAlphaNum 64) .Values.global.keycloak.postgresPas
 {{- end -}}
 {{- end -}}
 
+{{- define "renku.keycloakIssuerUrl" -}}
+{{- printf "%s/realms/%s" (include "renku.keycloakUrl" . | trimSuffix "/") (include "renku.keycloak.realm" .) -}}
+{{- end -}}
+
 {{/*
 Common labels
 */}}
@@ -175,4 +179,39 @@ renku-authz-tls-cert
 
 {{- define "renku.CASecretName" -}}
 renku-ca
+{{- end -}}
+
+{{- define "renku.events.streamEnvVars" -}}
+- name: "RS_REDIS_QUEUE_PROJECT_CREATED"
+  value: "project.created"
+- name: "RS_REDIS_QUEUE_PROJECT_UPDATED"
+  value: "project.updated"
+- name: "RS_REDIS_QUEUE_PROJECT_REMOVED"
+  value: "project.removed"
+- name: "RS_REDIS_QUEUE_PROJECTAUTH_ADDED"
+  value: "projectAuth.added"
+- name: "RS_REDIS_QUEUE_PROJECTAUTH_UPDATED"
+  value: "projectAuth.updated"
+- name: "RS_REDIS_QUEUE_PROJECTAUTH_REMOVED"
+  value: "projectAuth.removed"
+- name: "RS_REDIS_QUEUE_USER_ADDED"
+  value: "user.added"
+- name: "RS_REDIS_QUEUE_USER_UPDATED"
+  value: "user.updated"
+- name: "RS_REDIS_QUEUE_USER_REMOVED"
+  value: "user.removed"
+- name: "RS_REDIS_QUEUE_GROUP_ADDED"
+  value: "group.added"
+- name: "RS_REDIS_QUEUE_GROUP_UPDATED"
+  value: "group.updated"
+- name: "RS_REDIS_QUEUE_GROUP_REMOVED"
+  value: "group.removed"
+- name: "RS_REDIS_QUEUE_GROUPMEMBER_ADDED"
+  value: "groupMember.added"
+- name: "RS_REDIS_QUEUE_GROUPMEMBER_UPDATED"
+  value: "groupMember.updated"
+- name: "RS_REDIS_QUEUE_GROUPMEMBER_REMOVED"
+  value: "groupMember.removed"
+- name: "RS_REDIS_QUEUE_DATASERVICE_ALLEVENTS"
+  value: "data_service.all_events"
 {{- end -}}

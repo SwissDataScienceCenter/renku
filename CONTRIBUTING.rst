@@ -9,6 +9,8 @@ The sections below provide guidelines for various types of contributions.
 Bug Reports and Feature Requests
 ================================
 
+**Do not report security issues as bugs**, instead email us at security@renku.io or create a `Github security advisory<https://github.com/SwissDataScienceCenter/renku/security/advisories/new>`__
+
 Bugs and feature requests should be reported on GitHub: https://github.com/SwissDataScienceCenter/renku/issues
 
 When reporting a bug, please include the following information:
@@ -28,6 +30,7 @@ If you do not already have a development environment set up, you will probably f
 * Small improvements need not reference an issue, but PRs that introduce larger changes or add new functionality should refer to an issue.
 * Structure your commits in meaningful units, each with an understandable purpose and coherent commit message. For example, if your proposed changes contain a refactoring and a new feature, make two PRs.
 * Format commit messages using the [Conventional Commits](https://www.conventionalcommits.org/) style
+* Follow the `software development guidelines <https://github.com/SwissDataScienceCenter/renku/blob/master/DEVELOPING.md>`__
 
 Finally, if your change is for one of the renku subprojects, you should also consult the
 guidelines for contributions within the subproject.

@@ -63,26 +63,17 @@ spec:
             - name: DEMO_USER_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: {{ cat (include "renku.fullname" .) "-kc-demo-user" | nospace }} 
+                  name: {{ cat (include "renku.fullname" .) "-kc-demo-user" | nospace }}
                   key: keycloakDemoUserPassword
             {{- end }}
             - name: INTERNAL_GITLAB_ENABLED
-              value: {{ .Values.gitlab.enabled | toString | lower | quote }}
-            {{- if .Values.gitlab.enabled  }}
-            - name: INTERNAL_GITLAB_OIDC_CLIENT_SECRET
-              valueFrom:
-                secretKeyRef:
-                  name: {{ cat (include "renku.fullname" .) "-gateway-revproxy" | nospace }} 
-                  key: gitlabClientInKeycloakSecret
-            - name: INTERNAL_GITLAB_OIDC_CLIENT_ID
-              value: "gitlab"
-            {{- end }}
+              value: "false"
             - name: RENKU_KC_CLIENT_ID
               value: renku
             - name: RENKU_KC_CLIENT_SECRET
               valueFrom:
                 secretKeyRef:
-                  name: {{ cat (include "renku.fullname" .) "-gateway-revproxy" | nospace }} 
+                  name: {{ cat (include "renku.fullname" .) "-gateway" | nospace }}
                   key: oidcClientSecret
             - name: RENKU_KC_CLIENT_PUBLIC
               value: "false"
@@ -93,7 +84,7 @@ spec:
             - name: CLI_KC_CLIENT_SECRET
               valueFrom:
                 secretKeyRef:
-                  name: {{ cat (include "renku.fullname" .) "-gateway-revproxy" | nospace }}
+                  name: {{ cat (include "renku.fullname" .) "-gateway" | nospace }}
                   key: cliClientSecret
             - name: CLI_KC_CLIENT_PUBLIC
               value: "true"
@@ -106,7 +97,7 @@ spec:
             - name: UI_KC_CLIENT_SECRET
               valueFrom:
                 secretKeyRef:
-                  name: {{ cat (include "renku.fullname" .) "-gateway-revproxy" | nospace }}
+                  name: {{ cat (include "renku.fullname" .) "-gateway" | nospace }}
                   key: uiserverClientSecret
             - name: UI_KC_CLIENT_PUBLIC
               value: "false"
@@ -117,7 +108,7 @@ spec:
             - name: NOTEBOOKS_KC_CLIENT_SECRET
               valueFrom:
                 secretKeyRef:
-                  name: {{ cat (include "renku.fullname" .) "-gateway-revproxy" | nospace }}
+                  name: {{ cat (include "renku.fullname" .) "-gateway" | nospace }}
                   key: notebooksClientSecret
             - name: NOTEBOOKS_KC_CLIENT_PUBLIC
               value: "false"

@@ -5,6 +5,76 @@ For changes that require manual steps other than changing values, please check o
 Please follow this convention when adding a new row
 * `<type: NEW|EDIT|DELETE> - *<resource name>*: <details>`
 
+## Upgrading to Renku 0.62.0
+
+* DELETE ``gitlab.*`` - all values related to the bundled GitLab have been removed. GitLab must from now on be provided as an external service and is no longer supplied as a part of the Renku Helm chart.
+* NEW `search.sentry.environment|dsn|enabled` to set the sentry environment for the search services
+
+## Upgrading to Renku 0.61.0
+
+* NEW ``networkPolicies.allowAllIngressFromPods`` specify pod selectors that will allow the selected pods to access all other services in the Renku release namespace.
+* NEW ``networkPolicies.allowAllIngressFromNamespaces`` specify a list of namespaces that should be allowed to access all other services in the Renku release namespace.
+
+## Upgrading to Renku 0.60.0
+
+* NEW ``gateway.idleSessionTTLSeconds`` to set the session idle TTL in seconds.
+* NEW ``gateway.maxSessionTTLSeconds`` to set the session max TTL in seconds.
+* NEW ``gateway.debug`` to enable debug logs from the gateway.
+
+## Upgrading to Renku 0.59.1
+
+* NEW ``notebooks.bypassCacheOnFailure`` has been added. Setting this to false prevents renku-notebooks to call
+  the k8s api directly if its k8s cache has issues or is not running.
+
+## Upgrading to Renku 0.57.0
+
+* DELETE ``gateway.image.auth`` has been removed.
+* EDIT ``gateway.reverseProxy`` settings have been moved to ``gateway``:
+
+Old
+  ```
+  gateway:
+    reverseProxy:
+      image:
+        repository: renku/renku-revproxy
+        tag: "0.24.0"
+        pullPolicy: IfNotPresent
+      metrics:
+        enabled: true
+        port: 8765
+      replicaCount: 2
+      podAnnotations: {}
+      resources: {}
+      autoscaling:
+        enabled: false
+        minReplicas: 2
+        maxReplicas: 5
+        targetMemoryUtilizationPercentage: 75
+        targetCPUUtilizationPercentage: 75
+      updateStrategy: {}
+  ```
+New
+  ```
+  gateway:
+    image:
+      repository: renku/renku-gateway
+      tag: "1.0.0"
+      pullPolicy: IfNotPresent
+    metrics:
+      enabled: true
+      port: 8765
+    replicaCount: 2
+    podAnnotations: {}
+    resources: {}
+    autoscaling:
+      enabled: false
+      minReplicas: 2
+      maxReplicas: 5
+      targetMemoryUtilizationPercentage: 75
+      targetCPUUtilizationPercentage: 75
+    updateStrategy: {}
+  ```
+
 ## Upgrading to Renku 0.54.0
 
 * NEW ``global.platformConfig``: The YAML string can now contain a new key, `secretServicePreviousPrivateKey` which allows for rotating the secret-storage private key.
@@ -13,7 +83,7 @@ Please follow this convention when adding a new row
   (either `running`, `finished` or `errored`) for the overall state of the rotation. Please make sure to unset `secretServicePreviousPrivateKey` once rotation is finished
   as a matter of best practice.
 
-  NOTE: Make sure that you do not redeploy or rollback the Renku Helm chart while a key rotation is underway. Even if the 
+  NOTE: Make sure that you do not redeploy or rollback the Renku Helm chart while a key rotation is underway. Even if the
   deployment is broken it is best to wait for the key rotation to finish before attempting another deployment or a rollback.
 
 ## Upgrading to Renku 0.53.0

@@ -2,7 +2,6 @@
 {{- $keycloakEnabled := .Values.keycloakx.enabled -}}
 {{- $keycloakFullname := include "keycloak.fullname" . -}}
 {{- $keycloakServicePort := .Values.keycloakx.ingress.servicePort -}}
-{{- $gitlabEnabled := .Values.gitlab.enabled -}}
 {{- $gitlabFullname := include "gitlab.fullname" . -}}
 {{- $gitlabServicePort := 80 -}}
 {{- $uiFullname := include "ui.fullname" . -}}
@@ -67,34 +66,28 @@ spec:
         pathType: Prefix
         backend:
           service:
-            {{- if $gitlabEnabled }}
-            name: {{ $gitlabFullname }}
-            port:
-              number: {{ $gitlabServicePort }}
-            {{ else }}
-            name: renku-traefik
+            name: {{ template "renku.fullname" $ }}-gateway
             port:
               number: 80
-            {{- end }}
       - path: /repos
         pathType: Prefix
         backend:
           service:
-            name: renku-traefik
+            name: {{ template "renku.fullname" $ }}-gateway
             port:
               number: 80
       - path: /api
         pathType: Prefix
         backend:
           service:
-            name: renku-traefik
+            name: {{ template "renku.fullname" $ }}-gateway
             port:
               number: 80
       - path: /entities
         pathType: Prefix
         backend:
           service:
-            name: renku-traefik
+            name: {{ template "renku.fullname" $ }}-gateway
             port:
               number: 80
       - path: /
@@ -108,7 +101,7 @@ spec:
         pathType: Prefix
         backend:
           service:
-            name: {{ $uiserverFullname }}
+            name: {{ template "renku.fullname" $ }}-gateway
             port:
               number: {{ $uiserverServicePort }}
       {{- if $graphEnabled }}
@@ -123,7 +116,7 @@ spec:
         pathType: Prefix
         backend:
           service:
-            name: {{ $knowledgeGraphFullname }}
+            name: {{ template "renku.fullname" $ }}-gateway
             port:
               number: 80
       {{- end }}

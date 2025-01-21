@@ -98,6 +98,7 @@ findable
 Fortran
 Frontend
 gapped
+gevent
 git-lfs
 githooks
 github
@@ -152,6 +153,7 @@ kwargs
 ld
 lefthand
 lfs
+liveness
 LocalClient
 localhost
 Lucene
@@ -308,9 +310,11 @@ unmapped
 unmerged
 Unmount
 unmount
+unmounting
 unpause
 unpushed
 unschedulable
+unsetting
 untracked
 untracked
 updatable

@@ -3,7 +3,7 @@ import os
 from dataclasses import dataclass, field
 
 from queries import DatabaseInit
-from utils import get_db_connection
+from utils import create_ulid_func, get_db_connection
 
 logging.basicConfig(level=logging.INFO)
 
@@ -132,7 +132,7 @@ def main():
         config.renku_db_name,
         config.renku_db_password,
         postgres_db_connection,
-        ["pg_trgm"],
+        ["pg_trgm", "pgcrypto"],
         config.db_admin_username,
     )
     db_init.create_database()
@@ -147,6 +147,7 @@ def main():
     renku_conn.set_session(autocommit=True)
     db_init.set_connection(renku_conn)
     db_init.set_extensions_and_roles()
+    create_ulid_func(config.db_admin_username, config.db_admin_password, config.renku_db_name, config.db_host, config.db_port)
 
 
 if __name__ == "__main__":

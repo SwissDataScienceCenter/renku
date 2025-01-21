@@ -1,4 +1,5 @@
 import logging
+from subprocess import STDOUT, check_output
 
 import requests
 
@@ -36,3 +37,12 @@ def gitlab_is_online(url: str) -> int:
             f"Gitlab is not available at {url}, status code is {res.status_code}"
         )
     return res.status_code
+
+
+def create_ulid_func(username: str, password: str, db_name: str, host: str, port: int):
+    output = check_output(
+        ["psql", "-U", username, "-d", db_name, "-h", host, "-p", str(port), "-f", "generate_ulid_func.sql"],
+        stderr=STDOUT,
+        env={"PGPASSWORD": password},
+    ).decode("utf-8")
+    logging.info(f"Created the ulid generation function:\n{output}")
