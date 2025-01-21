@@ -66,6 +66,12 @@ spec:
               value: "500ms"
             - name: RS_SOLR_LOG_MESSAGE_BODIES
               value: "false"
+            - name: "RS_SENTRY_DSN"
+              value: {{ .Values.search.sentry.dsn | quote }}
+            - name: "RS_SENTRY_ENV"
+              value: {{ .Values.search.sentry.environment | quote }}
+            - name: "RS_SENTRY_ENABLED"
+              value: {{ .Values.search.sentry.enabled | quote }}
             - name: JAVA_OPTS
               value: "-Xmx{{ .Values.search.searchProvision.jvmXmx }} -XX:+UseZGC -XX:+ZGenerational"
           ports:

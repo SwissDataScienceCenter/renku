@@ -13,6 +13,9 @@ spec:
   jobTemplate:
     spec:
       template:
+        metadata:
+          labels:
+            app: core-cache-cleanup
         spec:
           containers:
           - name: {{ include "renku-core.fullname" $ }}-cache-cleanup-{{ $version.name }}

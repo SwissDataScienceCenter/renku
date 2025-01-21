@@ -17,6 +17,9 @@ spec:
       release: {{ .Release.Name }}
   template:
     metadata:
+      annotations:
+        # NOTE: Without this the pod will not restart when the secret values change.
+        checksum/config: {{ include (print $.Template.BasePath "/notebooks/env-secret.yaml") . | sha256sum }}
       labels:
         app: {{ template "renku.notebooks.name" . }}-k8s-watcher
         chart: {{ template "renku.chart" . }}
@@ -43,6 +46,12 @@ spec:
               value: {{ .Values.amalthea.crdApiVersion }}
             - name: K8S_WATCHER_CR_PLURAL
               value: {{ .Values.amalthea.crdNames.plural }}
+            - name: K8S_WATCHER_AMALTHEA_SESSION_GROUP
+              value: amalthea.dev
+            - name: K8S_WATCHER_AMALTHEA_SESSION_VERSION
+              value: v1alpha1
+            - name: K8S_WATCHER_AMALTHEA_SESSION_PLURAL
+              value: amaltheasessions
             - name: K8S_WATCHER_NAMESPACES
               {{ if .Values.notebooks.sessionsNamespace }}
               value: {{ list .Release.Namespace .Values.notebooks.sessionsNamespace | uniq | toJson | quote }}

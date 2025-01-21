@@ -1,5 +1,283 @@
 .. _changelog:
 
+0.65.0
+------
+
+
+
+0.64.0
+------
+
+User-Facing Changes
+~~~~~~~~~~~~~~~~~~~
+
+**🌟 New Features**
+
+- **UI**: Early access to Renku 2.0 now available for users to try out. (`#3474 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3474>`__).
+- **UI**: Configure disk storage for Renku 2.0 sessions launchers. (`#3463 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3463>`__).
+
+**✨ Improvements**
+
+- **UI**: Cleanup the project and group settings pages (`#3472 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3472>`__).
+- **UI**: Hide the edit button when the user does not have permissions (`#3462 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3462>`__).
+
+**🐞 Bug Fixes**
+
+- **UI**: Display all data connector password fields (`#3477 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3477>`__).
+- **UI**: Do not set default values for data connector fields (`#3483 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3483>`__).
+- **UI**: Redirect properly when changing slug (`#3467 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3467>`__).
+- **Data services**: Re-enable S3 customizations for data connectors, which adds back the Switch S3 provider(`#606 <https://github.com/SwissDataScienceCenter/renku-data-services/pull/606>`__)
+
+Internal Changes
+~~~~~~~~~~~~~~~~
+
+**New Features**
+
+- **Data services**: Support saving disk storage size for session launchers.
+
+**Bug Fixes**
+
+- **Data services**: Fix patching wrong environment variables when resuming sessions.
+- **Data services**: Allow mount and work directories to be reset for session environments.
+- **Data services**: Do not call data service through the network from itself.
+- **Data services**: Make HEAD responses empty
+- **Data services**: Merge all API files correctly.
+
+Individual Components
+~~~~~~~~~~~~~~~~~~~~~
+
+- `renku-data-services 0.30.0 <https://github.com/SwissDataScienceCenter/renku-data-services/releases/tag/v0.30.0>`_
+- `renku-data-services 0.31.0 <https://github.com/SwissDataScienceCenter/renku-data-services/releases/tag/v0.31.0>`_
+- `renku-data-services 0.31.1 <https://github.com/SwissDataScienceCenter/renku-data-services/releases/tag/v0.31.1>`_
+- `renku-ui 3.46.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.46.0>`_
+- `renku-ui 3.46.1 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.46.1>`_
+
+
+0.63.0
+------
+
+This release introduces copying projects. This feature makes it easy for course instructors to distribute course materials to students.
+
+User-Facing Changes
+~~~~~~~~~~~~~~~~~~~
+
+**🌟 New Features**
+
+- **UI**: Introduce the ability to make a copy of a project, and to mark a project as a template intended for copying. (`#3427 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3427>`__).
+
+Individual Components
+~~~~~~~~~~~~~~~~~~~~~
+
+- `renku-ui 3.45.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.45.0>`_
+
+0.62.1
+------
+
+Renku 0.62.1 fixes a bug that prevented users to launch sessions with user secrets in Renku 1.0.
+
+
+User-Facing Changes
+~~~~~~~~~~~~~~~~~~~
+
+**🐞 Bug Fixes**
+
+- **Data services**: Correctly map user secrets in Renku 1.0 sessions to use the provided filename.
+
+Individual components
+~~~~~~~~~~~~~~~~~~~~~~
+
+- `renku-data-services 0.29.0 <https://github.com/SwissDataScienceCenter/renku-data-services/releases/tag/v0.29.0>`_
+
+0.62.0
+------
+
+This release introduces session secrets, which make it possible to connect to protected resources, such as databases or
+external compute systems, from a Renku session in a standardized and shareable manner.
+Collaborating with secrets is easy too: configure a single session secret slot to ensure
+that the secret shows up the same way for everyone, and each person enters their own value.
+
+In addition, we have also made it much easier to configure
+and use PolyBox and SwitchDrive data connectors.
+
+For administrators: This release removes the Gitlab omnibus Helm chart that we created and used to have as a dependency
+of the Renku Helm chart. We have been discouraging anyone from using
+this chart in production and we specified this in our documentation as well.
+
+If you are using the internal Gitlab Helm chart then ensure to migrate to a separate
+Gitlab deployment as specified in our `documentation <https://renku.readthedocs.io/en/stable/how-to-guides/admin/gitlab.html#migrate-from-renku-bundled-omnibus-gitlab-to-cloud-native-gitlab-helm-chart>`_.
+before installing this or any subsequent Renku version. Gitlab publishes an official Helm chart and
+that is what should be used for deploying Gitlab with Helm.
+
+User-Facing Changes
+~~~~~~~~~~~~~~~~~~~
+
+**🌟 New Features**
+
+- **UI**: Configure and save session secrets in Renku 2.0 projects and use them in sessions (`#3413 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3413>`__).
+
+**Improvements**
+
+- **UI**: Simplify the creation of PolyBox and SwitchDrive data connectors (`#3396 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3396>`__).
+- **UI**: Simplify the project and group creation interactions in Renku 2.0 to a simple modal (`#3399 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3399>`__).
+- **UI**: Introduce a refreshed design for the dashboard, user, and group pages in Renku 2.0 (`#3407 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3407>`__, `#3428 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3428>`__).
+
+Internal Changes
+~~~~~~~~~~~~~~~~
+
+**New Features**
+
+- **Data services**: Support saving session secrets in Renku 2.0 projects and mounting them in sessions.
+
+**Improvements**
+
+- **Infrastructure Components**: ``redis`` has been upgraded from version ``7.0.7`` to ``7.4.1``
+- **Helm chart**: remove the custom-made Gitlab Omnibus Helm chart from Renku dependencies
+- **Search services**: Add support for sentry
+
+
+**Bug Fixes**
+
+- **Search services**: Don't return results without linked namespaces
+
+
+Individual Components
+~~~~~~~~~~~~~~~~~~~~~
+
+- `renku-data-services 0.28.0 <https://github.com/SwissDataScienceCenter/renku-data-services/releases/tag/v0.28.0>`_
+- `renku-search 0.7.0 <https://github.com/SwissDataScienceCenter/renku-search/releases/tag/v0.7.0>`_
+- `renku-ui 3.43.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.43.0>`_
+- `renku-ui 3.44.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.44.0>`_
+- `renku-ui 3.44.1 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.44.1>`_
+
+0.61.2
+------
+
+Renku 0.61.2 fixes a bug that prevented users from resuming Renku V2 sessions
+after they have been hibernated because they were idle.
+
+
+User-Facing Changes
+~~~~~~~~~~~~~~~~~~~
+
+**🐞 Bug Fixes**
+
+- **Sessions**: Correctly resume hibernated sessions.
+
+Individual components
+~~~~~~~~~~~~~~~~~~~~~~
+
+- `amalthea 0.14.7 <https://github.com/SwissDataScienceCenter/amalthea/releases/tag/0.14.7>`_
+
+
+0.61.1
+------
+
+Renku 0.61.1 introduces a few bug fixes for the previous release.
+
+
+User-Facing Changes
+~~~~~~~~~~~~~~~~~~~
+
+**🐞 Bug Fixes**
+
+- **Sessions**: Correctly launch sessions that request dedicated resources classes
+
+Internal Changes
+~~~~~~~~~~~~~~~~
+
+**Bug Fixes**
+
+- **Amalthea**: Add resource requests for the authentication proxy containers
+- **Amalthea**: Add support for setting priority classes for sessions
+- **Data services**: Use the working directory to mount cloud storage if the mount path is relative
+- **Data services**: Use HTTPS in the redirect URL for the authentication proxy
+- **Data services**: Use GPU resource limits when GPUs are requested
+- **Helm chart**: Do not set the default storage class to empty string if it is not set in the values file
+- **Helm chart**: Restart the data services and notebooks pods when the mounted secret changes
+
+Individual components
+~~~~~~~~~~~~~~~~~~~~~~
+
+- `amalthea 0.14.5 <https://github.com/SwissDataScienceCenter/amalthea/releases/tag/0.14.5>`_
+- `amalthea 0.14.6 <https://github.com/SwissDataScienceCenter/amalthea/releases/tag/0.14.6>`_
+- `renku-data-services 0.27.1 <https://github.com/SwissDataScienceCenter/renku-data-services/releases/tag/v0.27.1>`_
+
+
+0.61.0
+------
+
+Renku 0.61.0 introduces a new version of Amalthea that supports running sessions with Docker images
+that do not contain Jupyter server.
+
+NOTES to administrators:
+
+- This upgrade introduces a brand new CRD for sessions. All services that support
+  sessions for Renku v2 will switch to this new CRD. Renku v1 sessions remain unchanged.
+  Therefore any old sessions for Renku v2 will not be visible to users after this upgrade. The sessions
+  themselves will not be immediately deleted and as long as users have saved links to their old sessions they
+  should be able to access their sessions and save data. However we recommend that administrators
+  notify users of the change and allow for enough time so that existing Renku v2 sessions can be saved and
+  cleaned up, rather than asking users to save the url to their sessions. In addition to users not being able
+  to see old Renku v2 sessions, they will also not be able to pause, resume or delete old Renku v2 sessions.
+  Therefore it's best if most sessions are properly saved and cleaned up before this update is rolled out. In order
+  to support the new CRD we have also created a new operator that will manage the new `amaltheasession` resources.
+
+- The network policies for Renku have been consolidated and revamped. The most notable change here is the
+  removal of the egress policy that prevented egress to internal IP addresses from sessions. Now we disallow
+  all ingress in the Renku release namespace by default and explicitly grant permissions to any pods that need
+  to access other pods inside the Renku release namespace. Two properties relevant to this have been added to the
+  Helm chart values file that allows administrators to grant access to all Renku services from a specific namespace
+  or to do the same for specific pods within the Renku namespace. These are not needed for Renku to function and the
+  default network policies should be sufficient, they have been added so that administrators can allow ingress for
+  other services that may not come with the Renku Helm chart such as logging or monitoring. This change will result in
+  the removal of some network policies and the creation of several new policies.
+
+User-Facing Changes
+~~~~~~~~~~~~~~~~~~~
+
+**✨ Improvements**
+
+- **UI**: Enable the use of custom images that don’t contain Jupyter, streamlining the image-building process and allowing for the use of “off-the-shelf” images (`#3341 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3341>`__).
+- **Sessions**: Enable running session images that do not contain Jupyter in them.
+
+Internal Changes
+~~~~~~~~~~~~~~~~
+
+**Improvements**
+
+- **Data services**: Add support for OAuth storage providers
+- **Data services**: Move notebooks code to data services
+- **Helm chart**: Consolidate and revamp network policies
+- **Data services**: Add support for project documentation
+- **Data services**: Add support for cloning projects
+
+**Bug Fixes**
+
+- **Gateway**: Pass on session cookie to data services for anonymous session authentication
+- **Data services**: Correct pagination for namespaces
+- **Data services**: Add creation date and created_by for namespaces
+- **Data services**: Pin RClone version in data services image
+- **Data services**: Properly handle multi-architecture docker images when getting working directory
+- **Data services**: Make environment working directory and mount directory optional
+- **Amalthea**: Add readiness and health checks to sessions.
+- **Amalthea**: Do not authenticate the authentication proxy health check
+- **Amalthea**: Do not mount the Kubernetes service account in sessions
+- **Amalthea**: Do not add Kubernetes specific environment variables in sessions
+
+Individual Components
+~~~~~~~~~~~~~~~~~~~~~
+
+- `renku-gateway 1.3.1 <https://github.com/SwissDataScienceCenter/renku-gateway/releases/tag/1.3.1>`_
+- `renku-ui 3.42.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.42.0>`_
+- `renku-data-services 0.26.0 <https://github.com/SwissDataScienceCenter/renku-data-services/releases/tag/v0.26.0>`_
+- `renku-data-services 0.27.0 <https://github.com/SwissDataScienceCenter/renku-data-services/releases/tag/v0.27.0>`_
+- `amalthea 0.13.0 <https://github.com/SwissDataScienceCenter/amalthea/releases/tag/0.13.0>`_
+- `amalthea 0.14.0 <https://github.com/SwissDataScienceCenter/amalthea/releases/tag/0.14.0>`_
+- `amalthea 0.14.1 <https://github.com/SwissDataScienceCenter/amalthea/releases/tag/0.14.1>`_
+- `amalthea 0.14.2 <https://github.com/SwissDataScienceCenter/amalthea/releases/tag/0.14.2>`_
+- `amalthea 0.14.3 <https://github.com/SwissDataScienceCenter/amalthea/releases/tag/0.14.3>`_
+- `amalthea 0.14.4 <https://github.com/SwissDataScienceCenter/amalthea/releases/tag/0.14.4>`_
+
 0.60.0
 ------
 
@@ -74,11 +352,16 @@ Internal Changes
 **Bug Fixes**
 
 - **Data services**: Handle spaces in ``provider_id`` for connected services (`#482 <https://github.com/SwissDataScienceCenter/renku-data-services/pull/482>`__).
+- **csi-rclone**: Do not log potentially sensitive data in error messages.
+- **csi-rclone**: Properly handle encrypted secrets with the new annotation-based storage class.
+
 
 Individual Components
 ~~~~~~~~~~~~~~~~~~~~~
 
 - `renku-data-services 0.24.2 <https://github.com/SwissDataScienceCenter/renku-data-services/releases/tag/v0.24.2>`__
+- `csi-rclone 0.3.4 <https://github.com/SwissDataScienceCenter/csi-rclone/releases/tag/v0.3.4>`__
+- `csi-rclone 0.3.5 <https://github.com/SwissDataScienceCenter/csi-rclone/releases/tag/v0.3.5>`__
 
 0.59.1
 ------
