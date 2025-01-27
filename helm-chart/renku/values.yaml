@@ -1498,6 +1498,9 @@ dataService:
   trustedProxies:
     proxiesCount: 1
     realIpHeader: x-real-ip
+  # Custom image building with Shipwright
+  imageBuilders:
+    enabled: false
 
 authz:
   replicaCount: 1
