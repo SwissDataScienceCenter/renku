@@ -46,7 +46,7 @@ function projectSubpageUrl(identifier: ProjectIdentifier, subpage: string) {
 }
 
 function searchForProject(props: ProjectIdentifier, shouldExist = true) {
-  cy.visit("/search");
+  cy.visit("/v1/search");
   cy.get("input[placeholder='Search...']").should("exist").scrollIntoView();
   cy.get("input[placeholder='Search...']")
     .should("be.visible")
@@ -58,7 +58,8 @@ function searchForProject(props: ProjectIdentifier, shouldExist = true) {
       .should("exist")
       .scrollIntoView()
       .should("be.visible");
-  } else {
+  }
+  else {
     cy.get(props.name).should("not.exist");
   }
 }
@@ -71,9 +72,9 @@ interface NewProjectProps extends ProjectIdentifier {
 function createProjectIfMissing(newProjectProps: NewProjectProps) {
   const namespace = newProjectProps.namespace ?? Cypress.env("TEST_USERNAME");
   const slug = encodeURIComponent(`${namespace}/${newProjectProps.name}`);
-  cy.request({failOnStatusCode: false, method: "GET", url: `/ui-server/api/projects/${slug}`}).then((response) => {
+  cy.request({ failOnStatusCode: false, method: "GET", url: `/ui-server/api/projects/${slug}` }).then((response) => {
     if (response.status != 200) {
-      cy.visit("/projects/new");
+      cy.visit("/v1/projects/new");
       cy.getDataCy("field-group-title")
         .should("be.visible")
         .clear()
@@ -97,7 +98,8 @@ function createProjectIfMissing(newProjectProps: NewProjectProps) {
       cy.get("[data-cy=create-project-button]", { timeout: TIMEOUTS.vlong })
         .should("be.enabled")
         .click();
-    } else {
+    }
+    else {
       cy.visit(`projects/${namespace}/${newProjectProps.name}`);
     }
     cy.url({ timeout: TIMEOUTS.vlong }).should(
