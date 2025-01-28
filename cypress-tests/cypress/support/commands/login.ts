@@ -4,7 +4,7 @@ const renkuLogin = (credentials: { username: string; password: string }[]) => {
       cy.get("#username").type(credential.username);
       cy.get("#password").type(credential.password, { log: false });
       cy.get("#kc-login").click();
-    }
+    },
   );
   cy.url().then((url) => {
     const parsedUrl = new URL(url);
@@ -21,7 +21,7 @@ const register = (
   email: string,
   password: string,
   firstName?: string,
-  lastName?: string
+  lastName?: string,
 ) => {
   cy.visit("/api/auth/login");
 
@@ -61,7 +61,7 @@ const register = (
         .should("be.visible")
         .should("be.enabled")
         .click();
-    }
+    },
   );
 };
 
@@ -101,7 +101,8 @@ function registerAndVerify(props: RegisterAndVerifyProps) {
   // If we send a request to the user endpoint on Gitlab too quickly after we log in then
   // it sometimes randomly responds with 401 and sometimes with 200 (as expected). This wait period seems to
   // allow Gitlab to "settle" after the login and properly recognize the token and respond with 200.
-  cy.wait(10000);
+  // eslint-disable-next-line cypress/no-unnecessary-waiting
+  cy.wait(10_000);
   cy.request("ui-server/api/data/user").its("status").should("eq", 200);
   cy.request("ui-server/api/user").then((response) => {
     expect(response.status).to.eq(200);
@@ -135,7 +136,7 @@ function robustLogin(props?: RobustLoginProps) {
       };
 
       return registerAndVerify(localProps);
-    }
+    },
   );
 }
 
@@ -155,7 +156,7 @@ declare global {
         email: string,
         password: string,
         firstName?: string,
-        lastName?: string
+        lastName?: string,
       );
       registerAndVerify(props: RegisterAndVerifyProps);
       robustLogin(props?: RobustLoginProps);

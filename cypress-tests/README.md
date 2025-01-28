@@ -22,7 +22,7 @@ Here is a list of the environment variable that you should set in the
 `cypress.env.json` file:
 
 | VARIABLE        | USE                                                   |
-|-----------------|-------------------------------------------------------|
+| --------------- | ----------------------------------------------------- |
 | BASE_URL        | Full URL of the target environment.                   |
 | TEST_EMAIL      | The email used to register on Keycloak.               |
 | TEST_PASSWORD   | Password.                                             |
@@ -31,8 +31,8 @@ Here is a list of the environment variable that you should set in the
 | TEST_USERNAME   | Username. Usually, it's the email without the domain. |
 
 > Tip: you might prefer not to save you password in plain text in the `cypress.env.json`
-  file. In that case, you can use the `TEST_PASSWORD` variable to the command line when
-  running the tests. For example `TEST_PASSWORD=mySecretPassword npm run e2e`.`
+> file. In that case, you can use the `TEST_PASSWORD` variable to the command line when
+> running the tests. For example `TEST_PASSWORD=mySecretPassword npm run e2e`.`
 
 ## Integration with CI pipeline
 
@@ -55,4 +55,4 @@ Re-running single tests would also fail when the deployment is deleted.
 - Using the electron browser from Cypress will not work because a few features in
   RenkuLab do not work with that (E.G: RStudio does not load at all).
 - Tests currently do not run on Firefox. Please use [Chrome](https://www.google.com/chrome)
-  or [Chromium](https://www.chromium.org) instead. 
+  or [Chromium](https://www.chromium.org) instead.

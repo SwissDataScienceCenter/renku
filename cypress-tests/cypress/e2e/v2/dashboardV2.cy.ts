@@ -41,7 +41,7 @@ describe("Dashboard v2 - Authenticated user", () => {
       () => {
         cy.robustLogin();
       },
-      validateLogin
+      validateLogin,
     );
     getUserNamespaceAPIV2().then((namespace) => {
       if (namespace) {
@@ -67,7 +67,7 @@ describe("Dashboard v2 - Authenticated user", () => {
       .find("a")
       .should(
         "contain.text",
-        `${prefixProjectTitle} ${projectIdentifier.slug}`
+        `${prefixProjectTitle} ${projectIdentifier.slug}`,
       );
     cy.getDataCy("dashboard-project-list")
       .find("a")
@@ -80,7 +80,7 @@ describe("Dashboard v2 - Authenticated user", () => {
     cy.getDataCy("search-card").should("have.length.at.least", 1);
     cy.getDataCy("search-card").should(
       "contain.text",
-      `${prefixProjectTitle} ${projectIdentifier.slug}`
+      `${prefixProjectTitle} ${projectIdentifier.slug}`,
     );
   });
 });
@@ -91,7 +91,7 @@ describe("Dashboard v2 - Non-Authenticated user", () => {
     cy.getDataCy("user-container").should("be.visible");
     cy.getDataCy("user-container").should(
       "contain.text",
-      "You are not logged in."
+      "You are not logged in.",
     );
   });
 });
