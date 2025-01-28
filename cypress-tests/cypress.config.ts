@@ -3,7 +3,8 @@ import { TIMEOUTS } from "./config";
 
 export default defineConfig({
   e2e: {
-    baseUrl: process.env.BASE_URL || "https://dev.renku.ch"
+    baseUrl: process.env.BASE_URL || "https://dev.renku.ch",
+    specPattern: "cypress/e2e/**/*.{js,jsx,ts,tsx}",
   },
   env: {
     TEST_EMAIL: process.env.TEST_EMAIL,
