@@ -3,10 +3,14 @@ import { TIMEOUTS } from "./config";
 
 export default defineConfig({
   e2e: {
-    baseUrl: process.env.BASE_URL || "https://dev.renku.ch",
+    // ? If we try to set up `baseUrl` here, process.env.BASE_URL isn't available
     specPattern: "cypress/e2e/**/*.{js,jsx,ts,tsx}",
+    setupNodeEvents(on, config) {
+      return { ...config, baseUrl: config.env.BASE_URL || "https://dev.renku.ch" };
+    },
   },
   env: {
+    BASE_URL: process.env.BASE_URL,
     TEST_EMAIL: process.env.TEST_EMAIL,
     TEST_PASSWORD: process.env.TEST_PASSWORD,
     TEST_FIRST_NAME: process.env.TEST_FIRST_NAME,
