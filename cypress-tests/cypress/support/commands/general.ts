@@ -6,7 +6,7 @@ export const validateLogin = {
     // it sometimes randomly responds with 401 and sometimes with 200 (as expected). This wait period seems to
     // allow Gitlab to "settle" after the login and properly recognize the token and respond with 200.
     // eslint-disable-next-line cypress/no-unnecessary-waiting
-    cy.wait(10_000);
+    cy.wait(TIMEOUTS.short);
     // This returns 401 when not properly logged in
     cy.request("ui-server/api/data/user").its("status").should("eq", 200);
     // This is how the ui decides the user is logged in
@@ -18,6 +18,20 @@ export const validateLogin = {
     });
   },
 };
+
+export const validateLoginV2 = {
+  validate() {
+    cy.request("api/data/user").then((response) => {
+      expect(response.status).to.eq(200);
+
+      expect(response.body).property("id").to.not.be.empty;
+      expect(response.body).property("id").to.not.be.null;
+      expect(response.body).property("username").to.not.be.empty;
+      expect(response.body).property("username").to.not.be.null;
+    });
+  },
+};
+
 
 export const getIframe = (selector: string) => {
   // https://github.com/cypress-io/cypress-example-recipes/blob/master/examples/blogs__iframes/cypress/support/e2e.js
