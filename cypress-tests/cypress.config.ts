@@ -15,11 +15,11 @@ export default defineConfig({
   },
   retries: {
     runMode: 2,
-    openMode: null
+    openMode: null,
   },
   defaultCommandTimeout: TIMEOUTS.standard,
   chromeWebSecurity: false,
   viewportWidth: 1280,
   viewportHeight: 960,
-  videoUploadOnPasses: false
+  videoUploadOnPasses: false,
 });
