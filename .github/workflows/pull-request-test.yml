@@ -149,7 +149,7 @@ jobs:
             useSession,
             checkWorkflows,
             rstudioSession,
-            dashboardV2,
+            v2/dashboardV2,
           ]
 
     steps:
