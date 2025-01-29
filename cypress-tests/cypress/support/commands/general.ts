@@ -33,7 +33,7 @@ export const validateLoginV2 = {
   },
 };
 
-export const getUserData = () => {
+export function getUserData(): Cypress.Chainable<User> {
   return cy.request("api/data/user").as("getUserData").then((response) => {
     expect(response.status).to.eq(200);
     expect(response.body).property("username").to.exist;
@@ -76,7 +76,6 @@ export function getRandomString(length = 8) {
 export default function registerGeneralCommands() {
   Cypress.Commands.add("getIframe", getIframe);
   Cypress.Commands.add("getDataCy", getDataCy);
-  Cypress.Commands.add("getUserData", getUserData);
 }
 
 declare global {
@@ -85,7 +84,6 @@ declare global {
     interface Chainable {
       getDataCy: typeof getDataCy;
       getIframe: typeof getIframe;
-      getUserData: typeof getUserData;
     }
   }
 }

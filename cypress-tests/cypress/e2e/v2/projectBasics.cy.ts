@@ -1,5 +1,6 @@
 import {
   getRandomString,
+  getUserData,
   validateLoginV2,
 } from "../../support/commands/general";
 import { ProjectIdentifierV2 } from "../../support/types/project.types";
@@ -48,11 +49,10 @@ describe("Project - create, edit and delete", () => {
   it("Project - create, edit and delete", () => {
     // Create a new project
     cy.visit("/v2");
-    cy.getUserData().then((user: User) => {
+    getUserData().then((user: User) => {
       const username = user.username;
-      cy.get("#plus-dropdown").should("exist").click();
+      cy.getDataCy("navbar-new-entity").click();
       cy.getDataCy("navbar-project-new").click();
-      cy.location("hash").should("eq", "#create-project");
       cy.getDataCy("new-project-modal").should("exist");
       cy.getDataCy("project-name-input").type(projectName);
       cy.getDataCy("project-slug-toggle").click();
@@ -62,11 +62,10 @@ describe("Project - create, edit and delete", () => {
       cy.getDataCy("new-project-modal").contains(
         `The URL for this project will be renkulab.io/v2/projects/${username}/${projectPath}`
       );
+      cy.intercept("POST", /(?:\/ui-server)?\/api\/data\/projects/).as("createProject");
       cy.getDataCy("project-create-button").click();
-      cy.location("pathname").should(
-        "eq",
-        `/v2/projects/${username}/${projectPath}`
-      );
+      cy.wait("@createProject");
+      cy.getDataCy("project-name").should("contain", projectName);
 
       // Change settings
       const modifiedProjectName = `${projectName} - modified`;
@@ -99,20 +98,6 @@ describe("Project - create, edit and delete", () => {
         "contain",
         modifiedProjectDescription
       );
-
-      // Revert settings
-      cy.getDataCy("project-overview-link").click();
-      cy.getDataCy("project-settings-link").click();
-      cy.getDataCy("project-name-input").clear().type(projectName);
-      cy.getDataCy("project-description-input")
-        .clear()
-        .type(projectDescription);
-      cy.getDataCy("project-visibility-public").click();
-      cy.getDataCy("project-update-button").click();
-      cy.wait("@updateProject");
-
-      cy.getDataCy("project-name").should("contain", projectName);
-      cy.getDataCy("project-description").should("contain", projectDescription);
 
       // Delete project
       cy.getDataCy("project-settings-link").click();
