@@ -2,14 +2,14 @@ import {
   getRandomString,
   validateLoginV2,
 } from "../../support/commands/general";
+import { ProjectIdentifierV2 } from "../../support/types/project.types";
 import { User } from "../../support/types/user.types";
 import {
   deleteProjectFromAPIV2,
   getProjectByNamespaceAPIV2,
-  ProjectIdentifierV2,
 } from "../../support/utils/projectsV2.utils";
 
-const sessionId = ["dashboardV2", getRandomString()];
+const sessionId = ["projectBasics", getRandomString()];
 
 beforeEach(() => {
   // Restore the session (login)
