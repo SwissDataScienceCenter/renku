@@ -70,7 +70,9 @@ function getDataCy(value: string, exist?: boolean) {
 }
 
 export function getRandomString(length = 8) {
-  return Math.random().toString(20).substring(2, length);
+  return Math.random()
+    .toString(20)
+    .substring(2, length + 2);
 }
 
 export default function registerGeneralCommands() {
