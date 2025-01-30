@@ -53,14 +53,14 @@ describe("Project - create, edit and delete", () => {
       const username = user.username;
       cy.getDataCy("navbar-new-entity").click();
       cy.getDataCy("navbar-project-new").click();
-      cy.getDataCy("new-project-modal").should("exist");
+      cy.getDataCy("project-creation-form").should("exist");
       cy.getDataCy("project-name-input").type(projectName);
       cy.getDataCy("project-slug-toggle").click();
       cy.getDataCy("project-slug-input").should("have.value", projectPath);
       cy.getDataCy("project-visibility-public").click();
       cy.getDataCy("project-description-input").type(projectDescription);
-      cy.getDataCy("new-project-modal").contains(
-        `The URL for this project will be renkulab.io/v2/projects/${username}/${projectPath}`
+      cy.getDataCy("project-url-preview").contains(
+        `/${username}/${projectPath}`
       );
       cy.intercept("POST", /(?:\/ui-server)?\/api\/data\/projects/).as("createProject");
       cy.getDataCy("project-create-button").click();
