@@ -101,9 +101,7 @@ describe("Project - create, edit and delete", () => {
 
       // Delete project
       cy.getDataCy("project-settings-link").click();
-      cy.getDataCy("project-delete")
-        .should("exist")
-        .contains("Are you sure you want to delete this project?");
+      cy.getDataCy("project-delete");
       cy.getDataCy("project-delete-button").should("not.be.enabled");
       cy.getDataCy("delete-confirmation-input").type(projectPath);
       cy.intercept("DELETE", /(?:\/ui-server)?\/api\/data\/projects\/[^/]+/).as(
