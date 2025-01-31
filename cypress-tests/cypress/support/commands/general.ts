@@ -34,23 +34,25 @@ export const validateLoginV2 = {
 };
 
 export function getUserData(): Cypress.Chainable<User> {
-  return cy.request("api/data/user").as("getUserData").then((response) => {
-    expect(response.status).to.eq(200);
-    expect(response.body).property("username").to.exist;
-    expect(response.body).property("username").to.not.be.empty;
-    expect(response.body).property("username").to.not.be.null;
+  return cy
+    .request("api/data/user")
+    .as("getUserData")
+    .then((response) => {
+      expect(response.status).to.eq(200);
+      expect(response.body).property("username").to.exist;
+      expect(response.body).property("username").to.not.be.empty;
+      expect(response.body).property("username").to.not.be.null;
 
-    return {
-      id: response.body.id,
-      username: response.body.username,
-      email: response.body.email,
-      first_name: response.body.first_name,
-      last_name: response.body.last_name,
-      is_admin: response.body.is_admin,
-    } as User;
-  });
+      return {
+        id: response.body.id,
+        username: response.body.username,
+        email: response.body.email,
+        first_name: response.body.first_name,
+        last_name: response.body.last_name,
+        is_admin: response.body.is_admin,
+      } as User;
+    });
 }
-
 
 export const getIframe = (selector: string) => {
   // https://github.com/cypress-io/cypress-example-recipes/blob/master/examples/blogs__iframes/cypress/support/e2e.js
