@@ -59,23 +59,14 @@ describe("Dashboard v2 - Authenticated user", () => {
   });
 
   it("Can see own project on the dashboard", () => {
-    cy.visit("v2");
-    cy.getDataCy("dashboard-project-list")
-      .find("a")
-      .should("have.length.at.least", 1);
-    cy.getDataCy("dashboard-project-list")
-      .find("a")
-      .should(
-        "contain.text",
-        `${prefixProjectTitle} ${projectIdentifier.slug}`,
-      );
-    cy.getDataCy("dashboard-project-list")
-      .find("a")
-      .should("contain.text", projectIdentifier.slug);
+    cy.visit("/");
+    cy.getDataCy("dashboard-project-list").find("a").should("have.length.at.least", 1);
+    cy.getDataCy("dashboard-project-list").find("a").should("contain.text", `${prefixProjectTitle} ${projectIdentifier.slug}`);
+    cy.getDataCy("dashboard-project-list").find("a").should("contain.text", projectIdentifier.slug);
   });
 
   it("Can find project in the search results", () => {
-    cy.visit("v2");
+    cy.visit("/");
     cy.getDataCy("view-my-projects-btn").click();
     cy.getDataCy("search-card").should("have.length.at.least", 1);
     cy.getDataCy("search-card").should(
@@ -87,11 +78,7 @@ describe("Dashboard v2 - Authenticated user", () => {
 
 describe("Dashboard v2 - Non-Authenticated user", () => {
   it("Cannot see projects and groups on Dashboard when logged out", () => {
-    cy.visit("v2");
-    cy.getDataCy("user-container").should("be.visible");
-    cy.getDataCy("user-container").should(
-      "contain.text",
-      "You are not logged in.",
-    );
+    cy.visit("/");
+    cy.getDataCy("user-container").should("not.exist");
   });
 });
