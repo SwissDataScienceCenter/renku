@@ -1,11 +1,11 @@
 import { getRandomString, validateLogin } from "../../support/commands/general";
 import { generatorProjectName } from "../../support/commands/projects";
+import { ProjectIdentifierV2 } from "../../support/types/project.types";
 import {
   createProjectIfMissingAPIV2,
   deleteProjectFromAPIV2,
   getProjectByNamespaceAPIV2,
   getUserNamespaceAPIV2,
-  ProjectIdentifierV2,
 } from "../../support/utils/projectsV2.utils";
 const projectTestConfig = {
   projectAlreadyExists: false,

@@ -1,13 +1,4 @@
-export type ProjectIdentifierV2 = {
-  slug: string;
-  namespace?: string;
-  id?: string;
-};
-
-export interface NewProjectV2Props extends ProjectIdentifierV2 {
-  visibility?: "public" | "private";
-  name: string;
-}
+import { NewProjectV2Body, ProjectIdentifierV2 } from "../types/project.types";
 
 /** Get the namespace of the logged in user from the API. */
 export function getUserNamespaceAPIV2(): Cypress.Chainable<string | null> {
@@ -44,14 +35,14 @@ export function getProjectByNamespaceAPIV2(
 
 /** Create a project (if the project is missing) by using only the API. */
 export function createProjectIfMissingAPIV2(
-  newProjectProps: NewProjectV2Props,
+  newProjectBody: NewProjectV2Body,
 ) {
-  return getProjectByNamespaceAPIV2(newProjectProps).then((response) => {
+  return getProjectByNamespaceAPIV2(newProjectBody).then((response) => {
     if (response.status != 200) {
       return cy.request({
         method: "POST",
         url: "api/data/projects",
-        body: newProjectProps,
+        body: newProjectBody,
         headers: {
           "Content-Type": "application/json",
         },

@@ -1,3 +1,5 @@
+import { TIMEOUTS } from "../../../config";
+
 const renkuLogin = (credentials: { username: string; password: string }[]) => {
   cy.wrap(credentials, { log: false }).each(
     (credential: { password: string; username: string }) => {
@@ -102,7 +104,7 @@ function registerAndVerify(props: RegisterAndVerifyProps) {
   // it sometimes randomly responds with 401 and sometimes with 200 (as expected). This wait period seems to
   // allow Gitlab to "settle" after the login and properly recognize the token and respond with 200.
   // eslint-disable-next-line cypress/no-unnecessary-waiting
-  cy.wait(10_000);
+  cy.wait(TIMEOUTS.short);
   cy.request("ui-server/api/data/user").its("status").should("eq", 200);
   cy.request("ui-server/api/user").then((response) => {
     expect(response.status).to.eq(200);
