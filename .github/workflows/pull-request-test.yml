@@ -150,6 +150,7 @@ jobs:
             checkWorkflows,
             rstudioSession,
             v2/dashboardV2,
+            v2/projectBasics,
           ]
 
     steps:
