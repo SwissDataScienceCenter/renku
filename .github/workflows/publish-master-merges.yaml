@@ -14,7 +14,7 @@ jobs:
   publish-chart:
     runs-on: ubuntu-20.04
     steps:
-      - uses: actions/checkout@v4.1.7
+      - uses: actions/checkout@v4.2.2
         with:
           fetch-depth: 0
       - uses: azure/setup-helm@v4
@@ -35,7 +35,7 @@ jobs:
       - id: set-version
         run: |
           echo "publish_version=${{ steps.bump-semver.outputs.new_version }}.$(echo ${{ github.sha }} | cut -c 1-7)" >> $GITHUB_ENV
-      - uses: SwissDataScienceCenter/renku-actions/publish-chart@v1.13.0
+      - uses: SwissDataScienceCenter/renku-actions/publish-chart@v1.14.0
         env:
           CHART_DIR: helm-chart/
           CHART_TAG: "--tag ${{env.publish_version}}"
