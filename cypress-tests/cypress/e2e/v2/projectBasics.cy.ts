@@ -19,7 +19,7 @@ beforeEach(() => {
     () => {
       cy.robustLogin();
     },
-    validateLoginV2
+    validateLoginV2,
   );
 });
 
@@ -60,9 +60,11 @@ describe("Project - create, edit and delete", () => {
       cy.getDataCy("project-visibility-public").click();
       cy.getDataCy("project-description-input").type(projectDescription);
       cy.getDataCy("project-url-preview").contains(
-        `/${username}/${projectPath}`
+        `/${username}/${projectPath}`,
       );
-      cy.intercept("POST", /(?:\/ui-server)?\/api\/data\/projects/).as("createProject");
+      cy.intercept("POST", /(?:\/ui-server)?\/api\/data\/projects/).as(
+        "createProject",
+      );
       cy.getDataCy("project-create-button").click();
       cy.wait("@createProject");
       cy.getDataCy("project-name").should("contain", projectName);
@@ -76,7 +78,7 @@ describe("Project - create, edit and delete", () => {
 
       cy.getDataCy("project-description-input").should(
         "have.value",
-        projectDescription
+        projectDescription,
       );
       cy.getDataCy("project-description-input")
         .clear()
@@ -86,7 +88,7 @@ describe("Project - create, edit and delete", () => {
       cy.getDataCy("project-visibility-private").click();
 
       cy.intercept("PATCH", /(?:\/ui-server)?\/api\/data\/projects\/[^/]+/).as(
-        "updateProject"
+        "updateProject",
       );
       cy.getDataCy("project-update-button").click();
       cy.wait("@updateProject");
@@ -96,7 +98,7 @@ describe("Project - create, edit and delete", () => {
       cy.getDataCy("project-name").should("contain", modifiedProjectName);
       cy.getDataCy("project-description").should(
         "contain",
-        modifiedProjectDescription
+        modifiedProjectDescription,
       );
 
       // Delete project
@@ -105,7 +107,7 @@ describe("Project - create, edit and delete", () => {
       cy.getDataCy("project-delete-button").should("not.be.enabled");
       cy.getDataCy("delete-confirmation-input").type(projectPath);
       cy.intercept("DELETE", /(?:\/ui-server)?\/api\/data\/projects\/[^/]+/).as(
-        "deleteProject"
+        "deleteProject",
       );
       cy.getDataCy("project-delete-button").should("be.enabled").click();
       cy.wait("@deleteProject");

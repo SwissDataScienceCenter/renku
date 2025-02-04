@@ -34,9 +34,7 @@ export function getProjectByNamespaceAPIV2(
 }
 
 /** Create a project (if the project is missing) by using only the API. */
-export function createProjectIfMissingAPIV2(
-  newProjectBody: NewProjectV2Body,
-) {
+export function createProjectIfMissingAPIV2(newProjectBody: NewProjectV2Body) {
   return getProjectByNamespaceAPIV2(newProjectBody).then((response) => {
     if (response.status != 200) {
       return cy.request({

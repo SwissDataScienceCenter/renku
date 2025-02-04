@@ -6,7 +6,10 @@ export default defineConfig({
     // ? If we try to set up `baseUrl` here, process.env.BASE_URL isn't available
     specPattern: "cypress/e2e/**/*.{js,jsx,ts,tsx}",
     setupNodeEvents(on, config) {
-      return { ...config, baseUrl: config.env.BASE_URL || "https://dev.renku.ch" };
+      return {
+        ...config,
+        baseUrl: config.env.BASE_URL || "https://dev.renku.ch",
+      };
     },
   },
   env: {
