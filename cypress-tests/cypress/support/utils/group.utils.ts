@@ -1,3 +1,5 @@
+import { NewGroupBody } from "../types/group.types";
+
 export function getGroupFromAPI(
   slug: string,
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -20,4 +22,20 @@ export function deleteGroupFromAPI(slug: string) {
       url: `api/data/groups/${slug}`,
     })
     .as("deleteGroup");
+}
+
+export function createGroupIfMissingAPI(newGrouptBody: NewGroupBody) {
+  return getGroupFromAPI(newGrouptBody.slug).then((response) => {
+    if (response.status != 200) {
+      return cy.request({
+        method: "POST",
+        url: "api/data/groups",
+        body: newGrouptBody,
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+    }
+    return response.body;
+  });
 }
