@@ -151,6 +151,7 @@ jobs:
             rstudioSession,
             v2/dashboardV2,
             v2/projectBasics,
+            v2/groupBasics,
           ]
 
     steps:
