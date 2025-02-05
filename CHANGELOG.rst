@@ -3,15 +3,6 @@
 0.65.0
 ------
 
-NOTE to administrators: This Renku version includes an update of the CSI Rclone driver which 
-will result in the unmounting of cloud storage in all running user sessions.
-
-Internal Changes
-~~~~~~~~~~~~~~~~
-
-**Bug Fixes**
-
-- **CSI Rclone**: Update liveness probe image version to fix restart loops.
 
 0.64.2
 ------
