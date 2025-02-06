@@ -37,7 +37,7 @@ describe("Basic public project functionality", () => {
       () => {
         cy.robustLogin();
       },
-      validateLogin
+      validateLogin,
     );
     cy.createProjectIfMissing({ templateName: "Python", ...projectIdentifier });
     cy.visitAndLoadProject(projectIdentifier);
@@ -49,7 +49,9 @@ describe("Basic public project functionality", () => {
     cy.searchForProject(projectIdentifier);
 
     // Check as an anonymous user
-    cy.session(["anonymous", getRandomString()], () => {});
+    cy.session(["anonymous", getRandomString()], () => {
+      cy.log("Anonyomous session setup");
+    });
     cy.visit("/");
     cy.get("#nav-hamburger").should("be.visible").click();
     cy.searchForProject(projectIdentifier);
@@ -113,10 +115,10 @@ describe("Basic public project functionality", () => {
     cy.get("div#tree-content").contains("metadata").should("exist").click();
     cy.getProjectPageLink(
       projectIdentifier,
-      "/files/blob/.renku/metadata/project"
+      "/files/blob/.renku/metadata/project",
     ).click();
     cy.contains(
-      '"@renku_data_type": "renku.domain_model.project.Project"'
+      '"@renku_data_type": "renku.domain_model.project.Project"',
     ).should("exist");
     cy.get("div#tree-content").contains("README.md").should("exist").click();
     cy.contains("This is a Renku project")
@@ -127,7 +129,7 @@ describe("Basic public project functionality", () => {
   it("Can view and modify sessions settings", () => {
     cy.intercept("/ui-server/api/renku/*/config.set").as("configSet");
     cy.intercept("/ui-server/api/renku/*/config.show?git_url=*").as(
-      "getConfig"
+      "getConfig",
     );
 
     // Make sure the renku.ini is in a pristine state

@@ -11,13 +11,13 @@ function retryRequest(
   service: string,
   limit = 10,
   delaySeconds = 30,
-  retries = 1
+  retries = 1,
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
 ): Cypress.Response<any> {
   if (retries > limit) {
     const minutes = Math.floor((limit * delaySeconds) / 60);
     throw new Error(
-      `Backend service "${service}" not responding within ${minutes} minutes at URL ${url}.`
+      `Backend service "${service}" not responding within ${minutes} minutes at URL ${url}.`,
     );
   }
 
@@ -28,7 +28,7 @@ function retryRequest(
     if (resp.status < 400 && !resp.body.error) return resp.body;
 
     cy.wait(delaySeconds * 1000).then(() =>
-      retryRequest(url, service, limit, delaySeconds, retries + 1)
+      retryRequest(url, service, limit, delaySeconds, retries + 1),
     );
   });
   return null;
@@ -44,7 +44,7 @@ describe("Verify the infrastructure is ready", () => {
     retryRequest("api/auth/login", "Gateway");
     retryRequest(
       `ui-server/api/allows-iframe/${encodeURIComponent("https://google.com")}`,
-      "UI server"
+      "UI server",
     );
     retryRequest("config.json", "UI client");
 
@@ -60,7 +60,7 @@ describe("Verify the infrastructure is ready", () => {
     const gitUrl =
       "https://gitlab.dev.renku.ch/renku-ui-tests/renku-project-v10";
     const coreUrl = `/ui-server/api/renku/config.show?git_url=${encodeURIComponent(
-      gitUrl
+      gitUrl,
     )}`;
     cy.request(coreUrl).then((resp) => {
       if (resp.status >= 400 || !("result" in resp.body))

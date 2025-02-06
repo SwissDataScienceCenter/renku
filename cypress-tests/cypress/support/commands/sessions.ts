@@ -31,7 +31,7 @@ function waitForImageToBuild() {
 
 function stopAllSessionsForProject(
   identifier: ProjectIdentifier,
-  loadPage = true
+  loadPage = true,
 ) {
   const id = fullProjectIdentifier(identifier);
   cy.intercept("/ui-server/api/notebooks/servers*").as("getSessions");
@@ -104,15 +104,15 @@ function quickstartSession() {
     .contains("Starting Session")
     .should("exist");
   cy.get(".progress-box .progress-title", { timeout: TIMEOUTS.vlong }).should(
-    "not.exist"
+    "not.exist",
   );
   cy.getIframe("iframe#session-iframe").within(() => {
     cy.get(".jp-Launcher-content", { timeout: TIMEOUTS.long }).should(
-      "be.visible"
+      "be.visible",
     );
     cy.get(".jp-Launcher-section").should("be.visible");
     cy.get('.jp-LauncherCard[title="Start a new terminal session"]').should(
-      "be.visible"
+      "be.visible",
     );
   });
 }

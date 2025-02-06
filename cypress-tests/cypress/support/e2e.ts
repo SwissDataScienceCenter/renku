@@ -12,6 +12,6 @@ registerProjectCommands();
 registerSessionCommands();
 registerDatasetsCommands();
 
-Cypress.on("uncaught:exception", (err) => {
+Cypress.on("uncaught:exception", () => {
   return false;
 });
