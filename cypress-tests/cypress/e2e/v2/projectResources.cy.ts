@@ -74,9 +74,11 @@ describe("Project resources - work with code, data, sessions", () => {
   const visitCurrentProject = () => {
     // There should a link on the dashboard for a newly created project
     cy.visit("/v2");
-    cy.getDataCy("dashboard-project-list").get(
-      `a[href*="/${projectIdentifier.namespace}/${projectIdentifier.slug}"]`
-    ).click();
+    cy.getDataCy("dashboard-project-list")
+      .get(
+        `a[href*="/${projectIdentifier.namespace}/${projectIdentifier.slug}"]`,
+      )
+      .click();
     cy.getDataCy("project-name").should("contain", projectName);
   };
 
@@ -101,17 +103,22 @@ describe("Project resources - work with code, data, sessions", () => {
     cy.getDataCy("data-connector-slug-input").should("have.value", name);
     cy.getDataCy("data-connector-mount-input").should("have.value", name);
     cy.getDataCy("data-connector-edit-update-button").click();
-
     cy.getDataCy("data-connector-edit-success").should("be.visible");
     cy.getDataCy("data-connector-edit-close-button").click();
-    cy.getDataCy("data-connector-box").find(`[data-cy=data-connector-name]`)
+
+    // ? Currently, data connectors newly linked might not appear immediately
+    visitCurrentProject();
+    cy.getDataCy("data-connector-box")
+      .find(`[data-cy=data-connector-name]`)
       .contains(name);
 
     // Edit data connector
     const newName = `${name} edited`;
 
-    cy.getDataCy("data-connector-box").find(`[data-cy=data-connector-name]`)
-      .contains(name).click();
+    cy.getDataCy("data-connector-box")
+      .find(`[data-cy=data-connector-name]`)
+      .contains(name)
+      .click();
     cy.getDataCy("data-connector-edit").click();
     cy.getDataCy("test-data-connector-button").click();
     cy.getDataCy("add-data-connector-continue-button").click();
@@ -123,11 +130,49 @@ describe("Project resources - work with code, data, sessions", () => {
     cy.getDataCy("data-connector-slug-input").should("have.value", name);
     cy.getDataCy("data-connector-mount-input").should("have.value", name);
     cy.getDataCy("data-connector-edit-update-button").click();
-
     cy.getDataCy("data-connector-edit-success").should("be.visible");
     cy.getDataCy("data-connector-edit-close-button").click();
+
+    // ? Currently, data connectors newly linked might not appear immediately
+    visitCurrentProject();
     cy.getDataCy("data-connector-box")
       .find(`[data-cy=data-connector-name]`)
       .contains(newName);
+  });
+
+  it("Work with code", () => {
+    const repoUrl = "https://github.com/SwissDataScienceCenter/renku-ui.git";
+    const repoName = "renku-ui";
+    const repoUrlEdited =
+      "https://github.com/SwissDataScienceCenter/renku-data-services.git";
+    const repoNameEdited = "renku-data-services";
+
+    // Add code repository
+    visitCurrentProject();
+    cy.getDataCy("add-code-repository").click();
+    cy.getDataCy("project-add-repository-url").should("be.empty").type(repoUrl);
+    cy.getDataCy("add-code-repository-modal-button").click();
+    cy.getDataCy("code-repositories-box")
+      .find("[data-cy=code-repository-item]")
+      .contains(repoName);
+    cy.contains("[data-cy=code-repository-item]", repoName).contains(
+      "Pull only",
+    );
+
+    // Edit code repository
+    cy.contains("[data-cy=code-repository-item]", repoName)
+      .find("[data-cy=code-repository-edit]")
+      .click();
+    cy.getDataCy("project-edit-repository-url")
+      .should("have.value", repoUrl)
+      .clear()
+      .type(repoUrlEdited);
+    cy.getDataCy("edit-code-repository-modal-button").click();
+    cy.getDataCy("code-repositories-box")
+      .find("[data-cy=code-repository-item]")
+      .contains(repoNameEdited);
+    cy.contains("[data-cy=code-repository-item]", repoName).contains(
+      "Pull only",
+    );
   });
 });
