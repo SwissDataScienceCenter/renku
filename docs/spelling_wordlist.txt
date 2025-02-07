@@ -87,6 +87,7 @@ dotfiles
 dropdown
 entrypoint
 env
+ETag
 executables
 extraEnv
 extraEnvFrom
@@ -153,6 +154,7 @@ kwargs
 ld
 lefthand
 lfs
+lifecycle
 liveness
 LocalClient
 localhost
@@ -196,6 +198,7 @@ pipenv
 pipx
 PNG
 png
+Polybox
 Postgresql
 powerline
 pre

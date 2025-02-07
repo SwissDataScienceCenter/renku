@@ -5,6 +5,9 @@
 
 Renku ``0.64.2`` introduces minor features and various bug fixes.
 
+NOTE to administrators: This Renku version includes an update of the CSI Rclone driver which
+will result in the unmounting of cloud storage in all running user sessions.
+
 User-Facing Changes
 ~~~~~~~~~~~~~~~~~~~
 
@@ -21,6 +24,9 @@ Internal Changes
 **Improvements**
 
 - **Data services**: Initial support for archiving sessions in the backend.
+- **CSI Rclone**: Cleanup old mounted drives on nodes inside the code rather
+  than as a Kubernetes lifecycle hook which can fail and cause a restart loop.
+
 **Bug Fixes**
 
 - **Data services**: Update the project ETag when the namespace slug changes.
@@ -30,6 +36,7 @@ Individual components
 ~~~~~~~~~~~~~~~~~~~~~~
 
 - `renku-data-services 0.32.0 <https://github.com/SwissDataScienceCenter/renku-data-services/releases/tag/v0.32.0>`_
+- `csi-rclone 0.3.7 <https://github.com/SwissDataScienceCenter/csi-rclone/releases/tag/v0.3.7>`__
 
 
 0.64.1
