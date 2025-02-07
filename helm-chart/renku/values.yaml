@@ -1493,6 +1493,57 @@ dataService:
   affinity: {}
   # This defines the maximum number of pinned projects in user preferences
   maxPinnedProjects: 5
+  # Settings for global session environments
+  environments:
+  # If this is set, default global session environments will be created on first start
+    seed: false
+    # Environments to create
+    initialEnvironments:
+    - name: Python/Jupyter
+      description: Standard python environment
+      container_image: renku/renkulab-py:3.10-0.23.0
+      default_url: /lab
+      working_directory: /home/jovyan/work
+      mount_directory: /home/jovyan/work
+      port: 8888
+      uid: 1000
+      gid: 100
+      command:
+        - sh
+        - -c
+      args:
+        - >
+          /entrypoint.sh jupyter server --ServerApp.ip=0.0.0.0 --ServerApp.port=8888 --ServerApp.base_url=$RENKU_BASE_URL_PATH --ServerApp.token="" --ServerApp.password="" --ServerApp.allow_remote_access=true --ContentsManager.allow_hidden=true --ServerApp.allow_origin=* --ServerApp.root_dir="/home/jovyan/work"
+    - name: R/Rstudio
+      description: Standard R environment
+      container_image: renku/renkulab-r:4.3.1-0.23.0
+      default_url: /rstudio
+      working_directory: /home/jovyan/work
+      mount_directory: /home/jovyan/work
+      port: 8888
+      uid: 1000
+      gid: 100
+      command:
+        - sh
+        - -c
+      args:
+        - >
+          /entrypoint.sh jupyter server --ServerApp.ip=0.0.0.0 --ServerApp.port=8888 --ServerApp.base_url=$RENKU_BASE_URL_PATH --ServerApp.token="" --ServerApp.password="" --ServerApp.allow_remote_access=true --ContentsManager.allow_hidden=true --ServerApp.allow_origin=* --ServerApp.root_dir="/home/jovyan/work"
+    - name: Code server
+      description: Python environment with VSCode-like frontend
+      container_image: registry.renkulab.io/rok.roskar/vscode-example:f7b1a71
+      default_url: /vscode
+      working_directory: /home/jovyan/work
+      mount_directory: /home/jovyan/work
+      port: 8888
+      uid: 1000
+      gid: 100
+      command:
+        - sh
+        - -c
+      args:
+        - >
+          /entrypoint.sh jupyter server --ServerApp.ip=0.0.0.0 --ServerApp.port=8888 --ServerApp.base_url=$RENKU_BASE_URL_PATH --ServerApp.token="" --ServerApp.password="" --ServerApp.allow_remote_access=true --ContentsManager.allow_hidden=true --ServerApp.allow_origin=* --ServerApp.root_dir="/home/jovyan/work"
   # Trusted proxies configuration
   # See: https://sanic.dev/en/guide/advanced/proxy-headers.md
   trustedProxies:

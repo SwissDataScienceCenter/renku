@@ -1,0 +1,14 @@
+{{- if .Values.dataService.environments.seed -}}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ template "renku.fullname" . }}-initial-environments
+  labels:
+    app: {{ template "renku.name" . }}
+    chart: {{ template "renku.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+data:
+  initial.json: |
+    {{ .Values.dataService.environments.initialEnvironments | default list | toJson }}
+{{- end -}}

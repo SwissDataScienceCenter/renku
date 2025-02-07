@@ -122,6 +122,8 @@ spec:
                 fieldRef:
                   apiVersion: v1
                   fieldPath: metadata.namespace
+            - name: SESSIONS_INITIAL_ENVIRONMENTS_PATH
+              value: /etc/environments/initial.json              
             - name: SESSIONS_NAMESPACE
               valueFrom:
                 fieldRef:
@@ -138,6 +140,11 @@ spec:
             - mountPath: "/secrets/publicKey"
               name: secret-service-public-key
               readOnly: true
+            {{- if .Values.dataService.environments.seed }}
+            - mountPath: "/etc/environments"
+              name: initial-environments
+              readOnly: true
+            {{- end }}
             {{- include "certificates.volumeMounts.system" . | nindent 12 }}
           livenessProbe:
             httpGet:
@@ -177,6 +184,11 @@ spec:
         - name: server-options
           configMap:
             name: {{ template "renku.fullname" . }}-server-options
+        {{- if .Values.dataService.environments.seed }}
+        - name: initial-environments
+          configMap:
+            name: {{ template "renku.fullname" . }}-initial-environments
+        {{- end }}
         - name: encryption-key
           secret:
             secretName: {{ template "renku.fullname" . }}-secrets-storage
