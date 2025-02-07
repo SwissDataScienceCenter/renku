@@ -3,6 +3,33 @@
 0.64.2
 ------
 
+Renku ``0.64.2`` introduces minor features and various bug fixes.
+
+User-Facing Changes
+~~~~~~~~~~~~~~~~~~~
+
+**🐞 Bug Fixes**
+
+- **Sessions**: Refresh the Git credentials when a session is being resumed so
+  that users always have valid credentials.
+- **Sessions**: Message that "file changed on disk" when editing files
+  mounted through Polybox should not occur on every file save now.
+
+Internal Changes
+~~~~~~~~~~~~~~~~
+
+**Improvements**
+
+- **Data services**: Initial support for archiving sessions in the backend.
+**Bug Fixes**
+
+- **Data services**: Update the project ETag when the namespace slug changes.
+- **Data services**: Handle HTTP errors when probing Git repositories.
+
+Individual components
+~~~~~~~~~~~~~~~~~~~~~~
+
+- `renku-data-services 0.32.0 <https://github.com/SwissDataScienceCenter/renku-data-services/releases/tag/v0.32.0>`_
 
 
 0.64.1
