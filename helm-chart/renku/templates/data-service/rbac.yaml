@@ -83,7 +83,7 @@ rules:
   - apiGroups:
       - shipwright.io
     resources:
-      - buildrun
+      - buildruns
     verbs:
       - create
       - update
