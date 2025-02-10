@@ -80,6 +80,18 @@ rules:
       - list
       - get
       - watch
+  - apiGroups:
+      - shipwright.io
+    resources:
+      - buildrun
+    verbs:
+      - create
+      - update
+      - delete
+      - patch
+      - list
+      - get
+      - watch
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
