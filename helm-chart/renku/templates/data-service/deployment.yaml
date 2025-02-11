@@ -117,6 +117,16 @@ spec:
               value: {{ .Values.dataService.trustedProxies.proxiesCount | default "" | quote }}
             - name: REAL_IP_HEADER
               value: {{ .Values.dataService.trustedProxies.realIpHeader | default "" | quote }}
+            - name: IMAGE_BUILDERS_ENABLED
+              value: {{ .Values.dataService.imageBuilders.enabled | quote }}
+            - name: BUILD_OUTPUT_IMAGE_PREFIX
+              value: {{ .Values.dataService.imageBuilders.outputImagePrefix | default "" | quote }}
+            - name: BUILD_VSCODIUM_PYTHON_RUN_IMAGE
+              value: {{ .Values.dataService.imageBuilders.vscodiumPythonRunImage | default "" | quote }}
+            - name: BUILD_STRATEGY_NAME
+              value: {{ .Values.dataService.imageBuilders.strategyName | default "" | quote }}
+            - name: BUILD_PUSH_SECRET_NAME
+              value: {{ .Values.dataService.imageBuilders.pushSecretName | default "" | quote }}
             - name: KUBERNETES_NAMESPACE
               valueFrom:
                 fieldRef:
