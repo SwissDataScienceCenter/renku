@@ -13,6 +13,8 @@ Renku now includes anonymized product metrics, making it easier to know what fea
 * NEW `posthog.apiKey` apiKey for your posthog project
 * NEW `posthog.environment` adds an `environment` property to all logged metrics events, allowing to distinguish e.g. `development` and `production`
 
+* NEW `core.resources.rqmetrics` to set up cpu/memory requests and limits
+
 ## Upgrading to Renku 0.66.0
 
 * NEW `dataService.imageBuilders` to configure session image builds using Shipwright.
