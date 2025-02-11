@@ -13,12 +13,12 @@ import {
 
 const sessionId = ["projectBasics", getRandomString()];
 
-describe("Project resources - work with code, data, sessions", () => {
+describe("Project resources - work with code, data, environments", () => {
   // Define some project details
   const projectNameRandomPart = getRandomString();
   const projectName = `project-resources-${projectNameRandomPart}`;
   const projectDescription =
-    "This is a test project from Cypress to test working with code, data, session";
+    "This is a test project from Cypress to test working with code, data, environments";
   const projectIdentifier: ProjectIdentifierV2 = {
     slug: projectName,
     id: null,
@@ -171,8 +171,44 @@ describe("Project resources - work with code, data, sessions", () => {
     cy.getDataCy("code-repositories-box")
       .find("[data-cy=code-repository-item]")
       .contains(repoNameEdited);
-    cy.contains("[data-cy=code-repository-item]", repoName).contains(
+    cy.contains("[data-cy=code-repository-item]", repoNameEdited).contains(
       "Pull only",
+    );
+  });
+
+  it("Work with session environments", () => {
+    const sessionImage = "alpine:latest";
+    const sessionUrl = "/test";
+    const sessionName = `vscode-${getRandomString()}`;
+
+    // Add session environment
+    visitCurrentProject();
+    cy.getDataCy("add-session-launcher").click();
+    cy.getDataCy("existing-custom-button").click();
+    cy.getDataCy("custom-image-input").should("be.empty").type(sessionImage);
+    cy.getDataCy("environment-advanced-settings-toggle").click();
+    cy.getDataCy("session-launcher-field-default_url").clear().type(sessionUrl);
+    cy.getDataCy("next-session-button").click();
+    cy.getDataCy("launcher-name-input").should("be.empty").type(sessionName);
+    cy.getDataCy("add-session-button").click();
+    cy.getDataCy("session-launcher-creation-success").should("be.visible");
+    cy.getDataCy("close-cancel-button").click();
+
+    // Edit session environment
+    cy.getDataCy("sessions-box")
+      .contains("[data-cy=session-launcher-item]", sessionName)
+      .click();
+    cy.getDataCy("session-view-menu-edit").click();
+    cy.getDataCy("edit-session-name")
+      .should("have.value", sessionName)
+      .clear()
+      .type(`${sessionName}-edited`);
+    cy.getDataCy("edit-session-button").click();
+    cy.getDataCy("session-launcher-update-success").should("be.visible");
+    cy.getDataCy("close-cancel-button").click();
+    cy.getDataCy("sessions-box").contains(
+      "[data-cy=session-launcher-item]",
+      sessionName,
     );
   });
 });
