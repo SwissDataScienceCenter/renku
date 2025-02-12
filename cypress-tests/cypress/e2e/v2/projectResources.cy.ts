@@ -11,7 +11,7 @@ import {
   getProjectByNamespaceAPIV2,
 } from "../../support/utils/projectsV2.utils";
 
-const sessionId = ["projectBasics", getRandomString()];
+const sessionId = ["projectResources", getRandomString()];
 
 describe("Project resources - work with code, data, environments", () => {
   // Define some project details
