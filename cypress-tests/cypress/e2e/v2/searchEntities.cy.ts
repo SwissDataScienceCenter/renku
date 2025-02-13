@@ -35,6 +35,7 @@ describe("Search for resources: groups, projects, users", () => {
     first: `${stringGroup}-${stringFirst}-${stringRandomTwo}-${getRandomString()}`,
     second: `${stringGroup}-${stringSecond}-${stringRandomOne}-${getRandomString()}`,
   };
+  let userNamespace: string;
 
   // Create the requires resources
   before(() => {
@@ -49,6 +50,7 @@ describe("Search for resources: groups, projects, users", () => {
 
     // Create groups and projects -- fail early if any of the resources are not created
     getUserData().then((user: User) => {
+      userNamespace = user.username;
       for (const proj of [projects.first, projects.second]) {
         createProjectIfMissingAPIV2({
           name: proj,
@@ -91,9 +93,13 @@ describe("Search for resources: groups, projects, users", () => {
     [projects.first, projects.second].forEach((proj) => {
       getProjectByNamespaceAPIV2({
         slug: proj,
+        namespace: userNamespace,
       }).then((response) => {
         if (response.status === 200) {
-          deleteProjectFromAPIV2(response.body.id);
+          deleteProjectFromAPIV2({
+            id: response.body.id,
+            slug: proj,
+          });
         }
       });
     });
