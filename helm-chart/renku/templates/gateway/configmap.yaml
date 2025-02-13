@@ -9,7 +9,12 @@ metadata:
     heritage: {{ .Release.Service }}
 data:
   config.yaml: |
-    debugMode: {{ .Values.gateway.debug | default false }}
+    debugMode: {{ .Values.gateway.development | default false }}
+    {{- if (.Values.gateway.development | default false) }}
+    runningEnvironment: development
+    {{- else }}
+    runningEnvironment: production
+    {{- end }}
     server:
       port: 8080
       host: 0.0.0.0
@@ -35,6 +40,7 @@ data:
         - issuer: {{ printf "%s/realms/%s" (include "renku.keycloakUrl" . | trimSuffix "/") (include "renku.keycloak.realm" .) }}
           audience: renku
           authorizedParty: renku-cli
+      unsafeCookieTemplate: {{ .Values.gateway.enableUnsafeSessionCookies | default false }}
     revproxy:
       renkuBaseUrl: {{ include "renku.baseUrl" . | quote }}
       externalGitlabUrl: {{ .Values.global.gitlab.url | default "" | quote }}
