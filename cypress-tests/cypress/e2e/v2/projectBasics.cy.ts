@@ -12,31 +12,41 @@ import {
 
 const sessionId = ["projectBasics", getRandomString()];
 
-beforeEach(() => {
-  // Restore the session (login)
-  cy.session(
-    sessionId,
-    () => {
-      cy.robustLogin();
-    },
-    validateLoginV2,
-  );
-});
-
 describe("Project - create, edit and delete", () => {
   // Define some project details
-  const projectNameRandomPart = getRandomString();
-  const projectName = `project/$test-${projectNameRandomPart}`;
-  const projectPath = `project-test-${projectNameRandomPart}`;
   const projectDescription = "This is a test project from Cypress";
-  const projectIdentifier: ProjectIdentifierV2 = {
-    slug: projectPath,
-    id: null,
-    namespace: null,
-  };
+  let projectNameRandomPart: string;
+  let projectName;
+  let projectPath;
+  let projectIdentifier: ProjectIdentifierV2;
+
+  function resetRequiredResources() {
+    projectNameRandomPart = getRandomString();
+    projectName = `project/$test-${projectNameRandomPart}`;
+    projectPath = `project-test-${projectNameRandomPart}`;
+    projectIdentifier = {
+      slug: projectPath,
+      id: null,
+      namespace: null,
+    };
+  }
+
+  beforeEach(() => {
+    // Restore the session (login)
+    cy.session(
+      sessionId,
+      () => {
+        cy.robustLogin();
+      },
+      validateLoginV2,
+    );
+
+    // Define new project details to avoid conflicts on retries
+    resetRequiredResources();
+  });
 
   // Cleanup the project after the test -- useful on failure
-  after(() => {
+  afterEach(() => {
     getProjectByNamespaceAPIV2(projectIdentifier).then((response) => {
       if (response.status === 200) {
         projectIdentifier.id = response.body.id;
