@@ -12,17 +12,6 @@ import {
 
 const sessionId = ["projectBasics", getRandomString()];
 
-beforeEach(() => {
-  // Restore the session (login)
-  cy.session(
-    sessionId,
-    () => {
-      cy.robustLogin();
-    },
-    validateLoginV2,
-  );
-});
-
 describe("Project - create, edit and delete", () => {
   // Define some project details
   const projectNameRandomPart = getRandomString();
@@ -34,6 +23,17 @@ describe("Project - create, edit and delete", () => {
     id: null,
     namespace: null,
   };
+
+  // Restore the session (login)
+  beforeEach(() => {
+    cy.session(
+      sessionId,
+      () => {
+        cy.robustLogin();
+      },
+      validateLoginV2,
+    );
+  });
 
   // Cleanup the project after the test -- useful on failure
   after(() => {

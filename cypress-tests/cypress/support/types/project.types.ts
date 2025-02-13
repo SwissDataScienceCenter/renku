@@ -5,6 +5,7 @@ export type ProjectIdentifierV2 = {
 };
 
 export interface NewProjectV2Body extends ProjectIdentifierV2 {
+  description?: string;
   name: string;
   visibility?: "public" | "private";
 }

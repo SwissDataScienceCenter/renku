@@ -152,6 +152,7 @@ jobs:
             v2/dashboardV2,
             v2/projectBasics,
             v2/groupBasics,
+            v2/projectResources,
           ]
 
     steps:
