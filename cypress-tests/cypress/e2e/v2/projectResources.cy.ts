@@ -82,7 +82,7 @@ describe("Project resources - work with code, data, environments", () => {
     cy.getDataCy("project-name").should("contain", projectName);
   };
 
-  it("Work with data", () => {
+  it("Add and modify data connectors", () => {
     const name = `giab-${getRandomString()}`;
 
     // Add data connector
@@ -140,7 +140,7 @@ describe("Project resources - work with code, data, environments", () => {
       .contains(newName);
   });
 
-  it("Work with code", () => {
+  it("Add and modify code repositories", () => {
     const repoUrl = "https://github.com/SwissDataScienceCenter/renku-ui.git";
     const repoName = "renku-ui";
     const repoUrlEdited =
@@ -176,7 +176,7 @@ describe("Project resources - work with code, data, environments", () => {
     );
   });
 
-  it("Work with session environments", () => {
+  it("Add and modify session environments", () => {
     const sessionImage = "alpine:latest";
     const sessionUrl = "/test";
     const sessionName = `vscode-${getRandomString()}`;
