@@ -1,0 +1,43 @@
+gitlab:
+  enabled: false
+global:
+  gateway:
+    gitlabClientId: <gitlabClientId>
+    gitlabClientSecret: <gitlabClientSecret>
+  gitlab:
+    url: <gitlab-url>
+    registry:
+      host: <gitlab-registry-FQDN>
+  renku:
+    domain: <deployment-FQDN>
+  useHTTPS: true
+ingress:
+  enabled: true
+  hosts:
+    - <deployment-FQDN>
+  tls:
+    - hosts:
+        - <deployment-FQDN>
+      secretName: <certificate-secret-name>
+jena:
+  persistence:
+    enabled: false
+notebooks:
+  oidc:
+    allowUnverifiedEmail: true
+    authUrl: https://<deployment-FQDN>/auth/realms/Renku/protocol/openid-connect/auth
+    tokenUrl: https://<deployment-FQDN>/auth/realms/Renku/protocol/openid-connect/token
+  sessionIngress:
+    host: <deployment-FQDN>
+    tlsSecret: <certificate-secret-name>
+postgresql:
+  primary:
+    persistence:
+      enabled: false
+redis:
+  master:
+    persistence:
+      enabled: false
+solr:
+  persistence:
+    enabled: false
