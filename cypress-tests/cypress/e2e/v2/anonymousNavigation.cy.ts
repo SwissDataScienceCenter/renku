@@ -79,7 +79,8 @@ describe("Anonymous users can only access public resources", () => {
         getProjectByNamespaceAPIV2({
           namespace: user.username,
           slug: proj,
-        }).then((response) => { // eslint-disable-line max-nested-callbacks
+          // eslint-disable-next-line max-nested-callbacks
+        }).then((response) => {
           if (response.status === 200) {
             deleteProjectFromAPIV2({
               id: response.body.id,
@@ -96,7 +97,7 @@ describe("Anonymous users can only access public resources", () => {
     cy.visit("/v2");
     cy.getDataCy("navbar-link-search").click();
     cy.intercept(
-      new RegExp(`(?:/ui-server)?/api/search/query\\?q=.*?${randomString}.*`)
+      new RegExp(`(?:/ui-server)?/api/search/query\\?q=.*?${randomString}.*`),
     ).as("searchQuery");
     cy.getDataCy("search-input").clear().type(randomString);
     cy.getDataCy("search-button").click();
@@ -113,7 +114,7 @@ describe("Anonymous users can only access public resources", () => {
     cy.getDataCy("navbar-login").should("be.visible");
     cy.getDataCy("navbar-link-search").click();
     cy.intercept(
-      new RegExp(`(?:/ui-server)?/api/search/query\\?q=.*?${randomString}.*`)
+      new RegExp(`(?:/ui-server)?/api/search/query\\?q=.*?${randomString}.*`),
     ).as("searchQuery");
     cy.getDataCy("search-input").clear().type(randomString);
     cy.getDataCy("search-button").click();
@@ -175,9 +176,9 @@ describe("Anonymous users can only access public resources", () => {
       });
 
     cy.getDataCy("search-card")
-        .filter(`:contains("${publicProjectName}")`)
-        .find(`[data-cy=search-card-entity-link]`)
-        .click();
+      .filter(`:contains("${publicProjectName}")`)
+      .find(`[data-cy=search-card-entity-link]`)
+      .click();
 
     // Login, check the public project and change visibility
     cy.url().then((url) => {

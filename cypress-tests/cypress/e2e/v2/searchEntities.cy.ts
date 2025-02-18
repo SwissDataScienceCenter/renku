@@ -120,11 +120,9 @@ describe("Search for resources: groups, projects, users", () => {
 
     // Search for string
     cy.getDataCy("navbar-link-search").click();
-    cy.intercept(
-      new RegExp(
-        `(?:/ui-server)?/api/search/query.*`,
-      ),
-    ).as("searchQuery");
+    cy.intercept(new RegExp(`(?:/ui-server)?/api/search/query.*`)).as(
+      "searchQuery",
+    );
     cy.getDataCy("search-input").clear().type(stringRandomOne);
     cy.getDataCy("search-button").click();
     cy.wait("@searchQuery");
@@ -150,12 +148,16 @@ describe("Search for resources: groups, projects, users", () => {
     cy.getDataCy("search-input").clear().type(stringRandomOne);
     cy.getDataCy("search-button").click();
     cy.wait("@searchQuery");
-    cy.getDataCy("search-card").should("have.length", 1).contains(groups.second);
+    cy.getDataCy("search-card")
+      .should("have.length", 1)
+      .contains(groups.second);
 
     cy.getDataCy("search-filter-type-group").filter(":visible").click();
     cy.getDataCy("search-filter-type-project").filter(":visible").click();
     cy.wait("@searchQuery");
-    cy.getDataCy("search-card").should("have.length", 1).contains(projects.first);
+    cy.getDataCy("search-card")
+      .should("have.length", 1)
+      .contains(projects.first);
 
     // Search with filters
     const complexSearch = `type:group,project ${stringRandomOne} ${stringRandomTwo}`;
@@ -168,7 +170,7 @@ describe("Search for resources: groups, projects, users", () => {
         cy.wrap(card).should(($card) => {
           const text = $card.text();
           expect(text).to.match(
-            new RegExp(`${stringRandomOne}|${stringRandomTwo}`)
+            new RegExp(`${stringRandomOne}|${stringRandomTwo}`),
           );
         });
       });
