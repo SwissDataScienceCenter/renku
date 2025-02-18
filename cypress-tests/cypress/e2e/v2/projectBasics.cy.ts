@@ -45,17 +45,6 @@ describe("Project - create, edit and delete", () => {
     resetRequiredResources();
   });
 
-  // Restore the session (login)
-  beforeEach(() => {
-    cy.session(
-      sessionId,
-      () => {
-        cy.robustLogin();
-      },
-      validateLoginV2,
-    );
-  });
-
   // Cleanup the project after the test -- useful on failure
   afterEach(() => {
     getProjectByNamespaceAPIV2(projectIdentifier).then((response) => {
