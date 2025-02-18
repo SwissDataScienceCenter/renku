@@ -36,28 +36,6 @@ describe("Group - create, edit and delete", () => {
     resetRequiredResources();
   });
 
-  // Restore the session (login)
-  beforeEach(() => {
-    cy.session(
-      sessionId,
-      () => {
-        cy.robustLogin();
-      },
-      validateLoginV2,
-    );
-  });
-
-  // Restore the session (login)
-  beforeEach(() => {
-    cy.session(
-      sessionId,
-      () => {
-        cy.robustLogin();
-      },
-      validateLoginV2,
-    );
-  });
-
   // Cleanup the group after the test -- useful on failure
   afterEach(() => {
     getGroupFromAPI(groupSlug).then((response) => {

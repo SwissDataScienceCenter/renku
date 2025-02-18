@@ -1,4 +1,3 @@
-import { TIMEOUTS } from "../../../config";
 import {
   getRandomString,
   getUserData,
