@@ -11,7 +11,19 @@ import {
   getProjectByNamespaceAPIV2,
 } from "../../support/utils/projectsV2.utils";
 
-const sessionId = ["anonymousNavigation", getRandomString()];
+const anonymousSession = {
+  id: ["anonymousNavigation-anonymousUser", getRandomString()],
+  setup: () => {
+    cy.log("Anonymous session");
+  },
+};
+const loggedSession = {
+  id: ["anonymousNavigation-loggedUser", getRandomString()],
+  setup: () => {
+    cy.log("Logged in session");
+    cy.robustLogin();
+  },
+};
 
 describe("Anonymous users can only access public resources", () => {
   // Define some project details
@@ -25,24 +37,10 @@ describe("Anonymous users can only access public resources", () => {
     publicProjectName = `anon-public-${randomString}`;
   }
 
-  function browserLogout() {
-    // Logging out from the browser ensures cookies are cleared
-    cy.visit("/v2");
-    cy.getDataCy("navbar-toggle-user-menu").click();
-    cy.getDataCy("navbar-logout").click();
-    cy.getDataCy("renku-root").should("be.visible");
-  }
-
   // Restore the session (login) and create the required projects
   beforeEach(() => {
     // Login
-    cy.session(
-      sessionId,
-      () => {
-        cy.robustLogin();
-      },
-      validateLoginV2,
-    );
+    cy.session(loggedSession.id, loggedSession.setup, validateLoginV2);
 
     // Create projects with new names to be sure re-runs don't break.
     resetRequiredResources();
@@ -69,13 +67,7 @@ describe("Anonymous users can only access public resources", () => {
   // Cleanup the project after the test
   afterEach(() => {
     // Login -- mind we might be logged out
-    cy.session(
-      sessionId,
-      () => {
-        cy.robustLogin();
-      },
-      validateLoginV2,
-    );
+    cy.session(loggedSession.id, loggedSession.setup, validateLoginV2);
 
     // Delete the projects
     getUserData().then((user: User) => {
@@ -113,7 +105,7 @@ describe("Anonymous users can only access public resources", () => {
       });
 
     // Log out and search for the projects as an anonymous user
-    browserLogout();
+    cy.session(anonymousSession.id, anonymousSession.setup);
     cy.visit("/v2");
     cy.getDataCy("navbar-login").should("be.visible");
     cy.getDataCy("navbar-link-search").click();
@@ -131,7 +123,7 @@ describe("Anonymous users can only access public resources", () => {
 
     // Login, check the private project and change visibility
     cy.url().then((url) => {
-      cy.robustLogin();
+      cy.session(loggedSession.id, loggedSession.setup, validateLoginV2);
       cy.visit(url);
       cy.getDataCy("project-update-button").should("be.visible");
 
@@ -162,11 +154,10 @@ describe("Anonymous users can only access public resources", () => {
       cy.getDataCy("project-settings-general")
         .get(".alert-success")
         .contains("The project has been successfully updated.");
-
-      browserLogout();
     });
 
     // Verify the previously private project is now publicly visible
+    cy.session(anonymousSession.id, anonymousSession.setup);
     cy.visit("/v2");
     cy.getDataCy("navbar-login").should("be.visible");
     cy.getDataCy("navbar-link-search").click();
@@ -186,7 +177,7 @@ describe("Anonymous users can only access public resources", () => {
 
     // Login, check the public project and change visibility
     cy.url().then((url) => {
-      cy.robustLogin();
+      cy.session(loggedSession.id, loggedSession.setup, validateLoginV2);
       cy.visit(url);
       cy.getDataCy("project-settings-link").click();
 
@@ -201,11 +192,10 @@ describe("Anonymous users can only access public resources", () => {
       cy.getDataCy("project-settings-general")
         .get(".alert-success")
         .contains("The project has been successfully updated.");
-
-      browserLogout();
     });
 
     // Verify the previously public project is now invisible
+    cy.session(anonymousSession.id, anonymousSession.setup);
     cy.visit("/v2");
     cy.getDataCy("navbar-login").should("be.visible");
     cy.getDataCy("navbar-link-search").click();
