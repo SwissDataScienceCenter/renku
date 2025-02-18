@@ -1,3 +1,4 @@
+import { TIMEOUTS } from "../../../config";
 import {
   getRandomString,
   getUserData,
@@ -28,12 +29,12 @@ describe("Search for resources: groups, projects, users", () => {
   const stringProject = "project";
   const stringGroup = "group";
   const projects = {
-    first: `${stringProject}-${stringFirst}-${stringRandomOne}-${getRandomString()}`,
-    second: `${stringProject}-${stringSecond}-${stringRandomTwo}-${getRandomString()}`,
+    first: `${stringProject}-${stringFirst}-${stringRandomOne}`,
+    second: `${stringProject}-${stringSecond}-${stringRandomTwo}`,
   };
   const groups = {
-    first: `${stringGroup}-${stringFirst}-${stringRandomTwo}-${getRandomString()}`,
-    second: `${stringGroup}-${stringSecond}-${stringRandomOne}-${getRandomString()}`,
+    first: `${stringGroup}-${stringFirst}-${stringRandomTwo}`,
+    second: `${stringGroup}-${stringSecond}-${stringRandomOne}`,
   };
   let userNamespace: string;
 
@@ -57,7 +58,6 @@ describe("Search for resources: groups, projects, users", () => {
           namespace: user.username,
           slug: proj,
         }).then((response) => {
-          // eslint-disable-line max-nested-callbacks
           if (response.status >= 400) {
             throw new Error("Failed to create project");
           }
@@ -68,13 +68,16 @@ describe("Search for resources: groups, projects, users", () => {
           name: grp,
           slug: grp,
         }).then((response) => {
-          // eslint-disable-line max-nested-callbacks
           if (response.status >= 400) {
             throw new Error("Failed to create group");
           }
         });
       }
     });
+
+    // ? This isn't ideal, but groups need a little time to be indexed in search and this avoids
+    // ? occasionally failing tests
+    cy.wait(TIMEOUTS.short);
   });
 
   // Restore the session (login)
@@ -119,62 +122,71 @@ describe("Search for resources: groups, projects, users", () => {
     cy.getDataCy("navbar-link-search").click();
     cy.intercept(
       new RegExp(
-        `(?:/ui-server)?/api/search/query\\?q=.*?${stringRandomOne}.*`,
+        `(?:/ui-server)?/api/search/query.*`,
       ),
-    ).as("searchQueryOne");
+    ).as("searchQuery");
     cy.getDataCy("search-input").clear().type(stringRandomOne);
     cy.getDataCy("search-button").click();
-    cy.wait("@searchQueryOne");
-    cy.getDataCy("search-card").should("have.length", 2);
-    cy.intercept(
-      new RegExp(
-        `(?:/ui-server)?/api/search/query\\?q=.*?${stringRandomTwo}.*`,
-      ),
-    ).as("searchQueryTwo");
+    cy.wait("@searchQuery");
+    cy.getDataCy("search-card")
+      .should("have.length", 2)
+      .each((card) => {
+        cy.wrap(card).should("contain", stringRandomOne);
+      });
     cy.getDataCy("search-input").clear().type(stringRandomTwo);
     cy.getDataCy("search-button").click();
-    cy.wait("@searchQueryTwo");
-    cy.getDataCy("search-card").should("have.length", 2);
+    cy.wait("@searchQuery");
+    cy.getDataCy("search-card")
+      .should("have.length", 2)
+      .each((card) => {
+        cy.wrap(card).should("contain", stringRandomTwo);
+      });
 
     // Filter for projects and groups
     cy.getDataCy("search-filter-type-group").filter(":visible").click();
-    cy.wait("@searchQueryTwo");
-    cy.getDataCy("search-card").should("have.length", 1);
+    cy.wait("@searchQuery");
+    cy.getDataCy("search-card").should("have.length", 1).contains(groups.first);
 
     cy.getDataCy("search-input").clear().type(stringRandomOne);
     cy.getDataCy("search-button").click();
-    cy.wait("@searchQueryOne");
-    cy.getDataCy("search-card").should("have.length", 1);
+    cy.wait("@searchQuery");
+    cy.getDataCy("search-card").should("have.length", 1).contains(groups.second);
 
     cy.getDataCy("search-filter-type-group").filter(":visible").click();
     cy.getDataCy("search-filter-type-project").filter(":visible").click();
-    cy.wait("@searchQueryOne");
-    cy.getDataCy("search-card").should("have.length", 1);
+    cy.wait("@searchQuery");
+    cy.getDataCy("search-card").should("have.length", 1).contains(projects.first);
 
     // Search with filters
     const complexSearch = `type:group,project ${stringRandomOne} ${stringRandomTwo}`;
     cy.getDataCy("search-input").clear().type(complexSearch);
     cy.getDataCy("search-button").click();
-    cy.wait("@searchQueryTwo");
-    cy.getDataCy("search-card").should("have.length", 4);
+    cy.wait("@searchQuery");
+    cy.getDataCy("search-card")
+      .should("have.length", 4)
+      .each((card) => {
+        cy.wrap(card).should(($card) => {
+          const text = $card.text();
+          expect(text).to.match(
+            new RegExp(`${stringRandomOne}|${stringRandomTwo}`)
+          );
+        });
+      });
 
     // Filter by date
     cy.getDataCy("search-filter-created-older-than-90-days")
       .filter(":visible")
       .click();
-    cy.wait("@searchQueryTwo");
+    cy.wait("@searchQuery");
     cy.getDataCy("search-card").should("have.length", 0);
     cy.getDataCy("search-filter-created-last-week").filter(":visible").click();
 
     // Can search for users -- can't guarantee we match an exact number here
     const userSearch = "type:user";
     cy.getDataCy("search-filter-created-all").filter(":visible").click();
-    cy.intercept(
-      new RegExp(`(?:/ui-server)?/api/search/query\\?q=.*user.*`),
-    ).as("searchQueryUsers");
     cy.getDataCy("search-input").clear().type(userSearch);
     cy.getDataCy("search-button").click();
-    cy.wait("@searchQueryUsers");
+    cy.wait("@searchQuery");
     cy.getDataCy("search-card").should("have.length.at.least", 1);
   });
 });

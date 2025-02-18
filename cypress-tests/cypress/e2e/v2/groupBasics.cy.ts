@@ -11,10 +11,41 @@ const sessionId = ["groupBasics", getRandomString()];
 
 describe("Group - create, edit and delete", () => {
   // Define some group details
-  const groupNameRandomPart = getRandomString();
-  const groupName = `group/$test-${groupNameRandomPart}`;
-  const groupSlug = `group-test-${groupNameRandomPart}`;
   const groupDescription = "This is a test group from Cypress";
+  let groupNameRandomPart;
+  let groupName;
+  let groupSlug;
+
+  function resetRequiredResources() {
+    groupNameRandomPart = getRandomString();
+    groupName = `group/$test-${groupNameRandomPart}`;
+    groupSlug = `group-test-${groupNameRandomPart}`;
+  }
+
+  beforeEach(() => {
+    // Restore the session (login)
+    cy.session(
+      sessionId,
+      () => {
+        cy.robustLogin();
+      },
+      validateLoginV2,
+    );
+
+    // Define new group details to avoid conflicts on retries
+    resetRequiredResources();
+  });
+
+  // Restore the session (login)
+  beforeEach(() => {
+    cy.session(
+      sessionId,
+      () => {
+        cy.robustLogin();
+      },
+      validateLoginV2,
+    );
+  });
 
   // Restore the session (login)
   beforeEach(() => {
@@ -28,7 +59,7 @@ describe("Group - create, edit and delete", () => {
   });
 
   // Cleanup the group after the test -- useful on failure
-  after(() => {
+  afterEach(() => {
     getGroupFromAPI(groupSlug).then((response) => {
       if (response.status === 200) {
         deleteGroupFromAPI(groupSlug);
