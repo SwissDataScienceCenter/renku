@@ -1,3 +1,4 @@
+import { TIMEOUTS } from "../../../config";
 import {
   getRandomString,
   getUserData,
@@ -60,6 +61,9 @@ describe("Anonymous users can only access public resources", () => {
         });
       }
     });
+
+    // ? Wait a little time to allow the search engine to index resources
+    cy.wait(TIMEOUTS.short);
   });
 
   // Cleanup the project after the test
