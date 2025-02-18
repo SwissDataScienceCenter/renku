@@ -10,6 +10,7 @@ import {
   deleteProjectFromAPIV2,
   getProjectByNamespaceAPIV2,
 } from "../../support/utils/projectsV2.utils";
+import { verifySearchIndexing } from "../../support/utils/search.utils";
 
 const anonymousSession = {
   id: ["anonymousNavigation-anonymousUser", getRandomString()],
@@ -60,8 +61,8 @@ describe("Anonymous users can only access public resources", () => {
       }
     });
 
-    // ? Wait a little time to allow the search engine to index resources
-    cy.wait(TIMEOUTS.short);
+    // Verify the resources are searchable
+    verifySearchIndexing(randomString, 2);
   });
 
   // Cleanup the project after the test

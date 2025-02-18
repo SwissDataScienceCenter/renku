@@ -15,6 +15,7 @@ import {
   deleteProjectFromAPIV2,
   getProjectByNamespaceAPIV2,
 } from "../../support/utils/projectsV2.utils";
+import { verifySearchIndexing } from "../../support/utils/search.utils";
 
 const sessionId = ["searchEntities", getRandomString()];
 
@@ -75,9 +76,8 @@ describe("Search for resources: groups, projects, users", () => {
       }
     });
 
-    // ? This isn't ideal, but groups need a little time to be indexed in search and this avoids
-    // ? occasionally failing tests
-    cy.wait(TIMEOUTS.short);
+    // Verify the resources are searchable
+    verifySearchIndexing(`${stringRandomOne} ${stringRandomTwo}`, 4);
   });
 
   // Restore the session (login)
