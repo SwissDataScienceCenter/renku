@@ -101,7 +101,11 @@ describe("Anonymous users can only access public resources", () => {
     cy.getDataCy("search-input").clear().type(randomString);
     cy.getDataCy("search-button").click();
     cy.wait("@searchQuery");
-    cy.getDataCy("search-card").should("have.length", 2);
+    cy.getDataCy("search-card")
+      .should("have.length", 2)
+      .each((card) => {
+        cy.wrap(card).should("contain", randomString);
+      });
 
     // Log out and search for the projects as an anonymous user
     browserLogout();
@@ -114,7 +118,7 @@ describe("Anonymous users can only access public resources", () => {
     cy.getDataCy("search-input").clear().type(randomString);
     cy.getDataCy("search-button").click();
     cy.wait("@searchQuery");
-    cy.getDataCy("search-card").should("have.length", 1);
+    cy.getDataCy("search-card").should("have.length", 1).contains(randomString);
     cy.getDataCy("search-card").getDataCy("search-card-entity-link").click();
     cy.getDataCy("project-name").should("contain", publicProjectName);
     cy.getDataCy("project-settings-link").click();
@@ -130,7 +134,11 @@ describe("Anonymous users can only access public resources", () => {
       cy.getDataCy("search-input").clear().type(randomString);
       cy.getDataCy("search-button").click();
       cy.wait("@searchQuery");
-      cy.getDataCy("search-card").should("have.length", 2);
+      cy.getDataCy("search-card")
+        .should("have.length", 2)
+        .each((card) => {
+          cy.wrap(card).should("contain", randomString);
+        });
       cy.getDataCy("search-card")
         .filter(`:contains("${privateProjectName}")`)
         .find(`[data-cy=search-card-entity-link]`)
@@ -160,7 +168,11 @@ describe("Anonymous users can only access public resources", () => {
     cy.getDataCy("search-input").clear().type(randomString);
     cy.getDataCy("search-button").click();
     cy.wait("@searchQuery");
-    cy.getDataCy("search-card").should("have.length", 2);
+    cy.getDataCy("search-card")
+      .should("have.length", 2)
+      .each((card) => {
+        cy.wrap(card).should("contain", randomString);
+      });
 
     cy.getDataCy("search-card")
         .filter(`:contains("${publicProjectName}")`)
@@ -197,6 +209,7 @@ describe("Anonymous users can only access public resources", () => {
     cy.wait("@searchQuery");
     cy.getDataCy("search-card")
       .should("have.length", 1)
-      .should("not.contain", publicProjectName);
+      .should("not.contain", publicProjectName)
+      .should("contain", privateProjectName);
   });
 });
