@@ -1,4 +1,3 @@
-import { TIMEOUTS } from "../../../config";
 import {
   getRandomString,
   getUserData,
@@ -15,6 +14,7 @@ import {
   deleteProjectFromAPIV2,
   getProjectByNamespaceAPIV2,
 } from "../../support/utils/projectsV2.utils";
+import { verifySearchIndexing } from "../../support/utils/search.utils";
 
 const sessionId = ["searchEntities", getRandomString()];
 
@@ -75,9 +75,8 @@ describe("Search for resources: groups, projects, users", () => {
       }
     });
 
-    // ? This isn't ideal, but groups need a little time to be indexed in search and this avoids
-    // ? occasionally failing tests
-    cy.wait(TIMEOUTS.short);
+    // Verify the resources are searchable
+    verifySearchIndexing(`${stringRandomOne} ${stringRandomTwo}`, 4);
   });
 
   // Restore the session (login)
@@ -120,11 +119,9 @@ describe("Search for resources: groups, projects, users", () => {
 
     // Search for string
     cy.getDataCy("navbar-link-search").click();
-    cy.intercept(
-      new RegExp(
-        `(?:/ui-server)?/api/search/query.*`,
-      ),
-    ).as("searchQuery");
+    cy.intercept(new RegExp(`(?:/ui-server)?/api/search/query.*`)).as(
+      "searchQuery",
+    );
     cy.getDataCy("search-input").clear().type(stringRandomOne);
     cy.getDataCy("search-button").click();
     cy.wait("@searchQuery");
@@ -150,12 +147,16 @@ describe("Search for resources: groups, projects, users", () => {
     cy.getDataCy("search-input").clear().type(stringRandomOne);
     cy.getDataCy("search-button").click();
     cy.wait("@searchQuery");
-    cy.getDataCy("search-card").should("have.length", 1).contains(groups.second);
+    cy.getDataCy("search-card")
+      .should("have.length", 1)
+      .contains(groups.second);
 
     cy.getDataCy("search-filter-type-group").filter(":visible").click();
     cy.getDataCy("search-filter-type-project").filter(":visible").click();
     cy.wait("@searchQuery");
-    cy.getDataCy("search-card").should("have.length", 1).contains(projects.first);
+    cy.getDataCy("search-card")
+      .should("have.length", 1)
+      .contains(projects.first);
 
     // Search with filters
     const complexSearch = `type:group,project ${stringRandomOne} ${stringRandomTwo}`;
@@ -168,7 +169,7 @@ describe("Search for resources: groups, projects, users", () => {
         cy.wrap(card).should(($card) => {
           const text = $card.text();
           expect(text).to.match(
-            new RegExp(`${stringRandomOne}|${stringRandomTwo}`)
+            new RegExp(`${stringRandomOne}|${stringRandomTwo}`),
           );
         });
       });
