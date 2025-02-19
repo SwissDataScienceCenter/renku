@@ -2,21 +2,32 @@
 
 This section includes a set of acceptance tests for RenkuLab. The tests are
 written using [Cypress](https://www.cypress.io), run in Chrome, and the main target
-is the web interface of RenkuLab.
+is the web interface of [RenkuLab](https://renkulab.io).
+
+## Test coverage
+
+The tests aim to cover the most common user interactions with RenkuLab. The
+goal is to ensure that the most important features work as expected and new
+features or changes do not introduce regressions.
+
+Other details specific to the web interface (like the UI design, responsiveness,
+error handling, etc.) are tested in the unit and integration tests of the
+[Renku UI repository](https://github.com/SwissDataScienceCenter/renku-ui).
 
 ## Running the tests
 
-You need a fully working RenkuLab deployment to run the tests against. You will also
-need a user account for the deployment.
+You need a fully working RenkuLab deployment to run the tests against, and a user
+account for the deployment.
 
-If you wish to run the tests locally, you will need to clone the repository and have a
+To run the tests locally, you will need to clone the repository and have a
 recent version of Node.js installed. Then follow these steps:
 
-- Create a `cypress.env.json` file with the necessary user credentials. You can use the
-  `cypress.env.template.json` file as a template.
 - Install the dependencies with `npm install`.
-- Run the tests with `npm run e2e`. If you prefer not to use the GUI, you can run the
-  tests in headless mode with `npm run e2e:headless`.
+- Either create a `cypress.env.json` file with the necessary user and deployment
+  details (you can start from the `cypress.env.template.json` template) or be sure
+  to set all the environment variables listed below.
+- Run the tests with `npm run e2e` or one of the many available flags. For example,
+  you can run the tests without the GUI with `npm run e2e:headless`.
 
 Here is a list of the environment variable that you should set in the
 `cypress.env.json` file:
@@ -30,29 +41,16 @@ Here is a list of the environment variable that you should set in the
 | TEST_LAST_NAME  | Last name.                                            |
 | TEST_USERNAME   | Username. Usually, it's the email without the domain. |
 
-> Tip: you might prefer not to save you password in plain text in the `cypress.env.json`
-> file. In that case, you can use the `TEST_PASSWORD` variable to the command line when
-> running the tests. For example `TEST_PASSWORD=mySecretPassword npm run e2e`.`
+> Tip: you might prefer _not_ to save you password in plain text in the `cypress.env.json`
+> file.
 
 ## Integration with CI pipeline
 
-The primary purpose of the tests is to spot regressions early on new pull requests.
+We require these tests to pass before merging any feature branch to the release branch.
+The primary purpose is to spot regressions early and avoid leaving the burden of
+fixing them to the release manager.
+
 Most Renku repositories have a CI pipeline that runs the tests automatically for every
-commit. That requires deploying a full RenkuLab instance using the
-`/deploy #persist` command. The tests are run automatically in headless mode unless
-the flag `#notest` is included.
-
-You can read more details in the documentation in the
-[renku-actions repository](https://github.com/SwissDataScienceCenter/renku-actions/tree/master/test-renku-cypress).
-
-Mind that including the `#persist` flag is currently necessary since the deployment
-is deleted automatically after running a separate set of acceptance tests; the Cypress
-tests generally run much quicker but they are not guaranteed to finish on time.
-Re-running single tests would also fail when the deployment is deleted.
-
-## Limitations
-
-- Using the electron browser from Cypress will not work because a few features in
-  RenkuLab do not work with that (E.G: RStudio does not load at all).
-- Tests currently do not run on Firefox. Please use [Chrome](https://www.google.com/chrome)
-  or [Chromium](https://www.chromium.org) instead.
+commit. That requires deploying a full RenkuLab instance using the `/deploy` string
+in the PR description. Tests can be excluded by adding the `#notest` flag.
+You can read more details in the [renku-actions repository](https://github.com/SwissDataScienceCenter/renku-actions/tree/master/test-renku-cypress).
