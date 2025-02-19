@@ -1505,6 +1505,8 @@ dataService:
     # vscodiumPythonRunImage:
     # strategyName:
     # pushSecretName:
+    # buildRunRetentionAfterFailedSeconds:
+    # buildRunRetentionAfterSucceededSeconds:
 
 authz:
   replicaCount: 1

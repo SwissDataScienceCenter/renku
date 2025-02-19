@@ -127,6 +127,10 @@ spec:
               value: {{ .Values.dataService.imageBuilders.strategyName | default "" | quote }}
             - name: BUILD_PUSH_SECRET_NAME
               value: {{ .Values.dataService.imageBuilders.pushSecretName | default "" | quote }}
+            - name: BUILD_RUN_RETENTION_AFTER_FAILED_SECONDS
+              value: {{ .Values.dataService.imageBuilders.buildRunRetentionAfterFailedSeconds | default "" | quote }}
+            - name: BUILD_RUN_RETENTION_AFTER_SUCCEEDED_SECONDS
+              value: {{ .Values.dataService.imageBuilders.buildRunRetentionAfterSucceededSeconds | default "" | quote }}
             - name: KUBERNETES_NAMESPACE
               valueFrom:
                 fieldRef:
