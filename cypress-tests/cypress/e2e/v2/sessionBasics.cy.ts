@@ -1,3 +1,4 @@
+import { TIMEOUTS } from "../../../config";
 import {
   getRandomString,
   getUserData,
@@ -11,21 +12,19 @@ import {
   getProjectByNamespaceAPIV2,
 } from "../../support/utils/projectsV2.utils";
 
-// !const sessionId = ["sessionBasics", getRandomString()];
-const sessionId = ["sessionBasics", 1];
+const sessionId = ["sessionBasics", getRandomString()];
 
 describe("Start a session that consumes project resources", () => {
   // Define required resources
   let projectNameRandomPart: string;
   let projectName;
-  let projectPath;
   let projectIdentifier: ProjectIdentifierV2;
 
   function resetRequiredResources() {
     projectNameRandomPart = getRandomString();
     projectName = `session-basics-${projectNameRandomPart}`;
     projectIdentifier = {
-      slug: projectPath,
+      slug: projectName,
       id: null,
       namespace: null,
     };
@@ -38,7 +37,7 @@ describe("Start a session that consumes project resources", () => {
       () => {
         cy.robustLogin();
       },
-      validateLoginV2
+      validateLoginV2,
     );
 
     // Create a project
@@ -65,6 +64,130 @@ describe("Start a session that consumes project resources", () => {
   });
 
   it("Start a session with VSCode and check it has the necessary resources", () => {
+    const dataConnectorName = `giab-${getRandomString()}`;
+    const repositoryName = "renku-ui";
+    const session = {
+      arguments:
+        '["/entrypoint.sh jupyter server --ServerApp.ip=0.0.0.0 --ServerApp.port=8888 --ServerApp.base_url=$RENKU_BASE_URL_PATH --ServerApp.token=\\"\\" --ServerApp.password=\\"\\" --ServerApp.allow_remote_access=true --ContentsManager.allow_hidden=true --ServerApp.allow_origin=* --ServerApp.root_dir=\\"/home/jovyan/work\\""]',
+      command: '["sh","-c"]',
+      image: "registry.renkulab.io/rok.roskar/vscode-example:0c10599",
+      name: "vscode-launcher",
+      url: "/vscode",
+    };
+
+    // Access the project and create some resources.
     cy.visit("/v2");
+    cy.getDataCy("dashboard-project-list")
+      .get(
+        `a[href*="/${projectIdentifier.namespace}/${projectIdentifier.slug}"]`,
+      )
+      .click();
+    cy.getDataCy("project-name").should("contain", projectName);
+
+    cy.getDataCy("add-data-connector").click();
+    cy.getDataCy("project-data-controller-mode-create").click();
+    cy.getDataCy("data-storage-s3").click();
+    cy.getDataCy("data-provider-AWS").click();
+    cy.getDataCy("data-connector-edit-next-button").click();
+    cy.getDataCy("data-connector-source-path").clear().type("giab");
+    cy.getDataCy("test-data-connector-button").click();
+    cy.getDataCy("add-data-connector-continue-button").click();
+    cy.getDataCy("data-connector-name-input").clear().type(dataConnectorName);
+    cy.getDataCy("data-connector-edit-update-button").click();
+    cy.getDataCy("data-connector-edit-success").should("be.visible");
+    cy.getDataCy("data-connector-edit-close-button").click();
+    // ? data connectors don't refresh properly yet so we need to reload the page
+    cy.reload();
+    cy.getDataCy("data-connector-box")
+      .find(`[data-cy=data-connector-name]`)
+      .contains(dataConnectorName);
+
+    cy.getDataCy("add-code-repository").click();
+    cy.getDataCy("project-add-repository-url")
+      .clear()
+      .type("https://github.com/SwissDataScienceCenter/renku-ui.git");
+    cy.getDataCy("add-code-repository-modal-button").click();
+    cy.getDataCy("code-repositories-box")
+      .find("[data-cy=code-repository-item]")
+      .contains(repositoryName);
+    cy.contains("[data-cy=code-repository-item]", repositoryName).contains(
+      "Pull only",
+    );
+
+    cy.getDataCy("add-session-launcher").click();
+    cy.getDataCy("existing-custom-button").click();
+    cy.getDataCy("custom-image-input").clear().type(session.image);
+    cy.getDataCy("environment-advanced-settings-toggle").click();
+    cy.getDataCy("session-launcher-field-default_url")
+      .clear()
+      .type(session.url);
+    cy.getDataCy("session-launcher-field-command")
+      .clear()
+      .type(session.command);
+    cy.getDataCy("session-launcher-field-args")
+      .clear()
+      .type(session.arguments, { parseSpecialCharSequences: false });
+    cy.getDataCy("next-session-button").click();
+    cy.getDataCy("launcher-name-input").clear().type(session.name);
+    cy.getDataCy("add-session-button").click();
+    cy.getDataCy("session-launcher-creation-success").should("be.visible");
+    cy.getDataCy("close-cancel-button").click();
+
+    // Start a pristine session
+    cy.getDataCy("sessions-box")
+      .contains("[data-cy=session-launcher-item]", session.name)
+      .then(($el) => {
+        const $resume = $el.find("[data-cy=resume-session-button]");
+        const $open = $el.find("[data-cy=open-session]");
+        if ($resume.length > 0 || $open.length > 0) {
+          cy.wrap($el).find("[data-cy=button-with-menu-dropdown]").click();
+          cy.wrap($el).find("[data-cy=delete-session-button]").click();
+          cy.getDataCy("delete-session-modal-button").click();
+        }
+      });
+    cy.getDataCy("sessions-box")
+      .contains("[data-cy=session-launcher-item]", session.name)
+      .find("[data-cy=start-session-button]", {
+        timeout: TIMEOUTS.long,
+      })
+      .click();
+    cy.getDataCy("session-status-starting");
+    cy.get("[data-cy=session-status-starting]", {
+      timeout: TIMEOUTS.long,
+    }).should("be.visible");
+    cy.getDataCy("session-header").contains(session.name);
+    cy.get("[data-cy=session-iframe]", { timeout: TIMEOUTS.vlong }).should(
+      "be.visible",
+    );
+
+    // Check the project resources are available in the session.
+    cy.getIframe("[data-cy=session-iframe]").within(() => {
+      // ? Mind the following commands target the VSCode web interface.
+      const findAndExpandFolder = (name: string, depth: number) => {
+        cy.contains(`[role=treeitem][aria-level="${depth}"]`, name).then(
+          ($el) => {
+            if ($el.attr("aria-expanded") === "false") {
+              cy.wrap($el).click();
+            }
+          },
+        );
+      };
+      cy.get("#workbench\\.view\\.explorer", { timeout: TIMEOUTS.long }).within(
+        () => {
+          // Check the repository content
+          findAndExpandFolder("work", 1);
+          findAndExpandFolder(repositoryName, 2);
+          cy.get(
+            `[role="treeitem"][aria-level="3"][aria-label="client"]`,
+          ).should("be.visible");
+
+          // Check the S3 bucket content
+          findAndExpandFolder(dataConnectorName, 2);
+          cy.get(
+            `[role="treeitem"][aria-level="3"][aria-label="data_RNAseq"]`,
+          ).should("be.visible");
+        },
+      );
+    });
   });
 });
