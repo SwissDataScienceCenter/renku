@@ -26,11 +26,13 @@ Internal Changes
 
 - **Data services**: Migrate old cloned projects that had linked environments
   that should have been independent.
+- **Gateway**: Do not shut down the load balancer for the core service too early.
 
 Individual components
 ~~~~~~~~~~~~~~~~~~~~~~
 
 - `renku-data-services 0.33.0 <https://github.com/SwissDataScienceCenter/renku-data-services/releases/tag/v0.33.0>`_
+- `renku-gateway 1.3.2 <https://github.com/SwissDataScienceCenter/renku-gateway/releases/tag/1.3.2>`_
 
 
 
