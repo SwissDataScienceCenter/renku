@@ -1,5 +1,10 @@
 .. _changelog:
 
+Test
+----
+
+Just a test.
+
 0.64.2
 ------
 
