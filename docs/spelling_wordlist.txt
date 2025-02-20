@@ -183,6 +183,7 @@ nt
 oauth
 OAuth
 oid
+OIDC
 ok
 online
 OpenID

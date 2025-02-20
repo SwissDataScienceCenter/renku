@@ -25,11 +25,6 @@ jena:
 notebooks:
   oidc:
     allowUnverifiedEmail: true
-    authUrl: https://<deployment-FQDN>/auth/realms/Renku/protocol/openid-connect/auth
-    tokenUrl: https://<deployment-FQDN>/auth/realms/Renku/protocol/openid-connect/token
-  sessionIngress:
-    host: <deployment-FQDN>
-    tlsSecret: <certificate-secret-name>
 postgresql:
   primary:
     persistence:
