@@ -3,6 +3,35 @@
 0.64.3
 ------
 
+Renku ``0.64.3`` introduces some bug fixes and minor improvements.
+
+User-Facing Changes
+~~~~~~~~~~~~~~~~~~~
+
+**✨ Improvements**
+
+- **Sessions**: Add default global environments. Prior to this there
+  was no environments at all in a brand new deployment.
+
+**🐞 Bug Fixes**
+
+- **Sessions**: Create a brand new environment when cloning projects
+  instead of linking the environment from the parent project in the new
+  project.
+
+Internal Changes
+~~~~~~~~~~~~~~~~
+
+**Bug Fixes**
+
+- **Data services**: Migrate old cloned projects that had linked environments
+  that should have been independent.
+
+Individual components
+~~~~~~~~~~~~~~~~~~~~~~
+
+- `renku-data-services 0.33.0 <https://github.com/SwissDataScienceCenter/renku-data-services/releases/tag/v0.33.0>`_
+
 
 
 0.64.2
