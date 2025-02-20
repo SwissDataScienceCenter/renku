@@ -12,6 +12,14 @@ Internal Changes
   secret defining them already exists, it will be maintained, if it does not a set of random passwords will
   be generated.
 
+- **Redis**: Now the password for Redis is optional to define in the values file: if the secret defining it already
+  exists, it will be maintained, if it does not a set of random passwords will be generated.
+
+- **OIDC**: Now all OIDC secrets are optional to define in the values file: if the secret defining them already exists,
+  it will be maintained, if it does not a set of random passwords will be generated.
+
+- Values for `notebooks.oidc.authUrl`, `notebooks.oidc.tokenUrl`, `notebooks.sessionIngress` have now sensible defaults
+  and are optional to define in the values file if Keycloak is deployed through the Renku Helm chart.
 
 0.64.2
 ------
