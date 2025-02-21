@@ -67,7 +67,7 @@ spec:
                 - name: SOLR_URL
                   value: "http://{{ template "solr.fullname" . }}:{{ .Values.global.solr.port }}"
                 - name: SOLR_CORE
-                  value: {{ first .Values.solr.coreNames }}
+                  value: {{ index .Values.solr.coreNames 1 }}
                 - name: SOLR_USER
                   value: {{ default "admin" .Values.solr.auth.adminUsername | quote }}
                 - name: SOLR_PASSWORD
