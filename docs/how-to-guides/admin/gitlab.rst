@@ -205,7 +205,7 @@ Set values in configuration files
 Migration
 ^^^^^^^^^
 
-#. Uninstall Renku & modify your Renku Helm values to use an external GitLab, specifying the new GitLab URL. You can also start with a newly generated Renku values using the `Renku generate-values script <https://github.com/SwissDataScienceCenter/renku/tree/master/scripts/generate-values>`_.
+#. Uninstall Renku & modify your Renku Helm values to use an external GitLab, specifying the new GitLab URL. You can also start with a newly generated Renku values referring to the file in the `minimal-deployment` directory.
 #. (Optional, recommended) Create a new namespace for GitLab
 #. Create secrets in the namespace you wish to deploy GitLab to with the content of the files containing the S3 bucket connection details and OAuth2 provider. Ensure the name of the secret and the key of the values match the associated values provided in your cloud-native Helm chart values.
 #. Install GitLab with Helm, providing the namespace, chart version and values file as arguments.
