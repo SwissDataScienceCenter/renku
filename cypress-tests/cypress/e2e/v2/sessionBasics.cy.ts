@@ -162,12 +162,14 @@ describe("Start a session that consumes project resources", () => {
 
     // Check the project resources are available in the session.
     cy.getIframe("[data-cy=session-iframe]").within(() => {
-      // ? Mind the following commands target the VSCode web interface.
+      // ? Mind the following commands target the VSCode web interface where we have little control.
       const findAndExpandFolder = (name: string, depth: number) => {
         cy.contains(`[role=treeitem][aria-level="${depth}"]`, name).then(
           ($el) => {
             if ($el.attr("aria-expanded") === "false") {
-              cy.wrap($el).click();
+              // ? Forcing clicks is a bad practice but VScode has unpredictable behavior for its popups.
+              // eslint-disable-next-line cypress/no-force
+              cy.wrap($el).click({ force: true });
             }
           },
         );
@@ -179,13 +181,13 @@ describe("Start a session that consumes project resources", () => {
           findAndExpandFolder(repositoryName, 2);
           cy.get(
             `[role="treeitem"][aria-level="3"][aria-label="client"]`,
-          ).should("be.visible");
+          ).should("exist");
 
           // Check the S3 bucket content
           findAndExpandFolder(dataConnectorName, 2);
           cy.get(
             `[role="treeitem"][aria-level="3"][aria-label="data_RNAseq"]`,
-          ).should("be.visible");
+          ).should("exist");
         },
       );
     });
