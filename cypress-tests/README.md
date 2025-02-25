@@ -19,7 +19,7 @@ error handling, etc.) are tested in the unit and integration tests of the
 You need a fully working RenkuLab deployment to run the tests against, and a user
 account for the deployment.
 
-To run the tests locally, you will need to clone the repository and have a
+To run the tests locally, you will need to clone this repository and have a
 recent version of Node.js installed. Then follow these steps:
 
 - Install the dependencies with `npm install`.
@@ -29,7 +29,7 @@ recent version of Node.js installed. Then follow these steps:
 - Run the tests with `npm run e2e` or one of the many available flags. For example,
   you can run the tests without the GUI with `npm run e2e:headless`.
 
-Here is a list of the environment variable that you should set in the
+Here is a list of the environment variables that you should set in the
 `cypress.env.json` file:
 
 | VARIABLE        | USE                                                   |
