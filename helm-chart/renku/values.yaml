@@ -1507,6 +1507,8 @@ dataService:
     # pushSecretName:
     # buildRunRetentionAfterFailedSeconds:
     # buildRunRetentionAfterSucceededSeconds:
+    # nodeSelector:
+    # tolerations:
 
 authz:
   replicaCount: 1
