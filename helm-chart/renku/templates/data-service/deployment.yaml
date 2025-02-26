@@ -131,6 +131,14 @@ spec:
               value: {{ .Values.dataService.imageBuilders.buildRunRetentionAfterFailedSeconds | default "" | quote }}
             - name: BUILD_RUN_RETENTION_AFTER_SUCCEEDED_SECONDS
               value: {{ .Values.dataService.imageBuilders.buildRunRetentionAfterSucceededSeconds | default "" | quote }}
+            {{- with .Values.dataService.imageBuilders.nodeSelector }}
+            - name: BUILD_NODE_SELECTOR
+              value: {{ toJson . | quote }}
+            {{- end }}
+            {{- with .Values.dataService.imageBuilders.tolerations }}
+            - name: BUILD_NODE_TOLERATIONS
+              value: {{ toJson . | quote }}
+            {{- end }}
             - name: KUBERNETES_NAMESPACE
               valueFrom:
                 fieldRef:
