@@ -104,30 +104,15 @@ chart
 We tried to document in-line all the important pieces that someone might want to
 configure, but there are `a lot` of options and many you probably won't care about immediately.
 
-To generate a basic values file, you can use a script we have prepared. You need to have Python3 and ``wget`` installed.
+To deploy a *development* version of Renku, you can use the values file found in the `minimal-deployment` folder.
 
-.. code-block::
+The following values needs to be replaced where the placeholders ``<...>`` are:
 
-   $ mkdir renku-values
-   $ cd renku-values
-   $ wget https://raw.githubusercontent.com/SwissDataScienceCenter/renku/master/scripts/generate-values/generate-values.sh
-   $ sh generate-values.sh -o renku-values.yaml
+  - The fully qualified domain name for the RenkuLab instance
+  - The Gitlab client ID and secret generated in the Gitlab configuration
+  - The URL of the Gitlab instance
 
-By default, this will create a python virtual environment and run the script; if
-you prefer to avoid any installation, you can pass the ``--docker`` flag to the
-``generate-values.sh`` script and it will execute in a docker container.
-
-After preparing your values and before deploying Renku please make sure to check
-the following in the values file:
-
-  - the URLs and DNS names are correct
-  - all the necessary secrets are configured
-  - the ingress configuration is correct
-  - add/verify, if necessary, the persistent volume claims
-
-.. note::
-   If you created persistent volumes in the step above, make sure to add their
-   references to the appropriate components under `storage.existingClaim`.
+The values file will deploy an instance of Renku where all the storage is *ephemeral* and will be lost if the pods are deleted.
 
 Further configuration
 ^^^^^^^^^^^^^^^^^^^^^^
