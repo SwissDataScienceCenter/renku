@@ -39,7 +39,7 @@ describe("Basic public project functionality", () => {
       () => {
         cy.robustLogin();
       },
-      validateLogin
+      validateLogin,
     );
     cy.createProjectIfMissing({ templateName: "Python", ...projectIdentifier });
   });
@@ -56,7 +56,7 @@ describe("Basic public project functionality", () => {
 
     // Start a session with options
     let serversInvoked = false;
-    cy.intercept("/ui-server/api/notebooks/servers*", (req) => {
+    cy.intercept("/ui-server/api/notebooks/servers*", () => {
       serversInvoked = true;
     }).as("getServers");
     cy.getProjectSection("Sessions").click();
@@ -84,7 +84,7 @@ describe("Basic public project functionality", () => {
       .contains("Starting Session")
       .should("exist");
     cy.get(".progress-box .progress-title", { timeout: TIMEOUTS.vlong }).should(
-      "not.exist"
+      "not.exist",
     );
 
     // Verify the "Connect" button works as well
@@ -101,7 +101,7 @@ describe("Basic public project functionality", () => {
     cy.getIframe("iframe#session-iframe").within(() => {
       // Open the terminal and check the repo is not ahead
       cy.get(".jp-Launcher-content", { timeout: TIMEOUTS.long }).should(
-        "be.visible"
+        "be.visible",
       );
       cy.get(".jp-Launcher-section").should("be.visible");
       cy.get('.jp-LauncherCard[title="Start a new terminal session"]')
@@ -112,7 +112,7 @@ describe("Basic public project functionality", () => {
       cy.get(".xterm-helper-textarea")
         .click()
         .type(
-          `renku run --name ${workflow.name} echo "123" > ${workflow.output}{enter}`
+          `renku run --name ${workflow.name} echo "123" > ${workflow.output}{enter}`,
         );
       cy.get("#filebrowser")
         .should("be.visible")
@@ -167,7 +167,9 @@ describe("Basic public project functionality", () => {
 
   it("Start a new session as anonymous user.", () => {
     // Do not re-use the logged-in session
-    cy.session(["anonymous", getRandomString()], () => {});
+    cy.session(["anonymous", getRandomString()], () => {
+      cy.log("Anonyomous session setup");
+    });
 
     // Log out and go to the project again
     cy.visit("/");
@@ -222,7 +224,7 @@ describe("Basic public project functionality", () => {
     cy.request({ url: "ui-server/api/notebooks/version" }).then((resp) => {
       if (!resp.body.versions[0].data.cloudstorageEnabled) {
         cy.log(
-          "Skipping the test since the deployment doesn't support Cloud Storage"
+          "Skipping the test since the deployment doesn't support Cloud Storage",
         );
         return;
       }
@@ -239,6 +241,7 @@ describe("Basic public project functionality", () => {
       // Add a S3 storage configuration if it doesn't exist
       cy.wait("@getProjectCloudStorage").then(({ response }) => {
         const storages = response.body as { storage: { name: string } }[];
+        // eslint-disable-next-line max-nested-callbacks
         if (storages.find(({ storage }) => storage.name === "data_s3")) {
           return;
         }
@@ -287,7 +290,7 @@ describe("Basic public project functionality", () => {
           .click();
 
         cy.getDataCy("cloud-storage-edit-body").contains(
-          "storage data_s3 has been successfully added"
+          "storage data_s3 has been successfully added",
         );
         cy.getDataCy("cloud-storage-edit-close-button")
           .should("be.visible")
@@ -327,7 +330,7 @@ describe("Basic public project functionality", () => {
       // Verify that the S3 data is mounted
       cy.getIframe("iframe#session-iframe").within(() => {
         cy.get(".jp-DirListing-content", { timeout: TIMEOUTS.long }).should(
-          "be.visible"
+          "be.visible",
         );
         cy.get(".jp-DirListing-item")
           .contains("data_s3")
@@ -340,7 +343,7 @@ describe("Basic public project functionality", () => {
           .dblclick();
 
         cy.get(".jp-FileEditor", { timeout: TIMEOUTS.long }).should(
-          "be.visible"
+          "be.visible",
         );
         cy.get(".jp-FileEditor")
           .contains("The GIAB s3 bucket and URLs")

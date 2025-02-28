@@ -1,22 +1,11 @@
 {
-  "include": [
-    "cypress/**/*.ts",
-    "index.ts",
-    "cypress.config.ts",
-    "config.ts",
-  ],
+  "include": ["cypress/**/*.ts", "index.ts", "cypress.config.ts", "config.ts"],
   "module": "commonjs",
   "compilerOptions": {
     "target": "es5",
     "declaration": true,
-    "types": [
-      "cypress",
-      "node",
-    ],
-    "lib": [
-      "es5",
-      "dom"
-    ],
-    "outDir": "dist",
+    "types": ["cypress", "node"],
+    "lib": ["es5", "dom"],
+    "outDir": "dist"
   }
 }

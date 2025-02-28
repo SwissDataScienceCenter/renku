@@ -1,11 +1,13 @@
 import { TIMEOUTS } from "../../../config";
+import { User } from "../types/user.types";
 
 export const validateLogin = {
   validate() {
     // If we send a request to the user endpoint on Gitlab too quickly after we log in then
     // it sometimes randomly responds with 401 and sometimes with 200 (as expected). This wait period seems to
     // allow Gitlab to "settle" after the login and properly recognize the token and respond with 200.
-    cy.wait(10000);
+    // eslint-disable-next-line cypress/no-unnecessary-waiting
+    cy.wait(TIMEOUTS.short);
     // This returns 401 when not properly logged in
     cy.request("ui-server/api/data/user").its("status").should("eq", 200);
     // This is how the ui decides the user is logged in
@@ -17,6 +19,40 @@ export const validateLogin = {
     });
   },
 };
+
+export const validateLoginV2 = {
+  validate() {
+    cy.request("api/data/user").then((response) => {
+      expect(response.status).to.eq(200);
+
+      expect(response.body).property("id").to.not.be.empty;
+      expect(response.body).property("id").to.not.be.null;
+      expect(response.body).property("username").to.not.be.empty;
+      expect(response.body).property("username").to.not.be.null;
+    });
+  },
+};
+
+export function getUserData(): Cypress.Chainable<User> {
+  return cy
+    .request("api/data/user")
+    .as("getUserData")
+    .then((response) => {
+      expect(response.status).to.eq(200);
+      expect(response.body).property("username").to.exist;
+      expect(response.body).property("username").to.not.be.empty;
+      expect(response.body).property("username").to.not.be.null;
+
+      return {
+        id: response.body.id,
+        username: response.body.username,
+        email: response.body.email,
+        first_name: response.body.first_name,
+        last_name: response.body.last_name,
+        is_admin: response.body.is_admin,
+      } as User;
+    });
+}
 
 export const getIframe = (selector: string) => {
   // https://github.com/cypress-io/cypress-example-recipes/blob/master/examples/blogs__iframes/cypress/support/e2e.js
@@ -35,8 +71,10 @@ function getDataCy(value: string, exist?: boolean) {
   return cy.get(`[data-cy=${value}]`);
 }
 
-export function getRandomString(length: number=8) {
-  return Math.random().toString(20).substr(2, length)
+export function getRandomString(length = 8) {
+  return Math.random()
+    .toString(20)
+    .substring(2, length + 2);
 }
 
 export default function registerGeneralCommands() {
