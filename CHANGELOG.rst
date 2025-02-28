@@ -3,6 +3,7 @@
 0.66.0
 ------
 
+- Prepare helm charts to allow data-services to connect to SOLR.
 
 
 0.65.0

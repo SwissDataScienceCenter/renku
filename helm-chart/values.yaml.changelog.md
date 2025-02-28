@@ -5,6 +5,10 @@ For changes that require manual steps other than changing values, please check o
 Please follow this convention when adding a new row
 * `<type: NEW|EDIT|DELETE> - *<resource name>*: <details>`
 
+## Upgrading to Renku 0.65.0
+
+* EDIT: Added a new core ``renku-data`` for SOLR in ``solr.coreNames``.
+
 ## Upgrading to Renku 0.62.0
 
 * DELETE ``gitlab.*`` - all values related to the bundled GitLab have been removed. GitLab must from now on be provided as an external service and is no longer supplied as a part of the Renku Helm chart.
