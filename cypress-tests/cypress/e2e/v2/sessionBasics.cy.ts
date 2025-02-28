@@ -65,14 +65,17 @@ describe("Start a session that consumes project resources", () => {
 
   it("Start a session with VSCode and check it has the necessary resources", () => {
     const dataConnectorName = `giab-${getRandomString()}`;
+    const dataContainerFolder = "data_RNAseq";
     const repositoryName = "renku-ui";
+    const repositoryFolder = "client";
     const session = {
-      arguments:
-        '["/entrypoint.sh jupyter server --ServerApp.ip=0.0.0.0 --ServerApp.port=8888 --ServerApp.base_url=$RENKU_BASE_URL_PATH --ServerApp.token=\\"\\" --ServerApp.password=\\"\\" --ServerApp.allow_remote_access=true --ContentsManager.allow_hidden=true --ServerApp.allow_origin=* --ServerApp.root_dir=\\"/home/jovyan/work\\""]',
-      command: '["sh","-c"]',
-      image: "registry.renkulab.io/rok.roskar/vscode-example:0c10599",
+      arguments: '["/entrypoint.sh"]',
+      command: '["bash"]',
+      image: "renku/renkulab-vscodium-python-runimage:ubuntu-59fcea4",
+      mountdir: "/home/ubuntu/work",
       name: "vscode-launcher",
-      url: "/vscode",
+      url: "/",
+      workdir: "/home/ubuntu/work",
     };
 
     // Access the project and create some resources.
@@ -121,6 +124,12 @@ describe("Start a session that consumes project resources", () => {
     cy.getDataCy("session-launcher-field-default_url")
       .clear()
       .type(session.url);
+    cy.getDataCy("session-launcher-field-mount_directory")
+      .clear()
+      .type(session.mountdir);
+    cy.getDataCy("session-launcher-field-working_directory")
+      .clear()
+      .type(session.workdir);
     cy.getDataCy("session-launcher-field-command")
       .clear()
       .type(session.command);
@@ -163,7 +172,7 @@ describe("Start a session that consumes project resources", () => {
     // Check the project resources are available in the session.
     cy.getIframe("[data-cy=session-iframe]").within(() => {
       // ? Mind the following commands target the VSCode web interface where we have little control.
-      const findAndExpandFolder = (name: string, depth: number) => {
+      function findAndExpandFolder(name: string, depth: number) {
         cy.contains(`[role=treeitem][aria-level="${depth}"]`, name).then(
           ($el) => {
             if ($el.attr("aria-expanded") === "false") {
@@ -173,20 +182,19 @@ describe("Start a session that consumes project resources", () => {
             }
           },
         );
-      };
+      }
       cy.get("#workbench\\.view\\.explorer", { timeout: TIMEOUTS.long }).within(
         () => {
           // Check the repository content
-          findAndExpandFolder("work", 1);
-          findAndExpandFolder(repositoryName, 2);
+          findAndExpandFolder(repositoryName, 1);
           cy.get(
-            `[role="treeitem"][aria-level="3"][aria-label="client"]`,
+            `[role="treeitem"][aria-level="2"][aria-label="${repositoryFolder}"]`,
           ).should("exist");
 
           // Check the S3 bucket content
-          findAndExpandFolder(dataConnectorName, 2);
+          findAndExpandFolder(dataConnectorName, 1);
           cy.get(
-            `[role="treeitem"][aria-level="3"][aria-label="data_RNAseq"]`,
+            `[role="treeitem"][aria-level="2"][aria-label="${dataContainerFolder}"]`,
           ).should("exist");
         },
       );
