@@ -1,6 +1,8 @@
 gitlab:
   enabled: false
 global:
+  anonymousSessions:
+    enabled: true
   gateway:
     gitlabClientId: <gitlabClientId>
     gitlabClientSecret: <gitlabClientSecret>
