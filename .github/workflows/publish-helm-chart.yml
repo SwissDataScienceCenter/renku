@@ -15,7 +15,7 @@ jobs:
       - name: Set version
         id: vars
         run: echo "tag=${GITHUB_REF#refs/*/}" >> $GITHUB_OUTPUT
-      - uses: SwissDataScienceCenter/renku-actions/publish-chart@v1.14.1
+      - uses: SwissDataScienceCenter/renku-actions/publish-chart@v1.15.0
         env:
           CHART_DIR: helm-chart/
           CHART_NAME: renku
