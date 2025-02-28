@@ -1507,6 +1507,7 @@ dataService:
     # pushSecretName:
     # buildRunRetentionAfterFailedSeconds:
     # buildRunRetentionAfterSucceededSeconds:
+    # buildRunTimeoutSeconds:
     # nodeSelector:
     # tolerations:
 
