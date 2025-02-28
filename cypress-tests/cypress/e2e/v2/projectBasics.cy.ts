@@ -62,6 +62,7 @@ describe("Project - create, edit and delete", () => {
     getUserData().then((user: User) => {
       const username = user.username;
       cy.getDataCy("navbar-new-entity").click();
+      cy.getDataCy("I-WILL-FAIL").click();
       cy.getDataCy("navbar-project-new").click();
       cy.getDataCy("project-creation-form").should("exist");
       cy.getDataCy("project-name-input").type(projectName);

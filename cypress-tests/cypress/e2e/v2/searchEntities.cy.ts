@@ -116,6 +116,7 @@ describe("Search for resources: groups, projects, users", () => {
 
   it("Can search for entities and filter works", () => {
     cy.visit("/v2");
+    cy.getDataCy("I-WILL-FAIL").click();
 
     // Search for string
     cy.getDataCy("navbar-link-search").click();
