@@ -66,6 +66,7 @@ Internal Changes
 **New Features**
 
 - **Data services**: Support creating session environments based on code repositories.
+- **Data services**: Prepare helm charts to allow data-services to connect to SOLR.
 - **Notebooks**: Cache Shipwright BuildRuns and Tekton TaskRuns for image builds.
 
 **Improvements**
