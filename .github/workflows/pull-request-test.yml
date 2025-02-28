@@ -133,7 +133,8 @@ jobs:
           s3-results-secret-key: ${{ secrets.ACCEPTANCE_TESTS_BUCKET_SECRET_KEY }}
           test-timeout-mins: "120"
 
-  test-pr-cypress:
+  legacy-cypress-acceptance-tests:
+    name: Run legacy Cypress tests (pre v2.0)
     needs: [check-deploy, deploy-pr]
     runs-on: ubuntu-22.04
 
@@ -149,15 +150,7 @@ jobs:
             useSession,
             checkWorkflows,
             rstudioSession,
-            v2/anonymousNavigation,
-            v2/dashboardV2,
-            v2/groupBasics,
-            v2/projectBasics,
-            v2/projectResources,
-            v2/searchEntities,
-            v2/sessionBasics,
           ]
-
     steps:
       - uses: SwissDataScienceCenter/renku-actions/test-renku-cypress@v1.14.0
         if: github.event.action != 'closed' && needs.check-deploy.outputs.pr-contains-string == 'true' && needs.check-deploy.outputs.test-enabled == 'true'
@@ -166,6 +159,34 @@ jobs:
           renku-reference: ${{ github.ref }}
           renku-release: ci-renku-${{ github.event.number }}
           test-user-password: ${{ secrets.RENKU_BOT_DEV_PASSWORD }}
+
+  cypress-acceptance-tests:
+    name: Run Cypress acceptance tests
+    needs: [check-deploy, deploy-pr]
+    runs-on: ubuntu-22.04
+    strategy:
+      fail-fast: false
+      matrix:
+        tests:
+          [
+            anonymousNavigation,
+            dashboardV2,
+            groupBasics,
+            projectBasics,
+            projectResources,
+            searchEntities,
+            sessionBasics,
+          ]
+    steps:
+      - uses: SwissDataScienceCenter/renku-actions/test-renku-cypress@v1.14.0
+        if: github.event.action != 'closed' && needs.check-deploy.outputs.pr-contains-string == 'true' && needs.check-deploy.outputs.test-enabled == 'true'
+        with:
+          e2e-folder: cypress/e2e/v2/
+          e2e-target: ${{ matrix.tests }}
+          renku-reference: ${{ github.ref }}
+          renku-release: ci-renku-${{ github.event.number }}
+          test-user-password: ${{ secrets.RENKU_BOT_DEV_PASSWORD }}
+
   deploy-string-no-custom-version:
     name: Check that deploy string doesn't specify a custom component version
     needs: [check-deploy]
