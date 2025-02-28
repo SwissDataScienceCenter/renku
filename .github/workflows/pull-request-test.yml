@@ -1,4 +1,4 @@
-name: Deploy and Test PR
+name: Test PR
 on:
   pull_request:
     types:
@@ -15,6 +15,7 @@ concurrency:
 
 jobs:
   test-docs:
+    name: Documentation
     if: github.event.action != 'closed'
     runs-on: ubuntu-latest
     steps:
@@ -48,6 +49,7 @@ jobs:
           path: docs/_build/html/
 
   check-deploy:
+    name: Anylize deploy string
     runs-on: ubuntu-22.04
     outputs:
       pr-contains-string: ${{ steps.deploy-comment.outputs.pr-contains-string }}
@@ -70,6 +72,7 @@ jobs:
           pr_ref: ${{ github.event.number }}
 
   deploy-pr:
+    name: Deploy
     if: github.event.action != 'closed'
     needs: [check-deploy]
     runs-on: ubuntu-22.04
@@ -120,6 +123,7 @@ jobs:
             You can access the deployment of this PR at https://ci-renku-${{ github.event.number }}.dev.renku.ch
 
   test-pr:
+    name: Legacy Scala tests
     if: github.event.action != 'closed' && needs.check-deploy.outputs.pr-contains-string == 'true' && needs.check-deploy.outputs.test-enabled == 'true'
     needs: [check-deploy, deploy-pr]
     runs-on: ubuntu-22.04
@@ -133,7 +137,8 @@ jobs:
           s3-results-secret-key: ${{ secrets.ACCEPTANCE_TESTS_BUCKET_SECRET_KEY }}
           test-timeout-mins: "120"
 
-  test-pr-cypress:
+  legacy-cypress-acceptance-tests:
+    name: Legacy Cypress tests
     needs: [check-deploy, deploy-pr]
     runs-on: ubuntu-22.04
 
@@ -149,15 +154,7 @@ jobs:
             useSession,
             checkWorkflows,
             rstudioSession,
-            v2/anonymousNavigation,
-            v2/dashboardV2,
-            v2/groupBasics,
-            v2/projectBasics,
-            v2/projectResources,
-            v2/searchEntities,
-            v2/sessionBasics,
           ]
-
     steps:
       - uses: SwissDataScienceCenter/renku-actions/test-renku-cypress@v1.14.0
         if: github.event.action != 'closed' && needs.check-deploy.outputs.pr-contains-string == 'true' && needs.check-deploy.outputs.test-enabled == 'true'
@@ -166,8 +163,36 @@ jobs:
           renku-reference: ${{ github.ref }}
           renku-release: ci-renku-${{ github.event.number }}
           test-user-password: ${{ secrets.RENKU_BOT_DEV_PASSWORD }}
+
+  cypress-acceptance-tests:
+    name: Cypress tests
+    needs: [check-deploy, deploy-pr]
+    runs-on: ubuntu-22.04
+    strategy:
+      fail-fast: false
+      matrix:
+        tests:
+          [
+            anonymousNavigation,
+            dashboardV2,
+            groupBasics,
+            projectBasics,
+            projectResources,
+            searchEntities,
+            sessionBasics,
+          ]
+    steps:
+      - uses: SwissDataScienceCenter/renku-actions/test-renku-cypress@v1.14.0
+        if: github.event.action != 'closed' && needs.check-deploy.outputs.pr-contains-string == 'true' && needs.check-deploy.outputs.test-enabled == 'true'
+        with:
+          e2e-folder: cypress/e2e/v2/
+          e2e-target: ${{ matrix.tests }}
+          renku-reference: ${{ github.ref }}
+          renku-release: ci-renku-${{ github.event.number }}
+          test-user-password: ${{ secrets.RENKU_BOT_DEV_PASSWORD }}
+
   deploy-string-no-custom-version:
-    name: Check that deploy string doesn't specify a custom component version
+    name: Ensure no custom components
     needs: [check-deploy]
     runs-on: ubuntu-22.04
     steps:
@@ -188,6 +213,7 @@ jobs:
         with:
           script: core.setFailed('Cannot merge release PR if it still has custom versions in deploy string.')
   cleanup:
+    name: Cleanup
     if: github.event.action == 'closed'
     runs-on: ubuntu-22.04
     steps:
