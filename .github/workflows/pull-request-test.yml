@@ -149,12 +149,13 @@ jobs:
             useSession,
             checkWorkflows,
             rstudioSession,
+            v2/anonymousNavigation,
             v2/dashboardV2,
-            v2/projectBasics,
             v2/groupBasics,
+            v2/projectBasics,
             v2/projectResources,
             v2/searchEntities,
-            v2/anonymousNavigation
+            v2/sessionBasics,
           ]
 
     steps:
