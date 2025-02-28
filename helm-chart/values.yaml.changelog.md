@@ -7,7 +7,7 @@ Please follow this convention when adding a new row
 
 ## Upgrading to Renku 0.65.0
 
-* EDIT: Configured a new core for SOLR
+* EDIT: Added a new core ``renku-data`` for SOLR in ``solr.coreNames``.
 
 ## Upgrading to Renku 0.62.0
 

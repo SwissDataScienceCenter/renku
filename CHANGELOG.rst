@@ -21,7 +21,7 @@ Internal Changes
 - Values for `notebooks.oidc.authUrl`, `notebooks.oidc.tokenUrl`, `notebooks.sessionIngress` have now sensible defaults
   and are optional to define in the values file if Keycloak is deployed through the Renku Helm chart.
 
-- Prepare helm charts to allow data-services connect to SOLR.
+- Prepare helm charts to allow data-services to connect to SOLR.
 
 0.64.3
 ------
