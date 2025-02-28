@@ -1498,18 +1498,32 @@ dataService:
   trustedProxies:
     proxiesCount: 1
     realIpHeader: x-real-ip
-  # Custom image building with Shipwright
+  # Build session images from code repositories with Shipwright
   imageBuilders:
+    # Experimental feature: enable at your own risk!
     enabled: false
-    # outputImagePrefix: 
-    # vscodiumPythonRunImage:
-    # strategyName:
-    # pushSecretName:
-    # buildRunRetentionAfterFailedSeconds:
-    # buildRunRetentionAfterSucceededSeconds:
-    # buildRunTimeoutSeconds:
+    ## The container image prefix for images built from code
+    # outputImagePrefix: harbor.dev.renku.ch/renku-build/
+    ## The run image used for Python + VSCodium images
+    # vscodiumPythonRunImage: renku/renkulab-vscodium-python-runimage:ubuntu-59fcea4
+    ## The name of the BuildStrategy to use for image builds.
+    # strategyName: renku-buildpacks
+    ## The name of the secret used to push images built from code.
+    # pushSecretName: renku-build-docker-secret
+    ## The TTL for BuildRuns
+    # buildRunRetentionAfterFailedSeconds: 86400
+    # buildRunRetentionAfterSucceededSeconds: 86400
+    ## The timeout duration for image builds.
+    # buildRunTimeoutSeconds: 3600
+    ## The node selector for BuildRuns
     # nodeSelector:
+    #  renku.io/node-purpose: image-build
+    ## The tolerations for BuildRuns
     # tolerations:
+    #   - effect: NoSchedule
+    #     key: renku.io/dedicated
+    #     operator: Equal
+    #     value: image-build
 
 authz:
   replicaCount: 1

@@ -5,6 +5,11 @@ For changes that require manual steps other than changing values, please check o
 Please follow this convention when adding a new row
 * `<type: NEW|EDIT|DELETE> - *<resource name>*: <details>`
 
+## Upgrading to Renku 0.65.0
+
+* NEW `dataService.imageBuilders` to configure session image builds using Shipwright.
+  This feature is experimental and should not be enabled by RenkuLab administrators. Enable the feature at your own risk!
+
 ## Upgrading to Renku 0.62.0
 
 * DELETE ``gitlab.*`` - all values related to the bundled GitLab have been removed. GitLab must from now on be provided as an external service and is no longer supplied as a part of the Renku Helm chart.
