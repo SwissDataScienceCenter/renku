@@ -79,5 +79,21 @@ rules:
       - list
       - get
       - watch
+  - apiGroups:
+      - shipwright.io
+    resources:
+      - buildruns
+    verbs:
+      - list
+      - get
+      - watch
+  - apiGroups:
+      - tekton.dev
+    resources:
+      - taskruns
+    verbs:
+      - list
+      - get
+      - watch
 {{ end }}
 {{ end }}
