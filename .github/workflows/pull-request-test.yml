@@ -1,4 +1,4 @@
-name: Deploy and Test PR
+name: Test PR
 on:
   pull_request:
     types:
@@ -15,6 +15,7 @@ concurrency:
 
 jobs:
   test-docs:
+    name: Documentation
     if: github.event.action != 'closed'
     runs-on: ubuntu-latest
     steps:
@@ -48,6 +49,7 @@ jobs:
           path: docs/_build/html/
 
   check-deploy:
+    name: Anylize deploy string
     runs-on: ubuntu-22.04
     outputs:
       pr-contains-string: ${{ steps.deploy-comment.outputs.pr-contains-string }}
@@ -70,6 +72,7 @@ jobs:
           pr_ref: ${{ github.event.number }}
 
   deploy-pr:
+    name: Deploy
     if: github.event.action != 'closed'
     needs: [check-deploy]
     runs-on: ubuntu-22.04
@@ -120,6 +123,7 @@ jobs:
             You can access the deployment of this PR at https://ci-renku-${{ github.event.number }}.dev.renku.ch
 
   test-pr:
+    name: Legacy Scala tests
     if: github.event.action != 'closed' && needs.check-deploy.outputs.pr-contains-string == 'true' && needs.check-deploy.outputs.test-enabled == 'true'
     needs: [check-deploy, deploy-pr]
     runs-on: ubuntu-22.04
@@ -134,7 +138,7 @@ jobs:
           test-timeout-mins: "120"
 
   legacy-cypress-acceptance-tests:
-    name: Run legacy Cypress tests (pre v2.0)
+    name: Legacy Cypress tests
     needs: [check-deploy, deploy-pr]
     runs-on: ubuntu-22.04
 
@@ -161,7 +165,7 @@ jobs:
           test-user-password: ${{ secrets.RENKU_BOT_DEV_PASSWORD }}
 
   cypress-acceptance-tests:
-    name: Run Cypress acceptance tests
+    name: Cypress tests
     needs: [check-deploy, deploy-pr]
     runs-on: ubuntu-22.04
     strategy:
@@ -188,7 +192,7 @@ jobs:
           test-user-password: ${{ secrets.RENKU_BOT_DEV_PASSWORD }}
 
   deploy-string-no-custom-version:
-    name: Check that deploy string doesn't specify a custom component version
+    name: Ensure no custom components
     needs: [check-deploy]
     runs-on: ubuntu-22.04
     steps:
@@ -209,6 +213,7 @@ jobs:
         with:
           script: core.setFailed('Cannot merge release PR if it still has custom versions in deploy string.')
   cleanup:
+    name: Cleanup
     if: github.event.action == 'closed'
     runs-on: ubuntu-22.04
     steps:
