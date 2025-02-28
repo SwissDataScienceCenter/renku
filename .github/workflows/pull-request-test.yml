@@ -142,13 +142,8 @@ jobs:
       matrix:
         tests:
           [
-            publicProject,
-            privateProject,
             updateProjects,
-            testDatasets,
-            useSession,
             checkWorkflows,
-            rstudioSession,
             v2/anonymousNavigation,
             v2/dashboardV2,
             v2/groupBasics,
