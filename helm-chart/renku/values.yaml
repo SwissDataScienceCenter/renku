@@ -341,6 +341,10 @@ keycloakx:
     {{- end -}}
   ingress:
     enabled: false
+  resources:
+    requests:
+      cpu: 100m
+      memory: 600Mi
 # Postgresql configuration
 # The bitnami postgres chart offers a variety of configuration options, most of
 # which are not explicitly mentioned here. We predominantly list the values where we
@@ -1151,17 +1155,12 @@ gateway:
   service:
     type: ClusterIP
     port: 80
-  resources: {}
-  # We usually recommend not to specify default resources and to leave this as a conscious
-  # choice for the user. This also increases chances charts run on environments with little
-  # resources, such as Minikube. If you do want to specify resources, uncomment the following
-  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
-  # limits:
-  #  cpu: 100m
-  #  memory: 128Mi
-  # requests:
-  #  cpu: 100m
-  #  memory: 128Mi
+  resources:
+    requests:
+      cpu: 20m
+      memory: 64Mi
+    limits:
+      memory: 64Mi
 
   # GitLab has introduced a new logout behavior in 12.7.0
   # which was initially broken and fixed in 12.9.0.
@@ -1219,6 +1218,8 @@ jena:
     - name: COMPACTING_SCHEDULE ## The 'Mon *-*-* 00:00:00' expression means the process will be run every Monday at 00:00:00. More details at https://github.com/eikek/calev
       value: "Mon *-*-* 00:00:00"
   resources:
+    limits:
+      memory: 1.5Gi
     requests:
       cpu: 1000m
       memory: 3Gi
