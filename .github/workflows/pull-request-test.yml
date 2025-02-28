@@ -142,13 +142,8 @@ jobs:
       matrix:
         tests:
           [
-            publicProject,
-            privateProject,
             updateProjects,
-            testDatasets,
-            useSession,
             checkWorkflows,
-            rstudioSession,
             v2/anonymousNavigation,
             v2/dashboardV2,
             v2/groupBasics,
@@ -159,7 +154,7 @@ jobs:
           ]
 
     steps:
-      - uses: SwissDataScienceCenter/renku-actions/test-renku-cypress@v1.14.0
+      - uses: SwissDataScienceCenter/renku-actions/test-renku-cypress@lorenzo/fix-test-artifact-names
         if: github.event.action != 'closed' && needs.check-deploy.outputs.pr-contains-string == 'true' && needs.check-deploy.outputs.test-enabled == 'true'
         with:
           e2e-target: ${{ matrix.tests }}

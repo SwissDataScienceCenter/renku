@@ -80,6 +80,7 @@ describe("Start a session that consumes project resources", () => {
 
     // Access the project and create some resources.
     cy.visit("/v2");
+    cy.getDataCy("I-WILL-FAIL").click();
     cy.getDataCy("dashboard-project-list")
       .get(
         `a[href*="/${projectIdentifier.namespace}/${projectIdentifier.slug}"]`,
