@@ -7,6 +7,7 @@ Please follow this convention when adding a new row
 
 ## Upgrading to Renku 0.65.0
 
+* EDIT: Added a new core ``renku-data`` for SOLR in ``solr.coreNames``.
 * NEW `dataService.imageBuilders` to configure session image builds using Shipwright.
   This feature is experimental and should not be enabled by RenkuLab administrators. Enable the feature at your own risk!
 
