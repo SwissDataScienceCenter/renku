@@ -3,6 +3,8 @@
 0.65.0
 ------
 
+Renku ``0.65.0`` includes improvements to different services and the Renku Helm chart.
+
 Internal Changes
 ~~~~~~~~~~~~~~~~
 
@@ -22,6 +24,13 @@ Internal Changes
   and are optional to define in the values file if Keycloak is deployed through the Renku Helm chart.
 
 - Prepare helm charts to allow data-services to connect to SOLR.
+
+- **Data services**: Migrating search code from another code base into Python.
+
+Individual components
+~~~~~~~~~~~~~~~~~~~~~~
+
+- `renku-data-services 0.34.0 <https://github.com/SwissDataScienceCenter/renku-data-services/releases/tag/v0.34.0>`_
 
 0.64.3
 ------
