@@ -644,10 +644,6 @@ spec:
     - from:
         - podSelector:
             matchLabels:
-              app: renku-data-service
-              release: {{ .Release.Name }}
-        - podSelector:
-            matchLabels:
               app: search-api
         - podSelector:
             matchLabels:
