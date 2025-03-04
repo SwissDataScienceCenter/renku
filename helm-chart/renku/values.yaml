@@ -6,7 +6,7 @@
 ## Shared values/secrets
 global:
   ## YAML string that contains all application level Renku configuration options.
-  platformConfig: |
+  platformConfig: ""
   # secretServicePrivateKey: ... RSA Private Key in PKCS8 PEM format (`ssh-keygen -m PKCS8 -t rsa -b 4096`)
   # secretServicePreviousPrivateKey: ... Previous Private key in PEM format, only set this when rotating keys
   # dataServiceEncryptionKey: 32 byte random string
@@ -20,13 +20,13 @@ global:
     ## setting this value or by randomly generating it because it was omitted below.
     postgresPassword:
       value:
-    ## URL for gitlab deployment
-    # url:
-    ## Set the default image registry
-    # registry:
-    #   host:
+        ## URL for gitlab deployment
+        # url:
+        ## Set the default image registry
+        # registry:
+        #   host:
 
-    ## Secret for the gitlab keycloak client
+        ## Secret for the gitlab keycloak client
     clientSecret: # use `openssl rand -hex 32`
   keycloak:
     ## Name of the postgres database to be used by Keycloak
@@ -35,25 +35,23 @@ global:
     postgresUser: keycloak
     ## Postgres password for the Keycloak database
     postgresPassword:
-      value:
-    ## Admin username/password for Keycloak
+      value: ## Admin username/password for Keycloak
     user: admin
     password:
-      value:
-    ## Fill in the keycloak url below if you are not using the renku-bundled keycloak instance
-    url:
-    ## Explicitly set another realm than "renku" here
+      value: ## Fill in the keycloak url below if you are not using the renku-bundled keycloak instance
+    url: ## Explicitly set another realm than "renku" here
+
     realm:
   gateway:
     ## Client secret of the renku client application registered in keycloak.
     ## Should be set to a proper value (i.e. by using openssl rand -hex 32) for production.
     ## Can be set here or as .clientSecret outside of .global, the values set ouside of global (if defined) take precedence.
-    clientSecret:
-    ## Client secret of the renku-cli client application registered in keycloak.
+    clientSecret: ## Client secret of the renku-cli client application registered in keycloak.
+
     ## Should be set to a proper value (i.e. by using openssl rand -hex 32) for production.
     ## Can be set here or as .cliClientSecret outside of .global, the values set ouside of global (if defined) take precedence.
-    cliClientSecret:
-    ## Client id and client secret of the renku gateway client application which is registered in GitLab.
+    cliClientSecret: ## Client id and client secret of the renku gateway client application which is registered in GitLab.
+
     ## Can be set here or as .gitlabClientId outside of .global, the values set ouside of global (if defined) take precedence.
     gitlabClientId: renku-ui
     ## Should be set to a proper value (i.e. by using openssl rand -hex 32) for production.
@@ -84,8 +82,7 @@ global:
     ## if this is left blank then the core service will derive the CLI version
     ## for a new project based on its own version.
     ## NOTE should only be set for CI deployments and development purposes.
-    cli_version:
-  ## Note that the graph will not turned on by default until renku 0.4.0
+    cli_version: ## Note that the graph will not turned on by default until renku 0.4.0
   graph:
     dbEventLog:
       ## Name of the postgres user to be used to access the Event Log db
@@ -131,11 +128,11 @@ global:
       ## Alternatively an existing secret can be provided. Note that postgres
       ## DOES NOT tolerate a change of the admin password when upgrading.
       # password:
-  ## Use an existing secret instead of creating a new one. It must have a
-  ## postgresql-password key containing the password for the posgres user.
-  # existingSecret:
+      ## Use an existing secret instead of creating a new one. It must have a
+      ## postgresql-password key containing the password for the posgres user.
+      # existingSecret:
 
-  # Globally available solr (TBD)
+      # Globally available solr (TBD)
   solr:
     port: 8983
 
@@ -188,7 +185,7 @@ global:
       tag: "0.0.2"
     customCAs: []
     # - secret:
-  ## Database credentials for postgres
+    ## Database credentials for postgres
   db:
     ## Used by the renku-data-services and potentially other backend services
     common:
@@ -211,7 +208,6 @@ ingress:
   annotations:
     ## The ingress class
     cert-manager.io/cluster-issuer: letsencrypt-production # Use null as value if not using cert-manager to remove this entry
-    kubernetes.io/ingress.class: nginx
     nginx.ingress.kubernetes.io/proxy-body-size: "0" # Adjust to a reasonable value for production to avoid DOS attacks.
     nginx.ingress.kubernetes.io/proxy-request-buffering: "off" # Needed if GitLab is behind this ingress
     nginx.ingress.kubernetes.io/proxy-buffer-size: "8k" # Default is 4k, larger size necessary for keycloak
@@ -256,8 +252,8 @@ keycloakx:
     - "--hostname-strict=false"
     - "--hostname-strict-https=false"
     - "--auto-build"
-    # The following environment variables are provided to keycloak
-    # as extraEnvFrom secrets.
+  # The following environment variables are provided to keycloak
+  # as extraEnvFrom secrets.
   # renku-keycloak-postgres
   # - DB_ADDR: database host                            value: <RELEASE-NAME>-postgresql
   # - DB_DATABASE: database name for keycloak           value: global.keycloak.postgresDatabase
@@ -306,6 +302,10 @@ keycloakx:
     image:
       repository: renku/init-realm
       tag: "latest"
+  resources:
+    requests:
+      cpu: 100m
+      memory: 600Mi
   ## Skip Keycloak testing when running Helm test
   test:
     enabled: false
@@ -356,7 +356,6 @@ postgresql:
   auth:
     username: postgres
     database: postgres
-
     ## The admin password should be set explicitly, otherwise a random string will be
     ## created. Alternatively an existing secret can be provided. Note that postgres
     ## DOES NOT tolerate a change of the admin password when upgrading.
@@ -370,9 +369,9 @@ postgresql:
     # replicationUsername: repl_user
     # replicationPassword: repl_password # generate a random password `openssl rand -hex 32`
 
-  # image:
-  # repository: bitnami/postgresql
-  # tag:
+    # image:
+    # repository: bitnami/postgresql
+    # tag:
 
   primary:
     persistence:
@@ -382,10 +381,14 @@ postgresql:
       ## Provide an existing PersistentVolumeClaim to be reused.
       # existingClaim:
 
-    # Consider replication. These are the defaults for the basic settings.
+      # Consider replication. These are the defaults for the basic settings.
     readReplicas:
       enabled: false
       replicaCount: 1
+    resources:
+      requests:
+        cpu: 100m
+        memory: 300Mi
 
 redis:
   # If set to true, a HA redis will be included in the Renku release.
@@ -399,8 +402,10 @@ redis:
   # for password auth.
   createSecret: true
   # The actual password, ignored if createSecret is false.
-  password: # openssl rand -hex 32
-  ###########################################################################
+  password:
+    # openssl rand -hex 32
+    ###########################################################################
+
   ### Configuration that is passed on to the redis chart, for details and ###
   ### further config options check out                                    ###
   ### https://github.com/bitnami/charts/tree/master/bitnami/redis         ###
@@ -557,7 +562,10 @@ ui:
     dashboardMessage:
       enabled: false
       # This is the main message and is rendered as Markdown content.
-      text: "# Welcome to Renku! 🐸\n\n✨This is an example welcome message.✨\n"
+      text: "# Welcome to Renku! 🐸
+
+
+        ✨This is an example welcome message.✨\n"
       # This message is displayed when the user click "Read more"
       # and is rendered as Markdown content.
       # Set this to the empty string "" to disable the "Read more" button.
@@ -667,7 +675,7 @@ ui:
       # overrides:
       #   9: "/"
       #   10: "/"
-    # Configuration to display the "email us" message on the session class selector.
+      # Configuration to display the "email us" message on the session class selector.
     sessionClassEmailUs:
       # Set this to "true" to enable the "Need more compute resources? Email us!" message
       # on the session class selector.
@@ -741,8 +749,8 @@ ui:
       #  - secretName: chart-example-tls
       #    hosts:
       #      - chart-example.local
-    ## Configure autoscaling
-    # configure autoscale only where needed
+      ## Configure autoscaling
+      # configure autoscale only where needed
     autoscaling:
       enabled: false
       # minReplicas: 2
@@ -778,6 +786,12 @@ amalthea:
   scope:
     clusterWide: false
   deployCrd: true
+  resources:
+    requests:
+      cpu: 20m
+      memory: 200Mi
+    limits:
+      memory: 200Mi
 ## Used only if S3 Mounts are enabled
 dlf-chart:
   csi-sidecars-rbac:
@@ -810,6 +824,7 @@ notebooks:
     # storageClass: csi-rclone
     s3:
       installDatashim: false
+
   # configuration for user session persistent volumes
   userSessionPersistentVolumes:
     enabled: true
@@ -824,21 +839,21 @@ notebooks:
   sentry:
     enabled: false
     dsn:
-    environment:
-    ## Sample rate is used for performance monitoring in sentry
+    environment: ## Sample rate is used for performance monitoring in sentry
+
     sampleRate: 0.2
   sessionSentry:
     gitClone:
       enabled: false
       dsn:
-      environment:
-      ## Sample rate is used for performance monitoring in sentry
+      environment: ## Sample rate is used for performance monitoring in sentry
+
       sampleRate: 0.2
     sidecar:
       enabled: false
       dsn:
-      environment:
-      ## Sample rate is used for performance monitoring in sentry
+      environment: ## Sample rate is used for performance monitoring in sentry
+
       sampleRate: 0.2
   replicaCount: 2
   ## Configure autoscaling
@@ -857,7 +872,7 @@ notebooks:
     ##
     # pullSecrets:
     #   - myRegistrKeySecretName
-  # turns on flask debug mode
+    # turns on flask debug mode
   debug: true
   # oidc settings
   oidc:
@@ -995,17 +1010,10 @@ notebooks:
     #  - secretName: chart-example-tls
     #    hosts:
     #      - chart-example.local
-  resources: {}
-  # We usually recommend not to specify default resources and to leave this as a conscious
-  # choice for the user. This also increases chances charts run on environments with little
-  # resources, such as Minikube. If you do want to specify resources, uncomment the following
-  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
-  # limits:
-  #  cpu: 100m
-  #  memory: 128Mi
-  # requests:
-  #  cpu: 100m
-  #  memory: 128Mi
+  resources:
+    requests:
+      cpu: 50m
+      memory: 150Mi
 
   culling:
     # How long before an idle session is removed from the cluster.
@@ -1024,8 +1032,8 @@ notebooks:
   tests:
     enabled: false
     oidc_issuer:
-    gitlab_token:
-    ## Specify the session types to be used in the tests, allowed values are 'registered' and/or 'anonymous'
+    gitlab_token: ## Specify the session types to be used in the tests, allowed values are 'registered' and/or 'anonymous'
+
     sessionTypes: ["registered"]
     image:
       repository: renku/renku-notebooks-tests
@@ -1077,8 +1085,7 @@ notebooks:
     ## - ssh_host_ecdsa_key.pub
     ## - ssh_host_ed25519_key
     ## - ssh_host_ed25519_key.pub
-    hostKeySecret:
-  ## Used for testing - should be set to false for production
+    hostKeySecret: ## Used for testing - should be set to false for production
   dummyStores: false
 tests:
   enabled: false
@@ -1112,12 +1119,12 @@ tests:
     #  filename:
     #  accessKey:
     #  secretKey:
-## Configuration for the Gateway service
+    ## Configuration for the Gateway service
 gateway:
   ## Optional list of allowed sources for Cross-Origin Resource Sharing.
   ## https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS
-  allowOrigin:
-  # - http://example.com
+  allowOrigin: # - http://example.com
+
   # - https://foo.example.com
   ## Set to true to enable the developement mode. This has negative security
   ## implications and should never be done in a production setting.
@@ -1135,13 +1142,13 @@ gateway:
   ## How long a session will be kept alive if it is idle.
   ## If set to 0 then there is no TTL.
   ## If not set, defaults to 14400 (4 hours).
-  idleSessionTTLSeconds:
-  ## The maximum duration a session can be kept alive.
+  idleSessionTTLSeconds: ## The maximum duration a session can be kept alive.
+
   ## If set to 0 then there is no TTL.
   ## If this value is set to a value other than 0 then it must be greater than idleSessionTTLSeconds.
   ## If not set, defaults to 86400 (24 hours).
-  maxSessionTTLSeconds:
-  ## For production deployment, you will need to define the secret key.
+  maxSessionTTLSeconds: ## For production deployment, you will need to define the secret key.
+
   ## This is a random string, used for cryptographic operations on cookies and sensitive information.
   ## Use `openssl rand -hex 32`.
   secretKey:
@@ -1152,7 +1159,12 @@ gateway:
   service:
     type: ClusterIP
     port: 80
-  resources: {}
+  resources:
+    requests:
+      cpu: 20m
+      memory: 64Mi
+    limits:
+      memory: 64Mi
   # We usually recommend not to specify default resources and to leave this as a conscious
   # choice for the user. This also increases chances charts run on environments with little
   # resources, such as Minikube. If you do want to specify resources, uncomment the following
@@ -1221,8 +1233,8 @@ jena:
       value: "Mon *-*-* 00:00:00"
   resources:
     requests:
-      cpu: 1000m
-      memory: 3Gi
+      cpu: 100m
+      memory: 1.5Gi
   additionalVolumeMounts:
     - name: shiro
       mountPath: /fuseki/shiro.ini
@@ -1280,8 +1292,10 @@ graph:
       type: ClusterIP
       port: 80
     resources:
+      limits:
+        memory: 256Mi
       requests:
-        cpu: 500m
+        cpu: 50m
         memory: 256Mi
     jvmXmx: 128M
     gitlab:
@@ -1316,11 +1330,13 @@ graph:
     service:
       type: ClusterIP
       port: 9002
+    jvmXmx: 512m
     resources:
+      limits:
+        memory: 600Mi
       requests:
-        memory: 2048Mi
-        cpu: "1"
-    jvmXmx: 1g
+        cpu: 500m
+        memory: 600Mi
     gitlab:
       rateLimit: 30/sec
     ## a demanded number of concurrent triples generation processes
@@ -1339,7 +1355,10 @@ graph:
       type: ClusterIP
       port: 80
     resources:
+      limits:
+        memory: 512Mi
       requests:
+        cpu: 100m
         memory: 512Mi
     gitlab:
       rateLimit: 100/sec
@@ -1358,7 +1377,10 @@ graph:
       type: ClusterIP
       port: 9005
     resources:
+      limits:
+        memory: 512Mi
       requests:
+        cpu: 100m
         memory: 512Mi
     jvmXmx: 256M
     gitlab:
@@ -1373,8 +1395,11 @@ graph:
       type: ClusterIP
       port: 9006
     resources:
+      limits:
+        memory: 256Mi
       requests:
-        memory: 384Mi
+        cpu: 50m
+        memory: 256Mi
     jvmXmx: 128M
     gitlab:
       rateLimit: 10/sec
@@ -1428,11 +1453,36 @@ core:
       tag: 0.0.3
       pullPolicy: IfNotPresent
   resources:
-    core: {}
-    rqmetrics: {}
-    datasetsWorkers: {}
-    managementWorkers: {}
-    scheduler: {}
+    core:
+      limits:
+        memory: 512Mi
+      requests:
+        cpu: 50m
+        memory: 512Mi
+    rqmetrics:
+      limits:
+        memory: 128Mi
+      requests:
+        cpu: 50m
+        memory: 128Mi
+    datasetsWorkers:
+      limits:
+        memory: 128Mi
+      requests:
+        cpu: 50m
+        memory: 128Mi
+    managementWorkers:
+      limits:
+        memory: 128Mi
+      requests:
+        cpu: 50m
+        memory: 128Mi
+    scheduler:
+      limits:
+        memory: 128Mi
+      requests:
+        cpu: 50m
+        memory: 128Mi
   sentry:
     enabled: false
     dsn:
