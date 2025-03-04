@@ -211,7 +211,6 @@ ingress:
   annotations:
     ## The ingress class
     cert-manager.io/cluster-issuer: letsencrypt-production # Use null as value if not using cert-manager to remove this entry
-    kubernetes.io/ingress.class: nginx
     nginx.ingress.kubernetes.io/proxy-body-size: "0" # Adjust to a reasonable value for production to avoid DOS attacks.
     nginx.ingress.kubernetes.io/proxy-request-buffering: "off" # Needed if GitLab is behind this ingress
     nginx.ingress.kubernetes.io/proxy-buffer-size: "8k" # Default is 4k, larger size necessary for keycloak
@@ -306,6 +305,10 @@ keycloakx:
     image:
       repository: renku/init-realm
       tag: "latest"
+  resources:
+    requests:
+      cpu: 100m
+      memory: 600Mi
   ## Skip Keycloak testing when running Helm test
   test:
     enabled: false
@@ -341,10 +344,6 @@ keycloakx:
     {{- end -}}
   ingress:
     enabled: false
-  resources:
-    requests:
-      cpu: 100m
-      memory: 600Mi
 # Postgresql configuration
 # The bitnami postgres chart offers a variety of configuration options, most of
 # which are not explicitly mentioned here. We predominantly list the values where we
@@ -360,7 +359,6 @@ postgresql:
   auth:
     username: postgres
     database: postgres
-
     ## The admin password should be set explicitly, otherwise a random string will be
     ## created. Alternatively an existing secret can be provided. Note that postgres
     ## DOES NOT tolerate a change of the admin password when upgrading.
@@ -390,6 +388,10 @@ postgresql:
     readReplicas:
       enabled: false
       replicaCount: 1
+    resources:
+      requests:
+        cpu: 100m
+        memory: 300Mi
 
 redis:
   # If set to true, a HA redis will be included in the Renku release.
@@ -398,7 +400,6 @@ redis:
   ### Configuration that is unknown to the redis chart but picked up      ###
   ### by the renku chart.                                                 ###
   ###########################################################################
-
   # If set to true, we'll create a k8s secret to be used as existingSecret
   # for password auth.
   createSecret: true
@@ -781,6 +782,12 @@ amalthea:
   scope:
     clusterWide: false
   deployCrd: true
+  resources:
+    requests:
+      cpu: 20m
+      memory: 200Mi
+    limits:
+      memory: 200Mi
 ## Used only if S3 Mounts are enabled
 dlf-chart:
   csi-sidecars-rbac:
@@ -998,17 +1005,10 @@ notebooks:
     #  - secretName: chart-example-tls
     #    hosts:
     #      - chart-example.local
-  resources: {}
-  # We usually recommend not to specify default resources and to leave this as a conscious
-  # choice for the user. This also increases chances charts run on environments with little
-  # resources, such as Minikube. If you do want to specify resources, uncomment the following
-  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
-  # limits:
-  #  cpu: 100m
-  #  memory: 128Mi
-  # requests:
-  #  cpu: 100m
-  #  memory: 128Mi
+  resources:
+    requests:
+      cpu: 50m
+      memory: 150Mi
 
   culling:
     # How long before an idle session is removed from the cluster.
@@ -1221,8 +1221,8 @@ jena:
     limits:
       memory: 1.5Gi
     requests:
-      cpu: 1000m
-      memory: 3Gi
+      cpu: 100m
+      memory: 1.5Gi
   additionalVolumeMounts:
     - name: shiro
       mountPath: /fuseki/shiro.ini
@@ -1280,8 +1280,10 @@ graph:
       type: ClusterIP
       port: 80
     resources:
+      limits:
+        memory: 256Mi
       requests:
-        cpu: 500m
+        cpu: 50m
         memory: 256Mi
     jvmXmx: 128M
     gitlab:
@@ -1316,11 +1318,13 @@ graph:
     service:
       type: ClusterIP
       port: 9002
+    jvmXmx: 512m
     resources:
+      limits:
+        memory: 600Mi
       requests:
-        memory: 2048Mi
-        cpu: "1"
-    jvmXmx: 1g
+        cpu: 500m
+        memory: 600Mi
     gitlab:
       rateLimit: 30/sec
     ## a demanded number of concurrent triples generation processes
@@ -1339,7 +1343,10 @@ graph:
       type: ClusterIP
       port: 80
     resources:
+      limits:
+        memory: 512Mi
       requests:
+        cpu: 100m
         memory: 512Mi
     gitlab:
       rateLimit: 100/sec
@@ -1358,7 +1365,10 @@ graph:
       type: ClusterIP
       port: 9005
     resources:
+      limits:
+        memory: 512Mi
       requests:
+        cpu: 100m
         memory: 512Mi
     jvmXmx: 256M
     gitlab:
@@ -1373,8 +1383,11 @@ graph:
       type: ClusterIP
       port: 9006
     resources:
+      limits:
+        memory: 256Mi
       requests:
-        memory: 384Mi
+        cpu: 50m
+        memory: 256Mi
     jvmXmx: 128M
     gitlab:
       rateLimit: 10/sec
@@ -1428,11 +1441,36 @@ core:
       tag: 0.0.3
       pullPolicy: IfNotPresent
   resources:
-    core: {}
-    rqmetrics: {}
-    datasetsWorkers: {}
-    managementWorkers: {}
-    scheduler: {}
+    core:
+      limits:
+        memory: 512Mi
+      requests:
+        cpu: 50m
+        memory: 512Mi
+    rqmetrics:
+      limits:
+        memory: 128Mi
+      requests:
+        cpu: 50m
+        memory: 128Mi
+    datasetsWorkers:
+      limits:
+        memory: 128Mi
+      requests:
+        cpu: 50m
+        memory: 128Mi
+    managementWorkers:
+      limits:
+        memory: 128Mi
+      requests:
+        cpu: 50m
+        memory: 128Mi
+    scheduler:
+      limits:
+        memory: 128Mi
+      requests:
+        cpu: 50m
+        memory: 128Mi
   sentry:
     enabled: false
     dsn:
