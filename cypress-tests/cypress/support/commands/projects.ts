@@ -15,7 +15,7 @@ export function generatorProjectName(name: string): string {
 }
 
 export function fullProjectIdentifier(
-  identifier: ProjectIdentifier
+  identifier: ProjectIdentifier,
 ): Required<ProjectIdentifier> {
   return { namespace: Cypress.env("TEST_USERNAME"), ...identifier };
 }
@@ -26,7 +26,7 @@ export function projectUrlFromIdentifier(id: ProjectIdentifier) {
 
 export function projectPageLinkSelector(
   identifier: ProjectIdentifier,
-  subpage: string
+  subpage: string,
 ) {
   const subpageUrl = projectSubpageUrl(identifier, subpage);
   return `a[href='${subpageUrl}']`;
@@ -39,7 +39,7 @@ function getProjectPageLink(identifier: ProjectIdentifier, subpage: string) {
 
 function projectSubpageUrl(identifier: ProjectIdentifier, subpage: string) {
   const projectUrl = projectUrlFromIdentifier(
-    fullProjectIdentifier(identifier)
+    fullProjectIdentifier(identifier),
   );
   const subPath = subpage.startsWith("/") ? subpage : `/${subpage}`;
   return `${projectUrl}${subPath}`;
@@ -71,7 +71,11 @@ interface NewProjectProps extends ProjectIdentifier {
 function createProjectIfMissing(newProjectProps: NewProjectProps) {
   const namespace = newProjectProps.namespace ?? Cypress.env("TEST_USERNAME");
   const slug = encodeURIComponent(`${namespace}/${newProjectProps.name}`);
-  cy.request({failOnStatusCode: false, method: "GET", url: `/ui-server/api/projects/${slug}`}).then((response) => {
+  cy.request({
+    failOnStatusCode: false,
+    method: "GET",
+    url: `/ui-server/api/projects/${slug}`,
+  }).then((response) => {
     if (response.status != 200) {
       cy.visit("/projects/new");
       cy.getDataCy("field-group-title")
@@ -102,10 +106,10 @@ function createProjectIfMissing(newProjectProps: NewProjectProps) {
     }
     cy.url({ timeout: TIMEOUTS.vlong }).should(
       "contain",
-      newProjectProps.name.toLowerCase()
+      newProjectProps.name.toLowerCase(),
     );
     cy.get(`[data-cy="header-project"]`, { timeout: TIMEOUTS.vlong }).should(
-      "be.visible"
+      "be.visible",
     );
     cy.get("ul.nav-pills-underline").should("be.visible");
   });
@@ -122,7 +126,7 @@ function deleteProjectFromAPI(identifier: ProjectIdentifier) {
 
 function deleteProject(
   identifier: ProjectIdentifier,
-  navigateToProject = false
+  navigateToProject = false,
 ) {
   if (navigateToProject) cy.visitAndLoadProject(identifier);
 
@@ -135,7 +139,7 @@ function deleteProject(
 
   const slug = identifier.namespace + "/" + identifier.name;
   cy.intercept("DELETE", `/ui-server/api/kg/projects/${slug}`).as(
-    "deleteProject"
+    "deleteProject",
   );
 
   // Delete the project
@@ -162,7 +166,7 @@ function deleteProject(
 function forkProject(identifier: ProjectIdentifier, newName: string) {
   // open the Fork project modal
   let projectsInvoked = false;
-  cy.intercept("/ui-server/api/graphql", (req) => {
+  cy.intercept("/ui-server/api/graphql", () => {
     projectsInvoked = true;
   }).as("getProjects");
   cy.getDataCy("project-overview-content")
@@ -198,7 +202,7 @@ function forkProject(identifier: ProjectIdentifier, newName: string) {
 
   // check the new project is ready
   cy.intercept("ui-server/api/renku/cache.migrations_check*").as(
-    "getMigrationsCheck"
+    "getMigrationsCheck",
   );
   cy.wait("@getMigrationsCheck", { timeout: TIMEOUTS.long });
 
@@ -211,13 +215,13 @@ function forkProject(identifier: ProjectIdentifier, newName: string) {
 
 function visitAndLoadProject(
   identifier: ProjectIdentifier,
-  skipOutdated = false
+  skipOutdated = false,
 ) {
   // load project and wait for the relevant resources to be loaded
   cy.intercept("/ui-server/api/user").as("getUser");
   cy.intercept("/ui-server/api/renku/*/datasets.list*").as("getDatasets");
   let versionInvoked = false;
-  cy.intercept("/ui-server/api/renku/versions", (req) => {
+  cy.intercept("/ui-server/api/renku/versions", () => {
     versionInvoked = true;
   }).as("getVersion");
   cy.intercept("/ui-server/api/projects/*").as("getProject");
@@ -300,7 +304,7 @@ declare global {
       visitProjectPageLink(identifier: ProjectIdentifier, subpage: string);
       visitAndLoadProject(
         identifier: ProjectIdentifier,
-        skipOutdated?: boolean
+        skipOutdated?: boolean,
       );
       waitMetadataIndexing(justTriggered?: boolean, goToSettings?: boolean);
     }

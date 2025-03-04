@@ -5,69 +5,35 @@
     "project": "tsconfig.json",
     "sourceType": "module"
   },
-  "plugins": [
-    "@typescript-eslint",
-    "cypress"
-  ],
+  "plugins": ["@typescript-eslint", "cypress", "no-only-tests"],
   "rules": {
-    "max-len": ["warn", 120],
     "no-eval": "error",
-    "quotes": ["warn", "double", {
-      "allowTemplateLiterals": true,
-      "avoidEscape": true
-    }],
-    "@typescript-eslint/no-unused-vars": ["warn", {
-      "vars": "all",
-      "args": "none",
-      "ignoreRestSiblings": false,
-      "argsIgnorePattern": "^_",
-      "varsIgnorePattern": "^_"
-    }],
+    "no-unused-vars": [
+      "warn",
+      {
+        "vars": "all",
+        "args": "none",
+        "ignoreRestSiblings": false
+      }
+    ],
     "no-console": "warn",
-    "curly": ["warn", "multi-or-nest", "consistent"],
-    "indent": ["warn", 2, {
-      "ignoredNodes": ["TemplateLiteral"],
-      "SwitchCase": 1
-    }],
-    "semi": ["warn", "always"],
-    "space-before-blocks": ["warn", "always"],
-    "no-multi-spaces": "warn",
-    "brace-style": ["warn", "stroustrup", {
-      "allowSingleLine": true
-    }],
-    "max-nested-callbacks": ["warn", 3],
+    "max-nested-callbacks": ["warn", 4],
     "no-alert": "error",
     "no-else-return": "warn",
     "jest/expect-expect": "off",
-    "comma-spacing": "warn",
-    "block-spacing": ["warn", "always"],
-    "key-spacing": "warn",
-    "no-trailing-spaces": "warn",
-    "object-curly-spacing": ["warn", "always"],
-    "space-infix-ops": "warn",
-    "space-unary-ops": ["warn", {
-      "words": true,
-      "nonwords": false
-    }],
-    "keyword-spacing": ["warn", {
-      "before": true
-    }],
-    "no-multiple-empty-lines": ["warn", {
-      "max": 2,
-      "maxEOF": 1
-    }],
-    "eol-last": 1,
     "cypress/no-assigning-return-values": "error",
     "cypress/no-unnecessary-waiting": "error",
     "cypress/assertion-before-screenshot": "warn",
     "cypress/no-force": "warn",
     "cypress/no-async-tests": "error",
-    "cypress/no-pause": "error"
+    "cypress/no-pause": "error",
+    "no-only-tests/no-only-tests": "error"
   },
   "extends": [
     "eslint:recommended",
     "plugin:@typescript-eslint/eslint-recommended",
     "plugin:@typescript-eslint/recommended",
-    "plugin:cypress/recommended"
+    "plugin:cypress/recommended",
+    "prettier"
   ]
 }
