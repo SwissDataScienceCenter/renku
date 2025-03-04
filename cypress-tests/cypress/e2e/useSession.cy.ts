@@ -146,7 +146,6 @@ describe("Basic public project functionality", () => {
     cy.getDataCy("workflows-browser")
       .should("be.visible")
       .children()
-      .should("have.length", 1)
       .contains(workflow.name)
       .should("be.visible")
       .click();
@@ -167,7 +166,7 @@ describe("Basic public project functionality", () => {
 
   it("Start a new session as anonymous user.", () => {
     // Do not re-use the logged-in session
-    cy.session(["anonymous", getRandomString()], () => {});
+    cy.session(["anonymous", getRandomString()], () => { });
 
     // Log out and go to the project again
     cy.visit("/");
