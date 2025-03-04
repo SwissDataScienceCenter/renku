@@ -49,7 +49,7 @@ jobs:
           path: docs/_build/html/
 
   check-deploy:
-    name: Anylize deploy string
+    name: Analyze deploy string
     runs-on: ubuntu-22.04
     outputs:
       pr-contains-string: ${{ steps.deploy-comment.outputs.pr-contains-string }}
