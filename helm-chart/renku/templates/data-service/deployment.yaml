@@ -127,6 +127,16 @@ spec:
                 fieldRef:
                   apiVersion: v1
                   fieldPath: metadata.namespace
+            - name: NB_SESSIONS__OIDC__CLIENT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: {{ cat (include "renku.fullname" .) "-gateway" | nospace }}
+                  key: notebooksClientSecret
+            - name: NB_SESSIONS__GIT_PROXY__RENKU_CLIENT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: {{ cat (include "renku.fullname" .) "-gateway" | nospace }}
+                  key: oidcClientSecret
             {{- include "certificates.env.python" . | nindent 12 }}
             {{- include "certificates.env.grpc" . | nindent 12 }}
           volumeMounts:
