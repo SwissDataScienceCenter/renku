@@ -38,7 +38,7 @@ describe("Basic rstudio functionality", () => {
       () => {
         cy.robustLogin();
       },
-      validateLogin
+      validateLogin,
     );
     cy.createProjectIfMissing({ templateName: "R (", ...projectIdentifier });
     cy.stopAllSessionsForProject(projectIdentifier);
@@ -82,6 +82,6 @@ describe("Basic rstudio functionality", () => {
       // Stops the session
       cy.pauseSession();
       cy.deleteSession();
-    }
+    },
   );
 });

@@ -3,6 +3,13 @@
 0.65.0
 ------
 
+User-Facing Changes
+~~~~~~~~~~~~~~~~~~~
+
+**🌟 New Features**
+
+- **UI**: Projects can now have documentation. (`#3478 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3478>`__).
+
 Internal Changes
 ~~~~~~~~~~~~~~~~
 
@@ -21,7 +28,10 @@ Internal Changes
 - Values for `notebooks.oidc.authUrl`, `notebooks.oidc.tokenUrl`, `notebooks.sessionIngress` have now sensible defaults
   and are optional to define in the values file if Keycloak is deployed through the Renku Helm chart.
 
-- Prepare helm charts to allow data-services to connect to SOLR.
+Individual Components
+~~~~~~~~~~~~~~~~~~~~~
+
+- `renku-ui 3.47.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.47.0>`_
 
 0.64.3
 ------
