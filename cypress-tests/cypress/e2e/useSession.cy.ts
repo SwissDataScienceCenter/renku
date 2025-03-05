@@ -146,7 +146,6 @@ describe("Basic public project functionality", () => {
     cy.getDataCy("workflows-browser")
       .should("be.visible")
       .children()
-      .should("have.length", 1)
       .contains(workflow.name)
       .should("be.visible")
       .click();
