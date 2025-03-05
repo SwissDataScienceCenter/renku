@@ -754,8 +754,8 @@ ui:
       # cpuUtilization: 70
     resources:
       requests:
-        cpu: 100m
-        memory: 128Mi
+        cpu: 25m
+        memory: 75Mi
     nodeSelector: {}
     tolerations: []
     affinity: {}
