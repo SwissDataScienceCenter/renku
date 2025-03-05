@@ -8,15 +8,12 @@
 {{- $uiServicePort := .Values.ui.client.service.port -}}
 {{- $uiserverFullname := include "uiserver.fullname" . -}}
 {{- $uiserverServicePort := .Values.ui.server.service.port -}}
-{{- $graphEnabled := .Values.graph.enabled -}}
 {{- $webhookServiceFullname := include "renku.graph.webhookService.fullname" . -}}
 {{- $knowledgeGraphFullname := include "renku.graph.knowledgeGraph.fullname" . -}}
 {{- $searchApiFullname := include "renku.search.searchApi.fullname" . -}}
 {{- $renkuFullname := include "renku.fullname" . -}}
-{{- if $graphEnabled }}
 {{- $jenaFullname := include "renku-jena.fullname" . -}}
 {{- $jenaServicePort := .Values.jena.service.port -}}
-{{- end }}
 {{- $swaggerEnabled := .Values.swagger.enabled -}}
 ---
 apiVersion: networking.k8s.io/v1
@@ -104,7 +101,6 @@ spec:
             name: {{ template "renku.fullname" $ }}-gateway
             port:
               number: {{ $uiserverServicePort }}
-      {{- if $graphEnabled }}
       - path: /webhooks/events
         pathType: Prefix
         backend:
@@ -119,7 +115,6 @@ spec:
             name: {{ template "renku.fullname" $ }}-gateway
             port:
               number: 80
-      {{- end }}
       {{- if $swaggerEnabled }}
       - path: /swagger
         pathType: Prefix
