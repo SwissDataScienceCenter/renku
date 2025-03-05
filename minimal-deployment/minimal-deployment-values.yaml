@@ -1,3 +1,4 @@
+---
 gitlab:
   enabled: false
 global:
@@ -7,26 +8,40 @@ global:
     gitlabClientId: <gitlabClientId>
     gitlabClientSecret: <gitlabClientSecret>
   gitlab:
-    url: <gitlab-url>
     registry:
       host: <gitlab-registry-FQDN>
+    url: <gitlab-url>
   renku:
     domain: <deployment-FQDN>
   useHTTPS: true
 ingress:
   enabled: true
   hosts:
-    - <deployment-FQDN>
+  - <deployment-FQDN>
   tls:
-    - hosts:
-        - <deployment-FQDN>
-      secretName: <certificate-secret-name>
+  - hosts:
+    - <deployment-FQDN>
+    secretName: <certificate-secret-name>
 jena:
   persistence:
     enabled: false
 notebooks:
   oidc:
     allowUnverifiedEmail: true
+  sessionAffinity:
+    nodeAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        nodeSelectorTerms:
+        - matchExpressions:
+          - key: renku.io/node-purpose
+            operator: In
+            values:
+            - user
+  sessionTolerations:
+  - effect: NoSchedule
+    key: renku.io/dedicated
+    operator: Equal
+    value: user
 postgresql:
   primary:
     persistence:
