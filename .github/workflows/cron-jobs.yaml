@@ -8,7 +8,7 @@ on:
 
 jobs:
   remove-CI-deployments:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     steps:
       - name: renku teardown
         uses: SwissDataScienceCenter/renku-actions/cleanup-renku-ci-deployments@v1.14.1

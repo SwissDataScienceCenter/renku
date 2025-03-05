@@ -10,7 +10,7 @@ on:
 jobs:
   check-open-prs:
     if: startsWith(github.event.pull_request.head.ref, 'release-')
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - name: Check unmerged PRs
         uses: actions/github-script@v7

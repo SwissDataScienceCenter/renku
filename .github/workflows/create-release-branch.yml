@@ -14,7 +14,7 @@ on:
 
 jobs:
   create-release-pr:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4.1.7
         with:
