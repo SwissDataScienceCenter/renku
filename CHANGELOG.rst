@@ -3,6 +3,22 @@
 0.65.1
 ------
 
+Renku 0.65.1 refactors the code used to deploy CI installations used to test Pull Requests.
+NOTE to administrators: The default values file now specify several resource requests and limits
+that were not specified before that are tuned for a small deployment, if the values file
+for your deployment does not override these requests and limits (which it should!) then
+you might end up with services being killed by Kubernetes (for Out Of Memory errors).
+
+Internal Changes
+~~~~~~~~~~~~~~~~
+
+**Improvements**
+
+- Many resources requests and limits have been defined in the default values file.
+- Now the values file used in the CI deployments is taken from this repository in `minimal-deployment`
+  which also serves as a reference for the default values file.
+- Removed a check in the Helm template for the ingress that could result in
+  dataset search not working properly if disabled.
 
 
 0.65.0
