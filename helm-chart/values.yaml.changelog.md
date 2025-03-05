@@ -5,6 +5,12 @@ For changes that require manual steps other than changing values, please check o
 Please follow this convention when adding a new row
 * `<type: NEW|EDIT|DELETE> - *<resource name>*: <details>`
 
+## Upgrading to Renku 0.65.1
+
+* Many default requests and limits have been defined in the values file. We recommend all administrators to set requests and limits in their values file
+to make sure that they satisfy the needs of their deployment.
+If limits are not set, the default will be applied by Helm and if those are too restrictive, it might result in services being killed by Kubernetes (for Out Of Memory errors).
+
 ## Upgrading to Renku 0.62.0
 
 * DELETE ``gitlab.*`` - all values related to the bundled GitLab have been removed. GitLab must from now on be provided as an external service and is no longer supplied as a part of the Renku Helm chart.
