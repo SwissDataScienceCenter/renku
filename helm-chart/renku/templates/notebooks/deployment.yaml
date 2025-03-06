@@ -76,8 +76,6 @@ spec:
               {{ end }}
             - name: K8S_WATCHER_PORT
               value: "8080"
-            - name: K8S_WATCHER_USER_ID_LABEL
-              value: renku.io/safe-username
           ports:
             - name: http
               containerPort: 8080
