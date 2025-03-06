@@ -28,7 +28,7 @@ describe("Fork and update old projects", () => {
       () => {
         cy.robustLogin();
       },
-      validateLogin
+      validateLogin,
     );
   });
 
@@ -125,9 +125,9 @@ describe("Fork and update old projects", () => {
     let commitFetched = false;
     cy.intercept(
       "/ui-server/api/projects/*/repository/commits?ref_name=master&per_page=100&page=1",
-      (req) => {
+      () => {
         commitFetched = true;
-      }
+      },
     ).as("getCommits");
     cy.getDataCy("project-overview-nav")
       .contains("a", "Commits")

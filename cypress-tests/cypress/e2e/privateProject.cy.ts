@@ -36,7 +36,7 @@ describe("Basic public project functionality", () => {
       () => {
         cy.robustLogin();
       },
-      validateLogin
+      validateLogin,
     );
     cy.createProjectIfMissing({
       templateName: "Python",
@@ -55,7 +55,9 @@ describe("Basic public project functionality", () => {
     cy.searchForProject(projectIdentifier, true);
 
     // Check as an anonymous user
-    cy.session(["anonymous", getRandomString()], () => {});
+    cy.session(["anonymous", getRandomString()], () => {
+      cy.log("Anonyomous session setup");
+    });
     cy.visit("/");
     cy.get("#nav-hamburger").should("be.visible").click();
     cy.searchForProject(projectIdentifier, false);
@@ -91,7 +93,9 @@ describe("Basic public project functionality", () => {
     // Search the project as both logged in and logged out.
     cy.searchForProject(projectIdentifier, true);
     // Check as an anonymous user
-    cy.session(["anonymous", getRandomString()], () => {});
+    cy.session(["anonymous", getRandomString()], () => {
+      cy.log("Anonyomous session setup");
+    });
     cy.visit("/");
     cy.get("#nav-hamburger").should("be.visible").click();
     cy.searchForProject(projectIdentifier, false);

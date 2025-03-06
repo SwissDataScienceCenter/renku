@@ -8,8 +8,8 @@
     "e2e:run": "cypress run --e2e --browser=chrome",
     "e2e:headless": "cypress run --e2e --browser=chrome --headless",
     "e2e:ci": "cypress run --e2e --browser=chrome --headless --spec",
-    "lint": "eslint . --ext .ts",
-    "parallel-run": "ts-node cypress/scripts/github-parallel-run.ts"
+    "lint": "eslint . --max-warnings=0",
+    "format": "prettier -w ."
   },
   "author": "Swiss Data Science Center",
   "dependencies": {
@@ -25,6 +25,9 @@
     "@typescript-eslint/eslint-plugin": "^5.45.0",
     "@typescript-eslint/parser": "^5.45.0",
     "eslint": "^8.28.0",
-    "eslint-plugin-cypress": "^2.12.1"
+    "eslint-config-prettier": "^10.0.1",
+    "eslint-plugin-cypress": "^2.12.1",
+    "eslint-plugin-no-only-tests": "^3.3.0",
+    "prettier": "^3.4.2"
   }
 }

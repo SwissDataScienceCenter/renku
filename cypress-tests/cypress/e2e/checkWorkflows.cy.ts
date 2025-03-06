@@ -17,7 +17,7 @@ describe("Workflows pages", () => {
       () => {
         cy.robustLogin();
       },
-      validateLogin
+      validateLogin,
     );
   });
 
@@ -27,7 +27,7 @@ describe("Workflows pages", () => {
     // Go the the workflows page and check the details of a workflow
     cy.getProjectSection("Workflows").click();
     cy.get("[data-cy=workflows-page]", { timeout: TIMEOUTS.long }).should(
-      "be.visible"
+      "be.visible",
     );
     cy.getDataCy("workflows-browser")
       .should("be.visible")

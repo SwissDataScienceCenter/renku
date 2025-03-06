@@ -28,7 +28,7 @@ const sessionId = ["testDatasets", getRandomString()];
 describe("Basic datasets functionality", () => {
   before(() => {
     // Intercept listing datasets
-    cy.intercept("/ui-server/api/renku/*/datasets.list?git_url=*", (req) => {
+    cy.intercept("/ui-server/api/renku/*/datasets.list?git_url=*", () => {
       listDatasetsInvoked = true;
     }).as("listDatasets");
   });
@@ -40,7 +40,7 @@ describe("Basic datasets functionality", () => {
       () => {
         cy.robustLogin();
       },
-      validateLogin
+      validateLogin,
     );
     cy.createProjectIfMissing({ templateName: "Python", ...projectIdentifier });
     cy.visitAndLoadProject(projectIdentifier);
@@ -76,7 +76,7 @@ describe("Basic datasets functionality", () => {
     cy.getDataCy("input-title").type(generatedDatasetName.name);
 
     cy.getDataCy("input-keywords").type(
-      keywords.reduce((text, value) => `${text}${value}{enter}`, "")
+      keywords.reduce((text, value) => `${text}${value}{enter}`, ""),
     );
     cy.get("div.ck.ck-editor__main div.ck.ck-content")
       .should("exist")
