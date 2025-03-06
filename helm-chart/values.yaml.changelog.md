@@ -5,9 +5,8 @@ For changes that require manual steps other than changing values, please check o
 Please follow this convention when adding a new row
 * `<type: NEW|EDIT|DELETE> - *<resource name>*: <details>`
 
-## Upgrading to Renku 0.65.0
+## Upgrading to Renku 0.66.0
 
-* EDIT: Added a new core ``renku-data`` for SOLR in ``solr.coreNames``.
 * NEW `dataService.imageBuilders` to configure session image builds using Shipwright.
   This feature is experimental and should not be enabled by RenkuLab administrators. Enable the feature at your own risk!
 
