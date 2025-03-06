@@ -3,6 +3,19 @@
 0.66.0
 ------
 
+Internal Changes
+~~~~~~~~~~~~~~~~
+
+**Improvements**
+
+- **Data services**: Handle Renku v1 sessions
+- **Gateway**: Route Renku v1 sessions through data services
+
+
+Individual Components
+~~~~~~~~~~~~~~~~~~~~~
+
+- `renku-gateway 1.4.0 <https://github.com/SwissDataScienceCenter/renku-gateway/releases/tag/1.4.0>`_
 
 
 0.65.0
