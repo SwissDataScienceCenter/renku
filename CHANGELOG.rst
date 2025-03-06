@@ -31,6 +31,8 @@ User-Facing Changes
 Internal Changes
 ~~~~~~~~~~~~~~~~
 
+
+
 **Improvements**
 
 - **Jena**: Now the passwords for the admin and Renku Jena users are optional to define in the values file: if the
