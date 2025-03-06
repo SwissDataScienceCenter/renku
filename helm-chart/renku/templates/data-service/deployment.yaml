@@ -96,17 +96,6 @@ spec:
                 secretKeyRef:
                   name: {{ .Values.global.redis.existingSecret }}
                   key: {{ .Values.global.redis.existingSecretPasswordKey }}
-            - name: SOLR_URL
-              value: "http://{{ template "solr.fullname" . }}:{{ .Values.global.solr.port }}"
-            - name: SOLR_CORE
-              value: {{ index .Values.solr.coreNames 1 }}
-            - name: SOLR_USER
-              value: {{ default "admin" .Values.solr.auth.adminUsername | quote }}
-            - name: SOLR_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: {{ template "solr.fullname" . }}
-                  key: solr-password
             - name: SENTRY_ENABLED
               value: {{ .Values.dataService.sentry.enabled | quote }}
             - name: SENTRY_DSN

@@ -495,7 +495,6 @@ solr:
   replicaCount: 1
   coreNames:
     - renku-search
-    - renku-data
   javaMem: "-Xmx512M"
   networkPolicy:
     allowExternal: false
