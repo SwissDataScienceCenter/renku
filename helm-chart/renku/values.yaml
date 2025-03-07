@@ -1219,10 +1219,10 @@ jena:
       value: "Mon *-*-* 00:00:00"
   resources:
     limits:
-      memory: 1.5Gi
+      memory: 3Gi
     requests:
-      cpu: 100m
-      memory: 1.5Gi
+      cpu: 300m
+      memory: 3Gi
   additionalVolumeMounts:
     - name: shiro
       mountPath: /fuseki/shiro.ini
