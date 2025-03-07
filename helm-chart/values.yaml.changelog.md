@@ -8,7 +8,9 @@ Please follow this convention when adding a new row
 ## Upgrading to Renku 0.66.0
 
 * NEW `dataService.imageBuilders` to configure session image builds using Shipwright.
-  This feature is experimental and should not be enabled by RenkuLab administrators. Enable the feature at your own risk!
+  This feature is experimental and should not be enabled by RenkuLab administrators.
+  The feature depends on Shipwright being already installed independently from the Renku Helm chart.
+  Enable the feature at your own risk!
 
 ## Upgrading to Renku 0.62.0
 
