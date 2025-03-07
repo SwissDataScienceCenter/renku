@@ -1501,7 +1501,7 @@ dataService:
   # Build session images from code repositories with Shipwright
   imageBuilders:
     # Experimental feature: enable at your own risk!
-    # The feature depends on Shipwright being already installed independently from the Renku Helm chart.
+    # The feature depends on Shipwright (version >= 0.15.x) being already installed independently from the Renku Helm chart.
     enabled: false
     ## The container image prefix for images built from code
     outputImagePrefix: harbor.dev.renku.ch/renku-build/

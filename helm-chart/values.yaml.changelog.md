@@ -9,7 +9,7 @@ Please follow this convention when adding a new row
 
 * NEW `dataService.imageBuilders` to configure session image builds using Shipwright.
   This feature is experimental and should not be enabled by RenkuLab administrators.
-  The feature depends on Shipwright being already installed independently from the Renku Helm chart.
+  The feature depends on Shipwright (version >= 0.15.x) being already installed independently from the Renku Helm chart.
   Enable the feature at your own risk!
 
 ## Upgrading to Renku 0.62.0
