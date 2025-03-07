@@ -13,6 +13,10 @@ Please follow this convention when adding a new row
 
 ## Upgrading to Renku 0.62.0
 
+* EDIT ``notebooks.replicaCount`` - set to zero by default because the data service is handling all sessions now, the notebook service will be fully decomissioned and remove from the helm chart in a subsequent PR.
+
+## Upgrading to Renku 0.62.0
+
 * DELETE ``gitlab.*`` - all values related to the bundled GitLab have been removed. GitLab must from now on be provided as an external service and is no longer supplied as a part of the Renku Helm chart.
 * NEW `search.sentry.environment|dsn|enabled` to set the sentry environment for the search services
 

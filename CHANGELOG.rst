@@ -26,7 +26,7 @@ Internal Changes
 - **Data services**: Handle Renku v1 sessions
 - **Gateway**: Route Renku v1 sessions through data services
 - **Notebooks**: Use the correct user labels when caching sessions
-
+- **Helm chart**: Set the notebooks replica count to zero because it is replaced by the data services
 - **Helm chart**: Add RBAC rules for Shipwright and Tekton resources in the Kubernetes cache
 
 

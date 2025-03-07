@@ -839,7 +839,7 @@ notebooks:
       environment:
       ## Sample rate is used for performance monitoring in sentry
       sampleRate: 0.2
-  replicaCount: 2
+  replicaCount: 0
   ## Configure autoscaling
   autoscaling:
     enabled: false
