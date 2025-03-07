@@ -3,6 +3,23 @@
 0.66.0
 ------
 
+Internal Changes
+~~~~~~~~~~~~~~~~
+
+**Improvements**
+
+- **Data services**: Handle Renku v1 sessions
+- **Gateway**: Route Renku v1 sessions through data services
+- **Notebooks**: Use the correct user labels when caching sessions
+- **Helm chart**: Set the notebooks replica count to zero because it is replaced by the data services
+- **Helm chart**: Add RBAC rules for Shipwright and Tekton resources in the Kubernetes cache
+
+
+Individual Components
+~~~~~~~~~~~~~~~~~~~~~
+
+- `renku-gateway 1.4.0 <https://github.com/SwissDataScienceCenter/renku-gateway/releases/tag/1.4.0>`_
+- `renku-notebooks 1.30.0 <https://github.com/SwissDataScienceCenter/renku-notebooks/releases/tag/1.30.0>`_
 
 
 0.65.0
