@@ -27,6 +27,7 @@ Internal Changes
 - **Gateway**: Route Renku v1 sessions through data services
 - **Notebooks**: Use the correct user labels when caching sessions
 
+- **Helm chart**: Add RBAC rules for Shipwright and Tekton resources in the Kubernetes cache
 
 
 Individual Components
