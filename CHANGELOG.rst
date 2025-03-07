@@ -10,12 +10,15 @@ Internal Changes
 
 - **Data services**: Handle Renku v1 sessions
 - **Gateway**: Route Renku v1 sessions through data services
+- **Notebooks**: Use the correct user labels when caching sessions
+
 
 
 Individual Components
 ~~~~~~~~~~~~~~~~~~~~~
 
 - `renku-gateway 1.4.0 <https://github.com/SwissDataScienceCenter/renku-gateway/releases/tag/1.4.0>`_
+- `renku-notebooks 1.30.0 <https://github.com/SwissDataScienceCenter/renku-notebooks/releases/tag/1.30.0>`_
 
 
 0.65.0
