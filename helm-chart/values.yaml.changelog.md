@@ -13,7 +13,7 @@ Please follow this convention when adding a new row
 
 ## Upgrading to Renku 0.62.0
 
-* EDIT ``notebooks.replicaCount`` - set to zero by default because the data service is handling all sessions now, the notebook service will be fully decomissioned and remove from the helm chart in a subsequent PR.
+* EDIT ``notebooks.replicaCount`` - set to zero by default because the data service is handling all sessions now, the notebook service will be fully decomissioned and removed from the helm chart in a subsequent PR.
 
 ## Upgrading to Renku 0.62.0
 
