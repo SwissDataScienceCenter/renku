@@ -11,6 +11,7 @@ Individual Components
 - `renku-data-services 0.35.0 <https://github.com/SwissDataScienceCenter/renku-data-services/releases/tag/v0.35.0>`_
 - `renku-notebooks 1.28.0 <https://github.com/SwissDataScienceCenter/renku-notebooks/releases/tag/1.28.0>`_
 - `renku-notebooks 1.29.0 <https://github.com/SwissDataScienceCenter/renku-notebooks/releases/tag/1.29.0>`_
+- `renku-notebooks 1.29.1 <https://github.com/SwissDataScienceCenter/renku-notebooks/releases/tag/1.29.1>`_
 
 
 0.65.0
