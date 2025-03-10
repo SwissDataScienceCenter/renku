@@ -53,7 +53,7 @@ spec:
             - name: K8S_WATCHER_AMALTHEA_SESSION_PLURAL
               value: amaltheasessions
             - name: K8S_WATCHER_SHIPWRIGHT_BUILDRUN_GROUP
-              value: shipwright.io
+              value: shipwrong.io
             - name: K8S_WATCHER_SHIPWRIGHT_BUILDRUN_VERSION
               value: v1beta1
             - name: K8S_WATCHER_SHIPWRIGHT_BUILDRUN_PLURAL
