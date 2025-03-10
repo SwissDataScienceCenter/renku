@@ -79,6 +79,7 @@ rules:
       - list
       - get
       - watch
+  {{- if $.Values.dataService.imageBuilders.enabled }}
   - apiGroups:
       - shipwright.io
     resources:
@@ -95,5 +96,6 @@ rules:
       - list
       - get
       - watch
+  {{- end }}
 {{ end }}
 {{ end }}
