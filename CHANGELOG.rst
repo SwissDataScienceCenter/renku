@@ -10,7 +10,7 @@ User-Facing Changes
 
 - **UI**: Create a custom environment for your session based on an environment definition in a code repository.
   Current support includes creating python environments defined by an environment.yaml file or similar.
-  This feature is only available on RenkuLab.io, Learn more in our `documentation <https://renku.notion.site/How-to-create-a-custom-environment-from-a-code-repository-1960df2efafc801b88f6da59a0aa8234>`__.
+  This feature is only available on RenkuLab.io, learn more in our `documentation <https://renku.notion.site/How-to-create-a-custom-environment-from-a-code-repository-1960df2efafc801b88f6da59a0aa8234>`__.
   (`#3522 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3522>`__)
 
 Internal Changes
