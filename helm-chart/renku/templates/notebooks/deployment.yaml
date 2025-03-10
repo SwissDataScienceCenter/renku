@@ -56,7 +56,7 @@ spec:
               value: {{ .Values.dataService.imageBuilders.enabled | quote }}
             {{- if .Values.dataService.imageBuilders.enabled }}
             - name: K8S_WATCHER_SHIPWRIGHT_BUILDRUN_GROUP
-              value: shipwrong.io
+              value: shipwright.io
             - name: K8S_WATCHER_SHIPWRIGHT_BUILDRUN_VERSION
               value: v1beta1
             - name: K8S_WATCHER_SHIPWRIGHT_BUILDRUN_PLURAL
