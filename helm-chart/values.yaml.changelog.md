@@ -11,8 +11,6 @@ Please follow this convention when adding a new row
   This feature is experimental - enable at your own risk! It depends on Shipwright (version >= 0.15.x) 
   which must be installed independently from the Renku Helm chart.
 
-## Upgrading to Renku 0.62.0
-
 * EDIT ``notebooks.replicaCount`` - set to zero by default because the data service is handling all sessions now, the notebook service will be fully decomissioned and removed from the helm chart in a subsequent PR.
 
 ## Upgrading to Renku 0.62.0

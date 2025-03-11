@@ -38,9 +38,10 @@ Individual Components
 - `renku-notebooks 1.29.0 <https://github.com/SwissDataScienceCenter/renku-notebooks/releases/tag/1.29.0>`_
 - `renku-notebooks 1.29.1 <https://github.com/SwissDataScienceCenter/renku-notebooks/releases/tag/1.29.1>`_
 - `renku-notebooks 1.29.2 <https://github.com/SwissDataScienceCenter/renku-notebooks/releases/tag/1.29.2>`_
+- `renku-notebooks 1.30.0 <https://github.com/SwissDataScienceCenter/renku-notebooks/releases/tag/1.30.0>`_
+- `renku-notebooks 1.30.1 <https://github.com/SwissDataScienceCenter/renku-notebooks/releases/tag/1.30.1>`_
 - `renku-ui 3.48.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.48.0>`_
 - `renku-gateway 1.4.0 <https://github.com/SwissDataScienceCenter/renku-gateway/releases/tag/1.4.0>`_
-- `renku-notebooks 1.30.0 <https://github.com/SwissDataScienceCenter/renku-notebooks/releases/tag/1.30.0>`_
 
 
 0.65.0
