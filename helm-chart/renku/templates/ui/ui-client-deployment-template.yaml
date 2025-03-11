@@ -124,6 +124,8 @@ spec:
               value: {{ .Values.dataService.maxPinnedProjects | quote }}
             - name: SESSION_CLASS_EMAIL_US
               value: {{ toJson .Values.ui.client.sessionClassEmailUs | quote }}
+            - name: IMAGE_BUILDERS_ENABLED
+              value: {{ .Values.dataService.imageBuilders.enabled | quote }}
           livenessProbe:
             httpGet:
               path: /
