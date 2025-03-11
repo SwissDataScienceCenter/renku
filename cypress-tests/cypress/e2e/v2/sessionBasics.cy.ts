@@ -118,7 +118,7 @@ describe("Start a session that consumes project resources", () => {
     );
 
     cy.getDataCy("add-session-launcher").click();
-    cy.getDataCy("existing-custom-button").click();
+    cy.getDataCy("environment-kind-custom").click();
     cy.getDataCy("custom-image-input").clear().type(session.image);
     cy.getDataCy("environment-advanced-settings-toggle").click();
     cy.getDataCy("session-launcher-field-default_url")

@@ -52,6 +52,22 @@ spec:
               value: v1alpha1
             - name: K8S_WATCHER_AMALTHEA_SESSION_PLURAL
               value: amaltheasessions
+            - name: K8S_WATCHER_IMAGE_BUILDERS_ENABLED
+              value: {{ .Values.dataService.imageBuilders.enabled | quote }}
+            {{- if .Values.dataService.imageBuilders.enabled }}
+            - name: K8S_WATCHER_SHIPWRIGHT_BUILDRUN_GROUP
+              value: shipwright.io
+            - name: K8S_WATCHER_SHIPWRIGHT_BUILDRUN_VERSION
+              value: v1beta1
+            - name: K8S_WATCHER_SHIPWRIGHT_BUILDRUN_PLURAL
+              value: buildruns
+            - name: K8S_WATCHER_TEKTON_TASKRUN_GROUP
+              value: tekton.dev
+            - name: K8S_WATCHER_TEKTON_TASKRUN_VERSION
+              value: v1
+            - name: K8S_WATCHER_TEKTON_TASKRUN_PLURAL
+              value: taskruns
+            {{- end }}
             - name: K8S_WATCHER_NAMESPACES
               {{ if .Values.notebooks.sessionsNamespace }}
               value: {{ list .Release.Namespace .Values.notebooks.sessionsNamespace | uniq | toJson | quote }}
