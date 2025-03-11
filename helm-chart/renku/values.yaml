@@ -26,7 +26,7 @@ global:
         # registry:
         #   host:
 
-        ## Secret for the gitlab keycloak client
+    ## Secret for the gitlab keycloak client
     clientSecret: # use `openssl rand -hex 32`
   keycloak:
     ## Name of the postgres database to be used by Keycloak
