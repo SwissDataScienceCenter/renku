@@ -102,5 +102,66 @@ Documentation
 * :ref:`how_to_guides`: recipes for common use-cases with Renku for users and administrators
 * :ref:`reference`: syntax, structure, architecture, etc.
 
-.. include:: ../README.rst
-  :start-after: contributing:
+Contributing
+------------
+
+We're happy to receive contributions of all kinds, whether it is an idea for a
+new feature, a bug report or a pull request!
+
+Please review our `contributing guidelines
+<https://github.com/SwissDataScienceCenter/renku/blob/master/CONTRIBUTING.rst>`_
+before submitting a pull request.
+
+
+Getting in touch
+----------------
+
+There are several channels you can use to communicate with us; we monitor all of
+them, so your messages will always get to us, but communication will be slightly
+more streamlined if you pick a channel that most suits your purpose and needs.
+
+* `discourse <https://renku.discourse.group>`_: questions concerning Renkulab or
+  Renku CLI usage, release notes
+
+* `github <https://github.com/SwissDataScienceCenter/renku>`_ & `renku
+  (CLI) <https://github.com/SwissDataScienceCenter/renku-python>`_: create
+  platform-usability and software-bug issues
+
+* `gitter <https://gitter.im/SwissDataScienceCenter/renku>`_: communicate with
+  the team
+
+Renku is developed as an open source project by the Swiss Data Science Center in
+a team split between EPFL and ETHZ.
+
+
+Project structure
+-----------------
+
+Renku consists of several sub-repositories:
+
+- `renku-gateway <https://github.com/SwissDataScienceCenter/renku-gateway>`_:
+  a simple API gateway
+
+- `renku-graph <https://github.com/SwissDataScienceCenter/renku-graph>`_:
+  Knowledge Graph services
+
+- `renku-notebooks <https://github.com/SwissDataScienceCenter/renku-notebooks>`_:
+  a lightweight service for handling interactive notebooks through Jupyter servers
+  and a k8s operator
+
+- `amalthea <https://github.com/SwissDataScienceCenter/amalthea>`_: k8s operator for
+  Jupyter servers.
+
+- `renkulab-docker <https://github.com/SwissDataScienceCenter/renkulab-docker>`_:
+  base images for interactive sessions
+
+- `renku-python <https://github.com/SwissDataScienceCenter/renku-python>`_:
+  the Python CLI, SDK, and core backend service
+
+- `renku-ui <https://github.com/SwissDataScienceCenter/renku-ui>`_: web front-end
+
+- `renku-project-templates <https://github.com/SwissDataScienceCenter/renku-project-template>`_:
+  base templates used for instantiating renku projects.
+
+- `renkulab-docker <https://github.com/SwissDataScienceCenter/renkulab-docker>`_: docker
+  images used for renku sessions.
