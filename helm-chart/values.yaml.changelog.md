@@ -5,6 +5,12 @@ For changes that require manual steps other than changing values, please check o
 Please follow this convention when adding a new row
 * `<type: NEW|EDIT|DELETE> - *<resource name>*: <details>`
 
+## Upgrading to Renku 0.66.0
+
+* NEW `dataService.imageBuilders` to configure session image builds using Shipwright.
+  This feature is experimental - enable at your own risk! It depends on Shipwright (version >= 0.15.x) 
+  which must be installed independently from the Renku Helm chart.
+
 ## Upgrading to Renku 0.65.1
 
 * Many default requests and limits have been defined in the values file. We recommend all administrators to set requests and limits in their values file
