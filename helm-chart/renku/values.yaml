@@ -35,7 +35,8 @@ global:
     postgresUser: keycloak
     ## Postgres password for the Keycloak database
     postgresPassword:
-      value: ## Admin username/password for Keycloak
+      value: 
+      ## Admin username/password for Keycloak
     user: admin
     password:
       value: ## Fill in the keycloak url below if you are not using the renku-bundled keycloak instance
