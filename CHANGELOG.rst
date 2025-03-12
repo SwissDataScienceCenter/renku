@@ -1,5 +1,50 @@
 .. _changelog:
 
+0.66.0
+------
+
+User-Facing Changes
+~~~~~~~~~~~~~~~~~~~
+
+**🌟 New Features**
+
+- **UI**: Create a custom environment for your session based on an environment definition in a code repository.
+  Current support includes creating python environments defined by an environment.yaml file or similar.
+  This feature is only available on RenkuLab.io, learn more in our `documentation <https://renku.notion.site/How-to-create-a-custom-environment-from-a-code-repository-1960df2efafc801b88f6da59a0aa8234>`__.
+  (`#3522 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3522>`__)
+
+Internal Changes
+~~~~~~~~~~~~~~~~
+
+**New Features**
+
+- **Data services**: Support creating session environments based on code repositories.
+- **Notebooks**: Cache Shipwright BuildRuns and Tekton TaskRuns for image builds.
+
+**Improvements**
+
+- **Data services**: Handle Renku v1 sessions.
+- **Gateway**: Route Renku v1 sessions through data services.
+- **Notebooks**: Use the correct user labels when caching sessions.
+- **Helm chart**: Set the notebooks replica count to zero because it is replaced by the data services.
+- **Helm chart**: Add RBAC rules for Shipwright and Tekton resources in the Kubernetes cache.
+
+
+Individual Components
+~~~~~~~~~~~~~~~~~~~~~
+
+- `renku-data-services 0.35.0 <https://github.com/SwissDataScienceCenter/renku-data-services/releases/tag/v0.35.0>`_
+- `renku-data-services 0.35.1 <https://github.com/SwissDataScienceCenter/renku-data-services/releases/tag/v0.35.1>`_
+- `renku-notebooks 1.28.0 <https://github.com/SwissDataScienceCenter/renku-notebooks/releases/tag/1.28.0>`_
+- `renku-notebooks 1.29.0 <https://github.com/SwissDataScienceCenter/renku-notebooks/releases/tag/1.29.0>`_
+- `renku-notebooks 1.29.1 <https://github.com/SwissDataScienceCenter/renku-notebooks/releases/tag/1.29.1>`_
+- `renku-notebooks 1.29.2 <https://github.com/SwissDataScienceCenter/renku-notebooks/releases/tag/1.29.2>`_
+- `renku-notebooks 1.30.0 <https://github.com/SwissDataScienceCenter/renku-notebooks/releases/tag/1.30.0>`_
+- `renku-notebooks 1.30.1 <https://github.com/SwissDataScienceCenter/renku-notebooks/releases/tag/1.30.1>`_
+- `renku-ui 3.48.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.48.0>`_
+- `renku-gateway 1.4.0 <https://github.com/SwissDataScienceCenter/renku-gateway/releases/tag/1.4.0>`_
+
+
 0.65.0
 ------
 

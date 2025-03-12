@@ -184,7 +184,7 @@ describe("Project resources - work with code, data, environments", () => {
     // Add session environment
     visitCurrentProject();
     cy.getDataCy("add-session-launcher").click();
-    cy.getDataCy("existing-custom-button").click();
+    cy.getDataCy("environment-kind-custom").click();
     cy.getDataCy("custom-image-input").should("be.empty").type(sessionImage);
     cy.getDataCy("environment-advanced-settings-toggle").click();
     cy.getDataCy("session-launcher-field-default_url").clear().type(sessionUrl);
