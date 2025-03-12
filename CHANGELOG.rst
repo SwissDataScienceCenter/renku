@@ -21,15 +21,28 @@ Internal Changes
 - **Data services**: Support creating session environments based on code repositories.
 - **Notebooks**: Cache Shipwright BuildRuns and Tekton TaskRuns for image builds.
 
+**Improvements**
+
+- **Data services**: Handle Renku v1 sessions.
+- **Gateway**: Route Renku v1 sessions through data services.
+- **Notebooks**: Use the correct user labels when caching sessions.
+- **Helm chart**: Set the notebooks replica count to zero because it is replaced by the data services.
+- **Helm chart**: Add RBAC rules for Shipwright and Tekton resources in the Kubernetes cache.
+
+
 Individual Components
 ~~~~~~~~~~~~~~~~~~~~~
 
 - `renku-data-services 0.35.0 <https://github.com/SwissDataScienceCenter/renku-data-services/releases/tag/v0.35.0>`_
+- `renku-data-services 0.35.1 <https://github.com/SwissDataScienceCenter/renku-data-services/releases/tag/v0.35.1>`_
 - `renku-notebooks 1.28.0 <https://github.com/SwissDataScienceCenter/renku-notebooks/releases/tag/1.28.0>`_
 - `renku-notebooks 1.29.0 <https://github.com/SwissDataScienceCenter/renku-notebooks/releases/tag/1.29.0>`_
 - `renku-notebooks 1.29.1 <https://github.com/SwissDataScienceCenter/renku-notebooks/releases/tag/1.29.1>`_
 - `renku-notebooks 1.29.2 <https://github.com/SwissDataScienceCenter/renku-notebooks/releases/tag/1.29.2>`_
+- `renku-notebooks 1.30.0 <https://github.com/SwissDataScienceCenter/renku-notebooks/releases/tag/1.30.0>`_
+- `renku-notebooks 1.30.1 <https://github.com/SwissDataScienceCenter/renku-notebooks/releases/tag/1.30.1>`_
 - `renku-ui 3.48.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.48.0>`_
+- `renku-gateway 1.4.0 <https://github.com/SwissDataScienceCenter/renku-gateway/releases/tag/1.4.0>`_
 
 
 0.65.0
