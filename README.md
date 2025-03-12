@@ -36,7 +36,7 @@ sing.
 A public instance of **RenkuLab** is available at
 https://renkulab.io/v2. To start exploring Renku, feel free to make an
 account and try it out! You can follow the [hands-on
-tutorial](https://renku.notion.site/Renku-2-0-Tutorials-1460df2efafc80c2b27acd221aa34a24?p=1a50df2efafc800f8554e30fd7458fa6&pm=s)
+tutorial](https://renku.notion.site/Hands-On-Tutorial-1a50df2efafc800f8554e30fd7458fa6)
 or visit our [Community
 Portal](https://renku.notion.site/Renku-Community-Portal-2a154d7d30b24ab8a5968c60c2592d87).
 
