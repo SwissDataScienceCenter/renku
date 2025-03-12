@@ -111,11 +111,7 @@ jobs:
           DOCKER_USERNAME: ${{ secrets.RENKU_DOCKER_USERNAME }}
           GITLAB_TOKEN: ${{ secrets.DEV_GITLAB_TOKEN }}
           KUBECONFIG: "${{ github.workspace }}/renkubot-kube.config"
-          RANCHER_DEV_API_ENDPOINT: ${{ secrets.RANCHER_DEV_API_ENDPOINT }}
-          RANCHER_PROJECT_ID: ${{ secrets.CI_RANCHER_PROJECT }}
-          RENKU_BOT_DEV_PASSWORD: ${{ secrets.RENKU_BOT_DEV_PASSWORD }}
           RENKU_RELEASE: ci-renku-${{ github.event.number }}
-          RENKU_TESTS_ENABLED: true
           RENKU_VALUES_FILE: "${{ github.workspace }}/values.yaml"
           RENKU_VALUES: ${{ secrets.COMBINED_CHARTS_CI_RENKU_VALUES }}
           RENKUBOT_KUBECONFIG: ${{ secrets.RENKUBOT_DEV_KUBECONFIG }}
@@ -167,7 +163,6 @@ jobs:
           ]
     steps:
       - uses: SwissDataScienceCenter/renku-actions/test-renku-cypress@v1.14.2
-        if: github.event.action != 'closed' && needs.check-deploy.outputs.pr-contains-string == 'true' && needs.check-deploy.outputs.test-enabled == 'true'
         with:
           e2e-target: ${{ matrix.tests }}
           renku-reference: ${{ github.ref }}
