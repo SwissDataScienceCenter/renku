@@ -49,7 +49,7 @@ Portal](https://renku.notion.site/Renku-Community-Portal-2a154d7d30b24ab8a5968c6
     recipes for common use-cases with Renku for users and administrators
 -   [Reference](https://renku.notion.site/Renku-2-0-Reference-874b6f7b83a044598f5bdbf1193cb150):
     various concepts explained in detail.
--   [Renku 2.0 blog](https://blog.renkulab.io/): discover what is new in Renku, for example [How Renku 2.0 is different from Renku Legacy](https://blog.renkulab.io/deep-dive-2-0/):
+-   [Renku 2.0 blog](https://blog.renkulab.io/): discover what is new in Renku, for example [How Renku 2.0 is different from Renku Legacy](https://blog.renkulab.io/deep-dive-2-0/)
 -   [\"Legacy\" documentation](https://renku.readthedocs.org): the
     documentation pages for the previous version of the platform.
 
