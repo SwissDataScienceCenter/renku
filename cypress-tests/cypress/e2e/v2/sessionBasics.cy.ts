@@ -11,6 +11,10 @@ import {
   deleteProjectFromAPIV2,
   getProjectByNamespaceAPIV2,
 } from "../../support/utils/projectsV2.utils";
+import {
+  deleteSessionFromAPI,
+  getSessionsFromAPI,
+} from "../../support/utils/sessions.utils";
 
 const sessionId = ["sessionBasics", getRandomString()];
 
@@ -52,12 +56,24 @@ describe("Start a session that consumes project resources", () => {
     });
   });
 
-  // Cleanup the project after the test
+  // Cleanup the session and the project after the test
   after(() => {
     getProjectByNamespaceAPIV2(projectIdentifier).then((response) => {
       if (response.status === 200) {
         projectIdentifier.id = response.body.id;
         projectIdentifier.namespace = response.body.namespace;
+
+        getSessionsFromAPI().then((response) => {
+          if (response.status === 200 && response.body.length > 0) {
+            // eslint-disable-next-line max-nested-callbacks
+            response.body.forEach((session) => {
+              if (session.project_id === projectIdentifier.id) {
+                deleteSessionFromAPI(session.name);
+              }
+            });
+          }
+        });
+
         deleteProjectFromAPIV2(projectIdentifier);
       }
     });
