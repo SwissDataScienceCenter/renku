@@ -1508,14 +1508,14 @@ dataService:
     create: true
   image:
     repository: renku/renku-data-service
-    tag: "0.35.1"
+    tag: "0.35.2"
     pullPolicy: IfNotPresent
   backgroundJobs:
     events:
       resources: {}
     image:
       repository: renku/data-service-background-jobs
-      tag: "0.35.1"
+      tag: "0.35.2"
       pullPolicy: IfNotPresent
     total:
       resources: {}
@@ -1595,7 +1595,7 @@ authz:
 secretsStorage:
   image:
     repository: renku/secrets-storage
-    tag: "0.35.1"
+    tag: "0.35.2"
     pullPolicy: IfNotPresent
   service:
     type: ClusterIP
