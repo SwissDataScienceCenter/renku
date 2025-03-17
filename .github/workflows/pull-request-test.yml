@@ -1,4 +1,8 @@
 name: Test PR
+permissions:
+  contents: read
+  pull-requests: read
+
 on:
   pull_request:
     types:
@@ -16,8 +20,8 @@ concurrency:
 jobs:
   test-docs:
     name: Documentation
+    runs-on: ubuntu-24.04
     if: github.event.action != 'closed'
-    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4.1.7
       - uses: actions/setup-java@v4
@@ -50,7 +54,7 @@ jobs:
 
   check-deploy:
     name: Analyze deploy string
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     outputs:
       pr-contains-string: ${{ steps.deploy-comment.outputs.pr-contains-string }}
       renku-core: ${{ steps.deploy-comment.outputs.renku-core}}
@@ -62,38 +66,56 @@ jobs:
       amalthea: ${{ steps.deploy-comment.outputs.amalthea}}
       amalthea-sessions: ${{ steps.deploy-comment.outputs.amalthea-sessions}}
       test-enabled: ${{ steps.deploy-comment.outputs.test-enabled}}
+      test-legacy-enabled: ${{ steps.deploy-comment.outputs.test-legacy-enabled}}
       extra-values: ${{ steps.deploy-comment.outputs.extra-values}}
     steps:
-      - uses: actions/checkout@v4.1.7
       - id: deploy-comment
-        uses: SwissDataScienceCenter/renku-actions/check-pr-description@v1.14.1
+        uses: SwissDataScienceCenter/renku-actions/check-pr-description@v1.14.2
         with:
-          string: /deploy
           pr_ref: ${{ github.event.number }}
 
   deploy-pr:
     name: Deploy
-    if: github.event.action != 'closed'
+    runs-on: ubuntu-24.04
     needs: [check-deploy]
-    runs-on: ubuntu-22.04
+    permissions:
+      pull-requests: write
+    if: github.event.action != 'closed'
     environment:
       name: ci-renku-${{ github.event.number }}
       url: https://ci-renku-${{ github.event.number }}.dev.renku.ch
     steps:
       - uses: actions/checkout@v4.1.7
+      - name: Find deplyoment url
+        if: needs.check-deploy.outputs.pr-contains-string == 'true'
+        uses: peter-evans/find-comment@v3
+        id: deploymentUrlMessage
+        with:
+          issue-number: ${{ github.event.pull_request.number }}
+          comment-author: "RenkuBot"
+          body-includes: "You can access the deployment of this PR at"
+      - name: Create comment deployment url
+        if: steps.deploymentUrlMessage.outputs.comment-id == 0 &&
+          needs.check-deploy.outputs.pr-contains-string == 'true'
+        uses: peter-evans/create-or-update-comment@v4
+        with:
+          token: ${{ secrets.RENKUBOT_GITHUB_TOKEN }}
+          issue-number: ${{ github.event.pull_request.number }}
+          body: |
+            You can access the deployment of this PR at https://ci-renku-${{ github.event.number }}.dev.renku.ch
       - name: renku build and deploy
         if: needs.check-deploy.outputs.pr-contains-string == 'true'
-        uses: SwissDataScienceCenter/renku-actions/deploy-renku@v1.14.1
+        uses: SwissDataScienceCenter/renku-actions/deploy-renku@v1.14.2
         env:
           DOCKER_PASSWORD: ${{ secrets.RENKU_DOCKER_PASSWORD }}
           DOCKER_USERNAME: ${{ secrets.RENKU_DOCKER_USERNAME }}
           GITLAB_TOKEN: ${{ secrets.DEV_GITLAB_TOKEN }}
           KUBECONFIG: "${{ github.workspace }}/renkubot-kube.config"
-          RENKU_ANONYMOUS_SESSIONS: true
           RENKU_RELEASE: ci-renku-${{ github.event.number }}
           RENKU_VALUES_FILE: "${{ github.workspace }}/values.yaml"
           RENKU_VALUES: ${{ secrets.COMBINED_CHARTS_CI_RENKU_VALUES }}
           RENKUBOT_KUBECONFIG: ${{ secrets.RENKUBOT_DEV_KUBECONFIG }}
+          RENKUBOT_RANCHER_BEARER_TOKEN: ${{ secrets.RENKUBOT_RANCHER_BEARER_TOKEN }}
           TEST_ARTIFACTS_PATH: "tests-artifacts-${{ github.sha }}"
           renku: "@${{ github.head_ref }}"
           renku_core: "${{ needs.check-deploy.outputs.renku-core }}"
@@ -105,43 +127,27 @@ jobs:
           amalthea: "${{ needs.check-deploy.outputs.amalthea }}"
           amalthea_sessions: "${{ needs.check-deploy.outputs.amalthea-sessions }}"
           extra_values: "${{ needs.check-deploy.outputs.extra-values }}"
-      - name: Check existing renkubot comment
-        if: needs.check-deploy.outputs.pr-contains-string == 'true'
-        uses: peter-evans/find-comment@v3
-        id: findcomment
-        with:
-          issue-number: ${{ github.event.pull_request.number }}
-          comment-author: "RenkuBot"
-      - name: Create comment pre deploy
-        if: ${{ steps.findcomment.outputs.comment-id == 0 &&
-          needs.check-deploy.outputs.pr-contains-string == 'true' }}
-        uses: peter-evans/create-or-update-comment@v4
-        with:
-          token: ${{ secrets.RENKUBOT_GITHUB_TOKEN }}
-          issue-number: ${{ github.event.pull_request.number }}
-          body: |
-            You can access the deployment of this PR at https://ci-renku-${{ github.event.number }}.dev.renku.ch
 
-  test-pr:
+  legacy-scala-tests:
     name: Legacy Scala tests
-    if: github.event.action != 'closed' && needs.check-deploy.outputs.pr-contains-string == 'true' && needs.check-deploy.outputs.test-enabled == 'true'
+    runs-on: ubuntu-24.04
     needs: [check-deploy, deploy-pr]
-    runs-on: ubuntu-22.04
+    if: github.event.action != 'closed' && needs.check-deploy.outputs.pr-contains-string == 'true' && needs.check-deploy.outputs.test-legacy-enabled == 'true'
     steps:
-      - uses: SwissDataScienceCenter/renku-actions/test-renku@v1.14.1
+      - uses: SwissDataScienceCenter/renku-actions/test-renku@v1.14.2
         with:
           kubeconfig: ${{ secrets.RENKUBOT_DEV_KUBECONFIG }}
           renku-release: ci-renku-${{ github.event.number }}
           gitlab-token: ${{ secrets.DEV_GITLAB_TOKEN }}
           s3-results-access-key: ${{ secrets.ACCEPTANCE_TESTS_BUCKET_ACCESS_KEY }}
           s3-results-secret-key: ${{ secrets.ACCEPTANCE_TESTS_BUCKET_SECRET_KEY }}
-          test-timeout-mins: "120"
+          test-timeout-mins: "60"
 
   legacy-cypress-acceptance-tests:
     name: Legacy Cypress tests
+    runs-on: ubuntu-24.04
     needs: [check-deploy, deploy-pr]
-    runs-on: ubuntu-22.04
-
+    if: github.event.action != 'closed' && needs.check-deploy.outputs.pr-contains-string == 'true' && needs.check-deploy.outputs.test-legacy-enabled == 'true'
     strategy:
       fail-fast: false
       matrix:
@@ -156,8 +162,7 @@ jobs:
             rstudioSession,
           ]
     steps:
-      - uses: SwissDataScienceCenter/renku-actions/test-renku-cypress@v1.14.1
-        if: github.event.action != 'closed' && needs.check-deploy.outputs.pr-contains-string == 'true' && needs.check-deploy.outputs.test-enabled == 'true'
+      - uses: SwissDataScienceCenter/renku-actions/test-renku-cypress@v1.14.2
         with:
           e2e-target: ${{ matrix.tests }}
           renku-reference: ${{ github.ref }}
@@ -166,8 +171,8 @@ jobs:
 
   cypress-acceptance-tests:
     name: Cypress tests
+    runs-on: ubuntu-24.04
     needs: [check-deploy, deploy-pr]
-    runs-on: ubuntu-22.04
     strategy:
       fail-fast: false
       matrix:
@@ -182,7 +187,7 @@ jobs:
             sessionBasics,
           ]
     steps:
-      - uses: SwissDataScienceCenter/renku-actions/test-renku-cypress@v1.14.0
+      - uses: SwissDataScienceCenter/renku-actions/test-renku-cypress@v1.14.2
         if: github.event.action != 'closed' && needs.check-deploy.outputs.pr-contains-string == 'true' && needs.check-deploy.outputs.test-enabled == 'true'
         with:
           e2e-folder: cypress/e2e/v2/
@@ -193,8 +198,8 @@ jobs:
 
   deploy-string-no-custom-version:
     name: Ensure no custom components
+    runs-on: ubuntu-24.04
     needs: [check-deploy]
-    runs-on: ubuntu-22.04
     steps:
       - name: Check deploy string
         if: ${{ 
@@ -212,13 +217,32 @@ jobs:
         uses: actions/github-script@v7
         with:
           script: core.setFailed('Cannot merge release PR if it still has custom versions in deploy string.')
+  
   cleanup:
     name: Cleanup
-    if: github.event.action == 'closed'
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
+    needs: [check-deploy]
+    if: github.event.action == 'closed' && needs.check-deploy.outputs.pr-contains-string == 'true'
+    permissions:
+      pull-requests: write
     steps:
+      - name: Find deplyoment url
+        uses: peter-evans/find-comment@v3
+        id: deploymentUrlMessage
+        with:
+          issue-number: ${{ github.event.pull_request.number }}
+          comment-author: "RenkuBot"
+          body-includes: "Tearing down the temporary RenkuLab deplyoment"
+      - name: Create comment deployment url
+        if: steps.deploymentUrlMessage.outputs.comment-id == 0
+        uses: peter-evans/create-or-update-comment@v4
+        with:
+          token: ${{ secrets.RENKUBOT_GITHUB_TOKEN }}
+          issue-number: ${{ github.event.pull_request.number }}
+          body: |
+            Tearing down the temporary RenkuLab deplyoment for this PR.
       - name: renku teardown
-        uses: SwissDataScienceCenter/renku-actions/cleanup-renku-ci-deployments@v1.14.1
+        uses: SwissDataScienceCenter/renku-actions/cleanup-renku-ci-deployments@v1.14.2
         env:
           HELM_RELEASE_REGEX: "^ci-renku-${{ github.event.number }}$"
           GITLAB_TOKEN: ${{ secrets.DEV_GITLAB_TOKEN }}

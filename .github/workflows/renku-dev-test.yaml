@@ -6,9 +6,9 @@ jobs:
   run-tests-dev:
     if: ${{ github.event.client_payload.metadata.summary == 'renku-dev' &&
       github.event.client_payload.message == 'Helm test succeeded' }}
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-24.04
     steps:
-      - uses: SwissDataScienceCenter/renku-actions/test-renku@v1.14.1
+      - uses: SwissDataScienceCenter/renku-actions/test-renku@v1.14.2
         with:
           kubeconfig: ${{ secrets.RENKUBOT_DEV_KUBECONFIG }}
           renku-release: renku
@@ -20,7 +20,7 @@ jobs:
   run-tests-dev-cypress:
     if: ${{ github.event.client_payload.metadata.summary == 'renku-dev' &&
       github.event.client_payload.message == 'Helm test succeeded' }}
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4.1.7
       - uses: cypress-io/github-action@v6

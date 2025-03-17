@@ -8,10 +8,10 @@ on:
 
 jobs:
   remove-CI-deployments:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     steps:
       - name: renku teardown
-        uses: SwissDataScienceCenter/renku-actions/cleanup-renku-ci-deployments@v1.14.1
+        uses: SwissDataScienceCenter/renku-actions/cleanup-renku-ci-deployments@v1.14.2
         env:
           GITLAB_TOKEN: ${{ secrets.DEV_GITLAB_TOKEN }}
           RENKUBOT_KUBECONFIG: ${{ secrets.RENKUBOT_DEV_KUBECONFIG }}
