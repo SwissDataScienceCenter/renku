@@ -13,6 +13,7 @@ User-Facing Changes
   This feature is only available on RenkuLab.io, learn more in our `documentation <https://renku.notion.site/How-to-create-a-custom-environment-from-a-code-repository-1960df2efafc801b88f6da59a0aa8234>`__.
   (`#3522 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3522>`__)
 - **UI**: Surface error messages from validating Git repository URLs
+- **UI**: Projects can now be migrated from Renku v1 to Renku 2.0 (`#3527 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3527>`__)
 - **Amalthea**: Surface to the user when a session cannot be launched because the quota in the resource pool was exceeded.
 - **Amalthea**: Improve error reporting around unschedulable sessions.
 - **Amalthea**: Improve error reporting around pulling images.
@@ -45,6 +46,7 @@ Individual Components
 - `renku-data-services 0.35.0 <https://github.com/SwissDataScienceCenter/renku-data-services/releases/tag/v0.35.0>`_
 - `renku-data-services 0.35.1 <https://github.com/SwissDataScienceCenter/renku-data-services/releases/tag/v0.35.1>`_
 - `renku-data-services 0.35.2 <https://github.com/SwissDataScienceCenter/renku-data-services/releases/tag/v0.35.2>`_
+- `renku-data-services 0.36.0 <https://github.com/SwissDataScienceCenter/renku-data-services/releases/tag/v0.36.0>`_
 - `renku-notebooks 1.28.0 <https://github.com/SwissDataScienceCenter/renku-notebooks/releases/tag/1.28.0>`_
 - `renku-notebooks 1.29.0 <https://github.com/SwissDataScienceCenter/renku-notebooks/releases/tag/1.29.0>`_
 - `renku-notebooks 1.29.1 <https://github.com/SwissDataScienceCenter/renku-notebooks/releases/tag/1.29.1>`_
