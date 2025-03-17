@@ -3,7 +3,7 @@
 0.66.0
 ------
 
-DEMO!
+TEST!
 
 User-Facing Changes
 ~~~~~~~~~~~~~~~~~~~
