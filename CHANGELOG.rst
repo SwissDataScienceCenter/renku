@@ -12,6 +12,7 @@ User-Facing Changes
   Current support includes creating python environments defined by an environment.yaml file or similar.
   This feature is only available on RenkuLab.io, learn more in our `documentation <https://renku.notion.site/How-to-create-a-custom-environment-from-a-code-repository-1960df2efafc801b88f6da59a0aa8234>`__.
   (`#3522 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3522>`__)
+- **UI**: Surface error messages from validating Git repository URLs
 - **Amalthea**: Surface to the user when a session cannot be launched because the quota in the resource pool was exceeded.
 - **Amalthea**: Improve error reporting around unschedulable sessions.
 - **Amalthea**: Improve error reporting around pulling images.
@@ -51,6 +52,8 @@ Individual Components
 - `renku-notebooks 1.30.0 <https://github.com/SwissDataScienceCenter/renku-notebooks/releases/tag/1.30.0>`_
 - `renku-notebooks 1.30.1 <https://github.com/SwissDataScienceCenter/renku-notebooks/releases/tag/1.30.1>`_
 - `renku-ui 3.48.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.48.0>`_
+- `renku-ui 3.49.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.49.0>`_
+- `renku-ui 3.50.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.50.0>`_
 - `renku-gateway 1.4.0 <https://github.com/SwissDataScienceCenter/renku-gateway/releases/tag/1.4.0>`_
 - `amalthea-sessions 0.17.0 <https://github.com/SwissDataScienceCenter/amalthea/releases/tag/0.17.0>`_
 - `amalthea-sessions 0.16.0 <https://github.com/SwissDataScienceCenter/amalthea/releases/tag/0.16.0>`_
