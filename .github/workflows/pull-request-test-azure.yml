@@ -74,7 +74,7 @@ jobs:
           RENKU_RELEASE: ci-renku-${{ github.event.number }}
           RENKU_VALUES_FILE: "${{ github.workspace }}/values.yaml"
           RENKU_VALUES: minimal-deployment/minimal-deployment-values.yaml
-          RENKUBOT_KUBECONFIG: ${{ secrets.RENKUBOT_DEV_KUBECONFIG }}
+          RENKUBOT_KUBECONFIG: $KUBECONFIG
           TEST_ARTIFACTS_PATH: "tests-artifacts-${{ github.sha }}"
           renku: "@${{ github.head_ref }}"
           renku_core: "${{ needs.check-deploy.outputs.renku-core }}"
