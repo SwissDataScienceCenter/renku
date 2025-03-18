@@ -61,6 +61,15 @@ jobs:
           cluster-name: "aks-switzerlandnorth-renku-dev"
       - uses: actions/checkout@v4.1.7
       - run: ls $KUBECONFIG
+
+      - name: Get kubeconfig content
+        id: kubeconfig
+        run: |
+          KUBECONFIG_CONTENT=$(cat $KUBECONFIG)
+          echo "KUBECONFIG_CONTENT<<EOF" >> $GITHUB_ENV
+          echo "$KUBECONFIG_CONTENT" >> $GITHUB_ENV
+          echo "EOF" >> $GITHUB_ENV
+
       - run: kubectl get nodes
       - name: renku build and deploy
         if: needs.check-deploy.outputs.pr-contains-string == 'true'
@@ -69,12 +78,12 @@ jobs:
           DOCKER_PASSWORD: ${{ secrets.RENKU_DOCKER_PASSWORD }}
           DOCKER_USERNAME: ${{ secrets.RENKU_DOCKER_USERNAME }}
           GITLAB_TOKEN: ${{ secrets.DEV_GITLAB_TOKEN }}
-          KUBECONFIG: $KUBECONFIG
+          KUBECONFIG: ${{ env.KUBECONFIG }}
           RENKU_ANONYMOUS_SESSIONS: true
           RENKU_RELEASE: ci-renku-${{ github.event.number }}
           RENKU_VALUES_FILE: "${{ github.workspace }}/values.yaml"
           RENKU_VALUES: minimal-deployment/minimal-deployment-values.yaml
-          RENKUBOT_KUBECONFIG: $KUBECONFIG
+          RENKUBOT_KUBECONFIG: ${{ env.KUBECONFIG_CONTENT }}
           TEST_ARTIFACTS_PATH: "tests-artifacts-${{ github.sha }}"
           renku: "@${{ github.head_ref }}"
           renku_core: "${{ needs.check-deploy.outputs.renku-core }}"
