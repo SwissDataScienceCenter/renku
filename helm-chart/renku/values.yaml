@@ -528,7 +528,7 @@ ui:
     replicaCount: 1
     image:
       repository: renku/renku-ui
-      tag: "3.47.0"
+      tag: "3.50.0"
       pullPolicy: IfNotPresent
       ## Optionally specify an array of imagePullSecrets.
       ## Secrets must be manually created in the namespace.
@@ -717,7 +717,7 @@ ui:
     keepCookies: []
     image:
       repository: renku/renku-ui-server
-      tag: "3.47.0"
+      tag: "3.50.0"
       pullPolicy: IfNotPresent
     imagePullSecrets: []
     nameOverride: ""
@@ -854,7 +854,7 @@ notebooks:
       environment:
       ## Sample rate is used for performance monitoring in sentry
       sampleRate: 0.2
-  replicaCount: 2
+  replicaCount: 0
   ## Configure autoscaling
   autoscaling:
     enabled: false
@@ -863,7 +863,7 @@ notebooks:
     targetCPUUtilizationPercentage: 50
   image:
     repository: renku/renku-notebooks
-    tag: "1.27.1"
+    tag: "1.30.1"
     pullPolicy: IfNotPresent
     ## Optionally specify an array of imagePullSecrets.
     ## Secrets must be manually created in the namespace.
@@ -982,15 +982,15 @@ notebooks:
   gitRpcServer:
     image:
       name: renku/git-rpc-server
-      tag: "1.27.1"
+      tag: "1.30.1"
   gitHttpsProxy:
     image:
       name: renku/git-https-proxy
-      tag: "1.27.1"
+      tag: "1.30.1"
   gitClone:
     image:
       name: renku/git-clone
-      tag: "1.27.1"
+      tag: "1.30.1"
   service:
     type: ClusterIP
     port: 80
@@ -1036,12 +1036,12 @@ notebooks:
     sessionTypes: ["registered"]
     image:
       repository: renku/renku-notebooks-tests
-      tag: "1.27.1"
+      tag: "1.30.1"
       pullPolicy: IfNotPresent
   k8sWatcher:
     image:
       repository: renku/k8s-watcher
-      tag: "1.27.1"
+      tag: "1.30.1"
       pullPolicy: IfNotPresent
     resources: {}
     replicaCount: 1
@@ -1053,12 +1053,12 @@ notebooks:
   secretsMount:
     image:
       repository: renku/secrets-mount
-      tag: "1.27.1"
+      tag: "1.30.1"
   ssh:
     enabled: false
     image:
       repository: renku/ssh-jump-host
-      tag: "1.27.1"
+      tag: "1.30.1"
       pullPolicy: IfNotPresent
     resources: {}
     replicaCount: 1
@@ -1154,7 +1154,7 @@ gateway:
   secretKey:
   image:
     repository: renku/renku-gateway
-    tag: "1.3.2"
+    tag: "1.4.0"
     pullPolicy: IfNotPresent
   service:
     type: ClusterIP
@@ -1508,14 +1508,14 @@ dataService:
     create: true
   image:
     repository: renku/renku-data-service
-    tag: "0.33.0"
+    tag: "0.36.0"
     pullPolicy: IfNotPresent
   backgroundJobs:
     events:
       resources: {}
     image:
       repository: renku/data-service-background-jobs
-      tag: "0.33.0"
+      tag: "0.36.0"
       pullPolicy: IfNotPresent
     total:
       resources: {}
@@ -1547,6 +1547,33 @@ dataService:
   trustedProxies:
     proxiesCount: 1
     realIpHeader: x-real-ip
+  # Build session images from code repositories with Shipwright
+  imageBuilders:
+    # Experimental feature: enable at your own risk!
+    # The feature depends on Shipwright (version >= 0.15.x) being already installed independently from the Renku Helm chart.
+    enabled: false
+    ## The container image prefix for images built from code
+    outputImagePrefix: harbor.dev.renku.ch/renku-build/
+    ## The run image used for Python + VSCodium images
+    vscodiumPythonRunImage: renku/renkulab-vscodium-python-runimage:ubuntu-59fcea4
+    ## The name of the BuildStrategy to use for image builds.
+    strategyName: renku-buildpacks
+    ## The name of the secret used to push images built from code.
+    pushSecretName: renku-build-docker-secret
+    ## The TTL for BuildRuns
+    buildRunRetentionAfterFailedSeconds: 86400
+    buildRunRetentionAfterSucceededSeconds: 86400
+    ## The timeout duration for image builds.
+    buildRunTimeoutSeconds: 3600
+    ## The node selector for BuildRuns
+    nodeSelector:
+      renku.io/node-purpose: image-build
+    ## The tolerations for BuildRuns
+    tolerations:
+      - effect: NoSchedule
+        key: renku.io/dedicated
+        operator: Equal
+        value: image-build
 
 authz:
   replicaCount: 1
@@ -1568,7 +1595,7 @@ authz:
 secretsStorage:
   image:
     repository: renku/secrets-storage
-    tag: "0.33.0"
+    tag: "0.36.0"
     pullPolicy: IfNotPresent
   service:
     type: ClusterIP

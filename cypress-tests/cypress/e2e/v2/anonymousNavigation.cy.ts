@@ -143,7 +143,7 @@ describe("Anonymous users can only access public resources", () => {
       cy.getDataCy("project-name").should("contain", privateProjectName);
       cy.getDataCy("project-settings-link").click();
 
-      cy.get("#project-visibility-private").should("be.checked");
+      cy.get("#project-settings-form-project-visibility-private").should("be.checked");
       cy.getDataCy("project-visibility-public").click();
 
       cy.intercept("PATCH", /(?:\/ui-server)?\/api\/data\/projects\/[^/]+/).as(
@@ -181,7 +181,7 @@ describe("Anonymous users can only access public resources", () => {
       cy.visit(url);
       cy.getDataCy("project-settings-link").click();
 
-      cy.get("#project-visibility-public").should("be.checked");
+      cy.get("#project-settings-form-project-visibility-public").should("be.checked");
       cy.getDataCy("project-visibility-private").click();
 
       cy.intercept("PATCH", /(?:\/ui-server)?\/api\/data\/projects\/[^/]+/).as(

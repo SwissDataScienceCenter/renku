@@ -286,6 +286,7 @@ supertypes
 swappiness
 symlink
 symlinks
+Tekton
 templated
 templating
 Tensorboard
