@@ -60,17 +60,21 @@ jobs:
           resource-group: "renku-dev"
           cluster-name: "aks-switzerlandnorth-renku-dev"
       - uses: actions/checkout@v4.1.7
-      - run: ls $KUBECONFIG
 
-      - name: Get kubeconfig content
-        id: kubeconfig
+      - name: Get AKS credentials
         run: |
-          KUBECONFIG_CONTENT=$(cat $KUBECONFIG)
-          echo "KUBECONFIG_CONTENT<<EOF" >> $GITHUB_ENV
-          echo "$KUBECONFIG_CONTENT" >> $GITHUB_ENV
+          az aks get-credentials --resource-group renku-dev --name aks-switzerlandnorth-renku-dev --file "${{ github.workspace }}/renkubot-kube.config"
+          chmod 600 "${{ github.workspace }}/renkubot-kube.config"
+
+          # Create a multiline env var with the content for RENKUBOT_KUBECONFIG
+          echo "RENKUBOT_KUBECONFIG<<EOF" >> $GITHUB_ENV
+          cat "${{ github.workspace }}/renkubot-kube.config" >> $GITHUB_ENV
           echo "EOF" >> $GITHUB_ENV
 
-      - run: kubectl get nodes
+      - name: Test kubectl connection
+        run: |
+          export KUBECONFIG="${{ github.workspace }}/renkubot-kube.config"
+          kubectl get nodes
       - name: renku build and deploy
         if: needs.check-deploy.outputs.pr-contains-string == 'true'
         uses: SwissDataScienceCenter/renku-actions/deploy-renku@v1.15.1
@@ -78,12 +82,12 @@ jobs:
           DOCKER_PASSWORD: ${{ secrets.RENKU_DOCKER_PASSWORD }}
           DOCKER_USERNAME: ${{ secrets.RENKU_DOCKER_USERNAME }}
           GITLAB_TOKEN: ${{ secrets.DEV_GITLAB_TOKEN }}
-          KUBECONFIG: $KUBECONFIG
+          KUBECONFIG: "${{ github.workspace }}/renkubot-kube.config"
           RENKU_ANONYMOUS_SESSIONS: true
           RENKU_RELEASE: ci-renku-${{ github.event.number }}
           RENKU_VALUES_FILE: "${{ github.workspace }}/values.yaml"
           RENKU_VALUES: minimal-deployment/minimal-deployment-values.yaml
-          RENKUBOT_KUBECONFIG: ${{ env.KUBECONFIG_CONTENT }}
+          RENKUBOT_KUBECONFIG: ${{ env.RENKUBOT_KUBECONFIG }}
           TEST_ARTIFACTS_PATH: "tests-artifacts-${{ github.sha }}"
           renku: "@${{ github.head_ref }}"
           renku_core: "${{ needs.check-deploy.outputs.renku-core }}"
