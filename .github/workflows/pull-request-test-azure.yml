@@ -61,6 +61,7 @@ jobs:
           cluster-name: "aks-switzerlandnorth-renku-dev"
       - uses: actions/checkout@v4.1.7
       - run: ls $KUBECONFIG
+      - run: kubectl get nodes
       - name: renku build and deploy
         if: needs.check-deploy.outputs.pr-contains-string == 'true'
         uses: SwissDataScienceCenter/renku-actions/deploy-renku@v1.15.1
