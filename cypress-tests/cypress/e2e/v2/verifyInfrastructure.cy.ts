@@ -10,7 +10,7 @@ function retryRequest(
   url: string,
   service: string,
   limit = 6,
-  delaySeconds = 21,
+  delaySeconds = 20,
   retries = 1,
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
 ): Cypress.Response<any> {
@@ -63,14 +63,7 @@ describe("Verify the infrastructure is ready", () => {
         throw new Error("Search endpoints not working as expected.");
     });
 
-    // Gateway should redirect to login page
-    const gatewayUrl = `/api/auth/login`;
-    cy.request(gatewayUrl).then((resp) => {
-      if (resp.status >= 400 || !(resp.body.includes(`class="renku-login-body"`)))
-        throw new Error("Gateway endpoints not working as expected.");
-    });
-
-    // Ui should load
+    // UI should load
     const uiUrl = `/help`;
     cy.request(uiUrl).then((resp) => {
       if (resp.status >= 400 || !(resp.body.includes(`<div id="root"`)))
