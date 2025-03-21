@@ -7,6 +7,7 @@ Internal Changes
 ~~~~~~~~~~~~~~~~
 
 - **Helm chart**: Update the Keycloak theme image to use non-root user by default.
+- **Admin tools**: Add Harbor initialization script to setup a registry for RenkuLab v2.
 
 0.67.1
 ------
