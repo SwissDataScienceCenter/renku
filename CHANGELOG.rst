@@ -15,6 +15,7 @@ Internal Changes
 
 - **Helm chart**: Update the Keycloak theme image to use non-root user by default.
 - **Data services**: Added k8s cache service that caches sessions in the data services database.
+- **Admin tools**: Add Harbor initialization script to setup a registry for RenkuLab v2.
 
 Individual Components
 ~~~~~~~~~~~~~~~~~~~~~
