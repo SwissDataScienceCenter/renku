@@ -57,9 +57,8 @@ describe("Verify the infrastructure is ready", () => {
     // UI should load
     const uiUrl = `/help`;
     cy.request(uiUrl).then((resp) => {
-      if (resp.status >= 400 || !(resp.body.includes(`<div id="root"`)))
+      if (resp.status >= 400 || !resp.body.includes(`<div id="root"`))
         throw new Error("UI not showing as expected.");
     });
-
   });
 });
