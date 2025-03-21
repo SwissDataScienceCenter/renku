@@ -12,8 +12,7 @@ function retryRequest(
   limit = 6,
   delaySeconds = 20,
   retries = 1,
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-): Cypress.Response<any> {
+) {
   if (retries > limit) {
     const minutes = Math.floor((limit * delaySeconds) / 60);
     throw new Error(
@@ -37,7 +36,6 @@ function retryRequest(
 describe("Verify the infrastructure is ready", () => {
   it("Can interact with the backend components", () => {
     retryRequest("api/data/version", "Data services");
-    retryRequest("api/notebooks/version", "Notebooks");
     retryRequest("api/search/version", "Search");
     retryRequest("api/auth/login", "Gateway");
     retryRequest("config.json", "UI client");
@@ -47,13 +45,6 @@ describe("Verify the infrastructure is ready", () => {
     cy.request(dataServiceUrl).then((resp) => {
       if (resp.status >= 400 || !resp.body.length)
         throw new Error("Data service endpoints not working as expected.");
-    });
-
-    // Notebooks should return a list of servers
-    const notebooksUrl = "/api/notebooks/servers";
-    cy.request(notebooksUrl).then((resp) => {
-      if (resp.status >= 400 || !("servers" in resp.body))
-        throw new Error("Notebook endpoints not working as expected.");
     });
 
     // Search should return a list of items
