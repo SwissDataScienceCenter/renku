@@ -3,7 +3,12 @@
 0.67.0
 ------
 
+Internal Changes
+~~~~~~~~~~~~~~~~
 
+**New Features**
+
+- **Data services**: Prepare helm charts to allow data-services to connect to SOLR.
 
 0.66.0
 ------
