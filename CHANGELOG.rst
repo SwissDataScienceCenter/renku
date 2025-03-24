@@ -13,6 +13,7 @@ User-Facing Changes
 
 - **UI**: Data connectors can be owned by projects.
 - **Data services**: Private images from the Renku Gitlab registry can be used in V2 sessions.
+- **UI**: Projects with private images from the Renku Gitlab registry can now be migrated from Renku v1 to Renku 2.0 (`#3603 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3603>`__)
 
 **🐞 Bug Fixes**
 
