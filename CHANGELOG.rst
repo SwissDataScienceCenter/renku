@@ -3,7 +3,21 @@
 0.67.0
 ------
 
+Renku ``0.67.0`` simplifies the authorization for data connectors and allows
+private images from the Renku Gitlab repository to be used in V2 sessions.
 
+Internal Changes
+~~~~~~~~~~~~~~~~
+
+**Improvements**
+
+- **Amalthea**: Add image pull policy for the session image.
+
+Individual components
+~~~~~~~~~~~~~~~~~~~~~~
+
+- `amalthea-sessions 0.18.0 <https://github.com/SwissDataScienceCenter/amalthea/releases/tag/0.18.0>`_
+- `amalthea-sessions 0.18.1 <https://github.com/SwissDataScienceCenter/amalthea/releases/tag/0.18.1>`_
 
 
 0.66.0
