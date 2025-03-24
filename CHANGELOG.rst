@@ -3,6 +3,41 @@
 0.67.0
 ------
 
+Renku ``0.67.0`` simplifies the authorization for data connectors and allows
+private images from the Renku Gitlab repository to be used in V2 sessions.
+
+User-Facing Changes
+~~~~~~~~~~~~~~~~~~~
+
+**🌟 New Features**
+
+- **UI**: Data connectors can be owned by projects.
+- **Data services**: Private images from the Renku Gitlab registry can be used in V2 sessions.
+
+**🐞 Bug Fixes**
+
+- **Data services**: Copy the project documentation when a project is copied.
+
+Internal Changes
+~~~~~~~~~~~~~~~~
+
+**Improvements**
+
+- **Amalthea**: Add image pull policy for the session image.
+- **Data services**: Simplify authorization for data connectors.
+
+**Bug Fixes**
+
+- **Data services**: Use "Always" as the image pull policy for session images.
+- **Data services**: Remove potential infinite recursion in project slug regex checks.
+
+Individual components
+~~~~~~~~~~~~~~~~~~~~~~
+
+- `amalthea-sessions 0.18.0 <https://github.com/SwissDataScienceCenter/amalthea/releases/tag/0.18.0>`_
+- `amalthea-sessions 0.18.1 <https://github.com/SwissDataScienceCenter/amalthea/releases/tag/0.18.1>`_
+- `renku-data-services 0.37.0 <https://github.com/SwissDataScienceCenter/renku-data-services/releases/tag/v0.37.0>`_
+- `renku-ui 3.51.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.51.0>`_
 
 
 0.66.0
