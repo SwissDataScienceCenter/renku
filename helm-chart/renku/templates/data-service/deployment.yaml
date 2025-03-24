@@ -152,6 +152,12 @@ spec:
             - name: BUILD_NODE_TOLERATIONS
               value: {{ toJson . | quote }}
             {{- end }}
+            - name: POSTHOG_ENABLED
+              value: {{ .Values.dataService.posthog.enabled | quote }}
+            - name: POSTHOG_API_KEY
+              value: {{ .Values.dataService.posthog.apiKey | default "" | quote }}
+            - name: POSTHOG_HOST
+              value: {{ .Values.dataService.posthog.host| default "" | quote }}
             - name: KUBERNETES_NAMESPACE
               valueFrom:
                 fieldRef:

@@ -1594,7 +1594,12 @@ dataService:
         key: renku.io/dedicated
         operator: Equal
         value: image-build
-
+  posthog:
+    enabled: false
+    # the posthog api key
+    # apiKey:
+    # the posthog host to send events to
+    # host:
 authz:
   replicaCount: 1
   image:
