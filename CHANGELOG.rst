@@ -39,6 +39,7 @@ Individual components
 - `amalthea-sessions 0.18.1 <https://github.com/SwissDataScienceCenter/amalthea/releases/tag/0.18.1>`_
 - `renku-data-services 0.37.0 <https://github.com/SwissDataScienceCenter/renku-data-services/releases/tag/v0.37.0>`_
 - `renku-ui 3.51.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.51.0>`_
+- `renku-ui 3.52.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.52.0>`_
 
 
 0.66.0
