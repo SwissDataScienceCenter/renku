@@ -502,6 +502,8 @@ solr:
   cloudEnabled: false
   collectionReplicas: 0
   replicaCount: 1
+  # Core names for solr that are created on first deployment. Once
+  # solr has cores, updating/changing this value has no effect.
   coreNames:
     - renku-search
   javaMem: "-Xmx512M"
