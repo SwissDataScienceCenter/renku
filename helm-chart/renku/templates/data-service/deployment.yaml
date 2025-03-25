@@ -99,7 +99,7 @@ spec:
             - name: SOLR_URL
               value: "http://{{ template "solr.fullname" . }}:{{ .Values.global.solr.port }}"
             - name: SOLR_CORE
-              value: {{ index .Values.solr.coreNames 1 }}
+              value: "renku-data"
             - name: SOLR_USER
               value: {{ default "admin" .Values.solr.auth.adminUsername | quote }}
             - name: SOLR_PASSWORD

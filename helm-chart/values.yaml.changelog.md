@@ -5,7 +5,6 @@ For changes that require manual steps other than changing values, please check o
 Please follow this convention when adding a new row
 * `<type: NEW|EDIT|DELETE> - *<resource name>*: <details>`
 
-
 ## Upgrading to Renku 0.66.0
 
 * NEW `dataService.imageBuilders` to configure session image builds using Shipwright.
@@ -13,8 +12,6 @@ Please follow this convention when adding a new row
   which must be installed independently from the Renku Helm chart.
 
 * EDIT ``notebooks.replicaCount`` - set to zero by default because the data service is handling all sessions now, the notebook service will be fully decomissioned and removed from the helm chart in a subsequent PR.
-
-* EDIT: Added a new core ``renku-data`` for SOLR in ``solr.coreNames``.
 
 ## Upgrading to Renku 0.65.1
 
