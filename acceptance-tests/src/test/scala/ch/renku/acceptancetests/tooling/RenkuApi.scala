@@ -33,7 +33,7 @@ trait RenkuApi extends RestClient {
     val url = renkuBaseUrl / "api" / "renku" / "apiversion"
     GET(url)
       .send(whenReceived(status = Ok) >=> bodyToJson)
-      .extract(jsonRoot.`result`.`latest_version`.string.getOption)
+      .extract(jsonRoot.`result`.`cli_version`.string.getOption)
       .map(CliVersion.get(_).fold(error => fail(error.getMessage), identity))
       .getOrElse(fail(s"CLI version couldn't be obtained from $url"))
   }
