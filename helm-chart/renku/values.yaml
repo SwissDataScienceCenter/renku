@@ -1162,7 +1162,7 @@ gateway:
   secretKey:
   image:
     repository: renku/renku-gateway
-    tag: "1.4.0"
+    tag: "1.5.0"
     pullPolicy: IfNotPresent
   service:
     type: ClusterIP
@@ -1594,12 +1594,14 @@ dataService:
         key: renku.io/dedicated
         operator: Equal
         value: image-build
-  posthog:
-    enabled: false
-    # the posthog api key
-    # apiKey:
-    # the posthog host to send events to
-    # host:
+posthog:
+  enabled: false
+  # the posthog api key
+  # apiKey:
+  # the posthog host to send events to
+  # host:
+  # the enviroment property to set on all events
+  # environment
 authz:
   replicaCount: 1
   image:

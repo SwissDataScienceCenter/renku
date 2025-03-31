@@ -29,6 +29,8 @@ Internal Changes
 
 - **Helm chart**: Update the Keycloak theme image to use non-root user by default.
 - **Data services**: Added k8s cache service that caches sessions in the data services database.
+- **Data services**: Added product metrics tracking.
+- **Gateway**: Added product metrics tracking.
 - **Data services**: Added data tasks deployment for running basic tasks in the scope of data services.
 - **Admin tools**: Add Harbor initialization script to setup a registry for RenkuLab v2.
 
@@ -38,6 +40,7 @@ Individual Components
 - `renku-data-services 0.39.0 <https://github.com/SwissDataScienceCenter/renku-data-services/releases/tag/v0.39.0>`_
 - `renku-data-services 0.40.0 <https://github.com/SwissDataScienceCenter/renku-data-services/releases/tag/v0.40.0>`_
 - `renku-data-services 0.41.0 <https://github.com/SwissDataScienceCenter/renku-data-services/releases/tag/v0.41.0>`_
+- `renku-gateway 1.5.0 <https://github.com/SwissDataScienceCenter/renku-gateway/releases/tag/1.5.0>`_
 - `renku-python 2.9.3 <https://github.com/SwissDataScienceCenter/renku-python/releases/tag/v2.9.3>`_
 - `renku-python 2.9.4 <https://github.com/SwissDataScienceCenter/renku-python/releases/tag/v2.9.4>`_
 

@@ -4,6 +4,14 @@ For changes that require manual steps other than changing values, please check o
 
 Please follow this convention when adding a new row
 * `<type: NEW|EDIT|DELETE> - *<resource name>*: <details>`
+## Upgrading to Renku 0.68.0
+
+Renku now includes anonymized product metrics, making it easier to know what features are used by users to help with product development and statistics.
+
+* NEW `posthog.enabled` to set up gathering product metrict using posthog (note: renku won't deploy posthog for you, either deploy it yourself or use their clould offering)
+* NEW `posthog.host` posthog host to log metrics to
+* NEW `posthog.apiKey` apiKey for your posthog project
+* NEW `posthog.environment` adds an `environment` property to all logged metrics events, allowing to distinguish e.g. `development` and `production`
 
 ## Upgrading to Renku 0.66.0
 
