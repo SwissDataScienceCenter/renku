@@ -94,3 +94,7 @@ Renku is built from several sub-repositories:
     operator for user session servers.
 -   [renkulab-docker](https://github.com/SwissDataScienceCenter/renkulab-docker):
     base images for interactive sessions.
+
+## Citing Renku in research papers
+
+If you use the Renku platform for your research, please do cite our [paper](https://proceedings.neurips.cc/paper_files/paper/2023/hash/838694e9ab6b0a193b84daaafcac0eed-Abstract-Datasets_and_Benchmarks.html). See [CITATION.cff](./CITATION.cff) for citation information. 
