@@ -35,6 +35,10 @@ type ProjectRobots []struct {
 	} `json:"permissions"`
 }
 
+type ResponseRobot struct {
+	Id int `json:"id"`
+}
+
 func request(method string, login Login, endpoint string, body []byte) (*http.Response, []byte, error) {
 	client := &http.Client{}
 	req, err := http.NewRequest(method, login.Url+endpoint, bytes.NewBuffer(body))
@@ -140,7 +144,6 @@ func main() {
 			}
 		}
 	}
-	reqMethod := ""
 	robotData := map[string]interface{}{}
 	if robotId == "" {
 		// Create a robot account
@@ -159,31 +162,36 @@ func main() {
 					"namespace": projectName,
 				},
 			},
-			"secret":   robotSecret,
 			"duration": -1,
 			"level":    "project",
 		}
-		reqMethod = "POST"
-	}
-
-	// The robot account exists, making sure that the secret is up-to-date
-	if robotId != "" {
-		logger.Println("Robot account already exists, refreshing the secret")
-		robotData = map[string]interface{}{
-			"secret": robotSecret,
+		robotAccountData, err := json.Marshal(robotData)
+		if err != nil {
+			logger.Fatal("Error marshaling robot account data:", err)
 		}
-		reqMethod = "PATCH"
+		resp, respBody, err := request("POST", login, "/robots/"+robotId, robotAccountData)
+		createdRobot := ResponseRobot{}
+		json.Unmarshal(respBody, &createdRobot)
+		robotId = strconv.Itoa(createdRobot.Id)
+		if resp.StatusCode != http.StatusCreated {
+			logger.Fatal("Failed to create robot account:", resp.Status, string(respBody), err)
+		}
 	}
 
+	// Update the robot account secret
+	logger.Println("Setting the secret for the robot account:", robotAccountName)
+	robotData = map[string]interface{}{
+		"secret": robotSecret,
+	}
 	robotAccountData, err := json.Marshal(robotData)
 	if err != nil {
 		logger.Fatal("Error marshaling robot account data:", err)
 	}
 
-	resp, respBody, err := request(reqMethod, login, "/robots/"+robotId, robotAccountData)
-	if resp.StatusCode != http.StatusOK && resp.StatusCode != http.StatusCreated {
-		logger.Fatal("Failed to create or update robot account:", resp.Status, string(respBody))
+	resp, respBody, err := request("PATCH", login, "/robots/"+robotId, robotAccountData)
+	if resp.StatusCode != http.StatusOK {
+		logger.Fatal("Failed to update the secret of the robot account:", resp.Status, string(respBody), err)
 	}
 
-	logger.Println("Robot account created or updated successfully: ", string(respBody))
+	logger.Println("Robot account secret updated successfully.")
 }
