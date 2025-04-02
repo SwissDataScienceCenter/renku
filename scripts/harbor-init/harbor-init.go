@@ -12,12 +12,16 @@ import (
 
 const (
 	harborURL        = "https://harbor.dev.renku.ch/api/v2.0"
-	username         = "admin"
-	password         = "foobar"
 	projectName      = "foobarproj"
 	robotAccountName = "test-automation-robot-foo-bar-blo-bla"
 	robotSecret      = "Foo-Bar-Password-321"
 )
+
+type Login struct {
+	Url      string
+	Username string
+	Password string
+}
 
 type Projects []struct {
 	Name string `json:"name"`
@@ -25,19 +29,19 @@ type Projects []struct {
 
 type ProjectRobots []struct {
 	Name        string `json:"name"`
-	Id int `json:"id"`
+	Id          int    `json:"id"`
 	Permissions []struct {
 		Namespace string `json:"namespace"`
 	} `json:"permissions"`
 }
 
-func request(method, endpoint string, body []byte) (*http.Response, []byte, error) {
+func request(method string, login Login, endpoint string, body []byte) (*http.Response, []byte, error) {
 	client := &http.Client{}
-	req, err := http.NewRequest(method, harborURL+endpoint, bytes.NewBuffer(body))
+	req, err := http.NewRequest(method, login.Url+endpoint, bytes.NewBuffer(body))
 	if err != nil {
 		return nil, nil, err
 	}
-	req.SetBasicAuth(username, password)
+	req.SetBasicAuth(login.Username, login.Password)
 	req.Header.Set("Content-Type", "application/json")
 
 	resp, err := client.Do(req)
@@ -53,12 +57,27 @@ func request(method, endpoint string, body []byte) (*http.Response, []byte, erro
 }
 
 func main() {
+	login := Login{}
+	// Get login from environment variable
+	login.Url = os.Getenv("HARBOR_URL")
+	if login.Url == "" {
+		log.Fatal("HARBOR_URL environment variable is not set")
+	}
+	login.Username = os.Getenv("HARBOR_ADMIN_USERNAME")
+	if login.Username == "" {
+		log.Fatal("HARBOR_ADMIN_USERNAME environment variable is not set")
+	}
+	login.Password = os.Getenv("HARBOR_ADMIN_PASSWORD")
+	if login.Password == "" {
+		log.Fatal("HARBOR_ADMIN_PASSWORD environment variable is not set")
+	}
+
 	// Initialize logger to print to stdout
 	logger := log.New(os.Stdout, "INFO: ", log.Ldate|log.Ltime)
 
 	// Authenticate and get a session cookie
 	logger.Println("Authenticating with Harbor server")
-	resp, body, err := request("GET", "/projects", nil)
+	resp, body, err := request("GET", login, "/audit-logs", nil)
 	if resp.StatusCode != http.StatusOK {
 		logger.Println("Failed to authenticate:", resp.Status)
 		return
@@ -67,7 +86,7 @@ func main() {
 
 	// Check if project already exists
 	logger.Println("Checking if project exists:", projectName)
-	resp, body, err = request("GET", "/projects?name="+projectName, nil)
+	resp, body, err = request("GET", login, "/projects?name="+projectName, nil)
 	if resp.StatusCode != http.StatusOK {
 		logger.Println("Failed to get project:", err)
 		return
@@ -89,7 +108,7 @@ func main() {
 			logger.Fatal("Error marshaling project data:", err)
 		}
 
-		resp, _, err = request("POST", "/projects", projectData)
+		resp, _, err = request("POST", login, "/projects", projectData)
 		if resp.StatusCode != http.StatusCreated {
 			logger.Fatal("Failed to create project:", resp.Status, err)
 		}
@@ -100,7 +119,7 @@ func main() {
 
 	// Check if robot account already exists
 	logger.Println("Checking if robot account exists:", robotAccountName)
-	resp, body, err = request("GET", "/projects/"+projectName+"/robots", nil)
+	resp, body, err = request("GET", login, "/projects/"+projectName+"/robots", nil)
 	if resp.StatusCode != http.StatusOK {
 		logger.Fatal("Failed to get robot account:", err)
 		return
@@ -161,7 +180,7 @@ func main() {
 		logger.Fatal("Error marshaling robot account data:", err)
 	}
 
-	resp, respBody, err := request(reqMethod, "/robots/"+robotId, robotAccountData)
+	resp, respBody, err := request(reqMethod, login, "/robots/"+robotId, robotAccountData)
 	if resp.StatusCode != http.StatusOK && resp.StatusCode != http.StatusCreated {
 		logger.Fatal("Failed to create or update robot account:", resp.Status, string(respBody))
 	}
