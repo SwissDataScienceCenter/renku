@@ -3,7 +3,7 @@
 0.67.1
 ------
 
-Renku 0.67.1 fixes an issue when creating a Data Connector inside a project would error out because the owner field was not correctly populated.
+Renku 0.67.1 fixes several issues related to data connectors that are owned by projects.
 
 User-Facing Changes
 ~~~~~~~~~~~~~~~~~~~
@@ -11,16 +11,21 @@ User-Facing Changes
 **✨ Improvements**
 
 - **UI**: Creating a project from a group page now has the group as the owner by default.
-- **UI**: Show session start link in the session off-canvas.
+- **UI**: Show session start link in the session off-canvas (i.e. the sidebar element in the UI).
 
 **🐞 Bug Fixes**
 
 - **UI**: Fix an issue when creating a Data Connector inside a project. The owner field is now correctly populated.
+- **UI**: Fix an issue that prevented linking data connectors that are owned by projects.
+- **Data services**: Add missing endpoint required to find a data connector owned by a project by its slug.
+- **Data services**: Fix an issue that prevented listing data connectors with uppercase letters in their slugs.
 
 Individual components
 ~~~~~~~~~~~~~~~~~~~~~~
 
 - `renku-ui 3.53.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.53.0>`_
+- `renku-ui 3.53.1 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.53.1>`_
+- `renku-data-services 0.37.1 <https://github.com/SwissDataScienceCenter/renku-data-services/releases/tag/v0.37.1>`_
 
 0.67.0
 ------
