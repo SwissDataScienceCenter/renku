@@ -530,7 +530,7 @@ ui:
     replicaCount: 1
     image:
       repository: renku/renku-ui
-      tag: "3.53.0"
+      tag: "3.53.1"
       pullPolicy: IfNotPresent
       ## Optionally specify an array of imagePullSecrets.
       ## Secrets must be manually created in the namespace.
@@ -719,7 +719,7 @@ ui:
     keepCookies: []
     image:
       repository: renku/renku-ui-server
-      tag: "3.53.0"
+      tag: "3.53.1"
       pullPolicy: IfNotPresent
     imagePullSecrets: []
     nameOverride: ""

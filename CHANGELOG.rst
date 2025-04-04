@@ -16,6 +16,7 @@ User-Facing Changes
 **🐞 Bug Fixes**
 
 - **UI**: Fix an issue when creating a Data Connector inside a project. The owner field is now correctly populated.
+- **UI**: Fix an issue that prevented linking data connectors that are owned by projects.
 - **Data services**: Add missing endpoint required to find a data connector owned by a project by its slug.
 - **Data services**: Fix an issue that prevented listing data connectors with uppercase letters in their slugs.
 
@@ -23,6 +24,7 @@ Individual components
 ~~~~~~~~~~~~~~~~~~~~~~
 
 - `renku-ui 3.53.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.53.0>`_
+- `renku-ui 3.53.1 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.53.1>`_
 - `renku-data-services 0.37.1 <https://github.com/SwissDataScienceCenter/renku-data-services/releases/tag/v0.37.1>`_
 
 0.67.0
