@@ -10,7 +10,7 @@ User-Facing Changes
 
 **✨ Improvements**
 
-- **UI**: Creating a project from a group page now as the group as the owner by default.
+- **UI**: Creating a project from a group page now has the group as the owner by default.
 - **UI**: Show session start link in the session off-canvas.
 
 **🐞 Bug Fixes**
