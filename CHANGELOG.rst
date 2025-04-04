@@ -3,6 +3,8 @@
 0.67.1
 ------
 
+Renku 0.67.1 fixes an issue when creating a Data Connector inside a project would error out because the owner field was not correctly populated.
+
 User-Facing Changes
 ~~~~~~~~~~~~~~~~~~~
 
