@@ -29,6 +29,9 @@ spec:
             runAsGroup: 1000670000
             allowPrivilegeEscalation: false
             runAsNonRoot: true
+            capabilities:
+              drop:
+                - ALL
           env:
             - name: K8S_NAMESPACE
               value: {{ .Release.Namespace }}

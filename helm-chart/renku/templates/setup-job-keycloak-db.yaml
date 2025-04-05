@@ -28,6 +28,9 @@ spec:
             runAsGroup: 1000
             allowPrivilegeEscalation: false
             runAsNonRoot: true
+            capabilities:
+              drop:
+                - ALL
           env:
             - name: DB_HOST
               value: {{ template "postgresql.fullname" . }}
