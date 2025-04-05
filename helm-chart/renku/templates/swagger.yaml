@@ -52,6 +52,8 @@ spec:
             httpGet:
               path: /swagger
               port: http
+          resources:
+            {{- toYaml .Values.swagger.resources | nindent 12 }}
       enableServiceLinks: false
 ---
 apiVersion: v1
