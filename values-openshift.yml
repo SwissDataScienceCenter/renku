@@ -1,0 +1,189 @@
+global:
+  gitlab:
+    url: https://gitlab.dev.renku.ch
+    registry:
+      host: registry.gitlab.dev.renku.ch
+  gateway:
+    gitlabClientSecret: s1
+  compatibility:
+    openshift:
+      adaptSecurityContext: force
+
+
+amalthea:
+  resources:
+    requests:
+      cpu: 10m
+      memory: 1Mi
+  securityContext:
+    runAsNonRoot: true
+    runAsUser: null
+    allowPrivilegeEscalation: false
+    capabilities:
+      drop:
+        - ALL
+
+notebooks:
+  resources:
+    requests:
+      cpu: 10m
+      memory: 1Mi
+tests:
+  resources:
+    requests:
+      cpu: 10m
+      memory: 1Mi
+gateway:
+  resources:
+    requests:
+      cpu: 10m
+      memory: 1Mi
+jena:
+  resources:
+    requests:
+      cpu: 10m
+      memory: 1Mi
+  securityContext:
+    runAsNonRoot: true
+    runAsUser: null
+    allowPrivilegeEscalation: false
+    capabilities:
+      drop:
+        - ALL
+  podSecurityContext:
+    fsGroup: null
+
+search:
+  searchApi:
+    resources:
+      requests:
+        cpu: 10m
+        memory: 1Mi
+  searchProvision:
+    resources:
+      requests:
+        cpu: 10m
+        memory: 1Mi
+graph:
+  webhookService:
+    resources:
+      requests:
+        cpu: 10m
+        memory: 1Mi
+  tokenRepository:
+    resources:
+      requests:
+        cpu: 10m
+        memory: 1Mi
+  triplesGenerator:
+    resources:
+      requests:
+        cpu: 10m
+        memory: 1Mi
+  knowledgeGraph:
+    resources:
+      requests:
+        cpu: 10m
+        memory: 1Mi
+  eventLog:
+    resources:
+      requests:
+        cpu: 10m
+        memory: 1Mi
+  commitEventService:
+    resources:
+      requests:
+        cpu: 10m
+        memory: 1Mi
+
+core:
+  resources:
+    core:
+      requests:
+        cpu: 10m
+        memory: 1Mi
+    rqmetrics:
+      requests:
+        cpu: 10m
+        memory: 1Mi
+    datasetsWorkers:
+      requests:
+        cpu: 10m
+        memory: 1Mi
+    managementWorkers:
+      requests:
+        cpu: 10m
+        memory: 1Mi
+    scheduler:
+      requests:
+        cpu: 10m
+        memory: 1Mi
+
+keycloakx:
+  resources:
+    requests:
+      cpu: 10m
+      memory: 1Mi
+  securityContext:
+    runAsUser: null
+  podSecurityContext:
+    fsGroup: null
+
+swagger:
+  resources:
+    requests:
+      cpu: 10m
+      memory: 1Mi
+
+redis:
+  replica:
+    resources:
+      requests:
+        cpu: 10m
+        memory: 1Mi
+  sentinel:
+    resources:
+      requests:
+        cpu: 10m
+        memory: 1Mi
+  metrics:
+    resources:
+      requests:
+        cpu: 10m
+        memory: 1Mi
+
+
+postgresql:
+  primary:
+    containerSecurityContext:
+      runAsUser: null
+      runAsGroup: null
+    podSecurityContext:
+      fsGroup: null
+    resources:
+      requests:
+        cpu: 10m
+        memory: 1Mi
+
+solr:
+  containerSecurityContext:
+    runAsUser: null
+    runAsGroup: null
+  podSecurityContext:
+    fsGroup: null
+
+securityContext:
+  runAsUser: null
+  runAsGroup: null
+podSecurityContext:
+  fsGroup: null
+
+ui:
+  client:
+    securityContext:
+      runAsUser: null
+      runAsGroup: null
+  server:
+    securityContext:
+      runAsUser: null
+      runAsGroup: null
