@@ -25,8 +25,8 @@ spec:
           image: "{{ .Values.platformInit.image.repository }}:{{ .Values.platformInit.image.tag }}"
           args: [ "platform-init.py" ]
           securityContext:
-            runAsUser: 1000
-            runAsGroup: 1000
+            runAsUser: 1000670000
+            runAsGroup: 1000670000
             allowPrivilegeEscalation: false
             runAsNonRoot: true
           env:
