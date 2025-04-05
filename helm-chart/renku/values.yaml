@@ -333,8 +333,6 @@ keycloakx:
     - name: init-certificates
       securityContext:
         allowPrivilegeEscalation: false
-        runAsGroup: 65534
-        runAsUser: 65534
         runAsNonRoot: true
         capabilities:
           drop:
