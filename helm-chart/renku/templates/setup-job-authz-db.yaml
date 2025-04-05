@@ -23,8 +23,6 @@ spec:
           image: "{{ .Values.initDb.image.repository }}:{{ .Values.initDb.image.tag }}"
           args: [ "authz_db_init.py" ]
           securityContext:
-            runAsUser: 1000
-            runAsGroup: 1000
             allowPrivilegeEscalation: false
             runAsNonRoot: true
             capabilities:

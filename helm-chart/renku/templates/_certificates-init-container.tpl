@@ -4,9 +4,10 @@
   image: "{{ .Values.global.certificates.image.repository }}:{{ .Values.global.certificates.image.tag }}"
   securityContext:
     allowPrivilegeEscalation: false
-    runAsUser: 1000
-    runAsGroup: 1000
     runAsNonRoot: true
+    capabilities:
+      drop:
+        - ALL
   volumeMounts:
     - name: etc-ssl-certs
       mountPath: /etc/ssl/certs/
