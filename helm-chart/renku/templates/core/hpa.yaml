@@ -1,3 +1,4 @@
+{{- if not .Values.excludeLegacyServices }}
 {{- range $version := .Values.global.core.versions }}
 ---
 {{- if $.Capabilities.APIVersions.Has "autoscaling/v2" }}
@@ -27,3 +28,4 @@ spec:
           type: Utilization
           averageUtilization: {{ $.Values.core.horizontalPodAutoscaling.averageMemoryUtilization }}
 {{ end }}
+{{- end }}
