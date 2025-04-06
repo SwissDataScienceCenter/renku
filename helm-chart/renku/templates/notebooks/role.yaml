@@ -1,4 +1,4 @@
-{{- if .Values.includeLegacyServices }}
+{{- if .Values.enableLegacyServices }}
 {{ if .Values.notebooks.rbac.create }}
 {{- $namespaces := list -}}
 {{ if .Values.notebooks.sessionsNamespace }}

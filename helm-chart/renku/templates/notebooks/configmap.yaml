@@ -1,4 +1,4 @@
-{{- if .Values.includeLegacyServices }}
+{{- if .Values.enableLegacyServices }}
 ---
 apiVersion: v1
 kind: ConfigMap

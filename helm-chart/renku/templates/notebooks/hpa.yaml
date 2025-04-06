@@ -1,4 +1,4 @@
-{{- if .Values.includeLegacyServices }}
+{{- if .Values.enableLegacyServices }}
 {{- if .Values.notebooks.autoscaling.enabled }}
 ---
 apiVersion: autoscaling/v1

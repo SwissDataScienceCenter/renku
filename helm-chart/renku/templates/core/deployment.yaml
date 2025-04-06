@@ -1,4 +1,4 @@
-{{- if .Values.includeLegacyServices }}
+{{- if .Values.enableLegacyServices }}
 {{- range $version := .Values.global.core.versions }}
 ---
 apiVersion: apps/v1

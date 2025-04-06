@@ -52,7 +52,7 @@ spec:
                   name: {{ .Values.global.externalServices.postgresql.existingSecret }}
                   key: postgres-password
             {{- end }}
-            {{- if .Values.includeLegacyServices }}
+            {{- if .Values.enableLegacyServices }}
             - name: EVENTLOG_DB_USERNAME
               value: {{ .Values.global.graph.dbEventLog.postgresUser | quote }}
             - name: EVENTLOG_DB_NAME

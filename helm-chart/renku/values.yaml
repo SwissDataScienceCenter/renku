@@ -1628,7 +1628,7 @@ secretsStorage:
   tolerations: []
   affinity: {}
 
-includeLegacyServices: true
+enableLegacyServices: true
 
 podSecurityContext: {}
 securityContext:

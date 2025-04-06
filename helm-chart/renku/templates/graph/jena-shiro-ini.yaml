@@ -1,4 +1,4 @@
-{{- if .Values.includeLegacyServices }}
+{{- if .Values.enableLegacyServices }}
 {{- $jenaAdminPwd := .Values.jena.users.admin.password | default (randAlphaNum 64) | b64enc }}
 {{- $jenaRenkuPwd := .Values.jena.users.renku.password | default (randAlphaNum 64) | b64enc }}
 

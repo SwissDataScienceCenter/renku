@@ -40,7 +40,7 @@ spec:
           image: "{{ .Values.notebooks.k8sWatcher.image.repository }}:{{ .Values.notebooks.k8sWatcher.image.tag }}"
           imagePullPolicy: {{ .Values.notebooks.k8sWatcher.image.pullPolicy }}
           env:
-            {{- if .Values.includeLegacyServices }}
+            {{- if .Values.enableLegacyServices }}
             - name: K8S_WATCHER_CR_GROUP
               value: {{ .Values.amalthea.crdApiGroup }}
             - name: K8S_WATCHER_CR_VERSION
