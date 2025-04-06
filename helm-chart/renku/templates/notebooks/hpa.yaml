@@ -1,3 +1,4 @@
+{{- if .Values.includeLegacyServices }}
 {{- if .Values.notebooks.autoscaling.enabled }}
 ---
 apiVersion: autoscaling/v1
@@ -27,4 +28,5 @@ spec:
   minReplicas: {{ .Values.notebooks.k8sWatcher.autoscaling.minReplicas }}
   maxReplicas: {{ .Values.notebooks.k8sWatcher.autoscaling.maxReplicas }}
   targetCPUUtilizationPercentage: {{ .Values.notebooks.k8sWatcher.autoscaling.targetCPUUtilizationPercentage }}
+{{- end }}
 {{- end }}
