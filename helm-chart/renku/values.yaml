@@ -568,14 +568,6 @@ ui:
     nodeSelector: {}
     tolerations: []
     affinity: {}
-    podSecurityContext: {}
-    securityContext:
-      runAsUser: 101
-      runAsNonRoot: true
-      allowPrivilegeEscalation: false
-      capabilities:
-        drop:
-          - ALL
     # This defines the message displayed on the home page of logged in users.
     dashboardMessage:
       enabled: false
@@ -743,15 +735,6 @@ ui:
       # The name of the service account to use.
       # If not set and create is true, a name is generated using the fullname template
       name: ""
-    podSecurityContext: {}
-    securityContext:
-      runAsUser: 1000
-      runAsGroup: 1000
-      runAsNonRoot: true
-      allowPrivilegeEscalation: false
-      capabilities:
-        drop:
-          - ALL
     service:
       type: ClusterIP
       port: 80
