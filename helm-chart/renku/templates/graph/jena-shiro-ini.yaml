@@ -1,3 +1,4 @@
+{{- if not .Values.excludeLegacyServices }}
 {{- $jenaAdminPwd := .Values.jena.users.admin.password | default (randAlphaNum 64) | b64enc }}
 {{- $jenaRenkuPwd := .Values.jena.users.renku.password | default (randAlphaNum 64) | b64enc }}
 
@@ -69,3 +70,4 @@ data:
     /renku/** = authcBasic,user[renku]
     /projects/** = authcBasic,user[renku]
     /migrations/** = authcBasic,user[admin]
+{{- end }}
