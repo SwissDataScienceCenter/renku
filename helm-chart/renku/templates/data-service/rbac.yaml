@@ -56,7 +56,7 @@ rules:
       - update
       - delete
       - patch
-  {{- if .Values.includeLegacyServices }}
+  {{- if .Values.enableLegacyServices }}
   - apiGroups:
       - {{ .Values.amalthea.crdApiGroup }}
     resources:
