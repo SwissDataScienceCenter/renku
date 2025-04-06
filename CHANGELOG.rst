@@ -11,7 +11,7 @@ Internal Changes
 **Improvements**
 
 - **Helm chart**: Remove the custom security context from the UI server and client and use the common ones instead.
-Please check (`the Helm chart values changelog <https://github.com/SwissDataScienceCenter/renku/blob/0.68.0/helm-chart/values.yaml.changelog.md>`_) for more information about the Helm chart changes.
+  Please check (`the Helm chart values changelog <https://github.com/SwissDataScienceCenter/renku/blob/0.68.0/helm-chart/values.yaml.changelog.md>`__) for more information about the Helm chart changes.
 - **Helm chart**: Update the Keycloak theme image to use non-root user by default.
 
 0.67.1

@@ -327,6 +327,14 @@ keycloakx:
         - |
           echo "Copying theme..."
           cp -Rfv /renku_theme/* /theme
+      securityContext:
+        allowPrivilegeEscalation: false
+        runAsNonRoot: true
+        runAsGroup: 65534
+        runAsUser: 65534
+        capabilities:
+          drop:
+            - ALL
       volumeMounts:
         - name: theme
           mountPath: /theme
