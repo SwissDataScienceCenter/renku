@@ -1,3 +1,4 @@
+{{- if .Values.includeLegacyServices }}
 {{- if .Values.notebooks.tests.enabled }}
 apiVersion: v1
 kind: Pod
@@ -204,4 +205,5 @@ metadata:
     chart: {{ template "renku.chart" . }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
+{{- end }}
 {{- end }}
