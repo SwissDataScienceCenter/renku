@@ -18,16 +18,14 @@ spec:
         chart: {{ template "renku.chart" . }}
     spec:
       restartPolicy: Never
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
       containers:
         - name: initialize-postgres-renku
           image: "{{ .Values.initDb.image.repository }}:{{ .Values.initDb.image.tag }}"
           args: [ "renku_db_init.py" ]
           securityContext:
-            allowPrivilegeEscalation: false
-            runAsNonRoot: true
-            capabilities:
-              drop:
-                - ALL
+            {{- toYaml .Values.securityContext | nindent 12 }}
           env:
             - name: DB_HOST
               value: {{ template "postgresql.fullname" . }}
