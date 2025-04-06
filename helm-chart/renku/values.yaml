@@ -1627,6 +1627,9 @@ secretsStorage:
   nodeSelector: {}
   tolerations: []
   affinity: {}
+
+excludeLegacyServices: false
+
 podSecurityContext: {}
 securityContext:
   runAsUser: 1000
