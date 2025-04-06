@@ -51,6 +51,7 @@ spec:
                   name: {{ .Values.global.externalServices.postgresql.existingSecret }}
                   key: postgres-password
             {{- end }}
+            {{- if .Values.includeLegacyServices }}
             - name: EVENTLOG_DB_USERNAME
               value: {{ .Values.global.graph.dbEventLog.postgresUser | quote }}
             - name: EVENTLOG_DB_NAME
@@ -78,6 +79,7 @@ spec:
                 secretKeyRef:
                   name: {{ template "renku.fullname" . }}-graph-token-postgres
                   key: graph-tokenRepository-postgresPassword
+            {{- end }}
             - name: RENKU_DB_USERNAME
               value: {{ .Values.global.db.common.username | quote }}
             - name: RENKU_DB_NAME
