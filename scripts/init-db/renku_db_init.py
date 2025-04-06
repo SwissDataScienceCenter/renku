@@ -99,7 +99,7 @@ def main():
             "Creating the knowledge graph token repository postgres database..."
         )
         db_init = DatabaseInit(
-            tr_config.db_username,
+            tr_config.username,
             tr_config.db_name,
             tr_config.password,
             postgres_db_connection,
