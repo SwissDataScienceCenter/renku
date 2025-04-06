@@ -1,14 +1,20 @@
+gitlab:
+  enabled: false
 global:
+  anonymousSessions:
+    enabled: true
   gitlab:
     url: https://gitlab.dev.renku.ch
     registry:
       host: registry.gitlab.dev.renku.ch
   gateway:
-    gitlabClientSecret: s1
+    gitlabClientId: <gitlabClientId>
+    gitlabClientSecret: <gitlabClientSecret>
+  renku:
+    domain: test.com
   compatibility:
     openshift:
       adaptSecurityContext: force
-
 
 amalthea:
   resources:
@@ -178,12 +184,5 @@ securityContext:
 podSecurityContext:
   fsGroup: null
 
-ui:
-  client:
-    securityContext:
-      runAsUser: null
-      runAsGroup: null
-  server:
-    securityContext:
-      runAsUser: null
-      runAsGroup: null
+
+includeLegacyServices: false
