@@ -1,3 +1,4 @@
+{{- if .Values.includeLegacyServices }}
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
@@ -147,3 +148,4 @@ spec:
         - name: {{ . }}
       {{- end}}
       {{- end }}
+{{- end }}
