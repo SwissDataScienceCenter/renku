@@ -1,4 +1,4 @@
-{{- if not .Values.excludeLegacyServices }}
+{{- if .Values.includeLegacyServices }}
 {{- range $version := .Values.global.core.versions }}
 ---
 {{- if $.Capabilities.APIVersions.Has "autoscaling/v2" }}
