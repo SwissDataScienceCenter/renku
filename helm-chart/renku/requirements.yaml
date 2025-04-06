@@ -19,6 +19,7 @@ dependencies:
   - name: amalthea
     repository: "https://swissdatasciencecenter.github.io/helm-charts/"
     version: "0.18.1"
+    condition: includeLegacyServices
   - name: amalthea-sessions
     repository: "https://swissdatasciencecenter.github.io/helm-charts/"
     version: "0.18.1"
