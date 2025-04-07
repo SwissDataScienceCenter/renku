@@ -330,6 +330,12 @@ keycloakx:
       volumeMounts:
         - name: theme
           mountPath: /theme
+      securityContext:
+        runAsNonRoot: true
+        allowPrivilegeEscalation: false
+        capabilities:
+          drop:
+            - ALL
     - name: init-certificates
       securityContext:
         allowPrivilegeEscalation: false
