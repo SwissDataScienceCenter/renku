@@ -3,6 +3,11 @@
 0.68.0
 ------
 
+Internal Changes
+~~~~~~~~~~~~~~~~
+
+- **Helm chart**: Update the Keycloak theme image to use non-root user by default.
+
 0.67.2
 ------
 
