@@ -1521,6 +1521,11 @@ dataService:
       pullPolicy: IfNotPresent
     total:
       resources: {}
+  k8sWatcher:
+    image:
+      repository: renku/data-service-k8s-watcher
+      tag: "0.37.1"
+      pullPolicy: IfNotPresent
   service:
     type: ClusterIP
     port: 80
