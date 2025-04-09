@@ -14,6 +14,7 @@ Internal Changes
   Please check (`the Helm chart values changelog <https://github.com/SwissDataScienceCenter/renku/blob/0.68.0/helm-chart/values.yaml.changelog.md>`__) for more information about the Helm chart changes.
 - **Helm chart**: Update the Keycloak theme image to use non-root user by default.
 - **Data services**: Added k8s cache service that caches sessions in the data services database
+- **Helm chart**: Update the Keycloak theme image to use non-root user by default.
 
 Individual Components
 ~~~~~~~~~~~~~~~~~~~~~
