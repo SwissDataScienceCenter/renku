@@ -1259,10 +1259,10 @@ search:
       port: 80
     resources:
       limits:
-        memory: 400Mi
+        memory: 450Mi
       requests:
         cpu: 50m
-        memory: 400Mi
+        memory: 450Mi
     jvmXmx: 256M
   searchProvision:
     replicas: 1
@@ -1275,10 +1275,10 @@ search:
       port: 8081
     resources:
       limits:
-        memory: 800Mi
+        memory: 900Mi
       requests:
         cpu: 100m
-        memory: 800Mi
+        memory: 900Mi
     jvmXmx: 256M
 ## Configuration for renku-graph services
 graph:
