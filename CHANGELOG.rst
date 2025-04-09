@@ -3,7 +3,6 @@
 0.68.0
 ------
 
-
 0.67.1
 ------
 
@@ -30,7 +29,6 @@ Individual components
 - `renku-ui 3.53.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.53.0>`_
 - `renku-ui 3.53.1 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.53.1>`_
 - `renku-data-services 0.37.1 <https://github.com/SwissDataScienceCenter/renku-data-services/releases/tag/v0.37.1>`_
-
 
 0.67.0
 ------
