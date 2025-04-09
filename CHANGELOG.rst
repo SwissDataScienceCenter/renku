@@ -8,6 +8,7 @@ Internal Changes
 
 - **Helm chart**: Update the Keycloak theme image to use non-root user by default.
 - **Data services**: Added k8s cache service that caches sessions in the data services database
+- **Helm chart**: Update the Keycloak theme image to use non-root user by default.
 
 Individual Components
 ~~~~~~~~~~~~~~~~~~~~~
