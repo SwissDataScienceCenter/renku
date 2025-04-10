@@ -36,7 +36,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4.1.7
       - id: deploy-comment
-        uses: SwissDataScienceCenter/renku-actions/check-pr-description@add-de
+        uses: SwissDataScienceCenter/renku-actions/check-pr-description@v1.18.0
         with:
           string: /AzureDeploy
           pr_ref: ${{ github.event.number }}
@@ -77,7 +77,7 @@ jobs:
           export KUBECONFIG="${{ github.workspace }}/renkubot-kube.config"
           kubectl get nodes
       - name: renku build and deploy
-        if: needs.check-deploy.outputs.pr-contains-azure-string == 'true'
+        if: needs.check-deploy.outputs.pr-contains-string == 'true'
         uses: SwissDataScienceCenter/renku-actions/deploy-renku@v1.18.0
         env:
           DOCKER_PASSWORD: ${{ secrets.RENKU_DOCKER_PASSWORD }}
