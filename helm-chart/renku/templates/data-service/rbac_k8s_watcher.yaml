@@ -1,0 +1,78 @@
+{{- if .Values.dataService.rbac.create -}}
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: {{ template "renku.fullname" . }}-k8s-watcher
+  labels:
+    app: {{ template "renku.name" . }}
+    chart: {{ template "renku.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+rules:
+  - apiGroups:
+      - {{ .Values.amalthea.crdApiGroup }}
+    resources:
+      - {{ .Values.amalthea.crdNames.plural }}
+    verbs:
+      - create
+      - update
+      - delete
+      - patch
+      - list
+      - get
+      - watch
+  - apiGroups:
+      - amalthea.dev
+    resources:
+      - amaltheasessions
+    verbs:
+      - create
+      - update
+      - delete
+      - patch
+      - list
+      - get
+      - watch
+  {{- if .Values.dataService.imageBuilders.enabled }}
+  - apiGroups:
+      - shipwright.io
+    resources:
+      - buildruns
+    verbs:
+      - create
+      - update
+      - delete
+      - patch
+      - list
+      - get
+      - watch
+  {{- end }}
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: {{ template "renku.fullname" . }}-k8s-watcher
+  labels:
+    app: {{ template "renku.name" . }}
+    chart: {{ template "renku.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: {{ template "renku.fullname" . }}-k8s-watcher
+  labels:
+    app: {{ template "renku.name" . }}
+    chart: {{ template "renku.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: {{ template "renku.fullname" . }}-k8s-watcher
+subjects:
+  - kind: ServiceAccount
+    name: {{ template "renku.fullname" . }}-k8s-watcher
+    namespace: {{ .Release.Namespace }}
+{{- end -}}
