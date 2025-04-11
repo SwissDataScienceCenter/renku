@@ -5,6 +5,13 @@ For changes that require manual steps other than changing values, please check o
 Please follow this convention when adding a new row
 * `<type: NEW|EDIT|DELETE> - *<resource name>*: <details>`
 
+## Upgrading to Renku 0.68.0
+
+* DELETE ``ui.client.securityContext`` has been removed, replaced by ``securityContext``.
+* DELETE ``ui.server.securityContext`` has been removed, replaced by ``securityContext``.
+* DELETE ``ui.client.podSecurityContext`` has been removed, replaced by ``podSecurityContext``.
+* DELETE ``ui.server.podSecurityContext`` has been removed, replaced by ``podSecurityContext``.
+
 ## Upgrading to Renku 0.66.0
 
 * NEW `dataService.imageBuilders` to configure session image builds using Shipwright.
