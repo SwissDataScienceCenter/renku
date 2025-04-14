@@ -70,6 +70,12 @@ spec:
               kubernetes.io/metadata.name: {{ .Release.Namespace }}
         - podSelector:
             matchLabels:
+              app: renku-k8s-watcher
+          namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: {{ .Release.Namespace }}
+        - podSelector:
+            matchLabels:
               app: keycloak-sync
           namespaceSelector:
             matchLabels:
