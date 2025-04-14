@@ -13,6 +13,12 @@ Internal Changes
 - **Helm chart**: Remove the custom security context from the UI server and client and use the common ones instead.
   Please check (`the Helm chart values changelog <https://github.com/SwissDataScienceCenter/renku/blob/0.68.0/helm-chart/values.yaml.changelog.md>`__) for more information about the Helm chart changes.
 - **Helm chart**: Update the Keycloak theme image to use non-root user by default.
+- **Data services**: Added k8s cache service that caches sessions in the data services database
+
+Individual Components
+~~~~~~~~~~~~~~~~~~~~~
+
+- `renku-data-services 0.39.0 <https://github.com/SwissDataScienceCenter/renku-data-services/releases/tag/v0.39.0>`_
 
 0.67.1
 ------
