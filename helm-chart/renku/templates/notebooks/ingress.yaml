@@ -1,4 +1,4 @@
-{{- if .Values.enableLegacyServices }}
+{{- if .Values.enableV1Services }}
 {{- if .Values.notebooks.ingress.enabled -}}
 {{- $fullName := include "renku.notebooks.fullname" . -}}
 {{- $servicePort := .Values.notebooks.service.port -}}

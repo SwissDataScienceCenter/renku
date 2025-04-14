@@ -1,4 +1,4 @@
-{{- if .Values.enableLegacyServices }}
+{{- if .Values.enableV1Services }}
 {{- if .Values.notebooks.tests.enabled }}
 apiVersion: v1
 kind: Pod

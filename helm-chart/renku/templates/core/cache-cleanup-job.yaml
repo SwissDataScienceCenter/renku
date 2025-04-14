@@ -1,4 +1,4 @@
-{{- if .Values.enableLegacyServices }}
+{{- if .Values.enableV1Services }}
 {{- range $version := .Values.global.core.versions }}
 {{ if ne $version.name "v9"}}
 ---

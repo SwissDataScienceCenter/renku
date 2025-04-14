@@ -1,4 +1,4 @@
-{{- if .Values.enableLegacyServices }}
+{{- if .Values.enableV1Services }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
