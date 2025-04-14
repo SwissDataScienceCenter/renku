@@ -1533,6 +1533,7 @@ dataService:
       repository: renku/data-service-k8s-watcher
       tag: "0.37.1"
       pullPolicy: IfNotPresent
+    resources: {}
   service:
     type: ClusterIP
     port: 80
