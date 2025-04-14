@@ -3,7 +3,7 @@
 0.67.2
 ------
 
-Renku ``0.67.2`` several bug fixes on the API.
+Renku ``0.67.2`` fixes several bugs in the data services backend. 
 
 User-Facing Changes
 ~~~~~~~~~~~~~~~~~~~
