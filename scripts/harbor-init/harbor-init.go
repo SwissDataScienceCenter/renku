@@ -4,11 +4,13 @@ import (
 	"bytes"
 	"encoding/json"
 	"flag"
+	"fmt"
 	"io"
 	"log"
 	"net/http"
 	"os"
 	"strconv"
+	"strings"
 )
 
 const (
@@ -16,10 +18,41 @@ const (
 	HARBOR_API_ENDPOINT = "/api/v2.0"
 )
 
+type SensitiveString string
+
+func (s SensitiveString) String() string {
+	return "<redacted sensitive string>"
+}
+
+func (s SensitiveString) Format(w fmt.State, v rune) {
+	_, err := w.Write([]byte(s.String()))
+	if err != nil {
+		panic(err)
+	}
+}
+
+func (s *SensitiveString) Set(value string) error {
+	// Set the sensitive string value
+	*s = SensitiveString(value)
+	return nil
+}
+
 type Login struct {
+	Client   *http.Client
 	Url      string
 	Username string
-	Password string
+	Password SensitiveString
+}
+
+func (l *Login) String() string {
+	return l.Url + " " + l.Username + " " + "<redacted password>"
+}
+
+func (l *Login) Format(w fmt.State, v rune) {
+	_, err := w.Write([]byte(l.String()))
+	if err != nil {
+		panic(err)
+	}
 }
 
 type Projects []struct {
@@ -39,15 +72,14 @@ type ResponseRobot struct {
 }
 
 func request(method string, login Login, endpoint string, body []byte) (*http.Response, []byte, error) {
-	client := &http.Client{}
 	req, err := http.NewRequest(method, login.Url+endpoint, bytes.NewBuffer(body))
 	if err != nil {
 		return nil, nil, err
 	}
-	req.SetBasicAuth(login.Username, login.Password)
+	req.SetBasicAuth(login.Username, string(login.Password))
 	req.Header.Set("Content-Type", "application/json")
 
-	resp, err := client.Do(req)
+	resp, err := login.Client.Do(req)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -62,24 +94,27 @@ func request(method string, login Login, endpoint string, body []byte) (*http.Re
 func main() {
 	urlFlag := flag.String("url", "https://harbor.example.com", "Harbor URL")
 	adminFlag := flag.String("admin", "admin", "Harbor admin username")
-	passwordFlag := flag.String("password", "", "Harbor admin password")
+	var passwordFlag SensitiveString = ""
+	flag.Var(&passwordFlag, "password", "Harbor admin password")
 	projectNameFlag := flag.String("project", "renku-build", "Project name")
 	robotAccountNameFlag := flag.String("robot", "renku-registry-robot", "Robot account name")
-	robotSecretFlag := flag.String("secret", "", "Robot account secret")
+	var robotSecretFlag SensitiveString = ""
+	flag.Var(&robotSecretFlag, "secret", "Robot account secret")
 	flag.Parse()
 	// Initialize logger to print to stdout
 	logger := log.New(os.Stdout, "INFO: ", log.Ldate|log.Ltime)
 	login := Login{}
+	login.Client = &http.Client{}
 	// Get login from environment variable
 	if *urlFlag == "" {
 		logger.Fatal("url flag is not set")
 	}
-	login.Url = *urlFlag + HARBOR_API_ENDPOINT
+	login.Url = strings.TrimRight(*urlFlag, "/") + HARBOR_API_ENDPOINT
 	login.Username = *adminFlag
 	if login.Username == "" {
 		logger.Fatal("admin flag is not set")
 	}
-	login.Password = *passwordFlag
+	login.Password = passwordFlag
 	if login.Password == "" {
 		logger.Fatal("password flag is not set")
 	}
@@ -91,7 +126,7 @@ func main() {
 	if robotAccountName == "" {
 		logger.Fatal("robot flag is not set")
 	}
-	robotSecret := *robotSecretFlag
+	robotSecret := robotSecretFlag
 	if robotSecret == "" {
 		logger.Fatal("secret flag is not set")
 	}
@@ -151,11 +186,10 @@ func main() {
 	logger.Println("Checking if robot account exists:", robotAccountName)
 	resp, body, err = request("GET", login, "/projects/"+projectName+"/robots", nil)
 	if err != nil {
-		logger.Fatal("Error creating robot account: ", err)
+		logger.Fatal("Error getting robot account: ", err)
 	}
 	if resp.StatusCode != http.StatusOK {
 		logger.Fatal("Failed to get robot account:", err)
-		return
 	}
 	var robots ProjectRobots
 	err = json.Unmarshal(body, &robots)
@@ -217,7 +251,7 @@ func main() {
 	// Update the robot account secret
 	logger.Println("Setting the secret for the robot account:", robotAccountName)
 	robotData = map[string]interface{}{
-		"secret": robotSecret,
+		"secret": string(robotSecret),
 	}
 	robotAccountData, err := json.Marshal(robotData)
 	if err != nil {
