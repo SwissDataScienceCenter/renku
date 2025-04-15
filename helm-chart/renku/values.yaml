@@ -1640,7 +1640,3 @@ securityContext:
 nodeSelector: {}
 tolerations: []
 affinity: {}
-versions:
-  latest:
-    image:
-      tag: v2.9.4
