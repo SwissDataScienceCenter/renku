@@ -29,14 +29,14 @@ spec:
         {{- toYaml . | nindent 8 }}
     {{- end }}
       securityContext:
-        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+        {{- toYaml .Values.ui.server.podSecurityContext | nindent 8 }}
       automountServiceAccountToken: {{ .Values.global.debug }}
       initContainers:
         {{- include "certificates.initContainer" . | nindent 8 }}
       containers:
         - name: {{ .Chart.Name }}
           securityContext:
-            {{- toYaml .Values.securityContext | nindent 12 }}
+            {{- toYaml .Values.ui.server.securityContext | nindent 12 }}
           image: "{{ .Values.ui.server.image.repository }}:{{ .Values.ui.server.image.tag }}"
           imagePullPolicy: {{ .Values.ui.server.image.pullPolicy }}
           ports:

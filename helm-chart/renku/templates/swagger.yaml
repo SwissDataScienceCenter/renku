@@ -17,13 +17,9 @@ spec:
         app.kubernetes.io/name: {{ include "renku.name" . }}-swagger
         app.kubernetes.io/instance: {{ .Release.Name }}
     spec:
-      securityContext:
-        {{- toYaml .Values.podSecurityContext | nindent 8 }}
       containers:
         - name: swagger
           image: swaggerapi/swagger-ui
-          securityContext:
-            {{- toYaml .Values.securityContext | nindent 12 }}
           env:
             - name: BASE_URL
               value: /swagger

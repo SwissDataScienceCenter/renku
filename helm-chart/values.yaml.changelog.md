@@ -13,13 +13,6 @@ Renku now includes anonymized product metrics, making it easier to know what fea
 * NEW `posthog.apiKey` apiKey for your posthog project
 * NEW `posthog.environment` adds an `environment` property to all logged metrics events, allowing to distinguish e.g. `development` and `production`
 
-## Upgrading to Renku 0.68.0
-
-* DELETE ``ui.client.securityContext`` has been removed, replaced by ``securityContext``.
-* DELETE ``ui.server.securityContext`` has been removed, replaced by ``securityContext``.
-* DELETE ``ui.client.podSecurityContext`` has been removed, replaced by ``podSecurityContext``.
-* DELETE ``ui.server.podSecurityContext`` has been removed, replaced by ``podSecurityContext``.
-
 ## Upgrading to Renku 0.66.0
 
 * NEW `dataService.imageBuilders` to configure session image builds using Shipwright.
