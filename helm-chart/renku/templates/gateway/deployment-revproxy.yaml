@@ -103,6 +103,14 @@ spec:
                   key: cookieHashKey
             - name: GATEWAY_MONITORING_SENTRY_DSN
               value: {{ .Values.gateway.sentry.dsn }}
+            - name: GATEWAY_POSTHOG_ENABLED
+              value: {{ .Values.posthog.enabled | quote }}
+            - name: GATEWAY_POSTHOG_APIKEY
+              value: {{ .Values.posthog.apiKey | default "" | quote }}
+            - name: GATEWAY_POSTHOG_HOST
+              value: {{ .Values.posthog.host| default "" | quote }}
+            - name: GATEWAY_POSTHOG_ENVIRONMENT
+              value: {{ .Values.posthog.environment| default "" | quote }}
           volumeMounts:
             {{- include "certificates.volumeMounts.system" . | nindent 12 }}
             - mountPath: "/etc/gateway"
