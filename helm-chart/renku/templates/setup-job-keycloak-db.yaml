@@ -19,15 +19,14 @@ spec:
         chart: {{ template "renku.chart" . }}
     spec:
       restartPolicy: Never
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
       containers:
         - name: initialize-postgres-keycloak
           image: "{{ .Values.initDb.image.repository }}:{{ .Values.initDb.image.tag }}"
           args: [ "keycloak_db_init.py" ]
           securityContext:
-            runAsUser: 1000
-            runAsGroup: 1000
-            allowPrivilegeEscalation: false
-            runAsNonRoot: true
+            {{- toYaml .Values.securityContext | nindent 12 }}
           env:
             - name: DB_HOST
               value: {{ template "postgresql.fullname" . }}

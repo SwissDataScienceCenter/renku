@@ -318,7 +318,7 @@ keycloakx:
     enabled: false
   extraInitContainers: |
     - name: theme-provider
-      image: renku/keycloak-theme:4.1.5
+      image: renku/keycloak-theme:4.1.6
       imagePullPolicy: IfNotPresent
       command:
         - sh
@@ -327,14 +327,32 @@ keycloakx:
         - |
           echo "Copying theme..."
           cp -Rfv /renku_theme/* /theme
+      securityContext:
+        allowPrivilegeEscalation: false
+        runAsNonRoot: true
+        runAsGroup: 65534
+        runAsUser: 65534
+        capabilities:
+          drop:
+            - ALL
       volumeMounts:
         - name: theme
           mountPath: /theme
+      securityContext:
+        runAsNonRoot: true
+        allowPrivilegeEscalation: false
+        capabilities:
+          drop:
+            - ALL
     - name: init-certificates
       securityContext:
         allowPrivilegeEscalation: false
         runAsGroup: 65534
         runAsUser: 65534
+        runAsNonRoot: true
+        capabilities:
+          drop:
+            - ALL
       image: "registry.access.redhat.com/ubi8/ubi:8.4"
       command: ["sh", "-c"]
       args: ["mkdir -p /etc/pki/ca-trust/extracted/openssl/ /etc/pki/ca-trust/extracted/pem/ /etc/pki/ca-trust/extracted/java/ /etc/pki/ca-trust/extracted/edk2 && update-ca-trust"]
@@ -530,7 +548,7 @@ ui:
     replicaCount: 1
     image:
       repository: renku/renku-ui
-      tag: "3.52.0"
+      tag: "3.53.1"
       pullPolicy: IfNotPresent
       ## Optionally specify an array of imagePullSecrets.
       ## Secrets must be manually created in the namespace.
@@ -558,11 +576,6 @@ ui:
     nodeSelector: {}
     tolerations: []
     affinity: {}
-    podSecurityContext: {}
-    securityContext:
-      runAsUser: 101
-      runAsNonRoot: true
-      allowPrivilegeEscalation: false
     # This defines the message displayed on the home page of logged in users.
     dashboardMessage:
       enabled: false
@@ -719,7 +732,7 @@ ui:
     keepCookies: []
     image:
       repository: renku/renku-ui-server
-      tag: "3.52.0"
+      tag: "3.53.1"
       pullPolicy: IfNotPresent
     imagePullSecrets: []
     nameOverride: ""
@@ -730,12 +743,6 @@ ui:
       # The name of the service account to use.
       # If not set and create is true, a name is generated using the fullname template
       name: ""
-    podSecurityContext: {}
-    securityContext:
-      runAsUser: 1000
-      runAsGroup: 1000
-      runAsNonRoot: true
-      allowPrivilegeEscalation: false
     service:
       type: ClusterIP
       port: 80
@@ -1510,17 +1517,23 @@ dataService:
     create: true
   image:
     repository: renku/renku-data-service
-    tag: "0.37.0"
+    tag: "0.39.0"
     pullPolicy: IfNotPresent
   backgroundJobs:
     events:
       resources: {}
     image:
       repository: renku/data-service-background-jobs
-      tag: "0.37.0"
+      tag: "0.39.0"
       pullPolicy: IfNotPresent
     total:
       resources: {}
+  k8sWatcher:
+    image:
+      repository: renku/data-service-k8s-watcher
+      tag: "0.39.0"
+      pullPolicy: IfNotPresent
+    resources: {}
   service:
     type: ClusterIP
     port: 80
@@ -1604,7 +1617,7 @@ authz:
 secretsStorage:
   image:
     repository: renku/secrets-storage
-    tag: "0.37.0"
+    tag: "0.39.0"
     pullPolicy: IfNotPresent
   service:
     type: ClusterIP
@@ -1628,6 +1641,9 @@ securityContext:
   runAsGroup: 1000
   runAsNonRoot: true
   allowPrivilegeEscalation: false
+  capabilities:
+    drop:
+      - ALL
 nodeSelector: {}
 tolerations: []
 affinity: {}

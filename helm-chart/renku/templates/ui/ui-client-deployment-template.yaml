@@ -141,7 +141,7 @@ spec:
           resources:
 {{ toYaml .Values.ui.client.resources | indent 12 }}
           securityContext:
-            {{- toYaml .Values.ui.client.securityContext | nindent 12 }}
+            {{- toYaml .Values.securityContext | nindent 12 }}
     {{- with .Values.ui.client.nodeSelector }}
       nodeSelector:
 {{ toYaml . | indent 8 }}
@@ -155,7 +155,7 @@ spec:
 {{ toYaml . | indent 8 }}
     {{- end }}
       securityContext:
-        {{- toYaml .Values.ui.client.podSecurityContext | nindent 8 }}
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
       {{- if .Values.ui.client.image.pullSecrets }}
       imagePullSecrets:
       {{- range .Values.ui.client.image.pullSecrets }}
