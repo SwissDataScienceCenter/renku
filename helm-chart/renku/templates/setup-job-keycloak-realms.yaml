@@ -22,13 +22,14 @@ spec:
       restartPolicy: Never
       initContainers:
         {{- include "certificates.initContainer" . | nindent 8 }}
-      securityContext:
-        {{- toYaml .Values.podSecurityContext | nindent 8 }}
       containers:
         - name: init-keycloak
           image: "{{ .Values.keycloakx.initRealm.image.repository }}:{{ .Values.keycloakx.initRealm.image.tag }}"
           securityContext:
-            {{- toYaml .Values.securityContext | nindent 12 }}
+            runAsUser: 1000
+            runAsGroup: 1000
+            allowPrivilegeEscalation: false
+            runAsNonRoot: true
           command: ["python"]
           args: [
             "/app/init-realm.py",
