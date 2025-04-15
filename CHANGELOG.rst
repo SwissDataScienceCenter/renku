@@ -3,32 +3,25 @@
 0.68.0
 ------
 
-Renku 0.68.0 introduces some improvements to the Helm chart.
-
 User-Facing Changes
 ~~~~~~~~~~~~~~~~~~~
 
 **🐞 Bug Fixes**
 
-- **Core Service**: Fix a bug where removing activities wouldn't actually remove them
+- **Core Service**: Fix a bug where removing activities wouldn't actually remove them.
 
 Internal Changes
 ~~~~~~~~~~~~~~~~
 
-**Improvements**
-
-- **Helm chart**: Remove the custom security context from the UI server and client and use the common ones instead.
-  Please check (`the Helm chart values changelog <https://github.com/SwissDataScienceCenter/renku/blob/0.68.0/helm-chart/values.yaml.changelog.md>`__) for more information about the Helm chart changes.
 - **Helm chart**: Update the Keycloak theme image to use non-root user by default.
-- **Data services**: Added k8s cache service that caches sessions in the data services database
+- **Data services**: Added k8s cache service that caches sessions in the data services database.
 
 Individual Components
 ~~~~~~~~~~~~~~~~~~~~~
 
 - `renku-data-services 0.39.0 <https://github.com/SwissDataScienceCenter/renku-data-services/releases/tag/v0.39.0>`_
 - `renku-python 2.9.4 <https://github.com/SwissDataScienceCenter/renku-python/releases/tag/v2.9.4>`_
-- `renku-project-template 0.9.0 <https://github.com/SwissDataScienceCenter/renku-project-template/releases/tag/0.9.0>`_
-- `contributed-project-templates 0.10.0 <https://github.com/SwissDataScienceCenter/contributed-project-templates/releases/tag/0.10.0>`_
+- `renku-python 2.9.3 <https://github.com/SwissDataScienceCenter/renku-python/releases/tag/v2.9.3>`_
 
 0.67.2
 ------
