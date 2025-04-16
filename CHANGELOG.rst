@@ -18,6 +18,7 @@ Internal Changes
 - **Data services**: Added product metrics tracking
 - **Gateway**: Added product metrics tracking
 - **Data services**: Added k8s cache service that caches sessions in the data services database.
+- **Admin tools**: Add Harbor initialization script to setup a registry for RenkuLab v2.
 
 Individual Components
 ~~~~~~~~~~~~~~~~~~~~~
