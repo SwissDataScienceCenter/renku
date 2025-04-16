@@ -1,3 +1,4 @@
+{{- if .Values.enableV1Services }}
 {{- if and .Values.notebooks.rbac.create .Values.notebooks.userSessionPersistentVolumes.enabled }}
 {{- $namespaces := list -}}
 {{ if .Values.notebooks.sessionsNamespace }}
@@ -51,3 +52,4 @@ subjects:
     namespace: {{ $.Release.Namespace }}
 {{- end -}}
 {{- end -}}
+{{- end }}
