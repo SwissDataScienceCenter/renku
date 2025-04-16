@@ -1,5 +1,70 @@
 .. _changelog:
 
+0.67.2
+------
+
+Renku ``0.67.2`` fixes several bugs in the data services backend. 
+
+User-Facing Changes
+~~~~~~~~~~~~~~~~~~~
+
+**🐞 Bug Fixes**
+
+- **Data services**: Surface more specific message when Git integrations expire.
+- **Data services**: Fix a bug where modifying the resource class of a hibernated 
+  session would cause it to not start back up when resumed.
+- **Data services**: Data connectors were failing to copy when copying projects.
+
+Internal Changes
+~~~~~~~~~~~~~~~~
+
+**Improvements**
+
+- **Data services**: Add support for user-defined queries in the search. Note, that the
+  search in the data services is still under development and not available to users.
+
+**Bug Fixes**
+
+- **Data services**: Make validation of slugs in responses more lenient to avoid unnecessary validation errors.
+- **Data services**: Handle cases where the session pod may be missing when listing logs.
+- **Data services**: There are cases when old session secrets may not have been cleaned up properly.
+  In this case starting a new would fail, now we can patch and edit these secrets and properly start the session.
+- **Data services**: Re-provision the search index in Solr if a migration requires it.
+- **Data services**: Properly parse durations with high values in the session specifications.
+- **Data services**: Update search documents without optimistic concurrency control.
+
+Individual components
+~~~~~~~~~~~~~~~~~~~~~~
+
+- `renku-data-services 0.38.0 <https://github.com/SwissDataScienceCenter/renku-data-services/releases/tag/v0.38.0>`_
+
+0.67.1
+------
+
+Renku 0.67.1 fixes several issues related to data connectors that are owned by projects.
+
+User-Facing Changes
+~~~~~~~~~~~~~~~~~~~
+
+**✨ Improvements**
+
+- **UI**: Creating a project from a group page now has the group as the owner by default.
+- **UI**: Show session start link in the session off-canvas (i.e. the sidebar element in the UI).
+
+**🐞 Bug Fixes**
+
+- **UI**: Fix an issue when creating a Data Connector inside a project. The owner field is now correctly populated.
+- **UI**: Fix an issue that prevented linking data connectors that are owned by projects.
+- **Data services**: Add missing endpoint required to find a data connector owned by a project by its slug.
+- **Data services**: Fix an issue that prevented listing data connectors with uppercase letters in their slugs.
+
+Individual components
+~~~~~~~~~~~~~~~~~~~~~~
+
+- `renku-ui 3.53.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.53.0>`_
+- `renku-ui 3.53.1 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.53.1>`_
+- `renku-data-services 0.37.1 <https://github.com/SwissDataScienceCenter/renku-data-services/releases/tag/v0.37.1>`_
+
 0.67.0
 ------
 
