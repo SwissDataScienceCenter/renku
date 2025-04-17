@@ -253,6 +253,8 @@ sha
 shm
 Slurm
 Snyk
+SOLR
+Solr
 SPARQL
 spawner
 SQLAlchemy
