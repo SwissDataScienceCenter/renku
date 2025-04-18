@@ -152,7 +152,7 @@ spec:
             - name: BUILD_NODE_TOLERATIONS
               value: {{ toJson . | quote }}
             {{- end }}
-            - name: METRICS_ENABLED
+            - name: POSTHOG_ENABLED
               value: {{ .Values.posthog.enabled | quote }}
             - name: KUBERNETES_NAMESPACE
               valueFrom:

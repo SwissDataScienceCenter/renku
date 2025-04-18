@@ -50,7 +50,7 @@ spec:
                   key: password
             - name: K8S_NAMESPACE
               value: {{ .Release.Namespace | quote }}
-            - name: METRICS_ENABLED
+            - name: POSTHOG_ENABLED
               value: {{ .Values.posthog.enabled | quote }}
             - name: KUBERNETES_NAMESPACE
               valueFrom:
