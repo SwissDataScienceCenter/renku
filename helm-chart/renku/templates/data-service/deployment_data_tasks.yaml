@@ -100,4 +100,4 @@ spec:
     {{- end }}
       volumes:
         {{- include "certificates.volumes" . | nindent 8 }}
-      serviceAccountName: {{ template "renku.fullname" . }}-data-tasks
+      serviceAccountName: {{ template "renku.fullname" . }}-data-service
