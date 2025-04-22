@@ -1533,6 +1533,12 @@ dataService:
       tag: "0.40.0"
       pullPolicy: IfNotPresent
     resources: {}
+  dataTasks:
+    image:
+      repository: renku/data-service-data-tasks
+      tag: "0.39.0"
+      pullPolicy: IfNotPresent
+    resources: {}
   service:
     type: ClusterIP
     port: 80
