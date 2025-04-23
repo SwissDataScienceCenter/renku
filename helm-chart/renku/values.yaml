@@ -529,7 +529,7 @@ ui:
     replicaCount: 1
     image:
       repository: renku/renku-ui
-      tag: "3.52.0"
+      tag: "3.53.1"
       pullPolicy: IfNotPresent
       ## Optionally specify an array of imagePullSecrets.
       ## Secrets must be manually created in the namespace.
@@ -718,7 +718,7 @@ ui:
     keepCookies: []
     image:
       repository: renku/renku-ui-server
-      tag: "3.52.0"
+      tag: "3.53.1"
       pullPolicy: IfNotPresent
     imagePullSecrets: []
     nameOverride: ""
@@ -1258,10 +1258,10 @@ search:
       port: 80
     resources:
       limits:
-        memory: 400Mi
+        memory: 450Mi
       requests:
         cpu: 50m
-        memory: 400Mi
+        memory: 450Mi
     jvmXmx: 256M
   searchProvision:
     replicas: 1
@@ -1274,10 +1274,10 @@ search:
       port: 8081
     resources:
       limits:
-        memory: 800Mi
+        memory: 900Mi
       requests:
         cpu: 100m
-        memory: 800Mi
+        memory: 900Mi
     jvmXmx: 256M
 ## Configuration for renku-graph services
 graph:
@@ -1509,14 +1509,14 @@ dataService:
     create: true
   image:
     repository: renku/renku-data-service
-    tag: "0.37.0"
+    tag: "0.38.0"
     pullPolicy: IfNotPresent
   backgroundJobs:
     events:
       resources: {}
     image:
       repository: renku/data-service-background-jobs
-      tag: "0.37.0"
+      tag: "0.38.0"
       pullPolicy: IfNotPresent
     total:
       resources: {}
@@ -1596,7 +1596,7 @@ authz:
 secretsStorage:
   image:
     repository: renku/secrets-storage
-    tag: "0.37.0"
+    tag: "0.38.0"
     pullPolicy: IfNotPresent
   service:
     type: ClusterIP
