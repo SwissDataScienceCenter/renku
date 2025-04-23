@@ -37,6 +37,10 @@ spec:
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
           env:
+            - name: TCP_PORT
+              value: "8001"
+            - name: TCP_HOST
+              value: "0.0.0.0"
             - name: VERSION
               value: {{ .Values.dataService.image.tag | quote }}
             - name: DB_HOST
@@ -86,6 +90,12 @@ spec:
             {{- include "certificates.env.python" . | nindent 12 }}
           volumeMounts:
             {{- include "certificates.volumeMounts.system" . | nindent 12 }}
+          livenessProbe:
+            tcpSocket:
+              port: 8001
+            initialDelaySeconds: 15
+            periodSeconds: 10
+            failureThreshold: 6
           resources:
             {{ toYaml .Values.dataService.dataTasks.resources | nindent 12 }}
     {{- with .Values.dataService.nodeSelector }}
