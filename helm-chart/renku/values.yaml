@@ -256,8 +256,6 @@ keycloakx:
     - "start"
     - "--http-enabled=true"
     - "--http-port=8080"
-    - "--hostname-strict=false"
-    - "--hostname-strict-https=false"
     # The following environment variables are provided to keycloak
     # as extraEnvFrom secrets.
   # renku-keycloak-postgres
@@ -273,6 +271,8 @@ keycloakx:
         name: renku-keycloak-postgres
     - secretRef:
         name: keycloak-password-secret
+    - configMapRef:
+        name: keycloak-hostname
   extraVolumeMounts: |
     - name: theme
       mountPath: /opt/keycloak/themes/renku-theme
