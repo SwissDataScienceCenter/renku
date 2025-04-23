@@ -664,6 +664,10 @@ spec:
               release: {{ .Release.Name }}
         - podSelector:
             matchLabels:
+              app: renku-data-tasks
+              release: {{ .Release.Name }}
+        - podSelector:
+            matchLabels:
               app: search-api
         - podSelector:
             matchLabels:
