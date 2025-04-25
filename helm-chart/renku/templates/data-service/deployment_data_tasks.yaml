@@ -20,6 +20,7 @@ spec:
       labels:
         app: renku-data-tasks
         release: {{ .Release.Name }}
+        {{ .Values.global.redis.clientLabel | toYaml | nindent 8 }}
       annotations:
       {{- with .Values.dataService.podAnnotations }}
         {{- toYaml . | nindent 8 }}
