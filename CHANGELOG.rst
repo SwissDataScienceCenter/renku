@@ -1,9 +1,33 @@
 .. _changelog:
 
+0.68.0
+------
+
+User-Facing Changes
+~~~~~~~~~~~~~~~~~~~
+
+**🐞 Bug Fixes**
+
+- **Core Service**: Fix a bug where removing activities wouldn't actually remove them.
+
+Internal Changes
+~~~~~~~~~~~~~~~~
+
+- **Helm chart**: Update the Keycloak theme image to use non-root user by default.
+- **Data services**: Added k8s cache service that caches sessions in the data services database.
+- **Admin tools**: Add Harbor initialization script to setup a registry for RenkuLab v2.
+
+Individual Components
+~~~~~~~~~~~~~~~~~~~~~
+
+- `renku-data-services 0.39.0 <https://github.com/SwissDataScienceCenter/renku-data-services/releases/tag/v0.39.0>`_
+- `renku-python 2.9.4 <https://github.com/SwissDataScienceCenter/renku-python/releases/tag/v2.9.4>`_
+- `renku-python 2.9.3 <https://github.com/SwissDataScienceCenter/renku-python/releases/tag/v2.9.3>`_
+
 0.67.2
 ------
 
-Renku ``0.67.2`` fixes several bugs in the data services backend. 
+Renku ``0.67.2`` fixes several bugs in the data services backend.
 
 User-Facing Changes
 ~~~~~~~~~~~~~~~~~~~
@@ -11,7 +35,7 @@ User-Facing Changes
 **🐞 Bug Fixes**
 
 - **Data services**: Surface more specific message when Git integrations expire.
-- **Data services**: Fix a bug where modifying the resource class of a hibernated 
+- **Data services**: Fix a bug where modifying the resource class of a hibernated
   session would cause it to not start back up when resumed.
 - **Data services**: Data connectors were failing to copy when copying projects.
 
@@ -1601,7 +1625,7 @@ Internal Changes
 Individual Components
 ~~~~~~~~~~~~~~~~~~~~~
 
-- `renku-python 2.9.2 <https://github.com/SwissDataScienceCenter/renku-python/releases/tag/2.9.2>`_
+- `renku-python 2.9.2 <https://github.com/SwissDataScienceCenter/renku-python/releases/tag/v2.9.2>`_
 - `renku-data-services 0.5.0 <https://github.com/SwissDataScienceCenter/renku-data-services/releases/tag/v0.5.0>`_
 - `csi-rclone 0.1.7 <https://github.com/SwissDataScienceCenter/csi-rclone/releases/tag/v0.1.7>`_
 
