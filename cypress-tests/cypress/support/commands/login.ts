@@ -14,6 +14,7 @@ const renkuLogin = (credentials: { username: string; password: string }[]) => {
       parsedUrl.pathname.includes("gitlab") ||
       parsedUrl.host.includes("gitlab")
     ) {
+      cy.window().focus();
       cy.get("#container").should("not.have.class", "gl-pointer-events-none");
       cy.contains("button", "Authorize").should("be.visible").click();
     }
