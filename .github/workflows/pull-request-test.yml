@@ -305,7 +305,7 @@ jobs:
         with:
           e2e-folder: cypress/e2e/v2/
           e2e-target: ${{ matrix.tests }}
-          kubernetes-cluster-fqdn: ${{ needs.check-deploy.outputs.azure-deploy == 'true' && 'dev.azure.renku.ch' || '' }}
+          kubernetes-cluster-fqdn: ${{ needs.check-deploy.outputs.azure-deploy == 'true' && 'dev.azure.renku.ch' || 'dev.renku.ch' }}
           renku-reference: ${{ github.ref }}
           renku-release: ci-renku-${{ github.event.number }}
           test-user-password: ${{ secrets.RENKU_BOT_DEV_PASSWORD }}
