@@ -202,9 +202,9 @@ describe("Basic datasets functionality", () => {
     cy.get(".modal").contains("Deleting dataset...").should("be.visible");
 
     // Check the dataset is gone after the project has been indexed
-    cy.waitMetadataIndexing();
     // ! Currently, datasets don't disappear instantly because the UI uses a renku-core API
     // ! We can leave this disabled until that's addressed
+    // cy.waitMetadataIndexing();
     // cy.searchForDataset(generatedDatasetName.slug, false);
   });
 });
