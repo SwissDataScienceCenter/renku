@@ -190,11 +190,6 @@ describe("Basic datasets functionality", () => {
     cy.wait("@createDataset", { timeout: TIMEOUTS.long });
     cy.wait("@getDatasets", { timeout: TIMEOUTS.long });
 
-    // cy.getDataCy("list-card-title")
-    //   .contains(generatedDatasetName.name)
-    //   .should("be.visible")
-    //   .click();
-
     // Delete the dataset
     cy.getDataCy("delete-dataset-button").click();
     cy.contains("Are you sure you want to delete dataset").should("be.visible");
