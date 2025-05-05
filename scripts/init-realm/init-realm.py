@@ -129,14 +129,18 @@ def _check_and_create_client(keycloak_admin, new_client: OIDCClient, force: bool
 
         keycloak_admin.delete_client(realm_client["id"])
         created_client_id = keycloak_admin.create_client(new_client.to_dict())
-        service_account_user = keycloak_admin.get_client_service_account_user(created_client_id)
+        logging.info(f"Created client {created_client_id}")
 
-        if isinstance(service_account_user, dict) and service_account_user.get("id"):
+        # if a client does not have a service account, calling get_client_service_account_user raises a KeycloakGetError
+        try: 
+            service_account_user = keycloak_admin.get_client_service_account_user(created_client_id)
             logging.info(f"Reassigning service account roles {new_client.service_account_roles}")
             realm_management_roles = keycloak_admin.get_client_roles(realm_management_client_id)
             matching_roles = [{"name": role["name"], "id": role["id"]} for role in realm_management_roles if role["name"] in new_client.service_account_roles ]
             logging.info(f"Found and assigning matching roles: {matching_roles}")
             keycloak_admin.assign_client_role(service_account_user["id"], realm_management_client_id, matching_roles)
+        except KeycloakGetError:
+            logging.info(f"Client {created_client_id} does not use a service account.")
 
         logging.info("done")
 
