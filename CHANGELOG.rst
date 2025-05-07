@@ -3,12 +3,26 @@
 0.68.0
 ------
 
+TODO: changelog for global data connectors.
+
 User-Facing Changes
 ~~~~~~~~~~~~~~~~~~~
+
+**🌟 New Features**
+
+- **UI**: Datasets published on platforms such as Zenodo or Dataverse can be linked to
+  a project by using their reference DOI (Digital Object Identifier).
+- **UI**: Support declaring environment variables on session launchers.
+
+**✨ Improvements**
+
+- **UI**: Session UX improvements in Renku 2.0.
 
 **🐞 Bug Fixes**
 
 - **Core Service**: Fix a bug where removing activities wouldn't actually remove them.
+- **Data services**: Fix an issue where conflicting mount points would prevent sessions from starting.
+- **UI**: Fix an issue where pausing or resuming a session would crash the whole tab in Firefox.
 
 Internal Changes
 ~~~~~~~~~~~~~~~~
@@ -21,8 +35,9 @@ Individual Components
 ~~~~~~~~~~~~~~~~~~~~~
 
 - `renku-data-services 0.39.0 <https://github.com/SwissDataScienceCenter/renku-data-services/releases/tag/v0.39.0>`_
-- `renku-python 2.9.4 <https://github.com/SwissDataScienceCenter/renku-python/releases/tag/v2.9.4>`_
+- `renku-data-services 0.40.0 <https://github.com/SwissDataScienceCenter/renku-data-services/releases/tag/v0.40.0>`_
 - `renku-python 2.9.3 <https://github.com/SwissDataScienceCenter/renku-python/releases/tag/v2.9.3>`_
+- `renku-python 2.9.4 <https://github.com/SwissDataScienceCenter/renku-python/releases/tag/v2.9.4>`_
 
 0.67.2
 ------
