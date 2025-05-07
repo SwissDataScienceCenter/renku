@@ -14,10 +14,15 @@ User-Facing Changes
 a project by using their reference DOI (Digital Object Identifier).
 - **UI**: Support declaring environment variables on session launchers.
 
+**✨ Improvements**
+
+- **UI**: Session UX improvements in Renku 2.0.
+
 **🐞 Bug Fixes**
 
 - **Core Service**: Fix a bug where removing activities wouldn't actually remove them.
 - **Data services**: Fix an issue where conflicting mount points would prevent sessions from starting.
+- **UI**: Fix an issue where pausing or resuming a session would crash the whole tab in Firefox.
 
 Internal Changes
 ~~~~~~~~~~~~~~~~
