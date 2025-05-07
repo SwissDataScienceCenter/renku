@@ -37,6 +37,7 @@ Individual Components
 
 - `renku-data-services 0.39.0 <https://github.com/SwissDataScienceCenter/renku-data-services/releases/tag/v0.39.0>`_
 - `renku-data-services 0.40.0 <https://github.com/SwissDataScienceCenter/renku-data-services/releases/tag/v0.40.0>`_
+- `renku-data-services 0.41.0 <https://github.com/SwissDataScienceCenter/renku-data-services/releases/tag/v0.41.0>`_
 - `renku-python 2.9.3 <https://github.com/SwissDataScienceCenter/renku-python/releases/tag/v2.9.3>`_
 - `renku-python 2.9.4 <https://github.com/SwissDataScienceCenter/renku-python/releases/tag/v2.9.4>`_
 
