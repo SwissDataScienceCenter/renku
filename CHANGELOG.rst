@@ -11,7 +11,7 @@ User-Facing Changes
 **🌟 New Features**
 
 - **UI**: Datasets published on platforms such as Zenodo or Dataverse can be linked to
-a project by using their reference DOI (Digital Object Identifier).
+  a project by using their reference DOI (Digital Object Identifier).
 - **UI**: Support declaring environment variables on session launchers.
 
 **✨ Improvements**
