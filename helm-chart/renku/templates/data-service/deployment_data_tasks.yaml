@@ -1,0 +1,115 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ template "renku.fullname" . }}-data-tasks
+  labels:
+    app: renku-data-tasks
+    chart: {{ template "renku.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  replicas: 1
+  strategy:
+    {{- toYaml .Values.dataService.updateStrategy | nindent 4 }}
+  selector:
+    matchLabels:
+      app: renku-data-tasks
+      release: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app: renku-data-tasks
+        release: {{ .Release.Name }}
+        {{ .Values.global.redis.clientLabel | toYaml | nindent 8 }}
+      annotations:
+      {{- with .Values.dataService.podAnnotations }}
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+    spec:
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      automountServiceAccountToken: {{ .Values.global.debug }}
+      initContainers:
+        {{- include "certificates.initContainer" . | nindent 8 }}
+      containers:
+        - name: data-tasks
+          image: "{{ .Values.dataService.dataTasks.image.repository }}:{{ .Values.dataService.dataTasks.image.tag }}"
+          imagePullPolicy: {{ .Values.dataService.dataTasks.image.pullPolicy }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          env:
+            - name: TCP_PORT
+              value: "8001"
+            - name: TCP_HOST
+              value: "0.0.0.0"
+            - name: VERSION
+              value: {{ .Values.dataService.image.tag | quote }}
+            - name: DB_HOST
+              value: {{ template "postgresql.fullname" . }}
+            - name: DB_USER
+              value: {{ .Values.global.db.common.username }}
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.global.db.common.passwordSecretName }}
+                  key: password
+            - name: REDIS_HOST
+              value: {{ .Values.global.redis.host | quote }}
+            - name: REDIS_PORT
+              value: {{ .Values.global.redis.port | quote }}
+            - name: REDIS_DATABASE
+              value: {{ .Values.global.redis.dbIndex.events| quote }}
+            - name: REDIS_IS_SENTINEL
+              value: {{ .Values.global.redis.sentinel.enabled | quote }}
+            - name: REDIS_MASTER_SET
+              value: {{ .Values.global.redis.sentinel.masterSet | quote }}
+            - name: REDIS_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.global.redis.existingSecret }}
+                  key: {{ .Values.global.redis.existingSecretPasswordKey }}
+            - name: SOLR_URL
+              value: "http://{{ template "solr.fullname" . }}:{{ .Values.global.solr.port }}"
+            - name: SOLR_CORE
+              value: "renku-data"
+            - name: SOLR_USER
+              value: {{ default "admin" .Values.solr.auth.adminUsername | quote }}
+            - name: SOLR_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "solr.fullname" . }}
+                  key: solr-password
+            - name: AUTHZ_DB_HOST
+              value: {{ include "renku.fullname" . }}-authz
+            - name: AUTHZ_DB_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "renku.fullname" . }}-authz
+                  key: SPICEDB_GRPC_PRESHARED_KEY
+            - name: AUTHZ_DB_GRPC_PORT
+              value: "50051"
+            {{- include "certificates.env.python" . | nindent 12 }}
+          volumeMounts:
+            {{- include "certificates.volumeMounts.system" . | nindent 12 }}
+          livenessProbe:
+            tcpSocket:
+              port: 8001
+            initialDelaySeconds: 15
+            periodSeconds: 10
+            failureThreshold: 6
+          resources:
+            {{ toYaml .Values.dataService.dataTasks.resources | nindent 12 }}
+    {{- with .Values.dataService.nodeSelector }}
+      nodeSelector:
+        {{ toYaml . | nindent 8 }}
+    {{- end }}
+    {{- with .Values.dataService.affinity }}
+      affinity:
+        {{ toYaml . | nindent 8 }}
+    {{- end }}
+    {{- with .Values.dataService.tolerations }}
+      tolerations:
+        {{ toYaml . | nindent 8 }}
+    {{- end }}
+      volumes:
+        {{- include "certificates.volumes" . | nindent 8 }}
