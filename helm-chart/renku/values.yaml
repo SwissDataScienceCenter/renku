@@ -1600,7 +1600,7 @@ posthog:
   # apiKey:
   # the posthog host to send events to
   # host:
-  # the enviroment property to set on all events
+  # the environment property to set on all events
   # environment
 authz:
   replicaCount: 1
