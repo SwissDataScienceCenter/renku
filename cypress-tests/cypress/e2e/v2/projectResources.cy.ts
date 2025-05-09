@@ -186,7 +186,6 @@ describe("Project resources - work with code, data, environments", () => {
     cy.getDataCy("add-session-launcher").click();
     cy.getDataCy("environment-kind-custom").click();
     cy.getDataCy("custom-image-input").should("be.empty").type(sessionImage);
-    cy.getDataCy("environment-advanced-settings-toggle").click();
     cy.getDataCy("session-launcher-field-default_url").clear().type(sessionUrl);
     cy.getDataCy("next-session-button").click();
     cy.getDataCy("launcher-name-input").should("be.empty").type(sessionName);
