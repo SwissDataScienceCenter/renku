@@ -3,26 +3,47 @@
 0.68.0
 ------
 
+TODO: changelog for global data connectors.
+
 User-Facing Changes
 ~~~~~~~~~~~~~~~~~~~
+
+**🌟 New Features**
+
+- **UI**: Datasets published on platforms such as Zenodo or Dataverse can be linked to
+  a project by using their reference DOI (Digital Object Identifier).
+- **UI**: Support declaring environment variables on session launchers.
+
+**✨ Improvements**
+
+- **UI**: Session UX improvements in Renku 2.0.
 
 **🐞 Bug Fixes**
 
 - **Core Service**: Fix a bug where removing activities wouldn't actually remove them.
+- **Data services**: Fix an issue where conflicting mount points would prevent sessions from starting.
+- **UI**: Fix an issue where pausing or resuming a session would crash the whole tab in Firefox.
 
 Internal Changes
 ~~~~~~~~~~~~~~~~
 
 - **Helm chart**: Update the Keycloak theme image to use non-root user by default.
 - **Data services**: Added k8s cache service that caches sessions in the data services database.
+- **Data services**: Added product metrics tracking.
+- **Gateway**: Added product metrics tracking.
+- **Data services**: Added data tasks deployment for running basic tasks in the scope of data services.
 - **Admin tools**: Add Harbor initialization script to setup a registry for RenkuLab v2.
 
 Individual Components
 ~~~~~~~~~~~~~~~~~~~~~
 
 - `renku-data-services 0.39.0 <https://github.com/SwissDataScienceCenter/renku-data-services/releases/tag/v0.39.0>`_
-- `renku-python 2.9.4 <https://github.com/SwissDataScienceCenter/renku-python/releases/tag/v2.9.4>`_
+- `renku-data-services 0.40.0 <https://github.com/SwissDataScienceCenter/renku-data-services/releases/tag/v0.40.0>`_
+- `renku-data-services 0.41.0 <https://github.com/SwissDataScienceCenter/renku-data-services/releases/tag/v0.41.0>`_
+- `renku-data-services 0.42.0 <https://github.com/SwissDataScienceCenter/renku-data-services/releases/tag/v0.42.0>`_
+- `renku-gateway 1.5.0 <https://github.com/SwissDataScienceCenter/renku-gateway/releases/tag/1.5.0>`_
 - `renku-python 2.9.3 <https://github.com/SwissDataScienceCenter/renku-python/releases/tag/v2.9.3>`_
+- `renku-python 2.9.4 <https://github.com/SwissDataScienceCenter/renku-python/releases/tag/v2.9.4>`_
 - `amalthea-sessions 0.18.2 <https://github.com/SwissDataScienceCenter/amalthea/releases/tag/0.18.2>`_
 
 0.67.2
