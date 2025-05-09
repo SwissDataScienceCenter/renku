@@ -42,6 +42,7 @@ Individual Components
 - `renku-data-services 0.41.0 <https://github.com/SwissDataScienceCenter/renku-data-services/releases/tag/v0.41.0>`_
 - `renku-data-services 0.42.0 <https://github.com/SwissDataScienceCenter/renku-data-services/releases/tag/v0.42.0>`_
 - `renku-gateway 1.5.0 <https://github.com/SwissDataScienceCenter/renku-gateway/releases/tag/1.5.0>`_
+- `renku-gateway 1.5.1 <https://github.com/SwissDataScienceCenter/renku-gateway/releases/tag/1.5.1>`_
 - `renku-python 2.9.3 <https://github.com/SwissDataScienceCenter/renku-python/releases/tag/v2.9.3>`_
 - `renku-python 2.9.4 <https://github.com/SwissDataScienceCenter/renku-python/releases/tag/v2.9.4>`_
 - `amalthea-sessions 0.18.2 <https://github.com/SwissDataScienceCenter/amalthea/releases/tag/0.18.2>`_
