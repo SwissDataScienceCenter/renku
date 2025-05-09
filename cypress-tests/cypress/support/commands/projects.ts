@@ -269,10 +269,10 @@ function waitMetadataIndexing(justTriggered = true, goToSettings = true) {
     cy.wait(TIMEOUTS.short); // eslint-disable-line cypress/no-unnecessary-waiting
   }
   if (goToSettings) cy.getProjectSection("Settings").click();
-  cy.getDataCy("kg-status-section-open").should("exist").click();
+  cy.getDataCy("kg-status-section-open").click();
   cy.getDataCy("project-settings-knowledge-graph")
     .contains("Everything indexed", { timeout: TIMEOUTS.vlong })
-    .should("exist");
+    .should("be.visible");
 }
 
 export default function registerProjectCommands() {

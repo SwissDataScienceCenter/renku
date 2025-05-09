@@ -70,6 +70,18 @@ spec:
               kubernetes.io/metadata.name: {{ .Release.Namespace }}
         - podSelector:
             matchLabels:
+              app: renku-k8s-watcher
+          namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: {{ .Release.Namespace }}
+        - podSelector:
+            matchLabels:
+              app: renku-data-tasks
+          namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: {{ .Release.Namespace }}
+        - podSelector:
+            matchLabels:
               app: keycloak-sync
           namespaceSelector:
             matchLabels:
@@ -616,6 +628,10 @@ spec:
               release: {{ .Release.Name }}
         - podSelector:
             matchLabels:
+              app: renku-data-tasks
+              release: {{ .Release.Name }}
+        - podSelector:
+            matchLabels:
               app: {{ template "renku.search.searchApi.name" . }}
               release: {{ .Release.Name }}
       ports:
@@ -645,6 +661,10 @@ spec:
         - podSelector:
             matchLabels:
               app: renku-data-service
+              release: {{ .Release.Name }}
+        - podSelector:
+            matchLabels:
+              app: renku-data-tasks
               release: {{ .Release.Name }}
         - podSelector:
             matchLabels:

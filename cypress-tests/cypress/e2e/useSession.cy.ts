@@ -81,7 +81,7 @@ describe("Basic public project functionality", () => {
       .contains(projectTestConfig.projectName)
       .should("be.visible");
     cy.get(".progress-box .progress-title")
-      .contains("Starting Session")
+      .contains("Launching Session")
       .should("exist");
     cy.get(".progress-box .progress-title", { timeout: TIMEOUTS.vlong }).should(
       "not.exist",
@@ -94,7 +94,7 @@ describe("Basic public project functionality", () => {
       .click();
     cy.getDataCy("open-session").first().should("be.visible").click();
     cy.get(".progress-box .progress-title")
-      .contains("Starting Session")
+      .contains("Launching Session")
       .should("be.visible");
 
     // Run a simple workflow in the iframe
@@ -320,7 +320,7 @@ describe("Basic public project functionality", () => {
         .contains(projectTestConfig.projectName)
         .should("be.visible");
       cy.get(".progress-box .progress-title")
-        .contains("Starting Session")
+        .contains("Launching Session")
         .should("exist");
       cy.get(".progress-box .progress-title", {
         timeout: TIMEOUTS.vlong,

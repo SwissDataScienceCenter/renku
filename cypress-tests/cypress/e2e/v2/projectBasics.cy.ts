@@ -64,11 +64,15 @@ describe("Project - create, edit and delete", () => {
       cy.getDataCy("navbar-new-entity").click();
       cy.getDataCy("navbar-project-new").click();
       cy.getDataCy("project-creation-form").should("exist");
-      cy.getDataCy("project-creation-form-project-name-input").type(projectName);
+      cy.getDataCy("project-creation-form-project-name-input").type(
+        projectName,
+      );
       cy.getDataCy("project-slug-toggle").click();
       cy.getDataCy("project-slug-input").should("have.value", projectPath);
       cy.getDataCy("project-visibility-public").click();
-      cy.getDataCy("project-creation-form-project-description-input").type(projectDescription);
+      cy.getDataCy("project-creation-form-project-description-input").type(
+        projectDescription,
+      );
       cy.getDataCy("project-url-preview").contains(
         `/${username}/${projectPath}`,
       );
@@ -83,8 +87,13 @@ describe("Project - create, edit and delete", () => {
       const modifiedProjectName = `${projectName} - modified`;
       const modifiedProjectDescription = `${projectDescription} - modified`;
       cy.getDataCy("project-settings-link").click();
-      cy.getDataCy("project-settings-form-project-name-input").should("have.value", projectName);
-      cy.getDataCy("project-settings-form-project-name-input").clear().type(modifiedProjectName);
+      cy.getDataCy("project-settings-form-project-name-input").should(
+        "have.value",
+        projectName,
+      );
+      cy.getDataCy("project-settings-form-project-name-input")
+        .clear()
+        .type(modifiedProjectName);
 
       cy.getDataCy("project-settings-form-project-description-input").should(
         "have.value",
@@ -94,7 +103,9 @@ describe("Project - create, edit and delete", () => {
         .clear()
         .type(modifiedProjectDescription);
 
-      cy.get("#project-settings-form-project-visibility-public").should("be.checked");
+      cy.get("#project-settings-form-project-visibility-public").should(
+        "be.checked",
+      );
       cy.getDataCy("project-visibility-private").click();
 
       cy.intercept("PATCH", /(?:\/ui-server)?\/api\/data\/projects\/[^/]+/).as(

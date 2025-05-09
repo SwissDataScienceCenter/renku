@@ -101,7 +101,7 @@ function quickstartSession() {
   cy.get(".start-session-button").should("not.be.disabled").click();
   cy.get(".progress-box .progress-title").should("exist");
   cy.get(".progress-box .progress-title")
-    .contains("Starting Session")
+    .contains("Launching Session")
     .should("exist");
   cy.get(".progress-box .progress-title", { timeout: TIMEOUTS.vlong }).should(
     "not.exist",
