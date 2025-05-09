@@ -68,6 +68,14 @@ spec:
                 secretKeyRef:
                   name: {{ .Values.global.redis.existingSecret }}
                   key: {{ .Values.global.redis.existingSecretPasswordKey }}
+            - name: POSTHOG_ENABLED
+              value: {{ .Values.posthog.enabled | quote }}
+            - name: POSTHOG_API_KEY
+              value: {{ .Values.posthog.apiKey | default "" | quote }}
+            - name: POSTHOG_HOST
+              value: {{ .Values.posthog.host| default "" | quote }}
+            - name: POSTHOG_ENVIRONMENT
+              value: {{ .Values.posthog.environment| default "" | quote }}
             - name: SOLR_URL
               value: "http://{{ template "solr.fullname" . }}:{{ .Values.global.solr.port }}"
             - name: SOLR_CORE
