@@ -23,6 +23,7 @@ User-Facing Changes
 - **Core Service**: Fix a bug where removing activities wouldn't actually remove them.
 - **Data services**: Fix an issue where conflicting mount points would prevent sessions from starting.
 - **UI**: Fix an issue where pausing or resuming a session would crash the whole tab in Firefox.
+- **Gateway**: Do not crash if the metrics client is not enabled.
 
 Internal Changes
 ~~~~~~~~~~~~~~~~
@@ -42,6 +43,7 @@ Individual Components
 - `renku-data-services 0.41.0 <https://github.com/SwissDataScienceCenter/renku-data-services/releases/tag/v0.41.0>`_
 - `renku-data-services 0.42.0 <https://github.com/SwissDataScienceCenter/renku-data-services/releases/tag/v0.42.0>`_
 - `renku-gateway 1.5.0 <https://github.com/SwissDataScienceCenter/renku-gateway/releases/tag/1.5.0>`_
+- `renku-gateway 1.5.1 <https://github.com/SwissDataScienceCenter/renku-gateway/releases/tag/1.5.1>`_
 - `renku-python 2.9.3 <https://github.com/SwissDataScienceCenter/renku-python/releases/tag/v2.9.3>`_
 - `renku-python 2.9.4 <https://github.com/SwissDataScienceCenter/renku-python/releases/tag/v2.9.4>`_
 - `amalthea-sessions 0.18.2 <https://github.com/SwissDataScienceCenter/amalthea/releases/tag/0.18.2>`_
