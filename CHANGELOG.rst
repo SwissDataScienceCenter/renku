@@ -13,10 +13,13 @@ User-Facing Changes
 - **UI**: Datasets published on platforms such as Zenodo or Dataverse can be linked to
   a project by using their reference DOI (Digital Object Identifier).
 - **UI**: Support declaring environment variables on session launchers.
+- **UI**: Legacy projects can now be migrated to Renku 2.0 directly from within Renku 2.0. (`#3613 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3613>`__)
+
 
 **✨ Improvements**
 
-- **UI**: Session UX improvements in Renku 2.0.
+- **UI**: Improved session launcher and environment views with clear build status indicators and separated launcher, environment, and session UX. (`#3648 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3648>`__)
+- **UI**: Enhanced session launcher and session pages with clearer actions, improved environment selector and added session share link. (`#3659 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3659>`__)
 
 **🐞 Bug Fixes**
 
@@ -48,6 +51,8 @@ Individual Components
 - `renku-python 2.9.3 <https://github.com/SwissDataScienceCenter/renku-python/releases/tag/v2.9.3>`_
 - `renku-python 2.9.4 <https://github.com/SwissDataScienceCenter/renku-python/releases/tag/v2.9.4>`_
 - `amalthea-sessions 0.18.2 <https://github.com/SwissDataScienceCenter/amalthea/releases/tag/0.18.2>`_
+- `renku-ui 3.55.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.55.0>`_
+
 
 0.67.2
 ------
