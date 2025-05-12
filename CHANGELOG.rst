@@ -3,7 +3,7 @@
 0.68.0
 ------
 
-TODO: changelog for global data connectors.
+This version of Renku introduces several new features. The most notable of these are: being able to link and access data from Zenodo, Dataverse and similar providers, setting environment variables in session launchers and being able to migrate legacy Renku projects from within the new Renku UI.
 
 User-Facing Changes
 ~~~~~~~~~~~~~~~~~~~
@@ -26,7 +26,6 @@ User-Facing Changes
 - **Core Service**: Fix a bug where removing activities wouldn't actually remove them.
 - **Data services**: Fix an issue where conflicting mount points would prevent sessions from starting.
 - **UI**: Fix an issue where pausing or resuming a session would crash the whole tab in Firefox.
-- **Gateway**: Do not crash if the metrics client is not enabled.
 
 Internal Changes
 ~~~~~~~~~~~~~~~~
