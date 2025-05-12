@@ -46,6 +46,14 @@ rules:
       - list
       - get
       - watch
+  - apiGroups:
+      - tekton.dev
+    resources:
+      - taskruns
+    verbs:
+      - list
+      - get
+      - watch
   {{- end }}
 ---
 apiVersion: v1
