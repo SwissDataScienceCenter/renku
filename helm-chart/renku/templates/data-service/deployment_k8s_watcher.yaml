@@ -52,6 +52,8 @@ spec:
               value: {{ .Release.Namespace | quote }}
             - name: POSTHOG_ENABLED
               value: {{ .Values.posthog.enabled | quote }}
+            - name: IMAGE_BUILDERS_ENABLED
+              value: {{ .Values.dataService.imageBuilders.enabled | quote }}
             - name: KUBERNETES_NAMESPACE
               valueFrom:
                 fieldRef:
