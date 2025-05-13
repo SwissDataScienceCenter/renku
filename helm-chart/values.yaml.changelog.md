@@ -4,6 +4,16 @@ For changes that require manual steps other than changing values, please check o
 
 Please follow this convention when adding a new row
 * `<type: NEW|EDIT|DELETE> - *<resource name>*: <details>`
+## Upgrading to Renku 0.68.0
+
+Renku now includes anonymized product metrics, making it easier to know what features are used by users to help with product development and statistics.
+
+* NEW `posthog.enabled` to set up gathering product metrics using posthog (note: renku won't deploy posthog for you, either deploy it yourself or use their cloud offering)
+* NEW `posthog.host` posthog host to log metrics to
+* NEW `posthog.apiKey` apiKey for your posthog project
+* NEW `posthog.environment` adds an `environment` property to all logged metrics events, allowing to distinguish e.g. `development` and `production`
+
+* NEW `core.resources.rqmetrics` to set up cpu/memory requests and limits
 
 ## Upgrading to Renku 0.66.0
 
@@ -313,7 +323,7 @@ configuration is possible from its `values.yaml` file.
 In addition going forward we will follow a much stricter versioning scheme that will distinguish changes to
 the Renku Helm chart as opposed to changes to the application. Notably:
 - Patch changes (i.e. `0.50.1` -> `0.50.2`) indicate that there are NO changes in the Helm chart and that
-only appplication level bug fixes are present in the new release.
+only application level bug fixes are present in the new release.
 - Minor version changes (i.e. `0.50.2` -> `0.51.0`) indicate that there are NO changes in the Helm chart and that
 only application level new features and/or application level breaking changes are present.
 - Major version changes (i.e. `0.50.0` -> `1.0.0`) will be reserved for changes in the Helm chart, either when the

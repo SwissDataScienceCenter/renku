@@ -1,9 +1,71 @@
 .. _changelog:
 
+0.68.0
+------
+
+This version of Renku introduces several new features. The most notable of these are: 
+
+- using published datasets from Zenodo, Dataverse and similar providers as Data Connectors
+- setting environment variables in session launchers
+- migrating legacy Renku projects from within the new Renku UI
+
+The release also includes a completely reworked launcher/session interface. 
+
+User-Facing Changes
+~~~~~~~~~~~~~~~~~~~
+
+**🌟 New Features**
+
+- **UI**: Datasets published on platforms such as Zenodo or Dataverse can be linked to
+  a project as Data Connectors by using their reference DOI (Digital Object Identifier).
+- **UI**: Support declaring environment variables on session launchers.
+- **UI**: Legacy projects can now be migrated to Renku 2.0 directly from within Renku 2.0. (`#3613 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3613>`__)
+
+
+**✨ Improvements**
+
+- **UI**: Improved session launcher and environment views with clear build status indicators and separated launcher, environment, and session UX. (`#3648 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3648>`__)
+- **UI**: Enhanced session launcher and session pages with clearer actions, improved environment selector and added session share link. (`#3659 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3659>`__)
+
+**🐞 Bug Fixes**
+
+- **Core Service**: Fix a bug where removing activities wouldn't actually remove them.
+- **Data services**: Fix an issue where conflicting mount points would prevent sessions from starting.
+- **UI**: Fix an issue where pausing or resuming a session would crash the whole tab in Firefox.
+
+Internal Changes
+~~~~~~~~~~~~~~~~
+
+- **Helm chart**: Update the Keycloak theme image to use non-root user by default.
+- **Data services**: Added k8s cache service that caches sessions and builds in the data services database.
+- **Data services**: Added product metrics tracking.
+- **Gateway**: Added product metrics tracking.
+- **Data services**: Added data tasks deployment for running basic tasks in the scope of data services.
+- **Data services**: Stable sorting when listing sessions.
+- **Admin tools**: Add Harbor initialization script to setup a registry for RenkuLab v2.
+
+Individual Components
+~~~~~~~~~~~~~~~~~~~~~
+
+- `renku-data-services 0.39.0 <https://github.com/SwissDataScienceCenter/renku-data-services/releases/tag/v0.39.0>`_
+- `renku-data-services 0.40.0 <https://github.com/SwissDataScienceCenter/renku-data-services/releases/tag/v0.40.0>`_
+- `renku-data-services 0.41.0 <https://github.com/SwissDataScienceCenter/renku-data-services/releases/tag/v0.41.0>`_
+- `renku-data-services 0.42.0 <https://github.com/SwissDataScienceCenter/renku-data-services/releases/tag/v0.42.0>`_
+- `renku-data-services 0.43.0 <https://github.com/SwissDataScienceCenter/renku-data-services/releases/tag/v0.43.0>`_
+- `renku-data-services 0.43.1 <https://github.com/SwissDataScienceCenter/renku-data-services/releases/tag/v0.43.1>`_
+- `renku-gateway 1.5.0 <https://github.com/SwissDataScienceCenter/renku-gateway/releases/tag/1.5.0>`_
+- `renku-gateway 1.5.1 <https://github.com/SwissDataScienceCenter/renku-gateway/releases/tag/1.5.1>`_
+- `renku-python 2.9.3 <https://github.com/SwissDataScienceCenter/renku-python/releases/tag/v2.9.3>`_
+- `renku-python 2.9.4 <https://github.com/SwissDataScienceCenter/renku-python/releases/tag/v2.9.4>`_
+- `amalthea-sessions 0.18.2 <https://github.com/SwissDataScienceCenter/amalthea/releases/tag/0.18.2>`_
+- `renku-ui 3.54.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.54.0>`_
+- `renku-ui 3.55.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.55.0>`_
+
+
 0.67.2
 ------
 
-Renku ``0.67.2`` fixes several bugs in the data services backend. 
+Renku ``0.67.2`` fixes several bugs in the data services backend.
 
 User-Facing Changes
 ~~~~~~~~~~~~~~~~~~~
@@ -11,7 +73,7 @@ User-Facing Changes
 **🐞 Bug Fixes**
 
 - **Data services**: Surface more specific message when Git integrations expire.
-- **Data services**: Fix a bug where modifying the resource class of a hibernated 
+- **Data services**: Fix a bug where modifying the resource class of a hibernated
   session would cause it to not start back up when resumed.
 - **Data services**: Data connectors were failing to copy when copying projects.
 
@@ -1601,7 +1663,7 @@ Internal Changes
 Individual Components
 ~~~~~~~~~~~~~~~~~~~~~
 
-- `renku-python 2.9.2 <https://github.com/SwissDataScienceCenter/renku-python/releases/tag/2.9.2>`_
+- `renku-python 2.9.2 <https://github.com/SwissDataScienceCenter/renku-python/releases/tag/v2.9.2>`_
 - `renku-data-services 0.5.0 <https://github.com/SwissDataScienceCenter/renku-data-services/releases/tag/v0.5.0>`_
 - `csi-rclone 0.1.7 <https://github.com/SwissDataScienceCenter/csi-rclone/releases/tag/v0.1.7>`_
 

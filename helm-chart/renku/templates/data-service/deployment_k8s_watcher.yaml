@@ -1,0 +1,89 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ template "renku.fullname" . }}-k8s-watcher
+  labels:
+    app: renku-k8s-watcher
+    chart: {{ template "renku.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  replicas: 1
+  strategy: 
+    {{- toYaml .Values.dataService.updateStrategy | nindent 4 }}
+  selector:
+    matchLabels:
+      app: renku-k8s-watcher
+      release: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app: renku-k8s-watcher
+        release: {{ .Release.Name }}
+      annotations:
+      {{- with .Values.dataService.podAnnotations }}
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+    spec:
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      automountServiceAccountToken: {{ .Values.global.debug }}
+      initContainers:
+        {{- include "certificates.initContainer" . | nindent 8 }}
+      containers:
+        - name: k8s-watcher
+          image: "{{ .Values.dataService.k8sWatcher.image.repository }}:{{ .Values.dataService.k8sWatcher.image.tag }}"
+          imagePullPolicy: {{ .Values.dataService.k8sWatcher.image.pullPolicy }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          env:
+            - name: VERSION
+              value: {{ .Values.dataService.image.tag | quote }}
+            - name: DB_HOST
+              value: {{ template "postgresql.fullname" . }}
+            - name: DB_USER
+              value: {{ .Values.global.db.common.username }}
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.global.db.common.passwordSecretName }}
+                  key: password
+            - name: K8S_NAMESPACE
+              value: {{ .Release.Namespace | quote }}
+            - name: POSTHOG_ENABLED
+              value: {{ .Values.posthog.enabled | quote }}
+            - name: IMAGE_BUILDERS_ENABLED
+              value: {{ .Values.dataService.imageBuilders.enabled | quote }}
+            - name: KUBERNETES_NAMESPACE
+              valueFrom:
+                fieldRef:
+                  apiVersion: v1
+                  fieldPath: metadata.namespace
+            {{- include "certificates.env.python" . | nindent 12 }}
+          volumeMounts:
+            {{- include "certificates.volumeMounts.system" . | nindent 12 }}
+          livenessProbe:
+            exec:
+              command:
+                - cat
+                - /tmp/cache_ready
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            failureThreshold: 6
+          resources:
+            {{ toYaml .Values.dataService.k8sWatcher.resources | nindent 12 }}
+    {{- with .Values.dataService.nodeSelector }}
+      nodeSelector:
+        {{ toYaml . | nindent 8 }}
+    {{- end }}
+    {{- with .Values.dataService.affinity }}
+      affinity:
+        {{ toYaml . | nindent 8 }}
+    {{- end }}
+    {{- with .Values.dataService.tolerations }}
+      tolerations:
+        {{ toYaml . | nindent 8 }}
+    {{- end }}
+      volumes:
+        {{- include "certificates.volumes" . | nindent 8 }}
+      serviceAccountName: {{ template "renku.fullname" . }}-k8s-watcher
