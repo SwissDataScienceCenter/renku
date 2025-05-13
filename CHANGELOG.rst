@@ -1497,7 +1497,7 @@ Internal Changes
 Individual Components
 ~~~~~~~~~~~~~~~~~~~~~
 
-- `renku-python 2.9.2 <https://github.com/SwissDataScienceCenter/renku-python/releases/tag/2.9.2>`_
+- `renku-python 2.9.2 <https://github.com/SwissDataScienceCenter/renku-python/releases/tag/v2.9.2>`_
 - `renku-data-services 0.5.0 <https://github.com/SwissDataScienceCenter/renku-data-services/releases/tag/v0.5.0>`_
 - `csi-rclone 0.1.7 <https://github.com/SwissDataScienceCenter/csi-rclone/releases/tag/v0.1.7>`_
 
