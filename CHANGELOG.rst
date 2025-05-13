@@ -3,7 +3,13 @@
 0.68.0
 ------
 
-This version of Renku introduces several new features. The most notable of these are: being able to link and access data from Zenodo, Dataverse and similar providers, setting environment variables in session launchers and being able to migrate legacy Renku projects from within the new Renku UI.
+This version of Renku introduces several new features. The most notable of these are: 
+
+- using published datasets from Zenodo, Dataverse and similar providers as Data Connectors
+- setting environment variables in session launchers
+- migrating legacy Renku projects from within the new Renku UI
+
+The release also includes a completely reworked launcher/session interface. 
 
 User-Facing Changes
 ~~~~~~~~~~~~~~~~~~~
@@ -11,7 +17,7 @@ User-Facing Changes
 **🌟 New Features**
 
 - **UI**: Datasets published on platforms such as Zenodo or Dataverse can be linked to
-  a project by using their reference DOI (Digital Object Identifier).
+  a project as Data Connectors by using their reference DOI (Digital Object Identifier).
 - **UI**: Support declaring environment variables on session launchers.
 - **UI**: Legacy projects can now be migrated to Renku 2.0 directly from within Renku 2.0. (`#3613 <https://github.com/SwissDataScienceCenter/renku-ui/pull/3613>`__)
 
