@@ -1,5 +1,10 @@
 .. _changelog:
 
+0.69.0
+------
+
+
+
 0.68.1
 ------
 
@@ -32,7 +37,6 @@ Individual Components
 - `renku-data-services 0.43.3 <https://github.com/SwissDataScienceCenter/renku-data-services/releases/tag/v0.43.3>`_
 - `renku-data-services 0.44.0 <https://github.com/SwissDataScienceCenter/renku-data-services/releases/tag/v0.44.0>`_
 - `renku-ui 3.56.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.56.0>`_
-
 
 0.68.0
 ------
