@@ -10,12 +10,16 @@ this new version of the search. The switch will be done most likely in the next 
 
 User-Facing Changes
 ~~~~~~~~~~~~~~~~~~~
+**🌟 New Features**
+
+- **UI**: Introduce a GUI for creating session launch links.
 
 **🐞 Bug Fixes**
 
 - **Data services**: In some cases the namespace and slug of similar but unrelated data connectors
   was shown when adding or editing data connectors.
 - **Data services**: The creation of image pull secrets for private images from Gitlab was broken.
+- **UI**: Fix a bug that prevented custom launches of V2 sessions from working properly.
 
 Internal Changes
 ~~~~~~~~~~~~~~~~
@@ -28,6 +32,7 @@ Individual Components
 
 - `renku-data-services 0.43.3 <https://github.com/SwissDataScienceCenter/renku-data-services/releases/tag/v0.43.3>`_
 - `renku-data-services 0.44.0 <https://github.com/SwissDataScienceCenter/renku-data-services/releases/tag/v0.44.0>`_
+- `renku-ui 3.56.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.56.0>`_
 
 
 0.68.0
