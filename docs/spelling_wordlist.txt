@@ -97,6 +97,7 @@ filesystem
 FilterFlights
 findable
 Fortran
+frontend
 Frontend
 gapped
 gevent
