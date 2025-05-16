@@ -16,8 +16,7 @@ User-Facing Changes
 
 **🐞 Bug Fixes**
 
-- **Data services**: In some cases the namespace and slug of similar but unrelated data connectors
-  was shown when adding or editing data connectors.
+- **Data services**: In some cases data connectors were created and linked to the wrong project.
 - **Data services**: The creation of image pull secrets for private images from Gitlab was broken.
 - **UI**: Fix a bug that prevented custom launches of V2 sessions from working properly.
 
