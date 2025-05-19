@@ -6,6 +6,39 @@ TEST PR
 ------
 
 
+=======
+0.68.1
+------
+
+This version of Renku introduces several bug fixes for the backend services. It also makes DOI
+data connectors available in the data services search. Note though that the frontend is not yet using
+this new version of the search. The switch will be done most likely in the next release.
+
+
+User-Facing Changes
+~~~~~~~~~~~~~~~~~~~
+**🌟 New Features**
+
+- **UI**: Introduce a GUI for creating session launch links.
+
+**🐞 Bug Fixes**
+
+- **Data services**: In some cases data connectors were created and linked to the wrong project.
+- **Data services**: The creation of image pull secrets for private images from Gitlab was broken.
+- **UI**: Fix a bug that prevented custom launches of V2 sessions from working properly.
+
+Internal Changes
+~~~~~~~~~~~~~~~~
+
+- **Data services**: Add global (DOI) data connectors in search.
+- **Data services**: Make 404 exception not show a full trace in the logs.
+
+Individual Components
+~~~~~~~~~~~~~~~~~~~~~
+
+- `renku-data-services 0.43.3 <https://github.com/SwissDataScienceCenter/renku-data-services/releases/tag/v0.43.3>`_
+- `renku-data-services 0.44.0 <https://github.com/SwissDataScienceCenter/renku-data-services/releases/tag/v0.44.0>`_
+- `renku-ui 3.56.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.56.0>`_
 
 0.68.0
 ------
