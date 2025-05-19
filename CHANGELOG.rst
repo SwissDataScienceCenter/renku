@@ -3,7 +3,26 @@
 0.69.0
 ------
 
+This version of Renku introduces the option to use JupyterLab as a frontend for
+session environments that are built from code.
 
+User-Facing Changes
+~~~~~~~~~~~~~~~~~~~
+
+**🌟 New Features**
+
+- **UI**: Select JupyterLab as an option when creating environments from code.
+
+Internal Changes
+~~~~~~~~~~~~~~~~
+
+- **Data services**: Support for JupyterLab as an option when creating environments from code.
+
+Individual Components
+~~~~~~~~~~~~~~~~~~~~~
+
+- `renku-data-services 0.45.0 <https://github.com/SwissDataScienceCenter/renku-data-services/releases/tag/v0.45.0>`_
+- `renku-ui 3.57.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.54.0>`_
 
 0.68.1
 ------
