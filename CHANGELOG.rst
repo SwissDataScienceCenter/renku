@@ -1,5 +1,14 @@
 .. _changelog:
 
+0.70.0
+------
+
+Notes for Renku Administrators
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+This Renku version includes an update of the CSI Rclone driver which
+will result in the unmounting of cloud storage in all running user sessions.
+
 0.69.0
 ------
 
