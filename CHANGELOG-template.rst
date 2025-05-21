@@ -33,3 +33,11 @@ Individual components
 ~~~~~~~~~~~~~~~~~~~~~~
 
 - component links, alphabetized by team name
+
+Notes for Renku Administrators
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Information about whether upgrading to this version requires or causes
+an outage, interrupts sessions or introduces significant changes to the
+Helm chart.
+
