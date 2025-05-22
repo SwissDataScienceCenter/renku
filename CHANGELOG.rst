@@ -120,7 +120,13 @@ Individual Components
 - `amalthea-sessions 0.18.2 <https://github.com/SwissDataScienceCenter/amalthea/releases/tag/0.18.2>`_
 - `renku-ui 3.54.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.54.0>`_
 - `renku-ui 3.55.0 <https://github.com/SwissDataScienceCenter/renku-ui/releases/tag/3.55.0>`_
+- `csi-rclone 0.4.0 <https://github.com/SwissDataScienceCenter/csi-rclone/releases/tag/v0.4.0>`_
 
+Notes for Renku Administrators
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+This Renku version includes an update of the CSI Rclone driver which
+will result in the unmounting of cloud storage in all running user sessions.
 
 0.67.2
 ------
