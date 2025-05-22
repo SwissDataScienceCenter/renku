@@ -1,4 +1,4 @@
-name: "Create Release PR"
+name: "Create Release PR and draft Github release."
 on:
   workflow_dispatch:
     inputs:
@@ -60,4 +60,12 @@ jobs:
               issue_number: result.data.number,
               labels: ['release']
             });
-
+      - uses: release-drafter/release-drafter@v6
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag: "${{ github.event.inputs.version }}"
+          name: "${{ github.event.inputs.version }}"
+          version: "${{ github.event.inputs.version }}"
+          disable-autolabeler: true
+          disable-releaser: true
