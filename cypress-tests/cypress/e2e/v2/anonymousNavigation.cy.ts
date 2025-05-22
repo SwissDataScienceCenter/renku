@@ -93,7 +93,7 @@ describe("Anonymous users can only access public resources", () => {
     cy.visit("/v2");
     cy.getDataCy("navbar-link-search").click();
     cy.intercept(
-      new RegExp(`(?:/ui-server)?/api/search/query\\?q=.*?${randomString}.*`),
+      new RegExp(`/api/data/search/query\\?q=.*?${randomString}.*`),
     ).as("searchQuery");
     cy.getDataCy("search-input").clear().type(randomString);
     cy.getDataCy("search-button").click();
@@ -110,7 +110,7 @@ describe("Anonymous users can only access public resources", () => {
     cy.getDataCy("navbar-login").should("be.visible");
     cy.getDataCy("navbar-link-search").click();
     cy.intercept(
-      new RegExp(`(?:/ui-server)?/api/search/query\\?q=.*?${randomString}.*`),
+      new RegExp(`/api/data/search/query\\?q=.*?${randomString}.*`),
     ).as("searchQuery");
     cy.getDataCy("search-input").clear().type(randomString);
     cy.getDataCy("search-button").click();
