@@ -557,10 +557,7 @@ spec:
               release: {{ .Release.Name }}
         - podSelector:
             matchLabels:
-              app: data-service-background-jobs
-        - podSelector:
-            matchLabels:
-              app: data-service-total-users-sync
+              app: renku-data-tasks
       ports:
         - protocol: TCP
           port: http
