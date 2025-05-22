@@ -53,6 +53,17 @@ spec:
                 secretKeyRef:
                   name: {{ .Values.global.db.common.passwordSecretName }}
                   key: password
+            - name: KEYCLOAK_URL
+              value: {{ include "renku.keycloakUrl" . | quote}}
+            - name: KEYCLOAK_REALM
+              value: {{ include "renku.keycloak.realm" . | quote}}
+            - name: KEYCLOAK_CLIENT_ID
+              value: {{ include "renku.dataService.keycloak.clientId" . | quote }}
+            - name: KEYCLOAK_CLIENT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "renku.fullname" . }}
+                  key: dataServiceKeycloakClientSecret
             - name: REDIS_HOST
               value: {{ .Values.global.redis.host | quote }}
             - name: REDIS_PORT
@@ -97,6 +108,7 @@ spec:
             - name: AUTHZ_DB_GRPC_PORT
               value: "50051"
             {{- include "certificates.env.python" . | nindent 12 }}
+            {{- include "certificates.env.grpc" . | nindent 12 }}
           volumeMounts:
             {{- include "certificates.volumeMounts.system" . | nindent 12 }}
           livenessProbe:
