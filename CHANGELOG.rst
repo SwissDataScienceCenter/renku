@@ -16,12 +16,14 @@ Internal Changes
 
 - **Data services**: Update rclone to v1.69.2+renku-1
 - **Data services**: Fix an issue with namespaces in search
+- **Data services**: Moved background jobs cronjob into data-tasks
 - **CSI Rclone**: Update rclone to v1.69.2+renku-1
 
 Individual Components
 ~~~~~~~~~~~~~~~~~~~~~
 
 - `renku-data-services 0.46.0 <https://github.com/SwissDataScienceCenter/renku-data-services/releases/tag/v0.46.0>`_
+- `renku-data-services 0.47.0 <https://github.com/SwissDataScienceCenter/renku-data-services/releases/tag/v0.47.0>`_
 - `csi-rclone 0.4.1 <https://github.com/SwissDataScienceCenter/csi-rclone/releases/tag/v0.4.1>`_
 
 Notes for Renku Administrators
@@ -29,6 +31,8 @@ Notes for Renku Administrators
 
 This Renku version includes an update of the CSI Rclone driver which
 will result in the unmounting of cloud storage in all running user sessions.
+This version also removes the background jobs cronjob and removes the whole `dataService.backgroundJobs` section
+from the values.
 
 
 0.69.0
