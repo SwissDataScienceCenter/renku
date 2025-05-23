@@ -195,6 +195,16 @@ spec:
         - protocol: TCP
           # This port is hardcoded in Amalthea as the port for the authentication proxy
           port: 65535
+    - from:
+      # Allow amalthea operator access to auth proxy metadata endpoint
+      - podSelector:
+          matchLabels:
+            app.kubernetes.io/name: amalthea-sessions
+      ports:
+        - protocol: TCP
+          # This port is hardcoded in Amalthea as the port for the authentication proxy metadata endpoint
+          port: 65534
+      
 ---
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
