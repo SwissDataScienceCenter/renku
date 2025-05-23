@@ -1,5 +1,7 @@
 .. _changelog:
 
+NOTE: Starting with version ``0.70.0`` release changelog was moved to the `GitHub Release page <https://github.com/SwissDataScienceCenter/renku/releases>`_
+
 0.69.0
 ------
 
