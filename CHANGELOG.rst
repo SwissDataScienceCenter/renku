@@ -62,13 +62,13 @@ Individual Components
 0.68.0
 ------
 
-This version of Renku introduces several new features. The most notable of these are: 
+This version of Renku introduces several new features. The most notable of these are:
 
 - using published datasets from Zenodo, Dataverse and similar providers as Data Connectors
 - setting environment variables in session launchers
 - migrating legacy Renku projects from within the new Renku UI
 
-The release also includes a completely reworked launcher/session interface. 
+The release also includes a completely reworked launcher/session interface.
 
 User-Facing Changes
 ~~~~~~~~~~~~~~~~~~~
