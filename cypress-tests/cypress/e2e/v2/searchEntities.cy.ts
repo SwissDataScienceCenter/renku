@@ -119,7 +119,7 @@ describe("Search for resources: groups, projects, users", () => {
 
     // Search for string
     cy.getDataCy("navbar-link-search").click();
-    cy.intercept(new RegExp(`(?:/ui-server)?/api/search/query.*`)).as(
+    cy.intercept(new RegExp(`/api/data/search/query.*`)).as(
       "searchQuery",
     );
     cy.getDataCy("search-input").clear().type(stringRandomOne);
