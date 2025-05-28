@@ -53,29 +53,35 @@ jobs:
           path: docs/_build/html/
 
   check-deploy:
-    name: Analyze deploy string
+    name: Analyze deploy strings
     runs-on: ubuntu-24.04
     outputs:
-      pr-contains-string: ${{ steps.deploy-comment.outputs.pr-contains-string }}
-      renku-core: ${{ steps.deploy-comment.outputs.renku-core}}
-      renku-gateway: ${{ steps.deploy-comment.outputs.renku-gateway}}
-      renku-graph: ${{ steps.deploy-comment.outputs.renku-graph}}
-      renku-notebooks: ${{ steps.deploy-comment.outputs.renku-notebooks}}
-      renku-ui: ${{ steps.deploy-comment.outputs.renku-ui}}
-      renku-data-services: ${{ steps.deploy-comment.outputs.renku-data-services}}
-      amalthea: ${{ steps.deploy-comment.outputs.amalthea}}
-      amalthea-sessions: ${{ steps.deploy-comment.outputs.amalthea-sessions}}
-      test-enabled: ${{ steps.deploy-comment.outputs.test-enabled}}
-      test-legacy-enabled: ${{ steps.deploy-comment.outputs.test-legacy-enabled}}
-      extra-values: ${{ steps.deploy-comment.outputs.extra-values}}
+      switch-deploy: ${{ steps.deploy-comment.outputs.pr-contains-string }}
+      azure-deploy: ${{ steps.deploy-comment-azure.outputs.pr-contains-string }}
+      renku-core: ${{ steps.deploy-comment.outputs.renku-core || steps.deploy-comment-azure.outputs.renku-core }}
+      renku-gateway: ${{ steps.deploy-comment.outputs.renku-gateway || steps.deploy-comment-azure.outputs.renku-gateway }}
+      renku-graph: ${{ steps.deploy-comment.outputs.renku-graph || steps.deploy-comment-azure.outputs.renku-graph }}
+      renku-notebooks: ${{ steps.deploy-comment.outputs.renku-notebooks || steps.deploy-comment-azure.outputs.renku-notebooks }}
+      renku-ui: ${{ steps.deploy-comment.outputs.renku-ui || steps.deploy-comment-azure.outputs.renku-ui }}
+      renku-data-services: ${{ steps.deploy-comment.outputs.renku-data-services || steps.deploy-comment-azure.outputs.renku-data-services }}
+      amalthea: ${{ steps.deploy-comment.outputs.amalthea || steps.deploy-comment-azure.outputs.amalthea }}
+      amalthea-sessions: ${{ steps.deploy-comment.outputs.amalthea-sessions || steps.deploy-comment-azure.outputs.amalthea-sessions }}
+      test-enabled: ${{ steps.deploy-comment.outputs.test-enabled == 'true' || steps.deploy-comment-azure.outputs.test-enabled == 'true' }}
+      test-legacy-enabled: ${{ steps.deploy-comment.outputs.test-legacy-enabled == 'true' || steps.deploy-comment-azure.outputs.test-legacy-enabled == 'true' }}
+      extra-values: ${{ steps.deploy-comment.outputs.extra-values || steps.deploy-comment-azure.outputs.extra-values }}
     steps:
       - id: deploy-comment
-        uses: SwissDataScienceCenter/renku-actions/check-pr-description@v1.17.0
+        uses: SwissDataScienceCenter/renku-actions/check-pr-description@v1.18.2
         with:
+          pr_ref: ${{ github.event.number }}
+      - id: deploy-comment-azure
+        uses: SwissDataScienceCenter/renku-actions/check-pr-description@v1.18.2
+        with:
+          string: /AzureDeploy
           pr_ref: ${{ github.event.number }}
 
   deploy-pr:
-    name: Deploy
+    name: Deploy on SWITCH
     runs-on: ubuntu-24.04
     needs: [check-deploy]
     permissions:
@@ -86,8 +92,8 @@ jobs:
       url: https://ci-renku-${{ github.event.number }}.dev.renku.ch
     steps:
       - uses: actions/checkout@v4.2.2
-      - name: Find deplyoment url
-        if: needs.check-deploy.outputs.pr-contains-string == 'true'
+      - name: Find deployment url
+        if: needs.check-deploy.outputs.switch-deploy == 'true'
         uses: peter-evans/find-comment@v3
         id: deploymentUrlMessage
         with:
@@ -96,7 +102,7 @@ jobs:
           body-includes: "You can access the deployment of this PR at"
       - name: Create comment deployment url
         if: steps.deploymentUrlMessage.outputs.comment-id == 0 &&
-          needs.check-deploy.outputs.pr-contains-string == 'true'
+          needs.check-deploy.outputs.switch-deploy == 'true'
         uses: peter-evans/create-or-update-comment@v4
         with:
           token: ${{ secrets.RENKUBOT_GITHUB_TOKEN }}
@@ -104,8 +110,8 @@ jobs:
           body: |
             You can access the deployment of this PR at https://ci-renku-${{ github.event.number }}.dev.renku.ch
       - name: renku build and deploy
-        if: needs.check-deploy.outputs.pr-contains-string == 'true'
-        uses: SwissDataScienceCenter/renku-actions/deploy-renku@v1.17.0
+        if: needs.check-deploy.outputs.switch-deploy == 'true'
+        uses: SwissDataScienceCenter/renku-actions/deploy-renku@v1.18.2
         env:
           DOCKER_PASSWORD: ${{ secrets.RENKU_DOCKER_PASSWORD }}
           DOCKER_USERNAME: ${{ secrets.RENKU_DOCKER_USERNAME }}
@@ -128,15 +134,121 @@ jobs:
           amalthea_sessions: "${{ needs.check-deploy.outputs.amalthea-sessions }}"
           extra_values: "${{ needs.check-deploy.outputs.extra-values }}"
 
+  deploy-pr-azure:
+    name: Deploy on Azure
+    runs-on: ubuntu-24.04
+    needs: [check-deploy]
+    permissions:
+      pull-requests: write
+      id-token: write
+    if: github.event.action != 'closed'
+    steps:
+      - uses: actions/checkout@v4.2.2
+      - name: Find deployment url
+        if: needs.check-deploy.outputs.azure-deploy == 'true'
+        uses: peter-evans/find-comment@v3
+        id: deploymentUrlMessage
+        with:
+          issue-number: ${{ github.event.pull_request.number }}
+          comment-author: "RenkuBot"
+          body-includes: "You can access the deployment of this PR at"
+
+      - name: Create comment deployment url
+        if: steps.deploymentUrlMessage.outputs.comment-id == 0 &&
+          needs.check-deploy.outputs.azure-deploy == 'true'
+        uses: peter-evans/create-or-update-comment@v4
+        with:
+          token: ${{ secrets.RENKUBOT_GITHUB_TOKEN }}
+          issue-number: ${{ github.event.pull_request.number }}
+          body: |
+            You can access the deployment of this PR at ${{ format('https://ci-renku-{0}.dev.azure.renku.ch', github.event.number) }}
+
+      - name: Azure login
+        if: needs.check-deploy.outputs.azure-deploy == 'true'
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.CI_RENKU_AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.CI_RENKU_AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.CI_RENKU_AZURE_SUBSCRIPTION_ID }}
+      - uses: azure/aks-set-context@v4
+        if: needs.check-deploy.outputs.azure-deploy == 'true'
+        with:
+          resource-group: "renku-dev"
+          cluster-name: "aks-switzerlandnorth-renku-dev"
+
+      - name: Get AKS credentials
+        if: needs.check-deploy.outputs.azure-deploy == 'true'
+        run: |
+          az aks get-credentials --resource-group renku-dev --name aks-switzerlandnorth-renku-dev --file "${{ github.workspace }}/renkubot-kube.config"
+          chmod 600 "${{ github.workspace }}/renkubot-kube.config"
+
+          echo "RENKUBOT_KUBECONFIG<<EOF" >> $GITHUB_ENV
+          cat "${{ github.workspace }}/renkubot-kube.config" >> $GITHUB_ENV
+          echo "EOF" >> $GITHUB_ENV
+
+      - name: renku build and deploy
+        if: needs.check-deploy.outputs.azure-deploy == 'true'
+        uses: SwissDataScienceCenter/renku-actions/deploy-renku@v1.18.2
+        env:
+          DOCKER_PASSWORD: ${{ secrets.RENKU_DOCKER_PASSWORD }}
+          DOCKER_USERNAME: ${{ secrets.RENKU_DOCKER_USERNAME }}
+          GITLAB_TOKEN: ${{ secrets.DEV_GITLAB_TOKEN }}
+          KUBECONFIG: "${{ github.workspace }}/renkubot-kube.config"
+          RENKU_RELEASE: ci-renku-${{ github.event.number }}
+          RENKU_VALUES_FILE: "${{ github.workspace }}/values.yaml"
+          RENKU_VALUES: minimal-deployment/minimal-deployment-values.yaml
+          RENKUBOT_KUBECONFIG: ${{ env.RENKUBOT_KUBECONFIG }}
+          TEST_ARTIFACTS_PATH: "tests-artifacts-${{ github.sha }}"
+          KUBERNETES_CLUSTER_FQDN: 'dev.azure.renku.ch'
+          RENKU_ANONYMOUS_SESSIONS: 'true'
+          ENABLE_NGINX_INGRESS: 'true'
+          renku: "@${{ github.head_ref }}"
+          renku_core: "${{ needs.check-deploy.outputs.renku-core }}"
+          renku_gateway: "${{ needs.check-deploy.outputs.renku-gateway }}"
+          renku_graph: "${{ needs.check-deploy.outputs.renku-graph }}"
+          renku_notebooks: "${{ needs.check-deploy.outputs.renku-notebooks }}"
+          renku_ui: "${{ needs.check-deploy.outputs.renku-ui }}"
+          renku_data_services: "${{ needs.check-deploy.outputs.renku-data-services }}"
+          amalthea: "${{ needs.check-deploy.outputs.amalthea }}"
+          amalthea_sessions: "${{ needs.check-deploy.outputs.amalthea-sessions }}"
+          extra_values: "${{ needs.check-deploy.outputs.extra-values }}"
+
   legacy-scala-tests:
     name: Legacy Scala tests
     runs-on: ubuntu-24.04
-    needs: [check-deploy, deploy-pr]
-    if: github.event.action != 'closed' && needs.check-deploy.outputs.pr-contains-string == 'true' && needs.check-deploy.outputs.test-legacy-enabled == 'true'
+    needs: [check-deploy, deploy-pr, deploy-pr-azure]
+    if: github.event.action != 'closed' && (needs.check-deploy.outputs.switch-deploy == 'true' || needs.check-deploy.outputs.azure-deploy == 'true') && needs.check-deploy.outputs.test-legacy-enabled == 'true'
+    permissions:
+      id-token: write
     steps:
-      - uses: SwissDataScienceCenter/renku-actions/test-renku@v1.17.0
+  
+      - name: Azure login
+        if: needs.check-deploy.outputs.azure-deploy == 'true'
+        uses: azure/login@v2
         with:
-          kubeconfig: ${{ secrets.RENKUBOT_DEV_KUBECONFIG }}
+          client-id: ${{ secrets.CI_RENKU_AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.CI_RENKU_AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.CI_RENKU_AZURE_SUBSCRIPTION_ID }}
+
+      - uses: azure/aks-set-context@v4
+        if: needs.check-deploy.outputs.azure-deploy == 'true'
+        with:
+          resource-group: "renku-dev"
+          cluster-name: "aks-switzerlandnorth-renku-dev"
+
+      - name: Get AKS credentials
+        if: needs.check-deploy.outputs.azure-deploy == 'true'
+        run: |
+          az aks get-credentials --resource-group renku-dev --name aks-switzerlandnorth-renku-dev --file "${{ github.workspace }}/renkubot-kube.config"
+          chmod 600 "${{ github.workspace }}/renkubot-kube.config"
+
+          echo "RENKUBOT_KUBECONFIG<<EOF" >> $GITHUB_ENV
+          cat "${{ github.workspace }}/renkubot-kube.config" >> $GITHUB_ENV
+          echo "EOF" >> $GITHUB_ENV
+
+      - uses: SwissDataScienceCenter/renku-actions/test-renku@v1.18.2
+        with:
+          kubeconfig: ${{ needs.check-deploy.outputs.azure-deploy == 'true' && env.RENKUBOT_KUBECONFIG || secrets.RENKUBOT_DEV_KUBECONFIG }}
           renku-release: ci-renku-${{ github.event.number }}
           gitlab-token: ${{ secrets.DEV_GITLAB_TOKEN }}
           s3-results-access-key: ${{ secrets.ACCEPTANCE_TESTS_BUCKET_ACCESS_KEY }}
@@ -146,8 +258,7 @@ jobs:
   legacy-cypress-acceptance-tests:
     name: Legacy Cypress tests
     runs-on: ubuntu-24.04
-    needs: [check-deploy, deploy-pr]
-    if: github.event.action != 'closed' && needs.check-deploy.outputs.pr-contains-string == 'true' && needs.check-deploy.outputs.test-legacy-enabled == 'true'
+    needs: [check-deploy, deploy-pr, deploy-pr-azure]
     strategy:
       fail-fast: false
       matrix:
@@ -162,18 +273,19 @@ jobs:
             rstudioSession,
           ]
     steps:
-      - uses: SwissDataScienceCenter/renku-actions/test-renku-cypress@v1.17.0
-        if: github.event.action != 'closed' && needs.check-deploy.outputs.pr-contains-string == 'true' && needs.check-deploy.outputs.test-enabled == 'true'
+      - uses: SwissDataScienceCenter/renku-actions/test-renku-cypress@v1.18.2
+        if: github.event.action != 'closed' && (needs.check-deploy.outputs.switch-deploy == 'true' || needs.check-deploy.outputs.azure-deploy == 'true') && needs.check-deploy.outputs.test-legacy-enabled == 'true'
         with:
           e2e-target: ${{ matrix.tests }}
           renku-reference: ${{ github.ref }}
           renku-release: ci-renku-${{ github.event.number }}
           test-user-password: ${{ secrets.RENKU_BOT_DEV_PASSWORD }}
+          kubernetes-cluster-fqdn: ${{ needs.check-deploy.outputs.azure-deploy == 'true' && 'dev.azure.renku.ch' || 'dev.renku.ch' }}
 
   cypress-acceptance-tests:
     name: Cypress tests
     runs-on: ubuntu-24.04
-    needs: [check-deploy, deploy-pr]
+    needs: [check-deploy, deploy-pr, deploy-pr-azure]
     strategy:
       fail-fast: false
       matrix:
@@ -188,11 +300,12 @@ jobs:
             sessionBasics,
           ]
     steps:
-      - uses: SwissDataScienceCenter/renku-actions/test-renku-cypress@v1.17.0
-        if: github.event.action != 'closed' && needs.check-deploy.outputs.pr-contains-string == 'true' && needs.check-deploy.outputs.test-enabled == 'true'
+      - uses: SwissDataScienceCenter/renku-actions/test-renku-cypress@v1.18.2
+        if: github.event.action != 'closed' && (needs.check-deploy.outputs.switch-deploy == 'true' || needs.check-deploy.outputs.azure-deploy == 'true') && needs.check-deploy.outputs.test-enabled == 'true'
         with:
           e2e-folder: cypress/e2e/v2/
           e2e-target: ${{ matrix.tests }}
+          kubernetes-cluster-fqdn: ${{ needs.check-deploy.outputs.azure-deploy == 'true' && 'dev.azure.renku.ch' || 'dev.renku.ch' }}
           renku-reference: ${{ github.ref }}
           renku-release: ci-renku-${{ github.event.number }}
           test-user-password: ${{ secrets.RENKU_BOT_DEV_PASSWORD }}
@@ -204,7 +317,7 @@ jobs:
     steps:
       - name: Check deploy string
         if: ${{
-          needs.check-deploy.outputs.pr-contains-string == 'true'
+          needs.check-deploy.outputs.switch-deploy == 'true'
           && startsWith(github.base_ref, 'release-')
           && (
           needs.check-deploy.outputs.renku-core != null
@@ -223,17 +336,18 @@ jobs:
     name: Cleanup
     runs-on: ubuntu-24.04
     needs: [check-deploy]
-    if: github.event.action == 'closed' && needs.check-deploy.outputs.pr-contains-string == 'true'
+    if: github.event.action == 'closed' && (needs.check-deploy.outputs.switch-deploy == 'true' || needs.check-deploy.outputs.azure-deploy == 'true')
     permissions:
       pull-requests: write
+      id-token: write
     steps:
-      - name: Find deplyoment url
+      - name: Find deployment url
         uses: peter-evans/find-comment@v3
         id: deploymentUrlMessage
         with:
           issue-number: ${{ github.event.pull_request.number }}
           comment-author: "RenkuBot"
-          body-includes: "Tearing down the temporary RenkuLab deplyoment"
+          body-includes: "Tearing down the temporary RenkuLab deployment"
       - name: Create comment deployment url
         if: steps.deploymentUrlMessage.outputs.comment-id == 0
         uses: peter-evans/create-or-update-comment@v4
@@ -241,12 +355,40 @@ jobs:
           token: ${{ secrets.RENKUBOT_GITHUB_TOKEN }}
           issue-number: ${{ github.event.pull_request.number }}
           body: |
-            Tearing down the temporary RenkuLab deplyoment for this PR.
+            Tearing down the temporary RenkuLab deployment for this PR.
+
+      # Azure-specific setup
+      - name: Azure login
+        if: needs.check-deploy.outputs.azure-deploy == 'true'
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.CI_RENKU_AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.CI_RENKU_AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.CI_RENKU_AZURE_SUBSCRIPTION_ID }}
+
+      - uses: azure/aks-set-context@v4
+        if: needs.check-deploy.outputs.azure-deploy == 'true'
+        with:
+          resource-group: "renku-dev"
+          cluster-name: "aks-switzerlandnorth-renku-dev"
+
+      - name: Get AKS credentials
+        if: needs.check-deploy.outputs.azure-deploy == 'true'
+        run: |
+          az aks get-credentials --resource-group renku-dev --name aks-switzerlandnorth-renku-dev --file "${{ github.workspace }}/renkubot-kube.config"
+          chmod 600 "${{ github.workspace }}/renkubot-kube.config"
+
+          # Create a multiline env var with the content for RENKUBOT_KUBECONFIG
+          echo "RENKUBOT_KUBECONFIG<<EOF" >> $GITHUB_ENV
+          cat "${{ github.workspace }}/renkubot-kube.config" >> $GITHUB_ENV
+          echo "EOF" >> $GITHUB_ENV
+
+      # Cleanup for both standard and Azure deployments
       - name: renku teardown
-        uses: SwissDataScienceCenter/renku-actions/cleanup-renku-ci-deployments@v1.17.0
+        uses: SwissDataScienceCenter/renku-actions/cleanup-renku-ci-deployments@v1.18.2
         env:
           HELM_RELEASE_REGEX: "^ci-renku-${{ github.event.number }}$"
           GITLAB_TOKEN: ${{ secrets.DEV_GITLAB_TOKEN }}
-          RENKUBOT_KUBECONFIG: ${{ secrets.RENKUBOT_DEV_KUBECONFIG }}
+          RENKUBOT_KUBECONFIG: ${{ needs.check-deploy.outputs.azure-deploy == 'true' && env.RENKUBOT_KUBECONFIG || secrets.RENKUBOT_DEV_KUBECONFIG }}
           MAX_AGE_SECONDS: 0
           DELETE_NAMESPACE: "true"

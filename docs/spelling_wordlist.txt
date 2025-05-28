@@ -34,6 +34,7 @@ Calamus
 cgroup
 Champak
 changelog
+changelogs
 chartpress
 Chartpress
 checksum
@@ -97,6 +98,7 @@ filesystem
 FilterFlights
 findable
 Fortran
+frontend
 Frontend
 gapped
 gevent

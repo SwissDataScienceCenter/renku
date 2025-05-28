@@ -46,7 +46,7 @@ function projectSubpageUrl(identifier: ProjectIdentifier, subpage: string) {
 }
 
 function searchForProject(props: ProjectIdentifier, shouldExist = true) {
-  cy.visit("/search");
+  cy.visit("/v1/search");
   cy.get("input[placeholder='Search...']").should("exist").scrollIntoView();
   cy.get("input[placeholder='Search...']")
     .should("be.visible")
@@ -58,7 +58,8 @@ function searchForProject(props: ProjectIdentifier, shouldExist = true) {
       .should("exist")
       .scrollIntoView()
       .should("be.visible");
-  } else {
+  }
+  else {
     cy.get(props.name).should("not.exist");
   }
 }
@@ -77,7 +78,7 @@ function createProjectIfMissing(newProjectProps: NewProjectProps) {
     url: `/ui-server/api/projects/${slug}`,
   }).then((response) => {
     if (response.status != 200) {
-      cy.visit("/projects/new");
+      cy.visit("/v1/projects/new");
       cy.getDataCy("field-group-title")
         .should("be.visible")
         .clear()
@@ -101,7 +102,8 @@ function createProjectIfMissing(newProjectProps: NewProjectProps) {
       cy.get("[data-cy=create-project-button]", { timeout: TIMEOUTS.vlong })
         .should("be.enabled")
         .click();
-    } else {
+    }
+    else {
       cy.visit(`projects/${namespace}/${newProjectProps.name}`);
     }
     cy.url({ timeout: TIMEOUTS.vlong }).should(
@@ -269,10 +271,10 @@ function waitMetadataIndexing(justTriggered = true, goToSettings = true) {
     cy.wait(TIMEOUTS.short); // eslint-disable-line cypress/no-unnecessary-waiting
   }
   if (goToSettings) cy.getProjectSection("Settings").click();
-  cy.getDataCy("kg-status-section-open").should("exist").click();
+  cy.getDataCy("kg-status-section-open").click();
   cy.getDataCy("project-settings-knowledge-graph")
     .contains("Everything indexed", { timeout: TIMEOUTS.vlong })
-    .should("exist");
+    .should("be.visible");
 }
 
 export default function registerProjectCommands() {

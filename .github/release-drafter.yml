@@ -1,0 +1,8 @@
+template: |
+  # $RESOLVED_VERSION
+  Please create a discussion page in Notion and add a link to it here.
+
+  The changelog contents should be added to this Notion page.
+
+  When the release is ready copy the changelog contents from the Notion page into this page,
+  and finally publish the release.
