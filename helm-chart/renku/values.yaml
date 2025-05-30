@@ -1631,6 +1631,11 @@ secretsStorage:
   nodeSelector: {}
   tolerations: []
   affinity: {}
+
+# This is used to indicate whether services needed exclusively for Renku V1 are deployed or not.
+# The support for this feature is experimental and it should not be set to false in production at all.
+enableV1Services: true
+
 podSecurityContext: {}
 securityContext:
   runAsUser: 1000
