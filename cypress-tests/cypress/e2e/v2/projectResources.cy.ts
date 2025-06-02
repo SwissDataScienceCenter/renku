@@ -100,6 +100,7 @@ describe("Project resources - work with code, data, environments", () => {
     cy.getDataCy("add-data-connector-continue-button").click();
 
     cy.getDataCy("data-connector-name-input").should("be.empty").type(name);
+    cy.getDataCy("data-connector-slug-toggle").click();
     cy.getDataCy("data-connector-slug-input").should("have.value", name);
     cy.getDataCy("data-connector-mount-input").should("have.value", name);
     cy.getDataCy("data-connector-edit-update-button").click();
@@ -120,13 +121,12 @@ describe("Project resources - work with code, data, environments", () => {
       .contains(name)
       .click();
     cy.getDataCy("data-connector-edit").click();
-    cy.getDataCy("test-data-connector-button").click();
-    cy.getDataCy("add-data-connector-continue-button").click();
 
     cy.getDataCy("data-connector-name-input")
       .should("have.value", name)
       .clear()
       .type(newName);
+    cy.getDataCy("data-connector-slug-toggle").click();
     cy.getDataCy("data-connector-slug-input").should("have.value", name);
     cy.getDataCy("data-connector-mount-input").should("have.value", name);
     cy.getDataCy("data-connector-edit-update-button").click();
