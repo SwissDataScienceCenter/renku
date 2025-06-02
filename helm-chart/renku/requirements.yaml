@@ -18,10 +18,10 @@ dependencies:
     condition: enableV1Services
   - name: amalthea
     repository: "https://swissdatasciencecenter.github.io/helm-charts/"
-    version: "0.18.3"
+    version: "0.19.0"
   - name: amalthea-sessions
     repository: "https://swissdatasciencecenter.github.io/helm-charts/"
-    version: "0.18.3"
+    version: "0.19.0"
   - name: dlf-chart
     repository: "https://swissdatasciencecenter.github.io/datashim/"
     version: "0.3.9-renku-2"
