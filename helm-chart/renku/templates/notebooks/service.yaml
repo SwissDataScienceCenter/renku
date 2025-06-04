@@ -1,3 +1,4 @@
+{{- if .Values.enableV1Services }}
 apiVersion: v1
 kind: Service
 metadata:
@@ -37,3 +38,4 @@ spec:
   selector:
     app: {{ template "renku.notebooks.name" . }}-k8s-watcher
     release: {{ .Release.Name }}
+{{- end }}

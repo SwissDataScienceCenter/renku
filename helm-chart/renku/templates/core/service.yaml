@@ -1,3 +1,4 @@
+{{- if .Values.enableV1Services }}
 {{- range $version := .Values.global.core.versions }}
 ---
 apiVersion: v1
@@ -46,3 +47,4 @@ spec:
 
 {{ end }}
 {{ end }}
+{{- end }}

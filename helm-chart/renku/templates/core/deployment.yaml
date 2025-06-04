@@ -1,3 +1,4 @@
+{{- if .Values.enableV1Services }}
 {{- range $version := .Values.global.core.versions }}
 ---
 apiVersion: apps/v1
@@ -296,3 +297,4 @@ spec:
         {{- toYaml . | nindent 8 }}
     {{- end }}
 {{ end }}
+{{- end }}
