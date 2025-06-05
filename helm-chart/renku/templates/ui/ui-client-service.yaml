@@ -11,7 +11,7 @@ spec:
   type: {{ .Values.ui.client.service.type }}
   ports:
     - port: {{ .Values.ui.client.service.port }}
-      targetPort: 8080
+      targetPort: 3000
       protocol: TCP
       name: http
   selector:
@@ -32,7 +32,7 @@ spec:
   type: {{ .Values.ui.client.service.type }}
   ports:
     - port: {{ .Values.ui.client.service.port }}
-      targetPort: 8080
+      targetPort: 3000
       protocol: TCP
       name: http
   selector:
