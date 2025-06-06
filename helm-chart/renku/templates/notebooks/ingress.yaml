@@ -1,3 +1,4 @@
+{{- if .Values.enableV1Services }}
 {{- if .Values.notebooks.ingress.enabled -}}
 {{- $fullName := include "renku.notebooks.fullname" . -}}
 {{- $servicePort := .Values.notebooks.service.port -}}
@@ -39,4 +40,5 @@ spec:
                 port: 
                   number: {{ $.Values.notebooks.service.port }}
   {{- end }}
+{{- end }}
 {{- end }}
