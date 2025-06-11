@@ -318,7 +318,7 @@ keycloakx:
     enabled: false
   extraInitContainers: |
     - name: theme-provider
-      image: renku/keycloak-theme:4.1.6
+      image: renku/keycloak-theme:0483516
       imagePullPolicy: IfNotPresent
       command:
         - sh
