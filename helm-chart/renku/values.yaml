@@ -675,6 +675,10 @@ ui:
       # overrides:
       #   9: "/"
       #   10: "/"
+    # Configuration to enable/disable support for Renku legacy pages
+    legacySupport:
+      # Set this to "false" to disable support for Renku legacy
+      enabled: true
     # Configuration to display the "email us" message on the session class selector.
     sessionClassEmailUs:
       # Set this to "true" to enable the "Need more compute resources? Email us!" message

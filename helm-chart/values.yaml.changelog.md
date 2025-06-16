@@ -11,6 +11,7 @@ Please follow this convention when adding a new row
 
 This will result in 2 fewer deployments in your cluster. If the values are left in the values file they will be ignored. Therefore this does not require immediate action by administrators, it is just good practice to remove deprecated sections that you may have in your values file.
 
+* NEW ``ui.client.legacySupport`` to control whether Renku Legacy is supported in the UI.
 * DELETE `ui.client.podSecurityContext`, replaced by `podSecurityContext`
 * DELETE `ui.client.securityContext`, replaced by `securityContext`
 * DELETE `ui.server.podSecurityContext`, replaced by `podSecurityContext`
