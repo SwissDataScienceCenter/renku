@@ -89,7 +89,7 @@ jobs:
     if: github.event.action != 'closed'
     environment:
       name: ci-renku-${{ github.event.number }}
-      url: https://ci-renku-${{ github.event.number }}.dev.renku.ch
+      url: https://staging.dev.renku.ch
     steps:
       - uses: actions/checkout@v4.2.2
       - name: Find deployment url
@@ -108,7 +108,7 @@ jobs:
           token: ${{ secrets.RENKUBOT_GITHUB_TOKEN }}
           issue-number: ${{ github.event.pull_request.number }}
           body: |
-            You can access the deployment of this PR at https://ci-renku-${{ github.event.number }}.dev.renku.ch
+            You can access the deployment of this PR at https://staging.dev.renku.ch
       - name: renku build and deploy
         if: needs.check-deploy.outputs.switch-deploy == 'true'
         uses: SwissDataScienceCenter/renku-actions/deploy-renku@v1.18.2
@@ -117,7 +117,7 @@ jobs:
           DOCKER_USERNAME: ${{ secrets.RENKU_DOCKER_USERNAME }}
           GITLAB_TOKEN: ${{ secrets.DEV_GITLAB_TOKEN }}
           KUBECONFIG: "${{ github.workspace }}/renkubot-kube.config"
-          RENKU_RELEASE: ci-renku-${{ github.event.number }}
+          RENKU_RELEASE: staging
           RENKU_VALUES_FILE: "${{ github.workspace }}/values.yaml"
           RENKU_VALUES: minimal-deployment/minimal-deployment-values.yaml
           RENKUBOT_KUBECONFIG: ${{ secrets.RENKUBOT_DEV_KUBECONFIG }}
