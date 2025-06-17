@@ -5,9 +5,14 @@ For changes that require manual steps other than changing values, please check o
 Please follow this convention when adding a new row
 * `<type: NEW|EDIT|DELETE> - *<resource name>*: <details>`
 
+## Upgrading to Renku 0.71.0
+
++* NEW `enableV1Services` used to indicate whether services needed exclusively for Renku V1 are deployed or not. The support for this feature is experimental and it should not yet be used in production at all.
+
 ## Upgrading to Renku 0.70.0
 
 * DELETE `dataService.backgroundJobs` backgroundJobs have been rolled into dataTasks deployment.
+
 ## Upgrading to Renku 0.68.0
 
 Renku now includes anonymized product metrics, making it easier to know what features are used by users to help with product development and statistics.
