@@ -318,7 +318,7 @@ keycloakx:
     enabled: false
   extraInitContainers: |
     - name: theme-provider
-      image: renku/keycloak-theme:4.1.6
+      image: renku/keycloak-theme:4.1.7
       imagePullPolicy: IfNotPresent
       command:
         - sh
@@ -536,7 +536,7 @@ ui:
     replicaCount: 1
     image:
       repository: renku/renku-ui
-      tag: "3.59.1"
+      tag: "4.1.0"
       pullPolicy: IfNotPresent
       ## Optionally specify an array of imagePullSecrets.
       ## Secrets must be manually created in the namespace.
@@ -566,7 +566,7 @@ ui:
     affinity: {}
     podSecurityContext: {}
     securityContext:
-      runAsUser: 101
+      runAsUser: 1000
       runAsNonRoot: true
       allowPrivilegeEscalation: false
     # This defines the message displayed on the home page of logged in users.
@@ -725,7 +725,7 @@ ui:
     keepCookies: []
     image:
       repository: renku/renku-ui-server
-      tag: "3.59.1"
+      tag: "4.1.0"
       pullPolicy: IfNotPresent
     imagePullSecrets: []
     nameOverride: ""
