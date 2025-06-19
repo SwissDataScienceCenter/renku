@@ -101,6 +101,8 @@ spec:
             name: {{ template "renku.fullname" $ }}-gateway
             port:
               number: {{ $uiserverServicePort }}
+
+      {{- if .Values.enableV1Services }}
       - path: /webhooks/events
         pathType: Prefix
         backend:
@@ -115,6 +117,7 @@ spec:
             name: {{ template "renku.fullname" $ }}-gateway
             port:
               number: 80
+      {{- end }}
       {{- if $swaggerEnabled }}
       - path: /swagger
         pathType: Prefix
