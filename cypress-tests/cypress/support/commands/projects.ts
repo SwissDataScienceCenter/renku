@@ -69,6 +69,47 @@ interface NewProjectProps extends ProjectIdentifier {
   visibility?: "public" | "private" | "internal";
 }
 
+interface NewProjectTemplate {
+  namespace: string;
+  slug: string;
+  project_id: string;
+  name: string;
+}
+
+function createProjectV1API(newProjectProps: NewProjectProps) {
+  const newProjectBody = {
+    identifier: newProjectProps.templateName,
+    project_name: newProjectProps.name,
+    project_namespace: newProjectProps.namespace,
+    project_repository: "https://gitlab.dev.renku.ch",
+    ref: "0.9.0",
+    url: "https://github.com/SwissDataScienceCenter/renku-project-template"
+  }
+  cy.request({
+    method: "POST",
+    url: "api/renku/templates.create_project",
+    body: newProjectBody,
+    headers: {
+      "Content-Type": "application/json",
+    },
+  }).then((responseProject: Cypress.Response<NewProjectTemplate>) => {
+    const project = responseProject.body;
+    const updateProjectBody = {
+      id: project.namespace + "/" + project.slug,
+      name: project.name,
+      visibility: newProjectProps.visibility ?? "private",
+    }
+    return cy.request({
+      method: "PUT",
+      url: "api/projects/" + project.namespace + "/" + project.slug,
+      body: updateProjectBody,
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+  });
+}
+
 function createProjectIfMissing(newProjectProps: NewProjectProps) {
   const namespace = newProjectProps.namespace ?? Cypress.env("TEST_USERNAME");
   const slug = encodeURIComponent(`${namespace}/${newProjectProps.name}`);
@@ -76,36 +117,11 @@ function createProjectIfMissing(newProjectProps: NewProjectProps) {
     failOnStatusCode: false,
     method: "GET",
     url: `/ui-server/api/projects/${slug}`,
-  }).then((response) => {
+  }).then(async (response) => {
     if (response.status != 200) {
-      cy.visit("/v1/projects/new");
-      cy.getDataCy("field-group-title")
-        .should("be.visible")
-        .clear()
-        .type(newProjectProps.name);
-      if (newProjectProps.namespace) {
-        cy.get("#namespace-input")
-          .should("be.visible")
-          .clear()
-          .type(newProjectProps.namespace);
-      }
-
-      if (newProjectProps.templateName)
-        cy.contains(newProjectProps.templateName).should("be.visible").click();
-
-      if (newProjectProps.visibility) {
-        cy.getDataCy(`visibility-${newProjectProps.visibility}`)
-          .should("be.visible")
-          .click();
-      }
-      // The button may take some time before it is clickable
-      cy.get("[data-cy=create-project-button]", { timeout: TIMEOUTS.vlong })
-        .should("be.enabled")
-        .click();
+      await createProjectV1API(newProjectProps);
     }
-    else {
-      cy.visit(`projects/${namespace}/${newProjectProps.name}`);
-    }
+    cy.visit(`projects/${ namespace }/${ newProjectProps.name }`);
     cy.url({ timeout: TIMEOUTS.vlong }).should(
       "contain",
       newProjectProps.name.toLowerCase(),
