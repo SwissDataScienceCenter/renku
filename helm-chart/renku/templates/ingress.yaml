@@ -2,19 +2,21 @@
 {{- $keycloakEnabled := .Values.keycloakx.enabled -}}
 {{- $keycloakFullname := include "keycloak.fullname" . -}}
 {{- $keycloakServicePort := .Values.keycloakx.ingress.servicePort -}}
-{{- $gitlabFullname := include "gitlab.fullname" . -}}
-{{- $gitlabServicePort := 80 -}}
 {{- $uiFullname := include "ui.fullname" . -}}
 {{- $uiServicePort := .Values.ui.client.service.port -}}
 {{- $uiserverFullname := include "uiserver.fullname" . -}}
 {{- $uiserverServicePort := .Values.ui.server.service.port -}}
-{{- $webhookServiceFullname := include "renku.graph.webhookService.fullname" . -}}
-{{- $knowledgeGraphFullname := include "renku.graph.knowledgeGraph.fullname" . -}}
 {{- $searchApiFullname := include "renku.search.searchApi.fullname" . -}}
 {{- $renkuFullname := include "renku.fullname" . -}}
+{{- $swaggerEnabled := .Values.swagger.enabled -}}
+{{- if .Values.enableV1Services }}
+{{- $gitlabFullname := include "gitlab.fullname" . -}}
+{{- $gitlabServicePort := 80 -}}
+{{- $webhookServiceFullname := include "renku.graph.webhookService.fullname" . -}}
+{{- $knowledgeGraphFullname := include "renku.graph.knowledgeGraph.fullname" . -}}
 {{- $jenaFullname := include "renku-jena.fullname" . -}}
 {{- $jenaServicePort := .Values.jena.service.port -}}
-{{- $swaggerEnabled := .Values.swagger.enabled -}}
+{{- end }}
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
