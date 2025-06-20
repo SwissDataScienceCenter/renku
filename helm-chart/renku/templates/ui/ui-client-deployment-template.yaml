@@ -116,7 +116,7 @@ spec:
                   key: chart_version
             - name: HOMEPAGE
               value: {{ toJson .Values.ui.client.homepage | quote }}
-            - name: CORE_API_VERSION_CONFIG			
+            - name: CORE_API_VERSION_CONFIG
               value: {{ toJson .Values.ui.client.coreApiVersionConfig | quote }}
             - name: KEYCLOAK_REALM
               value: {{ include "renku.keycloak.realm" . | quote }}
@@ -126,6 +126,8 @@ spec:
               value: {{ toJson .Values.ui.client.sessionClassEmailUs | quote }}
             - name: IMAGE_BUILDERS_ENABLED
               value: {{ .Values.dataService.imageBuilders.enabled | quote }}
+            - name: LEGACY_SUPPORT
+              value: {{ printf "{\"enabled\": %t }" .Values.enableV1Services | quote }}
           livenessProbe:
             httpGet:
               path: /
