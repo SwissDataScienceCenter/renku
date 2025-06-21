@@ -70,49 +70,81 @@ interface NewProjectProps extends ProjectIdentifier {
 }
 
 interface NewProjectTemplate {
-  namespace: string;
-  slug: string;
-  project_id: string;
-  name: string;
+  result: {
+    namespace: string;
+    slug: string;
+    project_id: string;
+    name: string;
+  }
 }
 
+interface Templates {
+  templates: {
+    folder: string;
+    name: string;
+  }[];
+}
 function createProjectV1API(newProjectProps: NewProjectProps) {
-  const newProjectBody = {
-    identifier: newProjectProps.templateName,
-    project_name: newProjectProps.name,
-    project_namespace: newProjectProps.namespace,
-    project_repository: "https://gitlab.dev.renku.ch",
-    ref: "0.9.0",
-    url: "https://github.com/SwissDataScienceCenter/renku-project-template"
-  }
-  cy.request({
-    method: "POST",
-    url: "api/renku/templates.create_project",
-    body: newProjectBody,
-    headers: {
-      "Content-Type": "application/json",
-    },
-  }).then((responseProject: Cypress.Response<NewProjectTemplate>) => {
-    const project = responseProject.body;
-    const updateProjectBody = {
-      id: project.namespace + "/" + project.slug,
-      name: project.name,
-      visibility: newProjectProps.visibility ?? "private",
+  const resTemplates = getTemplates();
+  resTemplates.then((response) => {
+    console.log("Templates fetched from manifest:", response.result);
+    if (response.result.templates.length === 0) {
+      throw new Error("No templates found in the manifest");
     }
-    return cy.request({
-      method: "PUT",
-      url: "api/projects/" + project.namespace + "/" + project.slug,
-      body: updateProjectBody,
+    const newProjectBody = {
+      identifier: response.result.templates[0].folder ?? "python",
+      project_name: newProjectProps.name,
+      project_namespace: newProjectProps.namespace,
+      project_repository: "https://gitlab.dev.renku.ch",
+      ref: "0.9.0",
+      url: "https://github.com/SwissDataScienceCenter/renku-project-template",
+    };
+    cy.request({
+      method: "POST",
+      url: "api/renku/templates.create_project",
+      body: newProjectBody,
       headers: {
         "Content-Type": "application/json",
       },
+    }).then((responseProject: Cypress.Response<NewProjectTemplate>) => {
+      const project = responseProject.body.result;
+      const identifier = encodeURIComponent(project.namespace + "/" + project.slug);
+      const updateProjectBody = {
+        id: identifier,
+        visibility: newProjectProps.visibility ?? "private",
+      };
+      return cy.request({
+        method: "PUT",
+        url: "api/projects/" + identifier,
+        body: updateProjectBody,
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
     });
   });
 }
 
+function getTemplates() {
+  return cy.request({
+    method: "GET",
+    url: "api/renku/templates.read_manifest?url=https%3A%2F%2Fgithub.com%2FSwissDataScienceCenter%2Frenku-project-template",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  }).then((response) => {
+    if (response.status !== 200) {
+      throw new Error(`Failed to fetch templates: ${response.statusText}`);
+    }
+    return response.body;
+  });
+}
+
+
 function createProjectIfMissing(newProjectProps: NewProjectProps) {
   const namespace = newProjectProps.namespace ?? Cypress.env("TEST_USERNAME");
   const slug = encodeURIComponent(`${namespace}/${newProjectProps.name}`);
+
   cy.request({
     failOnStatusCode: false,
     method: "GET",
