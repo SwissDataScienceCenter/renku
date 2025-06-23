@@ -87,7 +87,6 @@ interface Templates {
 function createProjectV1API(newProjectProps: NewProjectProps) {
   const resTemplates = getTemplates();
   resTemplates.then((response) => {
-    console.log("Templates fetched from manifest:", response.result);
     if (response.result.templates.length === 0) {
       throw new Error("No templates found in the manifest");
     }
@@ -111,7 +110,7 @@ function createProjectV1API(newProjectProps: NewProjectProps) {
       const identifier = encodeURIComponent(project.namespace + "/" + project.slug);
       const updateProjectBody = {
         id: identifier,
-        visibility: newProjectProps.visibility ?? "private",
+        visibility: newProjectProps.visibility ?? "public",
       };
       return cy.request({
         method: "PUT",
@@ -320,6 +319,13 @@ function waitMetadataIndexing(justTriggered = true, goToSettings = true) {
   }
   if (goToSettings) cy.getProjectSection("Settings").click();
   cy.getDataCy("kg-status-section-open").click();
+  // Check if the update button is present and click it
+  cy.getDataCy("kg-status-section-action-button").then(($el) => {
+    const updateButton = $el.find("#button-update-projectKnowledgeGraph");
+    if (updateButton.length) {
+      cy.wrap(updateButton).click();
+    }
+  });
   cy.getDataCy("project-settings-knowledge-graph")
     .contains("Everything indexed", { timeout: TIMEOUTS.vlong })
     .should("be.visible");
