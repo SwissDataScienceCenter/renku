@@ -318,7 +318,8 @@ keycloakx:
     enabled: false
   extraInitContainers: |
     - name: theme-provider
-      image: renku/keycloak-theme:97daa55
+      # image: renku/keycloak-theme:97daa55 # custom banner
+      image: renku/keycloak-theme:5244637
       imagePullPolicy: IfNotPresent
       command:
         - sh
