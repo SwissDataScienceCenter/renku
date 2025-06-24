@@ -74,11 +74,11 @@ jobs:
         uses: SwissDataScienceCenter/renku-actions/check-pr-description@v1.18.2
         with:
           pr_ref: ${{ github.event.number }}
-      - id: deploy-comment-azure
-        uses: SwissDataScienceCenter/renku-actions/check-pr-description@v1.18.2
-        with:
-          string: /AzureDeploy
-          pr_ref: ${{ github.event.number }}
+      # - id: deploy-comment-azure
+      #   uses: SwissDataScienceCenter/renku-actions/check-pr-description@v1.18.2
+      #   with:
+      #     string: /AzureDeploy
+      #     pr_ref: ${{ github.event.number }}
 
   deploy-pr:
     name: Deploy on SWITCH
