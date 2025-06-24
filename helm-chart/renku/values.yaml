@@ -319,7 +319,8 @@ keycloakx:
   extraInitContainers: |
     - name: theme-provider
       # image: renku/keycloak-theme:97daa55 # custom banner
-      image: renku/keycloak-theme:5244637
+      # image: renku/keycloak-theme:5244637
+      image: renku/keycloak-theme:4de0621 # newest theme (=custom banner, with original message)
       imagePullPolicy: IfNotPresent
       command:
         - sh
