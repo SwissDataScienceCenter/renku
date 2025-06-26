@@ -370,33 +370,6 @@ spec:
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
-  name: ingress-to-search-service-from-gateway
-  labels:
-    app: {{ template "renku.name" . }}
-    chart: {{ template "renku.chart" . }}
-    release: {{ .Release.Name }}
-    heritage: {{ .Release.Service }}
-spec:
-  podSelector:
-    matchLabels:
-      app: {{ template "renku.search.searchApi.name" . }}
-      release: {{ .Release.Name }}
-  policyTypes:
-    - Ingress
-  ingress:
-    - from:
-        - podSelector:
-            matchLabels:
-              app: {{ template "gateway.name" . }}
-              release: {{ .Release.Name }}
-      ports:
-        - protocol: TCP
-          port: http-search-api
-
----
-apiVersion: networking.k8s.io/v1
-kind: NetworkPolicy
-metadata:
   name: ingress-to-uiserver-from-anywhere
   labels:
     app: {{ template "renku.name" . }}
@@ -637,10 +610,6 @@ spec:
             matchLabels:
               app: renku-data-tasks
               release: {{ .Release.Name }}
-        - podSelector:
-            matchLabels:
-              app: {{ template "renku.search.searchApi.name" . }}
-              release: {{ .Release.Name }}
       ports:
         - protocol: TCP
           port: redis
@@ -673,12 +642,6 @@ spec:
             matchLabels:
               app: renku-data-tasks
               release: {{ .Release.Name }}
-        - podSelector:
-            matchLabels:
-              app: search-api
-        - podSelector:
-            matchLabels:
-              app: search-provision
       ports:
         - protocol: TCP
           port: http

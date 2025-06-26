@@ -10,7 +10,6 @@
 {{- $uiserverServicePort := .Values.ui.server.service.port -}}
 {{- $webhookServiceFullname := include "renku.graph.webhookService.fullname" . -}}
 {{- $knowledgeGraphFullname := include "renku.graph.knowledgeGraph.fullname" . -}}
-{{- $searchApiFullname := include "renku.search.searchApi.fullname" . -}}
 {{- $renkuFullname := include "renku.fullname" . -}}
 {{- $jenaFullname := include "renku-jena.fullname" . -}}
 {{- $jenaServicePort := .Values.jena.service.port -}}

@@ -36,7 +36,6 @@ function retryRequest(
 describe("Verify the infrastructure is ready", () => {
   it("Can interact with the backend components", () => {
     retryRequest("api/data/version", "Data services");
-    retryRequest("api/search/version", "Search");
     retryRequest("api/auth/login", "Gateway");
     retryRequest("config.json", "UI client");
 
