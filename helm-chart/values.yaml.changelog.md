@@ -5,6 +5,12 @@ For changes that require manual steps other than changing values, please check o
 Please follow this convention when adding a new row
 * `<type: NEW|EDIT|DELETE> - *<resource name>*: <details>`
 
+## Upgrading to Renku 2.3.0
+
+* DELETE `search`, now the search and search provisioning is part of the data services and data tasks and are not separate services.
+
+This will result in 2 fewer deployments in your cluster. If the values are left in the values file they will be ignored.
+
 ## Upgrading to Renku 0.71.0
 
 +* NEW `enableV1Services` used to indicate whether services needed exclusively for Renku V1 are deployed or not. The support for this feature is experimental and it should not yet be used in production at all.
