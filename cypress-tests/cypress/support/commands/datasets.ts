@@ -1,6 +1,7 @@
 import { v4 as uuidv4 } from "uuid";
 
 import { ProjectIdentifier } from "./projects";
+import { TIMEOUTS } from "../../../config";
 
 export type DatasetIdentifier = ProjectIdentifier & {
   datasetName: string;
@@ -29,6 +30,9 @@ function searchForDataset(name: string, shouldExist = true) {
     .scrollIntoView()
     .should("be.visible")
     .check();
+
+  // wait until search indexing is done, sometimes it takes some more seconds
+  cy.wait(TIMEOUTS.standard); // eslint-disable-line cypress/no-unnecessary-waiting
   cy.get("input[placeholder='Search...']")
     .should("be.visible")
     .type(name)
