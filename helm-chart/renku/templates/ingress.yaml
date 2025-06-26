@@ -2,17 +2,11 @@
 {{- $keycloakEnabled := .Values.keycloakx.enabled -}}
 {{- $keycloakFullname := include "keycloak.fullname" . -}}
 {{- $keycloakServicePort := .Values.keycloakx.ingress.servicePort -}}
-{{- $gitlabFullname := include "gitlab.fullname" . -}}
-{{- $gitlabServicePort := 80 -}}
 {{- $uiFullname := include "ui.fullname" . -}}
 {{- $uiServicePort := .Values.ui.client.service.port -}}
 {{- $uiserverFullname := include "uiserver.fullname" . -}}
 {{- $uiserverServicePort := .Values.ui.server.service.port -}}
-{{- $webhookServiceFullname := include "renku.graph.webhookService.fullname" . -}}
-{{- $knowledgeGraphFullname := include "renku.graph.knowledgeGraph.fullname" . -}}
 {{- $renkuFullname := include "renku.fullname" . -}}
-{{- $jenaFullname := include "renku-jena.fullname" . -}}
-{{- $jenaServicePort := .Values.jena.service.port -}}
 {{- $swaggerEnabled := .Values.swagger.enabled -}}
 ---
 apiVersion: networking.k8s.io/v1
@@ -58,28 +52,7 @@ spec:
             port:
               name: {{ $keycloakServicePort }}
       {{- end }}
-      - path: /gitlab
-        pathType: Prefix
-        backend:
-          service:
-            name: {{ template "renku.fullname" $ }}-gateway
-            port:
-              number: 80
-      - path: /repos
-        pathType: Prefix
-        backend:
-          service:
-            name: {{ template "renku.fullname" $ }}-gateway
-            port:
-              number: 80
       - path: /api
-        pathType: Prefix
-        backend:
-          service:
-            name: {{ template "renku.fullname" $ }}-gateway
-            port:
-              number: 80
-      - path: /entities
         pathType: Prefix
         backend:
           service:
@@ -100,11 +73,33 @@ spec:
             name: {{ template "renku.fullname" $ }}-gateway
             port:
               number: {{ $uiserverServicePort }}
+      {{- if $.Values.enableV1Services }}
+      - path: /gitlab
+        pathType: Prefix
+        backend:
+          service:
+            name: {{ template "renku.fullname" $ }}-gateway
+            port:
+              number: 80
+      - path: /repos
+        pathType: Prefix
+        backend:
+          service:
+            name: {{ template "renku.fullname" $ }}-gateway
+            port:
+              number: 80
+      - path: /entities
+        pathType: Prefix
+        backend:
+          service:
+            name: {{ template "renku.fullname" $ }}-gateway
+            port:
+              number: 80
       - path: /webhooks/events
         pathType: Prefix
         backend:
           service:
-            name: {{ $webhookServiceFullname }}
+            name: {{ template "renku.graph.webhookService.fullname" $ }}
             port:
               number: 80
       - path: /knowledge-graph
@@ -114,6 +109,7 @@ spec:
             name: {{ template "renku.fullname" $ }}-gateway
             port:
               number: 80
+      {{- end }}
       {{- if $swaggerEnabled }}
       - path: /swagger
         pathType: Prefix
