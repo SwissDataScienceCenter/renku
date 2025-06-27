@@ -46,6 +46,13 @@ describe("Verify the infrastructure is ready", () => {
         throw new Error("Data service endpoints not working as expected.");
     });
 
+    // Search should return a list of items
+    const searchUrl = "/api/search/query";
+    cy.request(searchUrl).then((resp) => {
+      if (resp.status >= 400 || !("items" in resp.body))
+        throw new Error("Search endpoints not working as expected.");
+    });
+
     // UI should load
     const uiUrl = `/help`;
     cy.request(uiUrl).then((resp) => {
