@@ -38,6 +38,7 @@ spec:
             matchLabels:
               kubernetes.io/metadata.name: {{ .Release.Namespace }}
         {{- end }}
+        {{- if .Values.enableV1Services }}
         - podSelector:
             matchLabels:
               app: event-log
@@ -56,6 +57,7 @@ spec:
           namespaceSelector:
             matchLabels:
               kubernetes.io/metadata.name: {{ .Release.Namespace }}
+        {{- end }}
         - podSelector:
             matchLabels:
               app: post-install-postgres
@@ -288,6 +290,7 @@ spec:
       ports:
         - protocol: TCP
           port: http
+{{- if .Values.enableV1Services }}
 ---
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
@@ -366,6 +369,7 @@ spec:
       ports:
         - protocol: TCP
           port: http-kg
+{{- end }}
 ---
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
@@ -467,6 +471,7 @@ spec:
         - protocol: TCP
           port: http
 {{- end }}
+{{- if .Values.enableV1Services }}
 ---
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
@@ -491,6 +496,7 @@ spec:
       ports:
         - protocol: TCP
           port: http-webhook-sv
+{{- end }}
 ---
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
@@ -546,6 +552,7 @@ spec:
           port: http
         - protocol: TCP
           port: grpc
+{{- if .Values.enableV1Services }}
 ---
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
@@ -571,6 +578,7 @@ spec:
       ports:
         - protocol: TCP
           port: http
+{{- end }}
 {{- if .Values.redis.install }}
 ---
 apiVersion: networking.k8s.io/v1
@@ -713,6 +721,7 @@ spec:
     - from:
         - ipBlock:
             cidr: 0.0.0.0/0
+{{- if .Values.enableV1Services }}
 ---
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
@@ -925,6 +934,7 @@ spec:
       ports:
         - protocol: TCP
           port: http
+{{- end }}
 ---
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
@@ -954,6 +964,7 @@ spec:
       ports:
         - protocol: TCP
           port: http
+{{- if .Values.enableV1Services }}
 ---
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
@@ -982,6 +993,7 @@ spec:
       ports:
         - protocol: TCP
           port: http
+{{- end }}
 ---
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
@@ -1009,6 +1021,7 @@ spec:
       ports:
         - protocol: TCP
           port: http
+{{- if .Values.enableV1Services }}
 ---
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
@@ -1053,6 +1066,7 @@ spec:
       app.kubernetes.io/name: amalthea
   policyTypes:
   - Egress
+{{- end }}
 ---
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
