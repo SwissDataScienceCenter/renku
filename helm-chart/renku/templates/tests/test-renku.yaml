@@ -1,4 +1,5 @@
 {{ if .Values.tests.enabled -}}
+{{ if .Values.enableV1Services -}}
 apiVersion: v1
 kind: Pod
 metadata:
@@ -84,4 +85,5 @@ spec:
     {{ end }}
     resources:
 {{ toYaml .Values.tests.resources | indent 6 }}
+{{- end }}
 {{- end }}
