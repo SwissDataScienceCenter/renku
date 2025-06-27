@@ -47,7 +47,7 @@ describe("Verify the infrastructure is ready", () => {
     });
 
     // Search should return a list of items
-    const searchUrl = "/api/search/query";
+    const searchUrl = "/api/data/search/query";
     cy.request(searchUrl).then((resp) => {
       if (resp.status >= 400 || !("items" in resp.body))
         throw new Error("Search endpoints not working as expected.");
