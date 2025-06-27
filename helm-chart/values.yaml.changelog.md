@@ -9,7 +9,7 @@ Please follow this convention when adding a new row
 
 * DELETE `search`, now the search and search provisioning is part of the data services and data tasks and are not separate services.
 
-This will result in 2 fewer deployments in your cluster. If the values are left in the values file they will be ignored.
+This will result in 2 fewer deployments in your cluster. If the values are left in the values file they will be ignored. Therefore this does not require immediate action by administrators, it is just good practice to remove deprecated sections that you may have in your values file.
 
 ## Upgrading to Renku 0.71.0
 
