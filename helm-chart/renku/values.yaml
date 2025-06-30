@@ -318,7 +318,7 @@ keycloakx:
     enabled: false
   extraInitContainers: |
     - name: theme-provider
-      image: renku/keycloak-theme:4.1.7
+      image: renku/keycloak-theme:4.1.8
       imagePullPolicy: IfNotPresent
       command:
         - sh
@@ -1247,44 +1247,6 @@ jena:
   additionalInitContainerScript: "find /fuseki -name tdb.lock -type f -delete && find /fuseki/configuration -name *.ttl -type f -empty -delete && echo clean-up done"
   test:
     enabled: false
-## Configuration for renku-search services
-search:
-  sentry:
-    enabled: false
-    dsn:
-    environment:
-  searchApi:
-    replicas: 1
-    image:
-      repository: renku/search-api
-      tag: "0.7.0"
-      pullPolicy: IfNotPresent
-    service:
-      type: ClusterIP
-      port: 80
-    resources:
-      limits:
-        memory: 450Mi
-      requests:
-        cpu: 50m
-        memory: 450Mi
-    jvmXmx: 256M
-  searchProvision:
-    replicas: 1
-    image:
-      repository: renku/search-provision
-      tag: "0.7.0"
-      pullPolicy: IfNotPresent
-    service:
-      type: ClusterIP
-      port: 8081
-    resources:
-      limits:
-        memory: 900Mi
-      requests:
-        cpu: 100m
-        memory: 900Mi
-    jvmXmx: 256M
 ## Configuration for renku-graph services
 graph:
   webhookService:
@@ -1515,18 +1477,18 @@ dataService:
     create: true
   image:
     repository: renku/renku-data-service
-    tag: "0.48.1"
+    tag: "0.49.0"
     pullPolicy: IfNotPresent
   k8sWatcher:
     image:
       repository: renku/data-service-k8s-watcher
-      tag: "0.48.1"
+      tag: "0.49.0"
       pullPolicy: IfNotPresent
     resources: {}
   dataTasks:
     image:
       repository: renku/data-service-data-tasks
-      tag: "0.48.1"
+      tag: "0.49.0"
       pullPolicy: IfNotPresent
     resources: {}
   service:
@@ -1612,7 +1574,7 @@ authz:
 secretsStorage:
   image:
     repository: renku/secrets-storage
-    tag: "0.48.1"
+    tag: "0.49.0"
     pullPolicy: IfNotPresent
   service:
     type: ClusterIP

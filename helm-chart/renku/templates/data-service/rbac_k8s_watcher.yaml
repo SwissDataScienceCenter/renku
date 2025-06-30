@@ -9,6 +9,7 @@ metadata:
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
 rules:
+  {{- if .Values.enableV1Services }}
   - apiGroups:
       - {{ .Values.amalthea.crdApiGroup }}
     resources:
@@ -21,6 +22,7 @@ rules:
       - list
       - get
       - watch
+  {{- end }}
   - apiGroups:
       - amalthea.dev
     resources:
