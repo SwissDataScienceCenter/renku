@@ -7,6 +7,8 @@ metadata:
   annotations:
     "helm.sh/hook": test
 spec:
+  securityContext:
+    {{- toYaml .Values.podSecurityContext | nindent 4 }}
   volumes:
   - name: dshm
     emptyDir:
@@ -15,6 +17,8 @@ spec:
   containers:
   - name: sbt
     image: {{ .Values.tests.image.repository }}:{{ .Values.tests.image.tag }}
+    securityContext:
+      {{- toYaml .Values.securityContext | nindent 6 }}
     env:
       - name: RENKU_TEST_URL
         value: '{{ template "renku.http" . }}://{{ .Values.global.renku.domain }}'

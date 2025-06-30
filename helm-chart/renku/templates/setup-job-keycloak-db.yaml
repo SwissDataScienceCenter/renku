@@ -19,6 +19,8 @@ spec:
         chart: {{ template "renku.chart" . }}
     spec:
       restartPolicy: Never
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
       containers:
         - name: initialize-postgres-keycloak
           image: "{{ .Values.initDb.image.repository }}:{{ .Values.initDb.image.tag }}"
