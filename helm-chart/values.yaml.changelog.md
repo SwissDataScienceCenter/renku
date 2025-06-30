@@ -11,6 +11,8 @@ Please follow this convention when adding a new row
 
 This will result in 2 fewer deployments in your cluster. If the values are left in the values file they will be ignored. Therefore this does not require immediate action by administrators, it is just good practice to remove deprecated sections that you may have in your values file.
 
+* Security contexts changes.
+
 ## Upgrading to Renku 0.71.0
 
 +* NEW `enableV1Services` used to indicate whether services needed exclusively for Renku V1 are deployed or not. The support for this feature is experimental and it should not yet be used in production at all.
