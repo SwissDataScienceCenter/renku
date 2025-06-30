@@ -67,6 +67,10 @@ spec:
               value: {{ .Values.ui.client.privacy.page.enabled | quote }}
             - name: TERMS_CONTENT
               value: {{ .Values.ui.client.privacy.page.termsContent | default "" | quote }}
+            - name: PRIVACY_CONTENT
+              value: {{ .Values.ui.client.privacy.page.privacyPolicyContent | default "" | quote }}
+            - name: PRIVACY_BANNER_ENABLED
+              value: {{ .Values.ui.client.privacy.banner.enabled | quote }}
             - name: PRIVACY_BANNER_CONTENT
               value: {{ .Values.ui.client.privacy.banner.content | default "" | b64enc | quote }}
             - name: PRIVACY_BANNER_LAYOUT

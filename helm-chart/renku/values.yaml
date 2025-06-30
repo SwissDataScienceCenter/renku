@@ -618,7 +618,6 @@ ui:
     privacy:
       # If you want to enable the Privacy Policy and Terms of Service pages, you shoud add your custom content
       # in privacyPolicyContent and termsContent. Markdown is supported.
-      # As a reference, you can use the "ui-client-configmap" configMap content in the "sample" sections.
       page:
         enabled: false
         #privacyPolicyContent: ""
