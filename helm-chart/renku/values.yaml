@@ -536,7 +536,7 @@ ui:
     replicaCount: 1
     image:
       repository: renku/renku-ui
-      tag: "4.1.0"
+      tag: "4.2.0"
       pullPolicy: IfNotPresent
       ## Optionally specify an array of imagePullSecrets.
       ## Secrets must be manually created in the namespace.
@@ -618,7 +618,6 @@ ui:
     privacy:
       # If you want to enable the Privacy Policy and Terms of Service pages, you shoud add your custom content
       # in privacyPolicyContent and termsContent. Markdown is supported.
-      # As a reference, you can use the "ui-client-configmap" configMap content in the "sample" sections.
       page:
         enabled: false
         #privacyPolicyContent: ""
@@ -725,7 +724,7 @@ ui:
     keepCookies: []
     image:
       repository: renku/renku-ui-server
-      tag: "4.1.0"
+      tag: "4.2.0"
       pullPolicy: IfNotPresent
     imagePullSecrets: []
     nameOverride: ""
