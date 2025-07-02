@@ -23,10 +23,7 @@ spec:
           image: "{{ .Values.initDb.image.repository }}:{{ .Values.initDb.image.tag }}"
           args: [ "renku_db_init.py" ]
           securityContext:
-            runAsUser: 1000
-            runAsGroup: 1000
-            allowPrivilegeEscalation: false
-            runAsNonRoot: true
+            {{- toYaml .Values.securityContext | nindent 12 }}
           env:
             - name: DB_HOST
               value: {{ template "postgresql.fullname" . }}

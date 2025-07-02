@@ -25,10 +25,7 @@ spec:
           image: "{{ .Values.platformInit.image.repository }}:{{ .Values.platformInit.image.tag }}"
           args: [ "platform-init.py" ]
           securityContext:
-            runAsUser: 1000
-            runAsGroup: 1000
-            allowPrivilegeEscalation: false
-            runAsNonRoot: true
+            {{- toYaml .Values.securityContext | nindent 12 }}
           env:
             - name: K8S_NAMESPACE
               value: {{ .Release.Namespace }}

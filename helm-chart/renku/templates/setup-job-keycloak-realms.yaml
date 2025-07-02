@@ -26,10 +26,7 @@ spec:
         - name: init-keycloak
           image: "{{ .Values.keycloakx.initRealm.image.repository }}:{{ .Values.keycloakx.initRealm.image.tag }}"
           securityContext:
-            runAsUser: 1000
-            runAsGroup: 1000
-            allowPrivilegeEscalation: false
-            runAsNonRoot: true
+            {{- toYaml .Values.securityContext | nindent 12 }}
           command: ["python"]
           args: [
             "/app/init-realm.py",
