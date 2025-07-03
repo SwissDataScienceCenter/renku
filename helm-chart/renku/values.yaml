@@ -338,9 +338,7 @@ keycloakx:
             - ALL
     - name: init-certificates
       securityContext:
-        allowPrivilegeEscalation: false
-        runAsGroup: 65534
-        runAsUser: 65534
+        {{- toYaml .Values.securityContext | nindent 8 }}
       image: "registry.access.redhat.com/ubi8/ubi:8.4"
       command: ["sh", "-c"]
       args: ["mkdir -p /etc/pki/ca-trust/extracted/openssl/ /etc/pki/ca-trust/extracted/pem/ /etc/pki/ca-trust/extracted/java/ /etc/pki/ca-trust/extracted/edk2 && update-ca-trust"]
@@ -564,11 +562,6 @@ ui:
     nodeSelector: {}
     tolerations: []
     affinity: {}
-    podSecurityContext: {}
-    securityContext:
-      runAsUser: 1000
-      runAsNonRoot: true
-      allowPrivilegeEscalation: false
     # This defines the message displayed on the home page of logged in users.
     dashboardMessage:
       enabled: false
@@ -735,12 +728,6 @@ ui:
       # The name of the service account to use.
       # If not set and create is true, a name is generated using the fullname template
       name: ""
-    podSecurityContext: {}
-    securityContext:
-      runAsUser: 1000
-      runAsGroup: 1000
-      runAsNonRoot: true
-      allowPrivilegeEscalation: false
     service:
       type: ClusterIP
       port: 80
@@ -1603,6 +1590,9 @@ securityContext:
   runAsGroup: 1000
   runAsNonRoot: true
   allowPrivilegeEscalation: false
+  capabilities:
+    drop:
+      - ALL
 nodeSelector: {}
 tolerations: []
 affinity: {}
