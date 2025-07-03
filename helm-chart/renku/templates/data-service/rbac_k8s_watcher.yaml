@@ -58,16 +58,6 @@ rules:
       - watch
   {{- end }}
 ---
-apiVersion: v1
-kind: ServiceAccount
-metadata:
-  name: {{ template "renku.fullname" . }}-k8s-watcher
-  labels:
-    app: {{ template "renku.name" . }}
-    chart: {{ template "renku.chart" . }}
-    release: {{ .Release.Name }}
-    heritage: {{ .Release.Service }}
----
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
