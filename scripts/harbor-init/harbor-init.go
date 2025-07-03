@@ -163,7 +163,7 @@ func main() {
 		logger.Println("The project does not exist yet, creating: ", projectName)
 		project := map[string]interface{}{
 			"project_name": projectName,
-			"public":       false,
+			"public":       true, // For Renkulab we assume that the project is public and can be read by anyone
 		}
 		projectData, err := json.Marshal(project)
 		if err != nil {
