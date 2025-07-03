@@ -27,6 +27,8 @@ These are:
 - setup job for the platform initiliazation
 - setup job for the Renku database initialization in Postgres
 - self-signed CA certificates initialization container
+- Keycloak initialization container that injects self signed CA certificates is now using the 
+  centralized security context instead of a custom one
 
 ## Upgrading to Renku 0.71.0
 
