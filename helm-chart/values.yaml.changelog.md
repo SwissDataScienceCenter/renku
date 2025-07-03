@@ -11,6 +11,25 @@ Please follow this convention when adding a new row
 
 This will result in 2 fewer deployments in your cluster. If the values are left in the values file they will be ignored. Therefore this does not require immediate action by administrators, it is just good practice to remove deprecated sections that you may have in your values file.
 
+* DELETE `ui.client.podSecurityContext`, replaced by `podSecurityContext`
+* DELETE `ui.client.securityContext`, replaced by `securityContext`
+* DELETE `ui.server.podSecurityContext`, replaced by `podSecurityContext`
+* DELETE `ui.server.securityContext`, replaced by `securityContext`
+* EDIT `securityContext` added "drop all capabilities" to the default value
+
+There are also several other components that were using hardcoded security contexts that 
+now are using the centralized `securityContext` and `podSecurityContext` from the values file. 
+These are:
+- Helm tests
+- setup job for the authorization database
+- setup job for for the Keycloak database in Postgres
+- setup job for the Keycloak realms
+- setup job for the platform initiliazation
+- setup job for the Renku database initialization in Postgres
+- self-signed CA certificates initialization container
+- Keycloak initialization container that injects self signed CA certificates is now using the 
+  centralized security context instead of a custom one
+
 ## Upgrading to Renku 0.71.0
 
 +* NEW `enableV1Services` used to indicate whether services needed exclusively for Renku V1 are deployed or not. The support for this feature is experimental and it should not yet be used in production at all.

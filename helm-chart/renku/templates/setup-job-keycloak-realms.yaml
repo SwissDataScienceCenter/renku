@@ -20,6 +20,8 @@ spec:
         chart: {{ template "renku.chart" . }}
     spec:
       restartPolicy: Never
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
       initContainers:
         {{- include "certificates.initContainer" . | nindent 8 }}
       containers:
