@@ -338,9 +338,7 @@ keycloakx:
             - ALL
     - name: init-certificates
       securityContext:
-        allowPrivilegeEscalation: false
-        runAsGroup: 65534
-        runAsUser: 65534
+        {{- toYaml .Values.securityContext | nindent 8 }}
       image: "registry.access.redhat.com/ubi8/ubi:8.4"
       command: ["sh", "-c"]
       args: ["mkdir -p /etc/pki/ca-trust/extracted/openssl/ /etc/pki/ca-trust/extracted/pem/ /etc/pki/ca-trust/extracted/java/ /etc/pki/ca-trust/extracted/edk2 && update-ca-trust"]
@@ -536,7 +534,7 @@ ui:
     replicaCount: 1
     image:
       repository: renku/renku-ui
-      tag: "4.1.0"
+      tag: "4.2.1"
       pullPolicy: IfNotPresent
       ## Optionally specify an array of imagePullSecrets.
       ## Secrets must be manually created in the namespace.
@@ -564,11 +562,6 @@ ui:
     nodeSelector: {}
     tolerations: []
     affinity: {}
-    podSecurityContext: {}
-    securityContext:
-      runAsUser: 1000
-      runAsNonRoot: true
-      allowPrivilegeEscalation: false
     # This defines the message displayed on the home page of logged in users.
     dashboardMessage:
       enabled: false
@@ -618,7 +611,6 @@ ui:
     privacy:
       # If you want to enable the Privacy Policy and Terms of Service pages, you shoud add your custom content
       # in privacyPolicyContent and termsContent. Markdown is supported.
-      # As a reference, you can use the "ui-client-configmap" configMap content in the "sample" sections.
       page:
         enabled: false
         #privacyPolicyContent: ""
@@ -725,7 +717,7 @@ ui:
     keepCookies: []
     image:
       repository: renku/renku-ui-server
-      tag: "4.1.0"
+      tag: "4.2.1"
       pullPolicy: IfNotPresent
     imagePullSecrets: []
     nameOverride: ""
@@ -736,12 +728,6 @@ ui:
       # The name of the service account to use.
       # If not set and create is true, a name is generated using the fullname template
       name: ""
-    podSecurityContext: {}
-    securityContext:
-      runAsUser: 1000
-      runAsGroup: 1000
-      runAsNonRoot: true
-      allowPrivilegeEscalation: false
     service:
       type: ClusterIP
       port: 80
@@ -1248,44 +1234,6 @@ jena:
   additionalInitContainerScript: "find /fuseki -name tdb.lock -type f -delete && find /fuseki/configuration -name *.ttl -type f -empty -delete && echo clean-up done"
   test:
     enabled: false
-## Configuration for renku-search services
-search:
-  sentry:
-    enabled: false
-    dsn:
-    environment:
-  searchApi:
-    replicas: 1
-    image:
-      repository: renku/search-api
-      tag: "0.7.0"
-      pullPolicy: IfNotPresent
-    service:
-      type: ClusterIP
-      port: 80
-    resources:
-      limits:
-        memory: 450Mi
-      requests:
-        cpu: 50m
-        memory: 450Mi
-    jvmXmx: 256M
-  searchProvision:
-    replicas: 1
-    image:
-      repository: renku/search-provision
-      tag: "0.7.0"
-      pullPolicy: IfNotPresent
-    service:
-      type: ClusterIP
-      port: 8081
-    resources:
-      limits:
-        memory: 900Mi
-      requests:
-        cpu: 100m
-        memory: 900Mi
-    jvmXmx: 256M
 ## Configuration for renku-graph services
 graph:
   webhookService:
@@ -1642,6 +1590,9 @@ securityContext:
   runAsGroup: 1000
   runAsNonRoot: true
   allowPrivilegeEscalation: false
+  capabilities:
+    drop:
+      - ALL
 nodeSelector: {}
 tolerations: []
 affinity: {}
