@@ -16,7 +16,7 @@ export function verifySearchIndexing(
   );
 
   function attempt(tries: number): Cypress.Chainable<boolean> {
-    return cy.request(`/api/search/query?q=${query}`).then((response) => {
+    return cy.request(`/api/data/search/query?q=${query}`).then((response) => {
       const success =
         matcher === "eq"
           ? response.body.items && response.body.items.length === expectedItems

@@ -38,6 +38,7 @@ spec:
             matchLabels:
               kubernetes.io/metadata.name: {{ .Release.Namespace }}
         {{- end }}
+        {{- if .Values.enableV1Services }}
         - podSelector:
             matchLabels:
               app: event-log
@@ -56,6 +57,7 @@ spec:
           namespaceSelector:
             matchLabels:
               kubernetes.io/metadata.name: {{ .Release.Namespace }}
+        {{- end }}
         - podSelector:
             matchLabels:
               app: post-install-postgres
@@ -288,6 +290,7 @@ spec:
       ports:
         - protocol: TCP
           port: http
+{{- if .Values.enableV1Services }}
 ---
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
@@ -366,33 +369,7 @@ spec:
       ports:
         - protocol: TCP
           port: http-kg
----
-apiVersion: networking.k8s.io/v1
-kind: NetworkPolicy
-metadata:
-  name: ingress-to-search-service-from-gateway
-  labels:
-    app: {{ template "renku.name" . }}
-    chart: {{ template "renku.chart" . }}
-    release: {{ .Release.Name }}
-    heritage: {{ .Release.Service }}
-spec:
-  podSelector:
-    matchLabels:
-      app: {{ template "renku.search.searchApi.name" . }}
-      release: {{ .Release.Name }}
-  policyTypes:
-    - Ingress
-  ingress:
-    - from:
-        - podSelector:
-            matchLabels:
-              app: {{ template "gateway.name" . }}
-              release: {{ .Release.Name }}
-      ports:
-        - protocol: TCP
-          port: http-search-api
-
+{{- end }}
 ---
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
@@ -494,6 +471,7 @@ spec:
         - protocol: TCP
           port: http
 {{- end }}
+{{- if .Values.enableV1Services }}
 ---
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
@@ -518,6 +496,7 @@ spec:
       ports:
         - protocol: TCP
           port: http-webhook-sv
+{{- end }}
 ---
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
@@ -573,6 +552,7 @@ spec:
           port: http
         - protocol: TCP
           port: grpc
+{{- if .Values.enableV1Services }}
 ---
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
@@ -598,6 +578,7 @@ spec:
       ports:
         - protocol: TCP
           port: http
+{{- end }}
 {{- if .Values.redis.install }}
 ---
 apiVersion: networking.k8s.io/v1
@@ -637,10 +618,6 @@ spec:
             matchLabels:
               app: renku-data-tasks
               release: {{ .Release.Name }}
-        - podSelector:
-            matchLabels:
-              app: {{ template "renku.search.searchApi.name" . }}
-              release: {{ .Release.Name }}
       ports:
         - protocol: TCP
           port: redis
@@ -673,12 +650,6 @@ spec:
             matchLabels:
               app: renku-data-tasks
               release: {{ .Release.Name }}
-        - podSelector:
-            matchLabels:
-              app: search-api
-        - podSelector:
-            matchLabels:
-              app: search-provision
       ports:
         - protocol: TCP
           port: http
@@ -750,6 +721,7 @@ spec:
     - from:
         - ipBlock:
             cidr: 0.0.0.0/0
+{{- if .Values.enableV1Services }}
 ---
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
@@ -962,6 +934,7 @@ spec:
       ports:
         - protocol: TCP
           port: http
+{{- end }}
 ---
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
@@ -991,6 +964,7 @@ spec:
       ports:
         - protocol: TCP
           port: http
+{{- if .Values.enableV1Services }}
 ---
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
@@ -1019,6 +993,7 @@ spec:
       ports:
         - protocol: TCP
           port: http
+{{- end }}
 ---
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
@@ -1046,6 +1021,7 @@ spec:
       ports:
         - protocol: TCP
           port: http
+{{- if .Values.enableV1Services }}
 ---
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
@@ -1090,6 +1066,7 @@ spec:
       app.kubernetes.io/name: amalthea
   policyTypes:
   - Egress
+{{- end }}
 ---
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy

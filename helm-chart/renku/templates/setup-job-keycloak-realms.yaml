@@ -20,16 +20,15 @@ spec:
         chart: {{ template "renku.chart" . }}
     spec:
       restartPolicy: Never
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
       initContainers:
         {{- include "certificates.initContainer" . | nindent 8 }}
       containers:
         - name: init-keycloak
           image: "{{ .Values.keycloakx.initRealm.image.repository }}:{{ .Values.keycloakx.initRealm.image.tag }}"
           securityContext:
-            runAsUser: 1000
-            runAsGroup: 1000
-            allowPrivilegeEscalation: false
-            runAsNonRoot: true
+            {{- toYaml .Values.securityContext | nindent 12 }}
           command: ["python"]
           args: [
             "/app/init-realm.py",

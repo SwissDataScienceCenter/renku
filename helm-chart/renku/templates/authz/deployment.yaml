@@ -36,6 +36,8 @@ spec:
           # and the database migration will not read the db connection uri string from an env variable
           image: "{{ .Values.authz.image.repository }}:{{ .Values.authz.image.tag }}-debug"
           imagePullPolicy: {{ .Values.authz.image.pullPolicy }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
           env:
             - name: "SPICEDB_DATASTORE_CONN_URI"
               valueFrom:
