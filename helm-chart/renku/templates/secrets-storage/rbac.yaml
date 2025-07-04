@@ -42,13 +42,3 @@ subjects:
     name: {{ template "renku.fullname" $ }}-secrets-storage
     namespace: {{ $.Release.Namespace }}
 {{ end }}
----
-apiVersion: v1
-kind: ServiceAccount
-metadata:
-  name: {{ template "renku.fullname" . }}-secrets-storage
-  labels:
-    app: {{ template "renku.name" . }}
-    chart: {{ template "renku.chart" . }}
-    release: {{ .Release.Name }}
-    heritage: {{ .Release.Service }}
