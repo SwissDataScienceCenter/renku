@@ -1,0 +1,30 @@
+on:
+  push:
+    paths:
+      - "global-images/**"
+env:
+  DOCKER_PREFIX: ghcr.io/swissdatasciencecenter/renku
+jobs:
+  build-images:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3.2.0
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      - name: Docker meta
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.DOCKER_PREFIX }}/py-vscode
+          tags: |
+            type=sha
+      - uses: buildpacks/github-actions/setup-pack@v5.0.0
+      - name: Build image
+        run: pack build ${{ env.DOCKER_PREFIX }}/py-vscode -p global-images/base/ --builder ghcr.io/swissdatasciencecenter/renku-frontend-buildpacks/selector:0.0.6 --run-image ghcr.io/swissdatasciencecenter/renku-frontend-buildpacks/base-image:0.0.6 --env BP_RENKU_FRONTENDS=jupyterlab
