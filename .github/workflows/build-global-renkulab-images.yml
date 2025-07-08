@@ -44,7 +44,8 @@ jobs:
           echo "tags = $tags"
           pack build \
             ${{ env.DOCKER_PREFIX }}/py-${{matrix.FLAVOR}}-${{matrix.FRONTEND}}:latest \
-            -p global-images/base/ \
+            -p global-images/${{matrix.FLAVOR}} \
             --builder ghcr.io/swissdatasciencecenter/renku-frontend-buildpacks/selector:0.0.6 \
             --run-image ghcr.io/swissdatasciencecenter/renku-frontend-buildpacks/base-image:0.0.6 \
-            --env BP_RENKU_FRONTENDS=jupyterlab --tag $tags
+            --env BP_RENKU_FRONTENDS=${{matrix.FRONTEND}} --tag $tags \
+            --publish
