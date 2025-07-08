@@ -1,3 +1,5 @@
+name: Build global base images
+
 on:
   push:
     paths:
