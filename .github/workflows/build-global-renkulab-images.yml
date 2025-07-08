@@ -1,7 +1,7 @@
 on:
   push:
-    paths:
-      - "global-images/**"
+    # paths:
+    #   - "global-images/**"
 env:
   DOCKER_PREFIX: ghcr.io/swissdatasciencecenter/renku
 jobs:
