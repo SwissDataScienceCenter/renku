@@ -7,6 +7,15 @@ env:
 jobs:
   build-images:
     runs-on: ubuntu-24.04
+    strategy:
+      fail-fast: true
+      matrix:
+        FLAVOR:
+          - base
+          - datascience
+        FRONTEND:
+          - jupyterlab
+          - vscodium
     steps:
       - uses: actions/checkout@v4
       - name: Login to GitHub Container Registry
@@ -23,9 +32,19 @@ jobs:
         id: meta
         uses: docker/metadata-action@v5
         with:
-          images: ${{ env.DOCKER_PREFIX }}/py-vscode
+          images: ${{ env.DOCKER_PREFIX }}/py-${{ matrix.FLAVOR }}-${{matrix.FRONTEND}}
           tags: |
-            type=sha
+            type=sha,prefix=
+            type=raw,value=latest
       - uses: buildpacks/github-actions/setup-pack@v5.0.0
       - name: Build image
-        run: pack build ${{ env.DOCKER_PREFIX }}/py-vscode -p global-images/base/ --builder ghcr.io/swissdatasciencecenter/renku-frontend-buildpacks/selector:0.0.6 --run-image ghcr.io/swissdatasciencecenter/renku-frontend-buildpacks/base-image:0.0.6 --env BP_RENKU_FRONTENDS=jupyterlab
+        run: |
+          tags=$(echo "${{ steps.meta.outputs.tags }}" | tr '\n' ',')
+          tags=${tags::-1}
+          echo "tags = $tags"
+          pack build \
+            ${{ env.DOCKER_PREFIX }}/py-${{matrix.FLAVOR}}-${{matrix.FRONTEND}}:latest \
+            -p global-images/base/ \
+            --builder ghcr.io/swissdatasciencecenter/renku-frontend-buildpacks/selector:0.0.6 \
+            --run-image ghcr.io/swissdatasciencecenter/renku-frontend-buildpacks/base-image:0.0.6 \
+            --env BP_RENKU_FRONTENDS=jupyterlab --tag $tags
