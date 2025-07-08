@@ -1,7 +1,8 @@
 on:
   push:
-    # paths:
-    #   - "global-images/**"
+    paths:
+      - "global-images/**"
+      - ".github/workflows/build-global-renkulab-images.yml"
 env:
   DOCKER_PREFIX: ghcr.io/swissdatasciencecenter/renku
 jobs:
@@ -41,7 +42,6 @@ jobs:
         run: |
           tags=$(echo "${{ steps.meta.outputs.tags }}" | tr '\n' ',')
           tags=${tags::-1}
-          echo "tags = $tags"
           pack build \
             ${{ env.DOCKER_PREFIX }}/py-${{matrix.FLAVOR}}-${{matrix.FRONTEND}}:latest \
             -p global-images/${{matrix.FLAVOR}} \
