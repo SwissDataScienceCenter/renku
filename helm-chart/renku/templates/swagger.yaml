@@ -19,7 +19,7 @@ spec:
     spec:
       containers:
         - name: swagger
-          image: swaggerapi/swagger-ui
+          image: "{{ .Values.swagger.image.repository }}:{{ .Values.swagger.image.tag }}"
           env:
             - name: BASE_URL
               value: /swagger
