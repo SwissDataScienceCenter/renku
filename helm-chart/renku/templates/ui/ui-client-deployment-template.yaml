@@ -25,26 +25,6 @@ spec:
         app: ui
         release: {{ .Release.Name }}
     spec:
-      {{- if .Values.ui.client.privacy.page.enabled }}
-      volumes:
-        - name: privacy
-          configMap:
-            name: {{ printf "%s-privacy-and-terms" (include "renku.fullname" .) | quote }}
-            items:
-            {{- if .Values.ui.client.privacy.page.privacyPolicyContent }}
-            - key: "privacy_statement"
-            {{- else }}
-            - key: "sample_privacy_statement"
-            {{- end }}
-              path: statement.md
-            {{- if .Values.ui.client.privacy.page.termsContent }}
-            - key: "terms"
-            {{- else }}
-            - key: "sample_terms"
-            {{- end }}
-              path: terms.md
-
-      {{- end }}
       automountServiceAccountToken: {{ .Values.global.debug }}
       containers:
         - name: {{ .Chart.Name }}
@@ -54,11 +34,6 @@ spec:
             - name: http
               containerPort: 8080
               protocol: TCP
-          {{- if .Values.ui.client.privacy.page.enabled }}
-          volumeMounts:
-            - mountPath: /config-privacy
-              name: privacy
-          {{- end }}
           env:
             - name: BASE_URL
               value: {{ (include "renku.baseUrl" .) | quote }}
@@ -90,17 +65,14 @@ spec:
               value: {{ .Values.ui.client.privacy.banner.enabled | quote }}
             - name: TERMS_PAGES_ENABLED
               value: {{ .Values.ui.client.privacy.page.enabled | quote }}
-            {{- if .Values.ui.client.privacy.banner.enabled }}
+            - name: TERMS_CONTENT
+              value: {{ .Values.ui.client.privacy.page.termsContent | default "" | quote }}
+            - name: PRIVACY_CONTENT
+              value: {{ .Values.ui.client.privacy.page.privacyPolicyContent | default "" | quote }}
             - name: PRIVACY_BANNER_CONTENT
-              value: {{ .Values.ui.client.privacy.banner.content | default (printf "") | b64enc | quote }}
+              value: {{ .Values.ui.client.privacy.banner.content | default "" | b64enc | quote }}
             - name: PRIVACY_BANNER_LAYOUT
-              value: {{ toJson .Values.ui.client.privacy.banner.layout | default (printf "") | quote }}
-            {{ else }}
-            - name: PRIVACY_BANNER_CONTENT
-              value: ""
-            - name: PRIVACY_BANNER_LAYOUT
-              value: "{}"
-            {{- end }}
+              value: {{ toJson .Values.ui.client.privacy.banner.layout | default "{}" | quote }}
             - name: TEMPLATES
               value: {{ toJson .Values.ui.client.templates | quote }}
             - name: PREVIEW_THRESHOLD
@@ -141,7 +113,7 @@ spec:
           resources:
 {{ toYaml .Values.ui.client.resources | indent 12 }}
           securityContext:
-            {{- toYaml .Values.ui.client.securityContext | nindent 12 }}
+            {{- toYaml .Values.securityContext | nindent 12 }}
     {{- with .Values.ui.client.nodeSelector }}
       nodeSelector:
 {{ toYaml . | indent 8 }}
@@ -155,7 +127,7 @@ spec:
 {{ toYaml . | indent 8 }}
     {{- end }}
       securityContext:
-        {{- toYaml .Values.ui.client.podSecurityContext | nindent 8 }}
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
       {{- if .Values.ui.client.image.pullSecrets }}
       imagePullSecrets:
       {{- range .Values.ui.client.image.pullSecrets }}
