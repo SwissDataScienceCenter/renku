@@ -10,7 +10,6 @@ metadata:
 data:
   config.yaml: |
     debugMode: {{ .Values.gateway.debug | default false }}
-    enableV1Services: {{ .Values.enableV1Services  | default false }}
     server:
       port: 8080
       host: 0.0.0.0
@@ -76,7 +75,7 @@ data:
           scopes: ["openid", "api", "read_user", "read_repository"] 
           callbackURI: {{ printf "%s/api/auth/callback" (include "renku.baseUrl" .) }}
           usePKCE: false
-        {{ end -}}
+        {{- end }}
       oldGitLabLogout: {{ .Values.gateway.oldGitLabLogout | default false }}
       logoutGitLabUponRenkuLogout: {{ .Values.gateway.logoutGitLabUponRenkuLogout | default true }}
     redis:
