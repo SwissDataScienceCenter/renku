@@ -232,6 +232,37 @@ networkPolicies:
   allowAllIngressFromPods: []
   ## List of namespaces that should be allowed all ingress to all services
   allowAllIngressFromNamespaces: []
+  sessions:
+    egress:
+      # NOTE: These prevent user sessions from accessing other services running in your cluster.
+      # In some cases these may need to be modified because you are using a specific K8s deployment
+      # or when all Renku services and Keycloak are accessible only internally in your network.
+      # The default setup here assumes that you have standard Kubernetes and that Renku is exposed
+      # to the internet.
+      - to:
+        # DNS resolution
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: kube-system
+          podSelector:
+            matchLabels:
+              k8s-app: kube-dns
+        ports:
+        - port: 53
+          protocol: UDP
+        - port: 53
+          protocol: TCP
+      - to:
+        # Allow access to any port/protocol as long as it is directed
+        # outside of the cluster. This is done by excluding
+        # IP ranges which are reserved for private networking from
+        # the allowed range.
+        - ipBlock:
+            cidr: 0.0.0.0/0
+            except:
+            - 10.0.0.0/8
+            - 172.16.0.0/12
+            - 192.168.0.0/16
 ## Keycloak configuration
 keycloakx:
   ## Spawn a keycloak instance
