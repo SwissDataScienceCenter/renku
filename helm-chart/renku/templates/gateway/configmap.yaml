@@ -10,6 +10,7 @@ metadata:
 data:
   config.yaml: |
     debugMode: {{ .Values.gateway.debug | default false }}
+    enableV1Services: {{ .Values.enableV1Services  | default false }}
     server:
       port: 8080
       host: 0.0.0.0
