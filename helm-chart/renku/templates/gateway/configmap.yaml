@@ -37,6 +37,7 @@ data:
           audience: renku
           authorizedParty: renku-cli
     revproxy:
+      enableV1Services: {{ .Values.enableV1Services  | default false }}
       renkuBaseUrl: {{ include "renku.baseUrl" . | quote }}
       externalGitlabUrl: {{ .Values.global.gitlab.url | default "" | quote }}
       k8sNamespace: {{ .Release.Namespace }}
