@@ -39,7 +39,7 @@ describe("Dashboard v2 - Authenticated user", () => {
     cy.session(
       sessionId,
       () => {
-        cy.robustLogin();
+        cy.robustLogin("v2");
       },
       validateLogin,
     );
