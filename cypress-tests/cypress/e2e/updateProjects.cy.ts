@@ -26,7 +26,7 @@ describe("Fork and update old projects", () => {
     cy.session(
       sessionId,
       () => {
-        cy.robustLogin();
+        cy.robustLogin("v1");
       },
       validateLogin,
     );

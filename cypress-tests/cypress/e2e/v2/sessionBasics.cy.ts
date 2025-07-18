@@ -39,7 +39,7 @@ describe("Start a session that consumes project resources", () => {
     cy.session(
       sessionId,
       () => {
-        cy.robustLogin();
+        cy.robustLogin("v2");
       },
       validateLoginV2,
     );

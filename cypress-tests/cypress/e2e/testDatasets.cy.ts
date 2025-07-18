@@ -30,7 +30,7 @@ describe("Basic datasets functionality", () => {
     cy.session(
       sessionId,
       () => {
-        cy.robustLogin();
+        cy.robustLogin("v1");
       },
       validateLogin,
     );

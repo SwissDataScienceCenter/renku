@@ -36,7 +36,7 @@ describe("Project - create, edit and delete", () => {
     cy.session(
       sessionId,
       () => {
-        cy.robustLogin();
+        cy.robustLogin("v2");
       },
       validateLoginV2,
     );

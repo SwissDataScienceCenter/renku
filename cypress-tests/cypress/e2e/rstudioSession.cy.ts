@@ -36,7 +36,7 @@ describe("Basic rstudio functionality", () => {
     cy.session(
       sessionId,
       () => {
-        cy.robustLogin();
+        cy.robustLogin("v1");
       },
       validateLogin,
     );

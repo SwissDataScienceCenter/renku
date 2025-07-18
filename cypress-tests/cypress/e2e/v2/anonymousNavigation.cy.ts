@@ -21,7 +21,7 @@ const loggedSession = {
   id: ["anonymousNavigation-loggedUser", getRandomString()],
   setup: () => {
     cy.log("Logged in session");
-    cy.robustLogin();
+    cy.robustLogin("v2");
   },
 };
 
