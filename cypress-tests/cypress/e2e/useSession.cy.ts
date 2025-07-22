@@ -191,7 +191,7 @@ describe("Basic public project functionality", () => {
     // Stop the session -- mind that anonymous users cannot pause sessions
     cy.deleteSession({ fromSessionPage: true });
 
-    cy.robustLogin();
+    cy.robustLogin("v1");
   });
 
   it("Start a new session on a project without permissions.", () => {
