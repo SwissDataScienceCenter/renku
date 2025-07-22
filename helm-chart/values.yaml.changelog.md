@@ -5,6 +5,21 @@ For changes that require manual steps other than changing values, please check o
 Please follow this convention when adding a new row
 * `<type: NEW|EDIT|DELETE> - *<resource name>*: <details>`
 
+## Upgrading to Renku 2.5.0
+
+The notebook service and asscociated K8s services and components like Service, Roles, Rolebindings, etc. have been
+removed so the portions of the values file related to them have been removed and will be ignored
+going forward. This does not require immediate action from administrators but it will allow for the
+simplification of existing values files which now can contain fewer sections.
+
+* DELETE `notebooks.autoscaling`
+* DELETE `notebooks.ingress`
+* DELETE `notebooks.image`
+* DELETE `notebooks.resources`
+* DELETE `notebooks.tests`
+* DELETE `notebooks.k8sWatcher`
+* DELETE `notebooks.dummyStores`
+
 ## Upgrading to Renku 2.3.0
 
 * DELETE `search`, now the search and search provisioning is part of the data services and data tasks and are not separate services.

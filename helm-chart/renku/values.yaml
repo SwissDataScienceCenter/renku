@@ -849,23 +849,6 @@ notebooks:
       ## Sample rate is used for performance monitoring in sentry
       sampleRate: 0.2
   replicaCount: 0
-  ## Configure autoscaling
-  autoscaling:
-    enabled: false
-    minReplicas: 2
-    maxReplicas: 5
-    targetCPUUtilizationPercentage: 50
-  image:
-    repository: renku/renku-notebooks
-    tag: "1.30.1"
-    pullPolicy: IfNotPresent
-    ## Optionally specify an array of imagePullSecrets.
-    ## Secrets must be manually created in the namespace.
-    ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/
-    ##
-    # pullSecrets:
-    #   - myRegistrKeySecretName
-  # turns on flask debug mode
   debug: true
   # oidc settings
   oidc:
@@ -991,22 +974,6 @@ notebooks:
   rbac:
     serviceAccountName: default
     create: true
-  ingress:
-    enabled: false
-    annotations: {}
-    # kubernetes.io/ingress.class: nginx
-    # kubernetes.io/tls-acme: "true"
-    path: /
-    hosts:
-      - chart-example.local
-    tls: []
-    #  - secretName: chart-example-tls
-    #    hosts:
-    #      - chart-example.local
-  resources:
-    requests:
-      cpu: 50m
-      memory: 150Mi
 
   culling:
     # How long before an idle session is removed from the cluster.
@@ -1022,28 +989,6 @@ notebooks:
     maxAgeSecondsThreshold:
       anonymous: 0 # do not cull sessions solely based on age (use activity)
       registered: 0 # do not cull sessions solely based on age (use activity)
-  tests:
-    enabled: false
-    oidc_issuer:
-    gitlab_token:
-    ## Specify the session types to be used in the tests, allowed values are 'registered' and/or 'anonymous'
-    sessionTypes: ["registered"]
-    image:
-      repository: renku/renku-notebooks-tests
-      tag: "1.30.1"
-      pullPolicy: IfNotPresent
-  k8sWatcher:
-    image:
-      repository: renku/k8s-watcher
-      tag: "1.30.1"
-      pullPolicy: IfNotPresent
-    resources: {}
-    replicaCount: 1
-    autoscaling:
-      enabled: false
-      targetCPUUtilizationPercentage: 50
-      minReplicas: 2
-      maxReplicas: 5
   secretsMount:
     image:
       repository: renku/secrets-mount
@@ -1079,8 +1024,6 @@ notebooks:
     ## - ssh_host_ed25519_key
     ## - ssh_host_ed25519_key.pub
     hostKeySecret:
-  ## Used for testing - should be set to false for production
-  dummyStores: false
 tests:
   enabled: false
   image:
