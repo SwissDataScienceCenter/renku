@@ -534,7 +534,7 @@ ui:
     replicaCount: 1
     image:
       repository: renku/renku-ui
-      tag: "4.3.0"
+      tag: "4.4.0"
       pullPolicy: IfNotPresent
       ## Optionally specify an array of imagePullSecrets.
       ## Secrets must be manually created in the namespace.
@@ -717,7 +717,7 @@ ui:
     keepCookies: []
     image:
       repository: renku/renku-ui-server
-      tag: "4.3.0"
+      tag: "4.4.0"
       pullPolicy: IfNotPresent
     imagePullSecrets: []
     nameOverride: ""
@@ -1449,6 +1449,9 @@ core:
 ## Configuration for the Swagger-UI available at <renku-domain>/swagger
 swagger:
   enabled: true
+  image:
+    repository: swaggerapi/swagger-ui
+    tag: "latest"
 ## The image used in startup scripts to initialize different postgress databases
 initDb:
   image:
