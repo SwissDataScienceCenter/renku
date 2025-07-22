@@ -1467,7 +1467,7 @@ dataService:
     create: true
   image:
     repository: renku/renku-data-service
-    tag: "0.50.0"
+    tag: "next"
     pullPolicy: IfNotPresent
   k8sWatcher:
     image:
