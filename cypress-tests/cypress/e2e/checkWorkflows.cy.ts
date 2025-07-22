@@ -15,7 +15,7 @@ describe("Workflows pages", () => {
     cy.session(
       sessionId,
       () => {
-        cy.robustLogin();
+        cy.robustLogin("v1");
       },
       validateLogin,
     );
