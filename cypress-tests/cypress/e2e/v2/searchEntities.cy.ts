@@ -44,7 +44,7 @@ describe("Search for resources: groups, projects, users", () => {
     cy.session(
       sessionId,
       () => {
-        cy.robustLogin();
+        cy.robustLogin("v2");
       },
       validateLoginV2,
     );
@@ -84,7 +84,7 @@ describe("Search for resources: groups, projects, users", () => {
     cy.session(
       sessionId,
       () => {
-        cy.robustLogin();
+        cy.robustLogin("v2");
       },
       validateLoginV2,
     );

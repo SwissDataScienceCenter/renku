@@ -27,7 +27,7 @@ describe("Group - create, edit and delete", () => {
     cy.session(
       sessionId,
       () => {
-        cy.robustLogin();
+        cy.robustLogin("v2");
       },
       validateLoginV2,
     );
@@ -66,7 +66,7 @@ describe("Group - create, edit and delete", () => {
     // Change settings
     const modifiedGroupName = `${groupName} - modified`;
     const modifiedGroupDescription = `${groupDescription} - modified`;
-    cy.getDataCy("nav-link-settings").click();
+    cy.getDataCy("group-settings-link").click();
     cy.getDataCy("group-name-input").should("have.value", groupName);
     cy.getDataCy("group-name-input").clear().type(modifiedGroupName);
     cy.getDataCy("group-description-input").should(
@@ -88,7 +88,7 @@ describe("Group - create, edit and delete", () => {
     );
 
     // Delete group
-    cy.getDataCy("nav-link-settings").click();
+    cy.getDataCy("group-settings-link").click();
     cy.getDataCy("group-delete-button").click();
     cy.getDataCy("group-delete-confirm-button").should("not.be.enabled");
     cy.getDataCy("delete-confirmation-input").type(groupSlug);

@@ -31,7 +31,7 @@ describe("Project resources - work with code, data, environments", () => {
     cy.session(
       sessionId,
       () => {
-        cy.robustLogin();
+        cy.robustLogin("v2");
       },
       validateLoginV2,
     );
@@ -54,7 +54,7 @@ describe("Project resources - work with code, data, environments", () => {
     cy.session(
       sessionId,
       () => {
-        cy.robustLogin();
+        cy.robustLogin("v2");
       },
       validateLoginV2,
     );
