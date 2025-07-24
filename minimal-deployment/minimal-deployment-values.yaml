@@ -15,6 +15,7 @@ global:
     domain: <deployment-FQDN>
   useHTTPS: true
 ingress:
+  className: webapprouting.kubernetes.azure.com
   enabled: true
   hosts:
     - <deployment-FQDN>
@@ -34,6 +35,9 @@ notebooks:
                 operator: In
                 values:
                   - user
+  sessionIngress:
+    annotations:
+      kubernetes.io/ingress.class: webapprouting.kubernetes.azure.com
   sessionTolerations:
     - effect: NoSchedule
       key: renku.io/dedicated
