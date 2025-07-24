@@ -76,7 +76,7 @@ type RegisterAndVerifyProps = {
   lastName?: string;
 };
 
-function registerAndVerify(props: RegisterAndVerifyProps) {
+function registerAndVerify(renkuVersion : 'v1' | 'v2', props: RegisterAndVerifyProps) {
   // Register with the CI deployment
   const { email, password, firstName, lastName } = props;
   cy.register(email, password, firstName, lastName);
@@ -107,13 +107,14 @@ function registerAndVerify(props: RegisterAndVerifyProps) {
   // allow Gitlab to "settle" after the login and properly recognize the token and respond with 200.
   // eslint-disable-next-line cypress/no-unnecessary-waiting
   cy.wait(TIMEOUTS.short);
-  cy.request("ui-server/api/data/user").its("status").should("eq", 200);
-  cy.request("ui-server/api/user").then((response) => {
+  cy.request("/api/data/user").its("status").should("eq", 200);
+  if (renkuVersion === 'v1') {
+  cy.request("/api/user").then((response) => {
     expect(response.status).to.eq(200);
     expect(response.body).property("username").to.not.be.empty;
     expect(response.body).property("username").to.not.be.null;
     expect(response.body).property("state").to.equal("active");
-  });
+  });}
 }
 
 type RobustLoginProps = {
@@ -121,11 +122,12 @@ type RobustLoginProps = {
   password: string;
   firstName?: string;
   lastName?: string;
+  
 };
 
-function robustLogin(props?: RobustLoginProps) {
+function robustLogin(renkuVersion: 'v1' | 'v2',props?: RobustLoginProps) {
   // Check if we are already logged in
-  cy.request({ failOnStatusCode: false, url: "ui-server/api/data/user" }).then(
+  cy.request({ failOnStatusCode: false, url: "/api/data/user" }).then(
     (resp) => {
       // we are already logged in
       if (resp.status >= 200 && resp.status < 400) return;
@@ -139,7 +141,7 @@ function robustLogin(props?: RobustLoginProps) {
         ...props,
       };
 
-      return registerAndVerify(localProps);
+      return registerAndVerify(renkuVersion, localProps);
     },
   );
 }
@@ -162,8 +164,8 @@ declare global {
         firstName?: string,
         lastName?: string,
       );
-      registerAndVerify(props: RegisterAndVerifyProps);
-      robustLogin(props?: RobustLoginProps);
+      registerAndVerify(renkuVersion: 'v1' | 'v2', props: RegisterAndVerifyProps);
+      robustLogin(renkuVersion: 'v1' | 'v2', props?: RobustLoginProps);
     }
   }
 }

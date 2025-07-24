@@ -1,4 +1,4 @@
-import { getRandomString, validateLogin } from "../../support/commands/general";
+import { getRandomString, validateLoginV2 } from "../../support/commands/general";
 import { generatorProjectName } from "../../support/commands/projects";
 import { ProjectIdentifierV2 } from "../../support/types/project.types";
 import {
@@ -39,9 +39,9 @@ describe("Dashboard v2 - Authenticated user", () => {
     cy.session(
       sessionId,
       () => {
-        cy.robustLogin();
+        cy.robustLogin("v2");
       },
-      validateLogin,
+      validateLoginV2,
     );
     getUserNamespaceAPIV2().then((namespace) => {
       if (namespace) {
