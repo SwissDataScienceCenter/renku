@@ -35,14 +35,14 @@ jobs:
         run: |
           sudo apt-get update -y && sudo apt-get install graphviz
           git submodule sync
-          git submodule update --init --force docs/renku-python
+          git submodule update --init --force docs-legacy/renku-python
           pip install --upgrade pip
-          pip install -r docs/requirements.txt
+          pip install -r docs-legacy/requirements.txt
       - name: test the docs build
         env:
           SIDEBAR: 1
         run: |
-          cd docs
+          cd docs-legacy
           sphinx-build -nNW -b spelling -d _build/doctrees . _build/spelling
           sphinx-build -qnNW . _build/html
       - name: Upload docs
@@ -50,7 +50,7 @@ jobs:
         if: success()
         with:
           name: docs
-          path: docs/_build/html/
+          path: docs-legacy/_build/html/
 
   check-deploy:
     name: Analyze deploy strings
