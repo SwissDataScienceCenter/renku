@@ -1,5 +1,5 @@
 ---
-title: Configuration
+title: Resource pools and classes
 ---
 
 :::warning[Under construction]

@@ -1,5 +1,5 @@
 ---
-title: Configuration
+title: Upgrading Renku
 ---
 
 :::warning[Under construction]
