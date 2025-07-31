@@ -1,5 +1,5 @@
 ---
-title: Configuration
+title: Remote clusters
 ---
 
 :::warning[Under construction]
