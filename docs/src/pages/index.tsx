@@ -28,7 +28,7 @@ function HomepageHeader() {
         <div className={styles.buttons}>
           <Link
             className="button button--secondary button--lg"
-            to="/docs/admins">
+            to="/docs/admins/architecture/services">
             I am an Administrator deploying Renku
           </Link>
         </div>
