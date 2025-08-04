@@ -30,7 +30,6 @@ spec:
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      serviceAccountName: {{ if .Values.notebooks.rbac.create }}"{{ template "renku.notebooks.fullname" . }}"{{ else }}"{{ .Values.notebooks.rbac.serviceAccountName }}"{{ end }}
       securityContext:
         fsGroup: 1000
       containers:
