@@ -121,7 +121,7 @@ jobs:
         if: needs.check-deploy.outputs.deploy == 'true'
         run: |
           az aks get-credentials --resource-group renku-dev --name aks-switzerlandnorth-renku-dev --file "${{ runner.temp }}/renkubot-kube.config"
-          chmod 600 "${{ runner.temp }}/renkubot-kube.config"
+          chmod 400 "${{ runner.temp }}/renkubot-kube.config"
 
       - name: renku build and deploy
         if: needs.check-deploy.outputs.deploy == 'true'
@@ -174,7 +174,7 @@ jobs:
         if: needs.check-deploy.outputs.deploy == 'true'
         run: |
           az aks get-credentials --resource-group renku-dev --name aks-switzerlandnorth-renku-dev --file "${{ runner.temp }}/renkubot-kube.config"
-          chmod 600 "${{ runner.temp }}/renkubot-kube.config"
+          chmod 400 "${{ runner.temp }}/renkubot-kube.config"
 
       - uses: SwissDataScienceCenter/renku-actions/test-renku@v1.19.0
         with:
@@ -306,7 +306,7 @@ jobs:
         if: needs.check-deploy.outputs.deploy == 'true'
         run: |
           az aks get-credentials --resource-group renku-dev --name aks-switzerlandnorth-renku-dev --file "${{ runner.temp }}/renkubot-kube.config"
-          chmod 600 "${{ runner.temp }}/renkubot-kube.config"
+          chmod 400 "${{ runner.temp }}/renkubot-kube.config"
 
       # Cleanup Azure deployments
       - name: renku teardown
