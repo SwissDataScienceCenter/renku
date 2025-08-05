@@ -70,7 +70,7 @@ jobs:
       extra-values: ${{ steps.deploy-comment.outputs.extra-values }}
     steps:
       - id: deploy-comment
-        uses: SwissDataScienceCenter/renku-actions/check-pr-descriptionfeat-rely-on-kubeconfig-env-var
+        uses: SwissDataScienceCenter/renku-actions/check-pr-description@feat-rely-on-kubeconfig-env-var
         with:
           pr_ref: ${{ github.event.number }}
 
@@ -125,7 +125,7 @@ jobs:
 
       - name: renku build and deploy
         if: needs.check-deploy.outputs.deploy == 'true'
-        uses: SwissDataScienceCenter/renku-actions/deploy-renkufeat-rely-on-kubeconfig-env-var
+        uses: SwissDataScienceCenter/renku-actions/deploy-renku@feat-rely-on-kubeconfig-env-var
         env:
           DOCKER_PASSWORD: ${{ secrets.RENKU_DOCKER_PASSWORD }}
           DOCKER_USERNAME: ${{ secrets.RENKU_DOCKER_USERNAME }}
@@ -180,7 +180,7 @@ jobs:
           cat "${{ github.workspace }}/renkubot-kube.config" >> $GITHUB_ENV
           echo "EOF" >> $GITHUB_ENV
 
-      - uses: SwissDataScienceCenter/renku-actions/test-renkufeat-rely-on-kubeconfig-env-var
+      - uses: SwissDataScienceCenter/renku-actions/test-renku@feat-rely-on-kubeconfig-env-var
         with:
           kubeconfig: ${{ needs.check-deploy.outputs.deploy == 'true' && env.RENKUBOT_KUBECONFIG || secrets.RENKUBOT_DEV_KUBECONFIG }}
           renku-release: ci-renku-${{ github.event.number }}
@@ -207,7 +207,7 @@ jobs:
             rstudioSession,
           ]
     steps:
-      - uses: SwissDataScienceCenter/renku-actions/test-renku-cypressfeat-rely-on-kubeconfig-env-var
+      - uses: SwissDataScienceCenter/renku-actions/test-renku-cypress@feat-rely-on-kubeconfig-env-var
         if: github.event.action != 'closed' && (needs.check-deploy.outputs.switch-deploy == 'true' || needs.check-deploy.outputs.deploy == 'true') && needs.check-deploy.outputs.test-legacy-enabled == 'true'
         with:
           e2e-target: ${{ matrix.tests }}
@@ -234,7 +234,7 @@ jobs:
             sessionBasics,
           ]
     steps:
-      - uses: SwissDataScienceCenter/renku-actions/test-renku-cypressfeat-rely-on-kubeconfig-env-var
+      - uses: SwissDataScienceCenter/renku-actions/test-renku-cypress@feat-rely-on-kubeconfig-env-var
         if: github.event.action != 'closed' && (needs.check-deploy.outputs.switch-deploy == 'true' || needs.check-deploy.outputs.deploy == 'true') && needs.check-deploy.outputs.test-enabled == 'true'
         with:
           e2e-folder: cypress/e2e/v2/
@@ -314,7 +314,7 @@ jobs:
 
       # Cleanup Azure deployments
       - name: renku teardown
-        uses: SwissDataScienceCenter/renku-actions/cleanup-renku-ci-deploymentsfeat-rely-on-kubeconfig-env-var
+        uses: SwissDataScienceCenter/renku-actions/cleanup-renku-ci-deployments@feat-rely-on-kubeconfig-env-var
         env:
           HELM_RELEASE_REGEX: "^ci-renku-${{ github.event.number }}$"
           GITLAB_TOKEN: ${{ secrets.DEV_GITLAB_TOKEN }}
