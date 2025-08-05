@@ -178,7 +178,7 @@ jobs:
 
       - uses: SwissDataScienceCenter/renku-actions/test-renku@v1.19.0
         with:
-          kubeconfig: ${{ needs.check-deploy.outputs.deploy == 'true' && env.RENKUBOT_KUBECONFIG || secrets.RENKUBOT_DEV_KUBECONFIG }}
+          kubeconfig: "${{ runner.temp }}/renkubot-kube.config"
           renku-release: ci-renku-${{ github.event.number }}
           gitlab-token: ${{ secrets.DEV_GITLAB_TOKEN }}
           s3-results-access-key: ${{ secrets.ACCEPTANCE_TESTS_BUCKET_ACCESS_KEY }}
