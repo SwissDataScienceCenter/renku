@@ -70,7 +70,7 @@ jobs:
       extra-values: ${{ steps.deploy-comment.outputs.extra-values }}
     steps:
       - id: deploy-comment
-        uses: SwissDataScienceCenter/renku-actions/check-pr-description@v1.18.2
+        uses: SwissDataScienceCenter/renku-actions/check-pr-description@v1.19.0
         with:
           pr_ref: ${{ github.event.number }}
 
@@ -121,15 +121,11 @@ jobs:
         if: needs.check-deploy.outputs.deploy == 'true'
         run: |
           az aks get-credentials --resource-group renku-dev --name aks-switzerlandnorth-renku-dev --file "${{ github.workspace }}/renkubot-kube.config"
-          chmod 600 "${{ github.workspace }}/renkubot-kube.config"
-
-          echo "RENKUBOT_KUBECONFIG<<EOF" >> $GITHUB_ENV
-          cat "${{ github.workspace }}/renkubot-kube.config" >> $GITHUB_ENV
-          echo "EOF" >> $GITHUB_ENV
+          chmod 400 "${{ github.workspace }}/renkubot-kube.config"
 
       - name: renku build and deploy
         if: needs.check-deploy.outputs.deploy == 'true'
-        uses: SwissDataScienceCenter/renku-actions/deploy-renku@v1.18.2
+        uses: SwissDataScienceCenter/renku-actions/deploy-renku@v1.19.0
         env:
           DOCKER_PASSWORD: ${{ secrets.RENKU_DOCKER_PASSWORD }}
           DOCKER_USERNAME: ${{ secrets.RENKU_DOCKER_USERNAME }}
@@ -138,7 +134,6 @@ jobs:
           RENKU_RELEASE: ci-renku-${{ github.event.number }}
           RENKU_VALUES_FILE: "${{ github.workspace }}/values.yaml"
           RENKU_VALUES: minimal-deployment/minimal-deployment-values.yaml
-          RENKUBOT_KUBECONFIG: ${{ env.RENKUBOT_KUBECONFIG }}
           TEST_ARTIFACTS_PATH: "tests-artifacts-${{ github.sha }}"
           KUBERNETES_CLUSTER_FQDN: "dev.renku.ch"
           RENKU_ANONYMOUS_SESSIONS: "true"
@@ -179,15 +174,11 @@ jobs:
         if: needs.check-deploy.outputs.deploy == 'true'
         run: |
           az aks get-credentials --resource-group renku-dev --name aks-switzerlandnorth-renku-dev --file "${{ github.workspace }}/renkubot-kube.config"
-          chmod 600 "${{ github.workspace }}/renkubot-kube.config"
+          chmod 400 "${{ github.workspace }}/renkubot-kube.config"
 
-          echo "RENKUBOT_KUBECONFIG<<EOF" >> $GITHUB_ENV
-          cat "${{ github.workspace }}/renkubot-kube.config" >> $GITHUB_ENV
-          echo "EOF" >> $GITHUB_ENV
-
-      - uses: SwissDataScienceCenter/renku-actions/test-renku@v1.18.2
+      - uses: SwissDataScienceCenter/renku-actions/test-renku@v1.19.0
         with:
-          kubeconfig: ${{ needs.check-deploy.outputs.deploy == 'true' && env.RENKUBOT_KUBECONFIG || secrets.RENKUBOT_DEV_KUBECONFIG }}
+          kubeconfig: "${{ github.workspace }}/renkubot-kube.config"
           renku-release: ci-renku-${{ github.event.number }}
           gitlab-token: ${{ secrets.DEV_GITLAB_TOKEN }}
           s3-results-access-key: ${{ secrets.ACCEPTANCE_TESTS_BUCKET_ACCESS_KEY }}
@@ -212,7 +203,7 @@ jobs:
             rstudioSession,
           ]
     steps:
-      - uses: SwissDataScienceCenter/renku-actions/test-renku-cypress@v1.18.2
+      - uses: SwissDataScienceCenter/renku-actions/test-renku-cypress@v1.19.0
         if: github.event.action != 'closed' && (needs.check-deploy.outputs.switch-deploy == 'true' || needs.check-deploy.outputs.deploy == 'true') && needs.check-deploy.outputs.test-legacy-enabled == 'true'
         with:
           e2e-target: ${{ matrix.tests }}
@@ -239,7 +230,7 @@ jobs:
             sessionBasics,
           ]
     steps:
-      - uses: SwissDataScienceCenter/renku-actions/test-renku-cypress@v1.18.2
+      - uses: SwissDataScienceCenter/renku-actions/test-renku-cypress@v1.19.0
         if: github.event.action != 'closed' && (needs.check-deploy.outputs.switch-deploy == 'true' || needs.check-deploy.outputs.deploy == 'true') && needs.check-deploy.outputs.test-enabled == 'true'
         with:
           e2e-folder: cypress/e2e/v2/
@@ -315,19 +306,14 @@ jobs:
         if: needs.check-deploy.outputs.deploy == 'true'
         run: |
           az aks get-credentials --resource-group renku-dev --name aks-switzerlandnorth-renku-dev --file "${{ github.workspace }}/renkubot-kube.config"
-          chmod 600 "${{ github.workspace }}/renkubot-kube.config"
+          chmod 400 "${{ github.workspace }}/renkubot-kube.config"
 
-          # Create a multiline env var with the content for RENKUBOT_KUBECONFIG
-          echo "RENKUBOT_KUBECONFIG<<EOF" >> $GITHUB_ENV
-          cat "${{ github.workspace }}/renkubot-kube.config" >> $GITHUB_ENV
-          echo "EOF" >> $GITHUB_ENV
-
-      # Cleanup for both standard and Azure deployments
+      # Cleanup Azure deployments
       - name: renku teardown
-        uses: SwissDataScienceCenter/renku-actions/cleanup-renku-ci-deployments@v1.18.2
+        uses: SwissDataScienceCenter/renku-actions/cleanup-renku-ci-deployments@v1.19.0
         env:
           HELM_RELEASE_REGEX: "^ci-renku-${{ github.event.number }}$"
           GITLAB_TOKEN: ${{ secrets.DEV_GITLAB_TOKEN }}
-          RENKUBOT_KUBECONFIG: ${{ needs.check-deploy.outputs.deploy == 'true' && env.RENKUBOT_KUBECONFIG || secrets.RENKUBOT_DEV_KUBECONFIG }}
+          KUBECONFIG: "${{ github.workspace }}/renkubot-kube.config"
           MAX_AGE_SECONDS: 0
           DELETE_NAMESPACE: "true"
