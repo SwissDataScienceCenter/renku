@@ -120,8 +120,8 @@ jobs:
       - name: Get AKS credentials
         if: needs.check-deploy.outputs.deploy == 'true'
         run: |
-          az aks get-credentials --resource-group renku-dev --name aks-switzerlandnorth-renku-dev --file "${{ runner.temp }}/renkubot-kube.config"
-          chmod 400 "${{ runner.temp }}/renkubot-kube.config"
+          az aks get-credentials --resource-group renku-dev --name aks-switzerlandnorth-renku-dev --file "${{ github.workspace }}/renkubot-kube.config"
+          chmod 400 "${{ github.workspace }}/renkubot-kube.config"
 
       - name: renku build and deploy
         if: needs.check-deploy.outputs.deploy == 'true'
@@ -130,7 +130,7 @@ jobs:
           DOCKER_PASSWORD: ${{ secrets.RENKU_DOCKER_PASSWORD }}
           DOCKER_USERNAME: ${{ secrets.RENKU_DOCKER_USERNAME }}
           GITLAB_TOKEN: ${{ secrets.DEV_GITLAB_TOKEN }}
-          KUBECONFIG: "${{ runner.temp }}/renkubot-kube.config"
+          KUBECONFIG: "${{ github.workspace }}/renkubot-kube.config"
           RENKU_RELEASE: ci-renku-${{ github.event.number }}
           RENKU_VALUES_FILE: "${{ github.workspace }}/values.yaml"
           RENKU_VALUES: minimal-deployment/minimal-deployment-values.yaml
@@ -173,12 +173,12 @@ jobs:
       - name: Get AKS credentials
         if: needs.check-deploy.outputs.deploy == 'true'
         run: |
-          az aks get-credentials --resource-group renku-dev --name aks-switzerlandnorth-renku-dev --file "${{ runner.temp }}/renkubot-kube.config"
-          chmod 400 "${{ runner.temp }}/renkubot-kube.config"
+          az aks get-credentials --resource-group renku-dev --name aks-switzerlandnorth-renku-dev --file "${{ github.workspace }}/renkubot-kube.config"
+          chmod 400 "${{ github.workspace }}/renkubot-kube.config"
 
       - uses: SwissDataScienceCenter/renku-actions/test-renku@v1.19.0
         with:
-          kubeconfig: "${{ runner.temp }}/renkubot-kube.config"
+          kubeconfig: "${{ github.workspace }}/renkubot-kube.config"
           renku-release: ci-renku-${{ github.event.number }}
           gitlab-token: ${{ secrets.DEV_GITLAB_TOKEN }}
           s3-results-access-key: ${{ secrets.ACCEPTANCE_TESTS_BUCKET_ACCESS_KEY }}
@@ -305,8 +305,8 @@ jobs:
       - name: Get AKS credentials
         if: needs.check-deploy.outputs.deploy == 'true'
         run: |
-          az aks get-credentials --resource-group renku-dev --name aks-switzerlandnorth-renku-dev --file "${{ runner.temp }}/renkubot-kube.config"
-          chmod 400 "${{ runner.temp }}/renkubot-kube.config"
+          az aks get-credentials --resource-group renku-dev --name aks-switzerlandnorth-renku-dev --file "${{ github.workspace }}/renkubot-kube.config"
+          chmod 400 "${{ github.workspace }}/renkubot-kube.config"
 
       # Cleanup Azure deployments
       - name: renku teardown
@@ -314,6 +314,6 @@ jobs:
         env:
           HELM_RELEASE_REGEX: "^ci-renku-${{ github.event.number }}$"
           GITLAB_TOKEN: ${{ secrets.DEV_GITLAB_TOKEN }}
-          KUBECONFIG: "${{ runner.temp }}/renkubot-kube.config"
+          KUBECONFIG: "${{ github.workspace }}/renkubot-kube.config"
           MAX_AGE_SECONDS: 0
           DELETE_NAMESPACE: "true"
