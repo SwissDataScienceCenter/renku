@@ -101,7 +101,7 @@ jobs:
           token: ${{ secrets.RENKUBOT_GITHUB_TOKEN }}
           issue-number: ${{ github.event.pull_request.number }}
           body: |
-            You can access the deployment of this PR at ${{ format('https://ci-renku-{0}.dev.azure.renku.ch', github.event.number) }}
+            You can access the deployment of this PR at ${{ format('https://ci-renku-{0}.dev.renku.ch', github.event.number) }}
 
       - name: Azure login
         if: needs.check-deploy.outputs.deploy == 'true'
@@ -135,7 +135,7 @@ jobs:
           RENKU_VALUES_FILE: "${{ github.workspace }}/values.yaml"
           RENKU_VALUES: minimal-deployment/minimal-deployment-values.yaml
           TEST_ARTIFACTS_PATH: "tests-artifacts-${{ github.sha }}"
-          KUBERNETES_CLUSTER_FQDN: "dev.azure.renku.ch"
+          KUBERNETES_CLUSTER_FQDN: "dev.renku.ch"
           RENKU_ANONYMOUS_SESSIONS: "true"
           renku: "@${{ github.head_ref }}"
           renku_core: "${{ needs.check-deploy.outputs.renku-core }}"
@@ -210,7 +210,7 @@ jobs:
           renku-reference: ${{ github.ref }}
           renku-release: ci-renku-${{ github.event.number }}
           test-user-password: ${{ secrets.RENKU_BOT_DEV_PASSWORD }}
-          kubernetes-cluster-fqdn: ${{ needs.check-deploy.outputs.deploy == 'true' && 'dev.azure.renku.ch' || 'dev.renku.ch' }}
+          kubernetes-cluster-fqdn: ${{ needs.check-deploy.outputs.deploy == 'true' && 'dev.renku.ch' }}
 
   cypress-acceptance-tests:
     name: Cypress tests
@@ -235,7 +235,7 @@ jobs:
         with:
           e2e-folder: cypress/e2e/v2/
           e2e-target: ${{ matrix.tests }}
-          kubernetes-cluster-fqdn: ${{ needs.check-deploy.outputs.deploy == 'true' && 'dev.azure.renku.ch' || 'dev.renku.ch' }}
+          kubernetes-cluster-fqdn: ${{ needs.check-deploy.outputs.deploy == 'true' && 'dev.renku.ch' }}
           renku-reference: ${{ github.ref }}
           renku-release: ci-renku-${{ github.event.number }}
           test-user-password: ${{ secrets.RENKU_BOT_DEV_PASSWORD }}
