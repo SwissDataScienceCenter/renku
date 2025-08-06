@@ -122,6 +122,10 @@ jobs:
         run: |
           az aks get-credentials --resource-group renku-dev --name aks-switzerlandnorth-renku-dev 
 
+      - name: Create values file
+        run: |
+          touch ${{ runner.temp }}/values.yaml
+
       - name: renku build and deploy
         if: needs.check-deploy.outputs.deploy == 'true'
         uses: SwissDataScienceCenter/renku-actions/deploy-renku@v1.19.0
