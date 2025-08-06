@@ -103,34 +103,13 @@ jobs:
           body: |
             You can access the deployment of this PR at ${{ format('https://ci-renku-{0}.dev.renku.ch', github.event.number) }}
 
-      - name: Azure login
-        if: needs.check-deploy.outputs.deploy == 'true'
-        uses: azure/login@v2
-        with:
-          client-id: ${{ secrets.CI_RENKU_AZURE_CLIENT_ID }}
-          tenant-id: ${{ secrets.CI_RENKU_AZURE_TENANT_ID }}
-          subscription-id: ${{ secrets.CI_RENKU_AZURE_SUBSCRIPTION_ID }}
-
-      - uses: azure/aks-set-context@v4
-        if: needs.check-deploy.outputs.deploy == 'true'
-        with:
-          resource-group: "renku-dev"
-          cluster-name: "aks-switzerlandnorth-renku-dev"
-
-      - name: Get AKS credentials
-        if: needs.check-deploy.outputs.deploy == 'true'
-        run: |
-          az aks get-credentials --resource-group renku-dev --name aks-switzerlandnorth-renku-dev --file "${{ github.workspace }}/renkubot-kube.config"
-          chmod 400 "${{ github.workspace }}/renkubot-kube.config"
-
       - name: renku build and deploy
         if: needs.check-deploy.outputs.deploy == 'true'
-        uses: SwissDataScienceCenter/renku-actions/deploy-renku@v1.19.0
+        uses: SwissDataScienceCenter/renku-actions/deploy-renku@feat-add-azure-login-to-deploy
         env:
           DOCKER_PASSWORD: ${{ secrets.RENKU_DOCKER_PASSWORD }}
           DOCKER_USERNAME: ${{ secrets.RENKU_DOCKER_USERNAME }}
           GITLAB_TOKEN: ${{ secrets.DEV_GITLAB_TOKEN }}
-          KUBECONFIG: "${{ github.workspace }}/renkubot-kube.config"
           RENKU_RELEASE: ci-renku-${{ github.event.number }}
           RENKU_VALUES_FILE: "${{ github.workspace }}/values.yaml"
           RENKU_VALUES: minimal-deployment/minimal-deployment-values.yaml
@@ -147,6 +126,11 @@ jobs:
           amalthea: "${{ needs.check-deploy.outputs.amalthea }}"
           amalthea_sessions: "${{ needs.check-deploy.outputs.amalthea-sessions }}"
           extra_values: "${{ needs.check-deploy.outputs.extra-values }}"
+        with:
+          azure_login: true
+          azure_client_id: ${{ secrets.CI_RENKU_AZURE_CLIENT_ID }}
+          azure_tenant_id: ${{ secrets.CI_RENKU_AZURE_TENANT_ID }}
+          azure_subscription_id: ${{ secrets.CI_RENKU_AZURE_SUBSCRIPTION_ID }}
 
   legacy-scala-tests:
     name: Legacy Scala tests
