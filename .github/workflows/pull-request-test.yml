@@ -122,10 +122,6 @@ jobs:
         run: |
           az aks get-credentials --resource-group renku-dev --name aks-switzerlandnorth-renku-dev 
 
-      - name: Create values file
-        run: |
-          touch ${{ runner.temp }}/values.yaml
-
       - name: renku build and deploy
         if: needs.check-deploy.outputs.deploy == 'true'
         uses: SwissDataScienceCenter/renku-actions/deploy-renku@v1.19.0
@@ -134,7 +130,7 @@ jobs:
           DOCKER_USERNAME: ${{ secrets.RENKU_DOCKER_USERNAME }}
           GITLAB_TOKEN: ${{ secrets.DEV_GITLAB_TOKEN }}
           RENKU_RELEASE: ci-renku-${{ github.event.number }}
-          RENKU_VALUES_FILE: "${{ runner.temp }}/values.yaml"
+          RENKU_VALUES_FILE: "${{ github.workspace }}/values.yaml"
           RENKU_VALUES: minimal-deployment/minimal-deployment-values.yaml
           TEST_ARTIFACTS_PATH: "tests-artifacts-${{ github.sha }}"
           KUBERNETES_CLUSTER_FQDN: "dev.renku.ch"
