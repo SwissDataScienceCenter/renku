@@ -43,10 +43,6 @@ notebooks:
       key: renku.io/dedicated
       operator: Equal
       value: user
-postgresql:
-  primary:
-    persistence:
-      enabled: false
 redis:
   master:
     persistence:
