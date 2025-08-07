@@ -29,3 +29,4 @@ basic datascience:
 		--env BP_RENKU_FRONTENDS=$(FRONTEND) \
 		--tag $$TAGS \
 		$$PUBLISH_FLAG \
+		$$EXTRA_FLAGS

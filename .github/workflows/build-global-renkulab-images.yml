@@ -50,4 +50,5 @@ jobs:
           RUN_IMAGE=${{ env.RUN_IMAGE }} \
           BUILDER=${{ env.BUILDER_IMAGE }} \
           PUBLISH=1 \
+          EXTRA_FLAGS="--cache-image ${{ env.DOCKER_PREFIX }}/py-${{ matrix.FLAVOR }}-${{ matrix.FRONTEND }}-cache:latest" \
           make -C global-images ${{ matrix.FLAVOR }}
