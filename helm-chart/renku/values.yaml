@@ -991,17 +991,17 @@ notebooks:
   gitRpcServer:
     image:
       name: renku/git-rpc-server
-      tag: "1.30.1"
+      tag: "1.31.0"
   gitHttpsProxy:
     image:
       name: renku/git-https-proxy
-      tag: "1.30.1"
+      tag: "1.31.0"
     port: 65480
     healthPort: # defaults to port+1
   gitClone:
     image:
       name: renku/git-clone
-      tag: "1.30.1"
+      tag: "1.31.0"
   service:
     type: ClusterIP
     port: 80
@@ -1026,12 +1026,12 @@ notebooks:
   secretsMount:
     image:
       repository: renku/secrets-mount
-      tag: "1.30.1"
+      tag: "1.31.0"
   ssh:
     enabled: false
     image:
       repository: renku/ssh-jump-host
-      tag: "1.30.1"
+      tag: "1.31.0"
       pullPolicy: IfNotPresent
     resources: {}
     replicaCount: 1
