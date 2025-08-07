@@ -25,6 +25,17 @@ There are a few environment variables you can set to modify the build.
 | RUN_IMAGE | Run image to use | ghcr.io/swissdatasciencecenter/renku-frontend-buildpacks/base-image:0.0.6 |
 | TAGS | Comma-separated list of image names | None |
 
+## Adding packages to existing images
+
+The python images use poetry (< 2.0) for dependency management. Use poetry to add packages, for example:
+
+```bash
+$ cd datascience
+$ poetry add tensorflow
+```
+
+Make sure `pyproject.toml` and `poetry.lock` are updated and push the changes.
+
 ## Adding additional images
 
 To configure an additional image spec to be built, follow these steps:
