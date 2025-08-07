@@ -99,7 +99,7 @@ spec:
             - name: IMAGE_BUILDERS_ENABLED
               value: {{ .Values.dataService.imageBuilders.enabled | quote }}
             - name: SUPPORT_LEGACY_SESSIONS
-              value: {{ .Values.ui.client.support_legacy_sessions | quote }}
+              value: {{ .Values.ui.client.supportLegacySessions | quote }}
             - name: LEGACY_SUPPORT
               value: {{ printf "{\"enabled\": %t }" .Values.enableV1Services | quote }}
           livenessProbe:
