@@ -45,10 +45,8 @@ jobs:
         run: |
           tags=$(echo "${{ steps.meta.outputs.tags }}" | tr '\n' ',')
           tags=${tags::-1}
-          pack build \
-            ${{ env.DOCKER_PREFIX }}/py-${{ matrix.FLAVOR }}-${{ matrix.FRONTEND }}:latest \
-            -p global-images/${{ matrix.FLAVOR }} \
-            --builder ${{ env.BUILDER_IMAGE }} \
-            --run-image ${{ env.RUN_IMAGE }} \
-            --env BP_RENKU_FRONTENDS=${{ matrix.FRONTEND }} --tag $tags \
-            --publish
+          TAGS=tags \
+          FRONTEND=${{ matrix.FRONTEND }} \
+          RUN_IMAGE=${{ env.RUN_IMAGE }} \
+          BUILDER=${{ env.BUILDER_IMAGE }} \
+          make ${{ matrix.FLAVOR }}
