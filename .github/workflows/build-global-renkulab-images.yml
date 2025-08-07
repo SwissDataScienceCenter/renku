@@ -49,4 +49,5 @@ jobs:
           FRONTEND=${{ matrix.FRONTEND }} \
           RUN_IMAGE=${{ env.RUN_IMAGE }} \
           BUILDER=${{ env.BUILDER_IMAGE }} \
+          PUBLISH=1 \
           make -C global-images ${{ matrix.FLAVOR }}

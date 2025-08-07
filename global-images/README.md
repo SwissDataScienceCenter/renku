@@ -2,22 +2,36 @@
 
 The subdirectories here contain basic spec for images that can be used in global session launchers in RenkuLab.
 They are built using [buildpacks](https://github.com/SwissDataScienceCenter/renku-frontend-buildpacks/) and contain
-some basic libraries.
+some basic libraries. Consult the environment definition files in the subdirectories to see which packages they contain.
 
 ## Building
 
 To build the images, install [pack](https://buildpacks.io/docs/for-platform-operators/how-to/integrate-ci/pack/) then run:
 
 ```shell
-$ pack build \
-    --builder ghcr.io/swissdatasciencecenter/renku-frontend-buildpacks/selector:0.0.6 \
-    --run-image ghcr.io/swissdatasciencecenter/renku-frontend-buildpacks/base-image:0.0.6 \
-    -p global-images/base \
-    --env BP_RENKU_FRONTENDS=jupyterlab \
-    renku/renkulab-base-py
+$ make all
 ```
 
-You may specify a different frontend (e.g. `vscodium`) and choose a different environment spec from the `global-images` directory.
+## Configuration
+
+There are a few environment variables you can set to modify the build.
+
+| Environment Variable | Description | Default |
+------------------------------------------------
+| BUILDER | Builder image to use | ghcr.io/swissdatasciencecenter/renku-frontend-buildpacks/selector:0.0.6 |
+| DOCKER_PREFIX | Prefix to use for the image | None |
+| FRONTEND | The frontend to add (vscodium or jupyterlab) | vscodium |
+| PUBLISH | Push the image to the registry | False |
+| RUN_IMAGE | Run image to use | ghcr.io/swissdatasciencecenter/renku-frontend-buildpacks/base-image:0.0.6 |
+| TAGS | Comma-separated list of image names | None |
+
+## Adding additional images
+
+To configure an additional image spec to be built, follow these steps:
+
+- create a new sub-directory with the corresponding environment definition file
+- add the new directory name to the Makefile targets
+- add the directory name to the `FLAVOR` list in the build matrix in `build-global-renkulab-images.yml`
 
 ## Publishing
 
