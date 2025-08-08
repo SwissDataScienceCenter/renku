@@ -18,34 +18,40 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  changes:
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: read
+    outputs:
+      backend: ${{ steps.filter.outputs.docs }}
+      frontend: ${{ steps.filter.outputs.frontend }}
+    steps:
+    # For pull requests it's not necessary to checkout the code
+    - uses: dorny/paths-filter@v3
+      id: filter
+      with:
+        filters: |
+          docs:
+            - 'docs/**'
+
   test-docs:
+    needs: changes
     name: Documentation
     runs-on: ubuntu-24.04
-    if: github.event.action != 'closed'
+    if: github.event.action != 'closed' && needs.changes.outputs.docs == 'true'
     steps:
-      - uses: dorny/paths-filter@v3
-        id: changes
-        with:
-          filters: |
-            src:
-              - 'docs/**'
       - uses: actions/checkout@v4.2.2
-        if: steps.changes.outputs.src == 'true'
       - uses: actions/setup-node@v4
-        if: steps.changes.outputs.src == 'true'
         working-directory: docs
         with:
           cache: npm
       - name: install dependencies
-        if: steps.changes.outputs.src == 'true'
         working-directory: docs
         run: npm install
       - name: test docs spelling
-        if: steps.changes.outputs.src == 'true'
         working-directory: docs
         run: npm run spell-check
       - name: test the docs build
-        if: steps.changes.outputs.src == 'true'
         working-directory: docs
         run: npm run build
 
