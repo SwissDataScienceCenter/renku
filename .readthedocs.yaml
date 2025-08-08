@@ -2,14 +2,14 @@ version: 2
 build:
   os: ubuntu-22.04
   tools:
-    nodejs: "18"
+    nodejs: "22"
   jobs:
     install:
-       - cd docs/ && npm install
+       - npm --prefix docs clean-install
     build:
       html:
         # Build the site
-        - cd docs/ && npm run build
+        - npm --prefix docs run build
         # Copy generated files into Read the Docs directory
         - mkdir --parents $READTHEDOCS_OUTPUT/html/
         - cp --recursive docs/build/* $READTHEDOCS_OUTPUT/html/
