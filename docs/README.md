@@ -20,6 +20,10 @@ Another useful command is `npm run clear` (accompanied with a server restart) wh
 cached and built static files when significant changes are made but they do not
 show up on the development server.
 
+## Updating documentation
+
+All the relevant files are in the `docs/docs` folder. You can add new pages or folders there to modify or add to the documentation.
+
 ## Build
 
 ```bash
