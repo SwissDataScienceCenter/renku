@@ -4,6 +4,8 @@ import type * as Preset from '@docusaurus/preset-classic';
 
 // This runs in Node.js - Don't use client-side code here (browser APIs, JSX...)
 
+const url = new URL(process.env.READTHEDOCS_CANONICAL_URL || "https://renku.readthedocs.io");
+
 const config: Config = {
   title: 'Renku',
   tagline: 'Connecting data, code, compute, and people.',
@@ -15,10 +17,10 @@ const config: Config = {
   },
 
   // Set the production url of your site here
-  url: process.env.READTHEDOCS_CANONICAL_URL || "https://renku.readthedocs.io",
+  url: `http://${url.host}`,
   // Set the /<baseUrl>/ pathname under which your site is served
   // For GitHub pages deployment, it is often '/<projectName>/'
-  baseUrl: '/',
+  baseUrl: url.pathname,
 
   // GitHub pages deployment config.
   // If you aren't using GitHub pages, you don't need these.
