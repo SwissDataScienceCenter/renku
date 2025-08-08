@@ -106,7 +106,7 @@ const config: Config = {
             },
             {
               label: 'For admins',
-              to: '/docs/admins',
+              to: '/docs/admins/architecture/services',
             },
           ],
         },

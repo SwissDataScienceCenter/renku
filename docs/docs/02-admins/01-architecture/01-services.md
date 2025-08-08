@@ -13,7 +13,7 @@ in Kubernetes.
 - **Data service**: The main backend service for Renku.
 - **Secret service**: Stores and manipulates user secrets.
 - **K8s watcher**: Watches Kubernetes events for user sessions and populates the information in Postgres.
-- **UI**: Serves static assets for the user interface.
+- **UI**: The web server for the Renku user interface.
 - **UI server**: Backend for frontend, most likely to be fully eliminated in the future.
 - **Amalthea**: Kubernetes operator that controls user sessions.
 
