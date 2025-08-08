@@ -4,7 +4,7 @@ title: Requirements
 
 ## Kubernetes or Openshift
 
-It is recomended to have a maintained version that is either actively
+It is recommended to have a maintained version that is either actively
 supported or has maintenance support. Older versions may work but 
 it is not safe operating Kubernetes versions that are unsupported.
 
@@ -29,7 +29,7 @@ We recommend installing both via their respective Helm charts.
 
 You should have a container storage interface (CSI) driver which supports
 dynamic volume provisioning. If you use managed Kubernetes on any public cloud
-you will most likely get this out of the box. Dynamic volume provisioining
+you will most likely get this out of the box. Dynamic volume provisioning
 allows the storage driver to create volumes from persistent volume claims (PVC).
 
 To find out if you have dynamic volume provisioning you can run the following
@@ -47,7 +47,7 @@ provisioning.
 
 The `csi-rclone` storage class should not be used for provisioning storage for sessions.
 It is used by Renku to mount data connectors with data hosted on cloud storage. But its
-performance is not suffcient to host the local filesystem for a session.
+performance is not sufficient to host the local filesystem for a session.
 
 :::
 

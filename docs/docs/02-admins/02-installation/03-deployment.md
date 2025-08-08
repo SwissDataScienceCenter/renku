@@ -10,7 +10,7 @@ title: Deployment
 helm repo add renku https://swissdatasciencecenter.github.io/helm-charts
 ```
 
-2. Update the repo with the newest Helm chart.
+2. Update the repository with the newest Helm chart.
 
 ```
 helm repo update renku
@@ -19,7 +19,7 @@ helm repo update renku
 3. Read the [Configuration section](02-configuration.md) of the documentation and setup your values file.
 
 :::info
-You can merge the differet values file examples from different steps of the documentation
+You can merge the different values file examples from different steps of the documentation
 into a single file, or use multiple values file and let Helm merge them. 
 For example, you can do the following:
 ```
@@ -85,7 +85,7 @@ spec:
 
 You can refer to the Flux documentation about 
 [specifying multiple Helm chart values files](https://fluxcd.io/flux/components/helm/helmreleases/#values)
-in Kubernetes `Secrets` or `ConfigMaps` if you dont want to merge all the examples from the documentation by hand.
+in Kubernetes `Secrets` or `ConfigMaps` if you don't want to merge all the examples from the documentation by hand.
 
 :::warning
 You should not be committing any secrets or passwords that may be required in the values file

@@ -14,7 +14,7 @@ Scrapes metrics and data from services running in your cluster.
 
 ## [Grafana](https://grafana.com/)
 
-Visualizes metrics scraped by prometheus. We can provide some dashboards
+Visualizes metrics scraped by Prometheus. We can provide some dashboards
 upon request that we use in production.
 
 ## [Alertmanager](https://github.com/prometheus/alertmanager)

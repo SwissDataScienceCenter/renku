@@ -21,7 +21,7 @@ have deployed.
 
 One of the most important setting in your values file is the amount of resources (i.e. CPU and memory)
 for the different Renku services that will be deployed. We strongly recommend setting resource requests
-for cpu and memory, and resource limits for memory that match the request. In addition to this, you should have
+for CPU and memory, and resource limits for memory that match the request. In addition to this, you should have
 alarms on the memory usage for each service so that more memory can be provisioned when the memory usage
 is high (e.g. >80% or 90% of the limit). Without tracking this or acting when memory usage spikes to 
 do a sudden increase in users your Renku deployment will not run reliably and crucial services will
@@ -210,7 +210,7 @@ in the Renku repository.
 
 This is what is required:
 - Public Harbor project.
-- Robot account with permisssions `list`, `pull`, `push`, `read`.
+- Robot account with permissions `list`, `pull`, `push`, `read`.
 - Kubernetes secret of type `kubernetes.io/dockerconfigjson` which contains the
   credentials for the robot account and will allow Renku to push images into the Harbor repository.
 

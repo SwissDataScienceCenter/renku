@@ -4,7 +4,7 @@ A summary of the main services that make up Renku and how they are organized.
 
 ## Overview
 
-Unless specifically stated every service below is either a Deployment or Statefulset
+Unless specifically stated every service below is either a Deployment or StatefulSet
 in Kubernetes.
 
 ### Developed in-house
@@ -19,7 +19,7 @@ in Kubernetes.
 
 ### Cronjobs and initialization
 
-- Platform initialiation
+- Platform initialization
 - Postgres initialization for Keycloak
 - Postgres initialization for Authzed 
 - Postgres initialization for Renku data service
