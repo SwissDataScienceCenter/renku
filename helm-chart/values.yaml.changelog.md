@@ -13,7 +13,8 @@ configured with either port (custom session environments).
 
 Important: this change will cause existing sessions to have git misconfigured when resuming. Users should be made
 aware that after upgrading they should save their work and shut down their session. Sessions already running will not
-break, it is resuming which will not work.
+break, it is resuming which will not work. To avoid this disruption the `port` value can be set to `8080` when
+upgrading to Renku `2.6.0` and unsetting the value back to default during downtime.
 
 * NEW `notebooks.gitHttpsProxy.port` to set the git-proxy port
 * NEW `notebooks.gitHttpsProxy.healthPort` to set the git-proxy health check port
