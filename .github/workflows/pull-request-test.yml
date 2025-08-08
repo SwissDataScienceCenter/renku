@@ -23,8 +23,7 @@ jobs:
     permissions:
       pull-requests: read
     outputs:
-      backend: ${{ steps.filter.outputs.docs }}
-      frontend: ${{ steps.filter.outputs.frontend }}
+      docs: ${{ steps.filter.outputs.docs }}
     steps:
     # For pull requests it's not necessary to checkout the code
     - uses: dorny/paths-filter@v3
@@ -38,21 +37,21 @@ jobs:
     needs: changes
     name: Documentation
     runs-on: ubuntu-24.04
-    if: github.event.action != 'closed' && needs.changes.outputs.docs == 'true'
+    if: ${{github.event.action != 'closed' && needs.changes.outputs.docs == 'true'}}
+    defaults:
+      run:
+        working-directory: docs/
     steps:
       - uses: actions/checkout@v4.2.2
       - uses: actions/setup-node@v4
-        working-directory: docs
         with:
           cache: npm
+          cache-dependency-path: docs/package-lock.json
       - name: install dependencies
-        working-directory: docs
         run: npm install
       - name: test docs spelling
-        working-directory: docs
         run: npm run spell-check
       - name: test the docs build
-        working-directory: docs
         run: npm run build
 
   check-deploy:
