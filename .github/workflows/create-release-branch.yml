@@ -16,7 +16,7 @@ jobs:
   create-release-pr:
     runs-on: ubuntu-24.04
     steps:
-      - uses: actions/checkout@v4.2.2
+      - uses: actions/checkout@v5.0.0
         with:
           fetch-depth: 0
           token: "${{ secrets.RENKUBOT_GITHUB_TOKEN }}"
