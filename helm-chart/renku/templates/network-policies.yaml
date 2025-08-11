@@ -1068,3 +1068,46 @@ spec:
       app.kubernetes.io/name: AmaltheaSession
   policyTypes:
   - Egress
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: ingress-to-rclone-rcd-from-data-service
+  labels:
+    app: {{ template "renku.name" . }}
+    chart: {{ template "renku.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  podSelector:
+    matchLabels:
+      app: renku-rclone-rcd
+      release: {{ .Release.Name }}
+  policyTypes:
+    - Ingress
+  ingress:
+    - from:
+        - podSelector:
+            matchLabels:
+              app: renku-data-service
+              release: {{ .Release.Name }}
+      ports:
+        - protocol: TCP
+          port: http
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: egress-from-rclone-rcd
+spec:
+  egress:
+    {{- with .Values.networkPolicies.sessions.egress }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+  podSelector:
+    matchLabels:
+      app: renku-rclone-rcd
+      release: {{ .Release.Name }}
+  policyTypes:
+  - Egress
+
