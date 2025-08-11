@@ -1,0 +1,54 @@
+name: Build global base images
+
+on:
+  push:
+    paths:
+      - "global-images/**"
+      - ".github/workflows/build-global-renkulab-images.yml"
+env:
+  DOCKER_PREFIX: ghcr.io/swissdatasciencecenter/renku
+  BUILDER_IMAGE: ghcr.io/swissdatasciencecenter/renku-frontend-buildpacks/selector:0.0.6
+  RUN_IMAGE: ghcr.io/swissdatasciencecenter/renku-frontend-buildpacks/base-image:0.0.6
+jobs:
+  build-images:
+    runs-on: ubuntu-24.04
+    strategy:
+      fail-fast: true
+      matrix:
+        FLAVOR:
+          - basic
+          - datascience
+        FRONTEND:
+          - jupyterlab
+          - vscodium
+    steps:
+      - uses: actions/checkout@v4
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      - name: Docker meta
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.DOCKER_PREFIX }}/py-${{ matrix.FLAVOR }}-${{ matrix.FRONTEND }}
+          tags: |
+            type=sha,prefix=
+            type=raw,value=latest,enable=${{ github.ref == 'refs/heads/master' }}
+            type=semver,pattern={{version}},event=tag
+      - uses: buildpacks/github-actions/setup-pack@v5.0.0
+      - name: Build image
+        run: |
+          tags=$(echo "${{ steps.meta.outputs.tags }}" | tr '\n' ',')
+          tags=${tags::-1}
+          TAGS=$tags \
+          FRONTEND=${{ matrix.FRONTEND }} \
+          RUN_IMAGE=${{ env.RUN_IMAGE }} \
+          BUILDER=${{ env.BUILDER_IMAGE }} \
+          PUBLISH=1 \
+          EXTRA_FLAGS="--cache-image ${{ env.DOCKER_PREFIX }}/py-${{ matrix.FLAVOR }}-${{ matrix.FRONTEND }}-cache:latest" \
+          make -C global-images ${{ matrix.FLAVOR }}
