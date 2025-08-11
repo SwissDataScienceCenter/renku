@@ -5,6 +5,9 @@ on:
     paths:
       - "global-images/**"
       - ".github/workflows/build-global-renkulab-images.yml"
+    tags:
+      - "[0-9]+.[0-9]+.[0-9]+"
+
 env:
   DOCKER_PREFIX: ghcr.io/swissdatasciencecenter/renku
   BUILDER_IMAGE: ghcr.io/swissdatasciencecenter/renku-frontend-buildpacks/selector:0.0.6
