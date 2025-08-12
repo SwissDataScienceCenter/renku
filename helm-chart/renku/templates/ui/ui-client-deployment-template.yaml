@@ -99,7 +99,7 @@ spec:
             - name: IMAGE_BUILDERS_ENABLED
               value: {{ .Values.dataService.imageBuilders.enabled | quote }}
             - name: LEGACY_SUPPORT
-              value: {{ printf "{\"enabled\": %t }" .Values.enableV1Services | quote }}
+              value: {{ dict "enabled" .Values.enableV1Services "supportLegacySessions" .Values.ui.client.supportLegacySessions | toJson | quote }}
           livenessProbe:
             httpGet:
               path: /
