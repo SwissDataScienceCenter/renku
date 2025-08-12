@@ -54,6 +54,8 @@ spec:
               value: {{ .Values.posthog.enabled | quote }}
             - name: IMAGE_BUILDERS_ENABLED
               value: {{ .Values.dataService.imageBuilders.enabled | quote }}
+            - name: V1_SERVICES_ENABLED
+              value: {{ .Values.enableV1Services | default false }}
             - name: KUBERNETES_NAMESPACE
               valueFrom:
                 fieldRef:
