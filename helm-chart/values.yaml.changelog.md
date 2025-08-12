@@ -7,7 +7,7 @@ Please follow this convention when adding a new row
 
 ## Upgrading to Renku 2.6.0
 
-+* NEW `ui.client.supportLegacySessions` used to disabled Legacy sessions.
++* NEW `ui.client.supportLegacySessions` used to disable Legacy sessions.
 
 ## Upgrading to Renku 2.5.0
 
