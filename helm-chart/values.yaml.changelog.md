@@ -5,6 +5,10 @@ For changes that require manual steps other than changing values, please check o
 Please follow this convention when adding a new row
 * `<type: NEW|EDIT|DELETE> - *<resource name>*: <details>`
 
+## Upgrading to Renku 2.6.0
+
++* NEW `ui.client.supportLegacySessions` used to disable Legacy sessions.
+
 ## Upgrading to Renku 2.5.0
 
 The notebook service and asscociated K8s services and components like Service, Roles, Rolebindings, etc. have been

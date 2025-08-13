@@ -1,0 +1,15 @@
+[tool.poetry]
+name = "basic-python-renku-dependencies"
+version = "0.0.1"
+description = "Basic Python dependencies for renkulab.io"
+authors = ["Renku developers <hello@renku.io>"]
+license = "Apache 2.0"
+readme = "README.md"
+package-mode = false
+
+[tool.poetry.dependencies]
+python = ">=3.12,<3.14"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

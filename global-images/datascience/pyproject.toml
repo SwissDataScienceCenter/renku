@@ -1,0 +1,23 @@
+[tool.poetry]
+name = "datascience-python-renku-dependencies"
+version = "0.0.1"
+description = "Basic Python datascience dependencies for renkulab.io"
+authors = ["Renku developers <hello@renku.io>"]
+license = "Apache 2.0"
+readme = "README.md"
+package-mode = false
+
+[tool.poetry.dependencies]
+python = ">=3.12,<3.14"
+pandas = "^2.3.1"
+numpy = "^2.3.2"
+scipy = "^1.16.1"
+scikit-learn = "^1.7.1"
+plotly = "^6.2.0"
+transformers = "^4.55.0"
+matplotlib = "^3.10.5"
+seaborn = "^0.13.2"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
