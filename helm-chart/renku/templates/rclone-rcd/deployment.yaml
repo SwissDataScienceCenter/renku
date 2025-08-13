@@ -1,0 +1,81 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ template "renku.fullname" . }}-rclone-rcd
+  labels:
+    app: renku-rclone-rcd
+    chart: {{ template "renku.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  replicas: {{ .Values.rcloneRcd.replicaCount }}
+  strategy:
+    {{- toYaml .Values.rcloneRcd.updateStrategy | nindent 4 }}
+  selector:
+    matchLabels:
+      app: renku-rclone-rcd
+      release: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app: renku-rclone-rcd
+        release: {{ .Release.Name }}
+    spec:
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      initContainers:
+        {{- include "certificates.initContainer" . | nindent 8 }}
+      containers:
+        - name: rclone-rcd
+          image: "{{ .Values.rcloneRcd.image.name }}:{{ .Values.rcloneRcd.image.tag }}"
+          imagePullPolicy: {{ .Values.rcloneRcd.image.pullPolicy }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          command: ["rclone"]
+          args: ["rcd", "--rc-addr", "0.0.0.0:8000", "--rc-no-auth"]
+          ports:
+            - name: http
+              containerPort: 8000
+              protocol: TCP
+          volumeMounts:
+            {{- include "certificates.volumeMounts.system" . | nindent 12 }}
+          livenessProbe:
+            exec:
+              command:
+                - wget
+                - --post-data
+                - ""
+                - "http://127.0.0.1:8000/rc/noop"
+                - --output-document
+                - "-"
+                - "-q"
+            periodSeconds: 10
+            failureThreshold: 3
+          startupProbe:
+            exec:
+              command:
+                - wget
+                - --post-data
+                - ""
+                - "http://127.0.0.1:8000/rc/noop"
+                - --output-document
+                - "-"
+                - "-q"
+            periodSeconds: 10
+            failureThreshold: 2
+          resources:
+            {{ toYaml .Values.rcloneRcd.resources | nindent 12 }}
+    {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{ toYaml . | nindent 8 }}
+    {{- end }}
+    {{- with .Values.affinity }}
+      affinity:
+        {{ toYaml . | nindent 8 }}
+    {{- end }}
+    {{- with .Values.tolerations }}
+      tolerations:
+        {{ toYaml . | nindent 8 }}
+    {{- end }}
+      volumes:
+        {{- include "certificates.volumes" . | nindent 8 }}

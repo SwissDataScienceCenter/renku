@@ -842,6 +842,15 @@ csi-rclone:
   # where it is used.
   #   tolerations: []
   #   affinity: {}
+# Used to test rclone connections from the data service
+rcloneRcd:
+  image:
+    name: rclone/rclone
+    tag: "1.70"
+    pullPolicy: IfNotPresent
+  resources: {}
+  replicas: 1
+  updateStrategy: {}
 notebooks:
   cloudstorage:
     ## If enabled this will allow mounting of rclone cloudstorage
