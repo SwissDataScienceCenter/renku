@@ -42,7 +42,7 @@ jobs:
       run:
         working-directory: docs/
     steps:
-      - uses: actions/checkout@v4.2.2
+      - uses: actions/checkout@v5
       - uses: actions/setup-node@v4
         with:
           node-version: "22"
@@ -86,7 +86,7 @@ jobs:
       id-token: write
     if: github.event.action != 'closed'
     steps:
-      - uses: actions/checkout@v4.2.2
+      - uses: actions/checkout@v5
       - name: Find deployment url
         if: needs.check-deploy.outputs.deploy == 'true'
         uses: peter-evans/find-comment@v3
