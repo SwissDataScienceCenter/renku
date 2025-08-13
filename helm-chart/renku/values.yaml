@@ -165,7 +165,7 @@ global:
     port: 6379
     ## Not that the host is the same as fullnameOverride only in sentinel mode.
     ## In other cases the redis service is usually called <fullnameOverride>-headless.
-    host: renku-redis
+    host: renku-redis-master
     sentinel:
       ## Set to true if redis host/port point to a redis sentinel.
       enabled: false
