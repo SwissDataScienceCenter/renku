@@ -168,7 +168,7 @@ global:
     host: renku-redis
     sentinel:
       ## Set to true if redis host/port point to a redis sentinel.
-      enabled: true
+      enabled: false
       masterSet: mymaster
     ## The label added to client pods so that they can access redis.
     ## Needed only if the network policy from the redis helm chart that adds this
