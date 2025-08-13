@@ -14,12 +14,12 @@ RUN apt-get update && \
 # This 'mkdir' is just to make the openjdk installation to pass
 RUN mkdir -p /usr/share/man/man1 && \
     apt-get update && \
-    apt-get install -y openjdk-17-jdk
+    apt-get install -y openjdk-21-jdk
 
 # Install sbt
-RUN echo "deb https://repo.scala-sbt.org/scalasbt/debian all main" | tee /etc/apt/sources.list.d/sbt.list && \
-    echo "deb https://repo.scala-sbt.org/scalasbt/debian /" |  tee /etc/apt/sources.list.d/sbt_old.list && \
-    curl -sL "https://keyserver.ubuntu.com/pks/lookup?op=get&search=0x2EE0EA64E40A89B84B2DF73499E82A75642AC823" | apt-key add && \
+RUN echo "deb [signed-by=/usr/share/keyrings/scala.gpg] https://repo.scala-sbt.org/scalasbt/debian all main" | tee /etc/apt/sources.list.d/sbt.list && \
+    echo "deb [signed-by=/usr/share/keyrings/scala.gpg] https://repo.scala-sbt.org/scalasbt/debian /" |  tee /etc/apt/sources.list.d/sbt_old.list && \
+    curl -sL "https://keyserver.ubuntu.com/pks/lookup?op=get&search=0x2EE0EA64E40A89B84B2DF73499E82A75642AC823" | gpg --dearmor -o /usr/share/keyrings/scala.gpg && \
     apt-get update &&  apt-get install sbt && \
     rm -rf /var/cache/apt && \
     wget --quiet https://dl.min.io/client/mc/release/linux-amd64/mc -O /usr/local/bin/mc && \
