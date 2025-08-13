@@ -162,7 +162,7 @@ global:
     ## If you're deploying redis through this chart and you want to deviate from
     ## the defaults, you'll have to match whatever you set here in the non-global
     ## redis section below which defines the actual redis cluster.
-    port: 26379
+    port: 6379
     ## Not that the host is the same as fullnameOverride only in sentinel mode.
     ## In other cases the redis service is usually called <fullnameOverride>-headless.
     host: renku-redis
