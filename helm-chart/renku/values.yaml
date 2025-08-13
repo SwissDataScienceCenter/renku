@@ -461,7 +461,7 @@ redis:
 
   # replication is the default; standalone is also an option but this results in
   # no read only replicas
-  architecture: replication
+  architecture: standalone
   auth:
     enabled: true
     # renku-gateway requires sentinel authentication to be enabled
@@ -502,7 +502,7 @@ redis:
   # pod and this does checking to ensure that the system always has a
   # master
   sentinel:
-    enabled: true
+    enabled: false
     # this determines how many nodes must agree before a master
     # reelection is required
     quorum: 2
