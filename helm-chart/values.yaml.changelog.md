@@ -16,7 +16,7 @@ configured with either port (custom session environments).
 
 ## Upgrading to Renku 2.6.0
 
-+* NEW `ui.client.supportLegacySessions` used to disable Legacy sessions.
+* NEW `ui.client.supportLegacySessions` used to disable Legacy sessions.
 
 ## Upgrading to Renku 2.5.0
 
