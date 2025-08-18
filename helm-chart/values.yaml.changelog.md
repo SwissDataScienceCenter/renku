@@ -11,7 +11,6 @@ The git-proxy sidecar container in sessions has been updated to have ports confi
 for session services (range 65400-65535). Previously, the ports 8080 and 8081 were used which would break sessions
 configured with either port (custom session environments).
 
-
 * NEW `notebooks.gitHttpsProxy.port` to set the git-proxy port
 * NEW `notebooks.gitHttpsProxy.healthPort` to set the git-proxy health check port
 
