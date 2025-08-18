@@ -24,6 +24,7 @@ jobs:
         FRONTEND:
           - jupyterlab
           - vscodium
+          - ttyd
     steps:
       - uses: actions/checkout@v4
       - name: Login to GitHub Container Registry
