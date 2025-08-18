@@ -5,6 +5,8 @@ on:
     paths:
       - "global-images/**"
       - ".github/workflows/build-global-renkulab-images.yml"
+    branches:
+      - "**"
     tags:
       - "[0-9]+.[0-9]+.[0-9]+"
 
