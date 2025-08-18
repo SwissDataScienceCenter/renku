@@ -5,13 +5,15 @@ on:
     paths:
       - "global-images/**"
       - ".github/workflows/build-global-renkulab-images.yml"
+    branches:
+      - "**"
     tags:
       - "[0-9]+.[0-9]+.[0-9]+"
 
 env:
   DOCKER_PREFIX: ghcr.io/swissdatasciencecenter/renku
-  BUILDER_IMAGE: ghcr.io/swissdatasciencecenter/renku-frontend-buildpacks/selector:0.0.6
-  RUN_IMAGE: ghcr.io/swissdatasciencecenter/renku-frontend-buildpacks/base-image:0.0.6
+  BUILDER_IMAGE: ghcr.io/swissdatasciencecenter/renku-frontend-buildpacks/selector:0.0.8
+  RUN_IMAGE: ghcr.io/swissdatasciencecenter/renku-frontend-buildpacks/base-image:0.0.8
 jobs:
   build-images:
     runs-on: ubuntu-24.04
@@ -24,6 +26,7 @@ jobs:
         FRONTEND:
           - jupyterlab
           - vscodium
+          - ttyd
     steps:
       - uses: actions/checkout@v4
       - name: Login to GitHub Container Registry
