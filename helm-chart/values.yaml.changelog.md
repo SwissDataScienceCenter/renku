@@ -5,6 +5,19 @@ For changes that require manual steps other than changing values, please check o
 Please follow this convention when adding a new row
 * `<type: NEW|EDIT|DELETE> - *<resource name>*: <details>`
 
+## Upgrading to Renku 2.7.0
+
+The git-proxy sidecar container in sessions has been updated to have ports configured inside the reserved range
+for session services (range 65400-65535). Previously, the ports 8080 and 8081 were used which would break sessions
+configured with either port (custom session environments).
+
+Important: this change will cause existing sessions to have git misconfigured when resuming. Users should be made
+aware that after upgrading they should save their work and shut down their session. Sessions already running will not
+break, it is resuming which will not work.
+
+* NEW `notebooks.gitHttpsProxy.port` to set the git-proxy port
+* NEW `notebooks.gitHttpsProxy.healthPort` to set the git-proxy health check port
+
 ## Upgrading to Renku 2.6.0
 
 +* NEW `ui.client.supportLegacySessions` used to disable Legacy sessions.
