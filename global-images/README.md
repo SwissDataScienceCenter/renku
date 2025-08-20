@@ -17,7 +17,7 @@ $ make all
 There are a few environment variables you can set to modify the build.
 
 | Environment Variable | Description | Default |
-------------------------------------------------
+|----------------------|-------------|---------|
 | BUILDER | Builder image to use | ghcr.io/swissdatasciencecenter/renku-frontend-buildpacks/selector:0.0.8 |
 | DOCKER_PREFIX | Prefix to use for the image | None |
 | FRONTEND | The frontend to add (vscodium or jupyterlab) | vscodium |
