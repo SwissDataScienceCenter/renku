@@ -1,4 +1,5 @@
 ---
+enableV1Services: false
 gitlab:
   enabled: false
 global:
