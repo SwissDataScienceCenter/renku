@@ -996,8 +996,8 @@ notebooks:
     image:
       name: renku/git-https-proxy
       tag: "1.31.1"
-    port: # defaults to 65480
-    healthPort: # defaults to port+1
+    port: 65480
+    healthPort: 65481
   gitClone:
     image:
       name: renku/git-clone
