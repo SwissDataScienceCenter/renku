@@ -152,6 +152,8 @@ spec:
             - name: BUILD_NODE_TOLERATIONS
               value: {{ toJson . | quote }}
             {{- end }}
+            - name: V1_SESSIONS_ENABLED
+              value: {{ .Values.ui.client.supportLegacySessions | default false | quote }}
             - name: POSTHOG_ENABLED
               value: {{ .Values.posthog.enabled | quote }}
             - name: KUBERNETES_NAMESPACE

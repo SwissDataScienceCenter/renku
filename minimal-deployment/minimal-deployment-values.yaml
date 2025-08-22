@@ -14,6 +14,11 @@ global:
   renku:
     domain: <deployment-FQDN>
   useHTTPS: true
+  redis:
+    port: 6379
+    host: renku-redis-master
+    sentinel:
+      enabled: false
 ingress:
   className: webapprouting.kubernetes.azure.com
   enabled: true
@@ -44,6 +49,9 @@ notebooks:
       operator: Equal
       value: user
 redis:
+  architecture: standalone
   master:
     persistence:
       enabled: false
+  sentinel:
+    enabled: false
