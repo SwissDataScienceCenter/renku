@@ -5,13 +5,15 @@ on:
     paths:
       - "global-images/**"
       - ".github/workflows/build-global-renkulab-images.yml"
+    branches:
+      - "**"
     tags:
       - "[0-9]+.[0-9]+.[0-9]+"
 
 env:
   DOCKER_PREFIX: ghcr.io/swissdatasciencecenter/renku
-  BUILDER_IMAGE: ghcr.io/swissdatasciencecenter/renku-frontend-buildpacks/selector:0.0.6
-  RUN_IMAGE: ghcr.io/swissdatasciencecenter/renku-frontend-buildpacks/base-image:0.0.6
+  BUILDER_IMAGE: ghcr.io/swissdatasciencecenter/renku-frontend-buildpacks/selector:0.0.8
+  RUN_IMAGE: ghcr.io/swissdatasciencecenter/renku-frontend-buildpacks/base-image:0.0.8
 jobs:
   build-images:
     runs-on: ubuntu-24.04
@@ -24,8 +26,9 @@ jobs:
         FRONTEND:
           - jupyterlab
           - vscodium
+          - ttyd
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - name: Login to GitHub Container Registry
         uses: docker/login-action@v3
         with:
@@ -43,7 +46,7 @@ jobs:
             type=sha,prefix=
             type=raw,value=latest,enable=${{ github.ref == 'refs/heads/master' }}
             type=semver,pattern={{version}},event=tag
-      - uses: buildpacks/github-actions/setup-pack@v5.0.0
+      - uses: buildpacks/github-actions/setup-pack@v5.9.3
       - name: Build image
         run: |
           tags=$(echo "${{ steps.meta.outputs.tags }}" | tr '\n' ',')
