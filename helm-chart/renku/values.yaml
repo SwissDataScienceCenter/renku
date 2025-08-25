@@ -8,6 +8,8 @@
 
 ## Global variables
 ## Shared values/secrets
+
+# JUST A FAKE CHANGE
 global:
   ## YAML string that contains all application level Renku configuration options.
   platformConfig: |
