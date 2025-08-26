@@ -9,12 +9,12 @@ package-mode = false
 
 [tool.poetry.dependencies]
 python = ">=3.12,<3.14"
-pandas = "^2.3.1"
+pandas = "^2.3.2"
 numpy = "^2.3.2"
 scipy = "^1.16.1"
 scikit-learn = "^1.7.1"
-plotly = "^6.2.0"
-transformers = "^4.55.0"
+plotly = "^6.3.0"
+transformers = "^4.55.4"
 matplotlib = "^3.10.5"
 seaborn = "^0.13.2"
 
