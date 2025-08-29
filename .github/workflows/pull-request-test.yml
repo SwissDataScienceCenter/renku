@@ -134,7 +134,7 @@ jobs:
           DOCKER_USERNAME: ${{ secrets.RENKU_DOCKER_USERNAME }}
           GITLAB_TOKEN: ${{ secrets.DEV_GITLAB_TOKEN }}
           KUBECONFIG: "${{ github.workspace }}/renkubot-kube.config"
-          RENKU_RELEASE: ci-renku-${{ github.event.number }}
+          RENKU_RELEASE: thechosenone # TODO: undo before merging
           RENKU_VALUES_FILE: "${{ github.workspace }}/values.yaml"
           RENKU_VALUES: minimal-deployment/minimal-deployment-values.yaml
           TEST_ARTIFACTS_PATH: "tests-artifacts-${{ github.sha }}"
