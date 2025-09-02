@@ -1,5 +1,40 @@
+# NOTE: Any resource requests and replica counts here are used only for development and testing purposes
+# and likely will not be able to support more than 5 concurrent users.
+# Therefore the resource requests, limits, replica counts here and are NOT SUITABLE FOR PRODUCTION.
 ---
+authz:
+  resources:
+    resources:
+      limits:
+        memory: 50Mi
+      requests:
+        cpu: 20m
+        memory: 50Mi
+dataService:
+  dataTasks:
+    resources:
+      limits:
+        memory: 160Mi
+      requests:
+        cpu: 50m
+        memory: 160Mi
+  k8sWatcher:
+    resources:
+      limits:
+        memory: 150Mi
+      requests:
+        cpu: 20m
+        memory: 150Mi
+  resources:
+    limits:
+      memory: 600Mi
+    requests:
+      cpu: 50m
+      memory: 600Mi
+  replicaCount: 1
 enableV1Services: false
+gateway:
+  replicaCount: 1
 gitlab:
   enabled: false
 global:
@@ -56,3 +91,26 @@ redis:
       enabled: false
   sentinel:
     enabled: false
+secretsStorage:
+  resources:
+    limits:
+      memory: 400Mi
+    requests:
+      cpu: 50m
+      memory: 400Mi
+solr:
+  resources:
+    limits:
+      memory: 300Mi
+    requests:
+      cpu: 50m
+      memory: 300Mi
+ui:
+  client:
+    resources:
+      limits:
+        memory: 65Mi
+      requests:
+        cpu: 10m
+        memory: 65Mi
+
