@@ -63,6 +63,12 @@ ingress:
     - hosts:
         - <deployment-FQDN>
       secretName: <certificate-secret-name>
+keycloakx:
+  resources:
+    requests:
+      memory: 600Mi
+    limits:
+      memory: 600Mi
 notebooks:
   oidc:
     allowUnverifiedEmail: true
@@ -83,6 +89,13 @@ notebooks:
       key: renku.io/dedicated
       operator: Equal
       value: user
+postgresql:
+  primary:
+    resources:
+      limits:
+        memory: 300Mi
+      requests:
+        memory: 300Mi
 redis:
   architecture: standalone
   master:
@@ -112,4 +125,10 @@ ui:
       requests:
         cpu: 10m
         memory: 150Mi
+  server:
+    resources:
+      limits:
+        memory: 75Mi
+      requests:
+        memory: 75Mi
 
