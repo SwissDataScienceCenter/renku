@@ -13,23 +13,23 @@ dataService:
   dataTasks:
     resources:
       limits:
-        memory: 160Mi
+        memory: 200Mi
       requests:
         cpu: 50m
-        memory: 160Mi
+        memory: 200Mi
   k8sWatcher:
     resources:
       limits:
-        memory: 150Mi
+        memory: 200Mi
       requests:
         cpu: 20m
-        memory: 150Mi
+        memory: 200Mi
   resources:
     limits:
-      memory: 600Mi
+      memory: 650Mi
     requests:
       cpu: 50m
-      memory: 600Mi
+      memory: 650Mi
   replicaCount: 1
 enableV1Services: false
 gateway:
@@ -93,17 +93,17 @@ redis:
 secretsStorage:
   resources:
     limits:
-      memory: 400Mi
+      memory: 450Mi
     requests:
       cpu: 50m
-      memory: 400Mi
+      memory: 450Mi
 solr:
   resources:
     limits:
-      memory: 300Mi
+      memory: 350Mi
     requests:
       cpu: 50m
-      memory: 300Mi
+      memory: 350Mi
 ui:
   client:
     resources:
