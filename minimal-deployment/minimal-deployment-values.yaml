@@ -5,18 +5,18 @@
 authz:
   resources:
     limits:
-      memory: 50Mi
+      memory: 75Mi
     requests:
-      cpu: 20m
-      memory: 50Mi
+      cpu: 50m
+      memory: 75Mi
 dataService:
   dataTasks:
     resources:
       limits:
-        memory: 200Mi
+        memory: 250Mi
       requests:
         cpu: 50m
-        memory: 200Mi
+        memory: 250Mi
   k8sWatcher:
     resources:
       limits:
@@ -106,17 +106,17 @@ redis:
 secretsStorage:
   resources:
     limits:
-      memory: 450Mi
+      memory: 500Mi
     requests:
       cpu: 50m
-      memory: 450Mi
+      memory: 500Mi
 solr:
   resources:
     limits:
-      memory: 350Mi
+      memory: 400Mi
     requests:
       cpu: 50m
-      memory: 350Mi
+      memory: 400Mi
 ui:
   client:
     resources:
