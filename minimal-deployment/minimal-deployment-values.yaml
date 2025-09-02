@@ -108,8 +108,8 @@ ui:
   client:
     resources:
       limits:
-        memory: 65Mi
+        memory: 150Mi
       requests:
         cpu: 10m
-        memory: 65Mi
+        memory: 150Mi
 
