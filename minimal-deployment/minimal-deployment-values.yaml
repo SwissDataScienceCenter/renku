@@ -26,10 +26,10 @@ dataService:
         memory: 200Mi
   resources:
     limits:
-      memory: 650Mi
+      memory: 700Mi
     requests:
       cpu: 50m
-      memory: 650Mi
+      memory: 700Mi
   replicaCount: 1
 enableV1Services: false
 gateway:
