@@ -240,7 +240,7 @@ jobs:
           e2e-target: ${{ matrix.tests }}
           kubernetes-cluster-fqdn: ${{ needs.check-deploy.outputs.deploy == 'true' && 'dev.renku.ch' }}
           renku-reference: ${{ github.ref }}
-          renku-release: ci-renku-${{ github.event.number }}
+          renku-release: thechosenone # TODO: undo before merging
           test-user-password: ${{ secrets.RENKU_BOT_DEV_PASSWORD }}
 
   deploy-string-no-custom-version:
