@@ -10,6 +10,8 @@ npm install
 
 ## Local Development
 
+`cd` into the `docs` folder.
+
 ```bash
 npm run start
 ```
