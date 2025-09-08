@@ -23,6 +23,7 @@ The default Keycloak admin username and password are stored in the `keycloak-pas
 kubectl get secret keycloak-password-secret -n renku -o jsonpath='{.data.KEYCLOAK_ADMIN}' | base64 -d
 ```
 
+For the password:
 ```bash
 kubectl get secret keycloak-password-secret -n renku -o jsonpath='{.data.KEYCLOAK_ADMIN_PASSWORD}' | base64 -d
 ```
