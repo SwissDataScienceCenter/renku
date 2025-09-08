@@ -45,7 +45,13 @@ To grant administrative privileges to additional users:
 
 ## Managing Keycloak Admin Users
 
-In addition to Renku-specific admin user, you may want to create additional Keycloak admin accounts for managing the identity provider itself.
+In addition to Renku-specific admin user, you may want to create additional Keycloak admin accounts for managing the identity provider itself. 
+
+:::danger[Keycloak admins have very broad permissions]
+Assigning someone to be a Keycloak admin gives them full access to every realm in the Keycloak deployment and the ability to create, impersonate and delete any user in any realm, as well as make any user a Renku admin. Use this with caution.
+:::
+
+Note that making someone a Keycloak admin does not automatically make them a Renku admin or vice versa. The two roles are completely independent. But a Keycloak admin can impersonate a user that has the Renku admin role. In addition, Keycloak admins have the permission to assign the Renku admin role to themselves or any other user.
 
 ### Creating Additional Keycloak Admins
 
