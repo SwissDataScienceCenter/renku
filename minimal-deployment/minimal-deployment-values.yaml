@@ -1,5 +1,39 @@
+# NOTE: Any resource requests and replica counts here are used only for development and testing purposes
+# and likely will not be able to support more than 5 concurrent users.
+# Therefore the resource requests, limits, replica counts here and are NOT SUITABLE FOR PRODUCTION.
 ---
+authz:
+  resources:
+    limits:
+      memory: 75Mi
+    requests:
+      cpu: 50m
+      memory: 75Mi
+dataService:
+  dataTasks:
+    resources:
+      limits:
+        memory: 250Mi
+      requests:
+        cpu: 50m
+        memory: 250Mi
+  k8sWatcher:
+    resources:
+      limits:
+        memory: 200Mi
+      requests:
+        cpu: 20m
+        memory: 200Mi
+  resources:
+    limits:
+      memory: 750Mi
+    requests:
+      cpu: 50m
+      memory: 750Mi
+  replicaCount: 1
 enableV1Services: false
+gateway:
+  replicaCount: 1
 gitlab:
   enabled: false
 global:
@@ -29,6 +63,12 @@ ingress:
     - hosts:
         - <deployment-FQDN>
       secretName: <certificate-secret-name>
+keycloakx:
+  resources:
+    requests:
+      memory: 600Mi
+    limits:
+      memory: 600Mi
 notebooks:
   oidc:
     allowUnverifiedEmail: true
@@ -49,6 +89,13 @@ notebooks:
       key: renku.io/dedicated
       operator: Equal
       value: user
+postgresql:
+  primary:
+    resources:
+      limits:
+        memory: 300Mi
+      requests:
+        memory: 300Mi
 redis:
   architecture: standalone
   master:
@@ -56,3 +103,32 @@ redis:
       enabled: false
   sentinel:
     enabled: false
+secretsStorage:
+  resources:
+    limits:
+      memory: 500Mi
+    requests:
+      cpu: 50m
+      memory: 500Mi
+solr:
+  resources:
+    limits:
+      memory: 400Mi
+    requests:
+      cpu: 50m
+      memory: 400Mi
+ui:
+  client:
+    resources:
+      limits:
+        memory: 150Mi
+      requests:
+        cpu: 10m
+        memory: 150Mi
+  server:
+    resources:
+      limits:
+        memory: 75Mi
+      requests:
+        memory: 75Mi
+
