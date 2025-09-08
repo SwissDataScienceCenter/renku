@@ -17,7 +17,7 @@ Renku uses [Keycloak](https://www.keycloak.org/) as its identity provider. When 
 
 ### Default Admin Credentials
 
-The default admin username and password are stored in the `keycloak-password-secret` Kubernetes secret when Renku is installed. To retrieve these credentials:
+The default Keycloak admin username and password are stored in the `keycloak-password-secret` Kubernetes secret when Renku is installed. To retrieve these credentials run the commands below:
 
 ```bash
 kubectl get secret keycloak-password-secret -n renku -o jsonpath='{.data.KEYCLOAK_ADMIN}' | base64 -d
