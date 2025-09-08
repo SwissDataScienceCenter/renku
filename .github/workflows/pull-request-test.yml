@@ -134,7 +134,7 @@ jobs:
           DOCKER_USERNAME: ${{ secrets.RENKU_DOCKER_USERNAME }}
           GITLAB_TOKEN: ${{ secrets.DEV_GITLAB_TOKEN }}
           KUBECONFIG: "${{ github.workspace }}/renkubot-kube.config"
-          RENKU_RELEASE: thechosenone # TODO: undo before merging
+          RENKU_RELEASE: ci-renku-${{ github.event.number }}
           RENKU_VALUES_FILE: "${{ github.workspace }}/values.yaml"
           RENKU_VALUES: minimal-deployment/minimal-deployment-values.yaml
           TEST_ARTIFACTS_PATH: "tests-artifacts-${{ github.sha }}"
@@ -240,7 +240,7 @@ jobs:
           e2e-target: ${{ matrix.tests }}
           kubernetes-cluster-fqdn: ${{ needs.check-deploy.outputs.deploy == 'true' && 'dev.renku.ch' }}
           renku-reference: ${{ github.ref }}
-          renku-release: thechosenone # TODO: undo before merging
+          renku-release: ci-renku-${{ github.event.number }}
           test-user-password: ${{ secrets.RENKU_BOT_DEV_PASSWORD }}
 
   deploy-string-no-custom-version:
