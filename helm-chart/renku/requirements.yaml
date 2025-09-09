@@ -1,14 +1,14 @@
 dependencies:
   - name: postgresql
     version: "14.2.4"
-    repository: "oci://registry-1.docker.io/bitnamicharts"
+    repository: "oci://harbor.renkulab.io/bitnami-mirror"
     condition: postgresql.enabled
   - name: keycloakx
     version: 2.1.0
     repository: "https://codecentric.github.io/helm-charts"
     condition: keycloakx.enabled
   - name: redis
-    repository: "oci://registry-1.docker.io/bitnamicharts"
+    repository: "oci://harbor.renkulab.io/bitnami-mirror"
     version: 20.3.0
     condition: redis.install
   - name: renku-jena
@@ -32,7 +32,7 @@ dependencies:
     version: "0.4.2"
     condition: global.csi-rclone.install
   - name: solr
-    repository: "oci://registry-1.docker.io/bitnamicharts"
+    repository: "oci://harbor.renkulab.io/bitnami-mirror"
     version: "8.9.2"
     condition: solr.enabled
     # setting the version of bitnami-common here to avoid conflicts in sub-charts bundling different versions

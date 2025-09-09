@@ -96,6 +96,10 @@ postgresql:
         memory: 300Mi
       requests:
         memory: 300Mi
+  # Use Bitnami's PostgreSQL image from Renkulab Harbor registry
+  image:
+    registry: harbor.renkulab.io
+    repository: bitnami-mirror/postgresql
 redis:
   architecture: standalone
   master:
@@ -103,6 +107,14 @@ redis:
       enabled: false
   sentinel:
     enabled: false
+    # Use Bitnami's Redis Sentinel image from Renkulab Harbor registry
+    image:
+      registry: harbor.renkulab.io
+      repository: bitnami-mirror/redis-sentinel
+  # Use Bitnami's Redis image from Renkulab Harbor registry
+  image:
+    registry: harbor.renkulab.io
+    repository: bitnami-mirror/redis
 secretsStorage:
   resources:
     limits:
@@ -117,6 +129,10 @@ solr:
     requests:
       cpu: 50m
       memory: 400Mi
+  # Use Bitnami's Solr image from Renkulab Harbor registry
+  image:
+    registry: harbor.renkulab.io
+    repository: bitnami-mirror/solr
 ui:
   client:
     resources:
@@ -131,4 +147,3 @@ ui:
         memory: 75Mi
       requests:
         memory: 75Mi
-
