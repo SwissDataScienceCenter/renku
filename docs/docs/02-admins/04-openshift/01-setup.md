@@ -1,0 +1,266 @@
+---
+title: Installing on OpenShift
+---
+
+## Preparing the project
+
+The helm installation operates the same on OpenShift as on Kubernetes however
+there are some differences such as management of CRDs that must be done by an
+administrator. There are also RBAC rules that must be put int place that will
+require admin access.
+
+### CRDs
+
+Generate the CRDs out of the helm chart:
+
+```bash
+helm template --namespace renku renku renku/renku -f renku-values.yaml --set amalthea.deployCrd=true --set amalthea-sessions.deployCrd=true | yq e '. | select(.kind == "CustomResourceDefinition")' > renku-crds.yaml
+```
+
+Generate the RBAC for renku-data-services:
+
+```bash
+ helm template --namespace renku renku renku/renku -f renku-values.yaml --set amalthea.deployCrd=true --set amalthea-session.deployCrd=true --set dataService.rbac.create=true| yq e '. | select(.kind == "*Role*" and (.metadata.name == "renku-data-service" or .metadata.name == "renku-k8s-watcher"))' > data-services-rbac.yaml
+```
+
+This is because renku-data-services requires ClusterRole and ClusterRoleBinding.
+In this case, the Role and RoleBinding will also be handled by the admin as
+making the distinction in the charts starts to make it overly complicated for
+not much benefits.
+
+## Cluster access
+
+Login
+
+```bash
+oc login --user <username> https://url.to.openshift.cluster --web
+```
+
+Create the project
+
+```bash
+oc new-project renku
+```
+
+## Optional:
+
+If no certificate issuer is available, then a self signed issuer can be created.
+
+Note that this require a ClusterIssuer and thus admin access.
+
+Follow the [Cert-Manager documentation for SelfSigned](https://cert-manager.io/docs/configuration/selfsigned/)
+
+
+## Prerequisite
+
+### CRDs
+
+Install CRDs generated earlier (as an admin):
+
+```bash
+oc apply -f renku-crds.yaml
+```
+### RBAC
+
+Depending on how many people will manage the Renku deployment(s), it will be
+simpler to create a `Group` so that the required roles do not need to be updated
+for each every person.
+
+```yaml
+kind: Group
+apiVersion: user.openshift.io/v1
+metadata:
+  name: renku-admin
+users:
+  - user1
+  - user2
+
+```
+
+As an admin:
+
+```bash
+oc apply -f - renku-admin.yaml
+```
+
+Required cluster roles, bindings and cluster role bindings for people installing
+Renku:
+
+```yaml
+kind: ClusterRole
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: amaltheasession-manager
+rules:
+- apiGroups:
+  - amalthea.dev
+  resources:
+  - amaltheasessions
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - amalthea.dev
+  resources:
+  - amaltheasessions/finalizers
+  verbs:
+  - update
+- apiGroups:
+  - amalthea.dev
+  resources:
+  - amaltheasessions/status
+  verbs:
+  - get
+  - patch
+  - update
+---
+kind: RoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: amaltheasession-manager-for-renku-admin
+  namespace: renku
+subjects:
+  - kind: Group
+    apiGroup: rbac.authorization.k8s.io
+    name: renku-admin
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: amaltheasession-manager
+---
+kind: RoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: resourcesquotas-manager-for-renku-admin
+subjects:
+  - kind: Group
+    apiGroup: rbac.authorization.k8s.io
+    name: renku-admin
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: resourcesquotas-manager
+---
+kind: ClusterRole
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: priorityclasses-manager
+rules:
+- apiGroups:
+  - "scheduling.k8s.io"
+  resources:
+  - priorityclasses
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+---
+kind: ClusterRoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: priorityclasses-manager-for-renku-admin
+subjects:
+  - kind: User
+    apiGroup: rbac.authorization.k8s.io
+    name: renku-admin
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: priorityclasses-manager
+```
+
+As an admin, setup renku project admin roles:
+
+```bash
+oc apply -f renku-roles.yaml
+```
+
+## Renku deployment
+
+With everything in place as listed in the previous steps, Renku can now be
+installed as usual
+
+```bash
+helm upgrade  --install --namespace renku renku renk/renku -f renku-values.yaml --timeout 1800s --skip-crds
+```
+
+### Setup Keycloak
+
+Grab admin password
+
+```bash
+oc -n renku get secrets keycloak-password-secret -o jsonpath='{.data.KEYCLOAK_ADMIN_PASSWORD}' | base64 -d | pbcopy
+```
+
+Next:
+
+- Login the Keycloak console
+- Switch to the Renku realm
+- Go to Identity Providers
+- Click on OpenID Connect
+- Fill in the information for the identity provider
+- Go to Groups
+- Create renku-admin group
+- Add Role mapping for renku-admin
+
+Once done, make the admin users log into Renku then:
+
+- Go to either Groups or Users
+- Add admin user to the renku-admin group
+
+### Amalthea session service account
+
+The default Security Context Constraint (SCC) used to start pods will not allow
+for Amalthea sessions to run as it uses fixed user values. This means that
+currently the `nonroot-v2` SCC must be used. This can be achieved through the
+use of a service account with adequate configuration.
+
+Create service account for amalthea-sessions to allow the use of a different
+SCC:
+
+```bash
+oc --namespace renku create serviceaccount renku-amalthea-sessions-scc-handler
+```
+
+Add the required SCC to the service account (must be done as an admin)
+
+```bash
+oc adm policy add-scc-to-user nonroot-v2 -z renku-amalthea-sessions-scc-handler -n renku
+```
+
+### On the Renku side
+
+In order to use this service account, which is cluster specific, the Renku
+platform needs to be configured for that. It's a two phase approach:
+
+1. A Cluster object must be created with the name of the service account to be
+used
+2. A resource pool must be configured to use this
+
+<!--
+    To be added:
+    - example of curl command to create the cluster
+    - example of curl command to set the cluster on a specific resource pool
+    - example of curl command to create a resource pool using that cluster
+-->
+
+# Cleanup
+
+If you want to fully clean the namespace used for Renku without deleting it, you
+will need to apply the following commands after having run helm uninstall:
+
+```bash
+oc delete secret -l release==renku  --namespace renku
+oc delete jobs -l release==renku  --namespace renku
+oc delete serviceaccounts -l release==renku  --namespace renku
+oc get pvc --namespace renku | awk '{print $1}' | xargs oc delete pvc
+```
