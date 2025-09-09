@@ -1564,6 +1564,18 @@ secretsStorage:
 # The support for this feature is experimental and it should not be set to false in production at all.
 enableV1Services: true
 
+# When this is set to false the gateway and data service will ignore the Gitlab
+# that can be integrated with Renku and will not ask users to log into this Gitlab.
+# NOTE: This flag has no effect on the core service and knowledge graph. Therefore
+# setting this to false should only be done if the enableV1Services flag is also false.
+# When this is set to false the gateway will not inject the internal gitlab tokens and
+# the data service will not require them and if tokens are passed it will just ignore them.
+# Setting this to false in existing Renku deployment will result in code repositories
+# that use the internal Gitlab not functioning properly. If you still want to set this
+# to false and keep operating with an internal Gitlab you should create an Integration
+# with the internal Gitlab and ask users to activate the connection.
+enableInternalGitlab: true
+
 podSecurityContext: {}
 securityContext:
   runAsUser: 1000
