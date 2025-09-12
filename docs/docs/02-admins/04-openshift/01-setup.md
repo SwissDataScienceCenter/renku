@@ -62,7 +62,7 @@ Install CRDs generated earlier (as an admin):
 ```bash
 oc apply -f renku-crds.yaml
 ```
-### RBACs
+### RBAC
 
 Install the RBAC rules generated earlier (as an admin):
 
