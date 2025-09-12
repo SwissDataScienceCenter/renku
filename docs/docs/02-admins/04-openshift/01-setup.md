@@ -17,6 +17,8 @@ Generate the CRDs out of the helm chart:
 helm template --namespace renku renku renku/renku -f renku-values.yaml --set amalthea.deployCrd=true --set amalthea-sessions.deployCrd=true | yq e '. | select(.kind == "CustomResourceDefinition")' > renku-crds.yaml
 ```
 
+### RBACs
+
 Generate the RBAC for renku-data-services:
 
 ```bash
@@ -60,7 +62,13 @@ Install CRDs generated earlier (as an admin):
 ```bash
 oc apply -f renku-crds.yaml
 ```
-### RBAC
+### RBACs
+
+Install the RBACs generated earlier (as an admin):
+
+```bash
+oc apply -f data-services-rbac.yaml
+```
 
 Depending on how many people will manage the Renku deployment(s), it will be
 simpler to create a `Group` so that the required roles do not need to be updated
@@ -183,6 +191,8 @@ As an admin, setup renku project admin roles:
 ```bash
 oc apply -f renku-roles.yaml
 ```
+
+
 
 ## Renku deployment
 
