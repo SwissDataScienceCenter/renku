@@ -50,7 +50,7 @@ data:
           servicePaths: 
             {{- include "gateway.core.pathsYaml" . | nindent 12 }}
           sticky: true 
-        dataService: {{ printf "http://%s-data-service" .Release.Name | quote }}
+        dataService: {{ printf "http://%s-data-service" (include "renku.fullname" .) | quote }}
         keycloak: {{ include "renku.keycloakUrl" . | quote }} 
         uiserver: {{ printf "http://%s" (include "ui-server.fullname" .) | quote }} 
         search: {{ printf "http://%s-search-api" .Release.Name | quote }}
