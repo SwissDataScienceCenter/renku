@@ -64,7 +64,7 @@ oc apply -f renku-crds.yaml
 ```
 ### RBACs
 
-Install the RBACs generated earlier (as an admin):
+Install the RBAC rules generated earlier (as an admin):
 
 ```bash
 oc apply -f data-services-rbac.yaml
