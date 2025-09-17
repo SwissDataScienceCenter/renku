@@ -5,6 +5,15 @@ For changes that require manual steps other than changing values, please check o
 Please follow this convention when adding a new row
 * `<type: NEW|EDIT|DELETE> - *<resource name>*: <details>`
 
+## Upgrading to Renku 2.8.0
+
+* NEW `enableInternalGitlab`, set to `true` by default. Indicates that the Gitlab that comes with legacy (V1) Renku
+should still be used. If the value is set to `false` then the gateway will not ask users to
+log into the Renku legacy Gitlab and will not inject credentials for it. Note also that the
+`enableInternalGitlab` flag cannot be set to `false` if the `enableV1Services` flag is set to `true`.
+If you are creating a brand new deployment of Renku, then both the `enableInternalGitlab` and the
+`enableV1Services` flags should be set to `false`.
+
 ## Upgrading to Renku 2.7.0
 
 The git-proxy sidecar container in sessions has been updated to have ports configured inside the reserved range
