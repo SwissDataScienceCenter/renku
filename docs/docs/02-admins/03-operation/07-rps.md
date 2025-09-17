@@ -1,5 +1,5 @@
 ---
-title: Resource pools and classes
+title: Resource Pools and Classes
 ---
 
 :::warning[Under construction]
