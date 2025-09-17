@@ -37,6 +37,7 @@ data:
           authorizedParty: renku-cli
     revproxy:
       enableV1Services: {{ .Values.enableV1Services | default false }}
+      enableInternalGitlab: {{ .Values.enableInternalGitlab | default false }}
       renkuBaseUrl: {{ include "renku.baseUrl" . | quote }}
       externalGitlabUrl: {{ .Values.global.gitlab.url | default "" | quote }}
       k8sNamespace: {{ .Release.Namespace }}
@@ -56,6 +57,7 @@ data:
         search: {{ printf "http://%s-search-api" .Release.Name | quote }}
     login:
       enableV1Services: {{ .Values.enableV1Services | default false }}
+      enableInternalGitlab: {{ .Values.enableInternalGitlab | default false }}
       renkuBaseUrl: {{ include "renku.baseUrl" . | quote }}
       loginRoutesBasePath: "/api/auth"
       defaultAppRedirectURL: {{ include "renku.baseUrl" . | quote }}
@@ -68,7 +70,7 @@ data:
           scopes: ["profile", "email", "openid", "microprofile-jwt"]
           callbackURI:  {{ printf "%s/api/auth/callback" (include "renku.baseUrl" .) }}
           usePKCE: false
-        {{- if .Values.enableV1Services }}
+        {{- if .Values.enableInternalGitlab }}
         gitlab:
           issuer: {{ .Values.global.gitlab.url | quote }}
           clientID: {{ .Values.gateway.gitlabClientId | default .Values.global.gateway.gitlabClientId | quote }}
