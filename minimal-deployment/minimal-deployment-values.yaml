@@ -105,6 +105,11 @@ redis:
   master:
     persistence:
       enabled: false
+  metrics:
+    # Use the bitnami metrics image from the Renkulab Harbor registry
+    image:
+      registry: harbor.renkulab.io
+      repository: bitnami-mirror/redis-exporter
   sentinel:
     enabled: false
     # Use Bitnami's Redis Sentinel image from Renkulab Harbor registry
