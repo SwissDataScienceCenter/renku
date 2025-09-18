@@ -286,14 +286,15 @@ networkPolicies:
             cidr: 172.31.0.0/16
 ```
 
-### On the Renku side
+## After deployment
 
-In order to use this service account, which is cluster specific, the Renku
-platform needs to be configured for that. It's a two phase approach:
+### Service account configuration
+
+In order to make use of the service account created above, the Renku platform must be configured. More specifically, the resources pools that will target the OpenShift cluster must be configured. It's a two step process:
 
 1. A Cluster object must be created with the name of the service account to be
 used
-2. A resource pool must be configured to use this
+2. Each resource pool targeting the cluster must be configured to use it
 
 <!--
     To be added:
