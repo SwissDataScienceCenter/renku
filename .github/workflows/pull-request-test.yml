@@ -43,7 +43,7 @@ jobs:
         working-directory: docs/
     steps:
       - uses: actions/checkout@v5
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v5
         with:
           node-version: "22"
           cache: npm
@@ -261,7 +261,7 @@ jobs:
           || needs.check-deploy.outputs.renku-data-services != null
           )
           }}
-        uses: actions/github-script@v7
+        uses: actions/github-script@v8
         with:
           script: core.setFailed('Cannot merge release PR if it still has custom versions in deploy string.')
 
