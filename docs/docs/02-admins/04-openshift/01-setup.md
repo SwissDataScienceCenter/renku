@@ -18,8 +18,13 @@ helm template --namespace renku renku renku/renku -f renku-values.yaml --set ama
 ```
 
 :::warning
-The above command will give you the CRDs from the  latest version of Renku. But you can select the CRDs from a specific Renku version by adding the `--version=x.x.x` flag to the `helm template` command. Using the latest version may cause problems or unpredictable behavior if you extract the resource from a different version of Renku than what you have or will install.
+The above command will give you the CRDs from the latest version of Renku. But
+you can select the CRDs from a specific Renku version by adding the
+`--version=x.x.x` flag to the `helm template` command. Using the latest version
+may cause problems or unpredictable behavior if you extract the resource from a
+different version of Renku than what you have or will install.
 :::
+
 ### RBAC
 
 Generate the RBAC for renku-data-services:
@@ -32,6 +37,14 @@ This is because renku-data-services requires ClusterRole and ClusterRoleBinding.
 In this case, the Role and RoleBinding will also be handled by the admin as
 making the distinction in the charts starts to make it overly complicated for
 not much benefits.
+
+:::warning
+The above command will give you the RBAC from the latest version of Renku. But
+you can select the RBAC from a specific Renku version by adding the
+`--version=x.x.x` flag to the `helm template` command. Using the latest version
+may cause problems or unpredictable behavior if you extract the resource from a
+different version of Renku than what you have or will install.
+:::
 
 ## Cluster access
 
