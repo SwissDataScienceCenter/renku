@@ -247,6 +247,62 @@ Add the required SCC to the service account (must be done as an admin)
 oc adm policy add-scc-to-user nonroot-v2 -z renku-amalthea-sessions-scc-handler -n renku
 ```
 
+### Network Policies:
+
+There are some subtle differences in the DNS setup between a vanilla Kubernetes
+cluster and OpenShift. Without diving in the details, the main issue is that the
+NetworkPolicy for the AmaltheaSession objects created with Renku won't work as
+is in OpenShift.
+
+There are three (maybe four) things to take into account:
+
+- The DNS is using port 5353
+- The DNS resolver is in a different namespace
+- The DNS resolver pods have a different label to match
+- Depending on your network setup there might be IP blocks to unlock
+
+Here is an example of a modified NetworkPolicy that adds port 5353 to the list of
+allowed ports as well as updates the namespace and pod selectors to reach the
+appropriate dns pods.
+
+It also shows how to unlock part of the internal network to make it accessible to
+AmaltheaSession. That last point is completely optional but might be useful
+depending on the network setup of the infrastructure hosting the cluster.
+
+```yaml
+# values.yaml
+networkPolicies:
+  sessions:
+    egress:
+      - ports:
+        - port: 53
+          protocol: UDP
+        - port: 53
+          protocol: TCP
+        - port: 5353
+          protocol: UDP
+        - port: 5353
+          protocol: TCP
+        to:
+          - namespaceSelector:
+              matchLabels:
+                kubernetes.io/metadata.name: openshift-dns
+            podSelector:
+              matchLabels:
+                dns.operator.openshift.io/daemonset-dns: default
+      - to:
+        - ipBlock:
+            cidr: 0.0.0.0/0
+            except:
+            - 10.0.0.0/8
+            - 172.16.0.0/12
+            - 192.168.0.0/16
+      # Optional: unlock access to part of the internal network
+      - to:
+        - ipBlock:
+            cidr: 172.31.0.0/16
+```
+
 ### On the Renku side
 
 In order to use this service account, which is cluster specific, the Renku
