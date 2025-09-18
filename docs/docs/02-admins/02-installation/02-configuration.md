@@ -240,6 +240,8 @@ The file above is just an example you will have to modify the options shown as f
   The example in the yaml snippet above is for a secret called `renku-build-docker-secret` located
   in the same namespace as where Renku is installed.
 
+- Label the node(s) you want to use for the builds with `renku.io/node-purpose: image-build`
+
 ### Configuration without Harbor and Shipwright
 
 This is the default and no further steps are needed.
