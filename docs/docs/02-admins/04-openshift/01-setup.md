@@ -6,7 +6,7 @@ title: Installing on OpenShift
 
 The helm installation operates the same on OpenShift as on Kubernetes however
 there are some differences such as management of CRDs that must be done by an
-administrator. There are also RBAC rules that must be put int place that will
+administrator. There are also RBAC rules that must be put into place that will
 require admin access.
 
 ### CRDs
@@ -17,7 +17,10 @@ Generate the CRDs out of the helm chart:
 helm template --namespace renku renku renku/renku -f renku-values.yaml --set amalthea.deployCrd=true --set amalthea-sessions.deployCrd=true | yq e '. | select(.kind == "CustomResourceDefinition")' > renku-crds.yaml
 ```
 
-### RBACs
+:::warning
+The above command will give you the CRDs from the  latest version of Renku. But you can select the CRDs from a specific Renku version by adding the `--version=x.x.x` flag to the `helm template` command. Using the latest version may cause problems or unpredictable behavior if you extract the resource from a different version of Renku than what you have or will install.
+:::
+### RBAC
 
 Generate the RBAC for renku-data-services:
 
@@ -203,29 +206,9 @@ installed as usual
 helm upgrade  --install --namespace renku renku renk/renku -f renku-values.yaml --timeout 1800s --skip-crds
 ```
 
-### Setup Keycloak
-
-Grab admin password
-
-```bash
-oc -n renku get secrets keycloak-password-secret -o jsonpath='{.data.KEYCLOAK_ADMIN_PASSWORD}' | base64 -d | pbcopy
-```
-
-Next:
-
-- Login the Keycloak console
-- Switch to the Renku realm
-- Go to Identity Providers
-- Click on OpenID Connect
-- Fill in the information for the identity provider
-- Go to Groups
-- Create renku-admin group
-- Add Role mapping for renku-admin
-
-Once done, make the admin users log into Renku then:
-
-- Go to either Groups or Users
-- Add admin user to the renku-admin group
+:::info
+Any Renku user can be made a Renku administrator. This is useful for setting up different global environments, resource pools or integrations. In addition, Renku administrators can access the projects and similar resources of any user in the platform. The documentation for assigning the Renku administrator role can be found [here](08-user-management.md).
+:::
 
 ### Amalthea session service account
 
