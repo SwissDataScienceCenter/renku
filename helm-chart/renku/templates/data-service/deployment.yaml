@@ -154,6 +154,8 @@ spec:
             {{- end }}
             - name: V1_SESSIONS_ENABLED
               value: {{ .Values.ui.client.supportLegacySessions | default false | quote }}
+            - name: ENABLE_INTERNAL_GITLAB
+              value: {{ .Values.enableInternalGitlab | default false | quote }}
             - name: POSTHOG_ENABLED
               value: {{ .Values.posthog.enabled | quote }}
             - name: KUBERNETES_NAMESPACE

@@ -565,7 +565,7 @@ ui:
     replicaCount: 1
     image:
       repository: renku/renku-ui
-      tag: "4.7.0"
+      tag: "4.8.0"
       pullPolicy: IfNotPresent
       ## Optionally specify an array of imagePullSecrets.
       ## Secrets must be manually created in the namespace.
@@ -749,7 +749,7 @@ ui:
     keepCookies: []
     image:
       repository: renku/renku-ui-server
-      tag: "4.7.0"
+      tag: "4.8.0"
       pullPolicy: IfNotPresent
     imagePullSecrets: []
     nameOverride: ""
@@ -1125,7 +1125,7 @@ gateway:
   secretKey:
   image:
     repository: renku/renku-gateway
-    tag: "1.6.0"
+    tag: "1.7.0"
     pullPolicy: IfNotPresent
   service:
     type: ClusterIP
@@ -1444,18 +1444,18 @@ dataService:
     create: true
   image:
     repository: renku/renku-data-service
-    tag: "0.55.0"
+    tag: "0.56.0"
     pullPolicy: IfNotPresent
   k8sWatcher:
     image:
       repository: renku/data-service-k8s-watcher
-      tag: "0.55.0"
+      tag: "0.56.0"
       pullPolicy: IfNotPresent
     resources: {}
   dataTasks:
     image:
       repository: renku/data-service-data-tasks
-      tag: "0.55.0"
+      tag: "0.56.0"
       pullPolicy: IfNotPresent
     resources: {}
   service:
@@ -1541,7 +1541,7 @@ authz:
 secretsStorage:
   image:
     repository: renku/secrets-storage
-    tag: "0.55.0"
+    tag: "0.56.0"
     pullPolicy: IfNotPresent
   service:
     type: ClusterIP
@@ -1563,6 +1563,18 @@ secretsStorage:
 # This is used to indicate whether services needed exclusively for Renku V1 are deployed or not.
 # The support for this feature is experimental and it should not be set to false in production at all.
 enableV1Services: true
+
+# When this is set to false the gateway and data service will ignore the Gitlab
+# that can be integrated with Renku and will not ask users to log into this Gitlab.
+# NOTE: This flag has no effect on the core service and knowledge graph. Therefore
+# setting this to false should only be done if the enableV1Services flag is also false.
+# When this is set to false the gateway will not inject the internal gitlab tokens and
+# the data service will not require them and if tokens are passed it will just ignore them.
+# Setting this to false in existing Renku deployment will result in code repositories
+# that use the internal Gitlab not functioning properly. If you still want to set this
+# to false and keep operating with an internal Gitlab you should create an Integration
+# with the internal Gitlab and ask users to activate the connection.
+enableInternalGitlab: true
 
 podSecurityContext: {}
 securityContext:

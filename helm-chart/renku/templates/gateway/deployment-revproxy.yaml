@@ -71,7 +71,7 @@ spec:
                 secretKeyRef:
                   name: {{ cat (include "renku.fullname" .) "-gateway" | nospace }}
                   key: oidcClientSecret
-            {{- if .Values.enableV1Services }}
+            {{- if .Values.enableInternalGitlab }}
             - name: GATEWAY_LOGIN_PROVIDERS_GITLAB_CLIENTSECRET
               valueFrom:
                 secretKeyRef:
@@ -93,7 +93,7 @@ spec:
                 secretKeyRef:
                   name: {{ cat (include "renku.fullname" .) "-gateway" | nospace }}
                   key: cookieHashKey
-            {{- if .Values.enableV1Services }}
+            {{- if .Values.enableInternalGitlab }}
             - name: GATEWAY_LOGIN_PROVIDERS_GITLAB_COOKIEENCODINGKEY
               valueFrom:
                 secretKeyRef:
