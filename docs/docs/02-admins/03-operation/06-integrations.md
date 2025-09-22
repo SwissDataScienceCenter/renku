@@ -9,7 +9,7 @@ compute platforms such as HPC clusters. All of these integrations or connected
 services are just OAuth2 clients to 3rd party services or applications.
 
 Therefore, for every integration there are 2 steps:
-1. Creating the client at the 3rd party application (i.e. at Gitlab.com).
+1. Creating the client at the 3rd party application (e.g. at Gitlab.com).
 2. Adding the client configuration in Renku from the admin console.
 
 :::note
@@ -30,7 +30,7 @@ register more than one client of the "Gitlab" kind.
 #### Create the client in Gitlab
 
 1. Navigate to your Gitlab deployment and log in. You may create the application
-as an admin or even as a regular users as long as your specific Gitlab deployment
+as an admin or even as a regular user as long as your specific Gitlab deployment
 allows this.
     :::info
     Some Gitlab deployments have the option to create applications disabled.
