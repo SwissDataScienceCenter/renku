@@ -5,8 +5,7 @@ title: Resource Pools and Classes
 Resource pools allow Renku administrators to:
 - control access to compute resources
 - assign specific users to specific nodes on the cluster
-- limit how much resources (i.e. memory, CPU and/or GPU) can users consume
-- control which users can access which resources
+- limit how much resources (i.e. memory, CPU and/or GPU) users can consume
 - control how long can sessions be idle before they are hibernated
 - control how long can sessions be hibernated before they are deleted.
 
@@ -34,20 +33,20 @@ After you create a resource pool you can change any of these options.
 
 Resource classes represent a collection of:
 - CPU
-- memory
+- Memory
 - GPU
 - Default disk storage
 - Maximum disk storage
 - Kubernetes tolerations
 - Kubernetes node affinities
 
-A resource class is what users select when they start a session and a single resource
+A resource class is what users select when they start a session. A single resource
 pool can have many resource classes.
 
 :::info
 The node affinities and tolerations can be used to make it so that specific resource
 classes run on specific nodes in the Kubernetes cluster. For this admins need to also
-manually create taints on specific nodes directly in the Kubernetes cluster and add
+ create taints on specific nodes directly in the Kubernetes cluster and add
 tolerations for these taints in the resource classes. See the Kubernetes documentation on
 [assigning pods to nodes](https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/) and
 [taints and tolerations](https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration/) 
@@ -90,7 +89,7 @@ A renku session is considered idle if both of the following conditions are true:
 
 Amalthea, the Kubernets operator that manages Renku user sessions, periodically
 checks for the 2 conditions mentioned above. Based on the conditions it determines whether 
-each user session is idle or not. If the session is found to be idle repeatedly for a period 
+each user session is idle or not. If the session is found to be idle for a period 
 longer than the specified threshold then the session will be hibernated. This threshold
 is the `Maximum idle time before hibernating` option you can specify in the resource pool.
 A single instance of the session found to NOT be idle is enough to reset the timer for
