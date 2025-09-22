@@ -56,7 +56,7 @@ to control scheduling.
 
 ## Quotas 
 
-A resource pool may have a quota. The quota is the total amount of resources (CPU, GPU and memory)
+The quota of a resource pool is the total amount of resources (CPU, GPU and memory)
 that all resource classes in the pool can have available and use at any one time for all sessions.
 
 For example if you set a quota of 2 CPU and 10Gi of memory. And you have these two resource classes in the pool:
