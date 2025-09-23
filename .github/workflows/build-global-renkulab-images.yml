@@ -54,16 +54,18 @@ jobs:
 
           # publish only on pushes to master or release tags
           PUBLISH=0
+          EXTRA_FLAGS=""
           if [[ "${GITHUB_REF}" == "refs/heads/master" ]]; then
             PUBLISH=1
           elif [[ "${GITHUB_REF}" =~ ^refs/tags/[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
             PUBLISH=1
           fi
+          [ "${PUBLISH:-}" = "1" ] && EXTRA_FLAGS="--cache-image ${{ env.DOCKER_PREFIX }}/py-${{ matrix.FLAVOR }}-${{ matrix.FRONTEND }}-cache:latest"
 
           TAGS=$tags \
           FRONTEND=${{ matrix.FRONTEND }} \
           RUN_IMAGE=${{ env.RUN_IMAGE }} \
           BUILDER=${{ env.BUILDER_IMAGE }} \
           PUBLISH=$PUBLISH \
-          EXTRA_FLAGS="--cache-image ${{ env.DOCKER_PREFIX }}/py-${{ matrix.FLAVOR }}-${{ matrix.FRONTEND }}-cache:latest" \
+          EXTRA_FLAGS=$EXTRA_FLAGS \
           make -C global-images ${{ matrix.FLAVOR }}
