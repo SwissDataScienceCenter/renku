@@ -313,7 +313,7 @@ jobs:
 
       # Cleanup Azure deployments
       - name: renku teardown
-        uses: SwissDataScienceCenter/renku-actions/cleanup-renku-ci-deployments@v1.19.0
+        uses: SwissDataScienceCenter/renku-actions/cleanup-renku-ci-deployments@leafty/fix-no-js-crd
         env:
           HELM_RELEASE_REGEX: "^ci-renku-${{ github.event.number }}$"
           GITLAB_TOKEN: ${{ secrets.DEV_GITLAB_TOKEN }}
