@@ -1513,6 +1513,18 @@ dataService:
         key: renku.io/dedicated
         operator: Equal
         value: image-build
+  ## The service account used in the Amalthea session pods for the default resource pool.
+  ## The only use for this is if you want to use a different SCC than the default in Openshift.
+  ## The service account is not mounted in the session. Leaving the default value of "" means that
+  ## a service account will not be specified for the Session spec.
+  defaultResourcePoolSessionServiceAccount: ""
+  ## A secret name that contains kubeconfigs for all remote clusters you want to use.
+  ## Each key in the secret should be a file name and should contain the YAML kubeconfig
+  ## for a remote cluster you would like to use. The name of the kubeconfig can then be used
+  ## in the payload for creating a cluster in the API, under the `config_name` field.
+  ## If the value is not set then a secret is not mounted.
+  ## The secret should be in the same namespace as where all the Renku services are installed.
+  remoteClustersKubeconfigSecretName: ""
 posthog:
   enabled: false
   # the posthog api key

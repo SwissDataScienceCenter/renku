@@ -61,9 +61,18 @@ spec:
                 fieldRef:
                   apiVersion: v1
                   fieldPath: metadata.namespace
+            {{- if .Values.dataService.remoteClustersKubeconfigSecretName }}
+            - name: K8S_CONFIGS_ROOT
+              value: "/secrets/kube_configs"
+            {{- end }}
             {{- include "certificates.env.python" . | nindent 12 }}
           volumeMounts:
             {{- include "certificates.volumeMounts.system" . | nindent 12 }}
+            {{- if .Values.dataService.remoteClustersKubeconfigSecretName }}
+            - name: remote-cluster-kubeconfigs
+              mountPath: "/secrets/kube_configs"
+              readOnly: true
+            {{- end }}
           livenessProbe:
             exec:
               command:
@@ -88,4 +97,9 @@ spec:
     {{- end }}
       volumes:
         {{- include "certificates.volumes" . | nindent 8 }}
+        {{- if .Values.dataService.remoteClustersKubeconfigSecretName }}
+        - name: remote-cluster-kubeconfigs
+          secret:
+            secretName: {{ .Values.dataService.remoteClustersKubeconfigSecretName }}
+        {{- end }}
       serviceAccountName: {{ template "renku.fullname" . }}-k8s-watcher
