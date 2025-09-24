@@ -178,6 +178,8 @@ spec:
                 secretKeyRef:
                   name: {{ cat (include "renku.fullname" .) "-gateway" | nospace }}
                   key: oidcClientSecret
+            - name: DEFAULT_RESOURCE_POOL_SESSION_SERVICE_ACCOUNT
+              value: {{ default "" .Values.dataService.defaultResourcePoolSessionServiceAccount | quote }}
             {{- if .Values.dataService.remoteClustersKubeconfigSecretName }}
             - name: K8S_CONFIGS_ROOT
               value: "/secrets/kube_configs"
