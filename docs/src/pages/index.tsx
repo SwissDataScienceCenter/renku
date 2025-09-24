@@ -20,7 +20,7 @@ function HomepageHeader() {
         <div className={styles.buttons}>
           <Link
             className="button button--secondary button--lg"
-            to="/docs/users/index">
+            to="/docs/users">
             I am a Renku user
           </Link>
         </div>
