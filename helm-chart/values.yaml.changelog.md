@@ -7,8 +7,8 @@ Please follow this convention when adding a new row
 
 ## Upgrading to Renku 2.9.0
 
-* NEW `dataService.defaultResourcePoolSessionServiceAccount`, set to "" by default.
-  The service account used in the Amalthea session pods for the default resource pool.
+* NEW `dataService.localClusterSessionServiceAccount`, set to "" by default.
+  The service account used in the Amalthea session pods for the resource pool(s) that use the local cluster.
   The only use for this is if you want to use a different SCC than the default in Openshift.
   The service account is not mounted in the session. Leaving the default value of "" means that
   a service account will not be specified for the Session spec.

@@ -179,8 +179,8 @@ spec:
                   name: {{ cat (include "renku.fullname" .) "-gateway" | nospace }}
                   key: oidcClientSecret
             - name: LOCAL_CLUSTER_SESSION_SERVICE_ACCOUNT
-              value: {{ default "" .Values.dataService.defaultResourcePoolSessionServiceAccount | quote }}
-            {{- if .Values.dataService.remoteClustersKubeconfigSecretName }}
+              value: {{ default "" .Values.dataService.localClusterSessionServiceAccount | quote }}
+            {{- if .Values.dataService.localClusterSessionServiceAccount }}
             - name: K8S_CONFIGS_ROOT
               value: "/secrets/kube_configs"
             {{- end }}
