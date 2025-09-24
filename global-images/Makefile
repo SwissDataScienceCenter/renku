@@ -10,7 +10,7 @@ all: basic datascience
 basic datascience:
 	@BASE=$@; \
 	PUBLISH_FLAG=""; \
-	if [ -n "$$PUBLISH" ]; then PUBLISH_FLAG="--publish"; fi; \
+	if [ "$${PUBLISH:-}" = "1" ]; then PUBLISH_FLAG="--publish"; fi; \
 	if [ -n "$$DOCKER_PREFIX" ]; then \
 		case "$$DOCKER_PREFIX" in \
 			*/) FINAL_PREFIX="$$DOCKER_PREFIX";; \
