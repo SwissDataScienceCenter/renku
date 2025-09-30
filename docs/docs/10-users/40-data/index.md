@@ -32,7 +32,11 @@ You can save your credentials for a data connector in RenkuLab so that you donâ€
 
 You can enter or modify the saved credentials for a data connector, and also delete it. Click on top of a data connector and a right-menu appears in the screen. Click on the **drop-down arrow** menu next to **Edit** to access further options to work on your data connector.
 
+<article style={{transform:'scale(0.75)'}}>
+
 ![image.png](./data-connectors-00.png)
+
+</article>
 
 ## Share, reuse, and trace your data
 
