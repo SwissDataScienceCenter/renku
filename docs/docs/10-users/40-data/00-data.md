@@ -2,7 +2,7 @@
 
 A data connector is a connection to a cloud data resource outside of RenkuLab.
 
-# Data in Renku 2.0
+# Data in Renku
 
 RenkuLab interactive sessions can connect with data hosted in cloud storage systems. Once you add the data connector to the project, the storage is simply mounted as another folder in your session. You can concentrate on developing your code to analyze your data, rather than worrying about moving data around!
 

@@ -1,3 +1,8 @@
+---
+title: Data Repositories
+description: Zenodo, Dataverse, etc.
+---
+
 # How to connect data from data repositories (such as Zenodo or Dataverse)
 
 # Which data repositories are supported?

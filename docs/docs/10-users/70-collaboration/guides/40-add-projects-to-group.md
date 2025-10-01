@@ -1,4 +1,4 @@
-# How to add projects to your group
+# Add projects to your group
 
 ###
 

@@ -1,4 +1,4 @@
-# How to use your own docker image for a Renku session
+# Use your own docker image for a Renku session
 
 <aside>
 <img src="https://www.notion.so/icons/light-bulb_blue.svg" alt="https://www.notion.so/icons/light-bulb_blue.svg" width="40px" />

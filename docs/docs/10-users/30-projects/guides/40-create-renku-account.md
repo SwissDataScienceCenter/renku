@@ -1,4 +1,4 @@
-# How to create your Renku account
+# Create your Renku account
 
 1. Click on Login at top right corner of [renkulab.io](http://renkulab.io)
 

@@ -1,4 +1,4 @@
-# How to connect to a Renku session from your local VSCode
+# Connect to a Renku session from your local VSCode
 
 Would you prefer to work on your Renku project from the comfort of your local VSCode rather than in the browser? This how-to guide shows you how to do exactly that!
 

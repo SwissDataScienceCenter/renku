@@ -1,4 +1,4 @@
-# How to migrate a session launcher that references RenkuLab GitLab
+# Migrate a session launcher that references RenkuLab GitLab
 
 <aside>
 <img src="https://www.notion.so/icons/new-alert_red.svg" alt="https://www.notion.so/icons/new-alert_red.svg" width="40px" />

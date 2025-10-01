@@ -1,4 +1,4 @@
-# How to create a group
+# Create a group
 
 <aside>
 💡

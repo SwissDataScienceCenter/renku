@@ -1,4 +1,4 @@
-# How to migrate a Renku 1.0 project to Renku 2.0
+# Migrate a Renku Legacy project to Renku 2.0
 
 This guide will explain what migrating a project from Renku 1.0 to 2.0 means, and walk you through how to migrate your project.
 

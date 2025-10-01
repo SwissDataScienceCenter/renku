@@ -1,4 +1,4 @@
-# How to connect your Renku account to your GitHub or GitLab account
+# Integrate with GitHub/GitLab
 
 Renku allows you to connect to several external service providers, including GitHub, GitLab, ETH GitLab and SDSC GitLab.
 

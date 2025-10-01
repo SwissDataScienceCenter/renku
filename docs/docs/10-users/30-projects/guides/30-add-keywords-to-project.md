@@ -1,4 +1,4 @@
-# How to add keywords to a project
+# Add keywords to a project
 
 You can easily add keywords to your project. These metadata may help you in the search and keep your projects organized according to different topics. Remember that you can also add keywords to your data connectors!
 
