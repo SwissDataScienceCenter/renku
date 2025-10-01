@@ -1,8 +1,4 @@
-# How to create an environment for your session
-
-Tags: sessions
-Renku version: 2.0
-Type: How-to Guide
+# Create an environment for your session
 
 Renku supports a variety of ways of working with sessions. To determine what kind of Renku session environment is right for you, answer the following questions:
 

@@ -1,4 +1,4 @@
-# How to create a new project
+# Create a project
 
 Work in Renku is organized around projects: a **project** is the core building block where you connect data sources, code repositories and compute environments (for running sessions). You can grant access to a project to your colleagues and collaborators, or even share some elements (code, data or compute environments) of your project to a broader audience.
 

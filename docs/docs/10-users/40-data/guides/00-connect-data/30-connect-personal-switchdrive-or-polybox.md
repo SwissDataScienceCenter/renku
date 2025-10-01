@@ -1,3 +1,7 @@
+---
+title: Personal Switchdrive/PolyBox
+---
+
 # How to connect a personal Switchdrive or Polybox folder to your project
 
 :::warning

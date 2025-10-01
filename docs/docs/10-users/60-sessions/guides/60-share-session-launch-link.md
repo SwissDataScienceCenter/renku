@@ -1,4 +1,4 @@
-# How to share a session launch link
+# Share a session launch link
 
 Ever wanted to send someone a direct link to launch a Renku session?
 

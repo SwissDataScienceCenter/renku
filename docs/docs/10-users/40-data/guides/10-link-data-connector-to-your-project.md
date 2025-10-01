@@ -1,4 +1,4 @@
-# How to link a data connector to your project
+# Reuse data from another Renku project
 
 1. Find the [Data connector](Data%20connector%203ae1e46fdb094cc48516a104457e5633.md) that you want to add to your project. This may be on a project page, on a group page, or on your personal profile page (see [How to access your personal Renku page](/docs/users/projects/guides/access-your-personal-renku-page))
     

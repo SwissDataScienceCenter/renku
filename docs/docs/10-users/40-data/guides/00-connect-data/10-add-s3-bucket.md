@@ -1,4 +1,8 @@
-# How to add an S3 bucket
+---
+title: S3 bucket
+---
+
+# How to connect an S3 bucket
 
 In your project’s dashboard:
 

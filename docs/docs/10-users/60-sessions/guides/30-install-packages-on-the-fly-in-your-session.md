@@ -1,4 +1,4 @@
-# How to install packages on-the-fly in your session
+# Install packages on-the-fly in your session
 
 **Choose your language:**
 

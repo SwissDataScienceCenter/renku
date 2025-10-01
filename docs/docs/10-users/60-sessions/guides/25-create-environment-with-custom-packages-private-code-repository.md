@@ -1,4 +1,4 @@
-# How to create an environment with custom packages from a private code repository
+# Create an environment with custom packages from a private code repository
 
 # Instructions
 

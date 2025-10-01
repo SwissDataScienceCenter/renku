@@ -1,4 +1,4 @@
-# How to add a session launcher to your project
+# Add a session launcher to your project
 
 There are 3 ways to create a session launcher on RenkuLab. Which of the situations below best describes you?
 

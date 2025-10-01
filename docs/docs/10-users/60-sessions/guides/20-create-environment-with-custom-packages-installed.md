@@ -1,4 +1,4 @@
-# How to create an environment with custom packages installed
+# Create an environment with custom packages installed
 
 If you’d like a set of custom packages to be installed and ready to go when you (or anyone else) launches a session in your project, you can take advantage of Renku’s **code based environments**.
 

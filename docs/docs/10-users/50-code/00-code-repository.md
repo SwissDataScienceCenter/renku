@@ -1,6 +1,6 @@
 # Code repository
 
-For the purposes of Renku 2.0, a code repository is a git-based collection of code files, hosted at [GitHub.com](http://GitHub.com), [GitLab.com](http://GitLab.com), or similar.
+For the purposes of Renku, a code repository is a git-based collection of code files, hosted at [GitHub.com](http://GitHub.com), [GitLab.com](http://GitLab.com), or similar.
 
 When a code repository is connected to a [Project](Project%20d75bd8e300e2439991f9dc9ddb9b1146.md) , the repository is automatically cloned into the [Session](Session%20fd7c8246082145df8bcad675cf919206.md), where the files can be accessed and run.
 
