@@ -1,3 +1,7 @@
+---
+title: ETH Research Collection
+---
+
 # How to add a dataset from ETH Research Collection
 
 :::info

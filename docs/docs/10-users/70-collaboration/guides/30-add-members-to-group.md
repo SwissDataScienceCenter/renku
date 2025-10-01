@@ -1,4 +1,4 @@
-# How to add members to a group
+# Add members to a group
 
 1. Go to the Group page and edit its properties under the tab **Settings**:
     

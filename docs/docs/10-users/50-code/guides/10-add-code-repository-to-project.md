@@ -1,4 +1,4 @@
-# How to add a code repository to your project
+# Add a code repository to your project
 
 :::note
 

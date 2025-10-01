@@ -1,4 +1,4 @@
-# How to select compute resources for your session
+# Select compute resources for your session
 
 To change which resource class your project’s session launcher uses, you can edit the default resource class used by your session launcher:
 

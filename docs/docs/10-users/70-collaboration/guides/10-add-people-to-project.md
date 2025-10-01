@@ -1,4 +1,4 @@
-# How to add people to a project
+# Add people to a project
 
 You can easily add collaborators to your project. They may have different roles, either owners, editors or viewers.
 

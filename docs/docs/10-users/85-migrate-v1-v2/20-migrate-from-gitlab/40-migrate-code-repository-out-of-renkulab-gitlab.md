@@ -1,4 +1,4 @@
-# How to migrate a code repository out of RenkuLab GitLab
+# Migrate a code repository out of RenkuLab GitLab
 
 Renku version: 2.0
 Type: How-to Guide

@@ -1,3 +1,7 @@
+---
+title: SFTP
+---
+
 # How to connect to an SFTP server (e.g. EPFL NAS)
 
 ## 1. Reuse an existing SFTP data connector or create a new one
