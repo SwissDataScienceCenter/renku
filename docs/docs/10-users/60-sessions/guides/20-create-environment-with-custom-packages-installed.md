@@ -6,43 +6,44 @@ With Renku code based environments, you can point Renku to a code repository tha
 
 This guide has 2 parts:
 
-- First, we will walk through what kinds of files you can use to define code based environments in RenkuLab.
-- Second, we’ll show you how to create a code-based environment for your project.
+- First, we will walk through what kinds of files you can use to [define code based
+  environments](#what-kinds-of-environment-definitions-are-supported) in Renku.
+- Second, we’ll show you how to [create a code-based
+  environment](#how-to-create-a-code-based-environment-for-your-renku-session) for your project.
 
-# What kinds of environment definitions are supported?
+## What kinds of environment definitions are supported?
 
 RenkuLab’s code-based environments currently supports creating **Python** environments. Support for more languages is coming soon!
 
-<aside>
-<img src="https://www.notion.so/icons/info-alternate_blue.svg" alt="https://www.notion.so/icons/info-alternate_blue.svg" width="40px" />
+:::tip
 
-Do you need to install R packages in your Renku session? See [R](/docs/users/sessions/guides/install-packages-on-the-fly-in-your-session).
+Are you working in R? Support for R is coming soon. For now, for working with R please see
+[installing packages on the fly in your
+session](/docs/users/sessions/guides/install-packages-on-the-fly-in-your-session).
 
-</aside>
+:::
 
-## Defining a Python Environment
+### Defining a Python Environment
 
 There are multiple ways you can define a python environment for your Renku session:
 
-- [Miniconda (`environment.yml`) (recommended)](/docs/users/sessions/guides/create-environment-with-custom-packages-installed)
-- [Pip (`requirements.txt`)](/docs/users/sessions/guides/create-environment-with-custom-packages-installed)
-- [Poetry (`pyproject.toml`)](/docs/users/sessions/guides/create-environment-with-custom-packages-installed)
+- [Miniconda (`environment.yml`) (recommended)](#miniconda-environmentyml-recommended)
+- [Pip (`requirements.txt`)](#pip-requirementstxt)
+- [Poetry (`pyproject.toml`)](#poetry-pyprojecttoml)
 
 See below for more details on how to use each of these systems.
 
-<aside>
-<img src="https://www.notion.so/icons/thought-dialogue_blue.svg" alt="https://www.notion.so/icons/thought-dialogue_blue.svg" width="40px" />
+:::info
+If you’d like to learn more about the system Renku uses to create python environments, check
+out [Paketo Buildpacks](https://paketo.io/docs/howto/python/#use-a-package-manager).
+:::
 
-If you’d like to learn more about the system Renku uses to create python environments, check out https://paketo.io/docs/howto/python/#use-a-package-manager.
-
-</aside>
-
-### Miniconda (`environment.yml`) (recommended)
+#### Miniconda (`environment.yml`) (recommended)
 
 Include an `environment.yml` file located at the root (top level) of the code repository.
 
 - Here’s an example `environment.yml`:
-    
+
     ```yaml
     # Note: name can be changed
     name: "base"
@@ -68,7 +69,7 @@ Include an `environment.yml` file located at the root (top level) of the code 
     # Note: prefix can be changed
     prefix: "/opt/conda"
     ```
-    
+
 
 Important usage notes:
 
@@ -79,34 +80,33 @@ Important usage notes:
 - Please note that miniconda can only be used at this time to create Python environments, not R environments.
 - Environments defined with one of these files will be created via miniconda. Configuring a version of miniconda is not supported.
 
-### Pip (`requirements.txt`)
+#### Pip (`requirements.txt`)
 
 Include a valid `requirements.txt` file at the root (top level) of your code repository. Renku will create an environment from this file using `pip`.
 
-<aside>
-<img src="https://www.notion.so/icons/info-alternate_blue.svg" alt="https://www.notion.so/icons/info-alternate_blue.svg" width="40px" />
+:::info
 
-Defining a python environment via a requirements.txt file will create a python environment with python version `3.10`. It is not currently possible to specify a different python version.
+Defining a python environment via a requirements.txt file will create a python environment with
+python version `3.10`. It is not currently possible to specify a different python version.
 
-</aside>
+:::
 
 - Here is an example `requirements.txt`:
-    
+
     ```
     numpy==2.2.2
     pandas==2.2.3
     jupyterlab==4.3.5
     ```
-    
 
-### Poetry (`pyproject.toml`)
+#### Poetry (`pyproject.toml`)
 
 Including a `pyproject.toml` file at the root of your code repository triggers the poetry installation process. The buildpack will invoke `poetry` to install the application dependencies defined in `pyproject.toml` and set up a virtual environment.
 
-Note that poetry version 1.8.3 will be used.
+Note that poetry version `1.8.3` will be used.
 
 - Here is an example `pyproject.toml`:
-    
+
     ```toml
     [tool.poetry]
     name = "python-poetry-1"
@@ -131,48 +131,39 @@ Note that poetry version 1.8.3 will be used.
     requires = ["poetry-core"]
     build-backend = "poetry.core.masonry.api"
     ```
-    
 
-## Defining an R Environment
+## How to create a code-based environment for your Renku session
 
-<aside>
-<img src="https://www.notion.so/icons/traffic-cone_yellow.svg" alt="https://www.notion.so/icons/traffic-cone_yellow.svg" width="40px" />
+:::info
 
-This feature is coming soon. For now, please see [R](/docs/users/sessions/guides/install-packages-on-the-fly-in-your-session).
+This functionality only works with **public code repositories**. If your code repository is
+private, please see [Creating a custom environment from a private code
+repository](/docs/users/sessions/guides/create-environment-with-custom-packages-private-code-repository).
 
-</aside>
-
-# How to create a code-based environment for your Renku session
-
-<aside>
-<img src="https://www.notion.so/icons/info-alternate_blue.svg" alt="https://www.notion.so/icons/info-alternate_blue.svg" width="40px" />
-
-**Important**: This functionality only works with **public code repositories**. If your code repository is private, please see [Creating a code-based environment from a private code repository](/docs/users/sessions/guides/create-environment-with-custom-packages-private-code-repository).
-
-</aside>
+:::
 
 1. Make sure the code repository that contains your environment definition file is added to your Renku project.
 2. Create a **new session launcher**
 3. Select the  **Create from code** option
-    
+
     ![image.png](./create-environment-with-custom-packages-installed-10.png)
-    
+
 4. Select the **Code repository**
-    
-    <aside>
-    <img src="https://www.notion.so/icons/info-alternate_blue.svg" alt="https://www.notion.so/icons/info-alternate_blue.svg" width="40px" />
-    
-    Note: The code repository must be public
-    
-    </aside>
-    
-    <aside>
-    <img src="https://www.notion.so/icons/info-alternate_blue.svg" alt="https://www.notion.so/icons/info-alternate_blue.svg" width="40px" />
-    
+
+    :::info
+
+    Note: The code repository must be public. If your code repository is private, please see
+    [Creating a custom environment from a private code
+    repository](/docs/users/sessions/guides/create-environment-with-custom-packages-private-code-repository)
+
+    :::
+
+    :::info
+
     Note: The code repository must be already linked to the Renku project
-    
-    </aside>
-    
+
+    :::
+
 5. Select the **Environment** **type** (Python, *more coming soon*)
 6. Select the **User interface** you’d like your session to have (VSCodium or Jupyterlab, *more coming soon*).
 7. Click **Next**
@@ -186,7 +177,7 @@ The environment is now being built by RenkuLab. You can see the status on the se
 
 When the environment is built, you can launch your session.
 
-# Updating a code-based environment
+## Updating a code-based environment
 
 1. When you want to make changes to your environment (add new packages), first update the environment definition file in the code repository where the environment is defined.
 2. Then, rebuild the environment in RenkuLab:
@@ -194,16 +185,20 @@ When the environment is built, you can launch your session.
     2. Navigate to the **Session Environment** section.
     3. Click on **Rebuild**.
 
-# [experimental] Using a dashboard with a code-based environment
+## [experimental] Using a dashboard with a code-based environment
 
-<aside>
-<img src="https://www.notion.so/icons/traffic-cone_orange.svg" alt="https://www.notion.so/icons/traffic-cone_orange.svg" width="40px" />
+:::warning
 
-Temporary and experimental: the description below is a current work-around but we will streamline this workflow in the near future!
+Temporary and experimental! The description below is a current work-around but we will streamline
+this workflow in the near future!
 
-</aside>
+:::
 
-Your project might have a nice dashboard inside, which you would want others to see. If your repository’s requirements include a dashboard tool (e.g. streamlit or plotly dash), it is relatively simple to have Renku build the image, and convert it to show the dashboard instead of VSCodium. This way, you can have, for example, one launcher for development that you use and another to show others the results.
+Your project might have a nice dashboard inside, which you would want others to see. If your
+repository’s requirements include a dashboard tool (e.g. streamlit or plotly dash), it is relatively
+simple to have Renku build the image, and convert it to show the dashboard instead of VSCodium. This
+way, you can have, for example, one launcher for development that you use and another to show others
+the results.
 
 To set up a dashboard with an environment built from your repository, you can follow these steps:
 
@@ -219,11 +214,7 @@ And your launcher set up could be, for example:
 
 ![image.png](./create-environment-with-custom-packages-installed-40.png)
 
-# Creating a code-based environment from a private code repository
+## Creating a code-based environment from a private code repository
 
-<aside>
-<img src="https://www.notion.so/icons/traffic-cone_yellow.svg" alt="https://www.notion.so/icons/traffic-cone_yellow.svg" width="40px" />
-
-Coming soon!
-
-</aside>
+Please see [Creating a custom environment from a private code
+repository](10-users/60-sessions/guides/25-create-environment-with-custom-packages-private-code-repository.md).
