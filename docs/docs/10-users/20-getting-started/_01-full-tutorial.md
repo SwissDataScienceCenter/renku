@@ -6,7 +6,7 @@ This tutorial will guide you through creating a Renku project related to the ana
 
 To begin using Renku, you need to create an account. Follow these steps:
 
-1. Visit [RenkuLab](https://renkulab.io/v2)
+1. Visit [RenkuLab](https://renkulab.io)
 2. Click on **Login** at the top right corner
 3. Sign up using your preferred option (edu-ID, GitHub, or ORCID)
 
@@ -181,12 +181,10 @@ If you want to share your project with a wider audience, you can make it public.
 
 ## Conclusion
 
-🎉 Congratulations! You have successfully created a Renku project, connected data and code, launched a session, and shared your project with collaborators. 
+🎉 Congratulations! You have successfully created a Renku project, connected data and code, launched a session, and shared your project with collaborators.
 
-You can find this project available here: https://renkulab.io/v2/projects/renku-team/zurich-air-quality-analysis
+You can find this project available [here](https://renkulab.io/p/renku-team/zurich-air-quality-analysis).
 
 :::tip
-
-Want to learn more? Check out our full library of [ Renku How-To Guides](https://www.notion.so/Renku-How-To-Guides-900f417fc205439789a9fbdc5cadcec8?pvs=21). 
-
+Want to learn more? Check out our full library of [Renku Use Cases](/docs/docs/10-users/80-use-cases/).
 :::

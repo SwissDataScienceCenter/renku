@@ -1,8 +1,5 @@
 # Migrate a code repository out of RenkuLab GitLab
 
-Renku version: 2.0
-Type: How-to Guide
-
 <aside>
 <img src="https://www.notion.so/icons/new-alert_red.svg" alt="https://www.notion.so/icons/new-alert_red.svg" width="40px" />
 

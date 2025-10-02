@@ -37,7 +37,7 @@ We know this how-to guide is not easy, and we are hard at work to make this easi
     
     ![image.png](./create-custom-environment-and-launcher-for-shiny-app-30.png)
     
-7. Add a session launcher to your Renku 2.0 project with the following **Custom Environment** option as explained in [How to use your own docker image for a Renku session](/docs/users/sessions/guides/use-your-own-docker-image-for-renku-session) considering the following parameters:
+7. Add a session launcher to your Renku project with the following **Custom Environment** option as explained in [How to use your own docker image for a Renku session](/docs/users/sessions/guides/use-your-own-docker-image-for-renku-session) considering the following parameters:
     1. **Container Image:** `*user_registry_link*`
     2. **Default URL:** `/shiny/work/<*path-to-app>*/`
         
