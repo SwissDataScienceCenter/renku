@@ -46,5 +46,5 @@ In order to add people as members to a Renku project, they first have to have cr
 
 You can refer to the following projects which illustrate how to showcase a project on Renku:
 
-- Shiny: [NO2 pathway analysis](https://renkulab.io/v2/projects/renku-team/n2o-pathway-analysis)
-- Streamlit: [Store sales](https://renkulab.io/v2/projects/sdsc-renku-research/sales-streamlit)
+- Shiny: [NO2 pathway analysis](https://renkulab.io/p/renku-team/n2o-pathway-analysis)
+- Streamlit: [Store sales](https://renkulab.io/p/sdsc-renku-research/sales-streamlit)
