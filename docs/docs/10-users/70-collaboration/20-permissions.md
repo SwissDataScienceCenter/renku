@@ -1,6 +1,6 @@
 # Permissions, Roles, and Access Rights
 
-This reference guide covers how permissions, roles, and access rights work in Renku 2.0.
+This reference guide covers how permissions, roles, and access rights work in Renku.
 
 # Project Permissions
 
