@@ -1,4 +1,4 @@
-# Migrate from Renku 1 to Renku 2
+# Migrate from Renku Legacy
 
 ```mdx-code-block
 import DocCardList from '@theme/DocCardList';
