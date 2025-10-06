@@ -85,8 +85,8 @@ For more details, see [Group Abilities by Role](Permissions,%20Roles,%20and%20Ac
 | View content in the group (projects and data connectors) | ✅ | ✅ | ✅ |
 | Create new content in the group (projects and data connectors) | ✅ | ✅ | ❌ |
 | Edit content in the group (projects and data connectors) | ✅ | ✅ | ❌ |
-| Move projects into the group | ✅ (The individual must also be an owner of the project being moved into the group) | ✅ (The individual must also be an owner of the project being moved into the group) | ❌ |
-| Move projects out of group | ✅ | ✅ (The individual must also be an owner of the project being moved out of the group) | ✅ (Project owners may move their project to a different namespace, regardless of their role in the original namespace) |
+| Move projects into the group | ✅ (The individual must also be an owner of the project being moved into the group) | ✅ (The individual must also be an owner of the project being moved into the group) | ❌ |
+| Move projects out of group | ✅ | ✅ (The individual must also be an owner of the project being moved out of the group) | ✅ (Project owners may move their project to a different namespace, regardless of their role in the original namespace) |
 | Remove a member from the group | ✅ | ❌ | ❌ |
 | Change roles of group members | ✅ | ❌ | ❌ |
 | Edit the namespace (name, slug) | ✅ | ❌ | ❌ |

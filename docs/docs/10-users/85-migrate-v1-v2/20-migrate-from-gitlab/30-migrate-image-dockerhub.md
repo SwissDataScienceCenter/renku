@@ -6,7 +6,7 @@
 
 **Step 1: Create a DockerHub account**
 
-- Go to [https://hub.docker.com](https://hub.docker.com/) and click "Sign Up"
+- Go to [https://hub.docker.com](https://hub.docker.com/) and click "Sign Up"
 - Choose a username (this will be part of your image URLs)
 - Verify your email address
 
@@ -42,7 +42,7 @@ Use [**Method 2 (Docker CLI)**](#method-2-using-the-docker-command-line) if you 
 
 **Step 4: Modify your CI/CD pipeline in GitLab**
 
-- Edit the `.gitlab-ci.yml` file in your repository and replace it with the following:
+- Edit the `.gitlab-ci.yml` file in your repository and replace it with the following:
 
 ```yaml
 variables:
@@ -104,7 +104,7 @@ Your image is migrated! Continue to [Part 2: create a new session launcher](#par
 **Step 2: Install Docker locally**
 
 - Ensure Docker is installed and running on your machine
-- Verify with: `docker --version`
+- Verify with: `docker --version`
 
 **Step 3: Log into both registries**
 

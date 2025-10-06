@@ -13,14 +13,14 @@ To create a new project:
     ![image.png](./create-a-project-00.png)
 
 2. On the project creation page
-    - **Name**: Enter the project identifier.
+    - **Name**: Enter the project identifier.
     - **Owner**: Decide whether the project should be under your user space or under a group you belong to.
     - **Visibility**: Set it either to be **Public** or **Private**.
     - **Description (optional)**: Fill in the description for the project.
 
         ![image.png](./create-a-project-10.png)
 
-3. Add the data for your project. See our collection of [Guides](10-users/40-data/guides/00-connect-data/index.md) for options for creating data connectors.
+3. Add the data for your project. See our collection of [Guides](/docs/users/data/guides/connect-data) for options for creating data connectors.
 
 4. Add code repository as explained in [How to add a code repository to your project](/docs/users/code/guides/add-code-repository-to-project).
 5. Create a session launcher for working in your project:
@@ -35,9 +35,6 @@ To create a new project:
         of the sessions, remember to assign to the session launcher with the adequate resource class
         when adding the session launcher to your project.
 
-        #TODO broken link
-        Learn more about custom resource pools for
-        courses: [Request a Custom Resource
-        Pool](Resource%20Pools%20&%20Classes%2011f0df2efafc802dbe05f4dcd375431f.md).
+        For custom resource pools for courses [Contact](https://www.notion.so/Contact-dd098db288ff433893a4d4d429da99c1?pvs=21) us!
 
         :::

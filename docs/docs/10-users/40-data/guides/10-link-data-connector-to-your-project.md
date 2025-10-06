@@ -13,7 +13,7 @@
     
     Copy a data connector identifier from the side panel.
     
-4. In the project where you want to use the data connector, click the ➕ button next to **Data**.
+4. In the project where you want to use the data connector, click the ➕ button next to **Data**.
 5. In the **Link or create data connector** pop up, choose **Link a data connector**.
 6. Paste the data connector **ID** in the identifier box
     

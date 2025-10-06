@@ -4,7 +4,7 @@ This guide shows you how to set up a Renkulab project and session launcher that 
 
 ## Clone the template repo
 
-Clone the repo located at [https://github.com/SwissDataScienceCenter/demo-shiny-serve](https://github.com/SwissDataScienceCenter/demo-shiny-serve) and replace the contents of the `src/r/app` folder with your app.
+Clone the repo located at [https://github.com/SwissDataScienceCenter/demo-shiny-serve](https://github.com/SwissDataScienceCenter/demo-shiny-serve) and replace the contents of the `src/r/app` folder with your app.
 
 ## Build/test locally [optional]
 
@@ -14,9 +14,9 @@ If you have Docker installed on your machine, you can build the Dockerfile and m
 
 Create a repository on GitHub and push your local repo to it. The repo includes actions to build a Docker image for serving your app.
 
-In the web page for your repo, you should see a section called **Packages** in the right-hand side of the page for your repo. Click there to get the URL for the image (you will probably want to most recent one).
+In the web page for your repo, you should see a section called **Packages** in the right-hand side of the page for your repo. Click there to get the URL for the image (you will probably want to most recent one).
 
-It will look something like: `ghcr.io/swissdatasciencecenter/demo-shiny-serve:sha-71a15ca`
+It will look something like: `ghcr.io/swissdatasciencecenter/demo-shiny-serve:sha-71a15ca`
 
 ## Create a Session Launcher
 
@@ -26,7 +26,7 @@ Go to your Renkulab project (or create a new one, if necessary) and add a sessio
 
 - **Container Image**: *[the image URL from above]*
 - **Port**: 3838
-- **UID**: 997 (the `shiny` user in the Rocker image)
+- **UID**: 997 (the `shiny` user in the Rocker image)
 - **GID**: 997
 
 The other values in the Session Launcher configuration can be left to their defaults/empty

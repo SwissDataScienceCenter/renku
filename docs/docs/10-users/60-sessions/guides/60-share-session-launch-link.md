@@ -48,7 +48,7 @@ First, add an environment variable to your session launcher.
     
     ![env-vars.png](./share-session-launch-link-30.png)
     
-3. Click on the ✏️ icon to edit the launcher’s environment variables.
+3. Click on the ✏️ icon to edit the launcher’s environment variables.
 4. Give your environment variable a name, and optionally a default value.
     
     ![image.png](./share-session-launch-link-20.png)

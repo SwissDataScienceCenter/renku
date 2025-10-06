@@ -11,7 +11,7 @@ Only use this How-To guide to connect a folder that **only you** use. To connect
 
 :::
 
-1. Add a new data connector by clicking the ➕ in the Data section of your project.
+1. Add a new data connector by clicking the ➕ in the Data section of your project.
 2. Click on **Create a data connector** and choose **Polybox** (or **SwitchDrive**) and at the bottom select Mode > **Personal**.
 3. Click on **Next**
     

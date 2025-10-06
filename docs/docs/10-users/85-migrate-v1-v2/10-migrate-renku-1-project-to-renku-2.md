@@ -10,12 +10,12 @@ through how to migrate your project.
 
 ## What happens when I migrate a project to Renku 2.0?
 
-**✅ Code Repository**
+**✅ Code Repository**
 
 The project code repository will be migrated automatically, and will show up in your Renku 2.0
 project under the **Code repositories** section.
 
-**✅ ✳️ Datasets & Git LFS Data**
+**✅ ✳️ Datasets & Git LFS Data**
 
 Git LFS data, including Renku Datasets, are a part of your code repository, and will be available
 from inside your Renku 2.0 session via the git lfs command line tool.
@@ -33,12 +33,12 @@ connector](10-users/40-data/00-data.md).
 
 :::
 
-**❌ Cloud Storage Data**
+**❌ Cloud Storage Data**
 
 Cloud storage migration isn’t available at the moment. Please reconfigure your cloud storage as a
 Renku 2.0 [Data connector](10-users/40-data/00-data.md).
 
-**✅ ✳️ Session**
+**✅ ✳️ Session**
 
 By default, the Renku 2.0 project will be created with a [Session
 Launcher](10-users/60-sessions/20-session-launcher.md) that uses **the latest image
@@ -58,7 +58,7 @@ If you have a pinned image, the pinned image will be used.
 The default resource class used by your Renku Legacy project session will be set as the default
 resource class in the Renku 2.0 session launcher.
 
-**✅ ✳️ Workflows**
+**✅ ✳️ Workflows**
 
 You may continue to use Renku workflows in your session via the CLI.
 
@@ -70,14 +70,14 @@ to Renku Legacy. Read more on our blog post [Deep Dive: What's New in Renku
 
 :::
 
-**✅ Metadata**
+**✅ Metadata**
 
 Project title, description, and keywords will be automatically migrated. You have the option to
 modify the title of the project during the project migration process.
 
 One exception is the project image, which is not migrated at this time.
 
-**❌ Members**
+**❌ Members**
 
 Project members will not be migrated. Please add members directly to the Renku 2.0 project after
 migrating.
@@ -133,9 +133,9 @@ If for whatever reason you need to migrate a project manually, you can do so by 
     1. Navigate to your Renku Legacy project in **GitLab**
     2. Navigate in the left menu to **Deploy** and then **Container Registry**
     3. Click on the repository
-    4. Find your latest tag, and click the 📋 icon to copy the URL. It should look like this:
+    4. Find your latest tag, and click the 📋 icon to copy the URL. It should look like this:
         `registry.renkulab.io/laura.kinkead1/n2o-pathway-analysis:980f4a3`
-    5. In your Renku 2.0 project, → Click on the ➕ in the Sessions box to create a new Session Launcher
+    5. In your Renku 2.0 project, → Click on the ➕ in the Sessions box to create a new Session Launcher
         1. Select **Custom Environment**
         2. Paste the URL you copied from the GitLab container registry in the **Container Image** field
         3. In the **Advanced Settings**, specify the **Default URL**:
