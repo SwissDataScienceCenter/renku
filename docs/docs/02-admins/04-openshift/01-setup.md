@@ -208,8 +208,6 @@ As an admin, setup renku project admin roles:
 oc apply -f renku-roles.yaml
 ```
 
-
-
 ## Renku deployment
 
 With everything in place as listed in the previous steps, Renku can now be
@@ -245,6 +243,14 @@ Add the required SCC to the service account (must be done as an admin)
 
 ```bash
 oc adm policy add-scc-to-user nonroot-v2 -z renku-amalthea-sessions-scc-handler -n renku
+```
+
+To make use of this service account in your cluster, set the
+`localClusterSessionServiceAccount` settings under `dataService`.
+
+```yaml
+dataService:
+  localClusterSessionServiceAccount: renku-amalthea-sessions-scc-handler
 ```
 
 ### Network Policies:
@@ -302,20 +308,3 @@ networkPolicies:
         - ipBlock:
             cidr: 172.31.0.0/16
 ```
-
-## After deployment
-
-### Service account configuration
-
-In order to make use of the service account created above, the Renku platform must be configured. More specifically, the resources pools that will target the OpenShift cluster must be configured. It's a two step process:
-
-1. A Cluster object must be created with the name of the service account to be
-used
-2. Each resource pool targeting the cluster must be configured to use it
-
-<!--
-    To be added:
-    - example of curl command to create the cluster
-    - example of curl command to set the cluster on a specific resource pool
-    - example of curl command to create a resource pool using that cluster
--->
