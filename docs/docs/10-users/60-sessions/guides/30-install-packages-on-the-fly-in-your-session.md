@@ -12,11 +12,11 @@ To get started, see [How to create an environment with custom packages installed
 
 **Add packages to your project dependencies**
 
-To add packages to your environment, add the packages to the dependencies file: `install.R`.
+To add packages to your environment, add the packages to the dependencies file: `install.R`.
 
-To specify your project dependencies in `install.R`, write the R package install commands.
+To specify your project dependencies in `install.R`, write the R package install commands.
 
-Note that the base R `install.packages` function can only install the latest version of a package on CRAN. To install a specific version, use `devtools::install_version`. If the package is not on CRAN and exists as a github repo, you can use `install_github` instead. These two scenarios are shown in the example below.
+Note that the base R `install.packages` function can only install the latest version of a package on CRAN. To install a specific version, use `devtools::install_version`. If the package is not on CRAN and exists as a github repo, you can use `install_github` instead. These two scenarios are shown in the example below.
 
 ```r
 devtools::install_version("ggplot2",
@@ -47,9 +47,9 @@ If your image uses conda as the python package management system, follow the ins
 
 **Add packages to your project dependencies**
 
-To add packages to your environment, add the packages to the dependencies file: `environment.yml`.
+To add packages to your environment, add the packages to the dependencies file: `environment.yml`.
 
-To add your project’s dependencies to `environment.yml`, specify an environment name and then a list of dependencies.
+To add your project’s dependencies to `environment.yml`, specify an environment name and then a list of dependencies.
 
 ```yaml
 name: stats
@@ -58,7 +58,7 @@ dependencies:
 - pandas
 ```
 
-For more details, see [conda’s documentation](https://docs.conda.io/projects/conda/en/latest/user-guide/tasks/manage-environments.html#create-env-file-manually).
+For more details, see [conda’s documentation](https://docs.conda.io/projects/conda/en/latest/user-guide/tasks/manage-environments.html#create-env-file-manually).
 
 **Install the packages**
 

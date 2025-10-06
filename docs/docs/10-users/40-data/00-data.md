@@ -10,7 +10,7 @@ Plus, when you add a data connector to your project, that connection is availabl
 
 :::info
 
-To add a data connector to your project, click the ➕ button in the data section of the project.
+To add a data connector to your project, click the ➕ button in the data section of the project.
 
 :::
 
@@ -20,9 +20,9 @@ RenkuLab supports a range of cloud storage providers, including S3, Azure Blob, 
 
 ## How are credentials handled for Data connectors?
 
-**The access to the data connector is fully managed by the external storage provider.** When a user launches a session on a project that includes a data connector that requires credentials, Renku will ask that user for their credentials. Renku will only provides the access to the data if the user provides valid credentials.
+**The access to the data connector is fully managed by the external storage provider.** When a user launches a session on a project that includes a data connector that requires credentials, Renku will ask that user for their credentials. Renku will only provide the access to the data if the user provides valid credentials.
 
-Being able to *see* a Renku data connector is not the same as being able to *access* the data itself! For example, a data connector may be public, which means other users on RenkuLab can *see* that the data connector exists, and also be protected with credentials, which means that only people with valid credentials can *access* the actual data.
+Being able to *see* a Renku data connector is not the same as being able to *access* the data itself! For example, a data connector may be public, which means other users on RenkuLab can *see* that the data connector exists, and also be protected with credentials, which means that only people with valid credentials can *access* the actual data.
 
 ### Saving credentials
 
@@ -32,11 +32,9 @@ You can save your credentials for a data connector in RenkuLab so that you don�
 
 You can enter or modify the saved credentials for a data connector, and also delete it. Click on top of a data connector and a right-menu appears in the screen. Click on the **drop-down arrow** menu next to **Edit** to access further options to work on your data connector.
 
-<article style={{transform:'scale(0.75)'}}>
-
+<p class="image-container">
 ![image.png](./data-connectors-00.png)
-
-</article>
+</p>
 
 ## Share, reuse, and trace your data
 
@@ -46,4 +44,6 @@ Data connectors can be shared among projects. You do not need to create the same
 
 You can check where your data has been used on the right menu of your data connector under the **Projects** section.
 
+<p class="image-container">
 ![image.png](./data-connectors-10.png)
+</p>

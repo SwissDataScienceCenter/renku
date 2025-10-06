@@ -40,7 +40,7 @@ out [Paketo Buildpacks](https://paketo.io/docs/howto/python/#use-a-package-manag
 
 #### Miniconda (`environment.yml`) (recommended)
 
-Include an `environment.yml` file located at the root (top level) of the code repository.
+Include an `environment.yml` file located at the root (top level) of the code repository.
 
 - Here’s an example `environment.yml`:
 
@@ -82,7 +82,7 @@ Important usage notes:
 
 #### Pip (`requirements.txt`)
 
-Include a valid `requirements.txt` file at the root (top level) of your code repository. Renku will create an environment from this file using `pip`.
+Include a valid `requirements.txt` file at the root (top level) of your code repository. Renku will create an environment from this file using `pip`.
 
 :::info
 
@@ -101,7 +101,7 @@ python version `3.10`. It is not currently possible to specify a different pytho
 
 #### Poetry (`pyproject.toml`)
 
-Including a `pyproject.toml` file at the root of your code repository triggers the poetry installation process. The buildpack will invoke `poetry` to install the application dependencies defined in `pyproject.toml` and set up a virtual environment.
+Including a `pyproject.toml` file at the root of your code repository triggers the poetry installation process. The buildpack will invoke `poetry` to install the application dependencies defined in `pyproject.toml` and set up a virtual environment.
 
 Note that poetry version `1.8.3` will be used.
 

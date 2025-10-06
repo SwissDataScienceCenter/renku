@@ -5,11 +5,15 @@ especially in projects were created before version 0.67.0. And conversely, you m
 warnings** on data connectors that *other* project members can’t see. This how-to guide will walk
 you through what these warnings mean and how to resolve them.
 
+<p class="image-container"> 
 ![A notification about hidden data connectors](./resolve-hidden-visibility-warning-10.png)
+</p>
 
 A notification about hidden data connectors
 
+<p class="image-container"> 
 ![A data connector with a visibility warning](./resolve-hidden-visibility-warning-20.png)
+</p>
 
 A data connector with a visibility warning
 
@@ -36,7 +40,9 @@ But if you see a visibility warning on a data connector that everyone in the pro
 1. Click on the data connector with the visibility warning to open its side sheet
 2. In the side sheet, click on **Edit** in the top right
     
+    <p class="image-container"> 
     ![image.png](./resolve-hidden-visibility-warning-30.png)
+    </p>
     
 3. Depending on your data connector, either click **Next**, or click **Test Connection** and then **Continue** to get to the next page of the data connector information
     
@@ -51,19 +57,20 @@ Now the data connector is owned by the project, so everyone in the project is gu
 
 ### Option 2: Make the data connector public
 
-<aside>
-<img src="https://www.notion.so/icons/warning_yellow.svg" alt="https://www.notion.so/icons/warning_yellow.svg" width="40px" />
+:::warning
 
-**Warning:** Do not make a data connector public if it supports write access and does not require credentials!
+Do not make a data connector public if it supports write access and does not require credentials!
 
-</aside>
+:::
 
 Another option is to make the data connector public. This will guarantee that everyone can see the data connector.
 
 1. Click on the data connector with the Visibility warning to open its side sheet
 2. In the side sheet, click on **Edit** in the top right
-    
+   
+    <p class="image-container"> 
     ![image.png](./resolve-hidden-visibility-warning-30.png)
+    </p>
     
 3. Depending on your data connector, either click **Next**, or click **Test Connection** and then **Continue** to get to the next page of the data connector information
     

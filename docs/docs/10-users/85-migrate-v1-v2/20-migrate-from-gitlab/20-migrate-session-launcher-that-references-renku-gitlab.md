@@ -31,7 +31,7 @@ That’s great! Please continue to the next question, [Is your repository public
 If you don’t need any specific packages installed in your R session, follow these steps to create a
 new R session launcher in your project:
 
-1. Create a session launcher by clicking the ➕ button in the sessions box.
+1. Create a session launcher by clicking the ➕ button in the sessions box.
 2. Select **global environment**
 3. Select the **R** global environment
 

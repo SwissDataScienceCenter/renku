@@ -23,7 +23,7 @@ In your project’s dashboard:
     ![image.png](add-s3-bucket-20.png)
     
 7. On the last page, fill in the final details for your data connector, namely:
-    1. **Name**: pick any name for the data connector (e.g. `Giab`)
+    1. **Name**: pick any name for the data connector (e.g. `Giab`)
     2. **Owner:** select the namespace of the data connector (e.g. the user’s or a group).
     3. **Visibility:** decide whether the data connector should be Public or Private.
     4. **Mount point**: write the folder in your session where the s3 will be mounted.

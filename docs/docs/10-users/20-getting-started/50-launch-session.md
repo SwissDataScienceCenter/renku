@@ -13,13 +13,13 @@ To run your code and analyze data on RenkuLab, first decide what kind of session
 
 You can have multiple Session Launchers in your project that run different kinds of sessions. Check
 out what else you can do with [Renku
-sessions](https://www.notion.so/1a70df2efafc81c9ae50d9ef3e7bddbd?pvs=21)
+sessions](/docs/users/sessions/environment)
 
 :::
 
 :::tip
 
-Do you need more resources than are available in RenkuLab’s public resource classes? [Contact](https://www.notion.so/Contact-dd098db288ff433893a4d4d429da99c1?pvs=21) us! We can configure a custom resource pool for your team or class.
+Do you need more resources than are available in RenkuLab’s public resource classes? [Contact](/docs/community) us! We can configure a custom resource pool for your team or class.
 
 :::
 
@@ -35,7 +35,7 @@ We have set up a global environment which already has many packages installed. I
 
 :::info
 
-For a detailed guide for how to install packages, see [How to install packages in your session](https://www.notion.so/How-to-install-packages-in-your-session-f1ffb813996943869b50f6c5b263f5c9?pvs=21).
+For a detailed guide for how to install packages, see [How to install packages in your session](/docs/users/sessions/guides/install-packages-on-the-fly-in-your-session).
 
 :::
 
@@ -64,10 +64,10 @@ plt.savefig(file_save_path+'Decomposition Analysis of ' + str(parameter) + ' in 
 
 ```
 
-If you did [2.1 (optional) Connect a storage space to save your work](https://www.notion.so/2-1-optional-Connect-a-storage-space-to-save-your-work-1a50df2efafc80188d45c60b18f19c71?pvs=21), try creating the file in your attached storage space (modify the `file_save_path`), and see that it is synced back to the source system.
+If you did [2.1 (optional) Connect a storage space to save your work](/docs/users/data/guides/connect-data/), try creating the file in your attached storage space (modify the `file_save_path`), and see that it is synced back to the source system.
 
 :::info
 
-The git repository we connected with our project is read-only. However, when you connect your Renku project with a git repository that you have push (write) access to, you will be able to run git commands in the session to save your work back to the code repository! To make this work, first [connect Renku with your GitHub or GitLab account](https://www.notion.so/How-to-connect-your-Renku-account-to-your-GitHub-or-GitLab-account-3d394998d82b44b4a053e9461949119a?pvs=21).
+The git repository we connected with our project is read-only. However, when you connect your Renku project with a git repository that you have push (write) access to, you will be able to run git commands in the session to save your work back to the code repository! To make this work, first [connect Renku with your GitHub or GitLab account](/docs/users/code/guides/connect-renku-account-to-github-or-gitlab-account).
 
 :::

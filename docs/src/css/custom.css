@@ -55,3 +55,15 @@
   color: var(--ifm-color-emphasis-600);
   white-space: nowrap;
 }
+
+.image-container
+{
+    max-width: 50%;
+    margin: auto;
+}
+
+.image-container-large
+{
+    max-width: 85%;
+    margin: auto;
+}

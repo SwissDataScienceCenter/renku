@@ -16,7 +16,7 @@ VSCode tunnels are supported in the following Renku session environments:
 
 1. **Launch a Renku session** that uses one of the supported environments listed above.
 2. **Open a terminal** inside the session.
-3. Run **`start_tunnel`** and follow the instructions:
+3. Run **`start_tunnel`** and follow the instructions:
     1. Log in to VSCode with either your Microsoft account or GitHub account
     2. Open the displayed link and enter the device code
     3. When it shows you another URL to open, you are done. Continue to the next steps.

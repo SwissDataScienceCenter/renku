@@ -18,12 +18,12 @@ In Switchdrive/PolyBox:
 3. Click ‘**Create public link**’
     1. Select the read + write settings you want - probably view only since it’s public!
     2. If you want to restrict who can access this shared folder, set a password
-4. Click the ‘**Copy to Clipboard**’ 📋 button. The link will look something like this:
+4. Click the ‘**Copy to Clipboard**’ 📋 button. The link will look something like this:
     1. [https://polybox.ethz.ch/index.php/s/8NffJ3rFyHaVjgR](https://polybox.ethz.ch/index.php/s/8NffJ3rFyHaVjgR)
 
 ### Add the folder to your Renku project
 
-1. Add a new data connector by clicking the ➕ in the Data section of your project.
+1. Add a new data connector by clicking the ➕ in the Data section of your project.
 2. Click on Create a data connector and choose **Polybox** (or **SwitchDrive**)
 3. At the bottom, select mode **Shared**.
     

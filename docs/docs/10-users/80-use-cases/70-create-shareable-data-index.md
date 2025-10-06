@@ -13,7 +13,7 @@ This tutorial will walk you through creating and sharing a dataset index on Renk
     <aside>
     <img src="https://www.notion.so/icons/info-alternate_blue.svg" alt="https://www.notion.so/icons/info-alternate_blue.svg" width="40px" />
     
-    The above how-to guides instruct you to create a data connector in the context of a project. For this tutorial, instead create the data connectors on the group page directly by clicking the ➕ button in the **Data** section of the group page.
+    The above how-to guides instruct you to create a data connector in the context of a project. For this tutorial, instead create the data connectors on the group page directly by clicking the ➕ button in the **Data** section of the group page.
     
     </aside>
     
