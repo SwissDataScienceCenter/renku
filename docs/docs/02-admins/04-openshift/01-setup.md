@@ -253,6 +253,24 @@ dataService:
   localClusterSessionServiceAccount: renku-amalthea-sessions-scc-handler
 ```
 
+### Amalthea ingress
+
+The configuration for the sessions ingress have their own settings (which are
+similar to the one from the main ingress). In order to have them use the proper
+class, their annotations must be updated:
+
+```yaml
+notebooks:
+  sessionIngress:
+    annotations:
+      kubernetes.io/ingress.class: openshift-default
+      # remove default nginx specific annotations
+      nginx.ingress.kubernetes.io/proxy-body-size: null
+      nginx.ingress.kubernetes.io/proxy-request-buffering: null
+      nginx.ingress.kubernetes.io/proxy-buffer-size: null
+
+```
+
 ### Network Policies:
 
 There are some subtle differences in the DNS setup between a vanilla Kubernetes
