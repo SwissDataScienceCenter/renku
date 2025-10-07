@@ -19,7 +19,7 @@ sessions](/docs/users/sessions/environment)
 
 :::tip
 
-Do you need more resources than are available in RenkuLab’s public resource classes? [Contact](/docs/community) us! We can configure a custom resource pool for your team or class.
+Do you need more resources than are available in RenkuLab’s public resource classes? [Contact](/docs/users/community) us! We can configure a custom resource pool for your team or class.
 
 :::
 

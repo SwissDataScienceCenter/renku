@@ -34,5 +34,5 @@ shut-down.
 
 Everyone is welcome to use RenkuLab and run sessions in our free tier resource pool. If you need
 more computational resources than are available in our free tier,
-[Contact](https://www.notion.so/Contact-dd098db288ff433893a4d4d429da99c1?pvs=21) us to set up a
+[Contact](/docs/users/community) us to set up a
 contract for a custom resource pool on RenkuLab.

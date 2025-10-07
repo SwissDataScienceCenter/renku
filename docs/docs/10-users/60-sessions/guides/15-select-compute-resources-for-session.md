@@ -1,21 +1,17 @@
 # Select compute resources for your session
 
-import selectCompute from './select-compute-resources-for-session-10.mov';
-
 To change which resource class your project’s session launcher uses, you can edit the default resource class used by your session launcher:
 
 1. Click on the session launcher in your project
 2. Navigate to “Default Resource Class” and click the pencil icon to change the resource class.
 
-<p class="image-container">
-<video controls>
-<source src={selectCompute} />
-</video>
-</p>
+import selectResourceVideo from './select-compute-resources-for-session-10.mov';
+
+<video controls width="100%" src={selectResourceVideo} />
 
 :::tip
 
-Do you need more resources than are available in RenkuLab’s public resource classes? [Contact](https://www.notion.so/Contact-dd098db288ff433893a4d4d429da99c1?pvs=21) us! We can configure a custom resource pool for your needs upon demand.
+Do you need more resources than are available in RenkuLab’s public resource classes? [Contact](/docs/users/community) us! We can configure a custom resource pool for your needs upon demand.
 
 :::
 
@@ -25,4 +21,5 @@ If you would **temporarily** launch a session with different resources without c
 2. Select **Custom launch**.
 3. Choose a resource class for this session
 
-![dynamically_select_compute_resources.mov](./select-compute-resources-for-session-10.mov)
+<video controls width="100%" src={selectResourceVideo} />
+

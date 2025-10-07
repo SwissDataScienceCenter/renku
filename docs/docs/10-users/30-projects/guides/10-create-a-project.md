@@ -26,7 +26,7 @@ To create a new project:
 5. Create a session launcher for working in your project:
     1. Select an environment:
         1. Check out the environments available in Renku via [How to add a session launcher to your project](/docs/users/sessions/guides/add-session-launcher-to-project). If these are sufficient for your project, use them!
-        2. If you need to customize the environment for your project, you can create a custom environment yourself via [How to use your own docker image for a Renku session](/docs/users/sessions/guides/use-your-own-docker-image-for-renku-session), or  [Contact](https://www.notion.so/Contact-dd098db288ff433893a4d4d429da99c1?pvs=21) us if you are in trouble!
+        2. If you need to customize the environment for your project, you can create a custom environment yourself via [How to use your own docker image for a Renku session](/docs/users/sessions/guides/use-your-own-docker-image-for-renku-session), or  [Contact](/docs/users/community) us if you are in trouble!
     2. Set the session launcher’s default resource class for your project [How to select compute resources for your session](/docs/users/sessions/guides/select-compute-resources-for-session).
 
         :::info
@@ -35,6 +35,6 @@ To create a new project:
         of the sessions, remember to assign to the session launcher with the adequate resource class
         when adding the session launcher to your project.
 
-        For custom resource pools for courses [Contact](https://www.notion.so/Contact-dd098db288ff433893a4d4d429da99c1?pvs=21) us!
+        For custom resource pools for courses [Contact](/docs/users/community) us!
 
         :::

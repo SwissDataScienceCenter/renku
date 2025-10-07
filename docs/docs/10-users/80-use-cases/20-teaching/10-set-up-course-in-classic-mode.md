@@ -14,25 +14,23 @@ For alternative workflows for using Renku in your course, see [Renku for Teachin
 2. Add a code repository as explained in [How to add a code repository to your project](/docs/users/code/guides/add-code-repository-to-project) with the course tasks
 3. Add data, if needed. See our collection of How To Guides for options for creating data connectors.
     
-    <aside>
-    <img src="https://www.notion.so/icons/report_orange.svg" alt="https://www.notion.so/icons/report_orange.svg" width="40px" />
+    :::info
     
-    If you add data connectors to your template project, you must make the data connectors public in order for students to be able to create copies that include the data connector. For more information, see [Linking Data Connectors](Permissions,%20Roles,%20and%20Access%20Rights%20%5Bdeprecated%5D%209c0aea98b26c4c02ba6323326fa949e1.md) .
+    If you add data connectors to your template project, you must make the data connectors public in order for students to be able to create copies that include the data connector. For more information, see [Data Connectors Permissions](/docs/users/collaboration/permissions#data-connector-permissions.
     
-    </aside>
+    :::
     
 4. Create a session launcher for working in your project:
     1. Select an environment:
         1. Check out the environments available in Renku via [How to add a session launcher to your project](/docs/users/sessions/guides/add-session-launcher-to-project). If these are sufficient for your course, use them!
-        2. If you need to customize the environment for your course, you can create a custom environment yourself via [How to use your own docker image for a Renku session](/docs/users/sessions/guides/use-your-own-docker-image-for-renku-session), or  [Contact](/docs/community) us and we can create a custom environment for your course!
+        2. If you need to customize the environment for your course, you can create a custom environment yourself via [How to use your own docker image for a Renku session](/docs/users/sessions/guides/use-your-own-docker-image-for-renku-session), or  [Contact](/docs/users/community) us and we can create a custom environment for your course!
     2. Set the session launcher’s **default resource class** to your **course’s resource pool**, as described in [How to select compute resources for your session](/docs/users/sessions/guides/select-compute-resources-for-session).
         
-        <aside>
-        <img src="https://www.notion.so/icons/info-alternate_blue.svg" alt="https://www.notion.so/icons/info-alternate_blue.svg" width="40px" />
+        :::info
         
-        In order to ensure adequate resources for running the project and to control the consumption of the sessions, remember to assign to the session launcher with the adequate resource class when adding the session launcher to your project. Learn more about custom resource pools for courses: [Request a Custom Resource Pool](Resource%20Pools%20&%20Classes%2011f0df2efafc802dbe05f4dcd375431f.md).
+        In order to ensure adequate resources for running the project and to control the consumption of the sessions, remember to assign to the session launcher with the adequate resource class when adding the session launcher to your project. Learn more about custom resource pools for courses: [Request a Custom Resource Pool](/docs/users/sessions/resource-pools-and-classes#request-custom-resource-pool).
         
-        </aside>
+        :::
         
 
 **Then, mark your project to a template project:**
@@ -59,12 +57,11 @@ By marking your project as a template project:
     
 - Note about copies & access rights: that you are restricted to viewing copies of projects that you have access to. If someone makes a copy of your template and makes it private, you do not see that copy.
 
-<aside>
-<img src="https://www.notion.so/icons/info-alternate_blue.svg" alt="https://www.notion.so/icons/info-alternate_blue.svg" width="40px" />
+:::info
 
 You can only view copies of projects that you have access to. If someone makes a copy of your template and makes it private, you do not see that copy.
 
-</aside>
+:::
 
 **Here’s what to instruct your students to do:**
 

@@ -6,11 +6,8 @@ Sometimes you need to share or present the results of your project to stakeholde
 
 ## Part 1: Create a Renku project and connect data and code
 
-1. Create a Renku project as explained in [[old] How to Create a new project](%5Bold%5D%20How%20to%20Create%20a%20new%20project%207243ec38d7964900a2b0fdeb17cfa4ce.md)
-2. Add the data connectors. See our collection of How To Guides for options for connecting data to your Renku project:
-    
-    [Untitled](Showcase%20your%20project%20on%20Renku%201460df2efafc801e86a6e4f6d99020e7/Untitled%201490df2efafc803289d2d5a207f67904.csv)
-    
+1. Create a Renku project as explained in [How to Create a new project](/docs/users/projects/guides/create-a-project)
+2. Add the data connectors. See our collection of [How To Guides](/docs/users/data/guides/connect-data/) for options for connecting data to your Renku project.
 3. Add the code repositories as explained in [How to add a code repository to your project](/docs/users/code/guides/add-code-repository-to-project) 
 
 ## Part 2: Create an interactive session to showcase your project
@@ -28,7 +25,7 @@ Renku allows you to have multiple session launchers in the same project. For exa
 
 **Share Publicly**
 
-If you want to make your Renku project publicly accessible, set the **visibility** of the project to **Public**. You can change the visibility of the project in the project settings. Only a project owner can change the project’s visibility. Read more in [Project Permissions](Permissions,%20Roles,%20and%20Access%20Rights%20%5Bdeprecated%5D%209c0aea98b26c4c02ba6323326fa949e1.md). 
+If you want to make your Renku project publicly accessible, set the **visibility** of the project to **Public**. You can change the visibility of the project in the project settings. Only a project owner can change the project’s visibility. Read more in [Project Permissions](/docs/users/collaboration/permissions#project-permissions). 
 
 Making a project public means that everyone on the internet can view the project and launch sessions. 
 
@@ -38,7 +35,7 @@ However, if there are protected resources on the project, for example a data con
 
 If you want to share your Renku project only with specific people, add them as members to the project. 
 
-You add new members to your project in the project settings. Only a project owner can change the project’s members. Read more in [Project Permissions](Permissions,%20Roles,%20and%20Access%20Rights%20%5Bdeprecated%5D%209c0aea98b26c4c02ba6323326fa949e1.md). 
+You add new members to your project in the project settings. Only a project owner can change the project’s members. Read more in [Project Permissions](/docs/users/collaboration/permissions#project-permissions). 
 
 In order to add people as members to a Renku project, they first have to have created a Renku account. 
 

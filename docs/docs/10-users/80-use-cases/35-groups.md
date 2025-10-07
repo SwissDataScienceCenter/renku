@@ -13,7 +13,7 @@ Follow these How-To Guides to get started:
 
 [How to add people to a project](/docs/users/collaboration/guides/add-people-to-project)
 
-For an overview of the roles you can give people on a project, see [Project Roles](Permissions,%20Roles,%20and%20Access%20Rights%20%5Bdeprecated%5D%209c0aea98b26c4c02ba6323326fa949e1.md).
+For an overview of the roles you can give people on a project, see [Project Roles](/docs/users/collaboration/permissions#project-roles).
 
 ## Collaborating on multiple projects
 
@@ -25,6 +25,6 @@ Follow these How-To Guides to get started:
 
 [How to add members to a group](/docs/users/collaboration/guides/add-members-to-group)
 
-For an overview of the roles you can give people on a group, see [Group Permissions](Permissions,%20Roles,%20and%20Access%20Rights%20%5Bdeprecated%5D%209c0aea98b26c4c02ba6323326fa949e1.md).
+For an overview of the roles you can give people on a group, see [Group Permissions](/docs/users/collaboration/permissions#group-permissions).
 
-To understand how group roles are related to project roles, see [Groups and Role Inheritance](Permissions,%20Roles,%20and%20Access%20Rights%20%5Bdeprecated%5D%209c0aea98b26c4c02ba6323326fa949e1.md).
+To understand how group roles are related to project roles, see [Groups and Role Inheritance](https://www.notion.so/Role-Inheritance-b70b2a48d74043ca9b78a5ed1f60ae10?pvs=21).

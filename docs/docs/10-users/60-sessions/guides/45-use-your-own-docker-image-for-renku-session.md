@@ -23,7 +23,9 @@ In the project page:
 1. Under **Sessions** section click on ➕ to add a new launcher
 2. Select **External environment**
 
+    <p class="image-container-large">
     ![image.png](./use-your-own-docker-image-for-renku-session-10.png)
+    </p>
 
 3. For the container image, provide an **image identifier**.
     - Some examples of image identifiers:
@@ -49,12 +51,11 @@ In the project page:
 
     - I’m using an image created by **Renku** and that is **older** than version 0.24.0 (the version number is in the image tag).
 
-        <aside>
-        <img src="https://www.notion.so/icons/info-alternate_blue.svg" alt="https://www.notion.so/icons/info-alternate_blue.svg" width="40px" />
+        :::note
 
-        Note: If you are working with an image in a launcher where the l**auncher was created before November 27, 2024**, the launcher was migrated automatically with the new Renku release to include the necessary advanced settings. The instructions below apply only to new session launchers you are creating for the first time.
+        If you are working with an image in a launcher where the **launcher was created before November 27, 2024**, the launcher was migrated automatically with the new Renku release to include the necessary advanced settings. The instructions below apply only to new session launchers you are creating for the first time.
 
-        </aside>
+        :::
 
         For Renku base images of version 0.24.0 or older (or images that are based on these images), you have 2 options:
 
@@ -75,14 +76,14 @@ In the project page:
 
     - I’m using an image created **somewhere else** (not by Renku).
 
-        You need to fill in the **Advanced Settings** for your image to work on RenkuLab. See [Example image configurations for common front ends](/docs/users/sessions/guides/use-your-own-docker-image-for-renku-session) below.
+        You need to fill in the **Advanced Settings** for your image to work on RenkuLab. See [Example image configurations for common front ends](#example-image-configurations) below.
 
 
 5. Select the **Resource class** that best fits your expected computational needs.
 
     :::tip
 
-    If the available resource classes are too small for your compute requirements, we can create a custom resource pool for you! See [Request a Custom Resource Pool](Resource%20Pools%20&%20Classes%2011f0df2efafc802dbe05f4dcd375431f.md).
+    If the available resource classes are too small for your compute requirements, we can create a custom resource pool for you! See [Request a Custom Resource Pool](/docs/users/sessions/resource-pools-and-classes#request-custom-resource-pool).
 
     :::
 
@@ -93,17 +94,21 @@ In the project page:
 
 Note that you can always **modify your session launcher** by clicking on top of it on the project’s page, and using the menu on the right:
 
+<p class="image-container-large">
 ![image.png](./use-your-own-docker-image-for-renku-session-30.png)
+</p>
 
 :::
 
-## Example image configurations for common front ends
+## Example image configurations for common front ends {#example-image-configurations}
 
 In order to run a docker image in a session, Renku needs to know some information about how to run and serve that image.
 
 In this section, you can see example configurations for commonly used images. If you build an image with one of these images as the base, then you can use this provided configuration to make that image run in RenkuLab.  The information below can be copied and pasted into the **Advanced Settings** form for creating a **custom environment**.
 
+<p class="image-container-large">
 ![image.png](./use-your-own-docker-image-for-renku-session-40.png)
+</p>
 
 ### Jupyter
 
@@ -116,7 +121,7 @@ In this section, you can see example configurations for commonly used images. If
 ["sh", "-c"]
 ```
 
-- Command Arguments CMD ([learn more](/docs/users/sessions/guides/use-your-own-docker-image-for-renku-session)):
+- Command Arguments CMD ([learn more](/docs/users/sessions/guides/use-your-own-docker-image-for-renku-session#about-renku-session-urls)):
 
 ```json
 ["jupyter server --ServerApp.ip=0.0.0.0 --ServerApp.port=8888 --ServerApp.base_url=$RENKU_BASE_URL_PATH --ServerApp.token=\"\" --ServerApp.password=\"\" --ServerApp.allow_remote_access=true --ContentsManager.allow_hidden=true --ServerApp.allow_origin=*"]
@@ -135,7 +140,7 @@ In this section, you can see example configurations for commonly used images. If
 ["sh", "-c"]
 ```
 
-- Command Arguments CMD ([learn more](/docs/users/sessions/guides/use-your-own-docker-image-for-renku-session)):
+- Command Arguments CMD ([learn more](/docs/users/sessions/guides/use-your-own-docker-image-for-renku-session#about-renku-session-urls)):
 
 ```json
 ["jupyter server --ServerApp.ip=0.0.0.0 --ServerApp.port=8888 --ServerApp.base_url=$RENKU_BASE_URL_PATH --ServerApp.token=\"\" --ServerApp.password=\"\" --ServerApp.allow_remote_access=true --ContentsManager.allow_hidden=true --ServerApp.allow_origin=*"]
@@ -161,7 +166,7 @@ In this section, you can see example configurations for commonly used images. If
 ["sh", "-c"]
 ```
 
-- Command Arguments CMD ([learn more](/docs/users/sessions/guides/use-your-own-docker-image-for-renku-session)):
+- Command Arguments CMD ([learn more](/docs/users/sessions/guides/use-your-own-docker-image-for-renku-session#about-renku-session-urls)):
 
 ```json
 ["code serve-web --server-base-path $RENKU_BASE_URL_PATH/ --without-connection-token --host 0.0.0.0 --port 8888"]
@@ -177,7 +182,7 @@ In this section, you can see example configurations for commonly used images. If
 ["sh", "-c"]
 ```
 
-- Command Arguments CMD (fill in `<your-repo-name>/<your-app>`) ([learn more](/docs/users/sessions/guides/use-your-own-docker-image-for-renku-session)):
+- Command Arguments CMD (fill in `<your-repo-name>/<your-app>`) ([learn more](/docs/users/sessions/guides/use-your-own-docker-image-for-renku-session#about-renku-session-urls)):
 
 ```json
 ["streamlit run $RENKU_WORKING_DIR/<your-repo-name>/<your-app>.py --server.port=8888 --server.address=0.0.0.0 --server.baseUrlPath=$RENKU_BASE_URL_PATH"]
@@ -193,7 +198,7 @@ In this section, you can see example configurations for commonly used images. If
 ["sh", "-c"]
 ```
 
-- Command Arguments CMD (fill in `<your-repo-name>/<your-app>`!) ([learn more](/docs/users/sessions/guides/use-your-own-docker-image-for-renku-session)):
+- Command Arguments CMD (fill in `<your-repo-name>/<your-app>`!) ([learn more](/docs/users/sessions/guides/use-your-own-docker-image-for-renku-session#about-renku-session-urls)):
 
 ```json
 ["DASH_URL_BASE_PATHNAME=$RENKU_BASE_URL_PATH/ HOST=0.0.0.0 PORT=8888 python $RENKU_WORKING_DIR/<your-repo-name>/<your-app>.py"]
@@ -209,7 +214,7 @@ In this section, you can see example configurations for commonly used images. If
 ["sh", "-c"]
 ```
 
-- Command Arguments CMD (fill in `<your-repo-name>/<your-app>`!)([learn more](/docs/users/sessions/guides/use-your-own-docker-image-for-renku-session)):
+- Command Arguments CMD (fill in `<your-repo-name>/<your-app>`!)([learn more](/docs/users/sessions/guides/use-your-own-docker-image-for-renku-session#about-renku-session-urls)):
 
 ```json
 ["python $RENKU_WORKING_DIR/<your-repo-name>/<your-app>.py --server_port=8888 --server_name=0.0.0.0 --root_path=$RENKU_BASE_URL_PATH"]
@@ -240,7 +245,7 @@ app.launch(server_port=args.server_port,
 					 root_path=args.root_path)
 ```
 
-## About Renku Session URLs
+## About Renku Session URLs {#about-renku-session-urls}
 
 The biggest challenge with running custom images on Renku is managing the URL path where the session is accessible. This path is not known ahead of time but only once the session has been launched. Renku injects two environment variables in each session to indicate the full session URL and the path portion of the URL. These environment variables are named respectively `RENKU_BASE_URL` and `RENKU_BASE_URL_PATH`. Regardless of what image you are running on Renku you will have to specify the path where the session can be accessed. Most programs you will run in an image will assume that the path where they run is `/`, but we never run session at such location. For example, on [renkulab.io](http://renkulab.io) sessions are available at URLs like the following: `https://renkulab.io/sessions/tasko-olevsk-bfff446a2f41`
 

@@ -16,7 +16,7 @@ helm repo add renku https://swissdatasciencecenter.github.io/helm-charts
 helm repo update renku
 ```
 
-3. Read the [Configuration section](02-configuration.md) of the documentation and setup your values file.
+3. Read the [Configuration section](./configuration) of the documentation and setup your values file.
 
 :::info
 You can merge the different values file examples from different steps of the documentation
@@ -59,7 +59,7 @@ spec:
 ```
 
 3. Starter `HelmRelease`, you will need to populate the values file in here for
-a functional deployment. See the [Configuration section](02-configuration.md) for more details.
+a functional deployment. See the [Configuration section](./configuration) for more details.
 
 
 ```yaml

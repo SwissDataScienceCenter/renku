@@ -30,11 +30,6 @@ On RenkuLab, the following resources classes are publicly available (in the “p
 
 ![Untitled](./resource-pools-and-classes-20.jpg)
 
-## Request a Custom Resource Pool
+## Request a Custom Resource Pool {#request-custom-resource-pool}
 
-<aside>
-<img src="https://www.notion.so/icons/rocket_green.svg" alt="https://www.notion.so/icons/rocket_green.svg" width="40px" />
-
-Do you need more resources than are available in RenkuLab’s public resource classes? [Contact](https://www.notion.so/Contact-dd098db288ff433893a4d4d429da99c1?pvs=21) us! We can configure a custom resource pool for your needs upon demand. We apply flat, transparent pricing, passing down infra rates savings.
-
-</aside>
+Do you need more resources than are available in RenkuLab’s public resource classes? [Contact](/docs/users/community) us! We can configure a custom resource pool for your needs upon demand. We apply flat, transparent pricing, passing down infra rates savings.

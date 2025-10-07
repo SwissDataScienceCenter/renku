@@ -1,6 +1,6 @@
 # Environment
 
-An environment is a docker-based environment that can run in a RenkuLab interactive [Session](Session%20fd7c8246082145df8bcad675cf919206.md) .
+An environment is a docker-based environment that can run in a RenkuLab interactive [Session](/docs/users/sessions/session) .
 
 An environment consists of:
 
@@ -9,4 +9,4 @@ An environment consists of:
 
 Renku provides several *global environments* that come pre-configured and ready to use. Alternatively, you can create your own custom environment with your own docker image.
 
-Environments are connected to a Renku project via a [Session Launcher](Session%20Launcher%20518df05050a7434eb3eb0493181d715c.md).
+Environments are connected to a Renku project via a [Session Launcher](/docs/users/sessions/session-launcher).

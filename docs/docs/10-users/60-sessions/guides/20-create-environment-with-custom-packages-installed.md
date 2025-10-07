@@ -202,13 +202,15 @@ the results.
 
 To set up a dashboard with an environment built from your repository, you can follow these steps:
 
-1. Follow the steps for creating a [code-based environment](/docs/users/sessions/guides/create-environment-with-custom-packages-installed) above.
+1. Follow the steps for creating a [code-based environment](#how-to-create-a-code-based-environment-for-your-renku-session) above.
 2. Once the image is done building, edit the environment and change it to a “Custom Environment”
 3. Edit the `Command` to be `["bash", "-c"]` and `Args` to correspond to your app - see common examples [here](/docs/users/sessions/guides/use-your-own-docker-image-for-renku-session).
 
 Once you are done, your environment configuration should look something like this:
 
+<p class="image-container">
 ![image.png](./create-environment-with-custom-packages-installed-30.png)
+</p>
 
 And your launcher set up could be, for example:
 
@@ -217,4 +219,4 @@ And your launcher set up could be, for example:
 ## Creating a code-based environment from a private code repository
 
 Please see [Creating a custom environment from a private code
-repository](10-users/60-sessions/guides/25-create-environment-with-custom-packages-private-code-repository.md).
+repository](/docs/users/sessions/guides/create-environment-with-custom-packages-private-code-repository).

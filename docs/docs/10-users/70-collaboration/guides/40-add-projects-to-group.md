@@ -4,7 +4,7 @@
 
 To add projects to your group:
 
-- Create a [new project](%5Bold%5D%20How%20to%20Create%20a%20new%20project%207243ec38d7964900a2b0fdeb17cfa4ce.md)
+- Create a [new project](/docs/users/projects/guides/create-a-project)
     - During that process: select your group’s name as Namespace
     - The new project will be mapped to your group
 - For existing projects

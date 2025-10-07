@@ -2,7 +2,7 @@
 
 This reference guide covers how permissions, roles, and access rights work in Renku.
 
-# Project Permissions
+## Project Permissions
 
 ---
 
@@ -31,7 +31,7 @@ There are 2 types of project membership:
 - **Direct membership:** A person is added directly to the project as a member.
 - **Inherited membership**: A person has access to the project by being a member of the project’s namespace (group). For more details, see [Role Inheritance](https://www.notion.so/Role-Inheritance-b70b2a48d74043ca9b78a5ed1f60ae10?pvs=21).
 
-## Project Roles
+## Project Roles {#project-roles}
 
 Members of projects can have one of the following roles:
 
@@ -39,11 +39,11 @@ Members of projects can have one of the following roles:
 - **Editor:** Can edit most things on the project, but cannot change who can access the project (cannot add members or change the project visibility).
 - **Viewer:** Can see the project and launch sessions.  ****
 
-For more details, see [Project Abilities by Roles](Permissions,%20Roles,%20and%20Access%20Rights%2013b0df2efafc803e9b57c30df1be6c0a.md).
+For more details, see [Project Abilities by Roles](#project-abilities-by-roles).
 
 There may be multiple people in each of these roles (for example, a project may have more than one owner).
 
-## Project Abilities by Roles
+## Project Abilities by Roles {#project-abilities-by-roles}
 
 | Action | Owner | Editor | Viewer |
 | --- | --- | --- | --- |
@@ -63,7 +63,7 @@ There may be multiple people in each of these roles (for example, a project may 
 | Change the namespace the project is in | ✅ | ❌ | ❌ |
 | Delete the project | ✅ | ❌ | ❌ |
 
-# Group Permissions
+## Group Permissions {#group-permissions}
 
 ---
 
@@ -75,9 +75,9 @@ Members on groups can have one of the following roles:
 - **Editor:** Can edit all content in the group and add content (projects and data connectors) to the group, but cannot modify group membership.
 - **Viewer:** Can view all content in the group (projects and data connectors)
 
-For more details, see [Group Abilities by Role](Permissions,%20Roles,%20and%20Access%20Rights%2013b0df2efafc803e9b57c30df1be6c0a.md) .
+For more details, see [Group Abilities by Role](#group-abilities-by-role).
 
-## Group Abilities by Role
+## Group Abilities by Role {#group-abilities-by-role}
 
 | Action | Owner | Editor | Viewer |
 | --- | --- | --- | --- |
@@ -92,7 +92,7 @@ For more details, see [Group Abilities by Role](Permissions,%20Roles,%20and%20Ac
 | Edit the namespace (name, slug) | ✅ | ❌ | ❌ |
 | Add a member to the group | ✅ | ❌ | ❌ |
 
-# Data Connector Permissions
+## Data Connector Permissions {#data-connector-permissions}
 
 ---
 
@@ -101,11 +101,16 @@ Access to a Renku data connector is determined by 2 things:
 1. The data connector’s **visibility** (private or public).
 2. The data connector’s **membership**. This is (mostly) determined by the data connector’s namespace (project, group, or user).
 
-<aside>
-<img src="https://www.notion.so/icons/info-alternate_blue.svg" alt="https://www.notion.so/icons/info-alternate_blue.svg" width="40px" /> **Note:** **Access to a data connector is not equivalent to access to the data!**
-Being able to edit a data connector is not the same as being able to access the data itself! The access to data is managed externally by the system where the data lives. See also: [Data Connectors & Credentials](Permissions,%20Roles,%20and%20Access%20Rights%2013b0df2efafc803e9b57c30df1be6c0a.md).
+<div id="note-access-to-data-connector">
 
-</aside>
+:::note
+
+**Access to a data connector is not equivalent to access to the data!**
+Being able to edit a data connector is not the same as being able to access the data itself! The access to data is managed externally by the system where the data lives. See also: [Data Connectors & Credentials](#data-connectors-and-credentials).
+
+:::
+
+</div>
 
 ## Visibility
 
@@ -139,24 +144,23 @@ Members of data connectors can have one of the following roles:
 - **Editor:** Can edit the configuration of the data connector.
 - **Viewer:** Can see the data connector, and use it in projects where it is already linked.
 
-For more details, see [Data Connector Abilities by Roles](Permissions,%20Roles,%20and%20Access%20Rights%2013b0df2efafc803e9b57c30df1be6c0a.md) .
+For more details, see [Data Connector Abilities by Roles](#data-connector-abilities-by-roles).
 
 There may be multiple people in each of these roles (for example, a data connector may have more than one owner).
 
-## Data Connector Abilities by Roles
+## Data Connector Abilities by Roles {#data-connector-abilities-by-roles}
 
-| Action | Owner | Editor | Viewer |
-| --- | --- | --- | --- |
-| Use the data connector (i.e. the data connector will be mounted in a launched session)
-*Note: any required credentials must be provided by the user launching the session | ✅ | ✅ | ✅ |
-| Link the data connector to another project | ✅ | ✅ | ✅ |
-| See the data connector in search | ✅ | ✅ | ✅ |
-| Edit the data connector configuration (see [**Note:** **Access to a data connector is not equivalent to access to the data!**
-Being able to edit a data connector is not the same as being able to access the data itself! The access to data is managed externally by the system where the data lives. See also: [Data Connectors & Credentials](Permissions,%20Roles,%20and%20Access%20Rights%2013b0df2efafc803e9b57c30df1be6c0a.md). ](Permissions,%20Roles,%20and%20Access%20Rights%2013b0df2efafc803e9b57c30df1be6c0a.md)  | ✅ | ✅ | ❌ |
-| Change the data connector visibility | ✅ | ❌ | ❌ |
-| Delete the data connector (which removes the data connector from all linked projects) | ✅ | ❌ | ❌ |
+| Action                                                                                   | Owner | Editor | Viewer |
+|------------------------------------------------------------------------------------------| --- | --- | --- |
+| Use the data connector (i.e. the data connector will be mounted in a launched session)   
+ *Note: any required credentials must be provided by the user launching the session       | ✅ | ✅ | ✅ |
+| Link the data connector to another project                                               | ✅ | ✅ | ✅ |
+| See the data connector in search                                                         | ✅ | ✅ | ✅ |
+| Edit the data connector configuration (see this [note](#note-access-to-data-connector)). | ✅ | ✅ | ❌ |
+| Change the data connector visibility                                                     | ✅ | ❌ | ❌ |
+| Delete the data connector (which removes the data connector from all linked projects)    | ✅ | ❌ | ❌ |
 
-## Data Connectors & Credentials
+## Data Connectors & Credentials {#data-connectors-and-credentials}
 
 If a data connector requires credentials in order to access it, each user who launches a session with the data connector will be prompted to enter their credentials for that data.
 
@@ -164,9 +168,9 @@ Credentials are not shared across Renku users.
 
 A user may choose to save their credentials for a data connector in RenkuLab so that they do not have to re-enter them at every session launch. But these saved credentials are not shared with any other Renku user.
 
-<aside>
-<img src="https://www.notion.so/icons/info-alternate_blue.svg" alt="https://www.notion.so/icons/info-alternate_blue.svg" width="40px" />
+:::note
 
-Note: This documentation is valid starting from RenkuLab version `0.67.0`.
+This documentation is valid starting from RenkuLab version `0.67.0`.
 
-</aside>
+:::
+

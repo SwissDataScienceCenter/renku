@@ -9,11 +9,12 @@ In the project page:
 - Click  ➕  **(c)**
 - Look up the user’s name
 - Assign the role
-    - For more information about roles, see [Permissions, Roles, and Access Rights](Permissions,%20Roles,%20and%20Access%20Rights%2013b0df2efafc803e9b57c30df1be6c0a.md)
+    - For more information about roles, see [Permissions, Roles, and Access Rights](/docs/users/collaboration/permissions)
 - Repeat for as many new members as you wish
 
 :::info
-<img src="https://www.notion.so/icons/info-alternate_blue.svg" alt="https://www.notion.so/icons/info-alternate_blue.svg" width="40px" /> Note that in order to add someone to a project, they need to have already created their account on RenkuLab.
+
+Note that in order to add someone to a project, they need to have already created their account on RenkuLab.
 
 :::
 

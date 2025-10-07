@@ -12,7 +12,7 @@ List of containers and a short explanation for each for user sessions.
 
 ### Init containers:
 - **git-clone**: Clones all repositories used in the session. 
-- **init-certficates**: Injects CA certificates into all other containers.
+- **init-certificates**: Injects CA certificates into all other containers.
 
 ## Networking
 

@@ -3,7 +3,7 @@
 :::info
 
 In order to access your code repository from RenkuLab, you need to [connect your RenkuLab account
-with GitHub/GitLab](/docs/users/data/guides/connect-renku-account-to-github-or-gitlab-account).
+with GitHub/GitLab](/docs/users/code/guides/connect-renku-account-to-github-or-gitlab-account).
 
 :::
 
@@ -15,11 +15,15 @@ In the project page:
     
 2. Click on **Connect an existing repository** button
     
+    <p class="image-container-large">
     ![image.png](./add-code-repository-to-project-20.png)
+    </p>
     
 3. Fill in the URL of the code repository you want to add to your project. You can copy this URL from the browser page of your code repository.
     
+    <p class="image-container-large">
     ![image.png](./add-code-repository-to-project-30.png)
+    </p>
     
     :::note
     
@@ -28,7 +32,7 @@ In the project page:
     :::
     
 4. Click on **Add code repository** button
-5. Check that the **access badge** indicates the access level you expect to have for this code repository. If you do not have the access you are expecting, see [How to connect your Renku account to your GitHub or GitLab account](/docs/users/data/guides/connect-renku-account-to-github-or-gitlab-account).
+5. Check that the **access badge** indicates the access level you expect to have for this code repository. If you do not have the access you are expecting, see [How to connect your Renku account to your GitHub or GitLab account](/docs/users/code/guides/connect-renku-account-to-github-or-gitlab-account).
     
     :::note
     
@@ -47,4 +51,6 @@ Be mindful that your repository cannot be completely empty. Otherwise, you will 
 
 :::
 
-![Renku2_new_code_repository.mov](./add-code-repository-to-project-10.mov)
+import codeRepositoryVideo from './add-code-repository-to-project-10.mov';
+
+<video controls width="100%" src={codeRepositoryVideo} />

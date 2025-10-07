@@ -10,7 +10,7 @@ Choose from the **Global environments** to create a session with commonly used p
 
 ### I have a **code repository that defines what packages I need.**
 
-Select the **Create from Code** option and let Renku build a environment based on your code for you- no knowledge of Docker required!
+Select the **Create from Code** option and let Renku build a environment based on your code for you - no knowledge of Docker required!
 
 → See [How to create an environment with custom packages installed](/docs/users/sessions/guides/create-environment-with-custom-packages-installed).
 
@@ -29,7 +29,9 @@ In the project page:
 1. In the **Sessions** section click on ➕ to add a new session launcher
 2. Choose **Global environment** (if it’s not already selected)
     
+    <p class="image-container-large">
     ![image.png](./add-session-launcher-to-project-10.png)
+    </p>
     
 3. Select an environment from the list.
     
@@ -44,23 +46,20 @@ In the project page:
 6. Select the **Resource class** that best fits your expected computational needs.
     
     :::note
-    <img src="https://www.notion.so/icons/rocket_green.svg" alt="https://www.notion.so/icons/rocket_green.svg" width="40px" />
     
-    If the available resource classes are too small for your compute requirements, see [How to select compute resources for your session](/docs/users/sessions/guides/select-compute-resources-for-session) and [Contact](https://www.notion.so/Contact-dd098db288ff433893a4d4d429da99c1?pvs=21)  us!
+    If the available resource classes are too small for your compute requirements, see [How to select compute resources for your session](/docs/users/sessions/guides/select-compute-resources-for-session) and [Contact](/docs/users/community)  us!
     
     :::
     
 7. Click on **Add session launcher**
 
 :::info
-<img src="https://www.notion.so/icons/info-alternate_blue.svg" alt="https://www.notion.so/icons/info-alternate_blue.svg" width="40px" />
 
 If you need to add dependencies to the environment, see [How to install packages on-the-fly in your session](/docs/users/sessions/guides/install-packages-on-the-fly-in-your-session)
 
 :::
 
 :::info
-<img src="https://www.notion.so/icons/info-alternate_blue.svg" alt="https://www.notion.so/icons/info-alternate_blue.svg" width="40px" />
 
 Note that you can always **modify your session launcher** by clicking on it on the project’s page, to open the session launcher side panel:
 

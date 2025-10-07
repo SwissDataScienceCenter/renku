@@ -67,7 +67,7 @@ git push -u github master
 
 **Does your new git provider not support git LFS data?** For a short term workaround, run the following command to push your code while ignoring the git LFS data: `git push --no-verify`.
 
-In the long term, we recommend that you move your git LFS data to a [cloud storage](Data%20connector%203ae1e46fdb094cc48516a104457e5633.md) that you can connect to your Renku 2.0 project. Feel free to [get in touch](mailto:hello@renku.io) with us if you need help.
+In the long term, we recommend that you move your git LFS data to a [cloud storage](/docs/users/data/data) that you can connect to your Renku 2.0 project. Feel free to [get in touch](mailto:hello@renku.io) with us if you need help.
 
 :::
 

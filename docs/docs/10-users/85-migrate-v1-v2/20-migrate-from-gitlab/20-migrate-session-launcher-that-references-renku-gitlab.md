@@ -1,7 +1,3 @@
----
-title: Migrate a session launcher
-description: Find the best approach for your launcher
----
 # Migrate a session launcher that references RenkuLab GitLab
 
 :::danger
@@ -18,15 +14,15 @@ session environment is right for you and how to migrate, answer the following qu
 
 ## 1. What language does your project use?
 
-* [→ Python](#-im-working-in-python)
-* [→ R](#-im-working-in-r)
-* [→ other](#-im-working-in-another-language)
+* [→ Python](#im-working-in-python)
+* [→ R](#im-working-in-r)
+* [→ other](#im-working-in-another-language)
 
-### → I’m working in Python
+### → I’m working in Python {#im-working-in-python}
 
-That’s great! Please continue to the next question, [Is your repository public or private?](#2-is-your-projects-code-repository-public-or-private)
+That’s great! Please continue to the next question, [Is your repository public or private?](#is-your-projects-code-repository-public-or-private)
 
-### → I’m working in R
+### → I’m working in R {#im-working-in-r}
 
 If you don’t need any specific packages installed in your R session, follow these steps to create a
 new R session launcher in your project:
@@ -35,21 +31,19 @@ new R session launcher in your project:
 2. Select **global environment**
 3. Select the **R** global environment
 
-If you do need custom packages installed in your R session, see [How to migrate an image from
-RenkuLab GitLab to
-Dockerhub](10-users/85-migrate-v1-v2/20-migrate-from-gitlab/30-migrate-image-dockerhub.md).
+If you do need custom packages installed in your R session, see [How to migrate an image from RenkuLab GitLab to Dockerhub](/docs/users/migrate-v1-v2/migrate-from-gitlab/migrate-image-dockerhub).
 
 
-### → I’m working in another language
+### → I’m working in another language {#im-working-in-another-language}
 
-See [How to migrate an image from RenkuLab GitLab to Dockerhub](10-users/85-migrate-v1-v2/20-migrate-from-gitlab/30-migrate-image-dockerhub.md).
+See [How to migrate an image from RenkuLab GitLab to Dockerhub](/docs/users/migrate-v1-v2/migrate-from-gitlab/migrate-image-dockerhub).
 
-## 2. Is your project’s code repository public or private?
+## 2. Is your project’s code repository public or private? {#is-your-projects-code-repository-public-or-private}
 
-* [→ Public](#-my-code-repository-is-public)
-* [→ Private](#-my-code-repository-is-private)
+* [→ Public](#my-code-repository-is-public)
+* [→ Private](#my-code-repository-is-private)
 
-### → My code repository is public
+### → My code repository is public {#my-code-repository-is-public}
 
 In Renku 2.0, you can have Renku build session environment (docker image) from a code definition
 file. In Renku 2.0, this is called **code based environments**. See the following guide to set up a
@@ -68,6 +62,6 @@ definition files.**
 Once you’ve created a new code based environment launcher, you can delete the migrated
 launcher that references the RenkuLab GitLab.
 
-### → My code repository is private
+### → My code repository is private {#my-code-repository-is-private}
 
-Please see [Creating an environment from a private code repository](10-users/60-sessions/guides/25-create-environment-with-custom-packages-private-code-repository.md)
+Please see [Creating an environment from a private code repository](/docs/users/sessions/guides/create-environment-with-custom-packages-private-code-repository)

@@ -1,8 +1,3 @@
----
-title: Migrate a Renku Legacy project
-description: Migrate to Renku 2.0
----
-
 # Migrate a Renku Legacy project to Renku 2.0
 
 This guide will explain what migrating a project from Renku Legacy to Renku 2.0 means, and walk you
@@ -29,26 +24,26 @@ Please note that Renku 2.0 takes a significantly different approach to data comp
 Legacy. Read more on our blog post: [Deep Dive: What's New in Renku
 2.0](https://blog.renkulab.io/deep-dive-2-0/#data-connectors-replace-datasets). Consider moving your
 data into an external storage system and connecting it to your project via a [Data
-connector](10-users/40-data/00-data.md). 
+connector](/docs/users/data/data). 
 
 :::
 
 **❌ Cloud Storage Data**
 
 Cloud storage migration isn’t available at the moment. Please reconfigure your cloud storage as a
-Renku 2.0 [Data connector](10-users/40-data/00-data.md).
+Renku 2.0 [Data connector](/docs/users/data/data).
 
 **✅ ✳️ Session**
 
 By default, the Renku 2.0 project will be created with a [Session
-Launcher](10-users/60-sessions/20-session-launcher.md) that uses **the latest image
+Launcher](/docs/users/sessions/session-launcher) that uses **the latest image
 created for the 1.0 project**.
 
 :::info
 
 If you would like to be able to continue to update what packages are installed in your environment,
 you can [create an environment with custom
-packages](10-users/60-sessions/guides/20-create-environment-with-custom-packages-installed.md) via
+packages](/docs/users/sessions/guides/create-environment-with-custom-packages-installed) via
 Renku 2.0's 'code based environments'.
 
 :::
@@ -98,16 +93,22 @@ Here’s how to migrate your Renku Legacy project to 2.0:
 
     The migration banner invites you to migrate your project to Renku 2.0.
 
-3. Review that the project name, owner, and visibility as as you want.
+   3. Review that the project name, owner, and visibility as you want.
 
-    ![The migration modal shows you what components of the project will and will not be migrated. ](./migrate-renku-1-project-to-renku-2-20.png)
+       <p class="image-container-medium">
+       ![The migration modal shows you what components of the project will and will not be migrated. ](./migrate-renku-1-project-to-renku-2-20.png)
+       </p>
 
-    The migration modal shows you what components of the project will and will not be migrated.
+       The migration modal shows you what components of the project will and will not be migrated.
 
-    :::tip If you would like to share your project with a group, we recommend creating that group in
-    Renku 2.0 (see [How to create a group](/docs/users/collaboration/guides/create-group)). Then,
-    come back to the project migration and select that group as the **owner** for the migrated
-    project. :::
+       :::tip
+
+       If you would like to share your project with a group, we recommend creating that group in
+       Renku 2.0 (see [How to create a group](/docs/users/collaboration/guides/create-group)). Then,
+       come back to the project migration and select that group as the **owner** for the migrated
+       project.
+
+       :::
 
 After you migrate the project, if you return to the 1.0 version of the project, you will see a
 banner with a button to go to the 2.0 version of the project.
@@ -142,7 +143,9 @@ If for whatever reason you need to migrate a project manually, you can do so by 
             1. If it’s a Jupyter-based image, enter `/lab`
             2. If it’s a RStudio-based image, enter `/rstudio`
 
+        <p class="image-container-large">
         ![Screenshot From 2024-11-27 10-50-22.png](./migrate-renku-1-project-to-renku-2-50.png)
+        </p>
 
     6. Click **Next**
     7. Give your Launcher a **name** that describes what it does

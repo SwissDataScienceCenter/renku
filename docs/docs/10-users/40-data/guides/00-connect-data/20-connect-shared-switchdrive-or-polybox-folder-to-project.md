@@ -36,10 +36,11 @@ In Switchdrive/PolyBox:
     1. **Public link:** Paste the link to the folder.
     2. **Password:** If there is a password for the shared folder, enter that. Otherwise, leave it blank.
         
-        <aside>
-        <img src="https://www.notion.so/icons/info-alternate_blue.svg" alt="https://www.notion.so/icons/info-alternate_blue.svg" width="40px" /> For shared folders protected with a password, everyone who launches a session will need to provide the password to the folder in order for that folder to be connected in their session. If the password is not provided, the folder will be empty.
+       :::info
+   
+       For shared folders protected with a password, everyone who launches a session will need to provide the password to the folder in order for that folder to be connected in their session. If the password is not provided, the folder will be empty.
         
-        </aside>
+        :::
         
     3. Click on **Test connection.**
     4. A message in green “The connection to the storage works correctly.” should appear. Click on **Continue**.
@@ -53,10 +54,11 @@ In Switchdrive/PolyBox:
     4. **Mount point**: name of the directory in your session workspace where the folder will be mounted.
     5. **Read-only**: by default is active. Deactivate if you want to have read/write access.
         
-        <aside>
-        <img src="https://www.notion.so/icons/info-alternate_blue.svg" alt="https://www.notion.so/icons/info-alternate_blue.svg" width="40px" /> If you need a folder to be read-only for some users and read+write for other users of the same project, you can create two public links with different rights and add the two connectors to the project. The read+write  should be protected with a password, which can be shared with those users who should access the folder with read+write rights. Therefore, only those users with the password will be able to modify the content of that folder through the appropriate connector.
+       :::info
+
+       If you need a folder to be read-only for some users and read+write for other users of the same project, you can create two public links with different rights and add the two connectors to the project. The read+write  should be protected with a password, which can be shared with those users who should access the folder with read+write rights. Therefore, only those users with the password will be able to modify the content of that folder through the appropriate connector.
         
-        </aside>
+        :::
         
     6. **Save credentials**: if there is a password for the folder, click this box if you want to save your password in RenkuLab. (Only you will have access to those credentials. Credentials are not shared in RenkuLab.)
         

@@ -9,14 +9,13 @@ For creating the project:
 1. Follow the steps in [Workshop Mode](https://www.notion.so/Workshop-Mode-1460df2efafc804e9fa9e3cebb8262ef?pvs=21) to set up the course project.
 2. Add the course participants to your Git code repository, so they can create their own branch.
 
-    <aside>
-    <img src="https://www.notion.so/icons/info-alternate_blue.svg" alt="https://www.notion.so/icons/info-alternate_blue.svg" width="40px" />
+    :::info
 
     For example, if the course git repository is on GitHub, add the course participants to the repository **on GitHub**. When the student links their GitHub account with their Renku account, Renku will automatically reflect their access from GitHub.
 
-    </aside>
+    :::
 
-3. Instruct course participants to connect their Renku account to their GitHub or GitLab account, as described in [How to connect your Renku account to your GitHub or GitLab account](/docs/users/data/guides/connect-renku-account-to-github-or-gitlab-account)
+3. Instruct course participants to connect their Renku account to their GitHub or GitLab account, as described in [How to connect your Renku account to your GitHub or GitLab account](/docs/users/code/guides/connect-renku-account-to-github-or-gitlab-account)
 4. Instruct course participants to work on their branch. Once they’ve launched a session, course participants can create a new branch with the following command:
 
     ```jsx
@@ -33,9 +32,8 @@ For creating the project:
     ```
 
 
-<aside>
-❗
+:::warning
 
-Be mindful to protect your code repository from undesired changes from participants via protected branches. You can find more information on this topic both for GitHub ([here](https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-protected-branches/about-protected-branches)) and GitLab ([here](https://docs.gitlab.com/ee/user/project/repository/branches/protected.html)).
+Be mindful to protect your code repository from undesired changes from participants via protected branches. You can find more information on this topic both for [GitHub](https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-protected-branches/about-protected-branches) and [GitLab](https://docs.gitlab.com/ee/user/project/repository/branches/protected.html).
 
-</aside>
+:::

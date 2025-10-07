@@ -10,11 +10,11 @@ Renku only has one mode for working with R sessions at the moment. When you crea
 
 ### → I’m working in Python
 
-We have multiple ways of working in Python in Renku sessions! Please continue to the next question [2. Would you like packages to be pre-installed and ready to go when you (or anyone else) launches the session?](/docs/users/sessions/guides/create-environment-for-your-session).
+We have multiple ways of working in Python in Renku sessions! Please continue to the next question [Would you like packages to be pre-installed and ready to go when you (or anyone else) launches the session?](#2-would-you-like-packages-to-be-pre-installed-and-ready-to-go-when-you-or-anyone-else-launches-the-session).
 
 ### → I’m working in another language
 
-Working in some other language? That’s ok! You can run a wide variety of Docker images in Renku sessions! See [How to use your own docker image for a Renku session](/docs/users/sessions/guides/use-your-own-docker-image-for-renku-session) 
+Working in some other language? That’s ok! You can run a wide variety of Docker images in Renku sessions! See [use your own docker image for a Renku session](/docs/users/sessions/guides/use-your-own-docker-image-for-renku-session) 
 
 ## 2. Would you like packages to be pre-installed and ready to go when you (or anyone else) launches the session?
 

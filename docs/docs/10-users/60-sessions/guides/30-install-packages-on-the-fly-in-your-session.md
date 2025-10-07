@@ -2,21 +2,21 @@
 
 **Choose your language:**
 
-# Python
+## Python
 
 Renku can build an environment based on a Python dependencies file for you (no knowledge of Docker required)!
 
 To get started, see [How to create an environment with custom packages installed](/docs/users/sessions/guides/create-environment-with-custom-packages-installed).
 
-# R
+## R {#r}
 
 **Add packages to your project dependencies**
 
 To add packages to your environment, add the packages to the dependencies file: `install.R`.
 
-To specify your project dependencies in `install.R`, write the R package install commands.
+To specify your project dependencies in `install.R`, write the R package installation commands.
 
-Note that the base R `install.packages` function can only install the latest version of a package on CRAN. To install a specific version, use `devtools::install_version`. If the package is not on CRAN and exists as a github repo, you can use `install_github` instead. These two scenarios are shown in the example below.
+Note that the base R `install.packages` function can only install the latest version of a package on CRAN. To install a specific version, use `devtools::install_version`. If the package is not on CRAN and exists as a GitHub repo, you can use `install_github` instead. These two scenarios are shown in the example below.
 
 ```r
 devtools::install_version("ggplot2",
@@ -34,14 +34,13 @@ Every time you start or resume the session, install the packages you listed in t
 **$** R -f install.R
 ```
 
-<aside>
-<img src="https://www.notion.so/icons/report_yellow.svg" alt="https://www.notion.so/icons/report_yellow.svg" width="40px" />
+:::note
 
- Note: You need to install the dependencies every time you launch or resume your session.
+You need to install the dependencies every time you launch or resume your session.
 
-</aside>
+:::
 
-# conda
+## conda
 
 If your image uses conda as the python package management system, follow the instructions.
 
@@ -68,9 +67,8 @@ Install the packages you listed in the dependency file by running the following 
 **$** conda env update --file environment.yml  --prune
 ```
 
-<aside>
-<img src="https://www.notion.so/icons/report_yellow.svg" alt="https://www.notion.so/icons/report_yellow.svg" width="40px" />
+:::note
 
- Note: You need to install the dependencies every time you launch or resume your session.
+You need to install the dependencies every time you launch or resume your session.
 
-</aside>
+:::

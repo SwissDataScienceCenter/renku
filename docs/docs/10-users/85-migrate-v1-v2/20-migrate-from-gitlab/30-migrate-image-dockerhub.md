@@ -19,11 +19,11 @@
 
 From here, we offer two methods for migrating a RenkuLab GitLab docker image to Dockerhub.
 
-Use [**Method 1 (GitLab CI)**](#method-1-using-gitlab-cicd-pipeline) if you with to avoid installing docker locally.
+Use [**Method 1 (GitLab CI)**](#using-gitlab-cicd-pipeline) if you with to avoid installing docker locally.
 
-Use [**Method 2 (Docker CLI)**](#method-2-using-the-docker-command-line) if you with to avoid rebuilding your image.
+Use [**Method 2 (Docker CLI)**](#using-the-docker-command-line) if you with to avoid rebuilding your image.
 
-### Method 1: Using GitLab CI/CD Pipeline
+### Method 1: Using GitLab CI/CD Pipeline {#using-gitlab-cicd-pipeline}
 
 **Step 3: Set up variables in GitLab**
 
@@ -93,7 +93,7 @@ mirror:
 
 Your image is migrated! Continue to [Part 2: create a new session launcher](#part-2-create-a-new-renku-session-launcher-that-uses-the-migrated-image).
 
-### Method 2: Using the Docker command line
+### Method 2: Using the Docker command line {#using-the-docker-command-line}
 
 **Step 1: Create a RenkuLab GitLab Personal Access Token**
 
@@ -161,14 +161,16 @@ docker rmi your-dockerhub-username/your-repo-name:tag
 
 Your image is migrated! Continue to [Part 2: create a new session launcher](#part-2-create-a-new-renku-session-launcher-that-uses-the-migrated-image).
 
-## Part 2: Create a new Renku Session Launcher that uses the migrated image
+## Part 2: Create a new Renku Session Launcher that uses the migrated image {#part-2-create-a-new-renku-session-launcher-that-uses-the-migrated-image}
 
 In the project page:
 
 1. Under **Sessions** section click on ➕ to add a new launcher
 2. Select **External environment**
 
+    <p class="image-container-large">
     ![image.png](dockerhub-image-2.png)
+    </p>
 
 3. For the container image, enter your **image identifier**.
     - Some examples of image identifiers:
@@ -176,10 +178,15 @@ In the project page:
         - `continuumio/anaconda3:2024.06-1`
     - The image identifier should be in the format that works with `docker pull`
 4. Depending on the image you’re using, you’ll need to fill in the **Advanced settings**. See the information below for how to fill it in:
+
+    <p class="image-container-large">
     ![image.png](dockerhub-image-3.png)
+    </p>
 
     :::warning
+
     This part is important! Please read carefully.
+
     :::
 
     <details>

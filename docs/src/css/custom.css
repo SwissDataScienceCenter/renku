@@ -56,14 +56,19 @@
   white-space: nowrap;
 }
 
-.image-container
-{
-    max-width: 50%;
+.image-container, .image-container-medium, .image-container-large {
     margin: auto;
+    text-align: center; /* Center the image horizontally when its width is narrower than the max-width*/
 }
 
-.image-container-large
-{
+.image-container {
+    max-width: 55%;
+}
+
+.image-container-medium {
+    max-width: 70%;
+}
+
+.image-container-large {
     max-width: 85%;
-    margin: auto;
 }
