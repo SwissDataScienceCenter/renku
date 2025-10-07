@@ -5,7 +5,6 @@ title: Personal Switchdrive/PolyBox
 # How to connect a personal Switchdrive or Polybox folder to your project
 
 :::warning
-❗
 
 Only use this How-To guide to connect a folder that **only you** use. To connect a folder that you share with others, see [How to connect a shared Switchdrive or PolyBox folder to your project](/docs/users/data/guides/connect-data/connect-shared-switchdrive-or-polybox-folder-to-project) .
 
