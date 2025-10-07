@@ -34,7 +34,7 @@ jobs:
           git commit -m "chore: create release ${{ github.event.inputs.version }}" --allow-empty
           git push
       - name: Create Pull Request
-        uses: actions/github-script@v7
+        uses: actions/github-script@v8
         with:
           github-token: ${{ secrets.RENKUBOT_GITHUB_TOKEN }}
           script: |
