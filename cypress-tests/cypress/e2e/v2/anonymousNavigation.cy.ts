@@ -106,9 +106,8 @@ describe("Anonymous users can only access public resources", () => {
 
     // Log out and search for the projects as an anonymous user
     cy.session(anonymousSession.id, anonymousSession.setup);
-    cy.visit("/v2");
+    cy.visit("/search");
     cy.getDataCy("navbar-login").should("be.visible");
-    cy.getDataCy("navbar-link-search").click();
     cy.intercept(
       new RegExp(`/api/data/search/query\\?(?:.*&)*q=.*?${randomString}.*`),
     ).as("searchQuery");
@@ -160,9 +159,8 @@ describe("Anonymous users can only access public resources", () => {
 
     // Verify the previously private project is now publicly visible
     cy.session(anonymousSession.id, anonymousSession.setup);
-    cy.visit("/v2");
+    cy.visit("/search");
     cy.getDataCy("navbar-login").should("be.visible");
-    cy.getDataCy("navbar-link-search").click();
     cy.getDataCy("search-input").clear().type(randomString);
     cy.getDataCy("search-button").click();
     cy.wait("@searchQuery");
@@ -200,9 +198,8 @@ describe("Anonymous users can only access public resources", () => {
 
     // Verify the previously public project is now invisible
     cy.session(anonymousSession.id, anonymousSession.setup);
-    cy.visit("/v2");
+    cy.visit("/search");
     cy.getDataCy("navbar-login").should("be.visible");
-    cy.getDataCy("navbar-link-search").click();
     cy.getDataCy("search-input").clear().type(randomString);
     cy.getDataCy("search-button").click();
     cy.wait("@searchQuery");
