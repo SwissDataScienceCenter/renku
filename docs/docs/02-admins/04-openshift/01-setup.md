@@ -246,7 +246,7 @@ oc adm policy add-scc-to-user nonroot-v2 -z renku-amalthea-sessions-scc-handler 
 ```
 
 To make use of this service account in your cluster, set the
-`localClusterSessionServiceAccount` settings under `dataService`.
+`localClusterSessionServiceAccount` settings under `dataService` in the Helm chart values file.
 
 ```yaml
 dataService:
