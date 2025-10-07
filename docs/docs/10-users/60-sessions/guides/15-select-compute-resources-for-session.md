@@ -1,11 +1,17 @@
 # Select compute resources for your session
 
+import selectCompute from './select-compute-resources-for-session-10.mov';
+
 To change which resource class your project’s session launcher uses, you can edit the default resource class used by your session launcher:
 
 1. Click on the session launcher in your project
 2. Navigate to “Default Resource Class” and click the pencil icon to change the resource class.
 
-![image.png](./select-compute-resources-for-session-10.mov)
+<p class="image-container">
+<video controls>
+<source src={selectCompute} />
+</video>
+</p>
 
 :::tip
 
