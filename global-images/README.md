@@ -21,7 +21,7 @@ There are a few environment variables you can set to modify the build.
 | BUILDER | Builder image to use | ghcr.io/swissdatasciencecenter/renku-frontend-buildpacks/selector:0.0.8 |
 | DOCKER_PREFIX | Prefix to use for the image | None |
 | FRONTEND | The frontend to add (vscodium or jupyterlab) | vscodium |
-| PUBLISH | Push the image to the registry | False |
+| PUBLISH | Set to "1" to push the image to the registry | False |
 | RUN_IMAGE | Run image to use | ghcr.io/swissdatasciencecenter/renku-frontend-buildpacks/base-image:0.0.8 |
 | TAGS | Comma-separated list of image names | None |
 
