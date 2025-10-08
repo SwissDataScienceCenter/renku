@@ -892,7 +892,7 @@ notebooks:
   sessionIngress:
     host:
     tlsSecret:
-    className: "" # nginx
+    className: "nginx"
     annotations:
       nginx.ingress.kubernetes.io/proxy-body-size: "0"
       nginx.ingress.kubernetes.io/proxy-buffer-size: 8k
