@@ -5,6 +5,10 @@ For changes that require manual steps other than changing values, please check o
 Please follow this convention when adding a new row
 * `<type: NEW|EDIT|DELETE> - *<resource name>*: <details>`
 
+## Upgrading to Renku 2.9.0
+
+* NEW `notebooks.sessionIngress.ingressClassName`, set to `nginx` by default. Replaces the deprecated `kubernetes.io/ingress.class` annotation.
+
 ## Upgrading to Renku 2.8.0
 
 * NEW `enableInternalGitlab`, set to `true` by default. Indicates that the Gitlab that comes with legacy (V1) Renku
