@@ -1,13 +1,16 @@
 ---
-title: Shared Switchdrive or PolyBox
+title: Shared Switchdrive/PolyBox
 ---
 
 # How to connect a shared Switchdrive or PolyBox folder to your project
 
-<aside>
-<img src="https://www.notion.so/icons/info-alternate_blue.svg" alt="https://www.notion.so/icons/info-alternate_blue.svg" width="40px" /> Follow this How-To guide to connect shared folders, both **privately** & **publicly** shared folders. The only difference is whether you set a password on the folder.
+:::info
 
-</aside>
+Follow this guide to connect both **privately** & **publicly** shared folders. The only difference
+between whether the folder is _public_ or _shared privately_ is whether you set a password on the
+folder.
+
+:::
 
 ### Create a “public link” for your Switchdrive (or Polybox) folder
 

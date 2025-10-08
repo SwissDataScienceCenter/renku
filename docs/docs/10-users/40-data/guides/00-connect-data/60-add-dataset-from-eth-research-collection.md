@@ -4,15 +4,8 @@ title: ETH Research Collection
 
 # How to add a dataset from ETH Research Collection
 
-:::info
-
-If you would like to connect your project to a public data source (e.g. ETH Research connection), you can use the platform’s technology to create such connection.
-
-:::
-
-## ETH Research Collection
-
-This platform uses webdav for connecting to data, if available in the public libdrive space. Please follow the following steps to connect your project to this data source.
+This platform uses webdav for connecting to data, if available in the public libdrive space. Please
+follow the following steps to connect your project to this data source.
 
 In your project’s dashboard:
 

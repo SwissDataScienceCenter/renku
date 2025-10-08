@@ -1,8 +1,9 @@
 # Add a code repository to your project
 
-:::note
+:::info
 
-In order to access your code repository from RenkuLab, you need to connect your RenkuLab account with GitHub/GitLab. See [How to connect your Renku account to your GitHub or GitLab account](/docs/users/data/guides/connect-renku-account-to-github-or-gitlab-account).
+In order to access your code repository from RenkuLab, you need to [connect your RenkuLab account
+with GitHub/GitLab](/docs/users/data/guides/connect-renku-account-to-github-or-gitlab-account).
 
 :::
 
