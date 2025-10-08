@@ -13,6 +13,6 @@ In this folder, run
 go run .
 ```
 
-You will be prompted for authentication tokens for Renku and GitLab. In both cases, admin tokens are required for the script wo work correctly.
+You will be prompted for authentication credentials for Renku and GitLab. In both cases, the credentials should have admin privileges.
 
-For Renku there is no way to create tokens -- the only option is to get the session cookie from the browser.
+For Renku we expect value of the `_renku_session` cookie after the user logs in as an administrator in the browser.
