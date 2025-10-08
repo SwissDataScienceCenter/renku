@@ -15,6 +15,13 @@ type MigratedProject struct {
 	projectId string
 }
 
+type Platform string
+
+const (
+	Renku  Platform = "Renku"
+	GitLab Platform = "GitLab"
+)
+
 type PlatformRedirectConfig struct {
 	SourceUrl string `json:"source_url"`
 	TargetUrl string `json:"target_url"`
@@ -29,7 +36,7 @@ type ServerCredentials struct {
 	token string
 }
 
-var defaultHosts = map[string]string{
+var defaultHosts = map[Platform]string{
 	"Renku":  "renkulab.io",
 	"GitLab": "gitlab.renkulab.io",
 }
@@ -215,23 +222,28 @@ func RetrieveGitLabProjectIdentifier(gitlabCredentials ServerCredentials, migrat
 	return result.PathWithNamespace
 }
 
-func ScanCredentials(name string) ServerCredentials {
+func ScanCredentials(name Platform) ServerCredentials {
 	var token string
-	hostEnvVar := fmt.Sprintf("%s_HOST", strings.ToUpper(name))
+	hostEnvVar := fmt.Sprintf("%s_HOST", strings.ToUpper(string(name)))
+	host := defaultHosts[name]
 	if envHost := os.Getenv(hostEnvVar); envHost != "" {
 		fmt.Printf("Using %s host from environment variable (%s): %s\n", name, hostEnvVar, envHost)
-		defaultHosts[name] = envHost
+		host = envHost
 	} else {
 		fmt.Printf("No %s host environment variable (%s) found, using default: %s\n", name, hostEnvVar, defaultHosts[name])
 	}
-	host := defaultHosts[name]
-	tokenEnvVar := fmt.Sprintf("%s_TOKEN", strings.ToUpper(name))
+	tokenEnvVar := fmt.Sprintf("%s_TOKEN", strings.ToUpper(string(name)))
 	if envToken := os.Getenv(tokenEnvVar); envToken != "" {
 		fmt.Printf("Using %s token from environment variable (%s).\n", name, tokenEnvVar)
-		token = envToken
-	} else {
-		fmt.Printf("  Enter %s (%s) access token: ", name, host)
-		fmt.Scanln(&token)
+		return ServerCredentials{host: host, token: envToken}
 	}
+
+	if name == "GitLab" {
+		fmt.Printf("  Enter GitLab (%s) admin user access token for the read_api scope: ", host)
+	} else {
+		fmt.Printf("  Enter Renku (%s) admin session token (from browser cookie '_renku_session'): ", host)
+	}
+	fmt.Scanln(&token)
+
 	return ServerCredentials{host: host, token: token}
 }

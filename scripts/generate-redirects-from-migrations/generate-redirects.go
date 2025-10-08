@@ -6,7 +6,7 @@ import (
 
 func main() {
 	fmt.Println("This script creates redirect entries for migrated projects.")
-	fmt.Print("You will be prompted for access tokens for Renku and GitLab, respectively.\n\n")
+	fmt.Print("You will be prompted for access tokens with admin rights for Renku and GitLab, respectively.\n\n")
 	renkuCredentials := ScanCredentials("Renku")
 	gitlabCredentials := ScanCredentials("GitLab")
 	migratedProjects := ListMigratedProjects(renkuCredentials)
