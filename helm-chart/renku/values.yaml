@@ -565,7 +565,7 @@ ui:
     replicaCount: 1
     image:
       repository: renku/renku-ui
-      tag: "4.9.0"
+      tag: "4.10.0"
       pullPolicy: IfNotPresent
       ## Optionally specify an array of imagePullSecrets.
       ## Secrets must be manually created in the namespace.
@@ -749,7 +749,7 @@ ui:
     keepCookies: []
     image:
       repository: renku/renku-ui-server
-      tag: "4.9.0"
+      tag: "4.10.0"
       pullPolicy: IfNotPresent
     imagePullSecrets: []
     nameOverride: ""
@@ -1444,18 +1444,18 @@ dataService:
     create: true
   image:
     repository: renku/renku-data-service
-    tag: "0.57.0"
+    tag: "0.58.0"
     pullPolicy: IfNotPresent
   k8sWatcher:
     image:
       repository: renku/data-service-k8s-watcher
-      tag: "0.57.0"
+      tag: "0.58.0"
       pullPolicy: IfNotPresent
     resources: {}
   dataTasks:
     image:
       repository: renku/data-service-data-tasks
-      tag: "0.57.0"
+      tag: "0.58.0"
       pullPolicy: IfNotPresent
     resources: {}
   service:
@@ -1513,6 +1513,18 @@ dataService:
         key: renku.io/dedicated
         operator: Equal
         value: image-build
+  ## The service account used in the Amalthea session pods for the resource pool(s) that use the local cluster.
+  ## The only use for this is if you want to use a different SCC than the default in Openshift.
+  ## The service account is not mounted in the session. Leaving the default value of "" means that
+  ## a service account will not be specified for the Session spec.
+  localClusterSessionServiceAccount: ""
+  ## A secret name that contains kubeconfigs for all remote clusters you want to use.
+  ## Each key in the secret should be a file name and should contain the YAML kubeconfig
+  ## for a remote cluster you would like to use. The name of the kubeconfig can then be used
+  ## in the payload for creating a cluster in the API, under the `config_name` field.
+  ## If the value is not set then a secret is not mounted.
+  ## The secret should be in the same namespace as where all the Renku services are installed.
+  remoteClustersKubeconfigSecretName: ""
 posthog:
   enabled: false
   # the posthog api key
@@ -1541,7 +1553,7 @@ authz:
 secretsStorage:
   image:
     repository: renku/secrets-storage
-    tag: "0.57.0"
+    tag: "0.58.0"
     pullPolicy: IfNotPresent
   service:
     type: ClusterIP

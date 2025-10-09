@@ -178,6 +178,14 @@ spec:
                 secretKeyRef:
                   name: {{ cat (include "renku.fullname" .) "-gateway" | nospace }}
                   key: oidcClientSecret
+            {{- if .Values.dataService.localClusterSessionServiceAccount }}
+            - name: LOCAL_CLUSTER_SESSION_SERVICE_ACCOUNT
+              value: {{ .Values.dataService.localClusterSessionServiceAccount | quote }}
+            {{- end }}
+            {{- if .Values.dataService.remoteClustersKubeconfigSecretName }}
+            - name: K8S_CONFIGS_ROOT
+              value: "/secrets/kube_configs"
+            {{- end }}
             {{- include "certificates.env.python" . | nindent 12 }}
             {{- include "certificates.env.grpc" . | nindent 12 }}
           volumeMounts:
@@ -189,6 +197,11 @@ spec:
             - mountPath: "/secrets/publicKey"
               name: secret-service-public-key
               readOnly: true
+            {{- if .Values.dataService.remoteClustersKubeconfigSecretName }}
+            - name: remote-cluster-kubeconfigs
+              mountPath: "/secrets/kube_configs"
+              readOnly: true
+            {{- end }}
             {{- include "certificates.volumeMounts.system" . | nindent 12 }}
           livenessProbe:
             httpGet:
@@ -240,5 +253,10 @@ spec:
             items:
             - key: publicKey
               path: publicKey
+        {{- if .Values.dataService.remoteClustersKubeconfigSecretName }}
+        - name: remote-cluster-kubeconfigs
+          secret:
+            secretName: {{ .Values.dataService.remoteClustersKubeconfigSecretName }}
+        {{- end }}
         {{- include "certificates.volumes" . | nindent 8 }}
       serviceAccountName: {{ template "renku.fullname" . }}-data-service
