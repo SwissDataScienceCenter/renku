@@ -77,10 +77,10 @@ read_api read_repository write_repository read_registry
 ### GitHub.com
 
 GitHub allows for two ways to integrate it. Renku uses _GitHub Apps_
-for accessing code repositories. It requires a _OAuth App_ for
+for accessing code repositories. It requires an _OAuth App_ for
 accessing private images at `ghcr.io`.
 
-Therefore, two integrations for GitHub are necessary to create in
+Therefore, two integrations for GitHub are necessary in
 Renku. It is important, that the _GitHub App_ - the one accessing code
 repositories has an _empty_ `image_registry_url` setting. For the
 _OAuth App_ however, a `image_registry_url` (which is
