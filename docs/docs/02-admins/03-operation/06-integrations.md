@@ -76,7 +76,19 @@ read_api read_repository write_repository read_registry
 
 ### GitHub.com
 
+GitHub allows for two ways to integrate it. Renku uses _GitHub Apps_
+for accessing code repositories. It requires an _OAuth App_ for
+accessing private images at `ghcr.io`.
+
+Therefore, two integrations for GitHub are necessary in
+Renku. It is important, that the _GitHub App_ - the one accessing code
+repositories has an _empty_ `image_registry_url` setting. For the
+_OAuth App_ however, a `image_registry_url` (which is
+`https://ghcr.io` for `github.com`) is required.
+
 #### Create the client in GitHub
+
+This creates a _GitHub App_ for accessing code repositories.
 
 1. Navigate to `https://github.com`.
 2. You can create the Renku client as part of your own profile or an organization.
@@ -112,6 +124,28 @@ you are creating the application at the user or organization level.
 You can do this by clicking the `Generate a new client secret` button once you have created the application.
 12. Save the `Client ID` and client secret because you will need them in the steps to follow.
 
+#### Creating OAuth App client in GitHub
+
+This is very similar to the above. 
+
+1. Go to `Developer settings` -> `OAuth Apps` -> `New OAuth App`.
+3. You should now see the form for adding the application. 
+4. Name the application. GitHub will derive a slug from this name that
+you will need when you register the integration in Renku.
+5. Fill in the description which will be displayed to users when they
+connect the integration and are asked to log into GitHub.
+6. For the `Homepage URL` use the URL of your Renku deployment.
+7. The `Callback URL` is based on the URL of your Renku deployment 
+like `https://<server-name>/api/data/oauth2/callback`. For example,
+if your Renku deployment is at `https://renkulab.io` then the `Callback URL` will be 
+`https://renkulab.io/api/data/oauth2/callback`.
+8. `Device Flow` is not necessary, it can be left disabled.
+9. Register the appliction
+
+Once registered, complete the process by generating a new client
+secret. Copy the client secret and client id somewhere, it is required
+to specify wher creating the Renku integration.
+
 #### Create the integration in Renku
 
 1. Log into Renku and navigate to the admin panel.
@@ -124,6 +158,13 @@ There are instructions in the steps above on how to find the application slug.
 6. Specify the base URL for Github (i.e. `https://github.com`) in the `URL` field.
 7. Specify the client ID and secret that you received when you created the application in the 
 GitHub pages for the corresponding `Client ID` and `Client Secret` fields.
+8. Only for an _OAuth App_: fill in the `Image Registry Url`. For
+   `github.com` it is `https://ghcr.io`. Leave `Image Registry Url`
+   empty when adding an integration for a _GitHub App_.
+
+This needs to be done twice: once for a _GitHub App_ (for accessing
+code repositories) and once for the _OAuth App_ (for accessing
+images).
 
 ### Enterprise GitHub
 
