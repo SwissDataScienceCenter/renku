@@ -15,13 +15,13 @@ In the project page:
     
 2. Click on **Connect an existing repository** button
     
-    <p class="image-container-large">
+    <p class="image-container-l">
     ![image.png](./add-code-repository-to-project-20.png)
     </p>
     
 3. Fill in the URL of the code repository you want to add to your project. You can copy this URL from the browser page of your code repository.
     
-    <p class="image-container-large">
+    <p class="image-container-l">
     ![image.png](./add-code-repository-to-project-30.png)
     </p>
     

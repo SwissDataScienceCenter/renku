@@ -16,13 +16,13 @@ Create custom launch links that do exactly that. Share them as simple URLs or em
 
 - **From inside a running session:** In the top bar of the running Renku session, click the  🔗 icon in the session controls.
     
-    <p class="image-container-large">
+    <p class="image-container-l">
     ![image.png](./share-session-launch-link-10.png)
     </p>
     
 1. Choose either to copy a Launch Link or markdown Launch Badge.
     
-    <p class="image-container-large">
+    <p class="image-container-l">
     ![launch-link-modal.png](./share-session-launch-link-50.png)
     </p>
     
@@ -49,14 +49,14 @@ First, add an environment variable to your session launcher.
 1. Clicking on the **Session Launcher** to open its **side panel**.
 2. Scroll down to the **Environment Variables** section.
     
-    <p class="image-container-large">
+    <p class="image-container-l">
     ![env-vars.png](./share-session-launch-link-30.png)
     </p>
     
 3. Click on the ✏️ icon to edit the launcher’s environment variables.
 4. Give your environment variable a name, and optionally a default value.
     
-    <p class="image-container-large">
+    <p class="image-container-l">
     ![image.png](./share-session-launch-link-20.png)
     </p>
     
@@ -70,7 +70,7 @@ Now, customize the launch link with the environment variable you just created.
 4. **Check the box** next to the environment variable you’d like to customize
 5. Enter a **value** for that variable for the launch link
     
-    <p class="image-container-large">
+    <p class="image-container-l">
     ![launch-link-modal-expanded.png](./share-session-launch-link-60.png)
     </p>
     

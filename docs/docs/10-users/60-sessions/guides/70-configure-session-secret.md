@@ -12,7 +12,7 @@ If you are adding a session secret to a project for the first time, follow these
 2. Scroll down to the **Session secret slots** section.
 3. Click the ➕ button to add a session secret slot.
     
-    <p class="image-container-large">
+    <p class="image-container-l">
     ![image.png](./configure-session-secret-10.png)
     </p>
     
@@ -30,7 +30,7 @@ Secrets you enter on Renku are only saved for you. Secrets are not shared with o
 
 :::
 
-<p class="image-container-large">
+<p class="image-container-l">
 ![image.png](./configure-session-secret-20.png)
 </p>
 
@@ -54,13 +54,13 @@ There are a few ways to get to the screen above.
 
 1. When you launch a session on a project that has session secrets slots, you will be prompted during session launch to enter secrets for the slots.
 
-<p class="image-container-large">
+<p class="image-container-l">
 ![image.png](./configure-session-secret-30.png)
 </p>
 
 1. You can always go to project **Settings**, scroll to **Session Secret Slots**, and click the **Provide secret** button.
 
-<p class="image-container-large">
+<p class="image-container-l">
 ![image.png](./configure-session-secret-40.png)
 </p>
 
@@ -68,7 +68,7 @@ There are a few ways to get to the screen above.
 
 1. Click on the **user menu** in the top right and select **User Secrets**.
     
-    <p class="image-container-large">
+    <p class="image-container-l">
     ![image.png](./configure-session-secret-50.png)
     </p>
     

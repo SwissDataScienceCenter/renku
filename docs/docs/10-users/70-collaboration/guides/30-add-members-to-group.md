@@ -8,7 +8,7 @@
     - **User**: Find a user by typing the person’s name.
     - **Role**: Decide the rights of the users when adding them (you can always come back to this page to revise people’s rights by click on **Edit**).
     
-    <p class="image-container-large">
+    <p class="image-container-l">
     ![image.png](./add-members-to-group-20.png)
     </p>
     

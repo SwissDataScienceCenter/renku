@@ -42,7 +42,7 @@ Integrations with more data repositories, including ones in the ETH Domain, will
 
 1. Find the DOI badge box
     
-    <p class="image-container">
+    <p class="image-container-s">
     ![image-20](./connect-data-from-data-repositories-20.png)
     </p>
     
@@ -54,7 +54,7 @@ Integrations with more data repositories, including ones in the ETH Domain, will
 
 It is possible to use the DOI of a specific version of a Zenodo record, as well as using the “all versions” DOI (which will resolve to the latest version)
 
-<p class="image-container">
+<p class="image-container-s">
 ![Screenshot 2025-05-06 at 14.20.21.png](./connect-data-from-data-repositories-40.png)
 </p>
 

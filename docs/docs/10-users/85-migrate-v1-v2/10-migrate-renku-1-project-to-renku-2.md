@@ -95,7 +95,7 @@ Here’s how to migrate your Renku Legacy project to 2.0:
 
    3. Review that the project name, owner, and visibility as you want.
 
-       <p class="image-container-medium">
+       <p class="image-container-m">
        ![The migration modal shows you what components of the project will and will not be migrated. ](./migrate-renku-1-project-to-renku-2-20.png)
        </p>
 
@@ -143,7 +143,7 @@ If for whatever reason you need to migrate a project manually, you can do so by 
             1. If it’s a Jupyter-based image, enter `/lab`
             2. If it’s a RStudio-based image, enter `/rstudio`
 
-        <p class="image-container-large">
+        <p class="image-container-l">
         ![Screenshot From 2024-11-27 10-50-22.png](./migrate-renku-1-project-to-renku-2-50.png)
         </p>
 

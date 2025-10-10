@@ -168,7 +168,7 @@ In the project page:
 1. Under **Sessions** section click on ➕ to add a new launcher
 2. Select **External environment**
 
-    <p class="image-container-large">
+    <p class="image-container-l">
     ![image.png](dockerhub-image-2.png)
     </p>
 
@@ -179,7 +179,7 @@ In the project page:
     - The image identifier should be in the format that works with `docker pull`
 4. Depending on the image you’re using, you’ll need to fill in the **Advanced settings**. See the information below for how to fill it in:
 
-    <p class="image-container-large">
+    <p class="image-container-l">
     ![image.png](dockerhub-image-3.png)
     </p>
 

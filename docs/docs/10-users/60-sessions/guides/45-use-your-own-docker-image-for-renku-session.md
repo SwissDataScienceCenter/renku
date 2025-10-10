@@ -23,7 +23,7 @@ In the project page:
 1. Under **Sessions** section click on ➕ to add a new launcher
 2. Select **External environment**
 
-    <p class="image-container-large">
+    <p class="image-container-l">
     ![image.png](./use-your-own-docker-image-for-renku-session-10.png)
     </p>
 
@@ -94,7 +94,7 @@ In the project page:
 
 Note that you can always **modify your session launcher** by clicking on top of it on the project’s page, and using the menu on the right:
 
-<p class="image-container-large">
+<p class="image-container-l">
 ![image.png](./use-your-own-docker-image-for-renku-session-30.png)
 </p>
 
@@ -106,7 +106,7 @@ In order to run a docker image in a session, Renku needs to know some informatio
 
 In this section, you can see example configurations for commonly used images. If you build an image with one of these images as the base, then you can use this provided configuration to make that image run in RenkuLab.  The information below can be copied and pasted into the **Advanced Settings** form for creating a **custom environment**.
 
-<p class="image-container-large">
+<p class="image-container-l">
 ![image.png](./use-your-own-docker-image-for-renku-session-40.png)
 </p>
 
@@ -153,8 +153,6 @@ In this section, you can see example configurations for commonly used images. If
 ### RShiny
 
 🚧 _Not yet available_
-
-[How to serve a Shiny app without its code](/docs/users/projects/guides/serve-shiny-app-without-its-code)
 
 ### VSCode
 

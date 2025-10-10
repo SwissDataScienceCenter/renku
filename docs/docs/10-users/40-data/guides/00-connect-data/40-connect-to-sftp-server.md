@@ -10,7 +10,7 @@ If you already have an SFTP data connector available in your personal account or
 
 If you need to create a new one, click on the `+` to add a new data connector and select `sftp`
 
-<p class="image-container-large">
+<p class="image-container-l">
 ![image.png](./connect-to-sftp-server-10.png)
 </p>
 
@@ -20,7 +20,7 @@ Note that for the EPFL NAS, the server address is `fts.epfl.ch`.
 
 If you are reusing a data connector, click on it to open the side panel and select the “Credentials” menu option in the upper right drop-down:
 
-<p class="image-container">
+<p class="image-container-s">
 ![image.png](./connect-to-sftp-server-20.png)
 </p>
 

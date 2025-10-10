@@ -29,7 +29,7 @@ In the project page:
 1. In the **Sessions** section click on ➕ to add a new session launcher
 2. Choose **Global environment** (if it’s not already selected)
     
-    <p class="image-container-large">
+    <p class="image-container-l">
     ![image.png](./add-session-launcher-to-project-10.png)
     </p>
     

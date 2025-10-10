@@ -24,7 +24,7 @@ To set up a dashboard with an environment built from your repository, you can fo
 
 Once you are done, your environment configuration should look something like this:
 
-<p class="image-container">
+<p class="image-container-s">
 ![image.png](./create-environment-with-custom-packages-installed-30.png)
 </p>
 

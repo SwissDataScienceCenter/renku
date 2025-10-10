@@ -65,9 +65,9 @@ You can only view copies of projects that you have access to. If someone makes a
 
 **Here’s what to instruct your students to do:**
 
-1. Go to [insert template project link here](.)
+1. Go to [insert template project link here](/)
 2. Make a copy of the project using the banner in the button
-    
+   
     ![image.png](./set-up-course-in-classic-mode-50.png)
     
 3. (*If students work in teams*) Add your group members to their copy of the project under Settings ([How to add people to a project](/docs/users/collaboration/guides/add-people-to-project))

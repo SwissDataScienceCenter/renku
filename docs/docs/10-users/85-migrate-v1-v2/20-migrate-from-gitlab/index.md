@@ -18,7 +18,7 @@ image.**
 To determine what resources in your project need to be migrated, look for the **Migration needed**
 badge on code repositories and session launchers in your project:
 
-<p class="image-container">
+<p class="image-container-s">
 ![2_migration pill_2x.png](./migrate-out-of-renkulab-gitlab-10.png)
 </p>
 

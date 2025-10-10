@@ -56,19 +56,24 @@
   white-space: nowrap;
 }
 
-.image-container, .image-container-medium, .image-container-large {
-    margin: auto;
-    text-align: center; /* Center the image horizontally when its width is narrower than the max-width*/
+img {
+  filter: drop-shadow(0 10px 16px rgba(0, 0, 0, .25))
+          drop-shadow(0 2px 4px rgba(0, 0, 0, .15));
 }
 
-.image-container {
-    max-width: 55%;
+.image-container-s, .image-container-m, .image-container-l {
+  margin: auto;
+  text-align: center; /* Center the image horizontally when its width is narrower than the max-width*/
 }
 
-.image-container-medium {
-    max-width: 70%;
+.image-container-s {
+  max-width: 55%;
 }
 
-.image-container-large {
-    max-width: 85%;
+.image-container-m {
+  max-width: 70%;
+}
+
+.image-container-l {
+  max-width: 85%;
 }

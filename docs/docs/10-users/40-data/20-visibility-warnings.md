@@ -5,13 +5,13 @@ especially in projects were created before version 0.67.0. And conversely, you m
 warnings** on data connectors that *other* project members can’t see. This how-to guide will walk
 you through what these warnings mean and how to resolve them.
 
-<p class="image-container"> 
+<p class="image-container-s"> 
 ![A notification about hidden data connectors](./resolve-hidden-visibility-warning-10.png)
 </p>
 
 A notification about hidden data connectors
 
-<p class="image-container"> 
+<p class="image-container-s"> 
 ![A data connector with a visibility warning](./resolve-hidden-visibility-warning-20.png)
 </p>
 
@@ -40,7 +40,7 @@ But if you see a visibility warning on a data connector that everyone in the pro
 1. Click on the data connector with the visibility warning to open its side sheet
 2. In the side sheet, click on **Edit** in the top right
     
-    <p class="image-container"> 
+    <p class="image-container-s"> 
     ![image.png](./resolve-hidden-visibility-warning-30.png)
     </p>
     
@@ -68,7 +68,7 @@ Another option is to make the data connector public. This will guarantee that ev
 1. Click on the data connector with the Visibility warning to open its side sheet
 2. In the side sheet, click on **Edit** in the top right
    
-    <p class="image-container"> 
+    <p class="image-container-s"> 
     ![image.png](./resolve-hidden-visibility-warning-30.png)
     </p>
     

@@ -14,7 +14,7 @@ Resource pools allow Renku administrators to:
 1. Log into Renku as an administrator and navigate to the admin panel.
     :::info
     The documentation for assigning the Renku administrator role
-    can be found [here](08-user-management.md).
+    can be found [here](/docs/admins/operation/user-management).
     :::
 2. Click `Add Resource Pool` in the `Compute Resources` section.
 3. Come up with a name for the resource pool. This should be concise but

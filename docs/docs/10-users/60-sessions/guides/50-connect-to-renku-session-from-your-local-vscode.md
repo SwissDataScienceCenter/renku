@@ -24,7 +24,7 @@ VSCode tunnels are supported in the following Renku session environments:
 ### **Then, in a VSCode window on your local machine:**
 
 1. Install the **“Remote - Tunnels”** VSCode Extension if you don’t already have it.
-    <p class="image-container-medium">
+    <p class="image-container-m">
     ![image.png](./connect-to-renku-session-from-your-local-vscode-10.png)
     </p>
 
@@ -33,7 +33,7 @@ VSCode tunnels are supported in the following Renku session environments:
         2. **Search** for “Remote - Tunnels”
         3. Click **install**
 2. In the very bottom left of the window, click the **Open a Remote Window** button
-    <p class="image-container">
+    <p class="image-container-s">
     ![The ‘Open a Remote Window’ button](./connect-to-renku-session-from-your-local-vscode-20.png)
     </p>
     
@@ -42,7 +42,7 @@ VSCode tunnels are supported in the following Renku session environments:
 4. If you’re not signed in, you’ll be asked to sign in. Sign into the same account you did when running the `start_tunnel` script
 5. You should now see a list of available tunnels on your account, and one of them should be a `renku-...` tunnel. Select it!
 
-    <p class="image-container-large">
+    <p class="image-container-l">
     ![image.png](./connect-to-renku-session-from-your-local-vscode-30.png)
     </p>
 

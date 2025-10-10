@@ -32,18 +32,18 @@ You can save your credentials for a data connector in RenkuLab so that you donâ€
 
 You can enter or modify the saved credentials for a data connector, and also delete it. Click on top of a data connector and a right-menu appears in the screen. Click on the **drop-down arrow** menu next to **Edit** to access further options to work on your data connector.
 
-<p class="image-container">
+<p class="image-container-s">
 ![image.png](./data-connectors-00.png)
 </p>
 
 ## Share, reuse, and trace your data
 
-Data connectors can be shared among projects. You do not need to create the same data connector for multiple projects. Check [How to link a data connector to your project](/docs/users/data/guides/link-data-connector-to-your-project)!
+Data connectors can be shared among projects. You do not need to create the same data connector for multiple projects. Check [How to link a data connector to your project](/docs/users/data/guides/link-data-connector-to-project)!
 
 ### Track projects linked to your data connector
 
 You can check where your data has been used on the right menu of your data connector under the **Projects** section.
 
-<p class="image-container">
+<p class="image-container-s">
 ![image.png](./data-connectors-10.png)
 </p>

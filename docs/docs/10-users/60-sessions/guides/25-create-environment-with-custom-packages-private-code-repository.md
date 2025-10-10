@@ -11,19 +11,19 @@ If your code repository is private, follow the instructions below.
 1. First, make sure your code repository meets the requirements for Renku to build an image for you. See [What kinds of environment definitions are supported?](/docs/users/sessions/guides/create-environment-with-custom-packages-installed)
 2. In your GitHub code repository, in the upper menu, click on **Actions**.
 
-    <p class="image-container-large">
+    <p class="image-container-l">
     ![image.png](./create-environment-with-custom-packages-private-code-repository-10.png)
     </p>
 
 3. Click **set up a workflow yourself**
 
-    <p class="image-container-large">
+    <p class="image-container-l">
     ![image.png](./create-environment-with-custom-packages-private-code-repository-20.png)
     </p>
 
 4. Change the filename to **renku-image-build.yaml**
 
-    <p class="image-container-large">
+    <p class="image-container-l">
     ![image.png](./create-environment-with-custom-packages-private-code-repository-30.png)
     </p>
 
@@ -80,7 +80,7 @@ If your code repository is private, follow the instructions below.
 1. Go back the main page of your code repository
 2. In the right menu, under **Packages**, click on the entry that reads **repo-name/renku-image**.
 
-    <p class="image-container-large">
+    <p class="image-container-l">
     ![image.png](./create-environment-with-custom-packages-private-code-repository-40.png)
     </p>
 

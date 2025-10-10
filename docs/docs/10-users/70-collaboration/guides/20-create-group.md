@@ -16,7 +16,7 @@ Creating a group allows you to gather all the information and resources (data, p
     - **Description (Optional)**: add the description of your group.
     - Click on the **Create** button.
     
-    <p class="image-container-large">
+    <p class="image-container-l">
     ![image.png](./create-group-20.png)
     </p>
     
