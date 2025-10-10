@@ -5,6 +5,22 @@ For changes that require manual steps other than changing values, please check o
 Please follow this convention when adding a new row
 * `<type: NEW|EDIT|DELETE> - *<resource name>*: <details>`
 
+## Upgrading to Renku 2.9.0
+
+* NEW `notebooks.sessionIngress.ingressClassName`, set to `nginx` by default. Replaces the deprecated `kubernetes.io/ingress.class` annotation.
+* NEW `dataService.localClusterSessionServiceAccount`, set to "" by default.
+  The service account used in the Amalthea session pods for the resource pool(s) that use the local cluster.
+  The only use for this is if you want to use a different SCC than the default in Openshift.
+  The service account is not mounted in the session. Leaving the default value of "" means that
+  a service account will not be specified for the Session spec.
+* NEW `dataService.remoteClustersKubeconfigSecretName`, set to "" by default.
+  A secret name that contains kubeconfigs for all remote clusters you want to use.
+  Each key in the secret should be a file name and should contain the YAML kubeconfig
+  for a remote cluster you would like to use. The name of the kubeconfig can then be used
+  in the payload for creating a cluster in the API, under the `config_name` field.
+  If the value is not set then a secret is not mounted.
+  The secret should be in the same namespace as where all the Renku services are installed.
+
 ## Upgrading to Renku 2.8.0
 
 * NEW `enableInternalGitlab`, set to `true` by default. Indicates that the Gitlab that comes with legacy (V1) Renku
