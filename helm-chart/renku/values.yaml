@@ -411,9 +411,10 @@ postgresql:
     # replicationUsername: repl_user
     # replicationPassword: repl_password # generate a random password `openssl rand -hex 32`
 
-  # image:
-  # repository: bitnami/postgresql
-  # tag:
+  ## Use Bitnami's PostgreSQL image from Renkulab Harbor registry
+  image:
+    registry: harbor.renkulab.io
+    repository: bitnami-mirror/postgresql
 
   primary:
     persistence:
@@ -516,6 +517,10 @@ redis:
     failoverTimeout: 2000
     # the default is 220 which causes redis to take ~4 minutes to fully start
     getMasterTimeout: 5
+    # Use Bitnami's Redis Sentinel image from Renkulab Harbor registry
+    image:
+      registry: harbor.renkulab.io
+      repository: bitnami-mirror/redis-sentinel
   # network policies are supported by the chart
   networkPolicy:
     enabled: true
@@ -529,9 +534,17 @@ redis:
     podAnnotations:
       prometheus.io/scrape: "true"
       prometheus.io/port: "9121"
+    # Use the bitnami metrics image from the Renkulab Harbor registry
+    image:
+      registry: harbor.renkulab.io
+      repository: bitnami-mirror/redis-exporter
   # default - making explicit
   sysctl:
     enabled: false
+  # Use Bitnami's Redis image from Renkulab Harbor registry
+  image:
+    registry: harbor.renkulab.io
+    repository: bitnami-mirror/redis
 solr:
   enabled: true
   cloudEnabled: false
@@ -541,6 +554,9 @@ solr:
   # solr has cores, updating/changing this value has no effect.
   coreNames:
     - renku-search
+  image:
+    registry: harbor.renkulab.io
+    repository: bitnami-mirror/solr
   javaMem: "-Xmx512M"
   networkPolicy:
     allowExternal: false
