@@ -28,3 +28,52 @@
   --ifm-color-primary-lightest: #4fddbf;
   --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.3);
 }
+
+.sidebar-section-divider {
+  margin: 16px 0 12px 0;
+}
+
+.sidebar-section-header {
+  display: flex;
+  align-items: center;
+  padding: 0 12px;
+}
+
+.sidebar-section-line {
+  flex: 1;
+  height: 1px;
+  background-color: var(--ifm-color-emphasis-200);
+  margin-left: 8px;
+  margin-right: 8px;
+}
+
+.sidebar-section-text {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--ifm-color-emphasis-600);
+  white-space: nowrap;
+}
+
+img {
+  filter: drop-shadow(0 10px 16px rgba(0, 0, 0, .25))
+          drop-shadow(0 2px 4px rgba(0, 0, 0, .15));
+}
+
+.image-container-s, .image-container-m, .image-container-l {
+  margin: auto;
+  text-align: center; /* Center the image horizontally when its width is narrower than the max-width*/
+}
+
+.image-container-s {
+  max-width: 55%;
+}
+
+.image-container-m {
+  max-width: 70%;
+}
+
+.image-container-l {
+  max-width: 85%;
+}

@@ -154,10 +154,10 @@ demonstrated in the example below.
     ├── environment.yml
     └── src
         ├── bash
-        │   └── init.sh
+        │   └── init.sh
         ├── julia
-        │   └── FilterFlights.jl
+        │   └── FilterFlights.jl
         ├── python
-        │   └── filter_flights.py
+        │   └── filter_flights.py
         └── r
             └── RunFilterFlights.r
