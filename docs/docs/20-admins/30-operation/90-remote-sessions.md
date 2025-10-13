@@ -12,7 +12,7 @@ The technical details of remote sessions are explained on the [Amalthea reposito
 
 ## Configuring remote sessions at CSCS
 
-This section describes how to setup remote sessions at [CSCS](https://cscs.ch),
+This section describes how to set up remote sessions at [CSCS](https://cscs.ch),
 which uses the FirecREST API to start remote sessions.
 This example can be adapted to allow users of your Renku instance to start
 sessions at another HPC infrastructure.
@@ -42,7 +42,7 @@ Then, fill the "Add provider" form as follows:
 * OpenID Connect Issuer URL: `https://auth.cscs.ch/auth/realms/cscs`
 
 Once the new integration has been created, you should test it by clicking "Connect" on
-the corresponding entry in the "Integration" page (see [testing integrations](./integrations#testing-integrations)).
+the corresponding entry in the "Integration" page (see [testing integrations](/docs/admins/operation/integrations#testing-integrations)).
 
 ### 3. Add resource pools which start remote sessions
 
@@ -125,8 +125,8 @@ Now you can launch the session.
 
 ### Troubleshooting
 
-If the sessions fails to start because the SLURM account is incorrect, you can specify it as an environment variable
+If the session fails to start because the SLURM account is incorrect, you can specify it as an environment variable
 in the session launcher.
 
-Open the session launcher's offcanvas, then scroll down to the "Environment Variables" section and add the following:
+Open the session launcher's off-canvas, then scroll down to the "Environment Variables" section and add the following:
 * `SLURM_ACCOUNT`: `<your CSCS group>`

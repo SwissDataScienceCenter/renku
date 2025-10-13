@@ -218,11 +218,13 @@ helm upgrade  --install --namespace renku renku renk/renku -f renku-values.yaml 
 ```
 
 :::info
+
 Any Renku user can be made a Renku administrator. This is useful for setting up
 different global environments, resource pools or integrations. In addition,
 Renku administrators can access the projects and similar resources of any user
 in the platform. The documentation for assigning the Renku administrator role
-can be found [here](../03-operation/08-user-management.md).
+can be found [here](/docs/admins/operation/user-management).
+
 :::
 
 ### Amalthea session service account
