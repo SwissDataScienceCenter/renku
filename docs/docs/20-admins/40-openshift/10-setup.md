@@ -208,25 +208,6 @@ As an admin, setup renku project admin roles:
 oc apply -f renku-roles.yaml
 ```
 
-## Renku deployment
-
-With everything in place as listed in the previous steps, Renku can now be
-installed as usual
-
-```bash
-helm upgrade  --install --namespace renku renku renk/renku -f renku-values.yaml --timeout 1800s --skip-crds
-```
-
-:::info
-
-Any Renku user can be made a Renku administrator. This is useful for setting up
-different global environments, resource pools or integrations. In addition,
-Renku administrators can access the projects and similar resources of any user
-in the platform. The documentation for assigning the Renku administrator role
-can be found [here](/docs/admins/operation/user-management).
-
-:::
-
 ### Amalthea session service account
 
 The default Security Context Constraint (SCC) used to start pods will not allow
@@ -328,3 +309,41 @@ networkPolicies:
         - ipBlock:
             cidr: 172.31.0.0/16
 ```
+
+## Renku deployment
+
+With everything in place as listed in the previous steps, Renku can now be
+installed as usual
+
+```bash
+helm upgrade  --install --namespace renku renku renk/renku -f renku-values.yaml --timeout 1800s --skip-crds
+```
+
+:::info
+
+Any Renku user can be made a Renku administrator. This is useful for setting up
+different global environments, resource pools or integrations. In addition,
+Renku administrators can access the projects and similar resources of any user
+in the platform. The documentation for assigning the Renku administrator role
+can be found [here](/docs/admins/operation/user-management).
+
+:::
+
+## Post-deployment
+
+Currently, Prometheus integration in `renku-data-service` and `renku-k8s-watcher`
+uses `/prometheus` as work folder. This folder is not writable as is on
+OpenShift due to the user/group id handling. As a simple solution, apply the
+following two commands to point the integration to `/tmp`.
+
+```bash
+oc -n renku set env deployment/renku-data-service -c data-service prometheus_multiproc_dir=/tmp
+oc -n renku set env deployment/renku-k8s-watcher -c k8s-watcher prometheus_multiproc_dir=/tmp
+```
+:::info
+
+Not doing it will have no consequences on normal functionality outside of
+Prometheus however it will have an impact on the logs as errors will be shown
+there making things harder to debug in case of problems.
+
+:::
