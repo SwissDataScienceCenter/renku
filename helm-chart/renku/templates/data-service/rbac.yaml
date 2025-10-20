@@ -73,7 +73,7 @@ rules:
   - apiGroups:
       - amalthea.dev
     resources:
-      - amaltheasessions
+      - hpcamaltheasessions
     verbs:
       - create
       - update
