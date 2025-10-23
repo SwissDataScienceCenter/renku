@@ -1,0 +1,19 @@
+---
+{{- if .Values.keycloakx.enabled }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: keycloak-admin-console
+  labels:
+    app: {{ template "renku.name" . }}
+    chart: {{ template "renku.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+  annotations:
+    helm.sh/hook: pre-install,pre-upgrade,pre-rollback
+    helm.sh/hook-delete-policy: before-hook-creation
+data:
+  {{- if .Values.global.keycloak.secureAdminConsole }}
+  KC_HOSTNAME_ADMIN_URL: http://localhost:8080
+  {{- end }}
+{{- end }}
