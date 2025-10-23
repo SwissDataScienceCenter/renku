@@ -100,6 +100,8 @@ spec:
               value: {{ .Values.dataService.imageBuilders.enabled | quote }}
             - name: LEGACY_SUPPORT
               value: {{ dict "enabled" .Values.enableV1Services "supportLegacySessions" .Values.ui.client.supportLegacySessions | toJson | quote }}
+            - name: METRICS_ENABLE
+              value: {{ .Values.ui.client.prometheus.enabled | quote }}
           livenessProbe:
             httpGet:
               path: /
