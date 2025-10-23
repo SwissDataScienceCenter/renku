@@ -758,6 +758,12 @@ ui:
         repository: renku/renku-ui
         tag: "0.11.16"
     supportLegacySessions: false
+    prometheus:
+      enabled: true
+      annotations:
+        prometheus.io/path: "/metrics"
+        prometheus.io/port: "9090"
+        prometheus.io/scrape: "true"
   server:
     ## The URL for the server service; the URL used by the client is the server.url + /ui-server endpoint.
     url:
