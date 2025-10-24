@@ -34,6 +34,11 @@ spec:
             - name: http
               containerPort: 8080
               protocol: TCP
+            {{- if .Values.ui.client.prometheus.enabled }}
+            - name: metrics
+              containerPort: 9090
+              protocol: TCP
+            {{- end }}
           env:
             - name: BASE_URL
               value: {{ (include "renku.baseUrl" .) | quote }}
