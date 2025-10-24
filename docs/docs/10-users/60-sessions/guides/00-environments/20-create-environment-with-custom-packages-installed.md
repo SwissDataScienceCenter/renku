@@ -19,7 +19,7 @@ RenkuLab’s code-based environments currently supports creating **Python** envi
 
 Are you working in R? Support for R is coming soon. For now, for working with R please see
 [installing packages on the fly in your
-session](/docs/users/sessions/guides/install-packages-on-the-fly-in-your-session).
+session](/docs/users/sessions/guides/environments/install-packages-on-the-fly-in-your-session).
 
 :::
 
