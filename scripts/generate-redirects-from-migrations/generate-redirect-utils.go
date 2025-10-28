@@ -202,6 +202,7 @@ func RetrieveGitLabProjectIdentifier(gitlabCredentials ServerCredentials, migrat
 
 	if resp.StatusCode != 200 {
 		fmt.Printf("GitLab API returned status: %d\n", resp.StatusCode)
+		fmt.Printf("Retrieving information about GitLab project: %d (GitLab id) <- %s (Renku id)\n", migratedProject.v1Id, migratedProject.projectId)
 		return ""
 	}
 
