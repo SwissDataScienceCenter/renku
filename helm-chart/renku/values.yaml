@@ -1183,6 +1183,8 @@ gateway:
     targetMemoryUtilizationPercentage: 75
     targetCPUUtilizationPercentage: 75
   updateStrategy: {}
+  redirects:
+    redirectedHost: gitlab.renkulab.io
 jena:
   image:
     repository: renku/renku-jena
