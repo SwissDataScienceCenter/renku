@@ -264,8 +264,8 @@ class, their annotations must be updated:
 ```yaml
 notebooks:
   sessionIngress:
+    ingressClassName: openshift-default
     annotations:
-      kubernetes.io/ingress.class: openshift-default
       # remove default nginx specific annotations
       nginx.ingress.kubernetes.io/proxy-body-size: null
       nginx.ingress.kubernetes.io/proxy-request-buffering: null
