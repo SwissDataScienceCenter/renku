@@ -18,8 +18,8 @@ npm run start
 
 This command starts a local development server and opens up a browser window. Most changes are reflected live without having to restart the server.
 
-Another useful command is `npm run clear` (accompanied with a server restart) which purges the locally 
-cached and built static files when significant changes are made but they do not
+Another useful command is `npm run clear` (accompanied by a server restart) which purges the locally 
+cached and built static files when significant changes are made, but they do not
 show up on the development server.
 
 ## Updating documentation
@@ -39,3 +39,44 @@ This command generates static content into the `build` directory and can be serv
 The documentation is deployed using [Read The Docs](https://about.readthedocs.com/). 
 The [renku project](https://app.readthedocs.org/projects/renku/) on Read the Docs
 builds and deploys when changes are made in the repo.
+
+## Notes
+
+* When adding an image to a page, put it in the same folder as the page and reference it using a relative path (e.g. `./image.png`). By default, the image will fill the whole page's width. If that's what you want, you're done. Otherwise, you can wrap the image in a container with a custom width based on your desired size, e.g.:
+    ```md
+    <p class="image-container-s">
+    ![image 10](./image-10.png)
+    </p>
+    ```
+    The available container sizes are `image-container-s` (55% width), `image-container-m` (70% width), and `image-container-l` (85% width).
+* Image properties that are controllable by CSS can be modified in the documentation CSS file at `docs/src/css/custom.css`. Currently, we use it to add shadows to all images and to define the container sizes for images:
+    ```css
+    img {
+      filter: drop-shadow(0 10px 16px rgba(0, 0, 0, .25))
+              drop-shadow(0 2px 4px rgba(0, 0, 0, .15));
+    }
+
+    .image-container-s, .image-container-m, .image-container-l {
+      margin: auto;
+      text-align: center; /* Center the image horizontally when its width is narrower than the max-width*/
+    }
+
+    .image-container-s {
+      max-width: 55%;
+    }
+
+    .image-container-m {
+      max-width: 70%;
+    }
+
+    .image-container-l {
+      max-width: 85%;
+    }
+    ```
+* When adding a video to a page, put it in the same folder as the page. You then need to import it in the markdown file using its relative path and put the imported name in the `src` attribute of the `video` tag. For example:
+    ```md
+    import video10 from './video-10.mp4';
+
+    <video controls width="100%" src={video10} />
+    ```
+* When linking to other documentation pages, always use absolute links (e.g. `/docs/users/sessions/guides/create-environment-with-custom-packages-installed`) instead of relative links (e.g. `../sessions/guides/create-environment-with-custom-packages-installed`) or relative paths (e.g. `../60-sessions/guides/20-create-environment-with-custom-packages-installed.md`). Never use file paths for links. Absolute links are more robust to changes in the folder structure and easier to modify when necessary. You can easily get the absolute link of a page by browsing to it in your browser and copying the URL's path from the browser's address bar.

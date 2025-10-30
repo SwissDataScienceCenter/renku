@@ -1,4 +1,4 @@
-FROM python:3.9-slim
+FROM python:3.13-slim
 
 RUN apt-get update && \
     apt-get install -y \
@@ -34,9 +34,9 @@ RUN addgroup -gid 1001 attests && \
 
 USER attests
 
-ENV PATH=/home/attests/.local/bin:/home/attests/.local/lib/python3.8/site-packages:$PATH
+ENV PATH=/home/attests/.local/bin:/home/attests/.local/lib/python3.13/site-packages:$PATH
 
-RUN python3 -m pip install --upgrade 'pip==23.0' && \
+RUN python3 -m pip install --upgrade 'pip==25.3' && \
     python3 -m pip install -r /tests/requirements.txt
 
 ENV DOCKER="1"
