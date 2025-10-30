@@ -332,3 +332,265 @@ networkPolicies:
           - ipBlock:
               cidr: 172.31.0.0/16
 ```
+
+### Chart dependencies
+
+Renku depends on several sub-charts to be deployed. The components provided by
+them do not necessarily start as is on OpenShift.
+
+The configuration example below contains the value changes required for them to
+start properly.
+
+## Example:
+
+Here follows a full configuration based on the minimal deployment values file.
+
+Beside Renku specific elements, customization of child charts are also required.
+Here we can see the changes to be applied to make KeycloakX, PostgreSQL, Redis
+and Solr start properly.
+
+Note that these changes are not Renku specific, they need to be applied in any
+cases when deployed in OpenShift.
+
+```yaml
+# NOTE: Any resource requests and replica counts here are used only for development and testing purposes
+# and likely will not be able to support more than 5 concurrent users.
+# Therefore the resource requests, limits, replica counts here and are NOT SUITABLE FOR PRODUCTION.
+---
+
+enableInternalGitlab: false
+
+# OpenShift
+amalthea:
+  deployCrd: false
+
+amalthea-sessions:
+  deployCrd: false
+
+podSecurityContext:
+  runAsUser: null
+  runAsGroup: null
+  runAsNonRoot: true
+  seccompProfile:
+    type: "RuntimeDefault"
+
+securityContext:
+  runAsUser: null
+  runAsGroup: null
+  runAsNonRoot: true
+  allowPrivilegeEscalation: false
+  capabilities:
+    drop: ["ALL"]
+  seccompProfile:
+    type: "RuntimeDefault"
+
+networkPolicies:
+  sessions:
+    egress:
+      - ports:
+        - port: 53
+          protocol: UDP
+        - port: 53
+          protocol: TCP
+        - port: 5353
+          protocol: UDP
+        - port: 5353
+          protocol: TCP
+        to:
+          - namespaceSelector:
+              matchLabels:
+                kubernetes.io/metadata.name: openshift-dns
+            podSelector:
+              matchLabels:
+                dns.operator.openshift.io/daemonset-dns: default
+      - to:
+        - ipBlock:
+            cidr: 0.0.0.0/0
+            except:
+            - 10.0.0.0/8
+            - 172.16.0.0/12
+            - 192.168.0.0/16
+      # Unlock access to part of the internal network
+      - to:
+        - ipBlock:
+            cidr: 172.31.0.0/16
+# end OpenShift
+
+authz:
+  resources:
+    limits:
+      memory: 75Mi
+    requests:
+      cpu: 50m
+      memory: 75Mi
+dataService:
+  # added
+  rbac:
+    create: false
+
+  localClusterSessionServiceAccount: renku-amalthea-sessions-scc-handler
+  # end added
+  dataTasks:
+    resources:
+      limits:
+        memory: 250Mi
+      requests:
+        cpu: 50m
+        memory: 250Mi
+  k8sWatcher:
+    resources:
+      limits:
+        memory: 200Mi
+      requests:
+        cpu: 20m
+        memory: 200Mi
+  resources:
+    limits:
+      memory: 750Mi
+    requests:
+      cpu: 50m
+      memory: 750Mi
+  replicaCount: 1
+enableV1Services: false
+gateway:
+  replicaCount: 1
+gitlab:
+  enabled: false
+global:
+  anonymousSessions:
+    enabled: false # Changed from default
+  renku:
+    domain: renku.apps.my-openshift.ch
+  useHTTPS: true
+  redis:
+    port: 6379
+    host: renku-redis-master
+    sentinel:
+      enabled: false
+ingress:
+  className: openshift-default
+  enabled: true
+  hosts:
+    - renku.apps.my-open-shift.ch
+  tls:
+    - hosts:
+        - renku.apps.my-openshift.ch
+      secretName: renku-renku-ch-tls
+keycloakx:
+  resources:
+    requests:
+      memory: 600Mi
+    limits:
+      memory: 600Mi
+  # added
+  podSecurityContext:
+    fsGroup: null
+
+  securityContext:
+    runAsUser: null
+    runAsGroup: null
+    runAsNonRoot: true
+    allowPrivilegeEscalation: false
+    capabilities:
+      drop: ["ALL"]
+    seccompProfile:
+      type: "RuntimeDefault"
+  # end added
+notebooks:
+  oidc:
+    allowUnverifiedEmail: true
+  sessionIngress:
+    host: renku.apps.my-openshift.ch
+    tlsSecret: renku-renku-ch-tls
+    ingressClassName: openshift-default
+postgresql:
+  primary:
+    # added
+    volumePermissions:
+      enabled: false
+      securityContext:
+        runAsUser: "auto"
+    podSecurityContext:
+      enabled: false
+
+    shmVolume:
+      chmod:
+        enabled: false
+
+    containerSecurityContext:
+      enabled: false
+    # end added
+    resources:
+      limits:
+        memory: 300Mi
+      requests:
+        memory: 300Mi
+  # Use Bitnami's PostgreSQL image from Renkulab Harbor registry
+  image:
+    registry: harbor.renkulab.io
+    repository: bitnami-mirror/postgresql
+redis:
+  architecture: standalone
+  master:
+    persistence:
+      enabled: false
+  metrics:
+    # Use the bitnami metrics image from the Renkulab Harbor registry
+    image:
+      registry: harbor.renkulab.io
+      repository: bitnami-mirror/redis-exporter
+  sentinel:
+    enabled: false
+    # Use Bitnami's Redis Sentinel image from Renkulab Harbor registry
+    image:
+      registry: harbor.renkulab.io
+      repository: bitnami-mirror/redis-sentinel
+  # Use Bitnami's Redis image from Renkulab Harbor registry
+  image:
+    registry: harbor.renkulab.io
+    repository: bitnami-mirror/redis
+secretsStorage:
+  resources:
+    limits:
+      memory: 500Mi
+    requests:
+      cpu: 50m
+      memory: 500Mi
+solr:
+  resources:
+    limits:
+      memory: 800Mi
+    requests:
+      cpu: 50m
+      memory: 400Mi
+  # Use Bitnami's Solr image from Renkulab Harbor registry
+  image:
+    registry: harbor.renkulab.io
+    repository: bitnami-mirror/solr
+  # added
+  podSecurityContext:
+    fsGroup: null
+  containerSecurityContext:
+    runAsUser: null
+  # end added
+ui:
+  client:
+    # added
+    welcomePage:
+      text: |
+        ## Welcome to the OpenShift deployment of Renku!
+    # end added
+    resources:
+      limits:
+        memory: 150Mi
+      requests:
+        cpu: 10m
+        memory: 150Mi
+  server:
+    resources:
+      limits:
+        memory: 75Mi
+      requests:
+        memory: 75Mi
+
+```
