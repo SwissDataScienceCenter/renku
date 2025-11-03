@@ -11,6 +11,9 @@ Please follow this convention when adding a new row
   Legacy (v1) services are now deprecated in Renku and version 2.11 is the last Renku
   release where legacy services can be enabled. In the next Renku release (2.12),
   the `enableV1Services` chart value will be removed.
+* NEW `dataService.imageBuilders.builderImage`, sets the builder image used for Renku builds.
+* NEW `dataService.imageBuilders.runImage`, sets the run image used for Renku builds.
+* DELETE `dataService.imageBuilders.vscodiumPythonRunImage`, as it is replaced by `dataService.imageBuilders.runImage`.
 
 ## Upgrading to Renku 2.9.0
 
