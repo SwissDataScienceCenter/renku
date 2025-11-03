@@ -16,9 +16,9 @@ interface. Though you mostly see examples of Python and R in RenkuLab, you can u
 language in Renku.  
 
 You can [configure a custom environment for your Renku
-session](/docs/users/sessions/guides/environments/create-environment-with-custom-packages-installed), and
+session](../sessions/guides/environments/create-environment-with-custom-packages-installed), and
 even [use your own docker image for a Renku
-session](/docs/users/sessions/guides/environments/use-your-own-docker-image-for-renku-session).
+session](../sessions/guides/environments/use-your-own-docker-image-for-renku-session).
 
 ### Can I keep a session running after I close the browser?
 
