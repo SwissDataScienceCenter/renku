@@ -132,8 +132,10 @@ spec:
               value: {{ .Values.dataService.imageBuilders.enabled | quote }}
             - name: BUILD_OUTPUT_IMAGE_PREFIX
               value: {{ .Values.dataService.imageBuilders.outputImagePrefix | default "" | quote }}
-            - name: BUILD_VSCODIUM_PYTHON_RUN_IMAGE
-              value: {{ .Values.dataService.imageBuilders.vscodiumPythonRunImage | default "" | quote }}
+            - name: BUILD_BUILDER_IMAGE
+              value: {{ .Values.dataService.imageBuilders.builderImage | default "" | quote }}
+            - name: BUILD_RUN_IMAGE
+              value: {{ .Values.dataService.imageBuilders.runImage | default "" | quote }}
             - name: BUILD_STRATEGY_NAME
               value: {{ .Values.dataService.imageBuilders.strategyName | default "" | quote }}
             - name: BUILD_PUSH_SECRET_NAME

@@ -5,6 +5,12 @@ For changes that require manual steps other than changing values, please check o
 Please follow this convention when adding a new row
 * `<type: NEW|EDIT|DELETE> - *<resource name>*: <details>`
 
+## NEWEST VERSION
+
+* NEW `dataService.imageBuilders.builderImage`, sets the builder image used for Renku builds.
+* NEW `dataService.imageBuilders.runImage`, sets the run image used for Renku builds.
+* DELETE `dataService.imageBuilders.vscodiumPythonRunImage`, as it is replaced by `dataService.imageBuilders.runImage`.
+
 ## Upgrading to Renku 2.9.0
 
 * NEW `notebooks.sessionIngress.ingressClassName`, set to `nginx` by default. Replaces the deprecated `kubernetes.io/ingress.class` annotation.
