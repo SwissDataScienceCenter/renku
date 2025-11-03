@@ -1515,6 +1515,24 @@ dataService:
     runImage: "ghcr.io/swissdatasciencecenter/renku-frontend-buildpacks/base-image:0.1.0"
     ## The name of the BuildStrategy to use for image builds.
     strategyName: renku-buildpacks-v2
+    ## Configuration overrides for specific target platforms
+    platformOverrides: {}
+      # linux/arm64:
+      #   builderImage: "ghcr.io/swissdatasciencecenter/renku-frontend-buildpacks/selector:0.1.0"
+      #   runImage: "ghcr.io/swissdatasciencecenter/renku-frontend-buildpacks/base-image:0.1.0"
+      #   strategyName: renku-buildpacks-v2
+      #   nodeSelector:
+      #     kubernetes.io/arch: arm64
+      #     renku.io/node-purpose: image-build
+      #   tolerations:
+      #     - effect: NoSchedule
+      #       key: renku.io/dedicated
+      #       operator: Equal
+      #       value: image-build
+      #     - effect: NoSchedule
+      #       key: renku.io/arch
+      #       operator: Equal
+      #       value: arm64
     ## The name of the secret used to push images built from code.
     pushSecretName: renku-build-docker-secret
     ## The TTL for BuildRuns
