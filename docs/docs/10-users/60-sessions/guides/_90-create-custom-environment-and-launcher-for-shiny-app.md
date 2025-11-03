@@ -24,7 +24,7 @@ We know this how-to guide is not easy, and we are hard at work to make this easi
     
     ![image.png](./create-custom-environment-and-launcher-for-shiny-app-10.png)
     
-2. In *project-fork*, modify the `install.R` file to include the required R packages for your project, as explained [here](/docs/users/sessions/guides/install-packages-on-the-fly-in-your-session#r).
+2. In *project-fork*, modify the `install.R` file to include the required R packages for your project, as explained [here](/docs/users/sessions/guides/environments/install-packages-on-the-fly-in-your-session#r).
 3. Commit your changes for *project-fork*.
 4. Select **Deploy(4a)/Container Registry(4b)** on the left menu of *project-fork*.
 5. Click on top of your image registry to access the tags **(5)**.
@@ -35,7 +35,7 @@ We know this how-to guide is not easy, and we are hard at work to make this easi
     
     ![image.png](./create-custom-environment-and-launcher-for-shiny-app-30.png)
     
-7. Add a session launcher to your Renku project with the following **Custom Environment** option as explained in [How to use your own docker image for a Renku session](/docs/users/sessions/guides/use-your-own-docker-image-for-renku-session) considering the following parameters:
+7. Add a session launcher to your Renku project with the following **Custom Environment** option as explained in [How to use your own docker image for a Renku session](/docs/users/sessions/guides/environments/use-your-own-docker-image-for-renku-session) considering the following parameters:
     1. **Container Image:** `*user_registry_link*`
     2. **Default URL:** `/shiny/work/<*path-to-app>*/`
         
