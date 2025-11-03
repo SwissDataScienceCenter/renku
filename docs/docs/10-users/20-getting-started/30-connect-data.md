@@ -25,6 +25,6 @@ The data connector we added in the previous step is for an existing dataset, and
 
 :::info
 
-Check out our guides for creating different types of [data connectors](/docs/users/data/data).
+Check out our guides for creating different types of [data connectors](../data/data).
 
 :::

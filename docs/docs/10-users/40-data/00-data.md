@@ -38,7 +38,7 @@ You can enter or modify the saved credentials for a data connector, and also del
 
 ## Share, reuse, and trace your data
 
-Data connectors can be shared among projects. You do not need to create the same data connector for multiple projects. Check [How to link a data connector to your project](/docs/users/data/guides/link-data-connector-to-project)!
+Data connectors can be shared among projects. You do not need to create the same data connector for multiple projects. Check [How to link a data connector to your project](guides/link-data-connector-to-project)!
 
 ### Track projects linked to your data connector
 
