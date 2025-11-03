@@ -101,7 +101,7 @@ Access to a Renku data connector is determined by 2 things:
 1. The data connector’s **visibility** (private or public).
 2. The data connector’s **membership**. This is (mostly) determined by the data connector’s namespace (project, group, or user).
 
-<div id="note-access-to-data-connector">
+###### {#note-access-to-data-connector}
 
 :::note
 
@@ -109,8 +109,6 @@ Access to a Renku data connector is determined by 2 things:
 Being able to edit a data connector is not the same as being able to access the data itself! The access to data is managed externally by the system where the data lives. See also: [Data Connectors & Credentials](#data-connectors-and-credentials).
 
 :::
-
-</div>
 
 ## Visibility
 
