@@ -6,6 +6,8 @@
 ## that are tuned for a small-scale deployment. For larger deployments, you will need
 ## to adjust these values to match your cluster's capacity and your expected load.
 
+# Fake change
+
 ## Global variables
 ## Shared values/secrets
 global:
