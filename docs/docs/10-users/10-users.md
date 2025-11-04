@@ -6,8 +6,9 @@ Our mission is to enable the Swiss National Open Research Data (ORD) Strategy, s
 
 ## Connecting data, code, compute, and *people*.
 
-Stop juggling multiple platforms and scattered resources. Renku provides a seamless environment
-where all your project components work together.
+Stop juggling multiple platforms and scattered resources. Renku provides a seamless environment where all your project components work together.
+
+      ![image.jpg](./first_page_1.jpg)
 
 ## Renku empowers collaboration by reducing friction
 
@@ -42,3 +43,11 @@ Renku is developed under the Apache 2.0 license and can be deployed on a variety
 Want to try it out? [Get started with Renku](/docs/users/getting-started/)! 
 
 :::
+
+
+<iframe width="560" height="315"
+src="https://www.youtube.com/embed/FXgXzBuqJnk?si=ycdHhlSponqsVQje"
+title="YouTube video player"
+frameborder=""
+allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+allowfullscreen></iframe>
