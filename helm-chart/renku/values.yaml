@@ -1604,6 +1604,9 @@ enableV1Services: true
 # with the internal Gitlab and ask users to activate the connection.
 enableInternalGitlab: true
 
+# When using ArgoCD this flag will be used to template ArgoCD hooks instead of Helm hooks
+argoCD: false
+
 podSecurityContext: {}
 securityContext:
   runAsUser: 1000

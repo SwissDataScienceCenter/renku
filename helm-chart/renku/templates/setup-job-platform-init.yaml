@@ -9,6 +9,9 @@ metadata:
     chart: {{ template "renku.chart" . }}
   annotations:
     "helm.sh/hook": pre-install,pre-upgrade,pre-rollback
+    {{- if .Values.argoCD }}
+    "argocd.argoproj.io/hook": PreSync
+    {{- end }}
 spec:
   template:
     metadata:
@@ -49,6 +52,10 @@ metadata:
   annotations:
     "helm.sh/hook": pre-install,pre-upgrade,pre-rollback
     "helm.sh/hook-weight": "-5"
+    {{- if .Values.argoCD }}
+    "argocd.argoproj.io/hook": PreSync
+    "argocd.argoproj.io/sync-wave": "-5"
+    {{- end }}
 rules:
   - apiGroups:
       - ""
@@ -73,6 +80,10 @@ metadata:
   annotations:
     "helm.sh/hook": pre-install,pre-upgrade,pre-rollback
     "helm.sh/hook-weight": "-5"
+    {{- if .Values.argoCD }}
+    "argocd.argoproj.io/hook": PreSync
+    "argocd.argoproj.io/sync-wave": "-5"
+    {{- end }}
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
@@ -86,6 +97,10 @@ metadata:
   annotations:
     "helm.sh/hook": pre-install,pre-upgrade,pre-rollback
     "helm.sh/hook-weight": "-5"
+    {{- if .Values.argoCD }}
+    "argocd.argoproj.io/hook": PreSync
+    "argocd.argoproj.io/sync-wave": "-5"
+    {{- end }}
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: Role
