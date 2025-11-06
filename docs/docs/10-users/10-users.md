@@ -10,23 +10,33 @@ Stop juggling multiple platforms and scattered resources. Renku provides a seaml
 
       ![image.jpg](./first_page_1.jpg)
 
-## Renku empowers collaboration by reducing friction
+# Renku empowers collaboration by reducing friction
 
-### Findability
+import Admonition from '@theme/Admonition';
 
-**On Renku, your project doesn’t exist in isolation.** The connections to other research activities are preserved, powering discovery and understanding.
+<Admonition type="success" icon="🔎" title="Findability">
 
-### Accessibility
+**On Renku, your project doesn’t exist in isolation.** The connections to other research activities are preserved, powering discovery and understanding.<br/>
+
+</Admonition>
+
+<Admonition type="success" icon="🤝" title="Accessibility">
 
 **Collaborate on your Renku project with anyone,** across specialties and skill levels.
 
-### Interoperability
+</Admonition>
+
+<Admonition type="success" icon="⚙️" title=" Interoperability">
 
 **Connect, Share, Launch!** It just works.
 
-### Reusability
+</Admonition>
+
+<Admonition type="success" icon="♻️" title="Reusability">
 
 **Publishing your project is as easy as flipping a toggle from private to public.** Offering your work for discovery and reuse is automatic, not added work.
+
+</Admonition>
 
 # How Renku works
 
@@ -51,3 +61,10 @@ title="YouTube video player"
 frameborder=""
 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
 allowfullscreen></iframe>
+
+
+<!-- <video controls width="100%" src="https://www.youtube.com/embed/FXgXzBuqJnk?si=ycdHhlSponqsVQje" / >  -->
+
+<!-- <video width="320" height="240" controls>
+  <source src="https://www.youtube.com/embed/FXgXzBuqJnk?si=ycdHhlSponqsVQje">
+</video> -->
