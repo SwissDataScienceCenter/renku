@@ -7,8 +7,6 @@ Please follow this convention when adding a new row
 
 ## Upgrading to Renku 2.11.0
 
-enableV1Services: false
-
 * EDIT `enableV1Services` is now set to `false` by default.
   Legacy (v1) services are now deprecated in Renku and version 2.11 is the last Renku
   release where legacy services can be enabled. In the next Renku release (2.12),
