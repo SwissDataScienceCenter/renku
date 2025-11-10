@@ -2,7 +2,9 @@
 
 ### Collaboration is key in research, and Renku makes it easy to share your project.
 
+<p class="image-container-m">
 ![image.png](./share-your-project.png)
+</p>
 
 ## 5.1 Add People to a Project (optional)
 
@@ -13,7 +15,6 @@ In your project page:
 3. Search for  the people you want to invite by name or username and set their role. 
 
 ![image.png](./add-member.png)
-
     :::info
     Note that in order to add people to your Renku project, they need to already have a Renku account. 
     :::
