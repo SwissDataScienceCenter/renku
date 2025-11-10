@@ -32,7 +32,7 @@ Integrations with more data repositories, including ones in the ETH Domain, will
 2. On the Renku project page, click the ➕ button in the data section to add a new data connector
 3. Select the **Import data by DOI** mode
     
-![image-10](./connect-data-from-data-repositories-10.png)
+    ![image-10](./connect-data-from-data-repositories-10.png)
     
 4. Paste the DOI and click **Import**
 
