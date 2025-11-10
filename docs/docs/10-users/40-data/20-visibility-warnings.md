@@ -1,4 +1,4 @@
-# About visibility warnings
+# How to resolve ‘hidden’ & ‘visibility warning’ data connectors
 
 You may sometimes see a note that there are **hidden data connectors** that you can’t see,
 especially in projects were created before version 0.67.0. And conversely, you may see **visibility
@@ -7,15 +7,16 @@ you through what these warnings mean and how to resolve them.
 
 <p class="image-container-s"> 
 ![A notification about hidden data connectors](./resolve-hidden-visibility-warning-10.png)
+*A notification about hidden data connectors*
 </p>
 
-A notification about hidden data connectors
+
 
 <p class="image-container-s"> 
 ![A data connector with a visibility warning](./resolve-hidden-visibility-warning-20.png)
+*A data connector with a visibility warning*
 </p>
 
-A data connector with a visibility warning
 
 ## What hidden data connectors mean
 
