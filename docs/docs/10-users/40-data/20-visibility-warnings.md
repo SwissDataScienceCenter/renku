@@ -1,16 +1,11 @@
 # How to resolve ‘hidden’ & ‘visibility warning’ data connectors
 
-You may sometimes see a note that there are **hidden data connectors** that you can’t see,
-especially in projects were created before version 0.67.0. And conversely, you may see **visibility
-warnings** on data connectors that *other* project members can’t see. This how-to guide will walk
-you through what these warnings mean and how to resolve them.
+Renku release 0.67.0 introduces more flexibility for how you connect data connectors to projects. With this update, you may see a note that there are **hidden data connectors** that you can’t see, especially in projects were created before version 0.67.0. And conversely, you may see **visibility warnings** on data connectors that other project members can’t see. This how-to guide will walk you through what these warnings mean and how to resolve them. 
 
 <p class="image-container-s"> 
 ![A notification about hidden data connectors](./resolve-hidden-visibility-warning-10.png)
 *A notification about hidden data connectors*
 </p>
-
-
 
 <p class="image-container-s"> 
 ![A data connector with a visibility warning](./resolve-hidden-visibility-warning-20.png)
@@ -20,15 +15,15 @@ you through what these warnings mean and how to resolve them.
 
 ## What hidden data connectors mean
 
-If you see a note that there are hidden data connectors on a project, that means that there are data connectors linked to the project that you do not have access rights to view.
+If you see a note that there are hidden data connectors on a project, that means that there are data connectors linked to the project that you do not have access rights to view. 
 
-Hidden data connectors may be intentional- someone in the project has linked a personal data connector that you do not need access to. Or, it might mean that someone has accidentally created a data connector in a way that does not grant everyone in the project access.
+Hidden data connectors may be intentional- someone in the project has linked a personal data connector that you do not need access to. Or, it might mean that someone has accidentally created a data connector in a way that does not grant everyone in the project access. 
 
 In order to determine if a hidden data connector represents an issue, speak with the other members of the project. For each data connector that is hidden for you, there is one marked with a visibility warning for someone else!
 
 ## What visibility warnings mean
 
-A data connector visibility warning means that there may be members of the project who cannot see the data connector. This happens when data connector is private and is owned by another user.
+A data connector visibility warning means that there may be members of the project who cannot see the data connector. This happens when data connector is private and is owned by another user. 
 
 This may be intentional! For example, if you create a personal data connector for your personal Switchdrive folder and link it to a project, other people in the project don’t see that data connector, and that’s intentional!
 
