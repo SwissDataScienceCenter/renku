@@ -10,11 +10,12 @@ In your project page:
 1. Open the **Settings** tab.
 2. Go to **Project Members** and click on **+**
 3. Search for  the people you want to invite by name or username and set their role. 
-    
-    :::note
+
+![image.png](./add-member.png)
+
+    :::info
     Note that in order to add people to your Renku project, they need to already have a Renku account. 
     :::
-    
 
 ## 5.2  Make Your Project Public (optional)
 
