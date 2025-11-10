@@ -48,5 +48,7 @@ Data connectors can be shared among projects. You do not need to create the same
 
 You can check where your data has been used on the right menu of your data connector under the **Projects** section.
 
+<p class="image-container-s">
 ![image.png](./data-connectors-10.png)
+</p>
 
