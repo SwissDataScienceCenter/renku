@@ -1,7 +1,8 @@
 # Share Your Project
 
 ### Collaboration is key in research, and Renku makes it easy to share your project.
-       ![image.png](./share-your-project.png)
+
+![image.png](./share-your-project.png)
 
 ## 5.1 Add People to a Project (optional)
 
