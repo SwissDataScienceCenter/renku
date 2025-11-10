@@ -11,16 +11,14 @@ We support connecting with data repositories that have as their backend either I
 
 **Examples of Invenio data repositories:**
 
-- [Zenodo](https://zenodo.org)
-- [CaltechDATA](https://data.caltech.edu)
-
-→ [see all](https://inveniosoftware.org/showcase/)
+ [Zenodo](https://zenodo.org)
+*/* [CaltechDATA](https://data.caltech.edu)
+*/* [See all](https://inveniosoftware.org/showcase/)
 
 **Examples of Dataverse data repositories:**
 
-- [Harvard Dataverse](https://dataverse.harvard.edu)
-
-→ [see all](https://dataverse.org)
+[Harvard Dataverse](https://dataverse.harvard.edu)
+*/* [See all](https://dataverse.org)
 
 :::info
 
