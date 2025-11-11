@@ -39,7 +39,7 @@ describe("Verify the infrastructure is ready", () => {
     retryRequest("api/auth/login", "Gateway");
     retryRequest("config.json", "UI client");
 
-    // Data service should return a list of default resopurce pools
+    // Data service should return a list of default resource pools
     const dataServiceUrl = "/api/data/resource_pools";
     cy.request(dataServiceUrl).then((resp) => {
       if (resp.status >= 400 || !resp.body.length)
