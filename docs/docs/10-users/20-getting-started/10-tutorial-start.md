@@ -11,7 +11,3 @@ To begin using Renku, you need to create an account. Follow these steps:
 3. Sign up using your preferred option (edu-ID, GitHub, or ORCID)
 
 ![image.png](./GS_image_1.png)
-
-![image.png](./sunset_renku_legacy.jpg)
-
-hello
