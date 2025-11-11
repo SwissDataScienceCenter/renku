@@ -24,7 +24,7 @@ Once your session has launched, you will see the data and code that you linked t
 
 ## 4.3 (optional) Add a second Session Launcher
 
-When you want to create a RenkuLab session with a set of packages that’s reproducible and shareable, we recommend defining your package dependencies in code. Then, use the ‘Create from Code’ session launcher option to have Renku create a reproducible session environment for you! See [How to create an environment with custom packages installed](/docs/users/60-sessions/guides/How-to-create-an-environment-with-custom) for details. 
+When you want to create a RenkuLab session with a set of packages that’s reproducible and shareable, we recommend defining your package dependencies in code. Then, use the ‘Create from Code’ session launcher option to have Renku create a reproducible session environment for you! See [How to create an environment with custom packages installed](/docs/users/60-sessions/guides/How-to-create-an-environment-with-custom.md) for details. 
 
 ## 4.4 Code (optional)
 
