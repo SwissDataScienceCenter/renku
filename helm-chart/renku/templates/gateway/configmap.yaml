@@ -96,6 +96,7 @@ data:
         enabled: {{ .Values.gateway.metrics.enabled }}
         port: {{ .Values.gateway.metrics.port }}
     redirects:
+      enabled: {{ .Values.gateway.redirects.enabled }}
       renkuBaseUrl: {{ include "renku.baseUrl" . | quote }}
       redirectedHost: {{ .Values.gateway.redirects.redirectedHost | default "" | quote }}
 ---

@@ -1184,6 +1184,7 @@ gateway:
     targetCPUUtilizationPercentage: 75
   updateStrategy: {}
   redirects:
+    enabled: false
     redirectedHost: gitlab.renkulab.io
 jena:
   image:
