@@ -1,4 +1,4 @@
-# Renku Users Documentation
+# About Renkulab.io
 
 Renku is an open-source platform that connects the ecosystem of data, code, and compute to empower researchers to build collaborative communities.
 
@@ -8,7 +8,9 @@ Our mission is to enable the Swiss National Open Research Data (ORD) Strategy, s
 
 Stop juggling multiple platforms and scattered resources. Renku provides a seamless environment where all your project components work together.
 
-      ![image.jpg](./first_page_1.jpg)
+<p class="image-container-l">
+![image.jpg](./renku-works.png)
+</p>
 
 # Renku empowers collaboration by reducing friction
 
@@ -62,9 +64,3 @@ frameborder=""
 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
 allowfullscreen></iframe>
 
-
-<!-- <video controls width="100%" src="https://www.youtube.com/embed/FXgXzBuqJnk?si=ycdHhlSponqsVQje" / >  -->
-
-<!-- <video width="320" height="240" controls>
-  <source src="https://www.youtube.com/embed/FXgXzBuqJnk?si=ycdHhlSponqsVQje">
-</video> -->
