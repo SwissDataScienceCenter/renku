@@ -1,0 +1,37 @@
+{{- if .Values.gateway.redirects.enabled -}}
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: gitlab-redirect-{{ template "renku.fullname" . }}
+  labels:
+    app: gitlab
+    chart: {{ template "renku.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-production
+    nginx.ingress.kubernetes.io/proxy-body-size: "0"
+    nginx.ingress.kubernetes.io/proxy-buffer-size: 8k
+    nginx.ingress.kubernetes.io/proxy-request-buffering: "off"
+    nginx.ingress.kubernetes.io/use-regex: "true"
+    nginx.ingress.kubernetes.io/rewrite-target: /api/gitlab-redirect/$1
+spec:
+  ingressClassName: webapprouting.kubernetes.azure.com
+{{- if .Values.ingress.tls }}
+  tls:
+  - hosts:
+    - {{ .Values.gateway.redirects.serveHost }}
+    secretName: gitlab-{{ .Values.global.renku.domain }}-tls
+{{- end }}
+  rules:
+    - host: {{ .Values.gateway.redirects.serveHost }}
+      http:
+        paths:
+        - backend:
+            service:
+              name: {{ template "renku.fullname" . }}-gateway
+              port:
+                number: 80
+          path: /(.*)
+          pathType: ImplementationSpecific
+{{- end }}

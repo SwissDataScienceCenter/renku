@@ -1186,6 +1186,7 @@ gateway:
   redirects:
     enabled: false
     redirectedHost: gitlab.renkulab.io
+    serveHost: gitlab.renkulab.io
 jena:
   image:
     repository: renku/renku-jena
