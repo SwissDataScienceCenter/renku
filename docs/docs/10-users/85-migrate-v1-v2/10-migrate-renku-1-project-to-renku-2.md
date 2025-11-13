@@ -24,26 +24,26 @@ Please note that Renku 2.0 takes a significantly different approach to data comp
 Legacy. Read more on our blog post: [Deep Dive: What's New in Renku
 2.0](https://blog.renkulab.io/deep-dive-2-0/#data-connectors-replace-datasets). Consider moving your
 data into an external storage system and connecting it to your project via a [Data
-connector](/docs/users/data/data). 
+connector](../data/data).
 
 :::
 
 **❌ Cloud Storage Data**
 
 Cloud storage migration isn’t available at the moment. Please reconfigure your cloud storage as a
-Renku 2.0 [Data connector](/docs/users/data/data).
+Renku 2.0 [Data connector](../data/data).
 
 **✅ ✳️ Session**
 
 By default, the Renku 2.0 project will be created with a [Session
-Launcher](/docs/users/sessions/session-launcher) that uses **the latest image
+Launcher](../sessions/session-launcher) that uses **the latest image
 created for the 1.0 project**.
 
 :::info
 
 If you would like to be able to continue to update what packages are installed in your environment,
 you can [create an environment with custom
-packages](/docs/users/sessions/guides/create-environment-with-custom-packages-installed) via
+packages](../sessions/guides/create-environment-with-custom-packages-installed) via
 Renku 2.0's 'code based environments'.
 
 :::
@@ -79,7 +79,7 @@ migrating.
 
 :::tip
  If you would like to share a set of projects with a group, you can create a Renku 2.0
-group! See [How to create a group](/docs/users/collaboration/guides/create-group).
+group! See [How to create a group](../collaboration/guides/create-group).
 :::
 
 ## Automated Migration
@@ -104,7 +104,7 @@ Here’s how to migrate your Renku Legacy project to 2.0:
        :::tip
 
        If you would like to share your project with a group, we recommend creating that group in
-       Renku 2.0 (see [How to create a group](/docs/users/collaboration/guides/create-group)). Then,
+       Renku 2.0 (see [How to create a group](../collaboration/guides/create-group)). Then,
        come back to the project migration and select that group as the **owner** for the migrated
        project.
 
@@ -128,7 +128,7 @@ If for whatever reason you need to migrate a project manually, you can do so by 
 
 1. Create a new project in Renku 2.0
 2. **Code:** Add your Renku Legacy project GitLab URL to the Code section in your Renku 2.0 project
-    1. See [How to add a code repository to your project](/docs/users/code/guides/add-code-repository-to-project)
+    1. See [How to add a code repository to your project](../code/guides/add-code-repository-to-project)
 3. **Data**: If you use cloud storage in your project, create a data connector for the cloud storage object.
 4. **Session:** Add your Renku Legacy project docker image:
     1. Navigate to your Renku Legacy project in **GitLab**

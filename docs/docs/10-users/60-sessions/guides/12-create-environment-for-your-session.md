@@ -6,7 +6,7 @@ Renku supports a variety of ways of working with sessions. To determine what kin
 
 ### → I’m working in R
 
-Renku only has one mode for working with R sessions at the moment. When you create a session launcher, select **global environment** and select the **R** global environment. If you need to install additional packages, see [How to install packages on-the-fly in your session](/docs/users/sessions/guides/install-packages-on-the-fly-in-your-session). 
+Renku only has one mode for working with R sessions at the moment. When you create a session launcher, select **global environment** and select the **R** global environment. If you need to install additional packages, see [How to install packages on-the-fly in your session](install-packages-on-the-fly-in-your-session).
 
 ### → I’m working in Python
 
@@ -14,13 +14,13 @@ We have multiple ways of working in Python in Renku sessions! Please continue to
 
 ### → I’m working in another language
 
-Working in some other language? That’s ok! You can run a wide variety of Docker images in Renku sessions! See [use your own docker image for a Renku session](/docs/users/sessions/guides/use-your-own-docker-image-for-renku-session) 
+Working in some other language? That’s ok! You can run a wide variety of Docker images in Renku sessions! See [use your own docker image for a Renku session](use-your-own-docker-image-for-renku-session)
 
 ## 2. Would you like packages to be pre-installed and ready to go when you (or anyone else) launches the session?
 
 ### → Yes please!
 
-See [How to create an environment with custom packages installed](/docs/users/sessions/guides/create-environment-with-custom-packages-installed) 
+See [How to create an environment with custom packages installed](create-environment-with-custom-packages-installed)
 
 ### → Having packages pre-installed is not so important to me right now.
 
@@ -28,7 +28,7 @@ If you don’t need custom packages installed, you can get started quickly by si
 
 When you launch a session with a global environment, you can still install packages on the fly. Please note, however, that these packages will not persist once you shut down your session. You will have to re-install them after you shut down and re-launch your session. In addition, the packages you install won’t be available for anyone else who launches a session from the launcher. 
 
-If you’d like to permanently add the packages you need to your session environment, see [How to create an environment with custom packages installed](/docs/users/sessions/guides/create-environment-with-custom-packages-installed). 
+If you’d like to permanently add the packages you need to your session environment, see [How to create an environment with custom packages installed](create-environment-with-custom-packages-installed).
 
 - diagram view
     

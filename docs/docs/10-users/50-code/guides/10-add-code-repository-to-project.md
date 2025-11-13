@@ -3,7 +3,7 @@
 :::info
 
 In order to access your code repository from RenkuLab, you need to [connect your RenkuLab account
-with GitHub/GitLab](/docs/users/code/guides/connect-renku-account-to-github-or-gitlab-account).
+with GitHub/GitLab](connect-renku-account-to-github-or-gitlab-account).
 
 :::
 
@@ -32,7 +32,7 @@ In the project page:
     :::
     
 4. Click on **Add code repository** button
-5. Check that the **access badge** indicates the access level you expect to have for this code repository. If you do not have the access you are expecting, see [How to connect your Renku account to your GitHub or GitLab account](/docs/users/code/guides/connect-renku-account-to-github-or-gitlab-account).
+5. Check that the **access badge** indicates the access level you expect to have for this code repository. If you do not have the access you are expecting, see [How to connect your Renku account to your GitHub or GitLab account](connect-renku-account-to-github-or-gitlab-account).
     
     :::note
     

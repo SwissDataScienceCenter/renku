@@ -11,7 +11,7 @@ import selectResourceVideo from './select-compute-resources-for-session-10.mov';
 
 :::tip
 
-Do you need more resources than are available in RenkuLab’s public resource classes? [Contact](/docs/users/community) us! We can configure a custom resource pool for your needs upon demand.
+Do you need more resources than are available in RenkuLab’s public resource classes? [Contact](../../community) us! We can configure a custom resource pool for your needs upon demand.
 
 :::
 

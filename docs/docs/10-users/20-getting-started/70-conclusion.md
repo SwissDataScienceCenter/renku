@@ -6,6 +6,6 @@ You can find this project available here: [Zurich Air Quality Analysis](https://
 
 :::tip
 
-Want to learn more? Check out our full library of [Renku Use Cases](/docs/users/use-cases/).
+Want to learn more? Check out our full library of [Renku Use Cases](../use-cases).
 
 :::

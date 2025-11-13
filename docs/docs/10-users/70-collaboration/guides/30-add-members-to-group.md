@@ -15,6 +15,6 @@
 
 :::tip
 
-To learn more about roles in groups, see [Group Permissions](/docs/users/collaboration/permissions#group-permissions)
+To learn more about roles in groups, see [Group Permissions](../permissions#group-permissions)
 
 :::

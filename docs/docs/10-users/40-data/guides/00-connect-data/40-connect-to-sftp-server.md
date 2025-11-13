@@ -6,7 +6,7 @@ title: SFTP
 
 ## 1. Reuse an existing SFTP data connector or create a new one
 
-If you already have an SFTP data connector available in your personal account or in a group that you are a member of, go ahead and simply [link that data connector](/docs/users/data/guides/link-data-connector-to-project) to your project.
+If you already have an SFTP data connector available in your personal account or in a group that you are a member of, go ahead and simply [link that data connector](../link-data-connector-to-project) to your project.
 
 If you need to create a new one, click on the `+` to add a new data connector and select `sftp`
 
