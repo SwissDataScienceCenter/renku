@@ -1184,9 +1184,19 @@ gateway:
     targetCPUUtilizationPercentage: 75
   updateStrategy: {}
   redirects:
-    enabled: false
-    redirectedHost: gitlab.renkulab.io
-    serveHost: gitlab.renkulab.io
+    gitlab:
+      enabled: false
+      redirectedHost: gitlab.renkulab.io
+      ingress:
+        className: webapprouting.kubernetes.azure.com
+        host: gitlab.renkulab.io
+        annotations:
+          cert-manager.io/cluster-issuer: letsencrypt-production # Use null as value if not using cert-manager to remove this entry
+          nginx.ingress.kubernetes.io/proxy-body-size: "0" # Adjust to a reasonable value for production to avoid DOS attacks.
+          nginx.ingress.kubernetes.io/proxy-request-buffering: "off" # Needed if GitLab is behind this ingress
+          nginx.ingress.kubernetes.io/proxy-buffer-size: "8k" # Default is 4k, larger size necessary for keycloak
+          nginx.ingress.kubernetes.io/use-regex: "true"
+          nginx.ingress.kubernetes.io/rewrite-target: /api/gitlab-redirect/$1
 jena:
   image:
     repository: renku/renku-jena
