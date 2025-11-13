@@ -34,6 +34,10 @@ In the project page:
             - `continuumio/anaconda3:2024.06-1`
         - if the image is hosted on gitlab.renkulab.io:
             - `registry.renkulab.io/laura.kinkead1/n2o-pathway-analysis:980f4a3`
+		- if you want to use a custom image built with Github Actions:
+    		- `ghcr.io/<username>/<projectname>:sha-<hash>`
+			- `ghcr.io/swissdatasciencecenter/renku-custom-vscodium-image-template:sha-a6e42d6`
+			- You can follow the README of this [template](https://github.com/SwissDataScienceCenter/renku-custom-vscodium-image-template) to build your own custom image
     - The image identifier should be in the format that works with `docker pull`
 4. Depending on the image you’re using, you’ll need to fill in the **Advanced settings**. See the information below for how to fill it in:
 
