@@ -1,0 +1,7 @@
+run-image: leafty/test:run-image-1763044425287
+build-image: paketobuildpacks/ubuntu-noble-build:0.0.38
+builder-image: leafty/test:selector-1763044425287
+
+run-image-cuda: leafty/test:run-image-cuda-1763044425287
+build-image: leafty/test:build-image-cuda-1763044425287
+builder-image: leafty/test:selector-cuda-1763044425287
