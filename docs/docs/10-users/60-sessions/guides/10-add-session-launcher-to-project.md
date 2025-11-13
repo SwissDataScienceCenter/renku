@@ -6,7 +6,7 @@ There are 3 ways to create a session launcher on RenkuLab. Which of the situatio
 
 Choose from the **Global environments** to create a session with commonly used packages pre-installed.
 
-→ Continue [below](/docs/users/sessions/guides/add-session-launcher-to-project) with the documentation on this page to get started!
+→ Continue [below](#the-rest-of-this-guide-will-walk-you-through-creating-a-basic-launcher-with-a-global-environment) with the documentation on this page to get started!
 
 ### I have a **code repository that defines what packages I need.**
 
@@ -22,7 +22,7 @@ Select the **External Environment** option to configure Renku to run your docker
 
 ---
 
-The rest of this guide will walk you through creating a basic launcher with a global environment.
+## The rest of this guide will walk you through creating a basic launcher with a global environment.
 
 In the project page:
 
