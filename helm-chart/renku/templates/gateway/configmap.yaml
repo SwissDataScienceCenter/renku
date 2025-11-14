@@ -95,4 +95,9 @@ data:
       prometheus:
         enabled: {{ .Values.gateway.metrics.enabled }}
         port: {{ .Values.gateway.metrics.port }}
+    redirects:
+      gitlab:
+        enabled: {{ .Values.gateway.redirects.gitlab.enabled }}
+        renkuBaseUrl: {{ include "renku.baseUrl" . | quote }}
+        redirectedHost: {{ .Values.gateway.redirects.gitlab.redirectedHost | default "" | quote }}
 ---
