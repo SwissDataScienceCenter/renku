@@ -1,6 +1,6 @@
 # Launch a Session
 
-## 4.1 Add a Session Launcher
+## Add a Session Launcher
 
 To run your code and analyze data on RenkuLab, first decide what kind of session environment you would like by creating a session launcher. 
 
@@ -16,17 +16,17 @@ You can have multiple Session Launchers in your project that run different kinds
 :::info
 Do you need more resources than those available in RenkuLab’s public resource classes? [Contact us!](mailto:hello@renku.io) We can configure a custom resource pool for your team or class.
 :::
-## 4.2 Launch a Session
+## Launch a Session
 
 Click on the **Launch** button in your new Session Launcher to start a session. 
 
 Once your session has launched, you will see the data and code that you linked to your project inside your session ready to use. The data and code each show up in the file system as folders. Open them up and take a look around!
 
-## 4.3 (optional) Add a second Session Launcher
+## Add a second Session Launcher (optional) 
 
 When you want to create a RenkuLab session with a set of packages that’s reproducible and shareable, we recommend defining your package dependencies in code. Then, use the ‘Create from Code’ session launcher option to have Renku create a reproducible session environment for you! See [How to create an environment with custom packages installed](/10-users/60-sessions/guides/80-How-to-create-an-environment-with-custom.md) for details. 
 
-## 4.4 Code (optional)
+## Run the Code (optional)
 
 Open the notebook `air-quality-analysis/notebooks/exploratory_analysis-genova.ipynb` in the repository. Run the full notebook.
 

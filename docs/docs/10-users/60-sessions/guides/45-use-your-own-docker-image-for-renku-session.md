@@ -95,7 +95,7 @@ In the project page:
 Note that you can always **modify your session launcher** by clicking on top of it on the project’s page, and using the menu on the right:
 
 <p class="image-container-l">
-![image.png](./use-your-own-docker-image-for-renku-session-30.png)
+![image.png](./edit-session-launcher.png)
 </p>
 
 :::

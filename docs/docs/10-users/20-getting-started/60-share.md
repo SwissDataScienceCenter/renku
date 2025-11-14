@@ -6,7 +6,7 @@
 ![image.png](./share-your-project.png)
 </p>
 
-## 5.1 Add People to a Project (optional)
+## Add People to a Project (optional)
 
 In your project page:
 
@@ -19,7 +19,7 @@ In your project page:
     Note that in order to add people to your Renku project, they need to already have a Renku account. 
     :::
 
-## 5.2  Make Your Project Public (optional)
+## Make Your Project Public (optional)
 
 If you want to share your project with a wider audience, you can make it public. 
 

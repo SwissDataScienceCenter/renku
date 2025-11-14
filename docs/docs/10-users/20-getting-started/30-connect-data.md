@@ -17,7 +17,7 @@ Note that the Description in Zenodo of this dataset is automatically imported as
 :::
 
 
-## 2.1 (optional) Connect a Storage Space to save your work
+## Connect a Storage Space to save your work (optional) 
 
 The data connector in the previous step is read-only. If you would like to be able to save the work you do in your Renku session, add a data connector for a storage where you'd like to save that work. For example, you might use a Switchdrive or Polybox folder, or an S3 bucket.
 
