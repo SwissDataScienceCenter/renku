@@ -63,16 +63,16 @@ jobs:
       - name: Setup pack
         uses: buildpacks/github-actions/setup-pack@v5.9.3
 
-      - name: Build linux/amd64 image
-        working-directory: ./global-images
-        run: |
-          BUILD_TAG="py-${{ matrix.FLAVOR }}-${{ matrix.FRONTEND }}-amd64"
-          pack build "${BUILD_TAG}" \
-            -p "${{ matrix.FLAVOR }}" \
-            --builder "${{ env.BUILDER_IMAGE_AMD64 }}" \
-            --run-image "${{ env.RUN_IMAGE_AMD64 }}" \
-            --env BP_RENKU_FRONTENDS="${{ matrix.FRONTEND }}" \
-            --platform linux/amd64
+      # - name: Build linux/amd64 image
+      #   working-directory: ./global-images
+      #   run: |
+      #     BUILD_TAG="py-${{ matrix.FLAVOR }}-${{ matrix.FRONTEND }}-amd64"
+      #     pack build "${BUILD_TAG}" \
+      #       -p "${{ matrix.FLAVOR }}" \
+      #       --builder "${{ env.BUILDER_IMAGE_AMD64 }}" \
+      #       --run-image "${{ env.RUN_IMAGE_AMD64 }}" \
+      #       --env BP_RENKU_FRONTENDS="${{ matrix.FRONTEND }}" \
+      #       --platform linux/amd64
 
       - name: Build linux/arm64 image
         working-directory: ./global-images
@@ -83,12 +83,13 @@ jobs:
             --builder "${{ env.BUILDER_IMAGE_ARM64 }}" \
             --run-image "${{ env.RUN_IMAGE_ARM64 }}" \
             --env BP_RENKU_FRONTENDS="${{ matrix.FRONTEND }}" \
-            --platform linux/arm64
+            --platform linux/arm64 \
+            --env BP_LOG_LEVEL=DEBUG
 
       - name: Testing
         run: |
-          BUILD_TAG="py-${{ matrix.FLAVOR }}-${{ matrix.FRONTEND }}-amd64"
-          docker inspect "${BUILD_TAG}"
+          # BUILD_TAG="py-${{ matrix.FLAVOR }}-${{ matrix.FRONTEND }}-amd64"
+          # docker inspect "${BUILD_TAG}"
 
           BUILD_TAG="py-${{ matrix.FLAVOR }}-${{ matrix.FRONTEND }}-arm64"
           docker inspect "${BUILD_TAG}"
