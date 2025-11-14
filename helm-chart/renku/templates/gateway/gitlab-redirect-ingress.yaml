@@ -1,0 +1,34 @@
+{{- if .Values.gateway.redirects.gitlab.enabled -}}
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: gitlab-redirect-{{ template "renku.fullname" . }}
+  labels:
+    app: gitlab
+    chart: {{ template "renku.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+{{- with .Values.gateway.redirects.gitlab.ingress.annotations }}
+  annotations:
+{{ toYaml . | indent 4 }}
+{{- end }}
+spec:
+  ingressClassName: {{ .Values.gateway.redirects.gitlab.ingress.className }}
+{{- if .Values.ingress.tls }}
+  tls:
+  - hosts:
+    - {{ .Values.gateway.redirects.gitlab.ingress.host }}
+    secretName: gitlab-{{ .Values.global.renku.domain }}-tls
+{{- end }}
+  rules:
+    - host: {{ .Values.gateway.redirects.gitlab.ingress.host }}
+      http:
+        paths:
+        - backend:
+            service:
+              name: {{ template "renku.fullname" . }}-gateway
+              port:
+                number: 80
+          path: /(.*)
+          pathType: ImplementationSpecific
+{{- end }}
