@@ -12,8 +12,16 @@ on:
 
 env:
   DOCKER_PREFIX: ghcr.io/swissdatasciencecenter/renku
-  BUILDER_IMAGE: ghcr.io/swissdatasciencecenter/renku-frontend-buildpacks/selector:0.0.8
-  RUN_IMAGE: ghcr.io/swissdatasciencecenter/renku-frontend-buildpacks/base-image:0.0.8
+
+  # BUILDER_IMAGE: ghcr.io/swissdatasciencecenter/renku-frontend-buildpacks/selector:0.0.8
+  # RUN_IMAGE: ghcr.io/swissdatasciencecenter/renku-frontend-buildpacks/base-image:0.0.8
+
+  RUN_IMAGE_AMD64: leafty/test:run-image-1763044425287
+  BUILDER_IMAGE_AMD64: leafty/test:selector-1763044425287
+
+  RUN_IMAGE_ARM64: salimkayal/test-arm:run-cu-0.1.0
+  BUILDER_IMAGE_ARM64: salimkayal/test-arm:cuda-selector-builder-0.1.7
+
 jobs:
   build-images:
     runs-on: ubuntu-24.04
@@ -22,19 +30,22 @@ jobs:
       matrix:
         FLAVOR:
           - basic
-          - datascience
+          # - datascience
         FRONTEND:
           - jupyterlab
-          - vscodium
-          - ttyd
+          # - vscodium
+          # - ttyd
     steps:
-      - uses: actions/checkout@v5
+      - name: Checkout repository
+        uses: actions/checkout@v5
       - name: Login to GitHub Container Registry
         uses: docker/login-action@v3
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
       - name: Docker meta
@@ -46,26 +57,71 @@ jobs:
             type=sha,prefix=
             type=raw,value=latest,enable=${{ github.ref == 'refs/heads/master' }}
             type=semver,pattern={{version}},event=tag
-      - uses: buildpacks/github-actions/setup-pack@v5.9.3
-      - name: Build image
+      - name: Setup pack
+        uses: buildpacks/github-actions/setup-pack@v5.9.3
+
+      - name: Build linux/amd64 image
+        working-directory: ./global-images
         run: |
-          tags=$(echo "${{ steps.meta.outputs.tags }}" | tr '\n' ',')
-          tags=${tags::-1}
+          BUILD_TAG="py-${{ matrix.FLAVOR }}-${{ matrix.FRONTEND }}-amd64"
+          pack build "${BUILD_TAG}" \
+            -p "${{ matrix.FLAVOR }}" \
+            --builder "${{ env.BUILDER_IMAGE_AMD64 }}" \
+            --run-image "${{ env.RUN_IMAGE_AMD64 }}" \
+            --env BP_RENKU_FRONTENDS="${{ matrix.FRONTEND }}" \
+            --platform linux/amd64
 
-          # publish only on pushes to master or release tags
-          PUBLISH=0
-          EXTRA_FLAGS=""
-          if [[ "${GITHUB_REF}" == "refs/heads/master" ]]; then
-            PUBLISH=1
-          elif [[ "${GITHUB_REF}" =~ ^refs/tags/[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
-            PUBLISH=1
-          fi
-          [ "${PUBLISH:-}" = "1" ] && EXTRA_FLAGS="--cache-image ${{ env.DOCKER_PREFIX }}/py-${{ matrix.FLAVOR }}-${{ matrix.FRONTEND }}-cache:latest"
+      - name: Build linux/arm64 image
+        working-directory: ./global-images
+        run: |
+          BUILD_TAG="py-${{ matrix.FLAVOR }}-${{ matrix.FRONTEND }}-arm64"
+          pack build "${BUILD_TAG}" \
+            -p "${{ matrix.FLAVOR }}" \
+            --builder "${{ env.BUILDER_IMAGE_ARM64 }}" \
+            --run-image "${{ env.RUN_IMAGE_ARM64 }}" \
+            --env BP_RENKU_FRONTENDS="${{ matrix.FRONTEND }}" \
+            --platform linux/arm64 \
+            --env BP_LOG_LEVEL=DEBUG
 
-          TAGS=$tags \
-          FRONTEND=${{ matrix.FRONTEND }} \
-          RUN_IMAGE=${{ env.RUN_IMAGE }} \
-          BUILDER=${{ env.BUILDER_IMAGE }} \
-          PUBLISH=$PUBLISH \
-          EXTRA_FLAGS=$EXTRA_FLAGS \
-          make -C global-images ${{ matrix.FLAVOR }}
+      - name: Testing
+        run: |
+          BUILD_TAG="py-${{ matrix.FLAVOR }}-${{ matrix.FRONTEND }}-amd64"
+          docker inspect "${BUILD_TAG}"
+
+          BUILD_TAG="py-${{ matrix.FLAVOR }}-${{ matrix.FRONTEND }}-arm64"
+          docker inspect "${BUILD_TAG}"
+
+      - name: Combine images
+        run: |
+          TAG_ARGS=$(echo "${{ steps.meta.outputs.json }}" | jq -cr '.tags | map("--tag " + .) | join(" ")')
+          echo "${TAG_ARGS}"
+          LINUX_AMD64_IMAGE="py-${{ matrix.FLAVOR }}-${{ matrix.FRONTEND }}-amd64"
+          LINUX_ARM64_IMAGE="py-${{ matrix.FLAVOR }}-${{ matrix.FRONTEND }}-arm64"
+          docker buildx imagetools create \
+          "${TAG_ARGS}" \
+          "${LINUX_AMD64_IMAGE}" \
+          "${LINUX_ARM64_IMAGE}" \
+          --dry-run
+
+      # - name: Build image
+      #   run: |
+      #     tags=$(echo "${{ steps.meta.outputs.tags }}" | tr '\n' ',')
+      #     tags=${tags::-1}
+
+      #     # publish only on pushes to master or release tags
+      #     PUBLISH=0
+      #     EXTRA_FLAGS=""
+      #     if [[ "${GITHUB_REF}" == "refs/heads/master" ]]; then
+      #       PUBLISH=1
+      #     elif [[ "${GITHUB_REF}" =~ ^refs/tags/[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+      #       PUBLISH=1
+      #     fi
+      #     [ "${PUBLISH:-}" = "1" ] && EXTRA_FLAGS="--cache-image ${{ env.DOCKER_PREFIX }}/py-${{ matrix.FLAVOR }}-${{ matrix.FRONTEND }}-cache:latest"
+
+      #     TAGS=$tags \
+      #     FRONTEND=${{ matrix.FRONTEND }} \
+      #     RUN_IMAGE=${{ env.RUN_IMAGE }} \
+      #     BUILDER=${{ env.BUILDER_IMAGE }} \
+      #     PUBLISH=$PUBLISH \
+      #     EXTRA_FLAGS=$EXTRA_FLAGS \
+      #     make -C global-images ${{ matrix.FLAVOR }}
