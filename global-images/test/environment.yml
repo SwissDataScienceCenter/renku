@@ -1,8 +1,0 @@
-name: "base"
-channels:
-  - conda-forge
-  - nodefaults
-dependencies:
-  - python=3.13
-  - pip
-prefix: "/opt/conda"

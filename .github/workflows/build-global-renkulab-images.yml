@@ -28,13 +28,9 @@ jobs:
     strategy:
       fail-fast: true
       matrix:
-        # PLATFORM:
-        #   - linux/amd64
-        #   - linux/arm64
         FLAVOR:
-          # - basic
+          - basic
           # - datascience
-          - test
         FRONTEND:
           - jupyterlab
           # - vscodium
@@ -64,16 +60,16 @@ jobs:
       - name: Setup pack
         uses: buildpacks/github-actions/setup-pack@v5.9.3
 
-      # - name: Build linux/amd64 image
-      #   working-directory: ./global-images
-      #   run: |
-      #     BUILD_TAG="py-${{ matrix.FLAVOR }}-${{ matrix.FRONTEND }}-amd64"
-      #     pack build "${BUILD_TAG}" \
-      #       -p "${{ matrix.FLAVOR }}" \
-      #       --builder "${{ env.BUILDER_IMAGE_AMD64 }}" \
-      #       --run-image "${{ env.RUN_IMAGE_AMD64 }}" \
-      #       --env BP_RENKU_FRONTENDS="${{ matrix.FRONTEND }}" \
-      #       --platform linux/amd64
+      - name: Build linux/amd64 image
+        working-directory: ./global-images
+        run: |
+          BUILD_TAG="py-${{ matrix.FLAVOR }}-${{ matrix.FRONTEND }}-amd64"
+          pack build "${BUILD_TAG}" \
+            -p "${{ matrix.FLAVOR }}" \
+            --builder "${{ env.BUILDER_IMAGE_AMD64 }}" \
+            --run-image "${{ env.RUN_IMAGE_AMD64 }}" \
+            --env BP_RENKU_FRONTENDS="${{ matrix.FRONTEND }}" \
+            --platform linux/amd64
 
       - name: Build linux/arm64 image
         working-directory: ./global-images
@@ -89,11 +85,23 @@ jobs:
 
       - name: Testing
         run: |
-          # BUILD_TAG="py-${{ matrix.FLAVOR }}-${{ matrix.FRONTEND }}-amd64"
-          # docker inspect "${BUILD_TAG}"
+          BUILD_TAG="py-${{ matrix.FLAVOR }}-${{ matrix.FRONTEND }}-amd64"
+          docker inspect "${BUILD_TAG}"
 
           BUILD_TAG="py-${{ matrix.FLAVOR }}-${{ matrix.FRONTEND }}-arm64"
           docker inspect "${BUILD_TAG}"
+
+      - name: Combine images
+        run: |
+          TAG_ARGS=$(echo "${{ steps.meta.outputs.json }}" | jq -cr '.tags | map("--tag " + .) | join(" ")')
+          echo "${TAG_ARGS}"
+          LINUX_AMD64_IMAGE="py-${{ matrix.FLAVOR }}-${{ matrix.FRONTEND }}-amd64"
+          LINUX_ARM64_IMAGE="py-${{ matrix.FLAVOR }}-${{ matrix.FRONTEND }}-arm64"
+          docker buildx imagetools create \
+          "${TAG_ARGS}" \
+          "${LINUX_AMD64_IMAGE}" \
+          "${LINUX_ARM64_IMAGE}" \
+          --dry-run
 
       # - name: Build image
       #   run: |
