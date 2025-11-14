@@ -32,8 +32,9 @@ jobs:
         #   - linux/amd64
         #   - linux/arm64
         FLAVOR:
-          - basic
+          # - basic
           # - datascience
+          - test
         FRONTEND:
           - jupyterlab
           # - vscodium
