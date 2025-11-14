@@ -19,8 +19,8 @@ env:
   RUN_IMAGE_AMD64: leafty/test:run-image-1763044425287
   BUILDER_IMAGE_AMD64: leafty/test:selector-1763044425287
 
-  RUN_IMAGE_ARM64: leafty/test:run-image-cuda-1763044425287
-  BUILDER_IMAGE_ARM64: leafty/test:selector-cuda-1763044425287
+  RUN_IMAGE_ARM64: salimkayal/test-arm:run-cu-0.1.0
+  BUILDER_IMAGE_ARM64: salimkayal/test-arm:cuda-selector-builder-0.1.7
 
 jobs:
   build-images:
