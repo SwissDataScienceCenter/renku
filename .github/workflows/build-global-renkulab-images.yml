@@ -46,7 +46,7 @@ jobs:
             type=sha,prefix=
             type=raw,value=latest,enable=${{ github.ref == 'refs/heads/master' }}
             type=semver,pattern={{version}},event=tag
-      - uses: buildpacks/github-actions/setup-pack@v5.9.3
+      - uses: buildpacks/github-actions/setup-pack@v5.9.6
       - name: Build image
         run: |
           tags=$(echo "${{ steps.meta.outputs.tags }}" | tr '\n' ',')
