@@ -3,7 +3,8 @@
 A data connector is a connection to a cloud data resource outside of RenkuLab.
 
 <p class="image-container-l">
-![image.png](./data.png)
+<iframe width="560" height="315" src="https://www.youtube.com/embed/LS-GVUofxVM?si=XJKDZv7ktQy0ATfY" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+*Learn how to connect data to a Renku project and how to link and trace data among multiple projects.*
 </p>
 
 # Data in Renku
