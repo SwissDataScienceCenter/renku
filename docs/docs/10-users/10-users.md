@@ -2,7 +2,10 @@
 
 Renku is an open-source platform for researchers and scientists to connect data, code and compute seamlessly, thus enabling collaborative communities, reproducibility, transparency and results outreach. Stop juggling multiple platforms and scattered resources: in Renku all your components work together in a project. Let's get started!
 
+<p class="image-container-l">
 <iframe width="560" height="315" src="https://www.youtube.com/embed/FXgXzBuqJnk?si=HGIZ5mQbz0MrChGF" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+*Learn what Renku is, how to log in into Renku and how your dashboard looks like.*
+</p>
 
 ## How to use Renku docs
 
