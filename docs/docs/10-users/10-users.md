@@ -15,7 +15,7 @@ Renku is an open-source platform for researchers and scientists to connect data,
 
 <p class="text-align: center">
 ![image.png](./project_40px.png)
-[**Projects**](/docs/users/projects/) in Renku may contain [Data](/docs/users/data/), [Code](/docs/users/code/) and [Sessions](/docs/users/sessions/) to foster [Collaboration](/docs/users/collaboration/). Check each individual building block for understanding the possibilities that Renku offers. 
+[**Projects**](/docs/users/projects/projects/) in Renku may contain [Data](/docs/users/data/data/), [Code](/docs/users/code/) and [Sessions](/docs/users/sessions/environment/) to foster [Collaboration](/docs/users/collaboration/). Check each individual building block for understanding the possibilities that Renku offers. 
 </p>  
 
   ___
@@ -29,7 +29,7 @@ Renku is an open-source platform for researchers and scientists to connect data,
 
 <p class="text-align: center">
 ![image.png](./use-cases_40px.png)
-[**Knowledge Base**](/docs/docs/10-users/95-knowledge-base/02-fair-open-science.md) Curiosity about how it works? [Any doubts](/docs/users/faq/)? Join our channels to keep in touch with us.
+[**Knowledge Base**](/docs/users/knowledge-base/fair-open-science/) Curiosity about how it works? [Any doubts](/docs/users/knowledge-base/faq/)? Join our channels to keep in touch with us.
 </p>    
 
   ___
