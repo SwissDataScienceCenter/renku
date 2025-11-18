@@ -55,11 +55,9 @@ jobs:
         id: meta
         uses: docker/metadata-action@v5
         with:
-          images: ${{ env.DOCKER_PREFIX }}/py-${{ matrix.FLAVOR }}-${{ matrix.FRONTEND }}
+          images: ${{ env.DOCKER_PREFIX }}/py-${{ matrix.FLAVOR }}-${{ matrix.FRONTEND }}-${{ matrix.PLATFORM }}
           tags: |
-            type=sha,prefix=
-            type=raw,value=latest,enable=${{ github.ref == 'refs/heads/master' }}
-            type=semver,pattern={{version}},event=tag
+            type=sha,prefix=sha-
       - name: Setup pack
         uses: buildpacks/github-actions/setup-pack@v5.9.3
 
@@ -77,18 +75,18 @@ jobs:
       - name: Build image
         working-directory: ./global-images
         run: |
-          BUILD_TAG="py-${{ matrix.FLAVOR }}-${{ matrix.FRONTEND }}-${{ matrix.PLATFORM }}"
+          BUILD_TAG=$(echo "${{ steps.meta.outputs.json }}" | jq -cr '.tags[0]')
           pack build "${BUILD_TAG}" \
             -p "${{ matrix.FLAVOR }}" \
             --builder "${{ env.BUILDER_IMAGE_ARM64 }}" \
             --run-image "${{ env.RUN_IMAGE_ARM64 }}" \
             --env BP_RENKU_FRONTENDS="${{ matrix.FRONTEND }}" \
-            --platform "${{ matrix.PLATFORM }} \
+            --platform "${{ matrix.PLATFORM }}" \
             --env BP_LOG_LEVEL=DEBUG
 
       - name: Testing
         run: |
-          BUILD_TAG="py-${{ matrix.FLAVOR }}-${{ matrix.FRONTEND }}-${{ matrix.PLATFORM }}"
+          BUILD_TAG=$(echo "${{ steps.meta.outputs.json }}" | jq -cr '.tags[0]')
           docker inspect "${BUILD_TAG}"
 
       # - name: Combine images
