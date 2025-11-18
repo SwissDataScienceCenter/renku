@@ -161,7 +161,7 @@ jobs:
           fi
 
           docker buildx imagetools create \
-            "${TAG_ARGS}" \
+            ${TAG_ARGS} \
             "${LINUX_AMD64_IMAGE}" \
             "${LINUX_ARM64_IMAGE}"
 
