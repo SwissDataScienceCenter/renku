@@ -75,12 +75,12 @@ jobs:
           elif [[ "${GITHUB_REF}" =~ ^refs/tags/[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
             PUBLISH=1
           fi
-          [ "${PUBLISH:-}" = "1" ] && EXTRA_FLAGS="--cache-image ${CACHE_IMAGE}"
+          [ "${PUBLISH:-}" = "1" ] && EXTRA_FLAGS="--publish --cache-image ${CACHE_IMAGE} --cache type=build;format=image;name=${CACHE_IMAGE}"
 
           echo "${BUILD_TAG}"
           echo "${CACHE_IMAGE}"
           echo "${PUBLISH}"
-           echo "${EXTRA_FLAGS}"
+          echo "${EXTRA_FLAGS}"
 
           pack build "${BUILD_TAG}" \
             -p "${{ matrix.FLAVOR }}" \
@@ -88,7 +88,7 @@ jobs:
             --run-image "${{ env.RUN_IMAGE_ARM64 }}" \
             --env BP_RENKU_FRONTENDS="${{ matrix.FRONTEND }}" \
             --platform "${{ matrix.PLATFORM }}" \
-            --cache "type=build;format=image;name=${CACHE_IMAGE}"
+            "${EXTRA_FLAGS}"
 
       - name: Testing
         run: |
