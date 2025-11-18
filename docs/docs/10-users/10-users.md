@@ -57,13 +57,15 @@ Renku is an open-source platform for researchers and scientists to connect data,
       [![Renku Release Octubre 2025](https://blog.renkulab.io/assets/images/cscs-cover-90cd8e2dbe514501f43d26ed2c6b2a45.png)](https://blog.renkulab.io/release-2025-10/)
 
     **Renku Release • Octubre 2025**  
-    Novedades del blog: nueva versión, mejoras y cambios importantes.
+     We've combined Renku's super-simple sessions with the power of supercomputing!
+    
     </p>
   ___
 
     <p class="image-container-s">
     [![AiiDA Success Story](https://blog.renkulab.io/assets/images/intro-image-f9ca2c80c6b9ad273b0d8750b112dab7.png)](https://blog.renkulab.io/aiida-success-story/)
 
-**AiiDA Success Story • Octubre 2025**  
-Cómo el grupo de Materials Software y Data de PSI utiliza Renku para facilitar el acceso a datos de investigación.
-</p>
+    **AiiDA Success Story • Octubre 2025**  
+    How PSI's Materials Software and Data group uses Renku to facilitate access to research data.
+    
+    </p>
