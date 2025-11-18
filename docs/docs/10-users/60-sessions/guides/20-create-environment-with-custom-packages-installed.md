@@ -42,7 +42,8 @@ out [Paketo Buildpacks](https://paketo.io/docs/howto/python/#use-a-package-manag
 
 Include an `environment.yml` file located at the root (top level) of the code repository.
 
-- Here’s an example `environment.yml`:
+<details>
+<summary>Here’s an example `environment.yml`:</summary>
 
     ```yaml
     # Note: name can be changed
@@ -69,7 +70,7 @@ Include an `environment.yml` file located at the root (top level) of the code re
     # Note: prefix can be changed
     prefix: "/opt/conda"
     ```
-
+</details>
 
 Important usage notes:
 
@@ -91,13 +92,15 @@ python version `3.10`. It is not currently possible to specify a different pytho
 
 :::
 
-- Here is an example `requirements.txt`:
+<details>
+<summary>Here is an example `requirements.txt`:</summary>
 
     ```
     numpy==2.2.2
     pandas==2.2.3
     jupyterlab==4.3.5
     ```
+</details>  
 
 #### Poetry (`pyproject.toml`)
 
@@ -105,7 +108,8 @@ Including a `pyproject.toml` file at the root of your code repository triggers t
 
 Note that poetry version `1.8.3` will be used.
 
-- Here is an example `pyproject.toml`:
+<details>
+<summary>Here is an example `pyproject.toml`:</summary>
 
     ```toml
     [tool.poetry]
@@ -131,6 +135,15 @@ Note that poetry version `1.8.3` will be used.
     requires = ["poetry-core"]
     build-backend = "poetry.core.masonry.api"
     ```
+</details>  
+
+## Defining an R Environment
+
+:::info
+
+This feature is coming soon. For now, please see [R](https://docs.renkulab.io/en/latest/docs/users/sessions/guides/install-packages-on-the-fly-in-your-session). 
+
+:::
 
 ## How to create a code-based environment for your Renku session
 

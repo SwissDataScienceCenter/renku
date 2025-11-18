@@ -4,7 +4,7 @@ Session secrets help you connect to protected resources, such as databases or ex
 
 ## **How to add a session secret slot to the project**
 
-The session secret **slot** determines how the secret shows up in the session (the secret file name and path), which is the same for every member of the project.
+The session secret **slot** determines how the secret shows up in the session (the secret file name and path), which is the same for every member of the project. 
 
 If you are adding a session secret to a project for the first time, follow these steps to set up the secret slot:
 
