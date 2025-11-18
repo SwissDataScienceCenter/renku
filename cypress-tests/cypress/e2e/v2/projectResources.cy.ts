@@ -111,16 +111,12 @@ describe("Project resources - work with code, data, environments", () => {
     visitCurrentProject();
     cy.getDataCy("data-connector-box")
       .find(`[data-cy=data-connector-name]`)
-      .contains(name);
+      .contains(name)
+      .click();
+      cy.getDataCy("data-connector-edit").click();
 
     // Edit data connector
     const newName = `${name} edited`;
-
-    cy.getDataCy("data-connector-box")
-      .find(`[data-cy=data-connector-name]`)
-      .contains(name)
-      .click();
-    cy.getDataCy("data-connector-edit").click();
 
     cy.getDataCy("data-connector-name-input")
       .should("have.value", name)
@@ -143,77 +139,75 @@ describe("Project resources - work with code, data, environments", () => {
   it("Delete a data connector", () => {
     const name = `giab-delete-${getRandomString()}`;
 
-    getUserData().then((user: User) => {
-      // Create a data connector from the project page
-      visitCurrentProject();
-      cy.getDataCy("add-data-connector").click();
-      cy.getDataCy("project-data-controller-mode-create").click();
-      cy.getDataCy("data-storage-s3").click();
-      cy.getDataCy("data-provider-AWS").click();
-      cy.getDataCy("data-connector-edit-next-button").click();
+    // Create a data connector from the project page
+    visitCurrentProject();
+    cy.getDataCy("add-data-connector").click();
+    cy.getDataCy("project-data-controller-mode-create").click();
+    cy.getDataCy("data-storage-s3").click();
+    cy.getDataCy("data-provider-AWS").click();
+    cy.getDataCy("data-connector-edit-next-button").click();
 
-      cy.getDataCy("data-connector-source-path").should("be.empty").type("giab");
-      cy.getDataCy("test-data-connector-button").click();
-      cy.getDataCy("cloud-storage-connection-success").should("be.visible");
-      cy.getDataCy("add-data-connector-continue-button").click();
+    cy.getDataCy("data-connector-source-path").should("be.empty").type("giab");
+    cy.getDataCy("test-data-connector-button").click();
+    cy.getDataCy("cloud-storage-connection-success").should("be.visible");
+    cy.getDataCy("add-data-connector-continue-button").click();
 
-      cy.getDataCy("data-connector-name-input").should("be.empty").type(name);
-      cy.getDataCy("data-connector-slug-toggle").click();
-      cy.getDataCy("data-connector-slug-input").should("have.value", name);
-      cy.getDataCy("data-connector-edit-update-button").click();
-      cy.getDataCy("data-connector-edit-success").should("be.visible");
-      cy.getDataCy("data-connector-edit-close-button").click();
+    cy.getDataCy("data-connector-name-input").should("be.empty").type(name);
+    cy.getDataCy("data-connector-slug-toggle").click();
+    cy.getDataCy("data-connector-slug-input").should("have.value", name);
+    cy.getDataCy("data-connector-edit-update-button").click();
+    cy.getDataCy("data-connector-edit-success").should("be.visible");
+    cy.getDataCy("data-connector-edit-close-button").click();
 
-      // Delete the data connector from the user's namespace page
-      // Note: You can only delete data connectors from the owner's page (user/group page),
-      // not from a project page (where you can only unlink them)
-      cy.visit(`/u/${user.username}`);
-      cy.getDataCy("data-connector-box")
-        .find(`[data-cy=data-connector-name]`)
-        .contains(name);
+    // Navigate to the user's namespace page by clicking the namespace link
+    // Note: You can only delete data connectors from the owner's page, not
+    // from a project page (where you can only unlink them)
+    visitCurrentProject();
+    cy.getDataCy("project-namespace-link").click();
 
-      cy.getDataCy("data-connector-box")
-        .find(`[data-cy=data-connector-name]`)
-        .contains(name)
-        .click();
+    cy.getDataCy("data-connector-box")
+      .find(`[data-cy=data-connector-name]`)
+      .contains(name)
+      .click();
 
-      // Open the dropdown menu and click delete
-      cy.getDataCy("button-with-menu-dropdown")
-        .should("be.visible")
-        .scrollIntoView()
-        .click();
-      cy.getDataCy("data-connector-delete").should("be.visible").click();
+    // Open the dropdown menu and click delete
+    cy.getDataCy("data-connector-menu-dropdown")
+      .should("be.visible")
+      .scrollIntoView()
+      .click();
+    cy.getDataCy("data-connector-delete").should("be.visible").click();
 
-      // Confirm deletion by typing the slug
-      cy.getDataCy("delete-confirmation-input").type(name);
-      cy.getDataCy("delete-data-connector-modal-button").click();
+    // Confirm deletion by typing the slug
+    cy.getDataCy("delete-confirmation-input").type(name);
+    cy.getDataCy("delete-data-connector-modal-button").click();
 
-      // Verify the data connector is deleted
-      cy.visit(`/u/${user.username}`);
-      cy.getDataCy("data-connector-box")
-        .find(`[data-cy=data-connector-name]`)
-        .contains(name)
-        .should("not.exist");
-    });
+    // Verify the data connector is deleted
+    cy.getDataCy("data-connector-box")
+      .find(`[data-cy=data-connector-name]`)
+      .contains(name)
+      .should("not.exist");
   });
 
   it("Link an existing data connector to a project", () => {
     const name = `giab-link-${getRandomString()}`;
-    let slug = "";
 
-    // Create a data connector in the user namespace (not linked to the project)
+    // Create a data connector not linked to a project
     getUserData().then((user: User) => {
-      slug = name;
+      const slug = name;
       const dataConnectorIdentifier = `${user.username}/${slug}`;
 
-      // Go to the user's page to create a data connector
-      cy.visit(`/u/${user.username}`);
+      // Navigate to the user's namespace page by clicking the namespace link
+      visitCurrentProject();
+      cy.getDataCy("project-namespace-link").click();
+
       cy.getDataCy("add-data-connector").click();
       cy.getDataCy("data-storage-s3").click();
       cy.getDataCy("data-provider-AWS").click();
       cy.getDataCy("data-connector-edit-next-button").click();
 
-      cy.getDataCy("data-connector-source-path").should("be.empty").type("giab");
+      cy.getDataCy("data-connector-source-path")
+        .should("be.empty")
+        .type("giab");
       cy.getDataCy("test-data-connector-button").click();
       cy.getDataCy("cloud-storage-connection-success").should("be.visible");
       cy.getDataCy("add-data-connector-continue-button").click();
@@ -245,56 +239,68 @@ describe("Project resources - work with code, data, environments", () => {
   });
 
   it("Unlink a data connector from a project", () => {
-    const name = `giab-unlink-${getRandomString()}`;
+    const name = `giab-link-${getRandomString()}`;
 
-    // Create and link a data connector to the project
-    visitCurrentProject();
-    cy.getDataCy("add-data-connector").click();
-    cy.getDataCy("project-data-controller-mode-create").click();
-    cy.getDataCy("data-storage-s3").click();
-    cy.getDataCy("data-provider-AWS").click();
-    cy.getDataCy("data-connector-edit-next-button").click();
+    // Create a data connector not linked to a project
+    getUserData().then((user: User) => {
+      const slug = name;
+      const dataConnectorIdentifier = `${user.username}/${slug}`;
 
-    cy.getDataCy("data-connector-source-path").should("be.empty").type("giab");
-    cy.getDataCy("test-data-connector-button").click();
-    cy.getDataCy("cloud-storage-connection-success").should("be.visible");
-    cy.getDataCy("add-data-connector-continue-button").click();
+      // Navigate to the user's namespace page by clicking the namespace link
+      visitCurrentProject();
+      cy.getDataCy("project-namespace-link").click();
 
-    cy.getDataCy("data-connector-name-input").should("be.empty").type(name);
-    cy.getDataCy("data-connector-slug-toggle").click();
-    cy.getDataCy("data-connector-slug-input").should("have.value", name);
-    cy.getDataCy("data-connector-edit-update-button").click();
-    cy.getDataCy("data-connector-edit-success").should("be.visible");
-    cy.getDataCy("data-connector-edit-close-button").click();
+      cy.getDataCy("add-data-connector").click();
+      cy.getDataCy("data-storage-s3").click();
+      cy.getDataCy("data-provider-AWS").click();
+      cy.getDataCy("data-connector-edit-next-button").click();
 
-    // ? Currently, data connectors newly linked might not appear immediately
-    visitCurrentProject();
-    cy.getDataCy("data-connector-box")
-      .find(`[data-cy=data-connector-name]`)
-      .contains(name);
+      cy.getDataCy("data-connector-source-path")
+        .should("be.empty")
+        .type("giab");
+      cy.getDataCy("test-data-connector-button").click();
+      cy.getDataCy("cloud-storage-connection-success").should("be.visible");
+      cy.getDataCy("add-data-connector-continue-button").click();
 
-    cy.getDataCy("data-connector-box")
-      .find(`[data-cy=data-connector-name]`)
-      .contains(name)
-      .click();
+      cy.getDataCy("data-connector-name-input").should("be.empty").type(name);
+      cy.getDataCy("data-connector-slug-toggle").click();
+      cy.getDataCy("data-connector-slug-input").should("have.value", name);
+      cy.getDataCy("data-connector-edit-update-button").click();
+      cy.getDataCy("data-connector-edit-success").should("be.visible");
+      cy.getDataCy("data-connector-edit-close-button").click();
 
-    cy.getDataCy("data-connector-title").should("be.visible").contains(name);
+      // Now link the data connector to the project
+      visitCurrentProject();
+      cy.getDataCy("add-data-connector").click();
+      cy.getDataCy("project-data-controller-mode-link").click();
 
-    // Click the dropdown toggle button to open the menu
-    cy.getDataCy("button-with-menu-dropdown")
-      .eq(1)
-      .should("be.visible")
-      .click();
-    cy.getDataCy("data-connector-unlink").should("be.visible").click();
+      // Enter the data connector identifier
+      cy.get("#data-connector-identifier")
+        .should("be.empty")
+        .type(dataConnectorIdentifier);
+      cy.getDataCy("link-data-connector-button").click();
 
-    cy.getDataCy("delete-data-connector-modal-button").click();
+      // ? Currently, data connectors newly linked might not appear immediately
+      visitCurrentProject();
+      cy.getDataCy("data-connector-box")
+        .find(`[data-cy=data-connector-name]`)
+        .contains(name)
+        .click();
 
-    // Verify the data connector is no longer linked to the project
-    visitCurrentProject();
-    cy.getDataCy("data-connector-box")
-      .find(`[data-cy=data-connector-name]`)
-      .contains(name)
-      .should("not.exist");
+      cy.getDataCy("data-connector-title").should("be.visible").contains(name);
+
+      // Click the dropdown dropdown button to open the menu
+      cy.getDataCy("data-connector-menu-dropdown")
+        .should("be.visible")
+        .click();
+      cy.getDataCy("data-connector-unlink").should("be.visible").click();
+
+      cy.getDataCy("delete-data-connector-modal-button").click();
+
+      // Verify the data connector is no longer linked to the project
+      visitCurrentProject();
+      cy.contains(`[data-cy=data-connector-name]`, name).should("not.exist");
+    });
   });
 
   it("Add and modify code repositories", () => {
