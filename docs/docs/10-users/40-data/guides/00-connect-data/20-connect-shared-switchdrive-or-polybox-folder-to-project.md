@@ -30,7 +30,9 @@ In Switchdrive/PolyBox:
 2. Click on Create a data connector and choose **Polybox** (or **SwitchDrive**)
 3. At the bottom, select mode **Shared**.
     
+    <p class="image-container-m">
     ![image.png](./connect-shared-switchdrive-or-polybox-folder-to-project-10.png)
+    </p>
     
 4. Complete the information to your Shared folder:
     1. **Public link:** Paste the link to the folder.
@@ -44,8 +46,10 @@ In Switchdrive/PolyBox:
         
     3. Click on **Test connection.**
     4. A message in green “The connection to the storage works correctly.” should appear. Click on **Continue**.
-    
+
+    <p class="image-container-m">
     ![image.png](./connect-shared-switchdrive-or-polybox-folder-to-project-20.png)
+    </p>
     
 5. Specify the final details of the data connector, namely:
     1. **Name**: term to refer to your data connector
@@ -62,6 +66,8 @@ In Switchdrive/PolyBox:
         
     6. **Save credentials**: if there is a password for the folder, click this box if you want to save your password in RenkuLab. (Only you will have access to those credentials. Credentials are not shared in RenkuLab.)
         
+        <p class="image-container-m">
         ![image.png](./connect-shared-switchdrive-or-polybox-folder-to-project-30.png)
+        </p>
         
 6. Click on **+ Add connector**
