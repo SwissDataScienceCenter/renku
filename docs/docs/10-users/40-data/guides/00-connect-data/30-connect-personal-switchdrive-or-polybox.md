@@ -14,7 +14,9 @@ Only use this How-To guide to connect a folder that **only you** use. To connect
 2. Click on **Create a data connector** and choose **Polybox** (or **SwitchDrive**) and at the bottom select Mode > **Personal**.
 3. Click on **Next**
     
+    <p class="image-container-m">
     ![image.png](./connect-personal-switchdrive-or-polybox-10.png)
+    </p>
     
 4. Fill in the options for your data connector, namely:
     1. **Username**: fill in your username
@@ -29,7 +31,9 @@ Only use this How-To guide to connect a folder that **only you** use. To connect
     4. Click on **Test connection.**
     5. A message in green “The connection to the storage works correctly.” should appear. Click on **Continue**.
     
+    <p class="image-container-m">
     ![image.png](./connect-personal-switchdrive-or-polybox-20.png)
+    </p>
     
 5. Specify the final details of the data connector, namely:
     1. **Name**: term to refer to your data connector
@@ -42,4 +46,6 @@ Only use this How-To guide to connect a folder that **only you** use. To connect
         2. **Save credentials**: click this box if you want your token to be saved in your user secrets (only you will have access to those credentials)
 6. Click on **+ Add connector**
 
+<p class="image-container-m">
 ![image.png](./connect-personal-switchdrive-or-polybox-30.png)
+</p>
