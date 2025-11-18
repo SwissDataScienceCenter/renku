@@ -47,7 +47,7 @@ In the project page:
 
         The only additional parameter you have to provide in the session launcher creation dialog is the `Default URL` and this should be set to `/lab`.
 
-        ![image.png](./use-your-own-docker-image-for-renku-session-20.png)
+        ![image.png](./use-your-own-docker-image-for-renku-session-30.png)
 
     - I’m using an image created by **Renku** and that is **older** than version 0.24.0 (the version number is in the image tag).
 
