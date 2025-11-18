@@ -75,7 +75,7 @@ jobs:
       - name: Build image
         working-directory: ./global-images
         run: |
-          BUILD_TAG=$(echo "${{ steps.meta.outputs.json }}" | jq -cr '.tags[0]')
+          BUILD_TAG=$(echo '${{ steps.meta.outputs.json }}' | jq -cr '.tags[0]')
           pack build "${BUILD_TAG}" \
             -p "${{ matrix.FLAVOR }}" \
             --builder "${{ env.BUILDER_IMAGE_ARM64 }}" \
@@ -86,7 +86,7 @@ jobs:
 
       - name: Testing
         run: |
-          BUILD_TAG=$(echo "${{ steps.meta.outputs.json }}" | jq -cr '.tags[0]')
+          BUILD_TAG=$(echo '${{ steps.meta.outputs.json }}' | jq -cr '.tags[0]')
           docker inspect "${BUILD_TAG}"
 
       # - name: Combine images
