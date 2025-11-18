@@ -87,12 +87,8 @@ jobs:
             --run-image "${{ env.RUN_IMAGE_ARM64 }}" \
             --env BP_RENKU_FRONTENDS="${{ matrix.FRONTEND }}" \
             --platform "${{ matrix.PLATFORM }}" \
+            --previous-image "${CACHE_IMAGE}" \
             ${EXTRA_FLAGS}
-
-      - name: Testing
-        run: |
-          BUILD_TAG=$(echo '${{ steps.meta.outputs.json }}' | jq -cr '.tags[0]')
-          docker inspect "${BUILD_TAG}"
 
   combine-images:
     needs: [build-images]
@@ -168,11 +164,6 @@ jobs:
             "${TAG_ARGS}" \
             "${LINUX_AMD64_IMAGE}" \
             "${LINUX_ARM64_IMAGE}"
-      
-      - name: Testing
-        run: |
-          BUILD_TAG=$(echo '${{ steps.meta.outputs.json }}' | jq -cr '.tags[0]')
-          docker inspect "${BUILD_TAG}"
 
       # - name: Combine images
       #   run: |
