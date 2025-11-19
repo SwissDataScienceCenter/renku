@@ -70,7 +70,7 @@ jobs:
           CACHE_IMAGE=$(echo '${{ steps.meta_cache.outputs.json }}' | jq -cr '.tags[0]')
           echo "CACHE_IMAGE=${CACHE_IMAGE}"
           # publish only on pushes to master or release tags
-          PUBLISH=1
+          PUBLISH=0
           EXTRA_FLAGS=""
           if [[ "${GITHUB_REF}" == "refs/heads/master" ]]; then
             PUBLISH=1
@@ -80,7 +80,6 @@ jobs:
           [ "${PUBLISH:-}" = "1" ] && EXTRA_FLAGS="--publish --cache-image ${CACHE_IMAGE}"
           echo "PUBLISH=${PUBLISH}"
           echo "EXTRA_FLAGS=${EXTRA_FLAGS}"
-
           pack build "${BUILD_TAG}" \
             -p "${{ matrix.FLAVOR }}" \
             --builder "${{ env.BUILDER_IMAGE_ARM64 }}" \
@@ -145,57 +144,19 @@ jobs:
           echo "LINUX_AMD64_IMAGE=${LINUX_AMD64_IMAGE}"
           LINUX_ARM64_IMAGE=$(echo '${{ steps.meta_arm64.outputs.json }}' | jq -cr '.tags[0]')
           echo "LINUX_ARM64_IMAGE=${LINUX_ARM64_IMAGE}"
-
           # publish only on pushes to master or release tags
-          PUBLISH=1
+          PUBLISH=0
           if [[ "${GITHUB_REF}" == "refs/heads/master" ]]; then
             PUBLISH=1
           elif [[ "${GITHUB_REF}" =~ ^refs/tags/[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
             PUBLISH=1
           fi
           echo "PUBLISH=${PUBLISH}"
-
           if [[ "${PUBLISH:-}" != "1" ]]; then
             echo "Skipping"
             exit 0
           fi
-
           docker buildx imagetools create \
             ${TAG_ARGS} \
             "${LINUX_AMD64_IMAGE}" \
             "${LINUX_ARM64_IMAGE}"
-
-      # - name: Combine images
-      #   run: |
-      #     TAG_ARGS=$(echo "${{ steps.meta.outputs.json }}" | jq -cr '.tags | map("--tag " + .) | join(" ")')
-      #     echo "${TAG_ARGS}"
-      #     LINUX_AMD64_IMAGE="py-${{ matrix.FLAVOR }}-${{ matrix.FRONTEND }}-amd64"
-      #     LINUX_ARM64_IMAGE="py-${{ matrix.FLAVOR }}-${{ matrix.FRONTEND }}-arm64"
-      #     docker buildx imagetools create \
-      #     "${TAG_ARGS}" \
-      #     "${LINUX_AMD64_IMAGE}" \
-      #     "${LINUX_ARM64_IMAGE}" \
-      #     --dry-run
-
-      # - name: Build image
-      #   run: |
-      #     tags=$(echo "${{ steps.meta.outputs.tags }}" | tr '\n' ',')
-      #     tags=${tags::-1}
-
-      #     # publish only on pushes to master or release tags
-      #     PUBLISH=0
-      #     EXTRA_FLAGS=""
-      #     if [[ "${GITHUB_REF}" == "refs/heads/master" ]]; then
-      #       PUBLISH=1
-      #     elif [[ "${GITHUB_REF}" =~ ^refs/tags/[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
-      #       PUBLISH=1
-      #     fi
-      #     [ "${PUBLISH:-}" = "1" ] && EXTRA_FLAGS="--cache-image ${{ env.DOCKER_PREFIX }}/py-${{ matrix.FLAVOR }}-${{ matrix.FRONTEND }}-cache:latest"
-
-      #     TAGS=$tags \
-      #     FRONTEND=${{ matrix.FRONTEND }} \
-      #     RUN_IMAGE=${{ env.RUN_IMAGE }} \
-      #     BUILDER=${{ env.BUILDER_IMAGE }} \
-      #     PUBLISH=$PUBLISH \
-      #     EXTRA_FLAGS=$EXTRA_FLAGS \
-      #     make -C global-images ${{ matrix.FLAVOR }}
