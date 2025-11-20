@@ -129,9 +129,8 @@ describe("Start a session that consumes project resources", () => {
     cy.getDataCy("code-repositories-box")
       .find("[data-cy=code-repository-item]")
       .contains(repositoryName);
-    cy.contains("[data-cy=code-repository-item]", repositoryName).contains(
-      "Pull only",
-    );
+    cy.contains("[data-cy=code-repository-item]", repositoryName)
+      .contains("Integration recommended");
 
     cy.getDataCy("add-session-launcher").click();
     cy.getDataCy("environment-kind-custom").click();
@@ -175,7 +174,11 @@ describe("Start a session that consumes project resources", () => {
         timeout: TIMEOUTS.long,
       })
       .click();
-    cy.getDataCy("session-status-starting");
+    cy.get("[data-cy=session-repositories-modal]", {
+        timeout: TIMEOUTS.long,
+      })
+      .should("be.visible");
+    cy.getDataCy("session-repositories-modal-continue").click();
     cy.get("[data-cy=session-status-starting]", {
       timeout: TIMEOUTS.long,
     }).should("be.visible");
