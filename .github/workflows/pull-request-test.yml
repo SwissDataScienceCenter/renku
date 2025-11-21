@@ -230,7 +230,7 @@ jobs:
             dataConnectors,
             groups,
             projects,
-            searchEntities,
+            search,
             sessions,
           ]
     steps:

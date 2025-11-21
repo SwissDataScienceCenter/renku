@@ -16,7 +16,7 @@ import {
 } from "../../support/utils/projectsV2.utils";
 import { verifySearchIndexing } from "../../support/utils/search.utils";
 
-const sessionId = ["searchEntities", getRandomString()];
+const sessionId = ["search", getRandomString()];
 
 describe("Search for resources: groups, projects, users", () => {
   // Define projects and groups details
