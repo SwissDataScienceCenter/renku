@@ -46,7 +46,7 @@ plt.savefig(file_save_path+'Trend Analysis of ' + str(parameter) + ' in ' + str(
 plt.savefig(file_save_path+'Trend Analysis of ' + str(parameter) + ' in ' + str(location) +' by Date'+'.pdf')
 ```
 
-If you did [Connect a Storage Space to save your work](https://docs.renkulab.io/en/latest/docs/users/data/guides/connect-data/), try creating the file in your attached storage space (modify the `file_save_path`), and see that it is synced back to the source system. 
+If you did [Connect a Storage Space to save your work](../40-data/guides/00-connect-data/index.md), try creating the file in your attached storage space (modify the `file_save_path`), and see that it is synced back to the source system. 
 
 :::info
 
