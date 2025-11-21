@@ -1,4 +1,7 @@
-import { getRandomString, validateLoginV2 } from "../../support/commands/general";
+import {
+  getRandomString,
+  validateLoginV2,
+} from "../../support/commands/general";
 import { generatorProjectName } from "../../support/commands/projects";
 import { ProjectIdentifierV2 } from "../../support/types/project.types";
 import {
@@ -60,9 +63,18 @@ describe("Dashboard v2 - Authenticated user", () => {
 
   it("Can see own project on the dashboard", () => {
     cy.visit("/");
-    cy.getDataCy("dashboard-project-list").find("a").should("have.length.at.least", 1);
-    cy.getDataCy("dashboard-project-list").find("a").should("contain.text", `${prefixProjectTitle} ${projectIdentifier.slug}`);
-    cy.getDataCy("dashboard-project-list").find("a").should("contain.text", projectIdentifier.slug);
+    cy.getDataCy("dashboard-project-list")
+      .find("a")
+      .should("have.length.at.least", 1);
+    cy.getDataCy("dashboard-project-list")
+      .find("a")
+      .should(
+        "contain.text",
+        `${prefixProjectTitle} ${projectIdentifier.slug}`,
+      );
+    cy.getDataCy("dashboard-project-list")
+      .find("a")
+      .should("contain.text", projectIdentifier.slug);
   });
 
   it("Can find project in the search results", () => {
