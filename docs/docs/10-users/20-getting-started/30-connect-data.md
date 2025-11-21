@@ -12,7 +12,7 @@ Here's how to connect this dataset to your Renku project with a data connector:
 
 :::info
 
-Note that the Description in Zenodo of this dataset is automatically imported as part of the metadata of your data connector.
+Note that the description in Zenodo of this dataset is automatically imported as part of the metadata of your data connector.
 
 :::
 
