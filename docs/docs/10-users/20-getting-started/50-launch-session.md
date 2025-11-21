@@ -50,7 +50,7 @@ If you did [Connect a Storage Space to save your work](../40-data/guides/00-conn
 
 :::info
 
-The git repository we connected with our project is read-only. However, when you connect your Renku project with a git repository that you have push (write) access to, you will be able to run git commands in the session to save your work back to the code repository! To make this work, first [connect Renku with your GitHub or GitLab account](https://docs.renkulab.io/en/latest/docs/users/code/guides/connect-renku-account-to-github-or-gitlab-account). 
+The git repository we connected with our project is read-only. However, when you connect your Renku project with a git repository that you have push (write) access to, you will be able to run git commands in the session to save your work back to the code repository! To make this work, first [connect Renku with your GitHub or GitLab account](../50-code/guides/20-connect-renku-account-to-github-or-gitlab-account.md). 
 
 :::
 
