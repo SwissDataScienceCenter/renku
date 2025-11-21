@@ -49,7 +49,7 @@ In Renku 2.0, you can have Renku build session environment (docker image) from a
 file. In Renku 2.0, this is called **code based environments**. See the following guide to set up a
 new code based environment from your code repository.
 
-[How to create an environment with custom packages installed](../../sessions/guides/create-environment-with-custom-packages-installed)
+[How to create an environment with custom packages installed](../../sessions/guides/environments/create-environment-with-custom-packages-installed)
 
 :::warning
 
@@ -64,4 +64,4 @@ launcher that references the RenkuLab GitLab.
 
 ### → My code repository is private {#my-code-repository-is-private}
 
-Please see [Creating an environment from a private code repository](../../sessions/guides/create-environment-with-custom-packages-private-code-repository)
+Please see [Creating an environment from a private code repository](../../sessions/guides/environments/create-environment-with-custom-packages-private-code-repository)

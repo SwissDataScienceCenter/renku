@@ -35,7 +35,7 @@ We have set up a global environment which already has many packages installed. I
 
 :::info
 
-For a detailed guide for how to install packages, see [How to install packages in your session](../sessions/guides/install-packages-on-the-fly-in-your-session).
+For a detailed guide for how to install packages, see [How to install packages in your session](../sessions/guides/environments/install-packages-on-the-fly-in-your-session).
 
 :::
 
