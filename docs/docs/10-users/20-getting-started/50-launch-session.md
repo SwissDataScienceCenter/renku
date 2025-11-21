@@ -10,7 +10,7 @@ To run your code and analyze data on RenkuLab, first decide what kind of session
 4. Choose the compute resources for your session based on your project’s needs in the drop-down menu, and select the amount of disk space.
 
 :::info
-You can have multiple Session Launchers in your project that run different kinds of sessions. [Check out out How to guides to add a session launcher to your project](https://docs.renkulab.io/en/latest/docs/users/sessions/guides/add-session-launcher-to-project)
+You can have multiple Session Launchers in your project that run different kinds of sessions. Check out [How to guides to add a session launcher to your project](../60-sessions/guides/10-add-session-launcher-to-project.md)
 :::
 
 :::info
