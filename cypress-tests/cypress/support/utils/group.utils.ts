@@ -13,7 +13,7 @@ export function getGroupFromAPI(
     .as("getGroup");
 }
 
-/** Delete a project by using only the API. */
+/** Delete a group by using only the API. */
 export function deleteGroupFromAPI(slug: string) {
   return cy
     .request({

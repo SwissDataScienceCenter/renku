@@ -10,7 +10,7 @@ import {
   getProjectByNamespaceAPIV2,
 } from "../../support/utils/projectsV2.utils";
 
-const sessionId = ["projectBasics", getRandomString()];
+const sessionId = ["projects", getRandomString()];
 
 describe("Project - create, edit and delete", () => {
   // Define some project details

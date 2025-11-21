@@ -16,7 +16,7 @@ const projectTestConfig = {
 };
 
 const prefixProjectTitle = "My Renku Project";
-const sessionId = ["dashboardV2", getRandomString()];
+const sessionId = ["dashboard", getRandomString()];
 
 describe("Dashboard v2 - Authenticated user", () => {
   const projectIdentifier: ProjectIdentifierV2 = {

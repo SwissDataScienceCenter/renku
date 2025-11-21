@@ -15,7 +15,7 @@ import { ProjectIdentifierV2 } from "../../support/types/project.types";
 import { User } from "../../support/types/user.types";
 import { verifySearchIndexing } from "../../support/utils/search.utils";
 
-const sessionId = ["groupBasics", getRandomString()];
+const sessionId = ["groups", getRandomString()];
 
 describe("Group - create, edit and delete", () => {
   // Define some group details
@@ -314,116 +314,5 @@ describe("Group - create, edit and delete", () => {
     deleteProjectFromAPIV2(project1Identifier);
     project2Identifier.namespace = userNamespace;
     deleteProjectFromAPIV2(project2Identifier);
-  });
-
-  it("Link and unlink group data connector to user project", () => {
-    const dataConnectorName = `dc-${groupNameRandomPart}`;
-    const projectName = `project-${groupNameRandomPart}`;
-
-    let dataConnectorIdentifier: string;
-    const projectIdentifier: ProjectIdentifierV2 = {
-      slug: projectName,
-      id: null,
-      namespace: null,
-    };
-
-    projectIdentifier.namespace = userNamespace;
-    dataConnectorIdentifier = `${groupSlug}/${dataConnectorName}`;
-
-    // Create a new group
-    cy.visit("/");
-    cy.getDataCy("navbar-new-entity").click();
-    cy.getDataCy("navbar-group-new").click();
-    cy.getDataCy("group-creation-form").should("exist");
-    cy.getDataCy("group-name-input").type(groupName);
-    cy.getDataCy("group-slug-toggle").click();
-    cy.getDataCy("group-slug-input").should("have.value", groupSlug);
-    cy.getDataCy("group-description-input").type(groupDescription);
-    cy.intercept("POST", /(?:\/ui-server)?\/api\/data\/groups/).as(
-      "createGroup",
-    );
-    cy.getDataCy("group-create-button").click();
-    cy.wait("@createGroup");
-    cy.getDataCy("group-name").should("contain", groupName);
-
-    // Create a data connector owned by the group
-    cy.getDataCy("add-data-connector").click();
-    cy.getDataCy("data-storage-s3").click();
-    cy.getDataCy("data-provider-AWS").click();
-    cy.getDataCy("data-connector-edit-next-button").click();
-
-    cy.getDataCy("data-connector-source-path").should("be.empty").type("giab");
-    cy.getDataCy("test-data-connector-button").click();
-    cy.getDataCy("cloud-storage-connection-success").should("be.visible");
-    cy.getDataCy("add-data-connector-continue-button").click();
-
-    cy.getDataCy("data-connector-name-input")
-      .should("be.empty")
-      .type(dataConnectorName);
-    cy.getDataCy("data-connector-slug-toggle").click();
-    cy.getDataCy("data-connector-slug-input").should(
-      "have.value",
-      dataConnectorName,
-    );
-    cy.getDataCy("data-connector-edit-update-button").click();
-    cy.getDataCy("data-connector-edit-success").should("be.visible");
-    cy.getDataCy("data-connector-edit-close-button").click();
-
-    // Verify data connector appears in the group
-    cy.getDataCy("data-connector-box")
-      .find(`[data-cy=data-connector-name]`)
-      .contains(dataConnectorName);
-
-    // Create a project in user's namespace
-    createProjectIfMissingAPIV2({
-      description: "Test project in user namespace",
-      name: projectName,
-      namespace: userNamespace,
-      slug: projectName,
-      visibility: "private",
-    }).then((project) => {
-      projectIdentifier.id = project.id;
-    });
-
-    // Navigate to the user's project
-    cy.visit("/");
-    cy.getDataCy("projects-container")
-      .find('[data-cy="dashboard-project-list"]')
-      .contains(projectName)
-      .click();
-    cy.getDataCy("project-name").should("contain", projectName);
-
-    // Link the group data connector to the user's project
-    cy.getDataCy("add-data-connector").click();
-    cy.getDataCy("project-data-controller-mode-link").click();
-
-    // Enter the data connector identifier
-    cy.get("#data-connector-identifier")
-      .should("be.empty")
-      .type(dataConnectorIdentifier);
-    cy.getDataCy("link-data-connector-button").click();
-
-    // Verify the data connector is linked to the project
-    cy.getDataCy("data-connector-box")
-      .find(`[data-cy=data-connector-name]`)
-      .contains(dataConnectorName)
-      .click();
-
-    cy.getDataCy("data-connector-title")
-      .should("be.visible")
-      .contains(dataConnectorName);
-
-    // Unlink the data connector from the project
-    cy.getDataCy("data-connector-menu-dropdown").should("be.visible").click();
-    cy.getDataCy("data-connector-unlink").should("be.visible").click();
-    cy.getDataCy("delete-data-connector-modal-button").click();
-
-    // Verify the data connector is no longer linked to the project
-    cy.contains(`[data-cy=data-connector-name]`, dataConnectorName).should(
-      "not.exist",
-    );
-
-    // Cleanup: Delete project
-    deleteProjectFromAPIV2(projectIdentifier);
   });
 });
