@@ -266,8 +266,53 @@ describe("Group - create, edit and delete", () => {
     cy.contains(name).should("be.visible");
     cy.contains(project1DataConnectorName).should("be.visible");
 
+    // Move project2 to user's namespace
+    cy.visit("/");
+    cy.getDataCy("groups-container")
+      .find('[data-cy="dashboard-group-list"]')
+      .contains(groupName)
+      .click();
+    cy.getDataCy("group-name").should("contain", groupName);
+
+    cy.getDataCy("project-box")
+      .find('[data-cy="dashboard-project-list"]')
+      .contains(project2Name)
+      .click();
+    cy.getDataCy("project-name").should("contain", project2Name);
+
+    cy.getDataCy("project-settings-link").click();
+
+    cy.getDataCy("project-settings-form-project-namespace-input").click();
+    cy.get('[role="option"]')
+      .filter(`:contains("${userNamespace}")`)
+      .first()
+      .click();
+
+    cy.intercept("PATCH", /(?:\/ui-server)?\/api\/data\/projects\/[^/]+/).as(
+      "updateProject",
+    );
+    cy.getDataCy("project-update-button").click();
+    cy.wait("@updateProject");
+
+    // Wait for search indexing to complete
+    verifySearchIndexing(groupNameRandomPart, 5);
+
+    // Navigate back to group search page
+    cy.visit("/");
+    cy.getDataCy("groups-container")
+      .find('[data-cy="dashboard-group-list"]')
+      .contains(groupName)
+      .click();
+    cy.getDataCy("group-name").should("contain", groupName);
+    cy.getDataCy("group-search-link").click();
+
+    // Verify project2 no longer appears in group search
+    cy.contains(project1Name).should("be.visible");
+    cy.contains(project2Name).should("not.exist");
+
     // Cleanup: Delete projects
     deleteProjectFromAPIV2(project1Identifier);
+    project2Identifier.namespace = userNamespace;
     deleteProjectFromAPIV2(project2Identifier);
   });
 
