@@ -43,7 +43,7 @@ created for the 1.0 project**.
 
 If you would like to be able to continue to update what packages are installed in your environment,
 you can [create an environment with custom
-packages](../sessions/guides/create-environment-with-custom-packages-installed) via
+packages](../sessions/guides/environments/create-environment-with-custom-packages-installed) via
 Renku 2.0's 'code based environments'.
 
 :::

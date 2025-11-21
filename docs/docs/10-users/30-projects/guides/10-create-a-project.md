@@ -25,8 +25,8 @@ To create a new project:
 4. Add code repository as explained in [How to add a code repository to your project](../../code/guides/add-code-repository-to-project).
 5. Create a session launcher for working in your project:
     1. Select an environment:
-        1. Check out the environments available in Renku via [How to add a session launcher to your project](../../sessions/guides/add-session-launcher-to-project). If these are sufficient for your project, use them!
-        2. If you need to customize the environment for your project, you can create a custom environment yourself via [How to use your own docker image for a Renku session](../../sessions/guides/use-your-own-docker-image-for-renku-session), or  [Contact](../../community) us if you are in trouble!
+        1. Check out the environments available in Renku via [How to add a session launcher to your project](../../sessions/guides/environments/). If these are sufficient for your project, use them!
+        2. If you need to customize the environment for your project, you can create a custom environment yourself via [How to use your own docker image for a Renku session](../../sessions/guides/environments/use-your-own-docker-image-for-renku-session), or  [Contact](../../community) us if you are in trouble!
     2. Set the session launcher’s default resource class for your project [How to select compute resources for your session](../../sessions/guides/select-compute-resources-for-session).
 
         :::info

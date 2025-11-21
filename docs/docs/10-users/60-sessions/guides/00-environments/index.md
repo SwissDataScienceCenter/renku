@@ -9,7 +9,7 @@ A session launcher defines the environment and compute resources for a Renku ses
     :::tip
 
     Do you need more resources than are available in RenkuLab’s public resource classes? [Contact
-    us!](/docs/users/community) We can configure a custom resource pool for your needs upon demand.
+    us!](../../../community) We can configure a custom resource pool for your needs upon demand.
 
     :::
 
@@ -25,7 +25,7 @@ environment is right for you, answer the following questions:
 Renku only has one mode for working with R sessions at the moment. When you create a session
 launcher, select **global environment** and select the **R** global environment. If you need to
 install additional packages, see [How to install packages on-the-fly in your
-session](/docs/users/sessions/guides/environments/install-packages-on-the-fly-in-your-session).
+session](install-packages-on-the-fly-in-your-session).
 
 #### → I’m working in Python
 
@@ -38,7 +38,7 @@ session?](#2-would-you-like-packages-to-be-pre-installed-and-ready-to-go-when-yo
 
 Working in some other language? That’s ok! You can run a wide variety of Docker images in Renku
 sessions! See [How to use your own docker image for a Renku
-session](/docs/users/sessions/guides/environments/use-your-own-docker-image-for-renku-session)
+session](use-your-own-docker-image-for-renku-session)
 
 ### 2. Would you like packages to be pre-installed and ready to go when you (or anyone else) launches the session?
 
@@ -52,11 +52,11 @@ environment definition file, such as a environment.yml, requirements.txt, or pyp
 Renku will build a custom environment for your session for you!
 
 → If your code repository is **public**, see [How to create an environment with custom packages
-installed](/docs/users/sessions/guides/environments/create-environment-with-custom-packages-installed).
+installed](create-environment-with-custom-packages-installed).
 
 → If your code repository is **private**, see [How to create an environment with custom packages from
 a private code
-repository](/docs/users/sessions/guides/environments/create-environment-with-custom-packages-private-code-repository).
+repository](create-environment-with-custom-packages-private-code-repository).
 
 #### → Having packages pre-installed is not so important to me right now.
 
@@ -71,4 +71,4 @@ you install won’t be available for anyone else who launches a session from the
 
 If you’d like to permanently add the packages you need to your session environment, see [How to
 create an environment with custom packages
-installed](/docs/users/sessions/guides/environments/create-environment-with-custom-packages-installed).
+installed](create-environment-with-custom-packages-installed).
