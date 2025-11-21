@@ -18,9 +18,9 @@ export const Highlight = ({children, color}) => (
 For the purposes of Renku, a code repository is a git-based collection of code files, hosted at
 [GitHub.com](http://github.com), [GitLab.com](http://gitLab.com), or similar.
 
-When a code repository is connected to a [Project](/docs/users/projects/projects),
+When a code repository is connected to a [Project](../projects/projects),
 the repository is automatically cloned into the
-[Session](/docs/users/sessions/session), where the files can be accessed and run.
+[Session](../sessions/session), where the files can be accessed and run.
 
 ## Access to Code Repositories from RenkuLab
 

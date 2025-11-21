@@ -19,7 +19,7 @@ RenkuLab’s code-based environments currently supports creating **Python** envi
 
 Are you working in R? Support for R is coming soon. For now, for working with R please see
 [installing packages on the fly in your
-session](/docs/users/sessions/guides/install-packages-on-the-fly-in-your-session).
+session](install-packages-on-the-fly-in-your-session).
 
 :::
 
@@ -151,7 +151,7 @@ This feature is coming soon. For now, please see [R](https://docs.renkulab.io/en
 
 This functionality only works with **public code repositories**. If your code repository is
 private, please see [Creating a custom environment from a private code
-repository](/docs/users/sessions/guides/create-environment-with-custom-packages-private-code-repository).
+repository](create-environment-with-custom-packages-private-code-repository).
 
 :::
 
@@ -167,7 +167,7 @@ repository](/docs/users/sessions/guides/create-environment-with-custom-packages-
 
     Note: The code repository must be public. If your code repository is private, please see
     [Creating a custom environment from a private code
-    repository](/docs/users/sessions/guides/create-environment-with-custom-packages-private-code-repository)
+    repository](create-environment-with-custom-packages-private-code-repository)
 
     :::
 
@@ -217,7 +217,7 @@ To set up a dashboard with an environment built from your repository, you can fo
 
 1. Follow the steps for creating a [code-based environment](#how-to-create-a-code-based-environment-for-your-renku-session) above.
 2. Once the image is done building, edit the environment and change it to a “Custom Environment”
-3. Edit the `Command` to be `["bash", "-c"]` and `Args` to correspond to your app - see common examples [here](/docs/users/sessions/guides/use-your-own-docker-image-for-renku-session).
+3. Edit the `Command` to be `["bash", "-c"]` and `Args` to correspond to your app - see common examples [here](use-your-own-docker-image-for-renku-session).
 
 Once you are done, your environment configuration should look something like this:
 
@@ -232,4 +232,4 @@ And your launcher set up could be, for example:
 ## Creating a code-based environment from a private code repository
 
 Please see [Creating a custom environment from a private code
-repository](/docs/users/sessions/guides/create-environment-with-custom-packages-private-code-repository).
+repository](create-environment-with-custom-packages-private-code-repository).

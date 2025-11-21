@@ -42,7 +42,7 @@ Then, fill the "Add provider" form as follows:
 * OpenID Connect Issuer URL: `https://auth.cscs.ch/auth/realms/cscs`
 
 Once the new integration has been created, you should test it by clicking "Connect" on
-the corresponding entry in the "Integration" page (see [testing integrations](/docs/admins/operation/integrations#testing-integrations)).
+the corresponding entry in the "Integration" page (see [testing integrations](integrations#testing-integrations)).
 
 ### 3. Add resource pools which start remote sessions
 

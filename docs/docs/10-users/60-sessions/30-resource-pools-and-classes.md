@@ -36,4 +36,4 @@ On RenkuLab, the following resources classes are publicly available (in the “p
 
 ## Request a Custom Resource Pool {#request-custom-resource-pool}
 
-Do you need more resources than are available in RenkuLab’s public resource classes? [Contact](/docs/users/community) us! We can configure a custom resource pool for your needs upon demand. We apply flat, transparent pricing, passing down infra rates savings.
+Do you need more resources than are available in RenkuLab’s public resource classes? [Contact](../community) us! We can configure a custom resource pool for your needs upon demand. We apply flat, transparent pricing, passing down infra rates savings.

@@ -11,6 +11,6 @@ You can find the project described in this tutorial [here](https://renkulab.io/p
 
 :::tip
 
-Want to learn more? Check out our full library of [Renku Use Cases](/docs/users/use-cases/).
+Want to learn more? Check out our full library of [Renku Use Cases](../use-cases).
 
 :::

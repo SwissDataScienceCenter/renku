@@ -15,7 +15,7 @@ For creating the project:
 
     :::
 
-3. Instruct course participants to connect their Renku account to their GitHub or GitLab account, as described in [How to connect your Renku account to your GitHub or GitLab account](/docs/users/code/guides/connect-renku-account-to-github-or-gitlab-account)
+3. Instruct course participants to connect their Renku account to their GitHub or GitLab account, as described in [How to connect your Renku account to your GitHub or GitLab account](../../code/guides/connect-renku-account-to-github-or-gitlab-account)
 4. Instruct course participants to work on their branch. Once they’ve launched a session, course participants can create a new branch with the following command:
 
     ```jsx

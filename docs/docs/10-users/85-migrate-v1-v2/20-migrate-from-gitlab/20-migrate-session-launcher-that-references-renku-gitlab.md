@@ -31,12 +31,12 @@ new R session launcher in your project:
 2. Select **global environment**
 3. Select the **R** global environment
 
-If you do need custom packages installed in your R session, see [How to migrate an image from RenkuLab GitLab to Dockerhub](/docs/users/migrate-v1-v2/migrate-from-gitlab/migrate-image-dockerhub).
+If you do need custom packages installed in your R session, see [How to migrate an image from RenkuLab GitLab to Dockerhub](migrate-image-dockerhub).
 
 
 ### → I’m working in another language {#im-working-in-another-language}
 
-See [How to migrate an image from RenkuLab GitLab to Dockerhub](/docs/users/migrate-v1-v2/migrate-from-gitlab/migrate-image-dockerhub).
+See [How to migrate an image from RenkuLab GitLab to Dockerhub](migrate-image-dockerhub).
 
 ## 2. Is your project’s code repository public or private? {#is-your-projects-code-repository-public-or-private}
 
@@ -49,7 +49,7 @@ In Renku 2.0, you can have Renku build session environment (docker image) from a
 file. In Renku 2.0, this is called **code based environments**. See the following guide to set up a
 new code based environment from your code repository.
 
-[How to create an environment with custom packages installed](/docs/users/sessions/guides/create-environment-with-custom-packages-installed)
+[How to create an environment with custom packages installed](../../sessions/guides/create-environment-with-custom-packages-installed)
 
 :::warning
 
@@ -64,4 +64,4 @@ launcher that references the RenkuLab GitLab.
 
 ### → My code repository is private {#my-code-repository-is-private}
 
-Please see [Creating an environment from a private code repository](/docs/users/sessions/guides/create-environment-with-custom-packages-private-code-repository)
+Please see [Creating an environment from a private code repository](../../sessions/guides/create-environment-with-custom-packages-private-code-repository)
