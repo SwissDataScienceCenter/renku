@@ -58,8 +58,7 @@ function searchForProject(props: ProjectIdentifier, shouldExist = true) {
       .should("exist")
       .scrollIntoView()
       .should("be.visible");
-  }
-  else {
+  } else {
     cy.get(props.name).should("not.exist");
   }
 }
@@ -102,8 +101,7 @@ function createProjectIfMissing(newProjectProps: NewProjectProps) {
       cy.get("[data-cy=create-project-button]", { timeout: TIMEOUTS.vlong })
         .should("be.enabled")
         .click();
-    }
-    else {
+    } else {
       cy.visit(`projects/${namespace}/${newProjectProps.name}`);
     }
     cy.url({ timeout: TIMEOUTS.vlong }).should(
