@@ -23,7 +23,7 @@ The data connector in the previous step is read only. If you would like to be ab
 
 :::info
 
-Check out our guides for creating different types of [data connectors](https://docs.renkulab.io/en/latest/docs/users/data/guides/connect-data/)
+Check out our guides for creating different types of [data connectors](../40-data/guides/00-connect-data/index.md)
 
 :::
 
