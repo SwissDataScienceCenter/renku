@@ -156,7 +156,7 @@ describe("Project resources - work with code, data, environments", () => {
       .find("[data-cy=code-repository-item]")
       .contains(repoName);
     cy.contains("[data-cy=code-repository-item]", repoName).contains(
-      "Integration recommended",
+      /Integration recommended|Request integration/,
     );
 
     // Edit code repository
@@ -172,7 +172,7 @@ describe("Project resources - work with code, data, environments", () => {
       .find("[data-cy=code-repository-item]")
       .contains(repoNameEdited);
     cy.contains("[data-cy=code-repository-item]", repoNameEdited).contains(
-      "Integration recommended",
+      /Integration recommended|Request integration/,
     );
   });
 

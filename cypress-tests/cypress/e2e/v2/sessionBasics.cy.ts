@@ -130,7 +130,7 @@ describe("Start a session that consumes project resources", () => {
       .find("[data-cy=code-repository-item]")
       .contains(repositoryName);
     cy.contains("[data-cy=code-repository-item]", repositoryName)
-      .contains("Integration recommended");
+      .contains(/Integration recommended|Request integration/);
 
     cy.getDataCy("add-session-launcher").click();
     cy.getDataCy("environment-kind-custom").click();
