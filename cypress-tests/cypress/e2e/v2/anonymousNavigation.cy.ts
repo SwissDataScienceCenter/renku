@@ -5,9 +5,9 @@ import {
 } from "../../support/commands/general";
 import { User } from "../../support/types/user";
 import {
-  createProjectIfMissingAPIV2,
-  deleteProjectFromAPIV2,
-  getProjectByNamespaceAPIV2,
+  createProjectIfMissingV2,
+  deleteProject,
+  getProjectByNamespace,
 } from "../../support/utils/projects";
 import { verifySearchIndexing } from "../../support/utils/search";
 
@@ -46,7 +46,7 @@ describe("Anonymous users can only access public resources", () => {
     resetRequiredResources();
     getUserData().then((user: User) => {
       for (const proj of [privateProjectName, publicProjectName]) {
-        createProjectIfMissingAPIV2({
+        createProjectIfMissingV2({
           name: proj,
           namespace: user.username,
           slug: proj,
@@ -72,16 +72,13 @@ describe("Anonymous users can only access public resources", () => {
     // Delete the projects
     getUserData().then((user: User) => {
       [privateProjectName, publicProjectName].forEach((proj) => {
-        getProjectByNamespaceAPIV2({
+        getProjectByNamespace({
           namespace: user.username,
           slug: proj,
           // eslint-disable-next-line max-nested-callbacks
         }).then((response) => {
           if (response.status === 200) {
-            deleteProjectFromAPIV2({
-              id: response.body.id,
-              slug: proj,
-            });
+            deleteProject(response.body.id);
           }
         });
       });

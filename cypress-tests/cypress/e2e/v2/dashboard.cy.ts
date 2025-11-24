@@ -5,11 +5,11 @@ import {
 import { generatorProjectName } from "../../support/commands/projects";
 import { ProjectIdentifierV2 } from "../../support/types/projects";
 import {
-  createProjectIfMissingAPIV2,
-  deleteProjectFromAPIV2,
-  getProjectByNamespaceAPIV2,
-  getUserNamespaceAPIV2,
+  createProjectIfMissingV2,
+  deleteProject,
+  getProjectByNamespace,
 } from "../../support/utils/projects";
+import { getUserNamespace } from "../../support/utils/user";
 const projectTestConfig = {
   projectAlreadyExists: false,
   projectName: generatorProjectName("dashboardV2"),
@@ -30,8 +30,8 @@ describe("Dashboard v2 - Authenticated user", () => {
       !projectTestConfig.projectAlreadyExists &&
       projectIdentifier.id != null
     ) {
-      deleteProjectFromAPIV2(projectIdentifier);
-      getProjectByNamespaceAPIV2(projectIdentifier).then((response) => {
+      deleteProject(projectIdentifier.id);
+      getProjectByNamespace(projectIdentifier).then((response) => {
         expect(response.status).to.equal(404);
       });
     }
@@ -46,15 +46,15 @@ describe("Dashboard v2 - Authenticated user", () => {
       },
       validateLoginV2,
     );
-    getUserNamespaceAPIV2().then((namespace) => {
+    getUserNamespace().then((namespace) => {
       if (namespace) {
         projectIdentifier.namespace = namespace;
-        createProjectIfMissingAPIV2({
+        createProjectIfMissingV2({
           visibility: "private",
           name: `${prefixProjectTitle} ${projectIdentifier.slug}`,
           namespace,
           slug: projectIdentifier.slug,
-        }).then((project) => (projectIdentifier.id = project.id));
+        }).then((project) => (projectIdentifier.id = project.body.id));
       } else {
         cy.log("No user namespace found, project cannot be created.");
       }

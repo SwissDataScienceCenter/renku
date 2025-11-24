@@ -4,7 +4,7 @@ export type ProjectIdentifierV2 = {
   slug: string;
 };
 
-export interface NewProjectV2Body extends ProjectIdentifierV2 {
+export interface ProjectV2 extends ProjectIdentifierV2 {
   description?: string;
   name: string;
   visibility?: "public" | "private";
