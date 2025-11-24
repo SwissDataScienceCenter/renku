@@ -38,6 +38,6 @@ If you wish you write changes back to the repository, see [How to connect your R
 
 ### Private Code Repositories
 
-In order to access your **private** code repository from RenkuLab, you need to connect your RenkuLab account with GitHub/GitLab. See [How to connect your Renku account to your GitHub or GitLab account](https://docs.renkulab.io/en/latest/docs/users/code/guides/connect-renku-account-to-github-or-gitlab-account/).
+In order to access your **private** code repository from RenkuLab, you need to connect your RenkuLab account with GitHub/GitLab. See [How to connect your Renku account to your GitHub or GitLab account](./guides/20-connect-renku-account-to-github-or-gitlab-account.md).
 
 
