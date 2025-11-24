@@ -1,16 +1,4 @@
-export const Highlight = ({children, color}) => (
-  <span
-    style={{
-      backgroundColor: color,
-      borderRadius: '2px',
-      color: '#000000ff',
-      padding: '0.2rem',
-    }}>
-    {children}
-  </span>
-);
-
-<!-- <Highlight color="#c6d000ff">Docusaurus green</Highlight> -->
+<!-- Highlight available globally <Highlight color="#c6d000ff">Docusaurus green</Highlight> -->
 
 
 # Code repository
