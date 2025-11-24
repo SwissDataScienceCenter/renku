@@ -1,6 +1,6 @@
 # How to resolve ‘hidden’ & ‘visibility warning’ data connectors
 
-Renku release 0.67.0 introduces more flexibility for how you connect data connectors to projects. With this update, you may see a note that there are **hidden data connectors** that you can’t see, especially in projects were created before version 0.67.0. And conversely, you may see **visibility warnings** on data connectors that other project members can’t see. This how-to guide will walk you through what these warnings mean and how to resolve them. 
+Renku release 0.67.0 introduced more flexibility for how you connect data connectors to projects. Since this update, you may see a note that there are **hidden data connectors** that you can’t see, especially in projects that were created before version 0.67.0. And conversely, you may see **visibility warnings** on data connectors that other project members can’t see. This how-to guide will walk you through what these warnings mean and how to resolve them. 
 
 <p class="image-container-s"> 
 ![A notification about hidden data connectors](./resolve-hidden-visibility-warning-10.png)
