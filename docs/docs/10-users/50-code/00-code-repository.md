@@ -34,7 +34,7 @@ Once you have connected your accounts, your access to the code repository in Ren
 
 Public code repositories may be connected to Renku projects and accessed with no further action. You will be able to read and run the files of the repository in your session. 
 
-If you wish you write changes back to the repository, see [How to connect your Renku account to your GitHub or GitLab account](https://docs.renkulab.io/en/latest/docs/users/code/guides/connect-renku-account-to-github-or-gitlab-account/).
+If you wish you write changes back to the repository, see [How to connect your Renku account to your GitHub or GitLab account](./guides/20-connect-renku-account-to-github-or-gitlab-account.md).
 
 ### Private Code Repositories
 
