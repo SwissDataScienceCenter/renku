@@ -23,6 +23,6 @@
 7. Click **Link data**.
 
 <p class="image-container-s">
-![Pasting a data connector identifier to connect it to a new project.](link-data-connector-to-project-30.png)
-*Pasting a data connector identifier to connect it to a new project.*
+![Paste a data connector identifier to connect it to a new project.](link-data-connector-to-project-30.png)
+*Paste a data connector identifier to connect it to a new project.*
 </p>
