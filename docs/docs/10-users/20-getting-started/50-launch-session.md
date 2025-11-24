@@ -10,7 +10,7 @@ To run your code and analyze data on RenkuLab, first decide what kind of session
 4. Choose the compute resources for your session based on your project’s needs in the drop-down menu, and select the amount of disk space.
 
 :::info
-You can have multiple Session Launchers in your project that run different kinds of sessions. [Check out out How to guides to add a session launcher to your project](https://docs.renkulab.io/en/latest/docs/users/sessions/guides/add-session-launcher-to-project)
+You can have multiple Session Launchers in your project that run different kinds of sessions. Check out [How to guides to add a session launcher to your project](../60-sessions/guides/10-add-session-launcher-to-project.md)
 :::
 
 :::info
@@ -24,7 +24,7 @@ Once your session has launched, you will see the data and code that you linked t
 
 ## Add a second Session Launcher (optional) 
 
-When you want to create a RenkuLab session with a set of packages that’s reproducible and shareable, we recommend defining your package dependencies in code. Then, use the ‘Create from Code’ session launcher option to have Renku create a reproducible session environment for you! See [How to create an environment with custom packages installed](/docs/users/sessions/guides/create-environment-with-custom-packages-installed) for details. 
+When you want to create a RenkuLab session with a set of packages that’s reproducible and shareable, we recommend defining your package dependencies in code. Then, use the ‘Create from Code’ session launcher option to have Renku create a reproducible session environment for you! See [How to create an environment with custom packages installed](../60-sessions/guides/20-create-environment-with-custom-packages-installed.md) for details.
 
 ## Run the Code (optional)
 
@@ -46,11 +46,11 @@ plt.savefig(file_save_path+'Trend Analysis of ' + str(parameter) + ' in ' + str(
 plt.savefig(file_save_path+'Trend Analysis of ' + str(parameter) + ' in ' + str(location) +' by Date'+'.pdf')
 ```
 
-If you did [Connect a Storage Space to save your work](https://docs.renkulab.io/en/latest/docs/users/data/guides/connect-data/), try creating the file in your attached storage space (modify the `file_save_path`), and see that it is synced back to the source system. 
+If you did [Connect a Storage Space to save your work](../40-data/guides/00-connect-data/index.md), try creating the file in your attached storage space (modify the `file_save_path`), and see that it is synced back to the source system. 
 
 :::info
 
-The git repository we connected with our project is read-only. However, when you connect your Renku project with a git repository that you have push (write) access to, you will be able to run git commands in the session to save your work back to the code repository! To make this work, first [connect Renku with your GitHub or GitLab account](https://docs.renkulab.io/en/latest/docs/users/code/guides/connect-renku-account-to-github-or-gitlab-account). 
+The git repository we connected with our project is read-only. However, when you connect your Renku project with a git repository that you have push (write) access to, you will be able to run git commands in the session to save your work back to the code repository! To make this work, first [connect Renku with your GitHub or GitLab account](../50-code/guides/20-connect-renku-account-to-github-or-gitlab-account.md). 
 
 :::
 

@@ -12,18 +12,18 @@ Here's how to connect this dataset to your Renku project with a data connector:
 
 :::info
 
-Note that the Description in Zenodo of this dataset is automatically imported as part of the metadata of your data connector.
+Note that the description in Zenodo of this dataset is automatically imported as part of the metadata of your data connector.
 
 :::
 
 
 ## Connect a Storage Space to save your work (optional) 
 
-The data connector in the previous step is read-only. If you would like to be able to save the work you do in your Renku session, add a data connector for a storage where you'd like to save that work. For example, you might use a Switchdrive or Polybox folder, or an S3 bucket.
+The data connector in the previous step is read only. If you would like to be able to save the work you do in your Renku session, add a data connector for a storage where you'd like to save that work. For example, you might use a Switch Drive or polybox folder, or an S3 bucket.
 
 :::info
 
-Check out our guides for creating different types of [data connectors](https://docs.renkulab.io/en/latest/docs/users/data/guides/connect-data/)
+Check out our guides for creating different types of [data connectors](../40-data/guides/00-connect-data/index.md)
 
 :::
 
