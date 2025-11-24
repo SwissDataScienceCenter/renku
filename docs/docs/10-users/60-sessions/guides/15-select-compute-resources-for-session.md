@@ -22,4 +22,3 @@ If you would **temporarily** launch a session with different resources without c
 3. Choose a resource class for this session
 
 <video controls width="100%" src={selectResourceVideo} />
-

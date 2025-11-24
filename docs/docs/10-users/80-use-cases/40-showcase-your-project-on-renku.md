@@ -1,6 +1,6 @@
 # Showcase your project on Renku
 
-Sometimes you need to share or present the results of your project to stakeholders or other colleagues. In this tutorial, you will learn how to serve dashboards from Renku projects through dedicated session launchers. 
+Sometimes you need to share or present the results of your project to stakeholders or other colleagues. In this tutorial, you will learn how to serve dashboards from Renku projects through dedicated session launchers.
 
 **Contents**
 
@@ -27,17 +27,17 @@ Renku allows you to have multiple session launchers in the same project. For exa
 
 If you want to make your Renku project publicly accessible, set the **visibility** of the project to **Public**. You can change the visibility of the project in the project settings. Only a project owner can change the project’s visibility. Read more in [Project Permissions](../collaboration/permissions#project-permissions).
 
-Making a project public means that everyone on the internet can view the project and launch sessions. 
+Making a project public means that everyone on the internet can view the project and launch sessions.
 
 However, if there are protected resources on the project, for example a data connector that requires credentials or a private git repository, people will have to provide those credentials in order to see those resources. The access to the data and code resources are not changed when you make your Renku project public.
 
 **Share with specific people**
 
-If you want to share your Renku project only with specific people, add them as members to the project. 
+If you want to share your Renku project only with specific people, add them as members to the project.
 
 You add new members to your project in the project settings. Only a project owner can change the project’s members. Read more in [Project Permissions](../collaboration/permissions#project-permissions).
 
-In order to add people as members to a Renku project, they first have to have created a Renku account. 
+In order to add people as members to a Renku project, they first have to have created a Renku account.
 
 ## Example Showcase Projects
 

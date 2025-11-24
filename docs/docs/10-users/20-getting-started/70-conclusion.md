@@ -1,8 +1,13 @@
 # Next Steps
 
-🎉 Congratulations! You have successfully created a Renku project, connected data and code, launched a session, and shared your project with collaborators. 
 
-You can find this project available here: [Zurich Air Quality Analysis](https://renkulab.io/p/renku-team/zurich-air-quality-analysis).
+🎉 Congratulations! You have successfully created a Renku project, connected data and code, launched a session, and shared your project with collaborators.
+
+![image.png](./congratulations.png)
+
+You can find the project described in this tutorial [here](https://renkulab.io/p/renku-team/genova-weather-analysis)
+
+![image.png](./genova-img.png)
 
 :::tip
 
