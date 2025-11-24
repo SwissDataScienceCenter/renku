@@ -1,5 +1,5 @@
 import { TIMEOUTS } from "../../../config";
-import { User } from "../types/user.types";
+import { User } from "../types/user";
 
 export const validateLogin = {
   validate() {

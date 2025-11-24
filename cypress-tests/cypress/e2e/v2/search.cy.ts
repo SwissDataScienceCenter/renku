@@ -3,18 +3,18 @@ import {
   getUserData,
   validateLoginV2,
 } from "../../support/commands/general";
-import { User } from "../../support/types/user.types";
+import { User } from "../../support/types/user";
 import {
   createGroupIfMissingAPI,
   deleteGroupFromAPI,
   getGroupFromAPI,
-} from "../../support/utils/group.utils";
+} from "../../support/utils/groups";
 import {
   createProjectIfMissingAPIV2,
   deleteProjectFromAPIV2,
   getProjectByNamespaceAPIV2,
-} from "../../support/utils/projectsV2.utils";
-import { verifySearchIndexing } from "../../support/utils/search.utils";
+} from "../../support/utils/projects";
+import { verifySearchIndexing } from "../../support/utils/search";
 
 const sessionId = ["search", getRandomString()];
 

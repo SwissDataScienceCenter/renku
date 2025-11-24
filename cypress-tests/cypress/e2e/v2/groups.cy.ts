@@ -6,14 +6,14 @@ import {
 import {
   deleteGroupFromAPI,
   getGroupFromAPI,
-} from "../../support/utils/group.utils";
+} from "../../support/utils/groups";
 import {
   createProjectIfMissingAPIV2,
   deleteProjectFromAPIV2,
-} from "../../support/utils/projectsV2.utils";
-import { ProjectIdentifierV2 } from "../../support/types/project.types";
-import { User } from "../../support/types/user.types";
-import { verifySearchIndexing } from "../../support/utils/search.utils";
+} from "../../support/utils/projects";
+import { ProjectIdentifierV2 } from "../../support/types/projects";
+import { User } from "../../support/types/user";
+import { verifySearchIndexing } from "../../support/utils/search";
 
 const sessionId = ["groups", getRandomString()];
 

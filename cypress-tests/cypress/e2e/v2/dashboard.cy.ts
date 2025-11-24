@@ -3,13 +3,13 @@ import {
   validateLoginV2,
 } from "../../support/commands/general";
 import { generatorProjectName } from "../../support/commands/projects";
-import { ProjectIdentifierV2 } from "../../support/types/project.types";
+import { ProjectIdentifierV2 } from "../../support/types/projects";
 import {
   createProjectIfMissingAPIV2,
   deleteProjectFromAPIV2,
   getProjectByNamespaceAPIV2,
   getUserNamespaceAPIV2,
-} from "../../support/utils/projectsV2.utils";
+} from "../../support/utils/projects";
 const projectTestConfig = {
   projectAlreadyExists: false,
   projectName: generatorProjectName("dashboardV2"),

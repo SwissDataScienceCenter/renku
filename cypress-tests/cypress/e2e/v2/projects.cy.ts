@@ -3,12 +3,12 @@ import {
   getUserData,
   validateLoginV2,
 } from "../../support/commands/general";
-import { ProjectIdentifierV2 } from "../../support/types/project.types";
-import { User } from "../../support/types/user.types";
+import { ProjectIdentifierV2 } from "../../support/types/projects";
+import { User } from "../../support/types/user";
 import {
   deleteProjectFromAPIV2,
   getProjectByNamespaceAPIV2,
-} from "../../support/utils/projectsV2.utils";
+} from "../../support/utils/projects";
 
 const sessionId = ["projects", getRandomString()];
 

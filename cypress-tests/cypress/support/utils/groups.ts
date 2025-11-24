@@ -1,4 +1,4 @@
-import { NewGroupBody } from "../types/group.types";
+import { NewGroupBody } from "../types/groups";
 
 export function getGroupFromAPI(
   slug: string,

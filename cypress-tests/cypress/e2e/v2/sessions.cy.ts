@@ -4,17 +4,17 @@ import {
   getUserData,
   validateLoginV2,
 } from "../../support/commands/general";
-import { ProjectIdentifierV2 } from "../../support/types/project.types";
-import { User } from "../../support/types/user.types";
+import { ProjectIdentifierV2 } from "../../support/types/projects";
+import { User } from "../../support/types/user";
 import {
   createProjectIfMissingAPIV2,
   deleteProjectFromAPIV2,
   getProjectByNamespaceAPIV2,
-} from "../../support/utils/projectsV2.utils";
+} from "../../support/utils/projects";
 import {
   deleteSessionFromAPI,
   getSessionsFromAPI,
-} from "../../support/utils/sessions.utils";
+} from "../../support/utils/sessions";
 
 const sessionId = ["sessions", getRandomString()];
 
