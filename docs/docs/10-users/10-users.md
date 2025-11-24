@@ -18,7 +18,7 @@ Renku is an open-source platform for researchers and scientists to connect data,
 
 <p class="text-align: center">
 ![image.png](./project_40px.png)
-[**Projects**](/docs/users/projects/projects/) in Renku may contain [Data](/docs/users/data/data/), [Code](/docs/users/code/) and [Sessions](/docs/users/sessions/environment/) to foster [Collaboration](/docs/users/collaboration/). Check each individual building block for understanding the possibilities that Renku offers. 
+[**Projects**](/docs/users/projects/projects/) in Renku may contain [Data](/docs/users/data/data/), [Code](/docs/users/code/code-repository) and [Sessions](/docs/users/sessions/environment/) to foster [Collaboration](/docs/users/collaboration/). Check each individual building block for understanding the possibilities that Renku offers. 
 </p>  
 
   ___
