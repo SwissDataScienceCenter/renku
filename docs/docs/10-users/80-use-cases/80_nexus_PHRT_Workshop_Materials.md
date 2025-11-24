@@ -48,7 +48,7 @@ title: Nexus PHRT Workshop Materials
 
 </details>
 
-# Examples - Available Code repositories 
+# Examples - Available Code repositories
 
 <details>
 <summary>**Next Generation Sequencing Bioinformatics - Asia 2024 (Jupyter Notebooks)**</summary>

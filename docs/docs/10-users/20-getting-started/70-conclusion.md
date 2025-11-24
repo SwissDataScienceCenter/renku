@@ -7,7 +7,7 @@
 
 You can find the project described in this tutorial [here](https://renkulab.io/p/renku-team/genova-weather-analysis)
 
-![image.png](./genova-img.png)    
+![image.png](./genova-img.png)
 
 :::tip
 

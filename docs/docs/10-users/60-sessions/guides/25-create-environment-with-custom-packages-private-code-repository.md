@@ -31,10 +31,10 @@ If your code repository is private, follow the instructions below.
 
     ```yaml
     name: build image
-    
+
     on:
       push:
-    
+
     jobs:
       build-image:
         runs-on: ubuntu-24.04
@@ -96,7 +96,7 @@ If your code repository is private, follow the instructions below.
     ![image.png](./create-environment-with-custom-packages-private-code-repository-60.png)
 
    :::tip
-   Would you like your launcher environment to update automatically everytime you push? Replace the very last part of the image URL after the `:` with `latest`, as in the image above. 
+   Would you like your launcher environment to update automatically everytime you push? Replace the very last part of the image URL after the `:` with `latest`, as in the image above.
    :::
 
 7. In the advanced settings, set the following fields:

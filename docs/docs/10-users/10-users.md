@@ -12,35 +12,35 @@ Renku is an open-source platform for researchers and scientists to connect data,
 
 <p class="text-align: center">
 ![image.png](./rocket_40px.png)
-[**First Steps Tutorial**](/docs/users/getting-started/): Want to try it out? [Create your account](/docs/users/getting-started/tutorial-start) and follow our hands-on tutorial! 
+[**First Steps Tutorial**](/docs/users/getting-started/): Want to try it out? [Create your account](/docs/users/getting-started/tutorial-start) and follow our hands-on tutorial!
 </p>
   ___
 
 <p class="text-align: center">
 ![image.png](./project_40px.png)
-[**Projects**](/docs/users/projects/projects/) in Renku may contain [Data](/docs/users/data/data/), [Code](/docs/users/code/code-repository) and [Sessions](/docs/users/sessions/environment/) to foster [Collaboration](/docs/users/collaboration/). Check each individual building block for understanding the possibilities that Renku offers. 
-</p>  
+[**Projects**](/docs/users/projects/projects/) in Renku may contain [Data](/docs/users/data/data/), [Code](/docs/users/code/code-repository) and [Sessions](/docs/users/sessions/environment/) to foster [Collaboration](/docs/users/collaboration/). Check each individual building block for understanding the possibilities that Renku offers.
+</p>
 
   ___
 
 <p class="text-align: center">
 ![image.png](./use-cases_40px.png)
 [**Use Cases**](/docs/users/use-cases/) Learn more about how Renku is used in the broader community.
-</p>    
+</p>
 
   ___
 
 <p class="text-align: center">
 ![image.png](./use-cases_40px.png)
 [**Knowledge Base**](/docs/users/knowledge-base/fair-open-science/) Curiosity about how it works? [Any doubts](/docs/users/knowledge-base/faq/)? Join our channels to keep in touch with us.
-</p>    
+</p>
 
   ___
 
 <p class="text-align: center">
 ![image.png](./sunset_40px.png)
 [**Renku Legacy:**](/docs/users/migrate-v1-v2/) Guidelines on how to migrate your code repositories from Legacy Renkulab Gitlab to your own code repository provider, and keep
-</p>  
+</p>
 
 
 ## Use cases
@@ -56,16 +56,16 @@ Renku is an open-source platform for researchers and scientists to connect data,
       <p class="image-container-s">
       [![Renku Release Octubre 2025](https://blog.renkulab.io/assets/images/cscs-cover-90cd8e2dbe514501f43d26ed2c6b2a45.png)](https://blog.renkulab.io/release-2025-10/)
 
-    **Renku Release • October 2025**  
+    **Renku Release • October 2025**
      We've combined Renku's super-simple sessions with the power of supercomputing!
-    
+
     </p>
   ___
 
     <p class="image-container-s">
     [![AiiDA Success Story](https://blog.renkulab.io/assets/images/intro-image-f9ca2c80c6b9ad273b0d8750b112dab7.png)](https://blog.renkulab.io/aiida-success-story/)
 
-    **AiiDA Success Story • October 2025**  
+    **AiiDA Success Story • October 2025**
     How PSI's Materials Software and Data group uses Renku to facilitate access to research data.
-    
+
     </p>

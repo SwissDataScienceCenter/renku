@@ -31,23 +31,23 @@ Integrations with more data repositories, including ones in the ETH Domain, will
 1. Find and copy the DOI on the dataset page (see [How to find the DOI on Zenodo](#how-to-find-the-doi-on-zenodo))
 2. On the Renku project page, click the ➕ button in the data section to add a new data connector
 3. Select the **Import data by DOI** mode
-    
+
     ![image-10](./connect-data-from-data-repositories-10.png)
-    
+
 4. Paste the DOI and click **Import**
 
 ## How to find the DOI on Zenodo
 
 1. Find the DOI badge box
-    
+
     <p class="image-container-s">
     ![image-20](./connect-data-from-data-repositories-20.png)
     </p>
-    
+
 2. Click the badge and copy the DOI
-    
+
     ![image-30](./connect-data-from-data-repositories-30.png)
-    
+
 :::note
 
 It is possible to use the DOI of a specific version of a Zenodo record, as well as using the “all versions” DOI (which will resolve to the latest version)

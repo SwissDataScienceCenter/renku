@@ -24,14 +24,14 @@ See [How to create an environment with custom packages installed](create-environ
 
 ### → Having packages pre-installed is not so important to me right now.
 
-If you don’t need custom packages installed, you can get started quickly by simply selecting one or Renku’s pre-made **global environments**. When you create a session launcher, select **global environment** and choose one of the pre-made environments. 
+If you don’t need custom packages installed, you can get started quickly by simply selecting one or Renku’s pre-made **global environments**. When you create a session launcher, select **global environment** and choose one of the pre-made environments.
 
-When you launch a session with a global environment, you can still install packages on the fly. Please note, however, that these packages will not persist once you shut down your session. You will have to re-install them after you shut down and re-launch your session. In addition, the packages you install won’t be available for anyone else who launches a session from the launcher. 
+When you launch a session with a global environment, you can still install packages on the fly. Please note, however, that these packages will not persist once you shut down your session. You will have to re-install them after you shut down and re-launch your session. In addition, the packages you install won’t be available for anyone else who launches a session from the launcher.
 
 If you’d like to permanently add the packages you need to your session environment, see [How to create an environment with custom packages installed](create-environment-with-custom-packages-installed).
 
 - diagram view
-    
+
     ```mermaid
     graph TD
       AppDev[Do you want to use your Renku session so share an App/Dashboard or is it for doing interactive work?]
@@ -51,5 +51,5 @@ If you’d like to permanently add the packages you need to your session environ
       Packages -->|no| GlobalEnv
       PublicPrivate -->|public| CodeBasedEnv
       PublicPrivate -->|private| GitHubAction
-      
+
     ```

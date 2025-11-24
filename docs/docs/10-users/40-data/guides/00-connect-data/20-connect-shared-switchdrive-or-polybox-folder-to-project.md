@@ -29,45 +29,45 @@ In Switchdrive/PolyBox:
 1. Add a new data connector by clicking the ➕ in the Data section of your project.
 2. Click on Create a data connector and choose **Polybox** (or **SwitchDrive**)
 3. At the bottom, select mode **Shared**.
-    
+
     <p class="image-container-m">
     ![image.png](./connect-shared-switchdrive-or-polybox-folder-to-project-10.png)
     </p>
-    
+
 4. Complete the information to your Shared folder:
     1. **Public link:** Paste the link to the folder.
     2. **Password:** If there is a password for the shared folder, enter that. Otherwise, leave it blank.
-        
+
        :::info
-   
+
        For shared folders protected with a password, everyone who launches a session will need to provide the password to the folder in order for that folder to be connected in their session. If the password is not provided, the folder will be empty.
-        
+
         :::
-        
+
     3. Click on **Test connection.**
     4. A message in green “The connection to the storage works correctly.” should appear. Click on **Continue**.
 
     <p class="image-container-m">
     ![image.png](./connect-shared-switchdrive-or-polybox-folder-to-project-20.png)
     </p>
-    
+
 5. Specify the final details of the data connector, namely:
     1. **Name**: term to refer to your data connector
     2. **Owner**: select where it belongs (either you as a user or a group)
     3. **Visibility**: decide whether it should be public or private
     4. **Mount point**: name of the directory in your session workspace where the folder will be mounted.
     5. **Read-only**: by default is active. Deactivate if you want to have read/write access.
-        
+
        :::info
 
        If you need a folder to be read-only for some users and read+write for other users of the same project, you can create two public links with different rights and add the two connectors to the project. The read+write  should be protected with a password, which can be shared with those users who should access the folder with read+write rights. Therefore, only those users with the password will be able to modify the content of that folder through the appropriate connector.
-        
+
         :::
-        
+
     6. **Save credentials**: if there is a password for the folder, click this box if you want to save your password in RenkuLab. (Only you will have access to those credentials. Credentials are not shared in RenkuLab.)
-        
+
         <p class="image-container-m">
         ![image.png](./connect-shared-switchdrive-or-polybox-folder-to-project-30.png)
         </p>
-        
+
 6. Click on **+ Add connector**

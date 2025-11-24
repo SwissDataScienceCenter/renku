@@ -28,29 +28,29 @@ In the project page:
 
 1. In the **Sessions** section click on ➕ to add a new session launcher
 2. Choose **Global environment** (if it’s not already selected)
-    
+
     <p class="image-container-l">
     ![image.png](./add-session-launcher-to-project-10.png)
     </p>
-    
+
 3. Select an environment from the list.
-    
+
     :::info
-        
+
     Don’t see an environment that suits your needs? You can create your own! See [How to create an environment with custom packages installed](create-environment-with-custom-packages-installed) or [How to use your own docker image for a Renku session](use-your-own-docker-image-for-renku-session)
-    
+
     :::
-    
+
 4. Click **Next**
 5. (optional) Give your session launcher a **Name**.
 6. Select the **Resource class** that best fits your expected computational needs.
-    
+
     :::note
-    
+
     If the available resource classes are too small for your compute requirements, see [How to select compute resources for your session](select-compute-resources-for-session) and [Contact](../../community)  us!
-    
+
     :::
-    
+
 7. Click on **Add session launcher**
 
 :::info

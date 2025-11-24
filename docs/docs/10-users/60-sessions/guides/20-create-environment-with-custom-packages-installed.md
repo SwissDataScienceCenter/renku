@@ -100,7 +100,7 @@ python version `3.10`. It is not currently possible to specify a different pytho
     pandas==2.2.3
     jupyterlab==4.3.5
     ```
-</details>  
+</details>
 
 #### Poetry (`pyproject.toml`)
 
@@ -121,7 +121,7 @@ Note that poetry version `1.8.3` will be used.
     # Important: use `package-mode = false` if the repository
     # is not an installable package.
     package-mode = false
-    
+
     [tool.poetry.dependencies]
     python = "^3.12"
     numpy = "^2.2.2"
@@ -130,18 +130,18 @@ Note that poetry version `1.8.3` will be used.
     scipy = "^1.15.1"
     torch = "^2.6.0"
     pytorch-lightning = "^2.5.0.post0"
-    
+
     [build-system]
     requires = ["poetry-core"]
     build-backend = "poetry.core.masonry.api"
     ```
-</details>  
+</details>
 
 ## Defining an R Environment
 
 :::info
 
-This feature is coming soon. For now, please see [R](./30-install-packages-on-the-fly-in-your-session.md). ). 
+This feature is coming soon. For now, please see [R](./30-install-packages-on-the-fly-in-your-session.md). ).
 
 :::
 

@@ -52,4 +52,3 @@ You can check where your data has been used on the right menu of your data conne
 <p class="image-container-s">
 ![image.png](./data-connectors-10.png)
 </p>
-
