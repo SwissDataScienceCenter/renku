@@ -141,7 +141,7 @@ Note that poetry version `1.8.3` will be used.
 
 :::info
 
-This feature is coming soon. For now, please see [R](https://docs.renkulab.io/en/latest/docs/users/sessions/guides/install-packages-on-the-fly-in-your-session). 
+This feature is coming soon. For now, please see [R](./30-install-packages-on-the-fly-in-your-session.md). ). 
 
 :::
 

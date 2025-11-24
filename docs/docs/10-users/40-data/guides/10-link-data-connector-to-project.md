@@ -5,7 +5,7 @@
 2. Click on the data connector to open the data connector’s side panel.
 3. Next to **ID**, click the copy button.
 
-<p class="image-container-s">
+<p class="image-container-m">
 ![An example of a data connector displayed on a group page.](./link-data-connector-to-project-10.png)
 *An example of a data connector displayed on a group page.*
 </p> 
@@ -14,7 +14,7 @@
 5. In the **Link or create data connector** pop up, choose **Link a data connector**.
 6. Paste the data connector **ID** in the identifier box
 
-<p class="image-container-s">
+<p class="image-container-m">
 ![Copy a data connector identifier from the side panel.](link-data-connector-to-project-20.png)
  *Copy a data connector identifier from the side panel.*
   </p>
@@ -22,7 +22,7 @@
     
 7. Click **Link data**.
 
-<p class="image-container-s">
+<p class="image-container-m">
 ![Pasting a data connector identifier to connect it to a new project.](link-data-connector-to-project-30.png)
 *Pasting a data connector identifier to connect it to a new project.*
 </p>
