@@ -81,7 +81,7 @@ For more details, see [Group Abilities by Role](#group-abilities-by-role).
 
 | Action | Owner | Editor | Viewer |
 | --- | --- | --- | --- |
-| Inherited role on content inside the group (see also: [Role Inheritance](https://www.notion.so/Role-Inheritance-b70b2a48d74043ca9b78a5ed1f60ae10?pvs=21)) | Owner | Viewer | Viewer |
+| Inherited role on content inside the group (see also: [Role Inheritance](https://www.notion.so/Role-Inheritance-b70b2a48d74043ca9b78a5ed1f60ae10?pvs=21)) | Owner | Editor | Viewer |
 | View content in the group (projects and data connectors) | ✅ | ✅ | ✅ |
 | Create new content in the group (projects and data connectors) | ✅ | ✅ | ❌ |
 | Edit content in the group (projects and data connectors) | ✅ | ✅ | ❌ |
