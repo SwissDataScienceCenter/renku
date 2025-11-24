@@ -23,4 +23,4 @@ And, if your institution has a dedicated GitLab instance you would like to integ
 
 :::
 
-For more information about working with code repositories on Renku, check out the **code** section in the [How To Guides](https://docs.renkulab.io/en/latest/docs/users/code/code-repository).
+For more information about working with code repositories on Renku, check out the **code** section in the [How To Guides](../50-code/00-code-repository.md).
