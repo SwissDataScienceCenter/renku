@@ -24,7 +24,7 @@ the repository is automatically cloned into the
 
 ## Access to Code Repositories from RenkuLab
 
-Once you have connected your accounts, your access to the code repository in RenkuLab will match your access level on GitHub/GitLab (if the account is [connected](/docs/users/code/guides/connect-renku-account-to-github-or-gitlab-account)): 
+Once you have connected your accounts, your access to the code repository in RenkuLab will match your access level on [GitHub/GitLab](./guides/20-connect-renku-account-to-github-or-gitlab-account.md): 
 
 - If you are able to write to the repository (push and pull rights) you will see a <Highlight color="#059b11ff">green</Highlight> status.
 - If you can only see the code repository, you will only be able to pull or clone from the code repository (status in <Highlight color="#f1fb36ff">yellow</Highlight>).
