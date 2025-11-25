@@ -29,8 +29,7 @@ If the project is owned by a group, all members of the group inherit membership 
 There are 2 types of project membership:
 
 - **Direct membership:** A person is added directly to the project as a member.
-- **Inherited membership**: A person has access to the project by being a member of the project’s namespace (group). For more details, see [Role Inheritance](https://www.notion.so/Role-Inheritance-b70b2a48d74043ca9b78a5ed1f60ae10?pvs=21).
-
+- **Inherited membership**: A person has access to the project by being a member of the project’s namespace (group). 
 ## Project Roles {#project-roles}
 
 Members of projects can have one of the following roles:
@@ -150,8 +149,8 @@ There may be multiple people in each of these roles (for example, a data connect
 
 | Action                                                                                   | Owner | Editor | Viewer |
 |------------------------------------------------------------------------------------------| --- | --- | --- |
-| Use the data connector (i.e. the data connector will be mounted in a launched session)
- *Note: any required credentials must be provided by the user launching the session       | ✅ | ✅ | ✅ |
+| Use the data connector (i.e. the data connector will be mounted in a launched session). 
+ *Note: any required credentials must be provided by the user launching the session        | ✅ | ✅ | ✅ |
 | Link the data connector to another project                                               | ✅ | ✅ | ✅ |
 | See the data connector in search                                                         | ✅ | ✅ | ✅ |
 | Edit the data connector configuration (see this [note](#note-access-to-data-connector)). | ✅ | ✅ | ❌ |
