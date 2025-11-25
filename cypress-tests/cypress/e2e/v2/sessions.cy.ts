@@ -4,19 +4,19 @@ import {
   getUserData,
   validateLoginV2,
 } from "../../support/commands/general";
-import { ProjectIdentifierV2 } from "../../support/types/project.types";
-import { User } from "../../support/types/user.types";
+import { ProjectIdentifierV2 } from "../../support/types/projects";
+import { User } from "../../support/types/user";
 import {
   createProjectIfMissingAPIV2,
   deleteProjectFromAPIV2,
   getProjectByNamespaceAPIV2,
-} from "../../support/utils/projectsV2.utils";
+} from "../../support/utils/projects";
 import {
   deleteSessionFromAPI,
   getSessionsFromAPI,
-} from "../../support/utils/sessions.utils";
+} from "../../support/utils/sessions";
 
-const sessionId = ["sessionBasics", getRandomString()];
+const sessionId = ["sessions", getRandomString()];
 
 describe("Start a session that consumes project resources", () => {
   // Define required resources
@@ -33,6 +33,15 @@ describe("Start a session that consumes project resources", () => {
       namespace: null,
     };
   }
+  const visitCurrentProject = () => {
+    // There should a link on the dashboard for a newly created project
+    cy.visit("/v2");
+    cy.getDataCy("dashboard-project-list")
+      .get(
+        `a[href*="/${projectIdentifier.namespace}/${projectIdentifier.slug}"]`,
+      )
+      .click();
+  };
 
   beforeEach(() => {
     // Restore the session (login)
@@ -77,6 +86,41 @@ describe("Start a session that consumes project resources", () => {
         deleteProjectFromAPIV2(projectIdentifier);
       }
     });
+  });
+
+  it("Add and modify session environments", () => {
+    const sessionImage = "alpine:latest";
+    const sessionUrl = "/test";
+    const sessionName = `vscode-${getRandomString()}`;
+
+    // Add session environment
+    visitCurrentProject();
+    cy.getDataCy("add-session-launcher").click();
+    cy.getDataCy("environment-kind-custom").click();
+    cy.getDataCy("custom-image-input").should("be.empty").type(sessionImage);
+    cy.getDataCy("session-launcher-field-default_url").clear().type(sessionUrl);
+    cy.getDataCy("next-session-button").click();
+    cy.getDataCy("launcher-name-input").should("be.empty").type(sessionName);
+    cy.getDataCy("add-session-button").click();
+    cy.getDataCy("session-launcher-creation-success").should("be.visible");
+    cy.getDataCy("close-cancel-button").click();
+
+    // Edit session environment
+    cy.getDataCy("sessions-box")
+      .contains("[data-cy=session-launcher-item]", sessionName)
+      .click();
+    cy.getDataCy("session-view-menu-edit").click();
+    cy.getDataCy("edit-session-name")
+      .should("have.value", sessionName)
+      .clear()
+      .type(`${sessionName}-edited`);
+    cy.getDataCy("edit-session-button").click();
+    cy.getDataCy("session-launcher-update-success").should("be.visible");
+    cy.getDataCy("close-cancel-button").click();
+    cy.getDataCy("sessions-box").contains(
+      "[data-cy=session-launcher-item]",
+      sessionName,
+    );
   });
 
   it("Start a session with VSCode and check it has the necessary resources", () => {
