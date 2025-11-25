@@ -1,4 +1,4 @@
-import { NewProjectV2Body, ProjectIdentifierV2 } from "../types/project.types";
+import { NewProjectV2Body, ProjectIdentifierV2 } from "../types/projects";
 
 /** Get the namespace of the logged in user from the API. */
 export function getUserNamespaceAPIV2(): Cypress.Chainable<string | null> {
