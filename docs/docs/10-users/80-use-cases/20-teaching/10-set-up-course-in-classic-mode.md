@@ -12,11 +12,12 @@ For alternative workflows for using Renku in your course, see [Renku for Teachin
 
 1. Create a Renku project as explained in [How to create a new project](../../projects/guides/create-a-project)
 2. Add a code repository as explained in [How to add a code repository to your project](../../code/guides/add-code-repository-to-project) with the course tasks
-3. Add data, if needed. See our collection of How To Guides for options for creating data connectors.
+3. Add data, if needed. See our collection of [How To Guides for options for creating data connectors](https://docs.renkulab.io/en/latest/docs/users/data/guides/connect-data/).
+
     
     :::info
     
-    If you add data connectors to your template project, you must make the data connectors public in order for students to be able to create copies that include the data connector. For more information, see [Data Connectors Permissions](../../collaboration/permissions#data-connector-permissions.
+    If you add data connectors to your template project, you must make the data connectors public in order for students to be able to create copies that include the data connector. For more information, see [Data Connectors Permissions](../../collaboration/permissions#data-connector-permissions).
     
     :::
     
