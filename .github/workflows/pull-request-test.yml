@@ -225,12 +225,13 @@ jobs:
         tests:
           [
             anonymousNavigation,
-            dashboardV2,
-            groupBasics,
-            projectBasics,
-            projectResources,
-            searchEntities,
-            sessionBasics,
+            codeRepositories,
+            dashboard,
+            dataConnectors,
+            groups,
+            projects,
+            search,
+            sessions,
           ]
     steps:
       - uses: SwissDataScienceCenter/renku-actions/test-renku-cypress@v1.19.1

@@ -3,26 +3,24 @@ import {
   getUserData,
   validateLoginV2,
 } from "../../support/commands/general";
-import { ProjectIdentifierV2 } from "../../support/types/project.types";
-import { User } from "../../support/types/user.types";
+import { ProjectIdentifierV2 } from "../../support/types/projects";
+import { User } from "../../support/types/user";
 import {
   createProjectIfMissingAPIV2,
   deleteProjectFromAPIV2,
   getProjectByNamespaceAPIV2,
-} from "../../support/utils/projectsV2.utils";
+} from "../../support/utils/projects";
 import {
   createGroupIfMissingAPI,
   deleteGroupFromAPI,
-} from "../../support/utils/group.utils";
+} from "../../support/utils/groups";
 
-const sessionId = ["projectResources", getRandomString()];
+const sessionId = ["dataConnectors", getRandomString()];
 
-describe("Project resources - work with code, data, environments", () => {
-  // Define some project details
+describe("Data Connectors", () => {
   const projectNameRandomPart = getRandomString();
-  const projectName = `project-resources-${projectNameRandomPart}`;
-  const projectDescription =
-    "This is a test project from Cypress to test working with code, data, environments";
+  const projectName = `data-connectors-${projectNameRandomPart}`;
+  const projectDescription = "Test project for data connector tests";
   const projectIdentifier: ProjectIdentifierV2 = {
     slug: projectName,
     id: null,
@@ -41,7 +39,7 @@ describe("Project resources - work with code, data, environments", () => {
       validateLoginV2,
     );
 
-    // Create the project and save its deetails
+    // Create the project and save its details
     getUserData().then((user: User) => {
       userNamespace = user.username;
       projectIdentifier.namespace = user.username;
@@ -299,77 +297,6 @@ describe("Project resources - work with code, data, environments", () => {
       .should("not.exist");
   });
 
-  it("Add and modify code repositories", () => {
-    const repoUrl = "https://github.com/SwissDataScienceCenter/renku-ui.git";
-    const repoName = "renku-ui";
-    const repoUrlEdited =
-      "https://github.com/SwissDataScienceCenter/renku-data-services.git";
-    const repoNameEdited = "renku-data-services";
-
-    // Add code repository
-    visitCurrentProject();
-    cy.getDataCy("add-code-repository").click();
-    cy.getDataCy("project-add-repository-url").should("be.empty").type(repoUrl);
-    cy.getDataCy("add-code-repository-modal-button").click();
-    cy.getDataCy("code-repositories-box")
-      .find("[data-cy=code-repository-item]")
-      .contains(repoName);
-    cy.contains("[data-cy=code-repository-item]", repoName).contains(
-      "Pull only",
-    );
-
-    // Edit code repository
-    cy.contains("[data-cy=code-repository-item]", repoName)
-      .find("[data-cy=code-repository-edit]")
-      .click();
-    cy.getDataCy("project-edit-repository-url")
-      .should("have.value", repoUrl)
-      .clear()
-      .type(repoUrlEdited);
-    cy.getDataCy("edit-code-repository-modal-button").click();
-    cy.getDataCy("code-repositories-box")
-      .find("[data-cy=code-repository-item]")
-      .contains(repoNameEdited);
-    cy.contains("[data-cy=code-repository-item]", repoNameEdited).contains(
-      "Pull only",
-    );
-  });
-
-  it("Add and modify session environments", () => {
-    const sessionImage = "alpine:latest";
-    const sessionUrl = "/test";
-    const sessionName = `vscode-${getRandomString()}`;
-
-    // Add session environment
-    visitCurrentProject();
-    cy.getDataCy("add-session-launcher").click();
-    cy.getDataCy("environment-kind-custom").click();
-    cy.getDataCy("custom-image-input").should("be.empty").type(sessionImage);
-    cy.getDataCy("session-launcher-field-default_url").clear().type(sessionUrl);
-    cy.getDataCy("next-session-button").click();
-    cy.getDataCy("launcher-name-input").should("be.empty").type(sessionName);
-    cy.getDataCy("add-session-button").click();
-    cy.getDataCy("session-launcher-creation-success").should("be.visible");
-    cy.getDataCy("close-cancel-button").click();
-
-    // Edit session environment
-    cy.getDataCy("sessions-box")
-      .contains("[data-cy=session-launcher-item]", sessionName)
-      .click();
-    cy.getDataCy("session-view-menu-edit").click();
-    cy.getDataCy("edit-session-name")
-      .should("have.value", sessionName)
-      .clear()
-      .type(`${sessionName}-edited`);
-    cy.getDataCy("edit-session-button").click();
-    cy.getDataCy("session-launcher-update-success").should("be.visible");
-    cy.getDataCy("close-cancel-button").click();
-    cy.getDataCy("sessions-box").contains(
-      "[data-cy=session-launcher-item]",
-      sessionName,
-    );
-  });
-
   it("Link and unlink data connector from another project", () => {
     const secondProjectName = `project-2-${getRandomString()}`;
     const name = `giab-${getRandomString()}`;
@@ -538,5 +465,116 @@ describe("Project resources - work with code, data, environments", () => {
 
     // Cleanup: Delete the group (which will also delete the data connector)
     deleteGroupFromAPI(groupName);
+  });
+
+  it("Link and unlink group data connector to user project", () => {
+    const groupNameRandomPart = getRandomString();
+    const groupName = `group-${groupNameRandomPart}`;
+    const groupSlug = groupName;
+    const dataConnectorName = `dc-${groupNameRandomPart}`;
+    const projectName = `project-${groupNameRandomPart}`;
+
+    const projectIdentifier: ProjectIdentifierV2 = {
+      slug: projectName,
+      id: null,
+      namespace: null,
+    };
+
+    // Create a new group
+    cy.visit("/");
+    cy.getDataCy("create-group-button").click();
+    cy.getDataCy("group-name-input").type(groupName);
+    cy.getDataCy("group-slug-input").should("have.value", groupSlug);
+
+    cy.intercept("POST", /(?:\/ui-server)?\/api\/data\/groups/).as(
+      "createGroup",
+    );
+    cy.getDataCy("group-create-button").click();
+    cy.wait("@createGroup");
+    cy.getDataCy("group-name").should("contain", groupName);
+
+    // Create a data connector owned by the group
+    cy.getDataCy("add-data-connector").click();
+    cy.getDataCy("data-storage-s3").click();
+    cy.getDataCy("data-provider-AWS").click();
+    cy.getDataCy("data-connector-edit-next-button").click();
+
+    cy.getDataCy("data-connector-source-path").should("be.empty").type("giab");
+    cy.getDataCy("test-data-connector-button").click();
+    cy.getDataCy("cloud-storage-connection-success").should("be.visible");
+    cy.getDataCy("add-data-connector-continue-button").click();
+
+    cy.getDataCy("data-connector-name-input")
+      .should("be.empty")
+      .type(dataConnectorName);
+    cy.getDataCy("data-connector-slug-toggle").click();
+    cy.getDataCy("data-connector-slug-input").should(
+      "have.value",
+      dataConnectorName,
+    );
+    cy.getDataCy("data-connector-edit-update-button").click();
+    cy.getDataCy("data-connector-edit-success").should("be.visible");
+    cy.getDataCy("data-connector-edit-close-button").click();
+
+    // Verify data connector appears in the group
+    cy.getDataCy("data-connector-box")
+      .find(`[data-cy=data-connector-name]`)
+      .contains(dataConnectorName);
+
+    const dataConnectorIdentifier = `${groupSlug}/${dataConnectorName}`;
+
+    // Create a project in user's namespace
+    createProjectIfMissingAPIV2({
+      description: "Test project in user namespace",
+      name: projectName,
+      namespace: userNamespace,
+      slug: projectName,
+      visibility: "private",
+    }).then((project) => {
+      projectIdentifier.id = project.id;
+      projectIdentifier.namespace = userNamespace;
+    });
+
+    // Navigate to the user's project
+    cy.visit("/");
+    cy.getDataCy("projects-container")
+      .find('[data-cy="dashboard-project-list"]')
+      .contains(projectName)
+      .click();
+    cy.getDataCy("project-name").should("contain", projectName);
+
+    // Link the group data connector to the user's project
+    cy.getDataCy("add-data-connector").click();
+    cy.getDataCy("project-data-controller-mode-link").click();
+
+    // Enter the data connector identifier
+    cy.get("#data-connector-identifier")
+      .should("be.empty")
+      .type(dataConnectorIdentifier);
+    cy.getDataCy("link-data-connector-button").click();
+
+    // Verify the data connector is linked to the project
+    cy.getDataCy("data-connector-box")
+      .find(`[data-cy=data-connector-name]`)
+      .contains(dataConnectorName)
+      .click();
+
+    cy.getDataCy("data-connector-title")
+      .should("be.visible")
+      .contains(dataConnectorName);
+
+    // Unlink the data connector from the project
+    cy.getDataCy("data-connector-menu-dropdown").should("be.visible").click();
+    cy.getDataCy("data-connector-unlink").should("be.visible").click();
+    cy.getDataCy("delete-data-connector-modal-button").click();
+
+    // Verify the data connector is no longer linked to the project
+    cy.contains(`[data-cy=data-connector-name]`, dataConnectorName).should(
+      "not.exist",
+    );
+
+    // Cleanup: Delete project
+    deleteProjectFromAPIV2(projectIdentifier);
+    deleteGroupFromAPI(groupSlug);
   });
 });

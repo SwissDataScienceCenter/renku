@@ -3,20 +3,20 @@ import {
   getUserData,
   validateLoginV2,
 } from "../../support/commands/general";
-import { User } from "../../support/types/user.types";
+import { User } from "../../support/types/user";
 import {
   createGroupIfMissingAPI,
   deleteGroupFromAPI,
   getGroupFromAPI,
-} from "../../support/utils/group.utils";
+} from "../../support/utils/groups";
 import {
   createProjectIfMissingAPIV2,
   deleteProjectFromAPIV2,
   getProjectByNamespaceAPIV2,
-} from "../../support/utils/projectsV2.utils";
-import { verifySearchIndexing } from "../../support/utils/search.utils";
+} from "../../support/utils/projects";
+import { verifySearchIndexing } from "../../support/utils/search";
 
-const sessionId = ["searchEntities", getRandomString()];
+const sessionId = ["search", getRandomString()];
 
 describe("Search for resources: groups, projects, users", () => {
   // Define projects and groups details
@@ -119,9 +119,7 @@ describe("Search for resources: groups, projects, users", () => {
 
     // Search for string
     cy.getDataCy("navbar-link-search").click();
-    cy.intercept(new RegExp(`/api/data/search/query.*`)).as(
-      "searchQuery",
-    );
+    cy.intercept(new RegExp(`/api/data/search/query.*`)).as("searchQuery");
     cy.getDataCy("search-input").clear().type(stringRandomOne);
     cy.getDataCy("search-button").click();
     cy.wait("@searchQuery");
