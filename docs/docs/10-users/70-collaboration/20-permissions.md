@@ -30,13 +30,14 @@ There are 2 types of project membership:
 
 - **Direct membership:** A person is added directly to the project as a member.
 - **Inherited membership**: A person has access to the project by being a member of the project’s namespace (group). 
+
 ## Project Roles {#project-roles}
 
 Members of projects can have one of the following roles:
 
 - **Owner:** Can do everything on the project. This role is automatically assigned to whoever created the project.
 - **Editor:** Can edit most things on the project, but cannot change who can access the project (cannot add members or change the project visibility).
-- **Viewer:** Can see the project and launch sessions.  ****
+- **Viewer:** Can see the project and launch sessions.
 
 For more details, see [Project Abilities by Roles](#project-abilities-by-roles).
 
@@ -80,7 +81,7 @@ For more details, see [Group Abilities by Role](#group-abilities-by-role).
 
 | Action | Owner | Editor | Viewer |
 | --- | --- | --- | --- |
-| Inherited role on content inside the group (see also: [Role Inheritance](https://www.notion.so/Role-Inheritance-b70b2a48d74043ca9b78a5ed1f60ae10?pvs=21)) | Owner | Editor | Viewer |
+| Inherited role on content inside the group | Owner | Editor | Viewer |
 | View content in the group (projects and data connectors) | ✅ | ✅ | ✅ |
 | Create new content in the group (projects and data connectors) | ✅ | ✅ | ❌ |
 | Edit content in the group (projects and data connectors) | ✅ | ✅ | ❌ |
@@ -130,7 +131,7 @@ If the data connector is owned by an individual user, only that user can edit th
 
 There are 2 types of data connector membership:
 
-- **Inherited membership**: A person has access to the data connector by being a member of the data connector’s namespace (project, group, or user). For more details, see [Role Inheritance](https://www.notion.so/Role-Inheritance-b70b2a48d74043ca9b78a5ed1f60ae10?pvs=21).
+- **Inherited membership**: A person has access to the data connector by being a member of the data connector’s namespace (project, group, or user).
 - *(Direct membership of data connectors does not exist at this time.)*
 
 ## Data Connector Roles
