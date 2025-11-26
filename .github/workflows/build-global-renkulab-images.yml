@@ -69,6 +69,10 @@ jobs:
           echo "BUILD_TAG=${BUILD_TAG}"
           CACHE_IMAGE=$(echo '${{ steps.meta_cache.outputs.json }}' | jq -cr '.tags[0]')
           echo "CACHE_IMAGE=${CACHE_IMAGE}"
+          RUN_IMAGE=${{ matrix.PLATFORM == 'linux/arm64' && ${{ env.RUN_IMAGE_AMD64 }} || ${{ env.RUN_IMAGE_ARM64 }} }}
+          echo "RUN_IMAGE=${RUN_IMAGE}"
+          BUILDER_IMAGE=${{ matrix.PLATFORM == 'linux/arm64' && ${{ env.RUN_IMAGE_AMD64 }} || ${{ env.RUN_IMAGE_ARM64 }} }}
+          echo "BUILDER_IMAGE=${BUILDER_IMAGE}"
           # publish only on pushes to master or release tags
           PUBLISH=0
           EXTRA_FLAGS=""
@@ -82,8 +86,8 @@ jobs:
           echo "EXTRA_FLAGS=${EXTRA_FLAGS}"
           pack build "${BUILD_TAG}" \
             -p "${{ matrix.FLAVOR }}" \
-            --builder "${{ env.BUILDER_IMAGE_ARM64 }}" \
-            --run-image "${{ env.RUN_IMAGE_ARM64 }}" \
+            --builder "${BUILDER_IMAGE}" \
+            --run-image "${RUN_IMAGE}" \
             --env BP_RENKU_FRONTENDS="${{ matrix.FRONTEND }}" \
             --platform "${{ matrix.PLATFORM }}" \
             --previous-image "${CACHE_IMAGE}" \
