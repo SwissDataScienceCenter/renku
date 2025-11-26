@@ -71,7 +71,7 @@ jobs:
           echo "CACHE_IMAGE=${CACHE_IMAGE}"
           RUN_IMAGE=${{ matrix.PLATFORM == 'linux/arm64' && env.RUN_IMAGE_ARM64 || env.RUN_IMAGE_AMD64 }}
           echo "RUN_IMAGE=${RUN_IMAGE}"
-          BUILDER_IMAGE=${{ matrix.PLATFORM == 'linux/arm64' && env.RUN_IMAGE_ATM64 || env.RUN_IMAGE_AMD64 }}
+          BUILDER_IMAGE=${{ matrix.PLATFORM == 'linux/arm64' && env.BUILDER_IMAGE_ARM64 || env.BUILDER_IMAGE_AMD64 }}
           echo "BUILDER_IMAGE=${BUILDER_IMAGE}"
           # publish only on pushes to master or release tags
           PUBLISH=0
