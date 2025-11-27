@@ -135,6 +135,17 @@ spec:
               value: "client_credentials"
             - name: "DATASERVICE_KC_CLIENT_SERVICE_ACCOUNT_ROLES"
               value: '["view-users", "query-users", "view-events", "view-realm"]'
+            - name: ALERTMANAGER_WEBHOOK_OIDC_ENABLED
+              value: {{ .Values.keycloakx.alerts.alertmanager.enabled | toString | lower | quote }}
+            {{- if .Values.keycloakx.alerts.alertmanager.enabled }}
+            - name: ALERTMANAGER_WEBHOOK_OIDC_CLIENT_ID
+              value: {{ .Values.keycloakx.alerts.alertmanager.clientId | default "alertmanager-webhook" | quote }}
+            - name: ALERTMANAGER_WEBHOOK_OIDC_CLIENT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: {{ cat (include "renku.fullname" .) "-alertmanager-webhook" | nospace }}
+                  key: alertmanagerClientSecret
+            {{- end }}
             - name: PYTHONUNBUFFERED
               value: "0"
             {{- include "certificates.env.python" . | nindent 12 }}

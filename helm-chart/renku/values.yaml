@@ -331,6 +331,17 @@ keycloakx:
   ## user must be queried from kubernetes (see the rendered NOTES.txt
   ## template which is shown after a successul deployment).
   createDemoUser: false
+  ## Alerts configuration
+  alerts:
+    ## Alertmanager webhook authentication
+    ## Create an OIDC client for authenticating webhooks sent by Alertmanager to Renku
+    alertmanager:
+      enabled: false
+      ## Client ID for the Alertmanager webhook OIDC client (defaults to "alertmanager-webhook")
+      # clientId: alertmanager-webhook
+      ## Client secret for the Alertmanager webhook OIDC client
+      ## Should be set to a proper value (i.e. by using openssl rand -hex 32) for production
+      clientSecret:
   ## This section points to an image used to create
   ## a Renku realm and initialize it with the necessary
   ## clients during deployment. It should not be necessary
