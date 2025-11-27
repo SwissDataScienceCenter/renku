@@ -98,4 +98,19 @@ Renku is built from several sub-repositories:
 
 ## Citing Renku in research papers
 
-If you use the Renku platform for your research, please do cite our [paper](https://proceedings.neurips.cc/paper_files/paper/2023/hash/838694e9ab6b0a193b84daaafcac0eed-Abstract-Datasets_and_Benchmarks.html). See the citation information in the side panel of this repo for APA and BibTex formats.
+If you use the Renku platform for your research, please do cite our [paper](https://proceedings.neurips.cc/paper_files/paper/2023/hash/838694e9ab6b0a193b84daaafcac0eed-Abstract-Datasets_and_Benchmarks.html). Use this BibTex for the citation:
+
+```bibtex
+@inproceedings{NEURIPS2023_838694e9,
+ author = {Ro\\v{s}kar, Rok and Ramakrishnan, Chandrasekhar and Volpi, Michele and Perez-Cruz, Fernando and Gasser, Lilian and Ozdemir, Firat and Paitz, Patrick and Alisafaee, Mohammad and Fischer, Philipp and Grubenmann, Ralf and Harris, Eliza and Olevski, Tasko and Remlinger, Carl and Salamanca, Luis and Capon Garcia, Elisabet and Cavazzi, Lorenzo and Chrobasik, Jakub and Cordoba Osnas, Darlin and Degano, Alessandro and Dupre, Jimena and Johnson, Wesley and Kettner, Eike and Kinkead, Laura and Murphy, Sean D. and Thiebaut, Flora and Verscheure, Olivier},
+ booktitle = {Advances in Neural Information Processing Systems},
+ editor = {A. Oh and T. Naumann and A. Globerson and K. Saenko and M. Hardt and S. Levine},
+ pages = {42161--42173},
+ publisher = {Curran Associates, Inc.},
+ title = {Renku: a platform for sustainable data science},
+ url = {<https://proceedings.neurips.cc/paper_files/paper/2023/file/838694e9ab6b0a193b84daaafcac0eed-Paper-Datasets_and_Benchmarks.pdf>},
+ volume = {36},
+ year = {2023}
+}
+```
+
